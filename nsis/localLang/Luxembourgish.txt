@@ -1,0 +1,17 @@
+# NOTE:
+# It's very important, that you keep the character encoding at UTF-16 LittleEndian
+# For Windows, open this file in Notepad and save with file encoding "Unicode".
+#
+# Strings need to be placed between quotes (""), a newline is written as ${NL}
+#
+# Translators: Please add your name to the TRANSLATOR string
+#
+!insertmacro LANG_STRING TRANSLATOR                "Mod-Karlthegreat"
+!insertmacro LANG_STRING CREATE_DESKTOP            "Ikon um Desktop dobäisetzen"
+!insertmacro LANG_STRING CREATE_STARTMENU          "Eng Ikon am Start-Menü dobäisetzen"
+!insertmacro LANG_STRING DB_WILL_BE_REMOVED        "OPGEPASST!${NL}${NL}Doduerch gëtt den HO komplett desinstalléiert, OCH DENG DATEBANK BASS DE DA LASS!"
+!insertmacro LANG_STRING UNINST_CONFIRM            "Ech widderhuelen:${NL}Dat wäert och deng HO-Datebank läschen!!${NL}(Du solls däin alen HO NET desinstalléieren, éiers de eng HO-Aktualiséierung gemaach hues!)${NL}${NL}Awer desinstalléieren?"
+!insertmacro LANG_STRING JRE                       "Java Runtime Environment"
+!insertmacro LANG_STRING INST_TYPE_FULL            "Full"
+!insertmacro LANG_STRING INST_TYPE_FULL_WITH_JRE   "Full (with Java Runtime Environment)"
+!insertmacro LANG_STRING INST_TYPE_MINIMAL         "Minimal"

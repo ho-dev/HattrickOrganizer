@@ -1,0 +1,17 @@
+# NOTE:
+# It's very important, that you keep the character encoding at UTF-16 LittleEndian
+# For Windows, open this file in Notepad and save with file encoding "Unicode".
+#
+# Strings need to be placed between quotes (""), a newline is written as ${NL}
+#
+# Translators: Please add your name to the TRANSLATOR string
+#
+!insertmacro LANG_STRING TRANSLATOR                "kgabor"
+!insertmacro LANG_STRING CREATE_DESKTOP            "Parancsikon létrehozása az Asztalon"
+!insertmacro LANG_STRING CREATE_STARTMENU          "Parancsikon létrehozása a Start menüben"
+!insertmacro LANG_STRING DB_WILL_BE_REMOVED        "FIGYELEM!${NL}${NL}Ha folytatod, teljes egészében törlöd a HO-t, AZ ADATBÁZISODDAL EGYÜTT!"
+!insertmacro LANG_STRING UNINST_CONFIRM            "Ismétlem:${NL}Ezzel a HO adatbázisod is törlődik!${NL}(A HO új verziójának telepítése előtt NEM kell eltávolítanod a régi HO-t!)${NL}${NL}Eltávolítod mindenképp?"
+!insertmacro LANG_STRING JRE                       "Java futtatási környezet"
+!insertmacro LANG_STRING INST_TYPE_FULL            "Teljes"
+!insertmacro LANG_STRING INST_TYPE_FULL_WITH_JRE   "Teljes (Java futtatási környezettel)"
+!insertmacro LANG_STRING INST_TYPE_MINIMAL         "Minimális"

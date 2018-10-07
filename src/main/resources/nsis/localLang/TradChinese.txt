@@ -1,0 +1,17 @@
+# NOTE:
+# It's very important, that you keep the character encoding at UTF-16 LittleEndian
+# For Windows, open this file in Notepad and save with file encoding "Unicode".
+#
+# Strings need to be placed between quotes (""), a newline is written as ${NL}
+#
+# Translators: Please add your name to the TRANSLATOR string
+#
+!insertmacro LANG_STRING TRANSLATOR                "Penink"
+!insertmacro LANG_STRING CREATE_DESKTOP            "在桌面創造一個捷徑"
+!insertmacro LANG_STRING CREATE_STARTMENU          "在開始創造一個捷徑"
+!insertmacro LANG_STRING DB_WILL_BE_REMOVED        "注意這將會移除HO和它的資料庫(隊伍相關資料都將消失)"
+!insertmacro LANG_STRING UNINST_CONFIRM            "請再確認一次，是否要移除HO和其資料庫!(你不應該只是為了更新就移除HO，只要將最新${NL}版本覆蓋上原安裝資料夾就行了)無論如何還是要移除嗎？"
+!insertmacro LANG_STRING JRE                       "爪哇執行環境Java Runtime Environment"
+!insertmacro LANG_STRING INST_TYPE_FULL            "完整安裝"
+!insertmacro LANG_STRING INST_TYPE_FULL_WITH_JRE   "完整安裝(爪哇執行環境JRE)"
+!insertmacro LANG_STRING INST_TYPE_MINIMAL         "最小安裝"

@@ -1,0 +1,17 @@
+# NOTE:
+# It's very important, that you keep the character encoding at UTF-16 LittleEndian
+# For Windows, open this file in Notepad and save with file encoding "Unicode".
+#
+# Strings need to be placed between quotes (""), a newline is written as ${NL}
+#
+# Translators: Please add your name to the TRANSLATOR string
+#
+!insertmacro LANG_STRING TRANSLATOR                "Chokky"
+!insertmacro LANG_STRING CREATE_DESKTOP            "Kreiraj ikonicu na desktopu"
+!insertmacro LANG_STRING CREATE_STARTMENU          "Kreiraj ikonicu u Start meniju"
+!insertmacro LANG_STRING DB_WILL_BE_REMOVED        "UPOZORENJE!${NL}${NL}Ovim će u potpunosti biti deinstaliran HO, ULJUČUJUĆI I BAZU PODATAKA!"
+!insertmacro LANG_STRING UNINST_CONFIRM            "Ponavljamo:${NL}Ovim će biti izbrisana HO baza podataka!${NL}(NE BI TREBALI deinstalirati stari HO pre nego što ga ažurirate s novom verzijom!)${NL}${NL}Ipak deinstaliraj?"
+!insertmacro LANG_STRING JRE                       "Java Runtime Environment"
+!insertmacro LANG_STRING INST_TYPE_FULL            "Kompletna instalacija"
+!insertmacro LANG_STRING INST_TYPE_FULL_WITH_JRE   "Kompletna instalacija (sa Java Runtime Environment)"
+!insertmacro LANG_STRING INST_TYPE_MINIMAL         "Minimalna instalacija"

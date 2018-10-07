@@ -1,0 +1,64 @@
+# Skeleton file for ratings
+#
+# This is a comment
+# Everything after a '#' is ignored
+#
+# The general section parameters will be applied to the calculated value
+[general] 	
+version=3.0
+multiplier=1		# val = val * multiplier
+delta=0			# val = val + delta
+squareMod=0		# val = val + (1+squareMod)*val^2
+pic=1			# val = val * pic, if attitude=pic
+mots=1			# val = val * mots, if attitude=mots
+normal=1		# val = val * mots, if attitude=normal
+home=1			# val = val * home, if home game
+away=1			# val = val * away, if away game
+confidence=0		# val = val * (1+confidence)*(teamconfidence-5)
+teamspiritPreMulti=4.5	# val = val * (YourTeamSpirit*teamspiritPreMulti)^teamspiritPower
+teamspiritPower=0
+trainerOff=1		# val = val * trainerOff, if trainer is offensive
+trainerDef=1		# ...
+trainerNeutral=1
+extraMulti=1		# multiplier for extra positions (<=1)
+
+# SKILLNAME is one of: 	{goalkeeper, playmaking, passing, winger, scoring, defending}
+#
+# SIDENAME is one of:	allsides	the weights are applied to every matching player (default)
+			thisside	the weights are applied to the current side's players 
+			otherside	the weights are applied to the other side's players
+					(e.g. right side defence -> use left side players, 
+					left side attack -> use right side players)
+			middle		the weights are applied to the middle players
+					i.e. all 'extra' players and the keeper
+					if you only have a single CD/IM/FW and 
+						he is not TowardsWing, he is a "middle" player to
+
+[SKILLNAME_SIDENAME]
+allCDs=0	# multiplier for all central defenders
+allWBs=0	# multiplier for all wingbacks
+allIMs=0	# multiplier for all inner midfields
+allWIs=0	# multiplier for all wingers
+allFWs=0	# muttiplier for all forwards
+keeper=0	# keeper
+cd_norm=0	# central defender normal
+cd_off=0	# central defender offensive
+cd_tw=0		# central defender to wing
+wb_norm=0	# wingback normal
+wb_off=0	# wingback offensive
+wb_def=0	# wingback defensive
+wb_tm=0		# wingback to middle
+im_norm=0	# inner midfield norm
+im_off=0	# inner midfield offensive
+im_def=0	# inner midfield defensive
+im_tw=0		# inner midfield to wing
+wi_norm=0	# winger normal
+wi_off=0	# winger offensive
+wi_def=0	# winger defensive
+wi_tm=0		# winger to middle
+fw_norm=0	# forward normal
+fw_def=0	# forward defensive
+fw_tw=0		# forward to wing
+extra_cd=0	# extra central defender
+extra_im=0	# extra inner midfield
+extra_fw=0	# extra forward

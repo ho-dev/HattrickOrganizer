@@ -1,0 +1,17 @@
+# NOTE:
+# It's very important, that you keep the character encoding at UTF-16 LittleEndian
+# For Windows, open this file in Notepad and save with file encoding "Unicode".
+#
+# Strings need to be placed between quotes (""), a newline is written as ${NL}
+#
+# Translators: Please add your name to the TRANSLATOR string
+#
+!insertmacro LANG_STRING TRANSLATOR                "oleh_deneb"
+!insertmacro LANG_STRING CREATE_DESKTOP            "Додати значок на робочий стіл"
+!insertmacro LANG_STRING CREATE_STARTMENU          "Додати значок в головне меню"
+!insertmacro LANG_STRING DB_WILL_BE_REMOVED        "УВАГА!${NL}${NL}HO Буде видалено повністю, ВКЛЮЧАЮЧИ БАЗУ ДАНИХ ПРО ВАШУ КОМАНДУ!"
+!insertmacro LANG_STRING UNINST_CONFIRM            "Попередження:${NL}Буде видалено базу даних про вашу команду!${NL}(Вам не потрібно видаляти HO перед встановленням новішої версії!)${NL}${NL}Видалити НО?"
+!insertmacro LANG_STRING JRE                       "Java Runtime Environment"
+!insertmacro LANG_STRING INST_TYPE_FULL            "Full"
+!insertmacro LANG_STRING INST_TYPE_FULL_WITH_JRE   "Full (with Java Runtime Environment)"
+!insertmacro LANG_STRING INST_TYPE_MINIMAL         "Minimal"
