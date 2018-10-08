@@ -36,6 +36,7 @@ final class MatchDetailsTable extends AbstractTable {
 		columns[14]= new ColumnDescriptor("GastRightDef",Types.INTEGER,false);
 		columns[15]= new ColumnDescriptor("GastTacticSkill",Types.INTEGER,false);
 		columns[16]= new ColumnDescriptor("GastTacticType",Types.INTEGER,false);
+		columns[29]= new ColumnDescriptor("GastHatstats",Types.INTEGER,false);
 		columns[17]= new ColumnDescriptor("HeimName",Types.VARCHAR,false,256);
 		columns[18]= new ColumnDescriptor("HeimId",Types.INTEGER,false);
 		columns[19]= new ColumnDescriptor("HeimEinstellung",Types.INTEGER,false);
@@ -49,10 +50,11 @@ final class MatchDetailsTable extends AbstractTable {
 		columns[27]= new ColumnDescriptor("HeimRightDef",Types.INTEGER,false);
 		columns[28]= new ColumnDescriptor("HeimTacticSkill",Types.INTEGER,false);
 		columns[29]= new ColumnDescriptor("HeimTacticType",Types.INTEGER,false);
+		columns[29]= new ColumnDescriptor("HeimHatstats",Types.INTEGER,false);
 		columns[30]= new ColumnDescriptor("SpielDatum",Types.TIMESTAMP,false);
 		columns[31]= new ColumnDescriptor("WetterId",Types.INTEGER,false);
 		columns[32]= new ColumnDescriptor("Zuschauer",Types.INTEGER,false);
-		columns[33]= new ColumnDescriptor("Matchreport",Types.VARCHAR,false,8196);
+		columns[33]= new ColumnDescriptor("Matchreport",Types.VARCHAR,false,15000);
 		columns[34]= new ColumnDescriptor("RegionID",Types.INTEGER,false);
 		columns[35]= new ColumnDescriptor("soldTerraces",Types.INTEGER,false);
 		columns[36]= new ColumnDescriptor("soldBasic",Types.INTEGER,false);

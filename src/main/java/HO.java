@@ -46,39 +46,39 @@ public class HO {
 	 * version.htm in onlinefiles folder. 
 	 */
 	
-	
-	/**
-	 * HO Version
-	 */
-	public static final double VERSION = 1.435d;
-	/**
-	 * language version
-	 */
-	public static final int SPRACHVERSION = 2;
-	private static int revision = 0;
-	/**
-	 * Is this a development version? Note that a "development" version can a
-	 * release ("Beta" or "DEV" version). The DEVELOPMENT flag is used by the
-	 * ant build script. Keep around.
-	 */
-	private static final boolean DEVELOPMENT = true;
-	/**
-	 * A RELEASE is when a build artifact gets delivered to users. Note that
-	 * even a DEVELOPMENT version can be a RELEASE ("Beta"). So when a version
-	 * is build (no matter if DEVELOPMENT or not), this flag should be set to
-	 * true. The main purpose for the flag is to disable code (unfinished new
-	 * features, debug code) which should not be seen in a release.
-	 */
-	private static final boolean RELEASE = false;
-
-	public static boolean isDevelopment() {
-		return DEVELOPMENT;
-	}
-
-	public static boolean isRelease() {
-		return RELEASE;
-	}
-
+//
+//	/**
+//	 * HO Version
+//	 */
+//	public static final double VERSION = 1.435d;
+//	/**
+//	 * language version
+//	 */
+//	public static final int SPRACHVERSION = 2;
+//	private static int revision = 0;
+//	/**
+//	 * Is this a development version? Note that a "development" version can a
+//	 * release ("Beta" or "DEV" version). The DEVELOPMENT flag is used by the
+//	 * ant build script. Keep around.
+//	 */
+//	private static final boolean DEVELOPMENT = true;
+//	/**
+//	 * A RELEASE is when a build artifact gets delivered to users. Note that
+//	 * even a DEVELOPMENT version can be a RELEASE ("Beta"). So when a version
+//	 * is build (no matter if DEVELOPMENT or not), this flag should be set to
+//	 * true. The main purpose for the flag is to disable code (unfinished new
+//	 * features, debug code) which should not be seen in a release.
+//	 */
+//	private static final boolean RELEASE = false;
+//
+//	public static boolean isDevelopment() {
+//		return DEVELOPMENT;
+//	}
+//
+//	public static boolean isRelease() {
+//		return RELEASE;
+//	}
+//
 	/**
 	 * Main method to start a HOMainFrame.
 	 *
@@ -204,32 +204,32 @@ public class HO {
 		});
 	}
 
-	public static int getRevisionNumber() {
-		if (revision == 0) {
-			InputStream is = null;
-			BufferedReader br = null;
-			try {
-				is = HO.class.getResourceAsStream("/revision.num");
-				if (is != null) {
-					br = new BufferedReader(new InputStreamReader(is));
-					String line = null;
-					// expect one line only
-					if (br != null && (line = br.readLine()) != null) {
-						revision = Integer.parseInt(line.trim());
-					}
-				} else {
-					HOLogger.instance().debug(HO.class, "revision.num not found");
-				}
-			} catch (Exception e) {
-				HOLogger.instance().warning(HO.class, "getRevisionNumber failed: " + e);
-			} finally {
-				IOUtils.closeQuietly(br);
-				IOUtils.closeQuietly(is);
-			}
-		}
-		if (revision == 0) { // to avoid multiple errors
-			revision = 1;
-		}
-		return revision;
-	}
+//	public static int getRevisionNumber() {
+//		if (revision == 0) {
+//			InputStream is = null;
+//			BufferedReader br = null;
+//			try {
+//				is = HO.class.getResourceAsStream("/revision.num");
+//				if (is != null) {
+//					br = new BufferedReader(new InputStreamReader(is));
+//					String line = null;
+//					// expect one line only
+//					if (br != null && (line = br.readLine()) != null) {
+//						revision = Integer.parseInt(line.trim());
+//					}
+//				} else {
+//					HOLogger.instance().debug(HO.class, "revision.num not found");
+//				}
+//			} catch (Exception e) {
+//				HOLogger.instance().warning(HO.class, "getRevisionNumber failed: " + e);
+//			} finally {
+//				IOUtils.closeQuietly(br);
+//				IOUtils.closeQuietly(is);
+//			}
+//		}
+//		if (revision == 0) { // to avoid multiple errors
+//			revision = 1;
+//		}
+//		return revision;
+//	}
 }

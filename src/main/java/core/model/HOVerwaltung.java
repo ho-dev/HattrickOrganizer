@@ -248,10 +248,12 @@ public class HOVerwaltung {
 			// java.net.URL resource = new
 			// gui.vorlagen.ImagePanel().getClass().getClassLoader().getResource(
 			// "sprache" );
-			final java.io.File sprachverzeichnis = new java.io.File("sprache");
 
-			final java.io.File[] moeglicheSprachdateien = sprachverzeichnis
-					.listFiles(new ExampleFileFilter("properties"));
+			final java.io.File sprachverzeichnis = new java.io.File(HOVerwaltung.class.getResource("/sprache").toURI());
+			final java.io.File[] moeglicheSprachdateien = sprachverzeichnis.listFiles(new ExampleFileFilter("properties"));
+
+
+
 
 			for (int i = 0; (moeglicheSprachdateien != null) && (i < moeglicheSprachdateien.length); i++) {
 				double sprachfileversion = 0;

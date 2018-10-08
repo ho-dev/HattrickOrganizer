@@ -21,7 +21,7 @@ final class MatchHighlightsTable extends AbstractTable {
 		columns = new ColumnDescriptor[14];
 		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false);
 		columns[1] = new ColumnDescriptor("GastTore", Types.INTEGER, false);
-		columns[2] = new ColumnDescriptor("HeimTore", Types.VARCHAR, false, 256);
+		columns[2] = new ColumnDescriptor("HeimTore", Types.INTEGER, false);
 		columns[3] = new ColumnDescriptor("Typ", Types.INTEGER, false);
 		columns[4] = new ColumnDescriptor("Minute", Types.INTEGER, false);
 		columns[5] = new ColumnDescriptor("SpielerId", Types.INTEGER, false);
@@ -32,7 +32,7 @@ final class MatchHighlightsTable extends AbstractTable {
 		columns[10] = new ColumnDescriptor("GehilfeID", Types.INTEGER, false);
 		columns[11] = new ColumnDescriptor("GehilfeName", Types.VARCHAR, false, 256);
 		columns[12] = new ColumnDescriptor("GehilfeHeim", Types.BOOLEAN, false);
-		columns[13] = new ColumnDescriptor("EventText", Types.VARCHAR, false, 512);
+		columns[13] = new ColumnDescriptor("EventText", Types.VARCHAR, false, 5000);
 	}
 
 	@Override
