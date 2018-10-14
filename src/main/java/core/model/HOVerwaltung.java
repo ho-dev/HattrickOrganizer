@@ -249,7 +249,9 @@ public class HOVerwaltung {
 			// gui.vorlagen.ImagePanel().getClass().getClassLoader().getResource(
 			// "sprache" );
 
+			HOLogger.instance().log(HOVerwaltung.class,HOVerwaltung.class.getResource("/sprache").toURI());
 			final java.io.File sprachverzeichnis = new java.io.File(HOVerwaltung.class.getResource("/sprache").toURI());
+
 			final java.io.File[] moeglicheSprachdateien = sprachverzeichnis.listFiles(new ExampleFileFilter("properties"));
 
 

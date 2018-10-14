@@ -68,7 +68,7 @@ VIProductVersion "$HOVERSION"
 
 !insertmacro MUI_PAGE_WELCOME
 !define MUI_LICENSEPAGE_CHECKBOX
-!insertmacro MUI_PAGE_LICENSE "${CONFPATH}/HO_lgpl.txt"
+!insertmacro MUI_PAGE_LICENSE "${CONFPATH}\\HO_lgpl.txt"
 
 ; Show componentspage only WITHJRE
 !define MUI_COMPONENTSPAGE_NODESC

@@ -2,8 +2,5 @@
 plugins {
     
     id 'java'    // Apply the java plugin to add support for Java
-    id 'application'    // Apply the application plugin to add support for building an application
 }
 
-// Define the main class for the application
-mainClassName = 'HOUpdater'
