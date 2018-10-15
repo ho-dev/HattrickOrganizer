@@ -466,7 +466,7 @@ public class MyConnector {
 		ret.setBeta(false);
 		ret.setVersion(hoInfo.VERSION);
 		try {
-			final String s = getWebPage(MyConnector.getPluginSite() + "/version.htm", false);
+			final String s = getWebPage("https://akasolace.github.io/HO/latest.html", false);
 			try {
 				ret.setVersion(Double.parseDouble(s));
 			} catch (NumberFormatException e) {

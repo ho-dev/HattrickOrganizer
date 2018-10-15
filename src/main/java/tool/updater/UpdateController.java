@@ -159,15 +159,15 @@ public final class UpdateController {
 					HOVerwaltung.instance().getLanguageString("updateavailable") + "\n\n"
 							+ HOVerwaltung.instance().getLanguageString("ls.version") + ": "
 							+ version.getVersionString() + "\n"
-							+ HOVerwaltung.instance().getLanguageString("Source")
-							+ ": http://www.hattrickorganizer.net/\n\n"
+//							+ HOVerwaltung.instance().getLanguageString("Source")
+//							+ ": http://www.hattrickorganizer.net/\n\n"
 							+ HOVerwaltung.instance().getLanguageString("ls.button.update") + "?",
 					HOVerwaltung.instance().getLanguageString("confirmation.title"),
 					JOptionPane.YES_NO_OPTION);
 
 			if (update == JOptionPane.YES_OPTION) {
 				// updateHO(version.getVersion());
-				updateHO(MyConnector.getFinalSite() + "/" + version.getZipFileName());
+				updateHO(version.getVersion());
 			}
 		} else {
 			final int currRev = hoInfo.getRevisionNumber();
@@ -185,9 +185,8 @@ public final class UpdateController {
 	}
 
 	public static void updateHO(double version) {
-		String ver = "" + version;
-		ver = ver.replaceAll("\\.", "");
-		updateHO(MyConnector.getFinalSite() + "/HO_" + ver + ".zip");
+        String ver = Double.toString(version);
+        updateHO("https://github.com/akasolace/HO/releases/download/"+ver+"/HO_"+ver+".zip");
 	}
 
 	public static void updateHO(final String urlString) {
