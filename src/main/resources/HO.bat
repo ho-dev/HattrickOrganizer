@@ -3,7 +3,7 @@
 @rem HO startup script for Windows
 @rem Version 1.0
 @rem Created by the HO-Team
-@rem Last Change: 2018-10-13 by akasolace
+@rem Last Change: 2018-10-16 by akasolace
 @rem ##########################################################################
 
 @rem Set Debug mode [on/off]
@@ -13,7 +13,7 @@ set DEBUG=off
 set DIRNAME=%~dp0
 if "%DIRNAME%" == "" set DIRNAME=.
 set APP_BASE_NAME=%~n0
-set APP_HOME=%DIRNAME%..
+set APP_HOME=%DIRNAME%
 
 
 @rem Set JavaPath, i.e. the path that contains java.exe/javaw.exe
@@ -27,7 +27,7 @@ set JAVA_PATH=
 @rem unless you know what you are doing!
 
 @rem ===============================================================
-set CLASSPATH=%APP_HOME%;%APP_HOME%\bin;%APP_HOME%\lib\commons-codec-1.4.jar;%APP_HOME%\lib\hamcrest-core-1.3.jar;%APP_HOME%\lib\HO.jar;%APP_HOME%\lib\hsqldb-2.4.1.jar;%APP_HOME%\lib\jcalendar-1.4.jar;%APP_HOME%\lib\jgoodies-common-1.8.1.jar;%APP_HOME%\lib\jgoodies-looks-2.7.0.jar;%APP_HOME%\lib\scribe-1.3.0.jar
+set CLASSPATH=%APP_HOME%;%APP_HOME%\commons-codec-1.4.jar;%APP_HOME%\HO.jar;%APP_HOME%\hsqldb-2.4.1.jar;%APP_HOME%\jcalendar-1.4.jar;%APP_HOME%\jgoodies-common-1.8.1.jar;%APP_HOME%\jgoodies-looks-2.7.0.jar;%APP_HOME%\scribe-1.3.0.jar
 
 @rem In debug mode, we use java.exe to get System.out.println output,
 @rem else we use javaw.exe to make the script quiet

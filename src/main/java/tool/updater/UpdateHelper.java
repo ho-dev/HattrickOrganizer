@@ -52,7 +52,7 @@ public class UpdateHelper {
 		int data;
 		try {
 			FileOutputStream outStream = new FileOutputStream(targetFile);
-			InputStream in = MyConnector.instance().getFileFromWeb(urlName, true);
+			InputStream in = MyConnector.instance().getFileFromWeb(urlName, false);
 			BufferedOutputStream out = new BufferedOutputStream(outStream);
 			while (true) {
 				data = in.read();

@@ -205,7 +205,7 @@ public final class UpdateController {
 			String dir = System.getProperty("user.dir");
 			ZipHelper.extractFile(zipFile, "HO.bat", dir);
 			ZipHelper.extractFile(zipFile, "HO.sh", dir);
-			ZipHelper.extractFile(zipFile, "HOLauncher.class", dir);
+			ZipHelper.extractFile(zipFile, "HOUpdater.class", dir);
 		} catch (Exception e) {
 			HOLogger.instance().log(UpdateController.class, e);
 			return;
