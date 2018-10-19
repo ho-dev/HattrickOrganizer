@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<HoUsers>
+ <User>
+   <Name>singleUser</Name>
+   <Url>jdbc:hsqldb:file:/Users/Shared/HattrickOrganizerDB/database</Url>
+   <User>sa</User>
+   <Password></Password>
+   <Driver>org.hsqldb.jdbcDriver</Driver>
+   <BackupLevel>3</BackupLevel>
+ </User>
+</HoUsers>

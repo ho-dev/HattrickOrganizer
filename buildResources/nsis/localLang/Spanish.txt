@@ -1,0 +1,17 @@
+# NOTE:
+# It's very important, that you keep the character encoding at UTF-16 LittleEndian
+# For Windows, open this file in Notepad and save with file encoding "Unicode".
+#
+# Strings need to be placed between quotes (""), a newline is written as ${NL}
+#
+# Translators: Please add your name to the TRANSLATOR string
+#
+!insertmacro LANG_STRING TRANSLATOR                "LarsVegas"
+!insertmacro LANG_STRING CREATE_DESKTOP            "Crear icono en el escritorio"
+!insertmacro LANG_STRING CREATE_STARTMENU          "Crear icono en el menu de inicio"
+!insertmacro LANG_STRING DB_WILL_BE_REMOVED        "¡ATENCION!${NL}${NL}Con este paso, desinstalarás completamente HO, ¡INCLUYENDO TU BASE DE DATOS!"
+!insertmacro LANG_STRING UNINST_CONFIRM            "Repito:${NL}¡Con este paso también desinstalarás tu base de datos del HO!${NL}(¡NO deberías desinstalar tu versión antigua del antes de actualizar el HO!)${NL}${NL}¿Quieres desinstalarlo de todos modos?"
+!insertmacro LANG_STRING JRE                       "Java Runtime Environment"
+!insertmacro LANG_STRING INST_TYPE_FULL            "Completo"
+!insertmacro LANG_STRING INST_TYPE_FULL_WITH_JRE   "Completo (con Java Runtime Environment)"
+!insertmacro LANG_STRING INST_TYPE_MINIMAL         "Mínimo"

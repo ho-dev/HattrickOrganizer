@@ -43,10 +43,12 @@ String getParameter(String regex, String hoInfoPath) {
 
 ext {
       nsis_exe_path = "C:\\Program Files (x86)\\NSIS\\makensis.exe"
-      nsis_confPath = "${projectDir}\\src\\main\\resources\\nsis"
+      nsis_confPath = "${projectDir}\\buildResources\\nsis"
       nsis_scriptName = "${nsis_confPath}\\makeWinInstaller.nsi"
       ho_version = "XXX"
-       target_dir= "${buildDir}\\artefacts"
+      target_dir = "${buildDir}\\artefacts"
+      target_osx_app_dir = "${target_dir}\\Hattrick Organizer.app"
+      osx_app_dir_sourcedir = "${projectDir}\\buildResources\\OSXapp\\source"
 }
 
 jar {
@@ -58,7 +60,7 @@ jar {
 task makeAll(type: GradleBuild) {
     group 'ho'
     description 'Create HO.jar, HO.zip, and HO.exe">'
-    tasks = ['init', 'installDist', 'AddResourcesAndZip', 'makeWinInstaller']
+    tasks = ['init', 'installDist', 'AddResourcesAndZip', 'makeWinInstaller', 'makeOSXApp']
 }
 
 task init{
@@ -79,7 +81,8 @@ task init{
         println(": ${project.ext.ho_version}")
         //     Creating Target directory ...  ---------------------------------------------------------------------
         println("creating directory for artefacts: ${target_dir}")
-        mkdir target_dir
+        mkdir project.ext.target_dir
+        mkdir project.ext.target_osx_app_dir
     }
 }
 
@@ -92,8 +95,7 @@ distributions {
 
 task makeWinInstaller {
     group 'ho'
-    description 'Create Win32-Installer using NSIS'  //depends="copy2build"
-    dependsOn 'init'
+    description 'Create Win32-Installer using NSIS'
 
     doLast {
         println("Creating win32 installer at ${target_dir} using NSIS...")
@@ -189,8 +191,40 @@ task AddResourcesAndZip {
 
 
 
-//TODO: a prioiri le .bat in ressource folder is now working
-// Il faut maintenant 
-// 1) remplacer celui generer automaticement dans install programme par celui la 
-// 2) delete le .sh, et peut etre le JUNIT 
-// 3( tester il est peut etre possible de mettre un lib/*.jar plutot que de tous les nommer 1 a 1
+task makeOSXApp{
+       group 'ho'
+       description "Creates the OSX App Image"
+
+        doLast{
+
+                }
+}
+       // <property name="InfoSrc" value="${export.dmg.sourcedir}/Hattrick Organizer.app/Contents/Info.plist" />
+        //<property name="InfoTarget" value="${export.osxzip.dir}/Hattrick Organizer.app/Contents/Info.plist" />
+
+        copy {
+            from "${project.ext.osx_app_dir_sourcedir}"
+            into "${project.ext.target_osx_app_dir}"
+            exclude "Hattrick Organizer.app\\Contents\\MacOS\\JavaApplicationStub"
+        }
+
+
+//        <copy todir="${export.osxzip.dir}/Hattrick Organizer.app/Contents/Resources/Java" preservelastmodified="yes">
+//        <fileset dir="${build.dir}" />
+//        </copy>
+//		<copy file="${export.osxzip.dir}/Hattrick Organizer.app/Contents/Resources/Java/changelog.txt" tofile="${export.osxzip.dir}/ChangeLog.txt" preservelastmodified="true" />
+//<echo>Setting HOVERSION=${hoversion} in ${InfoTarget}</echo>
+//		<copy file="${InfoSrc}" tofile="${InfoTarget}" overwrite="true">
+//			<filterchain>
+//				<replacestring from="HOVERSION" to="${hoversion}" />
+//        </filterchain>
+//		</copy>
+//        <copy file="${export.dmg.backgrounddir}/Back${dev}.png" tofile="${export.osxzip.dir}/.Back.png" preservelastmodified="true" />
+//        <zip destfile="${export.zip.dir}/HO_${hofullversion}.OSX.zip">
+//        <fileset dir="${export.osxzip.dir}" />
+//        <tarfileset filemode="755" dir="${export.dmg.sourcedir}">
+//        <include name="Hattrick Organizer.app/Contents/MacOS/JavaApplicationStub" />
+//        </tarfileset>
+//		</zip>
+//        </target>
+//    }

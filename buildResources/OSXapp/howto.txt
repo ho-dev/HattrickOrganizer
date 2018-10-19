@@ -1,0 +1,20 @@
+In 2394 a new .dmg was committed. Then updated a few revisions later. This is how to make them.
+
+Source: http://stackoverflow.com/questions/286419/how-to-build-a-dmg-mac-os-x-file-on-a-non-mac-platform
+
+Run linux...
+
+A couple of hfs packages are needed. They are complained about if you try without.
+
+Create the image. The first creates it, and the count 15 is the number of megabytes. The second
+line formats it to mac preferences.
+
+dd if=/dev/zero of=HO.dmg bs=1M count=15
+mkfs.hfsplus -v HO HO.dmg
+
+This mounts a .dmg to an existing folder:
+
+mount -o loop -t hfsplus HO.dmg /path/to/directory/you/want
+
+There are some installer structures in the images that may be necessary (not tried without).
+To copy them across, mount the old and new to separate folders, and copy (-r) the contents across.
