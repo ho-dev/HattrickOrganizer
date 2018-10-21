@@ -9,10 +9,10 @@ import core.constants.player.PlayerHonesty;
 import core.constants.player.PlayerSpeciality;
 import core.file.xml.XMLManager;
 import core.file.xml.XMLWorldDetailsParser;
-import core.info.hoInfo;
 import core.net.MyConnector;
 import core.util.HOLogger;
 import core.util.HelperWrapper;
+import core.HO;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -120,7 +120,7 @@ class NthrfConvertXml2Hrf {
 	final void createBasics(NtTeamDetailsParser details, NtPlayersParser players) throws Exception {
 		m_sHRFBuffer.append("[basics]\n");
 		m_sHRFBuffer.append("application=HO\n");
-		m_sHRFBuffer.append("appversion=" + hoInfo.VERSION + "\n");
+		m_sHRFBuffer.append("appversion=" + HO.VERSION + "\n");
 		m_sHRFBuffer.append("date=" + details.getFetchedDate() + "\n");
 		m_sHRFBuffer.append("season=" + "38" + "\n"); 		//TODO: Season
 		m_sHRFBuffer.append("matchround=" + "7" + "\n"); 	//TODO: MatchRound

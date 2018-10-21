@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
-import core.info.hoInfo;
+import core.HO;
 
 final class DBUpdater {
 	JDBCAdapter m_clJDBCAdapter;
@@ -277,7 +277,7 @@ final class DBUpdater {
 		// should be made
 		// during first run of a non development version.
 
-		if ((version == (DBVersion - 1) && !hoInfo.isDevelopment()) || (version < (DBVersion - 1))) {
+		if ((version == (DBVersion - 1) && !HO.isDevelopment()) || (version < (DBVersion - 1))) {
 			dbZugriff.saveUserParameter("DBVersion", 12);
 		}
 	}
@@ -420,7 +420,7 @@ final class DBUpdater {
 		// version.
 		if (version < DBVersion)
 		{
-			 if(!hoInfo.isDevelopment())
+			 if(!HO.isDevelopment())
 			 {
 				 	HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
 				 	dbZugriff.saveUserParameter("DBVersion", DBVersion);
@@ -433,7 +433,7 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().info(DBUpdater.class,
 					"Update done, db version number will NOT be increased from " + version
-							+ " to " + DBVersion + " (isDevelopment=" + hoInfo.isDevelopment() + ")");
+							+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
 
@@ -447,7 +447,7 @@ final class DBUpdater {
 		// 1.433 stuff.
 		
 		if (version < DBVersion) {
-			if(!hoInfo.isDevelopment()) {
+			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
 				dbZugriff.saveUserParameter("DBVersion", DBVersion);
 			} else {
@@ -457,7 +457,7 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().info(DBUpdater.class,
 					"Update done, db version number will NOT be increased from " + version
-					+ " to " + DBVersion + " (isDevelopment=" + hoInfo.isDevelopment() + ")");
+					+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
 	
@@ -485,7 +485,7 @@ final class DBUpdater {
 		}
 		
 		if (version < DBVersion) {
-			if(!hoInfo.isDevelopment()) {
+			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
 				dbZugriff.saveUserParameter("DBVersion", DBVersion);
 			} else {
@@ -495,7 +495,7 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().info(DBUpdater.class,
 					"Update done, db version number will NOT be increased from " + version
-					+ " to " + DBVersion + " (isDevelopment=" + hoInfo.isDevelopment() + ")");
+					+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
 	
@@ -519,7 +519,7 @@ final class DBUpdater {
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ALTER COLUMN HEIMTORE INTEGER"); // fix existing bug
 		
 		if (version < DBVersion) {
-			if(!hoInfo.isDevelopment()) {
+			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
 				dbZugriff.saveUserParameter("DBVersion", DBVersion);
 			} else {
@@ -529,7 +529,7 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().info(DBUpdater.class,
 					"Update done, db version number will NOT be increased from " + version
-					+ " to " + DBVersion + " (isDevelopment=" + hoInfo.isDevelopment() + ")");
+					+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
 	
@@ -557,41 +557,41 @@ final class DBUpdater {
 		 * 
 		 * DO NOT use 'if-then-else' here, as this would ignores some updates!
 		 */
-		if (lastConfigUpdate < 1.4101 || (hoInfo.isDevelopment() && lastConfigUpdate == 1.4101)) {
+		if (lastConfigUpdate < 1.4101 || (HO.isDevelopment() && lastConfigUpdate == 1.4101)) {
 			HOLogger.instance().log(getClass(), "Updating configuration to version 1.410-1...");
-			updateConfigTo1410_1(hoInfo.isDevelopment() && lastConfigUpdate == 1.4101);
+			updateConfigTo1410_1(HO.isDevelopment() && lastConfigUpdate == 1.4101);
 		}
 
-		if (lastConfigUpdate < 1.420 || (hoInfo.isDevelopment() && lastConfigUpdate == 1.420)) {
+		if (lastConfigUpdate < 1.420 || (HO.isDevelopment() && lastConfigUpdate == 1.420)) {
 			HOLogger.instance().log(getClass(), "Updating configuration to version 1.420...");
-			updateConfigTo1420(hoInfo.isDevelopment() && lastConfigUpdate == 1.420);
+			updateConfigTo1420(HO.isDevelopment() && lastConfigUpdate == 1.420);
 		}
 
-		if (lastConfigUpdate < 1.424 || (hoInfo.isDevelopment() && lastConfigUpdate == 1.424)) {
+		if (lastConfigUpdate < 1.424 || (HO.isDevelopment() && lastConfigUpdate == 1.424)) {
 			HOLogger.instance().log(getClass(), "Updating configuration to version 1.424...");
-			updateConfigTo1424(hoInfo.isDevelopment() && lastConfigUpdate == 1.424);
+			updateConfigTo1424(HO.isDevelopment() && lastConfigUpdate == 1.424);
 		}
 
-		if (lastConfigUpdate < 1.425 || (hoInfo.isDevelopment() && lastConfigUpdate == 1.425)) {
+		if (lastConfigUpdate < 1.425 || (HO.isDevelopment() && lastConfigUpdate == 1.425)) {
 			HOLogger.instance().log(getClass(), "Updating configuration to version 1.425...");
-			updateConfigTo1425(hoInfo.isDevelopment() && lastConfigUpdate == 1.425);
+			updateConfigTo1425(HO.isDevelopment() && lastConfigUpdate == 1.425);
 		}
 
-		if (lastConfigUpdate < 1.429 || (hoInfo.isDevelopment() && lastConfigUpdate == 1.429)) {
+		if (lastConfigUpdate < 1.429 || (HO.isDevelopment() && lastConfigUpdate == 1.429)) {
 			// Lets not reset poor user's custom training setting each time they
 			// start...
 			HOLogger.instance().log(getClass(), "Updating configuration to version 1.429...");
-			updateConfigTo1429(hoInfo.isDevelopment() && lastConfigUpdate == 1.429);
+			updateConfigTo1429(HO.isDevelopment() && lastConfigUpdate == 1.429);
 		}
 
-		if (lastConfigUpdate < 1.431 || (hoInfo.isDevelopment() && lastConfigUpdate == 1.431)) {
+		if (lastConfigUpdate < 1.431 || (HO.isDevelopment() && lastConfigUpdate == 1.431)) {
 			HOLogger.instance().log(getClass(), "Updating configuration to version 1.431...");
-			updateConfigTo1431(hoInfo.isDevelopment() && lastConfigUpdate == 1.431);
+			updateConfigTo1431(HO.isDevelopment() && lastConfigUpdate == 1.431);
 		}
 		
-		if (lastConfigUpdate < 1.434 || (hoInfo.isDevelopment() && lastConfigUpdate == 1.434)) {
+		if (lastConfigUpdate < 1.434 || (HO.isDevelopment() && lastConfigUpdate == 1.434)) {
 			HOLogger.instance().log(getClass(), "Updating configuration to version 1.434...");
-			updateConfigTo1434(hoInfo.isDevelopment() && lastConfigUpdate == 1.434);
+			updateConfigTo1434(HO.isDevelopment() && lastConfigUpdate == 1.434);
 		}
 
 	}

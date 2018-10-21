@@ -1,3 +1,9 @@
+
+
+plugins {
+    id "edu.sc.seis.macAppBundle" version "2.2.3"
+}
+
 apply plugin: 'java'
 compileJava.options.encoding = 'UTF-8'
 apply plugin: 'application'
@@ -7,21 +13,32 @@ repositories {
 }
 
 dependencies {
-
-    //compile 'com.google.guava:guava:23.0'
     compile 'com.jgoodies:jgoodies-looks:2.7.0'
     compile 'com.toedter:jcalendar:1.4'
     compile 'org.scribe:scribe:1.3.0'
-    compile 'org.hsqldb:hsqldb:2.4.1' 
-    compile 'junit:junit:4.12'    //  do we really need that file outside of test ?   src/main/java/ho/tool/updater/VersionTest.java
-
-    // Use JUnit test framework
-    testCompile 'junit:junit:4.12'
-
+    compile 'org.hsqldb:hsqldb:2.4.1'
+    compile 'junit:junit:4.12'
 }
 
 
-mainClassName = 'HO'
+ext {
+    nsis_exe_path = "C:\\Program Files (x86)\\NSIS\\makensis.exe"
+    nsis_confPath = "${projectDir}\\buildResources\\Win\\nsis"
+    nsis_scriptName = "${nsis_confPath}\\makeWinInstaller.nsi"
+    ho_version = "XXX"
+    target_dir = "${buildDir}\\artefacts"
+    osx_app_dir_sourcedir = "${projectDir}\\buildResources\\OSXapp"
+}
+
+mainClassName = 'HOLauncher'
+
+macAppBundle {
+    mainClassName = "HOLauncher"
+    icon = "${project.ext.osx_app_dir_sourcedir}\\source\\Hattrick Organizer.app\\Contents\\Resources\\HO.icns"
+    bundleJRE = true
+    javaProperties.put("apple.laf.useScreenMenuBar", "true")
+    backgroundImage = "${project.ext.osx_app_dir_sourcedir}\\background\\Back_BETA.png"
+}
 
 // define custom function ---------------------
 import java.util.regex.Matcher;
@@ -41,26 +58,17 @@ String getParameter(String regex, String hoInfoPath) {
 }
 // ------------------------------------------
 
-ext {
-      nsis_exe_path = "C:\\Program Files (x86)\\NSIS\\makensis.exe"
-      nsis_confPath = "${projectDir}\\buildResources\\nsis"
-      nsis_scriptName = "${nsis_confPath}\\makeWinInstaller.nsi"
-      ho_version = "XXX"
-      target_dir = "${buildDir}\\artefacts"
-      target_osx_app_dir = "${target_dir}\\Hattrick Organizer.app"
-      osx_app_dir_sourcedir = "${projectDir}\\buildResources\\OSXapp\\source"
-}
 
 jar {
     manifest {
-        attributes 'Main-Class': 'HO'
+        attributes 'Main-Class': 'HOLauncher'
     }
 }
 
 task makeAll(type: GradleBuild) {
     group 'ho'
     description 'Create HO.jar, HO.zip, and HO.exe">'
-    tasks = ['init', 'installDist', 'AddResourcesAndZip', 'makeWinInstaller', 'makeOSXApp']
+    tasks = ['init', 'installDist', 'AddResourcesAndZip', 'makeWinInstaller', 'createApp', 'AddResourcesAndZipMacApp']
 }
 
 task init{
@@ -72,17 +80,16 @@ task init{
         project.delete(files("${buildDir}/"))
         //     Getting HO version...      ---------------------------------------------------------------------
         print("Getting HO version...")
-        def hoInfoPath = "${projectDir}\\src\\main\\java\\core\\info\\hoInfo.java"
+        def hoInfoPath = "${projectDir}\\src\\main\\java\\core\\HO.java"
         project.ext.ho_version = getParameter("\\WVERSION[\\s]*=[\\s]*([0-9.]*)", hoInfoPath)
-        def isDevlopment = getParameter("\\DEVELOPMENT[\\s]*=[\\s]*([a-zA-Z]*)", hoInfoPath)
-        if (isDevlopment) {
+        def isDevelopment = getParameter("\\DEVELOPMENT[\\s]*=[\\s]*([a-zA-Z]*)", hoInfoPath)
+        if (isDevelopment) {
             project.ext.ho_version += "_BETA"
         }
         println(": ${project.ext.ho_version}")
         //     Creating Target directory ...  ---------------------------------------------------------------------
         println("creating directory for artefacts: ${target_dir}")
         mkdir project.ext.target_dir
-        mkdir project.ext.target_osx_app_dir
     }
 }
 
@@ -94,14 +101,13 @@ distributions {
 }
 
 task makeWinInstaller {
-    group 'ho'
     description 'Create Win32-Installer using NSIS'
 
     doLast {
         println("Creating win32 installer at ${target_dir} using NSIS...")
 
         def DBUILDDIR = "${buildDir}\\install\\${project.ext.ho_version}"
-        def DOUTFILE="${project.ext.target_dir}\\${project.ext.ho_version}_Win32_Installer.exe"
+        def DOUTFILE="${project.ext.target_dir}\\HO_${project.ext.ho_version}_Win32_Installer.exe"
 
           print("-V2"+" "+"-NOCD"+" "+"-DBUILDDIR=${DBUILDDIR}"+" "+ "-DHOVERSION='${project.ext.ho_version}'"+" "+ "-DCONFPATH=${nsis_confPath}"+" "+ "-DOUTFILE='${DOUTFILE}'"+" "+ "${project.ext.nsis_scriptName}")
         exec {
@@ -116,7 +122,6 @@ task AddResourcesAndZip {
     group 'tool'
     dependsOn 'init', 'installDist'
     def distribDir = file("${buildDir}/install/XXX")
-    def HOUPdater_build_dir = project(':HOUpdater').buildDir
     doLast {
         println("adding resources folder")
         copy {
@@ -138,10 +143,6 @@ task AddResourcesAndZip {
         copy {
             from "${projectDir}\\src\\main\\resources\\prediction"
             into "${distribDir}\\prediction"
-        }
-        copy {
-            from "${HOUPdater_build_dir}\\classes\\java\\main\\HOUpdater.class"
-            into "${distribDir}"
         }
         copy {
             from "${projectDir}\\src\\main\\resources\\HO.bat"
@@ -176,55 +177,63 @@ task AddResourcesAndZip {
 
         println("zipping distribution")
         task(ZipDistribution, type: Zip) {
-            archiveName = "${project.ext.ho_version}.zip"
+            archiveName = "HO_${project.ext.ho_version}.zip"
             from "${buildDir}/install/${project.ext.ho_version}"
             destinationDir = file("${project.ext.target_dir}")
         }.execute()
 
     }
+}
 
+task AddResourcesAndZipMacApp {
+    dependsOn 'init', 'createApp'
+    def macAppDir = file("${buildDir}\\macApp\\HOtest.app\\Contents\\Java")
+    doLast {
+        println("adding resources folder")
+        copy {
+            from "${projectDir}\\src\\main\\resources\\changelog.txt"
+            into macAppDir
+        }
+        copy {
+            from "${projectDir}\\src\\main\\resources\\sprache"
+            into "${macAppDir}\\sprache"
+        }
+        copy {
+            from "${projectDir}\\src\\main\\resources\\gui"
+            into "${macAppDir}\\gui"
+        }
+        copy {
+            from "${projectDir}\\src\\main\\resources\\flags"
+            into "${macAppDir}\\flags"
+        }
+        copy {
+            from "${projectDir}\\src\\main\\resources\\prediction"
+            into "${macAppDir}\\prediction"
+        }
+        copy {
+            from "${projectDir}\\src\\main\\resources\\themes"
+            into "${macAppDir}\\themes"
+        }
+        delete "${macAppDir}\\hamcrest-core-1.3.jar"
+        delete "${macAppDir}\\junit-4.12.jar"
 
+        println("renaming MacApp distribution")
+        copy {
+            from("${buildDir}\\macApp\\HOtest.app")
+            into("${buildDir}\\macApp\\HO_${project.ext.ho_version}")
+        }
+        delete "${buildDir}\\\\macApp\\\\HOtest.app"
 
-
+        println("zipping MacApp distribution")
+        task(ZipMacAppDistribution, type: Zip) {
+            archiveName = "HO_${project.ext.ho_version}.OSX.zip"
+            from "${buildDir}\\macApp\\HO_${project.ext.ho_version}"
+            destinationDir = file("${project.ext.target_dir}")
+        }.execute()
 
     }
 
-
-
-task makeOSXApp{
-       group 'ho'
-       description "Creates the OSX App Image"
-
-        doLast{
-
-                }
 }
-       // <property name="InfoSrc" value="${export.dmg.sourcedir}/Hattrick Organizer.app/Contents/Info.plist" />
-        //<property name="InfoTarget" value="${export.osxzip.dir}/Hattrick Organizer.app/Contents/Info.plist" />
-
-        copy {
-            from "${project.ext.osx_app_dir_sourcedir}"
-            into "${project.ext.target_osx_app_dir}"
-            exclude "Hattrick Organizer.app\\Contents\\MacOS\\JavaApplicationStub"
-        }
 
 
-//        <copy todir="${export.osxzip.dir}/Hattrick Organizer.app/Contents/Resources/Java" preservelastmodified="yes">
-//        <fileset dir="${build.dir}" />
-//        </copy>
-//		<copy file="${export.osxzip.dir}/Hattrick Organizer.app/Contents/Resources/Java/changelog.txt" tofile="${export.osxzip.dir}/ChangeLog.txt" preservelastmodified="true" />
-//<echo>Setting HOVERSION=${hoversion} in ${InfoTarget}</echo>
-//		<copy file="${InfoSrc}" tofile="${InfoTarget}" overwrite="true">
-//			<filterchain>
-//				<replacestring from="HOVERSION" to="${hoversion}" />
-//        </filterchain>
-//		</copy>
-//        <copy file="${export.dmg.backgrounddir}/Back${dev}.png" tofile="${export.osxzip.dir}/.Back.png" preservelastmodified="true" />
-//        <zip destfile="${export.zip.dir}/HO_${hofullversion}.OSX.zip">
-//        <fileset dir="${export.osxzip.dir}" />
-//        <tarfileset filemode="755" dir="${export.dmg.sourcedir}">
-//        <include name="Hattrick Organizer.app/Contents/MacOS/JavaApplicationStub" />
-//        </tarfileset>
-//		</zip>
-//        </target>
-//    }
+

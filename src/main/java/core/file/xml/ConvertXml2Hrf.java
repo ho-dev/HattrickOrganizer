@@ -27,8 +27,8 @@ import core.net.MyConnector;
 import core.net.login.LoginWaitDialog;
 import core.util.HOLogger;
 import core.util.IOUtils;
-import core.info.hoInfo;
 import module.lineup.substitution.model.Substitution;
+import core.HO;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -320,7 +320,7 @@ public class ConvertXml2Hrf {
 			Map<String, String> worldDataMap, StringBuilder buffer) {
 		buffer.append("[basics]\n");
 		buffer.append("application=HO\n");
-		buffer.append("appversion=").append(hoInfo.VERSION).append('\n');
+		buffer.append("appversion=").append(HO.VERSION).append('\n');
 		buffer.append("date=").append(teamdetailsDataMap.get("FetchedDate"))
 				.append('\n');
 		buffer.append("season=").append(worldDataMap.get("Season"))

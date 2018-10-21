@@ -1,6 +1,7 @@
 // %3852537837:de.hattrickorganizer.gui%
 package core.gui;
 
+import core.HO;
 import core.db.DBManager;
 import core.file.hrf.HRFImport;
 import core.gui.comp.panel.ImagePanel;
@@ -10,7 +11,6 @@ import core.gui.theme.ThemeManager;
 import core.gui.theme.ho.HOTheme;
 import core.gui.theme.jgoodies.JGoodiesTheme;
 import core.gui.theme.nimbus.NimbusTheme;
-import core.info.hoInfo;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -259,13 +259,13 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	public static String getVersionString() {
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
 		nf.setMinimumFractionDigits(3);
-		String txt = nf.format(hoInfo.VERSION);
+		String txt = nf.format(HO.VERSION);
 
-		if (hoInfo.isDevelopment()) {
+		if (HO.isDevelopment()) {
 			txt += " DEV";
-			final int r = hoInfo.getRevisionNumber();
+			final int r = HO.getRevisionNumber();
 			if (r > 1) {
-				txt += " (r" + hoInfo.getRevisionNumber() + ")";
+				txt += " (r" + HO.getRevisionNumber() + ")";
 			}
 		}
 		return txt;
@@ -611,7 +611,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		m_jmMenuBar.add(m_jmAbout);
 
-		if (!hoInfo.isRelease()) {
+		if (!HO.isRelease()) {
 			m_jmMenuBar.add(DebugMode.getDeveloperMenu());
 		}
 

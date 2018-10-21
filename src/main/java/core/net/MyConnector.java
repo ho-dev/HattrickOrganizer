@@ -7,7 +7,6 @@ import core.file.xml.XMLNewsParser;
 import core.file.xml.XMLTeamDetailsParser;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
-import core.info.hoInfo;
 import core.model.HOVerwaltung;
 import core.model.News;
 import core.model.UserParameter;
@@ -21,6 +20,8 @@ import core.util.IOUtils;
 import core.util.StringUtils;
 import core.util.XMLUtils;
 import tool.updater.VersionInfo;
+import core.HO;
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -59,7 +60,7 @@ public class MyConnector {
 	private final static SimpleDateFormat HT_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	private static final int chppID = 3330;
 	private static final String htUrl = "http://chpp.hattrick.org/chppxml.ashx";
-	public static String m_sIDENTIFIER = "HO! Hattrick Organizer V" + hoInfo.VERSION;
+	public static String m_sIDENTIFIER = "HO! Hattrick Organizer V" + HO.VERSION;
 	private static MyConnector m_clInstance;
 	private final static String VERSION_TRAINING = "2.1";
 	private final static String VERSION_MATCHORDERS = "2.4";
@@ -464,7 +465,7 @@ public class MyConnector {
 	public VersionInfo getLatestVersion() {
 		VersionInfo ret = new VersionInfo();
 		ret.setBeta(false);
-		ret.setVersion(hoInfo.VERSION);
+		ret.setVersion(HO.VERSION);
 		try {
 			final String s = getWebPage("https://akasolace.github.io/HO/latest.html", false);
 			try {

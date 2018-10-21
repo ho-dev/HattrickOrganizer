@@ -8,7 +8,6 @@ package tool.updater;
 import core.file.ZipHelper;
 import core.file.xml.Extension;
 import core.gui.HOMainFrame;
-import core.info.hoInfo;
 import core.model.HOParameter;
 import core.model.HOVerwaltung;
 import core.model.News;
@@ -29,6 +28,7 @@ import javax.swing.JOptionPane;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import core.HO;
 
 public final class UpdateController {
 
@@ -154,7 +154,7 @@ public final class UpdateController {
 	public static void check4update() {
 		VersionInfo version = MyConnector.instance().getLatestVersion();
 		if (version != null
-				&& (version.getVersion() > hoInfo.VERSION || (version.getVersion() == hoInfo.VERSION && hoInfo.isDevelopment()))) {
+				&& (version.getVersion() > HO.VERSION || (version.getVersion() == HO.VERSION && HO.isDevelopment()))) {
 			int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
 					HOVerwaltung.instance().getLanguageString("updateavailable") + "\n\n"
 							+ HOVerwaltung.instance().getLanguageString("ls.version") + ": "
@@ -170,13 +170,13 @@ public final class UpdateController {
 				updateHO(version.getVersion());
 			}
 		} else {
-			final int currRev = hoInfo.getRevisionNumber();
+			final int currRev = HO.getRevisionNumber();
 			JOptionPane.showMessageDialog(HOMainFrame.instance(), HOVerwaltung.instance()
 					.getLanguageString("updatenotavailable")
 					+ "\n\n"
 					+ HOVerwaltung.instance().getLanguageString("ls.version")
 					+ ": "
-					+ hoInfo.VERSION
+					+ HO.VERSION
 					+ (currRev > 1 ? " (Build " + currRev + ")" : ""), HOVerwaltung.instance()
 					.getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
 					.getLanguageString("ls.menu.file.update.ho"), JOptionPane.INFORMATION_MESSAGE);
@@ -203,8 +203,8 @@ public final class UpdateController {
 		try {
 			zipFile = new ZipFile("update.zip");
 			String dir = System.getProperty("user.dir");
-			ZipHelper.extractFile(zipFile, "HO.bat", dir);
-			ZipHelper.extractFile(zipFile, "HO.sh", dir);
+			ZipHelper.extractFile(zipFile, "buildResources/Win/HO.bat", dir);
+			ZipHelper.extractFile(zipFile, "buildResources/Linux/HO.sh", dir);
 			ZipHelper.extractFile(zipFile, "HOUpdater.class", dir);
 		} catch (Exception e) {
 			HOLogger.instance().log(UpdateController.class, e);
@@ -226,10 +226,10 @@ public final class UpdateController {
 	 */
 	public static void check4latestbeta() {
 		final VersionInfo vi = MyConnector.instance().getLatestBetaVersion();
-		final int currRev = hoInfo.getRevisionNumber();
+		final int currRev = HO.getRevisionNumber();
 		if (vi != null
 				&& vi.isValid()
-				&& (vi.getVersion() > hoInfo.VERSION || (vi.getVersion() == hoInfo.VERSION && currRev > 1 && currRev < vi
+				&& (vi.getVersion() > HO.VERSION || (vi.getVersion() == HO.VERSION && currRev > 1 && currRev < vi
 						.getBuild()))) {
 			int update = JOptionPane.showConfirmDialog(
 					HOMainFrame.instance(),
@@ -253,7 +253,7 @@ public final class UpdateController {
 					+ "\n\n"
 					+ HOVerwaltung.instance().getLanguageString("ls.version")
 					+ ": "
-					+ hoInfo.VERSION
+					+ HO.VERSION
 					+ (currRev > 1 ? " (Build " + currRev + ")" : ""), HOVerwaltung.instance()
 					.getLanguageString("ls.menu.file.update") + " - " + HOVerwaltung.instance()
 					.getLanguageString("ls.menu.file.update.hobeta"), JOptionPane.INFORMATION_MESSAGE);
@@ -262,7 +262,7 @@ public final class UpdateController {
 
 	public static void check4EPVUpdate() {
 		Extension data = MyConnector.instance().getEpvVersion();
-		if (hoInfo.VERSION >= data.getMinimumHOVersion()
+		if (HO.VERSION >= data.getMinimumHOVersion()
 				&& data.getRelease() > HOParameter.instance().EpvRelease) {
 			// Info anzeigen, dass es ein Update gibt
 			// Show update info
@@ -313,10 +313,10 @@ public final class UpdateController {
 		Extension data = MyConnector.instance().getRatingsVersion();
 		HOLogger.instance().log(
 				UpdateController.class,
-				"Check: " + hoInfo.VERSION + ">=" + (data != null ? data.getMinimumHOVersion() : -1f)
+				"Check: " + HO.VERSION + ">=" + (data != null ? data.getMinimumHOVersion() : -1f)
 						+ " && " + (data != null ? data.getRelease() : -1f) + " > "
 						+ HOParameter.instance().RatingsRelease);
-		if (data != null && hoInfo.VERSION >= data.getMinimumHOVersion()
+		if (data != null && HO.VERSION >= data.getMinimumHOVersion()
 				&& data.getRelease() > HOParameter.instance().RatingsRelease) {
 			// Info anzeigen das es ein Update gibt
 			int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(), HOVerwaltung
@@ -371,11 +371,11 @@ public final class UpdateController {
 	public static void checkNews() {
 		News news = MyConnector.instance().getLatestNews();
 		if (news.getId() > HOParameter.instance().lastNews) {
-			if (hoInfo.VERSION >= news.getMinimumHOVersion()) {
+			if (HO.VERSION >= news.getMinimumHOVersion()) {
 				HOParameter.instance().lastNews = news.getId();
 				switch (news.getType()) {
 				case News.HO: {
-					if (!UserParameter.instance().updateCheck && news.getVersion() > hoInfo.VERSION) {
+					if (!UserParameter.instance().updateCheck && news.getVersion() > HO.VERSION) {
 						int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
 								HOVerwaltung.instance().getLanguageString("updateavailable"),
 								HOVerwaltung.instance().getLanguageString("confirmation.title"),

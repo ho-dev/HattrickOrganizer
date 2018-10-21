@@ -1,0 +1,4 @@
+Manifest-Version: 2.0
+Java-Version: JDK8 update181 jdk1.8.0_181
+Created-By: HO-Team
+

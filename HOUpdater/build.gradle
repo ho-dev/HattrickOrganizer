@@ -1,6 +1,0 @@
-
-plugins {
-    
-    id 'java'    // Apply the java plugin to add support for Java
-}
-

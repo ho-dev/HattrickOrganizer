@@ -1,0 +1,11 @@
+The rating prediction is based on:
+
+centraldefense	HO internal optimization
+sidedefense	HO internal optimization
+midfield	HO internal optimization
+centralattack	HO internal optimization
+sideattack	HO internal optimization
+playerstrength	Discound Fed, GM-Mjoelnir and others
+tactics		HO internal optimization
+
+We would like to thank everybody who helped!

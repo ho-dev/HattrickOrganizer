@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import core.info.hoInfo;
+import core.HO;
 
 public class Credits {
 
@@ -25,7 +25,7 @@ public class Credits {
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		creditsPanel.add(new JLabel("Hattrick Organizer " + hoInfo.VERSION), gbc);
+		creditsPanel.add(new JLabel("Hattrick Organizer " + HO.VERSION), gbc);
 		gbc.gridy = 1;
 		creditsPanel.add(new JLabel(" "), gbc);
 

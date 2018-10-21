@@ -5,12 +5,12 @@ import core.db.DBManager;
 import core.file.ExampleFileFilter;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
-import core.info.hoInfo;
 import core.net.login.LoginWaitDialog;
 import core.training.TrainingManager;
 import core.util.HOLogger;
 import core.util.UTF8Control;
 import module.lineup.Lineup;
+import core.HO;
 
 import java.sql.Timestamp;
 import java.text.MessageFormat;
@@ -272,7 +272,7 @@ public class HOVerwaltung {
 							"- " + moeglicheSprachdateien[i].getName());
 				}
 
-				if (sprachfileversion >= hoInfo.SPRACHVERSION) {
+				if (sprachfileversion >= HO.SPRACHVERSION) {
 					final String name = moeglicheSprachdateien[i].getName().substring(0,
 							moeglicheSprachdateien[i].getName().indexOf('.'));
 					sprachdateien.add(name);
@@ -318,7 +318,7 @@ public class HOVerwaltung {
 					HOLogger.instance().log(HOMainFrame.class, "not use " + sprachdatei.getName());
 				}
 
-				if (sprachfileversion >= hoInfo.SPRACHVERSION) {
+				if (sprachfileversion >= HO.SPRACHVERSION) {
 					HOLogger.instance().log(HOMainFrame.class, "use " + sprachdatei.getName());
 
 					// ok!!
