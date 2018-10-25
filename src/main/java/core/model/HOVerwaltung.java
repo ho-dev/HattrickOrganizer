@@ -249,49 +249,64 @@ public class HOVerwaltung {
 			// gui.vorlagen.ImagePanel().getClass().getClassLoader().getResource(
 			// "sprache" );
 
-			HOLogger.instance().log(HOVerwaltung.class,HOVerwaltung.class.getResource("/sprache").toURI());
-			final java.io.File sprachverzeichnis = new java.io.File(HOVerwaltung.class.getResource("/sprache").toURI());
+//            java.net.URL url = HOVerwaltung.class.getClassLoader().getResource("sprache");
+//            java.net.JarURLConnection connection = (java.net.JarURLConnection) url.openConnection();
+//            String filepath = (String)connection.getJarFileURL().toURI();
 
-			final java.io.File[] moeglicheSprachdateien = sprachverzeichnis.listFiles(new ExampleFileFilter("properties"));
+            java.io.InputStream is = HOVerwaltung.class.getClassLoader().getResourceAsStream("sprache/ListLanguages.txt");
+            java.util.Scanner s = new java.util.Scanner(is);
+            java.util.ArrayList<String> llist = new java.util.ArrayList<String>();
+            while (s.hasNext()){
+                llist.add(s.next());
+            }
+            s.close();
 
+            files = llist.toArray(new String[llist.size()]);
 
-
-
-			for (int i = 0; (moeglicheSprachdateien != null) && (i < moeglicheSprachdateien.length); i++) {
-				double sprachfileversion = 0;
-				
-				String tmpName = moeglicheSprachdateien[i].getName();
-				// Need to remove ".properties and add "sprache."
-				final ResourceBundle temp = ResourceBundle.getBundle(
-						"sprache." + tmpName.substring(0, tmpName.indexOf(".")), new UTF8Control());
-
-				try {
-					sprachfileversion = Double.parseDouble(temp.getString("Version"));
-				} catch (Exception e) {
-					HOLogger.instance().log(HOVerwaltung.class,
-							"- " + moeglicheSprachdateien[i].getName());
-				}
-
-				if (sprachfileversion >= HO.SPRACHVERSION) {
-					final String name = moeglicheSprachdateien[i].getName().substring(0,
-							moeglicheSprachdateien[i].getName().indexOf('.'));
-					sprachdateien.add(name);
-					HOLogger.instance().log(HOVerwaltung.class,
-							"+ " + moeglicheSprachdateien[i].getName());
-				}
-				// Nicht passende Version
-				else {
-					HOLogger.instance().log(HOVerwaltung.class,
-							"- " + moeglicheSprachdateien[i].getName());
-				}
-			}
-
-			// Umkopieren
-			files = new String[sprachdateien.size()];
-
-			for (int i = 0; i < sprachdateien.size(); i++) {
-				files[i] = sprachdateien.get(i);
-			}
+//			HOLogger.instance().log(HOVerwaltung.class, connection.getJarFileURL().toURI());
+//
+//			final java.io.File sprachverzeichnis = new java.io.File(connection.getJarFileURL().toURI());
+//
+//			final java.io.File[] moeglicheSprachdateien = sprachverzeichnis.listFiles(new ExampleFileFilter("properties"));
+//
+//
+//
+//
+//			for (int i = 0; (moeglicheSprachdateien != null) && (i < moeglicheSprachdateien.length); i++) {
+//				double sprachfileversion = 0;
+//
+//				String tmpName = moeglicheSprachdateien[i].getName();
+//				// Need to remove ".properties and add "sprache."
+//				final ResourceBundle temp = ResourceBundle.getBundle(
+//						"sprache." + tmpName.substring(0, tmpName.indexOf(".")), new UTF8Control());
+//
+//				try {
+//					sprachfileversion = Double.parseDouble(temp.getString("Version"));
+//				} catch (Exception e) {
+//					HOLogger.instance().log(HOVerwaltung.class,
+//							"- " + moeglicheSprachdateien[i].getName());
+//				}
+//
+//				if (sprachfileversion >= HO.SPRACHVERSION) {
+//					final String name = moeglicheSprachdateien[i].getName().substring(0,
+//							moeglicheSprachdateien[i].getName().indexOf('.'));
+//					sprachdateien.add(name);
+//					HOLogger.instance().log(HOVerwaltung.class,
+//							"+ " + moeglicheSprachdateien[i].getName());
+//				}
+//				// Nicht passende Version
+//				else {
+//					HOLogger.instance().log(HOVerwaltung.class,
+//							"- " + moeglicheSprachdateien[i].getName());
+//				}
+//			}
+//
+//			// Umkopieren
+//			files = new String[sprachdateien.size()];
+//
+//			for (int i = 0; i < sprachdateien.size(); i++) {
+//				files[i] = sprachdateien.get(i);
+//			}
 		} catch (Exception e) {
 			HOLogger.instance().log(HOVerwaltung.class, e);
 		}
