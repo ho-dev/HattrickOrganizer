@@ -37,6 +37,7 @@ macAppBundle {
     icon = "${project.ext.osx_app_dir_sourcedir}\\source\\Hattrick Organizer.app\\Contents\\Resources\\HO.icns"
     bundleJRE = true
     javaProperties.put("apple.laf.useScreenMenuBar", "true")
+    javaProperties.put("apple.awt.showGrowBox", "true")
     backgroundImage = "${project.ext.osx_app_dir_sourcedir}\\background\\Back_BETA.png"
 }
 
@@ -81,7 +82,7 @@ task init{
         //     Getting HO version...      ---------------------------------------------------------------------
         print("Getting HO version...")
         def hoInfoPath = "${projectDir}\\src\\main\\java\\core\\HO.java"
-        project.ext.ho_version = getParameter("\\WVERSION[\\s]*=[\\s]*([0-9.]*)", hoInfoPath)
+        project.ext.ho_version = getParameter("\\WVERSION[\\s]*=[\\s]*([0-9.]*)", hoInfoPath).replaceAll('\\.','_')
         def isDevelopment = getParameter("\\DEVELOPMENT[\\s]*=[\\s]*([a-zA-Z]*)", hoInfoPath)
         if (isDevelopment) {
             project.ext.ho_version += "_BETA"
@@ -145,13 +146,13 @@ task AddResourcesAndZip {
             into "${distribDir}\\prediction"
         }
         copy {
-            from "${projectDir}\\src\\main\\resources\\HO.bat"
+            from "${projectDir}\\buildResources\\Win\\HO.bat"
             into "${distribDir}"
         }
-        copy {
-            from "${projectDir}\\src\\main\\resources\\HO.sh"
-            into "${distribDir}"
-        }
+//        copy {
+//            from "${projectDir}\\src\\main\\resources\\HO.sh"
+//            into "${distribDir}"
+//        }
         copy {
             from "${distribDir}/lib"
             include "**/*.jar"
@@ -187,48 +188,51 @@ task AddResourcesAndZip {
 
 task AddResourcesAndZipMacApp {
     dependsOn 'init', 'createApp'
-    def macAppDir = file("${buildDir}\\macApp\\HOtest.app\\Contents\\Java")
+    def macAppDir = "${buildDir}\\macApp\\HO.app\\Contents\\Java"
     doLast {
         println("adding resources folder")
         copy {
             from "${projectDir}\\src\\main\\resources\\changelog.txt"
-            into macAppDir
+            into "${buildDir}\\macApp"
         }
-        copy {
-            from "${projectDir}\\src\\main\\resources\\sprache"
-            into "${macAppDir}\\sprache"
-        }
-        copy {
-            from "${projectDir}\\src\\main\\resources\\gui"
-            into "${macAppDir}\\gui"
-        }
-        copy {
-            from "${projectDir}\\src\\main\\resources\\flags"
-            into "${macAppDir}\\flags"
-        }
-        copy {
-            from "${projectDir}\\src\\main\\resources\\prediction"
-            into "${macAppDir}\\prediction"
-        }
-        copy {
-            from "${projectDir}\\src\\main\\resources\\themes"
-            into "${macAppDir}\\themes"
-        }
+//        copy {
+//            from "${projectDir}\\src\\main\\resources\\sprache"
+//            into "${macAppDir}\\sprache"
+//        }
+//        copy {
+//            from "${projectDir}\\src\\main\\resources\\gui"
+//            into "${macAppDir}\\gui"
+//        }
+//        copy {
+//            from "${projectDir}\\src\\main\\resources\\flags"
+//            into "${macAppDir}\\flags"
+//        }
+//        copy {
+//            from "${projectDir}\\src\\main\\resources\\prediction"
+//            into "${macAppDir}\\prediction"
+//        }
+//        copy {
+//            from "${projectDir}\\src\\main\\resources\\themes"
+//            into "${macAppDir}\\themes"
+//        }
         delete "${macAppDir}\\hamcrest-core-1.3.jar"
         delete "${macAppDir}\\junit-4.12.jar"
 
-        println("renaming MacApp distribution")
-        copy {
-            from("${buildDir}\\macApp\\HOtest.app")
-            into("${buildDir}\\macApp\\HO_${project.ext.ho_version}")
-        }
-        delete "${buildDir}\\\\macApp\\\\HOtest.app"
+//        println("renaming MacApp distribution")
+//        copy {
+//            from("${buildDir}\\macApp\\HO.app")
+//            into("${buildDir}\\macApp\\HO_${project.ext.ho_version}.app")
+//        }
+//        delete "${buildDir}\\macApp\\HO.app"
 
         println("zipping MacApp distribution")
-        task(ZipMacAppDistribution, type: Zip) {
-            archiveName = "HO_${project.ext.ho_version}.OSX.zip"
-            from "${buildDir}\\macApp\\HO_${project.ext.ho_version}"
+        task(ZipMacAppDistribution, type: Tar) {
+            archiveName = "HO_${project.ext.ho_version}_OSX.zip"
             destinationDir = file("${project.ext.target_dir}")
+            from ("${buildDir}\\macApp") {exclude("**\\JavaAppLauncher")}
+            from ("${buildDir}\\macApp") {
+                include("**\\JavaAppLauncher")
+                fileMode=0755}
         }.execute()
 
     }
@@ -237,3 +241,22 @@ task AddResourcesAndZipMacApp {
 
 
 
+task createLanguageFileList()  {
+    group 'tool'
+
+    def lTranslationFiles = []
+    fileTree(dir: "${projectDir}\\src\\main\\resources\\sprache", include: '**/*.properties').visit {
+        FileVisitDetails details -> lTranslationFiles << details.file.name
+    }
+
+    doLast {
+            lTranslationFiles = lTranslationFiles.collect { it.take(it.lastIndexOf('.'))}
+            println lTranslationFiles
+            File lstFile = new File("${projectDir}\\src\\main\\resources\\sprache\\ListLanguages.txt")
+            lstFile.withWriter{ out -> lTranslationFiles.each {out.println it}
+           }
+    }
+
+
+
+}
