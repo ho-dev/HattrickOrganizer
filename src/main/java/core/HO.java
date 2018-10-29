@@ -148,7 +148,7 @@ public class HO {
 		// Init!
 		interuptionsWindow.setInfoText(3, "Initialize Data-Administration");
 
-		// Beim ersten Start Sprache erfragen
+		// Ask for language at first start
 		if (DBManager.instance().isFirstStart()) {
 			interuptionsWindow.setVisible(false);
 			new core.option.InitOptionsDialog();
