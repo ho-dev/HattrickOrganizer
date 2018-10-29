@@ -79,6 +79,12 @@ task init{
         //     Deleting build project     ---------------------------------------------------------------------
         println("Deleting build project ....")
         project.delete(files("${buildDir}/"))
+        println("Deleting ho build folder ....")
+        project.delete(files("${projectDir}\\db"))
+        project.delete(files("${projectDir}\\logs"))
+        project.delete(files("${projectDir}\\themes"))
+        project.delete(files("${projectDir}\\user.xml"))
+
         //     Getting HO version...      ---------------------------------------------------------------------
         print("Getting HO version...")
         def hoInfoPath = "${projectDir}\\src\\main\\java\\core\\HO.java"
@@ -149,10 +155,7 @@ task AddResourcesAndZip {
             from "${projectDir}\\buildResources\\Win\\HO.bat"
             into "${distribDir}"
         }
-//        copy {
-//            from "${projectDir}\\src\\main\\resources\\HO.sh"
-//            into "${distribDir}"
-//        }
+
         copy {
             from "${distribDir}/lib"
             include "**/*.jar"
@@ -195,35 +198,9 @@ task AddResourcesAndZipMacApp {
             from "${projectDir}\\src\\main\\resources\\changelog.txt"
             into "${buildDir}\\macApp"
         }
-//        copy {
-//            from "${projectDir}\\src\\main\\resources\\sprache"
-//            into "${macAppDir}\\sprache"
-//        }
-//        copy {
-//            from "${projectDir}\\src\\main\\resources\\gui"
-//            into "${macAppDir}\\gui"
-//        }
-//        copy {
-//            from "${projectDir}\\src\\main\\resources\\flags"
-//            into "${macAppDir}\\flags"
-//        }
-//        copy {
-//            from "${projectDir}\\src\\main\\resources\\prediction"
-//            into "${macAppDir}\\prediction"
-//        }
-//        copy {
-//            from "${projectDir}\\src\\main\\resources\\themes"
-//            into "${macAppDir}\\themes"
-//        }
+
         delete "${macAppDir}\\hamcrest-core-1.3.jar"
         delete "${macAppDir}\\junit-4.12.jar"
-
-//        println("renaming MacApp distribution")
-//        copy {
-//            from("${buildDir}\\macApp\\HO.app")
-//            into("${buildDir}\\macApp\\HO_${project.ext.ho_version}.app")
-//        }
-//        delete "${buildDir}\\macApp\\HO.app"
 
         println("zipping MacApp distribution")
         task(ZipMacAppDistribution, type: Tar) {
