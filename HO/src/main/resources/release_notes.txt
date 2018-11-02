@@ -1,6 +1,0 @@
-Changelist HO! 1.435
-====================
-- Improved the statistics tab to display crowd numbers in each stadium section, including percentages. 
-- Added a debug tool to allow translators to edit language files. (Edited properties files must be passed to a developer to commit.) 
-- Added HatStats statistics in Matches module
-- Support Support Player
