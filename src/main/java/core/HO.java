@@ -12,14 +12,16 @@ import core.model.UserParameter;
 import core.training.TrainingManager;
 import core.util.ExceptionHandler;
 import core.util.HOLogger;
-import core.util.IOUtils;
-import java.io.BufferedReader;
+//import core.util.IOUtils;
+//import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+//import java.io.InputStream;
+//import java.io.InputStreamReader;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Main HO starter class.
@@ -31,39 +33,18 @@ import javax.swing.SwingUtilities;
 
 public class HO {
 
-	/**
-	 * Release Notes: ============== The first SVN commit AFTER a release should
-	 * include an increased VERSION number with DEVELOPMENT set to true an
-	 * updated VERSION number in conf/addToZip/version.txt new headers in
-	 * conf/addToZip/release_notes.txt and conf/addToZip/changelog.txt The last
-	 * SVN commit BEFORE a release should set DEVELOPMENT to false.
-	 */
 
-	/**
-	 * Preparing updates from inside HO:
-	 * 
-	 * Beta versions: Upload to development and update betaversion.htm in same folder
-	 * 
-	 * Full release: Upload a zip with no revision info to the final folder. Update
-	 * version.htm in onlinefiles folder. 
-	 */
-	
+    public static double VERSION;  // Version is set in build.gradle and exposed to HO via the manifest
+    //public static final int SPRACHVERSION = 2;
+    private static boolean DEVELOPMENT = false; // Version type is set in build.gradle and exposed to HO via the manifest
 
-	/**
-	 * HO Version
-	 */
-	public static final double VERSION = 1.435d;
-	/**
-	 * language version
-	 */
-	public static final int SPRACHVERSION = 2;
-	private static int revision = 0;
+
 	/**
 	 * Is this a development version? Note that a "development" version can a
 	 * release ("Beta" or "DEV" version). The DEVELOPMENT flag is used by the
 	 * ant build script. Keep around.
 	 */
-	private static final boolean DEVELOPMENT = true;
+
 	/**
 	 * A RELEASE is when a build artifact gets delivered to users. Note that
 	 * even a DEVELOPMENT version can be a RELEASE ("Beta"). So when a version
@@ -106,6 +87,27 @@ public class HO {
 				HOLogger.instance().setLogLevel(HOLogger.ERROR);
 			}
 		}
+
+		// Get HO version rom manifest
+        String sVERSION = HO.class.getPackage().getImplementationVersion();
+        if (sVERSION != null) {
+            Pattern p = Pattern.compile("(^\\d+[.\\d+]*)");
+            Matcher m = p.matcher(sVERSION);
+
+            if (m.find()) {
+                VERSION = Double.parseDouble(m.group(1));
+                // now we check i it is a release or a development version
+                p = Pattern.compile("^\\d.*([a-zA-Z])$");
+                m = p.matcher(sVERSION);
+                if (m.find()) {
+                    DEVELOPMENT = true;
+                }
+            } else {
+                HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
+                VERSION = 0d;
+                DEVELOPMENT = true;
+            }
+        }
 
 		// Usermanagement Login-Dialog
 		try {

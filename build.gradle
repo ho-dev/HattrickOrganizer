@@ -1,17 +1,22 @@
-
-
+//============ plugins and external jar dependencies ===================================================================
 plugins {
     id "edu.sc.seis.macAppBundle" version "2.2.3"
+    id "nebula.ospackage" version "5.0.4"
 }
 
+// java plugin configuration ========================
 apply plugin: 'java'
 compileJava.options.encoding = 'UTF-8'
+
+// application plugin configuration ================
 apply plugin: 'application'
+mainClassName = 'HOLauncher'
 
 repositories {
     jcenter()
 }
 
+//============  external jar dependencies ==========
 dependencies {
     compile 'com.jgoodies:jgoodies-looks:2.7.0'
     compile 'com.toedter:jcalendar:1.4'
@@ -21,17 +26,39 @@ dependencies {
 }
 
 
+//============  variables ==============================================================================================
+version = '1.435-SNAPSHOT'   // HO version
+
+
 ext {
     nsis_exe_path = "C:\\Program Files (x86)\\NSIS\\makensis.exe"
     nsis_confPath = "${projectDir}\\buildResources\\Win\\nsis"
     nsis_scriptName = "${nsis_confPath}\\makeWinInstaller.nsi"
-    ho_version = "XXX"
     target_dir = "${buildDir}\\artefacts"
     osx_app_dir_sourcedir = "${projectDir}\\buildResources\\OSXapp"
 }
 
-mainClassName = 'HOLauncher'
+//======================================================================================================================
 
+// Configure tasks =====================================================================================================
+// Configure jar task ================================
+jar {
+    archiveName = "HO.jar"
+    manifest {
+        attributes 'Manifest-Version': 1.0, 'Implementation-Title': 'HO', 'Implementation-Version': version,
+                   'Main-Class': 'HOLauncher',
+                    "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+    }
+}
+
+// Configure distribution task =======================
+distributions {
+    main {
+        baseName = 'XXX'
+    }
+}
+
+// Configure macAppBundle task =======================
 macAppBundle {
     mainClassName = "HOLauncher"
     icon = "${project.ext.osx_app_dir_sourcedir}\\source\\Hattrick Organizer.app\\Contents\\Resources\\HO.icns"
@@ -41,35 +68,80 @@ macAppBundle {
     backgroundImage = "${project.ext.osx_app_dir_sourcedir}\\background\\Back_BETA.png"
 }
 
-// define custom function ---------------------
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-String getParameter(String regex, String hoInfoPath) {
+// Configure ospackage and buildDeb tasks ============
+ospackage {
+        packageName = 'ho'
+        os = LINUX // only applied to RPM
+        packager 'aksolace'
+        summary ' HattrickOrganizer! \n Manager tool for http://www.hattrick.org'
+        license = 'LGPL'
 
-    Pattern pattern = Pattern.compile(regex);
+        requires("openjdk-8-jre | openjdk-9-jre | openjdk-10-jre | openjdk-11-jre")
 
-    try {BufferedReader br = new BufferedReader(new FileReader(hoInfoPath))
-        String line;
-        while ((line = br.readLine()) != null) {
-               Matcher matcher = pattern.matcher(line)
-                if (matcher.find()){return (matcher.group(1))}
-              }
+        into '/usr'
+
+        from(jar.outputs.files) {
+            into 'lib\\ho'
         }
-    catch (e) {print("Error", e)}
-}
-// ------------------------------------------
+        from("${projectDir}\\src\\main\\resources\\sprache") {
+            into 'lib\\ho\\sprache'
+        }
+        from("${projectDir}\\src\\main\\resources\\flags") {
+            into 'lib\\ho\\flags'
+        }
+        from("${projectDir}\\src\\main\\resources\\prediction") {
+            into 'lib\\ho\\prediction'
+        }
+        from("${projectDir}\\src\\main\\resources\\themes") {
+            into 'lib\\ho\\themes'
+        }
 
+        from("${projectDir}\\src\\main\\resources") {
+            include "**/*.jar"
+            into "lib\\ho"
+        }
 
-jar {
-    manifest {
-        attributes 'Main-Class': 'HOLauncher'
+        from("${projectDir}\\src\\main\\resources") {
+            include "ho_logo.png"
+            into "lib\\ho"
+        }
+
+        from("${projectDir}\\buildResources\\Linux\\ho.sh") {
+            into 'bin'
+            fileMode = 0755
+        }
+
+        from("${projectDir}\\buildResources\\Linux\\ho.desktop") {
+            into 'share\\applications'
+            fileMode = 0644
+        }
     }
+
+buildDeb {
+        link('/usr/bin/ho', '/usr/bin/ho.sh')
+        postInstall "mkdir -p -m 0777 ~/.ho"
 }
+
+buildRpm {
+    link('/usr/bin/ho', '/usr/bin/ho.sh')
+    postInstall "mkdir -p -m 0777 ~/.ho"
+}
+
+//======================================================================================================================
+
+// ==========  my tasks ================================================================================================
 
 task makeAll(type: GradleBuild) {
     group 'ho'
-    description 'Create HO.jar, HO.zip, and HO.exe">'
-    tasks = ['init', 'installDist', 'AddResourcesAndZip', 'makeWinInstaller', 'createApp', 'AddResourcesAndZipMacApp']
+    description 'Create ZipDistribution, Windows, MacOS and Linux binaries'
+    tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'createApp',
+             'AddResourcesAndZipMacApp', 'buildDeb', 'finishDeb', 'buildDeb']
+}
+
+task makeWindowsBinarary(type: GradleBuild) {
+    group 'ho'
+    description 'Create ZipDistribution and Windows binary'
+    tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution']
 }
 
 task init{
@@ -85,47 +157,22 @@ task init{
         project.delete(files("${projectDir}\\themes"))
         project.delete(files("${projectDir}\\user.xml"))
 
-        //     Getting HO version...      ---------------------------------------------------------------------
-        print("Getting HO version...")
-        def hoInfoPath = "${projectDir}\\src\\main\\java\\core\\HO.java"
-        project.ext.ho_version = getParameter("\\WVERSION[\\s]*=[\\s]*([0-9.]*)", hoInfoPath).replaceAll('\\.','_')
-        def isDevelopment = getParameter("\\DEVELOPMENT[\\s]*=[\\s]*([a-zA-Z]*)", hoInfoPath)
-        if (isDevelopment) {
-            project.ext.ho_version += "_BETA"
-        }
-        println(": ${project.ext.ho_version}")
+//        //     Getting HO version...      ---------------------------------------------------------------------
+//        print("Getting HO version...")
+//        def hoInfoPath = "${projectDir}\\src\\main\\java\\core\\HO.java"
+//        project.ext.ho_version = getParameter("\\WVERSION[\\s]*=[\\s]*([0-9.]*)", hoInfoPath).replaceAll('\\.','_')
+//        def isDevelopment = getParameter("\\DEVELOPMENT[\\s]*=[\\s]*([a-zA-Z]*)", hoInfoPath)
+//        if (isDevelopment) {
+//            project.ext.ho_version += "_BETA"
+//        }
+//        println(": ${project.ext.ho_version}")
         //     Creating Target directory ...  ---------------------------------------------------------------------
         println("creating directory for artefacts: ${target_dir}")
         mkdir project.ext.target_dir
     }
 }
 
-distributions {
-    main {
-        baseName = 'XXX'
-        }
-
-}
-
-task makeWinInstaller {
-    description 'Create Win32-Installer using NSIS'
-
-    doLast {
-        println("Creating win32 installer at ${target_dir} using NSIS...")
-
-        def DBUILDDIR = "${buildDir}\\install\\${project.ext.ho_version}"
-        def DOUTFILE="${project.ext.target_dir}\\HO_${project.ext.ho_version}_Win32_Installer.exe"
-
-          print("-V2"+" "+"-NOCD"+" "+"-DBUILDDIR=${DBUILDDIR}"+" "+ "-DHOVERSION='${project.ext.ho_version}'"+" "+ "-DCONFPATH=${nsis_confPath}"+" "+ "-DOUTFILE='${DOUTFILE}'"+" "+ "${project.ext.nsis_scriptName}")
-        exec {
-            executable nsis_exe_path
-            args "-V2", "-NOCD", "-DBUILDDIR=${DBUILDDIR}", "-DHOVERSION='${project.ext.ho_version}'", "-DCONFPATH=${nsis_confPath}", "-DOUTFILE='${DOUTFILE}'", "${project.ext.nsis_scriptName}"
-        }
-
-    }
-}
-
-task AddResourcesAndZip {
+task AddResourcesInDistrib {
     group 'tool'
     dependsOn 'init', 'installDist'
     def distribDir = file("${buildDir}/install/XXX")
@@ -175,18 +222,49 @@ task AddResourcesAndZip {
         println("renaming distribution")
         copy {
             from("${distribDir}")
-            into("${buildDir}/install/${project.ext.ho_version}")
+            into("${buildDir}/install/${project.version}")
         }
         delete "${distribDir}"
 
-        println("zipping distribution")
-        task(ZipDistribution, type: Zip) {
-            archiveName = "HO_${project.ext.ho_version}.zip"
-            from "${buildDir}/install/${project.ext.ho_version}"
-            destinationDir = file("${project.ext.target_dir}")
-        }.execute()
+    }
+}
+
+task makeWinInstaller {
+    description 'Create Win32-Installer using NSIS'
+
+    doLast {
+        println("Creating win32 installer at ${target_dir} using NSIS...")
+
+        def DBUILDDIR = "${buildDir}\\install\\${project.version}"
+        def DOUTFILE="${project.ext.target_dir}\\HO_${project.version}_Win32_Installer.exe"
+
+//          print("-V2"+" "+"-NOCD"+" "+"-DBUILDDIR=${DBUILDDIR}"+" "+ "-DHOVERSION='${project.version}'"+" "+ "-DCONFPATH=${nsis_confPath}"+" "+ "-DOUTFILE='${DOUTFILE}'"+" "+ "${project.ext.nsis_scriptName}")
+        exec {
+            executable nsis_exe_path
+            args "-V2", "-NOCD", "-DBUILDDIR=${DBUILDDIR}", "-DHOVERSION='${project.version}'", "-DCONFPATH=${nsis_confPath}", "-DOUTFILE='${DOUTFILE}'", "${project.ext.nsis_scriptName}"
+        }
 
     }
+}
+
+task finishDeb{
+    group 'tool'
+    doLast {
+        println("copy and rename deb package to artefacts folder")
+        copy {
+            from("${buildDir}/distributions")
+            include("*.deb")
+            into("${buildDir}/artefacts")
+        }
+    }
+}
+
+
+task ZipDistribution(type: Zip) {
+    println("zipping distribution")
+    archiveName = "HO_${project.version}.zip"
+    from "${buildDir}/install/${project.version}"
+    destinationDir = file("${project.ext.target_dir}")
 }
 
 task AddResourcesAndZipMacApp {
@@ -204,7 +282,7 @@ task AddResourcesAndZipMacApp {
 
         println("zipping MacApp distribution")
         task(ZipMacAppDistribution, type: Tar) {
-            archiveName = "HO_${project.ext.ho_version}_OSX.zip"
+            archiveName = "HO_${project.version}_OSX.zip"
             destinationDir = file("${project.ext.target_dir}")
             from ("${buildDir}\\macApp") {exclude("**\\JavaAppLauncher")}
             from ("${buildDir}\\macApp") {
@@ -215,8 +293,6 @@ task AddResourcesAndZipMacApp {
     }
 
 }
-
-
 
 task createLanguageFileList()  {
     group 'tool'
@@ -233,7 +309,5 @@ task createLanguageFileList()  {
             lstFile.withWriter{ out -> lTranslationFiles.each {out.println it}
            }
     }
-
-
 
 }

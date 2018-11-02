@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=HattrickOrganizer
+Keywords=ho;hattrick;
+Comment=Manager tool for http://www.hattrick.org
+Icon=/usr/lib/ho/ho_logo.png
+Categories=Game
+Encoding=UTF-8
+Exec=/usr/bin/ho
+Terminal=false
