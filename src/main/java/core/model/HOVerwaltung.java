@@ -288,14 +288,18 @@ public class HOVerwaltung {
 					HOLogger.instance().log(HOMainFrame.class, "not use " + dateiname);
 				}
 
-				if (sprachfileversion >= HO.SPRACHVERSION) {
-					HOLogger.instance().log(HOMainFrame.class, "use " + dateiname);
+//				if (sprachfileversion >= HO.SPRACHVERSION) {
+//					HOLogger.instance().log(HOMainFrame.class, "use " + dateiname);
+//
+//					// ok!!
+//					return;
+//				}
 
-					// ok!!
-					return;
-				}
+				HOLogger.instance().log(HOMainFrame.class, "use " + dateiname);
+				// ok!!
+				return;
 
-				HOLogger.instance().log(HOMainFrame.class, "not use " + dateiname);
+				//HOLogger.instance().log(HOMainFrame.class, "not use " + dateiname);
 
 			}
 		} catch (Exception e) {
