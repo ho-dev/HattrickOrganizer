@@ -97,7 +97,7 @@ public class HO {
             if (m.find()) {
                 VERSION = Double.parseDouble(m.group(1));
                 // now we check i it is a release or a development version
-                p = Pattern.compile("^\\d.*([a-zA-Z])$");
+                p = Pattern.compile("([a-zA-Z])");
                 m = p.matcher(sVERSION);
                 if (m.find()) {
                     DEVELOPMENT = true;

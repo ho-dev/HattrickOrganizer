@@ -27,7 +27,7 @@ dependencies {
 
 
 //============  variables ==============================================================================================
-version = '1.435-SNAPSHOT'   // HO version
+version = '1.435-SNAPSHOT-2018110523431211'   // HO version
 
 
 ext {
@@ -76,8 +76,6 @@ ospackage {
         summary ' HattrickOrganizer! \n Manager tool for http://www.hattrick.org'
         license = 'LGPL'
 
-        requires("openjdk-8-jre | openjdk-9-jre | openjdk-10-jre | openjdk-11-jre")
-
         into '/usr'
 
         from(jar.outputs.files) {
@@ -115,16 +113,19 @@ ospackage {
             into 'share\\applications'
             fileMode = 0644
         }
+
+        postInstall("chmod 777 /usr/lib/ho")
+
     }
 
 buildDeb {
+        requires("openjdk-8-jre | openjdk-9-jre | openjdk-10-jre | openjdk-11-jre")
         link('/usr/bin/ho', '/usr/bin/ho.sh')
-        postInstall "mkdir -p -m 0777 ~/.ho"
 }
 
 buildRpm {
+    requires("jre-1.8.0-openjdk")
     link('/usr/bin/ho', '/usr/bin/ho.sh')
-    postInstall "mkdir -p -m 0777 ~/.ho"
 }
 
 //======================================================================================================================
@@ -135,7 +136,7 @@ task makeAll(type: GradleBuild) {
     group 'ho'
     description 'Create ZipDistribution, Windows, MacOS and Linux binaries'
     tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'createApp',
-             'AddResourcesAndZipMacApp', 'buildDeb', 'finishDeb', 'buildDeb']
+             'AddResourcesAndZipMacApp', 'buildDeb', 'finishDeb', 'buildDeb', 'buildRpm']
 }
 
 task makeWindowsBinarary(type: GradleBuild) {
@@ -156,16 +157,7 @@ task init{
         project.delete(files("${projectDir}\\logs"))
         project.delete(files("${projectDir}\\themes"))
         project.delete(files("${projectDir}\\user.xml"))
-
-//        //     Getting HO version...      ---------------------------------------------------------------------
-//        print("Getting HO version...")
-//        def hoInfoPath = "${projectDir}\\src\\main\\java\\core\\HO.java"
-//        project.ext.ho_version = getParameter("\\WVERSION[\\s]*=[\\s]*([0-9.]*)", hoInfoPath).replaceAll('\\.','_')
-//        def isDevelopment = getParameter("\\DEVELOPMENT[\\s]*=[\\s]*([a-zA-Z]*)", hoInfoPath)
-//        if (isDevelopment) {
-//            project.ext.ho_version += "_BETA"
-//        }
-//        println(": ${project.ext.ho_version}")
+        
         //     Creating Target directory ...  ---------------------------------------------------------------------
         println("creating directory for artefacts: ${target_dir}")
         mkdir project.ext.target_dir
