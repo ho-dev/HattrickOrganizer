@@ -197,21 +197,29 @@ public class StatisticQuery {
 			final int hrfid = DBManager.instance().getHRFID4Date(arenamodels[i].getTimestampMatchDate());
 
 			try {
-				//Stadiongrösse
-				sql = "SELECT GesamtGr FROM " + StadionTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
+                //Get the stadium capacities
+				sql = "SELECT GesamtGr, AnzSteh, AnzSitz , AnzDach , AnzLogen FROM " + StadionTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
 				rs = DBManager.instance().getAdapter().executeQuery(sql);
 				if (rs.first()) {
 					arenamodels[i].setArenaGroesse(rs.getInt("GesamtGr"));
+                    arenamodels[i].setMaxTerraces(rs.getInt("AnzSteh"));
+                    arenamodels[i].setMaxBasic(rs.getInt("AnzSitz"));
+                    arenamodels[i].setMaxRoof(rs.getInt("AnzDach"));
+                    arenamodels[i].setMaxVip(rs.getInt("AnzLogen"));
 					maxArenaGroesse = Math.max(arenamodels[i].getArenaGroesse(), maxArenaGroesse);
 				}
 				rs.close();
 
-				// fix bug when visitors exceed the stadiumsize
+				// fix bug when visitors exceed the stadium size
 				try {
 					if (arenamodels[i].getZuschaueranzahl() > arenamodels[i].getArenaGroesse()) {
-						rs = DBManager.instance().getAdapter().executeQuery("SELECT GesamtGr FROM " + StadionTable.TABLENAME + " WHERE HRF_ID=" + (hrfid+1));
+						rs = DBManager.instance().getAdapter().executeQuery("SELECT GesamtGr, AnzSteh, AnzSitz , AnzDach , AnzLogen FROM " + StadionTable.TABLENAME + " WHERE HRF_ID=" + (hrfid+1));
 						if (rs.next()) {
 							arenamodels[i].setArenaGroesse(rs.getInt("GesamtGr"));
+                            arenamodels[i].setMaxTerraces(rs.getInt("AnzSteh"));
+                            arenamodels[i].setMaxBasic(rs.getInt("AnzSitz"));
+                            arenamodels[i].setMaxRoof(rs.getInt("AnzDach"));
+                            arenamodels[i].setMaxVip(rs.getInt("AnzLogen"));
 							maxArenaGroesse = Math.max(arenamodels[i].getArenaGroesse(), maxArenaGroesse);
 						}
 					}
@@ -250,7 +258,7 @@ public class StatisticQuery {
 			}
 		}
 
-		tablemodel = new ArenaStatistikTableModel(arenamodels, maxArenaGroesse, maxFans);
+        tablemodel = new ArenaStatistikTableModel(arenamodels, maxArenaGroesse, maxFans);
 
 		return tablemodel;
 	}

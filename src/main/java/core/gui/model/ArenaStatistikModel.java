@@ -47,6 +47,10 @@ public class ArenaStatistikModel {
     private int basics;
     private int roof;
     private int vip;
+    private int maxTerraces;
+    private int maxBasic;
+    private int maxRoof;
+    private int maxVip;
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -271,9 +275,9 @@ public class ArenaStatistikModel {
     }
 
     /**
-     * Setter for property m_iMatchTyp.
+     * Setter for property m_mtMatchTyp.
      *
-     * @param m_iMatchTyp New value of property m_iMatchTyp.
+     * @param m_mtMatchTyp New value of property m_iMatchTyp.
      */
     public final void setMatchTyp(MatchType m_mtMatchTyp) {
         this.m_mtMatchTyp = m_mtMatchTyp;
@@ -378,7 +382,39 @@ public class ArenaStatistikModel {
 		this.vip = vip;
 	}
 
-	//--------------------------------------------------------------
+    public int getMaxTerraces() {
+        return maxTerraces;
+    }
+
+    public void setMaxTerraces(int maxTerraces) {
+        this.maxTerraces = maxTerraces;
+    }
+
+    public int getMaxBasic() {
+        return maxBasic;
+    }
+
+    public void setMaxBasic(int maxBasic) {
+        this.maxBasic = maxBasic;
+    }
+
+    public int getMaxRoof() {
+        return maxRoof;
+    }
+
+    public void setMaxRoof(int maxRoof) {
+        this.maxRoof = maxRoof;
+    }
+
+    public int getMaxVip() {
+        return maxVip;
+    }
+
+    public void setMaxVip(int maxVip) {
+        this.maxVip = maxVip;
+    }
+
+    //--------------------------------------------------------------
     public final int compareTo(Object obj) {
         if (obj instanceof ArenaStatistikModel) {
             final ArenaStatistikModel info = (ArenaStatistikModel) obj;
@@ -394,4 +430,5 @@ public class ArenaStatistikModel {
 
         return 0;
     }
+
 }

@@ -42,10 +42,14 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			// Auslastung
 			"%",
 			HOVerwaltung.instance().getLanguageString("ls.club.arena.terraces"),
+            "%",
 			HOVerwaltung.instance().getLanguageString("ls.club.arena.basicseating"),
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"),
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"),
-			// Fananzahl
+            "%",
+            HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"),
+            "%",
+            HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"),
+            "%",
+            // Fananzahl
 			HOVerwaltung.instance().getLanguageString("Fans"),
 			HOVerwaltung.instance().getLanguageString("Fans") + " / "
 					+ HOVerwaltung.instance().getLanguageString("Wochen"),
@@ -71,10 +75,14 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			HOVerwaltung.instance().getLanguageString("Zuschauer"), // Zuschauer
 			"%", // Auslastung
 			HOVerwaltung.instance().getLanguageString("ls.club.arena.terraces"),
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.basicseating"),
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"),
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"),
-			HOVerwaltung.instance().getLanguageString("Fans"), // Fananzahl
+            "%", // Percentage of crowd on the terraces
+            HOVerwaltung.instance().getLanguageString("ls.club.arena.basicseating"),
+            "%", // Percentage of crowd in the basic seats
+            HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"),
+            "%", // Percentage of crowd under the roof
+            HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"),
+            "%", // Percentage of crowd in the VIP seats
+            HOVerwaltung.instance().getLanguageString("Fans"), // Fananzahl
 			HOVerwaltung.instance().getLanguageString("Fans") + " / "
 					+ HOVerwaltung.instance().getLanguageString("Wochen"),
 			HOVerwaltung.instance().getLanguageString("Zuschauer") + " / "
@@ -285,28 +293,36 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			    		(int) ((float) match.getZuschaueranzahl() / (float) match.getArenaGroesse() * 1000),
 			    		0, 1000, 1, 0.1, background, new Color(0, 120, 120), " %");
 
-				  //Ligaplatz
-			    m_clData[i][9] = new ColorLabelEntry(match.getSoldTerraces()+"",
+			    //Terraces
+			    m_clData[i][9] = new ColorLabelEntry(match.getSoldTerraces() + " / " + match.getMaxTerraces() + "",
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.CENTER);
 
-			  //Ligaplatz
-			    m_clData[i][10] = new ColorLabelEntry(match.getSoldBasics()+"",
+			    m_clData[i][10] = new ProgressbarTableEntry((int) ((float) match.getSoldTerraces() / (float) match.getMaxTerraces() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
+
+			    //Basic seats
+			    m_clData[i][11] = new ColorLabelEntry(match.getSoldBasics() + " / " + match.getMaxBasic() + "",
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.CENTER);
 
-			  //Ligaplatz
-			    m_clData[i][11] = new ColorLabelEntry(match.getSoldRoof()+"",
+                m_clData[i][12] = new ProgressbarTableEntry((int) ((float) match.getSoldBasics() / (float) match.getMaxBasic() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
+
+			    //Seats under the roof
+			    m_clData[i][13] = new ColorLabelEntry(match.getSoldRoof() + " / " + match.getMaxRoof() + "",
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.CENTER);
 
-			  //Ligaplatz
-			    m_clData[i][12] = new ColorLabelEntry(match.getSoldVip()+"",
+                m_clData[i][14] = new ProgressbarTableEntry((int) ((float) match.getSoldRoof() / (float) match.getMaxRoof() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
+
+			    //VIP seats
+			    m_clData[i][15] = new ColorLabelEntry(match.getSoldVip() + " / " + match.getMaxVip() + "",
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.CENTER);
+
+                m_clData[i][16] = new ProgressbarTableEntry((int) ((float) match.getSoldVip() / (float) match.getMaxVip() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
 
 			    //Fananzahl
-			    m_clData[i][13] = new ProgressbarTableEntry(match.getFans(), 0, m_iMaxFananzahl, 0, 1, background, new Color(80, 80, 80), "");
+			    m_clData[i][17] = new ProgressbarTableEntry(match.getFans(), 0, m_iMaxFananzahl, 0, 1, background, new Color(80, 80, 80), "");
 
 			    //Fanzuwachs pro Woche
 			    float fanzuwachs = 0;
@@ -316,20 +332,20 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			                     - m_clMatches[i + 1].getMatchDateAsTimestamp().getTime());
 			    }
 
-			    m_clData[i][14] = new ColorLabelEntry(fanzuwachs, background, false,false,0);
+			    m_clData[i][18] = new ColorLabelEntry(fanzuwachs, background, false,false,0);
 
 			    //Quotione  Zuschauer/Fans
-			    m_clData[i][15] = new ColorLabelEntry(Helper.round((float) match.getZuschaueranzahl()
+			    m_clData[i][19] = new ColorLabelEntry(Helper.round((float) match.getZuschaueranzahl()
 						/ (float) match.getFans(), 2) + "", ColorLabelEntry.FG_STANDARD, background,
 						SwingConstants.RIGHT);
 
 			    // Fanstimmung
-			    m_clData[i][16] = new ColorLabelEntry(Finanzen.getNameForLevelFans(match.getFanZufriedenheit(), match.getMatchDateAsTimestamp()),
+			    m_clData[i][20] = new ColorLabelEntry(Finanzen.getNameForLevelFans(match.getFanZufriedenheit(), match.getMatchDateAsTimestamp()),
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.LEFT);
 
 			    //Ligaplatz
-			    m_clData[i][17] = new ColorLabelEntry(match.getLigaPlatz() + ".",
+			    m_clData[i][21] = new ColorLabelEntry(match.getLigaPlatz() + ".",
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.CENTER);
 
