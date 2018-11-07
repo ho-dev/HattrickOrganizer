@@ -50,7 +50,8 @@ import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 import org.w3c.dom.Document;
 
-import sun.misc.BASE64Encoder;
+//import sun.misc.BASE64Encoder;
+import java.util.Base64;
 
 
 /**
@@ -708,7 +709,7 @@ public class MyConnector {
 	 * 
 	 * @param surl
 	 *            the full url with parameters
-	 * @param bodyprop
+	 * @param bodyParas
 	 *            A hash map of string, string where key is parameter key and
 	 *            value is parameter value
 	 * @param showErrorMessage
@@ -834,7 +835,7 @@ public class MyConnector {
 		if (this.proxySettings != null && this.proxySettings.isAuthenticationNeeded()) {
 			final String pw = this.proxySettings.getUsername() + ":"
 					+ this.proxySettings.getPassword();
-			final String epw = (new BASE64Encoder()).encode(pw.getBytes());
+			final String epw = new String(Base64.getEncoder().encode(pw.getBytes()));
 			request.addHeader("Proxy-Authorization", "Basic " + epw);
 		}
 	}
