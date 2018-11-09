@@ -27,7 +27,7 @@ dependencies {
 
 
 //============  variables ==============================================================================================
-version = '1.435-SNAPSHOT-2018110721071007'   // HO version
+version = '1.435-SNAPSHOT-2018110921071007'   // HO version
 
 
 ext {
@@ -76,47 +76,48 @@ ospackage {
         summary ' HattrickOrganizer! \n Manager tool for http://www.hattrick.org'
         license = 'LGPL'
 
-        into '/usr'
 
-        from(jar.outputs.files) {
-            into 'lib\\ho'
-        }
-        from("${projectDir}\\src\\main\\resources\\sprache") {
-            into 'lib\\ho\\sprache'
-        }
-        from("${projectDir}\\src\\main\\resources\\flags") {
-            into 'lib\\ho\\flags'
-        }
-        from("${projectDir}\\src\\main\\resources\\prediction") {
-            into 'lib\\ho\\prediction'
-        }
-        from("${projectDir}\\src\\main\\resources\\themes") {
-            into 'lib\\ho\\themes'
-        }
+    into '/usr'
 
-        from("${projectDir}\\src\\main\\resources") {
-            include "**/*.jar"
-            into "lib\\ho"
-        }
-
-        from("${projectDir}\\src\\main\\resources") {
-            include "ho_logo.png"
-            into "lib\\ho"
-        }
-
-        from("${projectDir}\\buildResources\\Linux\\ho.sh") {
-            into 'bin'
-            fileMode = 0755
-        }
-
-        from("${projectDir}\\buildResources\\Linux\\ho.desktop") {
-            into 'share\\applications'
-            fileMode = 0644
-        }
-
-        postInstall("chmod 777 /usr/lib/ho")
-
+    from(jar.outputs.files) {
+        into 'lib\\ho'
     }
+    from("${projectDir}\\src\\main\\resources\\sprache") {
+        into 'lib\\ho\\sprache'
+    }
+    from("${projectDir}\\src\\main\\resources\\flags") {
+        into 'lib\\ho\\flags'
+    }
+    from("${projectDir}\\src\\main\\resources\\prediction") {
+        into 'lib\\ho\\prediction'
+    }
+    from("${projectDir}\\src\\main\\resources\\themes") {
+        into 'lib\\ho\\themes'
+    }
+
+    from("${projectDir}\\src\\main\\resources") {
+        include "**/*.jar"
+        into "lib\\ho"
+    }
+
+    from("${projectDir}\\src\\main\\resources") {
+        include "ho_logo.png"
+        into "lib\\ho"
+    }
+
+    from("${projectDir}\\buildResources\\Linux\\ho.sh") {
+        into 'bin'
+        fileMode = 0755
+    }
+
+    from("${projectDir}\\buildResources\\Linux\\ho.desktop") {
+        into 'share\\applications'
+        fileMode = 0644
+    }
+
+    postInstall "chmod 777 /usr/lib/ho"
+
+}
 
 buildDeb {
         requires("openjdk-8-jre | openjdk-9-jre | openjdk-10-jre | openjdk-11-jre")
@@ -194,6 +195,11 @@ task AddResourcesInDistrib {
             from "${projectDir}\\buildResources\\Win\\HO.bat"
             into "${distribDir}"
         }
+        copy {
+            from "${projectDir}\\buildResources\\Linux\\ho.sh"
+            into "${distribDir}"
+            fileMode = 0755
+        }
 
         copy {
             from "${distribDir}/lib"
@@ -269,9 +275,13 @@ task finishRpm{
 task ZipDistribution(type: Zip) {
     println("zipping distribution")
     archiveName = "HO_${project.version}.zip"
-    from "${buildDir}/install/${project.version}"
     destinationDir = file("${project.ext.target_dir}")
-}
+    from ("${buildDir}/install/${project.version}") {exclude("**\\ho.sh", "**\\HO.bat")}
+    from ("${buildDir}/install/${project.version}") {
+        include("**\\ho.sh")
+        fileMode=0755 }
+    }
+
 
 task AddResourcesAndZipMacApp {
     dependsOn 'init', 'createApp'
