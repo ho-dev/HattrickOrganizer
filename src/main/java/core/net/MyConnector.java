@@ -488,7 +488,7 @@ public class MyConnector {
 		BufferedReader br = null;
 		InputStream is = null;
 		try {
-			is = getNonCHPPWebFile(MyConnector.getBetaSite() + "/betaversion.htm", false);
+			is = getNonCHPPWebFile("https://akasolace.github.io/HO/latestbeta.html", false);
 			if (is != null) {
 				br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 				VersionInfo ret = new VersionInfo();

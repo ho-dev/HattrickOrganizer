@@ -27,7 +27,13 @@ dependencies {
 
 
 //============  variables ==============================================================================================
-version = '1.435-SNAPSHOT-2018110921071007'   // HO version
+
+//naming
+// for Development version : 'X.XXX-DEV-XXX'
+// for BETA version : 'X.XXX-BETA-X'
+
+version = '1.435-DEV-3'   // HO version
+
 
 
 ext {

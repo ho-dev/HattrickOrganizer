@@ -18,9 +18,11 @@ public class VersionInfo {
 	private int build;
 	private Date released;
 	private boolean beta;
+	private String versionType;
 	final static private DecimalFormat DECF = new DecimalFormat("0.000##");
 	final static private DateFormat DATF = new SimpleDateFormat("dd.MM.yyyy");
 	final static private DateFormat DATFILE = new SimpleDateFormat("yyyyMMdd");
+
 	
 	static {
 		DecimalFormatSymbols ds = new DecimalFormatSymbols();
@@ -95,19 +97,32 @@ public class VersionInfo {
 		this.beta = beta;
 	}
 
+	public void setVersionType(String versionType)
+    {
+        this.versionType = versionType;
+        if (versionType == "RELEASE")
+        {
+            setBeta(false);
+        }
+        else{
+        setBeta(true);
+    }
+    }
+
+
 	// generic setter, example:
-	// version=1.429
-	// build=866
-	// beta=true
-	// released=31.05.2011
+	// version=1.435
+	// versionType=BETA
+    // build = 2
+	// released=31.05.2018
 	public void setValue(final String key, final String val) {
 		try {
 			if ("version".equals(key)) {
 				setVersion(Double.parseDouble(val));
 			} else if ("build".equals(key)) {
 				setBuild(Integer.parseInt(val));
-			} else if ("beta".equals(key)) {
-				setBeta(Boolean.parseBoolean(val));
+			} else if ("versionType".equals(key)) {
+			    setVersionType(val);
 			} else if ("released".equals(key)) {
 				setReleased(DATF.parse(val));
 			}
@@ -122,6 +137,6 @@ public class VersionInfo {
 
 	@Override
 	public String toString() {
-		return "VersionInfo [version=" + version + ", build=" + build + ", released=" + released + ", beta=" + beta + "]";
+		return "VersionInfo [version=" + version + ",  version type=" + versionType + ", build=" + build + ", released=" + released + ", beta=" + beta + "]";
 	}
 }

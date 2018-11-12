@@ -166,8 +166,7 @@ public final class UpdateController {
 					JOptionPane.YES_NO_OPTION);
 
 			if (update == JOptionPane.YES_OPTION) {
-				// updateHO(version.getVersion());
-				updateHO(version.getVersion());
+				updateHO(version.getVersion(), false, 0);
 			}
 		} else {
 			final int currRev = HO.getRevisionNumber();
@@ -184,10 +183,15 @@ public final class UpdateController {
 		}
 	}
 
-	public static void updateHO(double version) {
+	public static void updateHO(double version, boolean dev, int build) {
         String ver = Double.toString(version);
-        updateHO("https://github.com/akasolace/HO/releases/download/"+ver+"/HO_"+ver+".zip");
-	}
+        String sbuild = Integer.toString(build);
+        if (dev) {
+            updateHO("https://github.com/akasolace/HO/releases/download/dev/HO_" + ver + "-DEV-" + sbuild + ".zip");
+        } else {
+            updateHO("https://github.com/akasolace/HO/releases/download/" + ver + "/HO_" + ver + ".zip");
+        }
+    }
 
 	public static void updateHO(final String urlString) {
 		File tmp = new File("update.zip");
@@ -238,14 +242,12 @@ public final class UpdateController {
 							+ vi.getVersionString() + "\n"
 							+ HOVerwaltung.instance().getLanguageString("Released") + ": "
 							+ vi.getReleaseDate() + "\n"
-							+ HOVerwaltung.instance().getLanguageString("Source")
-							+ ": http://ho1.sourceforge.net/development/\n\n"
 							+ HOVerwaltung.instance().getLanguageString("ls.button.update") + "?",
 					HOVerwaltung.instance().getLanguageString("confirmation.title"),
 					JOptionPane.YES_NO_OPTION);
 
 			if (update == JOptionPane.YES_OPTION) {
-				updateHO(MyConnector.getBetaSite() + "/" + vi.getZipFileName());
+				updateHO(vi.getVersion(), true, vi.getBuild());
 			}
 		} else {
 			JOptionPane.showMessageDialog(HOMainFrame.instance(), HOVerwaltung.instance()
@@ -260,54 +262,54 @@ public final class UpdateController {
 		}
 	}
 
-	public static void check4EPVUpdate() {
-		Extension data = MyConnector.instance().getEpvVersion();
-		if (HO.VERSION >= data.getMinimumHOVersion()
-				&& data.getRelease() > HOParameter.instance().EpvRelease) {
-			// Info anzeigen, dass es ein Update gibt
-			// Show update info
-			int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(), HOVerwaltung
-					.instance().getLanguageString("updateavailable")
-					+ "\n\n"
-					+ HOVerwaltung.instance().getLanguageString("ls.button.update") + "?",
-					HOVerwaltung.instance().getLanguageString("confirmation.title"),
-					JOptionPane.YES_NO_OPTION);
+//	public static void check4EPVUpdate() {
+//		Extension data = MyConnector.instance().getEpvVersion();
+//		if (HO.VERSION >= data.getMinimumHOVersion()
+//				&& data.getRelease() > HOParameter.instance().EpvRelease) {
+//			// Info anzeigen, dass es ein Update gibt
+//			// Show update info
+//			int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(), HOVerwaltung
+//					.instance().getLanguageString("updateavailable")
+//					+ "\n\n"
+//					+ HOVerwaltung.instance().getLanguageString("ls.button.update") + "?",
+//					HOVerwaltung.instance().getLanguageString("confirmation.title"),
+//					JOptionPane.YES_NO_OPTION);
+//
+//			if (update == JOptionPane.YES_OPTION) {
+//				updateEPV(data.getRelease());
+//			}
+//		} else
+//			JOptionPane.showMessageDialog(null,
+//					HOVerwaltung.instance().getLanguageString("updatenotavailable") + "\n\n"
+//							+ HOVerwaltung.instance().getLanguageString("ls.version") + ": "
+//							+ HOParameter.instance().EpvRelease, HOVerwaltung.instance()
+//							.getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
+//							.getLanguageString("EPV"), JOptionPane.INFORMATION_MESSAGE);
+//
+//	}
 
-			if (update == JOptionPane.YES_OPTION) {
-				updateEPV(data.getRelease());
-			}
-		} else
-			JOptionPane.showMessageDialog(null,
-					HOVerwaltung.instance().getLanguageString("updatenotavailable") + "\n\n"
-							+ HOVerwaltung.instance().getLanguageString("ls.version") + ": "
-							+ HOParameter.instance().EpvRelease, HOVerwaltung.instance()
-							.getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
-							.getLanguageString("EPV"), JOptionPane.INFORMATION_MESSAGE);
-
-	}
-
-	public static void updateEPV(float release) {
-		File tmp = new File("tmp.dat");
-		LoginWaitDialog wait = new LoginWaitDialog(HOMainFrame.instance());
-		wait.setVisible(true);
-		if (!UpdateHelper
-				.download(MyConnector.getResourceSite() + "/downloads/epvWeights.mlp", tmp)) {
-			wait.setVisible(false);
-			tmp.delete();
-			return;
-		}
-		File target = new File("prediction/epvWeights.mlp");
-		target.delete();
-		tmp.renameTo(target);
-		HOParameter.instance().EpvRelease = release;
-		wait.setVisible(false);
-		JOptionPane.showMessageDialog(null,
-				HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
-				.getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
-				.getLanguageString("EPV"),
-				JOptionPane.INFORMATION_MESSAGE);
-
-	}
+//	public static void updateEPV(float release) {
+//		File tmp = new File("tmp.dat");
+//		LoginWaitDialog wait = new LoginWaitDialog(HOMainFrame.instance());
+//		wait.setVisible(true);
+//		if (!UpdateHelper
+//				.download(MyConnector.getResourceSite() + "/downloads/epvWeights.mlp", tmp)) {
+//			wait.setVisible(false);
+//			tmp.delete();
+//			return;
+//		}
+//		File target = new File("prediction/epvWeights.mlp");
+//		target.delete();
+//		tmp.renameTo(target);
+//		HOParameter.instance().EpvRelease = release;
+//		wait.setVisible(false);
+//		JOptionPane.showMessageDialog(null,
+//				HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
+//				.getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
+//				.getLanguageString("EPV"),
+//				JOptionPane.INFORMATION_MESSAGE);
+//
+//	}
 
 	public static void check4RatingsUpdate() {
 		Extension data = MyConnector.instance().getRatingsVersion();
@@ -368,67 +370,67 @@ public final class UpdateController {
 
 	}
 
-	public static void checkNews() {
-		News news = MyConnector.instance().getLatestNews();
-		if (news.getId() > HOParameter.instance().lastNews) {
-			if (HO.VERSION >= news.getMinimumHOVersion()) {
-				HOParameter.instance().lastNews = news.getId();
-				switch (news.getType()) {
-				case News.HO: {
-					if (!UserParameter.instance().updateCheck && news.getVersion() > HO.VERSION) {
-						int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
-								HOVerwaltung.instance().getLanguageString("updateavailable"),
-								HOVerwaltung.instance().getLanguageString("confirmation.title"),
-								JOptionPane.YES_NO_OPTION);
-						if (update == JOptionPane.YES_OPTION) {
-							UpdateController.updateHO(news.getVersion());
-						}
-					}
-					break;
-				}
-				case News.EPV: {
-					if (news.getVersion() > HOParameter.instance().EpvRelease) {
-						int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(), news
-								.getMessages().get(0),
-								HOVerwaltung.instance().getLanguageString("confirmation.title"),
-								JOptionPane.YES_NO_OPTION);
-						if (update == JOptionPane.YES_OPTION) {
-							UpdateController.updateEPV(news.getVersion());
-						}
-					}
-					break;
-				}
-
-				case News.RATINGS: {
-					if (news.getVersion() > HOParameter.instance().RatingsRelease) {
-
-						int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(), news
-								.getMessages().get(0),
-								HOVerwaltung.instance().getLanguageString("confirmation.title"),
-								JOptionPane.YES_NO_OPTION);
-						if (update == JOptionPane.YES_OPTION) {
-
-							UpdateController.updateRatings(news.getVersion());
-						}
-					}
-					break;
-				}
-
-				case News.PLUGIN: {
-					JOptionPane.showMessageDialog(HOMainFrame.instance().getOwner(), new NewsPanel(
-							news), "Plugin News", JOptionPane.INFORMATION_MESSAGE);
-					break;
-				}
-				case News.MESSAGE: {
-					JOptionPane.showMessageDialog(HOMainFrame.instance().getOwner(), new NewsPanel(
-							news), "HO News", JOptionPane.INFORMATION_MESSAGE);
-					break;
-				}
-				default: {
-					// Unsupported Message Type
-				}
-				}
-			}
-		}
-	}
+//	public static void checkNews() {
+//		News news = MyConnector.instance().getLatestNews();
+//		if (news.getId() > HOParameter.instance().lastNews) {
+//			if (HO.VERSION >= news.getMinimumHOVersion()) {
+//				HOParameter.instance().lastNews = news.getId();
+//				switch (news.getType()) {
+//				case News.HO: {
+//					if (!UserParameter.instance().updateCheck && news.getVersion() > HO.VERSION) {
+//						int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
+//								HOVerwaltung.instance().getLanguageString("updateavailable"),
+//								HOVerwaltung.instance().getLanguageString("confirmation.title"),
+//								JOptionPane.YES_NO_OPTION);
+//						if (update == JOptionPane.YES_OPTION) {
+//							UpdateController.updateHO(news.getVersion());
+//						}
+//					}
+//					break;
+//				}
+//				case News.EPV: {
+//					if (news.getVersion() > HOParameter.instance().EpvRelease) {
+//						int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(), news
+//								.getMessages().get(0),
+//								HOVerwaltung.instance().getLanguageString("confirmation.title"),
+//								JOptionPane.YES_NO_OPTION);
+//						if (update == JOptionPane.YES_OPTION) {
+//							UpdateController.updateEPV(news.getVersion());
+//						}
+//					}
+//					break;
+//				}
+//
+//				case News.RATINGS: {
+//					if (news.getVersion() > HOParameter.instance().RatingsRelease) {
+//
+//						int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(), news
+//								.getMessages().get(0),
+//								HOVerwaltung.instance().getLanguageString("confirmation.title"),
+//								JOptionPane.YES_NO_OPTION);
+//						if (update == JOptionPane.YES_OPTION) {
+//
+//							UpdateController.updateRatings(news.getVersion());
+//						}
+//					}
+//					break;
+//				}
+//
+//				case News.PLUGIN: {
+//					JOptionPane.showMessageDialog(HOMainFrame.instance().getOwner(), new NewsPanel(
+//							news), "Plugin News", JOptionPane.INFORMATION_MESSAGE);
+//					break;
+//				}
+//				case News.MESSAGE: {
+//					JOptionPane.showMessageDialog(HOMainFrame.instance().getOwner(), new NewsPanel(
+//							news), "HO News", JOptionPane.INFORMATION_MESSAGE);
+//					break;
+//				}
+//				default: {
+//					// Unsupported Message Type
+//				}
+//				}
+//			}
+//		}
+//	}
 }

@@ -264,7 +264,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		if (HO.isDevelopment()) {
 			txt += " DEV";
 			final int r = HO.getRevisionNumber();
-			if (r > 1) {
+			if (r >= 1) {
 				txt += " (r" + HO.getRevisionNumber() + ")";
 			}
 		}

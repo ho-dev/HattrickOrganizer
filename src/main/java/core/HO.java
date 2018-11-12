@@ -35,8 +35,10 @@ public class HO {
 
 
     public static double VERSION;  // Version is set in build.gradle and exposed to HO via the manifest
+    private static int RevisionNumber;
     //public static final int SPRACHVERSION = 2;
     private static boolean DEVELOPMENT = false; // Version type is set in build.gradle and exposed to HO via the manifest
+    private static String versionType;
 
 
 	/**
@@ -88,7 +90,7 @@ public class HO {
 			}
 		}
 
-		// Get HO version rom manifest
+		// Get HO version from manifest
         String sVERSION = HO.class.getPackage().getImplementationVersion();
         if (sVERSION != null) {
             Pattern p = Pattern.compile("(^\\d+[.\\d+]*)");
@@ -96,11 +98,26 @@ public class HO {
 
             if (m.find()) {
                 VERSION = Double.parseDouble(m.group(1));
+                versionType = "RELEASE";
+
                 // now we check i it is a release or a development version
-                p = Pattern.compile("([a-zA-Z])");
+                p = Pattern.compile("BETA-([0-9]*)$");
                 m = p.matcher(sVERSION);
                 if (m.find()) {
+                    RevisionNumber = Integer.parseInt(m.group(1));
+                    versionType = "BETA";
                     DEVELOPMENT = true;
+                }
+                else
+                {
+                    p = Pattern.compile("DEV-([0-9]*)$");
+                    m = p.matcher(sVERSION);
+                    if (m.find()) {
+                        RevisionNumber = Integer.parseInt(m.group(1));
+                        versionType = "DEV";
+                        DEVELOPMENT = true;
+                    }
+
                 }
             } else {
                 HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
@@ -209,6 +226,10 @@ public class HO {
 	}
 
 	public static int getRevisionNumber() {
-	return 0;
+	return RevisionNumber;
 	}
+
+    public static String getversionType() {
+        return versionType;
+    }
 }
