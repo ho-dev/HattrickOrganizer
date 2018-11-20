@@ -251,11 +251,10 @@ public class OnlineWorker {
 
 				// Store full info for all matches
 				for (MatchKurzInfo match : allMatches) {
-					// Only if not in the db
+					// if match is available and match is finished
 					if ((DBManager.instance().isMatchVorhanden(match.getMatchID()))
-							&& (!DBManager.instance().isMatchLineupVorhanden(match.getMatchID()))
 							&& (match.getMatchStatus() == MatchKurzInfo.FINISHED)) {
-						downloadMatchData(match.getMatchID(), match.getMatchTyp(), false);
+						downloadMatchData(match.getMatchID(), match.getMatchTyp(), true);
 					}
 				}
 			}

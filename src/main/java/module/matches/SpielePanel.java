@@ -248,7 +248,7 @@ public final class SpielePanel extends LazyImagePanel {
 		for (int i = 0; i < rows.length; i++) {
 			infos[i] = ((MatchesColumnModel) matchesTable.getSorter().getModel())
 					.getMatch((int) ((ColorLabelEntry) matchesTable.getSorter().getValueAt(rows[i],
-							5)).getNumber());
+							7)).getNumber());
 		}
 
 		StringBuilder text = new StringBuilder(100);

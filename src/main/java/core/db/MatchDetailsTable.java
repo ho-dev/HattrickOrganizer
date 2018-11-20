@@ -18,7 +18,7 @@ final class MatchDetailsTable extends AbstractTable {
 	
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[39];
+		columns = new ColumnDescriptor[41];
 		columns[0]= new ColumnDescriptor("MatchID",Types.INTEGER,false,true);
 		columns[1]= new ColumnDescriptor("ArenaId",Types.INTEGER,false);
 		columns[2]= new ColumnDescriptor("ArenaName",Types.VARCHAR,false,256);
@@ -36,30 +36,30 @@ final class MatchDetailsTable extends AbstractTable {
 		columns[14]= new ColumnDescriptor("GastRightDef",Types.INTEGER,false);
 		columns[15]= new ColumnDescriptor("GastTacticSkill",Types.INTEGER,false);
 		columns[16]= new ColumnDescriptor("GastTacticType",Types.INTEGER,false);
-		columns[29]= new ColumnDescriptor("GastHatstats",Types.INTEGER,false);
-		columns[17]= new ColumnDescriptor("HeimName",Types.VARCHAR,false,256);
-		columns[18]= new ColumnDescriptor("HeimId",Types.INTEGER,false);
-		columns[19]= new ColumnDescriptor("HeimEinstellung",Types.INTEGER,false);
-		columns[20]= new ColumnDescriptor("HeimTore",Types.INTEGER,false);
-		columns[21]= new ColumnDescriptor("HeimLeftAtt",Types.INTEGER,false);
-		columns[22]= new ColumnDescriptor("HeimLeftDef",Types.INTEGER,false);
-		columns[23]= new ColumnDescriptor("HeimMidAtt",Types.INTEGER,false);
-		columns[24]= new ColumnDescriptor("HeimMidDef",Types.INTEGER,false);
-		columns[25]= new ColumnDescriptor("HeimMidfield",Types.INTEGER,false);
-		columns[26]= new ColumnDescriptor("HeimRightAtt",Types.INTEGER,false);
-		columns[27]= new ColumnDescriptor("HeimRightDef",Types.INTEGER,false);
-		columns[28]= new ColumnDescriptor("HeimTacticSkill",Types.INTEGER,false);
-		columns[29]= new ColumnDescriptor("HeimTacticType",Types.INTEGER,false);
-		columns[29]= new ColumnDescriptor("HeimHatstats",Types.INTEGER,false);
-		columns[30]= new ColumnDescriptor("SpielDatum",Types.TIMESTAMP,false);
-		columns[31]= new ColumnDescriptor("WetterId",Types.INTEGER,false);
-		columns[32]= new ColumnDescriptor("Zuschauer",Types.INTEGER,false);
-		columns[33]= new ColumnDescriptor("Matchreport",Types.VARCHAR,false,15000);
-		columns[34]= new ColumnDescriptor("RegionID",Types.INTEGER,false);
-		columns[35]= new ColumnDescriptor("soldTerraces",Types.INTEGER,false);
-		columns[36]= new ColumnDescriptor("soldBasic",Types.INTEGER,false);
-		columns[37]= new ColumnDescriptor("soldRoof",Types.INTEGER,false);
-		columns[38]= new ColumnDescriptor("soldVIP",Types.INTEGER,false);
+		columns[17]= new ColumnDescriptor("GASTHATSTATS",Types.INTEGER,false);
+		columns[18]= new ColumnDescriptor("HeimName",Types.VARCHAR,false,256);
+		columns[19]= new ColumnDescriptor("HeimId",Types.INTEGER,false);
+		columns[20]= new ColumnDescriptor("HeimEinstellung",Types.INTEGER,false);
+		columns[21]= new ColumnDescriptor("HeimTore",Types.INTEGER,false);
+		columns[22]= new ColumnDescriptor("HeimLeftAtt",Types.INTEGER,false);
+		columns[23]= new ColumnDescriptor("HeimLeftDef",Types.INTEGER,false);
+		columns[24]= new ColumnDescriptor("HeimMidAtt",Types.INTEGER,false);
+		columns[25]= new ColumnDescriptor("HeimMidDef",Types.INTEGER,false);
+		columns[26]= new ColumnDescriptor("HeimMidfield",Types.INTEGER,false);
+		columns[27]= new ColumnDescriptor("HeimRightAtt",Types.INTEGER,false);
+		columns[28]= new ColumnDescriptor("HeimRightDef",Types.INTEGER,false);
+		columns[29]= new ColumnDescriptor("HeimTacticSkill",Types.INTEGER,false);
+		columns[30]= new ColumnDescriptor("HeimTacticType",Types.INTEGER,false);
+		columns[31]= new ColumnDescriptor("HEIMHATSTATS",Types.INTEGER,false);
+		columns[32]= new ColumnDescriptor("SpielDatum",Types.TIMESTAMP,false);
+		columns[33]= new ColumnDescriptor("WetterId",Types.INTEGER,false);
+		columns[34]= new ColumnDescriptor("Zuschauer",Types.INTEGER,false);
+		columns[35]= new ColumnDescriptor("Matchreport",Types.VARCHAR,false,15000);
+		columns[36]= new ColumnDescriptor("RegionID",Types.INTEGER,false);
+		columns[37]= new ColumnDescriptor("soldTerraces",Types.INTEGER,false);
+		columns[38]= new ColumnDescriptor("soldBasic",Types.INTEGER,false);
+		columns[39]= new ColumnDescriptor("soldRoof",Types.INTEGER,false);
+		columns[40]= new ColumnDescriptor("soldVIP",Types.INTEGER,false);
 	}
 	
 	@Override

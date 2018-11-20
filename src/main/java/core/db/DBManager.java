@@ -837,7 +837,7 @@ public class DBManager {
 	// -------------------------------------------------
 
 	/**
-	 * Ist das Match schon in der Datenbank vorhanden?
+	 * Check if match is available
 	 */
 	public boolean isMatchVorhanden(int matchid) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
