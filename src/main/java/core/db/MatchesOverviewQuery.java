@@ -140,14 +140,14 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 	private static void fillMatchesOverviewChanceRow(boolean ownTeam, int teamId, MatchesHighlightsStat row, int matchtype){
 		StringBuilder sql = new StringBuilder(200);
 		ResultSet rs = null;
-		sql.append("SELECT TYP, COUNT(*) AS C  FROM  MATCHHIGHLIGHTS join MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID ");
+		sql.append("SELECT TYP, COUNT(*) AS C FROM  MATCHHIGHLIGHTS join MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID ");
 		sql.append("WHERE TEAMID ");
 		if(!ownTeam)
 			sql.append("!");
 		sql.append("=").append(teamId).append(" AND SUBTYP IN(");
 		sql.append(row.getSubtyps()).append(")");
 		sql.append(getMatchTypWhereClause(matchtype));
-		sql.append("GROUP BY TYP HAVING TYP in (");
+		sql.append(" GROUP BY TYP HAVING TYP in (");
 		sql.append(row.getTypes());
 		sql.append(") ORDER BY TYP");
 		rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
