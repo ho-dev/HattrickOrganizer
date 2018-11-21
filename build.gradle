@@ -143,7 +143,7 @@ task makeAll(type: GradleBuild) {
     group 'ho'
     description 'Create ZipDistribution, Windows, MacOS and Linux binaries'
     tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'createApp',
-             'AddResourcesAndZipMacApp', 'buildDeb', 'finishDeb', 'buildDeb', 'buildRpm', 'finishRpm']
+             'AddResourcesAndZipMacApp', 'buildDeb', 'finishDeb', 'buildRpm', 'finishRpm']
 }
 
 task makeWindowsBinarary(type: GradleBuild) {
@@ -259,7 +259,7 @@ task finishDeb{
             from("${buildDir}/distributions")
             include("*.deb")
             into("${buildDir}/artefacts")
-            rename { filename -> filename.replace '_all', ''}
+            rename { filename -> filename.replace('_all', '').replace('~','-')}
         }
     }
 }
@@ -272,7 +272,7 @@ task finishRpm{
             from("${buildDir}/distributions")
             include("*.rpm")
             into("${buildDir}/artefacts")
-            rename { filename -> filename.replace '.noarch', ''}
+            rename { filename -> filename.replace('.noarch', '').replace('~','-')}
             }
         }
     }
