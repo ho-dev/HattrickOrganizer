@@ -107,7 +107,7 @@ public class PlayerConverter {
 
         specialitiesvalues = new ArrayList<Integer>();
 
-        for (int k = 0; k < 6; k++) {
+        for (int k = 0; k < 7; k++) {
             specialitiesvalues.add(new Integer(k));
         }
 
