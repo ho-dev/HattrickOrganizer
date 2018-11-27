@@ -1,4 +1,4 @@
-# HO
+<img src="https://cdn.jsdelivr.net/gh/akasolace/ho@master/src/main/resources/ho_logo.png"><br>  # HO
 Helper Tool for online-manager [Hattrick] www.hattrick.org
 
 ## Features
