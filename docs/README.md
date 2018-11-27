@@ -1,5 +1,10 @@
-<img src="https://cdn.jsdelivr.net/gh/akasolace/ho@master/src/main/resources/ho_logo.png"><br>  # HO
-Helper Tool for online-manager [Hattrick] www.hattrick.org
+
+<div align="center">
+  <img src="https://cdn.jsdelivr.net/gh/akasolace/ho@master/src/main/resources/ho_logo.png">
+</div>
+
+**Helper Tool for online-manager [Hattrick](www.hattrick.org)**
+___
 
 ## Features
 
