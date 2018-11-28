@@ -206,7 +206,7 @@ class TeamRatingPanel extends JPanel implements ItemListener {
     private void initSubLevel() {
         levels = new ArrayList<RatingItem>();
 
-        for (int i = 1; i < 21; i++) {
+        for (int i = 1; i < 26; i++) {
             levels.add(new RatingItem(PlayerAbility.getNameForSkill(i, false), i));
         }
     }
