@@ -1,5 +1,8 @@
 Changelist HO! 1.435
 ====================
+- macOS version is working again
 - Improved the statistics tab to display crowd numbers in each stadium section, including percentages.
 - Added HatStats statistics in Matches module
-- Support Support Player
+- Fixed bug related to the introduction of Support specialty
+- Added support for Divine+ ratings in Match Analysis
+- Added flags for Comores, Guam, Sri Lanka, Sao Tomé-et-Principe and Curaçao
