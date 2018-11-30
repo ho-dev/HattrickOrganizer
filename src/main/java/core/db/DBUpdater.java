@@ -84,6 +84,8 @@ final class DBUpdater {
 					updateDBv20(DBVersion, version);
 				case 20:
 					updateDBv21(DBVersion, version);
+                case 21:
+                    updateDBv22(DBVersion, version);
 				}
 				
 
@@ -500,7 +502,7 @@ final class DBUpdater {
 	}
 	
 	private void updateDBv21(int DBVersion, int version) throws SQLException {
-		// 1.435
+		// 1.435 BETA
 		if (columnExistsInTable("MATCHREPORT", MatchDetailsTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ALTER COLUMN MATCHREPORT SET DATA TYPE VARCHAR(15000)"); // fix an existing bug - maybe 15 000 is not enough
 		}
@@ -517,7 +519,8 @@ final class DBUpdater {
 		
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ALTER COLUMN EVENTTEXT SET DATA TYPE VARCHAR(5000)"); // fix existing bug
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ALTER COLUMN HEIMTORE INTEGER"); // fix existing bug
-		
+
+
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
@@ -532,6 +535,33 @@ final class DBUpdater {
 					+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
+
+    private void updateDBv22(int DBVersion, int version) throws SQLException {
+        // 1.435
+
+        // refresh HT_WORLD_DETAILS for IFA module
+        if (tableExists("HT_WORLDDETAILS")) {
+            m_clJDBCAdapter.executeUpdate("DROP TABLE HT_WORLDDETAILS");
+        }
+
+        if (!tableExists(WorldDetailsTable.TABLENAME)) {
+            dbZugriff.getTable(WorldDetailsTable.TABLENAME).createTable();
+        }
+
+        if (version < DBVersion) {
+            if(!HO.isDevelopment()) {
+                HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
+                dbZugriff.saveUserParameter("DBVersion", DBVersion);
+            } else {
+                HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
+                dbZugriff.saveUserParameter("DBVersion", DBVersion - 1);
+            }
+        } else {
+            HOLogger.instance().info(DBUpdater.class,
+                    "Update done, db version number will NOT be increased from " + version
+                            + " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
+        }
+    }
 	
 	
 	/**

@@ -37,7 +37,7 @@ public class HO {
     public static double VERSION;  // Version is set in build.gradle and exposed to HO via the manifest
     private static int RevisionNumber;
     //public static final int SPRACHVERSION = 2;
-    private static boolean DEVELOPMENT = false; // Version type is set in build.gradle and exposed to HO via the manifest
+    private static boolean DEVELOPMENT = true; // Version type is set in build.gradle and exposed to HO via the manifest
     private static String versionType;
 
 

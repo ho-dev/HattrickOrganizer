@@ -8,6 +8,7 @@ Changelist HO! 1.435
 - Fixed bug related to the introduction of Support specialty
 - Added support for Divine+ ratings in Match Analysis
 - Added flags for Comores, Guam, Sri Lanka, Sao Tomé-et-Principe and Curaçao
+- Fixed a long time build where IFA would crash
 
 Changelist HO! 1.434
 ====================
