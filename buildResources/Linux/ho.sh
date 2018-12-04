@@ -2,7 +2,7 @@
 
 LAUNCHDIR="$(dirname "$0")"
 LAUNCHDIR="`eval echo $LAUNCHDIR`"
-HOHOME="~/.local/share/ho"
+HOHOME="~/.ho"
 HOHOME="`eval echo $HOHOME`"
 OLDHOHOME="~/.hattrickorganizer"
 OLDHOHOME="`eval echo $OLDHOHOME`"
@@ -21,8 +21,6 @@ start(){
         if [ -d ${OLDHOHOME}/db ]
         then
             cp -r ${OLDHOHOME}/db ${HOHOME}/db
-            BKPDATE=`date +%Y-%m-%d_%H-%M-%S`
-            mv ${OLDHOHOME} ${HOHOME}/backup_${BKPDATE}
         fi
     fi
     
