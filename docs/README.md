@@ -35,7 +35,7 @@ A single master branch record the history of the project.
 
 To contribute features, you should clone the repository, create a tracking branch for develop and create the feature.
 When the feature is ready, you can make a pull request to merge that feature into master. 
-Please read first the [contribution guide](docs/CONTRIBUTING.md)
+Please read first the [contribution guide](contributing.md)
 
 
 ## Releases
