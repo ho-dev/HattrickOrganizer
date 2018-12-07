@@ -61,7 +61,7 @@ git checkout master
 git pull upstream master --ff-only
 ~~
 
-*When you want to update the feature branch with changes in master after you created the branch, check the section on [updating a PR](###update-your-pull-request)*
+*When you want to update the feature branch with changes in master after you created the branch, check the section on [updating a PR](#update-your-pull-request)*
 
 Before submitting your changes for review, make sure to pull latest vesrion of master and check that HO builds with your changes. 
 Once your changes are ready to be submitted, make sure to push your changes to GitHub before creating a pull request. 
