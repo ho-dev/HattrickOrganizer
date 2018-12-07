@@ -70,7 +70,7 @@ However, once it's ready, we will merge it, and you will have successfully contr
 
 
 
-### 4. Committing your code
+### 4. Commit your code
 
 Once you’ve made changes, you can see them by typing:
 
@@ -125,7 +125,7 @@ When you’re ready to ask for a code review, file a pull request. Before you do
     -Click on the Compare button for your feature branch
     -Select the base and compare branches, if necessary. This will be master and shiny-new-feature, respectively.
 
-### 7. make the pull request
+### 7. Make the pull request
 
 If everything looks good, you are ready to make a pull request. A pull request is how code from a local repository becomes available to the GitHub community and can be looked at and eventually merged into the master version. This pull request and its associated changes will eventually be committed to the master branch and available in the next release. To submit a pull request:
 
