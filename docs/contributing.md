@@ -6,7 +6,7 @@ This is also a great place for filing bug reports and making suggestions for way
 
 ## Filing Issues
 
-If you notice a bug in the code or in docs or have suggestions for how we can improve either, feel free to create an issue on the GitHub "issues" tab using GitHub's "issue" form. The form contains some questions that will help us best address your issue. For more information regarding how to file issues against pandas, please refer to the Bug reports and enhancement requests section of our main contribution doc.
+If you notice a bug in the code or in docs or have suggestions for how we can improve either, feel free to create an issue on the GitHub "issues" tab using GitHub's "issue" form. T
 
 ## Getting Started
 
@@ -30,7 +30,7 @@ You will need your own fork to work on the code. Go to the HO project page and h
 
 ~~~
 git clone https://github.com/your-user-name/HO.git HO-yourname
-cd pandas-yourname
+cd HO-yourname
 git remote add upstream https://github.com/akasolace/ho.git 
 ~~~
 
@@ -69,9 +69,8 @@ You will most likely be asked to make additional changes before it is finally re
 However, once it's ready, we will merge it, and you will have successfully contributed to the codebase!
 
 
-Contributing your changes to pandas
-Committing your code
 
+### 4. Committing your code
 
 Once you’ve made changes, you can see them by typing:
 
@@ -96,7 +95,7 @@ Now you can commit your changes in your local repository:
 
 ```git commit -m```
 
-### Push your changes
+### 5. Push your changes
 
 When you want your changes to appear publicly on your GitHub page, push your forked feature branch’s commits:
 
@@ -117,7 +116,7 @@ upstream        git://github.com/akasolace/ho.git (push)
 
 Now your code is on GitHub, but it is not yet a part of the HO project. For that to happen, a pull request needs to be submitted on GitHub.
 
-### Review your code
+### 6. Review your code
 
 When you’re ready to ask for a code review, file a pull request. Before you do, once again make sure that you have followed all the guidelines outlined in this document. You should also double check your branch changes against the branch it was based on:
 
@@ -126,7 +125,7 @@ When you’re ready to ask for a code review, file a pull request. Before you do
     -Click on the Compare button for your feature branch
     -Select the base and compare branches, if necessary. This will be master and shiny-new-feature, respectively.
 
-### make the pull request
+### 7. make the pull request
 
 If everything looks good, you are ready to make a pull request. A pull request is how code from a local repository becomes available to the GitHub community and can be looked at and eventually merged into the master version. This pull request and its associated changes will eventually be committed to the master branch and available in the next release. To submit a pull request:
 
@@ -138,7 +137,7 @@ If everything looks good, you are ready to make a pull request. A pull request i
 
 This request then goes to the repository maintainers, and they will review the code.
 
-### Update your pull request
+### 8. Update your pull request
 
 Based on the review you get on your pull request, you will probably need to make some changes to the code. In that case, you can make them in your branch, add a new commit to that branch, push it to GitHub, and the pull request will be automatically updated. Pushing them to GitHub again is done by:
 
@@ -166,7 +165,7 @@ After the feature branch has been update locally, you can now update your pull r
 
 ```git push origin shiny-new-feature```
 
-### Delete your merged branch (optional)
+9. Delete your merged branch (optional)
 
 Once your feature branch is accepted into upstream, you’ll probably want to get rid of the branch. First, merge upstream master into your branch so git knows it is safe to delete your branch:
 
