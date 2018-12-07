@@ -33,12 +33,9 @@ If the language you are interested in is not listed please open a request
 
 A single master branch record the history of the project.
 
-To contribute features, you should clone the repository, create a tracking branch for develop and create the feature:
-
-git clone https://github.com/akasolace/ho.git
-git checkout -b some-feature develop
-
+To contribute features, you should clone the repository, create a tracking branch for develop and create the feature.
 When the feature is ready, you can make a pull request to merge that feature into master. 
+Please read first the [contribution guide](docs/CONTRIBUTING.md)
 
 
 ## Releases
