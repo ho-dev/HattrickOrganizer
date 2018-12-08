@@ -86,7 +86,7 @@ public class PlayerTableModel extends DefaultTableModel{
 		data[15][1] = HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingerdefensive");
 		data[15][2] = Float.valueOf(m_spieler.getPosVal_W_D());
 		data[16][0] = Float.valueOf(m_spieler.getOldPosVal_F());
-		data[16][1] = HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfieldertowardswing");
+		data[16][1] = HOVerwaltung.instance().getLanguageString("ls.player.position_short.forward");
 		data[16][2] = Float.valueOf(m_spieler.getPosVal_F());
 		data[17][0] = Float.valueOf(m_spieler.getOldPosVal_F_D());
 		data[17][1] = HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwarddefensive");
@@ -136,7 +136,7 @@ public class PlayerTableModel extends DefaultTableModel{
 		columnNames[32] = HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingertowardsmiddle");
 		columnNames[33] = HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingeroffensive");
 		columnNames[34] = HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingerdefensive");
-		columnNames[35] = HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfieldertowardswing");
+		columnNames[35] = HOVerwaltung.instance().getLanguageString("ls.player.position_short.forward");
 		columnNames[36] = HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwarddefensive");
 		columnNames[37] = HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwardtowardswing");
 		columnNames[38] = HOVerwaltung.instance().getLanguageString("ls.player.wage");
