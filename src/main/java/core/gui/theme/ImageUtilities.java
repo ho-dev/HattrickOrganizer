@@ -1,5 +1,6 @@
 package core.gui.theme;
 
+import core.model.UserParameter;
 import core.model.player.ISpielerPosition;
 import core.model.player.SpielerPosition;
 
@@ -443,14 +444,17 @@ public class ImageUtilities {
 			trickotImage = changeColor(changeColor(makeColorTransparent(ThemeManager.getIcon(HOIconName.TRICKOT).getImage(),
 					Color.WHITE), Color.BLACK, trickotfarbe), new Color(100, 100, 100), trickotfarbe.brighter());
 			komplettIcon = new ImageIcon(trickotImage);
+			BufferedImage largeImage = new BufferedImage(28, 14, BufferedImage.TYPE_INT_ARGB);
+			largeImage = (BufferedImage) merge(largeImage, komplettIcon.getImage());
+			komplettIcon = new ImageIcon(largeImage);
 	
 		// return new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB );
 		// Trickotnummer
 			if ((trickotnummer > 0) && (trickotnummer < 100)) {
-				BufferedImage image = new BufferedImage(30, 14, BufferedImage.TYPE_INT_ARGB);
-	
+				BufferedImage image = new BufferedImage(28, 14, BufferedImage.TYPE_INT_ARGB);
+
 				// 5;
-				int xPosText = 22;
+				int xPosText = 20;
 	
 				// Helper.makeColorTransparent( image, Color.white );
 				final java.awt.Graphics2D g2d = (java.awt.Graphics2D) image.getGraphics();
@@ -464,11 +468,11 @@ public class ImageUtilities {
 				g2d.setRenderingHint(
 						RenderingHints.KEY_RENDERING,
 						RenderingHints.VALUE_RENDER_QUALITY);
-				g2d.setFont(new java.awt.Font(Font.SANS_SERIF, Font.BOLD, 11));
+				g2d.setFont(new java.awt.Font(Font.SANS_SERIF, Font.PLAIN, UserParameter.instance().schriftGroesse));
 	
 				// Position bei grossen Zahlen weiter nach vorne
 				if (trickotnummer > 9) {
-					xPosText = 15;
+					xPosText = 13;
 				}
 	
 				g2d.setColor(Color.black);
