@@ -2,13 +2,23 @@ Please visit the HO! forum in the CHPP section of Hattrick if you have any quest
 
 Changelist HO! 1.435
 ====================
+[Added]
 - macOS version is working again
-- Improved the statistics tab to display crowd numbers in each stadium section, including percentages.
-- Added HatStats statistics in Matches module
-- Fixed bug related to the introduction of Support specialty
-- Added support for Divine+ ratings in Match Analysis
-- Added flags for Comores, Guam, Sri Lanka, Sao Tomé-et-Principe and Curaçao
-- Fixed a long time build where IFA would crash
+- statistics tab displays crowd numbers in each stadium section, including percentages
+- HatStats statistics are now displayed in Matches module
+- flags for Comores, Guam, Sri Lanka, Sao Tomé-et-Principe and Curaçao
+
+
+[Fixed]
+- bug related to the introduction of Support specialty
+- bug related to Divine+ ratings in Match Analysis
+- a long time bug where IFA tab would crash under certain circumstances of db update
+- bug in Misc Tab where some values were not displayed
+- bug where FW normal value was displayed in PlayerCompare (TAB Player Analysis)
+
+[Removed]
+- Update menu for flags, prediction rating and translation files
+
 
 Changelist HO! 1.434
 ====================
