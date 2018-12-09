@@ -35,7 +35,6 @@ final class StaffPanel extends JPanel {
 	private final ColorLabelEntry formCoachLabel = new ColorLabelEntry("");
 	private final ColorLabelEntry financialdirectorLabel = new ColorLabelEntry("");
 	private final ColorLabelEntry tacticalAssistantLabel = new ColorLabelEntry("");
-	private final ColorLabelEntry formAssistantLabel = new ColorLabelEntry("");
 
 	final GridBagLayout layout = new GridBagLayout();
 	final GridBagConstraints constraints = new GridBagConstraints();
@@ -53,11 +52,9 @@ final class StaffPanel extends JPanel {
 			doctorsLabel.setText(verein.getAerzte() + "");
 			spokepersonsLabel.setText(verein.getPRManager() + "");
 			psychologistsLabel.setText(verein.getPsychologen() + "");
-//			formCoachLabel.setText(verein.getMasseure() + "");
+			formCoachLabel.setText(verein.getFormCoachLevels() + "");
 			financialdirectorLabel.setText(verein.getFinancialDirectorLevels() + "");
 			tacticalAssistantLabel.setText(verein.getTacticalAssistantLevels() + "");
-			formAssistantLabel.setText(verein.getFormCoachLevels() + "");
-			
 		}
 	}
 
@@ -127,7 +124,7 @@ final class StaffPanel extends JPanel {
 		nextYvalue++;
 		
 		label = new JLabel(hoV.getLanguageString("ls.club.staff.formcoach"));
-		add(label,formAssistantLabel.getComponent(false), nextYvalue);
+		add(label,formCoachLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
 		
 		label = new JLabel(hoV.getLanguageString("ls.club.staff.financialdirector"));
@@ -137,9 +134,6 @@ final class StaffPanel extends JPanel {
 		label = new JLabel(hoV.getLanguageString("ls.club.staff.tacticalassistant"));
 		add(label,tacticalAssistantLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
-			
-		
-		
 		
 	}
 
