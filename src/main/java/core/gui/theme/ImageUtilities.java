@@ -445,6 +445,7 @@ public class ImageUtilities {
 					Color.WHITE), Color.BLACK, trickotfarbe), new Color(100, 100, 100), trickotfarbe.brighter());
 			komplettIcon = new ImageIcon(trickotImage);
 			BufferedImage largeImage = new BufferedImage(28, 14, BufferedImage.TYPE_INT_ARGB);
+			// Large Icon
 			largeImage = (BufferedImage) merge(largeImage, komplettIcon.getImage());
 			komplettIcon = new ImageIcon(largeImage);
 	
