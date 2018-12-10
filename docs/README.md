@@ -3,7 +3,7 @@
   <img src="https://cdn.jsdelivr.net/gh/akasolace/ho@master/src/main/resources/ho_logo.png">
 </div>
 
-**Helper Tool for online-manager [Hattrick](www.hattrick.org)**
+**Helper Tool for online-manager [Hattrick](http://www.hattrick.org)**
 <table>
 <tr>
   <td>Latest Release (Beta)</td>
@@ -17,7 +17,7 @@
   <td>License</td>
   <td>
     <a href="https://github.com/akasolace/HO/blob/1.435/LICENSE">
-    <img src="https://img.shields.io/badge/licence-LGPL%20v3.0-lightgrey.svg" alt="license" />
+    <img src="https://img.shields.io/badge/licence-LGPL%203.0-lightgrey.svg" alt="license" />
     </a>
 </td>
 </tr>
