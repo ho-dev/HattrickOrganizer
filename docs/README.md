@@ -4,6 +4,24 @@
 </div>
 
 **Helper Tool for online-manager [Hattrick](www.hattrick.org)**
+<table>
+<tr>
+  <td>Latest Release (Beta)</td>
+  <td>
+    <a href="https://github.com/akasolace/HO/releases/tag/1.435">
+    <img src="https://img.shields.io/badge/HO-1.435-red.svg" alt="latest release" />
+    </a>
+  </td>
+</tr>
+<tr>
+  <td>License</td>
+  <td>
+    <a href="https://github.com/akasolace/HO/blob/1.435/LICENSE">
+    <img src="https://img.shields.io/badge/licence-GLPL%20v3.0-lightgrey.svg" alt="license" />
+    </a>
+</td>
+</tr>
+</table>
 ___
 
 ## Features
