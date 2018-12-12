@@ -154,6 +154,8 @@ public final class UpdateController {
 					HOVerwaltung.instance().getLanguageString("updateavailable") + "\n\n"
 							+ HOVerwaltung.instance().getLanguageString("ls.version") + ": "
 							+ version.getVersionString() + "\n"
+							+ HOVerwaltung.instance().getLanguageString("Released") + ": "
+							+ version.getReleaseDate() + "\n"
 							+ HOVerwaltung.instance().getLanguageString("ls.button.update") + "?",
 					HOVerwaltung.instance().getLanguageString("confirmation.title"),
 					JOptionPane.YES_NO_OPTION);

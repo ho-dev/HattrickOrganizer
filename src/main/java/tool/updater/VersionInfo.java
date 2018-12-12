@@ -38,24 +38,24 @@ public class VersionInfo {
 		return DECF.format(version) + (beta ? " DEV" : "") + (build > 0 ? (" (Build " + build + ")") : "");
 	}
 	
-	/**
-	 * Get the proper file name for the version, e.g. HO_1429_BETA_r866.zip
-	 */
-	public String getZipFileName() {
-		String fn = "HO_";
-		fn += (DECF.format(version).replace(".", ""));
-		if (beta) {
-			fn += "_BETA";
-		}
-		if (build > 0) {
-			fn += ("_r" + build);
-		}
-		if (getFileNameDate().length() > 0) {
-			fn += ("_" + getFileNameDate());
-		}
-		fn += ".zip";
-		return fn;
-	}
+//	/**
+//	 * Get the proper file name for the version, e.g. HO_1429_BETA_r866.zip
+//	 */
+//	public String getZipFileName() {
+//		String fn = "HO_";
+//		fn += (DECF.format(version).replace(".", ""));
+//		if (beta) {
+//			fn += "_BETA";
+//		}
+//		if (build > 0) {
+//			fn += ("_r" + build);
+//		}
+//		if (getFileNameDate().length() > 0) {
+//			fn += ("_" + getFileNameDate());
+//		}
+//		fn += ".zip";
+//		return fn;
+//	}
 
 	public double getVersion() {
 		return version;
@@ -100,7 +100,7 @@ public class VersionInfo {
 	public void setVersionType(String versionType)
     {
         this.versionType = versionType;
-        if (versionType == "RELEASE")
+        if (versionType.equals("RELEASE"))
         {
             setBeta(false);
         }
