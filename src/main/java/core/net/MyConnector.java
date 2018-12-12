@@ -463,32 +463,11 @@ public class MyConnector {
 	// ///////////////////////////////////////////////////////////////////////////////
 	// Update Checker
 	// //////////////////////////////////////////////////////////////////////////////
-	public VersionInfo getLatestVersion() {
-		VersionInfo ret = new VersionInfo();
-		ret.setBeta(false);
-		ret.setVersion(HO.VERSION);
-		try {
-			final String s = getWebPage("https://akasolace.github.io/HO/latest.html", false);
-			try {
-				ret.setVersion(Double.parseDouble(s));
-			} catch (NumberFormatException e) {
-				HOLogger.instance().debug(getClass(), "Error parsing version '" + s + "': " + e);
-			}
-		} catch (Exception e) {
-			HOLogger.instance()
-					.log(getClass(), "Unable to connect to the update server (HO): " + e);
-		}
-		return ret;
-	}
-
-	/**
-	 * Get information about the latest HO beta.
-	 */
-	public VersionInfo getLatestBetaVersion() {
+	public VersionInfo getVersion(String url) {
 		BufferedReader br = null;
 		InputStream is = null;
 		try {
-			is = getNonCHPPWebFile("https://akasolace.github.io/HO/latestbeta.html", false);
+			is = getNonCHPPWebFile(url, false);
 			if (is != null) {
 				br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 				VersionInfo ret = new VersionInfo();
@@ -503,7 +482,6 @@ public class MyConnector {
 					}
 				}
 				if (ret.isValid()) {
-					HOLogger.instance().log(getClass(), "LatestBetaVersion: " + ret);
 					return ret;
 				}
 			} else {
@@ -519,16 +497,25 @@ public class MyConnector {
 		return null;
 	}
 
-	public Extension getEpvVersion() {
-		try {
-			String s = getWebPage(MyConnector.getResourceSite() + "/downloads/epv.xml", false);
-			return XMLExtensionParser.parseExtension(s);
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),
-					"Unable to connect to the update server (EPV): " + e);
-			return new Extension();
-		}
+
+	public VersionInfo getLatestVersion() {
+		return getVersion("https://akasolace.github.io/HO/latest.html");
 	}
+
+	public VersionInfo getLatestBetaVersion() {
+		return getVersion("https://akasolace.github.io/HO/latestbeta.html");
+	}
+
+//	public Extension getEpvVersion() {
+//		try {
+//			String s = getWebPage(MyConnector.getResourceSite() + "/downloads/epv.xml", false);
+//			return XMLExtensionParser.parseExtension(s);
+//		} catch (Exception e) {
+//			HOLogger.instance().log(getClass(),
+//					"Unable to connect to the update server (EPV): " + e);
+//			return new Extension();
+//		}
+//	}
 
 	public Extension getRatingsVersion() {
 		try {
@@ -541,18 +528,18 @@ public class MyConnector {
 		}
 	}
 
-	public News getLatestNews() {
-		try {
-			final String s = MyConnector.instance().getWebPage(
-					MyConnector.getResourceSite() + "/downloads/news.xml", false);
-			XMLNewsParser parser = new XMLNewsParser();
-			return parser.parseNews(s);
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),
-					"Unable to connect to the update server (News): " + e);
-			return new News();
-		}
-	}
+//	public News getLatestNews() {
+//		try {
+//			final String s = MyConnector.instance().getWebPage(
+//					MyConnector.getResourceSite() + "/downloads/news.xml", false);
+//			XMLNewsParser parser = new XMLNewsParser();
+//			return parser.parseNews(s);
+//		} catch (Exception e) {
+//			HOLogger.instance().log(getClass(),
+//					"Unable to connect to the update server (News): " + e);
+//			return new News();
+//		}
+//	}
 
 	// ///////////////////////////////////////////////////////////////////////////////
 	// Proxy
@@ -599,14 +586,14 @@ public class MyConnector {
 		return getNonCHPPWebFile(url, false);
 	}
 
-	public String getUsalWebPage(String url, boolean displaysettingsScreen) throws IOException {
-		if (displaysettingsScreen) {
-			// Show Proxy Screen
-			new ProxyDialog(HOMainFrame.instance());
-		}
-
-		return getWebPage(url, true);
-	}
+//	public String getUsalWebPage(String url, boolean displaysettingsScreen) throws IOException {
+//		if (displaysettingsScreen) {
+//			// Show Proxy Screen
+//			new ProxyDialog(HOMainFrame.instance());
+//		}
+//
+//		return getWebPage(url, true);
+//	}
 
 	/**
 	 * Get a web page using a URLconnection.
