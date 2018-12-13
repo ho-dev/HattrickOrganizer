@@ -49,7 +49,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	/**
 	 * Selects the player with the given id.
 	 * 
-	 * @param idPlayer
+	 * @param spieler
 	 *            the id of the player to select.
 	 */
 	public void setPlayer(Spieler spieler) {

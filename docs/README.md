@@ -2,14 +2,21 @@
 <div align="left">
   <img src="https://cdn.jsdelivr.net/gh/akasolace/ho@master/src/main/resources/ho_logo.png">
 </div>
-
-**Helper Tool for online-manager [Hattrick](www.hattrick.org)**
+**Helper Tool for online-manager [Hattrick](http://www.hattrick.org)**
 <table>
 <tr>
-  <td>Latest Release (Beta)</td>
+  <td>Latest Release</td>
   <td>
     <a href="https://github.com/akasolace/HO/releases/tag/1.435">
-    <img src="https://img.shields.io/badge/HO-1.435-red.svg" alt="latest release" />
+    <img src="https://img.shields.io/badge/HO-1.435-brightgreen.svg" alt="latest release" />
+    </a>
+  </td>
+</tr>
+<tr>
+  <td>Latest Development Version</td>
+  <td>
+    <a href="https://github.com/akasolace/HO/releases/tag/dev">
+    <img src="https://img.shields.io/badge/HO-DEV-red.svg" alt="latest development version" />
     </a>
   </td>
 </tr>
@@ -17,7 +24,7 @@
   <td>License</td>
   <td>
     <a href="https://github.com/akasolace/HO/blob/1.435/LICENSE">
-    <img src="https://img.shields.io/badge/licence-GLPL%20v3.0-lightgrey.svg" alt="license" />
+    <img src="https://img.shields.io/badge/licence-LGPL%203.0-lightgrey.svg" alt="license" />
     </a>
 </td>
 </tr>

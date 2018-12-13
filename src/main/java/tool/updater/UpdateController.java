@@ -1,8 +1,3 @@
-// %1730913863:de.hattrickorganizer.tools.updater%
-/*
- * Created on 16.05.2004
- *
- */
 package tool.updater;
 
 import core.file.ZipHelper;
@@ -10,8 +5,8 @@ import core.file.xml.Extension;
 import core.gui.HOMainFrame;
 import core.model.HOParameter;
 import core.model.HOVerwaltung;
-import core.model.News;
-import core.model.UserParameter;
+//import core.model.News;
+//import core.model.UserParameter;
 import core.net.MyConnector;
 import core.net.login.LoginWaitDialog;
 import core.util.HOLogger;
@@ -25,7 +20,7 @@ import java.util.zip.ZipFile;
 
 import javax.swing.JOptionPane;
 
-import org.w3c.dom.Document;
+//import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import core.HO;
@@ -38,115 +33,115 @@ public final class UpdateController {
 	public static final String UPDATES_URL = "http://ho1.sourceforge.net/onlinefiles";
 	protected static final String WEB_FLAGSFILE = UPDATES_URL + "/xml/flags.zip";
 
-	/**
-	 * Show the language file update dialog.
-	 */
-	public static void showLanguageUpdateDialog() {
-		try {
-			File file = createXMLFile(UPDATES_URL + "/xml/languages.xml",
-					new File(System.getProperty("user.dir") + File.separator + "sprache"
-							+ File.separator + "languages.xml"));
+//	/**
+//	 * Show the language file update dialog.
+//	 */
+//	public static void showLanguageUpdateDialog() {
+//		try {
+//			File file = createXMLFile(UPDATES_URL + "/xml/languages.xml",
+//					new File(System.getProperty("user.dir") + File.separator + "sprache"
+//							+ File.separator + "languages.xml"));
+//
+//			Document doc = UpdateHelper.getDocument(file);
+//
+//			Map<String, HPLanguageInfo> map = getWebLanguages(doc.getDocumentElement()
+//					.getChildNodes());
+//
+//			LanguagesDialog dialog = new LanguagesDialog(map);
+//
+//			dialog.setVisible(true);
+//		} catch (Exception e1) {
+//			HOLogger.instance().log(UpdateController.class, e1);
+//		}
+//	}
 
-			Document doc = UpdateHelper.getDocument(file);
+//	/**
+//	 * Download latest flags from the external space.
+//	 */
+//	public static void updateFlags() {
+//		try {
+//			UpdateHelper.download(WEB_FLAGSFILE, getLocalZipFile());
+//			ZipHelper.unzip(getLocalZipFile(), new File(System.getProperty("user.dir")));
+//			JOptionPane.showMessageDialog(null,
+//					HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
+//					.getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
+//					.getLanguageString("ls.menu.file.update.flags"),
+//					JOptionPane.INFORMATION_MESSAGE);
+//		} catch (Exception e1) {
+//			HOLogger.instance().log(UpdateController.class, e1);
+//		}
+//	}
 
-			Map<String, HPLanguageInfo> map = getWebLanguages(doc.getDocumentElement()
-					.getChildNodes());
+//	/**
+//	 * Create an zip file in the systems temp folder.
+//	 */
+//	protected static File getLocalZipFile() throws IOException {
+//		if (zip == null) {
+//			zip = File.createTempFile("tmp", "zip");
+//		}
+//		return zip;
+//	}
 
-			LanguagesDialog dialog = new LanguagesDialog(map);
+//	/**
+//	 * Create an xml file in the systems temp folder.
+//	 */
+//	private static File getLocalXMLFile() throws IOException {
+//		if (tmp == null) {
+//			tmp = File.createTempFile("tmp", "xml");
+//		}
+//		return tmp;
+//	}
 
-			dialog.setVisible(true);
-		} catch (Exception e1) {
-			HOLogger.instance().log(UpdateController.class, e1);
-		}
-	}
+//	/**
+//	 * analyse the languages.xml file and create a hashtable
+//	 */
+//	private static Map<String, HPLanguageInfo> getWebLanguages(NodeList elements) {
+//		HPLanguageInfo tmp = null;
+//		Element element = null;
+//
+//		Map<String, HPLanguageInfo> map = new HashMap<String, HPLanguageInfo>();
+//
+//		for (int i = 0; i < elements.getLength(); i++) {
+//			if (elements.item(i) instanceof Element) {
+//				element = (Element) elements.item(i);
+//
+//				if (element.getTagName().equals("property")) {
+//					tmp = HPLanguageInfo.instance(element.getChildNodes());
+//					map.put(tmp.getFilename(), tmp);
+//				}
+//			}
+//		}
+//
+//		return map;
+//	}
 
-	/**
-	 * Download latest flags from the external space.
-	 */
-	public static void updateFlags() {
-		try {
-			UpdateHelper.download(WEB_FLAGSFILE, getLocalZipFile());
-			ZipHelper.unzip(getLocalZipFile(), new File(System.getProperty("user.dir")));
-			JOptionPane.showMessageDialog(null,
-					HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
-					.getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
-					.getLanguageString("ls.menu.file.update.flags"),
-					JOptionPane.INFORMATION_MESSAGE);
-		} catch (Exception e1) {
-			HOLogger.instance().log(UpdateController.class, e1);
-		}
-	}
-
-	/**
-	 * Create an zip file in the systems temp folder.
-	 */
-	protected static File getLocalZipFile() throws IOException {
-		if (zip == null) {
-			zip = File.createTempFile("tmp", "zip");
-		}
-		return zip;
-	}
-
-	/**
-	 * Create an xml file in the systems temp folder.
-	 */
-	private static File getLocalXMLFile() throws IOException {
-		if (tmp == null) {
-			tmp = File.createTempFile("tmp", "xml");
-		}
-		return tmp;
-	}
-
-	/**
-	 * analyse the languages.xml file and create a hashtable
-	 */
-	private static Map<String, HPLanguageInfo> getWebLanguages(NodeList elements) {
-		HPLanguageInfo tmp = null;
-		Element element = null;
-
-		Map<String, HPLanguageInfo> map = new HashMap<String, HPLanguageInfo>();
-
-		for (int i = 0; i < elements.getLength(); i++) {
-			if (elements.item(i) instanceof Element) {
-				element = (Element) elements.item(i);
-
-				if (element.getTagName().equals("property")) {
-					tmp = HPLanguageInfo.instance(element.getChildNodes());
-					map.put(tmp.getFilename(), tmp);
-				}
-			}
-		}
-
-		return map;
-	}
-
-	/**
-	 * Download the xml file from Web and save it local
-	 */
-	private static File createXMLFile(String url, File tmp) throws Exception {
-		boolean showDialog = false;
-		String content = "";
-
-		try {
-			content = MyConnector.instance().getUsalWebPage(url, showDialog);
-		} catch (Exception ex) {
-			if (tmp.exists()) {
-				return tmp;
-			}
-			return null;
-		}
-
-		if (tmp.exists()) {
-			tmp.delete();
-		}
-
-		FileWriter writer = new FileWriter(tmp);
-		writer.write(content);
-		writer.flush();
-		writer.close();
-
-		return tmp;
-	}
+//	/**
+//	 * Download the xml file from Web and save it local
+//	 */
+//	private static File createXMLFile(String url, File tmp) throws Exception {
+//		boolean showDialog = false;
+//		String content = "";
+//
+//		try {
+//			content = MyConnector.instance().getUsalWebPage(url, showDialog);
+//		} catch (Exception ex) {
+//			if (tmp.exists()) {
+//				return tmp;
+//			}
+//			return null;
+//		}
+//
+//		if (tmp.exists()) {
+//			tmp.delete();
+//		}
+//
+//		FileWriter writer = new FileWriter(tmp);
+//		writer.write(content);
+//		writer.flush();
+//		writer.close();
+//
+//		return tmp;
+//	}
 
 	/**
 	 * Check the external site for the latest release version.
@@ -159,8 +154,8 @@ public final class UpdateController {
 					HOVerwaltung.instance().getLanguageString("updateavailable") + "\n\n"
 							+ HOVerwaltung.instance().getLanguageString("ls.version") + ": "
 							+ version.getVersionString() + "\n"
-//							+ HOVerwaltung.instance().getLanguageString("Source")
-//							+ ": http://www.hattrickorganizer.net/\n\n"
+							+ HOVerwaltung.instance().getLanguageString("Released") + ": "
+							+ version.getReleaseDate() + "\n"
 							+ HOVerwaltung.instance().getLanguageString("ls.button.update") + "?",
 					HOVerwaltung.instance().getLanguageString("confirmation.title"),
 					JOptionPane.YES_NO_OPTION);
