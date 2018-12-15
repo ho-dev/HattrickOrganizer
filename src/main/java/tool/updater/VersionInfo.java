@@ -14,6 +14,7 @@ import java.util.Locale;
 public class VersionInfo {
 
 	private double version;
+	private String fullVersion;
 	private int build;
 	private Date released;
 	private String versionType;
@@ -34,7 +35,7 @@ public class VersionInfo {
 	public String getVersionString() {
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
 		nf.setMinimumFractionDigits(3);
-		String txt = nf.format(HO.VERSION);
+		String txt = nf.format(version);
 
 		if (versionType=="BETA") {
 			txt += " BETA (r" + build + ")";
@@ -55,11 +56,14 @@ public class VersionInfo {
 		return version;
 	}
 
+	public String getfullVersion() { return fullVersion;}
+
 	public String getversionType() {
 		return versionType;
 	}
 
 	public void setAllButReleaseDate(String sVERSION) {
+		fullVersion = sVERSION;
 		String[] aVersion = sVERSION.split("\\.");
 
 		this.version = Double.parseDouble(aVersion[0] + "." + aVersion[1]);

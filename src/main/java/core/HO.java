@@ -35,7 +35,7 @@ public class HO {
 
 
     public static double VERSION;  // Version is set in build.gradle and exposed to HO via the manifest
-    private static int RevisionNumber;
+	public static int RevisionNumber;
     private static String versionType;
 
 
@@ -92,7 +92,6 @@ public class HO {
 
 		// Get HO version from manifest
         String sVERSION = HO.class.getPackage().getImplementationVersion();
-		sVERSION = "1.435.2.5"; //TODO: delete that line before branch merging
         if (sVERSION != null) {
 			String[] aVersion = sVERSION.split("\\.");
 

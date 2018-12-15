@@ -91,8 +91,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private final JMenu m_jmModuleMenu = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.modules"));
 
 	// Menus
-	private final JMenu m_jmUpdating = new JMenu(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.update"));
+//	private final JMenuItem m_jmUpdating = new JMenuItem(HOVerwaltung.instance()
+//			.getLanguageString("ls.menu.file.update"));
 	private final JMenuItem m_jmBeendenItem = new JMenuItem(HOVerwaltung.instance()
 			.getLanguageString("ls.menu.file.quit"));
 	private final JMenuItem m_jmCreditsItem = new JMenuItem(HOVerwaltung.instance()
@@ -127,8 +127,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 //			.getLanguageString("ls.menu.file.update.flags"));
 	private final JMenuItem m_jmiHO = new JMenuItem(HOVerwaltung.instance()
 			.getLanguageString("ls.menu.file.update.ho"));
-	private final JMenuItem m_jmiHObeta = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.update.hobeta"));
+//	private final JMenuItem m_jmiHObeta = new JMenuItem(HOVerwaltung.instance()
+//			.getLanguageString("ls.menu.file.update.hobeta"));
 //	private final JMenuItem m_jmiRatings = new JMenuItem(HOVerwaltung.instance()
 //			.getLanguageString("ls.menu.file.update.ratingpredictionformulas"));
 //	private final JMenuItem m_jmiLanguages = new JMenuItem(HOVerwaltung.instance()
@@ -415,10 +415,17 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 //			UpdateController.check4RatingsUpdate();
 //		}
 		else if (source.equals(m_jmiHO)) {
-			UpdateController.check4update();
-		} else if (source.equals(m_jmiHObeta)) {
-			UpdateController.check4latestbeta();
+			if(isMac()) {
+				UpdateController.check4update(true);
+			}
+			else
+			{
+				UpdateController.check4update(false);
+			}
 		}
+//		else if (source.equals(m_jmiHObeta)) {
+//			UpdateController.check4latestbeta();
+//		}
 		HOMainFrame.setHOStatus(HOMainFrame.READY);
 	}
 
@@ -524,22 +531,21 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		// Updating Menu
 //		m_jmiLanguages.addActionListener(this);
 //		m_jmiFlags.addActionListener(this);
-		if (isMac()) { // update doesn't work on MacOs' strange packet structure
-			m_jmiHO.setEnabled(false);
-			m_jmiHObeta.setEnabled(false);
-		} else {
-			m_jmiHO.addActionListener(this);
-			m_jmiHObeta.addActionListener(this);
-		}
+//		if (isMac()) { // update doesn't work on MacOs' strange packet structure
+//			m_jmiHO.setEnabled(false);
+////			m_jmiHObeta.setEnabled(false);
+//		} else {
+//			m_jmiHO.addActionListener(this);
+////			m_jmiHObeta.addActionListener(this);
+//		}
 //		m_jmiRatings.addActionListener(this);
-
-		m_jmUpdating.add(m_jmiHO);
-		m_jmUpdating.add(m_jmiHObeta);
+		m_jmiHO.addActionListener(this);
+//		m_jmUpdating.add(m_jmiHO);
+//		m_jmUpdating.add(m_jmiHObeta);
 //		m_jmUpdating.add(m_jmiRatings);
 //		m_jmUpdating.add(m_jmiLanguages);
 //		m_jmUpdating.add(m_jmiFlags);
 
-		m_jmDatei.add(m_jmUpdating);
 
 		m_jmDatei.addSeparator();
 
@@ -572,6 +578,9 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		m_jmFullScreenItem.addActionListener(this);
 		m_jmDatei.add(m_jmFullScreenItem);
 
+		m_jmDatei.addSeparator();
+
+		m_jmDatei.add(m_jmiHO);
 		m_jmDatei.addSeparator();
 
 		// Beenden
