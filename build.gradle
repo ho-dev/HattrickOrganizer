@@ -36,8 +36,9 @@ dependencies {
 // 2 for RELEASE status
 
 def major = '1'
-def minor = '435'
-def development_stage = '1'
+def minor = '436'
+def development_stage = '0'
+def releaseArtefacts = true
 
 def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
@@ -164,21 +165,25 @@ task makeAll(type: GradleBuild) {
 
 task updatebuildreferences(){
     doLast {
-        new File("$projectDir/docs/latest.html").text = """Version=$version
+        if (releaseArtefacts)
+        new File("$projectDir/docs/latest.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 """
         println("latest.html has been updated")
         if (development_stage==1) {
-            new File("$projectDir/docs/latestbeta.html").text = """Version=$version
+            new File("$projectDir/docs/latestbeta.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 """
             println("latestbeta.html has been updated")
         }
         if (development_stage==2) {
-            new File("$projectDir/docs/lateststable.html").text = """Version=$version
+            new File("$projectDir/docs/lateststable.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 """
             println("lateststable.html has been updated")
+        }
+        else{
+            println("artefacts not released, html files have not been updated !!")
         }
     }
 }

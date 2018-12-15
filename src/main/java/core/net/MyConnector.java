@@ -510,17 +510,6 @@ public class MyConnector {
 		return getVersion("https://akasolace.github.io/HO/latestbeta.html");
 	}
 
-//	public Extension getEpvVersion() {
-//		try {
-//			String s = getWebPage(MyConnector.getResourceSite() + "/downloads/epv.xml", false);
-//			return XMLExtensionParser.parseExtension(s);
-//		} catch (Exception e) {
-//			HOLogger.instance().log(getClass(),
-//					"Unable to connect to the update server (EPV): " + e);
-//			return new Extension();
-//		}
-//	}
-
 	public Extension getRatingsVersion() {
 		try {
 			String s = getWebPage(MyConnector.getResourceSite() + "/downloads/ratings.xml", false);
@@ -532,18 +521,6 @@ public class MyConnector {
 		}
 	}
 
-//	public News getLatestNews() {
-//		try {
-//			final String s = MyConnector.instance().getWebPage(
-//					MyConnector.getResourceSite() + "/downloads/news.xml", false);
-//			XMLNewsParser parser = new XMLNewsParser();
-//			return parser.parseNews(s);
-//		} catch (Exception e) {
-//			HOLogger.instance().log(getClass(),
-//					"Unable to connect to the update server (News): " + e);
-//			return new News();
-//		}
-//	}
 
 	// ///////////////////////////////////////////////////////////////////////////////
 	// Proxy

@@ -162,12 +162,27 @@ public final class UpdateController {
 
 		if (version != null
 				&& (version.getVersion() > HO.VERSION || (version.getVersion() == HO.VERSION && HO.isDevelopment()))) {
+
+			String versionType = version.getversionType();
+			String updateAvailable;
+			switch (versionType){
+				case "DEV":
+					updateAvailable = HOVerwaltung.instance().getLanguageString("updateDEVavailable");
+					break;
+				case "BETA":
+					updateAvailable = HOVerwaltung.instance().getLanguageString("updateBETAavailable");
+					break;
+				default:
+					updateAvailable = HOVerwaltung.instance().getLanguageString("updateStableavailable");
+					break;
+			}
+
 			int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
-					HOVerwaltung.instance().getLanguageString("updateavailable") + "\n\n"
+					updateAvailable + "\n\n"
 							+ HOVerwaltung.instance().getLanguageString("ls.version") + ": "
 							+ version.getVersionString() + "\n"
 							+ HOVerwaltung.instance().getLanguageString("Released") + ": "
-							+ version.getReleaseDate() + "\n"
+							+ version.getReleaseDate() + "\n\n"
 							+ HOVerwaltung.instance().getLanguageString("ls.button.update") + "?",
 					HOVerwaltung.instance().getLanguageString("confirmation.title"),
 					JOptionPane.YES_NO_OPTION);
