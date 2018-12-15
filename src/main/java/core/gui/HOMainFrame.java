@@ -41,6 +41,7 @@ import tool.updater.UpdateController;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -174,8 +175,13 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		
 		String teamName = DBManager.instance().getBasics(DBManager.instance().getLatestHrfId()).getTeamName();
-		
-		setTitle("HO! - Hattrick Organizer " + getVersionString() + " - " + teamName);
+
+		if(teamName.equals("")){
+		setTitle("HO! - Hattrick Organizer " + getVersionString());}
+		else{
+			setTitle("HO! - Hattrick Organizer " + getVersionString() + " - " + teamName);}
+
+
 		this.setIconImage(ThemeManager.getIcon(HOIconName.LOGO16).getImage());
 
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -261,13 +267,22 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		nf.setMinimumFractionDigits(3);
 		String txt = nf.format(HO.VERSION);
 
-		if (HO.isDevelopment()) {
+		if (HO.isBeta()) {
+			txt += " BETA";
+			final int r = HO.getRevisionNumber();
+			if (r >= 1) {
+				txt += " (r" + HO.getRevisionNumber() + ")";
+			}
+		}
+
+		else if (HO.isDevelopment()) {
 			txt += " DEV";
 			final int r = HO.getRevisionNumber();
 			if (r >= 1) {
 				txt += " (r" + HO.getRevisionNumber() + ")";
 			}
 		}
+
 		return txt;
 	}
 

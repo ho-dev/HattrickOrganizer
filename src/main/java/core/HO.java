@@ -36,8 +36,6 @@ public class HO {
 
     public static double VERSION;  // Version is set in build.gradle and exposed to HO via the manifest
     private static int RevisionNumber;
-    //public static final int SPRACHVERSION = 2;
-    private static boolean DEVELOPMENT = true; // Version type is set in build.gradle and exposed to HO via the manifest
     private static String versionType;
 
 
@@ -54,15 +52,17 @@ public class HO {
 	 * true. The main purpose for the flag is to disable code (unfinished new
 	 * features, debug code) which should not be seen in a release.
 	 */
-	private static final boolean RELEASE = false;
 
 	public static boolean isDevelopment() {
-		return DEVELOPMENT;
+		return versionType == "DEV";
+	}
+	public static boolean isBeta() {
+		return versionType == "BETA";
+	}
+	public static boolean isRelease() {
+		return versionType == "RELEASE";
 	}
 
-	public static boolean isRelease() {
-		return RELEASE;
-	}
 
 	/**
 	 * Main method to start a HOMainFrame.
@@ -92,39 +92,30 @@ public class HO {
 
 		// Get HO version from manifest
         String sVERSION = HO.class.getPackage().getImplementationVersion();
+		sVERSION = "1.435.2.5"; //TODO: delete that line before branch merging
         if (sVERSION != null) {
-            Pattern p = Pattern.compile("(^\\d+[.\\d+]*)");
-            Matcher m = p.matcher(sVERSION);
+			String[] aVersion = sVERSION.split("\\.");
 
-            if (m.find()) {
-                VERSION = Double.parseDouble(m.group(1));
-                versionType = "RELEASE";
+			VERSION = Double.parseDouble(aVersion[0] + "." + aVersion[1]);
+			RevisionNumber = Integer.parseInt(aVersion[3]);
+			switch (aVersion[2]) {
+				case "0":
+					versionType = "DEV";
+					break;
+				case "1":
+					versionType = "BETA";
+					break;
+				default:
+					versionType = "RELEASE";
+					break;
+			}
+			}
 
-                // now we check i it is a release or a development version
-                p = Pattern.compile("BETA-([0-9]*)$");
-                m = p.matcher(sVERSION);
-                if (m.find()) {
-                    RevisionNumber = Integer.parseInt(m.group(1));
-                    versionType = "BETA";
-                    DEVELOPMENT = true;
-                }
-                else
-                {
-                    p = Pattern.compile("DEV-([0-9]*)$");
-                    m = p.matcher(sVERSION);
-                    if (m.find()) {
-                        RevisionNumber = Integer.parseInt(m.group(1));
-                        versionType = "DEV";
-                        DEVELOPMENT = true;
-                    }
-
-                }
-            } else {
+            else {
                 HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
                 VERSION = 0d;
-                DEVELOPMENT = true;
+				versionType = "DEV";
             }
-        }
 
 		// Usermanagement Login-Dialog
 		try {

@@ -144,10 +144,22 @@ public final class UpdateController {
 //	}
 
 	/**
-	 * Check the external site for the latest release version.
+	 * Check the external site for the latest version according to user preference regarding release channel
 	 */
 	public static void check4update() {
-		VersionInfo version = MyConnector.instance().getLatestVersion();
+		VersionInfo version;
+		switch (core.model.UserParameter.temp().ReleaseChannel) {
+			case "Stable":
+				version = MyConnector.instance().getLatestStableVersion();
+				break;
+			case "Beta":
+				version = MyConnector.instance().getLatestBetaVersion();
+				break;
+			default:
+				version = MyConnector.instance().getLatestVersion();
+				break;
+		}
+
 		if (version != null
 				&& (version.getVersion() > HO.VERSION || (version.getVersion() == HO.VERSION && HO.isDevelopment()))) {
 			int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),

@@ -498,6 +498,10 @@ public class MyConnector {
 	}
 
 
+	public VersionInfo getLatestStableVersion() {
+		return getVersion("https://akasolace.github.io/HO/lateststable.html");
+	}
+
 	public VersionInfo getLatestVersion() {
 		return getVersion("https://akasolace.github.io/HO/latest.html");
 	}

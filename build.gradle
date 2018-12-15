@@ -29,11 +29,25 @@ dependencies {
 //============  variables ==============================================================================================
 
 //naming
-// for Development version : 'X.XXX-DEV-XXX'
-// for BETA version : 'X.XXX-BETA-X'
+// Major.minor.Development_stage.Build
+// Development_stage
+// 0 for DEV status
+// 1 for BETA status
+// 2 for RELEASE status
 
-version = '1.435'   // HO version
+def major = '1'
+def minor = '435'
+def development_stage = '1'
 
+def versionPropsFile = file('version.properties')
+Properties versionProps = new Properties()
+versionProps.load(new FileInputStream(versionPropsFile))
+def buildNumber = versionProps['buildNumber'].toInteger() + 1
+buildNumber =  buildNumber.toString()
+versionProps['buildNumber'] = buildNumber
+versionProps.store(versionPropsFile.newWriter(), null)
+
+version = major + '.' + minor + '.' + development_stage + '.' + buildNumber
 
 
 ext {
@@ -139,11 +153,34 @@ buildRpm {
 
 // ==========  my tasks ================================================================================================
 
+import java.text.SimpleDateFormat
+
 task makeAll(type: GradleBuild) {
     group 'ho'
     description 'Create ZipDistribution, Windows, MacOS and Linux binaries'
     tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'createApp',
-             'AddResourcesAndZipMacApp', 'buildDeb', 'finishDeb', 'buildRpm', 'finishRpm']
+             'AddResourcesAndZipMacApp', 'buildDeb', 'finishDeb', 'buildRpm', 'finishRpm', 'updatebuildreferences']
+}
+
+task updatebuildreferences(){
+    doLast {
+        new File("$projectDir/docs/latest.html").text = """Version=$version
+released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
+"""
+        println("latest.html has been updated")
+        if (development_stage==1) {
+            new File("$projectDir/docs/latestbeta.html").text = """Version=$version
+released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
+"""
+            println("latestbeta.html has been updated")
+        }
+        if (development_stage==2) {
+            new File("$projectDir/docs/lateststable.html").text = """Version=$version
+released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
+"""
+            println("lateststable.html has been updated")
+        }
+    }
 }
 
 task makeWindowsBinarary(type: GradleBuild) {
