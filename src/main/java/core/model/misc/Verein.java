@@ -73,8 +73,8 @@ public final class Verein {
         m_iFans = DF.parse(properties.getProperty("fanclub", "0")).intValue();
         m_iUngeschlagen = DF.parse(properties.getProperty("undefeated", "0")).intValue();
         m_iSiege = DF.parse(properties.getProperty("victories", "0")).intValue();
-        m_iFinancialDirectorLevels = DF.parse(properties.getProperty("financialDirectorLevels", "0")).intValue();
-        m_iFormCoachLevels = DF.parse(properties.getProperty("formCoachLevels", "0")).intValue();
+        m_iFinancialDirectorLevels = DF.parse(properties.getProperty("financialdirectorlevels", "0")).intValue();
+        m_iFormCoachLevels = DF.parse(properties.getProperty("formcoachlevels", "0")).intValue();
         m_iTacticalAssistantLevels = DF.parse(properties.getProperty("tacticalassistantlevels", "0")).intValue();
     }
 

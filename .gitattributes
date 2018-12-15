@@ -1,0 +1,9 @@
+# Handle line endings automatically for files automatically detected as text
+* text=auto
+
+# unix script should always have LF line ending on checkout
+*.sh text eol=lf
+
+# binary files that should not be modified.
+*.png binary
+*.jpg binary

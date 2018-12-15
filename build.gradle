@@ -32,7 +32,7 @@ dependencies {
 // for Development version : 'X.XXX-DEV-XXX'
 // for BETA version : 'X.XXX-BETA-X'
 
-version = '1.435-DEV-7'   // HO version
+version = '1.435'   // HO version
 
 
 

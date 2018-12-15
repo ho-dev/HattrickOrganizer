@@ -1,18 +1,10 @@
 package core.gui.theme;
 
+import core.model.UserParameter;
 import core.model.player.ISpielerPosition;
 import core.model.player.SpielerPosition;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.Transparency;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
@@ -22,7 +14,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import javax.swing.ImageIcon;
-
 
 public class ImageUtilities {
 
@@ -245,8 +236,8 @@ public class ImageUtilities {
 
 	/**
 	 * Creates a wide image for use where value can be greater than 99
-	 * @param wert the Value
-	 * @param aktuell
+	 * @param value the Value
+	 * @param current
 	 * @return an icon representation of the value
 	 */
 	public static ImageIcon getWideImageIcon4Veraenderung(int value, boolean current) {
@@ -453,14 +444,18 @@ public class ImageUtilities {
 			trickotImage = changeColor(changeColor(makeColorTransparent(ThemeManager.getIcon(HOIconName.TRICKOT).getImage(),
 					Color.WHITE), Color.BLACK, trickotfarbe), new Color(100, 100, 100), trickotfarbe.brighter());
 			komplettIcon = new ImageIcon(trickotImage);
+			BufferedImage largeImage = new BufferedImage(28, 14, BufferedImage.TYPE_INT_ARGB);
+			// Large Icon
+			largeImage = (BufferedImage) merge(largeImage, komplettIcon.getImage());
+			komplettIcon = new ImageIcon(largeImage);
 	
 		// return new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB );
 		// Trickotnummer
 			if ((trickotnummer > 0) && (trickotnummer < 100)) {
-				BufferedImage image = new BufferedImage(24, 14, BufferedImage.TYPE_INT_ARGB);
-	
+				BufferedImage image = new BufferedImage(28, 14, BufferedImage.TYPE_INT_ARGB);
+
 				// 5;
-				int xPosText = 18;
+				int xPosText = 20;
 	
 				// Helper.makeColorTransparent( image, Color.white );
 				final java.awt.Graphics2D g2d = (java.awt.Graphics2D) image.getGraphics();
@@ -468,18 +463,24 @@ public class ImageUtilities {
 				// Wert eintragen
 				// g2d.setComposite ( AlphaComposite.getInstance(
 				// AlphaComposite.SRC_OVER, 1.0f ) );
-				g2d.setFont(new java.awt.Font("sansserif", java.awt.Font.BOLD, 10));
+				g2d.setRenderingHint(
+						RenderingHints.KEY_TEXT_ANTIALIASING,
+						RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+				g2d.setRenderingHint(
+						RenderingHints.KEY_RENDERING,
+						RenderingHints.VALUE_RENDER_QUALITY);
+				g2d.setFont(new java.awt.Font(Font.SANS_SERIF, Font.PLAIN, UserParameter.instance().schriftGroesse));
 	
 				// Position bei grossen Zahlen weiter nach vorne
 				if (trickotnummer > 9) {
-					xPosText = 12;
+					xPosText = 13;
 				}
 	
 				g2d.setColor(Color.black);
 				g2d.drawString(trickotnummer + "", xPosText, 13);
 	
 				// Zusammenführen
-				image = (BufferedImage) merge(komplettIcon.getImage(), image);
+				image = (BufferedImage) merge(image, komplettIcon.getImage());
 	
 				// Icon erstellen und in den Cache packen
 				komplettIcon = new ImageIcon(image);

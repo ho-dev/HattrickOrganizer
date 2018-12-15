@@ -122,16 +122,16 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			.getLanguageString("ls.menu.file.subskillrecalculation"));
 	private final JMenuItem m_jmTraining2 = new JMenuItem(HOVerwaltung.instance()
 			.getLanguageString("ls.menu.file.subskillrecalculation7weeks"));
-	private final JMenuItem m_jmiFlags = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.update.flags"));
+//	private final JMenuItem m_jmiFlags = new JMenuItem(HOVerwaltung.instance()
+//			.getLanguageString("ls.menu.file.update.flags"));
 	private final JMenuItem m_jmiHO = new JMenuItem(HOVerwaltung.instance()
 			.getLanguageString("ls.menu.file.update.ho"));
 	private final JMenuItem m_jmiHObeta = new JMenuItem(HOVerwaltung.instance()
 			.getLanguageString("ls.menu.file.update.hobeta"));
-	private final JMenuItem m_jmiRatings = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.update.ratingpredictionformulas"));
-	private final JMenuItem m_jmiLanguages = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.update.languagefile"));
+//	private final JMenuItem m_jmiRatings = new JMenuItem(HOVerwaltung.instance()
+//			.getLanguageString("ls.menu.file.update.ratingpredictionformulas"));
+//	private final JMenuItem m_jmiLanguages = new JMenuItem(HOVerwaltung.instance()
+//			.getLanguageString("ls.menu.file.update.languagefile"));
 	// Components
 	private HOTabbedPane m_jtpTabbedPane;
 
@@ -390,16 +390,19 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			openURL("https://sourceforge.net/apps/phpbb/ho1/index.php");
 		} else if (source.equals(m_jmHattrickItem)) { // Hattrick
 			openURL("http://www.hattrick.org/");
-		} else if (source.equals(m_jmiLanguages)) {
-			UpdateController.showLanguageUpdateDialog();
-		} else if (source.equals(m_jmiFlags)) {
-			UpdateController.updateFlags();
-		} else if (source.equals(m_jmiHO)) {
+		}
+// else if (source.equals(m_jmiLanguages)) {
+//			UpdateController.showLanguageUpdateDialog();
+//		} else if (source.equals(m_jmiFlags)) {
+//			UpdateController.updateFlags();
+//		}
+//		else if (source.equals(m_jmiRatings)) {
+//			UpdateController.check4RatingsUpdate();
+//		}
+		else if (source.equals(m_jmiHO)) {
 			UpdateController.check4update();
 		} else if (source.equals(m_jmiHObeta)) {
 			UpdateController.check4latestbeta();
-		} else if (source.equals(m_jmiRatings)) {
-			UpdateController.check4RatingsUpdate();
 		}
 		HOMainFrame.setHOStatus(HOMainFrame.READY);
 	}
@@ -504,8 +507,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		m_jmDatei.add(m_jmImportItem);
 
 		// Updating Menu
-		m_jmiLanguages.addActionListener(this);
-		m_jmiFlags.addActionListener(this);
+//		m_jmiLanguages.addActionListener(this);
+//		m_jmiFlags.addActionListener(this);
 		if (isMac()) { // update doesn't work on MacOs' strange packet structure
 			m_jmiHO.setEnabled(false);
 			m_jmiHObeta.setEnabled(false);
@@ -513,13 +516,13 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			m_jmiHO.addActionListener(this);
 			m_jmiHObeta.addActionListener(this);
 		}
-		m_jmiRatings.addActionListener(this);
+//		m_jmiRatings.addActionListener(this);
 
 		m_jmUpdating.add(m_jmiHO);
 		m_jmUpdating.add(m_jmiHObeta);
-		m_jmUpdating.add(m_jmiRatings);
-		m_jmUpdating.add(m_jmiLanguages);
-		m_jmUpdating.add(m_jmiFlags);
+//		m_jmUpdating.add(m_jmiRatings);
+//		m_jmUpdating.add(m_jmiLanguages);
+//		m_jmUpdating.add(m_jmiFlags);
 
 		m_jmDatei.add(m_jmUpdating);
 
