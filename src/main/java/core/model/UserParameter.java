@@ -87,6 +87,8 @@ public final class UserParameter extends Configuration {
     /** Current Matchlist Download checked in Download Dialog? */
     public boolean currentMatchlist = true;
 
+    //Release Channel options
+    public String ReleaseChannel = "Stable";
 
     //Die Spieleranalyse wird vertikal untereinander gepackt oder nicht
     public boolean spieleranalyseVertikal = true;
@@ -414,6 +416,7 @@ public final class UserParameter extends Configuration {
 		map.put("aufstellungsAssistentPanel_notLast",String.valueOf(aufstellungsAssistentPanel_notLast));
 		map.put("aufstellungsAssistentPanel_verletzt",String.valueOf(aufstellungsAssistentPanel_verletzt));
 		map.put("xmlDownload",String.valueOf(xmlDownload));
+        map.put("ReleaseChannel",String.valueOf(ReleaseChannel));
 		map.put("fixtures",String.valueOf(fixtures));
 		map.put("currentMatchlist",String.valueOf(currentMatchlist));
 		map.put("logoutOnExit",String.valueOf(logoutOnExit));
@@ -625,6 +628,7 @@ public final class UserParameter extends Configuration {
 		aufstellungsAssistentPanel_notLast = getBooleanValue(values,"aufstellungsAssistentPanel_notLast");
 		aufstellungsAssistentPanel_verletzt = getBooleanValue(values,"aufstellungsAssistentPanel_verletzt");
 		xmlDownload = getBooleanValue(values,"xmlDownload");
+        ReleaseChannel = getStringValue(values, "ReleaseChannel");
 		fixtures = getBooleanValue(values,"fixtures");
 		currentMatchlist = getBooleanValue(values,"currentMatchlist");
 		logoutOnExit = getBooleanValue(values,"logoutOnExit");

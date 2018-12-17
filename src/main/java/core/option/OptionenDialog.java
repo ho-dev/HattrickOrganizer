@@ -41,6 +41,7 @@ public class OptionenDialog extends JDialog {
 	private TrainingsOptionenPanel m_jpTrainingsOptionen;
 	private UserColumnsPanel m_jpUserColumns;
 	private DownloadPanel m_jpDownloadPanel;
+	private ReleaseChannelPanel m_jpReleaseChannelsPanel;
 	private JButton saveButton;
 	private JButton cancelButton;
 	private ImagePanel buttonPanel;
@@ -128,6 +129,14 @@ public class OptionenDialog extends JDialog {
 				core.model.HOVerwaltung.instance()
 						.getLanguageString("options.tabtitle.download"), new JScrollPane(
 						m_jpDownloadPanel));
+
+
+		// Release Channels
+		m_jpReleaseChannelsPanel = new ReleaseChannelPanel();
+		tabbedPane.addTab(
+				core.model.HOVerwaltung.instance()
+						.getLanguageString("options.tabtitle.release_channels"), new JScrollPane(
+						m_jpReleaseChannelsPanel));
 
 		// Columns
 		m_jpUserColumns = new UserColumnsPanel();

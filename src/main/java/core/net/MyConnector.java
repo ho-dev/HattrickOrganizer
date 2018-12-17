@@ -498,6 +498,10 @@ public class MyConnector {
 	}
 
 
+	public VersionInfo getLatestStableVersion() {
+		return getVersion("https://akasolace.github.io/HO/lateststable.html");
+	}
+
 	public VersionInfo getLatestVersion() {
 		return getVersion("https://akasolace.github.io/HO/latest.html");
 	}
@@ -505,17 +509,6 @@ public class MyConnector {
 	public VersionInfo getLatestBetaVersion() {
 		return getVersion("https://akasolace.github.io/HO/latestbeta.html");
 	}
-
-//	public Extension getEpvVersion() {
-//		try {
-//			String s = getWebPage(MyConnector.getResourceSite() + "/downloads/epv.xml", false);
-//			return XMLExtensionParser.parseExtension(s);
-//		} catch (Exception e) {
-//			HOLogger.instance().log(getClass(),
-//					"Unable to connect to the update server (EPV): " + e);
-//			return new Extension();
-//		}
-//	}
 
 	public Extension getRatingsVersion() {
 		try {
@@ -528,18 +521,6 @@ public class MyConnector {
 		}
 	}
 
-//	public News getLatestNews() {
-//		try {
-//			final String s = MyConnector.instance().getWebPage(
-//					MyConnector.getResourceSite() + "/downloads/news.xml", false);
-//			XMLNewsParser parser = new XMLNewsParser();
-//			return parser.parseNews(s);
-//		} catch (Exception e) {
-//			HOLogger.instance().log(getClass(),
-//					"Unable to connect to the update server (News): " + e);
-//			return new News();
-//		}
-//	}
 
 	// ///////////////////////////////////////////////////////////////////////////////
 	// Proxy

@@ -1,12 +1,11 @@
 package tool.updater;
 
+import core.HO;
 import core.util.HOLogger;
 
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -15,13 +14,12 @@ import java.util.Date;
 public class VersionInfo {
 
 	private double version;
+	private String fullVersion;
 	private int build;
 	private Date released;
-	private boolean beta;
 	private String versionType;
 	final static private DecimalFormat DECF = new DecimalFormat("0.000##");
 	final static private DateFormat DATF = new SimpleDateFormat("dd.MM.yyyy");
-	final static private DateFormat DATFILE = new SimpleDateFormat("yyyyMMdd");
 
 	
 	static {
@@ -35,96 +33,80 @@ public class VersionInfo {
 	 * Get a human readable version info string.
 	 */
 	public String getVersionString() {
-		return DECF.format(version) + (beta ? " DEV" : "") + (build > 0 ? (" (Build " + build + ")") : "");
+		NumberFormat nf = NumberFormat.getInstance(Locale.US);
+		nf.setMinimumFractionDigits(3);
+		String txt = nf.format(version);
+
+		if (versionType=="BETA") {
+			txt += " BETA (r" + build + ")";
+		}
+
+		else if (versionType=="DEV") {
+			txt += " DEV (r" + build + ")";
+		}
+
+		return txt;
 	}
-	
-//	/**
-//	 * Get the proper file name for the version, e.g. HO_1429_BETA_r866.zip
-//	 */
-//	public String getZipFileName() {
-//		String fn = "HO_";
-//		fn += (DECF.format(version).replace(".", ""));
-//		if (beta) {
-//			fn += "_BETA";
-//		}
-//		if (build > 0) {
-//			fn += ("_r" + build);
-//		}
-//		if (getFileNameDate().length() > 0) {
-//			fn += ("_" + getFileNameDate());
-//		}
-//		fn += ".zip";
-//		return fn;
-//	}
+
+
+
+
 
 	public double getVersion() {
 		return version;
 	}
 
-	public void setVersion(double version) {
-		this.version = version;
+	public String getfullVersion() { return fullVersion;}
+
+	public String getversionType() {
+		return versionType;
 	}
+
+	public void setAllButReleaseDate(String sVERSION) {
+		fullVersion = sVERSION;
+		String[] aVersion = sVERSION.split("\\.");
+
+		this.version = Double.parseDouble(aVersion[0] + "." + aVersion[1]);
+		this.build = Integer.parseInt(aVersion[3]);
+		switch (aVersion[2]) {
+			case "0":
+				this.versionType = "DEV";
+				break;
+			case "1":
+				this.versionType = "BETA";
+				break;
+			default:
+				this.versionType = "RELEASE";
+				break;
+		}
+	}
+
 
 	public int getBuild() {
 		return build;
 	}
 
-	public void setBuild(int build) {
-		this.build = build;
-	}
-
-	public Date getReleased() {
-		return released;
-	}
 
 	public String getReleaseDate() {
 		return released != null ? DATF.format(released) : "";
 	}
 
-	public String getFileNameDate() {
-		return released != null ? DATFILE.format(released) : "";
-	}
 	
-	public void setReleased(Date released) {
+	public void setReleasedDate(Date released) {
 		this.released = released;
 	}
 
-	public boolean isBeta() {
-		return beta;
-	}
-
-	public void setBeta(boolean beta) {
-		this.beta = beta;
-	}
-
-	public void setVersionType(String versionType)
-    {
-        this.versionType = versionType;
-        if (versionType.equals("RELEASE"))
-        {
-            setBeta(false);
-        }
-        else{
-        setBeta(true);
-    }
-    }
-
 
 	// generic setter, example:
-	// version=1.435
-	// versionType=BETA
-    // build = 2
+	// version=1.436.0.43
 	// released=31.05.2018
 	public void setValue(final String key, final String val) {
 		try {
 			if ("version".equals(key)) {
-				setVersion(Double.parseDouble(val));
-			} else if ("build".equals(key)) {
-				setBuild(Integer.parseInt(val));
-			} else if ("versionType".equals(key)) {
-			    setVersionType(val);
-			} else if ("released".equals(key)) {
-				setReleased(DATF.parse(val));
+				setAllButReleaseDate(val);
+			}
+			else if ("released".equals(key)) {
+				setReleasedDate(DATF.parse(val));
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "Error parsing " + key + " / " + val + " : " + e);
@@ -137,6 +119,6 @@ public class VersionInfo {
 
 	@Override
 	public String toString() {
-		return "VersionInfo [version=" + version + ",  version type=" + versionType + ", build=" + build + ", released=" + released + ", beta=" + beta + "]";
+		return "VersionInfo [version=" + version + ",  version type=" + versionType + ", build=" + build + ", released=" + released +"]";
 	}
 }
