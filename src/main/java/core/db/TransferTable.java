@@ -163,18 +163,6 @@ public class TransferTable extends AbstractTable {
                     final PlayerTransfer transfer = iter.next();
                     addTransfer(transfer);
                 }
-            } else {
-                // Fired player, update team related transfers and remove the rest of the player's history
-                final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-
-                final StringBuffer sqlStmt = new StringBuffer("UPDATE " + getTableName()); //$NON-NLS-1$
-                sqlStmt.append(" SET"); //$NON-NLS-1$
-                sqlStmt.append(" playerid = 0, playername = ''"); //$NON-NLS-1$
-                sqlStmt.append(" WHERE playerid = " + playerId); //$NON-NLS-1$
-                sqlStmt.append(" AND (buyerid = " + teamid + " OR sellerid = " + teamid + ")"); //$NON-NLS-1$
-                DBManager.instance().getAdapter().executeUpdate(sqlStmt.toString());
-                DBManager.instance().getAdapter().executeUpdate("DELETE FROM " + getTableName()
-                                                              + " WHERE playerid = " + playerId);
             }
         } catch (Exception e) {
             e.printStackTrace();
