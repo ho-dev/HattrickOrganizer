@@ -23,7 +23,7 @@ start(){
         fi
     fi
 
-    # check if version as change
+    # check if version in lib is greater than version in home
     LIBVERSION=`unzip -q -c $HODIR/HO.jar META-INF/MANIFEST.MF | grep Implementation-Version | cut -d' ' -f 2`
     if [ -f $HOHOME/HO.jar ]
     then
@@ -32,7 +32,7 @@ start(){
         HOMEVERSION=""
     fi
 
-    if [ "$HOMEVERSION" != "$LIBVERSION" ]
+    if [[ "$LIBVERSION" > "$HOMEVERSION" ]]
     then
         cp -R "${HODIR}/." "${HOHOME}"
     fi
