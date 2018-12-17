@@ -165,22 +165,28 @@ task makeAll(type: GradleBuild) {
 
 task updatebuildreferences(){
     doLast {
-        if (releaseArtefacts)
-        new File("$projectDir/docs/latest.html").text = """version=$version
+        if (releaseArtefacts) {
+            // always update latest.html
+            new File("$projectDir/docs/latest.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 """
-        println("latest.html has been updated")
-        if (development_stage==1) {
-            new File("$projectDir/docs/latestbeta.html").text = """version=$version
+            println("latest.html has been updated")
+
+            // update latestbeta.html if beta or stable has been released
+            if (development_stage != '0') {
+                new File("$projectDir/docs/latestbeta.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 """
-            println("latestbeta.html has been updated")
-        }
-        if (development_stage==2) {
-            new File("$projectDir/docs/lateststable.html").text = """version=$version
+                println("latestbeta.html has been updated")
+            }
+
+            // update lateststable.html only if stable has been released
+            if (development_stage == '2') {
+                new File("$projectDir/docs/lateststable.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 """
-            println("lateststable.html has been updated")
+                println("lateststable.html has been updated")
+            }
         }
         else{
             println("artefacts not released, html files have not been updated !!")
@@ -221,6 +227,10 @@ task AddResourcesInDistrib {
         println("adding resources folder")
         copy {
             from "${projectDir}\\src\\main\\resources\\changelog.txt"
+            into distribDir
+        }
+        copy {
+            from "${projectDir}\\src\\main\\resources\\Logo.ico"
             into distribDir
         }
         copy {
