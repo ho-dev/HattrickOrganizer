@@ -41,7 +41,6 @@ import tool.updater.UpdateController;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -85,54 +84,38 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private InfoPanel m_jpInfoPanel;
 	private final JMenuBar m_jmMenuBar = new JMenuBar();
 	// Top level Menu
-	private final JMenu m_jmAbout = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.aboutho"));
-	private final JMenu m_jmDatei = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.file"));
-	private final JMenu m_jmVerschiedenes = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.functions"));
-	private final JMenu m_jmModuleMenu = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.modules"));
+	private final JMenu m_jmFile = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.file"));       //File
+	private final JMenu m_jmFunctions = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.functions")); //Functions
+	private final JMenu m_jmModules = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.modules"));   //Modules
+	private final JMenu m_jmHelp = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.help"));      //Help
 
-	// Menus
-//	private final JMenuItem m_jmUpdating = new JMenuItem(HOVerwaltung.instance()
-//			.getLanguageString("ls.menu.file.update"));
-	private final JMenuItem m_jmBeendenItem = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.quit"));
-	private final JMenuItem m_jmCreditsItem = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("Credits"));
-	private final JMenuItem m_jmDownloadItem = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.download"));
-	private final JMenuItem m_jmForumItem = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("Forum"));
-	private final JMenuItem m_jmHattrickItem = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("Hattrick"));
-	private final JMenuItem m_jmWikiItem = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("Help"));
-	private final JMenuItem m_jmHomepageItem = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.aboutho.homepage"));
-	private final JMenuItem m_jmFullScreenItem = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.fullscreen"));
-	private final JMenuItem m_jmImportItem = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.importfromhrf"));
-	private final JMenuItem m_jmOptionen = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.preferences"));
-	private final JMenu databaseMenu = new JMenu(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.database"));
-	private final JMenuItem databaseOptionsMenu = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.database.dbuseradministration"));
-	private final JMenuItem m_jmiDbCleanupTool = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.database.databasecleanup"));
-	private final JMenuItem m_jmTraining = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.subskillrecalculation"));
-	private final JMenuItem m_jmTraining2 = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.subskillrecalculation7weeks"));
-//	private final JMenuItem m_jmiFlags = new JMenuItem(HOVerwaltung.instance()
-//			.getLanguageString("ls.menu.file.update.flags"));
-	private final JMenuItem m_jmiHO = new JMenuItem(HOVerwaltung.instance()
-			.getLanguageString("ls.menu.file.update.ho"));
-//	private final JMenuItem m_jmiHObeta = new JMenuItem(HOVerwaltung.instance()
-//			.getLanguageString("ls.menu.file.update.hobeta"));
-//	private final JMenuItem m_jmiRatings = new JMenuItem(HOVerwaltung.instance()
-//			.getLanguageString("ls.menu.file.update.ratingpredictionformulas"));
-//	private final JMenuItem m_jmiLanguages = new JMenuItem(HOVerwaltung.instance()
-//			.getLanguageString("ls.menu.file.update.languagefile"));
+	// Sub Level Menus
+
+	// -----------  File
+	private final JMenuItem m_jmDownloadItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.download"));
+	private final JMenuItem m_jmImportItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.importfromhrf"));
+	private final JMenuItem m_jmiHO = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"));
+	private final JMenuItem m_jmTraining = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation"));
+	private final JMenuItem m_jmTraining2 = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation7weeks"));
+	private final JMenuItem m_jmOptionen = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.preferences"));
+	private final JMenu databaseMenu = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.file.database"));
+	private final JMenuItem databaseOptionsMenu = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.dbuseradministration"));
+	private final JMenuItem m_jmiDbCleanupTool = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.databasecleanup"));
+	private final JMenuItem m_jmFullScreenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.fullscreen"));
+	private final JMenuItem m_jmBeendenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.quit"));
+
+
+	// -----------  Functions
+
+	// -----------  Modules
+
+	// -----------  Help
+	private final JMenuItem m_jmHomepageItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.projecthomepage"));
+	private final JMenuItem m_jmWikiItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.help"));
+	private final JMenuItem m_jmReportAbug = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.reportabug"));
+	private final JMenuItem m_jmAboutAbout = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.about"));
+
+
 	// Components
 	private HOTabbedPane m_jtpTabbedPane;
 
@@ -395,25 +378,16 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			FullScreen.instance().restoreNormalMode(this);
 			// Fire CloseEvent, so all Modules get informed
 			this.processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-		} else if (source.equals(m_jmCreditsItem)) {
+		} else if (source.equals(m_jmAboutAbout)) {
 			Credits.showCredits(HOMainFrame.instance());
 		} else if (source.equals(m_jmHomepageItem)) { // Homepage
-			openURL("http://www.hattrickorganizer.net/");
+			openURL("https://akasolace.github.io/HO/");
 		} else if (source.equals(m_jmWikiItem)) { // User Guide
-			openURL("http://ho1.sourceforge.net/wiki/");
-		} else if (source.equals(m_jmForumItem)) { // Forum
-			openURL("https://sourceforge.net/apps/phpbb/ho1/index.php");
-		} else if (source.equals(m_jmHattrickItem)) { // Hattrick
-			openURL("http://www.hattrick.org/");
+			openURL("https://github.com/akasolace/HO/wiki");
+		} else if (source.equals(m_jmReportAbug)){ // Report a bug
+			openURL("https://github.com/akasolace/HO/issues");
 		}
-// else if (source.equals(m_jmiLanguages)) {
-//			UpdateController.showLanguageUpdateDialog();
-//		} else if (source.equals(m_jmiFlags)) {
-//			UpdateController.updateFlags();
-//		}
-//		else if (source.equals(m_jmiRatings)) {
-//			UpdateController.check4RatingsUpdate();
-//		}
+
 		else if (source.equals(m_jmiHO)) {
 			if(isMac()) {
 				UpdateController.check4update(true);
@@ -423,9 +397,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 				UpdateController.check4update(false);
 			}
 		}
-//		else if (source.equals(m_jmiHObeta)) {
-//			UpdateController.check4latestbeta();
-//		}
+
 		HOMainFrame.setHOStatus(HOMainFrame.READY);
 	}
 
@@ -437,9 +409,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 	}
 
-	public void addTopLevelMenu(JMenu menu) {
-		m_jmMenuBar.add(menu);
-	}
 
 	/**
 	 * Beendet HO
@@ -522,51 +491,34 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		m_jmDownloadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
 		m_jmDownloadItem.addActionListener(this);
-		m_jmDatei.add(m_jmDownloadItem);
+		m_jmFile.add(m_jmDownloadItem);
 
 		// Import HRF
 		m_jmImportItem.addActionListener(this);
-		m_jmDatei.add(m_jmImportItem);
+		m_jmFile.add(m_jmImportItem);
 
 		// Updating Menu
-//		m_jmiLanguages.addActionListener(this);
-//		m_jmiFlags.addActionListener(this);
-//		if (isMac()) { // update doesn't work on MacOs' strange packet structure
-//			m_jmiHO.setEnabled(false);
-////			m_jmiHObeta.setEnabled(false);
-//		} else {
-//			m_jmiHO.addActionListener(this);
-////			m_jmiHObeta.addActionListener(this);
-//		}
-//		m_jmiRatings.addActionListener(this);
 		m_jmiHO.addActionListener(this);
-//		m_jmUpdating.add(m_jmiHO);
-//		m_jmUpdating.add(m_jmiHObeta);
-//		m_jmUpdating.add(m_jmiRatings);
-//		m_jmUpdating.add(m_jmiLanguages);
-//		m_jmUpdating.add(m_jmiFlags);
-
-
-		m_jmDatei.addSeparator();
+		m_jmFile.addSeparator();
 
 		// Training
 		m_jmTraining.addActionListener(this);
-		m_jmDatei.add(m_jmTraining);
+		m_jmFile.add(m_jmTraining);
 		m_jmTraining2.addActionListener(this);
-		m_jmDatei.add(m_jmTraining2);
+		m_jmFile.add(m_jmTraining2);
 
-		m_jmDatei.addSeparator();
+		m_jmFile.addSeparator();
 
 		// Optionen
 		m_jmOptionen.addActionListener(this);
-		m_jmDatei.add(m_jmOptionen);
+		m_jmFile.add(m_jmOptionen);
 		databaseMenu.add(databaseOptionsMenu);
 		databaseOptionsMenu.addActionListener(this);
 		databaseMenu.add(m_jmiDbCleanupTool);
 		m_jmiDbCleanupTool.addActionListener(this);
-		m_jmDatei.add(databaseMenu);
+		m_jmFile.add(databaseMenu);
 
-		m_jmDatei.addSeparator();
+		m_jmFile.addSeparator();
 
 		// Toggle full screen mode
 		if (FullScreen.instance().isFullScreenSupported(this)) {
@@ -576,20 +528,20 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			m_jmFullScreenItem.setEnabled(false);
 		}
 		m_jmFullScreenItem.addActionListener(this);
-		m_jmDatei.add(m_jmFullScreenItem);
+		m_jmFile.add(m_jmFullScreenItem);
 
-		m_jmDatei.addSeparator();
+		m_jmFile.addSeparator();
 
-		m_jmDatei.add(m_jmiHO);
-		m_jmDatei.addSeparator();
+		m_jmFile.add(m_jmiHO);
+		m_jmFile.addSeparator();
 
 		// Beenden
 		m_jmBeendenItem.addActionListener(this);
-		m_jmDatei.add(m_jmBeendenItem);
+		m_jmFile.add(m_jmBeendenItem);
 
-		m_jmMenuBar.add(m_jmDatei);
+		m_jmMenuBar.add(m_jmFile);
 
-		// Verschiedenes
+		// Modules
 		IModule[] activeModules = ModuleManager.instance().getModules(true);
 		for (int i = 0; i < activeModules.length; i++) {
 			if (activeModules[i].hasMainTab()) {
@@ -606,37 +558,34 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 					}
 				});
-				m_jmVerschiedenes.add(showTabMenuItem);
+				m_jmFunctions.add(showTabMenuItem);
 			}
 			if (activeModules[i].hasMenu()) {
-				m_jmModuleMenu.add(activeModules[i].getMenu());
+				m_jmModules.add(activeModules[i].getMenu());
 			}
 		}
 
-		// About
-		m_jmHomepageItem.addActionListener(this);
-		m_jmAbout.add(m_jmHomepageItem);
+		// Help =========================================================================
+		m_jmHomepageItem.addActionListener(this);  //   Help | HomePage
+		m_jmHelp.add(m_jmHomepageItem);
 
-		m_jmForumItem.addActionListener(this);
-		m_jmAbout.add(m_jmForumItem);
+		m_jmWikiItem.addActionListener(this);     //   Help | Wiki
+		m_jmHelp.add(m_jmWikiItem);
 
-		m_jmHattrickItem.addActionListener(this);
-		m_jmAbout.add(m_jmHattrickItem);
+		m_jmReportAbug.addActionListener(this);    //   Help | Report a bug
+		m_jmHelp.add(m_jmReportAbug);
 
-		m_jmWikiItem.addActionListener(this);
-		m_jmAbout.add(m_jmWikiItem);
+		m_jmHelp.addSeparator();
 
-		m_jmAbout.addSeparator();
-
-		m_jmCreditsItem.addActionListener(this);
-		m_jmAbout.add(m_jmCreditsItem);
+		m_jmAboutAbout.addActionListener(this);   // Help | About
+		m_jmHelp.add(m_jmAboutAbout);
 
 		// add Top Level Menus
-		m_jmMenuBar.add(m_jmVerschiedenes);
+		m_jmMenuBar.add(m_jmFunctions);
 		m_jmMenuBar.add(new ToolManager().getToolMenu());
-		m_jmMenuBar.add(m_jmModuleMenu);
+		m_jmMenuBar.add(m_jmModules);
 
-		m_jmMenuBar.add(m_jmAbout);
+		m_jmMenuBar.add(m_jmHelp);
 
 		if (!HO.isRelease()) {
 			m_jmMenuBar.add(DebugMode.getDeveloperMenu());

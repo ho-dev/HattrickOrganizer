@@ -15,6 +15,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import core.HO;
+import core.util.BrowserLauncher;
+import core.util.HOLogger;
 
 public class Credits {
 
@@ -25,12 +27,12 @@ public class Credits {
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		creditsPanel.add(new JLabel("Hattrick Organizer " + HO.VERSION), gbc);
+		creditsPanel.add(new JLabel("Hattrick Organizer " + HO.getVersionString()), gbc);
 		gbc.gridy = 1;
 		creditsPanel.add(new JLabel(" "), gbc);
 
 		gbc.gridy = 2;
-		String[] text = HOVerwaltung.instance().getLanguageString("MenuCredits").split("\\n");
+		String[] text = HOVerwaltung.instance().getLanguageString("window.about.text").split("\\n");
 		for (String line : text) {
 			creditsPanel.add(new JLabel(line), gbc);
 			gbc.gridy++;
@@ -116,7 +118,16 @@ public class Credits {
 
 		Object[] components = { creditsPanel, fuguePanel, fatcowPanel, axialisPanel, brsevPanel };
 
-		JOptionPane.showMessageDialog(parent, components, HOVerwaltung.instance()
-				.getLanguageString("MenuCreditsChoice"), JOptionPane.INFORMATION_MESSAGE);
+		Object[] options1 = { HOVerwaltung.instance().getLanguageString("window.about.licence"), HOVerwaltung.instance().getLanguageString("ls.button.ok")};
+
+		int result = JOptionPane.showOptionDialog(parent, components, HOVerwaltung.instance().getLanguageString("window.about.title"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null,options1, null);
+		if (result == JOptionPane.YES_OPTION) {
+			try {
+				BrowserLauncher.openURL("https://github.com/akasolace/HO/blob/master/LICENSE");
+			} catch (Exception ex) {
+				HOLogger.instance().log(HOMainFrame.class, ex);
+			}
+		}
+
 	}
 }

@@ -20,6 +20,8 @@ import java.io.File;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,6 +63,21 @@ public class HO {
 	}
 	public static boolean isRelease() {
 		return versionType == "RELEASE";
+	}
+	public static String getVersionString() {
+		NumberFormat nf = NumberFormat.getInstance(Locale.US);
+		nf.setMinimumFractionDigits(3);
+		String txt = nf.format(VERSION);
+
+		if (versionType=="BETA") {
+			txt += " BETA (r" + RevisionNumber + ")";
+		}
+
+		else if (versionType=="DEV") {
+			txt += " DEV (r" + RevisionNumber + ")";
+		}
+
+		return txt;
 	}
 
 
