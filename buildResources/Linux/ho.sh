@@ -8,22 +8,35 @@ OLDHOHOME="~/.hattrickorganizer"
 OLDHOHOME="`eval echo $OLDHOHOME`"
 
 start(){
-    HODIR=/usr/lib/ho/
+    HODIR=/usr/lib/ho
 
     if [ ! -d "${HOHOME}" ]
     then
         echo "creating ${HOHOME}"
         mkdir -m 755 "${HOHOME}"
         echo "copying required ressource"
-        cp -R "${HODIR}/." "${HOHOME}"
-        
+
         # Copy db from old version
         if [ -d ${OLDHOHOME}/db ]
         then
             cp -r ${OLDHOHOME}/db ${HOHOME}/db
         fi
     fi
-    
+
+    # check if version in lib is greater than version in home
+    LIBVERSION=`unzip -q -c $HODIR/HO.jar META-INF/MANIFEST.MF | grep Implementation-Version | cut -d' ' -f 2`
+    if [ -f $HOHOME/HO.jar ]
+    then
+        HOMEVERSION=`unzip -q -c $HOHOME/HO.jar META-INF/MANIFEST.MF | grep Implementation-Version | cut -d' ' -f 2`
+    else
+        HOMEVERSION=""
+    fi
+
+    if [[ "$LIBVERSION" > "$HOMEVERSION" ]]
+    then
+        cp -R "${HODIR}/." "${HOHOME}"
+    fi
+
     # Start HOLauncher
     echo "Starting HO from ${HOHOME}...\n"
     cd "${HOHOME}"
