@@ -38,8 +38,7 @@ public final class UpdateController {
 				break;
 		}
 
-		if ((version != null) && (version.getBuild() > HO.RevisionNumber))
-		     {
+		if ((version != null) && (version.getBuild() >= HO.RevisionNumber)) {
 			String versionType = version.getversionType();
 			String updateAvailable;
 			switch (versionType){
@@ -55,7 +54,7 @@ public final class UpdateController {
 			}
 
 
-			if(bInformationOnly){
+			if(bInformationOnly) {
 				JOptionPane.showMessageDialog(HOMainFrame.instance(),
 						updateAvailable + "\n\n"
 								+ HOVerwaltung.instance().getLanguageString("ls.version") + ": "
@@ -78,10 +77,21 @@ public final class UpdateController {
 						HOVerwaltung.instance().getLanguageString("confirmation.title"),
 						JOptionPane.YES_NO_OPTION);
 
-				if (update == JOptionPane.YES_OPTION) {
-						updateHO(version.getfullVersion(), version.getVersion(), versionType);}
+				// Warning, if install via package, ask user to confirmation
+				if (update == JOptionPane.YES_OPTION && 
+					System.getProperty("install.mode","").equalsIgnoreCase("pkg") &&
+					versionType.equals("RELEASE")) {
+					update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
+					HOVerwaltung.instance().getLanguageString("ls.button.update.linux.pkg.warning") + "?",
+					HOVerwaltung.instance().getLanguageString("confirmation.title"),
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE);
 				}
-
+					
+				if (update == JOptionPane.YES_OPTION) {
+						updateHO(version.getfullVersion(), version.getVersion(), versionType);
+				}
+			}
 		} else {
 			final int currRev = HO.getRevisionNumber();
 			JOptionPane.showMessageDialog(HOMainFrame.instance(), HOVerwaltung.instance()

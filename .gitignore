@@ -126,3 +126,9 @@ local.properties
 .scala_dependencies
 .worksheet
 /user.xml
+
+# vs code IDE specific
+.classpath
+.project
+.vscode/
+
