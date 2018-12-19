@@ -40,7 +40,7 @@ start(){
     # Start HOLauncher
     echo "Starting HO from ${HOHOME}...\n"
     cd "${HOHOME}"
-    eval "java -cp \"./*\" HOLauncher"
+    eval "java -cp \"./*\" -Dinstall.mode=pkg HOLauncher"
 }
 
 startfromzip(){
