@@ -69,6 +69,40 @@ Please read first the [contribution guide](contributing.md)
 
 When a release is ready, we fork a release branch from master. 
 
+
+## Dependencies
+
+HO bundles a number of libraries that are compatibly licensed.  We list
+these here.
+
+* commons-codec
+  * License: Apache License, version 2.0
+  * For details, see ``docs/Licences/common-codecs/LICENSE.txt``
+
+* hsqldb
+  * License: has its own licence based on BSD
+  * For details, see ``docs/Licences/hsqldb/LICENSE.txt``
+  
+* jcalendar
+  * License: LGPL
+  * For details, see ``http://www.gnu.org/licenses/lgpl.html``
+  
+ * JGoodies Looks 2.70
+  * License: BSD 2-clause
+  * For details, see ``https://mvnrepository.com/artifact/com.jgoodies/jgoodies-looks/2.7.0``
+  
+ * macAppBundle
+  * License: Apache License, version 2.0
+  * For details, see ``docs/Licences/macAppBundle/LICENSE.txt``
+  
+ * scribe
+  * License: MIT
+  * For details, see ``docs/Licences/scribe/LICENSE.txt``
+  
+ * ospackage
+  * License: Apache License, version 2.0
+  * For details, see ``docs/Licences/ospackage/LICENSE.txt``
+
 ## Acknowledgements
 
 Thanks to all HO previous developers, maintainers as well as all contributors. 
