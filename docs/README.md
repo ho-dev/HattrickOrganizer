@@ -87,19 +87,19 @@ these here.
   * License: LGPL
   * For details, see ``http://www.gnu.org/licenses/lgpl.html``
   
- * JGoodies Looks 2.70
+* JGoodies Looks 2.70
   * License: BSD 2-clause
   * For details, see ``https://mvnrepository.com/artifact/com.jgoodies/jgoodies-looks/2.7.0``
   
- * macAppBundle
+* macAppBundle
   * License: Apache License, version 2.0
   * For details, see ``docs/Licences/macAppBundle/LICENSE.txt``
   
- * scribe
+* scribe
   * License: MIT
   * For details, see ``docs/Licences/scribe/LICENSE.txt``
   
- * ospackage
+* ospackage
   * License: Apache License, version 2.0
   * For details, see ``docs/Licences/ospackage/LICENSE.txt``
 
