@@ -132,5 +132,5 @@ local.properties
 .project
 .vscode/
 
-# macos thumb
+# macos Desktop Service Store
 .DS_Store
