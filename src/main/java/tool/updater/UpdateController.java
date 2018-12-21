@@ -1,23 +1,18 @@
 package tool.updater;
 
+import java.io.*;
+import java.util.zip.ZipFile;
+import javax.swing.JOptionPane;
+
+import core.HO;
 import core.file.ZipHelper;
-import core.file.xml.Extension;
 import core.gui.HOMainFrame;
-import core.model.HOParameter;
 import core.model.HOVerwaltung;
-//import core.model.News;
-//import core.model.UserParameter;
 import core.net.MyConnector;
 import core.net.login.LoginWaitDialog;
 import core.util.HOLogger;
 
-import java.io.File;
-import java.util.zip.ZipFile;
-import javax.swing.JOptionPane;
-import core.HO;
-
 public final class UpdateController {
-
 
 	public static final String UPDATES_URL = "http://ho1.sourceforge.net/onlinefiles";
 
@@ -38,7 +33,7 @@ public final class UpdateController {
 				break;
 		}
 
-		if ((version != null) && (version.getBuild() >= HO.RevisionNumber)) {
+		if ((version != null) && (version.getBuild() > HO.RevisionNumber)) {
 			String versionType = version.getversionType();
 			String updateAvailable;
 			switch (versionType){
@@ -53,29 +48,30 @@ public final class UpdateController {
 					break;
 			}
 
-
 			if(bInformationOnly) {
-				JOptionPane.showMessageDialog(HOMainFrame.instance(),
-						updateAvailable + "\n\n"
-								+ HOVerwaltung.instance().getLanguageString("ls.version") + ": "
-								+ version.getVersionString() + "\n"
-								+ HOVerwaltung.instance().getLanguageString("Released") + ": "
-								+ version.getReleaseDate() + "\n\n"
-								+ HOVerwaltung.instance().getLanguageString("ls.button.update.available") + "\n"
-								+ getHOupdateURL(version.getfullVersion(), version.getVersion(), versionType),
-						       HOVerwaltung.instance().getLanguageString("confirmation.title"),
-						JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(HOMainFrame.instance(), 
+					new UpdaterPanel("<html><body>" + updateAvailable + "<br/><br/>"
+						+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("ls.version") + ":</font>"
+						+ version.getVersionString() + "<br/>"
+						+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("Released") + ":</font>"
+						+ version.getReleaseDate() + "<br/><br/>"
+						+ HOVerwaltung.instance().getLanguageString("ls.button.update.available") + "<br/>"
+						+ getHOupdateURL(version.getfullVersion(), version.getVersion(),versionType) + "</body></html>",
+				 		getReleaseNote()),
+					HOVerwaltung.instance().getLanguageString("confirmation.title"),
+					JOptionPane.INFORMATION_MESSAGE);
 			}
 			else {
 				int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
-						updateAvailable + "\n\n"
-								+ HOVerwaltung.instance().getLanguageString("ls.version") + ": "
-								+ version.getVersionString() + "\n"
-								+ HOVerwaltung.instance().getLanguageString("Released") + ": "
-								+ version.getReleaseDate() + "\n\n"
-								+ HOVerwaltung.instance().getLanguageString("ls.button.update") + "?",
-						HOVerwaltung.instance().getLanguageString("confirmation.title"),
-						JOptionPane.YES_NO_OPTION);
+								new UpdaterPanel("<html><body>" + updateAvailable + "<br/><br/>"
+									+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("ls.version") + ":</font>"
+									+ version.getVersionString() + "<br/>"
+									+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("Released") + ":</font>"
+									+ version.getReleaseDate() + "<br/><br/>"
+									+ HOVerwaltung.instance().getLanguageString("ls.button.update") + "?</body></html>",
+									getReleaseNote()),
+								HOVerwaltung.instance().getLanguageString("confirmation.title"),
+								JOptionPane.YES_NO_OPTION);
 
 				// Warning, if install via package, ask user to confirmation
 				if (update == JOptionPane.YES_OPTION && 
@@ -152,5 +148,30 @@ public final class UpdateController {
 		HOMainFrame.instance().beenden();
 	}
 
+	private static String getReleaseNote() {
+		
+		BufferedReader br = null;
+		String buff = "";
+		StringBuilder sb = new StringBuilder();
 
+		try {
+			br = new BufferedReader(new InputStreamReader(UpdateController.class.getResourceAsStream("/release_notes.txt")));
+			String line;
+			while ((line = br.readLine()) != null) {
+				sb.append(line).append("\n");
+			}
+			buff = sb.toString();
+		} catch (Exception e) {
+			buff =  HOVerwaltung.instance().getLanguageString("ls.update.releasenote.error") + e.getMessage();
+		} finally {
+			try {
+				if (br != null) {
+					br.close();
+				}
+			} catch (IOException e) {
+				HOLogger.instance().log(UpdateController.class, e);
+			}
+		}
+		return buff;
+	}
 }
