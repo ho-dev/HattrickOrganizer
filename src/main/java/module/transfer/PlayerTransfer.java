@@ -169,6 +169,15 @@ public class PlayerTransfer {
     }
 
     /**
+     * Sets the id of the transfered player.
+     *
+     * @param Id of the transfered player.
+     */
+    public final void setPlayerId(int id) {
+        this.playerId = id;
+    }
+
+     /**
      * Gets the id of the transfered player.
      *
      * @return Id of the transfered player.

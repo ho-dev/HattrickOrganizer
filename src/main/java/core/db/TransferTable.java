@@ -133,20 +133,27 @@ public class TransferTable extends AbstractTable {
 
             for (Iterator<PlayerTransfer> iter = transfers.iterator(); iter.hasNext();) {
                 PlayerTransfer transfer = iter.next();
-                addTransfer(transfer);
+                final Spieler player;
 
-                final Spieler player = PlayerRetriever.getPlayer(transfer.getPlayerId());
+                if (transfer.getPlayerId() != 0) {
+                    player= PlayerRetriever.getPlayer(transfer.getPlayerId());
+                } else {
+                    player = PlayerRetriever.getPlayer(transfer.getPlayerName());
+                  }
 
                 if (player != null) {
                     players.add(player);
+                    transfer.setPlayerId(player.getSpielerID());
                 }
+
+                addTransfer(transfer);
             }
             
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
-        }
+          }
     }
     
     /**
