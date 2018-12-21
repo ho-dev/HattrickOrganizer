@@ -2,6 +2,7 @@
 plugins {
     id "edu.sc.seis.macAppBundle" version "2.2.3"
     id "nebula.ospackage" version "5.0.4"
+    id "com.github.breadmoirai.github-release" version "2.2.1" apply false
 }
 
 // java plugin configuration ========================
@@ -39,6 +40,7 @@ def major = '1'
 def minor = '436'
 def development_stage = '0'
 def releaseArtefacts = true
+def upstreamFixed = true
 
 def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
@@ -293,8 +295,7 @@ task makeWinInstaller {
 
         def DBUILDDIR = "${buildDir}\\install\\${project.version}"
         def DOUTFILE="${project.ext.target_dir}\\HO_${project.version}_Win32_Installer.exe"
-
-//          print("-V2"+" "+"-NOCD"+" "+"-DBUILDDIR=${DBUILDDIR}"+" "+ "-DHOVERSION='${project.version}'"+" "+ "-DCONFPATH=${nsis_confPath}"+" "+ "-DOUTFILE='${DOUTFILE}'"+" "+ "${project.ext.nsis_scriptName}")
+        
         exec {
             executable nsis_exe_path
             args "-V2", "-NOCD", "-DBUILDDIR=${DBUILDDIR}", "-DHOVERSION='${project.version}'", "-DCONFPATH=${nsis_confPath}", "-DOUTFILE='${DOUTFILE}'", "${project.ext.nsis_scriptName}"
@@ -311,7 +312,7 @@ task finishDeb{
             from("${buildDir}/distributions")
             include("*.deb")
             into("${buildDir}/artefacts")
-            rename { filename -> filename.replace('_all', '').replace('~','-')}
+            rename { filename -> filename.replace('_all', '').replace('~','-').replace('ho','HO')}
         }
     }
 }
@@ -324,7 +325,7 @@ task finishRpm{
             from("${buildDir}/distributions")
             include("*.rpm")
             into("${buildDir}/artefacts")
-            rename { filename -> filename.replace('.noarch', '').replace('~','-')}
+            rename { filename -> filename.replace('.noarch', '').replace('~','-').replace('ho','HO')}
             }
         }
     }
@@ -385,3 +386,91 @@ task createLanguageFileList()  {
     }
 
 }
+
+
+apply plugin: 'com.github.breadmoirai.github-release'
+githubRelease {
+
+    def _token = GITHUB_TOKEN  // required token for your personal access with repo permissions
+    owner = 'akasolace'
+    repo = 'HO'
+
+    println("$target_dir")
+    releaseAssets.from("$target_dir")
+    println(releaseAssets)
+
+    body {
+        token = _token
+        if (releaseArtefacts) {
+            if (development_stage == '0') {
+                tagName = "DEV"
+                releaseName = "DEV"
+                targetCommitish = "master"
+                body = "Latest development version (aimed at developers).\nBuild ... Release on ...."
+                prerelease = true
+                overwrite = false
+                println("DEVELOPMENT version has been released on GitHub")
+            } else if (development_stage == '1') {
+                tagName = "BETA"
+                releaseName = "BETA"
+                targetCommitish = "master"
+                body = "..................."
+                prerelease = true
+                overwrite = true
+                println("BETA version has been released on GitHub.\nBuild ... Release on ....")
+            } else if (development_stage == '2') {
+                println("automatic release of stable version has not been implemented yet !!")
+            }
+
+        }
+    }}
+        
+
+// task ReleaseToGitHub is broken until upstream fix ===================================
+//task ReleaseToGitHub() {
+//    group 'tool'
+//
+//    if (releaseArtefacts && ['0', '1', '2'].contains(development_stage) && upstreamFixed) {
+//        println("I apply")
+//        apply plugin: 'com.github.breadmoirai.github-release'
+//        githubRelease {
+//
+//            def _token = GITHUB_TOKEN  // required token for your personal access with repo permissions
+//            owner = 'akasolace'
+//            repo = 'HO'
+//
+//            println("$target_dir")
+//            releaseAssets.from("$target_dir")
+//            println(releaseAssets)
+//
+//            body {
+//                token = _token
+//                if (releaseArtefacts) {
+//                    if (development_stage == '0') {
+//                        tagName = "DEV"
+//                        releaseName = "DEV"
+//                        targetCommitish = "master"
+//                        body = "Latest development version (aimed at developers).\nBuild ... Release on ...."
+//                        prerelease = true
+//                        overwrite = false
+//                        println("DEVELOPMENT version has been released on GitHub")
+//                    } else if (development_stage == '1') {
+//                        tagName = "BETA"
+//                        releaseName = "BETA"
+//                        targetCommitish = "master"
+//                        body = "..................."
+//                        prerelease = true
+//                        overwrite = true
+//                        println("BETA version has been released on GitHub.\nBuild ... Release on ....")
+//                    } else if (development_stage == '2') {
+//                        println("automatic release of stable version has not been implemented yet !!")
+//                    }
+//
+//                }
+//
+//            }
+//
+//        }
+//    }
+//
+//}
