@@ -1,5 +1,10 @@
 Please visit the HO! forum in the CHPP section of Hattrick if you have any questions!
 
+Changelist HO! 1.436
+====================
+[Added]
+- display this release notes before HO update
+
 Changelist HO! 1.435
 ====================
 [Added]
