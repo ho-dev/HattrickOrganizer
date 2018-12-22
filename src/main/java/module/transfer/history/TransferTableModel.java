@@ -126,7 +126,7 @@ class TransferTableModel extends AbstractTableModel {
                 if (transfer.getPlayerInfo() != null) {
                     return new Integer(transfer.getPlayerInfo().getFuehrung());
                 } else {
-                    return new Integer(0);
+                    return new Integer(-1);
                 }
 
             case 9:
@@ -134,7 +134,7 @@ class TransferTableModel extends AbstractTableModel {
                 if (transfer.getPlayerInfo() != null) {
                     return new Integer(transfer.getPlayerInfo().getErfahrung());
                 } else {
-                    return new Integer(0);
+                    return new Integer(-1);
                 }
 
             case 10:
@@ -142,7 +142,7 @@ class TransferTableModel extends AbstractTableModel {
                 if (transfer.getPlayerInfo() != null) {
                     return new Integer(transfer.getPlayerInfo().getForm());
                 } else {
-                    return new Integer(0);
+                    return new Integer(-1);
                 }
 
             case 11:
@@ -150,7 +150,7 @@ class TransferTableModel extends AbstractTableModel {
                 if (transfer.getPlayerInfo() != null) {
                     return new Integer(transfer.getPlayerInfo().getKondition());
                 } else {
-                    return new Integer(0);
+                    return new Integer(-1);
                 }
 
             case 12:
@@ -158,7 +158,7 @@ class TransferTableModel extends AbstractTableModel {
                 if (transfer.getPlayerInfo() != null) {
                     return new Integer(transfer.getPlayerInfo().getTorwart());
                 } else {
-                    return new Integer(0);
+                    return new Integer(-1);
                 }
 
             case 13:
@@ -166,7 +166,7 @@ class TransferTableModel extends AbstractTableModel {
                 if (transfer.getPlayerInfo() != null) {
                     return new Integer(transfer.getPlayerInfo().getVerteidigung());
                 } else {
-                    return new Integer(0);
+                    return new Integer(-1);
                 }
 
             case 14:
@@ -174,7 +174,7 @@ class TransferTableModel extends AbstractTableModel {
                 if (transfer.getPlayerInfo() != null) {
                     return new Integer(transfer.getPlayerInfo().getSpielaufbau());
                 } else {
-                    return new Integer(0);
+                    return new Integer(-1);
                 }
 
             case 15:
@@ -182,7 +182,7 @@ class TransferTableModel extends AbstractTableModel {
                 if (transfer.getPlayerInfo() != null) {
                     return new Integer(transfer.getPlayerInfo().getPasspiel());
                 } else {
-                    return new Integer(0);
+                    return new Integer(-1);
                 }
 
             case 16:
@@ -190,7 +190,7 @@ class TransferTableModel extends AbstractTableModel {
                 if (transfer.getPlayerInfo() != null) {
                     return new Integer(transfer.getPlayerInfo().getFluegelspiel());
                 } else {
-                    return new Integer(0);
+                    return new Integer(-1);
                 }
 
             case 17:
@@ -198,7 +198,7 @@ class TransferTableModel extends AbstractTableModel {
                 if (transfer.getPlayerInfo() != null) {
                     return new Integer(transfer.getPlayerInfo().getTorschuss());
                 } else {
-                    return new Integer(0);
+                    return new Integer(-1);
                 }
 
             case 18:
@@ -206,7 +206,7 @@ class TransferTableModel extends AbstractTableModel {
                 if (transfer.getPlayerInfo() != null) {
                     return new Integer(transfer.getPlayerInfo().getStandards());
                 } else {
-                    return new Integer(0);
+                    return new Integer(-1);
                 }
 
             default:

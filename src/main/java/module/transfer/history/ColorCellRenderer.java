@@ -54,7 +54,7 @@ class ColorCellRenderer extends DefaultTableCellRenderer {
 
         final int intVal = ((Integer) value).intValue();
 
-        if (intVal == 0) {
+        if (intVal == -1) {
             setText("---");
         }
 
