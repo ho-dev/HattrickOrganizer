@@ -105,7 +105,8 @@ these here.
 
 ## Acknowledgements
 
-Thanks to all HO previous developers, maintainers as well as all contributors. 
+Thanks to all previous HO developers, maintainers as well as all contributors. 
+
 For their support of open source projects, special thanks to:
 - **JetBrains** https://www.jetbrains.com
 - **PoEditor**  https://poeditor.com
