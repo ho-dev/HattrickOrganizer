@@ -85,7 +85,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     private JButton jbRemove = new JButton(HOVerwaltung.instance().getLanguageString("ScoutEntfernen"));
     private JButton jbAdd = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.add"));
     private JButton jbMiniScout = new JButton(HOVerwaltung.instance().getLanguageString("ScoutMini"));
-    private JButton jbApply = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply"));
+    private JButton jbApply = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply")+" from HT Classic Page");
+    private JButton jbApplyHTCopy = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply")+" from HT Copy Button");
     private JButton jbRemoveAll = new JButton(HOVerwaltung.instance().getLanguageString("Scout.RemoveAll"));
     private JComboBox jcbExperience = new JComboBox(PlayerAbility.ITEMS);
     private JComboBox jcbWinger = new JComboBox(PlayerAbility.ITEMS);
@@ -178,8 +179,10 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
      */
     public final void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource().equals(jbApply)) {
-            copyPaste();
-    	} else if (actionEvent.getSource().equals(jbAddTempSpieler)) {
+            copyPaste("HTClassicPage");
+    	} else if (actionEvent.getSource().equals(jbApplyHTCopy)) {
+            copyPaste("HTCopyButton");
+        } else if (actionEvent.getSource().equals(jbAddTempSpieler)) {
             final Spieler tempSpieler = new Spieler();
             tempSpieler.setNationalitaet(HOVerwaltung.instance().getModel().getBasics().getLand());
             tempSpieler.setSpielerID(getNextTempSpielerID());
@@ -453,13 +456,17 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     /**
      * Calls playerconverter and fills boxes to the corresponding values
      */
-    private void copyPaste() {
+    private void copyPaste(String mode) {
         String message = "";
         final PlayerConverter pc = new PlayerConverter();
 
         try {
-            final Player player = pc.build(jtaCopyPaste.getText());
-
+            final Player player;
+            if (mode.equals("HTClassicPage")) {
+                player = pc.build(jtaCopyPaste.getText());
+            } else { // "HTCopyButton"
+                player = pc.buildHTCopyButton(jtaCopyPaste.getText());
+            }
             if (player != null) {
                 jtfPlayerID.setText(player.getPlayerID() + "");
                 jtfName.setText(player.getPlayerName());
@@ -551,6 +558,9 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         constraints.insets = new Insets(4, 4, 4, 4);
 
         JPanel panel;
+        JPanel buttonPanel;
+        JPanel copyPastePanel;
+        JLabel jlExplainGuide;
         JLabel label;
 
         setLayout(layout);
@@ -688,10 +698,33 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         panel.setLayout(new BorderLayout());
         panel.setBorder(javax.swing.BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString("CopyPaste")));
         jtaCopyPaste.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Transferscout_CopyPaste"));
-        panel.add(new JScrollPane(jtaCopyPaste), BorderLayout.NORTH);
+
+        copyPastePanel = new ImagePanel();
+        copyPastePanel.setLayout(new BorderLayout());
+        jlExplainGuide = new JLabel("<html>Explain Options:<br /> " +
+                "1) Use copy page in old style. For setting old stile, in hattrick: My Hattrick -> Preference -> Site Preference -> Use classic page<br />" +
+                "2) Use copy Hattric Button For setting old stile, in hattrick: My Hattrick -> Preference -> Site Preference -> Enable Copy notes<br />" +
+                "N.B. The languages Hattick Site and Hattrick Organizer should be the same.</html>");
+        //jtfExplainGuide.setEditable(false);
+        copyPastePanel.add(jlExplainGuide ,BorderLayout.NORTH);
+        copyPastePanel.add(new JScrollPane(jtaCopyPaste),BorderLayout.SOUTH);
+        panel.add(copyPastePanel, BorderLayout.NORTH);
+        //panel.add(new JScrollPane(jtaCopyPaste), BorderLayout.SOUTH);
+
+        buttonPanel = new ImagePanel();
+        buttonPanel.setLayout(new GridLayout(1,3));
+        jbApply.setToolTipText("Copy Page Old style");
         jbApply.addActionListener(this);
         layout.setConstraints(jbApply, constraints);
-        panel.add(jbApply, BorderLayout.CENTER);
+        buttonPanel.add(jbApply, BorderLayout.WEST);
+
+        jbApplyHTCopy.setToolTipText("Use Copy Button HT");
+        jbApplyHTCopy.addActionListener(this);
+        layout.setConstraints(jbApplyHTCopy, constraints);
+        buttonPanel.add(jbApplyHTCopy, BorderLayout.EAST);
+
+        panel.add(buttonPanel, BorderLayout.CENTER);
+
         panel.add(jlStatus, BorderLayout.SOUTH);
 
         constraints.fill = GridBagConstraints.BOTH;

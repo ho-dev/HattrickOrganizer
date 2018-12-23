@@ -4,12 +4,7 @@ package module.transfer.scout;
 import core.model.HOVerwaltung;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -143,6 +138,303 @@ public class PlayerConverter {
      */
     public final int getError() {
         return error;
+    }
+
+    /**
+     * Parses the copied text from Hattrick Copy Button and returns a Player Object
+     *
+     * @param text the copied text from HT site
+     *
+     * @return Player a Player object
+     *
+     * @throws Exception Throws exception on some parse errors
+     */
+    public final Player buildHTCopyButton(String text) throws Exception {
+        error = 0;
+
+        final Player player = new Player();
+        String txtTmp = "";
+
+        Scanner sc = new Scanner(text);
+        int i = 1;
+        String row = "";
+        List<String> rows = new ArrayList<String>();
+        while (sc.hasNextLine()) {
+            row = sc.nextLine();
+            row = row.trim();
+            if (!row.isEmpty())
+                rows.add(row);
+        }
+        sc.close();
+
+        // Set index rows
+        int offsetIndexRowSpeciality = 0;
+        if (rows.size()>11){
+            offsetIndexRowSpeciality = 1;
+        }
+        int indexRowNamePlayerId = 0;
+        int indexRowAge = 1;
+        int indexRowTSI = 5;
+        int indexRowSpecialty = 6;
+        int indexRowWarning = 7 + offsetIndexRowSpeciality;
+        int indexRowInjure = 8 + offsetIndexRowSpeciality;
+        int indexRowFormStamina = 9 + offsetIndexRowSpeciality;
+        int indexRowSkills = 10 + offsetIndexRowSpeciality;
+
+        // Extract Name and PlayerId
+        row = rows.get(indexRowNamePlayerId);
+        sc = new Scanner(row);
+        // Player Name
+        sc.useDelimiter("\\[playerid=");
+        txtTmp = sc.next().trim();
+        player.setPlayerName(txtTmp);
+        // Player Id
+        sc.useDelimiter("\\]");
+        txtTmp = sc.next().trim().substring(10);
+        if(!txtTmp.equals("")) {
+            player.setPlayerID(Integer.parseInt(txtTmp));
+        }
+        sc.close();
+        // Age
+        row = rows.get(indexRowAge);
+        sc = new Scanner(row);
+        sc.useDelimiter(" ");
+        txtTmp = sc.next().trim();
+        player.setAge(Integer.parseInt(txtTmp));
+        // Age Days
+        sc.useDelimiter(" ");
+        while (sc.hasNext()) {
+            if (sc.hasNextInt()) {
+                txtTmp = sc.next().trim();
+            } else {
+                sc.next();
+            }
+        }
+        if(!txtTmp.equals("")) {
+            player.setAgeDays(Integer.parseInt(txtTmp));
+        }
+        sc.close();
+        // TSI
+        row = rows.get(indexRowTSI);
+        sc = new Scanner(row);
+        sc.useDelimiter("");
+        txtTmp = "";
+        String c = "";
+        while (sc.hasNext()) {
+            if (sc.hasNextShort() ) {
+                txtTmp = txtTmp + sc.next().trim();
+            } else {
+                c = sc.next();
+            }
+        }
+        if(!txtTmp.equals("")) {
+            player.setTSI(Integer.parseInt(txtTmp));
+        }
+        // Speciality
+        // TODO: 2018-12-23
+
+        // Warnings
+        row = rows.get(indexRowWarning);
+        sc = new Scanner(row);
+        sc.useDelimiter("");
+        txtTmp = "";
+        c = "";
+        while (sc.hasNext()) {
+            if (sc.hasNextInt() ) {
+                txtTmp = txtTmp + sc.next().trim();
+            } else {
+                c = sc.next();
+                // System.out.println(c);
+                if (c.equals("-")){
+                    txtTmp = txtTmp + c;
+                }
+            }
+        }
+        player.setBooked(txtTmp);
+        // Injure
+        row = rows.get(indexRowInjure);
+        sc = new Scanner(row);
+        sc.useDelimiter("");
+        txtTmp = "";
+        c = "";
+        while (sc.hasNext()) {
+            if (sc.hasNextInt() ) {
+                txtTmp = txtTmp + sc.next().trim();
+            } else {
+                c = sc.next();
+                if (c.equals("+") || c.equals("∞")){  //TODO carattere infinito Acciaccato ma gioca
+                    txtTmp = txtTmp + c;
+                }
+            }
+        }
+        if(!txtTmp.equals("")) {
+            player.setInjury(Integer.parseInt(txtTmp));
+        }
+        //Form and Stamina
+        row = rows.get(indexRowFormStamina);
+        sc = new Scanner(row);
+        sc.useDelimiter("");
+        txtTmp = "";
+        c = "";
+        boolean findValue = false;
+        while (sc.hasNext()) {
+            if (sc.hasNextInt() ) {
+                txtTmp = txtTmp + sc.next().trim();
+                findValue = true;
+            } else {
+                c = sc.next();
+                if (findValue)
+                    break;
+            }
+        }
+        if(!txtTmp.equals("")) {
+            player.setForm(Integer.parseInt(txtTmp));
+        }
+        txtTmp = "";
+        c = "";
+        findValue = false;
+        while (sc.hasNext()) {
+            if (sc.hasNextInt() ) {
+                txtTmp = txtTmp + sc.next().trim();
+                findValue = true;
+            } else {
+                c = sc.next();
+                if (findValue)
+                    break;
+            }
+        }
+        if(!txtTmp.equals("")) {
+            player.setStamina(Integer.parseInt(txtTmp));
+        }
+        //Keeper
+        row = rows.get(indexRowSkills);
+        sc = new Scanner(row);
+        sc.useDelimiter("");
+        txtTmp = "";
+        c = "";
+        findValue = false;
+        while (sc.hasNext()) {
+            if (sc.hasNextInt() ) {
+                txtTmp = txtTmp + sc.next().trim();
+                findValue = true;
+            } else {
+                c = sc.next();
+                if (findValue)
+                    break;
+            }
+        }
+        if(!txtTmp.equals("")) {
+            player.setGoalKeeping(Integer.parseInt(txtTmp));
+        }
+        //Defense
+        txtTmp = "";
+        c = "";
+        findValue = false;
+        while (sc.hasNext()) {
+            if (sc.hasNextInt() ) {
+                txtTmp = txtTmp + sc.next().trim();
+                findValue = true;
+            } else {
+                c = sc.next();
+                if (findValue)
+                    break;
+            }
+        }
+        if(!txtTmp.equals("")) {
+            player.setDefense(Integer.parseInt(txtTmp));
+        }
+        //PlayMaking
+        txtTmp = "";
+        c = "";
+        findValue = false;
+        while (sc.hasNext()) {
+            if (sc.hasNextInt() ) {
+                txtTmp = txtTmp + sc.next().trim();
+                findValue = true;
+            } else {
+                c = sc.next();
+                if (findValue)
+                    break;
+            }
+        }
+        if(!txtTmp.equals("")) {
+            player.setPlayMaking(Integer.parseInt(txtTmp));
+        }
+        //Wing
+        txtTmp = "";
+        c = "";
+        findValue = false;
+        while (sc.hasNext()) {
+            if (sc.hasNextInt() ) {
+                txtTmp = txtTmp + sc.next().trim();
+                findValue = true;
+            } else {
+                c = sc.next();
+                if (findValue)
+                    break;
+            }
+        }
+        if(!txtTmp.equals("")) {
+            player.setWing(Integer.parseInt(txtTmp));
+        }
+        //Passing
+        txtTmp = "";
+        c = "";
+        findValue = false;
+        while (sc.hasNext()) {
+            if (sc.hasNextInt() ) {
+                txtTmp = txtTmp + sc.next().trim();
+                findValue = true;
+            } else {
+                c = sc.next();
+                if (findValue)
+                    break;
+            }
+        }
+        if(!txtTmp.equals("")) {
+            player.setPassing(Integer.parseInt(txtTmp));
+        }
+        //Attack
+        txtTmp = "";
+        c = "";
+        findValue = false;
+        while (sc.hasNext()) {
+            if (sc.hasNextInt() ) {
+                txtTmp = txtTmp + sc.next().trim();
+                findValue = true;
+            } else {
+                c = sc.next();
+                if (findValue)
+                    break;
+            }
+        }
+        if(!txtTmp.equals("")) {
+            player.setAttack(Integer.parseInt(txtTmp));
+        }
+        //Set Pieces
+        txtTmp = "";
+        c = "";
+        findValue = false;
+        while (sc.hasNext()) {
+            if (sc.hasNextInt() ) {
+                txtTmp = txtTmp + sc.next().trim();
+                findValue = true;
+            } else {
+                c = sc.next();
+                if (findValue)
+                    break;
+            }
+        }
+        if(!txtTmp.equals("")) {
+            player.setSetPieces(Integer.parseInt(txtTmp));
+        }
+
+        //Price TODO
+        //Deadline TODO
+        //Experience TODO
+        //Loyalty TODO
+
+        return player;
     }
 
     /**
