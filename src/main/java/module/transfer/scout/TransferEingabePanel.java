@@ -6,6 +6,7 @@ import core.datatype.CBItem;
 //import core.epv.EPVData;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
+import core.gui.comp.HyperLinkLabel;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoppelLabelEntry;
 import core.gui.comp.panel.ImagePanel;
@@ -16,12 +17,9 @@ import core.model.player.SpielerPosition;
 import core.module.IModule;
 import core.util.HOLogger;
 import core.util.Helper;
+import jdk.nashorn.internal.runtime.ECMAException;
 
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -85,8 +83,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     private JButton jbRemove = new JButton(HOVerwaltung.instance().getLanguageString("ScoutEntfernen"));
     private JButton jbAdd = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.add"));
     private JButton jbMiniScout = new JButton(HOVerwaltung.instance().getLanguageString("ScoutMini"));
-    private JButton jbApply = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply")+" from HT Classic Page");
-    private JButton jbApplyHTCopy = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply")+" from HT Copy Button");
+    private JButton jbApply = new JButton(HOVerwaltung.instance().getLanguageString("ApplyForClassicPage"));
+    private JButton jbApplyHTCopy = new JButton(HOVerwaltung.instance().getLanguageString("ApplyForHTCopyButton"));
     private JButton jbRemoveAll = new JButton(HOVerwaltung.instance().getLanguageString("Scout.RemoveAll"));
     private JComboBox jcbExperience = new JComboBox(PlayerAbility.ITEMS);
     private JComboBox jcbWinger = new JComboBox(PlayerAbility.ITEMS);
@@ -100,6 +98,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     private JComboBox jcbKeeper = new JComboBox(PlayerAbility.ITEMS);
     private JComboBox jcbDefending = new JComboBox(PlayerAbility.ITEMS);
     private JComboBox jcbLoyalty = new JComboBox(PlayerAbility.ITEMS);
+    private JComboBox jcbLeadership = new JComboBox(PlayerAbility.ITEMS);
     private JCheckBox jchHomegrown = new JCheckBox();
     private JLabel jlStatus = new JLabel(HOVerwaltung.instance().getLanguageString("scout_status") + ": ");
     private JTextArea jtaCopyPaste = new JTextArea(5, 20);
@@ -206,6 +205,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             tempSpieler.setStandards(((CBItem) jcbSetPieces.getSelectedItem()).getId());
             tempSpieler.setSpielaufbau(((CBItem) jcbPlaymaking.getSelectedItem()).getId());
             tempSpieler.setLoyalty(((CBItem)jcbLoyalty.getSelectedItem()).getId());
+            tempSpieler.setFuehrung(((CBItem)jcbLeadership.getSelectedItem()).getId());
             tempSpieler.setHomeGrown(jchHomegrown.isSelected());
             HOVerwaltung.instance().getModel().addSpieler(tempSpieler);
             RefreshManager.instance().doReInit();
@@ -318,6 +318,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         jcbDefending.removeItemListener(this);
         jcbSetPieces.removeItemListener(this);
         jcbLoyalty.removeActionListener(this);
+        jcbLeadership.removeActionListener(this);
         jchHomegrown.removeActionListener(this);
         Helper.markierenComboBox(jcbSpeciality, clScoutEntry.getSpeciality());
         Helper.markierenComboBox(jcbExperience, clScoutEntry.getErfahrung());
@@ -331,6 +332,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         Helper.markierenComboBox(jcbDefending, clScoutEntry.getVerteidigung());
         Helper.markierenComboBox(jcbSetPieces, clScoutEntry.getStandards());
         Helper.markierenComboBox(jcbLoyalty, clScoutEntry.getLoyalty());
+        Helper.markierenComboBox(jcbLeadership, clScoutEntry.getLoyalty());
         jchHomegrown.setSelected(clScoutEntry.isHomegrown());
         jcbSpeciality.addItemListener(this);
         jcbExperience.addItemListener(this);
@@ -343,6 +345,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         jcbPassing.addItemListener(this);
         jcbDefending.addItemListener(this);
         jcbSetPieces.addItemListener(this);
+        jcbLoyalty.addItemListener(this);
+        jcbLeadership.addItemListener(this);
         jchHomegrown.addItemListener(this);
     }
 
@@ -353,7 +357,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         final Spieler tempSpieler = new Spieler();
         tempSpieler.setSpezialitaet(((CBItem)jcbSpeciality.getSelectedItem()).getId());
         tempSpieler.setErfahrung(((CBItem)jcbExperience.getSelectedItem()).getId());
-		tempSpieler.setFuehrung(3); // Huh???
+        tempSpieler.setFuehrung(((CBItem)jcbLeadership.getSelectedItem()).getId());
         tempSpieler.setForm(((CBItem)jcbForm.getSelectedItem()).getId());
         tempSpieler.setKondition(((CBItem)jcbStamina.getSelectedItem()).getId());
         tempSpieler.setVerteidigung(((CBItem)jcbDefending.getSelectedItem()).getId());
@@ -425,6 +429,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         clScoutEntry.setStandards(((CBItem) jcbSetPieces.getSelectedItem()).getId());
         clScoutEntry.setSpielaufbau(((CBItem) jcbPlaymaking.getSelectedItem()).getId());
         clScoutEntry.setLoyalty(((CBItem) jcbLoyalty.getSelectedItem()).getId());
+        clScoutEntry.setLeadership(((CBItem) jcbLeadership.getSelectedItem()).getId());
         clScoutEntry.setHomegrown(jchHomegrown.isSelected());
     }
 
@@ -458,6 +463,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
      */
     private void copyPaste(String mode) {
         String message = "";
+        String errorFields = "";
+
         final PlayerConverter pc = new PlayerConverter();
 
         try {
@@ -508,6 +515,9 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 jcbLoyalty.removeItemListener(this);
                 Helper.markierenComboBox(jcbLoyalty,player.getLoyalty());
                 jcbLoyalty.addItemListener(this);
+                jcbLeadership.removeItemListener(this);
+                Helper.markierenComboBox(jcbLeadership,player.getLeadership());
+                jcbLeadership.addItemListener(this);
                 jchHomegrown.removeItemListener(this);
                 jchHomegrown.setSelected(player.isHomwGrown());
                 jchHomegrown.addItemListener(this);
@@ -515,13 +525,21 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 // Listener stays here for recalculation of rating
                 Helper.markierenComboBox(jcbPlaymaking,player.getPlayMaking());
 
+                errorFields = pc.getErrorFields();
                 // Normally not working. Thus last positioned
-                final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("dd.MM.yy HH:mm",
-                                                                                               java.util.Locale.GERMANY);
-                final java.util.Date date = simpleFormat.parse(player.getExpiryDate() + " "
-                                                               + player.getExpiryTime());
-                jsSpinner.setValue(date);
-
+                try {
+                    final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("dd.MM.yy HH:mm",
+                            java.util.Locale.GERMANY);
+                    final java.util.Date date = simpleFormat.parse(player.getExpiryDate() + " "
+                            + player.getExpiryTime());
+                    jsSpinner.setValue(date);
+                } catch (Exception e){
+                    HOLogger.instance().debug(getClass(), e);
+                    message = HOVerwaltung.instance().getLanguageString("scout_warning");
+                    if (!errorFields.equals(""))
+                        errorFields += ", ";
+                    errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
+                }
                 setLabels();
             }
         } catch (Exception e) {
@@ -543,7 +561,10 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                     message = HOVerwaltung.instance().getLanguageString("scout_success");
             }
         }
-        jlStatus.setText(HOVerwaltung.instance().getLanguageString("scout_status") + ": " + message);
+        if(!errorFields.equals("")){
+            errorFields = " ("  + errorFields + ")";
+        }
+        jlStatus.setText(HOVerwaltung.instance().getLanguageString("scout_status") + ": " + message + errorFields);
     }
 
     /**
@@ -567,7 +588,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 
         // Entries
         panel = new ImagePanel();
-        panel.setLayout(new GridLayout(10, 4, 4, 4));
+        panel.setLayout(new GridLayout(11, 4, 4, 4));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.id"));
         panel.add(label);
@@ -612,6 +633,11 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 		label = new JLabel("EPV");
 		panel.add(label);
 		panel.add(jtfEPV);
+
+        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.leadership"));
+        panel.add(label);
+        jcbLeadership.addItemListener(this);
+        panel.add(jcbLeadership);
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.experience"));
         panel.add(label);
@@ -701,24 +727,21 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 
         copyPastePanel = new ImagePanel();
         copyPastePanel.setLayout(new BorderLayout());
-        jlExplainGuide = new JLabel("<html>Explain Options:<br /> " +
-                "1) Use copy page in old style. For setting old stile, in hattrick: My Hattrick -> Preference -> Site Preference -> Use classic page<br />" +
-                "2) Use copy Hattric Button For setting old stile, in hattrick: My Hattrick -> Preference -> Site Preference -> Enable Copy notes<br />" +
-                "N.B. The languages Hattick Site and Hattrick Organizer should be the same.</html>");
-        //jtfExplainGuide.setEditable(false);
+        jlExplainGuide = new JLabel(HOVerwaltung.instance().getLanguageString("ExplainHowToUseTransferScout"));
         copyPastePanel.add(jlExplainGuide ,BorderLayout.NORTH);
+        JLabel linkLabel = new HyperLinkLabel("https://github.com/akasolace/HO/wiki/Transfer-Scout", "https://github.com/akasolace/HO/wiki/Transfer-Scout");
+        copyPastePanel.add(linkLabel, BorderLayout.CENTER);
         copyPastePanel.add(new JScrollPane(jtaCopyPaste),BorderLayout.SOUTH);
         panel.add(copyPastePanel, BorderLayout.NORTH);
-        //panel.add(new JScrollPane(jtaCopyPaste), BorderLayout.SOUTH);
 
         buttonPanel = new ImagePanel();
-        buttonPanel.setLayout(new GridLayout(1,3));
-        jbApply.setToolTipText("Copy Page Old style");
+        buttonPanel.setLayout(new GridLayout(1,2));
+        jbApply.setToolTipText(HOVerwaltung.instance().getLanguageString("ApplyForClassicPage"));
         jbApply.addActionListener(this);
         layout.setConstraints(jbApply, constraints);
         buttonPanel.add(jbApply, BorderLayout.WEST);
 
-        jbApplyHTCopy.setToolTipText("Use Copy Button HT");
+        jbApplyHTCopy.setToolTipText(HOVerwaltung.instance().getLanguageString("ApplyForHTCopyButton"));
         jbApplyHTCopy.addActionListener(this);
         layout.setConstraints(jbApplyHTCopy, constraints);
         buttonPanel.add(jbApplyHTCopy, BorderLayout.EAST);

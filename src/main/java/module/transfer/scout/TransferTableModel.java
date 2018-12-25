@@ -40,6 +40,8 @@ public class TransferTableModel extends AbstractTableModel {
 	    HOVerwaltung.instance().getLanguageString("ls.player.tsi"),
 	    // Homegrown
 	    HOVerwaltung.instance().getLanguageString("ls.player.motherclub"),
+        //Leadership
+        HOVerwaltung.instance().getLanguageString("ls.player.leadership"),
 	    //Erfahrung
 	    HOVerwaltung.instance().getLanguageString("ls.player.experience"),
 	    //Form
@@ -125,6 +127,8 @@ public class TransferTableModel extends AbstractTableModel {
 	    HOVerwaltung.instance().getLanguageString("ls.player.tsi"),
 	    // Homegrown
 	    HOVerwaltung.instance().getLanguageString("ls.player.short_motherclub"),
+        //Leadership
+        HOVerwaltung.instance().getLanguageString("ls.player.leadership"),
 	    //Erfahrung
 	    HOVerwaltung.instance().getLanguageString("ls.player.short_experience"),
 	    //Form
@@ -243,7 +247,7 @@ public class TransferTableModel extends AbstractTableModel {
      *  Return null if there is no match.
      *
      *
-     * @param column  the column being queried
+     * @param columnIndex  the column being queried
      * @return a string containing the name of <code>column</code>
      */
     @Override
@@ -359,6 +363,7 @@ public class TransferTableModel extends AbstractTableModel {
             aktuellerSpieler.setName(aktuellerScoutEintrag.getName());
             aktuellerSpieler.setSpezialitaet(aktuellerScoutEintrag.getSpeciality());
             aktuellerSpieler.setErfahrung(aktuellerScoutEintrag.getErfahrung());
+            aktuellerSpieler.setFuehrung(aktuellerScoutEintrag.getLeadership());
             aktuellerSpieler.setForm(aktuellerScoutEintrag.getForm());
             aktuellerSpieler.setKondition(aktuellerScoutEintrag.getKondition());
             aktuellerSpieler.setVerteidigung(aktuellerScoutEintrag.getVerteidigung());
@@ -405,191 +410,194 @@ public class TransferTableModel extends AbstractTableModel {
             HomegrownEntry home = new HomegrownEntry();
             home.setSpieler(aktuellerSpieler);
             m_clData[i][7] = home;
+            //Leadershio
+            m_clData[i][8] = new ColorLabelEntry(aktuellerSpieler.getFuehrung()+"",
+                    ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.RIGHT);
             //Erfahrung
-            m_clData[i][8] = new ColorLabelEntry(aktuellerSpieler.getErfahrung()+"",
+            m_clData[i][9] = new ColorLabelEntry(aktuellerSpieler.getErfahrung()+"",
             		ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.RIGHT);
             //Form
-            m_clData[i][9] = new ColorLabelEntry(aktuellerSpieler.getForm()+"",
+            m_clData[i][10] = new ColorLabelEntry(aktuellerSpieler.getForm()+"",
             		ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.RIGHT);
             //Kondition
-            m_clData[i][10] = new ColorLabelEntry(aktuellerSpieler.getKondition()+"",
+            m_clData[i][11] = new ColorLabelEntry(aktuellerSpieler.getKondition()+"",
             		ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.RIGHT);
             // Loyalty
-            m_clData[i][11] = new ColorLabelEntry(aktuellerSpieler.getLoyalty()+"",
+            m_clData[i][12] = new ColorLabelEntry(aktuellerSpieler.getLoyalty()+"",
             		ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                     SwingConstants.RIGHT);
 
             //Torwart
-            m_clData[i][12] = new ColorLabelEntry(aktuellerSpieler.getTorwart()+"",
+            m_clData[i][13] = new ColorLabelEntry(aktuellerSpieler.getTorwart()+"",
                                                   ColorLabelEntry.FG_STANDARD,
                                                   ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                                                   SwingConstants.RIGHT);
 
             //Verteidigung
-            m_clData[i][13] = new ColorLabelEntry(aktuellerSpieler.getVerteidigung()+"",
+            m_clData[i][14] = new ColorLabelEntry(aktuellerSpieler.getVerteidigung()+"",
                                                   ColorLabelEntry.FG_STANDARD,
                                                   ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                                                   SwingConstants.RIGHT);
 
             //Spielaufbau
-            m_clData[i][14] = new ColorLabelEntry(aktuellerSpieler.getSpielaufbau()+"",
+            m_clData[i][15] = new ColorLabelEntry(aktuellerSpieler.getSpielaufbau()+"",
                                                   ColorLabelEntry.FG_STANDARD,
                                                   ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                                                   SwingConstants.RIGHT);
 
             //Passpiel
-            m_clData[i][15] = new ColorLabelEntry(aktuellerSpieler.getPasspiel()+"",
+            m_clData[i][16] = new ColorLabelEntry(aktuellerSpieler.getPasspiel()+"",
                                                   ColorLabelEntry.FG_STANDARD,
                                                   ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                                                   SwingConstants.RIGHT);
 
             //Flügelspiel
-            m_clData[i][16] = new ColorLabelEntry(aktuellerSpieler.getFluegelspiel()+"",
+            m_clData[i][17] = new ColorLabelEntry(aktuellerSpieler.getFluegelspiel()+"",
                                                   ColorLabelEntry.FG_STANDARD,
                                                   ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                                                   SwingConstants.RIGHT);
 
             //Torschuss
-            m_clData[i][17] = new ColorLabelEntry(aktuellerSpieler.getTorschuss()+"",
+            m_clData[i][18] = new ColorLabelEntry(aktuellerSpieler.getTorschuss()+"",
                                                   ColorLabelEntry.FG_STANDARD,
                                                   ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                                                   SwingConstants.RIGHT);
 
             //Standards
-            m_clData[i][18] = new ColorLabelEntry(aktuellerSpieler.getStandards()+"",
+            m_clData[i][19] = new ColorLabelEntry(aktuellerSpieler.getStandards()+"",
                                                   ColorLabelEntry.FG_STANDARD,
                                                   ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                                                   SwingConstants.RIGHT);
 
             //Wert Torwart
-            m_clData[i][19] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(ISpielerPosition.KEEPER,
+            m_clData[i][20] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(ISpielerPosition.KEEPER,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Innnenverteidiger
-            m_clData[i][20] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER,
+            m_clData[i][21] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Innnenverteidiger Nach Aussen
-            m_clData[i][21] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.CENTRAL_DEFENDER_TOWING,
+            m_clData[i][22] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.CENTRAL_DEFENDER_TOWING,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Innnenverteidiger Offensiv
-            m_clData[i][22] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.CENTRAL_DEFENDER_OFF,
+            m_clData[i][23] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.CENTRAL_DEFENDER_OFF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Aussenverteidiger
-            m_clData[i][23] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.BACK,
+            m_clData[i][24] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.BACK,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Aussenverteidiger Nach Innen
-            m_clData[i][24] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.BACK_TOMID,
+            m_clData[i][25] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.BACK_TOMID,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Aussenverteidiger Offensiv
-            m_clData[i][25] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.BACK_OFF,
+            m_clData[i][26] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.BACK_OFF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Aussenverteidiger Defensiv
-            m_clData[i][26] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.BACK_DEF,
+            m_clData[i][27] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.BACK_DEF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Mittelfeld
-            m_clData[i][27] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.MIDFIELDER,
+            m_clData[i][28] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.MIDFIELDER,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Mittelfeld Nach Aussen
-            m_clData[i][28] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.MIDFIELDER_TOWING,
+            m_clData[i][29] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.MIDFIELDER_TOWING,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Mittelfeld Offensiv
-            m_clData[i][29] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.MIDFIELDER_OFF,
+            m_clData[i][30] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.MIDFIELDER_OFF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Mittelfeld Defensiv
-            m_clData[i][30] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.MIDFIELDER_DEF,
+            m_clData[i][31] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.MIDFIELDER_DEF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Flügel
-            m_clData[i][31] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.WINGER,
+            m_clData[i][32] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.WINGER,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Flügel Nach Innen
-            m_clData[i][32] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.WINGER_TOMID,
+            m_clData[i][33] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.WINGER_TOMID,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Flügel Offensiv
-            m_clData[i][33] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.WINGER_OFF,
+            m_clData[i][34] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.WINGER_OFF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Flügel Defensiv
-            m_clData[i][34] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.WINGER_DEF,
+            m_clData[i][35] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.WINGER_DEF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Sturm
-            m_clData[i][35] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.FORWARD,
+            m_clData[i][36] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.FORWARD,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Wert Sturm Defensiv
-            m_clData[i][36] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.FORWARD_DEF,
+            m_clData[i][37] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.FORWARD_DEF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
           //Wert Sturm Nach Aussen
-            m_clData[i][37] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.FORWARD_TOWING,
+            m_clData[i][38] = new ColorLabelEntry(aktuellerSpieler.calcPosValue(SpielerPosition.FORWARD_TOWING,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
                                                   core.model.UserParameter.instance().anzahlNachkommastellen);
 
             //Notiz
-            m_clData[i][38] = new ColorLabelEntry(aktuellerScoutEintrag.getInfo(),
+            m_clData[i][39] = new ColorLabelEntry(aktuellerScoutEintrag.getInfo(),
                                                   ColorLabelEntry.FG_STANDARD,
                                                   ColorLabelEntry.BG_STANDARD, JLabel.LEFT);
 
