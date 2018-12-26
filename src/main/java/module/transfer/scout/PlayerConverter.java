@@ -591,6 +591,7 @@ public class PlayerConverter {
         }
 
         //Deadline TODO
+        /*
         txtTmp = "";
         if(!txtTmp.equals("")) {
             player.setPassing(Integer.parseInt(txtTmp));
@@ -599,6 +600,7 @@ public class PlayerConverter {
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
         }
+        */
         //Mother Club TODO
         txtTmp = "";
         if (!errorFields.equals(""))
