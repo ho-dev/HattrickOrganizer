@@ -581,7 +581,30 @@ public class PlayerConverter {
         }
 
         //Price TODO
+        txtTmp = "";
+        if(!txtTmp.equals("")) {
+            player.setPassing(Integer.parseInt(txtTmp));
+        } else {
+            if (!errorFields.equals(""))
+                errorFields += ", ";
+            errorFields += HOVerwaltung.instance().getLanguageString("scout_price");
+        }
+
         //Deadline TODO
+        txtTmp = "";
+        if(!txtTmp.equals("")) {
+            player.setPassing(Integer.parseInt(txtTmp));
+        } else {
+            if (!errorFields.equals(""))
+                errorFields += ", ";
+            errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
+        }
+        //Mother Club TODO
+        txtTmp = "";
+        if (!errorFields.equals(""))
+            errorFields += ", ";
+        errorFields += HOVerwaltung.instance().getLanguageString("ls.player.motherclub");
+
 
         return player;
     }
