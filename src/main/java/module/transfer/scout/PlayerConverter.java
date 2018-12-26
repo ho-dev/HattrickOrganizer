@@ -325,9 +325,7 @@ public class PlayerConverter {
         }
         // Speciality
         row = rows.get(indexRowSpecialty).toLowerCase(java.util.Locale.ENGLISH);
-        System.out.println(row);
         for (int index=1;index<specialities.size();index++) {
-            System.out.println(specialities.get(index));
             if(row.contains(specialities.get(index))) {
                 player.setSpeciality(specialitiesvalues.get(index));
                 break;
