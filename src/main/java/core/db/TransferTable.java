@@ -49,7 +49,7 @@ public class TransferTable extends AbstractTable {
 			"CREATE INDEX sell_id ON " + getTableName() + "(" + columns[8].getColumnName() + ")"};
 	}
 
-	   /**
+    /**
      * Remove a transfer from the HO database
      *
      * @param transferId Transfer ID
@@ -133,13 +133,8 @@ public class TransferTable extends AbstractTable {
 
             for (Iterator<PlayerTransfer> iter = transfers.iterator(); iter.hasNext();) {
                 PlayerTransfer transfer = iter.next();
-                final Spieler player;
 
-                if (transfer.getPlayerId() != 0) {
-                    player= PlayerRetriever.getPlayer(transfer.getPlayerId());
-                } else {
-                    player = PlayerRetriever.getPlayer(transfer.getPlayerName());
-                  }
+                final Spieler player = PlayerRetriever.getPlayer(transfer);
 
                 if (player != null) {
                     players.add(player);
