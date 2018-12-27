@@ -61,6 +61,21 @@ public class TransferTable extends AbstractTable {
     		// ignore
     	}
     }
+
+    /**
+     * Test if a transfer is already in the HO database
+     *
+     * @param transferId Transfer ID
+     */
+    public boolean alreadyInDB(int transferId) {
+         try {
+            JDBCAdapter adapter = DBManager.instance().getAdapter();
+            return (adapter.executeQuery("SELECT transferid FROM " + getTableName() + " WHERE transferid = "+ transferId) != null) ? true : false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+          }
+    }
 	
     /**
      * Gets a list of transfers.
@@ -101,21 +116,6 @@ public class TransferTable extends AbstractTable {
     }
     
     /**
-     * Reload transfer data for a team from the HT xml.
-     *
-     * @param teamid Team id to reload data for
-     *
-     * @throws Exception If an error occurs.
-     */
-    public void reloadTeamTransfers(int teamid) {
-        DBManager.instance().getAdapter().executeUpdate("DELETE FROM " + getTableName()
-                                                      + " WHERE buyerid = " + teamid
-                                                      + " OR sellerid = " + teamid);
-        updateTeamTransfers(teamid);
-    }
-    
-    
-    /**
      * Update transfer data for a team from the HT xml.
      *
      * Returns false if this fails
@@ -143,8 +143,12 @@ public class TransferTable extends AbstractTable {
 
                 if (player != null) {
                     players.add(player);
-                    transfer.setPlayerId(player.getSpielerID());
-                }
+                    if (transfer.getPlayerId() == 0) {
+                        transfer.setPlayerId(player.getSpielerID());
+                    }
+                } else {
+                    if (alreadyInDB(transfer.getTransferID())) continue;
+                  }
 
                 addTransfer(transfer);
             }

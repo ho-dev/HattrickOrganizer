@@ -166,7 +166,7 @@ public class HistoryPane extends JSplitPane {
 	                        final JWindow waitWindow = new LoginWaitDialog(HOMainFrame.instance());
 	                        waitWindow.setVisible(true);
 
-	                        DBManager.instance().reloadTeamTransfers(teamId);
+	                        DBManager.instance().updateTeamTransfers(teamId);
 	                        waitWindow.setVisible(false);
 	                        waitWindow.dispose();
 	                    } catch (Exception ex) {

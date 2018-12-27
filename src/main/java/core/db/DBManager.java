@@ -1277,11 +1277,6 @@ public class DBManager {
 				.updatePlayerTransfers(playerId);
 	}
 
-	public void reloadTeamTransfers(int teamid) {
-		((TransferTable) getTable(TransferTable.TABLENAME))
-				.reloadTeamTransfers(teamid);
-	}
-
 	public boolean updateTeamTransfers(int teamid) {
 		return ((TransferTable) getTable(TransferTable.TABLENAME))
 					.updateTeamTransfers(teamid);
