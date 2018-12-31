@@ -239,6 +239,8 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         playerTable.getColumnModel().getColumn(4).setCellRenderer(new IconCellRenderer());
         playerTable.getColumnModel().getColumn(4).setMaxWidth(20);
         playerTable.getColumnModel().getColumn(4).setPreferredWidth(150);
+        playerTable.getColumnModel().getColumn(8).setCellRenderer(new ButtonCellRenderer());
+        playerTable.getColumnModel().getColumn(8).setCellEditor(new ButtonCellEditor(this, values));
     }
 
     /**

@@ -1272,6 +1272,11 @@ public class DBManager {
 				.getTransfers(season, bought, sold);
 	}
 
+    public void removeTransfer(int transferId) {
+		((TransferTable) getTable(TransferTable.TABLENAME))
+				.removeTransfer(transferId);
+	}
+
 	public void updatePlayerTransfers(int playerId) {
 		((TransferTable) getTable(TransferTable.TABLENAME))
 				.updatePlayerTransfers(playerId);
