@@ -53,8 +53,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
     //~ Instance fields ----------------------------------------------------------------------------
 	private JButton jbApply = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.ok"));
-    private JButton jbApplyScout = new JButton(HOVerwaltung.instance().getLanguageString("ApplyForClassicPage"));
-    private JButton jbApplyHTCopy = new JButton(HOVerwaltung.instance().getLanguageString("ApplyForHTCopyButton"));
+    private JButton jbApplyScout = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.apply"));
     private JButton jbCancel = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
     private JComboBox jcbAttacking = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
     private JComboBox jcbDefense = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
@@ -135,9 +134,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         } else if (actionEvent.getSource().equals(jbCancel)) {
         	close();
         } else if (actionEvent.getSource().equals(jbApplyScout)) {
-            copyPaste("HTClassicPage");
-        } else if (actionEvent.getSource().equals(jbApplyHTCopy)) {
-            copyPaste("HTCopyButton");
+            copyPaste();
 		} else if (actionEvent.getSource().equals(jtfAge)) {
 			spielervalueChanged();
         }
@@ -184,18 +181,15 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     /**
      * Calls playerconverter and fills boxes to the corresponding values
      */
-    private void copyPaste(String mode) {
+    private void copyPaste() {
         final PlayerConverter pc = new PlayerConverter();
         String message = "";
         String errorFields = "";
 
         try {
             final Player player;
-            if (mode.equals("HTClassicPage")) {
-                player = pc.build(jtaCopyPaste.getText());
-            } else { // "HTCopyButton"
-                player = pc.buildHTCopyButton(jtaCopyPaste.getText());
-            }
+            player = pc.build(jtaCopyPaste.getText());
+
             if (player != null) {
                 jtfPlayerID.setText(player.getPlayerID() + "");
                 jtfName.setText(player.getPlayerName());
@@ -212,7 +206,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                 Helper.markierenComboBox(jcbExperience, player.getExperience());
                 jcbExperience.addItemListener(this);
                 jcbLeadership.removeItemListener(this);
-                Helper.markierenComboBox(jcbLeadership, player.getExperience());
+                Helper.markierenComboBox(jcbLeadership, player.getLeadership());
                 jcbLeadership.addItemListener(this);
                 jcbForm.removeItemListener(this);
                 Helper.markierenComboBox(jcbForm, player.getForm());
@@ -522,15 +516,10 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
         buttonPanel = new ImagePanel();
         buttonPanel.setLayout(new GridLayout(1,2));
-        jbApplyScout.setToolTipText(HOVerwaltung.instance().getLanguageString("ApplyForClassicPage"));
+        jbApplyScout.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.button.apply"));
         jbApplyScout.addActionListener(this);
         layout.setConstraints(jbApplyScout, constraints);
         buttonPanel.add(jbApplyScout, BorderLayout.WEST);
-
-        jbApplyHTCopy.setToolTipText(HOVerwaltung.instance().getLanguageString("ApplyForHTCopyButton"));
-        jbApplyHTCopy.addActionListener(this);
-        layout.setConstraints(jbApplyHTCopy, constraints);
-        buttonPanel.add(jbApplyHTCopy, BorderLayout.EAST);
 
         panel.add(buttonPanel, BorderLayout.CENTER);
 

@@ -83,8 +83,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     private JButton jbRemove = new JButton(HOVerwaltung.instance().getLanguageString("ScoutEntfernen"));
     private JButton jbAdd = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.add"));
     private JButton jbMiniScout = new JButton(HOVerwaltung.instance().getLanguageString("ScoutMini"));
-    private JButton jbApply = new JButton(HOVerwaltung.instance().getLanguageString("ApplyForClassicPage"));
-    private JButton jbApplyHTCopy = new JButton(HOVerwaltung.instance().getLanguageString("ApplyForHTCopyButton"));
+    private JButton jbApply = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply"));
     private JButton jbRemoveAll = new JButton(HOVerwaltung.instance().getLanguageString("Scout.RemoveAll"));
     private JComboBox jcbExperience = new JComboBox(PlayerAbility.ITEMS);
     private JComboBox jcbWinger = new JComboBox(PlayerAbility.ITEMS);
@@ -178,9 +177,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
      */
     public final void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource().equals(jbApply)) {
-            copyPaste("HTClassicPage");
-    	} else if (actionEvent.getSource().equals(jbApplyHTCopy)) {
-            copyPaste("HTCopyButton");
+            copyPaste();
         } else if (actionEvent.getSource().equals(jbAddTempSpieler)) {
             final Spieler tempSpieler = new Spieler();
             tempSpieler.setNationalitaet(HOVerwaltung.instance().getModel().getBasics().getLand());
@@ -461,7 +458,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     /**
      * Calls playerconverter and fills boxes to the corresponding values
      */
-    private void copyPaste(String mode) {
+    private void copyPaste() {
         String message = "";
         String errorFields = "";
 
@@ -469,15 +466,13 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 
         try {
             final Player player;
-            if (mode.equals("HTClassicPage")) {
-                player = pc.build(jtaCopyPaste.getText());
-            } else { // "HTCopyButton"
-                player = pc.buildHTCopyButton(jtaCopyPaste.getText());
-            }
+            player = pc.build(jtaCopyPaste.getText());
+
             if (player != null) {
                 jtfPlayerID.setText(player.getPlayerID() + "");
                 jtfName.setText(player.getPlayerName());
                 jtfAge.setText(player.getAge() + "." + player.getAgeDays());
+
                 jtfPrice.setText(player.getPrice() + "");
                 jtfTSI.setText(player.getTSI() + "");
                 jtaNotes.setText(player.getInfo());
@@ -736,15 +731,10 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 
         buttonPanel = new ImagePanel();
         buttonPanel.setLayout(new GridLayout(1,2));
-        jbApply.setToolTipText(HOVerwaltung.instance().getLanguageString("ApplyForClassicPage"));
+        jbApply.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.button.apply"));
         jbApply.addActionListener(this);
         layout.setConstraints(jbApply, constraints);
         buttonPanel.add(jbApply, BorderLayout.WEST);
-
-        jbApplyHTCopy.setToolTipText(HOVerwaltung.instance().getLanguageString("ApplyForHTCopyButton"));
-        jbApplyHTCopy.addActionListener(this);
-        layout.setConstraints(jbApplyHTCopy, constraints);
-        buttonPanel.add(jbApplyHTCopy, BorderLayout.EAST);
 
         panel.add(buttonPanel, BorderLayout.CENTER);
 

@@ -1,6 +1,8 @@
 // %1329240092:de.hattrickorganizer.gui.transferscout%
 package module.transfer.scout;
 
+import core.constants.player.PlayerSpeciality;
+import core.datatype.CBItem;
 import core.model.HOVerwaltung;
 
 import java.text.SimpleDateFormat;
@@ -104,8 +106,13 @@ public class PlayerConverter {
 
         specialitiesvalues = new ArrayList<Integer>();
 
-        for (int k = 0; k < 8; k++) {
-            specialitiesvalues.add(new Integer(k));
+        for (int i = 0; i<PlayerSpeciality.ITEMS.length; i++){
+            for (int k = 0; k < 8; k++) {
+                if(PlayerSpeciality.ITEMS[i].getText().toLowerCase(java.util.Locale.ENGLISH).equals(specialities.get(k))){
+                    specialitiesvalues.add(PlayerSpeciality.ITEMS[i].getId());
+                    break;
+                }
+            }
         }
 
         // Sort specialities by length (shortest first)
@@ -129,6 +136,8 @@ public class PlayerConverter {
 
             p--;
         }
+
+        errorFields = "";
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -186,6 +195,7 @@ public class PlayerConverter {
         int indexRowNamePlayerId = 0;
         int indexRowAge = 1;
         int indexRowExperience = 3;
+        int indexMotherClub = 4;
         int indexRowTSI = 5;
         int indexRowSpecialty = 7;
         int indexRowWarning = 7 + offsetIndexRowSpeciality;
@@ -303,6 +313,11 @@ public class PlayerConverter {
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.loyalty");
         }
         sc.close();
+        // Mother Club
+        row = rows.get(indexMotherClub).toLowerCase(java.util.Locale.ENGLISH);
+        if (row.indexOf(HOVerwaltung.instance().getLanguageString("ls.player.motherclub").toLowerCase(java.util.Locale.ENGLISH))>=0) {
+            player.setHomeGrown(true);
+        }
         // TSI
         row = rows.get(indexRowTSI);
         sc = new Scanner(row);
@@ -349,7 +364,7 @@ public class PlayerConverter {
             }
         }
         if(!txtTmp.equals("")) {
-            player.setBooked(txtTmp);
+            player.setBooked(row.trim());
         } else {
             if (!errorFields.equals(""))
                 errorFields += ", ";
@@ -599,13 +614,18 @@ public class PlayerConverter {
             errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
         }
         */
-        //Mother Club TODO
-        txtTmp = "";
-        if (!errorFields.equals(""))
-            errorFields += ", ";
-        errorFields += HOVerwaltung.instance().getLanguageString("ls.player.motherclub");
 
+        return player;
+    }
 
+    public final Player build(String text) throws Exception {
+        Player player = new Player();
+
+        if(text.indexOf("[playerid=")>=0){
+            player = this.buildHTCopyButton(text);
+        }else {
+            player = this.buildClassicPage(text);
+        }
         return player;
     }
 
@@ -618,7 +638,7 @@ public class PlayerConverter {
      *
      * @throws Exception Throws exception on some parse errors
      */
-    public final Player build(String text) throws Exception {
+    public final Player buildClassicPage(String text) throws Exception {
         error = 0;
 
         final Player player = new Player();
@@ -1070,7 +1090,7 @@ public class PlayerConverter {
 
             final List<List<Object>> foundspecialities = new ArrayList<List<Object>>();
 
-            while (p >= 0) {
+            while (p > 0) {
                 final String singlespeciality = specialities.get(p).toString();
                 k = mytext.indexOf(singlespeciality);
 
@@ -1139,7 +1159,7 @@ public class PlayerConverter {
             }
 
             if (foundspecialities.size() > 0) {
-                player.setSpeciality((specialitiesvalues.get(((Integer) (foundspecialities.get(0)).get(2)).intValue())).intValue() + 1);
+                player.setSpeciality((specialitiesvalues.get(((Integer) (foundspecialities.get(0)).get(2)).intValue())).intValue());
             } else {
                 player.setSpeciality(0);
             }
