@@ -791,6 +791,11 @@ public class DBManager {
 				.getSpielerUserPosFlag(spielerId);
 	}
 
+	public boolean getIsSpielerFired(int spielerId) {
+		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
+				.getIsSpielerFired(spielerId);
+	}
+
 	public void saveManuellerSmilie(int spielerId, String smilie) {
 		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.saveManuellerSmilie(spielerId, smilie);
@@ -815,6 +820,11 @@ public class DBManager {
 	public void saveTeamInfoSmilie(int spielerId, String smilie) {
 		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.saveTeamInfoSmilie(spielerId, smilie);
+	}
+
+	public void saveIsSpielerFired(int spielerId, boolean isFired) {
+		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
+				.saveIsSpielerFired(spielerId, isFired);
 	}
 
 	// ------------------------------- MatchLineupTable

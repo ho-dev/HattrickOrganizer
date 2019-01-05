@@ -86,6 +86,8 @@ final class DBUpdater {
 					updateDBv21(DBVersion, version);
                 case 21:
                     updateDBv22(DBVersion, version);
+                case 22:
+                    updateDBv23(DBVersion, version);
 				}
 				
 
@@ -563,6 +565,29 @@ final class DBUpdater {
         }
     }
 	
+    private void updateDBv23(int DBVersion, int version) throws SQLException {
+        // 1.436 BETA
+
+        // add player fired information to SPIELERNOTIZ table
+        if (!columnExistsInTable("isFired", SpielerNotizenTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELERNOTIZ ADD COLUMN isFired BOOLEAN");
+			m_clJDBCAdapter.executeUpdate("UPDATE SPIELERNOTIZ SET isFired = 'false'");
+		}
+
+        if (version < DBVersion) {
+            if(!HO.isDevelopment()) {
+                HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
+                dbZugriff.saveUserParameter("DBVersion", DBVersion);
+            } else {
+                HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
+                dbZugriff.saveUserParameter("DBVersion", DBVersion - 1);
+            }
+        } else {
+            HOLogger.instance().info(DBUpdater.class,
+                    "Update done, db version number will NOT be increased from " + version
+                            + " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
+        }
+    }
 	
 	/**
 	 * Automatic update of User Configuration parameters
