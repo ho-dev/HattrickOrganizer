@@ -63,18 +63,14 @@ public class TransferTable extends AbstractTable {
     }
 
     /**
-     * Test if a transfer is already in the HO database
+     * Gets requested transfer
      *
      * @param transferId Transfer ID
      */
-    public boolean alreadyInDB(int transferId) {
-         try {
-            JDBCAdapter adapter = DBManager.instance().getAdapter();
-            return (adapter.executeQuery("SELECT transferid FROM " + getTableName() + " WHERE transferid = "+ transferId) != null) ? true : false;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-          }
+    public PlayerTransfer getTransfer(int transferId) {
+        List<PlayerTransfer> result = loadTransfers("SELECT * FROM " + getTableName() + " WHERE transferid = "+ transferId);
+        if (result.size() > 0) return result.get(0);
+        return null;
     }
 	
     /**
@@ -139,10 +135,16 @@ public class TransferTable extends AbstractTable {
                 if (player != null) {
                     players.add(player);
                     if (transfer.getPlayerId() == 0) {
-                        transfer.setPlayerId(player.getSpielerID());
+                        int playerIdFound = player.getSpielerID();
+                        transfer.setPlayerId(playerIdFound);
+                        DBManager.instance().saveIsSpielerFired(playerIdFound, true);
                     }
                 } else {
-                    if (alreadyInDB(transfer.getTransferID())) continue;
+                    PlayerTransfer alreadyInDB = getTransfer(transfer.getTransferID());
+                    if (alreadyInDB != null && transfer.getPlayerId() == 0) {
+                        DBManager.instance().saveIsSpielerFired(alreadyInDB.getPlayerId(), true);
+                        continue;
+                    }
                   }
 
                 addTransfer(transfer);
@@ -169,7 +171,7 @@ public class TransferTable extends AbstractTable {
                     final PlayerTransfer transfer = iter.next();
                     addTransfer(transfer);
                 }
-            }
+            } else DBManager.instance().saveIsSpielerFired(playerId, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
