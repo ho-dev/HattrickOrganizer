@@ -61,6 +61,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
                                         SwingConstants.LEFT);
     private JLabel income = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
     private JLabel name = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
+    private JLabel fired = new JLabel(HOVerwaltung.instance().getLanguageString("FiredPlayer"), SwingConstants.LEFT);
 
     private JLabel skill_defense = new JLabel("", SwingConstants.LEFT);
     private JLabel skill_experience = new JLabel("", SwingConstants.LEFT);
@@ -129,6 +130,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
         detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("PlayerDetail.CurrentTSI")), "4, 0");
         detailPanel.add(currTSI, "5, 0");
+        detailPanel.add(fired, "4, 1");
 
         detailPanel.add(arrow_scoring, "7, 0"); //$NON-NLS-1$
         detailPanel.add(skill_scoring, "8, 0"); //$NON-NLS-1$
@@ -248,8 +250,13 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
      */
     private void updatePanel() {
         if (playerId > 0) {
-            if (DBManager.instance().getIsSpielerFired(playerId)) updBtn.setEnabled(false);
-            else updBtn.setEnabled(true);
+            if (DBManager.instance().getIsSpielerFired(playerId)) {
+                fired.setVisible(true);
+                updBtn.setEnabled(false);
+            } else {
+                fired.setVisible(false);
+                updBtn.setEnabled(true);
+              }
 
             name.setText(this.playerName);
 
