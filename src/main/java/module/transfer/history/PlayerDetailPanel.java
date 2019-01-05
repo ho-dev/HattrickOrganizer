@@ -248,7 +248,9 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
      */
     private void updatePanel() {
         if (playerId > 0) {
-            updBtn.setEnabled(true);
+            if (DBManager.instance().getIsSpielerFired(playerId)) updBtn.setEnabled(false);
+            else updBtn.setEnabled(true);
+
             name.setText(this.playerName);
 
             if (player != null) {
