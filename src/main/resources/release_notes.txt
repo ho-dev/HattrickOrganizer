@@ -1,15 +1,15 @@
 Please visit the HO! forum in the CHPP section of Hattrick if you have any questions!
-If you retrieve a bug, please, you open a issue on HO! github: https://github.com/akasolace/HO/issues
+If you find a bug, please open an issue on GitHub: https://github.com/akasolace/HO/issues
 
 Changelist HO! 1.436
 ====================
 [Added]
-- display this release notes before HO update
-- translation in csv export player
-- support to Transfer Scout for new graphic by HT Copy Button (doesen't possible get: Deadline, Price)
+- display release notes before HO update
+- translation in csv player export
+- support for new HT layout by HT Copy Button in Transfer Scout (deadline and price data are not available)
 
 [Fixed]
-- bug related to show FW normal value in PlayerCompare (TAB Player Analysis)
-- bug related to show in poor quality the shirt numbers on MacOs
-- bug where it was missed some column values for specific when the column name it was repeted
-- bug relate to wrong of data player export by Tool - csv export player
+- missing FW normal value in PlayerCompare (Player Analysis Tab)
+- missing columns in certain languages because of duplicate names (Player Analysis Tab)
+- poor quality shirt numbers on MacOS
+- wrong data in csv player export tool
