@@ -6,7 +6,7 @@ Changelist HO! 1.436
 [Added]
 - display this release notes before HO update
 - translation in csv export player
-- support to Transfer Scout for new graphic by HT Copy Button (doesen't yet possible get: Deadline, Price, Mother Club info)
+- support to Transfer Scout for new graphic by HT Copy Button (doesen't possible get: Deadline, Price)
 
 [Fixed]
 - bug related to show FW normal value in PlayerCompare (TAB Player Analysis)
