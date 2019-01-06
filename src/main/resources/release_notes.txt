@@ -1,25 +1,15 @@
 Please visit the HO! forum in the CHPP section of Hattrick if you have any questions!
+If you find a bug, please open an issue on GitHub: https://github.com/akasolace/HO/issues
 
 Changelist HO! 1.436
 ====================
 [Added]
-- display this release notes before HO update
-
-Changelist HO! 1.435
-====================
-[Added]
-- macOS version is working again
-- statistics tab displays crowd numbers in each stadium section, including percentages
-- HatStats statistics are now displayed in Matches module
-- flags for Comores, Guam, Sri Lanka, Sao Tomé-et-Principe and Curaçao
-
+- display release notes before HO update
+- translation in csv player export
+- support for new HT layout by HT Copy Button in Transfer Scout (deadline and price data are not available)
 
 [Fixed]
-- bug related to the introduction of Support specialty
-- bug related to Divine+ ratings in Match Analysis
-- a long time bug where IFA tab would crash under certain circumstances of db update
-- bug in Misc Tab where some values were not displayed
-- bug where FW normal value was displayed in PlayerCompare (TAB Player Analysis)
-
-[Removed]
-- Update menu for flags, prediction rating and translation files
+- missing FW normal value in PlayerCompare (Player Analysis Tab)
+- missing columns in certain languages because of duplicate names (Player Analysis Tab)
+- poor quality shirt numbers on MacOS
+- wrong data in csv player export tool

@@ -5,10 +5,12 @@ import core.constants.player.PlayerSpeciality;
 import core.datatype.CBItem;
 //import core.epv.EPVData;
 import core.gui.HOMainFrame;
+import core.gui.comp.HyperLinkLabel;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
 import core.model.player.Spieler;
 import core.model.player.SpielerPosition;
+import core.util.HOLogger;
 import core.util.Helper;
 
 import java.awt.BorderLayout;
@@ -55,6 +57,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private JButton jbCancel = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
     private JComboBox jcbAttacking = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
     private JComboBox jcbDefense = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
+    private JComboBox jcbLeadership = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
     private JComboBox jcbExperience = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
     private JComboBox jcbForm = new JComboBox(core.util.Helper.EINSTUFUNG_FORM);
     private JComboBox jcbKeeper = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
@@ -181,9 +184,11 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private void copyPaste() {
         final PlayerConverter pc = new PlayerConverter();
         String message = "";
+        String errorFields = "";
 
         try {
-            final Player player = pc.build(jtaCopyPaste.getText());
+            final Player player;
+            player = pc.build(jtaCopyPaste.getText());
 
             if (player != null) {
                 jtfPlayerID.setText(player.getPlayerID() + "");
@@ -200,6 +205,9 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                 jcbExperience.removeItemListener(this);
                 Helper.markierenComboBox(jcbExperience, player.getExperience());
                 jcbExperience.addItemListener(this);
+                jcbLeadership.removeItemListener(this);
+                Helper.markierenComboBox(jcbLeadership, player.getLeadership());
+                jcbLeadership.addItemListener(this);
                 jcbForm.removeItemListener(this);
                 Helper.markierenComboBox(jcbForm, player.getForm());
                 jcbForm.addItemListener(this);
@@ -234,15 +242,25 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                 // Listener stays here for recalculation of rating
                 Helper.markierenComboBox(jcbPlaymaking, player.getPlayMaking());
 
+                errorFields = pc.getErrorFields();
                 // Normally not working. Thus last positioned
-                final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("dd.MM.yy HH:mm",
-                		java.util.Locale.GERMANY);
-                final java.util.Date date = simpleFormat.parse(player.getExpiryDate() + " "
-                                                               + player.getExpiryTime());
-                jsSpinner.setValue(date);
+                try {
+                    final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("dd.MM.yy HH:mm",
+                            java.util.Locale.GERMANY);
+                    final java.util.Date date = simpleFormat.parse(player.getExpiryDate() + " "
+                            + player.getExpiryTime());
+                    jsSpinner.setValue(date);
+                } catch (Exception e){
+                    HOLogger.instance().debug(getClass(), e);
+                    message = HOVerwaltung.instance().getLanguageString("scout_warning");
+                    if (!errorFields.equals(""))
+                        errorFields += ", ";
+                    errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
+                }
                 spielervalueChanged();
             }
         } catch (Exception e) {
+            HOLogger.instance().debug(getClass(), e);
             message = core.model.HOVerwaltung.instance().getLanguageString("scout_error");
         }
 
@@ -260,7 +278,10 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                     message = HOVerwaltung.instance().getLanguageString("scout_success");
             }
         }
-        jlStatus.setText(HOVerwaltung.instance().getLanguageString("scout_status") + ": " + message);
+        if(!errorFields.equals("")){
+            errorFields = " ("  + errorFields + ")";
+        }
+        jlStatus.setText(HOVerwaltung.instance().getLanguageString("scout_status") + ": " + message + errorFields);
     }
 
     private void close() {
@@ -288,6 +309,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         entry.setPrice(Integer.parseInt(jtfPrice.getText()));
         entry.setTSI(Integer.parseInt(jtfTSI.getText()));
         entry.setSpeciality(((CBItem) jcbSpeciality.getSelectedItem()).getId());
+        entry.setErfahrung(((CBItem) jcbLeadership.getSelectedItem()).getId());
         entry.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
         entry.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
         entry.setKondition(((CBItem) jcbStamina.getSelectedItem()).getId());
@@ -319,6 +341,9 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         constraints.insets = new Insets(4, 4, 4, 4);
 
         JPanel panel;
+        JPanel copyPastePanel;
+        JLabel jlExplainGuide;
+        JPanel buttonPanel;
         JLabel label;
 
         setContentPane(new ImagePanel());
@@ -326,7 +351,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
         // Textfields and Comboboxes
         panel = new ImagePanel();
-        panel.setLayout(new GridLayout(10, 4, 4, 4));
+        panel.setLayout(new GridLayout(11, 4, 4, 4));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.id"));
         panel.add(label);
@@ -370,6 +395,11 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 		label = new JLabel("EPV");
 		panel.add(label);
 		panel.add(jtfEPV);
+
+        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.leadership"));
+        panel.add(label);
+        jcbLeadership.addItemListener(this);
+        panel.add(jcbLeadership);
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.experience"));
         panel.add(label);
@@ -474,10 +504,25 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         panel.setLayout(new BorderLayout());
         panel.setBorder(javax.swing.BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString("CopyPaste")));
         jtaCopyPaste.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Transferscout_CopyPaste"));
-        panel.add(new JScrollPane(jtaCopyPaste), BorderLayout.NORTH);
-        layout.setConstraints(jbApplyScout, constraints);
+
+        copyPastePanel = new ImagePanel();
+        copyPastePanel.setLayout(new BorderLayout());
+        jlExplainGuide = new JLabel(HOVerwaltung.instance().getLanguageString("ExplainHowToUseTransferScout"));
+        copyPastePanel.add(jlExplainGuide ,BorderLayout.NORTH);
+        JLabel linkLabel = new HyperLinkLabel("https://github.com/akasolace/HO/wiki/Transfer-Scout", "https://github.com/akasolace/HO/wiki/Transfer-Scout");
+        copyPastePanel.add(linkLabel, BorderLayout.CENTER);
+        copyPastePanel.add(new JScrollPane(jtaCopyPaste),BorderLayout.SOUTH);
+        panel.add(copyPastePanel, BorderLayout.NORTH);
+
+        buttonPanel = new ImagePanel();
+        buttonPanel.setLayout(new GridLayout(1,2));
+        jbApplyScout.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.button.apply"));
         jbApplyScout.addActionListener(this);
-        panel.add(jbApplyScout, BorderLayout.CENTER);
+        layout.setConstraints(jbApplyScout, constraints);
+        buttonPanel.add(jbApplyScout, BorderLayout.WEST);
+
+        panel.add(buttonPanel, BorderLayout.CENTER);
+
         panel.add(jlStatus, BorderLayout.SOUTH);
 
         constraints.fill = GridBagConstraints.BOTH;
@@ -521,7 +566,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         final Spieler tempSpieler = new Spieler();
         tempSpieler.setSpezialitaet(((CBItem) jcbSpeciality.getSelectedItem()).getId());
         tempSpieler.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
-		tempSpieler.setFuehrung(3);
+		tempSpieler.setFuehrung(((CBItem) jcbLeadership.getSelectedItem()).getId());
         tempSpieler.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
         tempSpieler.setKondition(((CBItem) jcbStamina.getSelectedItem()).getId());
         tempSpieler.setVerteidigung(((CBItem) jcbDefense.getSelectedItem()).getId());
