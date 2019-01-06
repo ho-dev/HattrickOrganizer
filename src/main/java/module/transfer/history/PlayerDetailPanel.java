@@ -130,6 +130,8 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
         detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("PlayerDetail.CurrentTSI")), "4, 0");
         detailPanel.add(currTSI, "5, 0");
+
+        fired.setVisible(false);
         detailPanel.add(fired, "4, 1");
 
         detailPanel.add(arrow_scoring, "7, 0"); //$NON-NLS-1$
@@ -202,6 +204,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
      */
     public final void clearPanel() {
         updBtn.setEnabled(false);
+        fired.setVisible(false);
         name.setText(""); //$NON-NLS-1$
         age.setText(""); //$NON-NLS-1$
         income.setText("");
