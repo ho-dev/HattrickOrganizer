@@ -133,7 +133,7 @@ public class TransferTable extends AbstractTable {
                 final Spieler player = PlayerRetriever.getPlayer(transfer);
 
                 if (player != null) {
-                    players.add(player);
+                    if (!players.contains(player)) players.add(player);
                     if (transfer.getPlayerId() == 0) {
                         int playerIdFound = player.getSpielerID();
                         transfer.setPlayerId(playerIdFound);
@@ -141,15 +141,28 @@ public class TransferTable extends AbstractTable {
                     }
                 } else {
                     PlayerTransfer alreadyInDB = getTransfer(transfer.getTransferID());
-                    if (alreadyInDB != null && transfer.getPlayerId() == 0) {
-                        DBManager.instance().saveIsSpielerFired(alreadyInDB.getPlayerId(), true);
-                        continue;
+                    if (alreadyInDB != null) {
+                        if (transfer.getPlayerId() == 0) {
+                            DBManager.instance().saveIsSpielerFired(alreadyInDB.getPlayerId(), true);
+                            continue;
+                        } else {
+                            Spieler dummy = new Spieler();
+                            dummy.setSpielerID(transfer.getPlayerId());
+                            if (!players.contains(dummy)) players.add(dummy);
+                          }
                     }
                   }
 
                 addTransfer(transfer);
             }
-            
+
+            for (Iterator<Spieler> iter = players.iterator(); iter.hasNext();) {
+                int playerID = iter.next().getSpielerID();
+                if (!DBManager.instance().getIsSpielerFired(playerID)) {
+                    updatePlayerTransfers(playerID);
+                }
+            }
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
