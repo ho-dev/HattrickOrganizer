@@ -170,7 +170,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
         this.sidePanel.removeAll();
 
         final double[][] sizes = {
-                               {10, 150, 10, 75, TableLayoutConstants.FILL, 10},
+                               {10, 185, 10, 90, TableLayoutConstants.FILL, 10},
                                {10, TableLayoutConstants.PREFERRED, 10}
                            };
         final TableLayout tLayout = new TableLayout(sizes);

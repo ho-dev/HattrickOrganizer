@@ -105,8 +105,8 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
         final double[][] sizes = {
                                {
-                                   10, 50, 150, 20, 75, 50, TableLayoutConstants.FILL, 30, 100, 30, 100, 30,
-                                   100, 50, 100, 10
+                                   10, 95, 150, 20, 100, 75, TableLayoutConstants.FILL, 30, 110, 30, 110, 30,
+                                   110, 30, 120, 10
                                },
                                {20, 20, 20}
                            };
@@ -240,10 +240,10 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     private void refreshPlayerTable(List<PlayerTransfer> values) {
         final DefaultTableSorter sorter = (DefaultTableSorter) playerTable.getModel();
         sorter.setTableModel(new PlayerTransferTableModel(values));
-        playerTable.getColumnModel().getColumn(3).setPreferredWidth(150);
+        playerTable.getColumnModel().getColumn(3).setPreferredWidth(200);
         playerTable.getColumnModel().getColumn(4).setCellRenderer(new IconCellRenderer());
         playerTable.getColumnModel().getColumn(4).setMaxWidth(20);
-        playerTable.getColumnModel().getColumn(4).setPreferredWidth(150);
+        playerTable.getColumnModel().getColumn(5).setPreferredWidth(200);
         playerTable.getColumnModel().getColumn(8).setCellRenderer(new ButtonCellRenderer());
         playerTable.getColumnModel().getColumn(8).setCellEditor(new ButtonCellEditor(this, values));
     }
