@@ -165,6 +165,12 @@ task makeAll(type: GradleBuild) {
              'AddResourcesAndZipMacApp', 'buildDeb', 'finishDeb', 'buildRpm', 'finishRpm', 'updatebuildreferences']
 }
 
+task makeosX(type: GradleBuild) {
+    group 'ho'
+    description 'Create ZipDistribution and MacOS binaries'
+    tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'ZipDistribution', 'createApp', 'AddResourcesAndZipMacApp']
+}
+
 task updatebuildreferences(){
     doLast {
         if (releaseArtefacts) {
