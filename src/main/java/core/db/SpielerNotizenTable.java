@@ -17,13 +17,14 @@ final class SpielerNotizenTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[6];
+		columns = new ColumnDescriptor[7];
 		columns[0]= new ColumnDescriptor("SpielerID",Types.INTEGER,false,true);
 		columns[1]= new ColumnDescriptor("Notiz",Types.VARCHAR,false,2048);
 		columns[2]= new ColumnDescriptor("Spielberechtigt",Types.BOOLEAN,false);
 		columns[3]= new ColumnDescriptor("TeamInfoSmilie",Types.VARCHAR,false,127);
 		columns[4]= new ColumnDescriptor("ManuellerSmilie",Types.VARCHAR,false,127);
 		columns[5]= new ColumnDescriptor("userPos",Types.INTEGER,false);
+		columns[6]= new ColumnDescriptor("isFired",Types.BOOLEAN,false);
 	}
 
 	byte getSpielerUserPosFlag(int spielerId) {
@@ -118,7 +119,7 @@ final class SpielerNotizenTable extends AbstractTable {
 
 		return true;
 	}
-	
+
 	String getTeamInfoSmilie(int spielerId) {
 		ResultSet rs = null;
 		String sql = null;
@@ -138,6 +139,28 @@ final class SpielerNotizenTable extends AbstractTable {
 
 		return "";
 	}
+
+	boolean getIsSpielerFired(int spielerId) {
+		ResultSet rs = null;
+		String sql = null;
+
+		sql = "SELECT isFired FROM " + getTableName() + " WHERE SpielerID = " + spielerId;
+		rs = adapter.executeQuery(sql);
+
+		try {
+			if (rs != null) {
+				if (rs.first()) {
+					return rs.getBoolean("isFired");
+				} else {
+					return false;
+				}
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),"DatenbankZugriff.getIsSpielerFired: " + e);
+		}
+
+		return false;
+	}
 	
 	void saveManuellerSmilie(int spielerId, String smilie) {
 		String statement = null;
@@ -154,10 +177,10 @@ final class SpielerNotizenTable extends AbstractTable {
 					//erst Vorhandene Aufstellung löschen
 					//deleteSpielerNotizTabelle( awhereS, awhereV );
 					//insert vorbereiten
-					createEntry(spielerId,"","",smilie,true,(byte) -1);
+					createEntry(spielerId,"","",smilie,true,(byte) -1, false);
 				}
 			} catch (Exception e) {
-				createEntry(spielerId,"","",smilie,true,(byte) -1);
+				createEntry(spielerId,"","",smilie,true,(byte) -1, false);
 			}
 		}
 	}
@@ -175,10 +198,10 @@ final class SpielerNotizenTable extends AbstractTable {
 					//erst Vorhandene Aufstellung löschen
 					//deleteSpielerNotizTabelle( awhereS, awhereV );
 					//insert vorbereiten
-					createEntry(spielerId,notiz,"","",true,(byte) -1);					
+					createEntry(spielerId,notiz,"","",true,(byte) -1, false);
 				}
 			} catch (Exception e) {
-				createEntry(spielerId,notiz,"","",true,(byte) -1);
+				createEntry(spielerId,notiz,"","",true,(byte) -1, false);
 			}
 		}
 	}
@@ -198,10 +221,10 @@ final class SpielerNotizenTable extends AbstractTable {
 					//erst Vorhandene Aufstellung löschen
 					//deleteSpielerNotizTabelle( awhereS, awhereV );
 					//insert vorbereiten
-					createEntry(spielerId,"","","",spielberechtigt,(byte) -1);
+					createEntry(spielerId,"","","",spielberechtigt,(byte) -1, false);
 				}
 			} catch (Exception e) {
-				createEntry(spielerId,"","","",spielberechtigt,(byte) -1);
+				createEntry(spielerId,"","","",spielberechtigt,(byte) -1, false);
 			}
 		}
 	}
@@ -219,7 +242,7 @@ final class SpielerNotizenTable extends AbstractTable {
 					//erst Vorhandene Aufstellung löschen
 					//deleteSpielerNotizTabelle( awhereS, awhereV );
 					//insert vorbereiten
-					createEntry(spielerId,"","","",true,flag);					
+					createEntry(spielerId,"","","",true,flag, false);
 				}
 			} catch (Exception e) {
 			}
@@ -239,17 +262,38 @@ final class SpielerNotizenTable extends AbstractTable {
 					//erst Vorhandene Aufstellung löschen
 					//deleteSpielerNotizTabelle( awhereS, awhereV );
 					//insert vorbereiten
-					createEntry(spielerId,"",smilie,"",true,(byte) -1);
+					createEntry(spielerId,"",smilie,"",true,(byte) -1, false);
 				}
 			} catch (Exception e) {
-				createEntry(spielerId,"",smilie,"",true,(byte) -1);				
+				createEntry(spielerId,"",smilie,"",true,(byte) -1, false);
 			}
 		}
 	}
-	
-	private void createEntry(int spielerId, String notiz, String teamSmilie, String manualSmilie, boolean spielberechtigt, byte flag) {
-		String statement = "INSERT INTO " + getTableName() + " ( SpielerID, Notiz, TeamInfoSmilie, ManuellerSmilie, Spielberechtigt, userPos ) VALUES(";
-		statement += ("" + spielerId + ",'"+core.db.DBManager.insertEscapeSequences(notiz)+"' ," + "'" + teamSmilie + "'," + "'" + manualSmilie + "',"+spielberechtigt+","+ flag +")");
+
+	void saveIsSpielerFired(int spielerId, boolean isFired) {
+		String statement = null;
+
+		if (spielerId > 0) {
+			try {
+				//erst UPdate versuchen
+				statement = "UPDATE " + getTableName() + " SET isFired=" + isFired + " WHERE SpielerID = " + spielerId;
+
+				//Insert falls kein passender Eintrag gefunden wurde
+				if (adapter.executeUpdate(statement) < 1) {
+					//erst Vorhandene Aufstellung löschen
+					//deleteSpielerNotizTabelle( awhereS, awhereV );
+					//insert vorbereiten
+					createEntry(spielerId,"","","",true,(byte) -1, isFired);
+				}
+			} catch (Exception e) {
+				createEntry(spielerId,"","","",true,(byte) -1, isFired);
+			}
+		}
+	}
+
+	private void createEntry(int spielerId, String notiz, String teamSmilie, String manualSmilie, boolean spielberechtigt, byte flag, boolean isFired) {
+		String statement = "INSERT INTO " + getTableName() + " ( SpielerID, Notiz, TeamInfoSmilie, ManuellerSmilie, Spielberechtigt, userPos, isFired ) VALUES(";
+		statement += ("" + spielerId + ",'" + core.db.DBManager.insertEscapeSequences(notiz) + "' ," + "'" + teamSmilie + "'," + "'" + manualSmilie + "'," + spielberechtigt + "," + flag + "," + isFired + ")");
 		adapter.executeUpdate(statement);
 	}
 	

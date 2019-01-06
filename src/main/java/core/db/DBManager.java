@@ -791,6 +791,11 @@ public class DBManager {
 				.getSpielerUserPosFlag(spielerId);
 	}
 
+	public boolean getIsSpielerFired(int spielerId) {
+		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
+				.getIsSpielerFired(spielerId);
+	}
+
 	public void saveManuellerSmilie(int spielerId, String smilie) {
 		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.saveManuellerSmilie(spielerId, smilie);
@@ -815,6 +820,11 @@ public class DBManager {
 	public void saveTeamInfoSmilie(int spielerId, String smilie) {
 		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.saveTeamInfoSmilie(spielerId, smilie);
+	}
+
+	public void saveIsSpielerFired(int spielerId, boolean isFired) {
+		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
+				.saveIsSpielerFired(spielerId, isFired);
 	}
 
 	// ------------------------------- MatchLineupTable
@@ -1272,14 +1282,14 @@ public class DBManager {
 				.getTransfers(season, bought, sold);
 	}
 
+    public void removeTransfer(int transferId) {
+		((TransferTable) getTable(TransferTable.TABLENAME))
+				.removeTransfer(transferId);
+	}
+
 	public void updatePlayerTransfers(int playerId) {
 		((TransferTable) getTable(TransferTable.TABLENAME))
 				.updatePlayerTransfers(playerId);
-	}
-
-	public void reloadTeamTransfers(int teamid) {
-		((TransferTable) getTable(TransferTable.TABLENAME))
-				.reloadTeamTransfers(teamid);
 	}
 
 	public boolean updateTeamTransfers(int teamid) {

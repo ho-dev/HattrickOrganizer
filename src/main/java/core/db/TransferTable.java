@@ -49,7 +49,7 @@ public class TransferTable extends AbstractTable {
 			"CREATE INDEX sell_id ON " + getTableName() + "(" + columns[8].getColumnName() + ")"};
 	}
 
-	   /**
+    /**
      * Remove a transfer from the HO database
      *
      * @param transferId Transfer ID
@@ -60,6 +60,17 @@ public class TransferTable extends AbstractTable {
     	} catch (Exception e) {
     		// ignore
     	}
+    }
+
+    /**
+     * Gets requested transfer
+     *
+     * @param transferId Transfer ID
+     */
+    public PlayerTransfer getTransfer(int transferId) {
+        List<PlayerTransfer> result = loadTransfers("SELECT * FROM " + getTableName() + " WHERE transferid = "+ transferId);
+        if (result.size() > 0) return result.get(0);
+        return null;
     }
 	
     /**
@@ -101,21 +112,6 @@ public class TransferTable extends AbstractTable {
     }
     
     /**
-     * Reload transfer data for a team from the HT xml.
-     *
-     * @param teamid Team id to reload data for
-     *
-     * @throws Exception If an error occurs.
-     */
-    public void reloadTeamTransfers(int teamid) {
-        DBManager.instance().getAdapter().executeUpdate("DELETE FROM " + getTableName()
-                                                      + " WHERE buyerid = " + teamid
-                                                      + " OR sellerid = " + teamid);
-        updateTeamTransfers(teamid);
-    }
-    
-    
-    /**
      * Update transfer data for a team from the HT xml.
      *
      * Returns false if this fails
@@ -133,20 +129,45 @@ public class TransferTable extends AbstractTable {
 
             for (Iterator<PlayerTransfer> iter = transfers.iterator(); iter.hasNext();) {
                 PlayerTransfer transfer = iter.next();
-                addTransfer(transfer);
 
-                final Spieler player = PlayerRetriever.getPlayer(transfer.getPlayerId());
+                final Spieler player = PlayerRetriever.getPlayer(transfer);
 
                 if (player != null) {
-                    players.add(player);
+                    if (!players.contains(player)) players.add(player);
+                    if (transfer.getPlayerId() == 0) {
+                        int playerIdFound = player.getSpielerID();
+                        transfer.setPlayerId(playerIdFound);
+                        DBManager.instance().saveIsSpielerFired(playerIdFound, true);
+                    }
+                } else {
+                    PlayerTransfer alreadyInDB = getTransfer(transfer.getTransferID());
+                    if (alreadyInDB != null) {
+                        if (transfer.getPlayerId() == 0) {
+                            DBManager.instance().saveIsSpielerFired(alreadyInDB.getPlayerId(), true);
+                            continue;
+                        } else {
+                            Spieler dummy = new Spieler();
+                            dummy.setSpielerID(transfer.getPlayerId());
+                            if (!players.contains(dummy)) players.add(dummy);
+                          }
+                    }
+                  }
+
+                addTransfer(transfer);
+            }
+
+            for (Iterator<Spieler> iter = players.iterator(); iter.hasNext();) {
+                int playerID = iter.next().getSpielerID();
+                if (!DBManager.instance().getIsSpielerFired(playerID)) {
+                    updatePlayerTransfers(playerID);
                 }
             }
-            
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
-        }
+          }
     }
     
     /**
@@ -163,19 +184,7 @@ public class TransferTable extends AbstractTable {
                     final PlayerTransfer transfer = iter.next();
                     addTransfer(transfer);
                 }
-            } else {
-                // Fired player, update team related transfers and remove the rest of the player's history
-                final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-
-                final StringBuffer sqlStmt = new StringBuffer("UPDATE " + getTableName()); //$NON-NLS-1$
-                sqlStmt.append(" SET"); //$NON-NLS-1$
-                sqlStmt.append(" playerid = 0, playername = ''"); //$NON-NLS-1$
-                sqlStmt.append(" WHERE playerid = " + playerId); //$NON-NLS-1$
-                sqlStmt.append(" AND (buyerid = " + teamid + " OR sellerid = " + teamid + ")"); //$NON-NLS-1$
-                DBManager.instance().getAdapter().executeUpdate(sqlStmt.toString());
-                DBManager.instance().getAdapter().executeUpdate("DELETE FROM " + getTableName()
-                                                              + " WHERE playerid = " + playerId);
-            }
+            } else DBManager.instance().saveIsSpielerFired(playerId, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -303,15 +312,7 @@ public class TransferTable extends AbstractTable {
             final Spieler spieler = DBManager.instance().getSpielerAtDate(transfer.getPlayerId(),transfer.getDate());
 
             if (spieler != null) {
-            	int transferSeason = HTCalendarFactory.getHTSeason(transfer.getDate());
-                int transferWeek = HTCalendarFactory.getHTWeek(transfer.getDate());
-                int spielerSeason = HTCalendarFactory.getHTSeason(spieler.getHrfDate());
-                int spielerWeek = HTCalendarFactory.getHTWeek(spieler.getHrfDate());
-
-                // Not in the same week, possible skillup so skip it
-                if (((transferSeason * 16) + transferWeek) == ((spielerSeason * 16) + spielerWeek)) {
-                    transfer.setPlayerInfo(spieler);
-                }
+                transfer.setPlayerInfo(spieler);
             }
         }
 

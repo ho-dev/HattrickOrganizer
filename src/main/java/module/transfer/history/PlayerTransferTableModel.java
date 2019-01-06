@@ -7,6 +7,7 @@ import module.transfer.PlayerTransfer;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 
 
@@ -29,7 +30,7 @@ class PlayerTransferTableModel extends AbstractTableModel {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private List<PlayerTransfer> values;
-    private String[] colNames = new String[8];
+    private String[] colNames = new String[9];
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -49,6 +50,7 @@ class PlayerTransferTableModel extends AbstractTableModel {
         this.colNames[5] = HOVerwaltung.instance().getLanguageString("Seller"); //$NON-NLS-1$
         this.colNames[6] = HOVerwaltung.instance().getLanguageString("Price"); //$NON-NLS-1$
         this.colNames[7] = HOVerwaltung.instance().getLanguageString("ls.player.tsi"); //$NON-NLS-1$
+        this.colNames[8] = ""; //$NON-NLS-1$
 
         this.values = values;
     }
@@ -69,6 +71,12 @@ class PlayerTransferTableModel extends AbstractTableModel {
     /** {@inheritDoc} */
     public final int getRowCount() {
         return values.size();
+    }
+
+    /** {@inheritDoc} */
+	public boolean isCellEditable(int row, int col) {
+        if (col == 8) return true;
+		return false;
     }
 
     /** {@inheritDoc} */
@@ -100,6 +108,8 @@ class PlayerTransferTableModel extends AbstractTableModel {
             case 7:
                 return new Integer(transfer.getTsi());
 
+            case 8:
+                return new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
             default:
                 return ""; //$NON-NLS-1$
         }

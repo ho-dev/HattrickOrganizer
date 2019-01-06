@@ -61,6 +61,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
                                         SwingConstants.LEFT);
     private JLabel income = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
     private JLabel name = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
+    private JLabel fired = new JLabel(HOVerwaltung.instance().getLanguageString("FiredPlayer"), SwingConstants.LEFT);
 
     private JLabel skill_defense = new JLabel("", SwingConstants.LEFT);
     private JLabel skill_experience = new JLabel("", SwingConstants.LEFT);
@@ -104,8 +105,8 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
         final double[][] sizes = {
                                {
-                                   10, 50, 150, 20, 75, 50, TableLayoutConstants.FILL, 30, 100, 30, 100, 30,
-                                   100, 50, 100, 10
+                                   10, 95, 150, 20, 100, 75, TableLayoutConstants.FILL, 30, 110, 30, 110, 30,
+                                   110, 30, 120, 10
                                },
                                {20, 20, 20}
                            };
@@ -129,6 +130,9 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
         detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("PlayerDetail.CurrentTSI")), "4, 0");
         detailPanel.add(currTSI, "5, 0");
+
+        fired.setVisible(false);
+        detailPanel.add(fired, "4, 1");
 
         detailPanel.add(arrow_scoring, "7, 0"); //$NON-NLS-1$
         detailPanel.add(skill_scoring, "8, 0"); //$NON-NLS-1$
@@ -200,6 +204,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
      */
     public final void clearPanel() {
         updBtn.setEnabled(false);
+        fired.setVisible(false);
         name.setText(""); //$NON-NLS-1$
         age.setText(""); //$NON-NLS-1$
         income.setText("");
@@ -235,10 +240,12 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     private void refreshPlayerTable(List<PlayerTransfer> values) {
         final DefaultTableSorter sorter = (DefaultTableSorter) playerTable.getModel();
         sorter.setTableModel(new PlayerTransferTableModel(values));
-        playerTable.getColumnModel().getColumn(3).setPreferredWidth(150);
+        playerTable.getColumnModel().getColumn(3).setPreferredWidth(200);
         playerTable.getColumnModel().getColumn(4).setCellRenderer(new IconCellRenderer());
         playerTable.getColumnModel().getColumn(4).setMaxWidth(20);
-        playerTable.getColumnModel().getColumn(4).setPreferredWidth(150);
+        playerTable.getColumnModel().getColumn(5).setPreferredWidth(200);
+        playerTable.getColumnModel().getColumn(8).setCellRenderer(new ButtonCellRenderer());
+        playerTable.getColumnModel().getColumn(8).setCellEditor(new ButtonCellEditor(this, values));
     }
 
     /**
@@ -246,7 +253,14 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
      */
     private void updatePanel() {
         if (playerId > 0) {
-            updBtn.setEnabled(true);
+            if (DBManager.instance().getIsSpielerFired(playerId)) {
+                fired.setVisible(true);
+                updBtn.setEnabled(false);
+            } else {
+                fired.setVisible(false);
+                updBtn.setEnabled(true);
+              }
+
             name.setText(this.playerName);
 
             if (player != null) {
