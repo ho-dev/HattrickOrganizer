@@ -7,9 +7,15 @@ Changelist HO! 1.436
 - display release notes before HO update
 - translation in csv player export
 - support for new HT layout by HT Copy Button in Transfer Scout (deadline and price data are not available)
+- team transfer update now includes individual histories
+- information that player has been fired in transfer history panel
+- remove transfer button in transfer history panel
 
 [Fixed]
 - missing FW normal value in PlayerCompare (Player Analysis Tab)
 - missing columns in certain languages because of duplicate names (Player Analysis Tab)
 - poor quality shirt numbers on MacOS
 - wrong data in csv player export tool
+- layout changes in transfer history tab
+- fired player transfer history in no longer removed on transfer history update
+- player data is no longer missing from transfer history top panel
