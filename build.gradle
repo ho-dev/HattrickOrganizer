@@ -59,6 +59,7 @@ ext {
     nsis_scriptName = "${nsis_confPath}\\makeWinInstaller.nsi"
     target_dir = "${buildDir}\\artefacts"
     osx_app_dir_sourcedir = "${projectDir}\\buildResources\\OSXapp"
+    python_script = "${projectDir}\\buildResources\\Generic\\generate_hash.py"
 }
 
 //======================================================================================================================
@@ -162,7 +163,7 @@ task makeAll(type: GradleBuild) {
     group 'ho'
     description 'Create ZipDistribution, Windows, MacOS and Linux binaries'
     tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'createApp',
-             'AddResourcesAndZipMacApp', 'buildDeb', 'finishDeb', 'buildRpm', 'finishRpm', 'updatebuildreferences']
+             'AddResourcesAndZipMacApp', 'buildDeb', 'finishDeb', 'buildRpm', 'finishRpm', 'updatebuildreferences', 'compute_sha_sums']
 }
 
 task makeosX(type: GradleBuild) {
@@ -393,6 +394,15 @@ task createLanguageFileList()  {
 
 }
 
+
+task compute_sha_sums(){
+    group 'tool'
+    description 'compute sha sums of binaries and store them in files'
+    doLast {
+        String command = "cmd /c D:\\Anaconda3\\python ${python_script}"
+        Process p = Runtime.getRuntime().exec(command)
+    }
+}
 
 apply plugin: 'com.github.breadmoirai.github-release'
 githubRelease {
