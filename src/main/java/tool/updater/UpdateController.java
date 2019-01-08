@@ -56,8 +56,9 @@ public final class UpdateController {
 						+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("Released") + ":</font>"
 						+ version.getReleaseDate() + "<br/><br/>"
 						+ HOVerwaltung.instance().getLanguageString("ls.button.update.available") + "<br/>"
-						+ getHOupdateURL(version.getfullVersion(), version.getVersion(),versionType) + "</body></html>",
-				 		getReleaseNote()),
+						+ "</body></html>",
+				 		getReleaseNote(),
+						getHOupdateURL(version.getfullVersion(), version.getVersion(),versionType)),
 					HOVerwaltung.instance().getLanguageString("confirmation.title"),
 					JOptionPane.INFORMATION_MESSAGE);
 			}
@@ -104,12 +105,20 @@ public final class UpdateController {
 	}
 
 	public static String getHOupdateURL(String full_version, double version, String versionType) {
+		String suffix = ".zip";
+		if (isMac()){
+			suffix = "_OSX" + suffix;
+		}
 		if (versionType == "DEV") {
-			return "https://github.com/akasolace/HO/releases/download/dev/HO_" + full_version + ".zip";
+			return "https://github.com/akasolace/HO/releases/download/dev/HO_" + full_version + suffix;
 		} else {
 			String ver = Double.toString(version);
-			return "https://github.com/akasolace/HO/releases/download/" + ver + "/HO_" + ver + ".zip";
+			return "https://github.com/akasolace/HO/releases/download/" + ver + "/HO_" + ver + suffix;
 		}
+	}
+
+	final public static boolean isMac() {
+		return (System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH).indexOf("mac") != -1);
 	}
 
 	public static void updateHO(String full_version, double version, String versionType) {
