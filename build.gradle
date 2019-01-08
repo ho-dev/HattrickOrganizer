@@ -200,7 +200,7 @@ released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
             }
         }
         else{
-            println("artefacts not released, html files have not been updated !!")
+            println("html files have not been updated : artefacts should not been released, !!")
         }
     }
 }
