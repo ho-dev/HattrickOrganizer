@@ -40,7 +40,7 @@ dependencies {
 def major = '1'
 def minor = '436'
 def development_stage = '0'
-def releaseArtefacts = true
+def releaseArtefacts = false
 
 def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
@@ -58,7 +58,7 @@ ext {
     nsis_confPath = "${projectDir}\\buildResources\\Win\\nsis"
     nsis_scriptName = "${nsis_confPath}\\makeWinInstaller.nsi"
     target_dir = "${buildDir}\\artefacts"
-    osx_app_dir_sourcedir = "${projectDir}\\buildResources\\OSXapp"
+    osx_app_dir_sourcedir = "${projectDir}\\buildResources\\Mac"
     python_script = "${projectDir}\\buildResources\\Generic\\generate_hash.py"
 }
 
@@ -85,11 +85,11 @@ distributions {
 // Configure macAppBundle task =======================
 macAppBundle {
     mainClassName = "HOLauncher"
-    icon = "${project.ext.osx_app_dir_sourcedir}\\source\\Hattrick Organizer.app\\Contents\\Resources\\HO.icns"
+    icon = "${project.ext.osx_app_dir_sourcedir}\\HO.icns"
     bundleJRE = true
     javaProperties.put("apple.laf.useScreenMenuBar", "true")
     javaProperties.put("apple.awt.showGrowBox", "true")
-    backgroundImage = "${project.ext.osx_app_dir_sourcedir}\\background\\Back_BETA.png"
+    backgroundImage = "${project.ext.osx_app_dir_sourcedir}\\Back.png"
 }
 
 // Configure ospackage and buildDeb tasks ============
@@ -175,6 +175,8 @@ task makeosX(type: GradleBuild) {
 task updatebuildreferences(){
     doLast {
         if (releaseArtefacts) {
+            println("artefacts have to be uploaded or it will break update process !!!")
+
             // always update latest.html
             new File("$projectDir/docs/latest.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
