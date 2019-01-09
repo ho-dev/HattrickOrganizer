@@ -19,7 +19,7 @@ public final class UpdateController {
 	/**
 	 * Check the external site for the latest version according to user preference regarding release channel
 	 */
-	public static void check4update(boolean bInformationOnly) {
+	public static void check4update(boolean isMac) {
 		VersionInfo version;
 		switch (core.model.UserParameter.temp().ReleaseChannel) {
 			case "Stable":
@@ -48,7 +48,7 @@ public final class UpdateController {
 					break;
 			}
 
-			if(bInformationOnly) {
+			if(isMac) {
 				JOptionPane.showMessageDialog(HOMainFrame.instance(), 
 					new UpdaterPanel("<html><body>" + updateAvailable + "<br/><br/>"
 						+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("ls.version") + ":</font>"
@@ -58,7 +58,7 @@ public final class UpdateController {
 						+ HOVerwaltung.instance().getLanguageString("ls.button.update.available") + "<br/>"
 						+ "</body></html>",
 				 		getReleaseNote(),
-						getHOupdateURL(version.getfullVersion(), version.getVersion(),versionType)),
+							get_HOzip_updateURL(version.getfullVersion(), version.getVersion(),versionType)),
 					HOVerwaltung.instance().getLanguageString("confirmation.title"),
 					JOptionPane.INFORMATION_MESSAGE);
 			}
@@ -104,9 +104,9 @@ public final class UpdateController {
 		}
 	}
 
-	public static String getHOupdateURL(String full_version, double version, String versionType) {
+	public static String get_HOzip_updateURL(String full_version, double version, String versionType) {
 		String suffix = ".zip";
-		if (isMac()){
+		if (HOMainFrame.isMac()){
 			suffix = "_OSX" + suffix;
 		}
 		if (versionType == "DEV") {
@@ -117,12 +117,8 @@ public final class UpdateController {
 		}
 	}
 
-	final public static boolean isMac() {
-		return (System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH).indexOf("mac") != -1);
-	}
-
 	public static void updateHO(String full_version, double version, String versionType) {
-            updateHO(getHOupdateURL(full_version, version, versionType));
+            updateHO(get_HOzip_updateURL(full_version, version, versionType));
     }
 
 	public static void updateHO(final String urlString) {
