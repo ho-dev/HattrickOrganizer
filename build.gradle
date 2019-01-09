@@ -162,14 +162,14 @@ import java.text.SimpleDateFormat
 task makeAll(type: GradleBuild) {
     group 'ho'
     description 'Create ZipDistribution, Windows, MacOS and Linux binaries'
-    tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'createApp',
+    tasks = ['createLanguageFileList', 'init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'createApp',
              'AddResourcesAndZipMacApp', 'buildDeb', 'finishDeb', 'buildRpm', 'finishRpm', 'updatebuildreferences', 'compute_sha_sums']
 }
 
 task makeosX(type: GradleBuild) {
     group 'ho'
     description 'Create ZipDistribution and MacOS binaries'
-    tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'ZipDistribution', 'createApp', 'AddResourcesAndZipMacApp']
+    tasks = ['createLanguageFileList', 'init', 'installDist', 'AddResourcesInDistrib', 'ZipDistribution', 'createApp', 'AddResourcesAndZipMacApp']
 }
 
 task updatebuildreferences(){
@@ -387,6 +387,7 @@ task createLanguageFileList()  {
     }
 
     doLast {
+            println("updating language list filter")
             lTranslationFiles = lTranslationFiles.collect { it.take(it.lastIndexOf('.'))}
             println lTranslationFiles
             File lstFile = new File("${projectDir}\\src\\main\\resources\\sprache\\ListLanguages.txt")

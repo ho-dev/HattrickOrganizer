@@ -11,19 +11,19 @@ Changelist HO! 1.436
 - team transfer update now includes individual histories
 - information that player has been fired in transfer history panel
 - remove transfer button in transfer history panel
-- include direct link to download now version for mac user
+- include direct link to download new version [macOS only as direct update is not supported on that platform]
 
 [Fixed]
 - ability to start HO on Linux from script after fresh install (bug #34)
 - version in splash screen and main GUI header (bug #36)
 - missing icon (bug #37)
-- missing columns in certain languages because of duplicate names (Player Analysis Tab) (bug #41)
+- Fixed missing columns in Player Analysis Tab (bug only existed in certain languages) (bug #41)
 - poor quality shirt numbers on MacOS
 - wrong data in csv player export tool  (bug #42)
 - layout changes in transfer history tab
 - fired player transfer history in no longer removed on transfer history update
 - player data is no longer missing from transfer history top panel  (bug #45)
-- wrong link in menu bout HO!  (bug #43)
+- wrong link in menu "about HO!"  (bug #43)
 - small bugs related to update process on all platforms (bug #57)
 
 Changelist HO! 1.435
