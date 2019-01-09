@@ -21,6 +21,7 @@ public class UpdaterPanel extends JPanel {
 		this.version = version;
 		this.releaseNote = releaseNote;
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		setPreferredSize( new Dimension( 650, 300 ) );
 		initLayout();
 	}
 	
@@ -45,18 +46,11 @@ public class UpdaterPanel extends JPanel {
 	
 	// Create Release Notes panel
 	private void initReleaseNotesPanel() {
-		JPanel panel = new JPanel();
 		JTextArea txtArea  = new JTextArea(10, 40);
 		JScrollPane scrollPane = new JScrollPane(txtArea);
-				
-		txtArea.setText(releaseNote);
+
+		txtArea.setText(HOVerwaltung.instance().getLanguageString("ls.update.releasenote") + ":\n\n" + releaseNote);
 		txtArea.setCaretPosition(0);
-	    panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-	    panel.setBorder(BorderFactory.createCompoundBorder(
-	    	BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString("ls.update.releasenote")),
-	    	BorderFactory.createEmptyBorder(10,10,10,10)));
-	    panel.add(scrollPane);
-	    panel.add(Box.createRigidArea(new Dimension(0,10)));
-	    add(panel);
+		add(scrollPane);
 	}
 }
