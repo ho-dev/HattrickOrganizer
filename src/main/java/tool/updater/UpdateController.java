@@ -19,7 +19,7 @@ public final class UpdateController {
 	/**
 	 * Check the external site for the latest version according to user preference regarding release channel
 	 */
-	public static void check4update(boolean bInformationOnly) {
+	public static void check4update(boolean isMac) {
 		VersionInfo version;
 		switch (core.model.UserParameter.temp().ReleaseChannel) {
 			case "Stable":
@@ -48,16 +48,24 @@ public final class UpdateController {
 					break;
 			}
 
-			if(bInformationOnly) {
-				JOptionPane.showMessageDialog(HOMainFrame.instance(), 
+			if(isMac) {
+				/**
+				 * Update is not supported for macOS platform. Hence, instead we will present to the user,
+				 * a direct url link for downloading the relevant osX app package -according to his release channel preference.
+				 */
+				String macos_zip_download_url = get_HO_zip_download_url(version.getfullVersion(), version.getVersion(),versionType);
+				macos_zip_download_url = macos_zip_download_url.replace(".zip","_OSX.zip");
+				JOptionPane.showMessageDialog(HOMainFrame.instance(),
 					new UpdaterPanel("<html><body>" + updateAvailable + "<br/><br/>"
 						+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("ls.version") + ":</font>"
 						+ version.getVersionString() + "<br/>"
 						+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("Released") + ":</font>"
 						+ version.getReleaseDate() + "<br/><br/>"
 						+ HOVerwaltung.instance().getLanguageString("ls.button.update.available") + "<br/>"
-						+ getHOupdateURL(version.getfullVersion(), version.getVersion(),versionType) + "</body></html>",
-				 		getReleaseNote()),
+						+ "</body></html>",
+				 		getReleaseNote(),
+						macos_zip_download_url
+							),
 					HOVerwaltung.instance().getLanguageString("confirmation.title"),
 					JOptionPane.INFORMATION_MESSAGE);
 			}
@@ -103,7 +111,7 @@ public final class UpdateController {
 		}
 	}
 
-	public static String getHOupdateURL(String full_version, double version, String versionType) {
+	public static String get_HO_zip_download_url(String full_version, double version, String versionType) {
 		if (versionType == "DEV") {
 			return "https://github.com/akasolace/HO/releases/download/dev/HO_" + full_version + ".zip";
 		} else {
@@ -113,7 +121,7 @@ public final class UpdateController {
 	}
 
 	public static void updateHO(String full_version, double version, String versionType) {
-            updateHO(getHOupdateURL(full_version, version, versionType));
+            updateHO(get_HO_zip_download_url(full_version, version, versionType));
     }
 
 	public static void updateHO(final String urlString) {
