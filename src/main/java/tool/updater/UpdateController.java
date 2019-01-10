@@ -49,7 +49,12 @@ public final class UpdateController {
 			}
 
 			if(isMac) {
-				JOptionPane.showMessageDialog(HOMainFrame.instance(), 
+				// Only for Macos Platform the zip is named different
+				// And The automatic update is not available, in fact,
+				// System shows the message that contains the link to perform the correct download
+				String macos_zip_download_url = get_HO_zip_download_url(version.getfullVersion(), version.getVersion(),versionType);
+				macos_zip_download_url = macos_zip_download_url.replace(".zip","_OSX.zip");
+				JOptionPane.showMessageDialog(HOMainFrame.instance(),
 					new UpdaterPanel("<html><body>" + updateAvailable + "<br/><br/>"
 						+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("ls.version") + ":</font>"
 						+ version.getVersionString() + "<br/>"
@@ -58,7 +63,8 @@ public final class UpdateController {
 						+ HOVerwaltung.instance().getLanguageString("ls.button.update.available") + "<br/>"
 						+ "</body></html>",
 				 		getReleaseNote(),
-							get_HOzip_updateURL(version.getfullVersion(), version.getVersion(),versionType)),
+						macos_zip_download_url
+							),
 					HOVerwaltung.instance().getLanguageString("confirmation.title"),
 					JOptionPane.INFORMATION_MESSAGE);
 			}
@@ -104,21 +110,17 @@ public final class UpdateController {
 		}
 	}
 
-	public static String get_HOzip_updateURL(String full_version, double version, String versionType) {
-		String suffix = ".zip";
-		if (HOMainFrame.isMac()){
-			suffix = "_OSX" + suffix;
-		}
+	public static String get_HO_zip_download_url(String full_version, double version, String versionType) {
 		if (versionType == "DEV") {
-			return "https://github.com/akasolace/HO/releases/download/dev/HO_" + full_version + suffix;
+			return "https://github.com/akasolace/HO/releases/download/dev/HO_" + full_version + ".zip";
 		} else {
 			String ver = Double.toString(version);
-			return "https://github.com/akasolace/HO/releases/download/" + ver + "/HO_" + ver + suffix;
+			return "https://github.com/akasolace/HO/releases/download/" + ver + "/HO_" + ver + ".zip";
 		}
 	}
 
 	public static void updateHO(String full_version, double version, String versionType) {
-            updateHO(get_HOzip_updateURL(full_version, version, versionType));
+            updateHO(get_HO_zip_download_url(full_version, version, versionType));
     }
 
 	public static void updateHO(final String urlString) {
