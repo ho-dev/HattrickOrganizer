@@ -7,3 +7,8 @@
  **person responsible for reviewing proposed changes:** (Optional)
 
 @xxx
+
+**requested files have been updated**
+
+ - [ ] changelog.txt
+ - [ ]  	release_notes.txt
