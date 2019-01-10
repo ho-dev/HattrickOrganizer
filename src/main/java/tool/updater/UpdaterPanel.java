@@ -20,7 +20,11 @@ public class UpdaterPanel extends JPanel {
 	private String updateLink;
 	
 	public UpdaterPanel(String version, String releaseNote) {
-		new UpdaterPanel(version,releaseNote, "");
+		this.version = version;
+		this.releaseNote = releaseNote;
+		this.updateLink = "";
+		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		initLayout();
 	}
 
 	public UpdaterPanel(String version, String releaseNote, String updateLink) {
