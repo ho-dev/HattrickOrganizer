@@ -49,9 +49,10 @@ public final class UpdateController {
 			}
 
 			if(isMac) {
-				// Only for Macos Platform the zip is named different
-				// And The automatic update is not available, in fact,
-				// System shows the message that contains the link to perform the correct download
+				/**
+				 * Update is not supported for macOS platform. Hence, instead we will present to the user,
+				 * a direct url link for downloading the relevant osX app package -according to his release channel preference.
+				 */
 				String macos_zip_download_url = get_HO_zip_download_url(version.getfullVersion(), version.getVersion(),versionType);
 				macos_zip_download_url = macos_zip_download_url.replace(".zip","_OSX.zip");
 				JOptionPane.showMessageDialog(HOMainFrame.instance(),
