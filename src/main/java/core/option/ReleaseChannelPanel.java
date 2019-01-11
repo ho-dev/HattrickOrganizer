@@ -3,6 +3,7 @@ package core.option;
 import core.gui.comp.panel.ImagePanel;
 
 import java.awt.GridLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.*;
@@ -68,6 +69,8 @@ public final class ReleaseChannelPanel extends ImagePanel
         jbg_buttonGroup.add(jrb_Dev);
 
         jl_Description = new JTextArea("", 5, 1);
+        jl_Description.setLineWrap(true);
+        jl_Description.setWrapStyleWord(true);
         jl_Description.setEditable(false);
 
 
