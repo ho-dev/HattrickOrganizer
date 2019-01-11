@@ -2,6 +2,7 @@
 plugins {
     id "edu.sc.seis.macAppBundle" version "2.2.3"
     id "nebula.ospackage" version "5.0.4"
+    id 'de.jansauer.poeditor' version '1.0.0'
     id "com.github.breadmoirai.github-release" version "2.2.1" apply false
 }
 
@@ -174,17 +175,23 @@ buildRpm {
 
 import java.text.SimpleDateFormat
 
+'poeditorPull'
+
+task init(type: GradleBuild) {
+    tasks = ['poeditorPull', 'createLanguageFileList', 'cleanBuild']
+}
+
 task makeAll(type: GradleBuild) {
     group 'ho'
     description 'Create ZipDistribution, Windows, MacOS and Linux binaries'
-    tasks = ['createLanguageFileList', 'init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'createApp',
+    tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'createApp',
              'AddResourcesAndZipMacApp', 'buildDeb', 'finishDeb', 'buildRpm', 'finishRpm', 'updatebuildreferences', 'compute_sha_sums']
 }
 
 task makeosX(type: GradleBuild) {
     group 'ho'
     description 'Create ZipDistribution and MacOS binaries'
-    tasks = ['createLanguageFileList', 'init', 'installDist', 'AddResourcesInDistrib', 'ZipDistribution', 'createApp', 'AddResourcesAndZipMacApp']
+    tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'ZipDistribution', 'createApp', 'AddResourcesAndZipMacApp']
 }
 
 task updatebuildreferences(){
@@ -226,9 +233,10 @@ task makeWindowsBinarary(type: GradleBuild) {
     tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution']
 }
 
-task init{
+task cleanBuild{
     group 'ho'
     description 'get HO Version'
+
     doLast {
         //     Deleting build project     ---------------------------------------------------------------------
         println("Deleting build project ....")
@@ -448,7 +456,27 @@ githubRelease {
 
         }
     }}
-        
+
+
+poeditor {
+    apiKey = POEDITOR_APIKEY
+    projectId = '206221'
+
+    trans type:'properties', lang: 'bg', file: 'src\\main\\resources\\sprache\\Bulgarian.properties'
+    trans type:'properties', lang: 'ca', file: 'src\\main\\resources\\sprache\\Catalan.properties'
+    trans type:'properties', lang: 'hr', file: 'src\\main\\resources\\sprache\\Hrvatski(Croatian).properties'
+    trans type:'properties', lang: 'de', file: 'src\\main\\resources\\sprache\\Deutsch.properties'
+    trans type:'properties', lang: 'da', file: 'src\\main\\resources\\sprache\\Danish.properties'
+    trans type:'properties', lang: 'fr', file: 'src\\main\\resources\\sprache\\French.properties'
+    trans type:'properties', lang: 'it', file: 'src\\main\\resources\\sprache\\Italiano.properties'
+    trans type:'properties', lang: 'pl', file: 'src\\main\\resources\\sprache\\Polish.properties'
+    trans type:'properties', lang: 'es', file: 'src\\main\\resources\\sprache\\Spanish.properties'
+
+
+    trans type:'properties', lang: 'lv', file: 'src\\main\\resources\\sprache\\Latvija.properties'
+//    trans lang: 'de', file: 'build/translations_de.xtb'
+//    trans lang: 'it', file: 'build/translations_it.xtb'
+}
 
 //// task ReleaseToGitHub is broken until upstream fix ===================================
 //    apply plugin: 'com.github.breadmoirai.github-release'

@@ -16,7 +16,6 @@ Hrvatski(Croatian)
 Indonesian
 Italiano
 Japanese
-languages
 Latvija
 Lithuanian
 Magyar
