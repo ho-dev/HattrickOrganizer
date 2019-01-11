@@ -49,7 +49,7 @@ public class EmblemPanel extends JPanel {
 		this.panel.setBackground(Color.white);
 		this.logoLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
 				"ifa.loadEmblem.clickHere"));
-		this.logoLabel.setPreferredSize(new Dimension(100, 100));
+		this.logoLabel.setPreferredSize(new Dimension(200, 100));
 		this.logoLabel.setVerticalAlignment(0);
 		this.logoLabel.setHorizontalAlignment(0);
 		this.logoLabel.setBackground(Color.white);
