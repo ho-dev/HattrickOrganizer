@@ -4,7 +4,7 @@ If you find a bug, please open an issue on GitHub: https://github.com/akasolace/
 Changelist HO! 1.436
 ====================
 [Added]
-- added possibility for user to select and save release channel preference (DEV/BETA/STABLE)
+- possibility for user to select and save release channel preference (DEV/BETA/STABLE)
 - display release notes before HO update
 - translation in csv player export
 - support for new HT layout by HT Copy Button in Transfer Scout (deadline and price data are not available)
