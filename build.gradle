@@ -73,6 +73,20 @@ jar {
                    'Main-Class': 'HOLauncher',
                     "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
     }
+//    include "${projectDir}\\src\\main\\resources\\themes\\**"
+    exclude "prediction"
+    exclude "themes"
+    exclude "ho_logo.png"
+    exclude "Logo.ico"
+    exclude "release_notes.txt"
+    exclude "changelog.txt"
+    exclude "hsqldb.jar"
+    exclude "jcalendar-1.3.2.jar"
+    exclude "looks-2.3.1.jar"
+    exclude "scribe-1.3.0.jar"
+    exclude "commons-codec-1.4.jar"
+    exclude "themes"
+
 }
 
 // Configure distribution task =======================
@@ -115,6 +129,7 @@ ospackage {
     from("${projectDir}\\src\\main\\resources\\prediction") {
         into 'lib\\ho\\prediction'
     }
+
     from("${projectDir}\\src\\main\\resources\\themes") {
         into 'lib\\ho\\themes'
     }
@@ -244,22 +259,17 @@ task AddResourcesInDistrib {
             from "${projectDir}\\src\\main\\resources\\Logo.ico"
             into distribDir
         }
-        copy {
-            from "${projectDir}\\src\\main\\resources\\sprache"
-            into "${distribDir}\\sprache"
-        }
-        copy {
-            from "${projectDir}\\src\\main\\resources\\gui"
-            into "${distribDir}\\gui"
-        }
-        copy {
-            from "${projectDir}\\src\\main\\resources\\flags"
-            into "${distribDir}\\flags"
-        }
+
         copy {
             from "${projectDir}\\src\\main\\resources\\prediction"
             into "${distribDir}\\prediction"
         }
+
+        copy {
+            from "${projectDir}\\src\\main\\resources\\themes"
+            into "${distribDir}\\themes"
+        }
+
         copy {
             from "${projectDir}\\buildResources\\Win\\HO.bat"
             into "${distribDir}"
@@ -275,16 +285,11 @@ task AddResourcesInDistrib {
             include "**/*.jar"
             into "${distribDir}"
         }
-        copy {
-            from "${projectDir}\\src\\main\\resources\\themes"
-            into "${distribDir}\\themes"
-        }
-        delete "${distribDir}\\bin"
-        delete "${distribDir}\\gui"
-        delete "${distribDir}\\lib"
         delete "${distribDir}\\hamcrest-core-1.3.jar"
         delete "${distribDir}\\junit-4.12.jar"
 
+        delete "${distribDir}\\bin"
+        delete "${distribDir}\\lib"
 
         println("renaming distribution")
         copy {
