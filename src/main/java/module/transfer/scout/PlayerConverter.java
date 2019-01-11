@@ -215,6 +215,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
+            error = 1;
         }
         // Player Id
         sc.useDelimiter("\\]");
@@ -225,6 +226,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.name");
+            error = 1;
         }
         sc.close();
         // Age
@@ -238,6 +240,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.age");
+            error = 1;
         }
         // Age Days
         sc.useDelimiter(" ");
@@ -254,6 +257,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.age.days");
+            error = 1;
         }
         sc.close();
         //Analyze Player Description
@@ -277,6 +281,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.experience");
+            error = 1;
         }
         // Leadership
         found = false;
@@ -294,6 +299,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.leadership");
+            error = 1;
         }
         // Loyalty
         found = false;
@@ -311,11 +317,14 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.loyalty");
+            error = 1;
         }
         sc.close();
         // Mother Club
         row = rows.get(indexMotherClub).toLowerCase(java.util.Locale.ENGLISH);
-        if (row.indexOf(HOVerwaltung.instance().getLanguageString("ls.player.motherclub").toLowerCase(java.util.Locale.ENGLISH))>=0) {
+        if (!HOVerwaltung.instance().getLanguageString("ls.player.motherclub.bonus").isEmpty() && row.indexOf(HOVerwaltung.instance().getLanguageString("ls.player.motherclub.bonus").toLowerCase(java.util.Locale.ENGLISH))>=0) {
+            player.setHomeGrown(true);
+        }else if (!HOVerwaltung.instance().getLanguageString("ls.player.motherclub").isEmpty() && row.indexOf(HOVerwaltung.instance().getLanguageString("ls.player.motherclub").toLowerCase(java.util.Locale.ENGLISH))>=0) {
             player.setHomeGrown(true);
         }
         // TSI
@@ -337,6 +346,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.TSI");
+            error = 1;
         }
         // Speciality
         row = rows.get(indexRowSpecialty).toLowerCase(java.util.Locale.ENGLISH);
@@ -369,6 +379,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.warningstatus");
+            error = 1;
         }
         // Injure
         row = rows.get(indexRowInjure);
@@ -413,6 +424,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.form");
+            error = 1;
         }
         txtTmp = "";
         c = "";
@@ -434,6 +446,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
+            error = 1;
         }
         //Keeper
         row = rows.get(indexRowSkills);
@@ -459,6 +472,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper");
+            error = 1;
         }
         //Defense
         txtTmp = "";
@@ -481,6 +495,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.defending");
+            error = 1;
         }
         //PlayMaking
         txtTmp = "";
@@ -503,6 +518,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking");
+            error = 1;
         }
         //Wing
         txtTmp = "";
@@ -525,6 +541,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.winger");
+            error = 1;
         }
         //Passing
         txtTmp = "";
@@ -547,6 +564,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.passing");
+            error = 1;
         }
         //Attack
         txtTmp = "";
@@ -569,6 +587,7 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
+            error = 1;
         }
         //Set Pieces
         txtTmp = "";
@@ -591,40 +610,37 @@ public class PlayerConverter {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
+            error = 1;
         }
 
-        //Price TODO
+        //Price - Price is not present in HT copy button
         txtTmp = "";
         if(!txtTmp.equals("")) {
-            player.setPassing(Integer.parseInt(txtTmp));
+            player.setPrice(Integer.parseInt(txtTmp));
         } else {
             if (!errorFields.equals(""))
                 errorFields += ", ";
             errorFields += HOVerwaltung.instance().getLanguageString("scout_price");
+            error = 1;
         }
 
-        //Deadline TODO
-        /*
-        txtTmp = "";
-        if(!txtTmp.equals("")) {
-            player.setPassing(Integer.parseInt(txtTmp));
-        } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
-        }
-        */
+        //Deadline - Date and Time expired is not present in HT copy button
+        //This check is performed in the method caller
 
         return player;
     }
 
     public final Player build(String text) throws Exception {
         Player player = new Player();
-
-        if(text.indexOf("[playerid=")>=0){
-            player = this.buildHTCopyButton(text);
-        }else {
-            player = this.buildClassicPage(text);
+        if (text==null || text.isEmpty()){
+            // This error to shown error for empty input
+            error = 3;
+        }else{
+            if(text.indexOf("[playerid=")>=0){
+                player = this.buildHTCopyButton(text);
+            }else {
+                player = this.buildClassicPage(text);
+            }
         }
         return player;
     }

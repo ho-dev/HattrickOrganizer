@@ -521,19 +521,26 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 Helper.markierenComboBox(jcbPlaymaking,player.getPlayMaking());
 
                 errorFields = pc.getErrorFields();
-                // Normally not working. Thus last positioned
-                try {
-                    final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("dd.MM.yy HH:mm",
-                            java.util.Locale.GERMANY);
-                    final java.util.Date date = simpleFormat.parse(player.getExpiryDate() + " "
-                            + player.getExpiryTime());
-                    jsSpinner.setValue(date);
-                } catch (Exception e){
-                    HOLogger.instance().debug(getClass(), e);
-                    message = HOVerwaltung.instance().getLanguageString("scout_warning");
+
+                if(player.getExpiryDate() == null || player.getExpiryDate() == null || player.getExpiryDate().isEmpty() || player.getExpiryTime().isEmpty()){
                     if (!errorFields.equals(""))
                         errorFields += ", ";
                     errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
+                } else {
+                    // Normally not working. Thus last positioned
+                    try {
+                        final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("dd.MM.yy HH:mm",
+                                java.util.Locale.GERMANY);
+                        final java.util.Date date = simpleFormat.parse(player.getExpiryDate() + " "
+                                + player.getExpiryTime());
+                        jsSpinner.setValue(date);
+                    } catch (Exception e) {
+                        HOLogger.instance().debug(getClass(), e);
+                        message = HOVerwaltung.instance().getLanguageString("scout_warning");
+                        if (!errorFields.equals(""))
+                            errorFields += ", ";
+                        errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
+                    }
                 }
                 setLabels();
             }
@@ -551,6 +558,10 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                     break;
                 case 2:
                     message = HOVerwaltung.instance().getLanguageString("scout_error");
+                    break;
+                case 3:
+                    message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
+                    errorFields = "";
                     break;
                 default:
                     message = HOVerwaltung.instance().getLanguageString("scout_success");
