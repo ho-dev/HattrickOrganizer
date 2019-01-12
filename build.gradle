@@ -41,7 +41,7 @@ dependencies {
 def major = '1'
 def minor = '436'
 def development_stage = '0'
-def releaseArtefacts = false
+def releaseArtefacts = true
 
 def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
@@ -74,7 +74,6 @@ jar {
                    'Main-Class': 'HOLauncher',
                     "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
     }
-//    include "${projectDir}\\src\\main\\resources\\themes\\**"
     exclude "prediction"
     exclude "themes"
     exclude "ho_logo.png"
@@ -86,9 +85,28 @@ jar {
     exclude "looks-2.3.1.jar"
     exclude "scribe-1.3.0.jar"
     exclude "commons-codec-1.4.jar"
-    exclude "themes"
-
 }
+
+
+task osXjar(type: Jar) {
+    archiveName = "HO.jar"
+    from sourceSets.main.output
+    manifest {
+        attributes 'Manifest-Version': 1.0, 'Implementation-Title': 'HO', 'Implementation-Version': version,
+                'Main-Class': 'HOLauncher',
+                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+    }
+    exclude "ho_logo.png"
+    exclude "Logo.ico"
+    exclude "release_notes.txt"
+    exclude "changelog.txt"
+    exclude "hsqldb.jar"
+    exclude "jcalendar-1.3.2.jar"
+    exclude "looks-2.3.1.jar"
+    exclude "scribe-1.3.0.jar"
+    exclude "commons-codec-1.4.jar"
+}
+
 
 // Configure distribution task =======================
 distributions {
@@ -184,8 +202,9 @@ task init(type: GradleBuild) {
 task makeAll(type: GradleBuild) {
     group 'ho'
     description 'Create ZipDistribution, Windows, MacOS and Linux binaries'
-    tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'createApp',
-             'AddResourcesAndZipMacApp', 'buildDeb', 'finishDeb', 'buildRpm', 'finishRpm', 'updatebuildreferences', 'compute_sha_sums']
+    tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'buildDeb',
+             'finishDeb', 'buildRpm', 'finishRpm', 'osXjar', 'createApp',
+             'AddResourcesAndZipMacApp', 'updatebuildreferences', 'compute_sha_sums']
 }
 
 task makeosX(type: GradleBuild) {
@@ -471,11 +490,8 @@ poeditor {
     trans type:'properties', lang: 'it', file: 'src\\main\\resources\\sprache\\Italiano.properties'
     trans type:'properties', lang: 'pl', file: 'src\\main\\resources\\sprache\\Polish.properties'
     trans type:'properties', lang: 'es', file: 'src\\main\\resources\\sprache\\Spanish.properties'
-
-
+    trans type:'properties', lang: 'nl', file: 'src\\main\\resources\\sprache\\Nederlands.properties'
     trans type:'properties', lang: 'lv', file: 'src\\main\\resources\\sprache\\Latvija.properties'
-//    trans lang: 'de', file: 'build/translations_de.xtb'
-//    trans lang: 'it', file: 'build/translations_it.xtb'
 }
 
 //// task ReleaseToGitHub is broken until upstream fix ===================================
