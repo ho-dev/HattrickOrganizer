@@ -244,7 +244,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
                 errorFields = pc.getErrorFields();
 
-                if(player.getExpiryDate() == null || player.getExpiryDate() == null || player.getExpiryDate().isEmpty() || player.getExpiryTime().isEmpty()){
+                if(player.getExpiryDate() == null || player.getExpiryTime() == null || player.getExpiryDate().isEmpty() || player.getExpiryTime().isEmpty()){
                     if (!errorFields.equals(""))
                         errorFields += ", ";
                     errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");

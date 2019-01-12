@@ -522,7 +522,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 
                 errorFields = pc.getErrorFields();
 
-                if(player.getExpiryDate() == null || player.getExpiryDate() == null || player.getExpiryDate().isEmpty() || player.getExpiryTime().isEmpty()){
+                if(player.getExpiryDate() == null || player.getExpiryTime() == null || player.getExpiryDate().isEmpty() || player.getExpiryTime().isEmpty()){
                     if (!errorFields.equals(""))
                         errorFields += ", ";
                     errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
