@@ -14,6 +14,7 @@ Changelist HO! 1.436
 - include direct link to download new version [macOS only as direct update is not supported on that platform]
 
 [Fixed]
+- optimized build is saving approximately 35% disk space on produced binaries (bug #71)
 - ability to start HO on Linux from script after fresh install (bug #34)
 - version in splash screen and main GUI header (bug #36)
 - missing icon (bug #37)
