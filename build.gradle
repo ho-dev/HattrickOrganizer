@@ -224,12 +224,26 @@ released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 """
             println("latest.html has been updated")
 
+            copy {
+                from "${projectDir}\\src\\main\\resources\\release_notes.md"
+                into "$projectDir/docs"
+                rename { filename -> filename.replace('release_notes', 'release_notes(dev)')}
+            }
+            println("release notes of DEV version have been updated")
+
             // update latestbeta.html if beta or stable has been released
             if (development_stage != '0') {
                 new File("$projectDir/docs/latestbeta.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 """
                 println("latestbeta.html has been updated")
+                copy {
+                    from "${projectDir}\\src\\main\\resources\\release_notes.md"
+                    into "$projectDir/docs"
+                    rename { filename -> filename.replace('release_notes', 'release_notes(beta)')}
+                }
+                println("release notes of BETA version have been updated")
+                
             }
 
             // update lateststable.html only if stable has been released
@@ -238,6 +252,12 @@ released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 """
                 println("lateststable.html has been updated")
+                copy {
+                    from "${projectDir}\\src\\main\\resources\\release_notes.md"
+                    into "$projectDir/docs"
+                    rename { filename -> filename.replace('release_notes', 'release_notes(stable)')}
+                }
+                println("release notes of STABLE version have been updated")
             }
         }
         else{

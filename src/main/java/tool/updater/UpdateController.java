@@ -163,7 +163,7 @@ public final class UpdateController {
 		StringBuilder sb = new StringBuilder();
 
 		try {
-			br = new BufferedReader(new InputStreamReader(UpdateController.class.getResourceAsStream("/release_notes.txt")));
+			br = new BufferedReader(new InputStreamReader(UpdateController.class.getResourceAsStream("/release_notes.md")));
 			String line;
 			while ((line = br.readLine()) != null) {
 				sb.append(line).append("\n");

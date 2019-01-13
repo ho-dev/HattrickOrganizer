@@ -1,9 +1,5 @@
----
-title: HO release notes
-layout: page
----
-
-
+Changelist HO! 1.436
+====================
 [Added]
 - possibility for user to select and save release channel preference (DEV/BETA/STABLE)
 - display release notes before HO update
