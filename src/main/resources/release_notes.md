@@ -1,3 +1,8 @@
+---
+title: HO release notes
+layout: page
+---
+
 Changelist HO! 1.436
 ====================
 [Added]
