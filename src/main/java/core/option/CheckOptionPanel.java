@@ -20,7 +20,6 @@ public final class CheckOptionPanel extends ImagePanel
     //~ Static fields/initializers -----------------------------------------------------------------
 
 	private static final long serialVersionUID = 1L;
-    private JCheckBox m_jchShowSaveDialog;
     private JCheckBox m_jchUpdateCheck;
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -37,7 +36,6 @@ public final class CheckOptionPanel extends ImagePanel
 
     public final void itemStateChanged(java.awt.event.ItemEvent itemEvent) {        
         core.model.UserParameter.temp().updateCheck = m_jchUpdateCheck.isSelected();
-        core.model.UserParameter.temp().showHRFSaveDialog = m_jchShowSaveDialog.isSelected();
     }
 
 	public void stateChanged(ChangeEvent arg0) {
@@ -54,12 +52,6 @@ public final class CheckOptionPanel extends ImagePanel
         m_jchUpdateCheck.addItemListener(this);
         add(m_jchUpdateCheck);
 
-        m_jchShowSaveDialog = new JCheckBox(core.model.HOVerwaltung.instance().getLanguageString("Show_SaveHRF_Dialog"));
-        m_jchShowSaveDialog.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString("tt_Optionen_Show_SaveHRF_Dialog"));
-        m_jchShowSaveDialog.setOpaque(false);
-        m_jchShowSaveDialog.setSelected(core.model.UserParameter.temp().showHRFSaveDialog);
-        m_jchShowSaveDialog.addItemListener(this);
-        add(m_jchShowSaveDialog);
         for(int i = 0; i < 6; i++) {
         	add(new JLabel(""));
         }
