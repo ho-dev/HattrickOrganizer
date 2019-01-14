@@ -20,21 +20,43 @@ public final class UpdateController {
 	 * Check the external site for the latest version according to user preference regarding release channel
 	 */
 	public static void check4update(boolean isMac) {
-		VersionInfo version;
+		VersionInfo devVersion = MyConnector.instance().getLatestVersion();
+        VersionInfo betaVersion = MyConnector.instance().getLatestBetaVersion();
+        VersionInfo stableVersion = MyConnector.instance().getLatestStableVersion();
+        VersionInfo updVersion = null;
+
 		switch (core.model.UserParameter.temp().ReleaseChannel) {
 			case "Stable":
-				version = MyConnector.instance().getLatestStableVersion();
+			    if (compareToCurrentVersions(stableVersion)) {
+                    updVersion = stableVersion;
+                }
 				break;
 			case "Beta":
-				version = MyConnector.instance().getLatestBetaVersion();
+			    if (compareTwoVersions(stableVersion, betaVersion)) {
+			        if (compareToCurrentVersions(stableVersion))
+                        updVersion = stableVersion;
+                }
+                else if (compareToCurrentVersions(betaVersion)) {
+                    updVersion = betaVersion;
+                }
 				break;
 			default:
-				version = MyConnector.instance().getLatestVersion();
+                if (compareTwoVersions(stableVersion, devVersion)) {
+                    if (compareToCurrentVersions(stableVersion))
+                        updVersion = stableVersion;
+                }
+                else if (compareTwoVersions(betaVersion, devVersion)) {
+                    if (compareToCurrentVersions(betaVersion))
+                        updVersion = betaVersion;
+                }
+                else if (compareToCurrentVersions(devVersion)) {
+                        updVersion = devVersion;
+                }
 				break;
 		}
 
-		if ((version != null) && (version.getBuild() > HO.RevisionNumber)) {
-			String versionType = version.getversionType();
+        if (updVersion != null) {
+			String versionType = updVersion.getversionType();
 			String updateAvailable;
 			switch (versionType){
 				case "DEV":
@@ -53,14 +75,14 @@ public final class UpdateController {
 				 * Update is not supported for macOS platform. Hence, instead we will present to the user,
 				 * a direct url link for downloading the relevant osX app package -according to his release channel preference.
 				 */
-				String macos_zip_download_url = get_HO_zip_download_url(version.getfullVersion(), version.getVersion(),versionType);
+				String macos_zip_download_url = get_HO_zip_download_url(updVersion.getfullVersion(), updVersion.getVersion(),versionType);
 				macos_zip_download_url = macos_zip_download_url.replace(".zip","_OSX.zip");
 				JOptionPane.showMessageDialog(HOMainFrame.instance(),
 					new UpdaterPanel("<html><body>" + updateAvailable + "<br/><br/>"
 						+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("ls.version") + ":</font>"
-						+ version.getVersionString() + "<br/>"
+						+ updVersion.getVersionString() + "<br/>"
 						+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("Released") + ":</font>"
-						+ version.getReleaseDate() + "<br/><br/>"
+						+ updVersion.getReleaseDate() + "<br/><br/>"
 						+ HOVerwaltung.instance().getLanguageString("ls.button.update.available") + "<br/>"
 						+ "</body></html>",
 				 		getReleaseNote(),
@@ -73,9 +95,9 @@ public final class UpdateController {
 				int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
 								new UpdaterPanel("<html><body>" + updateAvailable + "<br/><br/>"
 									+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("ls.version") + ":</font>"
-									+ version.getVersionString() + "<br/>"
+									+ updVersion.getVersionString() + "<br/>"
 									+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("Released") + ":</font>"
-									+ version.getReleaseDate() + "<br/><br/>"
+									+ updVersion.getReleaseDate() + "<br/><br/>"
 									+ HOVerwaltung.instance().getLanguageString("ls.button.update") + "?</body></html>",
 									getReleaseNote()),
 								HOVerwaltung.instance().getLanguageString("confirmation.title"),
@@ -93,7 +115,7 @@ public final class UpdateController {
 				}
 					
 				if (update == JOptionPane.YES_OPTION) {
-						updateHO(version.getfullVersion(), version.getVersion(), versionType);
+						updateHO(updVersion.getfullVersion(), updVersion.getVersion(), versionType);
 				}
 			}
 		} else {
@@ -182,4 +204,22 @@ public final class UpdateController {
 		}
 		return buff;
 	}
+
+	public static boolean compareTwoVersions(VersionInfo a, VersionInfo b) {
+	    System.out.println("a:"+a.getVersion() + "@" + a.getBuild() + ",b:" + b.getVersion() + "@" + b.getBuild());
+	    if (a.getVersion() > b.getVersion() ||
+                (a.getVersion() == b.getVersion() && a.getBuild() > b.getBuild()))
+	        return true;
+
+	    return false;
+	}
+
+    public static boolean compareToCurrentVersions(VersionInfo a) {
+        System.out.println("a:"+a.getVersion() + "@" + a.getBuild() + ",b:" + HO.VERSION + "@" + HO.getRevisionNumber());
+        if (a.getVersion() > HO.VERSION ||
+                (a.getVersion() == HO.VERSION && a.getBuild() > HO.getRevisionNumber()))
+            return true;
+
+        return false;
+    }
 }
