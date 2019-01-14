@@ -1,108 +1,146 @@
 package core.option;
 
+import core.model.HOVerwaltung;
 import core.gui.comp.panel.ImagePanel;
 
-import java.awt.GridLayout;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.Insets;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.event.ItemEvent;
 
-import javax.swing.*;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import javax.swing.JCheckBox;
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButton;
 import javax.swing.event.ChangeEvent;
 
-
 /**
- * Radio buttons in Release Channel Panel  (preferences)
+ * Controls for release channel with description
+ * and auto-update-check control.
+ * Release Channel Panel
  */
 public final class ReleaseChannelPanel extends ImagePanel
-        implements javax.swing.event.ChangeListener, java.awt.event.ItemListener
-{
-    //~ Static fields/initializers -----------------------------------------------------------------
+	implements javax.swing.event.ChangeListener, java.awt.event.ItemListener {
 
-    private static final long serialVersionUID = 1L;
-    JRadioButton jrb_Stable;
-    JRadioButton jrb_Beta;
-    JRadioButton jrb_Dev;
-    JTextArea  jl_Description;
+	//~ Static fields/initializers -----------------------------------------------------------------
 
+	private static final long serialVersionUID = 1L;
+	private JRadioButton m_jrb_Stable = new JRadioButton("Stable", false);
+	private JRadioButton m_jrb_Beta = new JRadioButton("Beta", false);
+	private JRadioButton m_jrb_Dev = new JRadioButton("Dev", false);
+	private	ButtonGroup m_bg_ButtonGroup = new ButtonGroup();
+	private JLabel m_jl_PleaseSelect = new JLabel(HOVerwaltung.instance().getLanguageString("options.release_channels_pleaseSelect"));
+	private JTextArea m_jta_Description = new JTextArea("", 8, 1);
+    private JCheckBox m_jchUpdateCheck;
 
-    /**
-     * Creates a new Release Channel Panel object.
-     */
-    public ReleaseChannelPanel() {
-        initComponents();
-    }
+	//~ Constructors -------------------------------------------------------------------------------
 
-    //~ Methods ------------------------------------------------------------------------------------
+	/**
+	* Creates a new ReleaseChannelPanel object.
+	*/
+	public ReleaseChannelPanel() {
+		initComponents();
+	}
 
-    public final void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
-        // TODO: manage saving into DB
-        if (jrb_Stable.isSelected()){
-        core.model.UserParameter.temp().ReleaseChannel = "Stable";
-            jl_Description.setText(core.model.HOVerwaltung.instance().getLanguageString("options.release_channels_STABLE_desc"));}
-        else if (jrb_Beta.isSelected()){
-            core.model.UserParameter.temp().ReleaseChannel = "Beta";
-            jl_Description.setText(core.model.HOVerwaltung.instance().getLanguageString("options.release_channels_BETA_desc"));}
-        else{
-            core.model.UserParameter.temp().ReleaseChannel = "Dev";
-            jl_Description.setText(core.model.HOVerwaltung.instance().getLanguageString("options.release_channels_DEV_desc"));}
-    }
+	//~ Methods ------------------------------------------------------------------------------------
 
-    public void stateChanged(ChangeEvent arg0) {
+	public final void itemStateChanged(ItemEvent itemEvent) {
+		JRadioButton source = (JRadioButton)itemEvent.getItem();
+		if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
+			core.model.UserParameter.temp().ReleaseChannel = source.getText();
+			m_jta_Description.setText(
+					core.model.HOVerwaltung.instance().getLanguageString("options.release_channels_" +
+					source.getText().toUpperCase(java.util.Locale.ENGLISH) + "_desc")
+				);
+		}
+		core.model.UserParameter.temp().updateCheck = m_jchUpdateCheck.isSelected();
+	}
 
-    }
+	public void stateChanged(ChangeEvent arg0) {}
 
-    private void initComponents() {
-        setLayout(new GridLayout(6, 1, 0, 0));
+	private void initComponents() {
+		setLayout(new GridBagLayout());
 
-        JLabel jlQuestion = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("options.release_channels_pleaseSelect"));
-        Font f = jlQuestion.getFont();
-        jlQuestion.setFont(f.deriveFont(f.getStyle() ^ Font.BOLD));
-        add(jlQuestion);
+		GridBagConstraints placement;
 
-        jrb_Stable = new JRadioButton("Stable", true);
-        jrb_Beta = new JRadioButton("Beta", false);
-        jrb_Dev = new JRadioButton("Dev", false);
+		placement = new GridBagConstraints();
+		placement.insets = new Insets(25, 0, 25, 0);
+		placement.anchor = GridBagConstraints.NORTH;
+		placement.gridwidth = GridBagConstraints.REMAINDER;
+		placement.weightx = 1;
+		placement.gridx = 0;
+		placement.gridy = 0;
+		add(m_jl_PleaseSelect, placement);
 
-        ButtonGroup jbg_buttonGroup = new ButtonGroup();
-        jbg_buttonGroup.add(jrb_Stable);
-        jbg_buttonGroup.add(jrb_Beta);
-        jbg_buttonGroup.add(jrb_Dev);
+		m_jrb_Stable.addItemListener(this);
+		placement = new GridBagConstraints();
+		placement.insets = new Insets(25, 50, 25, 0);
+		placement.anchor = GridBagConstraints.WEST;
+		placement.gridx = 0;
+		placement.gridy = 1;
+		add(m_jrb_Stable, placement);
 
-        jl_Description = new JTextArea("", 5, 1);
-        jl_Description.setLineWrap(true);
-        jl_Description.setWrapStyleWord(true);
-        jl_Description.setEditable(false);
+		m_jrb_Beta.addItemListener(this);
+		placement = new GridBagConstraints();
+		placement.insets = new Insets(25, 0, 25, 0);
+		placement.weightx = 1;
+		placement.gridx = 1;
+		placement.gridy = 1;
+		add(m_jrb_Beta, placement);
 
+		m_jrb_Dev.addItemListener(this);
+		placement = new GridBagConstraints();
+		placement.insets = new Insets(25, 0, 25, 50);
+		placement.anchor = GridBagConstraints.EAST;
+		placement.gridx = 2;
+		placement.gridy = 1;
+		add(m_jrb_Dev, placement);
 
+		m_jta_Description.setLineWrap(true);
+		m_jta_Description.setWrapStyleWord(true);
+		m_jta_Description.setEditable(false);
+		placement = new GridBagConstraints();
+		placement.insets = new Insets(25, 0, 25, 0);
+		placement.fill = GridBagConstraints.BOTH;
+		placement.anchor = GridBagConstraints.CENTER;
+		placement.gridwidth = GridBagConstraints.REMAINDER;
+		placement.gridx = 0;
+		placement.gridy = 2;
+		add(m_jta_Description, placement);
 
-        switch (core.model.UserParameter.temp().ReleaseChannel) {
-            case "Beta":
-                jrb_Beta.setSelected(true);
-                jl_Description.setText(core.model.HOVerwaltung.instance().getLanguageString("options.release_channels_BETA_desc"));
-                break;
-            case "Dev":
-                jrb_Dev.setSelected(true);
-                jl_Description.setText(core.model.HOVerwaltung.instance().getLanguageString("options.release_channels_DEV_desc"));
-                break;
-            default:
-                jl_Description.setText(core.model.HOVerwaltung.instance().getLanguageString("options.release_channels_STABLE_desc"));
+		m_jchUpdateCheck = new JCheckBox(core.model.HOVerwaltung.instance().getLanguageString("UpdateCheck"));
+        m_jchUpdateCheck.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString("tt_Optionen_UpdateCheck"));
+        m_jchUpdateCheck.setSelected(core.model.UserParameter.temp().updateCheck);
+        m_jchUpdateCheck.setOpaque(false);
+        m_jchUpdateCheck.setEnabled(false);
+        m_jchUpdateCheck.addItemListener(this);
+		placement = new GridBagConstraints();
+		placement.insets = new Insets(25, 0, 25, 0);
+		placement.anchor = GridBagConstraints.NORTH;
+		placement.gridwidth = GridBagConstraints.REMAINDER;
+		placement.weightx = 1;
+		placement.weighty = 1;
+		placement.gridx = 0;
+		placement.gridy = 3;
+        add(m_jchUpdateCheck, placement);
 
-        }
+		m_bg_ButtonGroup.add(m_jrb_Stable);
+		m_bg_ButtonGroup.add(m_jrb_Beta);
+		m_bg_ButtonGroup.add(m_jrb_Dev);
 
-        //Register a listener for the radio buttons.
-        jrb_Stable.addItemListener(this);
-        jrb_Beta.addItemListener(this);
-        jrb_Dev.addItemListener(this);
-
-        add(jrb_Stable);
-        add(jrb_Beta);
-        add(jrb_Dev);
-
-//        add(new JSeparator());
-
-        add(jl_Description);
-
-
-    }
-
+		switch (core.model.UserParameter.temp().ReleaseChannel) {
+			case "Stable":
+				m_jrb_Stable.setSelected(true);
+				break;
+			case "Beta":
+				m_jrb_Beta.setSelected(true);
+				break;
+			case "Dev":
+				m_jrb_Dev.setSelected(true);
+				break;
+			default:
+				break;
+		}
+	}
 }

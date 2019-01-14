@@ -70,10 +70,6 @@ public final class UserParameter extends Configuration {
     public boolean aufstellungsAssistentPanel_notLast;
     public boolean aufstellungsAssistentPanel_verletzt;
 
-    //Logout
-    /** option parameter */
-    public boolean logoutOnExit = true;
-
     //Dialog, wo mit welchem Namen das HRF gespeichert werden soll
 
     /** option parameter */
@@ -180,8 +176,6 @@ public final class UserParameter extends Configuration {
 
 
     //Update
-	public boolean newsCheck = false;
-	public boolean userCheck = false;
     public boolean updateCheck = false;
 
     //Zahlen hinter den Bewertungen anzeigen
@@ -419,7 +413,6 @@ public final class UserParameter extends Configuration {
         map.put("ReleaseChannel",String.valueOf(ReleaseChannel));
 		map.put("fixtures",String.valueOf(fixtures));
 		map.put("currentMatchlist",String.valueOf(currentMatchlist));
-		map.put("logoutOnExit",String.valueOf(logoutOnExit));
 		map.put("showHRFSaveDialog",String.valueOf(showHRFSaveDialog));
 		map.put("spieleranalyseVertikal",String.valueOf(spieleranalyseVertikal));
 		map.put("statistikAlleBeschriftung",String.valueOf(statistikAlleBeschriftung));
@@ -497,8 +490,6 @@ public final class UserParameter extends Configuration {
 		map.put("tempTabSpieleranalyse",String.valueOf(tempTabSpieleranalyse));
 		map.put("tempTabSpieleruebersicht",String.valueOf(tempTabSpieleruebersicht));
 		map.put("tempTabStatistik",String.valueOf(tempTabStatistik));
-		map.put("newsCheck",String.valueOf(newsCheck));
-		map.put("userCheck",String.valueOf(userCheck));
 		map.put("updateCheck",String.valueOf(updateCheck));
 		map.put("zahlenFuerSkill",String.valueOf(zahlenFuerSkill));
 		map.put("AlterFaktor",String.valueOf(TRAINING_OFFSET_AGE));
@@ -631,7 +622,6 @@ public final class UserParameter extends Configuration {
         ReleaseChannel = getStringValue(values, "ReleaseChannel");
 		fixtures = getBooleanValue(values,"fixtures");
 		currentMatchlist = getBooleanValue(values,"currentMatchlist");
-		logoutOnExit = getBooleanValue(values,"logoutOnExit");
 		showHRFSaveDialog = getBooleanValue(values,"showHRFSaveDialog");
 		spieleranalyseVertikal = getBooleanValue(values,"spieleranalyseVertikal");
 		statistikAlleBeschriftung = getBooleanValue(values,"statistikAlleBeschriftung");
@@ -709,8 +699,6 @@ public final class UserParameter extends Configuration {
 		tempTabSpieleranalyse = getBooleanValue(values,"tempTabSpieleranalyse");
 		tempTabSpieleruebersicht = getBooleanValue(values,"tempTabSpieleruebersicht");
 		tempTabStatistik = getBooleanValue(values,"tempTabStatistik");
-		newsCheck = getBooleanValue(values,"newsCheck");
-		userCheck = getBooleanValue(values,"userCheck");
 		updateCheck = getBooleanValue(values,"updateCheck");
 		zahlenFuerSkill = getBooleanValue(values,"zahlenFuerSkill");
 
