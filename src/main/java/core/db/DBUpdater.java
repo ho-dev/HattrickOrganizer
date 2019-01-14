@@ -758,7 +758,7 @@ final class DBUpdater {
 	private void updateConfigTo1436(boolean alreadyApplied) {
 
 		try {
-			
+			dbZugriff.removeUserParameter("newsCheck");
 		} catch (Exception e) {
 			HOLogger.instance().debug(getClass(),
 					"Error updating to config 1436: " + e.getMessage());

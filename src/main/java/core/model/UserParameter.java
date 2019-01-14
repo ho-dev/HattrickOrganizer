@@ -180,7 +180,6 @@ public final class UserParameter extends Configuration {
 
 
     //Update
-	public boolean newsCheck = false;
 	public boolean userCheck = false;
     public boolean updateCheck = false;
 
@@ -497,7 +496,6 @@ public final class UserParameter extends Configuration {
 		map.put("tempTabSpieleranalyse",String.valueOf(tempTabSpieleranalyse));
 		map.put("tempTabSpieleruebersicht",String.valueOf(tempTabSpieleruebersicht));
 		map.put("tempTabStatistik",String.valueOf(tempTabStatistik));
-		map.put("newsCheck",String.valueOf(newsCheck));
 		map.put("userCheck",String.valueOf(userCheck));
 		map.put("updateCheck",String.valueOf(updateCheck));
 		map.put("zahlenFuerSkill",String.valueOf(zahlenFuerSkill));
@@ -709,7 +707,6 @@ public final class UserParameter extends Configuration {
 		tempTabSpieleranalyse = getBooleanValue(values,"tempTabSpieleranalyse");
 		tempTabSpieleruebersicht = getBooleanValue(values,"tempTabSpieleruebersicht");
 		tempTabStatistik = getBooleanValue(values,"tempTabStatistik");
-		newsCheck = getBooleanValue(values,"newsCheck");
 		userCheck = getBooleanValue(values,"userCheck");
 		updateCheck = getBooleanValue(values,"updateCheck");
 		zahlenFuerSkill = getBooleanValue(values,"zahlenFuerSkill");
