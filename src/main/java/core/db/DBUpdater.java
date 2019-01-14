@@ -649,6 +649,11 @@ final class DBUpdater {
 			updateConfigTo1434(HO.isDevelopment() && lastConfigUpdate == 1.434);
 		}
 
+		if (lastConfigUpdate < 1.436 || (HO.isDevelopment() && lastConfigUpdate == 1.436)) {
+			HOLogger.instance().log(getClass(), "Updating configuration to version 1.436...");
+			updateConfigTo1436(HO.isDevelopment() && lastConfigUpdate == 1.436);
+		}
+
 	}
 
 	private void updateConfigTo1410_1(boolean alreadyApplied) {
@@ -748,6 +753,19 @@ final class DBUpdater {
 		}
 		// always set the LastConfUpdate as last step
 		dbZugriff.saveUserParameter("LastConfUpdate", 1.434);
+	}
+
+	private void updateConfigTo1436(boolean alreadyApplied) {
+
+		try {
+			
+		} catch (Exception e) {
+			HOLogger.instance().debug(getClass(),
+					"Error updating to config 1436: " + e.getMessage());
+		}
+
+		// always set the LastConfUpdate as last step
+		dbZugriff.saveUserParameter("LastConfUpdate", 1.436);
 	}
 
 	private void resetTrainingParameters() {
