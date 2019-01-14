@@ -1670,6 +1670,17 @@ public class DBManager {
 				.update(fieldName, value);
 	}
 
+	/**
+	 * Remove a single UserParameter from the DB
+	 * 
+	 * @param fieldName
+	 *            the name of the parameter to remove
+	 */
+	void removeUserParameter(String fieldName) {
+		((UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME))
+				.remove(fieldName);
+	}
+
 	public void saveHOColumnModel(HOTableModel model) {
 		((UserColumnsTable) getTable(UserColumnsTable.TABLENAME))
 				.saveModel(model);

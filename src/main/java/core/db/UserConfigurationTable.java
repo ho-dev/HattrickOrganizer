@@ -74,9 +74,25 @@ final class UserConfigurationTable extends AbstractTable {
 			// Key not yet in DB -> insert key/value
 			insert(key, value);
 	}
+	/**
+	 * Update a key in the user configuration
+	 * if the key does not exist yet, insert it
+	 * @param key
+	 * @param value
+	 */
 	
+	void remove(String key) {
+		final StringBuffer sql = new StringBuffer(80);
+		sql.append("DELETE FROM ");
+		sql.append(getTableName());
+		sql.append(" WHERE ");
+		sql.append(columns[0].getColumnName());
+		sql.append(" = '");
+		sql.append(key);
+		sql.append("'");
+		adapter.executeUpdate(sql.toString());
+	}
 	
-
 	private String getStringValue(String key) {
 		String value = null;
 		final StringBuffer sql = new StringBuffer(100);
