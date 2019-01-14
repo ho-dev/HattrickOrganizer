@@ -39,16 +39,18 @@ import tool.ToolManager;
 import tool.dbcleanup.DBCleanupTool;
 import tool.updater.UpdateController;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -94,7 +96,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	// -----------  File
 	private final JMenuItem m_jmDownloadItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.download"));
 	private final JMenuItem m_jmImportItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.importfromhrf"));
-	private final JMenuItem m_jmiHO = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"));
 	private final JMenuItem m_jmTraining = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation"));
 	private final JMenuItem m_jmTraining2 = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation7weeks"));
 	private final JMenuItem m_jmOptionen = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.preferences"));
@@ -114,6 +115,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private final JMenuItem m_jmWikiItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.help"));
 	private final JMenuItem m_jmReportAbug = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.reportabug"));
 	private final JMenuItem m_jmAboutAbout = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.about"));
+	private final JMenuItem m_jmCheckUpdate = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"));
+	private final JMenuItem m_jmReleaseNotes = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.update.releasenote"));
 
 
 	// Components
@@ -388,13 +391,23 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			openURL("https://github.com/akasolace/HO/issues");
 		}
 
-		else if (source.equals(m_jmiHO)) {
+		else if (source.equals(m_jmCheckUpdate)) {
 			if(isMac()) {
 				UpdateController.check4update(true);
 			}
 			else
 			{
 				UpdateController.check4update(false);
+			}
+		}
+		else if (source.equals(m_jmReleaseNotes)) {
+			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+				try {
+					Desktop.getDesktop().browse(new URI(HO.getReleaseNoteURL()));
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(this, e.getMessage(), HOVerwaltung.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -496,9 +509,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		// Import HRF
 		m_jmImportItem.addActionListener(this);
 		m_jmFile.add(m_jmImportItem);
-
-		// Updating Menu
-		m_jmiHO.addActionListener(this);
 		m_jmFile.addSeparator();
 
 		// Training
@@ -530,9 +540,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		m_jmFullScreenItem.addActionListener(this);
 		m_jmFile.add(m_jmFullScreenItem);
 
-		m_jmFile.addSeparator();
-
-		m_jmFile.add(m_jmiHO);
 		m_jmFile.addSeparator();
 
 		// Beenden
@@ -574,7 +581,12 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		m_jmReportAbug.addActionListener(this);    //   Help | Report a bug
 		m_jmHelp.add(m_jmReportAbug);
+		m_jmHelp.addSeparator();
 
+		m_jmCheckUpdate.addActionListener(this);
+		m_jmHelp.add(m_jmCheckUpdate);				// Help | check update
+		m_jmReleaseNotes.addActionListener(this);
+		m_jmHelp.add(m_jmReleaseNotes);				// Help | release notes
 		m_jmHelp.addSeparator();
 
 		m_jmAboutAbout.addActionListener(this);   // Help | About
