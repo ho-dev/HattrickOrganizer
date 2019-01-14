@@ -15,6 +15,9 @@ import core.util.HOLogger;
 public final class UpdateController {
 
 	public static final String UPDATES_URL = "http://ho1.sourceforge.net/onlinefiles";
+    private static final String DEV_URL = "https://akasolace.github.io/HO/release_notes(dev).html";
+    private static final String BETA_URL = "https://akasolace.github.io/HO/release_notes(beta).html";
+    private static final String STABLE_URL = "https://akasolace.github.io/HO/release_notes(stable).html";
 
 	/**
 	 * Check the external site for the latest version according to user preference regarding release channel
@@ -58,15 +61,19 @@ public final class UpdateController {
         if (updVersion != null) {
 			String versionType = updVersion.getversionType();
 			String updateAvailable;
+			String releaseNoteUrl;
 			switch (versionType){
 				case "DEV":
 					updateAvailable = HOVerwaltung.instance().getLanguageString("updateDEVavailable");
+                    releaseNoteUrl = DEV_URL;
 					break;
 				case "BETA":
 					updateAvailable = HOVerwaltung.instance().getLanguageString("updateBETAavailable");
+                    releaseNoteUrl = BETA_URL;
 					break;
 				default:
 					updateAvailable = HOVerwaltung.instance().getLanguageString("updateStableavailable");
+                    releaseNoteUrl = STABLE_URL;
 					break;
 			}
 
@@ -85,7 +92,7 @@ public final class UpdateController {
 						+ updVersion.getReleaseDate() + "<br/><br/>"
 						+ HOVerwaltung.instance().getLanguageString("ls.button.update.available") + "<br/>"
 						+ "</body></html>",
-				 		getReleaseNote(),
+				 		releaseNoteUrl,
 						macos_zip_download_url
 							),
 					HOVerwaltung.instance().getLanguageString("confirmation.title"),
@@ -99,7 +106,7 @@ public final class UpdateController {
 									+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("Released") + ":</font>"
 									+ updVersion.getReleaseDate() + "<br/><br/>"
 									+ HOVerwaltung.instance().getLanguageString("ls.button.update") + "?</body></html>",
-									getReleaseNote()),
+									releaseNoteUrl),
 								HOVerwaltung.instance().getLanguageString("confirmation.title"),
 								JOptionPane.YES_NO_OPTION);
 
@@ -178,35 +185,7 @@ public final class UpdateController {
 		HOMainFrame.instance().beenden();
 	}
 
-	private static String getReleaseNote() {
-		
-		BufferedReader br = null;
-		String buff = "";
-		StringBuilder sb = new StringBuilder();
-
-		try {
-			br = new BufferedReader(new InputStreamReader(UpdateController.class.getResourceAsStream("/release_notes.md")));
-			String line;
-			while ((line = br.readLine()) != null) {
-				sb.append(line).append("\n");
-			}
-			buff = sb.toString();
-		} catch (Exception e) {
-			buff =  HOVerwaltung.instance().getLanguageString("ls.update.releasenote.error") + e.getMessage();
-		} finally {
-			try {
-				if (br != null) {
-					br.close();
-				}
-			} catch (IOException e) {
-				HOLogger.instance().log(UpdateController.class, e);
-			}
-		}
-		return buff;
-	}
-
 	public static boolean compareTwoVersions(VersionInfo a, VersionInfo b) {
-	    System.out.println("a:"+a.getVersion() + "@" + a.getBuild() + ",b:" + b.getVersion() + "@" + b.getBuild());
 	    if (a.getVersion() > b.getVersion() ||
                 (a.getVersion() == b.getVersion() && a.getBuild() > b.getBuild()))
 	        return true;
@@ -215,7 +194,6 @@ public final class UpdateController {
 	}
 
     public static boolean compareToCurrentVersions(VersionInfo a) {
-        System.out.println("a:"+a.getVersion() + "@" + a.getBuild() + ",b:" + HO.VERSION + "@" + HO.getRevisionNumber());
         if (a.getVersion() > HO.VERSION ||
                 (a.getVersion() == HO.VERSION && a.getBuild() > HO.getRevisionNumber()))
             return true;

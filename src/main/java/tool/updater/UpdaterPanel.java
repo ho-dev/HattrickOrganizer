@@ -1,38 +1,32 @@
 package tool.updater;
 
-import java.awt.Dimension;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import java.awt.*;
+import java.io.IOException;
+import javax.swing.*;
 
 import core.gui.comp.HyperLinkLabel;
-import core.model.HOVerwaltung;
 
 public class UpdaterPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private String version;
-	private String releaseNote;
+	private String releaseNoteUrl;
 	private String updateLink;
 	
-	public UpdaterPanel(String version, String releaseNote) {
+	public UpdaterPanel(String version, String releaseNoteUrl) {
 		this.version = version;
-		this.releaseNote = releaseNote;
+		this.releaseNoteUrl = releaseNoteUrl;
 		this.updateLink = "";
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		initLayout();
 	}
 
-	public UpdaterPanel(String version, String releaseNote, String updateLink) {
+	public UpdaterPanel(String version, String releaseNoteUrl, String updateLink) {
 		this.version = version;
-		this.releaseNote = releaseNote;
+		this.releaseNoteUrl = releaseNoteUrl;
 		this.updateLink = updateLink;
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		setPreferredSize( new Dimension( 650, 300 ) );
+		setPreferredSize( new Dimension( 680, 300 ) );
 		initLayout();
 	}
 	
@@ -73,11 +67,16 @@ public class UpdaterPanel extends JPanel {
 	
 	// Create Release Notes panel
 	private void initReleaseNotesPanel() {
-		JTextArea txtArea  = new JTextArea(10, 40);
-		JScrollPane scrollPane = new JScrollPane(txtArea);
 
-		txtArea.setText(HOVerwaltung.instance().getLanguageString("ls.update.releasenote") + ":\n\n" + releaseNote);
-		txtArea.setCaretPosition(0);
+        JTextPane panel  = new JTextPane();
+        try {
+            panel.setPage(releaseNoteUrl);
+        } catch (IOException e) {
+            panel.setText(""+e.getCause());
+        }
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setPreferredSize(new Dimension( 680, 300 ));
+
 		add(scrollPane);
-	}
+    }
 }
