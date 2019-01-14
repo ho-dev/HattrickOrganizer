@@ -70,10 +70,6 @@ public final class UserParameter extends Configuration {
     public boolean aufstellungsAssistentPanel_notLast;
     public boolean aufstellungsAssistentPanel_verletzt;
 
-    //Logout
-    /** option parameter */
-    public boolean logoutOnExit = true;
-
     //Dialog, wo mit welchem Namen das HRF gespeichert werden soll
 
     /** option parameter */
@@ -417,7 +413,6 @@ public final class UserParameter extends Configuration {
         map.put("ReleaseChannel",String.valueOf(ReleaseChannel));
 		map.put("fixtures",String.valueOf(fixtures));
 		map.put("currentMatchlist",String.valueOf(currentMatchlist));
-		map.put("logoutOnExit",String.valueOf(logoutOnExit));
 		map.put("showHRFSaveDialog",String.valueOf(showHRFSaveDialog));
 		map.put("spieleranalyseVertikal",String.valueOf(spieleranalyseVertikal));
 		map.put("statistikAlleBeschriftung",String.valueOf(statistikAlleBeschriftung));
@@ -627,7 +622,6 @@ public final class UserParameter extends Configuration {
         ReleaseChannel = getStringValue(values, "ReleaseChannel");
 		fixtures = getBooleanValue(values,"fixtures");
 		currentMatchlist = getBooleanValue(values,"currentMatchlist");
-		logoutOnExit = getBooleanValue(values,"logoutOnExit");
 		showHRFSaveDialog = getBooleanValue(values,"showHRFSaveDialog");
 		spieleranalyseVertikal = getBooleanValue(values,"spieleranalyseVertikal");
 		statistikAlleBeschriftung = getBooleanValue(values,"statistikAlleBeschriftung");
