@@ -28,3 +28,11 @@ Changelist HO! 1.436
 - player data is no longer missing from transfer history top panel  (bug #45)
 - wrong link in menu bout HO!  (bug #43)
 - small bugs related to update process on all platforms (bug #57)
+
+[Changed]
+- moved 'save HRF dialog' option to download tab (#80)
+- moved (and disabled) legacy 'update HO on download' option to release channel tab (#80)
+- appearence of release channel tab
+
+[Removed]
+- legacy options from preferences check tab (including the tab) (#80)
