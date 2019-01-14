@@ -759,6 +759,7 @@ final class DBUpdater {
 
 		try {
 			dbZugriff.removeUserParameter("newsCheck");
+			dbZugriff.removeUserParameter("userCheck");
 		} catch (Exception e) {
 			HOLogger.instance().debug(getClass(),
 					"Error updating to config 1436: " + e.getMessage());

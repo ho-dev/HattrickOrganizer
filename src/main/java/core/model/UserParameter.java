@@ -180,7 +180,6 @@ public final class UserParameter extends Configuration {
 
 
     //Update
-	public boolean userCheck = false;
     public boolean updateCheck = false;
 
     //Zahlen hinter den Bewertungen anzeigen
@@ -496,7 +495,6 @@ public final class UserParameter extends Configuration {
 		map.put("tempTabSpieleranalyse",String.valueOf(tempTabSpieleranalyse));
 		map.put("tempTabSpieleruebersicht",String.valueOf(tempTabSpieleruebersicht));
 		map.put("tempTabStatistik",String.valueOf(tempTabStatistik));
-		map.put("userCheck",String.valueOf(userCheck));
 		map.put("updateCheck",String.valueOf(updateCheck));
 		map.put("zahlenFuerSkill",String.valueOf(zahlenFuerSkill));
 		map.put("AlterFaktor",String.valueOf(TRAINING_OFFSET_AGE));
@@ -707,7 +705,6 @@ public final class UserParameter extends Configuration {
 		tempTabSpieleranalyse = getBooleanValue(values,"tempTabSpieleranalyse");
 		tempTabSpieleruebersicht = getBooleanValue(values,"tempTabSpieleruebersicht");
 		tempTabStatistik = getBooleanValue(values,"tempTabStatistik");
-		userCheck = getBooleanValue(values,"userCheck");
 		updateCheck = getBooleanValue(values,"updateCheck");
 		zahlenFuerSkill = getBooleanValue(values,"zahlenFuerSkill");
 

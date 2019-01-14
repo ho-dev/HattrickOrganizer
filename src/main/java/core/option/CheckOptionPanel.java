@@ -20,7 +20,6 @@ public final class CheckOptionPanel extends ImagePanel
     //~ Static fields/initializers -----------------------------------------------------------------
 
 	private static final long serialVersionUID = 1L;
-	private JCheckBox m_jchHOUsers;    
     private JCheckBox m_jchLogout;
     private JCheckBox m_jchShowSaveDialog;
     private JCheckBox m_jchUpdateCheck;
@@ -41,7 +40,6 @@ public final class CheckOptionPanel extends ImagePanel
         core.model.UserParameter.temp().updateCheck = m_jchUpdateCheck.isSelected();
         core.model.UserParameter.temp().logoutOnExit = m_jchLogout.isSelected();
         core.model.UserParameter.temp().showHRFSaveDialog = m_jchShowSaveDialog.isSelected();
-        core.model.UserParameter.temp().userCheck = m_jchHOUsers.isSelected();
     }
 
 	public void stateChanged(ChangeEvent arg0) {
@@ -50,14 +48,6 @@ public final class CheckOptionPanel extends ImagePanel
 
     private void initComponents() {
         setLayout(new GridLayout(10, 1, 4, 4));
-
-		m_jchHOUsers = new JCheckBox(core.model.HOVerwaltung.instance().getLanguageString("UsersCheck"));
-		m_jchHOUsers.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString("tt_Optionen_UsersCheck"));
-		m_jchHOUsers.setOpaque(false);
-		m_jchHOUsers.setSelected(core.model.UserParameter.temp().userCheck);
-		m_jchHOUsers.addItemListener(this);
-		add(m_jchHOUsers);
-
 
         m_jchUpdateCheck = new JCheckBox(core.model.HOVerwaltung.instance().getLanguageString("UpdateCheck"));
         m_jchUpdateCheck.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString("tt_Optionen_UpdateCheck"));
