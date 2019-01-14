@@ -43,6 +43,8 @@ def minor = '436'
 def development_stage = '0'
 def releaseArtefacts = true
 
+//====================================================================================================================
+
 def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
 versionProps.load(new FileInputStream(versionPropsFile))

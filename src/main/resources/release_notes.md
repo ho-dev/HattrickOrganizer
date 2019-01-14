@@ -17,6 +17,10 @@ Changelist HO! 1.436
 
 [Fixed]
 - optimized build is saving approximately 35% disk space on produced binaries (bug #71)
+- Preference|Check had lot of non-working entries, it has been deleted (bug #80)
+    - preference for HRF location save dialog has been moved into Preference|Download tab
+    - preference regarding automatic version check has been moved  into Preference|Release Channels
+      but is temporary deactivated until new behaviour is validated
 - ability to start HO on Linux from script after fresh install (bug #34)
 - version in splash screen and main GUI header (bug #36)
 - missing icon (bug #37)
@@ -34,5 +38,4 @@ Changelist HO! 1.436
 - moved (and disabled) legacy 'update HO on download' option to release channel tab (#80)
 - appearence of release channel tab
 
-[Removed]
-- legacy options from preferences check tab (including the tab) (#80)
+
