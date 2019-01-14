@@ -758,6 +758,9 @@ final class DBUpdater {
 	private void updateConfigTo1436(boolean alreadyApplied) {
 
 		try {
+			if (!alreadyApplied) {
+				dbZugriff.saveUserParameter("ReleaseChannel", "Stable");
+			}
 			dbZugriff.removeUserParameter("newsCheck");
 			dbZugriff.removeUserParameter("userCheck");
 			dbZugriff.removeUserParameter("logoutOnExit");
