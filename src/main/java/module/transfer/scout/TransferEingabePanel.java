@@ -17,7 +17,6 @@ import core.model.player.SpielerPosition;
 import core.module.IModule;
 import core.util.HOLogger;
 import core.util.Helper;
-import jdk.nashorn.internal.runtime.ECMAException;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -28,7 +27,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,7 +99,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     private JComboBox jcbLoyalty = new JComboBox(PlayerAbility.ITEMS);
     private JComboBox jcbLeadership = new JComboBox(PlayerAbility.ITEMS);
     private JCheckBox jchHomegrown = new JCheckBox();
-    private JLabel jlStatus = new JLabel(HOVerwaltung.instance().getLanguageString("scout_status") + ": ");
+    private JLabel jlStatus = new JLabel("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ": <br /></p></html>");
     private JTextArea jtaCopyPaste = new JTextArea(5, 20);
     private JTextArea jtaNotes = new JTextArea();
     private JTextField jtfAge = new JTextField("17.0");
@@ -525,8 +523,6 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 // Normally not working. Thus last positioned
                 jsSpinner.setValue(pc.getDeadline());
 
-                errorFields = pc.getErrorFields();
-
                 setLabels();
             }
         } catch (Exception e) {
@@ -537,17 +533,17 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         jtaCopyPaste.setText("");
 
         if (message.equals("")) {
-            switch (pc.getError()) {
-                case PlayerConverter.ERROR_VALUE_WARNING:
+            switch (pc.getStatus()) {
+                case PlayerConverter.WARNING:
                     message = HOVerwaltung.instance().getLanguageString("scout_warning");
                     message += " " + pc.getErrorFieldsTextList();
                     message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");;
                     break;
-                case PlayerConverter.ERROR_VALUE_ERROR:
+                case PlayerConverter.ERROR:
                     message = HOVerwaltung.instance().getLanguageString("scout_error");
                     message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");;
                     break;
-                case PlayerConverter.ERROR_VALUE_EMPTY_INPUT:
+                case PlayerConverter.EMPTY_INPUT_ERROR:
                     message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
                     break;
                 default:

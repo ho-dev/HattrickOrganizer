@@ -26,12 +26,12 @@ public class PlayerConverter {
 	final private static Set<String> NORMALCHARS = new HashSet<String>();
     java.util.Date deadLineDate;
 
-    public static final int ERROR_VALUE_SUCCESS = 0; // No error detected
-    public static final int ERROR_VALUE_WARNING = 1; // One or some fields don't detected
-    public static final int ERROR_VALUE_ERROR = 2; // Severe error detected
-    public static final int ERROR_VALUE_EMPTY_INPUT = 3; // Empty input error detected
+    public static final int SUCCESS = 0; // No error detected
+    public static final int WARNING = 1; // One or some fields don't detected
+    public static final int ERROR = 2; // Severe error detected
+    public static final int EMPTY_INPUT_ERROR = 3; // Empty input error detected
 
-	private int error;
+	private int status;
     final private List<String> errorFields;
     final HOVerwaltung homodel = HOVerwaltung.instance();
 
@@ -49,7 +49,7 @@ public class PlayerConverter {
     public PlayerConverter() {
 
         errorFields = new ArrayList<String>();
-        error = ERROR_VALUE_SUCCESS;
+        status = SUCCESS;
         skills = new ArrayList<String>();
         skillvalues = new ArrayList<Integer>();
         specialities = new ArrayList<String>();
@@ -149,19 +149,19 @@ public class PlayerConverter {
             }
         } catch (Exception e) {
             HOLogger.instance().debug(getClass(), e);
-            error = ERROR_VALUE_ERROR;
+            status = ERROR;
         }
     }
 
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
-     * Returns possible error. If error is nonzero, there was a problem.
+     * Returns possible status. If status is nonzero, there was a problem.
      *
-     * @return Returns possible error
+     * @return Returns possible status
      */
-    public final int getError() {
-        return error;
+    public final int getStatus() {
+        return status;
     }
 
     /**
@@ -183,7 +183,7 @@ public class PlayerConverter {
      * @throws Exception Throws exception on some parse errors
      */
     public final Player buildHTCopyButton(String text) throws Exception {
-        error = ERROR_VALUE_SUCCESS;
+        status = SUCCESS;
 
         final Player player = new Player();
         String txtTmp;
@@ -589,7 +589,7 @@ public class PlayerConverter {
         Player player = null;
         if (text==null || text.isEmpty()){
             // This error to shown error for empty input
-            error = ERROR_VALUE_EMPTY_INPUT;
+            status = EMPTY_INPUT_ERROR;
         }else{
             if(text.indexOf("[playerid=")>=0){
                 player = this.buildHTCopyButton(text);
@@ -602,7 +602,7 @@ public class PlayerConverter {
 
     private void addErrorField(String fieldName){
         this.errorFields.add(fieldName);
-        this.error = ERROR_VALUE_WARNING;
+        this.status = WARNING;
     }
 
     public String getErrorFieldsTextList(){
@@ -631,7 +631,7 @@ public class PlayerConverter {
      * @throws Exception Throws exception on some parse errors
      */
     public final Player buildClassicPage(String text) throws Exception {
-        error = 0;
+        status = 0;
 
         final Player player = new Player();
 
@@ -897,7 +897,7 @@ public class PlayerConverter {
             	// Delete all rows not containing our year
             	tmp = lines.get(m).toString();
 
-            	if (p > 10) { // already 10 lines deleted - there must be something wrong, break
+            	if (p > 14) { // already 10 lines deleted - there must be something wrong, break
             		break;
             	}
 
@@ -977,7 +977,7 @@ public class PlayerConverter {
 				player.setExpiryDate(f.format(new Date()));
 				f = new SimpleDateFormat("HH:mm");
 				player.setExpiryTime(f.format(new Date()));
-				if (error == 0) {
+				if (status == 0) {
                     addErrorField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
                 }
 			}
@@ -1037,7 +1037,7 @@ public class PlayerConverter {
                 }
             }
 
-            if ((foundskills.size() < 11) && (error == 0)) {
+            if ((foundskills.size() < 11) && (status == 0)) {
                 addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill"));
             }
 
@@ -1116,12 +1116,12 @@ public class PlayerConverter {
                 }
             }
 
-            if ((foundspecialities.size() > 1) && (error == 0)) {
-            	error = ERROR_VALUE_WARNING;
+            if ((foundspecialities.size() > 1) && (status == 0)) {
+            	status = WARNING;
             	try {
             		if (foundspecialities.size() == 2 && (Integer)(foundspecialities.get(1).get(0)) > 1500) {
             			// no error, but caused by Foxtricks quick-links (QUICK links <-> QUICK player special)
-            			error = 0;
+            			status = 0;
             		}
             	} catch (Exception e) {
             		// nothing todo here

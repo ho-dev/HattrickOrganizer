@@ -27,7 +27,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +72,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private JCheckBox jchHomegrown = new JCheckBox();
     private JLabel jlRating = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Unbestimmt")
                                          + ": 0.0");
-    private JLabel jlStatus = new JLabel("Status: ");
+    private JLabel jlStatus = new JLabel("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ":&nbsp<br />&nbsp</p></html>");
     private JTextArea jtaCopyPaste = new JTextArea(5, 20);
     private JTextArea jtaNotes = new JTextArea(5, 20);
     private JTextField jtfAge = new JTextField("17.0");
@@ -247,8 +246,6 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                 // Normally not working. Thus last positioned
                 jsSpinner.setValue(pc.getDeadline());
 
-                errorFields = pc.getErrorFields();
-
                 spielervalueChanged();
             }
         } catch (Exception e) {
@@ -259,17 +256,17 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         jtaCopyPaste.setText("");
 
         if (message.equals("")) {
-            switch (pc.getError()) {
-                case PlayerConverter.ERROR_VALUE_WARNING:
+            switch (pc.getStatus()) {
+                case PlayerConverter.WARNING:
                     message = HOVerwaltung.instance().getLanguageString("scout_warning");
                     message += " " + pc.getErrorFieldsTextList();
                     message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");;
                     break;
-                case PlayerConverter.ERROR_VALUE_ERROR:
+                case PlayerConverter.ERROR:
                     message = HOVerwaltung.instance().getLanguageString("scout_error");
                     message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");;
                     break;
-                case PlayerConverter.ERROR_VALUE_EMPTY_INPUT:
+                case PlayerConverter.EMPTY_INPUT_ERROR:
                     message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
                     break;
                 default:
@@ -346,7 +343,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
         // Textfields and Comboboxes
         panel = new ImagePanel();
-        panel.setLayout(new GridLayout(11, 4, 4, 4));
+        panel.setLayout(new GridLayout(13, 4, 4, 4));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.id"));
         panel.add(label);
