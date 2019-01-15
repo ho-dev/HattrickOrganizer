@@ -295,6 +295,10 @@ public class PlayerConverter {
         if(!found){
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.leadership"));
         }
+
+        /*
+        Removed as discussed on post:
+        https://github.com/akasolace/HO/pull/76#issuecomment-454571806
         // Loyalty
         found = false;
         while (sc.hasNext() && !found){
@@ -318,6 +322,8 @@ public class PlayerConverter {
         }else if (!HOVerwaltung.instance().getLanguageString("ls.player.motherclub").isEmpty() && row.indexOf(HOVerwaltung.instance().getLanguageString("ls.player.motherclub").toLowerCase(java.util.Locale.ENGLISH))>=0) {
             player.setHomeGrown(true);
         }
+        */
+
         // TSI
         row = rows.get(indexRowTSI);
         sc = new Scanner(row);
