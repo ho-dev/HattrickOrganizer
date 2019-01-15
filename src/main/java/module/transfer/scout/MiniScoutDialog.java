@@ -28,6 +28,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -184,7 +186,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private void copyPaste() {
         final PlayerConverter pc = new PlayerConverter();
         String message = "";
-        String errorFields = "";
+        List<String> errorFields = new ArrayList<String>();
 
         try {
             final Player player;
@@ -242,28 +244,11 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                 // Listener stays here for recalculation of rating
                 Helper.markierenComboBox(jcbPlaymaking, player.getPlayMaking());
 
+                // Normally not working. Thus last positioned
+                jsSpinner.setValue(pc.getDeadline());
+
                 errorFields = pc.getErrorFields();
 
-                if(player.getExpiryDate() == null || player.getExpiryTime() == null || player.getExpiryDate().isEmpty() || player.getExpiryTime().isEmpty()){
-                    if (!errorFields.equals(""))
-                        errorFields += ", ";
-                    errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
-                } else {
-                    // Normally not working. Thus last positioned
-                    try {
-                        final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("dd.MM.yy HH:mm",
-                                java.util.Locale.GERMANY);
-                        final java.util.Date date = simpleFormat.parse(player.getExpiryDate() + " "
-                                + player.getExpiryTime());
-                        jsSpinner.setValue(date);
-                    } catch (Exception e) {
-                        HOLogger.instance().debug(getClass(), e);
-                        message = HOVerwaltung.instance().getLanguageString("scout_warning");
-                        if (!errorFields.equals(""))
-                            errorFields += ", ";
-                        errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
-                    }
-                }
                 spielervalueChanged();
             }
         } catch (Exception e) {
@@ -275,24 +260,23 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
         if (message.equals("")) {
             switch (pc.getError()) {
-                case 1:
+                case PlayerConverter.ERROR_VALUE_WARNING:
                     message = HOVerwaltung.instance().getLanguageString("scout_warning");
+                    message += " " + pc.getErrorFieldsTextList();
+                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");;
                     break;
-                case 2:
+                case PlayerConverter.ERROR_VALUE_ERROR:
                     message = HOVerwaltung.instance().getLanguageString("scout_error");
+                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");;
                     break;
-                case 3:
+                case PlayerConverter.ERROR_VALUE_EMPTY_INPUT:
                     message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
-                    errorFields = "";
                     break;
                 default:
                     message = HOVerwaltung.instance().getLanguageString("scout_success");
             }
         }
-        if(!errorFields.equals("")){
-            errorFields = " ("  + errorFields + ")";
-        }
-        jlStatus.setText(HOVerwaltung.instance().getLanguageString("scout_status") + ": " + message + errorFields);
+        jlStatus.setText("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ": " + message + "</p></html>");
     }
 
     private void close() {
