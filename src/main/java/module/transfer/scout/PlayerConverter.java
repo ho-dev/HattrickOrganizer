@@ -2,8 +2,8 @@
 package module.transfer.scout;
 
 import core.constants.player.PlayerSpeciality;
-import core.datatype.CBItem;
 import core.model.HOVerwaltung;
+import core.util.HOLogger;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -24,8 +24,15 @@ public class PlayerConverter {
 	final private List<String> specialities;
 	final private List<Integer> specialitiesvalues;
 	final private static Set<String> NORMALCHARS = new HashSet<String>();
-	private int error;
-	private String errorFields;
+    java.util.Date deadLineDate;
+
+    public static final int SUCCESS = 0; // No error detected
+    public static final int WARNING = 1; // One or some fields don't detected
+    public static final int ERROR = 2; // Severe error detected
+    public static final int EMPTY_INPUT_ERROR = 3; // Empty input error detected
+
+	private int status;
+    final private List<String> errorFields;
     final HOVerwaltung homodel = HOVerwaltung.instance();
 
 	static {
@@ -40,115 +47,121 @@ public class PlayerConverter {
      * We prepare our skill and specialities and sort them
      */
     public PlayerConverter() {
-        // Get all skills for active language
-        // This should be the same language as in Hattrick
+
+        errorFields = new ArrayList<String>();
+        status = SUCCESS;
         skills = new ArrayList<String>();
-        skills.add(homodel.getLanguageString("ls.player.skill.value.non-existent").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.disastrous").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.wretched").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.poor").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.weak").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.inadequate").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.passable").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.solid").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.excellent").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.formidable").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.outstanding").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.brilliant").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.magnificent").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.worldclass").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.supernatural").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.titanic").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.extra-terrestrial").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.mythical").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.magical").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.utopian").toLowerCase(java.util.Locale.ENGLISH));
-        skills.add(homodel.getLanguageString("ls.player.skill.value.divine").toLowerCase(java.util.Locale.ENGLISH));
-
         skillvalues = new ArrayList<Integer>();
+        specialities = new ArrayList<String>();
+        specialitiesvalues = new ArrayList<Integer>();
+        deadLineDate = new java.sql.Date(System.currentTimeMillis());
 
-        for (int k = 0; k < skills.size(); k++) {
-            skillvalues.add(new Integer(k));
-        }
+        try{
+            // Get all skills for active language
+            // This should be the same language as in Hattrick
+            skills.add(homodel.getLanguageString("ls.player.skill.value.non-existent").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.disastrous").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.wretched").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.poor").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.weak").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.inadequate").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.passable").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.solid").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.excellent").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.formidable").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.outstanding").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.brilliant").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.magnificent").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.worldclass").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.supernatural").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.titanic").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.extra-terrestrial").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.mythical").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.magical").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.utopian").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.divine").toLowerCase(java.util.Locale.ENGLISH));
 
-        // Sort skills by length (shortest first)
-        int p = skills.size() - 1;
-
-        while (p > 0) {
-            int k = p;
-
-            while ((k < skills.size())
-                   && (skills.get(k - 1).toString().length() > skills.get(k).toString().length())) {
-                final String t = skills.get(k - 1).toString();
-                skills.set(k - 1, skills.get(k).toString());
-                skills.set(k, t);
-
-                final Integer i = skillvalues.get(k - 1);
-                skillvalues.set(k - 1, skillvalues.get(k));
-                skillvalues.set(k, i);
-                k++;
+            for (int k = 0; k < skills.size(); k++) {
+                skillvalues.add(new Integer(k));
             }
 
-            p--;
-        }
+            // Sort skills by length (shortest first)
+            int p = skills.size() - 1;
 
-        // Get all specialities for active language
-        // This should be the same language as in Hattrick
-        specialities = new ArrayList<String>();
-        specialities.add(""); // No speciality
-        specialities.add(homodel.getLanguageString("ls.player.speciality.technical").toLowerCase(java.util.Locale.ENGLISH));
-        specialities.add(homodel.getLanguageString("ls.player.speciality.quick").toLowerCase(java.util.Locale.ENGLISH));
-        specialities.add(homodel.getLanguageString("ls.player.speciality.powerful").toLowerCase(java.util.Locale.ENGLISH));
-        specialities.add(homodel.getLanguageString("ls.player.speciality.unpredictable").toLowerCase(java.util.Locale.ENGLISH));
-        specialities.add(homodel.getLanguageString("ls.player.speciality.head").toLowerCase(java.util.Locale.ENGLISH));
-        specialities.add(homodel.getLanguageString("ls.player.speciality.regainer").toLowerCase(java.util.Locale.ENGLISH));
-        specialities.add(homodel.getLanguageString("ls.player.speciality.support").toLowerCase(java.util.Locale.ENGLISH));
+            while (p > 0) {
+                int k = p;
 
-        specialitiesvalues = new ArrayList<Integer>();
+                while ((k < skills.size())
+                       && (skills.get(k - 1).toString().length() > skills.get(k).toString().length())) {
+                    final String t = skills.get(k - 1).toString();
+                    skills.set(k - 1, skills.get(k).toString());
+                    skills.set(k, t);
 
-        for (int i = 0; i<PlayerSpeciality.ITEMS.length; i++){
-            for (int k = 0; k < 8; k++) {
-                if(PlayerSpeciality.ITEMS[i].getText().toLowerCase(java.util.Locale.ENGLISH).equals(specialities.get(k))){
-                    specialitiesvalues.add(PlayerSpeciality.ITEMS[i].getId());
-                    break;
+                    final Integer i = skillvalues.get(k - 1);
+                    skillvalues.set(k - 1, skillvalues.get(k));
+                    skillvalues.set(k, i);
+                    k++;
+                }
+
+                p--;
+            }
+
+            // Get all specialities for active language
+            // This should be the same language as in Hattrick
+            specialities.add(""); // No speciality
+            specialities.add(homodel.getLanguageString("ls.player.speciality.technical").toLowerCase(java.util.Locale.ENGLISH));
+            specialities.add(homodel.getLanguageString("ls.player.speciality.quick").toLowerCase(java.util.Locale.ENGLISH));
+            specialities.add(homodel.getLanguageString("ls.player.speciality.powerful").toLowerCase(java.util.Locale.ENGLISH));
+            specialities.add(homodel.getLanguageString("ls.player.speciality.unpredictable").toLowerCase(java.util.Locale.ENGLISH));
+            specialities.add(homodel.getLanguageString("ls.player.speciality.head").toLowerCase(java.util.Locale.ENGLISH));
+            specialities.add(homodel.getLanguageString("ls.player.speciality.regainer").toLowerCase(java.util.Locale.ENGLISH));
+            specialities.add(homodel.getLanguageString("ls.player.speciality.support").toLowerCase(java.util.Locale.ENGLISH));
+
+            for (int i = 0; i<PlayerSpeciality.ITEMS.length; i++){
+                for (int k = 0; k < 8; k++) {
+                    if(PlayerSpeciality.ITEMS[i].getText().toLowerCase(java.util.Locale.ENGLISH).equals(specialities.get(k))){
+                        specialitiesvalues.add(PlayerSpeciality.ITEMS[i].getId());
+                        break;
+                    }
                 }
             }
-        }
 
-        // Sort specialities by length (shortest first)
-        p = specialities.size() - 1;
+            // Sort specialities by length (shortest first)
+            p = specialities.size() - 1;
 
-        while (p > 0) {
-            int k = p;
+            while (p > 0) {
+                int k = p;
 
-            while ((k < specialities.size())
-                   && (specialities.get(k - 1).toString().length() > specialities.get(k).toString()
-                                                                                 .length())) {
-                final String t = specialities.get(k - 1).toString();
-                specialities.set(k - 1, specialities.get(k).toString());
-                specialities.set(k, t);
+                while ((k < specialities.size())
+                       && (specialities.get(k - 1).toString().length() > specialities.get(k).toString()
+                                                                                     .length())) {
+                    final String t = specialities.get(k - 1).toString();
+                    specialities.set(k - 1, specialities.get(k).toString());
+                    specialities.set(k, t);
 
-                final Integer i = specialitiesvalues.get(k - 1);
-                specialitiesvalues.set(k - 1, specialitiesvalues.get(k));
-                specialitiesvalues.set(k, i);
-                k++;
+                    final Integer i = specialitiesvalues.get(k - 1);
+                    specialitiesvalues.set(k - 1, specialitiesvalues.get(k));
+                    specialitiesvalues.set(k, i);
+                    k++;
+                }
+
+                p--;
             }
-
-            p--;
+        } catch (Exception e) {
+            HOLogger.instance().debug(getClass(), e);
+            status = ERROR;
         }
-
-        errorFields = "";
     }
 
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
-     * Returns possible error. If error is nonzero, there was a problem.
+     * Returns possible status. If status is nonzero, there was a problem.
      *
-     * @return Returns possible error
+     * @return Returns possible status
      */
-    public final int getError() {
-        return error;
+    public final int getStatus() {
+        return status;
     }
 
     /**
@@ -156,7 +169,7 @@ public class PlayerConverter {
      *
      * @return Returns possible fields error
      */
-    public final String getErrorFields() {
+    public final List<String> getErrorFields() {
         return errorFields;
     }
 
@@ -170,8 +183,7 @@ public class PlayerConverter {
      * @throws Exception Throws exception on some parse errors
      */
     public final Player buildHTCopyButton(String text) throws Exception {
-        error = 0;
-        errorFields = "";
+        status = SUCCESS;
 
         final Player player = new Player();
         String txtTmp;
@@ -212,9 +224,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setPlayerName(txtTmp);
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.id"));
         }
         // Player Id
         sc.useDelimiter("\\]");
@@ -222,9 +232,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setPlayerID(Integer.parseInt(txtTmp));
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.name");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.name"));
         }
         sc.close();
         // Age
@@ -235,9 +243,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setAge(Integer.parseInt(txtTmp));
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.age");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.age"));
         }
         // Age Days
         sc.useDelimiter(" ");
@@ -251,9 +257,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setAgeDays(Integer.parseInt(txtTmp));
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.age.days");
+            addErrorField(HOVerwaltung.instance().getLanguageString("s.player.age.days"));
         }
         sc.close();
         //Analyze Player Description
@@ -274,9 +278,7 @@ public class PlayerConverter {
             sc.next();
         }
         if(!found){
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.experience");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.experience"));
         }
         // Leadership
         found = false;
@@ -291,10 +293,12 @@ public class PlayerConverter {
             sc.next();
         }
         if(!found){
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.leadership");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.leadership"));
         }
+
+        /*
+        Removed as discussed on post:
+        https://github.com/akasolace/HO/pull/76#issuecomment-454571806
         // Loyalty
         found = false;
         while (sc.hasNext() && !found){
@@ -308,16 +312,18 @@ public class PlayerConverter {
             sc.next();
         }
         if(!found){
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.loyalty");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.loyalty"));
         }
         sc.close();
         // Mother Club
         row = rows.get(indexMotherClub).toLowerCase(java.util.Locale.ENGLISH);
-        if (row.indexOf(HOVerwaltung.instance().getLanguageString("ls.player.motherclub").toLowerCase(java.util.Locale.ENGLISH))>=0) {
+        if (!HOVerwaltung.instance().getLanguageString("ls.player.motherclub.bonus").isEmpty() && row.indexOf(HOVerwaltung.instance().getLanguageString("ls.player.motherclub.bonus").toLowerCase(java.util.Locale.ENGLISH))>=0) {
+            player.setHomeGrown(true);
+        }else if (!HOVerwaltung.instance().getLanguageString("ls.player.motherclub").isEmpty() && row.indexOf(HOVerwaltung.instance().getLanguageString("ls.player.motherclub").toLowerCase(java.util.Locale.ENGLISH))>=0) {
             player.setHomeGrown(true);
         }
+        */
+
         // TSI
         row = rows.get(indexRowTSI);
         sc = new Scanner(row);
@@ -334,9 +340,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setTSI(Integer.parseInt(txtTmp));
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.TSI");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.tsi"));
         }
         // Speciality
         row = rows.get(indexRowSpecialty).toLowerCase(java.util.Locale.ENGLISH);
@@ -366,9 +370,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setBooked(row.trim());
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.warningstatus");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.warningstatus"));
         }
         // Injure
         row = rows.get(indexRowInjure);
@@ -381,7 +383,7 @@ public class PlayerConverter {
                 txtTmp = txtTmp + sc.next().trim();
             } else {
                 c = sc.next();
-                if (c.equals("+") || c.equals("∞")){  //TODO carattere infinito Acciaccato ma gioca
+                if (c.equals("+") || c.equals("∞")){  //TODO Acciaccato ma gioca
                     txtTmp = txtTmp + c;
                 }
             }
@@ -410,9 +412,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setForm(Integer.parseInt(txtTmp));
         }else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.form");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.form"));
         }
         txtTmp = "";
         c = "";
@@ -431,9 +431,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setStamina(Integer.parseInt(txtTmp));
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina"));
         }
         //Keeper
         row = rows.get(indexRowSkills);
@@ -456,9 +454,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setGoalKeeping(Integer.parseInt(txtTmp));
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper"));
         }
         //Defense
         txtTmp = "";
@@ -478,9 +474,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setDefense(Integer.parseInt(txtTmp));
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.defending");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.defending"));
         }
         //PlayMaking
         txtTmp = "";
@@ -500,9 +494,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setPlayMaking(Integer.parseInt(txtTmp));
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking"));
         }
         //Wing
         txtTmp = "";
@@ -522,9 +514,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setWing(Integer.parseInt(txtTmp));
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.winger");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.winger"));
         }
         //Passing
         txtTmp = "";
@@ -544,9 +534,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setPassing(Integer.parseInt(txtTmp));
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.passing");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.passing"));
         }
         //Attack
         txtTmp = "";
@@ -566,9 +554,7 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setAttack(Integer.parseInt(txtTmp));
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring"));
         }
         //Set Pieces
         txtTmp = "";
@@ -588,46 +574,58 @@ public class PlayerConverter {
         if(!txtTmp.equals("")) {
             player.setSetPieces(Integer.parseInt(txtTmp));
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
+            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces"));
         }
 
-        //Price TODO
+        //Price - Price is not present in HT copy button
         txtTmp = "";
         if(!txtTmp.equals("")) {
-            player.setPassing(Integer.parseInt(txtTmp));
+            player.setPrice(Integer.parseInt(txtTmp));
         } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("scout_price");
+            addErrorField(HOVerwaltung.instance().getLanguageString("scout_price"));
         }
 
-        //Deadline TODO
-        /*
-        txtTmp = "";
-        if(!txtTmp.equals("")) {
-            player.setPassing(Integer.parseInt(txtTmp));
-        } else {
-            if (!errorFields.equals(""))
-                errorFields += ", ";
-            errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
-        }
-        */
+        //Deadline - Date and Time expired is not present in HT copy button
+        setDeadline(player);
 
         return player;
     }
 
     public final Player build(String text) throws Exception {
-        Player player = new Player();
-
-        if(text.indexOf("[playerid=")>=0){
-            player = this.buildHTCopyButton(text);
-        }else {
-            player = this.buildClassicPage(text);
+        Player player = null;
+        if (text==null || text.isEmpty()){
+            // This error to shown error for empty input
+            status = EMPTY_INPUT_ERROR;
+        }else{
+            if(text.indexOf("[playerid=")>=0){
+                player = this.buildHTCopyButton(text);
+            }else {
+                player = this.buildClassicPage(text);
+            }
         }
         return player;
     }
+
+    private void addErrorField(String fieldName){
+        this.errorFields.add(fieldName);
+        this.status = WARNING;
+    }
+
+    public String getErrorFieldsTextList(){
+        String errorFieldsTxt = "";
+        if (errorFields.size()>0){
+            errorFieldsTxt = " (";
+            for (int i=0;i<errorFields.size();i++) {
+                if(i>=1) {
+                    errorFieldsTxt += ", ";
+                }
+                errorFieldsTxt += errorFields.get(i);
+            }
+            errorFieldsTxt += ")";
+        }
+        return errorFieldsTxt;
+    }
+
 
     /**
      * Parses the copied text and returns a Player Object
@@ -639,7 +637,7 @@ public class PlayerConverter {
      * @throws Exception Throws exception on some parse errors
      */
     public final Player buildClassicPage(String text) throws Exception {
-        error = 0;
+        status = 0;
 
         final Player player = new Player();
 
@@ -744,7 +742,7 @@ public class PlayerConverter {
             if (!age.equals("")) {
                 player.setAge(Integer.valueOf(age).intValue());
             } else {
-                error = 2;
+                addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.age"));
             }
 
             //-- get ageDays
@@ -781,7 +779,7 @@ public class PlayerConverter {
             if (!ageDays.equals("")) {
                 player.setAgeDays(Integer.valueOf(ageDays).intValue());
             } else {
-                error = 2;
+                addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.age.days"));
             }
 
             // clean lines till here
@@ -841,7 +839,7 @@ public class PlayerConverter {
             if (!tsi.equals("")) {
                 player.setTSI(Integer.valueOf(tsi).intValue());
             } else {
-                error = 2;
+                addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.tsi"));
             }
 
             // -- check for line wage / season (since FoxTrick 0.4.8.2)
@@ -905,7 +903,7 @@ public class PlayerConverter {
             	// Delete all rows not containing our year
             	tmp = lines.get(m).toString();
 
-            	if (p > 10) { // already 10 lines deleted - there must be something wrong, break
+            	if (p > 14) { // already 10 lines deleted - there must be something wrong, break
             		break;
             	}
 
@@ -985,8 +983,8 @@ public class PlayerConverter {
 				player.setExpiryDate(f.format(new Date()));
 				f = new SimpleDateFormat("HH:mm");
 				player.setExpiryTime(f.format(new Date()));
-				if (error == 0) {
-                    error = 1;
+				if (status == 0) {
+                    addErrorField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
                 }
 			}
 
@@ -1045,8 +1043,8 @@ public class PlayerConverter {
                 }
             }
 
-            if ((foundskills.size() < 11) && (error == 0)) {
-                error = 1;
+            if ((foundskills.size() < 11) && (status == 0)) {
+                addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill"));
             }
 
             // Sort skills by location
@@ -1082,7 +1080,7 @@ public class PlayerConverter {
 					setSkillsBarStyle(player, foundskills);
 				}
 			} catch (Exception e) {
-				error = 2;
+                addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill"));
 			}
 
             // We can search the speciality in text now
@@ -1124,12 +1122,12 @@ public class PlayerConverter {
                 }
             }
 
-            if ((foundspecialities.size() > 1) && (error == 0)) {
-            	error = 1;
+            if ((foundspecialities.size() > 1) && (status == 0)) {
+            	status = WARNING;
             	try {
             		if (foundspecialities.size() == 2 && (Integer)(foundspecialities.get(1).get(0)) > 1500) {
             			// no error, but caused by Foxtricks quick-links (QUICK links <-> QUICK player special)
-            			error = 0;
+            			status = 0;
             		}
             	} catch (Exception e) {
             		// nothing todo here
@@ -1164,6 +1162,8 @@ public class PlayerConverter {
                 player.setSpeciality(0);
             }
         }
+
+        setDeadline(player);
 
         return player;
     }
@@ -1368,5 +1368,25 @@ public class PlayerConverter {
             }
         }
         return exp;
+    }
+
+    public java.util.Date getDeadline(){
+        return deadLineDate;
+    }
+
+    public void setDeadline(Player player){
+        if(player.getExpiryDate() == null || player.getExpiryTime() == null || player.getExpiryDate().isEmpty() || player.getExpiryTime().isEmpty()){
+            this.addErrorField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
+        } else {
+            try {
+                final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("dd.MM.yy HH:mm",
+                        java.util.Locale.GERMANY);
+                deadLineDate = simpleFormat.parse(player.getExpiryDate() + " "
+                        + player.getExpiryTime());
+            } catch (Exception e) {
+                HOLogger.instance().debug(getClass(), e);
+                this.addErrorField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
+            }
+        }
     }
 }

@@ -27,7 +27,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -71,7 +72,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private JCheckBox jchHomegrown = new JCheckBox();
     private JLabel jlRating = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Unbestimmt")
                                          + ": 0.0");
-    private JLabel jlStatus = new JLabel("Status: ");
+    private JLabel jlStatus = new JLabel("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ":&nbsp<br />&nbsp</p></html>");
     private JTextArea jtaCopyPaste = new JTextArea(5, 20);
     private JTextArea jtaNotes = new JTextArea(5, 20);
     private JTextField jtfAge = new JTextField("17.0");
@@ -184,7 +185,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private void copyPaste() {
         final PlayerConverter pc = new PlayerConverter();
         String message = "";
-        String errorFields = "";
+        List<String> errorFields = new ArrayList<String>();
 
         try {
             final Player player;
@@ -242,21 +243,9 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                 // Listener stays here for recalculation of rating
                 Helper.markierenComboBox(jcbPlaymaking, player.getPlayMaking());
 
-                errorFields = pc.getErrorFields();
                 // Normally not working. Thus last positioned
-                try {
-                    final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("dd.MM.yy HH:mm",
-                            java.util.Locale.GERMANY);
-                    final java.util.Date date = simpleFormat.parse(player.getExpiryDate() + " "
-                            + player.getExpiryTime());
-                    jsSpinner.setValue(date);
-                } catch (Exception e){
-                    HOLogger.instance().debug(getClass(), e);
-                    message = HOVerwaltung.instance().getLanguageString("scout_warning");
-                    if (!errorFields.equals(""))
-                        errorFields += ", ";
-                    errorFields += HOVerwaltung.instance().getLanguageString("Ablaufdatum");
-                }
+                jsSpinner.setValue(pc.getDeadline());
+
                 spielervalueChanged();
             }
         } catch (Exception e) {
@@ -267,21 +256,24 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         jtaCopyPaste.setText("");
 
         if (message.equals("")) {
-            switch (pc.getError()) {
-                case 1:
+            switch (pc.getStatus()) {
+                case PlayerConverter.WARNING:
                     message = HOVerwaltung.instance().getLanguageString("scout_warning");
+                    message += " " + pc.getErrorFieldsTextList();
+                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");;
                     break;
-                case 2:
+                case PlayerConverter.ERROR:
                     message = HOVerwaltung.instance().getLanguageString("scout_error");
+                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");;
+                    break;
+                case PlayerConverter.EMPTY_INPUT_ERROR:
+                    message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
                     break;
                 default:
                     message = HOVerwaltung.instance().getLanguageString("scout_success");
             }
         }
-        if(!errorFields.equals("")){
-            errorFields = " ("  + errorFields + ")";
-        }
-        jlStatus.setText(HOVerwaltung.instance().getLanguageString("scout_status") + ": " + message + errorFields);
+        jlStatus.setText("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ": " + message + "</p></html>");
     }
 
     private void close() {
@@ -351,7 +343,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
         // Textfields and Comboboxes
         panel = new ImagePanel();
-        panel.setLayout(new GridLayout(11, 4, 4, 4));
+        panel.setLayout(new GridLayout(13, 4, 4, 4));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.id"));
         panel.add(label);
