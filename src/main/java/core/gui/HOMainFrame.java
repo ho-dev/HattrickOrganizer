@@ -45,12 +45,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
@@ -404,7 +401,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		else if (source.equals(m_jmChangelog)) {
 			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
 
-				URL url = HOMainFrame.class.getResource("/changelog.html");
+				URL url = HOMainFrame.class.getResource("/changelog.md");
 				if (url == null) {
 					JOptionPane.showMessageDialog(this, HOVerwaltung.instance().getLanguageString("Changelog.error"), HOVerwaltung.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
 				}

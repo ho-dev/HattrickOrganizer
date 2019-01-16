@@ -1,19 +1,9 @@
-Please visit the HO! forum in the CHPP section of Hattrick if you have any questions!
-If you find a bug, please open an issue on GitHub: https://github.com/akasolace/HO/issues
+*Please visit the HO! forum in the CHPP section of Hattrick if you have any questions!
+If you find a bug, please open an issue on [GitHub](https://github.com/akasolace/HO/issues)*
 
-Changelist HO! 1.436
-====================
-[[Added]
- - possibility for user to select and save release channel preference (DEV/BETA/STABLE)
- - display release notes before HO update
- - translation in csv player export
- - support for new HT layout by HT Copy Button in Transfer Scout (deadline and price data are not available)
- - team transfer update now includes individual histories
- - information that player has been fired in transfer history panel
- - remove transfer button in transfer history panel
- - include direct link to download now version for mac user
+# Changelist HO! 1.436
 
- [Fixed]
+## Fixed
  - optimized build is saving approximately 35% disk space on produced binaries (bug #71)
  - Preference|Check had lot of non-working entries: it has been deleted:
      - preference for HRF location save dialog has been moved into Preference|Download tab
@@ -30,8 +20,18 @@ Changelist HO! 1.436
  - player data is no longer missing from transfer history top panel  (bug #45)
  - wrong link in menu bout HO!  (bug #43)
  - small bugs related to update process on all platforms (bug #57)
+ 
+ ## Added
+  - possibility for user to select and save release channel preference (DEV/BETA/STABLE)
+  - display release notes before HO update
+  - translation in csv player export
+  - support for new HT layout by HT Copy Button in Transfer Scout
+  - team transfer update now includes individual histories
+  - information that player has been fired in transfer history panel
+  - remove transfer button in transfer history panel
+  - include direct link to download now version for mac user
 
- [Changed]
+## Changed
  - moved 'save HRF dialog' option to download tab (#80)
  - moved (and disabled) legacy 'update HO on download' option to release channel tab (#80)
  - appearence of release channel tab
@@ -39,21 +39,21 @@ Changelist HO! 1.436
 
 Changelist HO! 1.435
 ====================
-[Added]
-- macOS version is working again
-- statistics tab displays crowd numbers in each stadium section, including percentages
-- HatStats statistics are now displayed in Matches module
-- flags for Comores, Guam, Sri Lanka, Sao Tomé-et-Principe and Curaçao
 
-
-[Fixed]
+## Fixed
 - bug related to the introduction of Support specialty
 - bug related to Divine+ ratings in Match Analysis
 - a long time bug where IFA tab would crash under certain circumstances of db update
 - bug in Misc Tab where some values were not displayed
 - bug where FW normal value was displayed in PlayerCompare (TAB Player Analysis)
 
-[Removed]
+##Added
+- macOS version is working again
+- statistics tab displays crowd numbers in each stadium section, including percentages
+- HatStats statistics are now displayed in Matches module
+- flags for Comores, Guam, Sri Lanka, Sao Tomé-et-Principe and Curaçao
+
+##Removed
 - Update menu for flags, prediction rating and translation files
 
 

@@ -1,0 +1,562 @@
+<p><em>Please visit the HO! forum in the CHPP section of Hattrick if you have any questions!<br/>If you find a bug, please open an issue on <a href="https://github.com/akasolace/HO/issues">GitHub</a></em></p>
+<h1>Changelist HO! 1.436</h1>
+<h2>Fixed</h2>
+<ul>
+  <li>optimized build is saving approximately 35% disk space on produced binaries (bug #71)</li>
+  <li>Preference|Check had lot of non-working entries: it has been deleted:
+    <ul>
+      <li>preference for HRF location save dialog has been moved into Preference|Download tab</li>
+      <li>preference regarding automatic version check has been moved into Preference|Release Channels<br/> but is temporary deactivated until new behaviour is validated</li>
+    </ul>
+  </li>
+  <li>ability to start HO on Linux from script after fresh install (bug #34)</li>
+  <li>version in splash screen and main GUI header (bug #36)</li>
+  <li>missing icon (bug #37)</li>
+  <li>missing columns in certain languages because of duplicate names (Player Analysis Tab) (bug #41)</li>
+  <li>poor quality shirt numbers on MacOS</li>
+  <li>wrong data in csv player export tool (bug #42)</li>
+  <li>layout changes in transfer history tab</li>
+  <li>fired player transfer history in no longer removed on transfer history update</li>
+  <li>player data is no longer missing from transfer history top panel (bug #45)</li>
+  <li>wrong link in menu bout HO! (bug #43)</li>
+  <li>small bugs related to update process on all platforms (bug #57)</li>
+</ul>
+<p>## Added<br/> - possibility for user to select and save release channel preference (DEV/BETA/STABLE)<br/> - display release notes before HO update<br/> - translation in csv player export<br/> - support for new HT layout by HT Copy Button in Transfer Scout<br/> - team transfer update now includes individual histories<br/> - information that player has been fired in transfer history panel<br/> - remove transfer button in transfer history panel<br/> - include direct link to download now version for mac user</p>
+<h2>Changed</h2>
+<ul>
+  <li>moved 'save HRF dialog' option to download tab (#80)</li>
+  <li>moved (and disabled) legacy 'update HO on download' option to release channel tab (#80)</li>
+  <li>appearence of release channel tab</li>
+</ul>
+<h1>Changelist HO! 1.435</h1>
+<h2>Fixed</h2>
+<ul>
+  <li>bug related to the introduction of Support specialty</li>
+  <li>bug related to Divine+ ratings in Match Analysis</li>
+  <li>a long time bug where IFA tab would crash under certain circumstances of db update</li>
+  <li>bug in Misc Tab where some values were not displayed</li>
+  <li>bug where FW normal value was displayed in PlayerCompare (TAB Player Analysis)</li>
+</ul>
+<h2>Added</h2>
+<ul>
+  <li>macOS version is working again</li>
+  <li>statistics tab displays crowd numbers in each stadium section, including percentages</li>
+  <li>HatStats statistics are now displayed in Matches module</li>
+  <li>flags for Comores, Guam, Sri Lanka, Sao Tomé-et-Principe and Curaçao</li>
+</ul>
+<h2>Removed</h2>
+<ul>
+  <li>Update menu for flags, prediction rating and translation files</li>
+</ul>
+<h1>Changelist HO! 1.434</h1>
+<ul>
+  <li>Added check if database folder is writeable</li>
+  <li>Removed market value logic (EPV)</li>
+  <li>Added new staff structure to miscellaneous tab</li>
+  <li>Added new staff assistant level to training tab</li>
+  <li>Made sure staff assistant level is visible even if there are no staff at all.</li>
+  <li>NThrf should be working again</li>
+  <li>Added team name to title bar</li>
+  <li>Modified training factors, including base week. Hopefully predictions are improved.</li>
+  <li>
+  <p>Changes done related to Style of Play being introduced.</p></li>
+  <li>Max number of orders is dependent on Tactical Assistant level.</li>
+  <li>A warning appears if you somehow have more orders than allowed to.</li>
+  <li>Added download and storage of style of play to match orders.</li>
+  <li>Caution: style of play is always 0 if you haven't set a new default lineup for the upcoming match.</li>
+  <li>Added support in lineup details (right panel).</li>
+  <li>A combo box near the top to select style of play.</li>
+  <li>The available choices depend on trainer type and Tactical Assistant level.</li>
+  <li>A combo box near trainer choice to set a different number of tactical assistants in this panel only.</li>
+  <li>Rating calculation uses style of play. The calculation uses a linear fit between the set values for<br/>offensive, neutral and defensive trainer contributions.</li>
+  <li>Added upload of style of play to the match orders.</li>
+  <li>Two new version of rating prediction values according to changes for the new season. Default and newB.<br/>Every feedback which one you think is better is appreciated.</li>
+  <li>Added style of play support in matches and matchesanalyzer module.</li>
+  <li>
+  <p>Increased training speed influence of assistant coaches from 3.2% to 3.5%.</p></li>
+  <li>Added subskill import from hrf's from hattrickportal.pro (big thanks to duke for the support).</li>
+  <li>Added a lineup and lineup with ratings export to HT-ML (nice for the forum).</li>
+  <li>Added age column to player analysis module which displays age on that match date (skills are still the current).</li>
+  <li>Show player compare tab under player analysis.</li>
+  <li>Made authorization always ask for priviliges to set match orders.</li>
+  <li>Reduced max assistant level from 15 to 10 after removal of one assistant position</li>
+  <li>
+  <p>Added support for Divine+ ratings in various spots. Included are matches panel and team analyzer.</p></li>
+  <li>Added "no coach" support for NThrf. National teams get a default trainer assigned.</li>
+  <li>Made a fix so that one download cancel should be enough when importing hrf to empty database.</li>
+  <li>Added support for third team.</li>
+  <li>Fixed match report to display extra time.</li>
+  <li>Fixed IFA to handle HT International league that has no country ID.</li>
+  <li>Fixed match analyzer to handle tactics above divine.</li>
+</ul>
+<h2>Language updates:</h2>
+<ul>
+  <li>Updated Danish translations (thx Max_Schreck).</li>
+  <li>Major update to the Czech file (thx vik-m).</li>
+  <li>Updated Lithuanian translations (thx LA-MJ).</li>
+  <li>Updated German translations (thx-GM-Romanolus).</li>
+  <li>Updated French translations (thx davidatorus).</li>
+  <li>Updated Spanish and Spanish sudamericano translations (thx Baler0).</li>
+  <li>Updated Portugues translations (thx a_cardoso).</li>
+  <li>Updated Romanian translations (thx DragosE).</li>
+  <li>Updated Hangul (Korean) translations (thx SI-CH).</li>
+  <li>Updated Galego/Galician translations (thx LA-OReiDasSachadas).</li>
+  <li>Updates up to forum post [post=14978456.685]. Thanks to numerous users.</li>
+</ul>
+<h1>Changelist HO! 1.433</h1>
+<ul>
+  <li>Added support for second teams. They need their own HO database.</li>
+  <li>Updated training speeds for shooting (thx Zoldon).</li>
+  <li>Bugfix for wrong player parsing in Transferscout for norwegian users (thx Avec2).</li>
+  <li>Bugfix for order changes not being loaded correctly in saved lineups.</li>
+  <li>IFA: Added modules menu option to rebuild the match database.</li>
+  <li>Language files are now UTF=8, and should be more readable.</li>
+  <li>Changed the menu link to the new user guide.</li>
+</ul>
+<h2>Language updates:</h2>
+<ul>
+  <li>Updated French translations (thx davidatorus).</li>
+  <li>Updated Hangul (Korean) translations (thx SI-CH).</li>
+  <li>Updated Hebrew translations (thx Mod-Transy).</li>
+  <li>Updated Italiano translations (thx bigpapy).</li>
+  <li>Updated Lithuanian translations (thx LA-MJ).</li>
+  <li>Updated Norsk translations (thx ksunmn).</li>
+  <li>Updated Portugues translations (thx a_cardoso).</li>
+  <li>Updated Svenska translations (thx montevi, murko).</li>
+</ul>
+<h1>Changelist HO! 1.432</h1>
+<ul>
+  <li>
+  <p>Hattrick Organizer now requires Java 1.6 (aka JRE6). Open JDK supports older operating systems that oracle does not. Please update your Java installation if needed.</p></li>
+  <li>
+  <p>Player subskills<br/>. Training is now minute based. Correct counting only for matches downloaded in 1.431 or later.<br/> It is possible to delete your own matches by the db cleanup tool, and download them again by<br/> archive options in download. After this a full subskill recalculation could be interesting.<br/>. Osmosis training has been added. A small training effect for all players on the field.<br/>. Added green background for 100% trainees and yellow for 50% trainees in training prediction (white background for osmosis training).<br/>. Use subskill overflow for training prediction to avoid rounding errors hiding coach and assitant number changes effects.<br/>. The skill level effect on training has been adjusted.<br/>. Skill drops due to age at 30 or above, or at skills of 16 or above is in as a first version.<br/> Speeds will require more or less tuning.<br/>. Training offset has been removed, and been replaced with an option to adjust the subskill directly.</p></li>
+  <li>
+  <p>Team Analyzer<br/>. All update restrictions have been removed, including favorite teams.<br/>. Update will now download the matches to fill out your autofilter request, or the 30 last opponent matches if a manual filter is selected.<br/>. Tournament opponents are in, and so are tournament matches.<br/>. Auto filter options are now saved when you analyze, and should reappear that way until changed.<br/>. Auto filter options for tournament and masters matches.<br/>. Fixed bug that renaming team after the last league match prevented analyzing matches before name changes.</p></li>
+  <li>
+  <p>Match order uploads<br/>. The option to upload match orders to Hattrick have been added.<br/>. This is a Hattrick supporter feature, and non-supporters will find the upload button inactive.<br/>. The lineup tab now has its own tabs, the new ones are:<br/> . Lineup - the old one.<br/> . Match orders - a place to set and view match orders.<br/> . Penalty takers - a place to view and set the penalty shooter list.<br/> . Upload/Download - a place to upload and download orders to and from specific matches.</p></li>
+  <li>
+  <p>Special Events<br/>. got a lot of improvments (esp. the filter)</p></li>
+  <li>
+  <p>Lazy initialization/refresh<br/>. The content of each tab is now loaded not before the tab is opened for the first time. Analogous,<br/> if the content of a tab needs to be refreshed, it is only refreshed if the tab is currently showing.<br/> If it's not showing, it will be refreshed as soon as it gets shown. This works (at the moment) for<br/> all tabs except lineup, players, transfers. Lazy initialization/refresh will noticeable (depending<br/> on the number of modules you are using) decrease startup time and reduce the memory footprint of the application.</p></li>
+  <li>
+  <p>Added Tournament matches.</p></li>
+  <li>New icon and startup screen.</li>
+  <li>Moved intern help texts and from external files to our wiki page (https://sourceforge.net/apps/trac/ho1/wiki/Manual) and link to it in the menu.</li>
+  <li>Made player name column width adjustable on squad tab.</li>
+  <li>Added half time results in matches tab.</li>
+  <li>Seat distribution is shown in arena section of Statistics tab.</li>
+  <li>Stadium prices HT-adapted (7/10/19/35).</li>
+  <li>Copying ratings to the clipboard in HT-ML table format now centres all ratings in the table.</li>
+  <li>Lowered Overcrowding penalty for lineups with 3 forwards. Attack ratings with 3 forwards should now be closer to the reality.</li>
+  <li>TS Forecast Module should now display confidence at the correct level.</li>
+  <li>TS Forecast Module: Fixed Loepi curve with a new database, enabled TS and confidence graphs by default and detect if team is still in cup or has qualifiers.</li>
+  <li>Maintain Captain and Set piece taker when the line up is reversed.</li>
+  <li>The old penalty shooter button is gone. Look for the new tab instead.</li>
+  <li>Added ability to reset all positional orders in the line up tab.</li>
+  <li>Calculate loyalty and homegrownbonus for set pieces and penalty takers.</li>
+  <li>Fixed IFA module not to download matches before the user got the team.</li>
+  <li>Removed Shirt number 100 for players without a shirt number.</li>
+  <li>Included Loyalty and mother club into csv player export</li>
+  <li>ArenaStats initial view corrected (filter setting was "competition matches", while what was displayed was "all matches").</li>
+  <li>on HRF import, user will not be asked for every HRF which was already imported if he wants to import it again (checkbox "apply to all")</li>
+  <li>user/database configuration form got some polish and went from the Options dialog to the File-&gt;Database menu</li>
+  <li>database cleanup tool went from the Tools menu to File-&gt;Database</li>
+</ul>
+<h2>Language updates:</h2>
+<ul>
+  <li>Added Japanese as new HO language (thx nomad331).</li>
+  <li>Updated Danish translations (thx Max_Schreck).</li>
+  <li>Updated English translations (thx edswifa).</li>
+  <li>Updated French translations (thx davidatorus).</li>
+  <li>Updated Galego translations (thx GZ-grobas).</li>
+  <li>Updated German translations (thx Werder0405).</li>
+  <li>Updated Hangul (Korean) translations (thx SI-CH).</li>
+  <li>Updated Lithuanian translations (thx LA-MJ).</li>
+  <li>Updated Nederlands translations (thx BrammieG).</li>
+  <li>Updated Persian translations (thx bagher).</li>
+  <li>Updated Portugues translations (thx a_cardoso).</li>
+  <li>Updated Romanian translations (thx DragosE).</li>
+  <li>Updated Spanish translations (thx LarsVegas).</li>
+</ul>
+<h2>ThemeManager:</h2>
+<ul>
+  <li>New keys:<br/>. Icons: imagePanel.background, grassPanel.background, remove, transfer.in, transfer.out, MatchTypeTourneyGrp, MatchTypeTourneyPlayOff, exclamation-red, exclamation, control-double-090, control-double-270, order_set, plays_at_beginning, is_reserve, not_in_lineup, move_up, move_down, move_left, move_right, arrow_circle_double, arrow_move, substitution, clearPositionOrders<br/>. Colors: matchtype.tourneyGroup.bg, matchtype.tourneyFinals.bg, teamanalyzer.teamlist.league, teamanalyzer.teamlist.cup, teamanalyzer.teamlist.nexttournament, teamanalyzer.teamlist.tournament</li>
+  <li>Fatcow-Theme: Added and updated some icons and colors.</li>
+</ul>
+<h2>Plugin (Module) Updates:</h2>
+<ul>
+  <li>Active developed Plugins are now integrated as modules, outdated and not more developed Plugins are NOT integrated/supported anymore.<br/>. Calendar, Commons, Converter, Feedback, PerformanceOverview, SeriesStats, StarCalc, Teamplanner and YouthClub were NOT integrated.<br/>. NTHRF, SpecialEvents, TeamAnalyzer, TeamOfTheWeek, TrainingExperience, Transfers, TS Forecast were integrated.<br/>. ArenaSizer was moved into tools + got more options and statistical section.<br/>. DevHelp -&gt; SQL Dialog integrated for developers.<br/>. Evilcard was integrated + got a small rearrangement of panels.<br/>. ExperienceViewer moved as submodule into Playeranalysis.<br/>. Flags was not integrated. Functions are integrated in IFA module.<br/>. HRF-Explorer was moved into tools.<br/>. IFA was integrated + Panels were rearranged and also optimized.<br/>. MatchesOverview was not integrated. Functions are integrated in matches tab.<br/>. Playercompare moved as submodule into Playeranalysis.<br/>. Transferscout moved as submodule into Transfers.<br/>. XMLExporter was moved into tools.</li>
+  <li>New startup possibility for each module in the options:<br/>. Autostart = visible after HO-startup. (uses memory)<br/>. Activated = Not visible after HO-Startup but easy to start with the functions-menu without HO-restart. (uses memory)<br/>. Deactivated = Not visible after HO-Startup. Can only be made visible through changing the startup option and HO-restart. (uses no memory)</li>
+  <li>Possibility added to close a module with the "x"-Button on each tab.</li>
+</ul>
+<h1>Changelist HO! 1.431</h1>
+<ul>
+  <li>
+  <p>Added Loyalty and Mother Club Bonus.<br/> . Rating prediction is updated.<br/> . Added in most places we could think of.<br/> . Column preferences are cleared in lineup and squad view due to column changes.</p></li>
+  <li>
+  <p>Theme Manager is added - customize the looks! (Thanks fusselhirn!)<br/>. See example.zip in the theme folder, especially data.txt and ReadMe.txt inside.</p></li>
+  <li>
+  <p>Download modifications<br/>. Added better error message when file save on download fails.<br/>. HRF saving is now optional. You can actually cancel!<br/>. Reworked Download to abort on failure. Cancel only once!<br/>. CHPP is now checked for status via it's XML<br/>. Sanity checks added for downloads of matches...<br/>. Removed double proxy dialog on download of non chpp files.<br/>. Can now delete 'corrupted' matches</p></li>
+  <li>Added better error message when database is unable to create its file.</li>
+  <li>Fixed sort issue on player tables.</li>
+  <li>Fixed localization issue messing up ratings for some locales</li>
+  <li>Added new parameter to ratings, called postDelta, which is added after postMulti has been applied (defaults to 0).</li>
+  <li>Added two more new parameter to CA ratings calculations only, called playerPostMulti and playerPostDelta, for use in CA player contribution calculations (default to 1 and 0 respectively)</li>
+  <li>Modified button behaviour on matches screen to be enabled/disabled appropriately</li>
+  <li>Fixed player regainer string not showing.</li>
+  <li>Fixed wrong set piece taker on corners</li>
+  <li>Added missing match events</li>
+  <li>Added rest of HOMainFrame non language string to language files</li>
+  <li>Added Hatstats and Loddar stats to Matches view</li>
+  <li>Minor fixes and tweaks that is probably not mentioned...</li>
+  <li>Download of beta and update via HO now works.</li>
+</ul>
+<h2>Language updates:</h2>
+<ul>
+  <li>Removed unused strings (thx Seb04 for hunting :) )</li>
+  <li>Added Hebrew as new HO language (thx Mod-Transy)</li>
+  <li>Added Indonesian as new HO language (thx Zolfaghar)</li>
+  <li>Update Bulgarian translations (thx stiflar)</li>
+  <li>Update Catalan translations (thx carlesmu)</li>
+  <li>Update Chinese translations (thx tianbing)</li>
+  <li>Update Czech translations (thx fisero)</li>
+  <li>Update Danish translations (thx Max_Schreck)</li>
+  <li>Update Finnish translations (thx paragon81)</li>
+  <li>Update French translations (thx fierz1998)</li>
+  <li>Update Galego translations (thx GZ-grobas)</li>
+  <li>Update Georgian translations (thx serjhanti, Rukhadze)</li>
+  <li>Update German translations (thx Werder0405)</li>
+  <li>Update Hangul(Korean) translations (thx SI-CH)</li>
+  <li>Update Hebrew translations (thx Mod-Transy)</li>
+  <li>Update Hrvatski(Croatian) translations (thx -Iuve-)</li>
+  <li>Update Italiano translations (thx silkevicious)</li>
+  <li>Update Lithuanian translations (thx Kacerga)</li>
+  <li>Update Magyar translations (thx salt00)</li>
+  <li>Update Nederlands translations (thx BrammieG)</li>
+  <li>Update Norsk translations (thx ultracool)</li>
+  <li>Update Persian translations (thx lvl_Rashid_lvl)</li>
+  <li>Update Polish translations (thx aMiUK)</li>
+  <li>Update Portugues translations (thx Aristodemos)</li>
+  <li>Update PortuguesBrasil translations (thx garcilp)</li>
+  <li>Update Romanian translations (thx Spify)</li>
+  <li>Update Russian translations (thx Deal_of_Ghost)</li>
+  <li>Update Slovak translations (thx Refri)</li>
+  <li>Update Spanish translations (thx Baler0)</li>
+  <li>Update Spanish_sudamericano translations (thx Baler0)</li>
+  <li>Update Srpski + Srpski (lat) translations (thx FoxWMB, ljushaff)</li>
+  <li>Update Svenska translations (thx KrustyTheClown, Ehlana)</li>
+  <li>Update Turkish translations (thx QUARESMAA7)</li>
+  <li>Update Ukranian translations (thx oleh_deneb)</li>
+  <li>Update Vlaams translations (thx icarus95)</li>
+</ul>
+<h2>Plugin Updates:</h2>
+<ul>
+  <li>
+  <p>Training Experience v 1.255:<br/>. Added set piece filter, and removed occurrences of no longer existing general and stamina training<br/>. Changed icon drawing on Analyzer panel to show values &gt; 99</p></li>
+  <li>
+  <p>Team Analyzer v 2.84:<br/>. Fixed icon issue with Nimbus skin<br/>. Match download is updated to work even better</p></li>
+  <li>
+  <p>Special Events v 1.24<br/>. Added missing events</p></li>
+</ul>
+<h2>Themes:</h2>
+<ul>
+  <li>Fatcow<br/>. Added first version (thanks Werder0405)</li>
+</ul>
+<h1>Changelist HO! 1.430</h1>
+<ul>
+  <li>Publishing a proper release based on 1.429</li>
+  <li>Some minor fixes</li>
+</ul>
+<h1>Changelist HO! 1.429</h1>
+<ul>
+  <li>Authentication is now done through oAuth</li>
+  <li>Added flags for Cuba, O'zbekiston, Cameroon, and Palestine</li>
+  <li>Training defaults are updated (thx Art-Frisson for numbers), and the format of modifying them in options have changed</li>
+  <li>Fixed a small error in the Lineup gui with temporary players</li>
+  <li>Downloaded matches with individual orders should now display better.<br/> Matches already in the database can be redownloaded from the matches screen.</li>
+  <li>Prediction Offset should work again.</li>
+  <li>It is no longer possible to set the keeper at set piece taker.</li>
+  <li>The set piece taker is no longer automatically first on the penalty shooter list.</li>
+  <li>Changed formation experience ordering according to Hattrick</li>
+</ul>
+<h2>Language updates:</h2>
+<ul>
+  <li>Update Catalan translations (thx CAT-fike)</li>
+  <li>Update Finnish translations (thx -Lupi-)</li>
+  <li>Update French translations (thx Butboja)</li>
+  <li>Update Galego translations (thx OReiDasSachadas)</li>
+  <li>Update German translations (thx Werder0405)</li>
+  <li>Update Hrvatski(Croatian) translations (thx Bilke5)</li>
+  <li>Update Italiano translations (thx silkevicious)</li>
+  <li>Update Nederlands translations (thx BrammieG)</li>
+  <li>Update Norsk translations</li>
+  <li>Update Polish translations (thx aMiUK)</li>
+  <li>Update Portugues translations (thx a_cardoso)</li>
+  <li>Update Slovak translations (thx zymbo)</li>
+  <li>Update Spanish translations (thx Baler0, garcilp)</li>
+  <li>Update Spanish_Sudamericano translations (thx Baler0)</li>
+  <li>Update Srpski translations (thx dr_Chokky)</li>
+  <li>Update Srpski(lat) translations (thx dr_Chokky)</li>
+  <li>Update Vlaams translations (thx icarus95)</li>
+</ul>
+<h1>Changelist HO! 1.428</h1>
+<ul>
+  <li>The model is switched to the 553 lineup model. This has affected a lot of the code</li>
+  <li>Linup screen now has 14 position boxes, but only 11 can be filled</li>
+  <li>Swap ability is added to subs</li>
+  <li>Moved positions of captain, set piece taker and reserves to match the HT layout</li>
+  <li>Moved buttons for categories, and flips with friends compact the layout</li>
+  <li>Small adjustment to output of "copy ratings to clipboard"</li>
+  <li>"MiniPosFrame" has indicators for incomplete lineup (and 553 layout)</li>
+  <li>Matches screen is updated to display matches in a 553 format</li>
+  <li>Use of all CHPP APIs related to match lineups are now at latest API version</li>
+  <li>TeamAnalyzer is updated to 553 changes, including lineup screen</li>
+  <li>Team of the week plugin interprets the new positions, otherwise no change</li>
+  <li>Added crowding penalties in rating calculation. Default is again the default prediction set</li>
+  <li>Prediction type can again be selected manually in the lineup screen</li>
+  <li>Removed some traces of the now gone economists and gk trainers</li>
+</ul>
+<h1>Changelist HO! 1.427</h1>
+<ul>
+  <li>automatically select prediction type (thx Smaug)</li>
+  <li>allow new position "Extra def. Forward" to simulate lineups with 3 def. forwards (thx Smaug)</li>
+  <li>add optional "Nimbus" look and feel, if available</li>
+  <li>update some graphics</li>
+  <li>fix bug with fraction digit in fanclub size</li>
+  <li>fix home/away determination for DBs with illegal matches (announced but never played)</li>
+</ul>
+<h1>Changelist HO! 1.426</h1>
+<ul>
+  <li>fix bug, that prevented HO from starting in special screen configurations</li>
+  <li>fix bug in TeamAnalyzer which lead to missing opponent specials and wrong blue player names</li>
+  <li>add option to "re-simulate" an old match</li>
+  <li>allow openjdk as alternative for the Debian build (thx salt00)</li>
+  <li>lineup screen: add feature to copy ratings into the system clipboard</li>
+  <li>allow to quick-switch also the keeper</li>
+  <li>quick hack to handle HTs changed lineup data</li>
+  <li>add handling for new formation experience data</li>
+  <li>add new engine prediction types from cirlama</li>
+</ul>
+<h2>Language updates:</h2>
+<ul>
+  <li>fix Spanish specialty names</li>
+  <li>update Serbian translations (thx Chokky)</li>
+  <li>add Catalan translations for some plugins (thx CAT-fike)</li>
+  <li>update English denominations to solve problems in the player parser (thx salt00)</li>
+  <li>add Hangul (Korean) as new HO language (thx to dodegun!)</li>
+  <li>fix Danish 'non-existent' denomination (fixes also player parser problems)</li>
+  <li>add Persian as new HO language (big thx to lvl_Rashid_lvl!)</li>
+</ul>
+<h2>Plugin Updates:</h2>
+<ul>
+  <li>flagsplugin 3.23 (catch possible exception when getting the country id of an opponent)</li>
+  <li>TSForecast 1.01 (fix problems at plugin start with only few datasets)</li>
+  <li>add PlayerCompare and HRFExplorer to plugins (thx KickMuck)</li>
+</ul>
+<h1>Changelist HO! 1.425</h1>
+<ul>
+  <li>fixed problem of missing match highlights / reports when downloading games with the team analyzer</li>
+  <li>fixed problem starting match simulation when own tactic strength is higher than divine</li>
+  <li>fixed problems in the transferscout player parser when using IE and the bar style</li>
+  <li>added new tactic: Long shots</li>
+  <li>updated rating prediction</li>
+  <li>updated tactic level prediction</li>
+  <li>fixed several problems with HT suddenly adding players without RoleID to XML data</li>
+  <li>handle long shot events in match highlights</li>
+  <li>show correct tactic strength after loading an stored lineup</li>
+  <li>Added a new config option for the default state of the "download matches/schedule" checkboxes on the download dialog</li>
+  <li>added a database cleanup tool that removes old matches / HRFs</li>
+  <li>Fix bug in stadium statistics (&gt;100% usage)</li>
+  <li>Using team experience formula by kopsterkespits as default now</li>
+  <li>team captain's value in lineup now shows the predicted team experience using this player as captain</li>
+  <li>improve support for non latin characters</li>
+  <li>MacOS: HO now uses a modern JavaApplicationStub (no need for Rosetta anymore) and the Aqua toolbars (thx to DerKanzler)</li>
+</ul>
+<h2>Language updates:</h2>
+<ul>
+  <li>add Slovenian as new HO language (big thx to odemodet!)</li>
+  <li>huge update of the Bulgarian translation (thx stiflar)</li>
+  <li>improve French translation (thx Bruno)</li>
+  <li>fixed Czech skill names</li>
+  <li>add "Greeklish" as new HO language (big thx to Angelos!)</li>
+  <li>improve Slowak translation (thx refri)</li>
+  <li>add Chinese as new HO languag (thx Ryan Li!)</li>
+</ul>
+<h2>Plugin Updates:</h2>
+<ul>
+  <li>SpecialEvents 1.221 (added weather SEs, counters, set pieces...)</li>
+  <li>Feedback 0.44 (included in HO 1.425)</li>
+  <li>TeamAnalyzer 2.70 (included in HO 1.425, using new formula for rating ratios)</li>
+</ul>
+<h2>Special Notes:</h2>
+<p>We changed the minimum Java version starting with this release to Sun Java 1.5 (aka JRE5).<br/>Please update your Java installation if needed.</p>
+<h1>Changelist HO! 1.424</h1>
+<ul>
+  <li>fix problem with "-1" trainings and missing stats</li>
+  <li>changed the 5,10 and 50 star symbol a bit (more contrast)</li>
+  <li>updated EPV</li>
+  <li>reactivated HO auto update</li>
+  <li>added training block function</li>
+  <li>enhance transfer scout player parser</li>
+  <li>added CSV player export</li>
+  <li>changed the download process of the match highlights (big thx to GM-Mjoelnir!)<br/>(we are very hopeful that the problem with the missing match reports is fixed now)</li>
+  <li>changed HO.sh to allow spaces in path name ($HODIR and $HOHOME)</li>
+  <li>
+    <p>Language updates:</p>
+    <ul>
+      <li>small fix in the French translation (thx Bruno)</li>
+      <li>updates for several languages (thx -_duke_-, Chokky, LderMax, mikaelmd, Off_Line, Temur)</li>
+    </ul>
+  </li>
+</ul>
+<h2>Plugin Updates:</h2>
+<ul>
+  <li>TeamAnalyzer 2.69 (included in HO 1.424, added new "diff%" column to rating comparison)</li>
+  <li>Feedback 0.421 (included in HO 1.424)</li>
+</ul>
+<h1>Changelist HO! 1.423</h1>
+<ul>
+  <li>fix problem with training subskill calculation on the first update 2009</li>
+  <li>adapt transfer scouts player parser for the new design<br/>(tested only with the default (long) style at the moment)</li>
+  <li>
+    <p>Translation updates:</p>
+    <ul>
+      <li>added Georgian as new HO language (thx Temur for his very quick translation)</li>
+      <li>updated Serbian translation (thx chokky - again!)</li>
+      <li>updated Swedish (thx mikaelmd)</li>
+    </ul>
+  </li>
+</ul>
+<h1>Changelist HO! 1.422</h1>
+<ul>
+  <li>added Windows installer version (thx Flattermann and all translators!)</li>
+  <li>Match highlights: added new symbol for indirect free kicks</li>
+  <li>added weather SEs to match highlights</li>
+  <li>update French language file (thx clemchen)</li>
+  <li>stars are now aggregated in groups of 5 stars instead of using single stars</li>
+  <li>updated rating prediction</li>
+  <li>updated epv</li>
+  <li>fix player coloring in match reports after HT redesign</li>
+  <li>prevent NPE in match details parser (caused by injury)</li>
+</ul>
+<h1>Changelist HO! 1.421</h1>
+<ul>
+  <li>fix a problem with HO! not starting after loading data when there was no league schedule</li>
+  <li>update rating prediction parameters</li>
+  <li>update training speed calculation</li>
+  <li>use new EPV calculation (early beta!)</li>
+  <li>change default to show 2 fraction digits</li>
+  <li>change default log level to "debug"</li>
+  <li>change bash dependent code in HO.sh</li>
+  <li>fix problem in TransferScout parser mixing injuries and yellow cards</li>
+  <li>add Regainer to TransferScout</li>
+</ul>
+<h1>Changelist HO! 1.420</h1>
+<ul>
+  <li>adaptions to CHPP interface changes</li>
+  <li>language fix German team confidence translation</li>
+  <li>fixed a small bug in the implementation to kopsterkespits' team XP formula</li>
+  <li>fixed MacOS preferences problem (prefs not saved when using Command-Q)</li>
+  <li>fixed regainer problem (regainer in lineup leads to ArrayOutOfBounds-Exception in RatingPredictionManager)</li>
+  <li>Translation updates:<br/>Srpski and Srpski(lat) v3.6 (thx chokky)<br/>Portuguese v3.6 (thx Ldermax)<br/>Turkish v3.6 (thx Yusuf)<br/>new: Hrvatski (thx Dragan)</li>
+</ul>
+<h2>Plugin Updates:</h2>
+<ul>
+  <li>TeamAnalyzer 2.68 (included in HO 1.420, adaptions to CHPP interface changes)</li>
+  <li>Transfers 0.972 (included in HO 1.420, adaptions to CHPP interface changes)</li>
+  <li>Flags plugin 3.21 (adaptions to CHPP interface changes, added coolness summary)</li>
+  <li>Team of the Week 0.2 (adaptions to CHPP interface changes)</li>
+  <li>EvilCard 0.952 (fix sorting by percentages, added Portuguese translation thx LderMax)</li>
+  <li>Int.Friendly Analyzer 0.95 (adapt to CHPP changes)</li>
+</ul>
+<h1>Changelist HO! 1.410</h1>
+<ul>
+  <li>Updated rating prediction (thx Flattermann and many supporters)</li>
+  <li>New training speed calculation including minute based training (thx Flattermann)</li>
+  <li>Added days of players age</li>
+  <li>Added the "away derby" option to the match lineup and it's prediction</li>
+  <li>Show birthdays in training prognosis (Training Experience plugin)</li>
+  <li>Added new star formulas (thx HO forum users, esp. chokky and Xell)</li>
+  <li>Use simple star rating to determine players best position</li>
+  <li>Fix mixed flags of Oman and Al Yaman</li>
+  <li>Updated Dutch language to version 3.5 (thx Jeronim0)</li>
+  <li>Updated Serbian languages to version 3.5 (thx chokky)</li>
+  <li>Updated French language to version 3.5 - fixes also bugs at player skill parsing in the Transfer plugin (thx guitch)</li>
+  <li>Automatically enable options league- and team-schedule in download dialog</li>
+  <li>Added team XP formula from kopsterkespits (tooltip over average team XP)</li>
+  <li>Arena Sizer: use lower fan factors</li>
+</ul>
+<h2>Plugin Updates:</h2>
+<ul>
+  <li>Feedback plugin 0.42 (included in HO 1.410)</li>
+  <li>Training Experience plugin 1.25 (included in HO 1.410)</li>
+  <li>TeamAnalyzer 2.67 (included in HO 1.410)</li>
+  <li>Flags plugin 3.19 (fix flags of Uman + Al Yaman, added Uganda + Maldives, use internal coolness calculation)</li>
+  <li>EvilCard plugin 0.951 (fix exception)</li>
+  <li>SpecialEvents plugin 1.21 (fix exception)</li>
+</ul>
+<h2>Special Notes:</h2>
+<p>Please start a full subskill recalculation (File / Calculate Subskills) after the installation to benefit of the new training speed calculation.</p>
+<h1>Changelist HO! 1.400</h1>
+<ul>
+  <li>Added first implementation of new rating formulas (new match engine)<br/> BIG THX to Flattermann for his effort - he provided GREAT help!</li>
+  <li>Added option to switch between old and new match engine in the lineup panel</li>
+  <li>Added correct handling of new fan mood levels</li>
+  <li>Added stamina training part (thx Flattermann)</li>
+  <li>Changed seat distribution in ArenaSizer (60/23.5/14/2.5)</li>
+  <li>Added Quatar and Tanzania and their flags</li>
+  <li>Added Srpski (Serbian) [latin and kyrillic] as new HO languages (thx chokky + jablan)</li>
+  <li>Update Dutch translation (thx jeronim0)</li>
+  <li>Prevent possible NPE with red cards (MatchPlayerRetriever)</li>
+  <li>Fix minor bug in language update dialog (duplicate entries)</li>
+  <li>Catch possible NPE when getting EPV value of certain players</li>
+  <li>Minor bugfixes when loading plugins</li>
+  <li>Removed EPV splash screen</li>
+  <li>Removed HoFriendly as demanded by CHPPs</li>
+  <li>Removed player tab from TeamAnalyzer as demanded by CHPPs</li>
+  <li>Small updates for all languages (thx to many HO! forum users)</li>
+</ul>
+<h2>Plugin Updates:</h2>
+<ul>
+  <li>EvilCard 0.95</li>
+  <li>Flags plugin 3.16</li>
+  <li>InternationalFriendlyAnalyzer (IFA) 0.93</li>
+  <li>TeamAnalyzer 2.66 (included in HO 1.400)</li>
+  <li>Training Experience 1.24 (included in HO 1.400)</li>
+  <li>Transfers plugin 0.971 (included in HO 1.400)</li>
+</ul>
+<h2>Special Notes:</h2>
+<p>HO 1.400 includes a first version to predict the ratings of the new match engine. The quality proved to be quite good at internal tests, but the differences may be a bit higher than for the old engine. Use the prediction offset calculation to get better results and provide feedback in the HO! forum. That way we can enhance the accuracy. Thx!</p>
+<p>The 2 most active HO1 developers from the lasst months are on vacation for the next 2 respectively 3 weeks. Thats not planned, but a funny coincidence. It might get a bit silent from HO! side during this time. We expect to have helpful feedback when we're back - especially regardings the new rating predictions.</p>
+<h1>Changelist HO! 1.399</h1>
+<ul>
+  <li>Adaption to CHPP changes (worlddetails)</li>
+  <li>Added Turkish and Galician as new HO languages (thx Yusuf and Pablo)</li>
+  <li>Lineup panel: fixed bug that lead to a "4-4-2 all normal lineup" instead<br/> of the real last / actual lineup of the team</li>
+  <li>Fixed coloring of players in match reports (thx to drake79)<br/> Note: it's necessary to re-download old matches with buggy coloring</li>
+  <li>Player overview: use no fraction digits when visualising differences<br/> in TSI, salary and market value. Show thousand delimiter instead.</li>
+  <li>Lineup panel: added option to simulate the trainer type (thx drake79)</li>
+  <li>fixed a bug that prevented further downloads when a match with more<br/> than 3 injured players occured</li>
+  <li>ArenaSizer: 18 Euro income from seats under roof</li>
+  <li>Lineup panel: fixed label of Reserve Defender</li>
+  <li>HT bug hotfix: copy last supporter mood level to current, if its missing in the XML</li>
+</ul>
+<h2>Converter Plugin:</h2>
+<ul>
+  <li>Adaption to CHPP change (worlddetails)</li>
+</ul>
+<h1>Changelist HO! 1.398</h1>
+<ul>
+  <li>TeamAnalyzer: fix a problem with matches with less than 11 players</li>
+  <li>ArenaSizer: use correct prices (like in HO! 1.396)</li>
+  <li>include all current flags</li>
+  <li>compiled using Java 1.4 class compatibility (hopefully fixes some TA issues<br/> for Java 1.4 and Mac users)</li>
+  <li>change internal URL for Plugin downloads to plugins.hattrickorganizer.net</li>
+  <li>removed upload of EPV data</li>
+  <li>changed version check to allow a newer version in the local installation</li>
+  <li>prevent NPE in MatchPopulator (TeamAnalyzer)</li>
+  <li>prevent NSEEx in RatingUtil (Commons)</li>
+  <li>prevent NPE in HTCalendarFactory (Commons)</li>
+</ul>
+<p>Special Note 1:<br/> ---------------<br/> To those who did not notice yet: with the help of our fellow user Odicin we<br/> were able to fix the 3rd party plugins "International Friendly Analyzer" and<br/> "Flags plugin". Both plugins stopped working after the HT/CHPP change last<br/> November. If you use these plugins and have problems with the update of new<br/> flags, make sure to have the latest version installed.<br/> Check this menu: File -&gt; Update -&gt; Plugins -&gt; Normal.</p>
+<p>Special Note 2:<br/> ---------------<br/> Thanks to the work of two HO! users Yusuf and Pablo we can offer "Turkish"<br/> and "Galician(Galego)" as new HO! language soon. Unfortunately both didn't<br/> make it into HO! 1.398, we're very sorry! But in the next days both should<br/> be available using the HO! update for language files.</p>

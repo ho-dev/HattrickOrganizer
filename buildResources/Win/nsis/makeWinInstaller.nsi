@@ -76,7 +76,7 @@ VIProductVersion "$HOVERSION"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 ;!define MUI_FINISHPAGE_RUN "$INSTDIR\HO.bat"
-!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\changelog.txt"
+;!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\changelog.txt"
 !define MUI_FINISHPAGE_LINK "Hattrick Organizer Homepage"
 !define MUI_FINISHPAGE_LINK_LOCATION "https://akasolace.github.io/HO/"
 
