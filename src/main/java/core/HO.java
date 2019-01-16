@@ -12,7 +12,6 @@ import core.model.UserParameter;
 import core.training.TrainingManager;
 import core.util.ExceptionHandler;
 import core.util.HOLogger;
-import tool.updater.UpdateController;
 //import core.util.IOUtils;
 //import java.io.BufferedReader;
 import java.io.File;
@@ -240,16 +239,4 @@ public class HO {
     public static String getversionType() {
         return versionType;
     }
-
-    public static String getReleaseNoteURL() {
-		if (versionType=="BETA") {
-			return UpdateController.BETA_URL;
-		}
-
-		else if (versionType=="DEV") {
-			return UpdateController.DEV_URL;
-		}
-
-		return UpdateController.STABLE_URL;
-	}
 }

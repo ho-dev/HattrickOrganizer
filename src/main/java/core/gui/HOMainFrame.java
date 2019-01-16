@@ -51,6 +51,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -116,7 +117,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private final JMenuItem m_jmReportAbug = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.reportabug"));
 	private final JMenuItem m_jmAboutAbout = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.about"));
 	private final JMenuItem m_jmCheckUpdate = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"));
-	private final JMenuItem m_jmReleaseNotes = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.update.releasenote"));
+	private final JMenuItem m_jmChangelog = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.changelog"));
 
 
 	// Components
@@ -400,12 +401,16 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 				UpdateController.check4update(false);
 			}
 		}
-		else if (source.equals(m_jmReleaseNotes)) {
+		else if (source.equals(m_jmChangelog)) {
 			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+
+				URL url = HOMainFrame.class.getResource("/changelog.html");
+				if (url == null) {
+					JOptionPane.showMessageDialog(this, HOVerwaltung.instance().getLanguageString("Changelog.error"), HOVerwaltung.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
+				}
 				try {
-					Desktop.getDesktop().browse(new URI(HO.getReleaseNoteURL()));
+					Desktop.getDesktop().browse(url.toURI());
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(this, e.getMessage(), HOVerwaltung.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
@@ -585,8 +590,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		m_jmCheckUpdate.addActionListener(this);
 		m_jmHelp.add(m_jmCheckUpdate);				// Help | check update
-		m_jmReleaseNotes.addActionListener(this);
-		m_jmHelp.add(m_jmReleaseNotes);				// Help | release notes
+		m_jmChangelog.addActionListener(this);
+		m_jmHelp.add(m_jmChangelog);				// Help | changelog
 		m_jmHelp.addSeparator();
 
 		m_jmAboutAbout.addActionListener(this);   // Help | About

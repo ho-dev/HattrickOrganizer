@@ -15,9 +15,9 @@ import core.util.HOLogger;
 public final class UpdateController {
 
 	public static final String UPDATES_URL = "http://ho1.sourceforge.net/onlinefiles";
-	public static final String DEV_URL = "https://akasolace.github.io/HO/release_notes(dev).html";
-	public static final String BETA_URL = "https://akasolace.github.io/HO/release_notes(beta).html";
-	public static final String STABLE_URL = "https://akasolace.github.io/HO/release_notes(stable).html";
+	private static final String DEV_URL = "https://akasolace.github.io/HO/release_notes(dev).html";
+	private static final String BETA_URL = "https://akasolace.github.io/HO/release_notes(beta).html";
+	private static final String STABLE_URL = "https://akasolace.github.io/HO/release_notes(stable).html";
 
 	/**
 	 * Check the external site for the latest version according to user preference regarding release channel
