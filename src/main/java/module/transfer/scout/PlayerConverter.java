@@ -33,6 +33,7 @@ public class PlayerConverter {
 
 	private int status;
     final private List<String> errorFields;
+    final private List<String> notSupportedFields;
     final HOVerwaltung homodel = HOVerwaltung.instance();
 
 	static {
@@ -49,6 +50,7 @@ public class PlayerConverter {
     public PlayerConverter() {
 
         errorFields = new ArrayList<String>();
+        notSupportedFields = new ArrayList<String>();
         status = SUCCESS;
         skills = new ArrayList<String>();
         skillvalues = new ArrayList<Integer>();
@@ -171,6 +173,15 @@ public class PlayerConverter {
      */
     public final List<String> getErrorFields() {
         return errorFields;
+    }
+
+    /**
+     * Returns possible not supported fiels. If notSupportedFields is non empty, there was some fields don't supported.
+     *
+     * @return Returns possible possible not supported fiels
+     */
+    public final List<String> getNotSupportedFields() {
+        return notSupportedFields;
     }
 
     /**
@@ -578,15 +589,19 @@ public class PlayerConverter {
         }
 
         //Price - Price is not present in HT copy button
+        /*
         txtTmp = "";
         if(!txtTmp.equals("")) {
             player.setPrice(Integer.parseInt(txtTmp));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("scout_price"));
         }
+        */
+        addNotSupportedField(HOVerwaltung.instance().getLanguageString("scout_price"));
 
         //Deadline - Date and Time expired is not present in HT copy button
-        setDeadline(player);
+        //setDeadline(player);
+        addNotSupportedField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
 
         return player;
     }
@@ -611,21 +626,9 @@ public class PlayerConverter {
         this.status = WARNING;
     }
 
-    public String getErrorFieldsTextList(){
-        String errorFieldsTxt = "";
-        if (errorFields.size()>0){
-            errorFieldsTxt = " (";
-            for (int i=0;i<errorFields.size();i++) {
-                if(i>=1) {
-                    errorFieldsTxt += ", ";
-                }
-                errorFieldsTxt += errorFields.get(i);
-            }
-            errorFieldsTxt += ")";
-        }
-        return errorFieldsTxt;
+    private void addNotSupportedField(String fieldName){
+        this.notSupportedFields.add(fieldName);
     }
-
 
     /**
      * Parses the copied text and returns a Player Object
@@ -1161,10 +1164,11 @@ public class PlayerConverter {
             } else {
                 player.setSpeciality(0);
             }
+
+            setDeadline(player);
+        }else{
+            status = ERROR;
         }
-
-        setDeadline(player);
-
         return player;
     }
 
