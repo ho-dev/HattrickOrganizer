@@ -45,10 +45,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -400,16 +403,18 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 		else if (source.equals(m_jmChangelog)) {
 			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-
-				URL url = HOMainFrame.class.getResource("/changelog.md");
-				if (url == null) {
-					JOptionPane.showMessageDialog(this, HOVerwaltung.instance().getLanguageString("Changelog.error"), HOVerwaltung.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
-				}
 				try {
-					Desktop.getDesktop().browse(url.toURI());
+					File jarFile = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+					URI logFile = jarFile.getParentFile().toPath().resolve("changelog.html").toUri();
+					Desktop.getDesktop().browse(logFile);
 				} catch (Exception e) {
+					JOptionPane.showMessageDialog(this, HOVerwaltung.instance().getLanguageString("Changelog.error"), HOVerwaltung.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
+			}
+			else
+			{
+				HOLogger.instance().log(HOMainFrame.class, "popopopopo");
 			}
 		}
 
@@ -832,9 +837,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		DBManager.instance().saveUserParameter();
 	}
 
-	public static int getHOStatus() {
-		return status;
-	}
 
 	public static void setHOStatus(int i) {
 		status = i;

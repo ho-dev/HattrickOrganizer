@@ -87,6 +87,7 @@ jar {
     exclude "looks-2.3.1.jar"
     exclude "scribe-1.3.0.jar"
     exclude "commons-codec-1.4.jar"
+    exclude "changelog.html"
 
 }
 
@@ -107,6 +108,7 @@ task osXjar(type: Jar) {
     exclude "looks-2.3.1.jar"
     exclude "scribe-1.3.0.jar"
     exclude "commons-codec-1.4.jar"
+    exclude "changelog.html"
 }
 
 
@@ -195,15 +197,20 @@ buildRpm {
 
 import java.text.SimpleDateFormat
 
-'poeditorPull'
+task generateChangelogHTML(type: GradleBuild) {
+    tasks = ['pushmd', 'markdownToHtml', 'pullhtml']
+}
+
 
 task init(type: GradleBuild) {
-    tasks = ['markdownToHtml', 'cleanBuild', 'poeditorPull', 'createLanguageFileList']
+    tasks = ['cleanBuild', 'generateChangelogHTML', 'poeditorPull', 'createLanguageFileList']
 }
 
 task finish(type: GradleBuild) {
     tasks = ['updatebuildreferences', 'compute_sha_sums']
 }
+
+
 
 
 task makeAll(type: GradleBuild) {
@@ -279,9 +286,6 @@ task makeWindowsBinarary(type: GradleBuild) {
 }
 
 task cleanBuild{
-    group 'ho'
-    description 'get HO Version'
-
     doLast {
         //     Deleting build project     ---------------------------------------------------------------------
         println("Deleting build project ....")
@@ -296,13 +300,29 @@ task cleanBuild{
         println("creating directory for artefacts: ${target_dir}")
         mkdir project.ext.target_dir
 
-        // Copying changelog
+    }
+}
+
+
+task pushmd {
+    doLast {
+        copy {
+            from "${projectDir}\\src\\main\\resources\\changelog.md"
+            into "${projectDir}\\docs\\changelog\\md"
+        }
+    }
+}
+
+task pullhtml {
+    doLast {
         copy {
             from "${projectDir}\\docs\\changelog\\html\\changelog.html"
             into "${projectDir}\\src\\main\\resources"
         }
     }
 }
+
+
 
 task AddResourcesInDistrib {
     group 'tool'
@@ -311,7 +331,7 @@ task AddResourcesInDistrib {
     doLast {
         println("adding resources folder")
         copy {
-            from "${projectDir}\\docs\\changelog\\html\\changelog.html"
+            from "${projectDir}\\src\\main\\resources\\changelog.html"
             into distribDir
         }
         copy {
@@ -421,7 +441,7 @@ task AddResourcesAndZipMacApp {
     doLast {
         println("adding resources folder")
         copy {
-            from "${projectDir}\\docs\\changelog\\html\\changelog.html"
+            from "${projectDir}\\src\\main\\resources\\changelog.html"
             into "${buildDir}\\macApp"
         }
         delete "${macAppDir}\\hamcrest-core-1.3.jar"
