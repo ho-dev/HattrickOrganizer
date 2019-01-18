@@ -72,7 +72,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private JCheckBox jchHomegrown = new JCheckBox();
     private JLabel jlRating = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Unbestimmt")
                                          + ": 0.0");
-    private JLabel jlStatus = new JLabel("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ":&nbsp<br />&nbsp</p></html>");
+    private JLabel jlStatus = new JLabel("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ":&nbsp<br />&nbsp<br />&nbsp</p></html>");
     private JTextArea jtaCopyPaste = new JTextArea(5, 20);
     private JTextArea jtaNotes = new JTextArea(5, 20);
     private JTextField jtfAge = new JTextField("17.0");
@@ -234,7 +234,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                 Helper.markierenComboBox(jcbStandards, player.getSetPieces());
                 jcbStandards.addItemListener(this);
                 jcbLoyalty.removeItemListener(this);
-                Helper.markierenComboBox(jcbLoyalty,player.getLoyalty());
+                Helper.markierenComboBox(jcbLoyalty, player.getLoyalty());
                 jcbLoyalty.addItemListener(this);
                 jchHomegrown.removeItemListener(this);
                 jchHomegrown.setSelected(player.isHomwGrown());
@@ -251,6 +251,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         } catch (Exception e) {
             HOLogger.instance().debug(getClass(), e);
             message = core.model.HOVerwaltung.instance().getLanguageString("scout_error");
+            message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
         }
 
         jtaCopyPaste.setText("");
@@ -259,21 +260,44 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
             switch (pc.getStatus()) {
                 case PlayerConverter.WARNING:
                     message = HOVerwaltung.instance().getLanguageString("scout_warning");
-                    message += " " + pc.getErrorFieldsTextList();
-                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");;
+                    message += " " + getFieldsTextList(pc.getErrorFields());
+                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
+                    if (pc.getNotSupportedFields().size() > 0) {
+                        message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
+                        message += " " + getFieldsTextList(pc.getNotSupportedFields());
+                    }
                     break;
                 case PlayerConverter.ERROR:
                     message = HOVerwaltung.instance().getLanguageString("scout_error");
-                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");;
+                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
                     break;
                 case PlayerConverter.EMPTY_INPUT_ERROR:
                     message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
                     break;
                 default:
                     message = HOVerwaltung.instance().getLanguageString("scout_success");
+                    if (pc.getNotSupportedFields().size() > 0) {
+                        message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
+                        message += " " + getFieldsTextList(pc.getNotSupportedFields());
+                    }
             }
         }
         jlStatus.setText("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ": " + message + "</p></html>");
+    }
+
+    private String getFieldsTextList(List<String> fields){
+        String errorFieldsTxt = "";
+        if (fields.size()>0){
+            //errorFieldsTxt = " (";
+            for (int i=0;i<fields.size();i++) {
+                if(i>=1) {
+                    errorFieldsTxt += ", ";
+                }
+                errorFieldsTxt += fields.get(i);
+            }
+            // errorFieldsTxt += ")";
+        }
+        return errorFieldsTxt;
     }
 
     private void close() {
@@ -384,7 +408,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         jcbSpeciality.addItemListener(this);
         panel.add(jcbSpeciality);
 
-		label = new JLabel("EPV");
+		label = new JLabel("");
 		panel.add(label);
 		panel.add(jtfEPV);
 

@@ -528,6 +528,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         } catch (Exception e) {
         	HOLogger.instance().debug(getClass(), e);
             message = HOVerwaltung.instance().getLanguageString("scout_error");
+            message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
         }
 
         jtaCopyPaste.setText("");
@@ -536,21 +537,44 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             switch (pc.getStatus()) {
                 case PlayerConverter.WARNING:
                     message = HOVerwaltung.instance().getLanguageString("scout_warning");
-                    message += " " + pc.getErrorFieldsTextList();
-                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");;
+                    message += " " + getFieldsTextList(pc.getErrorFields());
+                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
+                    if(pc.getNotSupportedFields().size()>0) {
+                        message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
+                        message += " " + getFieldsTextList(pc.getNotSupportedFields());
+                    }
                     break;
                 case PlayerConverter.ERROR:
                     message = HOVerwaltung.instance().getLanguageString("scout_error");
-                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");;
+                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
                     break;
                 case PlayerConverter.EMPTY_INPUT_ERROR:
                     message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
                     break;
                 default:
                     message = HOVerwaltung.instance().getLanguageString("scout_success");
+                    if(pc.getNotSupportedFields().size()>0) {
+                        message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
+                        message += " " + getFieldsTextList(pc.getNotSupportedFields());
+                    }
             }
         }
         jlStatus.setText("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ": " + message + "</p></html>");
+    }
+
+    private String getFieldsTextList(List<String> fields){
+        String errorFieldsTxt = "";
+        if (fields.size()>0){
+            //errorFieldsTxt = " (";
+            for (int i=0;i<fields.size();i++) {
+                if(i>=1) {
+                    errorFieldsTxt += ", ";
+                }
+                errorFieldsTxt += fields.get(i);
+            }
+            // errorFieldsTxt += ")";
+        }
+        return errorFieldsTxt;
     }
 
     /**
@@ -616,7 +640,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         jcbSpeciality.addItemListener(this);
         panel.add(jcbSpeciality);
 
-		label = new JLabel("EPV");
+		label = new JLabel("");
 		panel.add(label);
 		panel.add(jtfEPV);
 
