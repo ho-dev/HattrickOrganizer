@@ -49,7 +49,8 @@ def releaseArtefacts = false
 def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
 versionProps.load(new FileInputStream(versionPropsFile))
-def buildNumber = versionProps['buildNumber'] + 1
+def buildNumber = versionProps['buildNumber'] as Integer
+buildNumber += 1
 buildNumber =  buildNumber.toString()
 versionProps['buildNumber'] = buildNumber
 versionProps.store(versionPropsFile.newWriter(), null)
