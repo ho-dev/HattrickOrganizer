@@ -5,7 +5,8 @@ layout: page
 
 Changelist HO! 1.436
 ====================
-[Added]
+
+## Added
 - possibility for user to select and save release channel preference (DEV/BETA/STABLE)
 - display release notes before HO update
 - translation in csv player export
@@ -15,7 +16,7 @@ Changelist HO! 1.436
 - remove transfer button in transfer history panel
 - include direct link to download now version for mac user
 
-[Fixed]
+## Fixed
 - optimized build is saving approximately 35% disk space on produced binaries (bug #71)
 - Preference|Check had lot of non-working entries, it has been deleted (bug #80)
     - preference for HRF location save dialog has been moved into Preference|Download tab
@@ -33,7 +34,7 @@ Changelist HO! 1.436
 - wrong link in menu bout HO!  (bug #43)
 - small bugs related to update process on all platforms (bug #57)
 
-[Changed]
+## Changed
 - moved 'save HRF dialog' option to download tab (#80)
 - moved (and disabled) legacy 'update HO on download' option to release channel tab (#80)
 - appearence of release channel tab

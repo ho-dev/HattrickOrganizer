@@ -145,7 +145,7 @@ public final class UpdateController {
 			return "https://github.com/akasolace/HO/releases/download/dev/HO_" + full_version + ".zip";
 		} else {
 			String ver = Double.toString(version);
-			return "https://github.com/akasolace/HO/releases/download/" + ver + "/HO_" + ver + ".zip";
+			return "https://github.com/akasolace/HO/releases/download/" + ver + "/HO_" + full_version + ".zip";
 		}
 	}
 
