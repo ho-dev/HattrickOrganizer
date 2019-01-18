@@ -42,15 +42,14 @@ dependencies {
 def major = '1'
 def minor = '436'
 def development_stage = '0'
-def releaseArtefacts = false
+def releaseArtefacts = true
 
 //====================================================================================================================
 
 def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
 versionProps.load(new FileInputStream(versionPropsFile))
-def buildNumber = versionProps['buildNumber'] as Integer
-buildNumber += 1
+def buildNumber = (versionProps['buildNumber'] as Integer) + 1
 buildNumber =  buildNumber.toString()
 versionProps['buildNumber'] = buildNumber
 versionProps.store(versionPropsFile.newWriter(), null)
@@ -198,27 +197,32 @@ buildRpm {
 
 import java.text.SimpleDateFormat
 
-task generateChangelogHTML(type: GradleBuild) {
-    tasks = ['pushmd', 'markdownToHtml', 'pullhtml']
-}
+//task generateChangelogHTML(type: GradleBuild) {
+//    tasks = ['pushmd', 'markdownToHtml', 'pullhtml']
+//}
 
 
-task init(type: GradleBuild) {
-    tasks = ['cleanBuild', 'generateChangelogHTML', 'poeditorPull', 'createLanguageFileList']
-}
+//task init(type: GradleBuild) {
+//    tasks = ['cleanBuild', 'generateChangelogHTML', 'poeditorPull', 'createLanguageFileList']
+//}
 
-task finish(type: GradleBuild) {
-    tasks = ['updatebuildreferences', 'compute_sha_sums']
-}
+//task finish(type: GradleBuild) {
+//    tasks = ['updatebuildreferences', 'compute_sha_sums']
+//}
 
-
-
+//task makeAll(type: GradleBuild) {
+//    group 'ho'
+//    description 'Create ZipDistribution, Windows, MacOS and Linux binaries'
+//    tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'buildDeb',
+//             'finishDeb', 'buildRpm', 'finishRpm', 'osXjar', 'createApp', 'AddResourcesAndZipMacApp', 'finish']
+//}
 
 task makeAll(type: GradleBuild) {
     group 'ho'
     description 'Create ZipDistribution, Windows, MacOS and Linux binaries'
-    tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'buildDeb',
-             'finishDeb', 'buildRpm', 'finishRpm', 'osXjar', 'createApp', 'AddResourcesAndZipMacApp', 'finish']
+    tasks = ['cleanBuild', 'pushmd', 'markdownToHtml', 'pullhtml', 'poeditorPull', 'createLanguageFileList',
+             'installDist', 'AddResourcesInDistrib', 'makeWinInstaller', 'ZipDistribution', 'buildDeb',
+             'finishDeb', 'buildRpm', 'finishRpm', 'osXjar', 'createApp', 'AddResourcesAndZipMacApp', 'updatebuildreferences', 'compute_sha_sums']
 }
 
 task makeosX(type: GradleBuild) {
