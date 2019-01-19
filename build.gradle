@@ -42,7 +42,7 @@ dependencies {
 def major = '1'
 def minor = '436'
 def development_stage = '0'
-def releaseArtefacts = true
+def releaseArtefacts = false
 
 //====================================================================================================================
 
@@ -532,6 +532,10 @@ task compute_sha_sums(){
 //        }
 //    }}
 
+poeditorPull {
+    outputs.upToDateWhen { false }
+}
+
 
 poeditor {
     apiKey = POEDITOR_APIKEY
@@ -544,6 +548,7 @@ poeditor {
     trans type:'properties', lang: 'nl', file: 'src\\main\\resources\\sprache\\Nederlands.properties'
     trans type:'properties', lang: 'fr', file: 'src\\main\\resources\\sprache\\French.properties'
     trans type:'properties', lang: 'de', file: 'src\\main\\resources\\sprache\\Deutsch.properties'
+    trans type:'properties', lang: 'hu', file: 'src\\main\\resources\\sprache\\Magyar.properties'  //Hungarian
     trans type:'properties', lang: 'it', file: 'src\\main\\resources\\sprache\\Italiano.properties'
     trans type:'properties', lang: 'lv', file: 'src\\main\\resources\\sprache\\Latvija.properties' //#Lettonie
     trans type:'properties', lang: 'pl', file: 'src\\main\\resources\\sprache\\Polish.properties'
