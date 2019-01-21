@@ -108,6 +108,7 @@ task osXjar(type: Jar) {
     exclude "looks-2.3.1.jar"
     exclude "scribe-1.3.0.jar"
     exclude "commons-codec-1.4.jar"
+    exclude "changelog.md"
     exclude "changelog.html"
 }
 
@@ -447,14 +448,14 @@ task AddResourcesAndZipMacApp {
         println("adding resources folder")
         copy {
             from "${projectDir}\\src\\main\\resources\\changelog.html"
-            into "${buildDir}\\macApp"
+            into "${buildDir}\\macApp\\HO.app"
         }
         delete "${macAppDir}\\hamcrest-core-1.3.jar"
         delete "${macAppDir}\\junit-4.12.jar"
 
         println("zipping MacApp distribution")
         task(ZipMacAppDistribution, type: Tar) {
-            archiveName = "HO_${project.version}_OSX.zip"
+            archiveName = "HO_${project.version}_macOS.zip"
             destinationDir = file("${project.ext.target_dir}")
             from ("${buildDir}\\macApp") {exclude("**\\JavaAppLauncher")}
             from ("${buildDir}\\macApp") {

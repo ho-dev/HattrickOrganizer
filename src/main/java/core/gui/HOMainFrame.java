@@ -405,7 +405,9 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
 				try {
 					File jarFile = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
-					URI logFile = jarFile.getParentFile().toPath().resolve("changelog.html").toUri();
+					URI logFile;
+					if (!isMac()) {logFile = jarFile.getParentFile().toPath().resolve("changelog.html").toUri();}
+					else {logFile = jarFile.getParentFile().getParentFile().toPath().resolve("changelog.html").toUri();}
 					Desktop.getDesktop().browse(logFile);
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(this, HOVerwaltung.instance().getLanguageString("Changelog.error"), HOVerwaltung.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
