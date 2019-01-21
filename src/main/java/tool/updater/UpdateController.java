@@ -83,7 +83,7 @@ public final class UpdateController {
 				 * a direct url link for downloading the relevant osX app package -according to his release channel preference.
 				 */
 				String macos_zip_download_url = get_HO_zip_download_url(updVersion.getfullVersion(), updVersion.getVersion(),versionType);
-				macos_zip_download_url = macos_zip_download_url.replace(".zip","_OSX.zip");
+				macos_zip_download_url = macos_zip_download_url.replace(".zip","_macOS.zip");
 				JOptionPane.showMessageDialog(HOMainFrame.instance(),
 					new UpdaterPanel("<html><body>" + updateAvailable + "<br/><br/>"
 						+ "<font color=gray>" + HOVerwaltung.instance().getLanguageString("ls.version") + ":</font>"
