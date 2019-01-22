@@ -22,14 +22,14 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
  - small bugs related to update process on all platforms (bug #57)
  
  ## Added
-  - possibility for user to select and save release channel preference (DEV/BETA/STABLE)
-  - display release notes before HO update
-  - translation in csv player export
-  - support for new HT layout by HT Copy Button in Transfer Scout
-  - team transfer update now includes individual histories
-  - information that player has been fired in transfer history panel
-  - remove transfer button in transfer history panel
-  - include direct link to download now version for mac user
+ - possibility for user to select and save release channel preference (DEV/BETA/STABLE)
+ - display release notes before HO update
+ - translation in csv player export
+ - support for new HT layout by HT Copy Button in Transfer Scout
+ - team transfer update now includes individual histories
+ - information that player has been fired in transfer history panel
+ - remove transfer button in transfer history panel
+ - include direct link to download now version for mac user
 
 ## Changed
  - moved 'save HRF dialog' option to download tab (#80)

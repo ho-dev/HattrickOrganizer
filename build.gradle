@@ -41,7 +41,7 @@ dependencies {
 
 def major = '1'
 def minor = '436'
-def development_stage = '0'
+def development_stage = '1'
 def releaseArtefacts = false
 
 //====================================================================================================================
