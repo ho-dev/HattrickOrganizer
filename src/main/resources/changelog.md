@@ -21,7 +21,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
  - wrong link in menu bout HO!  (bug #43)
  - small bugs related to update process on all platforms (bug #57)
  
- ## Added
+## Added
  - possibility for user to select and save release channel preference (DEV/BETA/STABLE)
  - display release notes before HO update
  - translation in csv player export
@@ -34,7 +34,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ## Changed
  - moved 'save HRF dialog' option to download tab (#80)
  - moved (and disabled) legacy 'update HO on download' option to release channel tab (#80)
- - appearence of release channel tab
+ - appearance of release channel tab
 
 
 Changelist HO! 1.435
