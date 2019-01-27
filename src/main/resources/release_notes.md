@@ -33,6 +33,7 @@ Changelist HO! 1.436
 - player data is no longer missing from transfer history top panel  (bug #45)
 - wrong link in menu bout HO!  (bug #43)
 - small bugs related to update process on all platforms (bug #57)
+- wages/prices are formatted as team local currency as opposed to host system currency (bug #93)
 
 ## Changed
 - moved 'save HRF dialog' option to download tab (#80)

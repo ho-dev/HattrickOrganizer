@@ -20,6 +20,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
  - player data is no longer missing from transfer history top panel  (bug #45)
  - wrong link in menu bout HO!  (bug #43)
  - small bugs related to update process on all platforms (bug #57)
+ - wages/prices are formatted as team local currency as opposed to host system currency (bug #93)
  
 ## Added
  - possibility for user to select and save release channel preference (DEV/BETA/STABLE)
