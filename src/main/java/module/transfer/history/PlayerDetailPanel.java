@@ -308,7 +308,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
                 }
             }
 
-            income.setText(HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyName() + " " + valIncome);
+            income.setText(core.util.Helper.getNumberFormat(true, 0).format(valIncome));
             refreshPlayerTable(transfers);
         }
     }
