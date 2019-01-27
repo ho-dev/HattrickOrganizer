@@ -259,9 +259,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 			label.validate();
 		}
 		else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.wage")))	{
-			XtraData extraData = HOVerwaltung.instance().getModel().getXtraDaten();
-			String curr = "" + df.format(Double.parseDouble(value.toString())) + " " + extraData.getCurrencyName();
-			label.setText(curr);
+			label.setText(Helper.getNumberFormat(true, 0).format(value));
 
 			label.setHorizontalAlignment(SwingConstants.RIGHT);
 			label.setBackground(table.getBackground());

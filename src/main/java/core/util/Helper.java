@@ -92,7 +92,7 @@ public class Helper {
 		new CBItem("", Weather.PARTIALLY_CLOUDY.getId()), new CBItem("", Weather.OVERCAST.getId()), 
 		new CBItem("", Weather.RAINY.getId()) };
 
-	public static NumberFormat CURRENCYFORMAT = java.text.NumberFormat.getCurrencyInstance();
+	public static NumberFormat CURRENCYFORMAT = java.text.NumberFormat.getCurrencyInstance(LocaleResolve.parse(HOVerwaltung.instance().getModel().getBasics().getLiga()));
 
     /** wird für das Parsen in parseFloat benötigt */
     public static DecimalFormat INTEGERFORMAT = new java.text.DecimalFormat("#0");
