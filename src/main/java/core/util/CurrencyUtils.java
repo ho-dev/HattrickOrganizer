@@ -424,6 +424,10 @@ public class CurrencyUtils {
 
 		CURRENCYSYMBOL = getCurrencySymbol(leagueLocale);
 
+		String systemCountryName = Locale.getDefault().getDisplayCountry(Locale.US);
+		String leagueCountryName = leagueLocale.getDisplayCountry(Locale.US);
+		if(leagueCountryName.equals(systemCountryName)) formatter = (DecimalFormat)DecimalFormat.getCurrencyInstance();
+
 		if(formatter == null) formatter = (DecimalFormat)DecimalFormat.getCurrencyInstance(leagueLocale);
 
 		return formatter;
