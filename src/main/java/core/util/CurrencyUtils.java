@@ -7,6 +7,8 @@ import java.text.DecimalFormatSymbols;
 
 public class CurrencyUtils {
 
+	public static String CURRENCYSYMBOL = "";
+
 	private CurrencyUtils() {}
 
 	static NumberFormat getLeagueCurrencyFormater(int leagueID) {
@@ -419,6 +421,8 @@ public class CurrencyUtils {
 			default:
 				leagueLocale = Locale.getDefault();
 		}
+
+		CURRENCYSYMBOL = getCurrencySymbol(leagueLocale);
 
 		if(formatter == null) formatter = (DecimalFormat)DecimalFormat.getCurrencyInstance(leagueLocale);
 

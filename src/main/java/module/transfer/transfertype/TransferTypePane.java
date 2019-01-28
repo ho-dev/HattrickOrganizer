@@ -6,6 +6,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.Spieler;
+import core.util.CurrencyUtils;
 import module.training.ui.comp.DividerListener;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
@@ -219,7 +220,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
                 c.col1 = 2;
                 c.col2 = c.col1;
                 c.hAlign = TableLayoutConstants.CENTER;
-                this.sidePanel.add(new JLabel(HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyName()),
+                this.sidePanel.add(new JLabel(CurrencyUtils.CURRENCYSYMBOL),
                                    c);
 
                 c.col1 = 3;
@@ -250,7 +251,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
         c.col1 = 2;
         c.col2 = c.col1;
         c.hAlign = TableLayoutConstants.CENTER;
-        this.sidePanel.add(new JLabel(HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyName()), c);
+        this.sidePanel.add(new JLabel(CurrencyUtils.CURRENCYSYMBOL), c);
 
         c.col1 = 3;
         c.col2 = c.col1;
