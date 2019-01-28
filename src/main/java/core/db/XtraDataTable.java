@@ -20,7 +20,6 @@ final class XtraDataTable extends AbstractTable {
 		columns[0]= new ColumnDescriptor( "HRF_ID",				Types.INTEGER,	false, true );
 		columns[1]= new ColumnDescriptor( "CurrencyRate",		Types.REAL,		false );
 		columns[2]= new ColumnDescriptor( "HasPromoted",		Types.BOOLEAN,	false );
-		columns[3]= new ColumnDescriptor( "CurrencyName",		Types.VARCHAR,	false, 127);
 		columns[4]= new ColumnDescriptor( "LogoURL",			Types.VARCHAR,	false, 127);
 		columns[5]= new ColumnDescriptor( "SeriesMatchDate",	Types.TIMESTAMP,false );
 		columns[6]= new ColumnDescriptor( "TrainingDate",		Types.TIMESTAMP,false );
@@ -74,7 +73,7 @@ final class XtraDataTable extends AbstractTable {
 			deleteXtraDaten(hrfId);
 
 			//insert vorbereiten
-			statement = "INSERT INTO "+getTableName()+" ( HRF_ID , CurrencyRate, HasPromoted , CurrencyName , LogoURL , SeriesMatchDate ,TrainingDate, EconomyDate, LeagueLevelUnitID ) VALUES(";
+			statement = "INSERT INTO "+getTableName()+" ( HRF_ID , CurrencyRate, HasPromoted , LogoURL , SeriesMatchDate ,TrainingDate, EconomyDate, LeagueLevelUnitID ) VALUES(";
 			statement
 				+= (""
 					+ hrfId
@@ -83,8 +82,6 @@ final class XtraDataTable extends AbstractTable {
 					+ ","
 					+ hasProm
 					+ ",'"
-					+ core.db.DBManager.insertEscapeSequences(xtra.getCurrencyName())
-					+ "','"
 					+ core.db.DBManager.insertEscapeSequences(xtra.getLogoURL())
 					+ "', '"
 					+ xtra.getSeriesMatchDate()

@@ -124,8 +124,6 @@ public class XMLWorldDetailsParser {
 					
 					// Remove for ugly second team fix
 					
-//					ele = (Element) root.getElementsByTagName("CurrencyName").item(0);
-//					map.put("CurrencyName", (XMLManager.getFirstChildNodeValue(ele)));
 //					ele = (Element) root.getElementsByTagName("CurrencyRate").item(0);
 //					map.put("CurrencyRate", (XMLManager.getFirstChildNodeValue(ele)));
 
@@ -148,9 +146,7 @@ public class XMLWorldDetailsParser {
 		root = (Element) root.getElementsByTagName("LeagueList").item(0);
 		root = (Element) root.getElementsByTagName("Country").item(0);
 		
-		Element ele = (Element) root.getElementsByTagName("CurrencyName").item(0);
-		info.setCurrencyName(XMLManager.getFirstChildNodeValue(ele));
-		ele = (Element) root.getElementsByTagName("CurrencyRate").item(0);
+		Element ele = (Element) root.getElementsByTagName("CurrencyRate").item(0);
 		info.setCurrencyRate(XMLManager.getFirstChildNodeValue(ele));
 		
 		return info;

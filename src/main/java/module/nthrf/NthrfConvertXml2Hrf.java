@@ -460,9 +460,7 @@ class NthrfConvertXml2Hrf {
 		m_sHRFBuffer.append("TrainingDate=" + world.get("TrainingDate") + "\n");
 		m_sHRFBuffer.append("EconomyDate=" + world.get("EconomyDate") + "\n");
 		m_sHRFBuffer.append("SeriesMatchDate=" + world.get("SeriesMatchDate") + "\n");
-//		m_sHRFBuffer.append("CurrencyName=" + world.get("CurrencyName") + "\n");
 //		m_sHRFBuffer.append("CurrencyRate=" + world.get("CurrencyRate").toString().replace(',', '.') + "\n");
-		m_sHRFBuffer.append("CurrencyName=€\n");
 		m_sHRFBuffer.append("CurrencyRate=10\n");
 		
 		m_sHRFBuffer.append("LogoURL=" + details.getHomePageUrl() + "\n");

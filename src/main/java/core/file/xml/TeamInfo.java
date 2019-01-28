@@ -8,7 +8,6 @@ public class TeamInfo {
 	private String league;
 	private int leagueId;
 	private String currencyRate;
-	private String currencyName;
 	private boolean primaryTeam;
 	
 	public int getTeamId() {
@@ -57,14 +56,6 @@ public class TeamInfo {
 
 	public void setCurrencyRate(String currencyRate) {
 		this.currencyRate = currencyRate;
-	}
-
-	public String getCurrencyName() {
-		return currencyName;
-	}
-
-	public void setCurrencyName(String currencyName) {
-		this.currencyName = currencyName;
 	}
 
 	public boolean isPrimaryTeam() {

@@ -109,7 +109,6 @@ public class ConvertXml2Hrf {
 		// Currency fix
 		
 		if (ModuleConfig.instance().containsKey("CurrencyRate")) {
-			worldDataMap.put("CurrencyName", ModuleConfig.instance().getString("CurrencyName"));
 			worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("CurrencyRate"));
 		} else {
 			// We need to get hold of the currency info for the primary team, no matter which team we download.
@@ -129,10 +128,8 @@ public class ConvertXml2Hrf {
 				
 				primary = XMLWorldDetailsParser.updateTeamInfoWithCurrency(primary, mc.getWorldDetails(primary.getLeagueId()));
 				
-				ModuleConfig.instance().setString("CurrencyName", primary.getCurrencyName().trim());
 				ModuleConfig.instance().setString("CurrencyRate", primary.getCurrencyRate().trim());
 				
-				worldDataMap.put("CurrencyName", ModuleConfig.instance().getString("CurrencyName"));
 				worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("CurrencyRate"));
 			} else {
 				HOLogger.instance().error(ConvertXml2Hrf.class, "ConvertXML2Hrf: No primary team found!");
@@ -1108,8 +1105,6 @@ public class ConvertXml2Hrf {
 				.append('\n');
 		buffer.append("SeriesMatchDate=")
 				.append(worldDataMap.get("SeriesMatchDate")).append('\n');
-		buffer.append("CurrencyName=").append(worldDataMap.get("CurrencyName"))
-				.append('\n');
 		buffer.append("CurrencyRate=")
 				.append(worldDataMap.get("CurrencyRate").toString()
 						.replace(',', '.')).append('\n');

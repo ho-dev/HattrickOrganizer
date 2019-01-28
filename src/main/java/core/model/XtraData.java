@@ -8,7 +8,6 @@ import core.util.HOLogger;
 public class XtraData  {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private String m_sCurrencyName;
     private String m_sLogoURL;
     private java.sql.Timestamp m_clEconomyDate;
     private java.sql.Timestamp m_clSeriesMatchDate;
@@ -26,7 +25,6 @@ public class XtraData  {
         m_dCurrencyRate = Double.parseDouble(properties.getProperty("currencyrate", "1"));
         m_bHasPromoted = Boolean.valueOf(properties.getProperty("haspromoted", "FALSE"))
                                 .booleanValue();
-        m_sCurrencyName = properties.getProperty("currencyname", "");
         m_sLogoURL = properties.getProperty("logourl", "");
         m_clSeriesMatchDate = core.util.Helper.parseDate(properties.getProperty("seriesmatchdate"));
         m_clEconomyDate = core.util.Helper.parseDate(properties.getProperty("economydate"));
@@ -44,7 +42,6 @@ public class XtraData  {
     public XtraData(java.sql.ResultSet rs) throws Exception {
         try {
             m_dCurrencyRate = rs.getDouble("CurrencyRate");
-            m_sCurrencyName = core.db.DBManager.deleteEscapeSequences(rs.getString("CurrencyName"));
             m_sLogoURL = core.db.DBManager.deleteEscapeSequences(rs.getString("LogoURL"));
             m_bHasPromoted = rs.getBoolean("HasPromoted");
             m_clSeriesMatchDate = rs.getTimestamp("SeriesMatchDate");
@@ -59,24 +56,6 @@ public class XtraData  {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-
-    /**
-     * Setter for property m_sCurrencyName.
-     *
-     * @param m_sCurrencyName New value of property m_sCurrencyName.
-     */
-    public final void setCurrencyName(java.lang.String m_sCurrencyName) {
-        this.m_sCurrencyName = m_sCurrencyName;
-    }
-
-    /**
-     * Getter for property m_sCurrencyName.
-     *
-     * @return Value of property m_sCurrencyName.
-     */
-    public final java.lang.String getCurrencyName() {
-        return m_sCurrencyName;
-    }
 
     /**
      * Setter for property m_dCurrencyRate.
