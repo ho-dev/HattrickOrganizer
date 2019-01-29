@@ -92,19 +92,19 @@ public class Helper {
 		new CBItem("", Weather.PARTIALLY_CLOUDY.getId()), new CBItem("", Weather.OVERCAST.getId()), 
 		new CBItem("", Weather.RAINY.getId()) };
 
-	public static NumberFormat CURRENCYFORMAT = java.text.NumberFormat.getCurrencyInstance(LocaleResolve.parse(HOVerwaltung.instance().getModel().getBasics().getLiga()));
+	public static NumberFormat CURRENCYFORMAT = CurrencyUtils.getLeagueCurrencyFormater(HOVerwaltung.instance().getModel().getBasics().getLiga());
 
     /** wird für das Parsen in parseFloat benötigt */
-    public static DecimalFormat INTEGERFORMAT = new java.text.DecimalFormat("#0");
+    public static DecimalFormat INTEGERFORMAT = new DecimalFormat("#0");
 
     /** decimal format - 1 fraction digit */
-    public static DecimalFormat DEFAULTDEZIMALFORMAT = new java.text.DecimalFormat("#0.0");
+    public static DecimalFormat DEFAULTDEZIMALFORMAT = new DecimalFormat("#0.0");
 
     /** decimal format - 2 fraction digits */
-    public static DecimalFormat DEZIMALFORMAT_2STELLEN = new java.text.DecimalFormat("#0.00");
+    public static DecimalFormat DEZIMALFORMAT_2STELLEN = new DecimalFormat("#0.00");
 
     /** decimal format - 3 fraction digits */
-    public static DecimalFormat DEZIMALFORMAT_3STELLEN = new java.text.DecimalFormat("#0.000");
+    public static DecimalFormat DEZIMALFORMAT_3STELLEN = new DecimalFormat("#0.000");
 
     /** Schon eine Meldung angezeigt? */
     public static boolean paneShown;

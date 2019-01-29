@@ -11,6 +11,7 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.net.login.LoginWaitDialog;
 import core.util.Helper;
+import core.util.CurrencyUtils;
 import module.training.ui.comp.DividerListener;
 import module.transfer.PlayerTransfer;
 import module.transfer.ui.layout.TableLayout;
@@ -211,9 +212,8 @@ public class HistoryPane extends JSplitPane {
         amountPanel.add(amountTransfersIn, "5, 1");
         amountPanel.add(amTransOut, "4, 2");
         amountPanel.add(amountTransfersOut, "5, 2");
-
         pricePanel = new TotalsPanel(hoV.getLanguageString("Price"),
-        		hoV.getModel().getXtraDaten().getCurrencyName());
+        		CurrencyUtils.CURRENCYSYMBOL);
         tsiPanel = new TotalsPanel(hoV.getLanguageString("ls.player.tsi")); //$NON-NLS-1$
 
         sidePanel.add(filterPanel, "0, 0");
