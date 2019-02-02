@@ -37,11 +37,11 @@ dependencies {
 // Development_stage
 // 0 for DEV status
 // 1 for BETA status
-// 2 for RELEASE status
+// 2 for STABLE status
 
 def major = '1'
-def minor = '436'
-def development_stage = '1'
+def minor = '437'
+def development_stage = '0'
 def releaseArtefacts = false
 
 //====================================================================================================================
