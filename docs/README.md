@@ -53,8 +53,8 @@
 
 ## Localization
 
-If you want to see current translations status or contribute please visit HO translation [website](https://poeditor.com/join/project/jCaWGL1JCl)
-If the language you are interested in is not listed please open a request
+If you want to contribute or see current translation status please visit HO translation [website](https://poeditor.com/join/project/jCaWGL1JCl).   
+Please open a request if the language you are interested in is not listed.
 
 ## Development workflow
 
@@ -62,7 +62,7 @@ A single master branch record the history of the project.
 
 To contribute features, you should clone the repository, create a tracking branch for develop and create the feature.
 When the feature is ready, you can make a pull request to merge that feature into master. 
-Please read first the [contribution guide](contributing.md)
+Please read the [contribution guide](contributing.md) first.
 
 
 ## Releases
