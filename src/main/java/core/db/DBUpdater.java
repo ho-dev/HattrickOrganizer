@@ -88,6 +88,8 @@ final class DBUpdater {
                     updateDBv22(DBVersion, version);
                 case 22:
                     updateDBv23(DBVersion, version);
+                case 23:
+                    updateDBv24(DBVersion, version);
 				}
 				
 
@@ -594,6 +596,37 @@ final class DBUpdater {
         }
     }
 	
+	private void updateDBv24(int DBVersion, int version) throws SQLException {
+		// 1.438
+		if (columnExistsInTable("MATCHREPORT", MatchDetailsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ALTER COLUMN MATCHREPORT SET DATA TYPE VARCHAR(20000)"); // fix an existing bug - 15 000 was not enough
+		}
+
+		if (!columnExistsInTable("HEIMHATSTATS", MatchDetailsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HEIMHATSTATS INTEGER");
+			m_clJDBCAdapter.executeUpdate("UPDATE MATCHDETAILS SET HEIMHATSTATS = HEIMLEFTATT + HEIMRIGHTATT + HEIMMIDATT + 3 * HEIMMIDFIELD + HEIMLEFTDEF + HEIMRIGHTDEF + HEIMMIDDEF");
+		}
+
+		if (!columnExistsInTable("GASTHATSTATS", MatchDetailsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GASTHATSTATS INTEGER");
+			m_clJDBCAdapter.executeUpdate("UPDATE MATCHDETAILS SET GASTHATSTATS = GASTLEFTATT + GASTRIGHTATT + GASTMIDATT + 3 * GASTMIDFIELD + GASTLEFTDEF + GASTRIGHTDEF + GASTMIDDEF");
+		}
+
+		if (version < DBVersion) {
+			if(!HO.isDevelopment()) {
+				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
+				dbZugriff.saveUserParameter("DBVersion", DBVersion);
+			} else {
+				HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
+				dbZugriff.saveUserParameter("DBVersion", DBVersion - 1);
+			}
+		} else {
+			HOLogger.instance().info(DBUpdater.class,
+					"Update done, db version number will NOT be increased from " + version
+					+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
+		}
+	}
+
 	/**
 	 * Automatic update of User Configuration parameters
 	 * 
