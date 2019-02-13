@@ -11,12 +11,12 @@ import core.util.Helper;
 import java.math.BigDecimal;
 
 
-class ArenaSizer {
+public class ArenaSizer {
 
-    private static final float ADMISSION_PRICE_TERRACES = 70f;
-    private static final float ADMISSION_PRICE_BASICS = 100f;
-    private static final float ADMISSION_PRICE_ROOF = 190f;
-    private static final float ADMISSION_PRICE_VIP = 350f;
+    public static final float ADMISSION_PRICE_TERRACES = 70f;
+    public static final float ADMISSION_PRICE_BASICS = 100f;
+    public static final float ADMISSION_PRICE_ROOF = 190f;
+    public static final float ADMISSION_PRICE_VIP = 350f;
 
     private static final float MAINTENANCE_TERRACES = 5f;
     private static final float MAINTENANCE_BASICS = 7f;
