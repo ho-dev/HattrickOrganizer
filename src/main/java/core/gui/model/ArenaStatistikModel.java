@@ -3,6 +3,7 @@ package core.gui.model;
 
 import core.model.match.MatchType;
 import core.util.HOLogger;
+import tool.arenasizer.ArenaSizer;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -52,7 +53,20 @@ public class ArenaStatistikModel {
     private int maxRoof;
     private int maxVip;
 
+    private float currencyFactor;
+    private float terracesIncome;
+    private float basicSeatIncome;
+    private float seatRoofIncome;
+    private float vipIncome;
+    private float totalIncome;
+    private float matchTypeFactor;
+
     //~ Methods ------------------------------------------------------------------------------------
+
+
+    public ArenaStatistikModel() {
+        currencyFactor = core.model.UserParameter.instance().faktorGeld;
+    }
 
     /**
      * Setter for property m_iArenaGroesse.
@@ -412,6 +426,67 @@ public class ArenaStatistikModel {
 
     public void setMaxVip(int maxVip) {
         this.maxVip = maxVip;
+    }
+
+    public float getTerracesIncome() {
+        terracesIncome = getSoldTerraces() * (getMatchTypeFactor() * ArenaSizer.ADMISSION_PRICE_TERRACES / currencyFactor);
+        return terracesIncome;
+    }
+
+    public float getBasicSeatIncome() {
+        basicSeatIncome = getSoldBasics() * (getMatchTypeFactor() * ArenaSizer.ADMISSION_PRICE_BASICS / currencyFactor);
+        return basicSeatIncome;
+    }
+
+    public float getSeatRoofIncome() {
+        seatRoofIncome = getSoldRoof() * (getMatchTypeFactor() * ArenaSizer.ADMISSION_PRICE_ROOF / currencyFactor);
+        return seatRoofIncome;
+    }
+
+    public float getVipIncome() {
+        vipIncome = getSoldVip() * (getMatchTypeFactor() * ArenaSizer.ADMISSION_PRICE_VIP / currencyFactor);
+        return vipIncome;
+    }
+
+    public float getTotalIncome() {
+        totalIncome = getTerracesIncome() + getBasicSeatIncome() + getSeatRoofIncome() + getVipIncome();
+        return totalIncome;
+    }
+
+    /*
+            From HT Manual
+            League matches: The home team takes all the income.
+            Cup matches: The home team takes 2/3 of the income and away team gets 1/3.
+            Friendlies and qualifiers: Income is split evenly
+    */
+    public float getMatchTypeFactor() {
+        switch (m_mtMatchTyp) {
+            case LEAGUE:
+                matchTypeFactor = 1;
+                break;
+            case CUP:
+                matchTypeFactor = (float) 2/3;
+                break;
+            case FRIENDLYCUPRULES:
+            case INTFRIENDLYCUPRULES:
+            case FRIENDLYNORMAL:
+            case INTFRIENDLYNORMAL:
+            case MASTERS:
+            case QUALIFICATION:
+                matchTypeFactor = (float) 1/2;
+                break;
+            case TOURNAMENTGROUP:
+            case TOURNAMENTPLAYOFF:
+            case NATIONALFRIENDLY:
+            case NONE:
+            case NATIONALCOMPCUPRULES:
+            case INTSPIEL:
+            case NATIONALCOMPNORMAL:
+            default:
+                matchTypeFactor = 0;
+                break;
+        }
+        return matchTypeFactor;
     }
 
     //--------------------------------------------------------------

@@ -90,14 +90,14 @@ public class ArenaStatistikTable extends JTable {
 
         final TableColumnModel tableColumnModel = getColumnModel();
 
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < tableColumnModel.getColumnCount(); i++) {
             tableColumnModel.getColumn(i).setIdentifier(new Integer(i));
         }
 
         m_clTableSorter.addMouseListenerToHeaderInTable(this);
 
         setAutoResizeMode(AUTO_RESIZE_OFF);
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(0))).setPreferredWidth(Helper.calcCellWidth(75));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(0))).setPreferredWidth(Helper.calcCellWidth(85));
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(0))).setMinWidth(Helper.calcCellWidth(70));
 
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(1))).setPreferredWidth(Helper.calcCellWidth(20));
@@ -109,9 +109,10 @@ public class ArenaStatistikTable extends JTable {
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(3))).setMinWidth(Helper.calcCellWidth(55));
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(3))).setPreferredWidth(Helper.calcCellWidth(60));
 
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(4))).setPreferredWidth(Helper.calcCellWidth(30));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(4))).setMinWidth(Helper.calcCellWidth(25));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(4))).setPreferredWidth(Helper.calcCellWidth(25));
 
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(5))).setPreferredWidth(Helper.calcCellWidth(55));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(5))).setPreferredWidth(Helper.calcCellWidth(85));
 
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(6))).setPreferredWidth(Helper.calcCellWidth(150));
 
@@ -119,15 +120,9 @@ public class ArenaStatistikTable extends JTable {
 
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(8))).setPreferredWidth(Helper.calcCellWidth(110));
 
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(9))).setPreferredWidth(Helper.calcCellWidth(110));
-
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(10))).setPreferredWidth(Helper.calcCellWidth(90));
-
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(11))).setPreferredWidth(Helper.calcCellWidth(90));
-
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(12))).setPreferredWidth(Helper.calcCellWidth(90));
-
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(13))).setPreferredWidth(Helper.calcCellWidth(90));
+        for (int i = 9; i < tableColumnModel.getColumnCount(); i++) {
+            tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(i))).setPreferredWidth(Helper.calcCellWidth(90));
+        }
 
         setSelectionMode(0);
         setRowSelectionAllowed(true);
@@ -137,7 +132,6 @@ public class ArenaStatistikTable extends JTable {
     
     private void reInitModel(int matchtyp) {
         m_clTableModel = DBManager.instance().getArenaStatistikModel(matchtyp);
-
         m_clTableSorter = new TableSorter(m_clTableModel, 5, -1);
         setModel(m_clTableSorter);
     }

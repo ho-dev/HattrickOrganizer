@@ -7,12 +7,10 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchType;
 import core.model.misc.Finanzen;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
-import tool.arenasizer.ArenaSizer;
 
 import java.awt.Color;
 import java.text.DateFormat;
@@ -37,24 +35,27 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			HOVerwaltung.instance().getLanguageString("ls.match.result"),
 			HOVerwaltung.instance().getLanguageString("ls.match.weather"),
 			HOVerwaltung.instance().getLanguageString("ls.match.id"),
-			// Stadiongroesse
-			HOVerwaltung.instance().getLanguageString("Aktuell"),
-			// Zuschauer
-			HOVerwaltung.instance().getLanguageString("Zuschauer"),
+			HOVerwaltung.instance().getLanguageString("Aktuell"), // Stadiongroesse
+			HOVerwaltung.instance().getLanguageString("Zuschauer"), // Zuschauer
 			"%", // Auslastung
-			"Total Income", // Total Income
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.total"), // Income Total
+
 			HOVerwaltung.instance().getLanguageString("ls.club.arena.terraces"),
 			"%", // Percentage of crowd on the terraces
-			"terraces Income", // terraces Income
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.terraces"), // Income Terraces
+
 			HOVerwaltung.instance().getLanguageString("ls.club.arena.basicseating"),
 			"%", // Percentage of crowd in the basic seats
-			"basic Income", // basic Income
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.basicseating"), // Income Basic
+
 			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"),
 			"%", // Percentage of crowd under the roof
-			"roof Income", // roof Income
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.seatsunderroof"), // Income Seats Under Roof
+
 			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"),
 			"%", // Percentage of crowd in the VIP seats
-			"VIP seats Income", // VIP seats Income
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.seatsinvipboxes"), // Income Seats In Vip Boxes
+
 			HOVerwaltung.instance().getLanguageString("Fans"), // Fananzahl
 			HOVerwaltung.instance().getLanguageString("Fans") + " / "
 					+ HOVerwaltung.instance().getLanguageString("Wochen"),
@@ -76,20 +77,25 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			HOVerwaltung.instance().getLanguageString("Aktuell"), // Stadiongroesse
 			HOVerwaltung.instance().getLanguageString("Zuschauer"), // Zuschauer
 			"%", // Auslastung
-			"Total Income", // Total Income
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.total"), // Income Total
+
 			HOVerwaltung.instance().getLanguageString("ls.club.arena.terraces"),
-            "%", // Percentage of crowd on the terraces
-			"terraces Income", // terraces Income
-            HOVerwaltung.instance().getLanguageString("ls.club.arena.basicseating"),
-            "%", // Percentage of crowd in the basic seats
-			"basic Income", // basic Income
-            HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"),
-            "%", // Percentage of crowd under the roof
-			"roof Income", // roof Income
-            HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"),
-            "%", // Percentage of crowd in the VIP seats
-			"VIP seats Income", // VIP seats Income
-            HOVerwaltung.instance().getLanguageString("Fans"), // Fananzahl
+			"%", // Percentage of crowd on the terraces
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.terraces"), // Income Terraces
+
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.basicseating"),
+			"%", // Percentage of crowd in the basic seats
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.basicseating"), // Income Basic
+
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"),
+			"%", // Percentage of crowd under the roof
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.seatsunderroof"), // Income Seats Under Roof
+
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"),
+			"%", // Percentage of crowd in the VIP seats
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.seatsinvipboxes"), // Income Seats In Vip Boxes
+
+			HOVerwaltung.instance().getLanguageString("Fans"), // Fananzahl
 			HOVerwaltung.instance().getLanguageString("Fans") + " / "
 					+ HOVerwaltung.instance().getLanguageString("Wochen"),
 			HOVerwaltung.instance().getLanguageString("Zuschauer") + " / "
@@ -247,51 +253,10 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
     	try {
 			m_clData = new Object[m_clMatches.length][m_sColumnNames.length];
 
-			float currencyFactor = core.model.UserParameter.instance().faktorGeld;
-
 			for (int i = 0; i < m_clMatches.length; i++) {
 			    final ArenaStatistikModel match = m_clMatches[i];
 			    final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
 				int colIndex = 0;
-				/*
-				Partite di Campionato: La squadra di casa ottiene tutto l'incasso.
-				Partite di Coppa: La squadra di casa ottiene i 2/3 dell'incasso, mentre la squadra ospite ottiene il restante 1/3.
-				Amichevoli e Spareggi: L'incasso viene diviso a metà tra le due squadre.
-				 */
-
-				float matchTypeFactor = 0;
-				switch (match.getMatchTyp()) {
-					case LEAGUE:
-						matchTypeFactor = 1;
-						break;
-					case CUP:
-						matchTypeFactor = (float) 2/3;
-						break;
-					case QUALIFICATION:
-					case TOURNAMENTGROUP:
-					case TOURNAMENTPLAYOFF:
-					case FRIENDLYCUPRULES:
-					case INTFRIENDLYCUPRULES:
-					case FRIENDLYNORMAL:
-					case INTFRIENDLYNORMAL:
-					case MASTERS:
-					case NATIONALFRIENDLY:
-					case NONE:
-					case NATIONALCOMPCUPRULES:
-					case INTSPIEL:
-					case NATIONALCOMPNORMAL:
-						matchTypeFactor = (float) 1/2;
-						break;
-					default:
-						matchTypeFactor = 0;
-						break;
-				}
-
-				float terracesIncome = (match.getSoldTerraces() * (matchTypeFactor * ArenaSizer.ADMISSION_PRICE_TERRACES / currencyFactor));
-				float basicSeatIncome = (match.getSoldBasics() * (matchTypeFactor * ArenaSizer.ADMISSION_PRICE_BASICS / currencyFactor));
-				float seatRoofIncome = (match.getSoldRoof() * (matchTypeFactor * ArenaSizer.ADMISSION_PRICE_ROOF / currencyFactor));
-				float vipIncome = (match.getSoldVip() * (matchTypeFactor * ArenaSizer.ADMISSION_PRICE_VIP / currencyFactor));
-				float totalIncome = terracesIncome + basicSeatIncome + seatRoofIncome + vipIncome;
 
 			    //Datum
 			    m_clData[i][colIndex] = new ColorLabelEntry(match.getMatchDateAsTimestamp().getTime(),
@@ -352,7 +317,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				colIndex++;
 
 			    //Total Income
-				m_clData[i][colIndex] = new ColorLabelEntry(Helper.getNumberFormat(true, 0).format(totalIncome),
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getTotalIncome(), Helper.getNumberFormat(true, 0).format(match.getTotalIncome()),
 						ColorLabelEntry.FG_STANDARD, background,
 						SwingConstants.LEFT);
 				colIndex++;
@@ -367,7 +332,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				colIndex++;
 
 				//Terrace Income
-				m_clData[i][colIndex] = new ColorLabelEntry(Helper.getNumberFormat(true, 0).format(terracesIncome),
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getTerracesIncome(), Helper.getNumberFormat(true, 0).format(match.getTerracesIncome()),
 						ColorLabelEntry.FG_STANDARD, background,
 						SwingConstants.LEFT);
 				colIndex++;
@@ -382,7 +347,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				colIndex++;
 
 				//Basic Seat Income
-				m_clData[i][colIndex] = new ColorLabelEntry(Helper.getNumberFormat(true, 0).format(basicSeatIncome),
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getBasicSeatIncome(), Helper.getNumberFormat(true, 0).format(match.getBasicSeatIncome()),
 						ColorLabelEntry.FG_STANDARD, background,
 						SwingConstants.LEFT);
 				colIndex++;
@@ -397,7 +362,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				colIndex++;
 
 				//Seats under the roof Income
-				m_clData[i][colIndex] = new ColorLabelEntry(Helper.getNumberFormat(true, 0).format(seatRoofIncome),
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getSeatRoofIncome(), Helper.getNumberFormat(true, 0).format(match.getSeatRoofIncome()),
 						ColorLabelEntry.FG_STANDARD, background,
 						SwingConstants.LEFT);
 				colIndex++;
@@ -412,7 +377,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				colIndex++;
 
 				//SVIP seats Income
-				m_clData[i][colIndex] = new ColorLabelEntry(Helper.getNumberFormat(true, 0).format(vipIncome),
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getVipIncome(), Helper.getNumberFormat(true, 0).format(match.getVipIncome()),
 						ColorLabelEntry.FG_STANDARD, background,
 						SwingConstants.LEFT);
 				colIndex++;
