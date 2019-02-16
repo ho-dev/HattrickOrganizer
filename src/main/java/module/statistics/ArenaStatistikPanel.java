@@ -49,11 +49,13 @@ public class ArenaStatistikPanel extends LazyImagePanel {
 		panel.add(matchFilterComboBox);
 		add(panel, BorderLayout.NORTH);
 
-		arenaStatistikTable = new ArenaStatistikTable(UserParameter.instance().spieleFilter);
+		// Nur Pflichtspiele ist default
+		matchFilterComboBox.setSelectedIndex(0);
+
+		// to set the first element
+		arenaStatistikTable = new ArenaStatistikTable(((CBItem) matchFilterComboBox.getSelectedItem()).getId());
 		add(new JScrollPane(arenaStatistikTable), BorderLayout.CENTER);
 
-		// Nur Pflichtspiele ist default
-		matchFilterComboBox.setSelectedIndex(1);
 	}
 
 	private void addListeners() {

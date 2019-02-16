@@ -82,7 +82,7 @@ public class ArenaStatistikTable extends JTable {
         setOpaque(false);
 
         reInitModel(matchtyp);
-        
+
         final ToolTipHeader header = new ToolTipHeader(getColumnModel());
         header.setToolTipStrings(m_clTableModel.m_sToolTipStrings);
         header.setToolTipText("");
@@ -129,11 +129,17 @@ public class ArenaStatistikTable extends JTable {
 
         m_clTableSorter.initsort();
     }
-    
+
     private void reInitModel(int matchtyp) {
         m_clTableModel = DBManager.instance().getArenaStatistikModel(matchtyp);
-        m_clTableSorter = new TableSorter(m_clTableModel, 5, -1);
-        setModel(m_clTableSorter);
+        if (m_clTableSorter == null){
+            m_clTableSorter = new TableSorter(m_clTableModel, 5, -1);
+            setModel(m_clTableSorter);
+        }else{
+            m_clTableSorter.setModel(m_clTableModel);
+            setModel(m_clTableSorter);
+            m_clTableSorter.reallocateIndexes();
+        }
     }
     
 }
