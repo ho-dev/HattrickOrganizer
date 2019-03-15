@@ -258,6 +258,11 @@ public class UploadDownloadPanel extends LazyPanel {
 			} else {
 				lineup.setLocation(IMatchDetails.LOCATION_AWAY);
 			}
+
+			// in case of tournament match, set location neither to home or away but to special tournament settings
+			if (match.getMatchTyp().isTournament()){
+				lineup.setLocation(IMatchDetails.LOCATION_TOURNAMENT);
+			    }
 			String message = HOVerwaltung.instance().getLanguageString("lineup.download.success");
 			JOptionPane.showMessageDialog(HOMainFrame.instance(), message, HOVerwaltung.instance()
 					.getLanguageString("lineup.download.title"), messageType);
@@ -417,7 +422,7 @@ public class UploadDownloadPanel extends LazyPanel {
 					isSelected, hasFocus, row, column);
 			component.setText(null);
 			MatchType type = (MatchType) value;
-			Icon icon = ThemeManager.getIcon(HOIconName.MATCHTYPES[type.getIconArrayIndex()]);
+			Icon icon = ThemeManager.getIcon(HOIconName.MATCHICONS[type.getIconArrayIndex()]);
 			component.setIcon(icon);
 			return component;
 		}

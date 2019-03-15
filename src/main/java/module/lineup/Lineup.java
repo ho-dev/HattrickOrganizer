@@ -796,12 +796,7 @@ public class Lineup {
 				}
 
 				final List<MatchKurzInfo> sMatches = orderMatches(matches);
-				for (int i = 0; i < matches.length; i++) {
-					match = sMatches.get(i);
-					if (match.getMatchTyp().isOfficial()) {
-						break;
-					}
-				}
+				match = sMatches.get(0);
 
 				if (match == null) {
 					m_sLocation = IMatchDetails.LOCATION_AWAY;
@@ -809,13 +804,10 @@ public class Lineup {
 					return m_sLocation;
 				}
 
-				m_sLocation = (match.getHeimID() == teamId) ? IMatchDetails.LOCATION_HOME
-						: IMatchDetails.LOCATION_AWAY;
+				if (match.getMatchTyp().isOfficial()) {m_sLocation = (match.getHeimID() == teamId) ? IMatchDetails.LOCATION_HOME: IMatchDetails.LOCATION_AWAY;}
+				else {m_sLocation = IMatchDetails.LOCATION_TOURNAMENT;}
 
-				// To decide away derby we need hold of the region.
-				// I think this is very annoying to get hold of
-				// (possible both download and db work needed) and
-				// probably why aik has it as TODO (blaghaid).
+				// TODO: Manage away derby : To decide away derby we need hold of the region (likely both download and db work needed)
 
 			} catch (Exception e) {
 				HOLogger.instance().error(getClass(), "getHeimspiel: " + e);

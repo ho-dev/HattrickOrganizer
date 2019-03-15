@@ -23,7 +23,7 @@ public class MatchTypeTableCellRenderer extends DefaultTableCellRenderer {
 
 		MatchType matchType = (MatchType) value;
 		if (matchType != null) {
-			component.setIcon(ThemeManager.getIcon(HOIconName.MATCHTYPES[matchType
+			component.setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType
 					.getIconArrayIndex()]));
 		} else {
 			component.setIcon(null);

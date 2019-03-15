@@ -45,6 +45,9 @@ public class XMLMatchesParser {
 
 		MatchKurzInfo spiel = null;
 		List<MatchKurzInfo> liste = new ArrayList<MatchKurzInfo>();
+		int iMatchType;
+		int iCupLevel;
+		int iCupLevelIndex;
 
 		if (doc != null) {
 			Element root = doc.getDocumentElement();
@@ -66,8 +69,16 @@ public class XMLMatchesParser {
 							.getNodeValue()));
 					tmp = (Element) ele.getElementsByTagName("MatchType").item(
 							0);
-					spiel.setMatchTyp(MatchType.getById(Integer.parseInt(tmp
-							.getFirstChild().getNodeValue())));
+					iMatchType = Integer.parseInt(tmp.getFirstChild().getNodeValue());
+					if (iMatchType != 3) {spiel.setMatchType(MatchType.getById(iMatchType));}
+					else{
+						tmp = (Element) ele.getElementsByTagName("CupLevel").item(0);
+						iCupLevel = Integer.parseInt(tmp.getFirstChild().getNodeValue());
+						tmp = (Element) ele.getElementsByTagName("CupLevelIndex").item(0);
+						iCupLevelIndex = Integer.parseInt(tmp.getFirstChild().getNodeValue());
+						spiel.setMatchType(MatchType.getById(iMatchType, iCupLevel, iCupLevelIndex));
+					}
+
 					tmp = (Element) ele.getElementsByTagName("HomeTeam")
 							.item(0);
 					spiel.setHeimID(Integer.parseInt(((Element) tmp

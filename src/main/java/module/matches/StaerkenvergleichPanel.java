@@ -101,7 +101,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		Matchdetails details = this.matchesModel.getDetails();
 
 
-		matchtypLabel.setIcon(ThemeManager.getIcon(HOIconName.MATCHTYPES[info.getMatchTyp()
+		matchtypLabel.setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[info.getMatchTyp()
 				.getIconArrayIndex()]));
 		matchtypLabel.setText(info.getMatchTyp().getName());
 
@@ -135,8 +135,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			}
 
 			String name4matchtyp = info.getMatchTyp().getName();
-			if ((details.getZuschauer() <= 0) && (info.getMatchTyp() != MatchType.TOURNAMENTGROUP)
-					&& (info.getMatchTyp() != MatchType.TOURNAMENTPLAYOFF)) {
+			if ((details.getZuschauer() <= 0) && (info.getMatchTyp().getSourceString() == "hattrick")) {
 				name4matchtyp += (" ( " + HOVerwaltung.instance().getLanguageString("Reload_Match") + " )");
 			}
 			matchtypLabel.setText(name4matchtyp);

@@ -78,7 +78,7 @@ final class FutureMatchBox extends JPanel {
 
 		gridbagconstraints.gridx = 3;
 		JLabel lIcon = new JLabel(
-				ThemeManager.getIcon(HOIconName.MATCHTYPES[iType
+				ThemeManager.getIcon(HOIconName.MATCHICONS[iType
 						.getIconArrayIndex()]));
 		lIcon.setToolTipText(iType.getName());
 		add(lIcon, gridbagconstraints);

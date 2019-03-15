@@ -13,6 +13,9 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Vector;
 
+/**
+ * Class used to store in DB, [Matches] Table fetched via CHPP
+ */
 final class MatchesKurzInfoTable extends AbstractTable {
 	final static String TABLENAME = "MATCHESKURZINFO";
 
@@ -22,20 +25,20 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[11];
-		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false, true);
-		columns[1] = new ColumnDescriptor("MatchTyp", Types.INTEGER, false);
-		columns[2] = new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256);
-		columns[3] = new ColumnDescriptor("HeimID", Types.INTEGER, false);
-		columns[4] = new ColumnDescriptor("GastName", Types.VARCHAR, false, 256);
-		columns[5] = new ColumnDescriptor("GastID", Types.INTEGER, false);
-		columns[6] = new ColumnDescriptor("MatchDate", Types.VARCHAR, false,
-				256);
-		columns[7] = new ColumnDescriptor("HeimTore", Types.INTEGER, false);
-		columns[8] = new ColumnDescriptor("GastTore", Types.INTEGER, false);
-		columns[9] = new ColumnDescriptor("Aufstellung", Types.BOOLEAN, false);
-		columns[10] = new ColumnDescriptor("Status", Types.INTEGER, false);
-
+		columns = new ColumnDescriptor[13];
+		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false, true); //The globally unique identifier of the match
+		columns[1] = new ColumnDescriptor("MatchTyp", Types.INTEGER, false); //Integer defining the type of match
+		columns[2] = new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256); // HomeTeamName
+		columns[3] = new ColumnDescriptor("HeimID", Types.INTEGER, false);  //HomeTeamID
+		columns[4] = new ColumnDescriptor("GastName", Types.VARCHAR, false, 256); // AwayTeamName
+		columns[5] = new ColumnDescriptor("GastID", Types.INTEGER, false);  //AwayTeamID
+		columns[6] = new ColumnDescriptor("MatchDate", Types.VARCHAR, false, 256); // The start date and time (kick-off) of the match.
+		columns[7] = new ColumnDescriptor("HeimTore", Types.INTEGER, false); // The current number of goals in the match for the home team.
+		columns[8] = new ColumnDescriptor("GastTore", Types.INTEGER, false); // The current number of goals in the match for the away team
+		columns[9] = new ColumnDescriptor("Aufstellung", Types.BOOLEAN, false); // List of boolean value only supplied for upcoming matches of your own team that signifies whether you have given orders or not
+		columns[10] = new ColumnDescriptor("Status", Types.INTEGER, false); // Specifying whether the match is FINISHED, ONGOING or UPCOMING
+		columns[11] = new ColumnDescriptor("CupLevel", Types.INTEGER, false); // 1 = National/Divisional cup, 2 = Challenger cup, 3 = Consolation cup. 0 if MatchType is not 3
+		columns[12] = new ColumnDescriptor("CupLevelIndex", Types.INTEGER, false); // In Challenger cups: 1 = Emerald (start week 2), 2 = Ruby (start week 3), 3 = Sapphire (start week 4). Always 1 for National/Divisional (main cups) and Consolation cups. 0 if MatchType is not 3.
 	}
 
 	@Override
@@ -204,7 +207,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		match.setMatchID(rs.getInt("MatchID"));
 		match.setGastTore(rs.getInt("GastTore"));
 		match.setHeimTore(rs.getInt("HeimTore"));
-		match.setMatchTyp(MatchType.getById(rs.getInt("MatchTyp")));
+		match.setMatchType(MatchType.getById(rs.getInt("MatchTyp")));
 		match.setMatchStatus(rs.getInt("Status"));
 		match.setOrdersGiven(rs.getBoolean("Aufstellung"));
 		return match;

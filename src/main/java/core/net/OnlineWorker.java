@@ -340,7 +340,7 @@ public class OnlineWorker {
 				info.setMatchDate(lineup.getStringSpielDate());
 				info.setMatchID(matchid);
 				info.setMatchStatus(MatchKurzInfo.FINISHED);
-				info.setMatchTyp(lineup.getMatchTyp());
+				info.setMatchType(details.getMatchType());
 
 				boolean success = DBManager.instance().storeMatch(info, details, lineup);
 				if (!success) {
@@ -692,8 +692,7 @@ public class OnlineWorker {
 		return "{\"id\":\"" + id + "\",\"behaviour\":\"" + behaviour + "\"}";
 	}
 
-	private static Matchdetails fetchDetails(int matchID, MatchType matchType, MatchLineup lineup,
-			LoginWaitDialog waitDialog) {
+	private static Matchdetails fetchDetails(int matchID, MatchType matchType, MatchLineup lineup, LoginWaitDialog waitDialog) {
 		String matchDetails = "";
 		Matchdetails details = null;
 

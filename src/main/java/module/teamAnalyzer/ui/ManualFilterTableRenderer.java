@@ -51,7 +51,7 @@ public class ManualFilterTableRenderer extends DefaultTableCellRenderer {
 		}
 		
 		if (value instanceof ImageIcon) {
-			setIcon(ThemeManager.getIcon(HOIconName.MATCHTYPES[type.getIconArrayIndex()]));
+			setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[type.getIconArrayIndex()]));
 			setText(null);
 		} else {
 			setIcon(null);

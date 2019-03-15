@@ -349,7 +349,7 @@ final public class UserColumnFactory {
 			@Override
 			public IHOTableEntry getTableEntry(MatchKurzInfo match){
 				final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
-				return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHTYPES[match.getMatchTyp().getIconArrayIndex()]),
+				return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[match.getMatchTyp().getIconArrayIndex()]),
                        match.getMatchTyp().getId(), ColorLabelEntry.FG_STANDARD,
                        background, SwingConstants.CENTER);
 			}
@@ -357,7 +357,7 @@ final public class UserColumnFactory {
 			@Override
 			public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem){
 				final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
-				return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHTYPES[spielerCBItem.getMatchTyp().getIconArrayIndex()]),
+				return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[spielerCBItem.getMatchTyp().getIconArrayIndex()]),
                        spielerCBItem.getMatchTyp().getId(),
                        ColorLabelEntry.FG_STANDARD, background,
                        SwingConstants.CENTER);

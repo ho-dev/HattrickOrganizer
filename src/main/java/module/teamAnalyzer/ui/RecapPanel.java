@@ -143,11 +143,11 @@ public class RecapPanel extends JPanel {
             // Columns 0-2
             if (isHomeMatch) {
                 rowData.add(match.getAwayTeam());
-                rowData.add(ThemeManager.getIcon(HOIconName.MATCHTYPES[matchType.getIconArrayIndex()]));
+                rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
                 rowData.add(match.getHomeGoals() + GOALS_SPACE + match.getAwayGoals());
             } else {
                 rowData.add("* " + match.getHomeTeam()); //$NON-NLS-1$
-                rowData.add(ThemeManager.getIcon(HOIconName.MATCHTYPES[matchType.getIconArrayIndex()]));
+                rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
                 rowData.add(match.getAwayGoals() + GOALS_SPACE + match.getHomeGoals());
             }
 
