@@ -1,6 +1,20 @@
 *Please visit the HO! forum in the CHPP section of Hattrick if you have any questions!
 If you find a bug, please open an issue on [GitHub](https://github.com/akasolace/HO/issues)*
 
+
+# Changelist HO! 2.0
+
+## Added
+ - Increase list of supported game (default settings and icons) (e.g. Tournment matches) #21
+
+## Fixed
+ - startup issue for certain Linux configuration (#102)
+ - sorting issue after change filter in Arena section
+ - bug due to match report size larger than db threshold
+
+## Changed
+ - ...
+ 
 # Changelist HO! 1.436
 
 ## Fixed

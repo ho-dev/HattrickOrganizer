@@ -39,10 +39,10 @@ dependencies {
 // 1 for BETA status
 // 2 for STABLE status
 
-def major = '1'
-def minor = '436'
-def development_stage = '2'
-def releaseArtefacts = true
+def major = '2'
+def minor = '0'
+def development_stage = '0'
+def releaseArtefacts = false
 
 //====================================================================================================================
 
