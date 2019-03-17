@@ -1,10 +1,6 @@
 package core.file.xml;
 
-import core.model.match.IMatchHighlight;
-import core.model.match.MatchHighlight;
-import core.model.match.MatchLineup;
-import core.model.match.MatchLineupPlayer;
-import core.model.match.Matchdetails;
+import core.model.match.*;
 import core.util.HOLogger;
 import java.util.Vector;
 import org.w3c.dom.Document;
@@ -502,9 +498,35 @@ public class XMLMatchdetailsParser {
         }
     }
 
+	private static void readMatchType(Document doc, Matchdetails md) {
+		Element ele = null;
+		Element root = null;
+
+		root = doc.getDocumentElement();
+
+		try {
+			//Daten füllen
+			ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
+			md.setFetchDatumFromString(ele.getFirstChild().getNodeValue());
+
+			//MatchData
+			root = (Element) root.getElementsByTagName("Match").item(0);
+			ele = (Element) root.getElementsByTagName("MatchID").item(0);
+			md.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			ele = (Element) root.getElementsByTagName("MatchDate").item(0);
+			md.setSpielDatumFromString(ele.getFirstChild().getNodeValue());
+		} catch (Exception e) {
+			HOLogger.instance().log(XMLMatchdetailsParser.class,e);
+			md = null;
+		}
+	}
+
     private static void readGeneral(Document doc, Matchdetails md) {
         Element ele = null;
         Element root = null;
+        int iMatchType;
+		int iCupLevel;
+		int iCupLevelIndex;
 
         root = doc.getDocumentElement();
 
@@ -515,6 +537,16 @@ public class XMLMatchdetailsParser {
 
             //MatchData
             root = (Element) root.getElementsByTagName("Match").item(0);
+			ele = (Element) root.getElementsByTagName("MatchType").item(0);
+			iMatchType = Integer.parseInt(ele.getFirstChild().getNodeValue());
+			if (iMatchType != 3) {md.setMatchType(MatchType.getById(iMatchType));}
+			else{
+				ele = (Element) root.getElementsByTagName("CupLevel").item(0);
+				iCupLevel = Integer.parseInt(ele.getFirstChild().getNodeValue());
+				ele = (Element) root.getElementsByTagName("CupLevelIndex").item(0);
+				iCupLevelIndex = Integer.parseInt(ele.getFirstChild().getNodeValue());
+				md.setMatchType(MatchType.getById(iMatchType, iCupLevel, iCupLevelIndex));
+			}
             ele = (Element) root.getElementsByTagName("MatchID").item(0);
             md.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("MatchDate").item(0);

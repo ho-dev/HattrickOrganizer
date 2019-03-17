@@ -126,7 +126,9 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			new CBItem(HOVerwaltung.instance().getLanguageString("matchlocation.away"),
 					IMatchDetails.LOCATION_AWAY), //
 			new CBItem(HOVerwaltung.instance().getLanguageString("matchlocation.awayderby"),
-					IMatchDetails.LOCATION_AWAYDERBY) //
+					IMatchDetails.LOCATION_AWAYDERBY), //
+			new CBItem(HOVerwaltung.instance().getLanguageString("matchlocation.tournament"),
+					IMatchDetails.LOCATION_TOURNAMENT) //
 	};
 	private JComboBox m_jcbLocation = new JComboBox(LOCATION);
 
@@ -219,13 +221,28 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	}
 
 	/**
-	 * Set the match location (home/away/awayderby).
-	 *
+	 * Set the match location (home/away/awayderby/tournament).
+	 * And in case it is a tournament match, it will also set TS and confidence to default values
 	 * @param location
 	 *            the constant for the location
 	 */
 	private void setLocation(int location) {
+		// Set the location
 		Helper.markierenComboBox(m_jcbLocation, location);
+
+		if (location == IMatchDetails.LOCATION_TOURNAMENT) {
+			setStimmung(6, 2); // Set Team Spirit to content (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
+			m_jcbMainStimmung.setEnabled(false);
+			m_jcbSubStimmung.setEnabled(false);
+			setSelbstvertrauen(6); // Set Team Spirit to wonderful (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
+			m_jcbSelbstvertrauen.setEnabled(false);
+		}
+		else
+		{
+			m_jcbMainStimmung.setEnabled(true);
+			m_jcbSubStimmung.setEnabled(true);
+			m_jcbSelbstvertrauen.setEnabled(true);
+		}
 	}
 
 	private void setLabels() {
@@ -260,7 +277,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 						m_jpRating.setBottomCenter(vergleichsaufstellung.getCentralAttackRating());
 						m_jpRating.setBottomLeft(vergleichsaufstellung.getRightAttackRating());
 
-						// Wieder die richtige Aufstellung setzen
+						// Put back the right Lineup
 						homodel.setAufstellung(aufstellung);
 					}
 				}

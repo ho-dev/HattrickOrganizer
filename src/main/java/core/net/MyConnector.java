@@ -66,7 +66,7 @@ public class MyConnector {
 	private final static String VERSION_TRAINING = "2.1";
 	private final static String VERSION_MATCHORDERS = "2.4";
 	private final static String VERSION_MATCHLINEUP = "1.9";
-	private final static String VERSION_MATCHDETAILS = "2.3";
+	private final static String VERSION_MATCHDETAILS = "3.0";
 	private final static String VERSION_PLAYERS = "2.1";
 	private final static String VERSION_PLAYERDETAILS = "2.0";
 	private final static String VERSION_WORLDDETAILS = "1.8";
@@ -242,6 +242,8 @@ public class MyConnector {
 			url.append("&LastMatchDate=").append(HT_FORMAT.format(lastDate));
 		}
 
+		url.append("&includeHTO=true&version=1.4");
+
 		return getCHPPWebFile(url.toString());
 	}
 
@@ -304,7 +306,7 @@ public class MyConnector {
 		if (teamId>0) {
 			urlpara.append("&teamId=").append(teamId);
 		}
-		urlpara.append("&actionType=setmatchorder");
+		urlpara.append("&actionType=setmatchorder"); // TODO: create a function FetchAndSendRatingsPrediction similar to setMatchOrder but using &actionType=predictratings
 		urlpara.append("&sourceSystem=" + matchType.getSourceString());
 
 		Map<String, String> paras = new HashMap<String, String>();
@@ -349,7 +351,7 @@ public class MyConnector {
 	 */
 	public String getMatches(int teamId, boolean forceRefresh, Date date) throws IOException {
 		StringBuilder urlBuilder = new StringBuilder();
-		urlBuilder.append(htUrl).append("?file=matches&version=2.6");
+		urlBuilder.append(htUrl).append("?file=matches&version=2.8");
 		urlBuilder.append("&teamID=").append(teamId);
 		if (forceRefresh) {
 			urlBuilder.append("&actionType=refreshCache");
@@ -364,7 +366,7 @@ public class MyConnector {
 	 * Get Matches
 	 */
 	public String getMatches(int teamId, boolean forceRefresh, boolean upcoming) throws IOException {
-		String url = htUrl + "?file=matches&version=2.6";
+		String url = htUrl + "?file=matches&version=2.8";
 
 		if (teamId > 0) {
 			url += "&teamID=" + teamId;

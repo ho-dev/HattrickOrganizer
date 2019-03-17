@@ -72,7 +72,7 @@ public class RecapTableRenderer extends DefaultTableCellRenderer {
 			case 1:
 
 				// Set icon for match type.
-				setIcon(ThemeManager.getIcon(HOIconName.MATCHTYPES[matchType.getIconArrayIndex()]));
+				setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
 				setText(null);
 
 				StringBuffer tipText = new StringBuffer(matchType.getName());

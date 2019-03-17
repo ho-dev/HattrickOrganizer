@@ -43,6 +43,9 @@ public interface IMatchDetails {
     public static final short LOCATION_HOME = 1;
     /** away derby */
     public static final short LOCATION_AWAYDERBY = 2;
+    /** Tournament */
+    public static final short LOCATION_TOURNAMENT = 3;
+
 
 
 }

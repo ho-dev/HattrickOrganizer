@@ -7,6 +7,11 @@ HOHOME="`eval echo $HOHOME`"
 OLDHOHOME="~/.hattrickorganizer"
 OLDHOHOME="`eval echo $OLDHOHOME`"
 
+comp_vers()
+{
+	test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
+}
+
 start(){
     HODIR=/usr/lib/ho
 
@@ -24,15 +29,15 @@ start(){
     fi
 
     # check if version in lib is greater than version in home
-    LIBVERSION=`unzip -q -c $HODIR/HO.jar META-INF/MANIFEST.MF | grep Implementation-Version | cut -d' ' -f 2`
+    LIBVERSION=`unzip -q -c $HODIR/HO.jar META-INF/MANIFEST.MF | sed 's///' | grep Implementation-Version | cut -d' ' -f 2`
     if [ -f $HOHOME/HO.jar ]
     then
-        HOMEVERSION=`unzip -q -c $HOHOME/HO.jar META-INF/MANIFEST.MF | grep Implementation-Version | cut -d' ' -f 2`
+        HOMEVERSION=`unzip -q -c $HOHOME/HO.jar META-INF/MANIFEST.MF | sed 's///' | grep Implementation-Version | cut -d' ' -f 2`
     else
-        HOMEVERSION=""
+        HOMEVERSION="0.0.0.0"
     fi
 
-    if [[ "$LIBVERSION" > "$HOMEVERSION" ]]
+    if comp_vers "$LIBVERSION" "$HOMEVERSION"
     then
         cp -R "${HODIR}/." "${HOHOME}"
     fi

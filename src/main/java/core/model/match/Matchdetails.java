@@ -45,6 +45,9 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     private int m_iGuestTacticType;
     private int m_iHeimId = -1;
 
+    // Match Type used in case match is reloaded, i.e matchType in Database was incorrect
+    private MatchType m_MatchTyp = MatchType.NONE;
+
     //-1pic,0=nor,1=mots, -1000 Unbekannt
     private int m_iHomeEinstellung;
 
@@ -911,6 +914,10 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         this.m_iMatchID = m_iMatchID;
     }
 
+    public final void setMatchType(MatchType m_MatchTyp) {
+        this.m_MatchTyp = m_MatchTyp;
+    }
+
     /**
      * Getter for property m_iMatchID.
      *
@@ -920,6 +927,9 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         return m_iMatchID;
     }
 
+    public final MatchType getMatchType() {
+        return m_MatchTyp;
+    }
 
     /**
      * Setter for property m_sMatchreport.

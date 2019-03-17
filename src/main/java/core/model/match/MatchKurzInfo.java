@@ -290,7 +290,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @param m_iMatchTyp
 	 *            New value of property m_iMatchTyp.
 	 */
-	public final void setMatchTyp(MatchType matchTyp) {
+	public final void setMatchType(MatchType matchTyp) {
 		this.m_mtMatchTyp = matchTyp;
 	}
 
@@ -346,7 +346,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 		setMatchDate(match.getMatchDate());
 		setMatchStatus(match.getMatchStatus());
 		setOrdersGiven(match.isOrdersGiven());
-		setMatchTyp(match.getMatchTyp());
+		setMatchType(match.getMatchTyp());
 	}
 	
 	public final boolean isHomeMatch()

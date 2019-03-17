@@ -54,7 +54,7 @@ final class MatchDetailsTable extends AbstractTable {
 		columns[32]= new ColumnDescriptor("SpielDatum",Types.TIMESTAMP,false);
 		columns[33]= new ColumnDescriptor("WetterId",Types.INTEGER,false);
 		columns[34]= new ColumnDescriptor("Zuschauer",Types.INTEGER,false);
-		columns[35]= new ColumnDescriptor("Matchreport",Types.VARCHAR,false,15000);
+		columns[35]= new ColumnDescriptor("Matchreport",Types.VARCHAR,false,20000);
 		columns[36]= new ColumnDescriptor("RegionID",Types.INTEGER,false);
 		columns[37]= new ColumnDescriptor("soldTerraces",Types.INTEGER,false);
 		columns[38]= new ColumnDescriptor("soldBasic",Types.INTEGER,false);

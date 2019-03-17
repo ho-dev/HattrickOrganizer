@@ -81,7 +81,7 @@ class TSPanel extends JPanel {
   public static final Color lightRed    = new Color(255, 230, 230);
   public static final Color lightYellow = new Color(255, 255, 200);
 
-  private final ImageIcon m_newImage   = ThemeManager.getIcon(HOIconName.MATCHTYPES[2]);
+  private final ImageIcon m_newImage   = ThemeManager.getIcon(HOIconName.MATCHICONS[2]);
   private final ImageIcon m_startImage = ThemeManager.getIcon(HOIconName.MANUELLSMILIES[7]);
 
 

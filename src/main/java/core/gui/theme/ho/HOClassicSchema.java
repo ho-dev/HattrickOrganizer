@@ -29,20 +29,20 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 	}
 
 	private void initIcons() {
-		put(MATCHTYPES[1], "gui/bilder/Meisterschale.gif");
-		put(MATCHTYPES[2], "gui/bilder/relegation.gif");
-		put(MATCHTYPES[3], "gui/bilder/Pokal.gif");
-		put(MATCHTYPES[4], "gui/bilder/freundschaft.gif");
-		put(MATCHTYPES[5], "gui/bilder/freundschaft.gif");
-		put(MATCHTYPES[6], "gui/bilder/Pokal2.gif");
-		put(MATCHTYPES[7], "gui/bilder/Pokal2.gif");
-		put(MATCHTYPES[8], "gui/bilder/freunschaft_intern.gif");
-		put(MATCHTYPES[9], "gui/bilder/freunschaft_intern.gif");
-		put(MATCHTYPES[10], "gui/bilder/Meisterschale2.gif");
-		put(MATCHTYPES[11], "gui/bilder/Meisterschale2.gif");
-		put(MATCHTYPES[12], "gui/bilder/freundschaft.gif");
-		put(MATCHTYPES[13], "gui/bilder/tournament.png");
-		put(MATCHTYPES[14], "gui/bilder/tournament.png");
+		put(MATCHICONS[0], "gui/bilder/league_match_icon.png");
+		put(MATCHICONS[1], "gui/bilder/qualification_match_icon.png");
+		put(MATCHICONS[2], "gui/bilder/friendly_match_icon.png");
+		put(MATCHICONS[3], "gui/bilder/national_cup_match_icon.png");
+		put(MATCHICONS[4], "gui/bilder/emerald_cup_match_icon.png");
+		put(MATCHICONS[5], "gui/bilder/ruby_cup_match_icon.png");
+		put(MATCHICONS[6], "gui/bilder/sapphire_cup_match_icon.png");
+		put(MATCHICONS[7], "gui/bilder/ladder_match_icon.png");
+		put(MATCHICONS[8], "gui/bilder/tournament_match_icon.png");
+		put(MATCHICONS[9], "gui/bilder/single_match_icon.png");
+		put(MATCHICONS[10], "gui/bilder/masters_match_icon.png");
+		put(MATCHICONS[11], "gui/bilder/default_match_icon.gif");
+		put(MATCHICONS[12], "gui/bilder/consolante_cup_match_icon.png");
+
 
 		put(MANUELLSMILIES[1], "gui/bilder/smilies/1bigsmile.gif");
 		put(MANUELLSMILIES[2], "gui/bilder/smilies/2smile.gif");

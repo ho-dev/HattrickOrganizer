@@ -89,7 +89,11 @@ final class DBUpdater {
                 case 22:
                     updateDBv23(DBVersion, version);
                 case 23:
-                    updateDBv24(DBVersion, version);
+					//MATCHREPORT was made longer here but not in table definition
+					//to fix this mistake and not repeat code
+					//updateDBv24 is falling through to updateDBv25
+                case 24:
+                    updateDBv25(DBVersion, version);
 				}
 				
 
@@ -596,8 +600,8 @@ final class DBUpdater {
         }
     }
 	
-	private void updateDBv24(int DBVersion, int version) throws SQLException {
-		// 1.438
+	private void updateDBv25(int DBVersion, int version) throws SQLException {
+		// 1.436
 		if (columnExistsInTable("MATCHREPORT", MatchDetailsTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ALTER COLUMN MATCHREPORT SET DATA TYPE VARCHAR(20000)"); // fix an existing bug - 15 000 was not enough
 		}

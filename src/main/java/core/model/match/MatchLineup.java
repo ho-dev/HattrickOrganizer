@@ -231,6 +231,10 @@ public class MatchLineup {
         return m_iMatchID;
     }
 
+    public final MatchType getMatchType() {
+        return m_MatchTyp;
+    }
+
     /**
      * Setter for property m_iMatchTyp.
      *

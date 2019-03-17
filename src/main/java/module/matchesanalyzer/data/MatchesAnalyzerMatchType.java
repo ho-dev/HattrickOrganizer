@@ -41,7 +41,7 @@ public enum MatchesAnalyzerMatchType {
 	}
 
 	public Icon getIcon() {
-		return ThemeManager.getIcon(HOIconName.MATCHTYPES[ordinal()]);
+		return ThemeManager.getIcon(HOIconName.MATCHICONS[ordinal()]);
 	}
 
 	public boolean isLeague() {

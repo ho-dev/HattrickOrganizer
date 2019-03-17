@@ -77,11 +77,11 @@ public class ManualFilterPanel extends JPanel {
 
 			if (element.isHome()) {
 				rowData.add(element.getAwayTeam());
-				rowData.add(ThemeManager.getIcon(HOIconName.MATCHTYPES[element.getMatchType().getIconArrayIndex()]));
+				rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[element.getMatchType().getIconArrayIndex()]));
 				rowData.add(element.getHomeGoals() + " - " + element.getAwayGoals());
 			} else {
 				rowData.add("*" + element.getHomeTeam());
-				rowData.add(ThemeManager.getIcon(HOIconName.MATCHTYPES[element.getMatchType().getIconArrayIndex()]));
+				rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[element.getMatchType().getIconArrayIndex()]));
 				rowData.add(element.getAwayGoals() + " - " + element.getHomeGoals());
 			}
 
