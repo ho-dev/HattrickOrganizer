@@ -35,32 +35,35 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			HOVerwaltung.instance().getLanguageString("ls.match.result"),
 			HOVerwaltung.instance().getLanguageString("ls.match.weather"),
 			HOVerwaltung.instance().getLanguageString("ls.match.id"),
-			// Stadiongroesse
-			HOVerwaltung.instance().getLanguageString("Aktuell"),
-			// Zuschauer
-			HOVerwaltung.instance().getLanguageString("Zuschauer"),
-			// Auslastung
-			"%",
+			HOVerwaltung.instance().getLanguageString("Aktuell"), // Stadiongroesse
+			HOVerwaltung.instance().getLanguageString("Zuschauer"), // Zuschauer
+			"%", // Auslastung
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.total"), // Income Total
+
 			HOVerwaltung.instance().getLanguageString("ls.club.arena.terraces"),
-            "%",
+			"%", // Percentage of crowd on the terraces
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.terraces"), // Income Terraces
+
 			HOVerwaltung.instance().getLanguageString("ls.club.arena.basicseating"),
-            "%",
-            HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"),
-            "%",
-            HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"),
-            "%",
-            // Fananzahl
-			HOVerwaltung.instance().getLanguageString("Fans"),
+			"%", // Percentage of crowd in the basic seats
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.basicseating"), // Income Basic
+
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"),
+			"%", // Percentage of crowd under the roof
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.seatsunderroof"), // Income Seats Under Roof
+
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"),
+			"%", // Percentage of crowd in the VIP seats
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.seatsinvipboxes"), // Income Seats In Vip Boxes
+
+			HOVerwaltung.instance().getLanguageString("Fans"), // Fananzahl
 			HOVerwaltung.instance().getLanguageString("Fans") + " / "
 					+ HOVerwaltung.instance().getLanguageString("Wochen"),
 			HOVerwaltung.instance().getLanguageString("Zuschauer") + " / "
 					+ HOVerwaltung.instance().getLanguageString("Fans"),
-			// Stimmung
-			HOVerwaltung.instance().getLanguageString("Fans"),
-			// LigaPlatz
-			HOVerwaltung.instance().getLanguageString("Platzierung")
-
-			};
+			HOVerwaltung.instance().getLanguageString("Fans"), // Stimmung
+			HOVerwaltung.instance().getLanguageString("Platzierung") // LigaPlatz
+    };
 
     protected Object[][] m_clData;
 
@@ -74,22 +77,31 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			HOVerwaltung.instance().getLanguageString("Aktuell"), // Stadiongroesse
 			HOVerwaltung.instance().getLanguageString("Zuschauer"), // Zuschauer
 			"%", // Auslastung
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.total"), // Income Total
+
 			HOVerwaltung.instance().getLanguageString("ls.club.arena.terraces"),
-            "%", // Percentage of crowd on the terraces
-            HOVerwaltung.instance().getLanguageString("ls.club.arena.basicseating"),
-            "%", // Percentage of crowd in the basic seats
-            HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"),
-            "%", // Percentage of crowd under the roof
-            HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"),
-            "%", // Percentage of crowd in the VIP seats
-            HOVerwaltung.instance().getLanguageString("Fans"), // Fananzahl
+			"%", // Percentage of crowd on the terraces
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.terraces"), // Income Terraces
+
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.basicseating"),
+			"%", // Percentage of crowd in the basic seats
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.basicseating"), // Income Basic
+
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"),
+			"%", // Percentage of crowd under the roof
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.seatsunderroof"), // Income Seats Under Roof
+
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"),
+			"%", // Percentage of crowd in the VIP seats
+			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.seatsinvipboxes"), // Income Seats In Vip Boxes
+
+			HOVerwaltung.instance().getLanguageString("Fans"), // Fananzahl
 			HOVerwaltung.instance().getLanguageString("Fans") + " / "
 					+ HOVerwaltung.instance().getLanguageString("Wochen"),
 			HOVerwaltung.instance().getLanguageString("Zuschauer") + " / "
 					+ HOVerwaltung.instance().getLanguageString("Fans"),
 			HOVerwaltung.instance().getLanguageString("Fans"), // Stimmung
 			HOVerwaltung.instance().getLanguageString("Platzierung") // LigaPlatz
-
     };
     private ArenaStatistikModel[] m_clMatches;
     private int m_iMaxArenaGroesse;
@@ -244,85 +256,135 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			for (int i = 0; i < m_clMatches.length; i++) {
 			    final ArenaStatistikModel match = m_clMatches[i];
 			    final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
+				int colIndex = 0;
+
 			    //Datum
-			    m_clData[i][0] = new ColorLabelEntry(match.getMatchDateAsTimestamp().getTime(),
+			    m_clData[i][colIndex] = new ColorLabelEntry(match.getMatchDateAsTimestamp().getTime(),
 			    		DateFormat.getDateTimeInstance().format(match.getMatchDateAsTimestamp()),
 			    		ColorLabelEntry.FG_STANDARD, background, SwingConstants.LEFT);
+				colIndex++;
 			    //Spielart
 			    m_clData[i][1] = new ColorLabelEntry(
 			    					ThemeManager.getIcon(HOIconName.MATCHICONS[match.getMatchTyp().getIconArrayIndex()]),
 			    		match.getMatchTyp().getId(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+				colIndex++;
 			    //Gast
-			    m_clData[i][2] = new ColorLabelEntry(match.getGastName(), ColorLabelEntry.FG_STANDARD,
+			    m_clData[i][colIndex] = new ColorLabelEntry(match.getGastName(), ColorLabelEntry.FG_STANDARD,
 			    		background, SwingConstants.LEFT);
-			    //Ergebnis
-			    m_clData[i][3] = new ColorLabelEntry(StringUtils.getResultString(match.getHeimTore(), match.getGastTore()),
-			    		ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+				colIndex++;
 
+			    //Ergebnis
+			    m_clData[i][colIndex] = new ColorLabelEntry(StringUtils.getResultString(match.getHeimTore(), match.getGastTore()),
+			    		ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
 			    //Sterne für Sieger!
 			    if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
-			        ((ColorLabelEntry) m_clData[i][3]).setIcon(ImageUtilities.NOIMAGEICON);
+			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ImageUtilities.NOIMAGEICON);
 			    } else if (match.getHeimTore() > match.getGastTore()) {
-			        ((ColorLabelEntry) m_clData[i][3]).setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
+			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
 			    } else if (match.getHeimTore() < match.getGastTore()) {
-			        ((ColorLabelEntry) m_clData[i][3]).setIcon(ImageUtilities.NOIMAGEICON);
+			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ImageUtilities.NOIMAGEICON);
 			    } else {
-			        ((ColorLabelEntry) m_clData[i][3]).setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY, Color.WHITE));
+			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY, Color.WHITE));
 			    }
+				colIndex++;
 
 			    //Wetter
-			    m_clData[i][4] = new ColorLabelEntry(ThemeManager.getIcon(HOIconName.WEATHER[match.getWetter()]),
+			    m_clData[i][colIndex] = new ColorLabelEntry(ThemeManager.getIcon(HOIconName.WEATHER[match.getWetter()]),
 			                                         match.getWetter(), ColorLabelEntry.FG_STANDARD,
 			                                         background, SwingConstants.RIGHT);
+				colIndex++;
 
 			    //Matchid
-			    m_clData[i][5] = new ColorLabelEntry(match.getMatchID(), match.getMatchID() + "",
+			    m_clData[i][colIndex] = new ColorLabelEntry(match.getMatchID(), match.getMatchID() + "",
 			                                         ColorLabelEntry.FG_STANDARD, background,
 			                                         SwingConstants.RIGHT);
+				colIndex++;
 
 			    //Stadiongroesse
-			    m_clData[i][6] = new ProgressbarTableEntry(match.getArenaGroesse(), 0,
+			    m_clData[i][colIndex] = new ProgressbarTableEntry(match.getArenaGroesse(), 0,
 			    		m_iMaxArenaGroesse, 0, 1, background, new Color(0, 0, 120), "");
+				colIndex++;
 
 			    //Zuschauer
-			    m_clData[i][7] = new ProgressbarTableEntry(match.getZuschaueranzahl(), 0,
+			    m_clData[i][colIndex] = new ProgressbarTableEntry(match.getZuschaueranzahl(), 0,
 			    		m_iMaxArenaGroesse, 0, 1, background, new Color(0, 120, 0), "");
+				colIndex++;
 
 			    //Verhältnis Auslastung
-			    m_clData[i][8] = new ProgressbarTableEntry(
+			    m_clData[i][colIndex] = new ProgressbarTableEntry(
 			    		(int) ((float) match.getZuschaueranzahl() / (float) match.getArenaGroesse() * 1000),
 			    		0, 1000, 1, 0.1, background, new Color(0, 120, 120), " %");
+				colIndex++;
+
+			    //Total Income
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getTotalIncome(), Helper.getNumberFormat(true, 0).format(match.getTotalIncome()),
+						ColorLabelEntry.FG_STANDARD, background,
+						SwingConstants.LEFT);
+				colIndex++;
 
 			    //Terraces
-			    m_clData[i][9] = new ColorLabelEntry(match.getSoldTerraces() + " / " + match.getMaxTerraces() + "",
+			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldTerraces() + " / " + match.getMaxTerraces() + "",
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.CENTER);
+				colIndex++;
 
-			    m_clData[i][10] = new ProgressbarTableEntry((int) ((float) match.getSoldTerraces() / (float) match.getMaxTerraces() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
+			    m_clData[i][colIndex] = new ProgressbarTableEntry((int) ((float) match.getSoldTerraces() / (float) match.getMaxTerraces() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
+				colIndex++;
+
+				//Terrace Income
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getTerracesIncome(), Helper.getNumberFormat(true, 0).format(match.getTerracesIncome()),
+						ColorLabelEntry.FG_STANDARD, background,
+						SwingConstants.LEFT);
+				colIndex++;
 
 			    //Basic seats
-			    m_clData[i][11] = new ColorLabelEntry(match.getSoldBasics() + " / " + match.getMaxBasic() + "",
+			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldBasics() + " / " + match.getMaxBasic() + "",
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.CENTER);
+				colIndex++;
 
-                m_clData[i][12] = new ProgressbarTableEntry((int) ((float) match.getSoldBasics() / (float) match.getMaxBasic() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
+                m_clData[i][colIndex] = new ProgressbarTableEntry((int) ((float) match.getSoldBasics() / (float) match.getMaxBasic() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
+				colIndex++;
+
+				//Basic Seat Income
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getBasicSeatIncome(), Helper.getNumberFormat(true, 0).format(match.getBasicSeatIncome()),
+						ColorLabelEntry.FG_STANDARD, background,
+						SwingConstants.LEFT);
+				colIndex++;
 
 			    //Seats under the roof
-			    m_clData[i][13] = new ColorLabelEntry(match.getSoldRoof() + " / " + match.getMaxRoof() + "",
+			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldRoof() + " / " + match.getMaxRoof() + "",
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.CENTER);
+				colIndex++;
 
-                m_clData[i][14] = new ProgressbarTableEntry((int) ((float) match.getSoldRoof() / (float) match.getMaxRoof() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
+                m_clData[i][colIndex] = new ProgressbarTableEntry((int) ((float) match.getSoldRoof() / (float) match.getMaxRoof() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
+				colIndex++;
+
+				//Seats under the roof Income
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getSeatRoofIncome(), Helper.getNumberFormat(true, 0).format(match.getSeatRoofIncome()),
+						ColorLabelEntry.FG_STANDARD, background,
+						SwingConstants.LEFT);
+				colIndex++;
 
 			    //VIP seats
-			    m_clData[i][15] = new ColorLabelEntry(match.getSoldVip() + " / " + match.getMaxVip() + "",
+			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldVip() + " / " + match.getMaxVip() + "",
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.CENTER);
+				colIndex++;
 
-                m_clData[i][16] = new ProgressbarTableEntry((int) ((float) match.getSoldVip() / (float) match.getMaxVip() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
+                m_clData[i][colIndex] = new ProgressbarTableEntry((int) ((float) match.getSoldVip() / (float) match.getMaxVip() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
+				colIndex++;
+
+				//SVIP seats Income
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getVipIncome(), Helper.getNumberFormat(true, 0).format(match.getVipIncome()),
+						ColorLabelEntry.FG_STANDARD, background,
+						SwingConstants.LEFT);
+				colIndex++;
 
 			    //Fananzahl
-			    m_clData[i][17] = new ProgressbarTableEntry(match.getFans(), 0, m_iMaxFananzahl, 0, 1, background, new Color(80, 80, 80), "");
+			    m_clData[i][colIndex] = new ProgressbarTableEntry(match.getFans(), 0, m_iMaxFananzahl, 0, 1, background, new Color(80, 80, 80), "");
+				colIndex++;
 
 			    //Fanzuwachs pro Woche
 			    float fanzuwachs = 0;
@@ -332,22 +394,26 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			                     - m_clMatches[i + 1].getMatchDateAsTimestamp().getTime());
 			    }
 
-			    m_clData[i][18] = new ColorLabelEntry(fanzuwachs, background, false,false,0);
+			    m_clData[i][colIndex] = new ColorLabelEntry(fanzuwachs, background, false,false,0);
+				colIndex++;
 
 			    //Quotione  Zuschauer/Fans
-			    m_clData[i][19] = new ColorLabelEntry(Helper.round((float) match.getZuschaueranzahl()
+			    m_clData[i][colIndex] = new ColorLabelEntry(Helper.round((float) match.getZuschaueranzahl()
 						/ (float) match.getFans(), 2) + "", ColorLabelEntry.FG_STANDARD, background,
 						SwingConstants.RIGHT);
+				colIndex++;
 
 			    // Fanstimmung
-			    m_clData[i][20] = new ColorLabelEntry(Finanzen.getNameForLevelFans(match.getFanZufriedenheit(), match.getMatchDateAsTimestamp()),
+			    m_clData[i][colIndex] = new ColorLabelEntry(Finanzen.getNameForLevelFans(match.getFanZufriedenheit(), match.getMatchDateAsTimestamp()),
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.LEFT);
+				colIndex++;
 
 			    //Ligaplatz
-			    m_clData[i][21] = new ColorLabelEntry(match.getLigaPlatz() + ".",
+			    m_clData[i][colIndex] = new ColorLabelEntry(match.getLigaPlatz() + ".",
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.CENTER);
+				colIndex++;
 
 			}
 		} catch (Exception e) {

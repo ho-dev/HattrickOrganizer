@@ -82,7 +82,7 @@ public class ArenaStatistikTable extends JTable {
         setOpaque(false);
 
         reInitModel(matchtyp);
-        
+
         final ToolTipHeader header = new ToolTipHeader(getColumnModel());
         header.setToolTipStrings(m_clTableModel.m_sToolTipStrings);
         header.setToolTipText("");
@@ -90,42 +90,56 @@ public class ArenaStatistikTable extends JTable {
 
         final TableColumnModel tableColumnModel = getColumnModel();
 
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < tableColumnModel.getColumnCount(); i++) {
             tableColumnModel.getColumn(i).setIdentifier(new Integer(i));
         }
 
         m_clTableSorter.addMouseListenerToHeaderInTable(this);
 
         setAutoResizeMode(AUTO_RESIZE_OFF);
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(0))).setPreferredWidth(Helper.calcCellWidth(75));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(0))).setPreferredWidth(Helper.calcCellWidth(85));
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(0))).setMinWidth(Helper.calcCellWidth(70));
+
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(1))).setPreferredWidth(Helper.calcCellWidth(20));
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(1))).setMinWidth(Helper.calcCellWidth(20));
+
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(2))).setMinWidth(Helper.calcCellWidth(55));
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(2))).setPreferredWidth(Helper.calcCellWidth(120));
+
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(3))).setMinWidth(Helper.calcCellWidth(55));
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(3))).setPreferredWidth(Helper.calcCellWidth(60));
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(4))).setPreferredWidth(Helper.calcCellWidth(30));
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(5))).setPreferredWidth(Helper.calcCellWidth(55));
+
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(4))).setMinWidth(Helper.calcCellWidth(25));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(4))).setPreferredWidth(Helper.calcCellWidth(25));
+
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(5))).setPreferredWidth(Helper.calcCellWidth(85));
+
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(6))).setPreferredWidth(Helper.calcCellWidth(150));
+
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(7))).setPreferredWidth(Helper.calcCellWidth(150));
+
         tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(8))).setPreferredWidth(Helper.calcCellWidth(110));
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(9))).setPreferredWidth(Helper.calcCellWidth(110));
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(10))).setPreferredWidth(Helper.calcCellWidth(90));
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(11))).setPreferredWidth(Helper.calcCellWidth(90));
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(12))).setPreferredWidth(Helper.calcCellWidth(90));
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(13))).setPreferredWidth(Helper.calcCellWidth(90));
+
+        for (int i = 9; i < tableColumnModel.getColumnCount(); i++) {
+            tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(i))).setPreferredWidth(Helper.calcCellWidth(90));
+        }
 
         setSelectionMode(0);
         setRowSelectionAllowed(true);
 
         m_clTableSorter.initsort();
     }
-    
+
     private void reInitModel(int matchtyp) {
         m_clTableModel = DBManager.instance().getArenaStatistikModel(matchtyp);
-        m_clTableSorter = new TableSorter(m_clTableModel, 5, -1);
-        setModel(m_clTableSorter);
+        if (m_clTableSorter == null){
+            m_clTableSorter = new TableSorter(m_clTableModel, 5, -1);
+            setModel(m_clTableSorter);
+        }else{
+            m_clTableSorter.setModel(m_clTableModel);
+            setModel(m_clTableSorter);
+            m_clTableSorter.reallocateIndexes();
+        }
     }
     
 }
