@@ -3,10 +3,11 @@ package module.matches;
 
 import core.db.DBManager;
 import core.gui.comp.panel.RasenPanel;
+import core.model.UserParameter;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -120,122 +121,122 @@ public class AufstellungsSternePanel extends RasenPanel {
 
 			for (MatchLineupPlayer player : aufstellung) {
 				switch (player.getId()) {
-				case ISpielerPosition.keeper: {
+				case IMatchRoleID.keeper: {
 					m_clKeeper.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.rightBack: {
+				case IMatchRoleID.rightBack: {
 					m_clRightBack.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.leftBack: {
+				case IMatchRoleID.leftBack: {
 					m_clLeftBack.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.rightCentralDefender: {
+				case IMatchRoleID.rightCentralDefender: {
 					m_clRightCentralDefender.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.middleCentralDefender: {
+				case IMatchRoleID.middleCentralDefender: {
 					m_clMiddleCentralDefender.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.leftCentralDefender: {
+				case IMatchRoleID.leftCentralDefender: {
 					m_clLeftCentralDefender.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.rightInnerMidfield: {
+				case IMatchRoleID.rightInnerMidfield: {
 					m_clRightInnerMidfielder.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.centralInnerMidfield: {
+				case IMatchRoleID.centralInnerMidfield: {
 					m_clCentralInnerMidfielder.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.leftInnerMidfield: {
+				case IMatchRoleID.leftInnerMidfield: {
 					m_clLeftInnerMidfielder.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.leftWinger: {
+				case IMatchRoleID.leftWinger: {
 					m_clLeftWinger.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.rightWinger: {
+				case IMatchRoleID.rightWinger: {
 					m_clRightWinger.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.rightForward: {
+				case IMatchRoleID.rightForward: {
 					m_clRightForward.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.centralForward: {
+				case IMatchRoleID.centralForward: {
 					m_clCentralForward.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.leftForward: {
+				case IMatchRoleID.leftForward: {
 					m_clLeftForward.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.substDefender: {
+				case IMatchRoleID.substCD1: {
 					m_clReserveDefender.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.substForward: {
+				case IMatchRoleID.substFW1: {
 					m_clReserveForward.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.substInnerMidfield: {
+				case IMatchRoleID.substIM1: {
 					m_clReserveMidfielder.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.substKeeper: {
+				case IMatchRoleID.substGK1: {
 					m_clReserveKeeper.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.substWinger: {
+				case IMatchRoleID.substWI1: {
 					m_clReserveWinger.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.captain: {
+				case IMatchRoleID.captain: {
 					m_clCaptain.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.setPieces: {
+				case IMatchRoleID.setPieces: {
 					m_clSetPieces.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.ausgewechselt: {
+				case IMatchRoleID.FirstPlayerReplaced: {
 					m_clAusgewechselt1.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.ausgewechselt + 1: {
+				case IMatchRoleID.SecondPlayerReplaced: {
 					m_clAusgewechselt2.refresh(lineup, player);
 					break;
 				}
 
-				case ISpielerPosition.ausgewechselt + 2: {
+				case IMatchRoleID.ThirdPlayerReplaced: {
 					m_clAusgewechselt3.refresh(lineup, player);
 					break;
 				}
@@ -288,7 +289,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 		m_jlTeamName.setOpaque(false);
 		m_jlTeamName.setForeground(Color.white);
 		m_jlTeamName.setFont(m_jlTeamName.getFont().deriveFont(Font.BOLD,
-				core.model.UserParameter.instance().schriftGroesse + 3));
+				UserParameter.instance().schriftGroesse + 3));
 		layout.setConstraints(m_jlTeamName, constraints);
 		centerPanel.add(m_jlTeamName);
 
@@ -306,7 +307,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 12;
 		}
 
-		m_clKeeper = new SpielerSternePanel(ISpielerPosition.keeper, m_bPrint, centerPanel, gridx,
+		m_clKeeper = new SpielerSternePanel(IMatchRoleID.keeper, m_bPrint, centerPanel, gridx,
 				gridy);
 
 		if (m_bHeim) {
@@ -317,7 +318,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 11;
 		}
 
-		m_clRightBack = new SpielerSternePanel(ISpielerPosition.rightBack, m_bPrint, centerPanel,
+		m_clRightBack = new SpielerSternePanel(IMatchRoleID.rightBack, m_bPrint, centerPanel,
 				gridx, gridy);
 
 		if (m_bHeim) {
@@ -328,7 +329,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 11;
 		}
 
-		m_clRightCentralDefender = new SpielerSternePanel(ISpielerPosition.rightCentralDefender,
+		m_clRightCentralDefender = new SpielerSternePanel(IMatchRoleID.rightCentralDefender,
 				m_bPrint, centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -339,7 +340,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 11;
 		}
 
-		m_clMiddleCentralDefender = new SpielerSternePanel(ISpielerPosition.middleCentralDefender,
+		m_clMiddleCentralDefender = new SpielerSternePanel(IMatchRoleID.middleCentralDefender,
 				m_bPrint, centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -350,7 +351,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 11;
 		}
 
-		m_clLeftCentralDefender = new SpielerSternePanel(ISpielerPosition.leftCentralDefender,
+		m_clLeftCentralDefender = new SpielerSternePanel(IMatchRoleID.leftCentralDefender,
 				m_bPrint, centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -361,7 +362,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 11;
 		}
 
-		m_clLeftBack = new SpielerSternePanel(ISpielerPosition.leftBack, m_bPrint, centerPanel,
+		m_clLeftBack = new SpielerSternePanel(IMatchRoleID.leftBack, m_bPrint, centerPanel,
 				gridx, gridy);
 
 		if (m_bHeim) {
@@ -372,7 +373,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 10;
 		}
 
-		m_clRightWinger = new SpielerSternePanel(ISpielerPosition.rightWinger, m_bPrint,
+		m_clRightWinger = new SpielerSternePanel(IMatchRoleID.rightWinger, m_bPrint,
 				centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -383,7 +384,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 10;
 		}
 
-		m_clRightInnerMidfielder = new SpielerSternePanel(ISpielerPosition.rightInnerMidfield,
+		m_clRightInnerMidfielder = new SpielerSternePanel(IMatchRoleID.rightInnerMidfield,
 				m_bPrint, centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -394,7 +395,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 10;
 		}
 
-		m_clCentralInnerMidfielder = new SpielerSternePanel(ISpielerPosition.centralInnerMidfield,
+		m_clCentralInnerMidfielder = new SpielerSternePanel(IMatchRoleID.centralInnerMidfield,
 				m_bPrint, centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -405,7 +406,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 10;
 		}
 
-		m_clLeftInnerMidfielder = new SpielerSternePanel(ISpielerPosition.leftInnerMidfield,
+		m_clLeftInnerMidfielder = new SpielerSternePanel(IMatchRoleID.leftInnerMidfield,
 				m_bPrint, centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -416,7 +417,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 10;
 		}
 
-		m_clLeftWinger = new SpielerSternePanel(ISpielerPosition.leftWinger, m_bPrint, centerPanel,
+		m_clLeftWinger = new SpielerSternePanel(IMatchRoleID.leftWinger, m_bPrint, centerPanel,
 				gridx, gridy);
 
 		if (m_bHeim) {
@@ -427,7 +428,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 9;
 		}
 
-		m_clRightForward = new SpielerSternePanel(ISpielerPosition.rightForward, m_bPrint,
+		m_clRightForward = new SpielerSternePanel(IMatchRoleID.rightForward, m_bPrint,
 				centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -438,7 +439,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 9;
 		}
 
-		m_clCentralForward = new SpielerSternePanel(ISpielerPosition.centralForward, m_bPrint,
+		m_clCentralForward = new SpielerSternePanel(IMatchRoleID.centralForward, m_bPrint,
 				centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -449,7 +450,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 9;
 		}
 
-		m_clLeftForward = new SpielerSternePanel(ISpielerPosition.leftForward, m_bPrint,
+		m_clLeftForward = new SpielerSternePanel(IMatchRoleID.leftForward, m_bPrint,
 				centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -460,7 +461,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 13;
 		}
 
-		m_clReserveKeeper = new SpielerSternePanel(ISpielerPosition.substKeeper, m_bPrint,
+		m_clReserveKeeper = new SpielerSternePanel(IMatchRoleID.substGK1, m_bPrint,
 				centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -471,7 +472,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 13;
 		}
 
-		m_clReserveDefender = new SpielerSternePanel(ISpielerPosition.substDefender, m_bPrint,
+		m_clReserveDefender = new SpielerSternePanel(IMatchRoleID.substCD1, m_bPrint,
 				centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -482,7 +483,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 13;
 		}
 
-		m_clReserveMidfielder = new SpielerSternePanel(ISpielerPosition.substInnerMidfield,
+		m_clReserveMidfielder = new SpielerSternePanel(IMatchRoleID.substIM1,
 				m_bPrint, centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -493,7 +494,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 13;
 		}
 
-		m_clReserveForward = new SpielerSternePanel(ISpielerPosition.substForward, m_bPrint,
+		m_clReserveForward = new SpielerSternePanel(IMatchRoleID.substFW1, m_bPrint,
 				centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -504,7 +505,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 13;
 		}
 
-		m_clReserveWinger = new SpielerSternePanel(ISpielerPosition.substWinger, m_bPrint,
+		m_clReserveWinger = new SpielerSternePanel(IMatchRoleID.substWI1, m_bPrint,
 				centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -515,7 +516,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 14;
 		}
 
-		m_clCaptain = new SpielerSternePanel(ISpielerPosition.captain, m_bPrint, centerPanel,
+		m_clCaptain = new SpielerSternePanel(IMatchRoleID.captain, m_bPrint, centerPanel,
 				gridx, gridy);
 
 		if (m_bHeim) {
@@ -526,7 +527,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 14;
 		}
 
-		m_clSetPieces = new SpielerSternePanel(ISpielerPosition.setPieces, m_bPrint, centerPanel,
+		m_clSetPieces = new SpielerSternePanel(IMatchRoleID.setPieces, m_bPrint, centerPanel,
 				gridx, gridy);
 
 		if (m_bHeim) {
@@ -537,7 +538,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 14;
 		}
 
-		m_clAusgewechselt1 = new SpielerSternePanel(ISpielerPosition.ausgewechselt, m_bPrint,
+		m_clAusgewechselt1 = new SpielerSternePanel(IMatchRoleID.FirstPlayerReplaced, m_bPrint,
 				centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -548,7 +549,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 14;
 		}
 
-		m_clAusgewechselt2 = new SpielerSternePanel(ISpielerPosition.ausgewechselt, m_bPrint,
+		m_clAusgewechselt2 = new SpielerSternePanel(IMatchRoleID.SecondPlayerReplaced, m_bPrint,
 				centerPanel, gridx, gridy);
 
 		if (m_bHeim) {
@@ -559,7 +560,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			gridy = 14;
 		}
 
-		m_clAusgewechselt3 = new SpielerSternePanel(ISpielerPosition.ausgewechselt, m_bPrint,
+		m_clAusgewechselt3 = new SpielerSternePanel(IMatchRoleID.ThirdPlayerReplaced, m_bPrint,
 				centerPanel, gridx, gridy);
 
 		final JLabel label = new JLabel();

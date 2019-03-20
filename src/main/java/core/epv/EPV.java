@@ -1,10 +1,6 @@
 // %1598857424:de.hattrickorganizer.logik%
 package core.epv;
 
-import core.model.HOVerwaltung;
-import core.model.player.Spieler;
-import core.util.HOLogger;
-
 /**
  * Main EPV manager class
  *
@@ -21,7 +17,7 @@ import core.util.HOLogger;
 //
 //    //~ Methods ------------------------------------------------------------------------------------
 //
-//    public final EPVData getEPVData(Spieler spieler) {
+//    public final EPVData getEPVData(Player spieler) {
 //        final EPVData data = new EPVData(spieler);
 //        return data;
 //    }

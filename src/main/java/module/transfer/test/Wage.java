@@ -51,7 +51,7 @@ public class Wage {
 	public static List<Wage> getWagesByAge(int playerID) {
 		List<Wage> wages = new ArrayList<Wage>();
 
-		String query = "SELECT age, gehalt FROM Spieler WHERE spielerid=" + playerID
+		String query = "SELECT age, gehalt FROM Player WHERE spielerid=" + playerID
 				+ " GROUP BY age, gehalt";
 		ResultSet rs = DBManager.instance().getAdapter().executeQuery(query);
 		try {

@@ -3,7 +3,7 @@ package core.gui.model;
 
 import core.model.match.MatchType;
 import core.model.match.Matchdetails;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 
 /**
@@ -13,7 +13,7 @@ public class SpielerMatchCBItem {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private Matchdetails m_clMatchdetails;
-    private Spieler m_clSpieler;
+    private Player m_clPlayer;
     private String m_clGastteam;
     private String m_clHeimteam;
     private String m_clMatchdate;
@@ -31,11 +31,11 @@ public class SpielerMatchCBItem {
     /**
      * Creates a new SpielerMatchCBItem object.
      */
-    public SpielerMatchCBItem(Spieler spieler, int matchid, float rating, int positionsid,
+    public SpielerMatchCBItem(Player player, int matchid, float rating, int positionsid,
                               String matchdate, String heimteam, int heimid, String gastteam,
                               int gastid, MatchType matchtyp, Matchdetails matchdetails,
                               String selbstvertrauen, String stimmung) {
-        m_clSpieler = spieler;
+        m_clPlayer = player;
         m_iMatchID = matchid;
         m_fRating = rating;
         m_iPosition = positionsid;
@@ -251,21 +251,21 @@ public class SpielerMatchCBItem {
     }
 
     /**
-     * Setter for property m_clSpieler.
+     * Setter for property m_clPlayer.
      *
-     * @param m_clSpieler New value of property m_clSpieler.
+     * @param m_clPlayer New value of property m_clPlayer.
      */
-    public final void setSpieler(core.model.player.Spieler m_clSpieler) {
-        this.m_clSpieler = m_clSpieler;
+    public final void setSpieler(Player m_clPlayer) {
+        this.m_clPlayer = m_clPlayer;
     }
 
     /**
-     * Getter for property m_clSpieler.
+     * Getter for property m_clPlayer.
      *
-     * @return Value of property m_clSpieler.
+     * @return Value of property m_clPlayer.
      */
-    public final core.model.player.Spieler getSpieler() {
-        return m_clSpieler;
+    public final Player getSpieler() {
+        return m_clPlayer;
     }
 
     /**

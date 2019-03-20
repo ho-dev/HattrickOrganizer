@@ -2,10 +2,10 @@ package module.lineup;
 
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import core.model.player.Player;
 import core.util.HOLogger;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
-import core.model.player.Spieler;
 
 import java.awt.Component;
 import java.awt.Toolkit;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import static core.model.player.ISpielerPosition.*;
+import static core.model.player.IMatchRoleID.*;
 
 
 /**
@@ -145,9 +145,9 @@ public class CopyListener implements ActionListener {
 			int positionID = p.getPositionsID();
 			int playerID = p.getPlayerId();
 			if (playerID != -1) {
-				Spieler player = p.getSelectedPlayer();
+				Player player = p.getSelectedPlayer();
 				switch (positionID) {
-				// ugly that the imported static constants from ISpielerPosition are named in lower case
+				// ugly that the imported static constants from IMatchRoleID are named in lower case
 				case keeper: goalie = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportNameForKeeper(); break;
 				case rightBack: rightWB = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName(); break;
 				case rightCentralDefender: rightCD = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialityExportName(); break;
@@ -167,7 +167,7 @@ public class CopyListener implements ActionListener {
 			}
 		}
 		HOVerwaltung hov = HOVerwaltung.instance();
-		Lineup lineupData = hov.getModel().getAufstellung();
+		Lineup lineupData = hov.getModel().getLineup();
 		byte system = lineupData.ermittelSystem();
 		String systemName = lineupData.getSystemName(system);
 		int tacticType = lineupData.getTacticType();
@@ -199,9 +199,9 @@ public class CopyListener implements ActionListener {
 			int positionID = p.getPositionsID();
 			int playerID = p.getPlayerId();
 			if (playerID != -1) {
-				Spieler player = p.getSelectedPlayer();
+				Player player = p.getSelectedPlayer();
 				switch (positionID) {
-				// ugly that the imported static constants from ISpielerPosition are named in lower case
+				// ugly that the imported static constants from IMatchRoleID are named in lower case
 				case keeper: goalie = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportNameForKeeper(); break;
 				case rightBack: rightWB = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName(); break;
 				case rightCentralDefender: rightCD = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialityExportName(); break;
@@ -221,7 +221,7 @@ public class CopyListener implements ActionListener {
 			}
 		}
 		HOVerwaltung hov = HOVerwaltung.instance();
-		Lineup lineupData = hov.getModel().getAufstellung();
+		Lineup lineupData = hov.getModel().getLineup();
 		byte system = lineupData.ermittelSystem();
 		String systemName = lineupData.getSystemName(system);
 		int tacticType = lineupData.getTacticType();

@@ -1,7 +1,7 @@
 package core.model.match;
 
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.Substitution;
 
@@ -147,8 +147,8 @@ public class MatchLineupTeam {
 
 		for (MatchLineupPlayer player : m_vAufstellung) {
 			if (player.getSpielerId() == id) {
-				if ((player.getId() == ISpielerPosition.captain)
-						|| (player.getId() == ISpielerPosition.setPieces)) {
+				if ((player.getId() == IMatchRoleID.captain)
+						|| (player.getId() == IMatchRoleID.setPieces)) {
 					// ignore
 				} else {
 					return player;
@@ -160,7 +160,7 @@ public class MatchLineupTeam {
 	}
 
 	/**
-	 * Liefert Einen Spieler per PositionsID aus der Aufstellung
+	 * Liefert Einen Player per PositionsID aus der Aufstellung
 	 */
 	public final MatchLineupPlayer getPlayerByPosition(int id) {
 		MatchLineupPlayer player = null;
@@ -264,35 +264,35 @@ public class MatchLineupTeam {
 		for (int i = 0; i < m_vAufstellung.size(); i++) {
 			player = (MatchLineupPlayer) m_vAufstellung.get(i);
 
-			if ((player != null) && (player.getId() < ISpielerPosition.startReserves)) {
+			if (player != null) {
 				switch (player.getPosition()) {
-				case ISpielerPosition.UNKNOWN:
+				case IMatchRoleID.UNKNOWN:
 					break;
 
-				case ISpielerPosition.BACK:
-				case ISpielerPosition.BACK_TOMID:
-				case ISpielerPosition.BACK_OFF:
-				case ISpielerPosition.BACK_DEF:
-				case ISpielerPosition.CENTRAL_DEFENDER:
-				case ISpielerPosition.CENTRAL_DEFENDER_TOWING:
-				case ISpielerPosition.CENTRAL_DEFENDER_OFF:
+				case IMatchRoleID.BACK:
+				case IMatchRoleID.BACK_TOMID:
+				case IMatchRoleID.BACK_OFF:
+				case IMatchRoleID.BACK_DEF:
+				case IMatchRoleID.CENTRAL_DEFENDER:
+				case IMatchRoleID.CENTRAL_DEFENDER_TOWING:
+				case IMatchRoleID.CENTRAL_DEFENDER_OFF:
 					abw++;
 					break;
 
-				case ISpielerPosition.MIDFIELDER:
-				case ISpielerPosition.MIDFIELDER_OFF:
-				case ISpielerPosition.MIDFIELDER_DEF:
-				case ISpielerPosition.MIDFIELDER_TOWING:
-				case ISpielerPosition.WINGER:
-				case ISpielerPosition.WINGER_TOMID:
-				case ISpielerPosition.WINGER_OFF:
-				case ISpielerPosition.WINGER_DEF:
+				case IMatchRoleID.MIDFIELDER:
+				case IMatchRoleID.MIDFIELDER_OFF:
+				case IMatchRoleID.MIDFIELDER_DEF:
+				case IMatchRoleID.MIDFIELDER_TOWING:
+				case IMatchRoleID.WINGER:
+				case IMatchRoleID.WINGER_TOMID:
+				case IMatchRoleID.WINGER_OFF:
+				case IMatchRoleID.WINGER_DEF:
 					mf++;
 					break;
 
-				case ISpielerPosition.FORWARD:
-				case ISpielerPosition.FORWARD_TOWING:
-				case ISpielerPosition.FORWARD_DEF:
+				case IMatchRoleID.FORWARD:
+				case IMatchRoleID.FORWARD_TOWING:
+				case IMatchRoleID.FORWARD_DEF:
 					st++;
 					break;
 				}

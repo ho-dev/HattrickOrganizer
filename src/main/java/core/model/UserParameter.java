@@ -181,7 +181,7 @@ public final class UserParameter extends Configuration {
     //Zahlen hinter den Bewertungen anzeigen
     public boolean zahlenFuerSkill = true;
 
-    /*gibt die mindeststärke für einen Spieler an für seine Idealpos um vom Aufstellungsassi bei idealpos gesetzt zu werden*/
+    /*gibt die mindeststärke für einen Player an für seine Idealpos um vom Aufstellungsassi bei idealpos gesetzt zu werden*/
     public float MinIdealPosStk = 3.5f;
     public float TrainerFaktor = 1.0f;
 

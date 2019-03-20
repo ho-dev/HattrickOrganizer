@@ -5,7 +5,7 @@ import core.gui.Updateable;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.UserParameter;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import module.playerOverview.PlayerTable;
 import module.playerOverview.SpielerUebersichtNamenTable;
 
@@ -127,7 +127,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	}
 
 	/**
-	 * Setzt die Spieler und Taktiken der einzelnen PositionsPanels neu
+	 * Setzt die Player und Taktiken der einzelnen PositionsPanels neu
 	 */
 	public final void update() {
 		aufstellungsPositionsPanel.refresh();
@@ -267,9 +267,9 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 					if (targetTable.getSelectedRow() != row) {
 						targetTable.setRowSelectionInterval(row, row);
 					}
-					Spieler spieler = ((PlayerTable) sourceTable).getSpieler(row);
-					if (spieler != null) {
-						HOMainFrame.instance().setActualSpieler(spieler);
+					Player player = ((PlayerTable) sourceTable).getSpieler(row);
+					if (player != null) {
+						HOMainFrame.instance().setActualSpieler(player);
 					}
 				}
 			}

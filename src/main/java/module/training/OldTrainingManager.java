@@ -4,7 +4,7 @@ package module.training;
 import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
 import core.model.player.ISkillup;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.HTCalendarFactory;
 import core.util.HelperWrapper;
 
@@ -30,7 +30,7 @@ public class OldTrainingManager {
 	 * 
 	 * @param player
 	 */
-	public OldTrainingManager(Spieler player) {
+	public OldTrainingManager(Player player) {
 		if (player == null) {
 			return;
 		}

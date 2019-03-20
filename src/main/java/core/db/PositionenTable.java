@@ -1,6 +1,7 @@
 package core.db;
 
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -31,11 +32,11 @@ public final class PositionenTable extends AbstractTable {
 	/**
 	 * lädt System Positionen
 	 */
-	Vector<ISpielerPosition> getSystemPositionen(int hrfID, String sysName) {
+	Vector<IMatchRoleID> getSystemPositionen(int hrfID, String sysName) {
 		ResultSet rs = null;
-		core.model.player.SpielerPosition pos = null;
+		MatchRoleID pos = null;
 		String sql = null;
-		final Vector<ISpielerPosition> ret = new Vector<ISpielerPosition>();
+		final Vector<IMatchRoleID> ret = new Vector<IMatchRoleID>();
 
 		sql = "SELECT * FROM "+getTableName()+" WHERE HRF_ID = " + hrfID + " AND Aufstellungsname ='" + sysName + "'";
 		rs = adapter.executeQuery(sql);
@@ -51,24 +52,24 @@ public final class PositionenTable extends AbstractTable {
 					int playerID = rs.getInt("SpielerID");
 					
 					switch (behavior) {
-					case ISpielerPosition.OLD_EXTRA_DEFENDER :
-						roleID = ISpielerPosition.middleCentralDefender;
-						behavior = ISpielerPosition.NORMAL;
+					case IMatchRoleID.OLD_EXTRA_DEFENDER :
+						roleID = IMatchRoleID.middleCentralDefender;
+						behavior = IMatchRoleID.NORMAL;
 						break;
-					case ISpielerPosition.OLD_EXTRA_MIDFIELD :
-						roleID = ISpielerPosition.centralInnerMidfield;
-						behavior = ISpielerPosition.NORMAL;
+					case IMatchRoleID.OLD_EXTRA_MIDFIELD :
+						roleID = IMatchRoleID.centralInnerMidfield;
+						behavior = IMatchRoleID.NORMAL;
 						break;
-					case ISpielerPosition.OLD_EXTRA_FORWARD :
-						roleID = ISpielerPosition.centralForward;
-						behavior = ISpielerPosition.NORMAL;
+					case IMatchRoleID.OLD_EXTRA_FORWARD :
+						roleID = IMatchRoleID.centralForward;
+						behavior = IMatchRoleID.NORMAL;
 						break;
-					case ISpielerPosition.OLD_EXTRA_DEFENSIVE_FORWARD :
-						roleID = ISpielerPosition.centralForward;
-						behavior = ISpielerPosition.DEFENSIVE;
+					case IMatchRoleID.OLD_EXTRA_DEFENSIVE_FORWARD :
+						roleID = IMatchRoleID.centralForward;
+						behavior = IMatchRoleID.DEFENSIVE;
 				}
 					
-					if (roleID < ISpielerPosition.setPieces) {
+					if (roleID < IMatchRoleID.setPieces) {
 						roleID = convertOldRoleToNew(roleID);
 					}
 					
@@ -76,7 +77,7 @@ public final class PositionenTable extends AbstractTable {
 						playerID = 0;
 					}
 					
-					pos = new core.model.player.SpielerPosition(roleID, playerID, (byte)behavior);
+					pos = new MatchRoleID(roleID, playerID, (byte)behavior);
 					ret.add(pos);
 				}
 			}
@@ -90,16 +91,16 @@ public final class PositionenTable extends AbstractTable {
 	/**
 	 * speichert System Positionen
 	 */
-	void saveSystemPositionen(int hrfId, Vector<ISpielerPosition> positionen, String sysName) {
+	void saveSystemPositionen(int hrfId, Vector<IMatchRoleID> positionen, String sysName) {
 		String statement = null;
-		core.model.player.SpielerPosition pos = null;
+		MatchRoleID pos = null;
 
 		//bereits vorhandenen Eintrag entdernen
 		DBManager.instance().deleteSystem(hrfId, sysName);
 
 		//speichern vorbereiten
 		for (int i = 0;(positionen != null) && (sysName != null) && (i < positionen.size()); i++) {
-			pos = (core.model.player.SpielerPosition) positionen.elementAt(i);
+			pos = (MatchRoleID) positionen.elementAt(i);
 			statement = "INSERT INTO "+getTableName()+" ( HRF_ID, ID, Aufstellungsname, SpielerID, Taktik ) VALUES(";
 			statement += ("" + hrfId + "," + pos.getId() + ",'" + sysName + "'," + pos.getSpielerId() + "," + pos.getTaktik() + " )");
 
@@ -110,38 +111,38 @@ public final class PositionenTable extends AbstractTable {
 	// Helper
 	private int convertOldRoleToNew(int roleID) {
     	switch (roleID) {
-    		case ISpielerPosition.oldKeeper :
-    			return ISpielerPosition.keeper;
-    		case ISpielerPosition.oldRightBack :
-    			return ISpielerPosition.rightBack;
-    		case ISpielerPosition.oldLeftCentralDefender :
-    			return ISpielerPosition.leftCentralDefender;
-    		case ISpielerPosition.oldRightCentralDefender :
-    			return ISpielerPosition.rightCentralDefender;
-    		case ISpielerPosition.oldLeftBack :
-    			return ISpielerPosition.leftBack;
-    		case ISpielerPosition.oldRightWinger :
-    			return ISpielerPosition.rightWinger;
-    		case ISpielerPosition.oldRightInnerMidfielder :
-    			return ISpielerPosition.rightInnerMidfield;
-    		case ISpielerPosition.oldLeftInnerMidfielder :
-    			return ISpielerPosition.leftInnerMidfield;
-    		case ISpielerPosition.oldLeftWinger:
-    			return ISpielerPosition.leftWinger;
-    		case ISpielerPosition.oldRightForward :
-    			return ISpielerPosition.rightForward;
-    		case ISpielerPosition.oldLeftForward :
-    			return ISpielerPosition.leftForward;
-    		case ISpielerPosition.oldSubstKeeper :
-    			return ISpielerPosition.substKeeper;
-    		case ISpielerPosition.oldSubstDefender :
-    			return ISpielerPosition.substDefender;
-    		case ISpielerPosition.oldSubstMidfielder :
-    			return ISpielerPosition.substInnerMidfield;
-    		case ISpielerPosition.oldSubstWinger :
-    			return ISpielerPosition.substWinger;
-    		case ISpielerPosition.oldSubstForward :
-    			return ISpielerPosition.substForward;
+    		case IMatchRoleID.oldKeeper :
+    			return IMatchRoleID.keeper;
+    		case IMatchRoleID.oldRightBack :
+    			return IMatchRoleID.rightBack;
+    		case IMatchRoleID.oldLeftCentralDefender :
+    			return IMatchRoleID.leftCentralDefender;
+    		case IMatchRoleID.oldRightCentralDefender :
+    			return IMatchRoleID.rightCentralDefender;
+    		case IMatchRoleID.oldLeftBack :
+    			return IMatchRoleID.leftBack;
+    		case IMatchRoleID.oldRightWinger :
+    			return IMatchRoleID.rightWinger;
+    		case IMatchRoleID.oldRightInnerMidfielder :
+    			return IMatchRoleID.rightInnerMidfield;
+    		case IMatchRoleID.oldLeftInnerMidfielder :
+    			return IMatchRoleID.leftInnerMidfield;
+    		case IMatchRoleID.oldLeftWinger:
+    			return IMatchRoleID.leftWinger;
+    		case IMatchRoleID.oldRightForward :
+    			return IMatchRoleID.rightForward;
+    		case IMatchRoleID.oldLeftForward :
+    			return IMatchRoleID.leftForward;
+    		case IMatchRoleID.oldSubstKeeper :
+    			return IMatchRoleID.substGK1;
+    		case IMatchRoleID.oldSubstDefender :
+    			return IMatchRoleID.substCD1;
+    		case IMatchRoleID.oldSubstMidfielder :
+    			return IMatchRoleID.substIM1;
+    		case IMatchRoleID.oldSubstWinger :
+    			return IMatchRoleID.substWI1;
+    		case IMatchRoleID.oldSubstForward :
+    			return IMatchRoleID.substFW1;
     		default :
     			return roleID;
     	}

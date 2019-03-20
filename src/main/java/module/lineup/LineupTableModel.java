@@ -5,7 +5,7 @@ import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.PlayerColumn;
 import core.gui.model.UserColumnFactory;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.HOLogger;
 
 import java.util.Vector;
@@ -14,7 +14,7 @@ public class LineupTableModel extends HOTableModel {
 
 	private static final long serialVersionUID = 6706783648812506363L;
 
-	private Vector<Spieler> m_vPlayers;
+	private Vector<Player> m_vPlayers;
 
 	public LineupTableModel(int id) {
 		super(id, "Aufstellung");
@@ -82,13 +82,13 @@ public class LineupTableModel extends HOTableModel {
 				final int id = Integer
 						.parseInt(((core.gui.comp.entry.ColorLabelEntry) getValueAt(i,
 								getColumnIndexOfDisplayedColumn(UserColumnFactory.ID))).getText());
-				final Spieler spieler = getSpieler(id);
+				final Player player = getSpieler(id);
 
-				if ((spieler != null)
-						&& (spieler.isSpielberechtigt() != ((Boolean) getValueAt(i,
+				if ((player != null)
+						&& (player.isSpielberechtigt() != ((Boolean) getValueAt(i,
 								getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP)))
 								.booleanValue())) {
-					spieler.setSpielberechtigt(((Boolean) getValueAt(i,
+					player.setSpielberechtigt(((Boolean) getValueAt(i,
 							getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP)))
 							.booleanValue());
 				}
@@ -99,11 +99,11 @@ public class LineupTableModel extends HOTableModel {
 		}
 	}
 
-	public final Spieler getSpieler(int id) {
+	public final Player getSpieler(int id) {
 		if (id > 0) {
 			for (int i = 0; i < m_vPlayers.size(); i++) {
-				if (((Spieler) m_vPlayers.get(i)).getSpielerID() == id) {
-					return (Spieler) m_vPlayers.get(i);
+				if (((Player) m_vPlayers.get(i)).getSpielerID() == id) {
+					return (Player) m_vPlayers.get(i);
 				}
 			}
 		}
@@ -112,17 +112,17 @@ public class LineupTableModel extends HOTableModel {
 	}
 
 	/**
-	 * Spieler neu setzen
+	 * Player neu setzen
 	 */
-	public final void setValues(Vector<Spieler> player) {
+	public final void setValues(Vector<Player> player) {
 		m_vPlayers = player;
 		initData();
 	}
 
 	/**
-	 * Fügt der Tabelle einen Spieler hinzu
+	 * Fügt der Tabelle einen Player hinzu
 	 */
-	public final void addSpieler(Spieler player, int index) {
+	public final void addSpieler(Player player, int index) {
 		m_vPlayers.add(index, player);
 		initData();
 	}
@@ -136,15 +136,15 @@ public class LineupTableModel extends HOTableModel {
 		m_clData = new Object[m_vPlayers.size()][tmpDisplayedColumns.length];
 
 		for (int i = 0; i < m_vPlayers.size(); i++) {
-			final Spieler aktuellerSpieler = (Spieler) m_vPlayers.get(i);
+			final Player aktuellerPlayer = (Player) m_vPlayers.get(i);
 
 			for (int j = 0; j < tmpDisplayedColumns.length; j++) {
 				if (tmpDisplayedColumns[j] instanceof PlayerColumn)
 					m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(
-							aktuellerSpieler, null);
+							aktuellerPlayer, null);
 				if (tmpDisplayedColumns[j] instanceof BooleanColumn)
 					m_clData[i][j] = ((BooleanColumn) tmpDisplayedColumns[j])
-							.getValue(aktuellerSpieler);
+							.getValue(aktuellerPlayer);
 			}
 		}
 	}
@@ -155,7 +155,7 @@ public class LineupTableModel extends HOTableModel {
 	public final void reInitData() {
 		UserColumn[] tmpDisplayedColumns = getDisplayedColumns();
 		for (int i = 0; i < m_vPlayers.size(); i++) {
-			final Spieler aktuellerSpieler = (Spieler) m_vPlayers.get(i);
+			final Player aktuellerPlayer = (Player) m_vPlayers.get(i);
 
 			for (int j = 0; j < tmpDisplayedColumns.length; j++) {
 				if (tmpDisplayedColumns[j].getId() == UserColumnFactory.NAME
@@ -163,15 +163,15 @@ public class LineupTableModel extends HOTableModel {
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.BEST_POSITION
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.GROUP)
 					m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(
-							aktuellerSpieler, null);
+							aktuellerPlayer, null);
 			}
 		}
 	}
 
 	/**
-	 * Entfernt den Spieler aus der Tabelle
+	 * Entfernt den Player aus der Tabelle
 	 */
-	public final void removeSpieler(Spieler player) {
+	public final void removeSpieler(Player player) {
 		m_vPlayers.remove(player);
 		initData();
 	}

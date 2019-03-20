@@ -1,12 +1,12 @@
 package module.lineup.substitution;
 
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 public class PlayerPositionItem {
 	private Integer position;
-	private Spieler player;
+	private Player player;
 
-	PlayerPositionItem(Integer pos, Spieler player) {
+	PlayerPositionItem(Integer pos, Player player) {
 		this.player = player;
 		this.position = pos;
 	}
@@ -15,7 +15,7 @@ public class PlayerPositionItem {
 		return position;
 	}
 
-	public Spieler getSpieler() {
+	public Player getSpieler() {
 		return this.player;
 	}
 

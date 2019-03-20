@@ -20,7 +20,7 @@ import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.Matchdetails;
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 import core.module.IModule;
 import core.net.OnlineWorker;
 import core.prediction.MatchEnginePanel;
@@ -217,16 +217,16 @@ public final class SpielePanel extends LazyImagePanel {
 			int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 			List<MatchLineupPlayer> teamspieler = DBManager.instance().getMatchLineupPlayers(
 					matchesModel.getMatch().getMatchID(), teamid);
-			Lineup aufstellung = HOVerwaltung.instance().getModel().getAufstellung();
+			Lineup aufstellung = HOVerwaltung.instance().getModel().getLineup();
 
 			aufstellung.clearLineup(); // To make sure the old one is
 										// gone.
 
 			if (teamspieler != null) {
 				for (MatchLineupPlayer player : teamspieler) {
-					if (player.getId() == ISpielerPosition.setPieces) {
+					if (player.getId() == IMatchRoleID.setPieces) {
 						aufstellung.setKicker(player.getSpielerId());
-					} else if (player.getId() == ISpielerPosition.captain) {
+					} else if (player.getId() == IMatchRoleID.captain) {
 						aufstellung.setKapitaen(player.getSpielerId());
 					} else {
 						aufstellung.setSpielerAtPosition(player.getId(), player.getSpielerId(),
@@ -360,7 +360,7 @@ public final class SpielePanel extends LazyImagePanel {
 	 * Get the team data for the own team (current linep).
 	 */
 	private TeamData getOwnLineupRatings(MatchPredictionManager manager) {
-		Lineup lineup = HOVerwaltung.instance().getModel().getAufstellung();
+		Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
 		TeamRatings teamRatings = manager.generateTeamRatings(
 				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getMidfieldRating())),
 				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getLeftDefenseRating())),

@@ -4,7 +4,7 @@ import core.db.DBManager;
 import core.db.JDBCAdapter;
 import core.model.HOVerwaltung;
 import core.model.player.ISkillup;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.HTCalendarFactory;
 
 import java.sql.ResultSet;
@@ -48,12 +48,12 @@ public class EffectDAO {
 
             // Loop through all player (also old players) to get all trained skillups.
             // Group these skillups by season and week.
-            List<Spieler> players = new Vector<Spieler>(HOVerwaltung.instance().getModel().getAllSpieler());
+            List<Player> players = new Vector<Player>(HOVerwaltung.instance().getModel().getAllSpieler());
 
             players.addAll(HOVerwaltung.instance().getModel().getAllOldSpieler());
 
-            for (Iterator<Spieler> iterPlayers = players.iterator(); iterPlayers.hasNext();) {
-                Spieler player = (Spieler) iterPlayers.next();
+            for (Iterator<Player> iterPlayers = players.iterator(); iterPlayers.hasNext();) {
+                Player player = (Player) iterPlayers.next();
                 OldTrainingManager otm = new OldTrainingManager(player);
                 List<ISkillup> skillups = otm.getTrainedSkillups();
 

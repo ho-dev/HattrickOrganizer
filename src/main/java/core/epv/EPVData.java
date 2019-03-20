@@ -1,7 +1,7 @@
 package core.epv;
 
 import core.constants.player.PlayerSkill;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 
 /**
@@ -57,7 +57,7 @@ public class EPVData implements Cloneable {
     /**
      * Creates a new EPVData object.
      */
-    public EPVData(Spieler s) {
+    public EPVData(Player s) {
         setPlayerName(s.getName());
         setAge(s.getAlter());
         setAgeDays(s.getAgeDays());

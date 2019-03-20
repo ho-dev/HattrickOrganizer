@@ -1,7 +1,7 @@
 package module.transfer.test;
 
 import core.db.DBManager;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -20,15 +20,15 @@ import javax.swing.table.AbstractTableModel;
 public class WagesSumPanel extends JPanel {
 
 	private static final long serialVersionUID = -5258776512974633343L;
-	private Spieler spieler;
+	private Player player;
 	private JTable table;
 
 	WagesSumPanel() {
 		initComponents();
 	}
 
-	void setPlayer(Spieler player) {
-		this.spieler = player;
+	void setPlayer(Player player) {
+		this.player = player;
 		refreshData();
 	}
 	
@@ -44,12 +44,12 @@ public class WagesSumPanel extends JPanel {
 	}
 
 	private void refreshData() {
-		if (this.spieler != null) {
-			Transfer t = Transfer.getTransfer(spieler.getSpielerID());
+		if (this.player != null) {
+			Transfer t = Transfer.getTransfer(player.getSpielerID());
 			Date buyingDate;
-			if (spieler.isHomeGrown()) {
+			if (player.isHomeGrown()) {
 				buyingDate = new Date(DBManager.instance()
-						.getSpielerFirstHRF(spieler.getSpielerID()).getHrfDate().getTime());
+						.getSpielerFirstHRF(player.getSpielerID()).getHrfDate().getTime());
 			} else {
 				buyingDate = t.purchaseDate;
 			}
@@ -57,14 +57,14 @@ public class WagesSumPanel extends JPanel {
 			Date sellingDate = (t.sellingDate != null) ? t.sellingDate : new Date(); 
 			List<Date> updates = Calc.getUpdates(Calc.getEconomyDate(), buyingDate, sellingDate);
 			
-			List<Wage> wagesByAge = Wage.getWagesByAge(spieler.getSpielerID());
+			List<Wage> wagesByAge = Wage.getWagesByAge(player.getSpielerID());
 
 			Map<Integer, Wage> ageWageMap = new HashMap<Integer, Wage>();
 			for (Wage wage : wagesByAge) {
 				ageWageMap.put(Integer.valueOf(wage.getAge()), wage);
 			}
 
-			Date birthDay17 = Calc.get17thBirthday(spieler.getSpielerID());
+			Date birthDay17 = Calc.get17thBirthday(player.getSpielerID());
 			Map<Integer, Entry> ageWageSumMap = new HashMap<Integer, Entry>();
 			for (Date date : updates) {
 				int ageAt = Calc.getAgeAt(birthDay17, date);

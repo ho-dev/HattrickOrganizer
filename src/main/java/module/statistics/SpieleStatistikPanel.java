@@ -16,7 +16,7 @@ import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.Matchdetails;
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
 import core.util.Helper;
 import module.matches.SpielePanel;
@@ -604,8 +604,8 @@ public class SpieleStatistikPanel extends LazyImagePanel {
 				for (int j = 0; j < team.size(); j++) {
 					final MatchLineupPlayer player = (MatchLineupPlayer) team.get(j);
 
-					if (player.getId() < ISpielerPosition.startReserves
-							&& player.getId() >= ISpielerPosition.startLineup) {
+					if (player.getId() < IMatchRoleID.startReserves
+							&& player.getId() >= IMatchRoleID.startLineup) {
 						float rating = (float) player.getRating();
 
 						if (rating > 0) {

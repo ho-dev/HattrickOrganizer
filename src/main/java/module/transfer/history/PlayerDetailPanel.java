@@ -8,7 +8,7 @@ import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
 import module.transfer.ui.layout.TableLayout;
@@ -54,7 +54,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     private static final String SKILL_KEEPER = hov.getLanguageString("ls.player.skill.keeper");
     private static final String SKILL_EXPERIENCE = hov.getLanguageString("ls.player.experience");
 
-    private Spieler player;
+    private Player player;
     private JButton updBtn = new JButton();
     private JLabel age = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
     private JLabel currTSI = new JLabel(HOVerwaltung.instance().getLanguageString("PlayerDetail.NotAvail"),

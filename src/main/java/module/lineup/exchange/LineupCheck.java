@@ -5,8 +5,8 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
-import core.model.player.ISpielerPosition;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import module.lineup.Lineup;
 
 import java.util.ArrayList;
@@ -55,11 +55,11 @@ public class LineupCheck {
 	}
 
 	public static boolean hasFreeReserves(Lineup lineup) {
-		return isFree(lineup, ISpielerPosition.substKeeper)
-				|| isFree(lineup, ISpielerPosition.substDefender)
-				|| isFree(lineup, ISpielerPosition.substWinger)
-				|| isFree(lineup, ISpielerPosition.substInnerMidfield)
-				|| isFree(lineup, ISpielerPosition.substForward);
+		return isFree(lineup, IMatchRoleID.substGK1)
+				|| isFree(lineup, IMatchRoleID.substCD1)
+				|| isFree(lineup, IMatchRoleID.substWI1)
+				|| isFree(lineup, IMatchRoleID.substIM1)
+				|| isFree(lineup, IMatchRoleID.substFW1);
 	}
 
 	private static boolean penaltyTakersOK(MatchKurzInfo match, Lineup lineup) {
@@ -70,7 +70,7 @@ public class LineupCheck {
 	}
 	
 	private static boolean isFree(Lineup lineup, int positionId) {
-		SpielerPosition pos = lineup.getPositionById(positionId);
+		MatchRoleID pos = lineup.getPositionById(positionId);
 		return pos == null || pos.getSpielerId() == 0;
 	}
 

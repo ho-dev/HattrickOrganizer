@@ -9,7 +9,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.model.AufstellungsListRenderer;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
@@ -37,7 +37,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 
 	//~ Static fields/initializers -----------------------------------------------------------------
 
-    private static Vector<Spieler> vergleichsSpieler = new Vector<Spieler>();
+    private static Vector<Player> vergleichsPlayer = new Vector<Player>();
     private static boolean vergleichsMarkierung;
 
     //~ Instance fields ----------------------------------------------------------------------------
@@ -64,8 +64,8 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
     /**
      * Gibt die Vergleichsspieler zurück
      */
-    public static Vector<Spieler> getVergleichsSpieler() {
-        return vergleichsSpieler;
+    public static Vector<Player> getVergleichsPlayer() {
+        return vergleichsPlayer;
     }
 
     public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
@@ -95,7 +95,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
             }
 
             loadHRFListe(false);
-            vergleichsSpieler.removeAllElements();
+            vergleichsPlayer.removeAllElements();
 
             // HRF Deleted, recalculate Skillups
 			DBManager.instance().reimportSkillup();
@@ -119,7 +119,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 	public final void valueChanged(javax.swing.event.ListSelectionEvent listSelectionEvent) {
 		// Markierung vorhanden
 		if (m_jlHRFs.getSelectedValue() != null) {
-			vergleichsSpieler = DBManager.instance().getSpieler(((CBItem) m_jlHRFs.getSelectedValue()).getId());
+			vergleichsPlayer = DBManager.instance().getSpieler(((CBItem) m_jlHRFs.getSelectedValue()).getId());
 			vergleichsMarkierung = true;
 
 			if (m_jlHRFs.getSelectedIndex() > 0) {
@@ -130,7 +130,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 		}
 		// Keine Markierung -> Alles löschen
 		else {
-			vergleichsSpieler.removeAllElements();
+			vergleichsPlayer.removeAllElements();
 			vergleichsMarkierung = false;
 			m_jbLoeschen.setEnabled(false);
 		}

@@ -4,7 +4,7 @@ package core.gui.model;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.UserColumn;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 /**
  * Column shows skill of a player
@@ -54,7 +54,7 @@ public class PlayerColumn extends UserColumn {
 	 * @param comparePlayer
 	 * @return
 	 */
-	public IHOTableEntry getTableEntry(Spieler player,Spieler comparePlayer){
+	public IHOTableEntry getTableEntry(Player player, Player comparePlayer){
 		return new ColorLabelEntry(getValue(player),
 	            ColorLabelEntry.BG_STANDARD, false, 0);
 	}
@@ -65,7 +65,7 @@ public class PlayerColumn extends UserColumn {
 	 * @param player
 	 * @return
 	 */
-	public int getValue(Spieler player){
+	public int getValue(Player player){
 		return player.getSpielerID();
 	}
 	

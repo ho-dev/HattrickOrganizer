@@ -198,7 +198,7 @@ class NthrfConvertXml2Hrf {
 		m_sHRFBuffer.append("[lastlineup]" + "\n");
 
 		try {
-			// ISpielerPosition.INNENVERTEIDIGER
+			// IMatchRoleID.INNENVERTEIDIGER
 			NtPlayerPosition p1 = NthrfUtil.getPlayerPositionByRole(lineup, 1);
 			NtPlayerPosition p2 = NthrfUtil.getPlayerPositionByRole(lineup, 2);
 			NtPlayerPosition p3 = NthrfUtil.getPlayerPositionByRole(lineup, 3);
@@ -274,7 +274,7 @@ class NthrfConvertXml2Hrf {
 		m_sHRFBuffer.append("[lineup]" + "\n");
 
 		try {
-			// ISpielerPosition.INNENVERTEIDIGER
+			// IMatchRoleID.INNENVERTEIDIGER
 			NtPlayerPosition p1 = NthrfUtil.getPlayerPositionByRole(lineup, 1);
 			NtPlayerPosition p2 = NthrfUtil.getPlayerPositionByRole(lineup, 2);
 			NtPlayerPosition p3 = NthrfUtil.getPlayerPositionByRole(lineup, 3);

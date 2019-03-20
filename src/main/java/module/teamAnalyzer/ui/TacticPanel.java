@@ -1,7 +1,7 @@
 package module.teamAnalyzer.ui;
 
 import core.gui.model.BaseTableModel;
-import core.model.player.SpielerPosition;
+import core.model.player.MatchRoleID;
 import module.teamAnalyzer.report.TacticReport;
 
 import java.awt.BorderLayout;
@@ -57,7 +57,7 @@ public class TacticPanel extends JPanel {
             TacticReport report = iter.next();
 
             rowData = new Vector<Object>();
-            rowData.add(SpielerPosition.getNameForPosition((byte)report.getTacticCode()));
+            rowData.add(MatchRoleID.getNameForPosition((byte)report.getTacticCode()));
             rowData.add("" + report.getAppearance());
             rowData.add(format(report.getRating()));
             tableModel.addRow(rowData);

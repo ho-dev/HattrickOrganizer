@@ -323,7 +323,7 @@ public class StatisticQuery {
 
 					//Neues HRF beginnt
 					if (letzteHRFID != rs.getInt("HRF_ID")) {
-						//summenwerte durch anzahl Spieler pro HRF teilen
+						//summenwerte durch anzahl Player pro HRF teilen
 						for (int i = 0; i < (summewerte.length - 1); i++) {
 							summewerte[i] = summewerte[i] / spielerProHRFID;
 						}
@@ -357,7 +357,7 @@ public class StatisticQuery {
 				}
 
 				//Die letzen werte noch übernehmen
-				//summenwerte durch anzahl Spieler pro HRF teilen
+				//summenwerte durch anzahl Player pro HRF teilen
 				for (int i = 0; i < (summewerte.length - 1); i++) {
 					summewerte[i] = summewerte[i] / spielerProHRFID;
 				}

@@ -3,7 +3,7 @@ package core.gui.model;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.model.match.Matchdetails;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import java.util.Vector;
 
@@ -124,12 +124,12 @@ public class PlayerAnalysisModel extends HOTableModel {
     	for (int i = 0; i < m_vSpielerMatchCBItem.size(); i++) {
            	final SpielerMatchCBItem spielerCBItem = ((SpielerMatchCBItem) m_vSpielerMatchCBItem
                     .get(i));
-            final Spieler aktuellerSpieler = spielerCBItem.getSpieler();
+            final Player aktuellerPlayer = spielerCBItem.getSpieler();
             final Matchdetails matchdetails = spielerCBItem.getMatchdetails();
  
     		for (int j = 0; j < tmpDisplayedColumns.length; j++) {
     			if(tmpDisplayedColumns[j] instanceof PlayerColumn)
-    				m_clData[i][j] = ((PlayerColumn)tmpDisplayedColumns[j]).getTableEntry(aktuellerSpieler,null);
+    				m_clData[i][j] = ((PlayerColumn)tmpDisplayedColumns[j]).getTableEntry(aktuellerPlayer,null);
     			if(tmpDisplayedColumns[j] instanceof MatchDetailsColumn)
     				m_clData[i][j] = ((MatchDetailsColumn)tmpDisplayedColumns[j]).getTableEntry(matchdetails);
     			if(tmpDisplayedColumns[j] instanceof MatchKurzInfoColumn)
@@ -142,7 +142,7 @@ public class PlayerAnalysisModel extends HOTableModel {
     }
  
     /**
-     * Spieler neu setzen
+     * Player neu setzen
      */
     public final void setValues(Vector<SpielerMatchCBItem> spielermatchCBItem) {
         m_vSpielerMatchCBItem = spielermatchCBItem;

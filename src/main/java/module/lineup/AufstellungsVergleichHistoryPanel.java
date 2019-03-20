@@ -66,7 +66,7 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 		try {
 			m_clHRFNextAufstellung = new AufstellungCBItem(HOVerwaltung.instance()
 					.getLanguageString("AktuelleAufstellung"), HOVerwaltung.instance().getModel()
-					.getAufstellung().duplicate());
+					.getLineup().duplicate());
 			m_clHRFLastAufstellung = new AufstellungCBItem(HOVerwaltung.instance()
 					.getLanguageString("LetzteAufstellung"), HOVerwaltung.instance().getModel()
 					.getLastAufstellung().duplicate());
@@ -159,7 +159,7 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 		final int y = HOMainFrame.instance().getLocation().y
 				+ HOMainFrame.instance().getSize().height;
 		AufstellungsNameDialog dlg = new AufstellungsNameDialog(HOMainFrame.instance(),
-				aufstellungsname, HOVerwaltung.instance().getModel().getAufstellung(), x, y);
+				aufstellungsname, HOVerwaltung.instance().getModel().getLineup(), x, y);
 		dlg.setVisible(true);
 
 		if (!dlg.isCanceled()) {
@@ -191,7 +191,7 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 	}
 
 	private void loadSelectedStoredLineup() {
-		final Lineup old = HOVerwaltung.instance().getModel().getAufstellung();
+		final Lineup old = HOVerwaltung.instance().getModel().getLineup();
 		m_clAngezeigteAufstellung = ((AufstellungCBItem) m_jlAufstellungen.getSelectedValue())
 				.duplicate();
 		final Lineup new1 = m_clAngezeigteAufstellung.getAufstellung().duplicate();
@@ -282,7 +282,7 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 				}
 				m_bVergleichAngestossen = true;
 				m_clVergleichsAufstellung = aufstellungCB.duplicate();
-				final Lineup old = HOVerwaltung.instance().getModel().getAufstellung();
+				final Lineup old = HOVerwaltung.instance().getModel().getLineup();
 				if (old != null) { // keep the same location (home / away /
 									// derby)
 					m_clVergleichsAufstellung.getAufstellung().setLocation(old.getLocation());

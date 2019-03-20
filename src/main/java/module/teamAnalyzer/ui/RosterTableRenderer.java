@@ -86,22 +86,22 @@ public class RosterTableRenderer extends DefaultTableCellRenderer {
                int pos = ((Integer) table.getValueAt(row, 2)).intValue();
                int posCode = Commons.getModel().getHelper().getPosition(pos);
                switch (posCode) {
-               case ISpielerPosition.keeper:
+               case IMatchRoleID.keeper:
                    setForeground(Color.BLACK);
                    break;
-               case ISpielerPosition.insideBack1:
+               case IMatchRoleID.insideBack1:
                    setForeground(Color.BLUE.darker().darker());
                    break;
-               case ISpielerPosition.leftBack:
+               case IMatchRoleID.leftBack:
                    setForeground(Color.GREEN.darker().darker());
                    break;
-               case ISpielerPosition.insideMid1:
+               case IMatchRoleID.insideMid1:
                    setForeground(Color.YELLOW.darker().darker());
                    break;
-               case ISpielerPosition.leftWinger:
+               case IMatchRoleID.leftWinger:
                    setForeground(Color.ORANGE.darker().darker());
                    break;
-               case ISpielerPosition.forward1:
+               case IMatchRoleID.forward1:
                    setForeground(Color.RED.darker().darker());
                    break;
                }

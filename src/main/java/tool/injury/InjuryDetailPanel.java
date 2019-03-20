@@ -3,7 +3,7 @@ package tool.injury;
 import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import tool.keepertool.PlayerItem;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -117,9 +117,9 @@ class InjuryDetailPanel extends JPanel {
         players.removeAllItems();
         players.addItem(new PlayerItem());
 
-        for (Iterator<Spieler> iter = HOVerwaltung.instance().getModel().getAllSpieler().iterator();
+        for (Iterator<Player> iter = HOVerwaltung.instance().getModel().getAllSpieler().iterator();
              iter.hasNext();) {
-            final Spieler element = iter.next();
+            final Player element = iter.next();
 
             if (element.getVerletzt() > 0) {
                 players.addItem(new PlayerItem(element));
@@ -138,21 +138,21 @@ class InjuryDetailPanel extends JPanel {
                         return;
                     }
 
-                    final Spieler spieler = HOVerwaltung.instance().getModel().getSpieler(selected
+                    final Player player = HOVerwaltung.instance().getModel().getSpieler(selected
                                                                                            .getId());
 
-                    if (spieler == null) {
+                    if (player == null) {
                         return;
                     }
 
-                    age.setText("" + spieler.getAlter());
-                    injury.setText("" + spieler.getVerletzt());
+                    age.setText("" + player.getAlter());
+                    injury.setText("" + player.getVerletzt());
 
                     String tsi = "";
 
                     try {
                         ResultSet rs = DBManager.instance().getAdapter().executeQuery("select marktwert, hrf_id from SPIELER where spielerid="
-                                                                                        + spieler
+                                                                                        + player
                                                                                           .getSpielerID()
                                                                                         + " and verletzt=-1 order by hrf_id desc");
 
@@ -166,7 +166,7 @@ class InjuryDetailPanel extends JPanel {
 
                     try {
                         ResultSet rs = DBManager.instance().getAdapter().executeQuery("select marktwert from SPIELER where spielerid="
-                                                                                        + spieler
+                                                                                        + player
                                                                                           .getSpielerID()
                                                                                         + " and verletzt>-1 order by hrf_id desc");
 

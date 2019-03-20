@@ -4,7 +4,7 @@ package module.training.ui.renderer;
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import module.training.ui.TrainingLegendPanel;
 
 import java.awt.Color;
@@ -55,7 +55,7 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 
             // fetch playerId (last column) from table
         	playerId = Integer.parseInt((String)table.getValueAt(row, table.getColumnCount()-1));
-        	Spieler player =HOVerwaltung.instance().getModel().getSpieler(playerId);
+        	Player player =HOVerwaltung.instance().getModel().getSpieler(playerId);
         	realPlayerAge = player.getAlterWithAgeDays();
 
         	/** If there is some kind of skillup information

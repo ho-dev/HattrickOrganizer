@@ -11,9 +11,9 @@ import core.gui.comp.entry.DoppelLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
+import core.model.player.Player;
 import core.module.IModule;
 import core.util.Helper;
 
@@ -109,7 +109,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     private final JLabel m_jlVerteidigung = new JLabel();
     private final JLabel m_jlLoyalty = new JLabel();
     private final JLabel m_jlHomeGrown = new JLabel();
-    private Spieler m_clSpieler;
+    private Player m_clPlayer;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -121,15 +121,15 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public final void setSpieler(Spieler spieler) {
-        m_clSpieler = spieler;
+    public final void setSpieler(Player player) {
+        m_clPlayer = player;
 
-        if (spieler != null) {
+        if (player != null) {
             setLabels();
             setCBs();
 
             //Remove for Temp player
-            if (spieler.getSpielerID() < 0) {
+            if (player.getSpielerID() < 0) {
                 m_jbRemoveTempSpieler.setEnabled(true);
             } else {
                 m_jbRemoveTempSpieler.setEnabled(false);
@@ -146,31 +146,31 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
     public final void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(m_jbAddTempSpieler)) {
-            final Spieler tempSpieler = new Spieler();
-            tempSpieler.setNationalitaet(HOVerwaltung.instance().getModel().getBasics().getLand());
-            tempSpieler.setSpielerID(module.transfer.scout.TransferEingabePanel
+            final Player tempPlayer = new Player();
+            tempPlayer.setNationalitaet(HOVerwaltung.instance().getModel().getBasics().getLand());
+            tempPlayer.setSpielerID(module.transfer.scout.TransferEingabePanel
                                      .getNextTempSpielerID());
-            tempSpieler.setName("Temp " + Math.abs(1000 + tempSpieler.getSpielerID()));
-			tempSpieler.setAlter(getAge());
-			tempSpieler.setAgeDays(getAgeDays());
-            tempSpieler.setErfahrung(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
-            tempSpieler.setForm(((CBItem) m_jcbForm.getSelectedItem()).getId());
-            tempSpieler.setKondition(((CBItem) m_jcbKondition.getSelectedItem()).getId());
-            tempSpieler.setVerteidigung(((CBItem) m_jcbVerteidigung.getSelectedItem()).getId());
-            tempSpieler.setSpezialitaet(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
-            tempSpieler.setTorschuss(((CBItem) m_jcbTorschuss.getSelectedItem()).getId());
-            tempSpieler.setTorwart(((CBItem) m_jcbTorwart.getSelectedItem()).getId());
-            tempSpieler.setFluegelspiel(((CBItem) m_jcbFluegel.getSelectedItem()).getId());
-            tempSpieler.setPasspiel(((CBItem) m_jcbPasspiel.getSelectedItem()).getId());
-            tempSpieler.setStandards(((CBItem) m_jcbStandard.getSelectedItem()).getId());
-            tempSpieler.setSpielaufbau(((CBItem) m_jcbSpielaufbau.getSelectedItem()).getId());
-            tempSpieler.setLoyalty(((CBItem) m_jcbLoyalty.getSelectedItem()).getId());
-            tempSpieler.setHomeGrown(m_jchHomegrown.isSelected());
-            HOVerwaltung.instance().getModel().addSpieler(tempSpieler);
+            tempPlayer.setName("Temp " + Math.abs(1000 + tempPlayer.getSpielerID()));
+			tempPlayer.setAlter(getAge());
+			tempPlayer.setAgeDays(getAgeDays());
+            tempPlayer.setErfahrung(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
+            tempPlayer.setForm(((CBItem) m_jcbForm.getSelectedItem()).getId());
+            tempPlayer.setKondition(((CBItem) m_jcbKondition.getSelectedItem()).getId());
+            tempPlayer.setVerteidigung(((CBItem) m_jcbVerteidigung.getSelectedItem()).getId());
+            tempPlayer.setSpezialitaet(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
+            tempPlayer.setTorschuss(((CBItem) m_jcbTorschuss.getSelectedItem()).getId());
+            tempPlayer.setTorwart(((CBItem) m_jcbTorwart.getSelectedItem()).getId());
+            tempPlayer.setFluegelspiel(((CBItem) m_jcbFluegel.getSelectedItem()).getId());
+            tempPlayer.setPasspiel(((CBItem) m_jcbPasspiel.getSelectedItem()).getId());
+            tempPlayer.setStandards(((CBItem) m_jcbStandard.getSelectedItem()).getId());
+            tempPlayer.setSpielaufbau(((CBItem) m_jcbSpielaufbau.getSelectedItem()).getId());
+            tempPlayer.setLoyalty(((CBItem) m_jcbLoyalty.getSelectedItem()).getId());
+            tempPlayer.setHomeGrown(m_jchHomegrown.isSelected());
+            HOVerwaltung.instance().getModel().addSpieler(tempPlayer);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
         } else if (e.getSource().equals(m_jbRemoveTempSpieler)) {
-            HOVerwaltung.instance().getModel().removeSpieler(m_clSpieler);
+            HOVerwaltung.instance().getModel().removeSpieler(m_clPlayer);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
         }
@@ -178,7 +178,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
     public final void itemStateChanged(ItemEvent itemEvent) {
         if ((itemEvent.getStateChange() == ItemEvent.SELECTED) || (itemEvent.getSource() == m_jchHomegrown)) {
-            if (m_clSpieler != null) {
+            if (m_clPlayer != null) {
                 setLabels();
             } else {
                 resetLabels();
@@ -195,21 +195,21 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     }
 
     private void setCBs() {
-        m_jlName.setText(m_clSpieler.getName());
-		jtfAge.setText(m_clSpieler.getAlter()+"."+m_clSpieler.getAgeDays());
-        Helper.markierenComboBox(m_jcbForm, m_clSpieler.getForm());
-        Helper.markierenComboBox(m_jcbErfahrung, m_clSpieler.getErfahrung());
-        Helper.markierenComboBox(m_jcbKondition, m_clSpieler.getKondition());
-        Helper.markierenComboBox(m_jcbSpielaufbau, m_clSpieler.getSpielaufbau());
-        Helper.markierenComboBox(m_jcbFluegel, m_clSpieler.getFluegelspiel());
-        Helper.markierenComboBox(m_jcbTorschuss, m_clSpieler.getTorschuss());
-        Helper.markierenComboBox(m_jcbTorwart, m_clSpieler.getTorwart());
-        Helper.markierenComboBox(m_jcbPasspiel, m_clSpieler.getPasspiel());
-        Helper.markierenComboBox(m_jcbVerteidigung, m_clSpieler.getVerteidigung());
-		Helper.markierenComboBox(m_jcbSpeciality, m_clSpieler.getSpezialitaet());
-        Helper.markierenComboBox(m_jcbStandard, m_clSpieler.getStandards());
-        Helper.markierenComboBox(m_jcbLoyalty, m_clSpieler.getLoyalty());
-        m_jchHomegrown.setSelected(m_clSpieler.isHomeGrown());
+        m_jlName.setText(m_clPlayer.getName());
+		jtfAge.setText(m_clPlayer.getAlter()+"."+ m_clPlayer.getAgeDays());
+        Helper.markierenComboBox(m_jcbForm, m_clPlayer.getForm());
+        Helper.markierenComboBox(m_jcbErfahrung, m_clPlayer.getErfahrung());
+        Helper.markierenComboBox(m_jcbKondition, m_clPlayer.getKondition());
+        Helper.markierenComboBox(m_jcbSpielaufbau, m_clPlayer.getSpielaufbau());
+        Helper.markierenComboBox(m_jcbFluegel, m_clPlayer.getFluegelspiel());
+        Helper.markierenComboBox(m_jcbTorschuss, m_clPlayer.getTorschuss());
+        Helper.markierenComboBox(m_jcbTorwart, m_clPlayer.getTorwart());
+        Helper.markierenComboBox(m_jcbPasspiel, m_clPlayer.getPasspiel());
+        Helper.markierenComboBox(m_jcbVerteidigung, m_clPlayer.getVerteidigung());
+		Helper.markierenComboBox(m_jcbSpeciality, m_clPlayer.getSpezialitaet());
+        Helper.markierenComboBox(m_jcbStandard, m_clPlayer.getStandards());
+        Helper.markierenComboBox(m_jcbLoyalty, m_clPlayer.getLoyalty());
+        m_jchHomegrown.setSelected(m_clPlayer.isHomeGrown());
 
         m_jlForm.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
         m_jlKondition.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
@@ -240,134 +240,134 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     }
 
     private void setLabels() {
-        final Spieler tempSpieler = new Spieler();
-        tempSpieler.setForm(((CBItem) m_jcbForm.getSelectedItem()).getId());
-        tempSpieler.setErfahrung(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
-        tempSpieler.setKondition(((CBItem) m_jcbKondition.getSelectedItem()).getId());
-        tempSpieler.setVerteidigung(((CBItem) m_jcbVerteidigung.getSelectedItem()).getId());
-		tempSpieler.setSpezialitaet(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
-        tempSpieler.setTorschuss(((CBItem) m_jcbTorschuss.getSelectedItem()).getId());
-        tempSpieler.setTorwart(((CBItem) m_jcbTorwart.getSelectedItem()).getId());
-        tempSpieler.setFluegelspiel(((CBItem) m_jcbFluegel.getSelectedItem()).getId());
-        tempSpieler.setPasspiel(((CBItem) m_jcbPasspiel.getSelectedItem()).getId());
-        tempSpieler.setStandards(((CBItem) m_jcbStandard.getSelectedItem()).getId());
-        tempSpieler.setSpielaufbau(((CBItem) m_jcbSpielaufbau.getSelectedItem()).getId());
-        tempSpieler.setLoyalty(((CBItem) m_jcbLoyalty.getSelectedItem()).getId());
-        tempSpieler.setHomeGrown(m_jchHomegrown.isSelected());
+        final Player tempPlayer = new Player();
+        tempPlayer.setForm(((CBItem) m_jcbForm.getSelectedItem()).getId());
+        tempPlayer.setErfahrung(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
+        tempPlayer.setKondition(((CBItem) m_jcbKondition.getSelectedItem()).getId());
+        tempPlayer.setVerteidigung(((CBItem) m_jcbVerteidigung.getSelectedItem()).getId());
+		tempPlayer.setSpezialitaet(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
+        tempPlayer.setTorschuss(((CBItem) m_jcbTorschuss.getSelectedItem()).getId());
+        tempPlayer.setTorwart(((CBItem) m_jcbTorwart.getSelectedItem()).getId());
+        tempPlayer.setFluegelspiel(((CBItem) m_jcbFluegel.getSelectedItem()).getId());
+        tempPlayer.setPasspiel(((CBItem) m_jcbPasspiel.getSelectedItem()).getId());
+        tempPlayer.setStandards(((CBItem) m_jcbStandard.getSelectedItem()).getId());
+        tempPlayer.setSpielaufbau(((CBItem) m_jcbSpielaufbau.getSelectedItem()).getId());
+        tempPlayer.setLoyalty(((CBItem) m_jcbLoyalty.getSelectedItem()).getId());
+        tempPlayer.setHomeGrown(m_jchHomegrown.isSelected());
 
-        m_jlForm.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempSpieler.getForm()- m_clSpieler.getForm(),true));
-        m_jlKondition.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempSpieler.getKondition()- m_clSpieler.getKondition(),true));
-        m_jlErfahrung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempSpieler.getErfahrung()- m_clSpieler.getErfahrung(),true));
-        m_jlSpielaufbau.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempSpieler.getSpielaufbau()- m_clSpieler.getSpielaufbau(),true));
-        m_jlFluegel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempSpieler.getFluegelspiel()- m_clSpieler.getFluegelspiel(),true));
-        m_jlTorschuss.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempSpieler.getTorschuss()- m_clSpieler.getTorschuss(),true));
-        m_jlTorwart.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempSpieler.getTorwart()- m_clSpieler.getTorwart(),true));
-        m_jlPasspiel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempSpieler.getPasspiel()- m_clSpieler.getPasspiel(),true));
-        m_jlVerteidigung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempSpieler.getVerteidigung()- m_clSpieler.getVerteidigung(),true));
-        m_jlStandard.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempSpieler.getStandards()- m_clSpieler.getStandards(),true));
-        m_jlLoyalty.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempSpieler.getLoyalty()- m_clSpieler.getLoyalty(), true));
+        m_jlForm.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getForm()- m_clPlayer.getForm(),true));
+        m_jlKondition.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getKondition()- m_clPlayer.getKondition(),true));
+        m_jlErfahrung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getErfahrung()- m_clPlayer.getErfahrung(),true));
+        m_jlSpielaufbau.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getSpielaufbau()- m_clPlayer.getSpielaufbau(),true));
+        m_jlFluegel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getFluegelspiel()- m_clPlayer.getFluegelspiel(),true));
+        m_jlTorschuss.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getTorschuss()- m_clPlayer.getTorschuss(),true));
+        m_jlTorwart.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getTorwart()- m_clPlayer.getTorwart(),true));
+        m_jlPasspiel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getPasspiel()- m_clPlayer.getPasspiel(),true));
+        m_jlVerteidigung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getVerteidigung()- m_clPlayer.getVerteidigung(),true));
+        m_jlStandard.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getStandards()- m_clPlayer.getStandards(),true));
+        m_jlLoyalty.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getLoyalty()- m_clPlayer.getLoyalty(), true));
         int hg = 0;
-        if (m_clSpieler.isHomeGrown() != tempSpieler.isHomeGrown())
+        if (m_clPlayer.isHomeGrown() != tempPlayer.isHomeGrown())
         {
-        	if (m_clSpieler.isHomeGrown())
+        	if (m_clPlayer.isHomeGrown())
         		hg = -1;
         	else
         		hg = 1;
         }
         m_jlHomeGrown.setIcon(ImageUtilities.getImageIcon4Veraenderung(hg, true));
 
-        m_jpBestPos.setText(SpielerPosition.getNameForPosition(tempSpieler.getIdealPosition())
+        m_jpBestPos.setText(MatchRoleID.getNameForPosition(tempPlayer.getIdealPosition())
         		+ " (" + Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(tempSpieler.getIdealPosition(), true)) + ")");
+        		.format(tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true)) + ")");
         m_jpWertTor.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen).
-        		format(tempSpieler.calcPosValue(ISpielerPosition.KEEPER, true)));
-        m_jpWertTor.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.KEEPER, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.KEEPER,true), false);
+        		format(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true)));
+        m_jpWertTor.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.KEEPER,true), false);
         m_jpWertInnenVert.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER, true)));
-        m_jpWertInnenVert.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER,true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER,true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true)));
+        m_jpWertInnenVert.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,true), false);
         m_jpWertInnenVertAus.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER_TOWING, true)));
-        m_jpWertInnenVertAus.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER_TOWING, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER_TOWING, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true)));
+        m_jpWertInnenVertAus.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true), false);
         m_jpWertInnenVertOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER_OFF, true)));
-        m_jpWertInnenVertOff.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER_OFF, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER_OFF, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true)));
+        m_jpWertInnenVertOff.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true), false);
         m_jpWertAussenVert.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.BACK, true)));
-        m_jpWertAussenVert.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.BACK, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.BACK, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK, true)));
+        m_jpWertAussenVert.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.BACK, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.BACK, true), false);
         m_jpWertAussenVertIn.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen).
-        		format(tempSpieler.calcPosValue(ISpielerPosition.BACK_TOMID, true)));
-        m_jpWertAussenVertIn.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.BACK_TOMID, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.BACK_TOMID, true), false);
+        		format(tempPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true)));
+        m_jpWertAussenVertIn.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true), false);
         m_jpWertAussenVertOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.BACK_OFF, true)));
-        m_jpWertAussenVertOff.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.BACK_OFF, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.BACK_OFF, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true)));
+        m_jpWertAussenVertOff.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true), false);
         m_jpWertAussenVertDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.BACK_DEF, true)));
-        m_jpWertAussenVertDef.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.BACK_DEF, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.BACK_DEF, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true)));
+        m_jpWertAussenVertDef.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true), false);
         m_jpWertMittelfeld.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.MIDFIELDER, true)));
-        m_jpWertMittelfeld.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.MIDFIELDER, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.MIDFIELDER, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true)));
+        m_jpWertMittelfeld.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true), false);
         m_jpWertMittelfeldAus.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.MIDFIELDER_TOWING, true)));
-        m_jpWertMittelfeldAus.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.MIDFIELDER_TOWING, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.MIDFIELDER_TOWING, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true)));
+        m_jpWertMittelfeldAus.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true), false);
         m_jpWertMittelfeldOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.MIDFIELDER_OFF, true)));
-        m_jpWertMittelfeldOff.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.MIDFIELDER_OFF, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.MIDFIELDER_OFF, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true)));
+        m_jpWertMittelfeldOff.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true), false);
         m_jpWertMittelfeldDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.MIDFIELDER_DEF, true)));
-        m_jpWertMittelfeldDef.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.MIDFIELDER_DEF, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.MIDFIELDER_DEF, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true)));
+        m_jpWertMittelfeldDef.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true), false);
         m_jpWertFluegel.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.WINGER, true)));
-        m_jpWertFluegel.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.WINGER, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.WINGER, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER, true)));
+        m_jpWertFluegel.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.WINGER, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.WINGER, true), false);
         m_jpWertFluegelIn.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.WINGER_TOMID, true)));
-        m_jpWertFluegelIn.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.WINGER_TOMID, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.WINGER_TOMID, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true)));
+        m_jpWertFluegelIn.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true), false);
         m_jpWertFluegelOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.WINGER_OFF, true)));
-        m_jpWertFluegelOff.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.WINGER_OFF, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.WINGER_OFF, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true)));
+        m_jpWertFluegelOff.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true), false);
         m_jpWertFluegelDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.WINGER_DEF, true)));
-        m_jpWertFluegelDef.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.WINGER_DEF, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.WINGER_DEF, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true)));
+        m_jpWertFluegelDef.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true), false);
         m_jpWertSturm.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.FORWARD, true)));
-        m_jpWertSturm.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.FORWARD, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.FORWARD, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD, true)));
+        m_jpWertSturm.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.FORWARD, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.FORWARD, true), false);
         m_jpWertSturmAus.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.FORWARD_TOWING, true)));
-        m_jpWertSturmAus.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.FORWARD_TOWING, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.FORWARD_TOWING, true), false);
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true)));
+        m_jpWertSturmAus.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true), false);
         m_jpWertSturmDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.FORWARD_DEF, true)));
-        m_jpWertSturmDef.getRechts().setSpecialNumber(tempSpieler.calcPosValue(ISpielerPosition.FORWARD_DEF, true)
-        		- m_clSpieler.calcPosValue(ISpielerPosition.FORWARD_DEF, true), false);
-		tempSpieler.setAlter(getAge());
-		tempSpieler.setAgeDays(getAgeDays());
-		tempSpieler.setFuehrung(m_clSpieler.getFuehrung());
-		tempSpieler.setSpezialitaet(m_clSpieler.getSpezialitaet());
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true)));
+        m_jpWertSturmDef.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true)
+        		- m_clPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true), false);
+		tempPlayer.setAlter(getAge());
+		tempPlayer.setAgeDays(getAgeDays());
+		tempPlayer.setFuehrung(m_clPlayer.getFuehrung());
+		tempPlayer.setSpezialitaet(m_clPlayer.getSpezialitaet());
 //        m_jpEPV.setText(java.text.NumberFormat.getCurrencyInstance()
 //        		.format(HOVerwaltung.instance().getModel().getEPV()
-//        		.getPrice(new EPVData(tempSpieler))));
+//        		.getPrice(new EPVData(tempPlayer))));
     }
 
 	private int getAge() {
 		int age = 17;
-		if (m_clSpieler != null) {
-			age = m_clSpieler.getAlter();
+		if (m_clPlayer != null) {
+			age = m_clPlayer.getAlter();
 		}
 		try {
 			age = Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", ""));
@@ -378,8 +378,8 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
 	private int getAgeDays() {
 		int age = 0;
-		if (m_clSpieler != null) {
-			age = m_clSpieler.getAgeDays();
+		if (m_clPlayer != null) {
+			age = m_clPlayer.getAgeDays();
 		}
 		try {
 			age = Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", ""));
@@ -843,7 +843,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
 	public void focusLost(FocusEvent e) {
 		if (e.getSource().equals(jtfAge)) {
-			if (m_clSpieler != null) {
+			if (m_clPlayer != null) {
 				setLabels();
 			} else {
 				resetLabels();

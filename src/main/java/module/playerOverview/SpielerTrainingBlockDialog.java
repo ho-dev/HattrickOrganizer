@@ -5,7 +5,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.HOLogger;
 
 import java.awt.Dimension;
@@ -46,7 +46,7 @@ final class SpielerTrainingBlockDialog extends JDialog implements ActionListener
 	private List<SingleTrainingBlock> allTrainingBlocks;
 
 	/* current player */
-	private Spieler m_clPlayer;
+	private Player m_clPlayer;
 
 	/* the panels with the training blocks */
 	private JPanel panel;
@@ -56,7 +56,7 @@ final class SpielerTrainingBlockDialog extends JDialog implements ActionListener
 	/**
 	 * Creates a new SpielerTrainingBlockDialog object.
 	 */
-	protected SpielerTrainingBlockDialog(javax.swing.JFrame owner, Spieler player) {
+	protected SpielerTrainingBlockDialog(javax.swing.JFrame owner, Player player) {
 		super(owner, true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle(
@@ -102,7 +102,7 @@ final class SpielerTrainingBlockDialog extends JDialog implements ActionListener
 		// Iterate through all HRFs for this player
 		do {
 			// Fetch the player from that HRF
-			Spieler player = DBManager.instance().getSpielerFromHrf(hrfId, playerId);
+			Player player = DBManager.instance().getSpielerFromHrf(hrfId, playerId);
 			if (player == null) {
 				HOLogger.instance().log(getClass(), "Warning! Player "+playerId+" at hrf "+ hrfId+" is NULL");
 				continue;
@@ -144,7 +144,7 @@ final class SpielerTrainingBlockDialog extends JDialog implements ActionListener
 		// Iterate through all HRFs for this player
 		do {
 			// Fetch the player from that HRF
-			Spieler player = DBManager.instance().getSpielerFromHrf(hrfId, playerId);
+			Player player = DBManager.instance().getSpielerFromHrf(hrfId, playerId);
 			if (player == null) {
 				HOLogger.instance().log(getClass(), "Warning@SaveBlocks! Player "+playerId+" at hrf "+ hrfId+" is NULL");
 				continue;

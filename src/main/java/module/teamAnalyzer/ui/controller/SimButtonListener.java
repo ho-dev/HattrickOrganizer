@@ -84,7 +84,7 @@ public class SimButtonListener implements ActionListener {
                                                                    myTeam.getRightAttack());
 
         TeamData myTeamValues = manager.generateTeamData(myTeam.getTeamPanel().getText(),
-        		myTeamRatings, HOVerwaltung.instance().getModel().getAufstellung().getTacticType(), getTacticLevel());
+        		myTeamRatings, HOVerwaltung.instance().getModel().getLineup().getTacticType(), getTacticLevel());
 
         TeamRatings opponentTeamRatings = manager.generateTeamRatings(opponentTeam.getMidfield(),
                                                                          opponentTeam.getLeftDefence(),
@@ -101,7 +101,7 @@ public class SimButtonListener implements ActionListener {
         MatchEnginePanel matchPredictionPanel;
         String match = "";
 
-        if (HOVerwaltung.instance().getModel().getAufstellung().getLocation() == 1) {
+        if (HOVerwaltung.instance().getModel().getLineup().getLocation() == 1) {
             matchPredictionPanel = new MatchEnginePanel(myTeamValues, opponentTeamValues);
             match = myTeamValues.getTeamName() + " - " + opponentTeamValues.getTeamName();
         } else {
@@ -120,25 +120,25 @@ public class SimButtonListener implements ActionListener {
     private int getTacticLevel() {
         double tacticLevel = 1d;
 
-        switch (HOVerwaltung.instance().getModel().getAufstellung().getTacticType()) {
+        switch (HOVerwaltung.instance().getModel().getLineup().getTacticType()) {
             case IMatchDetails.TAKTIK_KONTER:
-                tacticLevel = HOVerwaltung.instance().getModel().getAufstellung().getTacticLevelCounter();
+                tacticLevel = HOVerwaltung.instance().getModel().getLineup().getTacticLevelCounter();
                 break;
 
             case IMatchDetails.TAKTIK_MIDDLE:
-                tacticLevel = HOVerwaltung.instance().getModel().getAufstellung().getTacticLevelAimAow();
+                tacticLevel = HOVerwaltung.instance().getModel().getLineup().getTacticLevelAimAow();
                 break;
 
             case IMatchDetails.TAKTIK_PRESSING:
-                tacticLevel = HOVerwaltung.instance().getModel().getAufstellung().getTacticLevelPressing();
+                tacticLevel = HOVerwaltung.instance().getModel().getLineup().getTacticLevelPressing();
                 break;
 
             case IMatchDetails.TAKTIK_WINGS:
-                tacticLevel = HOVerwaltung.instance().getModel().getAufstellung().getTacticLevelAimAow();
+                tacticLevel = HOVerwaltung.instance().getModel().getLineup().getTacticLevelAimAow();
                 break;
 
             case IMatchDetails.TAKTIK_LONGSHOTS:
-                tacticLevel = HOVerwaltung.instance().getModel().getAufstellung().getTacticLevelLongShots();
+                tacticLevel = HOVerwaltung.instance().getModel().getLineup().getTacticLevelLongShots();
                 break;
         }
         // Re-Scale to HT ratings (...,solid=6,...,divine=19)

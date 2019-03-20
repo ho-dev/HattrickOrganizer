@@ -2,7 +2,7 @@ package module.lineup.substitution;
 
 import core.datatype.CBItem;
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 import core.util.Helper;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
@@ -61,8 +61,8 @@ public class SubstitutionEditView extends JPanel {
 
 		if (isSubstitution()) {
 			List<PlayerPositionItem> substitutionPlayers = SubstitutionDataProvider
-					.getFieldPositions(ISpielerPosition.substKeeper,
-							ISpielerPosition.substForward, false);
+					.getFieldPositions(IMatchRoleID.substGK1,
+							IMatchRoleID.substFW1, false);
 			this.playerInComboBox.setModel(new DefaultComboBoxModel(
 					substitutionPlayers.toArray()));
 			this.playerInComboBox.setSelectedItem(null);
@@ -74,8 +74,8 @@ public class SubstitutionEditView extends JPanel {
 
 		if (!isPositionSwap()) {
 			List<PlayerPositionItem> positions = SubstitutionDataProvider
-					.getFieldPositions(ISpielerPosition.keeper,
-							ISpielerPosition.leftForward, true);
+					.getFieldPositions(IMatchRoleID.keeper,
+							IMatchRoleID.leftForward, true);
 			this.positionComboBox.setModel(new DefaultComboBoxModel(positions
 					.toArray()));
 			this.positionComboBox.setSelectedItem(null);

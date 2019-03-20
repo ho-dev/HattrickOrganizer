@@ -2,8 +2,8 @@ package module.lineup;
 
 import core.gui.Updateable;
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
+import core.model.player.IMatchRoleID;
+import core.model.player.Player;
 
 public class SwapPositionsManager {
 
@@ -47,19 +47,19 @@ public class SwapPositionsManager {
 	private void swapPositionsInLineup(SwapPositionFeature swapPositionA,
 			SwapPositionFeature swapPositionB) {
 		Lineup lineup = HOVerwaltung.instance().getModel()
-				.getAufstellung();
+				.getLineup();
 
 		// Changed to allow swapping players to empty positions - Blaghaid
 
 		int positionA = swapPositionA.getPositionsID();
 		int positionB = swapPositionB.getPositionsID();
-		Spieler playerA = lineup.getPlayerByPositionID(positionA);
-		Spieler playerB = lineup.getPlayerByPositionID(positionB);
+		Player playerA = lineup.getPlayerByPositionID(positionA);
+		Player playerB = lineup.getPlayerByPositionID(positionB);
 		
 		// We don't want to swap a substitute into an empty position unless there is less
 		// than 11 players on the field.
-		if ((playerA==null && positionB >= ISpielerPosition.startReserves) ||
-				(playerB==null && positionA >= ISpielerPosition.startReserves))   {
+		if ((playerA==null && positionB >= IMatchRoleID.startReserves) ||
+				(playerB==null && positionA >= IMatchRoleID.startReserves))   {
 			if (lineup.hasFreePosition() != true) {
 				// HOLogger.instance().debug(getClass(), "Stopped swap due to sub-check!");
 				return;

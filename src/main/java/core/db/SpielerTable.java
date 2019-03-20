@@ -1,7 +1,7 @@
 package core.db;
 
 import core.constants.player.PlayerSkill;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -93,7 +93,7 @@ final class SpielerTable extends AbstractTable {
 	 * @param player	the player to be saved
 	 */
 
-	void saveSpieler(int hrfId, Spieler player, Timestamp date) {
+	void saveSpieler(int hrfId, Player player, Timestamp date) {
 		StringBuilder statement = new StringBuilder(500);
 		final String[] awhereS = { "HRF_ID", "SpielerId" };
 		final String[] awhereV = { "" + hrfId, "" + player.getSpielerID()};
@@ -176,20 +176,20 @@ final class SpielerTable extends AbstractTable {
 	}
 	
 	/**
-	 * speichert die Spieler
+	 * speichert die Player
 	 */
-	void saveSpieler(int hrfId, Vector<Spieler> spieler, Timestamp date) {
+	void saveSpieler(int hrfId, Vector<Player> spieler, Timestamp date) {
 //		String statement = null;
 		final String[] awhereS = { "HRF_ID" };
 		final String[] awhereV = { "" + hrfId };
-		Spieler player = null;
+		Player player = null;
 
 		if (spieler != null) {
 			// Delete old values
 			delete(awhereS, awhereV);
 
 			for (int i = 0; i < spieler.size(); i++) {
-				player = (Spieler) spieler.elementAt(i);
+				player = (Player) spieler.elementAt(i);
 				
 				saveSpieler (hrfId, player, date);
 			}
@@ -205,9 +205,9 @@ final class SpielerTable extends AbstractTable {
 	 *
 	 * @return player
 	 */
-	Spieler getSpielerFromHrf(int hrfID, int playerId) {
+	Player getSpielerFromHrf(int hrfID, int playerId) {
 		ResultSet rs = null;
-		Spieler player = null;
+		Player player = null;
 		String sql = null;
 
 		sql = "SELECT * from "+getTableName()+" WHERE HRF_ID = " + hrfID + " AND SpielerId="+playerId;
@@ -230,13 +230,13 @@ final class SpielerTable extends AbstractTable {
 	}
 	
 	/**
-	 * lädt die Spieler zum angegeben HRF file ein
+	 * lädt die Player zum angegeben HRF file ein
 	 */
-	Vector<Spieler> getSpieler(int hrfID) {
+	Vector<Player> getSpieler(int hrfID) {
 		ResultSet rs = null;
-		Spieler player = null;
+		Player player = null;
 		String sql = null;
-		final Vector<Spieler> ret = new Vector<Spieler>();
+		final Vector<Player> ret = new Vector<Player>();
 
 		sql = "SELECT * from "+getTableName()+" WHERE HRF_ID = " + hrfID;
 		rs = adapter.executeQuery(sql);
@@ -253,20 +253,20 @@ final class SpielerTable extends AbstractTable {
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getSpieler: " + e);
+			HOLogger.instance().log(getClass(),"DatenbankZugriff.getPlayer: " + e);
 		}
 
 		return ret;
 	}
 
 	/**
-	 * gibt alle Spieler zurück, auch ehemalige
+	 * gibt alle Player zurück, auch ehemalige
 	 */
-	Vector<Spieler> getAllSpieler() {
+	Vector<Player> getAllSpieler() {
 		ResultSet rs = null;
-		Spieler player = null;
+		Player player = null;
 		String sql = null;
-		final Vector<Spieler> ret = new Vector<Spieler>();
+		final Vector<Player> ret = new Vector<Player>();
 
 		sql = "SELECT DISTINCT SpielerID from "+getTableName()+"";
 		rs = adapter.executeQuery(sql);
@@ -293,7 +293,7 @@ final class SpielerTable extends AbstractTable {
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getSpieler: " + e);
+			HOLogger.instance().log(getClass(),"DatenbankZugriff.getPlayer: " + e);
 		}
 
 		return ret;
@@ -301,7 +301,7 @@ final class SpielerTable extends AbstractTable {
 
 
 	/**
-	 * Gibt die letzte Bewertung für den Spieler zurück // HRF
+	 * Gibt die letzte Bewertung für den Player zurück // HRF
 	 */
 	int getLetzteBewertung4Spieler(int spielerid) {
 		int bewertung = 0;
@@ -321,11 +321,11 @@ final class SpielerTable extends AbstractTable {
 	}
 
 	/**
-	 * Gibt einen Spieler zurück mit den Daten kurz vor dem Timestamp
+	 * Gibt einen Player zurück mit den Daten kurz vor dem Timestamp
 	 */
-	Spieler getSpielerAtDate(int spielerid, Timestamp time) {
+	Player getSpielerAtDate(int spielerid, Timestamp time) {
 		ResultSet rs = null;
-		Spieler player = null;
+		Player player = null;
 		String sql = null;
 
 		//6 Tage   //1209600000  //14 Tage vorher
@@ -348,11 +348,11 @@ final class SpielerTable extends AbstractTable {
 				if (rs.first()) {
 					player = createObject(rs);
 
-					//HOLogger.instance().log(getClass(), "Spieler " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
+					//HOLogger.instance().log(getClass(), "Player " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"1. Spieler nicht gefunden für Datum " + time.toString() + " und SpielerID " + spielerid);
+			HOLogger.instance().log(getClass(),"1. Player nicht gefunden für Datum " + time.toString() + " und SpielerID " + spielerid);
 		}
 
 		//--- Dann ein HRF später versuchen, Dort muss er dann eigenlich vorhanden sein! ---
@@ -365,11 +365,11 @@ final class SpielerTable extends AbstractTable {
 					if (rs.first()) {
 						player = createObject(rs);
 
-						//HOLogger.instance().log(getClass(), "Spieler " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
+						//HOLogger.instance().log(getClass(), "Player " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
 					}
 				}
 			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),"2. Spieler nicht gefunden für Datum " + time.toString() + " und SpielerID " + spielerid);
+				HOLogger.instance().log(getClass(),"2. Player nicht gefunden für Datum " + time.toString() + " und SpielerID " + spielerid);
 			}
 		}
 
@@ -387,11 +387,11 @@ final class SpielerTable extends AbstractTable {
 					if (rs.first()) {
 						player = createObject(rs);
 
-						//HOLogger.instance().log(getClass(), "Spieler " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
+						//HOLogger.instance().log(getClass(), "Player " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
 					}
 				}
 			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),"3. Spieler nicht gefunden für Datum " + time.toString() + " und SpielerID " + spielerid);
+				HOLogger.instance().log(getClass(),"3. Player nicht gefunden für Datum " + time.toString() + " und SpielerID " + spielerid);
 			}
 		}
 
@@ -400,9 +400,9 @@ final class SpielerTable extends AbstractTable {
 
 	//------------------------------------------------------------------------------
 
-	Spieler getSpielerBeforeDate(Timestamp time, int spielerid) {
+	Player getSpielerBeforeDate(Timestamp time, int spielerid) {
 		ResultSet rs = null;
-		Spieler player = null;
+		Player player = null;
 		String sql = null;
 
 		if (time == null) {
@@ -418,22 +418,22 @@ final class SpielerTable extends AbstractTable {
 				if (rs.first()) {
 					player = createObject(rs);
 
-					//HOLogger.instance().log(getClass(), "Spieler " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
+					//HOLogger.instance().log(getClass(), "Player " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DBZugriff.getSpielerBeforeDate: Keine HRF mit dem Spieler vor dem Datum gefunden");
+			HOLogger.instance().log(getClass(),"DBZugriff.getSpielerBeforeDate: Keine HRF mit dem Player vor dem Datum gefunden");
 		}
 
 		return player;
 	}
 
 	/**
-	 * Gibt einen Spieler zurück aus dem ersten HRF
+	 * Gibt einen Player zurück aus dem ersten HRF
 	 */
-	Spieler getSpielerFirstHRF(int spielerid) {
+	Player getSpielerFirstHRF(int spielerid) {
 		ResultSet rs = null;
-		Spieler player = null;
+		Player player = null;
 		String sql = null;
 
 		sql = "SELECT * from "+getTableName()+" WHERE SpielerID=" + spielerid + " ORDER BY Datum ASC";
@@ -444,9 +444,9 @@ final class SpielerTable extends AbstractTable {
 				if (rs.first()) {
 					player = createObject(rs);
 
-					//Info, da der Spieler für den Vergleich in der Spielerübersicht benutzt wird
+					//Info, da der Player für den Vergleich in der Spielerübersicht benutzt wird
 					player.setOld(true);
-//					HOLogger.instance().log(getClass(),"Spieler " + player.getName() + " vom " + rs.getTimestamp("Datum"));
+//					HOLogger.instance().log(getClass(),"Player " + player.getName() + " vom " + rs.getTimestamp("Datum"));
 				}
 			}
 		} catch (Exception e) {
@@ -457,7 +457,7 @@ final class SpielerTable extends AbstractTable {
 	}
 
 	/**
-	 * Gibt das Datum des ersten HRFs zurück, in dem der Spieler aufgetaucht ist
+	 * Gibt das Datum des ersten HRFs zurück, in dem der Player aufgetaucht ist
 	 */
 	Timestamp getTimestamp4FirstPlayerHRF(int spielerid) {
 		Timestamp time = null;
@@ -477,7 +477,7 @@ final class SpielerTable extends AbstractTable {
 	}
 
 	/**
-	 * Gibt einen Spieler zurï¿½ck mit den Daten kurz vor dem Timestamp
+	 * Gibt einen Player zurï¿½ck mit den Daten kurz vor dem Timestamp
 	 */
 	int getTrainerType(int hrfID) {
 		ResultSet rs = null;
@@ -499,10 +499,10 @@ final class SpielerTable extends AbstractTable {
 	}
 
 	   /**
-     * Erstellt einen Spieler aus der Datenbank
+     * Erstellt einen Player aus der Datenbank
      */
-    private Spieler createObject(ResultSet rs) {
-    	Spieler player = new Spieler();
+    private Player createObject(ResultSet rs) {
+    	Player player = new Player();
         try {
         	player.setSpielerID(rs.getInt("SpielerID"));
             player.setName(DBManager.deleteEscapeSequences(rs.getString("Name")));

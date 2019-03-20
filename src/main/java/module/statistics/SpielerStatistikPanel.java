@@ -14,7 +14,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
 
@@ -494,17 +494,17 @@ class SpielerStatistikPanel extends LazyImagePanel {
 	}
 
 	private void initSpielerCB() {
-		List<Spieler> players = HOVerwaltung.instance().getModel().getAllSpieler();
+		List<Player> players = HOVerwaltung.instance().getModel().getAllSpieler();
 		List<SpielerCBItem> spielerCBItems = new ArrayList<SpielerCBItem>(players.size());
-		for (Spieler player : players) {
+		for (Player player : players) {
 			spielerCBItems.add(new SpielerCBItem(player.getName(), 0f, player));
 		}
 		Collections.sort(spielerCBItems);
 
-		// Alte Spieler
-		List<Spieler> oldPlayers = HOVerwaltung.instance().getModel().getAllOldSpieler();
+		// Alte Player
+		List<Player> oldPlayers = HOVerwaltung.instance().getModel().getAllOldSpieler();
 		List<SpielerCBItem> spielerOldCBItems = new ArrayList<SpielerCBItem>(players.size());
-		for (Spieler player : oldPlayers) {
+		for (Player player : oldPlayers) {
 			spielerOldCBItems.add(new SpielerCBItem(player.getName(), 0f, player));
 		}
 		Collections.sort(spielerOldCBItems);
@@ -518,7 +518,7 @@ class SpielerStatistikPanel extends LazyImagePanel {
 		cbItems.addAll(spielerOldCBItems);
 
 		m_jcbSpieler.setModel(new DefaultComboBoxModel(cbItems.toArray()));
-		// Kein Spieler selektiert
+		// Kein Player selektiert
 		m_jcbSpieler.setSelectedItem(null);
 	}
 

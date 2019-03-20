@@ -7,7 +7,7 @@ import core.gui.comp.NumericDocument;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
 import core.model.match.MatchType;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.net.OnlineWorker;
 import core.training.TrainingManager;
 import core.util.Helper;
@@ -150,7 +150,7 @@ public class OutputPanel extends LazyImagePanel {
 
 	private void selectPlayerFromModel() {
 		this.outputTable.clearSelection();
-		Spieler player = this.model.getActivePlayer();
+		Player player = this.model.getActivePlayer();
 		if (player != null) {
 			OutputTableModel tblModel = (OutputTableModel) this.outputTable.getModel();
 			for (int i = 0; i < tblModel.getRowCount(); i++) {

@@ -4,7 +4,7 @@ package module.lineup;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 
 
 /**
- * Hier lassen sich mit einem Klick alle aufgestellten Spieler einer Gruppe zuordnen
+ * Hier lassen sich mit einem Klick alle aufgestellten Player einer Gruppe zuordnen
  */
 final class AufstellungsGruppenPanel extends JPanel implements ActionListener {
 
@@ -61,23 +61,23 @@ final class AufstellungsGruppenPanel extends JPanel implements ActionListener {
     }
 
     private void gruppenMarkierung(String gruppenName) {
-        final Vector<Spieler> alleSpieler = HOVerwaltung.instance().getModel().getAllSpieler();
+        final Vector<Player> allePlayer = HOVerwaltung.instance().getModel().getAllSpieler();
         final Lineup aufstellung = HOVerwaltung.instance()
                                                                                                           .getModel()
-                                                                                                          .getAufstellung();
+                                                                                                          .getLineup();
 
-        //Alle Spieler auf der Gruppe entfernen und die neuen reinsetzen
-        for (int i = 0; i < alleSpieler.size(); i++) {
-            final Spieler spieler = alleSpieler.get(i);
+        //Alle Player auf der Gruppe entfernen und die neuen reinsetzen
+        for (int i = 0; i < allePlayer.size(); i++) {
+            final Player player = allePlayer.get(i);
 
             //ein erste 11
-            if (aufstellung.isSpielerInAnfangsElf(spieler.getSpielerID())) {
-                spieler.setTeamInfoSmilie(gruppenName);
+            if (aufstellung.isPlayerInStartingEleven(player.getSpielerID())) {
+                player.setTeamInfoSmilie(gruppenName);
             }
             //nicht erste 11 und trotzdem in der gleichen Gruppe
-            else if (spieler.getTeamInfoSmilie().equals(gruppenName)) {
+            else if (player.getTeamInfoSmilie().equals(gruppenName)) {
                 //Gruppe entfernen
-                spieler.setTeamInfoSmilie("");
+                player.setTeamInfoSmilie("");
             }
         }
 

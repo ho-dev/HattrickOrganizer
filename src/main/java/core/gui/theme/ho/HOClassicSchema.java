@@ -224,8 +224,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(PANEL_BG, "white");
 		put(PANEL_BORDER, "dark_gray");
 		put(BUTTON_BG, "white");
-		put(BUTTON_ASSIST_BG, "yellow");
-
+		put(BUTTON_ASSIST_CANCEL_BG,  new Color(226, 31, 31));
+		put(BUTTON_ASSIST_OK_BG,  new Color(34, 225, 36));
 		put(LABEL_ERROR_FG, Color.RED);
 		put(LABEL_SUCCESS_FG, "green");
 		put(LABEL_ONGREEN_FG, "white");

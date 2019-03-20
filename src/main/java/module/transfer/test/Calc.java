@@ -120,7 +120,7 @@ public class Calc {
 	}
 	
 	public static Date get17thBirthday(int playerId) {
-		String query = "SELECT LIMIT 0 1 AGE, AGEDAYS, DATUM FROM spieler WHERE spielerid="
+		String query = "SELECT LIMIT 0 1 AGE, AGEDAYS, DATUM FROM player WHERE spielerid="
 				+ playerId;
 		ResultSet rs = DBManager.instance().getAdapter().executeQuery(query);
 		try {
@@ -295,7 +295,7 @@ public class Calc {
 	}
 
 	public static int getAgeAt(Date date, int playerId) {
-		String query = "SELECT LIMIT 0 1 AGE, AGEDAYS, DATUM FROM spieler WHERE spielerid="
+		String query = "SELECT LIMIT 0 1 AGE, AGEDAYS, DATUM FROM player WHERE spielerid="
 				+ playerId;
 		ResultSet rs = DBManager.instance().getAdapter().executeQuery(query);
 		try {

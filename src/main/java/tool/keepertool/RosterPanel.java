@@ -3,7 +3,8 @@ package tool.keepertool;
 
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
@@ -51,9 +52,9 @@ class RosterPanel extends JPanel {
         players.removeAllItems();
         players.addItem(new PlayerItem());
 
-        for (Iterator<Spieler> iter = HOVerwaltung.instance().getModel().getAllSpieler().iterator();
+        for (Iterator<Player> iter = HOVerwaltung.instance().getModel().getAllSpieler().iterator();
              iter.hasNext();) {
-            final Spieler element = iter.next();
+            final Player element = iter.next();
 
             if (element.getTorwart() > 4) {
                 players.addItem(new PlayerItem(element));

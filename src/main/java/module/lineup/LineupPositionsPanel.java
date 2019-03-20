@@ -7,15 +7,11 @@ import core.gui.model.AufstellungCBItem;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
+import core.model.player.IMatchRoleID;
+import core.model.player.Player;
 import core.util.HOLogger;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,10 +20,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.*;
+import javax.swing.border.Border;
+
+import static javax.swing.SwingConstants.HORIZONTAL;
 
 /**
  * Enthält die einzelnen Positionen
@@ -41,151 +37,165 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private JButton m_jbFlipSide = new JButton(ThemeManager.getIcon(HOIconName.RELOAD));
 	private JButton m_jbMidiFrame = new JButton(ThemeManager.getIcon(HOIconName.MIDLINEUPFRAME));
 	private JButton m_jbMiniFrame = new JButton(ThemeManager.getIcon(HOIconName.MINLINEUPFRAME));
-	private PlayerPositionPanel m_clCentralForward;
-	private PlayerPositionPanel m_clCentralInnerMidfielder;
+	private PlayerPositionPanel m_clKeeper;
+
 	private PlayerPositionPanel m_clLeftBack;
-	private PlayerPositionPanel m_clLeftWinger;
 	private PlayerPositionPanel m_clLeftCentralDefender;
-	private PlayerPositionPanel m_clLeftInnerMidfielder;
-	private PlayerPositionPanel m_clLeftForward;
 	private PlayerPositionPanel m_clMiddleCentralDefender;
-	private PlayerPositionPanel m_clRightBack;
-	private PlayerPositionPanel m_clRightWinger;
 	private PlayerPositionPanel m_clRightCentralDefender;
+	private PlayerPositionPanel m_clRightBack;
+
+	private PlayerPositionPanel m_clLeftWinger;
+	private PlayerPositionPanel m_clLeftInnerMidfielder;
+	private PlayerPositionPanel m_clCentralInnerMidfielder;
 	private PlayerPositionPanel m_clRightInnerMidfielder;
+	private PlayerPositionPanel m_clRightWinger;
+
+
+	private PlayerPositionPanel m_clLeftForward;
+	private PlayerPositionPanel m_clCentralForward;
 	private PlayerPositionPanel m_clRightForward;
-	private PlayerPositionPanel m_clSubstWinger;
-	private PlayerPositionPanel m_clSubstMidfield;
-	private PlayerPositionPanel m_clSubstForward;
-	private PlayerPositionPanel m_clSubstKeeper;
-	private PlayerPositionPanel m_clSubstDefender;
+
+	private PlayerPositionPanel m_clSubstKeeper1;
+	private PlayerPositionPanel m_clSubstKeeper2;
+	private PlayerPositionPanel m_clSubstCD1;
+	private PlayerPositionPanel m_clSubstCD2;
+	private PlayerPositionPanel m_clSubstWB1;
+	private PlayerPositionPanel m_clSubstWB2;
+	private PlayerPositionPanel m_clSubstIM1;
+	private PlayerPositionPanel m_clSubstIM2;
+	private PlayerPositionPanel m_clSubstFwd1;
+	private PlayerPositionPanel m_clSubstFwd2;
+	private PlayerPositionPanel m_clSubstWI1;
+	private PlayerPositionPanel m_clSubstWI2;
+	private PlayerPositionPanel m_clSubstXtr1;
+	private PlayerPositionPanel m_clSubstXtr2;
 	private PlayerPositionPanel m_clCaptain;
 	private PlayerPositionPanel m_clSetPieceTaker;
-	private PlayerPositionPanel m_clKeeper;
 	private javax.swing.JLayeredPane centerPanel;
 	private final SwapPositionsManager swapPositionsManager = new SwapPositionsManager(this);
 	private final IAufstellungsAssistentPanel assistantPanel;
 	
-	private static final String EMPTY = "";
-	private static final String SPACE =" ";
-
-	public PlayerPositionPanel getM_clCentralForward() {
-		return m_clCentralForward;
-	}
-
-	public void setM_clCentralForward(PlayerPositionPanel m_clCentralForward) {
-		this.m_clCentralForward = m_clCentralForward;
-	}
-
-	public PlayerPositionPanel getM_clCentralInnerMidfielder() {
-		return m_clCentralInnerMidfielder;
-	}
-
-	public void setM_clCentralInnerMidfielder(
-			PlayerPositionPanel m_clCentralInnerMidfielder) {
-		this.m_clCentralInnerMidfielder = m_clCentralInnerMidfielder;
-	}
-
-	public PlayerPositionPanel getM_clLeftBack() {
-		return m_clLeftBack;
-	}
-
-	public void setM_clLeftBack(PlayerPositionPanel m_clLeftBack) {
-		this.m_clLeftBack = m_clLeftBack;
-	}
-
-	public PlayerPositionPanel getM_clLeftWinger() {
-		return m_clLeftWinger;
-	}
-
-	public void setM_clLeftWinger(PlayerPositionPanel m_clLeftWinger) {
-		this.m_clLeftWinger = m_clLeftWinger;
-	}
-
-	public PlayerPositionPanel getM_clLeftCentralDefender() {
-		return m_clLeftCentralDefender;
-	}
-
-	public void setM_clLeftCentralDefender(
-			PlayerPositionPanel m_clLeftCentralDefender) {
-		this.m_clLeftCentralDefender = m_clLeftCentralDefender;
-	}
-
-	public PlayerPositionPanel getM_clLeftInnerMidfielder() {
-		return m_clLeftInnerMidfielder;
-	}
-
-	public void setM_clLeftInnerMidfielder(
-			PlayerPositionPanel m_clLeftInnerMidfielder) {
-		this.m_clLeftInnerMidfielder = m_clLeftInnerMidfielder;
-	}
-
-	public PlayerPositionPanel getM_clLeftForward() {
-		return m_clLeftForward;
-	}
-
-	public void setM_clLeftForward(PlayerPositionPanel m_clLeftForward) {
-		this.m_clLeftForward = m_clLeftForward;
-	}
-
-	public PlayerPositionPanel getM_clMiddleCentralDefender() {
-		return m_clMiddleCentralDefender;
-	}
-
-	public void setM_clMiddleCentralDefender(
-			PlayerPositionPanel m_clMiddleCentralDefender) {
-		this.m_clMiddleCentralDefender = m_clMiddleCentralDefender;
-	}
-
-	public PlayerPositionPanel getM_clRightBack() {
-		return m_clRightBack;
-	}
-
-	public void setM_clRightBack(PlayerPositionPanel m_clRightBack) {
-		this.m_clRightBack = m_clRightBack;
-	}
-
-	public PlayerPositionPanel getM_clRightWinger() {
-		return m_clRightWinger;
-	}
-
-	public void setM_clRightWinger(PlayerPositionPanel m_clRightWinger) {
-		this.m_clRightWinger = m_clRightWinger;
-	}
-
-	public PlayerPositionPanel getM_clRightCentralDefender() {
-		return m_clRightCentralDefender;
-	}
-
-	public void setM_clRightCentralDefender(
-			PlayerPositionPanel m_clRightCentralDefender) {
-		this.m_clRightCentralDefender = m_clRightCentralDefender;
-	}
-
-	public PlayerPositionPanel getM_clRightInnerMidfielder() {
-		return m_clRightInnerMidfielder;
-	}
-
-	public void setM_clRightInnerMidfielder(
-			PlayerPositionPanel m_clRightInnerMidfielder) {
-		this.m_clRightInnerMidfielder = m_clRightInnerMidfielder;
-	}
-
-	public PlayerPositionPanel getM_clRightForward() {
-		return m_clRightForward;
-	}
-
-	public void setM_clRightForward(PlayerPositionPanel m_clRightForward) {
-		this.m_clRightForward = m_clRightForward;
-	}
-
-	public PlayerPositionPanel getM_clKeeper() {
-		return m_clKeeper;
-	}
-
-	public void setM_clKeeper(PlayerPositionPanel m_clKeeper) {
-		this.m_clKeeper = m_clKeeper;
-	}
+//	private static final String EMPTY = "";
+//	private static final String SPACE =" ";
+//
+//	public PlayerPositionPanel getM_clCentralForward() {
+//		return m_clCentralForward;
+//	}
+//
+//	public void setM_clCentralForward(PlayerPositionPanel m_clCentralForward) {
+//		this.m_clCentralForward = m_clCentralForward;
+//	}
+//
+//	public PlayerPositionPanel getM_clCentralInnerMidfielder() {
+//		return m_clCentralInnerMidfielder;
+//	}
+//
+//	public void setM_clCentralInnerMidfielder(
+//			PlayerPositionPanel m_clCentralInnerMidfielder) {
+//		this.m_clCentralInnerMidfielder = m_clCentralInnerMidfielder;
+//	}
+//
+//	public PlayerPositionPanel getM_clLeftBack() {
+//		return m_clLeftBack;
+//	}
+//
+//	public void setM_clLeftBack(PlayerPositionPanel m_clLeftBack) {
+//		this.m_clLeftBack = m_clLeftBack;
+//	}
+//
+//	public PlayerPositionPanel getM_clLeftWinger() {
+//		return m_clLeftWinger;
+//	}
+//
+//	public void setM_clLeftWinger(PlayerPositionPanel m_clLeftWinger) {
+//		this.m_clLeftWinger = m_clLeftWinger;
+//	}
+//
+//	public PlayerPositionPanel getM_clLeftCentralDefender() {
+//		return m_clLeftCentralDefender;
+//	}
+//
+//	public void setM_clLeftCentralDefender(
+//			PlayerPositionPanel m_clLeftCentralDefender) {
+//		this.m_clLeftCentralDefender = m_clLeftCentralDefender;
+//	}
+//
+//	public PlayerPositionPanel getM_clLeftInnerMidfielder() {
+//		return m_clLeftInnerMidfielder;
+//	}
+//
+//	public void setM_clLeftInnerMidfielder(
+//			PlayerPositionPanel m_clLeftInnerMidfielder) {
+//		this.m_clLeftInnerMidfielder = m_clLeftInnerMidfielder;
+//	}
+//
+//	public PlayerPositionPanel getM_clLeftForward() {
+//		return m_clLeftForward;
+//	}
+//
+//	public void setM_clLeftForward(PlayerPositionPanel m_clLeftForward) {
+//		this.m_clLeftForward = m_clLeftForward;
+//	}
+//
+//	public PlayerPositionPanel getM_clMiddleCentralDefender() {
+//		return m_clMiddleCentralDefender;
+//	}
+//
+//	public void setM_clMiddleCentralDefender(
+//			PlayerPositionPanel m_clMiddleCentralDefender) {
+//		this.m_clMiddleCentralDefender = m_clMiddleCentralDefender;
+//	}
+//
+//	public PlayerPositionPanel getM_clRightBack() {
+//		return m_clRightBack;
+//	}
+//
+//	public void setM_clRightBack(PlayerPositionPanel m_clRightBack) {
+//		this.m_clRightBack = m_clRightBack;
+//	}
+//
+//	public PlayerPositionPanel getM_clRightWinger() {
+//		return m_clRightWinger;
+//	}
+//
+//	public void setM_clRightWinger(PlayerPositionPanel m_clRightWinger) {
+//		this.m_clRightWinger = m_clRightWinger;
+//	}
+//
+//	public PlayerPositionPanel getM_clRightCentralDefender() {
+//		return m_clRightCentralDefender;
+//	}
+//
+//	public void setM_clRightCentralDefender(
+//			PlayerPositionPanel m_clRightCentralDefender) {
+//		this.m_clRightCentralDefender = m_clRightCentralDefender;
+//	}
+//
+//	public PlayerPositionPanel getM_clRightInnerMidfielder() {
+//		return m_clRightInnerMidfielder;
+//	}
+//
+//	public void setM_clRightInnerMidfielder(
+//			PlayerPositionPanel m_clRightInnerMidfielder) {
+//		this.m_clRightInnerMidfielder = m_clRightInnerMidfielder;
+//	}
+//
+//	public PlayerPositionPanel getM_clRightForward() {
+//		return m_clRightForward;
+//	}
+//
+//	public void setM_clRightForward(PlayerPositionPanel m_clRightForward) {
+//		this.m_clRightForward = m_clRightForward;
+//	}
+//
+//	public PlayerPositionPanel getM_clKeeper() {
+//		return m_clKeeper;
+//	}
+//
+//	public void setM_clKeeper(PlayerPositionPanel m_clKeeper) {
+//		this.m_clKeeper = m_clKeeper;
+//	}
 
 	public LineupPositionsPanel(LineupPanel panel) {
 		m_clLineupPanel = panel;
@@ -205,7 +215,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		} else if (actionEvent.getSource().equals(m_jbMidiFrame)) {
 			new AufstellungsMiniPositionsFrame(m_clLineupPanel, false, false);
 		} else if (actionEvent.getSource().equals(m_jbFlipSide)) {
-			HOVerwaltung.instance().getModel().getAufstellung().flipSide();
+			HOVerwaltung.instance().getModel().getLineup().flipSide();
 			HOMainFrame.instance().getAufstellungsPanel().update();
 		} else {
 			final AufstellungsMiniPositionsFrame frame = new AufstellungsMiniPositionsFrame(
@@ -236,22 +246,22 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		boolean exludeLast = m_clLineupPanel.getAufstellungsAssistentPanel()
 				.isExcludeLastMatch();
 
-		// Alle SpielerPositionen Informieren erste 11
-		List<Spieler> aufgestellteSpieler = new ArrayList<Spieler>();
-		List<Spieler> alleSpieler = HOVerwaltung.instance().getModel().getAllSpieler();
-		List<Spieler> gefilterteSpieler = new ArrayList<Spieler>();
-		Lineup aufstellung = HOVerwaltung.instance().getModel().getAufstellung();
+		// All Player Positions Inform First 11
+		List<Player> selectedPlayers = new ArrayList<Player>();
+		List<Player> allPlayers = HOVerwaltung.instance().getModel().getAllSpieler();
+		List<Player> filteredPlayers = new ArrayList<Player>();
+		Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
 
-		for (Spieler player: alleSpieler) {
-			// ein erste 11
-			if (aufstellung.isSpielerInAnfangsElf(player.getSpielerID())) {
-				aufgestellteSpieler.add(player);
+		for (Player player: allPlayers) {
+			// the first 11
+			if (lineup.isPlayerInStartingEleven(player.getSpielerID())) {
+				selectedPlayers.add(player);
 			}
 		}
 
-		// Den Gruppenfilter anwenden
-		for (Spieler player: alleSpieler) {
-			// Kein Filter
+		// Apply the Group Filter
+		for (Player player: allPlayers) {
+			// No Filter
 			if (!gruppenfilter || (gruppe.equals(player.getTeamInfoSmilie()) && !gruppenegieren)
 					|| (!gruppe.equals(player.getTeamInfoSmilie()) && gruppenegieren)) {
 				boolean include = true;
@@ -261,41 +271,50 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 				if (exludeLast
 						&& (lastLineup != null)
 						&& lastLineup.getAufstellung()
-								.isSpielerInAnfangsElf(player.getSpielerID())) {
+								.isPlayerInStartingEleven(player.getSpielerID())) {
 					include = false;
 					HOLogger.instance().log(getClass(), "Exclude: " + player.getName());
 				}
 
 				if (include) {
-					gefilterteSpieler.add(player);
+					filteredPlayers.add(player);
 				}
 			}
 		}
 
-		m_clKeeper.refresh(gefilterteSpieler);
-		m_clLeftBack.refresh(gefilterteSpieler);
-		m_clLeftCentralDefender.refresh(gefilterteSpieler);
-		m_clMiddleCentralDefender.refresh(gefilterteSpieler);
-		m_clRightCentralDefender.refresh(gefilterteSpieler);
-		m_clRightBack.refresh(gefilterteSpieler);
-		m_clLeftWinger.refresh(gefilterteSpieler);
-		m_clLeftInnerMidfielder.refresh(gefilterteSpieler);
-		m_clCentralInnerMidfielder.refresh(gefilterteSpieler);
-		m_clRightInnerMidfielder.refresh(gefilterteSpieler);
-		m_clRightWinger.refresh(gefilterteSpieler);
-		m_clLeftForward.refresh(gefilterteSpieler);
-		m_clCentralForward.refresh(gefilterteSpieler);
-		m_clRightForward.refresh(gefilterteSpieler);
-		m_clSubstKeeper.refresh(gefilterteSpieler);
-		m_clSubstDefender.refresh(gefilterteSpieler);
-		m_clSubstMidfield.refresh(gefilterteSpieler);
-		m_clSubstWinger.refresh(gefilterteSpieler);
-		m_clSubstForward.refresh(gefilterteSpieler);
-		m_clSetPieceTaker.refresh(aufgestellteSpieler);
-		m_clCaptain.refresh(aufgestellteSpieler);
+		m_clKeeper.refresh(filteredPlayers);
+		m_clLeftBack.refresh(filteredPlayers);
+		m_clLeftCentralDefender.refresh(filteredPlayers);
+		m_clMiddleCentralDefender.refresh(filteredPlayers);
+		m_clRightCentralDefender.refresh(filteredPlayers);
+		m_clRightBack.refresh(filteredPlayers);
+		m_clLeftWinger.refresh(filteredPlayers);
+		m_clLeftInnerMidfielder.refresh(filteredPlayers);
+		m_clCentralInnerMidfielder.refresh(filteredPlayers);
+		m_clRightInnerMidfielder.refresh(filteredPlayers);
+		m_clRightWinger.refresh(filteredPlayers);
+		m_clLeftForward.refresh(filteredPlayers);
+		m_clCentralForward.refresh(filteredPlayers);
+		m_clRightForward.refresh(filteredPlayers);
+		m_clSubstKeeper1.refresh(filteredPlayers);
+		m_clSubstKeeper2.refresh(filteredPlayers);
+		m_clSubstCD1.refresh(filteredPlayers);
+	    m_clSubstCD2.refresh(filteredPlayers);
+		m_clSubstWB1.refresh(filteredPlayers);
+		m_clSubstWB2.refresh(filteredPlayers);
+		m_clSubstIM1.refresh(filteredPlayers);
+		m_clSubstIM2.refresh(filteredPlayers);
+		m_clSubstFwd1.refresh(filteredPlayers);
+		m_clSubstFwd2.refresh(filteredPlayers);
+		m_clSubstWI1.refresh(filteredPlayers);
+		m_clSubstWI2.refresh(filteredPlayers);
+		m_clSubstXtr1.refresh(filteredPlayers);
+		m_clSubstXtr2.refresh(filteredPlayers);
+		m_clSetPieceTaker.refresh(selectedPlayers);
+	 	m_clCaptain.refresh(selectedPlayers);
 
 		// Check
-		aufstellung.checkAufgestellteSpieler();
+		lineup.checkAufgestellteSpieler();
 	}
 
 	public void exportOldLineup(String name) {
@@ -324,13 +343,23 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 			saveDetail(bw, m_clRightForward);
 			saveDetail(bw, m_clCentralForward);
 			saveDetail(bw, m_clLeftForward);
+			saveDetail(bw, m_clSubstKeeper1);
+			saveDetail(bw, m_clSubstKeeper2);
+			saveDetail(bw, m_clSubstCD1);
+			saveDetail(bw, m_clSubstCD2);
+			saveDetail(bw, m_clSubstWB1);
+			saveDetail(bw, m_clSubstWB2);
+			saveDetail(bw, m_clSubstIM1);
+			saveDetail(bw, m_clSubstIM2);
+			saveDetail(bw, m_clSubstFwd1);
+			saveDetail(bw, m_clSubstFwd2);
+			saveDetail(bw, m_clSubstWI1);
+			saveDetail(bw, m_clSubstWI2);
+			saveDetail(bw, m_clSubstXtr1);
+			saveDetail(bw, m_clSubstXtr2);
 			saveDetail(bw, m_clSetPieceTaker);
-			saveDetail(bw, m_clSubstKeeper);
 			saveDetail(bw, m_clCaptain);
-			saveDetail(bw, m_clSubstDefender);
-			saveDetail(bw, m_clSubstMidfield);
-			saveDetail(bw, m_clSubstWinger);
-			saveDetail(bw, m_clSubstForward);
+
 			bw.write("<tacticType>" + m_clLineupPanel.getAufstellungsDetailPanel().getTaktik()
 					+ "</tacticType>");
 			bw.newLine();
@@ -360,9 +389,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		bw.newLine();
 	}
 	
-	private void savePenaltyTakers(BufferedWriter bw) {
-		
-	}
+////	private void savePenaltyTakers(BufferedWriter bw) {
+////
+//	}
 
 	@Override
 	public final void update() {
@@ -384,22 +413,22 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
-		constraints.insets = new Insets(2, 2, 2, 2);
+		constraints.insets = new Insets(1, 1, 1, 1);
 
 		centerPanel.setLayout(layout);
 
-		constraints.gridx = 2;
+		constraints.gridx = 3;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
-		m_clKeeper = new PlayerPositionPanel(this, ISpielerPosition.keeper);
+		m_clKeeper = new PlayerPositionPanel(this, IMatchRoleID.keeper);
 		layout.setConstraints(m_clKeeper, constraints);
 		centerPanel.add(m_clKeeper);
 		swapPositionsManager.addSwapCapabilityTo(m_clKeeper);
 		
-		constraints.gridx = 0;
+		constraints.gridx = 1;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
-		m_clRightBack = new PlayerPositionPanel(this, ISpielerPosition.rightBack);
+		m_clRightBack = new PlayerPositionPanel(this, IMatchRoleID.rightBack);
 		layout.setConstraints(m_clRightBack, constraints);
 		centerPanel.add(m_clRightBack);
 		swapPositionsManager.addSwapCapabilityTo(m_clRightBack);
@@ -407,40 +436,40 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// Defense line
 
-		constraints.gridx = 1;
+		constraints.gridx = 2;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
 		m_clRightCentralDefender = new PlayerPositionPanel(this,
-				ISpielerPosition.rightCentralDefender);
+				IMatchRoleID.rightCentralDefender);
 		layout.setConstraints(m_clRightCentralDefender, constraints);
 		centerPanel.add(m_clRightCentralDefender);
 		swapPositionsManager.addSwapCapabilityTo(m_clRightCentralDefender);
 		assistantPanel.addToAssistant(m_clRightCentralDefender);
 
-		constraints.gridx = 2;
+		constraints.gridx = 3;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
 		m_clMiddleCentralDefender = new PlayerPositionPanel(this,
-				ISpielerPosition.middleCentralDefender);
+				IMatchRoleID.middleCentralDefender);
 		layout.setConstraints(m_clMiddleCentralDefender, constraints);
 		centerPanel.add(m_clMiddleCentralDefender);
 		swapPositionsManager.addSwapCapabilityTo(m_clMiddleCentralDefender);
 		assistantPanel.addToAssistant(m_clMiddleCentralDefender);
 
-		constraints.gridx = 3;
+		constraints.gridx = 4;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
 		m_clLeftCentralDefender = new PlayerPositionPanel(this,
-				ISpielerPosition.leftCentralDefender);
+				IMatchRoleID.leftCentralDefender);
 		layout.setConstraints(m_clLeftCentralDefender, constraints);
 		centerPanel.add(m_clLeftCentralDefender);
 		swapPositionsManager.addSwapCapabilityTo(m_clLeftCentralDefender);
 		assistantPanel.addToAssistant(m_clLeftCentralDefender);
 
-		constraints.gridx = 4;
+		constraints.gridx = 5;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
-		m_clLeftBack = new PlayerPositionPanel(this, ISpielerPosition.leftBack);
+		m_clLeftBack = new PlayerPositionPanel(this, IMatchRoleID.leftBack);
 		layout.setConstraints(m_clLeftBack, constraints);
 		centerPanel.add(m_clLeftBack);
 		swapPositionsManager.addSwapCapabilityTo(m_clLeftBack);
@@ -448,48 +477,48 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// Midfield Line
 
-		constraints.gridx = 0;
+		constraints.gridx = 1;
 		constraints.gridy = 2;
 		constraints.gridwidth = 1;
-		m_clRightWinger = new PlayerPositionPanel(this, ISpielerPosition.rightWinger);
+		m_clRightWinger = new PlayerPositionPanel(this, IMatchRoleID.rightWinger);
 		layout.setConstraints(m_clRightWinger, constraints);
 		centerPanel.add(m_clRightWinger);
 		swapPositionsManager.addSwapCapabilityTo(m_clRightWinger);
 		assistantPanel.addToAssistant(m_clRightWinger);
 
-		constraints.gridx = 1;
+		constraints.gridx = 2;
 		constraints.gridy = 2;
 		constraints.gridwidth = 1;
 		m_clRightInnerMidfielder = new PlayerPositionPanel(this,
-				ISpielerPosition.rightInnerMidfield);
+				IMatchRoleID.rightInnerMidfield);
 		layout.setConstraints(m_clRightInnerMidfielder, constraints);
 		centerPanel.add(m_clRightInnerMidfielder);
 		swapPositionsManager.addSwapCapabilityTo(m_clRightInnerMidfielder);
 		assistantPanel.addToAssistant(m_clRightInnerMidfielder);
 
-		constraints.gridx = 2;
+		constraints.gridx = 3;
 		constraints.gridy = 2;
 		constraints.gridwidth = 1;
 		m_clCentralInnerMidfielder = new PlayerPositionPanel(this,
-				ISpielerPosition.centralInnerMidfield);
+				IMatchRoleID.centralInnerMidfield);
 		layout.setConstraints(m_clCentralInnerMidfielder, constraints);
 		centerPanel.add(m_clCentralInnerMidfielder);
 		swapPositionsManager.addSwapCapabilityTo(m_clCentralInnerMidfielder);
 		assistantPanel.addToAssistant(m_clCentralInnerMidfielder);
 
-		constraints.gridx = 3;
+		constraints.gridx = 4;
 		constraints.gridy = 2;
 		constraints.gridwidth = 1;
-		m_clLeftInnerMidfielder = new PlayerPositionPanel(this, ISpielerPosition.leftInnerMidfield);
+		m_clLeftInnerMidfielder = new PlayerPositionPanel(this, IMatchRoleID.leftInnerMidfield);
 		layout.setConstraints(m_clLeftInnerMidfielder, constraints);
 		centerPanel.add(m_clLeftInnerMidfielder);
 		swapPositionsManager.addSwapCapabilityTo(m_clLeftInnerMidfielder);
 		assistantPanel.addToAssistant(m_clLeftInnerMidfielder);
 
-		constraints.gridx = 4;
+		constraints.gridx = 5;
 		constraints.gridy = 2;
 		constraints.gridwidth = 1;
-		m_clLeftWinger = new PlayerPositionPanel(this, ISpielerPosition.leftWinger);
+		m_clLeftWinger = new PlayerPositionPanel(this, IMatchRoleID.leftWinger);
 		layout.setConstraints(m_clLeftWinger, constraints);
 		centerPanel.add(m_clLeftWinger);
 		swapPositionsManager.addSwapCapabilityTo(m_clLeftWinger);
@@ -497,110 +526,68 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// Forward line
 
-		constraints.gridx = 1;
+		constraints.gridx = 2;
 		constraints.gridy = 3;
 		constraints.gridwidth = 1;
-		m_clRightForward = new PlayerPositionPanel(this, ISpielerPosition.rightForward);
+		m_clRightForward = new PlayerPositionPanel(this, IMatchRoleID.rightForward);
 		layout.setConstraints(m_clRightForward, constraints);
 		centerPanel.add(m_clRightForward);
 		swapPositionsManager.addSwapCapabilityTo(m_clRightForward);
 		assistantPanel.addToAssistant(m_clRightForward);
 
-		constraints.gridx = 2;
+		constraints.gridx = 3;
 		constraints.gridy = 3;
 		constraints.gridwidth = 1;
-		m_clCentralForward = new PlayerPositionPanel(this, ISpielerPosition.centralForward);
+		m_clCentralForward = new PlayerPositionPanel(this, IMatchRoleID.centralForward);
 		layout.setConstraints(m_clCentralForward, constraints);
 		centerPanel.add(m_clCentralForward);
 		swapPositionsManager.addSwapCapabilityTo(m_clCentralForward);
 		assistantPanel.addToAssistant(m_clCentralForward);
 
-		constraints.gridx = 3;
+		constraints.gridx = 4;
 		constraints.gridy = 3;
 		constraints.gridwidth = 1;
-		m_clLeftForward = new PlayerPositionPanel(this, ISpielerPosition.leftForward);
+		m_clLeftForward = new PlayerPositionPanel(this, IMatchRoleID.leftForward);
 		layout.setConstraints(m_clLeftForward, constraints);
 		centerPanel.add(m_clLeftForward);
 		swapPositionsManager.addSwapCapabilityTo(m_clLeftForward);
 		assistantPanel.addToAssistant(m_clLeftForward);
 
-		// A spacer between forwards and reserves.
+		// A spacer between forwards and captain
 
 		constraints.gridx = 0;
 		constraints.gridy = 4;
-		constraints.gridwidth = 5;
+		constraints.gridwidth = 7;
 		Box box = new Box(BoxLayout.Y_AXIS);
-		box.add(Box.createRigidArea(new Dimension(10, 6)));
+		box.add(Box.createVerticalStrut(10));
 		layout.setConstraints(box, constraints);
 		centerPanel.add(box);
 
-		// The reserves
-
-		constraints.gridx = 0;
-		constraints.gridy = 5;
-		constraints.gridwidth = 1;
-		m_clSubstKeeper = new PlayerPositionPanel(this, ISpielerPosition.substKeeper);
-		layout.setConstraints(m_clSubstKeeper, constraints);
-		centerPanel.add(m_clSubstKeeper);
-		swapPositionsManager.addSwapCapabilityTo(m_clSubstKeeper);
+		// Captain and setpieces
 
 		constraints.gridx = 1;
 		constraints.gridy = 5;
 		constraints.gridwidth = 1;
-		m_clSubstDefender = new PlayerPositionPanel(this, ISpielerPosition.substDefender);
-		layout.setConstraints(m_clSubstDefender, constraints);
-		centerPanel.add(m_clSubstDefender);
-		swapPositionsManager.addSwapCapabilityTo(m_clSubstDefender);
+		m_clCaptain = new PlayerPositionPanel(this, IMatchRoleID.captain);
+		layout.setConstraints(m_clCaptain, constraints);
+		centerPanel.add(m_clCaptain);
 
 		constraints.gridx = 2;
 		constraints.gridy = 5;
 		constraints.gridwidth = 1;
-		m_clSubstMidfield = new PlayerPositionPanel(this, ISpielerPosition.substInnerMidfield);
-		layout.setConstraints(m_clSubstMidfield, constraints);
-		centerPanel.add(m_clSubstMidfield);
-		swapPositionsManager.addSwapCapabilityTo(m_clSubstMidfield);
+		m_clSetPieceTaker = new PlayerPositionPanel(this, IMatchRoleID.setPieces);
+		layout.setConstraints(m_clSetPieceTaker, constraints);
+		centerPanel.add(m_clSetPieceTaker);
 
-		constraints.gridx = 3;
-		constraints.gridy = 5;
-		constraints.gridwidth = 1;
-		m_clSubstForward = new PlayerPositionPanel(this, ISpielerPosition.substForward);
-		layout.setConstraints(m_clSubstForward, constraints);
-		centerPanel.add(m_clSubstForward);
-		swapPositionsManager.addSwapCapabilityTo(m_clSubstForward);
+		// Buttons to allocate team number to players currently on the line up
 
 		constraints.gridx = 4;
 		constraints.gridy = 5;
 		constraints.gridwidth = 1;
-		m_clSubstWinger = new PlayerPositionPanel(this, ISpielerPosition.substWinger);
-		layout.setConstraints(m_clSubstWinger, constraints);
-		centerPanel.add(m_clSubstWinger);
-		swapPositionsManager.addSwapCapabilityTo(m_clSubstWinger);
-
-		// Captain and setpieces
-
-		constraints.gridx = 0;
-		constraints.gridy = 6;
-		constraints.gridwidth = 1;
-		m_clCaptain = new PlayerPositionPanel(this, ISpielerPosition.captain);
-		layout.setConstraints(m_clCaptain, constraints);
-		centerPanel.add(m_clCaptain);
-
-		constraints.gridx = 1;
-		constraints.gridy = 6;
-		constraints.gridwidth = 1;
-		m_clSetPieceTaker = new PlayerPositionPanel(this, ISpielerPosition.setPieces);
-		layout.setConstraints(m_clSetPieceTaker, constraints);
-		centerPanel.add(m_clSetPieceTaker);
-
-		// Gruppenzuordnung des aufgestellten
-
-		constraints.gridx = 3;
-		constraints.gridy = 6;
-		constraints.gridwidth = 1;
 		constraints.anchor = GridBagConstraints.CENTER;
 		centerPanel.add(new AufstellungsGruppenPanel(), constraints);
 
-		// MiniLineup
+		// buttons to toggle MiniLineup, reverse lineup ...
 		final JPanel buttonPanel = new JPanel(new BorderLayout());
 		buttonPanel.setOpaque(false);
 
@@ -629,12 +616,152 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_jbDrucken.setPreferredSize(new Dimension(m_jbDrucken.getPreferredSize().width, 25));
 		buttonPanel.add(panel, BorderLayout.NORTH);
 
-		constraints.gridx = 4;
-		constraints.gridy = 6;
+		constraints.gridx = 6;
+		constraints.gridy = 5;
 		constraints.gridwidth = 1;
 		constraints.anchor = GridBagConstraints.CENTER;
 		layout.setConstraints(panel, constraints);
 		centerPanel.add(panel);
+
+		// A spacer between captain and reserves.
+
+		constraints.gridx = 0;
+		constraints.gridy = 6;
+		constraints.gridwidth = 7;
+		Box box2 = new Box(BoxLayout.Y_AXIS);
+		box2.add(Box.createVerticalStrut(35));
+		layout.setConstraints(box2, constraints);
+		centerPanel.add(box2);
+
+		// Test
+		constraints.gridx = 0;
+		constraints.gridy = 7;
+		constraints.gridwidth = 7;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		JLabel label1 = new JLabel("SUBSTITUTES", JLabel.CENTER);
+		// create a line border with the specified color and width
+		Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
+		label1.setBorder(border);
+		Font labelFont = label1.getFont();
+		label1.setFont(new Font(labelFont.getName(), Font.BOLD, 15));
+		label1.setOpaque(true);
+		label1.setBackground(Color.GRAY);
+		layout.setConstraints(label1, constraints);
+		centerPanel.add(label1);
+
+		// The reserves
+
+		constraints.gridx = 0;
+		constraints.gridy = 8;
+		constraints.gridwidth = 1;
+		m_clSubstKeeper1 = new PlayerPositionPanel(this, IMatchRoleID.substGK1);
+		layout.setConstraints(m_clSubstKeeper1, constraints);
+		centerPanel.add(m_clSubstKeeper1);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstKeeper1);
+
+		constraints.gridx = 0;
+		constraints.gridy = 9;
+		constraints.gridwidth = 1;
+		m_clSubstKeeper2 = new PlayerPositionPanel(this, IMatchRoleID.substGK2);
+		layout.setConstraints(m_clSubstKeeper2, constraints);
+		centerPanel.add(m_clSubstKeeper2);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstKeeper2);
+
+		constraints.gridx = 1;
+		constraints.gridy = 8;
+		constraints.gridwidth = 1;
+		m_clSubstCD1 = new PlayerPositionPanel(this, IMatchRoleID.substCD1);
+		layout.setConstraints(m_clSubstCD1, constraints);
+		centerPanel.add(m_clSubstCD1);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstCD1);
+
+		constraints.gridx = 1;
+		constraints.gridy = 9;
+		constraints.gridwidth = 1;
+		m_clSubstCD2 = new PlayerPositionPanel(this, IMatchRoleID.substCD2);
+		layout.setConstraints(m_clSubstCD2, constraints);
+		centerPanel.add(m_clSubstCD2);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstCD2);
+
+		constraints.gridx = 2;
+		constraints.gridy = 8;
+		constraints.gridwidth = 1;
+		m_clSubstWB1 = new PlayerPositionPanel(this, IMatchRoleID.substWB1);
+		layout.setConstraints(m_clSubstWB1, constraints);
+		centerPanel.add(m_clSubstWB1);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstWB1);
+
+		constraints.gridx = 2;
+		constraints.gridy = 9;
+		constraints.gridwidth = 1;
+		m_clSubstWB2 = new PlayerPositionPanel(this, IMatchRoleID.substWB2);
+		layout.setConstraints(m_clSubstWB2, constraints);
+		centerPanel.add(m_clSubstWB2);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstWB2);
+
+		constraints.gridx = 3;
+		constraints.gridy = 8;
+		constraints.gridwidth = 1;
+		m_clSubstIM1 = new PlayerPositionPanel(this, IMatchRoleID.substIM1);
+		layout.setConstraints(m_clSubstIM1, constraints);
+		centerPanel.add(m_clSubstIM1);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstIM1);
+
+		constraints.gridx = 3;
+		constraints.gridy = 9;
+		constraints.gridwidth = 1;
+		m_clSubstIM2 = new PlayerPositionPanel(this, IMatchRoleID.substIM2);
+		layout.setConstraints(m_clSubstIM2, constraints);
+		centerPanel.add(m_clSubstIM2);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstIM2);
+
+		constraints.gridx = 4;
+		constraints.gridy = 8;
+		constraints.gridwidth = 1;
+		m_clSubstFwd1= new PlayerPositionPanel(this, IMatchRoleID.substFW1);
+		layout.setConstraints(m_clSubstFwd1, constraints);
+		centerPanel.add(m_clSubstFwd1);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstFwd1);
+
+		constraints.gridx = 4;
+		constraints.gridy = 9;
+		constraints.gridwidth = 1;
+		m_clSubstFwd2= new PlayerPositionPanel(this, IMatchRoleID.substFW2);
+		layout.setConstraints(m_clSubstFwd2, constraints);
+		centerPanel.add(m_clSubstFwd2);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstFwd2);
+
+		constraints.gridx = 5;
+		constraints.gridy = 8;
+		constraints.gridwidth = 1;
+		m_clSubstWI1 = new PlayerPositionPanel(this, IMatchRoleID.substWI1);
+		layout.setConstraints(m_clSubstWI1, constraints);
+		centerPanel.add(m_clSubstWI1);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstWI1);
+
+		constraints.gridx = 5;
+		constraints.gridy = 9;
+		constraints.gridwidth = 1;
+		m_clSubstWI2 = new PlayerPositionPanel(this, IMatchRoleID.substWI2);
+		layout.setConstraints(m_clSubstWI2, constraints);
+		centerPanel.add(m_clSubstWI2);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstWI2);
+
+		constraints.gridx = 6;
+		constraints.gridy = 8;
+		constraints.gridwidth = 1;
+		m_clSubstXtr1 = new PlayerPositionPanel(this, IMatchRoleID.substXT1);
+		layout.setConstraints(m_clSubstXtr1, constraints);
+		centerPanel.add(m_clSubstXtr1);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstXtr1);
+
+		constraints.gridx = 6;
+		constraints.gridy = 9;
+		constraints.gridwidth = 1;
+		m_clSubstXtr2 = new PlayerPositionPanel(this, IMatchRoleID.substXT2);
+		layout.setConstraints(m_clSubstXtr2, constraints);
+		centerPanel.add(m_clSubstXtr2);
+		swapPositionsManager.addSwapCapabilityTo(m_clSubstXtr2);
 
 		add(centerPanel, BorderLayout.CENTER);
 	}

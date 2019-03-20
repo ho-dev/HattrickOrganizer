@@ -9,8 +9,7 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.XtraData;
-import core.model.player.SpielerPosition;
+import core.model.player.MatchRoleID;
 import core.util.Helper;
 
 import java.awt.BorderLayout;
@@ -102,7 +101,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 		} else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("BestePosition")))		{
 			byte tmpPos = ((Float)table.getValueAt(row,column)).byteValue();
 			float tmpFloat =Helper.round((((Float)table.getValueAt(row,column)).floatValue() - tmpPos)*100,UserParameter.instance().anzahlNachkommastellen);
-			label.setText(SpielerPosition.getNameForPosition(tmpPos) + " ("+ tmpFloat +")");
+			label.setText(MatchRoleID.getNameForPosition(tmpPos) + " ("+ tmpFloat +")");
 			label.setBackground(table.getBackground());
 		} else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.short_motherclub"))) {
 			double skillwert = 0;

@@ -1,7 +1,7 @@
 package core.training;
 
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.HelperWrapper;
 
@@ -18,7 +18,7 @@ import java.util.Vector;
  * @author
  */
 public class TrainingPerPlayer  {
-    private Spieler _Player;
+    private Player _Player;
     private TrainingPoints _TrainingPair = null;
     private Date _TrainingDate = null;
     private TrainingPerWeek _TrainingWeek;
@@ -34,7 +34,7 @@ public class TrainingPerPlayer  {
     /**
      * Creates a new TrainingPerPlayer object initialized with a specific player
      */
-    public TrainingPerPlayer(Spieler oPlayer) {
+    public TrainingPerPlayer(Player oPlayer) {
     	_Player = oPlayer; 
     }
 
@@ -46,7 +46,7 @@ public class TrainingPerPlayer  {
      *
      * @param spieler New value of property spieler.
      */
-    public final void setPlayer(Spieler player) {
+    public final void setPlayer(Player player) {
         this._Player = player;
     }
 
@@ -55,7 +55,7 @@ public class TrainingPerPlayer  {
      *
      * @return Value of property spieler.
      */
-    public final Spieler getPlayer() {
+    public final Player getPlayer() {
         return this._Player;
     }
 

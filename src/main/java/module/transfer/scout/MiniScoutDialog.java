@@ -8,8 +8,8 @@ import core.gui.HOMainFrame;
 import core.gui.comp.HyperLinkLabel;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
-import core.model.player.SpielerPosition;
+import core.model.player.Player;
+import core.model.player.MatchRoleID;
 import core.util.HOLogger;
 import core.util.Helper;
 
@@ -188,7 +188,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         List<String> errorFields = new ArrayList<String>();
 
         try {
-            final Player player;
+            final module.transfer.scout.Player player;
             player = pc.build(jtaCopyPaste.getText());
 
             if (player != null) {
@@ -579,27 +579,27 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
      * Called whenever value changes. Positions are recalculated
      */
     private void spielervalueChanged() {
-        final Spieler tempSpieler = new Spieler();
-        tempSpieler.setSpezialitaet(((CBItem) jcbSpeciality.getSelectedItem()).getId());
-        tempSpieler.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
-		tempSpieler.setFuehrung(((CBItem) jcbLeadership.getSelectedItem()).getId());
-        tempSpieler.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
-        tempSpieler.setKondition(((CBItem) jcbStamina.getSelectedItem()).getId());
-        tempSpieler.setVerteidigung(((CBItem) jcbDefense.getSelectedItem()).getId());
-        tempSpieler.setTorschuss(((CBItem) jcbAttacking.getSelectedItem()).getId());
-        tempSpieler.setTorwart(((CBItem) jcbKeeper.getSelectedItem()).getId());
-        tempSpieler.setFluegelspiel(((CBItem) jcbWinger.getSelectedItem()).getId());
-        tempSpieler.setPasspiel(((CBItem) jcbPassing.getSelectedItem()).getId());
-        tempSpieler.setStandards(((CBItem) jcbStandards.getSelectedItem()).getId());
-        tempSpieler.setSpielaufbau(((CBItem) jcbPlaymaking.getSelectedItem()).getId());
-        tempSpieler.setLoyalty(((CBItem) jcbLoyalty.getSelectedItem()).getId());
-        tempSpieler.setHomeGrown(jchHomegrown.isSelected());
-        tempSpieler.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
-        tempSpieler.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
-//		EPVData data = new EPVData(tempSpieler);
+        final Player tempPlayer = new Player();
+        tempPlayer.setSpezialitaet(((CBItem) jcbSpeciality.getSelectedItem()).getId());
+        tempPlayer.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
+		tempPlayer.setFuehrung(((CBItem) jcbLeadership.getSelectedItem()).getId());
+        tempPlayer.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
+        tempPlayer.setKondition(((CBItem) jcbStamina.getSelectedItem()).getId());
+        tempPlayer.setVerteidigung(((CBItem) jcbDefense.getSelectedItem()).getId());
+        tempPlayer.setTorschuss(((CBItem) jcbAttacking.getSelectedItem()).getId());
+        tempPlayer.setTorwart(((CBItem) jcbKeeper.getSelectedItem()).getId());
+        tempPlayer.setFluegelspiel(((CBItem) jcbWinger.getSelectedItem()).getId());
+        tempPlayer.setPasspiel(((CBItem) jcbPassing.getSelectedItem()).getId());
+        tempPlayer.setStandards(((CBItem) jcbStandards.getSelectedItem()).getId());
+        tempPlayer.setSpielaufbau(((CBItem) jcbPlaymaking.getSelectedItem()).getId());
+        tempPlayer.setLoyalty(((CBItem) jcbLoyalty.getSelectedItem()).getId());
+        tempPlayer.setHomeGrown(jchHomegrown.isSelected());
+        tempPlayer.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
+        tempPlayer.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
+//		EPVData data = new EPVData(tempPlayer);
 //		double price = HOVerwaltung.instance().getModel().getEPV().getPrice(data);
 //		jtfEPV.setText(NumberFormat.getCurrencyInstance().format(price));
-        jlRating.setText(SpielerPosition.getNameForPosition(tempSpieler.getIdealPosition()) + " ("
-                         + tempSpieler.calcPosValue(tempSpieler.getIdealPosition(), true) + ")");
+        jlRating.setText(MatchRoleID.getNameForPosition(tempPlayer.getIdealPosition()) + " ("
+                         + tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true) + ")");
     }
 }

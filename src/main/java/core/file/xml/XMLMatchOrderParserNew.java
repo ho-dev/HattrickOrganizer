@@ -2,7 +2,7 @@ package core.file.xml;
 
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.player.SpielerPosition;
+import core.model.player.MatchRoleID;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
@@ -22,12 +22,12 @@ import org.w3c.dom.NodeList;
 public class XMLMatchOrderParserNew {
 
 	private Document document;
-	private Map<Integer, SpielerPosition> positions;
+	private Map<Integer, MatchRoleID> positions;
 	private List<Substitution> orders;
 
 	public XMLMatchOrderParserNew(Document doc) {
 		this.document = doc;
-		this.positions = new HashMap<Integer, SpielerPosition>();
+		this.positions = new HashMap<Integer, MatchRoleID>();
 		this.orders = new ArrayList<Substitution>();
 		parse();
 	}
@@ -37,7 +37,7 @@ public class XMLMatchOrderParserNew {
 		Element lineupElement = (Element) root.getElementsByTagName("Lineup").item(0);
 		NodeList players = lineupElement.getElementsByTagName("Player");
 		for (int i = 0; i < players.getLength(); i++) {
-			SpielerPosition position = getPosition(players.item(i));
+			MatchRoleID position = getPosition(players.item(i));
 			this.positions.put(position.getId(), position);
 		}
 
@@ -77,7 +77,7 @@ public class XMLMatchOrderParserNew {
 		return sub;
 	}
 
-	private SpielerPosition getPosition(Node playerNode) {
+	private MatchRoleID getPosition(Node playerNode) {
 		int playerId = Integer.parseInt(getChildValue(playerNode, "PlayerID"));
 		int roleId = Integer.parseInt(getChildValue(playerNode, "RoleID"));
 		byte behaviourId = 0;
@@ -88,7 +88,7 @@ public class XMLMatchOrderParserNew {
 			behaviourId = Byte.parseByte(behaviour);
 		}
 
-		return new SpielerPosition(roleId, playerId, behaviourId);
+		return new MatchRoleID(roleId, playerId, behaviourId);
 	}
 
 	/**

@@ -3,7 +3,7 @@ package module.transfer.test;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import java.awt.BorderLayout;
 import java.awt.Window;
@@ -52,20 +52,20 @@ public class TestDialog extends JDialog {
 
 	private void initComponents() {
 		getContentPane().setLayout(new BorderLayout());
-		List<Spieler> spieler = HOVerwaltung.instance().getModel().getAllSpieler();
-		spieler.addAll(HOVerwaltung.instance().getModel().getAllOldSpieler());
+		List<Player> player = HOVerwaltung.instance().getModel().getAllSpieler();
+		player.addAll(HOVerwaltung.instance().getModel().getAllOldSpieler());
 
-		Collections.sort(spieler, new Comparator<Spieler>() {
+		Collections.sort(player, new Comparator<Player>() {
 
 			@Override
-			public int compare(Spieler o1, Spieler o2) {
+			public int compare(Player o1, Player o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});
 
-		CBItm[] array = new CBItm[spieler.size()];
-		for (int i = 0; i < spieler.size(); i++) {
-			array[i] = new CBItm(spieler.get(i));
+		CBItm[] array = new CBItm[player.size()];
+		for (int i = 0; i < player.size(); i++) {
+			array[i] = new CBItm(player.get(i));
 		}
 
 		this.cbox = new JComboBox(array);
@@ -98,18 +98,18 @@ public class TestDialog extends JDialog {
 
 	private void spielerChanged() {
 		if (this.cbox.getSelectedItem() != null) {
-			Spieler spieler = ((CBItm) this.cbox.getSelectedItem()).getSpieler();
+			Player player = ((CBItm) this.cbox.getSelectedItem()).getPlayer();
 
-			// List<Wage> wages = Wage.getWagesByAge(spieler.getSpielerID());
+			// List<Wage> wages = Wage.getWagesByAge(player.getSpielerID());
 
-			Transfer t = Transfer.getTransfer(spieler.getSpielerID());
+			Transfer t = Transfer.getTransfer(player.getSpielerID());
 			Date buyingDate = null;
-			if (!spieler.isHomeGrown()) {
+			if (!player.isHomeGrown()) {
 				buyingDate = t.purchaseDate;
 
 			} else {
 				buyingDate = new Date(DBManager.instance()
-						.getSpielerFirstHRF(spieler.getSpielerID()).getHrfDate().getTime());
+						.getSpielerFirstHRF(player.getSpielerID()).getHrfDate().getTime());
 			}
 
 			StringBuilder sb = new StringBuilder();
@@ -118,7 +118,7 @@ public class TestDialog extends JDialog {
 			sb.append("Gekauft für ").append(purchasePrice).append("\n");
 			sb.append("Verkauft für ").append(sellingPrice).append("\n");
 
-			int wages = Calc.getWagesSum(spieler.getSpielerID(), buyingDate, t.sellingDate);
+			int wages = Calc.getWagesSum(player.getSpielerID(), buyingDate, t.sellingDate);
 
 			sb.append("wages payed: ").append(wages).append("\n");
 			int daysInTeam = Calc.getDaysBetween(t.sellingDate, buyingDate);
@@ -136,12 +136,12 @@ public class TestDialog extends JDialog {
 			// sb.append(wage.getAge() + " - " + wage.getWage() + "\n");
 			// }
 			// sb.append("\n\n");
-			// if (!spieler.isHomeGrown()) {
+			// if (!player.isHomeGrown()) {
 			// sb.append("Bought at: " +
-			// Calc.getBuyingDates(spieler.getSpielerID()).get(0));
+			// Calc.getBuyingDates(player.getSpielerID()).get(0));
 			// }
 			//
-			// int ageDays = Calc.getAgeAt(new Date(), spieler.getSpielerID());
+			// int ageDays = Calc.getAgeAt(new Date(), player.getSpielerID());
 			// int age = ageDays / 112;
 			// int days = ageDays % 112;
 			//
@@ -151,7 +151,7 @@ public class TestDialog extends JDialog {
 			// sb.append("\n\n");
 			// sb.append("Birthdays from 17 to 30\n");
 			// List<Birthday> birthdays =
-			// Calc.getBirthdays(spieler.getSpielerID(), 17, 30);
+			// Calc.getBirthdays(player.getSpielerID(), 17, 30);
 			// for (Birthday birthday : birthdays) {
 			// sb.append(birthday.getAge()).append(" ").append(birthday.getDate()).append("\n");
 			// }
@@ -159,13 +159,13 @@ public class TestDialog extends JDialog {
 			this.textArea.setText(sb.toString());
 
 			if (this.wagesOverviewPanel != null) {
-				this.wagesOverviewPanel.setPlayer(spieler);
+				this.wagesOverviewPanel.setPlayer(player);
 			}
 			if (this.wagesSumPanel != null) {
-				this.wagesSumPanel.setPlayer(spieler);
+				this.wagesSumPanel.setPlayer(player);
 			}
 			if (this.playerTransferIncomePanel != null) {
-				this.playerTransferIncomePanel.setPlayer(spieler);
+				this.playerTransferIncomePanel.setPlayer(player);
 			}
 		} else {
 			this.textArea.setText("");
@@ -183,19 +183,19 @@ public class TestDialog extends JDialog {
 	}
 
 	private class CBItm {
-		Spieler spieler;
+		Player player;
 
-		CBItm(Spieler spieler) {
-			this.spieler = spieler;
+		CBItm(Player player) {
+			this.player = player;
 		}
 
 		@Override
 		public String toString() {
-			return spieler.getName();
+			return player.getName();
 		}
 
-		public Spieler getSpieler() {
-			return this.spieler;
+		public Player getPlayer() {
+			return this.player;
 		}
 	}
 

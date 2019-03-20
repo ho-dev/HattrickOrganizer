@@ -15,7 +15,7 @@ import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.Weather;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
@@ -50,8 +50,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -284,9 +282,9 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		return m_clHOMainFrame;
 	}
 
-	public void setActualSpieler(Spieler spieler) {
-		getAufstellungsPanel().setPlayer(spieler.getSpielerID());
-		getSpielerUebersichtPanel().setPlayer(spieler);
+	public void setActualSpieler(Player player) {
+		getAufstellungsPanel().setPlayer(player.getSpielerID());
+		getSpielerUebersichtPanel().setPlayer(player);
 	}
 
 	public LineupPanel getAufstellungsPanel() {

@@ -1,9 +1,9 @@
 package core.model.match;
 
-import core.model.player.ISpielerPosition;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 
-public class MatchLineupPlayer extends SpielerPosition {
+public class MatchLineupPlayer extends MatchRoleID {
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private static final long serialVersionUID = -5986419471284091148L;
@@ -110,7 +110,7 @@ public class MatchLineupPlayer extends SpielerPosition {
         byte ret = super.getPosition();
 
         ///wenn pos nicht bestimmt werden kann dann die roleID zurückwerfen
-        if (ret == ISpielerPosition.UNKNOWN) {
+        if (ret == IMatchRoleID.UNKNOWN) {
             //m_iId;
             ret = (byte) getId();
         }

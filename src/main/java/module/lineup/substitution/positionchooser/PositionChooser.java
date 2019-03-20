@@ -1,7 +1,7 @@
 package module.lineup.substitution.positionchooser;
 
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
+import core.model.player.IMatchRoleID;
+import core.model.player.Player;
 import module.lineup.substitution.PlayerPositionItem;
 import module.lineup.substitution.positionchooser.PositionSelectionEvent.Change;
 
@@ -35,31 +35,31 @@ public class PositionChooser extends JPanel {
 	private Integer selected;
 
 	public PositionChooser() {
-		positions.put(Integer.valueOf(ISpielerPosition.keeper), new PositionPanel(ISpielerPosition.keeper));
-		positions.put(Integer.valueOf(ISpielerPosition.rightBack), new PositionPanel(ISpielerPosition.rightBack));
-		positions.put(Integer.valueOf(ISpielerPosition.rightCentralDefender), new PositionPanel(
-				ISpielerPosition.rightCentralDefender));
-		positions.put(Integer.valueOf(ISpielerPosition.middleCentralDefender), new PositionPanel(
-				ISpielerPosition.middleCentralDefender));
-		positions.put(Integer.valueOf(ISpielerPosition.leftCentralDefender), new PositionPanel(
-				ISpielerPosition.leftCentralDefender));
-		positions.put(Integer.valueOf(ISpielerPosition.leftBack), new PositionPanel(ISpielerPosition.leftBack));
-		positions.put(Integer.valueOf(ISpielerPosition.rightWinger), new PositionPanel(
-				ISpielerPosition.rightWinger));
-		positions.put(Integer.valueOf(ISpielerPosition.rightInnerMidfield), new PositionPanel(
-				ISpielerPosition.rightInnerMidfield));
-		positions.put(Integer.valueOf(ISpielerPosition.centralInnerMidfield), new PositionPanel(
-				ISpielerPosition.centralInnerMidfield));
-		positions.put(Integer.valueOf(ISpielerPosition.leftInnerMidfield), new PositionPanel(
-				ISpielerPosition.leftInnerMidfield));
-		positions.put(Integer.valueOf(ISpielerPosition.leftWinger),
-				new PositionPanel(ISpielerPosition.leftWinger));
-		positions.put(Integer.valueOf(ISpielerPosition.rightForward), new PositionPanel(
-				ISpielerPosition.rightForward));
-		positions.put(Integer.valueOf(ISpielerPosition.centralForward), new PositionPanel(
-				ISpielerPosition.centralForward));
-		positions.put(Integer.valueOf(ISpielerPosition.leftForward), new PositionPanel(
-				ISpielerPosition.leftForward));
+		positions.put(Integer.valueOf(IMatchRoleID.keeper), new PositionPanel(IMatchRoleID.keeper));
+		positions.put(Integer.valueOf(IMatchRoleID.rightBack), new PositionPanel(IMatchRoleID.rightBack));
+		positions.put(Integer.valueOf(IMatchRoleID.rightCentralDefender), new PositionPanel(
+				IMatchRoleID.rightCentralDefender));
+		positions.put(Integer.valueOf(IMatchRoleID.middleCentralDefender), new PositionPanel(
+				IMatchRoleID.middleCentralDefender));
+		positions.put(Integer.valueOf(IMatchRoleID.leftCentralDefender), new PositionPanel(
+				IMatchRoleID.leftCentralDefender));
+		positions.put(Integer.valueOf(IMatchRoleID.leftBack), new PositionPanel(IMatchRoleID.leftBack));
+		positions.put(Integer.valueOf(IMatchRoleID.rightWinger), new PositionPanel(
+				IMatchRoleID.rightWinger));
+		positions.put(Integer.valueOf(IMatchRoleID.rightInnerMidfield), new PositionPanel(
+				IMatchRoleID.rightInnerMidfield));
+		positions.put(Integer.valueOf(IMatchRoleID.centralInnerMidfield), new PositionPanel(
+				IMatchRoleID.centralInnerMidfield));
+		positions.put(Integer.valueOf(IMatchRoleID.leftInnerMidfield), new PositionPanel(
+				IMatchRoleID.leftInnerMidfield));
+		positions.put(Integer.valueOf(IMatchRoleID.leftWinger),
+				new PositionPanel(IMatchRoleID.leftWinger));
+		positions.put(Integer.valueOf(IMatchRoleID.rightForward), new PositionPanel(
+				IMatchRoleID.rightForward));
+		positions.put(Integer.valueOf(IMatchRoleID.centralForward), new PositionPanel(
+				IMatchRoleID.centralForward));
+		positions.put(Integer.valueOf(IMatchRoleID.leftForward), new PositionPanel(
+				IMatchRoleID.leftForward));
 
 		initComponents();
 	}
@@ -178,7 +178,7 @@ public class PositionChooser extends JPanel {
 
 		private static final long serialVersionUID = 6025107478898829134L;
 		private Integer position;
-		private Spieler player;
+		private Player player;
 		private boolean selected = false;
 
 		public PositionPanel(Integer position) {
@@ -186,7 +186,7 @@ public class PositionChooser extends JPanel {
 			initComponents();
 		}
 
-		public void setPlayer(Spieler player) {
+		public void setPlayer(Player player) {
 			this.player = player;
 			if (isOccupied()) {
 				setBackground(COLOR_POS_OCCUPIED);
@@ -197,7 +197,7 @@ public class PositionChooser extends JPanel {
 			}
 		}
 
-		public Spieler getPlayer() {
+		public Player getPlayer() {
 			return this.player;
 		}
 

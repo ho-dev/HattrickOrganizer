@@ -1,7 +1,7 @@
 package module.lineup.substitution;
 
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
@@ -25,60 +25,60 @@ public class LanguageStringLookup {
 		switch (id) {
 		case (-1):
 			return HOVerwaltung.instance().getLanguageString("subs.BehNoChange");
-		case ISpielerPosition.NORMAL:
+		case IMatchRoleID.NORMAL:
 			return HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal");
-		case ISpielerPosition.OFFENSIVE:
+		case IMatchRoleID.OFFENSIVE:
 			return HOVerwaltung.instance().getLanguageString("ls.player.behaviour.offensive");
-		case ISpielerPosition.DEFENSIVE:
+		case IMatchRoleID.DEFENSIVE:
 			return HOVerwaltung.instance().getLanguageString("ls.player.behaviour.defensive");
-		case ISpielerPosition.TOWARDS_MIDDLE:
+		case IMatchRoleID.TOWARDS_MIDDLE:
 			return HOVerwaltung.instance().getLanguageString("ls.player.behaviour.towardsmiddle");
-		case ISpielerPosition.TOWARDS_WING:
+		case IMatchRoleID.TOWARDS_WING:
 			return HOVerwaltung.instance().getLanguageString("ls.player.behaviour.towardswing");
 		default:
 			return "UNKNOWN_BEHAVIOUR";
 		}
 	}
 
-	public static String getPosition(byte id) {
+	public static String getPosition(int id) {
 		switch (id) {
-		case ISpielerPosition.keeper:
+		case IMatchRoleID.keeper:
 			return HOVerwaltung.instance().getLanguageString("subs.gk");
-		case ISpielerPosition.rightBack:
+		case IMatchRoleID.rightBack:
 			return HOVerwaltung.instance().getLanguageString("subs.rb");
-		case ISpielerPosition.rightCentralDefender:
+		case IMatchRoleID.rightCentralDefender:
 			return HOVerwaltung.instance().getLanguageString("subs.rcd");
-		case ISpielerPosition.middleCentralDefender:
+		case IMatchRoleID.middleCentralDefender:
 			return HOVerwaltung.instance().getLanguageString("subs.mcd");
-		case ISpielerPosition.leftCentralDefender:
+		case IMatchRoleID.leftCentralDefender:
 			return HOVerwaltung.instance().getLanguageString("subs.lcd");
-		case ISpielerPosition.leftBack:
+		case IMatchRoleID.leftBack:
 			return HOVerwaltung.instance().getLanguageString("subs.lb");
-		case ISpielerPosition.rightWinger:
+		case IMatchRoleID.rightWinger:
 			return HOVerwaltung.instance().getLanguageString("subs.rw");
-		case ISpielerPosition.rightInnerMidfield:
+		case IMatchRoleID.rightInnerMidfield:
 			return HOVerwaltung.instance().getLanguageString("subs.rim");
-		case ISpielerPosition.centralInnerMidfield:
+		case IMatchRoleID.centralInnerMidfield:
 			return HOVerwaltung.instance().getLanguageString("subs.cim");
-		case ISpielerPosition.leftInnerMidfield:
+		case IMatchRoleID.leftInnerMidfield:
 			return HOVerwaltung.instance().getLanguageString("subs.lim");
-		case ISpielerPosition.leftWinger:
+		case IMatchRoleID.leftWinger:
 			return HOVerwaltung.instance().getLanguageString("subs.lw");
-		case ISpielerPosition.rightForward:
+		case IMatchRoleID.rightForward:
 			return HOVerwaltung.instance().getLanguageString("subs.rfw");
-		case ISpielerPosition.centralForward:
+		case IMatchRoleID.centralForward:
 			return HOVerwaltung.instance().getLanguageString("subs.cfw");
-		case ISpielerPosition.leftForward:
+		case IMatchRoleID.leftForward:
 			return HOVerwaltung.instance().getLanguageString("subs.lfw");
-		case ISpielerPosition.substKeeper:
+		case IMatchRoleID.substGK1:
 			return HOVerwaltung.instance().getLanguageString("subs.subgk");
-		case ISpielerPosition.substDefender:
+		case IMatchRoleID.substCD1:
 			return HOVerwaltung.instance().getLanguageString("subs.subdef");
-		case ISpielerPosition.substInnerMidfield:
+		case IMatchRoleID.substIM1:
 			return HOVerwaltung.instance().getLanguageString("subs.submid");
-		case ISpielerPosition.substWinger:
+		case IMatchRoleID.substWI1:
 			return HOVerwaltung.instance().getLanguageString("subs.subwing");
-		case ISpielerPosition.substForward:
+		case IMatchRoleID.substFW1:
 			return HOVerwaltung.instance().getLanguageString("subs.subfw");
 		default:
 			return "";

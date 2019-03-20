@@ -2,7 +2,7 @@ package module.opponentspy;
 
 
 import core.model.match.MatchLineupPlayer;
-import core.model.player.Spieler;
+import core.model.player.Player;
 //import module.opponentspy.OpponentTeam.PlayedPosition;
 
 import module.opponentspy.OpponentTeam.PlayedPosition;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class OpponentPlayer extends Spieler {
+public class OpponentPlayer extends Player {
 	
 	private int position;
 	private List<MatchLineupPlayer> matchesPlayed;

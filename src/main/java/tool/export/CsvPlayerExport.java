@@ -4,8 +4,8 @@ import core.constants.player.PlayerSkill;
 import core.file.ExampleFileFilter;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
+import core.model.player.IMatchRoleID;
+import core.model.player.Player;
 import core.net.login.LoginWaitDialog;
 import core.util.HOLogger;
 
@@ -73,7 +73,7 @@ public class CsvPlayerExport {
 	private void doExport (File file) {
 		HOLogger.instance().debug(getClass(),
 				"Exporting all players as CSV to " + file.getName() + "...");
-		List<Spieler> list = HOVerwaltung.instance().getModel().getAllSpieler();
+		List<Player> list = HOVerwaltung.instance().getModel().getAllSpieler();
 		try {
 			FileWriter writer = new FileWriter(file);
 			//This is a try OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream(file), "utf-8");
@@ -129,9 +129,9 @@ public class CsvPlayerExport {
 							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwarddefensive") + "\","
 							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwardtowardswing") + "\","
 							+ "\n");
-			Iterator<Spieler> iter = list.iterator();
+			Iterator<Player> iter = list.iterator();
 			while (iter.hasNext()) {
-				Spieler curPlayer = (Spieler)iter.next();
+				Player curPlayer = (Player)iter.next();
 
 				String [] outCols = {
 						"" + curPlayer.getSpielerID(),
@@ -164,25 +164,25 @@ public class CsvPlayerExport {
 						"" + (curPlayer.getTorschuss() + curPlayer.getSubskill4PosAccurate(PlayerSkill.SCORING)),
 						"" + (curPlayer.getStandards() + curPlayer.getSubskill4PosAccurate(PlayerSkill.SET_PIECES)),
 						// ls.player.position_short
-						"" + curPlayer.calcPosValue(ISpielerPosition.KEEPER, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER_OFF, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER_TOWING, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.BACK, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.BACK_OFF, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.BACK_DEF, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.BACK_TOMID, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.MIDFIELDER, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.MIDFIELDER_OFF, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.MIDFIELDER_DEF, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.MIDFIELDER_TOWING, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.WINGER, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.WINGER_OFF, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.WINGER_DEF, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.WINGER_TOMID, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.FORWARD, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.FORWARD_DEF, true),
-						"" + curPlayer.calcPosValue(ISpielerPosition.FORWARD_TOWING, true)
+						"" + curPlayer.calcPosValue(IMatchRoleID.KEEPER, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.BACK, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.WINGER, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.FORWARD, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true),
+						"" + curPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true)
 				};
 				for (int col=0; col < outCols.length; col++) {
 					if (col > 0)

@@ -2,7 +2,7 @@ package module.transfer.test;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import module.transfer.PlayerTransfer;
 
 import java.awt.BorderLayout;
@@ -95,7 +95,7 @@ public class OverviewPanel extends JPanel {
 	}
 
 	private boolean addSomeData(TableRow row) {
-		Spieler player = getPlayer(row.getSale().getPlayerId(), row.getSale().getPlayerName());
+		Player player = getPlayer(row.getSale().getPlayerId(), row.getSale().getPlayerName());
 
 		if (player == null) {
 			System.out.println("####- player " + row.getSale().getPlayerId() + " ("
@@ -190,9 +190,9 @@ public class OverviewPanel extends JPanel {
 		return null;
 	}
 
-	private Spieler getPlayer(int playerId, String playerName) {
-		List<Spieler> all = HOVerwaltung.instance().getModel().getAllOldSpieler();
-		for (Spieler player : all) {
+	private Player getPlayer(int playerId, String playerName) {
+		List<Player> all = HOVerwaltung.instance().getModel().getAllOldSpieler();
+		for (Player player : all) {
 			if (playerId != 0) {
 				if (player.getSpielerID() == playerId) {
 					return player;

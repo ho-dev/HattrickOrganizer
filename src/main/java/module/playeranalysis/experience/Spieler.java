@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchHighlight;
 import core.model.match.MatchLineup;
+import core.model.player.Player;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -41,7 +42,7 @@ final class Spieler {
 	private HashMap<Integer,Integer> einsaetzeNachVorletzterAufwertung;
 	private HashMap<Integer,Integer> einsaetzeMitAktualisierungNachVorletzterAufwertung;
 
-	public Spieler(core.model.player.Spieler inSpieler) {
+	public Spieler(Player inPlayer) {
 		letzteErfahrungsAufwertung = null;
 		vorletzteErfahrungsAufwertung = null;
 		vorvorletzteErfahrungsAufwertung = null;
@@ -50,10 +51,10 @@ final class Spieler {
 		einsaetzeMitAktualisierungNachAufwertung = null;
 		einsaetzeNachVorletzterAufwertung = null;
 		einsaetzeMitAktualisierungNachVorletzterAufwertung = null;
-		id = inSpieler.getSpielerID();
-		name = inSpieler.getName();
-		alter = inSpieler.getAlter();
-		erfahrung = inSpieler.getErfahrung();
+		id = inPlayer.getSpielerID();
+		name = inPlayer.getName();
+		alter = inPlayer.getAlter();
+		erfahrung = inPlayer.getErfahrung();
 		erfahrungMin = erfahrung;
 		erfahrungWahrscheinlich = erfahrung;
 		erfahrungMax = erfahrung;
@@ -103,7 +104,7 @@ final class Spieler {
 			f2 = (dv * reststrecke) / (tempo * tempo);
 			anzahlWochenFehler = (int) (Math.sqrt(f1 * f1 + f2 * f2) + 0.5D);
 		}
-		erfahrungsBonus = inSpieler.getErfahrungsBonus((float) erfahrungWahrscheinlich);
+		erfahrungsBonus = inPlayer.getErfahrungsBonus((float) erfahrungWahrscheinlich);
 	}
 
 	public int getAnzahlWochen() {
@@ -440,7 +441,7 @@ final class Spieler {
 		Timestamp ret = null;
 		ResultSet rs = null;
 		String sql = null;
-		sql = "SELECT min(DATUM) FROM Spieler WHERE SpielerID = " + id
+		sql = "SELECT min(DATUM) FROM Player WHERE SpielerID = " + id
 				+ " AND Erfahrung = " + erfahrung;
 		rs = DBManager.instance().getAdapter().executeQuery(sql);
 		try {

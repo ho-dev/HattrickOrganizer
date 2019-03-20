@@ -1,13 +1,13 @@
 package core.model;
 
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
 
 public final class FactorObject {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** The position that is described by this FactorObject */
-    private byte m_bPosition = ISpielerPosition.UNKNOWN;
+    private byte m_bPosition = IMatchRoleID.UNKNOWN;
 
     /** Influence of Winger for this position */
     private float m_fFluegelspiel;

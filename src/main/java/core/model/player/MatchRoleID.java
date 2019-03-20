@@ -9,8 +9,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class SpielerPosition implements java.io.Serializable, Comparable<ISpielerPosition>,
-		core.model.player.ISpielerPosition {
+public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleID>,
+		IMatchRoleID {
 
 	private static final long serialVersionUID = -4822360078242315135L;
 
@@ -21,27 +21,27 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 	 * Array mit den Konstanten (CBItems) für die Positionen, Ohne Ausgewechselt
 	 */
 	public static final CBItem[] POSITIONEN = {
-			new CBItem(SpielerPosition.getNameForPosition(UNKNOWN), UNKNOWN),
-			new CBItem(SpielerPosition.getNameForPosition(COACH), COACH),
-			new CBItem(SpielerPosition.getNameForPosition(KEEPER), KEEPER),
-			new CBItem(SpielerPosition.getNameForPosition(CENTRAL_DEFENDER), CENTRAL_DEFENDER),
-			new CBItem(SpielerPosition.getNameForPosition(CENTRAL_DEFENDER_OFF), CENTRAL_DEFENDER_OFF),
-			new CBItem(SpielerPosition.getNameForPosition(CENTRAL_DEFENDER_TOWING), CENTRAL_DEFENDER_TOWING),
-			new CBItem(SpielerPosition.getNameForPosition(BACK), BACK),
-			new CBItem(SpielerPosition.getNameForPosition(BACK_OFF), BACK_OFF),
-			new CBItem(SpielerPosition.getNameForPosition(BACK_DEF), BACK_DEF),
-			new CBItem(SpielerPosition.getNameForPosition(BACK_TOMID), BACK_TOMID),
-			new CBItem(SpielerPosition.getNameForPosition(MIDFIELDER), MIDFIELDER),
-			new CBItem(SpielerPosition.getNameForPosition(MIDFIELDER_OFF), MIDFIELDER_OFF),
-			new CBItem(SpielerPosition.getNameForPosition(MIDFIELDER_DEF), MIDFIELDER_DEF),
-			new CBItem(SpielerPosition.getNameForPosition(MIDFIELDER_TOWING), MIDFIELDER_TOWING),
-			new CBItem(SpielerPosition.getNameForPosition(WINGER), WINGER),
-			new CBItem(SpielerPosition.getNameForPosition(WINGER_OFF), WINGER_OFF),
-			new CBItem(SpielerPosition.getNameForPosition(WINGER_DEF), WINGER_DEF),
-			new CBItem(SpielerPosition.getNameForPosition(WINGER_TOMID), WINGER_TOMID),
-			new CBItem(SpielerPosition.getNameForPosition(FORWARD), FORWARD),
-			new CBItem(SpielerPosition.getNameForPosition(FORWARD_DEF), FORWARD_DEF),
-			new CBItem(SpielerPosition.getNameForPosition(FORWARD_TOWING), FORWARD_TOWING) };
+			new CBItem(MatchRoleID.getNameForPosition(UNKNOWN), UNKNOWN),
+			new CBItem(MatchRoleID.getNameForPosition(COACH), COACH),
+			new CBItem(MatchRoleID.getNameForPosition(KEEPER), KEEPER),
+			new CBItem(MatchRoleID.getNameForPosition(CENTRAL_DEFENDER), CENTRAL_DEFENDER),
+			new CBItem(MatchRoleID.getNameForPosition(CENTRAL_DEFENDER_OFF), CENTRAL_DEFENDER_OFF),
+			new CBItem(MatchRoleID.getNameForPosition(CENTRAL_DEFENDER_TOWING), CENTRAL_DEFENDER_TOWING),
+			new CBItem(MatchRoleID.getNameForPosition(BACK), BACK),
+			new CBItem(MatchRoleID.getNameForPosition(BACK_OFF), BACK_OFF),
+			new CBItem(MatchRoleID.getNameForPosition(BACK_DEF), BACK_DEF),
+			new CBItem(MatchRoleID.getNameForPosition(BACK_TOMID), BACK_TOMID),
+			new CBItem(MatchRoleID.getNameForPosition(MIDFIELDER), MIDFIELDER),
+			new CBItem(MatchRoleID.getNameForPosition(MIDFIELDER_OFF), MIDFIELDER_OFF),
+			new CBItem(MatchRoleID.getNameForPosition(MIDFIELDER_DEF), MIDFIELDER_DEF),
+			new CBItem(MatchRoleID.getNameForPosition(MIDFIELDER_TOWING), MIDFIELDER_TOWING),
+			new CBItem(MatchRoleID.getNameForPosition(WINGER), WINGER),
+			new CBItem(MatchRoleID.getNameForPosition(WINGER_OFF), WINGER_OFF),
+			new CBItem(MatchRoleID.getNameForPosition(WINGER_DEF), WINGER_DEF),
+			new CBItem(MatchRoleID.getNameForPosition(WINGER_TOMID), WINGER_TOMID),
+			new CBItem(MatchRoleID.getNameForPosition(FORWARD), FORWARD),
+			new CBItem(MatchRoleID.getNameForPosition(FORWARD_DEF), FORWARD_DEF),
+			new CBItem(MatchRoleID.getNameForPosition(FORWARD_TOWING), FORWARD_TOWING) };
 
 	// Konstanten für TRAININGSEFFEKTE
 
@@ -64,21 +64,21 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 
 	// It is much safer to have "empty" as 0, as it appears temp-players may
 	// get ID -1 - Blaghaid
-	/** welcher Spieler besetzt diese Position */
+	/** welcher Player besetzt diese Position */
 	private int m_iSpielerId = 0;
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
 
 	/**
-	 * Creates a new instance of SpielerPosition
+	 * Creates a new instance of MatchRoleID
 	 */
 
 	/* byte position, */
-	public SpielerPosition(int id, int spielerId, byte taktik) {
+	public MatchRoleID(int id, int spielerId, byte taktik) {
 		// m_bPosition = position;
 
-		if ((id < ISpielerPosition.setPieces) && (id != -1)) {
+		if ((id < IMatchRoleID.setPieces) && (id != -1)) {
 			HOLogger.instance().debug(getClass(), "Old RoleID found in lineup: " + id);
 		}
 
@@ -88,15 +88,15 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 	}
 
 	/**
-	 * Creates a new instance of SpielerPosition
+	 * Creates a new instance of MatchRoleID
 	 */
-	public SpielerPosition(SpielerPosition sp) {
+	public MatchRoleID(MatchRoleID sp) {
 		// m_bPosition = position;
 		m_iId = sp.getId();
 		m_iSpielerId = sp.getSpielerId();
 		m_bTaktik = sp.getTaktik();
 
-		if ((m_iId < ISpielerPosition.setPieces) && (m_iId != -1)) {
+		if ((m_iId < IMatchRoleID.setPieces) && (m_iId != -1)) {
 			HOLogger.instance().debug(getClass(), "Old RoleID found in lineup: " + m_iId);
 		}
 	}
@@ -104,12 +104,12 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 	// //////////////////Load/Save/////////////////
 
 	/**
-	 * Konstruktor lädt die SpielerPosition aus einem InputStream
+	 * Konstruktor lädt die MatchRoleID aus einem InputStream
 	 *
 	 * @param dis
 	 *            Der InputStream aus dem gelesen wird
 	 */
-	public SpielerPosition(DataInputStream dis) {
+	public MatchRoleID(DataInputStream dis) {
 		// DataInputStream dis = null;
 		// byte data[] = null;
 		try {
@@ -132,8 +132,8 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 	// ------------------------------------------------------------------------------------
 
 	/**
-	 * Gibt eine mögliche HT-Positionsid für eine HO-Positionsid zurück. Nur zum
-	 * Laden des Positionsimage zu gebrauchen!!!
+	 * Returns a possible HT position ID for a HO position ID. Use only for
+	 * loading the position image
 	 */
 	public static int getHTPosidForHOPosition4Image(byte posId) {
 		switch (posId) {
@@ -171,11 +171,11 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 		case SUBSTITUTED1:
 		case SUBSTITUTED2:
 		case SUBSTITUTED3:
-			return ausgewechselt;
+			return FirstPlayerReplaced;
 
 		default: {
-			HOLogger.instance().log(SpielerPosition.class, "Unbestimmte Position: " + posId);
-			return ausgewechselt;
+			HOLogger.instance().log(MatchRoleID.class, "Position not recognized: " + posId);
+			return FirstPlayerReplaced;
 		}
 		}
 	}
@@ -302,20 +302,33 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 		case leftForward:
 			return "leftForward";
 
-		case substDefender:
+		case substCD1:
+		case substCD2:
 			return "substDefender";
 
-		case substInnerMidfield:
+		case substWB1:
+		case substWB2:
+			return "substWingback";
+
+		case substIM1:
+		case substIM2:
 			return "substInsideMid";
 
-		case substWinger:
+		case substWI1:
+		case substWI2:
 			return "substWinger";
 
-		case substKeeper:
+		case substGK1:
+		case substGK2:
 			return "substKeeper";
 
-		case substForward:
+		case substFW1:
+		case substFW2:
 			return "substForward";
+
+		case substXT1:
+		case substXT2:
+			return "substExtra";
 		}
 
 		return "";
@@ -392,6 +405,9 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 		case FORWARD_TOWING:
 			return HOVerwaltung.instance().getLanguageString("ls.player.position.forwardtowardswing");
 
+		case EXTRA:
+			return HOVerwaltung.instance().getLanguageString("ls.player.position.extra_substitute");
+
 		case SUBSTITUTED1:
 		case SUBSTITUTED2:
 		case SUBSTITUTED3:
@@ -408,7 +424,7 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 	}
 
 	public byte getPosition() {
-		return SpielerPosition.getPosition(m_iId, m_bTaktik);
+		return MatchRoleID.getPosition(m_iId, m_bTaktik);
 	}
 
 	/**
@@ -485,20 +501,33 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 			}
 		}
 
-		case substDefender:
+		case substCD1:
+		case substCD2:
 			return CENTRAL_DEFENDER;
 
-		case substInnerMidfield:
+		case substWB1:
+		case substWB2:
+			return BACK;
+
+		case substIM1:
+		case substIM2:
 			return MIDFIELDER;
 
-		case substWinger:
+		case substWI1:
+		case substWI2:
 			return WINGER;
 
-		case substKeeper:
+		case substGK1:
+		case substGK2:
 			return KEEPER;
 
-		case substForward:
+		case substFW1:
+		case substFW2:
 			return FORWARD;
+
+		case substXT1:
+		case substXT2:
+			return EXTRA;
 		}
 
 		return UNKNOWN;
@@ -524,18 +553,17 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 	}
 
 	/**
-	 * liefert eine ID nach der Sortiert werden kann ( z.B.
-	 * Spierlübersichtstabelle
+	 * returns an ID that can be sorted ( e.g. Player Overview Table )
 	 *
 	 */
 	public final int getSortId() {
 		int id = this.getPosition();
 
-		if (id == ISpielerPosition.FORWARD_TOWING) {
+		if (id == IMatchRoleID.FORWARD_TOWING) {
 			id = 18;
 		}
 
-		if (this.getId() >= ISpielerPosition.startReserves) {
+		if (this.getId() >= IMatchRoleID.startReserves) {
 			id += 20;
 		}
 
@@ -564,7 +592,7 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 	 *            New value of property m_iSpielerId.
 	 */
 	public final void setSpielerId(int spielerId) {
-		setSpielerId(spielerId, HOVerwaltung.instance().getModel().getAufstellung());
+		setSpielerId(spielerId, HOVerwaltung.instance().getModel().getLineup());
 	}
 
 	/**
@@ -584,8 +612,8 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 		// We don't want another player in the starting lineup if there are
 		// already 11 on the field.
 
-		if (!incomingEmpty && !containsPlayer && m_iId >= ISpielerPosition.startLineup
-				&& m_iId < ISpielerPosition.startReserves && lineup.hasFreePosition() == false) {
+		if (!incomingEmpty && !containsPlayer && m_iId >= IMatchRoleID.startLineup
+				&& m_iId < IMatchRoleID.startReserves && lineup.hasFreePosition() == false) {
 			HOLogger.instance().debug(getClass(),
 					"Blocked from setting player at position: " + m_iSpielerId + " " + m_iId);
 			return;
@@ -623,13 +651,13 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 	}
 
 	@Override
-	public final int compareTo(ISpielerPosition obj) {
-		if (obj instanceof SpielerPosition) {
-			final SpielerPosition position = (SpielerPosition) obj;
+	public final int compareTo(IMatchRoleID obj) {
+		if (obj instanceof MatchRoleID) {
+			final MatchRoleID position = (MatchRoleID) obj;
 
 			// Beide aufgestellt ?
-			if ((this.getId() < ISpielerPosition.startReserves)
-					&& (position.getId() < ISpielerPosition.startReserves)) {
+			if ((this.getId() < IMatchRoleID.startReserves)
+					&& (position.getId() < IMatchRoleID.startReserves)) {
 				if (this.getPosition() < position.getPosition()) {
 					return -1;
 				} else if (this.getPosition() == position.getPosition()) {
@@ -639,13 +667,13 @@ public class SpielerPosition implements java.io.Serializable, Comparable<ISpiele
 				}
 			}
 			// this aufgestellt ?
-			else if ((this.getId() < ISpielerPosition.startReserves)
-					&& (position.getId() >= ISpielerPosition.startReserves)) {
+			else if ((this.getId() < IMatchRoleID.startReserves)
+					&& (position.getId() >= IMatchRoleID.startReserves)) {
 				return -1;
 			}
 			// position aufgestellt
-			else if ((this.getId() >= ISpielerPosition.startReserves)
-					&& (position.getId() < ISpielerPosition.startReserves)) {
+			else if ((this.getId() >= IMatchRoleID.startReserves)
+					&& (position.getId() < IMatchRoleID.startReserves)) {
 				return 1;
 			}
 			// keiner aufgestellt

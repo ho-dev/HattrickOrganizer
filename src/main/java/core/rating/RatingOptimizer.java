@@ -15,8 +15,8 @@ import core.model.Team;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
+import core.model.player.IMatchRoleID;
+import core.model.player.Player;
 import core.util.HOLogger;
 import module.lineup.Lineup;
 
@@ -113,11 +113,11 @@ public class RatingOptimizer {
 		final Lineup lineup = new Lineup();
 		for (int k = 0;(lineupTeam.getAufstellung() != null) && (k < lineupTeam.getAufstellung().size()); k++) {					
 			MatchLineupPlayer playerMatch = (MatchLineupPlayer) lineupTeam.getAufstellung().get(k);
-			Spieler playerData = (Spieler) matchData.getPlayers().get(Integer.valueOf(playerMatch.getSpielerId()));
+			Player playerData = (Player) matchData.getPlayers().get(Integer.valueOf(playerMatch.getSpielerId()));
 			
-			if (playerMatch.getId() == ISpielerPosition.setPieces) {
+			if (playerMatch.getId() == IMatchRoleID.setPieces) {
 				lineup.setKicker(playerMatch.getSpielerId());
-			} else if (playerMatch.getId() == ISpielerPosition.captain) {
+			} else if (playerMatch.getId() == IMatchRoleID.captain) {
 				lineup.setKapitaen(playerMatch.getSpielerId());
 			} else {
 				lineup.setSpielerAtPosition(playerMatch.getId(), playerMatch.getSpielerId(), playerMatch.getTaktik());

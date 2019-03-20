@@ -2,18 +2,18 @@ package module.lineup.penalties;
 
 import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.rating.RatingPredictionManager;
 
 public class PenaltyTaker {
 
-	private Spieler player;
+	private Player player;
 
-	public PenaltyTaker(Spieler player) {
+	public PenaltyTaker(Player player) {
 		this.player = player;
 	}
 
-	public Spieler getPlayer() {
+	public Player getPlayer() {
 		return this.player;
 	}
 

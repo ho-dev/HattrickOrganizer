@@ -8,8 +8,8 @@ import core.model.match.MatchHighlight;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.Matchdetails;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
+import core.model.player.IMatchRoleID;
+import core.model.player.Player;
 import core.util.HOLogger;
 
 import java.util.ArrayList;
@@ -70,19 +70,19 @@ public class MatchExporter {
 
 				//Nun lineup durchlaufen und Spielerdaten holen
 				Vector<MatchLineupPlayer> aufstellung = DBManager.instance().getMatchLineupPlayers(details.getMatchID(),teamId);
-				Hashtable<Integer,Spieler> lineUpISpieler = new Hashtable<Integer,Spieler>();
+				Hashtable<Integer, Player> lineUpISpieler = new Hashtable<Integer, Player>();
 
 				boolean dataOK = true;
 
 				for (int k = 0;(aufstellung != null) && (k < aufstellung.size()); k++) {
-					//MatchDaten zum Spieler holen
+					//MatchDaten zum Player holen
 					MatchLineupPlayer player = aufstellung.get(k);
 
-					//Alte Werte zum Spieler holen fï¿½r das Matchdate
-					Spieler formerPlayerData = null;
+					//Alte Werte zum Player holen fï¿½r das Matchdate
+					Player formerPlayerData = null;
 
 					//Bankl + verlketzte ï¿½berspringen
-					if (player.getId() >= ISpielerPosition.startReserves) {
+					if (player.getId() >= IMatchRoleID.startReserves) {
 						continue;
 					}
 

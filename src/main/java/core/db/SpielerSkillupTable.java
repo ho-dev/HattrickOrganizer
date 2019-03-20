@@ -3,7 +3,7 @@ package core.db;
 import core.constants.player.PlayerSkill;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -43,7 +43,7 @@ final class SpielerSkillupTable extends AbstractTable {
 	}
 
 	/**
-	 * speichert die Spieler
+	 * speichert die Player
 	 */
 	void saveSkillup(int hrfId, int spielerId, Timestamp date, int skillValue, int skillCode) {
 		storeSkillup(hrfId,spielerId,date,skillValue,skillCode,true);
@@ -147,7 +147,7 @@ final class SpielerSkillupTable extends AbstractTable {
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),e);
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getSpieler: " + e);
+			HOLogger.instance().log(getClass(),"DatenbankZugriff.getPlayer: " + e);
 		}
 		return idVector;
 	}
@@ -170,10 +170,10 @@ final class SpielerSkillupTable extends AbstractTable {
 	// -------------------------------- Importing PArt ----------------------------------------------
 
 	void importNewSkillup(HOModel homodel) {
-		Vector<Spieler> players = homodel.getAllSpieler();
-		for (Iterator<Spieler> iter = players.iterator(); iter.hasNext();) {
-			Spieler nPlayer = iter.next();
-			Spieler oPlayer = HOVerwaltung.instance().getModel().getSpieler(nPlayer.getSpielerID());
+		Vector<Player> players = homodel.getAllSpieler();
+		for (Iterator<Player> iter = players.iterator(); iter.hasNext();) {
+			Player nPlayer = iter.next();
+			Player oPlayer = HOVerwaltung.instance().getModel().getSpieler(nPlayer.getSpielerID());
 			if (oPlayer!=null) {
 				checkNewSkillup(nPlayer,nPlayer.getTorwart(),oPlayer.getTorwart(),PlayerSkill.KEEPER,homodel.getID());	
 				checkNewSkillup(nPlayer,nPlayer.getSpielaufbau(),oPlayer.getSpielaufbau(),PlayerSkill.PLAYMAKING,homodel.getID());
@@ -190,7 +190,7 @@ final class SpielerSkillupTable extends AbstractTable {
 		}
 	}
 		
-	private void checkNewSkillup(Spieler nPlayer, int newValue, int oldValue, int skill, int hrf) {
+	private void checkNewSkillup(Player nPlayer, int newValue, int oldValue, int skill, int hrf) {
 		if (newValue>oldValue) {
 			storeSkillup(hrf,nPlayer.getSpielerID(),nPlayer.getHrfDate(),newValue,skill,true);
 		}
@@ -212,7 +212,7 @@ final class SpielerSkillupTable extends AbstractTable {
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),e);
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getSpieler: " + e);
+			HOLogger.instance().log(getClass(),"DatenbankZugriff.getPlayer: " + e);
 		}	
 		adapter.executeUpdate("DELETE FROM "+getTableName());
 		for (Iterator<Integer> iter = idVector.iterator(); iter.hasNext();) {

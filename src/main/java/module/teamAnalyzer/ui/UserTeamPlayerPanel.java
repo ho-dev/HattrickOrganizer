@@ -3,7 +3,7 @@ package module.teamAnalyzer.ui;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.player.SpielerPosition;
+import core.model.player.MatchRoleID;
 import module.teamAnalyzer.report.TacticReport;
 import module.teamAnalyzer.vo.UserTeamSpotLineup;
 
@@ -37,7 +37,7 @@ public class UserTeamPlayerPanel extends PlayerPanel {
                                                                                    (byte) lineup
                                                                                    .getTacticCode(),0));
             specialEventImage.setIcon(ThemeManager.getIcon(HOIconName.SPECIAL[lineup.getSpecialEvent()]));
-            positionField.setText(SpielerPosition.getNameForPosition((byte) lineup
+            positionField.setText(MatchRoleID.getNameForPosition((byte) lineup
                                                                                     .getPosition()));
             updateRatingPanel(lineup.getRating());
             tacticPanel.reload(new ArrayList<TacticReport>());

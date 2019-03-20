@@ -15,7 +15,7 @@ import core.model.HOVerwaltung;
 import core.model.Team;
 import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.rating.RatingPredictionConfig;
 import core.util.HOLogger;
 import core.util.Helper;
@@ -248,14 +248,12 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	private void setLabels() {
 		if (HOVerwaltung.instance().getModel().getTeam() != null) {
 			final HOModel homodel = HOVerwaltung.instance().getModel();
-			final Vector<Spieler> allSpieler = homodel.getAllSpieler();
-			final Lineup aufstellung = homodel.getAufstellung();
+			final Vector<Player> allPlayer = homodel.getAllSpieler();
+			final Lineup aufstellung = homodel.getLineup();
 
-			// AufstellungCBItem avergleich =
-			// AufstellungsVergleichHistoryPanel.getVergleichsAufstellung ();
-			// HRF-Vergleich gefordert
+			// HRF comparison required
 			if (AufstellungsVergleichHistoryPanel.isVergleichgefordert()) {
-				// Erst die Werte auf die der geladenen Aufstellung setzen
+				// First set the values ​​to those of the loaded setup
 				final AufstellungCBItem vergleichsaufstellungcbitem = AufstellungsVergleichHistoryPanel
 						.getVergleichsAufstellung();
 
@@ -315,10 +313,11 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			m_jpRating.setBottomCenter(aufstellung.getCentralAttackRating());
 			m_jpRating.setBottomLeft(aufstellung.getRightAttackRating());
 
-			// Farben neu berechnen
+			// Recalculate Borders
 			m_jpRating.calcColorBorders();
 
-			final double gesamtstaerke = aufstellung.getGesamtStaerke(allSpieler, true);
+			// get Total Strength
+			final double gesamtstaerke = aufstellung.getGesamtStaerke(allPlayer, true);
 
 			// *2 wegen halben Sternen
 			m_jpGesamtStaerke.setRating((int) (gesamtstaerke * 2));
@@ -341,7 +340,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			m_jcbPullBackMinute.setEnabled(!aufstellung.isPullBackOverride());
 			setPullBackOverride(aufstellung.isPullBackOverride());
 
-			float avXp = homodel.getAufstellung().getAverageExperience();
+			float avXp = homodel.getLineup().getAverageExperience();
 			m_jpDurchschnittErfahrung.setText(PlayerAbility.getNameForSkill(avXp));
 			m_jpDurchschnittErfahrung.setToolTipText((avXp < 0 ? (HOVerwaltung.instance()
 					.getLanguageString("lineup.upload.check.captainNotSet")) : ""));
@@ -349,7 +348,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			String formationExperienceTooltip = getFormationExperienceTooltip();
 			m_jpAktuellesSystem.setText(Lineup.getNameForSystem(aufstellung.ermittelSystem()));
 			m_jpAktuellesSystem.setToolTipText(formationExperienceTooltip);
-			int exp = homodel.getAufstellung().getTeamErfahrung4AktuellesSystem();
+			int exp = homodel.getLineup().getTeamErfahrung4AktuellesSystem();
 			m_jpErfahrungAktuellesSystem.setText(PlayerAbility.toString(exp) + " (" + exp + ")");
 			m_jpErfahrungAktuellesSystem.setToolTipText(formationExperienceTooltip);
 			m_jpErfahrungAktuellesSystem.setFGColor(new Color(Math.min(
@@ -506,29 +505,29 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 
 		if (event.getStateChange() == ItemEvent.DESELECTED) {
 			if (event.getSource().equals(m_jchPullBackOverride)) {
-				HOVerwaltung.instance().getModel().getAufstellung().setPullBackOverride(false);
+				HOVerwaltung.instance().getModel().getLineup().setPullBackOverride(false);
 				m_jcbPullBackMinute.setEnabled(true);
 				refresh();
 			}
 
 		} else if (event.getStateChange() == ItemEvent.SELECTED) {
 			if (event.getSource().equals(m_jchPullBackOverride)) {
-				HOVerwaltung.instance().getModel().getAufstellung().setPullBackOverride(true);
+				HOVerwaltung.instance().getModel().getLineup().setPullBackOverride(true);
 				m_jcbPullBackMinute.setEnabled(false);
 			} else if (event.getSource().equals(m_jcbPullBackMinute)) {
 				// Pull Back minute changed
 				HOVerwaltung
 						.instance()
 						.getModel()
-						.getAufstellung()
+						.getLineup()
 						.setPullBackMinute(((CBItem) m_jcbPullBackMinute.getSelectedItem()).getId());
 			} else if (event.getSource().equals(m_jcbTaktik)) {
 				// Tactic changed
-				HOVerwaltung.instance().getModel().getAufstellung()
+				HOVerwaltung.instance().getModel().getLineup()
 						.setTacticType(((CBItem) m_jcbTaktik.getSelectedItem()).getId());
 			} else if (event.getSource().equals(m_jcbEinstellung)) {
 				// Attitude changed
-				HOVerwaltung.instance().getModel().getAufstellung()
+				HOVerwaltung.instance().getModel().getLineup()
 						.setAttitude(((CBItem) m_jcbEinstellung.getSelectedItem()).getId());
 			} else if (event.getSource().equals(m_jcbMainStimmung)) {
 				// team spirit changed
@@ -552,7 +551,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 						.setTrainerTyp(((CBItem) m_jcbTrainerType.getSelectedItem()).getId());
 				doSilentRefresh = true; // To save the rating change display.
 				// will set current styleOfPlay value if valid otherwise set to trainer default
-				updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getAufstellung().getStyleOfPlay());
+				updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineup().getStyleOfPlay());
 				addAllStyleofPlayItems();
 				doSilentRefresh = false;
 			} else if (event.getSource().equals(m_jcbPredictionType)) {
@@ -561,17 +560,17 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 						.getSelectedItem()).getId());
 			} else if (event.getSource().equals(m_jcbLocation)) {
 				// location changed
-				HOVerwaltung.instance().getModel().getAufstellung()
+				HOVerwaltung.instance().getModel().getLineup()
 						.setLocation((short) ((CBItem) m_jcbLocation.getSelectedItem()).getId());
 			} else if (event.getSource().equals(m_jcbStyleOfPlay)) {
 				// CoachModifier/StyleOfPlay changed
-				HOVerwaltung.instance().getModel().getAufstellung()
+				HOVerwaltung.instance().getModel().getLineup()
 						.setStyleOfPlay(((CBItem) m_jcbStyleOfPlay.getSelectedItem()).getId());
 			} else if (event.getSource().equals(m_jcbTacticalAssistants)) {
 				HOVerwaltung.instance().getModel().getVerein().setTacticalAssistantLevels(((CBItem) m_jcbTacticalAssistants.getSelectedItem()).getId());
 				// Number of tactical assistants changed
 					doSilentRefresh = true; // To save the item change display
-					updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getAufstellung().getStyleOfPlay()); // Attempt to set the old value, otherwise trainer default.
+					updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineup().getStyleOfPlay()); // Attempt to set the old value, otherwise trainer default.
 					addAllStyleofPlayItems();
 					doSilentRefresh = false;
 			}
@@ -608,7 +607,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	 * @return the name of the tactic incl. strength
 	 */
 	private String getTaktikString() {
-		final Lineup aufstellung = HOVerwaltung.instance().getModel().getAufstellung();
+		final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineup();
 
 		// getTaktik liefert Taktik aus ComboBox, wir wollen Taktik aus
 		// aufstellung!
@@ -1064,7 +1063,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	@Override
 	public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 		// no silent refresh here
-		updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getAufstellung().getStyleOfPlay());	
+		updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineup().getStyleOfPlay());
 	}
 
 	@Override

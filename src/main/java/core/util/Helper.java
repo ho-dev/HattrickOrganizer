@@ -7,8 +7,8 @@ import core.datatype.CBItem;
 import core.datatype.ComboItem;
 import core.model.HOVerwaltung;
 import core.model.match.Weather;
-import core.model.player.ISpielerPosition;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 
 import java.awt.Component;
 import java.awt.Window;
@@ -67,25 +67,25 @@ public class Helper {
 
      /** Spielerpositionen */
 	public static final CBItem[] SPIELERPOSITIONEN = {
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.KEEPER), ISpielerPosition.KEEPER),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.CENTRAL_DEFENDER), ISpielerPosition.CENTRAL_DEFENDER),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.CENTRAL_DEFENDER_OFF), ISpielerPosition.CENTRAL_DEFENDER_OFF),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.CENTRAL_DEFENDER_TOWING), ISpielerPosition.CENTRAL_DEFENDER_TOWING),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.BACK), ISpielerPosition.BACK),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.BACK_OFF), ISpielerPosition.BACK_OFF),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.BACK_DEF), ISpielerPosition.BACK_DEF),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.BACK_TOMID), ISpielerPosition.BACK_TOMID),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.MIDFIELDER), ISpielerPosition.MIDFIELDER),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.MIDFIELDER_OFF), ISpielerPosition.MIDFIELDER_OFF),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.MIDFIELDER_DEF), ISpielerPosition.MIDFIELDER_DEF),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.MIDFIELDER_TOWING), ISpielerPosition.MIDFIELDER_TOWING),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.WINGER), ISpielerPosition.WINGER),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.WINGER_OFF), ISpielerPosition.WINGER_OFF),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.WINGER_DEF), ISpielerPosition.WINGER_DEF),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.WINGER_TOMID), ISpielerPosition.WINGER_TOMID),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.FORWARD), ISpielerPosition.FORWARD),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.FORWARD_DEF), ISpielerPosition.FORWARD_DEF),
-			new CBItem(SpielerPosition.getNameForPosition(ISpielerPosition.FORWARD_TOWING), ISpielerPosition.FORWARD_TOWING) };
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.KEEPER), IMatchRoleID.KEEPER),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.CENTRAL_DEFENDER), IMatchRoleID.CENTRAL_DEFENDER),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.CENTRAL_DEFENDER_OFF), IMatchRoleID.CENTRAL_DEFENDER_OFF),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.CENTRAL_DEFENDER_TOWING), IMatchRoleID.CENTRAL_DEFENDER_TOWING),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.BACK), IMatchRoleID.BACK),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.BACK_OFF), IMatchRoleID.BACK_OFF),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.BACK_DEF), IMatchRoleID.BACK_DEF),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.BACK_TOMID), IMatchRoleID.BACK_TOMID),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.MIDFIELDER), IMatchRoleID.MIDFIELDER),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.MIDFIELDER_OFF), IMatchRoleID.MIDFIELDER_OFF),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.MIDFIELDER_DEF), IMatchRoleID.MIDFIELDER_DEF),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.MIDFIELDER_TOWING), IMatchRoleID.MIDFIELDER_TOWING),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.WINGER), IMatchRoleID.WINGER),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.WINGER_OFF), IMatchRoleID.WINGER_OFF),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.WINGER_DEF), IMatchRoleID.WINGER_DEF),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.WINGER_TOMID), IMatchRoleID.WINGER_TOMID),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.FORWARD), IMatchRoleID.FORWARD),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.FORWARD_DEF), IMatchRoleID.FORWARD_DEF),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.FORWARD_TOWING), IMatchRoleID.FORWARD_TOWING) };
 
     /** weather combo boxes */
 	public static final CBItem[] WETTER = { new CBItem("", Weather.SUNNY.getId()), 

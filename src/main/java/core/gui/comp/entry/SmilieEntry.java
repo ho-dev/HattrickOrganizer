@@ -2,6 +2,8 @@
 package core.gui.comp.entry;
 
 import core.gui.theme.ThemeManager;
+import core.model.player.MatchRoleID;
+import core.model.player.Player;
 
 import javax.swing.SwingConstants;
 
@@ -19,7 +21,7 @@ public class SmilieEntry extends DoppelLabelEntry {
     private ColorLabelEntry team = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
                                                        ColorLabelEntry.BG_STANDARD,
                                                        SwingConstants.LEFT);
-    private core.model.player.Spieler spieler;
+    private Player player;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -31,13 +33,13 @@ public class SmilieEntry extends DoppelLabelEntry {
         this.setLabels(team, manuell);
     }
 
-   public final void setSpieler(core.model.player.Spieler spieler) {
-        this.spieler = spieler;
+   public final void setPlayer(Player player) {
+        this.player = player;
         updateComponent();
     }
 
-    public final core.model.player.Spieler getSpieler() {
-        return spieler;
+    public final Player getPlayer() {
+        return player;
     }
 
     @Override
@@ -45,37 +47,37 @@ public class SmilieEntry extends DoppelLabelEntry {
         if (obj instanceof SmilieEntry) {
             final SmilieEntry entry = (SmilieEntry) obj;
 
-            if ((entry.getSpieler() != null) && (getSpieler() != null)) {
+            if ((entry.getPlayer() != null) && (getPlayer() != null)) {
                 int ergebnis = 0;
 
                 //Beide null -> Der ManuelleSmilie entscheidet
-                if (((entry.getSpieler().getTeamInfoSmilie() == null)
-                    || entry.getSpieler().getTeamInfoSmilie().equals(""))
-                    && ((getSpieler().getTeamInfoSmilie() == null)
-                    || getSpieler().getTeamInfoSmilie().equals(""))) {
+                if (((entry.getPlayer().getTeamInfoSmilie() == null)
+                    || entry.getPlayer().getTeamInfoSmilie().equals(""))
+                    && ((getPlayer().getTeamInfoSmilie() == null)
+                    || getPlayer().getTeamInfoSmilie().equals(""))) {
                     ergebnis = 0;
-                } else if ((entry.getSpieler().getTeamInfoSmilie() == null)
-                           || entry.getSpieler().getTeamInfoSmilie().equals("")) {
+                } else if ((entry.getPlayer().getTeamInfoSmilie() == null)
+                           || entry.getPlayer().getTeamInfoSmilie().equals("")) {
                     ergebnis = 1;
-                } else if ((getSpieler().getTeamInfoSmilie() == null)
-                           || getSpieler().getTeamInfoSmilie().equals("")) {
+                } else if ((getPlayer().getTeamInfoSmilie() == null)
+                           || getPlayer().getTeamInfoSmilie().equals("")) {
                     ergebnis = -1;
                 } else {
-                    ergebnis = entry.getSpieler().getTeamInfoSmilie().compareTo(getSpieler()
+                    ergebnis = entry.getPlayer().getTeamInfoSmilie().compareTo(getPlayer()
                                                                                     .getTeamInfoSmilie());
                 }
 
                 //Bei "Gleichstand" die Aufstellung beachten
                 if (ergebnis == 0) {
-                    final core.model.player.SpielerPosition entrySort = core.model.HOVerwaltung.instance()
+                    final MatchRoleID entrySort = core.model.HOVerwaltung.instance()
                                                                                                                         .getModel()
-                                                                                                                        .getAufstellung()
-                                                                                                                        .getPositionBySpielerId(entry.getSpieler()
+                                                                                                                        .getLineup()
+                                                                                                                        .getPositionBySpielerId(entry.getPlayer()
                                                                                                                                                      .getSpielerID());
-                    final core.model.player.SpielerPosition sort = core.model.HOVerwaltung.instance()
+                    final MatchRoleID sort = core.model.HOVerwaltung.instance()
                                                                                                                    .getModel()
-                                                                                                                   .getAufstellung()
-                                                                                                                   .getPositionBySpielerId(getSpieler()
+                                                                                                                   .getLineup()
+                                                                                                                   .getPositionBySpielerId(getPlayer()
                                                                                                                                                .getSpielerID());
 
                     if ((sort == null) && (entrySort == null)) {
@@ -102,15 +104,15 @@ public class SmilieEntry extends DoppelLabelEntry {
 
     @Override
 	public final void updateComponent() {
-        if (spieler != null) {
-            if ((spieler.getTeamInfoSmilie() != null) && !spieler.getTeamInfoSmilie().equals("")) {
-                team.setIcon(ThemeManager.getIcon(spieler.getTeamInfoSmilie()));
+        if (player != null) {
+            if ((player.getTeamInfoSmilie() != null) && !player.getTeamInfoSmilie().equals("")) {
+                team.setIcon(ThemeManager.getIcon(player.getTeamInfoSmilie()));
             } else {
                 team.clear();
             }
 
-            if ((spieler.getManuellerSmilie() != null) && !spieler.getManuellerSmilie().equals("")) {
-                manuell.setIcon(ThemeManager.getIcon(spieler.getManuellerSmilie()));
+            if ((player.getManuellerSmilie() != null) && !player.getManuellerSmilie().equals("")) {
+                manuell.setIcon(ThemeManager.getIcon(player.getManuellerSmilie()));
             } else {
                 manuell.clear();
             }

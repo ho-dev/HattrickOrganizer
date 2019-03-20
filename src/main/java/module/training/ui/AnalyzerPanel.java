@@ -7,7 +7,7 @@ import core.gui.comp.panel.LazyPanel;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.model.player.ISkillup;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.GUIUtils;
 import module.training.OldTrainingManager;
 import module.training.SkillChange;
@@ -219,10 +219,10 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	 * 
 	 * @return Map of skillups
 	 */
-	private Map<Integer, List<SkillChange>> getSkillups(List<Spieler> players) {
+	private Map<Integer, List<SkillChange>> getSkillups(List<Player> players) {
 		Map<Integer, List<SkillChange>> skillupsByType = new HashMap<Integer, List<SkillChange>>();
 
-		for (Spieler player : players) {
+		for (Player player : players) {
 			OldTrainingManager otm = new OldTrainingManager(player);
 			List<ISkillup> skillups = otm.getAllSkillups();
 
@@ -389,7 +389,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 
 	private void selectPlayerFromModel() {
 		this.changesTable.clearSelection();
-		Spieler player = this.model.getActivePlayer();
+		Player player = this.model.getActivePlayer();
 		if (player != null) {
 			ChangesTableModel tblModel = (ChangesTableModel) this.changesTable.getModel();
 			for (int i = 0; i < tblModel.getRowCount(); i++) {

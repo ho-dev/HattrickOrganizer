@@ -2,7 +2,7 @@
 package module.training;
 
 import core.model.player.ISkillup;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 
 /**
@@ -14,7 +14,7 @@ public class SkillChange {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private ISkillup skillup;
-    private Spieler player;
+    private Player player;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ public class SkillChange {
      * @param player Player
      * @param skillup Skillup
      */
-    public SkillChange(Spieler player, ISkillup skillup) {
+    public SkillChange(Player player, ISkillup skillup) {
         this.player = player;
         this.skillup = skillup;
     }
@@ -36,7 +36,7 @@ public class SkillChange {
      *
      * @return Player
      */
-    public Spieler getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 

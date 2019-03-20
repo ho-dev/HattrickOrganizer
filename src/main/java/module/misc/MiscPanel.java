@@ -7,7 +7,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.misc.Finanzen;
 import core.model.misc.Verein;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.Helper;
 
 import java.awt.Component;
@@ -183,20 +183,20 @@ final class MiscPanel extends JPanel {
      */
     float getDurchschnittsAlter() {
         float summe = 0;
-        final Vector<Spieler> vSpieler = HOVerwaltung.instance().getModel().getAllSpieler();
+        final Vector<Player> vPlayer = HOVerwaltung.instance().getModel().getAllSpieler();
 
-        for (int i = 0; i < vSpieler.size(); i++) {
+        for (int i = 0; i < vPlayer.size(); i++) {
             //Trainer nicht berücksichtigen
-            if (!( vSpieler.get(i)).isTrainer()) {
+            if (!( vPlayer.get(i)).isTrainer()) {
             	// Age Years
-                summe += (vSpieler.get(i)).getAlter();
+                summe += (vPlayer.get(i)).getAlter();
                 // Age Days
-                summe += (vSpieler.get(i)).getAgeDays()/112.0;
+                summe += (vPlayer.get(i)).getAgeDays()/112.0;
             }
         }
 
         //Trainer abziehen
-        return Helper.round(summe / (vSpieler.size() - 1));
+        return Helper.round(summe / (vPlayer.size() - 1));
     }
 
     /**
@@ -204,17 +204,17 @@ final class MiscPanel extends JPanel {
      */
     float getDurchschnittsErfahrung() {
         float summe = 0;
-        final Vector<Spieler> vSpieler = HOVerwaltung.instance().getModel().getAllSpieler();
+        final Vector<Player> vPlayer = HOVerwaltung.instance().getModel().getAllSpieler();
 
-        for (int i = 0; i < vSpieler.size(); i++) {
+        for (int i = 0; i < vPlayer.size(); i++) {
             //Trainer nicht berücksichtigen
-            if (!(vSpieler.get(i)).isTrainer()) {
-                summe += (vSpieler.get(i)).getErfahrung();
+            if (!(vPlayer.get(i)).isTrainer()) {
+                summe += (vPlayer.get(i)).getErfahrung();
             }
         }
 
         //Trainer abziehen
-        return Helper.round(summe / (vSpieler.size() - 1), 3);
+        return Helper.round(summe / (vPlayer.size() - 1), 3);
     }
 
     /**
@@ -222,17 +222,17 @@ final class MiscPanel extends JPanel {
      */
     float getDurchschnittsForm() {
         float summe = 0;
-        final Vector<Spieler> vSpieler = HOVerwaltung.instance().getModel().getAllSpieler();
+        final Vector<Player> vPlayer = HOVerwaltung.instance().getModel().getAllSpieler();
 
-        for (int i = 0; i < vSpieler.size(); i++) {
+        for (int i = 0; i < vPlayer.size(); i++) {
             //Trainer nicht berücksichtigen
-            if (!(vSpieler.get(i)).isTrainer()) {
-                summe += (vSpieler.get(i)).getForm();
+            if (!(vPlayer.get(i)).isTrainer()) {
+                summe += (vPlayer.get(i)).getForm();
             }
         }
 
         //Trainer abziehen
-        return Helper.round(summe / (vSpieler.size() - 1), 3);
+        return Helper.round(summe / (vPlayer.size() - 1), 3);
     }
 
     /**
@@ -240,12 +240,12 @@ final class MiscPanel extends JPanel {
      */
     float getSumTSI() {
         float summe = 0;
-        final Vector<Spieler> vSpieler = HOVerwaltung.instance().getModel().getAllSpieler();
+        final Vector<Player> vPlayer = HOVerwaltung.instance().getModel().getAllSpieler();
 
-        for (int i = 0; i < vSpieler.size(); i++) {
+        for (int i = 0; i < vPlayer.size(); i++) {
             //Trainer nicht berücksichtigen
-            if (!(vSpieler.get(i)).isTrainer()) {
-                summe += (vSpieler.get(i)).getTSI();
+            if (!(vPlayer.get(i)).isTrainer()) {
+                summe += (vPlayer.get(i)).getTSI();
             }
         }
 
@@ -258,7 +258,7 @@ final class MiscPanel extends JPanel {
      */
 //    float getSumEPV() {
 //        float summe = 0;
-//        final Vector<Spieler> vSpieler = HOVerwaltung.instance().getModel().getAllSpieler();
+//        final Vector<Player> vSpieler = HOVerwaltung.instance().getModel().getAllSpieler();
 //
 //        for (int i = 0; i < vSpieler.size(); i++) {
 //            //Trainer nicht berücksichtigen

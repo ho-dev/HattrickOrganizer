@@ -2,11 +2,9 @@ package module.training.ui.model;
 
 import core.constants.TrainingType;
 import core.db.DBManager;
-import core.model.HOModel;
-import core.model.HOVerwaltung;
 import core.model.StaffMember;
 import core.model.StaffType;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.TrainingPerWeek;
 import module.training.OldTrainingManager;
@@ -17,7 +15,7 @@ import java.util.List;
 public class TrainingModel {
 
 	/** The currently selected player */
-	private Spieler activePlayer;
+	private Player activePlayer;
 	private int numberOfCoTrainers;
 	/** the current level of the coach */
 	private int trainerLevel;
@@ -30,11 +28,11 @@ public class TrainingModel {
 	
 
 
-	public Spieler getActivePlayer() {
+	public Player getActivePlayer() {
 		return activePlayer;
 	}
 
-	public void setActivePlayer(Spieler player) {
+	public void setActivePlayer(Player player) {
 		if ((this.activePlayer == null && player != null)
 				|| (this.activePlayer != null && player == null)
 				|| (this.activePlayer != null && player != null && this.activePlayer.getSpielerID() != player

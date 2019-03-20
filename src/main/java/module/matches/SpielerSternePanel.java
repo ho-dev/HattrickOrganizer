@@ -10,7 +10,9 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupPlayer;
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
+import core.model.player.Player;
 import core.util.Helper;
 import core.util.StringUtils;
 
@@ -33,7 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 /**
- * Zeigt den Spieler an der Position an und dessen Sterne
+ * Zeigt den Player an der Position an und dessen Sterne
  */
 final class SpielerSternePanel extends ImagePanel implements ActionListener {
 
@@ -93,7 +95,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 
 		// We want empty frames in the on field positions hidden when empty
 		if ((m_bOnScreen == true)
-				&& ((m_iPositionsID >= ISpielerPosition.startLineup) && (m_iPositionsID < ISpielerPosition.startReserves))) {
+				&& ((m_iPositionsID >= IMatchRoleID.startLineup) && (m_iPositionsID < IMatchRoleID.startReserves))) {
 			removePanel();
 		}
 
@@ -158,21 +160,21 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		add(panel);
 
 		switch (m_iPositionsID) {
-		case ISpielerPosition.keeper:
-		case ISpielerPosition.rightBack:
-		case ISpielerPosition.leftBack:
-		case ISpielerPosition.rightCentralDefender:
-		case ISpielerPosition.middleCentralDefender:
-		case ISpielerPosition.leftCentralDefender:
-		case ISpielerPosition.rightInnerMidfield:
-		case ISpielerPosition.centralInnerMidfield:
-		case ISpielerPosition.leftInnerMidfield:
-		case ISpielerPosition.leftWinger:
-		case ISpielerPosition.rightWinger:
-		case ISpielerPosition.rightForward:
-		case ISpielerPosition.centralForward:
-		case ISpielerPosition.leftForward:
-		case ISpielerPosition.ausgewechselt: {
+		case IMatchRoleID.keeper:
+		case IMatchRoleID.rightBack:
+		case IMatchRoleID.leftBack:
+		case IMatchRoleID.rightCentralDefender:
+		case IMatchRoleID.middleCentralDefender:
+		case IMatchRoleID.leftCentralDefender:
+		case IMatchRoleID.rightInnerMidfield:
+		case IMatchRoleID.centralInnerMidfield:
+		case IMatchRoleID.leftInnerMidfield:
+		case IMatchRoleID.leftWinger:
+		case IMatchRoleID.rightWinger:
+		case IMatchRoleID.rightForward:
+		case IMatchRoleID.centralForward:
+		case IMatchRoleID.leftForward:
+		case IMatchRoleID.FirstPlayerReplaced: {
 			constraints.gridx = 0;
 			constraints.gridy = 2;
 			constraints.weighty = 0; // No vertical stretch for this one
@@ -211,7 +213,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 			m_jbSpieler.setText(displayName);
 
 			int trickotnummer = 0;
-			final core.model.player.Spieler spieler = core.model.HOVerwaltung.instance()
+			final Player spieler = core.model.HOVerwaltung.instance()
 					.getModel().getSpieler(player.getSpielerId());
 
 			if (spieler != null) {
@@ -252,37 +254,37 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 
 		switch (posid) {
 
-		case ISpielerPosition.setPieces: {
+		case IMatchRoleID.setPieces: {
 			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("match.setpiecestaker"));
 			break;
 		}
-		case ISpielerPosition.captain: {
+		case IMatchRoleID.captain: {
 			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Spielfuehrer"));
 			break;
 		}
-		case ISpielerPosition.substDefender: {
+		case IMatchRoleID.substCD1: {
 			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Reserve") + " "
 					+ HOVerwaltung.instance().getLanguageString("defender"));
 			break;
 		}
-		case ISpielerPosition.substForward: {
+		case IMatchRoleID.substFW1: {
 			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Reserve") + " "
 					+ HOVerwaltung.instance().getLanguageString("ls.player.position.forward"));
 			break;
 		}
-		case ISpielerPosition.substWinger: {
+		case IMatchRoleID.substWI1: {
 			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Reserve") + " "
 					+ HOVerwaltung.instance().getLanguageString("ls.player.position.winger"));
 			break;
 		}
-		case ISpielerPosition.substInnerMidfield: {
+		case IMatchRoleID.substIM1: {
 			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Reserve")
 					+ " "
 					+ HOVerwaltung.instance().getLanguageString(
 							"ls.player.position.innermidfielder"));
 			break;
 		}
-		case ISpielerPosition.substKeeper: {
+		case IMatchRoleID.substGK1: {
 			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Reserve") + " "
 					+ HOVerwaltung.instance().getLanguageString("ls.player.position.keeper"));
 			break;
@@ -290,14 +292,14 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		default: {
 			// Special check here for the replaced players, we got a range of at
 			// least 3...
-			if ((posid >= ISpielerPosition.ausgewechselt)
-					&& (posid <= ISpielerPosition.ausgewechseltEnd)) {
+			if ((posid >= IMatchRoleID.FirstPlayerReplaced)
+					&& (posid <= IMatchRoleID.ThirdPlayerReplaced)) {
 				m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Ausgewechselt"));
 				break;
 			} else {
 
-				m_jlPosition.setText(core.model.player.SpielerPosition
-						.getNameForPosition(core.model.player.SpielerPosition.getPosition(posid,
+				m_jlPosition.setText(MatchRoleID
+						.getNameForPosition(MatchRoleID.getPosition(posid,
 								taktik)));
 			}
 		}

@@ -3,7 +3,7 @@ package module.transfer;
 
 
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import java.sql.Timestamp;
 
@@ -29,7 +29,7 @@ public class PlayerTransfer {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Player info on tranfer date */
-    private Spieler playerInfo;
+    private Player playerInfo;
 
     /** Name of the buyer team */
     private String buyerName = ""; //$NON-NLS-1$
@@ -191,7 +191,7 @@ public class PlayerTransfer {
      *
      * @param info Player information on transfer date.
      */
-    public final void setPlayerInfo(Spieler info) {
+    public final void setPlayerInfo(Player info) {
         this.playerInfo = info;
     }
 
@@ -200,7 +200,7 @@ public class PlayerTransfer {
      *
      * @return Playerinformation if available. else <code>null</code>
      */
-    public final Spieler getPlayerInfo() {
+    public final Player getPlayerInfo() {
         return playerInfo;
     }
 

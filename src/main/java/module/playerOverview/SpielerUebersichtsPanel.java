@@ -5,7 +5,7 @@ import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -25,7 +25,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
- * Bietet Übersicht über alle Spieler (main class of the package)
+ * Bietet Übersicht über alle Player (main class of the package)
  */
 public class SpielerUebersichtsPanel extends ImagePanel {
 
@@ -49,14 +49,14 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	/**
 	 * Selects the player with the given id.
 	 * 
-	 * @param spieler
+	 * @param player
 	 *            the id of the player to select.
 	 */
-	public void setPlayer(Spieler spieler) {
-		spielerUebersichtTableName.setSpieler(spieler.getSpielerID());
-		spielerUebersichtTable.setSpieler(spieler.getSpielerID());
-		spielerDetailPanel.setSpieler(spieler);
-		spielerTrainingsSimulatorPanel.setSpieler(spieler);
+	public void setPlayer(Player player) {
+		spielerUebersichtTableName.setSpieler(player.getSpielerID());
+		spielerUebersichtTable.setSpieler(player.getSpielerID());
+		spielerDetailPanel.setSpieler(player);
+		spielerTrainingsSimulatorPanel.setSpieler(player);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	// ----------------------Refresh--
 
 	/**
-	 * Refresh, wenn ein Spieler in der Aufstellung geändert wird (Google
+	 * Refresh, wenn ein Player in der Aufstellung geändert wird (Google
 	 * translate) Refresh, if a player is changed in the statement
 	 */
 	public final void refresh() {
@@ -99,9 +99,9 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	public final void refreshHRFVergleich() {
 		spielerUebersichtTable.refreshHRFVergleich();
 
-		Spieler spieler = spielerUebersichtTable.getSorter().getSpieler(
+		Player player = spielerUebersichtTable.getSorter().getSpieler(
 				spielerUebersichtTable.getSelectedRow());
-		spielerDetailPanel.setSpieler(spieler);
+		spielerDetailPanel.setSpieler(player);
 	}
 
 	/**
@@ -260,9 +260,9 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 						int row = spielerUebersichtTableName.getSelectedRow();
 						selectRow(spielerUebersichtTable, row);
 						if (row > -1) {
-							Spieler spieler = spielerUebersichtTable.getSorter().getSpieler(row);
-							if (spieler != null) {
-								HOMainFrame.instance().setActualSpieler(spieler);
+							Player player = spielerUebersichtTable.getSorter().getSpieler(row);
+							if (player != null) {
+								HOMainFrame.instance().setActualSpieler(player);
 							}
 						}
 					}

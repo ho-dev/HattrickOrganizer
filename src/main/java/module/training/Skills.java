@@ -2,7 +2,7 @@ package module.training;
 
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import java.awt.Color;
 
 /**
@@ -85,39 +85,39 @@ public class Skills {
      /**
      * Returns the Skill value for the player
      *
-     * @param spieler
+     * @param player
      * @param skillIndex constant index value of the skill we want to see
      *
      * @return The Skill value or 0 if the index is incorrect
      */
-    public static int getSkillValue(Spieler spieler, int skillIndex) {
+    public static int getSkillValue(Player player, int skillIndex) {
         switch (skillIndex) {
             case PlayerSkill.KEEPER:
-                return spieler.getTorwart();
+                return player.getTorwart();
 
             case PlayerSkill.PLAYMAKING:
-                return spieler.getSpielaufbau();
+                return player.getSpielaufbau();
 
             case PlayerSkill.PASSING:
-                return spieler.getPasspiel();
+                return player.getPasspiel();
 
             case PlayerSkill.WINGER:
-                return spieler.getFluegelspiel();
+                return player.getFluegelspiel();
 
             case PlayerSkill.DEFENDING:
-                return spieler.getVerteidigung();
+                return player.getVerteidigung();
 
             case PlayerSkill.SCORING:
-                return spieler.getTorschuss();
+                return player.getTorschuss();
 
             case PlayerSkill.SET_PIECES:
-                return spieler.getStandards();
+                return player.getStandards();
 
             case PlayerSkill.STAMINA:
-                return spieler.getKondition();
+                return player.getKondition();
 
             case PlayerSkill.EXPERIENCE:
-                return spieler.getErfahrung();
+                return player.getErfahrung();
         }
 
         return 0;

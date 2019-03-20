@@ -1,16 +1,12 @@
 package module.opponentspy;
 
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 //import module.opponentspy.OpponentTeam.PlayedPosition;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
 public class RoleAssigner {
 	
@@ -25,7 +21,7 @@ public class RoleAssigner {
 		int playedMatches = 0;
 		
 //		for (PlayedPosition pos : player.getPlayedPositions()) {
-//			if (pos.positionId >= ISpielerPosition.keeper && pos.positionId < ISpielerPosition.startReserves)
+//			if (pos.positionId >= IMatchRoleID.keeper && pos.positionId < IMatchRoleID.startReserves)
 //				playedMatches++;
 //		}
 		
@@ -75,39 +71,39 @@ public class RoleAssigner {
 		
 		switch (position.role) {
 			
-		case ISpielerPosition.KEEPER :
-			return ISpielerPosition.KEEPER;
+		case IMatchRoleID.KEEPER :
+			return IMatchRoleID.KEEPER;
 			
-		case ISpielerPosition.BACK :
+		case IMatchRoleID.BACK :
 			
 			if (position.defensive / position.count > 0.4 )
-				return ISpielerPosition.BACK_DEF;
+				return IMatchRoleID.BACK_DEF;
 			
 			if (position.toMiddle / position.count > 0.4)
-				return ISpielerPosition.BACK_TOMID;
+				return IMatchRoleID.BACK_TOMID;
 			
 			if (position.offensive / position.count > 0.4)
-				return ISpielerPosition.BACK_OFF;
+				return IMatchRoleID.BACK_OFF;
 			
-			return ISpielerPosition.BACK;
+			return IMatchRoleID.BACK;
 			
-		case ISpielerPosition.MIDFIELDER :
+		case IMatchRoleID.MIDFIELDER :
 			
 			if (position.defensive / position.count > 0.4 )
-				return ISpielerPosition.MIDFIELDER_DEF;
+				return IMatchRoleID.MIDFIELDER_DEF;
 			
 			if (position.toWing / position.count > 0.4)
-				return ISpielerPosition.MIDFIELDER_TOWING;
+				return IMatchRoleID.MIDFIELDER_TOWING;
 			
 			if (position.offensive / position.count > 0.4)
-				return ISpielerPosition.MIDFIELDER_OFF;
+				return IMatchRoleID.MIDFIELDER_OFF;
 			
-			return ISpielerPosition.MIDFIELDER;
+			return IMatchRoleID.MIDFIELDER;
 			
 			// TODO! Not very elegant, stupid rule?
 			
 		default : 
-			return ISpielerPosition.CENTRAL_DEFENDER;
+			return IMatchRoleID.CENTRAL_DEFENDER;
 			
 		
 		}
@@ -129,46 +125,46 @@ public class RoleAssigner {
 //			int pos = position.positionId;
 //			
 //			
-//			if (pos >= ISpielerPosition.startLineup && pos < ISpielerPosition.startReserves) {
+//			if (pos >= IMatchRoleID.startLineup && pos < IMatchRoleID.startReserves) {
 //				
 //				CalcPosition calcPosition = null;
 //				
-//				if (pos == ISpielerPosition.keeper) {
-//					getCalcPosition(positions, ISpielerPosition.KEEPER);
+//				if (pos == IMatchRoleID.keeper) {
+//					getCalcPosition(positions, IMatchRoleID.KEEPER);
 //			
-//				} else if (pos == ISpielerPosition.rightBack || pos == ISpielerPosition.leftBack) {
+//				} else if (pos == IMatchRoleID.rightBack || pos == IMatchRoleID.leftBack) {
 //					
-//					calcPosition = getCalcPosition(positions, ISpielerPosition.BACK);
+//					calcPosition = getCalcPosition(positions, IMatchRoleID.BACK);
 //						
 //				} else {
 //				
-//					calcPosition = getCalcPosition(positions, ISpielerPosition.MIDFIELDER);
+//					calcPosition = getCalcPosition(positions, IMatchRoleID.MIDFIELDER);
 //				
 //				}
 //				
 //				
 //				calcPosition.count += 1;
 //				
-//				if (pos != ISpielerPosition.keeper)
+//				if (pos != IMatchRoleID.keeper)
 //					addCalcTactic(calcPosition, position.tacticId);
 //			
-////			} else if (pos == ISpielerPosition.substDefender)  {
+////			} else if (pos == IMatchRoleID.substDefender)  {
 ////				
 ////				subDefender += 1;
 ////			
-////			} else if (pos == ISpielerPosition.substForward) {
+////			} else if (pos == IMatchRoleID.substForward) {
 ////				
 ////				subForward += 1 ;
 ////			
-////			} else if (pos == ISpielerPosition.substInnerMidfield) {
+////			} else if (pos == IMatchRoleID.substInnerMidfield) {
 ////			
 ////				subMidfielder += 1;
 ////			
-////			} else if (pos == ISpielerPosition.substKeeper ) {
+////			} else if (pos == IMatchRoleID.substKeeper ) {
 ////			
 ////				subKeeper += 1;
 ////			
-////			} else if (pos == ISpielerPosition.substWinger) {
+////			} else if (pos == IMatchRoleID.substWinger) {
 ////				
 ////				subWinger += 1;
 ////			
@@ -183,23 +179,23 @@ public class RoleAssigner {
 		
 		switch (tactic) {
 			
-			case ISpielerPosition.NORMAL :
+			case IMatchRoleID.NORMAL :
 				position.normal += 1;
 				break;
 				
-			case ISpielerPosition.OFFENSIVE :
+			case IMatchRoleID.OFFENSIVE :
 				position.offensive += 1;
 				break;
 				
-			case ISpielerPosition.DEFENSIVE :
+			case IMatchRoleID.DEFENSIVE :
 				position.defensive += 1;
 				break;
 				
-			case ISpielerPosition.TOWARDS_MIDDLE :
+			case IMatchRoleID.TOWARDS_MIDDLE :
 				position.toMiddle += 1;
 				break;
 				
-			case ISpielerPosition.TOWARDS_WING :
+			case IMatchRoleID.TOWARDS_WING :
 				position.toWing += 1;
 				break;
 		}

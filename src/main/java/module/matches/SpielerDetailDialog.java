@@ -20,9 +20,9 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupPlayer;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
+import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
 import module.playerOverview.SpielerDetailPanel;
@@ -47,7 +47,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 /**
- * Zeigt Details zu einem Spieler zu einer Zeit an
+ * Zeigt Details zu einem Player zu einer Zeit an
  */
 final class SpielerDetailDialog extends JDialog {
 
@@ -191,22 +191,22 @@ final class SpielerDetailDialog extends JDialog {
 			m_jpWertFluegelIn, m_jpWertFluegelOff, m_jpWertFluegelDef, m_jpWertSturm,
 			m_jpWertSturmAus, m_jpWertSturmDef };
 
-	private final byte[] playerPosition = new byte[] { ISpielerPosition.KEEPER,
-			ISpielerPosition.CENTRAL_DEFENDER, ISpielerPosition.CENTRAL_DEFENDER_TOWING,
-			ISpielerPosition.CENTRAL_DEFENDER_OFF, ISpielerPosition.BACK,
-			ISpielerPosition.BACK_TOMID, ISpielerPosition.BACK_OFF, ISpielerPosition.BACK_DEF,
-			ISpielerPosition.MIDFIELDER, ISpielerPosition.MIDFIELDER_TOWING,
-			ISpielerPosition.MIDFIELDER_OFF, ISpielerPosition.MIDFIELDER_DEF,
-			ISpielerPosition.WINGER, ISpielerPosition.WINGER_TOMID, ISpielerPosition.WINGER_OFF,
-			ISpielerPosition.WINGER_DEF, ISpielerPosition.FORWARD, ISpielerPosition.FORWARD_TOWING,
-			ISpielerPosition.FORWARD_DEF
+	private final byte[] playerPosition = new byte[] { IMatchRoleID.KEEPER,
+			IMatchRoleID.CENTRAL_DEFENDER, IMatchRoleID.CENTRAL_DEFENDER_TOWING,
+			IMatchRoleID.CENTRAL_DEFENDER_OFF, IMatchRoleID.BACK,
+			IMatchRoleID.BACK_TOMID, IMatchRoleID.BACK_OFF, IMatchRoleID.BACK_DEF,
+			IMatchRoleID.MIDFIELDER, IMatchRoleID.MIDFIELDER_TOWING,
+			IMatchRoleID.MIDFIELDER_OFF, IMatchRoleID.MIDFIELDER_DEF,
+			IMatchRoleID.WINGER, IMatchRoleID.WINGER_TOMID, IMatchRoleID.WINGER_OFF,
+			IMatchRoleID.WINGER_DEF, IMatchRoleID.FORWARD, IMatchRoleID.FORWARD_TOWING,
+			IMatchRoleID.FORWARD_DEF
 
 	};
 
 	public SpielerDetailDialog(JFrame owner, MatchLineupPlayer matchplayer, MatchLineup matchlineup) {
 		super(owner);
 		HOLogger.instance().log(getClass(), "SpielerDetailDialog");
-		Spieler player = DBManager.instance().getSpielerAtDate(matchplayer.getSpielerId(),
+		Player player = DBManager.instance().getSpielerAtDate(matchplayer.getSpielerId(),
 				matchlineup.getSpielDatum());
 
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -243,208 +243,208 @@ final class SpielerDetailDialog extends JDialog {
 		setVisible(true);
 	}
 
-	private void setLabels(Spieler m_clSpieler) {
-		Spieler m_clVergleichsSpieler = HOVerwaltung.instance().getModel()
-				.getSpieler(m_clSpieler.getSpielerID());
+	private void setLabels(Player m_clPlayer) {
+		Player m_clVergleichsPlayer = HOVerwaltung.instance().getModel()
+				.getSpieler(m_clPlayer.getSpielerID());
 
-		m_jpName.setText(m_clSpieler.getName());
-		m_jpName.setFGColor(SpielerLabelEntry.getForegroundForSpieler(m_clSpieler));
-		m_jpAlter.setText(m_clSpieler.getAlter() + "");
-		m_jpNationalitaet.setIcon(ImageUtilities.getFlagIcon(m_clSpieler.getNationalitaet()));
+		m_jpName.setText(m_clPlayer.getName());
+		m_jpName.setFGColor(SpielerLabelEntry.getForegroundForSpieler(m_clPlayer));
+		m_jpAlter.setText(m_clPlayer.getAlter() + "");
+		m_jpNationalitaet.setIcon(ImageUtilities.getFlagIcon(m_clPlayer.getNationalitaet()));
 
-		if (HOVerwaltung.instance().getModel().getAufstellung()
-				.isSpielerAufgestellt(m_clSpieler.getSpielerID())
-				&& (HOVerwaltung.instance().getModel().getAufstellung()
-						.getPositionBySpielerId(m_clSpieler.getSpielerID()) != null)) {
+		if (HOVerwaltung.instance().getModel().getLineup()
+				.isSpielerAufgestellt(m_clPlayer.getSpielerID())
+				&& (HOVerwaltung.instance().getModel().getLineup()
+						.getPositionBySpielerId(m_clPlayer.getSpielerID()) != null)) {
 			m_jpAufgestellt.setIcon(ImageUtilities.getImage4Position(
-					HOVerwaltung.instance().getModel().getAufstellung()
-							.getPositionBySpielerId(m_clSpieler.getSpielerID()),
-					m_clSpieler.getTrikotnummer()));
-			m_jpAufgestellt.setText(SpielerPosition.getNameForPosition(HOVerwaltung.instance()
-					.getModel().getAufstellung().getPositionBySpielerId(m_clSpieler.getSpielerID())
+					HOVerwaltung.instance().getModel().getLineup()
+							.getPositionBySpielerId(m_clPlayer.getSpielerID()),
+					m_clPlayer.getTrikotnummer()));
+			m_jpAufgestellt.setText(MatchRoleID.getNameForPosition(HOVerwaltung.instance()
+					.getModel().getLineup().getPositionBySpielerId(m_clPlayer.getSpielerID())
 					.getPosition()));
 		} else {
 			m_jpAufgestellt.setIcon(ImageUtilities.getImage4Position(null,
-					m_clSpieler.getTrikotnummer()));
+					m_clPlayer.getTrikotnummer()));
 			m_jpAufgestellt.setText("");
 		}
 
 		m_jpGruppeSmilie.getLinks().setAlignment(SwingConstants.CENTER);
 		m_jpGruppeSmilie.getRechts().setAlignment(SwingConstants.CENTER);
-		m_jpGruppeSmilie.getLinks().setIcon(ThemeManager.getIcon(m_clSpieler.getTeamInfoSmilie()));
+		m_jpGruppeSmilie.getLinks().setIcon(ThemeManager.getIcon(m_clPlayer.getTeamInfoSmilie()));
 		m_jpGruppeSmilie.getRechts()
-				.setIcon(ThemeManager.getIcon(m_clSpieler.getManuellerSmilie()));
+				.setIcon(ThemeManager.getIcon(m_clPlayer.getManuellerSmilie()));
 
-		m_jpStatus.setSpieler(m_clSpieler);
+		m_jpStatus.setPlayer(m_clPlayer);
 
-		if (m_clVergleichsSpieler == null) {
+		if (m_clVergleichsPlayer == null) {
 			String bonus = "";
-			int gehalt = (int) (m_clSpieler.getGehalt() / core.model.UserParameter.instance().faktorGeld);
+			int gehalt = (int) (m_clPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
 			String gehalttext = NumberFormat.getCurrencyInstance().format(gehalt);
 
-			if (m_clSpieler.getBonus() > 0) {
-				bonus = " (" + m_clSpieler.getBonus() + "% "
+			if (m_clPlayer.getBonus() > 0) {
+				bonus = " (" + m_clPlayer.getBonus() + "% "
 						+ HOVerwaltung.instance().getLanguageString("Bonus") + ")";
 			}
 
 			m_jpGehalt.getLinks().setText(gehalttext + "" + bonus);
 			m_jpGehalt.getRechts().clear();
-			m_jpMartwert.getLinks().setText(m_clSpieler.getTSI() + "");
+			m_jpMartwert.getLinks().setText(m_clPlayer.getTSI() + "");
 			m_jpMartwert.getRechts().clear();
-			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clSpieler.getForm()) + "");
+			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
 			m_jpForm2.clear();
-			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clSpieler.getKondition()) + "");
+			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
 			m_jpKondition2.clear();
-			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clSpieler.getTorwart()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.KEEPER))
+			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getTorwart()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.KEEPER))
 					+ "");
 			m_jpTorwart2.clear();
-			m_jpVerteidigung.setText(PlayerAbility.getNameForSkill(m_clSpieler.getVerteidigung()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.DEFENDING))
+			m_jpVerteidigung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getVerteidigung()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.DEFENDING))
 					+ "");
 			m_jpVerteidigung2.clear();
-			m_jpSpielaufbau.setText(PlayerAbility.getNameForSkill(m_clSpieler.getSpielaufbau()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.PLAYMAKING))
+			m_jpSpielaufbau.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSpielaufbau()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING))
 					+ "");
 			m_jpSpielaufbau2.clear();
-			m_jpPasspiel.setText(PlayerAbility.getNameForSkill(m_clSpieler.getPasspiel()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.PASSING))
+			m_jpPasspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPasspiel()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.PASSING))
 					+ "");
 			m_jpPasspiel2.clear();
-			m_jpFluegelspiel.setText(PlayerAbility.getNameForSkill(m_clSpieler.getFluegelspiel()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.WINGER))
+			m_jpFluegelspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getFluegelspiel()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.WINGER))
 					+ "");
 			m_jpFluegelspiel2.clear();
-			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clSpieler.getStandards()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.SET_PIECES))
+			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStandards()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES))
 					+ "");
 			m_jpStandards2.clear();
-			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clSpieler.getTorschuss()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.SCORING))
+			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clPlayer.getTorschuss()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.SCORING))
 					+ "");
 			m_jpTorschuss2.clear();
-			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clSpieler.getErfahrung()) + "");
+			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getErfahrung()) + "");
 			m_jpErfahrung2.clear();
-			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clSpieler.getFuehrung()) + "");
+			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getFuehrung()) + "");
 			m_jpFuehrung2.clear();
-			m_jpBestPos.setText(SpielerPosition.getNameForPosition(m_clSpieler.getIdealPosition())
-					+ " (" + m_clSpieler.calcPosValue(m_clSpieler.getIdealPosition(), true) + ")");
+			m_jpBestPos.setText(MatchRoleID.getNameForPosition(m_clPlayer.getIdealPosition())
+					+ " (" + m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true) + ")");
 			for (int i = 0; i < playerPositionValues.length; i++) {
-				showNormal(playerPositionValues[i], playerPosition[i], m_clSpieler);
+				showNormal(playerPositionValues[i], playerPosition[i], m_clPlayer);
 			}
 		} else {
 			String bonus = "";
-			int gehalt = (int) (m_clSpieler.getGehalt() / core.model.UserParameter.instance().faktorGeld);
-			int gehalt2 = (int) (m_clVergleichsSpieler.getGehalt() / core.model.UserParameter
+			int gehalt = (int) (m_clPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
+			int gehalt2 = (int) (m_clVergleichsPlayer.getGehalt() / core.model.UserParameter
 					.instance().faktorGeld);
 			String gehalttext = NumberFormat.getCurrencyInstance().format(gehalt);
 
-			if (m_clSpieler.getBonus() > 0) {
-				bonus = " (" + m_clSpieler.getBonus() + "% "
+			if (m_clPlayer.getBonus() > 0) {
+				bonus = " (" + m_clPlayer.getBonus() + "% "
 						+ HOVerwaltung.instance().getLanguageString("Bonus") + ")";
 			}
 
 			m_jpGehalt.getLinks().setText(gehalttext + "" + bonus);
 			m_jpGehalt.getRechts().setSpecialNumber((gehalt2 - gehalt), true);
-			m_jpMartwert.getLinks().setText(m_clSpieler.getTSI() + "");
+			m_jpMartwert.getLinks().setText(m_clPlayer.getTSI() + "");
 			m_jpMartwert.getRechts().setSpecialNumber(
-					(m_clVergleichsSpieler.getTSI() - m_clSpieler.getTSI()), false);
-			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clSpieler.getForm()) + "");
+					(m_clVergleichsPlayer.getTSI() - m_clPlayer.getTSI()), false);
+			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
 			m_jpForm2.setGraphicalChangeValue(
-					m_clVergleichsSpieler.getForm() - m_clSpieler.getForm(), !m_clSpieler.isOld(),
+					m_clVergleichsPlayer.getForm() - m_clPlayer.getForm(), !m_clPlayer.isOld(),
 					true);
-			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clSpieler.getKondition()) + "");
-			m_jpKondition2.setGraphicalChangeValue(m_clVergleichsSpieler.getKondition()
-					- m_clSpieler.getKondition(), !m_clVergleichsSpieler.isOld(), true);
-			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clSpieler.getTorwart()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.KEEPER))
+			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
+			m_jpKondition2.setGraphicalChangeValue(m_clVergleichsPlayer.getKondition()
+					- m_clPlayer.getKondition(), !m_clVergleichsPlayer.isOld(), true);
+			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getTorwart()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.KEEPER))
 					+ "");
 			m_jpTorwart2.setGraphicalChangeValue(
-					m_clVergleichsSpieler.getTorwart() - m_clSpieler.getTorwart(),
-					m_clVergleichsSpieler.getSubskill4Pos(PlayerSkill.KEEPER)
-							- m_clSpieler.getSubskill4Pos(PlayerSkill.KEEPER),
-					!m_clVergleichsSpieler.isOld(), true);
-			m_jpVerteidigung.setText(PlayerAbility.getNameForSkill(m_clSpieler.getVerteidigung()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.DEFENDING))
+					m_clVergleichsPlayer.getTorwart() - m_clPlayer.getTorwart(),
+					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.KEEPER)
+							- m_clPlayer.getSubskill4Pos(PlayerSkill.KEEPER),
+					!m_clVergleichsPlayer.isOld(), true);
+			m_jpVerteidigung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getVerteidigung()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.DEFENDING))
 					+ "");
 			m_jpVerteidigung2.setGraphicalChangeValue(
-					m_clVergleichsSpieler.getVerteidigung() - m_clSpieler.getVerteidigung(),
-					m_clVergleichsSpieler.getSubskill4Pos(PlayerSkill.DEFENDING)
-							- m_clSpieler.getSubskill4Pos(PlayerSkill.DEFENDING),
-					!m_clVergleichsSpieler.isOld(), true);
-			m_jpSpielaufbau.setText(PlayerAbility.getNameForSkill(m_clSpieler.getSpielaufbau()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.PLAYMAKING))
+					m_clVergleichsPlayer.getVerteidigung() - m_clPlayer.getVerteidigung(),
+					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.DEFENDING)
+							- m_clPlayer.getSubskill4Pos(PlayerSkill.DEFENDING),
+					!m_clVergleichsPlayer.isOld(), true);
+			m_jpSpielaufbau.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSpielaufbau()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING))
 					+ "");
 			m_jpSpielaufbau2.setGraphicalChangeValue(
-					m_clVergleichsSpieler.getSpielaufbau() - m_clSpieler.getSpielaufbau(),
-					m_clVergleichsSpieler.getSubskill4Pos(PlayerSkill.PLAYMAKING)
-							- m_clSpieler.getSubskill4Pos(PlayerSkill.PLAYMAKING),
-					!m_clVergleichsSpieler.isOld(), true);
-			m_jpPasspiel.setText(PlayerAbility.getNameForSkill(m_clSpieler.getPasspiel()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.PASSING))
+					m_clVergleichsPlayer.getSpielaufbau() - m_clPlayer.getSpielaufbau(),
+					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING)
+							- m_clPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING),
+					!m_clVergleichsPlayer.isOld(), true);
+			m_jpPasspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPasspiel()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.PASSING))
 					+ "");
 			m_jpPasspiel2.setGraphicalChangeValue(
-					m_clVergleichsSpieler.getPasspiel() - m_clSpieler.getPasspiel(),
-					m_clVergleichsSpieler.getSubskill4Pos(PlayerSkill.PASSING)
-							- m_clSpieler.getSubskill4Pos(PlayerSkill.PASSING),
-					!m_clVergleichsSpieler.isOld(), true);
-			m_jpFluegelspiel.setText(PlayerAbility.getNameForSkill(m_clSpieler.getFluegelspiel()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.WINGER))
+					m_clVergleichsPlayer.getPasspiel() - m_clPlayer.getPasspiel(),
+					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.PASSING)
+							- m_clPlayer.getSubskill4Pos(PlayerSkill.PASSING),
+					!m_clVergleichsPlayer.isOld(), true);
+			m_jpFluegelspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getFluegelspiel()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.WINGER))
 					+ "");
 			m_jpFluegelspiel2.setGraphicalChangeValue(
-					m_clVergleichsSpieler.getFluegelspiel() - m_clSpieler.getFluegelspiel(),
-					m_clVergleichsSpieler.getSubskill4Pos(PlayerSkill.WINGER)
-							- m_clSpieler.getSubskill4Pos(PlayerSkill.WINGER),
-					!m_clVergleichsSpieler.isOld(), true);
-			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clSpieler.getStandards()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.SET_PIECES))
+					m_clVergleichsPlayer.getFluegelspiel() - m_clPlayer.getFluegelspiel(),
+					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.WINGER)
+							- m_clPlayer.getSubskill4Pos(PlayerSkill.WINGER),
+					!m_clVergleichsPlayer.isOld(), true);
+			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStandards()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES))
 					+ "");
 			m_jpStandards2.setGraphicalChangeValue(
-					m_clVergleichsSpieler.getStandards() - m_clSpieler.getStandards(),
-					m_clVergleichsSpieler.getSubskill4Pos(PlayerSkill.SET_PIECES)
-							- m_clSpieler.getSubskill4Pos(PlayerSkill.SET_PIECES),
-					!m_clVergleichsSpieler.isOld(), true);
-			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clSpieler.getTorschuss()
-					+ m_clSpieler.getSubskill4Pos(PlayerSkill.SCORING))
+					m_clVergleichsPlayer.getStandards() - m_clPlayer.getStandards(),
+					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES)
+							- m_clPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES),
+					!m_clVergleichsPlayer.isOld(), true);
+			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clPlayer.getTorschuss()
+					+ m_clPlayer.getSubskill4Pos(PlayerSkill.SCORING))
 					+ "");
 			m_jpTorschuss2.setGraphicalChangeValue(
-					m_clVergleichsSpieler.getTorschuss() - m_clSpieler.getTorschuss(),
-					m_clVergleichsSpieler.getSubskill4Pos(PlayerSkill.SCORING)
-							- m_clSpieler.getSubskill4Pos(PlayerSkill.SCORING),
-					!m_clVergleichsSpieler.isOld(), true);
-			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clSpieler.getErfahrung()) + "");
-			m_jpErfahrung2.setGraphicalChangeValue(m_clVergleichsSpieler.getErfahrung()
-					- m_clSpieler.getErfahrung(), !m_clSpieler.isOld(), true);
-			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clSpieler.getFuehrung()) + "");
-			m_jpFuehrung2.setGraphicalChangeValue(m_clVergleichsSpieler.getFuehrung()
-					- m_clSpieler.getFuehrung(), !m_clVergleichsSpieler.isOld(), true);
-			m_jpBestPos.setText(core.model.player.SpielerPosition.getNameForPosition(m_clSpieler
+					m_clVergleichsPlayer.getTorschuss() - m_clPlayer.getTorschuss(),
+					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.SCORING)
+							- m_clPlayer.getSubskill4Pos(PlayerSkill.SCORING),
+					!m_clVergleichsPlayer.isOld(), true);
+			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getErfahrung()) + "");
+			m_jpErfahrung2.setGraphicalChangeValue(m_clVergleichsPlayer.getErfahrung()
+					- m_clPlayer.getErfahrung(), !m_clPlayer.isOld(), true);
+			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getFuehrung()) + "");
+			m_jpFuehrung2.setGraphicalChangeValue(m_clVergleichsPlayer.getFuehrung()
+					- m_clPlayer.getFuehrung(), !m_clVergleichsPlayer.isOld(), true);
+			m_jpBestPos.setText(MatchRoleID.getNameForPosition(m_clPlayer
 					.getIdealPosition())
 					+ " ("
-					+ m_clSpieler.calcPosValue(m_clSpieler.getIdealPosition(), true) + ")");
+					+ m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true) + ")");
 
 			for (int i = 0; i < playerPositionValues.length; i++) {
-				showWithCompare(playerPositionValues[i], playerPosition[i], m_clSpieler,
-						m_clVergleichsSpieler);
+				showWithCompare(playerPositionValues[i], playerPosition[i], m_clPlayer,
+						m_clVergleichsPlayer);
 			}
 		}
-		m_jpToreFreund.setText(m_clSpieler.getToreFreund() + "");
-		m_jpToreLiga.setText(m_clSpieler.getToreLiga() + "");
-		m_jpTorePokal.setText(m_clSpieler.getTorePokal() + "");
-		m_jpToreGesamt.setText(m_clSpieler.getToreGesamt() + "");
-		m_jpHattriks.setText(m_clSpieler.getHattrick() + "");
-		m_jpSpezialitaet.setText(PlayerSpeciality.toString(m_clSpieler.getSpezialitaet()));
-		m_jpSpezialitaet.setIcon(ThemeManager.getIcon(HOIconName.SPECIAL[m_clSpieler
+		m_jpToreFreund.setText(m_clPlayer.getToreFreund() + "");
+		m_jpToreLiga.setText(m_clPlayer.getToreLiga() + "");
+		m_jpTorePokal.setText(m_clPlayer.getTorePokal() + "");
+		m_jpToreGesamt.setText(m_clPlayer.getToreGesamt() + "");
+		m_jpHattriks.setText(m_clPlayer.getHattrick() + "");
+		m_jpSpezialitaet.setText(PlayerSpeciality.toString(m_clPlayer.getSpezialitaet()));
+		m_jpSpezialitaet.setIcon(ThemeManager.getIcon(HOIconName.SPECIAL[m_clPlayer
 				.getSpezialitaet()]));
-		m_jpAggressivitaet.setText(PlayerAggressiveness.toString(m_clSpieler.getAgressivitaet()));
+		m_jpAggressivitaet.setText(PlayerAggressiveness.toString(m_clPlayer.getAgressivitaet()));
 
 		// Dreher!
-		m_jpAnsehen.setText(PlayerAgreeability.toString(m_clSpieler.getCharakter()));
-		m_jpCharakter.setText(PlayerHonesty.toString(m_clSpieler.getAnsehen()));
+		m_jpAnsehen.setText(PlayerAgreeability.toString(m_clPlayer.getCharakter()));
+		m_jpCharakter.setText(PlayerHonesty.toString(m_clPlayer.getAnsehen()));
 
 	}
 
-	private void initComponents(Spieler player, MatchLineupPlayer matchplayer) {
+	private void initComponents(Player player, MatchLineupPlayer matchplayer) {
 		JComponent component = null;
 
 		getContentPane().setLayout(new BorderLayout());
@@ -1073,8 +1073,8 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridheight = 1;
 
 		for (int i = 0; i < playerPositionValues.length; i++) {
-			label = new JLabel(SpielerPosition.getKurzNameForPosition(playerPosition[i]));
-			label.setToolTipText(SpielerPosition.getNameForPosition(playerPosition[i]));
+			label = new JLabel(MatchRoleID.getKurzNameForPosition(playerPosition[i]));
+			label.setToolTipText(MatchRoleID.getNameForPosition(playerPosition[i]));
 			initBlueLabel(i, constraints, layout, panel, label);
 			initBlueField(i, constraints, layout, panel,
 					playerPositionValues[i].getComponent(false));
@@ -1196,7 +1196,7 @@ final class SpielerDetailDialog extends JDialog {
 		subpanel.setBorder(BorderFactory.createTitledBorder(HOVerwaltung.instance()
 				.getLanguageString("Rating")
 				+ " "
-				+ SpielerPosition.getNameForPosition(core.model.player.SpielerPosition
+				+ MatchRoleID.getNameForPosition(MatchRoleID
 						.getPosition(matchplayer.getId(), matchplayer.getTaktik()))));
 
 		subconstraints.gridx = 0;
@@ -1334,21 +1334,21 @@ final class SpielerDetailDialog extends JDialog {
 		c.gridy = y;
 	}
 
-	private void showNormal(DoppelLabelEntry labelEntry, byte playerPosition, Spieler m_clSpieler) {
+	private void showNormal(DoppelLabelEntry labelEntry, byte playerPosition, Player m_clPlayer) {
 		labelEntry.getLinks().setText(
-				Helper.round(m_clSpieler.calcPosValue(playerPosition, true),
+				Helper.round(m_clPlayer.calcPosValue(playerPosition, true),
 						core.model.UserParameter.instance().anzahlNachkommastellen) + "");
 		labelEntry.getRechts().clear();
 	}
 
 	private void showWithCompare(DoppelLabelEntry labelEntry, byte playerPosition,
-			Spieler m_clSpieler, Spieler m_clVergleichsSpieler) {
+								 Player m_clPlayer, Player m_clVergleichsPlayer) {
 		labelEntry.getLinks().setText(
-				Helper.round(m_clSpieler.calcPosValue(playerPosition, true),
+				Helper.round(m_clPlayer.calcPosValue(playerPosition, true),
 						core.model.UserParameter.instance().anzahlNachkommastellen) + "");
 
 		labelEntry.getRechts().setSpecialNumber(
-				m_clSpieler.calcPosValue(playerPosition, true)
-						- m_clVergleichsSpieler.calcPosValue(playerPosition, true), false);
+				m_clPlayer.calcPosValue(playerPosition, true)
+						- m_clVergleichsPlayer.calcPosValue(playerPosition, true), false);
 	}
 }

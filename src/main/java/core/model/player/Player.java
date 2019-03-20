@@ -28,7 +28,7 @@ import java.util.Locale;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
-public class Spieler {
+public class Player {
     //~ Class fields -------------------------------------------------------------------------------
 
 	/** Cache for star ratings (Hashtable<String, Float>) */
@@ -54,10 +54,10 @@ public class Spieler {
     private String m_sTeamInfoSmilie;
     private java.sql.Timestamp m_clhrfDate;
 
-    /** Datum des ersten HRFs mit dem Spieler */
+    /** Datum des ersten HRFs mit dem Player */
     private Timestamp m_tsTime4FirstHRF;
 
-    /** Der Spieler ist nicht mehr im aktuellen HRF vorhanden */
+    /** Der Player ist nicht mehr im aktuellen HRF vorhanden */
     private boolean m_bOld;
     private byte m_bUserPosFlag = -2;
 
@@ -145,7 +145,7 @@ public class Spieler {
 
     //protected int       m_iBonus            =   0;
 
-    /** Aus welchem Land kommt der Spieler */
+    /** Aus welchem Land kommt der Player */
     private int m_iNationalitaet = 49;
 
     /** Passpiel */
@@ -222,15 +222,15 @@ public class Spieler {
     ////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Creates a new instance of Spieler
+     * Creates a new instance of Player
      */
-    public Spieler() {
+    public Player() {
     }
 
     /**
-     * Erstellt einen Spieler aus den Properties einer HRF Datei
+     * Erstellt einen Player aus den Properties einer HRF Datei
      */
-    public Spieler(java.util.Properties properties, Timestamp hrfdate)
+    public Player(java.util.Properties properties, Timestamp hrfdate)
       throws Exception
     {
     	// Separate first, nick and last names are available. Utilize them?
@@ -316,11 +316,11 @@ public class Spieler {
         //Offsets aus dem aktuellen HRF holen
         final core.model.HOModel oldmodel = core.model.HOVerwaltung.instance()
                                                                                                    .getModel();
-        final Spieler oldSpieler = oldmodel.getSpieler(m_iSpielerID);
+        final Player oldPlayer = oldmodel.getSpieler(m_iSpielerID);
 
-        if (oldSpieler != null) {
+        if (oldPlayer != null) {
             // Training block
-            m_bTrainingBlock = oldSpieler.hasTrainingBlock();
+            m_bTrainingBlock = oldPlayer.hasTrainingBlock();
 
         }
     }
@@ -812,9 +812,9 @@ public class Spieler {
         //Usr Vorgabe aus DB holen
         final byte flag = getUserPosFlag();
 
-        if (flag == ISpielerPosition.UNKNOWN) {
+        if (flag == IMatchRoleID.UNKNOWN) {
             final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
-            byte idealPos = ISpielerPosition.UNKNOWN;
+            byte idealPos = IMatchRoleID.UNKNOWN;
             float maxStk = -1.0f;
 
             for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
@@ -900,7 +900,7 @@ public class Spieler {
     }
 
     /**
-     * Gibt die Letzte Bewertung zurück, die der Spieler bekommen hat
+     * Gibt die Letzte Bewertung zurück, die der Player bekommen hat
      */
     public int getLetzteBewertung() {
         if (m_iLastBewertung < 0) {
@@ -1155,7 +1155,7 @@ public class Spieler {
     }
 
     /**
-     * setzt ob der User den Spieler zum Spiel zulässt
+     * setzt ob der User den Player zum Spiel zulässt
      */
     public void setSpielberechtigt(boolean flag) {
         m_bSpielberechtigt = Boolean.valueOf(flag);
@@ -1164,7 +1164,7 @@ public class Spieler {
     }
 
     /**
-     * gibt an ob der User den Spieler zum Spiel zulässt
+     * gibt an ob der User den Player zum Spiel zulässt
      */
     public boolean isSpielberechtigt() {
         //Nur pr�fen, wenn nicht Spielberechtigt: Reduziert Zugriffe!
@@ -1321,7 +1321,7 @@ public class Spieler {
     }
 
     /**
-     * Gibt das Datum des ersten HRFs mit dem Spieler zurück
+     * Gibt das Datum des ersten HRFs mit dem Player zurück
      */
     public Timestamp getTimestamp4FirstPlayerHRF() {
         if (m_tsTime4FirstHRF == null) {
@@ -1458,7 +1458,7 @@ public class Spieler {
     }
 
     /**
-     * gibt an ob der Spieler Trainer ist
+     * gibt an ob der Player Trainer ist
      */
     public boolean isTrainer() {
         return ((m_iTrainer > 0) && (m_iTrainerTyp >= 0));
@@ -1542,10 +1542,10 @@ public class Spieler {
     }
 
     /**
-     * liefert User Notiz zum Spieler
+     * liefert User Notiz zum Player
      */
     public byte getUserPosFlag() {
-        if (m_bUserPosFlag < SpielerPosition.UNKNOWN) {
+        if (m_bUserPosFlag < MatchRoleID.UNKNOWN) {
             m_bUserPosFlag = DBManager.instance().getSpielerUserPosFlag(m_iSpielerID);
         }
 
@@ -1705,12 +1705,12 @@ public class Spieler {
        Bei Regen gibt es die Möglichkeit, daß sich die Torschuß-, Verteidigungs- und Spielaufbau-Fähigkeit
         von durchsetzungsstarken Spielern verbessert.
         Auf der anderen Seite kann sich die Torschußfähigkeit bei Sonnenschein verschlechtern.
-       Schnelle Spieler laufen bei Regen Gefahr, daß sich ihre Torschuß- und
+       Schnelle Player laufen bei Regen Gefahr, daß sich ihre Torschuß- und
         Verteidigungsfähigkeiten verschlechtern. Bei Sonnenschein besteht das Risiko
         , daß ihre Torschußfähigkeit unter dem Wetter leidet.
      */
     /*
-       Liefert die mögliche Auswirkung des Wetters auf den Spieler
+       Liefert die mögliche Auswirkung des Wetters auf den Player
        return 0 bei keine auswirkung
        1 bei positiv
        -1 bei negativ
@@ -1719,8 +1719,8 @@ public class Spieler {
         return PlayerSpeciality.getWeatherEffect(weather, m_iSpezialitaet);
     }
 
-    private void incrementSubskills(Spieler originalPlayer, int assistants, int trainerlevel, int intensity,
-            int stamina, int skill, double points, WeeklyTrainingType wt, List<StaffMember> staff)
+    private void incrementSubskills(Player originalPlayer, int assistants, int trainerlevel, int intensity,
+                                    int stamina, int skill, double points, WeeklyTrainingType wt, List<StaffMember> staff)
     {
         if (skill < PlayerSkill.KEEPER || points <= 0)
             return;
@@ -1751,8 +1751,8 @@ public class Spieler {
      * @param intensity - Training intensity
      * @param hrfID - the ID of the HRF
      */
-    public void calcIncrementalSubskills(Spieler originalPlayer, int assistants, int trainerlevel, int intensity,
-    		int stamina, TrainingPerWeek trainingWeek, List<StaffMember> staff) {
+    public void calcIncrementalSubskills(Player originalPlayer, int assistants, int trainerlevel, int intensity,
+                                         int stamina, TrainingPerWeek trainingWeek, List<StaffMember> staff) {
 
     	if (this.hasTrainingBlock()) {
     		return;
@@ -1793,7 +1793,7 @@ public class Spieler {
      * @param weeks The number of weeks to drop in case of missing info.
      */
 
-    public void performSkilldrop(Spieler originalPlayer, int weeks) {
+    public void performSkilldrop(Player originalPlayer, int weeks) {
 
     	if (originalPlayer == null) {
     		return;
@@ -1883,7 +1883,7 @@ public class Spieler {
         float psValue = fo.getPasspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.PASSING, useForm);
 
         // Fix for new Defensive Attacker position
-		if (fo.getPosition()==ISpielerPosition.FORWARD_DEF && getSpezialitaet()==PlayerSpeciality.TECHNICAL) {
+		if (fo.getPosition()== IMatchRoleID.FORWARD_DEF && getSpezialitaet()==PlayerSpeciality.TECHNICAL) {
 			psValue *= 1.30f;
 		}
 
@@ -1903,7 +1903,7 @@ public class Spieler {
      * Calculate the player strength on a specific lineup position
      * with or without form
      *
-     * @param pos		position from ISpielerPosition (TORWART.. POS_ZUS_INNENV)
+     * @param pos		position from IMatchRoleID (TORWART.. POS_ZUS_INNENV)
      * @param useForm	consider form?
      *
      * @return 			the player strength on this position
@@ -1929,7 +1929,7 @@ public class Spieler {
      *
      * @param old
      */
-    public void copySubSkills(Spieler old) {
+    public void copySubSkills(Player old) {
     	for (int skillType=0; skillType < PlayerSkill.EXPERIENCE; skillType++) {
 
     		if ((skillType == PlayerSkill.FORM) || (skillType == PlayerSkill.STAMINA)) {
@@ -1950,7 +1950,7 @@ public class Spieler {
      *
      * @param old
      */
-    public void copySkills(Spieler old) {
+    public void copySkills(Player old) {
 
     	for (int skillType=0; skillType <= PlayerSkill.LOYALTY; skillType++) {
     		setValue4Skill4(skillType, old.getValue4Skill4(skillType));
@@ -1981,8 +1981,8 @@ public class Spieler {
 	public boolean equals(Object obj) {
         boolean equals = false;
 
-        if (obj instanceof Spieler) {
-            equals = ((Spieler) obj).getSpielerID() == m_iSpielerID;
+        if (obj instanceof Player) {
+            equals = ((Player) obj).getSpielerID() == m_iSpielerID;
         }
 
         return equals;
@@ -1991,7 +1991,7 @@ public class Spieler {
     /**
      * prüft ob Skillup vorliegt
      */
-    protected boolean check4SkillUp(int skill, Spieler oldPlayer) {
+    protected boolean check4SkillUp(int skill, Player oldPlayer) {
     	if ((oldPlayer != null) && (oldPlayer.getSpielerID() > 0))
         	return oldPlayer.getValue4Skill4(skill) < getValue4Skill4(skill);
         return false;
@@ -2000,7 +2000,7 @@ public class Spieler {
     /**
      * Test for whether skilldown has occurred
      */
-    public boolean check4SkillDown(int skill, Spieler oldPlayer) {
+    public boolean check4SkillDown(int skill, Player oldPlayer) {
     	if (skill < PlayerSkill.EXPERIENCE)
     	if ((oldPlayer != null) && (oldPlayer.getSpielerID() > 0))
         	return oldPlayer.getValue4Skill4(skill) > getValue4Skill4(skill);

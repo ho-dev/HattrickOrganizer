@@ -6,8 +6,7 @@ import core.constants.TrainingType;
 import core.model.StaffMember;
 import core.model.StaffType;
 import core.model.UserParameter;
-import core.model.player.Spieler;
-import core.training.TrainingWeekPlayer;
+import core.model.player.Player;
 import core.training.type.*;
 
 public abstract class WeeklyTrainingType {
@@ -358,6 +357,6 @@ public abstract class WeeklyTrainingType {
 	 }
 	 
 	 
-	 public abstract double getTrainingLength(Spieler player, int assistants, int trainerLevel, int intensity, int stamina, List<StaffMember> staff);
-	 public abstract double getSecondaryTrainingLength(Spieler player, int assistants, int trainerLevel, int intensity, int stamina, List<StaffMember> staff);
+	 public abstract double getTrainingLength(Player player, int assistants, int trainerLevel, int intensity, int stamina, List<StaffMember> staff);
+	 public abstract double getSecondaryTrainingLength(Player player, int assistants, int trainerLevel, int intensity, int stamina, List<StaffMember> staff);
 }

@@ -6,7 +6,7 @@ import core.model.HOVerwaltung;
 import core.model.StaffMember;
 import core.model.StaffType;
 import core.model.UserParameter;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import module.training.ui.AnalyzerPanel;
 import module.training.ui.EffectPanel;
 import module.training.ui.OutputPanel;
@@ -42,7 +42,7 @@ public class TrainingModulePanel extends LazyPanel {
 
 	@Override
 	protected void update() {
-		Spieler oldPlayer = this.model.getActivePlayer();
+		Player oldPlayer = this.model.getActivePlayer();
 		// reset the selected player
 		this.model.setActivePlayer(null);
 		this.model.resetFutureTrainings();
@@ -50,7 +50,7 @@ public class TrainingModulePanel extends LazyPanel {
 		setStaffInTrainingModel(this.model);
 
 		if (oldPlayer != null) {
-			Spieler player = HOVerwaltung.instance().getModel()
+			Player player = HOVerwaltung.instance().getModel()
 					.getSpieler(oldPlayer.getSpielerID());
 			this.model.setActivePlayer(player);
 		}

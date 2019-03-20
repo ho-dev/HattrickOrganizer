@@ -6,7 +6,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.SpielerLabelEntry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import java.awt.Component;
 
@@ -16,7 +16,7 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 
 	public static javax.swing.JLabel m_jlLeer = new javax.swing.JLabel(" ");
 	public SpielerLabelEntry m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true);
-	private Spieler m_clSpieler;
+	private Player m_clPlayer;
 	private String m_sText;
 	private float m_fPositionsBewertung;
 
@@ -24,16 +24,16 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 	 * Creates a new SpielerCBItem object.
 	 * 
 	 */
-	public SpielerCBItem(String text, float poswert, Spieler spieler) {
+	public SpielerCBItem(String text, float poswert, Player player) {
 		m_sText = text;
-		m_clSpieler = spieler;
+		m_clPlayer = player;
 		m_fPositionsBewertung = poswert;
 		m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true);
 	}
 
-	public SpielerCBItem(String text, float poswert, Spieler spieler, boolean useCustomText) {
+	public SpielerCBItem(String text, float poswert, Player player, boolean useCustomText) {
 		m_sText = text;
-		m_clSpieler = spieler;
+		m_clPlayer = player;
 		m_fPositionsBewertung = poswert;
 		if (useCustomText == true) {
 			m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true, true, text);
@@ -43,12 +43,12 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 	}
 
 	public final Component getListCellRendererComponent(JList jList, int index, boolean isSelected) {
-		final Spieler spieler = getSpieler();
+		final Player player = getSpieler();
 
-		// Kann für Tempspieler < 0 sein && spieler.getSpielerID () > 0 )
-		if (spieler != null) {
-			m_clEntry.updateComponent(spieler, HOVerwaltung.instance().getModel().getAufstellung()
-					.getPositionBySpielerId(spieler.getSpielerID()), getPositionsBewertung(),
+		// Kann für Tempspieler < 0 sein && player.getSpielerID () > 0 )
+		if (player != null) {
+			m_clEntry.updateComponent(player, HOVerwaltung.instance().getModel().getLineup()
+					.getPositionBySpielerId(player.getSpielerID()), getPositionsBewertung(),
 					m_sText);
 
 			return m_clEntry.getComponent(isSelected);
@@ -68,12 +68,12 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 		return m_fPositionsBewertung;
 	}
 
-	public final void setSpieler(Spieler spieler) {
-		m_clSpieler = spieler;
+	public final void setSpieler(Player player) {
+		m_clPlayer = player;
 	}
 
-	public final Spieler getSpieler() {
-		return m_clSpieler;
+	public final Player getSpieler() {
+		return m_clPlayer;
 	}
 
 	public final void setText(String text) {
@@ -85,9 +85,9 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 		return m_sText;
 	}
 
-	public final void setValues(String text, float poswert, Spieler spieler) {
+	public final void setValues(String text, float poswert, Player player) {
 		m_sText = text;
-		m_clSpieler = spieler;
+		m_clPlayer = player;
 		m_fPositionsBewertung = poswert;
 	}
 
@@ -136,8 +136,8 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 
 	@Override
 	public int getId() {
-		if (this.m_clSpieler != null) {
-			return this.m_clSpieler.getSpielerID();
+		if (this.m_clPlayer != null) {
+			return this.m_clPlayer.getSpielerID();
 		}
 		return -1;
 	}

@@ -3,8 +3,8 @@ package module.training.ui.model;
 
 import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
-import core.model.player.SpielerPosition;
+import core.model.player.MatchRoleID;
+import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 import core.util.Helper;
 import module.training.Skills;
@@ -26,7 +26,7 @@ public class OutputTableModel extends AbstractTableModel {
 
 	public final static int COL_PLAYER_ID = 11;
 	private static final long serialVersionUID = -1695207352334612268L;
-	private List<Spieler> data = new ArrayList<Spieler>();
+	private List<Player> data = new ArrayList<Player>();
 	private final TrainingModel model;
 
 	/**
@@ -143,37 +143,37 @@ public class OutputTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Spieler spieler = data.get(rowIndex);
+		Player player = data.get(rowIndex);
 
 		switch (columnIndex) {
 		case 0:
 			// Spielername
-			return spieler.getName();
+			return player.getName();
 		case 1:
 			// Spieleralter
-			return spieler.getAlterWithAgeDaysAsString();
+			return player.getAlterWithAgeDaysAsString();
 		case 2:
 			// Beste Postion
-			return SpielerPosition.getNameForPosition(spieler.getIdealPosition()) + " ("
-					+ spieler.getIdealPosStaerke(true) + ")";
+			return MatchRoleID.getNameForPosition(player.getIdealPosition()) + " ("
+					+ player.getIdealPosStaerke(true) + ")";
 		case 3:
-			return createIcon(spieler, PlayerSkill.KEEPER);
+			return createIcon(player, PlayerSkill.KEEPER);
 		case 4:
-			return createIcon(spieler, PlayerSkill.DEFENDING);
+			return createIcon(player, PlayerSkill.DEFENDING);
 		case 5:
-			return createIcon(spieler, PlayerSkill.PLAYMAKING);
+			return createIcon(player, PlayerSkill.PLAYMAKING);
 		case 6:
-			return createIcon(spieler, PlayerSkill.PASSING);
+			return createIcon(player, PlayerSkill.PASSING);
 		case 7:
-			return createIcon(spieler, PlayerSkill.WINGER);
+			return createIcon(player, PlayerSkill.WINGER);
 		case 8:
-			return createIcon(spieler, PlayerSkill.SCORING);
+			return createIcon(player, PlayerSkill.SCORING);
 		case 9:
-			return createIcon(spieler, PlayerSkill.SET_PIECES);
+			return createIcon(player, PlayerSkill.SET_PIECES);
 		case 10:
-			return createIcon(spieler, PlayerSkill.STAMINA);
+			return createIcon(player, PlayerSkill.STAMINA);
 		case COL_PLAYER_ID:
-			return Integer.toString(spieler.getSpielerID());
+			return Integer.toString(player.getSpielerID());
 		default:
 			return "";
 		}
@@ -183,7 +183,7 @@ public class OutputTableModel extends AbstractTableModel {
 	 * Refill the table with the new training based on the last changes
 	 */
 	public void fillWithData() {
-		this.data = new ArrayList<Spieler>(HOVerwaltung.instance().getModel().getAllSpieler());
+		this.data = new ArrayList<Player>(HOVerwaltung.instance().getModel().getAllSpieler());
 		fireTableDataChanged();
 	}
 
@@ -197,7 +197,7 @@ public class OutputTableModel extends AbstractTableModel {
 	 * 
 	 * @return predicted training length
 	 */
-	private double getTrainingLength(Spieler player, int skillIndex) {
+	private double getTrainingLength(Player player, int skillIndex) {
 		double dReturn = 0;
 		WeeklyTrainingType wt = WeeklyTrainingType.instance(Skills.getTrainedSkillCode(skillIndex));
 		if (wt != null) {
@@ -219,7 +219,7 @@ public class OutputTableModel extends AbstractTableModel {
 	 * 
 	 * @return training point offset, if any
 	 */
-	private double getOffset(Spieler player, int skill) {
+	private double getOffset(Player player, int skill) {
 		double offset = player.getSubskill4Pos(skill);
 		double length = getTrainingLength(player, skill);
 		return offset * length;
@@ -228,16 +228,16 @@ public class OutputTableModel extends AbstractTableModel {
 	/**
 	 * Create a VerticalIndicator object
 	 * 
-	 * @param spieler
+	 * @param player
 	 *            object from which create the indicator
 	 * @param skillIndex
 	 *            points to skillup
 	 * 
 	 * @return the VerticalIndicator object
 	 */
-	private VerticalIndicator createIcon(Spieler spieler, int skillIndex) {
-		double point = getOffset(spieler, skillIndex);
-		double trainingLength = getTrainingLength(spieler, skillIndex);
+	private VerticalIndicator createIcon(Player player, int skillIndex) {
+		double point = getOffset(player, skillIndex);
+		double trainingLength = getTrainingLength(player, skillIndex);
 
 		VerticalIndicator vi = new VerticalIndicator(Helper.round(point, 1), Helper.round(
 				trainingLength, 1));

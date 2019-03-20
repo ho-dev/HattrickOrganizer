@@ -7,7 +7,7 @@ import core.db.DBManager;
 import core.model.misc.Basics;
 import core.model.misc.Finanzen;
 import core.model.misc.Verein;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.model.series.Liga;
 import core.training.SkillDrops;
 import core.training.TrainingPerWeek;
@@ -47,8 +47,8 @@ public class HOModel {
     private Spielplan m_clSpielplan;
     private Stadium m_clStadium;
     private Team m_clTeam;
-    private Vector<Spieler> m_vOldSpieler = new Vector<Spieler>();
-    private Vector<Spieler> m_vSpieler = new Vector<Spieler>();
+    private Vector<Player> m_vOldPlayer = new Vector<Player>();
+    private Vector<Player> m_vPlayer = new Vector<Player>();
     private Verein m_clVerein;
     private XtraData m_clXtraDaten;
     private int m_iID = -1;
@@ -69,17 +69,17 @@ public class HOModel {
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
-     * Alle Spieler werden übergeben und die noch aktuellen Spieler entfernt
+     * Alle Player werden übergeben und die noch aktuellen Player entfernt
      */
-    public final void setAllOldSpieler(Vector<Spieler> spielerVector) {
-        for (int i = 0; i < spielerVector.size(); i++) {
+    public final void setAllOldSpieler(Vector<Player> playerVector) {
+        for (int i = 0; i < playerVector.size(); i++) {
             //Auf alt setzen, die neuen werden gleich entfernt
-            ((Spieler) spielerVector.get(i)).setOld(true);
+            ((Player) playerVector.get(i)).setOld(true);
 
-            for (int j = 0; j < m_vSpieler.size(); j++) {
+            for (int j = 0; j < m_vPlayer.size(); j++) {
                 //Schon in den aktuellen Spielern vorhanden, dann überspringen
-                if (((Spieler) spielerVector.get(i)).equals(m_vSpieler.get(j))) {
-                    spielerVector.remove(i);
+                if (((Player) playerVector.get(i)).equals(m_vPlayer.get(j))) {
+                    playerVector.remove(i);
 
                     //Index einen zurücksetzen, da ein wert gelöscht wurde
                     i--;
@@ -88,23 +88,23 @@ public class HOModel {
             }
         }
 
-        m_vOldSpieler = spielerVector;
+        m_vOldPlayer = playerVector;
     }
 
     /**
-     * Gibt alle alten Spieler (nicht mehr im Team befindliche) zurück
+     * Gibt alle alten Player (nicht mehr im Team befindliche) zurück
      */
-    public final Vector<Spieler> getAllOldSpieler() {
-        return m_vOldSpieler;
+    public final Vector<Player> getAllOldSpieler() {
+        return m_vOldPlayer;
     }
 
-    //---------Spieler--------------------------------------
+    //---------Player--------------------------------------
 
     /**
-     * Gibt alle Spieler zurück
+     * Gibt alle Player zurück
      */
-    public final Vector<Spieler> getAllSpieler() {
-        return m_vSpieler;
+    public final Vector<Player> getAllSpieler() {
+        return m_vPlayer;
     }
 
     /**
@@ -117,9 +117,9 @@ public class HOModel {
     //---------Aufstellung ----------------------------------
 
     /**
-     * Gibt die Aufstellung zurück
+     * returns the lineup
      */
-    public final Lineup getAufstellung() {
+    public final Lineup getLineup() {
         return m_clAufstellung;
     }
 
@@ -212,17 +212,17 @@ public class HOModel {
     /**
      * Setzt einen neuen SpielerVector
      */
-    public final void setSpieler(Vector<Spieler> spielerVector) {
-        m_vSpieler = spielerVector;
+    public final void setSpieler(Vector<Player> playerVector) {
+        m_vPlayer = playerVector;
     }
 
     /**
-     * Gibt den Spieler mit der ID zurück
+     * Gibt den Player mit der ID zurück
      */
-    public final Spieler getSpieler(int id) {
-        for (int i = 0; (m_vSpieler != null) && (i < m_vSpieler.size()); i++) {
-            if (((Spieler) m_vSpieler.elementAt(i)).getSpielerID() == id) {
-                return (Spieler) m_vSpieler.elementAt(i);
+    public final Player getSpieler(int id) {
+        for (int i = 0; (m_vPlayer != null) && (i < m_vPlayer.size()); i++) {
+            if (((Player) m_vPlayer.elementAt(i)).getSpielerID() == id) {
+                return (Player) m_vPlayer.elementAt(i);
             }
         }
 
@@ -302,14 +302,14 @@ public class HOModel {
     /**
      * Gibt den Trainer zurück
      */
-    public final Spieler getTrainer() {
-    	Spieler trainer = null;
-        for (int i = 0; (m_vSpieler != null) && (i < m_vSpieler.size()); i++) {
-            if (((Spieler) m_vSpieler.elementAt(i)).isTrainer()) {
+    public final Player getTrainer() {
+    	Player trainer = null;
+        for (int i = 0; (m_vPlayer != null) && (i < m_vPlayer.size()); i++) {
+            if (((Player) m_vPlayer.elementAt(i)).isTrainer()) {
             	if (trainer==null) {
-            		trainer = (Spieler) m_vSpieler.elementAt(i);
+            		trainer = (Player) m_vPlayer.elementAt(i);
             	} else {
-					Spieler tmp = (Spieler) m_vSpieler.elementAt(i);
+					Player tmp = (Player) m_vPlayer.elementAt(i);
             		if (tmp.getTrainer()>trainer.getTrainer()) {
             			trainer = tmp;
             		}
@@ -320,7 +320,7 @@ public class HOModel {
         // Nt team protection, they may have no coach:
         if (trainer == null)
         {
-        	trainer = new Spieler();
+        	trainer = new Player();
         	trainer.setTrainer(7);
         	trainer.setTrainerTyp(2); // neutral;
         }
@@ -363,10 +363,10 @@ public class HOModel {
     }
 
     /**
-     * Fügt einen Spieler hinzu (wofür auch immer...)
+     * Fügt einen Player hinzu (wofür auch immer...)
      */
-    public final void addSpieler(Spieler spieler) {
-        m_vSpieler.add(spieler);
+    public final void addSpieler(Player player) {
+        m_vPlayer.add(player);
     }
 
     /**
@@ -376,7 +376,7 @@ public class HOModel {
 
     	boolean doOnce = false;
     	
-    	final Vector<Spieler> vSpieler = getAllSpieler();
+    	final Vector<Player> vPlayer = getAllSpieler();
     	final java.sql.Timestamp calcDate = m_clBasics.getDatum();
     	
     	final int previousHrfId = DBManager.instance().getPreviousHRF(m_iID);
@@ -411,7 +411,7 @@ public class HOModel {
     		
     		// Get the trainer skill
     		int trainerLevel;
-    		Spieler trainer = getTrainer();
+    		Player trainer = getTrainer();
     		if (trainer != null) {
     			trainerLevel = trainer.getTrainer();
     		} else {
@@ -420,25 +420,25 @@ public class HOModel {
     		}
     		
     		// Generate a map with spielers from the last hrf.
-    		final Map<String,Spieler> players = new HashMap<String,Spieler>();
-    		for (Iterator<Spieler> iter = DBManager.instance().getSpieler(previousHrfId).iterator();
-    		iter.hasNext();) {
-    			final Spieler element = iter.next();
+    		final Map<String, Player> players = new HashMap<String, Player>();
+    		for (Iterator<Player> iter = DBManager.instance().getSpieler(previousHrfId).iterator();
+				 iter.hasNext();) {
+    			final Player element = iter.next();
     			players.put(String.valueOf(element.getSpielerID()), element);
     		}
 
     		// Train each player
-    		for (int i = 0; i < vSpieler.size(); i++) {
+    		for (int i = 0; i < vPlayer.size(); i++) {
     			try {
-    				final Spieler player = vSpieler.get(i);
+    				final Player player = vPlayer.get(i);
  
     				// The version of the player from last hrf
-    				Spieler old = players.get(String.valueOf(player.getSpielerID()));
+    				Player old = players.get(String.valueOf(player.getSpielerID()));
     				if (old == null) {
     					if (TrainingManager.TRAININGDEBUG) {
     						HOLogger.instance().debug(HOModel.class, "Old player for id "+player.getSpielerID()+" = null");
     					}
-    					old = new Spieler();
+    					old = new Player();
     					old.setSpielerID(-1);
     				}
 
@@ -463,13 +463,13 @@ public class HOModel {
 	    				// Perform training for all "untrained weeks"
     				
 	    				// An "old" player we can mess with.
-	    				Spieler tmpOld = new Spieler();
+	    				Player tmpOld = new Player();
 						tmpOld.copySkills(old);
 						tmpOld.copySubSkills(old);
 						tmpOld.setSpielerID(old.getSpielerID());
 						tmpOld.setAlter(old.getAlter());
 	
-	    				Spieler calculationPlayer = null;
+	    				Player calculationPlayer = null;
 	    				TrainingPerWeek tpw;
 	    				Iterator<TrainingPerWeek> iter = trainingList.iterator(); 
 	    				while (iter.hasNext()) {
@@ -479,7 +479,7 @@ public class HOModel {
 	    						continue;
 	    					}
 	    					
-	    					// The "player" is only the relevant Spieler for the current Hrf. All previous
+	    					// The "player" is only the relevant Player for the current Hrf. All previous
 	    					// training weeks (if any), should be calculated based on "old", and the result
 	    					// of the previous week.
 	    					
@@ -496,7 +496,7 @@ public class HOModel {
 	    	
 	    					} else {
 	    						// An old week
-	    						calculationPlayer = new Spieler();
+	    						calculationPlayer = new Player();
 	    						calculationPlayer.copySkills(tmpOld);
 	    						calculationPlayer.copySubSkills(tmpOld);
 	    						calculationPlayer.setSpielerID(tmpOld.getSpielerID());
@@ -512,7 +512,7 @@ public class HOModel {
 	    					
 	    					if (iter.hasNext()) {
 	    						// Use calculated skills and subskills as "old" if there is another week in line... 
-	    						tmpOld = new Spieler();
+	    						tmpOld = new Player();
 	    						tmpOld.copySkills(calculationPlayer);
 	    						tmpOld.copySubSkills(calculationPlayer);
 	    						tmpOld.setSpielerID(calculationPlayer.getSpielerID());
@@ -541,7 +541,7 @@ public class HOModel {
     					TrainingPerWeek trWeek = TrainingWeekManager.instance().getTrainingWeek(getXtraDaten().getTrainingDate());
     					HOLogger.instance().debug(HOModel.class,
     							"WeeksCalculated="+trainingList.size()+", trArt="+(trWeek==null?"null":""+trWeek.getTrainingType())
-    							+ ", numPl="+vSpieler.size()+", calcDate="+calcDate.toString()+htcCs
+    							+ ", numPl="+ vPlayer.size()+", calcDate="+calcDate.toString()+htcCs
     							+ ", act="+actualTrainingDate.toString() +htcAs
     							+ ", prev="+(previousTrainingDate==null?"null":previousTrainingDate.toString()+htcPs)
     							+ " ("+previousHrfId+")");
@@ -560,8 +560,8 @@ public class HOModel {
     			}
     		}
 
-    		//Spieler
-    		DBManager.instance().saveSpieler(m_iID, m_vSpieler, m_clBasics.getDatum());
+    		//Player
+    		DBManager.instance().saveSpieler(m_iID, m_vPlayer, m_clBasics.getDatum());
     	}
     }
 
@@ -570,7 +570,7 @@ public class HOModel {
     }
     
     
-    private void logPlayerProgress (Spieler before, Spieler after) {
+    private void logPlayerProgress (Player before, Player after) {
     	
     	if ((after == null) || (before == null)) {	
     		// crash due to non paranoid logging is too silly
@@ -643,7 +643,7 @@ public class HOModel {
         m_clAufstellung = DBManager.instance().getAufstellung(-1,
                                                                                             Lineup.DEFAULT_NAME);
 
-        //prüfen ob alle aufgstellen Spieler noch existieren
+        //prüfen ob alle aufgstellen Player noch existieren
         m_clAufstellung.checkAufgestellteSpieler();
     }
 
@@ -651,15 +651,15 @@ public class HOModel {
         m_clLastAufstellung = DBManager.instance().getAufstellung(-1,
                                                                                                 Lineup.DEFAULT_NAMELAST);
 
-        //prüfen ob alle aufgstellen Spieler noch existieren
+        //prüfen ob alle aufgstellen Player noch existieren
         m_clLastAufstellung.checkAufgestellteSpieler();
     }
 
     /**
-     * Entfernt einen Spieler
+     * Entfernt einen Player
      */
-    public final void removeSpieler(Spieler spieler) {
-        m_vSpieler.remove(spieler);
+    public final void removeSpieler(Player player) {
+        m_vPlayer.remove(player);
     }
    
     /**
@@ -690,8 +690,8 @@ public class HOModel {
         DBManager.instance().saveAufstellung(m_iID, m_clLastAufstellung, Lineup.DEFAULT_NAMELAST);
         //Xtra Daten
         DBManager.instance().saveXtraDaten(m_iID, m_clXtraDaten);
-        //Spieler
-        DBManager.instance().saveSpieler(m_iID, m_vSpieler, m_clBasics.getDatum());
+        //Player
+        DBManager.instance().saveSpieler(m_iID, m_vPlayer, m_clBasics.getDatum());
         //Staff
         DBManager.instance().saveStaff(m_iID, m_clStaff);
     }

@@ -4,7 +4,7 @@ import core.db.DBManager;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.vo.Match;
 import module.teamAnalyzer.vo.MatchDetail;
@@ -115,7 +115,7 @@ public class MatchPopulator {
 
         double totStars = 0;
 
-        for (int spot = ISpielerPosition.startLineup; spot < ISpielerPosition.startReserves; spot++) {
+        for (int spot = IMatchRoleID.startLineup; spot < IMatchRoleID.startReserves; spot++) {
             MatchLineupPlayer mlp = tmpLineupTeam.getPlayerByPosition(spot);
 
             if (mlp != null && mlp.getSpielerId() > 0) {

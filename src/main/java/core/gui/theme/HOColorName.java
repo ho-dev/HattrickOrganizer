@@ -21,7 +21,8 @@ public interface HOColorName {
 	public static final String LIST_CURRENT_FG 			= "list.current.fg";
 	public static final String LIST_SELECTION_BG 		= "list.selection.bg";
 	public static final String BUTTON_BG 				= "button.bg";
-	public static final String BUTTON_ASSIST_BG			= "button.assist.bg";
+	public static final String BUTTON_ASSIST_CANCEL_BG	= "button.assist.cancel.bg";
+	public static final String BUTTON_ASSIST_OK_BG		= "button.assist.ok.bg";
 	public static final String TABLE_SELECTION_BG		= "table.selection.bg";
 	public static final String TABLE_SELECTION_FG		= "table.selection.fg";
 

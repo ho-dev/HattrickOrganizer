@@ -1,8 +1,8 @@
 package core.gui.theme;
 
 import core.model.UserParameter;
-import core.model.player.ISpielerPosition;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -350,7 +350,7 @@ public class ImageUtilities {
 	 * Return ImageIcon for Position
 	 *
 	 */
-	public static ImageIcon getImage4Position(SpielerPosition position, int trickotnummer) {
+	public static ImageIcon getImage4Position(MatchRoleID position, int trickotnummer) {
 	    if (position == null) {
 	        return ImageUtilities.getImage4Position(0, (byte) 0, trickotnummer);
 	    }
@@ -373,65 +373,65 @@ public class ImageUtilities {
 		
 		if (komplettIcon == null) {
 			switch (posid) {
-				case ISpielerPosition.keeper: {
+				case IMatchRoleID.keeper: {
 					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_KEEPER);
 					break;
 				}
 	
-				case ISpielerPosition.rightCentralDefender:
-				case ISpielerPosition.leftCentralDefender:
-				case ISpielerPosition.middleCentralDefender: {
+				case IMatchRoleID.rightCentralDefender:
+				case IMatchRoleID.leftCentralDefender:
+				case IMatchRoleID.middleCentralDefender: {
 					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_CENTRALDEFENCE);
 					break;
 				}
 	
-				case ISpielerPosition.leftBack:
-				case ISpielerPosition.rightBack: {
+				case IMatchRoleID.leftBack:
+				case IMatchRoleID.rightBack: {
 					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WINGBACK);
 					break;
 				}
 	
-				case ISpielerPosition.rightInnerMidfield:
-				case ISpielerPosition.leftInnerMidfield:
-				case ISpielerPosition.centralInnerMidfield: {
+				case IMatchRoleID.rightInnerMidfield:
+				case IMatchRoleID.leftInnerMidfield:
+				case IMatchRoleID.centralInnerMidfield: {
 					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_MIDFIELD);
 					break;
 				}
 	
-				case ISpielerPosition.leftWinger:
-				case ISpielerPosition.rightWinger: {
+				case IMatchRoleID.leftWinger:
+				case IMatchRoleID.rightWinger: {
 					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WING);
 					break;
 				}
 	
-				case ISpielerPosition.rightForward:
-				case ISpielerPosition.leftForward:
-				case ISpielerPosition.centralForward: {
+				case IMatchRoleID.rightForward:
+				case IMatchRoleID.leftForward:
+				case IMatchRoleID.centralForward: {
 					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_FORWARD);
 					break;
 				}
 	
-				case ISpielerPosition.substKeeper: {
+				case IMatchRoleID.substGK1: {
 					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBKEEPER);
 					break;
 				}
 	
-				case ISpielerPosition.substDefender: {
+				case IMatchRoleID.substCD1: {
 					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBDEFENCE);
 					break;
 				}
 	
-				case ISpielerPosition.substInnerMidfield: {
+				case IMatchRoleID.substIM1: {
 					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBMIDFIELD);
 					break;
 				}
 	
-				case ISpielerPosition.substWinger: {
+				case IMatchRoleID.substWI1: {
 					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBWING);
 					break;
 				}
 	
-				case ISpielerPosition.substForward: {
+				case IMatchRoleID.substFW1: {
 					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBFORWARD);
 					break;
 				}
@@ -458,7 +458,7 @@ public class ImageUtilities {
 				int xPosText = 20;
 	
 				// Helper.makeColorTransparent( image, Color.white );
-				final java.awt.Graphics2D g2d = (java.awt.Graphics2D) image.getGraphics();
+				final Graphics2D g2d = (Graphics2D) image.getGraphics();
 	
 				// Wert eintragen
 				// g2d.setComposite ( AlphaComposite.getInstance(
@@ -469,7 +469,7 @@ public class ImageUtilities {
 				g2d.setRenderingHint(
 						RenderingHints.KEY_RENDERING,
 						RenderingHints.VALUE_RENDER_QUALITY);
-				g2d.setFont(new java.awt.Font(Font.SANS_SERIF, Font.PLAIN, UserParameter.instance().schriftGroesse));
+				g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, UserParameter.instance().schriftGroesse));
 	
 				// Position bei grossen Zahlen weiter nach vorne
 				if (trickotnummer > 9) {

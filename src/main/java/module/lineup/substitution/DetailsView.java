@@ -5,7 +5,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.Helper;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
@@ -130,10 +130,10 @@ public class DetailsView extends JPanel {
 			HOModel hoModel = HOVerwaltung.instance().getModel();
 			orderType = LanguageStringLookup.getOrderType(this.substitution.getOrderType());
 
-			Spieler out = hoModel.getSpieler(this.substitution.getSubjectPlayerID());
+			Player out = hoModel.getSpieler(this.substitution.getSubjectPlayerID());
 			playerOut = (out != null) ? out.getName() : "";
 			if (this.substitution.getSubjectPlayerID() != this.substitution.getObjectPlayerID()) {
-				Spieler in = hoModel.getSpieler(this.substitution.getObjectPlayerID());
+				Player in = hoModel.getSpieler(this.substitution.getObjectPlayerID());
 				playerIn = (in != null) ? in.getName() : "";
 			}
 

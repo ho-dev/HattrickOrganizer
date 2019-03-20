@@ -9,7 +9,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
 
@@ -35,7 +35,7 @@ import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 
 /**
- * Bietet Übersicht über alle Spieler
+ * Bietet Übersicht über alle Player
  */
 public class SpielerAnalysePanel extends LazyImagePanel {
 	private static final long serialVersionUID = 7705544952029589545L;
@@ -149,19 +149,19 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 	}
 
 	private void fillSpielerCB() {
-		List<Spieler> players = HOVerwaltung.instance().getModel().getAllSpieler();
+		List<Player> players = HOVerwaltung.instance().getModel().getAllSpieler();
 		List<SpielerCBItem> spielerCBItems = new ArrayList<SpielerCBItem>(players.size());
 
-		for (Spieler player : players) {
+		for (Player player : players) {
 			spielerCBItems.add(new SpielerCBItem(player.getName(), 0f, player));
 		}
 		Collections.sort(spielerCBItems);
 
-		// Alte Spieler
-		List<Spieler> oldPlayers = HOVerwaltung.instance().getModel().getAllOldSpieler();
+		// Alte Player
+		List<Player> oldPlayers = HOVerwaltung.instance().getModel().getAllOldSpieler();
 		List<SpielerCBItem> spielerOldCBItems = new ArrayList<SpielerCBItem>(oldPlayers.size());
 
-		for (Spieler player : oldPlayers) {
+		for (Player player : oldPlayers) {
 			spielerOldCBItems.add(new SpielerCBItem(player.getName(), 0f, player));
 		}
 		Collections.sort(spielerOldCBItems);
@@ -177,7 +177,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		DefaultComboBoxModel cbModel = new DefaultComboBoxModel(cbItems.toArray());
 		playerComboBox.setModel(cbModel);
 
-		// Kein Spieler selektiert
+		// Kein Player selektiert
 		playerComboBox.setSelectedItem(null);
 	}
 

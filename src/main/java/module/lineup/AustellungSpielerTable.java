@@ -12,7 +12,7 @@ import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.Helper;
 import module.playerOverview.PlayerTable;
 
@@ -56,7 +56,7 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 	}
 
 	@Override
-	public Spieler getSpieler(int row) {
+	public Player getSpieler(int row) {
 		return this.tableSorter.getSpieler(row);
 	}
 

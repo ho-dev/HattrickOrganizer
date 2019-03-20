@@ -4,7 +4,7 @@ package module.transfer.transfertype;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import module.transfer.PlayerTransfer;
 import module.transfer.TransferTypes;
 
@@ -38,7 +38,7 @@ class TransferredPlayer {
      *
      * @param player PlayerId of the Transferred Player
      */
-    TransferredPlayer(Spieler player) {
+    TransferredPlayer(Player player) {
         age = player.getAlter();
         id = player.getSpielerID();
         experience = player.getErfahrung();

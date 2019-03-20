@@ -8,7 +8,7 @@ import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
 import core.model.match.Matchdetails;
 import core.model.match.Weather;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import module.specialEvents.filter.Filter;
 
 import java.sql.Timestamp;
@@ -265,14 +265,14 @@ public class SpecialEventsDM {
 		}
 
 		if (filter.isShowOwnPlayersOnly()) {
-			List<Spieler> players = new ArrayList<Spieler>();
+			List<Player> players = new ArrayList<Player>();
 			players.addAll(HOVerwaltung.instance().getModel().getAllSpieler());
 			if (!filter.isShowCurrentOwnPlayersOnly()) {
 				players.addAll(HOVerwaltung.instance().getModel().getAllOldSpieler());
 			}
 
 			boolean playerFound = false;
-			for (Spieler player : players) {
+			for (Player player : players) {
 				if (isInvolved(player.getSpielerID(), highlight)) {
 					// player found in list of current players
 					playerFound = true;

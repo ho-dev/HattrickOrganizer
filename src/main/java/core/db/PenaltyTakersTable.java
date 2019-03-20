@@ -1,7 +1,7 @@
 package core.db;
 
-import core.model.player.ISpielerPosition;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,7 +31,7 @@ public class PenaltyTakersTable extends AbstractTable {
 				+ columns[2].getColumnName() + ")" };
 	}
 
-	void storePenaltyTakers(String lineupName, List<SpielerPosition> penaltyTakers)
+	void storePenaltyTakers(String lineupName, List<MatchRoleID> penaltyTakers)
 			throws SQLException {
 		String sql = null;
 
@@ -42,7 +42,7 @@ public class PenaltyTakersTable extends AbstractTable {
 
 		if (penaltyTakers != null && !penaltyTakers.isEmpty()) {
 			for (int i = 0; i < penaltyTakers.size(); i++) {
-				SpielerPosition penaltyTaker = penaltyTakers.get(i);
+				MatchRoleID penaltyTaker = penaltyTakers.get(i);
 				if (penaltyTaker != null && penaltyTaker.getId() > 0) {
 					sql = "INSERT INTO " + TABLENAME + " ( LineupName, PlayerID, Pos ) VALUES (";
 					sql += "'" + lineupName + "'," + penaltyTaker.getSpielerId() + "," + penaltyTaker.getId()  + ")";
@@ -52,14 +52,14 @@ public class PenaltyTakersTable extends AbstractTable {
 		}
 	}
 
-	List<SpielerPosition> getPenaltyTakers(String lineupName) throws SQLException {
+	List<MatchRoleID> getPenaltyTakers(String lineupName) throws SQLException {
 		String sql = "SELECT * FROM " + TABLENAME + " WHERE LineupName='" + lineupName + "' ORDER BY Pos";
-		List<SpielerPosition> list = new ArrayList<SpielerPosition>();
+		List<MatchRoleID> list = new ArrayList<MatchRoleID>();
 
 		ResultSet rs = adapter.executeQuery(sql);
 		int counter = 0;
 		while (rs.next()) {
-			list.add(new SpielerPosition(rs.getInt("Pos"), rs.getInt("PlayerID"), ISpielerPosition.NORMAL));
+			list.add(new MatchRoleID(rs.getInt("Pos"), rs.getInt("PlayerID"), IMatchRoleID.NORMAL));
 			counter++;
 		}
 		return list;

@@ -7,7 +7,7 @@ import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupTeam;
 import core.model.match.MatchStatistics;
 import core.model.match.MatchType;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.HTCalendar;
 import core.util.HTCalendarFactory;
@@ -70,19 +70,19 @@ public class TrainingManager {
     /**
      * Training for given player for each skill
      *
-     * @param inputSpieler Player to use
+     * @param inputPlayer Player to use
      * @param train preset Trainingweeks
      * @param timestamp if not null, calculate training for this training date only
      *
      * @return TrainingPerPlayer
      */
-    public TrainingPerPlayer calculateWeeklyTrainingForPlayer(Spieler inputSpieler,
-    		TrainingPerWeek train, Timestamp timestamp) {
+    public TrainingPerPlayer calculateWeeklyTrainingForPlayer(Player inputPlayer,
+                                                              TrainingPerWeek train, Timestamp timestamp) {
         //playerID HIER SETZEN
-        final Spieler spieler = inputSpieler;
-        final int playerID = spieler.getSpielerID();
+        final Player player = inputPlayer;
+        final int playerID = player.getSpielerID();
 
-        TrainingPerPlayer output = new TrainingPerPlayer(spieler);
+        TrainingPerPlayer output = new TrainingPerPlayer(player);
         if (timestamp != null)
         	output.setTimestamp(timestamp);
         if (train == null || train.getTrainingType() < 0) {
@@ -101,7 +101,7 @@ public class TrainingManager {
         	c2s = " ("+htc2.getHTSeason()+"."+htc2.getHTWeek()+")";
 
         	HOLogger.instance().debug(getClass(),
-        			"Start calcWeeklyTraining for "+spieler.getName()+", zeitpunkt="+((timestamp!=null)?timestamp.toString()+c1s:"")
+        			"Start calcWeeklyTraining for "+ player.getName()+", zeitpunkt="+((timestamp!=null)?timestamp.toString()+c1s:"")
         			+ ", trainDate="+train.getTrainingDate().toString()+c2s);
         }
 
@@ -113,7 +113,7 @@ public class TrainingManager {
 	        	List<Integer> matches = getMatchesForTraining(trainingDate);
 	        	int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 	        	TrainingWeekPlayer tp = new TrainingWeekPlayer();
-	            tp.Name(spieler.getName());
+	            tp.Name(player.getName());
 	        	for (int i=0; i<matches.size(); i++) {
 	                final int matchId = (matches.get(i)).intValue();
 
@@ -153,7 +153,7 @@ public class TrainingManager {
 	            TrainingPoints trp = new TrainingPoints(wt.getPrimaryTraining(tp), wt.getSecondaryTraining(tp));
 	    		if (TrainingManager.TRAININGDEBUG) {
 					HOLogger.instance().debug(getClass(), "Week " + train.getHattrickWeek()
-	            		+": Player " + spieler.getName() + " (" + playerID + ")"
+	            		+": Player " + player.getName() + " (" + playerID + ")"
 	            		+" played total " + tp.getMinutesPlayed() + " mins for training purposes and got "
 	            		+ wt.getPrimaryTraining(tp) + " primary training points and "
 	            		+ wt.getSecondaryTraining(tp) + " secondary training points");

@@ -2,8 +2,8 @@ package module.lineup.substitution;
 
 import core.datatype.CBItem;
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
+import core.model.player.IMatchRoleID;
+import core.model.player.Player;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.Substitution;
 
@@ -15,25 +15,25 @@ import java.util.Map;
 public class SubstitutionDataProvider {
 
 	public static void getSubstitutions() {
-		List<Substitution> subs = HOVerwaltung.instance().getModel().getAufstellung()
+		List<Substitution> subs = HOVerwaltung.instance().getModel().getLineup()
 				.getSubstitutionList();
 	}
 
 	public static Map<Integer, PlayerPositionItem> getLineupPositions() {
-		return getPositionsMap(ISpielerPosition.startLineup, ISpielerPosition.substForward);
+		return getPositionsMap(IMatchRoleID.startLineup, IMatchRoleID.substFW1);
 	}
 
-	public static Map<Integer, PlayerPositionItem> getSubstitutionPositions() {
-		return getPositionsMap(ISpielerPosition.substKeeper, ISpielerPosition.substForward);
-	}
+//	public static Map<Integer, PlayerPositionItem> getSubstitutionPositions() {
+//		return getPositionsMap(IMatchRoleID.substGK1, IMatchRoleID.substFW1);
+//	}
 
 	public static Map<Integer, PlayerPositionItem> getPositionsMap(int start, int end) {
 
 		LinkedHashMap<Integer, PlayerPositionItem> positionMap = new LinkedHashMap<Integer, PlayerPositionItem>();
-		Lineup lineup = HOVerwaltung.instance().getModel().getAufstellung();
+		Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
 
 		for (int i = start; i <= end; i++) {
-			Spieler player = lineup.getPlayerByPositionID(i);
+			Player player = lineup.getPlayerByPositionID(i);
 			if (player != null) {
 				positionMap
 						.put(new Integer(i),
@@ -48,9 +48,9 @@ public class SubstitutionDataProvider {
 	public static List<PlayerPositionItem> getFieldPositions(int start, int end, boolean includeEmptyPositions) {
 		List<PlayerPositionItem> playerItems = new ArrayList<PlayerPositionItem>();
 
-		Lineup lineup = HOVerwaltung.instance().getModel().getAufstellung();
+		Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
 		for (int i = start; i <= end; i++) {
-			Spieler player = lineup.getPlayerByPositionID(i);
+			Player player = lineup.getPlayerByPositionID(i);
 			if (player != null || includeEmptyPositions) {
 				playerItems.add(new PlayerPositionItem(Integer.valueOf(i), player));
 			}

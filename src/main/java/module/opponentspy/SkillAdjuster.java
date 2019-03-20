@@ -1,6 +1,6 @@
 package module.opponentspy;
 
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 import module.opponentspy.CalcVariables.Skill;
 
 import java.util.ArrayList;
@@ -234,7 +234,7 @@ class SkillAdjuster {
 		
 		int gkTsi  = (int) ((formfactorGK * scaledSkillPowerGK) / 100);
 		calcPlayer.calculatedTSI = (int) (sqrtMultiplier * powerTotal);
-		if (calcPlayer.role == ISpielerPosition.KEEPER){
+		if (calcPlayer.role == IMatchRoleID.KEEPER){
 			
 			calcPlayer.calculatedTSI = gkTsi;
 		}

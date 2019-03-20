@@ -2,7 +2,6 @@ package core.gui.model;
 
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
-import core.db.DBManager;
 //import core.epv.EPVData;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoppelLabelEntry;
@@ -19,9 +18,9 @@ import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
+import core.model.player.Player;
 import core.util.HTCalendarFactory;
 import core.util.Helper;
 import core.util.StringUtils;
@@ -29,7 +28,6 @@ import module.playerOverview.SpielerStatusLabelEntry;
 
 import java.awt.Color;
 import java.sql.Timestamp;
-import java.util.Vector;
 
 import javax.swing.SwingConstants;
 import javax.swing.table.TableColumn;
@@ -95,15 +93,15 @@ final public class UserColumnFactory {
 			@Override
 			public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem){
 				ColorLabelEntry colorLabelEntry = new ColorLabelEntry(ImageUtilities
-                        .getImage4Position(SpielerPosition
+                        .getImage4Position(MatchRoleID
                                            .getHTPosidForHOPosition4Image((byte) spielerCBItem
                                                                           .getPosition()),
                                            (byte) 0, 0),
-                        -SpielerPosition.getSortId((byte) spielerCBItem
+                        -MatchRoleID.getSortId((byte) spielerCBItem
                                                    .getPosition(), false),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-				colorLabelEntry.setText(SpielerPosition.getNameForPosition((byte) spielerCBItem
+				colorLabelEntry.setText(MatchRoleID.getNameForPosition((byte) spielerCBItem
                         .getPosition())
                         + " ("
                         + spielerCBItem.getSpieler().calcPosValue((byte) spielerCBItem
@@ -123,7 +121,7 @@ final public class UserColumnFactory {
 		playerCBItemArray[4] = new PlayerCBItem(602, "ls.player.age"){
 			@Override
 			public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem){
-				Spieler player = spielerCBItem.getSpieler();
+				Player player = spielerCBItem.getSpieler();
 				Timestamp matchDate = spielerCBItem.getMatchdetails().getSpielDatum();
 				System.out.println(spielerCBItem.getMatchdate());
 				String ageString = player.getAdjustedAgeFromDate(matchDate);
@@ -195,28 +193,28 @@ final public class UserColumnFactory {
 		final PlayerColumn[] playerGoalsArray = new PlayerColumn[4];
 		playerGoalsArray[0] = new PlayerColumn(380,"TG","ToreGesamt",20){
 			@Override
-			public int getValue(Spieler player){
+			public int getValue(Player player){
 				return player.getToreGesamt();
 			}
 		};
 
 		playerGoalsArray[1] = new PlayerColumn(390,"TF","ToreFreund",20){
 			@Override
-			public int getValue(Spieler player){
+			public int getValue(Player player){
 				return player.getToreFreund();
 			}
 		};
 
 		playerGoalsArray[2] = new PlayerColumn(400,"TL","ToreLiga",20){
 			@Override
-			public int getValue(Spieler player){
+			public int getValue(Player player){
 				return player.getToreLiga();
 			}
 		};
 
 		playerGoalsArray[3] = new PlayerColumn(410,"TP","TorePokal",20){
 			@Override
-			public int getValue(Spieler player){
+			public int getValue(Player player){
 				return player.getTorePokal();
 			}
 		};
@@ -252,10 +250,10 @@ final public class UserColumnFactory {
 		final PlayerColumn[] playerBasicArray = new PlayerColumn[2];
 		playerBasicArray[0] = new PlayerColumn(NAME,"ls.player.name",0){
 			@Override
-			public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+			public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 				return new SpielerLabelEntry(player,
                         HOVerwaltung.instance().getModel()
-                        .getAufstellung()
+                        .getLineup()
                         .getPositionBySpielerId(player.getSpielerID()),
             0f, false, false);
 			}
@@ -268,7 +266,7 @@ final public class UserColumnFactory {
 
 		playerBasicArray[1] = new PlayerColumn(ID,"ls.player.id",0){
 			@Override
-			public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+			public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 				return new ColorLabelEntry(player.getSpielerID(),
 						player.getSpielerID() + "",
                         ColorLabelEntry.FG_STANDARD,
@@ -296,25 +294,25 @@ final public class UserColumnFactory {
 	 */
 	public static PlayerPositionColumn[] createPlayerPositionArray(){
 		final PlayerPositionColumn[] playerPositionArray = new PlayerPositionColumn[19];
-		playerPositionArray[0] = new PlayerPositionColumn( 190, "ls.player.position_short.keeper",						"ls.player.position.keeper",					ISpielerPosition.KEEPER );
-		playerPositionArray[1] = new PlayerPositionColumn( 200, "ls.player.position_short.centraldefender",				"ls.player.position.centraldefender",			ISpielerPosition.CENTRAL_DEFENDER );
-		playerPositionArray[2] = new PlayerPositionColumn( 210, "ls.player.position_short.centraldefendertowardswing",	"ls.player.position.centraldefendertowardswing",ISpielerPosition.CENTRAL_DEFENDER_TOWING );
-		playerPositionArray[3] = new PlayerPositionColumn( 220, "ls.player.position_short.centraldefenderoffensive",	"ls.player.position.centraldefenderoffensive",	ISpielerPosition.CENTRAL_DEFENDER_OFF );
-		playerPositionArray[4] = new PlayerPositionColumn( 230, "ls.player.position_short.wingback",					"ls.player.position.wingback",					ISpielerPosition.BACK );
-		playerPositionArray[5] = new PlayerPositionColumn( 240, "ls.player.position_short.wingbacktowardsmiddle",		"ls.player.position.wingbacktowardsmiddle",		ISpielerPosition.BACK_TOMID );
-		playerPositionArray[6] = new PlayerPositionColumn( 250, "ls.player.position_short.wingbackoffensive",			"ls.player.position.wingbackoffensive",			ISpielerPosition.BACK_OFF );
-		playerPositionArray[7] = new PlayerPositionColumn( 260, "ls.player.position_short.wingbackdefensive",			"ls.player.position.wingbackdefensive",			ISpielerPosition.BACK_DEF );
-		playerPositionArray[8] = new PlayerPositionColumn( 270, "ls.player.position_short.innermidfielder",				"ls.player.position.innermidfielder",			ISpielerPosition.MIDFIELDER );
-		playerPositionArray[9] = new PlayerPositionColumn( 280, "ls.player.position_short.innermidfieldertowardswing",	"ls.player.position.innermidfieldertowardswing",ISpielerPosition.MIDFIELDER_TOWING );
-		playerPositionArray[10] = new PlayerPositionColumn( 290, "ls.player.position_short.innermidfielderoffensive",	"ls.player.position.innermidfielderoffensive",	ISpielerPosition.MIDFIELDER_OFF );
-		playerPositionArray[11] = new PlayerPositionColumn( 300, "ls.player.position_short.innermidfielderdefensive",	"ls.player.position.innermidfielderdefensive",	ISpielerPosition.MIDFIELDER_DEF );
-		playerPositionArray[12] = new PlayerPositionColumn( 310, "ls.player.position_short.winger",						"ls.player.position.winger",					ISpielerPosition.WINGER );
-		playerPositionArray[13] = new PlayerPositionColumn( 320, "ls.player.position_short.wingertowardsmiddle",		"ls.player.position.wingertowardsmiddle",		ISpielerPosition.WINGER_TOMID );
-		playerPositionArray[14] = new PlayerPositionColumn( 330, "ls.player.position_short.wingeroffensive",			"ls.player.position.wingeroffensive",			ISpielerPosition.WINGER_OFF );
-		playerPositionArray[15] = new PlayerPositionColumn( 340, "ls.player.position_short.wingerdefensive",			"ls.player.position.wingerdefensive",			ISpielerPosition.WINGER_DEF );
-		playerPositionArray[16] = new PlayerPositionColumn( 350, "ls.player.position_short.forward",					"ls.player.position.forward",					ISpielerPosition.FORWARD );
-		playerPositionArray[17] = new PlayerPositionColumn( 360, "ls.player.position_short.forwardtowardswing",			"ls.player.position.forwardtowardswing",		ISpielerPosition.FORWARD_TOWING );
-		playerPositionArray[18] = new PlayerPositionColumn( 370, "ls.player.position_short.forwarddefensive",			"ls.player.position.forwarddefensive",			ISpielerPosition.FORWARD_DEF );
+		playerPositionArray[0] = new PlayerPositionColumn( 190, "ls.player.position_short.keeper",						"ls.player.position.keeper",					IMatchRoleID.KEEPER );
+		playerPositionArray[1] = new PlayerPositionColumn( 200, "ls.player.position_short.centraldefender",				"ls.player.position.centraldefender",			IMatchRoleID.CENTRAL_DEFENDER );
+		playerPositionArray[2] = new PlayerPositionColumn( 210, "ls.player.position_short.centraldefendertowardswing",	"ls.player.position.centraldefendertowardswing", IMatchRoleID.CENTRAL_DEFENDER_TOWING );
+		playerPositionArray[3] = new PlayerPositionColumn( 220, "ls.player.position_short.centraldefenderoffensive",	"ls.player.position.centraldefenderoffensive",	IMatchRoleID.CENTRAL_DEFENDER_OFF );
+		playerPositionArray[4] = new PlayerPositionColumn( 230, "ls.player.position_short.wingback",					"ls.player.position.wingback",					IMatchRoleID.BACK );
+		playerPositionArray[5] = new PlayerPositionColumn( 240, "ls.player.position_short.wingbacktowardsmiddle",		"ls.player.position.wingbacktowardsmiddle",		IMatchRoleID.BACK_TOMID );
+		playerPositionArray[6] = new PlayerPositionColumn( 250, "ls.player.position_short.wingbackoffensive",			"ls.player.position.wingbackoffensive",			IMatchRoleID.BACK_OFF );
+		playerPositionArray[7] = new PlayerPositionColumn( 260, "ls.player.position_short.wingbackdefensive",			"ls.player.position.wingbackdefensive",			IMatchRoleID.BACK_DEF );
+		playerPositionArray[8] = new PlayerPositionColumn( 270, "ls.player.position_short.innermidfielder",				"ls.player.position.innermidfielder",			IMatchRoleID.MIDFIELDER );
+		playerPositionArray[9] = new PlayerPositionColumn( 280, "ls.player.position_short.innermidfieldertowardswing",	"ls.player.position.innermidfieldertowardswing", IMatchRoleID.MIDFIELDER_TOWING );
+		playerPositionArray[10] = new PlayerPositionColumn( 290, "ls.player.position_short.innermidfielderoffensive",	"ls.player.position.innermidfielderoffensive",	IMatchRoleID.MIDFIELDER_OFF );
+		playerPositionArray[11] = new PlayerPositionColumn( 300, "ls.player.position_short.innermidfielderdefensive",	"ls.player.position.innermidfielderdefensive",	IMatchRoleID.MIDFIELDER_DEF );
+		playerPositionArray[12] = new PlayerPositionColumn( 310, "ls.player.position_short.winger",						"ls.player.position.winger",					IMatchRoleID.WINGER );
+		playerPositionArray[13] = new PlayerPositionColumn( 320, "ls.player.position_short.wingertowardsmiddle",		"ls.player.position.wingertowardsmiddle",		IMatchRoleID.WINGER_TOMID );
+		playerPositionArray[14] = new PlayerPositionColumn( 330, "ls.player.position_short.wingeroffensive",			"ls.player.position.wingeroffensive",			IMatchRoleID.WINGER_OFF );
+		playerPositionArray[15] = new PlayerPositionColumn( 340, "ls.player.position_short.wingerdefensive",			"ls.player.position.wingerdefensive",			IMatchRoleID.WINGER_DEF );
+		playerPositionArray[16] = new PlayerPositionColumn( 350, "ls.player.position_short.forward",					"ls.player.position.forward",					IMatchRoleID.FORWARD );
+		playerPositionArray[17] = new PlayerPositionColumn( 360, "ls.player.position_short.forwardtowardswing",			"ls.player.position.forwardtowardswing",		IMatchRoleID.FORWARD_TOWING );
+		playerPositionArray[18] = new PlayerPositionColumn( 370, "ls.player.position_short.forwarddefensive",			"ls.player.position.forwarddefensive",			IMatchRoleID.FORWARD_DEF );
 		return playerPositionArray;
 	}
 
@@ -681,7 +679,7 @@ final public class UserColumnFactory {
 
 			playerAdditionalArray[0] =new PlayerColumn(10," "," ",0){
 				@Override
-				public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+				public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 					int sort = player.getTrikotnummer();
 					if (sort <= 0) {
 		                // Temporary players don't have a shirt number
@@ -705,7 +703,7 @@ final public class UserColumnFactory {
 
 			playerAdditionalArray[1] =new PlayerColumn(20," ","ls.player.nationality",25){
 				@Override
-				public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+				public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 					return new ColorLabelEntry(ImageUtilities.getFlagIcon(player.getNationalitaet()),
                             player.getNationalitaet(),
                             ColorLabelEntry.FG_STANDARD,
@@ -715,7 +713,7 @@ final public class UserColumnFactory {
 
 			playerAdditionalArray[2] = new PlayerColumn(30, "ls.player.age", 40){
 				@Override
-				public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+				public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 					String ageString = player.getAlterWithAgeDaysAsString();
 					int birthdays = 0;
 					boolean playerExists;
@@ -746,12 +744,12 @@ final public class UserColumnFactory {
 
 			playerAdditionalArray[3] =new PlayerColumn(40,"BestePosition",100){
 				@Override
-				public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+				public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 
 					ColorLabelEntry tmp = new ColorLabelEntry(
-							-SpielerPosition.getSortId(player.getIdealPosition(), false)
+							-MatchRoleID.getSortId(player.getIdealPosition(), false)
 								- (player.getIdealPosStaerke(true) / 100.0f),
-							SpielerPosition.getNameForPosition(player.getIdealPosition())
+							MatchRoleID.getNameForPosition(player.getIdealPosition())
 								+ " ("
 								+ player.getIdealPosStaerke(true)
 								+ ")",
@@ -770,15 +768,15 @@ final public class UserColumnFactory {
 			// Position
 			playerAdditionalArray[4] =new PlayerColumn(LINUP,"Aufgestellt",28){
 				@Override
-				public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+				public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 					final HOModel model = HOVerwaltung.instance().getModel();
-					if (model.getAufstellung().isSpielerAufgestellt(player.getSpielerID())
-                            	&& (model.getAufstellung().getPositionBySpielerId(player
+					if (model.getLineup().isSpielerAufgestellt(player.getSpielerID())
+                            	&& (model.getLineup().getPositionBySpielerId(player
                                   .getSpielerID()) != null)) {
-						return new ColorLabelEntry(ImageUtilities.getImage4Position(model.getAufstellung()
+						return new ColorLabelEntry(ImageUtilities.getImage4Position(model.getLineup()
                        .getPositionBySpielerId(player.getSpielerID()),
                                                player.getTrikotnummer()),
-                                               -model.getAufstellung()
+                                               -model.getLineup()
                                                .getPositionBySpielerId(player
                                             		   .getSpielerID())
                                             		   .getSortId(),
@@ -797,18 +795,18 @@ final public class UserColumnFactory {
 
 			playerAdditionalArray[5] = new PlayerColumn(GROUP,"Gruppe",50){
 				@Override
-				public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+				public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 					SmilieEntry smilieEntry = new SmilieEntry();
-					smilieEntry.setSpieler(player);
+					smilieEntry.setPlayer(player);
 					return  smilieEntry;
 				}
 			};
 
 			playerAdditionalArray[6] = new PlayerColumn(70,"Status",50){
 				@Override
-				public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+				public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 					SpielerStatusLabelEntry entry = new SpielerStatusLabelEntry();
-					entry.setSpieler(player);
+					entry.setPlayer(player);
 					return  entry;
 				}
 			};
@@ -817,7 +815,7 @@ final public class UserColumnFactory {
 
 			playerAdditionalArray[7] = new PlayerColumn(420,"ls.player.wage",100){
 			@Override
-			public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+			public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 				final String bonus = "";
 				final int gehalt = (int) (player.getGehalt() / core.model.UserParameter.instance().faktorGeld);
 				final String gehalttext = Helper.getNumberFormat(true, 0).format(gehalt);
@@ -847,7 +845,7 @@ final public class UserColumnFactory {
 			};
 			playerAdditionalArray[8] = new PlayerColumn(430,"ls.player.tsi",0){
 				@Override
-				public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+				public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 					final String text = Helper.getNumberFormat(false, 0).format(player.getTSI());
 					if(playerCompare == null){
 						return new DoppelLabelEntry(new ColorLabelEntry(player
@@ -882,7 +880,7 @@ final public class UserColumnFactory {
 
 			playerAdditionalArray[9] = new PlayerColumn(RATING,"Rating",50){
 				@Override
-				public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+				public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 					if (player.getBewertung() > 0) {
 		                //Hat im letzen Spiel gespielt
 		                return new RatingTableEntry(player.getBewertung(), true);
@@ -896,7 +894,7 @@ final public class UserColumnFactory {
 
 			playerAdditionalArray[10] = new PlayerColumn(436,"Marktwert",140){
 				@Override
-				public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+				public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 //					EPVData data = HOVerwaltung.instance().getModel().getEPV().getEPVData(player);
 //					double price = HOVerwaltung.instance().getModel().getEPV().getPrice(data);
 //					final String text = Helper.getNumberFormat(true, 0).format(price);
@@ -931,9 +929,9 @@ final public class UserColumnFactory {
 
 			playerAdditionalArray[11] = new PlayerColumn(437, "ls.player.short_motherclub", "ls.player.motherclub",  25) {
 				@Override
-				public IHOTableEntry getTableEntry(Spieler player,Spieler playerCompare){
+				public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 					HomegrownEntry home = new HomegrownEntry();
-					home.setSpieler(player);
+					home.setPlayer(player);
 					setPreferredWidth(35);
 					return  home;
 				}

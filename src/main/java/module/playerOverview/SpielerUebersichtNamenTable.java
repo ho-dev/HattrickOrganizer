@@ -5,7 +5,7 @@ import core.gui.Refreshable;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.TableSorter;
 import core.gui.model.ReduzedTableModel;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import javax.swing.JTable;
 
@@ -33,7 +33,7 @@ public class SpielerUebersichtNamenTable extends JTable implements Refreshable, 
 	// ------------------------------------------------------------------------------------
 
 	@Override
-	public Spieler getSpieler(int row) {
+	public Player getSpieler(int row) {
 		return this.tableSorter.getSpieler(row);
 	}
 

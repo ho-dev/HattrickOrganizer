@@ -11,9 +11,8 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoppelLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.module.IModule;
 import core.util.HOLogger;
 import core.util.Helper;
@@ -179,32 +178,32 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         if (actionEvent.getSource().equals(jbApply)) {
             copyPaste();
         } else if (actionEvent.getSource().equals(jbAddTempSpieler)) {
-            final Spieler tempSpieler = new Spieler();
-            tempSpieler.setNationalitaet(HOVerwaltung.instance().getModel().getBasics().getLand());
-            tempSpieler.setSpielerID(getNextTempSpielerID());
+            final core.model.player.Player tempPlayer = new core.model.player.Player();
+            tempPlayer.setNationalitaet(HOVerwaltung.instance().getModel().getBasics().getLand());
+            tempPlayer.setSpielerID(getNextTempSpielerID());
             if (jtfName.getText().trim().equals("")) {
-                tempSpieler.setName("Temp " + Math.abs(1000 + tempSpieler.getSpielerID()));
+                tempPlayer.setName("Temp " + Math.abs(1000 + tempPlayer.getSpielerID()));
             } else {
-                tempSpieler.setName(jtfName.getText());
+                tempPlayer.setName(jtfName.getText());
             }
-            tempSpieler.setTSI(Integer.parseInt(jtfTSI.getText()));
-            tempSpieler.setSpezialitaet(((CBItem) jcbSpeciality.getSelectedItem()).getId());
-            tempSpieler.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
-            tempSpieler.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
-            tempSpieler.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
-            tempSpieler.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
-            tempSpieler.setKondition(((CBItem) jcbStamina.getSelectedItem()).getId());
-            tempSpieler.setVerteidigung(((CBItem)jcbDefending.getSelectedItem()).getId());
-            tempSpieler.setTorschuss(((CBItem) jcbScoring.getSelectedItem()).getId());
-            tempSpieler.setTorwart(((CBItem) jcbKeeper.getSelectedItem()).getId());
-            tempSpieler.setFluegelspiel(((CBItem) jcbWinger.getSelectedItem()).getId());
-            tempSpieler.setPasspiel(((CBItem) jcbPassing.getSelectedItem()).getId());
-            tempSpieler.setStandards(((CBItem) jcbSetPieces.getSelectedItem()).getId());
-            tempSpieler.setSpielaufbau(((CBItem) jcbPlaymaking.getSelectedItem()).getId());
-            tempSpieler.setLoyalty(((CBItem)jcbLoyalty.getSelectedItem()).getId());
-            tempSpieler.setFuehrung(((CBItem)jcbLeadership.getSelectedItem()).getId());
-            tempSpieler.setHomeGrown(jchHomegrown.isSelected());
-            HOVerwaltung.instance().getModel().addSpieler(tempSpieler);
+            tempPlayer.setTSI(Integer.parseInt(jtfTSI.getText()));
+            tempPlayer.setSpezialitaet(((CBItem) jcbSpeciality.getSelectedItem()).getId());
+            tempPlayer.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
+            tempPlayer.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
+            tempPlayer.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
+            tempPlayer.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
+            tempPlayer.setKondition(((CBItem) jcbStamina.getSelectedItem()).getId());
+            tempPlayer.setVerteidigung(((CBItem)jcbDefending.getSelectedItem()).getId());
+            tempPlayer.setTorschuss(((CBItem) jcbScoring.getSelectedItem()).getId());
+            tempPlayer.setTorwart(((CBItem) jcbKeeper.getSelectedItem()).getId());
+            tempPlayer.setFluegelspiel(((CBItem) jcbWinger.getSelectedItem()).getId());
+            tempPlayer.setPasspiel(((CBItem) jcbPassing.getSelectedItem()).getId());
+            tempPlayer.setStandards(((CBItem) jcbSetPieces.getSelectedItem()).getId());
+            tempPlayer.setSpielaufbau(((CBItem) jcbPlaymaking.getSelectedItem()).getId());
+            tempPlayer.setLoyalty(((CBItem)jcbLoyalty.getSelectedItem()).getId());
+            tempPlayer.setFuehrung(((CBItem)jcbLeadership.getSelectedItem()).getId());
+            tempPlayer.setHomeGrown(jchHomegrown.isSelected());
+            HOVerwaltung.instance().getModel().addSpieler(tempPlayer);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
         }
@@ -351,69 +350,69 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
      * Set labels to the new values
      */
     private void setLabels() {
-        final Spieler tempSpieler = new Spieler();
-        tempSpieler.setSpezialitaet(((CBItem)jcbSpeciality.getSelectedItem()).getId());
-        tempSpieler.setErfahrung(((CBItem)jcbExperience.getSelectedItem()).getId());
-        tempSpieler.setFuehrung(((CBItem)jcbLeadership.getSelectedItem()).getId());
-        tempSpieler.setForm(((CBItem)jcbForm.getSelectedItem()).getId());
-        tempSpieler.setKondition(((CBItem)jcbStamina.getSelectedItem()).getId());
-        tempSpieler.setVerteidigung(((CBItem)jcbDefending.getSelectedItem()).getId());
-        tempSpieler.setTorschuss(((CBItem)jcbScoring.getSelectedItem()).getId());
-        tempSpieler.setTorwart(((CBItem)jcbKeeper.getSelectedItem()).getId());
-        tempSpieler.setFluegelspiel(((CBItem)jcbWinger.getSelectedItem()).getId());
-        tempSpieler.setPasspiel(((CBItem)jcbPassing.getSelectedItem()).getId());
-        tempSpieler.setStandards(((CBItem)jcbSetPieces.getSelectedItem()).getId());
-        tempSpieler.setSpielaufbau(((CBItem)jcbPlaymaking.getSelectedItem()).getId());
-        tempSpieler.setLoyalty(((CBItem)jcbLoyalty.getSelectedItem()).getId());
-        tempSpieler.setHomeGrown(jchHomegrown.isSelected());
-        tempSpieler.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
-        tempSpieler.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
-//        EPVData data = new EPVData(tempSpieler);
+        final core.model.player.Player tempPlayer = new core.model.player.Player();
+        tempPlayer.setSpezialitaet(((CBItem)jcbSpeciality.getSelectedItem()).getId());
+        tempPlayer.setErfahrung(((CBItem)jcbExperience.getSelectedItem()).getId());
+        tempPlayer.setFuehrung(((CBItem)jcbLeadership.getSelectedItem()).getId());
+        tempPlayer.setForm(((CBItem)jcbForm.getSelectedItem()).getId());
+        tempPlayer.setKondition(((CBItem)jcbStamina.getSelectedItem()).getId());
+        tempPlayer.setVerteidigung(((CBItem)jcbDefending.getSelectedItem()).getId());
+        tempPlayer.setTorschuss(((CBItem)jcbScoring.getSelectedItem()).getId());
+        tempPlayer.setTorwart(((CBItem)jcbKeeper.getSelectedItem()).getId());
+        tempPlayer.setFluegelspiel(((CBItem)jcbWinger.getSelectedItem()).getId());
+        tempPlayer.setPasspiel(((CBItem)jcbPassing.getSelectedItem()).getId());
+        tempPlayer.setStandards(((CBItem)jcbSetPieces.getSelectedItem()).getId());
+        tempPlayer.setSpielaufbau(((CBItem)jcbPlaymaking.getSelectedItem()).getId());
+        tempPlayer.setLoyalty(((CBItem)jcbLoyalty.getSelectedItem()).getId());
+        tempPlayer.setHomeGrown(jchHomegrown.isSelected());
+        tempPlayer.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
+        tempPlayer.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
+//        EPVData data = new EPVData(tempPlayer);
 //		double price = HOVerwaltung.instance().getModel().getEPV().getPrice(data);
 //		jtfEPV.setText(NumberFormat.getCurrencyInstance().format(price));
-        jpBestPosition.setText(SpielerPosition.getNameForPosition(tempSpieler.getIdealPosition())
+        jpBestPosition.setText(MatchRoleID.getNameForPosition(tempPlayer.getIdealPosition())
         		+ " (" +
         		Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(tempSpieler.getIdealPosition(), true))
+        		.format(tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true))
         		 + ")");
         jpRatingKeeper.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.KEEPER, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true)) + "");
         jpRatingDefender.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true)) + "");
         jpRatingDefenderTowardsWing.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER_TOWING, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true)) + "");
         jpRatingDefenderOffensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.CENTRAL_DEFENDER_OFF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true)) + "");
         jpRatingWingback.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.BACK, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK, true)) + "");
         jpRatingWingbackTowardsMiddle.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.BACK_TOMID, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true)) + "");
         jpRatingWingbackOffensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.BACK_OFF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true)) + "");
         jpRatingWingbackDefensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.BACK_DEF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true)) + "");
         jpRatingMidfielder.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.MIDFIELDER, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true)) + "");
         jpRatingMidfielderTowardsWing.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.MIDFIELDER_TOWING, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true)) + "");
         jpRatingMidfielderOffensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.MIDFIELDER_OFF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true)) + "");
         jpRatingMidfielderDefensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.MIDFIELDER_DEF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true)) + "");
         jpRatingWinger.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.WINGER, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER, true)) + "");
         jpRatingWingerTowardsMiddle.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.WINGER_TOMID, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true)) + "");
         jpRatingWingerOffensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.WINGER_OFF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true)) + "");
         jpRatingWingerDefensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.WINGER_DEF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true)) + "");
         jpRatingForward.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.FORWARD, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD, true)) + "");
         jpRatingForwardTowardsWing.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.FORWARD_TOWING, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true)) + "");
         jpRatingForwardDefensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
-        		.format(tempSpieler.calcPosValue(ISpielerPosition.FORWARD_DEF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true)) + "");
         clScoutEntry.setSpeciality(((CBItem) jcbSpeciality.getSelectedItem()).getId());
         clScoutEntry.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
         clScoutEntry.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
@@ -465,7 +464,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         final PlayerConverter pc = new PlayerConverter();
 
         try {
-            final Player player;
+            final module.transfer.scout.Player player;
             player = pc.build(jtaCopyPaste.getText());
 
             if (player != null) {

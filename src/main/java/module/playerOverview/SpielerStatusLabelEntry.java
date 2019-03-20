@@ -6,7 +6,7 @@ import core.gui.comp.entry.DoppelLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import javax.swing.SwingConstants;
 
@@ -21,7 +21,7 @@ public class SpielerStatusLabelEntry extends DoppelLabelEntry {
     private ColorLabelEntry verwarnungen = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
                                                                ColorLabelEntry.BG_STANDARD,
                                                                SwingConstants.LEFT);
-    private core.model.player.Spieler spieler;
+    private Player player;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -33,13 +33,13 @@ public class SpielerStatusLabelEntry extends DoppelLabelEntry {
         this.setLabels(verwarnungen, verletzung);
     }
 
-    public final void setSpieler(Spieler spieler) {
-        this.spieler = spieler;
+    public final void setPlayer(Player player) {
+        this.player = player;
         updateComponent();
     }
 
-    public final Spieler getSpieler() {
-        return spieler;
+    public final Player getPlayer() {
+        return player;
     }
 
     @Override
@@ -47,15 +47,15 @@ public class SpielerStatusLabelEntry extends DoppelLabelEntry {
         if (obj instanceof SpielerStatusLabelEntry) {
             final SpielerStatusLabelEntry entry = (SpielerStatusLabelEntry) obj;
 
-            if ((entry.getSpieler() != null) && (getSpieler() != null)) {
-                if (entry.getSpieler().getVerletzt() > getSpieler().getVerletzt()) {
+            if ((entry.getPlayer() != null) && (getPlayer() != null)) {
+                if (entry.getPlayer().getVerletzt() > getPlayer().getVerletzt()) {
                     return 1;
-                } else if (entry.getSpieler().getVerletzt() < getSpieler().getVerletzt()) {
+                } else if (entry.getPlayer().getVerletzt() < getPlayer().getVerletzt()) {
                     return -1;
                 } else {
-                    if (entry.getSpieler().getGelbeKarten() > getSpieler().getGelbeKarten()) {
+                    if (entry.getPlayer().getGelbeKarten() > getPlayer().getGelbeKarten()) {
                         return 1;
-                    } else if (entry.getSpieler().getGelbeKarten() < getSpieler().getGelbeKarten()) {
+                    } else if (entry.getPlayer().getGelbeKarten() < getPlayer().getGelbeKarten()) {
                         return -1;
                     } else {
                         return 0;
@@ -69,22 +69,22 @@ public class SpielerStatusLabelEntry extends DoppelLabelEntry {
 
     @Override
 	public final void updateComponent() {
-        if (spieler != null) {
-            if (spieler.isGesperrt()) {
+        if (player != null) {
+            if (player.isGesperrt()) {
                 getLinks().setIcon(ThemeManager.getIcon(HOIconName.REDCARD));
-            } else if (spieler.getGelbeKarten() == 1) {
+            } else if (player.getGelbeKarten() == 1) {
                 getLinks().setIcon(ThemeManager.getIcon(HOIconName.YELLOWCARD));
-            } else if (spieler.getGelbeKarten() >= 2) {
+            } else if (player.getGelbeKarten() >= 2) {
                 getLinks().setIcon(ThemeManager.getIcon(HOIconName.TWOCARDS));
             } else {
                 getLinks().clear();
             }
 
-            if (spieler.getVerletzt() == 0) {
+            if (player.getVerletzt() == 0) {
                 getRechts().setText("");
                 getRechts().setIcon(ThemeManager.getIcon(HOIconName.PATCH));
-            } else if (spieler.getVerletzt() > 0) {
-                getRechts().setText(spieler.getVerletzt() + "");
+            } else if (player.getVerletzt() > 0) {
+                getRechts().setText(player.getVerletzt() + "");
                 getRechts().setIcon(ThemeManager.getIcon(HOIconName.INJURED));
             } else {
                 getRechts().clear();

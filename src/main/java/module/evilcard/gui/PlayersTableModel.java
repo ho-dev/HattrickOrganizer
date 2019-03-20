@@ -7,7 +7,7 @@ import core.gui.model.SpielerMatchCBItem;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchHighlight;
 import core.model.match.MatchHighlight;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import module.evilcard.Model;
 
 import java.util.Iterator;
@@ -152,9 +152,9 @@ class PlayersTableModel extends AbstractTableModel {
 	 * 
 	 */
 	private class Aggressive implements Comparable<Aggressive> {
-		private Spieler _player;
+		private Player _player;
 
-		Aggressive(Spieler player) {
+		Aggressive(Player player) {
 			_player = player;
 		}
 
@@ -166,8 +166,8 @@ class PlayersTableModel extends AbstractTableModel {
 
 		@Override
 		public int compareTo(Aggressive o2) {
-			Spieler p1 = _player;
-			Spieler p2 = o2._player;
+			Player p1 = _player;
+			Player p2 = o2._player;
 
 			if (p1.getAgressivitaet() == p2.getAgressivitaet())
 				return 0;
@@ -180,9 +180,9 @@ class PlayersTableModel extends AbstractTableModel {
 	 * 
 	 */
 	private class Honesty implements Comparable<Honesty> {
-		private Spieler _player;
+		private Player _player;
 
-		Honesty(Spieler player) {
+		Honesty(Player player) {
 			_player = player;
 		}
 
@@ -194,8 +194,8 @@ class PlayersTableModel extends AbstractTableModel {
 
 		@Override
 		public int compareTo(Honesty o2) {
-			Spieler p1 = _player;
-			Spieler p2 = o2._player;
+			Player p1 = _player;
+			Player p2 = o2._player;
 
 			if (p1.getAnsehen() == p2.getAnsehen())
 				return 0;
@@ -205,7 +205,7 @@ class PlayersTableModel extends AbstractTableModel {
 
 	private void generateData() {
 		// Get current players.
-		Vector<Spieler> players = new Vector<Spieler>();
+		Vector<Player> players = new Vector<Player>();
 		players.addAll(HOVerwaltung.instance().getModel().getAllSpieler());
 
 		// Add old players, when requested.
@@ -220,7 +220,7 @@ class PlayersTableModel extends AbstractTableModel {
 
 		for (int row = 0; row < playersNumber; row++) {
 			// giocatore
-			Spieler player = (Spieler) players.get(row);
+			Player player = (Player) players.get(row);
 
 			int id = player.getSpielerID();
 			

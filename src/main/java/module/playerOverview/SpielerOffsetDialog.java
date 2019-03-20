@@ -6,7 +6,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.option.SliderPanel;
 
 import java.awt.Dimension;
@@ -38,19 +38,19 @@ final class SpielerOffsetDialog extends JDialog implements ActionListener {
 	private SliderPanel m_jpTorschuss;
 	private SliderPanel m_jpTorwart;
 	private SliderPanel m_jpVerteidigung;
-	private Spieler m_clSpieler;
+	private Player m_clPlayer;
 
 	//~ Constructors -------------------------------------------------------------------------------
 
 	/**
 	 * Creates a new SpielerOffsetDialog object.
 	 */
-	protected SpielerOffsetDialog(javax.swing.JFrame owner, Spieler spieler) {
+	protected SpielerOffsetDialog(javax.swing.JFrame owner, Player player) {
 		super(owner, true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setTitle(HOVerwaltung.instance().getLanguageString("OffsetTitle") + " " + spieler.getName());
+		setTitle(HOVerwaltung.instance().getLanguageString("OffsetTitle") + " " + player.getName());
 
-		m_clSpieler = spieler;
+		m_clPlayer = player;
 
 		initComponents();
 
@@ -71,13 +71,13 @@ final class SpielerOffsetDialog extends JDialog implements ActionListener {
 	@Override
 	public final void actionPerformed(ActionEvent actionEvent) {
 		if (actionEvent.getSource().equals(m_jbOK)) {
-			m_clSpieler.setSubskill4Pos(PlayerSkill.WINGER, m_jpFluegelspiel.getValue() / 100);
-			m_clSpieler.setSubskill4Pos(PlayerSkill.PASSING, m_jpPasspiel.getValue() / 100);
-			m_clSpieler.setSubskill4Pos(PlayerSkill.PLAYMAKING, m_jpSpielaufbau.getValue() / 100);
-			m_clSpieler.setSubskill4Pos(PlayerSkill.SET_PIECES, m_jpStandard.getValue() / 100);
-			m_clSpieler.setSubskill4Pos(PlayerSkill.SCORING, m_jpTorschuss.getValue() / 100);
-			m_clSpieler.setSubskill4Pos(PlayerSkill.KEEPER, m_jpTorwart.getValue() / 100);
-			m_clSpieler.setSubskill4Pos(PlayerSkill.DEFENDING, m_jpVerteidigung.getValue() / 100);
+			m_clPlayer.setSubskill4Pos(PlayerSkill.WINGER, m_jpFluegelspiel.getValue() / 100);
+			m_clPlayer.setSubskill4Pos(PlayerSkill.PASSING, m_jpPasspiel.getValue() / 100);
+			m_clPlayer.setSubskill4Pos(PlayerSkill.PLAYMAKING, m_jpSpielaufbau.getValue() / 100);
+			m_clPlayer.setSubskill4Pos(PlayerSkill.SET_PIECES, m_jpStandard.getValue() / 100);
+			m_clPlayer.setSubskill4Pos(PlayerSkill.SCORING, m_jpTorschuss.getValue() / 100);
+			m_clPlayer.setSubskill4Pos(PlayerSkill.KEEPER, m_jpTorwart.getValue() / 100);
+			m_clPlayer.setSubskill4Pos(PlayerSkill.DEFENDING, m_jpVerteidigung.getValue() / 100);
 
 			DBManager.instance().saveSpieler(
 				HOVerwaltung.instance().getModel().getID(),
@@ -120,7 +120,7 @@ final class SpielerOffsetDialog extends JDialog implements ActionListener {
 				1,
 				1f,
 				80);
-		m_jpSpielaufbau.setValue((float) m_clSpieler.getSubskill4Pos(PlayerSkill.PLAYMAKING) * 100f);
+		m_jpSpielaufbau.setValue((float) m_clPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING) * 100f);
 		panel.add(m_jpSpielaufbau);
 
 		m_jpFluegelspiel =
@@ -130,7 +130,7 @@ final class SpielerOffsetDialog extends JDialog implements ActionListener {
 				1,
 				1f,
 				80);
-		m_jpFluegelspiel.setValue((float) m_clSpieler.getSubskill4Pos(PlayerSkill.WINGER) * 100f);
+		m_jpFluegelspiel.setValue((float) m_clPlayer.getSubskill4Pos(PlayerSkill.WINGER) * 100f);
 		panel.add(m_jpFluegelspiel);
 
 		m_jpTorschuss =
@@ -140,7 +140,7 @@ final class SpielerOffsetDialog extends JDialog implements ActionListener {
 				1,
 				1f,
 				80);
-		m_jpTorschuss.setValue((float) m_clSpieler.getSubskill4Pos(PlayerSkill.SCORING) * 100f);
+		m_jpTorschuss.setValue((float) m_clPlayer.getSubskill4Pos(PlayerSkill.SCORING) * 100f);
 		panel.add(m_jpTorschuss);
 
 		m_jpTorwart =
@@ -150,7 +150,7 @@ final class SpielerOffsetDialog extends JDialog implements ActionListener {
 				1,
 				1f,
 				80);
-		m_jpTorwart.setValue((float) m_clSpieler.getSubskill4Pos(PlayerSkill.KEEPER) * 100f);
+		m_jpTorwart.setValue((float) m_clPlayer.getSubskill4Pos(PlayerSkill.KEEPER) * 100f);
 		panel.add(m_jpTorwart);
 
 		m_jpPasspiel =
@@ -160,7 +160,7 @@ final class SpielerOffsetDialog extends JDialog implements ActionListener {
 				1,
 				1f,
 				80);
-		m_jpPasspiel.setValue((float) m_clSpieler.getSubskill4Pos(PlayerSkill.PASSING) * 100f);
+		m_jpPasspiel.setValue((float) m_clPlayer.getSubskill4Pos(PlayerSkill.PASSING) * 100f);
 		panel.add(m_jpPasspiel);
 
 		m_jpVerteidigung =
@@ -170,7 +170,7 @@ final class SpielerOffsetDialog extends JDialog implements ActionListener {
 				1,
 				1f,
 				80);
-		m_jpVerteidigung.setValue((float) m_clSpieler.getSubskill4Pos(PlayerSkill.DEFENDING) * 100f);
+		m_jpVerteidigung.setValue((float) m_clPlayer.getSubskill4Pos(PlayerSkill.DEFENDING) * 100f);
 		panel.add(m_jpVerteidigung);
 
 		m_jpStandard =
@@ -180,7 +180,7 @@ final class SpielerOffsetDialog extends JDialog implements ActionListener {
 				1,
 				1f,
 				80);
-		m_jpStandard.setValue((float) m_clSpieler.getSubskill4Pos(PlayerSkill.SET_PIECES) * 100f);
+		m_jpStandard.setValue((float) m_clPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES) * 100f);
 		panel.add(m_jpStandard);
 
 		constraints.anchor = GridBagConstraints.WEST;

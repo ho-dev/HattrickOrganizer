@@ -2,14 +2,14 @@ package core.file.xml;
 
 import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import java.util.Map;
 
 
 public class ExportMatchData {
 	
-	private Map<Integer,Spieler> players;
+	private Map<Integer, Player> players;
 	private Matchdetails details;
 	private MatchKurzInfo info;
 
@@ -21,7 +21,7 @@ public class ExportMatchData {
 		return info;
 	}
 
-	public Map<Integer,Spieler> getPlayers() {
+	public Map<Integer, Player> getPlayers() {
 		return players;
 	}
 
@@ -33,7 +33,7 @@ public class ExportMatchData {
 		this.info = info;
 	}
 
-	public void setPlayers(Map<Integer,Spieler> map) {
+	public void setPlayers(Map<Integer, Player> map) {
 		players = map;
 	}
 

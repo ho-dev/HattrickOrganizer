@@ -84,7 +84,7 @@ public class Finanzen  {
     /** Kosten Sonstige */
     protected int m_iKostenSonstige;
 
-    /** Kosten Spieler */
+    /** Kosten Player */
     protected int m_iKostenSpieler;
 
     /** Kosten Stadion */
@@ -123,7 +123,7 @@ public class Finanzen  {
     /** Kosten Sonstige */
     protected int m_iLetzteKostenSonstige;
 
-    /** Kosten Spieler */
+    /** Kosten Player */
     protected int m_iLetzteKostenSpieler;
 
     /** Kosten Stadion */

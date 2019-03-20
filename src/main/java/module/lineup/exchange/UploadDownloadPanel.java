@@ -173,7 +173,7 @@ public class UploadDownloadPanel extends LazyPanel {
 
 	private void upload() {
 		MatchKurzInfo match = getSelectedMatch();
-		Lineup lineup = HOVerwaltung.instance().getModel().getAufstellung();
+		Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
 		if (!LineupCheck.doUpload(match, lineup)) {
 			return;
 		}

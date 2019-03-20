@@ -150,9 +150,9 @@ final class DBUpdater {
 	 * @throws Exception
 	 */
 	private void updateDBv8() throws Exception {
-		m_clJDBCAdapter.executeUpdate("ALTER TABLE Spieler ADD COLUMN TrainingBlock BOOLEAN");
+		m_clJDBCAdapter.executeUpdate("ALTER TABLE Player ADD COLUMN TrainingBlock BOOLEAN");
 		m_clJDBCAdapter
-				.executeUpdate("UPDATE Spieler SET TrainingBlock=false WHERE TrainingBlock IS null");
+				.executeUpdate("UPDATE Player SET TrainingBlock=false WHERE TrainingBlock IS null");
 		// Always set field DBVersion to the new value as last action.
 		// Do not use DBVersion but the value, as update packs might
 		// do version checking again before applying!
@@ -407,7 +407,7 @@ final class DBUpdater {
 			dbZugriff.getTable(WorldDetailsTable.TABLENAME).createTable();
 		}
 
-		// Spieler table
+		// Player table
 		dropColumn("sSpezialitaet", "SPIELER");
 		dropColumn("sCharakter", "SPIELER");
 		dropColumn("sAnsehen", "SPIELER");

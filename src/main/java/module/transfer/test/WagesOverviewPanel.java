@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import core.db.DBManager;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,15 +18,15 @@ import javax.swing.table.AbstractTableModel;
 public class WagesOverviewPanel extends JPanel {
 
 	private static final long serialVersionUID = -8214198281402220881L;
-	private Spieler spieler;
+	private Player player;
 	private JTable table;
 
 	WagesOverviewPanel() {
 		initComponents();
 	}
 	
-	void setPlayer(Spieler spieler) {
-		this.spieler = spieler;
+	void setPlayer(Player player) {
+		this.player = player;
 		refreshData();
 	}
 
@@ -37,21 +37,21 @@ public class WagesOverviewPanel extends JPanel {
 	}
 
 	private void refreshData() {
-		if (this.spieler != null) {
-			Date buyingDate = Calc.getBuyingDate(spieler.getSpielerID());
+		if (this.player != null) {
+			Date buyingDate = Calc.getBuyingDate(player.getSpielerID());
 			if (buyingDate == null) {
 				buyingDate = new Date(DBManager.instance()
-						.getSpielerFirstHRF(spieler.getSpielerID()).getHrfDate().getTime());
+						.getSpielerFirstHRF(player.getSpielerID()).getHrfDate().getTime());
 			}
 			List<Date> updates = Calc.getUpdates(Calc.getEconomyDate(), buyingDate, new Date());
-			List<Wage> wagesByAge = Wage.getWagesByAge(spieler.getSpielerID());
+			List<Wage> wagesByAge = Wage.getWagesByAge(player.getSpielerID());
 
 			Map<Integer, Wage> ageWageMap = new HashMap<Integer, Wage>();
 			for (Wage wage : wagesByAge) {
 				ageWageMap.put(Integer.valueOf(wage.getAge()), wage);
 			}
 
-			Date birthDay17 = Calc.get17thBirthday(spieler.getSpielerID());
+			Date birthDay17 = Calc.get17thBirthday(player.getSpielerID());
 			List<Entry> entries = new ArrayList<Entry>();
 			for (Date date : updates) {
 				int ageAt = Calc.getAgeAt(birthDay17, date);

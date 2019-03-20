@@ -4,7 +4,7 @@ import core.db.DBManager;
 import core.gui.IRefreshable;
 import core.gui.RefreshManager;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import module.transfer.history.HistoryPane;
 import module.transfer.scout.TransferScoutPanel;
 import module.transfer.test.OverviewPanel;
@@ -22,8 +22,8 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 
 	private static final long serialVersionUID = -5312017309355429020L;
 	private HistoryPane historyPane;
-	private List<Spieler> oldplayers;
-	private List<Spieler> players;
+	private List<Player> oldplayers;
+	private List<Player> players;
 	private TransferTypePane transferTypePane;
 	private TransferScoutPanel scoutPanel;
 	private OverviewPanel overviewPanel;
@@ -63,10 +63,10 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		// LoginWaitDialog(HOMainFrame.instance());
 		// waitWindow.setVisible(true);
 
-		final List<Spieler> allOutdated = new Vector<Spieler>();
+		final List<Player> allOutdated = new Vector<Player>();
 
 		// Check for outdated players.
-		final List<Spieler> tmp = new Vector<Spieler>();
+		final List<Player> tmp = new Vector<Player>();
 		tmp.clear();
 		tmp.addAll(HOVerwaltung.instance().getModel().getAllSpieler());
 		tmp.removeAll(this.players);
@@ -78,10 +78,10 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		tmp.removeAll(this.oldplayers);
 		allOutdated.addAll(tmp);
 
-		final List<Spieler> outdated = allOutdated;
+		final List<Player> outdated = allOutdated;
 
-		for (Iterator<Spieler> iter = allOutdated.iterator(); iter.hasNext();) {
-			final Spieler player = iter.next();
+		for (Iterator<Player> iter = allOutdated.iterator(); iter.hasNext();) {
+			final Player player = iter.next();
 
 			if (player.getSpielerID() < 0) {
 				outdated.remove(player);
@@ -98,8 +98,8 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		
 		// Also, Db is called to do downloads? Truly messed up. 
 		if (success) {
-			for (Iterator<Spieler> iter = outdated.iterator(); iter.hasNext();) {
-				final Spieler player = iter.next();
+			for (Iterator<Player> iter = outdated.iterator(); iter.hasNext();) {
+				final Player player = iter.next();
 				DBManager.instance().updatePlayerTransfers(player.getSpielerID());
 			}
 		}

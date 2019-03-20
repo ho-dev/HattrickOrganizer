@@ -1,5 +1,6 @@
 package core.db;
 
+import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -29,7 +30,7 @@ final class SpielerNotizenTable extends AbstractTable {
 
 	byte getSpielerUserPosFlag(int spielerId) {
 		if (spielerId <= 0) {
-			return core.model.player.ISpielerPosition.UNKNOWN;
+			return IMatchRoleID.UNKNOWN;
 		}
 
 		ResultSet rs = null;
@@ -44,14 +45,14 @@ final class SpielerNotizenTable extends AbstractTable {
 					return rs.getByte("userPos");
 				}
 				
-				return core.model.player.ISpielerPosition.UNKNOWN;
+				return IMatchRoleID.UNKNOWN;
 				
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DatenbankZugriff.getSpielerUserPosFlag: " + e);
 		}
 
-		return core.model.player.ISpielerPosition.UNKNOWN;
+		return IMatchRoleID.UNKNOWN;
 	}
 	
 	String getManuellerSmilie(int spielerId) {

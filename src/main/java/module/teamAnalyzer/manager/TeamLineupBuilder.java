@@ -1,7 +1,7 @@
 package module.teamAnalyzer.manager;
 
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 import module.teamAnalyzer.report.PositionReport;
 import module.teamAnalyzer.report.SpotReport;
 import module.teamAnalyzer.report.TacticReport;
@@ -32,7 +32,7 @@ public class TeamLineupBuilder {
         teamLineup.setRating(teamReport.getRating());
         teamLineup.setStars(teamReport.getStars());
 
-        for (int spot = ISpielerPosition.startLineup; spot < ISpielerPosition.startReserves; spot++) {
+        for (int spot = IMatchRoleID.startLineup; spot < IMatchRoleID.startReserves; spot++) {
         	
             SpotReport spotReport = teamReport.getSpotReport(spot);
 

@@ -9,8 +9,8 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.UserParameter;
-import core.model.player.Spieler;
-import core.model.player.SpielerPosition;
+import core.model.player.MatchRoleID;
+import core.model.player.Player;
 import core.util.Helper;
 
 import java.awt.Color;
@@ -38,14 +38,14 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     /** Icon for playing creatively */
 
     //   private ImageIcon            m_clLeer                   =   new ImageIcon( new java.awt.image.BufferedImage( 14, 14, java.awt.image.BufferedImage.TYPE_INT_ARGB ) );
-    private Spieler m_clPlayer;
+    private Player m_clPlayer;
     private JComponent m_clComponent;
     private final JLabel m_jlGroup 			= new JLabel();
     private final JLabel m_jlName			= new JLabel();
     private final JLabel m_jlSkill			= new JLabel();
     private final JLabel m_jlSpezialitaet	= new JLabel();
     private final JLabel m_jlWeatherEffect	= new JLabel();
-    private SpielerPosition m_clCurrentPlayerPosition;
+    private MatchRoleID m_clCurrentPlayerPosition;
     private boolean m_bShowTrikot;
     private boolean m_bShowWeatherEffect = true;
     private boolean m_bCustomName = false;
@@ -57,9 +57,9 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     /**
      * Label für den Spielernamen (je nach Status)
      */
-    public SpielerLabelEntry(Spieler spieler, SpielerPosition positionAktuell,
+    public SpielerLabelEntry(Player player, MatchRoleID positionAktuell,
                              float positionsbewertung, boolean showTrikot, boolean showWetterwarnung) {
-        m_clPlayer = spieler;
+        m_clPlayer = player;
         m_clCurrentPlayerPosition = positionAktuell;
         m_fPositionsbewertung = positionsbewertung;
         m_bShowTrikot = showTrikot;
@@ -67,9 +67,9 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         createComponent();
     }
     
-    public SpielerLabelEntry(Spieler spieler, SpielerPosition positionAktuell,
-    		float positionsbewertung, boolean showTrikot, boolean showWetterwarnung, boolean customName, String customNameText) {
-    	m_clPlayer = spieler;
+    public SpielerLabelEntry(Player player, MatchRoleID positionAktuell,
+                             float positionsbewertung, boolean showTrikot, boolean showWetterwarnung, boolean customName, String customNameText) {
+    	m_clPlayer = player;
     	m_clCurrentPlayerPosition = positionAktuell;
     	m_fPositionsbewertung = positionsbewertung;
     	m_bShowTrikot = showTrikot;
@@ -97,7 +97,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     	 return m_clComponent;
     }
 
-    public final Spieler getSpieler() {
+    public final Player getSpieler() {
         return m_clPlayer;
     }
 
@@ -240,9 +240,9 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     /**
      * Aktualisierung des Entrys
      */
-    public final void updateComponent(Spieler spieler, SpielerPosition positionAktuell,
+    public final void updateComponent(Player player, MatchRoleID positionAktuell,
                                       float positionsbewertung, String nameText) {
-        m_clPlayer = spieler;
+        m_clPlayer = player;
         m_clCurrentPlayerPosition = positionAktuell;
         m_fPositionsbewertung = positionsbewertung;
         m_sCustomNameString = nameText;
@@ -293,7 +293,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         m_jlSkill.setText("");
     }
     
-    private void updateDisplay(Spieler player){
+    private void updateDisplay(Player player){
     	// weatherEffect
     	 m_jlWeatherEffect.setIcon(null);
     	if (m_bShowWeatherEffect) {
@@ -317,31 +317,31 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     }
 
 	//--------------static------------------------------
-	public static Color getForegroundForSpieler(Spieler spieler) {
+    // Color player name depending of status (injured, warned, ...)
+	public static Color getForegroundForSpieler(Player player) {
 	    Color color;
 	    UserParameter userParameter = core.model.UserParameter.instance();
 	    
-	    //Auf Transfermarkt
-	    if (spieler.getTransferlisted() > 0) {
+	    //On transfert market
+	    if (player.getTransferlisted() > 0) {
 	        color = userParameter.FG_TRANSFERMARKT;
 	    }
-	    //Verletzt
-	    else if (spieler.getVerletzt() > 0) {
+	    //Injured
+	    else if (player.getVerletzt() > 0) {
 	        color = userParameter.FG_VERLETZT;
 	    }
-	    //Gesperrt
-	    else if (spieler.isGesperrt()) {
+	    //Disabled
+	    else if (player.isGesperrt()) {
 	        color = userParameter.FG_GESPERRT;
 	    }
-	    //Angeschlagen
-	    else if (spieler.getVerletzt() == 0) {
+	    //Yellow card
+	    else if (player.getVerletzt() == 0) {
 	        color = userParameter.FG_ANGESCHLAGEN;
 	    }
-	    //Zwei Karten
-	    else if (spieler.getGelbeKarten() == 2) {
+	    //Red card
+	    else if (player.getGelbeKarten() == 2) {
 	        color = userParameter.FG_ZWEIKARTEN;
 	    }
-	    //Unverletzt
 	    else {
 	        color = userParameter.FG_STANDARD;
 	    }

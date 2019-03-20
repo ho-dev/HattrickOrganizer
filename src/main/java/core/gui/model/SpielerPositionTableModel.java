@@ -4,7 +4,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.RatingTableEntry;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
-import core.model.player.SpielerPosition;
+import core.model.player.MatchRoleID;
 
 import java.util.Vector;
 
@@ -126,7 +126,7 @@ public class SpielerPositionTableModel extends AbstractTableModel {
     }
 
     /**
-     * Spieler neu setzen
+     * Player neu setzen
      */
     public final void setValues(Vector<float[]> spielerbewertung) {
         m_vSpielerBewertung = spielerbewertung;
@@ -146,14 +146,14 @@ public class SpielerPositionTableModel extends AbstractTableModel {
             final float[] bewertung = ((float[]) m_vSpielerBewertung.get(i));
 
             //Position
-            m_clData[i][0] = new ColorLabelEntry(ImageUtilities.getImage4Position(SpielerPosition
+            m_clData[i][0] = new ColorLabelEntry(ImageUtilities.getImage4Position(MatchRoleID
                                                                     .getHTPosidForHOPosition4Image((byte) bewertung[3]),
                                                                     (byte) 0, 0),
-                                                 -SpielerPosition.getSortId((byte) bewertung[3],
+                                                 -MatchRoleID.getSortId((byte) bewertung[3],
                                                                             false),
                                                  ColorLabelEntry.FG_STANDARD,
                                                  ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-            ((ColorLabelEntry) m_clData[i][0]).setText(SpielerPosition.getNameForPosition((byte) bewertung[3]));
+            ((ColorLabelEntry) m_clData[i][0]).setText(MatchRoleID.getNameForPosition((byte) bewertung[3]));
 
             //Maximal
             m_clData[i][1] = new RatingTableEntry(bewertung[0] * 2, true);
@@ -167,15 +167,15 @@ public class SpielerPositionTableModel extends AbstractTableModel {
     }
 
     /*
-       public Spieler getSpieler( int id )
+       public Player getPlayer( int id )
        {
            if ( id > 0 )
            {
                for ( int i = 0; i < m_vSpieler.size(); i++ )
                {
-                   if ( ( (Spieler)m_vSpieler.get( i ) ).getSpielerID() == id )
+                   if ( ( (Player)m_vSpieler.get( i ) ).getSpielerID() == id )
                    {
-                       return (Spieler)m_vSpieler.get( i );
+                       return (Player)m_vSpieler.get( i );
                    }
                }
            }

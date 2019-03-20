@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.util.Properties;
 
 /**
- * Enthält die Daten des Teams (nicht der Spieler!)
+ * Enthält die Daten des Teams (nicht der Player!)
  */
 public final class Team  {
 	// ~ Instance fields

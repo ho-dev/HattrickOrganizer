@@ -1,7 +1,7 @@
 package module.transfer.test;
 
 import core.db.DBManager;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -27,7 +27,7 @@ public class PlayerTransferIncomePanel extends JPanel {
 		initComponents();
 	}
 	
-	void setPlayer(Spieler player) {
+	void setPlayer(Player player) {
 		if (player != null) {
 			NumberFormat nf = NumberFormat.getInstance();
 

@@ -3,7 +3,8 @@ package tool.keepertool;
 import core.constants.player.PlayerSkill;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -105,7 +106,7 @@ class ResultPanel extends JPanel {
         set.addActionListener(new ActionListener() {
                 @Override
 				public void actionPerformed(ActionEvent arg0) {
-                    final Spieler sp = HOVerwaltung.instance().getModel().getSpieler(id);
+                    final Player sp = HOVerwaltung.instance().getModel().getSpieler(id);
                     double decimals = average - sp.getTorwart()
                                       - sp.getSubskill4Pos(PlayerSkill.KEEPER);
 

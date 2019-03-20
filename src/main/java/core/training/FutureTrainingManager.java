@@ -6,7 +6,7 @@ import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
 import core.model.player.ISkillup;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.HelperWrapper;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class FutureTrainingManager {
 	public int[] finalSkillup = new int[8];
 
 	/** Active player */
-	private Spieler player;
+	private Player player;
 	private List<TrainingPerWeek> futureTrainings;
 	private List<ISkillup> futureSkillups;
 	private int weeksPassed = 0;
@@ -43,8 +43,8 @@ public class FutureTrainingManager {
 	* @param p The active player
 	* @param trainings The future training
 	*/
-	public FutureTrainingManager(Spieler p, List<TrainingPerWeek> trainings, int cotrainer, 
-										int trainerLvl, List<StaffMember> staff) {
+	public FutureTrainingManager(Player p, List<TrainingPerWeek> trainings, int cotrainer,
+                                 int trainerLvl, List<StaffMember> staff) {
 		this.player = p;
 		this.futureSkillups = new ArrayList<ISkillup>();
 		this.coTrainer = cotrainer;

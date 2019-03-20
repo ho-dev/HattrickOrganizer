@@ -1,6 +1,6 @@
 package core.gui.comp.table;
 
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 /**
  * editable checkbox in a JTable
@@ -27,7 +27,7 @@ public class BooleanColumn extends UserColumn {
 	 * @param player
 	 * @return Boolean
 	 */
-	public Boolean getValue(Spieler player){
+	public Boolean getValue(Player player){
 		return Boolean.valueOf(player.isSpielberechtigt());
 	}
 	

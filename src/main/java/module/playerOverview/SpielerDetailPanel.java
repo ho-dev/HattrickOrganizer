@@ -22,9 +22,9 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
+import core.model.player.Player;
 import core.module.IModule;
 import core.util.Helper;
 import module.lineup.Lineup;
@@ -93,7 +93,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private final DoppelLabelEntry m_jpTSI = new DoppelLabelEntry(new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
     		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT), new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
     		ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT));
-    private final JComboBox m_jcbUserBestPosition = new JComboBox(SpielerPosition.POSITIONEN);
+    private final JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
     // Top Row, column 3
     private final ColorLabelEntry m_jpLeadership = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
     		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -197,8 +197,8 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private final DoppelLabelEntry m_jpRatingForwardTowardsWing = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
     private final DoppelLabelEntry m_jpRatingForwardDefensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
     // Players
-    private Spieler m_clPlayer;
-    private Spieler m_clComparisonPlayer;
+    private Player m_clPlayer;
+    private Player m_clComparisonPlayer;
 
     private final DoppelLabelEntry[] playerPositionValues= new DoppelLabelEntry[]{
     		m_jpRatingKeeper,
@@ -223,25 +223,25 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     };
 
     private final byte[] playerPosition = new byte[]{
-    		ISpielerPosition.KEEPER,
-            ISpielerPosition.CENTRAL_DEFENDER,
-            ISpielerPosition.CENTRAL_DEFENDER_TOWING,
-            ISpielerPosition.CENTRAL_DEFENDER_OFF,
-            ISpielerPosition.BACK,
-            ISpielerPosition.BACK_TOMID,
-            ISpielerPosition.BACK_OFF,
-            ISpielerPosition.BACK_DEF,
-            ISpielerPosition.MIDFIELDER,
-            ISpielerPosition.MIDFIELDER_TOWING,
-            ISpielerPosition.MIDFIELDER_OFF,
-            ISpielerPosition.MIDFIELDER_DEF,
-            ISpielerPosition.WINGER,
-            ISpielerPosition.WINGER_TOMID,
-            ISpielerPosition.WINGER_OFF,
-            ISpielerPosition.WINGER_DEF,
-            ISpielerPosition.FORWARD,
-            ISpielerPosition.FORWARD_TOWING,
-            ISpielerPosition.FORWARD_DEF
+    		IMatchRoleID.KEEPER,
+            IMatchRoleID.CENTRAL_DEFENDER,
+            IMatchRoleID.CENTRAL_DEFENDER_TOWING,
+            IMatchRoleID.CENTRAL_DEFENDER_OFF,
+            IMatchRoleID.BACK,
+            IMatchRoleID.BACK_TOMID,
+            IMatchRoleID.BACK_OFF,
+            IMatchRoleID.BACK_DEF,
+            IMatchRoleID.MIDFIELDER,
+            IMatchRoleID.MIDFIELDER_TOWING,
+            IMatchRoleID.MIDFIELDER_OFF,
+            IMatchRoleID.MIDFIELDER_DEF,
+            IMatchRoleID.WINGER,
+            IMatchRoleID.WINGER_TOMID,
+            IMatchRoleID.WINGER_OFF,
+            IMatchRoleID.WINGER_DEF,
+            IMatchRoleID.FORWARD,
+            IMatchRoleID.FORWARD_TOWING,
+            IMatchRoleID.FORWARD_DEF
 
     };
 
@@ -259,7 +259,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     /**
      * Set the player to be shown
      */
-    public final void setSpieler(Spieler player) {
+    public final void setSpieler(Player player) {
         m_clPlayer = player;
         if (m_clPlayer != null) {
         	findComparisonPlayer();
@@ -359,12 +359,12 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         	m_jpMotherClub.setIcon( ThemeManager.getIcon(HOIconName.HOMEGROWN));
         else
         	m_jpMotherClub.clear();
-        Lineup lineup = HOVerwaltung.instance().getModel().getAufstellung();
+        Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
         if (lineup.isSpielerAufgestellt(m_clPlayer.getSpielerID())
             && (lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()) != null)) {
             m_jpPositioned.setIcon(ImageUtilities.getImage4Position(lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()),
             		m_clPlayer.getTrikotnummer()));
-            m_jpPositioned.setText(SpielerPosition.getNameForPosition(lineup.getPositionBySpielerId(m_clPlayer.getSpielerID())
+            m_jpPositioned.setText(MatchRoleID.getNameForPosition(lineup.getPositionBySpielerId(m_clPlayer.getSpielerID())
             		.getPosition()));
         } else {
             m_jpPositioned.setIcon(ImageUtilities.getImage4Position(null, m_clPlayer.getTrikotnummer()));
@@ -384,7 +384,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jcbInformation.removeItemListener(this);
         m_jcbInformation.setSelectedItem(m_clPlayer.getManuellerSmilie());
         m_jcbInformation.addItemListener(this);
-        m_jpStatus.setSpieler(m_clPlayer);
+        m_jpStatus.setPlayer(m_clPlayer);
         m_jcbUserBestPosition.removeItemListener(this);
         Helper.markierenComboBox(m_jcbUserBestPosition, m_clPlayer.getUserPosFlag());
         m_jcbUserBestPosition.addItemListener(this);
@@ -431,7 +431,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             m_jpLeadership.setText(PlayerAbility.getNameForSkill(m_clPlayer.getFuehrung()) + "");
             m_jpLoyalty.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLoyalty()) + "");
             m_jpLoyaltyChange.clear();
-            m_jpBestPosition.setText(SpielerPosition.getNameForPosition(m_clPlayer.getIdealPosition())
+            m_jpBestPosition.setText(MatchRoleID.getNameForPosition(m_clPlayer.getIdealPosition())
                                 + " ("
                                 + Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen).format(
                                 		m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true))
@@ -514,7 +514,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             m_jpLoyaltyChange.setGraphicalChangeValue(m_clPlayer.getLoyalty()
             		- m_clComparisonPlayer.getLoyalty(),
             		!m_clComparisonPlayer.isOld(), true);
-            m_jpBestPosition.setText(SpielerPosition.getNameForPosition(m_clPlayer.getIdealPosition())
+            m_jpBestPosition.setText(MatchRoleID.getNameForPosition(m_clPlayer.getIdealPosition())
                                 + " ("
                                 + m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true)
                                 + ")");
@@ -575,7 +575,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
      *
      * @return player
      */
-    private Spieler getComparisonPlayerFirstHRF(Spieler vorlage) {
+    private Player getComparisonPlayerFirstHRF(Player vorlage) {
         return core.db.DBManager.instance()
         	.getSpielerFirstHRF(vorlage.getSpielerID());
     }
@@ -586,10 +586,10 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private void findComparisonPlayer() {
         final int id = m_clPlayer.getSpielerID();
         for (int i = 0;
-             (SpielerTrainingsVergleichsPanel.getVergleichsSpieler() != null)
-             && (i < SpielerTrainingsVergleichsPanel.getVergleichsSpieler().size()); i++) {
-            Spieler comparisonPlayer = (Spieler)SpielerTrainingsVergleichsPanel
-            	.getVergleichsSpieler().get(i);
+             (SpielerTrainingsVergleichsPanel.getVergleichsPlayer() != null)
+             && (i < SpielerTrainingsVergleichsPanel.getVergleichsPlayer().size()); i++) {
+            Player comparisonPlayer = (Player)SpielerTrainingsVergleichsPanel
+            	.getVergleichsPlayer().get(i);
             if (comparisonPlayer.getSpielerID() == id) {
                 // Found it
             	m_clComparisonPlayer = comparisonPlayer;
@@ -895,8 +895,8 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
         constraints.gridheight = 1;
         for (int i = 0; i < playerPositionValues.length; i++) {
-        	label = new JLabel(SpielerPosition.getKurzNameForPosition(playerPosition[i]));
-            label.setToolTipText(SpielerPosition.getNameForPosition(playerPosition[i]));
+        	label = new JLabel(MatchRoleID.getKurzNameForPosition(playerPosition[i]));
+            label.setToolTipText(MatchRoleID.getNameForPosition(playerPosition[i]));
             initBlueLabel(i,constraints,layout,panel,label);
             initBlueField(i,constraints,layout,panel,playerPositionValues[i].getComponent(false));
 		}

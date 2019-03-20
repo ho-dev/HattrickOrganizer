@@ -6,7 +6,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.player.SpielerPosition;
+import core.model.player.MatchRoleID;
 import core.module.config.ModuleConfig;
 import core.util.HelperWrapper;
 import module.teamAnalyzer.SystemManager;
@@ -153,7 +153,7 @@ public class PlayerPanel extends JPanel {
 				specialEventImage.setIcon(ThemeManager.getIcon(HOIconName.SPECIAL[specialEvent]));
 			}
 
-			positionField.setText(SpielerPosition.getNameForPosition((byte) lineup.getPosition()));
+			positionField.setText(MatchRoleID.getNameForPosition((byte) lineup.getPosition()));
 			updateRatingPanel(lineup.getRating());
 			tacticPanel.reload(lineup.getTactics());
 		} else {

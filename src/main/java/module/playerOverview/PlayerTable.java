@@ -1,10 +1,10 @@
 package module.playerOverview;
 
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 public interface PlayerTable {
 
-	Spieler getSpieler(int row);
+	Player getSpieler(int row);
 	void setSpieler(int spielerid);
 	
 }

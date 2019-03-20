@@ -7,7 +7,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.LightGrayFilter;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.HOLogger;
 
 import java.awt.Color;
@@ -33,7 +33,7 @@ import javax.swing.ScrollPaneConstants;
 
 
 /**
- * Alle Spieler der Gruppe werden einer Gruppe zugeordnet
+ * Alle Player der Gruppe werden einer Gruppe zugeordnet
  */
 public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
     implements ActionListener
@@ -200,16 +200,16 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
     private void gruppenMarkierung() {
         //Von beiden Gruppen ein Button selektiert
         if ((getSelectedButton(true) != null) && (getSelectedButton(false) != null)) {
-            final Vector<Spieler> alleSpieler = HOVerwaltung.instance().getModel().getAllSpieler();
+            final Vector<Player> allePlayer = HOVerwaltung.instance().getModel().getAllSpieler();
             final String suchName = getName4Button(getSelectedButton(true));
             final String ersatzName = getName4Button(getSelectedButton(false));
 
-            for (int i = 0; i < alleSpieler.size(); i++) {
-                final Spieler spieler = alleSpieler.get(i);
+            for (int i = 0; i < allePlayer.size(); i++) {
+                final Player player = allePlayer.get(i);
 
-                //Spieler in der Gruppe
-                if (spieler.getTeamInfoSmilie().equals(suchName)) {
-                    spieler.setTeamInfoSmilie(ersatzName);
+                //Player in der Gruppe
+                if (player.getTeamInfoSmilie().equals(suchName)) {
+                    player.setTeamInfoSmilie(ersatzName);
                 }
             }
 

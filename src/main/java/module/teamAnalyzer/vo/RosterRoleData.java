@@ -1,6 +1,6 @@
 package module.teamAnalyzer.vo;
 
-import core.model.player.SpielerPosition;
+import core.model.player.MatchRoleID;
 import core.util.HelperWrapper;
 
 public class RosterRoleData {
@@ -45,7 +45,7 @@ public class RosterRoleData {
     public String getPositionDesc() {
         int posCode = HelperWrapper.instance().getPosition(pos);
 
-        return SpielerPosition.getNameForPosition((byte) posCode);
+        return MatchRoleID.getNameForPosition((byte) posCode);
     }
 
     public void addMatch(double rating) {

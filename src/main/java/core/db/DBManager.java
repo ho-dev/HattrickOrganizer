@@ -26,9 +26,9 @@ import core.model.match.MatchesOverviewRow;
 import core.model.misc.Basics;
 import core.model.misc.Finanzen;
 import core.model.misc.Verein;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
+import core.model.player.Player;
 import core.model.series.Liga;
 import core.model.series.Paarung;
 import core.training.TrainingPerWeek;
@@ -57,7 +57,7 @@ public class DBManager {
 	// ~ Static fields/initializers
 	// -----------------------------------------------------------------
 
-	// Datum der TSI Umstellung. Alle Marktwerte der Spieler müssen vor dem
+	// Datum der TSI Umstellung. Alle Marktwerte der Player müssen vor dem
 	// Datum durch 1000 geteilt werden (ohne Sprachfaktor)
 	/** database version */
 	private static final int DBVersion = 25;
@@ -353,15 +353,15 @@ public class DBManager {
 	// -------------------------------------------------
 
 	/**
-	 * gibt alle Spieler zurück, auch ehemalige
+	 * gibt alle Player zurück, auch ehemalige
 	 */
-	public Vector<Spieler> getAllSpieler() {
+	public Vector<Player> getAllSpieler() {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.getAllSpieler();
 	}
 
 	/**
-	 * Gibt die letzte Bewertung für den Spieler zurück // HRF
+	 * Gibt die letzte Bewertung für den Player zurück // HRF
 	 */
 	public int getLetzteBewertung4Spieler(int spielerid) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
@@ -369,9 +369,9 @@ public class DBManager {
 	}
 
 	/**
-	 * lädt die Spieler zum angegeben HRF file ein
+	 * lädt die Player zum angegeben HRF file ein
 	 */
-	public Vector<Spieler> getSpieler(int hrfID) {
+	public Vector<Player> getSpieler(int hrfID) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.getSpieler(hrfID);
 	}
@@ -387,29 +387,29 @@ public class DBManager {
 	 * 
 	 * @return player
 	 */
-	public Spieler getSpielerFromHrf(int hrfID, int playerId) {
+	public Player getSpielerFromHrf(int hrfID, int playerId) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.getSpielerFromHrf(hrfID, playerId);
 	}
 
 	/**
-	 * Gibt einen Spieler zurück mit den Daten kurz vor dem Timestamp
+	 * Gibt einen Player zurück mit den Daten kurz vor dem Timestamp
 	 */
-	public Spieler getSpielerAtDate(int spielerid, Timestamp time) {
+	public Player getSpielerAtDate(int spielerid, Timestamp time) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.getSpielerAtDate(spielerid, time);
 	}
 
 	/**
-	 * Gibt einen Spieler zurück aus dem ersten HRF
+	 * Gibt einen Player zurück aus dem ersten HRF
 	 */
-	public Spieler getSpielerFirstHRF(int spielerid) {
+	public Player getSpielerFirstHRF(int spielerid) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.getSpielerFirstHRF(spielerid);
 	}
 
 	/**
-	 * Gibt das Datum des ersten HRFs zurück, in dem der Spieler aufgetaucht ist
+	 * Gibt das Datum des ersten HRFs zurück, in dem der Player aufgetaucht ist
 	 */
 	public Timestamp getTimestamp4FirstPlayerHRF(int spielerid) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
@@ -429,11 +429,11 @@ public class DBManager {
 	}
 
 	/**
-	 * speichert die Spieler
+	 * speichert die Player
 	 */
-	public void saveSpieler(int hrfId, Vector<Spieler> spieler, Timestamp date) {
+	public void saveSpieler(int hrfId, Vector<Player> player, Timestamp date) {
 		((SpielerTable) getTable(SpielerTable.TABLENAME)).saveSpieler(hrfId,
-				spieler, date);
+                player, date);
 	}
 
 	/**
@@ -446,7 +446,7 @@ public class DBManager {
 	 * @param date
 	 *            date to save
 	 */
-	public void saveSpieler(int hrfId, Spieler player, Timestamp date) {
+	public void saveSpieler(int hrfId, Player player, Timestamp date) {
 		((SpielerTable) getTable(SpielerTable.TABLENAME)).saveSpieler(hrfId,
 				player, date);
 	}
@@ -529,7 +529,7 @@ public class DBManager {
 	// -------------------------------------------------
 
 	/**
-	 * Gibt eine Liste an Ratings zurück, auf denen der Spieler gespielt hat: 0
+	 * Gibt eine Liste an Ratings zurück, auf denen der Player gespielt hat: 0
 	 * = Max 1 = Min 2 = Durchschnitt 3 = posid
 	 */
 	public Vector<float[]> getAlleBewertungen(int spielerid) {
@@ -539,7 +539,7 @@ public class DBManager {
 
 	/**
 	 * Gibt die beste, schlechteste und durchschnittliche Bewertung für den
-	 * Spieler, sowie die Anzahl der Bewertungen zurück // Match
+	 * Player, sowie die Anzahl der Bewertungen zurück // Match
 	 */
 	public float[] getBewertungen4Player(int spielerid) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
@@ -548,7 +548,7 @@ public class DBManager {
 
 	/**
 	 * Gibt die beste, schlechteste und durchschnittliche Bewertung für den
-	 * Spieler, sowie die Anzahl der Bewertungen zurück // Match
+	 * Player, sowie die Anzahl der Bewertungen zurück // Match
 	 *
 	 * @param spielerid
 	 *            Spielerid
@@ -1030,7 +1030,7 @@ public class DBManager {
 				.getMatchSubstitutionsByHrf(hrfId, lineupName);
 	}
 
-	List<SpielerPosition> getPenaltyTakers(String lineupName) {
+	List<MatchRoleID> getPenaltyTakers(String lineupName) {
 		try {
 			return ((PenaltyTakersTable) getTable(PenaltyTakersTable.TABLENAME))
 					.getPenaltyTakers(lineupName);
@@ -1080,8 +1080,8 @@ public class DBManager {
 	/**
 	 * lädt System Positionen
 	 */
-	public Vector<ISpielerPosition> getSystemPositionen(int hrfID,
-			String sysName) {
+	public Vector<IMatchRoleID> getSystemPositionen(int hrfID,
+                                                    String sysName) {
 		return ((PositionenTable) getTable(PositionenTable.TABLENAME))
 				.getSystemPositionen(hrfID, sysName);
 	}
@@ -1090,7 +1090,7 @@ public class DBManager {
 	 * speichert System Positionen
 	 */
 	public void saveSystemPositionen(int hrfId,
-			Vector<ISpielerPosition> positionen, String sysName) {
+                                     Vector<IMatchRoleID> positionen, String sysName) {
 		((PositionenTable) getTable(PositionenTable.TABLENAME))
 				.saveSystemPositionen(hrfId, positionen, sysName);
 	}
@@ -1417,7 +1417,7 @@ public class DBManager {
 			final ResultSet rs = m_clJDBCAdapter.executeQuery(sql);
 			rs.beforeFirst();
 
-			// Alle Daten zu dem Spieler holen
+			// Alle Daten zu dem Player holen
 			while (rs.next()) {
 				final SpielerMatchCBItem temp = new SpielerMatchCBItem(null,
 						rs.getInt("MatchID"), rs.getFloat("Rating") * 2,
@@ -1453,8 +1453,8 @@ public class DBManager {
 					filter = new Timestamp(datum.getTime());
 				}
 
-				// Spieler
-				final core.model.player.Spieler player = getSpielerAtDate(
+				// Player
+				final Player player = getSpielerAtDate(
 						spielerid, filter);
 
 				// Matchdetails

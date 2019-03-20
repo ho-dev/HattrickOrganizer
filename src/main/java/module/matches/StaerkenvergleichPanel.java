@@ -13,9 +13,8 @@ import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
-import core.model.match.MatchType;
 import core.model.match.Matchdetails;
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 import core.util.Helper;
 
 import java.awt.Color;
@@ -627,8 +626,8 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 	private double getStars(List<MatchLineupPlayer> players) {
 		double stars = 0;
 		for (MatchLineupPlayer player : players) {
-			if ((player.getId() < ISpielerPosition.startReserves)
-					&& (player.getId() >= ISpielerPosition.startLineup)) {
+			if ((player.getId() < IMatchRoleID.startReserves)
+					&& (player.getId() >= IMatchRoleID.startLineup)) {
 				double rating = (double) player.getRating();
 
 				if (rating > 0) {

@@ -1,11 +1,9 @@
 package module.opponentspy;
 
 import core.constants.player.PlayerSpeciality;
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 //import module.opponentspy.OpponentTeam.PlayedPosition;
 
-import java.util.HashMap;
-import java.util.Iterator;
 
 public class CalcPlayerBaseProvider {
 
@@ -33,66 +31,66 @@ public class CalcPlayerBaseProvider {
 	public void setBaseSkills(CalcVariables calcPlayer) {
 		
 		switch (calcPlayer.role) {
-			case ISpielerPosition.KEEPER:
+			case IMatchRoleID.KEEPER:
 				setAsGoalkeeper(calcPlayer, calcPlayer.specialty);
 				break;
-			// case ISpielerPosition.COUNTER_DEFENDER :
+			// case IMatchRoleID.COUNTER_DEFENDER :
 			// setAsCounterDefender (calcPlayer));
 			// break; // It might be better to make a boolean in
 			// setAsCentralDefender and setAsWingBack because COUNTER_DEFENDER is
 			// not a position.
-			case ISpielerPosition.CENTRAL_DEFENDER:
+			case IMatchRoleID.CENTRAL_DEFENDER:
 				setAsCentralDefender(calcPlayer);
 				break;
-			case ISpielerPosition.CENTRAL_DEFENDER_OFF:
+			case IMatchRoleID.CENTRAL_DEFENDER_OFF:
 				setAsCentralDefender(calcPlayer);
 				break;
-			case ISpielerPosition.CENTRAL_DEFENDER_TOWING:
+			case IMatchRoleID.CENTRAL_DEFENDER_TOWING:
 				setAsWingBack(calcPlayer);
 				break;
-			case ISpielerPosition.BACK:
+			case IMatchRoleID.BACK:
 				setAsWingBack(calcPlayer);
 				break;
-			case ISpielerPosition.BACK_DEF:
+			case IMatchRoleID.BACK_DEF:
 				setAsWingBack(calcPlayer);
 				break;
-			case ISpielerPosition.BACK_OFF:
+			case IMatchRoleID.BACK_OFF:
 				setAsWingBack(calcPlayer);
 				break;
-			case ISpielerPosition.BACK_TOMID:
+			case IMatchRoleID.BACK_TOMID:
 				setAsCentralDefender(calcPlayer);
 				break;
-			case ISpielerPosition.MIDFIELDER:
+			case IMatchRoleID.MIDFIELDER:
 				setAsCentralMidfielder(calcPlayer);
 				break;
-			case ISpielerPosition.MIDFIELDER_DEF:
+			case IMatchRoleID.MIDFIELDER_DEF:
 				setAsCentralMidfielder(calcPlayer);
 				break;
-			case ISpielerPosition.MIDFIELDER_OFF:
+			case IMatchRoleID.MIDFIELDER_OFF:
 				setAsCentralMidfielder(calcPlayer);
 				break;
-			case ISpielerPosition.MIDFIELDER_TOWING:
+			case IMatchRoleID.MIDFIELDER_TOWING:
 				setAsWinger(calcPlayer);
 				break;
-			case ISpielerPosition.WINGER:
+			case IMatchRoleID.WINGER:
 				setAsWinger(calcPlayer);
 				break;
-			case ISpielerPosition.WINGER_DEF:
+			case IMatchRoleID.WINGER_DEF:
 				setAsWinger(calcPlayer);
 				break;
-			case ISpielerPosition.WINGER_OFF:
+			case IMatchRoleID.WINGER_OFF:
 				setAsWinger(calcPlayer);
 				break;
-			case ISpielerPosition.WINGER_TOMID:
+			case IMatchRoleID.WINGER_TOMID:
 				setAsCentralMidfielder(calcPlayer);
 				break;
-			case ISpielerPosition.FORWARD:
+			case IMatchRoleID.FORWARD:
 				setAsForward(calcPlayer);
 				break;
-			case ISpielerPosition.FORWARD_DEF:
+			case IMatchRoleID.FORWARD_DEF:
 				setAsForwardDefensive(calcPlayer);
 				break;
-			case ISpielerPosition.FORWARD_TOWING:
+			case IMatchRoleID.FORWARD_TOWING:
 				setAsForwardToWing(calcPlayer);
 				break;
 	

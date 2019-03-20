@@ -4,7 +4,7 @@ package core.gui.comp.table;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.model.PlayerOverviewModel;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.HOLogger;
 import module.lineup.LineupTableModel;
 
@@ -105,7 +105,7 @@ public class TableSorter extends TableMap {
     }
 
 
-    public final Spieler getSpieler(int row) {
+    public final Player getSpieler(int row) {
         if (row > -1) {
             try {
             	final int id = Integer.parseInt(((ColorLabelEntry) getValueAt(row,idSpalte)).getText());

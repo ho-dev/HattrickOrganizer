@@ -3,6 +3,7 @@ package module.playeranalysis.experience;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.player.Player;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -32,7 +33,7 @@ import javax.swing.table.TableColumnModel;
 class Spielertabelle extends JTable {
 	private static final long serialVersionUID = 3117625304079832033L;
 
-	public static final String spaltennamen[] = { "Spieler", "ls.player.age",
+	public static final String spaltennamen[] = { "Player", "ls.player.age",
 			"ls.player.experience", "seit", "Bonus", "SchaetzungMin", "SchaetzungWahrscheinlich",
 			"SchaetzungMax", "WochenBisAufwertung", "ls.match.matchtype.internationalfriendly_cup",
 			"ls.match.matchtype.internationalfriendly_normal",
@@ -516,12 +517,12 @@ class Spielertabelle extends JTable {
 	}
 
 	void aktualisieren() {
-		Vector<core.model.player.Spieler> alleSpieler = HOVerwaltung.instance().getModel()
+		Vector<Player> allePlayer = HOVerwaltung.instance().getModel()
 				.getAllSpieler();
-		spielerSortierung = new SpielerSortierung[alleSpieler.size()];
-		spieler = new Vector<Spieler>(alleSpieler.size());
+		spielerSortierung = new SpielerSortierung[allePlayer.size()];
+		spieler = new Vector<Spieler>(allePlayer.size());
 		int pos = 0;
-		for (Enumeration<core.model.player.Spieler> el = alleSpieler.elements(); el
+		for (Enumeration<Player> el = allePlayer.elements(); el
 				.hasMoreElements();) {
 			spieler.add(new Spieler(el.nextElement()));
 			spielerSortierung[pos] = new SpielerSortierung(pos);

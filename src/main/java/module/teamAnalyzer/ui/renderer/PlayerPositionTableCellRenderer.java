@@ -1,7 +1,7 @@
 package module.teamAnalyzer.ui.renderer;
 
 import core.gui.theme.ImageUtilities;
-import core.model.player.SpielerPosition;
+import core.model.player.MatchRoleID;
 import core.util.HelperWrapper;
 import java.awt.Component;
 import java.util.HashMap;
@@ -55,7 +55,7 @@ public class PlayerPositionTableCellRenderer extends DefaultTableCellRenderer {
             }
 
             this.setIcon(icon);
-            this.setText(SpielerPosition.getNameForPosition((byte) pos));
+            this.setText(MatchRoleID.getNameForPosition((byte) pos));
         } else {
             this.setIcon(null);
             this.setText(null);

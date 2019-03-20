@@ -8,7 +8,7 @@ import core.model.XtraData;
 import core.model.misc.Basics;
 import core.model.misc.Finanzen;
 import core.model.misc.Verein;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.model.series.Liga;
 import core.util.HOLogger;
 import core.util.IOUtils;
@@ -190,7 +190,7 @@ public class HRFStringParser {
 				}
 				// player
 				else if (entity.toString().equalsIgnoreCase(PLAYER)) {
-					hoModel.addSpieler(new Spieler(properties, hrfdate));
+					hoModel.addSpieler(new Player(properties, hrfdate));
 				}
 				// Xtra
 				else if (entity.toString().equalsIgnoreCase(XTRA)) {
@@ -219,8 +219,8 @@ public class HRFStringParser {
 		// resetted . So later trainer could be found by searching for player
 		// having trainerType != -1
 		if (trainerID > -1) {
-			List<Spieler> players = hoModel.getAllSpieler();
-			for (Spieler player : players) {
+			List<Player> players = hoModel.getAllSpieler();
+			for (Player player : players) {
 				if (player.isTrainer() && player.getSpielerID() != trainerID) {
 					player.setTrainer(-1);
 					player.setTrainerTyp(-1);

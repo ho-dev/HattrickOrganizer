@@ -7,8 +7,8 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.panel.RasenPanel;
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.series.Paarung;
 import module.series.Spielplan;
 
@@ -135,7 +135,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 	private void fillPanel(JPanel panel, MatchLineupPlayer mlp, boolean noStars) {
 		panel.setOpaque(false);
 
-		String posi = SpielerPosition.getNameForPosition((byte) mlp.getPositionCode());
+		String posi = MatchRoleID.getNameForPosition((byte) mlp.getPositionCode());
 
 		panel.removeAll();
 
@@ -285,22 +285,22 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		}
 		// TODO For match of year attention of doubles
 		Map<String, MatchLineupPlayer> spieler = new HashMap<String, MatchLineupPlayer>();
-		List<MatchLineupPlayer> players = getPlayetAt(db, matchIDs, ISpielerPosition.KEEPER, 1,
+		List<MatchLineupPlayer> players = getPlayetAt(db, matchIDs, IMatchRoleID.KEEPER, 1,
 				isBest);
 		spieler.put("1", players.get(0));
-		players = getPlayetAt(db, matchIDs, ISpielerPosition.BACK, 2, isBest);
+		players = getPlayetAt(db, matchIDs, IMatchRoleID.BACK, 2, isBest);
 		spieler.put("2", players.get(0));
 		spieler.put("5", players.get(1));
-		players = getPlayetAt(db, matchIDs, ISpielerPosition.CENTRAL_DEFENDER, 2, isBest);
+		players = getPlayetAt(db, matchIDs, IMatchRoleID.CENTRAL_DEFENDER, 2, isBest);
 		spieler.put("3", players.get(0));
 		spieler.put("4", players.get(1));
-		players = getPlayetAt(db, matchIDs, ISpielerPosition.WINGER, 2, isBest);
+		players = getPlayetAt(db, matchIDs, IMatchRoleID.WINGER, 2, isBest);
 		spieler.put("6", players.get(0));
 		spieler.put("9", players.get(1));
-		players = getPlayetAt(db, matchIDs, ISpielerPosition.MIDFIELDER, 2, isBest);
+		players = getPlayetAt(db, matchIDs, IMatchRoleID.MIDFIELDER, 2, isBest);
 		spieler.put("7", players.get(0));
 		spieler.put("8", players.get(1));
-		players = getPlayetAt(db, matchIDs, ISpielerPosition.FORWARD, 2, isBest);
+		players = getPlayetAt(db, matchIDs, IMatchRoleID.FORWARD, 2, isBest);
 		spieler.put("10", players.get(0));
 		spieler.put("11", players.get(1));
 		return spieler;
@@ -312,41 +312,41 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		String posClase = "";
 
 		switch (position) {
-		case ISpielerPosition.KEEPER: {
-			posClase += " FIELDPOS=" + ISpielerPosition.keeper + " ";
+		case IMatchRoleID.KEEPER: {
+			posClase += " FIELDPOS=" + IMatchRoleID.keeper + " ";
 			break;
 		}
 
-		case ISpielerPosition.CENTRAL_DEFENDER: {
-			posClase += " (FIELDPOS=" + ISpielerPosition.leftCentralDefender + " OR FIELDPOS="
-					+ ISpielerPosition.middleCentralDefender + " OR FIELDPOS="
-					+ ISpielerPosition.rightCentralDefender + ") ";
+		case IMatchRoleID.CENTRAL_DEFENDER: {
+			posClase += " (FIELDPOS=" + IMatchRoleID.leftCentralDefender + " OR FIELDPOS="
+					+ IMatchRoleID.middleCentralDefender + " OR FIELDPOS="
+					+ IMatchRoleID.rightCentralDefender + ") ";
 			break;
 		}
 
-		case ISpielerPosition.BACK: {
-			posClase += " (FIELDPOS=" + ISpielerPosition.leftBack + " OR FIELDPOS="
-					+ ISpielerPosition.rightBack + ") ";
+		case IMatchRoleID.BACK: {
+			posClase += " (FIELDPOS=" + IMatchRoleID.leftBack + " OR FIELDPOS="
+					+ IMatchRoleID.rightBack + ") ";
 			break;
 		}
 
-		case ISpielerPosition.WINGER: {
-			posClase += " (FIELDPOS=" + ISpielerPosition.leftWinger + " OR FIELDPOS="
-					+ ISpielerPosition.rightWinger + ") ";
+		case IMatchRoleID.WINGER: {
+			posClase += " (FIELDPOS=" + IMatchRoleID.leftWinger + " OR FIELDPOS="
+					+ IMatchRoleID.rightWinger + ") ";
 			break;
 		}
 
-		case ISpielerPosition.MIDFIELDER: {
-			posClase += " (FIELDPOS=" + ISpielerPosition.leftInnerMidfield + " OR FIELDPOS="
-					+ ISpielerPosition.centralInnerMidfield + " OR FIELDPOS="
-					+ ISpielerPosition.rightInnerMidfield + ") ";
+		case IMatchRoleID.MIDFIELDER: {
+			posClase += " (FIELDPOS=" + IMatchRoleID.leftInnerMidfield + " OR FIELDPOS="
+					+ IMatchRoleID.centralInnerMidfield + " OR FIELDPOS="
+					+ IMatchRoleID.rightInnerMidfield + ") ";
 			break;
 		}
 
-		case ISpielerPosition.FORWARD: {
-			posClase += " (FIELDPOS=" + ISpielerPosition.leftForward + " OR FIELDPOS="
-					+ ISpielerPosition.centralForward + " OR FIELDPOS="
-					+ ISpielerPosition.rightForward + ") ";
+		case IMatchRoleID.FORWARD: {
+			posClase += " (FIELDPOS=" + IMatchRoleID.leftForward + " OR FIELDPOS="
+					+ IMatchRoleID.centralForward + " OR FIELDPOS="
+					+ IMatchRoleID.rightForward + ") ";
 			break;
 		}
 		}

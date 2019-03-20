@@ -70,7 +70,7 @@ public class SwapPositionFeature {
 		}
 
 		private boolean playerIsSelectedOnThisPosition() {
-			Lineup lineup = HOVerwaltung.instance().getModel().getAufstellung();
+			Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
 			if (lineup.getPlayerByPositionID(getPositionsID()) != null) {
 				return true;
 			}

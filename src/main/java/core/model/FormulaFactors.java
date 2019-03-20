@@ -1,7 +1,7 @@
 package core.model;
 
 import core.file.xml.XMLManager;
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
 import java.io.File;
 import java.util.Date;
@@ -141,25 +141,25 @@ public class FormulaFactors {
      */
     public void init() {
         //                                     position,									tw,   sa,   ps,   fl,   vt,   ts,   std
-        m_clTorwart = new FactorObject(ISpielerPosition.KEEPER,		      		 		10.0f,0.0f, 0.0f, 0.0f, 2.6f, 0.0f, 0.0f);
-        m_clInnenVerteidiger = new FactorObject(ISpielerPosition.CENTRAL_DEFENDER,			0.0f, 3.0f, 0.5f, 0.0f, 9.0f, 0.0f, 0.0f);
-        m_clInnenVerteidiger_AUS = new FactorObject(ISpielerPosition.CENTRAL_DEFENDER_TOWING,	0.0f, 1.5f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
-        m_clInnenVerteidiger_OFF = new FactorObject(ISpielerPosition.CENTRAL_DEFENDER_OFF,	0.0f, 5.0f, 0.5f, 0.0f, 6.0f, 0.0f, 0.0f);
-        m_clAussenVerteidiger_IN = new FactorObject(ISpielerPosition.BACK_TOMID,	0.0f, 1.0f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
-        m_clAussenVerteidiger_OFF = new FactorObject(ISpielerPosition.BACK_OFF,0.0f, 1.5f, 1.5f, 4.0f, 6.0f, 0.0f, 0.0f);
-        m_clAussenVerteidiger_DEF = new FactorObject(ISpielerPosition.BACK_DEF,0.0f, 0.5f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
-        m_clAussenVerteidiger = new FactorObject(ISpielerPosition.BACK,		0.0f, 1.0f, 0.0f, 3.5f, 8.0f, 0.0f, 0.0f);
-        m_clFluegelspieler_OFF = new FactorObject(ISpielerPosition.WINGER_OFF,		0.0f, 3.0f, 2.5f, 7.0f, 1.0f, 0.0f, 0.0f);
-        m_clFluegelspieler_DEF = new FactorObject(ISpielerPosition.WINGER_DEF,		0.0f, 3.5f, 2.0f, 5.0f, 4.0f, 0.0f, 0.0f);
-        m_clFluegelspieler_IN = new FactorObject(ISpielerPosition.WINGER_TOMID,			0.0f, 6.0f, 2.0f, 4.0f, 2.0f, 0.0f, 0.0f);
-        m_clFluegelspieler = new FactorObject(ISpielerPosition.WINGER,				0.0f, 3.5f, 2.5f, 7.0f, 1.5f, 0.0f, 0.0f);
-        m_clZentralesMittelfeld_OFF = new FactorObject(ISpielerPosition.MIDFIELDER_OFF,		0.0f, 8.0f, 3.5f, 0.0f, 2.0f, 0.0f, 0.0f);
-        m_clZentralesMittelfeld_DEF = new FactorObject(ISpielerPosition.MIDFIELDER_DEF,		0.0f, 8.0f, 2.0f, 0.0f, 3.5f, 0.0f, 0.0f);
-	    m_clZentralesMittelfeld_AUS = new FactorObject(ISpielerPosition.MIDFIELDER_TOWING,		0.0f, 6.0f, 2.0f, 5.0f, 2.0f, 0.0f, 0.0f);
-        m_clZentralesMittelfeld = new FactorObject(ISpielerPosition.MIDFIELDER,				0.0f, 8.0f, 3.0f, 0.0f, 3.0f, 0.0f, 0.0f);
-        m_clSturm = new FactorObject(ISpielerPosition.FORWARD,								0.0f, 0.0f, 3.0f, 1.5f, 0.0f, 9.0f, 0.0f);
-        m_clSturm_DEF = new FactorObject(ISpielerPosition.FORWARD_DEF,						0.0f, 5.0f, 3.0f, 0.0f, 0.0f, 6.0f, 0.0f);
-        m_clSturm_AUS = new FactorObject(ISpielerPosition.FORWARD_TOWING,						0.0f, 0.0f, 3.0f, 4.0f, 0.0f, 6.5f, 0.0f);
+        m_clTorwart = new FactorObject(IMatchRoleID.KEEPER,		      		 		10.0f,0.0f, 0.0f, 0.0f, 2.6f, 0.0f, 0.0f);
+        m_clInnenVerteidiger = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER,			0.0f, 3.0f, 0.5f, 0.0f, 9.0f, 0.0f, 0.0f);
+        m_clInnenVerteidiger_AUS = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER_TOWING,	0.0f, 1.5f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
+        m_clInnenVerteidiger_OFF = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER_OFF,	0.0f, 5.0f, 0.5f, 0.0f, 6.0f, 0.0f, 0.0f);
+        m_clAussenVerteidiger_IN = new FactorObject(IMatchRoleID.BACK_TOMID,	0.0f, 1.0f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
+        m_clAussenVerteidiger_OFF = new FactorObject(IMatchRoleID.BACK_OFF,0.0f, 1.5f, 1.5f, 4.0f, 6.0f, 0.0f, 0.0f);
+        m_clAussenVerteidiger_DEF = new FactorObject(IMatchRoleID.BACK_DEF,0.0f, 0.5f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
+        m_clAussenVerteidiger = new FactorObject(IMatchRoleID.BACK,		0.0f, 1.0f, 0.0f, 3.5f, 8.0f, 0.0f, 0.0f);
+        m_clFluegelspieler_OFF = new FactorObject(IMatchRoleID.WINGER_OFF,		0.0f, 3.0f, 2.5f, 7.0f, 1.0f, 0.0f, 0.0f);
+        m_clFluegelspieler_DEF = new FactorObject(IMatchRoleID.WINGER_DEF,		0.0f, 3.5f, 2.0f, 5.0f, 4.0f, 0.0f, 0.0f);
+        m_clFluegelspieler_IN = new FactorObject(IMatchRoleID.WINGER_TOMID,			0.0f, 6.0f, 2.0f, 4.0f, 2.0f, 0.0f, 0.0f);
+        m_clFluegelspieler = new FactorObject(IMatchRoleID.WINGER,				0.0f, 3.5f, 2.5f, 7.0f, 1.5f, 0.0f, 0.0f);
+        m_clZentralesMittelfeld_OFF = new FactorObject(IMatchRoleID.MIDFIELDER_OFF,		0.0f, 8.0f, 3.5f, 0.0f, 2.0f, 0.0f, 0.0f);
+        m_clZentralesMittelfeld_DEF = new FactorObject(IMatchRoleID.MIDFIELDER_DEF,		0.0f, 8.0f, 2.0f, 0.0f, 3.5f, 0.0f, 0.0f);
+	    m_clZentralesMittelfeld_AUS = new FactorObject(IMatchRoleID.MIDFIELDER_TOWING,		0.0f, 6.0f, 2.0f, 5.0f, 2.0f, 0.0f, 0.0f);
+        m_clZentralesMittelfeld = new FactorObject(IMatchRoleID.MIDFIELDER,				0.0f, 8.0f, 3.0f, 0.0f, 3.0f, 0.0f, 0.0f);
+        m_clSturm = new FactorObject(IMatchRoleID.FORWARD,								0.0f, 0.0f, 3.0f, 1.5f, 0.0f, 9.0f, 0.0f);
+        m_clSturm_DEF = new FactorObject(IMatchRoleID.FORWARD_DEF,						0.0f, 5.0f, 3.0f, 0.0f, 0.0f, 6.0f, 0.0f);
+        m_clSturm_AUS = new FactorObject(IMatchRoleID.FORWARD_TOWING,						0.0f, 0.0f, 3.0f, 4.0f, 0.0f, 6.5f, 0.0f);
     }
 
     /**
@@ -358,26 +358,26 @@ public class FormulaFactors {
     public FactorObject getPositionFactor(byte playerPosition){
 
     	switch (playerPosition) {
-	        case ISpielerPosition.KEEPER: 					return m_clTorwart;
-	        case ISpielerPosition.CENTRAL_DEFENDER:        	return m_clInnenVerteidiger;
-	        case ISpielerPosition.CENTRAL_DEFENDER_OFF:    	return m_clInnenVerteidiger_OFF;
-	        case ISpielerPosition.CENTRAL_DEFENDER_TOWING:		return m_clInnenVerteidiger_AUS;
-	        case ISpielerPosition.BACK_OFF:   	return m_clAussenVerteidiger_OFF;
-	        case ISpielerPosition.BACK_DEF:   	return m_clAussenVerteidiger_DEF;
-	        case ISpielerPosition.BACK_TOMID:    	return m_clAussenVerteidiger_IN;
-	        case ISpielerPosition.BACK:       	return m_clAussenVerteidiger;
-	        case ISpielerPosition.MIDFIELDER_DEF:        	return m_clZentralesMittelfeld_DEF;
-	        case ISpielerPosition.MIDFIELDER_OFF:        	return m_clZentralesMittelfeld_OFF;
-	        case ISpielerPosition.MIDFIELDER_TOWING:        	return m_clZentralesMittelfeld_AUS;
-	        case ISpielerPosition.MIDFIELDER:	        	return m_clZentralesMittelfeld;
-	        case ISpielerPosition.WINGER_DEF:        	return m_clFluegelspieler_DEF;
-	        case ISpielerPosition.WINGER_OFF:			return m_clFluegelspieler_OFF;
-	        case ISpielerPosition.WINGER_TOMID:			return m_clFluegelspieler_IN;
-	        case ISpielerPosition.WINGER:				return m_clFluegelspieler;
-	        case ISpielerPosition.FORWARD_DEF:				return m_clSturm_DEF;
-	        case ISpielerPosition.FORWARD:					return m_clSturm;
-	        case ISpielerPosition.FORWARD_TOWING:				return m_clSturm_AUS;
-	        case ISpielerPosition.COACH:
+	        case IMatchRoleID.KEEPER: 					return m_clTorwart;
+	        case IMatchRoleID.CENTRAL_DEFENDER:        	return m_clInnenVerteidiger;
+	        case IMatchRoleID.CENTRAL_DEFENDER_OFF:    	return m_clInnenVerteidiger_OFF;
+	        case IMatchRoleID.CENTRAL_DEFENDER_TOWING:		return m_clInnenVerteidiger_AUS;
+	        case IMatchRoleID.BACK_OFF:   	return m_clAussenVerteidiger_OFF;
+	        case IMatchRoleID.BACK_DEF:   	return m_clAussenVerteidiger_DEF;
+	        case IMatchRoleID.BACK_TOMID:    	return m_clAussenVerteidiger_IN;
+	        case IMatchRoleID.BACK:       	return m_clAussenVerteidiger;
+	        case IMatchRoleID.MIDFIELDER_DEF:        	return m_clZentralesMittelfeld_DEF;
+	        case IMatchRoleID.MIDFIELDER_OFF:        	return m_clZentralesMittelfeld_OFF;
+	        case IMatchRoleID.MIDFIELDER_TOWING:        	return m_clZentralesMittelfeld_AUS;
+	        case IMatchRoleID.MIDFIELDER:	        	return m_clZentralesMittelfeld;
+	        case IMatchRoleID.WINGER_DEF:        	return m_clFluegelspieler_DEF;
+	        case IMatchRoleID.WINGER_OFF:			return m_clFluegelspieler_OFF;
+	        case IMatchRoleID.WINGER_TOMID:			return m_clFluegelspieler_IN;
+	        case IMatchRoleID.WINGER:				return m_clFluegelspieler;
+	        case IMatchRoleID.FORWARD_DEF:				return m_clSturm_DEF;
+	        case IMatchRoleID.FORWARD:					return m_clSturm;
+	        case IMatchRoleID.FORWARD_TOWING:				return m_clSturm_AUS;
+	        case IMatchRoleID.COACH:
         default:
             return null;
     	}
@@ -392,79 +392,79 @@ public class FormulaFactors {
      */
     public void setPositionFactor(byte pos, FactorObject factorObject){
     	switch(pos){
-        case ISpielerPosition.KEEPER:
+        case IMatchRoleID.KEEPER:
             m_clTorwart = factorObject;
             break;
 
-        case ISpielerPosition.CENTRAL_DEFENDER:
+        case IMatchRoleID.CENTRAL_DEFENDER:
             m_clInnenVerteidiger = factorObject;
             break;
 
-        case ISpielerPosition.CENTRAL_DEFENDER_OFF:
+        case IMatchRoleID.CENTRAL_DEFENDER_OFF:
             m_clInnenVerteidiger_OFF = factorObject;
             break;
 
-        case ISpielerPosition.CENTRAL_DEFENDER_TOWING:
+        case IMatchRoleID.CENTRAL_DEFENDER_TOWING:
             m_clInnenVerteidiger_AUS = factorObject;
             break;
 
-        case ISpielerPosition.BACK:
+        case IMatchRoleID.BACK:
             m_clAussenVerteidiger = factorObject;
             break;
 
-        case ISpielerPosition.BACK_OFF:
+        case IMatchRoleID.BACK_OFF:
             m_clAussenVerteidiger_OFF = factorObject;
             break;
 
-        case ISpielerPosition.BACK_DEF:
+        case IMatchRoleID.BACK_DEF:
             m_clAussenVerteidiger_DEF = factorObject;
             break;
 
-        case ISpielerPosition.BACK_TOMID:
+        case IMatchRoleID.BACK_TOMID:
             m_clAussenVerteidiger_IN = factorObject;
             break;
 
-        case ISpielerPosition.MIDFIELDER:
+        case IMatchRoleID.MIDFIELDER:
             m_clZentralesMittelfeld = factorObject;
             break;
 
-        case ISpielerPosition.MIDFIELDER_OFF:
+        case IMatchRoleID.MIDFIELDER_OFF:
             m_clZentralesMittelfeld_OFF = factorObject;
             break;
 
-        case ISpielerPosition.MIDFIELDER_DEF:
+        case IMatchRoleID.MIDFIELDER_DEF:
             m_clZentralesMittelfeld_DEF = factorObject;
             break;
 
-        case ISpielerPosition.MIDFIELDER_TOWING:
+        case IMatchRoleID.MIDFIELDER_TOWING:
             m_clZentralesMittelfeld_AUS = factorObject;
             break;
 
-        case ISpielerPosition.WINGER:
+        case IMatchRoleID.WINGER:
             m_clFluegelspieler = factorObject;
             break;
 
-        case ISpielerPosition.WINGER_OFF:
+        case IMatchRoleID.WINGER_OFF:
             m_clFluegelspieler_OFF = factorObject;
             break;
 
-        case ISpielerPosition.WINGER_DEF:
+        case IMatchRoleID.WINGER_DEF:
             m_clFluegelspieler_DEF = factorObject;
             break;
 
-        case ISpielerPosition.WINGER_TOMID:
+        case IMatchRoleID.WINGER_TOMID:
             m_clFluegelspieler_IN = factorObject;
             break;
 
-        case ISpielerPosition.FORWARD:
+        case IMatchRoleID.FORWARD:
             m_clSturm = factorObject;
             break;
 
-        case ISpielerPosition.FORWARD_DEF:
+        case IMatchRoleID.FORWARD_DEF:
             m_clSturm_DEF = factorObject;
             break;
 
-		case ISpielerPosition.FORWARD_TOWING:
+		case IMatchRoleID.FORWARD_TOWING:
 			m_clSturm_AUS = factorObject;
 			break;
     	}

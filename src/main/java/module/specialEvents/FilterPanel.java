@@ -5,7 +5,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import module.specialEvents.filter.Filter;
 
 import java.awt.Component;
@@ -445,30 +445,30 @@ public class FilterPanel extends JPanel {
 	private void updatePlayerComboBoxData(boolean currentPlayersOnly) {
 		CBItem oldItem = (CBItem) this.playerComboBox.getSelectedItem();
 
-		Comparator<Spieler> comparator = new Comparator<Spieler>() {
+		Comparator<Player> comparator = new Comparator<Player>() {
 
 			@Override
-			public int compare(Spieler o1, Spieler o2) {
+			public int compare(Player o1, Player o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
 		};
 
 		List<CBItem> playerItems = new ArrayList<CBItem>();
-		List<Spieler> players = new ArrayList<Spieler>(HOVerwaltung.instance().getModel()
+		List<Player> players = new ArrayList<Player>(HOVerwaltung.instance().getModel()
 				.getAllSpieler());
 		Collections.sort(players, comparator);
-		for (Spieler player : players) {
+		for (Player player : players) {
 			playerItems.add(new PlayerCBItem(player.getName(), player.getSpielerID(), player
 					.getSpezialitaet()));
 		}
 
 		if (!currentPlayersOnly) {
-			players = new ArrayList<Spieler>(HOVerwaltung.instance().getModel().getAllOldSpieler());
+			players = new ArrayList<Player>(HOVerwaltung.instance().getModel().getAllOldSpieler());
 			Collections.sort(players, comparator);
 			if (!players.isEmpty()) {
 				playerItems.add(null);
 			}
-			for (Spieler player : players) {
+			for (Player player : players) {
 				playerItems.add(new PlayerCBItem(player.getName(), player.getSpielerID(), player
 						.getSpezialitaet()));
 			}

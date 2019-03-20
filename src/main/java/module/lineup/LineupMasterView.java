@@ -4,8 +4,8 @@ import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.Updateable;
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import module.lineup.exchange.UploadDownloadPanel;
 import module.lineup.penalties.PenaltyTaker;
 import module.lineup.penalties.PenaltyTakersView;
@@ -52,12 +52,12 @@ public class LineupMasterView extends JPanel {
 		this.lineupPanel = new LineupPanel();
 		this.tabbedPane.addTab(hov.getLanguageString("Aufstellung"), this.lineupPanel);
 
-		this.substitutionOverview = new SubstitutionOverview(hov.getModel().getAufstellung());
+		this.substitutionOverview = new SubstitutionOverview(hov.getModel().getLineup());
 		this.tabbedPane.addTab(hov.getLanguageString("subs.Title"), this.substitutionOverview);
 
 		this.penaltyTakersView = new PenaltyTakersView();
 		this.penaltyTakersView.setPlayers(hov.getModel().getAllSpieler());
-		this.penaltyTakersView.setLineup(hov.getModel().getAufstellung());
+		this.penaltyTakersView.setLineup(hov.getModel().getLineup());
 		this.tabbedPane.addTab(hov.getLanguageString("lineup.penaltytakers.tab.title"),
 				this.penaltyTakersView);
 		this.tabbedPane.addTab(hov.getLanguageString("lineup.upload.tab.title"),
@@ -105,17 +105,17 @@ public class LineupMasterView extends JPanel {
 	
 	private void updatePenaltyTakersInLineup() {
 		List<PenaltyTaker> takers = this.penaltyTakersView.getPenaltyTakers();
-		List<SpielerPosition>  list = new ArrayList<SpielerPosition>(takers.size());
+		List<MatchRoleID>  list = new ArrayList<MatchRoleID>(takers.size());
 
 		for (int i = 0; i < takers.size(); i++) {
-			list.add(new SpielerPosition(ISpielerPosition.penaltyTaker1 + i, takers.get(i).getPlayer().getSpielerID(), ISpielerPosition.NORMAL));
+			list.add(new MatchRoleID(IMatchRoleID.penaltyTaker1 + i, takers.get(i).getPlayer().getSpielerID(), IMatchRoleID.NORMAL));
 		}
-		HOVerwaltung.instance().getModel().getAufstellung().setPenaltyTakers(list);
+		HOVerwaltung.instance().getModel().getLineup().setPenaltyTakers(list);
 	}
 	
 	private void refreshView() {
-		this.substitutionOverview.setLineup(HOVerwaltung.instance().getModel().getAufstellung());
+		this.substitutionOverview.setLineup(HOVerwaltung.instance().getModel().getLineup());
 		this.penaltyTakersView.setPlayers(HOVerwaltung.instance().getModel().getAllSpieler());
-		this.penaltyTakersView.setLineup(HOVerwaltung.instance().getModel().getAufstellung());		
+		this.penaltyTakersView.setLineup(HOVerwaltung.instance().getModel().getLineup());
 	}
 }

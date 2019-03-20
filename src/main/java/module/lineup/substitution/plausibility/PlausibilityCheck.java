@@ -4,7 +4,7 @@ import static module.lineup.substitution.model.MatchOrderType.NEW_BEHAVIOUR;
 import static module.lineup.substitution.model.MatchOrderType.POSITION_SWAP;
 import static module.lineup.substitution.model.MatchOrderType.SUBSTITUTION;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import module.lineup.Lineup;
 import module.lineup.LineupAssistant;
 import module.lineup.substitution.LanguageStringLookup;
@@ -57,7 +57,7 @@ public class PlausibilityCheck {
 
 		// when NEW_BEHAVIOUR, check that behaviour there is really a change
 //		if (substitution.getOrderType() == NEW_BEHAVIOUR) {
-//			SpielerPosition pos = lineup.getPositionBySpielerId(subjectPlayerID);
+//			MatchRoleID pos = lineup.getPositionBySpielerId(subjectPlayerID);
 //			if (pos.getTaktik() == substitution.getBehaviour()) {
 //				return Uncertainty.SAME_TACTIC;
 //			}
@@ -91,11 +91,11 @@ public class PlausibilityCheck {
 		return null;
 	}
 
-	private static Spieler getPlayerIn(Substitution substitution) {
+	private static Player getPlayerIn(Substitution substitution) {
 		return HOVerwaltung.instance().getModel().getSpieler(substitution.getObjectPlayerID());
 	}
 
-	private static Spieler getPlayerOut(Substitution substitution) {
+	private static Player getPlayerOut(Substitution substitution) {
 		return HOVerwaltung.instance().getModel().getSpieler(substitution.getSubjectPlayerID());
 	}
 }

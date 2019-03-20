@@ -1,5 +1,7 @@
 package core.gui.comp.entry;
 
+import core.model.player.Player;
+
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 
@@ -10,7 +12,7 @@ public class HomegrownEntry implements IHOTableEntry{
 	private ColorLabelEntry icon = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
 			ColorLabelEntry.BG_STANDARD,
 			SwingConstants.CENTER);
-	private core.model.player.Spieler spieler;
+	private Player player;
 
 	//~ Constructors -------------------------------------------------------------------------------
 
@@ -21,13 +23,13 @@ public class HomegrownEntry implements IHOTableEntry{
 		super();
 	}
 
-	public final void setSpieler(core.model.player.Spieler spieler) {
-		this.spieler = spieler;
+	public final void setPlayer(Player player) {
+		this.player = player;
 		updateComponent();
 	}
 
-	public final core.model.player.Spieler getSpieler() {
-		return spieler;
+	public final Player getPlayer() {
+		return player;
 	}
 
 
@@ -36,10 +38,10 @@ public class HomegrownEntry implements IHOTableEntry{
 		if (obj instanceof HomegrownEntry) {
 			final HomegrownEntry entry = (HomegrownEntry) obj;
 
-			if ((entry.getSpieler() != null) && (getSpieler() != null)) {
+			if ((entry.getPlayer() != null) && (getPlayer() != null)) {
 
-				if (entry.getSpieler().isHomeGrown() != getSpieler().isHomeGrown()) {
-					if (getSpieler().isHomeGrown() == true) {
+				if (entry.getPlayer().isHomeGrown() != getPlayer().isHomeGrown()) {
+					if (getPlayer().isHomeGrown() == true) {
 						return 1;
 					} else {
 						return -1;
@@ -53,8 +55,8 @@ public class HomegrownEntry implements IHOTableEntry{
 	
 	@Override
 	public final void updateComponent() {
-		if (spieler != null) {
-			if (spieler.isHomeGrown()) {
+		if (player != null) {
+			if (player.isHomeGrown()) {
 				icon.setIcon(core.gui.theme.ThemeManager.getIcon(core.gui.theme.HOIconName.HOMEGROWN));
 			} else {
 				icon.clear();
@@ -74,7 +76,7 @@ public class HomegrownEntry implements IHOTableEntry{
 
 	@Override
 	public void clear() {
-		spieler = null;
+		player = null;
 		updateComponent();
 		
 	}

@@ -2,8 +2,8 @@ package module.teamAnalyzer.ui;
 
 import core.gui.comp.panel.RasenPanel;
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
+import core.model.player.IMatchRoleID;
+import core.model.player.Player;
 import core.module.config.ModuleConfig;
 import module.lineup.Lineup;
 import module.teamAnalyzer.SystemManager;
@@ -93,20 +93,20 @@ public class TeamPanel extends JPanel {
         if (lineup != null) {
             lineupPanel.getOpponentTeam().setTeamName(SystemManager.getActiveTeamName() + " ("
                                                       + SystemManager.getActiveTeamId() + ")");
-            keeper.reload(lineup.getSpotLineup(ISpielerPosition.keeper), week, season);
-            leftBack.reload(lineup.getSpotLineup(ISpielerPosition.leftBack), week, season);
-            leftCentral.reload(lineup.getSpotLineup(ISpielerPosition.leftCentralDefender), week, season);
-            rightCentral.reload(lineup.getSpotLineup(ISpielerPosition.rightCentralDefender), week, season);
-            rightBack.reload(lineup.getSpotLineup(ISpielerPosition.rightBack), week, season);
-            leftWinger.reload(lineup.getSpotLineup(ISpielerPosition.leftWinger), week, season);
-            leftMidfielder.reload(lineup.getSpotLineup(ISpielerPosition.leftInnerMidfield), week, season);
-            rightMidfielder.reload(lineup.getSpotLineup(ISpielerPosition.rightInnerMidfield), week, season);
-            rightWinger.reload(lineup.getSpotLineup(ISpielerPosition.rightWinger), week, season);
-            leftAttacker.reload(lineup.getSpotLineup(ISpielerPosition.leftForward), week, season);
-            rightAttacker.reload(lineup.getSpotLineup(ISpielerPosition.rightForward), week, season);
-            centralAttacker.reload(lineup.getSpotLineup(ISpielerPosition.centralForward), week, season);
-            centralMidfielder.reload(lineup.getSpotLineup(ISpielerPosition.centralInnerMidfield), week, season);
-            middleCentral.reload(lineup.getSpotLineup(ISpielerPosition.middleCentralDefender), week, season);
+            keeper.reload(lineup.getSpotLineup(IMatchRoleID.keeper), week, season);
+            leftBack.reload(lineup.getSpotLineup(IMatchRoleID.leftBack), week, season);
+            leftCentral.reload(lineup.getSpotLineup(IMatchRoleID.leftCentralDefender), week, season);
+            rightCentral.reload(lineup.getSpotLineup(IMatchRoleID.rightCentralDefender), week, season);
+            rightBack.reload(lineup.getSpotLineup(IMatchRoleID.rightBack), week, season);
+            leftWinger.reload(lineup.getSpotLineup(IMatchRoleID.leftWinger), week, season);
+            leftMidfielder.reload(lineup.getSpotLineup(IMatchRoleID.leftInnerMidfield), week, season);
+            rightMidfielder.reload(lineup.getSpotLineup(IMatchRoleID.rightInnerMidfield), week, season);
+            rightWinger.reload(lineup.getSpotLineup(IMatchRoleID.rightWinger), week, season);
+            leftAttacker.reload(lineup.getSpotLineup(IMatchRoleID.leftForward), week, season);
+            rightAttacker.reload(lineup.getSpotLineup(IMatchRoleID.rightForward), week, season);
+            centralAttacker.reload(lineup.getSpotLineup(IMatchRoleID.centralForward), week, season);
+            centralMidfielder.reload(lineup.getSpotLineup(IMatchRoleID.centralInnerMidfield), week, season);
+            middleCentral.reload(lineup.getSpotLineup(IMatchRoleID.middleCentralDefender), week, season);
             
             lineupPanel.getOpponentTeam().setLeftAttack(lineup.getRating().getLeftAttack());
             lineupPanel.getOpponentTeam().setLeftDefence(lineup.getRating().getLeftDefense());
@@ -167,26 +167,26 @@ public class TeamPanel extends JPanel {
     private void setMyTeam() {
         //List<UserTeamPlayerPanel> list = new ArrayList<UserTeamPlayerPanel>();
     	HashMap<Integer, UserTeamPlayerPanel> list = new HashMap<Integer, UserTeamPlayerPanel>();
-    	Lineup lineup = HOVerwaltung.instance().getModel().getAufstellung();
+    	Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
 
-        for (int spot = ISpielerPosition.startLineup; spot < ISpielerPosition.startReserves; spot++) {
-            Spieler spieler = lineup.getPlayerByPositionID(spot);
+        for (int spot = IMatchRoleID.startLineup; spot < IMatchRoleID.startReserves; spot++) {
+            Player player = lineup.getPlayerByPositionID(spot);
             UserTeamPlayerPanel pp = new UserTeamPlayerPanel();
 
-            if (spieler != null) {
+            if (player != null) {
                 UserTeamSpotLineup spotLineup = new UserTeamSpotLineup();
 
                 spotLineup.setAppearance(0);
-                spotLineup.setName(getPlayerName(spieler.getName()));
-                spotLineup.setPlayerId(spieler.getSpielerID());
-                spotLineup.setSpecialEvent(spieler.getSpezialitaet());
+                spotLineup.setName(getPlayerName(player.getName()));
+                spotLineup.setPlayerId(player.getSpielerID());
+                spotLineup.setSpecialEvent(player.getSpezialitaet());
                 spotLineup.setTacticCode(lineup.getTactic4PositionID(spot));
                 spotLineup.setPosition(lineup.getEffectivePos4PositionID(spot));
-                spotLineup.setRating(spieler.calcPosValue(lineup.getEffectivePos4PositionID(spot),
+                spotLineup.setRating(player.calcPosValue(lineup.getEffectivePos4PositionID(spot),
                                                           true));
-                if (spieler.getVerletzt() > 0) {
+                if (player.getVerletzt() > 0) {
                 	spotLineup.setStatus(PlayerDataManager.INJURED);
-                } else if (spieler.isGesperrt()) {
+                } else if (player.isGesperrt()) {
                 	spotLineup.setStatus(PlayerDataManager.SUSPENDED);
                 }
                 spotLineup.setSpot(spot);
@@ -201,20 +201,20 @@ public class TeamPanel extends JPanel {
 
         lineupPanel.getMyTeam().setTeamName(HOVerwaltung.instance().getModel().getBasics().getTeamName() + " ("
                                             + HOVerwaltung.instance().getModel().getBasics().getTeamId() + ")");
-        fillPanel(lineupPanel.getMyTeam().getKeeperPanel(), list.get(ISpielerPosition.keeper));
-        fillPanel(lineupPanel.getMyTeam().getLeftWingbackPanel(), list.get(ISpielerPosition.leftBack));
-        fillPanel(lineupPanel.getMyTeam().getLeftCentralDefenderPanel(), list.get(ISpielerPosition.leftCentralDefender));
-        fillPanel(lineupPanel.getMyTeam().getRightCentralDefenderPanel(), list.get(ISpielerPosition.rightCentralDefender));
-        fillPanel(lineupPanel.getMyTeam().getRightWingbackPanel(), list.get(ISpielerPosition.rightBack));
-        fillPanel(lineupPanel.getMyTeam().getLeftWingPanel(), list.get(ISpielerPosition.leftWinger));
-        fillPanel(lineupPanel.getMyTeam().getLeftMidfieldPanel(), list.get(ISpielerPosition.leftInnerMidfield));
-        fillPanel(lineupPanel.getMyTeam().getRightMidfieldPanel(), list.get(ISpielerPosition.rightInnerMidfield));
-        fillPanel(lineupPanel.getMyTeam().getRightWingPanel(), list.get(ISpielerPosition.rightWinger));
-        fillPanel(lineupPanel.getMyTeam().getLeftForwardPanel(), list.get(ISpielerPosition.leftForward));
-        fillPanel(lineupPanel.getMyTeam().getRightForwardPanel(), list.get(ISpielerPosition.rightForward));
-        fillPanel(lineupPanel.getMyTeam().getCentralForwardPanel(), list.get(ISpielerPosition.centralForward));
-        fillPanel(lineupPanel.getMyTeam().getCentralMidfieldPanel(), list.get(ISpielerPosition.centralInnerMidfield));
-        fillPanel(lineupPanel.getMyTeam().getMiddleCentralDefenderPanel(), list.get(ISpielerPosition.middleCentralDefender));
+        fillPanel(lineupPanel.getMyTeam().getKeeperPanel(), list.get(IMatchRoleID.keeper));
+        fillPanel(lineupPanel.getMyTeam().getLeftWingbackPanel(), list.get(IMatchRoleID.leftBack));
+        fillPanel(lineupPanel.getMyTeam().getLeftCentralDefenderPanel(), list.get(IMatchRoleID.leftCentralDefender));
+        fillPanel(lineupPanel.getMyTeam().getRightCentralDefenderPanel(), list.get(IMatchRoleID.rightCentralDefender));
+        fillPanel(lineupPanel.getMyTeam().getRightWingbackPanel(), list.get(IMatchRoleID.rightBack));
+        fillPanel(lineupPanel.getMyTeam().getLeftWingPanel(), list.get(IMatchRoleID.leftWinger));
+        fillPanel(lineupPanel.getMyTeam().getLeftMidfieldPanel(), list.get(IMatchRoleID.leftInnerMidfield));
+        fillPanel(lineupPanel.getMyTeam().getRightMidfieldPanel(), list.get(IMatchRoleID.rightInnerMidfield));
+        fillPanel(lineupPanel.getMyTeam().getRightWingPanel(), list.get(IMatchRoleID.rightWinger));
+        fillPanel(lineupPanel.getMyTeam().getLeftForwardPanel(), list.get(IMatchRoleID.leftForward));
+        fillPanel(lineupPanel.getMyTeam().getRightForwardPanel(), list.get(IMatchRoleID.rightForward));
+        fillPanel(lineupPanel.getMyTeam().getCentralForwardPanel(), list.get(IMatchRoleID.centralForward));
+        fillPanel(lineupPanel.getMyTeam().getCentralMidfieldPanel(), list.get(IMatchRoleID.centralInnerMidfield));
+        fillPanel(lineupPanel.getMyTeam().getMiddleCentralDefenderPanel(), list.get(IMatchRoleID.middleCentralDefender));
         
         lineupPanel.getMyTeam().setLeftAttack(convertRating(lineup.getLeftAttackRating()));
         lineupPanel.getMyTeam().setLeftDefence(convertRating(lineup.getLeftDefenseRating()));

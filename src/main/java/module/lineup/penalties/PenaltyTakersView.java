@@ -6,8 +6,8 @@ import core.gui.comp.table.RowNumberTable;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
-import core.model.player.SpielerPosition;
+import core.model.player.Player;
+import core.model.player.MatchRoleID;
 import core.util.GUIUtils;
 import module.lineup.Lineup;
 
@@ -79,9 +79,9 @@ public class PenaltyTakersView extends JPanel {
 		return list;
 	}
 
-	public void setPlayers(List<Spieler> players) {
+	public void setPlayers(List<Player> players) {
 		this.players = new ArrayList<PenaltyTaker>();
-		for (Spieler player : players) {
+		for (Player player : players) {
 			this.players.add(new PenaltyTaker(player));
 		}
 		getPlayersTableModel().setPenaltyTakers(this.players);
@@ -92,9 +92,9 @@ public class PenaltyTakersView extends JPanel {
 		reset();
 
 		// get positions already set as penalty takers in the lineup
-		List<SpielerPosition> positions = this.lineup.getPenaltyTakers();
+		List<MatchRoleID> positions = this.lineup.getPenaltyTakers();
 		List<PenaltyTaker> takers = new ArrayList<PenaltyTaker>();
-		for (SpielerPosition pos : positions) {
+		for (MatchRoleID pos : positions) {
 			if (pos.getSpielerId() != 0) {
 				PenaltyTaker taker = getPenaltyTaker(pos.getSpielerId());
 				if (taker != null) {
@@ -531,10 +531,10 @@ public class PenaltyTakersView extends JPanel {
 		select(players, this.playersTable);
 	}
 
-	private Integer getInLineupVal(Spieler player) {
+	private Integer getInLineupVal(Player player) {
 		if (lineup != null) {
 			int playerId = player.getSpielerID();
-			if (lineup.isSpielerInAnfangsElf(playerId)) {
+			if (lineup.isPlayerInStartingEleven(playerId)) {
 				return Integer.valueOf(1);
 			} else if (lineup.isSpielerInReserve(playerId)) {
 				return Integer.valueOf(2);

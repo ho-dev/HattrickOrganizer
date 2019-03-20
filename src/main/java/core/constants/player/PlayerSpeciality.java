@@ -67,12 +67,12 @@ public final class PlayerSpeciality {
 	   Bei Regen gibt es die Möglichkeit, daß sich die Torschuß-, Verteidigungs- und Spielaufbau-Fähigkeit
 	    von durchsetzungsstarken Spielern verbessert.
 	    Auf der anderen Seite kann sich die Torschußfähigkeit bei Sonnenschein verschlechtern.
-	   Schnelle Spieler laufen bei Regen Gefahr, daß sich ihre Torschuß- und
+	   Schnelle Player laufen bei Regen Gefahr, daß sich ihre Torschuß- und
 	    Verteidigungsfähigkeiten verschlechtern. Bei Sonnenschein besteht das Risiko
 	    , daß ihre Torschußfähigkeit unter dem Wetter leidet.
 	 */
 	/*
-	   Liefert die mögliche Auswirkung des Wetters auf den Spieler
+	   Liefert die mögliche Auswirkung des Wetters auf den Player
 	   return 0 bei keine auswirkung
 	   1 bei positiv
 	   -1 bei negativ

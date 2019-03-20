@@ -4,7 +4,7 @@ import core.file.xml.XMLMatchdetailsParser;
 import core.model.HOVerwaltung;
 import core.model.match.MatchType;
 import core.model.match.Matchdetails;
-import core.model.player.ISpielerPosition;
+import core.model.player.IMatchRoleID;
 import core.net.MyConnector;
 
 import java.text.ParseException;
@@ -121,27 +121,27 @@ public class HelperWrapper {
      */
     public int getPosition(int hoposcode) {
         if (hoposcode == 0) {
-            return ISpielerPosition.keeper;
+            return IMatchRoleID.keeper;
         }
 
         if (hoposcode < 4) {
-            return ISpielerPosition.rightCentralDefender;
+            return IMatchRoleID.rightCentralDefender;
         }
 
         if ((hoposcode < 8)) {
-            return ISpielerPosition.leftBack;
+            return IMatchRoleID.leftBack;
         }
 
         if ((hoposcode < 12)) {
-            return ISpielerPosition.rightInnerMidfield;
+            return IMatchRoleID.rightInnerMidfield;
         }
 
         if ((hoposcode < 16)) {
-            return ISpielerPosition.leftWinger;
+            return IMatchRoleID.leftWinger;
         }
 
         if ((hoposcode < 18) || (hoposcode == 21)) {
-            return ISpielerPosition.rightForward;
+            return IMatchRoleID.rightForward;
         }
 
         if (hoposcode < 0) {

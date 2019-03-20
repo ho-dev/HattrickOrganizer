@@ -22,9 +22,9 @@ import core.model.match.MatchLineup;
 import core.model.match.MatchLineupTeam;
 import core.model.match.MatchType;
 import core.model.match.Matchdetails;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
-import core.model.player.SpielerPosition;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
+import core.model.player.Player;
 import core.net.login.LoginWaitDialog;
 import core.training.TrainingManager;
 import core.util.HOLogger;
@@ -149,11 +149,11 @@ public class OnlineWorker {
 							TrainingManager.instance().refreshTrainingWeeks();
 							homodel.calcSubskills();
 							AufstellungsVergleichHistoryPanel.setHRFAufstellung(
-									homodel.getAufstellung(), homodel.getLastAufstellung());
+									homodel.getLineup(), homodel.getLastAufstellung());
 							AufstellungsVergleichHistoryPanel
 									.setAngezeigteAufstellung(new AufstellungCBItem(
 											getLangString("AktuelleAufstellung"), homodel
-													.getAufstellung()));
+													.getLineup()));
 							homf.getAufstellungsPanel().getAufstellungsPositionsPanel()
 									.exportOldLineup("Actual");
 						}
@@ -608,13 +608,13 @@ public class OnlineWorker {
 
 		StringBuilder orders = new StringBuilder();
 		orders.append("{\"positions\":[");
-		orders.append(createPositionString(ISpielerPosition.keeper, lineup));
+		orders.append(createPositionString(IMatchRoleID.keeper, lineup));
 
-		for (int i = ISpielerPosition.rightBack; i <= ISpielerPosition.substInnerMidfield; i++) {
+		for (int i = IMatchRoleID.rightBack; i <= IMatchRoleID.substIM1; i++) {
 			orders.append(',').append(createPositionString(i, lineup));
 		}
-		orders.append(',').append(createPositionString(ISpielerPosition.substForward, lineup));
-		orders.append(',').append(createPositionString(ISpielerPosition.substWinger, lineup));
+		orders.append(',').append(createPositionString(IMatchRoleID.substFW1, lineup));
+		orders.append(',').append(createPositionString(IMatchRoleID.substWI1, lineup));
 
 		orders.append(',').append("{\"id\":\"").append(lineup.getKapitaen());
 		orders.append("\",\"behaviour\":\"0\"}");
@@ -622,10 +622,10 @@ public class OnlineWorker {
 		orders.append("\",\"behaviour\":\"0\"}");
 
 		// penalty takers
-		List<SpielerPosition> shooters = lineup.getPenaltyTakers();
+		List<MatchRoleID> shooters = lineup.getPenaltyTakers();
 		
 		int penshooters = 0;
-		for (SpielerPosition pos : shooters) {
+		for (MatchRoleID pos : shooters) {
 			orders.append(',').append("{\"id\":\"").append(pos.getSpielerId());
 			orders.append("\",\"behaviour\":\"0\"}");
 			penshooters++;
@@ -683,9 +683,9 @@ public class OnlineWorker {
 		int id = 0;
 		int behaviour = 0;
 
-		Spieler spieler = lineup.getPlayerByPositionID(roleId);
-		if (spieler != null) {
-			id = spieler.getSpielerID();
+		Player player = lineup.getPlayerByPositionID(roleId);
+		if (player != null) {
+			id = player.getSpielerID();
 			behaviour = lineup.getTactic4PositionID(roleId);
 		}
 

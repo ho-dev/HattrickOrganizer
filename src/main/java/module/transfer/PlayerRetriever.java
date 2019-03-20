@@ -3,7 +3,7 @@ package module.transfer;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.player.Spieler;
+import core.model.player.Player;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,14 +34,14 @@ public final class PlayerRetriever {
      * @return ISpieler interface representing the found player or <code>null</code> if no player
      *         could be found.
      */
-    public static Spieler getPlayer(int id) {
-        final Spieler player = HOVerwaltung.instance().getModel().getSpieler(id);
+    public static Player getPlayer(int id) {
+        final Player player = HOVerwaltung.instance().getModel().getSpieler(id);
 
         if (player == null) {
-            final List<Spieler> oldPlayers = HOVerwaltung.instance().getModel().getAllOldSpieler();
+            final List<Player> oldPlayers = HOVerwaltung.instance().getModel().getAllOldSpieler();
 
-            for (final Iterator<Spieler> iter = oldPlayers.iterator(); iter.hasNext();) {
-                final Spieler oldPlayer = iter.next();
+            for (final Iterator<Player> iter = oldPlayers.iterator(); iter.hasNext();) {
+                final Player oldPlayer = iter.next();
 
                 if (oldPlayer.getSpielerID() == id) {
                     return oldPlayer;
@@ -61,18 +61,18 @@ public final class PlayerRetriever {
      * @return ISpieler interface representing the found player or <code>null</code> if no player
      *         could be found.
      */
-    public static Spieler getPlayer(PlayerTransfer transfer) {
-        Spieler player = getPlayer(transfer.getPlayerId());
+    public static Player getPlayer(PlayerTransfer transfer) {
+        Player player = getPlayer(transfer.getPlayerId());
 
         if (player != null) return player;
 
-        List<Spieler> players = new ArrayList<Spieler>();
+        List<Player> players = new ArrayList<Player>();
         players.addAll(HOVerwaltung.instance().getModel().getAllSpieler());
         players.addAll(HOVerwaltung.instance().getModel().getAllOldSpieler());
 
-        List<Spieler> matches = new ArrayList<Spieler>();
+        List<Player> matches = new ArrayList<Player>();
 
-        for (final Iterator<Spieler> iter = players.iterator(); iter.hasNext();) {
+        for (final Iterator<Player> iter = players.iterator(); iter.hasNext();) {
             player = iter.next();
 
             if (Objects.equals(player.getName(), transfer.getPlayerName())) {
@@ -82,8 +82,8 @@ public final class PlayerRetriever {
 
         if (matches.size() == 1) return matches.get(0);
 
-        for (final Iterator<Spieler> iter = matches.iterator(); iter.hasNext();) {
-            final Spieler match = iter.next();
+        for (final Iterator<Player> iter = matches.iterator(); iter.hasNext();) {
+            final Player match = iter.next();
 
             player = DBManager.instance().getSpielerAtDate(match.getSpielerID(), transfer.getDate());
 

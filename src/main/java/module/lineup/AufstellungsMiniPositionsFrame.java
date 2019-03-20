@@ -6,14 +6,16 @@ import core.gui.Refreshable;
 import core.gui.Updateable;
 import core.gui.comp.panel.RasenPanel;
 import core.gui.model.SpielerCBItem;
+import core.gui.model.SpielerCBItemRenderer;
 import core.gui.print.ComponentPrintObject;
 import core.gui.print.PrintController;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.player.ISpielerPosition;
-import core.model.player.Spieler;
-import core.model.player.SpielerPosition;
+import core.model.UserParameter;
+import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
+import core.model.player.Player;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -149,97 +151,97 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 
 		// Alle SpielerPositionen Informieren
 		// erste 11
-		final Vector<Spieler> aufgestellteSpieler = new Vector<Spieler>();
+		final Vector<Player> aufgestelltePlayer = new Vector<Player>();
 
-		final Vector<Spieler> alleSpieler = HOVerwaltung.instance().getModel().getAllSpieler();
-		final Vector<Spieler> gefilterteSpieler = new Vector<Spieler>();
-		final Lineup aufstellung = HOVerwaltung.instance().getModel().getAufstellung();
+		final Vector<Player> allePlayer = HOVerwaltung.instance().getModel().getAllSpieler();
+		final Vector<Player> gefiltertePlayer = new Vector<Player>();
+		final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineup();
 
-		for (int i = 0; i < alleSpieler.size(); i++) {
-			final Spieler spieler = (Spieler) alleSpieler.get(i);
+		for (int i = 0; i < allePlayer.size(); i++) {
+			final Player player = (Player) allePlayer.get(i);
 
 			// ein erste 11
-			if (aufstellung.isSpielerInAnfangsElf(spieler.getSpielerID())) {
-				aufgestellteSpieler.add(spieler);
+			if (aufstellung.isPlayerInStartingEleven(player.getSpielerID())) {
+				aufgestelltePlayer.add(player);
 			}
 		}
 
 		// Den Gruppenfilter anwenden
-		for (int i = 0; i < alleSpieler.size(); i++) {
-			final Spieler spieler = (Spieler) alleSpieler.get(i);
+		for (int i = 0; i < allePlayer.size(); i++) {
+			final Player player = (Player) allePlayer.get(i);
 
 			// Kein Filter
-			if (!gruppenfilter || (gruppe.equals(spieler.getTeamInfoSmilie()) && !gruppenegieren)
-					|| (!gruppe.equals(spieler.getTeamInfoSmilie()) && gruppenegieren)) {
-				gefilterteSpieler.add(spieler);
+			if (!gruppenfilter || (gruppe.equals(player.getTeamInfoSmilie()) && !gruppenegieren)
+					|| (!gruppe.equals(player.getTeamInfoSmilie()) && gruppenegieren)) {
+				gefiltertePlayer.add(player);
 			}
 		}
 
 		// SpielerPositionsPanels aktualisieren
-		SpielerPosition position;
+		MatchRoleID position;
 
 		position = aufstellung.getPositionById(m_clKeeper.getPositionsID());
-		m_clKeeper.refresh(gefilterteSpieler);
+		m_clKeeper.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clLeftBack.getPositionsID());
-		m_clLeftBack.refresh(gefilterteSpieler);
+		m_clLeftBack.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clLeftCentralDefender.getPositionsID());
-		m_clLeftCentralDefender.refresh(gefilterteSpieler);
+		m_clLeftCentralDefender.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clMiddleCentralDefender.getPositionsID());
-		m_clMiddleCentralDefender.refresh(gefilterteSpieler);
+		m_clMiddleCentralDefender.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clRightCentralDefender.getPositionsID());
-		m_clRightCentralDefender.refresh(gefilterteSpieler);
+		m_clRightCentralDefender.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clRightBack.getPositionsID());
-		m_clRightBack.refresh(gefilterteSpieler);
+		m_clRightBack.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clLeftWinger.getPositionsID());
-		m_clLeftWinger.refresh(gefilterteSpieler);
+		m_clLeftWinger.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clLeftInnerMidfielder.getPositionsID());
-		m_clLeftInnerMidfielder.refresh(gefilterteSpieler);
+		m_clLeftInnerMidfielder.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clCentralInnerMidfielder.getPositionsID());
-		m_clCentralInnerMidfielder.refresh(gefilterteSpieler);
+		m_clCentralInnerMidfielder.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clRightInnerMidfielder.getPositionsID());
-		m_clRightInnerMidfielder.refresh(gefilterteSpieler);
+		m_clRightInnerMidfielder.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clRightWinger.getPositionsID());
-		m_clRightWinger.refresh(gefilterteSpieler);
+		m_clRightWinger.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clLeftForward.getPositionsID());
-		m_clLeftForward.refresh(gefilterteSpieler);
+		m_clLeftForward.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clCentralForward.getPositionsID());
-		m_clCentralForward.refresh(gefilterteSpieler);
+		m_clCentralForward.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clRightForward.getPositionsID());
-		m_clRightForward.refresh(gefilterteSpieler);
+		m_clRightForward.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clReserveKeeper.getPositionsID());
-		m_clReserveKeeper.refresh(gefilterteSpieler);
+		m_clReserveKeeper.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clReserveDefender.getPositionsID());
-		m_clReserveDefender.refresh(gefilterteSpieler);
+		m_clReserveDefender.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clReserveMidfielder.getPositionsID());
-		m_clReserveMidfielder.refresh(gefilterteSpieler);
+		m_clReserveMidfielder.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clReserveWinger.getPositionsID());
-		m_clReserveWinger.refresh(gefilterteSpieler);
+		m_clReserveWinger.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clReserveForward.getPositionsID());
-		m_clReserveForward.refresh(gefilterteSpieler);
+		m_clReserveForward.refresh(gefiltertePlayer);
 
 		position = aufstellung.getPositionById(m_clSetPieces.getPositionsID());
-		m_clSetPieces.refresh(aufgestellteSpieler);
+		m_clSetPieces.refresh(aufgestelltePlayer);
 
 		position = aufstellung.getPositionById(m_clCaptain.getPositionsID());
-		m_clCaptain.refresh(aufgestellteSpieler);
+		m_clCaptain.refresh(aufgestelltePlayer);
 
 		// Check
 		aufstellung.checkAufgestellteSpieler();
@@ -283,10 +285,10 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 	}
 
 	private SpielerCBItem createSpielerLabel(int spielerID) {
-		final Spieler spieler = HOVerwaltung.instance().getModel().getSpieler(spielerID);
+		final Player player = HOVerwaltung.instance().getModel().getSpieler(spielerID);
 
-		if (spieler != null) {
-			return new SpielerCBItem(spieler.getName(), 0f, spieler);
+		if (player != null) {
+			return new SpielerCBItem(player.getName(), 0f, player);
 		} else {
 			return new SpielerCBItem("", 0f, null);
 		}
@@ -298,7 +300,7 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 	private void initComponentes() {
 		setContentPane(new RasenPanel(new BorderLayout(), m_bPrint));
 
-		final javax.swing.JPanel centerPanel = new javax.swing.JPanel();
+		final JPanel centerPanel = new JPanel();
 		centerPanel.setOpaque(false);
 
 		final GridBagLayout layout = new GridBagLayout();
@@ -311,46 +313,46 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 
 		centerPanel.setLayout(layout);
 
-		m_clKeeper = new MiniPosPlayer(this, centerPanel, ISpielerPosition.keeper, m_bPrint,
+		m_clKeeper = new MiniPosPlayer(this, centerPanel, IMatchRoleID.keeper, m_bPrint,
 				m_bMinimize, 2, 0);
 
-		m_clRightBack = new MiniPosPlayer(this, centerPanel, ISpielerPosition.rightBack, m_bPrint,
+		m_clRightBack = new MiniPosPlayer(this, centerPanel, IMatchRoleID.rightBack, m_bPrint,
 				m_bMinimize, 0, 1);
 
 		m_clRightCentralDefender = new MiniPosPlayer(this, centerPanel,
-				ISpielerPosition.rightCentralDefender, m_bPrint, m_bMinimize, 1, 1);
+				IMatchRoleID.rightCentralDefender, m_bPrint, m_bMinimize, 1, 1);
 
 		m_clMiddleCentralDefender = new MiniPosPlayer(this, centerPanel,
-				ISpielerPosition.middleCentralDefender, m_bPrint, m_bMinimize, 2, 1);
+				IMatchRoleID.middleCentralDefender, m_bPrint, m_bMinimize, 2, 1);
 
 		m_clLeftCentralDefender = new MiniPosPlayer(this, centerPanel,
-				ISpielerPosition.leftCentralDefender, m_bPrint, m_bMinimize, 3, 1);
+				IMatchRoleID.leftCentralDefender, m_bPrint, m_bMinimize, 3, 1);
 
-		m_clLeftBack = new MiniPosPlayer(this, centerPanel, ISpielerPosition.leftBack, m_bPrint,
+		m_clLeftBack = new MiniPosPlayer(this, centerPanel, IMatchRoleID.leftBack, m_bPrint,
 				m_bMinimize, 4, 1);
 
-		m_clRightWinger = new MiniPosPlayer(this, centerPanel, ISpielerPosition.rightWinger,
+		m_clRightWinger = new MiniPosPlayer(this, centerPanel, IMatchRoleID.rightWinger,
 				m_bPrint, m_bMinimize, 0, 2);
 
 		m_clRightInnerMidfielder = new MiniPosPlayer(this, centerPanel,
-				ISpielerPosition.rightInnerMidfield, m_bPrint, m_bMinimize, 1, 2);
+				IMatchRoleID.rightInnerMidfield, m_bPrint, m_bMinimize, 1, 2);
 
 		m_clCentralInnerMidfielder = new MiniPosPlayer(this, centerPanel,
-				ISpielerPosition.centralInnerMidfield, m_bPrint, m_bMinimize, 2, 2);
+				IMatchRoleID.centralInnerMidfield, m_bPrint, m_bMinimize, 2, 2);
 
 		m_clLeftInnerMidfielder = new MiniPosPlayer(this, centerPanel,
-				ISpielerPosition.leftInnerMidfield, m_bPrint, m_bMinimize, 3, 2);
+				IMatchRoleID.leftInnerMidfield, m_bPrint, m_bMinimize, 3, 2);
 
-		m_clLeftWinger = new MiniPosPlayer(this, centerPanel, ISpielerPosition.leftWinger,
+		m_clLeftWinger = new MiniPosPlayer(this, centerPanel, IMatchRoleID.leftWinger,
 				m_bPrint, m_bMinimize, 4, 2);
 
-		m_clRightForward = new MiniPosPlayer(this, centerPanel, ISpielerPosition.rightForward,
+		m_clRightForward = new MiniPosPlayer(this, centerPanel, IMatchRoleID.rightForward,
 				m_bPrint, m_bMinimize, 1, 3);
 
-		m_clCentralForward = new MiniPosPlayer(this, centerPanel, ISpielerPosition.centralForward,
+		m_clCentralForward = new MiniPosPlayer(this, centerPanel, IMatchRoleID.centralForward,
 				m_bPrint, m_bMinimize, 2, 3);
 
-		m_clLeftForward = new MiniPosPlayer(this, centerPanel, ISpielerPosition.leftForward,
+		m_clLeftForward = new MiniPosPlayer(this, centerPanel, IMatchRoleID.leftForward,
 				m_bPrint, m_bMinimize, 3, 3);
 
 		// A spacer between forwards and reserves.
@@ -366,7 +368,7 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 		constraints.gridx = 0;
 		constraints.gridy = 5;
 		constraints.gridwidth = 1;
-		m_clReserveKeeper = new PlayerPositionPanel(this, ISpielerPosition.substKeeper, m_bPrint,
+		m_clReserveKeeper = new PlayerPositionPanel(this, IMatchRoleID.substGK1, m_bPrint,
 				m_bMinimize);
 		layout.setConstraints(m_clReserveKeeper, constraints);
 		centerPanel.add(m_clReserveKeeper);
@@ -374,7 +376,7 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 		constraints.gridx = 1;
 		constraints.gridy = 5;
 		constraints.gridwidth = 1;
-		m_clReserveDefender = new PlayerPositionPanel(this, ISpielerPosition.substDefender,
+		m_clReserveDefender = new PlayerPositionPanel(this, IMatchRoleID.substCD1,
 				m_bPrint, m_bMinimize);
 		layout.setConstraints(m_clReserveDefender, constraints);
 		centerPanel.add(m_clReserveDefender);
@@ -382,7 +384,7 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 		constraints.gridx = 2;
 		constraints.gridy = 5;
 		constraints.gridwidth = 1;
-		m_clReserveMidfielder = new PlayerPositionPanel(this, ISpielerPosition.substInnerMidfield,
+		m_clReserveMidfielder = new PlayerPositionPanel(this, IMatchRoleID.substIM1,
 				m_bPrint, m_bMinimize);
 		layout.setConstraints(m_clReserveMidfielder, constraints);
 		centerPanel.add(m_clReserveMidfielder);
@@ -390,7 +392,7 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 		constraints.gridx = 3;
 		constraints.gridy = 5;
 		constraints.gridwidth = 1;
-		m_clReserveForward = new PlayerPositionPanel(this, ISpielerPosition.substForward, m_bPrint,
+		m_clReserveForward = new PlayerPositionPanel(this, IMatchRoleID.substFW1, m_bPrint,
 				m_bMinimize);
 		layout.setConstraints(m_clReserveForward, constraints);
 		centerPanel.add(m_clReserveForward);
@@ -398,7 +400,7 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 		constraints.gridx = 4;
 		constraints.gridy = 5;
 		constraints.gridwidth = 1;
-		m_clReserveWinger = new PlayerPositionPanel(this, ISpielerPosition.substWinger, m_bPrint,
+		m_clReserveWinger = new PlayerPositionPanel(this, IMatchRoleID.substWI1, m_bPrint,
 				m_bMinimize);
 		layout.setConstraints(m_clReserveWinger, constraints);
 		centerPanel.add(m_clReserveWinger);
@@ -406,14 +408,14 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 		constraints.gridx = 0;
 		constraints.gridy = 6;
 		constraints.gridwidth = 1;
-		m_clCaptain = new PlayerPositionPanel(this, ISpielerPosition.captain, m_bPrint, m_bMinimize);
+		m_clCaptain = new PlayerPositionPanel(this, IMatchRoleID.captain, m_bPrint, m_bMinimize);
 		layout.setConstraints(m_clCaptain, constraints);
 		centerPanel.add(m_clCaptain);
 
 		constraints.gridx = 1;
 		constraints.gridy = 6;
 		constraints.gridwidth = 1;
-		m_clSetPieces = new PlayerPositionPanel(this, ISpielerPosition.setPieces, m_bPrint,
+		m_clSetPieces = new PlayerPositionPanel(this, IMatchRoleID.setPieces, m_bPrint,
 				m_bMinimize);
 		layout.setConstraints(m_clSetPieces, constraints);
 		centerPanel.add(m_clSetPieces);
@@ -424,7 +426,7 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 			// MiniLineup
 			final JPanel panel = new JPanel(new BorderLayout());
 			panel.setOpaque(false);
-			m_jbMaxFrame.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString(
+			m_jbMaxFrame.setToolTipText(HOVerwaltung.instance().getLanguageString(
 					"tt_AufstellungsMiniPosFrame_zurueck"));
 			m_jbMaxFrame.setPreferredSize(new Dimension(25, 25));
 			m_jbMaxFrame.addActionListener(this);
@@ -443,7 +445,7 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 		final JPanel sidePanel = new JPanel(new BorderLayout());
 		sidePanel.setOpaque(false);
 
-		final JLabel label = new JLabel(core.model.HOVerwaltung.instance().getLanguageString(
+		final JLabel label = new JLabel(HOVerwaltung.instance().getLanguageString(
 				"lineup.penaltytakers.takerstable.title"));
 		label.setFont(label.getFont().deriveFont(Font.BOLD));
 
@@ -457,13 +459,13 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 
 		final JList liste = new JList();
 		liste.setOpaque(false);
-		liste.setCellRenderer(new core.gui.model.SpielerCBItemRenderer());
+		liste.setCellRenderer(new SpielerCBItemRenderer());
 		liste.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		final DefaultListModel listmodel = new DefaultListModel();
-		List<SpielerPosition> shooters = HOVerwaltung.instance().getModel().getAufstellung()
+		List<MatchRoleID> shooters = HOVerwaltung.instance().getModel().getLineup()
 				.getPenaltyTakers();
-		for (SpielerPosition pos : shooters) {
+		for (MatchRoleID pos : shooters) {
 			listmodel.addElement(createSpielerLabel(pos.getSpielerId()));
 		}
 
@@ -479,9 +481,9 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 		setSize(getSize().width + 20, getSize().height + 30);
 
 		if (!m_bPrint) {
-			setLocation(core.model.UserParameter.instance().miniscout_PositionX,
-					core.model.UserParameter.instance().miniscout_PositionY);
-			core.gui.HOMainFrame.instance().setVisible(false);
+			setLocation(UserParameter.instance().miniscout_PositionX,
+					UserParameter.instance().miniscout_PositionY);
+			HOMainFrame.instance().setVisible(false);
 		} else {
 			try {
 				final Toolkit kit = Toolkit.getDefaultToolkit();
@@ -541,15 +543,15 @@ public class AufstellungsMiniPositionsFrame extends JFrame implements WindowList
 		private static final long serialVersionUID = 8546453871916507058L;
 
 		@Override
-		public void refresh(List<Spieler> spieler) {
-			super.refresh(spieler);
+		public void refresh(List<Player> player) {
+			super.refresh(player);
 			/*
 			 * If this Panel is present and contains no player, remove it. If
 			 * this Panel is not present and contains a player, add it. If the
 			 * panel is removed, add the dummy panel
 			 */
 
-			if (HOVerwaltung.instance().getModel().getAufstellung().hasFreePosition() == true) {
+			if (HOVerwaltung.instance().getModel().getLineup().hasFreePosition() == true) {
 				m_clDummy.setBorder(new LineBorder(Color.white));
 			} else {
 				m_clDummy.setBorder(null);

@@ -5,7 +5,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoppelLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.entry.SkillEntry;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.util.Helper;
 
 import java.awt.Color;
@@ -48,11 +48,11 @@ class PlayerSkillColumn extends PlayerColumn {
 	 * overwritten by created columns
 	 */
 	@Override
-	public IHOTableEntry getTableEntry(Spieler player,Spieler comparePlayer){
+	public IHOTableEntry getTableEntry(Player player, Player comparePlayer){
 		return new DoppelLabelEntry(getSkillValue(player),getCompareValue(player,comparePlayer));
 	}
 	
-	public  IHOTableEntry getSkillValue(Spieler player){
+	public  IHOTableEntry getSkillValue(Player player){
 		if(skill == PlayerSkill.EXPERIENCE
 				||  skill == PlayerSkill.FORM
 				|| skill == PlayerSkill.STAMINA
@@ -73,7 +73,7 @@ class PlayerSkillColumn extends PlayerColumn {
 	 * @param comparePlayer
 	 * @return ColorLabelEntry
 	 */
-	public ColorLabelEntry getCompareValue(Spieler player,Spieler comparePlayer){
+	public ColorLabelEntry getCompareValue(Player player, Player comparePlayer){
 		if(comparePlayer == null){
 			return new ColorLabelEntry("",
 	                   ColorLabelEntry.FG_STANDARD,
@@ -97,7 +97,7 @@ class PlayerSkillColumn extends PlayerColumn {
 	 * @param player
 	 * @return
 	 */
-	private int getSkill(Spieler player){
+	private int getSkill(Player player){
 		switch(skill){
 		case PlayerSkill.KEEPER: 		return player.getTorwart();
 		case PlayerSkill.DEFENDING: 	return player.getVerteidigung();

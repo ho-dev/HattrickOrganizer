@@ -7,8 +7,8 @@
 //import core.model.match.MatchLineupPlayer;
 //import core.model.match.MatchLineupTeam;
 //import core.model.match.Matchdetails;
-//import core.model.player.ISpielerPosition;
-//import core.model.player.Spieler;
+//import core.model.player.IMatchRoleID;
+//import core.model.player.Player;
 //import core.net.MyConnector;
 //import core.net.OnlineWorker;
 //import core.net.login.LoginWaitDialog;
@@ -255,13 +255,13 @@
 //			    // Mihai Orzea 23 years, 28700 TSI, 90840 wage,
 //			    // 12 keeper, 5 defending, 6 stamina, 1 set pieces, 5 experience, 7 form.
 //
-//			    OpponentPlayer orzea = estimator.calcPlayer(23, 90940, 29700, 7, 6, 0, ISpielerPosition.KEEPER);
+//			    OpponentPlayer orzea = estimator.calcPlayer(23, 90940, 29700, 7, 6, 0, IMatchRoleID.KEEPER);
 //			    orzea.setName("Orzea");
 //
 //			    // Stig-Arne Tellbratt 23 years, 49280 TSI, 238440 wage, possibly not adjusted since 3 days old
 //			    // 15 keeper, 11 defending, 15 set pieces, 8 stamina 6 experience, 7 form
 //
-//			    OpponentPlayer tellbratt = estimator.calcPlayer(23,  238440, 49280, 7, 8, 0, ISpielerPosition.KEEPER);
+//			    OpponentPlayer tellbratt = estimator.calcPlayer(23,  238440, 49280, 7, 8, 0, IMatchRoleID.KEEPER);
 //			    tellbratt.setName("Tellbratt");
 //
 ////					    printPlayer(tellbratt);
@@ -280,12 +280,12 @@
 //		        }
 //
 //				if (teamId != 0) {
-//					List<Spieler> players = OnlineWorker.getTeamPlayers(teamId);
+//					List<Player> players = OnlineWorker.getTeamPlayers(teamId);
 //
 //					if (players != null) {
 //						System.out.println(players.size() + " players found!");
 //
-//						for (Spieler player : players) {
+//						for (Player player : players) {
 //
 //							System.out.println("Id: " + player.getSpielerID() + " Name: " + player.getName() + " TSI: " + player.getTSI() + " Wage: " + player.getGehalt());
 //
@@ -350,7 +350,7 @@
 //					return;
 //				}
 ////
-////						Spieler player = OnlineWorker.getPlayer(playerId);
+////						Player player = OnlineWorker.getPlayer(playerId);
 ////						if (player == null) {
 ////							System.out.println("Null was returned :(");
 ////						} else {

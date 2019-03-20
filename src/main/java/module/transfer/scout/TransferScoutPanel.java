@@ -153,7 +153,7 @@ public class TransferScoutPanel extends ImagePanel implements MouseListener, Key
             final TableSorter model = (TableSorter)m_jtTransferTable.getModel();
             m_jpTransferEingabePanel.setScoutEintrag(model.getScoutEintrag(row).duplicate());
         } else {
-            //m_jpTransferEingabePanel.setSpieler( null );
+            //m_jpTransferEingabePanel.setPlayer( null );
         }
     }
 

@@ -5,13 +5,10 @@ import core.gui.IRefreshable;
 import core.gui.RefreshManager;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.BaseTableModel;
-import core.model.HOModel;
 import core.model.HOVerwaltung;
-import core.model.StaffMember;
-import core.model.StaffType;
 import core.model.UserParameter;
 import core.model.player.ISkillup;
-import core.model.player.Spieler;
+import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.ModelChangeListener;
@@ -163,7 +160,7 @@ public class TrainingRecapPanel extends LazyImagePanel {
 
 	private void selectPlayerFromModel() {
 		this.recapTable.getLockedTable().clearSelection();
-		Spieler player = this.model.getActivePlayer();
+		Player player = this.model.getActivePlayer();
 		if (player != null) {
 			for (int i = 0; i < this.recapTable.getLockedTable().getRowCount(); i++) {
 				String name = (String) this.recapTable.getLockedTable().getValueAt(i, 0);
@@ -205,10 +202,10 @@ public class TrainingRecapPanel extends LazyImagePanel {
 	private TableModel createTableModel() {
 
 		Vector<String> columns = getColumns();
-		List<Spieler> list = HOVerwaltung.instance().getModel().getAllSpieler();
+		List<Player> list = HOVerwaltung.instance().getModel().getAllSpieler();
 		List<Vector<String>> players = new ArrayList<Vector<String>>();
 		
-		for (Spieler player : list) {
+		for (Player player : list) {
 			FutureTrainingManager ftm = new FutureTrainingManager(player,
 					this.model.getFutureTrainings(), 0,
 					this.model.getTrainerLevel(), this.model.getAssistants()); 

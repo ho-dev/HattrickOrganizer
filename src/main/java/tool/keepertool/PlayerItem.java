@@ -1,6 +1,6 @@
 package tool.keepertool;
 
-import core.model.player.Spieler;
+import core.model.player.Player;
 import module.transfer.scout.ScoutEintrag;
 
 /**
@@ -21,13 +21,13 @@ public class PlayerItem {
     /**
      * Creates a new PlayerItem object.
      *
-     * @param spieler the roster player to include in the Combo
+     * @param player the roster player to include in the Combo
      */
-    public PlayerItem(Spieler spieler) {
-        tsi = spieler.getTSI();
-        form = spieler.getForm();
-        id = spieler.getSpielerID();
-        name = spieler.getName();
+    public PlayerItem(Player player) {
+        tsi = player.getTSI();
+        form = player.getForm();
+        id = player.getSpielerID();
+        name = player.getName();
     }
 
     /**
