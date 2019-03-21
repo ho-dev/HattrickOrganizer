@@ -54,26 +54,20 @@ import org.w3c.dom.Document;
 import java.util.Base64;
 
 
-/**
- * @author thomas.werth
- */
 public class MyConnector {
 	private final static SimpleDateFormat HT_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-	private static final int chppID = 3330;
 	private static final String htUrl = "http://chpp.hattrick.org/chppxml.ashx";
 	public static String m_sIDENTIFIER = "HO! Hattrick Organizer V" + HO.VERSION;
 	private static MyConnector m_clInstance;
 	private final static String VERSION_TRAINING = "2.1";
-	private final static String VERSION_MATCHORDERS = "2.4";
+	private final static String VERSION_MATCHORDERS = "3.0";
 	private final static String VERSION_MATCHLINEUP = "1.9";
 	private final static String VERSION_MATCHDETAILS = "3.0";
 	private final static String VERSION_PLAYERS = "2.1";
-	private final static String VERSION_PLAYERDETAILS = "2.0";
 	private final static String VERSION_WORLDDETAILS = "1.8";
 	private final static String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";
 	private final static String CONSUMER_SECRET = "2/Td)Cprd/?q`nAbkAL//F+eGD@KnnCc>)dQgtP,p+p";
 	private ProxySettings proxySettings;
-	private boolean m_bAuthenticated;
 	private OAuthService m_OAService;
 	private Token m_OAAccessToken;
 	private static boolean DEBUGSAVE = false;

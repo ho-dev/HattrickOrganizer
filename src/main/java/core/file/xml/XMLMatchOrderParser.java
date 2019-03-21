@@ -54,18 +54,15 @@ public class XMLMatchOrderParser {
 	 * Create a player from the given XML.
 	 */
 	private static void addPlayer(Element ele, Map<String, String> map) throws Exception {
-		Element tmp = null;
+		Element tmp;
 		int roleID = -1;
 		String behavior = "-1";
-		String spielerID = "-1";
-		String name = "";
+		String name;
 
 		tmp = (Element) ele.getElementsByTagName("PlayerID").item(0);
-		spielerID = XMLManager.getFirstChildNodeValue(tmp);
+		String spielerID = XMLManager.getFirstChildNodeValue(tmp);
 
-		if (spielerID.trim().equals("")) {
-			spielerID = "-1";
-		}
+		if (spielerID.trim().equals("")) {spielerID = "-1";}
 
 		tmp = (Element) ele.getElementsByTagName("RoleID").item(0);
 		if (tmp != null) {
@@ -75,18 +72,13 @@ public class XMLMatchOrderParser {
 		tmp = (Element) ele.getElementsByTagName("PlayerName").item(0);
 		name = XMLManager.getFirstChildNodeValue(tmp);
 
-		// individual orders only for the 10 players in the lineup (starting11 -
-		// keeper)
-		if ((roleID > IMatchRoleID.keeper) && (roleID < IMatchRoleID.startReserves)) {
+		// individual orders only for the 10 players in the lineup (i.e. starting11 excluding keeper)
+		if((roleID != IMatchRoleID.keeper)  && (IMatchRoleID.aFieldMatchRoleID.contains(roleID))) {
 			tmp = (Element) ele.getElementsByTagName("Behaviour").item(0);
 			behavior = XMLManager.getFirstChildNodeValue(tmp);
 		}
 
 		switch (roleID) {
-		// Why do only some have the check for previous entry? I guess it is due
-		// to duplicate positions
-		// In the 1.3 xml, hopefully no more. They don't hurt, so they are not
-		// removed.
 
 		case IMatchRoleID.keeper:
 			map.put("KeeperID", spielerID);
@@ -209,28 +201,73 @@ public class XMLMatchOrderParser {
 			break;
 
 		case IMatchRoleID.substGK1:
-			map.put("SubstKeeperID", spielerID);
-			map.put("SubstKeeperName", name);
+			map.put("substGK1ID", spielerID);
+			map.put("substGK1Name", name);
+			break;
+
+		case IMatchRoleID.substGK2:
+			map.put("substGK2ID", spielerID);
+			map.put("substGK2Name", name);
 			break;
 
 		case IMatchRoleID.substCD1:
-			map.put("SubstBackID", spielerID);
-			map.put("SubstBackName", name);
+			map.put("substCD1ID", spielerID);
+			map.put("substCD1Name", name);
+			break;
+
+		case IMatchRoleID.substCD2:
+			map.put("substCD2ID", spielerID);
+			map.put("substCD2Name", name);
+			break;
+
+		case IMatchRoleID.substWB1:
+			map.put("substWB1ID", spielerID);
+			map.put("substWB1Name", name);
+			break;
+
+		case IMatchRoleID.substWB2:
+			map.put("substWB2ID", spielerID);
+			map.put("substWB2Name", name);
 			break;
 
 		case IMatchRoleID.substIM1:
-			map.put("SubstInsideMidID", spielerID);
-			map.put("SubstInsideMidName", name);
+			map.put("substIM1ID", spielerID);
+			map.put("substIM1Name", name);
+			break;
+
+		case IMatchRoleID.substIM2:
+			map.put("substIM2ID", spielerID);
+			map.put("substIM2Name", name);
 			break;
 
 		case IMatchRoleID.substWI1:
-			map.put("SubstWingerID", spielerID);
-			map.put("SubstWingerName", name);
+			map.put("substWI1ID", spielerID);
+			map.put("substWI1Name", name);
+			break;
+
+		case IMatchRoleID.substWI2:
+			map.put("substWI2ID", spielerID);
+			map.put("substWI2Name", name);
 			break;
 
 		case IMatchRoleID.substFW1:
-			map.put("SubstForwardID", spielerID);
-			map.put("SubstForwardName", name);
+			map.put("substFW1ID", spielerID);
+			map.put("substFW1Name", name);
+			break;
+
+		case IMatchRoleID.substFW2:
+			map.put("substFW2ID", spielerID);
+			map.put("substFW2Name", name);
+			break;
+
+		case IMatchRoleID.substXT1:
+			map.put("substXT1ID", spielerID);
+			map.put("substXT1Name", name);
+			break;
+
+		case IMatchRoleID.substXT2:
+			map.put("substXT2ID", spielerID);
+			map.put("substXT2Name", name);
 			break;
 
 		case IMatchRoleID.setPieces:
@@ -351,33 +388,28 @@ public class XMLMatchOrderParser {
 	}
 
 	/**
-	 * erstellt das MAtchlineup Objekt
+	 * Creates the Matchlineup object
+	 * parsing of xml adapted to version 3.0 of match orders
 	 */
 	private static Hashtable<String, String> parseDetails(Document doc) {
-		Element ele = null;
-		Element root = null;
+		Element ele;
+		Element root;
 		final MyHashtable hash = new MyHashtable();
-		NodeList list = null;
+		NodeList list;
 
 		if (doc == null) {
 			return hash;
 		}
 
-		// Tabelle erstellen
 		root = doc.getDocumentElement();
 
 		try {
-			ele = (Element) root.getElementsByTagName("Version").item(0);
-
-			// Nach Format ab Version 1.2 parsen
-			// Daten füllen
-			// Fetchdate
 			ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
 			hash.put("FetchedDate", (XMLManager.getFirstChildNodeValue(ele)));
 			ele = (Element) root.getElementsByTagName("MatchID").item(0);
 			hash.put("MatchID", (XMLManager.getFirstChildNodeValue(ele)));
 
-			// Root wechseln
+			// change root to Match data
 			root = (Element) root.getElementsByTagName("MatchData").item(0);
 
 			if (!XMLManager.getAttributeValue(root, "Available").trim().equalsIgnoreCase("true")) {
@@ -389,12 +421,13 @@ public class XMLMatchOrderParser {
 			if (XMLManager.getAttributeValue(ele, "Available").trim().equalsIgnoreCase("true")) {
 				hash.put("Attitude", (XMLManager.getFirstChildNodeValue(ele)));
 			} else {
+				// in case attitude is not available TODO: check if this is really mandatory
 				hash.put("Attitude", "0");
 			}
 			
 			ele = (Element) root.getElementsByTagName("CoachModifier").item(0);
 			
-			// bingeling doesn't like the name coachModifier, so we always use styleOfPlay
+			// 'coachModifier' is called 'styleOfPlay' in HT
 			if (XMLManager.getAttributeValue(ele, "Available").trim().equalsIgnoreCase("true")) {
 				hash.put("StyleOfPlay", (XMLManager.getFirstChildNodeValue(ele)));
 			} else {

@@ -144,16 +144,21 @@ public class Lineup {
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.centralForward, Integer
 					.parseInt(properties.getProperty("forward3", "0")), Byte.parseByte(properties
 					.getProperty("behforward3", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substCD1, Integer
-					.parseInt(properties.getProperty("substback", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substIM1, Integer
-					.parseInt(properties.getProperty("substinsidemid", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substWI1, Integer
-					.parseInt(properties.getProperty("substwinger", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substGK1, Integer
-					.parseInt(properties.getProperty("substkeeper", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substFW1, Integer
-					.parseInt(properties.getProperty("substforward", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substGK1, Integer.parseInt(properties.getProperty("substgk1", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substGK2, Integer.parseInt(properties.getProperty("substgk2", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substCD1, Integer.parseInt(properties.getProperty("substcd1", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substCD2, Integer.parseInt(properties.getProperty("substcd2", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substWB1, Integer.parseInt(properties.getProperty("substwb1", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substWB2, Integer.parseInt(properties.getProperty("substwb2", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substIM1, Integer.parseInt(properties.getProperty("substim1", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substIM2, Integer.parseInt(properties.getProperty("substim2", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substWI1, Integer.parseInt(properties.getProperty("substwi1", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substWI2, Integer.parseInt(properties.getProperty("substwi2", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substFW1, Integer.parseInt(properties.getProperty("substfw1", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substFW2, Integer.parseInt(properties.getProperty("substfw2", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substXT1, Integer.parseInt(properties.getProperty("substxt1", "0")), (byte) 0));
+			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substXT2, Integer.parseInt(properties.getProperty("substxt2", "0")), (byte) 0));
+
 			m_iTacticType = Integer.parseInt(properties.getProperty("tactictype", "0"));
 			// bugfix: i had a HRF with installning=null (the string null)
 			String installning = properties.getProperty("installning");
