@@ -105,7 +105,7 @@ these here.
 
 ## Acknowledgements
 
-<img src="https://user-images.githubusercontent.com/1136496/54837108-e40f7f80-4cc5-11e9-9ea9-047856d17bb4.png" alt="Jetbrains" width="32" height="32" href="https://www.jetbrains.com/?from=HO"> is kindly supporting HO open source project with its full-featured JetBrains Toolbox.
+<a href="https://www.jetbrains.com/?from=HO"> <img src="https://user-images.githubusercontent.com/1136496/54837108-e40f7f80-4cc5-11e9-9ea9-047856d17bb4.png" alt="Jetbrains" width="32" height="32"> </a>  is kindly supporting **HO** open source project with its full-featured JetBrains Toolbox.
 
 For their support of open source projects, special thanks to:
 - **PoEditor**  https://poeditor.com
