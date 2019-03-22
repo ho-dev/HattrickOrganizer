@@ -105,9 +105,8 @@ these here.
 
 ## Acknowledgements
 
-Thanks to all previous HO developers, maintainers as well as all contributors. 
+!(https://user-images.githubusercontent.com/1136496/54837108-e40f7f80-4cc5-11e9-9ea9-047856d17bb4.png)[**Jetbrains**](https://www.jetbrains.com/?from=HO) is kindly supporting HO open source project with its full-featured JetBrains Toolbox.
 
 For their support of open source projects, special thanks to:
-- **JetBrains** https://www.jetbrains.com/?from=HO
 - **PoEditor**  https://poeditor.com
 - **SmartGit**  https://www.syntevo.com/smartgit/
