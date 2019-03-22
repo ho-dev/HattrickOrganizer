@@ -108,6 +108,6 @@ these here.
 Thanks to all previous HO developers, maintainers as well as all contributors. 
 
 For their support of open source projects, special thanks to:
-- **JetBrains** https://www.jetbrains.com
+- **JetBrains** https://www.jetbrains.com/?from=HO
 - **PoEditor**  https://poeditor.com
 - **SmartGit**  https://www.syntevo.com/smartgit/
