@@ -8,6 +8,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 
@@ -297,19 +298,19 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_clCentralForward.refresh(filteredPlayers);
 		m_clRightForward.refresh(filteredPlayers);
 		m_clSubstKeeper1.refresh(filteredPlayers);
-		m_clSubstKeeper2.refresh(filteredPlayers);
+		m_clSubstKeeper2.refresh2(filteredPlayers, m_clSubstKeeper1.getPlayerId());
 		m_clSubstCD1.refresh(filteredPlayers);
-	    m_clSubstCD2.refresh(filteredPlayers);
+	    m_clSubstCD2.refresh2(filteredPlayers, m_clSubstCD1.getPlayerId());
 		m_clSubstWB1.refresh(filteredPlayers);
-		m_clSubstWB2.refresh(filteredPlayers);
+		m_clSubstWB2.refresh2(filteredPlayers, m_clSubstWB1.getPlayerId());
 		m_clSubstIM1.refresh(filteredPlayers);
-		m_clSubstIM2.refresh(filteredPlayers);
+		m_clSubstIM2.refresh2(filteredPlayers, m_clSubstIM1.getPlayerId());
 		m_clSubstFwd1.refresh(filteredPlayers);
-		m_clSubstFwd2.refresh(filteredPlayers);
+		m_clSubstFwd2.refresh2(filteredPlayers, m_clSubstFwd1.getPlayerId());
 		m_clSubstWI1.refresh(filteredPlayers);
-		m_clSubstWI2.refresh(filteredPlayers);
+		m_clSubstWI2.refresh2(filteredPlayers, m_clSubstWI1.getPlayerId());
 		m_clSubstXtr1.refresh(filteredPlayers);
-		m_clSubstXtr2.refresh(filteredPlayers);
+		m_clSubstXtr2.refresh2(filteredPlayers, m_clSubstXtr1.getPlayerId());
 		m_clSetPieceTaker.refresh(selectedPlayers);
 	 	m_clCaptain.refresh(selectedPlayers);
 

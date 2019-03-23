@@ -27,7 +27,7 @@ public class LineupAssistant {
 	/**
 	 * gibt an ob der Player bereits aufgestellt ist auch ReserveBank zählt mit
 	 */
-	public final boolean isSpielerAufgestellt(int spielerId, List<IMatchRoleID> positions) {
+	public final boolean isPlayerInLineup(int spielerId, List<IMatchRoleID> positions) {
 		if (positions != null) {
 			for (IMatchRoleID position : positions) {
 				if (((MatchRoleID) position).getSpielerId() == spielerId) {
@@ -39,10 +39,7 @@ public class LineupAssistant {
 		return false;
 	}
 
-	/**
-	 * gibt an ob der Player von beginn an Spielt
-	 */
-	public final boolean isSpielerInAnfangsElf(int spielerId, Vector<IMatchRoleID> positionen) {
+	public final boolean isPlayerInStartingEleven(int spielerId, Vector<IMatchRoleID> positionen) {
 		for (int i = 0; (positionen != null) && (i < positionen.size()); i++) {
 			if ((((MatchRoleID) positionen.elementAt(i)).getId() < IMatchRoleID.startReserves)
 					&& (((MatchRoleID) positionen.elementAt(i)).getSpielerId() == spielerId)) {
@@ -52,6 +49,20 @@ public class LineupAssistant {
 
 		return false;
 	}
+
+	public final boolean isPlayerInLineupExcludingBackup(int spielerId, Vector<IMatchRoleID> positionen) {
+		if (!isPlayerInLineup(spielerId, positionen)) return false;
+
+		for (int i = 0; (positionen != null) && (i < positionen.size()); i++) {
+			if (IMatchRoleID.aBackupssMatchRoleID.contains(((MatchRoleID) positionen.elementAt(i)).getId()) &&
+					(((MatchRoleID) positionen.elementAt(i)).getSpielerId() == spielerId)) { return false;}
+		}
+
+		return true;
+	}
+
+
+
 
 	/**
 	 * Assitant to create automatic lineup
@@ -423,7 +434,7 @@ public class LineupAssistant {
 			aktuStk = player.calcPosValue(position, mitForm);
 			aktuStk += (m_weatherBonus * player.getWetterEffekt(this.weather) * aktuStk);
 
-			if ((!isSpielerAufgestellt(player.getSpielerID(), positionen))
+			if ((!isPlayerInLineup(player.getSpielerID(), positionen))
 					&& ((bestPlayer == null) || (bestStk < aktuStk))
 					&& ((ignoreSperre) || (!player.isGesperrt()))
 					&& ((ignoreVerletzung) || (player.getVerletzt() < 1))
@@ -457,7 +468,7 @@ public class LineupAssistant {
 			aktuStk += (m_weatherBonus * player.getWetterEffekt(this.weather) * aktuStk);
 
 			// Idealpos STK muss > mindestwert sein
-			if ((!isSpielerAufgestellt(player.getSpielerID(), positionen))
+			if ((!isPlayerInLineup(player.getSpielerID(), positionen))
 					&& (player.getIdealPosition() == position)
 					&& ((bestPlayer == null) || (bestStk < aktuStk))
 					&& ((ignoreSperre) || (!player.isGesperrt()))

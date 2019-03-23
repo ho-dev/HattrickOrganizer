@@ -770,7 +770,7 @@ final public class UserColumnFactory {
 				@Override
 				public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 					final HOModel model = HOVerwaltung.instance().getModel();
-					if (model.getLineup().isSpielerAufgestellt(player.getSpielerID())
+					if (model.getLineup().isPlayerInLineup(player.getSpielerID())
                             	&& (model.getLineup().getPositionBySpielerId(player
                                   .getSpielerID()) != null)) {
 						return new ColorLabelEntry(ImageUtilities.getImage4Position(model.getLineup()

@@ -360,7 +360,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         else
         	m_jpMotherClub.clear();
         Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
-        if (lineup.isSpielerAufgestellt(m_clPlayer.getSpielerID())
+        if (lineup.isPlayerInLineup(m_clPlayer.getSpielerID())
             && (lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()) != null)) {
             m_jpPositioned.setIcon(ImageUtilities.getImage4Position(lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()),
             		m_clPlayer.getTrikotnummer()));

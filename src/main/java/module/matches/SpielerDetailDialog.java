@@ -253,7 +253,7 @@ final class SpielerDetailDialog extends JDialog {
 		m_jpNationalitaet.setIcon(ImageUtilities.getFlagIcon(m_clPlayer.getNationalitaet()));
 
 		if (HOVerwaltung.instance().getModel().getLineup()
-				.isSpielerAufgestellt(m_clPlayer.getSpielerID())
+				.isPlayerInLineup(m_clPlayer.getSpielerID())
 				&& (HOVerwaltung.instance().getModel().getLineup()
 						.getPositionBySpielerId(m_clPlayer.getSpielerID()) != null)) {
 			m_jpAufgestellt.setIcon(ImageUtilities.getImage4Position(

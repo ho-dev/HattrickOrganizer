@@ -49,9 +49,9 @@ public class PlausibilityCheck {
 		// check if players in lineup. (for NEW_BEHAVIOUR, there is only one
 		// player involved)
 		if (substitution.getOrderType() != NEW_BEHAVIOUR
-				&& !lineup.isSpielerAufgestellt(objectPlayerID)) {
+				&& !lineup.isPlayerInLineup(objectPlayerID)) {
 			return Error.PLAYERIN_NOT_IN_LINEUP;
-		} else if (!lineup.isSpielerAufgestellt(subjectPlayerID)) {
+		} else if (!lineup.isPlayerInLineup(subjectPlayerID)) {
 			return Error.PLAYEROUT_NOT_IN_LINEUP;
 		}
 

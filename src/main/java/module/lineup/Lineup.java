@@ -372,7 +372,7 @@ public class Lineup {
 
 		if (players != null) {
 			for (Player player : players) {
-				if (m_clAssi.isSpielerInAnfangsElf(player.getSpielerID(), m_vPositionen)) {
+				if (m_clAssi.isPlayerInStartingEleven(player.getSpielerID(), m_vPositionen)) {
 					int curPlayerId = player.getSpielerID();
 					float curCaptainsValue = HOVerwaltung.instance().getModel().getLineup()
 							.getAverageExperience(curPlayerId);
@@ -408,7 +408,7 @@ public class Lineup {
 
 		if (players != null) {
 			for (Player player : players) {
-				if (m_clAssi.isSpielerInAnfangsElf(player.getSpielerID(), noKeeper)) {
+				if (m_clAssi.isPlayerInStartingEleven(player.getSpielerID(), noKeeper)) {
 					double sp = (double) player.getStandards()
 							+ player.getSubskill4Pos(PlayerSkill.SET_PIECES)
 							+ RatingPredictionManager.getLoyaltyHomegrownBonus(player);
@@ -450,7 +450,7 @@ public class Lineup {
 
 		if (players != null) {
 			for (Player player : players) {
-				if (m_clAssi.isSpielerInAnfangsElf(player.getSpielerID(), m_vPositionen)) {
+				if (m_clAssi.isPlayerInStartingEleven(player.getSpielerID(), m_vPositionen)) {
 					value += player.getErfahrung();
 					if (captainsId > 0) {
 						if (captainsId == player.getSpielerID()) {
@@ -1042,38 +1042,65 @@ public class Lineup {
 	 * Place a player to a certain position and check/solve dependencies.
 	 */
 	public final void setSpielerAtPosition(int positionsid, int spielerid) {
-		if (this.isSpielerAufgestellt(spielerid)) {
+		//if player changed in starting eleven or subsitute it has to be remove from previous occupied place in starting eleven or substitute
+		if(!IMatchRoleID.aBackupssMatchRoleID.contains(positionsid)){
+		MatchRoleID iRole;
+		int iPlayerID;
+		if (this.isPlayerInLineup(spielerid)) {
 			for (int i = 0; i < m_vPositionen.size(); i++) {
-				if (((MatchRoleID) m_vPositionen.get(i)).getSpielerId() == spielerid) {
-					((MatchRoleID) m_vPositionen.get(i)).setSpielerId(0, this);
+				iRole = (MatchRoleID) m_vPositionen.get(i);
+				iPlayerID = iRole.getSpielerId();
+				// player is removed from previous position as player on the field or as substitute
+				if (iPlayerID == spielerid) {iRole.setSpielerId(0, this);}
 				}
 			}
 		}
+
 		final MatchRoleID position = getPositionById(positionsid);
 		position.setSpielerId(spielerid, this);
+
 	}
 
 	/**
 	 * Check, if the player is in the lineup.
 	 */
-	public final boolean isSpielerAufgestellt(int spielerId) {
-		return m_clAssi.isSpielerAufgestellt(spielerId, m_vPositionen);
+	public final boolean isPlayerInLineup(int spielerId) {
+		return m_clAssi.isPlayerInLineup(spielerId, m_vPositionen);
+	}
+
+	public final boolean isPlayerInLineupExcludingBackup(int spielerId) {
+		return m_clAssi.isPlayerInLineupExcludingBackup(spielerId, m_vPositionen);
 	}
 
 	/**
 	 * Check, if the player is in the starting 11.
 	 */
 	public final boolean isPlayerInStartingEleven(int spielerId) {
-		return m_clAssi.isSpielerInAnfangsElf(spielerId, m_vPositionen);
+		return m_clAssi.isPlayerInStartingEleven(spielerId, m_vPositionen);
 	}
 
 	/**
-	 * Check, if the player is a substitute.
+	 * Check, if the player is a substitute or a backup.
 	 */
 	public final boolean isSpielerInReserve(int spielerId) {
-		return (m_clAssi.isSpielerAufgestellt(spielerId, m_vPositionen) && !m_clAssi
-				.isSpielerInAnfangsElf(spielerId, m_vPositionen));
+		return (m_clAssi.isPlayerInLineup(spielerId, m_vPositionen) && !m_clAssi
+				.isPlayerInStartingEleven(spielerId, m_vPositionen));
 	}
+
+	/**
+	 * check if the player is a sub (backup players are excluded)
+	 */
+	public final boolean isPlayerAsubstitute(int playerId) {
+		for (int i = 0; (m_vPositionen != null) && (i < m_vPositionen.size()); i++) {
+			if ((((MatchRoleID)m_vPositionen.elementAt(i)).getSpielerId() == playerId) &&
+					(IMatchRoleID.aSubstitutesMatchRoleID.contains(((MatchRoleID)m_vPositionen.elementAt(i)).getId()))){
+				return true;
+			}
+		}
+		return false;
+		}
+
+
 
 	/**
 	 * Returns a list with the substitutions for this lineup.
@@ -1715,55 +1742,55 @@ public class Lineup {
 		return Helper.round(stk, 1);
 	}
 
-	/**
-	 * Debug log lineup.
-	 */
-	private void dumpValues() {
-		if (m_vPositionen != null) {
-			for (IMatchRoleID pos : m_vPositionen) {
-				final Player temp = HOVerwaltung.instance().getModel()
-						.getSpieler(((MatchRoleID) pos).getSpielerId());
-				String name = "";
-				float stk = 0.0f;
-
-				if (temp != null) {
-					name = temp.getName();
-					stk = temp.calcPosValue(((MatchRoleID) pos).getPosition(), true);
-				}
-
-				HOLogger.instance().log(getClass(),
-						"PosID: " + MatchRoleID.getNameForID(((MatchRoleID) pos).getId()) //
-								+ ", Player :" + name + " , Stk : " + stk);
-			}
-		}
-		if (m_iKapitaen > 0) {
-			HOLogger.instance().log(
-					getClass(),
-					"Captain: "
-							+ HOVerwaltung.instance().getModel().getSpieler(m_iKapitaen).getName());
-		}
-
-		if (m_iKicker > 0) {
-			HOLogger.instance().log(
-					getClass(),
-					"SetPieces: "
-							+ HOVerwaltung.instance().getModel().getSpieler(m_iKicker).getName());
-		}
-
-		if (m_sLocation > -1) {
-			HOLogger.instance().log(getClass(), "Location: " + m_sLocation);
-		}
-
-		HOLogger.instance().log(
-				getClass(),
-				"GK: " + getTWTeamStk(HOVerwaltung.instance().getModel().getAllSpieler(), true)
-						+ " DF: "
-						+ getAWTeamStk(HOVerwaltung.instance().getModel().getAllSpieler(), true)
-						+ " MF : "
-						+ getMFTeamStk(HOVerwaltung.instance().getModel().getAllSpieler(), true)
-						+ " ST : "
-						+ getSTTeamStk(HOVerwaltung.instance().getModel().getAllSpieler(), true));
-	}
+//	/**
+//	 * Debug log lineup.
+//	 */
+//	private void dumpValues() {
+//		if (m_vPositionen != null) {
+//			for (IMatchRoleID pos : m_vPositionen) {
+//				final Player temp = HOVerwaltung.instance().getModel()
+//						.getSpieler(((MatchRoleID) pos).getSpielerId());
+//				String name = "";
+//				float stk = 0.0f;
+//
+//				if (temp != null) {
+//					name = temp.getName();
+//					stk = temp.calcPosValue(((MatchRoleID) pos).getPosition(), true);
+//				}
+//
+//				HOLogger.instance().log(getClass(),
+//						"PosID: " + MatchRoleID.getNameForID(((MatchRoleID) pos).getId()) //
+//								+ ", Player :" + name + " , Stk : " + stk);
+//			}
+//		}
+//		if (m_iKapitaen > 0) {
+//			HOLogger.instance().log(
+//					getClass(),
+//					"Captain: "
+//							+ HOVerwaltung.instance().getModel().getSpieler(m_iKapitaen).getName());
+//		}
+//
+//		if (m_iKicker > 0) {
+//			HOLogger.instance().log(
+//					getClass(),
+//					"SetPieces: "
+//							+ HOVerwaltung.instance().getModel().getSpieler(m_iKicker).getName());
+//		}
+//
+//		if (m_sLocation > -1) {
+//			HOLogger.instance().log(getClass(), "Location: " + m_sLocation);
+//		}
+//
+//		HOLogger.instance().log(
+//				getClass(),
+//				"GK: " + getTWTeamStk(HOVerwaltung.instance().getModel().getAllSpieler(), true)
+//						+ " DF: "
+//						+ getAWTeamStk(HOVerwaltung.instance().getModel().getAllSpieler(), true)
+//						+ " MF : "
+//						+ getMFTeamStk(HOVerwaltung.instance().getModel().getAllSpieler(), true)
+//						+ " ST : "
+//						+ getSTTeamStk(HOVerwaltung.instance().getModel().getAllSpieler(), true));
+//	}
 
 	/**
 	 * Initializes the 553 lineup
