@@ -22,6 +22,7 @@ repositories {
 
 //============  external jar dependencies ==========
 dependencies {
+    compile 'com.google.guava:guava:27.1-jre'
     compile 'com.jgoodies:jgoodies-looks:2.7.0'
     compile 'com.toedter:jcalendar:1.4'
     compile 'org.scribe:scribe:1.3.0'

@@ -1,5 +1,7 @@
 package core.model.player;
 
+import com.google.common.primitives.Ints;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -130,23 +132,23 @@ public interface IMatchRoleID {
 
     
     // The old role IDs used for mapping old data to new format
-     byte oldKeeper = 1;
-     byte oldRightBack = 2;
-     byte oldRightCentralDefender = 3;
-     byte oldLeftCentralDefender = 4;
-     byte oldLeftBack = 5;
-     byte oldRightWinger = 6;
-     byte oldRightInnerMidfielder = 7;
-     byte oldLeftInnerMidfielder = 8;
-     byte oldLeftWinger = 9;
-     byte oldRightForward = 10;
-     byte oldLeftForward = 11;
-     byte oldSubstKeeper = 12;
-     byte oldSubstDefender = 13;
-     byte oldSubstMidfielder = 14;
-     byte oldSubstWinger = 15;
-     byte oldSubstForward = 16;
-    
+     List<Integer> oldKeeper = Ints.asList(new int[] {1});
+     List<Integer>oldRightBack = Ints.asList(new int[] {2});
+     List<Integer>oldRightCentralDefender = Ints.asList(new int[] {3});
+     List<Integer>oldLeftCentralDefender = Ints.asList(new int[] {4});
+     List<Integer>oldLeftBack = Ints.asList(new int[] {5});
+     List<Integer>oldRightWinger = Ints.asList(new int[] {6});
+     List<Integer>oldRightInnerMidfielder = Ints.asList(new int[] {7});
+     List<Integer>oldLeftInnerMidfielder = Ints.asList(new int[] {8});
+     List<Integer>oldLeftWinger = Ints.asList(new int[] {9});
+     List<Integer>oldRightForward = Ints.asList(new int[] {10});
+     List<Integer>oldLeftForward = Ints.asList(new int[] {11});
+     List<Integer>oldSubstKeeper = Ints.asList(new int[] {12, 114});
+     List<Integer>oldSubstDefender = Ints.asList(new int[] {13, 115});
+     List<Integer>oldSubstMidfielder = Ints.asList(new int[] {14, 116});
+     List<Integer>oldSubstWinger = Ints.asList(new int[] {15, 117});
+     List<Integer>oldSubstForward = Ints.asList(new int[] {16, 118});
+
   
 //    /** Get the position byte back **/
 //    public byte getPosition();

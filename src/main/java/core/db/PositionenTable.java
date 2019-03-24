@@ -1,5 +1,6 @@
 package core.db;
 
+import core.model.match.MatchLineupPlayer;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;
@@ -68,10 +69,8 @@ public final class PositionenTable extends AbstractTable {
 						roleID = IMatchRoleID.centralForward;
 						behavior = IMatchRoleID.DEFENSIVE;
 				}
-					
-					if (roleID < IMatchRoleID.setPieces) {
-						roleID = convertOldRoleToNew(roleID);
-					}
+
+				roleID = MatchRoleID.convertOldRoleToNew(roleID);
 					
 					if (playerID < 0) {
 						playerID = 0;
@@ -107,45 +106,6 @@ public final class PositionenTable extends AbstractTable {
 			adapter.executeUpdate(statement);
 		}
 	}	
-	
-	// Helper
-	private int convertOldRoleToNew(int roleID) {
-    	switch (roleID) {
-    		case IMatchRoleID.oldKeeper :
-    			return IMatchRoleID.keeper;
-    		case IMatchRoleID.oldRightBack :
-    			return IMatchRoleID.rightBack;
-    		case IMatchRoleID.oldLeftCentralDefender :
-    			return IMatchRoleID.leftCentralDefender;
-    		case IMatchRoleID.oldRightCentralDefender :
-    			return IMatchRoleID.rightCentralDefender;
-    		case IMatchRoleID.oldLeftBack :
-    			return IMatchRoleID.leftBack;
-    		case IMatchRoleID.oldRightWinger :
-    			return IMatchRoleID.rightWinger;
-    		case IMatchRoleID.oldRightInnerMidfielder :
-    			return IMatchRoleID.rightInnerMidfield;
-    		case IMatchRoleID.oldLeftInnerMidfielder :
-    			return IMatchRoleID.leftInnerMidfield;
-    		case IMatchRoleID.oldLeftWinger:
-    			return IMatchRoleID.leftWinger;
-    		case IMatchRoleID.oldRightForward :
-    			return IMatchRoleID.rightForward;
-    		case IMatchRoleID.oldLeftForward :
-    			return IMatchRoleID.leftForward;
-    		case IMatchRoleID.oldSubstKeeper :
-    			return IMatchRoleID.substGK1;
-    		case IMatchRoleID.oldSubstDefender :
-    			return IMatchRoleID.substCD1;
-    		case IMatchRoleID.oldSubstMidfielder :
-    			return IMatchRoleID.substIM1;
-    		case IMatchRoleID.oldSubstWinger :
-    			return IMatchRoleID.substWI1;
-    		case IMatchRoleID.oldSubstForward :
-    			return IMatchRoleID.substFW1;
-    		default :
-    			return roleID;
-    	}
+
     }
 
-}

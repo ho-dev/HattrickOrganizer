@@ -305,8 +305,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	Vector<MatchLineupPlayer> getMatchLineupPlayers(int matchID, int teamID) {
 		MatchLineupPlayer player = null;
 		final Vector<MatchLineupPlayer> vec = new Vector<MatchLineupPlayer>();
-		String sql = null;
-		ResultSet rs = null;
+		String sql;
+		ResultSet rs;
 		int roleID;
 		int behavior;
 		int spielerID;
@@ -351,10 +351,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 						roleID = IMatchRoleID.centralForward;
 						behavior = IMatchRoleID.NORMAL;
 				}
-				
-				if (roleID < IMatchRoleID.setPieces) {
-					roleID = convertOldRoleToNew(roleID);
-				}
+
+				roleID = convertOldRoleToNew(roleID);
 				
 				// Position code and field position was removed from constructor below.
 				player = new MatchLineupPlayer(roleID, behavior, spielerID, rating, vname, nickName, name, rs.getInt("STATUS"), ratingStarsEndOfMatch, startPos, startBeh);
@@ -369,43 +367,25 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		
 		// Helpers
 		
-		 private int convertOldRoleToNew(int roleID) {
-		    	switch (roleID) {
-		    		case IMatchRoleID.oldKeeper :
-		    			return IMatchRoleID.keeper;
-		    		case IMatchRoleID.oldRightBack :
-		    			return IMatchRoleID.rightBack;
-		    		case IMatchRoleID.oldLeftCentralDefender :
-		    			return IMatchRoleID.leftCentralDefender;
-		    		case IMatchRoleID.oldRightCentralDefender :
-		    			return IMatchRoleID.rightCentralDefender;
-		    		case IMatchRoleID.oldLeftBack :
-		    			return IMatchRoleID.leftBack;
-		    		case IMatchRoleID.oldRightWinger :
-		    			return IMatchRoleID.rightWinger;
-		    		case IMatchRoleID.oldRightInnerMidfielder :
-		    			return IMatchRoleID.rightInnerMidfield;
-		    		case IMatchRoleID.oldLeftInnerMidfielder :
-		    			return IMatchRoleID.leftInnerMidfield;
-		    		case IMatchRoleID.oldLeftWinger:
-		    			return IMatchRoleID.leftWinger;
-		    		case IMatchRoleID.oldRightForward :
-		    			return IMatchRoleID.rightForward;
-		    		case IMatchRoleID.oldLeftForward :
-		    			return IMatchRoleID.leftForward;
-		    		case IMatchRoleID.oldSubstKeeper :
-		    			return IMatchRoleID.substGK1;
-		    		case IMatchRoleID.oldSubstDefender :
-		    			return IMatchRoleID.substCD1;
-		    		case IMatchRoleID.oldSubstMidfielder :
-		    			return IMatchRoleID.substIM1;
-		    		case IMatchRoleID.oldSubstWinger :
-		    			return IMatchRoleID.substWI1;
-		    		case IMatchRoleID.oldSubstForward :
-		    			return IMatchRoleID.substFW1;
-		    		default :
-		    			return roleID;
+		 public int convertOldRoleToNew(int roleID) {
+				if(IMatchRoleID.oldKeeper.contains(roleID)) return IMatchRoleID.keeper;
+				else if (IMatchRoleID.oldRightBack.contains(roleID)) return IMatchRoleID.rightBack;
+				else if (IMatchRoleID.oldLeftCentralDefender.contains(roleID))return IMatchRoleID.leftCentralDefender;
+		    		else if (IMatchRoleID.oldRightCentralDefender.contains(roleID))	return IMatchRoleID.rightCentralDefender;
+		    		else if (IMatchRoleID.oldLeftBack.contains(roleID))	return IMatchRoleID.leftBack;
+		    		else if (IMatchRoleID.oldRightWinger.contains(roleID)) return IMatchRoleID.rightWinger;
+		    		else if (IMatchRoleID.oldRightInnerMidfielder.contains(roleID))	return IMatchRoleID.rightInnerMidfield;
+		    		else if (IMatchRoleID.oldLeftInnerMidfielder.contains(roleID))return IMatchRoleID.leftInnerMidfield;
+		    		else if (IMatchRoleID.oldLeftWinger.contains(roleID))return IMatchRoleID.leftWinger;
+		    		else if (IMatchRoleID.oldRightForward.contains(roleID))return IMatchRoleID.rightForward;
+		    		else if (IMatchRoleID.oldLeftForward.contains(roleID))return IMatchRoleID.leftForward;
+		    		else if (IMatchRoleID.oldSubstKeeper.contains(roleID))return IMatchRoleID.substGK1;
+		    		else if (IMatchRoleID.oldSubstDefender.contains(roleID))return IMatchRoleID.substCD1;
+		    		else if (IMatchRoleID.oldSubstMidfielder.contains(roleID))return IMatchRoleID.substIM1;
+		    		else if (IMatchRoleID.oldSubstWinger.contains(roleID))return IMatchRoleID.substWI1;
+		    		else if (IMatchRoleID.oldSubstForward.contains(roleID))	return IMatchRoleID.substFW1;
+		    		else return roleID;
 		    	}
-		    }
+
 
 }

@@ -724,4 +724,24 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 
 		// return data;
 	}
+
+	public static int convertOldRoleToNew(int roleID) {
+		if(IMatchRoleID.oldKeeper.contains(roleID)) return IMatchRoleID.keeper;
+		else if (IMatchRoleID.oldRightBack.contains(roleID)) return IMatchRoleID.rightBack;
+		else if (IMatchRoleID.oldLeftCentralDefender.contains(roleID))return IMatchRoleID.leftCentralDefender;
+		else if (IMatchRoleID.oldRightCentralDefender.contains(roleID))	return IMatchRoleID.rightCentralDefender;
+		else if (IMatchRoleID.oldLeftBack.contains(roleID))	return IMatchRoleID.leftBack;
+		else if (IMatchRoleID.oldRightWinger.contains(roleID)) return IMatchRoleID.rightWinger;
+		else if (IMatchRoleID.oldRightInnerMidfielder.contains(roleID))	return IMatchRoleID.rightInnerMidfield;
+		else if (IMatchRoleID.oldLeftInnerMidfielder.contains(roleID))return IMatchRoleID.leftInnerMidfield;
+		else if (IMatchRoleID.oldLeftWinger.contains(roleID))return IMatchRoleID.leftWinger;
+		else if (IMatchRoleID.oldRightForward.contains(roleID))return IMatchRoleID.rightForward;
+		else if (IMatchRoleID.oldLeftForward.contains(roleID))return IMatchRoleID.leftForward;
+		else if (IMatchRoleID.oldSubstKeeper.contains(roleID))return IMatchRoleID.substGK1;
+		else if (IMatchRoleID.oldSubstDefender.contains(roleID))return IMatchRoleID.substCD1;
+		else if (IMatchRoleID.oldSubstMidfielder.contains(roleID))return IMatchRoleID.substIM1;
+		else if (IMatchRoleID.oldSubstWinger.contains(roleID))return IMatchRoleID.substWI1;
+		else if (IMatchRoleID.oldSubstForward.contains(roleID))	return IMatchRoleID.substFW1;
+		else return roleID;
+	}
 }
