@@ -69,7 +69,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 				break;
 
 			}
-			sql.append("SELECT *,");
+			sql.append("SELECT " + getTableName() + ".*,");
 			sql.append(column);
 			sql.append(" FROM ").append(getTableName());
 			sql.append(" WHERE ").append(home ? "HEIMID" : "GASTID")
