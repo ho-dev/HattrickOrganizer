@@ -105,9 +105,10 @@ these here.
 
 ## Acknowledgements
 
-<a href="https://www.jetbrains.com/?from=HO"> <img src="https://user-images.githubusercontent.com/1136496/54837108-e40f7f80-4cc5-11e9-9ea9-047856d17bb4.png" alt="Jetbrains" width="46" height="50"> </a> [**Jetbrains**](https://www.jetbrains.com/?from=HO) is kindly supporting HO open source project with its full-featured JetBrains Toolbox.
+The following companies are kindly supporting HO open source project:
 
-<a href="https://poeditor.com"> <img src="https://user-images.githubusercontent.com/1136496/54920078-92076d80-4f02-11e9-9f45-182a008b9757.png" alt="POEditor" width="128" height="32"> </a> [**POEditor**](https://poeditor.com) is kindly supporting HO open source project with its awesome localization tool
+<a href="https://www.jetbrains.com/?from=HO"> <img src="https://user-images.githubusercontent.com/1136496/54837108-e40f7f80-4cc5-11e9-9ea9-047856d17bb4.png" alt="Jetbrains" width="46" height="50"> </a> [**Jetbrains**](https://www.jetbrains.com/?from=HO) with its full-featured JetBrains Toolbox.
 
-For their support of open source projects, special thanks to:
-- **SmartGit**  https://www.syntevo.com/smartgit/
+<a href="https://poeditor.com"> <img src="https://user-images.githubusercontent.com/1136496/54920078-92076d80-4f02-11e9-9f45-182a008b9757.png" alt="POEditor" width="128" height="32"> </a> [**POEditor**](https://poeditor.com) with its awesome localization tool
+
+- [**Syntevo**](https://www.syntevo.com/smartgit/) with if powerful and multi-platform graphical Git client
