@@ -105,8 +105,9 @@ these here.
 
 ## Acknowledgements
 
-<a href="https://www.jetbrains.com/?from=HO"> <img src="https://user-images.githubusercontent.com/1136496/54837108-e40f7f80-4cc5-11e9-9ea9-047856d17bb4.png" alt="Jetbrains" width="32" height="32"> </a> [**Jetbrains**](https://www.jetbrains.com/?from=HO) is kindly supporting HO open source project with its full-featured JetBrains Toolbox.
+<a href="https://www.jetbrains.com/?from=HO"> <img src="https://user-images.githubusercontent.com/1136496/54837108-e40f7f80-4cc5-11e9-9ea9-047856d17bb4.png" alt="Jetbrains" width="46" height="50"> </a> [**Jetbrains**](https://www.jetbrains.com/?from=HO) is kindly supporting HO open source project with its full-featured JetBrains Toolbox.
+
+<a href="https://poeditor.com"> <img src="https://user-images.githubusercontent.com/1136496/54920078-92076d80-4f02-11e9-9f45-182a008b9757.png" alt="POEditor" width="128" height="32"> </a> [**POEditor**](https://poeditor.com) is kindly supporting HO open source project with its awesome localization tool
 
 For their support of open source projects, special thanks to:
-- **PoEditor**  https://poeditor.com
 - **SmartGit**  https://www.syntevo.com/smartgit/
