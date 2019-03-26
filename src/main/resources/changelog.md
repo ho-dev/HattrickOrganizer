@@ -11,6 +11,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
  - startup issue for certain Linux configuration (#102)
  - sorting issue after change filter in Arena section
  - bug due to match report size larger than db threshold
+ - invalid select statement and duplicated IDs in matches tab
 
 ## Changed
  - ...
