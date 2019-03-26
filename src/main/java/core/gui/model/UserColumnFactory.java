@@ -460,7 +460,7 @@ final public class UserColumnFactory {
 
 		};
 		
-		matchesArray[5] = new MatchKurzInfoColumn(490,"ls.match.hatstats.me",80){
+		matchesArray[5] = new MatchKurzInfoColumn(494,"ls.match.hatstats.me",80){
 			@Override
 			public IHOTableEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails){
 				final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
@@ -479,7 +479,7 @@ final public class UserColumnFactory {
 
 		};
 		
-		matchesArray[6] = new MatchKurzInfoColumn(490,"ls.match.hatstats.opp",80){
+		matchesArray[6] = new MatchKurzInfoColumn(498,"ls.match.hatstats.opp",80){
 			@Override
 			public IHOTableEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails){
 				final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
