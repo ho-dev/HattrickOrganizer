@@ -54,6 +54,7 @@ public class UploadDownloadPanel extends LazyPanel {
 	private JButton uploadButton;
 	private JButton downloadButton;
 	private JButton refreshButton;
+	private JButton getRatingsPredictionButton;
 	private boolean supporter;
 
 	@Override
@@ -80,6 +81,11 @@ public class UploadDownloadPanel extends LazyPanel {
 		this.downloadButton.setToolTipText(HOVerwaltung.instance().getLanguageString(
 				"lineup.upload.btn.download.tooltip"));
 		this.downloadButton.setEnabled(false);
+		this.getRatingsPredictionButton = new JButton(HOVerwaltung.instance().getLanguageString(
+				"lineup.getRatingsPrediction.btn.label"));
+		this.getRatingsPredictionButton.setToolTipText(HOVerwaltung.instance().getLanguageString(
+				"lineup.getRatingsPrediction.btn.tooltip"));
+		this.getRatingsPredictionButton.setEnabled(false);
 		this.uploadButton = new JButton(HOVerwaltung.instance().getLanguageString(
 				"lineup.upload.btn.upload"));
 		this.uploadButton.setToolTipText(HOVerwaltung.instance().getLanguageString(
@@ -100,7 +106,12 @@ public class UploadDownloadPanel extends LazyPanel {
 		gbc.weightx = 1.0;
 		buttonPanel.add(this.downloadButton, gbc);
 
-		GUIUtils.equalizeComponentSizes(this.refreshButton, this.uploadButton, this.downloadButton);
+		gbc.gridy = 3;
+		gbc.insets = new Insets(4, 8, 10, 10);
+		gbc.weightx = 1.0;
+		buttonPanel.add(this.getRatingsPredictionButton, gbc);
+
+		GUIUtils.equalizeComponentSizes(this.refreshButton, this.uploadButton, this.downloadButton, this.getRatingsPredictionButton);
 
 		MatchesTableModel model = new MatchesTableModel();
 		this.matchesTable = new JTable();
@@ -171,6 +182,17 @@ public class UploadDownloadPanel extends LazyPanel {
 		return data;
 	}
 
+	private void getRatingsPrediction()
+	{
+		// TODO: create code that get dPredictionRatingT0HO, dPredictionRatingT0HT  (Akasolace)
+		// dPredictionRatingT0HO and dPredictionRatingT0HT would have keys CD, LD, RD, MD, LA, CA, RA, HatStast, Loddar
+		// TODO: create function that display the rating comparison (BrokenEevator)
+		// ratingcomparision(dPredictionRatingT0HO, dPredictionRatingT0HT)
+
+		return;
+
+	}
+
 	private void upload() {
 		MatchKurzInfo match = getSelectedMatch();
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
@@ -186,9 +208,9 @@ public class UploadDownloadPanel extends LazyPanel {
 			CursorToolkit.stopWaitCursor(this);
 		}
 
-		int messageType = JOptionPane.PLAIN_MESSAGE;
+		int messageType;
 		boolean success = false;
-		String message = null;
+		String message;
 		try {
 			Document doc = XMLUtils.createDocument(result);
 			String successStr = XMLUtils.getAttributeValueFromNode(doc, "MatchData", "OrdersSet");
@@ -318,6 +340,8 @@ public class UploadDownloadPanel extends LazyPanel {
 			}
 		});
 
+		this.getRatingsPredictionButton.addActionListener(e -> getRatingsPrediction());
+
 		this.matchesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
@@ -326,6 +350,7 @@ public class UploadDownloadPanel extends LazyPanel {
 					boolean enableButtons = matchesTable.getSelectedRow() != -1;
 					uploadButton.setEnabled(supporter && enableButtons);
 					downloadButton.setEnabled(enableButtons);
+					getRatingsPredictionButton.setEnabled(enableButtons);
 				}
 			}
 		});
