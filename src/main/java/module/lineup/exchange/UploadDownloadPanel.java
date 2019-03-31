@@ -16,6 +16,7 @@ import core.util.GUIUtils;
 import core.util.HOLogger;
 import core.util.XMLUtils;
 import module.lineup.Lineup;
+import module.lineup.RatingComparisonDialog;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -27,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -186,8 +188,32 @@ public class UploadDownloadPanel extends LazyPanel {
 	{
 		// TODO: create code that get dPredictionRatingT0HO, dPredictionRatingT0HT  (Akasolace)
 		// dPredictionRatingT0HO and dPredictionRatingT0HT would have keys CD, LD, RD, MD, LA, CA, RA, HatStast, Loddar
-		// TODO: create function that display the rating comparison (BrokenEevator)
-		// ratingcomparision(dPredictionRatingT0HO, dPredictionRatingT0HT)
+
+		//Dummy code
+		HashMap<String, Double> dPredictionRatingT0HO = new HashMap<String, Double>();
+		dPredictionRatingT0HO.put("DC", 12.4);
+		dPredictionRatingT0HO.put("DR", 11.3);
+		dPredictionRatingT0HO.put("DL", 10.);
+		dPredictionRatingT0HO.put("M", 14.9);
+		dPredictionRatingT0HO.put("FC", 9.2);
+		dPredictionRatingT0HO.put("FR", 12.7);
+		dPredictionRatingT0HO.put("FL", 14.6);
+		dPredictionRatingT0HO.put("HatStats", 120.);
+		dPredictionRatingT0HO.put("Loddar", 94.);
+
+		HashMap<String, Double> dPredictionRatingT0HT = new HashMap<String, Double>();
+		dPredictionRatingT0HT.put("DC", 11.5);
+		dPredictionRatingT0HT.put("DR", 10.7);
+		dPredictionRatingT0HT.put("DL", 12.);
+		dPredictionRatingT0HT.put("M", 14.5);
+		dPredictionRatingT0HT.put("FC", 11.1);
+		dPredictionRatingT0HT.put("FR", 7.8);
+		dPredictionRatingT0HT.put("FL", 12.6);
+		dPredictionRatingT0HT.put("HatStats", 145.);
+		dPredictionRatingT0HT.put("Loddar", 12.);
+		//---------------------------------------------------------------------------------
+
+		new RatingComparisonDialog(dPredictionRatingT0HO, dPredictionRatingT0HT);
 
 		return;
 

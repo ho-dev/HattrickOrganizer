@@ -154,6 +154,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(HOMEGROWN, "gui/bilder/motherclub.png");
 		put(IMAGEPANEL_BACKGROUND, "gui/bilder/Background.jpg");
 		put(GRASSPANEL_BACKGROUND, "gui/bilder/Rasen_mit_Streifen.jpg");
+		put(RATINGCOMPARISON_BACKGROUND, "gui/bilder/field_cut.png");
 
 		// 1.431
 		put(REMOVE, "gui/bilder/remove.png");

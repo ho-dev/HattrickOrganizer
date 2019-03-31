@@ -4,6 +4,7 @@ public interface HOIconName {
 
 	public static final String IMAGEPANEL_BACKGROUND = "imagePanel.background";
 	public static final String GRASSPANEL_BACKGROUND = "grassPanel.background";
+	public static final String RATINGCOMPARISON_BACKGROUND = "ratingComparison.background";
 
 	public static final String[] MATCHICONS	= {"LEAGUE", "QUALIFICATION", "FRIENDLY", "NATIONAL_CUP", "EMERALD_CUP", "RUBY_CUP", "SAPPHIRE_CUP", "LADDER", "TOURNAMENT", "SINGLE", "MASTERS", "DEFAULT", "CONSOLANTE_CUP"};
 	public static final String[] WEATHER 		= { "weather0","weather1","weather2","weather3"};
