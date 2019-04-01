@@ -8,6 +8,7 @@ import core.model.match.MatchKurzInfo;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import module.lineup.Lineup;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,16 +51,15 @@ public class LineupCheck {
 		return result == JOptionPane.YES_OPTION;
 	}
 
-	public static boolean hasFreePosition(Lineup lineup) {
+	public static boolean hasFreePosition(@NotNull Lineup lineup) {
 		return lineup.hasFreePosition();
 	}
 
 	public static boolean hasFreeReserves(Lineup lineup) {
-		return isFree(lineup, IMatchRoleID.substGK1)
-				|| isFree(lineup, IMatchRoleID.substCD1)
-				|| isFree(lineup, IMatchRoleID.substWI1)
-				|| isFree(lineup, IMatchRoleID.substIM1)
-				|| isFree(lineup, IMatchRoleID.substFW1);
+		for (int subPos : IMatchRoleID.aBackupssMatchRoleID) {
+			if(isFree(lineup, subPos)) return true;
+		}
+		return false;
 	}
 
 	private static boolean penaltyTakersOK(MatchKurzInfo match, Lineup lineup) {

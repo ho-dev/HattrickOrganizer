@@ -53,6 +53,7 @@ public interface IMatchRoleID {
     int substWI2 = 212; // 	Backup (Winger)
     int substXT2 = 213; // 	Backup (Extra)
     List<Integer> aBackupssMatchRoleID = IntStream.rangeClosed(207, 213).boxed().collect(Collectors.toList());
+    List<Integer> aSubsAndBackupssMatchRoleID = IntStream.rangeClosed(200, 213).boxed().collect(Collectors.toList());
 
     // SetPieces Taker and Captain
     int setPieces = 17;
@@ -75,6 +76,7 @@ public interface IMatchRoleID {
     int penaltyTaker9 = 30;
     int penaltyTaker10 = 31;
     int penaltyTaker11 = 32;
+    List<Integer> aKickersMatchRoleID = IntStream.rangeClosed(22, 32).boxed().collect(Collectors.toList());
     
     
 //    /** ab welccher PositionsID gehört Pos zur Reserve Bank */

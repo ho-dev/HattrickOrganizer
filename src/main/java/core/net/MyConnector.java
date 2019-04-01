@@ -300,12 +300,10 @@ public class MyConnector {
 		if (teamId>0) {
 			urlpara.append("&teamId=").append(teamId);
 		}
-		urlpara.append("&actionType=setmatchorder"); // TODO: create a function FetchAndSendRatingsPrediction similar to setMatchOrder but using &actionType=predictratings
+		urlpara.append("&actionType=setmatchorder");
 		urlpara.append("&sourceSystem=" + matchType.getSourceString());
 
-		Map<String, String> paras = new HashMap<String, String>();
-		paras.put("lineup", orderString);
-		String result = readStream(postWebFileWithBodyParameters(htUrl + urlpara, paras, true,
+		String result = readStream(postWebFileWithSingleBodyValue(htUrl + urlpara, "lineup="+orderString, true,
 				"set_matchorder"));
 		String sError = XMLCHPPPreParser.getError(result);
 		if (sError.length() > 0) {
@@ -668,22 +666,22 @@ public class MyConnector {
 		return returnStream;
 	}
 
+
 	/**
-	 * Post a web file containing body parameters
-	 * 
+	 * Post a web file containing single value in the body (no key)
+	 *
 	 * @param surl
 	 *            the full url with parameters
-	 * @param bodyParas
-	 *            A hash map of string, string where key is parameter key and
-	 *            value is parameter value
+	 * @param sBody
+	 *            A string
 	 * @param showErrorMessage
 	 *            Whether to show message on error or not
 	 * @param scope
 	 *            The scope of the request is required, if no scope, put "".
 	 *            Example: "set_matchorder".
 	 */
-	public InputStream postWebFileWithBodyParameters(String surl, Map<String, String> bodyParas,
-			boolean showErrorMessage, String scope) {
+	public InputStream postWebFileWithSingleBodyValue(String surl, String sBody,
+													 boolean showErrorMessage, String scope) {
 
 		OAuthDialog authDialog = null;
 		Response response = null;
@@ -692,11 +690,9 @@ public class MyConnector {
 		try {
 			while (tryAgain == true) {
 				OAuthRequest request = new OAuthRequest(Verb.POST, surl);
-				for (Map.Entry<String, String> entry : bodyParas.entrySet()) {
-					request.addBodyParameter(entry.getKey(), entry.getValue());
-				}
+				request.addPayload(URLEncoder.encode(sBody, "UTF-8"));
 				infoHO(request);
-				request.addHeader("Content-Type", "application/x-www-form-urlencoded");
+				request.addHeader("Content-Type", "application/json");
 				if (m_OAAccessToken == null || m_OAAccessToken.getToken().length() == 0) {
 					iResponse = 401;
 				} else {
@@ -705,34 +701,34 @@ public class MyConnector {
 					iResponse = response.getCode();
 				}
 				switch (iResponse) {
-				case 200:
-				case 201:
-					// We are done!
-					return getResultStream(response);
-				case 401:
-					// disable WaitCursor to unblock GUI
-					CursorToolkit.stopWaitCursor(HOMainFrame.instance().getRootPane());
-					if (authDialog == null) {
-						authDialog = new OAuthDialog(HOMainFrame.instance(), m_OAService, scope);
-					}
-					authDialog.setVisible(true);
-					// A way out for a user unable to authorize for some reason
-					if (authDialog.getUserCancel() == true) {
-						return null;
-					}
-					m_OAAccessToken = authDialog.getAccessToken();
-					if (m_OAAccessToken == null) {
-						m_OAAccessToken = new Token(
-								Helper.decryptString(core.model.UserParameter.instance().AccessToken),
-								Helper.decryptString(core.model.UserParameter.instance().TokenSecret));
-					}
-					// Try again...
-					break;
-				case 407:
-					throw new RuntimeException(
-							"Download Error\nHTTP Response Code 407: Proxy authentication required.");
-				default:
-					throw new RuntimeException("Download Error\nHTTP Response Code: " + iResponse);
+					case 200:
+					case 201:
+						// We are done!
+						return getResultStream(response);
+					case 401:
+						// disable WaitCursor to unblock GUI
+						CursorToolkit.stopWaitCursor(HOMainFrame.instance().getRootPane());
+						if (authDialog == null) {
+							authDialog = new OAuthDialog(HOMainFrame.instance(), m_OAService, scope);
+						}
+						authDialog.setVisible(true);
+						// A way out for a user unable to authorize for some reason
+						if (authDialog.getUserCancel() == true) {
+							return null;
+						}
+						m_OAAccessToken = authDialog.getAccessToken();
+						if (m_OAAccessToken == null) {
+							m_OAAccessToken = new Token(
+									Helper.decryptString(core.model.UserParameter.instance().AccessToken),
+									Helper.decryptString(core.model.UserParameter.instance().TokenSecret));
+						}
+						// Try again...
+						break;
+					case 407:
+						throw new RuntimeException(
+								"Download Error\nHTTP Response Code 407: Proxy authentication required.");
+					default:
+						throw new RuntimeException("Download Error\nHTTP Response Code: " + iResponse);
 				}
 			}
 		} catch (Exception sox) {
@@ -788,7 +784,7 @@ public class MyConnector {
 	// //////////////////////////////////////////////////////////////////////////////
 
 	private void infoHO(OAuthRequest request) {
-		request.addHeader("accept-language", "de");
+		request.addHeader("accept-language", "en");
 		request.setConnectionKeepAlive(true);
 		request.setConnectTimeout(60, TimeUnit.SECONDS);
 		request.addHeader("accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*");

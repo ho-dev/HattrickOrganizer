@@ -44,7 +44,6 @@ final class AufstellungsRatingPanel extends RasenPanel {
 
     //~ Static fields/initializers -----------------------------------------------------------------
     public static final boolean REIHENFOLGE_STURM2VERTEIDIGUNG = false;
-    public static final boolean REIHENFOLGE_VERTEIDIGUNG2STURM = true;
 
     //~ Instance fields ----------------------------------------------------------------------------
 

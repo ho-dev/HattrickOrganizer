@@ -20,14 +20,9 @@ import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
 
+import java.sql.Array;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * 
@@ -1686,28 +1681,14 @@ public class Lineup {
 	 */
 	public boolean hasFreePosition() {
 		int numPlayers = 0;
+
 		for (IMatchRoleID pos : m_vPositionen) {
 			MatchRoleID position = (MatchRoleID) pos;
-
-			if ((position.getId() < IMatchRoleID.KEEPER)
-					|| (position.getId() >= IMatchRoleID.startReserves)) {
-				// We are not interested in reserves, captain, set piece taker.
-				continue;
-			}
-
-			// SpielerID of 0 indicates the position is empty. -1 is the first
-			// temp player. This is bug prone.
-			// At some time, clean up by adding some boolean value to Player
-			// instead (isTemp or something).
-
-			if (position.getSpielerId() != 0) {
-				numPlayers++;
-				if (numPlayers == 11) {
-					return false;
-				}
-			}
-		}
+			if ((IMatchRoleID.aFieldMatchRoleID.contains(position.getId())) && (position.getSpielerId() != 0)) numPlayers++;
+		    }
+		if (numPlayers == 11) return false;
 		return true;
+
 	}
 
 	/**

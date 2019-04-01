@@ -603,40 +603,43 @@ public class OnlineWorker {
 		String result;
 		// Tell the Connector that we will require match order rights.
 
-		// Building the order string as described in the match order API piece
-		// by piece.
+		boolean bFirst = true;
 
 		StringBuilder orders = new StringBuilder();
+
 		orders.append("{\"positions\":[");
-		orders.append(createPositionString(IMatchRoleID.keeper, lineup));
-
-		for (int i = IMatchRoleID.rightBack; i <= IMatchRoleID.substIM1; i++) {
-			orders.append(',').append(createPositionString(i, lineup));
+		for (int pos : IMatchRoleID.aFieldMatchRoleID)
+		{
+			if (bFirst)
+			{orders.append(createPositionString(pos, lineup));
+			bFirst = false;}
+			else orders.append(',').append(createPositionString(pos, lineup));
 		}
-		orders.append(',').append(createPositionString(IMatchRoleID.substFW1, lineup));
-		orders.append(',').append(createPositionString(IMatchRoleID.substWI1, lineup));
 
-		orders.append(',').append("{\"id\":\"").append(lineup.getKapitaen());
-		orders.append("\",\"behaviour\":\"0\"}");
-		orders.append(',').append("{\"id\":\"").append(lineup.getKicker());
-		orders.append("\",\"behaviour\":\"0\"}");
+		orders.append("],\"bench\":[");
+		bFirst = true;
+		for (int pos : IMatchRoleID.aSubsAndBackupssMatchRoleID) {
+			if (bFirst) {
+				orders.append(createPositionString(pos, lineup));
+				bFirst = false;}
+		else orders.append(',').append(createPositionString(pos, lineup));
+		}
 
-		// penalty takers
-		List<MatchRoleID> shooters = lineup.getPenaltyTakers();
-		
-		int penshooters = 0;
-		for (MatchRoleID pos : shooters) {
-			orders.append(',').append("{\"id\":\"").append(pos.getSpielerId());
-			orders.append("\",\"behaviour\":\"0\"}");
-			penshooters++;
+		orders.append("],\"kickers\":[");
+		bFirst = true;
+		for (int pos : IMatchRoleID.aKickersMatchRoleID)
+		{
+			if (bFirst) {
+			orders.append(createPositionString(pos, lineup));
+				bFirst = false;}
+			else orders.append(',').append(createPositionString(pos, lineup));
 		}
-		// Always give 11 shooters. There is a CHPP error if the number given is not 0 or 11. 
-		for (int i = 0 ; i < 11-penshooters; i++) {
-			orders.append(',').append("{\"id\":\"0");
-			orders.append("\",\"behaviour\":\"0\"}");
-		}
-		
-		orders.append("], \"settings\":{\"tactic\": \"").append(lineup.getTacticType());
+
+
+		orders.append(String.format("],\"captain\": \"%s\",",lineup.getKapitaen()));
+		orders.append(String.format("\"setPieces\": \"%s\",",lineup.getKicker()));
+
+		orders.append("\"settings\":{\"tactic\": \"").append(lineup.getTacticType());
 		orders.append("\",\"speechLevel\":\"").append(lineup.getAttitude());
 		orders.append("\", \"newLineup\":\"\",");
 		orders.append("\"coachModifier\":\"").append(lineup.getStyleOfPlay());
@@ -645,8 +648,7 @@ public class OnlineWorker {
 		Iterator<Substitution> iter = lineup.getSubstitutionList().iterator();
 		while (iter.hasNext()) {
 			Substitution sub = iter.next();
-			// to get conform with CHPP API (playerout==playerin if its a
-			// behaviour change)
+			// playerout == playerin if its a behaviour change)
 			if (sub.getOrderType() == MatchOrderType.NEW_BEHAVIOUR) {
 				orders.append("{\"playerin\":\"").append(sub.getSubjectPlayerID()).append("\",");
 			} else {
