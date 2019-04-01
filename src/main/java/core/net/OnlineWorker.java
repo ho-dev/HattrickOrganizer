@@ -3,14 +3,7 @@ package core.net;
 import core.db.DBManager;
 import core.file.ExampleFileFilter;
 import core.file.hrf.HRFStringParser;
-import core.file.xml.ConvertXml2Hrf;
-import core.file.xml.XMLArenaParser;
-import core.file.xml.XMLMatchArchivParser;
-import core.file.xml.XMLMatchLineupParser;
-import core.file.xml.XMLMatchOrderParser;
-import core.file.xml.XMLMatchdetailsParser;
-import core.file.xml.XMLMatchesParser;
-import core.file.xml.XMLSpielplanParser;
+import core.file.xml.*;
 import core.gui.HOMainFrame;
 import core.gui.InfoPanel;
 import core.gui.model.AufstellungCBItem;
@@ -34,6 +27,7 @@ import module.lineup.AufstellungsVergleichHistoryPanel;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
+import module.teamAnalyzer.vo.MatchRating;
 
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -817,6 +811,34 @@ public class OnlineWorker {
 			}
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Matchorder :";
+			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
+					JOptionPane.ERROR_MESSAGE);
+			HOLogger.instance().error(OnlineWorker.class, e.getMessage());
+		}
+
+		return null;
+	}
+
+	/**
+	 *
+	 * @param matchId
+	 *            The match ID for the match to download
+	 * @param matchType
+	 *            The matchTyp for the match to download
+	 * @return The Lineup object with the downloaded match data
+	 */
+	public static MatchRating getPredictionRatingbyMatchId(int matchId, MatchType matchType, int teamId) {
+
+		try {
+			String xml = MyConnector.instance().getRatingsPrediction(matchId, teamId, matchType);
+
+			if (!StringUtils.isEmpty(xml)) {
+				Map<String, String> map = XMLRatingParser.parsePredictionRatingFromString(xml);
+				return new MatchRating(map);
+			}
+		} catch (Exception e) {
+			String msg = getLangString("Downloadfehler") + " : Error fetching Prediction Rating :";
 			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);

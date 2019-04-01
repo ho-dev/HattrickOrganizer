@@ -8,7 +8,6 @@ import core.model.match.MatchKurzInfo;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import module.lineup.Lineup;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +50,7 @@ public class LineupCheck {
 		return result == JOptionPane.YES_OPTION;
 	}
 
-	public static boolean hasFreePosition(@NotNull Lineup lineup) {
+	public static boolean hasFreePosition(Lineup lineup) {
 		return lineup.hasFreePosition();
 	}
 

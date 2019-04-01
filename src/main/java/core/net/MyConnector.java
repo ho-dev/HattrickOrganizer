@@ -61,6 +61,7 @@ public class MyConnector {
 	private static MyConnector m_clInstance;
 	private final static String VERSION_TRAINING = "2.1";
 	private final static String VERSION_MATCHORDERS = "3.0";
+	private final static String VERSION_MATCHORDERS_PREDICTION_RATINGS = "3.0"; //TODO: could be deleted once CHPP API fixed (at that time VERSION_MATCHORDERS will be used instead of VERSION_MATCHORDERS_PREDICTION_RATINGS)
 	private final static String VERSION_MATCHLINEUP = "1.9";
 	private final static String VERSION_MATCHDETAILS = "3.0";
 	private final static String VERSION_PLAYERS = "2.1";
@@ -116,18 +117,6 @@ public class MyConnector {
 		return getHOSite() + "onlinefiles";
 	}
 
-	public static String getBetaSite() {
-		return getHOSite() + "development";
-	}
-
-	public static String getFinalSite() {
-		return getHOSite() + "final";
-	}
-
-	public static String getInitialHTConnectionUrl() {
-		return htUrl;
-	}
-
 	/**
 	 * Fetch a specific arena
 	 * 
@@ -137,7 +126,7 @@ public class MyConnector {
 	 * 
 	 * @throws IOException
 	 */
-	public String getArena(int arenaId) throws IOException {
+	public String getArena(int arenaId) {
 		String url = htUrl + "?file=arenadetails";
 		if (arenaId > 0) {
 			url += "&arenaID=" + arenaId;
@@ -148,7 +137,7 @@ public class MyConnector {
 	/**
 	 * holt die Finanzen
 	 */
-	public String getEconomy(int teamId) throws IOException {
+	public String getEconomy(int teamId){
 		String url = htUrl + "?file=economy&version=1.3&teamId=" + teamId;
 		return getCHPPWebFile(url);
 	}
@@ -166,7 +155,7 @@ public class MyConnector {
 	 * 
 	 * @return the complete file as String
 	 */
-	public String getHattrickXMLFile(String file) throws IOException {
+	public String getHattrickXMLFile(String file){
 		String url;
 
 		// An attempt at solving old syntaxes.
@@ -186,7 +175,7 @@ public class MyConnector {
 	/**
 	 * lädt die Tabelle
 	 */
-	public String getLeagueDetails(String leagueUnitId) throws IOException {
+	public String getLeagueDetails(String leagueUnitId) {
 		String url = htUrl + "?file=leaguedetails" + "&leagueLevelUnitID=" + leagueUnitId;
 		return getCHPPWebFile(url);
 	}
@@ -194,7 +183,7 @@ public class MyConnector {
 	/**
 	 * lädt den Spielplan
 	 */
-	public String getLeagueFixtures(int season, int leagueID) throws IOException {
+	public String getLeagueFixtures(int season, int leagueID){
 		String url = htUrl + "?file=leaguefixtures";
 		if (season > 0) {
 			url += "&season=" + season;
@@ -244,7 +233,7 @@ public class MyConnector {
 	/**
 	 * lädt die Aufstellungsbewertung zu einem Spiel
 	 */
-	public String getMatchLineup(int matchId, int teamId, MatchType matchType) throws IOException {
+	public String getMatchLineup(int matchId, int teamId, MatchType matchType) {
 		String url = htUrl + "?file=matchlineup&version=" + VERSION_MATCHLINEUP;
 
 		if (matchId > 0) {
@@ -260,6 +249,24 @@ public class MyConnector {
 	}
 
 	/**
+	 * lädt die Aufstellungsbewertung zu einem Spiel
+	 */
+	public String getRatingsPrediction(int matchId, int teamId, MatchType matchType) {
+		String url = htUrl + "?file=matchorders&version=" + VERSION_MATCHORDERS_PREDICTION_RATINGS;
+		url += "&actionType=predictratings";
+
+		if (matchId > 0) {
+			url += ("&matchID=" + matchId);
+		}
+
+		url += ("&teamID=" + teamId);
+
+		url += "&sourceSystem=" + matchType.getSourceString();
+
+		return getCHPPWebFile(url);
+	}
+
+	/**
 	 * Fetches the match order xml from Hattrick
 	 * 
 	 * @param matchId
@@ -269,7 +276,7 @@ public class MyConnector {
 	 * @return The api content (xml)
 	 * @throws IOException
 	 */
-	public String getMatchOrder(int matchId, MatchType matchType, int teamId) throws IOException {
+	public String getMatchOrder(int matchId, MatchType matchType, int teamId) {
 		String url = htUrl + "?file=matchorders&version=" + VERSION_MATCHORDERS + "&matchID="
 				+ matchId + "&teamId=" + teamId;
 		url += "&sourceSystem=" + matchType.getSourceString();

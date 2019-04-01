@@ -1059,9 +1059,8 @@ public class ConvertXml2Hrf {
 			buffer.append("staff").append(i).append("Cost=").append(hash.get("Cost")).append('\n');
 		}
 	}
-	
-	
-	/**
+
+    /**
 	 * Save the HRF file.
 	 */
 	private void writeHRF(String dateiname, StringBuilder buffer) {

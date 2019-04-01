@@ -169,9 +169,7 @@ public class RecapPanel extends JPanel {
             DecimalFormat df2 = new DecimalFormat("###.##"); //$NON-NLS-1$
 
             // Columns 16-17
-            rowData.add(df2.format(matchDetail.getRating().getLoddarStats(matchDetail.getTacticCode(),
-                                                                          matchDetail
-                                                                          .getTacticLevel())));
+            rowData.add(df2.format(matchDetail.getRating().getLoddarStats()));
             rowData.add(Matchdetails.getNameForTaktik(matchDetail.getTacticCode()));
 
             // Column 18

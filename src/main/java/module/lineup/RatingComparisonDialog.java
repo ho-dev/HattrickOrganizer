@@ -2,6 +2,7 @@ package module.lineup;
 
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import module.teamAnalyzer.vo.MatchRating;
 
 import java.util.HashMap;
 
@@ -11,11 +12,11 @@ import javax.swing.JPanel;
 public class RatingComparisonDialog extends JFrame {
 
 	JPanel content = new JPanel();
-	HashMap<String, Double> toHO;
-	HashMap<String, Double> toHT;
-	HashMap<String, Double> diff = new HashMap<String, Double>();
+	MatchRating toHO;
+	MatchRating toHT;
+	MatchRating diff = new MatchRating();
 
-	public RatingComparisonDialog(HashMap<String, Double> dPredictionRatingT0HO, HashMap<String, Double> dPredictionRatingT0HT) {
+	public RatingComparisonDialog(MatchRating dPredictionRatingT0HO, MatchRating dPredictionRatingT0HT) {
 		super(HOVerwaltung.instance().getLanguageString("RatingComparisonDialog"));
 		setIconImage(HOMainFrame.instance().getIconImage());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -28,15 +29,15 @@ public class RatingComparisonDialog extends JFrame {
 		add(content);
 		RatingComparisonPanel HORating = new RatingComparisonPanel("HO", toHO);
 		RatingComparisonPanel HTRating = new RatingComparisonPanel("HT", toHT);
-		diff.put("DC", toHO.get("DC")-toHT.get("DC"));
-		diff.put("DR", toHO.get("DR")-toHT.get("DR"));
-		diff.put("DL", toHO.get("DL")-toHT.get("DL"));
-		diff.put("M", toHO.get("M")-toHT.get("M"));
-		diff.put("FC", toHO.get("FC")-toHT.get("FC"));
-		diff.put("FR", toHO.get("FR")-toHT.get("FR"));
-		diff.put("FL", toHO.get("FL")-toHT.get("FL"));
-		diff.put("HatStats", toHO.get("HatStats")-toHT.get("HatStats"));
-		diff.put("Loddar", toHO.get("Loddar")-toHT.get("Loddar"));
+		diff.setCentralDefense(toHO.getCentralDefense()-toHT.getCentralDefense());
+		diff.setRightDefense(toHO.getRightDefense()-toHT.getRightDefense());
+		diff.setLeftDefense(toHO.getLeftDefense()-toHT.getLeftDefense());
+		diff.setMidfield(toHO.getMidfield()-toHT.getMidfield());
+		diff.setCentralAttack(toHO.getCentralAttack()-toHT.getCentralAttack());
+		diff.setRightAttack(toHO.getRightAttack()-toHT.getRightAttack());
+		diff.setLeftAttack(toHO.getLeftAttack()-toHT.getLeftAttack());
+		diff.setHatStats(toHO.getHatStats()-toHT.getHatStats());
+		diff.setLoddarStats(toHO.getLoddarStats()-toHT.getLoddarStats());
 		RatingComparisonPanel DiffRating = new RatingComparisonPanel("Diff", diff);
 		content.add(HORating);
 		content.add(HTRating);

@@ -1,13 +1,12 @@
-// %2389243612:hoplugins.commons.vo%
 package module.teamAnalyzer.vo;
-
 import core.model.match.IMatchDetails;
+import core.model.match.Matchdetails;
+
+import java.util.Map;
 
 
 /**
  * Class with holds the Ratings of a team in the 7 areas of the field
- *
- * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class MatchRating {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -19,6 +18,39 @@ public class MatchRating {
     private double midfield;
     private double rightAttack;
     private double rightDefense;
+    private int tacticSkill;
+    private int tacticType;
+    private double HatStats;
+    private double LoddarStat;
+
+
+    public MatchRating() {}
+    public MatchRating(Map<String, String> matchRating) {
+        this.centralAttack = intHT2loatHT(Integer.parseInt(matchRating.get("RatingMidAtt")));
+        this.centralDefense = intHT2loatHT(Integer.parseInt(matchRating.get("RatingMidDef")));
+        this.leftAttack = intHT2loatHT(Integer.parseInt(matchRating.get("RatingLeftAtt")));
+        this.leftDefense = intHT2loatHT(Integer.parseInt(matchRating.get("RatingLeftDef")));
+        this.midfield = intHT2loatHT(Integer.parseInt(matchRating.get("RatingMidfield")));
+        this.rightAttack = intHT2loatHT(Integer.parseInt(matchRating.get("RatingRightAtt")));
+        this.rightDefense = intHT2loatHT(Integer.parseInt(matchRating.get("RatingRightDef")));
+        this.tacticSkill = Integer.parseInt(matchRating.get("TacticSkill"));
+        this.tacticType = Integer.parseInt(matchRating.get("TacticType"));
+        HatStats = (midfield * 3) + leftAttack + rightAttack + centralAttack + centralDefense + leftDefense + rightDefense;
+        LoddarStat = computeLoddarStats(tacticType, tacticSkill);
+    }
+    public MatchRating(double LD, double CD, double RD, double MF, double LA, double CA, double RA, int tacticType, int tacticSkill) {
+        this.centralAttack = CA;
+        this.centralDefense = CD;
+        this.leftAttack = LA;
+        this.leftDefense = LD;
+        this.midfield = MF;
+        this.rightAttack = RA;
+        this.rightDefense = RD;
+        this.tacticSkill = tacticSkill;
+        this.tacticType = tacticType;
+        HatStats = (midfield * 3) + leftAttack + rightAttack + centralAttack + centralDefense + leftDefense + rightDefense;
+        LoddarStat = computeLoddarStats(tacticType, tacticSkill);
+    }
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -65,8 +97,11 @@ public class MatchRating {
      * @return the rating
      */
     public final double getHatStats() {
-        return (midfield * 3) + leftAttack + rightAttack + centralAttack + centralDefense
-               + leftDefense + rightDefense;
+        return HatStats;
+    }
+
+    public final void setHatStats(double _HatStats) {
+        HatStats=_HatStats;
     }
 
     /**
@@ -105,6 +140,15 @@ public class MatchRating {
         return leftDefense;
     }
 
+
+    public final void setLoddarStats(double _LoddarStats) {
+        LoddarStat = _LoddarStats;
+    }
+
+    public final double getLoddarStats() {
+        return LoddarStat;
+    }
+
     /**
      * Returns the calculated LoddarStats
      *
@@ -113,7 +157,7 @@ public class MatchRating {
      *
      * @return the rating
      */
-    public final double getLoddarStats(int tactic, int level) {
+    public final double computeLoddarStats(int tactic, int level) {
         final double MIDFIELD_SHIFT = 0.0;
         final double COUNTERATTACK_WEIGHT = 0.25;
         final double DEFENSE_WEIGHT = 0.47;
@@ -263,6 +307,10 @@ public class MatchRating {
      */
     public final int float2HTint(float x) {
         return (int) (((x - 1.0f) * 4.0f) + 1.0f);
+    }
+
+    public final double intHT2loatHT(int x) {
+        return (double) (((x - 1.0f) / 4.0f) + 1.0f);
     }
 
     /**

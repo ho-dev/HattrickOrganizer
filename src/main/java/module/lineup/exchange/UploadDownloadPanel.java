@@ -46,6 +46,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import module.teamAnalyzer.vo.MatchRating;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -186,34 +187,38 @@ public class UploadDownloadPanel extends LazyPanel {
 
 	private void getRatingsPrediction()
 	{
-		// TODO: create code that get dPredictionRatingT0HO, dPredictionRatingT0HT  (Akasolace)
-		// dPredictionRatingT0HO and dPredictionRatingT0HT would have keys CD, LD, RD, MD, LA, CA, RA, HatStast, Loddar
+		MatchRating HTmatchRating;
 
-		//Dummy code
-		HashMap<String, Double> dPredictionRatingT0HO = new HashMap<String, Double>();
-		dPredictionRatingT0HO.put("DC", 12.4);
-		dPredictionRatingT0HO.put("DR", 11.3);
-		dPredictionRatingT0HO.put("DL", 10.);
-		dPredictionRatingT0HO.put("M", 14.9);
-		dPredictionRatingT0HO.put("FC", 9.2);
-		dPredictionRatingT0HO.put("FR", 12.7);
-		dPredictionRatingT0HO.put("FL", 14.6);
-		dPredictionRatingT0HO.put("HatStats", 120.);
-		dPredictionRatingT0HO.put("Loddar", 94.);
+		CursorToolkit.startWaitCursor(this);
+		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		MatchKurzInfo match = getSelectedMatch();
+		try {
+			HTmatchRating = OnlineWorker.getPredictionRatingbyMatchId(match.getMatchID(), match.getMatchTyp(), teamId);
+			}
+         finally {
+			CursorToolkit.stopWaitCursor(this);
+		 }
 
-		HashMap<String, Double> dPredictionRatingT0HT = new HashMap<String, Double>();
-		dPredictionRatingT0HT.put("DC", 11.5);
-		dPredictionRatingT0HT.put("DR", 10.7);
-		dPredictionRatingT0HT.put("DL", 12.);
-		dPredictionRatingT0HT.put("M", 14.5);
-		dPredictionRatingT0HT.put("FC", 11.1);
-		dPredictionRatingT0HT.put("FR", 7.8);
-		dPredictionRatingT0HT.put("FL", 12.6);
-		dPredictionRatingT0HT.put("HatStats", 145.);
-		dPredictionRatingT0HT.put("Loddar", 12.);
-		//---------------------------------------------------------------------------------
+		Lineup currLineup =  HOVerwaltung.instance().getModel().getLineup();
+		download(false);
 
-		new RatingComparisonDialog(dPredictionRatingT0HO, dPredictionRatingT0HT);
+		double LD = HOVerwaltung.instance().getModel().getLineup().getLeftDefenseRating();
+		double CD = HOVerwaltung.instance().getModel().getLineup().getCentralDefenseRating();
+		double RD = HOVerwaltung.instance().getModel().getLineup().getRightDefenseRating();
+		double MF = HOVerwaltung.instance().getModel().getLineup().getMidfieldRating();
+		double LA = HOVerwaltung.instance().getModel().getLineup().getLeftAttackRating();
+		double CA = HOVerwaltung.instance().getModel().getLineup().getCentralAttackRating();
+		double RA = HOVerwaltung.instance().getModel().getLineup().getRightAttackRating();
+		int tacticType = HOVerwaltung.instance().getModel().getLineup().getTacticType();
+		int tacticSkill = HTmatchRating.float2HTint(HOVerwaltung.instance().getModel().getLineup().getTacticLevel(tacticType));
+
+		MatchRating HOmatchRating = new MatchRating(LD, CD, RD, MF, LA, CA, RA, tacticType, tacticSkill);
+
+		// restore previous Lineup
+		HOVerwaltung.instance().getModel().setAufstellung(currLineup);
+		HOMainFrame.instance().getAufstellungsPanel().update();
+
+		new RatingComparisonDialog(HOmatchRating, HTmatchRating);
 
 		return;
 
@@ -283,7 +288,8 @@ public class UploadDownloadPanel extends LazyPanel {
 				.getLanguageString("lineup.upload.title"), messageType);
 	}
 
-	private void download() {
+
+	private void download(boolean showDialog) {
 		Lineup lineup;
 		CursorToolkit.startWaitCursor(this);
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
@@ -312,8 +318,9 @@ public class UploadDownloadPanel extends LazyPanel {
 				lineup.setLocation(IMatchDetails.LOCATION_TOURNAMENT);
 			    }
 			String message = HOVerwaltung.instance().getLanguageString("lineup.download.success");
+			if (showDialog) {
 			JOptionPane.showMessageDialog(HOMainFrame.instance(), message, HOVerwaltung.instance()
-					.getLanguageString("lineup.download.title"), messageType);
+					.getLanguageString("lineup.download.title"), messageType);}
 			HOVerwaltung.instance().getModel().setAufstellung(lineup);
 			HOMainFrame.instance().getAufstellungsPanel().update();
 		}
@@ -362,7 +369,7 @@ public class UploadDownloadPanel extends LazyPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				download();
+				download(true);
 			}
 		});
 

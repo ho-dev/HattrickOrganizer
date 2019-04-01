@@ -5,6 +5,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import module.teamAnalyzer.vo.MatchRating;
 
 import java.util.HashMap;
 import java.text.DecimalFormat;
@@ -23,7 +24,7 @@ import javax.swing.JPanel;
 
 public class RatingComparisonPanel extends JPanel {
 
-	HashMap<String, Double> data;
+	MatchRating data;
 	JLabel DL = new JLabel("");
 	JLabel DR = new JLabel("");
 	JLabel DC = new JLabel("");
@@ -37,7 +38,7 @@ public class RatingComparisonPanel extends JPanel {
 
 	BufferedImage background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.RATINGCOMPARISON_BACKGROUND).getImage());
 
-	public RatingComparisonPanel(String source, HashMap<String, Double> data) {
+	public RatingComparisonPanel(String source, MatchRating data) {
 		this.data = data;
 		setLayout(new GridBagLayout());
 		setPreferredSize(new Dimension(267, 217));
@@ -66,40 +67,40 @@ public class RatingComparisonPanel extends JPanel {
 		formater.setMaximumFractionDigits(2);
 		formater.setRoundingMode(java.math.RoundingMode.HALF_UP);
 
-		DL.setText(formater.format(data.get("DL")));
+		DL.setText(formater.format(data.getRightDefense()));
 		DL.setFont(numFont);
 		add(DL, gbc);
 		
 		gbc.gridx = 2;
-		DR.setText(formater.format(data.get("DR")));
+		DR.setText(formater.format(data.getLeftDefense()));
 		DR.setFont(numFont);
 		add(DR, gbc);
 
 		gbc.gridx = 1;
-		DC.setText(formater.format(data.get("DC")));
+		DC.setText(formater.format(data.getCentralDefense()));
 		DC.setFont(numFont);
 		add(DC, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		M.setText(formater.format(data.get("M")));
+		M.setText(formater.format(data.getMidfield()));
 		M.setFont(numFont);
 		add(M, gbc);
 
 		gbc.gridy = 2;
 		gbc.gridwidth = 1;
-		FL.setText(formater.format(data.get("FL")));
+		FL.setText(formater.format(data.getRightAttack()));
 		FL.setFont(numFont);
 		add(FL, gbc);
 
 		gbc.gridx = 2;
-		FR.setText(formater.format(data.get("FR")));
+		FR.setText(formater.format(data.getLeftAttack()));
 		FR.setFont(numFont);
 		add(FR, gbc);
 
 		gbc.gridx = 1;
-		FC.setText(formater.format(data.get("FC")));
+		FC.setText(formater.format(data.getCentralAttack()));
 		FC.setFont(numFont);
 		add(FC, gbc);
 
@@ -110,12 +111,12 @@ public class RatingComparisonPanel extends JPanel {
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(0, 15, 0, 0);
-		loddar.setText("Loddar: " + formater.format(data.get("Loddar")));
+		loddar.setText("Loddar: " + formater.format(data.getLoddarStats()));
 		loddar.setFont(txtFont);
 		add(loddar, gbc);
 
 		gbc.gridy = 4;
-		hatstats.setText("Hatstats: " + formater.format(data.get("HatStats")));
+		hatstats.setText("Hatstats: " + formater.format(data.getHatStats()));
 		hatstats.setFont(txtFont);
 		add(hatstats, gbc);
 
