@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.text.DecimalFormat;
 
 import java.awt.Font;
+import java.awt.Color;
 import java.awt.Insets;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -56,9 +57,11 @@ public class RatingComparisonPanel extends JPanel {
 	}
 
 	private void initComponents() {
-		Font numFont = new Font("SansSerif", Font.BOLD, 26);
+		Font titleFont = new Font("SansSerif", Font.BOLD, 32);
+		Font numFont = new Font("SansSerif", Font.BOLD, 23);
 		Font txtFont = new Font("SansSerif", Font.BOLD, 18);
 		DecimalFormat formater = new DecimalFormat();
+		Double value; //to check for negatives
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.weightx = 4;
@@ -67,41 +70,55 @@ public class RatingComparisonPanel extends JPanel {
 		formater.setMaximumFractionDigits(2);
 		formater.setRoundingMode(java.math.RoundingMode.HALF_UP);
 
-		DL.setText(formater.format(data.getLeftDefense()));
+		value = data.getLeftDefense();
+		DL.setText(formater.format(value));
 		DL.setFont(numFont);
+		if(value < 0) DL.setForeground(Color.RED);
 		add(DL, gbc);
 		
 		gbc.gridx = 2;
-		DR.setText(formater.format(data.getRightDefense()));
+		value = data.getRightDefense();
+		DR.setText(formater.format(value));
 		DR.setFont(numFont);
+		if(value < 0) DR.setForeground(Color.RED);
 		add(DR, gbc);
 
 		gbc.gridx = 1;
-		DC.setText(formater.format(data.getCentralDefense()));
+		value = data.getCentralDefense();
+		DC.setText(formater.format(value));
 		DC.setFont(numFont);
+		if(value < 0) DC.setForeground(Color.RED);
 		add(DC, gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		M.setText(formater.format(data.getMidfield()));
+		value = data.getMidfield();
+		M.setText(formater.format(value));
 		M.setFont(numFont);
+		if(value < 0) M.setForeground(Color.RED);
 		add(M, gbc);
 
 		gbc.gridy = 2;
 		gbc.gridwidth = 1;
-		FL.setText(formater.format(data.getLeftAttack()));
+		value = data.getLeftAttack();
+		FL.setText(formater.format(value));
 		FL.setFont(numFont);
+		if(value < 0) FL.setForeground(Color.RED);
 		add(FL, gbc);
 
 		gbc.gridx = 2;
-		FR.setText(formater.format(data.getRightAttack()));
+		value = data.getRightAttack();
+		FR.setText(formater.format(value));
 		FR.setFont(numFont);
+		if(value < 0) FR.setForeground(Color.RED);
 		add(FR, gbc);
 
 		gbc.gridx = 1;
-		FC.setText(formater.format(data.getCentralAttack()));
+		value = data.getCentralAttack();
+		FC.setText(formater.format(value));
 		FC.setFont(numFont);
+		if(value < 0) FC.setForeground(Color.RED);
 		add(FC, gbc);
 
 		gbc.gridx = 0;
@@ -111,13 +128,17 @@ public class RatingComparisonPanel extends JPanel {
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(0, 15, 0, 0);
-		loddar.setText("Loddar: " + formater.format(data.getLoddarStats()));
+		value = data.getLoddarStats();
+		loddar.setText("Loddar: " + formater.format(value));
 		loddar.setFont(txtFont);
+		if(value < 0) loddar.setForeground(Color.RED);
 		add(loddar, gbc);
 
 		gbc.gridy = 4;
-		hatstats.setText("Hatstats: " + formater.format(data.getHatStats()));
+		value = data.getHatStats();
+		hatstats.setText("Hatstats: " + formater.format(value));
 		hatstats.setFont(txtFont);
+		if(value < 0) hatstats.setForeground(Color.RED);
 		add(hatstats, gbc);
 
 		gbc.gridx = 1;
@@ -126,7 +147,8 @@ public class RatingComparisonPanel extends JPanel {
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.insets = new Insets(0, 0, 0, 15);
-		name.setFont(txtFont);
+		name.setFont(titleFont);
+		name.setForeground(Color.BLUE);
 		add(name, gbc);
 	}
 }
