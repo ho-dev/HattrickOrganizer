@@ -67,12 +67,12 @@ public class RatingComparisonPanel extends JPanel {
 		formater.setMaximumFractionDigits(2);
 		formater.setRoundingMode(java.math.RoundingMode.HALF_UP);
 
-		DL.setText(formater.format(data.getRightDefense()));
+		DL.setText(formater.format(data.getLeftDefense()));
 		DL.setFont(numFont);
 		add(DL, gbc);
 		
 		gbc.gridx = 2;
-		DR.setText(formater.format(data.getLeftDefense()));
+		DR.setText(formater.format(data.getRightDefense()));
 		DR.setFont(numFont);
 		add(DR, gbc);
 
@@ -90,12 +90,12 @@ public class RatingComparisonPanel extends JPanel {
 
 		gbc.gridy = 2;
 		gbc.gridwidth = 1;
-		FL.setText(formater.format(data.getRightAttack()));
+		FL.setText(formater.format(data.getLeftAttack()));
 		FL.setFont(numFont);
 		add(FL, gbc);
 
 		gbc.gridx = 2;
-		FR.setText(formater.format(data.getLeftAttack()));
+		FR.setText(formater.format(data.getRightAttack()));
 		FR.setFont(numFont);
 		add(FR, gbc);
 
