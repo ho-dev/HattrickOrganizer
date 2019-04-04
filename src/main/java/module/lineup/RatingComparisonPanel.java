@@ -70,13 +70,14 @@ public class RatingComparisonPanel extends JPanel {
 		formater.setMaximumFractionDigits(2);
 		formater.setRoundingMode(java.math.RoundingMode.HALF_UP);
 
+		gbc.gridx = 2;
 		value = data.getLeftDefense();
 		DL.setText(formater.format(value));
 		DL.setFont(numFont);
 		if(value < 0) DL.setForeground(Color.RED);
 		add(DL, gbc);
 		
-		gbc.gridx = 2;
+		gbc.gridx = 0;
 		value = data.getRightDefense();
 		DR.setText(formater.format(value));
 		DR.setFont(numFont);
@@ -99,6 +100,7 @@ public class RatingComparisonPanel extends JPanel {
 		if(value < 0) M.setForeground(Color.RED);
 		add(M, gbc);
 
+		gbc.gridx = 2;
 		gbc.gridy = 2;
 		gbc.gridwidth = 1;
 		value = data.getLeftAttack();
@@ -107,7 +109,7 @@ public class RatingComparisonPanel extends JPanel {
 		if(value < 0) FL.setForeground(Color.RED);
 		add(FL, gbc);
 
-		gbc.gridx = 2;
+		gbc.gridx = 0;
 		value = data.getRightAttack();
 		FR.setText(formater.format(value));
 		FR.setFont(numFont);
