@@ -380,10 +380,16 @@ public class UploadDownloadPanel extends LazyPanel {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if (!e.getValueIsAdjusting()) {
-					boolean enableButtons = matchesTable.getSelectedRow() != -1;
+					boolean ordersSet = false;
+					int tableIndex = matchesTable.getSelectedRow();
+					boolean enableButtons = tableIndex != -1;
+					if (enableButtons) {
+						int modelIndex = matchesTable.convertRowIndexToModel(tableIndex);
+						ordersSet = ((MatchesTableModel) matchesTable.getModel()).getMatch(modelIndex).isOrdersGiven();
+					}
 					uploadButton.setEnabled(supporter && enableButtons);
 					downloadButton.setEnabled(enableButtons);
-					getRatingsPredictionButton.setEnabled(enableButtons);
+					getRatingsPredictionButton.setEnabled(ordersSet && enableButtons);
 				}
 			}
 		});

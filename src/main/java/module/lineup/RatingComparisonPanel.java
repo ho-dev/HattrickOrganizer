@@ -6,6 +6,7 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import module.teamAnalyzer.vo.MatchRating;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.HashMap;
 import java.text.DecimalFormat;
@@ -74,21 +75,21 @@ public class RatingComparisonPanel extends JPanel {
 		value = data.getLeftDefense();
 		DL.setText(formater.format(value));
 		DL.setFont(numFont);
-		if(value < 0) DL.setForeground(Color.RED);
+		if(value < 0) DL.setForeground(new Color(179, 45, 0));
 		add(DL, gbc);
 		
 		gbc.gridx = 0;
 		value = data.getRightDefense();
 		DR.setText(formater.format(value));
 		DR.setFont(numFont);
-		if(value < 0) DR.setForeground(Color.RED);
+		if(value < 0) DR.setForeground(new Color(179, 45, 0));
 		add(DR, gbc);
 
 		gbc.gridx = 1;
 		value = data.getCentralDefense();
 		DC.setText(formater.format(value));
 		DC.setFont(numFont);
-		if(value < 0) DC.setForeground(Color.RED);
+		if(value < 0) DC.setForeground(new Color(179, 45, 0));
 		add(DC, gbc);
 
 		gbc.gridx = 0;
@@ -97,7 +98,7 @@ public class RatingComparisonPanel extends JPanel {
 		value = data.getMidfield();
 		M.setText(formater.format(value));
 		M.setFont(numFont);
-		if(value < 0) M.setForeground(Color.RED);
+		if(value < 0) M.setForeground(new Color(179, 45, 0));
 		add(M, gbc);
 
 		gbc.gridx = 2;
@@ -106,21 +107,21 @@ public class RatingComparisonPanel extends JPanel {
 		value = data.getLeftAttack();
 		FL.setText(formater.format(value));
 		FL.setFont(numFont);
-		if(value < 0) FL.setForeground(Color.RED);
+		if(value < 0) FL.setForeground(new Color(179, 45, 0));
 		add(FL, gbc);
 
 		gbc.gridx = 0;
 		value = data.getRightAttack();
 		FR.setText(formater.format(value));
 		FR.setFont(numFont);
-		if(value < 0) FR.setForeground(Color.RED);
+		if(value < 0) FR.setForeground(new Color(179, 45, 0));
 		add(FR, gbc);
 
 		gbc.gridx = 1;
 		value = data.getCentralAttack();
 		FC.setText(formater.format(value));
 		FC.setFont(numFont);
-		if(value < 0) FC.setForeground(Color.RED);
+		if(value < 0) FC.setForeground(new Color(179, 45, 0));
 		add(FC, gbc);
 
 		gbc.gridx = 0;
@@ -133,14 +134,14 @@ public class RatingComparisonPanel extends JPanel {
 		value = data.getLoddarStats();
 		loddar.setText("Loddar: " + formater.format(value));
 		loddar.setFont(txtFont);
-		if(value < 0) loddar.setForeground(Color.RED);
+		if(value < 0) loddar.setForeground(new Color(179, 45, 0));
 		add(loddar, gbc);
 
 		gbc.gridy = 4;
 		value = data.getHatStats();
 		hatstats.setText("Hatstats: " + formater.format(value));
 		hatstats.setFont(txtFont);
-		if(value < 0) hatstats.setForeground(Color.RED);
+		if(value < 0) hatstats.setForeground(new Color(179, 45, 0));
 		add(hatstats, gbc);
 
 		gbc.gridx = 1;
