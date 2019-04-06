@@ -616,6 +616,16 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("UPDATE MATCHDETAILS SET GASTHATSTATS = GASTLEFTATT + GASTRIGHTATT + GASTMIDATT + 3 * GASTMIDFIELD + GASTLEFTDEF + GASTRIGHTDEF + GASTMIDDEF");
 		}
 
+		if (!columnExistsInTable("CUPLEVEL", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN CUPLEVEL INTEGER");
+			m_clJDBCAdapter.executeUpdate("UPDATE MATCHESKURZINFO SET CUPLEVEL = 0");
+		}
+
+		if (!columnExistsInTable("CUPLEVELINDEX", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN CUPLEVELINDEX INTEGER");
+			m_clJDBCAdapter.executeUpdate("UPDATE MATCHESKURZINFO SET CUPLEVELINDEX = 0");
+		}
+
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);

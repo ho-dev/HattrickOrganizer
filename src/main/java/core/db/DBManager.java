@@ -836,9 +836,9 @@ public class DBManager {
 	}
 
 	/**
-	 * Ist das Match schon in der Datenbank vorhanden?
+	 * Is the match already in the database?
 	 */
-	public boolean isMatchLineupVorhanden(int matchid) {
+	public boolean isMatchLineupInDB(int matchid) {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
 				.isMatchLineupVorhanden(matchid);
 	}

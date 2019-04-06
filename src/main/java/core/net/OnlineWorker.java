@@ -16,7 +16,6 @@ import core.model.match.MatchLineupTeam;
 import core.model.match.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
-import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.net.login.LoginWaitDialog;
 import core.training.TrainingManager;
@@ -276,7 +275,7 @@ public class OnlineWorker {
 		waitDialog = getWaitDialog();
 		// Only download if not present in the database, or if refresh is true
 		if (refresh || !DBManager.instance().isMatchVorhanden(matchid)
-				|| !DBManager.instance().isMatchLineupVorhanden(matchid)) {
+				|| !DBManager.instance().isMatchLineupInDB(matchid)) {
 			try {
 				int heimId = 0;
 				int gastId = 0;
@@ -463,7 +462,7 @@ public class OnlineWorker {
 					int curMatchId = match.getMatchID();
 					if (DBManager.instance().isMatchVorhanden(curMatchId)
 							&& match.getMatchStatus() == MatchKurzInfo.FINISHED
-							&& (!DBManager.instance().isMatchLineupVorhanden(curMatchId))) {
+							&& (!DBManager.instance().isMatchLineupInDB(curMatchId))) {
 
 						// No match in DB
 						boolean result = downloadMatchData(curMatchId, match.getMatchTyp(), false);
@@ -759,7 +758,7 @@ public class OnlineWorker {
 		boolean bOK = false;
 		for (int i = 0; i < infos.length; i++) {
 			int curMatchId = infos[i].getMatchID();
-			if (!DBManager.instance().isMatchLineupVorhanden(curMatchId)) {
+			if (!DBManager.instance().isMatchLineupInDB(curMatchId)) {
 				// Check if the lineup is available
 				if (infos[i].getMatchStatus() == MatchKurzInfo.FINISHED) {
 					HOLogger.instance().debug(OnlineWorker.class, "Get Lineup : " + curMatchId);

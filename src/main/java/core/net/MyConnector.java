@@ -62,7 +62,7 @@ public class MyConnector {
 	private final static String VERSION_TRAINING = "2.1";
 	private final static String VERSION_MATCHORDERS = "3.0";
 	private final static String VERSION_MATCHORDERS_PREDICTION_RATINGS = "3.0"; //TODO: could be deleted once CHPP API fixed (at that time VERSION_MATCHORDERS will be used instead of VERSION_MATCHORDERS_PREDICTION_RATINGS)
-	private final static String VERSION_MATCHLINEUP = "1.9";
+	private final static String VERSION_MATCHLINEUP = "2.0";
 	private final static String VERSION_MATCHDETAILS = "3.0";
 	private final static String VERSION_PLAYERS = "2.1";
 	private final static String VERSION_WORLDDETAILS = "1.8";

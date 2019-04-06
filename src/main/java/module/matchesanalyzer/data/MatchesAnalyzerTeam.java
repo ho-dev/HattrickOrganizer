@@ -83,15 +83,8 @@ public class MatchesAnalyzerTeam {
 			if(info == null || info.getMatchStatus() != MatchKurzInfo.FINISHED) continue;
 
 			int matchId = info.getMatchID();
-			MatchType matchType = info.getMatchTyp();
 
-			boolean stored = false;
-			if(!DBManager.instance().isMatchLineupVorhanden(matchId)) {
-				stored = OnlineWorker.downloadMatchData(matchId, matchType, false);
-			}
-
-			Matchdetails details = null;
-			details = DBManager.instance().getMatchDetails(matchId);
+			Matchdetails details = DBManager.instance().getMatchDetails(matchId);
 			if(details != null && details.getFetchDatum() == null) continue;
 
 			MatchLineupTeam lineup = DBManager.instance().getMatchLineupTeam(matchId, id);

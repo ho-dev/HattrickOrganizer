@@ -68,7 +68,7 @@ public class XMLMatchLineupParser {
 
 			if ((ml.getMatchTyp() != MatchType.TOURNAMENTGROUP)
 					&& (ml.getMatchTyp() != MatchType.TOURNAMENTPLAYOFF)
-					&& (ml.getMatchTyp() != MatchType.NONE)) { // HT bug
+					&& (ml.getMatchTyp() != MatchType.NONE)) { // no stadium info or this kind  of match
 				ele = (Element) root.getElementsByTagName("Arena").item(0);
 				ml.setArenaID(Integer.parseInt(ele.getElementsByTagName("ArenaID").item(0)
 						.getFirstChild().getNodeValue()));
@@ -213,7 +213,7 @@ public class XMLMatchLineupParser {
 		tmp = (Element) ele.getElementsByTagName("Lineup").item(0);
 
 		// The normal end of match report
-		// Einträge adden
+		// Adding entries
 		NodeList list = tmp.getElementsByTagName("Player");
 
 		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
@@ -375,14 +375,37 @@ public class XMLMatchLineupParser {
 				// mitgeliefert in xml, daher selbst setzen!
 				behavior = 0;
 
-			} else if ((roleID < IMatchRoleID.startReserves)
-					&& (roleID > IMatchRoleID.keeper)) {
+			} else if ((roleID >= 0)
+					&& (roleID < IMatchRoleID.setPieces)
+					|| ((roleID < IMatchRoleID.startReserves) && (roleID > IMatchRoleID.keeper))) {
 				tmp = (Element) ele.getElementsByTagName("Behaviour").item(0);
 				behavior = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 
-			}
-		}
+				switch (behavior) {
+					case IMatchRoleID.OLD_EXTRA_DEFENDER:
+						roleID = IMatchRoleID.middleCentralDefender;
+						behavior = IMatchRoleID.NORMAL;
+						break;
+					case IMatchRoleID.OLD_EXTRA_MIDFIELD:
+						roleID = IMatchRoleID.centralInnerMidfield;
+						behavior = IMatchRoleID.NORMAL;
+						break;
+					case IMatchRoleID.OLD_EXTRA_FORWARD:
+						roleID = IMatchRoleID.centralForward;
+						behavior = IMatchRoleID.NORMAL;
+						break;
+					case IMatchRoleID.OLD_EXTRA_DEFENSIVE_FORWARD:
+						roleID = IMatchRoleID.centralForward;
+						behavior = IMatchRoleID.DEFENSIVE;
+				}
 
+				// Wash the remaining old positions
+				if (roleID < IMatchRoleID.setPieces) {
+					roleID = MatchRoleID.convertOldRoleToNew(roleID);
+				}
+			}
+
+			}
 		player = new MatchLineupPlayer(-1, -1, spielerID, 0, name, 0);
 		player.setStartBehavior(behavior);
 		player.setStartPosition(roleID);

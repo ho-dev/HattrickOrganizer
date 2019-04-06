@@ -1,6 +1,8 @@
 package core.model.match;
 
 import core.model.HOVerwaltung;
+import core.model.cup.CupLevel;
+import core.model.cup.CupLevelIndex;
 import core.util.HOLogger;
 import core.util.StringUtils;
 
@@ -46,6 +48,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 
 	/** Typ des Spiels */
 	private MatchType m_mtMatchTyp = MatchType.NONE;
+	private CupLevel m_mtCupLevel = CupLevel.NONE;
+	private CupLevelIndex m_mtCupLevelIndex = CupLevelIndex.NONE;
 	private Timestamp matchDateTimestamp;
 	public static final int ONGOING = 3;
 	public static final int UPCOMING = 2;
@@ -301,6 +305,22 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 */
 	public final MatchType getMatchTyp() {
 		return m_mtMatchTyp;
+	}
+
+	public CupLevel geCupLevel() {
+		return m_mtCupLevel;
+	}
+
+	public void setCupLevel(CupLevel _CupLevel) {
+		this.m_mtCupLevel = _CupLevel;
+	}
+
+	public CupLevelIndex geCupLevelIndex() {
+		return m_mtCupLevelIndex;
+	}
+
+	public void setCupLevelIndex(CupLevelIndex _CupLevelIndex) {
+		this.m_mtCupLevelIndex = _CupLevelIndex;
 	}
 
 	// --------------------------------------------------------------

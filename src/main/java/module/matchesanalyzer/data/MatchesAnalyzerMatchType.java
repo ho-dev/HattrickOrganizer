@@ -22,12 +22,19 @@ public enum MatchesAnalyzerMatchType {
 	NAT_COMP_CUPRULES		(11,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.nationalteamscompetition_cup")),
 	NAT_FRIENDLY			(12,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.nationalteamsfriendly")),
 	TOURNAMENT_GROUP		(50,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.tournament_group")),
-	TOURNAMENT_PLAYOFF		(51,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.tournament_playoff"));
+	TOURNAMENT_PLAYOFF		(51,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.tournament_playoff")),
+	SINGLE					(61,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.single")),
+	LADDER					(62,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.ladder")),
+	PREPARATION				(80,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.preparation")),
+	EMERALDCUP				(1001,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.emerald_cup")),
+	RUBYCUP					(1002,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.ruby_cup")),
+	SAPPHIRECUP				(1003,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.sapphire_cup")),
+	CONSOLANTECUP			(1004,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.consolante_cup"));
 
 	private final int id;
 	private final String name;
 
-	private MatchesAnalyzerMatchType(int id, String name) {
+	MatchesAnalyzerMatchType(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -41,7 +48,43 @@ public enum MatchesAnalyzerMatchType {
 	}
 
 	public Icon getIcon() {
-		return ThemeManager.getIcon(HOIconName.MATCHICONS[ordinal()]);
+		int iconIndex = this.getIconArrayIndex();
+		return ThemeManager.getIcon(HOIconName.MATCHICONS[iconIndex]);
+	}
+
+	private int getIconArrayIndex() {
+		switch (this) {
+			case LEAGUE:
+				return 0;
+			case QUALIFICATION:
+				return 1;
+			case FRIENDLY_NORMAL:
+			case FRIENDLY_CUPRULES:
+			case INT_FRIENDLY_NORMAL:
+			case INT_FRIENDLY_CUPRULES:
+				return 2;
+			case CUP:
+				return 3;
+			case EMERALDCUP:
+				return 4;
+			case RUBYCUP:
+				return 5;
+			case SAPPHIRECUP:
+				return 6;
+			case LADDER:
+				return 7;
+			case TOURNAMENT_GROUP:
+			case TOURNAMENT_PLAYOFF:
+				return 8;
+			case SINGLE:
+				return 9;
+			case HT_MASTERS:
+				return 10;
+			case CONSOLANTECUP:
+				return 12;
+			default :
+				return 11;
+		}
 	}
 
 	public boolean isLeague() {
@@ -52,6 +95,10 @@ public enum MatchesAnalyzerMatchType {
 
 	public boolean isCup() {
 		if(this == CUP) return true;
+		if(this == EMERALDCUP) return true;
+		if(this == RUBYCUP) return true;
+		if(this == SAPPHIRECUP) return true;
+		if(this == CONSOLANTECUP) return true;
 		if(this == HT_MASTERS) return true;
 		return false;
 	}
@@ -69,6 +116,8 @@ public enum MatchesAnalyzerMatchType {
 		if(this == TOURNAMENT_GROUP) return true;
 		if(this == TOURNAMENT_PLAYOFF) return true;
 		if(this == INT_COMP_NORMAL) return true;
+		if(this == LADDER) return true;
+		if(this == SINGLE) return true;
 		return false;
 	}
 

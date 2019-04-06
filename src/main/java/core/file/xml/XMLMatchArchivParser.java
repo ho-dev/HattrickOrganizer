@@ -6,6 +6,8 @@
  */
 package core.file.xml;
 
+import core.model.cup.CupLevel;
+import core.model.cup.CupLevelIndex;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
 import core.util.HOLogger;
@@ -65,8 +67,10 @@ public class XMLMatchArchivParser {
 				else{
 					tmp = (Element) ele.getElementsByTagName("CupLevel").item(0);
 					iCupLevel = Integer.parseInt(tmp.getFirstChild().getNodeValue());
+					match.setCupLevel(CupLevel.fromInt(iCupLevel));
 					tmp = (Element) ele.getElementsByTagName("CupLevelIndex").item(0);
 					iCupLevelIndex = Integer.parseInt(tmp.getFirstChild().getNodeValue());
+					match.setCupLevelIndex(CupLevelIndex.fromInt(iCupLevelIndex));
 					match.setMatchType(MatchType.getById(iMatchType, iCupLevel, iCupLevelIndex));
 				}
 
