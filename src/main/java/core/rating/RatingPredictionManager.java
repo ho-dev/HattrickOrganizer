@@ -1,5 +1,6 @@
 package core.rating;
 
+import core.HO;
 import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.model.Team;
@@ -9,13 +10,13 @@ import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 import module.lineup.Lineup;
+import module.lineup.substitution.model.GoalDiffCriteria;
+import module.lineup.substitution.model.MatchOrderType;
+import module.lineup.substitution.model.RedCardCriteria;
+import module.lineup.substitution.model.Substitution;
 
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.GregorianCalendar;
-import java.util.Hashtable;
-import java.util.Properties;
+import java.util.*;
 
 public class RatingPredictionManager {
 	//~ Class constants ----------------------------------------------------------------------------
@@ -80,6 +81,19 @@ public class RatingPredictionManager {
     private boolean pullBackOverride;
     private int styleOfPlay;
 
+
+	/**  Evolution of lineup during the game
+	 *   he keys will represent an array of events (in minutes)
+	 *  e.g.   t = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 46, 50, 55, 60, 65, 71, …...., 90, 91, ….]
+	 *  i.e at each minute between 0 and 120 by step of 5 minutes     => +24 entries
+	 *  At 46 and 91 to show resting effect     =>  +2 entries
+	 *   At each minute a substitution occur.    => + [0-3] entries
+	 *   + pullback event if it occurs: => + [0-1] entry
+	 *           The values will represent the evolution of lineup
+	 *          e.g.    {0:'starting_lineup', 5:'starting_lineup', …....... 71:'lineup_after_sub1'}
+	 */
+	private Hashtable<Integer, Lineup> LineupEvolution = new Hashtable<>();
+
     public RatingPredictionManager () {
     	if (RatingPredictionManager.config == null)
     		RatingPredictionManager.config = RatingPredictionConfig.getInstance();
@@ -94,13 +108,116 @@ public class RatingPredictionManager {
         this.lineup = lineup;
         RatingPredictionManager.config = config;
         init(iteam, trainerType, styleOfPlay);
+        this.LineupEvolution = this.setLineupEvolution();
     }
 
     public RatingPredictionManager(Lineup lineup, Team team, short trainerType, int styleOfPlay, RatingPredictionConfig config)
     {
         this(lineup, 0, team, trainerType, styleOfPlay, config);
     }
-    
+
+
+    private Hashtable<Integer, Lineup> setLineupEvolution()
+	{
+		// Initilize _LineupEvolution and add starting lineup
+		Hashtable<Integer, Lineup> _LineupEvolution = new Hashtable<>();
+		_LineupEvolution.put(0, this.lineup.duplicate());
+
+		// list at which time occurs all events others than game start
+		List<Integer> events = new ArrayList<>();
+
+		boolean isPullBackOccuring = false;
+		for(Substitution sub :lineup.getSubstitutionList())
+		{
+			if ((sub.getMatchMinuteCriteria() != -1) &&
+			   (sub.getRedCardCriteria() == RedCardCriteria.IGNORE) &&
+				(sub.getStanding() == GoalDiffCriteria.ANY_STANDING)) {
+				events.add((int)(sub.getMatchMinuteCriteria()));
+			}
+
+	     }
+
+		Collections.sort(events);
+
+		// we calculate lineup for all event
+		Integer t = 0;
+		Integer tNextEvent;
+		Lineup currentLineup;
+
+		// define time of next event
+		if (events.size() > 0) {
+			tNextEvent = events.get(0);
+		}
+		else
+		{
+			tNextEvent = 125;
+		}
+
+		while(t<120)
+		{
+			// use Lineup at last event as reference
+			currentLineup = _LineupEvolution.get(t).duplicate();
+
+			//if no match event between now and the next step of 5 minutes, we jump to the next step
+			if ((t+5-(t+5)%5)<tNextEvent) t = t + 5 - (t + 5) % 5;
+
+			//else I treat next occurring match events
+			else
+			{
+				t = tNextEvent;
+
+
+				for(Substitution sub :lineup.getSubstitutionList())
+				{
+					if (tNextEvent == sub.getMatchMinuteCriteria())
+					{
+						// all matchOrders taking place now are recursively apply on the lineup object
+						currentLineup.UpdateLineupWithMatchOrder(sub);
+					}
+				}
+
+				// we remove all Match Events that have been already treated
+				Iterator itr = events.iterator();
+				while (itr.hasNext())
+				{
+					int x = (Integer)itr.next();
+					if (x == tNextEvent)
+						itr.remove();
+				}
+
+
+				// define time of next event
+				if (events.size() > 0) {
+					tNextEvent = events.get(0);
+				}
+				else
+				{
+					tNextEvent = 125;
+				}
+			}
+			_LineupEvolution.put(t, currentLineup);
+
+
+
+		}
+
+
+		// in case no MatchOrder took place at 46' and 91', we add them manually  in order to visualize respectively halftime and endgame rest effect
+		if(!_LineupEvolution.containsKey(46)) _LineupEvolution.put(46, _LineupEvolution.get(45).duplicate());
+		if(!_LineupEvolution.containsKey(91)) _LineupEvolution.put(91, _LineupEvolution.get(90).duplicate());
+
+
+		// we correct for pull back event
+		if (lineup.isPullBackOverride() && (lineup.getPullBackMinute()<120)) {
+			//TODO
+			HOLogger.instance().warning(this.getClass(), "PullBack not yet implemented in Prediction rating !!!");
+		}
+
+		return _LineupEvolution;
+
+
+	}
+
     private float calcRatings (int type) {
     	return calcRatings (type, ALLSIDES);
     }

@@ -41,39 +41,39 @@ public class Player {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    /** Spielberechtigt */
+    /** canPlay */
     private Boolean m_bSpielberechtigt;
 
-    /** ManuellerSmilie Dateiname */
+    /** Manual Smilie Filename*/
     private String m_sManuellerSmilie;
 
     /** Name */
     private String m_sName = "";
 
-    /** TeamInfoSmilie Dateiname */
+    /** TeamInfo Smilie Filename */
     private String m_sTeamInfoSmilie;
     private java.sql.Timestamp m_clhrfDate;
 
-    /** Datum des ersten HRFs mit dem Player */
+    /** Date of the first HRF referencing that player */
     private Timestamp m_tsTime4FirstHRF;
 
-    /** Der Player ist nicht mehr im aktuellen HRF vorhanden */
+    /** The player is no longer available in the current HRF */
     private boolean m_bOld;
     private byte m_bUserPosFlag = -2;
 
-    /** Fluegelspiel */
+    /** Wing skill*/
     private double m_dSubFluegelspiel;
 
-    /** Passpiel */
+    /** Pass skill */
     private double m_dSubPasspiel;
 
-    /** Spielaufbau */
+    /** Playmaking skill */
     private double m_dSubSpielaufbau;
 
     /** Standards */
     private double m_dSubStandards;
 
-    /** Torschuss */
+    /** Goal */
     private double m_dSubTorschuss;
 
     //Subskills
@@ -215,11 +215,23 @@ public class Player {
     /** Training block */
     private boolean m_bTrainingBlock = false;
 
+
+    /** specifying at what time –in minutes- that player entered the field
+     *  This parameter is only used by RatingPredictionManager to calculate the stamina effect
+     *  along the course of the game
+     */
+    private int GameStartingTime = 0;
+
+    public int getGameStartingTime() {
+        return GameStartingTime;
+    }
+
+    public void setGameStartingTime(int gameStartingTime) {
+        GameStartingTime = gameStartingTime;
+    }
+
     //~ Constructors -------------------------------------------------------------------------------
 
-    ////////////////////////////////////////////////////////////////////////////////
-    //Konstruktor
-    ////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Creates a new instance of Player

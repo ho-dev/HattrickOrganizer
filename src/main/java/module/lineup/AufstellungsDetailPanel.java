@@ -245,7 +245,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		}
 	}
 
-	private void setLabels() {
+	public void setLabels() {
 		if (HOVerwaltung.instance().getModel().getTeam() != null) {
 			final HOModel homodel = HOVerwaltung.instance().getModel();
 			final Vector<Player> allPlayer = homodel.getAllSpieler();
@@ -255,7 +255,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			if (AufstellungsVergleichHistoryPanel.isVergleichgefordert()) {
 				// First set the values ​​to those of the loaded setup
 				final AufstellungCBItem vergleichsaufstellungcbitem = AufstellungsVergleichHistoryPanel
-						.getVergleichsAufstellung();
+ 						.getVergleichsAufstellung();
 
 				if (vergleichsaufstellungcbitem != null) {
 					final Lineup vergleichsaufstellung = vergleichsaufstellungcbitem
@@ -267,13 +267,13 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 						// genommen wird
 						// vergleichsaufstellung.updateRatingPredictionConfig();
 						homodel.setAufstellung(vergleichsaufstellung);
-						m_jpRating.setTopRight(vergleichsaufstellung.getLeftDefenseRating());
+//						m_jpRating.setTopRight(vergleichsaufstellung.getLeftDefenseRating());
 						m_jpRating.setTopCenter(vergleichsaufstellung.getCentralDefenseRating());
-						m_jpRating.setTopLeft(vergleichsaufstellung.getRightDefenseRating());
-						m_jpRating.setMiddle(vergleichsaufstellung.getMidfieldRating());
-						m_jpRating.setBottomRight(vergleichsaufstellung.getLeftAttackRating());
-						m_jpRating.setBottomCenter(vergleichsaufstellung.getCentralAttackRating());
-						m_jpRating.setBottomLeft(vergleichsaufstellung.getRightAttackRating());
+//						m_jpRating.setTopLeft(vergleichsaufstellung.getRightDefenseRating());
+//						m_jpRating.setMiddle(vergleichsaufstellung.getMidfieldRating());
+//						m_jpRating.setBottomRight(vergleichsaufstellung.getLeftAttackRating());
+//						m_jpRating.setBottomCenter(vergleichsaufstellung.getCentralAttackRating());
+//						m_jpRating.setBottomLeft(vergleichsaufstellung.getRightAttackRating());
 
 						// Put back the right Lineup
 						homodel.setAufstellung(aufstellung);
@@ -284,34 +284,34 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			// Erst mal leeren
 			// aufstellung.updateRatingPredictionConfig();
 			m_jpRating.clear();
-			m_jpRating.setTopRightText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getLeftDefenseRating())), false,
-					true));
+//			m_jpRating.setTopRightText(PlayerAbility.getNameForSkill(
+//					(RatingUtil.getIntValue4Rating(aufstellung.getLeftDefenseRating())), false,
+//					true));
 			m_jpRating.setTopCenterText(PlayerAbility.getNameForSkill(
 					(RatingUtil.getIntValue4Rating(aufstellung.getCentralDefenseRating())), false,
 					true));
-			m_jpRating.setTopLeftText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRightDefenseRating())), false,
-					true));
-			m_jpRating.setMiddleText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getMidfieldRating())), false, true));
-			m_jpRating
-					.setBottomRightText(PlayerAbility.getNameForSkill(
-							(RatingUtil.getIntValue4Rating(aufstellung.getLeftAttackRating())),
-							false, true));
-			m_jpRating.setBottomCenterText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getCentralAttackRating())), false,
-					true));
-			m_jpRating.setBottomLeftText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRightAttackRating())), false,
-					true));
-			m_jpRating.setTopRight(aufstellung.getLeftDefenseRating());
+//			m_jpRating.setTopLeftText(PlayerAbility.getNameForSkill(
+//					(RatingUtil.getIntValue4Rating(aufstellung.getRightDefenseRating())), false,
+//					true));
+//			m_jpRating.setMiddleText(PlayerAbility.getNameForSkill(
+//					(RatingUtil.getIntValue4Rating(aufstellung.getMidfieldRating())), false, true));
+//			m_jpRating
+//					.setBottomRightText(PlayerAbility.getNameForSkill(
+//							(RatingUtil.getIntValue4Rating(aufstellung.getLeftAttackRating())),
+//							false, true));
+//			m_jpRating.setBottomCenterText(PlayerAbility.getNameForSkill(
+//					(RatingUtil.getIntValue4Rating(aufstellung.getCentralAttackRating())), false,
+//					true));
+//			m_jpRating.setBottomLeftText(PlayerAbility.getNameForSkill(
+//					(RatingUtil.getIntValue4Rating(aufstellung.getRightAttackRating())), false,
+//					true));
+//			m_jpRating.setTopRight(aufstellung.getLeftDefenseRating());
 			m_jpRating.setTopCenter(aufstellung.getCentralDefenseRating());
-			m_jpRating.setTopLeft(aufstellung.getRightDefenseRating());
-			m_jpRating.setMiddle(aufstellung.getMidfieldRating());
-			m_jpRating.setBottomRight(aufstellung.getLeftAttackRating());
-			m_jpRating.setBottomCenter(aufstellung.getCentralAttackRating());
-			m_jpRating.setBottomLeft(aufstellung.getRightAttackRating());
+//			m_jpRating.setTopLeft(aufstellung.getRightDefenseRating());
+//			m_jpRating.setMiddle(aufstellung.getMidfieldRating());
+//			m_jpRating.setBottomRight(aufstellung.getLeftAttackRating());
+//			m_jpRating.setBottomCenter(aufstellung.getCentralAttackRating());
+//			m_jpRating.setBottomLeft(aufstellung.getRightAttackRating());
 
 			// Recalculate Borders
 			m_jpRating.calcColorBorders();

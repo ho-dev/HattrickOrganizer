@@ -19,19 +19,11 @@ import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
-
-import java.sql.Array;
 import java.sql.Timestamp;
 import java.util.*;
 
-/**
- * 
- * Blaghaid moves it to a 553 model. Lots of changes. This is the model
- * responsible for holding the lineup used in predictions and other things.
- * 
- * @author thomas.werth
- */
-public class Lineup {
+
+public class Lineup{
 
 	public static final byte SYS_433 = 0;
 	public static final byte SYS_442 = 1;
@@ -79,6 +71,20 @@ public class Lineup {
 	private short m_sLocation = -1;
 
 	private boolean pullBackOverride;
+
+
+	/** indicate if pullback alreday occured
+	 * This parameter is only used by RatingPredictionManager
+	 * */
+	private boolean PullbackOccurred = false;
+
+	public boolean HasPullbackOccured() {
+		return PullbackOccurred;
+	}
+
+	public void setPullbackOccurred(boolean _PullbackOccurred) {
+		this.PullbackOccurred = _PullbackOccurred;
+	}
 	
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -153,17 +159,10 @@ public class Lineup {
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substFW2, Integer.parseInt(properties.getProperty("substfw2", "0")), (byte) 0));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substXT1, Integer.parseInt(properties.getProperty("substxt1", "0")), (byte) 0));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substXT2, Integer.parseInt(properties.getProperty("substxt2", "0")), (byte) 0));
-
 			m_iTacticType = Integer.parseInt(properties.getProperty("tactictype", "0"));
-			// bugfix: i had a HRF with installning=null (the string null)
-			String installning = properties.getProperty("installning");
-			
-			try {
-				m_iAttitude = Integer.parseInt(installning);
-			} catch (Exception e) {
-				HOLogger.instance().warning(getClass(), "Failed to parse attitude: " + installning);
-				m_iAttitude = IMatchDetails.EINSTELLUNG_NORMAL;
-			}
+			m_iAttitude = Integer.parseInt(properties.getProperty("installning", "0"));
+
+
 			
 			m_iStyleOfPlay = Integer.parseInt(properties.getProperty("styleofplay", "0"));
 			// and read the sub contents
@@ -1312,39 +1311,39 @@ public class Lineup {
 			properties.setProperty("leftForward",
 					String.valueOf(getPositionById(IMatchRoleID.leftForward).getSpielerId()));
 
-			properties.setProperty("substGK1",
+			properties.setProperty("substgk1",
 					String.valueOf(getPositionById(IMatchRoleID.substGK1).getSpielerId()));
-			properties.setProperty("substGK2",
+			properties.setProperty("substgk2",
 					String.valueOf(getPositionById(IMatchRoleID.substGK2).getSpielerId()));
 
-			properties.setProperty("substCD1",
+			properties.setProperty("substcd1",
 					String.valueOf(getPositionById(IMatchRoleID.substCD1).getSpielerId()));
-			properties.setProperty("substCD2",
+			properties.setProperty("substcd2",
 					String.valueOf(getPositionById(IMatchRoleID.substCD2).getSpielerId()));
 
-			properties.setProperty("substWB1",
+			properties.setProperty("substwb1",
 					String.valueOf(getPositionById(IMatchRoleID.substWB1).getSpielerId()));
-			properties.setProperty("substWB2",
+			properties.setProperty("substwb2",
 					String.valueOf(getPositionById(IMatchRoleID.substWB2).getSpielerId()));
 
-			properties.setProperty("substIM1", String.valueOf(getPositionById(
+			properties.setProperty("substim1", String.valueOf(getPositionById(
 					IMatchRoleID.substIM1).getSpielerId()));
-			properties.setProperty("substIM2", String.valueOf(getPositionById(
+			properties.setProperty("substim2", String.valueOf(getPositionById(
 					IMatchRoleID.substIM2).getSpielerId()));
 
-			properties.setProperty("substFW1",
+			properties.setProperty("substfw1",
 					String.valueOf(getPositionById(IMatchRoleID.substFW1).getSpielerId()));
-			properties.setProperty("substFW2",
+			properties.setProperty("substfw2",
 					String.valueOf(getPositionById(IMatchRoleID.substFW2).getSpielerId()));
 
-			properties.setProperty("substWI1",
+			properties.setProperty("substwi1",
 					String.valueOf(getPositionById(IMatchRoleID.substWI1).getSpielerId()));
-			properties.setProperty("substWI2",
+			properties.setProperty("substwi2",
 					String.valueOf(getPositionById(IMatchRoleID.substWI2).getSpielerId()));
 
-			properties.setProperty("substXT1",
+			properties.setProperty("substxt1",
 					String.valueOf(getPositionById(IMatchRoleID.substXT1).getSpielerId()));
-			properties.setProperty("substXT2",
+			properties.setProperty("substxt2",
 					String.valueOf(getPositionById(IMatchRoleID.substXT2).getSpielerId()));
 
 
@@ -1852,4 +1851,29 @@ public class Lineup {
 	public void setPullBackOverride(boolean pullBackOverride) {
 		this.pullBackOverride = pullBackOverride;
 	}
+
+
+	/**
+	 * Amend the lineup by applying the Given MatchOrder
+	 */
+	public void UpdateLineupWithMatchOrder(Substitution sub){
+		MatchRoleID matchRoleIDaffectedPlayer;
+		Player ObjectPlayer;
+		switch (sub.getOrderType()) {
+			case SUBSTITUTION:
+				matchRoleIDaffectedPlayer = this.getPositionBySpielerId(sub.getSubjectPlayerID());
+				ObjectPlayer = this.getPlayerByPositionID(getPositionBySpielerId(sub.getObjectPlayerID()).getId());
+				ObjectPlayer.setGameStartingTime(sub.getMatchMinuteCriteria());
+				matchRoleIDaffectedPlayer.setSpielerId(sub.getObjectPlayerID());
+				break;
+
+			default:
+				HOLogger.instance().error(Lineup.class, String.format("Incorrect Prediction Rating: the following match order has not been considered: %s", sub.getOrderType()));
+		}
+	}
+
+//	@Override
+//	protected Object clone() throws CloneNotSupportedException {
+//		return super.clone();
+//	}
 }
