@@ -64,7 +64,7 @@ public class RatingPredictionManager {
     private static RatingPredictionConfig config = RatingPredictionConfig.getInstance();
 	
     /** Cache for player strength (Hashtable<String, Float>) */
-    private static Hashtable<String, Double> playerStrengthCache = new Hashtable<String, Double>();
+    private static Hashtable<String, Double> playerStrengthCache = new Hashtable<>();
 
     
     //~ Instance fields ----------------------------------------------------------------------------
@@ -74,7 +74,7 @@ public class RatingPredictionManager {
     private short stimmung;
     private short substimmung;
     private short taktikType;
-    private short trainerType;
+	private short trainerType;
     private Lineup lineup;
     private int pullBackMinute;
     private boolean pullBackOverride;
@@ -815,12 +815,13 @@ public class RatingPredictionManager {
     	return delta;    	
     }
     
-    public static double calcPlayerStrength (RatingPredictionParameter params, 
+    public static double calcPlayerStrength (RatingPredictionParameter params,
     		String sectionName, double stamina, double xp, double skill, double form, boolean useForm) {
 //    	long startTime = new Date().getTime();
     	// If config changed, we have to clear the cache
+		boolean forceRefresh = true; //FIXME this should be necessary only in debug mode
     	if (!playerStrengthCache.containsKey("lastRebuild") 
-    			|| playerStrengthCache.get("lastRebuild") < config.getLastParse() ) {
+    			|| playerStrengthCache.get("lastRebuild") < config.getLastParse() || forceRefresh) {
     		HOLogger.instance().debug(RatingPredictionManager.class, "RPM tainted, clearing cache!");
     		playerStrengthCache.clear();
     		playerStrengthCache.put ("lastRebuild", new Double(new Date().getTime()));
@@ -834,71 +835,65 @@ public class RatingPredictionManager {
     	String useSection = sectionName;
     	if (!params.hasSection(sectionName))
     		useSection = RatingPredictionParameter.GENERAL;
-    	
-    	skill += params.getParam(useSection, "skillDelta", 0);
-    	stamina += params.getParam(useSection, "staminaDelta", 0);
+
     	form += params.getParam(useSection, "formDelta", 0);
-    	xp += params.getParam(useSection, "xpDelta", 0);
 
+    	// Compute Xp Effect
+		if (params.getParam(useSection, "multiXpLog", 99) != 99) {xp = Math.log(params.getParam(useSection, "multiXpLog", 0)) * Math.log(xp);}
+		else {
+			xp += params.getParam(useSection, "xpDelta", 0);
+			xp = Math.max(xp, params.getParam(useSection, "xpMin", 0));
+			xp = Math.min(xp, params.getParam(useSection, "xpMax", 99999));
+			xp *= params.getParam(useSection, "xpMultiplier", 1);
+			xp = Math.pow(xp, params.getParam(useSection, "xpPower", 1));
+			xp *= params.getParam(useSection, "finalXpMultiplier", 1);
+			xp += params.getParam(useSection, "finalXpDelta", 0);
+		}
+
+		skill += params.getParam(useSection, "skillDelta", 0);
     	skill = Math.max(skill, params.getParam(useSection, "skillMin", 0));
-    	stamina = Math.max(stamina, params.getParam(useSection, "staminaMin", 0));
+		skill = Math.min(skill, params.getParam(useSection, "skillMax", 99999));
+		skill *= params.getParam(useSection, "skillMultiplier", 1);
+		skill = Math.pow(skill, params.getParam(useSection, "skillPower", 1));
+
     	form = Math.max(form, params.getParam(useSection, "formMin", 0));
-    	xp = Math.max(xp, params.getParam(useSection, "xpMin", 0));
-
-    	skill = Math.min(skill, params.getParam(useSection, "skillMax", 99999));
-    	stamina = Math.min(stamina, params.getParam(useSection, "staminaMax", 99999));
     	form = Math.min(form, params.getParam(useSection, "formMax", 99999));
-    	xp = Math.min(xp, params.getParam(useSection, "xpMax", 99999));
-
-    	skill *= params.getParam(useSection, "skillMultiplier", 1);
-    	stamina *= params.getParam(useSection, "staminaMultiplier", 1);
     	form *= params.getParam(useSection, "formMultiplier", 1);
-    	xp *= params.getParam(useSection, "xpMultiplier", 1);
-
-    	skill = Math.pow(skill, params.getParam(useSection, "skillPower", 1));
-    	stamina = Math.pow(stamina, params.getParam(useSection, "staminaPower", 1));
     	form = Math.pow(form, params.getParam(useSection, "formPower", 1));
-    	xp = Math.pow(xp, params.getParam(useSection, "xpPower", 1));
+
 
     	if (params.getParam(useSection, "skillLog", 0) > 0)
     		skill = Math.log(skill)/Math.log(params.getParam(useSection, "skillLog", 0));
-    	if (params.getParam(useSection, "staminaLog", 0) > 0)
-    		stamina = Math.log(stamina)/Math.log(params.getParam(useSection, "staminaLog", 0));
     	if (params.getParam(useSection, "formLog", 0) > 0)
     		form = Math.log(form)/Math.log(params.getParam(useSection, "formLog", 0));
-    	if (params.getParam(useSection, "xpLog", 0) > 0)
-    		xp = Math.log(xp)/Math.log(params.getParam(useSection, "xpLog", 0));
+
 
     	skill *= params.getParam(useSection, "finalSkillMultiplier", 1);
-    	stamina *= params.getParam(useSection, "finalStaminaMultiplier", 1);
     	form *= params.getParam(useSection, "finalFormMultiplier", 1);
-    	xp *= params.getParam(useSection, "finalXpMultiplier", 1);
+
     	
     	skill += params.getParam(useSection, "finalSkillDelta", 0);
-    	stamina += params.getParam(useSection, "finalStaminaDelta", 0);
     	form += params.getParam(useSection, "finalFormDelta", 0);
-    	xp += params.getParam(useSection, "finalXpDelta", 0);
+
     	
     	stk = skill;
-    	if (params.getParam(useSection, "resultMultiStamina", 0) > 0)
-    		stk *= params.getParam(useSection, "resultMultiStamina", 0) * stamina;
     	if (useForm && params.getParam(useSection, "resultMultiForm", 0) > 0)
     		stk *= params.getParam(useSection, "resultMultiForm", 0) * form;
     	if (params.getParam(useSection, "resultMultiXp", 0) > 0)
     		stk *= params.getParam(useSection, "resultMultiXp", 0) * xp;
+		stk += params.getParam(useSection, "resultAddXp", 0) * xp;
 
-   		stk += params.getParam(useSection, "resultAddStamina", 0) * stamina;
    		if (useForm)
    			stk += params.getParam(useSection, "resultAddForm", 0) * form;
-   		stk += params.getParam(useSection, "resultAddXp", 0) * xp;
-   		
+
 //		HOLogger.instance().debug(RatingPredictionManager.class, "Adding to cache: " + key + "=" + stk);
-   		playerStrengthCache.put(key, new Double(stk));
-   		
+
+   		playerStrengthCache.put(key, stk);
 //    	long endTime = new Date().getTime();
 //    	HOLogger.instance().debug(RatingPredictionManager.class, "calcPlayerStrength (" 
 //    			+ "SN=" + sectionName + ",ST" + stamina + ",XP" + xp + ",SK" + skill + ",FO" + form + ",uF" + useForm+ ") took " + (endTime-startTime) + "ms");
-    	return stk;
+
+		return stk;
     }
 
     private void init(Team team, short trainerType, int styleOfPlay)
@@ -922,7 +917,43 @@ public class RatingPredictionManager {
         	e.printStackTrace();
         }
     }
-    
+
+	 /**
+	 * Returns the stamina effect per minute from tEnter tp tExit
+	 * @param stamina: player stamina
+	 * @param tEnter: at which minute the player entered the game
+     * @param tExit: at which minute the player exited the game
+	 */
+	public static double[] GetStaminaEffect(double stamina, int tEnter, int tExit, boolean isTactitPressing){
+		boolean isHighStaminaPlayer = false;
+
+		int nb_events = tExit - tEnter;
+		if ( (tEnter < 45) && (tExit > 45) ) nb_events += 1;
+		if ( (tEnter < 90) && (tExit > 90) ) nb_events += 1;
+		double[] result = new double[nb_events];
+
+		double energy = 102 + 23/7 * stamina;  // energy when entering the field for player whose stamina < 8
+		double P = isTactitPressing ? 1.1 : 1.0;
+		double energyLossPerMinuteLS = P * (5.95 - 27*stamina/70);
+		double energyLossPerMinuteHS = -3.25 * P;
+
+		if 	(stamina >= 8)
+		{
+			isHighStaminaPlayer = true;
+			energy = 125 + (stamina-7) *100 /7; // energy when entering the field for player whose stamina >= 8
+		}
+
+		for(int t=tEnter; t<tExit; t++)
+		{
+			if (t == 46) energy += 18.75;  // Energy recovery during half-time
+			else if (t == 91) energy += 6.25;  // Energy recovery before extra-time
+			else if (isHighStaminaPlayer) energy += energyLossPerMinuteHS;
+			else energy += energyLossPerMinuteLS;
+			result[t-tEnter] = energy;
+		}
+		return result;
+	}
+
     private double getTrainerEffect(double defensive, double offensive, double neutral) {
     	
     	// styleOfPlay * 0.1 gives us the fraction of the distance we need to go from

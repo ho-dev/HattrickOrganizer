@@ -500,8 +500,7 @@ public class Lineup {
 					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
 							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
 					RatingPredictionConfig.getInstance());
-			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
-			// Wert
+
 			double value = Math.max(1, rpManager.getCentralDefenseRatings());
 			if (value > 1) {
 				value += UserParameter.instance().middleDefenceOffset;

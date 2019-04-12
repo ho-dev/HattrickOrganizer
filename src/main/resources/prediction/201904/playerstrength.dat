@@ -1,0 +1,69 @@
+[general]
+
+
+# =================  Loyalty Factor ===============================
+# loyaltyaddition = loyaltyMax*loyalty/loyaltySkillMax
+# =============================================================
+
+# =================  Form Factor ===============================
+# form = form - 0.5			        (formDelta)
+# if (form < 0) then form = 0		(formMin)
+# if (form > 7) then form = 7		(formMax)
+# form = form/7				        (formMultiplier)
+# form = form^0.45			        (formPower)
+# <=> form-Factor = ((form-0.5)/7)^0.45
+# =============================================================
+
+# =================  XP Factor ===============================
+# <=> XP-Factor = 4/3 * log(xp)
+# =============================================================
+
+# =================  skill adjustment calculation ===============================
+# if (skill = Y and subskill=0) then skill = skill + x	(skillSubDeltaForLevelY)
+# skillc = [(skill + skillDelta) * skillMultiplier] ^ skillPower
+# skillc = skillc + homegrownbonus + loyaltyaddition + XP-Factor	
+# skillc = skillc * resultMultiForm * form	+ resultAddForm *  form	(resultMultiForm)
+# ===================================================================================
+
+
+# =================  Parameters ===============================
+homegrownbonus=0.5
+loyaltyMax=1
+loyaltySkillMax=20 
+
+formMin=0
+formMax=7
+formDelta=-0.5
+formMultiplier=0.142857142857143	# 1/7
+formPower=0.45
+resultMultiForm=1
+
+multiXpLog=1.33333333333333333333333333333333333333333333333333333333333		# 4/3
+resultAddXp=1
+
+skillDelta=-1.0
+skillMin=0
+
+# 9 multipliers for crowding penalties. 1-2-3 central defenders/midfielders/forwards
+1CdMulti=1
+2CdMulti=0.9647
+3CdMulti=0.8731
+1MfMulti=1
+2MfMulti=0.9356
+3MfMulti=0.8268
+1FwMulti=1
+2FwMulti=0.9480
+3FwMulti=0.8650
+
+# SkillSubDeltas:
+# Default is to add 0.5 subskill for skills 0 (non existant) up to 7 (solid)
+# Uncomment the next line to ignore the skillSubDeltas
+#[ignore]
+skillSubDeltaForLevel0=0.5
+skillSubDeltaForLevel1=0.5
+skillSubDeltaForLevel2=0.5
+skillSubDeltaForLevel3=0.5
+skillSubDeltaForLevel4=0.5
+skillSubDeltaForLevel5=0.5
+skillSubDeltaForLevel6=0.5
+skillSubDeltaForLevel7=0.5
