@@ -52,12 +52,12 @@ public class LineupMasterView extends JPanel {
 		this.lineupPanel = new LineupPanel();
 		this.tabbedPane.addTab(hov.getLanguageString("Aufstellung"), this.lineupPanel);
 
-		this.substitutionOverview = new SubstitutionOverview(hov.getModel().getLineup());
+		this.substitutionOverview = new SubstitutionOverview(hov.getModel().getLineupWithoutRatingRecalc());
 		this.tabbedPane.addTab(hov.getLanguageString("subs.Title"), this.substitutionOverview);
 
 		this.penaltyTakersView = new PenaltyTakersView();
 		this.penaltyTakersView.setPlayers(hov.getModel().getAllSpieler());
-		this.penaltyTakersView.setLineup(hov.getModel().getLineup());
+		this.penaltyTakersView.setLineup(hov.getModel().getLineupWithoutRatingRecalc());
 		this.tabbedPane.addTab(hov.getLanguageString("lineup.penaltytakers.tab.title"),
 				this.penaltyTakersView);
 		this.tabbedPane.addTab(hov.getLanguageString("lineup.upload.tab.title"),
@@ -110,12 +110,12 @@ public class LineupMasterView extends JPanel {
 		for (int i = 0; i < takers.size(); i++) {
 			list.add(new MatchRoleID(IMatchRoleID.penaltyTaker1 + i, takers.get(i).getPlayer().getSpielerID(), IMatchRoleID.NORMAL));
 		}
-		HOVerwaltung.instance().getModel().getLineup().setPenaltyTakers(list);
+		HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setPenaltyTakers(list);
 	}
 	
 	private void refreshView() {
-		this.substitutionOverview.setLineup(HOVerwaltung.instance().getModel().getLineup());
+		this.substitutionOverview.setLineup(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc());
 		this.penaltyTakersView.setPlayers(HOVerwaltung.instance().getModel().getAllSpieler());
-		this.penaltyTakersView.setLineup(HOVerwaltung.instance().getModel().getLineup());
+		this.penaltyTakersView.setLineup(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc());
 	}
 }

@@ -2,7 +2,9 @@ package module.lineup;
 
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
+import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.Ratings;
 import core.model.UserParameter;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
@@ -85,6 +87,8 @@ public class Lineup{
 	public void setPullbackOccurred(boolean _PullbackOccurred) {
 		this.PullbackOccurred = _PullbackOccurred;
 	}
+
+	private Ratings oRatings;
 	
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -108,43 +112,43 @@ public class Lineup{
 					.parseInt(properties.getProperty("keeper", "0")), (byte) 0));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightBack, Integer
 					.parseInt(properties.getProperty("rightback", "0")), Byte.parseByte(properties
-					.getProperty("behrightback", "0"))));
+					.getProperty("order_rightback", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightCentralDefender, Integer
-					.parseInt(properties.getProperty("insideback1", "0")), Byte
-					.parseByte(properties.getProperty("behinsideback1", "0"))));
+					.parseInt(properties.getProperty("rightCentralDefender", "0")), Byte
+					.parseByte(properties.getProperty("order_rightCentralDefender", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftCentralDefender, Integer
-					.parseInt(properties.getProperty("insideback2", "0")), Byte
-					.parseByte(properties.getProperty("behinsideback2", "0"))));
+					.parseInt(properties.getProperty("leftCentralDefender", "0")), Byte
+					.parseByte(properties.getProperty("order_leftCentralDefender", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.middleCentralDefender, Integer
-					.parseInt(properties.getProperty("insideback3", "0")), Byte
-					.parseByte(properties.getProperty("behinsideback3", "0"))));
+					.parseInt(properties.getProperty("middleCentralDefender", "0")), Byte
+					.parseByte(properties.getProperty("order_middleCentralDefender", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftBack, Integer
 					.parseInt(properties.getProperty("leftback", "0")), Byte.parseByte(properties
-					.getProperty("behleftback", "0"))));
+					.getProperty("order_leftBack", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightWinger, Integer
 					.parseInt(properties.getProperty("rightwinger", "0")), Byte
-					.parseByte(properties.getProperty("behrightwinger", "0"))));
+					.parseByte(properties.getProperty("order_rightWinger", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightInnerMidfield, Integer
-					.parseInt(properties.getProperty("insidemid1", "0")), Byte.parseByte(properties
-					.getProperty("behinsidemid1", "0"))));
+					.parseInt(properties.getProperty("rightInnerMidfield", "0")), Byte.parseByte(properties
+					.getProperty("order_rightInnerMidfield", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftInnerMidfield, Integer
-					.parseInt(properties.getProperty("insidemid2", "0")), Byte.parseByte(properties
-					.getProperty("behinsidemid2", "0"))));
+					.parseInt(properties.getProperty("leftInnerMidfield", "0")), Byte.parseByte(properties
+					.getProperty("order_leftInnerMidfield", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.centralInnerMidfield, Integer
-					.parseInt(properties.getProperty("insidemid3", "0")), Byte.parseByte(properties
-					.getProperty("behinsidemid3", "0"))));
+					.parseInt(properties.getProperty("middleInnerMidfield", "0")), Byte.parseByte(properties
+					.getProperty("order_centralInnerMidfield", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftWinger, Integer
 					.parseInt(properties.getProperty("leftwinger", "0")), Byte.parseByte(properties
-					.getProperty("behleftwinger", "0"))));
+					.getProperty("order_leftWinger", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightForward, Integer
-					.parseInt(properties.getProperty("forward1", "0")), Byte.parseByte(properties
-					.getProperty("behforward1", "0"))));
+					.parseInt(properties.getProperty("rightForward", "0")), Byte.parseByte(properties
+					.getProperty("order_rightForward", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftForward, Integer
-					.parseInt(properties.getProperty("forward2", "0")), Byte.parseByte(properties
-					.getProperty("behforward2", "0"))));
+					.parseInt(properties.getProperty("leftForward", "0")), Byte.parseByte(properties
+					.getProperty("order_leftForward", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.centralForward, Integer
-					.parseInt(properties.getProperty("forward3", "0")), Byte.parseByte(properties
-					.getProperty("behforward3", "0"))));
+					.parseInt(properties.getProperty("centralForward", "0")), Byte.parseByte(properties
+					.getProperty("order_centralForward", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substGK1, Integer.parseInt(properties.getProperty("substgk1", "0")), (byte) 0));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substGK2, Integer.parseInt(properties.getProperty("substgk2", "0")), (byte) 0));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substCD1, Integer.parseInt(properties.getProperty("substcd1", "0")), (byte) 0));
@@ -467,48 +471,36 @@ public class Lineup{
 		return value;
 	}
 
-	/**
-	 * Predicts Central Attack-Rating
-	 */
-	public final double getCentralAttackRating() {
-		if (HOVerwaltung.instance().getModel() != null
-				&& HOVerwaltung.instance().getModel().getID() != -1) {
-			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
-					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
-							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
-					RatingPredictionConfig.getInstance());
-			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
-			// Wert
-			double value = Math.max(1, rpManager.getCentralAttackRatings());
-			if (value > 1) {
-				value += UserParameter.instance().middleAttackOffset;
-			}
-			return value;
-		} else {
-			return 0.0d;
+
+	 public void setRatings() {
+		 final RatingPredictionManager rpManager;
+		 Ratings oRatings = new Ratings();
+
+		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
+			rpManager = new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam(),
+					(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay, RatingPredictionConfig.getInstance());
+			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings());
+			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings());
+			oRatings.setRightDefense(rpManager.getRightDefenseRatings());
+			oRatings.setMidfield(rpManager.getMFRatings());
+			oRatings.setLeftAttack(rpManager.getLeftAttackRatings());
+			oRatings.setCentralAttack(rpManager.getCentralAttackRatings());
+			oRatings.setRightAttack(rpManager.getRightAttackRatings());
+
+			this.oRatings = oRatings;
 		}
+		else {
+			this.oRatings = new Ratings(); }
 	}
 
-	/**
-	 * Predicts cd-Rating
-	 */
-	public final double getCentralDefenseRating() {
-		if (HOVerwaltung.instance().getModel() != null
-				&& HOVerwaltung.instance().getModel().getID() != -1) {
-			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
-					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
-							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
-					RatingPredictionConfig.getInstance());
 
-			double value = Math.max(1, rpManager.getCentralDefenseRatings());
-			if (value > 1) {
-				value += UserParameter.instance().middleDefenceOffset;
+	public Ratings getRatings() {
+		    if(oRatings == null)
+			{
+				setRatings();
 			}
-			return value;
-		} else {
-			return 0.0d;
+			return oRatings;
 		}
-	}
 
 	/**
 	 * Total strength.
@@ -522,20 +514,22 @@ public class Lineup{
 	 * Get the HT stats value for the lineup.
 	 */
 	public final int getHATStats() {
-		int sum;
-		final int MFfactor = 3;
-
-		sum = HTfloat2int(getMidfieldRating()) * MFfactor;
-
-		sum += HTfloat2int(getLeftDefenseRating());
-		sum += HTfloat2int(getCentralDefenseRating());
-		sum += HTfloat2int(getRightDefenseRating());
-
-		sum += HTfloat2int(getLeftAttackRating());
-		sum += HTfloat2int(getCentralAttackRating());
-		sum += HTfloat2int(getRightAttackRating());
-
-		return sum;
+		// FIXME: need to repair that function
+//		int sum;
+//		final int MFfactor = 3;
+//
+//		sum = HTfloat2int(getMidfieldRating()) * MFfactor;
+//
+//		sum += HTfloat2int(getLeftDefenseRating());
+//		sum += HTfloat2int(getCentralDefenseRating());
+//		sum += HTfloat2int(getRightDefenseRating());
+//
+//		sum += HTfloat2int(getLeftAttackRating());
+//		sum += HTfloat2int(getCentralAttackRating());
+//		sum += HTfloat2int(getRightAttackRating());
+//
+//		return sum;
+		return 0;
 	}
 
 	public void updateRatingPredictionConfig() {
@@ -588,62 +582,64 @@ public class Lineup{
 		return m_iKicker;
 	}
 
-	/**
-	 * Predicts LeftAttack-Rating
-	 */
-	public final double getLeftAttackRating() {
-		if (HOVerwaltung.instance().getModel() != null
-				&& HOVerwaltung.instance().getModel().getID() != -1) {
-			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
-					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
-							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
-					RatingPredictionConfig.getInstance());
-
-			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
-			// Wert
-			double value = Math.max(1, rpManager.getLeftAttackRatings());
-			if (value > 1) {
-				value += UserParameter.instance().leftAttackOffset;
-			}
-			return value;
-		} else {
-			return 0.0d;
-		}
-	}
-
-	/**
-	 * Predicts LeftDefense-Rating
-	 */
-	public final double getLeftDefenseRating() {
-		if (HOVerwaltung.instance().getModel() != null
-				&& HOVerwaltung.instance().getModel().getID() != -1) {
-			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
-					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
-							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
-					RatingPredictionConfig.getInstance());
-
-			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
-			// Wert
-			double value = Math.max(1, rpManager.getLeftDefenseRatings());
-			if (value > 1) {
-				value += UserParameter.instance().leftDefenceOffset;
-			}
-			return value;
-		} else {
-			return 0.0d;
-		}
-	}
+//	/**
+//	 * Predicts LeftAttack-Rating
+//	 */
+//	public final double getLeftAttackRating() {
+//		if (HOVerwaltung.instance().getModel() != null
+//				&& HOVerwaltung.instance().getModel().getID() != -1) {
+//			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
+//					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
+//							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
+//					RatingPredictionConfig.getInstance());
+//
+//			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
+//			// Wert
+//			double value = Math.max(1, rpManager.getLeftAttackRatings());
+//			if (value > 1) {
+//				value += UserParameter.instance().leftAttackOffset;
+//			}
+//			return value;
+//		} else {
+//			return 0.0d;
+//		}
+//	}
+//
+//	/**
+//	 * Predicts LeftDefense-Rating
+//	 */
+//	public final double getLeftDefenseRating() {
+//		if (HOVerwaltung.instance().getModel() != null
+//				&& HOVerwaltung.instance().getModel().getID() != -1) {
+//			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
+//					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
+//							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
+//					RatingPredictionConfig.getInstance());
+//
+//			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
+//			// Wert
+//			double value = Math.max(1, rpManager.getLeftDefenseRatings());
+//			if (value > 1) {
+//				value += UserParameter.instance().leftDefenceOffset;
+//			}
+//			return value;
+//		} else {
+//			return 0.0d;
+//		}
+//	}
 
 	/**
 	 * Get the Loddar stats value for the lineup.
 	 */
 	public final float getLoddarStats() {
-		LoddarStatsCalculator calculator = new LoddarStatsCalculator();
-		calculator.setRatings(getMidfieldRating(), getRightDefenseRating(),
-				getCentralDefenseRating(), getLeftDefenseRating(), getRightAttackRating(),
-				getCentralAttackRating(), getLeftAttackRating());
-		calculator.setTactics(getTacticType(), getTacticLevelAimAow(), getTacticLevelCounter());
-		return calculator.calculate();
+		// FIXME: need to repair function getLoddarStats
+//		LoddarStatsCalculator calculator = new LoddarStatsCalculator();
+//		calculator.setRatings(getMidfieldRating(), getRightDefenseRating(),
+//				getCentralDefenseRating(), getLeftDefenseRating(), getRightAttackRating(),
+//				getCentralAttackRating(), getLeftAttackRating());
+//		calculator.setTactics(getTacticType(), getTacticLevelAimAow(), getTacticLevelCounter());
+//		return calculator.calculate();
+		return 0;
 	}
 
 	/**
@@ -675,27 +671,27 @@ public class Lineup{
 	// Ratings
 	// ///////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Predicts MF-Rating
-	 */
-	public final double getMidfieldRating() {
-		if (HOVerwaltung.instance().getModel() != null
-				&& HOVerwaltung.instance().getModel().getID() != -1) {
-			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
-					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
-							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
-					RatingPredictionConfig.getInstance());
-			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
-			// Wert
-			double value = Math.max(1, rpManager.getMFRatings());
-			if (value > 1) {
-				value += UserParameter.instance().midfieldOffset;
-			}
-			return value;
-		} else {
-			return 0.0d;
-		}
-	}
+//	/**
+//	 * Predicts MF-Rating
+//	 */
+//	public final double getMidfieldRating() {
+//		if (HOVerwaltung.instance().getModel() != null
+//				&& HOVerwaltung.instance().getModel().getID() != -1) {
+//			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
+//					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
+//							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
+//					RatingPredictionConfig.getInstance());
+//			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
+//			// Wert
+//			double value = Math.max(1, rpManager.getMFRatings());
+//			if (value > 1) {
+//				value += UserParameter.instance().midfieldOffset;
+//			}
+//			return value;
+//		} else {
+//			return 0.0d;
+//		}
+//	}
 
 	/**
 	 * Get the short name for a fomation constant.
@@ -959,49 +955,49 @@ public class Lineup{
 		return m_vPositionen;
 	}
 
-	/**
-	 * Predicts Right-Attack-Rating
-	 */
-	public final double getRightAttackRating() {
-		if (HOVerwaltung.instance().getModel() != null
-				&& HOVerwaltung.instance().getModel().getID() != -1) {
-			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
-					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
-							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
-					RatingPredictionConfig.getInstance());
-			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
-			// Wert
-			double value = Math.max(1, rpManager.getRightAttackRatings());
-			if (value > 1) {
-				value += UserParameter.instance().rightAttackOffset;
-			}
-			return value;
-		} else {
-			return 0.0d;
-		}
-	}
+//	/**
+//	 * Predicts Right-Attack-Rating
+//	 */
+//	public final double getRightAttackRating() {
+//		if (HOVerwaltung.instance().getModel() != null
+//				&& HOVerwaltung.instance().getModel().getID() != -1) {
+//			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
+//					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
+//							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
+//					RatingPredictionConfig.getInstance());
+//			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
+//			// Wert
+//			double value = Math.max(1, rpManager.getRightAttackRatings());
+//			if (value > 1) {
+//				value += UserParameter.instance().rightAttackOffset;
+//			}
+//			return value;
+//		} else {
+//			return 0.0d;
+//		}
+//	}
 
-	/**
-	 * Predicts rd-Rating
-	 */
-	public final double getRightDefenseRating() {
-		if (HOVerwaltung.instance().getModel() != null
-				&& HOVerwaltung.instance().getModel().getID() != -1) {
-			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
-					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
-							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
-					RatingPredictionConfig.getInstance());
-			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
-			// Wert
-			double value = Math.max(1, rpManager.getRightDefenseRatings());
-			if (value > 1) {
-				value += UserParameter.instance().rightDefenceOffset;
-			}
-			return value;
-		} else {
-			return 0.0d;
-		}
-	}
+//	/**
+//	 * Predicts rd-Rating
+//	 */
+//	public final double getRightDefenseRating() {
+//		if (HOVerwaltung.instance().getModel() != null
+//				&& HOVerwaltung.instance().getModel().getID() != -1) {
+//			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
+//					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
+//							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
+//					RatingPredictionConfig.getInstance());
+//			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
+//			// Wert
+//			double value = Math.max(1, rpManager.getRightDefenseRatings());
+//			if (value > 1) {
+//				value += UserParameter.instance().rightDefenceOffset;
+//			}
+//			return value;
+//		} else {
+//			return 0.0d;
+//		}
+//	}
 
 	/**
 	 * Team star rating for attackers
@@ -1298,7 +1294,7 @@ public class Lineup{
 					String.valueOf(getPositionById(IMatchRoleID.rightWinger).getSpielerId()));
 			properties.setProperty("rightInnerMidfield", String.valueOf(getPositionById(
 					IMatchRoleID.rightInnerMidfield).getSpielerId()));
-			properties.setProperty("insidemid3", String.valueOf(getPositionById(
+			properties.setProperty("middleInnerMidfield", String.valueOf(getPositionById(
 					IMatchRoleID.centralInnerMidfield).getSpielerId()));
 			properties.setProperty("leftInnerMidfield", String.valueOf(getPositionById(
 					IMatchRoleID.leftInnerMidfield).getSpielerId()));
@@ -1862,9 +1858,19 @@ public class Lineup{
 		switch (sub.getOrderType()) {
 			case SUBSTITUTION:
 				matchRoleIDaffectedPlayer = this.getPositionBySpielerId(sub.getSubjectPlayerID());
+				if (matchRoleIDaffectedPlayer == null)
+				{
+					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
+					break;
+				}
 				ObjectPlayer = this.getPlayerByPositionID(getPositionBySpielerId(sub.getObjectPlayerID()).getId());
+				if (ObjectPlayer == null)
+				{
+					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getObjectPlayerID()));
+					break;
+				}
 				ObjectPlayer.setGameStartingTime(sub.getMatchMinuteCriteria());
-				matchRoleIDaffectedPlayer.setSpielerId(sub.getObjectPlayerID());
+				matchRoleIDaffectedPlayer.setSpielerIdFollowingSub(sub.getObjectPlayerID());
 				break;
 
 			default:

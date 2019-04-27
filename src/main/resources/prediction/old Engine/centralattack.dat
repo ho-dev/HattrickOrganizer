@@ -16,14 +16,14 @@ tacticLongshots      = 0.970577 # err=0.008211
 pullback             = -0.25
 
 [passing_allsides]
-IM_norm    = 0.1931
+IM_norm    = 0.202755
 FW_def     = 0.350593216445366
-IM_def     = 0.1302
-WI_norm    = 0.0615
-IM_off     = 0.287
+IM_def     = 0.10416
+WI_norm    = 0.07134
+IM_off     = 0.27265
 FW_tw      = 0.154848237124548
 FW_norm    = 0.218876084491443
-IM_tw      = 0.1347
+IM_tw      = 0.142782
 WI_def     = 0.031
 WI_off     = 0.0803
 WI_tm      = 0.0876
@@ -33,3 +33,6 @@ FW_def.technical = 0.350593216445366
 FW_tw      = 0.361066427573112
 FW_norm    = 0.593971677962079
 FW_def     = 0.365602172938477
+IM_off     = 0.184131220168244
+IM_norm    = 0.124734052372037
+IM_def     = 0.0712766013554495

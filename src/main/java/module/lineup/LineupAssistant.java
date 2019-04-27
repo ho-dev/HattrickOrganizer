@@ -373,7 +373,7 @@ public class LineupAssistant {
 	}
 
 	/**
-	 * resetet alle Verbindungen zwischen Position und Player
+	 * resets all connections between position and player
 	 * 
 	 * @param positionen
 	 *            a vector of player positions

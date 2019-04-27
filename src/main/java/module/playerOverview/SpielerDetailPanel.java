@@ -359,7 +359,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         	m_jpMotherClub.setIcon( ThemeManager.getIcon(HOIconName.HOMEGROWN));
         else
         	m_jpMotherClub.clear();
-        Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
+        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
         if (lineup.isPlayerInLineup(m_clPlayer.getSpielerID())
             && (lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()) != null)) {
             m_jpPositioned.setIcon(ImageUtilities.getImage4Position(lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()),

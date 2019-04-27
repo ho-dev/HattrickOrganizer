@@ -249,7 +249,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		if (HOVerwaltung.instance().getModel().getTeam() != null) {
 			final HOModel homodel = HOVerwaltung.instance().getModel();
 			final Vector<Player> allPlayer = homodel.getAllSpieler();
-			final Lineup aufstellung = homodel.getLineup();
+			final Lineup aufstellung = homodel.getLineupWithoutRatingRecalc();
 
 			// HRF comparison required
 			if (AufstellungsVergleichHistoryPanel.isVergleichgefordert()) {
@@ -267,13 +267,13 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 						// genommen wird
 						// vergleichsaufstellung.updateRatingPredictionConfig();
 						homodel.setAufstellung(vergleichsaufstellung);
-//						m_jpRating.setTopRight(vergleichsaufstellung.getLeftDefenseRating());
-						m_jpRating.setTopCenter(vergleichsaufstellung.getCentralDefenseRating());
-//						m_jpRating.setTopLeft(vergleichsaufstellung.getRightDefenseRating());
-//						m_jpRating.setMiddle(vergleichsaufstellung.getMidfieldRating());
-//						m_jpRating.setBottomRight(vergleichsaufstellung.getLeftAttackRating());
-//						m_jpRating.setBottomCenter(vergleichsaufstellung.getCentralAttackRating());
-//						m_jpRating.setBottomLeft(vergleichsaufstellung.getRightAttackRating());
+						m_jpRating.setTopRight(vergleichsaufstellung.getRatings().getLeftDefense().get(0));				//FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+						m_jpRating.setTopCenter(vergleichsaufstellung.getRatings().getCentralDefense().get(0));         //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+						m_jpRating.setTopLeft(vergleichsaufstellung.getRatings().getRightDefense().get(0));				//FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+						m_jpRating.setMiddle(vergleichsaufstellung.getRatings().getMidfield().get(0));					//FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+						m_jpRating.setBottomRight(vergleichsaufstellung.getRatings().getLeftAttack().get(0));			//FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+						m_jpRating.setBottomCenter(vergleichsaufstellung.getRatings().getCentralAttack().get(0));		//FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+						m_jpRating.setBottomLeft(vergleichsaufstellung.getRatings().getRightAttack().get(0));			//FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
 
 						// Put back the right Lineup
 						homodel.setAufstellung(aufstellung);
@@ -284,34 +284,27 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			// Erst mal leeren
 			// aufstellung.updateRatingPredictionConfig();
 			m_jpRating.clear();
-//			m_jpRating.setTopRightText(PlayerAbility.getNameForSkill(
-//					(RatingUtil.getIntValue4Rating(aufstellung.getLeftDefenseRating())), false,
-//					true));
+			m_jpRating.setTopRightText(PlayerAbility.getNameForSkill(
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getLeftDefense().get(0))), false, true));  //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
 			m_jpRating.setTopCenterText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getCentralDefenseRating())), false,
-					true));
-//			m_jpRating.setTopLeftText(PlayerAbility.getNameForSkill(
-//					(RatingUtil.getIntValue4Rating(aufstellung.getRightDefenseRating())), false,
-//					true));
-//			m_jpRating.setMiddleText(PlayerAbility.getNameForSkill(
-//					(RatingUtil.getIntValue4Rating(aufstellung.getMidfieldRating())), false, true));
-//			m_jpRating
-//					.setBottomRightText(PlayerAbility.getNameForSkill(
-//							(RatingUtil.getIntValue4Rating(aufstellung.getLeftAttackRating())),
-//							false, true));
-//			m_jpRating.setBottomCenterText(PlayerAbility.getNameForSkill(
-//					(RatingUtil.getIntValue4Rating(aufstellung.getCentralAttackRating())), false,
-//					true));
-//			m_jpRating.setBottomLeftText(PlayerAbility.getNameForSkill(
-//					(RatingUtil.getIntValue4Rating(aufstellung.getRightAttackRating())), false,
-//					true));
-//			m_jpRating.setTopRight(aufstellung.getLeftDefenseRating());
-			m_jpRating.setTopCenter(aufstellung.getCentralDefenseRating());
-//			m_jpRating.setTopLeft(aufstellung.getRightDefenseRating());
-//			m_jpRating.setMiddle(aufstellung.getMidfieldRating());
-//			m_jpRating.setBottomRight(aufstellung.getLeftAttackRating());
-//			m_jpRating.setBottomCenter(aufstellung.getCentralAttackRating());
-//			m_jpRating.setBottomLeft(aufstellung.getRightAttackRating());
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getCentralDefense().get(0))), false,	true)); //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+			m_jpRating.setTopLeftText(PlayerAbility.getNameForSkill(
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getRightDefense().get(0))), false,	true)); //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+			m_jpRating.setMiddleText(PlayerAbility.getNameForSkill(
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getMidfield().get(0))), false, true));   //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+			m_jpRating.setBottomRightText(PlayerAbility.getNameForSkill(
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getLeftAttack().get(0))),false, true));  //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+			m_jpRating.setBottomCenterText(PlayerAbility.getNameForSkill(
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getCentralAttack().get(0))), false,true));
+			m_jpRating.setBottomLeftText(PlayerAbility.getNameForSkill(
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getRightAttack().get(0))), false,true));
+			m_jpRating.setTopRight(aufstellung.getRatings().getLeftDefense().get(0));       //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+			m_jpRating.setTopCenter(aufstellung.getRatings().getCentralDefense().get(0));   //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+			m_jpRating.setTopLeft(aufstellung.getRatings().getRightDefense().get(0));       //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+			m_jpRating.setMiddle(aufstellung.getRatings().getMidfield().get(0));            //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+			m_jpRating.setBottomRight(aufstellung.getRatings().getLeftAttack().get(0));     //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+			m_jpRating.setBottomCenter(aufstellung.getRatings().getCentralAttack().get(0));  //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+			m_jpRating.setBottomLeft(aufstellung.getRatings().getRightAttack().get(0));     //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
 
 			// Recalculate Borders
 			m_jpRating.calcColorBorders();
@@ -340,7 +333,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			m_jcbPullBackMinute.setEnabled(!aufstellung.isPullBackOverride());
 			setPullBackOverride(aufstellung.isPullBackOverride());
 
-			float avXp = homodel.getLineup().getAverageExperience();
+			float avXp = homodel.getLineupWithoutRatingRecalc().getAverageExperience();
 			m_jpDurchschnittErfahrung.setText(PlayerAbility.getNameForSkill(avXp));
 			m_jpDurchschnittErfahrung.setToolTipText((avXp < 0 ? (HOVerwaltung.instance()
 					.getLanguageString("lineup.upload.check.captainNotSet")) : ""));
@@ -348,7 +341,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			String formationExperienceTooltip = getFormationExperienceTooltip();
 			m_jpAktuellesSystem.setText(Lineup.getNameForSystem(aufstellung.ermittelSystem()));
 			m_jpAktuellesSystem.setToolTipText(formationExperienceTooltip);
-			int exp = homodel.getLineup().getTeamErfahrung4AktuellesSystem();
+			int exp = homodel.getLineupWithoutRatingRecalc().getTeamErfahrung4AktuellesSystem();
 			m_jpErfahrungAktuellesSystem.setText(PlayerAbility.toString(exp) + " (" + exp + ")");
 			m_jpErfahrungAktuellesSystem.setToolTipText(formationExperienceTooltip);
 			m_jpErfahrungAktuellesSystem.setFGColor(new Color(Math.min(
@@ -505,72 +498,66 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 
 		if (event.getStateChange() == ItemEvent.DESELECTED) {
 			if (event.getSource().equals(m_jchPullBackOverride)) {
-				HOVerwaltung.instance().getModel().getLineup().setPullBackOverride(false);
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setPullBackOverride(false);
 				m_jcbPullBackMinute.setEnabled(true);
 				refresh();
 			}
 
 		} else if (event.getStateChange() == ItemEvent.SELECTED) {
 			if (event.getSource().equals(m_jchPullBackOverride)) {
-				HOVerwaltung.instance().getModel().getLineup().setPullBackOverride(true);
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setPullBackOverride(true);
 				m_jcbPullBackMinute.setEnabled(false);
+				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbPullBackMinute)) {
 				// Pull Back minute changed
-				HOVerwaltung
-						.instance()
-						.getModel()
-						.getLineup()
-						.setPullBackMinute(((CBItem) m_jcbPullBackMinute.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setPullBackMinute(((CBItem) m_jcbPullBackMinute.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbTaktik)) {
 				// Tactic changed
-				HOVerwaltung.instance().getModel().getLineup()
-						.setTacticType(((CBItem) m_jcbTaktik.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setTacticType(((CBItem) m_jcbTaktik.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbEinstellung)) {
 				// Attitude changed
-				HOVerwaltung.instance().getModel().getLineup()
-						.setAttitude(((CBItem) m_jcbEinstellung.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setAttitude(((CBItem) m_jcbEinstellung.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbMainStimmung)) {
 				// team spirit changed
-				HOVerwaltung.instance().getModel().getTeam()
-						.setStimmungAsInt(((CBItem) m_jcbMainStimmung.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getTeam().setStimmungAsInt(((CBItem) m_jcbMainStimmung.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbSubStimmung)) {
 				// team spirit (sub) changed
-				HOVerwaltung.instance().getModel().getTeam()
-						.setSubStimmung(((CBItem) m_jcbSubStimmung.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getTeam().setSubStimmung(((CBItem) m_jcbSubStimmung.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbSelbstvertrauen)) {
 				// team confidence changed
-				HOVerwaltung
-						.instance()
-						.getModel()
-						.getTeam()
-						.setSelbstvertrauenAsInt(
-								((CBItem) m_jcbSelbstvertrauen.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getTeam().setSelbstvertrauenAsInt(((CBItem) m_jcbSelbstvertrauen.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbTrainerType)) {
 				// trainer type changed
-				HOVerwaltung.instance().getModel().getTrainer()
-						.setTrainerTyp(((CBItem) m_jcbTrainerType.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getTrainer().setTrainerTyp(((CBItem) m_jcbTrainerType.getSelectedItem()).getId());
 				doSilentRefresh = true; // To save the rating change display.
 				// will set current styleOfPlay value if valid otherwise set to trainer default
-				updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineup().getStyleOfPlay());
+				updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay());
 				addAllStyleofPlayItems();
 				doSilentRefresh = false;
+				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbPredictionType)) {
 				// prediction type changed
-				RatingPredictionConfig.setInstancePredictionType(((CBItem) m_jcbPredictionType
-						.getSelectedItem()).getId());
+				RatingPredictionConfig.setInstancePredictionType(((CBItem) m_jcbPredictionType.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbLocation)) {
 				// location changed
-				HOVerwaltung.instance().getModel().getLineup()
-						.setLocation((short) ((CBItem) m_jcbLocation.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setLocation((short) ((CBItem) m_jcbLocation.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbStyleOfPlay)) {
 				// CoachModifier/StyleOfPlay changed
-				HOVerwaltung.instance().getModel().getLineup()
-						.setStyleOfPlay(((CBItem) m_jcbStyleOfPlay.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(((CBItem) m_jcbStyleOfPlay.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbTacticalAssistants)) {
 				HOVerwaltung.instance().getModel().getVerein().setTacticalAssistantLevels(((CBItem) m_jcbTacticalAssistants.getSelectedItem()).getId());
 				// Number of tactical assistants changed
 					doSilentRefresh = true; // To save the item change display
-					updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineup().getStyleOfPlay()); // Attempt to set the old value, otherwise trainer default.
+					updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay()); // Attempt to set the old value, otherwise trainer default.
 					addAllStyleofPlayItems();
 					doSilentRefresh = false;
 			}
@@ -607,7 +594,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	 * @return the name of the tactic incl. strength
 	 */
 	private String getTaktikString() {
-		final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineup();
+		final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
 		// getTaktik liefert Taktik aus ComboBox, wir wollen Taktik aus
 		// aufstellung!
@@ -1063,7 +1050,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	@Override
 	public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
 		// no silent refresh here
-		updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineup().getStyleOfPlay());
+		updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay());
 	}
 
 	@Override

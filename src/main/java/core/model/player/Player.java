@@ -1884,24 +1884,24 @@ public class Player {
         }
     	final boolean normalized = false;
 
-        float gkValue = fo.getTorwartScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.KEEPER, useForm);
+        float gkValue = fo.getTorwartScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.KEEPER, useForm);
 
-        float pmValue = fo.getSpielaufbauScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.PLAYMAKING, useForm);
+        float pmValue = fo.getSpielaufbauScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.PLAYMAKING, useForm);
 
-        float deValue = fo.getVerteidigungScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.DEFENDING, useForm);
+        float deValue = fo.getVerteidigungScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.DEFENDING, useForm);
 
-        float wiValue = fo.getFluegelspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.WINGER, useForm);
+        float wiValue = fo.getFluegelspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.WINGER, useForm);
 
-        float psValue = fo.getPasspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.PASSING, useForm);
+        float psValue = fo.getPasspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.PASSING, useForm);
 
         // Fix for new Defensive Attacker position
 		if (fo.getPosition()== IMatchRoleID.FORWARD_DEF && getSpezialitaet()==PlayerSpeciality.TECHNICAL) {
 			psValue *= 1.30f;
 		}
 
-        float spValue = fo.getStandardsScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.SET_PIECES, useForm);
+        float spValue = fo.getStandardsScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.SET_PIECES, useForm);
 
-        float scValue = fo.getTorschussScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.SCORING, useForm);
+        float scValue = fo.getTorschussScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.SCORING, useForm);
 
         float val = gkValue + pmValue + deValue + wiValue + psValue + spValue + scValue;
 

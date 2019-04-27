@@ -592,8 +592,22 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	 *            New value of property m_iSpielerId.
 	 */
 	public final void setSpielerId(int spielerId) {
-		setSpielerId(spielerId, HOVerwaltung.instance().getModel().getLineup());
+		setSpielerId(spielerId, HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc());
 	}
+
+	public final void setSpielerIdFollowingSub(int spielerId) {
+		boolean incomingEmpty = (spielerId < 1) && (spielerId > -10) ? true : false;
+
+
+		if (!incomingEmpty && m_iId >= IMatchRoleID.startLineup && m_iId < IMatchRoleID.startReserves) {
+			HOLogger.instance().debug(getClass(),
+					"Blocked from setting player at position: " + m_iSpielerId + " " + m_iId);
+			return;
+		} else {
+			this.m_iSpielerId = spielerId;
+		}
+	}
+
 
 	/**
 	 * Setter for property m_iSpielerId. This setter will fail if the provided

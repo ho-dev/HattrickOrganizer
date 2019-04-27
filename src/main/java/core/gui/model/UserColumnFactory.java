@@ -253,7 +253,7 @@ final public class UserColumnFactory {
 			public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 				return new SpielerLabelEntry(player,
                         HOVerwaltung.instance().getModel()
-                        .getLineup()
+                        .getLineupWithoutRatingRecalc()
                         .getPositionBySpielerId(player.getSpielerID()),
             0f, false, false);
 			}
@@ -770,13 +770,13 @@ final public class UserColumnFactory {
 				@Override
 				public IHOTableEntry getTableEntry(Player player, Player playerCompare){
 					final HOModel model = HOVerwaltung.instance().getModel();
-					if (model.getLineup().isPlayerInLineup(player.getSpielerID())
-                            	&& (model.getLineup().getPositionBySpielerId(player
+					if (model.getLineupWithoutRatingRecalc().isPlayerInLineup(player.getSpielerID())
+                            	&& (model.getLineupWithoutRatingRecalc().getPositionBySpielerId(player
                                   .getSpielerID()) != null)) {
-						return new ColorLabelEntry(ImageUtilities.getImage4Position(model.getLineup()
+						return new ColorLabelEntry(ImageUtilities.getImage4Position(model.getLineupWithoutRatingRecalc()
                        .getPositionBySpielerId(player.getSpielerID()),
                                                player.getTrikotnummer()),
-                                               -model.getLineup()
+                                               -model.getLineupWithoutRatingRecalc()
                                                .getPositionBySpielerId(player
                                             		   .getSpielerID())
                                             		   .getSortId(),

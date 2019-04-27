@@ -32,8 +32,7 @@ import java.util.Vector;
 
 
 /**
- * Die Klasse bündelt alle anderen Model, die zu einer HRF Datei gehören. Die Daten können
- * natürlich auch aus der Datenbank kommen
+ * This class bundles all models that belong to an HRF file - the data can also come from the database
  */
 public class HOModel {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -67,6 +66,12 @@ public class HOModel {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
+
+
+	public void setLineups(int id) {
+		this.setAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
+		this.setLastAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
+	}
 
     /**
      * Alle Player werden übergeben und die noch aktuellen Player entfernt
@@ -120,8 +125,16 @@ public class HOModel {
      * returns the lineup
      */
     public final Lineup getLineup() {
+		m_clAufstellung.setRatings();
         return m_clAufstellung;
     }
+
+	/**
+	 * returns the lineup
+	 */
+	public final Lineup getLineupWithoutRatingRecalc() {
+		return m_clAufstellung;
+	}
 
     /**
      * Setzt neue Basics

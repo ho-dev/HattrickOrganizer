@@ -38,6 +38,12 @@ public class HOVerwaltung {
 	/** Resource */
 	protected ResourceBundle languageBundle;
 
+	public int getId() {
+		return id;
+	}
+
+	private int id;
+
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
 
@@ -101,6 +107,7 @@ public class HOVerwaltung {
 	 */
 	public void loadLatestHoModel() {
 		int id = DBManager.instance().getLatestHrfId();
+		this.id = id;
 		m_clHoModel = loadModel(id);
 	}
 
@@ -170,8 +177,8 @@ public class HOVerwaltung {
 		final HOModel model = new HOModel();
 		model.setSpieler(DBManager.instance().getSpieler(id));
 		model.setAllOldSpieler(DBManager.instance().getAllSpieler());
-		model.setAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
-		model.setLastAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
+//		model.setAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
+//		model.setLastAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
 		model.setBasics(DBManager.instance().getBasics(id));
 		model.setFinanzen(DBManager.instance().getFinanzen(id));
 		model.setLiga(DBManager.instance().getLiga(id));
@@ -185,6 +192,7 @@ public class HOVerwaltung {
 		
 		return model;
 	}
+
 
 	/**
 	 * Returns the String connected to the active language file or connected to

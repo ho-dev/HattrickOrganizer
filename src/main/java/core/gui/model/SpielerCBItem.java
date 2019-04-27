@@ -47,7 +47,7 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 
 		// Kann für Tempspieler < 0 sein && player.getSpielerID () > 0 )
 		if (player != null) {
-			m_clEntry.updateComponent(player, HOVerwaltung.instance().getModel().getLineup()
+			m_clEntry.updateComponent(player, HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
 					.getPositionBySpielerId(player.getSpielerID()), getPositionsBewertung(),
 					m_sText);
 

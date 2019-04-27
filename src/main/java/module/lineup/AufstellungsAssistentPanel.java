@@ -228,9 +228,9 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 
 		if (actionEvent.getSource().equals(m_jbLoeschen)) {
 			// Alle Positionen leeren
-			hoModel.getLineup().resetAufgestellteSpieler();
-			hoModel.getLineup().setKicker(0);
-			hoModel.getLineup().setKapitaen(0);
+			hoModel.getLineupWithoutRatingRecalc().resetAufgestellteSpieler();
+			hoModel.getLineupWithoutRatingRecalc().setKicker(0);
+			hoModel.getLineupWithoutRatingRecalc().setKapitaen(0);
 			HOMainFrame
 					.instance()
 					.getInfoPanel()
@@ -241,7 +241,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 			// gui.RefreshManager.instance ().doRefresh ();
 		} else if (actionEvent.getSource().equals(m_jbClearPostionOrders)) {
 			// event listener for clear positonal orders button
-			hoModel.getLineup().resetPositionOrders();
+			hoModel.getLineupWithoutRatingRecalc().resetPositionOrders();
 			HOMainFrame
 					.instance()
 					.getInfoPanel()
@@ -250,7 +250,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 			mainFrame.getAufstellungsPanel().update();
 
 		} else if (actionEvent.getSource().equals(m_jbReserveLoeschen)) {
-			hoModel.getLineup().resetReserveBank();
+			hoModel.getLineupWithoutRatingRecalc().resetReserveBank();
 			mainFrame.getAufstellungsPanel().update();
 
 			// gui.RefreshManager.instance ().doRefresh ();
@@ -329,7 +329,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 		while (it.hasNext()) {
 			Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry = it.next();
 			if (!entry.getValue().isSelected()) {
-				HOVerwaltung.instance().getModel().getLineup()
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
 						.setSpielerAtPosition(entry.getKey().getPositionsID(), 0);
 			}
 		}
@@ -364,7 +364,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 			}
 		}
 
-		hoModel.getLineup().doAufstellung(vPlayer,
+		hoModel.getLineupWithoutRatingRecalc().doAufstellung(vPlayer,
 				(byte) ((CBItem) m_jcbReihenfolge.getSelectedItem()).getId(),
 				m_jchForm.isSelected(), m_jchIdealPosition.isSelected(),
 				m_jchVerletzte.isSelected(), m_jchGesperrte.isSelected(),

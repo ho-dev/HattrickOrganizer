@@ -19,7 +19,7 @@ pullback             = -0.25
 
 [passing_middle]
 IM_norm    = 0.0947
-IM_def     = 0.0609
+IM_def     = 0.04872
 IM_off     = 0.0938
 
 [passing_allsides]
@@ -33,27 +33,27 @@ FW_def     = 0.108702440947177
 
 [passing_thisside]
 IM_norm    = 0.1894
-IM_def     = 0.1218
+IM_def     = 0.09744
 WI_norm    = 0.1821
 IM_off     = 0.1877
 FW_tw      = 0.156219508979194
 IM_tw      = 0.2356
 WI_def     = 0.1501
 WI_off     = 0.2134
-WI_tm      = 0.1152
+WI_tm      = 0.144
 
 [winger_thisside]
 WB_norm    = 0.444111111111111
-WI_norm    = 0.749222222222222
-FW_tw      = 0.459551875390065
-WB_def     = 0.283666666666667
+WI_norm    = 0.6743
+FW_tw      = 0.505152
+WB_def     = 0.355185
 WB_off     = 0.542
 CD_tw      = 0.221266898016264
 IM_tw      = 0.4288
-WI_def     = 0.634444444444444
+WI_def     = 0.507555555555555
 WB_tm      = 0.242535
-WI_off     = 0.877
-WI_tm      = 0.494444444444444
+WI_off     = 0.7893
+WI_tm      = 0.584082
 
 [scoring_allsides]
 FW_norm    = 0.194298673558187
@@ -64,3 +64,6 @@ FW_tw      = 0.159594947390628
 
 [scoring_thisside]
 FW_tw      = 0.391339890825664
+
+[passing_otherside]
+FW_tw      = 0.047358
