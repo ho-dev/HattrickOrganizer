@@ -114,41 +114,41 @@ public class Lineup{
 					.parseInt(properties.getProperty("rightback", "0")), Byte.parseByte(properties
 					.getProperty("order_rightback", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightCentralDefender, Integer
-					.parseInt(properties.getProperty("rightCentralDefender", "0")), Byte
-					.parseByte(properties.getProperty("order_rightCentralDefender", "0"))));
+					.parseInt(properties.getProperty("rightcentraldefender", "0")), Byte
+					.parseByte(properties.getProperty("order_rightcentraldefender", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftCentralDefender, Integer
-					.parseInt(properties.getProperty("leftCentralDefender", "0")), Byte
-					.parseByte(properties.getProperty("order_leftCentralDefender", "0"))));
+					.parseInt(properties.getProperty("leftcentraldefender", "0")), Byte
+					.parseByte(properties.getProperty("order_leftcentraldefender", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.middleCentralDefender, Integer
-					.parseInt(properties.getProperty("middleCentralDefender", "0")), Byte
-					.parseByte(properties.getProperty("order_middleCentralDefender", "0"))));
+					.parseInt(properties.getProperty("middlecentraldefender", "0")), Byte
+					.parseByte(properties.getProperty("order_middlecentraldefender", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftBack, Integer
 					.parseInt(properties.getProperty("leftback", "0")), Byte.parseByte(properties
-					.getProperty("order_leftBack", "0"))));
+					.getProperty("order_leftback", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightWinger, Integer
 					.parseInt(properties.getProperty("rightwinger", "0")), Byte
-					.parseByte(properties.getProperty("order_rightWinger", "0"))));
+					.parseByte(properties.getProperty("order_rightwinger", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightInnerMidfield, Integer
-					.parseInt(properties.getProperty("rightInnerMidfield", "0")), Byte.parseByte(properties
-					.getProperty("order_rightInnerMidfield", "0"))));
+					.parseInt(properties.getProperty("rightinnermidfield", "0")), Byte.parseByte(properties
+					.getProperty("order_rightinnermidfield", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftInnerMidfield, Integer
-					.parseInt(properties.getProperty("leftInnerMidfield", "0")), Byte.parseByte(properties
-					.getProperty("order_leftInnerMidfield", "0"))));
+					.parseInt(properties.getProperty("leftinnermidfield", "0")), Byte.parseByte(properties
+					.getProperty("order_leftinnermidfield", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.centralInnerMidfield, Integer
-					.parseInt(properties.getProperty("middleInnerMidfield", "0")), Byte.parseByte(properties
-					.getProperty("order_centralInnerMidfield", "0"))));
+					.parseInt(properties.getProperty("middleinnermidfield", "0")), Byte.parseByte(properties
+					.getProperty("order_centralinnermidfield", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftWinger, Integer
 					.parseInt(properties.getProperty("leftwinger", "0")), Byte.parseByte(properties
-					.getProperty("order_leftWinger", "0"))));
+					.getProperty("order_leftwinger", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightForward, Integer
-					.parseInt(properties.getProperty("rightForward", "0")), Byte.parseByte(properties
-					.getProperty("order_rightForward", "0"))));
+					.parseInt(properties.getProperty("rightforward", "0")), Byte.parseByte(properties
+					.getProperty("order_rightforward", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftForward, Integer
-					.parseInt(properties.getProperty("leftForward", "0")), Byte.parseByte(properties
-					.getProperty("order_leftForward", "0"))));
+					.parseInt(properties.getProperty("leftforward", "0")), Byte.parseByte(properties
+					.getProperty("order_leftforward", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.centralForward, Integer
-					.parseInt(properties.getProperty("centralForward", "0")), Byte.parseByte(properties
-					.getProperty("order_centralForward", "0"))));
+					.parseInt(properties.getProperty("centralforward", "0")), Byte.parseByte(properties
+					.getProperty("order_centralforward", "0"))));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substGK1, Integer.parseInt(properties.getProperty("substgk1", "0")), (byte) 0));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substGK2, Integer.parseInt(properties.getProperty("substgk2", "0")), (byte) 0));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substCD1, Integer.parseInt(properties.getProperty("substcd1", "0")), (byte) 0));
@@ -1282,29 +1282,29 @@ public class Lineup{
 					String.valueOf(getPositionById(IMatchRoleID.keeper).getSpielerId()));
 			properties.setProperty("rightback",
 					String.valueOf(getPositionById(IMatchRoleID.rightBack).getSpielerId()));
-			properties.setProperty("rightCentralDefender", String.valueOf(getPositionById(
+			properties.setProperty("rightcentraldefender", String.valueOf(getPositionById(
 					IMatchRoleID.rightCentralDefender).getSpielerId()));
-			properties.setProperty("middleCentralDefender", String.valueOf(getPositionById(
+			properties.setProperty("middlecentraldefender", String.valueOf(getPositionById(
 					IMatchRoleID.middleCentralDefender).getSpielerId()));
-			properties.setProperty("leftCentralDefender", String.valueOf(getPositionById(
+			properties.setProperty("leftcentraldefender", String.valueOf(getPositionById(
 					IMatchRoleID.leftCentralDefender).getSpielerId()));
 			properties.setProperty("leftback",
 					String.valueOf(getPositionById(IMatchRoleID.leftBack).getSpielerId()));
 			properties.setProperty("rightwinger",
 					String.valueOf(getPositionById(IMatchRoleID.rightWinger).getSpielerId()));
-			properties.setProperty("rightInnerMidfield", String.valueOf(getPositionById(
+			properties.setProperty("rightinnermidfield", String.valueOf(getPositionById(
 					IMatchRoleID.rightInnerMidfield).getSpielerId()));
-			properties.setProperty("middleInnerMidfield", String.valueOf(getPositionById(
+			properties.setProperty("middleinnermidfield", String.valueOf(getPositionById(
 					IMatchRoleID.centralInnerMidfield).getSpielerId()));
-			properties.setProperty("leftInnerMidfield", String.valueOf(getPositionById(
+			properties.setProperty("leftinnermidfield", String.valueOf(getPositionById(
 					IMatchRoleID.leftInnerMidfield).getSpielerId()));
 			properties.setProperty("leftwinger",
 					String.valueOf(getPositionById(IMatchRoleID.leftWinger).getSpielerId()));
-			properties.setProperty("rightForward",
+			properties.setProperty("rightforward",
 					String.valueOf(getPositionById(IMatchRoleID.rightForward).getSpielerId()));
-			properties.setProperty("centralForward", String.valueOf(getPositionById(
+			properties.setProperty("centralforward", String.valueOf(getPositionById(
 					IMatchRoleID.centralForward).getSpielerId()));
-			properties.setProperty("leftForward",
+			properties.setProperty("leftforward",
 					String.valueOf(getPositionById(IMatchRoleID.leftForward).getSpielerId()));
 
 			properties.setProperty("substgk1",
@@ -1343,39 +1343,39 @@ public class Lineup{
 					String.valueOf(getPositionById(IMatchRoleID.substXT2).getSpielerId()));
 
 
-			properties.setProperty("order_rightBack",
+			properties.setProperty("order_rightback",
 					String.valueOf(getPositionById(IMatchRoleID.rightBack).getTaktik()));
-			properties.setProperty("order_rightCentralDefender", String.valueOf(getPositionById(
+			properties.setProperty("order_rightcentraldefender", String.valueOf(getPositionById(
 					IMatchRoleID.rightCentralDefender).getTaktik()));
-			properties.setProperty("order_leftCentralDefender", String.valueOf(getPositionById(
+			properties.setProperty("order_leftcentraldefender", String.valueOf(getPositionById(
 					IMatchRoleID.leftCentralDefender).getTaktik()));
-			properties.setProperty("order_middleCentralDefender", String.valueOf(getPositionById(
+			properties.setProperty("order_middlecentraldefender", String.valueOf(getPositionById(
 					IMatchRoleID.middleCentralDefender).getTaktik()));
-			properties.setProperty("order_leftBack",
+			properties.setProperty("order_leftback",
 					String.valueOf(getPositionById(IMatchRoleID.leftBack).getTaktik()));
-			properties.setProperty("order_rightWinger",
+			properties.setProperty("order_rightwinger",
 					String.valueOf(getPositionById(IMatchRoleID.rightWinger).getTaktik()));
-			properties.setProperty("order_rightInnerMidfield", String.valueOf(getPositionById(
+			properties.setProperty("order_rightinnermidfield", String.valueOf(getPositionById(
 					IMatchRoleID.rightInnerMidfield).getTaktik()));
 			properties
-					.setProperty("order_leftInnerMidfield", String.valueOf(getPositionById(
+					.setProperty("order_leftinnermidfield", String.valueOf(getPositionById(
 							IMatchRoleID.leftInnerMidfield).getTaktik()));
-			properties.setProperty("order_centralInnerMidfield", String.valueOf(getPositionById(
+			properties.setProperty("order_centralinnermidfield", String.valueOf(getPositionById(
 					IMatchRoleID.centralInnerMidfield).getTaktik()));
-			properties.setProperty("order_leftWinger",
+			properties.setProperty("order_leftwinger",
 					String.valueOf(getPositionById(IMatchRoleID.leftWinger).getTaktik()));
-			properties.setProperty("order_rightForward",
+			properties.setProperty("order_rightforward",
 					String.valueOf(getPositionById(IMatchRoleID.rightForward).getTaktik()));
-			properties.setProperty("order_leftForward",
+			properties.setProperty("order_leftforward",
 					String.valueOf(getPositionById(IMatchRoleID.leftForward).getTaktik()));
-			properties.setProperty("order_centralForward",
+			properties.setProperty("order_centralforward",
 					String.valueOf(getPositionById(IMatchRoleID.centralForward).getTaktik()));
 
 
 			properties.setProperty("set_pieces_taker", String.valueOf(getKicker()));
 			properties.setProperty("captain", String.valueOf(getKapitaen()));
 			properties.setProperty("tactictype", String.valueOf(getTacticType()));
-			properties.setProperty("attitude", String.valueOf(getAttitude()));
+			properties.setProperty("installning", String.valueOf(getAttitude()));
 			properties.setProperty("styleofplay", String.valueOf(getStyleOfPlay()));
 			for (int i = 0; i < this.substitutions.size(); i++) {
 				Substitution sub = this.substitutions.get(i);
