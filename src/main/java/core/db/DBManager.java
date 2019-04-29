@@ -35,6 +35,7 @@ import core.training.TrainingPerWeek;
 import core.util.HOLogger;
 import module.ifa.IfaMatch;
 import module.lineup.Lineup;
+import module.lineup.LineupPosition;
 import module.lineup.substitution.model.Substitution;
 import module.series.Spielplan;
 import module.teamAnalyzer.vo.PlayerInfo;
@@ -60,7 +61,7 @@ public class DBManager {
 	// Datum der TSI Umstellung. Alle Marktwerte der Player müssen vor dem
 	// Datum durch 1000 geteilt werden (ohne Sprachfaktor)
 	/** database version */
-	private static final int DBVersion = 25;
+	private static final int DBVersion = 26;
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
@@ -260,6 +261,8 @@ public class DBManager {
 		tables.put(IfaMatchTable.TABLENAME, new IfaMatchTable(adapter));
 		tables.put(PenaltyTakersTable.TABLENAME,
 				new PenaltyTakersTable(adapter));
+		tables.put(MatchOrderTable.TABLENAME, new MatchOrderTable(adapter));
+
 
 	}
 
@@ -1150,6 +1153,12 @@ public class DBManager {
 				verein);
 	}
 
+	// ------------------------------- FutureTraining
+	// -------------------------------------------------
+	public int getFuturTraining(int Saison, int Week) {
+		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).getFutureTrainings(Saison, Week);
+	}
+
 	// ------------------------------- XtraDataTable
 	// -------------------------------------------------
 
@@ -1770,6 +1779,23 @@ public class DBManager {
 	 */
 	public void deleteIFAMatches() {
 		((IfaMatchTable) getTable(IfaMatchTable.TABLENAME)).deleteAllMatches();
+	}
+
+
+	public LineupPosition getMatchOrder(int matchId,
+										MatchType matchTyp) {
+		return ((MatchOrderTable) getTable(MatchOrderTable.TABLENAME))
+				.getMatchOrder(matchId, matchTyp);
+	}
+
+	public boolean updateMatchOrder(Lineup linueup, int matchId, MatchType matchTyp) {
+		return ((MatchOrderTable) getTable(MatchOrderTable.TABLENAME))
+				.updateMatchOrder(linueup, matchId, matchTyp);
+	}
+
+	public void removeMatchOrder() {
+		((MatchOrderTable) getTable(MatchOrderTable.TABLENAME))
+				.removeMatchOrder();
 	}
 
 	/**

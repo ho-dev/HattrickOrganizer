@@ -1,5 +1,6 @@
 package core.model.player;
 
+import core.constants.TrainingType;
 import core.datatype.CBItem;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
@@ -423,6 +424,98 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		}
 	}
 
+
+	/**
+	 * Return if position is full train
+	 */
+	public static boolean isFullTrainPosition(byte posId, int train) {
+
+		if (train == TrainingType.SET_PIECES ||
+				train == TrainingType.SHOOTING)
+			return true;
+
+		switch (posId) {
+			case KEEPER:
+				if (train == TrainingType.GOALKEEPING ||
+						train == TrainingType.DEF_POSITIONS)
+					return true;
+				break;
+			case CENTRAL_DEFENDER:
+			case CENTRAL_DEFENDER_TOWING:
+			case CENTRAL_DEFENDER_OFF:
+				if (train == TrainingType.DEFENDING ||
+						train == TrainingType.DEF_POSITIONS ||
+						train == TrainingType.THROUGH_PASSES)
+					return true;
+				break;
+			case BACK:
+			case BACK_TOMID:
+			case BACK_OFF:
+			case BACK_DEF:
+				if (train == TrainingType.DEF_POSITIONS ||
+						train == TrainingType.THROUGH_PASSES ||
+						train == TrainingType.DEFENDING)
+					return true;
+				break;
+			case MIDFIELDER:
+			case MIDFIELDER_OFF:
+			case MIDFIELDER_DEF:
+			case MIDFIELDER_TOWING:
+				if (train == TrainingType.DEF_POSITIONS ||
+						train == TrainingType.PLAYMAKING ||
+						train == TrainingType.THROUGH_PASSES ||
+						train == TrainingType.SHORT_PASSES)
+					return true;
+				break;
+			case WINGER:
+			case WINGER_TOMID:
+			case WINGER_OFF:
+			case WINGER_DEF:
+				if (train == TrainingType.WING_ATTACKS ||
+						train == TrainingType.DEF_POSITIONS ||
+						train == TrainingType.CROSSING_WINGER ||
+						train == TrainingType.THROUGH_PASSES ||
+						train == TrainingType.SHORT_PASSES)
+					return true;
+				break;
+			case FORWARD:
+			case FORWARD_DEF:
+			case FORWARD_TOWING:
+				if (train == TrainingType.SCORING ||
+						train == TrainingType.WING_ATTACKS ||
+						train == TrainingType.SHORT_PASSES)
+					return true;
+				break;
+		}
+		return false;
+	}
+
+	/**
+	 * Return if position is partial train
+	 */
+	public static boolean isPartialTrainPosition(byte posId, int train) {
+
+		if (train == TrainingType.CROSSING_WINGER || train == TrainingType.PLAYMAKING) {
+			switch (posId) {
+				case BACK:
+				case BACK_TOMID:
+				case BACK_OFF:
+				case BACK_DEF:
+					if (train == TrainingType.CROSSING_WINGER)
+						return true;
+					break;
+				case WINGER:
+				case WINGER_TOMID:
+				case WINGER_OFF:
+				case WINGER_DEF:
+					if (train == TrainingType.PLAYMAKING)
+						return true;
+					break;
+			}
+		}
+		return false;
+	}
+
 	public byte getPosition() {
 		return MatchRoleID.getPosition(m_iId, m_bTaktik);
 	}
@@ -588,7 +681,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	 * Setter for property m_iSpielerId. This will fail if the current lineup of
 	 * the HO model would end up with 12 players or more.
 	 *
-	 * @param m_iSpielerId
+	 * @param spielerId
 	 *            New value of property m_iSpielerId.
 	 */
 	public final void setSpielerId(int spielerId) {

@@ -94,6 +94,8 @@ final class DBUpdater {
 					//updateDBv24 is falling through to updateDBv25
                 case 24:
                     updateDBv25(DBVersion, version);
+                case 25:
+					updateDBv26(DBVersion, version);
 				}
 				
 
@@ -626,6 +628,10 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("UPDATE MATCHESKURZINFO SET CUPLEVELINDEX = 0");
 		}
 
+		if (!tableExists(MatchOrderTable.TABLENAME)) {
+			dbZugriff.getTable(MatchOrderTable.TABLENAME).createTable();
+		}
+
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
@@ -638,6 +644,37 @@ final class DBUpdater {
 			HOLogger.instance().info(DBUpdater.class,
 					"Update done, db version number will NOT be increased from " + version
 					+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
+		}
+	}
+
+	private void updateDBv26(int DBVersion, int version) throws SQLException {
+		// 2.0
+		if (!columnExistsInTable("CUPLEVEL", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN CUPLEVEL INTEGER");
+			m_clJDBCAdapter.executeUpdate("UPDATE MATCHESKURZINFO SET CUPLEVEL = 0");
+		}
+
+		if (!columnExistsInTable("CUPLEVELINDEX", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN CUPLEVELINDEX INTEGER");
+			m_clJDBCAdapter.executeUpdate("UPDATE MATCHESKURZINFO SET CUPLEVELINDEX = 0");
+		}
+
+		if (!tableExists(MatchOrderTable.TABLENAME)) {
+			dbZugriff.getTable(MatchOrderTable.TABLENAME).createTable();
+		}
+
+		if (version < DBVersion) {
+			if(!HO.isDevelopment()) {
+				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
+				dbZugriff.saveUserParameter("DBVersion", DBVersion);
+			} else {
+				HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
+				dbZugriff.saveUserParameter("DBVersion", DBVersion - 1);
+			}
+		} else {
+			HOLogger.instance().info(DBUpdater.class,
+					"Update done, db version number will NOT be increased from " + version
+							+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
 

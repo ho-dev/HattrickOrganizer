@@ -127,4 +127,17 @@ public interface HOIconName {
 	
 	public static final String PIC = "pic";
 	public static final String MOTS = "mots";
+
+	public static final String TRAINBAR_FT = "trainpre_ft";
+	public static final String TRAINBAR_PT = "trainpre_pt";
+	public static final String TRAINBAR_FFT = "trainpre_fft";
+	public static final String TRAINBAR_FPT = "trainpre_fpt";
+	public static final String TRAINBAR_FT_FFT = "trainpre_ft_fft";
+	public static final String TRAINBAR_FT_FPT = "trainpre_ft_fpt";
+	public static final String TRAINBAR_PT_FPT = "trainpre_pt_fpt";
+	public static final String TRAINBAR_FT_PT = "trainpre_ft_pt";
+	public static final String TRAINBAR_FT_PT_E = "trainpre_ft_pt_e.png";
+	public static final String TRAINBAR_FT_E = "trainpre_ft_e";
+	public static final String TRAINBAR_PT_E = "trainpre_pt_e";
+	public static final String TRAINBAR_EMPTY = "trainpre_empty";
 }
