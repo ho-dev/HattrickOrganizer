@@ -61,7 +61,7 @@ public class DBManager {
 	// Datum der TSI Umstellung. Alle Marktwerte der Player müssen vor dem
 	// Datum durch 1000 geteilt werden (ohne Sprachfaktor)
 	/** database version */
-	private static final int DBVersion = 26;
+	private static final int DBVersion = 25;
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
