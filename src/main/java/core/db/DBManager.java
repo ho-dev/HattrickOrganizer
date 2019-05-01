@@ -537,7 +537,7 @@ public class DBManager {
 	 */
 	public Vector<float[]> getAlleBewertungen(int spielerid) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
-				.getAlleBewertungen(spielerid);
+				.getAllRatings(spielerid);
 	}
 
 	/**
@@ -560,7 +560,7 @@ public class DBManager {
 	 */
 	public float[] getBewertungen4PlayerUndPosition(int spielerid, byte position) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
-				.getBewertungen4PlayerUndPosition(spielerid, position);
+				.getPlayerRatingForPosition(spielerid, position);
 	}
 
 	public Vector<MatchLineupPlayer> getMatchLineupPlayers(int matchID,
