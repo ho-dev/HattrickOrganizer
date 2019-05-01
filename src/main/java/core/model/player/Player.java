@@ -477,12 +477,11 @@ public class Player {
     }
 
     /**
-     * Calculates String for full age with days and offset
-     * @return String of age & agedays & offset combined,
-     * 			format is "YY.DDD"
+     * Calculates String for full age and days correcting for the difference between (now and last HRF file)
+     * @return String of age & agedays format is "YY (DDD)"
      */
     public String getAlterWithAgeDaysAsString() {
-    	// format = yy.ddd
+    	// format = yy (ddd)
       	long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
     	long now = new Date().getTime();
     	long diff = (now - hrftime) / (1000*60*60*24);
@@ -493,7 +492,8 @@ public class Player {
     		days -= 112;
     		years++;
     	}
-    	String retVal = years + "." + days;
+    	String retVal = years + " (" + days+")";
+
     	return retVal;
     }
     
