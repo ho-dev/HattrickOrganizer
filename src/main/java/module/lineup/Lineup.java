@@ -163,12 +163,22 @@ public class Lineup{
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substFW2, Integer.parseInt(properties.getProperty("substfw2", "0")), (byte) 0));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substXT1, Integer.parseInt(properties.getProperty("substxt1", "0")), (byte) 0));
 			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substXT2, Integer.parseInt(properties.getProperty("substxt2", "0")), (byte) 0));
-			m_iTacticType = Integer.parseInt(properties.getProperty("tactictype", "0"));
-			m_iAttitude = Integer.parseInt(properties.getProperty("installning", "0"));
 
+			if (properties.getProperty("tactictype").equals("null")) // to avoid exception when match is finish
+				m_iTacticType = 0;
+			else
+				m_iTacticType = Integer.parseInt(properties.getProperty("tactictype", "0"));
 
-			
-			m_iStyleOfPlay = Integer.parseInt(properties.getProperty("styleofplay", "0"));
+			if (properties.getProperty("installning").equals("null")) // to avoid exception when match is finish
+				m_iAttitude = 0;
+			else
+				m_iAttitude = Integer.parseInt(properties.getProperty("installning", "0"));
+
+			if (properties.getProperty("styleofplay").equals("null")) // to avoid exception when match is finish
+				m_iStyleOfPlay = 0;
+			else
+				m_iStyleOfPlay = Integer.parseInt(properties.getProperty("styleofplay", "0"));
+
 			// and read the sub contents
 			for (int i = 0; i < 5; i++) {
 
