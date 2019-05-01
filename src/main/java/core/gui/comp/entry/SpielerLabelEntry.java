@@ -11,6 +11,7 @@ import core.gui.theme.ThemeManager;
 import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.training.TrainingPreviewPlayers;
 import core.util.Helper;
 
 import java.awt.Color;
@@ -45,6 +46,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private final JLabel m_jlSkill			= new JLabel();
     private final JLabel m_jlSpezialitaet	= new JLabel();
     private final JLabel m_jlWeatherEffect	= new JLabel();
+    private final JLabel m_jlTrainUp      	= new JLabel();
     private MatchRoleID m_clCurrentPlayerPosition;
     private boolean m_bShowTrikot;
     private boolean m_bShowWeatherEffect = true;
@@ -93,6 +95,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
      */
 	public final JComponent getComponent(boolean isSelected) {
     	 m_clComponent.setBackground(isSelected?HODefaultTableCellRenderer.SELECTION_BG:ColorLabelEntry.BG_STANDARD);
+         m_clComponent.setToolTipText(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getText());
     	 m_jlName.setForeground(isSelected?HODefaultTableCellRenderer.SELECTION_FG:getForegroundForSpieler(m_clPlayer));
     	 return m_clComponent;
     }
@@ -140,6 +143,9 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         constraints.weightx = 1.0;
         constraints.gridx = 1;
         constraints.insets = new Insets(0, 0, 0, 0);
+
+        m_clComponent.add(m_jlTrainUp);
+
         m_jlName.setIconTextGap(1);
         layout.setConstraints(m_jlName, constraints);
         m_clComponent.add(m_jlName);
@@ -290,6 +296,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         m_jlName.setIcon(null);
         m_jlWeatherEffect.setIcon(null);
         m_jlSpezialitaet.setIcon(null);
+        m_jlTrainUp.setIcon(null);
         m_jlSkill.setText("");
     }
     
@@ -314,6 +321,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             m_jlSkill.setText("");
         }
     	
+        m_jlTrainUp.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getIcon());
     }
 
 	//--------------static------------------------------

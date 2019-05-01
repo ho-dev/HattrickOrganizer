@@ -16,15 +16,10 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionManager;
+import core.training.TrainingPreviewPlayers;
 import core.util.Helper;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.LayoutManager;
+import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
@@ -570,6 +565,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
      */
     private void initLabel() {
     	final Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        final int nextWeekTrain = TrainingPreviewPlayers.instance().getNextWeekTraining();
 
         if (m_iPositionID == IMatchRoleID.setPieces) {
             m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("match.setpiecestaker"));
@@ -584,6 +580,16 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                 // Players on the lineup
                 if (IMatchRoleID.aFieldMatchRoleID.contains(position.getId())) {
                     m_jlPosition.setText(nameForPosition);
+
+                    if (MatchRoleID.isFullTrainPosition(position.getPosition(), nextWeekTrain)) {
+                        this.setBackground(Color.BLUE);
+                    }
+                    else if (MatchRoleID.isPartialTrainPosition(position.getPosition(), nextWeekTrain)) {
+                        this.setBackground(Color.CYAN);
+                    }
+                    else {
+                        this.setBackground(Color.WHITE);
+                    }
                 }
                 // Subs
                 else if (IMatchRoleID.aSubstitutesMatchRoleID.contains(position.getId())){

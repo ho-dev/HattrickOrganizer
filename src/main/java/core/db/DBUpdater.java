@@ -626,6 +626,10 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("UPDATE MATCHESKURZINFO SET CUPLEVELINDEX = 0");
 		}
 
+		if (!tableExists(MatchOrderTable.TABLENAME)) {
+			dbZugriff.getTable(MatchOrderTable.TABLENAME).createTable();
+		}
+
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);

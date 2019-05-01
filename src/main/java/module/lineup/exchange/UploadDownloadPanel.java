@@ -3,6 +3,7 @@ package module.lineup.exchange;
 import core.db.DBManager;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
+import core.gui.RefreshManager;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.renderer.DateTimeTableCellRenderer;
 import core.gui.theme.HOIconName;
@@ -304,6 +305,9 @@ public class UploadDownloadPanel extends LazyPanel {
 				((MatchesTableModel) this.matchesTable.getModel()).fireTableDataChanged();
 				selectMatch(match);
 			}
+
+			if (DBManager.instance().updateMatchOrder(lineup, match.getMatchID(), match.getMatchTyp()))
+				RefreshManager.instance().doRefresh();
 		} finally {
 			CursorToolkit.stopWaitCursor(this);
 		}

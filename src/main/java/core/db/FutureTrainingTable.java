@@ -108,6 +108,24 @@ public final class FutureTrainingTable extends AbstractTable {
 		return futures;
 	}
 	
+	int getFutureTrainings(int saison, int week) {
+		String query = "select TYPE from "+getTableName()+" where SEASON="+saison+" and WEEK="+week;
+		ResultSet rs = adapter.executeQuery(query);
+
+		try {
+			if (rs != null) {
+				rs.beforeFirst();
+
+				if (rs.next()) {
+					return (rs.getInt("TYPE"));
+				}
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
+		}
+		return -1;
+	}
+
 	void saveFutureTraining(TrainingPerWeek training) {
 		if (training != null) {
 			String statement =

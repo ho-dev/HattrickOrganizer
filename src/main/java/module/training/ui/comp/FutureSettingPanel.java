@@ -4,6 +4,7 @@ package module.training.ui.comp;
 import core.constants.TrainingType;
 import core.datatype.CBItem;
 import core.db.DBManager;
+import core.gui.RefreshManager;
 import core.model.HOVerwaltung;
 import core.training.TrainingPerWeek;
 import module.training.ui.model.FutureTrainingsTableModel;
@@ -60,6 +61,7 @@ public class FutureSettingPanel extends JPanel {
 
         this.model.saveFutureTrainings(futureTrainingsToSave);
         futureModel.populate(this.model.getFutureTrainings());
+        RefreshManager.instance().doRefresh();
     }
 
     /**
