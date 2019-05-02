@@ -52,6 +52,10 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	private static final long serialVersionUID = -2077901764599789950L;
 
 	private AufstellungsRatingPanel m_jpRating = new AufstellungsRatingPanel();
+	
+	final String offensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.offensive");
+	final String defensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.defensive");
+	final String neutral_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.neutral");
 
 	private ColorLabelEntry m_jpAktuellesSystem = new ColorLabelEntry("",
 			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
@@ -148,23 +152,23 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			.getLanguageString("PullBack.Override"), false);
 	
 	private CBItem[] STYLE_OF_PLAY = {
-			new CBItem("100% Defensive", -10),
-			new CBItem("80% Defensive", -8),
-			new CBItem("60% Defensive", -6),
-			new CBItem("50% Defensive", -5),
-			new CBItem("40% Defensive", -4),
-			new CBItem("30% Defensive", -3),
-			new CBItem("20% Defensive", -2),
-			new CBItem("10% Defensive", -1),
-			new CBItem("Neutral", 0),
-			new CBItem("10% Offensive", 1),
-			new CBItem("20% Offensive", 2),
-			new CBItem("30% Offensive", 3),
-			new CBItem("40% Offensive", 4),
-			new CBItem("50% Offensive", 5),
-			new CBItem("60% Offensive", 6),
-			new CBItem("80% Offensive", 8),
-			new CBItem("100% Offensive", 10)
+			new CBItem("100% " + defensive_sop, -10),
+			new CBItem("80% " + defensive_sop, -8),
+			new CBItem("60% " + defensive_sop, -6),
+			new CBItem("50% " + defensive_sop, -5),
+			new CBItem("40% " + defensive_sop, -4),
+			new CBItem("30% " + defensive_sop, -3),
+			new CBItem("20% " + defensive_sop, -2),
+			new CBItem("10% " + defensive_sop, -1),
+			new CBItem(neutral_sop, 0),
+			new CBItem("10% " + offensive_sop, 1),
+			new CBItem("20% " + offensive_sop, 2),
+			new CBItem("30% " + offensive_sop, 3),
+			new CBItem("40% " + offensive_sop, 4),
+			new CBItem("50% " + offensive_sop, 5),
+			new CBItem("60% " + offensive_sop, 6),
+			new CBItem("80% " + offensive_sop, 8),
+			new CBItem("100% " + offensive_sop, 10)
 	};
 	
 	private JComboBox  m_jcbStyleOfPlay = new JComboBox(STYLE_OF_PLAY);
@@ -931,10 +935,6 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	{
 		// remove all combo box items and add new ones.
 		
-		String offensive = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.offensive");
-		String defensive = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.defensive");
-		String neutral = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.neutral");
-		
 		List<Integer> legalValues = getValidStyleOfPlayValues();
 		
 		m_jcbStyleOfPlay.removeAllItems();
@@ -944,11 +944,11 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			CBItem cbItem;
 			
 			if (value == 0) {
-				cbItem = new CBItem(neutral, value);
+				cbItem = new CBItem(neutral_sop, value);
 			} else if (value > 0) {
-				cbItem = new CBItem((value * 10) + "% " + offensive, value);
+				cbItem = new CBItem((value * 10) + "% " + offensive_sop, value);
 			} else {
-				cbItem = new CBItem((Math.abs(value) * 10) + "% " + defensive, value);
+				cbItem = new CBItem((Math.abs(value) * 10) + "% " + defensive_sop, value);
 			}
 			m_jcbStyleOfPlay.addItem(cbItem);
 			
