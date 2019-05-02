@@ -9,6 +9,10 @@ import module.lineup.Lineup;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleID>,
 		IMatchRoleID {
@@ -850,5 +854,49 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		else if (IMatchRoleID.oldSubstWinger.contains(roleID))return IMatchRoleID.substWI1;
 		else if (IMatchRoleID.oldSubstForward.contains(roleID))	return IMatchRoleID.substFW1;
 		else return roleID;
+	}
+
+	public static Properties convertOldRoleToNew(Properties oldLineupProperties) {
+		Properties result = new Properties();
+		String sKey;
+
+		// mapping conversion OldRole -> New Rolw
+		HashMap<String, String> mappingTable = new HashMap<>();
+		mappingTable.put("behrightback","order_rightback");
+		mappingTable.put("behleftback","order_leftback");
+		mappingTable.put("insideback1","rightcentraldefender");
+		mappingTable.put("behinsideback1","order_rightcentraldefender");
+		mappingTable.put("insideback2","leftcentraldefender");
+		mappingTable.put("behinsideback2","order_leftcentraldefender");
+		mappingTable.put("insideback3","middlecentraldefender");
+		mappingTable.put("behinsideback3","order_middlecentraldefender");
+		mappingTable.put("behrightwinger","order_rightwinger");
+		mappingTable.put("behleftwinger","order_leftwinger");
+		mappingTable.put("insidemid1","rightinnermidfield");
+		mappingTable.put("behinsidemid1","order_rightinnermidfield");
+		mappingTable.put("insidemid2","leftinnermidfield");
+		mappingTable.put("behinsidemid2","order_leftinnermidfield");
+		mappingTable.put("insidemid3","middleinnermidfield");
+		mappingTable.put("behinsidemid3","order_centralinnermidfield");
+		mappingTable.put("forward1","rightforward");
+		mappingTable.put("behforward1","order_rightforward");
+		mappingTable.put("forward2","leftforward");
+		mappingTable.put("behforward2","order_leftforward");
+		mappingTable.put("forward3","centralforward");
+		mappingTable.put("behforward3","order_centralforward");
+		mappingTable.put("substback","substcd1");
+		mappingTable.put("substinsidemid","substim1");
+		mappingTable.put("substwinger","substwi1");
+		mappingTable.put("substkeeper","substgk1");
+		mappingTable.put("substforward","substfw1");
+
+
+		for (Map.Entry<Object, Object> entry : oldLineupProperties.entrySet()) {
+			sKey = entry.getKey().toString();
+			result.setProperty(mappingTable.getOrDefault(sKey, sKey), entry.getValue().toString());
+			}
+
+		return result;
+
 	}
 }

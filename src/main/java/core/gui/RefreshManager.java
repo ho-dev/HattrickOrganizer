@@ -49,7 +49,7 @@ public class RefreshManager {
                 }
                 //plugin
                 else {
-                    ((IRefreshable) m_clRefreshable.get(i)).refresh();
+                    (m_clRefreshable.get(i)).refresh();
                 }
             } catch (Exception e) {
                 HOLogger.instance().log(getClass(),"Gefangener Fehler beim doReInit:");

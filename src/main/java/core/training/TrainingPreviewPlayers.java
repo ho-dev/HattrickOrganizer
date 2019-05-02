@@ -191,7 +191,7 @@ public class TrainingPreviewPlayers implements Refreshable {
 
                 int nextWeekTrain = getNextWeekTraining();
 
-                if (nextWeekTrain > -1) {
+                if ((nextWeekTrain > -1) && (previousTrainingDate != null)){
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(previousTrainingDate);
                     weekTrainTyp = WeeklyTrainingType.instance(nextWeekTrain);

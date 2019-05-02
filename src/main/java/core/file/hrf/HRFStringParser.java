@@ -8,6 +8,7 @@ import core.model.XtraData;
 import core.model.misc.Basics;
 import core.model.misc.Finanzen;
 import core.model.misc.Verein;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.model.series.Liga;
 import core.util.HOLogger;
@@ -117,8 +118,10 @@ public class HRFStringParser {
 				propertiesList.add(properties);
 			}
 
+
 			// Close the reader
 			IOUtils.closeQuietly(hrfReader);
+
 
 			// Create HOModel
 			modelReturn = createHOModel(propertiesList, hrfdate);
@@ -178,7 +181,7 @@ public class HRFStringParser {
 				}
 				// lineup
 				else if (entity.toString().equalsIgnoreCase(LINEUP)) {
-					hoModel.setAufstellung(new Lineup(properties));
+					hoModel.setAufstellung(new Lineup(MatchRoleID.convertOldRoleToNew(properties)));
 				}
 				// economy
 				else if (entity.toString().equalsIgnoreCase(ECONOMY)) {
