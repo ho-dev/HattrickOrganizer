@@ -1,6 +1,7 @@
 package module.lineup.substitution;
 
 import core.constants.UIConstants;
+import core.gui.HOMainFrame;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
@@ -286,6 +287,8 @@ public class SubstitutionOverview extends JPanel {
 			updateOrderIDs();
 			refresh();
 			selectSubstitution(sub);
+			HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setLabels();
+
 		}
 	}
 

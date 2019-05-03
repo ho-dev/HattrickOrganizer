@@ -2,12 +2,14 @@ package core.db;
 
 import core.model.match.MatchLineupPlayer;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.Vector;
 
+import static core.model.player.IMatchRoleID.aFieldMSubsAndBackupMatchRoleID;
 
 
 public final class MatchLineupPlayerTable extends AbstractTable {
@@ -49,26 +51,24 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	}
 	
 	/**
-	 * Gibt eine Liste an Ratings zurück, auf denen der Player gespielt hat: 0 = Max 1 = Min 2 =
-	 * Durchschnitt 3 = posid
+	 Returns a list of ratings the player has played on: 0: Max,  1: Min,  2: Average,  3: posid
 	 */
-	Vector<float[]> getAlleBewertungen(int spielerid) {
-		final Vector<float[]> bewertung = new Vector<float[]>();
+	Vector<float[]> getAllRatings(int playerID) {
+		final Vector<float[]> ratings = new Vector<>();
 
-		//Alle Möglichen Kombos durchlaufen
-		for (byte i = 0; i < IMatchRoleID.substFW1; i++) { // Blaghaid changed the high end
-			final float[] temp = getBewertungen4PlayerUndPosition(spielerid, i);
+		//Iterate over possible combinations
+		for (int i: aFieldMSubsAndBackupMatchRoleID) {
+			final float[] temp = getPlayerRatingForPosition(playerID, i);
 
-			//Min ein Wert für die Pos gefunden -> Max > 0
+			//Min found a value for the pos -> max> 0
 			if (temp[0] > 0) {
-				//Erste Wert statt aktuellen wert mit der Posid füllen
+				// Fill in the first value instead of the current value with the posid
 				temp[3] = i;
-
-				bewertung.add(temp);
+				ratings.add(temp);
 			}
 		}
 
-		return bewertung;
+		return ratings;
 	}
 	
 	/**
@@ -121,13 +121,11 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	}
 	
 	/**
-	 * Gibt die beste, schlechteste und durchschnittliche Bewertung für den Player, sowie die
-	 * Anzahl der Bewertungen zurück // Match
-	 *
-	 * @param spielerid Spielerid
+	 * Returns the best, worst, and average rating for the player, as well as the number of ratings // match
+	 *  @param spielerid Spielerid
 	 * @param position Usere positionscodierung mit taktik
 	 */
-	float[] getBewertungen4PlayerUndPosition(int spielerid, byte position) {
+	float[] getPlayerRatingForPosition(int spielerid, int position) {
 		//Max, Min, Durchschnitt
 		final float[] bewertungen = { 0f, 0f, 0f, 0f };
 
@@ -166,7 +164,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 
 			//HOLogger.instance().log(getClass(),"Ratings Pos : " + i + " - " + bewertungen[0] + " / " + bewertungen[1] + " / " + bewertungen[2] + " / / " + bewertungen[3]);
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getBewertungen4PlayerUndPosition : " + e);
+			HOLogger.instance().log(getClass(),"DatenbankZugriff.getPlayerRatingForPosition : " + e);
 		}
 
 		return bewertungen;
@@ -197,55 +195,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		delete(where, werte);			
 	}
 	
-	/**
-	 * Updates a match lineup based on the given inputs
-	 *
-	 * @author blaghaid
-	 */
-	void updateMatchLineupPlayer(MatchLineupPlayer player, int matchID, int teamID) {
-		// As some weirdness may be present in the db (like old role IDs), we do a delete and
-		// insert rather than an update. It is not desired to end up with the same player in both
-		// and old style and new style position.
-		
-		if (player != null) {
 
-			// First, delete the player(s) present on the player's position. Hopefully the player given.
-			
-			final String[] where = { "MatchID" , "TeamID", "RoleID"};
-			final String[] werte = { "" + matchID, "" + teamID, "" + player.getId()};			
-			delete(where, werte);	
-
-			// Second, check if the player is still around in the lineup.
-			
-			try {
-				String sql = null;
-				int roleId;
-
-				sql = "SELECT * FROM "+getTableName()+" WHERE MatchID = " + matchID + " AND TeamID = " + teamID + " AND SpielerID = " + player.getSpielerId();
-				ResultSet rs = adapter.executeQuery(sql);
-				
-				rs.beforeFirst();
-				
-				while (rs.next()) {
-					
-					roleId = rs.getInt("RoleID"); 
-					
-					if ((roleId >= 0) && (roleId < IMatchRoleID.setPieces)) {
-						// We got an old roleId
-						deleteMatchLineupPlayer(new MatchLineupPlayer(roleId, 0, player.getSpielerId(), 0, "", 0), matchID, teamID);
-					}
-				}
-				
-				// And we store the given player after doing our deletes
-				storeMatchLineupPlayer(player, matchID, teamID);
-				
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),"DB.updateMatchLineupPlayer Retrieval Error" + e);
-				HOLogger.instance().log(getClass(),e);
-			}
-		}
-	}	
-	
 	@SuppressWarnings("deprecation")
 	void storeMatchLineupPlayer(MatchLineupPlayer player, int matchID, int teamID) {
 		if (player != null) {
@@ -352,7 +302,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 						behavior = IMatchRoleID.NORMAL;
 				}
 
-				roleID = convertOldRoleToNew(roleID);
+				roleID = MatchRoleID.convertOldRoleToNew(roleID);
 				
 				// Position code and field position was removed from constructor below.
 				player = new MatchLineupPlayer(roleID, behavior, spielerID, rating, vname, nickName, name, rs.getInt("STATUS"), ratingStarsEndOfMatch, startPos, startBeh);
@@ -364,28 +314,6 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 
 		return vec;
 	}
-		
-		// Helpers
-		
-		 public int convertOldRoleToNew(int roleID) {
-				if(IMatchRoleID.oldKeeper.contains(roleID)) return IMatchRoleID.keeper;
-				else if (IMatchRoleID.oldRightBack.contains(roleID)) return IMatchRoleID.rightBack;
-				else if (IMatchRoleID.oldLeftCentralDefender.contains(roleID))return IMatchRoleID.leftCentralDefender;
-		    		else if (IMatchRoleID.oldRightCentralDefender.contains(roleID))	return IMatchRoleID.rightCentralDefender;
-		    		else if (IMatchRoleID.oldLeftBack.contains(roleID))	return IMatchRoleID.leftBack;
-		    		else if (IMatchRoleID.oldRightWinger.contains(roleID)) return IMatchRoleID.rightWinger;
-		    		else if (IMatchRoleID.oldRightInnerMidfielder.contains(roleID))	return IMatchRoleID.rightInnerMidfield;
-		    		else if (IMatchRoleID.oldLeftInnerMidfielder.contains(roleID))return IMatchRoleID.leftInnerMidfield;
-		    		else if (IMatchRoleID.oldLeftWinger.contains(roleID))return IMatchRoleID.leftWinger;
-		    		else if (IMatchRoleID.oldRightForward.contains(roleID))return IMatchRoleID.rightForward;
-		    		else if (IMatchRoleID.oldLeftForward.contains(roleID))return IMatchRoleID.leftForward;
-		    		else if (IMatchRoleID.oldSubstKeeper.contains(roleID))return IMatchRoleID.substGK1;
-		    		else if (IMatchRoleID.oldSubstDefender.contains(roleID))return IMatchRoleID.substCD1;
-		    		else if (IMatchRoleID.oldSubstMidfielder.contains(roleID))return IMatchRoleID.substIM1;
-		    		else if (IMatchRoleID.oldSubstWinger.contains(roleID))return IMatchRoleID.substWI1;
-		    		else if (IMatchRoleID.oldSubstForward.contains(roleID))	return IMatchRoleID.substFW1;
-		    		else return roleID;
-		    	}
 
 
 }

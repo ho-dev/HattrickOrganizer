@@ -216,7 +216,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		} else if (actionEvent.getSource().equals(m_jbMidiFrame)) {
 			new AufstellungsMiniPositionsFrame(m_clLineupPanel, false, false);
 		} else if (actionEvent.getSource().equals(m_jbFlipSide)) {
-			HOVerwaltung.instance().getModel().getLineup().flipSide();
+			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().flipSide();
 			HOMainFrame.instance().getAufstellungsPanel().update();
 		} else {
 			final AufstellungsMiniPositionsFrame frame = new AufstellungsMiniPositionsFrame(
@@ -251,7 +251,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		List<Player> selectedPlayers = new ArrayList<Player>();
 		List<Player> allPlayers = HOVerwaltung.instance().getModel().getAllSpieler();
 		List<Player> filteredPlayers = new ArrayList<Player>();
-		Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
+		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
 		for (Player player: allPlayers) {
 			// the first 11

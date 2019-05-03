@@ -196,6 +196,20 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		
 		put(PIC, "gui/bilder/pic.png");
 		put(MOTS, "gui/bilder/mots.png");
+
+		// Train bar
+		put(TRAINBAR_FT, "gui/bilder/trainpreview/trainpre_ft.png");
+		put(TRAINBAR_PT, "gui/bilder/trainpreview/trainpre_pt.png");
+		put(TRAINBAR_FFT, "gui/bilder/trainpreview/trainpre_fft.png");
+		put(TRAINBAR_FPT, "gui/bilder/trainpreview/trainpre_fpt.png");
+		put(TRAINBAR_FT_FFT, "gui/bilder/trainpreview/trainpre_ft_fft.png");
+		put(TRAINBAR_FT_FPT, "gui/bilder/trainpreview/trainpre_ft_fpt.png");
+		put(TRAINBAR_PT_FPT, "gui/bilder/trainpreview/trainpre_pt_fpt.png");
+		put(TRAINBAR_FT_PT, "gui/bilder/trainpreview/trainpre_ft_pt.png");
+		put(TRAINBAR_FT_PT_E, "gui/bilder/trainpreview/trainpre_ft_pt_e.png");
+		put(TRAINBAR_FT_E, "gui/bilder/trainpreview/trainpre_ft_e.png");
+		put(TRAINBAR_PT_E, "gui/bilder/trainpreview/trainpre_pt_e.png");
+		put(TRAINBAR_EMPTY, "gui/bilder/trainpreview/trainpre_empty.png");
 	}
 
 	private void initBooleans() {

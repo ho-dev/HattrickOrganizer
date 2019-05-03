@@ -4,6 +4,7 @@ import core.gui.HOMainFrame;
 import core.gui.Updateable;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
+import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.Player;
 import module.playerOverview.PlayerTable;
@@ -130,6 +131,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	 * Setzt die Player und Taktiken der einzelnen PositionsPanels neu
 	 */
 	public final void update() {
+		HOVerwaltung.instance().getModel().getLineup();
 		aufstellungsPositionsPanel.refresh();
 		aufstellungsDetailPanel.refresh();
 		aufstellungSpielerTable.refresh();

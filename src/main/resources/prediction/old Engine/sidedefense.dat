@@ -21,10 +21,10 @@ IM_norm    = 0.1893
 WB_norm    = 0.9213
 IM_def     = 0.2711
 WI_norm    = 0.3499
-IM_off     = 0.1025
+IM_off     = 0.076875
 WB_def     = 1.0024
 WB_off     = 0.6994
-CD_tw      = 0.715857079379445
+CD_tw      = 0.758808504142212
 IM_tw      = 0.2491
 WI_def     = 0.487789473684211
 WB_tm      = 0.6889
@@ -40,7 +40,7 @@ keeper     = 0.599619047619048
 IM_norm    = 0.0946
 IM_def     = 0.1355
 CD_norm    = 0.25866266121096
-IM_off     = 0.0512
+IM_off     = 0.0384
 CD_off     = 0.189361371523282
 
 [defending_allsides]

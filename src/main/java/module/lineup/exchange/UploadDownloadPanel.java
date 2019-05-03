@@ -3,11 +3,13 @@ package module.lineup.exchange;
 import core.db.DBManager;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
+import core.gui.RefreshManager;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.renderer.DateTimeTableCellRenderer;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.Ratings;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
@@ -202,15 +204,16 @@ public class UploadDownloadPanel extends LazyPanel {
 		Lineup currLineup =  HOVerwaltung.instance().getModel().getLineup();
 		download(false);
 
-		double LD = HOVerwaltung.instance().getModel().getLineup().getLeftDefenseRating();
-		double CD = HOVerwaltung.instance().getModel().getLineup().getCentralDefenseRating();
-		double RD = HOVerwaltung.instance().getModel().getLineup().getRightDefenseRating();
-		double MF = HOVerwaltung.instance().getModel().getLineup().getMidfieldRating();
-		double LA = HOVerwaltung.instance().getModel().getLineup().getLeftAttackRating();
-		double CA = HOVerwaltung.instance().getModel().getLineup().getCentralAttackRating();
-		double RA = HOVerwaltung.instance().getModel().getLineup().getRightAttackRating();
-		int tacticType = HOVerwaltung.instance().getModel().getLineup().getTacticType();
-		int tacticSkill = HTmatchRating.float2HTint(HOVerwaltung.instance().getModel().getLineup().getTacticLevel(tacticType));
+		Ratings oRatings = HOVerwaltung.instance().getModel().getLineup().getRatings();
+		double LD = oRatings.getLeftDefense().get(0);
+		double CD = oRatings.getCentralDefense().get(0);
+		double RD = oRatings.getRightDefense().get(0);
+		double MF = oRatings.getMidfield().get(0);
+		double LA = oRatings.getLeftAttack().get(0);
+		double CA = oRatings.getCentralAttack().get(0);
+		double RA = oRatings.getRightAttack().get(0);
+		int tacticType = 0; //FIXME ?? HOVerwaltung.instance().getModel().getLineup().getTacticType();
+		int tacticSkill =0; //FIXME ?? HTmatchRating.float2HTint(HOVerwaltung.instance().getModel().getLineup().getTacticLevel(tacticType));
 
 		MatchRating HOmatchRating = new MatchRating(LD, CD, RD, MF, LA, CA, RA, tacticType, tacticSkill);
 
@@ -302,6 +305,9 @@ public class UploadDownloadPanel extends LazyPanel {
 				((MatchesTableModel) this.matchesTable.getModel()).fireTableDataChanged();
 				selectMatch(match);
 			}
+
+			if (DBManager.instance().updateMatchOrder(lineup, match.getMatchID(), match.getMatchTyp()))
+				RefreshManager.instance().doRefresh();
 		} finally {
 			CursorToolkit.stopWaitCursor(this);
 		}

@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
@@ -68,8 +69,16 @@ public class XMLMatchOrderParser {
 		if (tmp != null) {
 			roleID = Integer.parseInt(XMLManager.getFirstChildNodeValue(tmp));
 		}
+		else if (ele.getTagName().equalsIgnoreCase("SetPieces"))
+		{
+			roleID = IMatchRoleID.setPieces;
+		}
+		else if (ele.getTagName().equalsIgnoreCase("Captain"))
+		{
+			roleID = IMatchRoleID.captain;
+		}
 
-		tmp = (Element) ele.getElementsByTagName("PlayerName").item(0);
+		tmp = (Element) ele.getElementsByTagName("LastName").item(0);
 		name = XMLManager.getFirstChildNodeValue(tmp);
 
 		// individual orders only for the 10 players in the lineup (i.e. starting11 excluding keeper)
@@ -455,16 +464,36 @@ public class XMLMatchOrderParser {
 			hash.put("TacticType", (XMLManager.getFirstChildNodeValue(ele)));
 			
 			// Root wechseln
-			Element child = (Element) root.getElementsByTagName("Lineup").item(0);
+//			Node Lineup = doc.getElementsByTagName("Lineup").item(0);
 
-			list = child.getElementsByTagName("Player");
-
+			// Treatment of Players in starting Lineup
+			Element Positions = (Element) doc.getElementsByTagName("Positions").item(0);
+			list = Positions.getElementsByTagName("Player");
 			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
 				addPlayer((Element) list.item(i), hash);
 			}
-			fillEmptySpotsWithAdditionalPlayers(hash);
 
-			child = (Element) root.getElementsByTagName("PlayerOrders").item(0);
+			// Treatment of Players on the bench
+			Element Bench = (Element) doc.getElementsByTagName("Bench").item(0);
+			list = Bench.getElementsByTagName("Player");
+			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+				addPlayer((Element) list.item(i), hash);
+			}
+
+			// Treatment of Penalty Takers
+			Element Kickers = (Element) doc.getElementsByTagName("Kickers").item(0);
+			list = Kickers.getElementsByTagName("Player");
+			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+				addPlayer((Element) list.item(i), hash);
+			}
+
+			// Treatment of SP taker and Captain
+			addPlayer((Element) doc.getElementsByTagName("SetPieces").item(0), hash);
+			addPlayer((Element) doc.getElementsByTagName("Captain").item(0), hash);
+
+
+			// Treatment of Players Orders
+			Element child = (Element) root.getElementsByTagName("PlayerOrders").item(0);
 
 			list = child.getElementsByTagName("PlayerOrder");
 			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
@@ -480,66 +509,5 @@ public class XMLMatchOrderParser {
 		return hash;
 	}
 
-	private static void fillEmptySpotsWithAdditionalPlayers(Map<String, String> map) {
-		// Does this have any role? I guess noone will miss it if deleted after
-		// 553 change
 
-		try {
-			int a = 1;
-			String add = map.get("Additional" + a + "ID");
-			if (add == null) {
-				return;
-			} else {
-				String pos = getNextFreeSlot(map);
-				if (pos != null) {
-					map.put(pos + "ID", add);
-					map.put(pos + "Name", map.get("Additional" + a + "Name"));
-				}
-			}
-			a = 2;
-			add = map.get("Additional" + a + "ID");
-			if (add == null) {
-				return;
-			} else {
-				String pos = getNextFreeSlot(map);
-				if (pos != null) {
-					map.put(pos + "ID", add);
-					map.put(pos + "Name", map.get("Additional" + a + "Name"));
-				}
-			}
-			a = 3;
-			add = map.get("Additional" + a + "ID");
-			if (add == null) {
-				return;
-			} else {
-				String pos = getNextFreeSlot(map);
-				if (pos != null) {
-					map.put(pos + "ID", add);
-					map.put(pos + "Name", map.get("Additional" + a + "Name"));
-				}
-			}
-			a = 4;
-			add = map.get("Additional" + a + "ID");
-			if (add == null) {
-				return;
-			} else {
-				String pos = getNextFreeSlot(map);
-				if (pos != null) {
-					map.put(pos + "ID", add);
-					map.put(pos + "Name", map.get("Additional" + a + "Name"));
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().debug(XMLMatchOrderParser.class, e);
-		}
-	}
-
-	private static String getNextFreeSlot(Map<String, String> map) {
-		for (String pos : PLAYERPOSITIONS) {
-			if (!map.containsKey(pos + "ID")) {
-				return pos;
-			}
-		}
-		return null;
-	}
 }

@@ -142,6 +142,22 @@ public enum MatchType {
 		}
 	}
 
+	public boolean isTraining() {
+		switch (this) {
+			case LEAGUE :
+			case QUALIFICATION :
+			case CUP :
+			case FRIENDLYNORMAL :
+			case FRIENDLYCUPRULES :
+			case INTFRIENDLYNORMAL :
+			case INTFRIENDLYCUPRULES : {
+				return true;
+			}
+			default:
+				return false;
+		}
+	}
+
 	public boolean isTournament() {
 		switch (this) {
 			case LADDER:

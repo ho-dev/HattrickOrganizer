@@ -11,6 +11,7 @@ import core.db.DBManager;
 import core.file.xml.ExportMatchData;
 import core.file.xml.MatchExporter;
 import core.model.HOVerwaltung;
+import core.model.Ratings;
 import core.model.Team;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
@@ -137,25 +138,26 @@ public class RatingOptimizer {
 
 		int hrfID = DBManager.instance().getHrfIDSameTraining(matchData.getInfo().getMatchDateAsTimestamp());
 		RatingPredictionManager rpm = new RatingPredictionManager(lineup, DBManager.instance().getTeam(hrfID), (short) DBManager.instance().getTrainerType(hrfID), lineup.getStyleOfPlay(), RatingPredictionConfig.getInstance() );
+		Ratings oRating = lineup.getRatings();
 		double[] offset = new double[7];		
 		if (details.getHeimId() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
-					offset[0] = 0.875d + det.getHomeRightDef() / 4.0d - rpm.getRightDefenseRatings();                    
-                    offset[1] = 0.875d + det.getHomeMidDef() / 4.0d - rpm.getCentralDefenseRatings();
-					offset[2] = 0.875d + det.getHomeLeftDef() / 4.0d - rpm.getLeftDefenseRatings();
-                    offset[3] = 0.875d + det.getHomeMidfield() / 4.0d - rpm.getMFRatings();
-					offset[4] = 0.875d + det.getHomeRightAtt() / 4.0d - rpm.getRightAttackRatings();
-					offset[5] = 0.875d + det.getHomeMidAtt() / 4.0d - rpm.getCentralAttackRatings();
-                    offset[6] = 0.875d + det.getHomeLeftAtt() / 4.0d - rpm.getLeftAttackRatings();
+					offset[0] = 0.875d + det.getHomeRightDef() / 4.0d - oRating.getRightDefense().get(0);      //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
+                    offset[1] = 0.875d + det.getHomeMidDef() / 4.0d - oRating.getCentralDefense().get(0);     //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
+					offset[2] = 0.875d + det.getHomeLeftDef() / 4.0d - oRating.getLeftDefense().get(0);        //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
+                    offset[3] = 0.875d + det.getHomeMidfield() / 4.0d - oRating.getMidfield().get(0);         //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
+					offset[4] = 0.875d + det.getHomeRightAtt() / 4.0d - oRating.getRightAttack().get(0);      //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
+					offset[5] = 0.875d + det.getHomeMidAtt() / 4.0d - oRating.getCentralAttack().get(0);      //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
+                    offset[6] = 0.875d + det.getHomeLeftAtt() / 4.0d - oRating.getLeftAttack().get(0);         //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
                     
                     
                 } else {
-					offset[0] = 0.875d + det.getGuestRightDef() / 4.0d - rpm.getRightDefenseRatings();
-                    offset[1] = 0.875d + det.getGuestMidDef() / 4.0d - rpm.getCentralDefenseRatings();
-					offset[2] = 0.875d + det.getGuestLeftDef() / 4.0d - rpm.getLeftDefenseRatings();                    
-                    offset[3] = 0.875d + det.getGuestMidfield() / 4.0d - rpm.getMFRatings();                    
-					offset[4] = 0.875d + det.getGuestRightAtt() / 4.0d - rpm.getRightAttackRatings();
-                    offset[5] = 0.875d + det.getGuestMidAtt() / 4.0d - rpm.getCentralAttackRatings();
-					offset[6] = 0.875d + det.getGuestLeftAtt() / 4.0d - rpm.getLeftAttackRatings();
+					offset[0] = 0.875d + det.getGuestRightDef() / 4.0d - oRating.getRightDefense().get(0);    //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
+                    offset[1] = 0.875d + det.getGuestMidDef() / 4.0d - oRating.getCentralDefense().get(0);    //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
+					offset[2] = 0.875d + det.getGuestLeftDef() / 4.0d - oRating.getLeftDefense().get(0);      //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
+                    offset[3] = 0.875d + det.getGuestMidfield() / 4.0d - oRating.getMidfield().get(0);        //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
+					offset[4] = 0.875d + det.getGuestRightAtt() / 4.0d - oRating.getRightAttack().get(0);    //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
+                    offset[5] = 0.875d + det.getGuestMidAtt() / 4.0d - oRating.getCentralAttack().get(0);    //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
+					offset[6] = 0.875d + det.getGuestLeftAtt() / 4.0d - oRating.getLeftAttack().get(0);      //FIXME for compatiblity, here it should return averag prediction rating instead of t=0 rating
                     
                 }
         debugDiffs ("cd", det, rpm, DBManager.instance().getTeam(hrfID));
@@ -186,49 +188,49 @@ public class RatingOptimizer {
 		double calc = 0;
 		double real = 0;
 		if (type.equals("cd")) {
-			calc = rpm.getCentralDefenseRatings();
+			calc = rpm.getCentralDefenseRatings().get(0); //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeMidDef();
 			} else {
 				real = det.getGuestMidDef();				
 			}
 		} else if (type.equals("sd_l")) {
-			calc = rpm.getLeftDefenseRatings();
+			calc = rpm.getLeftDefenseRatings().get(0);  //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeLeftDef();
 			} else {
 				real = det.getGuestLeftDef();				
 			}
 		} else if (type.equals("sd_r")) {
-			calc = rpm.getRightDefenseRatings();
+			calc = rpm.getRightDefenseRatings().get(0);   //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeRightDef();
 			} else {
 				real = det.getGuestRightDef();				
 			}
 		} else if (type.equals("mid")) {
-			calc = rpm.getMFRatings();
+			calc = rpm.getMFRatings().get(0);   //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeMidfield();
 			} else {
 				real = det.getGuestMidfield();				
 			}
 		} else if (type.equals("ca")) {
-			calc = rpm.getCentralAttackRatings();
+			calc = rpm.getCentralAttackRatings().get(0);  //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeMidAtt();
 			} else {
 				real = det.getGuestMidAtt();				
 			}
 		} else if (type.equals("sa_l")) {
-			calc = rpm.getLeftAttackRatings();
+			calc = rpm.getLeftAttackRatings().get(0);   //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeLeftAtt();
 			} else {
 				real = det.getGuestLeftAtt();				
 			}
 		} else if (type.equals("sa_r")) {
-			calc = rpm.getRightAttackRatings();
+			calc = rpm.getRightAttackRatings().get(0);  //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeRightAtt();
 			} else {

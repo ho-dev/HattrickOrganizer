@@ -1,5 +1,7 @@
 package core.model.player;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
 import java.util.Arrays;
 import java.util.List;
@@ -54,6 +56,8 @@ public interface IMatchRoleID {
     int substXT2 = 213; // 	Backup (Extra)
     List<Integer> aBackupssMatchRoleID = IntStream.rangeClosed(207, 213).boxed().collect(Collectors.toList());
     List<Integer> aSubsAndBackupssMatchRoleID = IntStream.rangeClosed(200, 213).boxed().collect(Collectors.toList());
+    List<Integer> aFieldMSubsAndBackupMatchRoleID = Lists.newArrayList(Iterables.concat(aFieldMatchRoleID, aSubsAndBackupssMatchRoleID));
+
 
     // SetPieces Taker and Captain
     int setPieces = 17;
@@ -150,117 +154,5 @@ public interface IMatchRoleID {
      List<Integer>oldSubstMidfielder = Ints.asList(new int[] {14, 116});
      List<Integer>oldSubstWinger = Ints.asList(new int[] {15, 117});
      List<Integer>oldSubstForward = Ints.asList(new int[] {16, 118});
-
-  
-//    /** Get the position byte back **/
-//    public byte getPosition();
-//
-//    /** Set the position ID **/
-//    public void setId(int m_iId);
-//
-//    /** Get the individual order ID **/
-//    public byte getTaktik();
-//
-//    /** Set the individual order ID **/
-//    public void setTaktik(byte m_bTaktik);
-    
-    
-//    @Deprecated
-//    public static final int insideBack1 = rightCentralDefender;
-//    @Deprecated
-//    public static final int insideBack2 = leftCentralDefender;
-//    @Deprecated
-//    public static final int insideMid1 = rightInnerMidfield;
-//    @Deprecated
-//    public static final int insideMid2 = leftInnerMidfield;
-//    @Deprecated
-//    public static final int forward1 = rightForward;
-//    @Deprecated
-//    public static final int forward2 = leftForward;
-//    @Deprecated
-//    public static final int substBack = substDefender;
-//    @Deprecated
-//    public static final int substInsideMid = substInnerMidfield;
-//    @Deprecated
-//    public static final int standard = setPieces;
-//    @Deprecated
-//    public static final int spielfuehrer = captain;
-//
-//    @Deprecated
-//    public static final int beginnReservere = 12;
-//
-//    @Deprecated
-//    public static final byte OFFENSIV = OFFENSIVE;
-//    @Deprecated
-//    public static final byte DEFENSIV = DEFENSIVE;
-//    @Deprecated
-//    public static final byte ZUR_MITTE = TOWARDS_MIDDLE;
-//    @Deprecated
-//    public static final byte NACH_AUSSEN = TOWARDS_WING;
-//    @Deprecated
-//    public static final byte ZUS_STUERMER = OLD_EXTRA_FORWARD;
-//    @Deprecated
-//    public static final byte ZUS_MITTELFELD = OLD_EXTRA_MIDFIELD;
-//    @Deprecated
-//    public static final byte ZUS_INNENV = OLD_EXTRA_DEFENDER;
-//    @Deprecated
-//    public static final byte ZUS_STUERMER_DEF = OLD_EXTRA_DEFENSIVE_FORWARD;
-//
-//    @Deprecated
-//    public static final byte TORWART = KEEPER;
-//    @Deprecated
-//    public static final byte INNENVERTEIDIGER = CENTRAL_DEFENDER;
-//    @Deprecated
-//    public static final byte INNENVERTEIDIGER_OFF = CENTRAL_DEFENDER_OFF;
-//    @Deprecated
-//    public static final byte INNENVERTEIDIGER_AUS = CENTRAL_DEFENDER_TOWING;
-//    @Deprecated
-//    public static final byte AUSSENVERTEIDIGER = BACK;
-//    @Deprecated
-//    public static final byte AUSSENVERTEIDIGER_OFF = BACK_OFF;
-//    @Deprecated
-//    public static final byte AUSSENVERTEIDIGER_IN = BACK_TOMID;
-//    @Deprecated
-//    public static final byte AUSSENVERTEIDIGER_DEF = BACK_DEF;
-//    @Deprecated
-//    public static final byte MITTELFELD = MIDFIELDER;
-//    @Deprecated
-//    public static final byte MITTELFELD_OFF = MIDFIELDER_OFF;
-//    @Deprecated
-//    public static final byte MITTELFELD_DEF = MIDFIELDER_DEF;
-//    @Deprecated
-//    public static final byte MITTELFELD_AUS = MIDFIELDER_TOWING;
-//    @Deprecated
-//    public static final byte FLUEGELSPIEL = WINGER;
-//    @Deprecated
-//    public static final byte FLUEGELSPIEL_OFF = WINGER_OFF;
-//    @Deprecated
-//    public static final byte FLUEGELSPIEL_DEF = WINGER_DEF;
-//    @Deprecated
-//    public static final byte FLUEGELSPIEL_IN = WINGER_TOMID;
-//    @Deprecated
-//    public static final byte STURM = FORWARD;
-//    @Deprecated
-//    public static final byte STURM_DEF = FORWARD_DEF;
-//    @Deprecated
-//    public static final byte AUSGEWECHSELT1 = SUBSTITUTED1;
-//    @Deprecated
-//    public static final byte AUSGEWECHSELT2 = SUBSTITUTED2;
-//    @Deprecated
-//    public static final byte AUSGEWECHSELT3 = SUBSTITUTED3;
-//    @Deprecated
-//    public static final byte STURM_AUS = FORWARD_TOWING;
-//    @Deprecated
-//    public static final byte POS_ZUS_STUERMER = 22;
-//    @Deprecated
-//    public static final byte POS_ZUS_STUERMER_DEF = 25;
-//    @Deprecated
-//    public static final byte POS_ZUS_MITTELFELD = 23;
-//    @Deprecated
-//    public static final byte POS_ZUS_INNENV = 24;
-//    @Deprecated
-//    public static final byte UNBESTIMMT = UNKNOWN;
-//    @Deprecated
-//    public static final byte TRAINER = COACH;
     
 }

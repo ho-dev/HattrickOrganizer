@@ -1,7 +1,10 @@
 package module.lineup.substitution;
 
+import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.util.GUIUtils;
+import module.lineup.AufstellungsDetailPanel;
+import module.lineup.LineupPanel;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
 

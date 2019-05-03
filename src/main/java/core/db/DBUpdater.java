@@ -602,6 +602,12 @@ final class DBUpdater {
 	
 	private void updateDBv25(int DBVersion, int version) throws SQLException {
 		// 1.436
+
+		// remove currency name information from XTRADATA table
+		if (columnExistsInTable("CurrencyName", XtraDataTable.TABLENAME)) {
+			dropColumn("CurrencyName", "XTRADATA");
+		}
+
 		if (columnExistsInTable("MATCHREPORT", MatchDetailsTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ALTER COLUMN MATCHREPORT SET DATA TYPE VARCHAR(20000)"); // fix an existing bug - 15 000 was not enough
 		}
@@ -624,6 +630,10 @@ final class DBUpdater {
 		if (!columnExistsInTable("CUPLEVELINDEX", MatchesKurzInfoTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN CUPLEVELINDEX INTEGER");
 			m_clJDBCAdapter.executeUpdate("UPDATE MATCHESKURZINFO SET CUPLEVELINDEX = 0");
+		}
+
+		if (!tableExists(MatchOrderTable.TABLENAME)) {
+			dbZugriff.getTable(MatchOrderTable.TABLENAME).createTable();
 		}
 
 		if (version < DBVersion) {

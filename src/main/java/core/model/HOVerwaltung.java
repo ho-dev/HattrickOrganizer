@@ -38,6 +38,12 @@ public class HOVerwaltung {
 	/** Resource */
 	protected ResourceBundle languageBundle;
 
+	public int getId() {
+		return id;
+	}
+
+	private int id;
+
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
 
@@ -101,6 +107,7 @@ public class HOVerwaltung {
 	 */
 	public void loadLatestHoModel() {
 		int id = DBManager.instance().getLatestHrfId();
+		this.id = id;
 		m_clHoModel = loadModel(id);
 	}
 
@@ -185,6 +192,7 @@ public class HOVerwaltung {
 		
 		return model;
 	}
+
 
 	/**
 	 * Returns the String connected to the active language file or connected to

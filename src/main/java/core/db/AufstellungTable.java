@@ -60,10 +60,10 @@ final class AufstellungTable extends AbstractTable {
 
 		if (auf != null) {
 			auf.setPositionen(DBManager.instance().getSystemPositionen(hrfID, name));
-			auf.setSubstitionList(new ArrayList<Substitution>(DBManager.instance()
+			auf.setSubstitionList(new ArrayList<>(DBManager.instance()
 					.getMatchSubstitutionsByHrf(hrfID, name)));
-			List<MatchRoleID> xxxx = DBManager.instance().getPenaltyTakers(name);
 			auf.setPenaltyTakers(DBManager.instance().getPenaltyTakers(name));
+			auf.setRatings();
 		}
 
 		return auf;

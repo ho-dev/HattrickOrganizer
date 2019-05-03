@@ -16,15 +16,10 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionManager;
+import core.training.TrainingPreviewPlayers;
 import core.util.Helper;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.LayoutManager;
+import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
@@ -229,7 +224,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     @Override
 	public void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
         if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-            final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineup();
+            final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
             final Player player = getSelectedPlayer();
 
@@ -290,7 +285,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         if (m_iPositionID == IMatchRoleID.setPieces) {
             aktuellerPlayer = HOVerwaltung.instance().getModel().getSpieler(HOVerwaltung.instance()
                                                                                          .getModel()
-                                                                                         .getLineup()
+                                                                                         .getLineupWithoutRatingRecalc()
                                                                                          .getKicker());
 			if (aktuellerPlayer !=null) {
 				playerId = aktuellerPlayer.getSpielerID();
@@ -301,7 +296,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
 			// Make sure the incoming player list is not modified, it
 			// seems to visit the captain position later.
 
-			Player keeper = HOVerwaltung.instance().getModel().getLineup().
+			Player keeper = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().
 					getPlayerByPositionID(IMatchRoleID.keeper);
 			if (keeper != null) {
 				Vector<Player> tmpPlayer = new Vector<Player>(player.size() -1);
@@ -315,7 +310,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         } else if (m_iPositionID == IMatchRoleID.captain) {
             aktuellerPlayer = HOVerwaltung.instance().getModel().getSpieler(HOVerwaltung.instance()
                                                                                          .getModel()
-                                                                                         .getLineup()
+                                                                                         .getLineupWithoutRatingRecalc()
                                                                                          .getKapitaen());
 			if (aktuellerPlayer !=null) {
 				playerId = aktuellerPlayer.getSpielerID();
@@ -323,7 +318,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
 			tacticOrder=-1;
         } else {
             //Get currently setup player
-            final MatchRoleID position = HOVerwaltung.instance().getModel().getLineup()
+            final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
                                                          .getPositionById(m_iPositionID);
 
             if (position != null) {
@@ -335,7 +330,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
 					playerId = aktuellerPlayer.getSpielerID();
 				} else {
 					// We want to disable the player selection box if there is already 11 players on the field and this is an on field position.
-					if ((HOVerwaltung.instance().getModel().getLineup().hasFreePosition() == false) &&
+					if ((HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().hasFreePosition() == false) &&
 							(m_iPositionID >= IMatchRoleID.keeper) && (m_iPositionID < IMatchRoleID.startReserves)) {
 						m_jcbPlayer.setEnabled(false);
 					} else {
@@ -365,7 +360,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         playerId = -1;
 
         //Get currently setup player in that position
-        final MatchRoleID position = HOVerwaltung.instance().getModel().getLineup().getPositionById(m_iPositionID);
+        final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionById(m_iPositionID);
         if (position != null) {selectedPlayer = HOVerwaltung.instance().getModel().getSpieler(position.getSpielerId());
             setTaktik(position.getTaktik(), selectedPlayer);}
 
@@ -443,7 +438,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         //Minimized
         if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getSpieler() != null)) {
             m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getName());
-            m_jlPlayer.setIcon(ImageUtilities.getImage4Position(HOVerwaltung.instance().getModel().getLineup().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
+            m_jlPlayer.setIcon(ImageUtilities.getImage4Position(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
                                                                                     m_clSelectedPlayer.getSpieler().getTrikotnummer()));
         } else {
             m_jlPlayer.setText("");
@@ -459,7 +454,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
      */
     protected void setSpielerListe2(List<Player> allPlayers, Player selectedPlayer, int playerIDcorrespondingSub) {
 
-        Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
+        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
         // list of all players currently set as subs
         List<Player> lSubs = new ArrayList<Player>();
@@ -538,7 +533,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         //Minimized
         if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getSpieler() != null)) {
             m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getName());
-            m_jlPlayer.setIcon(ImageUtilities.getImage4Position(HOVerwaltung.instance().getModel().getLineup().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
+            m_jlPlayer.setIcon(ImageUtilities.getImage4Position(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
                     m_clSelectedPlayer.getSpieler().getTrikotnummer()));
         } else {
             m_jlPlayer.setText("");
@@ -569,7 +564,8 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
      * Setzt das Label
      */
     private void initLabel() {
-    	final Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
+    	final Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        final int nextWeekTrain = TrainingPreviewPlayers.instance().getNextWeekTraining();
 
         if (m_iPositionID == IMatchRoleID.setPieces) {
             m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("match.setpiecestaker"));
@@ -584,6 +580,16 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                 // Players on the lineup
                 if (IMatchRoleID.aFieldMatchRoleID.contains(position.getId())) {
                     m_jlPosition.setText(nameForPosition);
+
+                    if (MatchRoleID.isFullTrainPosition(position.getPosition(), nextWeekTrain)) {
+                        this.setBackground(Color.BLUE);
+                    }
+                    else if (MatchRoleID.isPartialTrainPosition(position.getPosition(), nextWeekTrain)) {
+                        this.setBackground(Color.CYAN);
+                    }
+                    else {
+                        this.setBackground(Color.WHITE);
+                    }
                 }
                 // Subs
                 else if (IMatchRoleID.aSubstitutesMatchRoleID.contains(position.getId())){
@@ -735,13 +741,12 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             } else if (m_iPositionID == IMatchRoleID.captain) {
                 item.setValues(spielerName,
                                Helper.round(
-                            		   HOVerwaltung.instance().getModel().getLineup().getAverageExperience(player.getSpielerID()),
+                            		   HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getAverageExperience(player.getSpielerID()),
                             		   core.model.UserParameter.instance().anzahlNachkommastellen),
                         player);
                 return item;
             } else {
-                final MatchRoleID position = HOVerwaltung.instance().getModel().getLineup()
-                                                                                        .getPositionById(m_iPositionID);
+                final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionById(m_iPositionID);
 
                 if (position != null) {
                     item.setValues(spielerName,

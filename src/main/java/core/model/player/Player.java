@@ -41,39 +41,39 @@ public class Player {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    /** Spielberechtigt */
+    /** canPlay */
     private Boolean m_bSpielberechtigt;
 
-    /** ManuellerSmilie Dateiname */
+    /** Manual Smilie Filename*/
     private String m_sManuellerSmilie;
 
     /** Name */
     private String m_sName = "";
 
-    /** TeamInfoSmilie Dateiname */
+    /** TeamInfo Smilie Filename */
     private String m_sTeamInfoSmilie;
     private java.sql.Timestamp m_clhrfDate;
 
-    /** Datum des ersten HRFs mit dem Player */
+    /** Date of the first HRF referencing that player */
     private Timestamp m_tsTime4FirstHRF;
 
-    /** Der Player ist nicht mehr im aktuellen HRF vorhanden */
+    /** The player is no longer available in the current HRF */
     private boolean m_bOld;
     private byte m_bUserPosFlag = -2;
 
-    /** Fluegelspiel */
+    /** Wing skill*/
     private double m_dSubFluegelspiel;
 
-    /** Passpiel */
+    /** Pass skill */
     private double m_dSubPasspiel;
 
-    /** Spielaufbau */
+    /** Playmaking skill */
     private double m_dSubSpielaufbau;
 
     /** Standards */
     private double m_dSubStandards;
 
-    /** Torschuss */
+    /** Goal */
     private double m_dSubTorschuss;
 
     //Subskills
@@ -215,11 +215,23 @@ public class Player {
     /** Training block */
     private boolean m_bTrainingBlock = false;
 
+
+    /** specifying at what time –in minutes- that player entered the field
+     *  This parameter is only used by RatingPredictionManager to calculate the stamina effect
+     *  along the course of the game
+     */
+    private int GameStartingTime = 0;
+
+    public int getGameStartingTime() {
+        return GameStartingTime;
+    }
+
+    public void setGameStartingTime(int gameStartingTime) {
+        GameStartingTime = gameStartingTime;
+    }
+
     //~ Constructors -------------------------------------------------------------------------------
 
-    ////////////////////////////////////////////////////////////////////////////////
-    //Konstruktor
-    ////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Creates a new instance of Player
@@ -465,12 +477,11 @@ public class Player {
     }
 
     /**
-     * Calculates String for full age with days and offset
-     * @return String of age & agedays & offset combined,
-     * 			format is "YY.DDD"
+     * Calculates String for full age and days correcting for the difference between (now and last HRF file)
+     * @return String of age & agedays format is "YY (DDD)"
      */
     public String getAlterWithAgeDaysAsString() {
-    	// format = yy.ddd
+    	// format = yy (ddd)
       	long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
     	long now = new Date().getTime();
     	long diff = (now - hrftime) / (1000*60*60*24);
@@ -481,7 +492,8 @@ public class Player {
     		days -= 112;
     		years++;
     	}
-    	String retVal = years + "." + days;
+    	String retVal = years + " (" + days+")";
+
     	return retVal;
     }
     
@@ -1872,24 +1884,24 @@ public class Player {
         }
     	final boolean normalized = false;
 
-        float gkValue = fo.getTorwartScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.KEEPER, useForm);
+        float gkValue = fo.getTorwartScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.KEEPER, useForm);
 
-        float pmValue = fo.getSpielaufbauScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.PLAYMAKING, useForm);
+        float pmValue = fo.getSpielaufbauScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.PLAYMAKING, useForm);
 
-        float deValue = fo.getVerteidigungScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.DEFENDING, useForm);
+        float deValue = fo.getVerteidigungScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.DEFENDING, useForm);
 
-        float wiValue = fo.getFluegelspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.WINGER, useForm);
+        float wiValue = fo.getFluegelspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.WINGER, useForm);
 
-        float psValue = fo.getPasspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.PASSING, useForm);
+        float psValue = fo.getPasspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.PASSING, useForm);
 
         // Fix for new Defensive Attacker position
 		if (fo.getPosition()== IMatchRoleID.FORWARD_DEF && getSpezialitaet()==PlayerSpeciality.TECHNICAL) {
 			psValue *= 1.30f;
 		}
 
-        float spValue = fo.getStandardsScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.SET_PIECES, useForm);
+        float spValue = fo.getStandardsScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.SET_PIECES, useForm);
 
-        float scValue = fo.getTorschussScaled(normalized) * RatingPredictionManager.calcPlayerStrength(this, PlayerSkill.SCORING, useForm);
+        float scValue = fo.getTorschussScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.SCORING, useForm);
 
         float val = gkValue + pmValue + deValue + wiValue + psValue + spValue + scValue;
 

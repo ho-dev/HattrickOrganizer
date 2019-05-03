@@ -1,5 +1,6 @@
 package core.model.player;
 
+import core.constants.TrainingType;
 import core.datatype.CBItem;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
@@ -8,6 +9,10 @@ import module.lineup.Lineup;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleID>,
 		IMatchRoleID {
@@ -423,6 +428,98 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		}
 	}
 
+
+	/**
+	 * Return if position is full train
+	 */
+	public static boolean isFullTrainPosition(byte posId, int train) {
+
+		if (train == TrainingType.SET_PIECES ||
+				train == TrainingType.SHOOTING)
+			return true;
+
+		switch (posId) {
+			case KEEPER:
+				if (train == TrainingType.GOALKEEPING ||
+						train == TrainingType.DEF_POSITIONS)
+					return true;
+				break;
+			case CENTRAL_DEFENDER:
+			case CENTRAL_DEFENDER_TOWING:
+			case CENTRAL_DEFENDER_OFF:
+				if (train == TrainingType.DEFENDING ||
+						train == TrainingType.DEF_POSITIONS ||
+						train == TrainingType.THROUGH_PASSES)
+					return true;
+				break;
+			case BACK:
+			case BACK_TOMID:
+			case BACK_OFF:
+			case BACK_DEF:
+				if (train == TrainingType.DEF_POSITIONS ||
+						train == TrainingType.THROUGH_PASSES ||
+						train == TrainingType.DEFENDING)
+					return true;
+				break;
+			case MIDFIELDER:
+			case MIDFIELDER_OFF:
+			case MIDFIELDER_DEF:
+			case MIDFIELDER_TOWING:
+				if (train == TrainingType.DEF_POSITIONS ||
+						train == TrainingType.PLAYMAKING ||
+						train == TrainingType.THROUGH_PASSES ||
+						train == TrainingType.SHORT_PASSES)
+					return true;
+				break;
+			case WINGER:
+			case WINGER_TOMID:
+			case WINGER_OFF:
+			case WINGER_DEF:
+				if (train == TrainingType.WING_ATTACKS ||
+						train == TrainingType.DEF_POSITIONS ||
+						train == TrainingType.CROSSING_WINGER ||
+						train == TrainingType.THROUGH_PASSES ||
+						train == TrainingType.SHORT_PASSES)
+					return true;
+				break;
+			case FORWARD:
+			case FORWARD_DEF:
+			case FORWARD_TOWING:
+				if (train == TrainingType.SCORING ||
+						train == TrainingType.WING_ATTACKS ||
+						train == TrainingType.SHORT_PASSES)
+					return true;
+				break;
+		}
+		return false;
+	}
+
+	/**
+	 * Return if position is partial train
+	 */
+	public static boolean isPartialTrainPosition(byte posId, int train) {
+
+		if (train == TrainingType.CROSSING_WINGER || train == TrainingType.PLAYMAKING) {
+			switch (posId) {
+				case BACK:
+				case BACK_TOMID:
+				case BACK_OFF:
+				case BACK_DEF:
+					if (train == TrainingType.CROSSING_WINGER)
+						return true;
+					break;
+				case WINGER:
+				case WINGER_TOMID:
+				case WINGER_OFF:
+				case WINGER_DEF:
+					if (train == TrainingType.PLAYMAKING)
+						return true;
+					break;
+			}
+		}
+		return false;
+	}
+
 	public byte getPosition() {
 		return MatchRoleID.getPosition(m_iId, m_bTaktik);
 	}
@@ -588,12 +685,26 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	 * Setter for property m_iSpielerId. This will fail if the current lineup of
 	 * the HO model would end up with 12 players or more.
 	 *
-	 * @param m_iSpielerId
+	 * @param spielerId
 	 *            New value of property m_iSpielerId.
 	 */
 	public final void setSpielerId(int spielerId) {
-		setSpielerId(spielerId, HOVerwaltung.instance().getModel().getLineup());
+		setSpielerId(spielerId, HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc());
 	}
+
+	public final void setSpielerIdFollowingSub(int spielerId) {
+		boolean incomingEmpty = (spielerId < 1) && (spielerId > -10) ? true : false;
+
+
+		if (!incomingEmpty && m_iId >= IMatchRoleID.startLineup && m_iId < IMatchRoleID.startReserves) {
+			HOLogger.instance().debug(getClass(),
+					"Blocked from setting player at position: " + m_iSpielerId + " " + m_iId);
+			return;
+		} else {
+			this.m_iSpielerId = spielerId;
+		}
+	}
+
 
 	/**
 	 * Setter for property m_iSpielerId. This setter will fail if the provided
@@ -743,5 +854,49 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		else if (IMatchRoleID.oldSubstWinger.contains(roleID))return IMatchRoleID.substWI1;
 		else if (IMatchRoleID.oldSubstForward.contains(roleID))	return IMatchRoleID.substFW1;
 		else return roleID;
+	}
+
+	public static Properties convertOldRoleToNew(Properties oldLineupProperties) {
+		Properties result = new Properties();
+		String sKey;
+
+		// mapping conversion OldRole -> New Rolw
+		HashMap<String, String> mappingTable = new HashMap<>();
+		mappingTable.put("behrightback","order_rightback");
+		mappingTable.put("behleftback","order_leftback");
+		mappingTable.put("insideback1","rightcentraldefender");
+		mappingTable.put("behinsideback1","order_rightcentraldefender");
+		mappingTable.put("insideback2","leftcentraldefender");
+		mappingTable.put("behinsideback2","order_leftcentraldefender");
+		mappingTable.put("insideback3","middlecentraldefender");
+		mappingTable.put("behinsideback3","order_middlecentraldefender");
+		mappingTable.put("behrightwinger","order_rightwinger");
+		mappingTable.put("behleftwinger","order_leftwinger");
+		mappingTable.put("insidemid1","rightinnermidfield");
+		mappingTable.put("behinsidemid1","order_rightinnermidfield");
+		mappingTable.put("insidemid2","leftinnermidfield");
+		mappingTable.put("behinsidemid2","order_leftinnermidfield");
+		mappingTable.put("insidemid3","middleinnermidfield");
+		mappingTable.put("behinsidemid3","order_centralinnermidfield");
+		mappingTable.put("forward1","rightforward");
+		mappingTable.put("behforward1","order_rightforward");
+		mappingTable.put("forward2","leftforward");
+		mappingTable.put("behforward2","order_leftforward");
+		mappingTable.put("forward3","centralforward");
+		mappingTable.put("behforward3","order_centralforward");
+		mappingTable.put("substback","substcd1");
+		mappingTable.put("substinsidemid","substim1");
+		mappingTable.put("substwinger","substwi1");
+		mappingTable.put("substkeeper","substgk1");
+		mappingTable.put("substforward","substfw1");
+
+
+		for (Map.Entry<Object, Object> entry : oldLineupProperties.entrySet()) {
+			sKey = entry.getKey().toString();
+			result.setProperty(mappingTable.getOrDefault(sKey, sKey), entry.getValue().toString());
+			}
+
+		return result;
+
 	}
 }

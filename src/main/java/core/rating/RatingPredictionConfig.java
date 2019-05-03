@@ -177,7 +177,7 @@ public class RatingPredictionConfig {
     	}
     }
 
-      public RatingPredictionParameter getCentralAttackParameters()
+    public RatingPredictionParameter getCentralAttackParameters()
     {
         return centralAttackParam;
     }

@@ -1,21 +1,23 @@
 package core.rating;
 
+import core.HO;
 import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.model.Team;
+import core.model.UserParameter;
 import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 import module.lineup.Lineup;
+import module.lineup.substitution.model.GoalDiffCriteria;
+import module.lineup.substitution.model.MatchOrderType;
+import module.lineup.substitution.model.RedCardCriteria;
+import module.lineup.substitution.model.Substitution;
 
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.GregorianCalendar;
-import java.util.Hashtable;
-import java.util.Properties;
+import java.util.*;
 
 public class RatingPredictionManager {
 	//~ Class constants ----------------------------------------------------------------------------
@@ -64,7 +66,7 @@ public class RatingPredictionManager {
     private static RatingPredictionConfig config = RatingPredictionConfig.getInstance();
 	
     /** Cache for player strength (Hashtable<String, Float>) */
-    private static Hashtable<String, Double> playerStrengthCache = new Hashtable<String, Double>();
+    private static Hashtable<String, Double> playerStrengthCache = new Hashtable<>();
 
     
     //~ Instance fields ----------------------------------------------------------------------------
@@ -74,11 +76,24 @@ public class RatingPredictionManager {
     private short stimmung;
     private short substimmung;
     private short taktikType;
-    private short trainerType;
-    private Lineup lineup;
+	private short trainerType; //FIXME: investiguate why trainer type is never used !
+    private Lineup startingLineup;
     private int pullBackMinute;
     private boolean pullBackOverride;
     private int styleOfPlay;
+
+
+	/**  Evolution of lineup during the game
+	 *   he keys will represent an array of events (in minutes)
+	 *  e.g.   t = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 46, 50, 55, 60, 65, 71, …...., 90, 91, ….]
+	 *  i.e at each minute between 0 and 120 by step of 5 minutes     => +24 entries
+	 *  At 46 and 91 to show resting effect     =>  +2 entries
+	 *   At each minute a substitution occur.    => + [0-3] entries
+	 *   + pullback event if it occurs: => + [0-1] entry
+	 *           The values will represent the evolution of lineup
+	 *          e.g.    {0:'starting_lineup', 5:'starting_lineup', …....... 71:'lineup_after_sub1'}
+	 */
+	private Hashtable<Integer, Lineup> LineupEvolution = new Hashtable<>();
 
     public RatingPredictionManager () {
     	if (RatingPredictionManager.config == null)
@@ -89,24 +104,137 @@ public class RatingPredictionManager {
     	RatingPredictionManager.config = config;
     }
     
-    public RatingPredictionManager(Lineup lineup, int i, Team iteam, short trainerType, int styleOfPlay, RatingPredictionConfig config)
+    public RatingPredictionManager(Lineup _startingLineup, int i, Team iteam, short trainerType, int styleOfPlay, RatingPredictionConfig config)
     {
-        this.lineup = lineup;
+        this.startingLineup = _startingLineup;
         RatingPredictionManager.config = config;
         init(iteam, trainerType, styleOfPlay);
+        this.LineupEvolution = this.setLineupEvolution();
     }
 
-    public RatingPredictionManager(Lineup lineup, Team team, short trainerType, int styleOfPlay, RatingPredictionConfig config)
+    public RatingPredictionManager(Lineup _startingLineup, Team team, short trainerType, int styleOfPlay, RatingPredictionConfig config)
     {
-        this(lineup, 0, team, trainerType, styleOfPlay, config);
+        this(_startingLineup, 0, team, trainerType, styleOfPlay, config);
+    }
+
+
+    private Hashtable<Integer, Lineup> setLineupEvolution()
+	{
+		// Initilize _LineupEvolution and add starting lineup
+		Hashtable<Integer, Lineup> _LineupEvolution = new Hashtable<>();
+		_LineupEvolution.put(0, startingLineup.duplicate());
+
+		// list at which time occurs all events others than game start
+		List<Integer> events = new ArrayList<>();
+
+		boolean isPullBackOccuring = false;
+		for(Substitution sub :startingLineup.getSubstitutionList())
+		{
+			if ((sub.getMatchMinuteCriteria() != -1) &&
+			   (sub.getRedCardCriteria() == RedCardCriteria.IGNORE) &&
+				(sub.getStanding() == GoalDiffCriteria.ANY_STANDING)) {
+				events.add((int)(sub.getMatchMinuteCriteria()));
+			}
+
+	     }
+
+		Collections.sort(events);
+
+		// we calculate lineup for all event
+		Integer t = 0;
+		Integer tNextEvent;
+		Lineup currentLineup;
+
+		// define time of next event
+		if (events.size() > 0) {
+			tNextEvent = events.get(0);
+		}
+		else
+		{
+			tNextEvent = 125;
+		}
+
+		while(t<120)
+		{
+			// use Lineup at last event as reference
+			currentLineup = _LineupEvolution.get(t).duplicate();
+
+			//if no match event between now and the next step of 5 minutes, we jump to the next step
+			if ((t+5-(t+5)%5)<tNextEvent) t = t + 5 - (t + 5) % 5;
+
+			//else I treat next occurring match events
+			else
+			{
+				t = tNextEvent;
+
+
+				for(Substitution sub :startingLineup.getSubstitutionList())
+				{
+					if (tNextEvent == sub.getMatchMinuteCriteria())
+					{
+						// all matchOrders taking place now are recursively apply on the lineup object
+						currentLineup.UpdateLineupWithMatchOrder(sub);
+					}
+				}
+
+				// we remove all Match Events that have been already treated
+				Iterator itr = events.iterator();
+				while (itr.hasNext())
+				{
+					int x = (Integer)itr.next();
+					if (x == tNextEvent)
+						itr.remove();
+				}
+
+
+				// define time of next event
+				if (events.size() > 0) {
+					tNextEvent = events.get(0);
+				}
+				else
+				{
+					tNextEvent = 125;
+				}
+			}
+			_LineupEvolution.put(t, currentLineup);
+
+
+
+		}
+
+
+		// in case no MatchOrder took place at 46' and 91', we add them manually  in order to visualize respectively halftime and endgame rest effect
+		if(!_LineupEvolution.containsKey(46)) _LineupEvolution.put(46, _LineupEvolution.get(45).duplicate());
+		if(!_LineupEvolution.containsKey(91)) _LineupEvolution.put(91, _LineupEvolution.get(90).duplicate());
+
+
+		// we correct for pull back event
+		if (startingLineup.isPullBackOverride() && (startingLineup.getPullBackMinute()<120)) {
+			//TODO
+			HOLogger.instance().warning(this.getClass(), "PullBack not yet implemented in Prediction rating !!!");
+		}
+
+		return _LineupEvolution;
+
+
+	}
+
+	private float calcRatings (int type) {
+    	//FIXME: this function is a patch, it needs to be deleted when finalized !!
+		return calcRatings (type, ALLSIDES);
+	}
+
+	private float calcRatings ( int type, int side2calc) {
+		//FIXME: this function is a patch, it needs to be deleted when finalized !!
+    	return 0;
+	}
+
+    private float calcRatings (int t, Lineup lineup, int type) {
+    	return calcRatings (t, lineup, type, ALLSIDES);
     }
     
-    private float calcRatings (int type) {
-    	return calcRatings (type, ALLSIDES);
-    }
-    
-    private float calcRatings (int type, int side2calc) {
-//    	long startTime = new Date().getTime();
+    private float calcRatings (int t, Lineup _lineup, int type, int side2calc) {
+//    	FIXME: use time innformation
     	RatingPredictionParameter params;
     	switch (type) {
 		case SIDEDEFENSE:
@@ -132,7 +260,7 @@ public class RatingPredictionManager {
     	double retVal = 0;
     	while (allKeys.hasMoreElements()) {
     		String sectionName = (String)allKeys.nextElement();
-    		double curValue = calcPartialRating (params, sectionName, side2calc);
+    		double curValue = calcPartialRating (t, _lineup, params, sectionName, side2calc);
 //    		HOLogger.instance().debug(this.getClass(), "PartRating for type "+type+", section "+sectionName+" is "+curValue);
     		retVal += curValue;
     	}
@@ -144,7 +272,7 @@ public class RatingPredictionManager {
     	return (float)retVal;
     }
 
-    private double calcPartialRating (RatingPredictionParameter params, String sectionName, int side2calc) {
+    private double calcPartialRating (int t, Lineup _lineup, RatingPredictionParameter params, String sectionName, int side2calc) {
     	int skillType = sectionNameToSkillAndSide(sectionName)[0];
     	int sideType = sectionNameToSkillAndSide(sectionName)[1];
     	double retVal = 0;
@@ -156,21 +284,21 @@ public class RatingPredictionManager {
     	switch (sideType) {
 		case THISSIDE:
 			if (side2calc == LEFT)
-				allStk = getAllPlayerStrengthLeft(skillType);
+				allStk = getAllPlayerStrengthLeft(t, _lineup, skillType);
 			else
-				allStk = getAllPlayerStrengthRight(skillType);
+				allStk = getAllPlayerStrengthRight(t, _lineup, skillType);
 			break;
 		case OTHERSIDE:
 			if (side2calc == LEFT)
-				allStk = getAllPlayerStrengthRight(skillType);
+				allStk = getAllPlayerStrengthRight(t, _lineup, skillType);
 			else
-				allStk = getAllPlayerStrengthLeft(skillType);
+				allStk = getAllPlayerStrengthLeft(t, _lineup, skillType);
 			break;
 		case MIDDLE:
-			allStk = getAllPlayerStrengthMiddle(skillType);
+			allStk = getAllPlayerStrengthMiddle(t, _lineup, skillType);
 	   		break;
 		default:
-			allStk = getAllPlayerStrength(skillType);
+			allStk = getAllPlayerStrength(t, _lineup, skillType);
 			break;
     	}
     	double[][] allWeights = getAllPlayerWeights(params, sectionName);
@@ -191,12 +319,12 @@ public class RatingPredictionManager {
     					// set in static method and can't check the number of central players in the lineup. Feel free to
     					// move to a better home.
     					
-    					retVal += adjustForCrowding(curStk, effPos) * curWeight;
+    					retVal += adjustForCrowding(_lineup, curStk, effPos) * curWeight;
     				} else {
     	  
 //    					System.out.println ("addingPlayer (ALL) @"+effPos+": (skill "+skillType+") stk="+curStk + " * weight="+ curAllSpecWeight +" = "+curStk * curAllSpecWeight);
     					
-    					retVal += adjustForCrowding(curStk, effPos) * curAllSpecWeight;
+    					retVal += adjustForCrowding(_lineup, curStk, effPos) * curAllSpecWeight;
     				}
     			}
     		}
@@ -205,7 +333,7 @@ public class RatingPredictionManager {
     	return retVal;
     }
     
-    private double adjustForCrowding(double stk, int pos) {
+    private double adjustForCrowding(Lineup _lineup, double stk, int pos) {
     	
     	double weight;
     	
@@ -214,7 +342,7 @@ public class RatingPredictionManager {
 	    	case IMatchRoleID.CENTRAL_DEFENDER_OFF :
 	    	case IMatchRoleID.CENTRAL_DEFENDER_TOWING :
 	    	{
-	    		weight = getCrowdingPenalty(CENTRALDEFENSE);
+	    		weight = getCrowdingPenalty(_lineup, CENTRALDEFENSE);
 	    		break;
 	    	}
 	    	case IMatchRoleID.MIDFIELDER :
@@ -222,14 +350,14 @@ public class RatingPredictionManager {
 	    	case IMatchRoleID.MIDFIELDER_OFF :
 	    	case IMatchRoleID.MIDFIELDER_TOWING :
 	    	{
-	    		weight = getCrowdingPenalty(MIDFIELD);
+	    		weight = getCrowdingPenalty(_lineup, MIDFIELD);
 	    		break;
 	    	}
 	    	case IMatchRoleID.FORWARD :
 	    	case IMatchRoleID.FORWARD_DEF :
 	    	case IMatchRoleID.FORWARD_TOWING :
 	    	{
-	    		weight = getCrowdingPenalty(CENTRALATTACK);
+	    		weight = getCrowdingPenalty(_lineup, CENTRALATTACK);
 	    		break;
 	    	}
 	    	default :
@@ -258,19 +386,19 @@ public class RatingPredictionManager {
     	else if (taktikType == Matchdetails.TAKTIK_KONTER)
     		retVal *= params.getParam(sectionName, "tacticCounter", 1);
     	else if (taktikType == Matchdetails.TAKTIK_CREATIVE)
-    		retVal *= params.getParam(sectionName, "tacticCreative", 1);
+    		retVal *= params.getParam(sectionName, "tacticcreative", 1);
     	else if (taktikType == Matchdetails.TAKTIK_PRESSING)
-    		retVal *= params.getParam(sectionName, "tacticPressing", 1);
+    		retVal *= params.getParam(sectionName, "tacticpressing", 1);
     	else if (taktikType == Matchdetails.TAKTIK_LONGSHOTS)
-    		retVal *= params.getParam(sectionName, "tacticLongshots", 1);
+    		retVal *= params.getParam(sectionName, "tacticlongshots", 1);
 
         double teamspirit = (double)stimmung + ((double)substimmung / 5);
         // Alternative 1: TS linear
-        retVal *= (1 + params.getParam(sectionName, "teamSpiritMulti", 0)
+        retVal *= (1 + params.getParam(sectionName, "teamspiritmulti", 0)
         			*(teamspirit - 5.5));
         // Alternative 2: TS exponentiell
-       	retVal *= Math.pow((teamspirit * params.getParam(sectionName, "teamSpiritPreMulti", 1/4.5)), 
-       				params.getParam(sectionName, "teamSpiritPower", 0));
+       	retVal *= Math.pow((teamspirit * params.getParam(sectionName, "teamspiritpremulti", 1/4.5)),
+       				params.getParam(sectionName, "teamspiritpower", 0));
         
     	if (heimspiel == IMatchDetails.LOCATION_HOME)
     		retVal *= params.getParam(sectionName, "home", 1);
@@ -442,48 +570,124 @@ public class RatingPredictionManager {
     	return retArray;
     }
     
+//
+//    public float getCentralAttackRatings()
+//    {
+//    	return calcRatings(CENTRALATTACK);
+//    }
+
+
+//    public float getCentralDefenseRatings()
+//    {
+//    	return calcRatings(CENTRALDEFENSE);
+//    }
+
+	public Hashtable<Integer, Double> getCentralDefenseRatings()
+	{
+		double userRatingOffset = UserParameter.instance().middleDefenceOffset;
+		Hashtable<Integer, Double> CentralDefenseRatings = new Hashtable<>();
+		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+			CentralDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALDEFENSE));
+		}
+		return CentralDefenseRatings;
+	}
+
+	public Hashtable<Integer, Double> getCentralAttackRatings()
+	{
+		double userRatingOffset = UserParameter.instance().middleAttackOffset;
+		Hashtable<Integer, Double> CentralAttackRatings = new Hashtable<>();
+		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+			CentralAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALATTACK));
+		}
+		return CentralAttackRatings;
+	}
+
+//    public float getRightAttackRatings()
+//    {
+//        return getSideAttackRatings(RIGHT);
+//    }
+
+//    public float getLeftAttackRatings()
+//    {
+//        return getSideAttackRatings(LEFT);
+//    }
+
+//    public float getSideAttackRatings (int side) {
+//    	return calcRatings(SIDEATTACK, side);
+//    }
+
+//    public float getRightDefenseRatings()
+//    {
+//        return getSideDefenseRatings(RIGHT);
+//    }
+
+	public Hashtable<Integer, Double> getRightDefenseRatings()
+	{
+		double userRatingOffset = UserParameter.instance().rightDefenceOffset;
+		Hashtable<Integer, Double> RightDefenseRatings = new Hashtable<>();
+		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+			RightDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, RIGHT));
+		}
+		return RightDefenseRatings;
+	}
+
+//    public float getLeftDefenseRatings()
+//    {
+//        return getSideDefenseRatings(LEFT);
+//    }
+
+	public Hashtable<Integer, Double> getLeftDefenseRatings()
+	{
+		double userRatingOffset = UserParameter.instance().leftDefenceOffset;
+		Hashtable<Integer, Double> LeftDefenseRatings = new Hashtable<>();
+		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+			LeftDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, LEFT));
+		}
+		return LeftDefenseRatings;
+	}
+
+	public Hashtable<Integer, Double> getLeftAttackRatings()
+	{
+		double userRatingOffset = UserParameter.instance().leftAttackOffset;
+		Hashtable<Integer, Double> LeftAttackRatings = new Hashtable<>();
+		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+			LeftAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, LEFT));
+		}
+		return LeftAttackRatings;
+	}
+
+	public Hashtable<Integer, Double> getRightAttackRatings()
+	{
+		double userRatingOffset = UserParameter.instance().rightAttackOffset;
+		Hashtable<Integer, Double> RightAttackRatings = new Hashtable<>();
+		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+			RightAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, RIGHT));
+		}
+		return RightAttackRatings;
+	}
+
+
+//    public float getSideDefenseRatings (int side) {
+//    	return calcRatings(SIDEDEFENSE, side);
+//    }
+
+//	public float getMFRatings ()
+//	{
+//		return calcRatings(MIDFIELD);
+//	}
+
+	public Hashtable<Integer, Double> getMFRatings()
+	{
+		double userRatingOffset = UserParameter.instance().midfieldOffset;
+		Hashtable<Integer, Double> MidfieldRatings = new Hashtable<>();
+		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+			MidfieldRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), MIDFIELD));
+		}
+		return MidfieldRatings;
+	}
+
     
-    public float getCentralAttackRatings()
-    {
-    	return calcRatings(CENTRALATTACK);
-    }
-
-
-    public float getCentralDefenseRatings()
-    {
-    	return calcRatings(CENTRALDEFENSE);
-    }
-
-    public float getRightAttackRatings()
-    {
-        return getSideAttackRatings(RIGHT);
-    }
-
-    public float getLeftAttackRatings()
-    {
-        return getSideAttackRatings(LEFT);
-    }
-
-    public float getSideAttackRatings (int side) {
-    	return calcRatings(SIDEATTACK, side);
-    }
-
-    public float getRightDefenseRatings()
-    {
-        return getSideDefenseRatings(RIGHT);
-    }
-
-    public float getLeftDefenseRatings()
-    {
-        return getSideDefenseRatings(LEFT);
-    }
-
-    public float getSideDefenseRatings (int side) {
-    	return calcRatings(SIDEDEFENSE, side);
-    }
-
-    
-    private double getCrowdingPenalty(int pos) {
+    private double getCrowdingPenalty(Lineup _lineup, int pos) {
     	double penalty;
     	RatingPredictionParameter  para = config.getPlayerStrengthParameters();
     	
@@ -492,15 +696,15 @@ public class RatingPredictionManager {
     	switch (pos) {
     	case CENTRALDEFENSE :
     		// Central Defender
-    		penalty = para.getParam(RatingPredictionParameter.GENERAL, getNumCDs() + "CdMulti");
+    		penalty = para.getParam(RatingPredictionParameter.GENERAL, getNumCDs(_lineup) + "CdMulti");
     		break;
     	case MIDFIELD :
     		// Midfielder
-    		penalty = para.getParam(RatingPredictionParameter.GENERAL, getNumIMs() + "MfMulti");
+    		penalty = para.getParam(RatingPredictionParameter.GENERAL, getNumIMs(_lineup) + "MfMulti");
     		break;
     	case CENTRALATTACK :
     		// Forward
-    		penalty = para.getParam(RatingPredictionParameter.GENERAL, getNumFWs() + "FwMulti");
+    		penalty = para.getParam(RatingPredictionParameter.GENERAL, getNumFWs(_lineup) + "FwMulti");
     		break;
     	default :
     		penalty = 1;
@@ -560,26 +764,26 @@ public class RatingPredictionManager {
     	return weights;
     }
     
-    public double[][] getAllPlayerStrength (int skillType) {
-    	return getAllPlayerStrength(skillType, true, true, true);
+    public double[][] getAllPlayerStrength (int t, Lineup _lineup, int skillType) {
+    	return getAllPlayerStrength(t, _lineup, skillType, true, true, true);
     }
 
-    public double[][] getAllPlayerStrengthLeft (int skillType) {
-    	return getAllPlayerStrength(skillType, true, false, false);
+    public double[][] getAllPlayerStrengthLeft (int t, Lineup _lineup, int skillType) {
+    	return getAllPlayerStrength(t, _lineup, skillType, true, false, false);
     }
 
-    public double[][] getAllPlayerStrengthRight (int skillType) {
-    	return getAllPlayerStrength(skillType, false, false, true);
+    public double[][] getAllPlayerStrengthRight (int t, Lineup _lineup, int skillType) {
+    	return getAllPlayerStrength(t, _lineup, skillType, false, false, true);
     }
 
-    public double[][] getAllPlayerStrengthMiddle (int skillType) {
-    	return getAllPlayerStrength(skillType, false, true, false);
+    public double[][] getAllPlayerStrengthMiddle (int t, Lineup _lineup, int skillType) {
+    	return getAllPlayerStrength(t, _lineup, skillType, false, true, false);
     }
 
-    public int getNumIMs () {
+    public int getNumIMs (Lineup _lineup) {
     	int retVal = 0;
     	for(int pos : IMatchRoleID.aFieldMatchRoleID) {
-    		Player player = lineup.getPlayerByPositionID(pos);
+    		Player player = _lineup.getPlayerByPositionID(pos);
             if (player != null) {
             	if (pos == IMatchRoleID.rightInnerMidfield || pos == IMatchRoleID.leftInnerMidfield ||
             			pos == IMatchRoleID.centralInnerMidfield)
@@ -589,10 +793,10 @@ public class RatingPredictionManager {
     	return retVal;
     }
 
-    public int getNumFWs () {
+    public int getNumFWs (Lineup _lineup) {
     	int retVal = 0;
     	for(int pos : IMatchRoleID.aFieldMatchRoleID) {
-    		Player player = lineup.getPlayerByPositionID(pos);
+    		Player player = _lineup.getPlayerByPositionID(pos);
             if (player != null) {
             	if (pos == IMatchRoleID.rightForward || pos == IMatchRoleID.leftForward ||
             			pos == IMatchRoleID.centralForward)
@@ -602,10 +806,10 @@ public class RatingPredictionManager {
     	return retVal;
     }
 
-    public int getNumCDs () {
+    public int getNumCDs (Lineup _lineup) {
     	int retVal = 0;
     	for(int pos : IMatchRoleID.aFieldMatchRoleID) {
-    		Player player = lineup.getPlayerByPositionID(pos);
+    		Player player = _lineup.getPlayerByPositionID(pos);
             if (player != null) {
             	if (pos == IMatchRoleID.rightCentralDefender || pos == IMatchRoleID.leftCentralDefender ||
             			pos == IMatchRoleID.middleCentralDefender)
@@ -669,12 +873,12 @@ public class RatingPredictionManager {
     	return bonus;
     }
     
-    public double[][] getAllPlayerStrength (int skillType, boolean useLeft, boolean useMiddle, boolean useRight) {
+    public double[][] getAllPlayerStrength (int t, Lineup _lineup, int skillType, boolean useLeft, boolean useMiddle, boolean useRight) {
     	double[][] retArray = new double[IMatchRoleID.NUM_POSITIONS][SPEC_ALL];
 //    	System.out.println ("getAllPlayerStrength: st="+skillType+", l="+useLeft+", m="+useMiddle+", r="+useRight);
         for(int pos : IMatchRoleID.aFieldMatchRoleID) {
-            Player player = lineup.getPlayerByPositionID(pos);
-            byte taktik = lineup.getTactic4PositionID(pos);
+            Player player = _lineup.getPlayerByPositionID(pos);
+            byte taktik = _lineup.getTactic4PositionID(pos);
             if(player != null) {
 //            	System.out.println ("getAllPlayerStrength."+pos+", id="+player.getSpielerID()+", taktik="+taktik);
             	// Check sides
@@ -692,61 +896,61 @@ public class RatingPredictionManager {
             		
             		else switch (pos) {
             		case IMatchRoleID.keeper:
-            			retArray[IMatchRoleID.KEEPER][specialty] += calcPlayerStrength(player, skillType);
+            			retArray[IMatchRoleID.KEEPER][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			break;
             		case IMatchRoleID.rightCentralDefender:
             		case IMatchRoleID.leftCentralDefender:
             		case IMatchRoleID.middleCentralDefender:
             			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.CENTRAL_DEFENDER][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.CENTRAL_DEFENDER][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			else if (taktik == IMatchRoleID.OFFENSIVE)
-            				retArray[IMatchRoleID.CENTRAL_DEFENDER_OFF][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.CENTRAL_DEFENDER_OFF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			else if (taktik == IMatchRoleID.TOWARDS_WING)
-            				retArray[IMatchRoleID.CENTRAL_DEFENDER_TOWING][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.CENTRAL_DEFENDER_TOWING][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			break;
             		case IMatchRoleID.rightBack:
             		case IMatchRoleID.leftBack:
             			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.BACK][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.BACK][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			else if (taktik == IMatchRoleID.OFFENSIVE)
-            				retArray[IMatchRoleID.BACK_OFF][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.BACK_OFF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			else if (taktik == IMatchRoleID.DEFENSIVE)
-            				retArray[IMatchRoleID.BACK_DEF][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.BACK_DEF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			else if (taktik == IMatchRoleID.TOWARDS_MIDDLE)
-            				retArray[IMatchRoleID.BACK_TOMID][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.BACK_TOMID][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			break;
             		case IMatchRoleID.rightWinger:
             		case IMatchRoleID.leftWinger:
             			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.WINGER][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.WINGER][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			else if (taktik == IMatchRoleID.OFFENSIVE)
-            				retArray[IMatchRoleID.WINGER_OFF][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.WINGER_OFF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			else if (taktik == IMatchRoleID.DEFENSIVE)
-            				retArray[IMatchRoleID.WINGER_DEF][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.WINGER_DEF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			else if (taktik == IMatchRoleID.TOWARDS_MIDDLE)
-            				retArray[IMatchRoleID.WINGER_TOMID][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.WINGER_TOMID][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			break;
             		case IMatchRoleID.rightInnerMidfield:
             		case IMatchRoleID.leftInnerMidfield:
             		case IMatchRoleID.centralInnerMidfield:
             			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.MIDFIELDER][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.MIDFIELDER][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			else if (taktik == IMatchRoleID.OFFENSIVE)
-            				retArray[IMatchRoleID.MIDFIELDER_OFF][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.MIDFIELDER_OFF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			else if (taktik == IMatchRoleID.DEFENSIVE)
-            				retArray[IMatchRoleID.MIDFIELDER_DEF][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.MIDFIELDER_DEF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			else if (taktik == IMatchRoleID.TOWARDS_WING)
-            				retArray[IMatchRoleID.MIDFIELDER_TOWING][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.MIDFIELDER_TOWING][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			break;
             		case IMatchRoleID.rightForward:
             		case IMatchRoleID.leftForward:
             		case IMatchRoleID.centralForward:
             			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.FORWARD][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.FORWARD][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			else if (taktik == IMatchRoleID.DEFENSIVE) {
-            				retArray[IMatchRoleID.FORWARD_DEF][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.FORWARD_DEF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			} else if (taktik == IMatchRoleID.TOWARDS_WING)
-            				retArray[IMatchRoleID.FORWARD_TOWING][specialty] += calcPlayerStrength(player, skillType);
+            				retArray[IMatchRoleID.FORWARD_TOWING][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
             			break;
             		}
             	}
@@ -754,17 +958,12 @@ public class RatingPredictionManager {
         }
         return retArray;
     }
-    
-    public float getMFRatings ()
-    {
-    	return calcRatings(MIDFIELD);
+
+    public static float calcPlayerStrength(int t, Player player, int skillType, boolean isPressing) {
+    	return calcPlayerStrength(t, player, skillType, true, isPressing);
     }
 
-    public static float calcPlayerStrength(Player player, int skillType) {
-    	return calcPlayerStrength(player, skillType, true);
-    }
-
-    public static float calcPlayerStrength(Player player, int skillType, boolean useForm) {
+    public static float calcPlayerStrength(int t, Player player, int skillType, boolean useForm, boolean isPressing) {
         double retVal = 0.0F;
         try
         {
@@ -803,7 +1002,10 @@ public class RatingPredictionManager {
         catch(Exception e) {
         	e.printStackTrace();
         }
-        return (float)retVal;    	
+
+		double StaminaEffect = 1;
+        if (t != -1) StaminaEffect = GetStaminaEffect(player.getKondition(),player.getGameStartingTime(), t, isPressing);
+        return (float)(retVal * StaminaEffect);
     }
 
     private static float getSubDeltaFromConfig (RatingPredictionParameter params, String sectionName, int skill) {
@@ -815,12 +1017,13 @@ public class RatingPredictionManager {
     	return delta;    	
     }
     
-    public static double calcPlayerStrength (RatingPredictionParameter params, 
-    		String sectionName, double stamina, double xp, double skill, double form, boolean useForm) {
+    public static double calcPlayerStrength (RatingPredictionParameter params,
+    	String sectionName, double stamina, double xp, double skill, double form, boolean useForm) {
 //    	long startTime = new Date().getTime();
     	// If config changed, we have to clear the cache
+		boolean forceRefresh = true; //FIXME this should be necessary only in debug mode
     	if (!playerStrengthCache.containsKey("lastRebuild") 
-    			|| playerStrengthCache.get("lastRebuild") < config.getLastParse() ) {
+    			|| playerStrengthCache.get("lastRebuild") < config.getLastParse() || forceRefresh) {
     		HOLogger.instance().debug(RatingPredictionManager.class, "RPM tainted, clearing cache!");
     		playerStrengthCache.clear();
     		playerStrengthCache.put ("lastRebuild", new Double(new Date().getTime()));
@@ -834,71 +1037,65 @@ public class RatingPredictionManager {
     	String useSection = sectionName;
     	if (!params.hasSection(sectionName))
     		useSection = RatingPredictionParameter.GENERAL;
-    	
-    	skill += params.getParam(useSection, "skillDelta", 0);
-    	stamina += params.getParam(useSection, "staminaDelta", 0);
+
     	form += params.getParam(useSection, "formDelta", 0);
-    	xp += params.getParam(useSection, "xpDelta", 0);
 
+    	// Compute Xp Effect
+		if (params.getParam(useSection, "multiXpLog10", 99) != 99) {xp = params.getParam(useSection, "multiXpLog10", 0) * Math.log10(xp);}
+		else {
+			xp += params.getParam(useSection, "xpDelta", 0);
+			xp = Math.min(xp, params.getParam(useSection, "xpMax", 99999));
+			xp *= params.getParam(useSection, "xpMultiplier", 1);
+			xp = Math.pow(xp, params.getParam(useSection, "xpPower", 1));
+			xp *= params.getParam(useSection, "finalXpMultiplier", 1);
+			xp += params.getParam(useSection, "finalXpDelta", 0);
+		}
+		xp = Math.max(xp, params.getParam(useSection, "xpMin", 0));
+
+		skill += params.getParam(useSection, "skillDelta", 0);
     	skill = Math.max(skill, params.getParam(useSection, "skillMin", 0));
-    	stamina = Math.max(stamina, params.getParam(useSection, "staminaMin", 0));
+		skill = Math.min(skill, params.getParam(useSection, "skillMax", 99999));
+		skill *= params.getParam(useSection, "skillMultiplier", 1);
+		skill = Math.pow(skill, params.getParam(useSection, "skillPower", 1));
+
     	form = Math.max(form, params.getParam(useSection, "formMin", 0));
-    	xp = Math.max(xp, params.getParam(useSection, "xpMin", 0));
-
-    	skill = Math.min(skill, params.getParam(useSection, "skillMax", 99999));
-    	stamina = Math.min(stamina, params.getParam(useSection, "staminaMax", 99999));
     	form = Math.min(form, params.getParam(useSection, "formMax", 99999));
-    	xp = Math.min(xp, params.getParam(useSection, "xpMax", 99999));
-
-    	skill *= params.getParam(useSection, "skillMultiplier", 1);
-    	stamina *= params.getParam(useSection, "staminaMultiplier", 1);
     	form *= params.getParam(useSection, "formMultiplier", 1);
-    	xp *= params.getParam(useSection, "xpMultiplier", 1);
-
-    	skill = Math.pow(skill, params.getParam(useSection, "skillPower", 1));
-    	stamina = Math.pow(stamina, params.getParam(useSection, "staminaPower", 1));
     	form = Math.pow(form, params.getParam(useSection, "formPower", 1));
-    	xp = Math.pow(xp, params.getParam(useSection, "xpPower", 1));
+
 
     	if (params.getParam(useSection, "skillLog", 0) > 0)
     		skill = Math.log(skill)/Math.log(params.getParam(useSection, "skillLog", 0));
-    	if (params.getParam(useSection, "staminaLog", 0) > 0)
-    		stamina = Math.log(stamina)/Math.log(params.getParam(useSection, "staminaLog", 0));
     	if (params.getParam(useSection, "formLog", 0) > 0)
     		form = Math.log(form)/Math.log(params.getParam(useSection, "formLog", 0));
-    	if (params.getParam(useSection, "xpLog", 0) > 0)
-    		xp = Math.log(xp)/Math.log(params.getParam(useSection, "xpLog", 0));
+
 
     	skill *= params.getParam(useSection, "finalSkillMultiplier", 1);
-    	stamina *= params.getParam(useSection, "finalStaminaMultiplier", 1);
     	form *= params.getParam(useSection, "finalFormMultiplier", 1);
-    	xp *= params.getParam(useSection, "finalXpMultiplier", 1);
+
     	
     	skill += params.getParam(useSection, "finalSkillDelta", 0);
-    	stamina += params.getParam(useSection, "finalStaminaDelta", 0);
     	form += params.getParam(useSection, "finalFormDelta", 0);
-    	xp += params.getParam(useSection, "finalXpDelta", 0);
+
     	
     	stk = skill;
-    	if (params.getParam(useSection, "resultMultiStamina", 0) > 0)
-    		stk *= params.getParam(useSection, "resultMultiStamina", 0) * stamina;
     	if (useForm && params.getParam(useSection, "resultMultiForm", 0) > 0)
-    		stk *= params.getParam(useSection, "resultMultiForm", 0) * form;
+    		stk *= params.getParam(useSection, "resultMultiForm", 0);
     	if (params.getParam(useSection, "resultMultiXp", 0) > 0)
     		stk *= params.getParam(useSection, "resultMultiXp", 0) * xp;
+		stk += params.getParam(useSection, "resultAddXp", 0) * xp;
 
-   		stk += params.getParam(useSection, "resultAddStamina", 0) * stamina;
    		if (useForm)
-   			stk += params.getParam(useSection, "resultAddForm", 0) * form;
-   		stk += params.getParam(useSection, "resultAddXp", 0) * xp;
-   		
+   			stk *= form;
+
 //		HOLogger.instance().debug(RatingPredictionManager.class, "Adding to cache: " + key + "=" + stk);
-   		playerStrengthCache.put(key, new Double(stk));
-   		
+
+   		playerStrengthCache.put(key, stk);
 //    	long endTime = new Date().getTime();
 //    	HOLogger.instance().debug(RatingPredictionManager.class, "calcPlayerStrength (" 
 //    			+ "SN=" + sectionName + ",ST" + stamina + ",XP" + xp + ",SK" + skill + ",FO" + form + ",uF" + useForm+ ") took " + (endTime-startTime) + "ms");
-    	return stk;
+
+		return stk;
     }
 
     private void init(Team team, short trainerType, int styleOfPlay)
@@ -906,14 +1103,14 @@ public class RatingPredictionManager {
         try
         {
             this.trainerType = trainerType;
-            this.attitude = (short)lineup.getAttitude();
-            this.heimspiel = lineup.getLocation();
-            this.taktikType = (short)lineup.getTacticType();
+            this.attitude = (short)startingLineup.getAttitude();
+            this.heimspiel = startingLineup.getLocation();
+            this.taktikType = (short)startingLineup.getTacticType();
             this.stimmung = (short)team.getStimmungAsInt();
             this.substimmung = (short)team.getSubStimmung();
             this.selbstvertrauen = (short)team.getSelbstvertrauenAsInt();
-            this.pullBackMinute = lineup.getPullBackMinute();
-            this.pullBackOverride = lineup.isPullBackOverride();
+            this.pullBackMinute = startingLineup.getPullBackMinute();
+            this.pullBackOverride = startingLineup.isPullBackOverride();
             this.styleOfPlay = styleOfPlay;
             return;
         }
@@ -922,7 +1119,52 @@ public class RatingPredictionManager {
         	e.printStackTrace();
         }
     }
-    
+
+	 /**
+	 * Returns the stamina effect per minute from tEnter tp tExit
+	 * @param stamina: player stamina
+	 * @param tEnter: at which minute the player entered the game
+     * @param tNow: current minute being played
+	 */
+	public static double GetStaminaEffect(double stamina, int tEnter, int tNow, boolean isTacticPressing){
+		boolean isHighStaminaPlayer;
+
+		stamina -= 1;
+		double P = isTacticPressing ? 1.1 : 1.0;
+		double energyLossPerMinuteLS = -P * (5.95 - 27*stamina/70.0)/5;
+		double energyLossPerMinuteHS = -3.25 * P /5;
+
+		double energy;
+
+		if(stamina >= 7) {
+			isHighStaminaPlayer = true;
+			energy = 125 + (stamina - 7) * 100 / 7.0 - energyLossPerMinuteHS;  //energy when entering the field for player whose stamina >= 8
+		}
+		else{
+			isHighStaminaPlayer = false;
+			energy = 102 + 23 / 7.0 * stamina - energyLossPerMinuteLS; //energy when entering the field for player whose stamina < 8
+		}
+
+
+		int t=tEnter;
+
+		while(t<=tNow)
+		{
+			if ((t == 46) && (tEnter<45)) energy += 18.75;  // Energy recovery during half-time
+			else if ((t == 91) && (tEnter<90)) energy += 6.25;  // Energy recovery before extra-time
+			else {
+				  if(isHighStaminaPlayer) {
+					  energy = energy + energyLossPerMinuteHS;
+				  }
+				else {
+					  energy = energy + energyLossPerMinuteLS;
+				  }
+			}
+			t += 1;
+		}
+		return Math.max(10, Math.min(100, energy)) / 100.0;
+	}
+
     private double getTrainerEffect(double defensive, double offensive, double neutral) {
     	
     	// styleOfPlay * 0.1 gives us the fraction of the distance we need to go from
@@ -961,10 +1203,10 @@ public class RatingPredictionManager {
     	float passing = 0;
         for(int i : IMatchRoleID.aFieldMatchRoleID)
         {
-            Player ispieler = lineup.getPlayerByPositionID(i);
-            byte taktik = lineup.getTactic4PositionID(i);
+            Player ispieler = startingLineup.getPlayerByPositionID(i);
+            byte taktik = startingLineup.getTactic4PositionID(i);
             if(ispieler != null) {
-            	passing =  calcPlayerStrength(ispieler, PASSING);
+            	passing =  calcPlayerStrength(-1, ispieler, PASSING, false);
             	// Zus. MF/IV/ST
                 if(taktik == 7 || taktik == 6 || taktik == 5)
                     passing *= params.getParam("extraMulti", 1.0);
@@ -994,10 +1236,10 @@ public class RatingPredictionManager {
         for(int pos = IMatchRoleID.rightBack; pos <= IMatchRoleID.leftBack; pos++)
         {
         	playerContribution = 0d;
-            Player player = lineup.getPlayerByPositionID(pos);
+            Player player = startingLineup.getPlayerByPositionID(pos);
             if(player != null) {
-            		playerContribution = (params.getParam("counter", "multiPs", 1.0) * calcPlayerStrength(player, PASSING));
-            		playerContribution += (params.getParam("counter", "multiDe", 1.0) * calcPlayerStrength(player, DEFENDING));
+            		playerContribution = (params.getParam("counter", "multiPs", 1.0) * calcPlayerStrength(-1, player, PASSING, false));
+            		playerContribution += (params.getParam("counter", "multiDe", 1.0) * calcPlayerStrength(-1, player, DEFENDING, false));
             		playerContribution *= params.getParam("counter", "playerPostMulti", 1.0);
             		playerContribution += params.getParam("counter", "playerPostDelta", 0);
             		retVal += playerContribution;
@@ -1021,9 +1263,9 @@ public class RatingPredictionManager {
         for(int pos = IMatchRoleID.startLineup + 1; pos < IMatchRoleID.startReserves; pos++)
         {
             float defense = 0.0F;
-            Player player = lineup.getPlayerByPositionID(pos);
+            Player player = startingLineup.getPlayerByPositionID(pos);
             if(player != null) {
-            	defense = calcPlayerStrength(player, DEFENDING);
+            	defense = calcPlayerStrength(-1, player, DEFENDING, false);
                 if (player.getSpezialitaet() == PlayerSpeciality.POWERFUL) {
                 	defense *= 2;
                 }
@@ -1050,10 +1292,10 @@ public class RatingPredictionManager {
         {
             float scoring = 0.0F;
             float setpieces = 0.0F;
-            Player player = lineup.getPlayerByPositionID(pos);
+            Player player = startingLineup.getPlayerByPositionID(pos);
             if(player != null) {
-            	scoring = 3*calcPlayerStrength(player, SCORING);
-            	setpieces = calcPlayerStrength(player, SETPIECES);
+            	scoring = 3*calcPlayerStrength(-1, player, SCORING, false);
+            	setpieces = calcPlayerStrength(-1, player, SETPIECES, false);
                 retVal += scoring;
                 retVal += setpieces;
             }
