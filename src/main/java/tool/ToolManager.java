@@ -101,19 +101,28 @@ public class ToolManager implements ActionListener {
             PluginFeedback pluginFeedback = new PluginFeedback();
             String message = "[" + pluginFeedback.getHoToken() + "]";
             try {
-                int result = pluginFeedback.sendFeedbackToServer(lineup, rating);
+                String result = pluginFeedback.sendFeedbackToServer(lineup, rating);
                 message += " Dati inviati al server, grazie! (Risultato:" + result + ")";
                 HOLogger.instance().info(getClass(), message);
+                if (message.length() > 200) {
+                    message = message.substring(0, 200);
+                }
                 JOptionPane.showMessageDialog(null, message);
             } catch (IOException ex) {
                 message += " Errore nell'invio dei dati al server. (Error Message:" + ex.getMessage() + ")"; //todo remove getmessage
                 HOLogger.instance().error(getClass(), ex);
                 ex.printStackTrace();
+                if (message.length() > 200) {
+                    message = message.substring(0, 200);
+                }
                 JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
             } catch (IllegalArgumentException ex) {
                 message += " Errore negli input. (Error Message:" + ex.getMessage() + ")"; //todo remove getmessage
                 HOLogger.instance().error(getClass(), ex);
                 ex.printStackTrace();
+                if (message.length() > 200) {
+                    message = message.substring(0, 200);
+                }
                 JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
             }
         }

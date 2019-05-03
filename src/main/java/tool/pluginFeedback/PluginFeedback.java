@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Base64;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -50,42 +51,47 @@ ect
                 + System.getProperty("os.arch") + " (" + System.getProperty("os.version")
                 + "))/" + System.getProperty("java.version") + " ("
                 + System.getProperty("java.vendor") + ")";
-        postUrl = "http://mistermax80.max:8080/ws-user-feedbacks";
-        getUrl = "http://mistermax80.max:8080/ws-user-feedbacks";
+        //postUrl = "http://mistermax80.max:8080/ws-user-feedbacks?access-token=foqwij41094-d423r87oh43fuo";
+        postUrl = "http://mistermax80.max:8080/ws-ho-feedbacks";
+        getUrl = "http://mistermax80.max:8080/ws-ho-feedbacks";
+        //postUrl = "https://mistermax80.000webhostapp.com/index.php?r=ws-ho-feedback/create";
     }
 
     // SendFeedbackToServer (Lineup lineup, PredictionRating rating)
-    public int sendFeedbackToServer(Lineup lineup, MatchRating rating) throws IOException, IllegalArgumentException {
-        int result = -1;
+    public String sendFeedbackToServer(Lineup lineup, MatchRating rating) throws IOException, IllegalArgumentException {
+        String result;
 
         // Input Checks
         if (lineup != null && rating != null) {
             List<Player> playerList = HOVerwaltung.instance().getModel().getAllSpieler();
-            for (int i = 0; i < playerList.size() - 3; i++) {
-                playerList.remove(i);
-            }
+            //for (int i = 0; i < playerList.size() - 3; i++) {
+            //    playerList.remove(i);
+            //}
 
             Feedback feedback = new Feedback(lineup.getPositionen(), rating, playerList, hoToken);
             // Create a JsonObject
             GsonBuilder builder = new GsonBuilder();
             builder.setPrettyPrinting();
-            Gson gsonFeedback = builder.create();
-            result = this.doPOST("{\"JSON_OBJECTS\": " + gsonFeedback.toJson(feedback) + "}");
+            Gson gsonFeedback = builder.create();          result = this.doPOST("{\"json_objects\": " + gsonFeedback.toJson(feedback) + "}");
         } else {
             throw new IllegalArgumentException("The inputs (Lineup lineup or MatchRating rating) are null value! (" + hoToken + ")");
         }
         return result;
     }
 
-    private int doPOST(String postParams) throws IOException {
-        int result = 0;
+    private String doPOST(String postParams) throws IOException {
         URL obj = new URL(postUrl);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
         con.setRequestMethod("POST");
         con.setRequestProperty("User-Agent", userAgent);
         con.setRequestProperty("Accept", "application/json");
         con.setRequestProperty("Content-Type", "application/json");
         con.setRequestProperty("HO-Token", hoToken);
+        String authString = "foqwij41094-d423r87oh43fuo:";
+        String encodedString = Base64.getEncoder().encodeToString(authString.getBytes());
+        con.setRequestProperty("Authorization", "Basic " + encodedString);
+        //con.setRequestProperty("Authorization : Basic base64(access_token:)", "foqwij41094-d423r87oh43fuo");
 
         // For POST only - START
         con.setDoOutput(true);
@@ -127,7 +133,7 @@ ect
         // print result
         System.out.println(response.toString());
 
-        return result;
+        return response.toString();
     }
 
     private static String randomAlphaNumeric(int count) {
