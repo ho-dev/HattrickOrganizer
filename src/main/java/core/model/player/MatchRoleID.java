@@ -48,11 +48,6 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 			new CBItem(MatchRoleID.getNameForPosition(FORWARD_DEF), FORWARD_DEF),
 			new CBItem(MatchRoleID.getNameForPosition(FORWARD_TOWING), FORWARD_TOWING) };
 
-	// Konstanten für TRAININGSEFFEKTE
-
-	public static final byte KEIN_TE = 0;
-	public static final byte SCHWACHER_TE = 1;
-	public static final byte VOLLER_TE = 2;
 
 	// ~ Instance fields
 	// ----------------------------------------------------------------------------

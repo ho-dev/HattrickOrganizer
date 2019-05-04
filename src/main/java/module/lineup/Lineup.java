@@ -965,50 +965,6 @@ public class Lineup{
 		return m_vPositionen;
 	}
 
-//	/**
-//	 * Predicts Right-Attack-Rating
-//	 */
-//	public final double getRightAttackRating() {
-//		if (HOVerwaltung.instance().getModel() != null
-//				&& HOVerwaltung.instance().getModel().getID() != -1) {
-//			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
-//					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
-//							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
-//					RatingPredictionConfig.getInstance());
-//			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
-//			// Wert
-//			double value = Math.max(1, rpManager.getRightAttackRatings());
-//			if (value > 1) {
-//				value += UserParameter.instance().rightAttackOffset;
-//			}
-//			return value;
-//		} else {
-//			return 0.0d;
-//		}
-//	}
-
-//	/**
-//	 * Predicts rd-Rating
-//	 */
-//	public final double getRightDefenseRating() {
-//		if (HOVerwaltung.instance().getModel() != null
-//				&& HOVerwaltung.instance().getModel().getID() != -1) {
-//			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
-//					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
-//							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
-//					RatingPredictionConfig.getInstance());
-//			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
-//			// Wert
-//			double value = Math.max(1, rpManager.getRightDefenseRatings());
-//			if (value > 1) {
-//				value += UserParameter.instance().rightDefenceOffset;
-//			}
-//			return value;
-//		} else {
-//			return 0.0d;
-//		}
-//	}
-
 	/**
 	 * Team star rating for attackers
 	 */
@@ -1040,23 +996,46 @@ public class Lineup{
 	/**
 	 * Place a player to a certain position and check/solve dependencies.
 	 */
-	public final void setSpielerAtPosition(int positionsid, int spielerid) {
-		//if player changed in starting eleven or subsitute it has to be remove from previous occupied place in starting eleven or substitute
-		if(!IMatchRoleID.aBackupssMatchRoleID.contains(positionsid)){
-		MatchRoleID iRole;
-		int iPlayerID;
-		if (this.isPlayerInLineup(spielerid)) {
-			for (int i = 0; i < m_vPositionen.size(); i++) {
-				iRole = (MatchRoleID) m_vPositionen.get(i);
-				iPlayerID = iRole.getSpielerId();
-				// player is removed from previous position as player on the field or as substitute
-				if (iPlayerID == spielerid) {iRole.setSpielerId(0, this);}
+	public final void setSpielerAtPosition(int positionID, int playerID) {
+		//if player changed in starting eleven or substitute it has to be remove from previous occupied place in starting eleven or substitute
+		if(!IMatchRoleID.aBackupssMatchRoleID.contains(positionID)){
+			MatchRoleID iRole;
+			int iPlayerID;
+
+			// player is being set in starting 11
+			if (IMatchRoleID.aFieldMatchRoleID.contains(positionID)) {
+				// but player was already set in starting 11 or as a sub, hence it has to be removed from previously occupied position
+				if (this.isPlayerInStartingEleven(playerID) || this.isPlayerASub(playerID)) {
+					for (int i = 0; i < m_vPositionen.size(); i++) {
+						iRole = (MatchRoleID) m_vPositionen.get(i);
+						iPlayerID = iRole.getSpielerId();
+						// player is removed from previous position as player on the field or as substitute
+						if (iPlayerID == playerID) {
+							iRole.setSpielerId(0, this);
+						}
+					}
 				}
 			}
+
+			// player is being set as a sub
+			else if (IMatchRoleID.aSubstitutesMatchRoleID.contains(positionID)) {
+				// but player was already set in starting 11, hence it has to be removed from previously occupied position
+				if (this.isPlayerInStartingEleven(playerID)) {
+					for (int i = 0; i < m_vPositionen.size(); i++) {
+						iRole = (MatchRoleID) m_vPositionen.get(i);
+						iPlayerID = iRole.getSpielerId();
+						// player is removed from previous position as player on the field or as substitute
+						if (iPlayerID == playerID) {
+							iRole.setSpielerId(0, this);
+						}
+					}
+				}
+			}
+
 		}
 
-		final MatchRoleID position = getPositionById(positionsid);
-		position.setSpielerId(spielerid, this);
+		final MatchRoleID position = getPositionById(positionID);
+		position.setSpielerId(playerID, this);
 
 	}
 
@@ -1067,15 +1046,18 @@ public class Lineup{
 		return m_clAssi.isPlayerInLineup(spielerId, m_vPositionen);
 	}
 
-	public final boolean isPlayerInLineupExcludingBackup(int spielerId) {
-		return m_clAssi.isPlayerInLineupExcludingBackup(spielerId, m_vPositionen);
-	}
-
 	/**
 	 * Check, if the player is in the starting 11.
 	 */
 	public final boolean isPlayerInStartingEleven(int spielerId) {
 		return m_clAssi.isPlayerInStartingEleven(spielerId, m_vPositionen);
+	}
+
+	/**
+	 * Check, if the player is a subsitute
+	 */
+	public final boolean isPlayerASub(int spielerId) {
+		return m_clAssi.isPlayerASub(spielerId, m_vPositionen);
 	}
 
 	/**
@@ -1085,20 +1067,6 @@ public class Lineup{
 		return (m_clAssi.isPlayerInLineup(spielerId, m_vPositionen) && !m_clAssi
 				.isPlayerInStartingEleven(spielerId, m_vPositionen));
 	}
-
-	/**
-	 * check if the player is a sub (backup players are excluded)
-	 */
-	public final boolean isPlayerAsubstitute(int playerId) {
-		for (int i = 0; (m_vPositionen != null) && (i < m_vPositionen.size()); i++) {
-			if ((((MatchRoleID)m_vPositionen.elementAt(i)).getSpielerId() == playerId) &&
-					(IMatchRoleID.aSubstitutesMatchRoleID.contains(((MatchRoleID)m_vPositionen.elementAt(i)).getId()))){
-				return true;
-			}
-		}
-		return false;
-		}
-
 
 
 	/**

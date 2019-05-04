@@ -131,7 +131,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	 * Setzt die Player und Taktiken der einzelnen PositionsPanels neu
 	 */
 	public final void update() {
-		HOVerwaltung.instance().getModel().getLineup();
+		HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 		aufstellungsPositionsPanel.refresh();
 		aufstellungsDetailPanel.refresh();
 		aufstellungSpielerTable.refresh();

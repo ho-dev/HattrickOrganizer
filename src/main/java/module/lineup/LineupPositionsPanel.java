@@ -248,9 +248,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 				.isExcludeLastMatch();
 
 		// All Player Positions Inform First 11
-		List<Player> selectedPlayers = new ArrayList<Player>();
+		List<Player> selectedPlayers = new ArrayList<>();
 		List<Player> allPlayers = HOVerwaltung.instance().getModel().getAllSpieler();
-		List<Player> filteredPlayers = new ArrayList<Player>();
+		List<Player> filteredPlayers = new ArrayList<>();
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
 		for (Player player: allPlayers) {
@@ -639,7 +639,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridy = 7;
 		constraints.gridwidth = 7;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		JLabel label1 = new JLabel("SUBSTITUTES", JLabel.CENTER);
+		JLabel label1 = new JLabel(HOVerwaltung.instance().getLanguageString("moduleLineup.LineupPanel.SubstitutesLabel"), JLabel.CENTER);
 		// create a line border with the specified color and width
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
 		label1.setBorder(border);

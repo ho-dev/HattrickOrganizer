@@ -36,7 +36,7 @@ import javax.swing.JLayeredPane;
 
 
 /**
- * Panel, in dem die Spielerposition dargestellt wird und geändert werden kann
+ * Panel in which the player position is displayed and can be changed
  */
 class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListener
 {
@@ -64,7 +64,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     private Updateable m_clUpdater;
     private SpielerCBItem[] m_clCBItems = new SpielerCBItem[0];
     private boolean m_bMinimize;
-    private int m_iPositionID = -1;
+    private int m_iPositionID;
 
 	private int playerId = -1;
 	private int tacticOrder = -1;
@@ -460,8 +460,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         List<Player> lSubs = new ArrayList<Player>();
 
         for (Player player: allPlayers) {
-            // the first 11
-            if (lineup.isPlayerAsubstitute(player.getSpielerID())) {
+            if (lineup.isPlayerASub(player.getSpielerID())) {
                 lSubs.add(player);
             }
         }

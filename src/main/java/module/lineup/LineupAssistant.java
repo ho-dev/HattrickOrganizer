@@ -25,7 +25,7 @@ public class LineupAssistant {
 	private Weather weather = Weather.PARTIALLY_CLOUDY;
 
 	/**
-	 * gibt an ob der Player bereits aufgestellt ist auch ReserveBank zählt mit
+	 * indicates if the player is already installed. Also ReserveBank counts
 	 */
 	public final boolean isPlayerInLineup(int spielerId, List<IMatchRoleID> positions) {
 		if (positions != null) {
@@ -39,27 +39,27 @@ public class LineupAssistant {
 		return false;
 	}
 
-	public final boolean isPlayerInStartingEleven(int spielerId, Vector<IMatchRoleID> positionen) {
-		for (int i = 0; (positionen != null) && (i < positionen.size()); i++) {
-			if ((((MatchRoleID) positionen.elementAt(i)).getId() < IMatchRoleID.startReserves)
-					&& (((MatchRoleID) positionen.elementAt(i)).getSpielerId() == spielerId)) {
-				return true;
-			}
-		}
+    public final boolean isPlayerInStartingEleven(int spielerId, Vector<IMatchRoleID> positionen) {
+        for (int i = 0; (positionen != null) && (i < positionen.size()); i++) {
+            if (IMatchRoleID.aFieldMatchRoleID.contains(((MatchRoleID) positionen.elementAt(i)).getId()) &&
+                    (((MatchRoleID) positionen.elementAt(i)).getSpielerId() == spielerId)) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public final boolean isPlayerInLineupExcludingBackup(int spielerId, Vector<IMatchRoleID> positionen) {
-		if (!isPlayerInLineup(spielerId, positionen)) return false;
+    public final boolean isPlayerASub(int spielerId, Vector<IMatchRoleID> positionen) {
+        for (int i = 0; (positionen != null) && (i < positionen.size()); i++) {
+            if (IMatchRoleID.aSubstitutesMatchRoleID.contains(((MatchRoleID) positionen.elementAt(i)).getId()) &&
+                    (((MatchRoleID) positionen.elementAt(i)).getSpielerId() == spielerId)) {
+                return true;
+            }
+        }
 
-		for (int i = 0; (positionen != null) && (i < positionen.size()); i++) {
-			if (IMatchRoleID.aBackupssMatchRoleID.contains(((MatchRoleID) positionen.elementAt(i)).getId()) &&
-					(((MatchRoleID) positionen.elementAt(i)).getSpielerId() == spielerId)) { return false;}
-		}
-
-		return true;
-	}
+        return false;
+    }
 
 
 
