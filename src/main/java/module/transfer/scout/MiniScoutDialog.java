@@ -580,7 +580,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
      */
     private void spielervalueChanged() {
         final Player tempPlayer = new Player();
-        tempPlayer.setSpezialitaet(((CBItem) jcbSpeciality.getSelectedItem()).getId());
+        tempPlayer.setPlayerSpecialty(((CBItem) jcbSpeciality.getSelectedItem()).getId());
         tempPlayer.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
 		tempPlayer.setFuehrung(((CBItem) jcbLeadership.getSelectedItem()).getId());
         tempPlayer.setForm(((CBItem) jcbForm.getSelectedItem()).getId());

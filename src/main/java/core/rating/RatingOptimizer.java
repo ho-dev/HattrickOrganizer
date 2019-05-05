@@ -188,49 +188,49 @@ public class RatingOptimizer {
 		double calc = 0;
 		double real = 0;
 		if (type.equals("cd")) {
-			calc = rpm.getCentralDefenseRatings().get(0); //FIXME replace by 90 minute average rating ?
+			calc = rpm.getCentralDefenseRatings(true, true).get(0); //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeMidDef();
 			} else {
 				real = det.getGuestMidDef();				
 			}
 		} else if (type.equals("sd_l")) {
-			calc = rpm.getLeftDefenseRatings().get(0);  //FIXME replace by 90 minute average rating ?
+			calc = rpm.getLeftDefenseRatings(true, true).get(0); //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeLeftDef();
 			} else {
 				real = det.getGuestLeftDef();				
 			}
 		} else if (type.equals("sd_r")) {
-			calc = rpm.getRightDefenseRatings().get(0);   //FIXME replace by 90 minute average rating ?
+			calc = rpm.getRightDefenseRatings(true, true).get(0); //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeRightDef();
 			} else {
 				real = det.getGuestRightDef();				
 			}
 		} else if (type.equals("mid")) {
-			calc = rpm.getMFRatings().get(0);   //FIXME replace by 90 minute average rating ?
+			calc = rpm.getMFRatings(true, true).get(0); //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeMidfield();
 			} else {
 				real = det.getGuestMidfield();				
 			}
 		} else if (type.equals("ca")) {
-			calc = rpm.getCentralAttackRatings().get(0);  //FIXME replace by 90 minute average rating ?
+			calc = rpm.getCentralAttackRatings(true, true).get(0); //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeMidAtt();
 			} else {
 				real = det.getGuestMidAtt();				
 			}
 		} else if (type.equals("sa_l")) {
-			calc = rpm.getLeftAttackRatings().get(0);   //FIXME replace by 90 minute average rating ?
+			calc = rpm.getLeftAttackRatings(true, true).get(0); //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeLeftAtt();
 			} else {
 				real = det.getGuestLeftAtt();				
 			}
 		} else if (type.equals("sa_r")) {
-			calc = rpm.getRightAttackRatings().get(0);  //FIXME replace by 90 minute average rating ?
+			calc = rpm.getRightAttackRatings(true, true).get(0); //FIXME replace by 90 minute average rating ?
 			if (home) {
 				real = det.getHomeRightAtt();
 			} else {

@@ -143,7 +143,7 @@ final class SpielerTable extends AbstractTable {
 			statement.append("0,");
 			statement.append("0,");
 			statement.append("0,");
-			statement.append(player.getSpezialitaet()).append(",");
+			statement.append(player.getPlayerSpecialty()).append(",");
 			statement.append(player.getCharakter()).append(",");
 			statement.append(player.getAnsehen()).append(",");
 			statement.append(player.getAgressivitaet()).append(",");
@@ -517,7 +517,7 @@ final class SpielerTable extends AbstractTable {
             player.setFluegelspiel(rs.getInt("Fluegel"));
             player.setTorschuss(rs.getInt("Torschuss"));
             player.setStandards(rs.getInt("Standards"));
-            player.setSpezialitaet(rs.getInt("iSpezialitaet"));
+            player.setPlayerSpecialty(rs.getInt("iSpezialitaet"));
             player.setCharakter(rs.getInt("iCharakter"));
             player.setAnsehen(rs.getInt("iAnsehen"));
             player.setAgressivitaet(rs.getInt("iAgressivitaet"));

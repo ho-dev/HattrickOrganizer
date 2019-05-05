@@ -137,7 +137,7 @@
 //			opponentPlayer.setAlter(player.getAlter());
 //			opponentPlayer.setAgeDays(player.getAgeDays());
 //			opponentPlayer.setVerletzt(player.getVerletzt());
-//			opponentPlayer.setSpezialitaet(player.getSpezialitaet());
+//			opponentPlayer.setPlayerSpecialty(player.getPlayerSpecialty());
 //			opponentPlayer.setForm(player.getForm());
 //			opponentPlayer.setKondition(player.getKondition());
 //

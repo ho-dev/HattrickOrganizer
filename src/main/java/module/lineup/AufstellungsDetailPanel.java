@@ -253,7 +253,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		if (HOVerwaltung.instance().getModel().getTeam() != null) {
 			final HOModel homodel = HOVerwaltung.instance().getModel();
 			final Vector<Player> allPlayer = homodel.getAllSpieler();
-			final Lineup aufstellung = homodel.getLineupWithoutRatingRecalc();
+			final Lineup aufstellung = homodel.getLineup();
 
 			// HRF comparison required
 			if (AufstellungsVergleichHistoryPanel.isVergleichgefordert()) {
@@ -285,8 +285,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 				}
 			}
 
-			// Erst mal leeren
-			// aufstellung.updateRatingPredictionConfig();
+			// no comparison required
 			m_jpRating.clear();
 			m_jpRating.setTopRightText(PlayerAbility.getNameForSkill(
 					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getLeftDefense().get(0))), false, true));  //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating

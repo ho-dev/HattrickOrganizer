@@ -4,7 +4,6 @@ import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
 import core.db.DBManager;
-//import core.epv.EPVData;
 import core.model.FactorObject;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
@@ -152,7 +151,7 @@ public class Player {
     private int m_iPasspiel = 1;
 
     /** SpezialitätID */
-    private int m_iSpezialitaet;
+    private int iPlayerSpecialty;
 
     /** Spielaufbau */
     private int m_iSpielaufbau = 1;
@@ -260,7 +259,7 @@ public class Player {
         m_iFluegelspiel = Integer.parseInt(properties.getProperty("ytt", "0"));
         m_iTorschuss = Integer.parseInt(properties.getProperty("mal", "0"));
         m_iStandards = Integer.parseInt(properties.getProperty("fas", "0"));
-        m_iSpezialitaet = Integer.parseInt(properties.getProperty("speciality", "0"));
+        iPlayerSpecialty = Integer.parseInt(properties.getProperty("speciality", "0"));
         m_iCharakter = Integer.parseInt(properties.getProperty("gentleness", "0"));
         m_iAnsehen = Integer.parseInt(properties.getProperty("honesty", "0"));
         m_iAgressivitaet = Integer.parseInt(properties.getProperty("aggressiveness", "0"));
@@ -1096,27 +1095,27 @@ public class Player {
     }
 
     /**
-     * Setter for property m_iSpezialitaet.
+     * Setter for property iPlayerSpecialty.
      *
-     * @param m_iSpezialitaet New value of property m_iSpezialitaet.
+     * @param iPlayerSpecialty New value of property iPlayerSpecialty.
      */
-    public void setSpezialitaet(int m_iSpezialitaet) {
-        this.m_iSpezialitaet = m_iSpezialitaet;
+    public void setPlayerSpecialty(int iPlayerSpecialty) {
+        this.iPlayerSpecialty = iPlayerSpecialty;
     }
 
     /**
-     * Getter for property m_iSpezialitaet.
+     * Getter for property iPlayerSpecialty.
      *
-     * @return Value of property m_iSpezialitaet.
+     * @return Value of property iPlayerSpecialty.
      */
-    public int getSpezialitaet() {
-        return m_iSpezialitaet;
+    public int getPlayerSpecialty() {
+        return iPlayerSpecialty;
     }
     
 
     // returns the name of the speciality in the used language
     public String getSpecialityName() {
-    	Speciality s = Speciality.values()[m_iSpezialitaet];
+    	Speciality s = Speciality.values()[iPlayerSpecialty];
 		if (s.equals(Speciality.NO_SPECIALITY)) {
 			return EMPTY;
 		} else {
@@ -1127,7 +1126,7 @@ public class Player {
     // return the name of the speciality with a break before and in brackets
     // e.g. [br][quick], used for HT-ML export
     public String getSpecialityExportName() {
-		Speciality s = Speciality.values()[m_iSpezialitaet];
+		Speciality s = Speciality.values()[iPlayerSpecialty];
 		if (s.equals(Speciality.NO_SPECIALITY)) {
 			return EMPTY;
 		} else {
@@ -1137,7 +1136,7 @@ public class Player {
     
     // no break so that the export looks better
     public String getSpecialityExportNameForKeeper() {
-		Speciality s = Speciality.values()[m_iSpezialitaet];
+		Speciality s = Speciality.values()[iPlayerSpecialty];
 		if (s.equals(Speciality.NO_SPECIALITY)) {
 			return EMPTY;
 		} else {
@@ -1705,30 +1704,13 @@ public class Player {
         return m_iVerteidigung;
     }
 
-    /*
-       Wetterabhängige Sonderereignisse
-       Bestimmte Spezialfähigkeiten können in Zusammenhang mit einem bestimmten Wetter
-        zu Sonderereignissen führen. Die Auswirkung dieses Sonderereignisses tritt
-        von dem Zeitpunkt in Kraft, an dem es im Spielbericht erwähnt wird,
-        und hat bis zum Spielende Einfluß auf die Leistung des Spielers.
-        Diese Auswirkung wird nach dem Spiel an der Spielerbewertung (Anzahl Sterne) sichtbar.
-       Die Torschuß- und die Spielaufbau-Fähigkeit von Ballzauberern kann sich bei Regen verschlechtern,
-        während sich die gleichen Fähigkeiten bei Sonnenschein verbessern können.
-       Bei Regen gibt es die Möglichkeit, daß sich die Torschuß-, Verteidigungs- und Spielaufbau-Fähigkeit
-        von durchsetzungsstarken Spielern verbessert.
-        Auf der anderen Seite kann sich die Torschußfähigkeit bei Sonnenschein verschlechtern.
-       Schnelle Player laufen bei Regen Gefahr, daß sich ihre Torschuß- und
-        Verteidigungsfähigkeiten verschlechtern. Bei Sonnenschein besteht das Risiko
-        , daß ihre Torschußfähigkeit unter dem Wetter leidet.
-     */
-    /*
-       Liefert die mögliche Auswirkung des Wetters auf den Player
-       return 0 bei keine auswirkung
-       1 bei positiv
-       -1 bei negativ
-     */
-    public int getWetterEffekt(Weather weather) {
-        return PlayerSpeciality.getWeatherEffect(weather, m_iSpezialitaet);
+
+    public int getWeatherEffect(Weather weather) {
+        return PlayerSpeciality.getWeatherEffect(weather, iPlayerSpecialty);
+    }
+
+    public float getImpactWeatherEffect(Weather weather) {
+        return PlayerSpeciality.getImpactWeatherEffect(weather, iPlayerSpecialty);
     }
 
     private void incrementSubskills(Player originalPlayer, int assistants, int trainerlevel, int intensity,
@@ -1875,7 +1857,7 @@ public class Player {
         					+ getKondition() + "|"
         					+ getErfahrung() + "|"
         					// We need to add the specialty, because of Technical DefFW
-        					+ getSpezialitaet();
+        					+ getPlayerSpecialty();
 
         // Check if the key already exists in cache
         if (starRatingCache.containsKey(key)) {
@@ -1883,25 +1865,19 @@ public class Player {
         	return ((Float)starRatingCache.get(key)).floatValue();
         }
     	final boolean normalized = false;
-
-        float gkValue = fo.getTorwartScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.KEEPER, useForm);
-
-        float pmValue = fo.getSpielaufbauScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.PLAYMAKING, useForm);
-
-        float deValue = fo.getVerteidigungScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.DEFENDING, useForm);
-
-        float wiValue = fo.getFluegelspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.WINGER, useForm);
-
-        float psValue = fo.getPasspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.PASSING, useForm);
+        float gkValue = fo.getTorwartScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.KEEPER, useForm, false, null, false);
+        float pmValue = fo.getSpielaufbauScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.PLAYMAKING, useForm, false, null, false);
+        float deValue = fo.getVerteidigungScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.DEFENDING, useForm, false, null, false);
+        float wiValue = fo.getFluegelspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.WINGER, useForm, false, null, false);
+        float psValue = fo.getPasspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.PASSING, useForm, false, null, false);
 
         // Fix for new Defensive Attacker position
-		if (fo.getPosition()== IMatchRoleID.FORWARD_DEF && getSpezialitaet()==PlayerSpeciality.TECHNICAL) {
-			psValue *= 1.30f;
+		if (fo.getPosition()== IMatchRoleID.FORWARD_DEF && getPlayerSpecialty()==PlayerSpeciality.TECHNICAL) {
+			psValue *= 1.30f; //FIXME this should be passed via the .dat file not hardcoded
 		}
 
-        float spValue = fo.getStandardsScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.SET_PIECES, useForm);
-
-        float scValue = fo.getTorschussScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.SCORING, useForm);
+        float spValue = fo.getStandardsScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.SET_PIECES, useForm, false, null, false);
+        float scValue = fo.getTorschussScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.SCORING, useForm, false, null, false);
 
         float val = gkValue + pmValue + deValue + wiValue + psValue + spValue + scValue;
 

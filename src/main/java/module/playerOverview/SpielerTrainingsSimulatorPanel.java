@@ -157,7 +157,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             tempPlayer.setForm(((CBItem) m_jcbForm.getSelectedItem()).getId());
             tempPlayer.setKondition(((CBItem) m_jcbKondition.getSelectedItem()).getId());
             tempPlayer.setVerteidigung(((CBItem) m_jcbVerteidigung.getSelectedItem()).getId());
-            tempPlayer.setSpezialitaet(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
+            tempPlayer.setPlayerSpecialty(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
             tempPlayer.setTorschuss(((CBItem) m_jcbTorschuss.getSelectedItem()).getId());
             tempPlayer.setTorwart(((CBItem) m_jcbTorwart.getSelectedItem()).getId());
             tempPlayer.setFluegelspiel(((CBItem) m_jcbFluegel.getSelectedItem()).getId());
@@ -206,7 +206,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         Helper.markierenComboBox(m_jcbTorwart, m_clPlayer.getTorwart());
         Helper.markierenComboBox(m_jcbPasspiel, m_clPlayer.getPasspiel());
         Helper.markierenComboBox(m_jcbVerteidigung, m_clPlayer.getVerteidigung());
-		Helper.markierenComboBox(m_jcbSpeciality, m_clPlayer.getSpezialitaet());
+		Helper.markierenComboBox(m_jcbSpeciality, m_clPlayer.getPlayerSpecialty());
         Helper.markierenComboBox(m_jcbStandard, m_clPlayer.getStandards());
         Helper.markierenComboBox(m_jcbLoyalty, m_clPlayer.getLoyalty());
         m_jchHomegrown.setSelected(m_clPlayer.isHomeGrown());
@@ -245,7 +245,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         tempPlayer.setErfahrung(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
         tempPlayer.setKondition(((CBItem) m_jcbKondition.getSelectedItem()).getId());
         tempPlayer.setVerteidigung(((CBItem) m_jcbVerteidigung.getSelectedItem()).getId());
-		tempPlayer.setSpezialitaet(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
+		tempPlayer.setPlayerSpecialty(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
         tempPlayer.setTorschuss(((CBItem) m_jcbTorschuss.getSelectedItem()).getId());
         tempPlayer.setTorwart(((CBItem) m_jcbTorwart.getSelectedItem()).getId());
         tempPlayer.setFluegelspiel(((CBItem) m_jcbFluegel.getSelectedItem()).getId());
@@ -358,7 +358,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 		tempPlayer.setAlter(getAge());
 		tempPlayer.setAgeDays(getAgeDays());
 		tempPlayer.setFuehrung(m_clPlayer.getFuehrung());
-		tempPlayer.setSpezialitaet(m_clPlayer.getSpezialitaet());
+		tempPlayer.setPlayerSpecialty(m_clPlayer.getPlayerSpecialty());
 //        m_jpEPV.setText(java.text.NumberFormat.getCurrencyInstance()
 //        		.format(HOVerwaltung.instance().getModel().getEPV()
 //        		.getPrice(new EPVData(tempPlayer))));

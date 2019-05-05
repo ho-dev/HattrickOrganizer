@@ -179,7 +179,7 @@ public class TeamPanel extends JPanel {
                 spotLineup.setAppearance(0);
                 spotLineup.setName(getPlayerName(player.getName()));
                 spotLineup.setPlayerId(player.getSpielerID());
-                spotLineup.setSpecialEvent(player.getSpezialitaet());
+                spotLineup.setSpecialEvent(player.getPlayerSpecialty());
                 spotLineup.setTacticCode(lineup.getTactic4PositionID(spot));
                 spotLineup.setPosition(lineup.getEffectivePos4PositionID(spot));
                 spotLineup.setRating(player.calcPosValue(lineup.getEffectivePos4PositionID(spot),

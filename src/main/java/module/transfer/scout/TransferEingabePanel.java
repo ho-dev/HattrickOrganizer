@@ -187,7 +187,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 tempPlayer.setName(jtfName.getText());
             }
             tempPlayer.setTSI(Integer.parseInt(jtfTSI.getText()));
-            tempPlayer.setSpezialitaet(((CBItem) jcbSpeciality.getSelectedItem()).getId());
+            tempPlayer.setPlayerSpecialty(((CBItem) jcbSpeciality.getSelectedItem()).getId());
             tempPlayer.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
             tempPlayer.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
             tempPlayer.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
@@ -351,7 +351,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
      */
     private void setLabels() {
         final core.model.player.Player tempPlayer = new core.model.player.Player();
-        tempPlayer.setSpezialitaet(((CBItem)jcbSpeciality.getSelectedItem()).getId());
+        tempPlayer.setPlayerSpecialty(((CBItem)jcbSpeciality.getSelectedItem()).getId());
         tempPlayer.setErfahrung(((CBItem)jcbExperience.getSelectedItem()).getId());
         tempPlayer.setFuehrung(((CBItem)jcbLeadership.getSelectedItem()).getId());
         tempPlayer.setForm(((CBItem)jcbForm.getSelectedItem()).getId());

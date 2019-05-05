@@ -489,13 +489,13 @@ public class Lineup{
 		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
 			rpManager = new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam(),
 					(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay, RatingPredictionConfig.getInstance());
-			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings());
-			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings());
-			oRatings.setRightDefense(rpManager.getRightDefenseRatings());
-			oRatings.setMidfield(rpManager.getMFRatings());
-			oRatings.setLeftAttack(rpManager.getLeftAttackRatings());
-			oRatings.setCentralAttack(rpManager.getCentralAttackRatings());
-			oRatings.setRightAttack(rpManager.getRightAttackRatings());
+			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
+			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
+			oRatings.setRightDefense(rpManager.getRightDefenseRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
+			oRatings.setMidfield(rpManager.getMFRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
+			oRatings.setLeftAttack(rpManager.getLeftAttackRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
+			oRatings.setCentralAttack(rpManager.getCentralAttackRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
+			oRatings.setRightAttack(rpManager.getRightAttackRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
 
 			this.oRatings = oRatings;
 		}

@@ -149,7 +149,7 @@ public class CsvPlayerExport {
 						"" + PlayerAggressiveness.toString(curPlayer.getAgressivitaet()),
 						"" + PlayerHonesty.toString(curPlayer.getAnsehen()),
 						//
-						"" + PlayerSpeciality.toString(curPlayer.getSpezialitaet()),
+						"" + PlayerSpeciality.toString(curPlayer.getPlayerSpecialty()),
 						"" + curPlayer.getErfahrung(),
 						"" + curPlayer.getFuehrung(),
 						"" + curPlayer.getForm(),

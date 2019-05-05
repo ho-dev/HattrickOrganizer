@@ -433,9 +433,9 @@ final class SpielerDetailDialog extends JDialog {
 		m_jpTorePokal.setText(m_clPlayer.getTorePokal() + "");
 		m_jpToreGesamt.setText(m_clPlayer.getToreGesamt() + "");
 		m_jpHattriks.setText(m_clPlayer.getHattrick() + "");
-		m_jpSpezialitaet.setText(PlayerSpeciality.toString(m_clPlayer.getSpezialitaet()));
+		m_jpSpezialitaet.setText(PlayerSpeciality.toString(m_clPlayer.getPlayerSpecialty()));
 		m_jpSpezialitaet.setIcon(ThemeManager.getIcon(HOIconName.SPECIAL[m_clPlayer
-				.getSpezialitaet()]));
+				.getPlayerSpecialty()]));
 		m_jpAggressivitaet.setText(PlayerAggressiveness.toString(m_clPlayer.getAgressivitaet()));
 
 		// Dreher!

@@ -455,7 +455,7 @@ public class Player
 		setNationality(m_Player.getNationalitaet());
 		setLeadership(m_Player.getFuehrung());
 		setGroup(m_Player.getTeamInfoSmilie());
-		setSpeciality(m_Player.getSpezialitaet());
+		setSpeciality(m_Player.getPlayerSpecialty());
 	}
 	
 	public void setOldSkillValues()

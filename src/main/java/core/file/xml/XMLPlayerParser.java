@@ -74,7 +74,7 @@ public class XMLPlayerParser {
         tmp = (Element) ele.getElementsByTagName("Leadership").item(0);
         player.setFuehrung(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
         tmp = (Element) ele.getElementsByTagName("Specialty").item(0);
-        player.setSpezialitaet(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
+        player.setPlayerSpecialty(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
         tmp = (Element) ele.getElementsByTagName("TransferListed").item(0);
         player.setTransferlisted(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
         tmp = (Element) ele.getElementsByTagName("CountryID").item(0);

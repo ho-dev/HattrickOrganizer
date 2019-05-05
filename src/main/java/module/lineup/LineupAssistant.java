@@ -19,9 +19,7 @@ public class LineupAssistant {
 	public static final byte MF_AW_ST = 3;
 	public static final byte ST_AW_MF = 4;
 	public static final byte ST_MF_AW = 5;
-	/** gibt an wie auf Wettereinfluss reagiert werden soll in Prozent */
-	private float m_weatherBonus = 0.2f;
-	/** gibt das Wetter an */
+	private float m_weatherBonus = 0.05f;
 	private Weather weather = Weather.PARTIALLY_CLOUDY;
 
 	/**
@@ -432,7 +430,7 @@ public class LineupAssistant {
 
 			// stk inklusive Wetter effekt errechnen
 			aktuStk = player.calcPosValue(position, mitForm);
-			aktuStk += (m_weatherBonus * player.getWetterEffekt(this.weather) * aktuStk);
+			aktuStk += m_weatherBonus * player.getWeatherEffect(this.weather) * aktuStk;
 
 			if ((!isPlayerInLineup(player.getSpielerID(), positionen))
 					&& ((bestPlayer == null) || (bestStk < aktuStk))
@@ -465,7 +463,7 @@ public class LineupAssistant {
 
 			// stk inklusive Wetter effekt errechnen
 			aktuStk = player.calcPosValue(position, mitForm);
-			aktuStk += (m_weatherBonus * player.getWetterEffekt(this.weather) * aktuStk);
+			aktuStk += m_weatherBonus * player.getWeatherEffect(this.weather) * aktuStk;
 
 			// Idealpos STK muss > mindestwert sein
 			if ((!isPlayerInLineup(player.getSpielerID(), positionen))

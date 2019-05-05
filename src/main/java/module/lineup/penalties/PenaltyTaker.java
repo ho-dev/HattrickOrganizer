@@ -25,7 +25,7 @@ public class PenaltyTaker {
 					+ (getSetPieces() + loy) * 0.7
 					+ (getScoring() + loy) * 0.3;
 
-		if (getPlayer().getSpezialitaet() == PlayerSpeciality.TECHNICAL) {
+		if (getPlayer().getPlayerSpecialty() == PlayerSpeciality.TECHNICAL) {
 			ability *= 1.1;
 		}
 		return ability;

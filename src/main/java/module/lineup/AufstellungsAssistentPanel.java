@@ -295,6 +295,11 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 		} else if (actionEvent.getSource().equals(overlayCancel)) {
 			removeGUI();
 		}
+
+		else if (actionEvent.getSource().equals(m_jcbWetter))
+		{
+			HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
+		}
 	}
 
 	@Override
@@ -364,7 +369,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 			}
 		}
 
-		hoModel.getLineupWithoutRatingRecalc().doAufstellung(vPlayer,
+		hoModel.getLineup().doAufstellung(vPlayer,
 				(byte) ((CBItem) m_jcbReihenfolge.getSelectedItem()).getId(),
 				m_jchForm.isSelected(), m_jchIdealPosition.isSelected(),
 				m_jchVerletzte.isSelected(), m_jchGesperrte.isSelected(),
@@ -543,6 +548,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 		m_jcbWetter.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
 		m_jcbWetter.setRenderer(new core.gui.comp.renderer.WeatherListCellRenderer());
 		m_jcbWetter.addItemListener(this);
+		m_jcbWetter.addActionListener(this);
 		panel.add(m_jcbWetter);
 
 		final JPanel panel2 = new JPanel(new BorderLayout());

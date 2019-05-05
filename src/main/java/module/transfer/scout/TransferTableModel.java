@@ -362,7 +362,7 @@ public class TransferTableModel extends AbstractTableModel {
             final ScoutEintrag aktuellerScoutEintrag = m_vScoutEintraege.get(i);
             final Player aktuellerPlayer = new Player();
             aktuellerPlayer.setName(aktuellerScoutEintrag.getName());
-            aktuellerPlayer.setSpezialitaet(aktuellerScoutEintrag.getSpeciality());
+            aktuellerPlayer.setPlayerSpecialty(aktuellerScoutEintrag.getSpeciality());
             aktuellerPlayer.setErfahrung(aktuellerScoutEintrag.getErfahrung());
             aktuellerPlayer.setFuehrung(aktuellerScoutEintrag.getLeadership());
             aktuellerPlayer.setForm(aktuellerScoutEintrag.getForm());

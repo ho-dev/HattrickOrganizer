@@ -219,7 +219,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 			if (spieler != null) {
 				trickotnummer = spieler.getTrikotnummer();
 				m_jlSpecial.setIcon(ThemeManager.getIcon(HOIconName.SPECIAL[spieler
-						.getSpezialitaet()]));
+						.getPlayerSpecialty()]));
 			} else {
 				m_jlSpecial.setIcon(null);
 			}

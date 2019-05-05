@@ -304,14 +304,14 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     	// weatherEffect
     	 m_jlWeatherEffect.setIcon(null);
     	if (m_bShowWeatherEffect) {
-    		int effect = PlayerSpeciality.getWeatherEffect(HOMainFrame.getWetter(),player.getSpezialitaet());
+    		int effect = PlayerSpeciality.getWeatherEffect(HOMainFrame.getWetter(),player.getPlayerSpecialty());
     		if(effect != 0){
     			final ImageIcon wettericon = ThemeManager.getIcon("weather.effect."+effect);
     			m_jlWeatherEffect.setIcon(wettericon);
     		}
         }
     	
-    	m_jlSpezialitaet.setIcon( ThemeManager.getIcon(HOIconName.SPECIAL[player.getSpezialitaet()]));
+    	m_jlSpezialitaet.setIcon( ThemeManager.getIcon(HOIconName.SPECIAL[player.getPlayerSpecialty()]));
 
         
         // positionValue

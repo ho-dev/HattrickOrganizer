@@ -1,18 +1,18 @@
 package core.rating;
 
-import core.HO;
 import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
+import core.gui.HOMainFrame;
 import core.model.Team;
 import core.model.UserParameter;
 import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
+import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.GoalDiffCriteria;
-import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
 
@@ -21,35 +21,26 @@ import java.util.*;
 
 public class RatingPredictionManager {
 	//~ Class constants ----------------------------------------------------------------------------
-	
     private static final int THISSIDE = RatingPredictionParameter.THISSIDE;
     private static final int OTHERSIDE = RatingPredictionParameter.OTHERSIDE;
     private static final int ALLSIDES = RatingPredictionParameter.ALLSIDES;
     private static final int MIDDLE = RatingPredictionParameter.MIDDLE;
     private static final int LEFT = RatingPredictionParameter.LEFT;
     private static final int RIGHT = RatingPredictionParameter.RIGHT;
-    
     public static final Date LAST_CHANGE = (new GregorianCalendar(2009, 4, 18)).getTime(); //18.05.2009
     public static final Date LAST_CHANGE_FRIENDLY = (new GregorianCalendar(2009, 4, 18)).getTime(); //18.05.2009
-
     private static final int SIDEDEFENSE = 0; 
     private static final int CENTRALDEFENSE = 1; 
     private static final int MIDFIELD = 2; 
     private static final int SIDEATTACK = 3; 
-    private static final int CENTRALATTACK = 4; 
-
+    private static final int CENTRALATTACK = 4;
     private static final int GOALKEEPING = PlayerSkill.KEEPER; // 0
     private static final int DEFENDING = PlayerSkill.DEFENDING; // 1
     private static final int WINGER = PlayerSkill.WINGER; // 2
     private static final int PLAYMAKING = PlayerSkill.PLAYMAKING; // 3
     private static final int SCORING = PlayerSkill.SCORING; // 4
     private static final int PASSING = PlayerSkill.PASSING; // 5
-	//private static final int STAMINA = ISpieler.SKILL_KONDITION; // 6
-    //private static final int FORM = ISpieler.SKILL_FORM; // 7
     private static final int SETPIECES = PlayerSkill.SET_PIECES; // 8
-    //private static final int EXPERIENCE = ISpieler.SKILL_EXPIERIENCE; // 9
-    //private static final int LEADERSHIP = ISpieler.SKILL_LEADERSHIP; // 10
-    
     public static final int SPEC_NONE = PlayerSpeciality.NO_SPECIALITY; // 0
     public static final int SPEC_TECHNICAL = PlayerSpeciality.TECHNICAL; // 1
     public static final int SPEC_QUICK = PlayerSpeciality.QUICK; // 2
@@ -76,8 +67,7 @@ public class RatingPredictionManager {
     private short stimmung;
     private short substimmung;
     private short taktikType;
-	private short trainerType; //FIXME: investiguate why trainer type is never used !
-    private Lineup startingLineup;
+	private Lineup startingLineup;
     private int pullBackMinute;
     private boolean pullBackOverride;
     private int styleOfPlay;
@@ -108,7 +98,7 @@ public class RatingPredictionManager {
     {
         this.startingLineup = _startingLineup;
         RatingPredictionManager.config = config;
-        init(iteam, trainerType, styleOfPlay);
+        init(iteam, styleOfPlay);
         this.LineupEvolution = this.setLineupEvolution();
     }
 
@@ -120,14 +110,13 @@ public class RatingPredictionManager {
 
     private Hashtable<Integer, Lineup> setLineupEvolution()
 	{
-		// Initilize _LineupEvolution and add starting lineup
+		// Initialize _LineupEvolution and add starting lineup
 		Hashtable<Integer, Lineup> _LineupEvolution = new Hashtable<>();
 		_LineupEvolution.put(0, startingLineup.duplicate());
 
 		// list at which time occurs all events others than game start
 		List<Integer> events = new ArrayList<>();
 
-		boolean isPullBackOccuring = false;
 		for(Substitution sub :startingLineup.getSubstitutionList())
 		{
 			if ((sub.getMatchMinuteCriteria() != -1) &&
@@ -202,15 +191,13 @@ public class RatingPredictionManager {
 
 		}
 
-
 		// in case no MatchOrder took place at 46' and 91', we add them manually  in order to visualize respectively halftime and endgame rest effect
 		if(!_LineupEvolution.containsKey(46)) _LineupEvolution.put(46, _LineupEvolution.get(45).duplicate());
 		if(!_LineupEvolution.containsKey(91)) _LineupEvolution.put(91, _LineupEvolution.get(90).duplicate());
 
-
 		// we correct for pull back event
 		if (startingLineup.isPullBackOverride() && (startingLineup.getPullBackMinute()<120)) {
-			//TODO
+			//FIXME: implement Pullback in prediction rating
 			HOLogger.instance().warning(this.getClass(), "PullBack not yet implemented in Prediction rating !!!");
 		}
 
@@ -219,22 +206,13 @@ public class RatingPredictionManager {
 
 	}
 
-	private float calcRatings (int type) {
-    	//FIXME: this function is a patch, it needs to be deleted when finalized !!
-		return calcRatings (type, ALLSIDES);
-	}
 
-	private float calcRatings ( int type, int side2calc) {
-		//FIXME: this function is a patch, it needs to be deleted when finalized !!
-    	return 0;
-	}
 
-    private float calcRatings (int t, Lineup lineup, int type) {
-    	return calcRatings (t, lineup, type, ALLSIDES);
+    private float calcRatings (int t, Lineup lineup, int type, boolean useForm, Weather weather, boolean useWeatherImpact) {
+    	return calcRatings (t, lineup, type, ALLSIDES, useForm, weather, useWeatherImpact);
     }
     
-    private float calcRatings (int t, Lineup _lineup, int type, int side2calc) {
-//    	FIXME: use time innformation
+    private float calcRatings (int t, Lineup _lineup, int type, int side2calc, boolean useForm, Weather weather, boolean useWeatherImpact) {
     	RatingPredictionParameter params;
     	switch (type) {
 		case SIDEDEFENSE:
@@ -259,20 +237,16 @@ public class RatingPredictionManager {
     	Enumeration<String> allKeys = allSections.keys();
     	double retVal = 0;
     	while (allKeys.hasMoreElements()) {
-    		String sectionName = (String)allKeys.nextElement();
-    		double curValue = calcPartialRating (t, _lineup, params, sectionName, side2calc);
-//    		HOLogger.instance().debug(this.getClass(), "PartRating for type "+type+", section "+sectionName+" is "+curValue);
+    		String sectionName = allKeys.nextElement();
+    		double curValue = calcPartialRating (t, _lineup, params, sectionName, side2calc, useForm, weather, useWeatherImpact);
     		retVal += curValue;
     	}
     	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);
-//    	HOLogger.instance().debug(this.getClass(), "Prediction ["+config.getPredictionName()+"] FullRating for type "+type+" is "+retVal);    	
-//    	long endTime = new Date().getTime();
-//    	HOLogger.instance().debug(RatingPredictionManager.class, "calcRatings (T=" + type + ",S=" + side2calc + ")"
-//    			+ " took " + (endTime-startTime) + "ms");
+
     	return (float)retVal;
     }
 
-    private double calcPartialRating (int t, Lineup _lineup, RatingPredictionParameter params, String sectionName, int side2calc) {
+    private double calcPartialRating (int t, Lineup _lineup, RatingPredictionParameter params, String sectionName, int side2calc, boolean useForm, Weather weather, boolean useWeatherImpact) {
     	int skillType = sectionNameToSkillAndSide(sectionName)[0];
     	int sideType = sectionNameToSkillAndSide(sectionName)[1];
     	double retVal = 0;
@@ -284,48 +258,33 @@ public class RatingPredictionManager {
     	switch (sideType) {
 		case THISSIDE:
 			if (side2calc == LEFT)
-				allStk = getAllPlayerStrengthLeft(t, _lineup, skillType);
+				allStk = getAllPlayerStrengthLeft(t, _lineup, useForm, weather, useWeatherImpact, skillType);
 			else
-				allStk = getAllPlayerStrengthRight(t, _lineup, skillType);
+				allStk = getAllPlayerStrengthRight(t, _lineup, useForm, weather, useWeatherImpact, skillType);
 			break;
 		case OTHERSIDE:
 			if (side2calc == LEFT)
-				allStk = getAllPlayerStrengthRight(t, _lineup, skillType);
+				allStk = getAllPlayerStrengthRight(t, _lineup, useForm, weather, useWeatherImpact, skillType);
 			else
-				allStk = getAllPlayerStrengthLeft(t, _lineup, skillType);
+				allStk = getAllPlayerStrengthLeft(t, _lineup, useForm, weather, useWeatherImpact, skillType);
 			break;
 		case MIDDLE:
-			allStk = getAllPlayerStrengthMiddle(t, _lineup, skillType);
+			allStk = getAllPlayerStrengthMiddle(t, _lineup, useForm, weather, useWeatherImpact, skillType);
 	   		break;
 		default:
-			allStk = getAllPlayerStrength(t, _lineup, skillType);
+			allStk = getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType);
 			break;
     	}
     	double[][] allWeights = getAllPlayerWeights(params, sectionName);
-//    	System.out.println ("calcPartRating: using sidetype="+sideType+", side2calc="+side2calc);
-    	// FIXME
+
     	for (int effPos=0; effPos < allStk.length; effPos++) {
 			double curAllSpecWeight = allWeights[effPos][SPEC_ALL];
     		for (int spec=0; spec < SPEC_ALL; spec++) {
     			double curStk = allStk[effPos][spec];
     			double curWeight = allWeights[effPos][spec];
     			if (curStk > 0) {
-    				if (curWeight > 0) {
-    					
-    	  
-//    					System.out.println ("addingPlayer (SPEC) @"+effPos+": (skill "+skillType+") stk="+curStk + " * weight="+ curWeight+" = "+curStk * curWeight);
-    					
-    					// blaghaid: I could not find a better spot to adjust for crowding. For instance the parameters are
-    					// set in static method and can't check the number of central players in the lineup. Feel free to
-    					// move to a better home.
-    					
-    					retVal += adjustForCrowding(_lineup, curStk, effPos) * curWeight;
-    				} else {
-    	  
-//    					System.out.println ("addingPlayer (ALL) @"+effPos+": (skill "+skillType+") stk="+curStk + " * weight="+ curAllSpecWeight +" = "+curStk * curAllSpecWeight);
-    					
-    					retVal += adjustForCrowding(_lineup, curStk, effPos) * curAllSpecWeight;
-    				}
+    				if (curWeight > 0) {retVal += adjustForCrowding(_lineup, curStk, effPos) * curWeight;}
+    				else {retVal += adjustForCrowding(_lineup, curStk, effPos) * curAllSpecWeight;}
     			}
     		}
     	}
@@ -473,28 +432,6 @@ public class RatingPredictionManager {
     	return retVal;
     }
 
-//    private static int getSpecialtyByName (String specialtyName) {
-//    	specialtyName = specialtyName.toLowerCase();
-//    	if (specialtyName.equals("none"))
-//    		return SPEC_NONE;
-//    	else if (specialtyName.equals("technical"))
-//    		return SPEC_TECHNICAL;
-//    	else if (specialtyName.equals("quick"))
-//    		return SPEC_QUICK;
-//    	else if (specialtyName.equals("powerful"))
-//    		return SPEC_POWERFUL;
-//    	else if (specialtyName.equals("unpredictable"))
-//    		return SPEC_UNPREDICTABLE;
-//    	else if (specialtyName.equals("header"))
-//    		return SPEC_HEADER;
-//    	else if (specialtyName.equals("regainer"))
-//    		return SPEC_REGAINER;
-//    	else if (specialtyName.equals("all") || specialtyName.equals(""))
-//    		return SPEC_ALL;
-//    	else
-//    		return -1;
-//    }
-    
     private static String getSkillName (int skill) {
     	switch (skill) {
 		case GOALKEEPING:
@@ -569,119 +506,83 @@ public class RatingPredictionManager {
     	retArray[1] = getSideByName (sideName);
     	return retArray;
     }
-    
-//
-//    public float getCentralAttackRatings()
-//    {
-//    	return calcRatings(CENTRALATTACK);
-//    }
 
-
-//    public float getCentralDefenseRatings()
-//    {
-//    	return calcRatings(CENTRALDEFENSE);
-//    }
-
-	public Hashtable<Integer, Double> getCentralDefenseRatings()
+	public Hashtable<Integer, Double> getCentralDefenseRatings(boolean useForm, boolean useWeatherImpact)
 	{
+		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().middleDefenceOffset;
 		Hashtable<Integer, Double> CentralDefenseRatings = new Hashtable<>();
 		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
-			CentralDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALDEFENSE));
+			CentralDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALDEFENSE, useForm, weather, useWeatherImpact));
 		}
 		return CentralDefenseRatings;
 	}
 
-	public Hashtable<Integer, Double> getCentralAttackRatings()
+	public Hashtable<Integer, Double> getCentralAttackRatings(boolean useForm, boolean useWeatherImpact)
 	{
+		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().middleAttackOffset;
 		Hashtable<Integer, Double> CentralAttackRatings = new Hashtable<>();
 		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
-			CentralAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALATTACK));
+			CentralAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALATTACK, useForm, weather, useWeatherImpact));
 		}
 		return CentralAttackRatings;
 	}
 
-//    public float getRightAttackRatings()
-//    {
-//        return getSideAttackRatings(RIGHT);
-//    }
 
-//    public float getLeftAttackRatings()
-//    {
-//        return getSideAttackRatings(LEFT);
-//    }
-
-//    public float getSideAttackRatings (int side) {
-//    	return calcRatings(SIDEATTACK, side);
-//    }
-
-//    public float getRightDefenseRatings()
-//    {
-//        return getSideDefenseRatings(RIGHT);
-//    }
-
-	public Hashtable<Integer, Double> getRightDefenseRatings()
+	public Hashtable<Integer, Double> getRightDefenseRatings(boolean useForm, boolean useWeatherImpact)
 	{
+		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().rightDefenceOffset;
 		Hashtable<Integer, Double> RightDefenseRatings = new Hashtable<>();
 		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
-			RightDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, RIGHT));
+			RightDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, RIGHT, useForm, weather, useWeatherImpact));
 		}
 		return RightDefenseRatings;
 	}
 
-//    public float getLeftDefenseRatings()
-//    {
-//        return getSideDefenseRatings(LEFT);
-//    }
 
-	public Hashtable<Integer, Double> getLeftDefenseRatings()
+	public Hashtable<Integer, Double> getLeftDefenseRatings(boolean useForm, boolean useWeatherImpact)
 	{
+		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().leftDefenceOffset;
 		Hashtable<Integer, Double> LeftDefenseRatings = new Hashtable<>();
 		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
-			LeftDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, LEFT));
+			LeftDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, LEFT, useForm, weather, useWeatherImpact));
 		}
 		return LeftDefenseRatings;
 	}
 
-	public Hashtable<Integer, Double> getLeftAttackRatings()
+	public Hashtable<Integer, Double> getLeftAttackRatings(boolean useForm, boolean useWeatherImpact)
 	{
+		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().leftAttackOffset;
 		Hashtable<Integer, Double> LeftAttackRatings = new Hashtable<>();
 		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
-			LeftAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, LEFT));
+			LeftAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, LEFT, useForm, weather, useWeatherImpact));
 		}
 		return LeftAttackRatings;
 	}
 
-	public Hashtable<Integer, Double> getRightAttackRatings()
+	public Hashtable<Integer, Double> getRightAttackRatings(boolean useForm, boolean useWeatherImpact)
 	{
+		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().rightAttackOffset;
 		Hashtable<Integer, Double> RightAttackRatings = new Hashtable<>();
 		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
-			RightAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, RIGHT));
+			RightAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, RIGHT, useForm, weather, useWeatherImpact));
 		}
 		return RightAttackRatings;
 	}
 
 
-//    public float getSideDefenseRatings (int side) {
-//    	return calcRatings(SIDEDEFENSE, side);
-//    }
-
-//	public float getMFRatings ()
-//	{
-//		return calcRatings(MIDFIELD);
-//	}
-
-	public Hashtable<Integer, Double> getMFRatings()
+	public Hashtable<Integer, Double> getMFRatings(boolean useForm, boolean useWeatherImpact)
 	{
+		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().midfieldOffset;
 		Hashtable<Integer, Double> MidfieldRatings = new Hashtable<>();
 		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
-			MidfieldRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), MIDFIELD));
+			MidfieldRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), MIDFIELD, useForm, weather, useWeatherImpact));
 		}
 		return MidfieldRatings;
 	}
@@ -715,7 +616,6 @@ public class RatingPredictionManager {
 
     public static double[][] getAllPlayerWeights (RatingPredictionParameter params, String sectionName) {
     	double[][] weights = new double[IMatchRoleID.NUM_POSITIONS][NUM_SPEC];
-		double extraMulti = params.getParam(RatingPredictionParameter.GENERAL, "extraMulti", 0);
 		double modCD = params.getParam(sectionName, "allCDs", 1);
 		double modWB = params.getParam(sectionName, "allWBs", 1);
 		double modIM = params.getParam(sectionName, "allIMs", 1);
@@ -764,20 +664,20 @@ public class RatingPredictionManager {
     	return weights;
     }
     
-    public double[][] getAllPlayerStrength (int t, Lineup _lineup, int skillType) {
-    	return getAllPlayerStrength(t, _lineup, skillType, true, true, true);
+    public double[][] getAllPlayerStrength (int t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
+    	return getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType, true, true, true);
     }
 
-    public double[][] getAllPlayerStrengthLeft (int t, Lineup _lineup, int skillType) {
-    	return getAllPlayerStrength(t, _lineup, skillType, true, false, false);
+    public double[][] getAllPlayerStrengthLeft (int t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
+    	return getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType, true, false, false);
     }
 
-    public double[][] getAllPlayerStrengthRight (int t, Lineup _lineup, int skillType) {
-    	return getAllPlayerStrength(t, _lineup, skillType, false, false, true);
+    public double[][] getAllPlayerStrengthRight (int t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
+    	return getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType, false, false, true);
     }
 
-    public double[][] getAllPlayerStrengthMiddle (int t, Lineup _lineup, int skillType) {
-    	return getAllPlayerStrength(t, _lineup, skillType, false, true, false);
+    public double[][] getAllPlayerStrengthMiddle (int t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
+    	return getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact,  skillType, false, true, false);
     }
 
     public int getNumIMs (Lineup _lineup) {
@@ -821,7 +721,6 @@ public class RatingPredictionManager {
     
 
     public boolean isLeft (int pos) {
-    	// Blaghaid - Taktik removed as parameter, no longer needed in 553
     	
     	if (pos == IMatchRoleID.leftCentralDefender
 				|| pos == IMatchRoleID.leftInnerMidfield
@@ -834,7 +733,6 @@ public class RatingPredictionManager {
     }
 
     public boolean isRight (int  pos) {
-    	// Blaghaid - Taktik removed as parameter, no longer needed in 553
     	
     	if (pos == IMatchRoleID.rightCentralDefender
 				|| pos == IMatchRoleID.rightInnerMidfield
@@ -847,8 +745,6 @@ public class RatingPredictionManager {
     }
     
     public boolean isMiddle (int pos) {
-    	// Blaghaid - Taktik removed as parameter, no longer needed in 553
-    	// A bunch of logic on single forward being central, etc used to be here. Will not be missed.
     	
     	if (pos == IMatchRoleID.centralForward
 				|| pos == IMatchRoleID.centralInnerMidfield
@@ -873,84 +769,77 @@ public class RatingPredictionManager {
     	return bonus;
     }
     
-    public double[][] getAllPlayerStrength (int t, Lineup _lineup, int skillType, boolean useLeft, boolean useMiddle, boolean useRight) {
+    public double[][] getAllPlayerStrength (int t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType, boolean useLeft, boolean useMiddle, boolean useRight) {
     	double[][] retArray = new double[IMatchRoleID.NUM_POSITIONS][SPEC_ALL];
-//    	System.out.println ("getAllPlayerStrength: st="+skillType+", l="+useLeft+", m="+useMiddle+", r="+useRight);
         for(int pos : IMatchRoleID.aFieldMatchRoleID) {
             Player player = _lineup.getPlayerByPositionID(pos);
             byte taktik = _lineup.getTactic4PositionID(pos);
             if(player != null) {
-//            	System.out.println ("getAllPlayerStrength."+pos+", id="+player.getSpielerID()+", taktik="+taktik);
             	// Check sides
             	if (!useLeft && isLeft(pos)
-            			|| !useMiddle && isMiddle(pos) // XXXX Could this bomb side contribution for the central ones?
+            			|| !useMiddle && isMiddle(pos)
             			|| !useRight && isRight(pos)) {
             		continue;
             	} else {
-            		int specialty = player.getSpezialitaet();
-            		// To avoid ArrayOutOfBound exception for unsupported/new specialties
-            		if (specialty < SPEC_NONE || specialty >= SPEC_ALL)
-            			specialty = SPEC_NONE;
+            		int specialty = player.getPlayerSpecialty();
 
-            		// Old code had lots of checks for extras here (extra central defender, etc)
-            		
-            		else switch (pos) {
+					switch (pos) {
             		case IMatchRoleID.keeper:
-            			retArray[IMatchRoleID.KEEPER][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            			retArray[IMatchRoleID.KEEPER][specialty] += calcPlayerStrength(t, player, skillType ,useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			break;
             		case IMatchRoleID.rightCentralDefender:
             		case IMatchRoleID.leftCentralDefender:
             		case IMatchRoleID.middleCentralDefender:
             			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.CENTRAL_DEFENDER][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.CENTRAL_DEFENDER][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			else if (taktik == IMatchRoleID.OFFENSIVE)
-            				retArray[IMatchRoleID.CENTRAL_DEFENDER_OFF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.CENTRAL_DEFENDER_OFF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			else if (taktik == IMatchRoleID.TOWARDS_WING)
-            				retArray[IMatchRoleID.CENTRAL_DEFENDER_TOWING][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.CENTRAL_DEFENDER_TOWING][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			break;
             		case IMatchRoleID.rightBack:
             		case IMatchRoleID.leftBack:
             			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.BACK][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.BACK][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			else if (taktik == IMatchRoleID.OFFENSIVE)
-            				retArray[IMatchRoleID.BACK_OFF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.BACK_OFF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			else if (taktik == IMatchRoleID.DEFENSIVE)
-            				retArray[IMatchRoleID.BACK_DEF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.BACK_DEF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			else if (taktik == IMatchRoleID.TOWARDS_MIDDLE)
-            				retArray[IMatchRoleID.BACK_TOMID][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.BACK_TOMID][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			break;
             		case IMatchRoleID.rightWinger:
             		case IMatchRoleID.leftWinger:
             			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.WINGER][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.WINGER][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			else if (taktik == IMatchRoleID.OFFENSIVE)
-            				retArray[IMatchRoleID.WINGER_OFF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.WINGER_OFF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			else if (taktik == IMatchRoleID.DEFENSIVE)
-            				retArray[IMatchRoleID.WINGER_DEF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.WINGER_DEF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			else if (taktik == IMatchRoleID.TOWARDS_MIDDLE)
-            				retArray[IMatchRoleID.WINGER_TOMID][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.WINGER_TOMID][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			break;
             		case IMatchRoleID.rightInnerMidfield:
             		case IMatchRoleID.leftInnerMidfield:
             		case IMatchRoleID.centralInnerMidfield:
             			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.MIDFIELDER][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.MIDFIELDER][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			else if (taktik == IMatchRoleID.OFFENSIVE)
-            				retArray[IMatchRoleID.MIDFIELDER_OFF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.MIDFIELDER_OFF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			else if (taktik == IMatchRoleID.DEFENSIVE)
-            				retArray[IMatchRoleID.MIDFIELDER_DEF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.MIDFIELDER_DEF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			else if (taktik == IMatchRoleID.TOWARDS_WING)
-            				retArray[IMatchRoleID.MIDFIELDER_TOWING][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.MIDFIELDER_TOWING][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			break;
             		case IMatchRoleID.rightForward:
             		case IMatchRoleID.leftForward:
             		case IMatchRoleID.centralForward:
             			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.FORWARD][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.FORWARD][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			else if (taktik == IMatchRoleID.DEFENSIVE) {
-            				retArray[IMatchRoleID.FORWARD_DEF][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.FORWARD_DEF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			} else if (taktik == IMatchRoleID.TOWARDS_WING)
-            				retArray[IMatchRoleID.FORWARD_TOWING][specialty] += calcPlayerStrength(t, player, skillType, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING);
+            				retArray[IMatchRoleID.FORWARD_TOWING][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
             			break;
             		}
             	}
@@ -959,11 +848,7 @@ public class RatingPredictionManager {
         return retArray;
     }
 
-    public static float calcPlayerStrength(int t, Player player, int skillType, boolean isPressing) {
-    	return calcPlayerStrength(t, player, skillType, true, isPressing);
-    }
-
-    public static float calcPlayerStrength(int t, Player player, int skillType, boolean useForm, boolean isPressing) {
+    public static float calcPlayerStrength(int t, Player player, int skillType, boolean useForm, boolean isPressing, Weather weather, boolean useWeatherImpact) {
         double retVal = 0.0F;
         try
         {
@@ -971,7 +856,7 @@ public class RatingPredictionManager {
             float skill;
             float subSkill;
             skill = player.getValue4Skill4(skillType);
-            float subskillFromDB = (float) player.getSubskill4Pos(skillType);
+            float subskillFromDB = player.getSubskill4Pos(skillType);
 //            System.out.println ("t="+skillType+", o="+manualOffset+", s="+subskillFromDB);
             /**
              * If we know the last level up date from this player or
@@ -992,8 +877,16 @@ public class RatingPredictionManager {
             
             // Add loyalty and homegrown bonuses
             skill += getLoyaltyHomegrownBonus(player);
-               
-            retVal = calcPlayerStrength(config.getPlayerStrengthParameters(), 
+
+            // consider weather impact
+			// is it where it should be ? maybe weather impact should  be considered before loyalty and homegrown bonus, as always HT is not clear
+			if (useWeatherImpact)
+			{
+				skill *= player.getImpactWeatherEffect(weather);
+			}
+
+
+            retVal = _calcPlayerStrength(config.getPlayerStrengthParameters(),
             		getSkillName(skillType), player.getKondition(), player.getErfahrung(), skill, player.getForm(), useForm);
 //            System.out.println("calcPlayerStrength for "+player.getSpielerID()
 //            		+", st="+skillType+", s="+skill+", k="+player.getKondition()
@@ -1017,9 +910,8 @@ public class RatingPredictionManager {
     	return delta;    	
     }
     
-    public static double calcPlayerStrength (RatingPredictionParameter params,
+    private static double _calcPlayerStrength (RatingPredictionParameter params,
     	String sectionName, double stamina, double xp, double skill, double form, boolean useForm) {
-//    	long startTime = new Date().getTime();
     	// If config changed, we have to clear the cache
 		boolean forceRefresh = true; //FIXME this should be necessary only in debug mode
     	if (!playerStrengthCache.containsKey("lastRebuild") 
@@ -1098,12 +990,11 @@ public class RatingPredictionManager {
 		return stk;
     }
 
-    private void init(Team team, short trainerType, int styleOfPlay)
+    private void init(Team team, int styleOfPlay)
     {
         try
         {
-            this.trainerType = trainerType;
-            this.attitude = (short)startingLineup.getAttitude();
+			this.attitude = (short)startingLineup.getAttitude();
             this.heimspiel = startingLineup.getLocation();
             this.taktikType = (short)startingLineup.getTacticType();
             this.stimmung = (short)team.getStimmungAsInt();
@@ -1206,7 +1097,7 @@ public class RatingPredictionManager {
             Player ispieler = startingLineup.getPlayerByPositionID(i);
             byte taktik = startingLineup.getTactic4PositionID(i);
             if(ispieler != null) {
-            	passing =  calcPlayerStrength(-1, ispieler, PASSING, false);
+            	passing =  calcPlayerStrength(-1, ispieler, PASSING, true, false, null, false);
             	// Zus. MF/IV/ST
                 if(taktik == 7 || taktik == 6 || taktik == 5)
                     passing *= params.getParam("extraMulti", 1.0);
@@ -1238,8 +1129,8 @@ public class RatingPredictionManager {
         	playerContribution = 0d;
             Player player = startingLineup.getPlayerByPositionID(pos);
             if(player != null) {
-            		playerContribution = (params.getParam("counter", "multiPs", 1.0) * calcPlayerStrength(-1, player, PASSING, false));
-            		playerContribution += (params.getParam("counter", "multiDe", 1.0) * calcPlayerStrength(-1, player, DEFENDING, false));
+            		playerContribution = (params.getParam("counter", "multiPs", 1.0) * calcPlayerStrength(-1, player, PASSING, true, false, null, false));
+            		playerContribution += (params.getParam("counter", "multiDe", 1.0) * calcPlayerStrength(-1, player, DEFENDING, true, false, null, false));
             		playerContribution *= params.getParam("counter", "playerPostMulti", 1.0);
             		playerContribution += params.getParam("counter", "playerPostDelta", 0);
             		retVal += playerContribution;
@@ -1265,8 +1156,8 @@ public class RatingPredictionManager {
             float defense = 0.0F;
             Player player = startingLineup.getPlayerByPositionID(pos);
             if(player != null) {
-            	defense = calcPlayerStrength(-1, player, DEFENDING, false);
-                if (player.getSpezialitaet() == PlayerSpeciality.POWERFUL) {
+            	defense = calcPlayerStrength(-1, player, DEFENDING, true, false, null, false);
+                if (player.getPlayerSpecialty() == PlayerSpeciality.POWERFUL) {
                 	defense *= 2;
                 }
                 retVal += defense;
@@ -1294,8 +1185,8 @@ public class RatingPredictionManager {
             float setpieces = 0.0F;
             Player player = startingLineup.getPlayerByPositionID(pos);
             if(player != null) {
-            	scoring = 3*calcPlayerStrength(-1, player, SCORING, false);
-            	setpieces = calcPlayerStrength(-1, player, SETPIECES, false);
+            	scoring = 3*calcPlayerStrength(-1, player, SCORING, true, false, null, false);
+            	setpieces = calcPlayerStrength(-1, player, SETPIECES, true, false, null, false);
                 retVal += scoring;
                 retVal += setpieces;
             }
