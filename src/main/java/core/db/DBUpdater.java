@@ -580,11 +580,6 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("UPDATE SPIELERNOTIZ SET isFired = 'false'");
 		}
 
-        // remove currency name information from XTRADATA table
-        if (columnExistsInTable("CurrencyName", XtraDataTable.TABLENAME)) {
-			dropColumn("CurrencyName", "XTRADATA");
-		}
-
         if (version < DBVersion) {
             if(!HO.isDevelopment()) {
                 HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
