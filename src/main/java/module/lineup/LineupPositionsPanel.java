@@ -634,13 +634,12 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		layout.setConstraints(box2, constraints);
 		centerPanel.add(box2);
 
-		// Test
+
 		constraints.gridx = 0;
 		constraints.gridy = 7;
 		constraints.gridwidth = 7;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		JLabel label1 = new JLabel(HOVerwaltung.instance().getLanguageString("moduleLineup.LineupPanel.SubstitutesLabel"), JLabel.CENTER);
-		// create a line border with the specified color and width
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
 		label1.setBorder(border);
 		Font labelFont = label1.getFont();
@@ -666,7 +665,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_clSubstKeeper2 = new PlayerPositionPanel(this, IMatchRoleID.substGK2);
 		layout.setConstraints(m_clSubstKeeper2, constraints);
 		centerPanel.add(m_clSubstKeeper2);
-		swapPositionsManager.addSwapCapabilityTo(m_clSubstKeeper2);
 
 		constraints.gridx = 1;
 		constraints.gridy = 8;
@@ -682,7 +680,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_clSubstCD2 = new PlayerPositionPanel(this, IMatchRoleID.substCD2);
 		layout.setConstraints(m_clSubstCD2, constraints);
 		centerPanel.add(m_clSubstCD2);
-		swapPositionsManager.addSwapCapabilityTo(m_clSubstCD2);
 
 		constraints.gridx = 2;
 		constraints.gridy = 8;
@@ -698,7 +695,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_clSubstWB2 = new PlayerPositionPanel(this, IMatchRoleID.substWB2);
 		layout.setConstraints(m_clSubstWB2, constraints);
 		centerPanel.add(m_clSubstWB2);
-		swapPositionsManager.addSwapCapabilityTo(m_clSubstWB2);
 
 		constraints.gridx = 3;
 		constraints.gridy = 8;
@@ -714,7 +710,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_clSubstIM2 = new PlayerPositionPanel(this, IMatchRoleID.substIM2);
 		layout.setConstraints(m_clSubstIM2, constraints);
 		centerPanel.add(m_clSubstIM2);
-		swapPositionsManager.addSwapCapabilityTo(m_clSubstIM2);
 
 		constraints.gridx = 4;
 		constraints.gridy = 8;
@@ -730,7 +725,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_clSubstFwd2= new PlayerPositionPanel(this, IMatchRoleID.substFW2);
 		layout.setConstraints(m_clSubstFwd2, constraints);
 		centerPanel.add(m_clSubstFwd2);
-		swapPositionsManager.addSwapCapabilityTo(m_clSubstFwd2);
 
 		constraints.gridx = 5;
 		constraints.gridy = 8;
@@ -746,7 +740,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_clSubstWI2 = new PlayerPositionPanel(this, IMatchRoleID.substWI2);
 		layout.setConstraints(m_clSubstWI2, constraints);
 		centerPanel.add(m_clSubstWI2);
-		swapPositionsManager.addSwapCapabilityTo(m_clSubstWI2);
 
 		constraints.gridx = 6;
 		constraints.gridy = 8;
@@ -762,7 +755,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_clSubstXtr2 = new PlayerPositionPanel(this, IMatchRoleID.substXT2);
 		layout.setConstraints(m_clSubstXtr2, constraints);
 		centerPanel.add(m_clSubstXtr2);
-		swapPositionsManager.addSwapCapabilityTo(m_clSubstXtr2);
 
 		add(centerPanel, BorderLayout.CENTER);
 	}
