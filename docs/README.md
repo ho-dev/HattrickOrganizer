@@ -111,4 +111,4 @@ The following companies are kindly supporting HO open source project:
 
 <a href="https://poeditor.com"> <img src="https://user-images.githubusercontent.com/1136496/54937829-795c7f00-4f25-11e9-8394-eb96ddea54fd.png" alt="POEditor" width="46" height="50"> </a> [**POEditor**](https://poeditor.com) with its awesome localization tool
 
-- [**Syntevo**](https://www.syntevo.com/smartgit/) with if powerful and multi-platform graphical Git client
+<a href="https://www.syntevo.com/smartgit/"> <img src="https://user-images.githubusercontent.com/1136496/57284884-5d1a3900-70b2-11e9-9917-15a7d2f2c83c.png" alt="SmartGit" width="46" height="50"> </a> [**Syntevo**](https://www.syntevo.com/smartgit/) with if powerful and multi-platform graphical Git client
