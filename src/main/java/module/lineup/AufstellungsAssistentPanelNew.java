@@ -110,6 +110,9 @@ public class AufstellungsAssistentPanelNew extends ImagePanel implements
 	}
 
 	@Override
+	public void setWeather(Weather weather) {}
+
+	@Override
 	public void addToAssistant(PlayerPositionPanel positionPanel) {
 	}
 

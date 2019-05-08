@@ -318,8 +318,8 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			// *2 wegen halben Sternen
 			m_jpGesamtStaerke.setRating((int) (gesamtstaerke * 2));
 			m_jpGesamtStaerkeText.setText(Helper.DEFAULTDEZIMALFORMAT.format(gesamtstaerke));
-			m_jpLoddarstat.setText(Helper.round(aufstellung.getLoddarStats(), 2) + "");
-			m_jpHatstat.setText(aufstellung.getHATStats() + "");
+			m_jpLoddarstat.setText(Helper.round(aufstellung.getRatings().getLoddarStat().get(0), 2) + "");  //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+			m_jpHatstat.setText(aufstellung.getRatings().getHatStats().get(0) + "");  //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
 
 			setStimmung(homodel.getTeam().getStimmungAsInt(), homodel.getTeam().getSubStimmung());
 			setSelbstvertrauen(homodel.getTeam().getSelbstvertrauenAsInt());

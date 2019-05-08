@@ -1788,9 +1788,8 @@ public class DBManager {
 				.getMatchOrder(matchId, matchTyp);
 	}
 
-	public boolean updateMatchOrder(Lineup linueup, int matchId, MatchType matchTyp) {
-		return ((MatchOrderTable) getTable(MatchOrderTable.TABLENAME))
-				.updateMatchOrder(linueup, matchId, matchTyp);
+	public void updateMatchOrder(Lineup lineup, int matchId) {
+		((MatchOrderTable) getTable(MatchOrderTable.TABLENAME)).updateMatchOrder(lineup, matchId);
 	}
 
 	public void removeMatchOrder() {

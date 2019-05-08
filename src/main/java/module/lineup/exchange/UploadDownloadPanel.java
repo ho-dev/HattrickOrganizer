@@ -13,6 +13,7 @@ import core.model.Ratings;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
+import core.model.match.Weather;
 import core.net.OnlineWorker;
 import core.util.GUIUtils;
 import core.util.HOLogger;
@@ -51,6 +52,8 @@ import javax.swing.table.TableColumn;
 import module.teamAnalyzer.vo.MatchRating;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+import static core.gui.HOMainFrame.instance;
 
 public class UploadDownloadPanel extends LazyPanel {
 
@@ -219,7 +222,7 @@ public class UploadDownloadPanel extends LazyPanel {
 
 		// restore previous Lineup
 		HOVerwaltung.instance().getModel().setAufstellung(currLineup);
-		HOMainFrame.instance().getAufstellungsPanel().update();
+		instance().getAufstellungsPanel().update();
 
 		new RatingComparisonDialog(HOmatchRating, HTmatchRating);
 
@@ -287,12 +290,16 @@ public class UploadDownloadPanel extends LazyPanel {
 			}
 		}
 
-		JOptionPane.showMessageDialog(HOMainFrame.instance(), message, HOVerwaltung.instance()
+		JOptionPane.showMessageDialog(instance(), message, HOVerwaltung.instance()
 				.getLanguageString("lineup.upload.title"), messageType);
 	}
 
 
 	private void download(boolean showDialog) {
+		download(showDialog, Weather.NULL);
+	}
+
+	private void download(boolean showDialog, Weather weather) {
 		Lineup lineup;
 		CursorToolkit.startWaitCursor(this);
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
@@ -305,30 +312,36 @@ public class UploadDownloadPanel extends LazyPanel {
 				((MatchesTableModel) this.matchesTable.getModel()).fireTableDataChanged();
 				selectMatch(match);
 			}
-
-			if (DBManager.instance().updateMatchOrder(lineup, match.getMatchID(), match.getMatchTyp()))
-				RefreshManager.instance().doRefresh();
-		} finally {
+			DBManager.instance().updateMatchOrder(lineup, match.getMatchID());
+		}
+		finally {
 			CursorToolkit.stopWaitCursor(this);
 		}
 		if (lineup != null) {
 			int messageType = JOptionPane.PLAIN_MESSAGE;
 			if (match.getHeimID() == teamId) {
 				lineup.setLocation(IMatchDetails.LOCATION_HOME);
-			} else {
+			}
+			else {
 				lineup.setLocation(IMatchDetails.LOCATION_AWAY);
 			}
+
 
 			// in case of tournament match, set location neither to home or away but to special tournament settings
 			if (match.getMatchTyp().isTournament()){
 				lineup.setLocation(IMatchDetails.LOCATION_TOURNAMENT);
 			    }
-			String message = HOVerwaltung.instance().getLanguageString("lineup.download.success");
+
+			// weather
+			if (weather == Weather.NULL) instance().getAufstellungsPanel().getAufstellungsAssistentPanel().setWeather(Weather.PARTIALLY_CLOUDY);
+
+			RefreshManager.instance().doRefresh();
+
 			if (showDialog) {
-			JOptionPane.showMessageDialog(HOMainFrame.instance(), message, HOVerwaltung.instance()
+			JOptionPane.showMessageDialog(instance(),  HOVerwaltung.instance().getLanguageString("lineup.download.success"), HOVerwaltung.instance()
 					.getLanguageString("lineup.download.title"), messageType);}
 			HOVerwaltung.instance().getModel().setAufstellung(lineup);
-			HOMainFrame.instance().getAufstellungsPanel().update();
+			instance().getAufstellungsPanel().update();
 		}
 	}
 

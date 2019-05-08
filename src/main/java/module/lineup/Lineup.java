@@ -496,6 +496,8 @@ public class Lineup{
 			oRatings.setLeftAttack(rpManager.getLeftAttackRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
 			oRatings.setCentralAttack(rpManager.getCentralAttackRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
 			oRatings.setRightAttack(rpManager.getRightAttackRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
+			oRatings.computeHatStats();
+			oRatings.computeLoddarStats();
 
 			this.oRatings = oRatings;
 		}
@@ -520,39 +522,6 @@ public class Lineup{
 				+ getMFTeamStk(player, useForm) + getSTTeamStk(player, useForm), 1);
 	}
 
-	/**
-	 * Get the HT stats value for the lineup.
-	 */
-	public final int getHATStats() {
-		// FIXME: need to repair that function
-//		int sum;
-//		final int MFfactor = 3;
-//
-//		sum = HTfloat2int(getMidfieldRating()) * MFfactor;
-//
-//		sum += HTfloat2int(getLeftDefenseRating());
-//		sum += HTfloat2int(getCentralDefenseRating());
-//		sum += HTfloat2int(getRightDefenseRating());
-//
-//		sum += HTfloat2int(getLeftAttackRating());
-//		sum += HTfloat2int(getCentralAttackRating());
-//		sum += HTfloat2int(getRightAttackRating());
-//
-//		return sum;
-		return 0;
-	}
-
-	public void updateRatingPredictionConfig() {
-		int vt = atLeastOne(getAnzInnenverteidiger());
-		int im = atLeastOne(getAnzInneresMittelfeld());
-		int st = atLeastOne(getAnzSturm());
-		String predictionName = vt + "D+" + im + "M+" + st + "F";
-		RatingPredictionConfig.setInstancePredictionName(predictionName);
-	}
-
-	private int atLeastOne(int count) {
-		return count == 0 ? 1 : count;
-	}
 
 	/**
 	 * Setter for property m_iKapitaen.
@@ -592,65 +561,7 @@ public class Lineup{
 		return m_iKicker;
 	}
 
-//	/**
-//	 * Predicts LeftAttack-Rating
-//	 */
-//	public final double getLeftAttackRating() {
-//		if (HOVerwaltung.instance().getModel() != null
-//				&& HOVerwaltung.instance().getModel().getID() != -1) {
-//			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
-//					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
-//							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
-//					RatingPredictionConfig.getInstance());
-//
-//			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
-//			// Wert
-//			double value = Math.max(1, rpManager.getLeftAttackRatings());
-//			if (value > 1) {
-//				value += UserParameter.instance().leftAttackOffset;
-//			}
-//			return value;
-//		} else {
-//			return 0.0d;
-//		}
-//	}
-//
-//	/**
-//	 * Predicts LeftDefense-Rating
-//	 */
-//	public final double getLeftDefenseRating() {
-//		if (HOVerwaltung.instance().getModel() != null
-//				&& HOVerwaltung.instance().getModel().getID() != -1) {
-//			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
-//					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
-//							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
-//					RatingPredictionConfig.getInstance());
-//
-//			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
-//			// Wert
-//			double value = Math.max(1, rpManager.getLeftDefenseRatings());
-//			if (value > 1) {
-//				value += UserParameter.instance().leftDefenceOffset;
-//			}
-//			return value;
-//		} else {
-//			return 0.0d;
-//		}
-//	}
 
-	/**
-	 * Get the Loddar stats value for the lineup.
-	 */
-	public final float getLoddarStats() {
-		// FIXME: need to repair function getLoddarStats
-//		LoddarStatsCalculator calculator = new LoddarStatsCalculator();
-//		calculator.setRatings(getMidfieldRating(), getRightDefenseRating(),
-//				getCentralDefenseRating(), getLeftDefenseRating(), getRightAttackRating(),
-//				getCentralAttackRating(), getLeftAttackRating());
-//		calculator.setTactics(getTacticType(), getTacticLevelAimAow(), getTacticLevelCounter());
-//		return calculator.calculate();
-		return 0;
-	}
 
 	/**
 	 * convert reduced float rating (1.00....20.99) to original integer HT
@@ -677,31 +588,6 @@ public class Lineup{
 		return Helper.round(stk, 1);
 	}
 
-	// ///////////////////////////////////////////////////////////////////////////////
-	// Ratings
-	// ///////////////////////////////////////////////////////////////////////////////
-
-//	/**
-//	 * Predicts MF-Rating
-//	 */
-//	public final double getMidfieldRating() {
-//		if (HOVerwaltung.instance().getModel() != null
-//				&& HOVerwaltung.instance().getModel().getID() != -1) {
-//			final RatingPredictionManager rpManager = new RatingPredictionManager(this,
-//					HOVerwaltung.instance().getModel().getTeam(), (short) HOVerwaltung.instance()
-//							.getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
-//					RatingPredictionConfig.getInstance());
-//			// ruft konvertiertes Plugin ( in Manager ) auf und returned den
-//			// Wert
-//			double value = Math.max(1, rpManager.getMFRatings());
-//			if (value > 1) {
-//				value += UserParameter.instance().midfieldOffset;
-//			}
-//			return value;
-//		} else {
-//			return 0.0d;
-//		}
-//	}
 
 	/**
 	 * Get the short name for a fomation constant.

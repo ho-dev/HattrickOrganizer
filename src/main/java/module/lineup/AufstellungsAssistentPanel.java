@@ -74,6 +74,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 			.getLanguageString("Verletze_aufstellen"),
 			core.model.UserParameter.instance().aufstellungsAssistentPanel_verletzt);
 	private final JComboBox m_jcbGruppe = new JComboBox(HOIconName.TEAMSMILIES);
+
 	private final JComboBox m_jcbWetter = new JComboBox(Helper.WETTER);
 	private final CBItem[] REIHENFOLGE = {
 			new CBItem(HOVerwaltung.instance().getLanguageString("AW-MF-ST"),
@@ -210,15 +211,16 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 		return m_jchVerletzte.isSelected();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see module.lineup.IAufstellungsAssistentPanel#getWetter()
-	 */
+
 	@Override
 	public final Weather getWeather() {
 		int id = ((CBItem) m_jcbWetter.getSelectedItem()).getId();
 		return Weather.getById(id);
+	}
+
+	@Override
+	public void setWeather(Weather weather) {
+		m_jcbWetter.setSelectedIndex(weather.getId());
 	}
 
 	@Override

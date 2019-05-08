@@ -29,6 +29,8 @@ public interface IAufstellungsAssistentPanel {
 
 	Weather getWeather();
 
+	void setWeather(Weather weather);
+
 	void addToAssistant(PlayerPositionPanel positionPanel);
 
 	/**

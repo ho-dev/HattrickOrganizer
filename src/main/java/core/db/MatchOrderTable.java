@@ -80,21 +80,16 @@ public class MatchOrderTable extends AbstractTable {
 	}
 
 	/**
-	 * Update match order if training match.
+	 * Update match order
 	 * Remove and insert rows
 	 *
 	 * @param linueup:	lineup of match
 	 * @param matchId:	match id
-	 * @param matchTyp:	match type
 	 * @return			true if update, false if no update
 	 */
-    public boolean updateMatchOrder(Lineup linueup, int matchId, MatchType matchTyp) {
-		if(matchTyp.isTraining()) {
+    public void updateMatchOrder(Lineup linueup, int matchId) {
 			removeMatchOrder();
 			insertMatchOrder(linueup, matchId, null);
-			return true;
-		}
-		return false;
 	}
 
 	/**
