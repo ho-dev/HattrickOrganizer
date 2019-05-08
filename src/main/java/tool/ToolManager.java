@@ -85,8 +85,8 @@ public class ToolManager implements ActionListener {
         } else if (source.equals(m_jmiHrfExplorer)) {
             new HrfExplorerDialog(HOMainFrame.instance()).setVisible(true);
         } else if (source.equals(m_jmiPluginFeedback)) {
-            // todo Remove after integration with real PluginFeedback called
-            // Create example data
+            // todo Remove after integration with correct PluginFeedback called
+            // Create example data - start
             Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
 
             MatchRating rating = new MatchRating();
@@ -97,32 +97,25 @@ public class ToolManager implements ActionListener {
             rating.setLeftAttack(5.55);
             rating.setCentralAttack(6.66);
             rating.setRightAttack(7.77);
+            // Create example data - end
 
+            // The following code can be include in correct called
             PluginFeedback pluginFeedback = new PluginFeedback();
-            String message = "[" + pluginFeedback.getHoToken() + "]";
+            String message = "[" + pluginFeedback.getHoToken() + "] ";
             try {
                 String result = pluginFeedback.sendFeedbackToServer(lineup, rating);
-                message += " Dati inviati al server, grazie! (Risultato:" + result + ")";
+                message += m_hov.getLanguageString("feedbackplugin.success");
                 HOLogger.instance().info(getClass(), message);
-                if (message.length() > 200) {
-                    message = message.substring(0, 200);
-                }
                 JOptionPane.showMessageDialog(null, message);
             } catch (IOException ex) {
-                message += " Errore nell'invio dei dati al server. (Error Message:" + ex.getMessage() + ")"; //todo remove getmessage
                 HOLogger.instance().error(getClass(), ex);
                 ex.printStackTrace();
-                if (message.length() > 200) {
-                    message = message.substring(0, 200);
-                }
+                message += m_hov.getLanguageString("feedbackplugin.serverError");
                 JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
             } catch (IllegalArgumentException ex) {
-                message += " Errore negli input. (Error Message:" + ex.getMessage() + ")"; //todo remove getmessage
                 HOLogger.instance().error(getClass(), ex);
                 ex.printStackTrace();
-                if (message.length() > 200) {
-                    message = message.substring(0, 200);
-                }
+                message += m_hov.getLanguageString("feedbackplugin.inputError");
                 JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
             }
         }

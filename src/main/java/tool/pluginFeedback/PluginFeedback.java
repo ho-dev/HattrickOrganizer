@@ -40,8 +40,9 @@ ect
     private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private String hoToken;
     private String userAgent;
-    private String getUrl;
+    //private String getUrl;
     private String postUrl;
+    private String authToken;
 
     public PluginFeedback() {
         // HO Token, useful to error analysis between HO and server
@@ -51,10 +52,16 @@ ect
                 + System.getProperty("os.arch") + " (" + System.getProperty("os.version")
                 + "))/" + System.getProperty("java.version") + " ("
                 + System.getProperty("java.vendor") + ")";
-        //postUrl = "http://mistermax80.max:8080/ws-user-feedbacks?access-token=foqwij41094-d423r87oh43fuo";
-        postUrl = "http://mistermax80.max:8080/ws-ho-feedbacks";
-        getUrl = "http://mistermax80.max:8080/ws-ho-feedbacks";
-        //postUrl = "https://mistermax80.000webhostapp.com/index.php?r=ws-ho-feedback/create";
+
+        authToken = "foqwij41094-d423r87oh43fuo";
+        // Mistermax80's local server - test
+        //getUrl = "http://mistermax80.max:8080/ws-ho-feedbacks";
+        //postUrl = "http://mistermax80.max:8080/ws-ho-feedbacks";
+
+        // Mistermax80's remote server - prod
+        //getUrl = "https://mistermax80.000webhostapp.com/ws-ho-feedbacks";
+        postUrl = "https://mistermax80.000webhostapp.com/ws-ho-feedbacks";
+
     }
 
     // SendFeedbackToServer (Lineup lineup, PredictionRating rating)
@@ -72,7 +79,8 @@ ect
             // Create a JsonObject
             GsonBuilder builder = new GsonBuilder();
             builder.setPrettyPrinting();
-            Gson gsonFeedback = builder.create();          result = this.doPOST("{\"json_objects\": " + gsonFeedback.toJson(feedback) + "}");
+            Gson gsonFeedback = builder.create();
+            result = this.doPOST("{\"json_objects\": " + gsonFeedback.toJson(feedback) + "}");
         } else {
             throw new IllegalArgumentException("The inputs (Lineup lineup or MatchRating rating) are null value! (" + hoToken + ")");
         }
@@ -88,7 +96,7 @@ ect
         con.setRequestProperty("Accept", "application/json");
         con.setRequestProperty("Content-Type", "application/json");
         con.setRequestProperty("HO-Token", hoToken);
-        String authString = "foqwij41094-d423r87oh43fuo:";
+        String authString = authToken + ":";
         String encodedString = Base64.getEncoder().encodeToString(authString.getBytes());
         con.setRequestProperty("Authorization", "Basic " + encodedString);
         //con.setRequestProperty("Authorization : Basic base64(access_token:)", "foqwij41094-d423r87oh43fuo");
@@ -96,7 +104,6 @@ ect
         // For POST only - START
         con.setDoOutput(true);
         OutputStream os = con.getOutputStream();
-        //"{\"JSON_OBJECTS\": \"da java 1234567890 !$%&/()=?àèéìòù\"}";
         os.write(postParams.getBytes());
         os.flush();
         os.close();
@@ -146,6 +153,7 @@ ect
     }
 
     // used only to test
+    /*
     private void sendGET() throws IOException {
         //URL obj = new URL(GET_URL);
         URL obj = new URL(getUrl);
@@ -173,6 +181,7 @@ ect
             System.out.println("GET request not worked");
         }
     }
+    */
 
     public String getHoToken() {
         return hoToken;
