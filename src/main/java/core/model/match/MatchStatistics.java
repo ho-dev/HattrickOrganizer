@@ -11,7 +11,6 @@ public class MatchStatistics {
 
 	private MatchLineupTeam teamLineup;
 	private int matchId;
-	private int endMinute = -111;
 
 	public MatchStatistics(int matchid, MatchLineupTeam team) {
 		this.matchId = matchid;
@@ -95,7 +94,7 @@ public class MatchStatistics {
 		// Done with substitutions, add end if necessary
 
 		if (inPosition) {
-			minPlayed += getMatchEndMinute() - enterMin;
+			minPlayed += getMatchEndMinute(spielerId) - enterMin;
 		}
 
 		return minPlayed;
@@ -211,7 +210,7 @@ public class MatchStatistics {
 
 		// Captain and set piece taker don't count...
 
-		if ((minute >= getMatchEndMinute()) || (minute < 0)) {
+		if ((minute >= getMatchEndMinute(spielerId)) || (minute < 0)) {
 			// The player is at home (they travel fast)...
 			return -1;
 		}
@@ -250,21 +249,30 @@ public class MatchStatistics {
 	 * 
 	 * @return the last minute or -1 if not found
 	 */
-	public int getMatchEndMinute() {
-		if (endMinute == -111) {
-			Vector<MatchHighlight> hls = DBManager.instance().getMatchDetails(matchId)
-					.getHighlights();
-			for (int i = 0; i < hls.size(); i++) {
-				if ((hls.get(i).getHighlightTyp() == 0)
-						&& (hls.get(i).getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_BESTER_SPIELER)) {
-					endMinute = hls.get(i).getMinute();
-					break;
-				}
+	public int getMatchEndMinute(int spielerId) {
+
+		int endMinute = 0;
+		Vector<MatchHighlight> hls = DBManager.instance().getMatchDetails(matchId).getHighlights();
+
+		for (int i = 0; i < hls.size(); i++) {
+			if ((hls.get(i).getHighlightTyp() == IMatchHighlight.HIGHLIGHT_KARTEN)
+					&& (hls.get(i).getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_SPIELENDE)) {
+				endMinute = hls.get(i).getMinute();
+				if (endMinute < 120)
+					endMinute = 90; //no train during stoppage of play
+				else if (endMinute > 120)
+					endMinute = 120; //no train during stoppage of play
+			}
+			else if ((hls.get(i).getHighlightTyp() == IMatchHighlight.HIGHLIGHT_KARTEN)
+					&& (hls.get(i).getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_ROT
+					|| hls.get(i).getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_GELB_ROT_HARTER_EINSATZ
+					|| hls.get(i).getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_GELB_ROT_UNFAIR)
+					&&  hls.get(i).getSpielerID() == spielerId) {
+				endMinute = hls.get(i).getMinute();
+				break;
 			}
 		}
-		// Paranoia. A match is 90 minutes or more, and no 100% trust in
-		// highlights.
-		return Math.max(90, endMinute);
+		return endMinute;
 	}
 
 	private boolean isOldie() {
