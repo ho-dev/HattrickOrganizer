@@ -61,7 +61,9 @@ public interface HOIconName {
 	public static final String CLEARRESERVE 	= "clearReserve";
 	public static final String CLEARPOSORDERS	= "clearPositionOrders";
 
-	public static final String LOGO16 			= "logo16";
+	public static final String LOGO16_STABLE	= "logo16_stable";
+	public static final String LOGO16_BETA		= "logo16_beta";
+	public static final String LOGO16_DEV		= "logo16_dev";
 	public static final String TRICKOT 			= "trickot";
 
 	// Highlights

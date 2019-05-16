@@ -81,8 +81,12 @@ jar {
     }
     exclude "prediction"
     exclude "themes"
-    exclude "ho_logo.png"
-    exclude "Logo.ico"
+    exclude "ho_logo_stable.png"
+    exclude "ho_logo_beta.png"
+    exclude "ho_logo_dev.png"
+    exclude "Logo_stable.ico"
+    exclude "Logo_beta.ico"
+    exclude "Logo_dev.ico"
     exclude "release_notes.md"
     exclude "hsqldb.jar"
     exclude "jcalendar-1.3.2.jar"
@@ -102,8 +106,12 @@ task osXjar(type: Jar) {
                 'Main-Class': 'HOLauncher',
                 "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
     }
-    exclude "ho_logo.png"
-    exclude "Logo.ico"
+    exclude "ho_logo_stable.png"
+    exclude "ho_logo_beta.png"
+    exclude "ho_logo_dev.png"
+    exclude "Logo_stable.ico"
+    exclude "Logo_beta.ico"
+    exclude "Logo_dev.ico"
     exclude "release_notes.md"
     exclude "hsqldb.jar"
     exclude "jcalendar-1.3.2.jar"
@@ -166,7 +174,18 @@ ospackage {
     }
 
     from("${projectDir}\\src\\main\\resources") {
-        include "ho_logo.png"
+        if (development_stage == '0') {
+            include "ho_logo_dev.png"
+            rename "ho_logo_dev.png", "ho_logo.png"
+        }
+        else if (development_stage == '1') {
+            include "ho_logo_beta.png"
+            rename "ho_logo_beta.png", "ho_logo.png"
+        }
+        else {
+            include "ho_logo_stable.png"
+            rename "ho_logo_stable.png", "ho_logo.png"
+        }
         into "lib\\ho"
     }
 
@@ -345,6 +364,18 @@ task AddResourcesInDistrib {
         copy {
             from "${projectDir}\\src\\main\\resources\\Logo.ico"
             into distribDir
+            if (development_stage == '0') {
+                rename "Logo_dev.ico", "Logo.ico"
+                rename "ho_logo_dev.png", "ho_logo.png"
+            }
+            else if (development_stage == '1') {
+                rename "Logo_beta.ico", "Logo.ico"
+                rename "ho_logo_beta.png", "ho_logo.png"
+            }
+            else {
+                rename "Logo_stable.ico", "Logo.ico"
+                rename "ho_logo_stable.png", "ho_logo.png"
+            }
         }
 
         copy {
@@ -385,6 +416,24 @@ task AddResourcesInDistrib {
         }
         delete "${distribDir}"
 
+        if (development_stage == '0') {
+            delete "${buildDir}\\install\\${project.version}\\Logo_beta.ico"
+            delete "${buildDir}\\install\\${project.version}\\Logo_stable.ico"
+            delete "${buildDir}\\install\\${project.version}\\ho_logo_beta.png"
+            delete "${buildDir}\\install\\${project.version}\\ho_logo_stable.png"
+        }
+        else if (development_stage == '1') {
+            delete "${buildDir}\\install\\${project.version}\\Logo_dev.ico"
+            delete "${buildDir}\\install\\${project.version}\\Logo_stable.ico"
+            delete "${buildDir}\\install\\${project.version}\\ho_logo_dev.png"
+            delete "${buildDir}\\install\\${project.version}\\ho_logo_stable.png"
+        }
+        else {
+            delete "${buildDir}\\install\\${project.version}\\Logo_beta.ico"
+            delete "${buildDir}\\install\\${project.version}\\Logo_dev.ico"
+            delete "${buildDir}\\install\\${project.version}\\ho_logo_beta.png"
+            delete "${buildDir}\\install\\${project.version}\\ho_logo_dev.png"
+        }
     }
 }
 

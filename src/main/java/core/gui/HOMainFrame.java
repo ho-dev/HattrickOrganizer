@@ -127,6 +127,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private boolean isAppTerminated = false; // set when HO should be terminated
 	private List<ApplicationClosingListener> applicationClosingListener = new ArrayList<ApplicationClosingListener>();
 
+	// Menu color depending of version
+	private final Color c_stable = new Color(182, 255, 182);
+	private final Color c_beta = new Color(162, 201, 255);
+	private final Color c_dev = new Color(235, 170, 170);
+
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
 
@@ -166,8 +171,15 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		else{
 			setTitle("HO! - Hattrick Organizer " + getVersionString() + " - " + teamName);}
 
-
-		this.setIconImage(ThemeManager.getIcon(HOIconName.LOGO16).getImage());
+		if (HO.isDevelopment()) {
+			this.setIconImage(ThemeManager.getIcon(HOIconName.LOGO16_DEV).getImage());
+		}
+		else if (HO.isBeta()) {
+			this.setIconImage(ThemeManager.getIcon(HOIconName.LOGO16_BETA).getImage());
+		}
+		else {
+			this.setIconImage(ThemeManager.getIcon(HOIconName.LOGO16_STABLE).getImage());
+		}
 
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addListeners();
@@ -472,7 +484,16 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	public void initComponents() {
 		javax.swing.ToolTipManager.sharedInstance().setDismissDelay(5000);
 
-		setContentPane(new ImagePanel());
+		if (HO.isDevelopment()) {
+			getContentPane().setBackground(c_dev);
+		}
+		else if (HO.isBeta()) {
+			getContentPane().setBackground(c_beta);
+		}
+		else {
+			getContentPane().setBackground(c_stable);
+		}
+
 		getContentPane().setLayout(new BorderLayout());
 
 		m_jtpTabbedPane = new HOTabbedPane();
