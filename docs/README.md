@@ -1,6 +1,6 @@
 
 <div align="left">
-  <img src="https://cdn.jsdelivr.net/gh/akasolace/ho@master/src/main/resources/ho_logo.png">
+  <img src="https://cdn.jsdelivr.net/gh/akasolace/ho@master/src/main/resources/ho_logo_stable.png">
 </div>
 
 **Helper Tool for online-manager [Hattrick](http://www.hattrick.org)**

@@ -37,7 +37,6 @@
 !define HO_UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Hattrick Organizer"
 
 ;InstallDir "$PROGRAMFILES\HattrickOrganizer"
-; For now, we default to C:\HattrickOrganizer until we have fixed the Vista issues
 InstallDir "C:\HattrickOrganizer"
 ;Get installation folder from registry if available
 InstallDirRegKey HKLM ${HO_REGKEY} "InstallLocation"
@@ -184,6 +183,7 @@ VIProductVersion "$HOVERSION"
 ####### Installer Functions/Sections ########
 
 Function .onInit
+  SetShellVarContext All
   !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
 
@@ -228,9 +228,9 @@ SectionEnd
 Section "$(CREATE_STARTMENU)" SEC_STARTMENU
     SectionIn 1
 	SetShellVarContext all
-    CreateDirectory "$SMPROGRAMS\Hattrick Organizer"
+    ;CreateDirectory "$SMPROGRAMS\Hattrick_Organizer"
     CreateShortCut "$SMPROGRAMS\Hattrick Organizer\Hattrick Organizer.lnk" "$INSTDIR\HO.bat" "" "$INSTDIR\Logo.ico"
-	CreateShortCut "$SMPROGRAMS\Hattrick Organizer\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
+	;CreateShortCut "$SMPROGRAMS\Hattrick Organizer\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
 SectionEnd
 
 

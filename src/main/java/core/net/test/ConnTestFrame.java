@@ -1,5 +1,7 @@
 package core.net.test;
 
+import core.HO;
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -53,7 +55,16 @@ public class ConnTestFrame extends JFrame {
 		contentPane.add(controlPanel, "South");
 		Image image = null;
 		try {
-			image = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/gui/bilder/Logo-16px.png"));
+			if (HO.isDevelopment()) {
+				image = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/gui/bilder/Logo-16px_dev.png"));
+			}
+			else if (HO.isBeta()) {
+				image = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/gui/bilder/Logo-16px_beta.png"));
+			}
+			else {
+				image = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/gui/bilder/Logo-16px_stable.png"));
+			}
+
 		} catch (Exception e) {
 			System.out.println("Error loading icon: " + e.getMessage());
 		}
