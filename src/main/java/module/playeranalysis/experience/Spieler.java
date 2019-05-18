@@ -441,7 +441,7 @@ final class Spieler {
 		Timestamp ret = null;
 		ResultSet rs = null;
 		String sql = null;
-		sql = "SELECT min(DATUM) FROM Player WHERE SpielerID = " + id
+		sql = "SELECT min(DATUM) FROM Spieler WHERE SpielerID = " + id
 				+ " AND Erfahrung = " + erfahrung;
 		rs = DBManager.instance().getAdapter().executeQuery(sql);
 		try {
