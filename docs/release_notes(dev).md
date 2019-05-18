@@ -14,6 +14,7 @@ Changelist HO! 2.0
  - sorting issue after change filter in Arena section
  - bug due to match report size larger than db threshold
  - invalid select statement and duplicated IDs in matches tab
+ - exception while opening Experience tab of the PlayerAnalysis module
 
 ## Changed
  - ...
