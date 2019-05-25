@@ -1,14 +1,10 @@
 package module.lineup;
 
-import core.gui.HOMainFrame;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.Ratings;
 import module.teamAnalyzer.vo.MatchRating;
-import org.checkerframework.checker.units.qual.C;
-
-import java.util.HashMap;
 import java.text.DecimalFormat;
 
 import java.awt.Font;
@@ -40,12 +36,84 @@ public class RatingComparisonPanel extends JPanel {
 
 	BufferedImage background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.RATINGCOMPARISON_BACKGROUND).getImage());
 
+
+	public void setMatchRating(MatchRating _data) {
+		this.data = _data;
+	}
+
+	public MatchRating getMatchRating() {
+		return this.data;
+	}
+
+	public void setMatchRating(Ratings _data) {
+		this.data = new MatchRating(_data);
+	}
+
 	public RatingComparisonPanel(String source, MatchRating data) {
 		this.data = data;
 		setLayout(new GridBagLayout());
 		setPreferredSize(new Dimension(267, 217));
 		name.setText(source);
 		initComponents();
+	}
+
+	public RatingComparisonPanel(String source) {
+		this(source, new MatchRating(0, 0, 0, 0, 0, 0, 0, 0, 0));
+	}
+
+
+	public void refresh() {
+		Font numFont = new Font("SansSerif", Font.BOLD, 23);
+		Font txtFont = new Font("SansSerif", Font.BOLD, 18);
+		DecimalFormat formater = new DecimalFormat();
+		formater.setMaximumFractionDigits(2);
+		formater.setRoundingMode(java.math.RoundingMode.HALF_UP);
+		Double value;
+
+		value = data.getLeftDefense();
+		DL.setText(formater.format(value));
+		DL.setFont(numFont);
+		if(value < 0) DL.setForeground(new Color(179, 45, 0));
+
+		value = data.getRightDefense();
+		DR.setText(formater.format(value));
+		DR.setFont(numFont);
+		if(value < 0) DR.setForeground(new Color(179, 45, 0));
+
+		value = data.getCentralDefense();
+		DC.setText(formater.format(value));
+		DC.setFont(numFont);
+		if(value < 0) DC.setForeground(new Color(179, 45, 0));
+
+		value = data.getMidfield();
+		M.setText(formater.format(value));
+		M.setFont(numFont);
+		if(value < 0) M.setForeground(new Color(179, 45, 0));
+
+		value = data.getLeftAttack();
+		FL.setText(formater.format(value));
+		FL.setFont(numFont);
+		if(value < 0) FL.setForeground(new Color(179, 45, 0));
+
+		value = data.getRightAttack();
+		FR.setText(formater.format(value));
+		FR.setFont(numFont);
+		if(value < 0) FR.setForeground(new Color(179, 45, 0));
+
+		value = data.getCentralAttack();
+		FC.setText(formater.format(value));
+		FC.setFont(numFont);
+		if(value < 0) FC.setForeground(new Color(179, 45, 0));
+
+		value = data.getLoddarStats();
+		loddar.setText("Loddar: " + formater.format(value));
+		loddar.setFont(txtFont);
+		if(value < 0) loddar.setForeground(new Color(179, 45, 0));
+
+		value = data.getHatStats();
+		hatstats.setText("Hatstats: " + formater.format(value));
+		hatstats.setFont(txtFont);
+		if(value < 0) hatstats.setForeground(new Color(179, 45, 0));
 	}
 
 	@Override

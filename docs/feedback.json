@@ -1,1 +1,8 @@
-{"lineup":{"100":0,"110":10}}
+{
+    "lineupName": "GK",
+    "lineup": {
+        "100": 0
+    },
+    "attitude": "Normal",
+    "tatic": "Normal"
+}

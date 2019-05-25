@@ -4,7 +4,6 @@ import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import module.teamAnalyzer.vo.MatchRating;
 
-import java.util.HashMap;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,7 +13,6 @@ public class RatingComparisonDialog extends JFrame {
 	JPanel content = new JPanel();
 	MatchRating toHO;
 	MatchRating toHT;
-	MatchRating diff = new MatchRating();
 
 	public RatingComparisonDialog(MatchRating dPredictionRatingT0HO, MatchRating dPredictionRatingT0HT) {
 		super(HOVerwaltung.instance().getLanguageString("RatingComparisonDialog"));
@@ -29,16 +27,7 @@ public class RatingComparisonDialog extends JFrame {
 		add(content);
 		RatingComparisonPanel HORating = new RatingComparisonPanel("HO", toHO);
 		RatingComparisonPanel HTRating = new RatingComparisonPanel("HT", toHT);
-		diff.setCentralDefense(toHO.getCentralDefense()-toHT.getCentralDefense());
-		diff.setRightDefense(toHO.getRightDefense()-toHT.getRightDefense());
-		diff.setLeftDefense(toHO.getLeftDefense()-toHT.getLeftDefense());
-		diff.setMidfield(toHO.getMidfield()-toHT.getMidfield());
-		diff.setCentralAttack(toHO.getCentralAttack()-toHT.getCentralAttack());
-		diff.setRightAttack(toHO.getRightAttack()-toHT.getRightAttack());
-		diff.setLeftAttack(toHO.getLeftAttack()-toHT.getLeftAttack());
-		diff.setHatStats(toHO.getHatStats()-toHT.getHatStats());
-		diff.setLoddarStats(toHO.getLoddarStats()-toHT.getLoddarStats());
-		RatingComparisonPanel DiffRating = new RatingComparisonPanel("Diff", diff);
+		RatingComparisonPanel DiffRating = new RatingComparisonPanel("Diff", toHO.minus(toHT));
 		content.add(HORating);
 		content.add(HTRating);
 		content.add(DiffRating);

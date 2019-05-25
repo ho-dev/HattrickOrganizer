@@ -1,4 +1,6 @@
 package module.teamAnalyzer.vo;
+import core.model.HOVerwaltung;
+import core.model.Ratings;
 import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
 
@@ -9,6 +11,11 @@ import java.util.Map;
  * Class with holds the Ratings of a team in the 7 areas of the field
  */
 public class MatchRating {
+
+
+    public static int ERROR = -9999;
+
+
     //~ Instance fields ----------------------------------------------------------------------------
 
     private double centralAttack;
@@ -18,10 +25,91 @@ public class MatchRating {
     private double midfield;
     private double rightAttack;
     private double rightDefense;
+
+    public int getTacticSkill() {
+        return tacticSkill;
+    }
+
     private int tacticSkill;
     private int tacticType;
     private double HatStats;
     private double LoddarStat;
+    private int attitude;
+    private int style_of_play;
+
+
+    public int getAttitude() {
+        return attitude;
+    }
+
+
+    public int getStyle_of_play() {
+        return style_of_play;
+    }
+
+
+
+    public void setAttitude(String attitude) {this.attitude = AttitudeStringToInt(attitude);}
+
+    public static int AttitudeStringToInt(String attitude) {
+        attitude = attitude.toLowerCase();
+        HOVerwaltung hoi = HOVerwaltung.instance();
+
+        if (attitude.equals(hoi.getLanguageString("ls.team.teamattitude.normal").toLowerCase())) return 0;
+        else if (attitude.equals(hoi.getLanguageString("ls.team.teamattitude.playitcool").toLowerCase())) return -1;
+        else if (attitude.equals(hoi.getLanguageString("ls.team.teamattitude.matchoftheseason").toLowerCase())) return 1;
+        else return ERROR;
+    }
+
+
+    public int getTacticType() {return tacticType;}
+
+    public void setTacticType(String tacticType) {this.tacticType = TacticTypeStringToInt(tacticType);}
+
+    public static int TacticTypeStringToInt(String tacticType) {
+        tacticType = tacticType.toLowerCase();
+        HOVerwaltung hoi = HOVerwaltung.instance();
+        if (tacticType.equals(hoi.getLanguageString("ls.team.tactic.normal").toLowerCase())) return 0;
+        else if (tacticType.equals(hoi.getLanguageString("ls.team.tactic.pressing").toLowerCase())) return 1;
+        else if (tacticType.equals(hoi.getLanguageString("ls.team.tactic.counter-attacks").toLowerCase())) return 2;
+        else if (tacticType.equals(hoi.getLanguageString("ls.team.tactic.attackinthemiddle").toLowerCase())) return 3;
+        else if (tacticType.equals(hoi.getLanguageString("ls.team.tactic.attackonwings").toLowerCase())) return 4;
+        else if (tacticType.equals(hoi.getLanguageString("ls.team.tactic.playcreatively").toLowerCase())) return 7;
+        else if (tacticType.equals(hoi.getLanguageString("ls.team.tactic.longshots").toLowerCase())) return 8;
+        else return ERROR;
+    }
+
+
+    public void setStyle_of_play(String style_of_play) {this.style_of_play = StyleOfPlayStringToInt(style_of_play);}
+
+
+    public static int StyleOfPlayStringToInt(String style_of_play){
+            //        -10	100% defensive
+//                -9	90% defensive
+//                -8	80% defensive
+//                -7	70% defensive
+//                -6	60% defensive
+//                -5	50% defensive
+//                -4	40% defensive
+//                -3	30% defensive
+//                -2	20% defensive
+//                -1	10% defensive
+//        0	Neutral
+//        1	10% offensive
+//        2	20% offensive
+//        3	30% offensive
+//        4	40% offensive
+//        5	50% offensive
+//        6	60% offensive
+//        7	70% offensive
+//        8	80% offensive
+//        9	90% offensive
+//        10	100% offensive
+        style_of_play = style_of_play.toLowerCase();
+        HOVerwaltung hoi = HOVerwaltung.instance();
+        if (style_of_play.equals(hoi.getLanguageString("ls.team.coachtype.neutral").toLowerCase())) return 0;
+        else return ERROR;
+        }
 
 
     public MatchRating() {}
@@ -35,8 +123,8 @@ public class MatchRating {
         this.rightDefense = intHT2loatHT(Integer.parseInt(matchRating.get("RatingRightDef")));
         this.tacticSkill = Integer.parseInt(matchRating.get("TacticSkill"));
         this.tacticType = Integer.parseInt(matchRating.get("TacticType"));
-        HatStats = (midfield * 3) + leftAttack + rightAttack + centralAttack + centralDefense + leftDefense + rightDefense;
-        LoddarStat = computeLoddarStats(tacticType, tacticSkill);
+        HatStats =  computeHatStats();
+        LoddarStat = computeLoddarStats();
     }
     public MatchRating(double LD, double CD, double RD, double MF, double LA, double CA, double RA, int tacticType, int tacticSkill) {
         this.centralAttack = CA;
@@ -48,12 +136,58 @@ public class MatchRating {
         this.rightDefense = RD;
         this.tacticSkill = tacticSkill;
         this.tacticType = tacticType;
-        HatStats = (midfield * 3) + leftAttack + rightAttack + centralAttack + centralDefense + leftDefense + rightDefense;
-        LoddarStat = computeLoddarStats(tacticType, tacticSkill);
+        this.HatStats = computeHatStats();
+        this.LoddarStat = computeLoddarStats();
+    }
+
+    public MatchRating(double LD, double CD, double RD, double MF, double LA, double CA, double RA, int iAttitude,
+                       int iTacticType, int iTacticlevel, int iStyle_of_play) {
+        this.centralAttack = CA;
+        this.centralDefense = CD;
+        this.leftAttack = LA;
+        this.leftDefense = LD;
+        this.midfield = MF;
+        this.rightAttack = RA;
+        this.rightDefense = RD;
+        this.tacticSkill = iTacticlevel;
+        this.tacticType = iTacticType;
+        this.attitude = iAttitude;
+        this.style_of_play = iStyle_of_play;
+        this.HatStats = computeHatStats();
+        this.LoddarStat = computeLoddarStats();
+    }
+
+    public MatchRating(Ratings ratings) {
+        this.centralAttack = ratings.getCentralAttack().get(0);
+        this.centralDefense = ratings.getCentralDefense().get(0);
+        this.leftAttack = ratings.getLeftAttack().get(0);
+        this.leftDefense = ratings.getLeftDefense().get(0);
+        this.midfield = ratings.getMidfield().get(0);
+        this.rightAttack = ratings.getRightAttack().get(0);
+        this.rightDefense = ratings.getRightDefense().get(0);
+        this.HatStats = ratings.getHatStats().get(0);
+        this.LoddarStat = ratings.getLoddarStat().get(0);
     }
 
     //~ Methods ------------------------------------------------------------------------------------
 
+    public MatchRating minus(MatchRating other)
+    {
+        if (null == other) return this;
+
+        MatchRating diff = new MatchRating();
+        diff.setCentralDefense(this.getCentralDefense()-other.getCentralDefense());
+        diff.setRightDefense(this.getRightDefense()-other.getRightDefense());
+        diff.setLeftDefense(this.getLeftDefense()-other.getLeftDefense());
+        diff.setMidfield(this.getMidfield()-other.getMidfield());
+        diff.setCentralAttack(this.getCentralAttack()-other.getCentralAttack());
+        diff.setRightAttack(this.getRightAttack()-other.getRightAttack());
+        diff.setLeftAttack(this.getLeftAttack()-other.getLeftAttack());
+        diff.setHatStats(this.getHatStats()-other.getHatStats());
+        diff.setLoddarStats(this.getLoddarStats()-other.getLoddarStats());
+
+        return diff;
+    }
     /**
      * Sets the central attack rating
      *
@@ -149,15 +283,16 @@ public class MatchRating {
         return LoddarStat;
     }
 
-    /**
-     * Returns the calculated LoddarStats
-     *
-     * @param tactic The tactic code
-     * @param level The tactic rating
-     *
-     * @return the rating
-     */
-    public final double computeLoddarStats(int tactic, int level) {
+
+    public final int computeHatStats(){
+        int mid = double2HTint(this.midfield);
+        int def = double2HTint(this.leftDefense)+double2HTint(this.centralDefense)+double2HTint(this.rightDefense);
+        int att = double2HTint(this.leftAttack)+double2HTint(this.centralAttack)+double2HTint(this.rightAttack);
+        return 3*mid+def+att;
+    }
+
+
+    public final double computeLoddarStats() {
         final double MIDFIELD_SHIFT = 0.0;
         final double COUNTERATTACK_WEIGHT = 0.25;
         final double DEFENSE_WEIGHT = 0.47;
@@ -167,13 +302,13 @@ public class MatchRating {
 
         double correctedCentralWeigth = CENTRAL_WEIGHT;
 
-        switch (tactic) {
+        switch (this.tacticType) {
             case IMatchDetails.TAKTIK_MIDDLE:
-                correctedCentralWeigth = CENTRAL_WEIGHT + (((0.2 * (level - 1)) / 19d) + 0.2);
+                correctedCentralWeigth = CENTRAL_WEIGHT + (((0.2 * (this.tacticSkill - 1)) / 19d) + 0.2);
                 break;
 
             case IMatchDetails.TAKTIK_WINGS:
-                correctedCentralWeigth = CENTRAL_WEIGHT - (((0.2 * (level - 1)) / 19d) + 0.2);
+                correctedCentralWeigth = CENTRAL_WEIGHT - (((0.2 * (this.tacticSkill - 1)) / 19d) + 0.2);
                 break;
 
             default:
@@ -184,8 +319,8 @@ public class MatchRating {
 
         double counterCorrection = 0;
 
-        if (tactic == IMatchDetails.TAKTIK_KONTER) {
-            counterCorrection = (COUNTERATTACK_WEIGHT * 2 * level) / (level + 20);
+        if (this.tacticType == IMatchDetails.TAKTIK_KONTER) {
+            counterCorrection = (COUNTERATTACK_WEIGHT * 2 * this.tacticSkill) / (this.tacticSkill + 20);
         }
 
         // Calculate attack rating
@@ -305,8 +440,12 @@ public class MatchRating {
      *
      * @return Integer HT rating
      */
-    public final int float2HTint(float x) {
+    public static final int float2HTint(float x) {
         return (int) (((x - 1.0f) * 4.0f) + 1.0f);
+    }
+
+    public static final int double2HTint(double x) {
+        return float2HTint((float)x);
     }
 
     public final double intHT2loatHT(int x) {
@@ -335,12 +474,9 @@ public class MatchRating {
 
     /**
      * Hattrick Quality function
-     *
-     * @param value Official Hattrick value
-     *
-     * @return Hattrick Quality value
      */
-    private double hq(double value) {
-        return (2 * value) / (value + 80);
+    private double hq(double _value) {
+        int value = double2HTint(_value);
+        return (2.0f * value) / (value + 80.0f);
     }
 }

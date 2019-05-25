@@ -102,6 +102,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LOCKED, "gui/bilder/Locked.gif");
 		put(EMPTY, "gui/bilder/empty.gif");
 		put(INFO, "gui/bilder/info.gif");
+		put(FEEDBACK, "gui/bilder/feedback.gif");
 		put(GOTOANALYSETOP, "gui/bilder/gotoAnalyseTop.png");
 		put(GOTOANALYSEBOTTOM, "gui/bilder/gotoAnalyseBottom.png");
 		put(OFFSET, "gui/bilder/offset.png");

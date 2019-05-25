@@ -1015,7 +1015,12 @@ public class Player {
     public java.lang.String getName() {
         return DBManager.deleteEscapeSequences(m_sName);
     }
-    
+
+    public java.lang.String getLastName() {
+        String lastName = this.getName();
+        return lastName.substring(lastName.lastIndexOf(" ")+1);
+    }
+
     /**
      * Getter for shortName
      * @return returns the fist letter of the first Name + a "." and the last name

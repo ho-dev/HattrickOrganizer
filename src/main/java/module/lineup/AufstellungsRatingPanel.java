@@ -13,6 +13,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.util.Helper;
+import module.pluginFeedback.FeedbackPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -101,6 +102,7 @@ final class AufstellungsRatingPanel extends RasenPanel {
     private NumberFormat m_clFormat;
     private boolean m_bReihenfolge = REIHENFOLGE_STURM2VERTEIDIGUNG;
     private final JButton copyButton = new JButton();
+    private final JButton feedbackButton = new JButton();
 
     // ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -694,7 +696,7 @@ final class AufstellungsRatingPanel extends RasenPanel {
         layout.setConstraints(subpanel, constraints);
         add(subpanel);
 
-        ////////////////////////////////////////////////////////////////////////
+        ////========================= BOTTOM ROW ===============================
         sublayout = new GridBagLayout();
         subconstraints = new GridBagConstraints();
         subconstraints.anchor = GridBagConstraints.CENTER;
@@ -705,6 +707,7 @@ final class AufstellungsRatingPanel extends RasenPanel {
         subpanel = new JPanel(sublayout);
         subpanel.setOpaque(false);
 
+
         //left bottom spacer
         tempcomponent = new JLabel();
         tempcomponent.setFont(tempcomponent.getFont().deriveFont(tempcomponent.getFont().getSize2D() - 2f));
@@ -712,9 +715,9 @@ final class AufstellungsRatingPanel extends RasenPanel {
         subconstraints.gridx = 1;
         subconstraints.gridy = 7;
         subconstraints.gridwidth = 1;
-
         sublayout.setConstraints(tempcomponent, subconstraints);
         subpanel.add(tempcomponent);
+
 
         //Bottom Center
         temppanel = new JPanel(new GridLayout(1, 2));
@@ -749,28 +752,38 @@ final class AufstellungsRatingPanel extends RasenPanel {
         sublayout.setConstraints(mainpanel, subconstraints);
         subpanel.add(mainpanel);
 
-        //right bottom spacer (copy button)
-        //tempcomponent = new JLabel();
-        //tempcomponent.setFont(tempcomponent.getFont().deriveFont(tempcomponent.getFont().getSize2D() - 2f));
-        //tempcomponent.setPreferredSize(new Dimension(Helper.calcCellWidth(10), Helper.calcCellWidth(2)));
-        //tempcomponent.setPreferredSize(new Dimension(Helper.calcCellWidth(1), 1));
-        subconstraints.gridx = 5;
-        subconstraints.gridy = 7;
-        subconstraints.gridwidth = 1;
 
-        //--- copy ratings button start
+        //--- BOTTOM RIGHT:   Copy Rating and Feedback button
         temppanel = new JPanel(new BorderLayout());
         temppanel.setOpaque(false);
+        JPanel subButtonPanel = new JPanel();
+        subButtonPanel.setOpaque(false);
+
+        feedbackButton.setToolTipText(HOVerwaltung.instance().getLanguageString("Lineup.Feedback.ToolTip"));
+        feedbackButton.setIcon(ThemeManager.getIcon(HOIconName.FEEDBACK));
+        feedbackButton.addActionListener(e -> new FeedbackPanel());
+        feedbackButton.setPreferredSize(new Dimension(24, 24));
+        feedbackButton.setMaximumSize(new Dimension(24, 24));
+        feedbackButton.setOpaque(false);
+        feedbackButton.setContentAreaFilled(false);
+        feedbackButton.setBorderPainted(false);
+        subButtonPanel.add(feedbackButton);
+
         copyButton.setToolTipText(HOVerwaltung.instance().getLanguageString("Lineup.CopyRatings.ToolTip"));
         copyButton.setIcon(ThemeManager.getIcon(HOIconName.INFO));
         copyButton.addActionListener(new CopyListener(this));
         copyButton.setPreferredSize(new Dimension(18, 18));
         copyButton.setMaximumSize(new Dimension(18, 18));
-        temppanel.add(copyButton, BorderLayout.EAST);
-        //--- copy ratings button end
+        copyButton.setOpaque(false);
+        copyButton.setContentAreaFilled(false);
+        copyButton.setBorderPainted(false);
+        subButtonPanel.add(copyButton);
 
-        //sublayout.setConstraints(tempcomponent, subconstraints);
-        //subpanel.add(tempcomponent);
+        temppanel.add(subButtonPanel, BorderLayout.CENTER);
+
+        subconstraints.gridx = 5;
+        subconstraints.gridy = 7;
+        subconstraints.gridwidth = 1;
         sublayout.setConstraints(temppanel, subconstraints);
         subpanel.add(temppanel);
 

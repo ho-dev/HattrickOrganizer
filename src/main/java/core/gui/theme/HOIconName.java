@@ -40,6 +40,7 @@ public interface HOIconName {
 	public static final String LOCKED 			= "locked";
 	public static final String EMPTY 			= "empty";
 	public static final String INFO 			= "info";
+	public static final String FEEDBACK 		= "feedback";
 	public static final String GOTOANALYSETOP 	= "gotoAnalyseTop";
 	public static final String GOTOANALYSEBOTTOM = "gotoAnalyseBottom";
 	public static final String OFFSET 			= "offset";

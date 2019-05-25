@@ -8,9 +8,9 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
-import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
+import module.pluginFeedback.FeedbackPanel;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -77,126 +77,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private final SwapPositionsManager swapPositionsManager = new SwapPositionsManager(this);
 	private final IAufstellungsAssistentPanel assistantPanel;
 	
-//	private static final String EMPTY = "";
-//	private static final String SPACE =" ";
-//
-//	public PlayerPositionPanel getM_clCentralForward() {
-//		return m_clCentralForward;
-//	}
-//
-//	public void setM_clCentralForward(PlayerPositionPanel m_clCentralForward) {
-//		this.m_clCentralForward = m_clCentralForward;
-//	}
-//
-//	public PlayerPositionPanel getM_clCentralInnerMidfielder() {
-//		return m_clCentralInnerMidfielder;
-//	}
-//
-//	public void setM_clCentralInnerMidfielder(
-//			PlayerPositionPanel m_clCentralInnerMidfielder) {
-//		this.m_clCentralInnerMidfielder = m_clCentralInnerMidfielder;
-//	}
-//
-//	public PlayerPositionPanel getM_clLeftBack() {
-//		return m_clLeftBack;
-//	}
-//
-//	public void setM_clLeftBack(PlayerPositionPanel m_clLeftBack) {
-//		this.m_clLeftBack = m_clLeftBack;
-//	}
-//
-//	public PlayerPositionPanel getM_clLeftWinger() {
-//		return m_clLeftWinger;
-//	}
-//
-//	public void setM_clLeftWinger(PlayerPositionPanel m_clLeftWinger) {
-//		this.m_clLeftWinger = m_clLeftWinger;
-//	}
-//
-//	public PlayerPositionPanel getM_clLeftCentralDefender() {
-//		return m_clLeftCentralDefender;
-//	}
-//
-//	public void setM_clLeftCentralDefender(
-//			PlayerPositionPanel m_clLeftCentralDefender) {
-//		this.m_clLeftCentralDefender = m_clLeftCentralDefender;
-//	}
-//
-//	public PlayerPositionPanel getM_clLeftInnerMidfielder() {
-//		return m_clLeftInnerMidfielder;
-//	}
-//
-//	public void setM_clLeftInnerMidfielder(
-//			PlayerPositionPanel m_clLeftInnerMidfielder) {
-//		this.m_clLeftInnerMidfielder = m_clLeftInnerMidfielder;
-//	}
-//
-//	public PlayerPositionPanel getM_clLeftForward() {
-//		return m_clLeftForward;
-//	}
-//
-//	public void setM_clLeftForward(PlayerPositionPanel m_clLeftForward) {
-//		this.m_clLeftForward = m_clLeftForward;
-//	}
-//
-//	public PlayerPositionPanel getM_clMiddleCentralDefender() {
-//		return m_clMiddleCentralDefender;
-//	}
-//
-//	public void setM_clMiddleCentralDefender(
-//			PlayerPositionPanel m_clMiddleCentralDefender) {
-//		this.m_clMiddleCentralDefender = m_clMiddleCentralDefender;
-//	}
-//
-//	public PlayerPositionPanel getM_clRightBack() {
-//		return m_clRightBack;
-//	}
-//
-//	public void setM_clRightBack(PlayerPositionPanel m_clRightBack) {
-//		this.m_clRightBack = m_clRightBack;
-//	}
-//
-//	public PlayerPositionPanel getM_clRightWinger() {
-//		return m_clRightWinger;
-//	}
-//
-//	public void setM_clRightWinger(PlayerPositionPanel m_clRightWinger) {
-//		this.m_clRightWinger = m_clRightWinger;
-//	}
-//
-//	public PlayerPositionPanel getM_clRightCentralDefender() {
-//		return m_clRightCentralDefender;
-//	}
-//
-//	public void setM_clRightCentralDefender(
-//			PlayerPositionPanel m_clRightCentralDefender) {
-//		this.m_clRightCentralDefender = m_clRightCentralDefender;
-//	}
-//
-//	public PlayerPositionPanel getM_clRightInnerMidfielder() {
-//		return m_clRightInnerMidfielder;
-//	}
-//
-//	public void setM_clRightInnerMidfielder(
-//			PlayerPositionPanel m_clRightInnerMidfielder) {
-//		this.m_clRightInnerMidfielder = m_clRightInnerMidfielder;
-//	}
-//
-//	public PlayerPositionPanel getM_clRightForward() {
-//		return m_clRightForward;
-//	}
-//
-//	public void setM_clRightForward(PlayerPositionPanel m_clRightForward) {
-//		this.m_clRightForward = m_clRightForward;
-//	}
-//
-//	public PlayerPositionPanel getM_clKeeper() {
-//		return m_clKeeper;
-//	}
-//
-//	public void setM_clKeeper(PlayerPositionPanel m_clKeeper) {
-//		this.m_clKeeper = m_clKeeper;
-//	}
 
 	public LineupPositionsPanel(LineupPanel panel) {
 		m_clLineupPanel = panel;

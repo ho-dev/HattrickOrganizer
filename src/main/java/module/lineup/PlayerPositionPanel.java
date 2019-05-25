@@ -727,8 +727,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
      */
     private SpielerCBItem createSpielerCBItem(SpielerCBItem item, Player player) {
         if (player != null) {
-        	// Create a string with just initial as first name
-        	String spielerName = player.getName().split(" ")[1];
+        	String spielerName = player.getLastName();
 
         	if (m_iPositionID == IMatchRoleID.setPieces) {
                 item.setValues(spielerName,
