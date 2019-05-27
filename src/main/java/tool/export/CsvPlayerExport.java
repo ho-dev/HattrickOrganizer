@@ -40,9 +40,11 @@ public class CsvPlayerExport {
 	// Force using dot as decimal point despite of locale
 	private static final DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.US);
 	// Fix output decimal format to avoid roundings like 6.5509996
-	private static final DecimalFormat df3 = new DecimalFormat("0.0##", dfs);
+	private static final DecimalFormat df2 = new DecimalFormat("0.0#", dfs); // 1…2 digits
+	private static final DecimalFormat df3 = new DecimalFormat("0.0##", dfs); // 1…3 digits
 
 	public CsvPlayerExport() {
+		df2.setRoundingMode(RoundingMode.HALF_UP);
 		df3.setRoundingMode(RoundingMode.HALF_UP); // 8.56789012 -> 8.568
 	}
 
@@ -174,25 +176,25 @@ public class CsvPlayerExport {
 						df3.format(curPlayer.getTorschuss() + curPlayer.getSubskill4PosAccurate(PlayerSkill.SCORING)),
 						df3.format(curPlayer.getStandards() + curPlayer.getSubskill4PosAccurate(PlayerSkill.SET_PIECES)),
 						// ls.player.position_short
-						"" + curPlayer.calcPosValue(IMatchRoleID.KEEPER, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.BACK, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.WINGER, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.FORWARD, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true)
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.KEEPER, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.BACK, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.WINGER, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.FORWARD, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true))
 				};
 				for (int col=0; col < outCols.length; col++) {
 					if (col > 0)
