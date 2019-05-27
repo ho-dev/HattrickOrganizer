@@ -188,12 +188,20 @@ public class CsvPlayerExport {
 				for (int col=0; col < outCols.length; col++) {
 					if (col > 0)
 						writer.write (",");
-					if(col==0 || col==1 || col==8 || col==9 || col==10 || col==11 || col==12 || col==13) {
-						writer.write("\"");
-						writer.write(outCols[col]);
-						writer.write("\"");
-					}else{
-						writer.write(outCols[col]);
+					switch(col) {
+						case  0: // name
+						case  1: // id
+						case  8: // injury
+						case  9: // homegrown
+						case 10: // agreeability
+						case 11: // aggressiveness
+						case 12: // honesty
+						case 13: // speciality
+							writer.write("\"" + outCols[col]+ "\"");
+							break;
+						default:
+							writer.write(outCols[col]);
+							break;
 					}
 				}
 				writer.write ("\n");
