@@ -10,9 +10,13 @@ import core.net.login.LoginWaitDialog;
 import core.util.HOLogger;
 
 import java.io.*;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -33,8 +37,13 @@ import core.constants.player.PlayerSpeciality;
 public class CsvPlayerExport {
 	private static String NAME = "CSV PlayerExport";
 	private static final String defaultFilename = "playerexport.csv";
+	// Force using dot as decimal point despite of locale
+	private static final DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.US);
+	// Fix output decimal format to avoid roundings like 6.5509996
+	private static final DecimalFormat df3 = new DecimalFormat("0.0##", dfs);
 
 	public CsvPlayerExport() {
+		df3.setRoundingMode(RoundingMode.HALF_UP); // 8.56789012 -> 8.568
 	}
 
 	public void showSaveDialog() {
@@ -157,13 +166,13 @@ public class CsvPlayerExport {
 						// ls.player.skill_short
 						"" + curPlayer.getKondition(),
 						"" + (curPlayer.getLoyalty()),
-						"" + (curPlayer.getTorwart() + curPlayer.getSubskill4PosAccurate(PlayerSkill.KEEPER)),
-						"" + (curPlayer.getVerteidigung() + curPlayer.getSubskill4PosAccurate(PlayerSkill.DEFENDING)),
-						"" + (curPlayer.getFluegelspiel() + curPlayer.getSubskill4PosAccurate(PlayerSkill.WINGER)),
-						"" + (curPlayer.getSpielaufbau() + curPlayer.getSubskill4PosAccurate(PlayerSkill.PLAYMAKING)),
-						"" + (curPlayer.getPasspiel() + curPlayer.getSubskill4PosAccurate(PlayerSkill.PASSING)),
-						"" + (curPlayer.getTorschuss() + curPlayer.getSubskill4PosAccurate(PlayerSkill.SCORING)),
-						"" + (curPlayer.getStandards() + curPlayer.getSubskill4PosAccurate(PlayerSkill.SET_PIECES)),
+						df3.format(curPlayer.getTorwart() + curPlayer.getSubskill4PosAccurate(PlayerSkill.KEEPER)),
+						df3.format(curPlayer.getVerteidigung() + curPlayer.getSubskill4PosAccurate(PlayerSkill.DEFENDING)),
+						df3.format(curPlayer.getFluegelspiel() + curPlayer.getSubskill4PosAccurate(PlayerSkill.WINGER)),
+						df3.format(curPlayer.getSpielaufbau() + curPlayer.getSubskill4PosAccurate(PlayerSkill.PLAYMAKING)),
+						df3.format(curPlayer.getPasspiel() + curPlayer.getSubskill4PosAccurate(PlayerSkill.PASSING)),
+						df3.format(curPlayer.getTorschuss() + curPlayer.getSubskill4PosAccurate(PlayerSkill.SCORING)),
+						df3.format(curPlayer.getStandards() + curPlayer.getSubskill4PosAccurate(PlayerSkill.SET_PIECES)),
 						// ls.player.position_short
 						"" + curPlayer.calcPosValue(IMatchRoleID.KEEPER, true),
 						"" + curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true),
