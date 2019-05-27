@@ -10,6 +10,7 @@ import core.net.login.LoginWaitDialog;
 import core.util.HOLogger;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
 
@@ -75,8 +76,7 @@ public class CsvPlayerExport {
 				"Exporting all players as CSV to " + file.getName() + "...");
 		List<Player> list = HOVerwaltung.instance().getModel().getAllSpieler();
 		try {
-			FileWriter writer = new FileWriter(file);
-			//This is a try OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream(file), "utf-8");
+			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
 
 			writer.write(
 							"\"" + HOVerwaltung.instance().getLanguageString("ls.player.id") + "\","
