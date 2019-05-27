@@ -142,7 +142,8 @@ public class CsvPlayerExport {
 						"" + curPlayer.getTSI(),
 						"" + (int)(curPlayer.getGehalt() / HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate()),
 						"" + curPlayer.getGelbeKarten(),
-						"" + curPlayer.getVerletzt(),
+						// empty field for a healthy player (injury == -1), +0 for bruised, +N for injured and +∞ for unrecoverable
+						(curPlayer.getVerletzt() < 0) ? "" : "+" + (curPlayer.getVerletzt()>9 ? "∞" : curPlayer.getVerletzt()),
 
 						"" + (curPlayer.isHomeGrown()),
 						"" + PlayerAgreeability.toString(curPlayer.getCharakter()),
@@ -187,7 +188,7 @@ public class CsvPlayerExport {
 				for (int col=0; col < outCols.length; col++) {
 					if (col > 0)
 						writer.write (",");
-					if(col==0 || col==1 || col==10 || col==11 || col==12 || col==13) {
+					if(col==0 || col==1 || col==8 || col==10 || col==11 || col==12 || col==13) {
 						writer.write("\"");
 						writer.write(outCols[col]);
 						writer.write("\"");
