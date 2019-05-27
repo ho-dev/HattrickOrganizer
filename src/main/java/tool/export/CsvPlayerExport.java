@@ -90,8 +90,8 @@ public class CsvPlayerExport {
 			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
 
 			writer.write(
-							"\"" + HOVerwaltung.instance().getLanguageString("ls.player.id") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.name") + "\","
+							"\"" + HOVerwaltung.instance().getLanguageString("ls.player.name") + "\","
+							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.id") + "\","
 							+ "\"" + HOVerwaltung.instance().getLanguageString("Aufgestellt") + "\","
 							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.age") + "\","
 							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.age") + " " + HOVerwaltung.instance().getLanguageString("ls.player.age.days") + "\","
@@ -145,8 +145,8 @@ public class CsvPlayerExport {
 				Player curPlayer = (Player)iter.next();
 
 				String [] outCols = {
-						"" + curPlayer.getSpielerID(),
 						"" + curPlayer.getName(),
+						"" + curPlayer.getSpielerID(),
 						"" + curPlayer.getTrikotnummer(),
 						"" + curPlayer.getAlter(),
 						"" + curPlayer.getAgeDays(),
