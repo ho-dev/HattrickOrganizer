@@ -10,8 +10,13 @@ import core.net.login.LoginWaitDialog;
 import core.util.HOLogger;
 
 import java.io.*;
+import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -32,8 +37,15 @@ import core.constants.player.PlayerSpeciality;
 public class CsvPlayerExport {
 	private static String NAME = "CSV PlayerExport";
 	private static final String defaultFilename = "playerexport.csv";
+	// Force using dot as decimal point despite of locale
+	private static final DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.US);
+	// Fix output decimal format to avoid roundings like 6.5509996
+	private static final DecimalFormat df2 = new DecimalFormat("0.0#", dfs); // 1…2 digits
+	private static final DecimalFormat df3 = new DecimalFormat("0.0##", dfs); // 1…3 digits
 
 	public CsvPlayerExport() {
+		df2.setRoundingMode(RoundingMode.HALF_UP);
+		df3.setRoundingMode(RoundingMode.HALF_UP); // 8.56789012 -> 8.568
 	}
 
 	public void showSaveDialog() {
@@ -75,12 +87,11 @@ public class CsvPlayerExport {
 				"Exporting all players as CSV to " + file.getName() + "...");
 		List<Player> list = HOVerwaltung.instance().getModel().getAllSpieler();
 		try {
-			FileWriter writer = new FileWriter(file);
-			//This is a try OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream(file), "utf-8");
+			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
 
 			writer.write(
-							"\"" + HOVerwaltung.instance().getLanguageString("ls.player.id") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.name") + "\","
+							"\"" + HOVerwaltung.instance().getLanguageString("ls.player.name") + "\","
+							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.id") + "\","
 							+ "\"" + HOVerwaltung.instance().getLanguageString("Aufgestellt") + "\","
 							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.age") + "\","
 							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.age") + " " + HOVerwaltung.instance().getLanguageString("ls.player.age.days") + "\","
@@ -134,17 +145,18 @@ public class CsvPlayerExport {
 				Player curPlayer = (Player)iter.next();
 
 				String [] outCols = {
-						"" + curPlayer.getSpielerID(),
 						"" + curPlayer.getName(),
+						"" + curPlayer.getSpielerID(),
 						"" + curPlayer.getTrikotnummer(),
 						"" + curPlayer.getAlter(),
 						"" + curPlayer.getAgeDays(),
 						"" + curPlayer.getTSI(),
 						"" + (int)(curPlayer.getGehalt() / HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate()),
 						"" + curPlayer.getGelbeKarten(),
-						"" + curPlayer.getVerletzt(),
+						// empty field for a healthy player (injury == -1), +0 for bruised, +N for injured and +∞ for unrecoverable
+						(curPlayer.getVerletzt() < 0) ? "" : "+" + (curPlayer.getVerletzt()>9 ? "∞" : curPlayer.getVerletzt()),
 
-						"" + (curPlayer.isHomeGrown()),
+						curPlayer.isHomeGrown() ? "♥" : "",
 						"" + PlayerAgreeability.toString(curPlayer.getCharakter()),
 						"" + PlayerAggressiveness.toString(curPlayer.getAgressivitaet()),
 						"" + PlayerHonesty.toString(curPlayer.getAnsehen()),
@@ -156,43 +168,51 @@ public class CsvPlayerExport {
 						// ls.player.skill_short
 						"" + curPlayer.getKondition(),
 						"" + (curPlayer.getLoyalty()),
-						"" + (curPlayer.getTorwart() + curPlayer.getSubskill4PosAccurate(PlayerSkill.KEEPER)),
-						"" + (curPlayer.getVerteidigung() + curPlayer.getSubskill4PosAccurate(PlayerSkill.DEFENDING)),
-						"" + (curPlayer.getFluegelspiel() + curPlayer.getSubskill4PosAccurate(PlayerSkill.WINGER)),
-						"" + (curPlayer.getSpielaufbau() + curPlayer.getSubskill4PosAccurate(PlayerSkill.PLAYMAKING)),
-						"" + (curPlayer.getPasspiel() + curPlayer.getSubskill4PosAccurate(PlayerSkill.PASSING)),
-						"" + (curPlayer.getTorschuss() + curPlayer.getSubskill4PosAccurate(PlayerSkill.SCORING)),
-						"" + (curPlayer.getStandards() + curPlayer.getSubskill4PosAccurate(PlayerSkill.SET_PIECES)),
+						df3.format(curPlayer.getTorwart() + curPlayer.getSubskill4PosAccurate(PlayerSkill.KEEPER)),
+						df3.format(curPlayer.getVerteidigung() + curPlayer.getSubskill4PosAccurate(PlayerSkill.DEFENDING)),
+						df3.format(curPlayer.getFluegelspiel() + curPlayer.getSubskill4PosAccurate(PlayerSkill.WINGER)),
+						df3.format(curPlayer.getSpielaufbau() + curPlayer.getSubskill4PosAccurate(PlayerSkill.PLAYMAKING)),
+						df3.format(curPlayer.getPasspiel() + curPlayer.getSubskill4PosAccurate(PlayerSkill.PASSING)),
+						df3.format(curPlayer.getTorschuss() + curPlayer.getSubskill4PosAccurate(PlayerSkill.SCORING)),
+						df3.format(curPlayer.getStandards() + curPlayer.getSubskill4PosAccurate(PlayerSkill.SET_PIECES)),
 						// ls.player.position_short
-						"" + curPlayer.calcPosValue(IMatchRoleID.KEEPER, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.BACK, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.WINGER, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.FORWARD, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true),
-						"" + curPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true)
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.KEEPER, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.BACK, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.WINGER, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.FORWARD, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true)),
+						df2.format(curPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true))
 				};
 				for (int col=0; col < outCols.length; col++) {
 					if (col > 0)
 						writer.write (",");
-					if(col==0 || col==1 || col==10 || col==11 || col==12 || col==13) {
-						writer.write("\"");
-						writer.write(outCols[col]);
-						writer.write("\"");
-					}else{
-						writer.write(outCols[col]);
+					switch(col) {
+						case  0: // name
+						case  1: // id
+						case  8: // injury
+						case  9: // homegrown
+						case 10: // agreeability
+						case 11: // aggressiveness
+						case 12: // honesty
+						case 13: // speciality
+							writer.write("\"" + outCols[col]+ "\"");
+							break;
+						default:
+							writer.write(outCols[col]);
+							break;
 					}
 				}
 				writer.write ("\n");
