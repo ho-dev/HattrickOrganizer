@@ -100,12 +100,12 @@ public final class SplashFrame extends JFrame {
 
         //GradientPaint pat= new GradientPaint(5, 136, Color.LIGHT_GRAY, getSize().width - 10, 14, Color.WHITE);
         g2d.setColor(progressColor);
-        g2d.fillRect(190, 200, Math.min((step * ((getSize().width-170)/(maxStep))), getSize().width-170 ), 5);
+        g2d.fillRect(110, 200, Math.min((step * ((getSize().width-70)/(maxStep))), getSize().width-70 ), 5);
 
         //infotext / progress
         g2d.setColor(Color.white);
         g2d.setFont(fontText);
-        g2d.drawString(m_sInfotext, 190,187);
+        g2d.drawString(m_sInfotext, 110,187);
         g2d.setFont(fontVersion);
         g2d.drawString(m_sVersionText, 15, 198);
     }

@@ -128,7 +128,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private List<ApplicationClosingListener> applicationClosingListener = new ArrayList<ApplicationClosingListener>();
 
 	// Menu color depending of version
-	private final Color c_stable = new Color(182, 255, 182);
 	private final Color c_beta = new Color(162, 201, 255);
 	private final Color c_dev = new Color(235, 170, 170);
 
@@ -261,22 +260,13 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 	public static String getVersionString() {
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
-		nf.setMinimumFractionDigits(3);
+		nf.setMinimumFractionDigits(1);
 		String txt = nf.format(HO.VERSION);
 
-		if (HO.isBeta()) {
-			txt += " BETA";
+		if (!HO.isRelease()) {
 			final int r = HO.getRevisionNumber();
 			if (r >= 1) {
-				txt += " (r" + HO.getRevisionNumber() + ")";
-			}
-		}
-
-		else if (HO.isDevelopment()) {
-			txt += " DEV";
-			final int r = HO.getRevisionNumber();
-			if (r >= 1) {
-				txt += " (r" + HO.getRevisionNumber() + ")";
+				txt += " r" + HO.getRevisionNumber();
 			}
 		}
 
@@ -491,7 +481,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			getContentPane().setBackground(c_beta);
 		}
 		else {
-			getContentPane().setBackground(c_stable);
+			setContentPane(new ImagePanel());
 		}
 
 		getContentPane().setLayout(new BorderLayout());
