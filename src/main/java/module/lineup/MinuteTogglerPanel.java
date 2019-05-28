@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -40,6 +42,27 @@ public final class MinuteTogglerPanel extends JPanel {
 			}
 		}
 		add(new JLabel(">>", SwingConstants.CENTER));
-		add(new JLabel("ET", SwingConstants.CENTER)); //toggle extra time visibility (on default: not visible)
+		JLabel ETButton = new JLabel("ET", SwingConstants.CENTER); //toggle extra time visibility (on default: not visible)
+		ETButton.addMouseListener(new MouseAdapter() {
+			boolean enabled = false;
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if(enabled) {
+					for(JLabel ETKey: toggleKeysET) {
+						toggleKeys.remove(ETKey);
+						remove(ETKey);
+					}
+				} else {
+					for(JLabel ETKey: toggleKeysET) {
+						toggleKeys.add(ETKey);
+						add(ETKey, toggleKeys.size());
+					}
+				  }
+				enabled = !enabled;
+				revalidate();
+			}
+		});
+		add(ETButton);
 	}
 }
