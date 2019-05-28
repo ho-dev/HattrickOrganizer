@@ -53,6 +53,8 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 
 	private AufstellungsRatingPanel m_jpRating = new AufstellungsRatingPanel();
 	
+	private MinuteTogglerPanel m_jpMinuteToggler = new MinuteTogglerPanel();
+	
 	final String offensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.offensive");
 	final String defensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.defensive");
 	final String neutral_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.neutral");
@@ -636,6 +638,9 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		JPanel panel;
 
 		int yPos = 1;
+
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		add(m_jpMinuteToggler, constraints);
 
 		constraints.gridx = 1;
 		constraints.gridy = yPos;
