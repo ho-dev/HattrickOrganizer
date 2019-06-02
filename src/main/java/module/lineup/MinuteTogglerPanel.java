@@ -71,9 +71,15 @@ public final class MinuteTogglerPanel extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if(enabled) {
+					JLabel key = toggleKeys.get(current);
 					for(JLabel ETKey: toggleKeysET) {
 						toggleKeys.remove(ETKey);
 						remove(ETKey);
+					}
+					if(current >= toggleKeys.size()) {
+						reverseColor(key);
+						current = toggleKeys.size() - 1;
+						reverseColor(toggleKeys.get(current));
 					}
 				} else {
 					for(JLabel ETKey: toggleKeysET) {
