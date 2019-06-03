@@ -40,13 +40,24 @@ public final class MinuteTogglerPanel extends JPanel {
 		add(prevButton);
 		List<Double> toggleLabels = new ArrayList(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
 		Collections.sort(toggleLabels);
-		for(int i=0;i<toggleLabels.size();i++) {
-			JLabel toggleLabel = new JLabel(String.valueOf(toggleLabels.get(i).longValue()), SwingConstants.CENTER);
+		for(final int[] i={0};i[0]<toggleLabels.size();i[0]++) {
+			JLabel toggleLabel = new JLabel(String.valueOf(toggleLabels.get(i[0]).longValue()), SwingConstants.CENTER);
+			toggleLabel.addMouseListener(new MouseAdapter() {
+				int labelIndex = i[0];
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					reverseColor(toggleKeys.get(current));
+					current = labelIndex;
+					reverseColor(toggleKeys.get(labelIndex));
+					revalidate();
+				}
+			});
 			toggleLabel.setForeground(Color.BLACK);
-			if(i%2 == 0) toggleLabel.setBackground(Color.GREEN);
+			if(i[0]%2 == 0) toggleLabel.setBackground(Color.GREEN);
 			else toggleLabel.setBackground(Color.RED);
 			toggleLabel.setOpaque(true);
-			if(toggleLabels.get(i) > 90d) {
+			if(toggleLabels.get(i[0]) > 90d) {
 				toggleKeysET.add(toggleLabel);
 			} else {
 				add(toggleLabel);
