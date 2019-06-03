@@ -465,6 +465,10 @@ public class ArenaStatistikModel {
                 matchTypeFactor = 1;
                 break;
             case CUP:
+            case EMERALDCUP:
+            case RUBYCUP:
+            case SAPPHIRECUP:
+            case CONSOLANTECUP:
                 matchTypeFactor = (float) 2/3;
                 break;
             case FRIENDLYCUPRULES:
