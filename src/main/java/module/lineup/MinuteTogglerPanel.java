@@ -20,10 +20,13 @@ public final class MinuteTogglerPanel extends JPanel {
 	
 	private List<JLabel> toggleKeys = new ArrayList();
 	private List<JLabel> toggleKeysET = new ArrayList();
+	private List<Double> toggleLabels = new ArrayList(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
+	private AufstellungsDetailPanel parent;
 	private int current = 0;
 	
-	public MinuteTogglerPanel() {
+	public MinuteTogglerPanel(AufstellungsDetailPanel parent) {
 
+		this.parent = parent;
 		initComponents();
 	}
 
@@ -35,10 +38,10 @@ public final class MinuteTogglerPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {
 				shiftBackward(1);
 				revalidate();
+				parent.reInit();
 			}
 		});
 		add(prevButton);
-		List<Double> toggleLabels = new ArrayList(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
 		Collections.sort(toggleLabels);
 		for(final int[] i={0};i[0]<toggleLabels.size();i[0]++) {
 			JLabel toggleLabel = new JLabel(String.valueOf(toggleLabels.get(i[0]).longValue()), SwingConstants.CENTER);
@@ -51,6 +54,7 @@ public final class MinuteTogglerPanel extends JPanel {
 					current = labelIndex;
 					reverseColor(toggleKeys.get(labelIndex));
 					revalidate();
+					parent.reInit();
 				}
 			});
 			toggleLabel.setForeground(Color.BLACK);
@@ -72,6 +76,7 @@ public final class MinuteTogglerPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {
 				shiftForward(1);
 				revalidate();
+				parent.reInit();
 			}
 		});
 		add(nextButton);
@@ -91,6 +96,7 @@ public final class MinuteTogglerPanel extends JPanel {
 						reverseColor(key);
 						current = toggleKeys.size() - 1;
 						reverseColor(toggleKeys.get(current));
+						parent.reInit();
 					}
 				} else {
 					for(JLabel ETKey: toggleKeysET) {
@@ -145,5 +151,9 @@ public final class MinuteTogglerPanel extends JPanel {
         Color bg = target.getBackground();
 		target.setForeground(bg);
 		target.setBackground(fg);
+	}
+
+	public Double getCurrentKey() {
+		return toggleLabels.get(current);
 	}
 }
