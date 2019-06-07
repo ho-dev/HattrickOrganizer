@@ -42,7 +42,7 @@ public final class XMLCHPPPreParser {
 	        	}
 	                
 	        } else {
-	        	sReturnError = hov.getLanguageString("NO_HRF_ERROR");
+	        	sReturnError = hov.getLanguageString("XML_PARSE_ERRROR");
 	        }
 		} else {
 			sReturnError = hov.getLanguageString("NO_HRF_ERROR");

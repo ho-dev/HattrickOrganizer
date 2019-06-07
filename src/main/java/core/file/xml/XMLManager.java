@@ -154,6 +154,11 @@ public class XMLManager  {
             HOLogger.instance().log(XMLManager.class,e);
         }
 
+        if (doc == null || doc.getElementsByTagName("HattrickData").getLength() <= 0) {
+            HOLogger.instance().error(XMLManager.class, "Cannot parse data:" + inputString);
+            return null;
+        }
+
         return doc;
     }
 
