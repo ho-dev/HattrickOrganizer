@@ -310,7 +310,9 @@ public class MyConnector {
 		urlpara.append("&actionType=setmatchorder");
 		urlpara.append("&sourceSystem=" + matchType.getSourceString());
 
-		String result = readStream(postWebFileWithSingleBodyValue(htUrl + urlpara, "lineup="+orderString, true,
+		Map<String, String> paras = new HashMap<>();
+		paras.put("lineup", orderString);
+		String result = readStream(postWebFileWithBodyParameters(htUrl + urlpara, paras, true,
 				"set_matchorder"));
 		String sError = XMLCHPPPreParser.getError(result);
 		if (sError.length() > 0) {
@@ -679,27 +681,29 @@ public class MyConnector {
 	 *
 	 * @param surl
 	 *            the full url with parameters
-	 * @param sBody
-	 *            A string
+	 * @param bodyParas
+	 *            A hash map of string, string where key is parameter key and value is parameter value
 	 * @param showErrorMessage
 	 *            Whether to show message on error or not
 	 * @param scope
 	 *            The scope of the request is required, if no scope, put "".
 	 *            Example: "set_matchorder".
 	 */
-	public InputStream postWebFileWithSingleBodyValue(String surl, String sBody,
+	public InputStream postWebFileWithBodyParameters(String surl, Map<String, String> bodyParas,
 													 boolean showErrorMessage, String scope) {
 
 		OAuthDialog authDialog = null;
 		Response response = null;
-		int iResponse = 200;
+		int iResponse;
 		boolean tryAgain = true;
 		try {
 			while (tryAgain == true) {
 				OAuthRequest request = new OAuthRequest(Verb.POST, surl);
-				request.addPayload(URLEncoder.encode(sBody, "UTF-8"));
+				for (Map.Entry<String, String> entry : bodyParas.entrySet()) {
+					request.addBodyParameter(entry.getKey(), entry.getValue());
+				}
 				infoHO(request);
-				request.addHeader("Content-Type", "application/json");
+				request.addHeader("Content-Type", "application/x-www-form-urlencoded");
 				if (m_OAAccessToken == null || m_OAAccessToken.getToken().length() == 0) {
 					iResponse = 401;
 				} else {
