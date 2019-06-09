@@ -638,8 +638,10 @@ public class MyConnector {
 			}
 		} catch (Exception sox) {
 			HOLogger.instance().error(getClass(), sox);
-			JOptionPane.showMessageDialog(null, surl + "\n" + sox.getMessage(), HOVerwaltung
-					.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,
+				sox.getMessage() + "\n\n" + "URL:" + surl + "\n",
+				HOVerwaltung.instance().getLanguageString("Fehler"),
+				JOptionPane.ERROR_MESSAGE);
 			returnString = "";
 		}
 		return returnString;
