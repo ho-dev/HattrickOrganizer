@@ -629,34 +629,34 @@ public class OnlineWorker {
 		}
 
 
-		orders.append(String.format("],\"captain\": \"%s\",",lineup.getKapitaen()));
-		orders.append(String.format("\"setPieces\": \"%s\",",lineup.getKicker()));
+		orders.append(String.format("],\"captain\": %s,",lineup.getKapitaen()));
+		orders.append(String.format("\"setPieces\": %s,",lineup.getKicker()));
 
-		orders.append("\"settings\":{\"tactic\": \"").append(lineup.getTacticType());
-		orders.append("\",\"speechLevel\":\"").append(lineup.getAttitude());
-		orders.append("\", \"newLineup\":\"\",");
-		orders.append("\"coachModifier\":\"").append(lineup.getStyleOfPlay());
-		orders.append("\"}, \"substitutions\":[");
+		orders.append("\"settings\":{\"tactic\":").append(lineup.getTacticType());
+		orders.append(",\"speechLevel\":").append(lineup.getAttitude());
+		orders.append(", \"newLineup\":\"\",");
+		orders.append("\"coachModifier\":").append(lineup.getStyleOfPlay());
+		orders.append("}, \"substitutions\":[");
 
 		Iterator<Substitution> iter = lineup.getSubstitutionList().iterator();
 		while (iter.hasNext()) {
 			Substitution sub = iter.next();
 			// playerout == playerin if its a behaviour change)
 			if (sub.getOrderType() == MatchOrderType.NEW_BEHAVIOUR) {
-				orders.append("{\"playerin\":\"").append(sub.getSubjectPlayerID()).append("\",");
+				orders.append("{\"playerin\":").append(sub.getSubjectPlayerID()).append(",");
 			} else {
-				orders.append("{\"playerin\":\"").append(sub.getObjectPlayerID()).append("\",");
+				orders.append("{\"playerin\":").append(sub.getObjectPlayerID()).append(",");
 			}
-			orders.append("\"playerout\":\"").append(sub.getSubjectPlayerID()).append("\",");
-			orders.append("\"orderType\":\"").append(sub.getOrderType().getId()).append("\",");
-			orders.append("\"min\":\"").append(sub.getMatchMinuteCriteria()).append("\",");
+			orders.append("\"playerout\":").append(sub.getSubjectPlayerID()).append(",");
+			orders.append("\"orderType\":").append(sub.getOrderType().getId()).append(",");
+			orders.append("\"min\":").append(sub.getMatchMinuteCriteria()).append(",");
 
 			// The uploaded position is not a RoleId
 			byte pos = (byte) ((sub.getRoleId() == -1) ? -1 : sub.getRoleId() -100);
-			orders.append("\"pos\":\"").append(pos).append("\",");
-			orders.append("\"beh\":\"").append(sub.getBehaviour()).append("\",");
-			orders.append("\"card\":\"").append(sub.getRedCardCriteria().getId()).append("\",");
-			orders.append("\"standing\":\"").append(sub.getStanding().getId()).append("\"}");
+			orders.append("\"pos\":").append(pos).append(",");
+			orders.append("\"beh\":").append(sub.getBehaviour()).append(",");
+			orders.append("\"card\":").append(sub.getRedCardCriteria().getId()).append(",");
+			orders.append("\"standing\":").append(sub.getStanding().getId()).append("}");
 			if (iter.hasNext()) {
 				orders.append(',');
 			}
@@ -684,7 +684,7 @@ public class OnlineWorker {
 			behaviour = lineup.getTactic4PositionID(roleId);
 		}
 
-		return "{\"id\":\"" + id + "\",\"behaviour\":\"" + behaviour + "\"}";
+		return "{\"id\":" + id + ",\"behaviour\":" + behaviour + "}";
 	}
 
 	private static Matchdetails fetchDetails(int matchID, MatchType matchType, MatchLineup lineup, LoginWaitDialog waitDialog) {
