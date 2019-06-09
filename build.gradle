@@ -79,22 +79,38 @@ jar {
                    'Main-Class': 'HOLauncher',
                     "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
     }
+    // folders 
     exclude "prediction"
     exclude "themes"
+
+    // changelog 
+    exclude "changelog.html"
+    exclude "release_notes.md"
+
+    // logos
     exclude "ho_logo_stable.png"
     exclude "ho_logo_beta.png"
     exclude "ho_logo_dev.png"
     exclude "Logo_stable.ico"
     exclude "Logo_beta.ico"
     exclude "Logo_dev.ico"
-    exclude "release_notes.md"
-    exclude "hsqldb.jar"
-    exclude "jcalendar-1.3.2.jar"
-    exclude "looks-2.3.1.jar"
+    
+    // external jars
     exclude "scribe-1.3.0.jar"
+    exclude "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar"
+    exclude "jsr305-3.0.2.jar"
+    exclude "jgoodies-looks-2.7.0.jar"
+    exclude "jgoodies-common-1.8.1.jar"
+    exclude "jcalendar-1.4.jar"
+    exclude "j2objc-annotations-1.1.jar"
+    exclude "hsqldb-2.4.1.jar"
+    exclude "guava-27.1-jre.jar"
+    exclude "gson-2.8.5.jar"
+    exclude "failureaccess-1.0.1.jar"
+    exclude "error_prone_annotations-2.2.0.jar"
     exclude "commons-codec-1.4.jar"
-    exclude "changelog.html"
-
+    exclude "checker-qual-2.5.2.jar"
+    exclude "animal-sniffer-annotations-1.17.jar"
 }
 
 
@@ -106,20 +122,38 @@ task osXjar(type: Jar) {
                 'Main-Class': 'HOLauncher',
                 "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
     }
+    // folders 
+    exclude "prediction"
+    exclude "themes"
+
+    // changelog 
+    exclude "changelog.html"
+    exclude "release_notes.md"
+
+    // logos
     exclude "ho_logo_stable.png"
     exclude "ho_logo_beta.png"
     exclude "ho_logo_dev.png"
     exclude "Logo_stable.ico"
     exclude "Logo_beta.ico"
     exclude "Logo_dev.ico"
-    exclude "release_notes.md"
-    exclude "hsqldb.jar"
-    exclude "jcalendar-1.3.2.jar"
-    exclude "looks-2.3.1.jar"
+
+    // external jars
     exclude "scribe-1.3.0.jar"
+    exclude "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar"
+    exclude "jsr305-3.0.2.jar"
+    exclude "jgoodies-looks-2.7.0.jar"
+    exclude "jgoodies-common-1.8.1.jar"
+    exclude "jcalendar-1.4.jar"
+    exclude "j2objc-annotations-1.1.jar"
+    exclude "hsqldb-2.4.1.jar"
+    exclude "guava-27.1-jre.jar"
+    exclude "gson-2.8.5.jar"
+    exclude "failureaccess-1.0.1.jar"
+    exclude "error_prone_annotations-2.2.0.jar"
     exclude "commons-codec-1.4.jar"
-    exclude "changelog.md"
-    exclude "changelog.html"
+    exclude "checker-qual-2.5.2.jar"
+    exclude "animal-sniffer-annotations-1.17.jar"
 }
 
 
