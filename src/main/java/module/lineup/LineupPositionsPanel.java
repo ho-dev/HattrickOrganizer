@@ -34,10 +34,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 	private static final long serialVersionUID = -9098199182886069003L;
 	private LineupPanel m_clLineupPanel;
-	private JButton m_jbDrucken = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
 	private JButton m_jbFlipSide = new JButton(ThemeManager.getIcon(HOIconName.RELOAD));
-	private JButton m_jbMidiFrame = new JButton(ThemeManager.getIcon(HOIconName.MIDLINEUPFRAME));
-	private JButton m_jbMiniFrame = new JButton(ThemeManager.getIcon(HOIconName.MINLINEUPFRAME));
 	private PlayerPositionPanel m_clKeeper;
 
 	private PlayerPositionPanel m_clLeftBack;
@@ -91,24 +88,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 	@Override
 	public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
-		if (actionEvent.getSource().equals(m_jbMiniFrame)) {
-			new AufstellungsMiniPositionsFrame(m_clLineupPanel, false, true);
-		} else if (actionEvent.getSource().equals(m_jbMidiFrame)) {
-			new AufstellungsMiniPositionsFrame(m_clLineupPanel, false, false);
-		} else if (actionEvent.getSource().equals(m_jbFlipSide)) {
+		if (actionEvent.getSource().equals(m_jbFlipSide)) {
 			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().flipSide();
 			HOMainFrame.instance().getAufstellungsPanel().update();
-		} else {
-			final AufstellungsMiniPositionsFrame frame = new AufstellungsMiniPositionsFrame(
-					m_clLineupPanel, true, false);
-			frame.setVisible(true);
-
-			try {
-				Thread.sleep(500);
-			} catch (Exception e) {
-			}
-
-			frame.doPrint();
 		}
 	}
 
@@ -474,27 +456,11 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		final JPanel panel = new JPanel();
 		panel.setOpaque(false);
-		m_jbDrucken.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString(
-				"tt_AufstellungsPosition_Drucken"));
-		m_jbDrucken.addActionListener(this);
-		m_jbDrucken.setPreferredSize(new Dimension(25, 25));
-		panel.add(m_jbDrucken);
-		m_jbMiniFrame.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString(
-				"tt_AufstellungsPosition_MiniFrame"));
-		m_jbMiniFrame.addActionListener(this);
-		m_jbMiniFrame.setPreferredSize(new Dimension(25, 25));
-		panel.add(m_jbMiniFrame);
-		m_jbMidiFrame.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString(
-				"tt_AufstellungsPosition_MidiFrame"));
-		m_jbMidiFrame.addActionListener(this);
-		m_jbMidiFrame.setPreferredSize(new Dimension(25, 25));
-		panel.add(m_jbMidiFrame);
 		m_jbFlipSide.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString(
 				"tt_AufstellungsPosition_FlipSide"));
 		m_jbFlipSide.addActionListener(this);
 		m_jbFlipSide.setPreferredSize(new Dimension(25, 25));
 		panel.add(m_jbFlipSide);
-		m_jbDrucken.setPreferredSize(new Dimension(m_jbDrucken.getPreferredSize().width, 25));
 		buttonPanel.add(panel, BorderLayout.NORTH);
 
 		constraints.gridx = 6;

@@ -51,8 +51,6 @@ public interface HOIconName {
 	public static final String RELOAD 			= "reload";
 	public static final String SIMULATEMATCH 	= "simulateMatch";
 	public static final String GETLINEUP 		= "getLineup";
-	public static final String MIDLINEUPFRAME 	= "midLineupFrame";
-	public static final String MINLINEUPFRAME 	= "minLineupFrame";
 	public static final String SWAP 			= "swap";
 	public static final String SWAPPRESSED 		= "swapPressed";
 	public static final String TURN 			= "turn";
