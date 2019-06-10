@@ -113,8 +113,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(RELOAD, "gui/bilder/Reload.png");
 		put(SIMULATEMATCH, "gui/bilder/simulate_match.png");
 		put(GETLINEUP, "gui/bilder/AufstellungUebernehmen.png");
-		put(MIDLINEUPFRAME, "gui/bilder/MidiAufstellung.png");
-		put(MINLINEUPFRAME, "gui/bilder/MiniAufstellung.png");
 		put(SWAP, "gui/bilder/swap.png");
 		put(SWAPPRESSED, "gui/bilder/swap-pressed.png");
 		put(TURN, "gui/bilder/drehen.png");
