@@ -40,7 +40,7 @@ dependencies {
 // 2 for STABLE status
 
 def major = '1'
-def minor = '436'
+def minor = '437'
 def development_stage = '2'
 def releaseArtefacts = true
 

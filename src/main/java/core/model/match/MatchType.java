@@ -37,7 +37,7 @@ public enum MatchType {
 				return matchType;
 			}
 		}
-		return null;
+		return NONE;
 	}
 
 	public String getSourceString() {
