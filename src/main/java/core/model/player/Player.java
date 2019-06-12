@@ -1028,7 +1028,9 @@ public class Player {
      */
     public String getShortName() {
     	String fullName = getName();
-    	return fullName.substring(0, 1) + ". " + fullName.substring(fullName.indexOf(" ") + 1);
+    	String initial = fullName.substring(0, 1);
+    	String lastName = getLastName();
+    	return initial + ". " + lastName;
     	
     }
 

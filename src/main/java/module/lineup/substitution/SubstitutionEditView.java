@@ -33,6 +33,8 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import static core.model.player.IMatchRoleID.aSubstitutesMatchRoleID;
+
 public class SubstitutionEditView extends JPanel {
 
 	private static final long serialVersionUID = 6041242290064429972L;
@@ -53,7 +55,7 @@ public class SubstitutionEditView extends JPanel {
 		addListeners();
 
 		Map<Integer, PlayerPositionItem> lineupPositions = SubstitutionDataProvider
-				.getLineupPositions();
+				.getFieldAndSubPlayerPosition();
 
 		this.playerComboBox.setModel(new DefaultComboBoxModel(lineupPositions
 				.values().toArray()));
@@ -61,8 +63,7 @@ public class SubstitutionEditView extends JPanel {
 
 		if (isSubstitution()) {
 			List<PlayerPositionItem> substitutionPlayers = SubstitutionDataProvider
-					.getFieldPositions(IMatchRoleID.substGK1,
-							IMatchRoleID.substFW1, false);
+					.getFieldPositions(aSubstitutesMatchRoleID, false);
 			this.playerInComboBox.setModel(new DefaultComboBoxModel(
 					substitutionPlayers.toArray()));
 			this.playerInComboBox.setSelectedItem(null);

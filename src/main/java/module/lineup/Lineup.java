@@ -1717,7 +1717,7 @@ public class Lineup{
 	 * Amend the lineup by applying the Given MatchOrder
 	 */
 	public void UpdateLineupWithMatchOrder(Substitution sub){
-		MatchRoleID matchRoleIDaffectedPlayer;
+		MatchRoleID matchRoleIDPlayer, matchRoleIDaffectedPlayer;
 		Player ObjectPlayer;
 		switch (sub.getOrderType()) {
 			case SUBSTITUTION:
@@ -1727,7 +1727,14 @@ public class Lineup{
 					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
 					break;
 				}
-				ObjectPlayer = this.getPlayerByPositionID(getPositionBySpielerId(sub.getObjectPlayerID()).getId());
+
+				matchRoleIDPlayer = getPositionBySpielerId(sub.getObjectPlayerID());
+				if (matchRoleIDPlayer==null)
+				{
+					HOLogger.instance().warning(Lineup.class, String.format("The substitution of player id: %s has not been recognized", sub.getObjectPlayerID()));
+					break;
+				}
+				ObjectPlayer = this.getPlayerByPositionID(matchRoleIDPlayer.getId());
 				if (ObjectPlayer == null)
 				{
 					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getObjectPlayerID()));
