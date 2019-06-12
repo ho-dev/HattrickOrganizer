@@ -12,6 +12,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static core.model.player.IMatchRoleID.aFieldAndSubsMatchRoleID;
+import static core.model.player.IMatchRoleID.aFieldMatchRoleID;
+
 public class SubstitutionDataProvider {
 
 	public static void getSubstitutions() {
@@ -19,20 +22,11 @@ public class SubstitutionDataProvider {
 				.getSubstitutionList();
 	}
 
-	public static Map<Integer, PlayerPositionItem> getLineupPositions() {
-		return getPositionsMap(IMatchRoleID.startLineup, IMatchRoleID.substFW1);
-	}
-
-//	public static Map<Integer, PlayerPositionItem> getSubstitutionPositions() {
-//		return getPositionsMap(IMatchRoleID.substGK1, IMatchRoleID.substFW1);
-//	}
-
-	public static Map<Integer, PlayerPositionItem> getPositionsMap(int start, int end) {
-
+	public static Map<Integer, PlayerPositionItem> getFieldAndSubPlayerPosition() {
 		LinkedHashMap<Integer, PlayerPositionItem> positionMap = new LinkedHashMap<Integer, PlayerPositionItem>();
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
 
-		for (int i = start; i <= end; i++) {
+		for (Integer i : aFieldAndSubsMatchRoleID) {
 			Player player = lineup.getPlayerByPositionID(i);
 			if (player != null) {
 				positionMap
@@ -41,8 +35,21 @@ public class SubstitutionDataProvider {
 										.getPlayerByPositionID(i)));
 			}
 		}
-
 		return positionMap;
+	}
+
+
+	public static List<PlayerPositionItem> getFieldPositions(List<Integer> aMatchRoleID , boolean includeEmptyPositions) {
+		List<PlayerPositionItem> playerItems = new ArrayList<PlayerPositionItem>();
+
+		Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
+		for (Integer i : aMatchRoleID) {
+			Player player = lineup.getPlayerByPositionID(i);
+			if (player != null || includeEmptyPositions) {
+				playerItems.add(new PlayerPositionItem(Integer.valueOf(i), player));
+			}
+		}
+		return playerItems;
 	}
 
 	public static List<PlayerPositionItem> getFieldPositions(int start, int end, boolean includeEmptyPositions) {

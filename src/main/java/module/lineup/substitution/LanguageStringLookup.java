@@ -72,6 +72,8 @@ public class LanguageStringLookup {
 			return HOVerwaltung.instance().getLanguageString("subs.lfw");
 		case IMatchRoleID.substGK1:
 			return HOVerwaltung.instance().getLanguageString("subs.subgk");
+		case IMatchRoleID.substWB1:
+			return HOVerwaltung.instance().getLanguageString("subs.subwb");
 		case IMatchRoleID.substCD1:
 			return HOVerwaltung.instance().getLanguageString("subs.subdef");
 		case IMatchRoleID.substIM1:
@@ -80,6 +82,8 @@ public class LanguageStringLookup {
 			return HOVerwaltung.instance().getLanguageString("subs.subwing");
 		case IMatchRoleID.substFW1:
 			return HOVerwaltung.instance().getLanguageString("subs.subfw");
+		case IMatchRoleID.substXT1:
+			return HOVerwaltung.instance().getLanguageString("subs.subxtra");
 		default:
 			return "";
 		}

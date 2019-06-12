@@ -57,7 +57,7 @@ public interface IMatchRoleID {
     List<Integer> aBackupssMatchRoleID = IntStream.rangeClosed(207, 213).boxed().collect(Collectors.toList());
     List<Integer> aSubsAndBackupssMatchRoleID = IntStream.rangeClosed(200, 213).boxed().collect(Collectors.toList());
     List<Integer> aFieldMSubsAndBackupMatchRoleID = Lists.newArrayList(Iterables.concat(aFieldMatchRoleID, aSubsAndBackupssMatchRoleID));
-
+    List<Integer> aFieldAndSubsMatchRoleID = Lists.newArrayList(Iterables.concat(aFieldMatchRoleID, aSubstitutesMatchRoleID));
 
     // SetPieces Taker and Captain
     int setPieces = 17;
