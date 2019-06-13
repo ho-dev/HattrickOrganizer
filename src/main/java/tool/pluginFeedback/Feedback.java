@@ -17,7 +17,7 @@ public class Feedback {
     private MatchRating rating;
     private Vector<IMatchRoleID> m_vPositionen;
 
-    public Feedback(Vector<IMatchRoleID> m_vPositionen, MatchRating rating, List<Player> playerList, String hoToken) {
+    public Feedback(Vector<IMatchRoleID> m_vPositionen, MatchRating rating, List<Player> playerList, String hoToken, String lineupName) {
         this.systemInfo = new HashMap();
         this.systemInfo.put("OS", System.getProperty("os.name") + " on "
                 + System.getProperty("os.arch") + " (" + System.getProperty("os.version")
@@ -25,9 +25,13 @@ public class Feedback {
         this.systemInfo.put("HO! Version", HO.getVersionString());
         this.systemInfo.put("Java Version", System.getProperty("java.version") + " ("
                 + System.getProperty("java.vendor") + ")");
-        this.systemInfo.put("HO-Token",hoToken);
+        this.systemInfo.put("HO-Token", hoToken);
+        this.systemInfo.put("lineupName", lineupName);
+
         this.playerList = playerList;
+
         this.rating = rating;
+
         this.m_vPositionen = m_vPositionen;
     }
 }

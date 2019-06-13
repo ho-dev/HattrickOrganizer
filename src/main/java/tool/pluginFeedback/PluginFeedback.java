@@ -65,7 +65,7 @@ ect
     }
 
     // SendFeedbackToServer (Lineup lineup, PredictionRating rating)
-    public String sendFeedbackToServer(Lineup lineup, MatchRating rating) throws IOException, IllegalArgumentException {
+    public String sendFeedbackToServer(Lineup lineup, MatchRating rating, String lineupName) throws IOException, IllegalArgumentException {
         String result;
 
         // Input Checks
@@ -75,7 +75,7 @@ ect
             //    playerList.remove(i);
             //}
 
-            Feedback feedback = new Feedback(lineup.getPositionen(), rating, playerList, hoToken);
+            Feedback feedback = new Feedback(lineup.getPositionen(), rating, playerList, hoToken, lineupName);
             // Create a JsonObject
             GsonBuilder builder = new GsonBuilder();
             builder.setPrettyPrinting();

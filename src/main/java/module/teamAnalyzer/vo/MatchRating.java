@@ -1,4 +1,5 @@
 package module.teamAnalyzer.vo;
+
 import core.model.HOVerwaltung;
 import core.model.Ratings;
 import core.model.match.IMatchDetails;
@@ -26,10 +27,6 @@ public class MatchRating {
     private double rightAttack;
     private double rightDefense;
 
-    public int getTacticSkill() {
-        return tacticSkill;
-    }
-
     private int tacticSkill;
     private int tacticType;
     private double HatStats;
@@ -37,19 +34,25 @@ public class MatchRating {
     private int attitude;
     private int style_of_play;
 
+    public int getTacticSkill() {
+        return tacticSkill;
+    }
+
+    public void setTacticSkill(int tacticSkill) {
+        this.tacticSkill = tacticSkill;
+    }
 
     public int getAttitude() {
         return attitude;
     }
 
-
     public int getStyle_of_play() {
         return style_of_play;
     }
 
-
-
-    public void setAttitude(String attitude) {this.attitude = AttitudeStringToInt(attitude);}
+    public void setAttitude(String attitude) {
+        this.attitude = AttitudeStringToInt(attitude);
+    }
 
     public static int AttitudeStringToInt(String attitude) {
         attitude = attitude.toLowerCase();
@@ -57,14 +60,19 @@ public class MatchRating {
 
         if (attitude.equals(hoi.getLanguageString("ls.team.teamattitude.normal").toLowerCase())) return 0;
         else if (attitude.equals(hoi.getLanguageString("ls.team.teamattitude.playitcool").toLowerCase())) return -1;
-        else if (attitude.equals(hoi.getLanguageString("ls.team.teamattitude.matchoftheseason").toLowerCase())) return 1;
+        else if (attitude.equals(hoi.getLanguageString("ls.team.teamattitude.matchoftheseason").toLowerCase()))
+            return 1;
         else return ERROR;
     }
 
 
-    public int getTacticType() {return tacticType;}
+    public int getTacticType() {
+        return tacticType;
+    }
 
-    public void setTacticType(String tacticType) {this.tacticType = TacticTypeStringToInt(tacticType);}
+    public void setTacticType(String tacticType) {
+        this.tacticType = TacticTypeStringToInt(tacticType);
+    }
 
     public static int TacticTypeStringToInt(String tacticType) {
         tacticType = tacticType.toLowerCase();
@@ -80,11 +88,13 @@ public class MatchRating {
     }
 
 
-    public void setStyle_of_play(String style_of_play) {this.style_of_play = StyleOfPlayStringToInt(style_of_play);}
+    public void setStyle_of_play(String style_of_play) {
+        this.style_of_play = StyleOfPlayStringToInt(style_of_play);
+    }
 
 
-    public static int StyleOfPlayStringToInt(String style_of_play){
-            //        -10	100% defensive
+    public static int StyleOfPlayStringToInt(String style_of_play) {
+        //        -10	100% defensive
 //                -9	90% defensive
 //                -8	80% defensive
 //                -7	70% defensive
@@ -109,10 +119,12 @@ public class MatchRating {
         HOVerwaltung hoi = HOVerwaltung.instance();
         if (style_of_play.equals(hoi.getLanguageString("ls.team.coachtype.neutral").toLowerCase())) return 0;
         else return ERROR;
-        }
+    }
 
 
-    public MatchRating() {}
+    public MatchRating() {
+    }
+
     public MatchRating(Map<String, String> matchRating) {
         this.centralAttack = intHT2loatHT(Integer.parseInt(matchRating.get("RatingMidAtt")));
         this.centralDefense = intHT2loatHT(Integer.parseInt(matchRating.get("RatingMidDef")));
@@ -123,9 +135,10 @@ public class MatchRating {
         this.rightDefense = intHT2loatHT(Integer.parseInt(matchRating.get("RatingRightDef")));
         this.tacticSkill = Integer.parseInt(matchRating.get("TacticSkill"));
         this.tacticType = Integer.parseInt(matchRating.get("TacticType"));
-        HatStats =  computeHatStats();
+        HatStats = computeHatStats();
         LoddarStat = computeLoddarStats();
     }
+
     public MatchRating(double LD, double CD, double RD, double MF, double LA, double CA, double RA, int tacticType, int tacticSkill) {
         this.centralAttack = CA;
         this.centralDefense = CD;
@@ -171,23 +184,23 @@ public class MatchRating {
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    public MatchRating minus(MatchRating other)
-    {
+    public MatchRating minus(MatchRating other) {
         if (null == other) return this;
 
         MatchRating diff = new MatchRating();
-        diff.setCentralDefense(this.getCentralDefense()-other.getCentralDefense());
-        diff.setRightDefense(this.getRightDefense()-other.getRightDefense());
-        diff.setLeftDefense(this.getLeftDefense()-other.getLeftDefense());
-        diff.setMidfield(this.getMidfield()-other.getMidfield());
-        diff.setCentralAttack(this.getCentralAttack()-other.getCentralAttack());
-        diff.setRightAttack(this.getRightAttack()-other.getRightAttack());
-        diff.setLeftAttack(this.getLeftAttack()-other.getLeftAttack());
-        diff.setHatStats(this.getHatStats()-other.getHatStats());
-        diff.setLoddarStats(this.getLoddarStats()-other.getLoddarStats());
+        diff.setCentralDefense(this.getCentralDefense() - other.getCentralDefense());
+        diff.setRightDefense(this.getRightDefense() - other.getRightDefense());
+        diff.setLeftDefense(this.getLeftDefense() - other.getLeftDefense());
+        diff.setMidfield(this.getMidfield() - other.getMidfield());
+        diff.setCentralAttack(this.getCentralAttack() - other.getCentralAttack());
+        diff.setRightAttack(this.getRightAttack() - other.getRightAttack());
+        diff.setLeftAttack(this.getLeftAttack() - other.getLeftAttack());
+        diff.setHatStats(this.getHatStats() - other.getHatStats());
+        diff.setLoddarStats(this.getLoddarStats() - other.getLoddarStats());
 
         return diff;
     }
+
     /**
      * Sets the central attack rating
      *
@@ -235,7 +248,7 @@ public class MatchRating {
     }
 
     public final void setHatStats(double _HatStats) {
-        HatStats=_HatStats;
+        HatStats = _HatStats;
     }
 
     /**
@@ -284,11 +297,11 @@ public class MatchRating {
     }
 
 
-    public final int computeHatStats(){
+    public final int computeHatStats() {
         int mid = double2HTint(this.midfield);
-        int def = double2HTint(this.leftDefense)+double2HTint(this.centralDefense)+double2HTint(this.rightDefense);
-        int att = double2HTint(this.leftAttack)+double2HTint(this.centralAttack)+double2HTint(this.rightAttack);
-        return 3*mid+def+att;
+        int def = double2HTint(this.leftDefense) + double2HTint(this.centralDefense) + double2HTint(this.rightDefense);
+        int att = double2HTint(this.leftAttack) + double2HTint(this.centralAttack) + double2HTint(this.rightAttack);
+        return 3 * mid + def + att;
     }
 
 
@@ -325,11 +338,11 @@ public class MatchRating {
 
         // Calculate attack rating
         final double attackStrength = (ATTACK_WEIGHT + counterCorrection) * ((correctedCentralWeigth * hq(centralAttack))
-                                      + (correctedWingerWeight * (hq(leftAttack) + hq(rightAttack))));
+                + (correctedWingerWeight * (hq(leftAttack) + hq(rightAttack))));
 
         // Calculate defense rating
         final double defenseStrength = DEFENSE_WEIGHT * ((CENTRAL_WEIGHT * hq(centralDefense))
-                                       + (WINGER_WEIGTH * (hq(leftDefense) + hq(rightDefense))));
+                + (WINGER_WEIGTH * (hq(leftDefense) + hq(rightDefense))));
 
         // Calculate midfield rating
         final double midfieldFactor = MIDFIELD_SHIFT + ((1 - MIDFIELD_SHIFT) * hq(midfield));
@@ -369,9 +382,9 @@ public class MatchRating {
         final double CENTER = 0.4;
 
         return (rightDefense * DEFENSE * SIDE) + (centralDefense * DEFENSE * CENTER)
-               + (leftDefense * DEFENSE * SIDE) + (rightAttack * ATTACK * SIDE)
-               + (centralAttack * ATTACK * CENTER) + (leftAttack * ATTACK * SIDE)
-               + (midfield * MIDFIELD);
+                + (leftDefense * DEFENSE * SIDE) + (rightAttack * ATTACK * SIDE)
+                + (centralAttack * ATTACK * CENTER) + (leftAttack * ATTACK * SIDE)
+                + (midfield * MIDFIELD);
     }
 
     /**
@@ -414,7 +427,6 @@ public class MatchRating {
      * Returns the calculated <B>Smart Squad Rating</B> (<code>Squad Rating / stars</code>)
      *
      * @param stars Team star rating
-     *
      * @return the rating
      */
     public final double getSmartSquad(double stars) {
@@ -429,7 +441,7 @@ public class MatchRating {
      */
     public final double getSquad() {
         return (midfield * 2) + leftAttack + rightAttack + centralAttack + centralDefense
-               + leftDefense + rightDefense;
+                + leftDefense + rightDefense;
     }
 
     /**
@@ -437,7 +449,6 @@ public class MatchRating {
      * is because of correct rounding to integer
      *
      * @param x HO float rating
-     *
      * @return Integer HT rating
      */
     public static final int float2HTint(float x) {
@@ -445,7 +456,7 @@ public class MatchRating {
     }
 
     public static final int double2HTint(double x) {
-        return float2HTint((float)x);
+        return float2HTint((float) x);
     }
 
     public final double intHT2loatHT(int x) {
@@ -456,7 +467,7 @@ public class MatchRating {
      * {@inheritDoc}
      */
     @Override
-	public final String toString() {
+    public final String toString() {
         final StringBuffer buffer = new StringBuffer();
 
         buffer.append("MatchRating[");

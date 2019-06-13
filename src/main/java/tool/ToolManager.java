@@ -86,24 +86,29 @@ public class ToolManager implements ActionListener {
             new HrfExplorerDialog(HOMainFrame.instance()).setVisible(true);
         } else if (source.equals(m_jmiPluginFeedback)) {
             // todo Remove after integration with correct PluginFeedback called
+
             // Create example data - start
             Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
 
-            MatchRating rating = new MatchRating();
-            rating.setLeftDefense(1.11);
-            rating.setCentralDefense(2.22);
-            rating.setRightDefense(3.33);
-            rating.setMidfield(4.44);
-            rating.setLeftAttack(5.55);
-            rating.setCentralAttack(6.66);
-            rating.setRightAttack(7.77);
+            MatchRating HTRatings = new MatchRating();
+            HTRatings.setLeftDefense(11.11);
+            HTRatings.setCentralDefense(22.22);
+            HTRatings.setRightDefense(33.33);
+            HTRatings.setMidfield(44.44);
+            HTRatings.setLeftAttack(55.55);
+            HTRatings.setCentralAttack(66.66);
+            HTRatings.setRightAttack(77.77);
+            HTRatings.setTacticType(m_hov.getLanguageString("ls.team.tactic.pressing").toLowerCase());
+            HTRatings.setTacticSkill(9);
+            HTRatings.setAttitude(m_hov.getLanguageString("ls.team.teamattitude.playitcool").toLowerCase());
+            HTRatings.setStyle_of_play(m_hov.getLanguageString("ls.team.coachtype.neutral").toLowerCase());
             // Create example data - end
 
             // The following code can be include in correct called
             PluginFeedback pluginFeedback = new PluginFeedback();
             String message = "[" + pluginFeedback.getHoToken() + "] ";
             try {
-                String result = pluginFeedback.sendFeedbackToServer(lineup, rating);
+                String result = pluginFeedback.sendFeedbackToServer(lineup, HTRatings, "prova_da_tool_manager");
                 message += m_hov.getLanguageString("feedbackplugin.success");
                 HOLogger.instance().info(getClass(), message);
                 JOptionPane.showMessageDialog(null, message);
