@@ -117,7 +117,7 @@ public class MatchRating {
 //        10	100% offensive
         style_of_play = style_of_play.toLowerCase();
         HOVerwaltung hoi = HOVerwaltung.instance();
-        if (style_of_play.equals(hoi.getLanguageString("ls.team.coachtype.neutral").toLowerCase())) return 0;
+        if (style_of_play.equals(hoi.getLanguageString("ls.team.styleofplay.neutral").toLowerCase())) return 0;
         else return ERROR;
     }
 

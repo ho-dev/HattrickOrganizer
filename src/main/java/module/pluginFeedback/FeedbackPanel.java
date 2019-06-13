@@ -107,7 +107,7 @@ public class FeedbackPanel extends JFrame {
             return result;
         }
 
-       if (allKeys.size() != 5) {
+       if (allKeys.size() < 4) {
             // We haven't found 5 attributes as expected  ============================================================
             String message = HOVerwaltung.instance().getLanguageString("feedbackplugin.ParseHTRatingError");
             JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
@@ -117,7 +117,7 @@ public class FeedbackPanel extends JFrame {
 
         String thisKey, nextKey;
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < allKeys.size()-1; i++) {
 
             thisKey = allKeys.get(i);
             nextKey = allKeys.get(i + 1);
@@ -129,7 +129,7 @@ public class FeedbackPanel extends JFrame {
             allValues.add(matcher.group(0));
         }
 
-        thisKey = allKeys.get(4);
+        thisKey = allKeys.get(allKeys.size()-1);
         regex = "(?<=" + thisKey + ")(.*)";
         pattern = Pattern.compile(regex, Pattern.MULTILINE | Pattern.DOTALL);
         matcher = pattern.matcher(input);
@@ -140,7 +140,7 @@ public class FeedbackPanel extends JFrame {
 
         String temp;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < allValues.size(); i++) {
             temp = allValues.get(i).replace("[/b]", "");
             temp = temp.replace("[b]", "");
             temp = temp.replaceAll("[:|\\s]", "");
