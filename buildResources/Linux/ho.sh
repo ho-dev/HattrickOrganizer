@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 LAUNCHDIR="$(dirname "$0")"
 LAUNCHDIR="`eval echo $LAUNCHDIR`"
