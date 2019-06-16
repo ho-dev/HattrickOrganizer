@@ -1,6 +1,7 @@
 package module.lineup;
 
 import core.model.HOVerwaltung;
+import core.rating.RatingPredictionManager;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.awt.event.MouseAdapter;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
 
 public final class MinuteTogglerPanel extends JPanel {
@@ -61,11 +63,19 @@ public final class MinuteTogglerPanel extends JPanel {
 			if(i[0]%2 == 0) toggleLabel.setBackground(Color.LIGHT_GRAY);
 			else toggleLabel.setBackground(Color.WHITE);
 			toggleLabel.setOpaque(true);
-			if(toggleLabels.get(i[0]) > 90d) {
-				toggleKeysET.add(toggleLabel);
-			} else {
+			if(toggleLabels.get(i[0]) == (45d + RatingPredictionManager.EPSILON)) {
+				toggleLabel.setText(String.valueOf(45));
+				toggleLabel.setBorder(BorderFactory.createMatteBorder(0, 6, 0, 0, Color.RED));
+			}
+			if(toggleLabels.get(i[0]) == (90d + RatingPredictionManager.EPSILON)) {
+				toggleLabel.setText(String.valueOf(90));
+				toggleLabel.setBorder(BorderFactory.createMatteBorder(0, 6, 0, 0, Color.RED));
+			}
+			if(toggleLabels.get(i[0]) <= 90d) {
 				add(toggleLabel);
 				toggleKeys.add(toggleLabel);
+			} else if(toggleLabels.get(i[0]) <= 120d) {
+				toggleKeysET.add(toggleLabel);
 			}
 		}
 		toggleKeys.get(0).setForeground(Color.LIGHT_GRAY);
