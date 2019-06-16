@@ -58,8 +58,8 @@ public final class MinuteTogglerPanel extends JPanel {
 				}
 			});
 			toggleLabel.setForeground(Color.BLACK);
-			if(i[0]%2 == 0) toggleLabel.setBackground(Color.GREEN);
-			else toggleLabel.setBackground(Color.RED);
+			if(i[0]%2 == 0) toggleLabel.setBackground(Color.LIGHT_GRAY);
+			else toggleLabel.setBackground(Color.WHITE);
 			toggleLabel.setOpaque(true);
 			if(toggleLabels.get(i[0]) > 90d) {
 				toggleKeysET.add(toggleLabel);
@@ -68,7 +68,7 @@ public final class MinuteTogglerPanel extends JPanel {
 				toggleKeys.add(toggleLabel);
 			}
 		}
-		toggleKeys.get(0).setForeground(Color.GREEN);
+		toggleKeys.get(0).setForeground(Color.LIGHT_GRAY);
 		toggleKeys.get(0).setBackground(Color.BLACK);
 		JLabel nextButton = new JLabel(">>", SwingConstants.CENTER);
 		nextButton.addMouseListener(new MouseAdapter() {
