@@ -5,7 +5,6 @@ import core.model.HOVerwaltung;
 import core.model.Ratings;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
-import core.model.match.Matchdetails;
 import core.util.HOLogger;
 import core.util.UTF8Control;
 import module.lineup.Lineup;
@@ -16,7 +15,6 @@ import tool.pluginFeedback.PluginFeedback;
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -68,7 +66,7 @@ public class FeedbackPanel extends JFrame {
             matcher = pattern.matcher(input);
             allRatings = new ArrayList<>();
             while (matcher.find()) {
-                allRatings.add(Double.parseDouble(matcher.group(0)));
+                allRatings.add(Math.max(1.0f, Double.parseDouble(matcher.group(0))));
             }
         } catch (Exception e) {
             // Error while parsing HT ratings values ============================================================
@@ -209,7 +207,7 @@ public class FeedbackPanel extends JFrame {
 
         // return false if tactic not properly set
         if ((HOLineup.getTacticType() != HTRatings.getTacticType()) ||
-                (HOLineup.getTacticType() != MatchRating.TacticTypeStringToInt(requirements.tatic))) return false;
+                (HOLineup.getTacticType() != MatchRating.TacticTypeStringToInt(requirements.tactic))) return false;
 
         // return false if HOLineup not fully included in required Lineup
         for (IMatchRoleID obj : HOLineup.getPositionen()) {
@@ -559,10 +557,10 @@ public class FeedbackPanel extends JFrame {
         String jlTeamAttitude_message = hoi.getLanguageString("ls.team.teamattitude");
 
         if (bFetchLineupSuccess) {
-            int iTactc = MatchRating.TacticTypeStringToInt(requirements.tatic);
+            int iTactic = MatchRating.TacticTypeStringToInt(requirements.tactic);
             int iAttitude = MatchRating.TacticTypeStringToInt(requirements.attitude);
             core.model.match.Matchdetails md = new core.model.match.Matchdetails();
-            jlTactics_message = start + jlTactics_message + ":</u></b> " + md.getNameForEinstellung(iTactc) + "</html>";
+            jlTactics_message = start + jlTactics_message + ":</u></b> " + md.getNameForEinstellung(iTactic) + "</html>";
             jlTeamAttitude_message = start + jlTeamAttitude_message + ":</u></b> " + md.getNameForEinstellung(iAttitude) + "</html>";
         } else {
             jlTactics_message += "?</html>";
@@ -646,14 +644,13 @@ public class FeedbackPanel extends JFrame {
         setPreferredSize(getSize());
         setResizable(false);
         setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
     }
 
     private class SimpleLineup {
         String lineupName;
         String attitude;
-        String tatic;
+        String tactic;
         Map<Integer, Byte> lineup;
     }
 }
