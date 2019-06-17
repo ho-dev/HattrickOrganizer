@@ -89,9 +89,12 @@ public class TrainingPreviewPlayers implements Refreshable {
      * refresh object
      */
     public void refresh() {
-        players.clear();
-        lMatchStats.clear();
-        lLinueupPos.clear();
+        if (players != null)
+            players.clear();
+        if (lMatchStats != null)
+            lMatchStats.clear();
+        if (lLinueupPos != null)
+            lLinueupPos.clear();
         nextWeekTraining = -1;
         weekTrainTyp = null;
         isFuturMatchInit = false;
