@@ -191,7 +191,7 @@ public class RatingPredictionManager {
 
 		}
 
-		// in case no MatchOrder took place at 46' and 91', we add them manually  in order to visualize respectively halftime and endgame rest effect
+		// in case no MatchOrder took place at 45' and 90', we add them manually  in order to visualize respectively halftime and endgame rest effect
 		if(!_LineupEvolution.containsKey(46)) _LineupEvolution.put(46, _LineupEvolution.get(45).duplicate());
 		if(!_LineupEvolution.containsKey(91)) _LineupEvolution.put(91, _LineupEvolution.get(90).duplicate());
 

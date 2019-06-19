@@ -2,16 +2,49 @@ package core.model;
 
 import core.model.match.IMatchDetails;
 
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 
 public class Ratings {
+
     public Hashtable<Integer, Double> getLeftDefense() {
         return leftDefense;
     }
 
+
+    private Hashtable<Integer, Double> addAverages(Hashtable<Integer, Double> vRatings)
+    {
+        int duration;
+        double ratingInc;
+        double totalRating90 = 0.0;
+        double totalRating120 = 0.0;
+        int m_a, m_b;
+
+        List<Integer> minutes = vRatings.keySet().stream().collect(Collectors.toList());
+        Collections.sort(minutes);
+
+        for (int m_i = 0; m_i < minutes.size()-1; m_i++) {
+            m_a = minutes.get(m_i);
+            m_b = minutes.get(m_i+1);
+            duration = m_b - m_a;
+            ratingInc = (vRatings.get(m_a) + vRatings.get(m_b)) / 2.0 * duration;
+
+            totalRating120 += ratingInc;
+
+            if(m_a<90) {totalRating90 += ratingInc;}
+        }
+
+        vRatings.put(-90, totalRating90/90.0);
+        vRatings.put(-120, totalRating120/120.0);
+        return vRatings;
+    }
+
     public void setLeftDefense(Hashtable<Integer, Double> leftDefense) {
-        this.leftDefense = leftDefense;
+        this.leftDefense = addAverages(leftDefense);
     }
 
     public Hashtable<Integer, Double> getCentralDefense() {
@@ -19,7 +52,7 @@ public class Ratings {
     }
 
     public void setCentralDefense(Hashtable<Integer, Double> centralDefense) {
-        this.centralDefense = centralDefense;
+        this.centralDefense = addAverages(centralDefense);
     }
 
     public Hashtable<Integer, Double> getRightDefense() {
@@ -27,7 +60,7 @@ public class Ratings {
     }
 
     public void setRightDefense(Hashtable<Integer, Double> rightDefense) {
-        this.rightDefense = rightDefense;
+        this.rightDefense = addAverages(rightDefense);
     }
 
     public Hashtable<Integer, Double> getMidfield() {
@@ -35,7 +68,7 @@ public class Ratings {
     }
 
     public void setMidfield(Hashtable<Integer, Double> midfield) {
-        this.midfield = midfield;
+        this.midfield = addAverages(midfield);
     }
 
     public Hashtable<Integer, Double> getLeftAttack() {
@@ -43,7 +76,7 @@ public class Ratings {
     }
 
     public void setLeftAttack(Hashtable<Integer, Double> leftAttack) {
-        this.leftAttack = leftAttack;
+        this.leftAttack = addAverages(leftAttack);
     }
 
     public Hashtable<Integer, Double> getCentralAttack() {
@@ -51,7 +84,7 @@ public class Ratings {
     }
 
     public void setCentralAttack(Hashtable<Integer, Double> centralAttack) {
-        this.centralAttack = centralAttack;
+        this.centralAttack = addAverages(centralAttack);
     }
 
     public Hashtable<Integer, Double> getRightAttack() {
@@ -59,7 +92,7 @@ public class Ratings {
     }
 
     public void setRightAttack(Hashtable<Integer, Double> rightAttack) {
-        this.rightAttack = rightAttack;
+        this.rightAttack = addAverages(rightAttack);
     }
 
     public Hashtable<Integer, Integer> getHatStats() {

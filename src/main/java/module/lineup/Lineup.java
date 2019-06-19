@@ -23,6 +23,7 @@ import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Lineup{
@@ -485,25 +486,26 @@ public class Lineup{
 	 public void setRatings() {
 		 final RatingPredictionManager rpManager;
 		 Ratings oRatings = new Ratings();
+		 boolean bForm = UserParameter.instance().aufstellungsAssistentPanel_form;
 
 		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
 			rpManager = new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam(),
 					(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay, RatingPredictionConfig.getInstance());
-			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
-			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
-			oRatings.setRightDefense(rpManager.getRightDefenseRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
-			oRatings.setMidfield(rpManager.getMFRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
-			oRatings.setLeftAttack(rpManager.getLeftAttackRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
-			oRatings.setCentralAttack(rpManager.getCentralAttackRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
-			oRatings.setRightAttack(rpManager.getRightAttackRatings(true, true)); // FIXME: useForm and useWeatherImpact should be passed from the GUI
+			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings(bForm, true));
+			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings(bForm, true));
+			oRatings.setRightDefense(rpManager.getRightDefenseRatings(bForm, true));
+			oRatings.setMidfield(rpManager.getMFRatings(bForm, true));
+			oRatings.setLeftAttack(rpManager.getLeftAttackRatings(bForm, true));
+			oRatings.setCentralAttack(rpManager.getCentralAttackRatings(bForm, true));
+			oRatings.setRightAttack(rpManager.getRightAttackRatings(bForm, true));
 			oRatings.computeHatStats();
 			oRatings.computeLoddarStats();
-
 			this.oRatings = oRatings;
 		}
 		else {
 			this.oRatings = new Ratings(); }
 	}
+
 
 
 	public Ratings getRatings() {
@@ -1741,7 +1743,9 @@ public class Lineup{
 					break;
 				}
 				ObjectPlayer.setGameStartingTime(sub.getMatchMinuteCriteria());
-				matchRoleIDaffectedPlayer.setSpielerIdFollowingSub(sub.getObjectPlayerID());
+				byte tactic = sub.getBehaviour();
+				if (tactic == -1) tactic = matchRoleIDaffectedPlayer.getTaktik();
+				this.setSpielerAtPosition(matchRoleIDaffectedPlayer.getId(), matchRoleIDPlayer.getSpielerId(), tactic);
 				break;
 
 			default:
