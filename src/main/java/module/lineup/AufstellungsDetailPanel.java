@@ -271,13 +271,13 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 						// genommen wird
 						// vergleichsaufstellung.updateRatingPredictionConfig();
 						homodel.setAufstellung(vergleichsaufstellung);
-						m_jpRating.setTopRight(vergleichsaufstellung.getRatings().getLeftDefense().get(0));				//FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
-						m_jpRating.setTopCenter(vergleichsaufstellung.getRatings().getCentralDefense().get(0));         //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
-						m_jpRating.setTopLeft(vergleichsaufstellung.getRatings().getRightDefense().get(0));				//FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
-						m_jpRating.setMiddle(vergleichsaufstellung.getRatings().getMidfield().get(0));					//FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
-						m_jpRating.setBottomRight(vergleichsaufstellung.getRatings().getLeftAttack().get(0));			//FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
-						m_jpRating.setBottomCenter(vergleichsaufstellung.getRatings().getCentralAttack().get(0));		//FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
-						m_jpRating.setBottomLeft(vergleichsaufstellung.getRatings().getRightAttack().get(0));			//FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+						m_jpRating.setTopRight(vergleichsaufstellung.getRatings().getLeftDefense().get(-90d));
+						m_jpRating.setTopCenter(vergleichsaufstellung.getRatings().getCentralDefense().get(-90d));
+						m_jpRating.setTopLeft(vergleichsaufstellung.getRatings().getRightDefense().get(-90d));
+						m_jpRating.setMiddle(vergleichsaufstellung.getRatings().getMidfield().get(-90d));
+						m_jpRating.setBottomRight(vergleichsaufstellung.getRatings().getLeftAttack().get(-90d));
+						m_jpRating.setBottomCenter(vergleichsaufstellung.getRatings().getCentralAttack().get(-90d));
+						m_jpRating.setBottomLeft(vergleichsaufstellung.getRatings().getRightAttack().get(-90d));
 
 						// Put back the right Lineup
 						homodel.setAufstellung(aufstellung);
@@ -288,26 +288,26 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			// no comparison required
 			m_jpRating.clear();
 			m_jpRating.setTopRightText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getLeftDefense().get(0))), false, true));  //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getLeftDefense().get(-90d))), false, true));
 			m_jpRating.setTopCenterText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getCentralDefense().get(0))), false,	true)); //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getCentralDefense().get(-90d))), false,	true));
 			m_jpRating.setTopLeftText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getRightDefense().get(0))), false,	true)); //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getRightDefense().get(-90d))), false,	true));
 			m_jpRating.setMiddleText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getMidfield().get(0))), false, true));   //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getMidfield().get(-90d))), false, true));
 			m_jpRating.setBottomRightText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getLeftAttack().get(0))),false, true));  //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getLeftAttack().get(-90d))),false, true));
 			m_jpRating.setBottomCenterText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getCentralAttack().get(0))), false,true));
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getCentralAttack().get(-90d))), false,true));
 			m_jpRating.setBottomLeftText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getRightAttack().get(0))), false,true));
-			m_jpRating.setTopRight(aufstellung.getRatings().getLeftDefense().get(0));       //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
-			m_jpRating.setTopCenter(aufstellung.getRatings().getCentralDefense().get(0));   //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
-			m_jpRating.setTopLeft(aufstellung.getRatings().getRightDefense().get(0));       //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
-			m_jpRating.setMiddle(aufstellung.getRatings().getMidfield().get(0));            //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
-			m_jpRating.setBottomRight(aufstellung.getRatings().getLeftAttack().get(0));     //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
-			m_jpRating.setBottomCenter(aufstellung.getRatings().getCentralAttack().get(0));  //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
-			m_jpRating.setBottomLeft(aufstellung.getRatings().getRightAttack().get(0));     //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getRightAttack().get(-90d))), false,true));
+			m_jpRating.setTopRight(aufstellung.getRatings().getLeftDefense().get(-90d));
+			m_jpRating.setTopCenter(aufstellung.getRatings().getCentralDefense().get(-90d));
+			m_jpRating.setTopLeft(aufstellung.getRatings().getRightDefense().get(-90d));
+			m_jpRating.setMiddle(aufstellung.getRatings().getMidfield().get(-90d));
+			m_jpRating.setBottomRight(aufstellung.getRatings().getLeftAttack().get(-90d));
+			m_jpRating.setBottomCenter(aufstellung.getRatings().getCentralAttack().get(-90d));
+			m_jpRating.setBottomLeft(aufstellung.getRatings().getRightAttack().get(-90d));
 
 			// Recalculate Borders
 			m_jpRating.calcColorBorders();
@@ -318,8 +318,8 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			// *2 wegen halben Sternen
 			m_jpGesamtStaerke.setRating((int) (gesamtstaerke * 2));
 			m_jpGesamtStaerkeText.setText(Helper.DEFAULTDEZIMALFORMAT.format(gesamtstaerke));
-			m_jpLoddarstat.setText(Helper.round(aufstellung.getRatings().getLoddarStat().get(0), 2) + "");  //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
-			m_jpHatstat.setText(aufstellung.getRatings().getHatStats().get(0) + "");  //FIXME: for compatibility, here we should return 90 minute average rating instead of t=0 rating
+			m_jpLoddarstat.setText(Helper.round(aufstellung.getRatings().getLoddarStat().get(-90d), 2) + "");
+			m_jpHatstat.setText(aufstellung.getRatings().getHatStats().get(-90d) + "");
 
 			setStimmung(homodel.getTeam().getStimmungAsInt(), homodel.getTeam().getSubStimmung());
 			setSelbstvertrauen(homodel.getTeam().getSelbstvertrauenAsInt());

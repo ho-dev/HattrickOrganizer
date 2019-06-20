@@ -11,20 +11,19 @@ import java.util.stream.Collectors;
 
 public class Ratings {
 
-    public Hashtable<Integer, Double> getLeftDefense() {
+    public Hashtable<Double, Double> getLeftDefense() {
         return leftDefense;
     }
 
 
-    private Hashtable<Integer, Double> addAverages(Hashtable<Integer, Double> vRatings)
+    private Hashtable<Double, Double> addAverages(Hashtable<Double, Double> vRatings)
     {
-        int duration;
         double ratingInc;
         double totalRating90 = 0.0;
         double totalRating120 = 0.0;
-        int m_a, m_b;
+        double duration, m_a, m_b;
 
-        List<Integer> minutes = vRatings.keySet().stream().collect(Collectors.toList());
+        List<Double> minutes = vRatings.keySet().stream().collect(Collectors.toList());
         Collections.sort(minutes);
 
         for (int m_i = 0; m_i < minutes.size()-1; m_i++) {
@@ -38,80 +37,80 @@ public class Ratings {
             if(m_a<90) {totalRating90 += ratingInc;}
         }
 
-        vRatings.put(-90, totalRating90/90.0);
-        vRatings.put(-120, totalRating120/120.0);
+        vRatings.put(-90d, totalRating90/90.0);
+        vRatings.put(-120d, totalRating120/120.0);
         return vRatings;
     }
 
-    public void setLeftDefense(Hashtable<Integer, Double> leftDefense) {
+    public void setLeftDefense(Hashtable<Double, Double> leftDefense) {
         this.leftDefense = addAverages(leftDefense);
     }
 
-    public Hashtable<Integer, Double> getCentralDefense() {
+    public Hashtable<Double, Double> getCentralDefense() {
         return centralDefense;
     }
 
-    public void setCentralDefense(Hashtable<Integer, Double> centralDefense) {
+    public void setCentralDefense(Hashtable<Double, Double> centralDefense) {
         this.centralDefense = addAverages(centralDefense);
     }
 
-    public Hashtable<Integer, Double> getRightDefense() {
+    public Hashtable<Double, Double> getRightDefense() {
         return rightDefense;
     }
 
-    public void setRightDefense(Hashtable<Integer, Double> rightDefense) {
+    public void setRightDefense(Hashtable<Double, Double> rightDefense) {
         this.rightDefense = addAverages(rightDefense);
     }
 
-    public Hashtable<Integer, Double> getMidfield() {
+    public Hashtable<Double, Double> getMidfield() {
         return midfield;
     }
 
-    public void setMidfield(Hashtable<Integer, Double> midfield) {
+    public void setMidfield(Hashtable<Double, Double> midfield) {
         this.midfield = addAverages(midfield);
     }
 
-    public Hashtable<Integer, Double> getLeftAttack() {
+    public Hashtable<Double, Double> getLeftAttack() {
         return leftAttack;
     }
 
-    public void setLeftAttack(Hashtable<Integer, Double> leftAttack) {
+    public void setLeftAttack(Hashtable<Double, Double> leftAttack) {
         this.leftAttack = addAverages(leftAttack);
     }
 
-    public Hashtable<Integer, Double> getCentralAttack() {
+    public Hashtable<Double, Double> getCentralAttack() {
         return centralAttack;
     }
 
-    public void setCentralAttack(Hashtable<Integer, Double> centralAttack) {
+    public void setCentralAttack(Hashtable<Double, Double> centralAttack) {
         this.centralAttack = addAverages(centralAttack);
     }
 
-    public Hashtable<Integer, Double> getRightAttack() {
+    public Hashtable<Double, Double> getRightAttack() {
         return rightAttack;
     }
 
-    public void setRightAttack(Hashtable<Integer, Double> rightAttack) {
+    public void setRightAttack(Hashtable<Double, Double> rightAttack) {
         this.rightAttack = addAverages(rightAttack);
     }
 
-    public Hashtable<Integer, Integer> getHatStats() {
+    public Hashtable<Double, Integer> getHatStats() {
         return HatStats;
     }
 
-    public Hashtable<Integer, Double> getLoddarStat() {
+    public Hashtable<Double, Double> getLoddarStat() {
         return LoddarStat;
     }
 
-    private Hashtable<Integer, Double> leftDefense = new Hashtable<>();
-    private Hashtable<Integer, Double> centralDefense = new Hashtable<>();
-    private Hashtable<Integer, Double> rightDefense = new Hashtable<>();
-    private Hashtable<Integer, Double> midfield = new Hashtable<>();
-    private Hashtable<Integer, Double> leftAttack = new Hashtable<>();
-    private Hashtable<Integer, Double> centralAttack = new Hashtable<>();
-    private Hashtable<Integer, Double> rightAttack = new Hashtable<>();
-    private Hashtable<Integer, Integer> HatStats = new Hashtable<>();
-    private Hashtable<Integer, Double> LoddarStat = new Hashtable<>();
+    private Hashtable<Double, Double> leftDefense = new Hashtable<>();
+    private Hashtable<Double, Double> centralDefense = new Hashtable<>();
+    private Hashtable<Double, Double> rightDefense = new Hashtable<>();
+    private Hashtable<Double, Double> midfield = new Hashtable<>();
+    private Hashtable<Double, Double> leftAttack = new Hashtable<>();
+    private Hashtable<Double, Double> centralAttack = new Hashtable<>();
+    private Hashtable<Double, Double> rightAttack = new Hashtable<>();
+    private Hashtable<Double, Integer> HatStats = new Hashtable<>();
+    private Hashtable<Double, Double> LoddarStat = new Hashtable<>();
 
     private int tacticType;
     private int tacticLevel;
@@ -122,11 +121,11 @@ public class Ratings {
     }
 
     public void computeHatStats() {
-        Hashtable<Integer, Integer> _HatStats = new Hashtable<>();
-        int t, iHatStats;
-        Double dMD, dRD, dLD, dCD, dLA, dRA, dCA;
+        Hashtable<Double, Integer> _HatStats = new Hashtable<>();
+        int iHatStats;
+        Double t, dMD, dRD, dLD, dCD, dLA, dRA, dCA;
 
-        for (Map.Entry<Integer,Double> tMid : midfield.entrySet()) {
+        for (Map.Entry<Double,Double> tMid : midfield.entrySet()) {
             t = tMid.getKey();
             dMD = tMid.getValue();
             dRD = rightDefense.get(t);
@@ -152,7 +151,7 @@ public class Ratings {
     }
 
     public void computeLoddarStats() {
-        Hashtable<Integer, Double> _LoddarStat = new Hashtable<>();
+        Hashtable<Double, Double> _LoddarStat = new Hashtable<>();
         final double MIDFIELD_SHIFT = 0.0;
         final double COUNTERATTACK_WEIGHT = 0.25;
         final double DEFENSE_WEIGHT = 0.47;
@@ -181,10 +180,9 @@ public class Ratings {
             counterCorrection = (COUNTERATTACK_WEIGHT * 2 * this.tacticLevel) / (this.tacticLevel + 20);
         }
 
-        int t;
-        Double dMD, dRD, dLD, dCD, dLA, dRA, dCA, dLoddar;
+        Double t, dMD, dRD, dLD, dCD, dLA, dRA, dCA, dLoddar;
 
-        for (Map.Entry<Integer,Double> tMid : midfield.entrySet()) {
+        for (Map.Entry<Double,Double> tMid : midfield.entrySet()) {
             t = tMid.getKey();
             dMD = tMid.getValue();
             dRD = rightDefense.get(t);

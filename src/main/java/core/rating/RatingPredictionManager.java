@@ -50,6 +50,7 @@ public class RatingPredictionManager {
     public static final int SPEC_REGAINER = PlayerSpeciality.REGAINER; // 6
     public static final int SPEC_ALL = PlayerSpeciality.REGAINER+1; // 7
     public static final int NUM_SPEC = SPEC_ALL+1; // 8
+	public static final double EPSILON = 0.000001;
 
     //~ Class fields -------------------------------------------------------------------------------
 
@@ -83,7 +84,7 @@ public class RatingPredictionManager {
 	 *           The values will represent the evolution of lineup
 	 *          e.g.    {0:'starting_lineup', 5:'starting_lineup', …....... 71:'lineup_after_sub1'}
 	 */
-	private Hashtable<Integer, Lineup> LineupEvolution = new Hashtable<>();
+	private Hashtable<Double, Lineup> LineupEvolution = new Hashtable<>();
 
     public RatingPredictionManager () {
     	if (RatingPredictionManager.config == null)
@@ -108,21 +109,21 @@ public class RatingPredictionManager {
     }
 
 
-    private Hashtable<Integer, Lineup> setLineupEvolution()
+    private Hashtable<Double, Lineup> setLineupEvolution()
 	{
 		// Initialize _LineupEvolution and add starting lineup
-		Hashtable<Integer, Lineup> _LineupEvolution = new Hashtable<>();
-		_LineupEvolution.put(0, startingLineup.duplicate());
+		Hashtable<Double, Lineup> _LineupEvolution = new Hashtable<>();
+		_LineupEvolution.put(0d, startingLineup.duplicate());
 
 		// list at which time occurs all events others than game start
-		List<Integer> events = new ArrayList<>();
+		List<Double> events = new ArrayList<>();
 
 		for(Substitution sub :startingLineup.getSubstitutionList())
 		{
 			if ((sub.getMatchMinuteCriteria() != -1) &&
 			   (sub.getRedCardCriteria() == RedCardCriteria.IGNORE) &&
 				(sub.getStanding() == GoalDiffCriteria.ANY_STANDING)) {
-				events.add((int)(sub.getMatchMinuteCriteria()));
+				events.add((double)(sub.getMatchMinuteCriteria()));
 			}
 
 	     }
@@ -130,8 +131,8 @@ public class RatingPredictionManager {
 		Collections.sort(events);
 
 		// we calculate lineup for all event
-		Integer t = 0;
-		Integer tNextEvent;
+		Double t = 0d;
+		Double tNextEvent, tMatchOrder;
 		Lineup currentLineup;
 
 		// define time of next event
@@ -140,26 +141,30 @@ public class RatingPredictionManager {
 		}
 		else
 		{
-			tNextEvent = 125;
+			tNextEvent = 125d;
 		}
 
-		while(t<120)
+		while(t<120d)
 		{
 			// use Lineup at last event as reference
 			currentLineup = _LineupEvolution.get(t).duplicate();
 
 			//if no match event between now and the next step of 5 minutes, we jump to the next step
-			if ((t+5-(t+5)%5)<tNextEvent) t = t + 5 - (t + 5) % 5;
+			if ((t+5-(t+5)%5)<tNextEvent + 3*EPSILON) t = t + 5 - (t + 5) % 5;
 
 			//else I treat next occurring match events
 			else
 			{
 				t = tNextEvent;
 
+				// In case the match order happen in whole 5 minutes, it is shifted by 2 Epsilon to be visible in the graphs
+				if (t%5<0.00001) t += 2*EPSILON;
 
 				for(Substitution sub :startingLineup.getSubstitutionList())
 				{
-					if (tNextEvent == sub.getMatchMinuteCriteria())
+					tMatchOrder = (double) sub.getMatchMinuteCriteria();
+
+					if (tNextEvent.equals(tMatchOrder))
 					{
 						// all matchOrders taking place now are recursively apply on the lineup object
 						currentLineup.UpdateLineupWithMatchOrder(sub);
@@ -170,7 +175,7 @@ public class RatingPredictionManager {
 				Iterator itr = events.iterator();
 				while (itr.hasNext())
 				{
-					int x = (Integer)itr.next();
+					Double x = (Double)itr.next();
 					if (x == tNextEvent)
 						itr.remove();
 				}
@@ -182,7 +187,7 @@ public class RatingPredictionManager {
 				}
 				else
 				{
-					tNextEvent = 125;
+					tNextEvent = 125d;
 				}
 			}
 			_LineupEvolution.put(t, currentLineup);
@@ -191,9 +196,9 @@ public class RatingPredictionManager {
 
 		}
 
-		// in case no MatchOrder took place at 45' and 90', we add them manually  in order to visualize respectively halftime and endgame rest effect
-		if(!_LineupEvolution.containsKey(46)) _LineupEvolution.put(46, _LineupEvolution.get(45).duplicate());
-		if(!_LineupEvolution.containsKey(91)) _LineupEvolution.put(91, _LineupEvolution.get(90).duplicate());
+		// we add time just after break in order to visualize respectively halftime and endgame rest effect
+		_LineupEvolution.put(45+EPSILON, _LineupEvolution.get(45d).duplicate());
+		_LineupEvolution.put(90+EPSILON, _LineupEvolution.get(90d).duplicate());
 
 		// we correct for pull back event
 		if (startingLineup.isPullBackOverride() && (startingLineup.getPullBackMinute()<120)) {
@@ -208,11 +213,15 @@ public class RatingPredictionManager {
 
 
 
-    private float calcRatings (int t, Lineup lineup, int type, boolean useForm, Weather weather, boolean useWeatherImpact) {
+    private float calcRatings (Double t, Lineup lineup, int type, boolean useForm, Weather weather, boolean useWeatherImpact) {
+
     	return calcRatings (t, lineup, type, ALLSIDES, useForm, weather, useWeatherImpact);
     }
     
-    private float calcRatings (int t, Lineup _lineup, int type, int side2calc, boolean useForm, Weather weather, boolean useWeatherImpact) {
+    private float calcRatings (Double _t, Lineup _lineup, int type, int side2calc, boolean useForm, Weather weather, boolean useWeatherImpact) {
+
+    	int t = (int) Math.round(_t);
+
     	RatingPredictionParameter params;
     	switch (type) {
 		case SIDEDEFENSE:
@@ -507,81 +516,81 @@ public class RatingPredictionManager {
     	return retArray;
     }
 
-	public Hashtable<Integer, Double> getCentralDefenseRatings(boolean useForm, boolean useWeatherImpact)
+	public Hashtable<Double, Double> getCentralDefenseRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().middleDefenceOffset;
-		Hashtable<Integer, Double> CentralDefenseRatings = new Hashtable<>();
-		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+		Hashtable<Double, Double> CentralDefenseRatings = new Hashtable<>();
+		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			CentralDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALDEFENSE, useForm, weather, useWeatherImpact));
 		}
 		return CentralDefenseRatings;
 	}
 
-	public Hashtable<Integer, Double> getCentralAttackRatings(boolean useForm, boolean useWeatherImpact)
+	public Hashtable<Double, Double> getCentralAttackRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().middleAttackOffset;
-		Hashtable<Integer, Double> CentralAttackRatings = new Hashtable<>();
-		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+		Hashtable<Double, Double> CentralAttackRatings = new Hashtable<>();
+		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			CentralAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALATTACK, useForm, weather, useWeatherImpact));
 		}
 		return CentralAttackRatings;
 	}
 
 
-	public Hashtable<Integer, Double> getRightDefenseRatings(boolean useForm, boolean useWeatherImpact)
+	public Hashtable<Double, Double> getRightDefenseRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().rightDefenceOffset;
-		Hashtable<Integer, Double> RightDefenseRatings = new Hashtable<>();
-		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+		Hashtable<Double, Double> RightDefenseRatings = new Hashtable<>();
+		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			RightDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, RIGHT, useForm, weather, useWeatherImpact));
 		}
 		return RightDefenseRatings;
 	}
 
 
-	public Hashtable<Integer, Double> getLeftDefenseRatings(boolean useForm, boolean useWeatherImpact)
+	public Hashtable<Double, Double> getLeftDefenseRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().leftDefenceOffset;
-		Hashtable<Integer, Double> LeftDefenseRatings = new Hashtable<>();
-		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+		Hashtable<Double, Double> LeftDefenseRatings = new Hashtable<>();
+		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			LeftDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, LEFT, useForm, weather, useWeatherImpact));
 		}
 		return LeftDefenseRatings;
 	}
 
-	public Hashtable<Integer, Double> getLeftAttackRatings(boolean useForm, boolean useWeatherImpact)
+	public Hashtable<Double, Double> getLeftAttackRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().leftAttackOffset;
-		Hashtable<Integer, Double> LeftAttackRatings = new Hashtable<>();
-		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+		Hashtable<Double, Double> LeftAttackRatings = new Hashtable<>();
+		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			LeftAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, LEFT, useForm, weather, useWeatherImpact));
 		}
 		return LeftAttackRatings;
 	}
 
-	public Hashtable<Integer, Double> getRightAttackRatings(boolean useForm, boolean useWeatherImpact)
+	public Hashtable<Double, Double> getRightAttackRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().rightAttackOffset;
-		Hashtable<Integer, Double> RightAttackRatings = new Hashtable<>();
-		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+		Hashtable<Double, Double> RightAttackRatings = new Hashtable<>();
+		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			RightAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, RIGHT, useForm, weather, useWeatherImpact));
 		}
 		return RightAttackRatings;
 	}
 
 
-	public Hashtable<Integer, Double> getMFRatings(boolean useForm, boolean useWeatherImpact)
+	public Hashtable<Double, Double> getMFRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
 		double userRatingOffset = UserParameter.instance().midfieldOffset;
-		Hashtable<Integer, Double> MidfieldRatings = new Hashtable<>();
-		for (Map.Entry<Integer,Lineup> tLineup : LineupEvolution.entrySet()) {
+		Hashtable<Double, Double> MidfieldRatings = new Hashtable<>();
+		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			MidfieldRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), MIDFIELD, useForm, weather, useWeatherImpact));
 		}
 		return MidfieldRatings;
