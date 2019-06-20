@@ -122,6 +122,7 @@ public final class MinuteTogglerPanel extends JPanel {
 	}
 
 	private void shiftForward(int value) {
+		if(value < 1) return;
 		ListIterator<JLabel> keyIterator = toggleKeys.listIterator(current);
 		JLabel key = keyIterator.next();
 		reverseColor(key);
@@ -139,6 +140,7 @@ public final class MinuteTogglerPanel extends JPanel {
 	}
 
 	private void shiftBackward(int value) {
+		if(value < 1) return;
 		ListIterator<JLabel> keyIterator = toggleKeys.listIterator(current + 1);
 		JLabel key = keyIterator.previous();
 		reverseColor(key);
