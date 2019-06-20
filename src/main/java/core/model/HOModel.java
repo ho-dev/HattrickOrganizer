@@ -129,6 +129,10 @@ public class HOModel {
         return m_clAufstellung;
     }
 
+	public final Lineup getCurrentLineup() {
+		return m_clAufstellung;
+	}
+
 	/**
 	 * returns the lineup
 	 */
