@@ -24,7 +24,7 @@ public final class MinuteTogglerPanel extends JPanel {
 	private List<JLabel> toggleKeysET = new ArrayList();
 	private List<Double> toggleLabels = new ArrayList(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
 	private AufstellungsDetailPanel parent;
-	private int current = 0;
+	private int current = -1; //default to regular time average
 	
 	public MinuteTogglerPanel(AufstellungsDetailPanel parent) {
 
@@ -80,8 +80,6 @@ public final class MinuteTogglerPanel extends JPanel {
 				toggleKeysET.add(toggleLabel);
 			}
 		}
-		toggleKeys.get(0).setForeground(Color.LIGHT_GRAY);
-		toggleKeys.get(0).setBackground(Color.BLACK);
 		JLabel nextButton = new JLabel(">>", SwingConstants.CENTER);
 		nextButton.addMouseListener(new MouseAdapter() {
 			@Override
