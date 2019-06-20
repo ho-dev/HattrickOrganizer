@@ -44,6 +44,8 @@ public final class MinuteTogglerPanel extends JPanel {
 			}
 		});
 		add(prevButton);
+		toggleLabels.remove(-90d);  //remove FT and ET
+		toggleLabels.remove(-120d); //placeholder labels
 		Collections.sort(toggleLabels);
 		for(final int[] i={0};i[0]<toggleLabels.size();i[0]++) {
 			JLabel toggleLabel = new JLabel(String.valueOf(toggleLabels.get(i[0]).longValue()), SwingConstants.CENTER);
@@ -52,7 +54,7 @@ public final class MinuteTogglerPanel extends JPanel {
 
 				@Override
 				public void mousePressed(MouseEvent e) {
-					reverseColor(toggleKeys.get(current));
+					if(current >= 0) reverseColor(toggleKeys.get(current));
 					current = labelIndex;
 					reverseColor(toggleKeys.get(labelIndex));
 					revalidate();
@@ -97,7 +99,8 @@ public final class MinuteTogglerPanel extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if(enabled) {
-					JLabel key = toggleKeys.get(current);
+					JLabel key = null;
+					if(current >= 0) key = toggleKeys.get(current);
 					for(JLabel ETKey: toggleKeysET) {
 						toggleKeys.remove(ETKey);
 						remove(ETKey);
@@ -123,9 +126,15 @@ public final class MinuteTogglerPanel extends JPanel {
 
 	private void shiftForward(int value) {
 		if(value < 1) return;
-		ListIterator<JLabel> keyIterator = toggleKeys.listIterator(current);
-		JLabel key = keyIterator.next();
-		reverseColor(key);
+		ListIterator<JLabel> keyIterator;
+		JLabel key = null;
+		if(current >= 0) {
+			keyIterator = toggleKeys.listIterator(current);
+			key = keyIterator.next();
+			reverseColor(key);
+		} else {
+			keyIterator = toggleKeys.listIterator(toggleKeys.size());
+		  }
 		while(value != 0) {
 			if(keyIterator.hasNext()) key = keyIterator.next();
 			else {
@@ -141,9 +150,15 @@ public final class MinuteTogglerPanel extends JPanel {
 
 	private void shiftBackward(int value) {
 		if(value < 1) return;
-		ListIterator<JLabel> keyIterator = toggleKeys.listIterator(current + 1);
-		JLabel key = keyIterator.previous();
-		reverseColor(key);
+		ListIterator<JLabel> keyIterator;
+		JLabel key = null;
+		if(current >= 0) {
+			keyIterator = toggleKeys.listIterator(current + 1);
+			key = keyIterator.previous();
+			reverseColor(key);
+		} else {
+			keyIterator = toggleKeys.listIterator();
+		  }
 		while(value != 0) {
 			if(keyIterator.hasPrevious()) {
 				key = keyIterator.previous();
@@ -166,6 +181,8 @@ public final class MinuteTogglerPanel extends JPanel {
 	}
 
 	public Double getCurrentKey() {
-		return toggleLabels.get(current);
+		if(current >= 0) return toggleLabels.get(current);
+		else if(current == -2) return -120d;
+		else return -90d;
 	}
 }
