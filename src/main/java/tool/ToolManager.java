@@ -2,10 +2,6 @@ package tool;
 
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
-import core.model.player.Player;
-import core.util.HOLogger;
-import module.lineup.Lineup;
-import module.teamAnalyzer.vo.MatchRating;
 import tool.arenasizer.ArenaSizerDialog;
 import tool.export.CsvPlayerExport;
 import tool.export.XMLExporter;
@@ -13,13 +9,9 @@ import tool.hrfExplorer.HrfExplorerDialog;
 import tool.injury.InjuryDialog;
 import tool.keepertool.KeeperToolDialog;
 import tool.notepad.NotepadDialog;
-import tool.pluginFeedback.PluginFeedback;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.*;
 
@@ -84,45 +76,6 @@ public class ToolManager implements ActionListener {
             new ArenaSizerDialog(HOMainFrame.instance()).setVisible(true);
         } else if (source.equals(m_jmiHrfExplorer)) {
             new HrfExplorerDialog(HOMainFrame.instance()).setVisible(true);
-        } else if (source.equals(m_jmiPluginFeedback)) {
-            // todo Remove after integration with correct PluginFeedback called
-
-            // Create example data - start
-            Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
-
-            MatchRating HTRatings = new MatchRating();
-            HTRatings.setLeftDefense(11.11);
-            HTRatings.setCentralDefense(22.22);
-            HTRatings.setRightDefense(33.33);
-            HTRatings.setMidfield(44.44);
-            HTRatings.setLeftAttack(55.55);
-            HTRatings.setCentralAttack(66.66);
-            HTRatings.setRightAttack(77.77);
-            HTRatings.setTacticType(m_hov.getLanguageString("ls.team.tactic.pressing").toLowerCase());
-            HTRatings.setTacticSkill(9);
-            HTRatings.setAttitude(m_hov.getLanguageString("ls.team.teamattitude.playitcool").toLowerCase());
-            HTRatings.setStyle_of_play(m_hov.getLanguageString("ls.team.coachtype.neutral").toLowerCase());
-            // Create example data - end
-
-            // The following code can be include in correct called
-            PluginFeedback pluginFeedback = new PluginFeedback();
-            String message = "[" + pluginFeedback.getHoToken() + "] ";
-            try {
-                String result = pluginFeedback.sendFeedbackToServer(lineup, HTRatings, "prova_da_tool_manager");
-                message += m_hov.getLanguageString("feedbackplugin.success");
-                HOLogger.instance().info(getClass(), message);
-                JOptionPane.showMessageDialog(null, message);
-            } catch (IOException ex) {
-                HOLogger.instance().error(getClass(), ex);
-                ex.printStackTrace();
-                message += m_hov.getLanguageString("feedbackplugin.serverError");
-                JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
-            } catch (IllegalArgumentException ex) {
-                HOLogger.instance().error(getClass(), ex);
-                ex.printStackTrace();
-                message += m_hov.getLanguageString("feedbackplugin.inputError");
-                JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
-            }
         }
     }
 }

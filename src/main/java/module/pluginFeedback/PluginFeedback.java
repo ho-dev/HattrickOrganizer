@@ -1,4 +1,4 @@
-package tool.pluginFeedback;
+package module.pluginFeedback;
 
 import core.HO;
 import core.model.HOVerwaltung;
@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Base64;
 import java.util.List;
@@ -20,22 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import module.teamAnalyzer.vo.MatchRating;
 
-import javax.swing.*;
-
 public class PluginFeedback {
-    /*
-you do an enum for status
-like serverStatusUpload.ok
-
-serverStatusUpload.error
-serverStatusUpload.blabla
-in english properties you enter value for
-ls.serverStatusUpload = e.g. "cant connect server"
-ls.serverStatusUpload.ok = all good .
-ect
-     */
-
-    // Return Codes
 
     private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private String hoToken;
