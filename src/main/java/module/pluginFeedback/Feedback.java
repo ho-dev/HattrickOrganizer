@@ -1,4 +1,4 @@
-package tool.pluginFeedback;
+package module.pluginFeedback;
 
 import core.HO;
 import core.model.player.IMatchRoleID;

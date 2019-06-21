@@ -10,7 +10,6 @@ import core.util.UTF8Control;
 import module.lineup.Lineup;
 import module.lineup.RatingComparisonPanel;
 import module.teamAnalyzer.vo.MatchRating;
-import tool.pluginFeedback.PluginFeedback;
 
 import javax.swing.*;
 import java.awt.*;
