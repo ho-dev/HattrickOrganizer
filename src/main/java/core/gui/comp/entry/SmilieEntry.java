@@ -71,12 +71,12 @@ public class SmilieEntry extends DoppelLabelEntry {
                 if (ergebnis == 0) {
                     final MatchRoleID entrySort = core.model.HOVerwaltung.instance()
                                                                                                                         .getModel()
-                                                                                                                        .getLineup()
+                                                                                                                        .getCurrentLineup()
                                                                                                                         .getPositionBySpielerId(entry.getPlayer()
                                                                                                                                                      .getSpielerID());
                     final MatchRoleID sort = core.model.HOVerwaltung.instance()
                                                                                                                    .getModel()
-                                                                                                                   .getLineup()
+                                                                                                                   .getCurrentLineup()
                                                                                                                    .getPositionBySpielerId(getPlayer()
                                                                                                                                                .getSpielerID());
 
