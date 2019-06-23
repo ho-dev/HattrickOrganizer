@@ -218,9 +218,7 @@ public class RatingPredictionManager {
     	return calcRatings (t, lineup, type, ALLSIDES, useForm, weather, useWeatherImpact);
     }
     
-    private float calcRatings (Double _t, Lineup _lineup, int type, int side2calc, boolean useForm, Weather weather, boolean useWeatherImpact) {
-
-    	int t = (int) Math.round(_t);
+    private float calcRatings (Double t, Lineup _lineup, int type, int side2calc, boolean useForm, Weather weather, boolean useWeatherImpact) {
 
     	RatingPredictionParameter params;
     	switch (type) {
@@ -255,7 +253,7 @@ public class RatingPredictionManager {
     	return (float)retVal;
     }
 
-    private double calcPartialRating (int t, Lineup _lineup, RatingPredictionParameter params, String sectionName, int side2calc, boolean useForm, Weather weather, boolean useWeatherImpact) {
+    private double calcPartialRating (double t, Lineup _lineup, RatingPredictionParameter params, String sectionName, int side2calc, boolean useForm, Weather weather, boolean useWeatherImpact) {
     	int skillType = sectionNameToSkillAndSide(sectionName)[0];
     	int sideType = sectionNameToSkillAndSide(sectionName)[1];
     	double retVal = 0;
@@ -673,19 +671,19 @@ public class RatingPredictionManager {
     	return weights;
     }
     
-    public double[][] getAllPlayerStrength (int t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
+    public double[][] getAllPlayerStrength (double t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
     	return getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType, true, true, true);
     }
 
-    public double[][] getAllPlayerStrengthLeft (int t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
+    public double[][] getAllPlayerStrengthLeft (double t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
     	return getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType, true, false, false);
     }
 
-    public double[][] getAllPlayerStrengthRight (int t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
+    public double[][] getAllPlayerStrengthRight (double t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
     	return getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType, false, false, true);
     }
 
-    public double[][] getAllPlayerStrengthMiddle (int t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
+    public double[][] getAllPlayerStrengthMiddle (double t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
     	return getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact,  skillType, false, true, false);
     }
 
@@ -778,7 +776,7 @@ public class RatingPredictionManager {
     	return bonus;
     }
     
-    public double[][] getAllPlayerStrength (int t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType, boolean useLeft, boolean useMiddle, boolean useRight) {
+    public double[][] getAllPlayerStrength (double t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType, boolean useLeft, boolean useMiddle, boolean useRight) {
     	double[][] retArray = new double[IMatchRoleID.NUM_POSITIONS][SPEC_ALL];
         for(int pos : IMatchRoleID.aFieldMatchRoleID) {
             Player player = _lineup.getPlayerByPositionID(pos);
@@ -857,7 +855,7 @@ public class RatingPredictionManager {
         return retArray;
     }
 
-    public static float calcPlayerStrength(int t, Player player, int skillType, boolean useForm, boolean isPressing, Weather weather, boolean useWeatherImpact) {
+    public static float calcPlayerStrength(double t, Player player, int skillType, boolean useForm, boolean isPressing, Weather weather, boolean useWeatherImpact) {
         double retVal = 0.0F;
         try
         {
@@ -1022,13 +1020,14 @@ public class RatingPredictionManager {
 
 	 /**
 	 * Returns the stamina effect per minute from tEnter tp tExit
-	 * @param stamina: player stamina
-	 * @param tEnter: at which minute the player entered the game
-     * @param tNow: current minute being played
-	 */
-	public static double GetStaminaEffect(double stamina, int tEnter, int tNow, boolean isTacticPressing){
+	  * @param stamina : player stamina
+	  * @param tEnter : at which minute the player entered the game
+	  * @param tNow : current minute being played
+	  */
+	public static double GetStaminaEffect(double stamina, double tEnter, double tNow, boolean isTacticPressing){
 		boolean isHighStaminaPlayer;
 
+		if (tEnter == 45d) tEnter += 2*EPSILON;
 		stamina -= 1;
 		double P = isTacticPressing ? 1.1 : 1.0;
 		double energyLossPerMinuteLS = -P * (5.95 - 27*stamina/70.0)/5;
@@ -1046,12 +1045,12 @@ public class RatingPredictionManager {
 		}
 
 
-		int t=tEnter;
+		double t=tEnter;
 
 		while(t<=tNow)
 		{
-			if ((t == 46) && (tEnter<45)) energy += 18.75;  // Energy recovery during half-time
-			else if ((t == 91) && (tEnter<90)) energy += 6.25;  // Energy recovery before extra-time
+			if ((t == (45d+EPSILON)) && (tEnter<(45d+2*EPSILON))) energy += 18.75;  // Energy recovery during half-time
+			else if ((t == (90d+EPSILON)) && (tEnter<(90d+2*EPSILON))) energy += 6.25;  // Energy recovery before extra-time
 			else {
 				  if(isHighStaminaPlayer) {
 					  energy = energy + energyLossPerMinuteHS;
@@ -1060,7 +1059,10 @@ public class RatingPredictionManager {
 					  energy = energy + energyLossPerMinuteLS;
 				  }
 			}
-			t += 1;
+			if (t==45d) t += EPSILON;
+			else if (t==(45 + EPSILON)) t += EPSILON;
+			else if (t==(45 + 2*EPSILON)) t = 46d;
+			else t += 1;
 		}
 		return Math.max(10, Math.min(100, energy)) / 100.0;
 	}
