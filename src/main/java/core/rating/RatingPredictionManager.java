@@ -904,9 +904,49 @@ public class RatingPredictionManager {
         }
 
 		double StaminaEffect = 1;
-        if (t != -1) StaminaEffect = GetStaminaEffect(player.getKondition(),player.getGameStartingTime(), t, isPressing);
+        if (t >= 0) StaminaEffect = GetStaminaEffect(player.getKondition(),player.getGameStartingTime(), t, isPressing);
+        else if (t==-2) StaminaEffect = getAvg90StaminaEffect(player.getKondition()); //average contribution of stamina over a 90 minutes game, this is used to compare player at given position
         return (float)(retVal * StaminaEffect);
     }
+
+
+    /*
+       return the stamina effect over 90 minutes, result empirically obtained by application of GetStaminaEffect formula
+     	in the future stamina could be set to a fload instead of an intger for higher precision
+     */
+    private static double getAvg90StaminaEffect(int iStamina)
+	{
+		double staminaEffect = 0.651561111111111;
+
+		switch (iStamina) {
+			case 2:
+				staminaEffect = 0.664462406015038;
+				break;
+			case 3:
+				staminaEffect = 0.726691729323308;
+				break;
+			case 4:
+				staminaEffect = 0.787578947368421;
+				break;
+			case 5:
+				staminaEffect = 0.846515037593985;
+				break;
+			case 6:
+				staminaEffect = 0.902372180451128;
+				break;
+			case 7:
+				staminaEffect = 0.949612781954887;
+				break;
+			case 8:
+				staminaEffect = 0.983289473684211;
+				break;
+			case 9:
+				staminaEffect = 1d;
+				break;
+		}
+
+		return staminaEffect;
+	}
 
     private static float getSubDeltaFromConfig (RatingPredictionParameter params, String sectionName, int skill) {
     	String useSection = sectionName;

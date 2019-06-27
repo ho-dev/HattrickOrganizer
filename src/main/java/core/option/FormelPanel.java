@@ -154,13 +154,13 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
         m_jpVerteidigung.removeChangeListener(this);
         m_jpStandard.removeChangeListener(this);
 
-        m_jpSpielaufbau.setValue(factorObject.getSpielaufbau());
-        m_jpFluegelspiel.setValue(factorObject.getFluegelspiel());
-        m_jpTorschuss.setValue(factorObject.getTorschuss());
-        m_jpTorwart.setValue(factorObject.getTorwart());
-        m_jpPasspiel.setValue(factorObject.getPasspiel());
-        m_jpVerteidigung.setValue(factorObject.getVerteidigung());
-        m_jpStandard.setValue(factorObject.getStandards());
+        m_jpSpielaufbau.setValue(factorObject.getPMfactor());
+        m_jpFluegelspiel.setValue(factorObject.getWIfactor());
+        m_jpTorschuss.setValue(factorObject.getSCfactor());
+        m_jpTorwart.setValue(factorObject.getGKfactor());
+        m_jpPasspiel.setValue(factorObject.getPSfactor());
+        m_jpVerteidigung.setValue(factorObject.getDEfactor());
+        m_jpStandard.setValue(factorObject.getSPfactor());
 
         m_jpSpielaufbau.addChangeListener(this);
         m_jpFluegelspiel.addChangeListener(this);

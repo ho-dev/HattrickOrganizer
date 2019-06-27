@@ -113,7 +113,7 @@ final class AufstellungsRatingPanel extends RasenPanel {
     protected AufstellungsRatingPanel() {
         initComponents();
 
-        if (core.model.UserParameter.instance().anzahlNachkommastellen == 1) {
+        if (core.model.UserParameter.instance().nbDecimals == 1) {
             m_clFormat = Helper.DEFAULTDEZIMALFORMAT;
         } else {
             m_clFormat = Helper.DEZIMALFORMAT_2STELLEN;

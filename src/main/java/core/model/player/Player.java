@@ -817,10 +817,10 @@ public class Player {
     }
 
     /**
-     * liefert die IdealPosition
+     * Calcultate Player Ideal Position
      */
     public byte getIdealPosition() {
-        //Usr Vorgabe aus DB holen
+        //get user defaulkt from DB
         final byte flag = getUserPosFlag();
 
         if (flag == IMatchRoleID.UNKNOWN) {
@@ -829,6 +829,7 @@ public class Player {
             float maxStk = -1.0f;
 
             for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
+                if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
                 if (calcPosValue(allPos[i].getPosition(),true) > maxStk) {
                 	maxStk = calcPosValue(allPos[i].getPosition(),true);
                     idealPos = allPos[i].getPosition();
@@ -1871,20 +1872,14 @@ public class Player {
 //        	System.out.println ("Using star rating from cache, key="+key+", tablesize="+starRatingCache.size());
         	return ((Float)starRatingCache.get(key)).floatValue();
         }
-    	final boolean normalized = false;
-        float gkValue = fo.getTorwartScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.KEEPER, useForm, false, null, false);
-        float pmValue = fo.getSpielaufbauScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.PLAYMAKING, useForm, false, null, false);
-        float deValue = fo.getVerteidigungScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.DEFENDING, useForm, false, null, false);
-        float wiValue = fo.getFluegelspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.WINGER, useForm, false, null, false);
-        float psValue = fo.getPasspielScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.PASSING, useForm, false, null, false);
 
-        // Fix for new Defensive Attacker position
-		if (fo.getPosition()== IMatchRoleID.FORWARD_DEF && getPlayerSpecialty()==PlayerSpeciality.TECHNICAL) {
-			psValue *= 1.30f; //FIXME this should be passed via the .dat file not hardcoded
-		}
-
-        float spValue = fo.getStandardsScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.SET_PIECES, useForm, false, null, false);
-        float scValue = fo.getTorschussScaled(normalized) * RatingPredictionManager.calcPlayerStrength(-1, this, PlayerSkill.SCORING, useForm, false, null, false);
+        float gkValue = fo.getGKfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.KEEPER, useForm, false, null, false);
+        float pmValue = fo.getPMfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.PLAYMAKING, useForm, false, null, false);
+        float deValue = fo.getDEfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.DEFENDING, useForm, false, null, false);
+        float wiValue = fo.getWIfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.WINGER, useForm, false, null, false);
+        float psValue = fo.getPSfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.PASSING, useForm, false, null, false);
+        float spValue = fo.getSPfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.SET_PIECES, useForm, false, null, false);
+        float scValue = fo.getSCfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.SCORING, useForm, false, null, false);
 
         float val = gkValue + pmValue + deValue + wiValue + psValue + spValue + scValue;
 
@@ -1904,18 +1899,23 @@ public class Player {
      * @return 			the player strength on this position
      */
     public float calcPosValue(byte pos, boolean useForm) {
-    	float es = -1.0f;
-    	final FactorObject factor = FormulaFactors.instance().getPositionFactor(pos);
+    	float es;
+    	FactorObject factor = FormulaFactors.instance().getPositionFactor(pos);
 
-    	if(factor != null)
-    		es = calcPosValue(factor, useForm);
+        // Fix for TDF
+        if (pos == IMatchRoleID.FORWARD_DEF && this.getPlayerSpecialty()==PlayerSpeciality.TECHNICAL) {
+            factor = FormulaFactors.instance().getPositionFactor(IMatchRoleID.FORWARD_DEF_TECH);
+        }
+
+    	if(factor != null) {
+            es = calcPosValue(factor, useForm);
+        }
     	 else{
     		 //	For Coach or factor not found return 0
     		 return 0.0f;
     	 }
 
-        return core.util.Helper.round(es / 2.0f,
-                                                       core.model.UserParameter.instance().anzahlNachkommastellen);
+        return core.util.Helper.round(es , core.model.UserParameter.instance().nbDecimals);
     }
 
     /**

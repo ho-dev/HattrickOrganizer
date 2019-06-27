@@ -181,7 +181,7 @@ public class HO {
 			interuptionsWindow.setVisible(true);
 		}
 
-		// Check -> Sprachdatei in Ordnung?
+		// Check if language file available
 		interuptionsWindow.setInfoText(4, "Check Languagefiles");
 		HOVerwaltung.checkLanguageFile(UserParameter.instance().sprachDatei);
 		HOVerwaltung.instance().setResource(UserParameter.instance().sprachDatei);

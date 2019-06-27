@@ -16,8 +16,8 @@ public class FormulaFactors {
     /** singelton */
     private static FormulaFactors m_clInstance;
 
-    /** Konstante wieviel PositionsObjekte es gibt */
-    protected static final int ANZ_FAKTOROBJEKTE = 19;
+    /** number of formula object to eval */
+    protected static final int NB_FORMULA_FACTORS = 20;
 
     /** Last change date */
     private static Date lastChange = new Date();
@@ -26,13 +26,13 @@ public class FormulaFactors {
 
     ////////////////////////////////AV//////////////////////////////////////////
     // wingback
-    FactorObject m_clAussenVerteidiger;
+    FactorObject foWB;
     // def wingback
-    FactorObject m_clAussenVerteidiger_DEF;
+    FactorObject foWB_DEF;
     // wingback towards middle
-    FactorObject m_clAussenVerteidiger_IN;
+    FactorObject foWB_TM;
     // off wingback
-    FactorObject m_clAussenVerteidiger_OFF;
+    FactorObject foWB_OFF;
 
     ////////////////////////////////AM//////////////////////////////////////////
     // normal winger
@@ -53,26 +53,28 @@ public class FormulaFactors {
     FactorObject m_clInnenVerteidiger_OFF;
 
     ////////////////////////////////MS//////////////////////////////////////////
-    // normal foreward
-    FactorObject m_clSturm;
+    // normal forward
+    FactorObject foFW;
     // defensive forward
-    FactorObject m_clSturm_DEF;
+    FactorObject foFW_DEF;
+    // technical defensive forward
+    FactorObject foFW_DEF_TECH;
     // forward towards wing
-    FactorObject m_clSturm_AUS;
+    FactorObject foFW_TW;
 
     ////////////////////////////////TW//////////////////////////////////////////
     // keeper
-    FactorObject m_clTorwart;
+    FactorObject foGK;
 
     ////////////////////////////////ZM//////////////////////////////////////////
     // normal inner midfielder
-    FactorObject m_clZentralesMittelfeld;
+    FactorObject foIM;
     // inner towards wing
-    FactorObject m_clZentralesMittelfeld_AUS;
+    FactorObject foIM_TW;
     // def inner
-    FactorObject m_clZentralesMittelfeld_DEF;
+    FactorObject foIM_DEF;
     // off inner
-    FactorObject m_clZentralesMittelfeld_OFF;
+    FactorObject foIM_OFF;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -101,27 +103,28 @@ public class FormulaFactors {
      * liefert Array mit allen Objekten
      */
     public FactorObject[] getAllObj() {
-        final FactorObject[] allObj = new FactorObject[ANZ_FAKTOROBJEKTE];
+        final FactorObject[] allObj = new FactorObject[NB_FORMULA_FACTORS];
 
-        allObj[0] = m_clTorwart;
+        allObj[0] = foGK;
         allObj[1] = m_clInnenVerteidiger;
         allObj[2] = m_clInnenVerteidiger_AUS;
         allObj[3] = m_clInnenVerteidiger_OFF;
-        allObj[4] = m_clAussenVerteidiger;
-        allObj[5] = m_clAussenVerteidiger_OFF;
-        allObj[6] = m_clAussenVerteidiger_IN;
-        allObj[7] = m_clAussenVerteidiger_DEF;
+        allObj[4] = foWB;
+        allObj[5] = foWB_OFF;
+        allObj[6] = foWB_TM;
+        allObj[7] = foWB_DEF;
         allObj[8] = m_clFluegelspieler;
         allObj[9] = m_clFluegelspieler_DEF;
         allObj[10] = m_clFluegelspieler_OFF;
         allObj[11] = m_clFluegelspieler_IN;
-        allObj[12] = m_clZentralesMittelfeld;
-        allObj[13] = m_clZentralesMittelfeld_OFF;
-        allObj[14] = m_clZentralesMittelfeld_DEF;
-        allObj[15] = m_clZentralesMittelfeld_AUS;
-        allObj[16] = m_clSturm;
-        allObj[17] = m_clSturm_DEF;
-        allObj[18] = m_clSturm_AUS;
+        allObj[12] = foIM;
+        allObj[13] = foIM_OFF;
+        allObj[14] = foIM_DEF;
+        allObj[15] = foIM_TW;
+        allObj[16] = foFW;
+        allObj[17] = foFW_DEF;
+        allObj[18] = foFW_DEF_TECH;
+        allObj[19] = foFW_TW;
         return allObj;
     }
 
@@ -129,9 +132,7 @@ public class FormulaFactors {
      * Import star formulas from the default XML.
      */
     public void importDefaults() {
-        //vorsichtshalber vorinitialisieren.
         init();
-        //eigentliche Defaults lesen
        	readFromXML("prediction/defaults.xml");
     }
 
@@ -140,38 +141,39 @@ public class FormulaFactors {
      * Usually these values should never be used, as we read the default.xml afterwards.
      */
     public void init() {
-        //                                     position,									tw,   sa,   ps,   fl,   vt,   ts,   std
-        m_clTorwart = new FactorObject(IMatchRoleID.KEEPER,		      		 		10.0f,0.0f, 0.0f, 0.0f, 2.6f, 0.0f, 0.0f);
-        m_clInnenVerteidiger = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER,			0.0f, 3.0f, 0.5f, 0.0f, 9.0f, 0.0f, 0.0f);
+        //                                     position,								    	 GK         PM         PS       WI        DE        SC        SP
+        foGK = new FactorObject(IMatchRoleID.KEEPER,		      		    	           	10.0f,0.0f, 0.0f, 0.0f, 2.6f, 0.0f, 0.0f);
+        m_clInnenVerteidiger = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER,	    		0.0f, 3.0f, 0.5f, 0.0f, 9.0f, 0.0f, 0.0f);
         m_clInnenVerteidiger_AUS = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER_TOWING,	0.0f, 1.5f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
-        m_clInnenVerteidiger_OFF = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER_OFF,	0.0f, 5.0f, 0.5f, 0.0f, 6.0f, 0.0f, 0.0f);
-        m_clAussenVerteidiger_IN = new FactorObject(IMatchRoleID.BACK_TOMID,	0.0f, 1.0f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
-        m_clAussenVerteidiger_OFF = new FactorObject(IMatchRoleID.BACK_OFF,0.0f, 1.5f, 1.5f, 4.0f, 6.0f, 0.0f, 0.0f);
-        m_clAussenVerteidiger_DEF = new FactorObject(IMatchRoleID.BACK_DEF,0.0f, 0.5f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
-        m_clAussenVerteidiger = new FactorObject(IMatchRoleID.BACK,		0.0f, 1.0f, 0.0f, 3.5f, 8.0f, 0.0f, 0.0f);
-        m_clFluegelspieler_OFF = new FactorObject(IMatchRoleID.WINGER_OFF,		0.0f, 3.0f, 2.5f, 7.0f, 1.0f, 0.0f, 0.0f);
-        m_clFluegelspieler_DEF = new FactorObject(IMatchRoleID.WINGER_DEF,		0.0f, 3.5f, 2.0f, 5.0f, 4.0f, 0.0f, 0.0f);
-        m_clFluegelspieler_IN = new FactorObject(IMatchRoleID.WINGER_TOMID,			0.0f, 6.0f, 2.0f, 4.0f, 2.0f, 0.0f, 0.0f);
-        m_clFluegelspieler = new FactorObject(IMatchRoleID.WINGER,				0.0f, 3.5f, 2.5f, 7.0f, 1.5f, 0.0f, 0.0f);
-        m_clZentralesMittelfeld_OFF = new FactorObject(IMatchRoleID.MIDFIELDER_OFF,		0.0f, 8.0f, 3.5f, 0.0f, 2.0f, 0.0f, 0.0f);
-        m_clZentralesMittelfeld_DEF = new FactorObject(IMatchRoleID.MIDFIELDER_DEF,		0.0f, 8.0f, 2.0f, 0.0f, 3.5f, 0.0f, 0.0f);
-	    m_clZentralesMittelfeld_AUS = new FactorObject(IMatchRoleID.MIDFIELDER_TOWING,		0.0f, 6.0f, 2.0f, 5.0f, 2.0f, 0.0f, 0.0f);
-        m_clZentralesMittelfeld = new FactorObject(IMatchRoleID.MIDFIELDER,				0.0f, 8.0f, 3.0f, 0.0f, 3.0f, 0.0f, 0.0f);
-        m_clSturm = new FactorObject(IMatchRoleID.FORWARD,								0.0f, 0.0f, 3.0f, 1.5f, 0.0f, 9.0f, 0.0f);
-        m_clSturm_DEF = new FactorObject(IMatchRoleID.FORWARD_DEF,						0.0f, 5.0f, 3.0f, 0.0f, 0.0f, 6.0f, 0.0f);
-        m_clSturm_AUS = new FactorObject(IMatchRoleID.FORWARD_TOWING,						0.0f, 0.0f, 3.0f, 4.0f, 0.0f, 6.5f, 0.0f);
+        m_clInnenVerteidiger_OFF = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER_OFF,	    0.0f, 5.0f, 0.5f, 0.0f, 6.0f, 0.0f, 0.0f);
+        foWB_TM = new FactorObject(IMatchRoleID.BACK_TOMID,                             	0.0f, 1.0f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
+        foWB_OFF = new FactorObject(IMatchRoleID.BACK_OFF,                                  0.0f, 1.5f, 1.5f, 4.0f, 6.0f, 0.0f, 0.0f);
+        foWB_DEF = new FactorObject(IMatchRoleID.BACK_DEF,                                  0.0f, 0.5f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
+        foWB = new FactorObject(IMatchRoleID.BACK,                 	                    	0.0f, 1.0f, 0.0f, 3.5f, 8.0f, 0.0f, 0.0f);
+        m_clFluegelspieler_OFF = new FactorObject(IMatchRoleID.WINGER_OFF,	            	0.0f, 3.0f, 2.5f, 7.0f, 1.0f, 0.0f, 0.0f);
+        m_clFluegelspieler_DEF = new FactorObject(IMatchRoleID.WINGER_DEF,		            0.0f, 3.5f, 2.0f, 5.0f, 4.0f, 0.0f, 0.0f);
+        m_clFluegelspieler_IN = new FactorObject(IMatchRoleID.WINGER_TOMID,		        	0.0f, 6.0f, 2.0f, 4.0f, 2.0f, 0.0f, 0.0f);
+        m_clFluegelspieler = new FactorObject(IMatchRoleID.WINGER,				            0.0f, 3.5f, 2.5f, 7.0f, 1.5f, 0.0f, 0.0f);
+        foIM_OFF = new FactorObject(IMatchRoleID.MIDFIELDER_OFF,		                    0.0f, 8.0f, 3.5f, 0.0f, 2.0f, 0.0f, 0.0f);
+        foIM_DEF = new FactorObject(IMatchRoleID.MIDFIELDER_DEF,		                    0.0f, 8.0f, 2.0f, 0.0f, 3.5f, 0.0f, 0.0f);
+	    foIM_TW = new FactorObject(IMatchRoleID.MIDFIELDER_TOWING,		                    0.0f, 6.0f, 2.0f, 5.0f, 2.0f, 0.0f, 0.0f);
+        foIM = new FactorObject(IMatchRoleID.MIDFIELDER,				                    0.0f, 8.0f, 3.0f, 0.0f, 3.0f, 0.0f, 0.0f);
+        foFW = new FactorObject(IMatchRoleID.FORWARD,								        0.0f, 0.0f, 3.0f, 1.5f, 0.0f, 9.0f, 0.0f);
+        foFW_DEF = new FactorObject(IMatchRoleID.FORWARD_DEF,						        0.0f, 5.0f, 3.0f, 0.0f, 0.0f, 6.0f, 0.0f);
+        foFW_TW = new FactorObject(IMatchRoleID.FORWARD_TOWING,						        0.0f, 0.0f, 3.0f, 4.0f, 0.0f, 6.5f, 0.0f);
     }
 
     /**
      * Read an XML file with star formula configurations.
      *
-     * @param dateiname the filename of the xml config
+     * @param defaults the filename of the xml config
      */
     public void readFromXML(String defaults) {
 		Document doc = null;
 
-		if (new File(defaults).exists()) {
-			doc = XMLManager.parseFile(defaults);
+		File file = new File(getClass().getClassLoader().getResource(defaults).getFile());
+		if (file.exists()) {
+			doc = XMLManager.parseFile(file.getAbsolutePath());
 		} else {
 			HOLogger.instance().debug(getClass(), "File " + defaults + " not found");
 			try {
@@ -191,25 +193,26 @@ public class FormulaFactors {
 
         try {
             //Daten füllen
-            m_clTorwart = readObject("KEEPER", root);
+            foGK = readObject("KEEPER", root);
             m_clInnenVerteidiger = readObject("DEFENSE", root);
             m_clInnenVerteidiger_OFF = readObject("DEFENSE_O", root);
             m_clInnenVerteidiger_AUS = readObject("DEFENSE_W", root);
-            m_clAussenVerteidiger = readObject("WB", root);
-            m_clAussenVerteidiger_DEF = readObject("WB_D", root);
-            m_clAussenVerteidiger_OFF = readObject("WB_O", root);
-            m_clAussenVerteidiger_IN = readObject("WB_M", root);
-            m_clZentralesMittelfeld_DEF = readObject("MD_D", root);
-            m_clZentralesMittelfeld = readObject("MD", root);
-            m_clZentralesMittelfeld_OFF = readObject("MD_O", root);
-            m_clZentralesMittelfeld_AUS = readObject("MD_W", root);
+            foWB = readObject("WB", root);
+            foWB_DEF = readObject("WB_D", root);
+            foWB_OFF = readObject("WB_O", root);
+            foWB_TM = readObject("WB_M", root);
+            foIM_DEF = readObject("MD_D", root);
+            foIM = readObject("MD", root);
+            foIM_OFF = readObject("MD_O", root);
+            foIM_TW = readObject("MD_W", root);
             m_clFluegelspieler_IN = readObject("WING_M", root);
             m_clFluegelspieler_OFF = readObject("WING_O", root);
             m_clFluegelspieler_DEF = readObject("WING_D", root);
             m_clFluegelspieler = readObject("WING", root);
-            m_clSturm_DEF = readObject("FW_D", root);
-            m_clSturm = readObject("FW", root);
-            m_clSturm_AUS = readObject("FW_W", root);
+            foFW_DEF = readObject("FW_D", root);
+            foFW_DEF_TECH = readObject("FW_D_TECH", root);
+            foFW = readObject("FW", root);
+            foFW_TW = readObject("FW_W", root);
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),"FormulaFactor.redxmlException gefangen: " + e);
             HOLogger.instance().log(getClass(),e);
@@ -283,25 +286,25 @@ public class FormulaFactors {
             doc.appendChild(tmpEle);
 
             //Objekte schreiben
-            writeFaktorObj(doc, m_clTorwart, tmpEle, "KEEPER");
+            writeFaktorObj(doc, foGK, tmpEle, "KEEPER");
             writeFaktorObj(doc, m_clInnenVerteidiger, tmpEle, "DEFENSE");
             writeFaktorObj(doc, m_clInnenVerteidiger_OFF, tmpEle, "DEFENSE_O");
             writeFaktorObj(doc, m_clInnenVerteidiger_AUS, tmpEle, "DEFENSE_W");
-            writeFaktorObj(doc, m_clAussenVerteidiger, tmpEle, "WB");
-            writeFaktorObj(doc, m_clAussenVerteidiger_DEF, tmpEle, "WB_D");
-            writeFaktorObj(doc, m_clAussenVerteidiger_OFF, tmpEle, "WB_O");
-            writeFaktorObj(doc, m_clAussenVerteidiger_IN, tmpEle, "WB_M");
-            writeFaktorObj(doc, m_clZentralesMittelfeld_DEF, tmpEle, "MD_D");
-            writeFaktorObj(doc, m_clZentralesMittelfeld, tmpEle, "MD");
-            writeFaktorObj(doc, m_clZentralesMittelfeld_OFF, tmpEle, "MD_O");
-            writeFaktorObj(doc, m_clZentralesMittelfeld_AUS, tmpEle, "MD_W");
+            writeFaktorObj(doc, foWB, tmpEle, "WB");
+            writeFaktorObj(doc, foWB_DEF, tmpEle, "WB_D");
+            writeFaktorObj(doc, foWB_OFF, tmpEle, "WB_O");
+            writeFaktorObj(doc, foWB_TM, tmpEle, "WB_M");
+            writeFaktorObj(doc, foIM_DEF, tmpEle, "MD_D");
+            writeFaktorObj(doc, foIM, tmpEle, "MD");
+            writeFaktorObj(doc, foIM_OFF, tmpEle, "MD_O");
+            writeFaktorObj(doc, foIM_TW, tmpEle, "MD_W");
             writeFaktorObj(doc, m_clFluegelspieler_IN, tmpEle, "WING_M");
             writeFaktorObj(doc, m_clFluegelspieler_OFF, tmpEle, "WING_O");
             writeFaktorObj(doc, m_clFluegelspieler_DEF, tmpEle, "WING_D");
             writeFaktorObj(doc, m_clFluegelspieler, tmpEle, "WING");
-            writeFaktorObj(doc, m_clSturm_DEF, tmpEle, "FW_D");
-			writeFaktorObj(doc, m_clSturm_AUS, tmpEle, "FW_W");
-            writeFaktorObj(doc, m_clSturm, tmpEle, "FW");
+            writeFaktorObj(doc, foFW_DEF, tmpEle, "FW_D");
+			writeFaktorObj(doc, foFW_TW, tmpEle, "FW_W");
+            writeFaktorObj(doc, foFW, tmpEle, "FW");
 
             //doc.appendChild ( ele );
             XMLManager.writeXML(doc, filename);
@@ -327,25 +330,25 @@ public class FormulaFactors {
         //Faktoren
         ele = doc.createElement("keeper");
         tmpEle.appendChild(ele);
-        ele.appendChild(doc.createTextNode("" + obj.getTorwart()));
+        ele.appendChild(doc.createTextNode("" + obj.getGKfactor()));
         ele = doc.createElement("defense");
         tmpEle.appendChild(ele);
-        ele.appendChild(doc.createTextNode("" + obj.getVerteidigung()));
+        ele.appendChild(doc.createTextNode("" + obj.getDEfactor()));
         ele = doc.createElement("passing");
         tmpEle.appendChild(ele);
-        ele.appendChild(doc.createTextNode("" + obj.getPasspiel()));
+        ele.appendChild(doc.createTextNode("" + obj.getPSfactor()));
         ele = doc.createElement("playmaking");
         tmpEle.appendChild(ele);
-        ele.appendChild(doc.createTextNode("" + obj.getSpielaufbau()));
+        ele.appendChild(doc.createTextNode("" + obj.getPMfactor()));
         ele = doc.createElement("scoring");
         tmpEle.appendChild(ele);
-        ele.appendChild(doc.createTextNode("" + obj.getTorschuss()));
+        ele.appendChild(doc.createTextNode("" + obj.getSCfactor()));
         ele = doc.createElement("wing");
         tmpEle.appendChild(ele);
-        ele.appendChild(doc.createTextNode("" + obj.getFluegelspiel()));
+        ele.appendChild(doc.createTextNode("" + obj.getWIfactor()));
         ele = doc.createElement("standard");
         tmpEle.appendChild(ele);
-        ele.appendChild(doc.createTextNode("" + obj.getStandards()));
+        ele.appendChild(doc.createTextNode("" + obj.getSPfactor()));
     }
 
     /**
@@ -358,25 +361,26 @@ public class FormulaFactors {
     public FactorObject getPositionFactor(byte playerPosition){
 
     	switch (playerPosition) {
-	        case IMatchRoleID.KEEPER: 					return m_clTorwart;
-	        case IMatchRoleID.CENTRAL_DEFENDER:        	return m_clInnenVerteidiger;
-	        case IMatchRoleID.CENTRAL_DEFENDER_OFF:    	return m_clInnenVerteidiger_OFF;
+	        case IMatchRoleID.KEEPER: 				    	return foGK;
+	        case IMatchRoleID.CENTRAL_DEFENDER:         	return m_clInnenVerteidiger;
+	        case IMatchRoleID.CENTRAL_DEFENDER_OFF:     	return m_clInnenVerteidiger_OFF;
 	        case IMatchRoleID.CENTRAL_DEFENDER_TOWING:		return m_clInnenVerteidiger_AUS;
-	        case IMatchRoleID.BACK_OFF:   	return m_clAussenVerteidiger_OFF;
-	        case IMatchRoleID.BACK_DEF:   	return m_clAussenVerteidiger_DEF;
-	        case IMatchRoleID.BACK_TOMID:    	return m_clAussenVerteidiger_IN;
-	        case IMatchRoleID.BACK:       	return m_clAussenVerteidiger;
-	        case IMatchRoleID.MIDFIELDER_DEF:        	return m_clZentralesMittelfeld_DEF;
-	        case IMatchRoleID.MIDFIELDER_OFF:        	return m_clZentralesMittelfeld_OFF;
-	        case IMatchRoleID.MIDFIELDER_TOWING:        	return m_clZentralesMittelfeld_AUS;
-	        case IMatchRoleID.MIDFIELDER:	        	return m_clZentralesMittelfeld;
-	        case IMatchRoleID.WINGER_DEF:        	return m_clFluegelspieler_DEF;
-	        case IMatchRoleID.WINGER_OFF:			return m_clFluegelspieler_OFF;
-	        case IMatchRoleID.WINGER_TOMID:			return m_clFluegelspieler_IN;
-	        case IMatchRoleID.WINGER:				return m_clFluegelspieler;
-	        case IMatchRoleID.FORWARD_DEF:				return m_clSturm_DEF;
-	        case IMatchRoleID.FORWARD:					return m_clSturm;
-	        case IMatchRoleID.FORWARD_TOWING:				return m_clSturm_AUS;
+	        case IMatchRoleID.BACK_OFF:   	                return foWB_OFF;
+	        case IMatchRoleID.BACK_DEF:   	                return foWB_DEF;
+	        case IMatchRoleID.BACK_TOMID:    	            return foWB_TM;
+	        case IMatchRoleID.BACK:       	                return foWB;
+	        case IMatchRoleID.MIDFIELDER_DEF:        	    return foIM_DEF;
+	        case IMatchRoleID.MIDFIELDER_OFF:        	    return foIM_OFF;
+	        case IMatchRoleID.MIDFIELDER_TOWING:        	return foIM_TW;
+	        case IMatchRoleID.MIDFIELDER:	        	    return foIM;
+	        case IMatchRoleID.WINGER_DEF:        	        return m_clFluegelspieler_DEF;
+	        case IMatchRoleID.WINGER_OFF:			        return m_clFluegelspieler_OFF;
+	        case IMatchRoleID.WINGER_TOMID:			        return m_clFluegelspieler_IN;
+	        case IMatchRoleID.WINGER:				        return m_clFluegelspieler;
+	        case IMatchRoleID.FORWARD_DEF:				    return foFW_DEF;
+            case IMatchRoleID.FORWARD_DEF_TECH:             return foFW_DEF_TECH;
+	        case IMatchRoleID.FORWARD:					    return foFW;
+	        case IMatchRoleID.FORWARD_TOWING:				return foFW_TW;
 	        case IMatchRoleID.COACH:
         default:
             return null;
@@ -393,7 +397,7 @@ public class FormulaFactors {
     public void setPositionFactor(byte pos, FactorObject factorObject){
     	switch(pos){
         case IMatchRoleID.KEEPER:
-            m_clTorwart = factorObject;
+            foGK = factorObject;
             break;
 
         case IMatchRoleID.CENTRAL_DEFENDER:
@@ -409,35 +413,35 @@ public class FormulaFactors {
             break;
 
         case IMatchRoleID.BACK:
-            m_clAussenVerteidiger = factorObject;
+            foWB = factorObject;
             break;
 
         case IMatchRoleID.BACK_OFF:
-            m_clAussenVerteidiger_OFF = factorObject;
+            foWB_OFF = factorObject;
             break;
 
         case IMatchRoleID.BACK_DEF:
-            m_clAussenVerteidiger_DEF = factorObject;
+            foWB_DEF = factorObject;
             break;
 
         case IMatchRoleID.BACK_TOMID:
-            m_clAussenVerteidiger_IN = factorObject;
+            foWB_TM = factorObject;
             break;
 
         case IMatchRoleID.MIDFIELDER:
-            m_clZentralesMittelfeld = factorObject;
+            foIM = factorObject;
             break;
 
         case IMatchRoleID.MIDFIELDER_OFF:
-            m_clZentralesMittelfeld_OFF = factorObject;
+            foIM_OFF = factorObject;
             break;
 
         case IMatchRoleID.MIDFIELDER_DEF:
-            m_clZentralesMittelfeld_DEF = factorObject;
+            foIM_DEF = factorObject;
             break;
 
         case IMatchRoleID.MIDFIELDER_TOWING:
-            m_clZentralesMittelfeld_AUS = factorObject;
+            foIM_TW = factorObject;
             break;
 
         case IMatchRoleID.WINGER:
@@ -457,15 +461,15 @@ public class FormulaFactors {
             break;
 
         case IMatchRoleID.FORWARD:
-            m_clSturm = factorObject;
+            foFW = factorObject;
             break;
 
         case IMatchRoleID.FORWARD_DEF:
-            m_clSturm_DEF = factorObject;
+            foFW_DEF = factorObject;
             break;
 
 		case IMatchRoleID.FORWARD_TOWING:
-			m_clSturm_AUS = factorObject;
+			foFW_TW = factorObject;
 			break;
     	}
     	resetLastChange();

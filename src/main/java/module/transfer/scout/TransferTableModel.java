@@ -474,128 +474,128 @@ public class TransferTableModel extends AbstractTableModel {
             m_clData[i][20] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(IMatchRoleID.KEEPER,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Innnenverteidiger
             m_clData[i][21] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Innnenverteidiger Nach Aussen
             m_clData[i][22] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.CENTRAL_DEFENDER_TOWING,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Innnenverteidiger Offensiv
             m_clData[i][23] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.CENTRAL_DEFENDER_OFF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Aussenverteidiger
             m_clData[i][24] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.BACK,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Aussenverteidiger Nach Innen
             m_clData[i][25] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.BACK_TOMID,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Aussenverteidiger Offensiv
             m_clData[i][26] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.BACK_OFF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Aussenverteidiger Defensiv
             m_clData[i][27] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.BACK_DEF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Mittelfeld
             m_clData[i][28] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.MIDFIELDER,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Mittelfeld Nach Aussen
             m_clData[i][29] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.MIDFIELDER_TOWING,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Mittelfeld Offensiv
             m_clData[i][30] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.MIDFIELDER_OFF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Mittelfeld Defensiv
             m_clData[i][31] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.MIDFIELDER_DEF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Flügel
             m_clData[i][32] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.WINGER,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Flügel Nach Innen
             m_clData[i][33] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.WINGER_TOMID,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Flügel Offensiv
             m_clData[i][34] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.WINGER_OFF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Flügel Defensiv
             m_clData[i][35] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.WINGER_DEF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Sturm
             m_clData[i][36] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.FORWARD,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Wert Sturm Defensiv
             m_clData[i][37] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.FORWARD_DEF,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
           //Wert Sturm Nach Aussen
             m_clData[i][38] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.FORWARD_TOWING,
                                                                                 true),
                                                   ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                                                   false,
-                                                  core.model.UserParameter.instance().anzahlNachkommastellen);
+                                                  core.model.UserParameter.instance().nbDecimals);
 
             //Notiz
             m_clData[i][39] = new ColorLabelEntry(aktuellerScoutEintrag.getInfo(),

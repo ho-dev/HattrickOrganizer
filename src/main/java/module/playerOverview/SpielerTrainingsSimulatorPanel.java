@@ -277,81 +277,81 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         m_jlHomeGrown.setIcon(ImageUtilities.getImageIcon4Veraenderung(hg, true));
 
         m_jpBestPos.setText(MatchRoleID.getNameForPosition(tempPlayer.getIdealPosition())
-        		+ " (" + Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        		+ " (" + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true)) + ")");
-        m_jpWertTor.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen).
+        m_jpWertTor.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).
         		format(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true)));
         m_jpWertTor.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.KEEPER,true), false);
-        m_jpWertInnenVert.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertInnenVert.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true)));
         m_jpWertInnenVert.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,true), false);
-        m_jpWertInnenVertAus.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertInnenVertAus.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true)));
         m_jpWertInnenVertAus.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true), false);
-        m_jpWertInnenVertOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertInnenVertOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true)));
         m_jpWertInnenVertOff.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true), false);
-        m_jpWertAussenVert.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertAussenVert.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK, true)));
         m_jpWertAussenVert.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.BACK, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.BACK, true), false);
-        m_jpWertAussenVertIn.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen).
+        m_jpWertAussenVertIn.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).
         		format(tempPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true)));
         m_jpWertAussenVertIn.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true), false);
-        m_jpWertAussenVertOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertAussenVertOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true)));
         m_jpWertAussenVertOff.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true), false);
-        m_jpWertAussenVertDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertAussenVertDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true)));
         m_jpWertAussenVertDef.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true), false);
-        m_jpWertMittelfeld.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertMittelfeld.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true)));
         m_jpWertMittelfeld.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true), false);
-        m_jpWertMittelfeldAus.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertMittelfeldAus.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true)));
         m_jpWertMittelfeldAus.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true), false);
-        m_jpWertMittelfeldOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertMittelfeldOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true)));
         m_jpWertMittelfeldOff.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true), false);
-        m_jpWertMittelfeldDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertMittelfeldDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true)));
         m_jpWertMittelfeldDef.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true), false);
-        m_jpWertFluegel.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertFluegel.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER, true)));
         m_jpWertFluegel.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.WINGER, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.WINGER, true), false);
-        m_jpWertFluegelIn.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertFluegelIn.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true)));
         m_jpWertFluegelIn.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true), false);
-        m_jpWertFluegelOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertFluegelOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true)));
         m_jpWertFluegelOff.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true), false);
-        m_jpWertFluegelDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertFluegelDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true)));
         m_jpWertFluegelDef.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true), false);
-        m_jpWertSturm.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertSturm.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD, true)));
         m_jpWertSturm.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.FORWARD, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.FORWARD, true), false);
-        m_jpWertSturmAus.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertSturmAus.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true)));
         m_jpWertSturmAus.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true), false);
-        m_jpWertSturmDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        m_jpWertSturmDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true)));
         m_jpWertSturmDef.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true)
         		- m_clPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true), false);

@@ -729,7 +729,7 @@ final class DBUpdater {
 	private void updateConfigTo1420(boolean alreadyApplied) {
 		resetTrainingParameters();
 		resetPredictionOffsets();
-		dbZugriff.saveUserParameter("anzahlNachkommastellen", 2);
+		dbZugriff.saveUserParameter("nbDecimals", 2);
 
 		// always set the LastConfUpdate as last step
 		dbZugriff.saveUserParameter("LastConfUpdate", 1.420);

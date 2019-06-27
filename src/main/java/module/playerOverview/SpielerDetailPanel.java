@@ -433,7 +433,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             m_jpLoyaltyChange.clear();
             m_jpBestPosition.setText(MatchRoleID.getNameForPosition(m_clPlayer.getIdealPosition())
                                 + " ("
-                                + Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen).format(
+                                + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).format(
                                 		m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true))
                                 + ")");
             for (int i = 0; i < playerPositionValues.length; i++) {
@@ -558,13 +558,13 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
     private void showNormal(DoppelLabelEntry labelEntry,byte playerPosition){
     	labelEntry.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
-    			.anzahlNachkommastellen).format(m_clPlayer.calcPosValue(playerPosition, true)));
+    			.nbDecimals).format(m_clPlayer.calcPosValue(playerPosition, true)));
     	labelEntry.getRechts().clear();
     }
 
     private void showWithCompare(DoppelLabelEntry labelEntry,byte playerPosition){
     	labelEntry.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
-    			.anzahlNachkommastellen).format(m_clPlayer.calcPosValue(playerPosition,true)));
+    			.nbDecimals).format(m_clPlayer.calcPosValue(playerPosition,true)));
     	labelEntry.getRechts().setSpecialNumber(m_clPlayer.calcPosValue(playerPosition,true)
     			- m_clComparisonPlayer.calcPosValue(playerPosition,true),false);
     }

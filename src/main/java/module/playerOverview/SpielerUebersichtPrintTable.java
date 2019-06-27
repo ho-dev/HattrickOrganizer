@@ -66,9 +66,9 @@ public class SpielerUebersichtPrintTable extends JTable {
         m_clTableSorter.addMouseListenerToHeaderInTable(this);
 
         //        int breite = (int) (55d * (1d
-        //                     + ((gui.UserParameter.instance().anzahlNachkommastellen - 1) / 4.5d)));
+        //                     + ((gui.UserParameter.instance().nbDecimals - 1) / 4.5d)));
 //        final int breite2 = (int) (55d * (1d
-//                            + ((gui.UserParameter.instance().anzahlNachkommastellen - 1) / 4.5d)));
+//                            + ((gui.UserParameter.instance().nbDecimals - 1) / 4.5d)));
 
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 

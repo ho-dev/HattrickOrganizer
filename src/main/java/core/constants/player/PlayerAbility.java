@@ -113,13 +113,13 @@ public final class PlayerAbility {
 	    if (zahlen) {
 	        if (isMatch) {
 	            bewertung += (" ("
-	            +  Helper.getNumberFormat(false, UserParameter.instance().anzahlNachkommastellen)
+	            +  Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
 	    		.format(Helper.round(bewertungwert + PlayerAbility.getValue4Sublevel(sublevel), 2))
 	             + ")");
 	        } else {
 	            bewertung += (" ("
-	            		+ Helper.getNumberFormat(false, UserParameter.instance().anzahlNachkommastellen)
-	             		.format(Helper.round(bewertungwertfloat, UserParameter.instance().anzahlNachkommastellen)) + ")");
+	            		+ Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+	             		.format(Helper.round(bewertungwertfloat, UserParameter.instance().nbDecimals)) + ")");
 	        }
 	    }
 

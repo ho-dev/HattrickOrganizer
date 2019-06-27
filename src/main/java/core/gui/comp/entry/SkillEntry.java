@@ -172,10 +172,10 @@ public class SkillEntry implements IHOTableEntry {
     public final void createText() {
         m_sText = Integer.toString((int) m_dZahl);
 
-        if (core.model.UserParameter.instance().anzahlNachkommastellen == 1) {
-            m_sNachkomma = Helper.DEFAULTDEZIMALFORMAT.format(Helper.round(m_dZahl - (int) m_dZahl,core.model.UserParameter.instance().anzahlNachkommastellen));
+        if (core.model.UserParameter.instance().nbDecimals == 1) {
+            m_sNachkomma = Helper.DEFAULTDEZIMALFORMAT.format(Helper.round(m_dZahl - (int) m_dZahl,core.model.UserParameter.instance().nbDecimals));
         } else {
-            m_sNachkomma = Helper.DEZIMALFORMAT_2STELLEN.format(Helper.round(m_dZahl - (int) m_dZahl,  core.model.UserParameter.instance().anzahlNachkommastellen));
+            m_sNachkomma = Helper.DEZIMALFORMAT_2STELLEN.format(Helper.round(m_dZahl - (int) m_dZahl,  core.model.UserParameter.instance().nbDecimals));
         }
 
         int index = m_sNachkomma.indexOf(',');

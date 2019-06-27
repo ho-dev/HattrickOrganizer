@@ -100,7 +100,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 			label.setBackground(table.getBackground());
 		} else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("BestePosition")))		{
 			byte tmpPos = ((Float)table.getValueAt(row,column)).byteValue();
-			float tmpFloat =Helper.round((((Float)table.getValueAt(row,column)).floatValue() - tmpPos)*100,UserParameter.instance().anzahlNachkommastellen);
+			float tmpFloat =Helper.round((((Float)table.getValueAt(row,column)).floatValue() - tmpPos)*100,UserParameter.instance().nbDecimals);
 			label.setText(MatchRoleID.getNameForPosition(tmpPos) + " ("+ tmpFloat +")");
 			label.setBackground(table.getBackground());
 		} else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.short_motherclub"))) {
@@ -207,7 +207,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 			try
 			{
 				neuerWert = Float.parseFloat(skill[0]);
-				changeValue = Helper.round(Float.parseFloat(skill[1]),UserParameter.instance().anzahlNachkommastellen);
+				changeValue = Helper.round(Float.parseFloat(skill[1]),UserParameter.instance().nbDecimals);
 			}
 			catch(Exception exc){}
 

@@ -98,7 +98,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
         	// Yes, we want negative numbers too
         	final double zahl2 = integerNumber + number;
             setValueAsText(zahl2, background, false, false, 
-            		core.model.UserParameter.instance().anzahlNachkommastellen, true);
+            		core.model.UserParameter.instance().nbDecimals, true);
         }
     }
 
@@ -255,7 +255,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      */
     private final void setGraphicalChangeValue(double number){
     	setValueAsText(number, null, false, false, 
-    			core.model.UserParameter.instance().anzahlNachkommastellen,
+    			core.model.UserParameter.instance().nbDecimals,
     			true);
     }
  
@@ -286,7 +286,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
 
     public final void setSpecialNumber(float number, boolean currencyformat) {
     	setValueAsText(number, null, currencyformat, false, 
-    			core.model.UserParameter.instance().anzahlNachkommastellen,
+    			core.model.UserParameter.instance().nbDecimals,
     			true);
     }
 

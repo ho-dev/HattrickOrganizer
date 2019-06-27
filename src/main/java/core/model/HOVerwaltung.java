@@ -73,10 +73,8 @@ public class HOVerwaltung {
 		if (m_clInstance == null) {
 			m_clInstance = new HOVerwaltung();
 
-			DBManager.instance().getFaktorenFromDB();
-
-			// Krücke bisher
-			// berechnung.FormulaFactors.instance ().init ();
+//			DBManager.instance().getFaktorenFromDB();
+			FormulaFactors.instance();
 		}
 
 		return m_clInstance;

@@ -372,46 +372,46 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 //		jtfEPV.setText(NumberFormat.getCurrencyInstance().format(price));
         jpBestPosition.setText(MatchRoleID.getNameForPosition(tempPlayer.getIdealPosition())
         		+ " (" +
-        		Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        		Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true))
         		 + ")");
-        jpRatingKeeper.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingKeeper.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true)) + "");
-        jpRatingDefender.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingDefender.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true)) + "");
-        jpRatingDefenderTowardsWing.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingDefenderTowardsWing.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true)) + "");
-        jpRatingDefenderOffensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingDefenderOffensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true)) + "");
-        jpRatingWingback.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingWingback.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK, true)) + "");
-        jpRatingWingbackTowardsMiddle.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingWingbackTowardsMiddle.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true)) + "");
-        jpRatingWingbackOffensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingWingbackOffensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true)) + "");
-        jpRatingWingbackDefensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingWingbackDefensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true)) + "");
-        jpRatingMidfielder.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingMidfielder.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true)) + "");
-        jpRatingMidfielderTowardsWing.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingMidfielderTowardsWing.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true)) + "");
-        jpRatingMidfielderOffensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingMidfielderOffensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true)) + "");
-        jpRatingMidfielderDefensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingMidfielderDefensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true)) + "");
-        jpRatingWinger.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingWinger.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER, true)) + "");
-        jpRatingWingerTowardsMiddle.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingWingerTowardsMiddle.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true)) + "");
-        jpRatingWingerOffensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingWingerOffensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true)) + "");
-        jpRatingWingerDefensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingWingerDefensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true)) + "");
-        jpRatingForward.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingForward.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD, true)) + "");
-        jpRatingForwardTowardsWing.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingForwardTowardsWing.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true)) + "");
-        jpRatingForwardDefensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().anzahlNachkommastellen)
+        jpRatingForwardDefensive.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true)) + "");
         clScoutEntry.setSpeciality(((CBItem) jcbSpeciality.getSelectedItem()).getId());
         clScoutEntry.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());

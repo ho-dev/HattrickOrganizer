@@ -47,19 +47,19 @@ public final class FaktorenTable extends AbstractTable {
 				+= (""
 					+ fo.getPosition()
 					+ ","
-					+ fo.getTorwart()
+					+ fo.getGKfactor()
 					+ ","
-					+ fo.getVerteidigung()
+					+ fo.getDEfactor()
 					+ ","
-					+ fo.getFluegelspiel()
+					+ fo.getWIfactor()
 					+ ","
-					+ fo.getPasspiel()
+					+ fo.getPSfactor()
 					+ ","
-					+ fo.getStandards()
+					+ fo.getSPfactor()
 					+ ","
-					+ fo.getTorschuss()
+					+ fo.getSCfactor()
 					+ ","
-					+ fo.getSpielaufbau()
+					+ fo.getPMfactor()
 					+ " )");
 			adapter.executeUpdate(statement);
 		}

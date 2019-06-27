@@ -11,12 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class RatingPredictionConfig {
-	
-	public static final int THISSIDE = RatingPredictionParameter.THISSIDE;
-    public static final int OTHERSIDE = RatingPredictionParameter.OTHERSIDE;
-    public static final int ALLSIDES = RatingPredictionParameter.ALLSIDES;
-    public static final int MIDDLE = RatingPredictionParameter.MIDDLE;
-    
+
 	/* We check for changed rating parameter files regularily */
 	private static long lastCheck = new Date().getTime();
 	private static long checkInterval = 5000; // in millisecs

@@ -134,6 +134,7 @@ public interface IMatchRoleID {
     byte FORWARD_TOWING = 21;
     byte UNKNOWN = -1;
     byte EXTRA = 30;
+    byte FORWARD_DEF_TECH = 98;
     byte COACH = 99;
 
     

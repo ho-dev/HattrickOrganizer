@@ -227,7 +227,7 @@ public final class RatingOffsetPanel
 				slider[i].setValue((int) (100 * offset[i][0]));
 				double value = offset[i][1];
 				if (value>0) {
-					if (core.model.UserParameter.temp().anzahlNachkommastellen == 1) {
+					if (core.model.UserParameter.temp().nbDecimals == 1) {
 						err[i].setText(Helper.DEFAULTDEZIMALFORMAT.format(value));
 					} else {
 						err[i].setText(Helper.DEZIMALFORMAT_2STELLEN.format(value));

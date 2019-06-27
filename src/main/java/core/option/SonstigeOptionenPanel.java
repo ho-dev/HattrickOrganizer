@@ -103,7 +103,7 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
 		if (itemEvent.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
 			core.model.UserParameter.temp().faktorGeld = ((GeldFaktorCBItem) m_jcbWaehrung.getSelectedItem()).getFaktor();
 			core.model.UserParameter.temp().TimeZoneDifference = ((CBItem) m_jcbTimeZoneDifference.getSelectedItem()).getId();
-			core.model.UserParameter.temp().anzahlNachkommastellen = ((CBItem) m_jcbNachkomma.getSelectedItem()).getId();
+			core.model.UserParameter.temp().nbDecimals = ((CBItem) m_jcbNachkomma.getSelectedItem()).getId();
 			core.model.UserParameter.temp().sprachDatei = ((String) m_jcbSprachdatei.getSelectedItem());
 			core.model.UserParameter.temp().standardsortierung = ((CBItem) m_jcbSortierung.getSelectedItem()).getId();
 			core.model.UserParameter.temp().skin = ((String) m_jcbSkin.getSelectedItem());
@@ -209,7 +209,7 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
 
 		m_jcbNachkomma = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("Nachkommastellen"), NACHKOMMASTELLEN, 120);
 		m_jcbNachkomma.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_Nachkommastellen"));
-		m_jcbNachkomma.setSelectedId(core.model.UserParameter.temp().anzahlNachkommastellen);
+		m_jcbNachkomma.setSelectedId(core.model.UserParameter.temp().nbDecimals);
 		m_jcbNachkomma.addItemListener(this);
 		add(m_jcbNachkomma);
 

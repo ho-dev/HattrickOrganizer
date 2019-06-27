@@ -10,40 +10,40 @@ public final class FactorObject {
     private byte m_bPosition = IMatchRoleID.UNKNOWN;
 
     /** Influence of Winger for this position */
-    private float m_fFluegelspiel;
+    private float fWing;
 
     /** Influence of Passing for this position */
-    private float m_fPasspiel;
+    private float fPassing;
 
     /** Influence of Playmaking for this position */
-    private float m_fSpielaufbau;
+    private float fPlaymaking;
 
     /** Influence of Set Pieces for this position */
-    private float m_fStandards;
+    private float fSetPieces;
 
     /** Influence of Scoring for this position */
-    private float m_fTorschuss;
+    private float fScoring;
 
     /** Influence of Goalkeeping for this position */
-    private float m_fTorwart;
+    private float fGoalkeeping;
 
     /** Influence of Defending for this position */
-    private float m_fVerteidigung;
+    private float fDefending;
 
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
      * Creates a new instance of FactorObject
      */
-    public FactorObject(byte position, float torwart, float spielaufbau, float passpiel,
-                        float fluegel, float abwehr, float torschuss, float standards) {
-        m_fTorschuss = torschuss;
-        m_fTorwart = torwart;
-        m_fStandards = standards;
-        m_fSpielaufbau = spielaufbau;
-        m_fPasspiel = passpiel;
-        m_fVerteidigung = abwehr;
-        m_fFluegelspiel = fluegel;
+    public FactorObject(byte position, float gk, float pm, float ps,
+                        float wi, float de, float sc, float sp) {
+        fScoring = sc;
+        fGoalkeeping = gk;
+        fSetPieces = sp;
+        fPlaymaking = pm;
+        fPassing = ps;
+        fDefending = de;
+        fWing = wi;
         m_bPosition = position;
     }
 
@@ -53,13 +53,13 @@ public final class FactorObject {
     public FactorObject(java.sql.ResultSet rs) {
         try {
             if (rs != null) {
-                m_fTorschuss = rs.getFloat("Torschuss");
-                m_fTorwart = rs.getFloat("Torwart");
-                m_fStandards = rs.getFloat("Standards");
-                m_fSpielaufbau = rs.getFloat("Spielaufbau");
-                m_fPasspiel = rs.getFloat("Passpiel");
-                m_fVerteidigung = rs.getFloat("Verteidigung");
-                m_fFluegelspiel = rs.getFloat("Fluegel");
+                fScoring = rs.getFloat("Torschuss");
+                fGoalkeeping = rs.getFloat("Torwart");
+                fSetPieces = rs.getFloat("Standards");
+                fPlaymaking = rs.getFloat("Spielaufbau");
+                fPassing = rs.getFloat("Passpiel");
+                fDefending = rs.getFloat("Verteidigung");
+                fWing = rs.getFloat("Fluegel");
                 m_bPosition = rs.getByte("HOPosition");
             }
         } catch (Exception e) {
@@ -70,45 +70,45 @@ public final class FactorObject {
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
-     * Setter for property m_fFluegelspiel.
+     * Setter for property fWing.
      *
-     * @param m_fFluegelspiel New value of property m_fFluegelspiel.
+     * @param m_fFluegelspiel New value of property fWing.
      */
     public final void setFluegelspiel(float m_fFluegelspiel) {
-        this.m_fFluegelspiel = m_fFluegelspiel;
+        this.fWing = m_fFluegelspiel;
     }
 
     /**
-     * Getter for property m_fFluegelspiel.
+     * Getter for property fWing.
      *
-     * @return Value of property m_fFluegelspiel.
+     * @return Value of property fWing.
      */
     public final float getFluegelspielScaled(boolean normalized) {
     	if (normalized) {
-    		return m_fFluegelspiel/getSum();
+    		return fWing /getSum();
     	}
-        return m_fFluegelspiel/10.0f;
+        return fWing /10.0f;
     }
 
     /**
-     * Setter for property m_fPasspiel.
+     * Setter for property fPassing.
      *
-     * @param m_fPasspiel New value of property m_fPasspiel.
+     * @param m_fPasspiel New value of property fPassing.
      */
     public final void setPasspiel(float m_fPasspiel) {
-        this.m_fPasspiel = m_fPasspiel;
+        this.fPassing = m_fPasspiel;
     }
 
     /**
-     * Getter for property m_fPasspiel.
+     * Getter for property fPassing.
      *
-     * @return Value of property m_fPasspiel.
+     * @return Value of property fPassing.
      */
     public final float getPasspielScaled(boolean normalized) {
 		if (normalized) {
-			return m_fPasspiel/getSum();
+			return fPassing /getSum();
 		}
-        return m_fPasspiel/10.0f;
+        return fPassing /10.0f;
     }
 
     /**
@@ -130,73 +130,73 @@ public final class FactorObject {
     }
 
     /**
-     * Setter for property m_fSpielaufbau.
+     * Setter for property fPlaymaking.
      *
-     * @param m_fSpielaufbau New value of property m_fSpielaufbau.
+     * @param m_fSpielaufbau New value of property fPlaymaking.
      */
     public final void setSpielaufbau(float m_fSpielaufbau) {
-        this.m_fSpielaufbau = m_fSpielaufbau;
+        this.fPlaymaking = m_fSpielaufbau;
     }
 
     /**
-     * Getter for property m_fSpielaufbau.
+     * Getter for property fPlaymaking.
      *
-     * @return Value of property m_fSpielaufbau.
+     * @return Value of property fPlaymaking.
      */
     public final float getSpielaufbauScaled(boolean normalized) {
 		if (normalized) {
-			return m_fSpielaufbau/getSum();
+			return fPlaymaking /getSum();
 		}
-        return m_fSpielaufbau/10.0f;
+        return fPlaymaking /10.0f;
     }
 
 
     /**
-     * Setter for property m_fStandards.
+     * Setter for property fSetPieces.
      *
-     * @param m_fStandards New value of property m_fStandards.
+     * @param m_fStandards New value of property fSetPieces.
      */
     public final void setStandards(float m_fStandards) {
-        this.m_fStandards = m_fStandards;
+        this.fSetPieces = m_fStandards;
     }
 
     /**
-     * Getter for property m_fStandards.
+     * Getter for property fSetPieces.
      *
-     * @return Value of property m_fStandards.
+     * @return Value of property fSetPieces.
      */
     public final float getStandardsScaled(boolean normalized) {
 		if (normalized) {
-			return m_fStandards/getSum();
+			return fSetPieces /getSum();
 		}    	
-        return m_fStandards/10.0f;
+        return fSetPieces /10.0f;
     }
 
     //HelperFuncs//////
     public final float getSum() {
-        return (m_fTorwart + m_fStandards + m_fTorschuss + m_fVerteidigung + m_fFluegelspiel
-               + m_fPasspiel + m_fSpielaufbau);
+        return (fGoalkeeping + fSetPieces + fScoring + fDefending + fWing
+               + fPassing + fPlaymaking);
     }
 
     /**
-     * Setter for property m_fTorschuss.
+     * Setter for property fScoring.
      *
-     * @param m_fTorschuss New value of property m_fTorschuss.
+     * @param m_fTorschuss New value of property fScoring.
      */
     public final void setTorschuss(float m_fTorschuss) {
-        this.m_fTorschuss = m_fTorschuss;
+        this.fScoring = m_fTorschuss;
     }
 
     /**
-     * Getter for property m_fTorschuss.
+     * Getter for property fScoring.
      *
-     * @return Value of property m_fTorschuss.
+     * @return Value of property fScoring.
      */
     public final float getTorschussScaled(boolean normalized) {
 		if (normalized) {
-			return m_fTorschuss/getSum();
+			return fScoring /getSum();
 		}    	
-        return m_fTorschuss/10.0f;
+        return fScoring /10.0f;
     }
 
     /**
@@ -205,7 +205,7 @@ public final class FactorObject {
      * @param m_iTorwart New value of property m_iTorwart.
      */
     public final void setTorwart(float m_iTorwart) {
-        this.m_fTorwart = m_iTorwart;
+        this.fGoalkeeping = m_iTorwart;
     }
 
     ///////////////Accessor//////////////////////
@@ -217,59 +217,59 @@ public final class FactorObject {
      */
     public final float getTorwartScaled(boolean normalized) {
 		if (normalized) {
-			return m_fTorwart/getSum();
+			return fGoalkeeping /getSum();
 		}    	    	
-        return m_fTorwart/10.0f;
+        return fGoalkeeping /10.0f;
     }
 
     /**
-     * Setter for property m_fVerteidigung.
+     * Setter for property fDefending.
      *
-     * @param m_fVerteidigung New value of property m_fVerteidigung.
+     * @param m_fVerteidigung New value of property fDefending.
      */
     public final void setVerteidigung(float m_fVerteidigung) {
-        this.m_fVerteidigung = m_fVerteidigung;
+        this.fDefending = m_fVerteidigung;
     }
 
 
     /**
-     * Getter for property m_fVerteidigung.
+     * Getter for property fDefending.
      *
-     * @return Value of property m_fVerteidigung.
+     * @return Value of property fDefending.
      */
     public final float getVerteidigungScaled(boolean normalized) {
 		if (normalized) {
-			return m_fVerteidigung/getSum();
+			return fDefending /getSum();
 		}    	      	
-        return m_fVerteidigung/10.0f;
+        return fDefending /10.0f;
     }
 
-	public float getFluegelspiel() {
-		return m_fFluegelspiel;
+	public float getWIfactor() {
+		return fWing;
 	}
 
-	public float getPasspiel() {
-		return m_fPasspiel;
+	public float getPSfactor() {
+		return fPassing;
 	}
 
-	public float getSpielaufbau() {
-		return m_fSpielaufbau;
+	public float getPMfactor() {
+		return fPlaymaking;
 	}
 
-	public float getStandards() {
-		return m_fStandards;
+	public float getSPfactor() {
+		return fSetPieces;
 	}
 
-	public float getTorschuss() {
-		return m_fTorschuss;
+	public float getSCfactor() {
+		return fScoring;
 	}
 
-	public float getTorwart() {
-		return m_fTorwart;
+	public float getGKfactor() {
+		return fGoalkeeping;
 	}
 
-	public float getVerteidigung() {
-		return m_fVerteidigung;
+	public float getDEfactor() {
+		return fDefending;
 	}
 
 }

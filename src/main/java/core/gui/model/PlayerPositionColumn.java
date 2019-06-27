@@ -54,7 +54,7 @@ class PlayerPositionColumn extends PlayerColumn {
 	public ColorLabelEntry getEntryValue(Player player){
 		return new ColorLabelEntry(player.calcPosValue(position, true),
 				getBackgroundColor(), false,
-				core.model.UserParameter.instance().anzahlNachkommastellen);
+				core.model.UserParameter.instance().nbDecimals);
 	}
 	
 	/**
@@ -74,7 +74,7 @@ class PlayerPositionColumn extends PlayerColumn {
 		return new ColorLabelEntry(player.calcPosValue(position, true)
 				-comparePlayer.calcPosValue(position, true),
 				getBackgroundColor(),false,false,
-				core.model.UserParameter.instance().anzahlNachkommastellen);
+				core.model.UserParameter.instance().nbDecimals);
 		
 	}
 	
@@ -83,7 +83,7 @@ class PlayerPositionColumn extends PlayerColumn {
 	 */
 	@Override
 	public void setSize(TableColumn column){
-		final int breite = (int) (55d * (1d + ((core.model.UserParameter.instance().anzahlNachkommastellen - 1) / 4.5d)));
+		final int breite = (int) (55d * (1d + ((core.model.UserParameter.instance().nbDecimals - 1) / 4.5d)));
 		column.setMinWidth(25);
 		column.setPreferredWidth((preferredWidth == 0)?Helper.calcCellWidth(breite):preferredWidth);
 	}

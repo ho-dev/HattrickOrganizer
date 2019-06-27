@@ -1337,7 +1337,7 @@ final class SpielerDetailDialog extends JDialog {
 	private void showNormal(DoppelLabelEntry labelEntry, byte playerPosition, Player m_clPlayer) {
 		labelEntry.getLinks().setText(
 				Helper.round(m_clPlayer.calcPosValue(playerPosition, true),
-						core.model.UserParameter.instance().anzahlNachkommastellen) + "");
+						core.model.UserParameter.instance().nbDecimals) + "");
 		labelEntry.getRechts().clear();
 	}
 
@@ -1345,7 +1345,7 @@ final class SpielerDetailDialog extends JDialog {
 								 Player m_clPlayer, Player m_clVergleichsPlayer) {
 		labelEntry.getLinks().setText(
 				Helper.round(m_clPlayer.calcPosValue(playerPosition, true),
-						core.model.UserParameter.instance().anzahlNachkommastellen) + "");
+						core.model.UserParameter.instance().nbDecimals) + "");
 
 		labelEntry.getRechts().setSpecialNumber(
 				m_clPlayer.calcPosValue(playerPosition, true)

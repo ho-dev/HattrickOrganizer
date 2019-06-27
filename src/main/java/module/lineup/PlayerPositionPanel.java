@@ -740,7 +740,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                 item.setValues(spielerName,
                                Helper.round(
                             		   HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getAverageExperience(player.getSpielerID()),
-                            		   core.model.UserParameter.instance().anzahlNachkommastellen),
+                            		   core.model.UserParameter.instance().nbDecimals),
                         player);
                 return item;
             } else {

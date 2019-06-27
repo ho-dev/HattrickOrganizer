@@ -213,8 +213,8 @@ public final class UserParameter extends Configuration {
     //Timezone
     public int TimeZoneDifference;
 
-    //Anzahl Nachkommastellen
-    public int anzahlNachkommastellen = 2;
+    //Number of decimals
+    public int nbDecimals = 2;
     public int aufstellungsAssistentPanel_reihenfolge = LineupAssistant.AW_MF_ST;
     public int aufstellungsPanel_horizontalLeftSplitPane = 450;
     public int aufstellungsPanel_horizontalRightSplitPane = 200;
@@ -510,7 +510,7 @@ public final class UserParameter extends Configuration {
 		map.put("DAUER_VERTEIDIGUNG",String.valueOf(TRAINING_OFFSET_DEFENDING));
 		map.put("DAUER_OSMOSIS",String.valueOf(TRAINING_OFFSET_OSMOSIS));
 		map.put("TimeZoneDifference",String.valueOf(TimeZoneDifference));
-		map.put("anzahlNachkommastellen",String.valueOf(anzahlNachkommastellen));
+		map.put("nbDecimals",String.valueOf(nbDecimals));
 		map.put("aufstellungsAssistentPanel_reihenfolge",String.valueOf(aufstellungsAssistentPanel_reihenfolge));
 		map.put("aufstellungsPanel_horizontalLeftSplitPane",String.valueOf(aufstellungsPanel_horizontalLeftSplitPane));
 		map.put("aufstellungsPanel_horizontalRightSplitPane",String.valueOf(aufstellungsPanel_horizontalRightSplitPane));
@@ -728,7 +728,7 @@ public final class UserParameter extends Configuration {
 		TRAINING_OFFSET_OSMOSIS = getFloatValue(values,"DAUER_OSMOSIS");
 		
 		TimeZoneDifference = getIntValue(values,"TimeZoneDifference");
-		anzahlNachkommastellen = getIntValue(values,"anzahlNachkommastellen");
+		nbDecimals = getIntValue(values,"nbDecimals");
 		aufstellungsAssistentPanel_reihenfolge = getIntValue(values,"aufstellungsAssistentPanel_reihenfolge");
 		aufstellungsPanel_horizontalLeftSplitPane = getIntValue(values,"aufstellungsPanel_horizontalLeftSplitPane");
 		aufstellungsPanel_horizontalRightSplitPane = getIntValue(values,"aufstellungsPanel_horizontalRightSplitPane");
