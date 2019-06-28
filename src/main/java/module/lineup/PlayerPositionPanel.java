@@ -253,6 +253,8 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                     } else {
                         aufstellung.setSpielerAtPosition(m_iPositionID, 0);
                     }
+                    // adjust backup players
+                    aufstellung.adjustBackupPlayers();
                 }
 
                 //Adjust colors
@@ -457,7 +459,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
         // list of all players currently set as subs
-        List<Player> lSubs = new ArrayList<Player>();
+        List<Player> lSubs = new ArrayList<>();
 
         for (Player player: allPlayers) {
             if (lineup.isPlayerASub(player.getSpielerID())) {

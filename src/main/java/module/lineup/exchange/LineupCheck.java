@@ -55,7 +55,7 @@ public class LineupCheck {
 	}
 
 	public static boolean hasFreeReserves(Lineup lineup) {
-		for (int subPos : IMatchRoleID.aBackupssMatchRoleID) {
+		for (int subPos : IMatchRoleID.aSubsAndBackupssMatchRoleID) {
 			if(isFree(lineup, subPos)) return true;
 		}
 		return false;

@@ -148,9 +148,6 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		this.updateables.add(updateable);
 	}
 
-	public void removeUpdateable(Updateable updateable) {
-		this.updateables.remove(updateable);
-	}
 
 	private void fireUpdate() {
 		for (int i = this.updateables.size() - 1; i >= 0; i--) {

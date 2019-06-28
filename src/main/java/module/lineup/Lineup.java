@@ -918,6 +918,7 @@ public class Lineup{
 						}
 					}
 				}
+
 			}
 
 		}
@@ -1753,8 +1754,53 @@ public class Lineup{
 		}
 	}
 
-//	@Override
-//	protected Object clone() throws CloneNotSupportedException {
-//		return super.clone();
-//	}
+	public void adjustBackupPlayers() {
+		Player player = this.getPlayerByPositionID(IMatchRoleID.substGK1);
+		int substGK = (player == null) ? 0 : player.getSpielerID();
+
+		player = this.getPlayerByPositionID(IMatchRoleID.substCD1);
+		int substCD = (player == null) ? 0 : player.getSpielerID();
+
+		player = this.getPlayerByPositionID(IMatchRoleID.substWB1);
+		int substWB = (player == null) ? 0 : player.getSpielerID();
+
+		player = this.getPlayerByPositionID(IMatchRoleID.substIM1);
+		int substIM = (player == null) ? 0 : player.getSpielerID();
+
+		player = this.getPlayerByPositionID(IMatchRoleID.substFW1);
+		int substFW = (player == null) ? 0 : player.getSpielerID();
+
+		player = this.getPlayerByPositionID(IMatchRoleID.substWI1);
+		int substWI = (player == null) ? 0 : player.getSpielerID();
+
+		player = this.getPlayerByPositionID(IMatchRoleID.substXT1);
+		int substXT = (player == null) ? 0 : player.getSpielerID();
+
+		ArrayList<Integer> authorisedBackup = new ArrayList<>(Arrays.asList(substGK, substCD, substWB, substIM, substFW, substWI, substXT));
+
+		// remove player from backup position if not listed as a sub anymore
+		adjustBackupPlayer(IMatchRoleID.substGK2, substGK, authorisedBackup);
+		adjustBackupPlayer(IMatchRoleID.substCD2, substCD, authorisedBackup);
+		adjustBackupPlayer(IMatchRoleID.substWB2, substWB, authorisedBackup);
+		adjustBackupPlayer(IMatchRoleID.substIM2, substIM, authorisedBackup);
+		adjustBackupPlayer(IMatchRoleID.substFW2, substFW, authorisedBackup);
+		adjustBackupPlayer(IMatchRoleID.substWI2, substWI, authorisedBackup);
+		adjustBackupPlayer(IMatchRoleID.substXT2, substXT, authorisedBackup);
+
+	}
+
+	public void adjustBackupPlayer(int iBackupPositionID, int iPlayerIDCorrespondingSub, ArrayList<Integer> authorisedBackup) {
+		Player player = this.getPlayerByPositionID(iBackupPositionID);
+		if (player != null){
+			int backupID = player.getSpielerID();
+			if ((backupID == iPlayerIDCorrespondingSub) || !(authorisedBackup.contains(backupID)))
+			{
+				// need to remove that player from that backup position
+				this.setSpielerAtPosition(iBackupPositionID, 0);
+			}
+
+
+		}
+	}
+
 }
