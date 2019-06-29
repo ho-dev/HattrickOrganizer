@@ -396,23 +396,7 @@ task AddResourcesInDistrib {
                 rename "Logo_stable.ico", "Logo.ico"
             }
         }
-
-//        copy {
-//            from "${projectDir}\\src\\main\\resources\\Logo.ico"
-//            into distribDir
-//            if (development_stage == '0') {
-//                rename "Logo_dev.ico", "Logo.ico"
-////                rename "ho_logo_dev.png", "ho_logo.png"
-//                println("here")
-//            } else if (development_stage == '1') {
-//                rename "Logo_beta.ico", "Logo.ico"
-////                rename "ho_logo_beta.png", "ho_logo.png"
-//            } else {
-//                rename "Logo_stable.ico", "Logo.ico"
-////                rename "ho_logo_stable.png", "ho_logo.png"
-//            }
-//        }
-
+        
         copy {
             from "${projectDir}\\src\\main\\resources\\prediction"
             into "${distribDir}\\prediction"

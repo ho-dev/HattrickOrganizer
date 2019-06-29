@@ -4,6 +4,7 @@ import core.file.xml.XMLManager;
 import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -13,15 +14,21 @@ import org.w3c.dom.Element;
 public class FormulaFactors {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    /** singelton */
+    /**
+     * singelton
+     */
     private static FormulaFactors m_clInstance;
 
-    /** number of formula object to eval */
+    /**
+     * number of formula object to eval
+     */
     protected static final int NB_FORMULA_FACTORS = 20;
 
-    /** Last change date */
+    /**
+     * Last change date
+     */
     private static Date lastChange = new Date();
-    
+
     //~ Instance fields ----------------------------------------------------------------------------
 
     ////////////////////////////////AV//////////////////////////////////////////
@@ -82,7 +89,7 @@ public class FormulaFactors {
      * Creates a new instance of FormulaFactors
      */
     private FormulaFactors() {
-    	resetLastChange();
+        resetLastChange();
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -133,7 +140,7 @@ public class FormulaFactors {
      */
     public void importDefaults() {
         init();
-       	readFromXML("prediction/defaults.xml");
+        readFromXML("prediction" + File.separatorChar + "defaults.xml");
     }
 
     /**
@@ -142,25 +149,25 @@ public class FormulaFactors {
      */
     public void init() {
         //                                     position,								    	 GK         PM         PS       WI        DE        SC        SP
-        foGK = new FactorObject(IMatchRoleID.KEEPER,		      		    	           	10.0f,0.0f, 0.0f, 0.0f, 2.6f, 0.0f, 0.0f);
-        m_clInnenVerteidiger = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER,	    		0.0f, 3.0f, 0.5f, 0.0f, 9.0f, 0.0f, 0.0f);
-        m_clInnenVerteidiger_AUS = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER_TOWING,	0.0f, 1.5f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
-        m_clInnenVerteidiger_OFF = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER_OFF,	    0.0f, 5.0f, 0.5f, 0.0f, 6.0f, 0.0f, 0.0f);
-        foWB_TM = new FactorObject(IMatchRoleID.BACK_TOMID,                             	0.0f, 1.0f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
-        foWB_OFF = new FactorObject(IMatchRoleID.BACK_OFF,                                  0.0f, 1.5f, 1.5f, 4.0f, 6.0f, 0.0f, 0.0f);
-        foWB_DEF = new FactorObject(IMatchRoleID.BACK_DEF,                                  0.0f, 0.5f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
-        foWB = new FactorObject(IMatchRoleID.BACK,                 	                    	0.0f, 1.0f, 0.0f, 3.5f, 8.0f, 0.0f, 0.0f);
-        m_clFluegelspieler_OFF = new FactorObject(IMatchRoleID.WINGER_OFF,	            	0.0f, 3.0f, 2.5f, 7.0f, 1.0f, 0.0f, 0.0f);
-        m_clFluegelspieler_DEF = new FactorObject(IMatchRoleID.WINGER_DEF,		            0.0f, 3.5f, 2.0f, 5.0f, 4.0f, 0.0f, 0.0f);
-        m_clFluegelspieler_IN = new FactorObject(IMatchRoleID.WINGER_TOMID,		        	0.0f, 6.0f, 2.0f, 4.0f, 2.0f, 0.0f, 0.0f);
-        m_clFluegelspieler = new FactorObject(IMatchRoleID.WINGER,				            0.0f, 3.5f, 2.5f, 7.0f, 1.5f, 0.0f, 0.0f);
-        foIM_OFF = new FactorObject(IMatchRoleID.MIDFIELDER_OFF,		                    0.0f, 8.0f, 3.5f, 0.0f, 2.0f, 0.0f, 0.0f);
-        foIM_DEF = new FactorObject(IMatchRoleID.MIDFIELDER_DEF,		                    0.0f, 8.0f, 2.0f, 0.0f, 3.5f, 0.0f, 0.0f);
-	    foIM_TW = new FactorObject(IMatchRoleID.MIDFIELDER_TOWING,		                    0.0f, 6.0f, 2.0f, 5.0f, 2.0f, 0.0f, 0.0f);
-        foIM = new FactorObject(IMatchRoleID.MIDFIELDER,				                    0.0f, 8.0f, 3.0f, 0.0f, 3.0f, 0.0f, 0.0f);
-        foFW = new FactorObject(IMatchRoleID.FORWARD,								        0.0f, 0.0f, 3.0f, 1.5f, 0.0f, 9.0f, 0.0f);
-        foFW_DEF = new FactorObject(IMatchRoleID.FORWARD_DEF,						        0.0f, 5.0f, 3.0f, 0.0f, 0.0f, 6.0f, 0.0f);
-        foFW_TW = new FactorObject(IMatchRoleID.FORWARD_TOWING,						        0.0f, 0.0f, 3.0f, 4.0f, 0.0f, 6.5f, 0.0f);
+        foGK = new FactorObject(IMatchRoleID.KEEPER, 10.0f, 0.0f, 0.0f, 0.0f, 2.6f, 0.0f, 0.0f);
+        m_clInnenVerteidiger = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER, 0.0f, 3.0f, 0.5f, 0.0f, 9.0f, 0.0f, 0.0f);
+        m_clInnenVerteidiger_AUS = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER_TOWING, 0.0f, 1.5f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
+        m_clInnenVerteidiger_OFF = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER_OFF, 0.0f, 5.0f, 0.5f, 0.0f, 6.0f, 0.0f, 0.0f);
+        foWB_TM = new FactorObject(IMatchRoleID.BACK_TOMID, 0.0f, 1.0f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
+        foWB_OFF = new FactorObject(IMatchRoleID.BACK_OFF, 0.0f, 1.5f, 1.5f, 4.0f, 6.0f, 0.0f, 0.0f);
+        foWB_DEF = new FactorObject(IMatchRoleID.BACK_DEF, 0.0f, 0.5f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
+        foWB = new FactorObject(IMatchRoleID.BACK, 0.0f, 1.0f, 0.0f, 3.5f, 8.0f, 0.0f, 0.0f);
+        m_clFluegelspieler_OFF = new FactorObject(IMatchRoleID.WINGER_OFF, 0.0f, 3.0f, 2.5f, 7.0f, 1.0f, 0.0f, 0.0f);
+        m_clFluegelspieler_DEF = new FactorObject(IMatchRoleID.WINGER_DEF, 0.0f, 3.5f, 2.0f, 5.0f, 4.0f, 0.0f, 0.0f);
+        m_clFluegelspieler_IN = new FactorObject(IMatchRoleID.WINGER_TOMID, 0.0f, 6.0f, 2.0f, 4.0f, 2.0f, 0.0f, 0.0f);
+        m_clFluegelspieler = new FactorObject(IMatchRoleID.WINGER, 0.0f, 3.5f, 2.5f, 7.0f, 1.5f, 0.0f, 0.0f);
+        foIM_OFF = new FactorObject(IMatchRoleID.MIDFIELDER_OFF, 0.0f, 8.0f, 3.5f, 0.0f, 2.0f, 0.0f, 0.0f);
+        foIM_DEF = new FactorObject(IMatchRoleID.MIDFIELDER_DEF, 0.0f, 8.0f, 2.0f, 0.0f, 3.5f, 0.0f, 0.0f);
+        foIM_TW = new FactorObject(IMatchRoleID.MIDFIELDER_TOWING, 0.0f, 6.0f, 2.0f, 5.0f, 2.0f, 0.0f, 0.0f);
+        foIM = new FactorObject(IMatchRoleID.MIDFIELDER, 0.0f, 8.0f, 3.0f, 0.0f, 3.0f, 0.0f, 0.0f);
+        foFW = new FactorObject(IMatchRoleID.FORWARD, 0.0f, 0.0f, 3.0f, 1.5f, 0.0f, 9.0f, 0.0f);
+        foFW_DEF = new FactorObject(IMatchRoleID.FORWARD_DEF, 0.0f, 5.0f, 3.0f, 0.0f, 0.0f, 6.0f, 0.0f);
+        foFW_TW = new FactorObject(IMatchRoleID.FORWARD_TOWING, 0.0f, 0.0f, 3.0f, 4.0f, 0.0f, 6.5f, 0.0f);
     }
 
     /**
@@ -169,56 +176,58 @@ public class FormulaFactors {
      * @param defaults the filename of the xml config
      */
     public void readFromXML(String defaults) {
-		Document doc = null;
-
-		File file = new File(getClass().getClassLoader().getResource(defaults).getFile());
-		if (file.exists()) {
-			doc = XMLManager.parseFile(file.getAbsolutePath());
-		} else {
-			HOLogger.instance().debug(getClass(), "File " + defaults + " not found");
-			try {
-				final ClassLoader loader = getClass().getClassLoader();
-				doc = XMLManager.parseFile(loader.getResourceAsStream(defaults));
-			} catch (Exception e) {
-				HOLogger.instance().debug(getClass(), "Error loading " + defaults + " as resource: " + e);
-			}
-		}
-
-		if (doc == null) {
-			return;
-		}
-
-        //Tabelle erstellen
-    	final Element root = doc.getDocumentElement();
+        Document doc;
 
         try {
-            //Daten füllen
-            foGK = readObject("KEEPER", root);
-            m_clInnenVerteidiger = readObject("DEFENSE", root);
-            m_clInnenVerteidiger_OFF = readObject("DEFENSE_O", root);
-            m_clInnenVerteidiger_AUS = readObject("DEFENSE_W", root);
-            foWB = readObject("WB", root);
-            foWB_DEF = readObject("WB_D", root);
-            foWB_OFF = readObject("WB_O", root);
-            foWB_TM = readObject("WB_M", root);
-            foIM_DEF = readObject("MD_D", root);
-            foIM = readObject("MD", root);
-            foIM_OFF = readObject("MD_O", root);
-            foIM_TW = readObject("MD_W", root);
-            m_clFluegelspieler_IN = readObject("WING_M", root);
-            m_clFluegelspieler_OFF = readObject("WING_O", root);
-            m_clFluegelspieler_DEF = readObject("WING_D", root);
-            m_clFluegelspieler = readObject("WING", root);
-            foFW_DEF = readObject("FW_D", root);
-            foFW_DEF_TECH = readObject("FW_D_TECH", root);
-            foFW = readObject("FW", root);
-            foFW_TW = readObject("FW_W", root);
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"FormulaFactor.redxmlException gefangen: " + e);
-            HOLogger.instance().log(getClass(),e);
+            File formulaFactorsFile = new File(defaults);
+            if (! formulaFactorsFile.exists()) {
+                try {
+                    formulaFactorsFile = new File(getClass().getClassLoader().getResource("prediction/defaults.xml").getFile());
+                } catch (Exception e) {
+                    HOLogger.instance().error(getClass(), "Error while loading prediction/defaults.xml: " + e);
+                }
+            }
+
+            doc = XMLManager.parseFile(formulaFactorsFile.getAbsolutePath());
+
+            //Reading xml ==========================================
+            final Element root = doc.getDocumentElement();
+
+            try {
+                foGK = readObject("KEEPER", root);
+                m_clInnenVerteidiger = readObject("DEFENSE", root);
+                m_clInnenVerteidiger_OFF = readObject("DEFENSE_O", root);
+                m_clInnenVerteidiger_AUS = readObject("DEFENSE_W", root);
+                foWB = readObject("WB", root);
+                foWB_DEF = readObject("WB_D", root);
+                foWB_OFF = readObject("WB_O", root);
+                foWB_TM = readObject("WB_M", root);
+                foIM_DEF = readObject("MD_D", root);
+                foIM = readObject("MD", root);
+                foIM_OFF = readObject("MD_O", root);
+                foIM_TW = readObject("MD_W", root);
+                m_clFluegelspieler_IN = readObject("WING_M", root);
+                m_clFluegelspieler_OFF = readObject("WING_O", root);
+                m_clFluegelspieler_DEF = readObject("WING_D", root);
+                m_clFluegelspieler = readObject("WING", root);
+                foFW_DEF = readObject("FW_D", root);
+                foFW_DEF_TECH = readObject("FW_D_TECH", root);
+                foFW = readObject("FW", root);
+                foFW_TW = readObject("FW_W", root);
+            }
+            catch (Exception e) {
+                HOLogger.instance().log(getClass(), "Error when parsing formula factors XML: " + e);
+            }
+
         }
+        catch (Exception e) {
+            HOLogger.instance().error(getClass(), "Error while loading prediction/defaults.xml");
+        }
+
         resetLastChange();
+
     }
+
 
     /**
      * Read the single skill contributions for a position.
