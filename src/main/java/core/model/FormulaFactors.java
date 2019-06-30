@@ -400,7 +400,7 @@ public class FormulaFactors {
      * set factorObject for a hoPosition
      *
      * @author Thorsten Dietz
-     * @param hoPosition
+     * @param pos
      * @param factorObject
      */
     public void setPositionFactor(byte pos, FactorObject factorObject){

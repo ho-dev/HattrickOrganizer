@@ -223,7 +223,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 								HOLogger.instance()
 										.debug(getClass(),
 												"ApplicationListener.handleQuit() fired! Quitting MacOS Application!");
-								beenden();
+								shutdown();
 							}
 							return null;
 						}
@@ -429,16 +429,15 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 
 	/**
-	 * Beendet HO
+	 * closing HO
 	 */
-	public void beenden() {
+	public void shutdown() {
 
 		CursorToolkit.startWaitCursor(getRootPane());
 		try {
 			fireApplicationClosing();
 
-			// TODO instead of calling XY.instance().save() from here, those
-			// classes should register a ApplicationClosingListener
+			// TODO: instead of calling XY.instance().save() from here, those classes should register an ApplicationClosingListener
 			HOLogger.instance().debug(getClass(), "Shutting down HO!");
 			// aktuelle UserParameter speichern
 			saveUserParameter();
@@ -854,7 +853,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			/**
 			 * Finally shutting down the application when the main window is
 			 * closed. This is initiated through the call to dispose().
-			 * System.exit is called only in the case when @see beenden() is
+			 * System.exit is called only in the case when @see shutdown() is
 			 * called in advance. This event is called when switching into full
 			 * screen mode, too.
 			 * 
@@ -873,7 +872,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			 */
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
-				beenden();
+				shutdown();
 			}
 
 		});

@@ -73,8 +73,8 @@ public class HOVerwaltung {
 		if (m_clInstance == null) {
 			m_clInstance = new HOVerwaltung();
 
-//			DBManager.instance().getFaktorenFromDB();
-			FormulaFactors.instance();
+			DBManager.instance().getFaktorenFromDB();
+
 		}
 
 		return m_clInstance;

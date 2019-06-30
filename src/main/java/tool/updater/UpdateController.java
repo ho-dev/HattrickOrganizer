@@ -182,7 +182,7 @@ public final class UpdateController {
                         .getLanguageString("ls.menu.file.update.ho"),
                 JOptionPane.INFORMATION_MESSAGE);
 
-        HOMainFrame.instance().beenden();
+        HOMainFrame.instance().shutdown();
     }
 
     public static boolean compareTwoVersions(VersionInfo a, VersionInfo b) {

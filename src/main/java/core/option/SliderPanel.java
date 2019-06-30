@@ -29,7 +29,7 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
     private float m_fFaktor = 1;
     private float m_fTextfeldFaktor = 1;
     private int m_iTextbreite = 80;
-    private int decimals = 1;
+    private int decimals = 0;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
      * @param faktor Faktor, mit dem Werte eingangs multipliziert und durch die sie ausgangs wieder
      *        dividiert werden
      * @param textfeldfaktor Faktor für die Anzeige des Sliderwerts in Textfeld
-     * @param textbreite Breite, die für das Label vorgesehen ist.
+     * @param textbreite Width intended for the label
      */
     public SliderPanel(String text, int max, int min, float faktor, float textfeldfaktor,
                        int textbreite) {
@@ -54,8 +54,7 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
 	 * @param text Text des Labels
 	 * @param max Maximaler Wert
 	 * @param min Minimaler Wert
-	 * @param faktor Faktor, mit dem Werte eingangs multipliziert und durch die sie ausgangs wieder
-	 *        dividiert werden
+	 * @param faktor formula factors are multiplied by this factor before being display and divided by it before being saved
 	 * @param textfeldfaktor Faktor für die Anzeige des Sliderwerts in Textfeld
 	 * @param textbreite Breite, die für das Label vorgesehen ist.
 	 */
@@ -93,8 +92,11 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
     }
 
     public final void stateChanged(javax.swing.event.ChangeEvent changeEvent) {
-        m_jtfTextfield.setText(core.util.Helper.round(m_jslSlider.getValue() * m_fTextfeldFaktor,decimals)
-                               + "");
+        if (decimals != 0){
+        m_jtfTextfield.setText(core.util.Helper.round(m_jslSlider.getValue() * m_fTextfeldFaktor,decimals) + "");}
+        else {
+        m_jtfTextfield.setText((int)(m_jslSlider.getValue() * m_fTextfeldFaktor) + "");
+        }
     }
 
     private void initComponents(String text, int max, int min) {
@@ -133,9 +135,15 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
         layout.setConstraints(m_jslSlider, constraints);
         add(m_jslSlider);
 
-        m_jtfTextfield = new JTextField(core.util.Helper.round(m_jslSlider
-                                                                                .getValue() * m_fTextfeldFaktor,decimals)
-                                        + "", 4);
+        if (decimals != 0){
+        m_jtfTextfield = new JTextField(core.util.Helper.round(m_jslSlider.getValue() * m_fTextfeldFaktor,decimals)
+                                        + "", 4);}
+        else
+        {
+            m_jtfTextfield = new JTextField((int)(m_jslSlider.getValue() * m_fTextfeldFaktor)
+                                                 + "", 4);
+        }
+
         m_jtfTextfield.setEditable(false);
         m_jtfTextfield.setHorizontalAlignment(SwingConstants.RIGHT);
         constraints.anchor = GridBagConstraints.EAST;
