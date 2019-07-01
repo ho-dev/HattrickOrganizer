@@ -171,15 +171,15 @@ public class MatchRating {
     }
 
     public MatchRating(Ratings ratings) {
-        this.centralAttack = ratings.getCentralAttack().get(0);
-        this.centralDefense = ratings.getCentralDefense().get(0);
-        this.leftAttack = ratings.getLeftAttack().get(0);
-        this.leftDefense = ratings.getLeftDefense().get(0);
-        this.midfield = ratings.getMidfield().get(0);
-        this.rightAttack = ratings.getRightAttack().get(0);
-        this.rightDefense = ratings.getRightDefense().get(0);
-        this.HatStats = ratings.getHatStats().get(0);
-        this.LoddarStat = ratings.getLoddarStat().get(0);
+        this.centralAttack = ratings.getCentralAttack().get(0d);
+        this.centralDefense = ratings.getCentralDefense().get(0d);
+        this.leftAttack = ratings.getLeftAttack().get(0d);
+        this.leftDefense = ratings.getLeftDefense().get(0d);
+        this.midfield = ratings.getMidfield().get(0d);
+        this.rightAttack = ratings.getRightAttack().get(0d);
+        this.rightDefense = ratings.getRightDefense().get(0d);
+        this.HatStats = ratings.getHatStats().get(0d);
+        this.LoddarStat = ratings.getLoddarStat().get(0d);
     }
 
     //~ Methods ------------------------------------------------------------------------------------
