@@ -18,13 +18,18 @@ import java.awt.event.MouseAdapter;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.ImageIcon;
 import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
 
 public final class MinuteTogglerPanel extends JPanel {
 	
-	private JLabel avg90Clock = new JLabel(ThemeManager.getScaledIcon(HOIconName.WHITE_GREEN_CLOCK, 20, 20));
-	private JLabel avg120Clock = new JLabel(ThemeManager.getScaledIcon(HOIconName.RED_WHITE_CLOCK, 20, 20));
+	private ImageIcon whiteGreenClock = ThemeManager.getScaledIcon(HOIconName.WHITE_GREEN_CLOCK, 20, 20);
+	private ImageIcon greenWhiteClock = ThemeManager.getScaledIcon(HOIconName.GREEN_WHITE_CLOCK, 20, 20);
+	private ImageIcon whiteRedClock = ThemeManager.getScaledIcon(HOIconName.WHITE_RED_CLOCK, 20, 20);
+	private ImageIcon redWhiteClock = ThemeManager.getScaledIcon(HOIconName.RED_WHITE_CLOCK, 20, 20);
+	private JLabel avg90Clock = new JLabel(whiteGreenClock);
+	private JLabel avg120Clock = new JLabel(redWhiteClock);
 	private List<JLabel> toggleKeys = new ArrayList();
 	private List<JLabel> toggleKeysET = new ArrayList();
 	private List<Double> toggleLabels = new ArrayList(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
@@ -47,6 +52,31 @@ public final class MinuteTogglerPanel extends JPanel {
 		constraints.weighty = 1;
 		constraints.gridx = 0;
 		constraints.gridy = 0;
+
+		avg90Clock.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if(current >= 0) reverseColor(toggleKeys.get(current));
+				else if(current == -2) avg120Clock.setIcon(redWhiteClock);
+				else if(current == -1) return;
+				current = -1;
+				avg90Clock.setIcon(whiteGreenClock);
+				revalidate();
+				parent.reInit();
+			}
+		});
+		avg120Clock.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if(current >= 0) reverseColor(toggleKeys.get(current));
+				else if(current == -1) avg90Clock.setIcon(greenWhiteClock);
+				else if(current == -2) return;
+				current = -2;
+				avg120Clock.setIcon(whiteRedClock);
+				revalidate();
+				parent.reInit();
+			}
+		});
 
 		JPanel clocksPanel = new JPanel();
 		clocksPanel.add(avg90Clock);
@@ -78,6 +108,8 @@ public final class MinuteTogglerPanel extends JPanel {
 				@Override
 				public void mousePressed(MouseEvent e) {
 					if(current >= 0) reverseColor(toggleKeys.get(current));
+					else if(current == -1) avg90Clock.setIcon(greenWhiteClock);
+					else if(current == -2) avg120Clock.setIcon(redWhiteClock);
 					current = labelIndex;
 					reverseColor(toggleKeys.get(labelIndex));
 					revalidate();
@@ -155,6 +187,8 @@ public final class MinuteTogglerPanel extends JPanel {
 			reverseColor(key);
 		} else {
 			keyIterator = toggleKeys.listIterator(toggleKeys.size());
+			if(current == -1) avg90Clock.setIcon(greenWhiteClock);
+			else if(current == -2) avg120Clock.setIcon(redWhiteClock);
 		  }
 		while(value != 0) {
 			if(keyIterator.hasNext()) key = keyIterator.next();
@@ -179,6 +213,8 @@ public final class MinuteTogglerPanel extends JPanel {
 			reverseColor(key);
 		} else {
 			keyIterator = toggleKeys.listIterator();
+			if(current == -1) avg90Clock.setIcon(greenWhiteClock);
+			else if(current == -2) avg120Clock.setIcon(redWhiteClock);
 		  }
 		while(value != 0) {
 			if(keyIterator.hasPrevious()) {
