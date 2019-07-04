@@ -78,6 +78,9 @@ public final class MinuteTogglerPanel extends JPanel {
 			}
 		});
 
+		avg90Clock.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Lineup_RatingsPanel_Green_Clock"));
+		avg120Clock.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Lineup_RatingsPanel_Red_Clock"));
+
 		JPanel clocksPanel = new JPanel();
 		clocksPanel.add(avg90Clock);
 		clocksPanel.add(avg120Clock);
