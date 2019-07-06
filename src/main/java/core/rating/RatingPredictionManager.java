@@ -19,6 +19,8 @@ import module.lineup.substitution.model.Substitution;
 import java.sql.Timestamp;
 import java.util.*;
 
+import static com.google.common.math.DoubleMath.fuzzyEquals;
+
 public class RatingPredictionManager {
 	//~ Class constants ----------------------------------------------------------------------------
     private static final int THISSIDE = RatingPredictionParameter.THISSIDE;
@@ -1066,8 +1068,12 @@ public class RatingPredictionManager {
 	  */
 	public static double GetStaminaEffect(double stamina, double tEnter, double tNow, boolean isTacticPressing){
 		boolean isHighStaminaPlayer;
+		double tolerance = EPSILON/10d;
 
-		if (tEnter == 45d) tEnter += 2*EPSILON;
+		// players entering just after break are no subject to break rest
+
+		if (fuzzyEquals(tEnter, 45d, tolerance) || fuzzyEquals(tEnter, 90d, tolerance)) tEnter += 2*EPSILON;
+
 		stamina -= 1;
 		double P = isTacticPressing ? 1.1 : 1.0;
 		double energyLossPerMinuteLS = -P * (5.95 - 27*stamina/70.0)/5;
@@ -1089,7 +1095,7 @@ public class RatingPredictionManager {
 
 		while(t<=tNow)
 		{
-			if ((t == (45d+EPSILON)) && (tEnter<(45d+2*EPSILON))) energy += 18.75;  // Energy recovery during half-time
+			if (fuzzyEquals(t, 45d+EPSILON, tolerance) && (tEnter<(45d+2*EPSILON))) energy += 18.75;  // Energy recovery during half-time
 			else if ((t == (90d+EPSILON)) && (tEnter<(90d+2*EPSILON))) energy += 6.25;  // Energy recovery before extra-time
 			else {
 				  if(isHighStaminaPlayer) {
@@ -1099,9 +1105,17 @@ public class RatingPredictionManager {
 					  energy = energy + energyLossPerMinuteLS;
 				  }
 			}
-			if (t==45d) t += EPSILON;
-			else if (t==(45 + EPSILON)) t += EPSILON;
-			else if (t==(45 + 2*EPSILON)) t = 46d;
+			// we move from 45 (resp. 90) -> 45 + EPSILON (resp. 90 + EPSILON) to account for break rest effect
+			if (fuzzyEquals(t, 45d, tolerance) || fuzzyEquals(t, 90d, tolerance)) t += EPSILON;
+
+			// subs set to take place at 45' and 90' are modelized to respectivly take place at 45'+2*EPSILON and 90'+2*EPSILON
+			// i.e just after the resting effect takes place
+			else if (fuzzyEquals(t, 45d+EPSILON, tolerance) || fuzzyEquals(t, 90d+EPSILON, tolerance)) t += EPSILON;
+
+			// we resume normal course, i.e. ratings are calculated by step of 1 minutes
+			else if (fuzzyEquals(t, 45d+2*EPSILON, tolerance)) t = 46d;
+			else if (fuzzyEquals(t, 90d+2*EPSILON, tolerance)) t = 91d;
+
 			else t += 1;
 		}
 		return Math.max(10, Math.min(100, energy)) / 100.0;
