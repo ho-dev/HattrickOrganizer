@@ -69,8 +69,8 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	private ColorLabelEntry m_jpErfahrungAktuellesSystem = new ColorLabelEntry("",
 			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
 			SwingConstants.CENTER);
-	private ColorLabelEntry m_jpGesamtStaerkeText = new ColorLabelEntry("",
-			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+//	private ColorLabelEntry m_jpGesamtStaerkeText = new ColorLabelEntry("",
+//			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
 	private ColorLabelEntry m_jpHatstat = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES, SwingConstants.CENTER);
 	private ColorLabelEntry m_jpLoddarstat = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
@@ -78,7 +78,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	private ColorLabelEntry m_jpTaktikStaerke = new ColorLabelEntry("",
 			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
 			SwingConstants.CENTER);
-	private RatingTableEntry m_jpGesamtStaerke = new RatingTableEntry();
+//	private RatingTableEntry m_jpGesamtStaerke = new RatingTableEntry();
 	private CBItem[] EINSTELLUNG = {
 			new CBItem(
 					HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool"),
@@ -316,11 +316,11 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			m_jpRating.calcColorBorders();
 
 			// get Total Strength
-			final double gesamtstaerke = aufstellung.getGesamtStaerke(allPlayer, true);
+//			final double gesamtstaerke = aufstellung.getGesamtStaerke(allPlayer, true);
 
 			// *2 wegen halben Sternen
-			m_jpGesamtStaerke.setRating((int) (gesamtstaerke * 2));
-			m_jpGesamtStaerkeText.setText(Helper.DEFAULTDEZIMALFORMAT.format(gesamtstaerke));
+//			m_jpGesamtStaerke.setRating((int) (gesamtstaerke * 2));
+//			m_jpGesamtStaerkeText.setText(Helper.DEFAULTDEZIMALFORMAT.format(gesamtstaerke));
 			m_jpLoddarstat.setText(Helper.round(aufstellung.getRatings().getLoddarStat().get(m_jpMinuteToggler.getCurrentKey()), 2) + "");
 			m_jpHatstat.setText(aufstellung.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()) + "");
 
@@ -651,11 +651,11 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		yPos++;
 		panel = new JPanel(new BorderLayout());
 		panel.setOpaque(true);
-		m_jpGesamtStaerke.setToolTipText(HOVerwaltung.instance().getLanguageString("Rating"));
-		panel.add(m_jpGesamtStaerke.getComponent(false), BorderLayout.CENTER);
-		m_jpGesamtStaerkeText.setFontStyle(Font.BOLD);
-		m_jpGesamtStaerkeText.setToolTipText(HOVerwaltung.instance().getLanguageString("Rating"));
-		panel.add(m_jpGesamtStaerkeText.getComponent(false), BorderLayout.EAST);
+//		m_jpGesamtStaerke.setToolTipText(HOVerwaltung.instance().getLanguageString("Rating"));
+//		panel.add(m_jpGesamtStaerke.getComponent(false), BorderLayout.CENTER);
+//		m_jpGesamtStaerkeText.setFontStyle(Font.BOLD);
+//		m_jpGesamtStaerkeText.setToolTipText(HOVerwaltung.instance().getLanguageString("Rating"));
+//		panel.add(m_jpGesamtStaerkeText.getComponent(false), BorderLayout.EAST);
 		constraints.gridx = 1;
 		constraints.gridy = yPos;
 		constraints.gridwidth = 2;

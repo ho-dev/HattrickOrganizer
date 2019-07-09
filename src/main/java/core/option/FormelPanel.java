@@ -223,37 +223,37 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
         panel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BORDER)));
 
         m_jpSpielaufbau = new SliderPanel(PlayerSkill.toString(PlayerSkill.PLAYMAKING),
-                                          100, 0, 10, 1.0f, 80);
+                                          100, 0, 100, 1.0f, 80);
         m_jpSpielaufbau.addChangeListener(this);
         panel.add(m_jpSpielaufbau);
 
         m_jpFluegelspiel = new SliderPanel(PlayerSkill.toString(PlayerSkill.WINGER),
-                                           100, 0, 10, 1.0f, 80);
+                                           100, 0, 100, 1.0f, 80);
         m_jpFluegelspiel.addChangeListener(this);
         panel.add(m_jpFluegelspiel);
 
         m_jpTorschuss = new SliderPanel(PlayerSkill.toString(PlayerSkill.SCORING),
-                                        100, 0, 10, 1.0f, 80);
+                                        100, 0, 100, 1.0f, 80);
         m_jpTorschuss.addChangeListener(this);
         panel.add(m_jpTorschuss);
 
         m_jpTorwart = new SliderPanel(PlayerSkill.toString(PlayerSkill.KEEPER),
-                                      100, 0, 10, 1.0f, 80);
+                                      100, 0, 100, 1.0f, 80);
         m_jpTorwart.addChangeListener(this);
         panel.add(m_jpTorwart);
 
         m_jpPasspiel = new SliderPanel(PlayerSkill.toString(PlayerSkill.PASSING),
-                                       100, 0, 10, 1.0f, 80);
+                                       100, 0, 100, 1.0f, 80);
         m_jpPasspiel.addChangeListener(this);
         panel.add(m_jpPasspiel);
 
         m_jpVerteidigung = new SliderPanel(PlayerSkill.toString(PlayerSkill.DEFENDING),
-                                           100, 0, 10, 1.0f, 80);
+                                           100, 0, 100, 1.0f, 80);
         m_jpVerteidigung.addChangeListener(this);
         panel.add(m_jpVerteidigung);
 
         m_jpStandard = new SliderPanel(PlayerSkill.toString(PlayerSkill.SET_PIECES),
-                                       100, 0, 10, 1.0f, 80);
+                                       100, 0, 100, 1.0f, 80);
         m_jpStandard.addChangeListener(this);
         panel.add(m_jpStandard);
 

@@ -26,7 +26,7 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
 	private JLabel m_jlLabel;
     private JSlider m_jslSlider;
     private JTextField m_jtfTextfield;
-    private float m_fFaktor = 1;
+    private float m_fFaktor;
     private float m_fTextfeldFaktor = 1;
     private int m_iTextbreite = 80;
     private int decimals = 0;
