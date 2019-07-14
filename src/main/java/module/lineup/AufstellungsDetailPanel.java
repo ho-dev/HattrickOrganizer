@@ -71,10 +71,6 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			SwingConstants.CENTER);
 //	private ColorLabelEntry m_jpGesamtStaerkeText = new ColorLabelEntry("",
 //			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
-	private ColorLabelEntry m_jpHatstat = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES, SwingConstants.CENTER);
-	private ColorLabelEntry m_jpLoddarstat = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES, SwingConstants.CENTER);
 	private ColorLabelEntry m_jpTaktikStaerke = new ColorLabelEntry("",
 			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
 			SwingConstants.CENTER);
@@ -311,6 +307,8 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			m_jpRating.setBottomRight(aufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
 			m_jpRating.setBottomCenter(aufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
 			m_jpRating.setBottomLeft(aufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setLoddar(Helper.round(aufstellung.getRatings().getLoddarStat().get(m_jpMinuteToggler.getCurrentKey()), 2));
+			m_jpRating.setHatstat(aufstellung.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
 
 			// Recalculate Borders
 			m_jpRating.calcColorBorders();
@@ -321,8 +319,6 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			// *2 wegen halben Sternen
 //			m_jpGesamtStaerke.setRating((int) (gesamtstaerke * 2));
 //			m_jpGesamtStaerkeText.setText(Helper.DEFAULTDEZIMALFORMAT.format(gesamtstaerke));
-			m_jpLoddarstat.setText(Helper.round(aufstellung.getRatings().getLoddarStat().get(m_jpMinuteToggler.getCurrentKey()), 2) + "");
-			m_jpHatstat.setText(aufstellung.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()) + "");
 
 			setStimmung(homodel.getTeam().getStimmungAsInt(), homodel.getTeam().getSubStimmung());
 			setSelbstvertrauen(homodel.getTeam().getSelbstvertrauenAsInt());
@@ -720,30 +716,6 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		m_jcbLocation.setOpaque(false);
 		layout.setConstraints(m_jcbLocation, constraints);
 		add(m_jcbLocation);
-
-		yPos++;
-		constraints.gridx = 1;
-		constraints.gridy = yPos;
-		constraints.gridwidth = 1;
-		label = new JLabel(HOVerwaltung.instance()
-				.getLanguageString("ls.match.ratingtype.hatstats"));
-		layout.setConstraints(label, constraints);
-		add(label);
-		constraints.gridx = 2;
-		constraints.gridy = yPos;
-		layout.setConstraints(m_jpHatstat.getComponent(false), constraints);
-		add(m_jpHatstat.getComponent(false));
-
-		yPos++;
-		initLabel(
-				constraints,
-				layout,
-				new JLabel(HOVerwaltung.instance().getLanguageString(
-						"ls.match.ratingtype.loddarstats")), yPos);
-		constraints.gridx = 2;
-		constraints.gridy = yPos;
-		layout.setConstraints(m_jpLoddarstat.getComponent(false), constraints);
-		add(m_jpLoddarstat.getComponent(false));
 
 		yPos++;
 		constraints.gridx = 1;
