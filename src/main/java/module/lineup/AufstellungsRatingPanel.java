@@ -41,7 +41,7 @@ import javax.swing.SwingConstants;
  */
 final class AufstellungsRatingPanel extends RasenPanel {
 
-	private static final long serialVersionUID = -8938268226990652913L;
+    private static final long serialVersionUID = -8938268226990652913L;
 
     //~ Static fields/initializers -----------------------------------------------------------------
     public static final boolean REIHENFOLGE_STURM2VERTEIDIGUNG = false;
@@ -55,35 +55,45 @@ final class AufstellungsRatingPanel extends RasenPanel {
     double topcenter;
     double topleft;
     double topright;
+    double hatstat;
+    double loddar;
 
     private ColorLabelEntry m_clBottomCenterCompare = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.CENTER);
-	private ColorLabelEntry m_clBottomCenterMain = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
-	private ColorLabelEntry m_clBottomLeftCompare = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.CENTER);
-	private ColorLabelEntry m_clBottomLeftMain = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
-	private ColorLabelEntry m_clBottomRightCompare = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.CENTER);
-	private ColorLabelEntry m_clBottomRightMain = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
-	private ColorLabelEntry m_clMiddleCompare = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.CENTER);
-	private ColorLabelEntry m_clMiddleMain = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
-	private ColorLabelEntry m_clTopCenterCompare = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.CENTER);
-	private ColorLabelEntry m_clTopCenterMain = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
-	private ColorLabelEntry m_clTopLeftCompare = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.CENTER);
-	private ColorLabelEntry m_clTopLeftMain = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
-	private ColorLabelEntry m_clTopRightCompare = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.CENTER);
-	private ColorLabelEntry m_clTopRightMain = new ColorLabelEntry("",
-			Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+    private ColorLabelEntry m_clBottomCenterMain = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+    private ColorLabelEntry m_clBottomLeftCompare = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+    private ColorLabelEntry m_clBottomLeftMain = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+    private ColorLabelEntry m_clBottomRightCompare = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+    private ColorLabelEntry m_clBottomRightMain = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+    private ColorLabelEntry m_clMiddleCompare = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+    private ColorLabelEntry m_clMiddleMain = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+    private ColorLabelEntry m_clTopCenterCompare = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+    private ColorLabelEntry m_clTopCenterMain = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+    private ColorLabelEntry m_clTopLeftCompare = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+    private ColorLabelEntry m_clTopLeftMain = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+    private ColorLabelEntry m_clTopRightCompare = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+    private ColorLabelEntry m_clTopRightMain = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+    private ColorLabelEntry m_clHatstatMain = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+    private ColorLabelEntry m_clLoddarMain = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+    private ColorLabelEntry m_clHatstatCompare = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+    private ColorLabelEntry m_clLoddarCompare = new ColorLabelEntry("",
+            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
     private Dimension GROESSE = new Dimension(Helper.calcCellWidth(80), Helper.calcCellWidth(25));
     private JLabel m_clBottomCenterText = new JLabel("", SwingConstants.LEFT);
     private JLabel m_clBottomLeftText = new JLabel("", SwingConstants.LEFT);
@@ -99,13 +109,14 @@ final class AufstellungsRatingPanel extends RasenPanel {
     private JPanel m_clTopCenterPanel = new JPanel(new BorderLayout());
     private JPanel m_clTopLeftPanel = new JPanel(new BorderLayout());
     private JPanel m_clTopRightPanel = new JPanel(new BorderLayout());
+    private JPanel m_clHTSLoddarPanel = new JPanel(new BorderLayout());
     private NumberFormat m_clFormat;
     private boolean m_bReihenfolge = REIHENFOLGE_STURM2VERTEIDIGUNG;
     private final JButton copyButton = new JButton();
     private final JButton feedbackButton = new JButton();
 
     // ~ Constructors
-	// -------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------
 
     /**
      * Creates a new instance of AufstellungsRatingPanel
@@ -147,6 +158,10 @@ final class AufstellungsRatingPanel extends RasenPanel {
         m_clBottomRightText.setText("");
         m_clBottomRightMain.clear();
         m_clBottomRightCompare.clear();
+        m_clHatstatMain.clear();
+        m_clHatstatCompare.clear();
+        m_clLoddarMain.clear();
+        m_clLoddarCompare.clear();
     }
 
     protected void setBottomCenter(double value) {
@@ -220,6 +235,18 @@ final class AufstellungsRatingPanel extends RasenPanel {
         m_clTopRightMain.setText(m_clFormat.format(value));
         m_clTopRightCompare.setSpecialNumber((float) (value - topright), false);
         topright = value;
+    }
+
+    protected void setHatstat(double value) {
+        m_clHatstatMain.setText(m_clFormat.format(value));
+        m_clHatstatCompare.setSpecialNumber((float) (value - hatstat), false);
+        hatstat = value;
+    }
+
+    protected void setLoddar(double value) {
+        m_clLoddarMain.setText(m_clFormat.format(value));
+        m_clLoddarCompare.setSpecialNumber((float) (value - loddar), false);
+        loddar = value;
     }
 
     protected void setTopRightText(String text) {
@@ -707,19 +734,73 @@ final class AufstellungsRatingPanel extends RasenPanel {
         subpanel = new JPanel(sublayout);
         subpanel.setOpaque(false);
 
+        //Dummy
+        temppanel = new JPanel();
+        temppanel.setOpaque(false);
+        subconstraints.gridx = 0;
+        subconstraints.gridy = 7;
+        subconstraints.gridwidth = 1;
+        sublayout.setConstraints(temppanel, subconstraints);
+        subpanel.add(temppanel);
 
-        //left bottom spacer
-        tempcomponent = new JLabel();
-        tempcomponent.setFont(tempcomponent.getFont().deriveFont(tempcomponent.getFont().getSize2D() - 2f));
-        tempcomponent.setPreferredSize(new Dimension(Helper.calcCellWidth(10), 1));
+        //Dummy
+        temppanel = new JPanel();
+        temppanel.setOpaque(false);
+        subconstraints.gridx = 2;
+        subconstraints.gridy = 7;
+        subconstraints.gridwidth = 1;
+        sublayout.setConstraints(temppanel, subconstraints);
+        subpanel.add(temppanel);
+
+        //HTSLoddar
+        subconstraints.weightx = 3.0;
+
+        innerpanel = new JPanel(new GridLayout(2, 2));
+        innerpanel.setBackground(Color.white);
+        innerpanel.setBorder(BorderFactory.createLineBorder(Color.black));
+
+        //Hatstats
+        temppanel = new JPanel(new GridLayout(1, 2));
+        temppanel.setOpaque(true);
+        m_clHatstatMain.setFontStyle(Font.BOLD);
+        tempcomponent = m_clHatstatMain.getComponent(false);
+        tempcomponent.setOpaque(true);
+        temppanel.add(tempcomponent);
+        tempcomponent = m_clHatstatCompare.getComponent(false);
+        tempcomponent.setOpaque(true);
+        temppanel.add(tempcomponent);
+        innerpanel.add(temppanel);
+
+        //Loddar
+        temppanel = new JPanel(new GridLayout(1, 2));
+        temppanel.setOpaque(true);
+        m_clLoddarMain.setFontStyle(Font.BOLD);
+        tempcomponent = m_clLoddarMain.getComponent(false);
+        tempcomponent.setOpaque(true);
+        temppanel.add(tempcomponent);
+        tempcomponent = m_clLoddarCompare.getComponent(false);
+        tempcomponent.setOpaque(true);
+        temppanel.add(tempcomponent);
+        innerpanel.add(temppanel);
+
+        //Main
+        m_clHTSLoddarPanel.setBackground(Color.WHITE);
+        m_clHTSLoddarPanel.add(innerpanel, BorderLayout.CENTER);
+
+        mainpanel = new JPanel(new BorderLayout());
+        mainpanel.setBackground(Color.white);
+        mainpanel.add(m_clHTSLoddarPanel, BorderLayout.CENTER);
+        mainpanel.setBorder(BorderFactory.createLineBorder(Color.black));
         subconstraints.gridx = 1;
         subconstraints.gridy = 7;
         subconstraints.gridwidth = 1;
-        sublayout.setConstraints(tempcomponent, subconstraints);
-        subpanel.add(tempcomponent);
+        sublayout.setConstraints(mainpanel, subconstraints);
+        subpanel.add(mainpanel);
 
 
         //Bottom Center
+        subconstraints.weightx = 8.0;
+
         temppanel = new JPanel(new GridLayout(1, 2));
         temppanel.setOpaque(true);
         m_clBottomCenterMain.setFontStyle(Font.BOLD);
@@ -746,7 +827,7 @@ final class AufstellungsRatingPanel extends RasenPanel {
         mainpanel.setBackground(Color.white);
         mainpanel.add(m_clBottomCenterPanel, BorderLayout.CENTER);
         mainpanel.setBorder(BorderFactory.createLineBorder(Color.white));
-        subconstraints.gridx = 2;
+        subconstraints.gridx = 3;
         subconstraints.gridy = 7;
         subconstraints.gridwidth = 3;
         sublayout.setConstraints(mainpanel, subconstraints);
@@ -754,6 +835,8 @@ final class AufstellungsRatingPanel extends RasenPanel {
 
 
         //--- BOTTOM RIGHT:   Copy Rating and Feedback button
+        subconstraints.weightx = 7.0;
+
         temppanel = new JPanel(new BorderLayout());
         temppanel.setOpaque(false);
         JPanel subButtonPanel = new JPanel();
@@ -781,7 +864,7 @@ final class AufstellungsRatingPanel extends RasenPanel {
 
         temppanel.add(subButtonPanel, BorderLayout.CENTER);
 
-        subconstraints.gridx = 5;
+        subconstraints.gridx = 6;
         subconstraints.gridy = 7;
         subconstraints.gridwidth = 1;
         sublayout.setConstraints(temppanel, subconstraints);
@@ -804,12 +887,18 @@ final class AufstellungsRatingPanel extends RasenPanel {
         m_clBottomLeftCompare.setSpecialNumber(0f, false);
         m_clBottomCenterCompare.setSpecialNumber(0f, false);
         m_clBottomRightCompare.setSpecialNumber(0f, false);
+        m_clHatstatCompare.setSpecialNumber(0f, false);
+        m_clLoddarCompare.setSpecialNumber(0f, false);
     }
 
     /**
      * Initialize all tool tips.
      */
     private void initToolTips() {
+        m_clHatstatMain.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"));
+        m_clHatstatCompare.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"));
+        m_clLoddarMain.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"));
+        m_clLoddarCompare.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"));
         if (m_bReihenfolge == REIHENFOLGE_STURM2VERTEIDIGUNG) {
             m_clTopLeftText.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence"));
             m_clTopLeftMain.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence"));
@@ -858,50 +947,56 @@ final class AufstellungsRatingPanel extends RasenPanel {
     }
 
     String getMidfieldRating() {
-    	return m_clFormat.format(middle);
+        return m_clFormat.format(middle);
     }
     String getLeftDefenseRating() {
         if (m_bReihenfolge == REIHENFOLGE_STURM2VERTEIDIGUNG) {
-        	return m_clFormat.format(topright);
+            return m_clFormat.format(topright);
         } else {
-        	return m_clFormat.format(bottomleft);
+            return m_clFormat.format(bottomleft);
         }
     }
     String getCentralDefenseRating() {
         if (m_bReihenfolge == REIHENFOLGE_STURM2VERTEIDIGUNG) {
-        	return m_clFormat.format(topcenter);
+            return m_clFormat.format(topcenter);
         } else {
-        	return m_clFormat.format(bottomcenter);
+            return m_clFormat.format(bottomcenter);
         }
     }
     String getRightDefenseRating() {
         if (m_bReihenfolge == REIHENFOLGE_STURM2VERTEIDIGUNG) {
-        	return m_clFormat.format(topleft);
+            return m_clFormat.format(topleft);
         } else {
-        	return m_clFormat.format(bottomright);
+            return m_clFormat.format(bottomright);
         }
     }
 
     String getLeftAttackRating() {
         if (m_bReihenfolge == REIHENFOLGE_STURM2VERTEIDIGUNG) {
-        	return m_clFormat.format(bottomright);
+            return m_clFormat.format(bottomright);
         } else {
-        	return m_clFormat.format(topleft);
+            return m_clFormat.format(topleft);
         }
     }
     String getCentralAttackRating() {
         if (m_bReihenfolge == REIHENFOLGE_STURM2VERTEIDIGUNG) {
-        	return m_clFormat.format(bottomcenter);
+            return m_clFormat.format(bottomcenter);
         } else {
-        	return m_clFormat.format(topcenter);
+            return m_clFormat.format(topcenter);
         }
     }
     String getRightAttackRating() {
         if (m_bReihenfolge == REIHENFOLGE_STURM2VERTEIDIGUNG) {
-        	return m_clFormat.format(bottomleft);
+            return m_clFormat.format(bottomleft);
         } else {
-        	return m_clFormat.format(topright);
+            return m_clFormat.format(topright);
         }
+    }
+    String getHatstatRating() {
+        return m_clFormat.format(hatstat);
+    }
+    String getLoddarRating() {
+        return m_clFormat.format(loddar);
     }
 
 }
