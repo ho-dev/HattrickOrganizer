@@ -1,13 +1,13 @@
 # based on information from HT forum (the unread manual)
 
 [general]
-delta                = 1.0 # fixed
+delta                = 0.75 # fixed
 trainerOff           = 1.1 # fixed
 trainerDef           = 0.9 # fixed
 trainerNeutral       = 1.02 # fixed
 confidence           = 0.0525 # fixed
 extraMulti           = 1.000 # fixed
-squareMod            = 0 # fixed
+squareMod            = 0.015 # fixed
 cubeMod              = 0 # fixed
 defleadPercentOff    = 0.000000 # fixed
 tacticLongshots      = 0.972980 # err=0.006620
