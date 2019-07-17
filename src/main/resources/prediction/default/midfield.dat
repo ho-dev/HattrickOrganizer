@@ -1,7 +1,7 @@
 # based on information from HT forum (the unread manual)
 
 [general]
-delta                = 1.0 # fixed
+delta                = 0.75 # fixed
 tacticCounter        = 0.930000 # fixed
 home                 = 1.199529 # err=0.004183
 awayDerby            = 1.113699 # err=0.007379
@@ -10,7 +10,7 @@ mots                 = 1.109650 # err=0.004748
 teamSpiritPreMulti   = 0.147832 # err=0.003676
 teamSpiritPower      = 0.417779 # err=0.005549
 extraMulti           = 1.000 # fixed
-squareMod            = 0 # fixed
+squareMod            = 0.015 # fixed
 cubeMod              = 0 # fixed
 tacticLongshots      = 0.950323 # err=0.008919
 

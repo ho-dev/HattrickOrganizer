@@ -65,7 +65,7 @@ public class FeedbackPanel extends JFrame {
             matcher = pattern.matcher(input);
             allRatings = new ArrayList<>();
             while (matcher.find()) {
-                allRatings.add(Math.max(1.0f, Double.parseDouble(matcher.group(0))));
+                allRatings.add(Double.parseDouble(matcher.group(0)));
             }
         } catch (Exception e) {
             // Error while parsing HT ratings values ============================================================

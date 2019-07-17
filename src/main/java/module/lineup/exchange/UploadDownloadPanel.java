@@ -208,15 +208,15 @@ public class UploadDownloadPanel extends LazyPanel {
 		download(false);
 
 		Ratings oRatings = HOVerwaltung.instance().getModel().getLineup().getRatings();
-		double LD = oRatings.getLeftDefense().get(0);
-		double CD = oRatings.getCentralDefense().get(0);
-		double RD = oRatings.getRightDefense().get(0);
-		double MF = oRatings.getMidfield().get(0);
-		double LA = oRatings.getLeftAttack().get(0);
-		double CA = oRatings.getCentralAttack().get(0);
-		double RA = oRatings.getRightAttack().get(0);
-		int tacticType = 0; //FIXME ?? HOVerwaltung.instance().getModel().getLineup().getTacticType();
-		int tacticSkill =0; //FIXME ?? HTmatchRating.float2HTint(HOVerwaltung.instance().getModel().getLineup().getTacticLevel(tacticType));
+		double LD = oRatings.getLeftDefense().get(0d);
+		double CD = oRatings.getCentralDefense().get(0d);
+		double RD = oRatings.getRightDefense().get(0d);
+		double MF = oRatings.getMidfield().get(0d);
+		double LA = oRatings.getLeftAttack().get(0d);
+		double CA = oRatings.getCentralAttack().get(0d);
+		double RA = oRatings.getRightAttack().get(0d);
+		int tacticType = 0;
+		int tacticSkill = 0;
 
 		MatchRating HOmatchRating = new MatchRating(LD, CD, RD, MF, LA, CA, RA, tacticType, tacticSkill);
 

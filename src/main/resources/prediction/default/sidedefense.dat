@@ -1,23 +1,23 @@
 # based on information from HT forum (the unread manual)
 
 [general]
-delta                = 1.0 # fixed
+delta                = 0.75 # fixed
 trainerOff           = 0.9 # fixed
 trainerDef           = 1.15 # fixed
 trainerNeutral       = 1.02 # fixed
 tacticCreative       = 0.930663 # err=0.004241
 tacticAIM            = 0.853911 # err=0.003586
 extraMulti           = 1.000 # fixed
-squareMod            = 0 # fixed
+squareMod            = 0.015 # fixed
 cubeMod              = 0 # fixed
 defleadPercentDef    = 0.000000 # fixed
 pullback             = 0.125
 
 [defending_allsides]
-keeper     = 0.071047184025
+keeper     = 0.069125
 
 [goalkeeping_allsides]
-keeper     = 0.173355129021
+keeper     = 0.149904761904762
 
 [defending_thisside]
 CD_norm    = 0.147778142772
