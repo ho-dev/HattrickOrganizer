@@ -7,18 +7,21 @@ import core.gui.comp.entry.SpielerLabelEntry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.util.Helper;
 
-import java.awt.Component;
 
 import javax.swing.JList;
+import java.awt.*;
 
 public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 
+	protected static int PLAYER_COMBO_HEIGHT = Helper.calcCellWidth(35);
 	public static javax.swing.JLabel m_jlLeer = new javax.swing.JLabel(" ");
 	public SpielerLabelEntry m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true);
 	private Player m_clPlayer;
 	private String m_sText;
 	private float m_fPositionsBewertung;
+	private boolean m_bMultiLine = false;
 
 	/**
 	 * Creates a new SpielerCBItem object.
@@ -31,14 +34,15 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 		m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true);
 	}
 
-	public SpielerCBItem(String text, float poswert, Player player, boolean useCustomText) {
+	public SpielerCBItem(String text, float poswert, Player player, boolean useCustomText, boolean multiLine) {
 		m_sText = text;
 		m_clPlayer = player;
 		m_fPositionsBewertung = poswert;
+		m_bMultiLine = multiLine;
 		if (useCustomText == true) {
-			m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true, true, text);
+			m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true, true, text, m_bMultiLine);
 		} else {
-			m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true);
+			m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true, false, "", m_bMultiLine);
 		}
 	}
 
@@ -51,8 +55,14 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 					.getPositionBySpielerId(player.getSpielerID()), getPositionsBewertung(),
 					m_sText);
 
+			if (m_bMultiLine) {
+				m_clEntry.getComponent(isSelected).setPreferredSize(new Dimension(m_clEntry.getComponent(isSelected).getPreferredSize().width, PLAYER_COMBO_HEIGHT));
+			}
 			return m_clEntry.getComponent(isSelected);
 		} else {
+			if (m_bMultiLine) {
+				m_jlLeer.setPreferredSize(new Dimension(m_jlLeer.getPreferredSize().width, PLAYER_COMBO_HEIGHT));
+			}
 			m_jlLeer.setOpaque(true);
 			m_jlLeer.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG
 					: ColorLabelEntry.BG_STANDARD);

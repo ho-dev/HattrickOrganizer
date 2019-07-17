@@ -44,15 +44,15 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
 	private static final long serialVersionUID = 3121389904504282953L;
 
 	protected static int PLAYER_POSITION_PANEL_WIDTH = Helper.calcCellWidth(160);
-	protected static int PLAYER_POSITION_PANEL_HEIGHT_FULL = Helper.calcCellWidth(80);
+	protected static int PLAYER_POSITION_PANEL_HEIGHT_FULL = Helper.calcCellWidth(95);
 	// Used for positions with no tactics box
-	protected static int PLAYER_POSITION_PANEL_HEIGHT_REDUCED = Helper.calcCellWidth(50);
+	protected static int PLAYER_POSITION_PANEL_HEIGHT_REDUCED = Helper.calcCellWidth(70);
 
 
 	protected static int MINI_PLAYER_POSITION_PANEL_WIDTH = Helper.calcCellWidth(120);
 	protected static int MINI_PLAYER_POSITION_PANEL_HEIGHT = Helper.calcCellWidth(32);
 
-	private static SpielerCBItem m_clNullSpieler = new SpielerCBItem("", 0f, null, true);
+	private static SpielerCBItem m_clNullSpieler = new SpielerCBItem("", 0f, null, false, true);
 
     //~ Instance fields ----------------------------------------------------------------------------
     private final JComboBox m_jcbPlayer = new JComboBox();
@@ -60,7 +60,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     private final JLabel m_jlPosition = new JLabel();
     //Für Minimized
     private final JLabel m_jlPlayer = new JLabel();
-    private final SpielerCBItem m_clSelectedPlayer = new SpielerCBItem("", 0f, null, true);
+    private final SpielerCBItem m_clSelectedPlayer = new SpielerCBItem("", 0f, null, false, true);
     private Updateable m_clUpdater;
     private SpielerCBItem[] m_clCBItems = new SpielerCBItem[0];
     private boolean m_bMinimize;
@@ -190,7 +190,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             constraints.gridy = 1;
             constraints.gridwidth = 2;
             m_jcbPlayer.addFocusListener(this);
-            m_jcbPlayer.setMaximumRowCount(15);
+            m_jcbPlayer.setMaximumRowCount(10);
             m_jcbPlayer.setRenderer(new SpielerCBItemRenderer());
             jlp.add(m_jcbPlayer, constraints, 1);
 
@@ -397,7 +397,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                 }
                 //Create new
                 else {
-                    tempCB[i] = new SpielerCBItem("", 0f, null, true);
+                    tempCB[i] = new SpielerCBItem("", 0f, null, true, true);
 
                     //HOLogger.instance().log(getClass(), "Create new SpielerCBItem " + this.m_iPositionsID );
                 }
@@ -486,7 +486,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                     tempCB[i] = m_clCBItems[i];}
                 //Create new
                 else {
-                    tempCB[i] = new SpielerCBItem("", 0f, null, true);
+                    tempCB[i] = new SpielerCBItem("", 0f, null, true, true);
                 }
             }
 
