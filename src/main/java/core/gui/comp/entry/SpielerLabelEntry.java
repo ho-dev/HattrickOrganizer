@@ -47,7 +47,6 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private final JLabel m_jlSpezialitaet	= new JLabel();
     private final JLabel m_jlWeatherEffect	= new JLabel();
     private final JLabel m_jlTrainUp      	= new JLabel();
-    private final JLabel m_jlTrikot     	= new JLabel();
     private MatchRoleID m_clCurrentPlayerPosition;
     private boolean m_bShowTrikot;
     private boolean m_bShowWeatherEffect = true;
@@ -192,14 +191,6 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             constraints.gridx = 3;
         }
         else {
-
-            // Trikot
-            m_jlTrikot.setBackground(ColorLabelEntry.BG_STANDARD);
-            m_jlTrikot.setOpaque(false);
-            m_jlTrikot.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
-            spezPanel.add(m_jlTrikot);
-
-
             //Training
             m_jlTrainUp.setBackground(ColorLabelEntry.BG_STANDARD);
             m_jlTrainUp.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -248,21 +239,13 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             m_jlName.setForeground(getForegroundForSpieler(m_clPlayer));
 
             //Trikot
-            //&& m_clSpielerPositionAktuell != null )
-            if (m_bMultiLine) {
-                m_jlTrikot.setIcon(ImageUtilities.getImage4Position(m_clCurrentPlayerPosition,
-                        m_clPlayer
-                                .getTrikotnummer()));
-            }
-            else if (m_bShowTrikot) {
+            if (m_bShowTrikot) {
                 m_jlName.setIcon(ImageUtilities.getImage4Position(m_clCurrentPlayerPosition,
                                                                                      m_clPlayer
                                                                                      .getTrikotnummer()));
-            }
-
-            if (m_bMultiLine || m_bShowTrikot) {
                 showGroupIcon();
             }
+
 
             //            else if ( m_bShowTrikot )
             //            {
@@ -282,18 +265,10 @@ public final class SpielerLabelEntry implements IHOTableEntry {
 
             //Trikot
             //&& m_clSpielerPositionAktuell != null )
-            if (m_bMultiLine) {
-                m_jlTrikot.setIcon(ImageUtilities.getImage4Position(m_clCurrentPlayerPosition,
-                        m_clPlayer
-                                .getTrikotnummer()));
-            }
-            else if (m_bShowTrikot) {
+            if (m_bShowTrikot) {
                 m_jlName.setIcon(ImageUtilities.getImage4Position(m_clCurrentPlayerPosition,
                                                                                      m_clPlayer
                                                                                      .getTrikotnummer()));
-            }
-
-            if (m_bMultiLine || m_bShowTrikot) {
                 showGroupIcon();
             }
 
@@ -328,16 +303,11 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         	}
 
             //Trikot
-            //&& m_clSpielerPositionAktuell != null )
-            if (m_bMultiLine) {
-                m_jlTrikot.setIcon(ImageUtilities.getImage4Position(m_clCurrentPlayerPosition, m_clPlayer.getTrikotnummer()));;
-            }
-            else if (m_bShowTrikot) {
-                m_jlName.setIcon(ImageUtilities.getImage4Position(m_clCurrentPlayerPosition, m_clPlayer.getTrikotnummer()));;
-            }
-            if (m_bMultiLine || m_bShowTrikot) {
+            if (m_bShowTrikot) {
+                m_jlName.setIcon(ImageUtilities.getImage4Position(m_clCurrentPlayerPosition, m_clPlayer.getTrikotnummer()));
                 showGroupIcon();
             }
+
             updateDisplay(m_clPlayer);
 
         } else {
