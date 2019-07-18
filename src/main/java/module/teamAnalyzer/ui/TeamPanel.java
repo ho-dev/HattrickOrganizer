@@ -190,7 +190,7 @@ public class TeamPanel extends JPanel {
                 	spotLineup.setStatus(PlayerDataManager.SUSPENDED);
                 }
                 spotLineup.setSpot(spot);
-                spotLineup.setTactics(new ArrayList<TacticReport>());
+                spotLineup.setTactics(new ArrayList<>());
                 pp.reload(spotLineup);
                 
             } else {
