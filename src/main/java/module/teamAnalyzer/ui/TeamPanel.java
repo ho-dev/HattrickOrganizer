@@ -167,9 +167,9 @@ public class TeamPanel extends JPanel {
     private void setMyTeam() {
         //List<UserTeamPlayerPanel> list = new ArrayList<UserTeamPlayerPanel>();
     	HashMap<Integer, UserTeamPlayerPanel> list = new HashMap<Integer, UserTeamPlayerPanel>();
-    	Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
+    	Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
-        for (int spot = IMatchRoleID.startLineup; spot < IMatchRoleID.startReserves; spot++) {
+        for (int spot : IMatchRoleID.aFieldMatchRoleID) {
             Player player = lineup.getPlayerByPositionID(spot);
             UserTeamPlayerPanel pp = new UserTeamPlayerPanel();
 
@@ -216,13 +216,13 @@ public class TeamPanel extends JPanel {
         fillPanel(lineupPanel.getMyTeam().getCentralMidfieldPanel(), list.get(IMatchRoleID.centralInnerMidfield));
         fillPanel(lineupPanel.getMyTeam().getMiddleCentralDefenderPanel(), list.get(IMatchRoleID.middleCentralDefender));
         
-        lineupPanel.getMyTeam().setLeftAttack(convertRating(lineup.getRatings().getLeftAttack().get(0))); //FIXME: for compatibility here we should set 90 minutea average rating....
-        lineupPanel.getMyTeam().setLeftDefence(convertRating(lineup.getRatings().getLeftDefense().get(0))); //FIXME: for compatibility here we should set 90 minutea average rating....
-        lineupPanel.getMyTeam().setRightAttack(convertRating(lineup.getRatings().getRightAttack().get(0))); //FIXME: for compatibility here we should set 90 minutea average rating....
-        lineupPanel.getMyTeam().setRightDefence(convertRating(lineup.getRatings().getRightDefense().get(0))); //FIXME: for compatibility here we should set 90 minutea average rating....
-        lineupPanel.getMyTeam().setMiddleAttack(convertRating(lineup.getRatings().getCentralAttack().get(0))); //FIXME: for compatibility here we should set 90 minutea average rating....
-        lineupPanel.getMyTeam().setMiddleDefence(convertRating(lineup.getRatings().getCentralDefense().get(0))); //FIXME: for compatibility here we should set 90 minutea average rating....
-        lineupPanel.getMyTeam().setMidfield(convertRating(lineup.getRatings().getMidfield().get(0)));//FIXME: for compatibility here we should set 90 minutea average rating....
+        lineupPanel.getMyTeam().setLeftAttack(convertRating(lineup.getRatings().getLeftAttack().get(-90d)));
+        lineupPanel.getMyTeam().setLeftDefence(convertRating(lineup.getRatings().getLeftDefense().get(-90d)));
+        lineupPanel.getMyTeam().setRightAttack(convertRating(lineup.getRatings().getRightAttack().get(-90d)));
+        lineupPanel.getMyTeam().setRightDefence(convertRating(lineup.getRatings().getRightDefense().get(-90d)));
+        lineupPanel.getMyTeam().setMiddleAttack(convertRating(lineup.getRatings().getCentralAttack().get(-90d)));
+        lineupPanel.getMyTeam().setMiddleDefence(convertRating(lineup.getRatings().getCentralDefense().get(-90d)));
+        lineupPanel.getMyTeam().setMidfield(convertRating(lineup.getRatings().getMidfield().get(-90d)));
     }
 
     private String getPlayerName(String name) {
