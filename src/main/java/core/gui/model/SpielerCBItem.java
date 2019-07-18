@@ -60,9 +60,6 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 			}
 			return m_clEntry.getComponent(isSelected);
 		} else {
-			if (m_bMultiLine) {
-				m_jlLeer.setPreferredSize(new Dimension(m_jlLeer.getPreferredSize().width, PLAYER_COMBO_HEIGHT));
-			}
 			m_jlLeer.setOpaque(true);
 			m_jlLeer.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG
 					: ColorLabelEntry.BG_STANDARD);
