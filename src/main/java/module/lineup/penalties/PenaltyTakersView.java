@@ -399,79 +399,43 @@ public class PenaltyTakersView extends JPanel {
 			}
 		});
 
-		this.takersTable.getModel().addTableModelListener(new TableModelListener() {
+		this.takersTable.getModel().addTableModelListener(arg0 -> clearButton.setEnabled(takersTable.getRowCount() > 0));
 
-			@Override
-			public void tableChanged(TableModelEvent arg0) {
-				clearButton.setEnabled(takersTable.getRowCount() > 0);
+		this.autoButton.addActionListener(e -> bestFit());
+
+		this.clearButton.addActionListener(e -> reset());
+
+		this.moveUpButton.addActionListener(arg0 -> moveTaker(Move.UP));
+
+		this.moveDownButton.addActionListener(arg0 -> moveTaker(Move.DOWN));
+
+		this.addToTakersButton.addActionListener(e -> {
+			List<PenaltyTaker> players = getSelected(playersTable);
+			for (PenaltyTaker player : players) {
+				getPlayersTableModel().remove(player);
+				getTakersTableModel().add(player);
 			}
+			selectTakers(players);
 		});
 
-		this.autoButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				bestFit();
-			}
-		});
-
-		this.clearButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				reset();
-			}
-		});
-
-		this.moveUpButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				moveTaker(Move.UP);
-			}
-		});
-
-		this.moveDownButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				moveTaker(Move.DOWN);
-			}
-		});
-
-		this.addToTakersButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				List<PenaltyTaker> players = getSelected(playersTable);
-				for (PenaltyTaker player : players) {
-					getPlayersTableModel().remove(player);
-					getTakersTableModel().add(player);
+		this.removeFromTakersButton.addActionListener(e -> {
+			List<PenaltyTaker> takers = getSelected(takersTable);
+			List<PenaltyTaker> activetakers = new ArrayList<>();
+			int iTaker;
+			for (PenaltyTaker taker : takers) {
+				getTakersTableModel().remove(taker);
+				iTaker = getInLineupVal(taker.getPlayer()).intValue();
+				if ( (showAnfangsElfCheckBox.isSelected() && iTaker == 1) ||
+					 (showReserveCheckBox.isSelected() && iTaker == 2) ||
+						(showOthersCheckBox.isSelected() && iTaker == 3))
+				{getPlayersTableModel().add(taker);
+				 activetakers.add(taker);
 				}
-				selectTakers(players);
 			}
+			selectPlayers(activetakers);
 		});
 
-		this.removeFromTakersButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				List<PenaltyTaker> takers = getSelected(takersTable);
-				for (PenaltyTaker taker : takers) {
-					getTakersTableModel().remove(taker);
-					getPlayersTableModel().add(taker);
-				}
-				selectPlayers(takers);
-			}
-		});
-
-		ItemListener filterCheckBoxListener = new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				getPlayersTableModel().fireTableDataChanged();
-			}
-		};
+		ItemListener filterCheckBoxListener = e -> getPlayersTableModel().fireTableDataChanged();
 		this.showAnfangsElfCheckBox.addItemListener(filterCheckBoxListener);
 		this.showReserveCheckBox.addItemListener(filterCheckBoxListener);
 		this.showOthersCheckBox.addItemListener(filterCheckBoxListener);
