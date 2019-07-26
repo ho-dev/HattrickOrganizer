@@ -71,6 +71,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.text.DefaultEditorKit;
 
 /**
  * The Main HO window
@@ -778,6 +779,17 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 					UIManager.setLookAndFeel(laf);
 				}
 			}
+			
+			// #177 Standard shortcuts for copy/cut/paste don't work in MacOSX if LookAndFeel changes
+			if (succ && System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH)
+						.startsWith("mac")) {
+				InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
+				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
+				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
+				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
+				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
+			}
+			
 			SwingUtilities.updateComponentTreeUI(this);
 		} catch (Exception e) {
 			HOLogger.instance().log(HOMainFrame.class, e);
