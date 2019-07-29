@@ -111,6 +111,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// All Player Positions Inform First 11
 		List<Player> selectedPlayers = new ArrayList<>();
+		List<Player> assitPlayers = new ArrayList<>();
 		List<Player> allPlayers = HOVerwaltung.instance().getModel().getAllSpieler();
 		List<Player> filteredPlayers = new ArrayList<>();
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
@@ -119,6 +120,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 			// the first 11
 			if (lineup.isPlayerInStartingEleven(player.getSpielerID())) {
 				selectedPlayers.add(player);
+			}
+			else if (lineup.isSpielerInReserve(player.getSpielerID())) {
+				assitPlayers.add(player);
 			}
 		}
 
@@ -145,36 +149,36 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 			}
 		}
 
-		m_clKeeper.refresh(filteredPlayers);
-		m_clLeftBack.refresh(filteredPlayers);
-		m_clLeftCentralDefender.refresh(filteredPlayers);
-		m_clMiddleCentralDefender.refresh(filteredPlayers);
-		m_clRightCentralDefender.refresh(filteredPlayers);
-		m_clRightBack.refresh(filteredPlayers);
-		m_clLeftWinger.refresh(filteredPlayers);
-		m_clLeftInnerMidfielder.refresh(filteredPlayers);
-		m_clCentralInnerMidfielder.refresh(filteredPlayers);
-		m_clRightInnerMidfielder.refresh(filteredPlayers);
-		m_clRightWinger.refresh(filteredPlayers);
-		m_clLeftForward.refresh(filteredPlayers);
-		m_clCentralForward.refresh(filteredPlayers);
-		m_clRightForward.refresh(filteredPlayers);
-		m_clSubstKeeper1.refresh(filteredPlayers);
+		m_clKeeper.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clLeftBack.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clLeftCentralDefender.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clMiddleCentralDefender.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clRightCentralDefender.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clRightBack.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clLeftWinger.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clLeftInnerMidfielder.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clCentralInnerMidfielder.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clRightInnerMidfielder.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clRightWinger.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clLeftForward.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clCentralForward.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clRightForward.refresh(filteredPlayers, selectedPlayers, assitPlayers);
+		m_clSubstKeeper1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
 		m_clSubstKeeper2.refresh2(filteredPlayers, m_clSubstKeeper1.getPlayerId());
-		m_clSubstCD1.refresh(filteredPlayers);
+		m_clSubstCD1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
 	    m_clSubstCD2.refresh2(filteredPlayers, m_clSubstCD1.getPlayerId());
-		m_clSubstWB1.refresh(filteredPlayers);
+		m_clSubstWB1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
 		m_clSubstWB2.refresh2(filteredPlayers, m_clSubstWB1.getPlayerId());
-		m_clSubstIM1.refresh(filteredPlayers);
+		m_clSubstIM1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
 		m_clSubstIM2.refresh2(filteredPlayers, m_clSubstIM1.getPlayerId());
-		m_clSubstFwd1.refresh(filteredPlayers);
+		m_clSubstFwd1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
 		m_clSubstFwd2.refresh2(filteredPlayers, m_clSubstFwd1.getPlayerId());
-		m_clSubstWI1.refresh(filteredPlayers);
+		m_clSubstWI1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
 		m_clSubstWI2.refresh2(filteredPlayers, m_clSubstWI1.getPlayerId());
-		m_clSubstXtr1.refresh(filteredPlayers);
+		m_clSubstXtr1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
 		m_clSubstXtr2.refresh2(filteredPlayers, m_clSubstXtr1.getPlayerId());
-		m_clSetPieceTaker.refresh(selectedPlayers);
-	 	m_clCaptain.refresh(selectedPlayers);
+		m_clSetPieceTaker.refresh(selectedPlayers, null, null);
+	 	m_clCaptain.refresh(selectedPlayers, null, null);
 
 		// Check
 		lineup.checkAufgestellteSpieler();

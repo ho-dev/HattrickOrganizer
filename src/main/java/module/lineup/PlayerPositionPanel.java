@@ -278,74 +278,101 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         }
     }
 
-    /**
+     /**
      * Update the list of player in the ComboBox except for backup
      */
-    public void refresh(List<Player> player) {
+    public void refresh(List<Player> player, List<Player> selectPlayer, List<Player> assitPlayer) {
         Player aktuellerPlayer = null;
-		playerId = -1;
+        playerId = -1;
         if (m_iPositionID == IMatchRoleID.setPieces) {
             aktuellerPlayer = HOVerwaltung.instance().getModel().getSpieler(HOVerwaltung.instance()
-                                                                                         .getModel()
-                                                                                         .getLineupWithoutRatingRecalc()
-                                                                                         .getKicker());
-			if (aktuellerPlayer !=null) {
-				playerId = aktuellerPlayer.getSpielerID();
-			}
-			tacticOrder=-1;
+                    .getModel()
+                    .getLineupWithoutRatingRecalc()
+                    .getKicker());
+            if (aktuellerPlayer !=null) {
+                playerId = aktuellerPlayer.getSpielerID();
+            }
+            tacticOrder=-1;
 
-			// Filter keeper from the player vector (can't be sp taker)
-			// Make sure the incoming player list is not modified, it
-			// seems to visit the captain position later.
+            // Filter keeper from the player vector (can't be sp taker)
+            // Make sure the incoming player list is not modified, it
+            // seems to visit the captain position later.
 
-			Player keeper = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().
-					getPlayerByPositionID(IMatchRoleID.keeper);
-			if (keeper != null) {
-				Vector<Player> tmpPlayer = new Vector<Player>(player.size() -1);
-				for (int i = 0; i < player.size(); i++) {
-					if ( keeper.getSpielerID() != player.get(i).getSpielerID()) {
-						tmpPlayer.add(player.get(i));
-					}
-				}
-				player = tmpPlayer;
-			}
+            Player keeper = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().
+                    getPlayerByPositionID(IMatchRoleID.keeper);
+            if (keeper != null) {
+                Vector<Player> tmpPlayer = new Vector<Player>(player.size() -1);
+                for (int i = 0; i < player.size(); i++) {
+                    if ( keeper.getSpielerID() != player.get(i).getSpielerID()) {
+                        tmpPlayer.add(player.get(i));
+                    }
+                }
+                player = tmpPlayer;
+            }
         } else if (m_iPositionID == IMatchRoleID.captain) {
             aktuellerPlayer = HOVerwaltung.instance().getModel().getSpieler(HOVerwaltung.instance()
-                                                                                         .getModel()
-                                                                                         .getLineupWithoutRatingRecalc()
-                                                                                         .getKapitaen());
-			if (aktuellerPlayer !=null) {
-				playerId = aktuellerPlayer.getSpielerID();
-			}
-			tacticOrder=-1;
+                    .getModel()
+                    .getLineupWithoutRatingRecalc()
+                    .getKapitaen());
+            if (aktuellerPlayer !=null) {
+                playerId = aktuellerPlayer.getSpielerID();
+            }
+            tacticOrder=-1;
         } else {
             //Get currently setup player
             final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
-                                                         .getPositionById(m_iPositionID);
+                    .getPositionById(m_iPositionID);
 
             if (position != null) {
                 aktuellerPlayer = HOVerwaltung.instance().getModel().getSpieler(position
-                                                                                 .getSpielerId());
+                        .getSpielerId());
 
-				if (aktuellerPlayer !=null) {
-					m_jcbPlayer.setEnabled(true); // To be sure
-					playerId = aktuellerPlayer.getSpielerID();
-				} else {
-					// We want to disable the player selection box if there is already 11 players on the field and this is an on field position.
-					if ((HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().hasFreePosition() == false) &&
-							(m_iPositionID >= IMatchRoleID.keeper) && (m_iPositionID < IMatchRoleID.startReserves)) {
-						m_jcbPlayer.setEnabled(false);
-					} else {
-						// And enable empty positions if there is room in the lineup
-						m_jcbPlayer.setEnabled(true);
-					}
-				}
-				tacticOrder = position.getTaktik();
+                if (aktuellerPlayer !=null) {
+                    m_jcbPlayer.setEnabled(true); // To be sure
+                    playerId = aktuellerPlayer.getSpielerID();
+                } else {
+                    // We want to disable the player selection box if there is already 11 players on the field and this is an on field position.
+                    if ((HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().hasFreePosition() == false) &&
+                            (m_iPositionID >= IMatchRoleID.keeper) && (m_iPositionID < IMatchRoleID.startReserves)) {
+                        m_jcbPlayer.setEnabled(false);
+                    } else {
+                        // And enable empty positions if there is room in the lineup
+                        m_jcbPlayer.setEnabled(true);
+                    }
+                }
+                tacticOrder = position.getTaktik();
                 setTaktik(position.getTaktik(), aktuellerPlayer);
             }
         }
 
         setSpielerListe(player, aktuellerPlayer);
+
+        if (selectPlayer != null && assitPlayer != null) {
+            for (int i = 0; i < m_jcbPlayer.getModel().getSize(); i++) {
+                Object obj = m_jcbPlayer.getItemAt(i);
+                boolean isInLineup = false;
+                if (obj instanceof SpielerCBItem) {
+                    SpielerCBItem cbitem = (SpielerCBItem) obj;
+                    if (cbitem.getSpieler() != null) {
+                        for (int j = 0; j < selectPlayer.size(); j++) {
+                            if (cbitem.getSpieler().getSpielerID() == selectPlayer.get(j).getSpielerID()) {
+                                cbitem.getEntry().setIsSelect(true);
+                                isInLineup = true;
+                                break;
+                            }
+                        }
+                        if (!isInLineup) {
+                            for (int j = 0; j < assitPlayer.size(); j++) {
+                                if (cbitem.getSpieler().getSpielerID() == assitPlayer.get(j).getSpielerID()) {
+                                    cbitem.getEntry().setIsAssit(true);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         initLabel();
 
