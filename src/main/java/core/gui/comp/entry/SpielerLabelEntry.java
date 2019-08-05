@@ -54,6 +54,8 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private String m_sCustomNameString = "";
     private float m_fPositionsbewertung;
     private boolean m_bMultiLine = false;
+    private boolean m_bSelect = false;
+    private boolean m_bAssit = false;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -96,11 +98,25 @@ public final class SpielerLabelEntry implements IHOTableEntry {
      * Gibt eine passende Komponente zurück
      */
 	public final JComponent getComponent(boolean isSelected) {
-    	 m_clComponent.setBackground(isSelected?HODefaultTableCellRenderer.SELECTION_BG:ColorLabelEntry.BG_STANDARD);
+	    if (m_bSelect)
+            m_clComponent.setBackground(Color.LIGHT_GRAY);
+	    else if (m_bAssit)
+            m_clComponent.setBackground(new Color (220,220,220));
+	    else
+    	    m_clComponent.setBackground(isSelected?HODefaultTableCellRenderer.SELECTION_BG:ColorLabelEntry.BG_STANDARD);
          m_clComponent.setToolTipText(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getText());
     	 m_jlName.setForeground(isSelected?HODefaultTableCellRenderer.SELECTION_FG:getForegroundForSpieler(m_clPlayer));
     	 return m_clComponent;
     }
+
+    public void setIsSelect(boolean isSelect)  {
+        m_bSelect = isSelect;
+    }
+
+    public void setIsAssit(boolean isSelect)  {
+        m_bAssit = isSelect;
+    }
+
 
     public final Player getSpieler() {
         return m_clPlayer;

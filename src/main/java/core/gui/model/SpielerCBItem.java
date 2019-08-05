@@ -67,6 +67,10 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 		}
 	}
 
+	public SpielerLabelEntry getEntry() {
+		return m_clEntry;
+	}
+
 	public final void setPositionsBewertung(float m_sPositionsBewertung) {
 		this.m_fPositionsBewertung = m_sPositionsBewertung;
 	}
