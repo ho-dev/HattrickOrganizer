@@ -241,14 +241,14 @@ public class CopyListener implements ActionListener {
 				"[/th][th align=center]"+HOVerwaltung.instance().getLanguageString("Mitte") +
 				"[/th][th align=center]"+HOVerwaltung.instance().getLanguageString("Links")+"[/th][/tr]" + LF;
 		String defence = "[tr][td align=center]" + rightWB + "[/td]" + "[td align=center]" + rightCD + "[/td]" + "[td align=center]" + middleCD + "[/td]" +
-				"[td align=center]" + leftCD + "[/td]" + "[td align=center]" + leftWB + "[/td]" + "[td valign=middle]"+lineup.getRightDefenseRating() +
-				"[/td][td valign=middle]"+lineup.getCentralDefenseRating() + "[/td][td valign=middle]"+lineup.getLeftDefenseRating() + "[/td][/tr]" + LF;
+				"[td align=center]" + leftCD + "[/td]" + "[td align=center]" + leftWB + "[/td]" + "[td align=center]"+lineup.getRightDefenseRating() +
+				"[/td][td align=center]"+lineup.getCentralDefenseRating() + "[/td][td align=center]"+lineup.getLeftDefenseRating() + "[/td][/tr]" + LF;
 		String middle = "[tr][td align=center]" + rightW + "[/td]" + "[td align=center]" + rightIM + "[/td]" + "[td align=center]" + middleIM + "[/td]" +
-				"[td align=center]" + leftIM + "[/td]" + "[td align=center]" + leftW + "[/td]" + "[td][/td]" + "[td valign=middle]" + 
+				"[td align=center]" + leftIM + "[/td]" + "[td align=center]" + leftW + "[/td]" + "[td][/td]" + "[td align=center]" +
 				lineup.getMidfieldRating()+ "[/td][td]" + "[/td][/tr]" + LF;
 		String attack = "[tr][td][/td][td align=center]" + rightFW + "[/td]" + "[td align=center]" + middleFW + "[/td]" + "[td align=center]" + leftFW + "[/td]" +
-				"[td][/td]" + "[td valign=middle]"+lineup.getRightAttackRating() + "[/td][td valign=middle]"+lineup.getCentralAttackRating() +
-				"[/td][td valign=middle]"+lineup.getLeftAttackRating() + "[/td][/tr]" + LF + "[/table]";
+				"[td][/td]" + "[td align=center]"+lineup.getRightAttackRating() + "[/td][td align=center]"+lineup.getCentralAttackRating() +
+				"[/td][td align=center]"+lineup.getLeftAttackRating() + "[/td][/tr]" + LF + "[/table]";
 		result = header + keeper + defence + middle + attack;
 		return result;
 	}
