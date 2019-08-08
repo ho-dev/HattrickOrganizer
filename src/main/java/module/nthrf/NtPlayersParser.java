@@ -33,9 +33,10 @@ class NtPlayersParser {
 		try {
 			for (Iterator<Long> i = playerIds.iterator(); i.hasNext(); ) {
 				Long playerId = i.next();
-				String xmlData = dh.getHattrickXMLFile("/chppxml.axd?file=playerdetails&playerId=" + playerId);
-				Element ele = XMLManager.parseString(xmlData).getDocumentElement();
-				ele = (Element)ele.getElementsByTagName("Player").item(0);
+				String xmlData = dh.getHattrickXMLFile("/chppxml.axd?file=playerdetails&version=2.7&playerId=" + playerId);
+				Document doc = XMLManager.parseString(xmlData);
+				Element root = doc.getDocumentElement();
+				Element ele = (Element)root.getElementsByTagName("Player").item(0);
                 players.add(createPlayer(ele, countryMapping));
             }
 		} catch (Exception e) {
@@ -50,7 +51,7 @@ class NtPlayersParser {
 
 		tmp = (Element) ele.getElementsByTagName("PlayerID").item(0);
 		player.setPlayerId(Long.parseLong(tmp.getFirstChild().getNodeValue()));
-		tmp = (Element) ele.getElementsByTagName("PlayerName").item(0);
+		tmp = (Element) ele.getElementsByTagName("LastName").item(0);
 		player.setName(tmp.getFirstChild().getNodeValue());
 
 		try {
@@ -75,7 +76,7 @@ class NtPlayersParser {
 		tmp = (Element) ele.getElementsByTagName("Specialty").item(0);
 		player.setSpeciality(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
 		tmp = (Element) ele.getElementsByTagName("TransferListed").item(0);
-		player.setTranferlisted(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
+		player.setTranferlisted(tmp.getFirstChild().getNodeValue().equals("True"));
 		tmp = (Element) ele.getElementsByTagName("NativeLeagueID").item(0);
 		int nativeLeagueId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		player.setNativeLeagueId(nativeLeagueId);

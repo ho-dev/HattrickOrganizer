@@ -198,8 +198,14 @@ public class HRFStringParser {
 				// Xtra
 				else if (entity.toString().equalsIgnoreCase(XTRA)) {
 					hoModel.setXtraDaten(new XtraData(properties));
-					trainerID = Integer.parseInt(properties.getProperty("trainerid", "-1")
-							.toString());
+					// Not numeric for national teams
+					try {
+						trainerID = Integer.parseInt( properties.getProperty("trainerid", "-1"));
+					} catch (NumberFormatException | NullPointerException nfe) {
+						trainerID = -1;
+					}
+
+
 				} else if (entity.toString().equalsIgnoreCase(LASTLINEUP)) {
 					hoModel.setLastAufstellung(new Lineup(properties));
 				} else if (entity.toString().equalsIgnoreCase(STAFF)) {

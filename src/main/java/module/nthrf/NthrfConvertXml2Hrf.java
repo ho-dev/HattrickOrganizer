@@ -8,7 +8,9 @@ import core.constants.player.PlayerAgreeability;
 import core.constants.player.PlayerHonesty;
 import core.constants.player.PlayerSpeciality;
 import core.file.xml.XMLManager;
+import core.file.xml.XMLMatchArchivParser;
 import core.file.xml.XMLWorldDetailsParser;
+import core.model.match.MatchKurzInfo;
 import core.net.MyConnector;
 import core.util.HOLogger;
 import core.util.HelperWrapper;
@@ -18,10 +20,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -61,10 +61,19 @@ class NthrfConvertXml2Hrf {
 			NtPlayer trainer = NthrfUtil.getTrainer(players);
 			debug("Got " + ((players != null && players.getPlayerIds() != null) ? players.getPlayerIds().size() : "null") + " players and trainer");
 
+			// nt matches
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTimeInMillis(System.currentTimeMillis());
+			xml = dh.getHattrickXMLFile("/chppxml.axd?file=matches&teamID=" + teamId + "&LastMatchDate=" + new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime()));
+			List<MatchKurzInfo> matches = XMLMatchArchivParser.parseMatchesFromString(xml);
+
 			// lineup
-			xml = dh.getHattrickXMLFile("/chppxml.axd?file=matchlineup&teamID=" + teamId);
-			NtLineupParser lineup = new NtLineupParser(xml);
-			debug("Got lineup");
+			NtLineupParser lineup = null;
+			if (matches.size() > 0) {
+				xml = dh.getHattrickXMLFile("/chppxml.axd?file=matchlineup&version=2.0&matchID=" + matches.get(matches.size() - 1).getMatchID() + "&teamID=" + teamId);
+				lineup = new NtLineupParser(xml);
+				debug("Got lineup");
+			}
 
 			createBasics(details, players); // ok, TODO
 			debug("created basics");
@@ -74,7 +83,8 @@ class NthrfConvertXml2Hrf {
 			debug("created club");
 			createTeam(details);			// ok
 			debug("created team details");
-			createLineUp(trainer, lineup);	// ok, TODO
+			if (lineup != null)
+				createLineUp(trainer, lineup);	// ok, TODO
 			debug("created lineup");
 			createEconomy(); 				// ok, TODO
 			debug("created economy");
@@ -84,7 +94,8 @@ class NthrfConvertXml2Hrf {
 			debug("created players");
 			createWorld(world, details, trainer);	// ok, TODO
 			debug("created world");
-			createLastLineUp(trainer, lineup);		//ok, TODO
+			if (lineup != null)
+				createLastLineUp(trainer, lineup);		//ok, TODO
 			debug("created last lineup");
 		} catch (Exception e) {
 			e.printStackTrace();

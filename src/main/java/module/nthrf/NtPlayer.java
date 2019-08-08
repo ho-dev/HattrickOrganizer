@@ -91,8 +91,11 @@ class NtPlayer {
 	public int getTranferlisted() {
 		return tranferlisted;
 	}
-	public void setTranferlisted(int tranferlisted) {
-		this.tranferlisted = tranferlisted;
+	public void setTranferlisted(boolean tranferlisted) {
+		if (tranferlisted)
+			this.tranferlisted = 1;
+		else
+			this.tranferlisted = 0;
 	}
 	public int getCountryId() {
 		if (countryId >= 0) {
