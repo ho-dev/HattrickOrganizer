@@ -513,19 +513,20 @@ task ZipDistribution(type: Zip) {
 
 task AddResourcesAndZipMacApp {
     dependsOn 'init', 'createApp'
-    def macAppDir = "${buildDir}\\macApp\\HO.app\\Contents\\Java"
     doLast {
+	    def baseMacAppDir = "${buildDir}\\macApp\\${project.macAppBundle.appName}.app"
+	    def macAppDir = "${baseMacAppDir}\\Contents\\Java"
         println("adding resources folder")
         copy {
             from "${projectDir}\\src\\main\\resources\\changelog.html"
-            into "${buildDir}\\macApp\\HO.app"
+            into "${baseMacAppDir}"
         }
         delete "${macAppDir}\\hamcrest-core-1.3.jar"
         delete "${macAppDir}\\junit-4.12.jar"
 
         println("zipping MacApp distribution")
         task(ZipMacAppDistribution, type: Tar) {
-            archiveName = "HO_${project.version}_macOS.zip"
+            archiveName = "${project.macAppBundle.appName}_${project.version}_macOS.zip"
             destinationDir = file("${project.ext.target_dir}")
             from ("${buildDir}\\macApp") {exclude("**\\JavaAppLauncher")}
             from ("${buildDir}\\macApp") {
