@@ -51,8 +51,10 @@ class NtPlayersParser {
 
 		tmp = (Element) ele.getElementsByTagName("PlayerID").item(0);
 		player.setPlayerId(Long.parseLong(tmp.getFirstChild().getNodeValue()));
-		tmp = (Element) ele.getElementsByTagName("LastName").item(0);
+		tmp = (Element) ele.getElementsByTagName("FirstName").item(0);
 		player.setName(tmp.getFirstChild().getNodeValue());
+		tmp = (Element) ele.getElementsByTagName("LastName").item(0);
+		player.setName(player.getName() + " " + tmp.getFirstChild().getNodeValue());
 
 		try {
 			tmp = (Element) ele.getElementsByTagName("PlayerNumber").item(0);

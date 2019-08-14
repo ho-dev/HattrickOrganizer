@@ -25,8 +25,10 @@ class NtLineupParser {
 
 		tmp = (Element) ele.getElementsByTagName("PlayerID").item(0);
 		pp.setPlayerId(Long.parseLong(tmp.getFirstChild().getNodeValue()));
-		tmp = (Element) ele.getElementsByTagName("LastName").item(0);
+		tmp = (Element) ele.getElementsByTagName("FirstName").item(0);
 		pp.setName(tmp.getFirstChild().getNodeValue());
+		tmp = (Element) ele.getElementsByTagName("LastName").item(0);
+		pp.setName(pp.getName() + " " + tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("RoleID").item(0);
 		int roleId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		pp.setRoleId(roleId);
