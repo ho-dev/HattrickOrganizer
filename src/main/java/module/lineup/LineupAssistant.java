@@ -493,9 +493,8 @@ public class LineupAssistant {
 		for (int i = 0; (positionen != null) && (vPlayer != null) && (i < positionen.size()); i++) {
 			pos = (MatchRoleID) positionen.get(i);
 
-			// bereits vergebene Positionen ignorieren und ReserveBank leer
-			// lassen
-			if ((pos.getSpielerId() > 0) || (pos.getId() < IMatchRoleID.startReserves)) {
+			// Ignore already assigned positions and non substitute position
+			if ((pos.getSpielerId() > 0) || ! IMatchRoleID.aSubstitutesMatchRoleID.contains(pos.getId())) {
 				continue;
 			}
 
