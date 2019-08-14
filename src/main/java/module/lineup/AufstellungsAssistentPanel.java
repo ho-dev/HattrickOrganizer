@@ -39,6 +39,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.border.MatteBorder;
 
 /**
  * Die automatische Aufstellung wird hier konfiguriert und gestartet
@@ -431,7 +432,10 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 		if (infoLabel == null) {
 			infoLabel = new JLabel();
 			infoLabel.setText(HOVerwaltung.instance().getLanguageString("lineupassist.Info"));
-			infoLabel.setOpaque(false);
+			// #194 - Hard to read suggestions in "LineUp"
+			infoLabel.setOpaque(true);
+			infoLabel.setBackground(ThemeManager.getColor(HOColorName.LINEUP_POS_MIN_BG));
+			infoLabel.setBorder(new MatteBorder(1,2,1,2, ThemeManager.getColor(HOColorName.LINEUP_POS_MIN_BORDER)));
 		}
 		posPanel.add(infoLabel, constraints, 2);
 
