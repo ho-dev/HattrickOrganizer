@@ -316,7 +316,16 @@ public final class Basics  {
     public int getTeamId() {
         return m_iTeamId;
     }
-    
+
+    /**
+     * Is national team
+     *
+     * @return true if it's a national team.
+     */
+    public boolean isNationalTeam() {
+        return (m_iTeamId > 0 && m_iTeamId < 5000);
+    }
+
 	/**
      * Setter for property m_sTeamName.
      *

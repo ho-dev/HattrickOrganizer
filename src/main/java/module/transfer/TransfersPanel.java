@@ -88,7 +88,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 			}
 		}
 		boolean success = false;
-		if ((outdated.size() > 0) && (DBManager.instance().getTransfers(0, true, true).size() == 0)) {
+		if ((outdated.size() > 0) && !HOVerwaltung.instance().getModel().getBasics().isNationalTeam() &&  (DBManager.instance().getTransfers(0, true, true).size() == 0)) {
 			success = DBManager.instance().updateTeamTransfers(
 						HOVerwaltung.instance().getModel().getBasics().getTeamId());
 		}

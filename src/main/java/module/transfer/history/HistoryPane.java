@@ -149,7 +149,7 @@ public class HistoryPane extends JSplitPane {
 
 				 HOVerwaltung hoV = HOVerwaltung.instance();
 				 int teamId = hoV.getModel().getBasics().getTeamId();
-	            if ( teamId != 0) {
+	            if ( teamId != 0 && !hoV.getModel().getBasics().isNationalTeam()) {
 	                final StringBuffer sBuffer = new StringBuffer();
 
 	                sBuffer.append(hoV.getLanguageString("UpdConfirmMsg.0"));

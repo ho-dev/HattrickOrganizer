@@ -61,6 +61,7 @@ public class MyConnector {
 	private static MyConnector m_clInstance;
 	private final static String VERSION_TRAINING = "2.1";
 	private final static String VERSION_MATCHORDERS = "3.0";
+	private final static String VERSION_MATCHORDERS_NT = "2.1";
 	private final static String VERSION_MATCHORDERS_PREDICTION_RATINGS = "3.0"; //TODO: could be deleted once CHPP API fixed (at that time VERSION_MATCHORDERS will be used instead of VERSION_MATCHORDERS_PREDICTION_RATINGS)
 	private final static String VERSION_MATCHLINEUP = "2.0";
 	private final static String VERSION_MATCHDETAILS = "3.0";
@@ -277,10 +278,13 @@ public class MyConnector {
 	 * @throws IOException
 	 */
 	public String getMatchOrder(int matchId, MatchType matchType, int teamId) {
-		String url = htUrl + "?file=matchorders&version=" + VERSION_MATCHORDERS + "&matchID="
-				+ matchId + "&teamId=" + teamId;
-		url += "&sourceSystem=" + matchType.getSourceString();
-
+		String url = htUrl + "?file=matchorders&matchID=" + matchId + "&sourceSystem=" + matchType.getSourceString();
+		if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
+			url += "&version=" + VERSION_MATCHORDERS_NT;
+		}
+		else {
+			url += "&version=" + VERSION_MATCHORDERS + "&teamId=" + teamId;
+		}
 		return getCHPPWebFile(url);
 	}
 
@@ -300,12 +304,19 @@ public class MyConnector {
 	public String setMatchOrder(int matchId, int teamId, MatchType matchType, String orderString)
 			throws IOException {
 		StringBuilder urlpara = new StringBuilder();
-		urlpara.append("?file=matchorders&version=").append(VERSION_MATCHORDERS);
+		if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
+			urlpara.append("?file=matchorders&version=").append(VERSION_MATCHORDERS_NT);
+		}
+		else
+		{
+			urlpara.append("?file=matchorders&version=").append(VERSION_MATCHORDERS);
+			if (teamId>0) {
+				urlpara.append("&teamId=").append(teamId);
+			}
+		}
+
 		if (matchId > 0) {
 			urlpara.append("&matchID=").append(matchId);
-		}
-		if (teamId>0) {
-			urlpara.append("&teamId=").append(teamId);
 		}
 		urlpara.append("&actionType=setmatchorder");
 		urlpara.append("&sourceSystem=" + matchType.getSourceString());
