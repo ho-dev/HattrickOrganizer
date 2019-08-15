@@ -122,9 +122,6 @@ task osXjar(type: Jar) {
                 'Main-Class': 'HOLauncher',
                 "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
     }
-    // folders 
-    exclude "prediction"
-    exclude "themes"
 
     // changelog 
     exclude "changelog.html"
@@ -264,7 +261,7 @@ task makeAll(type: GradleBuild) {
 task makeosX(type: GradleBuild) {
     group 'ho'
     description 'Create ZipDistribution and MacOS binaries'
-    tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'ZipDistribution', 'createApp', 'AddResourcesAndZipMacApp']
+    tasks = ['init', 'installDist', 'AddResourcesInDistrib', 'ZipDistribution', 'osXjar', 'createApp', 'AddResourcesAndZipMacApp']
 }
 
 task updatebuildreferences(){
