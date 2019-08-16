@@ -165,7 +165,7 @@ distributions {
 macAppBundle {
     mainClassName = "HOLauncher"
     icon = "${project.ext.osx_app_dir_sourcedir}\\HO.icns"
-    bundleJRE = true
+    bundleJRE = false // true #issue-198
     javaProperties.put("apple.laf.useScreenMenuBar", "true")
     javaProperties.put("apple.awt.showGrowBox", "true")
     backgroundImage = "${project.ext.osx_app_dir_sourcedir}\\Back.png"
