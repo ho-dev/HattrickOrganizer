@@ -1,11 +1,11 @@
 package core.rating;
 
+import core.file.FileLoader;
 import core.util.HOLogger;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,35 +75,27 @@ public class RatingPredictionConfig {
     	else {
     		ArrayList<String> list = new ArrayList<String>();
     		try {
-    			BufferedReader br = null;
-    			final File predFile = new File(predConfigFile);
-    			if (predFile.exists()) {
-    				br = new BufferedReader(new FileReader(predFile));
+    			InputStream predictionIS = FileLoader.instance().getFileInputStream(new String[]{predConfigFile, predDir + "/predictionTypes.conf"});
+    			if (predictionIS==null) {
+    				HOLogger.instance().debug(RatingPredictionConfig.class, "Error while loading: " + predConfigFile + ", " + predDir + "/predictionTypes.conf");
     			} else {
-    				try {
-						final ClassLoader loader = RatingPredictionConfig.class.getClassLoader();
-						br = new BufferedReader(new InputStreamReader((loader.getResourceAsStream(predDir + "/predictionTypes.conf"))));
-					} catch (Exception e) {
-						HOLogger.instance().debug(RatingPredictionConfig.class, "Error while loading : " + e);
-					}
-    			}
-    			while (br != null && br.ready()) {
-    				String line = br.readLine();
-    				// Remove Comments
-    				line = line.replaceFirst("#.*", "");
-    				// Trim
-    				line = line.trim();
-    				if (line.length() != 0) {
-    					list.add(line);
-    				}
+    				BufferedReader br = new BufferedReader(new InputStreamReader(predictionIS));
+    				while (br != null && br.ready()) {
+        				String line = br.readLine();
+        				// Remove Comments
+        				line = line.replaceFirst("#.*", "");
+        				// Trim
+        				line = line.trim();
+        				if (line.length() != 0) {
+        					list.add(line);
+        				}
+        			}
     			}
     			HOLogger.instance().debug(RatingPredictionConfig.class, "Found predictionTypes: "+list);
     			allPredictionNames = new String[list.size()];
     			for (int i=0; i < allPredictionNames.length; i++) {
     				allPredictionNames[i] = list.get(i);
     			}
-    		} catch (FileNotFoundException e) {
-    			HOLogger.instance().error(RatingPredictionConfig.class, "File not found: "+predConfigFile);
     		} catch (Exception e) {
     			e.printStackTrace();
     		}
