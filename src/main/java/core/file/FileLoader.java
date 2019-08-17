@@ -43,14 +43,23 @@ public class FileLoader {
 		return _instance;
 	}
 	
-	
+	/**
+	 * Returns the lastModified of the requested file. <br />
+	 * This can be used in order to check if a file was modified since its last access, in order to decide whether it needs to be persed again.
+	 * <strong>Please note</strong> that this property is not accessible when the file is loaded from a Jar. This shouldn't represent an issue,
+	 * because those files shouldn't be reloaded.
+	 * @param fileName The name of the file to be used to get the lastModified
+	 * @return <em>.lastModified()</em> of the File object (if accessible outside the Jar). <br />
+	 * <em>1</em> if the file is accessed from the Jar (this will allow to the current implementation of the reload-if-needed system to run once and only once)<br />
+	 * <em>-1</em> if the file has not been found
+	 */ 
 	public long getFileLastModified(String fileName) {
 		if (!fileStatusesCache.containsKey(fileName)) {
 			this.getFileInputStream(fileName);
 		}
 		switch (fileStatusesCache.get(fileName)) {
 			case INSIDE_JAR:
-				return -1;
+				return 1;
 			case OUTISDE_JAR:
 				File returnFile = new File(fileName);
 				return returnFile.lastModified();
