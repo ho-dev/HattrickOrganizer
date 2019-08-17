@@ -22,14 +22,12 @@ public class FileLoader {
 	boolean loadFromJar = false;
 	
 	private FileLoader() {
-		//URL testUrl = this.getClass().getClassLoader().getResource("prediction/defaults.xml");
-		//if (testUrl!=null) {
 		File testFile = new File("prediction/defaults.xml");
 		if (testFile.exists()) {
-			HOLogger.instance().error(getClass(), "Files will be searched outside the HO.jar");
+			HOLogger.instance().info(getClass(), "Files will be searched outside the HO.jar");
         } else {
         	loadFromJar = true;
-        	HOLogger.instance().error(getClass(), "Files will be searched into the HO.jar");
+        	HOLogger.instance().info(getClass(), "Files will be searched into the HO.jar");
         }
 	}
 	
@@ -68,7 +66,7 @@ public class FileLoader {
 	 * @param fileNames Ordered list of file names to be returned. 
 	 * @return the InputStream related to the fileName or <em>null</em> if the file doesn't exist
 	 */
-	public InputStream getFileInputStream(List<String> fileNames) {
+	public InputStream getFileInputStream(String[] fileNames) {
 		InputStream returnValue = null;
 		for (String fileName : fileNames) {
 			returnValue = this.getFileInputStream(fileName);

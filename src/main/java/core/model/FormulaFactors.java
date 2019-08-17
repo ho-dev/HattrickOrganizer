@@ -1,10 +1,13 @@
 package core.model;
 
+import core.file.FileLoader;
 import core.file.xml.XMLManager;
 import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -176,33 +179,11 @@ public class FormulaFactors {
      * @param defaults the filename of the xml config
      */
     public void readFromXML(String defaults) {
-        Document doc;
 
-        try {
-            File formulaFactorsFile = new File(defaults);
-            if (! formulaFactorsFile.exists()) {
-                try {
-                    formulaFactorsFile = new File(getClass().getClassLoader().getResource("prediction/defaults.xml").getFile());
-                } catch (Exception e) {
-            		HOLogger.instance().error(getClass(),
-            				"Error while loading prediction/defaults.xml (another attempt will follow via classloader): " + e);
-                }
-            }
-
-            // this manages #166
-            if (formulaFactorsFile.exists()) {
-            	doc = XMLManager.parseFile(formulaFactorsFile.getAbsolutePath());
-            } else {
-            	InputStream formulaFactorsIs = this.getClass().getClassLoader().getResourceAsStream(defaults);
-        		if (formulaFactorsIs==null) {
-        			formulaFactorsIs = this.getClass().getClassLoader().getResourceAsStream("prediction/defaults.xml");
-            	}
-        		if (formulaFactorsIs==null) {
-        			HOLogger.instance().error(getClass(), "Error while loading prediction/defaults.xml from HO.jar via classloader: " + this.getClass().getClassLoader().toString());
-        		}
-            	doc = XMLManager.parseFile(formulaFactorsIs);
-            }
-
+    	InputStream predictionIS = FileLoader.getInstance().getFileInputStream(new String[]{defaults, "prediction/defaults.xml"});
+    	
+    	if (predictionIS!=null) {
+    		Document doc = XMLManager.parseFile(predictionIS);
             //Reading xml ==========================================
             final Element root = doc.getDocumentElement();
 
@@ -231,11 +212,9 @@ public class FormulaFactors {
             catch (Exception e) {
                 HOLogger.instance().log(getClass(), "Error when parsing formula factors XML: " + e);
             }
-
-        }
-        catch (Exception e) {
-            HOLogger.instance().error(getClass(), "Error while loading prediction/defaults.xml");
-        }
+    	} else {
+    		HOLogger.instance().error(getClass(), "Error while loading prediction files (including prediction/defaults.xml)");
+    	}
 
         resetLastChange();
 
