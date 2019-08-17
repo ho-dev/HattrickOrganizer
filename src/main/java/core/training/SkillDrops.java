@@ -1,5 +1,6 @@
 package core.training;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -232,18 +233,24 @@ public class SkillDrops {
 	private double[][] readArrayFromFile (String fileName) {
 		
 		try {
+			InputStream fileIS = FileLoader.instance().getFileInputStream("prediction/skilldrops/" + fileName);
+			if (fileIS==null) {
+				HOLogger.instance().error(getClass(), "Failed to open skill drop file: " + fileName);
+				return null;
+			}
+			
 			List<double[]> lines = new ArrayList<double[]>();
 		
-			Scanner fileIn = new Scanner(FileLoader.instance().getFileInputStream("prediction/skilldrops/" + fileName));
+			Scanner fileIn = new Scanner(fileIS);
 			while (fileIn.hasNextLine()) {
 			    // read a line, and turn it into the characters
 			    String[] oneLine = fileIn.nextLine().split(",");
 			    if (oneLine.length != LINE_LENGTH) {
 			    	HOLogger.instance().error(getClass(), "Failed to read skill drop file: " 
 			    											+ fileName + ". error in line length");
-			    	return null;
+			    	fileIn.close();
+				    return null;
 			    }
-			    fileIn.close();
 			    
 			    double[] doubleLine = new double[oneLine.length];
 			    
@@ -258,6 +265,8 @@ public class SkillDrops {
 			    lines.add(doubleLine);
 			
 			}
+			fileIn.close();
+		    
 			if (lines.size() != LINES) {
 				HOLogger.instance().error(getClass(), "Failed to read skill drop file: " 
 														+ fileName + ". wrong number of lines");

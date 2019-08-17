@@ -52,8 +52,6 @@ public class FileLoader {
 		if (fileStatusesCache.get(fileName)==FileLoadingStatus.NOT_FOUND) return null;
 		boolean fileUnknown = fileStatusesCache.get(fileName)==null;
 		
-		HOLogger.instance().setLogLevel(0);
-		
 		if (fileUnknown || fileStatusesCache.get(fileName)==FileLoadingStatus.OUTISDE_JAR) {
 			File returnFile = new File(fileName);
 			try {
