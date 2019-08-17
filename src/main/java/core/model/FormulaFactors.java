@@ -6,8 +6,6 @@ import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
