@@ -1,11 +1,11 @@
 package core.training;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import core.constants.player.PlayerSkill;
+import core.file.FileLoader;
 import core.module.config.ModuleConfig;
 import core.util.HOLogger;
 
@@ -234,7 +234,7 @@ public class SkillDrops {
 		try {
 			List<double[]> lines = new ArrayList<double[]>();
 		
-			Scanner fileIn = new Scanner(new File("prediction/skilldrops/" + fileName));
+			Scanner fileIn = new Scanner(FileLoader.instance().getFileInputStream("prediction/skilldrops/" + fileName));
 			while (fileIn.hasNextLine()) {
 			    // read a line, and turn it into the characters
 			    String[] oneLine = fileIn.nextLine().split(",");
@@ -243,6 +243,7 @@ public class SkillDrops {
 			    											+ fileName + ". error in line length");
 			    	return null;
 			    }
+			    fileIn.close();
 			    
 			    double[] doubleLine = new double[oneLine.length];
 			    
@@ -262,7 +263,7 @@ public class SkillDrops {
 														+ fileName + ". wrong number of lines");
 				return null;
 			}
-		
+			
 			return lines.toArray(new double[lines.size()][]);
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), "Failed to read skill drop file: " + fileName + ". " + e.getMessage());
