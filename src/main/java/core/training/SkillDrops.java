@@ -1,11 +1,12 @@
 package core.training;
 
-import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import core.constants.player.PlayerSkill;
+import core.file.FileLoader;
 import core.module.config.ModuleConfig;
 import core.util.HOLogger;
 
@@ -232,16 +233,23 @@ public class SkillDrops {
 	private double[][] readArrayFromFile (String fileName) {
 		
 		try {
+			InputStream fileIS = FileLoader.instance().getFileInputStream("prediction/skilldrops/" + fileName);
+			if (fileIS==null) {
+				HOLogger.instance().error(getClass(), "Failed to open skill drop file: " + fileName);
+				return null;
+			}
+			
 			List<double[]> lines = new ArrayList<double[]>();
 		
-			Scanner fileIn = new Scanner(new File("prediction/skilldrops/" + fileName));
+			Scanner fileIn = new Scanner(fileIS);
 			while (fileIn.hasNextLine()) {
 			    // read a line, and turn it into the characters
 			    String[] oneLine = fileIn.nextLine().split(",");
 			    if (oneLine.length != LINE_LENGTH) {
 			    	HOLogger.instance().error(getClass(), "Failed to read skill drop file: " 
 			    											+ fileName + ". error in line length");
-			    	return null;
+			    	fileIn.close();
+				    return null;
 			    }
 			    
 			    double[] doubleLine = new double[oneLine.length];
@@ -257,12 +265,14 @@ public class SkillDrops {
 			    lines.add(doubleLine);
 			
 			}
+			fileIn.close();
+		    
 			if (lines.size() != LINES) {
 				HOLogger.instance().error(getClass(), "Failed to read skill drop file: " 
 														+ fileName + ". wrong number of lines");
 				return null;
 			}
-		
+			
 			return lines.toArray(new double[lines.size()][]);
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), "Failed to read skill drop file: " + fileName + ". " + e.getMessage());
