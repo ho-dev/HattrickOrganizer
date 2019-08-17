@@ -36,7 +36,7 @@ public class FileLoader {
 	 * Static method to be used in order to get an instance of the FileLoader
 	 * @return
 	 */
-	public static FileLoader getInstance() {
+	public static FileLoader instance() {
 		if (_instance==null) {
 			_instance = new FileLoader();
 		}
@@ -51,6 +51,8 @@ public class FileLoader {
 	public InputStream getFileInputStream(String fileName) {
 		if (fileStatusesCache.get(fileName)==FileLoadingStatus.NOT_FOUND) return null;
 		boolean fileUnknown = fileStatusesCache.get(fileName)==null;
+		
+		HOLogger.instance().setLogLevel(0);
 		
 		if (fileUnknown || fileStatusesCache.get(fileName)==FileLoadingStatus.OUTISDE_JAR) {
 			File returnFile = new File(fileName);

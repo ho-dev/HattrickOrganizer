@@ -178,7 +178,7 @@ public class FormulaFactors {
      */
     public void readFromXML(String defaults) {
 
-    	InputStream predictionIS = FileLoader.getInstance().getFileInputStream(new String[]{defaults, "prediction/defaults.xml"});
+    	InputStream predictionIS = FileLoader.instance().getFileInputStream(new String[]{defaults, "prediction/defaults.xml"});
     	
     	if (predictionIS!=null) {
     		Document doc = XMLManager.parseFile(predictionIS);
