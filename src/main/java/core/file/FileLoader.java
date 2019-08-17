@@ -43,6 +43,23 @@ public class FileLoader {
 		return _instance;
 	}
 	
+	
+	public long getFileLastModified(String fileName) {
+		if (!fileStatusesCache.containsKey(fileName)) {
+			this.getFileInputStream(fileName);
+		}
+		switch (fileStatusesCache.get(fileName)) {
+			case INSIDE_JAR:
+				return -1;
+			case OUTISDE_JAR:
+				File returnFile = new File(fileName);
+				return returnFile.lastModified();
+			default:
+				return -1;
+		}
+	}
+		
+			
 	/**
 	 * Provides access to the InputStream of a requested file 
 	 * @param fileName The name of the file to be returned
