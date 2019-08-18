@@ -28,10 +28,8 @@ public class RatingPredictionParameter  {
     }
     
 	public void readFromFile (String newFilename) {
+		// If filename changed or the file was modified -> (re)-parse the parameter file 
 		long currentLastModified = FileLoader.instance().getFileLastModified(newFilename);
-		/*
-		 * If filename changed or the file was modified -> (re)-parse the parameter file 
-		 */
 		if (!newFilename.equals(filename) || lastParse < currentLastModified) {
 			try {
 				lastParse = currentLastModified;
