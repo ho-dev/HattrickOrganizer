@@ -28,13 +28,13 @@ public class RatingPredictionParameter  {
     }
     
 	public void readFromFile (String newFilename) {
-		File file = new File(newFilename);
+		long currentLastModified = FileLoader.instance().getFileLastModified(newFilename);
 		/*
 		 * If filename changed or the file was modified -> (re)-parse the parameter file 
 		 */
-		if (!newFilename.equals(filename) || lastParse < file.lastModified()) {
+		if (!newFilename.equals(filename) || lastParse < currentLastModified) {
 			try {
-				lastParse = file.lastModified();
+				lastParse = currentLastModified;
 				filename = newFilename;
 				allProps.clear();
 				HOLogger.instance().debug(this.getClass(), "(Re-)initializing prediction parameters: "+newFilename);

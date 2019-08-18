@@ -45,7 +45,7 @@ public class FileLoader {
 	
 	/**
 	 * Returns the lastModified of the requested file. <br />
-	 * This can be used in order to check if a file was modified since its last access, in order to decide whether it needs to be persed again.
+	 * This can be used in order to check if a file was modified since its last access, in order to decide whether it needs to be parsed again.
 	 * <strong>Please note</strong> that this property is not accessible when the file is loaded from a Jar. This shouldn't represent an issue,
 	 * because those files shouldn't be reloaded.
 	 * @param fileName The name of the file to be used to get the lastModified
@@ -55,6 +55,7 @@ public class FileLoader {
 	 */ 
 	public long getFileLastModified(String fileName) {
 		if (!fileStatusesCache.containsKey(fileName)) {
+			// inserts the file in the cache if not yet available
 			this.getFileInputStream(fileName);
 		}
 		switch (fileStatusesCache.get(fileName)) {
