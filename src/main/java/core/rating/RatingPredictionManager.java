@@ -962,7 +962,7 @@ public class RatingPredictionManager {
     private static double _calcPlayerStrength (RatingPredictionParameter params,
     	String sectionName, double stamina, double xp, double skill, double form, boolean useForm) {
     	// If config changed, we have to clear the cache
-		boolean forceRefresh = false; //FIXME this should be necessary only in debug mode
+		boolean forceRefresh = false;
     	if (!playerStrengthCache.containsKey("lastRebuild") 
     			|| playerStrengthCache.get("lastRebuild") < config.getLastParse() || forceRefresh) {
     		HOLogger.instance().debug(RatingPredictionManager.class, "RPM tainted, clearing cache!");

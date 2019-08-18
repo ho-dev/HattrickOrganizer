@@ -486,7 +486,7 @@ public class Lineup{
 	 public void setRatings() {
 		 final RatingPredictionManager rpManager;
 		 Ratings oRatings = new Ratings();
-		 boolean bForm = UserParameter.instance().aufstellungsAssistentPanel_form;
+		 boolean bForm = true;
 
 		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
 			rpManager = new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam(),
