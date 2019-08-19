@@ -29,6 +29,7 @@ public class User {
 	private String url = "jdbc:hsqldb:file:db/database";
 	private String user = "sa";
 	private int backupLevel = 3;
+	private boolean isNtTeam = false;
 
 	/**
 	 * Creates a new User object.
@@ -145,6 +146,7 @@ public class User {
 				writer.println("   <Password><![CDATA[" + user.pwd + "]]></Password>");
 				writer.println("   <Driver><![CDATA[" + user.driver + "]]></Driver>");
 				writer.println("   <BackupLevel>" + user.backupLevel + "</BackupLevel>");
+				writer.println("   <NtTeam><![CDATA[" + user.isNtTeam + "]]></NtTeam>>");
 				writer.println(" </User>");
 			}
 
@@ -168,6 +170,10 @@ public class User {
 		return backupLevel;
 	}
 
+	public boolean isNtTeam() {
+		return isNtTeam;
+	}
+
 	public final void setName(String name) {
 		this.name = name;
 	}
@@ -179,6 +185,11 @@ public class User {
 	public final void setPath(String path) {
 		url = "jdbc:hsqldb:file:" + path + "/database";
 	}
+
+	public boolean setNtTeam(boolean isNtTeam) {
+		return this.isNtTeam = isNtTeam;
+	}
+
 
 	public static User addNewUser() {
 		User newUser = new User();
@@ -265,6 +276,10 @@ public class User {
 
 					if (element.getTagName().equals("BackupLevel")) {
 						backupLevel = Integer.parseInt(txt.getData().trim());
+					}
+
+					if (element.getTagName().equals("NtTeam")) {
+						isNtTeam = txt.getData().trim().equals("true");
 					}
 				}
 			}

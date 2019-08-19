@@ -17,13 +17,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -39,6 +33,9 @@ public class DatabaseUserEditDialog extends JDialog {
 	private boolean canceled = true;
 	private final boolean isNew;
 	private static final long serialVersionUID = -98754947290884048L;
+	private JRadioButton ntTeamYes;
+	private JRadioButton ntTeamNo;
+
 
 	public DatabaseUserEditDialog(Window parent, User user, boolean isNew) {
 		super(parent, ModalityType.APPLICATION_MODAL);
@@ -64,6 +61,10 @@ public class DatabaseUserEditDialog extends JDialog {
 		this.nameTextField.setText(this.user.getName());
 		this.databaseLocationTextField.setText(this.user.getDBPath());
 		this.numberOfBackupsTextField.setText(String.valueOf(this.user.getBackupLevel()));
+		if (this.user.isNtTeam())
+			ntTeamYes.setSelected(true);
+		else
+			ntTeamNo.setSelected(true);
 	}
 
 	private void initComponents() {
@@ -174,6 +175,28 @@ public class DatabaseUserEditDialog extends JDialog {
 		gbc.weightx = 1.0;
 		contentPanel.add(this.numberOfBackupsTextField, gbc);
 
+		JLabel ntTeamLabel = new JLabel(getLangStr("db.options.dlg.label.nt"));
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		gbc.insets = new Insets(4, 4, 4, 2);
+		gbc.gridwidth = 1;
+		contentPanel.add(ntTeamLabel, gbc);
+
+		ntTeamNo = new JRadioButton(HOVerwaltung.instance().getLanguageString("ls.button.no"));
+		ntTeamNo.setSelected(true);
+		ntTeamYes = new JRadioButton(HOVerwaltung.instance().getLanguageString("ls.button.yes"));
+		ButtonGroup group = new ButtonGroup();
+		group.add(ntTeamNo);
+		group.add(ntTeamYes);
+		gbc.gridx = 1;
+		gbc.insets = new Insets(4, 2, 4, 4);
+		gbc.gridwidth = 3;
+		gbc.weightx = 1.0;
+		contentPanel.add(this.ntTeamYes, gbc);
+		gbc.gridx = 1;
+		gbc.gridy = 4;
+		contentPanel.add(this.ntTeamNo, gbc);
+
 		return contentPanel;
 	}
 
@@ -210,6 +233,7 @@ public class DatabaseUserEditDialog extends JDialog {
 					user.setBackupLevel(Integer.parseInt(numberOfBackupsTextField.getText()));
 					user.setName(nameTextField.getText());
 					user.setPath(databaseLocationTextField.getText());
+					user.setNtTeam(ntTeamYes.isSelected());
 					canceled = false;
 					dispose();
 				}
@@ -233,9 +257,18 @@ public class DatabaseUserEditDialog extends JDialog {
 				checkCanSave();
 			}
 		};
+
+		ActionListener actionListener = new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				checkCanSave();
+			}
+		};
+
 		this.nameTextField.getDocument().addDocumentListener(documentListener);
 		this.databaseLocationTextField.getDocument().addDocumentListener(documentListener);
 		this.numberOfBackupsTextField.getDocument().addDocumentListener(documentListener);
+		this.ntTeamNo.addActionListener(actionListener);
+		this.ntTeamYes.addActionListener(actionListener);
 	}
 
 	private void openFileChooser() {
@@ -264,10 +297,10 @@ public class DatabaseUserEditDialog extends JDialog {
 	}
 
 	private boolean isChanged() {
-		return (!this.user.getName().equals(this.nameTextField.getText())
-				|| !this.user.getDBPath().equals(this.databaseLocationTextField.getText()) || !String
-				.valueOf(this.user.getBackupLevel())
-				.equals(this.numberOfBackupsTextField.getText()));
+		return (!this.user.getName().equals(this.nameTextField.getText()) ||
+				!this.user.getDBPath().equals(this.databaseLocationTextField.getText()) ||
+				!String.valueOf(this.user.getBackupLevel()).equals(this.numberOfBackupsTextField.getText()) ||
+				!(this.user.isNtTeam() == ntTeamYes.isSelected()));
 	}
 
 	private boolean checkDirectory() {
