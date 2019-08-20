@@ -3,6 +3,7 @@ package core.gui;
 
 import core.HO;
 import core.db.DBManager;
+import core.db.User;
 import core.file.hrf.HRFImport;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.tabbedPane.HOTabbedPane;
@@ -32,6 +33,7 @@ import module.lineup.IAufstellungsAssistentPanel;
 import module.lineup.LineupMasterView;
 import module.lineup.LineupPanel;
 import module.matches.SpielePanel;
+import module.nthrf.MainPanel;
 import module.playerOverview.SpielerUebersichtsPanel;
 import module.playeranalysis.PlayerAnalysisModulePanel;
 import module.transfer.TransfersPanel;
@@ -345,7 +347,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		if (source.equals(m_jmImportItem)) { // HRF Import
 			new HRFImport(this);
 		} else if (source.equals(m_jmDownloadItem)) { // HRF Download
-			new DownloadDialog();
+			if (User.getCurrentUser().isNtTeam())
+				JOptionPane.showMessageDialog(HOMainFrame.instance(), MainPanel.getInstance(),
+						HOVerwaltung.instance().getLanguageString("HRFDownload"), JOptionPane.PLAIN_MESSAGE);
+			else
+				new DownloadDialog();
 		} else if (source.equals(m_jmOptionen)) { // Options
 			new OptionenDialog(this).setVisible(true);
 		} else if (source.equals(databaseOptionsMenu)) {

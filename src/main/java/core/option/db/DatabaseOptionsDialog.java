@@ -208,7 +208,9 @@ public class DatabaseOptionsDialog extends JDialog {
 		private String[] columnNames = new String[] {
 				HOVerwaltung.instance().getLanguageString("Benutzername"),
 				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.dbPath"),
-				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.zips") };
+				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.zips"),
+				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.nt")
+		};
 
 		@Override
 		public Object getValueAt(int row, int column) {
@@ -220,6 +222,11 @@ public class DatabaseOptionsDialog extends JDialog {
 				return user.getDBPath();
 			case 2:
 				return user.getBackupLevel();
+			case 3:
+				if (user.isNtTeam())
+					return HOVerwaltung.instance().getLanguageString("ls.button.yes");
+				else
+					return HOVerwaltung.instance().getLanguageString("ls.button.no");
 			}
 			return null;
 		}

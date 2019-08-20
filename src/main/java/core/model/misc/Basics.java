@@ -1,6 +1,7 @@
 // %214693493:de.hattrickorganizer.model%
 package core.model.misc;
 
+import core.db.User;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -323,7 +324,7 @@ public final class Basics  {
      * @return true if it's a national team.
      */
     public boolean isNationalTeam() {
-        return (m_iTeamId > 0 && m_iTeamId < 5000);
+        return User.getCurrentUser().isNtTeam();
     }
 
 	/**

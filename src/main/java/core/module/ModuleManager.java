@@ -8,7 +8,6 @@ import module.lineup.LineupModule;
 import module.matches.MatchesModule;
 import module.matchesanalyzer.MatchesAnalyzerModule;
 import module.misc.MiscModule;
-import module.nthrf.NthrfModule;
 import module.playerOverview.PlayerOverviewModule;
 import module.playeranalysis.PlayerAnalysisModule;
 import module.series.SeriesModule;
@@ -62,7 +61,6 @@ public final class ModuleManager {
 				new SpecialEventsModule());
 		map.put(Integer.valueOf(IModule.TEAM_OF_THE_WEEK),
 				new TeamOfTheWeekModule());
-		map.put(Integer.valueOf(IModule.NTHRF), new NthrfModule());
 		map.put(Integer.valueOf(IModule.EVIL_CARD), new EvilCardModule());
 		map.put(Integer.valueOf(IModule.IFA), new IfaModule());
 		map.put(Integer.valueOf(IModule.MATCHESANALYZER), new MatchesAnalyzerModule());
