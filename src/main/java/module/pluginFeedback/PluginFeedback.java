@@ -38,13 +38,13 @@ public class PluginFeedback {
                 + System.getProperty("java.vendor") + ")";
 
         authToken = "foqwij41094-d423r87oh43fuo";
-        // Mistermax80's local server - test
-        //getUrl = "http://mistermax80.max:8080/ws-ho-feedbacks";
-        //postUrl = "http://mistermax80.max:8080/ws-ho-feedbacks";
+        // Local server - test
+        //getUrl = "http://hoserver.loc:8080/ws-ho-feedbacks";
+        //postUrl = "http://hoserver.loc:8080/ws-ho-feedbacks";
 
-        // Mistermax80's remote server - prod
-        //getUrl = "https://mistermax80.000webhostapp.com/ws-ho-feedbacks";
-        postUrl = "https://mistermax80.000webhostapp.com/ws-ho-feedbacks";
+        // HO Server Remote server - prod
+        //getUrl = "https://hofeedback.000webhostapp.com/ws-ho-feedbacks";
+        postUrl = "https://hofeedback.000webhostapp.com/ws-ho-feedbacks";
 
     }
 
