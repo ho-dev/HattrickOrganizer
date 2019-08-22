@@ -631,6 +631,13 @@ final class DBUpdater {
 			dbZugriff.getTable(MatchOrderTable.TABLENAME).createTable();
 		}
 
+		// use defaults player formula from defaults.xml by reseting the value in the database
+		AbstractTable faktorenTab = dbZugriff.getTable(FaktorenTable.TABLENAME);
+		if (faktorenTab != null) {
+			faktorenTab.dropTable();
+			faktorenTab.createTable();
+		}
+
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
