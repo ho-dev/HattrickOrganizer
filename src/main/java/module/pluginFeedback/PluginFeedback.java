@@ -38,13 +38,15 @@ public class PluginFeedback {
                 + System.getProperty("java.vendor") + ")";
 
         authToken = "foqwij41094-d423r87oh43fuo";
-        // Local server - test
-        //getUrl = "http://hoserver.loc:8080/ws-ho-feedbacks";
-        //postUrl = "http://hoserver.loc:8080/ws-ho-feedbacks";
 
         // HO Server Remote server - prod
         //getUrl = "https://hofeedback.000webhostapp.com/ws-ho-feedbacks";
         postUrl = "https://hofeedback.000webhostapp.com/ws-ho-feedbacks";
+
+        // local server - to be used for testing purposes
+        //getUrl = "http://hoserver.loc:80/ws-ho-feedbacks";
+        //postUrl = "http://hoserver.loc:80/ws-ho-feedbacks";
+
 
     }
 
