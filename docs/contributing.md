@@ -56,10 +56,10 @@ This changes your working directory to the shiny-new-feature branch. **Keep any 
 
 When creating this branch, make sure your master branch is up to date with the latest upstream master version. To update your local master branch, you can do:
 
-~~
+~~~
 git checkout master
 git pull upstream master --ff-only
-~~
+~~~
 
 *When you want to update the feature branch with changes in master after you created the branch, check the section on [updating a PR](#update-your-pull-request)*
 
