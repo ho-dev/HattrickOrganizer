@@ -67,6 +67,7 @@ public final class MinuteTogglerPanel extends JPanel {
 				parent.reInit();
 			}
 		});
+
 		avg120Clock.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -77,6 +78,13 @@ public final class MinuteTogglerPanel extends JPanel {
 				avg120Clock.setIcon(whiteRedClock);
 				revalidate();
 				parent.reInit();
+			}
+		});
+
+		ratingsGraph.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+			new RatingChartFrame();
 			}
 		});
 
