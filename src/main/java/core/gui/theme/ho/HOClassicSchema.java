@@ -216,6 +216,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(WHITE_GREEN_CLOCK, "gui/bilder/white-green-clock.png");
 		put(RED_WHITE_CLOCK, "gui/bilder/red-white-clock.png");
 		put(WHITE_RED_CLOCK, "gui/bilder/white-red-clock.png");
+
+		put(RATING_GRAPH, "gui/bilder/rating-graph.png");
 	}
 
 	private void initBooleans() {

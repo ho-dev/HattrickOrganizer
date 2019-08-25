@@ -147,4 +147,6 @@ public interface HOIconName {
 	public static final String WHITE_GREEN_CLOCK = "white-green-clock";
 	public static final String RED_WHITE_CLOCK = "red-white-clock";
 	public static final String WHITE_RED_CLOCK = "white-red-clock";
+
+	public static final String RATING_GRAPH = "rating-graph";
 }
