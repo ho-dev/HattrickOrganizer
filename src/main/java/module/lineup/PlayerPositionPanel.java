@@ -347,6 +347,17 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
 
         setSpielerListe(player, aktuellerPlayer);
 
+        for (int i = 0; i < m_jcbPlayer.getModel().getSize(); i++) {
+            Object obj = m_jcbPlayer.getItemAt(i);
+            if (obj instanceof SpielerCBItem) {
+                SpielerCBItem cbitem = (SpielerCBItem) obj;
+                if (cbitem.getSpieler() != null) {
+                    cbitem.getEntry().setIsSelect(false);
+                    cbitem.getEntry().setIsAssit(false);
+                }
+            }
+        }
+
         if (selectPlayer != null && assitPlayer != null) {
             for (int i = 0; i < m_jcbPlayer.getModel().getSize(); i++) {
                 Object obj = m_jcbPlayer.getItemAt(i);
