@@ -44,13 +44,13 @@ public class FormulaFactors {
 
     ////////////////////////////////AM//////////////////////////////////////////
     // normal winger
-    FactorObject m_clFluegelspieler;
+    FactorObject foWI;
     // def winger
-    FactorObject m_clFluegelspieler_DEF;
+    FactorObject foWI_DEF;
     // winger towards middle
-    FactorObject m_clFluegelspieler_IN;
+    FactorObject foWI_TM;
     // off winger
-    FactorObject m_clFluegelspieler_OFF;
+    FactorObject foWI_OFF;
 
     ////////////////////////////////Central_DEF//////////////////////////////////////////
     // central defender
@@ -121,10 +121,10 @@ public class FormulaFactors {
         allObj[5] = foWB_OFF;
         allObj[6] = foWB_TM;
         allObj[7] = foWB_DEF;
-        allObj[8] = m_clFluegelspieler;
-        allObj[9] = m_clFluegelspieler_DEF;
-        allObj[10] = m_clFluegelspieler_OFF;
-        allObj[11] = m_clFluegelspieler_IN;
+        allObj[8] = foWI;
+        allObj[9] = foWI_DEF;
+        allObj[10] = foWI_OFF;
+        allObj[11] = foWI_TM;
         allObj[12] = foIM;
         allObj[13] = foIM_OFF;
         allObj[14] = foIM_DEF;
@@ -140,36 +140,9 @@ public class FormulaFactors {
      * Import star formulas from the default XML.
      */
     public void importDefaults() {
-        init();
         readFromXML("prediction" + File.separatorChar + "defaults.xml");
     }
 
-    /**
-     * Initialize member with 'hardcoded' default values.
-     * Usually these values should never be used, as we read the default.xml afterwards.
-     */
-    public void init() {
-        //                                     position,								    	 GK         PM         PS       WI        DE        SC        SP
-        foGK = new FactorObject(IMatchRoleID.KEEPER, 10.0f, 0.0f, 0.0f, 0.0f, 2.6f, 0.0f, 0.0f);
-        m_clInnenVerteidiger = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER, 0.0f, 3.0f, 0.5f, 0.0f, 9.0f, 0.0f, 0.0f);
-        m_clInnenVerteidiger_AUS = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER_TOWING, 0.0f, 1.5f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
-        m_clInnenVerteidiger_OFF = new FactorObject(IMatchRoleID.CENTRAL_DEFENDER_OFF, 0.0f, 5.0f, 0.5f, 0.0f, 6.0f, 0.0f, 0.0f);
-        foWB_TM = new FactorObject(IMatchRoleID.BACK_TOMID, 0.0f, 1.0f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
-        foWB_OFF = new FactorObject(IMatchRoleID.BACK_OFF, 0.0f, 1.5f, 1.5f, 4.0f, 6.0f, 0.0f, 0.0f);
-        foWB_DEF = new FactorObject(IMatchRoleID.BACK_DEF, 0.0f, 0.5f, 0.5f, 2.0f, 8.5f, 0.0f, 0.0f);
-        foWB = new FactorObject(IMatchRoleID.BACK, 0.0f, 1.0f, 0.0f, 3.5f, 8.0f, 0.0f, 0.0f);
-        m_clFluegelspieler_OFF = new FactorObject(IMatchRoleID.WINGER_OFF, 0.0f, 3.0f, 2.5f, 7.0f, 1.0f, 0.0f, 0.0f);
-        m_clFluegelspieler_DEF = new FactorObject(IMatchRoleID.WINGER_DEF, 0.0f, 3.5f, 2.0f, 5.0f, 4.0f, 0.0f, 0.0f);
-        m_clFluegelspieler_IN = new FactorObject(IMatchRoleID.WINGER_TOMID, 0.0f, 6.0f, 2.0f, 4.0f, 2.0f, 0.0f, 0.0f);
-        m_clFluegelspieler = new FactorObject(IMatchRoleID.WINGER, 0.0f, 3.5f, 2.5f, 7.0f, 1.5f, 0.0f, 0.0f);
-        foIM_OFF = new FactorObject(IMatchRoleID.MIDFIELDER_OFF, 0.0f, 8.0f, 3.5f, 0.0f, 2.0f, 0.0f, 0.0f);
-        foIM_DEF = new FactorObject(IMatchRoleID.MIDFIELDER_DEF, 0.0f, 8.0f, 2.0f, 0.0f, 3.5f, 0.0f, 0.0f);
-        foIM_TW = new FactorObject(IMatchRoleID.MIDFIELDER_TOWING, 0.0f, 6.0f, 2.0f, 5.0f, 2.0f, 0.0f, 0.0f);
-        foIM = new FactorObject(IMatchRoleID.MIDFIELDER, 0.0f, 8.0f, 3.0f, 0.0f, 3.0f, 0.0f, 0.0f);
-        foFW = new FactorObject(IMatchRoleID.FORWARD, 0.0f, 0.0f, 3.0f, 1.5f, 0.0f, 9.0f, 0.0f);
-        foFW_DEF = new FactorObject(IMatchRoleID.FORWARD_DEF, 0.0f, 5.0f, 3.0f, 0.0f, 0.0f, 6.0f, 0.0f);
-        foFW_TW = new FactorObject(IMatchRoleID.FORWARD_TOWING, 0.0f, 0.0f, 3.0f, 4.0f, 0.0f, 6.5f, 0.0f);
-    }
 
     /**
      * Read an XML file with star formula configurations.
@@ -198,10 +171,10 @@ public class FormulaFactors {
                 foIM = readObject("MD", root);
                 foIM_OFF = readObject("MD_O", root);
                 foIM_TW = readObject("MD_W", root);
-                m_clFluegelspieler_IN = readObject("WING_M", root);
-                m_clFluegelspieler_OFF = readObject("WING_O", root);
-                m_clFluegelspieler_DEF = readObject("WING_D", root);
-                m_clFluegelspieler = readObject("WING", root);
+                foWI_TM = readObject("WING_M", root);
+                foWI_OFF = readObject("WING_O", root);
+                foWI_DEF = readObject("WING_D", root);
+                foWI = readObject("WING", root);
                 foFW_DEF = readObject("FW_D", root);
                 foFW_DEF_TECH = readObject("FW_D_TECH", root);
                 foFW = readObject("FW", root);
@@ -237,19 +210,21 @@ public class FormulaFactors {
             ele = (Element) root.getElementsByTagName("Position").item(0);
             factorObject.setPosition(Byte.parseByte(XMLManager.getFirstChildNodeValue(ele)));
             ele = (Element) root.getElementsByTagName("defense").item(0);
-            factorObject.setVerteidigung(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
+            factorObject.setDefendingFactor(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
             ele = (Element) root.getElementsByTagName("passing").item(0);
-            factorObject.setPasspiel(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
+            factorObject.setPassingFactor(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
             ele = (Element) root.getElementsByTagName("playmaking").item(0);
-            factorObject.setSpielaufbau(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
+            factorObject.setPlaymakingFactor(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
             ele = (Element) root.getElementsByTagName("scoring").item(0);
             factorObject.setTorschuss(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
             ele = (Element) root.getElementsByTagName("wing").item(0);
-            factorObject.setFluegelspiel(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
+            factorObject.setWingerFactor(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
             ele = (Element) root.getElementsByTagName("keeper").item(0);
             factorObject.setTorwart(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
-            ele = (Element) root.getElementsByTagName("standard").item(0);
-            factorObject.setStandards(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
+            ele = (Element) root.getElementsByTagName("setpieces").item(0);
+            factorObject.setSetPiecesFactor(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
+            ele = (Element) root.getElementsByTagName("normalization_factor").item(0);
+            factorObject.setNormalizationFactor(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),"FormulaFactor.redxmlException gefangen: " + e);
             HOLogger.instance().log(getClass(),e);
@@ -297,10 +272,10 @@ public class FormulaFactors {
             writeFaktorObj(doc, foIM, tmpEle, "MD");
             writeFaktorObj(doc, foIM_OFF, tmpEle, "MD_O");
             writeFaktorObj(doc, foIM_TW, tmpEle, "MD_W");
-            writeFaktorObj(doc, m_clFluegelspieler_IN, tmpEle, "WING_M");
-            writeFaktorObj(doc, m_clFluegelspieler_OFF, tmpEle, "WING_O");
-            writeFaktorObj(doc, m_clFluegelspieler_DEF, tmpEle, "WING_D");
-            writeFaktorObj(doc, m_clFluegelspieler, tmpEle, "WING");
+            writeFaktorObj(doc, foWI_TM, tmpEle, "WING_M");
+            writeFaktorObj(doc, foWI_OFF, tmpEle, "WING_O");
+            writeFaktorObj(doc, foWI_DEF, tmpEle, "WING_D");
+            writeFaktorObj(doc, foWI, tmpEle, "WING");
             writeFaktorObj(doc, foFW_DEF, tmpEle, "FW_D");
 			writeFaktorObj(doc, foFW_TW, tmpEle, "FW_W");
             writeFaktorObj(doc, foFW, tmpEle, "FW");
@@ -317,6 +292,7 @@ public class FormulaFactors {
      * Add data for a single position to the XML tree.
      */
     protected void writeFaktorObj(Document doc, FactorObject obj, Element root, String tagName) {
+        // TODO: fix this one setpieces and normlization factor  (unction that should be called (tbc)  rom the preference tab)
         Element ele = null;
         Element tmpEle = null;
 
@@ -372,10 +348,10 @@ public class FormulaFactors {
 	        case IMatchRoleID.MIDFIELDER_OFF:        	    return foIM_OFF;
 	        case IMatchRoleID.MIDFIELDER_TOWING:        	return foIM_TW;
 	        case IMatchRoleID.MIDFIELDER:	        	    return foIM;
-	        case IMatchRoleID.WINGER_DEF:        	        return m_clFluegelspieler_DEF;
-	        case IMatchRoleID.WINGER_OFF:			        return m_clFluegelspieler_OFF;
-	        case IMatchRoleID.WINGER_TOMID:			        return m_clFluegelspieler_IN;
-	        case IMatchRoleID.WINGER:				        return m_clFluegelspieler;
+	        case IMatchRoleID.WINGER_DEF:        	        return foWI_DEF;
+	        case IMatchRoleID.WINGER_OFF:			        return foWI_OFF;
+	        case IMatchRoleID.WINGER_TOMID:			        return foWI_TM;
+	        case IMatchRoleID.WINGER:				        return foWI;
 	        case IMatchRoleID.FORWARD_DEF:				    return foFW_DEF;
             case IMatchRoleID.FORWARD_DEF_TECH:             return foFW_DEF_TECH;
 	        case IMatchRoleID.FORWARD:					    return foFW;
@@ -444,19 +420,19 @@ public class FormulaFactors {
             break;
 
         case IMatchRoleID.WINGER:
-            m_clFluegelspieler = factorObject;
+            foWI = factorObject;
             break;
 
         case IMatchRoleID.WINGER_OFF:
-            m_clFluegelspieler_OFF = factorObject;
+            foWI_OFF = factorObject;
             break;
 
         case IMatchRoleID.WINGER_DEF:
-            m_clFluegelspieler_DEF = factorObject;
+            foWI_DEF = factorObject;
             break;
 
         case IMatchRoleID.WINGER_TOMID:
-            m_clFluegelspieler_IN = factorObject;
+            foWI_TM = factorObject;
             break;
 
         case IMatchRoleID.FORWARD:

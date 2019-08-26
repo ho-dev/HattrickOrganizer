@@ -463,13 +463,13 @@ public class Player
 		setOldExperience(m_Player.getErfahrung());
 		setOldForm(m_Player.getForm());
 		setOldStamina(m_Player.getKondition());
-		setOldKeeping(m_Player.getTorwart());
-		setOldDefending(m_Player.getVerteidigung());
-		setOldPlaymaking(m_Player.getSpielaufbau());
-		setOldPassing(m_Player.getPasspiel());
-		setOldWinger(m_Player.getFluegelspiel());
-		setOldScoring(m_Player.getTorschuss());
-		setOldSetPieces(m_Player.getStandards());
+		setOldKeeping(m_Player.getGKskill());
+		setOldDefending(m_Player.getDEFskill());
+		setOldPlaymaking(m_Player.getPMskill());
+		setOldPassing(m_Player.getPSskill());
+		setOldWinger(m_Player.getWIskill());
+		setOldScoring(m_Player.getSCskill());
+		setOldSetPieces(m_Player.getSPskill());
 		setOldLoyalty(m_Player.getLoyalty());
 		setOldHomeGrown(m_Player.isHomeGrown() ? 2 : 1);
 	}
@@ -496,13 +496,13 @@ public class Player
 		setExperience(m_Player.getErfahrung());
 		setForm(m_Player.getForm());
 		setStamina(m_Player.getKondition());
-		setKeeping(m_Player.getTorwart());
-		setDefending(m_Player.getVerteidigung());
-		setPlaymaking(m_Player.getSpielaufbau());
-		setPassing(m_Player.getPasspiel());
-		setWinger(m_Player.getFluegelspiel());
-		setScoring(m_Player.getTorschuss());
-		setSetPieces(m_Player.getStandards());
+		setKeeping(m_Player.getGKskill());
+		setDefending(m_Player.getDEFskill());
+		setPlaymaking(m_Player.getPMskill());
+		setPassing(m_Player.getPSskill());
+		setWinger(m_Player.getWIskill());
+		setScoring(m_Player.getSCskill());
+		setSetPieces(m_Player.getSPskill());
 		setLoyalty(m_Player.getLoyalty());
 		setHomeGrown(m_Player.isHomeGrown() ? 2 : 1);
 	}

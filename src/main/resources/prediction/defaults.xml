@@ -3,202 +3,222 @@
 <FormulaFactors>
 <KEEPER>
 	<Position>0</Position>
-	<keeper>0.5650336200466667</keeper>
-	<defense>0.23021596449999993</defense>
+	<keeper>0.056503362004666664</keeper>
+	<defense>0.023021596449999994</defense>
 	<wing>0.0</wing>
 	<playmaking>0.0</playmaking>
 	<scoring>0.0</scoring>
 	<passing>0.0</passing>
-	<standard>0.0</standard>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.8477390819132709</normalization_factor>
 </KEEPER>
 <DEFENSE>
 	<Position>1</Position>
 	<keeper>0.0</keeper>
-	<defense>0.37086460308</defense>
+	<defense>0.037086460308</defense>
 	<wing>0.0</wing>
-	<playmaking>0.11569270049999998</playmaking>
+	<playmaking>0.011569270049999998</playmaking>
 	<scoring>0.0</scoring>
 	<passing>0.0</passing>
-	<standard>0.0</standard>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.130501622239262</normalization_factor>
 </DEFENSE>
 <DEFENSE_O>
 	<Position>2</Position>
 	<keeper>0.0</keeper>
-	<defense>0.2771727716</defense>
+	<defense>0.027717277159999998</defense>
 	<wing>0.0</wing>
-	<playmaking>0.18510832079999998</playmaking>
+	<playmaking>0.018510832079999998</playmaking>
 	<scoring>0.0</scoring>
 	<passing>0.0</passing>
-	<standard>0.0</standard>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.0740965576787616</normalization_factor>
 </DEFENSE_O>
 <DEFENSE_W>
 	<Position>3</Position>
 	<keeper>0.0</keeper>
-	<defense>0.3942365291566666</defense>
-	<wing>0.06413333333333333</wing>
-	<playmaking>0.0694156203</playmaking>
+	<defense>0.039423652915666664</defense>
+	<wing>0.006413333333333333</wing>
+	<playmaking>0.006941562029999999</playmaking>
 	<scoring>0.0</scoring>
 	<passing>0.0</passing>
-	<standard>0.0</standard>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.2262940872499382</normalization_factor>
 </DEFENSE_W>
 <WB>
 	<Position>4</Position>
 	<keeper>0.0</keeper>
-	<defense>0.3690373746799999</defense>
-	<wing>0.1455333333333333</wing>
-	<playmaking>0.0694156203</playmaking>
+	<defense>0.03690373746799999</defense>
+	<wing>0.01455333333333333</wing>
+	<playmaking>0.006941562029999999</playmaking>
 	<scoring>0.0</scoring>
 	<passing>0.0</passing>
-	<standard>0.0</standard>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.3568751032327757</normalization_factor>
 </WB>
 <WB_O>
 	<Position>5</Position>
 	<keeper>0.0</keeper>
-	<defense>0.30599962746</defense>
-	<wing>0.17019999999999996</wing>
-	<playmaking>0.09255416039999999</playmaking>
+	<defense>0.030599962745999996</defense>
+	<wing>0.017019999999999997</wing>
+	<playmaking>0.009255416039999999</playmaking>
 	<scoring>0.0</scoring>
 	<passing>0.0</passing>
-	<standard>0.0</standard>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.321482742319449</normalization_factor>
 </WB_O>
 <WB_D>
 	<Position>7</Position>
 	<keeper>0.0</keeper>
-	<defense>0.404631929</defense>
-	<wing>0.11099999999999999</wing>
-	<playmaking>0.046277080199999994</playmaking>
+	<defense>0.0404631929</defense>
+	<wing>0.011099999999999999</wing>
+	<playmaking>0.004627708019999999</playmaking>
 	<scoring>0.0</scoring>
 	<passing>0.0</passing>
-	<standard>0.0</standard>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.3055790998870702</normalization_factor>
 </WB_D>
 <WB_M>
 	<Position>6</Position>
 	<keeper>0.0</keeper>
-	<defense>0.3814906134166667</defense>
-	<wing>0.08633333333333332</wing>
-	<playmaking>0.09255416039999999</playmaking>
+	<defense>0.038149061341666665</defense>
+	<wing>0.008633333333333331</wing>
+	<playmaking>0.009255416039999999</playmaking>
 	<scoring>0.0</scoring>
 	<passing>0.0</passing>
-	<standard>0.0</standard>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.3020220938812406</normalization_factor>
 </WB_M>
 <MD>
 	<Position>8</Position>
 	<keeper>0.0</keeper>
-	<defense>0.13950441388666665</defense>
+	<defense>0.013950441388666666</defense>
 	<wing>0.0</wing>
-	<playmaking>0.4627708019999999</playmaking>
-	<scoring>0.04343585205666667</scoring>
-	<passing>0.12928711141833332</passing>
-	<standard>0.0</standard>
+	<playmaking>0.046277080199999994</playmaking>
+	<scoring>0.0043435852056666665</scoring>
+	<passing>0.012928711141833332</passing>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.80068553601885</normalization_factor>
 </MD>
 <MD_O>
 	<Position>9</Position>
 	<keeper>0.0</keeper>
-	<defense>0.058327887653333334</defense>
+	<defense>0.005832788765333333</defense>
 	<wing>0.0</wing>
-	<playmaking>0.4396322618999999</playmaking>
-	<scoring>0.061205064261666664</scoring>
-	<passing>0.18554348867166665</passing>
-	<standard>0.0</standard>
+	<playmaking>0.04396322618999999</playmaking>
+	<scoring>0.006120506426166667</scoring>
+	<passing>0.018554348867166663</passing>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.730308825008621</normalization_factor>
 </MD_O>
 <MD_D>
 	<Position>10</Position>
 	<keeper>0.0</keeper>
-	<defense>0.20828094011999998</defense>
+	<defense>0.020828094011999997</defense>
 	<wing>0.0</wing>
-	<playmaking>0.4396322618999999</playmaking>
-	<scoring>0.025666639851666666</scoring>
-	<passing>0.07007175774333335</passing>
-	<standard>0.0</standard>
+	<playmaking>0.04396322618999999</playmaking>
+	<scoring>0.0025666639851666664</scoring>
+	<passing>0.0070071757743333345</passing>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.7278526774952654</normalization_factor>
 </MD_D>
 <MD_W>
 	<Position>11</Position>
 	<keeper>0.0</keeper>
-	<defense>0.14398366295999998</defense>
-	<wing>0.1455333333333333</wing>
-	<playmaking>0.4164937218</playmaking>
+	<defense>0.014398366295999998</defense>
+	<wing>0.01455333333333333</wing>
+	<playmaking>0.04164937218</playmaking>
 	<scoring>0.0</scoring>
-	<passing>0.121876875635</passing>
-	<standard>0.0</standard>
+	<passing>0.012187687563500001</passing>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.9235725388464018</normalization_factor>
 </MD_W>
 <WING>
 	<Position>12</Position>
 	<keeper>0.0</keeper>
-	<defense>0.15185117515</defense>
-	<wing>0.21213333333333334</wing>
-	<playmaking>0.20824686089999994</playmaking>
+	<defense>0.015185117514999999</defense>
+	<wing>0.021213333333333334</wing>
+	<playmaking>0.020824686089999996</playmaking>
 	<scoring>0.0</scoring>
-	<passing>0.08585125936166665</passing>
-	<standard>0.0</standard>
+	<passing>0.008585125936166666</passing>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.5290356837514363</normalization_factor>
 </WING>
 <WING_O>
 	<Position>13</Position>
 	<keeper>0.0</keeper>
-	<defense>0.09633502438</defense>
-	<wing>0.24666666666666665</wing>
-	<playmaking>0.1388312406</playmaking>
+	<defense>0.009633502438</defense>
+	<wing>0.024666666666666663</wing>
+	<playmaking>0.013883124059999998</playmaking>
 	<scoring>0.0</scoring>
-	<passing>0.09719997318499998</passing>
-	<standard>0.0</standard>
+	<passing>0.009719997318499998</passing>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.3453659690764093</normalization_factor>
 </WING_O>
 <WING_D>
 	<Position>14</Position>
 	<keeper>0.0</keeper>
-	<defense>0.24428347669</defense>
-	<wing>0.17019999999999996</wing>
-	<playmaking>0.1388312406</playmaking>
+	<defense>0.024428347669</defense>
+	<wing>0.017019999999999997</wing>
+	<playmaking>0.013883124059999998</playmaking>
 	<scoring>0.0</scoring>
-	<passing>0.06167178455833333</passing>
-	<standard>0.0</standard>
+	<passing>0.0061671784558333335</passing>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.4289030970850025</normalization_factor>
 </WING_D>
 <WING_M>
 	<Position>15</Position>
 	<keeper>0.0</keeper>
-	<defense>0.1432385927433333</defense>
-	<wing>0.18253333333333333</wing>
-	<playmaking>0.2545239411</playmaking>
+	<defense>0.014323859274333332</defense>
+	<wing>0.018253333333333333</wing>
+	<playmaking>0.02545239411</playmaking>
 	<scoring>0.0</scoring>
-	<passing>0.06858971058666666</passing>
-	<standard>0.0</standard>
+	<passing>0.0068589710586666654</passing>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.5076666055810133</normalization_factor>
 </WING_M>
 <FW>
 	<Position>16</Position>
 	<keeper>0.0</keeper>
 	<defense>0.0</defense>
-	<wing>0.11839999999999998</wing>
-	<playmaking>0.11569270049999998</playmaking>
-	<scoring>0.33063569116666663</scoring>
-	<passing>0.13422044475166667</passing>
-	<standard>0.0</standard>
+	<wing>0.011839999999999998</wing>
+	<playmaking>0.011569270049999998</playmaking>
+	<scoring>0.03306356911666666</scoring>
+	<passing>0.013422044475166667</passing>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.6239871185147083</normalization_factor>
 </FW>
 <FW_D>
 	<Position>17</Position>
 	<keeper>0.0</keeper>
 	<defense>0.0</defense>
-	<wing>0.06413333333333333</wing>
-	<playmaking>0.16196978069999995</playmaking>
-	<scoring>0.1746973203866667</scoring>
-	<passing>0.2575742496516667</passing>
-	<standard>0.0</standard>
+	<wing>0.006413333333333333</wing>
+	<playmaking>0.016196978069999996</playmaking>
+	<scoring>0.01746973203866667</scoring>
+	<passing>0.02575742496516667</passing>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.6443388185961887</normalization_factor>
 </FW_D>
 <FW_D_TECH>
 	<Position>98</Position>
 	<keeper>0.0</keeper>
 	<defense>0.0</defense>
-	<wing>0.06413333333333333</wing>
-	<playmaking>0.16196978069999995</playmaking>
-	<scoring>0.1746973203866667</scoring>
-	<passing>0.3069075829849999</passing>
-	<standard>0.0</standard>
+	<wing>0.006413333333333333</wing>
+	<playmaking>0.016196978069999996</playmaking>
+	<scoring>0.01746973203866667</scoring>
+	<passing>0.030690758298499994</passing>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.6443388185961887</normalization_factor>
 </FW_D_TECH>
 <FW_W>
 	<Position>21</Position>
 	<keeper>0.0</keeper>
 	<defense>0.0</defense>
-	<wing>0.20966666666666664</wing>
-	<playmaking>0.06941562029999998</playmaking>
-	<scoring>0.3029742228366667</scoring>
-	<passing>0.11201020896833333</passing>
-	<standard>0.0</standard>
+	<wing>0.020966666666666665</wing>
+	<playmaking>0.006941562029999998</playmaking>
+	<scoring>0.030297422283666667</scoring>
+	<passing>0.011201020896833332</passing>
+	<setpieces>0.0</setpieces>
+	<normalization_factor>1.6126436613742852</normalization_factor>
 </FW_W>
 </FormulaFactors>

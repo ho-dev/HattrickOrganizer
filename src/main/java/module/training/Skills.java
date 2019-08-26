@@ -93,25 +93,25 @@ public class Skills {
     public static int getSkillValue(Player player, int skillIndex) {
         switch (skillIndex) {
             case PlayerSkill.KEEPER:
-                return player.getTorwart();
+                return player.getGKskill();
 
             case PlayerSkill.PLAYMAKING:
-                return player.getSpielaufbau();
+                return player.getPMskill();
 
             case PlayerSkill.PASSING:
-                return player.getPasspiel();
+                return player.getPSskill();
 
             case PlayerSkill.WINGER:
-                return player.getFluegelspiel();
+                return player.getWIskill();
 
             case PlayerSkill.DEFENDING:
-                return player.getVerteidigung();
+                return player.getDEFskill();
 
             case PlayerSkill.SCORING:
-                return player.getTorschuss();
+                return player.getSCskill();
 
             case PlayerSkill.SET_PIECES:
-                return player.getStandards();
+                return player.getSPskill();
 
             case PlayerSkill.STAMINA:
                 return player.getKondition();

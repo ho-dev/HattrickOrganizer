@@ -107,7 +107,7 @@ class ResultPanel extends JPanel {
                 @Override
 				public void actionPerformed(ActionEvent arg0) {
                     final Player sp = HOVerwaltung.instance().getModel().getSpieler(id);
-                    double decimals = average - sp.getTorwart()
+                    double decimals = average - sp.getGKskill()
                                       - sp.getSubskill4Pos(PlayerSkill.KEEPER);
 
                     if (decimals > 1) {

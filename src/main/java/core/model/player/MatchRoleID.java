@@ -663,8 +663,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	}
 
 	/**
-	 * liefert eine ID nach der Sortiert werden kann ( z.B.
-	 * Spierlübersichtstabelle
+	 * returns an ID that can be sorted (e.g.  * Player overview table
 	 */
 	public static int getSortId(byte position, boolean reserve) {
 		int id = position;

@@ -20,14 +20,15 @@ public final class FaktorenTable extends AbstractTable {
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[8];
-		columns[0]= new ColumnDescriptor("HOPosition",Types.INTEGER,false,true);
-		columns[1]= new ColumnDescriptor("Torwart",Types.REAL,false);
-		columns[2]= new ColumnDescriptor("Verteidigung",Types.REAL,false);
-		columns[3]= new ColumnDescriptor("Fluegel",Types.REAL,false);
-		columns[4]= new ColumnDescriptor("Passpiel",Types.REAL,false);
-		columns[5]= new ColumnDescriptor("Standards",Types.REAL,false);
-		columns[6]= new ColumnDescriptor("Torschuss",Types.REAL,false);
-		columns[7]= new ColumnDescriptor("Spielaufbau",Types.REAL,false);
+		columns[0]= new ColumnDescriptor("PositionID",Types.INTEGER,false,true);
+		columns[1]= new ColumnDescriptor("GKfactor",Types.REAL,false);
+		columns[2]= new ColumnDescriptor("DEfactor",Types.REAL,false);
+		columns[3]= new ColumnDescriptor("WIfactor",Types.REAL,false);
+		columns[4]= new ColumnDescriptor("PSfactor",Types.REAL,false);
+		columns[5]= new ColumnDescriptor("SPfactor",Types.REAL,false);
+		columns[6]= new ColumnDescriptor("SCfactor",Types.REAL,false);
+		columns[7]= new ColumnDescriptor("PMfactor",Types.REAL,false);
+		columns[7]= new ColumnDescriptor("NormalisationFactor",Types.REAL,false);
 		
 		
 	}
@@ -35,14 +36,14 @@ public final class FaktorenTable extends AbstractTable {
 	protected void setFaktorenFromDB(FactorObject fo) {
 		if (fo != null) {
 			String statement = null;
-			final String[] awhereS = { "HOPosition" };
+			final String[] awhereS = { "PositionID" };
 			final String[] awhereV = { "" + fo.getPosition()};
 
 			//erst Vorhandene Aufstellung löschen
 			delete( awhereS, awhereV );
 
 			//insert vorbereiten
-			statement = "INSERT INTO "+getTableName()+" ( HOPosition, Torwart, Verteidigung, Fluegel, Passpiel, Standards, Torschuss, Spielaufbau ) VALUES(";
+			statement = "INSERT INTO "+getTableName()+" (PositionID, GKfactor, DEfactor, WIfactor, PSfactor, SPfactor, SCfactor, PMfactor, NormalisationFactor) VALUES(";
 			statement
 				+= (""
 					+ fo.getPosition()
@@ -60,6 +61,8 @@ public final class FaktorenTable extends AbstractTable {
 					+ fo.getSCfactor()
 					+ ","
 					+ fo.getPMfactor()
+					+ ","
+					+ fo.getNormalizationFactor()
 					+ " )");
 			adapter.executeUpdate(statement);
 		}
@@ -74,7 +77,7 @@ public final class FaktorenTable extends AbstractTable {
 			if (rs != null) {
 				rs.beforeFirst();
 				while (rs.next()) {
-					factors.setPositionFactor(rs.getByte("HOPosition"), new FactorObject(rs));
+					factors.setPositionFactor(rs.getByte("PositionID"), new FactorObject(rs));
 				}
 			} else {
 				// use hardcoded values

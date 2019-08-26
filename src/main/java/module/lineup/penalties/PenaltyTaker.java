@@ -32,12 +32,12 @@ public class PenaltyTaker {
 	}
 
 	public double getScoring() {
-		return ((double) this.player.getTorschuss())
+		return ((double) this.player.getSCskill())
 				+ this.player.getSubskill4Pos(PlayerSkill.SCORING);
 	}
 
 	public double getSetPieces() {
-		return ((double) this.player.getStandards())
+		return ((double) this.player.getSPskill())
 				+ this.player.getSubskill4Pos(PlayerSkill.SET_PIECES);
 	}
 

@@ -2,10 +2,8 @@ package module.lineup;
 
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
-import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.Ratings;
-import core.model.UserParameter;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
 import core.model.match.Weather;
@@ -23,7 +21,6 @@ import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class Lineup{
@@ -418,7 +415,7 @@ public class Lineup{
 		if (players != null) {
 			for (Player player : players) {
 				if (m_clAssi.isPlayerInStartingEleven(player.getSpielerID(), noKeeper)) {
-					double sp = (double) player.getStandards()
+					double sp = (double) player.getSPskill()
 							+ player.getSubskill4Pos(PlayerSkill.SET_PIECES)
 							+ RatingPredictionManager.getLoyaltyHomegrownBonus(player);
 					if (sp > maxStandard) {

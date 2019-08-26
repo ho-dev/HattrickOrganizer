@@ -156,7 +156,7 @@ class TransferTableModel extends AbstractTableModel {
             case 12:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getTorwart());
+                    return new Integer(transfer.getPlayerInfo().getGKskill());
                 } else {
                     return new Integer(-1);
                 }
@@ -164,7 +164,7 @@ class TransferTableModel extends AbstractTableModel {
             case 13:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getVerteidigung());
+                    return new Integer(transfer.getPlayerInfo().getDEFskill());
                 } else {
                     return new Integer(-1);
                 }
@@ -172,7 +172,7 @@ class TransferTableModel extends AbstractTableModel {
             case 14:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getSpielaufbau());
+                    return new Integer(transfer.getPlayerInfo().getPMskill());
                 } else {
                     return new Integer(-1);
                 }
@@ -180,7 +180,7 @@ class TransferTableModel extends AbstractTableModel {
             case 15:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getPasspiel());
+                    return new Integer(transfer.getPlayerInfo().getPSskill());
                 } else {
                     return new Integer(-1);
                 }
@@ -188,7 +188,7 @@ class TransferTableModel extends AbstractTableModel {
             case 16:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getFluegelspiel());
+                    return new Integer(transfer.getPlayerInfo().getWIskill());
                 } else {
                     return new Integer(-1);
                 }
@@ -196,7 +196,7 @@ class TransferTableModel extends AbstractTableModel {
             case 17:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getTorschuss());
+                    return new Integer(transfer.getPlayerInfo().getSCskill());
                 } else {
                     return new Integer(-1);
                 }
@@ -204,7 +204,7 @@ class TransferTableModel extends AbstractTableModel {
             case 18:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getStandards());
+                    return new Integer(transfer.getPlayerInfo().getSPskill());
                 } else {
                     return new Integer(-1);
                 }

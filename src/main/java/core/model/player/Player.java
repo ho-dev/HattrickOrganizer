@@ -30,8 +30,9 @@ import java.util.concurrent.TimeUnit;
 public class Player {
     //~ Class fields -------------------------------------------------------------------------------
 
-	/** Cache for star ratings (Hashtable<String, Float>) */
-    private static Hashtable<String,Object> starRatingCache = new Hashtable<String,Object>();
+	/** Cache for player contribution (Hashtable<String, Float>) */
+    private static Hashtable<String,Object> PlayerAbsoluteContributionCache = new Hashtable<String,Object>();
+    private static Hashtable<String,Object> PlayerRelativeContributionCache = new Hashtable<String,Object>();
 	// constants for lineup HT-ML export
     private static final String BREAK = "[br]";
 	private static final String O_BRACKET = "[";
@@ -688,7 +689,7 @@ public class Player {
      *
      * @return Value of property m_iFluegelspiel.
      */
-    public int getFluegelspiel() {
+    public int getWIskill() {
         return m_iFluegelspiel;
     }
 
@@ -814,30 +815,51 @@ public class Player {
     public void setHrfDate(Timestamp timestamp){
     	m_clhrfDate = timestamp;
     }
+
+
     /**
-     * liefert die Stärke für die IdealPosition
+     * calculate the contribution for the ideal position
      */
     public float getIdealPosStaerke(boolean mitForm) {
-        return calcPosValue(getIdealPosition(), mitForm);
+        return getIdealPosStaerke(mitForm, false);
+    }
+
+
+    /**
+     * calculate the contribution for the ideal position
+     */
+    public float getIdealPosStaerke(boolean mitForm, boolean normalized) {
+        return calcPosValue(getIdealPosition(), mitForm, normalized, -1);
     }
 
     /**
-     * Calcultate Player Ideal Position
+     * calculate the contribution for the ideal position
+     */
+    public float getIdealPosStaerke(boolean mitForm, boolean normalized, int nb_decimal) {
+        return calcPosValue(getIdealPosition(), mitForm, normalized, nb_decimal);
+    }
+
+    /**
+     * Calculate Player Ideal Position
      */
     public byte getIdealPosition() {
-        //get user defaulkt from DB
+        //in case player best position is forced by user
         final byte flag = getUserPosFlag();
 
         if (flag == IMatchRoleID.UNKNOWN) {
             final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
             byte idealPos = IMatchRoleID.UNKNOWN;
             float maxStk = -1.0f;
+            byte currPosition;
+            float contrib;
 
             for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
                 if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
-                if (calcPosValue(allPos[i].getPosition(),true) > maxStk) {
-                	maxStk = calcPosValue(allPos[i].getPosition(),true);
-                    idealPos = allPos[i].getPosition();
+                currPosition = allPos[i].getPosition();
+                contrib = calcPosValue(currPosition,true, true);
+                if (contrib > maxStk) {
+                	maxStk = contrib;
+                    idealPos = currPosition;
                 }
             }
 
@@ -1090,7 +1112,7 @@ public class Player {
      *
      * @return Value of property m_iPasspiel.
      */
-    public int getPasspiel() {
+    public int getPSskill() {
         return m_iPasspiel;
     }
 
@@ -1174,7 +1196,7 @@ public class Player {
      *
      * @return Value of property m_iSpielaufbau.
      */
-    public int getSpielaufbau() {
+    public int getPMskill() {
         return m_iSpielaufbau;
     }
 
@@ -1232,7 +1254,7 @@ public class Player {
      *
      * @return Value of property m_iStandards.
      */
-    public int getStandards() {
+    public int getSPskill() {
         return m_iStandards;
     }
 
@@ -1441,7 +1463,7 @@ public class Player {
      *
      * @return Value of property m_iTorschuss.
      */
-    public int getTorschuss() {
+    public int getSCskill() {
         return m_iTorschuss;
     }
 
@@ -1459,7 +1481,7 @@ public class Player {
      *
      * @return Value of property m_iTorwart.
      */
-    public int getTorwart() {
+    public int getGKskill() {
         return m_iTorwart;
     }
 
@@ -1713,7 +1735,7 @@ public class Player {
      *
      * @return Value of property m_iVerteidigung.
      */
-    public int getVerteidigung() {
+    public int getDEFskill() {
         return m_iVerteidigung;
     }
 
@@ -1829,25 +1851,32 @@ public class Player {
     //Helper
     ////////////////////////////////////////////////////////////////////////////////
 
+    float calcPosValue(FactorObject fo, boolean useForm)
+    {
+        return  calcPosValue(fo, useForm, false);
+    }
+
     /**
      * Calculate the player strength on a specific lineup position
      * with or without form
      *
      * @param fo 		FactorObject with the skill weights for this position
      * @param useForm	consider form?
+     * @param normalized	absolute or normalized contribution?
      *
      * @return 			the player strength on this position
      */
-    float calcPosValue(FactorObject fo, boolean useForm) {
+    float calcPosValue(FactorObject fo, boolean useForm, boolean normalized) {
         if ((fo == null) || (fo.getSum() == 0.0f)) {
             return -1.0f;
         }
 
         // The stars formulas are changed by the user -> clear the cache
-        if (!starRatingCache.containsKey("lastChange") || ((Date)starRatingCache.get("lastChange")).before(FormulaFactors.getLastChange())) {
+        if (!PlayerAbsoluteContributionCache.containsKey("lastChange") || ((Date) PlayerAbsoluteContributionCache.get("lastChange")).before(FormulaFactors.getLastChange())) {
 //    		System.out.println ("Clearing stars cache");
-        	starRatingCache.clear();
-        	starRatingCache.put("lastChange", new Date());
+        	PlayerAbsoluteContributionCache.clear();
+        	PlayerRelativeContributionCache.clear();
+        	PlayerAbsoluteContributionCache.put("lastChange", new Date());
         }
         /**
          * Create a key for the Hashtable cache
@@ -1859,25 +1888,26 @@ public class Player {
         float loy = RatingPredictionManager.getLoyaltyHomegrownBonus(this);
 
         String key = fo.getPosition() + ":"
-        					+ Helper.round(getTorwart() + getSubskill4Pos(PlayerSkill.KEEPER) + loy, 2) + "|"
-        					+ Helper.round(getSpielaufbau() + getSubskill4Pos(PlayerSkill.PLAYMAKING) + loy, 2) + "|"
-        					+ Helper.round(getVerteidigung() + getSubskill4Pos(PlayerSkill.DEFENDING) + loy, 2) + "|"
-        					+ Helper.round(getFluegelspiel() + getSubskill4Pos(PlayerSkill.WINGER) + loy, 2) + "|"
-        					+ Helper.round(getPasspiel() + getSubskill4Pos(PlayerSkill.PASSING) + loy, 2) + "|"
-        					+ Helper.round(getStandards() + getSubskill4Pos(PlayerSkill.SET_PIECES) + loy, 2) + "|"
-        					+ Helper.round(getTorschuss() + getSubskill4Pos(PlayerSkill.SCORING) + loy, 2) + "|"
+        					+ Helper.round(getGKskill() + getSubskill4Pos(PlayerSkill.KEEPER) + loy, 2) + "|"
+        					+ Helper.round(getPMskill() + getSubskill4Pos(PlayerSkill.PLAYMAKING) + loy, 2) + "|"
+        					+ Helper.round(getDEFskill() + getSubskill4Pos(PlayerSkill.DEFENDING) + loy, 2) + "|"
+        					+ Helper.round(getWIskill() + getSubskill4Pos(PlayerSkill.WINGER) + loy, 2) + "|"
+        					+ Helper.round(getPSskill() + getSubskill4Pos(PlayerSkill.PASSING) + loy, 2) + "|"
+        					+ Helper.round(getSPskill() + getSubskill4Pos(PlayerSkill.SET_PIECES) + loy, 2) + "|"
+        					+ Helper.round(getSCskill() + getSubskill4Pos(PlayerSkill.SCORING) + loy, 2) + "|"
         					+ getForm() + "|"
         					+ getKondition() + "|"
         					+ getErfahrung() + "|"
-        					// We need to add the specialty, because of Technical DefFW
-        					+ getPlayerSpecialty();
+        					+ getPlayerSpecialty(); // used for Technical DefFW
 
         // Check if the key already exists in cache
-        if (starRatingCache.containsKey(key)) {
-//        	System.out.println ("Using star rating from cache, key="+key+", tablesize="+starRatingCache.size());
-        	return ((Float)starRatingCache.get(key)).floatValue();
+        if (PlayerAbsoluteContributionCache.containsKey(key)) {
+           // System.out.println ("Using star rating from cache, key="+key+", tablesize="+starRatingCache.size());
+            if (normalized) {return ((Float)PlayerRelativeContributionCache.get(key)).floatValue();}
+            else {return ((Float)PlayerAbsoluteContributionCache.get(key)).floatValue();}
         }
 
+        // Compute contribution
         float gkValue = fo.getGKfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.KEEPER, useForm, false, null, false);
         float pmValue = fo.getPMfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.PLAYMAKING, useForm, false, null, false);
         float deValue = fo.getDEfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.DEFENDING, useForm, false, null, false);
@@ -1885,15 +1915,30 @@ public class Player {
         float psValue = fo.getPSfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.PASSING, useForm, false, null, false);
         float spValue = fo.getSPfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.SET_PIECES, useForm, false, null, false);
         float scValue = fo.getSCfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.SCORING, useForm, false, null, false);
-
         float val = gkValue + pmValue + deValue + wiValue + psValue + spValue + scValue;
 
+        float absVal = val*10; // multiplied by 10 for improved visibility
+        float normVal = val/fo.getNormalizationFactor()*100;  // scaled between 0 and 100%
+
         // Put to cache
-        starRatingCache.put(key, new Float(val));
+        PlayerAbsoluteContributionCache.put(key, absVal);
+        PlayerRelativeContributionCache.put(key, normVal);
+
 //    	System.out.println ("Star rating put to cache, key="+key+", val="+val+", tablesize="+starRatingCache.size());
-        return val;
+        if (normalized) {return normVal;}
+        else {return absVal;}
     }
 
+
+    public float calcPosValue(byte pos, boolean useForm, boolean normalized)
+    {
+        return calcPosValue(pos, true, true, core.model.UserParameter.instance().nbDecimals);
+    }
+
+    public float calcPosValue(byte pos, boolean useForm)
+    {
+        return  calcPosValue(pos, useForm, false);
+    }
     /**
      * Calculate the player strength on a specific lineup position
      * with or without form
@@ -1903,7 +1948,7 @@ public class Player {
      *
      * @return 			the player strength on this position
      */
-    public float calcPosValue(byte pos, boolean useForm) {
+    public float calcPosValue(byte pos, boolean useForm, boolean normalized, int nb_decimals) {
     	float es;
     	FactorObject factor = FormulaFactors.instance().getPositionFactor(pos);
 
@@ -1913,14 +1958,14 @@ public class Player {
         }
 
     	if(factor != null) {
-            es = calcPosValue(factor, useForm);
+            es = calcPosValue(factor, useForm, normalized);
         }
     	 else{
     		 //	For Coach or factor not found return 0
     		 return 0.0f;
     	 }
 
-        return core.util.Helper.round(es , core.model.UserParameter.instance().nbDecimals);
+        return core.util.Helper.round(es , nb_decimals);
     }
 
     /**

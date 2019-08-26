@@ -200,14 +200,14 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         Helper.markierenComboBox(m_jcbForm, m_clPlayer.getForm());
         Helper.markierenComboBox(m_jcbErfahrung, m_clPlayer.getErfahrung());
         Helper.markierenComboBox(m_jcbKondition, m_clPlayer.getKondition());
-        Helper.markierenComboBox(m_jcbSpielaufbau, m_clPlayer.getSpielaufbau());
-        Helper.markierenComboBox(m_jcbFluegel, m_clPlayer.getFluegelspiel());
-        Helper.markierenComboBox(m_jcbTorschuss, m_clPlayer.getTorschuss());
-        Helper.markierenComboBox(m_jcbTorwart, m_clPlayer.getTorwart());
-        Helper.markierenComboBox(m_jcbPasspiel, m_clPlayer.getPasspiel());
-        Helper.markierenComboBox(m_jcbVerteidigung, m_clPlayer.getVerteidigung());
+        Helper.markierenComboBox(m_jcbSpielaufbau, m_clPlayer.getPMskill());
+        Helper.markierenComboBox(m_jcbFluegel, m_clPlayer.getWIskill());
+        Helper.markierenComboBox(m_jcbTorschuss, m_clPlayer.getSCskill());
+        Helper.markierenComboBox(m_jcbTorwart, m_clPlayer.getGKskill());
+        Helper.markierenComboBox(m_jcbPasspiel, m_clPlayer.getPSskill());
+        Helper.markierenComboBox(m_jcbVerteidigung, m_clPlayer.getDEFskill());
 		Helper.markierenComboBox(m_jcbSpeciality, m_clPlayer.getPlayerSpecialty());
-        Helper.markierenComboBox(m_jcbStandard, m_clPlayer.getStandards());
+        Helper.markierenComboBox(m_jcbStandard, m_clPlayer.getSPskill());
         Helper.markierenComboBox(m_jcbLoyalty, m_clPlayer.getLoyalty());
         m_jchHomegrown.setSelected(m_clPlayer.isHomeGrown());
 
@@ -258,13 +258,13 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         m_jlForm.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getForm()- m_clPlayer.getForm(),true));
         m_jlKondition.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getKondition()- m_clPlayer.getKondition(),true));
         m_jlErfahrung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getErfahrung()- m_clPlayer.getErfahrung(),true));
-        m_jlSpielaufbau.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getSpielaufbau()- m_clPlayer.getSpielaufbau(),true));
-        m_jlFluegel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getFluegelspiel()- m_clPlayer.getFluegelspiel(),true));
-        m_jlTorschuss.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getTorschuss()- m_clPlayer.getTorschuss(),true));
-        m_jlTorwart.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getTorwart()- m_clPlayer.getTorwart(),true));
-        m_jlPasspiel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getPasspiel()- m_clPlayer.getPasspiel(),true));
-        m_jlVerteidigung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getVerteidigung()- m_clPlayer.getVerteidigung(),true));
-        m_jlStandard.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getStandards()- m_clPlayer.getStandards(),true));
+        m_jlSpielaufbau.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getPMskill()- m_clPlayer.getPMskill(),true));
+        m_jlFluegel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getWIskill()- m_clPlayer.getWIskill(),true));
+        m_jlTorschuss.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getSCskill()- m_clPlayer.getSCskill(),true));
+        m_jlTorwart.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getGKskill()- m_clPlayer.getGKskill(),true));
+        m_jlPasspiel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getPSskill()- m_clPlayer.getPSskill(),true));
+        m_jlVerteidigung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getDEFskill()- m_clPlayer.getDEFskill(),true));
+        m_jlStandard.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getSPskill()- m_clPlayer.getSPskill(),true));
         m_jlLoyalty.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getLoyalty()- m_clPlayer.getLoyalty(), true));
         int hg = 0;
         if (m_clPlayer.isHomeGrown() != tempPlayer.isHomeGrown())

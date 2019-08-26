@@ -631,7 +631,7 @@ final class DBUpdater {
 			dbZugriff.getTable(MatchOrderTable.TABLENAME).createTable();
 		}
 
-		// use defaults player formula from defaults.xml by reseting the value in the database
+		// use defaults player formula from defaults.xml by resetting the value in the database
 		AbstractTable faktorenTab = dbZugriff.getTable(FaktorenTable.TABLENAME);
 		if (faktorenTab != null) {
 			faktorenTab.dropTable();

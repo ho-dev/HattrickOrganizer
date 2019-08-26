@@ -751,8 +751,8 @@ final public class UserColumnFactory {
 								- (player.getIdealPosStaerke(true) / 100.0f),
 							MatchRoleID.getNameForPosition(player.getIdealPosition())
 								+ " ("
-								+ player.getIdealPosStaerke(true)
-								+ ")",
+								+ player.getIdealPosStaerke(true, true, 1)
+								+ "%)",
 							ColorLabelEntry.FG_STANDARD,
 							ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 					tmp.setIcon(ThemeManager.getIcon((player.getUserPosFlag() < 0)?HOIconName.TOOTHEDWHEEL:HOIconName.HAND));

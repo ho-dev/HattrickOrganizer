@@ -38,7 +38,7 @@ public class DefensivePositionsWeeklyTraining extends WeeklyTrainingType {
 	public double getTrainingLength(Player player, int assistants, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
 	{
 		 return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), assistants, trainerLevel, 
-				 intensity, stamina, player.getVerteidigung(), staff);
+				 intensity, stamina, player.getDEFskill(), staff);
 	}
 	@Override
 	public double getSecondaryTrainingLength(Player player, int assistants, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)

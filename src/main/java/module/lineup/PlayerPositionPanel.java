@@ -771,7 +771,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
 
         	if (m_iPositionID == IMatchRoleID.setPieces) {
                 item.setValues(spielerName,
-                               player.getStandards()
+                               player.getSPskill()
                                + player.getSubskill4Pos(PlayerSkill.SET_PIECES)
                                + RatingPredictionManager.getLoyaltyHomegrownBonus(player),
                         player);

@@ -99,13 +99,13 @@ class PlayerSkillColumn extends PlayerColumn {
 	 */
 	private int getSkill(Player player){
 		switch(skill){
-		case PlayerSkill.KEEPER: 		return player.getTorwart();
-		case PlayerSkill.DEFENDING: 	return player.getVerteidigung();
-		case PlayerSkill.PASSING: 		return player.getPasspiel();
-		case PlayerSkill.WINGER: 		return player.getFluegelspiel();
-		case PlayerSkill.PLAYMAKING: 	return player.getSpielaufbau();
-		case PlayerSkill.SET_PIECES: 		return player.getStandards();
-		case PlayerSkill.SCORING: 		return player.getTorschuss();
+		case PlayerSkill.KEEPER: 		return player.getGKskill();
+		case PlayerSkill.DEFENDING: 	return player.getDEFskill();
+		case PlayerSkill.PASSING: 		return player.getPSskill();
+		case PlayerSkill.WINGER: 		return player.getWIskill();
+		case PlayerSkill.PLAYMAKING: 	return player.getPMskill();
+		case PlayerSkill.SET_PIECES: 		return player.getSPskill();
+		case PlayerSkill.SCORING: 		return player.getSCskill();
 		case PlayerSkill.EXPERIENCE: 	return player.getErfahrung();
 		case PlayerSkill.FORM: 			return player.getForm();
 		case PlayerSkill.STAMINA: 		return player.getKondition();

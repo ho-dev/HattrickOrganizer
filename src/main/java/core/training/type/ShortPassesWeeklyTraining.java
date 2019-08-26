@@ -39,7 +39,7 @@ public class ShortPassesWeeklyTraining extends WeeklyTrainingType {
 	public double getTrainingLength(Player player, int assistants, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
 	{
 		return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), assistants, trainerLevel, 
-				intensity, stamina, player.getPasspiel(), staff);
+				intensity, stamina, player.getPSskill(), staff);
 	}
 	@Override
 	public double getSecondaryTrainingLength(Player player, int assistants, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)

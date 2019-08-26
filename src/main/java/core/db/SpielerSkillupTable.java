@@ -175,13 +175,13 @@ final class SpielerSkillupTable extends AbstractTable {
 			Player nPlayer = iter.next();
 			Player oPlayer = HOVerwaltung.instance().getModel().getSpieler(nPlayer.getSpielerID());
 			if (oPlayer!=null) {
-				checkNewSkillup(nPlayer,nPlayer.getTorwart(),oPlayer.getTorwart(),PlayerSkill.KEEPER,homodel.getID());	
-				checkNewSkillup(nPlayer,nPlayer.getSpielaufbau(),oPlayer.getSpielaufbau(),PlayerSkill.PLAYMAKING,homodel.getID());
-				checkNewSkillup(nPlayer,nPlayer.getPasspiel(),oPlayer.getPasspiel(),PlayerSkill.PASSING,homodel.getID());
-				checkNewSkillup(nPlayer,nPlayer.getFluegelspiel(),oPlayer.getFluegelspiel(),PlayerSkill.WINGER,homodel.getID());
-				checkNewSkillup(nPlayer,nPlayer.getVerteidigung(),oPlayer.getVerteidigung(),PlayerSkill.DEFENDING,homodel.getID());
-				checkNewSkillup(nPlayer,nPlayer.getTorschuss(),oPlayer.getTorschuss(),PlayerSkill.SCORING,homodel.getID());
-				checkNewSkillup(nPlayer,nPlayer.getStandards(),oPlayer.getStandards(),PlayerSkill.SET_PIECES,homodel.getID());
+				checkNewSkillup(nPlayer,nPlayer.getGKskill(),oPlayer.getGKskill(),PlayerSkill.KEEPER,homodel.getID());
+				checkNewSkillup(nPlayer,nPlayer.getPMskill(),oPlayer.getPMskill(),PlayerSkill.PLAYMAKING,homodel.getID());
+				checkNewSkillup(nPlayer,nPlayer.getPSskill(),oPlayer.getPSskill(),PlayerSkill.PASSING,homodel.getID());
+				checkNewSkillup(nPlayer,nPlayer.getWIskill(),oPlayer.getWIskill(),PlayerSkill.WINGER,homodel.getID());
+				checkNewSkillup(nPlayer,nPlayer.getDEFskill(),oPlayer.getDEFskill(),PlayerSkill.DEFENDING,homodel.getID());
+				checkNewSkillup(nPlayer,nPlayer.getSCskill(),oPlayer.getSCskill(),PlayerSkill.SCORING,homodel.getID());
+				checkNewSkillup(nPlayer,nPlayer.getSPskill(),oPlayer.getSPskill(),PlayerSkill.SET_PIECES,homodel.getID());
 				checkNewSkillup(nPlayer,nPlayer.getKondition(),oPlayer.getKondition(),PlayerSkill.STAMINA,homodel.getID());
 				checkNewSkillup(nPlayer,nPlayer.getErfahrung(),oPlayer.getErfahrung(),PlayerSkill.EXPERIENCE,homodel.getID());				
 				
