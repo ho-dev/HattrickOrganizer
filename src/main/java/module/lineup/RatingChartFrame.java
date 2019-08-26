@@ -3,6 +3,7 @@ package module.lineup;
 import core.model.HOVerwaltung;
 import core.gui.HOMainFrame;
 
+import java.awt.Dimension;
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
@@ -18,6 +19,8 @@ class RatingChartFrame extends JFrame {
 	private ButtonGroup chartButtonGroup = new ButtonGroup();
 	private JCheckBox etToggler = new JCheckBox(HOVerwaltung.instance().getLanguageString("lineup.ETToggler"));
 	private JPanel controlsPanel = new JPanel();
+	private JPanel placeholderChart = new JPanel();
+	private Dimension chartSize = new Dimension(900,700);
 
 	RatingChartFrame() {
 		super(HOVerwaltung.instance().getLanguageString("RatingChartFrame"));
@@ -33,10 +36,12 @@ class RatingChartFrame extends JFrame {
 	etToggler.setEnabled(false);
 	chartButtonGroup.add(singleChartButton);
 	chartButtonGroup.add(multiChartButton);
+	placeholderChart.setPreferredSize(chartSize);
 	controlsPanel.add(singleChartButton);
 	controlsPanel.add(multiChartButton);
 	controlsPanel.add(etToggler);
 	add(controlsPanel, BorderLayout.NORTH);
+	add(placeholderChart, BorderLayout.CENTER);
 	pack();
 	setVisible(true);
 	}
