@@ -17,7 +17,8 @@ public enum GoalDiffCriteria {
 	NOT_DOWN((byte) 5),
 	NOT_IN_THE_LEAD((byte) 6),
 	IN_THE_LEAD_BY_MORE_THAN_TWO((byte) 7),
-	DOWN_BY_MORE_THAN_TWO((byte) 8);
+	DOWN_BY_MORE_THAN_TWO((byte) 8),
+	MATCH_IS_NOT_TIED((byte) 9);
 
 	private final byte id;
 

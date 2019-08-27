@@ -174,6 +174,7 @@ public class ConvertXml2Hrf {
 		// Automatisch alle MatchLineups runterladen
 		Map<String, String> nextLineupDataMap = null;
 		for (MatchKurzInfo match : matches) {
+			// TODO maybe we should remove condition && (match.getMatchTyp().isOfficial()  (see #173)
 			if ((match.getMatchStatus() == MatchKurzInfo.UPCOMING) && (match.getMatchTyp().isOfficial())){
 				waitDialog.setValue(54);
 				// Match is always from the normal system, and league will do

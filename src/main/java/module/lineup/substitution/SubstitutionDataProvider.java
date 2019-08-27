@@ -82,8 +82,9 @@ public class SubstitutionDataProvider {
 				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalNotDown"), 5),
 				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalNotLead"), 6),
 				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalLeadMT2"), 7),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalDownMT2"), 8) };
-		return standingValues;
+				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalDownMT2"), 8),
+				new CBItem(HOVerwaltung.instance().getLanguageString("subs.MatchIsNotTied"), 9)};
+				return standingValues;
 	}
 
 	/**

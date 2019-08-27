@@ -117,6 +117,9 @@ public class LanguageStringLookup {
 		case DOWN_BY_MORE_THAN_TWO:
 			return HOVerwaltung.instance()
 					.getLanguageString("subs.GoalDownMT2");
+		case MATCH_IS_NOT_TIED:
+			return HOVerwaltung.instance()
+					.getLanguageString("subs.MatchIsNotTied");
 		default:
 			return "";
 		}
