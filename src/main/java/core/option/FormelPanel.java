@@ -264,8 +264,9 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
         m_jpStandard.addChangeListener(this);
         panel.add(m_jpStandard);
 
-        m_jpNORMALISATIONFACTOR = new SliderPanel(HOVerwaltung.instance().getLanguageString("PrefFormulaPanelNF"),
+        m_jpNORMALISATIONFACTOR = new SliderPanel(HOVerwaltung.instance().getLanguageString("Preference.Panel.Formula.NormalisationFactor.Short"),
                 100, 0, NORM_FAKTOR, 1.0f, 80);
+        m_jpNORMALISATIONFACTOR.setToolTipText(HOVerwaltung.instance().getLanguageString("Preference.Panel.Formula.NormalisationFactor"));
         m_jpNORMALISATIONFACTOR.addChangeListener(this);
         panel.add(m_jpNORMALISATIONFACTOR);
 
