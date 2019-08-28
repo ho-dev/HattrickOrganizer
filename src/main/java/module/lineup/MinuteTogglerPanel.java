@@ -112,8 +112,8 @@ public final class MinuteTogglerPanel extends JPanel {
 			}
 		});
 		add(prevButton, constraints);
-		toggleLabels.remove(-90d);  //remove FT and ET
-		toggleLabels.remove(-120d); //placeholder labels
+		toggleLabels.remove(-90d);  //remove 90' and 120'
+		toggleLabels.remove(-120d); //average placeholder labels
 		Collections.sort(toggleLabels);
 		for(final int[] i={0};i[0]<toggleLabels.size();i[0]++) {
 			JLabel toggleLabel = new JLabel(String.valueOf(toggleLabels.get(i[0]).longValue()), SwingConstants.CENTER);
