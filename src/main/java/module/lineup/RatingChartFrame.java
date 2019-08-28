@@ -22,6 +22,7 @@ class RatingChartFrame extends JFrame {
 	private JCheckBox etToggler = new JCheckBox(HOVerwaltung.instance().getLanguageString("lineup.ETToggler"));
 	private JPanel controlsPanel = new JPanel();
 	private JPanel placeholderChart = new JPanel();
+	private MultipleRatingChartsPanel multiChart = null;
 	private Dimension chartSize = new Dimension(900,700);
 
 	class ChartButtonHandler implements ItemListener {
@@ -37,7 +38,7 @@ class RatingChartFrame extends JFrame {
 				if(placeholderChart.getParent() != null) remove(placeholderChart);
 				if(source == null) {
 					if(e.getSource() == singleChartButton) source = new JPanel();
-					else if(e.getSource() == multiChartButton) source = new JPanel();
+					else if(e.getSource() == multiChartButton) source = new MultipleRatingChartsPanel();
 					source.setPreferredSize(chartSize);
 				}
 				add(source, BorderLayout.CENTER);
@@ -60,11 +61,11 @@ class RatingChartFrame extends JFrame {
 
 	private void initComponents() {
 	singleChartButton.setEnabled(false);
-	multiChartButton.setEnabled(false);
 	etToggler.setEnabled(false);
 	chartButtonGroup.add(singleChartButton);
 	chartButtonGroup.add(multiChartButton);
 	placeholderChart.setPreferredSize(chartSize);
+	multiChartButton.addItemListener(new ChartButtonHandler(multiChart));
 	controlsPanel.add(singleChartButton);
 	controlsPanel.add(multiChartButton);
 	controlsPanel.add(etToggler);
