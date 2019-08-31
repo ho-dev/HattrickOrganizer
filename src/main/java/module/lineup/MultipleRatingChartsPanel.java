@@ -67,6 +67,20 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		initComponents();
 	}
 
+	private SingleChart parse(Hashtable<Double, Double> source) {
+		ArrayList<Double> keys = new ArrayList(source.keySet());
+		keys.remove(-90d);  //remove 90' and 120'
+		keys.remove(-120d); //average placeholder labels
+		Collections.sort(keys, Collections.reverseOrder());
+		ArrayList<Double> valueList = new ArrayList();
+		ArrayList<String> captionList = new ArrayList();
+		for(Double key : keys) {
+			valueList.add(source.get(key));
+			captionList.add(String.valueOf(key.intValue()));
+		}
+		return new SingleChart(valueList.stream().mapToDouble(Double::doubleValue).toArray(), Helper.DEFAULTDEZIMALFORMAT, captionList.stream().toArray(String[]::new));
+	}
+
 	private void initComponents() {
 		showHelpLines.addItemListener(new ItemListener() {
 			@Override
@@ -97,20 +111,10 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 
-		Hashtable<Double, Double> map = HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense();
+		Hashtable<Double, Double> map;
 
-		ArrayList<Double> keys = new ArrayList(map.keySet());
-		keys.remove(-90d);  //remove 90' and 120'
-		keys.remove(-120d); //average placeholder labels
-		Collections.sort(keys, Collections.reverseOrder());
-		ArrayList<Double> valueList = new ArrayList();
-		ArrayList<String> captionList = new ArrayList();
-		for(Double key : keys) {
-			valueList.add(map.get(key));
-			captionList.add(String.valueOf(key.intValue()));
-		}
-		leftDefense = new SingleChart(valueList.stream().mapToDouble(Double::doubleValue).toArray(), Helper.DEFAULTDEZIMALFORMAT, captionList.stream().toArray(String[]::new));
-
+		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense();
+		leftDefense = parse(map);
 		chartsPanel.add(leftDefense.getChart(), gbc);
 
 		add(chartsPanel, BorderLayout.CENTER);
