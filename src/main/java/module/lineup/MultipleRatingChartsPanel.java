@@ -38,6 +38,8 @@ public final class MultipleRatingChartsPanel extends JPanel {
 
 		private void initComponents() {
 			data[0] = new StatistikModel(values, null, true, java.awt.Color.black, format);
+			data[0].setDataBasedBoundaries(true);
+			chart.setDataBasedBoundaries(true);
 			chart.setAllValues(data, captions, format, "", "", showValues.isSelected(), showHelpLines.isSelected());
 		}
 
