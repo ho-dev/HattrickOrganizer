@@ -5,10 +5,14 @@ import core.util.Helper;
 import core.gui.model.StatistikModel;
 import module.statistics.StatistikPanel;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
 import java.text.NumberFormat;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
@@ -44,6 +48,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	private JPanel chartsPanel = new JPanel(new GridBagLayout());
 	private JCheckBox showHelpLines = new JCheckBox(HOVerwaltung.instance().getLanguageString("Hilflinien"));
 	private JCheckBox showValues = new JCheckBox(HOVerwaltung.instance().getLanguageString("Beschriftung"));
+	private SingleChart leftDefense;
 
 	public MultipleRatingChartsPanel() {
 		super(new BorderLayout());
@@ -56,6 +61,27 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		controlsPanel.add(showHelpLines);
 		controlsPanel.add(showValues);
 		add(controlsPanel, BorderLayout.SOUTH);
+
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill =  GridBagConstraints.BOTH;
+		gbc.weightx = 1;
+		gbc.weighty = 1;
+
+		Hashtable<Double, Double> map = HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense();
+
+		ArrayList<Double> keys = new ArrayList(map.keySet());
+		keys.remove(-90d);  //remove 90' and 120'
+		keys.remove(-120d); //average placeholder labels
+		Collections.sort(keys, Collections.reverseOrder());
+		ArrayList<Double> valueList = new ArrayList();
+		ArrayList<String> captionList = new ArrayList();
+		for(Double key : keys) {
+			valueList.add(map.get(key));
+			captionList.add(String.valueOf(key.intValue()));
+		}
+		leftDefense = new SingleChart(valueList.stream().mapToDouble(Double::doubleValue).toArray(), Helper.DEFAULTDEZIMALFORMAT, captionList.stream().toArray(String[]::new));
+
+		chartsPanel.add(leftDefense.getChart(), gbc);
 
 		add(chartsPanel, BorderLayout.CENTER);
 	}
