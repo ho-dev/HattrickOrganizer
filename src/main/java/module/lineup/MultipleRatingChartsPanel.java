@@ -61,6 +61,14 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	private JCheckBox showHelpLines = new JCheckBox(HOVerwaltung.instance().getLanguageString("Hilflinien"));
 	private JCheckBox showValues = new JCheckBox(HOVerwaltung.instance().getLanguageString("Beschriftung"));
 	private SingleChart leftDefense;
+	private SingleChart centralDefense;
+	private SingleChart rightDefense;
+	// private SingleChart hatStats;
+	private SingleChart midfield;
+	private SingleChart loddar;
+	private SingleChart leftAttack;
+	private SingleChart centralAttack;
+	private SingleChart rightAttack;
 
 	public MultipleRatingChartsPanel() {
 		super(new BorderLayout());
@@ -90,6 +98,14 @@ public final class MultipleRatingChartsPanel extends JPanel {
 				else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
 				else return;
 				leftDefense.setHelpLines(selected);
+				centralDefense.setHelpLines(selected);
+				rightDefense.setHelpLines(selected);
+				// hatStats.setHelpLines(selected);
+				midfield.setHelpLines(selected);
+				loddar.setHelpLines(selected);
+				leftAttack.setHelpLines(selected);
+				centralAttack.setHelpLines(selected);
+				rightAttack.setHelpLines(selected);
 			}
 		});
 		showValues.addItemListener(new ItemListener() {
@@ -100,6 +116,14 @@ public final class MultipleRatingChartsPanel extends JPanel {
 				else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
 				else return;
 				leftDefense.setValues(selected);
+				centralDefense.setValues(selected);
+				rightDefense.setValues(selected);
+				// hatStats.setValues(selected);
+				midfield.setValues(selected);
+				loddar.setValues(selected);
+				leftAttack.setValues(selected);
+				centralAttack.setValues(selected);
+				rightAttack.setValues(selected);
 			}
 		});
 		controlsPanel.add(showHelpLines);
@@ -116,6 +140,48 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense();
 		leftDefense = parse(map);
 		chartsPanel.add(leftDefense.getChart(), gbc);
+
+		gbc.gridx = 1;
+		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getCentralDefense();
+		centralDefense = parse(map);
+		chartsPanel.add(centralDefense.getChart(), gbc);
+
+		gbc.gridx = 2;
+		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getRightDefense();
+		rightDefense = parse(map);
+		chartsPanel.add(rightDefense.getChart(), gbc);
+
+		// gbc.gridx = 0;
+		// gbc.gridy = 1;
+		// map = HOVerwaltung.instance().getModel().getLineup().getRatings().getHatStats();
+		// hatStats = parse(map);
+		// chartsPanel.add(hatStats.getChart(), gbc);
+
+		gbc.gridx = 1;
+		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getMidfield();
+		midfield = parse(map);
+		chartsPanel.add(midfield.getChart(), gbc);
+
+		gbc.gridx = 2;
+		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getLoddarStat();
+		loddar = parse(map);
+		chartsPanel.add(loddar.getChart(), gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftAttack();
+		leftAttack = parse(map);
+		chartsPanel.add(leftAttack.getChart(), gbc);
+
+		gbc.gridx = 1;
+		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getCentralAttack();
+		centralAttack = parse(map);
+		chartsPanel.add(centralAttack.getChart(), gbc);
+
+		gbc.gridx = 2;
+		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getRightAttack();
+		rightAttack = parse(map);
+		chartsPanel.add(rightAttack.getChart(), gbc);
 
 		add(chartsPanel, BorderLayout.CENTER);
 	}
