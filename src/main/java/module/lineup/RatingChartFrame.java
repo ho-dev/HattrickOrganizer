@@ -5,6 +5,8 @@ import core.gui.HOMainFrame;
 
 import java.awt.Dimension;
 import java.awt.BorderLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,6 +23,32 @@ class RatingChartFrame extends JFrame {
 	private JPanel controlsPanel = new JPanel();
 	private JPanel placeholderChart = new JPanel();
 	private Dimension chartSize = new Dimension(900,700);
+
+	class ChartButtonHandler implements ItemListener {
+		JPanel source;
+
+		public ChartButtonHandler(JPanel source) {
+			this.source = source;
+		}
+
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				if(placeholderChart.getParent() != null) remove(placeholderChart);
+				if(source == null) {
+					if(e.getSource() == singleChartButton) source = new JPanel();
+					else if(e.getSource() == multiChartButton) source = new JPanel();
+					source.setPreferredSize(chartSize);
+				}
+				add(source, BorderLayout.CENTER);
+				revalidate();
+				repaint();
+			}
+			else if (e.getStateChange() == ItemEvent.DESELECTED) {
+				remove(source);
+			}
+		}
+	};
 
 	RatingChartFrame() {
 		super(HOVerwaltung.instance().getLanguageString("RatingChartFrame"));
