@@ -69,24 +69,37 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	private SingleChart leftAttack;
 	private SingleChart centralAttack;
 	private SingleChart rightAttack;
+	private ArrayList<Double> mapKeys = null;
+	private String[] chartCaptions = null;
 
 	public MultipleRatingChartsPanel() {
 		super(new BorderLayout());
 		initComponents();
 	}
 
-	private SingleChart parse(Hashtable<Double, Double> source) {
-		ArrayList<Double> keys = new ArrayList(source.keySet());
-		keys.remove(-90d);  //remove 90' and 120'
-		keys.remove(-120d); //average placeholder labels
-		Collections.sort(keys, Collections.reverseOrder());
-		ArrayList<Double> valueList = new ArrayList();
-		ArrayList<String> captionList = new ArrayList();
-		for(Double key : keys) {
-			valueList.add(source.get(key));
-			captionList.add(String.valueOf(key.intValue()));
+	private void parsePrepare() {
+		if(mapKeys == null) {
+			mapKeys = new ArrayList(HOVerwaltung.instance().getModel().getLineup().getRatings().getMidfield().keySet());
+			mapKeys.remove(-90d);  //remove 90' and 120'
+			mapKeys.remove(-120d); //average placeholder labels
+			Collections.sort(mapKeys, Collections.reverseOrder());
 		}
-		return new SingleChart(valueList.stream().mapToDouble(Double::doubleValue).toArray(), Helper.DEFAULTDEZIMALFORMAT, captionList.stream().toArray(String[]::new));
+		if(chartCaptions == null) {
+			ArrayList<String> captionList = new ArrayList();
+			for(Double key : mapKeys) {
+				captionList.add(String.valueOf(key.intValue()));
+			}
+			chartCaptions = captionList.stream().toArray(String[]::new);
+		}
+	}
+
+	private SingleChart parse(Hashtable<Double, Double> source) {
+		parsePrepare();
+		ArrayList<Double> valueList = new ArrayList();
+		for(Double key : mapKeys) {
+			valueList.add(source.get(key));
+		}
+		return new SingleChart(valueList.stream().mapToDouble(Double::doubleValue).toArray(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
 	}
 
 	private void initComponents() {
