@@ -1,6 +1,7 @@
 package module.lineup;
 
 import core.model.HOVerwaltung;
+import core.model.Ratings;
 import core.util.Helper;
 import core.gui.model.StatistikModel;
 import module.statistics.StatistikPanel;
@@ -60,10 +61,12 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		}
 	}
 
+	private HOVerwaltung hov = HOVerwaltung.instance();
 	private JPanel controlsPanel = new JPanel();
 	private JPanel chartsPanel = new JPanel(new GridBagLayout());
-	private JCheckBox showHelpLines = new JCheckBox(HOVerwaltung.instance().getLanguageString("Hilflinien"));
-	private JCheckBox showValues = new JCheckBox(HOVerwaltung.instance().getLanguageString("Beschriftung"));
+	private JCheckBox showHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"));
+	private JCheckBox showValues = new JCheckBox(hov.getLanguageString("Beschriftung"));
+	private Ratings ratings = hov.getModel().getLineup().getRatings();
 	private SingleChart leftDefense;
 	private SingleChart centralDefense;
 	private SingleChart rightDefense;
@@ -83,7 +86,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 
 	private void parsePrepare() {
 		if(mapKeys == null) {
-			mapKeys = new ArrayList(HOVerwaltung.instance().getModel().getLineup().getRatings().getMidfield().keySet());
+			mapKeys = new ArrayList(ratings.getMidfield().keySet());
 			mapKeys.remove(-90d);  //remove 90' and 120'
 			mapKeys.remove(-120d); //average placeholder labels
 			Collections.sort(mapKeys, Collections.reverseOrder());
@@ -163,59 +166,59 @@ public final class MultipleRatingChartsPanel extends JPanel {
 
 		Hashtable<Double, Double> mapDD;
 
-		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense();
+		mapDD = ratings.getLeftDefense();
 		leftDefense = parseDD(mapDD);
-		leftDefense.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftdefence"));
+		leftDefense.setToolTip(hov.getLanguageString("ls.match.ratingsector.leftdefence"));
 		chartsPanel.add(leftDefense.getChart(), gbc);
 
 		gbc.gridx = 1;
-		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getCentralDefense();
+		mapDD = ratings.getCentralDefense();
 		centralDefense = parseDD(mapDD);
-		centralDefense.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centraldefence"));
+		centralDefense.setToolTip(hov.getLanguageString("ls.match.ratingsector.centraldefence"));
 		chartsPanel.add(centralDefense.getChart(), gbc);
 
 		gbc.gridx = 2;
-		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getRightDefense();
+		mapDD = ratings.getRightDefense();
 		rightDefense = parseDD(mapDD);
-		rightDefense.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence"));
+		rightDefense.setToolTip(hov.getLanguageString("ls.match.ratingsector.rightdefence"));
 		chartsPanel.add(rightDefense.getChart(), gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		Hashtable<Double, Integer> mapDI = HOVerwaltung.instance().getModel().getLineup().getRatings().getHatStats();
+		Hashtable<Double, Integer> mapDI = ratings.getHatStats();
 		hatStats = parseDI(mapDI);
-		hatStats.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"));
+		hatStats.setToolTip(hov.getLanguageString("ls.match.ratingtype.hatstats"));
 		chartsPanel.add(hatStats.getChart(), gbc);
 
 		gbc.gridx = 1;
-		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getMidfield();
+		mapDD = ratings.getMidfield();
 		midfield = parseDD(mapDD);
-		midfield.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.midfield"));
+		midfield.setToolTip(hov.getLanguageString("ls.match.ratingsector.midfield"));
 		chartsPanel.add(midfield.getChart(), gbc);
 
 		gbc.gridx = 2;
-		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getLoddarStat();
+		mapDD = ratings.getLoddarStat();
 		loddar = parseDD(mapDD);
-		loddar.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"));
+		loddar.setToolTip(hov.getLanguageString("ls.match.ratingtype.loddarstats"));
 		chartsPanel.add(loddar.getChart(), gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 2;
-		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftAttack();
+		mapDD = ratings.getLeftAttack();
 		leftAttack = parseDD(mapDD);
-		leftAttack.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftattack"));
+		leftAttack.setToolTip(hov.getLanguageString("ls.match.ratingsector.leftattack"));
 		chartsPanel.add(leftAttack.getChart(), gbc);
 
 		gbc.gridx = 1;
-		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getCentralAttack();
+		mapDD = ratings.getCentralAttack();
 		centralAttack = parseDD(mapDD);
-		centralAttack.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centralattack"));
+		centralAttack.setToolTip(hov.getLanguageString("ls.match.ratingsector.centralattack"));
 		chartsPanel.add(centralAttack.getChart(), gbc);
 
 		gbc.gridx = 2;
-		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getRightAttack();
+		mapDD = ratings.getRightAttack();
 		rightAttack = parseDD(mapDD);
-		rightAttack.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightattack"));
+		rightAttack.setToolTip(hov.getLanguageString("ls.match.ratingsector.rightattack"));
 		chartsPanel.add(rightAttack.getChart(), gbc);
 
 		add(chartsPanel, BorderLayout.CENTER);

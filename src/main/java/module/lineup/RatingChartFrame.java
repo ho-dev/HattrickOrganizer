@@ -16,10 +16,11 @@ import javax.swing.JRadioButton;
 
 class RatingChartFrame extends JFrame {
 
-	private JRadioButton singleChartButton = new JRadioButton(HOVerwaltung.instance().getLanguageString("lineup.SingleChart"));
-	private JRadioButton multiChartButton = new JRadioButton(HOVerwaltung.instance().getLanguageString("lineup.MultiChart"));
+	private HOVerwaltung hov = HOVerwaltung.instance();
+	private JRadioButton singleChartButton = new JRadioButton(hov.getLanguageString("lineup.SingleChart"));
+	private JRadioButton multiChartButton = new JRadioButton(hov.getLanguageString("lineup.MultiChart"));
 	private ButtonGroup chartButtonGroup = new ButtonGroup();
-	private JCheckBox etToggler = new JCheckBox(HOVerwaltung.instance().getLanguageString("lineup.ETToggler"));
+	private JCheckBox etToggler = new JCheckBox(hov.getLanguageString("lineup.ETToggler"));
 	private JPanel controlsPanel = new JPanel();
 	private JPanel placeholderChart = new JPanel();
 	private SingleRatingChartPanel singleChart = null;
