@@ -63,7 +63,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	private SingleChart leftDefense;
 	private SingleChart centralDefense;
 	private SingleChart rightDefense;
-	// private SingleChart hatStats;
+	private SingleChart hatStats;
 	private SingleChart midfield;
 	private SingleChart loddar;
 	private SingleChart leftAttack;
@@ -93,13 +93,22 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		}
 	}
 
-	private SingleChart parse(Hashtable<Double, Double> source) {
+	private SingleChart parseDD(Hashtable<Double, Double> source) {
 		parsePrepare();
 		ArrayList<Double> valueList = new ArrayList();
 		for(Double key : mapKeys) {
 			valueList.add(source.get(key));
 		}
 		return new SingleChart(valueList.stream().mapToDouble(Double::doubleValue).toArray(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
+	}
+
+	private SingleChart parseDI(Hashtable<Double, Integer> source) {
+		parsePrepare();
+		ArrayList<Double> valueList = new ArrayList();
+		for(Double key : mapKeys) {
+			valueList.add(source.get(key).doubleValue());
+		}
+		return new SingleChart(valueList.stream().mapToDouble(Double::doubleValue).toArray(), Helper.INTEGERFORMAT, chartCaptions);
 	}
 
 	private void initComponents() {
@@ -113,7 +122,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 				leftDefense.setHelpLines(selected);
 				centralDefense.setHelpLines(selected);
 				rightDefense.setHelpLines(selected);
-				// hatStats.setHelpLines(selected);
+				hatStats.setHelpLines(selected);
 				midfield.setHelpLines(selected);
 				loddar.setHelpLines(selected);
 				leftAttack.setHelpLines(selected);
@@ -131,7 +140,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 				leftDefense.setValues(selected);
 				centralDefense.setValues(selected);
 				rightDefense.setValues(selected);
-				// hatStats.setValues(selected);
+				hatStats.setValues(selected);
 				midfield.setValues(selected);
 				loddar.setValues(selected);
 				leftAttack.setValues(selected);
@@ -148,52 +157,52 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 
-		Hashtable<Double, Double> map;
+		Hashtable<Double, Double> mapDD;
 
-		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense();
-		leftDefense = parse(map);
+		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense();
+		leftDefense = parseDD(mapDD);
 		chartsPanel.add(leftDefense.getChart(), gbc);
 
 		gbc.gridx = 1;
-		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getCentralDefense();
-		centralDefense = parse(map);
+		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getCentralDefense();
+		centralDefense = parseDD(mapDD);
 		chartsPanel.add(centralDefense.getChart(), gbc);
 
 		gbc.gridx = 2;
-		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getRightDefense();
-		rightDefense = parse(map);
+		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getRightDefense();
+		rightDefense = parseDD(mapDD);
 		chartsPanel.add(rightDefense.getChart(), gbc);
 
-		// gbc.gridx = 0;
-		// gbc.gridy = 1;
-		// map = HOVerwaltung.instance().getModel().getLineup().getRatings().getHatStats();
-		// hatStats = parse(map);
-		// chartsPanel.add(hatStats.getChart(), gbc);
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		Hashtable<Double, Integer> mapDI = HOVerwaltung.instance().getModel().getLineup().getRatings().getHatStats();
+		hatStats = parseDI(mapDI);
+		chartsPanel.add(hatStats.getChart(), gbc);
 
 		gbc.gridx = 1;
-		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getMidfield();
-		midfield = parse(map);
+		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getMidfield();
+		midfield = parseDD(mapDD);
 		chartsPanel.add(midfield.getChart(), gbc);
 
 		gbc.gridx = 2;
-		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getLoddarStat();
-		loddar = parse(map);
+		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getLoddarStat();
+		loddar = parseDD(mapDD);
 		chartsPanel.add(loddar.getChart(), gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 2;
-		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftAttack();
-		leftAttack = parse(map);
+		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftAttack();
+		leftAttack = parseDD(mapDD);
 		chartsPanel.add(leftAttack.getChart(), gbc);
 
 		gbc.gridx = 1;
-		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getCentralAttack();
-		centralAttack = parse(map);
+		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getCentralAttack();
+		centralAttack = parseDD(mapDD);
 		chartsPanel.add(centralAttack.getChart(), gbc);
 
 		gbc.gridx = 2;
-		map = HOVerwaltung.instance().getModel().getLineup().getRatings().getRightAttack();
-		rightAttack = parse(map);
+		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getRightAttack();
+		rightAttack = parseDD(mapDD);
 		chartsPanel.add(rightAttack.getChart(), gbc);
 
 		add(chartsPanel, BorderLayout.CENTER);
