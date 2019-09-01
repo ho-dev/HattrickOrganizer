@@ -51,6 +51,10 @@ public final class MultipleRatingChartsPanel extends JPanel {
 			chart.setBeschriftung(state);
 		}
 
+		public void setToolTip(String text) {
+			chart.setToolTipText(text);
+		}
+
 		public StatistikPanel getChart() {
 			return chart;
 		}
@@ -161,48 +165,57 @@ public final class MultipleRatingChartsPanel extends JPanel {
 
 		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense();
 		leftDefense = parseDD(mapDD);
+		leftDefense.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftdefence"));
 		chartsPanel.add(leftDefense.getChart(), gbc);
 
 		gbc.gridx = 1;
 		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getCentralDefense();
 		centralDefense = parseDD(mapDD);
+		centralDefense.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centraldefence"));
 		chartsPanel.add(centralDefense.getChart(), gbc);
 
 		gbc.gridx = 2;
 		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getRightDefense();
 		rightDefense = parseDD(mapDD);
+		rightDefense.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence"));
 		chartsPanel.add(rightDefense.getChart(), gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		Hashtable<Double, Integer> mapDI = HOVerwaltung.instance().getModel().getLineup().getRatings().getHatStats();
 		hatStats = parseDI(mapDI);
+		hatStats.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"));
 		chartsPanel.add(hatStats.getChart(), gbc);
 
 		gbc.gridx = 1;
 		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getMidfield();
 		midfield = parseDD(mapDD);
+		midfield.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.midfield"));
 		chartsPanel.add(midfield.getChart(), gbc);
 
 		gbc.gridx = 2;
 		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getLoddarStat();
 		loddar = parseDD(mapDD);
+		loddar.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"));
 		chartsPanel.add(loddar.getChart(), gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftAttack();
 		leftAttack = parseDD(mapDD);
+		leftAttack.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftattack"));
 		chartsPanel.add(leftAttack.getChart(), gbc);
 
 		gbc.gridx = 1;
 		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getCentralAttack();
 		centralAttack = parseDD(mapDD);
+		centralAttack.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centralattack"));
 		chartsPanel.add(centralAttack.getChart(), gbc);
 
 		gbc.gridx = 2;
 		mapDD = HOVerwaltung.instance().getModel().getLineup().getRatings().getRightAttack();
 		rightAttack = parseDD(mapDD);
+		rightAttack.setToolTip(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightattack"));
 		chartsPanel.add(rightAttack.getChart(), gbc);
 
 		add(chartsPanel, BorderLayout.CENTER);
