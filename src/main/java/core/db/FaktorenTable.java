@@ -19,7 +19,7 @@ public final class FaktorenTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[8];
+		columns = new ColumnDescriptor[9];
 		columns[0]= new ColumnDescriptor("PositionID",Types.INTEGER,false,true);
 		columns[1]= new ColumnDescriptor("GKfactor",Types.REAL,false);
 		columns[2]= new ColumnDescriptor("DEfactor",Types.REAL,false);
@@ -28,9 +28,7 @@ public final class FaktorenTable extends AbstractTable {
 		columns[5]= new ColumnDescriptor("SPfactor",Types.REAL,false);
 		columns[6]= new ColumnDescriptor("SCfactor",Types.REAL,false);
 		columns[7]= new ColumnDescriptor("PMfactor",Types.REAL,false);
-		columns[7]= new ColumnDescriptor("NormalisationFactor",Types.REAL,false);
-		
-		
+		columns[8]= new ColumnDescriptor("NormalisationFactor",Types.REAL,false);
 	}
 
 	protected void setFaktorenFromDB(FactorObject fo) {
