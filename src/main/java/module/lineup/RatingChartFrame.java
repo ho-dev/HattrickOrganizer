@@ -23,6 +23,7 @@ class RatingChartFrame extends JFrame {
 	private JCheckBox etToggler = new JCheckBox(hov.getLanguageString("lineup.ETToggler"));
 	private JPanel controlsPanel = new JPanel();
 	private JPanel placeholderChart = new JPanel();
+	private RatingChartData chartData = new RatingChartData();
 	private SingleRatingChartPanel singleChart = null;
 	private MultipleRatingChartsPanel multiChart = null;
 	private Dimension chartSize = new Dimension(900,700);
@@ -40,7 +41,7 @@ class RatingChartFrame extends JFrame {
 				if(placeholderChart.getParent() != null) remove(placeholderChart);
 				if(source == null) {
 					if(e.getSource() == singleChartButton) source = new SingleRatingChartPanel();
-					else if(e.getSource() == multiChartButton) source = new MultipleRatingChartsPanel();
+					else if(e.getSource() == multiChartButton) source = new MultipleRatingChartsPanel(chartData);
 					source.setPreferredSize(chartSize);
 				}
 				add(source, BorderLayout.CENTER);

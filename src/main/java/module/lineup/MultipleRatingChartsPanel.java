@@ -1,14 +1,10 @@
 package module.lineup;
 
 import core.model.HOVerwaltung;
-import core.model.Ratings;
 import core.util.Helper;
 import core.gui.model.StatistikModel;
 import module.statistics.StatistikPanel;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Hashtable;
 import java.text.NumberFormat;
 
 import java.awt.BorderLayout;
@@ -66,7 +62,8 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	private JPanel chartsPanel = new JPanel(new GridBagLayout());
 	private JCheckBox showHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"));
 	private JCheckBox showValues = new JCheckBox(hov.getLanguageString("Beschriftung"));
-	private Ratings ratings = hov.getModel().getLineup().getRatings();
+	private RatingChartData chartData;
+	private String[] chartCaptions;
 	private SingleChart leftDefense;
 	private SingleChart centralDefense;
 	private SingleChart rightDefense;
@@ -76,46 +73,12 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	private SingleChart leftAttack;
 	private SingleChart centralAttack;
 	private SingleChart rightAttack;
-	private ArrayList<Double> mapKeys = null;
-	private String[] chartCaptions = null;
 
-	public MultipleRatingChartsPanel() {
+	public MultipleRatingChartsPanel(RatingChartData data) {
 		super(new BorderLayout());
+		chartData = data;
+		chartCaptions = chartData.getCaptions();
 		initComponents();
-	}
-
-	private void parsePrepare() {
-		if(mapKeys == null) {
-			mapKeys = new ArrayList(ratings.getMidfield().keySet());
-			mapKeys.remove(-90d);  //remove 90' and 120'
-			mapKeys.remove(-120d); //average placeholder labels
-			Collections.sort(mapKeys, Collections.reverseOrder());
-		}
-		if(chartCaptions == null) {
-			ArrayList<String> captionList = new ArrayList();
-			for(Double key : mapKeys) {
-				captionList.add(String.valueOf(key.intValue()));
-			}
-			chartCaptions = captionList.stream().toArray(String[]::new);
-		}
-	}
-
-	private SingleChart parseDD(Hashtable<Double, Double> source) {
-		parsePrepare();
-		ArrayList<Double> valueList = new ArrayList();
-		for(Double key : mapKeys) {
-			valueList.add(source.get(key));
-		}
-		return new SingleChart(valueList.stream().mapToDouble(Double::doubleValue).toArray(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
-	}
-
-	private SingleChart parseDI(Hashtable<Double, Integer> source) {
-		parsePrepare();
-		ArrayList<Double> valueList = new ArrayList();
-		for(Double key : mapKeys) {
-			valueList.add(source.get(key).doubleValue());
-		}
-		return new SingleChart(valueList.stream().mapToDouble(Double::doubleValue).toArray(), Helper.INTEGERFORMAT, chartCaptions);
 	}
 
 	private void initComponents() {
@@ -164,60 +127,49 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 
-		Hashtable<Double, Double> mapDD;
-
-		mapDD = ratings.getLeftDefense();
-		leftDefense = parseDD(mapDD);
+		leftDefense = new SingleChart(chartData.getLeftDefense(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
 		leftDefense.setToolTip(hov.getLanguageString("ls.match.ratingsector.leftdefence"));
 		chartsPanel.add(leftDefense.getChart(), gbc);
 
 		gbc.gridx = 1;
-		mapDD = ratings.getCentralDefense();
-		centralDefense = parseDD(mapDD);
+		centralDefense = new SingleChart(chartData.getCentralDefense(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
 		centralDefense.setToolTip(hov.getLanguageString("ls.match.ratingsector.centraldefence"));
 		chartsPanel.add(centralDefense.getChart(), gbc);
 
 		gbc.gridx = 2;
-		mapDD = ratings.getRightDefense();
-		rightDefense = parseDD(mapDD);
+		rightDefense = new SingleChart(chartData.getRightDefense(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
 		rightDefense.setToolTip(hov.getLanguageString("ls.match.ratingsector.rightdefence"));
 		chartsPanel.add(rightDefense.getChart(), gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		Hashtable<Double, Integer> mapDI = ratings.getHatStats();
-		hatStats = parseDI(mapDI);
+		hatStats = new SingleChart(chartData.getHatStats(), Helper.INTEGERFORMAT, chartCaptions);
 		hatStats.setToolTip(hov.getLanguageString("ls.match.ratingtype.hatstats"));
 		chartsPanel.add(hatStats.getChart(), gbc);
 
 		gbc.gridx = 1;
-		mapDD = ratings.getMidfield();
-		midfield = parseDD(mapDD);
+		midfield = new SingleChart(chartData.getMidfield(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
 		midfield.setToolTip(hov.getLanguageString("ls.match.ratingsector.midfield"));
 		chartsPanel.add(midfield.getChart(), gbc);
 
 		gbc.gridx = 2;
-		mapDD = ratings.getLoddarStat();
-		loddar = parseDD(mapDD);
+		loddar = new SingleChart(chartData.getLoddar(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
 		loddar.setToolTip(hov.getLanguageString("ls.match.ratingtype.loddarstats"));
 		chartsPanel.add(loddar.getChart(), gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 2;
-		mapDD = ratings.getLeftAttack();
-		leftAttack = parseDD(mapDD);
+		leftAttack = new SingleChart(chartData.getLeftAttack(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
 		leftAttack.setToolTip(hov.getLanguageString("ls.match.ratingsector.leftattack"));
 		chartsPanel.add(leftAttack.getChart(), gbc);
 
 		gbc.gridx = 1;
-		mapDD = ratings.getCentralAttack();
-		centralAttack = parseDD(mapDD);
+		centralAttack = new SingleChart(chartData.getCentralAttack(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
 		centralAttack.setToolTip(hov.getLanguageString("ls.match.ratingsector.centralattack"));
 		chartsPanel.add(centralAttack.getChart(), gbc);
 
 		gbc.gridx = 2;
-		mapDD = ratings.getRightAttack();
-		rightAttack = parseDD(mapDD);
+		rightAttack = new SingleChart(chartData.getRightAttack(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
 		rightAttack.setToolTip(hov.getLanguageString("ls.match.ratingsector.rightattack"));
 		chartsPanel.add(rightAttack.getChart(), gbc);
 
