@@ -2,9 +2,9 @@ package module.lineup;
 
 import javax.swing.JPanel;
 
-public final class SingleRatingChartPanel extends JPanel {
+public final class CombinedRatingChartPanel extends JPanel {
 
-	public SingleRatingChartPanel() {
+	public CombinedRatingChartPanel() {
 		initComponents();
 	}
 

@@ -17,14 +17,14 @@ import javax.swing.JRadioButton;
 class RatingChartFrame extends JFrame {
 
 	private HOVerwaltung hov = HOVerwaltung.instance();
-	private JRadioButton singleChartButton = new JRadioButton(hov.getLanguageString("lineup.SingleChart"));
+	private JRadioButton combinedChartButton = new JRadioButton(hov.getLanguageString("lineup.CombinedChart"));
 	private JRadioButton multiChartButton = new JRadioButton(hov.getLanguageString("lineup.MultiChart"));
 	private ButtonGroup chartButtonGroup = new ButtonGroup();
 	private JCheckBox etToggler = new JCheckBox(hov.getLanguageString("lineup.ETToggler"));
 	private JPanel controlsPanel = new JPanel();
 	private JPanel placeholderChart = new JPanel();
 	private RatingChartData chartData = new RatingChartData();
-	private SingleRatingChartPanel singleChart = null;
+	private CombinedRatingChartPanel combinedChart = null;
 	private MultipleRatingChartsPanel multiChart = null;
 	private Dimension chartSize = new Dimension(900,700);
 
@@ -40,7 +40,7 @@ class RatingChartFrame extends JFrame {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				if(placeholderChart.getParent() != null) remove(placeholderChart);
 				if(source == null) {
-					if(e.getSource() == singleChartButton) source = new SingleRatingChartPanel();
+					if(e.getSource() == combinedChartButton) source = new CombinedRatingChartPanel();
 					else if(e.getSource() == multiChartButton) source = new MultipleRatingChartsPanel(chartData);
 					source.setPreferredSize(chartSize);
 				}
@@ -64,12 +64,12 @@ class RatingChartFrame extends JFrame {
 
 	private void initComponents() {
 	etToggler.setEnabled(false);
-	chartButtonGroup.add(singleChartButton);
+	chartButtonGroup.add(combinedChartButton);
 	chartButtonGroup.add(multiChartButton);
 	placeholderChart.setPreferredSize(chartSize);
-	singleChartButton.addItemListener(new ChartButtonHandler(singleChart));
+	combinedChartButton.addItemListener(new ChartButtonHandler(combinedChart));
 	multiChartButton.addItemListener(new ChartButtonHandler(multiChart));
-	controlsPanel.add(singleChartButton);
+	controlsPanel.add(combinedChartButton);
 	controlsPanel.add(multiChartButton);
 	controlsPanel.add(etToggler);
 	add(controlsPanel, BorderLayout.NORTH);
