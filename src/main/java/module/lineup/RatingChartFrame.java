@@ -40,7 +40,7 @@ class RatingChartFrame extends JFrame {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				if(placeholderChart.getParent() != null) remove(placeholderChart);
 				if(source == null) {
-					if(e.getSource() == combinedChartButton) source = new CombinedRatingChartPanel();
+					if(e.getSource() == combinedChartButton) source = new CombinedRatingChartPanel(chartData);
 					else if(e.getSource() == multiChartButton) source = new MultipleRatingChartsPanel(chartData);
 					source.setPreferredSize(chartSize);
 				}

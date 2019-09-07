@@ -1,8 +1,13 @@
 package module.lineup;
 
 import core.model.HOVerwaltung;
+import core.util.Helper;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import core.gui.model.StatistikModel;
+import module.statistics.StatistikPanel;
+
+import java.text.NumberFormat;
 
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -17,10 +22,12 @@ public final class CombinedRatingChartPanel extends JPanel {
 	private final class Datum {
 		private JCheckBox checkbox;
 		private Color bg;
+		private Boolean visible;
 
 		public Datum(String text, Color background) {
 			checkbox = new JCheckBox(text);
 			bg = background;
+			visible = false;
 			init();
 		}
 
@@ -41,13 +48,21 @@ public final class CombinedRatingChartPanel extends JPanel {
 			return (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
 		}
 
+		StatistikModel getChartModel(double[] values, NumberFormat format) {
+			StatistikModel model = new StatistikModel(values, null, visible, bg, format);
+			model.setDataBasedBoundaries(true);
+			return model;
+		}
+
 		JCheckBox getCheckbox() {
 			return checkbox;
 		}
 	}
 
 	private HOVerwaltung hov = HOVerwaltung.instance();
+	private RatingChartData chartData;
 	private JPanel controlsPanel = new JPanel();
+	private StatistikPanel chart = new StatistikPanel(true);
 	private JCheckBox showHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"));
 	private JCheckBox showValues = new JCheckBox(hov.getLanguageString("Beschriftung"));
 	private Datum leftDefense;
@@ -60,8 +75,9 @@ public final class CombinedRatingChartPanel extends JPanel {
 	private Datum hatStats;
 	private Datum loddar;
 
-	public CombinedRatingChartPanel() {
+	public CombinedRatingChartPanel(RatingChartData data) {
 		setLayout(new BorderLayout());
+		chartData = data;
 		initComponents();
 	}
 
@@ -125,5 +141,19 @@ public final class CombinedRatingChartPanel extends JPanel {
 		controlsPanel.add(loddar.getCheckbox(), gbc);
 
 		add(controlsPanel, BorderLayout.WEST);
+
+		StatistikModel[] data = new StatistikModel[9];
+		data[0] = leftDefense.getChartModel(chartData.getLeftDefense(), Helper.DEFAULTDEZIMALFORMAT);
+		data[1] = centralDefense.getChartModel(chartData.getCentralDefense(), Helper.DEFAULTDEZIMALFORMAT);
+		data[2] = rightDefense.getChartModel(chartData.getRightDefense(), Helper.DEFAULTDEZIMALFORMAT);
+		data[3] = midfield.getChartModel(chartData.getMidfield(), Helper.DEFAULTDEZIMALFORMAT);
+		data[4] = leftAttack.getChartModel(chartData.getLeftAttack(), Helper.DEFAULTDEZIMALFORMAT);
+		data[5] = centralAttack.getChartModel(chartData.getCentralAttack(), Helper.DEFAULTDEZIMALFORMAT);
+		data[6] = rightAttack.getChartModel(chartData.getRightAttack(), Helper.DEFAULTDEZIMALFORMAT);
+		data[7] = hatStats.getChartModel(chartData.getHatStats(), Helper.INTEGERFORMAT);
+		data[8] = loddar.getChartModel(chartData.getLoddar(), Helper.DEFAULTDEZIMALFORMAT);
+		chart.setDataBasedBoundaries(true);
+		chart.setAllValues(data, chartData.getCaptions(), Helper.DEFAULTDEZIMALFORMAT, "", "", false, true);
+		add(chart, BorderLayout.CENTER);
 	}
 }
