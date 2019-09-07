@@ -25,7 +25,7 @@ public class ConnTest {
 	private static final long serialVersionUID = 8532069037729446669L;
 	final static private String LS = System.getProperty("line.separator");
 	final static private String URL_NORMAL = "http://ho1.sourceforge.net/onlinefiles/version.htm";
-	final static private String URL_SERVERS = "http://www.hattrick.org/common/chppxml.axd?file=servers";
+	final static private String URL_SERVERS = "https://www.hattrick.org/common/chppxml.axd?file=servers";
 	//final static private String URL_HT = "http://plugins.hattrickorganizer.net/version.htm";
 	final static private int steps = 3;
 	final static public float VERSION = 0.1f;

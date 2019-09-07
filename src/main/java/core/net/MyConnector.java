@@ -56,13 +56,12 @@ import java.util.Base64;
 
 public class MyConnector {
 	private final static SimpleDateFormat HT_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-	private static final String htUrl = "http://chpp.hattrick.org/chppxml.ashx";
+	private static final String htUrl = "https://chpp.hattrick.org/chppxml.ashx";
 	public static String m_sIDENTIFIER = "HO! Hattrick Organizer V" + HO.VERSION;
 	private static MyConnector m_clInstance;
 	private final static String VERSION_TRAINING = "2.1";
 	private final static String VERSION_MATCHORDERS = "3.0";
 	private final static String VERSION_MATCHORDERS_NT = "2.1";
-	private final static String VERSION_MATCHORDERS_PREDICTION_RATINGS = "3.0"; //TODO: could be deleted once CHPP API fixed (at that time VERSION_MATCHORDERS will be used instead of VERSION_MATCHORDERS_PREDICTION_RATINGS)
 	private final static String VERSION_MATCHLINEUP = "2.0";
 	private final static String VERSION_MATCHDETAILS = "3.0";
 	private final static String VERSION_PLAYERS = "2.1";
@@ -253,7 +252,7 @@ public class MyConnector {
 	 * lädt die Aufstellungsbewertung zu einem Spiel
 	 */
 	public String getRatingsPrediction(int matchId, int teamId, MatchType matchType) {
-		String url = htUrl + "?file=matchorders&version=" + VERSION_MATCHORDERS_PREDICTION_RATINGS;
+		String url = htUrl + "?file=matchorders&version=" + VERSION_MATCHORDERS;
 		url += "&actionType=predictratings";
 
 		if (matchId > 0) {
