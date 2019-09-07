@@ -22,14 +22,12 @@ public final class MultipleRatingChartsPanel extends JPanel {
 
 		private StatistikPanel chart = new StatistikPanel(true);
 		private StatistikModel[] data = new StatistikModel[1];
-		private String[] captions;
 		private double[] values;
 		private NumberFormat format;
 
-		public SingleChart(double[] values, NumberFormat format, String[] captions) {
+		public SingleChart(double[] values, NumberFormat format) {
 			this.values = values;
 			this.format = format;
-			this.captions = captions;
 			initComponents();
 		}
 
@@ -37,7 +35,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 			data[0] = new StatistikModel(values, null, true, java.awt.Color.black, format);
 			data[0].setDataBasedBoundaries(true);
 			chart.setDataBasedBoundaries(true);
-			chart.setAllValues(data, captions, format, "", "", showValues.isSelected(), showHelpLines.isSelected());
+			chart.setAllValues(data, chartCaptions, format, "", "", showValues.isSelected(), showHelpLines.isSelected());
 		}
 
 		public void setHelpLines(boolean state) {
@@ -127,49 +125,49 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 
-		leftDefense = new SingleChart(chartData.getLeftDefense(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
+		leftDefense = new SingleChart(chartData.getLeftDefense(), Helper.DEFAULTDEZIMALFORMAT);
 		leftDefense.setToolTip(hov.getLanguageString("ls.match.ratingsector.leftdefence"));
 		chartsPanel.add(leftDefense.getChart(), gbc);
 
 		gbc.gridx = 1;
-		centralDefense = new SingleChart(chartData.getCentralDefense(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
+		centralDefense = new SingleChart(chartData.getCentralDefense(), Helper.DEFAULTDEZIMALFORMAT);
 		centralDefense.setToolTip(hov.getLanguageString("ls.match.ratingsector.centraldefence"));
 		chartsPanel.add(centralDefense.getChart(), gbc);
 
 		gbc.gridx = 2;
-		rightDefense = new SingleChart(chartData.getRightDefense(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
+		rightDefense = new SingleChart(chartData.getRightDefense(), Helper.DEFAULTDEZIMALFORMAT);
 		rightDefense.setToolTip(hov.getLanguageString("ls.match.ratingsector.rightdefence"));
 		chartsPanel.add(rightDefense.getChart(), gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		hatStats = new SingleChart(chartData.getHatStats(), Helper.INTEGERFORMAT, chartCaptions);
+		hatStats = new SingleChart(chartData.getHatStats(), Helper.INTEGERFORMAT);
 		hatStats.setToolTip(hov.getLanguageString("ls.match.ratingtype.hatstats"));
 		chartsPanel.add(hatStats.getChart(), gbc);
 
 		gbc.gridx = 1;
-		midfield = new SingleChart(chartData.getMidfield(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
+		midfield = new SingleChart(chartData.getMidfield(), Helper.DEFAULTDEZIMALFORMAT);
 		midfield.setToolTip(hov.getLanguageString("ls.match.ratingsector.midfield"));
 		chartsPanel.add(midfield.getChart(), gbc);
 
 		gbc.gridx = 2;
-		loddar = new SingleChart(chartData.getLoddar(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
+		loddar = new SingleChart(chartData.getLoddar(), Helper.DEFAULTDEZIMALFORMAT);
 		loddar.setToolTip(hov.getLanguageString("ls.match.ratingtype.loddarstats"));
 		chartsPanel.add(loddar.getChart(), gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 2;
-		leftAttack = new SingleChart(chartData.getLeftAttack(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
+		leftAttack = new SingleChart(chartData.getLeftAttack(), Helper.DEFAULTDEZIMALFORMAT);
 		leftAttack.setToolTip(hov.getLanguageString("ls.match.ratingsector.leftattack"));
 		chartsPanel.add(leftAttack.getChart(), gbc);
 
 		gbc.gridx = 1;
-		centralAttack = new SingleChart(chartData.getCentralAttack(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
+		centralAttack = new SingleChart(chartData.getCentralAttack(), Helper.DEFAULTDEZIMALFORMAT);
 		centralAttack.setToolTip(hov.getLanguageString("ls.match.ratingsector.centralattack"));
 		chartsPanel.add(centralAttack.getChart(), gbc);
 
 		gbc.gridx = 2;
-		rightAttack = new SingleChart(chartData.getRightAttack(), Helper.DEFAULTDEZIMALFORMAT, chartCaptions);
+		rightAttack = new SingleChart(chartData.getRightAttack(), Helper.DEFAULTDEZIMALFORMAT);
 		rightAttack.setToolTip(hov.getLanguageString("ls.match.ratingsector.rightattack"));
 		chartsPanel.add(rightAttack.getChart(), gbc);
 
