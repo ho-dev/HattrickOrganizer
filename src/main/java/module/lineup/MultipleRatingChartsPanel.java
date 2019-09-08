@@ -13,6 +13,8 @@ import java.text.NumberFormat;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
@@ -36,7 +38,15 @@ public final class MultipleRatingChartsPanel extends JPanel {
 
 		private void initComponents() {
 			data[0] = new StatistikModel(values, null, true, java.awt.Color.black, format);
-			chart.setAllValues(data, captions, format, "", "", false, true);
+			chart.setAllValues(data, captions, format, "", "", showValues.isSelected(), showHelpLines.isSelected());
+		}
+
+		public void setHelpLines(boolean state) {
+			chart.setHilfslinien(state);
+		}
+
+		public void setValues(boolean state) {
+			chart.setBeschriftung(state);
 		}
 
 		public StatistikPanel getChart() {
@@ -56,8 +66,26 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	}
 
 	private void initComponents() {
-		showHelpLines.setEnabled(false);
-		showValues.setEnabled(false);
+		showHelpLines.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				boolean selected;
+				if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
+				else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
+				else return;
+				leftDefense.setHelpLines(selected);
+			}
+		});
+		showValues.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				boolean selected;
+				if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
+				else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
+				else return;
+				leftDefense.setValues(selected);
+			}
+		});
 		controlsPanel.add(showHelpLines);
 		controlsPanel.add(showValues);
 		add(controlsPanel, BorderLayout.SOUTH);
