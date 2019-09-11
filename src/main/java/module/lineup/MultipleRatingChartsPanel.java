@@ -37,7 +37,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 			data[0] = new StatistikModel(values, null, true, java.awt.Color.black, format);
 			data[0].setDataBasedBoundaries(true);
 			chart.setDataBasedBoundaries(true);
-			chart.setAllValues(data, chartCaptions, format, "", yAxisCaption, showValues.isSelected(), showHelpLines.isSelected());
+			chart.setAllValues(data, xAxisDataCaptions, format, "", yAxisCaption, showValues.isSelected(), showHelpLines.isSelected());
 		}
 
 		public void setHelpLines(boolean state) {
@@ -59,7 +59,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	private JCheckBox showHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"));
 	private JCheckBox showValues = new JCheckBox(hov.getLanguageString("Beschriftung"));
 	private RatingChartData chartData;
-	private String[] chartCaptions;
+	private String[] xAxisDataCaptions;
 	private SingleChart leftDefense;
 	private SingleChart centralDefense;
 	private SingleChart rightDefense;
@@ -73,7 +73,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	public MultipleRatingChartsPanel(RatingChartData data) {
 		super(new BorderLayout());
 		chartData = data;
-		chartCaptions = chartData.getCaptions();
+		xAxisDataCaptions = chartData.getCaptions();
 		initComponents();
 	}
 
