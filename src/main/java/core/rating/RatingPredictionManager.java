@@ -55,6 +55,7 @@ public class RatingPredictionManager {
 	public static final double EPSILON = 0.000001;
 
     //~ Class fields -------------------------------------------------------------------------------
+	private static HashMap<String, LinkedHashMap<Double, Double>> allStaminaEffect = new HashMap<>();
 
     // Initialize with default config
     private static RatingPredictionConfig config = RatingPredictionConfig.getInstance();
@@ -193,9 +194,6 @@ public class RatingPredictionManager {
 				}
 			}
 			_LineupEvolution.put(t, currentLineup);
-
-
-
 		}
 
 		// we add time just after break in order to visualize respectively halftime and endgame rest effect
@@ -209,7 +207,6 @@ public class RatingPredictionManager {
 		}
 
 		return _LineupEvolution;
-
 
 	}
 
@@ -1065,8 +1062,30 @@ public class RatingPredictionManager {
 	  * @param stamina : player stamina
 	  * @param tEnter : at which minute the player entered the game
 	  * @param tNow : current minute being played
+	  * @param isTacticPressing : flag to identify Pressing Tactic
 	  */
 	public static double GetStaminaEffect(double stamina, double tEnter, double tNow, boolean isTacticPressing){
+		String key = stamina + "|" + tEnter + "|" + isTacticPressing;
+		if (allStaminaEffect.containsKey(key)) {
+			return allStaminaEffect.get(key).get(tNow);
+		} else {
+			ComputeStaminaEffectAtEachMarks(stamina, tEnter, isTacticPressing);
+			return allStaminaEffect.get(key).get(tNow);
+		}
+	}
+
+
+
+	/**
+	 * Compute Hashmap {double t -> double stamina_effect} for each t in LineupEvolution
+	 * @param stamina : player stamina
+	 * @param tEnter : at which minute the player entered the game
+	 * @param isTacticPressing : flag to identify Pressing Tactic
+	 */
+	public static void ComputeStaminaEffectAtEachMarks(double stamina, double tEnter, boolean isTacticPressing){
+		LinkedHashMap<Double, Double> staminaEffectAtEachMarks = new LinkedHashMap<>();
+		String key = stamina + "|" + tEnter + "|" + isTacticPressing;
+
 		boolean isHighStaminaPlayer;
 		double tolerance = EPSILON/10d;
 
@@ -1093,35 +1112,41 @@ public class RatingPredictionManager {
 
 		double t=tEnter;
 
-		while(t<=tNow)
+		while(t<=120d)
 		{
 			if (fuzzyEquals(t, 45d+EPSILON, tolerance) && (tEnter<(45d+2*EPSILON))) energy += 18.75;  // Energy recovery during half-time
 			else if ((t == (90d+EPSILON)) && (tEnter<(90d+2*EPSILON))) energy += 6.25;  // Energy recovery before extra-time
 			else {
-				  if(isHighStaminaPlayer) {
-					  energy = energy + energyLossPerMinuteHS;
-				  }
+				if(isHighStaminaPlayer) {
+					energy = energy + energyLossPerMinuteHS;
+				}
 				else {
-					  energy = energy + energyLossPerMinuteLS;
-				  }
+					energy = energy + energyLossPerMinuteLS;
+				}
 			}
+
+			staminaEffectAtEachMarks.put(t, Math.max(10, Math.min(100, energy)) / 100.0);
+
 			// we move from 45 (resp. 90) -> 45 + EPSILON (resp. 90 + EPSILON) to account for break rest effect
 			if (fuzzyEquals(t, 45d, tolerance) || fuzzyEquals(t, 90d, tolerance)) t += EPSILON;
 
-			// subs set to take place at 45' and 90' are modelized to respectivly take place at 45'+2*EPSILON and 90'+2*EPSILON
-			// i.e just after the resting effect takes place
+				// subs set to take place at 45' and 90' are modelized to respectivly take place at 45'+2*EPSILON and 90'+2*EPSILON
+				// i.e just after the resting effect takes place
 			else if (fuzzyEquals(t, 45d+EPSILON, tolerance) || fuzzyEquals(t, 90d+EPSILON, tolerance)) t += EPSILON;
 
-			// we resume normal course, i.e. ratings are calculated by step of 1 minutes
+				// we resume normal course, i.e. ratings are calculated by step of 1 minutes
 			else if (fuzzyEquals(t, 45d+2*EPSILON, tolerance)) t = 46d;
 			else if (fuzzyEquals(t, 90d+2*EPSILON, tolerance)) t = 91d;
 
 			else t += 1;
 		}
-		return Math.max(10, Math.min(100, energy)) / 100.0;
+
+		allStaminaEffect.put(key, staminaEffectAtEachMarks);
 	}
 
-    private double getTrainerEffect(double defensive, double offensive, double neutral) {
+
+
+	private double getTrainerEffect(double defensive, double offensive, double neutral) {
     	
     	// styleOfPlay * 0.1 gives us the fraction of the distance we need to go from
     	// neutral to either defensive or offensive depending on what the style is.
