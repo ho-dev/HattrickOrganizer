@@ -89,6 +89,11 @@ public class RatingPredictionManager {
 	 */
 	private Hashtable<Double, Lineup> LineupEvolution = new Hashtable<>();
 
+	public void flushStaminaEffect()
+	{
+		allStaminaEffect.clear();
+	}
+
     public RatingPredictionManager () {
     	if (RatingPredictionManager.config == null)
     		RatingPredictionManager.config = RatingPredictionConfig.getInstance();
@@ -1057,6 +1062,13 @@ public class RatingPredictionManager {
         }
     }
 
+	private static double TryGetStaminaEffect(LinkedHashMap<Double, Double> StaminaEffect, double t)
+	{
+		if (StaminaEffect.containsKey(t)) return StaminaEffect.get(t);
+		else if (StaminaEffect.containsKey(Math.floor(t)+EPSILON)) return StaminaEffect.get(Math.floor(t)+EPSILON);
+		else return StaminaEffect.get(Math.floor(t));
+	}
+
 	 /**
 	 * Returns the stamina effect per minute from tEnter tp tExit
 	  * @param stamina : player stamina
@@ -1065,13 +1077,14 @@ public class RatingPredictionManager {
 	  * @param isTacticPressing : flag to identify Pressing Tactic
 	  */
 	public static double GetStaminaEffect(double stamina, double tEnter, double tNow, boolean isTacticPressing){
-		String key = stamina + "|" + tEnter + "|" + isTacticPressing;
-		if (allStaminaEffect.containsKey(key)) {
-			return allStaminaEffect.get(key).get(tNow);
-		} else {
-			ComputeStaminaEffectAtEachMarks(stamina, tEnter, isTacticPressing);
-			return allStaminaEffect.get(key).get(tNow);
+		if (tNow < tEnter)
+		{
+//			System.err.println("Inconsistent Lineup !!");   // This error occurs because of incorrect HO!Last Lineup table
+			return 0;
 		}
+		String key = stamina + "|" + tEnter + "|" + isTacticPressing;
+		if (! allStaminaEffect.containsKey(key)) ComputeStaminaEffectAtEachMarks(stamina, tEnter, isTacticPressing);
+		return TryGetStaminaEffect(allStaminaEffect.get(key), tNow);
 	}
 
 
@@ -1089,9 +1102,8 @@ public class RatingPredictionManager {
 		boolean isHighStaminaPlayer;
 		double tolerance = EPSILON/10d;
 
-		// players entering just after break are no subject to break rest
-
-		if (fuzzyEquals(tEnter, 45d, tolerance) || fuzzyEquals(tEnter, 90d, tolerance)) tEnter += 2*EPSILON;
+		// players entering just after break are not impacted by break rest effect
+		if (fuzzyEquals(tEnter, 45d, tolerance) || fuzzyEquals(tEnter, 90d, tolerance)) tEnter += EPSILON;
 
 		stamina -= 1;
 		double P = isTacticPressing ? 1.1 : 1.0;
@@ -1114,8 +1126,8 @@ public class RatingPredictionManager {
 
 		while(t<=120d)
 		{
-			if (fuzzyEquals(t, 45d+EPSILON, tolerance) && (tEnter<(45d+2*EPSILON))) energy += 18.75;  // Energy recovery during half-time
-			else if ((t == (90d+EPSILON)) && (tEnter<(90d+2*EPSILON))) energy += 6.25;  // Energy recovery before extra-time
+			if (fuzzyEquals(t, 45d+EPSILON, tolerance) && (tEnter<45d)) energy += 18.75;  // Energy recovery during half-time
+			else if ((t == (90d+EPSILON)) && (tEnter<90d)) energy += 6.25;  // Energy recovery before extra-time
 			else {
 				if(isHighStaminaPlayer) {
 					energy = energy + energyLossPerMinuteHS;
@@ -1130,13 +1142,9 @@ public class RatingPredictionManager {
 			// we move from 45 (resp. 90) -> 45 + EPSILON (resp. 90 + EPSILON) to account for break rest effect
 			if (fuzzyEquals(t, 45d, tolerance) || fuzzyEquals(t, 90d, tolerance)) t += EPSILON;
 
-				// subs set to take place at 45' and 90' are modelized to respectivly take place at 45'+2*EPSILON and 90'+2*EPSILON
-				// i.e just after the resting effect takes place
-			else if (fuzzyEquals(t, 45d+EPSILON, tolerance) || fuzzyEquals(t, 90d+EPSILON, tolerance)) t += EPSILON;
-
-				// we resume normal course, i.e. ratings are calculated by step of 1 minutes
-			else if (fuzzyEquals(t, 45d+2*EPSILON, tolerance)) t = 46d;
-			else if (fuzzyEquals(t, 90d+2*EPSILON, tolerance)) t = 91d;
+			// we resume normal course, i.e. ratings are calculated by step of 1 minutes
+			else if (fuzzyEquals(t, 45d+EPSILON, tolerance)) t = 46d;
+			else if (fuzzyEquals(t, 90d+EPSILON, tolerance)) t = 91d;
 
 			else t += 1;
 		}
