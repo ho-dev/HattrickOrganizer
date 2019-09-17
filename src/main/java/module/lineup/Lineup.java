@@ -488,7 +488,7 @@ public class Lineup{
 		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
 			rpManager = new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam(),
 					(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay, RatingPredictionConfig.getInstance());
-			rpManager.flushStaminaEffect();
+//			rpManager.flushStaminaEffect();
 //			this.printLineup();
 			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings(bForm, true));
 			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings(bForm, true));
@@ -797,7 +797,7 @@ public class Lineup{
 	public void printLineup() {
 		try {
 			String res = "*******************************************************************************************";
-			res += "\n" + "           " + "           " + this.getPlayerByPositionID(100).getShortName();
+			res += "\n" + "           " + "           " + this.tryGetPlayerNameByPositionID(100);
 			res += "\n" + this.tryGetPlayerNameByPositionID(101) + "   " + this.tryGetPlayerNameByPositionID(102) + "   " + this.tryGetPlayerNameByPositionID(103) + "   " + this.tryGetPlayerNameByPositionID(104) + "   " + this.tryGetPlayerNameByPositionID(105);
 			res += "\n" + this.tryGetPlayerNameByPositionID(106) + "   " + this.tryGetPlayerNameByPositionID(107) + "   " + this.tryGetPlayerNameByPositionID(108) + "   " + this.tryGetPlayerNameByPositionID(109) + "   " + this.tryGetPlayerNameByPositionID(110);
 			res += "\n" + "           " + this.tryGetPlayerNameByPositionID(111) + "   " + this.tryGetPlayerNameByPositionID(112) + "   " + this.tryGetPlayerNameByPositionID(113);

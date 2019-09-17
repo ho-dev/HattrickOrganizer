@@ -89,10 +89,10 @@ public class RatingPredictionManager {
 	 */
 	private Hashtable<Double, Lineup> LineupEvolution = new Hashtable<>();
 
-	public void flushStaminaEffect()
-	{
-		allStaminaEffect.clear();
-	}
+//	public void flushStaminaEffect()
+//	{
+//		allStaminaEffect.clear();
+//	}
 
     public RatingPredictionManager () {
     	if (RatingPredictionManager.config == null)

@@ -196,7 +196,7 @@ public class HO {
 
 		interuptionsWindow.setInfoText(5, "Load latest Data");
 		HOVerwaltung.instance().loadLatestHoModel();
-		HOVerwaltung.instance().getModel().setLineups(HOVerwaltung.instance().getModel().getID());
+//		HOVerwaltung.instance().getModel().setLineups(HOVerwaltung.instance().getModel().getID());
 		interuptionsWindow.setInfoText(6, "Load  XtraDaten");
 
 		// TableColumn

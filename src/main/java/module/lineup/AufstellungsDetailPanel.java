@@ -251,7 +251,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	public void setLabels() {
 		if (HOVerwaltung.instance().getModel().getTeam() != null) {
 			final HOModel homodel = HOVerwaltung.instance().getModel();
-			final Vector<Player> allPlayer = homodel.getAllSpieler();
+//			final Vector<Player> allPlayer = homodel.getAllSpieler();
 			final Lineup aufstellung = homodel.getLineup();
 
 			// HRF comparison required
