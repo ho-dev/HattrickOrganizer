@@ -13,6 +13,8 @@ import java.awt.Color;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
@@ -22,17 +24,23 @@ public final class CombinedRatingChartPanel extends JPanel {
 	private final class Datum {
 		private JCheckBox checkbox;
 		private Color bg;
-		private Boolean visible;
+		private StatistikModel model;
 
 		public Datum(String text, Color background) {
 			checkbox = new JCheckBox(text);
 			bg = background;
-			visible = false;
 			init();
 		}
 
 		private void init() {
-			checkbox.setEnabled(false);
+			checkbox.addItemListener(new ItemListener() {
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					if (e.getStateChange() == ItemEvent.SELECTED) model.setShow(true);
+					else if (e.getStateChange() == ItemEvent.DESELECTED) model.setShow(false);
+					chart.repaint();
+				}
+			});
 			checkbox.setOpaque(true);
 			checkbox.setBackground(bg);
 			if(getRelativeLuminance(bg) < 0.179) checkbox.setForeground(Color.WHITE);
@@ -49,7 +57,7 @@ public final class CombinedRatingChartPanel extends JPanel {
 		}
 
 		StatistikModel getChartModel(double[] values, NumberFormat format) {
-			StatistikModel model = new StatistikModel(values, null, visible, bg, format);
+			model = new StatistikModel(values, null, checkbox.isSelected(), bg, format);
 			model.setDataBasedBoundaries(true);
 			return model;
 		}
@@ -81,6 +89,10 @@ public final class CombinedRatingChartPanel extends JPanel {
 		initComponents();
 	}
 
+	StatistikPanel getChart() {
+		return chart;
+	}
+
 	private void initComponents() {
 		controlsPanel.setLayout(new GridBagLayout());
 
@@ -88,11 +100,23 @@ public final class CombinedRatingChartPanel extends JPanel {
 		gbc.fill =  GridBagConstraints.HORIZONTAL;
 		gbc.gridy = 0;
 
-		showHelpLines.setEnabled(false);
+		showHelpLines.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) getChart().setHilfslinien(true);
+				else if (e.getStateChange() == ItemEvent.DESELECTED) getChart().setHilfslinien(false);
+			}
+		});
 		controlsPanel.add(showHelpLines, gbc);
 
 		gbc.gridy++;
-		showValues.setEnabled(false);
+		showValues.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) getChart().setBeschriftung(true);
+				else if (e.getStateChange() == ItemEvent.DESELECTED) getChart().setBeschriftung(false);
+			}
+		});
 		controlsPanel.add(showValues, gbc);
 
 		gbc.gridy++;
@@ -153,7 +177,7 @@ public final class CombinedRatingChartPanel extends JPanel {
 		data[7] = hatStats.getChartModel(chartData.getHatStats(), Helper.INTEGERFORMAT);
 		data[8] = loddar.getChartModel(chartData.getLoddar(), Helper.DEFAULTDEZIMALFORMAT);
 		chart.setDataBasedBoundaries(true);
-		chart.setAllValues(data, chartData.getCaptions(), Helper.DEFAULTDEZIMALFORMAT, "", "", false, true);
+		chart.setAllValues(data, chartData.getCaptions(), Helper.DEFAULTDEZIMALFORMAT, "", "", showValues.isSelected(), showHelpLines.isSelected());
 		add(chart, BorderLayout.CENTER);
 	}
 }
