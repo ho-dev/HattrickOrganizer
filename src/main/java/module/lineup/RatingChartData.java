@@ -3,6 +3,7 @@ package module.lineup;
 import core.model.HOVerwaltung;
 import core.model.Ratings;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -21,8 +22,15 @@ public final class RatingChartData {
 	private double[] rightAttack = {};
 	private ArrayList<Double> mapKeys = null;
 	private String[] chartCaptions = null;
+	private boolean ET = false;
+	private int RTstartIdx = 0;
+	private int RTendIdx = 0;
 	private Hashtable<Double, Double> mapDD;
 	private Hashtable<Double, Integer> mapDI;
+
+	public void setET(boolean extraTime) {
+		ET = extraTime;
+	}
 
 	private void parsePrepare() {
 		if(mapKeys == null) {
@@ -30,6 +38,8 @@ public final class RatingChartData {
 			mapKeys.remove(-90d);  //remove 90' and 120'
 			mapKeys.remove(-120d); //average placeholder labels
 			Collections.sort(mapKeys, Collections.reverseOrder());
+			RTstartIdx = mapKeys.indexOf(90d);
+			RTendIdx = mapKeys.size();
 		}
 		if(chartCaptions == null) {
 			ArrayList<String> captionList = new ArrayList();
@@ -59,71 +69,91 @@ public final class RatingChartData {
 	}
 
 	double[] getLeftDefense() {
-		if(leftDefense.length != 0) return leftDefense;
-		mapDD = ratings.getLeftDefense();
-		leftDefense = parseDD(mapDD);
-		return leftDefense;
+		if(leftDefense.length == 0) {
+			mapDD = ratings.getLeftDefense();
+			leftDefense = parseDD(mapDD);
+		}
+		if(ET) return leftDefense;
+		else return Arrays.copyOfRange(leftDefense, RTstartIdx, RTendIdx);
 	}
 
 	double[] getCentralDefense() {
-		if(centralDefense.length != 0) return centralDefense;
-		mapDD = ratings.getCentralDefense();
-		centralDefense = parseDD(mapDD);
-		return centralDefense;
+		if(centralDefense.length == 0) {
+			mapDD = ratings.getCentralDefense();
+			centralDefense = parseDD(mapDD);
+		}
+		if(ET) return centralDefense;
+		else return Arrays.copyOfRange(centralDefense, RTstartIdx, RTendIdx);
 	}
 
 	double[] getRightDefense() {
-		if(rightDefense.length != 0) return rightDefense;
-		mapDD = ratings.getRightDefense();
-		rightDefense = parseDD(mapDD);
-		return rightDefense;
+		if(rightDefense.length == 0) {
+			mapDD = ratings.getRightDefense();
+			rightDefense = parseDD(mapDD);
+		}
+		if(ET) return rightDefense;
+		else return Arrays.copyOfRange(rightDefense, RTstartIdx, RTendIdx);
 	}
 
 	double[] getHatStats() {
-		if(hatStats.length != 0) return hatStats;
-		mapDI = ratings.getHatStats();
-		hatStats = parseDI(mapDI);
-		return hatStats;
+		if(hatStats.length == 0) {
+			mapDI = ratings.getHatStats();
+			hatStats = parseDI(mapDI);
+		}
+		if(ET) return hatStats;
+		else return Arrays.copyOfRange(hatStats, RTstartIdx, RTendIdx);
 	}
 
 	double[] getMidfield() {
-		if(midfield.length != 0) return midfield;
-		mapDD = ratings.getMidfield();
-		midfield = parseDD(mapDD);
-		return midfield;
+		if(midfield.length == 0) {
+			mapDD = ratings.getMidfield();
+			midfield = parseDD(mapDD);
+		}
+		if(ET) return midfield;
+		else return Arrays.copyOfRange(midfield, RTstartIdx, RTendIdx);
 	}
 
 	double[] getLoddar() {
-		if(loddar.length != 0) return loddar;
-		mapDD = ratings.getLoddarStat();
-		loddar = parseDD(mapDD);
-		return loddar;
+		if(loddar.length == 0) {
+			mapDD = ratings.getLoddarStat();
+			loddar = parseDD(mapDD);
+		}
+		if(ET) return loddar;
+		else return Arrays.copyOfRange(loddar, RTstartIdx, RTendIdx);
 	}
 
 	double[] getLeftAttack() {
-		if(leftAttack.length != 0) return leftAttack;
-		mapDD = ratings.getLeftAttack();
-		leftAttack = parseDD(mapDD);
-		return leftAttack;
+		if(leftAttack.length == 0) {
+			mapDD = ratings.getLeftAttack();
+			leftAttack = parseDD(mapDD);
+		}
+		if(ET) return leftAttack;
+		else return Arrays.copyOfRange(leftAttack, RTstartIdx, RTendIdx);
 	}
 
 	double[] getCentralAttack() {
-		if(centralAttack.length != 0) return centralAttack;
-		mapDD = ratings.getCentralAttack();
-		centralAttack = parseDD(mapDD);
-		return centralAttack;
+		if(centralAttack.length == 0) {
+			mapDD = ratings.getCentralAttack();
+			centralAttack = parseDD(mapDD);
+		}
+		if(ET) return centralAttack;
+		else return Arrays.copyOfRange(centralAttack, RTstartIdx, RTendIdx);
 	}
 
 	double[] getRightAttack() {
-		if(rightAttack.length != 0) return rightAttack;
-		mapDD = ratings.getRightAttack();
-		rightAttack = parseDD(mapDD);
-		return rightAttack;
+		if(rightAttack.length == 0) {
+			mapDD = ratings.getRightAttack();
+			rightAttack = parseDD(mapDD);
+		}
+		if(ET) return rightAttack;
+		else return Arrays.copyOfRange(rightAttack, RTstartIdx, RTendIdx);
 	}
 
 	String[] getCaptions() {
-		if(chartCaptions != null) return chartCaptions;
-		parsePrepare();
-		return chartCaptions;
+		if(chartCaptions == null) {
+			parsePrepare();
+		}
+		if(ET) return chartCaptions;
+		else return Arrays.copyOfRange(chartCaptions, RTstartIdx, RTendIdx);
 	}
 }
