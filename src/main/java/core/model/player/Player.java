@@ -829,7 +829,7 @@ public class Player {
      * calculate the contribution for the ideal position
      */
     public float getIdealPosStaerke(boolean mitForm, boolean normalized) {
-        return calcPosValue(getIdealPosition(), mitForm, normalized, -1);
+        return calcPosValue(getIdealPosition(), mitForm, normalized, 1);
     }
 
     /**
