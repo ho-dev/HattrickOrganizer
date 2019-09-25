@@ -19,7 +19,7 @@ class Position(Enum):
     FWl = 113
 
 
-class MatchOrder(Enum): #TODO: put correct data
+class MatchOrder(Enum):
     NORMAL = 0
     OFFENSIVE = 1
     DEFENSIVE = 2
@@ -27,8 +27,23 @@ class MatchOrder(Enum): #TODO: put correct data
     TOWARDS_WING = 4
 
 
-def validateLineup(requiredLineup):
+class Attitute(Enum):
+    NORMAL = "normal"
+    PIC = "playitcool"
+    MOTS = "matchoftheseason"
 
+
+class Tactic(Enum):
+    NORMAL = "normal"
+    PRESSING = "pressing"
+    CA = "counter-attacks"
+    AIM = "attackinthemiddle"
+    AOW = "attackonwings"
+    PC = "playcreatively"
+    LS = "longshots"
+
+
+def validateLineup(requiredLineup):
     for position, order, bPresent in requiredLineup:
         if bPresent:
             if position == Position.GK:
@@ -36,15 +51,18 @@ def validateLineup(requiredLineup):
             elif position in [Position.WBr, Position.WBl, Position.WIr, Position.WIl]:
                 assert order != MatchOrder.TOWARDS_WING, f"{position} can't receive  {order} order"
             elif position in [Position.CDr, Position.CDl]:
-                assert order in [MatchOrder.NORMAL, MatchOrder.TOWARDS_WING, MatchOrder.OFFENSIVE], f"{position} can't receive  {order} order"
+                assert order in [MatchOrder.NORMAL, MatchOrder.TOWARDS_WING,
+                                 MatchOrder.OFFENSIVE], f"{position} can't receive  {order} order"
             elif position == Position.CD:
                 assert order in [MatchOrder.NORMAL, MatchOrder.OFFENSIVE], f"{position} can't receive  {order} order"
             elif position in [Position.IMr, Position.IMl]:
                 assert order != MatchOrder.TOWARDS_MIDDLE, f"{position} can't receive  {order} order"
             elif position == Position.IM:
-                assert order in [MatchOrder.NORMAL, MatchOrder.OFFENSIVE, MatchOrder.DEFENSIVE], f"{position} can't receive  {order} order"
+                assert order in [MatchOrder.NORMAL, MatchOrder.OFFENSIVE,
+                                 MatchOrder.DEFENSIVE], f"{position} can't receive  {order} order"
             elif position in [Position.FWl, Position.FWr]:
-                assert order in [MatchOrder.NORMAL, MatchOrder.TOWARDS_WING, MatchOrder.DEFENSIVE], f"{position} can't receive {order} order"
+                assert order in [MatchOrder.NORMAL, MatchOrder.TOWARDS_WING,
+                                 MatchOrder.DEFENSIVE], f"{position} can't receive {order} order"
             elif position == Position.FW:
                 assert order in [MatchOrder.NORMAL, MatchOrder.DEFENSIVE], f"{position} can't receive {order} order"
             else:
@@ -52,6 +70,7 @@ def validateLineup(requiredLineup):
 
 
 def createJson(lineupName, requiredLineup, attitude, tactic):
+    attitude, tactic = attitude.value, tactic.value
     validateLineup(requiredLineup)
     json_data = {}
     lineup = {}
@@ -64,10 +83,10 @@ def createJson(lineupName, requiredLineup, attitude, tactic):
     json_data["attitude"] = attitude
     json_data["tatic"] = tactic
 
-    # with open(r"D:\TEMP\feedback.json", "w") as write_file:
-    #     json.dump(json_data, write_file, indent=4)
-    with open(r"docs/feedback.json", "w") as write_file:
+    with open(r"D:\TEMP\feedback.json", "w") as write_file:
         json.dump(json_data, write_file, indent=4)
+    # with open(r"docs/feedback.json", "w") as write_file:
+    #     json.dump(json_data, write_file, indent=4)
 
 
 requiredLineup = []
@@ -77,9 +96,4 @@ requiredLineup.append((Position.WBr, MatchOrder.DEFENSIVE, False))
 requiredLineup.append((Position.WIl, MatchOrder.TOWARDS_MIDDLE, False))
 requiredLineup.append((Position.FWl, MatchOrder.TOWARDS_WING, False))
 
-createJson("GK", requiredLineup, "Normal", "Normal")
-
-
-
-
-
+createJson("GK", requiredLineup, Attitute.NORMAL, Tactic.NORMAL)
