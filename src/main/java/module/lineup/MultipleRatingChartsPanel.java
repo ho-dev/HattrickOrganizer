@@ -73,50 +73,15 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	public MultipleRatingChartsPanel(RatingChartData data) {
 		super(new BorderLayout());
 		chartData = data;
-		xAxisDataCaptions = chartData.getCaptions();
 		initComponents();
 	}
 
-	private void initComponents() {
-		showHelpLines.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				boolean selected;
-				if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
-				else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
-				else return;
-				leftDefense.setHelpLines(selected);
-				centralDefense.setHelpLines(selected);
-				rightDefense.setHelpLines(selected);
-				hatStats.setHelpLines(selected);
-				midfield.setHelpLines(selected);
-				loddar.setHelpLines(selected);
-				leftAttack.setHelpLines(selected);
-				centralAttack.setHelpLines(selected);
-				rightAttack.setHelpLines(selected);
-			}
-		});
-		showValues.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				boolean selected;
-				if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
-				else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
-				else return;
-				leftDefense.setValues(selected);
-				centralDefense.setValues(selected);
-				rightDefense.setValues(selected);
-				hatStats.setValues(selected);
-				midfield.setValues(selected);
-				loddar.setValues(selected);
-				leftAttack.setValues(selected);
-				centralAttack.setValues(selected);
-				rightAttack.setValues(selected);
-			}
-		});
-		controlsPanel.add(showHelpLines);
-		controlsPanel.add(showValues);
-		add(controlsPanel, BorderLayout.SOUTH);
+	void prepareCharts() {
+		chartsPanel.removeAll();
+		chartsPanel.revalidate();
+		chartsPanel.repaint();
+
+		xAxisDataCaptions = chartData.getCaptions();
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill =  GridBagConstraints.BOTH;
@@ -177,7 +142,50 @@ public final class MultipleRatingChartsPanel extends JPanel {
 										Helper.DEFAULTDEZIMALFORMAT,
 										hov.getLanguageString("ls.match.ratingsector.rightattack"));
 		chartsPanel.add(rightAttack.getChart(), gbc);
+	}
 
+	private void initComponents() {
+		showHelpLines.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				boolean selected;
+				if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
+				else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
+				else return;
+				leftDefense.setHelpLines(selected);
+				centralDefense.setHelpLines(selected);
+				rightDefense.setHelpLines(selected);
+				hatStats.setHelpLines(selected);
+				midfield.setHelpLines(selected);
+				loddar.setHelpLines(selected);
+				leftAttack.setHelpLines(selected);
+				centralAttack.setHelpLines(selected);
+				rightAttack.setHelpLines(selected);
+			}
+		});
+		showValues.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				boolean selected;
+				if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
+				else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
+				else return;
+				leftDefense.setValues(selected);
+				centralDefense.setValues(selected);
+				rightDefense.setValues(selected);
+				hatStats.setValues(selected);
+				midfield.setValues(selected);
+				loddar.setValues(selected);
+				leftAttack.setValues(selected);
+				centralAttack.setValues(selected);
+				rightAttack.setValues(selected);
+			}
+		});
+		controlsPanel.add(showHelpLines);
+		controlsPanel.add(showValues);
+		add(controlsPanel, BorderLayout.SOUTH);
+
+		prepareCharts();
 		add(chartsPanel, BorderLayout.CENTER);
 	}
 }
