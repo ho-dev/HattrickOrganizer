@@ -1932,7 +1932,7 @@ public class Player {
 
     public float calcPosValue(byte pos, boolean useForm, boolean normalized)
     {
-        return calcPosValue(pos, true, true, core.model.UserParameter.instance().nbDecimals);
+        return calcPosValue(pos, useForm, normalized, core.model.UserParameter.instance().nbDecimals);
     }
 
     public float calcPosValue(byte pos, boolean useForm)

@@ -220,7 +220,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 				wertAlt.setText(chValue);
 			}
 			else if(changeValue == 0){
-				wertAlt.setText("-");
+				wertAlt.setText("");
 			}
 			else {
 				chValue += Float.toString(changeValue);
