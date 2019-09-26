@@ -10,6 +10,7 @@ import java.sql.Types;
 import java.util.Vector;
 
 import static core.model.player.IMatchRoleID.aFieldMSubsAndBackupMatchRoleID;
+import static core.model.player.IMatchRoleID.aPositionBehaviours;
 
 
 public final class MatchLineupPlayerTable extends AbstractTable {
@@ -56,8 +57,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	Vector<float[]> getAllRatings(int playerID) {
 		final Vector<float[]> ratings = new Vector<>();
 
-		//Iterate over possible combinations
-		for (int i: aFieldMSubsAndBackupMatchRoleID) {
+		//Iterate over possible combinations of position / behaviours
+		for (int i: aPositionBehaviours) {
 			final float[] temp = getPlayerRatingForPosition(playerID, i);
 
 			//Min found a value for the pos -> max> 0
@@ -126,8 +127,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	 * @param position Usere positionscodierung mit taktik
 	 */
 	float[] getPlayerRatingForPosition(int spielerid, int position) {
-		//Max, Min, Durchschnitt
-		final float[] bewertungen = { 0f, 0f, 0f, 0f };
+		//Max, Min, average
+		final float[] starsStatistics = { 0f, 0f, 0f, 0f };
 
 		try {
 			final String sql = "SELECT MatchID, Rating FROM "+getTableName()+" WHERE SpielerID=" + spielerid + " AND HoPosCode=" + position;
@@ -141,14 +142,14 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 				float rating = rs.getFloat("Rating");
 
 				if (rating > -1) {
-					bewertungen[0] = Math.max(bewertungen[0], rating);
+					starsStatistics[0] = Math.max(starsStatistics[0], rating);
 
-					if (bewertungen[1] == 0) {
-						bewertungen[1] = rating;
+					if (starsStatistics[1] == 0) {
+						starsStatistics[1] = rating;
 					}
 
-					bewertungen[1] = Math.min(bewertungen[1], rating);
-					bewertungen[2] += rating;
+					starsStatistics[1] = Math.min(starsStatistics[1], rating);
+					starsStatistics[2] += rating;
 
 					//HOLogger.instance().log(getClass(),rs.getInt("MatchID") + " : " + rating);
 
@@ -157,17 +158,17 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			}
 
 			if (i > 0) {
-				bewertungen[2] = (bewertungen[2] / i);
+				starsStatistics[2] = (starsStatistics[2] / i);
 			}
 
-			bewertungen[3] = i;
+			starsStatistics[3] = i;
 
 			//HOLogger.instance().log(getClass(),"Ratings Pos : " + i + " - " + bewertungen[0] + " / " + bewertungen[1] + " / " + bewertungen[2] + " / / " + bewertungen[3]);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DatenbankZugriff.getPlayerRatingForPosition : " + e);
 		}
 
-		return bewertungen;
+		return starsStatistics;
 	}
 	
 	/**

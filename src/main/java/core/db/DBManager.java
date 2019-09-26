@@ -532,8 +532,7 @@ public class DBManager {
 	// -------------------------------------------------
 
 	/**
-	 * Gibt eine Liste an Ratings zurück, auf denen der Player gespielt hat: 0
-	 * = Max 1 = Min 2 = Durchschnitt 3 = posid
+	 * Returns a list of ratings the player has played on [Max, Min, Average, posid]
 	 */
 	public Vector<float[]> getAlleBewertungen(int spielerid) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
@@ -1411,12 +1410,12 @@ public class DBManager {
 	}
 
 	/**
-	 * Gibt eine Liste mit SpielerMatchCBItems zu den einzelnen Matches zurück
+	 * Returns a list of PlayerMatchCBItems for given playerID
 	 */
 	public Vector<SpielerMatchCBItem> getSpieler4Matches(int spielerid) {
 		final Vector<SpielerMatchCBItem> spielerMatchCBItems = new Vector<SpielerMatchCBItem>();
 
-		// Liste aller Matchplayer mit der spielerid holen
+		// Get list of all matches containing the playerID
 		try {
 			final Vector<SpielerMatchCBItem> tempSpielerMatchCBItems = new Vector<SpielerMatchCBItem>();
 

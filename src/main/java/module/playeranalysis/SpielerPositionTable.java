@@ -67,7 +67,7 @@ final class SpielerPositionTable extends JTable {
 
 			m_clTableSorter.addMouseListenerToHeaderInTable(this);
 		} else {
-			// Werte neu setzen
+			// Reset values
 			m_clTableModel.setValues(core.db.DBManager.instance().getAlleBewertungen(
 					m_iSpielerId));
 			m_clTableSorter.reallocateIndexes();

@@ -1,4 +1,3 @@
-// %4093469452:de.hattrickorganizer.gui.model%
 package core.gui.comp.renderer;
 
 import core.gui.comp.entry.ColorLabelEntry;
@@ -15,7 +14,7 @@ import javax.swing.JTable;
 
 
 /**
- * Render für Tabellen mit JLabels als Tabellenobjekte
+ * Renderer for tables with JLabels as table objects
  */
 public class HODefaultTableCellRenderer implements javax.swing.table.TableCellRenderer {
     //~ Static fields/initializers -----------------------------------------------------------------

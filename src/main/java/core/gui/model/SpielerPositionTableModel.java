@@ -43,15 +43,15 @@ public class SpielerPositionTableModel extends AbstractTableModel {
     //Durchschnitt
     HOVerwaltung.instance().getLanguageString("Durchschnitt"),
                                         };
-    private Vector<float[]> m_vSpielerBewertung;
+    private Vector<float[]> m_playersEvaluation;
 
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
      * Creates a new SpielerPositionTableModel object.
      */
-    public SpielerPositionTableModel(Vector<float[]> spielerbewertung) {
-        m_vSpielerBewertung = spielerbewertung;
+    public SpielerPositionTableModel(Vector<float[]> playersEvaluation) {
+        m_playersEvaluation = playersEvaluation;
         initData();
     }
 
@@ -129,40 +129,40 @@ public class SpielerPositionTableModel extends AbstractTableModel {
      * Player neu setzen
      */
     public final void setValues(Vector<float[]> spielerbewertung) {
-        m_vSpielerBewertung = spielerbewertung;
+        m_playersEvaluation = spielerbewertung;
         initData();
     }
 
     //-----initialisierung-----------------------------------------
 
     /**
-     * Erzeugt einen Data[][] aus dem Spielervector
+     * Creates a Data[][] from the playerVvector
      */
     private void initData() {
-        m_clData = new Object[m_vSpielerBewertung.size()][m_sColumnNames.length];
+        m_clData = new Object[m_playersEvaluation.size()][m_sColumnNames.length];
 
-        for (int i = 0; i < m_vSpielerBewertung.size(); i++) {
-            //Zuerst die Position, dann max, min, durchschnitts Sterne
-            final float[] bewertung = ((float[]) m_vSpielerBewertung.get(i));
+        for (int i = 0; i < m_playersEvaluation.size(); i++) {
+            //First the position, then max, min, average stars
+            final float[] rating = m_playersEvaluation.get(i);
 
             //Position
             m_clData[i][0] = new ColorLabelEntry(ImageUtilities.getImage4Position(MatchRoleID
-                                                                    .getHTPosidForHOPosition4Image((byte) bewertung[3]),
+                                                                    .getHTPosidForHOPosition4Image((byte) rating[3]),
                                                                     (byte) 0, 0),
-                                                 -MatchRoleID.getSortId((byte) bewertung[3],
+                                                 -MatchRoleID.getSortId((byte) rating[3],
                                                                             false),
                                                  ColorLabelEntry.FG_STANDARD,
                                                  ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-            ((ColorLabelEntry) m_clData[i][0]).setText(MatchRoleID.getNameForPosition((byte) bewertung[3]));
+            ((ColorLabelEntry) m_clData[i][0]).setText(MatchRoleID.getNameForPosition((byte) rating[3]));
 
             //Maximal
-            m_clData[i][1] = new RatingTableEntry(bewertung[0] * 2, true);
+            m_clData[i][1] = new RatingTableEntry(rating[0] * 2, true);
 
             //Minial
-            m_clData[i][2] = new RatingTableEntry(bewertung[1] * 2, true);
+            m_clData[i][2] = new RatingTableEntry(rating[1] * 2, true);
 
             //Durchschnitt
-            m_clData[i][3] = new RatingTableEntry(Math.round(bewertung[2] * 2), true);
+            m_clData[i][3] = new RatingTableEntry(Math.round(rating[2] * 2), true);
         }
     }
 
