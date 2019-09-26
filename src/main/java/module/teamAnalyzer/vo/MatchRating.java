@@ -5,7 +5,10 @@ import core.model.Ratings;
 import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
 
+import javax.swing.*;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -94,31 +97,52 @@ public class MatchRating {
 
 
     public static int StyleOfPlayStringToInt(String style_of_play) {
-        //        -10	100% defensive
-//                -9	90% defensive
-//                -8	80% defensive
-//                -7	70% defensive
-//                -6	60% defensive
-//                -5	50% defensive
-//                -4	40% defensive
-//                -3	30% defensive
-//                -2	20% defensive
-//                -1	10% defensive
-//        0	Neutral
-//        1	10% offensive
-//        2	20% offensive
-//        3	30% offensive
-//        4	40% offensive
-//        5	50% offensive
-//        6	60% offensive
-//        7	70% offensive
-//        8	80% offensive
-//        9	90% offensive
-//        10	100% offensive
-        style_of_play = style_of_play.toLowerCase();
+        //-10	100% defensive
+        //-9	90% defensive
+        //-8	80% defensive
+        //-7	70% defensive
+        //-6	60% defensive
+        //-5	50% defensive
+        //-4	40% defensive
+        //-3	30% defensive
+        //-2	20% defensive
+        //-1	10% defensive
+        //0	Neutral
+        //1	10% offensive
+        //2	20% offensive
+        //3	30% offensive
+        //4	40% offensive
+        //5	50% offensive
+        //6	60% offensive
+        //7	70% offensive
+        //8	80% offensive
+        //9	90% offensive
+        //10	100% offensive
+
+        int result = ERROR;
+        int index = 0;
+
+        style_of_play = style_of_play.toLowerCase().trim();
         HOVerwaltung hoi = HOVerwaltung.instance();
-        if (style_of_play.equals(hoi.getLanguageString("ls.team.styleofplay.neutral").toLowerCase())) return 0;
-        else return ERROR;
+        if (style_of_play.equals(hoi.getLanguageString("ls.team.styleofplay.neutral").toLowerCase())) {
+            result = 0;
+        } else {
+            index = style_of_play.indexOf("%");
+
+            try {
+                result = Integer.parseInt(style_of_play.substring(0, index));
+            } catch (Exception e) {
+                result = ERROR;
+            }
+
+            if (style_of_play.contains(hoi.getLanguageString("ls.team.styleofplay.offensive").toLowerCase())) {
+            } else if (style_of_play.contains(hoi.getLanguageString("ls.team.styleofplay.defensive").toLowerCase())) {
+                result = result * -1;
+            } else {
+                result = ERROR;
+            }
+        }
+        return result;
     }
 
 

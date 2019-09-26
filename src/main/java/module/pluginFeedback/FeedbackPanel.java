@@ -41,20 +41,21 @@ public class FeedbackPanel extends JFrame {
     public FeedbackPanel() {
         HORatings = HOVerwaltung.instance().getModel().getLineup().getRatings();
         HOLineup = HOVerwaltung.instance().getModel().getLineup();
-
+        HTRatings = new MatchRating();
         bFetchLineupSuccess = fetchRequiredLineup();
 
         initComponents();
         refresh();
     }
 
-    public static MatchRating parseHTRating(String input) {
+    public boolean parseHTRating(String input) {
         Pattern pattern;
         Matcher matcher;
         String regex;
-        MatchRating result = new MatchRating();
 
-        if (input.equals("")) return result;
+        if (input.equals("")) {
+            return false;
+        }
 
         // Parsing HT ratings values ============================================================
         regex = "(?<=\\])([0-9\\.]+)(?=\\[)";
@@ -71,14 +72,14 @@ public class FeedbackPanel extends JFrame {
             // Error while parsing HT ratings values ============================================================
             String message = HOVerwaltung.instance().getLanguageString("feedbackplugin.ParseHTRatingError");
             JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
-            return result;
+            return false;
         }
 
         if (allRatings.size() != 7) {
             // We haven't found 7 ratings as expected  ============================================================
             String message = HOVerwaltung.instance().getLanguageString("feedbackplugin.ParseHTRatingError");
             JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
-            return result;
+            return false;
         }
 
 
@@ -101,20 +102,20 @@ public class FeedbackPanel extends JFrame {
             // Error while parsing other attributes ============================================================
             String message = HOVerwaltung.instance().getLanguageString("feedbackplugin.ParseHTRatingError");
             JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
-            return result;
+            return false;
         }
 
-       if (allKeys.size() < 4) {
-            // We haven't found 5 attributes as expected  ============================================================
+        if (allKeys.size() < 4) {
+            // We haven't found 4 attributes as expected  ============================================================
             String message = HOVerwaltung.instance().getLanguageString("feedbackplugin.ParseHTRatingError");
             JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
-            return result;
+            return false;
         }
 
 
         String thisKey, nextKey;
 
-        for (int i = 0; i < allKeys.size()-1; i++) {
+        for (int i = 0; i < allKeys.size() - 1; i++) {
 
             thisKey = allKeys.get(i);
             nextKey = allKeys.get(i + 1);
@@ -126,7 +127,7 @@ public class FeedbackPanel extends JFrame {
             allValues.add(matcher.group(0));
         }
 
-        thisKey = allKeys.get(allKeys.size()-1);
+        thisKey = allKeys.get(allKeys.size() - 1);
         regex = "(?<=" + thisKey + ")(.*)";
         pattern = Pattern.compile(regex, Pattern.MULTILINE | Pattern.DOTALL);
         matcher = pattern.matcher(input);
@@ -157,13 +158,13 @@ public class FeedbackPanel extends JFrame {
                 (iStyle_of_play == MatchRating.ERROR)) {
             String message = HOVerwaltung.instance().getLanguageString("feedbackplugin.ParseHTRatingError");
             JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
-            return result;
+            return false;
         }
 
-        result = new MatchRating(allRatings.get(2), allRatings.get(1), allRatings.get(0), allRatings.get(3), allRatings.get(6),
+        HTRatings = new MatchRating(allRatings.get(2), allRatings.get(1), allRatings.get(0), allRatings.get(3), allRatings.get(6),
                 allRatings.get(5), allRatings.get(4), iAttitude, iTacticType, iTacticlevel, iStyle_of_play);
 
-        return result;
+        return true;
     }
 
 
@@ -201,12 +202,16 @@ public class FeedbackPanel extends JFrame {
 
 
         // return false if attitude not properly set
+        String requirementsAttitude = HOVerwaltung.instance().getLanguageString("ls.team.teamattitude." + requirements.attitude.toLowerCase()).toLowerCase();
+        int iAttitude = MatchRating.AttitudeStringToInt(requirementsAttitude);
         if ((HOLineup.getAttitude() != HTRatings.getAttitude()) ||
-                (HOLineup.getAttitude() != MatchRating.AttitudeStringToInt(requirements.attitude))) return false;
+                (HOLineup.getAttitude() != MatchRating.AttitudeStringToInt(requirementsAttitude))) return false;
 
         // return false if tactic not properly set
+        String requirementsTacticType = HOVerwaltung.instance().getLanguageString("ls.team.tactic." + requirements.tactic.toLowerCase()).toLowerCase();
+        int iTactic = MatchRating.TacticTypeStringToInt(requirementsTacticType);
         if ((HOLineup.getTacticType() != HTRatings.getTacticType()) ||
-                (HOLineup.getTacticType() != MatchRating.TacticTypeStringToInt(requirements.tactic))) return false;
+                (HOLineup.getTacticType() != MatchRating.TacticTypeStringToInt(requirementsTacticType))) return false;
 
         // return false if HOLineup not fully included in required Lineup
         for (IMatchRoleID obj : HOLineup.getPositionen()) {
@@ -350,7 +355,7 @@ public class FeedbackPanel extends JFrame {
         // Refresh HO Lineup and ratings
         HORatings = HOVerwaltung.instance().getModel().getLineup().getRatings();
         HOLineup = HOVerwaltung.instance().getModel().getLineup();
-        HTRatings = parseHTRating(jtaCopyPaste.getText());
+        bFetchLineupSuccess = parseHTRating(jtaCopyPaste.getText());
         HOPredictionRating.setMatchRating(HORatings);
         HTPredictionRating.setMatchRating(HTRatings);
         DeltaPredictionRating.setMatchRating(HOPredictionRating.getMatchRating().minus(HTPredictionRating.getMatchRating()));
@@ -556,8 +561,12 @@ public class FeedbackPanel extends JFrame {
         String jlTeamAttitude_message = hoi.getLanguageString("ls.team.teamattitude");
 
         if (bFetchLineupSuccess) {
-            int iTactic = MatchRating.TacticTypeStringToInt(requirements.tactic);
-            int iAttitude = MatchRating.TacticTypeStringToInt(requirements.attitude);
+            String requirementsTacticType = hoi.getLanguageString("ls.team.tactic." + requirements.tactic.toLowerCase()).toLowerCase();
+            int iTactic = MatchRating.TacticTypeStringToInt(requirementsTacticType);
+
+            String requirementsAttitude = hoi.getLanguageString("ls.team.teamattitude." + requirements.attitude.toLowerCase()).toLowerCase();
+            int iAttitude = MatchRating.AttitudeStringToInt(requirementsAttitude);
+
             core.model.match.Matchdetails md = new core.model.match.Matchdetails();
             jlTactics_message = start + jlTactics_message + ":</u></b> " + md.getNameForEinstellung(iTactic) + "</html>";
             jlTeamAttitude_message = start + jlTeamAttitude_message + ":</u></b> " + md.getNameForEinstellung(iAttitude) + "</html>";
