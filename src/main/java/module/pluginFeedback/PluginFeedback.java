@@ -6,10 +6,7 @@ import core.model.player.Player;
 import core.util.HOLogger;
 import module.lineup.Lineup;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
@@ -80,17 +77,17 @@ public class PluginFeedback {
         con.setRequestMethod("POST");
         con.setRequestProperty("User-Agent", userAgent);
         con.setRequestProperty("Accept", "application/json");
-        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
         con.setRequestProperty("HO-Token", hoToken);
         String authString = authToken + ":";
         String encodedString = Base64.getEncoder().encodeToString(authString.getBytes());
         con.setRequestProperty("Authorization", "Basic " + encodedString);
-        //con.setRequestProperty("Authorization : Basic base64(access_token:)", "foqwij41094-d423r87oh43fuo");
+        //con.setRequestProperty("Authorization : Basic base64(access_token:)", "secret-key");
 
         // For POST only - START
         con.setDoOutput(true);
-        OutputStream os = con.getOutputStream();
-        os.write(postParams.getBytes());
+        Writer os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
+        os.write(postParams);
         os.flush();
         os.close();
         // For POST only - END
