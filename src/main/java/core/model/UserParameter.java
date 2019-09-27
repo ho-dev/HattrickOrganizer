@@ -301,14 +301,6 @@ public final class UserParameter extends Configuration {
     public int transferScoutPanel_horizontalSplitPane = 300;
     //Id der Währung
 
-	// Rating offset
-	public float leftDefenceOffset = 0.0f;
-	public float middleDefenceOffset = 0.0f;
-	public float rightDefenceOffset = 0.0f;
-	public float midfieldOffset = 0.0f;
-	public float leftAttackOffset = 0.0f;
-	public float middleAttackOffset = 0.0f;
-	public float rightAttackOffset = 0.0f;
     //veraltet!!
     public int waehrungsID = 3;
 
@@ -543,13 +535,6 @@ public final class UserParameter extends Configuration {
 		map.put("statistikSpieleFilter",String.valueOf(statistikSpieleFilter));
 		map.put("statistikSpielerFinanzenAnzahlHRF",String.valueOf(statistikSpielerFinanzenAnzahlHRF));
 		map.put("transferScoutPanel_horizontalSplitPane",String.valueOf(transferScoutPanel_horizontalSplitPane));
-		map.put("leftDefenceOffset",String.valueOf(leftDefenceOffset));
-		map.put("middleDefenceOffset",String.valueOf(middleDefenceOffset));
-		map.put("rightDefenceOffset",String.valueOf(rightDefenceOffset));
-		map.put("midfieldOffset",String.valueOf(midfieldOffset));
-		map.put("leftAttackOffset",String.valueOf(leftAttackOffset));
-		map.put("middleAttackOffset",String.valueOf(middleAttackOffset));
-		map.put("rightAttackOffset",String.valueOf(rightAttackOffset));
 		map.put("waehrungsID",String.valueOf(waehrungsID));
 		map.put("simulatorMatches",String.valueOf(simulatorMatches));
 		map.put("assistant101", String.valueOf(assistant101));
@@ -710,13 +695,6 @@ public final class UserParameter extends Configuration {
 		WetterEffektBonus = getFloatValue(values,"WetterEffektBonus");
 		faktorGeld = getFloatValue(values,"faktorGeld");
 		zellenbreitenFaktor = getFloatValue(values,"zellenbreitenFaktor");
-		leftDefenceOffset = getFloatValue(values,"leftDefenceOffset");
-		middleDefenceOffset = getFloatValue(values,"middleDefenceOffset");
-		rightDefenceOffset = getFloatValue(values,"rightDefenceOffset");
-		midfieldOffset = getFloatValue(values,"midfieldOffset");
-		leftAttackOffset = getFloatValue(values,"leftAttackOffset");
-		middleAttackOffset = getFloatValue(values,"middleAttackOffset");
-		rightAttackOffset = getFloatValue(values,"rightAttackOffset");
 		TRAINING_OFFSET_SCORING = getFloatValue(values,"DAUER_CHANCENVERWERTUNG");
 		TRAINING_OFFSET_WINGER = getFloatValue(values,"DAUER_FLUEGELSPIEL");
 		TRAINING_OFFSET_STAMINA = getFloatValue(values,"DAUER_KONDITION");
