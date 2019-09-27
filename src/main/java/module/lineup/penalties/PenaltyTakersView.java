@@ -508,12 +508,23 @@ public class PenaltyTakersView extends JPanel {
 	}
 
 	private void bestFit() {
+		boolean checkInEleven = showAnfangsElfCheckBox.isSelected();
+		boolean checkInReserve = showReserveCheckBox.isSelected();
+
 		List<PenaltyTaker> list = new ArrayList<PenaltyTaker>();
 		for (PenaltyTaker player : this.players) {
-			if (getInLineupVal(player.getPlayer()) != 3) {
-				list.add(player);
+			int lineupValue = getInLineupVal(player.getPlayer());
+			if (lineupValue != 3) {
+				if (checkInEleven && lineupValue == 1) {
+					list.add(player);
+				}
+
+				if (checkInReserve && lineupValue == 2) {
+					list.add(player);
+				}
 			}
 		}
+
 		Comparator<PenaltyTaker> comparator = new Comparator<PenaltyTaker>() {
 
 			@Override
