@@ -521,7 +521,7 @@ public class RatingPredictionManager {
 	public Hashtable<Double, Double> getCentralDefenseRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
-		double userRatingOffset = UserParameter.instance().middleDefenceOffset;
+		double userRatingOffset = 0;
 		Hashtable<Double, Double> CentralDefenseRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			CentralDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALDEFENSE, useForm, weather, useWeatherImpact));
@@ -532,7 +532,7 @@ public class RatingPredictionManager {
 	public Hashtable<Double, Double> getCentralAttackRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
-		double userRatingOffset = UserParameter.instance().middleAttackOffset;
+		double userRatingOffset = 0;
 		Hashtable<Double, Double> CentralAttackRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			CentralAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALATTACK, useForm, weather, useWeatherImpact));
@@ -544,7 +544,7 @@ public class RatingPredictionManager {
 	public Hashtable<Double, Double> getRightDefenseRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
-		double userRatingOffset = UserParameter.instance().rightDefenceOffset;
+		double userRatingOffset = 0;//UserParameter.instance().rightDefenceOffset;
 		Hashtable<Double, Double> RightDefenseRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			RightDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, RIGHT, useForm, weather, useWeatherImpact));
@@ -556,7 +556,7 @@ public class RatingPredictionManager {
 	public Hashtable<Double, Double> getLeftDefenseRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
-		double userRatingOffset = UserParameter.instance().leftDefenceOffset;
+		double userRatingOffset = 0;
 		Hashtable<Double, Double> LeftDefenseRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			LeftDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, LEFT, useForm, weather, useWeatherImpact));
@@ -567,7 +567,7 @@ public class RatingPredictionManager {
 	public Hashtable<Double, Double> getLeftAttackRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
-		double userRatingOffset = UserParameter.instance().leftAttackOffset;
+		double userRatingOffset = 0;
 		Hashtable<Double, Double> LeftAttackRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			LeftAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, LEFT, useForm, weather, useWeatherImpact));
@@ -578,7 +578,7 @@ public class RatingPredictionManager {
 	public Hashtable<Double, Double> getRightAttackRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
-		double userRatingOffset = UserParameter.instance().rightAttackOffset;
+		double userRatingOffset = 0;
 		Hashtable<Double, Double> RightAttackRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			RightAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, RIGHT, useForm, weather, useWeatherImpact));
@@ -590,7 +590,7 @@ public class RatingPredictionManager {
 	public Hashtable<Double, Double> getMFRatings(boolean useForm, boolean useWeatherImpact)
 	{
 		Weather weather = HOMainFrame.getWetter();
-		double userRatingOffset = UserParameter.instance().midfieldOffset;
+		double userRatingOffset = 0;
 		Hashtable<Double, Double> MidfieldRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			MidfieldRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), MIDFIELD, useForm, weather, useWeatherImpact));

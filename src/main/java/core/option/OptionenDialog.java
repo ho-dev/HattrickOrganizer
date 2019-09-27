@@ -35,7 +35,6 @@ public class OptionenDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private FarbPanel m_jpFarben;
 	private FormelPanel m_jpFormeln;
-	private RatingOffsetPanel m_jpRatingOffset;
 	private SonstigeOptionenPanel m_jpSonstigeOptionen;
 	private TrainingsOptionenPanel m_jpTrainingsOptionen;
 	private UserColumnsPanel m_jpUserColumns;
@@ -107,11 +106,6 @@ public class OptionenDialog extends JDialog {
 		m_jpFormeln = new FormelPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Formeln"), new JScrollPane(
 				m_jpFormeln));
-
-		// Prediction Offset
-		m_jpRatingOffset = new RatingOffsetPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("PredictionOffset"),
-				new JScrollPane(m_jpRatingOffset));
 
 		// Training
 		m_jpTrainingsOptionen = new TrainingsOptionenPanel();
