@@ -24,14 +24,14 @@ class RatingChartFrame extends JFrame {
 	private JPanel controlsPanel = new JPanel();
 	private JPanel placeholderChart = new JPanel();
 	private RatingChartData chartData = new RatingChartData();
-	private CombinedRatingChartPanel combinedChart = null;
-	private MultipleRatingChartsPanel multiChart = null;
+	private CombinedRatingChartPanel[] combinedChart = new CombinedRatingChartPanel[1];
+	private MultipleRatingChartsPanel[] multiChart = new MultipleRatingChartsPanel[1];
 	private Dimension chartSize = new Dimension(900,700);
 
 	class ChartButtonHandler implements ItemListener {
-		JPanel source;
+		JPanel[] source;
 
-		public ChartButtonHandler(JPanel source) {
+		public ChartButtonHandler(JPanel[] source) {
 			this.source = source;
 		}
 
@@ -39,17 +39,17 @@ class RatingChartFrame extends JFrame {
 		public void itemStateChanged(ItemEvent e) {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				if(placeholderChart.getParent() != null) remove(placeholderChart);
-				if(source == null) {
-					if(e.getSource() == combinedChartButton) source = new CombinedRatingChartPanel(chartData);
-					else if(e.getSource() == multiChartButton) source = new MultipleRatingChartsPanel(chartData);
-					source.setPreferredSize(chartSize);
+				if(source[0] == null) {
+					if(e.getSource() == combinedChartButton) source[0] = new CombinedRatingChartPanel(chartData);
+					else if(e.getSource() == multiChartButton) source[0] = new MultipleRatingChartsPanel(chartData);
+					source[0].setPreferredSize(chartSize);
 				}
-				add(source, BorderLayout.CENTER);
+				add(source[0], BorderLayout.CENTER);
 				revalidate();
 				repaint();
 			}
 			else if (e.getStateChange() == ItemEvent.DESELECTED) {
-				remove(source);
+				remove(source[0]);
 			}
 		}
 	};
