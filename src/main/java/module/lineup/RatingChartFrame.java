@@ -63,12 +63,20 @@ class RatingChartFrame extends JFrame {
 	}
 
 	private void initComponents() {
-	etToggler.setEnabled(false);
 	chartButtonGroup.add(combinedChartButton);
 	chartButtonGroup.add(multiChartButton);
 	placeholderChart.setPreferredSize(chartSize);
 	combinedChartButton.addItemListener(new ChartButtonHandler(combinedChart));
 	multiChartButton.addItemListener(new ChartButtonHandler(multiChart));
+	etToggler.addItemListener(new ItemListener() {
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			if (e.getStateChange() == ItemEvent.SELECTED) chartData.setET(true);
+			else if (e.getStateChange() == ItemEvent.DESELECTED) chartData.setET(false);
+			if(combinedChart[0] != null) combinedChart[0].prepareChart();
+			if(multiChart[0] != null) multiChart[0].prepareCharts();
+		}
+	});
 	controlsPanel.add(combinedChartButton);
 	controlsPanel.add(multiChartButton);
 	controlsPanel.add(etToggler);
