@@ -102,9 +102,9 @@ public class TrainingRecapTable extends JScrollPane {
         fixed.getColumnModel().getColumn(0).setMaxWidth(120);
         fixed.getColumnModel().getColumn(0).setMinWidth(120);
         fixed.getColumnModel().getColumn(0).setWidth(120);
-        fixed.getColumnModel().getColumn(1).setMaxWidth(50);
-        fixed.getColumnModel().getColumn(1).setMinWidth(50);
-        fixed.getColumnModel().getColumn(1).setWidth(50);
+        fixed.getColumnModel().getColumn(1).setMaxWidth(100);
+        fixed.getColumnModel().getColumn(1).setMinWidth(100);
+        fixed.getColumnModel().getColumn(1).setWidth(100);
         fixed.getColumnModel().getColumn(2).setMaxWidth(0);
         fixed.getColumnModel().getColumn(2).setMinWidth(0);
         fixed.getColumnModel().getColumn(2).setPreferredWidth(0);
