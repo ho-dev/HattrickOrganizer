@@ -363,6 +363,13 @@ public class FeedbackPanel extends JFrame {
 
         if (bFetchLineupSuccess) {
             areLineupsValid = checkHOandHTLineups();
+            if (!areLineupsValid) {
+                String message = "<html>" +
+                        HOVerwaltung.instance().getLanguageString("feedbackplugin.jbSendDeactivated") + "</br>" +
+                        HOVerwaltung.instance().getLanguageString("feedbackplugin.notMatchRequirements") +
+                        "</html>";
+                JOptionPane.showMessageDialog(null, message, "", JOptionPane.INFORMATION_MESSAGE);
+            }
             formatSendButton(); // it is possible to send data only if all criteria are met
         }
 
