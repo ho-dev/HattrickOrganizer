@@ -1,6 +1,7 @@
 package module.lineup;
 
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.util.Helper;
 import core.gui.model.StatistikModel;
 import module.statistics.StatistikPanel;
@@ -54,10 +55,11 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	}
 
 	private HOVerwaltung hov = HOVerwaltung.instance();
+	private UserParameter userParameter = UserParameter.instance();
 	private JPanel controlsPanel = new JPanel();
 	private JPanel chartsPanel = new JPanel(new GridBagLayout());
-	private JCheckBox showHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"));
-	private JCheckBox showValues = new JCheckBox(hov.getLanguageString("Beschriftung"));
+	private JCheckBox showHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"), userParameter.MultipleRatingChartsPanel_HelpLines);
+	private JCheckBox showValues = new JCheckBox(hov.getLanguageString("Beschriftung"),  userParameter.MultipleRatingChartsPanel_Values);
 	private RatingChartData chartData;
 	private String[] xAxisDataCaptions;
 	private SingleChart leftDefense;
@@ -161,6 +163,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 				leftAttack.setHelpLines(selected);
 				centralAttack.setHelpLines(selected);
 				rightAttack.setHelpLines(selected);
+				userParameter.MultipleRatingChartsPanel_HelpLines = selected;
 			}
 		});
 		showValues.addItemListener(new ItemListener() {
@@ -179,6 +182,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 				leftAttack.setValues(selected);
 				centralAttack.setValues(selected);
 				rightAttack.setValues(selected);
+				userParameter.MultipleRatingChartsPanel_Values = selected;
 			}
 		});
 		controlsPanel.add(showHelpLines);

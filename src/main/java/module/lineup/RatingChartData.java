@@ -1,6 +1,7 @@
 package module.lineup;
 
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.Ratings;
 
 import java.util.Arrays;
@@ -22,7 +23,7 @@ public final class RatingChartData {
 	private double[] rightAttack = {};
 	private ArrayList<Double> mapKeys = null;
 	private String[] chartCaptions = null;
-	private boolean ET = false;
+	private boolean ET = UserParameter.instance().RatingChartFrame_ET;
 	private int RTstartIdx = 0;
 	private int RTendIdx = 0;
 	private Hashtable<Double, Double> mapDD;

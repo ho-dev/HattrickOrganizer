@@ -1,6 +1,7 @@
 package module.lineup;
 
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.gui.HOMainFrame;
 
 import java.awt.Dimension;
@@ -17,10 +18,11 @@ import javax.swing.JRadioButton;
 class RatingChartFrame extends JFrame {
 
 	private HOVerwaltung hov = HOVerwaltung.instance();
+	private UserParameter userParameter = UserParameter.instance();
 	private JRadioButton combinedChartButton = new JRadioButton(hov.getLanguageString("lineup.CombinedChart"));
 	private JRadioButton multiChartButton = new JRadioButton(hov.getLanguageString("lineup.MultiChart"));
 	private ButtonGroup chartButtonGroup = new ButtonGroup();
-	private JCheckBox etToggler = new JCheckBox(hov.getLanguageString("lineup.ETToggler"));
+	private JCheckBox etToggler = new JCheckBox(hov.getLanguageString("lineup.ETToggler"), userParameter.RatingChartFrame_ET);
 	private JPanel controlsPanel = new JPanel();
 	private JPanel placeholderChart = new JPanel();
 	private RatingChartData chartData = new RatingChartData();
@@ -37,7 +39,9 @@ class RatingChartFrame extends JFrame {
 
 		@Override
 		public void itemStateChanged(ItemEvent e) {
+			boolean selected;
 			if (e.getStateChange() == ItemEvent.SELECTED) {
+				selected = true;
 				if(placeholderChart.getParent() != null) remove(placeholderChart);
 				if(source[0] == null) {
 					if(e.getSource() == combinedChartButton) source[0] = new CombinedRatingChartPanel(chartData);
@@ -49,8 +53,12 @@ class RatingChartFrame extends JFrame {
 				repaint();
 			}
 			else if (e.getStateChange() == ItemEvent.DESELECTED) {
+				selected = false;
 				remove(source[0]);
 			}
+			else return;
+			if(e.getSource() == combinedChartButton) userParameter.RatingChartFrame_Combined = selected;
+			else if(e.getSource() == multiChartButton) userParameter.RatingChartFrame_Multiple = selected;
 		}
 	};
 
@@ -71,8 +79,12 @@ class RatingChartFrame extends JFrame {
 	etToggler.addItemListener(new ItemListener() {
 		@Override
 		public void itemStateChanged(ItemEvent e) {
-			if (e.getStateChange() == ItemEvent.SELECTED) chartData.setET(true);
-			else if (e.getStateChange() == ItemEvent.DESELECTED) chartData.setET(false);
+			boolean selected;
+			if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
+			else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
+			else return;
+			chartData.setET(selected);
+			userParameter.RatingChartFrame_ET = selected;
 			if(combinedChart[0] != null) combinedChart[0].prepareChart();
 			if(multiChart[0] != null) multiChart[0].prepareCharts();
 		}
@@ -81,7 +93,9 @@ class RatingChartFrame extends JFrame {
 	controlsPanel.add(multiChartButton);
 	controlsPanel.add(etToggler);
 	add(controlsPanel, BorderLayout.NORTH);
-	add(placeholderChart, BorderLayout.CENTER);
+	if(userParameter.RatingChartFrame_Combined) combinedChartButton.doClick();
+	else if(userParameter.RatingChartFrame_Multiple) multiChartButton.doClick();
+	else add(placeholderChart, BorderLayout.CENTER);
 	pack();
 	setVisible(true);
 	}

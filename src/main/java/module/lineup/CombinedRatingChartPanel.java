@@ -1,6 +1,7 @@
 package module.lineup;
 
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.util.Helper;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
@@ -25,19 +26,42 @@ public final class CombinedRatingChartPanel extends JPanel {
 		private JCheckBox checkbox;
 		private Color bg;
 		private StatistikModel model;
+		private String paramName;
 
-		public Datum(String text, Color background) {
-			checkbox = new JCheckBox(text);
+		public Datum(String text, Color background, String userParamName) {
+			paramName = userParamName;
+			checkbox = new JCheckBox(text, getUserParameter());
 			bg = background;
 			init();
+		}
+
+		private boolean getUserParameter() {
+			try {
+				return (boolean) userParameter.getClass().getField(paramName).get(userParameter);
+				}
+			catch(java.lang.NoSuchFieldException e) {}
+			catch(java.lang.IllegalAccessException e) {}
+			return false;
+		}
+
+		private void setUserParameter(Boolean selected) {
+			try {
+				userParameter.getClass().getField(paramName).set(userParameter, selected);
+				}
+			catch(java.lang.NoSuchFieldException e) {}
+			catch(java.lang.IllegalAccessException e) {}
 		}
 
 		private void init() {
 			checkbox.addItemListener(new ItemListener() {
 				@Override
 				public void itemStateChanged(ItemEvent e) {
-					if (e.getStateChange() == ItemEvent.SELECTED) model.setShow(true);
-					else if (e.getStateChange() == ItemEvent.DESELECTED) model.setShow(false);
+					boolean selected;
+					if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
+					else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
+					else return;
+					model.setShow(selected);
+					setUserParameter(selected);
 					chart.repaint();
 				}
 			});
@@ -68,11 +92,12 @@ public final class CombinedRatingChartPanel extends JPanel {
 	}
 
 	private HOVerwaltung hov = HOVerwaltung.instance();
+	private UserParameter userParameter = UserParameter.instance();
 	private RatingChartData chartData;
 	private JPanel controlsPanel = new JPanel();
 	private StatistikPanel chart = new StatistikPanel(true);
-	private JCheckBox showHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"));
-	private JCheckBox showValues = new JCheckBox(hov.getLanguageString("Beschriftung"));
+	private JCheckBox showHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"), userParameter.CombinedRatingChartPanel_HelpLines);
+	private JCheckBox showValues = new JCheckBox(hov.getLanguageString("Beschriftung"), userParameter.CombinedRatingChartPanel_Values);
 	private Datum leftDefense;
 	private Datum centralDefense;
 	private Datum rightDefense;
@@ -118,8 +143,12 @@ public final class CombinedRatingChartPanel extends JPanel {
 		showHelpLines.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) getChart().setHilfslinien(true);
-				else if (e.getStateChange() == ItemEvent.DESELECTED) getChart().setHilfslinien(false);
+				boolean selected;
+				if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
+				else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
+				else return;
+				getChart().setHilfslinien(selected);
+				userParameter.CombinedRatingChartPanel_HelpLines = selected;
 			}
 		});
 		controlsPanel.add(showHelpLines, gbc);
@@ -128,55 +157,68 @@ public final class CombinedRatingChartPanel extends JPanel {
 		showValues.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) getChart().setBeschriftung(true);
-				else if (e.getStateChange() == ItemEvent.DESELECTED) getChart().setBeschriftung(false);
+				boolean selected;
+				if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
+				else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
+				else return;
+				getChart().setBeschriftung(selected);
+				userParameter.CombinedRatingChartPanel_Values = selected;
 			}
 		});
 		controlsPanel.add(showValues, gbc);
 
 		gbc.gridy++;
 		leftDefense = new Datum(hov.getLanguageString("ls.match.ratingsector.leftdefence"),
-								ThemeManager.getColor(HOColorName.SHIRT_WINGBACK).brighter());
+								ThemeManager.getColor(HOColorName.SHIRT_WINGBACK).brighter(),
+								"CombinedRatingChartPanel_LeftDefense");
 		controlsPanel.add(leftDefense.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		centralDefense = new Datum(hov.getLanguageString("ls.match.ratingsector.centraldefence"),
-									ThemeManager.getColor(HOColorName.SHIRT_CENTRALDEFENCE));
+									ThemeManager.getColor(HOColorName.SHIRT_CENTRALDEFENCE),
+									"CombinedRatingChartPanel_CentralDefense");
 		controlsPanel.add(centralDefense.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		rightDefense = new Datum(hov.getLanguageString("ls.match.ratingsector.rightdefence"),
-								ThemeManager.getColor(HOColorName.SHIRT_WINGBACK).darker());
+								ThemeManager.getColor(HOColorName.SHIRT_WINGBACK).darker(),
+								"CombinedRatingChartPanel_RightDefense");
 		controlsPanel.add(rightDefense.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		midfield = new Datum(hov.getLanguageString("ls.match.ratingsector.midfield"),
-							ThemeManager.getColor(HOColorName.SHIRT_MIDFIELD));
+							ThemeManager.getColor(HOColorName.SHIRT_MIDFIELD),
+							"CombinedRatingChartPanel_Midfield");
 		controlsPanel.add(midfield.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		leftAttack = new Datum(hov.getLanguageString("ls.match.ratingsector.leftattack"),
-								ThemeManager.getColor(HOColorName.SHIRT_WING).brighter());
+								ThemeManager.getColor(HOColorName.SHIRT_WING).brighter(),
+								"CombinedRatingChartPanel_LeftAttack");
 		controlsPanel.add(leftAttack.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		centralAttack = new Datum(hov.getLanguageString("ls.match.ratingsector.centralattack"),
-									ThemeManager.getColor(HOColorName.SHIRT_FORWARD));
+									ThemeManager.getColor(HOColorName.SHIRT_FORWARD),
+									"CombinedRatingChartPanel_CentralAttack");
 		controlsPanel.add(centralAttack.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		rightAttack = new Datum(hov.getLanguageString("ls.match.ratingsector.rightattack"),
-								ThemeManager.getColor(HOColorName.SHIRT_WING).darker());
+								ThemeManager.getColor(HOColorName.SHIRT_WING).darker(),
+								"CombinedRatingChartPanel_RightAttack");
 		controlsPanel.add(rightAttack.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		hatStats = new Datum(hov.getLanguageString("ls.match.ratingtype.hatstats"),
-							ThemeManager.getColor(HOColorName.STAT_HATSTATS));
+							ThemeManager.getColor(HOColorName.STAT_HATSTATS),
+							"CombinedRatingChartPanel_HatStats");
 		controlsPanel.add(hatStats.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		loddar = new Datum(hov.getLanguageString("ls.match.ratingtype.loddarstats"),
-							ThemeManager.getColor(HOColorName.STAT_LODDAR));
+							ThemeManager.getColor(HOColorName.STAT_LODDAR),
+							"CombinedRatingChartPanel_Loddar");
 		controlsPanel.add(loddar.getCheckbox(), gbc);
 
 		add(controlsPanel, BorderLayout.WEST);
