@@ -111,7 +111,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
 		// Hat das Spiel schon stattgefunden
 		if ((paarung != null) && paarung.hatStattgefunden()) {
-			// Match schon in der Datenbank
+			//Match already in the database
 			if (DBManager.instance().isMatchVorhanden(paarung.getMatchId())) {
 				button.setToolTipText(HOVerwaltung.instance().getLanguageString(
 						"tt_Ligatabelle_SpielAnzeigen"));
@@ -119,7 +119,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 				button.setIcon(ThemeManager.getIcon(HOIconName.SHOW_MATCH));
 				button.setDisabledIcon(ThemeManager.getIcon(HOIconName.SHOW_MATCH));
 			}
-			// Match noch nicht in der Datenbank
+			// Match not yet in the database
 			else {
 				button.setToolTipText(HOVerwaltung.instance().getLanguageString(
 						"tt_Ligatabelle_SpielDownloaden"));
@@ -128,7 +128,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 				button.setDisabledIcon(ThemeManager.getIcon(HOIconName.DOWNLOAD_MATCH));
 			}
 		}
-		// Noch nicht stattgefunden
+		// Match has not taken place yet
 		else {
 			button.setToolTipText(HOVerwaltung.instance().getLanguageString(
 					"tt_Ligatabelle_SpielNochnichtgespielt"));
