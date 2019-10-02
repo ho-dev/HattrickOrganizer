@@ -45,6 +45,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -638,8 +640,18 @@ public final class SpielePanel extends LazyImagePanel {
 	private void updateButtons() {
 		deleteButton.setEnabled(true);
 		simulateMatchButton.setEnabled(true);
-		if (matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED) {
+		long gameFinishTime = matchesModel.getMatch().getMatchDateAsTimestamp().getTime() + 3 * 60 * 60 * 1000L; //assuming 3 hours to make sure the game is finished
+
+		if(gameFinishTime < (new Date()).getTime())
+		{
 			reloadMatchButton.setEnabled(true);
+		}
+		else
+		{
+			reloadMatchButton.setEnabled(false);
+		}
+
+		if (matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED) {
 			final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 			if ((matchesModel.getMatch().getHeimID() == teamid)
 					|| (matchesModel.getMatch().getGastID() == teamid)) {
@@ -649,7 +661,6 @@ public final class SpielePanel extends LazyImagePanel {
 			}
 			printButton.setEnabled(true);
 		} else {
-			reloadMatchButton.setEnabled(false);
 			adoptLineupButton.setEnabled(false);
 			printButton.setEnabled(false);
 		}
