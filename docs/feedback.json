@@ -1,8 +1,8 @@
 {
-    "lineupName": "GK",
+    "lineupName": "CDc-Normal",
     "lineup": {
-        "100": 0
+        "103": 0
     },
     "attitude": "normal",
-    "tactic": "normal"
+    "tatic": "normal"
 }
