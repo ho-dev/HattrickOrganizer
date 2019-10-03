@@ -91,9 +91,10 @@ def createJson(lineupName, requiredLineup, attitude, tactic):
 
 requiredLineup = []
 
-requiredLineup.append((Position.GK, MatchOrder.NORMAL, True))
-requiredLineup.append((Position.WBr, MatchOrder.DEFENSIVE, False))
-requiredLineup.append((Position.WIl, MatchOrder.TOWARDS_MIDDLE, False))
-requiredLineup.append((Position.FWl, MatchOrder.TOWARDS_WING, False))
+# requiredLineup.append((Position.GK, MatchOrder.NORMAL, True))
+requiredLineup.append((Position.CD, MatchOrder.NORMAL, True))
+# requiredLineup.append((Position.WBr, MatchOrder.DEFENSIVE, False))
+# requiredLineup.append((Position.WIl, MatchOrder.TOWARDS_MIDDLE, False))
+# requiredLineup.append((Position.FWl, MatchOrder.TOWARDS_WING, False))
 
-createJson("GK", requiredLineup, Attitute.NORMAL, Tactic.NORMAL)
+createJson("CDc-Normal", requiredLineup, Attitute.NORMAL, Tactic.NORMAL)
