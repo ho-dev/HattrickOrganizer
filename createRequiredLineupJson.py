@@ -104,7 +104,7 @@ def createJson(lineupName, requiredLineup, attitude, tactic, bPRODUCTION):
     json_data["lineupName"] = lineupName
     json_data["lineup"] = lineup
     json_data["attitude"] = attitude
-    json_data["tatic"] = tactic
+    json_data["tactic"] = tactic
 
     path = r"D:\TEMP\feedback.json"
     answer = None
