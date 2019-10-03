@@ -69,8 +69,7 @@ public class PlayerDetailPanel extends LazyImagePanel {
 	/**
 	 * Method that populate this panel for the selected player
 	 * 
-	 * @param spieler
-	 *            player
+	 *
 	 */
 	private void loadFromModel() {
 		if (this.model.getActivePlayer() == null) {
