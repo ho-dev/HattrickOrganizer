@@ -1,8 +1,8 @@
 {
-    "server_status": "up", 
-    "lineupName": "CDc-Normal",
+    "server_status": "up",
+    "lineupName": "GK",
     "lineup": {
-        "103": 0
+        "100": 0
     },
     "attitude": "normal",
     "tactic": "normal"
