@@ -18,7 +18,6 @@ class Position(Enum):
     FW = 112
     FWl = 113
 
-
 class MatchOrder(Enum):
     NORMAL = 0
     OFFENSIVE = 1
@@ -26,12 +25,10 @@ class MatchOrder(Enum):
     TOWARDS_MIDDLE = 3
     TOWARDS_WING = 4
 
-
 class Attitute(Enum):
     NORMAL = "normal"
     PIC = "playitcool"
     MOTS = "matchoftheseason"
-
 
 class Tactic(Enum):
     NORMAL = "normal"
@@ -77,7 +74,6 @@ def validateLineup(requiredLineup):
             else:
                 raise ValueError(f"position {position} is not yet handled")
 
-
 def validate_answer(_answer):
     try:
         _answer = _answer.lower()
@@ -92,7 +88,7 @@ def validate_answer(_answer):
         print("Answer was not understood")
         return None
 
-def createJson(lineupName, requiredLineup, attitude, tactic, bPRODUCTION):
+def createJson(lineupName, requiredLineup, attitude, tactic, bPRODUCTION, bServerUP):
     attitude, tactic = attitude.value, tactic.value
     validateLineup(requiredLineup)
     json_data = {}
@@ -101,6 +97,12 @@ def createJson(lineupName, requiredLineup, attitude, tactic, bPRODUCTION):
         if bPresent:
             lineup[str(position.value)] = order.value
 
+    if bServerUP:
+        serverStatus = "up"
+    else:
+        serverStatus = "down"
+
+    json_data["server_status"] = serverStatus
     json_data["lineupName"] = lineupName
     json_data["lineup"] = lineup
     json_data["attitude"] = attitude
@@ -125,13 +127,19 @@ def createJson(lineupName, requiredLineup, attitude, tactic, bPRODUCTION):
             json.dump(json_data, write_file, indent=4)
 
 
-
+#single GK ================================================================================
+lineupName = "GK"
+attitude = Attitute.NORMAL
+tactic = Tactic.NORMAL
 requiredLineup = []
+requiredLineup.append((Position.GK, MatchOrder.NORMAL, True))
 
-# requiredLineup.append((Position.GK, MatchOrder.NORMAL, True))
-requiredLineup.append((Position.CD, MatchOrder.NORMAL, True))
+
+# ================================================================================
+
+# requiredLineup.append((Position.CD, MatchOrder.NORMAL, True))    // "CDc-Normal"
 # requiredLineup.append((Position.WBr, MatchOrder.DEFENSIVE, False))
 # requiredLineup.append((Position.WIl, MatchOrder.TOWARDS_MIDDLE, False))
 # requiredLineup.append((Position.FWl, MatchOrder.TOWARDS_WING, False))
 
-createJson("CDc-Normal", requiredLineup, Attitute.NORMAL, Tactic.NORMAL, bPRODUCTION = True)
+createJson(lineupName, requiredLineup, attitude, tactic, bPRODUCTION=True, bServerUP=True)
