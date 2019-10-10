@@ -38,6 +38,7 @@ public class StatistikPanel extends JPanel {
 	private boolean beschriftung;
 	private boolean hilfslinien = true;
 	private boolean m_bMaxMinBerechnen;
+	private boolean dataBasedBoundaries = false;
 	// Seitenabstände bis zum Koordinatenkreuzanfang
 	// Dynamisch berechnen
 	private int SL = 60;
@@ -122,6 +123,15 @@ public class StatistikPanel extends JPanel {
 	public final StatistikModel[] getModel() {
 		return m_clStatistikModel;
 	}
+
+    /**
+     * Setter for property dataBasedBoundaries.
+     *
+     * @param value New value of property dataBasedBoundaries.
+     */
+    public final void setDataBasedBoundaries(boolean value) {
+        dataBasedBoundaries = value;
+    }
 
 	/**
 	 * Ein bestimmtes Model holen
@@ -214,12 +224,27 @@ public class StatistikPanel extends JPanel {
 				max = maxFinder(true);
 				min = minFinder(true);
 
-				if (max < 0) {
-					max = 0;
-				}
+				if(dataBasedBoundaries) {
+					if (max < 0) {
+						max *= 0.9;
+					} else {
+						max *= 1.1;
+					  }
 
-				if (min > 0) {
-					min = 0;
+					if (min > 0) {
+						min *= 0.9;
+					} else {
+						min *= 1.1;
+					  }
+				}
+				else {
+					if (max < 0) {
+						max = 0;
+					}
+
+					if (min > 0) {
+						min = 0;
+					}
 				}
 			}
 
@@ -337,7 +362,9 @@ public class StatistikPanel extends JPanel {
 
 	// Findet den Maximalwert in einem double-Array
 	private double maxFinder(boolean usefaktor) {
-		double max = 1;
+		double max;
+		if(dataBasedBoundaries) max = Integer.MIN_VALUE;
+		else max = 1;
 
 		for (int i = 0; (m_clStatistikModel != null) && (m_clStatistikModel.length > i)
 				&& (m_clStatistikModel[i] != null) && (i < m_clStatistikModel.length); i++) {
@@ -360,7 +387,9 @@ public class StatistikPanel extends JPanel {
 
 	// Findet den Minimalwert in einem double-Array
 	private double minFinder(boolean usefaktor) {
-		double min = 0;
+		double min;
+		if(dataBasedBoundaries) min = Integer.MAX_VALUE;
+		else min = 0;
 
 		for (int i = 0; (m_clStatistikModel != null) && (m_clStatistikModel.length > i)
 				&& (m_clStatistikModel[i] != null) && (i < m_clStatistikModel.length); i++) {

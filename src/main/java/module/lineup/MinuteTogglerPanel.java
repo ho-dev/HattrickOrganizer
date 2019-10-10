@@ -28,6 +28,8 @@ public final class MinuteTogglerPanel extends JPanel {
 	private ImageIcon greenWhiteClock = ThemeManager.getScaledIcon(HOIconName.GREEN_WHITE_CLOCK, 20, 20);
 	private ImageIcon whiteRedClock = ThemeManager.getScaledIcon(HOIconName.WHITE_RED_CLOCK, 20, 20);
 	private ImageIcon redWhiteClock = ThemeManager.getScaledIcon(HOIconName.RED_WHITE_CLOCK, 20, 20);
+	private ImageIcon ratingsGraphIcon = ThemeManager.getScaledIcon(HOIconName.RATING_GRAPH, 20, 20);
+	private JLabel ratingsGraph = new JLabel(ratingsGraphIcon);
 	private JLabel avg90Clock = new JLabel(whiteGreenClock);
 	private JLabel avg120Clock = new JLabel(redWhiteClock);
 	private List<JLabel> toggleKeys = new ArrayList();
@@ -65,6 +67,7 @@ public final class MinuteTogglerPanel extends JPanel {
 				parent.reInit();
 			}
 		});
+
 		avg120Clock.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -78,11 +81,20 @@ public final class MinuteTogglerPanel extends JPanel {
 			}
 		});
 
+		ratingsGraph.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+			new RatingChartFrame();
+			}
+		});
+
 		avg90Clock.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Lineup_RatingsPanel_Green_Clock"));
 		avg120Clock.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Lineup_RatingsPanel_Red_Clock"));
+		ratingsGraph.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Lineup_RatingsPanel_RatingGraph"));
 
 		JPanel clocksPanel = new JPanel();
 		clocksPanel.add(avg90Clock);
+		clocksPanel.add(ratingsGraph);
 		clocksPanel.add(avg120Clock);
 		add(clocksPanel, constraints);
 
@@ -100,8 +112,8 @@ public final class MinuteTogglerPanel extends JPanel {
 			}
 		});
 		add(prevButton, constraints);
-		toggleLabels.remove(-90d);  //remove FT and ET
-		toggleLabels.remove(-120d); //placeholder labels
+		toggleLabels.remove(-90d);  //remove 90' and 120'
+		toggleLabels.remove(-120d); //average placeholder labels
 		Collections.sort(toggleLabels);
 		for(final int[] i={0};i[0]<toggleLabels.size();i[0]++) {
 			JLabel toggleLabel = new JLabel(String.valueOf(toggleLabels.get(i[0]).longValue()), SwingConstants.CENTER);

@@ -12,6 +12,7 @@ public class StatistikModel {
     private String m_sName = "";
     private double[] m_clWerte;
     private boolean m_bShow = true;
+    private boolean dataBasedBoundaries = false;
     private double m_dFaktor = 1;
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -95,7 +96,9 @@ public class StatistikModel {
 
     //-----------------------------------
     public final double getMaxValue() {
-        double max = 0;
+        double max;
+        if(dataBasedBoundaries) max = Integer.MIN_VALUE;
+        else max = 0;
 
         for (int i = 0; (m_clWerte != null) && (i < m_clWerte.length); i++) {
             if (m_clWerte[i] > max) {
@@ -107,14 +110,15 @@ public class StatistikModel {
     }
 
     public final double getMinValue() {
-        double min = 0;
+        double min;
+        if(dataBasedBoundaries) min = Integer.MAX_VALUE;
+        else min = 0;
 
         for (int i = 0; (m_clWerte != null) && (i < m_clWerte.length); i++) {
             if (m_clWerte[i] < min) {
                 min = m_clWerte[i];
             }
         }
-
         return (min);
     }
 
@@ -170,5 +174,14 @@ public class StatistikModel {
      */
     public final double[] getWerte() {
         return this.m_clWerte;
+    }
+
+    /**
+     * Setter for property dataBasedBoundaries.
+     *
+     * @param value New value of property dataBasedBoundaries.
+     */
+    public final void setDataBasedBoundaries(boolean value) {
+        dataBasedBoundaries = value;
     }
 }

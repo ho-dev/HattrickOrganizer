@@ -48,6 +48,7 @@ final class AufstellungsRatingPanel extends RasenPanel {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
+    int hatstat;
     double bottomcenter;
     double bottomleft;
     double bottomright;
@@ -55,7 +56,6 @@ final class AufstellungsRatingPanel extends RasenPanel {
     double topcenter;
     double topleft;
     double topright;
-    double hatstat;
     double loddar;
 
     private ColorLabelEntry m_clBottomCenterCompare = new ColorLabelEntry("",
@@ -237,9 +237,9 @@ final class AufstellungsRatingPanel extends RasenPanel {
         topright = value;
     }
 
-    protected void setHatstat(double value) {
-        m_clHatstatMain.setText(m_clFormat.format(value));
-        m_clHatstatCompare.setSpecialNumber((float) (value - hatstat), false);
+    protected void setHatstat(int value) {
+        m_clHatstatMain.setText(Helper.INTEGERFORMAT.format(value));
+        m_clHatstatCompare.setSpecialNumber(value - hatstat, false);
         hatstat = value;
     }
 
@@ -887,7 +887,7 @@ final class AufstellungsRatingPanel extends RasenPanel {
         m_clBottomLeftCompare.setSpecialNumber(0f, false);
         m_clBottomCenterCompare.setSpecialNumber(0f, false);
         m_clBottomRightCompare.setSpecialNumber(0f, false);
-        m_clHatstatCompare.setSpecialNumber(0f, false);
+        m_clHatstatCompare.setSpecialNumber(0, false);
         m_clLoddarCompare.setSpecialNumber(0f, false);
     }
 
@@ -993,7 +993,7 @@ final class AufstellungsRatingPanel extends RasenPanel {
         }
     }
     String getHatstatRating() {
-        return m_clFormat.format(hatstat);
+        return Helper.INTEGERFORMAT.format(hatstat);
     }
     String getLoddarRating() {
         return m_clFormat.format(loddar);
