@@ -1,6 +1,8 @@
 package module.pluginFeedback;
 
 import com.google.gson.Gson;
+import core.db.DBManager;
+import core.file.hrf.HRF;
 import core.model.HOVerwaltung;
 import core.model.Ratings;
 import core.model.player.IMatchRoleID;
@@ -17,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -39,13 +42,22 @@ public class FeedbackPanel extends JFrame {
     RatingComparisonPanel HOPredictionRating, HTPredictionRating, DeltaPredictionRating;
 
     public FeedbackPanel() {
-        HORatings = HOVerwaltung.instance().getModel().getLineup().getRatings();
-        HOLineup = HOVerwaltung.instance().getModel().getLineup();
-        HTRatings = new MatchRating();
-        bFetchLineupSuccess = fetchRequiredLineup();
+        int lastHrfId = DBManager.instance().getLatestHrfId();
+        long dateHrf = DBManager.instance().getBasics(lastHrfId).getDatum().getTime();
+        long dateNow = new Date().getTime();
+        long updateTime = 1000 * 60 * 5; // Time (millisec), time difference for consider data too old, 5 minutes
+        if (dateHrf + updateTime <= dateNow) {
+            String message = HOVerwaltung.instance().getLanguageString("feedbackplugin.dataTooOld", java.text.DateFormat.getDateTimeInstance().format(dateHrf));
+            JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
+        } else {
+            HORatings = HOVerwaltung.instance().getModel().getLineup().getRatings();
+            HOLineup = HOVerwaltung.instance().getModel().getLineup();
+            HTRatings = new MatchRating();
+            bFetchLineupSuccess = fetchRequiredLineup();
 
-        initComponents();
-        refresh();
+            initComponents();
+            refresh();
+        }
     }
 
     public boolean parseHTRating(String input) {
@@ -243,7 +255,7 @@ public class FeedbackPanel extends JFrame {
 
         // TODO: implementer warning based on comparison HO vs HT ???
 
-        PluginFeedback pluginFeedback = new PluginFeedback();
+        PluginFeedback pluginFeedback = new PluginFeedback(requirements.server_url);
         String message = "[" + pluginFeedback.getHoToken() + "] ";
         try {
             String result = pluginFeedback.sendFeedbackToServer(HOLineup, HTRatings, requirements.lineupName);
@@ -335,7 +347,7 @@ public class FeedbackPanel extends JFrame {
 
 
     private void formatSendButton() {
-        if (areLineupsValid) {
+        if (areLineupsValid && requirements.server_status.equals("up")) {
             jbSend.setEnabled(true);
             jbSend.setToolTipText(HOVerwaltung.instance().getLanguageString("feedbackplugin.jbSendActivated"));
         } else {
@@ -367,6 +379,12 @@ public class FeedbackPanel extends JFrame {
                 String message = "<html>" +
                         HOVerwaltung.instance().getLanguageString("feedbackplugin.jbSendDeactivated") + "</br>" +
                         HOVerwaltung.instance().getLanguageString("feedbackplugin.notMatchRequirements") +
+                        "</html>";
+                JOptionPane.showMessageDialog(null, message, "", JOptionPane.INFORMATION_MESSAGE);
+            }
+            if (!requirements.server_status.equals("up")) {
+                String message = "<html>" +
+                        HOVerwaltung.instance().getLanguageString("feedbackplugin.serverOffline") +
                         "</html>";
                 JOptionPane.showMessageDialog(null, message, "", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -663,6 +681,8 @@ public class FeedbackPanel extends JFrame {
     }
 
     private class SimpleLineup {
+        String server_url;
+        String server_status;
         String lineupName;
         String attitude;
         String tactic;
