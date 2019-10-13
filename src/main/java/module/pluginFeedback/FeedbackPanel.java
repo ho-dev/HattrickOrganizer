@@ -45,7 +45,7 @@ public class FeedbackPanel extends JFrame {
         int lastHrfId = DBManager.instance().getLatestHrfId();
         long dateHrf = DBManager.instance().getBasics(lastHrfId).getDatum().getTime();
         long dateNow = new Date().getTime();
-        long updateTime = 1000 * 60 * 5; // Time (millisec), time difference for consider data too old, 5 minutes
+        long updateTime = 1000 * 60 * 60; // Time (millisec), time difference for consider data too old, 1 hour
         if (dateHrf + updateTime <= dateNow) {
             String message = HOVerwaltung.instance().getLanguageString("feedbackplugin.dataTooOld", java.text.DateFormat.getDateTimeInstance().format(dateHrf));
             JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
