@@ -34,13 +34,17 @@ public final class MinuteTogglerPanel extends JPanel {
 	private JLabel avg120Clock = new JLabel(redWhiteClock);
 	private List<JLabel> toggleKeys = new ArrayList();
 	private List<JLabel> toggleKeysET = new ArrayList();
-	private List<Double> toggleLabels = new ArrayList(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
+	private List<Double> toggleLabels = null;
 	private AufstellungsDetailPanel parent;
 	private int current = -1; //default to regular time average
 	
 	public MinuteTogglerPanel(AufstellungsDetailPanel parent) {
-
 		this.parent = parent;
+	}
+
+	public void load() {
+		if(toggleLabels != null) return;
+		toggleLabels = new ArrayList(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
 		initComponents();
 	}
 
