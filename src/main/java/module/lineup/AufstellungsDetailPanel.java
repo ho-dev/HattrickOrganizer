@@ -254,6 +254,8 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 //			final Vector<Player> allPlayer = homodel.getAllSpieler();
 			final Lineup aufstellung = homodel.getLineup();
 
+			m_jpMinuteToggler.load();
+
 			// HRF comparison required
 			if (AufstellungsVergleichHistoryPanel.isVergleichgefordert()) {
 				// First set the values ​​to those of the loaded setup
