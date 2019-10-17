@@ -14,6 +14,7 @@ import module.training.ui.comp.VerticalIndicator;
 
 import java.util.*;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -48,6 +49,7 @@ public class OutputTableModel extends AbstractTableModel {
     public Class<?> getColumnClass(int columnIndex) {
         switch (columnIndex) {
             case 0:
+                return JLabel.class;
             case 1:
             case 2:
             case COL_PLAYER_ID:
@@ -154,7 +156,9 @@ public class OutputTableModel extends AbstractTableModel {
         switch (columnIndex) {
             case 0:
                 // Spielername
-                return player.getName();
+                JLabel jl_Name = new JLabel();
+                jl_Name.setText(player.getName());
+                return jl_Name;
             case 1:
                 // Spieleralter
                 return player.getAlterWithAgeDaysAsString();
