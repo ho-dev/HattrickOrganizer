@@ -33,6 +33,7 @@ import core.model.series.Liga;
 import core.model.series.Paarung;
 import core.training.TrainingPerWeek;
 import core.util.HOLogger;
+import core.util.ExceptionUtils;
 import module.ifa.IfaMatch;
 import module.lineup.Lineup;
 import module.lineup.LineupPosition;
@@ -310,7 +311,16 @@ public class DBManager {
 	 * @return boolean
 	 */
 	private boolean checkIfDBExists() {
-		return m_clJDBCAdapter.executeQuery("SELECT * FROM HRF WHERE 1=2") != null;
+		boolean exists;
+		try {
+			ResultSet rs = m_clJDBCAdapter.executeQuery("SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'");
+			rs.next();
+			exists = rs.getInt(1) > 0;
+		} catch(SQLException e) {
+			HOLogger.instance().error(getClass(), ExceptionUtils.getStackTrace(e));
+			exists = false;
+		  }
+		return exists;
 	}
 
 	// ------------------------------- SpielerSkillupTable
