@@ -372,80 +372,88 @@ public class FormulaFactors {
     public void setPositionFactor(byte pos, FactorObject factorObject){
     	switch(pos){
         case IMatchRoleID.KEEPER:
-            foGK = factorObject;
+            this.foGK = factorObject;
             break;
 
         case IMatchRoleID.CENTRAL_DEFENDER:
-            m_clInnenVerteidiger = factorObject;
+            this.m_clInnenVerteidiger = factorObject;
             break;
 
         case IMatchRoleID.CENTRAL_DEFENDER_OFF:
-            m_clInnenVerteidiger_OFF = factorObject;
+            this.m_clInnenVerteidiger_OFF = factorObject;
             break;
 
         case IMatchRoleID.CENTRAL_DEFENDER_TOWING:
-            m_clInnenVerteidiger_AUS = factorObject;
+            this.m_clInnenVerteidiger_AUS = factorObject;
             break;
 
         case IMatchRoleID.BACK:
-            foWB = factorObject;
+            this.foWB = factorObject;
             break;
 
         case IMatchRoleID.BACK_OFF:
-            foWB_OFF = factorObject;
+            this.foWB_OFF = factorObject;
             break;
 
         case IMatchRoleID.BACK_DEF:
-            foWB_DEF = factorObject;
+            this.foWB_DEF = factorObject;
             break;
 
         case IMatchRoleID.BACK_TOMID:
-            foWB_TM = factorObject;
+            this.foWB_TM = factorObject;
             break;
 
         case IMatchRoleID.MIDFIELDER:
-            foIM = factorObject;
+            this.foIM = factorObject;
             break;
 
         case IMatchRoleID.MIDFIELDER_OFF:
-            foIM_OFF = factorObject;
+            this.foIM_OFF = factorObject;
             break;
 
         case IMatchRoleID.MIDFIELDER_DEF:
-            foIM_DEF = factorObject;
+            this.foIM_DEF = factorObject;
             break;
 
         case IMatchRoleID.MIDFIELDER_TOWING:
-            foIM_TW = factorObject;
+            this.foIM_TW = factorObject;
             break;
 
         case IMatchRoleID.WINGER:
-            foWI = factorObject;
+            this.foWI = factorObject;
             break;
 
         case IMatchRoleID.WINGER_OFF:
-            foWI_OFF = factorObject;
+            this.foWI_OFF = factorObject;
             break;
 
         case IMatchRoleID.WINGER_DEF:
-            foWI_DEF = factorObject;
+            this.foWI_DEF = factorObject;
             break;
 
         case IMatchRoleID.WINGER_TOMID:
-            foWI_TM = factorObject;
+            this.foWI_TM = factorObject;
             break;
 
         case IMatchRoleID.FORWARD:
-            foFW = factorObject;
+            this.foFW = factorObject;
             break;
 
         case IMatchRoleID.FORWARD_DEF:
-            foFW_DEF = factorObject;
+            this.foFW_DEF = factorObject;
             break;
 
 		case IMatchRoleID.FORWARD_TOWING:
-			foFW_TW = factorObject;
+            this.foFW_TW = factorObject;
 			break;
+
+		case IMatchRoleID.FORWARD_DEF_TECH:
+            this.foFW_DEF_TECH = factorObject;
+		    break;
+
+        default:
+            HOLogger.instance().log(getClass(),"Error in function setPositionFactor, position could not be recognized");
+
     	}
     	resetLastChange();
     }
