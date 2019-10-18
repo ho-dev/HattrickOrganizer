@@ -241,6 +241,11 @@ public class OutputPanel extends LazyImagePanel {
             int realColumnIndex = convertColumnIndexToModel(columnAtPoint(p));
             int realRowIndex = convertRowIndexToModel(rowAtPoint(p));
 
+            if (realColumnIndex == 0) {
+                Object obj = tableModel.getToolTipAt(realRowIndex, realColumnIndex);
+                return obj.toString();
+            }
+
             if ((realColumnIndex > 2) && (realColumnIndex < 11)) {
                 Object obj = tableModel.getToolTipAt(realRowIndex, realColumnIndex);
 

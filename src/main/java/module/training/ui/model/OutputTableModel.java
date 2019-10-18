@@ -7,6 +7,7 @@ import core.model.player.ISkillup;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
+import core.training.TrainingPreviewPlayers;
 import core.training.WeeklyTrainingType;
 import core.util.Helper;
 import module.training.Skills;
@@ -137,7 +138,10 @@ public class OutputTableModel extends AbstractTableModel {
      * @return toolTip
      */
     public Object getToolTipAt(int rowIndex, int columnIndex) {
-        return ((VerticalIndicator) getValueAt(rowIndex, columnIndex)).getToolTipText();
+        if (columnIndex == 0) {
+            return ((JLabel) getValueAt(rowIndex, columnIndex)).getToolTipText();
+        } else
+            return ((VerticalIndicator) getValueAt(rowIndex, columnIndex)).getToolTipText();
     }
 
     /*
@@ -156,9 +160,15 @@ public class OutputTableModel extends AbstractTableModel {
         switch (columnIndex) {
             case 0:
                 // Spielername
-                JLabel jl_Name = new JLabel();
-                jl_Name.setText(player.getName());
-                return jl_Name;
+                JLabel jL_Name = new JLabel();
+                jL_Name.setText(player.getName());
+                String tooltip = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getText();
+                if (tooltip == null){
+                    tooltip = "";
+                }
+                jL_Name.setToolTipText(tooltip);
+                jL_Name.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getIcon());
+                return jL_Name;
             case 1:
                 // Spieleralter
                 return player.getAlterWithAgeDaysAsString();

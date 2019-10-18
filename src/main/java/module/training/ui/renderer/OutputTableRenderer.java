@@ -6,7 +6,7 @@ import module.training.ui.comp.VerticalIndicator;
 
 import java.awt.*;
 
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class OutputTableRenderer extends DefaultTableCellRenderer {
@@ -23,6 +23,10 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
 
         Color bg_color;
 
+        if (column == 0) {
+            JLabel jl = (JLabel) value;
+            return jl;
+        }
 
         if (column < 3 && isSelected) {
             return this;
