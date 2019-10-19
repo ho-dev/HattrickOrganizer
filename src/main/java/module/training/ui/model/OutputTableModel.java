@@ -11,6 +11,7 @@ import core.training.TrainingPreviewPlayers;
 import core.training.WeeklyTrainingType;
 import core.util.Helper;
 import module.training.Skills;
+import module.training.ui.comp.PlayerNameCell;
 import module.training.ui.comp.VerticalIndicator;
 
 import java.util.*;
@@ -50,7 +51,7 @@ public class OutputTableModel extends AbstractTableModel {
     public Class<?> getColumnClass(int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return JLabel.class;
+                return PlayerNameCell.class;
             case 1:
             case 2:
             case COL_PLAYER_ID:
@@ -160,15 +161,7 @@ public class OutputTableModel extends AbstractTableModel {
         switch (columnIndex) {
             case 0:
                 // Spielername
-                JLabel jL_Name = new JLabel();
-                jL_Name.setText(player.getName());
-                String tooltip = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getText();
-                if (tooltip == null){
-                    tooltip = "";
-                }
-                jL_Name.setToolTipText(tooltip);
-                jL_Name.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getIcon());
-                return jL_Name;
+                return createPlayerNameCell(player);
             case 1:
                 // Spieleralter
                 return player.getAlterWithAgeDaysAsString();
@@ -257,4 +250,11 @@ public class OutputTableModel extends AbstractTableModel {
 
         return vi;
     }
+
+    private PlayerNameCell createPlayerNameCell(Player player){
+        PlayerNameCell pnc = new PlayerNameCell(player);
+
+        return pnc;
+    }
+
 }

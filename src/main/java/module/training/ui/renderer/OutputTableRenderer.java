@@ -2,6 +2,7 @@ package module.training.ui.renderer;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import module.training.ui.comp.PlayerNameCell;
 import module.training.ui.comp.VerticalIndicator;
 
 import java.awt.*;
@@ -24,8 +25,16 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
         Color bg_color;
 
         if (column == 0) {
-            JLabel jl = (JLabel) value;
-            return jl;
+            PlayerNameCell pnc = (PlayerNameCell) value;
+            // Reset default values
+            pnc.setForeground(Color.BLACK);
+            if (isSelected) {
+                pnc.setBackground(SELECTION_BG);
+            } else {
+                pnc.setBackground(Color.WHITE);
+            }
+
+            return pnc;
         }
 
         if (column < 3 && isSelected) {
