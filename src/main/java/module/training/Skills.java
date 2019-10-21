@@ -16,30 +16,33 @@ public class Skills {
     public static int getSkillAtPosition(int position) {
         switch (position) {
             case 0:
-                return PlayerSkill.KEEPER;
+                return PlayerSkill.FORM;
 
             case 1:
-                return PlayerSkill.PLAYMAKING;
-
-            case 2:
-                return PlayerSkill.PASSING;
-
-            case 3:
-                return PlayerSkill.WINGER;
-
-            case 4:
-                return PlayerSkill.DEFENDING;
-
-            case 5:
-                return PlayerSkill.SCORING;
-
-            case 6:
-                return PlayerSkill.SET_PIECES;
-
-            case 7:
                 return PlayerSkill.STAMINA;
 
+            case 2:
+                return PlayerSkill.KEEPER;
+
+            case 3:
+                return PlayerSkill.PLAYMAKING;
+
+            case 4:
+                return PlayerSkill.PASSING;
+
+            case 5:
+                return PlayerSkill.WINGER;
+
+            case 6:
+                return PlayerSkill.DEFENDING;
+
+            case 7:
+                return PlayerSkill.SCORING;
+
             case 8:
+                return PlayerSkill.SET_PIECES;
+
+            case 9:
                 return PlayerSkill.EXPERIENCE;
         }
 

@@ -24,21 +24,15 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
 
         Color bg_color;
 
-        if (column == 0) {
-            PlayerNameCell pnc = (PlayerNameCell) value;
-            // Reset default values
-            pnc.setForeground(Color.BLACK);
-            if (isSelected) {
-                pnc.setBackground(SELECTION_BG);
-            } else {
-                pnc.setBackground(Color.WHITE);
-            }
-
-            return pnc;
-        }
-
         if (column < 3 && isSelected) {
-            return this;
+            if (column == 0) {
+                PlayerNameCell pnc = (PlayerNameCell) value;
+                pnc.setForeground(this.getForeground());
+                pnc.setBackground(this.getBackground());
+                return pnc;
+            } else {
+                return this;
+            }
         }
 
         // Reset default values
@@ -70,7 +64,16 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
                 bg_color = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
             }
 
-            setBackground(bg_color);
+            if (column == 0) {
+                PlayerNameCell pnc = (PlayerNameCell) value;
+                // Reset default values
+                pnc.setForeground(Color.BLACK);
+                pnc.setBackground(bg_color);
+                return pnc;
+            } else {
+                setBackground(bg_color);
+            }
+
         }
 
         return cell;

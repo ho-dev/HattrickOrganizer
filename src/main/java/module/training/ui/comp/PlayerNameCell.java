@@ -10,6 +10,7 @@ public class PlayerNameCell extends JLabel {
     public PlayerNameCell(Player player) {
         super();
 
+        this.setOpaque(true);
         this.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
         this.setText(player.getName());
 
