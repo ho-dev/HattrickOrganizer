@@ -50,8 +50,10 @@ public class RatingPredictionManager {
     public static final int SPEC_UNPREDICTABLE = PlayerSpeciality.UNPREDICTABLE; // 4
     public static final int SPEC_HEADER = PlayerSpeciality.HEAD; // 5
     public static final int SPEC_REGAINER = PlayerSpeciality.REGAINER; // 6
-    public static final int SPEC_ALL = PlayerSpeciality.REGAINER+1; // 7
-    public static final int NUM_SPEC = SPEC_ALL+1; // 8
+	public static final int SPEC_NOTUSED = 7;
+	public static final int SPEC_SUPPORT = PlayerSpeciality.SUPPORT; // 8
+    public static final int SPEC_ALL = SPEC_SUPPORT+1; // 9
+    public static final int NUM_SPEC = SPEC_ALL+1; // 10
 	public static final double EPSILON = 0.000001;
 
     //~ Class fields -------------------------------------------------------------------------------
@@ -291,6 +293,8 @@ public class RatingPredictionManager {
     	for (int effPos=0; effPos < allStk.length; effPos++) {
 			double curAllSpecWeight = allWeights[effPos][SPEC_ALL];
     		for (int spec=0; spec < SPEC_ALL; spec++) {
+    			if (spec == SPEC_NOTUSED)
+    				continue;
     			double curStk = allStk[effPos][spec];
     			double curWeight = allWeights[effPos][spec];
     			if (curStk > 0) {
@@ -432,6 +436,12 @@ public class RatingPredictionManager {
 			break;
 		case SPEC_REGAINER:
 			retVal += "regainer";
+			break;
+		case SPEC_NOTUSED:
+			retVal = "";
+			break;
+		case SPEC_SUPPORT:
+			retVal += "support";
 			break;
 		case SPEC_ALL:
 //			retVal += "all";
@@ -633,6 +643,8 @@ public class RatingPredictionManager {
 		double modWI = params.getParam(sectionName, "allWIs", 1);
 		double modFW = params.getParam(sectionName, "allFWs", 1);
     	for (int specialty=0; specialty<NUM_SPEC; specialty++) {
+    		if (specialty == SPEC_NOTUSED)
+    			continue;
     		String specialtyName = getSpecialtyName(specialty, true);
     		weights[IMatchRoleID.KEEPER][specialty] = params.getParam(sectionName, "keeper" + specialtyName);
     		weights[IMatchRoleID.KEEPER][specialty] += params.getParam(sectionName, "gk" + specialtyName);	// alias for keeper
