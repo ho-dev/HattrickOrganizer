@@ -5,16 +5,70 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 # Changelist HO! 2.0
 
 ## Added
- - Increase list of supported game (default settings and icons) (e.g. Tournment matches) #21
+  - Menu 
+    - checks software update and changelog under help #82 (Windows / Linux you can upgrade to the next version of HO using the update function)
+    - check the release channel you want use (DEV/BETA/Stable)
+    - **according to the channel version used, you will see the new logo and banner #84**
+    
+  - Lineup
+    - **Add new lineup substitutes (with wingback and extra) #120 #105**
+    - **Blue border on your trained player #44**
+    - **Green mark near player name for minutes based training according to the one chosen under training tab #44**
+    - Fix for translation in the menu from style of play #119
+    - Display only players lastname to improve lisibility #126
+    - Better use of space to improve visibility #133 
+    - Remove broken/useless buttons #132
+    - Support for download of non official Lineups (fixed in 1437)
+    - Grey background for player on the field or on the bench #146
+    - Hatstats and loddastat added to ratings table
+
+  - Rating
+    - **Timeline allowing to see rating evolution over time**
+    - **re-introduce [User Feedback](https://github.com/akasolace/HO/wiki/FeedBack) in order to allow among other things prediction rating improvement #38 #131**
+    - **Formulas will not use anymore the stars but absolutes and relatives players evaluation’s value #212**
+      - In squad and Lineup, are calculated both the absolute and the relative contribution of a player to the ratings
+      - The absolute is more or less what would be the sum of his contribution to the 7 sectors
+      - The relative contribution helps to determine the best position for a given player. It is the absolute contribution corrected by a factor. This allows to account for that some position contribute more to the total ratings than others (e.g. a player being divine in all his carac will contribute more to ratings if positioned as MidField than if positioned as WB)
+      - The coeffs are calculated using the prediction parameters of HO. They are approximate but hopefully they would be improved if we got sufficient contribution from the newly introduce FeedBack plugin.
+    - **Take weather event in consideration #111**
+    - **Take substitution in consideration**
+    - Improved formula #110
+    - Improve prediction rating formula for t=0 #39
+    - Improve prediction stamina effect #40
+    - **Offer rating comparison HT vs HO for t=0 from upload/download lineup tool**
+    - Rating Charts with graph
+
+
+
+ - NTHRF: Module is removed, now you can add your NT team in your own HO - see [wiki](https://github.com/akasolace/HO/wiki/NTHRF-since-HO-2.0)
+
+ - Misc
+   - **Support for all kind of matches #21**
+   - **training calculation is now minute based #27**
+   - Improvement to export CSV tools #42
+   - IFA: New countries added #17 #262
+   - Matches: possibility to download missing matches #237
+   - Statistics Arena: added information about incoming Cash #49 #109
+   - Squad: change age from year.day to year(day) #113
+
+
+
+    
+
 
 ## Fixed
- - startup issue for certain Linux configuration (#102)
+ - **startup issue for certain Linux configuration (#102)**
+ - **Standard shortcuts for copy/cut/paste in MacOSX #177**
+ - **training: fix for red card’s player, they had full training #127**
+ - fix on money symbols #93
  - sorting issue after change filter in Arena section
  - bug due to match report size larger than db threshold
  - invalid select statement and duplicated IDs in matches tab
+ - review HO build (Sanitize HO jar and fixes deb and rpm packages) #136 #139
+ - Fix for properly import training from previous version #100
+ - Error message instead exception when receive bad xml #140
+ - Some database fixes
 
-## Changed
- - ...
  
 # Changelist HO! 1.436
 
