@@ -488,9 +488,15 @@ public class XMLMatchOrderParser {
 			}
 
 			// Treatment of SP taker and Captain
-			addPlayer((Element) doc.getElementsByTagName("SetPieces").item(0), hash);
-			addPlayer((Element) doc.getElementsByTagName("Captain").item(0), hash);
+			Element SetPieces = (Element) doc.getElementsByTagName("SetPieces").item(0);
+			if (SetPieces != null) {
+				addPlayer(SetPieces, hash);
+			}
 
+			Element Captain = (Element) doc.getElementsByTagName("Captain").item(0);
+			if (Captain != null) {
+				addPlayer(Captain, hash);
+			}
 
 			// Treatment of Players Orders
 			Element child = (Element) root.getElementsByTagName("PlayerOrders").item(0);
