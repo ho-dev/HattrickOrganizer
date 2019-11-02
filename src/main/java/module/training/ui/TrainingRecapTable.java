@@ -44,6 +44,7 @@ public class TrainingRecapTable extends JScrollPane {
                                                        boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
+            // TODO : da modificare come OutputTableRender
             if (isSelected) {
                 return this;
             }

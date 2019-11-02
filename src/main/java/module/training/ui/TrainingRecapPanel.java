@@ -224,6 +224,7 @@ public class TrainingRecapPanel extends LazyImagePanel {
 			}
 
 			Vector<String> row = new Vector<String>();
+			// TODO: da modificare tabella di stringhe, ma deve diventare tabella di oggetti
 			row.add(player.getName());
 			row.add(player.getAlterWithAgeDaysAsString());
 			row.add(Integer.toString(ftm.getTrainingSpeed()));
