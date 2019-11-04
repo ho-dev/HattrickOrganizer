@@ -666,7 +666,7 @@ public class DBManager {
 	// -------------------------------------------------
 	public void setFaktorenFromDB(FactorObject fo) {
 		((FaktorenTable) getTable(FaktorenTable.TABLENAME))
-				.setFaktorenFromDB(fo);
+				.pushFactorsIntoDB(fo);
 	}
 
 	public void getFaktorenFromDB() {

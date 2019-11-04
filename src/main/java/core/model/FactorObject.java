@@ -65,7 +65,7 @@ public final class FactorObject {
                 fDefending = rs.getFloat("DEfactor");
                 fWing = rs.getFloat("WIfactor");
                 m_bPosition = rs.getByte("PositionID");
-                fNormalization = rs.getByte("NormalisationFactor");
+                fNormalization = rs.getFloat("NormalisationFactor");
             }
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),"Konstruktor Faktor Obj: " + e.toString());
