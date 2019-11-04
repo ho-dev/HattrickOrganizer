@@ -124,7 +124,8 @@ public class MatchRating {
 
         style_of_play = style_of_play.toLowerCase().trim();
         HOVerwaltung hoi = HOVerwaltung.instance();
-        if (style_of_play.equals(hoi.getLanguageString("ls.team.styleofplay.neutral").toLowerCase())) {
+        if ( (style_of_play.equals(hoi.getLanguageString("ls.team.styleofplay.neutral").toLowerCase())) ||
+              (style_of_play.equals("neutral"))) {
             result = 0;
         } else {
             index = style_of_play.indexOf("%");
@@ -135,8 +136,10 @@ public class MatchRating {
                 result = ERROR;
             }
 
-            if (style_of_play.contains(hoi.getLanguageString("ls.team.styleofplay.offensive").toLowerCase())) {
-            } else if (style_of_play.contains(hoi.getLanguageString("ls.team.styleofplay.defensive").toLowerCase())) {
+            if ((style_of_play.contains(hoi.getLanguageString("ls.team.styleofplay.offensive").toLowerCase())) ||
+                (style_of_play.contains("offensive"))){ }
+            else if ((style_of_play.contains(hoi.getLanguageString("ls.team.styleofplay.defensive").toLowerCase())) ||
+                    (style_of_play.contains("defensive"))){
                 result = result * -1;
             } else {
                 result = ERROR;
