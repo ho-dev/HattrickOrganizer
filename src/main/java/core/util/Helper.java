@@ -85,6 +85,7 @@ public class Helper {
 			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.WINGER_TOMID), IMatchRoleID.WINGER_TOMID),
 			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.FORWARD), IMatchRoleID.FORWARD),
 			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.FORWARD_DEF), IMatchRoleID.FORWARD_DEF),
+			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.FORWARD_DEF_TECH), IMatchRoleID.FORWARD_DEF_TECH),
 			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.FORWARD_TOWING), IMatchRoleID.FORWARD_TOWING) };
 
     /** weather combo boxes */

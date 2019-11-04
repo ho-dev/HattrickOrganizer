@@ -277,6 +277,7 @@ public class FormulaFactors {
             writeFaktorObj(doc, foWI_DEF, tmpEle, "WING_D");
             writeFaktorObj(doc, foWI, tmpEle, "WING");
             writeFaktorObj(doc, foFW_DEF, tmpEle, "FW_D");
+            writeFaktorObj(doc, foFW_DEF_TECH, tmpEle, "FW_D_TECH");
 			writeFaktorObj(doc, foFW_TW, tmpEle, "FW_W");
             writeFaktorObj(doc, foFW, tmpEle, "FW");
 
