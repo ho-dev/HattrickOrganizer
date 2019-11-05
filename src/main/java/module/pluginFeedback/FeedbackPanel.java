@@ -182,19 +182,8 @@ public class FeedbackPanel extends JFrame {
 
     private static String getTerms(HashMap<String, String> map, String term) {
 
-        Map<String, String> englishterms = new HashMap<>();
-
-        englishterms.put("ls.team.teamattitude", "team attitude");
-        englishterms.put("ls.team.tactics", "tactics");
-        englishterms.put("ls.team.styleofPlay", "style of play");
-
-        String english_term = "";
-
-        if(englishterms.containsKey(term)) {
-            english_term = englishterms.get(term);
-        } else {
-            return "";
-        }
+        ResourceBundle tempBundle = ResourceBundle.getBundle("sprache.English", new UTF8Control());
+        String english_term = tempBundle.getString(term).toLowerCase();
 
         String local_term = HOVerwaltung.instance().getLanguageString(term).toLowerCase();
         for (String _term : Arrays.asList(local_term, english_term)) {
