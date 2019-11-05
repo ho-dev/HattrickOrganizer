@@ -80,9 +80,7 @@ public interface IMatchRoleID {
     int penaltyTaker9 = 30;
     int penaltyTaker10 = 31;
     int penaltyTaker11 = 32;
-    List<Integer> aKickersMatchRoleID = IntStream.rangeClosed(22, 32).boxed().collect(Collectors.toList());
-    
-    
+
 //    /** ab welccher PositionsID gehört Pos zur Reserve Bank */
 //
     //First id of the reserves
