@@ -16,6 +16,7 @@ import core.model.match.MatchLineupTeam;
 import core.model.match.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.net.login.LoginWaitDialog;
 import core.training.TrainingManager;
@@ -262,7 +263,7 @@ public class OnlineWorker {
 	 * If a match is already in the db, and refresh is false, nothing is
 	 * downloaded.
 	 *
-	 * @param matchId
+	 * @param matchid
 	 *            ID for the match to be downloaded
 	 * @param matchType
 	 *            matchType for the match to be downloaded.
@@ -618,16 +619,27 @@ public class OnlineWorker {
 		else orders.append(',').append(createPositionString(pos, lineup));
 		}
 
-		orders.append("],\"kickers\":[");
-		bFirst = true;
-		for (int pos : IMatchRoleID.aKickersMatchRoleID)
-		{
-			if (bFirst) {
-			orders.append(createPositionString(pos, lineup));
-				bFirst = false;}
-			else orders.append(',').append(createPositionString(pos, lineup));
-		}
+		// penalty takers
+		List<MatchRoleID> shooters = lineup.getPenaltyTakers();
+		int penshooters = 0;
 
+		orders.append("],\"kickers\":[");
+		for (MatchRoleID pos : shooters) {
+			if (penshooters > 0) {
+				orders.append(',');
+			}
+			orders.append("{\"id\":\"").append(pos.getSpielerId());
+			orders.append("\",\"behaviour\":\"0\"}");
+			penshooters++;
+		}
+		// Always give 11 shooters. There is a CHPP error if the number given is not 0 or 11.
+		for (int i = 0 ; i < 11-penshooters; i++) {
+			if (penshooters > 0 || i > 0) {
+				orders.append(',');
+			}
+			orders.append("{\"id\":\"0");
+			orders.append("\",\"behaviour\":\"0\"}");
+		}
 
 		orders.append(String.format("],\"captain\": %s,",lineup.getKapitaen()));
 		orders.append(String.format("\"setPieces\": %s,",lineup.getKicker()));
