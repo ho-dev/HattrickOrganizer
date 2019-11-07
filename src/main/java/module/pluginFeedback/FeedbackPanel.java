@@ -19,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -47,7 +46,10 @@ public class FeedbackPanel extends JFrame {
         long dateNow = new Date().getTime();
         long updateTime = 1000 * 60 * 60; // Time (millisec), time difference for consider data too old, 1 hour
         if (dateHrf + updateTime <= dateNow) {
-            String message = HOVerwaltung.instance().getLanguageString("feedbackplugin.dataTooOld", java.text.DateFormat.getDateTimeInstance().format(dateHrf));
+
+            String message = HOVerwaltung.instance().getLanguageString("feedbackplugin.dataTooOldWarning"); //java.text.DateFormat.getDateTimeInstance().format(dateHrf));
+            message = String.format(message, java.text.DateFormat.getDateTimeInstance().format(dateHrf));
+
             JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
         } else {
             HORatings = HOVerwaltung.instance().getModel().getLineup().getRatings();
