@@ -228,6 +228,9 @@ public class FeedbackPanel extends JFrame {
         if ((HOLineup.getTacticType() != HTRatings.getTacticType()) ||
                 (HOLineup.getTacticType() != MatchRating.TacticTypeStringToInt(requirementsTacticType))) return false;
 
+        // return false if style of play not properly set
+        if ((HOLineup.getStyleOfPlay() * 10) != HTRatings.getStyle_of_play()) return false;
+
         // return false if HOLineup not fully included in required Lineup
         for (IMatchRoleID obj : HOLineup.getPositionen()) {
             positionHO = ((MatchRoleID) obj).getId();
