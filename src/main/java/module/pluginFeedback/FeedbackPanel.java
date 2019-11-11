@@ -206,8 +206,19 @@ public class FeedbackPanel extends JFrame {
             }
         }
 
-        return "";
+        // language is not English and translation does not exist, we will try to parse using a proxy
+        if (term == "ls.team.teamattitude") {
+            String local_proxy_term = HOVerwaltung.instance().getLanguageString("ls.team.teamattitude").toLowerCase().substring(0, 5);
+            String short_key;
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                short_key = entry.getKey().substring(0, 5);
+                if (short_key.equals(local_proxy_term)) {
+                    return entry.getValue();
+                }
+            }
+        }
 
+        return "";
     }
 
 
