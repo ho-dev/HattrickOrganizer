@@ -38,7 +38,7 @@ import javax.swing.table.TableModel;
 public class TrainingRecapPanel extends LazyImagePanel {
 
 	private static final long serialVersionUID = 7240288702397251461L;
-	private static final int fixedColumns = 3;
+	private static final int fixedColumns = 4;
 	private TrainingRecapTable recapTable;
 	private final TrainingModel model;
 	private boolean initialized = false;
@@ -107,6 +107,7 @@ public class TrainingRecapPanel extends LazyImagePanel {
 		columns.add(HOVerwaltung.instance().getLanguageString("Spieler"));
 		columns.add(HOVerwaltung.instance().getLanguageString("ls.player.age"));
 		columns.add("Speed");
+		columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
 
 		int actualSeason = HOVerwaltung.instance().getModel().getBasics().getSeason();
 		int actualWeek = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
@@ -224,10 +225,11 @@ public class TrainingRecapPanel extends LazyImagePanel {
 			}
 
 			Vector<String> row = new Vector<String>();
-			// TODO: da modificare tabella di stringhe, ma deve diventare tabella di oggetti
+			
 			row.add(player.getName());
 			row.add(player.getAlterWithAgeDaysAsString());
 			row.add(Integer.toString(ftm.getTrainingSpeed()));
+			row.add(Integer.toString(player.getSpielerID()));
 
 			for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
 				ISkillup s = (ISkillup) maps.get(columns.get(i + fixedColumns));

@@ -76,7 +76,7 @@ public class PlayerDetailPanel extends LazyImagePanel {
             playerLabel.setText(HOVerwaltung.instance().getLanguageString("PlayerSelect"));
             for (int i = 0; i < skillNumber; i++) {
                 skillLabel[i].setText("");
-                levelBar[i].setLevel(0f);
+                levelBar[i].setLevel(0f, 0);
             }
             return;
         }
@@ -99,7 +99,7 @@ public class PlayerDetailPanel extends LazyImagePanel {
                         this.model.getActivePlayer().getSubskill4Pos(PlayerSkill.FORM);
                 skillLabel[i].setText(String.valueOf(finalValue));
             }
-            levelBar[i].setLevel((float) finalValue / getSkillMaxValue(i));
+            levelBar[i].setLevel((float) finalValue / getSkillMaxValue(i), finalValue);
         }
     }
 
@@ -193,7 +193,7 @@ public class PlayerDetailPanel extends LazyImagePanel {
                 len = 110;
             }
 
-            levelBar[i] = new HTColorBar(0f, len, 16);
+            levelBar[i] = new HTColorBar(skillIndex, 0f, len, 16);
             levelBar[i].setOpaque(false);
             levelBar[i].setMinimumSize(new Dimension(200, 16));
             gbc.fill = GridBagConstraints.BOTH;

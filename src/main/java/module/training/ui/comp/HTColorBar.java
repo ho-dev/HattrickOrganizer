@@ -1,6 +1,8 @@
 // %1542412551:hoplugins.trainingExperience.ui.bar%
 package module.training.ui.comp;
 
+import core.constants.player.PlayerSkill;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,54 +11,69 @@ import java.awt.*;
  */
 public final class HTColorBar extends JComponent {
 
-	private static final long serialVersionUID = -4167591212962253628L;
-	static final int RED = 0x1000000;
-	static final int GREEN = 0x0010000;
-	static final int BLUE = 0x0000100;
-	final float xfrac;
-	/* length in x direction */
-	final int length;
-	int backgroundColor = 0xff0000;
-	/* thickness of the bar */
-	final int thickness;
-	private float end;
-	private final int colormask;
+    private int length;
+    private Color backgroundColor;
+    private int thickness;
+    private int end;
+    private float value;
+    private int skillIndex;
 
-	/**
-	 * ColorBar: initialize a color bar
-	 */
-	public HTColorBar(float value, int len, int thick) {
-		this.length = len;
+    Color GREEN = new Color(89, 150, 93); //Form >6
+    Color LIGHT_ORANGE = new Color(241, 196, 10); //Form >4 & <=6
+    Color ORANGE = new Color(245, 161, 4); //Form >2 & <=4
+    Color RED = new Color(221, 65, 64); //Form <=2
 
-		int col = GREEN;
-		this.end = (int) (len * value);
-		this.thickness = thick;
-		this.colormask = col;
-		//this.backgroundColor = ((backgroundColor & (0xffffff ^ colormask)) ^ ((int) (value * colormask) & colormask));
-		this.backgroundColor = Color.green.getRGB();
-		this.xfrac = (col / (float) Math.abs(length));
-		paintImmediately(getBounds());
-	}
+    /**
+     * ColorBar: initialize a color bar
+     */
+    public HTColorBar(int skillIndex, float value, int len, int thickness) {
+        this.length = len;
+        this.end = (int) (len * value);
+        this.thickness = thickness;
+        this.backgroundColor = GREEN;
+        this.value = value;
+        this.skillIndex = skillIndex;
 
-	public void setLevel(float value) {
-		this.end = (int) (value * length);
-		paintImmediately(getBounds());
-	}
+        paintImmediately(getBounds());
+    }
 
-	/* draw a color bar */
-	@Override
-	public void paint(Graphics g) {
-		g.clearRect(0, 0, length, thickness);
+    public void setLevel(float value, double skillValue) {
+        this.end = (int) (value * length);
+        this.backgroundColor = GREEN;
 
-		int x = 0;
-		int y = 0;
-		int basecolor = (backgroundColor & (0xffffff ^ colormask));
-		float amount = length - xfrac;
+        switch (skillIndex) {
+            case PlayerSkill.KEEPER:
+            case PlayerSkill.PLAYMAKING:
+            case PlayerSkill.PASSING:
+            case PlayerSkill.WINGER:
+            case PlayerSkill.DEFENDING:
+            case PlayerSkill.SCORING:
+            case PlayerSkill.SET_PIECES:
+                break;
+            case PlayerSkill.STAMINA:
+                break;
+            case PlayerSkill.EXPERIENCE:
+                break;
+            case PlayerSkill.FORM:
+                if (skillValue > 4 && skillValue <= 6) {
+                    backgroundColor = LIGHT_ORANGE;
+                } else if (skillValue > 2 && skillValue <= 4) {
+                    backgroundColor = ORANGE;
+                } else if (skillValue <= 2) {
+                    backgroundColor = RED;
+                }
+                break;
+        }
 
-		for (; x < end; x += 1, amount -= xfrac) {
-			int q = basecolor ^ (((int) amount) & colormask);
-			g.setColor(new Color(q));
-			g.drawLine(x, y, x, y + thickness);
-		}
-	}
+        paintImmediately(getBounds());
+    }
+
+    /* draw a color bar */
+    @Override
+    public void paint(Graphics g) {
+        g.clearRect(0, 0, length, thickness);
+        g.setColor(backgroundColor);
+        g.fillRect(0, 0, end, thickness);
+        //g.drawLine(0, 0, end, thickness);
+    }
 }
