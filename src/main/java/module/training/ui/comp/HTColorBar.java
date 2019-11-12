@@ -13,15 +13,24 @@ public final class HTColorBar extends JComponent {
 
     private int length;
     private Color backgroundColor;
+    private Color backgroundFirstColor;
+    private Color backgroundSecondColor;
+    private Color backgroundThirdColor;
     private int thickness;
     private int end;
     private float value;
+    private float secondValue;
+    private float thirdValue;
     private int skillIndex;
 
-    Color GREEN = new Color(89, 150, 93); //Form >6
-    Color LIGHT_ORANGE = new Color(241, 196, 10); //Form >4 & <=6
-    Color ORANGE = new Color(245, 161, 4); //Form >2 & <=4
-    Color RED = new Color(221, 65, 64); //Form <=2
+    Color GREY = new Color(236, 236, 236);
+    Color GREEN = new Color(89, 150, 93); //Form, Stamina >6
+    Color LIGHT_ORANGE = new Color(241, 196, 10); //Form, Stamina >4 & <=6
+    Color ORANGE = new Color(245, 161, 4); //Form, Stamina >2 & <=4
+    Color RED = new Color(221, 65, 64); //Form, Stamina <=2
+
+    Color LIGHT_GREEN = new Color(101, 170, 105); // Skill Decimal
+    Color ULTRA_LIGHT_GREEN = new Color(120, 195, 125); // Future Training
 
     /**
      * ColorBar: initialize a color bar
@@ -30,8 +39,13 @@ public final class HTColorBar extends JComponent {
         this.length = len;
         this.end = (int) (len * value);
         this.thickness = thickness;
-        this.backgroundColor = GREEN;
+        this.backgroundColor = GREY;
+        this.backgroundFirstColor = GREEN;
+        this.backgroundSecondColor = GREEN;
+        this.backgroundThirdColor = GREEN;
         this.value = value;
+        this.secondValue = 0;
+        this.thirdValue = 0;
         this.skillIndex = skillIndex;
 
         paintImmediately(getBounds());
@@ -39,7 +53,7 @@ public final class HTColorBar extends JComponent {
 
     public void setLevel(float value, double skillValue) {
         this.end = (int) (value * length);
-        this.backgroundColor = GREEN;
+        this.backgroundFirstColor = GREEN;
 
         switch (skillIndex) {
             case PlayerSkill.KEEPER:
@@ -51,16 +65,13 @@ public final class HTColorBar extends JComponent {
             case PlayerSkill.SET_PIECES:
                 break;
             case PlayerSkill.STAMINA:
-                break;
-            case PlayerSkill.EXPERIENCE:
-                break;
             case PlayerSkill.FORM:
                 if (skillValue > 4 && skillValue <= 6) {
-                    backgroundColor = LIGHT_ORANGE;
+                    backgroundFirstColor = LIGHT_ORANGE;
                 } else if (skillValue > 2 && skillValue <= 4) {
-                    backgroundColor = ORANGE;
+                    backgroundFirstColor = ORANGE;
                 } else if (skillValue <= 2) {
-                    backgroundColor = RED;
+                    backgroundFirstColor = RED;
                 }
                 break;
         }
@@ -68,12 +79,42 @@ public final class HTColorBar extends JComponent {
         paintImmediately(getBounds());
     }
 
+    public void setSecondLevel(float secondValue) {
+        this.backgroundSecondColor = LIGHT_GREEN;
+        this.secondValue = secondValue;
+        paintImmediately(getBounds());
+    }
+
+    public void setThirdLevel(float thirdValue) {
+        this.backgroundThirdColor = ULTRA_LIGHT_GREEN;
+        this.thirdValue = thirdValue;
+        paintImmediately(getBounds());
+    }
+
     /* draw a color bar */
     @Override
     public void paint(Graphics g) {
-        g.clearRect(0, 0, length, thickness);
+        int xStart = 0;
+        int xEnd = end;
+
         g.setColor(backgroundColor);
-        g.fillRect(0, 0, end, thickness);
-        //g.drawLine(0, 0, end, thickness);
+        g.fillRect(0, 0, length, thickness);
+        //g.clearRect(0, 0, length, thickness);
+        g.setColor(backgroundFirstColor);
+        g.fillRect(xStart, 0, xEnd, thickness);
+
+        if (secondValue > 0) {
+            xStart += xEnd;
+            xEnd = (int) (secondValue * length);
+            g.setColor(backgroundSecondColor);
+            g.fillRect(xStart, 0, xEnd, thickness);
+        }
+
+        if (thirdValue > 0) {
+            xStart += xEnd;
+            xEnd = (int) (thirdValue * length);
+            g.setColor(backgroundThirdColor);
+            g.fillRect(xStart, 0, xEnd, thickness);
+        }
     }
 }

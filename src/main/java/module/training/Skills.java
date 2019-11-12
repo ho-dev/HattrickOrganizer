@@ -25,16 +25,16 @@ public class Skills {
                 return PlayerSkill.KEEPER;
 
             case 3:
-                return PlayerSkill.PLAYMAKING;
+                return PlayerSkill.DEFENDING;
 
             case 4:
-                return PlayerSkill.PASSING;
+                return PlayerSkill.PLAYMAKING;
 
             case 5:
                 return PlayerSkill.WINGER;
 
             case 6:
-                return PlayerSkill.DEFENDING;
+                return PlayerSkill.PASSING;
 
             case 7:
                 return PlayerSkill.SCORING;
@@ -117,6 +117,9 @@ public class Skills {
 
             case PlayerSkill.STAMINA:
                 return player.getKondition() + player.getSubskill4Pos(skillIndex);
+
+            case PlayerSkill.FORM:
+                return player.getForm() + player.getSubskill4Pos(skillIndex);
 
             case PlayerSkill.EXPERIENCE:
                 return player.getErfahrung() + player.getSubskill4Pos(skillIndex);

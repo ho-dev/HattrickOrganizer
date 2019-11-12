@@ -192,6 +192,7 @@ public class FutureTrainingManager {
 		fp.setPlaymaking(getFinalValue(PlayerSkill.PLAYMAKING));
 		fp.setSetpieces(getFinalValue(PlayerSkill.SET_PIECES));
 		fp.setStamina(getFinalValue(PlayerSkill.STAMINA));
+		fp.setForm(getFinalValue(PlayerSkill.FORM));
 		fp.setAge(player.getAlter()+(int)(Math.floor((player.getAgeDays()+7*weeksPassed)/112d)));
 		fp.setPlayerId(player.getSpielerID());
 		return fp;
@@ -270,9 +271,6 @@ public class FutureTrainingManager {
 	/**
 	* Calculates the number of weeks needed for a future skillup
 	* 
-	* @param skillIndex		skill to use (from ISpieler.SKILL*)
-	* @param	intensity	training intensity
-	* @param	staminaTrainingPart	stamina share
 	*
 	* @return	the predicted length
 	*/
@@ -313,7 +311,6 @@ public class FutureTrainingManager {
 	/**
 	* Checks if a skillup has happened
 	*
-	* @param skillIndex the skill to consider
 	*
 	* @return true if skillup happened
 	*/
@@ -339,9 +336,9 @@ public class FutureTrainingManager {
 	/**
 	* Updates the training situation
 	*
-	* @param primarySkillIndex The skill to be updated
-	* @param primaryPoints The points to be added
 	* @param tw the training week settings for the considered week
+	 *
+	 *
 	*/
 	private void processTraining(WeeklyTrainingType wt, TrainingPoints trp, TrainingPerWeek tw) {
 		// number of weeks necessary to have a skillup

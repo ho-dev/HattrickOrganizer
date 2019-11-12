@@ -89,17 +89,18 @@ public class PlayerDetailPanel extends LazyImagePanel {
 
         for (int i = 0; i < skillNumber; i++) {
             int skillIndex = Skills.getSkillAtPosition(i);
-            skillLabel[i].setText(PlayerAbility.getNameForSkill(
-                    Skills.getSkillValue(this.model.getActivePlayer(), skillIndex), true));
+            float skillValue = Skills.getSkillValue(this.model.getActivePlayer(), skillIndex);
+            skillLabel[i].setText(PlayerAbility.getNameForSkill(skillValue, true));
 
             FuturePlayer fp = ftm.previewPlayer(UserParameter.instance().futureWeeks);
             double finalValue = getSkillValue(fp, skillIndex);
-            if (skillIndex == PlayerSkill.FORM) {
-                finalValue = this.model.getActivePlayer().getForm() +
-                        this.model.getActivePlayer().getSubskill4Pos(PlayerSkill.FORM);
-                skillLabel[i].setText(String.valueOf(finalValue));
-            }
-            levelBar[i].setLevel((float) finalValue / getSkillMaxValue(i), finalValue);
+
+            float skillValueInt = (int) skillValue;
+            float skillValueDecimal = skillValue - skillValueInt;
+
+            levelBar[i].setLevel((float) skillValueInt / getSkillMaxValue(i), skillValueInt);
+            levelBar[i].setSecondLevel((float) skillValueDecimal / getSkillMaxValue(i));
+            levelBar[i].setThirdLevel((float) (finalValue - skillValue) / getSkillMaxValue(i));
         }
     }
 
@@ -143,6 +144,9 @@ public class PlayerDetailPanel extends LazyImagePanel {
             case PlayerSkill.STAMINA:
                 return spieler.getStamina();
 
+            case PlayerSkill.FORM:
+                return spieler.getForm();
+
             case PlayerSkill.WINGER:
                 return spieler.getCross();
             default:
@@ -168,11 +172,16 @@ public class PlayerDetailPanel extends LazyImagePanel {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(2, 4, 2, 4);
         levelBar = new HTColorBar[skillNumber];
         skillLabel = new JLabel[skillNumber];
 
         for (int i = 0; i < skillNumber; i++) {
+            if (i == 1) {
+                gbc.insets = new Insets(2, 4, 8, 4);
+            } else {
+                gbc.insets = new Insets(2, 4, 2, 4);
+            }
+
             gbc.gridy = i;
             gbc.weightx = 0.0;
             gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -186,12 +195,7 @@ public class PlayerDetailPanel extends LazyImagePanel {
             gbc.gridx = 1;
             bottom.add(skillLabel[i], gbc);
 
-            int len = 200;
-            if (i == 0) {
-                len = 90;
-            } else if (i == 1) {
-                len = 110;
-            }
+            int len = (int) getSkillMaxValue(i) * 10;
 
             levelBar[i] = new HTColorBar(skillIndex, 0f, len, 16);
             levelBar[i].setOpaque(false);
