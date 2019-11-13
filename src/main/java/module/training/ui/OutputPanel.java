@@ -185,8 +185,10 @@ public class OutputPanel extends LazyImagePanel {
                     column.setPreferredWidth(150);
                     break;
                 case 1:
+                    column.setPreferredWidth(60);
+                    break;
                 case 2:
-                    column.setPreferredWidth(100);
+                    column.setPreferredWidth(140);
                     break;
                 default:
                     column.setPreferredWidth(70);

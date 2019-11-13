@@ -2,6 +2,7 @@ package module.training.ui.renderer;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import module.training.ui.comp.BestPositionCell;
 import module.training.ui.comp.PlayerNameCell;
 import module.training.ui.comp.VerticalIndicator;
 

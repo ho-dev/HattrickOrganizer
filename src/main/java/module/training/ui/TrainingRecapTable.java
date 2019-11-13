@@ -121,18 +121,18 @@ public class TrainingRecapTable extends JScrollPane {
             columnModel.removeColumn(columnModel.getColumn(fixedColumns));
         }
 
-        fixed.getColumnModel().getColumn(0).setMaxWidth(120);
-        fixed.getColumnModel().getColumn(0).setMinWidth(120);
-        fixed.getColumnModel().getColumn(0).setWidth(120);
-        fixed.getColumnModel().getColumn(1).setMaxWidth(100);
-        fixed.getColumnModel().getColumn(1).setMinWidth(100);
-        fixed.getColumnModel().getColumn(1).setWidth(100);
+        fixed.getColumnModel().getColumn(0).setMaxWidth(150);
+        fixed.getColumnModel().getColumn(0).setMinWidth(150);
+        fixed.getColumnModel().getColumn(0).setWidth(150);
+        fixed.getColumnModel().getColumn(1).setMaxWidth(60);
+        fixed.getColumnModel().getColumn(1).setMinWidth(60);
+        fixed.getColumnModel().getColumn(1).setWidth(60);
         fixed.getColumnModel().getColumn(2).setMaxWidth(0);
         fixed.getColumnModel().getColumn(2).setMinWidth(0);
         fixed.getColumnModel().getColumn(2).setPreferredWidth(0);
-        fixed.getColumnModel().getColumn(3).setMaxWidth(100);
-        fixed.getColumnModel().getColumn(3).setMinWidth(100);
-        fixed.getColumnModel().getColumn(3).setPreferredWidth(100);
+        fixed.getColumnModel().getColumn(3).setMaxWidth(0);
+        fixed.getColumnModel().getColumn(3).setMinWidth(0);
+        fixed.getColumnModel().getColumn(3).setPreferredWidth(0);
 
         //  Add the fixed table to the scroll pane
         fixed.setPreferredScrollableViewportSize(fixed.getPreferredSize());

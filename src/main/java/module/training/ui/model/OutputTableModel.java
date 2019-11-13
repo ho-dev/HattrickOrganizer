@@ -11,6 +11,7 @@ import core.training.TrainingPreviewPlayers;
 import core.training.WeeklyTrainingType;
 import core.util.Helper;
 import module.training.Skills;
+import module.training.ui.comp.BestPositionCell;
 import module.training.ui.comp.PlayerNameCell;
 import module.training.ui.comp.VerticalIndicator;
 
@@ -54,6 +55,7 @@ public class OutputTableModel extends AbstractTableModel {
                 return PlayerNameCell.class;
             case 1:
             case 2:
+                return BestPositionCell.class;
             case COL_PLAYER_ID:
                 return String.class;
             case 3:
@@ -161,14 +163,13 @@ public class OutputTableModel extends AbstractTableModel {
         switch (columnIndex) {
             case 0:
                 // Spielername
-                return createPlayerNameCell(player);
+                return createPlayerNameCell(player, ftm.getTrainingSpeed());
             case 1:
                 // Spieleralter
                 return player.getAlterWithAgeDaysAsString();
             case 2:
                 // Beste Postion
-                return MatchRoleID.getNameForPosition(player.getIdealPosition()) + " ("
-                        + player.getIdealPosStaerke(true) + ")";
+                return createBestPositionCell(player);
             case 3:
                 return createIcon(player, PlayerSkill.KEEPER);
             case 4:
@@ -251,10 +252,16 @@ public class OutputTableModel extends AbstractTableModel {
         return vi;
     }
 
-    private PlayerNameCell createPlayerNameCell(Player player){
-        PlayerNameCell pnc = new PlayerNameCell(player);
+    private PlayerNameCell createPlayerNameCell(Player player, int speed) {
+        PlayerNameCell pnc = new PlayerNameCell(player, speed);
 
         return pnc;
+    }
+
+    private BestPositionCell createBestPositionCell(Player player){
+        BestPositionCell bpc = new BestPositionCell(player);
+
+        return bpc;
     }
 
 }
