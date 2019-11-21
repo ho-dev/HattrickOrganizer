@@ -264,10 +264,13 @@ public class TrainingPreviewPlayers implements Refreshable {
                 + " OR MatchTyp=" + MatchType.FRIENDLYNORMAL.getId()
                 + " OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId()
                 + " OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId()
-                + " OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId() + " )"
+                + " OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId()
+                + " OR MatchTyp=" + MatchType.EMERALDCUP.getId()
+                + " OR MatchTyp=" + MatchType.RUBYCUP.getId()
+                + " OR MatchTyp=" + MatchType.SAPPHIRECUP.getId()
+                + " OR MatchTyp=" + MatchType.CONSOLANTECUP.getId() + " )"
                 + " AND (STATUS=" + MatchKurzInfo.FINISHED + " OR STATUS=" + MatchKurzInfo.UPCOMING + ")"
                 + " ORDER BY MatchDate DESC";
-
         return sdbquery;
     }
 
