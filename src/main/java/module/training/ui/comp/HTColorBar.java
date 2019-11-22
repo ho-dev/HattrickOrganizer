@@ -23,14 +23,14 @@ public final class HTColorBar extends JComponent {
     private float thirdValue;
     private int skillIndex;
 
-    Color GREY = new Color(236, 236, 236);
-    Color GREEN = new Color(89, 150, 93); //Form, Stamina >6
-    Color LIGHT_ORANGE = new Color(241, 196, 10); //Form, Stamina >4 & <=6
-    Color ORANGE = new Color(245, 161, 4); //Form, Stamina >2 & <=4
-    Color RED = new Color(221, 65, 64); //Form, Stamina <=2
+    Color COLOR_BACKGROUND = new Color(236, 236, 236);
+    Color COLOR_SKILL = new Color(89, 150, 93); //Form, Stamina >6
+    Color COLOR_SKILL_MEDIUM = new Color(241, 196, 10); //Form, Stamina >4 & <=6
+    Color COLOR_SKILL_LOW = new Color(245, 161, 4); //Form, Stamina >2 & <=4
+    Color COLOR_SKILL_BAD = new Color(221, 65, 64); //Form, Stamina <=2
 
-    Color LIGHT_GREEN = new Color(101, 170, 105); // Skill Decimal
-    Color ULTRA_LIGHT_GREEN = new Color(120, 195, 125); // Future Training
+    Color COLOR_SKILL_DECIMAL = new Color(153, 255, 157); // Skill Decimal
+    Color COLOR_FUTURE_SKILL = new Color(120, 195, 125); // Future Training
 
     /**
      * ColorBar: initialize a color bar
@@ -39,10 +39,10 @@ public final class HTColorBar extends JComponent {
         this.length = len;
         this.end = (int) (len * value);
         this.thickness = thickness;
-        this.backgroundColor = GREY;
-        this.backgroundFirstColor = GREEN;
-        this.backgroundSecondColor = GREEN;
-        this.backgroundThirdColor = GREEN;
+        this.backgroundColor = COLOR_BACKGROUND;
+        this.backgroundFirstColor = COLOR_SKILL;
+        this.backgroundSecondColor = COLOR_SKILL;
+        this.backgroundThirdColor = COLOR_SKILL;
         this.value = value;
         this.secondValue = 0;
         this.thirdValue = 0;
@@ -53,7 +53,7 @@ public final class HTColorBar extends JComponent {
 
     public void setLevel(float value, double skillValue) {
         this.end = (int) (value * length);
-        this.backgroundFirstColor = GREEN;
+        this.backgroundFirstColor = COLOR_SKILL;
 
         switch (skillIndex) {
             case PlayerSkill.KEEPER:
@@ -67,11 +67,11 @@ public final class HTColorBar extends JComponent {
             case PlayerSkill.STAMINA:
             case PlayerSkill.FORM:
                 if (skillValue > 4 && skillValue <= 6) {
-                    backgroundFirstColor = LIGHT_ORANGE;
+                    backgroundFirstColor = COLOR_SKILL_MEDIUM;
                 } else if (skillValue > 2 && skillValue <= 4) {
-                    backgroundFirstColor = ORANGE;
+                    backgroundFirstColor = COLOR_SKILL_LOW;
                 } else if (skillValue <= 2) {
-                    backgroundFirstColor = RED;
+                    backgroundFirstColor = COLOR_SKILL_BAD;
                 }
                 break;
         }
@@ -80,13 +80,13 @@ public final class HTColorBar extends JComponent {
     }
 
     public void setSecondLevel(float secondValue) {
-        this.backgroundSecondColor = LIGHT_GREEN;
+        this.backgroundSecondColor = COLOR_SKILL_DECIMAL;
         this.secondValue = secondValue;
         paintImmediately(getBounds());
     }
 
     public void setThirdLevel(float thirdValue) {
-        this.backgroundThirdColor = ULTRA_LIGHT_GREEN;
+        this.backgroundThirdColor = COLOR_FUTURE_SKILL;
         this.thirdValue = thirdValue;
         paintImmediately(getBounds());
     }
