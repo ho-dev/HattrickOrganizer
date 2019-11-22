@@ -539,7 +539,7 @@ task createLanguageFileList()  {
     group 'tool'
 
     def lTranslationFiles = []
-    fileTree(dir: "${projectDir}\\src\\main\\resources\\sprache", include: '**/*.properties').visit {
+    fileTree(dir: "${projectDir}\\src\\main\\resources\\sprache", include: '*.properties').visit {
         FileVisitDetails details -> lTranslationFiles << details.file.name
     }
 
