@@ -27,12 +27,11 @@ Portugues
 PortuguesBrasil
 Romanian
 Russian
+Serbian (Cyrillic)
 Slovak
 Slovenian
 Spanish
 Spanish_sudamericano
-Srpski(lat)
-Srpski
 Svenska
 Turkish
 Ukranian
