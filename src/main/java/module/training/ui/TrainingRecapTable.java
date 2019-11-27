@@ -70,7 +70,7 @@ public class TrainingRecapTable extends JScrollPane {
                 return this;
             }
 
-            int speed = Integer.parseInt((String) table.getValueAt(row, 2));
+            int speed = Integer.parseInt((String) table.getValueAt(row, 3));
             Color bg_color;
             // Speed range is 16 to 125
             if (speed > (125 + 50) / 2) {
@@ -127,12 +127,15 @@ public class TrainingRecapTable extends JScrollPane {
         fixed.getColumnModel().getColumn(1).setMaxWidth(60);
         fixed.getColumnModel().getColumn(1).setMinWidth(60);
         fixed.getColumnModel().getColumn(1).setWidth(60);
-        fixed.getColumnModel().getColumn(2).setMaxWidth(0);
-        fixed.getColumnModel().getColumn(2).setMinWidth(0);
-        fixed.getColumnModel().getColumn(2).setPreferredWidth(0);
+        fixed.getColumnModel().getColumn(2).setMaxWidth(200);
+        fixed.getColumnModel().getColumn(2).setMinWidth(200);
+        fixed.getColumnModel().getColumn(2).setPreferredWidth(200);
         fixed.getColumnModel().getColumn(3).setMaxWidth(0);
         fixed.getColumnModel().getColumn(3).setMinWidth(0);
         fixed.getColumnModel().getColumn(3).setPreferredWidth(0);
+        fixed.getColumnModel().getColumn(4).setMaxWidth(0);
+        fixed.getColumnModel().getColumn(4).setMinWidth(0);
+        fixed.getColumnModel().getColumn(4).setPreferredWidth(0);
 
         //  Add the fixed table to the scroll pane
         fixed.setPreferredScrollableViewportSize(fixed.getPreferredSize());

@@ -3,11 +3,8 @@ package module.training.ui.model;
 
 import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
-import core.model.player.ISkillup;
-import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
-import core.training.TrainingPreviewPlayers;
 import core.training.WeeklyTrainingType;
 import core.util.Helper;
 import module.training.Skills;

@@ -7,9 +7,9 @@ import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
+import core.model.player.MatchRoleID;
 import core.training.FutureTrainingManager;
 import module.training.Skills;
-import module.training.ui.comp.ColorBar;
 import module.training.ui.comp.HTColorBar;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.ModelChangeListener;
@@ -76,13 +76,15 @@ public class PlayerDetailPanel extends LazyImagePanel {
             playerLabel.setText(HOVerwaltung.instance().getLanguageString("PlayerSelect"));
             for (int i = 0; i < skillNumber; i++) {
                 skillLabel[i].setText("");
-                levelBar[i].setLevel(0f, 0);
+                levelBar[i].setSkillLevel(0f, 0);
             }
             return;
         }
 
         // sets player number
-        playerLabel.setText(this.model.getActivePlayer().getName());
+        String value = MatchRoleID.getNameForPosition(this.model.getActivePlayer().getIdealPosition()) + " ("
+                + this.model.getActivePlayer().getIdealPosStaerke(true) + ")";
+        playerLabel.setText("<html><b>" + this.model.getActivePlayer().getName() + "</b> - " + value + "</html>");
 
         // instantiate a future train manager to calculate the previsions */
         FutureTrainingManager ftm = this.model.getFutureTrainingManager();
@@ -98,9 +100,9 @@ public class PlayerDetailPanel extends LazyImagePanel {
             float skillValueInt = (int) skillValue;
             float skillValueDecimal = skillValue - skillValueInt;
 
-            levelBar[i].setLevel((float) skillValueInt / getSkillMaxValue(i), skillValueInt);
-            levelBar[i].setSecondLevel((float) skillValueDecimal / getSkillMaxValue(i));
-            levelBar[i].setThirdLevel((float) (finalValue - skillValue) / getSkillMaxValue(i));
+            levelBar[i].setSkillLevel((float) skillValueInt / getSkillMaxValue(i), skillValueInt);
+            levelBar[i].setSkillDecimalLevel((float) skillValueDecimal / getSkillMaxValue(i));
+            levelBar[i].setFutureSkillLevel((float) (finalValue - skillValue) / getSkillMaxValue(i));
         }
     }
 
@@ -163,7 +165,7 @@ public class PlayerDetailPanel extends LazyImagePanel {
 
         GridBagConstraints maingbc = new GridBagConstraints();
         maingbc.anchor = GridBagConstraints.NORTH;
-        maingbc.insets = new Insets(10, 10, 5, 10);
+        maingbc.insets = new Insets(10, 10, 15, 10);
         playerLabel = new JLabel("", SwingConstants.CENTER);
         add(playerLabel, maingbc);
 
