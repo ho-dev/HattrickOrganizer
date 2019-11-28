@@ -1,6 +1,8 @@
 package module.pluginFeedback;
 
 import com.google.gson.Gson;
+import core.db.DBManager;
+import core.file.hrf.HRF;
 import core.model.HOVerwaltung;
 import core.model.Ratings;
 import core.model.player.IMatchRoleID;
@@ -39,13 +41,25 @@ public class FeedbackPanel extends JFrame {
     RatingComparisonPanel HOPredictionRating, HTPredictionRating, DeltaPredictionRating;
 
     public FeedbackPanel() {
-        HORatings = HOVerwaltung.instance().getModel().getLineup().getRatings();
-        HOLineup = HOVerwaltung.instance().getModel().getLineup();
-        HTRatings = new MatchRating();
-        bFetchLineupSuccess = fetchRequiredLineup();
+        int lastHrfId = DBManager.instance().getLatestHrfId();
+        long dateHrf = DBManager.instance().getBasics(lastHrfId).getDatum().getTime();
+        long dateNow = new Date().getTime();
+        long updateTime = 1000 * 60 * 60; // Time (millisec), time difference for consider data too old, 1 hour
+        if (dateHrf + updateTime <= dateNow) {
 
-        initComponents();
-        refresh();
+            String message = HOVerwaltung.instance().getLanguageString("feedbackplugin.dataTooOldWarning"); //java.text.DateFormat.getDateTimeInstance().format(dateHrf));
+            message = String.format(message, java.text.DateFormat.getDateTimeInstance().format(dateHrf));
+
+            JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
+        } else {
+            HORatings = HOVerwaltung.instance().getModel().getLineup().getRatings();
+            HOLineup = HOVerwaltung.instance().getModel().getLineup();
+            HTRatings = new MatchRating();
+            bFetchLineupSuccess = fetchRequiredLineup();
+
+            initComponents();
+            refresh();
+        }
     }
 
     public boolean parseHTRating(String input) {
@@ -169,9 +183,10 @@ public class FeedbackPanel extends JFrame {
 
 
     private static String getTerms(HashMap<String, String> map, String term) {
-        ResourceBundle tempBundle = ResourceBundle.getBundle("sprache.English", new UTF8Control());
 
+        ResourceBundle tempBundle = ResourceBundle.getBundle("sprache.English", new UTF8Control());
         String english_term = tempBundle.getString(term).toLowerCase();
+
         String local_term = HOVerwaltung.instance().getLanguageString(term).toLowerCase();
         for (String _term : Arrays.asList(local_term, english_term)) {
             if (map.containsKey(_term)) {
@@ -191,8 +206,19 @@ public class FeedbackPanel extends JFrame {
             }
         }
 
-        return "";
+        // language is not English and translation does not exist, we will try to parse using a proxy
+        if (term == "ls.team.teamattitude") {
+            String local_proxy_term = HOVerwaltung.instance().getLanguageString("ls.team.teamattitude").toLowerCase().substring(0, 5);
+            String short_key;
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                short_key = entry.getKey().substring(0, 5);
+                if (short_key.equals(local_proxy_term)) {
+                    return entry.getValue();
+                }
+            }
+        }
 
+        return "";
     }
 
 
@@ -213,6 +239,9 @@ public class FeedbackPanel extends JFrame {
         if ((HOLineup.getTacticType() != HTRatings.getTacticType()) ||
                 (HOLineup.getTacticType() != MatchRating.TacticTypeStringToInt(requirementsTacticType))) return false;
 
+        // return false if style of play not properly set
+        if ((HOLineup.getStyleOfPlay() * 10) != HTRatings.getStyle_of_play()) return false;
+
         // return false if HOLineup not fully included in required Lineup
         for (IMatchRoleID obj : HOLineup.getPositionen()) {
             positionHO = ((MatchRoleID) obj).getId();
@@ -230,8 +259,10 @@ public class FeedbackPanel extends JFrame {
 
         // return false if required Lineup not fully included in HO Lineup
         for (Map.Entry<Integer, Byte> entry : requirements.lineup.entrySet()) {
-            HOLineup.getPositionById(entry.getKey()).getTaktik();
-            if ((HOLineup.getPositionById(entry.getKey()).getTaktik() != entry.getValue())) return false;
+            MatchRoleID HOposition = HOLineup.getPositionById(entry.getKey());
+            orderHO = HOposition.getTaktik();
+            isAligned = (HOposition.getSpielerId() != 0) && IMatchRoleID.aFieldMatchRoleID.contains(HOposition.getId());
+            if ((!isAligned) || (orderHO!=entry.getValue())) {return false;}
         }
 
         return true;
@@ -243,7 +274,7 @@ public class FeedbackPanel extends JFrame {
 
         // TODO: implementer warning based on comparison HO vs HT ???
 
-        PluginFeedback pluginFeedback = new PluginFeedback();
+        PluginFeedback pluginFeedback = new PluginFeedback(requirements.server_url);
         String message = "[" + pluginFeedback.getHoToken() + "] ";
         try {
             String result = pluginFeedback.sendFeedbackToServer(HOLineup, HTRatings, requirements.lineupName);
@@ -335,7 +366,7 @@ public class FeedbackPanel extends JFrame {
 
 
     private void formatSendButton() {
-        if (areLineupsValid) {
+        if (areLineupsValid && requirements.server_status.equals("up")) {
             jbSend.setEnabled(true);
             jbSend.setToolTipText(HOVerwaltung.instance().getLanguageString("feedbackplugin.jbSendActivated"));
         } else {
@@ -367,6 +398,12 @@ public class FeedbackPanel extends JFrame {
                 String message = "<html>" +
                         HOVerwaltung.instance().getLanguageString("feedbackplugin.jbSendDeactivated") + "</br>" +
                         HOVerwaltung.instance().getLanguageString("feedbackplugin.notMatchRequirements") +
+                        "</html>";
+                JOptionPane.showMessageDialog(null, message, "", JOptionPane.INFORMATION_MESSAGE);
+            }
+            if (!requirements.server_status.equals("up")) {
+                String message = "<html>" +
+                        HOVerwaltung.instance().getLanguageString("feedbackplugin.serverOffline") +
                         "</html>";
                 JOptionPane.showMessageDialog(null, message, "", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -663,6 +700,8 @@ public class FeedbackPanel extends JFrame {
     }
 
     private class SimpleLineup {
+        String server_url;
+        String server_status;
         String lineupName;
         String attitude;
         String tactic;

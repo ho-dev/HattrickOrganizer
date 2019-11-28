@@ -31,13 +31,13 @@ public final class FaktorenTable extends AbstractTable {
 		columns[8]= new ColumnDescriptor("NormalisationFactor",Types.REAL,false);
 	}
 
-	protected void setFaktorenFromDB(FactorObject fo) {
+	protected void pushFactorsIntoDB(FactorObject fo) {
 		if (fo != null) {
 			String statement = null;
 			final String[] awhereS = { "PositionID" };
 			final String[] awhereV = { "" + fo.getPosition()};
 
-			//erst Vorhandene Aufstellung löschen
+			//delete  the existing entry
 			delete( awhereS, awhereV );
 
 			//insert vorbereiten

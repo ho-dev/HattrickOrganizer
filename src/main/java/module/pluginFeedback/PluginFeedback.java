@@ -25,7 +25,7 @@ public class PluginFeedback {
     private String postUrl;
     private String authToken;
 
-    public PluginFeedback() {
+    public PluginFeedback(String url) {
         // HO Token, useful to error analysis between HO and server
         hoToken = "ho_token-" + PluginFeedback.randomAlphaNumeric(10);
         // userAgent real example: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36"
@@ -36,9 +36,12 @@ public class PluginFeedback {
 
         authToken = "foqwij41094-d423r87oh43fuo";
 
+        if (url==null || url.equals(""))
+            url = "https://hofeedback.000webhostapp.com/ws-ho-feedbacks";
+
         // HO Server Remote server - prod
         //getUrl = "https://hofeedback.000webhostapp.com/ws-ho-feedbacks";
-        postUrl = "https://hofeedback.000webhostapp.com/ws-ho-feedbacks";
+        postUrl = url;
 
         // local server - to be used for testing purposes
         //getUrl = "http://hoserver.loc:80/ws-ho-feedbacks";

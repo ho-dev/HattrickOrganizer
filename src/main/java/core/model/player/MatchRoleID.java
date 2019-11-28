@@ -402,6 +402,9 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		case FORWARD_DEF:
 			return HOVerwaltung.instance().getLanguageString("ls.player.position.forwarddefensive");
 
+		case FORWARD_DEF_TECH:
+			return HOVerwaltung.instance().getLanguageString("ls.player.position.forwarddefensivetechnical");
+
 		case FORWARD_TOWING:
 			return HOVerwaltung.instance().getLanguageString("ls.player.position.forwardtowardswing");
 

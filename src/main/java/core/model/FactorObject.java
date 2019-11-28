@@ -57,14 +57,15 @@ public final class FactorObject {
     public FactorObject(java.sql.ResultSet rs) {
         try {
             if (rs != null) {
-                fScoring = rs.getFloat("Torschuss");
-                fGoalkeeping = rs.getFloat("Torwart");
-                fSetPieces = rs.getFloat("Standards");
-                fPlaymaking = rs.getFloat("Spielaufbau");
-                fPassing = rs.getFloat("Passpiel");
-                fDefending = rs.getFloat("Verteidigung");
-                fWing = rs.getFloat("Fluegel");
-                m_bPosition = rs.getByte("HOPosition");
+                fScoring = rs.getFloat("SCfactor");
+                fGoalkeeping = rs.getFloat("GKfactor");
+                fSetPieces = rs.getFloat("SPfactor");
+                fPlaymaking = rs.getFloat("PMfactor");
+                fPassing = rs.getFloat("PSfactor");
+                fDefending = rs.getFloat("DEfactor");
+                fWing = rs.getFloat("WIfactor");
+                m_bPosition = rs.getByte("PositionID");
+                fNormalization = rs.getFloat("NormalisationFactor");
             }
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),"Konstruktor Faktor Obj: " + e.toString());

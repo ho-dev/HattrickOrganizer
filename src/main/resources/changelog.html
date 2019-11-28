@@ -2,18 +2,73 @@
 <h1>Changelist HO! 2.0</h1>
 <h2>Added</h2>
 <ul>
-  <li>Increase list of supported game (default settings and icons) (e.g. Tournment matches) #21</li>
+  <li>
+    <p>Menu</p>
+    <ul>
+      <li>checks software update and changelog under help #82 (Windows / Linux you can upgrade to the next version of HO using the update function)</li>
+      <li>check the release channel you want use (DEV/BETA/Stable)</li>
+      <li><strong>according to the channel version used, you will see the new logo and banner #84</strong></li>
+    </ul>
+  </li>
+  <li>
+    <p>Lineup</p>
+    <ul>
+      <li><strong>Add new lineup substitutes (with wingback and extra) #120 #105</strong></li>
+      <li><strong>Blue border on your trained player #44</strong></li>
+      <li><strong>Green mark near player name for minutes based training according to the one chosen under training tab #44</strong></li>
+      <li>Fix for translation in the menu from style of play #119</li>
+      <li>Display only players lastname to improve lisibility #126</li>
+      <li>Better use of space to improve visibility #133</li>
+      <li>Remove broken/useless buttons #132</li>
+      <li>Support for download of non official Lineups (fixed in 1437)</li>
+      <li>Grey background for player on the field or on the bench #146</li>
+      <li>Hatstats and loddastat added to ratings table</li>
+    </ul>
+  </li>
+  <li>
+    <p>Rating</p>
+    <ul>
+      <li><strong>Timeline allowing to see rating evolution over time</strong></li>
+      <li><strong>re-introduce <a href="https://github.com/akasolace/HO/wiki/FeedBack">User Feedback</a> in order to allow among other things prediction rating improvement #38 #131</strong></li>
+      <li><strong>Formulas will not use anymore the stars but absolutes and relatives players evaluation’s value #212</strong></li>
+      <li>In squad and Lineup, are calculated both the absolute and the relative contribution of a player to the ratings</li>
+      <li>The absolute is more or less what would be the sum of his contribution to the 7 sectors</li>
+      <li>The relative contribution helps to determine the best position for a given player. It is the absolute contribution corrected by a factor. This allows to account for that some position contribute more to the total ratings than others (e.g. a player being divine in all his carac will contribute more to ratings if positioned as MidField than if positioned as WB)</li>
+      <li>The coeffs are calculated using the prediction parameters of HO. They are approximate but hopefully they would be improved if we got sufficient contribution from the newly introduce FeedBack plugin.</li>
+      <li><strong>Take weather event in consideration #111</strong></li>
+      <li><strong>Take substitution in consideration</strong></li>
+      <li>Improved formula #110</li>
+      <li>Improve prediction rating formula for t=0 #39</li>
+      <li>Improve prediction stamina effect #40</li>
+      <li><strong>Offer rating comparison HT vs HO for t=0 from upload/download lineup tool</strong></li>
+      <li>Rating Charts with graph</li>
+    </ul>
+  </li>
+  <li>
+  <p>NTHRF: Module is removed, now you can add your NT team in your own HO - see <a href="https://github.com/akasolace/HO/wiki/NTHRF-since-HO-2.0">wiki</a></p></li>
+  <li>
+  <p>Misc</p></li>
+  <li><strong>Support for all kind of matches #21</strong></li>
+  <li><strong>training calculation is now minute based #27</strong></li>
+  <li>Improvement to export CSV tools #42</li>
+  <li>IFA: New countries added #17 #262</li>
+  <li>Matches: possibility to download missing matches #237</li>
+  <li>Statistics Arena: added information about incoming Cash #49 #109</li>
+  <li>Squad: change age from year.day to year(day) #113</li>
 </ul>
 <h2>Fixed</h2>
 <ul>
-  <li>startup issue for certain Linux configuration (#102)</li>
+  <li><strong>startup issue for certain Linux configuration (#102)</strong></li>
+  <li><strong>Standard shortcuts for copy/cut/paste in MacOSX #177</strong></li>
+  <li><strong>training: fix for red card’s player, they had full training #127</strong></li>
+  <li>fix on money symbols #93</li>
   <li>sorting issue after change filter in Arena section</li>
   <li>bug due to match report size larger than db threshold</li>
   <li>invalid select statement and duplicated IDs in matches tab</li>
-</ul>
-<h2>Changed</h2>
-<ul>
-  <li>...</li>
+  <li>review HO build (Sanitize HO jar and fixes deb and rpm packages) #136 #139</li>
+  <li>Fix for properly import training from previous version #100</li>
+  <li>Error message instead exception when receive bad xml #140</li>
+  <li>Some database fixes</li>
 </ul>
 <h1>Changelist HO! 1.436</h1>
 <h2>Fixed</h2>
