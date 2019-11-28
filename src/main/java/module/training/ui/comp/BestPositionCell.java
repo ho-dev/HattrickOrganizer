@@ -7,11 +7,13 @@ public class BestPositionCell implements Comparable<BestPositionCell> {
 
     private String value;
     private int pos;
+    private float strength;
 
 
     public BestPositionCell(Player player) {
+        strength = player.getIdealPosStaerke(true);
         value = MatchRoleID.getNameForPosition(player.getIdealPosition()) + " ("
-                + player.getIdealPosStaerke(true) + ")";
+                + strength + ")";
         pos = MatchRoleID.getSortId(player.getIdealPosition(), false);
     }
 
@@ -23,6 +25,10 @@ public class BestPositionCell implements Comparable<BestPositionCell> {
         this.pos = pos;
     }
 
+    public float getSortLevel() {
+        return pos * 100 - strength;
+    }
+
     @Override
     public String toString() {
         return value;
@@ -31,11 +37,11 @@ public class BestPositionCell implements Comparable<BestPositionCell> {
     @Override
     public int compareTo(BestPositionCell other) {
 
-        if (this.getPos() > other.getPos()) {
+        if (this.getSortLevel() > other.getSortLevel()) {
             return -1;
         }
 
-        if (this.getPos() < other.getPos()) {
+        if (this.getSortLevel() < other.getSortLevel()) {
             return 1;
         }
 

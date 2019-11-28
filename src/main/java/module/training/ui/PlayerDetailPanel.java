@@ -83,7 +83,7 @@ public class PlayerDetailPanel extends LazyImagePanel {
 
         // sets player number
         String value = MatchRoleID.getNameForPosition(this.model.getActivePlayer().getIdealPosition()) + " ("
-                + this.model.getActivePlayer().getIdealPosStaerke(true) + ")";
+                + this.model.getActivePlayer().getIdealPosStaerke(true, false, 2) + ")";
         playerLabel.setText("<html><b>" + this.model.getActivePlayer().getName() + "</b> - " + value + "</html>");
 
         // instantiate a future train manager to calculate the previsions */
