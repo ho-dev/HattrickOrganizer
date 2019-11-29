@@ -3,6 +3,9 @@ package module.training.ui;
 
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
+import core.db.DBManager;
+import core.gui.comp.entry.ColorLabelEntry;
+import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -15,25 +18,23 @@ import module.training.ui.model.ModelChange;
 import module.training.ui.model.ModelChangeListener;
 import module.training.ui.model.TrainingModel;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 /**
  * Panel where the future training predictions are shown.
  *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
-public class PlayerDetailPanel extends LazyImagePanel {
+public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
 
     private static final long serialVersionUID = -6606934473344186243L;
     private static final int skillNumber = 9;
     private JLabel playerLabel;
+    private JTextArea m_jtaNotes;
     private HTColorBar[] levelBar;
     private JLabel[] skillLabel;
     private final TrainingModel model;
@@ -74,6 +75,9 @@ public class PlayerDetailPanel extends LazyImagePanel {
     private void loadFromModel() {
         if (this.model.getActivePlayer() == null) {
             playerLabel.setText(HOVerwaltung.instance().getLanguageString("PlayerSelect"));
+            m_jtaNotes.setEditable(false);
+            m_jtaNotes.setText("");
+
             for (int i = 0; i < skillNumber; i++) {
                 skillLabel[i].setText("");
                 levelBar[i].setSkillLevel(0f, 0);
@@ -85,6 +89,9 @@ public class PlayerDetailPanel extends LazyImagePanel {
         String value = MatchRoleID.getNameForPosition(this.model.getActivePlayer().getIdealPosition()) + " ("
                 + this.model.getActivePlayer().getIdealPosStaerke(true, false, 2) + ")";
         playerLabel.setText("<html><b>" + this.model.getActivePlayer().getName() + "</b> - " + value + "</html>");
+
+        m_jtaNotes.setEditable(true);
+        m_jtaNotes.setText(DBManager.instance().getSpielerNotiz(this.model.getActivePlayer().getSpielerID()));
 
         // instantiate a future train manager to calculate the previsions */
         FutureTrainingManager ftm = this.model.getFutureTrainingManager();
@@ -165,7 +172,7 @@ public class PlayerDetailPanel extends LazyImagePanel {
 
         GridBagConstraints maingbc = new GridBagConstraints();
         maingbc.anchor = GridBagConstraints.NORTH;
-        maingbc.insets = new Insets(10, 10, 15, 10);
+        maingbc.insets = new Insets(8, 10, 8, 10);
         playerLabel = new JLabel("", SwingConstants.CENTER);
         add(playerLabel, maingbc);
 
@@ -207,11 +214,6 @@ public class PlayerDetailPanel extends LazyImagePanel {
             gbc.weightx = 1.0;
             bottom.add(levelBar[i], gbc);
         }
-        JPanel dummyPanelToConsumeAllExtraSpace = new JPanel();
-        dummyPanelToConsumeAllExtraSpace.setOpaque(false);
-        gbc.gridy++;
-        gbc.weighty = 1.0;
-        bottom.add(dummyPanelToConsumeAllExtraSpace, gbc);
 
         maingbc.gridy = 1;
         maingbc.insets = new Insets(0, 0, 0, 0);
@@ -219,5 +221,39 @@ public class PlayerDetailPanel extends LazyImagePanel {
         maingbc.weightx = 1.0;
         maingbc.weighty = 1.0;
         add(bottom, maingbc);
+
+        m_jtaNotes = new JTextArea(5,8);
+        m_jtaNotes.setEditable(false);
+        m_jtaNotes.setBackground(ColorLabelEntry.BG_STANDARD);
+        m_jtaNotes.addFocusListener(this);
+
+        JPanel panel2 = new ImagePanel();
+        panel2.setLayout(new BorderLayout());
+        panel2.setBorder(javax.swing.BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString("Notizen")));
+        panel2.add(new JScrollPane(m_jtaNotes), BorderLayout.CENTER);
+
+        maingbc.gridx = 0;
+        maingbc.gridy++;
+        maingbc.insets = new Insets(2, 0, 0, 0);
+        maingbc.fill = GridBagConstraints.BOTH;
+        add(panel2, maingbc);
+
+        JPanel dummyPanelToConsumeAllExtraSpace = new JPanel();
+        dummyPanelToConsumeAllExtraSpace.setOpaque(false);
+        maingbc.gridy++;
+        gbc.weighty = 1.0;
+        add(dummyPanelToConsumeAllExtraSpace, maingbc);
+    }
+
+    @Override
+    public void focusGained(FocusEvent e) {
+
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        if (this.model.getActivePlayer() != null) {
+            DBManager.instance().saveSpielerNotiz(this.model.getActivePlayer().getSpielerID(), m_jtaNotes.getText());
+        }
     }
 }
