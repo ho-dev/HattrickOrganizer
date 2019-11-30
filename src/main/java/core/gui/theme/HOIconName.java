@@ -141,7 +141,9 @@ public interface HOIconName {
 	public static final String TRAINBAR_FT_E = "trainpre_ft_e";
 	public static final String TRAINBAR_PT_E = "trainpre_pt_e";
 	public static final String TRAINBAR_EMPTY = "trainpre_empty";
-
+	public static final String STAMINABAR_FT = "stamina_ft";
+	public static final String STAMINABAR_FFT = "stamina_fft";
+	public static final String STAMINABAR_FT_E = "stamina_ft_e";
 
 	public static final String GREEN_WHITE_CLOCK = "green-white-clock";
 	public static final String WHITE_GREEN_CLOCK = "white-green-clock";

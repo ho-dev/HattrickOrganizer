@@ -135,6 +135,9 @@ public class TrainingPreviewPlayers implements Refreshable {
         int partialTrain = 0;
         boolean fullFuturTrain = false;
         boolean partialFuturTrain = false;
+        int iStamina = 0;
+        boolean bEstimedStamina = false;
+        int[] iEmpty = {};
 
         getMatchesForTraining();
 
@@ -145,6 +148,10 @@ public class TrainingPreviewPlayers implements Refreshable {
             }
             if (weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions() != null) {
                 partialTrain += lMatchStats.get(i).getMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions());
+            }
+            // If player receive training, don't display stamina icon
+            if (fullTrain == 0 && partialTrain == 0) {
+                iStamina = lMatchStats.get(i).getMinutesPlayedInPositions(playerID, iEmpty);
             }
         }
 
@@ -168,10 +175,16 @@ public class TrainingPreviewPlayers implements Refreshable {
                         }
                     }
                 }
+                // If player receive training, don't display stamina icon
+                if (fullTrain == 0 && partialTrain == 0 && !fullFuturTrain && !partialFuturTrain) {
+                    bEstimedStamina = true;
+                }
             }
         }
 
-        players.put(player,new TrainingPreviewPlayer(fullTrain, partialTrain, fullFuturTrain, partialFuturTrain));
+        players.put(player,new TrainingPreviewPlayer(fullTrain, partialTrain, 
+                fullFuturTrain, partialFuturTrain,
+                iStamina, bEstimedStamina));
     }
 
     /**

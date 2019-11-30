@@ -18,10 +18,13 @@ import javax.swing.*;
 public class TrainingPreviewPlayer {
 
 	private final int FULL_TRAIN_MIN = 90;
+	private final int FULL_STAMINA_MIN = FULL_TRAIN_MIN;
 	private int iFullTrain ;
 	private int iPartialTrain;
 	private boolean bFullEstimedTrain;
 	private boolean bPartialEstimedTrain;
+	private int iStamina;
+	private boolean bEstimedStamina;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -34,12 +37,15 @@ public class TrainingPreviewPlayer {
 	 * @param bPartialEstimedTrain:	will be train in a in 50% train position for the next match
 	 */
     public TrainingPreviewPlayer(int iFullTrain, int iPartialTrain,
-								 boolean bFullEstimedTrain, boolean bPartialEstimedTrain)
+								 boolean bFullEstimedTrain, boolean bPartialEstimedTrain,
+								 int iStamina, boolean bEstimedStamina)
 	{
 		this.iFullTrain = iFullTrain;
 		this.iPartialTrain = iPartialTrain;
 		this.bFullEstimedTrain = bFullEstimedTrain;
 		this.bPartialEstimedTrain = bPartialEstimedTrain;
+		this.iStamina = iStamina;
+		this.bEstimedStamina = bEstimedStamina;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -83,6 +89,15 @@ public class TrainingPreviewPlayer {
 		}
     	else if (iPartialTrain > 0) {
 			return ThemeManager.getIcon(HOIconName.TRAINBAR_PT_E);
+		}
+		else if (iStamina >= FULL_STAMINA_MIN) {
+			return ThemeManager.getIcon(HOIconName.STAMINABAR_FT);
+		}
+		else if (bEstimedStamina) {
+			return ThemeManager.getIcon(HOIconName.STAMINABAR_FFT);
+		}
+		else if (iStamina > 0) {
+			return ThemeManager.getIcon(HOIconName.STAMINABAR_FT_E);
 		}
 		return ThemeManager.getIcon(HOIconName.TRAINBAR_EMPTY);
 	}
@@ -146,6 +161,18 @@ public class TrainingPreviewPlayer {
 		else if (iPartialTrain > 0) {
 			return HOVerwaltung.instance().getLanguageString("trainpre.partialtrain") + ": "
 					+ iPartialTrain + "'";
+		}
+		else if (iStamina >= FULL_STAMINA_MIN) {
+			return HOVerwaltung.instance().getLanguageString("stamina.train") + ": "
+					+ FULL_STAMINA_MIN + "'";
+		}
+		else if (bEstimedStamina) {
+			return HOVerwaltung.instance().getLanguageString("stamina.train.estimated") + ": "
+					+ FULL_STAMINA_MIN+ "'";
+		}
+		else if (iStamina > 0) {
+			return HOVerwaltung.instance().getLanguageString("stamina.train") + ": "
+					+ iStamina + "'";
 		}
 		return null;
 	}
