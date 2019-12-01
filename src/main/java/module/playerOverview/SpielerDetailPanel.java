@@ -6,6 +6,7 @@ import core.constants.player.PlayerAgreeability;
 import core.constants.player.PlayerHonesty;
 import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
+import core.datatype.CBItem;
 import core.db.DBManager;
 //import core.epv.EPVData;
 import core.gui.HOMainFrame;
@@ -48,41 +49,41 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
+import static core.model.player.IMatchRoleID.*;
 
 
 /**
  * Shows player details for the selected player
  */
-public final class SpielerDetailPanel extends ImagePanel implements Refreshable, FocusListener, ItemListener, ActionListener
-{
+public final class SpielerDetailPanel extends ImagePanel implements Refreshable, FocusListener, ItemListener, ActionListener {
 
-	private static final long serialVersionUID = 3466993172643378958L;
+    private static final long serialVersionUID = 3466993172643378958L;
 
-	//~ Static fields/initializers -----------------------------------------------------------------
+    //~ Static fields/initializers -----------------------------------------------------------------
 
     public static final Dimension COMPONENTENSIZE = new Dimension(Helper.calcCellWidth(150),
-                                                             Helper.calcCellWidth(18));
+            Helper.calcCellWidth(18));
     public static final Dimension COMPONENTENSIZE2 = new Dimension(Helper.calcCellWidth(65),
-                                                              Helper.calcCellWidth(18));
+            Helper.calcCellWidth(18));
     private static final Dimension COMPONENTENSIZE3 = new Dimension(Helper.calcCellWidth(100),
-                                                              Helper.calcCellWidth(18));
+            Helper.calcCellWidth(18));
     private static final Dimension COMPONENTENSIZE4 = new Dimension(Helper.calcCellWidth(50),
-                                                              Helper.calcCellWidth(18));
+            Helper.calcCellWidth(18));
     private static final Dimension COMPONENTENSIZECB = new Dimension(Helper.calcCellWidth(150), 16);
 
     //~ Instance fields ----------------------------------------------------------------------------
     // Top Row, column 1
     private final ColorLabelEntry m_jpName = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpAge = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpNationality = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpPositioned = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     private RatingTableEntry m_jpRating = new RatingTableEntry();
     private final ColorLabelEntry m_jpBestPosition = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     // Top Row, column 2
     private final JComboBox m_jcbSquad = new JComboBox(HOIconName.TEAMSMILIES);
     private final JComboBox m_jcbInformation = new JComboBox(HOIconName.MANUELLSMILIES);
@@ -91,70 +92,70 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT), new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT));
     private final DoppelLabelEntry m_jpTSI = new DoppelLabelEntry(new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT), new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT));
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT), new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
+            ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT));
     private final JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
     // Top Row, column 3
     private final ColorLabelEntry m_jpLeadership = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpSpeciality = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpAggressivity = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpAgreeability = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpHonesty = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpInTeamSince = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     // Second Row, Column 1
     private final ColorLabelEntry m_jpExperience = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.LEFT);
+            ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpExperienceChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.CENTER);
+            ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpStamina = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
+            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpStaminaChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
+            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpPlaymaking = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpPlaymakingChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-             ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
-	private final ColorLabelEntry m_jpWinger = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
+            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
+    private final ColorLabelEntry m_jpWinger = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
+            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpWingerChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
+            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpScoring = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpScoringChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-             ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
+            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpLoyalty = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-			ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
+            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpLoyaltyChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-			ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
+            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
     // Second Row, Column 2
     private final ColorLabelEntry m_jpForm = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.LEFT);
+            ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpFormChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.CENTER);
+            ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpKeeper = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpKeeperChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-             ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
+            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpPassing = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
+            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpPassingChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
+            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpDefending = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpDefendingChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
+            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpSetPieces = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpSetPiecesChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-             ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
+            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpMotherClub = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-			ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     // Second Row, Column 3
     private final ColorLabelEntry m_jpGoalsFriendly = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
@@ -165,7 +166,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private final ColorLabelEntry m_jpGoalsTotal = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpHattricks = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpMarketValue = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     // Third Row, Columns 1 & 2
@@ -200,8 +201,8 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private Player m_clPlayer;
     private Player m_clComparisonPlayer;
 
-    private final DoppelLabelEntry[] playerPositionValues= new DoppelLabelEntry[]{
-    		m_jpRatingKeeper,
+    private final DoppelLabelEntry[] playerPositionValues = new DoppelLabelEntry[]{
+            m_jpRatingKeeper,
             m_jpRatingCentralDefender,
             m_jpRatingCentralDefenderTowardsWing,
             m_jpRatingCentralDefenderOffensive,
@@ -223,7 +224,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     };
 
     private final byte[] playerPosition = new byte[]{
-    		IMatchRoleID.KEEPER,
+            IMatchRoleID.KEEPER,
             IMatchRoleID.CENTRAL_DEFENDER,
             IMatchRoleID.CENTRAL_DEFENDER_TOWING,
             IMatchRoleID.CENTRAL_DEFENDER_OFF,
@@ -246,6 +247,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     };
 
     //~ Constructors -------------------------------------------------------------------------------
+
     /**
      * Creates a new SpielerDetailPanel object.
      */
@@ -262,7 +264,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     public final void setSpieler(Player player) {
         m_clPlayer = player;
         if (m_clPlayer != null) {
-        	findComparisonPlayer();
+            findComparisonPlayer();
             setLabels();
         } else {
             resetLabels();
@@ -273,20 +275,20 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     }
 
     @Override
-	public final void actionPerformed(java.awt.event.ActionEvent actionevent) {
-    	if (actionevent.getSource().equals(m_jbStatistics)) {
-    		HOMainFrame.instance().showTab(IModule.STATISTICS);
-    		((StatistikMainPanel)HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.STATISTICS)).setShowSpieler(m_clPlayer.getSpielerID());
+    public final void actionPerformed(java.awt.event.ActionEvent actionevent) {
+        if (actionevent.getSource().equals(m_jbStatistics)) {
+            HOMainFrame.instance().showTab(IModule.STATISTICS);
+            ((StatistikMainPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.STATISTICS)).setShowSpieler(m_clPlayer.getSpielerID());
         } else if (actionevent.getSource().equals(m_jbAnalysisTop)) {
-        	HOMainFrame.instance().showTab(IModule.PLAYERANALYSIS);
+            HOMainFrame.instance().showTab(IModule.PLAYERANALYSIS);
             HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Top(m_clPlayer.getSpielerID());
         } else if (actionevent.getSource().equals(m_jbAnalysisBottom)) {
             HOMainFrame.instance().showTab(IModule.PLAYERANALYSIS);
-        	HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Bottom(m_clPlayer.getSpielerID());
+            HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Bottom(m_clPlayer.getSpielerID());
         } else if (actionevent.getSource().equals(m_jbOffsets)) {
             new SpielerOffsetDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
         } else if (actionevent.getSource().equals(m_jbTrainingBlock)) {
-        	new SpielerTrainingBlockDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
+            new SpielerTrainingBlockDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
         }
     }
 
@@ -296,7 +298,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
      * @param event
      */
     @Override
-	public void focusGained(java.awt.event.FocusEvent event) {
+    public void focusGained(java.awt.event.FocusEvent event) {
     }
 
     /**
@@ -305,14 +307,14 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
      * @param event
      */
     @Override
-	public final void focusLost(java.awt.event.FocusEvent event) {
+    public final void focusLost(java.awt.event.FocusEvent event) {
         if (m_clPlayer != null) {
             DBManager.instance().saveSpielerNotiz(m_clPlayer.getSpielerID(), m_jtaNotes.getText());
         }
     }
 
     @Override
-	public final void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
+    public final void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
         if (itemEvent.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
             if (m_clPlayer != null) {
                 if (itemEvent.getSource().equals(m_jcbSquad)) {
@@ -321,7 +323,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
                     m_clPlayer.setManuellerSmilie(m_jcbInformation.getSelectedItem().toString());
                 } else if (itemEvent.getSource().equals(m_jcbUserBestPosition)) {
                     m_clPlayer.setUserPosFlag((byte) ((core.datatype.CBItem) m_jcbUserBestPosition
-                                                       .getSelectedItem()).getId());
+                            .getSelectedItem()).getId());
                 }
                 HOMainFrame.instance().getSpielerUebersichtPanel().update();
             }
@@ -332,7 +334,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
      * set the player to compare and refresh the display
      */
     @Override
-	public final void reInit() {
+    public final void reInit() {
         if (m_clPlayer != null) {
             findComparisonPlayer();
         }
@@ -343,7 +345,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
      * refresh the display
      */
     @Override
-	public final void refresh() {
+    public final void refresh() {
         setSpieler(m_clPlayer);
     }
 
@@ -356,16 +358,16 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jpAge.setText(m_clPlayer.getAgeStringFull());
         m_jpNationality.setIcon(ImageUtilities.getFlagIcon(m_clPlayer.getNationalitaet()));
         if (m_clPlayer.isHomeGrown())
-        	m_jpMotherClub.setIcon( ThemeManager.getIcon(HOIconName.HOMEGROWN));
+            m_jpMotherClub.setIcon(ThemeManager.getIcon(HOIconName.HOMEGROWN));
         else
-        	m_jpMotherClub.clear();
+            m_jpMotherClub.clear();
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
         if (lineup.isPlayerInLineup(m_clPlayer.getSpielerID())
-            && (lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()) != null)) {
+                && (lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()) != null)) {
             m_jpPositioned.setIcon(ImageUtilities.getImage4Position(lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()),
-            		m_clPlayer.getTrikotnummer()));
+                    m_clPlayer.getTrikotnummer()));
             m_jpPositioned.setText(MatchRoleID.getNameForPosition(lineup.getPositionBySpielerId(m_clPlayer.getSpielerID())
-            		.getPosition()));
+                    .getPosition()));
         } else {
             m_jpPositioned.setIcon(ImageUtilities.getImage4Position(null, m_clPlayer.getTrikotnummer()));
             m_jpPositioned.setText("");
@@ -388,9 +390,9 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jcbUserBestPosition.removeItemListener(this);
         Helper.markierenComboBox(m_jcbUserBestPosition, m_clPlayer.getUserPosFlag());
         m_jcbUserBestPosition.addItemListener(this);
-        final int salary = (int)(m_clPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
-		final String salarytext = Helper.getNumberFormat(true, 0).format(salary);
-		final String tsitext = Helper.getNumberFormat(false, 0).format(m_clPlayer.getTSI());
+        final int salary = (int) (m_clPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
+        final String salarytext = Helper.getNumberFormat(true, 0).format(salary);
+        final String tsitext = Helper.getNumberFormat(false, 0).format(m_clPlayer.getTSI());
         if (m_clComparisonPlayer == null) {
             String bonus = "";
             if (m_clPlayer.getBonus() > 0) {
@@ -406,25 +408,25 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             m_jpStamina.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
             m_jpStaminaChange.clear();
             m_jpKeeper.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.KEEPER)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.KEEPER)) + "");
             m_jpKeeperChange.clear();
             m_jpDefending.setText(PlayerAbility.getNameForSkill(m_clPlayer.getDEFskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.DEFENDING)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.DEFENDING)) + "");
             m_jpDefendingChange.clear();
             m_jpPlaymaking.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPMskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING)) + "");
             m_jpPlaymakingChange.clear();
             m_jpPassing.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPSskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.PASSING)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.PASSING)) + "");
             m_jpPassingChange.clear();
             m_jpWinger.setText(PlayerAbility.getNameForSkill(m_clPlayer.getWIskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.WINGER)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.WINGER)) + "");
             m_jpWingerChange.clear();
             m_jpSetPieces.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSPskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES)) + "");
             m_jpSetPiecesChange.clear();
             m_jpScoring.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSCskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.SCORING)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.SCORING)) + "");
             m_jpScoringChange.clear();
             m_jpExperience.setText(PlayerAbility.getNameForSkill(m_clPlayer.getErfahrung()) + "");
             m_jpExperienceChange.clear();
@@ -432,17 +434,17 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             m_jpLoyalty.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLoyalty()) + "");
             m_jpLoyaltyChange.clear();
             m_jpBestPosition.setText(MatchRoleID.getNameForPosition(m_clPlayer.getIdealPosition())
-                                + " ("
-                                + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).format(
-                                		m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true))
-                                + ")");
+                    + " ("
+                    + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).format(
+                    m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true))
+                    + ")");
             for (int i = 0; i < playerPositionValues.length; i++) {
-            	showNormal(playerPositionValues[i],playerPosition[i]);
-			}
+                showNormal(playerPositionValues[i], playerPosition[i]);
+            }
 
         } else {
             String bonus = "";
-            final int gehalt2 = (int)(m_clComparisonPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
+            final int gehalt2 = (int) (m_clComparisonPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
             if (m_clPlayer.getBonus() > 0) {
                 bonus = " (" + m_clPlayer.getBonus() + "% "
                         + HOVerwaltung.instance().getLanguageString("Bonus") + ")";
@@ -453,74 +455,74 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             m_jpTSI.getRechts().setSpecialNumber(m_clPlayer.getTSI() - m_clComparisonPlayer.getTSI(), false);
             m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
             m_jpFormChange.setGraphicalChangeValue(m_clPlayer.getForm()
-            		- m_clComparisonPlayer.getForm(), !m_clComparisonPlayer.isOld(), true);
+                    - m_clComparisonPlayer.getForm(), !m_clComparisonPlayer.isOld(), true);
             m_jpStamina.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
             m_jpStaminaChange.setGraphicalChangeValue(m_clPlayer.getKondition()
-            		- m_clComparisonPlayer.getKondition(), !m_clComparisonPlayer.isOld(), true);
+                    - m_clComparisonPlayer.getKondition(), !m_clComparisonPlayer.isOld(), true);
             m_jpKeeper.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.KEEPER)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.KEEPER)) + "");
             m_jpKeeperChange.setGraphicalChangeValue(m_clPlayer.getGKskill()
-            		- m_clComparisonPlayer.getGKskill(),
-            		m_clPlayer.getSubskill4Pos(PlayerSkill.KEEPER)
-            		- m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.KEEPER),
-            		!m_clComparisonPlayer.isOld(), true);
+                            - m_clComparisonPlayer.getGKskill(),
+                    m_clPlayer.getSubskill4Pos(PlayerSkill.KEEPER)
+                            - m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.KEEPER),
+                    !m_clComparisonPlayer.isOld(), true);
             m_jpDefending.setText(PlayerAbility.getNameForSkill(m_clPlayer.getDEFskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.DEFENDING)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.DEFENDING)) + "");
             m_jpDefendingChange.setGraphicalChangeValue(m_clPlayer.getDEFskill()
-            		- m_clComparisonPlayer.getDEFskill(),
-            		m_clPlayer.getSubskill4Pos(PlayerSkill.DEFENDING)
-                    - m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.DEFENDING),
+                            - m_clComparisonPlayer.getDEFskill(),
+                    m_clPlayer.getSubskill4Pos(PlayerSkill.DEFENDING)
+                            - m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.DEFENDING),
                     !m_clComparisonPlayer.isOld(), true);
             m_jpPlaymaking.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPMskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING)) + "");
             m_jpPlaymakingChange.setGraphicalChangeValue(m_clPlayer.getPMskill()
-            		- m_clComparisonPlayer.getPMskill(),
-            		m_clPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING)
-            		- m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING),
-            		!m_clComparisonPlayer.isOld(), true);
+                            - m_clComparisonPlayer.getPMskill(),
+                    m_clPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING)
+                            - m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING),
+                    !m_clComparisonPlayer.isOld(), true);
             m_jpPassing.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPSskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.PASSING)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.PASSING)) + "");
             m_jpPassingChange.setGraphicalChangeValue(m_clPlayer.getPSskill()
-            		- m_clComparisonPlayer.getPSskill(),
-            		m_clPlayer.getSubskill4Pos(PlayerSkill.PASSING)
-            		- m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.PASSING),
-            		!m_clComparisonPlayer.isOld(), true);
+                            - m_clComparisonPlayer.getPSskill(),
+                    m_clPlayer.getSubskill4Pos(PlayerSkill.PASSING)
+                            - m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.PASSING),
+                    !m_clComparisonPlayer.isOld(), true);
             m_jpWinger.setText(PlayerAbility.getNameForSkill(m_clPlayer.getWIskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.WINGER)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.WINGER)) + "");
             m_jpWingerChange.setGraphicalChangeValue(m_clPlayer.getWIskill()
-            		- m_clComparisonPlayer.getWIskill(),
-            		m_clPlayer.getSubskill4Pos(PlayerSkill.WINGER)
-                    - m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.WINGER),
+                            - m_clComparisonPlayer.getWIskill(),
+                    m_clPlayer.getSubskill4Pos(PlayerSkill.WINGER)
+                            - m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.WINGER),
                     !m_clComparisonPlayer.isOld(), true);
             m_jpSetPieces.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSPskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES)) + "");
             m_jpSetPiecesChange.setGraphicalChangeValue(m_clPlayer.getSPskill()
-            		- m_clComparisonPlayer.getSPskill(),
-            		m_clPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES)
-            		- m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES),
-            		!m_clComparisonPlayer.isOld(), true);
+                            - m_clComparisonPlayer.getSPskill(),
+                    m_clPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES)
+                            - m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES),
+                    !m_clComparisonPlayer.isOld(), true);
             m_jpScoring.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSCskill()
-            		+ m_clPlayer.getSubskill4Pos(PlayerSkill.SCORING)) + "");
+                    + m_clPlayer.getSubskill4Pos(PlayerSkill.SCORING)) + "");
             m_jpScoringChange.setGraphicalChangeValue(m_clPlayer.getSCskill()
-            		- m_clComparisonPlayer.getSCskill(),
-            		m_clPlayer.getSubskill4Pos(PlayerSkill.SCORING)
-            		- m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.SCORING),
-            		!m_clComparisonPlayer.isOld(), true);
+                            - m_clComparisonPlayer.getSCskill(),
+                    m_clPlayer.getSubskill4Pos(PlayerSkill.SCORING)
+                            - m_clComparisonPlayer.getSubskill4Pos(PlayerSkill.SCORING),
+                    !m_clComparisonPlayer.isOld(), true);
             m_jpExperience.setText(PlayerAbility.getNameForSkill(m_clPlayer.getErfahrung()) + "");
             m_jpExperienceChange.setGraphicalChangeValue(m_clPlayer.getErfahrung()
-            		- m_clComparisonPlayer.getErfahrung(), !m_clComparisonPlayer.isOld(), true);
+                    - m_clComparisonPlayer.getErfahrung(), !m_clComparisonPlayer.isOld(), true);
             m_jpLeadership.setText(PlayerAbility.getNameForSkill(m_clPlayer.getFuehrung()) + "");
             m_jpLoyalty.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLoyalty()) + "");
             m_jpLoyaltyChange.setGraphicalChangeValue(m_clPlayer.getLoyalty()
-            		- m_clComparisonPlayer.getLoyalty(),
-            		!m_clComparisonPlayer.isOld(), true);
+                            - m_clComparisonPlayer.getLoyalty(),
+                    !m_clComparisonPlayer.isOld(), true);
             m_jpBestPosition.setText(MatchRoleID.getNameForPosition(m_clPlayer.getIdealPosition())
-                                + " ("
-                                + m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true)
-                                + ")");
+                    + " ("
+                    + m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true)
+                    + ")");
             for (int i = 0; i < playerPositionValues.length; i++) {
-            	showWithCompare(playerPositionValues[i],playerPosition[i]);
-			}
+                showWithCompare(playerPositionValues[i], playerPosition[i]);
+            }
         }
         m_jpGoalsFriendly.setText(m_clPlayer.getToreFreund() + "");
         m_jpGoalsLeague.setText(m_clPlayer.getToreLiga() + "");
@@ -528,7 +530,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jpGoalsTotal.setText(m_clPlayer.getToreGesamt() + "");
         m_jpHattricks.setText(m_clPlayer.getHattrick() + "");
         m_jpSpeciality.setText(PlayerSpeciality.toString(m_clPlayer.getPlayerSpecialty()));
-        m_jpSpeciality.setIcon( ThemeManager.getIcon(HOIconName.SPECIAL[m_clPlayer.getPlayerSpecialty()]));
+        m_jpSpeciality.setIcon(ThemeManager.getIcon(HOIconName.SPECIAL[m_clPlayer.getPlayerSpecialty()]));
         m_jpAggressivity.setText(PlayerAggressiveness.toString(m_clPlayer.getAgressivitaet()));
         m_jpHonesty.setText(PlayerAgreeability.toString(m_clPlayer.getCharakter()));
         m_jpAgreeability.setText(PlayerHonesty.toString(m_clPlayer.getAnsehen()));
@@ -539,8 +541,8 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             temp += java.text.DateFormat.getDateInstance().format(time);
             final long timemillis = System.currentTimeMillis() - time.getTime();
             temp += (" (" + (int) (timemillis / 604800000) + " "
-            + HOVerwaltung.instance().getLanguageString("Wochen")
-            + ")");
+                    + HOVerwaltung.instance().getLanguageString("Wochen")
+                    + ")");
         }
         m_jpInTeamSince.setText(temp);
         m_jtaNotes.setEditable(true);
@@ -556,28 +558,50 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jbTrainingBlock.setEnabled(true);
     }
 
-    private void showNormal(DoppelLabelEntry labelEntry,byte playerPosition){
-    	labelEntry.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
-    			.nbDecimals).format(m_clPlayer.calcPosValue(playerPosition, true)));
-    	labelEntry.getRechts().clear();
+    private void showNormal(DoppelLabelEntry labelEntry, byte playerPosition) {
+        labelEntry.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
+                .nbDecimals).format(m_clPlayer.calcPosValue(playerPosition, true)));
+
+        byte[] alternativePosition = m_clPlayer.getAlternativePositions();
+        for (byte altPos : alternativePosition) {
+            if (altPos == playerPosition) {
+                labelEntry.getLinks().setBold(true);
+                break;
+            } else {
+                labelEntry.getLinks().setBold(false);
+            }
+        }
+
+        labelEntry.getRechts().clear();
     }
 
-    private void showWithCompare(DoppelLabelEntry labelEntry,byte playerPosition){
-    	labelEntry.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
-    			.nbDecimals).format(m_clPlayer.calcPosValue(playerPosition,true)));
-    	labelEntry.getRechts().setSpecialNumber(m_clPlayer.calcPosValue(playerPosition,true)
-    			- m_clComparisonPlayer.calcPosValue(playerPosition,true),false);
+    private void showWithCompare(DoppelLabelEntry labelEntry, byte playerPosition) {
+        labelEntry.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
+                .nbDecimals).format(m_clPlayer.calcPosValue(playerPosition, true)));
+
+        byte[] alternativePosition = m_clPlayer.getAlternativePositions();
+        for (byte altPos : alternativePosition) {
+            if (altPos == playerPosition) {
+                labelEntry.getLinks().setBold(true);
+                break;
+            } else {
+                labelEntry.getLinks().setBold(false);
+            }
+        }
+
+        labelEntry.getRechts().setSpecialNumber(m_clPlayer.calcPosValue(playerPosition, true)
+                - m_clComparisonPlayer.calcPosValue(playerPosition, true), false);
     }
+
     /**
      * return first player who is find in db
      *
-     * @param player template
-     *
+     * @param player
      * @return player
      */
-    private Player getComparisonPlayerFirstHRF(Player vorlage) {
+    private Player getComparisonPlayerFirstHRF(Player player) {
         return core.db.DBManager.instance()
-        	.getSpielerFirstHRF(vorlage.getSpielerID());
+                .getSpielerFirstHRF(player.getSpielerID());
     }
 
     /**
@@ -587,12 +611,12 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         final int id = m_clPlayer.getSpielerID();
         for (int i = 0;
              (SpielerTrainingsVergleichsPanel.getVergleichsPlayer() != null)
-             && (i < SpielerTrainingsVergleichsPanel.getVergleichsPlayer().size()); i++) {
-            Player comparisonPlayer = (Player)SpielerTrainingsVergleichsPanel
-            	.getVergleichsPlayer().get(i);
+                     && (i < SpielerTrainingsVergleichsPanel.getVergleichsPlayer().size()); i++) {
+            Player comparisonPlayer = (Player) SpielerTrainingsVergleichsPanel
+                    .getVergleichsPlayer().get(i);
             if (comparisonPlayer.getSpielerID() == id) {
                 // Found it
-            	m_clComparisonPlayer = comparisonPlayer;
+                m_clComparisonPlayer = comparisonPlayer;
                 return;
             }
         }
@@ -624,7 +648,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
         // Empty row
         label = new JLabel("  ");
-        setPosition(constraints,3,0);
+        setPosition(constraints, 3, 0);
         constraints.weightx = 0.0;
         constraints.gridheight = 11;
         layout.setConstraints(label, constraints);
@@ -633,51 +657,51 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
         // ***** Block 1
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.name"));
-        initNormalLabel(0,0,constraints,layout,panel,label);
-        initNormalField(1,0,constraints,layout,panel,m_jpName.getComponent(false));
+        initNormalLabel(0, 0, constraints, layout, panel, label);
+        initNormalField(1, 0, constraints, layout, panel, m_jpName.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.age"));
-        initNormalLabel(0,1,constraints,layout,panel,label);
-        initNormalField(1,1,constraints,layout,panel,m_jpAge.getComponent(false));
+        initNormalLabel(0, 1, constraints, layout, panel, label);
+        initNormalField(1, 1, constraints, layout, panel, m_jpAge.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.nationality"));
-        initNormalLabel(0,2,constraints,layout,panel,label);
-        initNormalField(1,2,constraints,layout,panel,m_jpNationality.getComponent(false));
+        initNormalLabel(0, 2, constraints, layout, panel, label);
+        initNormalField(1, 2, constraints, layout, panel, m_jpNationality.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Aufgestellt"));
-        initNormalLabel(0,3,constraints,layout,panel,label);
-        initNormalField(1,3,constraints,layout,panel,m_jpPositioned.getComponent(false));
+        initNormalLabel(0, 3, constraints, layout, panel, label);
+        initNormalField(1, 3, constraints, layout, panel, m_jpPositioned.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Rating"));
-        initNormalLabel(0,4,constraints,layout,panel,label);
-        initNormalField(1,4,constraints,layout,panel,m_jpRating.getComponent(false));
+        initNormalLabel(0, 4, constraints, layout, panel, label);
+        initNormalField(1, 4, constraints, layout, panel, m_jpRating.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("BestePosition"));
-        initNormalLabel(0,5,constraints,layout,panel,label);
-        initNormalField(1,5,constraints,layout,panel,m_jpBestPosition.getComponent(false));
+        initNormalLabel(0, 5, constraints, layout, panel, label);
+        initNormalField(1, 5, constraints, layout, panel, m_jpBestPosition.getComponent(false));
 
         // ***** Block 2
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Gruppe"));
-        initNormalLabel(4,0,constraints,layout,panel,label);
+        initNormalLabel(4, 0, constraints, layout, panel, label);
         m_jcbSquad.setPreferredSize(COMPONENTENSIZECB);
         m_jcbSquad.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
         m_jcbSquad.setRenderer(new SmilieListCellRenderer());
         m_jcbSquad.addItemListener(this);
-        setPosition(constraints,5,0);
+        setPosition(constraints, 5, 0);
         constraints.weightx = 1.0;
         constraints.gridwidth = 2;
         layout.setConstraints(m_jcbSquad, constraints);
         panel.add(m_jcbSquad);
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Info"));
-        initNormalLabel(4,1,constraints,layout,panel,label);
+        initNormalLabel(4, 1, constraints, layout, panel, label);
 
         m_jcbInformation.setMaximumRowCount(10);
         m_jcbInformation.setPreferredSize(COMPONENTENSIZECB);
         m_jcbInformation.setBackground(m_jcbSquad.getBackground());
         m_jcbInformation.setRenderer(new SmilieListCellRenderer());
         m_jcbInformation.addItemListener(this);
-        setPosition(constraints,5,1);
+        setPosition(constraints, 5, 1);
         constraints.weightx = 1.0;
         constraints.gridwidth = 2;
 
@@ -685,25 +709,25 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         panel.add(m_jcbInformation);
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Status"));
-        initNormalLabel(4,2,constraints,layout,panel,label);
-        initNormalField(5,2,constraints,layout,panel,m_jpStatus.getComponent(false));
+        initNormalLabel(4, 2, constraints, layout, panel, label);
+        initNormalField(5, 2, constraints, layout, panel, m_jpStatus.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.wage"));
-        initNormalLabel(4,3,constraints,layout,panel,label);
-        initNormalField(5,3,constraints,layout,panel,m_jpSalary.getComponent(false));
+        initNormalLabel(4, 3, constraints, layout, panel, label);
+        initNormalField(5, 3, constraints, layout, panel, m_jpSalary.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.tsi"));
-        initNormalLabel(4,4,constraints,layout,panel,label);
-        initNormalField(5,4,constraints,layout,panel,m_jpTSI.getComponent(false));
+        initNormalLabel(4, 4, constraints, layout, panel, label);
+        initNormalField(5, 4, constraints, layout, panel, m_jpTSI.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("BestePosition"));
-        initNormalLabel(4,5,constraints,layout,panel,label);
+        initNormalLabel(4, 5, constraints, layout, panel, label);
 
         m_jcbUserBestPosition.setMaximumRowCount(20);
         m_jcbUserBestPosition.setPreferredSize(COMPONENTENSIZECB);
         m_jcbUserBestPosition.setBackground(m_jcbSquad.getBackground());
         m_jcbUserBestPosition.addItemListener(this);
-        setPosition(constraints,5,5);
+        setPosition(constraints, 5, 5);
         constraints.weightx = 1.0;
         constraints.gridwidth = 2;
         layout.setConstraints(m_jcbUserBestPosition, constraints);
@@ -711,7 +735,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
         //empty row
         label = new JLabel();
-        setPosition(constraints,0,6);
+        setPosition(constraints, 0, 6);
         constraints.weightx = 0.0;
         constraints.gridwidth = 4;
         layout.setConstraints(label, constraints);
@@ -719,63 +743,63 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
         constraints.gridwidth = 1;
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.experience"));
-        initNormalLabel(0,7,constraints,layout,panel,label);
-        initYellowMainField(1,7,constraints,layout,panel,m_jpExperience.getComponent(false));
-        initYellowChangesField(2,7,constraints,layout,panel,m_jpExperienceChange.getComponent(false));
+        initNormalLabel(0, 7, constraints, layout, panel, label);
+        initYellowMainField(1, 7, constraints, layout, panel, m_jpExperience.getComponent(false));
+        initYellowChangesField(2, 7, constraints, layout, panel, m_jpExperienceChange.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.form"));
-        initNormalLabel(4,7,constraints,layout,panel,label);
-        initYellowMainField(5,7,constraints,layout,panel,m_jpForm.getComponent(false));
-        initYellowChangesField(6,7,constraints,layout,panel,m_jpFormChange.getComponent(false));
+        initNormalLabel(4, 7, constraints, layout, panel, label);
+        initYellowMainField(5, 7, constraints, layout, panel, m_jpForm.getComponent(false));
+        initYellowChangesField(6, 7, constraints, layout, panel, m_jpFormChange.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina"));
-        initNormalLabel(0,8,constraints,layout,panel,label);
-        initYellowMainField(1,8,constraints,layout,panel,m_jpStamina.getComponent(false));
-        initYellowChangesField(2,8,constraints,layout,panel,m_jpStaminaChange.getComponent(false));
+        initNormalLabel(0, 8, constraints, layout, panel, label);
+        initYellowMainField(1, 8, constraints, layout, panel, m_jpStamina.getComponent(false));
+        initYellowChangesField(2, 8, constraints, layout, panel, m_jpStaminaChange.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper"));
-        initNormalLabel(4,8,constraints,layout,panel,label);
-        initYellowMainField(5,8,constraints,layout,panel,m_jpKeeper.getComponent(false));
-        initYellowChangesField(6,8,constraints,layout,panel,m_jpKeeperChange.getComponent(false));
+        initNormalLabel(4, 8, constraints, layout, panel, label);
+        initYellowMainField(5, 8, constraints, layout, panel, m_jpKeeper.getComponent(false));
+        initYellowChangesField(6, 8, constraints, layout, panel, m_jpKeeperChange.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking"));
-        initNormalLabel(0,9,constraints,layout,panel,label);
-        initYellowMainField(1,9,constraints,layout,panel,m_jpPlaymaking.getComponent(false));
-        initYellowChangesField(2,9,constraints,layout,panel,m_jpPlaymakingChange.getComponent(false));
+        initNormalLabel(0, 9, constraints, layout, panel, label);
+        initYellowMainField(1, 9, constraints, layout, panel, m_jpPlaymaking.getComponent(false));
+        initYellowChangesField(2, 9, constraints, layout, panel, m_jpPlaymakingChange.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.passing"));
-        initNormalLabel(4,9,constraints,layout,panel,label);
-        initYellowMainField(5,9,constraints,layout,panel,m_jpPassing.getComponent(false));
-        initYellowChangesField(6,9,constraints,layout,panel,m_jpPassingChange.getComponent(false));
+        initNormalLabel(4, 9, constraints, layout, panel, label);
+        initYellowMainField(5, 9, constraints, layout, panel, m_jpPassing.getComponent(false));
+        initYellowChangesField(6, 9, constraints, layout, panel, m_jpPassingChange.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.winger"));
-        initNormalLabel(0,10,constraints,layout,panel,label);
-        initYellowMainField(1,10,constraints,layout,panel,m_jpWinger.getComponent(false));
-        initYellowChangesField(2,10,constraints,layout,panel,m_jpWingerChange.getComponent(false));
+        initNormalLabel(0, 10, constraints, layout, panel, label);
+        initYellowMainField(1, 10, constraints, layout, panel, m_jpWinger.getComponent(false));
+        initYellowChangesField(2, 10, constraints, layout, panel, m_jpWingerChange.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.defending"));
-        initNormalLabel(4,10,constraints,layout,panel,label);
-        initYellowMainField(5,10,constraints,layout,panel,m_jpDefending.getComponent(false));
-        initYellowChangesField(6,10,constraints,layout,panel,m_jpDefendingChange.getComponent(false));
+        initNormalLabel(4, 10, constraints, layout, panel, label);
+        initYellowMainField(5, 10, constraints, layout, panel, m_jpDefending.getComponent(false));
+        initYellowChangesField(6, 10, constraints, layout, panel, m_jpDefendingChange.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring"));
-        initNormalLabel(0,11,constraints,layout,panel,label);
-        initYellowMainField(1,11,constraints,layout,panel,m_jpScoring.getComponent(false));
-        initYellowChangesField(2,11,constraints,layout,panel,m_jpScoringChange.getComponent(false));
+        initNormalLabel(0, 11, constraints, layout, panel, label);
+        initYellowMainField(1, 11, constraints, layout, panel, m_jpScoring.getComponent(false));
+        initYellowChangesField(2, 11, constraints, layout, panel, m_jpScoringChange.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces"));
-        initNormalLabel(4,11,constraints,layout,panel,label);
-        initYellowMainField(5,11,constraints,layout,panel,m_jpSetPieces.getComponent(false));
-        initYellowChangesField(6,11,constraints,layout,panel,m_jpSetPiecesChange.getComponent(false));
+        initNormalLabel(4, 11, constraints, layout, panel, label);
+        initYellowMainField(5, 11, constraints, layout, panel, m_jpSetPieces.getComponent(false));
+        initYellowChangesField(6, 11, constraints, layout, panel, m_jpSetPiecesChange.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.loyalty"));
-        initNormalLabel(0,12,constraints,layout,panel,label);
-        initYellowMainField(1,12,constraints,layout,panel,m_jpLoyalty.getComponent(false));
-        initYellowChangesField(2,12,constraints,layout,panel,m_jpLoyaltyChange.getComponent(false));
+        initNormalLabel(0, 12, constraints, layout, panel, label);
+        initYellowMainField(1, 12, constraints, layout, panel, m_jpLoyalty.getComponent(false));
+        initYellowChangesField(2, 12, constraints, layout, panel, m_jpLoyaltyChange.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.motherclub"));
-        initNormalLabel(4,12,constraints,layout,panel,label);
-        initNormalField(5,12,constraints,layout,panel,m_jpMotherClub.getComponent(false));
+        initNormalLabel(4, 12, constraints, layout, panel, label);
+        initNormalField(5, 12, constraints, layout, panel, m_jpMotherClub.getComponent(false));
 
         m_jtaNotes.addFocusListener(this);
         m_jtaNotes.setEditable(false);
@@ -797,7 +821,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
         //empty row
         label = new JLabel("  ");
-        setPosition(constraints,7,0);
+        setPosition(constraints, 7, 0);
         constraints.weightx = 0.0;
         constraints.gridheight = 11;
         layout.setConstraints(label, constraints);
@@ -805,8 +829,8 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         constraints.gridheight = 1;
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.leadership"));
-        initNormalLabel(8,0,constraints,layout,panel,label);
-        setPosition(constraints,9,0);
+        initNormalLabel(8, 0, constraints, layout, panel, label);
+        setPosition(constraints, 9, 0);
         constraints.weightx = 1.0;
         component = m_jpLeadership.getComponent(false);
         component.setPreferredSize(COMPONENTENSIZE3);
@@ -814,27 +838,27 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         panel.add(component);
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.speciality"));
-        initNormalLabel(8,1,constraints,layout,panel,label);
-        initNormalField(9,1,constraints,layout,panel,m_jpSpeciality.getComponent(false));
+        initNormalLabel(8, 1, constraints, layout, panel, label);
+        initNormalField(9, 1, constraints, layout, panel, m_jpSpeciality.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.aggressiveness"));
-        initNormalLabel(8,2,constraints,layout,panel,label);
-        initNormalField(9,2,constraints,layout,panel,m_jpAggressivity.getComponent(false));
+        initNormalLabel(8, 2, constraints, layout, panel, label);
+        initNormalField(9, 2, constraints, layout, panel, m_jpAggressivity.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.agreeability"));
-        initNormalLabel(8,3,constraints,layout,panel,label);
-        initNormalField(9,3,constraints,layout,panel,m_jpHonesty.getComponent(false));
+        initNormalLabel(8, 3, constraints, layout, panel, label);
+        initNormalField(9, 3, constraints, layout, panel, m_jpHonesty.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.honesty"));
-        initNormalLabel(8,4,constraints,layout,panel,label);
-        initNormalField(9,4,constraints,layout,panel,m_jpAgreeability.getComponent(false));
+        initNormalLabel(8, 4, constraints, layout, panel, label);
+        initNormalField(9, 4, constraints, layout, panel, m_jpAgreeability.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ImTeamSeit"));
-        initNormalLabel(8,5,constraints,layout,panel,label);
-        initNormalField(9,5,constraints,layout,panel,m_jpInTeamSince.getComponent(false));
+        initNormalLabel(8, 5, constraints, layout, panel, label);
+        initNormalField(9, 5, constraints, layout, panel, m_jpInTeamSince.getComponent(false));
 
         label = new JLabel();
-        setPosition(constraints,11,6);
+        setPosition(constraints, 11, 6);
         constraints.weightx = 0.0;
         constraints.gridwidth = 3;
         constraints.gridheight = 1;
@@ -844,39 +868,39 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         constraints.gridheight = 1;
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ToreFreund"));
-        initNormalLabel(8,7,constraints,layout,panel,label);
-        initNormalField(9,7,constraints,layout,panel,m_jpGoalsFriendly.getComponent(false));
+        initNormalLabel(8, 7, constraints, layout, panel, label);
+        initNormalField(9, 7, constraints, layout, panel, m_jpGoalsFriendly.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ToreLiga"));
-        initNormalLabel(8,8,constraints,layout,panel,label);
-        initNormalField(9,8,constraints,layout,panel,m_jpGoalsLeague.getComponent(false));
+        initNormalLabel(8, 8, constraints, layout, panel, label);
+        initNormalField(9, 8, constraints, layout, panel, m_jpGoalsLeague.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("TorePokal"));
-        initNormalLabel(8,9,constraints,layout,panel,label);
-        initNormalField(9,9,constraints,layout,panel,m_jpGoalsCup.getComponent(false));
+        initNormalLabel(8, 9, constraints, layout, panel, label);
+        initNormalField(9, 9, constraints, layout, panel, m_jpGoalsCup.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ToreGesamt"));
-        initNormalLabel(8,10,constraints,layout,panel,label);
-        initNormalField(9,10,constraints,layout,panel,m_jpGoalsTotal.getComponent(false));
+        initNormalLabel(8, 10, constraints, layout, panel, label);
+        initNormalField(9, 10, constraints, layout, panel, m_jpGoalsTotal.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Hattricks"));
-        initNormalLabel(8,11,constraints,layout,panel,label);
-        initNormalField(9,11,constraints,layout,panel,m_jpHattricks.getComponent(false));
+        initNormalLabel(8, 11, constraints, layout, panel, label);
+        initNormalField(9, 11, constraints, layout, panel, m_jpHattricks.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Marktwert"));
-        initNormalLabel(8,12,constraints,layout,panel,label);
-        initNormalField(9,12,constraints,layout,panel,m_jpMarketValue.getComponent(false));
+        initNormalLabel(8, 12, constraints, layout, panel, label);
+        initNormalField(9, 12, constraints, layout, panel, m_jpMarketValue.getComponent(false));
 
         //Buttons
         final JPanel buttonpanel = new JPanel();
         buttonpanel.setOpaque(false);
-        initButton(m_jbStatistics,HOVerwaltung.instance().getLanguageString("tt_Spieler_statistik"),buttonpanel);
-        initButton(m_jbAnalysisTop,HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse1"),buttonpanel);
-        initButton(m_jbAnalysisBottom,HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse2"),buttonpanel);
-        initButton(m_jbOffsets,HOVerwaltung.instance().getLanguageString("tt_Spieler_offset"),buttonpanel);
-        initButton(m_jbTrainingBlock,HOVerwaltung.instance().getLanguageString("TrainingBlock"),buttonpanel);
+        initButton(m_jbStatistics, HOVerwaltung.instance().getLanguageString("tt_Spieler_statistik"), buttonpanel);
+        initButton(m_jbAnalysisTop, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse1"), buttonpanel);
+        initButton(m_jbAnalysisBottom, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse2"), buttonpanel);
+        initButton(m_jbOffsets, HOVerwaltung.instance().getLanguageString("tt_Spieler_offset"), buttonpanel);
+        initButton(m_jbTrainingBlock, HOVerwaltung.instance().getLanguageString("TrainingBlock"), buttonpanel);
 
-        setPosition(constraints,8,15);
+        setPosition(constraints, 8, 15);
         constraints.weightx = 1.0;
         constraints.gridheight = 3;
         constraints.gridwidth = 4;
@@ -887,7 +911,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
         // Empty row
         label = new JLabel("  ");
-        setPosition(constraints,11,0);
+        setPosition(constraints, 11, 0);
         constraints.weightx = 0.0;
         constraints.gridheight = 18;
         layout.setConstraints(label, constraints);
@@ -895,33 +919,35 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
         constraints.gridheight = 1;
         for (int i = 0; i < playerPositionValues.length; i++) {
-        	label = new JLabel(MatchRoleID.getKurzNameForPosition(playerPosition[i]));
+            label = new JLabel(MatchRoleID.getKurzNameForPosition(playerPosition[i]));
             label.setToolTipText(MatchRoleID.getNameForPosition(playerPosition[i]));
-            initBlueLabel(i,constraints,layout,panel,label);
-            initBlueField(i,constraints,layout,panel,playerPositionValues[i].getComponent(false));
-		}
+            initBlueLabel(i, constraints, layout, panel, label);
+            initBlueField(i, constraints, layout, panel, playerPositionValues[i].getComponent(false));
+        }
         add(panel, BorderLayout.CENTER);
     }
 
- 	/**
-	 * init a label
-	 * @param x
-	 * @param y
-	 * @param constraints
-	 * @param layout
-	 * @param panel
-	 * @param label
-	 */
-    private void initNormalLabel(int x,int y,GridBagConstraints constraints,GridBagLayout layout, JPanel panel, JLabel label){
-    	constraints.gridwidth = 1;
-    	setPosition(constraints,x,y);
-    	constraints.weightx = 0.0;
-    	layout.setConstraints(label, constraints);
-    	panel.add(label);
+    /**
+     * init a label
+     *
+     * @param x
+     * @param y
+     * @param constraints
+     * @param layout
+     * @param panel
+     * @param label
+     */
+    private void initNormalLabel(int x, int y, GridBagConstraints constraints, GridBagLayout layout, JPanel panel, JLabel label) {
+        constraints.gridwidth = 1;
+        setPosition(constraints, x, y);
+        constraints.weightx = 0.0;
+        layout.setConstraints(label, constraints);
+        panel.add(label);
     }
 
     /**
      * init a value field
+     *
      * @param x
      * @param y
      * @param constraints
@@ -929,8 +955,8 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
      * @param panel
      * @param component
      */
-    private void initNormalField(int x,int y,GridBagConstraints constraints,GridBagLayout layout, JPanel panel, JComponent component){
-        setPosition(constraints,x,y);
+    private void initNormalField(int x, int y, GridBagConstraints constraints, GridBagLayout layout, JPanel panel, JComponent component) {
+        setPosition(constraints, x, y);
         constraints.weightx = 1.0;
         constraints.gridwidth = 2;
         component.setPreferredSize(COMPONENTENSIZE);
@@ -940,14 +966,15 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
     /**
      * init a label
+     *
      * @param y
      * @param constraints
      * @param layout
      * @param panel
      * @param label
      */
-    private void initBlueLabel(int y,GridBagConstraints constraints,GridBagLayout layout, JPanel panel, JLabel label){
-    	setPosition(constraints,12,y);
+    private void initBlueLabel(int y, GridBagConstraints constraints, GridBagLayout layout, JPanel panel, JLabel label) {
+        setPosition(constraints, 12, y);
         constraints.weightx = 0.0;
         layout.setConstraints(label, constraints);
         panel.add(label);
@@ -955,14 +982,15 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
     /**
      * init a value field
+     *
      * @param y
      * @param constraints
      * @param layout
      * @param panel
      * @param component
      */
-    private void initBlueField(int y,GridBagConstraints constraints,GridBagLayout layout, JPanel panel, JComponent component){
-        setPosition(constraints,13,y);
+    private void initBlueField(int y, GridBagConstraints constraints, GridBagLayout layout, JPanel panel, JComponent component) {
+        setPosition(constraints, 13, y);
         constraints.weightx = 1.0;
         component.setPreferredSize(COMPONENTENSIZE2);
         layout.setConstraints(component, constraints);
@@ -971,52 +999,58 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
     /**
      * init a value field
+     *
      * @param y
      * @param constraints
      * @param layout
      * @param panel
      * @param component
      */
-    private void initYellowMainField(int x,int y,GridBagConstraints constraints,GridBagLayout layout, JPanel panel, JComponent component){
-        setPosition(constraints,x,y);
+    private void initYellowMainField(int x, int y, GridBagConstraints constraints, GridBagLayout layout, JPanel panel, JComponent component) {
+        setPosition(constraints, x, y);
         constraints.weightx = 1.0;
         component.setPreferredSize(COMPONENTENSIZE3);
         layout.setConstraints(component, constraints);
         panel.add(component);
     }
+
     /**
      * init a value field
+     *
      * @param y
      * @param constraints
      * @param layout
      * @param panel
      * @param component
      */
-    private void initYellowChangesField(int x,int y,GridBagConstraints constraints,GridBagLayout layout, JPanel panel, JComponent component){
-        setPosition(constraints,x,y);
+    private void initYellowChangesField(int x, int y, GridBagConstraints constraints, GridBagLayout layout, JPanel panel, JComponent component) {
+        setPosition(constraints, x, y);
         constraints.weightx = 1.0;
         component.setPreferredSize(COMPONENTENSIZE4);
         layout.setConstraints(component, constraints);
         panel.add(component);
     }
+
     /**
      * set position in gridBag
-     * @param constraints
+     *
+     * @param c
      * @param x
      * @param y
      */
-    private void setPosition(GridBagConstraints c, int x, int y){
-    	c.gridx = x;
+    private void setPosition(GridBagConstraints c, int x, int y) {
+        c.gridx = x;
         c.gridy = y;
     }
 
-    private void initButton(JButton button, String tooltipText, JPanel buttonpanel){
-    	button.setToolTipText(tooltipText);
-    	button.setPreferredSize(new Dimension(28, 28));
-    	button.setEnabled(false);
-    	button.addActionListener(this);
+    private void initButton(JButton button, String tooltipText, JPanel buttonpanel) {
+        button.setToolTipText(tooltipText);
+        button.setPreferredSize(new Dimension(28, 28));
+        button.setEnabled(false);
+        button.addActionListener(this);
         buttonpanel.add(button);
     }
+
     /**
      * clears all labels
      */
@@ -1058,7 +1092,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jpLoyaltyChange.clear();
         m_jpMotherClub.clear();
         for (int i = 0; i < playerPositionValues.length; i++) {
-        	playerPositionValues[i].clear();
+            playerPositionValues[i].clear();
         }
         m_jpGoalsFriendly.clear();
         m_jpGoalsLeague.clear();
@@ -1077,5 +1111,14 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jbAnalysisBottom.setEnabled(false);
         m_jbOffsets.setEnabled(false);
         m_jbTrainingBlock.setEnabled(false);
+    }
+
+    public CBItem[] getPositions() {
+        CBItem[] positions = new CBItem[3];
+        positions[0] = new CBItem(MatchRoleID.getNameForPosition(UNKNOWN), UNKNOWN);
+        positions[1] = new CBItem(MatchRoleID.getNameForPosition(COACH), COACH);
+        positions[2] = new CBItem(MatchRoleID.getNameForPosition(KEEPER), KEEPER);
+        positions[3] = new CBItem(MatchRoleID.getNameForPosition(CENTRAL_DEFENDER), CENTRAL_DEFENDER);
+        return positions;
     }
 }

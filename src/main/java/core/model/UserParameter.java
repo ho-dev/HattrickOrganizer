@@ -360,7 +360,7 @@ public final class UserParameter extends Configuration {
     public boolean CombinedRatingChartPanel_HelpLines = false;
 
     //Alternative Positions
-    public float alternativePositionsTolerance = .95f;
+    public float alternativePositionsTolerance = .98f;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -618,7 +618,7 @@ public final class UserParameter extends Configuration {
         map.put("CombinedRatingChartPanel_Loddar", String.valueOf(CombinedRatingChartPanel_Loddar));
         map.put("CombinedRatingChartPanel_Values", String.valueOf(CombinedRatingChartPanel_Values));
         map.put("CombinedRatingChartPanel_HelpLines", String.valueOf(CombinedRatingChartPanel_HelpLines));
-        map.put("alternativePositionTolerance", String.valueOf(alternativePositionsTolerance));
+        map.put("alternativePositionsTolerance", String.valueOf(alternativePositionsTolerance));
 
         return map;
     }
@@ -842,7 +842,7 @@ public final class UserParameter extends Configuration {
         CombinedRatingChartPanel_Loddar = getBooleanValue(values, "CombinedRatingChartPanel_Loddar");
         CombinedRatingChartPanel_Values = getBooleanValue(values, "CombinedRatingChartPanel_Values");
         CombinedRatingChartPanel_HelpLines = getBooleanValue(values, "CombinedRatingChartPanel_HelpLines");
-        alternativePositionsTolerance = getFloatValue(values, "alternativePositionTolerance");
+        alternativePositionsTolerance = getFloatValue(values, "alternativePositionsTolerance");
     }
 
 }

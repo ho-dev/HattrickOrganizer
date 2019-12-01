@@ -1325,7 +1325,7 @@ final class SpielerDetailDialog extends JDialog {
 	/**
 	 * set position in gridBag
 	 * 
-	 * @param constraints
+	 * @param c
 	 * @param x
 	 * @param y
 	 */
