@@ -1,5 +1,9 @@
 package module.lineup.substitution.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+
 /**
  * A class holding information about substitutions and order changes
  * 
@@ -7,26 +11,41 @@ package module.lineup.substitution.model;
  * 
  */
 public class Substitution {
-
 	private int playerOrderID = -1;
+	@SerializedName("playerin")
+	@Expose
 	private int objectPlayerID = -1;
+	@SerializedName("playerout")
+	@Expose
 	private int subjectPlayerID = -1;
+	@SerializedName("orderType")
+	@Expose
 	private MatchOrderType orderType = MatchOrderType.SUBSTITUTION;
-	private byte matchMinuteCriteria = -1;
-	private byte roleId = -1;
+	@SerializedName("min")
+	@Expose
+	private int matchMinuteCriteria = -1;
+	@SerializedName("pos")
+	@Expose
+	private byte positionIndex = -1;
+	@SerializedName("beh")
+	@Expose
 	private byte behaviour = -1;
+	@SerializedName("card")
+	@Expose
 	private RedCardCriteria card = RedCardCriteria.IGNORE;
+	@SerializedName("standing")
+	@Expose
 	private GoalDiffCriteria standing = GoalDiffCriteria.ANY_STANDING;
 
 	public Substitution(int playerOrderID, int playerIn, int subjectPlayerID,
-			MatchOrderType orderType, byte matchMinuteCriteria, byte roleId, byte behaviour,
+			MatchOrderType orderType, int matchMinuteCriteria, byte pos, byte behaviour,
 			RedCardCriteria card, GoalDiffCriteria standing) {
 		this.playerOrderID = playerOrderID;
 		this.objectPlayerID = playerIn;
 		this.subjectPlayerID = subjectPlayerID;
 		this.orderType = orderType;
 		this.matchMinuteCriteria = matchMinuteCriteria;
-		this.roleId = roleId;
+		this.positionIndex = pos;
 		this.behaviour = behaviour;
 		this.card = card;
 		this.standing = standing;
@@ -85,21 +104,27 @@ public class Substitution {
 		this.orderType = orderType;
 	}
 
-	public byte getMatchMinuteCriteria() {
+	public int getMatchMinuteCriteria() {
 		return matchMinuteCriteria;
 	}
 
-	public void setMatchMinuteCriteria(byte matchMinuteCriteria) {
+	public void setMatchMinuteCriteria(int matchMinuteCriteria) {
 		this.matchMinuteCriteria = matchMinuteCriteria;
 	}
 
-	public byte getRoleId() {
-		return roleId;
+	public int getRoleId() {
+		return positionIndex+100;
 	}
 
-	public void setRoleId(byte roleId) {
-		this.roleId = roleId;
+	public void setRoleId(int roleId) {
+		this.positionIndex = (byte) (roleId-100);
 	}
+
+	public byte getPositionIndex() {
+		return positionIndex;
+	}
+
+	public void setPositionIndex(byte positionIndex) { this.positionIndex = positionIndex; }
 
 	public byte getBehaviour() {
 		return behaviour;

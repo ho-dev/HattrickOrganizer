@@ -1,5 +1,7 @@
 package core.model.player;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import core.constants.TrainingType;
 import core.datatype.CBItem;
 import core.model.HOVerwaltung;
@@ -53,18 +55,32 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	// ----------------------------------------------------------------------------
 
 	/** TaktikAnweisungen */
+	@SerializedName("behaviour")
+	@Expose
 	private byte m_bTaktik = -1;
+
+	/** man marking, id of the marked opponent player */
+	@SerializedName("marking")
+	@Expose
+	private Integer m_iMarkingPlayerId = null;
 
 	/** PositionsAngabe */
 
 	// protected byte m_bPosition = -1;
 
 	/** ID */
+	@Expose
 	private int m_iId = -1;
+
+	public boolean isFieldMatchRoleId(){ return m_iId>=keeper && m_iId <=leftForward;}
+	public boolean isSubstitutesMatchRoleID () { return m_iId>=substGK1 && m_iId<= substXT1;}
+	public boolean isBackupsMatchRoleID(){ return m_iId>=substGK2 && m_iId<= substXT2;}
 
 	// It is much safer to have "empty" as 0, as it appears temp-players may
 	// get ID -1 - Blaghaid
 	/** welcher Player besetzt diese Position */
+	@SerializedName("id")
+	@Expose
 	private int m_iSpielerId = 0;
 
 	// ~ Constructors
@@ -85,6 +101,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		m_iId = id;
 		m_iSpielerId = spielerId;
 		m_bTaktik = taktik;
+		setMarkingPlayerId(0);
 	}
 
 	/**
@@ -95,6 +112,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		m_iId = sp.getId();
 		m_iSpielerId = sp.getSpielerId();
 		m_bTaktik = sp.getTaktik();
+		m_iMarkingPlayerId = sp.getMarkingPlayerId();
 
 		if ((m_iId < IMatchRoleID.setPieces) && (m_iId != -1)) {
 			HOLogger.instance().debug(getClass(), "Old RoleID found in lineup: " + m_iId);
@@ -744,6 +762,31 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	public final byte getTaktik() {
 		return m_bTaktik;
 	}
+
+
+	public final Integer getMarkingPlayerId() {
+		return m_iMarkingPlayerId;
+	}
+
+	public void setMarkingPlayerId(int id){
+		switch (this.m_iId){
+			case rightBack:
+			case rightCentralDefender:
+			case leftCentralDefender:
+			case middleCentralDefender:
+			case leftBack:
+			case rightWinger:
+			case rightInnerMidfield:
+			case centralInnerMidfield:
+			case leftInnerMidfield:
+			case leftWinger:
+				this.m_iMarkingPlayerId = id;
+				break;
+			default:
+				this.m_iMarkingPlayerId=null;
+		}
+	}
+
 
 	@Override
 	public final int compareTo(IMatchRoleID obj) {
