@@ -19,206 +19,306 @@ import core.training.WeeklyTrainingType;
 import core.util.Helper;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Player {
     //~ Class fields -------------------------------------------------------------------------------
 
-	/** Cache for player contribution (Hashtable<String, Float>) */
-    private static Hashtable<String,Object> PlayerAbsoluteContributionCache = new Hashtable<String,Object>();
-    private static Hashtable<String,Object> PlayerRelativeContributionCache = new Hashtable<String,Object>();
-	// constants for lineup HT-ML export
+    /**
+     * Cache for player contribution (Hashtable<String, Float>)
+     */
+    private static Hashtable<String, Object> PlayerAbsoluteContributionCache = new Hashtable<String, Object>();
+    private static Hashtable<String, Object> PlayerRelativeContributionCache = new Hashtable<String, Object>();
+    // constants for lineup HT-ML export
     private static final String BREAK = "[br]";
-	private static final String O_BRACKET = "[";
-	private static final String C_BRACKET = "]";
-	private static final String EMPTY = "";
+    private static final String O_BRACKET = "[";
+    private static final String C_BRACKET = "]";
+    private static final String EMPTY = "";
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    /** canPlay */
+    /**
+     * canPlay
+     */
     private Boolean m_bSpielberechtigt;
 
-    /** Manual Smilie Filename*/
+    /**
+     * Manual Smilie Filename
+     */
     private String m_sManuellerSmilie;
 
-    /** Name */
+    /**
+     * Name
+     */
     private String m_sName = "";
 
-    /** TeamInfo Smilie Filename */
+    /**
+     * TeamInfo Smilie Filename
+     */
     private String m_sTeamInfoSmilie;
     private java.sql.Timestamp m_clhrfDate;
 
-    /** Date of the first HRF referencing that player */
+    /**
+     * Date of the first HRF referencing that player
+     */
     private Timestamp m_tsTime4FirstHRF;
 
-    /** The player is no longer available in the current HRF */
+    /**
+     * The player is no longer available in the current HRF
+     */
     private boolean m_bOld;
     private byte m_bUserPosFlag = -2;
 
-    /** Wing skill*/
+    /**
+     * Wing skill
+     */
     private double m_dSubFluegelspiel;
 
-    /** Pass skill */
+    /**
+     * Pass skill
+     */
     private double m_dSubPasspiel;
 
-    /** Playmaking skill */
+    /**
+     * Playmaking skill
+     */
     private double m_dSubSpielaufbau;
 
-    /** Standards */
+    /**
+     * Standards
+     */
     private double m_dSubStandards;
 
-    /** Goal */
+    /**
+     * Goal
+     */
     private double m_dSubTorschuss;
 
     //Subskills
     private double m_dSubTorwart;
 
-    /** Verteidigung */
+    /**
+     * Verteidigung
+     */
     private double m_dSubVerteidigung;
 
-    /** Agressivität */
+    /**
+     * Agressivität
+     */
     private int m_iAgressivitaet;
 
-    /** Alter */
+    /**
+     * Alter
+     */
     private int m_iAlter;
 
-    /** Age Days */
+    /**
+     * Age Days
+     */
     private int m_iAgeDays;
 
-    /** Ansehen (ekel usw. ) */
+    /**
+     * Ansehen (ekel usw. )
+     */
     private int m_iAnsehen = 1;
 
-    /** Bewertung */
+    /**
+     * Bewertung
+     */
     private int m_iBewertung;
 
-    /** charakter ( ehrlich) */
+    /**
+     * charakter ( ehrlich)
+     */
     private int m_iCharakter = 1;
 
-    /** Erfahrung */
+    /**
+     * Erfahrung
+     */
     private int m_iErfahrung = 1;
 
-    /** Fluegelspiel */
+    /**
+     * Fluegelspiel
+     */
     private int m_iFluegelspiel = 1;
 
-    /** Form */
+    /**
+     * Form
+     */
     private int m_iForm = 1;
 
-    /** Führungsqualität */
+    /**
+     * Führungsqualität
+     */
     private int m_iFuehrung = 1;
 
-    /** Gehalt */
+    /**
+     * Gehalt
+     */
     private int m_iGehalt = 1;
 
-    /** Gelbe Karten */
+    /**
+     * Gelbe Karten
+     */
     private int m_iGelbeKarten;
 
-    /** Hattricks */
+    /**
+     * Hattricks
+     */
     private int m_iHattrick;
 
-    /** Home Grown */
+    /**
+     * Home Grown
+     */
     private boolean m_bHomeGrown = false;
 
-    /** Kondition */
+    /**
+     * Kondition
+     */
     private int m_iKondition = 1;
 
-    /** Länderspiele */
+    /**
+     * Länderspiele
+     */
     private int m_iLaenderspiele;
 
     //Cache
 
-    /** Letzte Bewertung */
+    /**
+     * Letzte Bewertung
+     */
     private int m_iLastBewertung = -1;
 
-    /** Loyalty */
+    /**
+     * Loyalty
+     */
     private int m_iLoyalty = 0;
 
-    /** Markwert */
+    /**
+     * Markwert
+     */
     private int m_iTSI;
 
     /** bonus in Prozent */
 
     //protected int       m_iBonus            =   0;
 
-    /** Aus welchem Land kommt der Player */
+    /**
+     * Aus welchem Land kommt der Player
+     */
     private int m_iNationalitaet = 49;
 
-    /** Passpiel */
+    /**
+     * Passpiel
+     */
     private int m_iPasspiel = 1;
 
-    /** SpezialitätID */
+    /**
+     * SpezialitätID
+     */
     private int iPlayerSpecialty;
 
-    /** Spielaufbau */
+    /**
+     * Spielaufbau
+     */
     private int m_iSpielaufbau = 1;
 
     ////////////////////////////////////////////////////////////////////////////////
     //Member
     ////////////////////////////////////////////////////////////////////////////////
 
-    /** SpielerID */
+    /**
+     * SpielerID
+     */
     private int m_iSpielerID;
 
-    /** Standards */
+    /**
+     * Standards
+     */
     private int m_iStandards = 1;
 
-    /** Tore Freundschaftspiel */
+    /**
+     * Tore Freundschaftspiel
+     */
     private int m_iToreFreund;
 
-    /** Tore Gesamt */
+    /**
+     * Tore Gesamt
+     */
     private int m_iToreGesamt;
 
-    /** Tore Liga */
+    /**
+     * Tore Liga
+     */
     private int m_iToreLiga;
 
-    /** Tore Pokalspiel */
+    /**
+     * Tore Pokalspiel
+     */
     private int m_iTorePokal;
 
-    /** Torschuss */
+    /**
+     * Torschuss
+     */
     private int m_iTorschuss = 1;
 
-    /** Torwart */
+    /**
+     * Torwart
+     */
     private int m_iTorwart = 1;
 
-    /** Trainerfähigkeit */
+    /**
+     * Trainerfähigkeit
+     */
     private int m_iTrainer;
 
-    /** Trainertyp */
+    /**
+     * Trainertyp
+     */
     private int m_iTrainerTyp = -1;
 
-    /** Transferlisted */
+    /**
+     * Transferlisted
+     */
     private int m_iTransferlisted;
 
     //TODO Noch in DB adden
 
-    /** Fetchdate */
+    /**
+     * Fetchdate
+     */
 
     //    protected Timestamp m_clFetchDate       =   new Timestamp( System.currentTimeMillis () );
 
     /*TrikotNummer*/
     private int m_iTrikotnummer = -1;
 
-    /** Länderspiele */
+    /**
+     * Länderspiele
+     */
     private int m_iU20Laenderspiele;
 
-    /** Verletzt Wochen */
+    /**
+     * Verletzt Wochen
+     */
     private int m_iVerletzt = -1;
 
-    /** Verteidigung */
+    /**
+     * Verteidigung
+     */
     private int m_iVerteidigung = 1;
 
-    /** Training block */
+    /**
+     * Training block
+     */
     private boolean m_bTrainingBlock = false;
 
 
-    /** specifying at what time –in minutes- that player entered the field
-     *  This parameter is only used by RatingPredictionManager to calculate the stamina effect
-     *  along the course of the game
+    /**
+     * specifying at what time –in minutes- that player entered the field
+     * This parameter is only used by RatingPredictionManager to calculate the stamina effect
+     * along the course of the game
      */
     private int GameStartingTime = 0;
 
@@ -243,9 +343,8 @@ public class Player {
      * Erstellt einen Player aus den Properties einer HRF Datei
      */
     public Player(java.util.Properties properties, Timestamp hrfdate)
-      throws Exception
-    {
-    	// Separate first, nick and last names are available. Utilize them?
+            throws Exception {
+        // Separate first, nick and last names are available. Utilize them?
 
         m_iSpielerID = Integer.parseInt(properties.getProperty("id", "0"));
         m_sName = properties.getProperty("name", "");
@@ -271,8 +370,8 @@ public class Player {
         m_iGehalt = Integer.parseInt(properties.getProperty("sal", "0"));
         m_iNationalitaet = Integer.parseInt(properties.getProperty("countryid", "0"));
         m_iTSI = Integer.parseInt(properties.getProperty("mkt", "0"));
-        
-     // also read subskills when importing hrf from hattrickportal.pro/ useful for U20/NT
+
+        // also read subskills when importing hrf from hattrickportal.pro/ useful for U20/NT
         m_dSubFluegelspiel = Double.parseDouble(properties.getProperty("yttsub", "0"));
         m_dSubPasspiel = Double.parseDouble(properties.getProperty("frasub", "0"));
         m_dSubSpielaufbau = Double.parseDouble(properties.getProperty("spesub", "0"));
@@ -320,7 +419,7 @@ public class Player {
 
         // for national teams it's not a numeric
         try {
-            m_iTransferlisted = Integer.parseInt( properties.getProperty("transferlisted", "0"));
+            m_iTransferlisted = Integer.parseInt(properties.getProperty("transferlisted", "0"));
         } catch (NumberFormatException | NullPointerException nfe) {
             m_iTransferlisted = 0;
         }
@@ -332,7 +431,7 @@ public class Player {
         //Alte Offsets holen!
         //Offsets aus dem aktuellen HRF holen
         final core.model.HOModel oldmodel = core.model.HOVerwaltung.instance()
-                                                                                                   .getModel();
+                .getModel();
         final Player oldPlayer = oldmodel.getSpieler(m_iSpielerID);
 
         if (oldPlayer != null) {
@@ -367,7 +466,7 @@ public class Player {
      * object[] [0] = Time der Änderung [1] = Boolean: false=Keine Änderung gefunden
      */
     public Vector<Object[]> getAllLevelUp(int skill) {
-        return DBManager.instance().getAllLevelUp(skill,m_iSpielerID);
+        return DBManager.instance().getAllLevelUp(skill, m_iSpielerID);
     }
 
     /**
@@ -391,10 +490,10 @@ public class Player {
     /**
      * Setter for property m_iAgeDays.
      *
-     * @param m_iAlter New value of property m_iAgeDays.
+     * @param m_iAgeDays New value of property m_iAgeDays.
      */
     public void setAgeDays(int m_iAgeDays) {
-    	this.m_iAgeDays = m_iAgeDays;
+        this.m_iAgeDays = m_iAgeDays;
     }
 
     /**
@@ -403,15 +502,16 @@ public class Player {
      * @return Value of property m_iAgeDays.
      */
     public int getAgeDays() {
-    	return m_iAgeDays;
+        return m_iAgeDays;
     }
-    
+
     /**
-     * Compute the number of calendar days between two Calendar objects. 
+     * Compute the number of calendar days between two Calendar objects.
      * The desired value is the number of days of the month between the
      * two Calendars, not the number of milliseconds' worth of days.
+     *
      * @param startCal The earlier calendar
-     * @param endCal The later calendar
+     * @param endCal   The later calendar
      * @return the number of calendar days of the month between startCal and endCal
      */
     public static long calendarDaysBetween(Calendar startCal, Calendar endCal) {
@@ -450,115 +550,119 @@ public class Player {
      * Calculates full age with days and offset
      *
      * @return Double value of age & agedays & offset combined,
-     * 			i.e. age + (agedays+offset)/112
+     * i.e. age + (agedays+offset)/112
      */
     public double getAlterWithAgeDays() {
-      	long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-    	long now = new Date().getTime();
-    	long diff = (now - hrftime) / (1000*60*60*24);
-    	int years = getAlter();
-    	int days = getAgeDays();
-    	double retVal = years + (double)(days+diff)/112;
-    	return retVal;
+        long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
+        long now = new Date().getTime();
+        long diff = (now - hrftime) / (1000 * 60 * 60 * 24);
+        int years = getAlter();
+        int days = getAgeDays();
+        double retVal = years + (double) (days + diff) / 112;
+        return retVal;
     }
-    
+
 
     /**
      * Calculates full age with days and offset for a given timestamp
      * used to sort columns
      * pay attention that it takes the hour and minute of the matchtime into account
      * if you only want the days between two days use method calendarDaysBetween(Calendar start, Calendar end)
+     *
      * @return Double value of age & agedays & offset combined,
-     * 			i.e. age + (agedays+offset)/112
+     * i.e. age + (agedays+offset)/112
      */
     public double getDoubleAgeFromDate(Timestamp t) {
-    	long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-    	long time = t.getTime();
-    	long diff = Math.abs((hrftime - time)) / (1000*60*60*24);
-    	int years = getAlter();
-    	int days = getAgeDays();
-    	double retVal = years + (double)(days-diff)/112;
-    	return retVal;
+        long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
+        long time = t.getTime();
+        long diff = Math.abs((hrftime - time)) / (1000 * 60 * 60 * 24);
+        int years = getAlter();
+        int days = getAgeDays();
+        double retVal = years + (double) (days - diff) / 112;
+        return retVal;
     }
 
     /**
      * Calculates String for full age and days correcting for the difference between (now and last HRF file)
+     *
      * @return String of age & agedays format is "YY (DDD)"
      */
     public String getAlterWithAgeDaysAsString() {
-    	// format = yy (ddd)
-      	long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-    	long now = new Date().getTime();
-    	long diff = (now - hrftime) / (1000*60*60*24);
-    	int years = getAlter();
-    	int days = getAgeDays();
-    	days += diff;
-    	while (days > 111) {
-    		days -= 112;
-    		years++;
-    	}
-    	String retVal = years + " (" + days+")";
+        // format = yy (ddd)
+        long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
+        long now = new Date().getTime();
+        long diff = (now - hrftime) / (1000 * 60 * 60 * 24);
+        int years = getAlter();
+        int days = getAgeDays();
+        days += diff;
+        while (days > 111) {
+            days -= 112;
+            years++;
+        }
+        String retVal = years + " (" + days + ")";
 
-    	return retVal;
+        return retVal;
     }
-    
+
     /**
      * Calculates String for full age with days and offset for a given timestamp
      * only takes days between dates into account
      * used for the age column in player analysis tab
+     *
      * @return String of age & agedays & offset combined,
-     * 			format is "YY.DDD"
+     * format is "YY.DDD"
      */
     public String getAdjustedAgeFromDate(Timestamp t) {
-    	// format = yy.ddd
-    	Calendar hrftime = Calendar.getInstance();
-    	Calendar date = Calendar.getInstance();
-    	hrftime.setTime(HOVerwaltung.instance().getModel().getBasics().getDatum());
-    	date.setTime(t);
-    	long diff = calendarDaysBetween(hrftime, date);
-    	int years = getAlter();
-    	int days = getAgeDays();
-    	days -= diff;
-    	while (days < 0) {
-    		days = 112 + days;
-    		years--;
-    	}
-    	String retVal = years + "." + days;
-    	return retVal;
+        // format = yy.ddd
+        Calendar hrftime = Calendar.getInstance();
+        Calendar date = Calendar.getInstance();
+        hrftime.setTime(HOVerwaltung.instance().getModel().getBasics().getDatum());
+        date.setTime(t);
+        long diff = calendarDaysBetween(hrftime, date);
+        int years = getAlter();
+        int days = getAgeDays();
+        days -= diff;
+        while (days < 0) {
+            days = 112 + days;
+            years--;
+        }
+        String retVal = years + "." + days;
+        return retVal;
     }
 
     /**
      * Get the full i18n'd string represention the players age. Includes
      * the birthay indicator as well.
+     *
      * @return the full i18n'd string represention the players age
      */
     public String getAgeStringFull() {
-      	long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-    	long now = new Date().getTime();
-    	long diff = (now - hrftime) / (1000*60*60*24);
-    	int years = getAlter();
-    	int days = getAgeDays();
-    	days += diff;
-    	boolean birthday = false;
-    	while (days > 111) {
-    		days -= 112;
-    		years++;
-    		birthday = true;
-    	}
-    	StringBuffer ret = new StringBuffer();
-    	ret.append(years);
-    	ret.append(" ");
-    	ret.append(HOVerwaltung.instance().getLanguageString("ls.player.age.years"));
-    	ret.append(" ");
-    	ret.append(days);
-    	ret.append(" ");
-    	ret.append(HOVerwaltung.instance().getLanguageString("ls.player.age.days"));
-    	if (birthday) {
-    		ret.append(" (");
-    		ret.append(HOVerwaltung.instance().getLanguageString("ls.player.age.birthday"));
-    		ret.append(")");
-    	}
-    	return ret.toString();
+        long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
+        long now = new Date().getTime();
+        long diff = (now - hrftime) / (1000 * 60 * 60 * 24);
+        int years = getAlter();
+        int days = getAgeDays();
+        days += diff;
+        boolean birthday = false;
+        while (days > 111) {
+            days -= 112;
+            years++;
+            birthday = true;
+        }
+        StringBuffer ret = new StringBuffer();
+        ret.append(years);
+        ret.append(" ");
+        ret.append(HOVerwaltung.instance().getLanguageString("ls.player.age.years"));
+        ret.append(" ");
+        ret.append(days);
+        ret.append(" ");
+        ret.append(HOVerwaltung.instance().getLanguageString("ls.player.age.days"));
+        if (birthday) {
+            ret.append(" (");
+            ret.append(HOVerwaltung.instance().getLanguageString("ls.player.age.birthday"));
+            ret.append(")");
+        }
+        return ret.toString();
     }
 
     /**
@@ -652,25 +756,24 @@ public class Player {
      * get the experience bonus
      *
      * @param experience effective experience to calculate the bonus, use the xp from the player if set to 0
-     *
      * @return experience bonus in percent
      */
     public float getErfahrungsBonus(float experience) {
         if (experience <= 0)
-        	// take xp from player (use medium xp sub, i.e. add 0.5)
-        	experience = m_iErfahrung + 0.5f;
+            // take xp from player (use medium xp sub, i.e. add 0.5)
+            experience = m_iErfahrung + 0.5f;
 
         // normalize xp [1,20] -> [0,19]
         experience -= 1;
 
-		if ( experience <= 0 )
-			return 0; /*If experience is non-existent, the bonus is zero!*/
+        if (experience <= 0)
+            return 0; /*If experience is non-existent, the bonus is zero!*/
 
-		// Use hardcorded values here,
-		// make sure to apply the same values as in prediction/*/playerStrength.dat
-		//
-		// We return the experience bonus in percent (0% = no bonus, 100% = doubled player strength...)
-		float bonus = (float) (0.0716 * Math.sqrt(experience));
+        // Use hardcorded values here,
+        // make sure to apply the same values as in prediction/*/playerStrength.dat
+        //
+        // We return the experience bonus in percent (0% = no bonus, 100% = doubled player strength...)
+        float bonus = (float) (0.0716 * Math.sqrt(experience));
 
         return bonus;
     }
@@ -796,7 +899,7 @@ public class Player {
      * @return Value of property m_bHomeGrown.
      */
     public void setHomeGrown(boolean hg) {
-    	m_bHomeGrown = hg;
+        m_bHomeGrown = hg;
     }
 
     /**
@@ -805,15 +908,15 @@ public class Player {
      * @return Value of property m_bHomeGrown
      */
     public boolean isHomeGrown() {
-    	return m_bHomeGrown;
+        return m_bHomeGrown;
     }
 
     public Timestamp getHrfDate() {
         return m_clhrfDate;
     }
 
-    public void setHrfDate(Timestamp timestamp){
-    	m_clhrfDate = timestamp;
+    public void setHrfDate(Timestamp timestamp) {
+        m_clhrfDate = timestamp;
     }
 
 
@@ -856,9 +959,9 @@ public class Player {
             for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
                 if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
                 currPosition = allPos[i].getPosition();
-                contrib = calcPosValue(currPosition,true, true);
+                contrib = calcPosValue(currPosition, true, true);
                 if (contrib > maxStk) {
-                	maxStk = contrib;
+                    maxStk = contrib;
                     idealPos = currPosition;
                 }
             }
@@ -867,6 +970,50 @@ public class Player {
         }
 
         return flag;
+    }
+
+    /**
+     * Calculate Player Alternative Positions
+     */
+    public byte[] getAlternativePositions() {
+
+        List<PositionContribute> positions = new ArrayList<>();
+        byte[] alternativePositions;
+        final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
+        byte currPosition;
+        PositionContribute currPositionContribute;
+
+        for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
+            if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
+            currPosition = allPos[i].getPosition();
+            currPositionContribute = new PositionContribute(calcPosValue(currPosition, true, true), currPosition);
+            positions.add(currPositionContribute);
+        }
+
+        positions.sort(new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                float f1 = ((PositionContribute) o1).getContribute();
+                float f2 = ((PositionContribute) o2).getContribute();
+                return Float.compare(f2, f1);
+            }
+        });
+
+        alternativePositions = new byte[positions.size()];
+        float tolerance = core.model.UserParameter.instance().alternativePositionsTolerance;
+
+        int i = 0;
+        for (i = 0; i < positions.size(); i++) {
+            if (positions.get(i).getContribute() >= positions.get(0).getContribute() * tolerance) {
+                alternativePositions[i] = positions.get(i).getPosition();
+            } else {
+                break;
+            }
+        }
+
+        alternativePositions = Arrays.copyOf(alternativePositions, i);
+
+        return alternativePositions;
     }
 
     /**
@@ -954,14 +1101,14 @@ public class Player {
      * Returns the loyalty stat
      */
     public int getLoyalty() {
-    	return m_iLoyalty;
+        return m_iLoyalty;
     }
 
     /**
      * Sets the loyalty stat
      */
-    public void  setLoyalty(int loy) {
-    	m_iLoyalty = loy;
+    public void setLoyalty(int loy) {
+        m_iLoyalty = loy;
     }
 
 
@@ -998,7 +1145,7 @@ public class Player {
         return m_sManuellerSmilie;
     }
 
-     /**
+    /**
      * Sets the TSI
      *
      * @param m_iTSI New value of property m_iMarkwert.
@@ -1046,20 +1193,21 @@ public class Player {
 
     public java.lang.String getLastName() {
         String lastName = this.getName();
-        return lastName.substring(lastName.lastIndexOf(" ")+1);
+        return lastName.substring(lastName.lastIndexOf(" ") + 1);
     }
 
     /**
      * Getter for shortName
+     *
      * @return returns the fist letter of the first Name + a "." and the last name
      * eg: James Bond = J. Bond
      */
     public String getShortName() {
-    	String fullName = getName();
-    	String initial = fullName.substring(0, 1);
-    	String lastName = getLastName();
-    	return initial + ". " + lastName;
-    	
+        String fullName = getName();
+        String initial = fullName.substring(0, 1);
+        String lastName = getLastName();
+        return initial + ". " + lastName;
+
     }
 
     /**
@@ -1146,41 +1294,39 @@ public class Player {
     public int getPlayerSpecialty() {
         return iPlayerSpecialty;
     }
-    
+
 
     // returns the name of the speciality in the used language
     public String getSpecialityName() {
-    	Speciality s = Speciality.values()[iPlayerSpecialty];
-		if (s.equals(Speciality.NO_SPECIALITY)) {
-			return EMPTY;
-		} else {
-			return HOVerwaltung.instance().getLanguageString("ls.player.speciality." + s.toString().toLowerCase(Locale.ROOT));
-		}
+        Speciality s = Speciality.values()[iPlayerSpecialty];
+        if (s.equals(Speciality.NO_SPECIALITY)) {
+            return EMPTY;
+        } else {
+            return HOVerwaltung.instance().getLanguageString("ls.player.speciality." + s.toString().toLowerCase(Locale.ROOT));
+        }
     }
-    
+
     // return the name of the speciality with a break before and in brackets
     // e.g. [br][quick], used for HT-ML export
     public String getSpecialityExportName() {
-		Speciality s = Speciality.values()[iPlayerSpecialty];
-		if (s.equals(Speciality.NO_SPECIALITY)) {
-			return EMPTY;
-		} else {
-			return BREAK + O_BRACKET + getSpecialityName() + C_BRACKET;
-		}
-	}
-    
+        Speciality s = Speciality.values()[iPlayerSpecialty];
+        if (s.equals(Speciality.NO_SPECIALITY)) {
+            return EMPTY;
+        } else {
+            return BREAK + O_BRACKET + getSpecialityName() + C_BRACKET;
+        }
+    }
+
     // no break so that the export looks better
     public String getSpecialityExportNameForKeeper() {
-		Speciality s = Speciality.values()[iPlayerSpecialty];
-		if (s.equals(Speciality.NO_SPECIALITY)) {
-			return EMPTY;
-		} else {
-			return O_BRACKET + getSpecialityName() + C_BRACKET;
-		}
-	}
-    
-    
-    
+        Speciality s = Speciality.values()[iPlayerSpecialty];
+        if (s.equals(Speciality.NO_SPECIALITY)) {
+            return EMPTY;
+        } else {
+            return O_BRACKET + getSpecialityName() + C_BRACKET;
+        }
+    }
+
 
     /**
      * Setter for property m_iSpielaufbau.
@@ -1206,7 +1352,7 @@ public class Player {
     public void setSpielberechtigt(boolean flag) {
         m_bSpielberechtigt = Boolean.valueOf(flag);
         DBManager.instance().saveSpielerSpielberechtigt(m_iSpielerID,
-                                                                                      flag);
+                flag);
     }
 
     /**
@@ -1262,7 +1408,7 @@ public class Player {
      * berechnet den Subskill pro position
      */
     public float getSubskill4Pos(int skill) {
-    	return Math.min(0.99f, Helper.round(getSubskill4PosAccurate(skill), 2));
+        return Math.min(0.99f, Helper.round(getSubskill4PosAccurate(skill), 2));
     }
 
     /**
@@ -1281,27 +1427,27 @@ public class Player {
                 break;
 
             case PlayerSkill.PLAYMAKING:
-                value =  m_dSubSpielaufbau;
+                value = m_dSubSpielaufbau;
                 break;
 
             case PlayerSkill.DEFENDING:
-                value =  m_dSubVerteidigung;
+                value = m_dSubVerteidigung;
                 break;
 
             case PlayerSkill.PASSING:
-                value =  m_dSubPasspiel;
+                value = m_dSubPasspiel;
                 break;
 
             case PlayerSkill.WINGER:
-                value =  m_dSubFluegelspiel;
+                value = m_dSubFluegelspiel;
                 break;
 
             case PlayerSkill.SCORING:
-                value =  m_dSubTorschuss;
+                value = m_dSubTorschuss;
                 break;
 
             case PlayerSkill.SET_PIECES:
-                value =  m_dSubStandards;
+                value = m_dSubStandards;
                 break;
         }
         return (float) Math.min(0.999, value);
@@ -1310,25 +1456,25 @@ public class Player {
     public void setSubskill4Pos(int skill, float value) {
         switch (skill) {
             case PlayerSkill.KEEPER:
-                 m_dSubTorwart= value;
-                 break;
+                m_dSubTorwart = value;
+                break;
             case PlayerSkill.PLAYMAKING:
-                m_dSubSpielaufbau= value;
+                m_dSubSpielaufbau = value;
                 break;
             case PlayerSkill.DEFENDING:
-                m_dSubVerteidigung= value;
+                m_dSubVerteidigung = value;
                 break;
             case PlayerSkill.PASSING:
-                m_dSubPasspiel= value;
+                m_dSubPasspiel = value;
                 break;
             case PlayerSkill.WINGER:
-                m_dSubFluegelspiel= value;
+                m_dSubFluegelspiel = value;
                 break;
             case PlayerSkill.SCORING:
-                m_dSubTorschuss= value;
+                m_dSubTorschuss = value;
                 break;
             case PlayerSkill.SET_PIECES:
-                m_dSubStandards= value;
+                m_dSubStandards = value;
                 break;
         }
     }
@@ -1638,7 +1784,7 @@ public class Player {
                 return m_iFuehrung;
 
             case PlayerSkill.LOYALTY:
-            	return m_iLoyalty;
+                return m_iLoyalty;
 
             default:
                 return 0;
@@ -1651,56 +1797,56 @@ public class Player {
      * @param skill the skill to change
      * @param value the new skill value
      */
-	public void setValue4Skill4(int skill, int value) {
-		switch (skill) {
-			case PlayerSkill.KEEPER :
-				setTorwart(value);
-				break;
+    public void setValue4Skill4(int skill, int value) {
+        switch (skill) {
+            case PlayerSkill.KEEPER:
+                setTorwart(value);
+                break;
 
-			case PlayerSkill.PLAYMAKING :
-				setSpielaufbau(value);
-				break;
+            case PlayerSkill.PLAYMAKING:
+                setSpielaufbau(value);
+                break;
 
-			case PlayerSkill.PASSING :
-				setPasspiel(value);
-				break;
+            case PlayerSkill.PASSING:
+                setPasspiel(value);
+                break;
 
-			case PlayerSkill.WINGER :
-				setFluegelspiel(value);
-				break;
+            case PlayerSkill.WINGER:
+                setFluegelspiel(value);
+                break;
 
-			case PlayerSkill.DEFENDING :
-				setVerteidigung(value);
-				break;
+            case PlayerSkill.DEFENDING:
+                setVerteidigung(value);
+                break;
 
-			case PlayerSkill.SCORING :
-				setTorschuss(value);
-				break;
+            case PlayerSkill.SCORING:
+                setTorschuss(value);
+                break;
 
-			case PlayerSkill.SET_PIECES :
-				setStandards(value);
-				break;
+            case PlayerSkill.SET_PIECES:
+                setStandards(value);
+                break;
 
-			case PlayerSkill.STAMINA :
-				setKondition(value);
-				break;
+            case PlayerSkill.STAMINA:
+                setKondition(value);
+                break;
 
-			case PlayerSkill.EXPERIENCE:
-				setErfahrung(value);
-				break;
+            case PlayerSkill.EXPERIENCE:
+                setErfahrung(value);
+                break;
 
-			case PlayerSkill.FORM:
-				setForm(value);
-				break;
+            case PlayerSkill.FORM:
+                setForm(value);
+                break;
 
-			case PlayerSkill.LEADERSHIP:
-				setFuehrung(value);
-				break;
+            case PlayerSkill.LEADERSHIP:
+                setFuehrung(value);
+                break;
 
-			case PlayerSkill.LOYALTY:
-				setLoyalty(value);
-		}
-	}
+            case PlayerSkill.LOYALTY:
+                setLoyalty(value);
+        }
+    }
 
 
     /**
@@ -1749,13 +1895,12 @@ public class Player {
     }
 
     private void incrementSubskills(Player originalPlayer, int assistants, int trainerlevel, int intensity,
-                                    int stamina, int skill, double points, WeeklyTrainingType wt, List<StaffMember> staff)
-    {
+                                    int stamina, int skill, double points, WeeklyTrainingType wt, List<StaffMember> staff) {
         if (skill < PlayerSkill.KEEPER || points <= 0)
             return;
 
-        float gain = (float)Helper.round(points / wt.getTrainingLength(
-                        this, assistants, trainerlevel, intensity, stamina, staff), 3);
+        float gain = (float) Helper.round(points / wt.getTrainingLength(
+                this, assistants, trainerlevel, intensity, stamina, staff), 3);
 
         if (gain <= 0)
             return;
@@ -1775,18 +1920,20 @@ public class Player {
      * Used when there is only 1 week of training to be calculated.
      *
      * @param originalPlayer - The player to calculate subskills on
-     * @param assistants - The number of assistants
-     * @param trainerlevel - The trainer level
-     * @param intensity - Training intensity
-     * @param hrfID - the ID of the HRF
+     * @param assistants     - The number of assistants
+     * @param trainerlevel   - The trainer level
+     * @param intensity      - Training intensity
+     * @param stamina
+     * @param trainingWeek
+     * @param staff
      */
     public void calcIncrementalSubskills(Player originalPlayer, int assistants, int trainerlevel, int intensity,
                                          int stamina, TrainingPerWeek trainingWeek, List<StaffMember> staff) {
 
-    	if (this.hasTrainingBlock()) {
-    		return;
-    	}
-    	
+        if (this.hasTrainingBlock()) {
+            return;
+        }
+
         if (trainingWeek == null)
             return;
 
@@ -1819,52 +1966,50 @@ public class Player {
      * Performs skill drops on the player based on age and skills
      *
      * @param originalPlayer The player as he was before this week. Used to find a subskill to drop from.
-     * @param weeks The number of weeks to drop in case of missing info.
+     * @param weeks          The number of weeks to drop in case of missing info.
      */
 
     public void performSkilldrop(Player originalPlayer, int weeks) {
 
-    	if (originalPlayer == null) {
-    		return;
-    	}
+        if (originalPlayer == null) {
+            return;
+        }
 
-    	for (int skillType=0; skillType < PlayerSkill.EXPERIENCE; skillType++) {
+        for (int skillType = 0; skillType < PlayerSkill.EXPERIENCE; skillType++) {
 
-    		if ((skillType == PlayerSkill.FORM) || (skillType == PlayerSkill.STAMINA)) {
-    			continue;
-    		}
+            if ((skillType == PlayerSkill.FORM) || (skillType == PlayerSkill.STAMINA)) {
+                continue;
+            }
 
-   			if (getValue4Skill4(skillType) >= 1) {
-    			float drop = weeks * SkillDrops.instance().getSkillDrop(getValue4Skill4(skillType), originalPlayer.getAlter(), skillType);
+            if (getValue4Skill4(skillType) >= 1) {
+                float drop = weeks * SkillDrops.instance().getSkillDrop(getValue4Skill4(skillType), originalPlayer.getAlter(), skillType);
 
-    			// Only bother if there is drop, there is something to drop from,
-    			//and check that the player has not popped
-	    		if ((drop > 0) && (originalPlayer.getSubskill4PosAccurate(skillType) >0)
-	    				&& (getValue4Skill4(skillType) == originalPlayer.getValue4Skill4(skillType))) {
-	    			setSubskill4Pos(skillType, Math.max(0, getSubskill4PosAccurate(skillType) - drop/100));
-	    		}
-    		}
-    	}
+                // Only bother if there is drop, there is something to drop from,
+                //and check that the player has not popped
+                if ((drop > 0) && (originalPlayer.getSubskill4PosAccurate(skillType) > 0)
+                        && (getValue4Skill4(skillType) == originalPlayer.getValue4Skill4(skillType))) {
+                    setSubskill4Pos(skillType, Math.max(0, getSubskill4PosAccurate(skillType) - drop / 100));
+                }
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////
     //Helper
     ////////////////////////////////////////////////////////////////////////////////
 
-    float calcPosValue(FactorObject fo, boolean useForm)
-    {
-        return  calcPosValue(fo, useForm, false);
+    float calcPosValue(FactorObject fo, boolean useForm) {
+        return calcPosValue(fo, useForm, false);
     }
 
     /**
      * Calculate the player strength on a specific lineup position
      * with or without form
      *
-     * @param fo 		FactorObject with the skill weights for this position
-     * @param useForm	consider form?
-     * @param normalized	absolute or normalized contribution?
-     *
-     * @return 			the player strength on this position
+     * @param fo         FactorObject with the skill weights for this position
+     * @param useForm    consider form?
+     * @param normalized absolute or normalized contribution?
+     * @return the player strength on this position
      */
     float calcPosValue(FactorObject fo, boolean useForm, boolean normalized) {
         if ((fo == null) || (fo.getSum() == 0.0f)) {
@@ -1874,9 +2019,9 @@ public class Player {
         // The stars formulas are changed by the user -> clear the cache
         if (!PlayerAbsoluteContributionCache.containsKey("lastChange") || ((Date) PlayerAbsoluteContributionCache.get("lastChange")).before(FormulaFactors.getLastChange())) {
 //    		System.out.println ("Clearing stars cache");
-        	PlayerAbsoluteContributionCache.clear();
-        	PlayerRelativeContributionCache.clear();
-        	PlayerAbsoluteContributionCache.put("lastChange", new Date());
+            PlayerAbsoluteContributionCache.clear();
+            PlayerRelativeContributionCache.clear();
+            PlayerAbsoluteContributionCache.put("lastChange", new Date());
         }
         /**
          * Create a key for the Hashtable cache
@@ -1888,23 +2033,26 @@ public class Player {
         float loy = RatingPredictionManager.getLoyaltyHomegrownBonus(this);
 
         String key = fo.getPosition() + ":"
-        					+ Helper.round(getGKskill() + getSubskill4Pos(PlayerSkill.KEEPER) + loy, 2) + "|"
-        					+ Helper.round(getPMskill() + getSubskill4Pos(PlayerSkill.PLAYMAKING) + loy, 2) + "|"
-        					+ Helper.round(getDEFskill() + getSubskill4Pos(PlayerSkill.DEFENDING) + loy, 2) + "|"
-        					+ Helper.round(getWIskill() + getSubskill4Pos(PlayerSkill.WINGER) + loy, 2) + "|"
-        					+ Helper.round(getPSskill() + getSubskill4Pos(PlayerSkill.PASSING) + loy, 2) + "|"
-        					+ Helper.round(getSPskill() + getSubskill4Pos(PlayerSkill.SET_PIECES) + loy, 2) + "|"
-        					+ Helper.round(getSCskill() + getSubskill4Pos(PlayerSkill.SCORING) + loy, 2) + "|"
-        					+ getForm() + "|"
-        					+ getKondition() + "|"
-        					+ getErfahrung() + "|"
-        					+ getPlayerSpecialty(); // used for Technical DefFW
+                + Helper.round(getGKskill() + getSubskill4Pos(PlayerSkill.KEEPER) + loy, 2) + "|"
+                + Helper.round(getPMskill() + getSubskill4Pos(PlayerSkill.PLAYMAKING) + loy, 2) + "|"
+                + Helper.round(getDEFskill() + getSubskill4Pos(PlayerSkill.DEFENDING) + loy, 2) + "|"
+                + Helper.round(getWIskill() + getSubskill4Pos(PlayerSkill.WINGER) + loy, 2) + "|"
+                + Helper.round(getPSskill() + getSubskill4Pos(PlayerSkill.PASSING) + loy, 2) + "|"
+                + Helper.round(getSPskill() + getSubskill4Pos(PlayerSkill.SET_PIECES) + loy, 2) + "|"
+                + Helper.round(getSCskill() + getSubskill4Pos(PlayerSkill.SCORING) + loy, 2) + "|"
+                + getForm() + "|"
+                + getKondition() + "|"
+                + getErfahrung() + "|"
+                + getPlayerSpecialty(); // used for Technical DefFW
 
         // Check if the key already exists in cache
         if (PlayerAbsoluteContributionCache.containsKey(key)) {
-           // System.out.println ("Using star rating from cache, key="+key+", tablesize="+starRatingCache.size());
-            if (normalized) {return ((Float)PlayerRelativeContributionCache.get(key)).floatValue();}
-            else {return ((Float)PlayerAbsoluteContributionCache.get(key)).floatValue();}
+            // System.out.println ("Using star rating from cache, key="+key+", tablesize="+starRatingCache.size());
+            if (normalized) {
+                return ((Float) PlayerRelativeContributionCache.get(key)).floatValue();
+            } else {
+                return ((Float) PlayerAbsoluteContributionCache.get(key)).floatValue();
+            }
         }
 
         // Compute contribution
@@ -1917,55 +2065,55 @@ public class Player {
         float scValue = fo.getSCfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.SCORING, useForm, false, null, false);
         float val = gkValue + pmValue + deValue + wiValue + psValue + spValue + scValue;
 
-        float absVal = val*10; // multiplied by 10 for improved visibility
-        float normVal = val/fo.getNormalizationFactor()*100;  // scaled between 0 and 100%
+        float absVal = val * 10; // multiplied by 10 for improved visibility
+        float normVal = val / fo.getNormalizationFactor() * 100;  // scaled between 0 and 100%
 
         // Put to cache
         PlayerAbsoluteContributionCache.put(key, absVal);
         PlayerRelativeContributionCache.put(key, normVal);
 
 //    	System.out.println ("Star rating put to cache, key="+key+", val="+val+", tablesize="+starRatingCache.size());
-        if (normalized) {return normVal;}
-        else {return absVal;}
+        if (normalized) {
+            return normVal;
+        } else {
+            return absVal;
+        }
     }
 
 
-    public float calcPosValue(byte pos, boolean useForm, boolean normalized)
-    {
+    public float calcPosValue(byte pos, boolean useForm, boolean normalized) {
         return calcPosValue(pos, useForm, normalized, core.model.UserParameter.instance().nbDecimals);
     }
 
-    public float calcPosValue(byte pos, boolean useForm)
-    {
-        return  calcPosValue(pos, useForm, false);
+    public float calcPosValue(byte pos, boolean useForm) {
+        return calcPosValue(pos, useForm, false);
     }
+
     /**
      * Calculate the player strength on a specific lineup position
      * with or without form
      *
-     * @param pos		position from IMatchRoleID (TORWART.. POS_ZUS_INNENV)
-     * @param useForm	consider form?
-     *
-     * @return 			the player strength on this position
+     * @param pos     position from IMatchRoleID (TORWART.. POS_ZUS_INNENV)
+     * @param useForm consider form?
+     * @return the player strength on this position
      */
     public float calcPosValue(byte pos, boolean useForm, boolean normalized, int nb_decimals) {
-    	float es;
-    	FactorObject factor = FormulaFactors.instance().getPositionFactor(pos);
+        float es;
+        FactorObject factor = FormulaFactors.instance().getPositionFactor(pos);
 
         // Fix for TDF
-        if (pos == IMatchRoleID.FORWARD_DEF && this.getPlayerSpecialty()==PlayerSpeciality.TECHNICAL) {
+        if (pos == IMatchRoleID.FORWARD_DEF && this.getPlayerSpecialty() == PlayerSpeciality.TECHNICAL) {
             factor = FormulaFactors.instance().getPositionFactor(IMatchRoleID.FORWARD_DEF_TECH);
         }
 
-    	if(factor != null) {
+        if (factor != null) {
             es = calcPosValue(factor, useForm, normalized);
+        } else {
+            //	For Coach or factor not found return 0
+            return 0.0f;
         }
-    	 else{
-    		 //	For Coach or factor not found return 0
-    		 return 0.0f;
-    	 }
 
-        return core.util.Helper.round(es , nb_decimals);
+        return core.util.Helper.round(es, nb_decimals);
     }
 
     /**
@@ -1975,18 +2123,18 @@ public class Player {
      * @param old
      */
     public void copySubSkills(Player old) {
-    	for (int skillType=0; skillType < PlayerSkill.EXPERIENCE; skillType++) {
+        for (int skillType = 0; skillType < PlayerSkill.EXPERIENCE; skillType++) {
 
-    		if ((skillType == PlayerSkill.FORM) || (skillType == PlayerSkill.STAMINA)) {
-    			continue;
-    		}
+            if ((skillType == PlayerSkill.FORM) || (skillType == PlayerSkill.STAMINA)) {
+                continue;
+            }
 
-    		if (!check4SkillUp(skillType, old)) {
-    			setSubskill4Pos(skillType, old.getSubskill4PosAccurate(skillType));
-    		} else {
-    			setSubskill4Pos(skillType, 0);
-    		}
-    	}
+            if (!check4SkillUp(skillType, old)) {
+                setSubskill4Pos(skillType, old.getSubskill4PosAccurate(skillType));
+            } else {
+                setSubskill4Pos(skillType, 0);
+            }
+        }
     }
 
     /**
@@ -1997,33 +2145,33 @@ public class Player {
      */
     public void copySkills(Player old) {
 
-    	for (int skillType=0; skillType <= PlayerSkill.LOYALTY; skillType++) {
-    		setValue4Skill4(skillType, old.getValue4Skill4(skillType));
-    	}
+        for (int skillType = 0; skillType <= PlayerSkill.LOYALTY; skillType++) {
+            setValue4Skill4(skillType, old.getValue4Skill4(skillType));
+        }
     }
 
 
     /**
      * Performs the subskill reset needed at skill drop.
      *
-     * @param SkillType The ID of the skill to perform drop on.
+     * @param skillType The ID of the skill to perform drop on.
      */
     public void dropSubskills(int skillType) {
-    	if (getValue4Skill4(skillType) > 0) {
-			// non-existent has no subskill.
-			setSubskill4Pos(skillType, 0.999f);
+        if (getValue4Skill4(skillType) > 0) {
+            // non-existent has no subskill.
+            setSubskill4Pos(skillType, 0.999f);
 
-		} else {
-			setSubskill4Pos(skillType, 0);
-		}
-	}
+        } else {
+            setSubskill4Pos(skillType, 0);
+        }
+    }
 
 
     //////////////////////////////////////////////////////////////////////////////////
     //equals
     /////////////////////////////////////////////////////////////////////////////////
     @Override
-	public boolean equals(Object obj) {
+    public boolean equals(Object obj) {
         boolean equals = false;
 
         if (obj instanceof Player) {
@@ -2037,8 +2185,8 @@ public class Player {
      * prüft ob Skillup vorliegt
      */
     protected boolean check4SkillUp(int skill, Player oldPlayer) {
-    	if ((oldPlayer != null) && (oldPlayer.getSpielerID() > 0))
-        	return oldPlayer.getValue4Skill4(skill) < getValue4Skill4(skill);
+        if ((oldPlayer != null) && (oldPlayer.getSpielerID() > 0))
+            return oldPlayer.getValue4Skill4(skill) < getValue4Skill4(skill);
         return false;
     }
 
@@ -2046,26 +2194,46 @@ public class Player {
      * Test for whether skilldown has occurred
      */
     public boolean check4SkillDown(int skill, Player oldPlayer) {
-    	if (skill < PlayerSkill.EXPERIENCE)
-    	if ((oldPlayer != null) && (oldPlayer.getSpielerID() > 0))
-        	return oldPlayer.getValue4Skill4(skill) > getValue4Skill4(skill);
+        if (skill < PlayerSkill.EXPERIENCE)
+            if ((oldPlayer != null) && (oldPlayer.getSpielerID() > 0))
+                return oldPlayer.getValue4Skill4(skill) > getValue4Skill4(skill);
         return false;
     }
 
     /**
      * Does this player have a training block?
+     *
      * @return training block
      */
-    public boolean hasTrainingBlock () {
-    	return m_bTrainingBlock;
+    public boolean hasTrainingBlock() {
+        return m_bTrainingBlock;
     }
 
     /**
      * Set the training block of this player (true/false)
-     * @param isBlocked	new value
+     *
+     * @param isBlocked new value
      */
-    public void setTrainingBlock (boolean isBlocked) {
-    	this.m_bTrainingBlock = isBlocked;
+    public void setTrainingBlock(boolean isBlocked) {
+        this.m_bTrainingBlock = isBlocked;
     }
 
+}
+
+class PositionContribute {
+    private float contribute;
+    private byte position;
+
+    public PositionContribute(float contribute, byte position) {
+        this.contribute = contribute;
+        this.position = position;
+    }
+
+    public float getContribute() {
+        return contribute;
+    }
+
+    public byte getPosition() {
+        return position;
+    }
 }
