@@ -22,6 +22,8 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
+import core.model.FactorObject;
+import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -49,8 +51,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
-import static core.model.player.IMatchRoleID.*;
-
+import static core.model.player.IMatchRoleID.UNKNOWN;
 
 /**
  * Shows player details for the selected player
@@ -94,7 +95,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private final DoppelLabelEntry m_jpTSI = new DoppelLabelEntry(new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT), new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT));
-    private final JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
+    private JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
     // Top Row, column 3
     private final ColorLabelEntry m_jpLeadership = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -388,6 +389,11 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jcbInformation.addItemListener(this);
         m_jpStatus.setPlayer(m_clPlayer);
         m_jcbUserBestPosition.removeItemListener(this);
+        m_jcbUserBestPosition.removeAllItems();
+        for (CBItem item : getPositions()
+        ) {
+            m_jcbUserBestPosition.addItem(item);
+        }
         Helper.markierenComboBox(m_jcbUserBestPosition, m_clPlayer.getUserPosFlag());
         m_jcbUserBestPosition.addItemListener(this);
         final int salary = (int) (m_clPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
@@ -1114,11 +1120,33 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     }
 
     public CBItem[] getPositions() {
-        CBItem[] positions = new CBItem[3];
-        positions[0] = new CBItem(MatchRoleID.getNameForPosition(UNKNOWN), UNKNOWN);
-        positions[1] = new CBItem(MatchRoleID.getNameForPosition(COACH), COACH);
-        positions[2] = new CBItem(MatchRoleID.getNameForPosition(KEEPER), KEEPER);
-        positions[3] = new CBItem(MatchRoleID.getNameForPosition(CENTRAL_DEFENDER), CENTRAL_DEFENDER);
+
+        final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
+        byte[] altPositions = m_clPlayer.getAlternativePositions();
+
+        CBItem[] positions = new CBItem[allPos.length];
+
+        int k = 0;
+        positions[k] = new CBItem(MatchRoleID.getNameForPosition(UNKNOWN), UNKNOWN);
+        k++;
+        String text = "";
+        for (FactorObject allPo : allPos) {
+            if (allPo.getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
+            text = MatchRoleID.getNameForPosition(allPo.getPosition())
+                    + " ("
+                    + Helper.getNumberFormat(false, 1).format(
+                    m_clPlayer.calcPosValue(allPo.getPosition(), true, true))
+                    + "%)";
+            for (byte altPos : altPositions
+            ) {
+                if (altPos == allPo.getPosition()) {
+                    text += " *";
+                }
+            }
+            positions[k] = new CBItem(text, allPo.getPosition());
+            k++;
+        }
+
         return positions;
     }
 }
