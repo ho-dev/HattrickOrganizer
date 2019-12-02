@@ -36,6 +36,7 @@ public class MatchStatistics {
 	 * @param accepted
 	 *            An array of integers specifying the positions which should be
 	 *            accepted
+	 *            If array is empty all positions are accepted
 	 * @return the number of minutes played in the specified positions
 	 */
 	public int getMinutesPlayedInPositions(int spielerId, int[] accepted) {
@@ -52,7 +53,7 @@ public class MatchStatistics {
 		int minPlayed = 0;
 
 		// Those in the starting lineup entered at minute 0
-		if (isInAcceptedPositions(player.getStartPosition(), accepted)) {
+		if (accepted.length ==0 || isInAcceptedPositions(player.getStartPosition(), accepted)) {
 			enterMin = 0;
 			inPosition = true;
 		}
@@ -74,7 +75,7 @@ public class MatchStatistics {
 			if ((sub.getObjectPlayerID() == spielerId) || (sub.getSubjectPlayerID() == spielerId)) {
 
 				int newpos = getPlayerFieldPositionAtMinute(spielerId, sub.getMatchMinuteCriteria());
-				boolean newPosAccepted = isInAcceptedPositions(newpos, accepted);
+				boolean newPosAccepted = accepted.length ==0 || isInAcceptedPositions(newpos, accepted);
 
 				if (inPosition && newPosAccepted) {
 					// He was in a counting position, and still is. Ignore

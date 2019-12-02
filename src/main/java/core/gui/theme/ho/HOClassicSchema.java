@@ -210,6 +210,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TRAINBAR_FT_PT_E, "gui/bilder/trainpreview/trainpre_ft_pt_e.png");
 		put(TRAINBAR_FT_E, "gui/bilder/trainpreview/trainpre_ft_e.png");
 		put(TRAINBAR_PT_E, "gui/bilder/trainpreview/trainpre_pt_e.png");
+		put(STAMINABAR_FT, "gui/bilder/trainpreview/stamina_ft.png");
+		put(STAMINABAR_FFT, "gui/bilder/trainpreview/stamina_fft.png");
+		put(STAMINABAR_FT_E, "gui/bilder/trainpreview/stamina_ft_e.png");
 		put(TRAINBAR_EMPTY, "gui/bilder/trainpreview/trainpre_empty.png");
 
 		put(GREEN_WHITE_CLOCK, "gui/bilder/green-white-clock.png");
