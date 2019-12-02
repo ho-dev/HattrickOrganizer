@@ -27,7 +27,7 @@ Portugues
 PortuguesBrasil
 Romanian
 Russian
-Serbian (Cyrillic)
+Serbian(Cyrillic)
 Slovak
 Slovenian
 Spanish
