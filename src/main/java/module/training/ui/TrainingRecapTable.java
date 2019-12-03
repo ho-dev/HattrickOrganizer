@@ -3,14 +3,14 @@ package module.training.ui;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import core.model.HOVerwaltung;
+import core.model.player.Player;
+import core.training.TrainingPreviewPlayers;
 
 import java.awt.Color;
 import java.awt.Component;
 
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
@@ -24,10 +24,10 @@ public class TrainingRecapTable extends JScrollPane {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 7666144967819145973L;
-	private JTable fixed;
+     *
+     */
+    private static final long serialVersionUID = 7666144967819145973L;
+    private JTable fixed;
     private JTable scroll;
 
     /**
@@ -44,16 +44,38 @@ public class TrainingRecapTable extends JScrollPane {
                                                        boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
+            this.setIcon(null);
+            this.setToolTipText("");
+
+            if (column == 0) {
+                String text = null;
+                String tooltip = null;
+                Icon icon = null;
+                int playerId = Integer.parseInt((String) table.getValueAt(row, table.getColumnCount() - 1));
+                Player player = HOVerwaltung.instance().getModel().getSpieler(playerId);
+
+                this.setOpaque(true);
+                this.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
+                this.setText(player.getName());
+
+                tooltip = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getText();
+                if (tooltip == null) {
+                    tooltip = "";
+                }
+                this.setToolTipText(tooltip);
+                this.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getIcon());
+            }
+            
             if (isSelected) {
                 return this;
             }
 
-            int speed = Integer.parseInt((String) table.getValueAt(row, 2));
-            Color bg_color; 
+            int speed = Integer.parseInt((String) table.getValueAt(row, 3));
+            Color bg_color;
             // Speed range is 16 to 125
-            if (speed > (125+50)/2) {
+            if (speed > (125 + 50) / 2) {
                 bg_color = ThemeManager.getColor(HOColorName.PLAYER_SKILL_SPECIAL_BG);
-            } else if (speed > (50+16)/2) {
+            } else if (speed > (50 + 16) / 2) {
                 bg_color = ThemeManager.getColor(HOColorName.PLAYER_SKILL_BG);
             } else {
                 bg_color = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
@@ -68,7 +90,7 @@ public class TrainingRecapTable extends JScrollPane {
     /**
      * Creates a new TrainingRecapTable object.
      *
-     * @param main Table to show
+     * @param main         Table to show
      * @param fixedColumns number of fixed columns
      */
     public TrainingRecapTable(JTable main, int fixedColumns) {
@@ -99,15 +121,21 @@ public class TrainingRecapTable extends JScrollPane {
             columnModel.removeColumn(columnModel.getColumn(fixedColumns));
         }
 
-        fixed.getColumnModel().getColumn(0).setMaxWidth(120);
-        fixed.getColumnModel().getColumn(0).setMinWidth(120);
-        fixed.getColumnModel().getColumn(0).setWidth(120);
-        fixed.getColumnModel().getColumn(1).setMaxWidth(100);
-        fixed.getColumnModel().getColumn(1).setMinWidth(100);
-        fixed.getColumnModel().getColumn(1).setWidth(100);
-        fixed.getColumnModel().getColumn(2).setMaxWidth(0);
-        fixed.getColumnModel().getColumn(2).setMinWidth(0);
-        fixed.getColumnModel().getColumn(2).setPreferredWidth(0);
+        fixed.getColumnModel().getColumn(0).setMaxWidth(150);
+        fixed.getColumnModel().getColumn(0).setMinWidth(150);
+        fixed.getColumnModel().getColumn(0).setWidth(150);
+        fixed.getColumnModel().getColumn(1).setMaxWidth(60);
+        fixed.getColumnModel().getColumn(1).setMinWidth(60);
+        fixed.getColumnModel().getColumn(1).setWidth(60);
+        fixed.getColumnModel().getColumn(2).setMaxWidth(200);
+        fixed.getColumnModel().getColumn(2).setMinWidth(200);
+        fixed.getColumnModel().getColumn(2).setPreferredWidth(200);
+        fixed.getColumnModel().getColumn(3).setMaxWidth(0);
+        fixed.getColumnModel().getColumn(3).setMinWidth(0);
+        fixed.getColumnModel().getColumn(3).setPreferredWidth(0);
+        fixed.getColumnModel().getColumn(4).setMaxWidth(0);
+        fixed.getColumnModel().getColumn(4).setMinWidth(0);
+        fixed.getColumnModel().getColumn(4).setPreferredWidth(0);
 
         //  Add the fixed table to the scroll pane
         fixed.setPreferredScrollableViewportSize(fixed.getPreferredSize());

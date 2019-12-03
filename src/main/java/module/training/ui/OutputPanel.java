@@ -28,6 +28,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.Collections;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -184,8 +185,10 @@ public class OutputPanel extends LazyImagePanel {
                     column.setPreferredWidth(150);
                     break;
                 case 1:
+                    column.setPreferredWidth(60);
+                    break;
                 case 2:
-                    column.setPreferredWidth(100);
+                    column.setPreferredWidth(140);
                     break;
                 default:
                     column.setPreferredWidth(70);
@@ -240,6 +243,11 @@ public class OutputPanel extends LazyImagePanel {
             Point p = e.getPoint();
             int realColumnIndex = convertColumnIndexToModel(columnAtPoint(p));
             int realRowIndex = convertRowIndexToModel(rowAtPoint(p));
+
+            if (realColumnIndex == 0) {
+                Object obj = tableModel.getToolTipAt(realRowIndex, realColumnIndex);
+                return obj.toString();
+            }
 
             if ((realColumnIndex > 2) && (realColumnIndex < 11)) {
                 Object obj = tableModel.getToolTipAt(realRowIndex, realColumnIndex);

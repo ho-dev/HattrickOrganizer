@@ -2,11 +2,13 @@ package module.training.ui.renderer;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import module.training.ui.comp.BestPositionCell;
+import module.training.ui.comp.PlayerNameCell;
 import module.training.ui.comp.VerticalIndicator;
 
 import java.awt.*;
 
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class OutputTableRenderer extends DefaultTableCellRenderer {
@@ -23,9 +25,15 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
 
         Color bg_color;
 
-
         if (column < 3 && isSelected) {
-            return this;
+            if (column == 0) {
+                PlayerNameCell pnc = (PlayerNameCell) value;
+                pnc.setForeground(this.getForeground());
+                pnc.setBackground(this.getBackground());
+                return pnc;
+            } else {
+                return this;
+            }
         }
 
         // Reset default values
@@ -57,7 +65,16 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
                 bg_color = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
             }
 
-            setBackground(bg_color);
+            if (column == 0) {
+                PlayerNameCell pnc = (PlayerNameCell) value;
+                // Reset default values
+                pnc.setForeground(Color.BLACK);
+                pnc.setBackground(bg_color);
+                return pnc;
+            } else {
+                setBackground(bg_color);
+            }
+
         }
 
         return cell;
