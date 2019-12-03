@@ -54,7 +54,7 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
         }
 
         if (column < 3 && !isSelected) {
-            int speed = Integer.parseInt((String) table.getValueAt(row, 12));
+            int speed = (int) table.getValueAt(row, 12);
 
             // Speed range is 16 to 125
             if (speed > (125 + 50) / 2) {
