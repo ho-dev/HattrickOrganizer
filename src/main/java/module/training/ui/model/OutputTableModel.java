@@ -64,6 +64,8 @@ public class OutputTableModel extends AbstractTableModel {
             case 9:
             case 10:
                 return VerticalIndicator.class;
+            case 12:
+                return Integer.class;
             default:
                 return super.getColumnClass(columnIndex);
         }
@@ -186,7 +188,7 @@ public class OutputTableModel extends AbstractTableModel {
             case COL_PLAYER_ID:
                 return Integer.toString(player.getSpielerID());
             case 12:
-                return Integer.toString(ftm.getTrainingSpeed());
+                return ftm.getTrainingSpeed();
             default:
                 return "";
         }
@@ -255,7 +257,7 @@ public class OutputTableModel extends AbstractTableModel {
         return pnc;
     }
 
-    private BestPositionCell createBestPositionCell(Player player){
+    private BestPositionCell createBestPositionCell(Player player) {
         BestPositionCell bpc = new BestPositionCell(player);
 
         return bpc;
