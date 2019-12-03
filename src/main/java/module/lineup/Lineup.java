@@ -1,5 +1,7 @@
 package module.lineup;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
@@ -1927,4 +1929,9 @@ public class Lineup{
 		}
 	}
 
+	public String toJson()
+	{
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		return gson.toJson(this);
+	}
 }

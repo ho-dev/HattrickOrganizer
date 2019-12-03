@@ -60,8 +60,9 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	private byte m_bTaktik = -1;
 
 	/** man marking, id of the marked opponent player */
-	@SerializedName("marking")
-	@Expose
+	// not (yet) supported by chpp
+	//@SerializedName("marking")
+	//@Expose
 	private Integer m_iMarkingPlayerId = null;
 
 	/** PositionsAngabe */
@@ -69,7 +70,6 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	// protected byte m_bPosition = -1;
 
 	/** ID */
-	@Expose
 	private int m_iId = -1;
 
 	public boolean isFieldMatchRoleId(){ return m_iId>=keeper && m_iId <=leftForward;}
