@@ -38,48 +38,93 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 
-
 /**
  * This is a Skill Tester, where parameters of a player can be changed to see
  * what effect this will have on ratings for the player.
  */
 final class SpielerTrainingsSimulatorPanel extends ImagePanel
-    implements core.gui.Refreshable, ItemListener, ActionListener, FocusListener
-{
+        implements core.gui.Refreshable, ItemListener, ActionListener, FocusListener {
 
-	private static final long serialVersionUID = 7657564758631332932L;
+    private static final long serialVersionUID = 7657564758631332932L;
 
-	//~ Static fields/initializers -----------------------------------------------------------------
+    //~ Static fields/initializers -----------------------------------------------------------------
 
     private static Dimension CBSIZE = new Dimension(Helper.calcCellWidth(120),
-                                                    Helper.calcCellWidth(25));
+            Helper.calcCellWidth(25));
     private static Dimension PFEILSIZE = new Dimension(20, 20);
 
     //~ Instance fields ----------------------------------------------------------------------------
 
     private final ColorLabelEntry m_jpBestPos = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-    private final DoppelLabelEntry m_jpWertAussenVert = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertAussenVertDef = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertAussenVertIn = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertAussenVertOff = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertFluegel = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertFluegelDef = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertFluegelIn = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertFluegelOff = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertInnenVert = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertInnenVertAus = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertInnenVertOff = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertMittelfeld = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertMittelfeldAus = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertMittelfeldDef = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertMittelfeldOff = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertSturm = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertSturmAus = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertSturmDef = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpWertTor = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+    // Ratings Column
+    private final DoppelLabelEntry m_jpRatingKeeper = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingCentralDefender = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingCentralDefenderTowardsWing = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingCentralDefenderOffensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingWingback = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingWingbackDefensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingWingbackTowardsMiddle = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingWingbackOffensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingeMidfielder = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingeMidfielderTowardsWing = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingeMidfielderDefensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingeMidfielderOffensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingWinger = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingWingerDefensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingWingerTowardsMiddle = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingWingerOffensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingForward = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingForwardTowardsWing = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoppelLabelEntry m_jpRatingForwardDefensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+
+    private final DoppelLabelEntry[] playerPositionValues = new DoppelLabelEntry[]{
+            m_jpRatingKeeper,
+            m_jpRatingCentralDefender,
+            m_jpRatingCentralDefenderTowardsWing,
+            m_jpRatingCentralDefenderOffensive,
+            m_jpRatingWingback,
+            m_jpRatingWingbackTowardsMiddle,
+            m_jpRatingWingbackOffensive,
+            m_jpRatingWingbackDefensive,
+            m_jpRatingeMidfielder,
+            m_jpRatingeMidfielderTowardsWing,
+            m_jpRatingeMidfielderOffensive,
+            m_jpRatingeMidfielderDefensive,
+            m_jpRatingWinger,
+            m_jpRatingWingerTowardsMiddle,
+            m_jpRatingWingerOffensive,
+            m_jpRatingWingerDefensive,
+            m_jpRatingForward,
+            m_jpRatingForwardTowardsWing,
+            m_jpRatingForwardDefensive
+    };
+
+    private final byte[] playerPosition = new byte[]{
+            IMatchRoleID.KEEPER,
+            IMatchRoleID.CENTRAL_DEFENDER,
+            IMatchRoleID.CENTRAL_DEFENDER_TOWING,
+            IMatchRoleID.CENTRAL_DEFENDER_OFF,
+            IMatchRoleID.BACK,
+            IMatchRoleID.BACK_TOMID,
+            IMatchRoleID.BACK_OFF,
+            IMatchRoleID.BACK_DEF,
+            IMatchRoleID.MIDFIELDER,
+            IMatchRoleID.MIDFIELDER_TOWING,
+            IMatchRoleID.MIDFIELDER_OFF,
+            IMatchRoleID.MIDFIELDER_DEF,
+            IMatchRoleID.WINGER,
+            IMatchRoleID.WINGER_TOMID,
+            IMatchRoleID.WINGER_OFF,
+            IMatchRoleID.WINGER_DEF,
+            IMatchRoleID.FORWARD,
+            IMatchRoleID.FORWARD_TOWING,
+            IMatchRoleID.FORWARD_DEF
+
+    };
+
     private final ColorLabelEntry m_jpEPV = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
     private final JButton m_jbAddTempSpieler = new JButton(HOVerwaltung.instance().getLanguageString("AddTempspieler"));
     private final JButton m_jbRemoveTempSpieler = new JButton(HOVerwaltung.instance().getLanguageString("RemoveTempspieler"));
     private final JComboBox m_jcbErfahrung = new JComboBox(PlayerAbility.ITEMS);
@@ -92,10 +137,10 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     private final JComboBox m_jcbTorschuss = new JComboBox(PlayerAbility.ITEMS);
     private final JComboBox m_jcbTorwart = new JComboBox(PlayerAbility.ITEMS);
     private final JComboBox m_jcbVerteidigung = new JComboBox(PlayerAbility.ITEMS);
-	private final JComboBox m_jcbSpeciality = new JComboBox(PlayerSpeciality.ITEMS);
-	private final JComboBox m_jcbLoyalty = new JComboBox(PlayerAbility.ITEMS);
-	private final JCheckBox m_jchHomegrown = new JCheckBox();
-	private JTextField jtfAge = new JTextField("17.0");
+    private final JComboBox m_jcbSpeciality = new JComboBox(PlayerSpeciality.ITEMS);
+    private final JComboBox m_jcbLoyalty = new JComboBox(PlayerAbility.ITEMS);
+    private final JCheckBox m_jchHomegrown = new JCheckBox();
+    private JTextField jtfAge = new JTextField("17.0");
     private final JLabel m_jlErfahrung = new JLabel();
     private final JLabel m_jlFluegel = new JLabel();
     private final JLabel m_jlForm = new JLabel();
@@ -110,6 +155,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     private final JLabel m_jlLoyalty = new JLabel();
     private final JLabel m_jlHomeGrown = new JLabel();
     private Player m_clPlayer;
+    private final Player tempPlayer = new Player();
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -149,10 +195,10 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             final Player tempPlayer = new Player();
             tempPlayer.setNationalitaet(HOVerwaltung.instance().getModel().getBasics().getLand());
             tempPlayer.setSpielerID(module.transfer.scout.TransferEingabePanel
-                                     .getNextTempSpielerID());
+                    .getNextTempSpielerID());
             tempPlayer.setName("Temp " + Math.abs(1000 + tempPlayer.getSpielerID()));
-			tempPlayer.setAlter(getAge());
-			tempPlayer.setAgeDays(getAgeDays());
+            tempPlayer.setAlter(getAge());
+            tempPlayer.setAgeDays(getAgeDays());
             tempPlayer.setErfahrung(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
             tempPlayer.setForm(((CBItem) m_jcbForm.getSelectedItem()).getId());
             tempPlayer.setKondition(((CBItem) m_jcbKondition.getSelectedItem()).getId());
@@ -196,7 +242,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
     private void setCBs() {
         m_jlName.setText(m_clPlayer.getName());
-		jtfAge.setText(m_clPlayer.getAlter()+"."+ m_clPlayer.getAgeDays());
+        jtfAge.setText(m_clPlayer.getAlter() + "." + m_clPlayer.getAgeDays());
         Helper.markierenComboBox(m_jcbForm, m_clPlayer.getForm());
         Helper.markierenComboBox(m_jcbErfahrung, m_clPlayer.getErfahrung());
         Helper.markierenComboBox(m_jcbKondition, m_clPlayer.getKondition());
@@ -206,23 +252,23 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         Helper.markierenComboBox(m_jcbTorwart, m_clPlayer.getGKskill());
         Helper.markierenComboBox(m_jcbPasspiel, m_clPlayer.getPSskill());
         Helper.markierenComboBox(m_jcbVerteidigung, m_clPlayer.getDEFskill());
-		Helper.markierenComboBox(m_jcbSpeciality, m_clPlayer.getPlayerSpecialty());
+        Helper.markierenComboBox(m_jcbSpeciality, m_clPlayer.getPlayerSpecialty());
         Helper.markierenComboBox(m_jcbStandard, m_clPlayer.getSPskill());
         Helper.markierenComboBox(m_jcbLoyalty, m_clPlayer.getLoyalty());
         m_jchHomegrown.setSelected(m_clPlayer.isHomeGrown());
 
-        m_jlForm.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlKondition.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlErfahrung.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlSpielaufbau.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlFluegel.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlTorschuss.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlTorwart.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlPasspiel.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlVerteidigung.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlStandard.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlLoyalty.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlHomeGrown.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
+        m_jlForm.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlKondition.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlErfahrung.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlSpielaufbau.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlFluegel.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlTorschuss.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlTorwart.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlPasspiel.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlVerteidigung.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlStandard.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlLoyalty.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlHomeGrown.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
 
         m_jcbForm.setEnabled(true);
         m_jcbErfahrung.setEnabled(true);
@@ -233,19 +279,18 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         m_jcbTorwart.setEnabled(true);
         m_jcbPasspiel.setEnabled(true);
         m_jcbVerteidigung.setEnabled(true);
-		m_jcbSpeciality.setEnabled(true);
+        m_jcbSpeciality.setEnabled(true);
         m_jcbStandard.setEnabled(true);
         m_jcbLoyalty.setEnabled(true);
         m_jchHomegrown.setEnabled(true);
     }
 
     private void setLabels() {
-        final Player tempPlayer = new Player();
         tempPlayer.setForm(((CBItem) m_jcbForm.getSelectedItem()).getId());
         tempPlayer.setErfahrung(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
         tempPlayer.setKondition(((CBItem) m_jcbKondition.getSelectedItem()).getId());
         tempPlayer.setVerteidigung(((CBItem) m_jcbVerteidigung.getSelectedItem()).getId());
-		tempPlayer.setPlayerSpecialty(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
+        tempPlayer.setPlayerSpecialty(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
         tempPlayer.setTorschuss(((CBItem) m_jcbTorschuss.getSelectedItem()).getId());
         tempPlayer.setTorwart(((CBItem) m_jcbTorwart.getSelectedItem()).getId());
         tempPlayer.setFluegelspiel(((CBItem) m_jcbFluegel.getSelectedItem()).getId());
@@ -255,138 +300,86 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         tempPlayer.setLoyalty(((CBItem) m_jcbLoyalty.getSelectedItem()).getId());
         tempPlayer.setHomeGrown(m_jchHomegrown.isSelected());
 
-        m_jlForm.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getForm()- m_clPlayer.getForm(),true));
-        m_jlKondition.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getKondition()- m_clPlayer.getKondition(),true));
-        m_jlErfahrung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getErfahrung()- m_clPlayer.getErfahrung(),true));
-        m_jlSpielaufbau.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getPMskill()- m_clPlayer.getPMskill(),true));
-        m_jlFluegel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getWIskill()- m_clPlayer.getWIskill(),true));
-        m_jlTorschuss.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getSCskill()- m_clPlayer.getSCskill(),true));
-        m_jlTorwart.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getGKskill()- m_clPlayer.getGKskill(),true));
-        m_jlPasspiel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getPSskill()- m_clPlayer.getPSskill(),true));
-        m_jlVerteidigung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getDEFskill()- m_clPlayer.getDEFskill(),true));
-        m_jlStandard.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getSPskill()- m_clPlayer.getSPskill(),true));
-        m_jlLoyalty.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getLoyalty()- m_clPlayer.getLoyalty(), true));
+        m_jlForm.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getForm() - m_clPlayer.getForm(), true));
+        m_jlKondition.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getKondition() - m_clPlayer.getKondition(), true));
+        m_jlErfahrung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getErfahrung() - m_clPlayer.getErfahrung(), true));
+        m_jlSpielaufbau.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getPMskill() - m_clPlayer.getPMskill(), true));
+        m_jlFluegel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getWIskill() - m_clPlayer.getWIskill(), true));
+        m_jlTorschuss.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getSCskill() - m_clPlayer.getSCskill(), true));
+        m_jlTorwart.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getGKskill() - m_clPlayer.getGKskill(), true));
+        m_jlPasspiel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getPSskill() - m_clPlayer.getPSskill(), true));
+        m_jlVerteidigung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getDEFskill() - m_clPlayer.getDEFskill(), true));
+        m_jlStandard.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getSPskill() - m_clPlayer.getSPskill(), true));
+        m_jlLoyalty.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getLoyalty() - m_clPlayer.getLoyalty(), true));
         int hg = 0;
-        if (m_clPlayer.isHomeGrown() != tempPlayer.isHomeGrown())
-        {
-        	if (m_clPlayer.isHomeGrown())
-        		hg = -1;
-        	else
-        		hg = 1;
+        if (m_clPlayer.isHomeGrown() != tempPlayer.isHomeGrown()) {
+            if (m_clPlayer.isHomeGrown())
+                hg = -1;
+            else
+                hg = 1;
         }
         m_jlHomeGrown.setIcon(ImageUtilities.getImageIcon4Veraenderung(hg, true));
 
         m_jpBestPos.setText(MatchRoleID.getNameForPosition(tempPlayer.getIdealPosition())
-        		+ " (" + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true)) + ")");
-        m_jpWertTor.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).
-        		format(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true)));
-        m_jpWertTor.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.KEEPER,true), false);
-        m_jpWertInnenVert.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true)));
-        m_jpWertInnenVert.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,true), false);
-        m_jpWertInnenVertAus.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true)));
-        m_jpWertInnenVertAus.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true), false);
-        m_jpWertInnenVertOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true)));
-        m_jpWertInnenVertOff.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true), false);
-        m_jpWertAussenVert.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK, true)));
-        m_jpWertAussenVert.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.BACK, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.BACK, true), false);
-        m_jpWertAussenVertIn.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).
-        		format(tempPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true)));
-        m_jpWertAussenVertIn.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true), false);
-        m_jpWertAussenVertOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true)));
-        m_jpWertAussenVertOff.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true), false);
-        m_jpWertAussenVertDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true)));
-        m_jpWertAussenVertDef.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true), false);
-        m_jpWertMittelfeld.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true)));
-        m_jpWertMittelfeld.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true), false);
-        m_jpWertMittelfeldAus.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true)));
-        m_jpWertMittelfeldAus.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true), false);
-        m_jpWertMittelfeldOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true)));
-        m_jpWertMittelfeldOff.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true), false);
-        m_jpWertMittelfeldDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true)));
-        m_jpWertMittelfeldDef.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true), false);
-        m_jpWertFluegel.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER, true)));
-        m_jpWertFluegel.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.WINGER, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.WINGER, true), false);
-        m_jpWertFluegelIn.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true)));
-        m_jpWertFluegelIn.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true), false);
-        m_jpWertFluegelOff.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true)));
-        m_jpWertFluegelOff.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true), false);
-        m_jpWertFluegelDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true)));
-        m_jpWertFluegelDef.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true), false);
-        m_jpWertSturm.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD, true)));
-        m_jpWertSturm.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.FORWARD, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.FORWARD, true), false);
-        m_jpWertSturmAus.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true)));
-        m_jpWertSturmAus.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true), false);
-        m_jpWertSturmDef.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true)));
-        m_jpWertSturmDef.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true)
-        		- m_clPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true), false);
-		tempPlayer.setAlter(getAge());
-		tempPlayer.setAgeDays(getAgeDays());
-		tempPlayer.setFuehrung(m_clPlayer.getFuehrung());
-		tempPlayer.setPlayerSpecialty(m_clPlayer.getPlayerSpecialty());
+                + " (" + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true)) + ")");
+
+        for (int i = 0; i < playerPositionValues.length; i++) {
+            showWithCompare(playerPositionValues[i], playerPosition[i]);
+        }
+
+        tempPlayer.setAlter(getAge());
+        tempPlayer.setAgeDays(getAgeDays());
+        tempPlayer.setFuehrung(m_clPlayer.getFuehrung());
+        tempPlayer.setPlayerSpecialty(m_clPlayer.getPlayerSpecialty());
 //        m_jpEPV.setText(java.text.NumberFormat.getCurrencyInstance()
 //        		.format(HOVerwaltung.instance().getModel().getEPV()
 //        		.getPrice(new EPVData(tempPlayer))));
     }
 
-	private int getAge() {
-		int age = 17;
-		if (m_clPlayer != null) {
-			age = m_clPlayer.getAlter();
-		}
-		try {
-			age = Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", ""));
-		} catch (NumberFormatException e) {
-		}
-		return age;
-	}
+    private void showWithCompare(DoppelLabelEntry labelEntry, byte playerPosition) {
 
-	private int getAgeDays() {
-		int age = 0;
-		if (m_clPlayer != null) {
-			age = m_clPlayer.getAgeDays();
-		}
-		try {
-			age = Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", ""));
-		} catch (NumberFormatException e) {
-		}
-		return age;
-	}
+        labelEntry.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(playerPosition, true)));
+
+
+        byte[] alternativePosition = tempPlayer.getAlternativePositions();
+        for (byte altPos : alternativePosition) {
+            if (altPos == playerPosition) {
+                labelEntry.getLinks().setBold(true);
+                break;
+            } else {
+                labelEntry.getLinks().setBold(false);
+            }
+        }
+
+        labelEntry.getRechts().setSpecialNumber(tempPlayer.calcPosValue(playerPosition, true)
+                - m_clPlayer.calcPosValue(playerPosition, true), false);
+    }
+
+    private int getAge() {
+        int age = 17;
+        if (m_clPlayer != null) {
+            age = m_clPlayer.getAlter();
+        }
+        try {
+            age = Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", ""));
+        } catch (NumberFormatException e) {
+        }
+        return age;
+    }
+
+    private int getAgeDays() {
+        int age = 0;
+        if (m_clPlayer != null) {
+            age = m_clPlayer.getAgeDays();
+        }
+        try {
+            age = Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", ""));
+        } catch (NumberFormatException e) {
+        }
+        return age;
+    }
 
     private void initComponents() {
         final GridBagLayout layout = new GridBagLayout();
@@ -425,30 +418,30 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         eingabenLayout.setConstraints(m_jlName, eingabenconstraints);
         panel.add(m_jlName);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.speciality"));
-		eingabenconstraints.gridx = 0;
-		eingabenconstraints.gridy = 1;
-		eingabenconstraints.gridwidth = 1;
-		eingabenLayout.setConstraints(label, eingabenconstraints);
-		panel.add(label);
-		m_jcbSpeciality.setPreferredSize(CBSIZE);
-		m_jcbSpeciality.addItemListener(this);
-		eingabenconstraints.gridx = 1;
-		eingabenconstraints.gridy = 1;
-		eingabenLayout.setConstraints(m_jcbSpeciality, eingabenconstraints);
-		panel.add(m_jcbSpeciality);
+        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.speciality"));
+        eingabenconstraints.gridx = 0;
+        eingabenconstraints.gridy = 1;
+        eingabenconstraints.gridwidth = 1;
+        eingabenLayout.setConstraints(label, eingabenconstraints);
+        panel.add(label);
+        m_jcbSpeciality.setPreferredSize(CBSIZE);
+        m_jcbSpeciality.addItemListener(this);
+        eingabenconstraints.gridx = 1;
+        eingabenconstraints.gridy = 1;
+        eingabenLayout.setConstraints(m_jcbSpeciality, eingabenconstraints);
+        panel.add(m_jcbSpeciality);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.age"));
-		eingabenconstraints.gridx = 3;
-		eingabenconstraints.gridy = 1;
-		eingabenLayout.setConstraints(label, eingabenconstraints);
-		panel.add(label);
-		jtfAge.setPreferredSize(CBSIZE);
-		jtfAge.addFocusListener(this);
-		eingabenconstraints.gridx = 4;
-		eingabenconstraints.gridy = 1;
-		eingabenLayout.setConstraints(jtfAge, eingabenconstraints);
-		panel.add(jtfAge);
+        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.age"));
+        eingabenconstraints.gridx = 3;
+        eingabenconstraints.gridy = 1;
+        eingabenLayout.setConstraints(label, eingabenconstraints);
+        panel.add(label);
+        jtfAge.setPreferredSize(CBSIZE);
+        jtfAge.addFocusListener(this);
+        eingabenconstraints.gridx = 4;
+        eingabenconstraints.gridy = 1;
+        eingabenLayout.setConstraints(jtfAge, eingabenconstraints);
+        panel.add(jtfAge);
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.experience"));
         eingabenconstraints.gridx = 0;
@@ -686,81 +679,12 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         panel.add(label);
         panel.add(m_jpBestPos.getComponent(false));
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.keeper"));
-        panel.add(label);
-        panel.add(m_jpWertTor.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.centraldefender"));
-        panel.add(label);
-        panel.add(m_jpWertInnenVert.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.centraldefendertowardswing"));
-        panel.add(label);
-        panel.add(m_jpWertInnenVertAus.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.centraldefenderoffensive"));
-        panel.add(label);
-        panel.add(m_jpWertInnenVertOff.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.wingback"));
-        panel.add(label);
-        panel.add(m_jpWertAussenVert.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.wingbacktowardsmiddle"));
-        panel.add(label);
-        panel.add(m_jpWertAussenVertIn.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.wingbackoffensive"));
-        panel.add(label);
-        panel.add(m_jpWertAussenVertOff.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.wingbackdefensive"));
-        panel.add(label);
-        panel.add(m_jpWertAussenVertDef.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.innermidfielder"));
-        panel.add(label);
-        panel.add(m_jpWertMittelfeld.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.innermidfieldertowardswing"));
-        panel.add(label);
-        panel.add(m_jpWertMittelfeldAus.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.innermidfielderoffensive"));
-        panel.add(label);
-        panel.add(m_jpWertMittelfeldOff.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.innermidfielderdefensive"));
-        panel.add(label);
-        panel.add(m_jpWertMittelfeldDef.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.winger"));
-        panel.add(label);
-        panel.add(m_jpWertFluegel.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.wingertowardsmiddle"));
-        panel.add(label);
-        panel.add(m_jpWertFluegelIn.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.wingeroffensive"));
-        panel.add(label);
-        panel.add(m_jpWertFluegelOff.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.wingerdefensive"));
-        panel.add(label);
-        panel.add(m_jpWertFluegelDef.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.forward"));
-        panel.add(label);
-        panel.add(m_jpWertSturm.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.forwardtowardswing"));
-        panel.add(label);
-        panel.add(m_jpWertSturmAus.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.position.forwarddefensive"));
-        panel.add(label);
-        panel.add(m_jpWertSturmDef.getComponent(false));
+        for (int i = 0; i < playerPositionValues.length; i++) {
+            label = new JLabel(MatchRoleID.getNameForPosition(playerPosition[i]));
+            label.setToolTipText(MatchRoleID.getNameForPosition(playerPosition[i]));
+            panel.add(label);
+            panel.add(playerPositionValues[i].getComponent(false));
+        }
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Marktwert"));
         panel.add(label);
@@ -775,19 +699,19 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
     private void resetCBs() {
         m_jlName.setText("");
-		jtfAge.setText("17.0");
-        m_jlForm.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlKondition.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlErfahrung.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlSpielaufbau.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlFluegel.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlTorschuss.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlTorwart.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlPasspiel.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlVerteidigung.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlStandard.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlLoyalty.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
-        m_jlHomeGrown.setIcon(ImageUtilities.getImageIcon4Veraenderung(0,true));
+        jtfAge.setText("17.0");
+        m_jlForm.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlKondition.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlErfahrung.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlSpielaufbau.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlFluegel.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlTorschuss.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlTorwart.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlPasspiel.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlVerteidigung.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlStandard.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlLoyalty.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
+        m_jlHomeGrown.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
 
         resetCB(m_jcbForm);
         resetCB(m_jcbErfahrung);
@@ -804,50 +728,34 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         resetCheckBox(m_jchHomegrown);
     }
 
-    private void resetCheckBox(JCheckBox chk){
-    	chk.setSelected(false);
-    	chk.setEnabled(false);
+    private void resetCheckBox(JCheckBox chk) {
+        chk.setSelected(false);
+        chk.setEnabled(false);
     }
 
-    private void resetCB(JComboBox cb){
-    	Helper.markierenComboBox(cb, PlayerAbility.DISASTROUS);
-    	cb.setEnabled(false);
+    private void resetCB(JComboBox cb) {
+        Helper.markierenComboBox(cb, PlayerAbility.DISASTROUS);
+        cb.setEnabled(false);
     }
 
     private void resetLabels() {
         m_jpBestPos.clear();
-        m_jpWertTor.clear();
-        m_jpWertInnenVert.clear();
-        m_jpWertInnenVertAus.clear();
-        m_jpWertInnenVertOff.clear();
-        m_jpWertAussenVert.clear();
-        m_jpWertAussenVertIn.clear();
-        m_jpWertAussenVertOff.clear();
-        m_jpWertAussenVertDef.clear();
-        m_jpWertMittelfeld.clear();
-        m_jpWertMittelfeldAus.clear();
-        m_jpWertMittelfeldDef.clear();
-        m_jpWertMittelfeldOff.clear();
-        m_jpWertFluegel.clear();
-        m_jpWertFluegelIn.clear();
-        m_jpWertFluegelDef.clear();
-        m_jpWertFluegelOff.clear();
-        m_jpWertSturm.clear();
-        m_jpWertSturmAus.clear();
-        m_jpWertSturmDef.clear();
+        for (int i = 0; i < playerPositionValues.length; i++) {
+            playerPositionValues[i].clear();
+        }
         m_jpEPV.clear();
     }
 
-	public void focusGained(FocusEvent arg0) {
-	}
+    public void focusGained(FocusEvent arg0) {
+    }
 
-	public void focusLost(FocusEvent e) {
-		if (e.getSource().equals(jtfAge)) {
-			if (m_clPlayer != null) {
-				setLabels();
-			} else {
-				resetLabels();
-			}
-		}
-	}
+    public void focusLost(FocusEvent e) {
+        if (e.getSource().equals(jtfAge)) {
+            if (m_clPlayer != null) {
+                setLabels();
+            } else {
+                resetLabels();
+            }
+        }
+    }
 }
