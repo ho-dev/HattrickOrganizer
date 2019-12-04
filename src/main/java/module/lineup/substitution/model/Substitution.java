@@ -26,7 +26,7 @@ public class Substitution {
 	private int matchMinuteCriteria = -1;
 	@SerializedName("pos")
 	@Expose
-	private byte positionIndex = -1;
+	private byte roleId = -1;
 	@SerializedName("beh")
 	@Expose
 	private byte behaviour = -1;
@@ -38,14 +38,14 @@ public class Substitution {
 	private GoalDiffCriteria standing = GoalDiffCriteria.ANY_STANDING;
 
 	public Substitution(int playerOrderID, int playerIn, int subjectPlayerID,
-			MatchOrderType orderType, int matchMinuteCriteria, byte pos, byte behaviour,
+			MatchOrderType orderType, int matchMinuteCriteria, byte roleId, byte behaviour,
 			RedCardCriteria card, GoalDiffCriteria standing) {
 		this.playerOrderID = playerOrderID;
 		this.objectPlayerID = playerIn;
 		this.subjectPlayerID = subjectPlayerID;
 		this.orderType = orderType;
 		this.matchMinuteCriteria = matchMinuteCriteria;
-		this.positionIndex = pos;
+		this.roleId = roleId;
 		this.behaviour = behaviour;
 		this.card = card;
 		this.standing = standing;
@@ -112,19 +112,15 @@ public class Substitution {
 		this.matchMinuteCriteria = matchMinuteCriteria;
 	}
 
-	public int getRoleId() {
-		return positionIndex+100;
+	public byte getRoleId() {
+		return roleId;
 	}
 
-	public void setRoleId(int roleId) {
-		this.positionIndex = (byte) (roleId-100);
-	}
+	public void setRoleId(byte roleId) { this.roleId = roleId; }
 
-	public byte getPositionIndex() {
-		return positionIndex;
-	}
+	public byte getPositionIndex() {return (byte) (this.roleId-100);}
 
-	public void setPositionIndex(byte positionIndex) { this.positionIndex = positionIndex; }
+	public void setPositionIndex(byte positionIndex) { this.roleId = (byte) (positionIndex+100); }
 
 	public byte getBehaviour() {
 		return behaviour;
