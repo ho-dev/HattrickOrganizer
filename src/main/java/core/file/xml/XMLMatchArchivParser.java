@@ -6,6 +6,8 @@
  */
 package core.file.xml;
 
+import core.db.DBManager;
+import core.model.Tournament.TournamentDetails;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.match.MatchKurzInfo;
@@ -18,6 +20,8 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import static core.net.OnlineWorker.getTournamentDetails;
 
 /**
  * @author TheTom
@@ -71,7 +75,22 @@ public class XMLMatchArchivParser {
 					tmp = (Element) ele.getElementsByTagName("CupLevelIndex").item(0);
 					iCupLevelIndex = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 					match.setCupLevelIndex(CupLevelIndex.fromInt(iCupLevelIndex));
-					match.setMatchType(MatchType.getById(iMatchType, iCupLevel, iCupLevelIndex));
+					match.setMatchType(MatchType.getById(iMatchType, iCupLevel, iCupLevelIndex, 0));
+				}
+				if (iMatchType == 50) {
+					tmp = (Element) ele.getElementsByTagName("MatchContextId").item(0);
+					int tournamentId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
+					match.setMatchContextId(tournamentId);
+
+					TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
+					if (oTournamentDetails == null)
+					{
+						oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
+						DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
+					}
+					match.setTournamentTypeID(oTournamentDetails.getTournamentType());
+
+					match.setMatchType(MatchType.getById(iMatchType, 0, 0, match.getTournamentTypeID()));
 				}
 
 				tmp = (Element) ele.getElementsByTagName("HomeTeam").item(0);

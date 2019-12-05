@@ -25,7 +25,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[13];
+		columns = new ColumnDescriptor[15];
 		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false, true); //The globally unique identifier of the match
 		columns[1] = new ColumnDescriptor("MatchTyp", Types.INTEGER, false); //Integer defining the type of match
 		columns[2] = new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256); // HomeTeamName
@@ -39,6 +39,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		columns[10] = new ColumnDescriptor("Status", Types.INTEGER, false); // Specifying whether the match is FINISHED, ONGOING or UPCOMING
 		columns[11] = new ColumnDescriptor("CupLevel", Types.INTEGER, false); // 1 = National/Divisional cup, 2 = Challenger cup, 3 = Consolation cup. 0 if MatchType is not 3
 		columns[12] = new ColumnDescriptor("CupLevelIndex", Types.INTEGER, false); // In Challenger cups: 1 = Emerald (start week 2), 2 = Ruby (start week 3), 3 = Sapphire (start week 4). Always 1 for National/Divisional (main cups) and Consolation cups. 0 if MatchType is not 3.
+		columns[13] = new ColumnDescriptor("MatchContextId", Types.INTEGER, true); // This will be either LeagueLevelUnitId (for League), CupId (Cup, Hattrick Masters, World Cup and U-20 World Cup), LadderId, TournamentId, or 0 for friendly, qualification, single matches and preparation matches.
+		columns[14] = new ColumnDescriptor("TournamentTypeID", Types.INTEGER, true); // 3 = League with playoffs , 4 = Cup
 	}
 
 	@Override
@@ -205,6 +207,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		match.setHeimName(DBManager.deleteEscapeSequences(rs
 				.getString("HeimName")));
 		match.setMatchID(rs.getInt("MatchID"));
+		match.setMatchContextId(rs.getInt("MatchContextId"));
+		match.setTournamentTypeID(rs.getInt("TournamentTypeID"));
 		match.setGastTore(rs.getInt("GastTore"));
 		match.setHeimTore(rs.getInt("HeimTore"));
 		match.setMatchType(MatchType.getById(rs.getInt("MatchTyp")));
@@ -333,10 +337,10 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	}
 
 	/**
-	 * Saves matches into the databse.
+	 * Saves matches into storeMatchKurzInfo table
 	 */
 	void storeMatchKurzInfos(MatchKurzInfo[] matches) {
-		String sql = null;
+		String sql;
 		final String[] where = { "MatchID" };
 		final String[] werte = new String[1];
 
@@ -345,11 +349,14 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			delete(where, werte);
 
 			try {
-				// insert vorbereiten
 				sql = "INSERT INTO "
 						+ getTableName()
-						+ " (  MatchID, MatchTyp, CupLevel, CupLevelIndex, HeimName, HeimID, GastName, GastID, MatchDate, HeimTore, GastTore, Aufstellung, Status ) VALUES(";
+						+ " (  MatchID, MatchContextId, TournamentTypeID, MatchTyp, CupLevel, CupLevelIndex, HeimName, HeimID, GastName, GastID, MatchDate, HeimTore, GastTore, Aufstellung, Status ) VALUES(";
 				sql += (matches[i].getMatchID()
+						+ ","
+						+ matches[i].getMatchContextId()
+						+ ","
+						+ matches[i].getTournamentTypeID()
 						+ ","
 						+ matches[i].getMatchTyp().getId()
 						+ ","

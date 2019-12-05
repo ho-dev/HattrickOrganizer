@@ -1,5 +1,6 @@
 package core.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -10,6 +11,15 @@ public class DateTimeUtils {
 	 * Utility class - private constructor enforces noninstantiability.
 	 */
 	private DateTimeUtils() {
+	}
+
+	/**
+        converts a Date into a SQL timestamp
+	 */
+	public static String DateToSQLtimeStamp(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String res = "TIMESTAMP '" + sdf.format(date) + "'";
+		return res;
 	}
 
 	/**
