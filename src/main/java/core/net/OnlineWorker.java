@@ -9,6 +9,7 @@ import core.gui.InfoPanel;
 import core.gui.model.AufstellungCBItem;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.Tournament.TournamentDetails;
 import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
@@ -265,6 +266,22 @@ public class OnlineWorker {
 	 *
 	 * @param matchid
 	 *            ID for the match to be downloaded
+	 * @param match
+	 *            MatchKurzInfo of the match
+	 * @param refresh
+	 *            If true the match will always be downloaded.
+	 *
+	 * @return true if the match is in the db afterwards
+	 */
+
+
+	/**
+	 * Downloads a match with the given criteria and stores it in the database.
+	 * If a match is already in the db, and refresh is false, nothing is
+	 * downloaded.
+	 *
+	 * @param matchid
+	 *            ID for the match to be downloaded
 	 * @param matchType
 	 *            matchType for the match to be downloaded.
 	 * @param refresh
@@ -323,7 +340,6 @@ public class OnlineWorker {
 				}
 
 				// Create the MatchKurzInfo even if we got an old one.
-				info = new MatchKurzInfo();
 				info.setOrdersGiven(true);
 				info.setGastID(lineup.getGastId());
 				info.setGastName(lineup.getGastName());
@@ -334,7 +350,7 @@ public class OnlineWorker {
 				info.setMatchDate(lineup.getStringSpielDate());
 				info.setMatchID(matchid);
 				info.setMatchStatus(MatchKurzInfo.FINISHED);
-				info.setMatchType(details.getMatchType());
+				info.setMatchType(matchType);
 
 				boolean success = DBManager.instance().storeMatch(info, details, lineup);
 				if (!success) {
@@ -403,7 +419,31 @@ public class OnlineWorker {
 			return XMLMatchesParser.parseMatchesFromString(matchesString);
 		}
 
-		return new ArrayList<MatchKurzInfo>();
+		return new ArrayList<>();
+	}
+
+	/**
+	 * Download information about a given tournament
+	 */
+
+	public static TournamentDetails getTournamentDetails(int tournamentId) {
+		TournamentDetails oTournamentDetails = null;
+		String tournamentString = "";
+
+		try {
+			tournamentString = MyConnector.instance().getTournamentDetails(tournamentId);
+		} catch (IOException e) {
+			Helper.showMessage(HOMainFrame.instance(), getLangString("Downloadfehler")
+							+ " : Error fetching Tournament Details : " + e, getLangString("Fehler"),
+					JOptionPane.ERROR_MESSAGE);
+			HOLogger.instance().log(OnlineWorker.class, e);
+		}
+
+		if (!StringUtils.isEmpty(tournamentString)) {
+			oTournamentDetails = XMLTournamentDetailsParser.parseTournamentDetailsFromString(tournamentString);  // TODO: create function parseTournamentDetailsFromString
+		}
+
+		return oTournamentDetails;
 	}
 
 	/**

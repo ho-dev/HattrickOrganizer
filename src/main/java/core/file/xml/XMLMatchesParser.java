@@ -1,7 +1,11 @@
 package core.file.xml;
 
+import core.db.DBManager;
+import core.db.TournamentDetailsTable;
+import core.model.Tournament.TournamentDetails;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
+import core.net.OnlineWorker;
 import core.util.HOLogger;
 
 import java.util.ArrayList;
@@ -10,6 +14,8 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import static core.net.OnlineWorker.getTournamentDetails;
 
 public class XMLMatchesParser {
 
@@ -42,9 +48,8 @@ public class XMLMatchesParser {
 	 * erstellt das MAtchlineup Objekt
 	 */
 	private static List<MatchKurzInfo> createMatches(Document doc) {
-
-		MatchKurzInfo spiel = null;
-		List<MatchKurzInfo> liste = new ArrayList<MatchKurzInfo>();
+		MatchKurzInfo match;
+		List<MatchKurzInfo> liste = new ArrayList<>();
 		int iMatchType;
 		int iCupLevel;
 		int iCupLevelIndex;
@@ -54,74 +59,86 @@ public class XMLMatchesParser {
 			try {
 				NodeList list = root.getElementsByTagName("Match");
 
-				Element ele = null;
-				Element tmp = null;
+				Element ele;
+				Element tmp;
 				for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-					spiel = new MatchKurzInfo();
+					match = new MatchKurzInfo();
 					ele = (Element) list.item(i);
 
-					// Daten füllen
-					tmp = (Element) ele.getElementsByTagName("MatchDate").item(
-							0);
-					spiel.setMatchDate(tmp.getFirstChild().getNodeValue());
+					tmp = (Element) ele.getElementsByTagName("MatchDate").item(0);
+					match.setMatchDate(tmp.getFirstChild().getNodeValue());
 					tmp = (Element) ele.getElementsByTagName("MatchID").item(0);
-					spiel.setMatchID(Integer.parseInt(tmp.getFirstChild()
-							.getNodeValue()));
-					tmp = (Element) ele.getElementsByTagName("MatchType").item(
-							0);
+					match.setMatchID(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
+					tmp = (Element) ele.getElementsByTagName("MatchType").item(0);
 					iMatchType = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-					if (iMatchType != 3) {spiel.setMatchType(MatchType.getById(iMatchType));}
+					if (iMatchType != 3) {match.setMatchType(MatchType.getById(iMatchType));}
 					else{
 						tmp = (Element) ele.getElementsByTagName("CupLevel").item(0);
 						iCupLevel = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 						tmp = (Element) ele.getElementsByTagName("CupLevelIndex").item(0);
 						iCupLevelIndex = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-						spiel.setMatchType(MatchType.getById(iMatchType, iCupLevel, iCupLevelIndex));
+						match.setMatchType(MatchType.getById(iMatchType, iCupLevel, iCupLevelIndex, 0));
 					}
+					if (iMatchType == 50) {
+						tmp = (Element) ele.getElementsByTagName("MatchContextId").item(0);
+						int tournamentId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
+						match.setMatchContextId(tournamentId);
+
+						TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
+						if (oTournamentDetails == null)
+						{
+							oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
+							DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
+						}
+						match.setTournamentTypeID(oTournamentDetails.getTournamentType());
+
+						match.setMatchType(MatchType.getById(iMatchType, 0, 0, match.getTournamentTypeID()));
+					}
+
 
 					tmp = (Element) ele.getElementsByTagName("HomeTeam")
 							.item(0);
-					spiel.setHeimID(Integer.parseInt(((Element) tmp
+					match.setHeimID(Integer.parseInt(((Element) tmp
 							.getElementsByTagName("HomeTeamID").item(0))
 							.getFirstChild().getNodeValue()));
-					spiel.setHeimName(((Element) tmp.getElementsByTagName(
+					match.setHeimName(((Element) tmp.getElementsByTagName(
 							"HomeTeamName").item(0)).getFirstChild()
 							.getNodeValue());
 					tmp = (Element) ele.getElementsByTagName("AwayTeam")
 							.item(0);
-					spiel.setGastID(Integer.parseInt(((Element) tmp
+					match.setGastID(Integer.parseInt(((Element) tmp
 							.getElementsByTagName("AwayTeamID").item(0))
 							.getFirstChild().getNodeValue()));
-					spiel.setGastName(((Element) tmp.getElementsByTagName(
+					match.setGastName(((Element) tmp.getElementsByTagName(
 							"AwayTeamName").item(0)).getFirstChild()
 							.getNodeValue());
 					tmp = (Element) ele.getElementsByTagName("Status").item(0);
-					spiel.setMatchStatus(getStatus(tmp.getFirstChild()
+					match.setMatchStatus(getStatus(tmp.getFirstChild()
 							.getNodeValue()));
 
-					if (spiel.getMatchStatus() == MatchKurzInfo.FINISHED) {
+					if (match.getMatchStatus() == MatchKurzInfo.FINISHED) {
 						tmp = (Element) ele.getElementsByTagName("HomeGoals")
 								.item(0);
-						spiel.setHeimTore(Integer.parseInt(tmp.getFirstChild()
+						match.setHeimTore(Integer.parseInt(tmp.getFirstChild()
 								.getNodeValue()));
 						tmp = (Element) ele.getElementsByTagName("AwayGoals")
 								.item(0);
-						spiel.setGastTore(Integer.parseInt(tmp.getFirstChild()
+						match.setGastTore(Integer.parseInt(tmp.getFirstChild()
 								.getNodeValue()));
-					} else if (spiel.getMatchStatus() == MatchKurzInfo.UPCOMING) {
+					} else if (match.getMatchStatus() == MatchKurzInfo.UPCOMING) {
 						try {
 							tmp = (Element) ele.getElementsByTagName(
 									"OrdersGiven").item(0);
-							spiel.setOrdersGiven(tmp.getFirstChild()
+							match.setOrdersGiven(tmp.getFirstChild()
 									.getNodeValue().equalsIgnoreCase("TRUE"));
 						} catch (Exception e) {
 							// We will end up here if the match is not the
 							// user's
-							spiel.setOrdersGiven(false);
+							match.setOrdersGiven(false);
 						}
 					}
 
-					liste.add(spiel);
+					liste.add(match);
 				}
 			} catch (Exception e) {
 				HOLogger.instance().log(XMLMatchesParser.class, e);

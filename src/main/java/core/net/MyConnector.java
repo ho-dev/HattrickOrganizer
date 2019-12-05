@@ -66,6 +66,7 @@ public class MyConnector {
 	private final static String VERSION_MATCHDETAILS = "3.0";
 	private final static String VERSION_PLAYERS = "2.1";
 	private final static String VERSION_WORLDDETAILS = "1.8";
+	private final static String VERSION_TOURNAMENTDETAILS = "1.0";
 	private final static String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";
 	private final static String CONSUMER_SECRET = "2/Td)Cprd/?q`nAbkAL//F+eGD@KnnCc>)dQgtP,p+p";
 	private ProxySettings proxySettings;
@@ -228,6 +229,18 @@ public class MyConnector {
 		url.append("&includeHTO=true&version=1.4");
 
 		return getCHPPWebFile(url.toString());
+	}
+
+	/**
+	 * Get information about a tournament. This is only available for the current season.
+	 */
+	public String getTournamentDetails(int tournamentId) throws IOException{
+		String url = htUrl + "?file=tournamentdetails&version=" + VERSION_TOURNAMENTDETAILS + "&tournamentId=" + tournamentId;
+		if (url == "") {
+			HOLogger.instance().error(getClass(), "getTournamentDetails: could not download information for required tournament: "+tournamentId);
+			throw new IOException("getTournamentDetails: could not download information for required tournament: "+tournamentId);
+		}
+		return getCHPPWebFile(url);
 	}
 
 	/**

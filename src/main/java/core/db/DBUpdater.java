@@ -14,22 +14,20 @@ import core.HO;
 
 final class DBUpdater {
 	JDBCAdapter m_clJDBCAdapter;
-	DBManager dbZugriff;
+	DBManager dbManager;
 
-	void setDbZugriff(DBManager dbZugriff) {
-		this.dbZugriff = dbZugriff;
+	void setDbManager(DBManager dbManager) {
+		this.dbManager = dbManager;
 	}
 
 	void updateDB(int DBVersion) {
-		// I introduce some new db versioning system.
 		// Just add new version cases in the switch..case part
 		// and leave the old ones active, so also users which
 		// have skipped a version get their database updated.
-		// jailbird.
-		int version = 0;
-		this.m_clJDBCAdapter = dbZugriff.getAdapter();
+		int version;
+		this.m_clJDBCAdapter = dbManager.getAdapter();
 
-		version = ((UserConfigurationTable) dbZugriff.getTable(UserConfigurationTable.TABLENAME))
+		version = ((UserConfigurationTable) dbManager.getTable(UserConfigurationTable.TABLENAME))
 				.getDBVersion();
 
 		// We may now update depending on the version identifier!
@@ -94,6 +92,8 @@ final class DBUpdater {
 					//updateDBv24 is falling through to updateDBv25
                 case 24:
                     updateDBv25(DBVersion, version);
+				case 25:
+					updateDBv26(DBVersion, version);
 				}
 				
 
@@ -117,7 +117,7 @@ final class DBUpdater {
 		// Always set field DBVersion to the new value as last action.
 		// Do not use DBVersion but the value, as update packs might
 		// do version checking again before applying!
-		dbZugriff.saveUserParameter("DBVersion", 6);
+		dbManager.saveUserParameter("DBVersion", 6);
 	}
 
 	/**
@@ -132,7 +132,7 @@ final class DBUpdater {
 
 		// Drop and recreate the table
 		// (i.e. use defaults from defaults.xml)
-		AbstractTable faktorenTab = dbZugriff.getTable(FaktorenTable.TABLENAME);
+		AbstractTable faktorenTab = dbManager.getTable(FaktorenTable.TABLENAME);
 		if (faktorenTab != null) {
 			faktorenTab.dropTable();
 			faktorenTab.createTable();
@@ -141,7 +141,7 @@ final class DBUpdater {
 		// Always set field DBVersion to the new value as last action.
 		// Do not use DBVersion but the value, as update packs might
 		// do version checking again before applying!
-		dbZugriff.saveUserParameter("DBVersion", 7);
+		dbManager.saveUserParameter("DBVersion", 7);
 	}
 
 	/**
@@ -156,7 +156,7 @@ final class DBUpdater {
 		// Always set field DBVersion to the new value as last action.
 		// Do not use DBVersion but the value, as update packs might
 		// do version checking again before applying!
-		dbZugriff.saveUserParameter("DBVersion", 8);
+		dbManager.saveUserParameter("DBVersion", 8);
 	}
 
 	/**
@@ -190,7 +190,7 @@ final class DBUpdater {
 		// Always set field DBVersion to the new value as last action.
 		// Do not use DBVersion but the value, as update packs might
 		// do version checking again before applying!
-		dbZugriff.saveUserParameter("DBVersion", 9);
+		dbManager.saveUserParameter("DBVersion", 9);
 	}
 
 	/**
@@ -214,7 +214,7 @@ final class DBUpdater {
 		// Always set field DBVersion to the new value as last action.
 		// Do not use DBVersion but the value, as update packs might
 		// do version checking again before applying!
-		dbZugriff.saveUserParameter("DBVersion", 10);
+		dbManager.saveUserParameter("DBVersion", 10);
 	}
 
 	/**
@@ -222,7 +222,7 @@ final class DBUpdater {
 	 */
 	private void updateDBv11() throws Exception {
 		// Problems in 1.431 release has shifted contents here to v12.
-		dbZugriff.saveUserParameter("DBVersion", 11);
+		dbManager.saveUserParameter("DBVersion", 11);
 		return;
 	}
 
@@ -272,7 +272,7 @@ final class DBUpdater {
 					.executeUpdate("UPDATE MATCHLINEUPPLAYER SET StartBehaviour = -1 WHERE StartBehaviour IS NULL");
 		}
 		if (!tableExists(MatchSubstitutionTable.TABLENAME)) {
-			dbZugriff.getTable(MatchSubstitutionTable.TABLENAME).createTable();
+			dbManager.getTable(MatchSubstitutionTable.TABLENAME).createTable();
 		}
 		if (!columnExistsInTable("LineupName", "MATCHSUBSTITUTION")) {
 			m_clJDBCAdapter
@@ -288,7 +288,7 @@ final class DBUpdater {
 		// during first run of a non development version.
 
 		if ((version == (DBVersion - 1) && !HO.isDevelopment()) || (version < (DBVersion - 1))) {
-			dbZugriff.saveUserParameter("DBVersion", 12);
+			dbManager.saveUserParameter("DBVersion", 12);
 		}
 	}
 
@@ -326,7 +326,7 @@ final class DBUpdater {
 
 		// MODULE_CONFIGURATION table
 		if (!tableExists(ModuleConfigTable.TABLENAME)) {
-			dbZugriff.getTable(ModuleConfigTable.TABLENAME).createTable();
+			dbManager.getTable(ModuleConfigTable.TABLENAME).createTable();
 		}
 
 		// Transfers-plugin
@@ -339,10 +339,10 @@ final class DBUpdater {
 					+ TransferTypeTable.TABLENAME);
 		}
 		if (!tableExists(TransferTable.TABLENAME)) {
-			dbZugriff.getTable(TransferTable.TABLENAME).createTable();
+			dbManager.getTable(TransferTable.TABLENAME).createTable();
 		}
 		if (!tableExists(TransferTypeTable.TABLENAME)) {
-			dbZugriff.getTable(TransferTypeTable.TABLENAME).createTable();
+			dbManager.getTable(TransferTypeTable.TABLENAME).createTable();
 		}
 
 		// TeamAnalyzer-plugin
@@ -355,10 +355,10 @@ final class DBUpdater {
 					+ TAPlayerTable.TABLENAME);
 		}
 		if (!tableExists(TAFavoriteTable.TABLENAME)) {
-			dbZugriff.getTable(TAFavoriteTable.TABLENAME).createTable();
+			dbManager.getTable(TAFavoriteTable.TABLENAME).createTable();
 		}
 		if (!tableExists(TAPlayerTable.TABLENAME)) {
-			dbZugriff.getTable(TAPlayerTable.TABLENAME).createTable();
+			dbManager.getTable(TAPlayerTable.TABLENAME).createTable();
 		}
 
 		if (hasPrimaryKey(TAPlayerTable.TABLENAME)) {
@@ -371,7 +371,7 @@ final class DBUpdater {
 		}
 
 		if (tableExists("TEAMANALYZER_SETTINGS")) {
-			ModuleConfigTable mConfigTable = (ModuleConfigTable) dbZugriff
+			ModuleConfigTable mConfigTable = (ModuleConfigTable) dbManager
 					.getTable(ModuleConfigTable.TABLENAME);
 			ResultSet rs = m_clJDBCAdapter.executeQuery("Select * from TEAMANALYZER_SETTINGS");
 			if (rs != null) {
@@ -400,11 +400,11 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("DROP TABLE IFA_MATCH");
 		}
 		if (!tableExists(IfaMatchTable.TABLENAME)) {
-			dbZugriff.getTable(IfaMatchTable.TABLENAME).createTable();
+			dbManager.getTable(IfaMatchTable.TABLENAME).createTable();
 		}
 
 		if (!tableExists(WorldDetailsTable.TABLENAME)) {
-			dbZugriff.getTable(WorldDetailsTable.TABLENAME).createTable();
+			dbManager.getTable(WorldDetailsTable.TABLENAME).createTable();
 		}
 
 		// Player table
@@ -421,7 +421,7 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("DROP TABLE PENALTYTAKERS");
 		}
 		if (!tableExists(PenaltyTakersTable.TABLENAME)) {
-			dbZugriff.getTable(PenaltyTakersTable.TABLENAME).createTable();
+			dbManager.getTable(PenaltyTakersTable.TABLENAME).createTable();
 		}
 
 		// Follow this pattern in the future. Only set db version if not
@@ -433,12 +433,12 @@ final class DBUpdater {
 			 if(!HO.isDevelopment())
 			 {
 				 	HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
-				 	dbZugriff.saveUserParameter("DBVersion", DBVersion);
+				 	dbManager.saveUserParameter("DBVersion", DBVersion);
 			 }
 			 else
 			 {
 				 	HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
-				 	dbZugriff.saveUserParameter("DBVersion", DBVersion - 1);
+				 	dbManager.saveUserParameter("DBVersion", DBVersion - 1);
 			 }
 		} else {
 			HOLogger.instance().info(DBUpdater.class,
@@ -459,10 +459,10 @@ final class DBUpdater {
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
-				dbZugriff.saveUserParameter("DBVersion", DBVersion);
+				dbManager.saveUserParameter("DBVersion", DBVersion);
 			} else {
 			 	HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
-				dbZugriff.saveUserParameter("DBVersion", DBVersion - 1);
+				dbManager.saveUserParameter("DBVersion", DBVersion - 1);
 			}
 		} else {
 			HOLogger.instance().info(DBUpdater.class,
@@ -475,7 +475,7 @@ final class DBUpdater {
 		// 1.434
 		
 		if (!tableExists(StaffTable.TABLENAME)) {
-			dbZugriff.getTable(StaffTable.TABLENAME).createTable();
+			dbManager.getTable(StaffTable.TABLENAME).createTable();
 		}
 		
 		if (!columnExistsInTable("TacticAssist", VereinTable.TABLENAME)) {
@@ -497,10 +497,10 @@ final class DBUpdater {
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
-				dbZugriff.saveUserParameter("DBVersion", DBVersion);
+				dbManager.saveUserParameter("DBVersion", DBVersion);
 			} else {
 			 	HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
-				dbZugriff.saveUserParameter("DBVersion", DBVersion - 1);
+				dbManager.saveUserParameter("DBVersion", DBVersion - 1);
 			}
 		} else {
 			HOLogger.instance().info(DBUpdater.class,
@@ -532,10 +532,10 @@ final class DBUpdater {
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
-				dbZugriff.saveUserParameter("DBVersion", DBVersion);
+				dbManager.saveUserParameter("DBVersion", DBVersion);
 			} else {
 			 	HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
-				dbZugriff.saveUserParameter("DBVersion", DBVersion - 1);
+				dbManager.saveUserParameter("DBVersion", DBVersion - 1);
 			}
 		} else {
 			HOLogger.instance().info(DBUpdater.class,
@@ -553,16 +553,16 @@ final class DBUpdater {
         }
 
         if (!tableExists(WorldDetailsTable.TABLENAME)) {
-            dbZugriff.getTable(WorldDetailsTable.TABLENAME).createTable();
+            dbManager.getTable(WorldDetailsTable.TABLENAME).createTable();
         }
 
         if (version < DBVersion) {
             if(!HO.isDevelopment()) {
                 HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
-                dbZugriff.saveUserParameter("DBVersion", DBVersion);
+                dbManager.saveUserParameter("DBVersion", DBVersion);
             } else {
                 HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
-                dbZugriff.saveUserParameter("DBVersion", DBVersion - 1);
+                dbManager.saveUserParameter("DBVersion", DBVersion - 1);
             }
         } else {
             HOLogger.instance().info(DBUpdater.class,
@@ -583,10 +583,10 @@ final class DBUpdater {
         if (version < DBVersion) {
             if(!HO.isDevelopment()) {
                 HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
-                dbZugriff.saveUserParameter("DBVersion", DBVersion);
+                dbManager.saveUserParameter("DBVersion", DBVersion);
             } else {
                 HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
-                dbZugriff.saveUserParameter("DBVersion", DBVersion - 1);
+                dbManager.saveUserParameter("DBVersion", DBVersion - 1);
             }
         } else {
             HOLogger.instance().info(DBUpdater.class,
@@ -628,11 +628,11 @@ final class DBUpdater {
 		}
 
 		if (!tableExists(MatchOrderTable.TABLENAME)) {
-			dbZugriff.getTable(MatchOrderTable.TABLENAME).createTable();
+			dbManager.getTable(MatchOrderTable.TABLENAME).createTable();
 		}
 
 		// use defaults player formula from defaults.xml by resetting the value in the database
-		AbstractTable faktorenTab = dbZugriff.getTable(FaktorenTable.TABLENAME);
+		AbstractTable faktorenTab = dbManager.getTable(FaktorenTable.TABLENAME);
 		if (faktorenTab != null) {
 			faktorenTab.dropTable();
 			faktorenTab.createTable();
@@ -650,10 +650,10 @@ final class DBUpdater {
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
-				dbZugriff.saveUserParameter("DBVersion", DBVersion);
+				dbManager.saveUserParameter("DBVersion", DBVersion);
 			} else {
 				HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
-				dbZugriff.saveUserParameter("DBVersion", DBVersion - 1);
+				dbManager.saveUserParameter("DBVersion", DBVersion - 1);
 			}
 		} else {
 			HOLogger.instance().info(DBUpdater.class,
@@ -662,6 +662,39 @@ final class DBUpdater {
 		}
 	}
 
+	private void updateDBv26(int DBVersion, int version) throws SQLException {
+		// HO 3.0
+
+		// store [Matches].MatchContextId into MATCHESKURZINFO table
+		if (!columnExistsInTable("MatchContextId", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN MatchContextId INTEGER");
+		}
+
+		//store [Tournament Details].TournamentTypeID into MATCHESKURZINFO table
+		if (!columnExistsInTable("TournamentType", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN TournamentTypeID INTEGER");
+		}
+
+		//create TournamentDetailsTable
+		if (!tableExists(TournamentDetailsTable.TABLENAME)) {
+			dbManager.getTable(TournamentDetailsTable.TABLENAME).createTable();
+		}
+
+
+		if (version < DBVersion) {
+			if(!HO.isDevelopment()) {
+				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
+				dbManager.saveUserParameter("DBVersion", DBVersion);
+			} else {
+				HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
+				dbManager.saveUserParameter("DBVersion", DBVersion - 1);
+			}
+		} else {
+			HOLogger.instance().info(DBUpdater.class,
+					"Update done, db version number will NOT be increased from " + version
+							+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
+		}
+	}
 	/**
 	 * Automatic update of User Configuration parameters
 	 * 
@@ -675,9 +708,9 @@ final class DBUpdater {
 	 */
 	void updateConfig() {
 		if (m_clJDBCAdapter == null)
-			m_clJDBCAdapter = dbZugriff.getAdapter();
+			m_clJDBCAdapter = dbManager.getAdapter();
 
-		double lastConfigUpdate = ((UserConfigurationTable) dbZugriff
+		double lastConfigUpdate = ((UserConfigurationTable) dbManager
 				.getTable(UserConfigurationTable.TABLENAME)).getLastConfUpdate();
 		/**
 		 * We have to use separate 'if-then' clauses for each conf version
@@ -739,27 +772,27 @@ final class DBUpdater {
 		m_clJDBCAdapter.executeUpdate("DROP TABLE IF EXISTS FEEDBACK_UPLOAD");
 
 		// always set the LastConfUpdate as last step
-		dbZugriff.saveUserParameter("LastConfUpdate", 1.4101);
+		dbManager.saveUserParameter("LastConfUpdate", 1.4101);
 	}
 
 	private void updateConfigTo1420(boolean alreadyApplied) {
 		resetTrainingParameters();
 		resetPredictionOffsets();
-		dbZugriff.saveUserParameter("nbDecimals", 2);
+		dbManager.saveUserParameter("nbDecimals", 2);
 
 		// always set the LastConfUpdate as last step
-		dbZugriff.saveUserParameter("LastConfUpdate", 1.420);
+		dbManager.saveUserParameter("LastConfUpdate", 1.420);
 	}
 
 	private void updateConfigTo1424(boolean alreadyApplied) {
 		resetTrainingParameters(); // Reset training parameters (just to be
 									// sure)
 
-		dbZugriff.saveUserParameter("updateCheck", "true");
-		dbZugriff.saveUserParameter("newsCheck", "true");
+		dbManager.saveUserParameter("updateCheck", "true");
+		dbManager.saveUserParameter("newsCheck", "true");
 
 		// always set the LastConfUpdate as last step
-		dbZugriff.saveUserParameter("LastConfUpdate", 1.424);
+		dbManager.saveUserParameter("LastConfUpdate", 1.424);
 	}
 
 	private void updateConfigTo1425(boolean alreadyApplied) {
@@ -770,8 +803,8 @@ final class DBUpdater {
 
 		// Apply only once
 		if (!alreadyApplied) {
-			dbZugriff.saveUserParameter("updateCheck", "true");
-			dbZugriff.saveUserParameter("newsCheck", "true");
+			dbManager.saveUserParameter("updateCheck", "true");
+			dbManager.saveUserParameter("newsCheck", "true");
 
 			// Drop the feedback tables to force new feedback upload
 			m_clJDBCAdapter.executeUpdate("DROP TABLE IF EXISTS FEEDBACK_SETTINGS");
@@ -779,7 +812,7 @@ final class DBUpdater {
 		}
 
 		// always set the LastConfUpdate as last step
-		dbZugriff.saveUserParameter("LastConfUpdate", 1.425);
+		dbManager.saveUserParameter("LastConfUpdate", 1.425);
 	}
 
 	private void updateConfigTo1429(boolean alreadyApplied) {
@@ -788,7 +821,7 @@ final class DBUpdater {
 			resetTrainingParameters();
 		}
 		// always set the LastConfUpdate as last step
-		dbZugriff.saveUserParameter("LastConfUpdate", 1.429);
+		dbManager.saveUserParameter("LastConfUpdate", 1.429);
 	}
 
 	private void updateConfigTo1431(boolean alreadyApplied) {
@@ -808,7 +841,7 @@ final class DBUpdater {
 			}
 		}
 		// always set the LastConfUpdate as last step
-		dbZugriff.saveUserParameter("LastConfUpdate", 1.431);
+		dbManager.saveUserParameter("LastConfUpdate", 1.431);
 	}
 	
 	private void updateConfigTo1434(boolean alreadyApplied) {
@@ -825,25 +858,25 @@ final class DBUpdater {
 
 		}
 		// always set the LastConfUpdate as last step
-		dbZugriff.saveUserParameter("LastConfUpdate", 1.434);
+		dbManager.saveUserParameter("LastConfUpdate", 1.434);
 	}
 
 	private void updateConfigTo1436(boolean alreadyApplied) {
 
 		try {
 			if (!alreadyApplied) {
-				dbZugriff.saveUserParameter("ReleaseChannel", "Stable");
+				dbManager.saveUserParameter("ReleaseChannel", "Stable");
 			}
-			dbZugriff.removeUserParameter("newsCheck");
-			dbZugriff.removeUserParameter("userCheck");
-			dbZugriff.removeUserParameter("logoutOnExit");
+			dbManager.removeUserParameter("newsCheck");
+			dbManager.removeUserParameter("userCheck");
+			dbManager.removeUserParameter("logoutOnExit");
 		} catch (Exception e) {
 			HOLogger.instance().debug(getClass(),
 					"Error updating to config 1436: " + e.getMessage());
 		}
 
 		// always set the LastConfUpdate as last step
-		dbZugriff.saveUserParameter("LastConfUpdate", 1.436);
+		dbManager.saveUserParameter("LastConfUpdate", 1.436);
 	}
 
 	private void resetTrainingParameters() {
@@ -851,31 +884,31 @@ final class DBUpdater {
 		// 1.429 training speed in db is now an offset
 		HOLogger.instance()
 				.info(this.getClass(), "Resetting training parameters to default values");
-		dbZugriff.saveUserParameter("DAUER_TORWART", 0.0);
-		dbZugriff.saveUserParameter("DAUER_VERTEIDIGUNG", 0.0);
-		dbZugriff.saveUserParameter("DAUER_SPIELAUFBAU", 0.0);
-		dbZugriff.saveUserParameter("DAUER_PASSPIEL", 0.0);
-		dbZugriff.saveUserParameter("DAUER_FLUEGELSPIEL", 0.0);
-		dbZugriff.saveUserParameter("DAUER_CHANCENVERWERTUNG", 0.0);
-		dbZugriff.saveUserParameter("DAUER_STANDARDS", 0.0);
+		dbManager.saveUserParameter("DAUER_TORWART", 0.0);
+		dbManager.saveUserParameter("DAUER_VERTEIDIGUNG", 0.0);
+		dbManager.saveUserParameter("DAUER_SPIELAUFBAU", 0.0);
+		dbManager.saveUserParameter("DAUER_PASSPIEL", 0.0);
+		dbManager.saveUserParameter("DAUER_FLUEGELSPIEL", 0.0);
+		dbManager.saveUserParameter("DAUER_CHANCENVERWERTUNG", 0.0);
+		dbManager.saveUserParameter("DAUER_STANDARDS", 0.0);
 
-		dbZugriff.saveUserParameter("AlterFaktor", 0.0);
-		dbZugriff.saveUserParameter("TrainerFaktor", 0.0);
-		dbZugriff.saveUserParameter("CoTrainerFaktor", 0.0);
-		dbZugriff.saveUserParameter("IntensitaetFaktor", 0.0);
+		dbManager.saveUserParameter("AlterFaktor", 0.0);
+		dbManager.saveUserParameter("TrainerFaktor", 0.0);
+		dbManager.saveUserParameter("CoTrainerFaktor", 0.0);
+		dbManager.saveUserParameter("IntensitaetFaktor", 0.0);
 	}
 
 	private void resetPredictionOffsets() {
 		// Reset Rating offsets for Rating Prediction
 		// because of changes in the prediction files
 		HOLogger.instance().info(this.getClass(), "Resetting rating prediction offsets");
-		dbZugriff.saveUserParameter("leftDefenceOffset", 0.0);
-		dbZugriff.saveUserParameter("middleDefenceOffset", 0.0);
-		dbZugriff.saveUserParameter("rightDefenceOffset", 0.0);
-		dbZugriff.saveUserParameter("midfieldOffset", 0.0);
-		dbZugriff.saveUserParameter("leftAttackOffset", 0.0);
-		dbZugriff.saveUserParameter("middleAttackOffset", 0.0);
-		dbZugriff.saveUserParameter("rightAttackOffset", 0.0);
+		dbManager.saveUserParameter("leftDefenceOffset", 0.0);
+		dbManager.saveUserParameter("middleDefenceOffset", 0.0);
+		dbManager.saveUserParameter("rightDefenceOffset", 0.0);
+		dbManager.saveUserParameter("midfieldOffset", 0.0);
+		dbManager.saveUserParameter("leftAttackOffset", 0.0);
+		dbManager.saveUserParameter("middleAttackOffset", 0.0);
+		dbManager.saveUserParameter("rightAttackOffset", 0.0);
 	}
 
 	private boolean hasPrimaryKey(String tableName) throws SQLException {

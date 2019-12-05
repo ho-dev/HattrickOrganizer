@@ -24,7 +24,8 @@ public enum MatchType {
 	EMERALDCUP(1001), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
 	RUBYCUP(1002), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
 	SAPPHIRECUP(1003), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
-	CONSOLANTECUP(1004); // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
+	CONSOLANTECUP(1004), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
+	DIVISIONBATTLE(1101); // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
 
 
 
@@ -49,7 +50,7 @@ public enum MatchType {
 		return null;
 	}
 
-	public static MatchType getById(int id, int CupLevel, int CupLevelIndex) {
+	public static MatchType getById(int id, int CupLevel, int CupLevelIndex, int iTournamentType) {
 		MatchType matchType = getById(id);
 		if (matchType == CUP) {
 			if (CupLevel == 1) {
@@ -71,6 +72,14 @@ public enum MatchType {
 						return NONE;
 					}
 				}
+			}
+		}
+		else if (matchType == TOURNAMENTGROUP)
+		{
+			TournamentType tournamentType = TournamentType.getById(iTournamentType);
+			if (tournamentType == TournamentType.DIVISIONBATTLE)
+			{
+				return DIVISIONBATTLE;
 			}
 		}
 		return matchType;
@@ -147,6 +156,7 @@ public enum MatchType {
 			case LADDER:
 			case TOURNAMENTGROUP:
 			case TOURNAMENTPLAYOFF:
+			case DIVISIONBATTLE:
 				return true;
 			default: return false;
 		}
@@ -215,6 +225,9 @@ public enum MatchType {
 			 case CONSOLANTECUP :
 				 return core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.consolante_cup");
 
+			 case DIVISIONBATTLE:
+				 return core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.division_battle");
+
 	         //Error?
 	         default:
 	             return "unknown";
@@ -252,6 +265,8 @@ public enum MatchType {
 				return 10;
 			case CONSOLANTECUP:
 				return 12;
+			case DIVISIONBATTLE:
+				return 13;
 			default :
 				return 11;
 		}

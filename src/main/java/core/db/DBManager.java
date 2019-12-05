@@ -11,6 +11,7 @@ import core.model.HOModel;
 import core.model.HOParameter;
 import core.model.StaffMember;
 import core.model.Team;
+import core.model.Tournament.TournamentDetails;
 import core.model.UserParameter;
 import core.model.WorldDetailLeague;
 import core.model.XtraData;
@@ -59,10 +60,8 @@ public class DBManager {
 	// ~ Static fields/initializers
 	// -----------------------------------------------------------------
 
-	// Datum der TSI Umstellung. Alle Marktwerte der Player müssen vor dem
-	// Datum durch 1000 geteilt werden (ohne Sprachfaktor)
 	/** database version */
-	private static final int DBVersion = 25;
+	private static final int DBVersion = 26; // DBVersion 26 introduce for HO 3.0 version
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
@@ -145,7 +144,7 @@ public class DBManager {
 			// Try connecting to the DB
 			try {
 				tempInstance.connect();
-				dbUpdater.setDbZugriff(tempInstance);
+				dbUpdater.setDbManager(tempInstance);
 			} catch (Exception e) {
 
 				String msg = e.getMessage();
@@ -263,8 +262,7 @@ public class DBManager {
 		tables.put(PenaltyTakersTable.TABLENAME,
 				new PenaltyTakersTable(adapter));
 		tables.put(MatchOrderTable.TABLENAME, new MatchOrderTable(adapter));
-
-
+		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(adapter));
 	}
 
 	AbstractTable getTable(String tableName) {
@@ -671,6 +669,18 @@ public class DBManager {
 
 	public void getFaktorenFromDB() {
 		((FaktorenTable) getTable(FaktorenTable.TABLENAME)).getFaktorenFromDB();
+	}
+
+
+	// Tournament Details
+	public TournamentDetails getTournamentDetailsFromDB(int tournamentId) {
+		TournamentDetails oTournamentDetails;
+		oTournamentDetails = ((TournamentDetailsTable) getTable(TournamentDetailsTable.TABLENAME)).getTournamentDetails(tournamentId);
+		return oTournamentDetails;
+	}
+
+	public void storeTournamentDetailsIntoDB(TournamentDetails oTournamentDetails) {
+		((TournamentDetailsTable) getTable(TournamentDetailsTable.TABLENAME)).storeTournamentDetails(oTournamentDetails);
 	}
 
 	// ------------------------------- FinanzenTable

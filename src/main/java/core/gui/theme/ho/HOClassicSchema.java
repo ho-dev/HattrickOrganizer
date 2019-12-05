@@ -42,7 +42,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(MATCHICONS[10], "gui/bilder/masters_match_icon.png");
 		put(MATCHICONS[11], "gui/bilder/default_match_icon.gif");
 		put(MATCHICONS[12], "gui/bilder/consolante_cup_match_icon.png");
-
+		put(MATCHICONS[13], "gui/bilder/division_battle_match_icon.png");
 
 		put(MANUELLSMILIES[1], "gui/bilder/smilies/1bigsmile.gif");
 		put(MANUELLSMILIES[2], "gui/bilder/smilies/2smile.gif");
