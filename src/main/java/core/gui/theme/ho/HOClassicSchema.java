@@ -42,7 +42,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(MATCHICONS[10], "gui/bilder/masters_match_icon.png");
 		put(MATCHICONS[11], "gui/bilder/default_match_icon.gif");
 		put(MATCHICONS[12], "gui/bilder/consolante_cup_match_icon.png");
-
+		put(MATCHICONS[13], "gui/bilder/division_battle_match_icon.png");
 
 		put(MANUELLSMILIES[1], "gui/bilder/smilies/1bigsmile.gif");
 		put(MANUELLSMILIES[2], "gui/bilder/smilies/2smile.gif");
@@ -210,6 +210,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TRAINBAR_FT_PT_E, "gui/bilder/trainpreview/trainpre_ft_pt_e.png");
 		put(TRAINBAR_FT_E, "gui/bilder/trainpreview/trainpre_ft_e.png");
 		put(TRAINBAR_PT_E, "gui/bilder/trainpreview/trainpre_pt_e.png");
+		put(STAMINABAR_FT, "gui/bilder/trainpreview/stamina_ft.png");
+		put(STAMINABAR_FFT, "gui/bilder/trainpreview/stamina_fft.png");
+		put(STAMINABAR_FT_E, "gui/bilder/trainpreview/stamina_ft_e.png");
 		put(TRAINBAR_EMPTY, "gui/bilder/trainpreview/trainpre_empty.png");
 
 		put(GREEN_WHITE_CLOCK, "gui/bilder/green-white-clock.png");

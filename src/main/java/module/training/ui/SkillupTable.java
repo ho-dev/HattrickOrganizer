@@ -42,7 +42,7 @@ public class SkillupTable extends JTable {
 		ISkillup skillup = model.getSkillup(convertRowIndexToModel(rowAtPoint(e.getPoint())));
 
 		if (skillup != null && skillup.getTrainType() == ISkillup.SKILLUP_REAL) {
-			return String.valueOf(skillup.getDate());
+			return java.text.DateFormat.getDateTimeInstance().format(skillup.getDate());
 		}
 
 		return "";

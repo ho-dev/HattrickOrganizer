@@ -1,6 +1,6 @@
 # directories excluded (to be adjusted)
 
-/db/
+/db*/
 /logs/
 /out/
 /Lineups/

@@ -37,8 +37,26 @@ public class MatchKurzInfo implements Comparable<Object> {
 	/** Heim Tore */
 	private int m_iHeimTore = -1;
 
-	/** ID des MAtches */
+	/** ID des Matches */
 	private int m_iMatchID = -1;
+
+	/** MatchContextId */
+	private int iMatchContextId;
+	public int getMatchContextId() {
+		return iMatchContextId;
+	}
+	public void setMatchContextId(int iMatchContextId) {
+		this.iMatchContextId = iMatchContextId;
+	}
+
+	/** TournamentTypeID */
+	private int iTournamentTypeID;
+	public int getTournamentTypeID() {
+		return iTournamentTypeID;
+	}
+	public void setTournamentTypeID(int iTournamentTypeID) {
+		this.iTournamentTypeID = iTournamentTypeID;
+	}
 
 	/** Status des Spiels */
 	private int m_iMatchStatus = -1;

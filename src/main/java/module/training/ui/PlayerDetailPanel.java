@@ -3,201 +3,257 @@ package module.training.ui;
 
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
+import core.db.DBManager;
+import core.gui.comp.entry.ColorLabelEntry;
+import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
+import core.model.player.MatchRoleID;
 import core.training.FutureTrainingManager;
 import module.training.Skills;
-import module.training.ui.comp.ColorBar;
+import module.training.ui.comp.HTColorBar;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.ModelChangeListener;
 import module.training.ui.model.TrainingModel;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 /**
  * Panel where the future training predictions are shown.
- * 
+ *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
-public class PlayerDetailPanel extends LazyImagePanel {
+public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
 
-	private static final long serialVersionUID = -6606934473344186243L;
-	private JLabel playerLabel;
-	private ColorBar[] levelBar;
-	private JLabel[] skillLabel;
-	private final TrainingModel model;
+    private static final long serialVersionUID = -6606934473344186243L;
+    private static final int skillNumber = 9;
+    private JLabel playerLabel;
+    private JTextArea m_jtaNotes;
+    private HTColorBar[] levelBar;
+    private JLabel[] skillLabel;
+    private final TrainingModel model;
 
-	/**
-	 * Creates the panel and its components
-	 */
-	public PlayerDetailPanel(TrainingModel model) {
-		this.model = model;
-	}
+    /**
+     * Creates the panel and its components
+     */
+    public PlayerDetailPanel(TrainingModel model) {
+        this.model = model;
+    }
 
-	@Override
-	protected void initialize() {
-		initComponents();
-		addListeners();
-		loadFromModel();
-		setNeedsRefresh(false);
-	}
+    @Override
+    protected void initialize() {
+        initComponents();
+        addListeners();
+        loadFromModel();
+        setNeedsRefresh(false);
+    }
 
-	@Override
-	protected void update() {
-		loadFromModel();
-	}
+    @Override
+    protected void update() {
+        loadFromModel();
+    }
 
-	private void addListeners() {
-		this.model.addModelChangeListener(new ModelChangeListener() {
+    private void addListeners() {
+        this.model.addModelChangeListener(new ModelChangeListener() {
 
-			@Override
-			public void modelChanged(ModelChange change) {
-				setNeedsRefresh(true);
-			}
-		});
-	}
+            @Override
+            public void modelChanged(ModelChange change) {
+                setNeedsRefresh(true);
+            }
+        });
+    }
 
-	/**
-	 * Method that populate this panel for the selected player
-	 * 
-	 *
-	 */
-	private void loadFromModel() {
-		if (this.model.getActivePlayer() == null) {
-			playerLabel.setText(HOVerwaltung.instance().getLanguageString("PlayerSelect"));
-			for (int i = 0; i < 8; i++) {
-				skillLabel[i].setText("");
-				levelBar[i].setLevel(0f);
-			}
-			return;
-		}
+    /**
+     * Method that populate this panel for the selected player
+     */
+    private void loadFromModel() {
+        if (this.model.getActivePlayer() == null) {
+            playerLabel.setText(HOVerwaltung.instance().getLanguageString("PlayerSelect"));
+            m_jtaNotes.setEditable(false);
+            m_jtaNotes.setText("");
 
-		// sets player number
-		playerLabel.setText(this.model.getActivePlayer().getName());
+            for (int i = 0; i < skillNumber; i++) {
+                skillLabel[i].setText("");
+                levelBar[i].setSkillLevel(0f, 0);
+            }
+            return;
+        }
 
-		// instantiate a future train manager to calculate the previsions */
-		FutureTrainingManager ftm = this.model.getFutureTrainingManager();
+        // sets player number
+        String value = MatchRoleID.getNameForPosition(this.model.getActivePlayer().getIdealPosition()) + " ("
+                + this.model.getActivePlayer().getIdealPosStaerke(true, false, 2) + ")";
+        playerLabel.setText("<html><b>" + this.model.getActivePlayer().getName() + "</b> - " + value + "</html>");
 
-		for (int i = 0; i < 8; i++) {
-			int skillIndex = Skills.getSkillAtPosition(i);
-			skillLabel[i].setText(PlayerAbility.getNameForSkill(
-					Skills.getSkillValue(this.model.getActivePlayer(), skillIndex), true));
+        m_jtaNotes.setEditable(true);
+        m_jtaNotes.setText(DBManager.instance().getSpielerNotiz(this.model.getActivePlayer().getSpielerID()));
 
-			FuturePlayer fp = ftm.previewPlayer(UserParameter.instance().futureWeeks);
-			double finalValue = getSkillValue(fp, skillIndex);
-			levelBar[i].setLevel((float) finalValue / getSkillMaxValue(i));
-		}
-	}
+        // instantiate a future train manager to calculate the previsions */
+        FutureTrainingManager ftm = this.model.getFutureTrainingManager();
 
-	/**
-	 * Get maximum value of the skill.
-	 * 
-	 * @param index
-	 * 
-	 * @return float Max value
-	 */
-	private float getSkillMaxValue(int index) {
-		if (index == 7) {
-			return 9f;
-		} else {
-			return 20f;
-		}
-	}
+        for (int i = 0; i < skillNumber; i++) {
+            int skillIndex = Skills.getSkillAtPosition(i);
+            float skillValue = Skills.getSkillValue(this.model.getActivePlayer(), skillIndex);
+            skillLabel[i].setText(PlayerAbility.getNameForSkill(skillValue, true));
 
-	private double getSkillValue(FuturePlayer spieler, int skillIndex) {
-		switch (skillIndex) {
-		case PlayerSkill.KEEPER:
-			return spieler.getGoalkeeping();
+            FuturePlayer fp = ftm.previewPlayer(UserParameter.instance().futureWeeks);
+            double finalValue = getSkillValue(fp, skillIndex);
 
-		case PlayerSkill.SCORING:
-			return spieler.getAttack();
+            float skillValueInt = (int) skillValue;
+            float skillValueDecimal = skillValue - skillValueInt;
 
-		case PlayerSkill.DEFENDING:
-			return spieler.getDefense();
+            levelBar[i].setSkillLevel((float) skillValueInt / getSkillMaxValue(i), skillValueInt);
+            levelBar[i].setSkillDecimalLevel((float) skillValueDecimal / getSkillMaxValue(i));
+            levelBar[i].setFutureSkillLevel((float) (finalValue - skillValue) / getSkillMaxValue(i));
+        }
+    }
 
-		case PlayerSkill.PASSING:
-			return spieler.getPassing();
+    /**
+     * Get maximum value of the skill.
+     *
+     * @param index
+     * @return float Max value
+     */
+    private float getSkillMaxValue(int index) {
+        // form 8, stamina 9
+        if (index == 0) {
+            return 8f;
+        } else if (index == 1) {
+            return 9f;
+        } else {
+            return 20f;
+        }
+    }
 
-		case PlayerSkill.PLAYMAKING:
-			return spieler.getPlaymaking();
+    private double getSkillValue(FuturePlayer spieler, int skillIndex) {
+        switch (skillIndex) {
+            case PlayerSkill.KEEPER:
+                return spieler.getGoalkeeping();
 
-		case PlayerSkill.SET_PIECES:
-			return spieler.getSetpieces();
+            case PlayerSkill.SCORING:
+                return spieler.getAttack();
 
-		case PlayerSkill.STAMINA:
-			return spieler.getStamina();
+            case PlayerSkill.DEFENDING:
+                return spieler.getDefense();
 
-		case PlayerSkill.WINGER:
-			return spieler.getCross();
-		default:
-			return 0;
-		}
-	}
+            case PlayerSkill.PASSING:
+                return spieler.getPassing();
 
-	/**
-	 * Initialize the object layout
-	 */
-	private void initComponents() {
-		setOpaque(false);
-		setLayout(new GridBagLayout());
+            case PlayerSkill.PLAYMAKING:
+                return spieler.getPlaymaking();
 
-		GridBagConstraints maingbc = new GridBagConstraints();
-		maingbc.anchor = GridBagConstraints.NORTH;
-		maingbc.insets = new Insets(10, 10, 5, 10);
-		playerLabel = new JLabel("", SwingConstants.CENTER);
-		add(playerLabel, maingbc);
+            case PlayerSkill.SET_PIECES:
+                return spieler.getSetpieces();
 
-		JPanel bottom = new JPanel(new GridBagLayout());
-		bottom.setOpaque(false);
+            case PlayerSkill.STAMINA:
+                return spieler.getStamina();
 
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(2, 4, 2, 4);
-		levelBar = new ColorBar[8];
-		skillLabel = new JLabel[8];
+            case PlayerSkill.FORM:
+                return spieler.getForm();
 
-		for (int i = 0; i < 8; i++) {
-			gbc.gridy = i;
-			gbc.weightx = 0.0;
-			gbc.fill = GridBagConstraints.HORIZONTAL;
+            case PlayerSkill.WINGER:
+                return spieler.getCross();
+            default:
+                return 0;
+        }
+    }
 
-			int skillIndex = Skills.getSkillAtPosition(i);
-			gbc.gridx = 0;
-			bottom.add(new JLabel(PlayerSkill.toString(skillIndex)), gbc);
+    /**
+     * Initialize the object layout
+     */
+    private void initComponents() {
+        setOpaque(false);
+        setLayout(new GridBagLayout());
 
-			skillLabel[i] = new JLabel("");
-			skillLabel[i].setOpaque(false);
-			gbc.gridx = 1;
-			bottom.add(skillLabel[i], gbc);
+        GridBagConstraints maingbc = new GridBagConstraints();
+        maingbc.anchor = GridBagConstraints.NORTH;
+        maingbc.insets = new Insets(8, 10, 8, 10);
+        playerLabel = new JLabel("", SwingConstants.CENTER);
+        add(playerLabel, maingbc);
 
-			levelBar[i] = new ColorBar(0f, 200, 16);
-			levelBar[i].setOpaque(false);
-			levelBar[i].setMinimumSize(new Dimension(200, 16));
-			gbc.fill = GridBagConstraints.BOTH;
-			gbc.gridx = 2;
-			gbc.weightx = 1.0;
-			bottom.add(levelBar[i], gbc);
-		}
-		JPanel dummyPanelToConsumeAllExtraSpace = new JPanel();
-		dummyPanelToConsumeAllExtraSpace.setOpaque(false);
-		gbc.gridy++;
-		gbc.weighty = 1.0;
-		bottom.add(dummyPanelToConsumeAllExtraSpace, gbc);
+        JPanel bottom = new JPanel(new GridBagLayout());
+        bottom.setOpaque(false);
 
-		maingbc.gridy = 1;
-		maingbc.insets = new Insets(0, 0, 0, 0);
-		maingbc.fill = GridBagConstraints.BOTH;
-		maingbc.weightx = 1.0;
-		maingbc.weighty = 1.0;
-		add(bottom, maingbc);
-	}
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.WEST;
+        levelBar = new HTColorBar[skillNumber];
+        skillLabel = new JLabel[skillNumber];
+
+        for (int i = 0; i < skillNumber; i++) {
+            if (i == 1) {
+                gbc.insets = new Insets(2, 4, 8, 4);
+            } else {
+                gbc.insets = new Insets(2, 4, 2, 4);
+            }
+
+            gbc.gridy = i;
+            gbc.weightx = 0.0;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+
+            int skillIndex = Skills.getSkillAtPosition(i);
+            gbc.gridx = 0;
+            bottom.add(new JLabel(PlayerSkill.toString(skillIndex)), gbc);
+
+            skillLabel[i] = new JLabel("");
+            skillLabel[i].setOpaque(false);
+            gbc.gridx = 1;
+            bottom.add(skillLabel[i], gbc);
+
+            int len = (int) getSkillMaxValue(i) * 10;
+
+            levelBar[i] = new HTColorBar(skillIndex, 0f, len, 16);
+            levelBar[i].setOpaque(false);
+            levelBar[i].setMinimumSize(new Dimension(200, 16));
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.gridx = 2;
+            gbc.weightx = 1.0;
+            bottom.add(levelBar[i], gbc);
+        }
+
+        maingbc.gridy = 1;
+        maingbc.insets = new Insets(0, 0, 0, 0);
+        maingbc.fill = GridBagConstraints.BOTH;
+        maingbc.weightx = 1.0;
+        maingbc.weighty = 1.0;
+        add(bottom, maingbc);
+
+        m_jtaNotes = new JTextArea(5,8);
+        m_jtaNotes.setEditable(false);
+        m_jtaNotes.setBackground(ColorLabelEntry.BG_STANDARD);
+        m_jtaNotes.addFocusListener(this);
+
+        JPanel panel2 = new ImagePanel();
+        panel2.setLayout(new BorderLayout());
+        panel2.setBorder(javax.swing.BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString("Notizen")));
+        panel2.add(new JScrollPane(m_jtaNotes), BorderLayout.CENTER);
+
+        maingbc.gridx = 0;
+        maingbc.gridy++;
+        maingbc.insets = new Insets(2, 0, 0, 0);
+        maingbc.fill = GridBagConstraints.BOTH;
+        add(panel2, maingbc);
+
+        JPanel dummyPanelToConsumeAllExtraSpace = new JPanel();
+        dummyPanelToConsumeAllExtraSpace.setOpaque(false);
+        maingbc.gridy++;
+        gbc.weighty = 1.0;
+        add(dummyPanelToConsumeAllExtraSpace, maingbc);
+    }
+
+    @Override
+    public void focusGained(FocusEvent e) {
+
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        if (this.model.getActivePlayer() != null) {
+            DBManager.instance().saveSpielerNotiz(this.model.getActivePlayer().getSpielerID(), m_jtaNotes.getText());
+        }
+    }
 }

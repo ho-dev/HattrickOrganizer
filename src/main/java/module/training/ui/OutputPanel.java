@@ -28,16 +28,14 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  * The Panel where the main training table is shown ("Training").
@@ -184,8 +182,10 @@ public class OutputPanel extends LazyImagePanel {
                     column.setPreferredWidth(150);
                     break;
                 case 1:
+                    column.setPreferredWidth(60);
+                    break;
                 case 2:
-                    column.setPreferredWidth(100);
+                    column.setPreferredWidth(140);
                     break;
                 default:
                     column.setPreferredWidth(70);
@@ -198,15 +198,25 @@ public class OutputPanel extends LazyImagePanel {
         playerIDCol.setMinWidth(0);
         playerIDCol.setMaxWidth(0);
 
-		// Hide column 12 (training speed)
-		playerIDCol = outputTable.getTableHeader().getColumnModel().getColumn(12);
-		playerIDCol.setPreferredWidth(0);
-		playerIDCol.setMinWidth(0);
-		playerIDCol.setMaxWidth(0);
+        // Hide column 12 (training speed)
+        playerIDCol = outputTable.getTableHeader().getColumnModel().getColumn(12);
+        playerIDCol.setPreferredWidth(0);
+        playerIDCol.setMinWidth(0);
+        playerIDCol.setMaxWidth(0);
 
-		outputTable.setAutoResizeMode(0);
-		outputTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
-		outputTable.setAutoCreateRowSorter(true);
+        outputTable.setAutoResizeMode(0);
+        outputTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        outputTable.setAutoCreateRowSorter(true);
+
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(outputTable.getModel());
+        outputTable.setRowSorter(sorter);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+
+        int columnIndexToSort = 12;
+        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.DESCENDING));
+
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
 
         add(new JScrollPane(outputTable), BorderLayout.CENTER);
 
@@ -240,6 +250,11 @@ public class OutputPanel extends LazyImagePanel {
             Point p = e.getPoint();
             int realColumnIndex = convertColumnIndexToModel(columnAtPoint(p));
             int realRowIndex = convertRowIndexToModel(rowAtPoint(p));
+
+            if (realColumnIndex == 0) {
+                Object obj = tableModel.getToolTipAt(realRowIndex, realColumnIndex);
+                return obj.toString();
+            }
 
             if ((realColumnIndex > 2) && (realColumnIndex < 11)) {
                 Object obj = tableModel.getToolTipAt(realRowIndex, realColumnIndex);
