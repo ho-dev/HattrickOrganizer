@@ -23,7 +23,7 @@ public final class PositionenTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[5];
+		columns = new ColumnDescriptor[6];
 		columns[0]= new ColumnDescriptor("HRF_ID",Types.INTEGER,false);
 		columns[1]= new ColumnDescriptor("ID",Types.INTEGER,false);
 		columns[2]= new ColumnDescriptor("Aufstellungsname",Types.VARCHAR,false,256);
