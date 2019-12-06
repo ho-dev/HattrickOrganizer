@@ -768,7 +768,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		return m_iMarkingPlayerId;
 	}
 
-	public void setMarkingPlayerId(int id){
+	public void setMarkingPlayerId(Integer id){
 		switch (this.m_iId){
 			case rightBack:
 			case rightCentralDefender:
@@ -780,6 +780,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 			case centralInnerMidfield:
 			case leftInnerMidfield:
 			case leftWinger:
+				if (id == null) id=0;
 				this.m_iMarkingPlayerId = id;
 				break;
 			default:

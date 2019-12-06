@@ -4,6 +4,7 @@ import core.model.match.MatchLineupPlayer;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;
+import org.hsqldb.types.Type;
 
 import java.sql.ResultSet;
 import java.sql.Types;
@@ -28,6 +29,7 @@ public final class PositionenTable extends AbstractTable {
 		columns[2]= new ColumnDescriptor("Aufstellungsname",Types.VARCHAR,false,256);
 		columns[3]= new ColumnDescriptor("SpielerID",Types.INTEGER,false);
 		columns[4]= new ColumnDescriptor("Taktik",Types.INTEGER,false);
+		columns[5]= new ColumnDescriptor("MarkingPlayerId",Types.INTEGER,true);
 	}
 	
 	/**
@@ -51,6 +53,8 @@ public final class PositionenTable extends AbstractTable {
 					int roleID = rs.getInt("ID");
 					int behavior = rs.getByte("Taktik");
 					int playerID = rs.getInt("SpielerID");
+
+					Integer markingPlayerId = (Integer)rs.getObject("MarkingPlayerId");
 					
 					switch (behavior) {
 					case IMatchRoleID.OLD_EXTRA_DEFENDER :
@@ -77,6 +81,7 @@ public final class PositionenTable extends AbstractTable {
 					}
 					
 					pos = new MatchRoleID(roleID, playerID, (byte)behavior);
+					pos.setMarkingPlayerId(markingPlayerId);
 					ret.add(pos);
 				}
 			}
@@ -100,9 +105,8 @@ public final class PositionenTable extends AbstractTable {
 		//speichern vorbereiten
 		for (int i = 0;(positionen != null) && (sysName != null) && (i < positionen.size()); i++) {
 			pos = (MatchRoleID) positionen.elementAt(i);
-			statement = "INSERT INTO "+getTableName()+" ( HRF_ID, ID, Aufstellungsname, SpielerID, Taktik ) VALUES(";
-			statement += ("" + hrfId + "," + pos.getId() + ",'" + sysName + "'," + pos.getSpielerId() + "," + pos.getTaktik() + " )");
-
+			statement = "INSERT INTO "+getTableName()+" ( HRF_ID, ID, Aufstellungsname, SpielerID, Taktik, MarkingPlayerId ) VALUES(";
+			statement += ("" + hrfId + "," + pos.getId() + ",'" + sysName + "'," + pos.getSpielerId() + "," + pos.getTaktik() + "," + pos.getMarkingPlayerId() + " )");
 			adapter.executeUpdate(statement);
 		}
 	}	
