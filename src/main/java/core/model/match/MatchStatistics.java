@@ -36,10 +36,9 @@ public class MatchStatistics {
 	 * @param accepted
 	 *            An array of integers specifying the positions which should be
 	 *            accepted
-	 *            If array is empty all positions are accepted
 	 * @return the number of minutes played in the specified positions
 	 */
-	public int getMinutesPlayedInPositions(int spielerId, int[] accepted) {
+	public int getTrainMinutesPlayedInPositions(int spielerId, int[] accepted) {
 
 		boolean inPosition = false;
 		MatchLineupPlayer player = (MatchLineupPlayer) teamLineup.getPlayerByID(spielerId);
@@ -53,7 +52,7 @@ public class MatchStatistics {
 		int minPlayed = 0;
 
 		// Those in the starting lineup entered at minute 0
-		if (accepted.length ==0 || isInAcceptedPositions(player.getStartPosition(), accepted)) {
+		if (isInAcceptedPositions(player.getStartPosition(), accepted)) {
 			enterMin = 0;
 			inPosition = true;
 		}
@@ -75,8 +74,8 @@ public class MatchStatistics {
 			if ((sub.getObjectPlayerID() == spielerId) || (sub.getSubjectPlayerID() == spielerId)) {
 
 				int newpos = getPlayerFieldPositionAtMinute(spielerId, sub.getMatchMinuteCriteria());
-				boolean newPosAccepted = accepted.length ==0 || isInAcceptedPositions(newpos, accepted);
-
+				boolean newPosAccepted = isInAcceptedPositions(newpos, accepted);
+			
 				if (inPosition && newPosAccepted) {
 					// He was in a counting position, and still is. Ignore
 				} else if (!inPosition && !newPosAccepted) {
@@ -101,6 +100,60 @@ public class MatchStatistics {
 		return minPlayed;
 	}
 
+	public int getStaminaMinutesPlayedInPositions(int spielerId) {
+
+		boolean inPosition = false;
+		MatchLineupPlayer player = (MatchLineupPlayer) teamLineup.getPlayerByID(spielerId);
+		List<Substitution> substitutions = teamLineup.getSubstitutions();
+
+		if (player == null) {
+			return 0;
+		}
+
+		int enterMin = -1;
+		int minPlayed = 0;
+		
+		// Those in the starting lineup entered at minute 0
+		if (player.getStartPosition() != -1) {
+			enterMin = 0;
+			inPosition = true;
+		}
+
+		// The substitutions are sorted on minute. Look for substitutions
+		// involving the player, and check his position
+		// after the substitution (on the substitution minute). Work through the
+		// list, and add minutes depending on
+		// entering/leaving the accepted position list.
+		Substitution sub;
+		for (int i = 0; i < substitutions.size(); i++) {
+			sub = substitutions.get(i);
+			if (sub == null) {
+				HOLogger.instance().debug(getClass(),
+						"getMinutesPlayedError, null in substitution list");
+				break;
+			}
+
+			if ((sub.getObjectPlayerID() == spielerId) || (sub.getSubjectPlayerID() == spielerId)) {
+				
+				if (getPlayerFieldPositionAtMinute(spielerId, sub.getMatchMinuteCriteria()) == -1) {
+					minPlayed += sub.getMatchMinuteCriteria() - enterMin;
+					inPosition = false;
+				}
+				else {
+					// He entered a counting position
+					enterMin = sub.getMatchMinuteCriteria();
+					inPosition = true;
+				}
+			}
+		}
+
+		if (inPosition) {
+			minPlayed += getMatchEndMinute(spielerId) - enterMin;
+		}
+
+		return minPlayed;
+	}	
+	
 	private boolean isInAcceptedPositions(int pos, int[] accepted) {
 		boolean result = false;
 
@@ -259,10 +312,6 @@ public class MatchStatistics {
 			if ((hls.get(i).getHighlightTyp() == IMatchHighlight.HIGHLIGHT_KARTEN)
 					&& (hls.get(i).getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_SPIELENDE)) {
 				endMinute = hls.get(i).getMinute();
-				if (endMinute < 120)
-					endMinute = 90; //no train during stoppage of play
-				else if (endMinute > 120)
-					endMinute = 120; //no train during stoppage of play
 			}
 			else if ((hls.get(i).getHighlightTyp() == IMatchHighlight.HIGHLIGHT_KARTEN)
 					&& (hls.get(i).getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_ROT

@@ -122,32 +122,32 @@ public class TrainingManager {
 	                MatchStatistics ms = new MatchStatistics(matchId, mlt);
 
 	                if (wt.getPrimaryTrainingSkillPositions() != null) {
-	                	tp.addPrimarySkillPositionMinutes(ms.getMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillPositions()));
+	                	tp.addPrimarySkillPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillPositions()));
 	                }
 	                if (wt.getPrimaryTrainingSkillBonusPositions() != null)
 	                {
-	                	tp.addPrimarySkillBonusPositionMinutes(ms.getMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillBonusPositions()));
+	                	tp.addPrimarySkillBonusPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillBonusPositions()));
 	                }
 	                if (wt.getPrimaryTrainingSkillSecondaryTrainingPositions() != null)
 	                {
-	                	tp.addPrimarySkillSecondaryPositionMinutes(ms.getMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillSecondaryTrainingPositions()));
+	                	tp.addPrimarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillSecondaryTrainingPositions()));
 	                }
 	                if (wt.getPrimaryTrainingSkillOsmosisTrainingPositions() != null) {
-	                	tp.addPrimarySkillOsmosisPositionMinutes(ms.getMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillOsmosisTrainingPositions()));
+	                	tp.addPrimarySkillOsmosisPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillOsmosisTrainingPositions()));
 	                }
 	                if (wt.getSecondaryTrainingSkillPositions() != null) {
-	                	tp.addSecondarySkillPrimaryMinutes(ms.getMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillPositions()));
+	                	tp.addSecondarySkillPrimaryMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillPositions()));
 	                }
 	                if (wt.getSecondaryTrainingSkillBonusPositions() != null)
 	                {
-	                	tp.addSecondarySkillBonusMinutes(ms.getMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillBonusPositions()));
+	                	tp.addSecondarySkillBonusMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillBonusPositions()));
 	                }
 	                if (wt.getSecondaryTrainingSkillSecondaryTrainingPositions() != null)
 	                {
-	                	tp.addSecondarySkillSecondaryPositionMinutes(ms.getMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillSecondaryTrainingPositions()));
+	                	tp.addSecondarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillSecondaryTrainingPositions()));
 	                }
 	                if (wt.getSecondaryTrainingSkillOsmosisTrainingPositions() != null) {
-	                	tp.addSecondarySkillOsmosisTrainingMinutes(ms.getMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillOsmosisTrainingPositions()));
+	                	tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillOsmosisTrainingPositions()));
 	                }
 	            }
 	            TrainingPoints trp = new TrainingPoints(wt.getPrimaryTraining(tp), wt.getSecondaryTraining(tp));
