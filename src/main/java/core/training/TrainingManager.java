@@ -238,7 +238,11 @@ public class TrainingManager {
         						+ " OR MatchTyp=" + MatchType.FRIENDLYNORMAL.getId()
         						+ " OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId()
         						+ " OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId()
-        						+ " OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId() + " )"
+								+ " OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId()
+								+ " OR MatchTyp=" + MatchType.EMERALDCUP.getId()
+								+ " OR MatchTyp=" + MatchType.RUBYCUP.getId()
+								+ " OR MatchTyp=" + MatchType.SAPPHIRECUP.getId()
+								+ " OR MatchTyp=" + MatchType.CONSOLANTECUP.getId() + " )"
         						+ " AND STATUS=" + MatchKurzInfo.FINISHED 
                                 + " ORDER BY MatchDate DESC";
 
