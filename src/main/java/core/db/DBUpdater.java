@@ -945,6 +945,11 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN NationalTeamID INTEGER");
 		}
 
+		// store [Positionen].MarkingPlayerId into POSITIONEN table
+		if (!columnExistsInTable("MarkingPlayerId", PositionenTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE POSITIONEN ADD COLUMN MarkingPlayerId INTEGER");
+		}
+
 		// store [Matches].MatchContextId into MATCHESKURZINFO table
 		if (!columnExistsInTable("MatchContextId", MatchesKurzInfoTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN MatchContextId INTEGER");
