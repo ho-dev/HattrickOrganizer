@@ -136,6 +136,24 @@ public class MyConnector {
 	}
 
 	/**
+	 * Fetch a specific region
+	 *
+	 * @param regionId
+	 *            id of the region to fetch
+	 * @return regiondetails xml
+	 *
+	 * @throws IOException
+	 */
+	public String getRegion(int regionId) {
+		String url = htUrl + "?file=regiondetails";
+		if (regionId > 0) {
+			url += "&regionID=" + regionId;
+		}
+		return getCHPPWebFile(url);
+	}
+
+
+	/**
 	 * holt die Finanzen
 	 */
 	public String getEconomy(int teamId){

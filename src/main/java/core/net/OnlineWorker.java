@@ -16,6 +16,7 @@ import core.model.match.MatchLineup;
 import core.model.match.MatchLineupTeam;
 import core.model.match.MatchType;
 import core.model.match.Matchdetails;
+import core.model.misc.Regiondetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -896,6 +897,24 @@ public class OnlineWorker {
 			HOLogger.instance().error(OnlineWorker.class, e.getMessage());
 		}
 
+		return null;
+	}
+
+	public static Regiondetails getRegionDetails(int regionId)
+	{
+		try {
+			String xml = MyConnector.instance().getRegion(regionId);
+			if ( !StringUtils.isEmpty(xml)){
+				return new Regiondetails(XMLRegionParser.parseRegionDetailsFromString(xml));
+			}
+		}
+		catch(Exception e){
+			String msg = getLangString("Downloadfehler") + " : Error fetching region details :";
+			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
+					JOptionPane.ERROR_MESSAGE);
+			HOLogger.instance().error(OnlineWorker.class, e.getMessage());
+		}
 		return null;
 	}
 
