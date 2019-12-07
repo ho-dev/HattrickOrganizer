@@ -946,8 +946,8 @@ final class DBUpdater {
 		}
 
 		// store [Positionen].MarkingPlayerId into POSITIONEN table
-		if (!columnExistsInTable("MarkingPlayerId", PositionenTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE POSITIONEN ADD COLUMN MarkingPlayerId INTEGER");
+		if (!columnExistsInTable("MARKINGPLAYERID", PositionenTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE POSITIONEN ADD COLUMN MARKINGPLAYERID INTEGER");
 		}
 
 		// store [Matches].MatchContextId into MATCHESKURZINFO table
