@@ -17,7 +17,11 @@ public class TrainingWeekPlayer {
 	}
 	public void addPrimarySkillPositionMinutes(int minutes)
 	{
-		_PrimarySkillPositionMinutes += minutes;
+		if ((_PrimarySkillPositionMinutes + minutes) > 90)
+			_PrimarySkillPositionMinutes = 90;
+		else
+			_PrimarySkillPositionMinutes += minutes;
+		
 		_TotalMinutesPlayed += minutes;
 	}
 	public int getPrimarySkillPositionMinutes()
@@ -26,7 +30,11 @@ public class TrainingWeekPlayer {
 	}
 	public void addPrimarySkillBonusPositionMinutes(int minutes)
 	{
-		_PrimarySkillBonusPositionMinutes += minutes;
+		if ((_PrimarySkillBonusPositionMinutes + minutes) > 90)
+			_PrimarySkillBonusPositionMinutes = 90;
+		else
+			_PrimarySkillBonusPositionMinutes += minutes;
+		
 		_TotalMinutesPlayed += minutes;
 	}
 	public int getPrimarySkillBonusPositionMinutes()
@@ -35,7 +43,11 @@ public class TrainingWeekPlayer {
 	}
 	public void addPrimarySkillSecondaryPositionMinutes(int minutes)
 	{
-		_PrimarySkillSecondaryPositionMinutes += minutes;
+		if ((_PrimarySkillSecondaryPositionMinutes + minutes) > 90)
+			_PrimarySkillSecondaryPositionMinutes = 90;
+		else
+			_PrimarySkillSecondaryPositionMinutes += minutes;
+		
 		_TotalMinutesPlayed += minutes;
 	}
 	public int getPrimarySkillSecondaryPositionMinutes()
@@ -44,7 +56,11 @@ public class TrainingWeekPlayer {
 	}
 	public void addPrimarySkillOsmosisPositionMinutes(int minutes)
 	{
-		_PrimarySkillOsmosisPositionMinutes += minutes;
+		if ((_PrimarySkillOsmosisPositionMinutes + minutes) > 90)
+			_PrimarySkillOsmosisPositionMinutes = 90;
+		else
+			_PrimarySkillOsmosisPositionMinutes += minutes;
+		
 		_TotalMinutesPlayed += minutes;
 	}
 	public int getPrimarySkillOsmosisPositionMinutes()
@@ -53,7 +69,10 @@ public class TrainingWeekPlayer {
 	}
 	public void addSecondarySkillPrimaryMinutes(int minutes)
 	{
-		_SecondarySkillPositionMinutes += minutes;
+		if ((_SecondarySkillPositionMinutes + minutes) > 90)
+			_SecondarySkillPositionMinutes = 90;
+		else
+			_SecondarySkillPositionMinutes += minutes;
 	}
 	public int getSecondarySkillPrimaryMinutes()
 	{
@@ -61,7 +80,10 @@ public class TrainingWeekPlayer {
 	}
 	public void addSecondarySkillBonusMinutes(int minutes)
 	{
-		_SecondarySkillBonusPositionMinutes += minutes;
+		if ((_SecondarySkillBonusPositionMinutes + minutes) > 90)
+			_SecondarySkillBonusPositionMinutes = 90;
+		else
+			_SecondarySkillBonusPositionMinutes += minutes;
 	}
 	public int getSecondarySkillBonusMinutes()
 	{
@@ -69,7 +91,10 @@ public class TrainingWeekPlayer {
 	}
 	public void addSecondarySkillSecondaryPositionMinutes(int minutes)
 	{
-		_SecondarySkillSecondaryPositionMinutes += minutes;
+		if ((_SecondarySkillSecondaryPositionMinutes + minutes) > 90)
+			_SecondarySkillSecondaryPositionMinutes = 90;
+		else
+			_SecondarySkillSecondaryPositionMinutes += minutes;
 	}
 	public int getSecondarySkillSecondaryPositionMinutes()
 	{
@@ -77,7 +102,10 @@ public class TrainingWeekPlayer {
 	}
 	public void addSecondarySkillOsmosisTrainingMinutes(int minutes)
 	{
-		_SecondarySkillOsmosisPositionMinutes += minutes;
+		if ((_SecondarySkillOsmosisPositionMinutes + minutes) > 90)
+			_SecondarySkillOsmosisPositionMinutes = 90;
+		else
+			_SecondarySkillOsmosisPositionMinutes += minutes;
 	}
 	public int getSecondarySkillOsmosisPositionMinutes()
 	{
