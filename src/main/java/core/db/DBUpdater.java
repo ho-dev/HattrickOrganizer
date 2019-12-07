@@ -666,8 +666,8 @@ final class DBUpdater {
 		// HO 3.0
 
 		// store [Positionen].MarkingPlayerId into POSITIONEN table
-		if (!columnExistsInTable("MarkingPlayerId", PositionenTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE POSITIONEN ADD COLUMN MarkingPlayerId INTEGER");
+		if (!columnExistsInTable("MARKINGPLAYERID", PositionenTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE POSITIONEN ADD COLUMN MARKINGPLAYERID INTEGER");
 		}
 
 		// store [Matches].MatchContextId into MATCHESKURZINFO table
@@ -676,7 +676,7 @@ final class DBUpdater {
 		}
 
 		//store [Tournament Details].TournamentTypeID into MATCHESKURZINFO table
-		if (!columnExistsInTable("TournamentType", MatchesKurzInfoTable.TABLENAME)) {
+		if (!columnExistsInTable("TournamentTypeID", MatchesKurzInfoTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN TournamentTypeID INTEGER");
 		}
 
