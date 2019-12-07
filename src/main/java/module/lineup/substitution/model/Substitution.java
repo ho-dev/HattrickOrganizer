@@ -23,7 +23,7 @@ public class Substitution {
 	private MatchOrderType orderType = MatchOrderType.SUBSTITUTION;
 	@SerializedName("min")
 	@Expose
-	private int matchMinuteCriteria = -1;
+	private byte matchMinuteCriteria = -1;
 	@SerializedName("pos")
 	@Expose
 	private byte roleId = -1;
@@ -38,7 +38,7 @@ public class Substitution {
 	private GoalDiffCriteria standing = GoalDiffCriteria.ANY_STANDING;
 
 	public Substitution(int playerOrderID, int playerIn, int subjectPlayerID,
-			MatchOrderType orderType, int matchMinuteCriteria, byte roleId, byte behaviour,
+			MatchOrderType orderType, byte matchMinuteCriteria, byte roleId, byte behaviour,
 			RedCardCriteria card, GoalDiffCriteria standing) {
 		this.playerOrderID = playerOrderID;
 		this.objectPlayerID = playerIn;
@@ -104,11 +104,11 @@ public class Substitution {
 		this.orderType = orderType;
 	}
 
-	public int getMatchMinuteCriteria() {
+	public byte getMatchMinuteCriteria() {
 		return matchMinuteCriteria;
 	}
 
-	public void setMatchMinuteCriteria(int matchMinuteCriteria) {
+	public void setMatchMinuteCriteria(byte matchMinuteCriteria) {
 		this.matchMinuteCriteria = matchMinuteCriteria;
 	}
 
