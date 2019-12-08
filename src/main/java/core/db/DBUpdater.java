@@ -665,11 +665,6 @@ final class DBUpdater {
 	private void updateDBv26(int DBVersion, int version) throws SQLException {
 		// HO 3.0
 
-		// store [Positionen].MarkingPlayerId into POSITIONEN table
-		if (!columnExistsInTable("MARKINGPLAYERID", PositionenTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE POSITIONEN ADD COLUMN MARKINGPLAYERID INTEGER");
-		}
-
 		// store [Matches].MatchContextId into MATCHESKURZINFO table
 		if (!columnExistsInTable("MatchContextId", MatchesKurzInfoTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN MatchContextId INTEGER");

@@ -59,12 +59,6 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	@Expose
 	private byte m_bTaktik = -1;
 
-	/** man marking, id of the marked opponent player */
-	// not (yet) supported by chpp
-	//@SerializedName("marking")
-	//@Expose
-	private Integer m_iMarkingPlayerId = null;
-
 	/** PositionsAngabe */
 
 	// protected byte m_bPosition = -1;
@@ -101,7 +95,6 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		m_iId = id;
 		m_iSpielerId = spielerId;
 		m_bTaktik = taktik;
-		setMarkingPlayerId(0);
 	}
 
 	/**
@@ -112,7 +105,6 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		m_iId = sp.getId();
 		m_iSpielerId = sp.getSpielerId();
 		m_bTaktik = sp.getTaktik();
-		m_iMarkingPlayerId = sp.getMarkingPlayerId();
 
 		if ((m_iId < IMatchRoleID.setPieces) && (m_iId != -1)) {
 			HOLogger.instance().debug(getClass(), "Old RoleID found in lineup: " + m_iId);
@@ -762,32 +754,6 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	public final byte getTaktik() {
 		return m_bTaktik;
 	}
-
-
-	public final Integer getMarkingPlayerId() {
-		return m_iMarkingPlayerId;
-	}
-
-	public void setMarkingPlayerId(Integer id){
-		switch (this.m_iId){
-			case rightBack:
-			case rightCentralDefender:
-			case leftCentralDefender:
-			case middleCentralDefender:
-			case leftBack:
-			case rightWinger:
-			case rightInnerMidfield:
-			case centralInnerMidfield:
-			case leftInnerMidfield:
-			case leftWinger:
-				if (id == null) id=0;
-				this.m_iMarkingPlayerId = id;
-				break;
-			default:
-				this.m_iMarkingPlayerId=null;
-		}
-	}
-
 
 	@Override
 	public final int compareTo(IMatchRoleID obj) {
