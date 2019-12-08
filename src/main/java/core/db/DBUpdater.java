@@ -671,7 +671,7 @@ final class DBUpdater {
 		}
 
 		//store [Tournament Details].TournamentTypeID into MATCHESKURZINFO table
-		if (!columnExistsInTable("TournamentType", MatchesKurzInfoTable.TABLENAME)) {
+		if (!columnExistsInTable("TournamentTypeID", MatchesKurzInfoTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN TournamentTypeID INTEGER");
 		}
 
