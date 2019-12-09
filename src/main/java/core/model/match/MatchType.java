@@ -90,7 +90,8 @@ public enum MatchType {
 			case SINGLE:
 			case LADDER:
 			case TOURNAMENTGROUP :
-			case TOURNAMENTPLAYOFF : {
+			case TOURNAMENTPLAYOFF :
+			case DIVISIONBATTLE:{
 				return "htointegrated";
 			}
 			default: {
