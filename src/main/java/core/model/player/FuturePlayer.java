@@ -7,6 +7,7 @@ public class FuturePlayer {
 	private double passing;
 	private double playmaking;
 	private double stamina;
+	private double form;
 	private double setpieces;
 	private int age;
 	private double defense;
@@ -51,6 +52,10 @@ public class FuturePlayer {
 		return stamina;
 	}
 
+	public double getForm() {
+		return form;
+	}
+
 	public void setAge(int i) {
 		age = i;
 	}
@@ -87,6 +92,10 @@ public class FuturePlayer {
 		stamina = i;
 	}
 
+	public void setForm(double i) {
+		form = i;
+	}
+
 	/**
 	 * toString methode: creates a String representation of the object
 	 * @return the String representation
@@ -100,6 +109,7 @@ public class FuturePlayer {
 		buffer.append("passing = "+passing);
 		buffer.append(", playmaking = "+playmaking);
 		buffer.append(", stamina = "+stamina);
+		buffer.append(", form = "+form);
 		buffer.append(", setpieces = "+setpieces);
 		buffer.append(", age = "+age);
 		buffer.append(", defense = "+defense);

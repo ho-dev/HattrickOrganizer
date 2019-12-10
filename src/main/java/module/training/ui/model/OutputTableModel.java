@@ -3,17 +3,18 @@ package module.training.ui.model;
 
 import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
-import core.model.player.ISkillup;
-import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.WeeklyTrainingType;
 import core.util.Helper;
 import module.training.Skills;
+import module.training.ui.comp.BestPositionCell;
+import module.training.ui.comp.PlayerNameCell;
 import module.training.ui.comp.VerticalIndicator;
 
 import java.util.*;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -48,8 +49,10 @@ public class OutputTableModel extends AbstractTableModel {
     public Class<?> getColumnClass(int columnIndex) {
         switch (columnIndex) {
             case 0:
+                return PlayerNameCell.class;
             case 1:
             case 2:
+                return BestPositionCell.class;
             case COL_PLAYER_ID:
                 return String.class;
             case 3:
@@ -61,6 +64,8 @@ public class OutputTableModel extends AbstractTableModel {
             case 9:
             case 10:
                 return VerticalIndicator.class;
+            case 12:
+                return Integer.class;
             default:
                 return super.getColumnClass(columnIndex);
         }
@@ -135,7 +140,10 @@ public class OutputTableModel extends AbstractTableModel {
      * @return toolTip
      */
     public Object getToolTipAt(int rowIndex, int columnIndex) {
-        return ((VerticalIndicator) getValueAt(rowIndex, columnIndex)).getToolTipText();
+        if (columnIndex == 0) {
+            return ((JLabel) getValueAt(rowIndex, columnIndex)).getToolTipText();
+        } else
+            return ((VerticalIndicator) getValueAt(rowIndex, columnIndex)).getToolTipText();
     }
 
     /*
@@ -154,14 +162,13 @@ public class OutputTableModel extends AbstractTableModel {
         switch (columnIndex) {
             case 0:
                 // Spielername
-                return player.getName();
+                return createPlayerNameCell(player, ftm.getTrainingSpeed());
             case 1:
                 // Spieleralter
                 return player.getAlterWithAgeDaysAsString();
             case 2:
                 // Beste Postion
-                return MatchRoleID.getNameForPosition(player.getIdealPosition()) + " ("
-                        + player.getIdealPosStaerke(true) + ")";
+                return createBestPositionCell(player);
             case 3:
                 return createIcon(player, PlayerSkill.KEEPER);
             case 4:
@@ -181,7 +188,7 @@ public class OutputTableModel extends AbstractTableModel {
             case COL_PLAYER_ID:
                 return Integer.toString(player.getSpielerID());
             case 12:
-                return Integer.toString(ftm.getTrainingSpeed());
+                return ftm.getTrainingSpeed();
             default:
                 return "";
         }
@@ -243,4 +250,17 @@ public class OutputTableModel extends AbstractTableModel {
 
         return vi;
     }
+
+    private PlayerNameCell createPlayerNameCell(Player player, int speed) {
+        PlayerNameCell pnc = new PlayerNameCell(player, speed);
+
+        return pnc;
+    }
+
+    private BestPositionCell createBestPositionCell(Player player) {
+        BestPositionCell bpc = new BestPositionCell(player);
+
+        return bpc;
+    }
+
 }

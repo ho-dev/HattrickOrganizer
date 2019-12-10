@@ -63,9 +63,6 @@ public class SkillupPanel extends LazyPanel {
 
 	/**
 	 * Populate the table
-	 * 
-	 * @param player
-	 *            the selected training situation
 	 */
 	private void loadFromModel() {
 		List<ISkillup> skillups = new ArrayList<ISkillup>();

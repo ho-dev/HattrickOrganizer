@@ -29,7 +29,8 @@ public enum MatchesAnalyzerMatchType {
 	EMERALDCUP				(1001,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.emerald_cup")),
 	RUBYCUP					(1002,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.ruby_cup")),
 	SAPPHIRECUP				(1003,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.sapphire_cup")),
-	CONSOLANTECUP			(1004,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.consolante_cup"));
+	CONSOLANTECUP			(1004,	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.consolante_cup")),
+	DIVISION_BATTLE         (1101, 	HOVerwaltung.instance().getLanguageString("ls.match.matchtype.division_battle"));
 
 	private final int id;
 	private final String name;
@@ -82,6 +83,8 @@ public enum MatchesAnalyzerMatchType {
 				return 10;
 			case CONSOLANTECUP:
 				return 12;
+			case DIVISION_BATTLE:
+				return 13;
 			default :
 				return 11;
 		}
@@ -115,6 +118,7 @@ public enum MatchesAnalyzerMatchType {
 	public boolean isUnofficial() {
 		if(this == TOURNAMENT_GROUP) return true;
 		if(this == TOURNAMENT_PLAYOFF) return true;
+		if(this == DIVISION_BATTLE) return true;
 		if(this == INT_COMP_NORMAL) return true;
 		if(this == LADDER) return true;
 		if(this == SINGLE) return true;
