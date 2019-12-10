@@ -8,6 +8,7 @@ import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupTeam;
 import core.model.match.MatchStatistics;
 import core.model.match.MatchType;
+import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
@@ -137,21 +138,26 @@ public class TrainingPreviewPlayers implements Refreshable {
         boolean partialFuturTrain = false;
         int iStamina = 0;
         boolean bEstimedStamina = false;
-        int[] iEmpty = {};
 
         getMatchesForTraining();
 
         for (int i = 0; i < lMatchStats.size(); i++) {
 
             if (weekTrainTyp.getPrimaryTrainingSkillPositions() != null) {
-                fullTrain += lMatchStats.get(i).getMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillPositions());
+                fullTrain += lMatchStats.get(i).getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillPositions());
+                if (fullTrain > 90)
+                    fullTrain = 90;
             }
             if (weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions() != null) {
-                partialTrain += lMatchStats.get(i).getMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions());
+                partialTrain += lMatchStats.get(i).getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions());
+                if (partialTrain > 90)
+                    partialTrain = 90;
             }
             // If player receive training, don't display stamina icon
             if (fullTrain == 0 && partialTrain == 0) {
-                iStamina = lMatchStats.get(i).getMinutesPlayedInPositions(playerID, iEmpty);
+                iStamina += lMatchStats.get(i).getStaminaMinutesPlayedInPositions(playerID);
+                if (iStamina > 90)
+                    iStamina = 90;
             }
         }
 
@@ -176,7 +182,8 @@ public class TrainingPreviewPlayers implements Refreshable {
                     }
                 }
                 // If player receive training, don't display stamina icon
-                if (fullTrain == 0 && partialTrain == 0 && !fullFuturTrain && !partialFuturTrain) {
+                if (fullTrain == 0 && partialTrain == 0 && !fullFuturTrain && !partialFuturTrain && 
+                        roleId.getId() < IMatchRoleID.substGK1) {
                     bEstimedStamina = true;
                 }
             }
