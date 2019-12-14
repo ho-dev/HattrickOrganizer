@@ -11,9 +11,11 @@ public class BestPositionCell implements Comparable<BestPositionCell> {
 
 
     public BestPositionCell(Player player) {
-        strength = player.getIdealPosStaerke(true);
-        value = MatchRoleID.getNameForPosition(player.getIdealPosition()) + " ("
-                + strength + ")";
+        byte bIdealPosition = player.getIdealPosition();
+        value = MatchRoleID.getNameForPosition(bIdealPosition)
+                + " ("
+                +  player.getIdealPosStaerke(true, true, 1)
+                + "%)";
         pos = MatchRoleID.getSortId(player.getIdealPosition(), false);
     }
 

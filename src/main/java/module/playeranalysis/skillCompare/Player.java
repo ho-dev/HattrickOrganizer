@@ -584,7 +584,7 @@ public class Player
 		setOldPosVal_F_D(m_Player.calcPosValue(IMatchRoleID.FORWARD_DEF,true));
 		setOldPosVal_F_TW(m_Player.calcPosValue(IMatchRoleID.FORWARD_TOWING,true));
 		setOldBestPosition(m_Player.getIdealPosition());
-		setOldBestPositionRating(m_Player.getIdealPosStaerke(true));
+		setOldBestPositionRating(m_Player.getIdealPosStaerke(true, true, 1));
 	}
 	
 	public void setNewPositionValues()
@@ -609,7 +609,7 @@ public class Player
 		setPosVal_F_D(m_Player.calcPosValue(IMatchRoleID.FORWARD_DEF,true));
 		setPosVal_F_TW(m_Player.calcPosValue(IMatchRoleID.FORWARD_TOWING,true));
 		setBestPosition(m_Player.getIdealPosition());
-		setBestPositionRating(m_Player.getIdealPosStaerke(true));
+		setBestPositionRating(m_Player.getIdealPosStaerke(true, true, 1));
 		changePlayerSkillValues(false);
 	}
 	

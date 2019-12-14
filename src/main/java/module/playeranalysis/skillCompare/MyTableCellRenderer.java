@@ -99,9 +99,10 @@ class MyTableCellRenderer  implements TableCellRenderer{
 				label.setIcon(ThemeManager.getIcon(group));
 			label.setBackground(table.getBackground());
 		} else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("BestePosition")))		{
+			// we parse back into best position and best rating value
 			byte tmpPos = ((Float)table.getValueAt(row,column)).byteValue();
-			float tmpFloat =Helper.round((((Float)table.getValueAt(row,column)).floatValue() - tmpPos)*100,UserParameter.instance().nbDecimals);
-			label.setText(MatchRoleID.getNameForPosition(tmpPos) + " ("+ tmpFloat +")");
+			float ratingValue = (((Float)table.getValueAt(row,column)).floatValue() - tmpPos) * 1000;
+			label.setText(MatchRoleID.getNameForPosition(tmpPos) + " ("+ String.format("%.1f", ratingValue) +"%)");
 			label.setBackground(table.getBackground());
 		} else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.short_motherclub"))) {
 			double skillwert = 0;

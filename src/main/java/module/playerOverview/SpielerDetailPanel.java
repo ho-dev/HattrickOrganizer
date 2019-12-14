@@ -7,7 +7,7 @@ import core.constants.player.PlayerHonesty;
 import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.db.DBManager;
-//import core.epv.EPVData;
+
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
@@ -431,11 +431,11 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             m_jpLeadership.setText(PlayerAbility.getNameForSkill(m_clPlayer.getFuehrung()) + "");
             m_jpLoyalty.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLoyalty()) + "");
             m_jpLoyaltyChange.clear();
-            m_jpBestPosition.setText(MatchRoleID.getNameForPosition(m_clPlayer.getIdealPosition())
+            byte bIdealPosition = m_clPlayer.getIdealPosition();
+            m_jpBestPosition.setText(MatchRoleID.getNameForPosition(bIdealPosition)
                                 + " ("
-                                + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).format(
-                                		m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true))
-                                + ")");
+                                +  m_clPlayer.getIdealPosStaerke(true, true, 1)
+                                + "%)");
             for (int i = 0; i < playerPositionValues.length; i++) {
             	showNormal(playerPositionValues[i],playerPosition[i]);
 			}
