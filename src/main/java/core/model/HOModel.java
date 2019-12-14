@@ -21,7 +21,7 @@ import core.util.HTCalendarFactory;
 import core.util.HelperWrapper;
 import module.lineup.Lineup;
 import module.series.Spielplan;
-import tool.arenasizer.Stadium;
+import tool.arenasizer.Arena;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class HOModel {
     private Finanzen m_clFinanzen;
     private Liga m_clLiga;
     private Spielplan m_clSpielplan;
-    private Stadium m_clStadium;
+    private Arena m_clArena;
     private Team m_clTeam;
     private Vector<Player> m_vOldPlayer = new Vector<Player>();
     private Vector<Player> m_vPlayer = new Vector<Player>();
@@ -274,8 +274,8 @@ public class HOModel {
     /**
      * Setzt neues Stadium
      */
-    public final void setStadium(Stadium stadium) {
-        m_clStadium = stadium;
+    public final void setArena(Arena arena) {
+        m_clArena = arena;
     }
 
     //--------Stadium----------------------------------------
@@ -283,8 +283,8 @@ public class HOModel {
     /**
      * Gibt das Stadium zurück
      */
-    public final Stadium getStadium() {
-        return m_clStadium;
+    public final Arena getArena() {
+        return m_clArena;
     }
 
     // ---------------- Staff -----------------------------
@@ -703,7 +703,7 @@ public class HOModel {
         //Finanzen
         DBManager.instance().saveFinanzen(m_iID, m_clFinanzen, m_clBasics.getDatum());
         //Stadion
-        DBManager.instance().saveStadion(m_iID, m_clStadium);
+        DBManager.instance().saveStadion(m_iID, m_clArena);
         //Liga
         DBManager.instance().saveLiga(m_iID, m_clLiga);
         //Aufstellung + aktu Sys als Standard saven

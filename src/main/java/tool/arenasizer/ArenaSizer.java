@@ -47,7 +47,7 @@ public class ArenaSizer {
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    final int calcMaxIncome(Stadium arena) {
+    final int calcMaxIncome(Arena arena) {
         int income = 0;
 
         income += ((arena.getStehplaetze() * ADMISSION_PRICE_TERRACES) / currencyFactor);
@@ -58,23 +58,23 @@ public class ArenaSizer {
         return income;
     }
 
-    final Stadium[] calcConstructionArenas(Stadium currentArena, int supporter){
-    	Stadium arenaMax = createArena(supporter * (SUPPORTER_NORMAL.intValue()+5) ,currentArena);
-        Stadium arenaNormal = createArena(supporter * SUPPORTER_NORMAL.intValue(),currentArena);
-        Stadium arenaMin = createArena(supporter * (SUPPORTER_NORMAL.intValue()-5),currentArena);
-        return new Stadium[]{arenaMax, arenaNormal, arenaMin};
+    final Arena[] calcConstructionArenas(Arena currentArena, int supporter){
+    	Arena arenaMax = createArena(supporter * (SUPPORTER_NORMAL.intValue()+5) ,currentArena);
+        Arena arenaNormal = createArena(supporter * SUPPORTER_NORMAL.intValue(),currentArena);
+        Arena arenaMin = createArena(supporter * (SUPPORTER_NORMAL.intValue()-5),currentArena);
+        return new Arena[]{arenaMax, arenaNormal, arenaMin};
     }
 
 
-    final Stadium[] calcConstructionArenas(Stadium currentArena, int maxSupporter, int normalSupporter, int minSupporter){
-        Stadium arenaMax = createArena(maxSupporter,currentArena);
-        Stadium arenaNormal = createArena(normalSupporter,currentArena);
-        Stadium arenaMin = createArena(minSupporter,currentArena);
-        return new Stadium[]{arenaMax, arenaNormal, arenaMin};
+    final Arena[] calcConstructionArenas(Arena currentArena, int maxSupporter, int normalSupporter, int minSupporter){
+        Arena arenaMax = createArena(maxSupporter,currentArena);
+        Arena arenaNormal = createArena(normalSupporter,currentArena);
+        Arena arenaMin = createArena(minSupporter,currentArena);
+        return new Arena[]{arenaMax, arenaNormal, arenaMin};
     }
 
-    private Stadium createArena(int size,Stadium current){
-    	Stadium tmp = new Stadium();
+    private Arena createArena(int size, Arena current){
+    	Arena tmp = new Arena();
     	BigDecimal sizeNumber = new BigDecimal(size);
     	tmp.setStehplaetze(TERRACES_PERCENT.multiply(sizeNumber).intValue());
     	tmp.setAusbauStehplaetze(tmp.getStehplaetze() - current.getStehplaetze());
@@ -126,7 +126,7 @@ public class ArenaSizer {
         return (int) ((arenaSize / 100.0f) * percent);
     }
 
-    final float calcMaintenance(Stadium arena) {
+    final float calcMaintenance(Arena arena) {
         float costs = 0.0f;
 
         costs += ((arena.getStehplaetze() * MAINTENANCE_TERRACES) / currencyFactor);

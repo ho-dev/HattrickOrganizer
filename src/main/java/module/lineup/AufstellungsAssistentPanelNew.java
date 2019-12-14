@@ -110,7 +110,7 @@ public class AufstellungsAssistentPanelNew extends ImagePanel implements
 	}
 
 	@Override
-	public void setWeather(Weather weather) {}
+	public void setWeather(Weather weather) {weatherChooser.setWeather(weather);}
 
 	@Override
 	public void addToAssistant(PlayerPositionPanel positionPanel) {

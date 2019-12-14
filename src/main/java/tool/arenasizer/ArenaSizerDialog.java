@@ -93,7 +93,7 @@ public class ArenaSizerDialog extends JDialog implements ActionListener {
 			tabbedPane = new JTabbedPane();
 			HOVerwaltung hoV = HOVerwaltung.instance();
 			tabbedPane.addTab(hoV.getLanguageString("Stadion"), getArenaPanel());
-			tabbedPane.addTab(hoV.getModel().getStadium().getStadienname(), getInfoPanel());
+			tabbedPane.addTab(hoV.getModel().getArena().getStadienname(), getInfoPanel());
 			tabbedPane.addTab(hoV.getLanguageString("Statistik"), getHistoryPanel());
 		}
 		return tabbedPane;
@@ -113,10 +113,10 @@ public class ArenaSizerDialog extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		 if(e.getSource() == refreshButton){
-			Stadium stadium = getControlPanel().getStadium();
+			Arena stadium = getControlPanel().getStadium();
 			int[] supporter = getControlPanel().getModifiedSupporter();
             getArenaPanel().reinitArena(stadium, supporter[0],supporter[1],supporter[2]);
-            getInfoPanel().reinitArena(HOVerwaltung.instance().getModel().getStadium(), supporter[0],supporter[1],supporter[2]);
+            getInfoPanel().reinitArena(HOVerwaltung.instance().getModel().getArena(), supporter[0],supporter[1],supporter[2]);
 		}
 	}
 }

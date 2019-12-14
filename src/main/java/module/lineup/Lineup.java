@@ -2,14 +2,19 @@ package module.lineup;
 
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
+import core.file.xml.MyHashtable;
+import core.file.xml.XMLMatchdetailsParser;
 import core.model.HOVerwaltung;
 import core.model.Ratings;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
+import core.model.match.Matchdetails;
 import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.net.MyConnector;
+import core.net.OnlineWorker;
 import core.rating.RatingPredictionConfig;
 import core.rating.RatingPredictionManager;
 import core.util.HOLogger;
@@ -69,6 +74,9 @@ public class Lineup{
 
 	/** Home/Away/AwayDerby */
 	private short m_sLocation = -1;
+
+	private int m_iArenaId = -1;
+	private int m_iRegionId = -1;
 
 	private boolean pullBackOverride;
 
@@ -660,7 +668,7 @@ public class Lineup{
 	/**
 	 * Setter for property m_sHeimspiel.
 	 * 
-	 * @param m_sHeimspiel
+	 * @param location
 	 *            New value of property m_sHeimspiel.
 	 */
 	public final void setLocation(short location) {
@@ -674,6 +682,29 @@ public class Lineup{
 	 */
 	public final short getLocation() {
 		if (m_sLocation < 0) {
+			getUpcomingMatch();
+		}
+		return m_sLocation;
+	}
+
+	public final int getArenaId()
+	{
+		if (m_iArenaId < 0) {
+			getUpcomingMatch();
+		}
+		return m_iArenaId;
+	}
+
+	public final int getRegionId()
+	{
+		if ( m_iRegionId<0){
+			getUpcomingMatch();
+		}
+		return  m_iRegionId;
+	}
+
+	private final void getUpcomingMatch()
+	{
 			try {
 				final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 				final MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(teamId,
@@ -682,8 +713,10 @@ public class Lineup{
 
 				if ((matches == null) || (matches.length < 1)) {
 					m_sLocation = IMatchDetails.LOCATION_AWAY;
+					m_iArenaId=0;
+					m_iRegionId=0;
 					HOLogger.instance().error(getClass(), "no match to determine location");
-					return m_sLocation;
+					return;
 				}
 
 				final List<MatchKurzInfo> sMatches = orderMatches(matches);
@@ -691,23 +724,21 @@ public class Lineup{
 
 				if (match == null) {
 					m_sLocation = IMatchDetails.LOCATION_AWAY;
+					m_iArenaId=0;
+					m_iRegionId=0;
 					HOLogger.instance().error(getClass(), "no match to determine location");
-					return m_sLocation;
+					return;
 				}
 
 				if (match.getMatchTyp().isOfficial()) {m_sLocation = (match.getHeimID() == teamId) ? IMatchDetails.LOCATION_HOME: IMatchDetails.LOCATION_AWAY;}
 				else {m_sLocation = IMatchDetails.LOCATION_TOURNAMENT;}
 
-				// TODO: Manage away derby : To decide away derby we need hold of the region (likely both download and db work needed)
 
 			} catch (Exception e) {
 				HOLogger.instance().error(getClass(), "getHeimspiel: " + e);
 				m_sLocation = 0;
 			}
-		}
-		// HOLogger.instance().debug(getClass(), "getHeimspiel: " +
-		// m_sLocation);
-		return m_sLocation;
+
 	}
 
 	/**

@@ -147,7 +147,7 @@ class ControlPanel extends JPanel implements ActionListener{
     //Init aus dem HRF
     private void initStadium() {
         //Nur, wenn es eine HRFArena ist
-        Stadium m_clStadium = HOVerwaltung.instance().getModel().getStadium();
+        Arena m_clStadium = HOVerwaltung.instance().getModel().getArena();
         int fans = HOVerwaltung.instance().getModel().getVerein().getFans();
 
         m_jtfFans.setText( fans + "");
@@ -167,7 +167,7 @@ class ControlPanel extends JPanel implements ActionListener{
 
     }
 
-    Stadium getStadium(){
+    Arena getStadium(){
         int steh = 0;
         int sitz = 0;
         int ueber = 0;
@@ -182,7 +182,7 @@ class ControlPanel extends JPanel implements ActionListener{
             HOLogger.instance().log(getClass(),"Fehler: keine Zahl");
         }
 
-        final Stadium stadium = new Stadium();
+        final Arena stadium = new Arena();
         stadium.setStehplaetze(steh);
         stadium.setSitzplaetze(sitz);
         stadium.setUeberdachteSitzplaetze(ueber);

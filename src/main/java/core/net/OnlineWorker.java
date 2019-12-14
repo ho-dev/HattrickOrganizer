@@ -298,6 +298,8 @@ public class OnlineWorker {
 			try {
 				int heimId = 0;
 				int gastId = 0;
+				int arenaId = 0;
+				int regionId = -1;
 				MatchKurzInfo info = null;
 				Matchdetails details;
 
@@ -310,24 +312,31 @@ public class OnlineWorker {
 
 				// If ids not found, download matchdetails to obtain them.
 				// Highlights will be missing.
-				if ((heimId == 0) || (gastId == 0)) {
+				if ((heimId == 0) || (gastId == 0) || arenaId==0 ) {
 					waitDialog.setValue(10);
 					details = fetchDetails(matchid, matchType, null, waitDialog);
 					heimId = details.getHeimId();
 					gastId = details.getGastId();
+					arenaId = details.getArenaID();
+					if ( arenaId != HOVerwaltung.instance().getModel().getArena().getArenaId()){
+						regionId=details.getRegionId();
+					}
 				}
 
-				MatchLineup lineup = getMatchlineup(matchid, matchType, heimId, gastId);
+				MatchLineup lineup = null;
+				if ( info.getMatchStatus() == MatchKurzInfo.FINISHED) {
+					lineup = getMatchlineup(matchid, matchType, heimId, gastId);
 
-				if (lineup == null) {
-					String msg = getLangString("Downloadfehler")
-							+ " : Error fetching Matchlineup :";
-					// Info
-					setInfoMsg(msg, InfoPanel.FEHLERFARBE);
-					Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
-							JOptionPane.ERROR_MESSAGE);
+					if (lineup == null) {
+						String msg = getLangString("Downloadfehler")
+								+ " : Error fetching Matchlineup :";
+						// Info
+						setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+						Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
+								JOptionPane.ERROR_MESSAGE);
 
-					return false;
+						return false;
+					}
 				}
 
 				// Get details with highlights.
@@ -352,8 +361,18 @@ public class OnlineWorker {
 				info.setMatchID(matchid);
 				info.setMatchStatus(MatchKurzInfo.FINISHED);
 				info.setMatchType(matchType);
+				info.setRegionId(regionId);
+				info.setArenaId(arenaId);
 
-				boolean success = DBManager.instance().storeMatch(info, details, lineup);
+				boolean success;
+				if ( lineup==null){
+					MatchKurzInfo[] matches = {info};
+					DBManager.instance().storeMatchKurzInfos(matches);
+					success = true;
+				}
+				else{
+					success = DBManager.instance().storeMatch(info, details, lineup);
+				}
 				if (!success) {
 					waitDialog.setVisible(false);
 					return false;
@@ -503,7 +522,7 @@ public class OnlineWorker {
 				for (MatchKurzInfo match : matches) {
 					int curMatchId = match.getMatchID();
 					if (DBManager.instance().isMatchVorhanden(curMatchId)
-							&& match.getMatchStatus() == MatchKurzInfo.FINISHED
+							&& match.getMatchStatus() == MatchKurzInfo.FINISHED				// TODO: Keine Aufstellung ODER Keine Arena
 							&& (!DBManager.instance().isMatchLineupInDB(curMatchId))) {
 
 						// No match in DB
@@ -512,6 +531,11 @@ public class OnlineWorker {
 							bOK = false;
 							break;
 						}
+					}
+					else {
+						// load match region id for weather and derby information
+						// regionId == -1 => HOME
+						// regionId == our region Id => DERBY
 					}
 				}
 			}

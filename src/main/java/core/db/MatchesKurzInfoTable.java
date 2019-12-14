@@ -351,7 +351,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			try {
 				sql = "INSERT INTO "
 						+ getTableName()
-						+ " (  MatchID, MatchContextId, TournamentTypeID, MatchTyp, CupLevel, CupLevelIndex, HeimName, HeimID, GastName, GastID, MatchDate, HeimTore, GastTore, Aufstellung, Status ) VALUES(";
+						+ " (  MatchID, MatchContextId, TournamentTypeID, MatchTyp, CupLevel, CupLevelIndex, HeimName, HeimID, GastName, GastID, MatchDate, HeimTore, GastTore, Aufstellung, Status, ArenaId, RegionId ) VALUES(";
 				sql += (matches[i].getMatchID()
 						+ ","
 						+ matches[i].getMatchContextId()
@@ -376,7 +376,9 @@ final class MatchesKurzInfoTable extends AbstractTable {
 						+ matches[i].getHeimTore() + ", "
 						+ matches[i].getGastTore() + ", "
 						+ matches[i].isOrdersGiven() + ", "
-						+ matches[i].getMatchStatus() + " )");
+						+ matches[i].getMatchStatus() + ", "
+						+ matches[i].getArenaId() + ", "
+						+ matches[i].getRegionId() + " )");
 				adapter.executeUpdate(sql);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),

@@ -64,6 +64,14 @@ public class MatchKurzInfo implements Comparable<Object> {
 	/** HO user team ID */
 	private int user_team_id = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
+	private int m_iArenaId = -1;
+	private int m_iRegionId = -1;
+
+	public final void setArenaId(int id) {this.m_iArenaId=id;}
+	public final int getArenaId() {return this.m_iArenaId;}
+	public final void setRegionId(int id) {this.m_iRegionId=id;}
+	public final int getRegionId(){return this.m_iRegionId;}
+
 	/** Typ des Spiels */
 	private MatchType m_mtMatchTyp = MatchType.NONE;
 	private CupLevel m_mtCupLevel = CupLevel.NONE;
