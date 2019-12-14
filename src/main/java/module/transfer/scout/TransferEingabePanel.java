@@ -370,11 +370,11 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 //        EPVData data = new EPVData(tempPlayer);
 //		double price = HOVerwaltung.instance().getModel().getEPV().getPrice(data);
 //		jtfEPV.setText(NumberFormat.getCurrencyInstance().format(price));
-        jpBestPosition.setText(MatchRoleID.getNameForPosition(tempPlayer.getIdealPosition())
-        		+ " (" +
-        		Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true))
-        		 + ")");
+        byte bIdealPosition = tempPlayer.getIdealPosition();
+        jpBestPosition.setText(MatchRoleID.getNameForPosition(bIdealPosition)
+                + " ("
+                +  tempPlayer.getIdealPosStaerke(true, true, 1)
+                + "%)");
         jpRatingKeeper.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
         		.format(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true)) + "");
         jpRatingDefender.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
