@@ -51,7 +51,7 @@ public final class PositionenTable extends AbstractTable {
 					int roleID = rs.getInt("ID");
 					int behavior = rs.getByte("Taktik");
 					int playerID = rs.getInt("SpielerID");
-					
+
 					switch (behavior) {
 					case IMatchRoleID.OLD_EXTRA_DEFENDER :
 						roleID = IMatchRoleID.middleCentralDefender;
@@ -101,8 +101,7 @@ public final class PositionenTable extends AbstractTable {
 		for (int i = 0;(positionen != null) && (sysName != null) && (i < positionen.size()); i++) {
 			pos = (MatchRoleID) positionen.elementAt(i);
 			statement = "INSERT INTO "+getTableName()+" ( HRF_ID, ID, Aufstellungsname, SpielerID, Taktik ) VALUES(";
-			statement += ("" + hrfId + "," + pos.getId() + ",'" + sysName + "'," + pos.getSpielerId() + "," + pos.getTaktik() + " )");
-
+			statement += ("" + hrfId + "," + pos.getId() + ",'" + sysName + "'," + pos.getSpielerId() + "," + pos.getTaktik()  + " )");
 			adapter.executeUpdate(statement);
 		}
 	}	

@@ -662,8 +662,8 @@ public class OnlineWorker {
 		String result;
 		// Tell the Connector that we will require match order rights.
 
+		/*
 		boolean bFirst = true;
-
 		StringBuilder orders = new StringBuilder();
 
 		orders.append("{\"positions\":[");
@@ -738,10 +738,11 @@ public class OnlineWorker {
 				orders.append(',');
 			}
 		}
-		orders.append("]}");
+		orders.append("]}");*/
 
+		String orders = lineup.toJson();
 		try {
-			result = MyConnector.instance().setMatchOrder(matchId, HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchType, orders.toString());
+			result = MyConnector.instance().setMatchOrder(matchId, HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchType, orders);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

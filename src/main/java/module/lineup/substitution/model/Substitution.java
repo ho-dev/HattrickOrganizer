@@ -1,5 +1,9 @@
 package module.lineup.substitution.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+
 /**
  * A class holding information about substitutions and order changes
  * 
@@ -7,15 +11,30 @@ package module.lineup.substitution.model;
  * 
  */
 public class Substitution {
-
 	private int playerOrderID = -1;
+	@SerializedName("playerin")
+	@Expose
 	private int objectPlayerID = -1;
+	@SerializedName("playerout")
+	@Expose
 	private int subjectPlayerID = -1;
+	@SerializedName("orderType")
+	@Expose
 	private MatchOrderType orderType = MatchOrderType.SUBSTITUTION;
+	@SerializedName("min")
+	@Expose
 	private byte matchMinuteCriteria = -1;
+	@SerializedName("pos")
+	@Expose
 	private byte roleId = -1;
+	@SerializedName("beh")
+	@Expose
 	private byte behaviour = -1;
+	@SerializedName("card")
+	@Expose
 	private RedCardCriteria card = RedCardCriteria.IGNORE;
+	@SerializedName("standing")
+	@Expose
 	private GoalDiffCriteria standing = GoalDiffCriteria.ANY_STANDING;
 
 	public Substitution(int playerOrderID, int playerIn, int subjectPlayerID,
@@ -97,9 +116,11 @@ public class Substitution {
 		return roleId;
 	}
 
-	public void setRoleId(byte roleId) {
-		this.roleId = roleId;
-	}
+	public void setRoleId(byte roleId) { this.roleId = roleId; }
+
+	public byte getPositionIndex() {return (byte) (this.roleId-100);}
+
+	public void setPositionIndex(byte positionIndex) { this.roleId = (byte) (positionIndex+100); }
 
 	public byte getBehaviour() {
 		return behaviour;
