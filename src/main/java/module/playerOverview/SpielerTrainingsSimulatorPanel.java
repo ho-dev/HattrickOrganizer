@@ -276,9 +276,11 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         }
         m_jlHomeGrown.setIcon(ImageUtilities.getImageIcon4Veraenderung(hg, true));
 
-        m_jpBestPos.setText(MatchRoleID.getNameForPosition(tempPlayer.getIdealPosition())
-        		+ " (" + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true)) + ")");
+        byte bIdealPosition = tempPlayer.getIdealPosition();
+        m_jpBestPos.setText(MatchRoleID.getNameForPosition(bIdealPosition)
+                + " ("
+                +  tempPlayer.getIdealPosStaerke(true, true, 1)
+                + "%)");
         m_jpWertTor.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).
         		format(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true)));
         m_jpWertTor.getRechts().setSpecialNumber(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true)
