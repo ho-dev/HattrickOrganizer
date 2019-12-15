@@ -28,7 +28,7 @@ import javax.swing.SwingConstants;
  *
  * @author Pirania
  */
-public class SkillEntry implements IHOTableEntry {
+public class SkillEntry extends AbstractHOTableEntry {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private Color m_clBGColor = ColorLabelEntry.BG_STANDARD;

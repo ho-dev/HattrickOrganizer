@@ -10,7 +10,7 @@ import javax.swing.SwingConstants;
 /**
  * Ein Panel mit zwei Labels, um zwei Werte in einer Spalte anzuzeigen ( Wert, Verbesserung )
  */
-public class DoppelLabelEntry implements IHOTableEntry {
+public class DoppelLabelEntry extends AbstractHOTableEntry {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private DoppelLabel m_clComponent = new DoppelLabel();
