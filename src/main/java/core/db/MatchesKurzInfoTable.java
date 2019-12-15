@@ -241,6 +241,23 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return vorhanden;
 	}
 
+	boolean hasArenaId(int matchId)
+	{
+		try {
+			final String sql = "SELECT ArenaId FROM " + getTableName() + " WHERE MatchId=" + matchId;
+			final ResultSet rs = adapter.executeQuery(sql);
+			rs.beforeFirst();
+			if (rs.next()) {
+				Integer arenaId = rs.getInt(1);
+				return arenaId != null && arenaId> -1;
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),
+					"DatenbankZugriff.hasArenaId : " + e);
+		}
+		return false;
+	}
+
 	// ///////////////////////////////////////////////////////////////////////////////
 	// MatchesASP MatchKurzInfo
 	// //////////////////////////////////////////////////////////////////////////////

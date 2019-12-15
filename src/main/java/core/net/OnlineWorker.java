@@ -294,38 +294,39 @@ public class OnlineWorker {
 		waitDialog = getWaitDialog();
 		// Only download if not present in the database, or if refresh is true
 		if (refresh || !DBManager.instance().isMatchVorhanden(matchid)
-				|| !DBManager.instance().isMatchLineupInDB(matchid)) {
+				|| !DBManager.instance().isMatchLineupInDB(matchid)
+				|| !DBManager.instance().isArenaIdInDb(matchid)) {
 			try {
-				int heimId = 0;
-				int gastId = 0;
-				int arenaId = 0;
-				int regionId = -1;
 				MatchKurzInfo info = null;
-				Matchdetails details;
+				Matchdetails details = null;
 
 				// Check if teams IDs are stored somewhere
 				if (DBManager.instance().isMatchVorhanden(matchid)) {
 					info = DBManager.instance().getMatchesKurzInfoByMatchID(matchid);
-					heimId = info.getHeimID();
-					gastId = info.getGastID();
+				}
+				else {
+					// TODO: up to now this method is only called, when match id is stored in Db
+					return false;
 				}
 
 				// If ids not found, download matchdetails to obtain them.
 				// Highlights will be missing.
-				if ((heimId == 0) || (gastId == 0) || arenaId==0 ) {
+				// ArenaId==0 in division battles
+				if ((info.getHeimID() == 0) || (info.getGastID() == 0) || info.getArenaId()<0 ) {
 					waitDialog.setValue(10);
 					details = fetchDetails(matchid, matchType, null, waitDialog);
-					heimId = details.getHeimId();
-					gastId = details.getGastId();
-					arenaId = details.getArenaID();
-					if ( arenaId != HOVerwaltung.instance().getModel().getArena().getArenaId()){
-						regionId=details.getRegionId();
+					info.setHeimID(details.getHeimId());
+					info.setGastID( details.getGastId());
+					info.setArenaId( details.getArenaID());
+					if ( info.getArenaId() != HOVerwaltung.instance().getModel().getArena().getArenaId()){
+						info.setRegionId(details.getRegionId());
 					}
 				}
 
 				MatchLineup lineup = null;
+				boolean success;
 				if ( info.getMatchStatus() == MatchKurzInfo.FINISHED) {
-					lineup = getMatchlineup(matchid, matchType, heimId, gastId);
+					lineup = getMatchlineup(matchid, matchType, info.getHeimID(), info.getGastID());
 
 					if (lineup == null) {
 						String msg = getLangString("Downloadfehler")
@@ -337,41 +338,30 @@ public class OnlineWorker {
 
 						return false;
 					}
+					
+					// Get details with highlights.
+					waitDialog.setValue(10);
+					details = fetchDetails(matchid, matchType, lineup, waitDialog);
+
+					if (details == null) {
+						HOLogger.instance().error(OnlineWorker.class,
+								"Error downloading match. Details is null: " + matchid);
+						return false;
+					}
+					info.setGastTore(details.getGuestGoals());
+					info.setHeimTore(details.getHomeGoals());
+					info.setGastID(lineup.getGastId());
+					info.setGastName(lineup.getGastName());
+					info.setHeimID(lineup.getHeimId());
+					info.setHeimName(lineup.getHeimName());
+					info.setMatchDate(lineup.getStringSpielDate());
+					success = DBManager.instance().storeMatch(info, details, lineup);
 				}
-
-				// Get details with highlights.
-				waitDialog.setValue(10);
-				details = fetchDetails(matchid, matchType, lineup, waitDialog);
-
-				if (details == null) {
-					HOLogger.instance().error(OnlineWorker.class,
-							"Error downloading match. Details is null: " + matchid);
-					return false;
-				}
-
-				// Create the MatchKurzInfo even if we got an old one.
-				info.setOrdersGiven(true);
-				info.setGastID(lineup.getGastId());
-				info.setGastName(lineup.getGastName());
-				info.setGastTore(details.getGuestGoals());
-				info.setHeimID(lineup.getHeimId());
-				info.setHeimName(lineup.getHeimName());
-				info.setHeimTore(details.getHomeGoals());
-				info.setMatchDate(lineup.getStringSpielDate());
-				info.setMatchID(matchid);
-				info.setMatchStatus(MatchKurzInfo.FINISHED);
-				info.setMatchType(matchType);
-				info.setRegionId(regionId);
-				info.setArenaId(arenaId);
-
-				boolean success;
-				if ( lineup==null){
+				else{
+					// Update arena and region ids
 					MatchKurzInfo[] matches = {info};
 					DBManager.instance().storeMatchKurzInfos(matches);
 					success = true;
-				}
-				else{
-					success = DBManager.instance().storeMatch(info, details, lineup);
 				}
 				if (!success) {
 					waitDialog.setVisible(false);
@@ -387,6 +377,7 @@ public class OnlineWorker {
 		waitDialog.setVisible(false);
 		return true;
 	}
+
 
 	/**
 	 * Loads the data for the given match from HT and updates the data for this
@@ -518,24 +509,20 @@ public class OnlineWorker {
 
 				waitDialog.setValue(100);
 
-				// Automatically download all MatchLineups
+				// Automatically download additional match infos (lineup + arena)
 				for (MatchKurzInfo match : matches) {
 					int curMatchId = match.getMatchID();
 					if (DBManager.instance().isMatchVorhanden(curMatchId)
-							&& match.getMatchStatus() == MatchKurzInfo.FINISHED				// TODO: Keine Aufstellung ODER Keine Arena
-							&& (!DBManager.instance().isMatchLineupInDB(curMatchId))) {
+							&& (match.getMatchStatus() == MatchKurzInfo.FINISHED
+							&& !DBManager.instance().isMatchLineupInDB(curMatchId)
+							|| !DBManager.instance().isArenaIdInDb(curMatchId))) {
 
-						// No match in DB
+						// No lineup or arenaId in DB
 						boolean result = downloadMatchData(curMatchId, match.getMatchTyp(), false);
 						if (!result) {
 							bOK = false;
 							break;
 						}
-					}
-					else {
-						// load match region id for weather and derby information
-						// regionId == -1 => HOME
-						// regionId == our region Id => DERBY
 					}
 				}
 			}

@@ -865,6 +865,9 @@ public class DBManager {
 				.isMatchLineupVorhanden(matchid);
 	}
 
+	public boolean isArenaIdInDb(int matchId){
+		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).hasArenaId(matchId);
+	}
 	// ------------------------------- MatchesKurzInfoTable
 	// -------------------------------------------------
 
