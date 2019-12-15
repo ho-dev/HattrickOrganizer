@@ -590,17 +590,31 @@ public class MyConnector {
 	 * Get the region id for a certain team.
 	 */
 	public String fetchRegionID(int teamId) {
-		String xmlFile = "";
+		String xml = fetchTeamDetails(teamId);
+		if ( xml.length()>0){
+			return XMLTeamDetailsParser.fetchRegionID(xml);
+		}
+		return "-1";
+	}
 
+	public String fetchArenaID(int teamId)
+	{
+		String xml = fetchTeamDetails(teamId);
+		if ( xml.length()>0){
+			return XMLTeamDetailsParser.fetchArenaID(xml);
+		}
+		return "-1";
+	}
+
+	public String fetchTeamDetails(int teamId)
+	{
 		try {
-			xmlFile = htUrl + "?file=teamdetails&teamID=" + teamId;
-			xmlFile = getCHPPWebFile(xmlFile);
+			String xmlFile = htUrl + "?file=teamdetails&teamID=" + teamId;
+			return getCHPPWebFile(xmlFile);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);
-			return "-1";
 		}
-
-		return XMLTeamDetailsParser.fetchRegionID(xmlFile, teamId);
+		return "";
 	}
 
 	public InputStream getFileFromWeb(String url, boolean displaysettingsScreen) throws IOException {

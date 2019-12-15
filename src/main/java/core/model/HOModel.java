@@ -4,10 +4,8 @@ import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 //import core.epv.EPV;
-import core.model.match.Matchdetails;
 import core.model.misc.Basics;
 import core.model.misc.Finanzen;
-import core.model.misc.Regiondetails;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.series.Liga;
@@ -38,10 +36,6 @@ import java.util.Vector;
  */
 public class HOModel {
     //~ Instance fields ----------------------------------------------------------------------------
-
-	private Matchdetails m_clSelectedMatch;
-	private Regiondetails m_clRegionOfSelectedMatch;
-
     private Lineup m_clAufstellung;
     private Lineup m_clLastAufstellung;
     private Basics m_clBasics;

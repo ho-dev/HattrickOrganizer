@@ -865,8 +865,8 @@ public class DBManager {
 				.isMatchLineupVorhanden(matchid);
 	}
 
-	public boolean isArenaIdInDb(int matchId){
-		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).hasArenaId(matchId);
+	public boolean isDerbyInfoInDb(int matchId){
+		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).hasDerbyInfo(matchId);
 	}
 	// ------------------------------- MatchesKurzInfoTable
 	// -------------------------------------------------

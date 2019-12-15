@@ -4,19 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
-import core.file.xml.MyHashtable;
-import core.file.xml.XMLMatchdetailsParser;
 import core.model.HOVerwaltung;
 import core.model.Ratings;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
-import core.model.match.Matchdetails;
 import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.net.MyConnector;
-import core.net.OnlineWorker;
 import core.rating.RatingPredictionConfig;
 import core.rating.RatingPredictionManager;
 import core.util.HOLogger;
@@ -720,7 +715,7 @@ public class Lineup{
 	 * @return the location constant for the match
 	 */
 	public final short getLocation() {
-		if (m_sLocation < 0) {
+		if (!isUpcomingMatchLoaded()) {
 			getUpcomingMatch();
 		}
 		return m_sLocation;
@@ -728,7 +723,7 @@ public class Lineup{
 
 	public final int getArenaId()
 	{
-		if (m_iArenaId < 0) {
+		if (!isUpcomingMatchLoaded()) {
 			getUpcomingMatch();
 		}
 		return m_iArenaId;
@@ -736,12 +731,13 @@ public class Lineup{
 
 	public final int getRegionId()
 	{
-		if ( m_iRegionId<0){
+		if (!isUpcomingMatchLoaded()) {
 			getUpcomingMatch();
 		}
 		return  m_iRegionId;
 	}
 
+	private final boolean isUpcomingMatchLoaded(){return m_iArenaId>=0; }
 	private final void getUpcomingMatch()
 	{
 			try {
@@ -769,8 +765,24 @@ public class Lineup{
 					return;
 				}
 
-				if (match.getMatchTyp().isOfficial()) {m_sLocation = (match.getHeimID() == teamId) ? IMatchDetails.LOCATION_HOME: IMatchDetails.LOCATION_AWAY;}
-				else {m_sLocation = IMatchDetails.LOCATION_TOURNAMENT;}
+				if (match.getMatchTyp().isOfficial()) {
+					if (match.getIsNeutral()) {
+						m_sLocation = IMatchDetails.LOCATION_NEUTRAL;    // could be overwritten if it is also a derby
+					}
+					if (match.isDerby()) {
+						m_sLocation = IMatchDetails.LOCATION_AWAYDERBY;
+					}
+					if (!match.isNeutral() && !match.isDerby()) {
+						if (match.isHomeMatch()) {
+							m_sLocation = IMatchDetails.LOCATION_HOME;
+						} else {
+							m_sLocation = IMatchDetails.LOCATION_AWAY;
+						}
+					}
+				}
+				else {
+					m_sLocation = IMatchDetails.LOCATION_TOURNAMENT;
+				}
 
 
 			} catch (Exception e) {

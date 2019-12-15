@@ -66,11 +66,19 @@ public class MatchKurzInfo implements Comparable<Object> {
 
 	private int m_iArenaId = -1;
 	private int m_iRegionId = -1;
+	private Boolean m_iIsDerby = null;
+	private Boolean m_iIsNeutral = null;
 
 	public final void setArenaId(int id) {this.m_iArenaId=id;}
 	public final int getArenaId() {return this.m_iArenaId;}
 	public final void setRegionId(int id) {this.m_iRegionId=id;}
 	public final int getRegionId(){return this.m_iRegionId;}
+	public final void setIsDerby(Boolean is) {this.m_iIsDerby=is;}
+	public final boolean isDerby(){return this.m_iIsDerby.equals(Boolean.TRUE);}
+	public final Boolean getIsDerby(){return this.m_iIsDerby;}
+	public final void setIsNeutral(Boolean is) {this.m_iIsNeutral=is;}
+	public final Boolean getIsNeutral(){return this.m_iIsNeutral;}
+	public final boolean isNeutral(){return this.m_iIsNeutral.equals(Boolean.TRUE);}
 
 	/** Typ des Spiels */
 	private MatchType m_mtMatchTyp = MatchType.NONE;

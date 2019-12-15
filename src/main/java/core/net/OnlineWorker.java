@@ -9,6 +9,7 @@ import core.gui.InfoPanel;
 import core.gui.model.AufstellungCBItem;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.Team;
 import core.model.Tournament.TournamentDetails;
 import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
@@ -295,7 +296,7 @@ public class OnlineWorker {
 		// Only download if not present in the database, or if refresh is true
 		if (refresh || !DBManager.instance().isMatchVorhanden(matchid)
 				|| !DBManager.instance().isMatchLineupInDB(matchid)
-				|| !DBManager.instance().isArenaIdInDb(matchid)) {
+				|| !DBManager.instance().isDerbyInfoInDb(matchid)) {
 			try {
 				MatchKurzInfo info = null;
 				Matchdetails details = null;
@@ -312,15 +313,26 @@ public class OnlineWorker {
 				// If ids not found, download matchdetails to obtain them.
 				// Highlights will be missing.
 				// ArenaId==0 in division battles
-				if ((info.getHeimID() == 0) || (info.getGastID() == 0) || info.getArenaId()<0 ) {
+				if ((info.getHeimID() == 0) || (info.getGastID() == 0) || info.getIsDerby() == null) {
 					waitDialog.setValue(10);
 					details = fetchDetails(matchid, matchType, null, waitDialog);
 					info.setHeimID(details.getHeimId());
 					info.setGastID( details.getGastId());
 					info.setArenaId( details.getArenaID());
-					if ( info.getArenaId() != HOVerwaltung.instance().getModel().getArena().getArenaId()){
-						info.setRegionId(details.getRegionId());
+					if ( info.getArenaId() > 0) info.setRegionId(details.getRegionId());
+
+					// get the other team
+					int otherId;
+					if ( info.isHomeMatch()){
+						otherId = info.getGastID();
 					}
+					else {
+						otherId = info.getHeimID();
+					}
+					Map<String, String> otherTeam = getTeam(otherId);
+					info.setIsDerby( getRegionId(otherTeam) == HOVerwaltung.instance().getModel().getBasics().getRegionId());
+					info.setIsNeutral( info.getArenaId() != HOVerwaltung.instance().getModel().getArena().getArenaId()
+										&& info.getArenaId() != getArenaId(otherTeam));
 				}
 
 				MatchLineup lineup = null;
@@ -376,6 +388,23 @@ public class OnlineWorker {
 		}
 		waitDialog.setVisible(false);
 		return true;
+	}
+
+	private static Map<String, String> getTeam(int teamId)
+	{
+		String str = MyConnector.instance().fetchTeamDetails(teamId);
+		return XMLTeamDetailsParser.parseTeamdetailsFromString(str, teamId);
+	}
+
+	private static int getRegionId(Map<String, String> team) {
+		String  str = team.get("RegionID");
+		return Integer.parseInt(str);
+	}
+
+	private  static int getArenaId(Map<String, String> team)
+	{
+		String str = team.get("ArenaID");
+		return Integer.parseInt(str);
 	}
 
 
@@ -515,7 +544,7 @@ public class OnlineWorker {
 					if (DBManager.instance().isMatchVorhanden(curMatchId)
 							&& (match.getMatchStatus() == MatchKurzInfo.FINISHED
 							&& !DBManager.instance().isMatchLineupInDB(curMatchId)
-							|| !DBManager.instance().isArenaIdInDb(curMatchId))) {
+							|| !DBManager.instance().isDerbyInfoInDb(curMatchId))) {
 
 						// No lineup or arenaId in DB
 						boolean result = downloadMatchData(curMatchId, match.getMatchTyp(), false);
