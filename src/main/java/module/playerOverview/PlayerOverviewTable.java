@@ -142,7 +142,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		if (tableModel == null) {
 			tableModel = UserColumnController.instance().getPlayerOverviewModel();
 			tableModel.setValues(HOVerwaltung.instance().getModel().getAllSpieler());
-			tableSorter = new TableSorter(tableModel, tableModel.getDisplayedColumns().length - 1, getSortSpalte());
+			tableSorter = new TableSorter(tableModel, tableModel.getDisplayedColumns().length - 1, getSortSpalte(), 0);
 
 			ToolTipHeader header = new ToolTipHeader(getColumnModel());
 			header.setToolTipStrings(tableModel.getTooltips());

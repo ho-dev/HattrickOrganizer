@@ -36,6 +36,11 @@ public interface IHOTableEntry extends Comparable<IHOTableEntry> {
 	public int compareTo(IHOTableEntry obj);
 
     /**
+     * Third sort the table
+     */
+    public int compareToThird(IHOTableEntry obj);
+    
+    /**
      * Create the Component. Keep it in a variable, so the same Component can be returned by
      * calling getComponent.  You don´t have to use this method at all, but it is recommend.
      */
