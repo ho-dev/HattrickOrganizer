@@ -13,7 +13,7 @@ import javax.swing.JProgressBar;
 /**
  * Progress bar as table cell.
  */
-public class ProgressbarTableEntry implements IHOTableEntry {
+public class ProgressbarTableEntry extends AbstractHOTableEntry {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private Color m_clBGColor = Color.WHITE;

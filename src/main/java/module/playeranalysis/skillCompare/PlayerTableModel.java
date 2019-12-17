@@ -152,10 +152,10 @@ public class PlayerTableModel extends DefaultTableModel{
 			tmpPlayer = spieler[i];
 			if(call == 1) {
 				data[counter][0] = new Boolean(false);
-				data[counter][4] = Float.valueOf(tmpPlayer.getOldBestPosition() + (tmpPlayer.getOldBestPositionRating()) / 100);
+				data[counter][4] = Float.valueOf(tmpPlayer.getOldBestPosition() + (tmpPlayer.getOldBestPositionRating()) / 1000);
 			} else {
 				data[counter][0] = "";
-				data[counter][4] = Float.valueOf(tmpPlayer.getBestPosition() + (tmpPlayer.getBestPositionRating()) / 100);
+				data[counter][4] = Float.valueOf(tmpPlayer.getBestPosition() + (tmpPlayer.getBestPositionRating()) / 1000);
 			}
 
 			data[counter][1] = tmpPlayer.getName()+";"+tmpPlayer.getSpeciality();

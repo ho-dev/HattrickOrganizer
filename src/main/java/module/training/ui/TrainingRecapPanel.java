@@ -230,8 +230,11 @@ public class TrainingRecapPanel extends LazyImagePanel {
 
             row.add(player.getName());
             row.add(player.getAlterWithAgeDaysAsString());
-            row.add(MatchRoleID.getNameForPosition(player.getIdealPosition()) + " ("
-                    + player.getIdealPosStaerke(true) + ")");
+            byte bIdealPosition = player.getIdealPosition();
+            row.add(MatchRoleID.getNameForPosition(bIdealPosition)
+                    + " ("
+                    +  player.getIdealPosStaerke(true, true, 1)
+                    + "%)");
             row.add(Integer.toString(ftm.getTrainingSpeed()));
             row.add(Integer.toString(player.getSpielerID()));
 

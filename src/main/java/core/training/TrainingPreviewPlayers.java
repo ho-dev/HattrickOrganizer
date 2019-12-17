@@ -8,6 +8,7 @@ import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupTeam;
 import core.model.match.MatchStatistics;
 import core.model.match.MatchType;
+import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
@@ -181,7 +182,8 @@ public class TrainingPreviewPlayers implements Refreshable {
                     }
                 }
                 // If player receive training, don't display stamina icon
-                if (fullTrain == 0 && partialTrain == 0 && !fullFuturTrain && !partialFuturTrain) {
+                if (fullTrain == 0 && partialTrain == 0 && !fullFuturTrain && !partialFuturTrain && 
+                        roleId.getId() < IMatchRoleID.substGK1) {
                     bEstimedStamina = true;
                 }
             }

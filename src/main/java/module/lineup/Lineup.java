@@ -1267,7 +1267,7 @@ public class Lineup{
 					String.valueOf(getPositionById(IMatchRoleID.centralForward).getTaktik()));
 
 
-			properties.setProperty("set_pieces_taker", String.valueOf(getKicker()));
+			properties.setProperty("kicker1", String.valueOf(getKicker()));
 			properties.setProperty("captain", String.valueOf(getKapitaen()));
 			properties.setProperty("tactictype", String.valueOf(getTacticType()));
 			properties.setProperty("installning", String.valueOf(getAttitude()));

@@ -149,6 +149,22 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         return 0;
     }
 
+    public final int compareToThird(IHOTableEntry obj) {
+        if (obj instanceof SpielerLabelEntry) {
+            final SpielerLabelEntry entry = (SpielerLabelEntry) obj;
+            int num1 = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getSortIndex();
+            int num2 = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.m_clPlayer).getSortIndex();
+            
+            if (num1 < num2) {
+                return -1;
+            } else if (num1 > num2) {
+                return 1;
+            } else {
+                return entry.getSpieler().getName().compareTo(m_clPlayer.getName());
+            }
+        }
+        return 0;
+    }
     //-------------------------------------------------------------    
 
     /**

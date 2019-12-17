@@ -28,6 +28,9 @@ public class TableSorter extends TableMap {
     private int currentColumn;
     private int idSpalte;
     private int m_iInitSortColumnIndex = -1;
+    private int thirdColSort = -1;
+    private int iThirdSort = 0;
+    boolean isThirdSort = false;
 
     public TableSorter() {
         sortingColumns = new Vector<Integer>();
@@ -41,6 +44,16 @@ public class TableSorter extends TableMap {
         this.m_iInitSortColumnIndex = initsortcolumnindex;
         sortingColumns = new Vector<Integer>();
         ascending = false;
+        currentColumn = -1;
+        setModel(tablemodel);
+    }
+
+    public TableSorter(TableModel tablemodel, int idSpalte, int initsortcolumnindex, int thirdColSort) {
+        this.idSpalte = idSpalte;
+        this.m_iInitSortColumnIndex = initsortcolumnindex;
+        sortingColumns = new Vector<Integer>();
+        this.thirdColSort = thirdColSort;
+        ascending = true;
         currentColumn = -1;
         setModel(tablemodel);
     }
@@ -165,6 +178,16 @@ public class TableSorter extends TableMap {
 
                 if ((mouseevent.getClickCount() == 1) && (j != -1)) {
                     boolean flag = ascending;
+                    
+                    if (thirdColSort == i) {
+                        isThirdSort = false;
+                        iThirdSort++;
+                        if (iThirdSort == 3) {
+                            isThirdSort = true;
+                            flag = true;
+                            iThirdSort = 0;
+                        }
+                    }
 
                     if (currentColumn == j) {
                         flag = !flag;
@@ -212,7 +235,7 @@ public class TableSorter extends TableMap {
             && obj1 instanceof IHOTableEntry) {
             final IHOTableEntry colorLabelentry1 = (IHOTableEntry) getModel().getValueAt(i, k);
             final IHOTableEntry colorLabelentry2 = (IHOTableEntry) getModel().getValueAt(j, k);
-            return colorLabelentry1.compareTo(colorLabelentry2);
+            return isThirdSort?colorLabelentry1.compareToThird(colorLabelentry2):colorLabelentry1.compareTo(colorLabelentry2);
         } 
         
         final Object obj2 = getModel().getValueAt(i, k);
