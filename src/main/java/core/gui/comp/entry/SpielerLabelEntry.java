@@ -55,6 +55,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private boolean m_bMultiLine = false;
     private boolean m_bSelect = false;
     private boolean m_bAssit = false;
+    private boolean alternativePosition = false;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -373,12 +374,20 @@ public final class SpielerLabelEntry implements IHOTableEntry {
 
         // positionValue
         if (m_bShowTrikot && (m_fPositionsbewertung != 0f)) {
-            m_jlSkill.setText("(" + m_fPositionsbewertung + ")");
+            String text = "(" + m_fPositionsbewertung + ")";
+            if (alternativePosition) {
+                text += " *";
+            }
+            m_jlSkill.setText(text);
         } else {
             m_jlSkill.setText("");
         }
 
         m_jlTrainUp.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getIcon());
+    }
+
+    public void setAlternativePosition() {
+        this.alternativePosition = true;
     }
 
     //--------------static------------------------------

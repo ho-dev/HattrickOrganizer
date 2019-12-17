@@ -22,6 +22,7 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 	private String m_sText;
 	private float m_fPositionsBewertung;
 	private boolean m_bMultiLine = false;
+	private boolean alternativePosition = false;
 
 	/**
 	 * Creates a new SpielerCBItem object.
@@ -54,6 +55,9 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 			m_clEntry.updateComponent(player, HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
 					.getPositionBySpielerId(player.getSpielerID()), getPositionsBewertung(),
 					m_sText);
+			if (alternativePosition){
+				m_clEntry.setAlternativePosition();
+			}
 
 			if (m_bMultiLine) {
 				m_clEntry.getComponent(isSelected).setPreferredSize(new Dimension(m_clEntry.getComponent(isSelected).getPreferredSize().width, PLAYER_COMBO_HEIGHT));
@@ -100,6 +104,13 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 		m_sText = text;
 		m_clPlayer = player;
 		m_fPositionsBewertung = poswert;
+	}
+
+	public final void setValues(String text, float poswert, Player player, boolean alternativePosition) {
+		m_sText = text;
+		m_clPlayer = player;
+		m_fPositionsBewertung = poswert;
+		this.alternativePosition = alternativePosition;
 	}
 
 	@Override
