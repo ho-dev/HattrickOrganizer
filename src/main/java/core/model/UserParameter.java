@@ -360,7 +360,7 @@ public final class UserParameter extends Configuration {
     public boolean CombinedRatingChartPanel_HelpLines = false;
 
     //Alternative Positions
-    public float alternativePositionsTolerance = .98f;
+    public float alternativePositionsTolerance = .03f;
 
     //~ Constructors -------------------------------------------------------------------------------
 

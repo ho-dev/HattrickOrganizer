@@ -227,7 +227,7 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
         m_jchZahlenBewertung.addItemListener(this);
         add(m_jchZahlenBewertung);
 
-        m_jslAlternativePositionsTolerance = new SliderPanel(HOVerwaltung.instance().getLanguageString("options.Alternative_Position_Tolerance"), 100, 0, 100, 1f, 120);
+        m_jslAlternativePositionsTolerance = new SliderPanel(HOVerwaltung.instance().getLanguageString("options.Alternative_Position_Tolerance"), 100, -1, 100, 1f, 120);
         m_jslAlternativePositionsTolerance.setToolTipText(HOVerwaltung.instance().getLanguageString("options.tt_Alternative_Position_Tolerance"));
         m_jslAlternativePositionsTolerance.setValue(UserParameter.temp().alternativePositionsTolerance);
         m_jslAlternativePositionsTolerance.addChangeListener(this);

@@ -761,13 +761,22 @@ final public class UserColumnFactory {
 
                 byte idealPosition = player.getIdealPosition();
 
+                String posValue = MatchRoleID.getNameForPosition(idealPosition)
+                        + " ("
+                        + player.getIdealPosStaerke(true, true, 1)
+                        + "%)";
+                byte[] alternativePosition = player.getAlternativePositions();
+                for (byte altPos : alternativePosition) {
+                    if (altPos == idealPosition) {
+                        posValue += " *";
+                        break;
+                    }
+                }
+
                 ColorLabelEntry tmp = new ColorLabelEntry(
                         -MatchRoleID.getSortId(idealPosition, false)
                                 + (player.getIdealPosStaerke(true) / 100.0f),
-                        MatchRoleID.getNameForPosition(idealPosition)
-                                + " ("
-                                + player.getIdealPosStaerke(true, true, 1)
-                                + "%)",
+                        posValue,
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 tmp.setIcon(ThemeManager.getIcon((player.getUserPosFlag() < 0) ? HOIconName.TOOTHEDWHEEL : HOIconName.HAND));

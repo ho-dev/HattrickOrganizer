@@ -1000,7 +1000,7 @@ public class Player {
         });
 
         alternativePositions = new byte[positions.size()];
-        float tolerance = core.model.UserParameter.instance().alternativePositionsTolerance;
+        float tolerance = 1f - core.model.UserParameter.instance().alternativePositionsTolerance;
 
         int i = 0;
         for (i = 0; i < positions.size(); i++) {
