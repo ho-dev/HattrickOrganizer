@@ -52,10 +52,10 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private boolean m_bCustomName = false;
     private String m_sCustomNameString = "";
     private float m_fPositionsbewertung;
+    private boolean m_bAlternativePosition;
     private boolean m_bMultiLine = false;
     private boolean m_bSelect = false;
     private boolean m_bAssit = false;
-    private boolean alternativePosition = false;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -67,6 +67,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         m_clPlayer = player;
         m_clCurrentPlayerPosition = positionAktuell;
         m_fPositionsbewertung = positionsbewertung;
+        m_bAlternativePosition = false;
         m_bShowTrikot = showTrikot;
         m_bShowWeatherEffect = showWetterwarnung;
         createComponent();
@@ -77,6 +78,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         m_clPlayer = player;
         m_clCurrentPlayerPosition = positionAktuell;
         m_fPositionsbewertung = positionsbewertung;
+        m_bAlternativePosition = false;
         m_bShowTrikot = showTrikot;
         m_bShowWeatherEffect = showWetterwarnung;
         m_bCustomName = customName;
@@ -133,6 +135,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         m_clPlayer = null;
         m_clCurrentPlayerPosition = null;
         m_fPositionsbewertung = 0f;
+        m_bAlternativePosition = false;
         updateComponent();
     }
 
@@ -154,7 +157,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             final SpielerLabelEntry entry = (SpielerLabelEntry) obj;
             int num1 = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getSortIndex();
             int num2 = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.m_clPlayer).getSortIndex();
-            
+
             if (num1 < num2) {
                 return -1;
             } else if (num1 > num2) {
@@ -320,10 +323,11 @@ public final class SpielerLabelEntry implements IHOTableEntry {
      * Aktualisierung des Entrys
      */
     public final void updateComponent(Player player, MatchRoleID positionAktuell,
-                                      float positionsbewertung, String nameText) {
+                                      float positionsbewertung, boolean alternativePosition, String nameText) {
         m_clPlayer = player;
         m_clCurrentPlayerPosition = positionAktuell;
         m_fPositionsbewertung = positionsbewertung;
+        m_bAlternativePosition = alternativePosition;
         m_sCustomNameString = nameText;
 
         if (m_clPlayer != null) {
@@ -389,21 +393,15 @@ public final class SpielerLabelEntry implements IHOTableEntry {
 
 
         // positionValue
-        if (m_bShowTrikot && (m_fPositionsbewertung != 0f)) {
-            String text = "(" + m_fPositionsbewertung + ")";
-            if (alternativePosition) {
-                text += " *";
-            }
-            m_jlSkill.setText(text);
+        if (m_bShowTrikot && (m_fPositionsbewertung != 0f) && !m_bAlternativePosition) {
+            m_jlSkill.setText("(" + m_fPositionsbewertung + ")");
+        } else if (m_bShowTrikot && (m_fPositionsbewertung != 0f) && m_bAlternativePosition) {
+            m_jlSkill.setText("(" + m_fPositionsbewertung + ") *");
         } else {
             m_jlSkill.setText("");
         }
 
         m_jlTrainUp.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getIcon());
-    }
-
-    public void setAlternativePosition() {
-        this.alternativePosition = true;
     }
 
     //--------------static------------------------------

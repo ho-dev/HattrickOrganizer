@@ -136,3 +136,4 @@ local.properties
 # macos Desktop Service Store
 .DS_Store
 /updateDB.py
+/.idea/jarRepositories.xml

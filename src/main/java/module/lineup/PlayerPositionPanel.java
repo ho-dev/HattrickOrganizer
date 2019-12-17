@@ -782,23 +782,18 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                         player.getSPskill()
                                 + player.getSubskill4Pos(PlayerSkill.SET_PIECES)
                                 + RatingPredictionManager.getLoyaltyHomegrownBonus(player),
-                        player);
+                        player, false);
                 return item;
             } else if (m_iPositionID == IMatchRoleID.captain) {
                 item.setValues(spielerName,
                         Helper.round(
                                 HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getAverageExperience(player.getSpielerID()),
                                 core.model.UserParameter.instance().nbDecimals),
-                        player);
+                        player, false);
                 return item;
             } else {
                 final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionById(m_iPositionID);
-                System.out.println(getClass()
-                        + " createSpielerCBItem:"
-                        + " position:" + position.getPosition()
-                        + " position name:" + MatchRoleID.getNameForPosition(position.getPosition())
-                        + " player:" + player.getLastName());
-                //final byte position2 = MatchRoleID.getPosition(m_iPositionID, (byte) 0); TODO remove
+
                 float value = player.calcPosValue(position.getPosition(), true);
 
                 byte[] alternativePositions = player.getAlternativePositions();
@@ -806,7 +801,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                 for (byte altPos : alternativePositions) {
                     if (altPos == position.getPosition()) {
                         alternativePosition = true;
-                        value += 100;
                         break;
                     }
                 }
