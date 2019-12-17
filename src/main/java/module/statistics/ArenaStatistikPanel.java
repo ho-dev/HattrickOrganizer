@@ -79,6 +79,8 @@ public class ArenaStatistikPanel extends LazyImagePanel {
 						SpielePanel.NUR_EIGENE_PFLICHTSPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePokalspiele"),
 						SpielePanel.NUR_EIGENE_POKALSPIELE),
+				new CBItem(HOVerwaltung.instance().getLanguageString("OnlySecondaryCup"),
+						SpielePanel.ONLY_SECONDARY_CUP),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneLigaspiele"),
 						SpielePanel.NUR_EIGENE_LIGASPIELE),
 				new CBItem(HOVerwaltung.instance()

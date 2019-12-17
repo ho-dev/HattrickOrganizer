@@ -78,6 +78,8 @@ public final class SpielePanel extends LazyImagePanel {
 	public static final int NUR_EIGENE_PFLICHTSPIELE = 2;
 	/** Only Matches of suplied team */
 	public static final int NUR_EIGENE_SPIELE = 1;
+	/** Only Secondary cup matchs */
+	public static final int ONLY_SECONDARY_CUP = 9;
 	public static final int ALLE_SPIELE = 0;
 	private static final long serialVersionUID = -6337569355347545083L;
 	private AufstellungsSternePanel aufstellungGastPanel;
@@ -554,6 +556,8 @@ public final class SpielePanel extends LazyImagePanel {
 						SpielePanel.NUR_EIGENE_PFLICHTSPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePokalspiele"),
 						SpielePanel.NUR_EIGENE_POKALSPIELE),
+				new CBItem(HOVerwaltung.instance().getLanguageString("OnlySecondaryCup"),
+						SpielePanel.ONLY_SECONDARY_CUP),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneLigaspiele"),
 						SpielePanel.NUR_EIGENE_LIGASPIELE),
 				new CBItem(HOVerwaltung.instance()
