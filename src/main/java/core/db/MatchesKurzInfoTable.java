@@ -196,7 +196,10 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			sql.append(" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
 			sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
 			sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
-			sql.append(" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");				
+			sql.append(" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");
+			break;
+		case SpielePanel.ONLY_QUALIF_MATCHES:
+			sql.append(" AND MatchTyp=" + MatchType.QUALIFICATION.getId());
 			break;
 		}
 		return sql;

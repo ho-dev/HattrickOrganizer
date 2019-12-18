@@ -200,8 +200,10 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 				sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
 				sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
 				sql.append(" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");
-				
-				
+				break;
+			case SpielePanel.ONLY_QUALIF_MATCHES:
+				sql.append(" AND MatchTyp=" + MatchType.QUALIFICATION.getId());
+				break;
 			}
 		return sql;
 	}

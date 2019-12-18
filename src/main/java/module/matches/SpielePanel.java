@@ -80,6 +80,8 @@ public final class SpielePanel extends LazyImagePanel {
 	public static final int NUR_EIGENE_SPIELE = 1;
 	/** Only Secondary cup matchs */
 	public static final int ONLY_SECONDARY_CUP = 9;
+	/** Only Qualifification matchs */
+	public static final int ONLY_QUALIF_MATCHES = 8;
 	public static final int ALLE_SPIELE = 0;
 	private static final long serialVersionUID = -6337569355347545083L;
 	private AufstellungsSternePanel aufstellungGastPanel;
@@ -434,7 +436,7 @@ public final class SpielePanel extends LazyImagePanel {
 
 		// Wenn kein Match in Tabelle gefunden
 		if (matchesTable.getSelectedRow() < 0) {
-			// Alle Spiele auswÃ¤hlen, damit die Markierung funktioniert
+			// Alle Spiele auswählen, damit die Markierung funktioniert
 			m_jcbSpieleFilter.setSelectedIndex(0);
 			UserParameter.instance().spieleFilter = 0;
 			matchesTable.markiereMatch(matchid);
@@ -560,6 +562,8 @@ public final class SpielePanel extends LazyImagePanel {
 						SpielePanel.ONLY_SECONDARY_CUP),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneLigaspiele"),
 						SpielePanel.NUR_EIGENE_LIGASPIELE),
+				new CBItem(HOVerwaltung.instance().getLanguageString("OnlyQualificationMatches"),
+						SpielePanel.ONLY_QUALIF_MATCHES),
 				new CBItem(HOVerwaltung.instance()
 						.getLanguageString("NurEigeneFreundschaftsspiele"),
 						SpielePanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE),
