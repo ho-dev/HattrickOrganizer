@@ -14,7 +14,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class RatingTableEntry implements IHOTableEntry {
+public class RatingTableEntry extends AbstractHOTableEntry {
     //~ Static fields/initializers -----------------------------------------------------------------
 
     private static ImageIcon FULL10STARIMAGEICON;

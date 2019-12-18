@@ -154,7 +154,17 @@ public class StatisticQuery {
 					break;
 				case SpielePanel.NUR_EIGENE_TOURNAMENTSPIELE :
 					sql += (" AND ( MatchTyp=" + MatchType.TOURNAMENTGROUP.getId());
-					sql += (" OR MatchTyp=" + MatchType.TOURNAMENTPLAYOFF.getId() + " )");
+					sql += (" OR MatchTyp=" + MatchType.TOURNAMENTPLAYOFF.getId());
+					sql += (" OR MatchTyp=" + MatchType.DIVISIONBATTLE.getId() + " )");
+					break;
+				case SpielePanel.ONLY_SECONDARY_CUP:
+					sql += (" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
+					sql += (" OR MatchTyp=" + MatchType.RUBYCUP.getId());
+					sql += (" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
+					sql += (" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");
+					break;
+				case SpielePanel.ONLY_QUALIF_MATCHES:
+					sql += (" AND MatchTyp=" + MatchType.QUALIFICATION.getId());
 					break;
 			}
 

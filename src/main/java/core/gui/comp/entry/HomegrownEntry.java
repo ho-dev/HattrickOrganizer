@@ -7,7 +7,7 @@ import javax.swing.SwingConstants;
 
 
 
-public class HomegrownEntry implements IHOTableEntry{
+public class HomegrownEntry extends AbstractHOTableEntry{
 
 	private ColorLabelEntry icon = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
 			ColorLabelEntry.BG_STANDARD,

@@ -114,6 +114,8 @@ public class TeamReport {
         rating.setLeftAttack(updateAverage(rating.getLeftAttack(), aRating.getLeftAttack()));
         rating.setCentralAttack(updateAverage(rating.getCentralAttack(), aRating.getCentralAttack()));
         rating.setRightAttack(updateAverage(rating.getRightAttack(), aRating.getRightAttack()));
+        rating.setHatStats(updateAverage(rating.getHatStats(), aRating.getHatStats()));
+        rating.setLoddarStats(updateAverage(rating.getLoddarStats(), aRating.getLoddarStats()));
     }
 
     /**

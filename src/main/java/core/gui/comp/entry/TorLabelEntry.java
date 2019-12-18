@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 
 
-public class TorLabelEntry implements IHOTableEntry {
+public class TorLabelEntry extends AbstractHOTableEntry {
 
     private static ImageIcon BALLIMAGEICON;
 

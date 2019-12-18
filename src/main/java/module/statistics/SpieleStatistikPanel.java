@@ -695,8 +695,12 @@ public class SpieleStatistikPanel extends LazyImagePanel {
 						SpielePanel.NUR_EIGENE_PFLICHTSPIELE + SpielePanel.NUR_GESPIELTEN_SPIELE),
 				new CBItem(getLangStr("NurEigenePokalspiele"), SpielePanel.NUR_EIGENE_POKALSPIELE
 						+ SpielePanel.NUR_GESPIELTEN_SPIELE),
+				new CBItem(HOVerwaltung.instance().getLanguageString("OnlySecondaryCup"),
+						SpielePanel.ONLY_SECONDARY_CUP),
 				new CBItem(getLangStr("NurEigeneLigaspiele"), SpielePanel.NUR_EIGENE_LIGASPIELE
 						+ SpielePanel.NUR_GESPIELTEN_SPIELE),
+				new CBItem(HOVerwaltung.instance().getLanguageString("OnlyQualificationMatches"),
+						SpielePanel.ONLY_QUALIF_MATCHES),
 				new CBItem(HOVerwaltung.instance()
 						.getLanguageString("NurEigeneFreundschaftsspiele"),
 						SpielePanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE

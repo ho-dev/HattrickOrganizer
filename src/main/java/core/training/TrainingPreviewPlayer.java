@@ -51,6 +51,45 @@ public class TrainingPreviewPlayer {
     //~ Methods ------------------------------------------------------------------------------------
 
 	/**
+	 * Get index to sort players by training preview
+	 *
+	 * @return	index
+	 */
+	public int getSortIndex()
+	{
+		if (iFullTrain >= FULL_TRAIN_MIN)
+			return 100;
+		else if (iFullTrain > 0 && bFullEstimedTrain)
+			return 99;
+		else if (bFullEstimedTrain)
+			return 98;
+		else if (iFullTrain > 0 && ((iPartialTrain + iFullTrain) >= FULL_TRAIN_MIN))
+			return 97;
+		else if (iFullTrain > 0 && bPartialEstimedTrain)
+			return 96;
+		else if (iFullTrain > 0 && iPartialTrain > 0)
+			return 95;
+		else if (iFullTrain > 0)
+			return 94;
+		else if (iPartialTrain >= FULL_TRAIN_MIN)
+			return 93;
+		else if (iPartialTrain > 0 && bPartialEstimedTrain)
+			return 92;
+		else if (bPartialEstimedTrain)
+			return 91;
+		else if (iPartialTrain > 0)
+			return 90;
+        else if (iStamina >= FULL_STAMINA_MIN)
+            return 50;
+        else if (bEstimedStamina)
+            return 49;
+        else if (iStamina > 0)
+            return 48;
+		return 0;
+	}
+
+
+	/**
 	 * Get icon corresponding to the training preview
 	 *
 	 * @return		icon

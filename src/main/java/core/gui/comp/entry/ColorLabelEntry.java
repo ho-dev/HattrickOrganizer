@@ -343,7 +343,12 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
          setBackground(m_clBGColor);
          setForeground(m_clFGColor);
     }
-    
+
+    @Override
+    public final int compareToThird(IHOTableEntry obj) {
+        return this.compareTo(obj);
+    }
+
     public void setBold(boolean bold) {
     	int style = (bold) ? Font.BOLD : Font.PLAIN;
     	setFont(getFont().deriveFont(style));
