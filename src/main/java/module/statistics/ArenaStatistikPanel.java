@@ -83,6 +83,8 @@ public class ArenaStatistikPanel extends LazyImagePanel {
 						SpielePanel.ONLY_SECONDARY_CUP),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneLigaspiele"),
 						SpielePanel.NUR_EIGENE_LIGASPIELE),
+				new CBItem(HOVerwaltung.instance().getLanguageString("OnlyQualificationMatches"),
+						SpielePanel.ONLY_QUALIF_MATCHES),
 				new CBItem(HOVerwaltung.instance()
 						.getLanguageString("NurEigeneFreundschaftsspiele"),
 						SpielePanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE) };

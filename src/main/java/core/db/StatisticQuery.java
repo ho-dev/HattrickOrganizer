@@ -163,6 +163,9 @@ public class StatisticQuery {
 					sql += (" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
 					sql += (" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");
 					break;
+				case SpielePanel.ONLY_QUALIF_MATCHES:
+					sql += (" AND MatchTyp=" + MatchType.QUALIFICATION.getId());
+					break;
 			}
 
 			sql += " ORDER BY MatchDate DESC";
