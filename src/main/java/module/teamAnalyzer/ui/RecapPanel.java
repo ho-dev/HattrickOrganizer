@@ -115,10 +115,12 @@ public class RecapPanel extends JPanel {
 	            } else {
 	            	rowData.add(df.format(0));
 	            }
+                rowData.add(df.format(averageRating.getLoddarStats()));
             } else {
             	rowData.add(df.format(0));
 	            rowData.add(df.format(0));
 	            rowData.add(df.format(0));
+                rowData.add(df.format(0));
             }
             rowData.add(VALUE_NA);
             rowData.add(VALUE_NA);

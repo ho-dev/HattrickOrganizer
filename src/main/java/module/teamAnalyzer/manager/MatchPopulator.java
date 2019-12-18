@@ -96,7 +96,8 @@ public class MatchPopulator {
             mr.setRightAttack(aMatchDetail.getGuestRightAtt());
             mr.setRightDefense(aMatchDetail.getGuestRightDef());
         }
-
+        mr.setHatStats(mr.computeHatStats());
+        mr.setLoddarStats(mr.computeLoddarStats());
         return mr;
     }
 
