@@ -192,8 +192,16 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 				break;
 			case SpielePanel.NUR_EIGENE_TOURNAMENTSPIELE :
 				sql.append(" AND ( MatchTyp=" + MatchType.TOURNAMENTGROUP.getId());
-				sql.append(" OR MatchTyp=" + MatchType.TOURNAMENTPLAYOFF.getId() + " )");
+				sql.append(" OR MatchTyp=" + MatchType.TOURNAMENTPLAYOFF.getId());
+				sql.append(" OR MatchTyp=" + MatchType.DIVISIONBATTLE.getId() + " )");
 				break;
+			case SpielePanel.ONLY_SECONDARY_CUP:
+				sql.append(" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
+				sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
+				sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
+				sql.append(" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");
+				
+				
 			}
 		return sql;
 	}
