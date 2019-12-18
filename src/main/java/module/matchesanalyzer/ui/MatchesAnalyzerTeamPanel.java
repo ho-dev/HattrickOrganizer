@@ -239,13 +239,5 @@ public class MatchesAnalyzerTeamPanel extends JPanel implements ActionListener, 
 		observable.addObserver(observer);
 		updateLineup();
 	}
-	
-	public void deleteObserver(Observer observer) {
-		observable.deleteObserver(observer);
-	}
-	
-	public void deleteObservers() {
-		observable.deleteObservers();
-	}
-	
+
 }
