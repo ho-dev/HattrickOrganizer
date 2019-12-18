@@ -12,11 +12,7 @@ import core.model.HOVerwaltung;
 import core.model.Team;
 import core.model.Tournament.TournamentDetails;
 import core.model.UserParameter;
-import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineup;
-import core.model.match.MatchLineupTeam;
-import core.model.match.MatchType;
-import core.model.match.Matchdetails;
+import core.model.match.*;
 import core.model.misc.Regiondetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -295,8 +291,10 @@ public class OnlineWorker {
 		waitDialog = getWaitDialog();
 		// Only download if not present in the database, or if refresh is true
 		if (refresh || !DBManager.instance().isMatchVorhanden(matchid)
+				|| DBManager.instance().hasUnsureWeatherForecast(matchid)
 				|| !DBManager.instance().isMatchLineupInDB(matchid)
-				|| !DBManager.instance().isDerbyInfoInDb(matchid)) {
+				|| !DBManager.instance().isDerbyInfoInDb(matchid)
+		) {
 			try {
 				MatchKurzInfo info = null;
 				Matchdetails details = null;
@@ -313,13 +311,45 @@ public class OnlineWorker {
 				// If ids not found, download matchdetails to obtain them.
 				// Highlights will be missing.
 				// ArenaId==0 in division battles
-				if ((info.getHeimID() == 0) || (info.getGastID() == 0) || info.getIsDerby() == null) {
+				if ((info.getHeimID() == 0) || (info.getGastID() == 0) || info.getIsDerby() == null || !info.getWeatherForecast().isSure()) {
 					waitDialog.setValue(10);
 					details = fetchDetails(matchid, matchType, null, waitDialog);
 					info.setHeimID(details.getHeimId());
 					info.setGastID( details.getGastId());
 					info.setArenaId( details.getArenaID());
-					if ( info.getArenaId() > 0) info.setRegionId(details.getRegionId());
+					if (info.getMatchStatus() == MatchKurzInfo.FINISHED){
+						info.setWeather(Weather.getById(details.getWetterId()));
+						info.setWeatherForecast(Weather.Forecast.HAPPENED);
+					}
+
+					if ( info.getArenaId() > 0) {
+						info.setRegionId(details.getRegionId());
+
+						if ( info.getWeatherForecast().isSure() == false){
+							Regiondetails regiondetails = getRegionDetails(info.getRegionId());
+							SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+							java.sql.Timestamp matchDate = info.getMatchDateAsTimestamp();
+							java.sql.Timestamp weatherDate = regiondetails.getFetchDatum();
+							String wdate = fmt.format(weatherDate);
+							String mdate = fmt.format(matchDate);
+							if ( mdate.equals(wdate)) {
+								info.setWeatherForecast(Weather.Forecast.TODAY);
+								info.setWeather(regiondetails.getWeather());
+							}
+							else {
+								Calendar c = Calendar.getInstance();
+								c.setTime(fmt.parse(wdate));
+								c.add(Calendar.DATE, 1);
+								if ( fmt.format(c.getTime()).equals(mdate)){
+									info.setWeatherForecast(Weather.Forecast.TOMORROW);
+								}
+								else {
+									info.setWeatherForecast((Weather.Forecast.UNSURE));
+								}
+								info.setWeather(regiondetails.getWeatherTomorrow());
+							}
+						}
+					}
 
 					// get the other team
 					int otherId;

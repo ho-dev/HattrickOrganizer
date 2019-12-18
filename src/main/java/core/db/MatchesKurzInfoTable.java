@@ -3,6 +3,7 @@ package core.db;
 import core.model.match.MatchKurzInfo;
 //import core.model.match.MatchKurzInfo2;
 import core.model.match.MatchType;
+import core.model.match.Weather;
 import core.util.HOLogger;
 import module.matches.SpielePanel;
 import module.matches.statistics.MatchesOverviewCommonPanel;
@@ -25,7 +26,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[19];
+		columns = new ColumnDescriptor[21];
 		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false, true); //The globally unique identifier of the match
 		columns[1] = new ColumnDescriptor("MatchTyp", Types.INTEGER, false); //Integer defining the type of match
 		columns[2] = new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256); // HomeTeamName
@@ -45,6 +46,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		columns[16] = new ColumnDescriptor("RegionId", Types.INTEGER, true); // region id
 		columns[17] = new ColumnDescriptor("isDerby", Types.INTEGER, true); // 0=false, 1=true, -1=unknown
 		columns[18] = new ColumnDescriptor("isNeutral", Types.INTEGER, true); // 0=false, 1=true, -1=unknown
+		columns[19] = new ColumnDescriptor("Weather", Types.INTEGER, true); // 0=rainy, ...
+		columns[20] = new ColumnDescriptor("WeatherForecast", Types.INTEGER, true); // 0=happened, ...
 
 	}
 
@@ -225,6 +228,10 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		if (rs.wasNull()) match.setIsDerby(null);
 		match.setIsNeutral(rs.getBoolean("isNeutral"));
 		if (rs.wasNull()) match.setIsNeutral(null);
+		match.setWeather((Weather.getById(rs.getInt("Weather")));
+		if (rs.wasNull()) match.setWeather(Weather.NULL);
+		match.setWeatherForecast(Weather.Forecast.getById(rs.getInt(rs.getInt("WeatherForecast")));
+		if ( rs.wasNull()) match.setWeatherForecast(Weather.Forecast.NULL);
 		return match;
 	}
 
@@ -269,6 +276,22 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return false;
 	}
 
+	boolean hasUnsureWeatherForecast(int matchId)
+	{
+		try{
+			final String sql = "SELECT WeatherForecast FROM " + getTableName() + " WHERE MatchId=" + matchId;
+			final ResultSet rs = adapter.executeQuery(sql);
+			rs.beforeFirst();
+			if (rs.next()) {
+				Weather.Forecast forecast = Weather.Forecast.getById(rs.getInt(1));
+				return !forecast.isSure();
+			}
+		}
+		catch(Exception e){
+			HOLogger.instance().log(getClass(), "DatenbankZugriff.hasUnsureWeatherForecast : " + e);
+		}
+		return false;
+	}
 	// ///////////////////////////////////////////////////////////////////////////////
 	// MatchesASP MatchKurzInfo
 	// //////////////////////////////////////////////////////////////////////////////

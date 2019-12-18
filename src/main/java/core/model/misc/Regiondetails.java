@@ -1,5 +1,8 @@
 package core.model.misc;
 
+import core.model.match.Weather;
+
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.FieldPosition;
@@ -17,8 +20,8 @@ public class Regiondetails {
     private String m_sRegionName = "";
     private int m_iNumberOfUsers = -1;
     private int m_iNumberOfOnlineUsers = -1;
-    private int m_iWeatherId = -1;
-    private int m_iTomorrowWeatherId = -1;
+    private Weather m_iWeather = Weather.NULL;
+    private Weather m_iWeatherTomorrow = Weather.NULL;
 
     public Regiondetails(Map<String, String> regionDetails) {
         this.m_clFetchDatum = Timestamp.from(Instant.parse( regionDetails.get("FetchedDate") ));
@@ -26,10 +29,14 @@ public class Regiondetails {
         this.m_iNumberOfOnlineUsers = Integer.parseInt(regionDetails.get("NumberOfOnline"));
         this.m_iNumberOfUsers = Integer.parseInt(regionDetails.get("NumberOfUsers"));
         this.m_iRegionId = Integer.parseInt(regionDetails.get("RegionID"));
-        this.m_iTomorrowWeatherId = Integer.parseInt(regionDetails.get("TomorrowWeatherID"));
-        this.m_iWeatherId = Integer.parseInt(regionDetails.get("WeatherID"));
+        this.m_iWeatherTomorrow = Weather.getById(Integer.parseInt(regionDetails.get("TomorrowWeatherID")));
+        this.m_iWeather = Weather.getById(Integer.parseInt(regionDetails.get("WeatherID")));
 
         this.m_sNation = regionDetails.get("LeagueName");
         this.m_sRegionName = regionDetails.get("RegionName");
     }
+
+    public Timestamp getFetchDatum(){return this.m_clFetchDatum;}
+    public Weather getWeather(){return this.m_iWeather;}
+    public Weather getWeatherTomorrow(){return this.m_iWeatherTomorrow;}
 }

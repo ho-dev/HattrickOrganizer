@@ -868,6 +868,10 @@ public class DBManager {
 	public boolean isDerbyInfoInDb(int matchId){
 		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).hasDerbyInfo(matchId);
 	}
+
+	public boolean hasUnsureWeatherForecast(int matchId){
+		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).hasUnsureWeatherForecast(matchId);
+	}
 	// ------------------------------- MatchesKurzInfoTable
 	// -------------------------------------------------
 

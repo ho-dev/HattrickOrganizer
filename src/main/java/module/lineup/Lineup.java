@@ -109,6 +109,9 @@ public class Lineup{
 	private int m_iArenaId = -1;
 	private int m_iRegionId = -1;
 
+	private Weather m_cWeather = Weather.NULL;
+	private Weather.Forecast m_cWeatherForecast = Weather.Forecast.NULL;
+
 	private boolean pullBackOverride;
 
 
@@ -744,19 +747,8 @@ public class Lineup{
 				final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 				final MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(teamId,
 						MatchKurzInfo.UPCOMING);
-				MatchKurzInfo match = null;
-
-				if ((matches == null) || (matches.length < 1)) {
-					m_sLocation = IMatchDetails.LOCATION_AWAY;
-					m_iArenaId=0;
-					m_iRegionId=0;
-					HOLogger.instance().error(getClass(), "no match to determine location");
-					return;
-				}
-
 				final List<MatchKurzInfo> sMatches = orderMatches(matches);
-				match = sMatches.get(0);
-
+				MatchKurzInfo match = sMatches.get(0);
 				if (match == null) {
 					m_sLocation = IMatchDetails.LOCATION_AWAY;
 					m_iArenaId=0;
