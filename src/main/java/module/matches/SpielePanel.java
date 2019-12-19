@@ -436,7 +436,7 @@ public final class SpielePanel extends LazyImagePanel {
 
 		// Wenn kein Match in Tabelle gefunden
 		if (matchesTable.getSelectedRow() < 0) {
-			// Alle Spiele auswählen, damit die Markierung funktioniert
+			// Alle Spiele auswaehlen, damit die Markierung funktioniert
 			m_jcbSpieleFilter.setSelectedIndex(0);
 			UserParameter.instance().spieleFilter = 0;
 			matchesTable.markiereMatch(matchid);
