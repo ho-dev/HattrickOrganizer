@@ -1,6 +1,7 @@
 package core.model.misc;
 
 import core.model.match.Weather;
+import core.util.Helper;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -24,14 +25,14 @@ public class Regiondetails {
     private Weather m_iWeatherTomorrow = Weather.NULL;
 
     public Regiondetails(Map<String, String> regionDetails) {
-        this.m_clFetchDatum = Timestamp.from(Instant.parse( regionDetails.get("FetchedDate") ));
+        String fDate = regionDetails.get("FetchedDate");
+        this.m_clFetchDatum = Helper.parseDate(fDate);
         this.m_iNationId =  Integer.parseInt(regionDetails.get("LeagueID"));
         this.m_iNumberOfOnlineUsers = Integer.parseInt(regionDetails.get("NumberOfOnline"));
         this.m_iNumberOfUsers = Integer.parseInt(regionDetails.get("NumberOfUsers"));
         this.m_iRegionId = Integer.parseInt(regionDetails.get("RegionID"));
         this.m_iWeatherTomorrow = Weather.getById(Integer.parseInt(regionDetails.get("TomorrowWeatherID")));
         this.m_iWeather = Weather.getById(Integer.parseInt(regionDetails.get("WeatherID")));
-
         this.m_sNation = regionDetails.get("LeagueName");
         this.m_sRegionName = regionDetails.get("RegionName");
     }

@@ -236,9 +236,9 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		if (rs.wasNull()) match.setIsDerby(null);
 		match.setIsNeutral(rs.getBoolean("isNeutral"));
 		if (rs.wasNull()) match.setIsNeutral(null);
-		match.setWeather((Weather.getById(rs.getInt("Weather")));
+		match.setWeather(Weather.getById(rs.getInt("Weather")));
 		if (rs.wasNull()) match.setWeather(Weather.NULL);
-		match.setWeatherForecast(Weather.Forecast.getById(rs.getInt(rs.getInt("WeatherForecast")));
+		match.setWeatherForecast(Weather.Forecast.getById(rs.getInt("WeatherForecast")));
 		if ( rs.wasNull()) match.setWeatherForecast(Weather.Forecast.NULL);
 		return match;
 	}
@@ -292,6 +292,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			rs.beforeFirst();
 			if (rs.next()) {
 				Weather.Forecast forecast = Weather.Forecast.getById(rs.getInt(1));
+				if (rs.wasNull()) return true;
 				return !forecast.isSure();
 			}
 		}
@@ -410,7 +411,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			try {
 				sql = "INSERT INTO "
 						+ getTableName()
-						+ " (  MatchID, MatchContextId, TournamentTypeID, MatchTyp, CupLevel, CupLevelIndex, HeimName, HeimID, GastName, GastID, MatchDate, HeimTore, GastTore, Aufstellung, Status, ArenaId, RegionId, isDerby, isNeutral ) VALUES(";
+						+ " (  MatchID, MatchContextId, TournamentTypeID, MatchTyp, CupLevel, CupLevelIndex, HeimName, HeimID, GastName, GastID, MatchDate, HeimTore, GastTore, Aufstellung, Status, ArenaId, RegionId, isDerby, isNeutral, Weather, WeatherForecast ) VALUES(";
 				sql += (matches[i].getMatchID()
 						+ ","
 						+ matches[i].getMatchContextId()
@@ -439,7 +440,9 @@ final class MatchesKurzInfoTable extends AbstractTable {
 						+ matches[i].getArenaId() + ", "
 						+ matches[i].getRegionId() + ", "
 						+ matches[i].getIsDerby() + ", "
-						+ matches[i].getIsNeutral() + " )");
+						+ matches[i].getIsNeutral() + ", "
+						+ matches[i].getWeather().getId() + ", "
+						+ matches[i].getWeatherForecast().getId() + " )");
 				adapter.executeUpdate(sql);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),

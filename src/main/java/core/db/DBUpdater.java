@@ -680,9 +680,19 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN ArenaId INTEGER");
 		}
 
-		//store ArenaId into MATCHESKURZINFO table
+		//store RegionId into MATCHESKURZINFO table
 		if (!columnExistsInTable("RegionId", MatchesKurzInfoTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN RegionId INTEGER");
+		}
+
+		//store Weather into MATCHESKURZINFO table
+		if (!columnExistsInTable("Weather", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN Weather INTEGER");
+		}
+
+		//store WeatherForecast into MATCHESKURZINFO table
+		if (!columnExistsInTable("WeatherForecast", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN WeatherForecast INTEGER");
 		}
 
 		//store isDerby into MATCHESKURZINFO table

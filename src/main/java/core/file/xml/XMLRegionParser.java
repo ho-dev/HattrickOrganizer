@@ -37,7 +37,7 @@ public class XMLRegionParser {
             extract(root, map, "NumberOfUsers");
             extract(root, map, "NumberOfOnline");
             extract(root, map, "WeatherID");
-            extract(root, map, "TomorrowWeatherID ");
+            extract(root, map, "TomorrowWeatherID");
 
         } catch (Exception e) {
             HOLogger.instance().log(XMLRegionParser.class, e);

@@ -311,7 +311,10 @@ public class OnlineWorker {
 				// If ids not found, download matchdetails to obtain them.
 				// Highlights will be missing.
 				// ArenaId==0 in division battles
-				if ((info.getHeimID() == 0) || (info.getGastID() == 0) || info.getIsDerby() == null || !info.getWeatherForecast().isSure()) {
+				if ((info.getHeimID() == 0) || (info.getGastID() == 0)
+						|| info.getIsDerby() == null
+						|| info.getWeatherForecast() == null || !info.getWeatherForecast().isSure()
+				) {
 					waitDialog.setValue(10);
 					details = fetchDetails(matchid, matchType, null, waitDialog);
 					info.setHeimID(details.getHeimId());
@@ -571,13 +574,14 @@ public class OnlineWorker {
 				// Automatically download additional match infos (lineup + arena)
 				for (MatchKurzInfo match : matches) {
 					int curMatchId = match.getMatchID();
-					if (DBManager.instance().isMatchVorhanden(curMatchId)
-							&& (match.getMatchStatus() == MatchKurzInfo.FINISHED
-							&& !DBManager.instance().isMatchLineupInDB(curMatchId)
-							|| !DBManager.instance().isDerbyInfoInDb(curMatchId))) {
+					boolean refresh = !DBManager.instance().isMatchVorhanden(curMatchId)
+							|| DBManager.instance().hasUnsureWeatherForecast(curMatchId)
+							|| !DBManager.instance().isMatchLineupInDB(curMatchId)
+							|| !DBManager.instance().isDerbyInfoInDb(curMatchId);
 
+					if (refresh) {
 						// No lineup or arenaId in DB
-						boolean result = downloadMatchData(curMatchId, match.getMatchTyp(), false);
+						boolean result = downloadMatchData(curMatchId, match.getMatchTyp(), refresh);
 						if (!result) {
 							bOK = false;
 							break;
