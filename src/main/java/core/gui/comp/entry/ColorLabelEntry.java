@@ -242,9 +242,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     	setIcon(ImageUtilities.getImageIcon4Veraenderung((int) Helper.round(integerNumber, 1),current));
 
         if (withText) {
-            //No negative subs-kills can happen when level up
-            final double number2 = integerNumber + Math.max(0d, number);
-            setGraphicalChangeValue(number2);
+            setGraphicalChangeValue(integerNumber + number);
         }
         updateComponent();
     }

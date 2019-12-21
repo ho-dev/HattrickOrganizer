@@ -173,9 +173,9 @@ public class SkillEntry extends AbstractHOTableEntry {
         m_sText = Integer.toString((int) m_dZahl);
 
         if (core.model.UserParameter.instance().nbDecimals == 1) {
-            m_sNachkomma = Helper.DEFAULTDEZIMALFORMAT.format(Helper.round(m_dZahl - (int) m_dZahl,core.model.UserParameter.instance().nbDecimals));
+            m_sNachkomma = Helper.DEFAULTDEZIMALFORMAT.format(m_dZahl - (int) m_dZahl);
         } else {
-            m_sNachkomma = Helper.DEZIMALFORMAT_2STELLEN.format(Helper.round(m_dZahl - (int) m_dZahl,  core.model.UserParameter.instance().nbDecimals));
+            m_sNachkomma = Helper.DEZIMALFORMAT_2STELLEN.format(m_dZahl - (int) m_dZahl);
         }
 
         int index = m_sNachkomma.indexOf(',');
