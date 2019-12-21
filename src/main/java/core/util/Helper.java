@@ -89,9 +89,13 @@ public class Helper {
 			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.FORWARD_TOWING), IMatchRoleID.FORWARD_TOWING) };
 
     /** weather combo boxes */
-	public static final CBItem[] WETTER = { new CBItem("", Weather.SUNNY.getId()), 
-		new CBItem("", Weather.PARTIALLY_CLOUDY.getId()), new CBItem("", Weather.OVERCAST.getId()), 
-		new CBItem("", Weather.RAINY.getId()) };
+	public static final CBItem[] WETTER =
+			{
+					new CBItem("", Weather.RAINY.getId()),
+					new CBItem("", Weather.OVERCAST.getId()),
+					new CBItem("", Weather.PARTIALLY_CLOUDY.getId()),
+					new CBItem("", Weather.SUNNY.getId())
+			};
 
 	public static NumberFormat CURRENCYFORMAT = CurrencyUtils.getLeagueCurrencyFormater(HOVerwaltung.instance().getModel().getBasics().getLiga());
 

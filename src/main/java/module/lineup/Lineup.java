@@ -108,7 +108,6 @@ public class Lineup{
 
 	private int m_iArenaId = -1;
 	private int m_iRegionId = -1;
-
 	private Weather m_cWeather = Weather.NULL;
 	private Weather.Forecast m_cWeatherForecast = Weather.Forecast.NULL;
 
@@ -718,26 +717,32 @@ public class Lineup{
 	 * @return the location constant for the match
 	 */
 	public final short getLocation() {
-		if (!isUpcomingMatchLoaded()) {
-			getUpcomingMatch();
-		}
+		if (!isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
 		return m_sLocation;
 	}
 
 	public final int getArenaId()
 	{
-		if (!isUpcomingMatchLoaded()) {
-			getUpcomingMatch();
-		}
+		if (!isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
 		return m_iArenaId;
 	}
 
 	public final int getRegionId()
 	{
-		if (!isUpcomingMatchLoaded()) {
-			getUpcomingMatch();
-		}
+		if (!isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
 		return  m_iRegionId;
+	}
+
+	public final Weather getWeather()
+	{
+		if (!isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
+		return  m_cWeather;
+	}
+
+	public final Weather.Forecast getWeatherForecast()
+	{
+		if (!isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
+		return  m_cWeatherForecast;
 	}
 
 	private final boolean isUpcomingMatchLoaded(){return m_iArenaId>=0; }
@@ -753,6 +758,8 @@ public class Lineup{
 					m_sLocation = IMatchDetails.LOCATION_AWAY;
 					m_iArenaId=0;
 					m_iRegionId=0;
+					m_cWeather = Weather.NULL;
+					m_cWeatherForecast = Weather.Forecast.NULL;
 					HOLogger.instance().error(getClass(), "no match to determine location");
 					return;
 				}
@@ -776,6 +783,8 @@ public class Lineup{
 					m_sLocation = IMatchDetails.LOCATION_TOURNAMENT;
 				}
 
+				m_cWeather = match.getWeather();
+				m_cWeatherForecast = match.getWeatherForecast();
 
 			} catch (Exception e) {
 				HOLogger.instance().error(getClass(), "getHeimspiel: " + e);

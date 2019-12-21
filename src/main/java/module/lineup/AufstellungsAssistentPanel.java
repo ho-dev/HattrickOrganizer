@@ -110,8 +110,8 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 	/**
 	 * Creates a new AufstellungsAssistentPanel object.
 	 */
-	public AufstellungsAssistentPanel() {
-		initComponents();
+	public AufstellungsAssistentPanel(Weather weather) {
+		initComponents(weather);
 	}
 
 	// ~ Methods
@@ -221,6 +221,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 
 	@Override
 	public void setWeather(Weather weather) {
+		if (weather==Weather.NULL) weather=Weather.PARTIALLY_CLOUDY;
 		m_jcbWetter.setSelectedIndex(weather.getId());
 	}
 
@@ -537,7 +538,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 		return false;
 	}
 
-	private void initComponents() {
+	private void initComponents(Weather weather) {
 		setLayout(new BorderLayout());
 
 		JPanel panel = new ImagePanel();
@@ -549,7 +550,9 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 
 		m_jcbWetter.setToolTipText(hoVerwaltung
 				.getLanguageString("tt_AufstellungsAssistent_Wetter"));
-		m_jcbWetter.setSelectedIndex(1);
+
+		if ( weather == Weather.NULL) weather = Weather.PARTIALLY_CLOUDY;
+		m_jcbWetter.setSelectedIndex(weather.getId());
 		m_jcbWetter.setPreferredSize(new Dimension(50, 20));
 		m_jcbWetter.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
 		m_jcbWetter.setRenderer(new core.gui.comp.renderer.WeatherListCellRenderer());

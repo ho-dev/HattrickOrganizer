@@ -607,7 +607,7 @@ poeditorPull {
 
 
 poeditor {
-    apiKey = POEDITOR_APIKEY
+//    apiKey = POEDITOR_APIKEY
     projectId = '206221'
 
     trans type:'properties', lang: 'bg', file: 'src\\main\\resources\\sprache\\Bulgarian.properties'
