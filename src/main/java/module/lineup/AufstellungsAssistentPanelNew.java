@@ -419,6 +419,7 @@ public class AufstellungsAssistentPanelNew extends ImagePanel implements
 		}
 
 		public void setWeather(Weather weather) {
+			if (getWeather() == weather) return;
 			switch (weather) {
 			case SUNNY:
 				this.buttonGroup.setSelected(this.sunnyBtn.getModel(), true);

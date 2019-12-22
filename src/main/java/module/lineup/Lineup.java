@@ -764,6 +764,7 @@ public class Lineup{
 					return;
 				}
 
+
 				if (match.getMatchTyp().isOfficial()) {
 					if (match.getIsNeutral()) {
 						m_sLocation = IMatchDetails.LOCATION_NEUTRAL;    // could be overwritten if it is also a derby
@@ -783,6 +784,8 @@ public class Lineup{
 					m_sLocation = IMatchDetails.LOCATION_TOURNAMENT;
 				}
 
+				m_iArenaId = match.getArenaId();
+				m_iRegionId = match.getRegionId();
 				m_cWeather = match.getWeather();
 				m_cWeatherForecast = match.getWeatherForecast();
 

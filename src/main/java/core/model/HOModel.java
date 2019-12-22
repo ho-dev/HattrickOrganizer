@@ -36,6 +36,7 @@ import java.util.Vector;
  */
 public class HOModel {
     //~ Instance fields ----------------------------------------------------------------------------
+
     private Lineup m_clAufstellung;
     private Lineup m_clLastAufstellung;
     private Basics m_clBasics;
@@ -268,8 +269,8 @@ public class HOModel {
     /**
      * Setzt neues Stadium
      */
-    public final void setStadium(Stadium arena) {
-        m_clStadium = arena;
+    public final void setStadium(Stadium stadium) {
+        m_clStadium = stadium;
     }
 
     //--------Stadium----------------------------------------

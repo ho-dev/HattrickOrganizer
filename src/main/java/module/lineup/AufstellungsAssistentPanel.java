@@ -3,6 +3,7 @@ package module.lineup;
 
 import core.datatype.CBItem;
 import core.gui.HOMainFrame;
+import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.model.AufstellungCBItem;
 import core.gui.theme.HOColorName;
@@ -44,7 +45,7 @@ import javax.swing.border.MatteBorder;
 /**
  * Die automatische Aufstellung wird hier konfiguriert und gestartet
  */
-public class AufstellungsAssistentPanel extends ImagePanel implements ActionListener, ItemListener,
+public class AufstellungsAssistentPanel extends ImagePanel implements Refreshable, ActionListener, ItemListener,
 		IAufstellungsAssistentPanel {
 
 	private static final long serialVersionUID = 5271343329674809429L;
@@ -222,7 +223,9 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 	@Override
 	public void setWeather(Weather weather) {
 		if (weather==Weather.NULL) weather=Weather.PARTIALLY_CLOUDY;
-		m_jcbWetter.setSelectedIndex(weather.getId());
+		if (m_jcbWetter.getSelectedIndex() != weather.getId()){
+			m_jcbWetter.setSelectedIndex(weather.getId());
+		}
 	}
 
 	@Override
@@ -632,5 +635,19 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 		m_jbOK.addActionListener(this);
 		panel.add(m_jbOK);
 		add(panel, BorderLayout.SOUTH);
+
+		core.gui.RefreshManager.instance().registerRefreshable(this);
 	}
-}
+
+	@Override
+	public void reInit() {
+		final HOModel homodel = HOVerwaltung.instance().getModel();
+		final Lineup lineup = homodel.getLineupWithoutRatingRecalc();
+		final Weather weather = lineup.getWeather();
+		setWeather(weather);
+	}
+
+	@Override
+	public void refresh() {
+		reInit();
+	}}
