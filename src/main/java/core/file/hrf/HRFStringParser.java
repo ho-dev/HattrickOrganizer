@@ -207,7 +207,7 @@ public class HRFStringParser {
 
 
 				} else if (entity.toString().equalsIgnoreCase(LASTLINEUP)) {
-					hoModel.setLastAufstellung(new Lineup(properties));
+					hoModel.setLastAufstellung(new Lineup(MatchRoleID.convertOldRoleToNew(properties)));
 				} else if (entity.toString().equalsIgnoreCase(STAFF)) {
 					hoModel.setStaff(parseStaff(properties));
 				}
