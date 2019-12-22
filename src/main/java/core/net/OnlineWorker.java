@@ -9,13 +9,10 @@ import core.gui.InfoPanel;
 import core.gui.model.AufstellungCBItem;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
-import core.model.Team;
 import core.model.Tournament.TournamentDetails;
 import core.model.UserParameter;
 import core.model.match.*;
 import core.model.misc.Regiondetails;
-import core.model.player.IMatchRoleID;
-import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.net.login.LoginWaitDialog;
 import core.training.TrainingManager;
@@ -24,8 +21,6 @@ import core.util.Helper;
 import core.util.StringUtils;
 import module.lineup.AufstellungsVergleichHistoryPanel;
 import module.lineup.Lineup;
-import module.lineup.substitution.model.MatchOrderType;
-import module.lineup.substitution.model.Substitution;
 import module.teamAnalyzer.vo.MatchRating;
 
 import java.awt.Color;
@@ -42,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -364,7 +358,7 @@ public class OnlineWorker {
 					}
 					Map<String, String> otherTeam = getTeam(otherId);
 					info.setIsDerby( getRegionId(otherTeam) == HOVerwaltung.instance().getModel().getBasics().getRegionId());
-					info.setIsNeutral( info.getArenaId() != HOVerwaltung.instance().getModel().getArena().getArenaId()
+					info.setIsNeutral( info.getArenaId() != HOVerwaltung.instance().getModel().getStadium().getArenaId()
 										&& info.getArenaId() != getArenaId(otherTeam));
 				}
 

@@ -69,8 +69,8 @@ public class MatchHelper {
 		 * 									for other downloads only HOME is recognized)
 		 */
 		int userTeamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		String userStadiumName = HOVerwaltung.instance().getModel().getArena().getStadienname();
-		int userStadiumId = HOVerwaltung.instance().getModel().getArena().getArenaId();
+		String userStadiumName = HOVerwaltung.instance().getModel().getStadium().getStadienname();
+		int userStadiumId = HOVerwaltung.instance().getModel().getStadium().getArenaId();
 		// TODO: It would be better to use the user region at match date, because
 		// in the meantime the user may have changed his region
 		int userRegion = HOVerwaltung.instance().getModel().getBasics().getRegionId();

@@ -57,7 +57,7 @@ class TeamPanel extends JPanel {
 	        teamIdLabel.setText(basics.getTeamId()+"");
 	        teamLabel.setText(basics.getTeamName());
 	        managerLabel.setText(basics.getManager());
-	        arenaLabel.setText(HOVerwaltung.instance().getModel().getArena().getStadienname());
+	        arenaLabel.setText(HOVerwaltung.instance().getModel().getStadium().getStadienname());
 	        seasonLabel.setText(basics.getSeason() + "");
 	        if(liga != null){
 	        	matchRoundLabel.setText(liga.getSpieltag() + "");

@@ -1,7 +1,7 @@
 package core.db;
 
 import core.util.HOLogger;
-import tool.arenasizer.Arena;
+import tool.arenasizer.Stadium;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,7 +40,7 @@ final class StadionTable extends AbstractTable {
 	 * @param hrfId 
 	 * @param stadion 
 	 */
-	void saveStadion(int hrfId, Arena stadion) {
+	void saveStadion(int hrfId, Stadium stadion) {
 		StringBuilder statement = new StringBuilder(200);
 		final String[] awhereS = { columns[0].getColumnName() };
 		final String[] awhereV = { String.valueOf(hrfId) };
@@ -85,9 +85,9 @@ final class StadionTable extends AbstractTable {
 	/**
 	 * lädt die Finanzen zum angegeben HRF file ein
 	 */
-	Arena getStadion(int hrfID) {
+	Stadium getStadion(int hrfID) {
 		ResultSet rs = null;
-		Arena stadion = null;
+		Stadium stadion = null;
 		String sql = null;
 
 		sql = "SELECT * FROM "+getTableName()+" WHERE HRF_ID = " + hrfID;
@@ -104,8 +104,8 @@ final class StadionTable extends AbstractTable {
 		return stadion;
 	}
 	
-	private Arena createStadionObject(ResultSet rs) throws SQLException {
-		Arena arena = new Arena();
+	private Stadium createStadionObject(ResultSet rs) throws SQLException {
+		Stadium arena = new Stadium();
 		arena.setStadienname(DBManager.deleteEscapeSequences(rs.getString("StadionName")));
 		arena.setArenaId(rs.getInt("ArenaID"));
 		arena.setSitzplaetze(rs.getInt("AnzSitz"));

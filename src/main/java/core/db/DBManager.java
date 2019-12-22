@@ -43,7 +43,7 @@ import module.series.Spielplan;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.transfer.PlayerTransfer;
 import module.transfer.scout.ScoutEintrag;
-import tool.arenasizer.Arena;
+import tool.arenasizer.Stadium;
 
 import java.io.File;
 import java.sql.ResultSet;
@@ -989,7 +989,7 @@ public class DBManager {
 	/**
 	 * lädt die Finanzen zum angegeben HRF file ein
 	 */
-	public Arena getStadion(int hrfID) {
+	public Stadium getStadion(int hrfID) {
 		return ((StadionTable) getTable(StadionTable.TABLENAME))
 				.getStadion(hrfID);
 	}
@@ -997,7 +997,7 @@ public class DBManager {
 	/**
 	 * speichert die Finanzen
 	 */
-	public void saveStadion(int hrfId, Arena stadion) {
+	public void saveStadion(int hrfId, Stadium stadion) {
 		((StadionTable) getTable(StadionTable.TABLENAME)).saveStadion(hrfId,
 				stadion);
 	}

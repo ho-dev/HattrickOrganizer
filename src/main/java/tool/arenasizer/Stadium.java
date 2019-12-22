@@ -3,7 +3,7 @@ package tool.arenasizer;
 /**
  * Enthält die Stadiendaten
  */
-public class Arena {
+public class Stadium {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Stadienname */
@@ -50,13 +50,13 @@ public class Arena {
     /**
      * Creates a new Stadium object.
      */
-    public Arena() {
+    public Stadium() {
     }
 
     /**
      * Creates a new Stadium object.
      */
-    public Arena(java.util.Properties properties) {
+    public Stadium(java.util.Properties properties) {
         m_sStadienname = properties.getProperty("arenaname", "");
         m_iStadiumId = Integer.parseInt(properties.getProperty("arenaid", "0"));
         //m_iGesamtgroesse = Integer.parseInt(properties.getProperty("seattotal", "0"));

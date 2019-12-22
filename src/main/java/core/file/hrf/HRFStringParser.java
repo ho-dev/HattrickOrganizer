@@ -14,7 +14,7 @@ import core.model.series.Liga;
 import core.util.HOLogger;
 import core.util.IOUtils;
 import module.lineup.Lineup;
-import tool.arenasizer.Arena;
+import tool.arenasizer.Stadium;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -189,7 +189,7 @@ public class HRFStringParser {
 				}
 				// arena
 				else if (entity.toString().equalsIgnoreCase(ARENA)) {
-					hoModel.setArena(new Arena(properties));
+					hoModel.setStadium(new Stadium(properties));
 				}
 				// player
 				else if (entity.toString().equalsIgnoreCase(PLAYER)) {

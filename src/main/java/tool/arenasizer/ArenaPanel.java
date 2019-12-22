@@ -34,10 +34,10 @@ final class ArenaPanel extends JPanel {
     private JTable m_jtArena = new JTable();
 
     //Teststadium
-    private Arena m_clStadium;
+    private Stadium m_clStadium;
     private String[] UEBERSCHRIFT = {"", HOVerwaltung.instance().getLanguageString("Aktuell"), HOVerwaltung.instance().getLanguageString("Maximal"),
     		HOVerwaltung.instance().getLanguageString("Durchschnitt"), HOVerwaltung.instance().getLanguageString("Minimal")};
-    private Arena[] m_clStadien;
+    private Stadium[] m_clStadien;
     private IHOTableEntry[][] values;
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ final class ArenaPanel extends JPanel {
     //-------Refresh---------------------------------
     public void reInit() {
     	HOModel model = HOVerwaltung.instance().getModel();
-        m_clStadium = model.getArena();
+        m_clStadium = model.getStadium();
         m_clStadien = m_clArenaSizer.calcConstructionArenas(m_clStadium,model.getVerein().getFans());
         //Entrys mit Werten füllen
         reinitTable();
@@ -109,7 +109,7 @@ final class ArenaPanel extends JPanel {
                 	            		   background, SwingConstants.RIGHT));
     }
 
-    void reinitArena(Arena currentArena, int maxSupporter, int normalSupporter, int minSupporter) {
+    void reinitArena(Stadium currentArena, int maxSupporter, int normalSupporter, int minSupporter) {
         m_clStadium = currentArena;
         m_clStadien = m_clArenaSizer.calcConstructionArenas(currentArena, maxSupporter, normalSupporter, minSupporter);
 
@@ -118,7 +118,7 @@ final class ArenaPanel extends JPanel {
     }
 
     private void reinitTable() {
-        final Arena stadium = HOVerwaltung.instance().getModel().getArena();
+        final Stadium stadium = HOVerwaltung.instance().getModel().getStadium();
         if (m_clStadium != null) {
                 ((DoppelLabelEntry) values[0][1]).getLinks().setText(m_clStadium.getStehplaetze() + "");
                 ((DoppelLabelEntry) values[0][1]).getRechts().setSpecialNumber(m_clStadium.getStehplaetze() - stadium.getStehplaetze(),false);

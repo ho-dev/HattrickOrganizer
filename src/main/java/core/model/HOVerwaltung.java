@@ -178,7 +178,7 @@ public class HOVerwaltung {
 		model.setBasics(DBManager.instance().getBasics(id));
 		model.setFinanzen(DBManager.instance().getFinanzen(id));
 		model.setLiga(DBManager.instance().getLiga(id));
-		model.setArena(DBManager.instance().getStadion(id));
+		model.setStadium(DBManager.instance().getStadion(id));
 		model.setTeam(DBManager.instance().getTeam(id));
 		model.setVerein(DBManager.instance().getVerein(id));
 		model.setID(id);
