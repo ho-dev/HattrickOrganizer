@@ -17,14 +17,15 @@ public class SpecialEventsPredictionManager {
     private Lineup m_cLineup=null;
     private Map<Integer, Player> playerInLineup;
 
-    private void  initAnalyzer()
+    private void  initAnalyzers()
     {
         analyzers.add(new ExperienceEventPredictionAnalyzer(this));
+        analyzers.add(new UnpredictableEventPredictionAnalyzer(this));
     }
 
     public SpecialEventsPredictionManager()
     {
-        initAnalyzer();
+        initAnalyzers();
     }
 
     public List<SpecialEventsPrediction> analyzeLineup(Lineup lineup)

@@ -25,4 +25,14 @@ public class SpecialEventsPrediction {
     public void setResponsiblePosition(IMatchRoleID responsiblePosition) {
         this.m_cResponsiblePosition = responsiblePosition;
     }
+
+    static public SpecialEventsPrediction createIfInRange (IMatchRoleID position, String eventName,
+                                                  double f1, double f2, double d1, double d2, double d)
+    {
+        if ( d >= d1 && d <=d2) {
+            return new SpecialEventsPrediction(position, eventName, new LinearFit(f1, f2, d1, d2).f(d));
+        }
+        return null;
+    }
+
 }
