@@ -70,7 +70,7 @@ public class HOModel {
 
 	public void setLineups(int id) {
 		this.setAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
-//		this.setLastAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
+		this.setLastAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
 	}
 
     /**
