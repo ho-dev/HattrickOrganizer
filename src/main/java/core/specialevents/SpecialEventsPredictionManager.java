@@ -13,14 +13,19 @@ import java.util.Vector;
 
 public class SpecialEventsPredictionManager {
 
-    List<ISpecialEventPredictionAnalyzer> analyzers;
+    static Vector<ISpecialEventPredictionAnalyzer> analyzers;
     private Lineup m_cLineup=null;
     private Map<Integer, Player> playerInLineup;
 
+    static void registerAnalyzer(ISpecialEventPredictionAnalyzer analyzer){
+        analyzers.add(analyzer);
+    }
     private void  initAnalyzers()
     {
+        analyzers = new Vector<ISpecialEventPredictionAnalyzer>();
         analyzers.add(new ExperienceEventPredictionAnalyzer(this));
         analyzers.add(new UnpredictableEventPredictionAnalyzer(this));
+        analyzers.add(new WingerEventPredictionAnalyzer(this));
     }
 
     public SpecialEventsPredictionManager()

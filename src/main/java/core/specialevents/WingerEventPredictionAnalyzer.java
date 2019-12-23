@@ -8,7 +8,6 @@ import core.model.player.Player;
 import java.util.List;
 import java.util.Vector;
 
-
 // Flügelspieler mit ausreichend gutem Flügelspielwert ermöglichen manchmal eine zusätzliche Torgelegenheit,
 // die durch einen Mannschaftskameraden (Stürmer oder Flügelspieler) vollendet wird. Wenn dieser zweite Spieler ein
 // Kopfballspezialist ist oder über eine genügend gute Torschuss-Fähigkeit verfügt, wird er die Chance mit höherer
