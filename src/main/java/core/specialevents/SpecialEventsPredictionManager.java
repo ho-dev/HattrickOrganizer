@@ -26,6 +26,8 @@ public class SpecialEventsPredictionManager {
         analyzers.add(new ExperienceEventPredictionAnalyzer(this));
         analyzers.add(new UnpredictableEventPredictionAnalyzer(this));
         analyzers.add(new WingerEventPredictionAnalyzer(this));
+        analyzers.add(new PowerfulForwardEventPredictionAnalyzer(this));
+        analyzers.add(new SittingMidfielderEventPredictionAnalyzer(this));
     }
 
     public SpecialEventsPredictionManager()

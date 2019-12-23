@@ -4,16 +4,15 @@ import core.constants.player.Speciality;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import module.lineup.substitution.model.MatchOrderType;
 
 import java.util.List;
 import java.util.Vector;
 
-public class PowerfulForwardEventPredictionAnalyzer implements  ISpecialEventPredictionAnalyzer {
-    public static final String eventName = "Powerful Forward";
+public class SittingMidfielderEventPredictionAnalyzer implements  ISpecialEventPredictionAnalyzer {
+    public static final String eventName = "Siting Midfielder";
     private SpecialEventsPredictionManager theManager = null;
 
-    public PowerfulForwardEventPredictionAnalyzer(SpecialEventsPredictionManager specialEventsPredictionManager) {
+    public SittingMidfielderEventPredictionAnalyzer(SpecialEventsPredictionManager specialEventsPredictionManager) {
         theManager = specialEventsPredictionManager;
     }
     @Override
@@ -25,17 +24,17 @@ public class PowerfulForwardEventPredictionAnalyzer implements  ISpecialEventPre
         if (speciality.equals(Speciality.POWERFUL)) {
 
             switch (position.getId()) {
-                case IMatchRoleID.leftForward:
-                case IMatchRoleID.centralForward:
-                case IMatchRoleID.rightForward:
+                case IMatchRoleID.leftInnerMidfield:
+                case IMatchRoleID.centralInnerMidfield:
+                case IMatchRoleID.rightInnerMidfield:
 
-                    if( position.getTaktik() == IMatchRoleID.NORMAL){
+                    if( position.getTaktik() == IMatchRoleID.DEFENSIVE){
 
-                        // TODO: Probability depends on defence skills of opponent defenders
-                        // TODO: Overcrowding, if more than 1 PNF is in lineup
+                        // TODO: Probability depends on skills of opponent forwards
+                        // TODO: Overcrowding, if more than one PDIM is in  lineup
                         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, eventName,
                                 .5, 0, 20*20, 8*8,
-                                p.getSCskill() * p.getPMskill());
+                                p.getDEFskill() * p.getPMskill());
                         if (se != null) {
                             ret.add(se);
                         }
