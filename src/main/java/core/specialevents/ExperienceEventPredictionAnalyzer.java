@@ -30,7 +30,7 @@ public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictio
             case IMatchRoleID.centralInnerMidfield:
             case IMatchRoleID.leftInnerMidfield:
             case IMatchRoleID.rightInnerMidfield:
-                SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, eventName, -.5,0,0,4, p.getErfahrung());
+                SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, eventName, -.5,0,4, p.getErfahrung());
                 if ( se!= null){
                     ret.add(se);
                 }
@@ -41,7 +41,7 @@ public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictio
             case IMatchRoleID.leftForward:
             case IMatchRoleID.centralForward:
             case IMatchRoleID.rightForward:
-                se = SpecialEventsPrediction.createIfInRange(position, eventName, .5,0,20,10, p.getErfahrung());
+                se = SpecialEventsPrediction.createIfInRange(position, eventName, .5,20,10, p.getErfahrung());
                 if ( se != null){
                     ret.add(se);
                 }

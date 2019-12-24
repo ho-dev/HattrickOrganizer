@@ -8,16 +8,16 @@ import java.util.Vector;
 
 public class SpecialEventsPrediction {
 
-    private double m_dChanceCreationProbability=0;
-    private String m_sName=null;
-    private IMatchRoleID m_cResponsiblePosition =null;
+    private double m_dChanceCreationProbability = 0;
+    private String m_sName = null;
+    private IMatchRoleID m_cResponsiblePosition = null;
 
-    private List<IMatchRoleID> m_cInvolvedPositions=null;
+    private List<IMatchRoleID> m_cInvolvedPositions = null;
 
     public SpecialEventsPrediction(IMatchRoleID position, String name, double p) {
         m_cResponsiblePosition = position;
         m_sName = name;
-        m_dChanceCreationProbability=p;
+        m_dChanceCreationProbability = p;
     }
 
     public IMatchRoleID getResponsiblePosition() {
@@ -37,22 +37,26 @@ public class SpecialEventsPrediction {
     }
 
     public void setInvolvedPosition(MatchRoleID mid) {
-        if ( this.m_cInvolvedPositions == null){
+        if (this.m_cInvolvedPositions == null) {
             this.m_cInvolvedPositions = new Vector<IMatchRoleID>();
-        }
-        else {
+        } else {
             this.m_cInvolvedPositions.clear();
         }
         this.m_cInvolvedPositions.add(mid);
     }
 
-    static public SpecialEventsPrediction createIfInRange (IMatchRoleID position, String eventName,
-                                                           double f1, double f2, double d1, double d2, double d)
-    {
-        if ( d >= d1 && d <=d2) {
-            return new SpecialEventsPrediction(position, eventName, new LinearFit(f1, f2, d1, d2).f(d));
+    static public SpecialEventsPrediction createIfInRange(IMatchRoleID position,
+                                                          String eventName,
+                                                          double maxProbability,
+                                                          double valueAtMaxProbability,
+                                                          double valueAtNullProbability,
+                                                          double value) {
+        if (valueAtMaxProbability > valueAtNullProbability) {
+            if (value <= valueAtNullProbability || value > valueAtMaxProbability) return null;
+        } else {
+            if (value >= valueAtNullProbability || value < valueAtMaxProbability) return null;
         }
-        return null;
+        double f = maxProbability - maxProbability / (valueAtNullProbability - valueAtMaxProbability) * (value - valueAtMaxProbability);  // linear fit
+        return new SpecialEventsPrediction(position, eventName, f);
     }
-
 }

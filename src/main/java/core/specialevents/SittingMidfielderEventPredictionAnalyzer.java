@@ -33,7 +33,7 @@ public class SittingMidfielderEventPredictionAnalyzer implements  ISpecialEventP
                         // TODO: Probability depends on skills of opponent forwards
                         // TODO: Overcrowding, if more than one PDIM is in  lineup
                         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, eventName,
-                                .5, 0, 20*20, 8*8,
+                                .5, 20*20, 8*8,
                                 p.getDEFskill() * p.getPMskill());
                         if (se != null) {
                             ret.add(se);

@@ -126,6 +126,7 @@ public class HOModel {
      */
     public final Lineup getLineup() {
 		m_clAufstellung.setRatings();
+		m_clAufstellung.setSpecialEvents();
         return m_clAufstellung;
     }
 

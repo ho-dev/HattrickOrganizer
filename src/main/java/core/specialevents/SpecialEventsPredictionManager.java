@@ -7,6 +7,7 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import module.lineup.Lineup;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -15,7 +16,7 @@ public class SpecialEventsPredictionManager {
 
     static Vector<ISpecialEventPredictionAnalyzer> analyzers;
     private Lineup m_cLineup=null;
-    private Map<Integer, Player> playerInLineup;
+    private HashMap<Integer, Player> playerInLineup = new HashMap<Integer, Player>();
 
     static void registerAnalyzer(ISpecialEventPredictionAnalyzer analyzer){
         analyzers.add(analyzer);
@@ -42,6 +43,7 @@ public class SpecialEventsPredictionManager {
         for ( ISpecialEventPredictionAnalyzer analyzer: analyzers) {
             for ( IMatchRoleID position: lineup.getFieldPositions()){
                 MatchRoleID mid = (MatchRoleID) position;
+                if ( mid.getSpielerId() == 0 ) continue;
                 ret.addAll(analyzer.analyzePosition(mid));
             }
         }
@@ -58,6 +60,7 @@ public class SpecialEventsPredictionManager {
         for (IMatchRoleID matchRoleID : this.m_cLineup.getFieldPositions())
         {
             MatchRoleID mid = (MatchRoleID) matchRoleID;
+            if ( mid.getSpielerId() == 0 ) continue;
             if ( this.playerInLineup.containsKey(mid.getSpielerId()) == false){
                 Player player = model.getSpieler(mid.getSpielerId());
                 if ( player != null){

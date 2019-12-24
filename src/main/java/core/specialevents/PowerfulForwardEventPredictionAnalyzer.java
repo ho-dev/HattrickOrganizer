@@ -34,7 +34,7 @@ public class PowerfulForwardEventPredictionAnalyzer implements  ISpecialEventPre
                         // TODO: Probability depends on defence skills of opponent defenders
                         // TODO: Overcrowding, if more than 1 PNF is in lineup
                         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, eventName,
-                                .5, 0, 20*20, 8*8,
+                                .5, 20*20, 8*8,
                                 p.getSCskill() * p.getPMskill());
                         if (se != null) {
                             ret.add(se);

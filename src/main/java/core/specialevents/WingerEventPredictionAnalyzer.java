@@ -33,7 +33,7 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
             case IMatchRoleID.rightWinger:
                 for ( IMatchRoleID imid : theManager.getLineup().getFieldPositions()){
                     MatchRoleID mid = (MatchRoleID) imid;
-                    if (mid.getId()==position.getId())continue; // same player again
+                    if ( mid.getSpielerId()==0 || mid.getId()==position.getId())continue; // same player again
                     switch (mid.getId()) {
                         case IMatchRoleID.leftWinger:
                         case IMatchRoleID.rightWinger:
@@ -45,7 +45,7 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
                             if (speciality.equals(Speciality.HEAD)) {
                                 SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
                                         position, eventNameHead,
-                                        .5, 0, 20, 8,
+                                        .5,  20, 8,
                                         p.getWIskill());
                                 if (se != null) {
                                     se.setInvolvedPosition(mid);
@@ -55,7 +55,7 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
 
                             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
                                     position, eventNameScorer,
-                                    .5,0, 20*20, 8*8,
+                                    .5,20*20, 8*8,
                                     p.getWIskill()*involvedPlayer.getSCskill());
                             if ( se != null){
                                 se.setInvolvedPosition(mid);

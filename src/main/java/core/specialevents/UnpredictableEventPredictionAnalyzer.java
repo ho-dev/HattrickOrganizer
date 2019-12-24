@@ -34,7 +34,7 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
                     position,
                     eventName,
-                    .5, 0, 20, 10,
+                    .5, 20, 10,
                     Math.max(p.getPSskill(), p.getSCskill()));
 
             if (se != null) {
@@ -51,7 +51,7 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
                 case IMatchRoleID.leftInnerMidfield:
                 case IMatchRoleID.rightInnerMidfield:
                     se = SpecialEventsPrediction.createIfInRange(position, eventName,
-                            -.5, 0, 0, 4,
+                            -.5,  0, 4,
                             p.getDEFskill());
                     if (se != null) {
                         ret.add(se);
