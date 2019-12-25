@@ -44,7 +44,8 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
                             Speciality speciality = Speciality.values()[involvedPlayer.getPlayerSpecialty()];
                             if (speciality.equals(Speciality.HEAD)) {
                                 SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
-                                        position, eventNameHead,
+                                        position,
+                                        SpecialEventType.WINGER_HEAD,
                                         .5,  20, 8,
                                         p.getWIskill());
                                 if (se != null) {
@@ -54,7 +55,8 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
                             }
 
                             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
-                                    position, eventNameScorer,
+                                    position,
+                                    SpecialEventType.WINGER_SCORER,
                                     .5,20*20, 8*8,
                                     p.getWIskill()*involvedPlayer.getSCskill());
                             if ( se != null){

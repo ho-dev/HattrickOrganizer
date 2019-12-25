@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Vector;
 
 public class SittingMidfielderEventPredictionAnalyzer implements  ISpecialEventPredictionAnalyzer {
-    public static final String eventName = "Siting Midfielder";
     private SpecialEventsPredictionManager theManager = null;
 
     public SittingMidfielderEventPredictionAnalyzer(SpecialEventsPredictionManager specialEventsPredictionManager) {
@@ -32,7 +31,9 @@ public class SittingMidfielderEventPredictionAnalyzer implements  ISpecialEventP
 
                         // TODO: Probability depends on skills of opponent forwards
                         // TODO: Overcrowding, if more than one PDIM is in  lineup
-                        SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, eventName,
+                        SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
+                                position,
+                                SpecialEventType.PDIM,
                                 .5, 20*20, 8*8,
                                 p.getDEFskill() * p.getPMskill());
                         if (se != null) {

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Vector;
 
 public class PowerfulForwardEventPredictionAnalyzer implements  ISpecialEventPredictionAnalyzer {
-    public static final String eventName = "Powerful Forward";
     private SpecialEventsPredictionManager theManager = null;
 
     public PowerfulForwardEventPredictionAnalyzer(SpecialEventsPredictionManager specialEventsPredictionManager) {
@@ -33,7 +32,9 @@ public class PowerfulForwardEventPredictionAnalyzer implements  ISpecialEventPre
 
                         // TODO: Probability depends on defence skills of opponent defenders
                         // TODO: Overcrowding, if more than 1 PNF is in lineup
-                        SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, eventName,
+                        SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
+                                position,
+                                SpecialEventType.PNF,
                                 .5, 20*20, 8*8,
                                 p.getSCskill() * p.getPMskill());
                         if (se != null) {

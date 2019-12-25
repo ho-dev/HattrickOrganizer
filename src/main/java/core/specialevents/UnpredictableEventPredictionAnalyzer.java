@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Vector;
 
 public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredictionAnalyzer {
-    public static final String eventName = "Unpredictable";
     private SpecialEventsPredictionManager theManager = null;
 
     public UnpredictableEventPredictionAnalyzer(SpecialEventsPredictionManager specialEventsPredictionManager) {
@@ -33,7 +32,7 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
 
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
                     position,
-                    eventName,
+                    SpecialEventType.UNPREDICTABLE,
                     .5, 20, 10,
                     Math.max(p.getPSskill(), p.getSCskill()));
 
@@ -50,7 +49,9 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
                 case IMatchRoleID.centralInnerMidfield:
                 case IMatchRoleID.leftInnerMidfield:
                 case IMatchRoleID.rightInnerMidfield:
-                    se = SpecialEventsPrediction.createIfInRange(position, eventName,
+                    se = SpecialEventsPrediction.createIfInRange(
+                            position,
+                            SpecialEventType.UNPREDICTABLE,
                             -.5,  0, 4,
                             p.getDEFskill());
                     if (se != null) {

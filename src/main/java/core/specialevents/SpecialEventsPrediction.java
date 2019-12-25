@@ -9,14 +9,13 @@ import java.util.Vector;
 public class SpecialEventsPrediction {
 
     private double m_dChanceCreationProbability = 0;
-    private String m_sName = null;
-    private IMatchRoleID m_cResponsiblePosition = null;
+    private ISpecialEventPredictionAnalyzer.SpecialEventType m_eEventType;
+    private IMatchRoleID m_cResponsiblePosition;
+    private List<IMatchRoleID> m_cInvolvedPositions;
 
-    private List<IMatchRoleID> m_cInvolvedPositions = null;
-
-    public SpecialEventsPrediction(IMatchRoleID position, String name, double p) {
+    public SpecialEventsPrediction(IMatchRoleID position, ISpecialEventPredictionAnalyzer.SpecialEventType type, double p) {
         m_cResponsiblePosition = position;
-        m_sName = name;
+        m_eEventType = type;
         m_dChanceCreationProbability = p;
     }
 
@@ -46,7 +45,7 @@ public class SpecialEventsPrediction {
     }
 
     static public SpecialEventsPrediction createIfInRange(IMatchRoleID position,
-                                                          String eventName,
+                                                          ISpecialEventPredictionAnalyzer.SpecialEventType eventName,
                                                           double maxProbability,
                                                           double valueAtMaxProbability,
                                                           double valueAtNullProbability,
