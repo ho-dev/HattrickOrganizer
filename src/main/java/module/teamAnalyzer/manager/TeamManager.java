@@ -262,7 +262,8 @@ public class TeamManager {
 
 		for (int i = 0; i < infoarray.length; i++) {
 			if ((infoarray[i].getMatchTyp() == MatchType.TOURNAMENTGROUP)
-					|| (infoarray[i].getMatchTyp() == MatchType.TOURNAMENTPLAYOFF)) {
+					|| (infoarray[i].getMatchTyp() == MatchType.TOURNAMENTPLAYOFF)
+					|| (infoarray[i].getMatchTyp() == MatchType.DIVISIONBATTLE)) {
 				MatchKurzInfo info = infoarray[i];
 				Team t = new Team();
 				String teamName;

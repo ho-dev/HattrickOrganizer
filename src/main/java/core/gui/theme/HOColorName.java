@@ -50,6 +50,7 @@ public interface HOColorName {
 	public static final String MATCHTYPE_NATIONAL_BG 		= "matchtype.national.bg";
 	public static final String MATCHTYPE_TOURNAMENT_GROUP_BG		= "matchtype.tourneyGroup.bg";
 	public static final String MATCHTYPE_TOURNAMENT_FINALS_BG 		= "matchtype.tourneyFinals.bg";
+	public static final String MATCHTYPE_DIVISIONBATTLE_BG 			= "matchtype.divisionbattlr.bg";
 
 
 	public static final String LEAGUEHISTORY_LINE1_FG 	= "leaguehistory.line1.fg";

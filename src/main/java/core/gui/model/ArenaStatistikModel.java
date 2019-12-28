@@ -486,6 +486,7 @@ public class ArenaStatistikModel {
             case NATIONALCOMPCUPRULES:
             case INTSPIEL:
             case NATIONALCOMPNORMAL:
+            case DIVISIONBATTLE:
             default:
                 matchTypeFactor = 0;
                 break;
