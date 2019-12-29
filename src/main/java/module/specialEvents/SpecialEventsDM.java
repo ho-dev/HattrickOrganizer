@@ -91,6 +91,7 @@ public class SpecialEventsDM {
 		if (filter.isShowTournament()) {
 			matchTypes.add(MatchType.TOURNAMENTGROUP.getId());
 			matchTypes.add(MatchType.TOURNAMENTPLAYOFF.getId());
+			matchTypes.add(MatchType.DIVISIONBATTLE.getId());
 		}
 		if (filter.isShowRelegation()) {
 			matchTypes.add(MatchType.QUALIFICATION.getId());
