@@ -27,8 +27,7 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
         Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();
         int id = position.getSpielerId();
         Player p = theManager.getPlayer(id);
-        Speciality speciality = Speciality.values()[p.getPlayerSpecialty()];
-        if (speciality.equals(Speciality.UNPREDICTABLE)) {
+        if (p.hasSpeciality(Speciality.UNPREDICTABLE)) {
 
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
                     position,

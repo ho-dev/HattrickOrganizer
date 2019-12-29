@@ -1295,6 +1295,11 @@ public class Player {
         return iPlayerSpecialty;
     }
 
+    public boolean hasSpeciality(Speciality speciality)
+    {
+        Speciality s = Speciality.values()[iPlayerSpecialty];
+        return s.equals(speciality);
+    }
 
     // returns the name of the speciality in the used language
     public String getSpecialityName() {

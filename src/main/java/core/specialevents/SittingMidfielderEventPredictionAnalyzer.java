@@ -19,8 +19,7 @@ public class SittingMidfielderEventPredictionAnalyzer implements  ISpecialEventP
         Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();
         int id = position.getSpielerId();
         Player p = theManager.getPlayer(id);
-        Speciality speciality = Speciality.values()[p.getPlayerSpecialty()];
-        if (speciality.equals(Speciality.POWERFUL)) {
+        if (p.hasSpeciality(Speciality.POWERFUL)) {
 
             switch (position.getId()) {
                 case IMatchRoleID.leftInnerMidfield:
