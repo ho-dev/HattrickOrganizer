@@ -369,6 +369,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(MATCHTYPE_NATIONAL_BG, new Color(240, 220, 255));
 		put(MATCHTYPE_TOURNAMENT_GROUP_BG, new Color(218, 237, 247));
 		put(MATCHTYPE_TOURNAMENT_FINALS_BG, new Color(218, 237, 247));
+		put(MATCHTYPE_DIVISIONBATTLE_BG, new Color(200, 210, 247));
 
 		// 1.431
 		put(MATCHDETAILS_PROGRESSBAR_GREEN, new Color(0, 124, 0));

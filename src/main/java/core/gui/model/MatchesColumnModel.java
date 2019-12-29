@@ -109,6 +109,8 @@ public final class MatchesColumnModel extends HOTableModel {
 			return ThemeManager.getColor(HOColorName.MATCHTYPE_TOURNAMENT_GROUP_BG);
 		case TOURNAMENTPLAYOFF:
 			return ThemeManager.getColor(HOColorName.MATCHTYPE_TOURNAMENT_FINALS_BG);
+		case DIVISIONBATTLE: 
+			return ThemeManager.getColor(HOColorName.MATCHTYPE_DIVISIONBATTLE_BG);
 			// Fehler?
 		default:
 			return ThemeManager.getColor(HOColorName.MATCHTYPE_BG);

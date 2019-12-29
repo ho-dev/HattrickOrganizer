@@ -70,7 +70,8 @@ public class XMLMatchLineupParser {
 					&& (ml.getMatchTyp() != MatchType.TOURNAMENTPLAYOFF)
 					&& (ml.getMatchTyp() != MatchType.NONE)
 					&& (ml.getMatchTyp() != MatchType.LADDER)
-					&& (ml.getMatchTyp() != MatchType.SINGLE)) { // no stadium info for this kind  of match
+					&& (ml.getMatchTyp() != MatchType.SINGLE)
+					&& (ml.getMatchTyp() != MatchType.DIVISIONBATTLE)) { // no stadium info for this kind  of match
 				ele = (Element) root.getElementsByTagName("Arena").item(0);
 				ml.setArenaID(Integer.parseInt(ele.getElementsByTagName("ArenaID").item(0)
 						.getFirstChild().getNodeValue()));
