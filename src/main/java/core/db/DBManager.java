@@ -906,6 +906,11 @@ public class DBManager {
 				.getMatchesKurzInfo(teamId);
 	}
 
+	public MatchKurzInfo getLastMatchesKurzInfo(int teamId){
+		return  ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
+				.getLastMatchesKurzInfo(teamId);
+	}
+
 	/**
 	 * Get all matches for the given sql where claus.
 	 * 

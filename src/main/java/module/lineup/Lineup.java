@@ -733,82 +733,95 @@ public class Lineup{
 	 * @return the location constant for the match
 	 */
 	public final short getLocation() {
-		if (!isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
+		if ( m_sLocation == -1 && !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
 		return m_sLocation;
 	}
 
+	public final void setArenaId(int id){
+		this.m_iArenaId=id;
+	}
 	public final int getArenaId()
 	{
-		if (!isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
+		if ( m_iArenaId == -1  && !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
 		return m_iArenaId;
 	}
 
+	public void setRegionId(int id){
+		this.m_iRegionId=id;
+	}
 	public final int getRegionId()
 	{
-		if (!isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
+		if (m_iRegionId == -1 && !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
 		return  m_iRegionId;
+	}
+
+	public final  void setWeather( Weather weather)
+	{
+		this.m_cWeather = weather;
 	}
 
 	public final Weather getWeather()
 	{
-		if (!isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
+		if (this.m_cWeather == Weather.NULL && !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
 		return  m_cWeather;
+	}
+
+	public final void setWeatherForecast(Weather.Forecast weatherForecast){
+		this.m_cWeatherForecast = weatherForecast;
 	}
 
 	public final Weather.Forecast getWeatherForecast()
 	{
-		if (!isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
+		if (this.m_cWeatherForecast == Weather.Forecast.NULL &&  !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
 		return  m_cWeatherForecast;
 	}
 
 	private final boolean isUpcomingMatchLoaded(){return m_iArenaId>=0; }
-	private final void getUpcomingMatch()
-	{
-			try {
-				final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-				final MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(teamId,
-						MatchKurzInfo.UPCOMING);
-				final List<MatchKurzInfo> sMatches = orderMatches(matches);
-				MatchKurzInfo match = sMatches.get(0);
-				if (match == null) {
-					m_sLocation = IMatchDetails.LOCATION_AWAY;
-					m_iArenaId=0;
-					m_iRegionId=0;
-					m_cWeather = Weather.NULL;
-					m_cWeatherForecast = Weather.Forecast.NULL;
-					HOLogger.instance().error(getClass(), "no match to determine location");
-					return;
-				}
-
-
-				if (match.getMatchTyp().isOfficial()) {
-					if (match.getIsNeutral()) {
-						m_sLocation = IMatchDetails.LOCATION_NEUTRAL;    // could be overwritten if it is also a derby
-					}
-					if (match.isDerby()) {
-						m_sLocation = IMatchDetails.LOCATION_AWAYDERBY;
-					}
-					if (!match.isNeutral() && !match.isDerby()) {
-						if (match.isHomeMatch()) {
-							m_sLocation = IMatchDetails.LOCATION_HOME;
-						} else {
-							m_sLocation = IMatchDetails.LOCATION_AWAY;
-						}
-					}
-				}
-				else {
-					m_sLocation = IMatchDetails.LOCATION_TOURNAMENT;
-				}
-
-				m_iArenaId = match.getArenaId();
-				m_iRegionId = match.getRegionId();
-				m_cWeather = match.getWeather();
-				m_cWeatherForecast = match.getWeatherForecast();
-
-			} catch (Exception e) {
-				HOLogger.instance().error(getClass(), "getHeimspiel: " + e);
-				m_sLocation = 0;
+	private final void getUpcomingMatch() {
+		try {
+			final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+			final MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(teamId,
+					MatchKurzInfo.UPCOMING);
+			final List<MatchKurzInfo> sMatches = orderMatches(matches);
+			MatchKurzInfo match = sMatches.get(0);
+			if (match == null) {
+				m_sLocation = IMatchDetails.LOCATION_AWAY;
+				m_iArenaId = 0;
+				m_iRegionId = 0;
+				m_cWeather = Weather.NULL;
+				m_cWeatherForecast = Weather.Forecast.NULL;
+				HOLogger.instance().error(getClass(), "no match to determine location");
+				return;
 			}
+
+
+			if (match.getMatchTyp().isOfficial()) {
+				if (match.isNeutral()) {
+					m_sLocation = IMatchDetails.LOCATION_NEUTRAL;    // could be overwritten if it is also a derby
+				}
+				if (match.isDerby()) {
+					m_sLocation = IMatchDetails.LOCATION_AWAYDERBY;
+				}
+				if (!match.isNeutral() && !match.isDerby()) {
+					if (match.isHomeMatch()) {
+						m_sLocation = IMatchDetails.LOCATION_HOME;
+					} else {
+						m_sLocation = IMatchDetails.LOCATION_AWAY;
+					}
+				}
+			} else {
+				m_sLocation = IMatchDetails.LOCATION_TOURNAMENT;
+			}
+
+			m_iArenaId = match.getArenaId();
+			m_iRegionId = match.getRegionId();
+			m_cWeather = match.getWeather();
+			m_cWeatherForecast = match.getWeatherForecast();
+
+		} catch (Exception e) {
+			HOLogger.instance().error(getClass(), "getHeimspiel: " + e);
+			m_sLocation = 0;
+		}
 
 	}
 
@@ -1453,6 +1466,11 @@ public class Lineup{
 			clone.setLocation(getLocation());
 			clone.setPullBackMinute(getPullBackMinute());
 			clone.setPullBackOverride(isPullBackOverride());
+			clone.setWeather(getWeather());
+			clone.setWeatherForecast(getWeatherForecast());
+			clone.setArenaId(getArenaId());
+			clone.setRegionId(getRegionId());
+
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), "Aufstellung.duplicate: " + e);
 		}

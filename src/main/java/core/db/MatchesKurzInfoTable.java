@@ -169,8 +169,28 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return liste.toArray(new MatchKurzInfo[liste.size()]);
 	}
 
-	
-	
+	public MatchKurzInfo  getLastMatchesKurzInfo(int teamId) {
+		StringBuilder sql = new StringBuilder(100);
+		ResultSet rs = null;
+		try {
+			sql.append("SELECT * FROM ").append(getTableName());
+			sql.append(" WHERE ( GastID = " + teamId + " OR HeimID = "
+						+ teamId + " )");
+			sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
+			sql.append(" ORDER BY MatchDate DESC LIMIT 1");
+			rs = adapter.executeQuery(sql.toString());
+			rs.beforeFirst();
+			while (rs.next()) {
+				return createMatchKurzInfo(rs);
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),
+					"DB.getMatchesKurzInfo Error" + e);
+		}
+		return null;
+	}
+
+
 	private StringBuilder getMatchTypWhereClause(int matchtype) {
 		StringBuilder sql = new StringBuilder(50);
 		switch (matchtype) {
