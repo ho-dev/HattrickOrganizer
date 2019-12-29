@@ -9,6 +9,7 @@ import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
 import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 import module.lineup.Lineup;
@@ -123,6 +124,16 @@ public class RatingPredictionManager {
 	{
 		// Initialize _LineupEvolution and add starting lineup
 		Hashtable<Double, Lineup> _LineupEvolution = new Hashtable<>();
+
+		// reset start time
+		for (IMatchRoleID matchRoleID: startingLineup.getPositionen()) {
+			MatchRoleID mid = (MatchRoleID)matchRoleID;
+			Player player = startingLineup.getPlayerByPositionID(mid.getId());
+			if (player != null) {
+				player.setGameStartingTime(0);
+			}
+		}
+
 		_LineupEvolution.put(0d, startingLineup.duplicate());
 
 		// list at which time occurs all events others than game start
