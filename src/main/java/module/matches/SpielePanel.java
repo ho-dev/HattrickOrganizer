@@ -650,7 +650,9 @@ public final class SpielePanel extends LazyImagePanel {
 		simulateMatchButton.setEnabled(true);
 		long gameFinishTime = matchesModel.getMatch().getMatchDateAsTimestamp().getTime() + 3 * 60 * 60 * 1000L; //assuming 3 hours to make sure the game is finished
 
-		if(gameFinishTime < (new Date()).getTime())
+		boolean gameFinished = matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED ||
+				gameFinishTime < new Date().getTime();
+		if(gameFinished)
 		{
 			reloadMatchButton.setEnabled(true);
 		}
