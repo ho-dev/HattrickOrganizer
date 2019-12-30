@@ -9,6 +9,7 @@ import java.util.Vector;
 public class SpecialEventsPrediction {
 
     private double m_dChanceCreationProbability = 0;
+    private boolean m_bOpponentEvent = false;
     private ISpecialEventPredictionAnalyzer.SpecialEventType m_eEventType;
     private IMatchRoleID m_cResponsiblePosition;
     private List<IMatchRoleID> m_cInvolvedPositions;
@@ -57,5 +58,10 @@ public class SpecialEventsPrediction {
         }
         double f = maxProbability - maxProbability / (valueAtNullProbability - valueAtMaxProbability) * (value - valueAtMaxProbability);  // linear fit
         return new SpecialEventsPrediction(position, eventName, f);
+    }
+
+    public void ChangeToOpponentEvent() {
+        m_dChanceCreationProbability *= -1;
+        m_bOpponentEvent = true;
     }
 }

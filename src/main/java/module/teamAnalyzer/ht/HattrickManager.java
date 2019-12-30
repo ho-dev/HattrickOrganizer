@@ -144,6 +144,12 @@ public class HattrickManager {
             int tsi = getIntValue(matchesList, i, "TSI");
             player.setTSI(tsi);
 
+            int salary = getIntValue(matchesList, i, "Salary");
+            player.setSalary(salary);
+
+            int stamina = getIntValue(matchesList, i, "StaminaSkill");
+            player.setStamina(stamina);
+
             String name = getValue(matchesList, i, "PlayerName");
             player.setName(name);
 

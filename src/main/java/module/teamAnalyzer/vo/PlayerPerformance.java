@@ -51,6 +51,10 @@ public class PlayerPerformance {
         return mlp.getRating();
     }
 
+    public double getRatingEnd(){
+        return mlp.getRatingStarsEndOfMatch();
+    }
+
     public int getSortId() {
         return mlp.getSortId();
     }

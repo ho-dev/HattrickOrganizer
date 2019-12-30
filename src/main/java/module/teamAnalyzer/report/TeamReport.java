@@ -2,7 +2,6 @@
 package module.teamAnalyzer.report;
 
 import core.model.HOVerwaltung;
-import core.specialevents.SpecialEventsPrediction;
 import core.specialevents.SpecialEventsPredictionManager;
 import module.lineup.Lineup;
 import module.teamAnalyzer.manager.PlayerDataManager;
@@ -12,7 +11,6 @@ import module.teamAnalyzer.vo.PlayerPerformance;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -36,7 +34,6 @@ public class TeamReport {
     /** Number of matches considered */
     private int matchNumber;
     private SpecialEventsPredictionManager m_cSpecialEventsPredictionManager;
-    private List<SpecialEventsPrediction> m_vSpecialEventsPredictions;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -94,7 +91,7 @@ public class TeamReport {
         if ( this.m_cSpecialEventsPredictionManager == null){
             this.m_cSpecialEventsPredictionManager = new SpecialEventsPredictionManager();
         }
-        this.m_vSpecialEventsPredictions = this.m_cSpecialEventsPredictionManager.analyzeLineup(lineup, matchDetail.getPerformances());
+        this.m_cSpecialEventsPredictionManager.analyzeLineup(lineup, matchDetail);
     }
 
     /**

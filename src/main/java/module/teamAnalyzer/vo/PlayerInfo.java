@@ -13,6 +13,8 @@ public class PlayerInfo {
     int status = PlayerDataManager.SOLD;
     int tSI;
     int teamId;
+    int salary; // Money in SEK
+    int stamina;
 
     //~ Methods ------------------------------------------------------------------------------------
     public void setAge(int i) {
@@ -105,7 +107,25 @@ public class PlayerInfo {
         buffer.append(", status = " + status);
         buffer.append(", tSI = " + tSI);
         buffer.append(", teamId = " + teamId);
+        buffer.append(", salary = " + salary);
+        buffer.append(", stamina = " + stamina);
         buffer.append("]");
         return buffer.toString();
+    }
+
+    public void setSalary(int salary) {
+        this.salary=salary;
+    }
+
+    public int getSalary() {
+        return salary;
+    }
+
+    public void setStamina(int stamina){
+        this.stamina = stamina;
+    }
+
+    public int getStamina(){
+        return this.stamina;
     }
 }
