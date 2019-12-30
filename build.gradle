@@ -41,8 +41,8 @@ dependencies {
 // 1 for BETA status
 // 2 for STABLE status
 
-def major = '3'
-def minor = '0'
+def major = '2'
+def minor = '1'
 def development_stage = '0'
 def releaseArtefacts = false
 
@@ -628,7 +628,7 @@ poeditor {
     trans type:'properties', lang: 'pt', file: 'src\\main\\resources\\sprache\\Portugues.properties'
     trans type:'properties', lang: 'pt-br', file: 'src\\main\\resources\\sprache\\PortuguesBrasil.properties'
     trans type:'properties', lang: 'ru', file: 'src\\main\\resources\\sprache\\Russian.properties'
-    trans type:'properties', lang: 'sr-cyrl', file: 'src\\main\\resources\\sprache\\Serbian (Cyrillic).properties'
+    trans type:'properties', lang: 'sr-cyrl', file: 'src\\main\\resources\\sprache\\Serbian(Cyrillic).properties'
     trans type:'properties', lang: 'sk', file: 'src\\main\\resources\\sprache\\Slovak.properties' //Slovak
     trans type:'properties', lang: 'es', file: 'src\\main\\resources\\sprache\\Spanish.properties'
     trans type:'properties', lang: 'sv', file: 'src\\main\\resources\\sprache\\Svenska.properties' //Swedish
