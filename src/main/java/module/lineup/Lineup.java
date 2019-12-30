@@ -1072,7 +1072,11 @@ public class Lineup{
 			MatchRoleID oldPlayerRole = getPositionBySpielerId(playerID);
 			if(oldPlayerRole != null && oldPlayerRole.isBackupsMatchRoleID() == false){
 				oldPlayerRole.setSpielerId(0, this);
+				if ( oldPlayerRole.isSubstitutesMatchRoleID()){
+					removeObjectPlayerFromSubstitutions(playerID);
+				}
 			}
+
 
 			/*MatchRoleID iRole;
 			int iPlayerID;
@@ -1114,6 +1118,20 @@ public class Lineup{
 		//final MatchRoleID position = getPositionById(positionID);
 		position.setSpielerId(playerID, this);
 
+	}
+
+	/**
+	 * Player is no longer on the bench and must be removed from substitution list
+	 * if it was planned that he should replace another player
+	 */
+	private void removeObjectPlayerFromSubstitutions(int playerID) {
+		for(Substitution substitution: this.substitutions){
+			if (substitution.getOrderType() == MatchOrderType.SUBSTITUTION &&
+					substitution.getObjectPlayerID() == playerID){
+				this.substitutions.remove(substitution);
+				break;
+			}
+		}
 	}
 
 	/**
