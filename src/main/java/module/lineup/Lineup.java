@@ -131,8 +131,8 @@ public class Lineup{
 
 	private Ratings oRatings;
 
-	private List<SpecialEventsPrediction> m_vSpecialEventsPredictions;
-	private SpecialEventsPredictionManager m_cSpecialEventsPredictionManager;
+	//private List<SpecialEventsPrediction> m_vSpecialEventsPredictions;
+	//private SpecialEventsPredictionManager m_cSpecialEventsPredictionManager;
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -527,10 +527,12 @@ public class Lineup{
 		}
 		return value;
 	}
-
+	
+	/* moved to team analyzers TeamReport.addSpecialEvents
 	public List<SpecialEventsPrediction> getSpecialEventsPredictions() {
 		return m_vSpecialEventsPredictions;
 	}
+
 
 	public void setSpecialEvents()
 	{
@@ -539,7 +541,7 @@ public class Lineup{
 		}
 		this.m_vSpecialEventsPredictions = this.m_cSpecialEventsPredictionManager.analyzeLineup(this);
 	}
-
+*/
 	 public void setRatings() {
 		 final RatingPredictionManager rpManager;
 		 Ratings oRatings = new Ratings();

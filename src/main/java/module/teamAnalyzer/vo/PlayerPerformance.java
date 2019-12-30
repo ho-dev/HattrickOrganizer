@@ -1,6 +1,7 @@
 package module.teamAnalyzer.vo;
 
 import core.model.match.MatchLineupPlayer;
+import core.model.player.MatchRoleID;
 
 
 /**
@@ -77,4 +78,6 @@ public class PlayerPerformance {
     public byte getTaktik() {
         return mlp.getTaktik();
     }
+
+    public MatchRoleID getMatchRoleID() { return this.mlp;}
 }
