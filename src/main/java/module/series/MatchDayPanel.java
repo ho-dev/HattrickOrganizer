@@ -117,9 +117,11 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         long gameFinishTime = 0;
         long nowTime = (new Date()).getTime();
 
+        boolean gameFinished = false;
         if (paarung != null) {
             gameFinishTime = paarung.getDatum().getTime();
             gameFinishTime = gameFinishTime + 3 * 60 * 60 * 1000L; //assuming 3 hours to make sure the game is finished
+            gameFinished = paarung.hatStattgefunden() == true || gameFinishTime < nowTime;
         }
 
         boolean gameFinished = paarung.hatStattgefunden() || gameFinishTime < nowTime;
