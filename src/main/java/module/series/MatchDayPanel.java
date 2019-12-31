@@ -124,7 +124,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
             gameFinished = paarung.hatStattgefunden() == true || gameFinishTime < nowTime;
         }
 
-        boolean gameFinished = paarung.hatStattgefunden() || gameFinishTime < nowTime;
+        gameFinished = paarung.hatStattgefunden() || gameFinishTime < nowTime;
         // Hat das Spiel schon stattgefunden
         if ((paarung != null) && gameFinished) {
             //Match already in the database
