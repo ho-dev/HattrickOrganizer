@@ -16,10 +16,10 @@ public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictio
     }
 
     @Override
-    public List<SpecialEventsPrediction> analyzePosition(MatchRoleID position) {
+    public List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
         Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();
         int id = position.getSpielerId();
-        Player p = theManager.getPlayer(id);
+        Player p = analyse.getPlayer(id);
         switch (position.getId()){
             case IMatchRoleID.rightBack:
             case IMatchRoleID.leftCentralDefender:

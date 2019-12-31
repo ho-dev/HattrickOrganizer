@@ -22,11 +22,11 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
     // niedrige Verteidigungs-Fähigkeit verfügt, kann es passieren, dass ein unvorsichtiger Pass von ihnen beim Gegner
     // landet – und sich diesem eine gute Einschussmöglichkeit eröffnet.
     @Override
-    public List<SpecialEventsPrediction> analyzePosition(MatchRoleID position) {
+    public List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
 
         Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();
         int id = position.getSpielerId();
-        Player p = theManager.getPlayer(id);
+        Player p = analyse.getPlayer(id);
         if (p.hasSpeciality(Speciality.UNPREDICTABLE)) {
 
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(

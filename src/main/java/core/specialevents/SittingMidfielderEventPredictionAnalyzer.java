@@ -15,10 +15,10 @@ public class SittingMidfielderEventPredictionAnalyzer implements  ISpecialEventP
         theManager = specialEventsPredictionManager;
     }
     @Override
-    public List<SpecialEventsPrediction> analyzePosition(MatchRoleID position) {
+    public List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
         Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();
         int id = position.getSpielerId();
-        Player p = theManager.getPlayer(id);
+        Player p = analyse.getPlayer(id);
         if (p.hasSpeciality(Speciality.POWERFUL)) {
 
             switch (position.getId()) {

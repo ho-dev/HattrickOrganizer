@@ -24,14 +24,14 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
     }
 
     @Override
-    public List<SpecialEventsPrediction> analyzePosition(MatchRoleID position) {
+    public List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse,MatchRoleID position) {
         Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();
         int id = position.getSpielerId();
-        Player p  = theManager.getPlayer(id);
+        Player p  = analyse.getPlayer(id);
         switch (position.getId()) {
             case IMatchRoleID.leftWinger:
             case IMatchRoleID.rightWinger:
-                for ( IMatchRoleID imid : theManager.getLineup().getFieldPositions()){
+                for ( IMatchRoleID imid : analyse.getLineup().getFieldPositions()){
                     MatchRoleID mid = (MatchRoleID) imid;
                     if ( mid.getSpielerId()==0 || mid.getId()==position.getId())continue; // same player again
                     switch (mid.getId()) {
@@ -40,7 +40,7 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
                         case IMatchRoleID.leftForward:
                         case IMatchRoleID.centralForward:
                         case IMatchRoleID.rightForward:
-                            Player involvedPlayer = theManager.getPlayer(mid.getSpielerId());
+                            Player involvedPlayer = analyse.getPlayer(mid.getSpielerId());
                             Speciality speciality = Speciality.values()[involvedPlayer.getPlayerSpecialty()];
                             if (speciality.equals(Speciality.HEAD)) {
                                 SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(

@@ -15,5 +15,5 @@ public interface ISpecialEventPredictionAnalyzer {
         WINGER_HEAD
     }
 
-    List<SpecialEventsPrediction> analyzePosition(MatchRoleID position);
+    List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse,  MatchRoleID position);
 }
