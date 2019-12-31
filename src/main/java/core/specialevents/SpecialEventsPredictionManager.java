@@ -124,7 +124,7 @@ public class SpecialEventsPredictionManager {
     public void setOpponentLineup(MatchDetail opponentMatch) {
         this.m_cOpponentLineup = new Lineup();
         for ( PlayerPerformance playerPerformance: opponentMatch.getPerformances() ) {
-            if (playerPerformance.getStatus() == PlayerDataManager.AVAILABLE) {
+            if (playerPerformance.getStatus() == PlayerDataManager.AVAILABLE) {     // if status is UNKNOWN user has to download players info
                 this.m_cOpponentLineup.setPosition(playerPerformance.getMatchRoleID());
                 // playerPerformance -> PLayer
                 OpponentPlayer player = (OpponentPlayer) this.opponentPlayerInLineup.get(playerPerformance.getSpielerId());

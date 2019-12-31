@@ -99,7 +99,7 @@ public class HattrickManager {
         String xml = "";
 
         try {
-			xml = MyConnector.instance().getHattrickXMLFile("/common/chppxml.axd?file=players&TeamID=" + teamId);
+			xml = MyConnector.instance().getHattrickXMLFile("/common/chppxml.axd?file=players&version=2.4&TeamID=" + teamId);
         } catch (Exception e) {
             return;
         }
@@ -147,11 +147,15 @@ public class HattrickManager {
             int salary = getIntValue(matchesList, i, "Salary");
             player.setSalary(salary);
 
+            String lastname = getValue(matchesList, i, "LastName");
+            String firstName = getValue(matchesList, i, "FirstName");
+            player.setName(firstName + " " + lastname);
+
             int stamina = getIntValue(matchesList, i, "StaminaSkill");
             player.setStamina(stamina);
 
-            String name = getValue(matchesList, i, "PlayerName");
-            player.setName(name);
+            boolean motherClubBonus = getValue(matchesList, i, "MotherClubBonus").equals("True");
+            player.setMotherClubBonus(motherClubBonus);
 
             players.add(player);
         }

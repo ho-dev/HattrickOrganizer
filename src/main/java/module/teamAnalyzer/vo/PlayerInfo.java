@@ -10,11 +10,12 @@ public class PlayerInfo {
     int form;
     int playerId;
     int specialEvent;
-    int status = PlayerDataManager.SOLD;
+    int status = PlayerDataManager.UNKNOWN;
     int tSI;
     int teamId;
     int salary; // Money in SEK
     int stamina;
+    boolean motherClubBonus;
 
     //~ Methods ------------------------------------------------------------------------------------
     public void setAge(int i) {
@@ -95,7 +96,7 @@ public class PlayerInfo {
      * @return the String representation
      */
     @Override
-	public String toString() {
+    public String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer.append("PlayerInfo[");
         buffer.append("name = " + name);
@@ -109,23 +110,19 @@ public class PlayerInfo {
         buffer.append(", teamId = " + teamId);
         buffer.append(", salary = " + salary);
         buffer.append(", stamina = " + stamina);
+        buffer.append(", motherClubBonus = " + motherClubBonus);
         buffer.append("]");
         return buffer.toString();
     }
 
     public void setSalary(int salary) {
-        this.salary=salary;
+        this.salary = salary;
     }
-
     public int getSalary() {
         return salary;
     }
-
-    public void setStamina(int stamina){
-        this.stamina = stamina;
-    }
-
-    public int getStamina(){
-        return this.stamina;
-    }
+    public void setStamina(int stamina) { this.stamina = stamina; }
+    public int getStamina() { return this.stamina; }
+    public void setMotherClubBonus(boolean bonus) { this.motherClubBonus = bonus; }
+    public boolean getMotherClubBonus() { return this.motherClubBonus; }
 }

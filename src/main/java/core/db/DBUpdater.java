@@ -705,6 +705,21 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN isNeutral BOOLEAN");
 		}
 
+		//store Salary into TA_PLAYER table
+		if (!columnExistsInTable("SALARY", TAPlayerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN SALARY INTEGER");
+		}
+
+		//store Stamina  into TA_PLAYER table
+		if (!columnExistsInTable("STAMINA", TAPlayerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN STAMINA INTEGER");
+		}
+
+		//store MotherClubBonus  into TA_PLAYER table
+		if (!columnExistsInTable("MOTHERCLUBBONUS", TAPlayerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN MOTHERCLUBBONUS BOOLEAN");
+		}
+
 		//create TournamentDetailsTable
 		if (!tableExists(TournamentDetailsTable.TABLENAME)) {
 			dbManager.getTable(TournamentDetailsTable.TABLENAME).createTable();
