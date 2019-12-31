@@ -41,7 +41,7 @@ public class OppPlayerSkillEstimator {
 		calcPlayer.tsi = player.getTSI();
 		calcPlayer.wage = player.getGehalt();
 		calcPlayer.role = player.getCalculationRole();
-		
+
 		return calcPlayer;
 	}
 	

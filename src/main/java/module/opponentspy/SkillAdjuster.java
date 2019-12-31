@@ -34,7 +34,7 @@ class SkillAdjuster {
 			if (needMoreMainSkill(calcPlayer)) {
 				// Reduce all subskills by 1. Then increase all skills until reaching wage or tsi limit.
 			
-				System.out.println("Need main");
+				// /System.out.println("Need main");
 				
 				for (Skill skill : calcPlayer.getSkills()) {
 					if (!skill.isMainSkill)
@@ -46,7 +46,7 @@ class SkillAdjuster {
 			else if (needMoreSecondarySkills(calcPlayer)) {
 				// Reduce mainskill by 1 and adjust all skills until limit
 	
-				System.out.println("Need Subs");
+				/// System.out.println("Need Subs");
 				
 				for (Skill skill : calcPlayer.getSkills()) {
 					if (skill.isMainSkill)
@@ -57,13 +57,13 @@ class SkillAdjuster {
 			}
 			else {
 				// We need neither? 
-				System.out.println("Need neither?!");
+				// System.out.println("Need neither?!");
 				break;
 			}
 		}
 		
 		// TODO TEMP REMOVE
-		System.out.println("RepeatCount: " + repeatCount);
+		//System.out.println("RepeatCount: " + repeatCount);
 	}
 	
 	private boolean areWeSatisfied(CalcVariables calcPlayer) {
@@ -253,10 +253,10 @@ class SkillAdjuster {
 	}
 
 	private double getAgeWageDropMultiplier (int age){
-		
+
 		double yearlyWageDropPercentage = Math.max (0.1, 0.1 * (age - 27));
 		double ageWageDrop = Math.min(yearlyWageDropPercentage, 1);
-		
+
 		return 1 - ageWageDrop;
 	}
 	

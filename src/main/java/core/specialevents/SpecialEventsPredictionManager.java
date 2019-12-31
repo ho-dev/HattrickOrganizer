@@ -136,10 +136,13 @@ public class SpecialEventsPredictionManager {
                     double form = latestPlayerInfo.getForm();
                     double stamina = latestPlayerInfo.getStamina();
                     int spec = latestPlayerInfo.getSpecialEvent();
+                    boolean motherClubBonus = latestPlayerInfo.getMotherClubBonus();
                     int role = playerPerformance.getMatchRoleID().getId();
                     player = m_cOppPlayerSkillEstimator.calcPlayer(age, wage, tsi, form, stamina, spec, role);
                     player.setSpielerID(playerPerformance.getSpielerId());
                     player.setName(playerPerformance.getSpielerName());
+                    player.setHomeGrown(latestPlayerInfo.getMotherClubBonus());
+                    player.setLoyalty(latestPlayerInfo.getLoyalty());
                     this.opponentPlayerInLineup.put(playerPerformance.getSpielerId(), player);
                 }
 

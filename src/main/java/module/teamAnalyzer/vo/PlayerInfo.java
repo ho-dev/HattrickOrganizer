@@ -16,6 +16,7 @@ public class PlayerInfo {
     int salary; // Money in SEK
     int stamina;
     boolean motherClubBonus;
+    int loyalty;
 
     //~ Methods ------------------------------------------------------------------------------------
     public void setAge(int i) {
@@ -111,6 +112,7 @@ public class PlayerInfo {
         buffer.append(", salary = " + salary);
         buffer.append(", stamina = " + stamina);
         buffer.append(", motherClubBonus = " + motherClubBonus);
+        buffer.append(", loyalty = " + loyalty);
         buffer.append("]");
         return buffer.toString();
     }
@@ -125,4 +127,6 @@ public class PlayerInfo {
     public int getStamina() { return this.stamina; }
     public void setMotherClubBonus(boolean bonus) { this.motherClubBonus = bonus; }
     public boolean getMotherClubBonus() { return this.motherClubBonus; }
+    public void setLoyalty(int loyalty){ this.loyalty=loyalty;}
+    public int  getLoyalty() { return this.loyalty; }
 }

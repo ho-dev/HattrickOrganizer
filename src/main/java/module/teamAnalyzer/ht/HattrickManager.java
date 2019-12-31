@@ -157,6 +157,9 @@ public class HattrickManager {
             boolean motherClubBonus = getValue(matchesList, i, "MotherClubBonus").equals("True");
             player.setMotherClubBonus(motherClubBonus);
 
+            int loyalty = getIntValue(matchesList, i, "Loyalty");
+            player.setLoyalty(loyalty);
+
             players.add(player);
         }
 

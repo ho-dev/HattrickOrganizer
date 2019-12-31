@@ -7,8 +7,6 @@ import core.model.player.IMatchRoleID;
 
 public class CalcPlayerBaseProvider {
 
-	
-	
 	public CalcVariables getCalcPlayerBase(int age, int wage, int tsi,
 			double form, double stamina, int spec, int role) {
 
@@ -21,13 +19,12 @@ public class CalcPlayerBaseProvider {
 		calcPlayer.stamina = stamina;
 		calcPlayer.specialty = spec;
 		calcPlayer.role = role;
-		
+
 		setBaseSkills(calcPlayer);
 		
 		return calcPlayer;
 	}
 
-		
 	public void setBaseSkills(CalcVariables calcPlayer) {
 		
 		switch (calcPlayer.role) {
@@ -104,7 +101,6 @@ public class CalcPlayerBaseProvider {
 
 		if (!(spec == PlayerSpeciality.UNPREDICTABLE)) {
 			if (calcPlayer.age < 22) {
-
 				calcPlayer.setGoalkeeping(7, 1);
 				calcPlayer.setDefending(6);
 				calcPlayer.setSetPieces(5);
