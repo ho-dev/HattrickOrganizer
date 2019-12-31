@@ -111,21 +111,21 @@ class SkillAdjuster {
 	
 			
 		while (!isDoneCalculating(calcPlayer, direction)) {
-
-			adjustAllSkillsOnce(calcPlayer, direction);
+			if ( !adjustAllSkillsOnce(calcPlayer, direction) ) break;	// no adjustments anymore
 			calculateWageAndTSI(calcPlayer);
 		}
 		
 	}
-	
-	
-	private void adjustAllSkillsOnce(CalcVariables calcPlayer, Direction direction) {
+
+	private boolean adjustAllSkillsOnce(CalcVariables calcPlayer, Direction direction) {
 		double delta = (direction == Direction.Up) ? SKILL_DELTA
 				: (0 - SKILL_DELTA);
 
+		boolean ret = false;
 		for (Skill skill : calcPlayer.getSkills()) {
-			adjustSkillOnce(skill, delta);
+			ret = ret || adjustSkillOnce(skill, delta);
 		}
+		return ret;
 	}
 	
 	private void adjustMainSkillsOnce(CalcVariables calcPlayer, Direction direction) {
@@ -148,13 +148,16 @@ class SkillAdjuster {
 		}
 	}
 
-	private void adjustSkillOnce(Skill skill, double delta) {
-		if (skill.skillValue >= 2) {
-			double priority = skill.isMainSkill ? 1 : skill.priority;
-			skill.skillValue += delta * priority;
+	private boolean adjustSkillOnce(Skill skill, double delta)
+	{
+		double priority = skill.isMainSkill ? 1 : skill.priority;
+		skill.skillValue += delta * priority;
+
+		if ( skill.skillValue <= 2 ){
+			skill.skillValue = 2;
+			return false;
 		}
-		
-		skill.skillValue = Math.max(skill.skillValue, 2);
+		return true;
 	}
 
 	private boolean isDoneCalculating(CalcVariables calcPlayer,

@@ -44,11 +44,10 @@ public class OppPlayerSkillEstimator {
 
 		return calcPlayer;
 	}
-	
-    
-    public OpponentPlayer calcPlayer(int age, int wage, int tsi, double form, double stamina, int spec, int role) {
+
+    public OpponentPlayer calcPlayer(int age, int wage, int tsi, double form, double stamina, int spec, int role, int injury_status) {
        			
-    	CalcVariables calcPlayer = calcPlayerBaseProvider.getCalcPlayerBase(age, wage, tsi, form, stamina, spec, role);
+    	CalcVariables calcPlayer = calcPlayerBaseProvider.getCalcPlayerBase(age, wage, tsi, form, stamina, spec, role, injury_status);
         skillAdjuster.AdjustPlayer(calcPlayer);
     	
         return createPlayer(null, role, calcPlayer);

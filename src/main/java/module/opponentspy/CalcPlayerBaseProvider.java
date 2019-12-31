@@ -8,7 +8,7 @@ import core.model.player.IMatchRoleID;
 public class CalcPlayerBaseProvider {
 
 	public CalcVariables getCalcPlayerBase(int age, int wage, int tsi,
-			double form, double stamina, int spec, int role) {
+			double form, double stamina, int spec, int role, int injury_status) {
 
 		CalcVariables calcPlayer = new CalcVariables();
 
@@ -19,6 +19,7 @@ public class CalcPlayerBaseProvider {
 		calcPlayer.stamina = stamina;
 		calcPlayer.specialty = spec;
 		calcPlayer.role = role;
+		calcPlayer.injuryStatus = injury_status;
 
 		setBaseSkills(calcPlayer);
 		
