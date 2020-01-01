@@ -9,12 +9,6 @@ import java.util.Vector;
 
 public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictionAnalyzer {
 
-    private SpecialEventsPredictionManager theManager = null;
-
-    public ExperienceEventPredictionAnalyzer(SpecialEventsPredictionManager specialEventsPredictionManager) {
-        theManager =specialEventsPredictionManager;
-    }
-
     @Override
     public List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
         Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();

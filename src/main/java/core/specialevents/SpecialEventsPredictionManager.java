@@ -10,59 +10,56 @@ import module.lineup.Lineup;
 import module.opponentspy.OppPlayerSkillEstimator;
 import module.opponentspy.OpponentPlayer;
 import module.opponentspy.OpponentTeam.PlayedPosition;
-import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.vo.MatchDetail;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.teamAnalyzer.vo.PlayerPerformance;
 
-import javax.sound.sampled.Line;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 public class SpecialEventsPredictionManager {
 
-    static private OppPlayerSkillEstimator m_cOppPlayerSkillEstimator = new OppPlayerSkillEstimator();
+    static private OppPlayerSkillEstimator oppPlayerSkillEstimator = new OppPlayerSkillEstimator();
     static Vector<ISpecialEventPredictionAnalyzer> analyzers;
-    private Lineup m_cLineup=null;
-    private Lineup m_cOpponentLineup = null;
+    private Lineup lineup =null;
+    private Lineup opponentLineup = null;
     private HashMap<Integer, Player> playerInLineup = new HashMap<Integer, Player>();
     private HashMap<Integer, Player> opponentPlayerInLineup = new HashMap<Integer, Player>();
 
     public class Analyse
     {
-        private List<SpecialEventsPrediction> m_vSpecialEventsPredictions;
-        private Lineup m_cLineup=null;
-        private Lineup m_cOpponentLineup = null;
-        private HashMap<Integer, Player> playerInLineup = new HashMap<Integer, Player>();
-        private HashMap<Integer, Player> opponentPlayerInLineup = new HashMap<Integer, Player>();
+        private List<SpecialEventsPrediction> specialEventsPredictions;
+        private Lineup lineup =null;
+        private Lineup opponentLineup = null;
+        private HashMap<Integer, Player> playerInLineup;
+        private HashMap<Integer, Player> opponentPlayerInLineup;
 
         public Analyse(Lineup lineup, Lineup oppLineup, HashMap<Integer, Player> player, HashMap<Integer, Player> oppPlayer){
-            m_cLineup = lineup;
-            m_cOpponentLineup = oppLineup;
+            this.lineup = lineup;
+            opponentLineup = oppLineup;
             playerInLineup = player;
             opponentPlayerInLineup = oppPlayer;
         }
 
         public void analyzeLineup() {
-            this.m_vSpecialEventsPredictions = new Vector<SpecialEventsPrediction>();
+            this.specialEventsPredictions = new Vector<SpecialEventsPrediction>();
             for (ISpecialEventPredictionAnalyzer analyzer : analyzers) {
-                for (IMatchRoleID position : m_cLineup.getFieldPositions()) {
+                for (IMatchRoleID position : lineup.getFieldPositions()) {
                     MatchRoleID mid = (MatchRoleID) position;
                     if (mid.getSpielerId() == 0) continue;
-                    this.m_vSpecialEventsPredictions.addAll(analyzer.analyzePosition(this, mid));
+                    this.specialEventsPredictions.addAll(analyzer.analyzePosition(this, mid));
                 }
             }
         }
 
         public Lineup getLineup() {
-            return m_cLineup;
+            return lineup;
         }
 
         public Lineup getOpponentLineup() {
-            return m_cOpponentLineup;
+            return opponentLineup;
         }
 
         public Player getPlayer(int playerId) {
@@ -74,7 +71,15 @@ public class SpecialEventsPredictionManager {
         }
 
         public List<SpecialEventsPrediction> getEvents() {
-            return this.m_vSpecialEventsPredictions;
+            return this.specialEventsPredictions;
+        }
+
+        public Player getOpponentPlayerByPosition(int pos) {
+            return this.opponentLineup.getPlayerByPositionID(pos);
+        }
+
+        public MatchRoleID getOpponentPosition(int pos) {
+            return this.opponentLineup.getPositionById(pos);
         }
     }
 
@@ -84,11 +89,12 @@ public class SpecialEventsPredictionManager {
     private void  initAnalyzers()
     {
         analyzers = new Vector<ISpecialEventPredictionAnalyzer>();
-        analyzers.add(new ExperienceEventPredictionAnalyzer(this));
-        analyzers.add(new UnpredictableEventPredictionAnalyzer(this));
-        analyzers.add(new WingerEventPredictionAnalyzer(this));
-        analyzers.add(new PowerfulForwardEventPredictionAnalyzer(this));
-        analyzers.add(new SittingMidfielderEventPredictionAnalyzer(this));
+        analyzers.add(new ExperienceEventPredictionAnalyzer());
+        analyzers.add(new UnpredictableEventPredictionAnalyzer());
+        analyzers.add(new WingerEventPredictionAnalyzer());
+        analyzers.add(new PowerfulForwardEventPredictionAnalyzer());
+        analyzers.add(new SittingMidfielderEventPredictionAnalyzer());
+        analyzers.add(new QuickEventPredictionAnalyzer());
     }
 
     public SpecialEventsPredictionManager()
@@ -99,16 +105,16 @@ public class SpecialEventsPredictionManager {
     public void analyzeLineup(Lineup lineup, MatchDetail opponentMatch) {
         setLineup(lineup);
         setOpponentLineup(opponentMatch);
-        this.teamAnalyse = new Analyse(m_cLineup, m_cOpponentLineup, playerInLineup, opponentPlayerInLineup);
+        this.teamAnalyse = new Analyse(this.lineup, opponentLineup, playerInLineup, opponentPlayerInLineup);
         this.teamAnalyse.analyzeLineup();
-        this.opponentAnalyse = new Analyse(m_cOpponentLineup, m_cLineup, opponentPlayerInLineup, playerInLineup);
+        this.opponentAnalyse = new Analyse(opponentLineup, this.lineup, opponentPlayerInLineup, playerInLineup);
         this.opponentAnalyse.analyzeLineup();
     }
 
     public void setLineup(Lineup m_cLineup) {
-        this.m_cLineup = m_cLineup;
+        this.lineup = m_cLineup;
         HOModel model = HOVerwaltung.instance().getModel();
-        for (IMatchRoleID matchRoleID : this.m_cLineup.getFieldPositions())
+        for (IMatchRoleID matchRoleID : this.lineup.getFieldPositions())
         {
             MatchRoleID mid = (MatchRoleID) matchRoleID;
             if ( mid.getSpielerId() == 0 ) continue;
@@ -122,10 +128,10 @@ public class SpecialEventsPredictionManager {
     }
 
     public void setOpponentLineup(MatchDetail opponentMatch) {
-        this.m_cOpponentLineup = new Lineup();
+        this.opponentLineup = new Lineup();
         for ( PlayerPerformance playerPerformance: opponentMatch.getPerformances() ) {
             if (playerPerformance.getStatus() == PlayerDataManager.AVAILABLE) {     // if status is UNKNOWN user has to download players info
-                this.m_cOpponentLineup.setPosition(playerPerformance.getMatchRoleID());
+                this.opponentLineup.setPosition(playerPerformance.getMatchRoleID());
                 // playerPerformance -> PLayer
                 OpponentPlayer player = (OpponentPlayer) this.opponentPlayerInLineup.get(playerPerformance.getSpielerId());
                 if (player == null) {
@@ -137,7 +143,7 @@ public class SpecialEventsPredictionManager {
                     double stamina = latestPlayerInfo.getStamina();
                     int spec = latestPlayerInfo.getSpecialEvent();
                     int role = playerPerformance.getMatchRoleID().getPosition();
-                    player = m_cOppPlayerSkillEstimator.calcPlayer(age, wage, tsi, form, stamina, spec, role, -1);
+                    player = oppPlayerSkillEstimator.calcPlayer(age, wage, tsi, form, stamina, spec, role, -1);
                     player.setSpielerID(playerPerformance.getSpielerId());
                     player.setName(playerPerformance.getSpielerName());
                     player.setHomeGrown(latestPlayerInfo.getMotherClubBonus());

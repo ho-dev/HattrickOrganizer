@@ -9,11 +9,6 @@ import java.util.List;
 import java.util.Vector;
 
 public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredictionAnalyzer {
-    private SpecialEventsPredictionManager theManager = null;
-
-    public UnpredictableEventPredictionAnalyzer(SpecialEventsPredictionManager specialEventsPredictionManager) {
-        theManager = specialEventsPredictionManager;
-    }
 
 
     // Spieler können ihre Passspiel-Fähigkeit für überraschende Steilpässe einsetzen und ihre Torschuss-Fähigkeit,

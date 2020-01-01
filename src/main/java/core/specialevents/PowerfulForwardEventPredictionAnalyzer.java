@@ -10,11 +10,7 @@ import java.util.List;
 import java.util.Vector;
 
 public class PowerfulForwardEventPredictionAnalyzer implements  ISpecialEventPredictionAnalyzer {
-    private SpecialEventsPredictionManager theManager = null;
 
-    public PowerfulForwardEventPredictionAnalyzer(SpecialEventsPredictionManager specialEventsPredictionManager) {
-        theManager = specialEventsPredictionManager;
-    }
     @Override
     public List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
         Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();

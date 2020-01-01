@@ -9,9 +9,11 @@ import java.util.Vector;
 public class SpecialEventsPrediction {
 
     private double chanceCreationProbability = 0;
+    private double goalProbability = 0;
     private ISpecialEventPredictionAnalyzer.SpecialEventType eventType;
     private IMatchRoleID responsiblePosition;
     private List<IMatchRoleID> involvedPositions;
+    private List<IMatchRoleID> involvedOpponentPositions;
 
     public SpecialEventsPrediction(IMatchRoleID position, ISpecialEventPredictionAnalyzer.SpecialEventType type, double p) {
         responsiblePosition = position;
@@ -44,6 +46,33 @@ public class SpecialEventsPrediction {
         this.involvedPositions.add(mid);
     }
 
+    public void addInvolvedPosition(MatchRoleID mid){
+        if (this.involvedPositions == null) {
+            this.involvedPositions = new Vector<IMatchRoleID>();
+        }
+        this.involvedPositions.add(mid);
+    }
+
+    public List<IMatchRoleID> getInvolvedOpponentPositions() {
+        return involvedOpponentPositions;
+    }
+
+    public void setInvolvedOpponentPosition(MatchRoleID mid) {
+        if (this.involvedOpponentPositions == null) {
+            this.involvedOpponentPositions = new Vector<IMatchRoleID>();
+        } else {
+            this.involvedOpponentPositions.clear();
+        }
+        this.involvedOpponentPositions.add(mid);
+    }
+
+    public void addInvolvedOpponentPosition(MatchRoleID mid){
+        if (this.involvedOpponentPositions == null) {
+            this.involvedOpponentPositions = new Vector<IMatchRoleID>();
+        }
+        this.involvedOpponentPositions.add(mid);
+    }
+
     static public SpecialEventsPrediction createIfInRange(IMatchRoleID position,
                                                           ISpecialEventPredictionAnalyzer.SpecialEventType eventName,
                                                           double maxProbability,
@@ -61,4 +90,11 @@ public class SpecialEventsPrediction {
         return new SpecialEventsPrediction(position, eventName, f);
     }
 
+    public double getGoalProbability() {
+        return goalProbability;
+    }
+
+    public void setGoalProbability(double goalProbability) {
+        this.goalProbability = goalProbability;
+    }
 }

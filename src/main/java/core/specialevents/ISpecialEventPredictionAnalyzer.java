@@ -12,7 +12,9 @@ public interface ISpecialEventPredictionAnalyzer {
         PDIM,
         UNPREDICTABLE,
         WINGER_SCORER,
-        WINGER_HEAD
+        WINGER_HEAD,
+        QUICK_PASS,
+        QUICK_SCORES
     }
 
     List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse,  MatchRoleID position);

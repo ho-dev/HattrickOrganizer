@@ -15,13 +15,6 @@ import java.util.Vector;
 // selben Spiel auftreten können.
 
 public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAnalyzer {
-    public static final String eventNameHead = "Winger-Head";
-    public static final String eventNameScorer = "Winger-Scorer";
-    private SpecialEventsPredictionManager theManager = null;
-
-    public WingerEventPredictionAnalyzer(SpecialEventsPredictionManager specialEventsPredictionManager) {
-        theManager = specialEventsPredictionManager;
-    }
 
     @Override
     public List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse,MatchRoleID position) {
