@@ -156,10 +156,10 @@ public class SpecialEventsPredictionManager {
                 double ratingEnd = playerPerformance.getRatingEnd();
                 PlayedPosition pos = new PlayedPosition(positionId, tacticId, matchtype, ratingStart, ratingEnd);
                 player.addPlayedPosition(pos);
-                m_cOppPlayerSkillEstimator.CalculateSkillsForPlayer(player);
+                //m_cOppPlayerSkillEstimator.CalculateSkillsForPlayer(player);
             }
             else {
-                // PLayer SUSPENDED or INJURED
+                // PLayer SOLD, SUSPENDED or INJURED
                 OpponentPlayer player = (OpponentPlayer) opponentPlayerInLineup.get(playerPerformance.getSpielerId());
                 if ( player != null){
                     opponentPlayerInLineup.remove(player);

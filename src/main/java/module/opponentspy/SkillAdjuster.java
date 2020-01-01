@@ -189,8 +189,8 @@ class SkillAdjuster {
 
 	  double yearlyDrop = 0.125;
 
-	// 0 to 8 years of drop
-	   int yearsOfDrop = Math.min(Math.max(0, age - 27), 8);
+		// 0 to 8 years of drop
+	   int yearsOfDrop = Math.min(Math.max(0, age - 27), 7);
 	   
 	   return 1 - (yearlyDrop * yearsOfDrop);
 	}
@@ -259,7 +259,7 @@ class SkillAdjuster {
 	private double getAgeWageDropMultiplier (int age){
 
 		double yearlyWageDropPercentage = Math.max (0.1, 0.1 * (age - 27));
-		double ageWageDrop = Math.min(yearlyWageDropPercentage, 1);
+		double ageWageDrop = Math.min(yearlyWageDropPercentage, 0.9);
 
 		return 1 - ageWageDrop;
 	}
@@ -302,7 +302,9 @@ class SkillAdjuster {
 		wage *= (1 + 0.0025*setPieces);
 		
 		wage *= getAgeWageDropMultiplier(calcPlayer.age);
-		
+
+		if ( wage < 2500) wage = 2500;
+
 		calcPlayer.calculatedWage = (int)wage;
 		return calcPlayer.calculatedWage;
 	}

@@ -8,41 +8,40 @@ import java.util.Vector;
 
 public class SpecialEventsPrediction {
 
-    private double m_dChanceCreationProbability = 0;
-    private boolean m_bOpponentEvent = false;
-    private ISpecialEventPredictionAnalyzer.SpecialEventType m_eEventType;
-    private IMatchRoleID m_cResponsiblePosition;
-    private List<IMatchRoleID> m_cInvolvedPositions;
+    private double chanceCreationProbability = 0;
+    private ISpecialEventPredictionAnalyzer.SpecialEventType eventType;
+    private IMatchRoleID responsiblePosition;
+    private List<IMatchRoleID> involvedPositions;
 
     public SpecialEventsPrediction(IMatchRoleID position, ISpecialEventPredictionAnalyzer.SpecialEventType type, double p) {
-        m_cResponsiblePosition = position;
-        m_eEventType = type;
-        m_dChanceCreationProbability = p;
+        responsiblePosition = position;
+        eventType = type;
+        chanceCreationProbability = p;
     }
 
     public IMatchRoleID getResponsiblePosition() {
-        return m_cResponsiblePosition;
+        return responsiblePosition;
     }
 
     public void setResponsiblePosition(IMatchRoleID responsiblePosition) {
-        this.m_cResponsiblePosition = responsiblePosition;
+        this.responsiblePosition = responsiblePosition;
     }
 
     public List<IMatchRoleID> getInvolvedPositions() {
-        return m_cInvolvedPositions;
+        return involvedPositions;
     }
 
     public void setInvolvedPositions(List<IMatchRoleID> m_cInvolvedPositions) {
-        this.m_cInvolvedPositions = m_cInvolvedPositions;
+        this.involvedPositions = m_cInvolvedPositions;
     }
 
     public void setInvolvedPosition(MatchRoleID mid) {
-        if (this.m_cInvolvedPositions == null) {
-            this.m_cInvolvedPositions = new Vector<IMatchRoleID>();
+        if (this.involvedPositions == null) {
+            this.involvedPositions = new Vector<IMatchRoleID>();
         } else {
-            this.m_cInvolvedPositions.clear();
+            this.involvedPositions.clear();
         }
-        this.m_cInvolvedPositions.add(mid);
+        this.involvedPositions.add(mid);
     }
 
     static public SpecialEventsPrediction createIfInRange(IMatchRoleID position,
@@ -52,16 +51,14 @@ public class SpecialEventsPrediction {
                                                           double valueAtNullProbability,
                                                           double value) {
         if (valueAtMaxProbability > valueAtNullProbability) {
-            if (value <= valueAtNullProbability || value > valueAtMaxProbability) return null;
+            if (value <= valueAtNullProbability ) return null;
+            if (value > valueAtMaxProbability) return new SpecialEventsPrediction(position, eventName, valueAtMaxProbability);
         } else {
-            if (value >= valueAtNullProbability || value < valueAtMaxProbability) return null;
+            if (value >= valueAtNullProbability ) return null;
+            if (value < valueAtMaxProbability) return new SpecialEventsPrediction(position, eventName, valueAtMaxProbability);
         }
         double f = maxProbability - maxProbability / (valueAtNullProbability - valueAtMaxProbability) * (value - valueAtMaxProbability);  // linear fit
         return new SpecialEventsPrediction(position, eventName, f);
     }
 
-    public void ChangeToOpponentEvent() {
-        m_dChanceCreationProbability *= -1;
-        m_bOpponentEvent = true;
-    }
 }
