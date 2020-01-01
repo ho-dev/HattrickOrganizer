@@ -162,20 +162,21 @@ class SkillAdjuster {
 
 	private boolean isDoneCalculating(CalcVariables calcPlayer,
 			Direction direction) {
-		boolean result = false;
-
 		
 		if (direction == Direction.Up) {
+			if ( calcPlayer.calculatedTSI <= 0 || calcPlayer.calculatedWage <= 0){
+				return true;	// Cancel, because of problems with too old players
+			}
 			if ((calcPlayer.calculatedTSI >= calcPlayer.tsi)
 					|| (calcPlayer.calculatedWage >= calcPlayer.wage))
-				result = true;
+				return true;
 		} else {
 			if ((calcPlayer.calculatedTSI <= calcPlayer.tsi)
 					|| (calcPlayer.calculatedWage <= calcPlayer.wage))
-				result = true;
+				return  true;
 		}
 
-		return result;
+		return false;
 	}
 	
 	protected void calculateWageAndTSI(CalcVariables calcPlayer) {
