@@ -104,4 +104,8 @@ public class SpecialEventsPrediction {
     public void setGoalProbability(double goalProbability) {
         this.goalProbability = goalProbability;
     }
+
+    public String getEventTypeAsString() {
+       return this.eventType.toString();
+    }
 }

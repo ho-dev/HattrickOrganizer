@@ -16,6 +16,7 @@ import module.teamAnalyzer.vo.PlayerInfo;
 import module.teamAnalyzer.vo.PlayerPerformance;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
@@ -182,7 +183,25 @@ public class SpecialEventsPredictionManager {
         }
     }
 
-    public List<SpecialEventsPrediction> getTeamevents(){
+    public Player getPlayer(IMatchRoleID id){
+        MatchRoleID mid = (MatchRoleID) id;
+        return getPlayer(mid.getSpielerId());
+    }
+
+    public Player getPlayer(int id){
+        return this.playerInLineup.get(id);
+    }
+
+    public Player getOpponentPlayer(IMatchRoleID id){
+        MatchRoleID mid = (MatchRoleID) id;
+        return getOpponentPlayer(mid.getSpielerId());
+    }
+
+    public Player getOpponentPlayer(int id){
+        return this.opponentPlayerInLineup.get(id);
+    }
+
+    public List<SpecialEventsPrediction> getTeamEvents(){
         if (this.teamAnalyse != null) {
             return this.teamAnalyse.getEvents();
         }
