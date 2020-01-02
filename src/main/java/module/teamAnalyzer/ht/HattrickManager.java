@@ -116,7 +116,7 @@ public class HattrickManager {
             player.setPlayerId(id);
 
             int card = getIntValue(matchesList, i, "Cards");
-            int injury = getIntValue(matchesList, i, "InjuryLevel");
+            int injury = getIntValue(matchesList, i, "InjuryLevel", -1);
             int status = PlayerDataManager.AVAILABLE;
 
             if (card == 3) {
@@ -174,23 +174,28 @@ public class HattrickManager {
     /**
      * Helper method to get a value from a Node.
      */
-    private static int getIntValue(Node node, int i, String tag) {
+    private static int getIntValue(Node node, int i, String tag){
+        return getIntValue(node, i, tag, 0);
+    }
+    private static int getIntValue(Node node, int i, String tag, int def) {
         try {
             String value = getValue(node, i, tag);
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
         }
 
-        return 0;
+        return def;
     }
 
     /**
      * Helper method to get a value from a Node.
      */
     private static String getValue(Node node, int i, String tag) {
-        String value = node.getOwnerDocument().getElementsByTagName(tag).item(i).getFirstChild()
-                           .getNodeValue();
-        return value;
+        Node n = node.getOwnerDocument().getElementsByTagName(tag).item(1).getFirstChild();
+        if ( n != null ){
+            return n.getNodeValue();
+        }
+        return "";
     }
 	
 	   /**
