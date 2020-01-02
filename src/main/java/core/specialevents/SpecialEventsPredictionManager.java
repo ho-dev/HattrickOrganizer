@@ -66,6 +66,14 @@ public class SpecialEventsPredictionManager {
             return this.playerInLineup.get(playerId);
         }
 
+        public Player getPlayerByPosition(int pos) {
+            return this.lineup.getPlayerByPositionID(pos);
+        }
+
+        public MatchRoleID getPosition(int pos) {
+            return this.lineup.getPositionById(pos);
+        }
+
         public Player getOpponentPlayer(int id){
             return this.opponentPlayerInLineup.get(id);
         }
