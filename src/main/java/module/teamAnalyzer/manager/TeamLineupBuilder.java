@@ -31,6 +31,7 @@ public class TeamLineupBuilder {
         teamLineup = new TeamLineup();
         teamLineup.setRating(teamReport.getRating());
         teamLineup.setStars(teamReport.getStars());
+        teamLineup.setSpecialEventsPrediction(teamReport.getSpecialEventsPredictionManager());
 
         for (int spot = IMatchRoleID.startLineup; spot < IMatchRoleID.startReserves; spot++) {
         	

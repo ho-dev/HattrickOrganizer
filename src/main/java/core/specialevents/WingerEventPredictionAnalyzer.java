@@ -20,7 +20,7 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
     public List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse,MatchRoleID position) {
         Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();
         int id = position.getSpielerId();
-        Player p  = analyse.getPlayer(id);
+        Player p = analyse.getPlayer(id);
         switch (position.getId()) {
             case IMatchRoleID.leftWinger:
             case IMatchRoleID.rightWinger:
@@ -54,6 +54,7 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
                                     p.getWIskill()*involvedPlayer.getSCskill());
                             if ( se != null){
                                 se.setInvolvedPosition(mid);
+                                se.setGoalProbability(se.getChanceCreationProbability()*analyse.getGoalProbability(involvedPlayer));
                                 ret.add(se);
                             }
                             break;

@@ -20,6 +20,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
+import static java.lang.Math.min;
+
 public class SpecialEventsPredictionManager {
 
     static private OppPlayerSkillEstimator oppPlayerSkillEstimator = new OppPlayerSkillEstimator();
@@ -89,6 +91,18 @@ public class SpecialEventsPredictionManager {
 
         public MatchRoleID getOpponentPosition(int pos) {
             return this.opponentLineup.getPositionById(pos);
+        }
+
+        public double getGoalProbability(Player scorer) {
+            // Calc goalProbability - compare score skill with opponent goalkeeper skill
+            int opponentGoalkeeperSkill = 0;
+            Player keeper = getOpponentPlayerByPosition(IMatchRoleID.keeper);
+            if (keeper != null) opponentGoalkeeperSkill = keeper.getGKskill();
+            SpecialEventsPrediction dummy = SpecialEventsPrediction.createIfInRange(null,
+                    ISpecialEventPredictionAnalyzer.SpecialEventType.QUICK_SCORES,
+                    1, 20, -5,
+                    min(20, scorer.getSCskill()) - min(20, opponentGoalkeeperSkill));
+            return dummy.getChanceCreationProbability();
         }
     }
 
@@ -214,4 +228,37 @@ public class SpecialEventsPredictionManager {
         }
         return null;
     }
+
+    // TODO: each special event type does not happen more than once
+    //  => aggregate sums of each type and handle probability sums > 1
+    public double getResultScores() {
+        double ret = 0;
+        for (SpecialEventsPrediction se: getTeamEvents()){
+            if ( se.getChanceCreationProbability()>0){
+                ret += se.getGoalProbability();
+            }
+        }
+        for (SpecialEventsPrediction se: getOpponentEvents()){
+            if ( se.getChanceCreationProbability()<0){
+                ret -= se.getGoalProbability();
+            }
+        }
+        return ret;
+    }
+
+    public double getOpponentResultScores() {
+        double ret = 0;
+        for (SpecialEventsPrediction se: getTeamEvents()){
+            if ( se.getChanceCreationProbability()<0){
+                ret -= se.getGoalProbability();
+            }
+        }
+        for (SpecialEventsPrediction se: getOpponentEvents()){
+            if ( se.getChanceCreationProbability()>0){
+                ret += se.getGoalProbability();
+            }
+        }
+        return ret;
+    }
+
 }

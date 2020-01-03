@@ -7,6 +7,8 @@ import core.model.player.Player;
 import java.util.List;
 import java.util.Vector;
 
+import static java.lang.Math.abs;
+
 public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictionAnalyzer {
 
     @Override
@@ -14,6 +16,7 @@ public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictio
         Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();
         int id = position.getSpielerId();
         Player p = analyse.getPlayer(id);
+        SpecialEventsPrediction se=null;
         switch (position.getId()){
             case IMatchRoleID.rightBack:
             case IMatchRoleID.leftCentralDefender:
@@ -23,14 +26,11 @@ public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictio
             case IMatchRoleID.centralInnerMidfield:
             case IMatchRoleID.leftInnerMidfield:
             case IMatchRoleID.rightInnerMidfield:
-                SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
+                 se = SpecialEventsPrediction.createIfInRange(
                         position,
                         SpecialEventType.EXPERIENCE,
                         -.5,0,4,
                         p.getErfahrung());
-                if ( se!= null){
-                    ret.add(se);
-                }
                 break;
 
             case IMatchRoleID.leftWinger:
@@ -43,10 +43,11 @@ public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictio
                         SpecialEventType.EXPERIENCE,
                         .5,20,10,
                         p.getErfahrung());
-                if ( se != null){
-                    ret.add(se);
-                }
                 break;
+        }
+        if ( se != null){
+            se.setGoalProbability(se.getChanceCreationProbability()/4);
+            ret.add(se);
         }
         return ret;
     }

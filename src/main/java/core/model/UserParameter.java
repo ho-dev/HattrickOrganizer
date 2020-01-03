@@ -250,8 +250,9 @@ public final class UserParameter extends Configuration {
     public int training_lowerLeftSplitPane = 200;
     public int training_pastFutureTrainingsSplitPane = 200;
 
-    public int teamAnalyzer_LowerLefSplitPane = 100;
-    public int teamAnalyzer_UpperLeftSplitPane = 350;
+    public int teamAnalyzer_LowerLeftSplitPane = 100;
+    public int teamAnalyzer_MiddleLeftSplitPane = 250;
+    public int teamAnalyzer_UpperLeftSplitPane = 450;
     public int teamAnalyzer_MainSplitPane = 300;
     public int teamAnalyzer_BottomSplitPane = 500;
     //Breite der BestPos-Spalte
@@ -597,7 +598,7 @@ public final class UserParameter extends Configuration {
         map.put("training_rightSplitPane", String.valueOf(training_rightSplitPane));
         map.put("training_mainSplitPane", String.valueOf(training_mainSplitPane));
         map.put("training_lowerLeftSplitPane", String.valueOf(training_lowerLeftSplitPane));
-        map.put("teamAnalyzer_LowerLefSplitPane", String.valueOf(teamAnalyzer_LowerLefSplitPane));
+        map.put("teamAnalyzer_LowerLefSplitPane", String.valueOf(teamAnalyzer_LowerLeftSplitPane));
         map.put("teamAnalyzer_UpperLeftSplitPane", String.valueOf(teamAnalyzer_UpperLeftSplitPane));
         map.put("teamAnalyzer_MainSplitPane", String.valueOf(teamAnalyzer_MainSplitPane));
         map.put("teamAnalyzer_BottomSplitPane", String.valueOf(teamAnalyzer_BottomSplitPane));
@@ -820,7 +821,7 @@ public final class UserParameter extends Configuration {
         training_rightSplitPane = getIntValue(values, "training_rightSplitPane");
         training_mainSplitPane = getIntValue(values, "training_mainSplitPane");
         training_lowerLeftSplitPane = getIntValue(values, "training_lowerLeftSplitPane");
-        teamAnalyzer_LowerLefSplitPane = getIntValue(values, "teamAnalyzer_LowerLefSplitPane");
+        teamAnalyzer_LowerLeftSplitPane = getIntValue(values, "teamAnalyzer_LowerLefSplitPane");
         teamAnalyzer_UpperLeftSplitPane = getIntValue(values, "teamAnalyzer_UpperLeftSplitPane");
         teamAnalyzer_MainSplitPane = getIntValue(values, "teamAnalyzer_MainSplitPane");
         teamAnalyzer_BottomSplitPane = getIntValue(values, "teamAnalyzer_BottomSplitPane");

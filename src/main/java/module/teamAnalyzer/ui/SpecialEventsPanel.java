@@ -1,13 +1,12 @@
 package module.teamAnalyzer.ui;
 
 import core.gui.model.BaseTableModel;
-import core.gui.theme.ImageUtilities;
-import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.specialevents.SpecialEventsPrediction;
 import core.specialevents.SpecialEventsPredictionManager;
 import core.util.Helper;
+import module.teamAnalyzer.vo.TeamLineup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,9 +16,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
+
 public class SpecialEventsPanel extends JPanel {
     private JTable table;
     private BaseTableModel tableModel;
+    private JLabel resultLabel;
 
     private String[] columns = {
             "Kind",
@@ -48,26 +49,39 @@ public class SpecialEventsPanel extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
+        JLabel start = new JLabel("Special Events");
+        add(start, BorderLayout.PAGE_START);
         add(scrollPane);
+
+        resultLabel = new JLabel( "Result: 0.00 - 0.00");
+        add(resultLabel, BorderLayout.PAGE_END);
+
     }
 
-    public void reload(SpecialEventsPredictionManager specialEventsPredictionManager) {
+    public void reload(TeamLineup teamLineup) {
+        if ( teamLineup==null) return;
+        SpecialEventsPredictionManager specialEventsPredictionManager = teamLineup.getSpecialEventsPrediction();
+        if (specialEventsPredictionManager == null) return;
+
         tableModel = new BaseTableModel(new Vector<Object>(), new Vector<String>(Arrays.asList(columns)));
         table.setModel(tableModel);
 
-        if (specialEventsPredictionManager == null) {
-            return;
-        }
-
         List<SpecialEventsPrediction> teamEvents = specialEventsPredictionManager.getTeamEvents();
+        HashSet<Player> involved = new HashSet<Player>();
+        HashSet<IMatchRoleID> involvedPositions;
         for ( SpecialEventsPrediction se : teamEvents){
 
-            HashSet<Player> involved = new HashSet<Player>();
-            for ( IMatchRoleID id: se.getInvolvedPositions()){
-                involved.add(specialEventsPredictionManager.getPlayer(id));
+            involvedPositions = se.getInvolvedPositions();
+            if ( involvedPositions != null) {
+                for (IMatchRoleID id : involvedPositions) {
+                    involved.add(specialEventsPredictionManager.getPlayer(id));
+                }
             }
-            for ( IMatchRoleID id: se.getInvolvedOpponentPositions()){
-                involved.add(specialEventsPredictionManager.getOpponentPlayer(id));
+            involvedPositions = se.getInvolvedOpponentPositions();
+            if ( involvedPositions != null){
+                for ( IMatchRoleID id: involvedPositions){
+                    involved.add(specialEventsPredictionManager.getOpponentPlayer(id));
+                }
             }
 
             tableModel.addRow(
@@ -86,12 +100,18 @@ public class SpecialEventsPanel extends JPanel {
         List<SpecialEventsPrediction> opponentEvents = specialEventsPredictionManager.getOpponentEvents();
         for ( SpecialEventsPrediction se : opponentEvents){
 
-            HashSet<Player> involved = new HashSet<Player>();
-            for ( IMatchRoleID id: se.getInvolvedPositions()){
-                involved.add(specialEventsPredictionManager.getOpponentPlayer(id));     // SE from opponent perspective
+
+            involvedPositions = se.getInvolvedPositions();
+            if ( involvedPositions != null) {
+                for (IMatchRoleID id : involvedPositions) {
+                    involved.add(specialEventsPredictionManager.getOpponentPlayer(id));     // SE from opponent perspective
+                }
             }
-            for ( IMatchRoleID id: se.getInvolvedOpponentPositions()){
-                involved.add(specialEventsPredictionManager.getPlayer(id));     // SE from opponent perspective
+            involvedPositions = se.getInvolvedOpponentPositions();
+            if ( involvedPositions  != null) {
+                for (IMatchRoleID id : involvedPositions) {
+                    involved.add(specialEventsPredictionManager.getPlayer(id));     // SE from opponent perspective
+                }
             }
 
             tableModel.addRow(
@@ -107,14 +127,12 @@ public class SpecialEventsPanel extends JPanel {
             );
         }
 
-
-        table.getTableHeader().getColumnModel().getColumn(0).setWidth(130);
-        table.getTableHeader().getColumnModel().getColumn(0).setPreferredWidth(130);
-        table.getTableHeader().getColumnModel().getColumn(1).setWidth(100);
-        table.getTableHeader().getColumnModel().getColumn(1).setPreferredWidth(100);
+        double scores = specialEventsPredictionManager.getResultScores();
+        double opponentScores = specialEventsPredictionManager.getOpponentResultScores();
+        this.resultLabel.setText(String.format("Result: %.2f : %.2f", scores, opponentScores));
     }
 
-    private Vector<Object> getRow(String kind, Player player, Player opponentPlayer, HashSet<Player> involved, double propability, double scores, double scoresOpponent) {
+    private Vector<Object> getRow(String kind, Player player, Player opponentPlayer, HashSet<Player> involved, double probability, Double scores, Double scoresOpponent) {
 
         Vector<String> involvedPlayerNames = new Vector<>();
         for ( Player p : involved){
@@ -128,9 +146,9 @@ public class SpecialEventsPanel extends JPanel {
         rowData.add(involvedPlayerNames);
 
         DecimalFormat df = new DecimalFormat("#.00");
-        rowData.add(df.format(propability));
-        rowData.add(df.format(scores));
-        rowData.add(df.format(scoresOpponent));
+        rowData.add(df.format(probability));
+        rowData.add(scores!=null?df.format(scores):"");
+        rowData.add(scoresOpponent!=null?df.format(scoresOpponent):"");
 
         return rowData;
     }

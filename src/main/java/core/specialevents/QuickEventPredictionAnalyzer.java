@@ -157,11 +157,11 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
         // Compare p passing skill with opponent defence skill
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
                 position,
-                SpecialEventType.QUICK_SCORES,
+                SpecialEventType.QUICK_PASS,
                 1, 20, -10,
                 min(20, p.getPSskill()) - min(20, opponentDefenceSkill));
         se.addInvolvedPosition(analyse.getPosition(passReceiver));
-        se.setGoalProbability(se.getChanceCreationProbability() * getGoalProbability(scorer));
+        se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(scorer));
         return se;
     }
 
@@ -174,23 +174,12 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
                 position,
                 SpecialEventType.QUICK_SCORES,
-                1, 20, -5,
+                1, 20, -10,
                 min(20, p.getSCskill()) - min(20, opp.getDEFskill()));
         se.addInvolvedOpponentPosition(analyse.getOpponentPosition(pos));
 
-        se.setGoalProbability(se.getChanceCreationProbability() * getGoalProbability(p));
+        se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(p));
         return se;
     }
 
-    private double getGoalProbability(Player scorer) {
-        // Calc goalProbability - compare score skill with opponent goalkeeper skill
-        int opponentGoalkeeperSkill = 0;
-        Player keeper = analyse.getOpponentPlayerByPosition(IMatchRoleID.keeper);
-        if (keeper != null) opponentGoalkeeperSkill = keeper.getGKskill();
-        SpecialEventsPrediction dummy = SpecialEventsPrediction.createIfInRange(null,
-                SpecialEventType.QUICK_SCORES,
-                1, 20, -5,
-                min(20, scorer.getSCskill()) - min(20, opponentGoalkeeperSkill));
-        return dummy.getChanceCreationProbability();
-    }
 }

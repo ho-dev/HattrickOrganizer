@@ -28,6 +28,7 @@ public class TeamAnalyzerPanel extends LazyPanel {
 	private MainPanel mainPanel;
 	private FilterPanel filterPanel;
 	private RatingPanel ratingPanel;
+	private SpecialEventsPanel specialEventsPanel;
 
 	@Override
 	protected void initialize() {
@@ -54,23 +55,31 @@ public class TeamAnalyzerPanel extends LazyPanel {
 		recapPanel = new RecapPanel();
 		mainPanel = new MainPanel();
 		ratingPanel = new RatingPanel();
+		specialEventsPanel = new SpecialEventsPanel();
+
 		setLayout(new BorderLayout());
 
 		JPanel buttonPanel = new ImagePanel(new BorderLayout());
 		simButton = new JButton(HOVerwaltung.instance().getLanguageString("Simulate"));
 		buttonPanel.add(simButton, BorderLayout.CENTER);
 
-		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, ratingPanel, buttonPanel);
-		splitPane.setDividerSize(1);
-		splitPane.setResizeWeight(1);
-		splitPane.setDividerLocation(UserParameter.instance().teamAnalyzer_LowerLefSplitPane);
-		splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.teamAnalyzer_LowerLefSplitPane));
+		JSplitPane splitPaneSub = new JSplitPane(JSplitPane.VERTICAL_SPLIT, ratingPanel, specialEventsPanel);
+		splitPaneSub.setDividerLocation(UserParameter.instance().teamAnalyzer_MiddleLeftSplitPane);
+		splitPaneSub.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
+				new DividerListener(DividerListener.teamAnalyzer_MiddleLeftSplitPane));
 
-		JSplitPane splitPaneLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT, filterPanel, splitPane);
-		splitPaneLeft.setDividerLocation(UserParameter.instance().teamAnalyzer_UpperLeftSplitPane);
-		splitPaneLeft.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
+		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, filterPanel, splitPaneSub);
+		splitPane.setDividerLocation(UserParameter.instance().teamAnalyzer_UpperLeftSplitPane);
+		splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
 				new DividerListener(DividerListener.teamAnalyzer_UpperLeftSplitPane));
+
+		JSplitPane splitPaneLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT, splitPane, buttonPanel);
+		splitPaneLeft.setDividerSize(1);
+		splitPaneLeft.setResizeWeight(1);
+		splitPaneLeft.setDividerLocation(UserParameter.instance().teamAnalyzer_LowerLeftSplitPane);
+		splitPaneLeft.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
+				new DividerListener(DividerListener.teamAnalyzer_LowerLeftSplitPane));
+
 
 		JSplitPane splitPaneUpper = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPaneLeft,
 				mainPanel);
@@ -108,6 +117,10 @@ public class TeamAnalyzerPanel extends LazyPanel {
 		return ratingPanel;
 	}
 
+	public SpecialEventsPanel getSpecialEventsPanel(){
+		return specialEventsPanel;
+	}
+
 	/**
 	 * Returns the recap panel
 	 * 
@@ -124,6 +137,8 @@ public class TeamAnalyzerPanel extends LazyPanel {
 		getMainPanel().reload(lineup, 0, 0);
 		getRecapPanel().reload(lineup);
 		getRatingPanel().reload(lineup);
+
+		getSpecialEventsPanel().reload(lineup);
 
 		if (ModuleConfig.instance().getBoolean(SystemManager.ISLINEUP)) {
 			this.simButton.setVisible(true);

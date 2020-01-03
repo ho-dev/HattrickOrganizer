@@ -33,7 +33,8 @@ public class TeamReport {
 
     /** Number of matches considered */
     private int matchNumber;
-    private SpecialEventsPredictionManager m_cSpecialEventsPredictionManager;
+
+    private SpecialEventsPredictionManager specialEventsPredictionManager;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -50,6 +51,10 @@ public class TeamReport {
     //~ Methods ------------------------------------------------------------------------------------
     public MatchRating getRating() {
         return rating;
+    }
+
+    public SpecialEventsPredictionManager getSpecialEventsPredictionManager() {
+        return specialEventsPredictionManager;
     }
 
     /**
@@ -88,10 +93,10 @@ public class TeamReport {
     {
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
-        if ( this.m_cSpecialEventsPredictionManager == null){
-            this.m_cSpecialEventsPredictionManager = new SpecialEventsPredictionManager();
+        if ( this.specialEventsPredictionManager == null){
+            this.specialEventsPredictionManager = new SpecialEventsPredictionManager();
         }
-        this.m_cSpecialEventsPredictionManager.analyzeLineup(lineup, matchDetail);
+        this.specialEventsPredictionManager.analyzeLineup(lineup, matchDetail);
     }
 
     /**
@@ -155,4 +160,5 @@ public class TeamReport {
 
         return rat;
     }
+
 }
