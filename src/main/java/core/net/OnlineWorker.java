@@ -298,16 +298,15 @@ public class OnlineWorker {
 					info = DBManager.instance().getMatchesKurzInfoByMatchID(matchid);
 				}
 				else {
-					// TODO: up to now this method is only called, when match id is stored in Db
-					return false;
+					info = new MatchKurzInfo();
 				}
 
 				// If ids not found, download matchdetails to obtain them.
 				// Highlights will be missing.
 				// ArenaId==0 in division battles
-				if ((info.getHeimID() == 0) || (info.getGastID() == 0)
-						|| info.getIsDerby() == null
-						|| info.getWeatherForecast() == null || !info.getWeatherForecast().isSure()
+				if ( info.getHeimID() <= 0
+						|| info.getGastID() <= 0
+						|| !info.getWeatherForecast().isSure()
 				) {
 					waitDialog.setValue(10);
 					details = fetchDetails(matchid, matchType, null, waitDialog);
