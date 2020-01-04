@@ -67,10 +67,9 @@ public class SpecialEventsPanel extends JPanel {
         table.setModel(tableModel);
 
         List<SpecialEventsPrediction> teamEvents = specialEventsPredictionManager.getTeamEvents();
-        HashSet<Player> involved = new HashSet<Player>();
         HashSet<IMatchRoleID> involvedPositions;
         for ( SpecialEventsPrediction se : teamEvents){
-
+            HashSet<Player> involved = new HashSet<Player>();
             involvedPositions = se.getInvolvedPositions();
             if ( involvedPositions != null) {
                 for (IMatchRoleID id : involvedPositions) {
@@ -99,7 +98,7 @@ public class SpecialEventsPanel extends JPanel {
 
         List<SpecialEventsPrediction> opponentEvents = specialEventsPredictionManager.getOpponentEvents();
         for ( SpecialEventsPrediction se : opponentEvents){
-
+            HashSet<Player> involved = new HashSet<Player>();
 
             involvedPositions = se.getInvolvedPositions();
             if ( involvedPositions != null) {

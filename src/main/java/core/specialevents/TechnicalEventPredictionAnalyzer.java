@@ -1,9 +1,11 @@
 package core.specialevents;
 
+import core.HO;
 import core.constants.player.Speciality;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.util.HOLogger;
 
 import java.util.List;
 import java.util.Vector;
@@ -58,14 +60,16 @@ public class TechnicalEventPredictionAnalyzer implements ISpecialEventPrediction
 
     private void getTechHeadEvent(Vector<SpecialEventsPrediction> ret, MatchRoleID position, int opponentPosition, double scoreBoost) {
         Player opp = analyse.getOpponentPlayerByPosition(opponentPosition);
+        if ( opp == null)return;
         if ( opp.hasSpeciality(Speciality.HEAD)){
-            Player p = analyse.getPlayerByPosition(position.getSpielerId());
+            Player p = analyse.getPlayer(position.getSpielerId());
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position,
                     SpecialEventType.TECHNICAL_HEAD,
                     1., 20, -20,
                     p.getSCskill()+p.getErfahrung() - opp.getDEFskill() - opp.getErfahrung()
                     );
             if  ( se != null ) {
+                se.addInvolvedOpponentPosition(analyse.getOpponentPosition(opponentPosition));
                 se.setGoalProbability(scoreBoost * se.getChanceCreationProbability() * analyse.getGoalProbability(p));
                 ret.add(se);
             }

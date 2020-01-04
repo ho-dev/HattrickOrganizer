@@ -79,11 +79,8 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
         Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();
 
         // Quick - scores
-        for ( int pos = IMatchRoleID.rightBack; pos <= IMatchRoleID.leftBack; pos++){
-            SpecialEventsPrediction se = getQuickScoresEvent(position, pos);
-            if ( se != null ){
-                ret.add(se);
-            }
+        for (int pos = IMatchRoleID.rightBack; pos <= IMatchRoleID.leftBack; pos++) {
+            getQuickScoresEvent(ret, position, pos);
         }
 
         // Quick - pass
@@ -91,38 +88,33 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
         double opponentDefenceSkill = 0;
         int n = 0;
         Player opp = analyse.getOpponentPlayerByPosition(block100PercentIfQuick);
-        if ( opp != null) {
+        if (opp != null) {
             n++;
             opponentDefenceSkill += opp.getDEFskill();
         }
         opp = analyse.getOpponentPlayerByPosition(block25PercentIfQuick);
-        if ( opp != null){
+        if (opp != null) {
             n++;
-            opponentDefenceSkill+= opp.getDEFskill();
+            opponentDefenceSkill += opp.getDEFskill();
         }
-        if ( useQuick2ForPassCalculation == true && block25PercentIfQuick2 != 0){
+        if (useQuick2ForPassCalculation == true && block25PercentIfQuick2 != 0) {
             opp = analyse.getOpponentPlayerByPosition(block25PercentIfQuick2);
-            if (opp != null){
+            if (opp != null) {
                 n++;
-                opponentDefenceSkill+= opp.getDEFskill();
+                opponentDefenceSkill += opp.getDEFskill();
             }
         }
-        if ( n > 0){
+        if (n > 0) {
             opponentDefenceSkill /= n;
         }
 
-        SpecialEventsPrediction passEvent = getQuickPassEvent(position, IMatchRoleID.rightWinger, opponentDefenceSkill);
-        if ( passEvent != null) ret.add(passEvent);
-        passEvent = getQuickPassEvent(position, IMatchRoleID.leftWinger, opponentDefenceSkill);
-        if ( passEvent != null) ret.add(passEvent);
-        passEvent = getQuickPassEvent(position, IMatchRoleID.rightForward, opponentDefenceSkill);
-        if ( passEvent != null) ret.add(passEvent);
-        passEvent = getQuickPassEvent(position, IMatchRoleID.centralForward, opponentDefenceSkill);
-        if ( passEvent != null) ret.add(passEvent);
-        passEvent = getQuickPassEvent(position, IMatchRoleID.leftForward, opponentDefenceSkill);
-        if ( passEvent != null) ret.add(passEvent);
+        getQuickPassEvent(ret, position, IMatchRoleID.rightWinger, opponentDefenceSkill);
+        getQuickPassEvent(ret, position, IMatchRoleID.leftWinger, opponentDefenceSkill);
+        getQuickPassEvent(ret, position, IMatchRoleID.rightForward, opponentDefenceSkill);
+        getQuickPassEvent(ret, position, IMatchRoleID.centralForward, opponentDefenceSkill);
+        getQuickPassEvent(ret, position, IMatchRoleID.leftForward, opponentDefenceSkill);
 
-        for ( SpecialEventsPrediction se : ret) {
+        for (SpecialEventsPrediction se : ret) {
             double goalProbabilityFactor = 0;   // used if block100Percent player is a quick one
             Player p = analyse.getOpponentPlayerByPosition(block100PercentIfQuick);
             if (p == null || !p.hasSpeciality(Speciality.QUICK)) {
@@ -143,15 +135,15 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
             } else {
                 se.addInvolvedOpponentPosition(analyse.getOpponentPosition(block100PercentIfQuick));
             }
-            se.setGoalProbability(se.getGoalProbability()*goalProbabilityFactor);
+            se.setGoalProbability(se.getGoalProbability() * goalProbabilityFactor);
         }
         return ret;
     }
 
-    private SpecialEventsPrediction getQuickPassEvent(MatchRoleID position, int passReceiver, double opponentDefenceSkill)
+    private void getQuickPassEvent(Vector<SpecialEventsPrediction> ret, MatchRoleID position, int passReceiver, double opponentDefenceSkill)
     {
         Player scorer = analyse.getPlayerByPosition(passReceiver);
-        if ( scorer == null ) return null;
+        if ( scorer == null ) return;
         Player p = analyse.getPlayer(position.getSpielerId());
 
         // Compare p passing skill with opponent defence skill
@@ -160,14 +152,16 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
                 SpecialEventType.QUICK_PASS,
                 1, 20, -10,
                 min(20, p.getPSskill()) - min(20, opponentDefenceSkill));
-        se.addInvolvedPosition(analyse.getPosition(passReceiver));
-        se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(scorer));
-        return se;
+        if ( se != null){
+            se.addInvolvedPosition(analyse.getPosition(passReceiver));
+            se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(scorer));
+            ret.add(se);
+        }
     }
 
-    private SpecialEventsPrediction getQuickScoresEvent(MatchRoleID position, int pos) {
+    private void getQuickScoresEvent(Vector<SpecialEventsPrediction> ret, MatchRoleID position, int pos) {
         Player opp = analyse.getOpponentPlayerByPosition(pos);
-        if (opp == null) return null;
+        if (opp == null) return;
         Player p = analyse.getPlayer(position.getSpielerId());
 
         // Compare p scoring skill with opponent defence skill
@@ -176,10 +170,11 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
                 SpecialEventType.QUICK_SCORES,
                 1, 20, -10,
                 min(20, p.getSCskill()) - min(20, opp.getDEFskill()));
-        se.addInvolvedOpponentPosition(analyse.getOpponentPosition(pos));
-
-        se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(p));
-        return se;
+        if ( se != null ) {
+            se.addInvolvedOpponentPosition(analyse.getOpponentPosition(pos));
+            se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(p));
+            ret.add(se);
+        }
     }
 
 }

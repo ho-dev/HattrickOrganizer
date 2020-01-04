@@ -6,6 +6,7 @@ import core.model.match.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.util.HOLogger;
 import module.lineup.Lineup;
 import module.opponentspy.OppPlayerSkillEstimator;
 import module.opponentspy.OpponentPlayer;
@@ -102,7 +103,8 @@ public class SpecialEventsPredictionManager {
                     ISpecialEventPredictionAnalyzer.SpecialEventType.QUICK_SCORES,
                     1, 20, -5,
                     min(20, scorer.getSCskill()) - min(20, opponentGoalkeeperSkill));
-            return dummy.getChanceCreationProbability();
+            if ( dummy != null) return dummy.getChanceCreationProbability();
+            return 0;
         }
     }
 
@@ -118,6 +120,7 @@ public class SpecialEventsPredictionManager {
         analyzers.add(new PowerfulForwardEventPredictionAnalyzer());
         analyzers.add(new SittingMidfielderEventPredictionAnalyzer());
         analyzers.add(new QuickEventPredictionAnalyzer());
+        analyzers.add(new TechnicalEventPredictionAnalyzer());
     }
 
     public SpecialEventsPredictionManager()
@@ -176,6 +179,26 @@ public class SpecialEventsPredictionManager {
                     player.setGehalt(wage);
                     player.setTSI(tsi);
                     player.setForm((int)form);
+                    player.setPlayerSpecialty(spec);
+
+                    String pInfo = String.format(
+                            "Name=%s, Age=%d, TSI=%d, Wage=%d, Form=%d, Experience=%d, GK=%d, DEF=%d, WI=%d, PM=%d , PS=%d, SC=%d, SP=%d",
+                            player.getName(),
+                            player.getAlter(),
+                            player.getTSI(),
+                            player.getGehalt(),
+                            player.getForm(),
+                            player.getErfahrung(),
+                            player.getGKskill(),
+                            player.getDEFskill(),
+                            player.getWIskill(),
+                            player.getPMskill(),
+                            player.getPSskill(),
+                            player.getSCskill(),
+                            player.getSPskill()
+                            );
+                    HOLogger.instance().debug(getClass(), pInfo);
+
                     this.opponentPlayerInLineup.put(playerPerformance.getSpielerId(), player);
                 }
 
