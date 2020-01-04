@@ -59,7 +59,7 @@ public class HattrickManager {
 	    		||	(filter.isAcceptedMatch(new Match(match))
 	    				&& !DBManager.instance().isMatchLineupInDB(match.getMatchID()))) {
 	    		
-	    		OnlineWorker.downloadMatchData(match.getMatchID(), match.getMatchTyp(), false);
+	    		OnlineWorker.downloadMatchData(match, false);
    			}
 	    	
 	    	limit--;
@@ -204,7 +204,7 @@ public class HattrickManager {
      * Helper method to get a value from a Node.
      */
     private static String getValue(Node node, int i, String tag) {
-        Node n = node.getOwnerDocument().getElementsByTagName(tag).item(1).getFirstChild();
+        Node n = node.getOwnerDocument().getElementsByTagName(tag).item(i).getFirstChild();
         if ( n != null ){
             return n.getNodeValue();
         }

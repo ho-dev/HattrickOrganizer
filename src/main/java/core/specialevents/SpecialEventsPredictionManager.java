@@ -171,6 +171,7 @@ public class SpecialEventsPredictionManager {
                     player.setName(playerPerformance.getSpielerName());
                     player.setHomeGrown(latestPlayerInfo.getMotherClubBonus());
                     player.setLoyalty(latestPlayerInfo.getLoyalty());
+                    player.setErfahrung(latestPlayerInfo.getExperience());
                     player.setAlter(age);
                     player.setGehalt(wage);
                     player.setTSI(tsi);

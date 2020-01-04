@@ -14,7 +14,8 @@ public interface ISpecialEventPredictionAnalyzer {
         WINGER_SCORER,
         WINGER_HEAD,
         QUICK_PASS,
-        QUICK_SCORES
+        QUICK_SCORES,
+        TECHNICAL_HEAD
     }
 
     List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse,  MatchRoleID position);

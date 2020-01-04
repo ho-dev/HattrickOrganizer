@@ -282,43 +282,50 @@ public class OnlineWorker {
 	 * @return true if the match is in the db afterwards
 	 */
 	public static boolean downloadMatchData(int matchid, MatchType matchType, boolean refresh) {
+		MatchKurzInfo info;
+		// Check if teams IDs are stored somewhere
+		if (DBManager.instance().isMatchVorhanden(matchid)) {
+			info = DBManager.instance().getMatchesKurzInfoByMatchID(matchid);
+		}
+		else {
+			info = new MatchKurzInfo();
+			info.setMatchID(matchid);
+			info.setMatchType(matchType);
+		}
+		return downloadMatchData(info, refresh);
+	}
+
+	public static boolean downloadMatchData( MatchKurzInfo info, boolean refresh)
+	{
 		waitDialog = getWaitDialog();
 		// Only download if not present in the database, or if refresh is true
+		int matchid = info.getMatchID();
 		if (refresh || !DBManager.instance().isMatchVorhanden(matchid)
 				|| DBManager.instance().hasUnsureWeatherForecast(matchid)
 				|| !DBManager.instance().isMatchLineupInDB(matchid)
-				|| !DBManager.instance().isDerbyInfoInDb(matchid)
 		) {
 			try {
-				MatchKurzInfo info = null;
 				Matchdetails details = null;
-
-				// Check if teams IDs are stored somewhere
-				if (DBManager.instance().isMatchVorhanden(matchid)) {
-					info = DBManager.instance().getMatchesKurzInfoByMatchID(matchid);
-				}
-				else {
-					info = new MatchKurzInfo();
-				}
 
 				// If ids not found, download matchdetails to obtain them.
 				// Highlights will be missing.
 				// ArenaId==0 in division battles
-				if ( info.getHeimID() <= 0
-						|| info.getGastID() <= 0
-						|| !info.getWeatherForecast().isSure()
-				) {
+				boolean newInfo = info.getHeimID()<=0 || info.getGastID()<=0;
+				if ( newInfo || !info.getWeatherForecast().isSure()) {
+
 					waitDialog.setValue(10);
-					details = fetchDetails(matchid, matchType, null, waitDialog);
+					details = fetchDetails(matchid, info.getMatchTyp(), null, waitDialog);
 					info.setHeimID(details.getHeimId());
 					info.setGastID( details.getGastId());
 					info.setArenaId( details.getArenaID());
-					if (info.getMatchStatus() == MatchKurzInfo.FINISHED){
+					info.setMatchDate(details.getSpielDatum().toString());
+					int wetterId = details.getWetterId();
+					if ( wetterId != -1 ){
+						info.setMatchStatus(MatchKurzInfo.FINISHED);
 						info.setWeather(Weather.getById(details.getWetterId()));
 						info.setWeatherForecast(Weather.Forecast.HAPPENED);
 					}
-
-					if ( info.getArenaId() > 0) {
+					else if ( info.getArenaId() > 0) {
 						info.setRegionId(details.getRegionId());
 
 						if ( info.getWeatherForecast().isSure() == false){
@@ -364,7 +371,7 @@ public class OnlineWorker {
 				MatchLineup lineup = null;
 				boolean success;
 				if ( info.getMatchStatus() == MatchKurzInfo.FINISHED) {
-					lineup = getMatchlineup(matchid, matchType, info.getHeimID(), info.getGastID());
+					lineup = getMatchlineup(matchid, info.getMatchTyp(), info.getHeimID(), info.getGastID());
 
 					if (lineup == null) {
 						String msg = getLangString("Downloadfehler")
@@ -379,7 +386,7 @@ public class OnlineWorker {
 					
 					// Get details with highlights.
 					waitDialog.setValue(10);
-					details = fetchDetails(matchid, matchType, lineup, waitDialog);
+					details = fetchDetails(matchid, info.getMatchTyp(), lineup, waitDialog);
 
 					if (details == null) {
 						HOLogger.instance().error(OnlineWorker.class,
@@ -392,7 +399,6 @@ public class OnlineWorker {
 					info.setGastName(lineup.getGastName());
 					info.setHeimID(lineup.getHeimId());
 					info.setHeimName(lineup.getHeimName());
-					info.setMatchDate(lineup.getStringSpielDate());
 					success = DBManager.instance().storeMatch(info, details, lineup);
 				}
 				else{
