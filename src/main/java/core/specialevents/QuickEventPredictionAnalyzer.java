@@ -142,6 +142,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
 
     private void getQuickPassEvent(Vector<SpecialEventsPrediction> ret, MatchRoleID position, int passReceiver, double opponentDefenceSkill)
     {
+        if ( passReceiver == position.getId()) return;
         Player scorer = analyse.getPlayerByPosition(passReceiver);
         if ( scorer == null ) return;
         Player p = analyse.getPlayer(position.getSpielerId());

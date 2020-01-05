@@ -926,9 +926,6 @@ public class Lineup{
 		}
 	}
 
-
-
-
 	/**
 	 * Get the position object by position id.
 	 */
