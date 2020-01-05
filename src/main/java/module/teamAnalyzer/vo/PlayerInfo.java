@@ -91,6 +91,38 @@ public class PlayerInfo {
         return teamId;
     }
 
+    public void setSalary(int salary) {
+        this.salary = salary;
+    }
+
+    public int getSalary() {
+        return salary;
+    }
+
+    public void setStamina(int stamina) {
+        this.stamina = stamina;
+    }
+
+    public int getStamina() {
+        return this.stamina;
+    }
+
+    public void setMotherClubBonus(boolean bonus) {
+        this.motherClubBonus = bonus;
+    }
+
+    public boolean getMotherClubBonus() {
+        return this.motherClubBonus;
+    }
+
+    public void setLoyalty(int loyalty) {
+        this.loyalty = loyalty;
+    }
+
+    public int getLoyalty() {
+        return this.loyalty;
+    }
+
     /**
      * toString methode: creates a String representation of the object
      *
@@ -116,17 +148,4 @@ public class PlayerInfo {
         buffer.append("]");
         return buffer.toString();
     }
-
-    public void setSalary(int salary) {
-        this.salary = salary;
-    }
-    public int getSalary() {
-        return salary;
-    }
-    public void setStamina(int stamina) { this.stamina = stamina; }
-    public int getStamina() { return this.stamina; }
-    public void setMotherClubBonus(boolean bonus) { this.motherClubBonus = bonus; }
-    public boolean getMotherClubBonus() { return this.motherClubBonus; }
-    public void setLoyalty(int loyalty){ this.loyalty=loyalty;}
-    public int  getLoyalty() { return this.loyalty; }
 }

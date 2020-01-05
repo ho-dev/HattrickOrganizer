@@ -283,7 +283,6 @@ public class OnlineWorker {
 	 */
 	public static boolean downloadMatchData(int matchid, MatchType matchType, boolean refresh) {
 		MatchKurzInfo info;
-		// Check if teams IDs are stored somewhere
 		if (DBManager.instance().isMatchVorhanden(matchid)) {
 			info = DBManager.instance().getMatchesKurzInfoByMatchID(matchid);
 		}
@@ -575,8 +574,7 @@ public class OnlineWorker {
 					int curMatchId = match.getMatchID();
 					boolean refresh = !DBManager.instance().isMatchVorhanden(curMatchId)
 							|| DBManager.instance().hasUnsureWeatherForecast(curMatchId)
-							|| !DBManager.instance().isMatchLineupInDB(curMatchId)
-							|| !DBManager.instance().isDerbyInfoInDb(curMatchId);
+							|| !DBManager.instance().isMatchLineupInDB(curMatchId);
 
 					if (refresh) {
 						// No lineup or arenaId in DB

@@ -118,10 +118,6 @@ public class Substitution {
 
 	public void setRoleId(byte roleId) { this.roleId = roleId; }
 
-	public byte getPositionIndex() {return (byte) (this.roleId-100);}
-
-	public void setPositionIndex(byte positionIndex) { this.roleId = (byte) (positionIndex+100); }
-
 	public byte getBehaviour() {
 		return behaviour;
 	}
