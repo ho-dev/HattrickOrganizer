@@ -22,6 +22,19 @@ public class SpecialEventsPrediction {
         chanceCreationProbability = p;
     }
 
+    public SpecialEventsPrediction(SpecialEventsPrediction se){
+        this.chanceCreationProbability = se.chanceCreationProbability;
+        this.eventType = se.eventType;
+        this.goalProbability  = se.goalProbability;
+        if (se.involvedOpponentPositions != null) {
+            this.involvedOpponentPositions = new HashSet<>(se.involvedOpponentPositions);
+        }
+        if( se.involvedPositions!=null){
+            this.involvedPositions = new HashSet<>(se.involvedPositions);
+        }
+        this.responsiblePosition = se.responsiblePosition;
+    }
+
     public IMatchRoleID getResponsiblePosition() {
         return responsiblePosition;
     }
@@ -107,5 +120,9 @@ public class SpecialEventsPrediction {
 
     public String getEventTypeAsString() {
        return this.eventType.toString();
+    }
+
+    public ISpecialEventPredictionAnalyzer.SpecialEventType getEventType(){
+        return this.eventType;
     }
 }

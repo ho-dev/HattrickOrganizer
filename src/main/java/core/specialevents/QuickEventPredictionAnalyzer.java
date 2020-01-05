@@ -104,7 +104,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
                 opponentDefenceSkill += opp.getDEFskill();
             }
         }
-        if (n > 0) {
+        if (n > 1) {
             opponentDefenceSkill /= n;
         }
 
@@ -155,7 +155,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
                 min(20, p.getPSskill()) - min(20, opponentDefenceSkill));
         if ( se != null){
             se.addInvolvedPosition(analyse.getPosition(passReceiver));
-            se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(scorer));
+            se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(analyse.getPosition(passReceiver)));
             ret.add(se);
         }
     }
@@ -173,7 +173,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
                 min(20, p.getSCskill()) - min(20, opp.getDEFskill()));
         if ( se != null ) {
             se.addInvolvedOpponentPosition(analyse.getOpponentPosition(pos));
-            se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(p));
+            se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(position));
             ret.add(se);
         }
     }

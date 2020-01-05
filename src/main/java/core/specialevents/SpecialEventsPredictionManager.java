@@ -93,18 +93,62 @@ public class SpecialEventsPredictionManager {
             return this.opponentLineup.getPositionById(pos);
         }
 
-        public double getGoalProbability(Player scorer) {
-            // Calc goalProbability - compare score skill with opponent goalkeeper skill
-            int opponentGoalkeeperSkill = 0;
-            Player keeper = getOpponentPlayerByPosition(IMatchRoleID.keeper);
-            if (keeper != null) opponentGoalkeeperSkill = keeper.getGKskill();
-            SpecialEventsPrediction dummy = SpecialEventsPrediction.createIfInRange(null,
+        public double getGoalProbability(IMatchRoleID scorer) {
+            return getGoalProbability(scorer, 0);
+        }
+
+        public double getGoalProbability(IMatchRoleID scorer, double skillbonus) {
+            SpecialEventsPrediction dummy = getScorerSpecialEvent(scorer,
                     ISpecialEventPredictionAnalyzer.SpecialEventType.QUICK_SCORES,
-                    1, 20, -5,
-                    min(20, scorer.getSCskill()) - min(20, opponentGoalkeeperSkill));
+                    skillbonus);
             if (dummy != null) return dummy.getChanceCreationProbability();
             return 0;
         }
+
+        public SpecialEventsPrediction getScorerSpecialEvent(
+                IMatchRoleID position,
+                ISpecialEventPredictionAnalyzer.SpecialEventType type,
+                double skillbonus                // to make it easier to score (for wingers etc.)
+        ){
+            // Calc goalProbability - compare score skill with opponent goalkeeper skill
+            MatchRoleID mid = (MatchRoleID) position;
+            Player scorer = getPlayer(mid.getSpielerId());;
+            int opponentGoalkeeperSkill = 0;
+            Player keeper = getOpponentPlayerByPosition(IMatchRoleID.keeper);
+            if (keeper != null) opponentGoalkeeperSkill = keeper.getGKskill();
+            return SpecialEventsPrediction.createIfInRange(position,type,
+                    1, 10-skillbonus, -10-skillbonus,
+                    scorer.getSCskill() -  opponentGoalkeeperSkill);
+        }
+
+        public double getOpponentGoalProbability(IMatchRoleID scorer) {
+            return getOpponentGoalProbability(scorer, 0);
+        }
+
+        public double getOpponentGoalProbability(IMatchRoleID scorer, double skillbonus) {
+            SpecialEventsPrediction dummy = getOpponentScorerSpecialEvent(scorer,
+                    ISpecialEventPredictionAnalyzer.SpecialEventType.QUICK_SCORES,
+                    skillbonus);
+            if (dummy != null) return dummy.getChanceCreationProbability();
+            return 0;
+        }
+
+        public SpecialEventsPrediction getOpponentScorerSpecialEvent(
+                IMatchRoleID position,
+                ISpecialEventPredictionAnalyzer.SpecialEventType type,
+                double skillbonus                // to make it easier to score (for wingers etc.)
+        ){
+            // Calc goalProbability - compare score skill with opponent goalkeeper skill
+            MatchRoleID mid = (MatchRoleID) position;
+            Player scorer = getOpponentPlayer(mid.getSpielerId());;
+            int goalkeeperSkill = 0;
+            Player keeper = getPlayerByPosition(IMatchRoleID.keeper);
+            if (keeper != null) goalkeeperSkill = keeper.getGKskill();
+            return SpecialEventsPrediction.createIfInRange(position,type,
+                    1, 10-skillbonus, -10-skillbonus,
+                    scorer.getSCskill() -  goalkeeperSkill);
+        }
+
     }
 
     private Analyse teamAnalyse;

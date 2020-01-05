@@ -10,7 +10,11 @@ public interface ISpecialEventPredictionAnalyzer {
         EXPERIENCE,
         PNF,
         PDIM,
-        UNPREDICTABLE,
+        UNPREDICTABLE,              // special action
+        UNPREDICTABLE_LONGPASS,
+        UNPREDICTABLE_MISTAKE,
+        UNPREDICTABLE_OWNGOAL,
+        UNPREDICTABLE_SCORES,
         WINGER_SCORER,
         WINGER_HEAD,
         QUICK_PASS,

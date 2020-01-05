@@ -70,9 +70,10 @@ public class TechnicalEventPredictionAnalyzer implements ISpecialEventPrediction
                     );
             if  ( se != null ) {
                 se.addInvolvedOpponentPosition(analyse.getOpponentPosition(opponentPosition));
-                se.setGoalProbability(scoreBoost * se.getChanceCreationProbability() * analyse.getGoalProbability(p));
+                se.setGoalProbability(scoreBoost * se.getChanceCreationProbability() * analyse.getGoalProbability(position));
                 ret.add(se);
             }
         }
     }
 }
+

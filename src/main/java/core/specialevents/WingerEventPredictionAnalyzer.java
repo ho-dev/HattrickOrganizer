@@ -54,7 +54,7 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
                                     p.getWIskill()*involvedPlayer.getSCskill());
                             if ( se != null){
                                 se.setInvolvedPosition(mid);
-                                se.setGoalProbability(se.getChanceCreationProbability()*analyse.getGoalProbability(involvedPlayer));
+                                se.setGoalProbability(se.getChanceCreationProbability()*analyse.getGoalProbability(mid));
                                 ret.add(se);
                             }
                             break;
