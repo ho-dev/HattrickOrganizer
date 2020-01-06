@@ -17,7 +17,7 @@ The code is hosted on GitHub, so you will need to use Git to clone the project a
 codebase. It is also suggested to use IntelliJ IDEA as the main IDE. In case you decide to use 
 Eclipse make sure to add all the relevant filters in the .ignore accordingly.
 
-In case of problems to set the development environment up, please consult our `FAQ </faq>`_ page to see 
+In case of problems to set the development environment up, please consult our :ref:`faq` page to see 
 the list of the most common issues.
 
 Contributing to the Codebase
