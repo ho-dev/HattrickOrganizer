@@ -29,6 +29,14 @@
     </a>
 </td>
 </tr>
+<tr>
+  <td>Documentation</td>
+  <td>
+  <a href='https://ho.readthedocs.io/en/latest/?badge=latest'>
+    <img src='https://readthedocs.org/projects/ho/badge/?version=latest' alt='Documentation Status' />
+</a>
+</td>
+</tr>
 </table>
 
 -----------------
