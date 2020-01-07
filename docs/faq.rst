@@ -4,6 +4,10 @@
 FAQ for developers
 ===============================
 
+|
+|
+
+----
 
 * **Gradle: could not get unknown property ``POEDITOR_APIKEY`` for object of type ``de.jansauer.poeditor.POEditorExtension``**
 
@@ -15,6 +19,7 @@ referring to ``POEDITOR_APIKEY``
     
     // apiKey = POEDITOR_APIKEY´
 
+----
 
 * **MacOS: ``Aqua`` exception: at runtime a series of runtime exceptions are thrown, and the UI doesn't work as expected...**
 
