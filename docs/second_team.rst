@@ -14,5 +14,5 @@ Second Team
     #. Press :kbd:`Close`
     #. Restart **HO!**
     #. In the new dialog, select the previously inserted username
-    #. When HO! starts, you will have an empty database. Select from menu guilabel:`File>Download` and follow the instructions
+    #. When **HO!** starts, you will have an empty database. Select from menu :guilabel:`File>Download` and follow the instructions
 
