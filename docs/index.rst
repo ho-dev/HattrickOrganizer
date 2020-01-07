@@ -1,13 +1,25 @@
-HO 
-=======
+.. container:: twocol
+
+   .. container:: leftside
+
+      .. image:: _static/screenshots/ho_logo_stable.png
+
+   .. container:: rightside
+
+      Helper Tool for online-manager `Hattrick <http://www.hattrick.org>'_
+      
 
 
-HO introduction
+Features
+-------------
 
-ddfg
-ddfgdfg
-ddfg
-ddfgdfg
+* Detailed Player development
+* Training Analysis and Prediction
+* Rating Prediction for your lineup
+* Opponents Analysis
+* Tons of statistics
+* Many additional tools and modules
+
 
 .. toctree::
     :maxdepth: 2
