@@ -22,5 +22,5 @@ Features
     :hidden:
 
     contributing
-    second_team
+    functionalities
     faq
