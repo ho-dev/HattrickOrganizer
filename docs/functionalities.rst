@@ -1,6 +1,10 @@
 .. _functionalities:
 
 
+Functionalities
+========================
+
+
 .. toctree::
     :maxdepth: 2
 
