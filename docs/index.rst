@@ -1,6 +1,6 @@
-|logo| Helper Tool for online-manager `Hattrick <http://www.hattrick.org>`_
+|logo|   Helper Tool for online-manager `Hattrick <http://www.hattrick.org>`_
 
-.. |logo| image:: tatic/pictures/ho_logo_stable.png
+.. |logo| image:: static/pictures/ho_logo_stable.png
      
    
 
