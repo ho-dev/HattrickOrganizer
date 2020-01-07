@@ -6,5 +6,5 @@
 
     nthrf
     second_team
-    FeedBack
+    feedback
     transfer_scout
