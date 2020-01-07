@@ -23,4 +23,8 @@ Features
     contributing
     functionalities
     faq
+    nthrf
+    second_team
+    feedback
+    transfer_scout
 
