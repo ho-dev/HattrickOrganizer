@@ -2,7 +2,7 @@
 
    .. container:: leftside
 
-      .. image:: _static/pictures/ho_logo_stable.png
+      .. figure:: static/pictures/ho_logo_stable.png
 
    .. container:: rightside
 
