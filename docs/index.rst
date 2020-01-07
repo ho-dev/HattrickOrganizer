@@ -2,7 +2,9 @@
 
 .. |logo| image:: static/pictures/ho_logo_stable.png
      
-   
+|
+|
+
 
 Features
 -------------
