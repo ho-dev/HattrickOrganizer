@@ -19,8 +19,16 @@ Features
 
 .. toctree::
     :maxdepth: 2
-    :hidden:
 
     contributing
-    functionalities
+    functionalities/index
+    faq
+
+test
+=======
+
+.. toctree::
+    :maxdepth: 2
+    
+    functionalities/index
     faq
