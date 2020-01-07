@@ -14,4 +14,5 @@ ddfgdfg
     :hidden:
 
     contributing
+    second_team
     faq
