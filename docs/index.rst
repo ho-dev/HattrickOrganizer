@@ -1,14 +1,8 @@
-.. container:: twocol
+|logo| Helper Tool for online-manager `Hattrick <http://www.hattrick.org>`_
 
-   .. container:: leftside
-
-      .. figure:: static/pictures/ho_logo_stable.png
-
-   .. container:: rightside
-
-      Helper Tool for online-manager `Hattrick <http://www.hattrick.org>`_
-      
-
+.. |logo| image:: tatic/pictures/ho_logo_stable.png
+     
+   
 
 Features
 -------------
