@@ -2,11 +2,11 @@
 
    .. container:: leftside
 
-      .. image:: _static/screenshots/ho_logo_stable.png
+      .. image:: _static/pictures/ho_logo_stable.png
 
    .. container:: rightside
 
-      Helper Tool for online-manager `Hattrick <http://www.hattrick.org>'_
+      Helper Tool for online-manager `Hattrick <http://www.hattrick.org>`_
       
 
 
