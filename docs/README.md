@@ -64,18 +64,9 @@
 If you want to contribute or see current translation status please visit HO translation [website](https://poeditor.com/join/project/jCaWGL1JCl).   
 Please open a request if the language you are interested in is not listed.
 
-## Development workflow
+## Documentation
 
-A single master branch record the history of the project.
-
-To contribute features, you should clone the repository, create a tracking branch for develop and create the feature.
-When the feature is ready, you can make a pull request to merge that feature into master. 
-Please read the [contribution guide](contributing.md) first.
-
-
-## Releases
-
-When a release is ready, we fork a release branch from master. 
+Documentation for HO! is located at https://ho.readthedocs.io/
 
 
 ## Dependencies
