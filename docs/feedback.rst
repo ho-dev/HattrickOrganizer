@@ -11,29 +11,36 @@ In order to work, you have to be in one of the following situation:
 
 FeedBack have to be done after a team update, if not you will get a warning for update it at first
 
+
+**Click on the red double arrows** will open the feedback plugin
+
+
 .. image:: static/pictures/feedback_1.png
+   :legend: feedback plugin
 
+|
 
-Use the double arrows will open the feedback popup
-
-
-.. image:: static/pictures/feedback_2.png
-
-
-Set your lineup as recommended:
+**Set your lineup as recommended:**
    * fille position - *indicated by the green box*
    * attitude and tactic 
    
-   
+.. image:: static/pictures/feedback_2.png
+
+
+| 
+  
 .. image:: static/pictures/feedback_3.jfif
-  
-  
-Copy the ratings on HT and paste them at step 2
-  
+    :legend: lineup in HO should be as per the recommendation
+
+
+|
+
+ **Copy the ratings on HT and paste them inside the feedback plugin** 
   
 .. image:: static/pictures/feedback_4.png
+    :legend: copying ratings from HT (lineup in HO should be similar to the one in HO!)
   
   
 Thanks for your participation  :-)
 
-When enough data are collected we will improve rating formula and share result of analysis on HT forum
+When enough data are collected we will improve rating formula and share result of analysis on HT forum !
