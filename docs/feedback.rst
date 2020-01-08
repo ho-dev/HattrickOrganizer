@@ -32,7 +32,7 @@ FeedBack have to be done after a team update, if not you will get a warning for 
   
 .. figure:: static/pictures/feedback_3.jfif
     
-    lineup in HO should be as per the recommendation
+    lineup in HO should be as per the recommendation !
 
 
 |
@@ -41,13 +41,17 @@ FeedBack have to be done after a team update, if not you will get a warning for 
   
 .. figure:: static/pictures/feedback_4.png
     
-    copying ratings from HT (lineup in HO should be similar to the one in HO!)
+    copying ratings from HT (should be exactly similar to the lineup in HO!)
   
 
 **4. Sending the feedback**
 
-Once ready, click on  :guilabel:`Refresh`, have a qualitative check of the retaings deviation between HT and HO! in order to spot errors in the process and then click on :guilabel:`Send` 
+Once ready, click on  :guilabel:`Refresh` and have a qualitative check of the retaings deviation between HT and HO!.
+
+If everything looks ok, click on :guilabel:`Send` ! 
+
+Thanks for your participation  :-)
 
 When enough data are collected we will improve rating formula and share result of analysis on HT forum !
 
-Thanks for your participation  :-)
+
