@@ -11,14 +11,13 @@ In order to work, you have to be in one of the following situation:
 
 FeedBack have to be done after a team update, if not you will get a warning for update it at first
 
-
-..image:: static/pictures/feedback_1.png
+.. image:: static/pictures/feedback_1.png
 
 
 Use the double arrows will open the feedback popup
 
 
-..image:: static/pictures/feedback_2.png
+.. image:: static/pictures/feedback_2.png
 
 
 Set your lineup as recommended:
@@ -26,13 +25,13 @@ Set your lineup as recommended:
    * attitude and tactic 
    
    
-  ..image:: static/pictures/feedback_3.jfif
+.. image:: static/pictures/feedback_3.jfif
   
   
-  Copy the ratings on HT and paste them at step 2
+Copy the ratings on HT and paste them at step 2
   
   
-  ..image:: static/pictures/feedback_4.png
+.. image:: static/pictures/feedback_4.png
   
   
 Thanks for your participation  :-)
