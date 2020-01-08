@@ -16,7 +16,8 @@ FeedBack have to be done after a team update, if not you will get a warning for 
 
 
 .. figure:: static/pictures/feedback_1.png
-   :legend: feedback plugin
+   
+   feedback plugin
 
 |
 
@@ -30,7 +31,8 @@ FeedBack have to be done after a team update, if not you will get a warning for 
 | 
   
 .. figure:: static/pictures/feedback_3.jfif
-    :legend: lineup in HO should be as per the recommendation
+    
+    lineup in HO should be as per the recommendation
 
 
 |
@@ -38,7 +40,8 @@ FeedBack have to be done after a team update, if not you will get a warning for 
  **Copy the ratings on HT and paste them inside the feedback plugin** 
   
 .. figure:: static/pictures/feedback_4.png
-    :legend: copying ratings from HT (lineup in HO should be similar to the one in HO!)
+    
+    copying ratings from HT (lineup in HO should be similar to the one in HO!)
   
   
 Thanks for your participation  :-)
