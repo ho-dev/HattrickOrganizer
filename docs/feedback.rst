@@ -15,7 +15,7 @@ FeedBack have to be done after a team update, if not you will get a warning for 
 **Click on the red double arrows** will open the feedback plugin
 
 
-.. image:: static/pictures/feedback_1.png
+.. fingure:: static/pictures/feedback_1.png
    :legend: feedback plugin
 
 |
@@ -24,12 +24,12 @@ FeedBack have to be done after a team update, if not you will get a warning for 
    * fille position - *indicated by the green box*
    * attitude and tactic 
    
-.. image:: static/pictures/feedback_2.png
+.. fingure:: static/pictures/feedback_2.png
 
 
 | 
   
-.. image:: static/pictures/feedback_3.jfif
+.. fingure:: static/pictures/feedback_3.jfif
     :legend: lineup in HO should be as per the recommendation
 
 
@@ -37,7 +37,7 @@ FeedBack have to be done after a team update, if not you will get a warning for 
 
  **Copy the ratings on HT and paste them inside the feedback plugin** 
   
-.. image:: static/pictures/feedback_4.png
+.. fingure:: static/pictures/feedback_4.png
     :legend: copying ratings from HT (lineup in HO should be similar to the one in HO!)
   
   
