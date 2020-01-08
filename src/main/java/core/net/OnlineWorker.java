@@ -340,6 +340,7 @@ public class OnlineWorker {
 				}
 
 				// Create the MatchKurzInfo even if we got an old one.
+				if (info == null) info = new MatchKurzInfo();
 				info.setOrdersGiven(true);
 				info.setGastID(lineup.getGastId());
 				info.setGastName(lineup.getGastName());
