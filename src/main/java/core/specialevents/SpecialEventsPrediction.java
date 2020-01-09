@@ -106,6 +106,10 @@ public class SpecialEventsPrediction {
         return new SpecialEventsPrediction(position, eventName, f);
     }
 
+    public void setChanceCreationProbability(double p){
+        this.chanceCreationProbability = p;
+    }
+
     public double getChanceCreationProbability() {
         return chanceCreationProbability;
     }

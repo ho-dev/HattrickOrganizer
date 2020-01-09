@@ -17,7 +17,6 @@ import module.teamAnalyzer.vo.PlayerInfo;
 import module.teamAnalyzer.vo.PlayerPerformance;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
@@ -159,8 +158,7 @@ public class SpecialEventsPredictionManager {
         analyzers.add(new ExperienceEventPredictionAnalyzer());
         analyzers.add(new UnpredictableEventPredictionAnalyzer());
         analyzers.add(new WingerEventPredictionAnalyzer());
-        analyzers.add(new PowerfulForwardEventPredictionAnalyzer());
-        analyzers.add(new SittingMidfielderEventPredictionAnalyzer());
+        analyzers.add(new PowerfulEventPredictionAnalyzer());
         analyzers.add(new QuickEventPredictionAnalyzer());
         analyzers.add(new TechnicalEventPredictionAnalyzer());
     }
@@ -196,7 +194,7 @@ public class SpecialEventsPredictionManager {
     public void setOpponentLineup(MatchDetail opponentMatch) {
         this.opponentLineup = new Lineup();
         for (PlayerPerformance playerPerformance : opponentMatch.getPerformances()) {
-            if (playerPerformance.getStatus() == PlayerDataManager.AVAILABLE) {     // if status is UNKNOWN user has to download players info
+            if (playerPerformance.getStatus() <= PlayerDataManager.AVAILABLE) {     // if status is UNKNOWN user has to download players info
                 this.opponentLineup.setPosition(playerPerformance.getMatchRoleID());
                 // playerPerformance -> PLayer
                 OpponentPlayer player = (OpponentPlayer) this.opponentPlayerInLineup.get(playerPerformance.getSpielerId());

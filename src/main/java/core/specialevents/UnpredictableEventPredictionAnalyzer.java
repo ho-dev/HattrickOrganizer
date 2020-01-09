@@ -65,26 +65,26 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
                     break;
                 case IMatchRoleID.rightBack:
                     getUnpredictableLongPass(ret, position);
-                    getUnpredictableMistake(ret, position, IMatchRoleID.rightForward, 0);
+                    getUnpredictableMistake(ret, position);
                     getUnpredictableSpecialAction(ret, position, IMatchRoleID.leftBack, IMatchRoleID.leftCentralDefender, 0);
                     break;
                 case IMatchRoleID.leftCentralDefender:
                 case IMatchRoleID.middleCentralDefender:
                 case IMatchRoleID.rightCentralDefender:
                     getUnpredictableLongPass(ret, position);
-                    getUnpredictableMistake(ret, position, IMatchRoleID.rightForward, 0);
+                    getUnpredictableMistake(ret, position);
                     getUnpredictableSpecialAction(ret, position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
                     break;
                 case IMatchRoleID.leftBack:
                     getUnpredictableLongPass(ret, position);
-                    getUnpredictableMistake(ret, position, IMatchRoleID.rightForward, 0);
-                    getUnpredictableSpecialAction(ret, position, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack, 0);
+                    getUnpredictableMistake(ret, position);
+                    getUnpredictableSpecialAction(ret, position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack, 0);
                     break;
 
                 case IMatchRoleID.rightInnerMidfield:
                 case IMatchRoleID.centralInnerMidfield:
                 case IMatchRoleID.leftInnerMidfield:
-                    getUnpredictableMistake(ret, position, IMatchRoleID.rightForward, 0);
+                    getUnpredictableMistake(ret, position);
                     getUnpredictableScores(ret, position, 0);
                     getUnpredictableSpecialAction(ret, position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
                     break;
