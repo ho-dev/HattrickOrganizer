@@ -173,7 +173,7 @@ Why a new Special Events framework?
  Example: Your stamina needs to be close or higher than your opponent. If you have 13 defending and your opponent 17
  scoring, you have 41% chance to press it.
 
- TODO: Winger to Anyone
+ Winger to Anyone DONE: WingerEventPredictionAnalyzer
  If your winger manages to break through the defense on his side of the pitch, he might pass the ball to the other
  Winger, Forward, or an Inner Midfielder.
 
@@ -181,7 +181,7 @@ Why a new Special Events framework?
  ball receiver has 13 scoring and the keeper has 15 goalkeeping. The chances to score are 69%. But if you increase your
  Winger skill to 16, your chances increase also to 73%
 
- TODO: Winger to Head
+ Winger to Head DONE: WingerEventPredictionAnalyzer
  Same as the previous event, but if the receiver has a head spec, then it will be far easier for him to score.
 
  Example: Same skills as before. The difference is that the ball receiver is easier to score now since he is a header.

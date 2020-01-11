@@ -725,6 +725,16 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN LOYALTY INTEGER");
 		}
 
+		//store RATINGINDIRECTSETPIECESATT  into MATCHDETAILS table
+		if (!columnExistsInTable("RATINGINDIRECTSETPIECESATT", MatchDetailsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESATT INTEGER");
+		}
+
+		//store RATINGINDIRECTSETPIECESDEF  into MATCHDETAILS table
+		if (!columnExistsInTable("RATINGINDIRECTSETPIECESDEF", MatchDetailsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESDEF INTEGER");
+		}
+
 		//create TournamentDetailsTable
 		if (!tableExists(TournamentDetailsTable.TABLENAME)) {
 			dbManager.getTable(TournamentDetailsTable.TABLENAME).createTable();

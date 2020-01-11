@@ -616,7 +616,13 @@ public class XMLMatchdetailsParser {
             md.setGuestMidAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingLeftAtt").item(0);
             md.setGuestLeftAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
-            try {
+
+			ele = (Element) root.getElementsByTagName("RatingIndirectSetPiecesAtt").item(0);
+			md.setRatingIndirectSetPiecesAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			ele = (Element) root.getElementsByTagName("RatingIndirectSetPiecesDef").item(0);
+			md.setRatingIndirectSetPiecesDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+
+			try {
                 ele = (Element) root.getElementsByTagName("TeamAttitude").item(0);
                 md.setGuestEinstellung(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             } catch (Exception e) {
@@ -664,7 +670,13 @@ public class XMLMatchdetailsParser {
             md.setHomeMidAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingLeftAtt").item(0);
             md.setHomeLeftAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
-            try {
+
+			ele = (Element) root.getElementsByTagName("RatingIndirectSetPiecesAtt").item(0);
+			md.setRatingIndirectSetPiecesAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			ele = (Element) root.getElementsByTagName("RatingIndirectSetPiecesDef").item(0);
+			md.setRatingIndirectSetPiecesDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+
+			try {
                 ele = (Element) root.getElementsByTagName("TeamAttitude").item(0);
                 md.setHomeEinstellung(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             } catch (Exception e) {

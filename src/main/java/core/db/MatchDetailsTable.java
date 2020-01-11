@@ -19,7 +19,7 @@ final class MatchDetailsTable extends AbstractTable {
 	
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[41];
+		columns = new ColumnDescriptor[43];
 		columns[0]= new ColumnDescriptor("MatchID",Types.INTEGER,false,true);
 		columns[1]= new ColumnDescriptor("ArenaId",Types.INTEGER,false);
 		columns[2]= new ColumnDescriptor("ArenaName",Types.VARCHAR,false,256);
@@ -61,16 +61,15 @@ final class MatchDetailsTable extends AbstractTable {
 		columns[38]= new ColumnDescriptor("soldBasic",Types.INTEGER,false);
 		columns[39]= new ColumnDescriptor("soldRoof",Types.INTEGER,false);
 		columns[40]= new ColumnDescriptor("soldVIP",Types.INTEGER,false);
+		columns[41]= new ColumnDescriptor("RatingIndirectSetPiecesDef",Types.INTEGER,true);
+		columns[42]= new ColumnDescriptor("RatingIndirectSetPiecesAtt",Types.INTEGER,true);
 	}
 	
 	@Override
 	protected String[] getCreateIndizeStatements() {
 		return new String[] {
 			"CREATE INDEX IMATCHDETAILS_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")"};
-	}	
-
-	
-
+	}
 	
 	/**
 	 * Gibt die MatchDetails zu einem Match zurück
@@ -122,6 +121,8 @@ final class MatchDetailsTable extends AbstractTable {
 				details.setSoldRoof(rs.getInt("soldRoof"));
 				details.setSoldVIP(rs.getInt("soldVIP"));
 				details.setMatchreport(DBManager.deleteEscapeSequences(rs.getString("Matchreport")));
+				details.setRatingIndirectSetPiecesAtt(rs.getInt("RatingIndirectSetPiecesAtt"));
+				details.setRatingIndirectSetPiecesDef(rs.getInt("RatingIndirectSetPiecesDef"));
 				ArrayList<MatchEvent> vMatchHighlights = DBManager.instance().getMatchHighlights(matchId);
 				details.setHighlights(vMatchHighlights);
 				details.setStatisics();
