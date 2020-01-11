@@ -33,7 +33,7 @@ public class DoppelLabelEntry extends AbstractHOTableEntry {
         super();
         m_clLinks = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, color,
                                         SwingConstants.RIGHT);
-        m_clRechts = new ColorLabelEntry("", core.model.UserParameter.instance().FG_VERLETZT, color,
+        m_clRechts = new ColorLabelEntry("", core.model.UserParameter.instance().FG_INJURED, color,
                                          SwingConstants.CENTER);
         createComponent();
     }

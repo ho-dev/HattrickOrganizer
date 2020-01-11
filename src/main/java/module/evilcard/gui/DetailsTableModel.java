@@ -2,9 +2,10 @@ package module.evilcard.gui;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.match.IMatchHighlight;
-import core.model.match.MatchHighlight;
+import core.model.match.MatchEvent;
 import core.model.match.Matchdetails;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Vector;
@@ -95,9 +96,8 @@ class DetailsTableModel extends AbstractTableModel {
 	private void generateData() {
 		// Inserimento valori iniziali
 		if (playerId > 0) {
-			Vector<MatchHighlight> highlights = DBManager.instance()
-					.getMatchHighlightsByTypIdAndPlayerId(IMatchHighlight.HIGHLIGHT_KARTEN,
-							playerId);
+			ArrayList<MatchEvent> highlights = DBManager.instance()
+					.getMatchHighlightsByTypIdAndPlayerId(MatchEvent.MatchEventCategory.MATCH_EVENT_CARDS.ordinal(), playerId);
 
 			int i = 0;
 			int rows = highlights.size();
@@ -106,32 +106,32 @@ class DetailsTableModel extends AbstractTableModel {
 				// inizializazione
 				data = new Object[rows][cols];
 
-				for (Iterator<MatchHighlight> iterator = highlights.iterator(); iterator.hasNext();) {
-					MatchHighlight matchHighlight = iterator.next();
+				for (Iterator<MatchEvent> iterator = highlights.iterator(); iterator.hasNext();) {
+					MatchEvent matchHighlight = iterator.next();
 
 					data[i][COL_MATCH_ID] = Integer.valueOf(matchHighlight.getMatchId());
 
 					data[i][COL_EVENT] = new String("<html>" + matchHighlight.getEventText());
 
 					// controllo ammonizioni
-					switch (matchHighlight.getHighlightSubTyp()) {
-					case IMatchHighlight.HIGHLIGHT_SUB_GELB_HARTER_EINSATZ:
+					switch (matchHighlight.getMatchEventID()) {
+						case YELLOW_CARD_NASTY_PLAY:  // #510
 						data[i][COL_WARNINGS_TYPE1] = CHECKED;
 						break;
 
-					case IMatchHighlight.HIGHLIGHT_SUB_GELB_ROT_HARTER_EINSATZ:
+						case RED_CARD_2ND_WARNING_NASTY_PLAY: // #512
 						data[i][COL_WARNINGS_TYPE2] = CHECKED;
 						break;
 
-					case IMatchHighlight.HIGHLIGHT_SUB_GELB_UNFAIR:
+						case YELLOW_CARD_CHEATING:  // #511
 						data[i][COL_WARNINGS_TYPE3] = CHECKED;
 						break;
 
-					case IMatchHighlight.HIGHLIGHT_SUB_GELB_ROT_UNFAIR:
+						case RED_CARD_2ND_WARNING_CHEATING: // #513
 						data[i][COL_WARNINGS_TYPE4] = CHECKED;
 						break;
 
-					case IMatchHighlight.HIGHLIGHT_SUB_ROT:
+						case RED_CARD_WITHOUT_WARNING:  // #514
 						data[i][COL_DIRECT_RED_CARDS] = CHECKED;
 						break;
 					}

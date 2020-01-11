@@ -4,7 +4,7 @@ package core.file.xml;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchHelper;
-import core.model.match.MatchHighlight;
+import core.model.match.MatchEvent;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.Matchdetails;
@@ -127,7 +127,7 @@ public class MatchExporter {
 			HOLogger.instance().debug(MatchExporter.class, "Ignoring match " + info.getMatchID() + ": Walk over");
 			return false;
 		}
-		Vector<MatchHighlight> highlights = details.getHighlights();
+		ArrayList<MatchEvent> highlights = details.getHighlights();
 		//Aussortieren starten...
 		if (info.getMatchDateAsTimestamp().before(startingDate)) { //Zu alt !!!
 			return false;

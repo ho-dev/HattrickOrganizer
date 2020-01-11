@@ -26,7 +26,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     private String m_sMatchreport = "";
     private Timestamp m_clFetchDatum;
     private Timestamp m_clSpielDatum;
-    private Vector<MatchHighlight> m_vHighlights = new Vector<MatchHighlight>();
+    private ArrayList<MatchEvent> m_vHighlights = new ArrayList<>();
     private int m_iArenaID = -1;
     private int m_iGastId = -1;
 
@@ -83,6 +83,73 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     private int soldVIP = -1;
 
     private int m_iRegionId;
+
+    public ArrayList<Injury> getM_Injuries() {
+        return m_Injuries;
+    }
+
+    public void setM_Injuries(ArrayList<Injury> m_Injuries) {
+        this.m_Injuries = m_Injuries;
+    }
+
+    public ArrayList<Injury> m_Injuries = new ArrayList<>();
+
+    public enum eInjuryType {
+        NA(0), BRUISE(1), INJURY(2);
+        private final int value;
+
+        public int getValue() { return value; }
+
+        eInjuryType(final int newValue) {
+            value = newValue;
+        }
+
+        public static eInjuryType fromInteger(int x) {
+            switch(x) {
+                case 0:
+                    return NA;
+                case 1:
+                    return BRUISE;
+                case 2:
+                    return INJURY;
+            }
+            return null;
+        }
+
+    }
+
+    public static class Injury{
+        public int getInjuryPlayerID() {
+            return InjuryPlayerID;
+        }
+
+        public eInjuryType getInjuryType() {
+            return InjuryType;
+        }
+
+        public int getInjuryMinute() {
+            return InjuryMinute;
+        }
+
+
+
+        int InjuryPlayerID;
+        int InjuryTeamID;
+        eInjuryType InjuryType;
+        int InjuryMinute;
+        int MatchPart;
+
+        public Injury(int injuryPlayerID, int injuryTeamID, int _injuryType, int injuryMinute, int matchPart) {
+            InjuryPlayerID = injuryPlayerID;
+            InjuryTeamID = injuryTeamID;
+            InjuryMinute = injuryMinute;
+            MatchPart = matchPart;
+            if (_injuryType == eInjuryType.BRUISE.value) {InjuryType = eInjuryType.BRUISE;}
+            else if(_injuryType == eInjuryType.INJURY.value) {InjuryType = eInjuryType.INJURY;}
+            else{HOLogger.instance().log(getClass(), "Injury type not recognized !!");}
+            }
+        }
+
 
     ////////////////////////////////////////////////////////////////////////////////
     //Konstruktor
@@ -186,18 +253,18 @@ public class Matchdetails implements core.model.match.IMatchDetails {
  		}
 
     public final int getGuestHalfTimeGoals() {
-    	Vector<MatchHighlight> highLights = getHighlights();
-    	for (MatchHighlight iMatchHighlight : highLights) {
-			if(iMatchHighlight.getHighlightTyp() == 0 && iMatchHighlight.getHighlightSubTyp() == 45)
+    	ArrayList<MatchEvent> highLights = getHighlights();
+    	for (MatchEvent iMatchHighlight : highLights) {
+			if(iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
 				return iMatchHighlight.getGastTore();
 		}
     	return -1;
 	}
 
 	public final int getHomeHalfTimeGoals() {
-		Vector<MatchHighlight> highLights = getHighlights();
-    	for (MatchHighlight iMatchHighlight : highLights) {
-			if(iMatchHighlight.getHighlightTyp() == 0 && iMatchHighlight.getHighlightSubTyp() == 45)
+        ArrayList<MatchEvent> highLights = getHighlights();
+    	for (MatchEvent iMatchHighlight : highLights) {
+			if(iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
 				return iMatchHighlight.getHeimTore();
 		}
     	return -1;
@@ -626,7 +693,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @param m_vHighlights New value of property m_vHighlights.
      */
-    public final void setHighlights(Vector<MatchHighlight> m_vHighlights) {
+    public final void setHighlights(ArrayList<MatchEvent> m_vHighlights) {
         this.m_vHighlights = m_vHighlights;
     }
 
@@ -635,7 +702,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_vHighlights.
      */
-    public final Vector<MatchHighlight> getHighlights() {
+    public final ArrayList<MatchEvent> getHighlights() {
         return m_vHighlights;
     }
 

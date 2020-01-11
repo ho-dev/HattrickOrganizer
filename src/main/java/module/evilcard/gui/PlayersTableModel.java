@@ -5,11 +5,11 @@ import core.constants.player.PlayerHonesty;
 import core.db.DBManager;
 import core.gui.model.SpielerMatchCBItem;
 import core.model.HOVerwaltung;
-import core.model.match.IMatchHighlight;
-import core.model.match.MatchHighlight;
+import core.model.match.MatchEvent;
 import core.model.player.Player;
 import module.evilcard.Model;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -233,64 +233,54 @@ class PlayersTableModel extends AbstractTableModel {
 				data[row][col] = new Integer(0);
 			}
 
-			Vector<MatchHighlight> highlights = DBManager.instance()
-					.getMatchHighlightsByTypIdAndPlayerId(IMatchHighlight.HIGHLIGHT_KARTEN, id);
+			ArrayList<MatchEvent> highlights = DBManager.instance().getMatchHighlightsByTypIdAndPlayerId(MatchEvent.MatchEventCategory.MATCH_EVENT_CARDS.ordinal(), id);
 
 			int matchid = 0;
-			int cartellino = 0;
 
-			for (Iterator<MatchHighlight> iterator = highlights.iterator(); iterator.hasNext();) {
-				MatchHighlight matchHighlight = iterator.next();
-				int subtypeHighlight = matchHighlight.getHighlightSubTyp();
+			for (Iterator<MatchEvent> iterator = highlights.iterator(); iterator.hasNext();) {
+				MatchEvent matchHighlight = iterator.next();
+				MatchEvent.MatchEventID me = matchHighlight.getMatchEventID();
 				int matchidlast = matchHighlight.getMatchId();
 
 				if (matchid != matchidlast) {
-					cartellino = 0;
 					matchid = matchidlast;
 				}
 
 				incrementaValoreColonna(row, COL_CARDS);
 
-				switch (subtypeHighlight) {
-				// prima ammonizione : fallaccio
-				case IMatchHighlight.HIGHLIGHT_SUB_GELB_HARTER_EINSATZ:
+				switch (me) {
+				case YELLOW_CARD_NASTY_PLAY:   //#510
 					incrementaValoreColonna(row, COL_WARNINGS_TYPE1);
 					incrementaValoreColonna(row, COL_WARNINGS);
-					cartellino++;
 					break;
 
-				// seconda ammonizione : fallaccio
-				case IMatchHighlight.HIGHLIGHT_SUB_GELB_ROT_HARTER_EINSATZ:
+				case RED_CARD_2ND_WARNING_NASTY_PLAY:    //#512
 					incrementaValoreColonna(row, COL_WARNINGS_TYPE2);
 					incrementaValoreColonna(row, COL_WARNINGS);
 					incrementaValoreColonna(row, COL_MATCHES);
-					cartellino++;
 					break;
 
-				// prima ammonizione : scorretto
-				case IMatchHighlight.HIGHLIGHT_SUB_GELB_UNFAIR:
+				case YELLOW_CARD_CHEATING:   //#511
 					incrementaValoreColonna(row, COL_WARNINGS_TYPE3);
 					incrementaValoreColonna(row, COL_WARNINGS);
-					cartellino++;
 					break;
 
-				// seconda ammonizione : scorretto
-				case IMatchHighlight.HIGHLIGHT_SUB_GELB_ROT_UNFAIR:
+				case RED_CARD_2ND_WARNING_CHEATING:   //#513
 					incrementaValoreColonna(row, COL_WARNINGS_TYPE4);
 					incrementaValoreColonna(row, COL_WARNINGS);
 					incrementaValoreColonna(row, COL_MATCHES);
-					cartellino++;
 					break;
 
-				// esplusione diretta
-				case IMatchHighlight.HIGHLIGHT_SUB_ROT:
+				case RED_CARD_WITHOUT_WARNING:   //#514
 					incrementaValoreColonna(row, COL_DIRECT_RED_CARDS);
 					incrementaValoreColonna(row, COL_MATCHES);
 					break;
 
+				// TODO: check wheter or not this block can be removed
 				// infortunio
-				case IMatchHighlight.HIGHLIGHT_SUB_VERLETZT_SCHWER:
+				case BADLY_INJURED_LEAVES_FIELD:
 					incrementaValoreColonna(row, COL_MATCHES);
+					System.out.println("not expecting to get here ..... Check what this block is doing !!!");
 					break;
 				}
 			}

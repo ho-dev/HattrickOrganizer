@@ -415,19 +415,19 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         }
         //Injured
         else if (player.getVerletzt() > 0) {
-            color = userParameter.FG_VERLETZT;
+            color = userParameter.FG_INJURED;
         }
         //Disabled
         else if (player.isGesperrt()) {
-            color = userParameter.FG_GESPERRT;
+            color = userParameter.FG_RED_CARD;
         }
         //Yellow card
         else if (player.getVerletzt() == 0) {
-            color = userParameter.FG_ANGESCHLAGEN;
+            color = userParameter.FG_BRUISED;
         }
         //Red card
         else if (player.getGelbeKarten() == 2) {
-            color = userParameter.FG_ZWEIKARTEN;
+            color = userParameter.FG_TWO_YELLOW_CARDS;
         } else {
             color = userParameter.FG_STANDARD;
         }
