@@ -3,7 +3,8 @@ from os import path
 
 path_to_folder = "D:\\Perso\\Code\\HO\\src\\main\\resources\\gui\\bilder\\match_events\\"
 
-combinations = {"converted_penalty.png": ("goal.png", "penalty.png", "v"),
+combinations = {"missed_penalty.png": ("miss.png", "penalty.png", "v"),
+                "converted_penalty.png": ("goal.png", "penalty.png", "v"),
                 "me_206.png": ("miss.png", "speciality-4.png", "v")}
 
 def get_concat_h(im1, im2, out):
@@ -22,7 +23,7 @@ def get_concat_v(im1, im2, out):
 for k, v in combinations.items():
     name_img1, name_img2, operation = v
 
-    if not path.exists("path_to_folder+out"):
+    if not path.exists(path_to_folder+k):
         try:
             im1 = Image.open(path_to_folder + name_img1)
             im2 = Image.open(path_to_folder + name_img2)

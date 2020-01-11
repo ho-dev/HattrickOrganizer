@@ -69,23 +69,24 @@ public interface HOIconName {
 
 	String ME_206 = "me_206";
 
-	String GOAL			= "tor";
+	String GOAL			= "goal";
+	String MISS			= "miss";
 	String GOAL_FREEKICK 	= "tor_freistoss";
 	String GOAL_MID		= "tor_mitte";
 	String GOAL_LEFT		= "tor_links";
 	String GOAL_RIGHT		= "tor_rechts";
 	String GOAL_PENALTY	= "tor_elfmeter";
 	String CONVERTED_PENALTY = "convertedPenalty";
+	String MISSED_PENALTY = "missedPenalty";
 	String GOAL_IFK = "tor_indirect_freekick";
 	String GOAL_LONGSHOT	= "tor_longshot";
 	String GOAL_SPECIAL	= "tor_special";
 	String GOAL_COUNTER	= "tor_counter";
-	String NOGOAL			= "keintor";
 	String NO_GOAL_FREEKICK = "keintor_freistoss";
 	String NO_GOAL_MID = "keintor_mitte";
 	String NO_GOAL_LEFT = "keintor_links";
 	String NO_GOAL_RIGHT = "keintor_rechts";
-	String NO_GOAL_PENALTY = "keintor_elfmeter";
+
 	String NO_GOAL_IFK = "keintor_indirect_freekick";
 	String NO_GOAL_LONGSHOT = "keintor_longshot";
 	String NO_GOAL_SPECIAL = "keintor_special";

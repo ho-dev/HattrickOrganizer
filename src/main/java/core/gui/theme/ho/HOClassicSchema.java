@@ -131,23 +131,22 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		// Highlights
 		put(BRUISED, "gui/bilder/match_events/plaster.png");
 		put(INJURED, "gui/bilder/match_events/injury(red).png");
-		put(GOAL, "gui/bilder/highlights/Fussball.png");
+		put(GOAL, "gui/bilder/match_events/goal.png");
+		put(MISS, "gui/bilder/match_events/miss.png");
 		put(GOAL_FREEKICK, "gui/bilder/highlights/Fussball_Freistoss.png");
 		put(GOAL_MID, "gui/bilder/match_events/goal_C.png");
 		put(GOAL_LEFT, "gui/bilder/match_events/goal_L.png");
 		put(GOAL_RIGHT, "gui/bilder/match_events/goal_R.png");
-		put(GOAL_PENALTY, "gui/bilder/highlights/Fussball_Elfmeter.png");
 		put(CONVERTED_PENALTY, "gui/bilder/match_events/converted_penalty.png");
+		put(MISSED_PENALTY, "gui/bilder/match_events/missed_penalty.png");
 		put(GOAL_IFK, "gui/bilder/highlights/Fussball_FreistossIndirekt.png");
 		put(GOAL_LONGSHOT, "gui/bilder/highlights/Fussball_Longshot.png");
 		put(GOAL_SPECIAL, "gui/bilder/highlights/Fussball_Spezial.png");
 		put(GOAL_COUNTER, "gui/bilder/highlights/Fussball_Konter.png");
-		put(NOGOAL, "gui/bilder/highlights/KeinFussball.png");
 		put(NO_GOAL_FREEKICK, "gui/bilder/highlights/KeinFussball_Freistoss.png");
 		put(NO_GOAL_MID, "gui/bilder/highlights/KeinFussball_Mitte.png");
 		put(NO_GOAL_LEFT, "gui/bilder/highlights/KeinFussball_Links.png");
 		put(NO_GOAL_RIGHT, "gui/bilder/highlights/KeinFussball_Rechts.png");
-		put(NO_GOAL_PENALTY, "gui/bilder/highlights/KeinFussball_Elfmeter.png");
 		put(NO_GOAL_FREEKICK, "gui/bilder/highlights/KeinFussball_FreistossIndirekt.png");
 		put(NO_GOAL_LONGSHOT, "gui/bilder/highlights/KeinFussball_Longshot.png");
 		put(NO_GOAL_SPECIAL, "gui/bilder/highlights/KeinFussball_Spezial.png");
