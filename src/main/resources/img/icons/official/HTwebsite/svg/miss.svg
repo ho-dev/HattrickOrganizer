@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg width="16px" height="16px" enable-background="new 0 0 16 16" version="1.1" viewBox="0 0 16 16" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink"><metadata><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><dc:title/></cc:Work></rdf:RDF></metadata>
+<g transform="translate(2)">
+	<circle cx="5.993" cy="8" r="5.905" fill="#fff"/>
+	<circle cx="6.012" cy="8.001" r="5.5" fill="#fff"/>
+	<path d="m5.993 3.095c2.705 0 4.905 2.201 4.905 4.906s-2.2 4.904-4.905 4.904-4.905-2.199-4.905-4.904 2.2-4.906 4.905-4.906m0-1c-3.262 0-5.905 2.645-5.905 5.906s2.644 5.904 5.905 5.904 5.905-2.644 5.905-5.904c0-3.261-2.643-5.906-5.905-5.906z" fill="#999"/>
+	<polygon points="3.895 7.319 5.992 5.794 8.092 7.319 7.29 9.785 4.697 9.785" fill="#999"/>
+	
+		
+			<defs>
+				<circle id="SVGID_1_" cx="5.993" cy="8.001" r="4.906"/>
+			</defs>
+			<clipPath id="SVGID_2_">
+				<use width="100%" height="100%" overflow="visible" xlink:href="#SVGID_1_"/>
+			</clipPath>
+			<polygon points="9.02 14.004 7.276 12.737 7.942 10.688 10.098 10.69 10.764 12.737" clip-path="url(#SVGID_2_)" fill="#999"/>
+		
+		
+			<defs>
+				<circle id="SVGID_3_" cx="5.993" cy="8.001" r="4.906"/>
+			</defs>
+			<clipPath id="SVGID_4_">
+				<use width="100%" height="100%" overflow="visible" xlink:href="#SVGID_3_"/>
+			</clipPath>
+			<polygon points="10.9 8.254 9.157 6.987 9.823 4.939 11.977 4.94 12.643 6.987" clip-path="url(#SVGID_4_)" fill="#999"/>
+		
+		
+			<defs>
+				<circle id="SVGID_5_" cx="5.993" cy="8.001" r="4.906"/>
+			</defs>
+			<clipPath id="SVGID_6_">
+				<use width="100%" height="100%" overflow="visible" xlink:href="#SVGID_5_"/>
+			</clipPath>
+			<polygon points="5.994 4.696 4.251 3.431 4.917 1.381 7.07 1.382 7.735 3.43" clip-path="url(#SVGID_6_)" fill="#999"/>
+		
+		
+			<defs>
+				<circle id="SVGID_7_" cx="5.993" cy="8.001" r="4.906"/>
+			</defs>
+			<clipPath id="SVGID_8_">
+				<use width="100%" height="100%" overflow="visible" xlink:href="#SVGID_7_"/>
+			</clipPath>
+			<polygon points="1.087 8.254 -0.655 6.987 0.011 4.939 2.164 4.94 2.829 6.987" clip-path="url(#SVGID_8_)" fill="#999"/>
+		
+		
+			<defs>
+				<circle id="SVGID_9_" cx="5.993" cy="8.001" r="4.906"/>
+			</defs>
+			<clipPath id="SVGID_10_">
+				<use width="100%" height="100%" overflow="visible" xlink:href="#SVGID_9_"/>
+			</clipPath>
+			<polygon points="2.981 14.004 1.238 12.737 1.904 10.688 4.058 10.69 4.724 12.737" clip-path="url(#SVGID_10_)" fill="#999"/>
+		
+	
+</g>
+</svg>
