@@ -760,8 +760,12 @@ final class AufstellungsRatingPanel extends RasenPanel {
         innerpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 
         //Hatstats
-        temppanel = new JPanel(new GridLayout(1, 2));
+        temppanel = new JPanel(new GridLayout(1, 3));
         temppanel.setOpaque(true);
+        JLabel lblHatStat = new JLabel(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"));
+        lblHatStat.setOpaque(true);
+        lblHatStat.setBackground(m_clHatstatMain.getComponent(false).getBackground());
+        temppanel.add(lblHatStat);
         m_clHatstatMain.setFontStyle(Font.BOLD);
         tempcomponent = m_clHatstatMain.getComponent(false);
         tempcomponent.setOpaque(true);
@@ -772,8 +776,12 @@ final class AufstellungsRatingPanel extends RasenPanel {
         innerpanel.add(temppanel);
 
         //Loddar
-        temppanel = new JPanel(new GridLayout(1, 2));
+        temppanel = new JPanel(new GridLayout(1, 3));
         temppanel.setOpaque(true);
+        JLabel lblLoddarStat = new JLabel(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"));
+        lblLoddarStat.setOpaque(true);
+        lblLoddarStat.setBackground(tempcomponent.getBackground());
+        temppanel.add(lblLoddarStat);
         m_clLoddarMain.setFontStyle(Font.BOLD);
         tempcomponent = m_clLoddarMain.getComponent(false);
         tempcomponent.setOpaque(true);
@@ -895,10 +903,6 @@ final class AufstellungsRatingPanel extends RasenPanel {
      * Initialize all tool tips.
      */
     private void initToolTips() {
-        m_clHatstatMain.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"));
-        m_clHatstatCompare.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"));
-        m_clLoddarMain.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"));
-        m_clLoddarCompare.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"));
         if (m_bReihenfolge == REIHENFOLGE_STURM2VERTEIDIGUNG) {
             m_clTopLeftText.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence"));
             m_clTopLeftMain.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence"));

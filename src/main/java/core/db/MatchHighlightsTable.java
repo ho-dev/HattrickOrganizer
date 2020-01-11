@@ -1,12 +1,13 @@
 package core.db;
 
-import core.model.match.MatchHighlight;
+import core.model.match.MatchEvent;
 import core.model.match.Matchdetails;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Vector;
 
 final class MatchHighlightsTable extends AbstractTable {
@@ -43,37 +44,35 @@ final class MatchHighlightsTable extends AbstractTable {
 
 	void storeMatchHighlights(Matchdetails details) {
 		if (details != null) {
-			// Vorhandene Einträge entfernen
+
 			final String[] where = { "MatchID" };
 			final String[] werte = { "" + details.getMatchID() };
+
+			// Remove existing entry
 			delete(where, werte);
 
 			try {
-				final Vector<MatchHighlight> vHighlights = details.getHighlights();
+				final ArrayList<MatchEvent> vHighlights = details.getHighlights();
 				HOLogger.instance().debug(getClass(), "count of highlights: " + vHighlights.size());
 				for (int i = 0; i < vHighlights.size(); i++) {
-					final MatchHighlight highlight = (MatchHighlight) vHighlights.get(i);
+					final MatchEvent highlight = vHighlights.get(i);
 					StringBuilder sql = new StringBuilder(100);
-					// insert vorbereiten
+
 					sql.append("INSERT INTO ").append(getTableName());
-					sql.append(" ( MatchId, GastTore, HeimTore, Typ, Minute, SpielerId, SpielerName, TeamId, SubTyp, SpielerHeim, GehilfeID, GehilfeName, GehilfeHeim, EventText ) VALUES (");
+					sql.append(" ( MatchId, Minute, EVENT_INDEX, SpielerId, SpielerName, TeamId, MATCH_EVENT_ID, SpielerHeim, GehilfeID, GehilfeName, GehilfeHeim, INJURY_TYPE, EventText ) VALUES (");
 					sql.append(details.getMatchID()).append(", ");
-					sql.append(highlight.getGastTore()).append(", ");
-					sql.append(highlight.getHeimTore()).append(", ");
-					sql.append(highlight.getHighlightTyp()).append(", ");
 					sql.append(highlight.getMinute()).append(", ");
+					sql.append(highlight.getM_iMatchEventIndex()).append(", ");
 					sql.append(highlight.getSpielerID()).append(", '");
-					sql.append(DBManager.insertEscapeSequences(highlight.getSpielerName())).append(
-							"', ");
+					sql.append(DBManager.insertEscapeSequences(highlight.getSpielerName())).append("', ");
 					sql.append(highlight.getTeamID()).append(", ");
-					sql.append(highlight.getHighlightSubTyp()).append(", ");
+					sql.append(highlight.getiMatchEventID()).append(", ");
 					sql.append(highlight.getSpielerHeim()).append(", ");
 					sql.append(highlight.getGehilfeID()).append(", '");
-					sql.append(DBManager.insertEscapeSequences(highlight.getGehilfeName())).append(
-							"', ");
-					sql.append(highlight.getGehilfeHeim()).append(", '");
-					sql.append(DBManager.insertEscapeSequences(highlight.getEventText())).append(
-							"') ");
+					sql.append(DBManager.insertEscapeSequences(highlight.getGehilfeName())).append("', ");
+					sql.append(highlight.getGehilfeHeim()).append(", ");
+					sql.append(highlight.getM_eInjuryType().getValue()).append(", '");
+					sql.append(DBManager.insertEscapeSequences(highlight.getEventText())).append("') ");
 					adapter.executeUpdate(sql.toString());
 				}
 			} catch (Exception e) {
@@ -83,18 +82,19 @@ final class MatchHighlightsTable extends AbstractTable {
 		}
 	}
 
-	Vector<MatchHighlight> getMatchHighlights(int matchId) {
+	/**
+	 * @param matchId the match id
+	 * @return the match highlights
+	 */
+	ArrayList<MatchEvent> getMatchHighlights(int matchId) {
 		try {
-			// Highlights holen
-			final Vector<MatchHighlight> vMatchHighlights = new Vector<MatchHighlight>();
+			final ArrayList<MatchEvent> vMatchHighlights = new ArrayList<>();
 
-			String sql = "SELECT * FROM " + getTableName() + " WHERE MatchId=" + matchId
-					+ " ORDER BY Minute, HeimTore, GastTore";
+			String sql = "SELECT * FROM " + getTableName() + " WHERE MatchId=" + matchId + " ORDER BY EVENT_INDEX, Minute";
 			ResultSet rs = adapter.executeQuery(sql);
 
 			rs.beforeFirst();
 
-			// Alle Highlights des Spieles holen
 			while (rs.next()) {
 				vMatchHighlights.add(createObject(rs));
 			}
@@ -103,32 +103,30 @@ final class MatchHighlightsTable extends AbstractTable {
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);
 		}
-		return new Vector<MatchHighlight>();
+		return new ArrayList<>();
 	}
 
-	private MatchHighlight createObject(ResultSet rs) throws SQLException {
-		final MatchHighlight highlight = new MatchHighlight();
+	private MatchEvent createObject(ResultSet rs) throws SQLException {
+		final MatchEvent highlight = new MatchEvent();
 
 		highlight.setMatchId(rs.getInt("MatchId"));
-		highlight.setGastTore(rs.getInt("GastTore"));
-		highlight.setHeimTore(rs.getInt("HeimTore"));
-		highlight.setHighlightTyp(rs.getInt("Typ"));
 		highlight.setMinute(rs.getInt("Minute"));
 		highlight.setSpielerID(rs.getInt("SpielerId"));
 		highlight.setSpielerName(DBManager.deleteEscapeSequences(rs.getString("SpielerName")));
 		highlight.setTeamID(rs.getInt("TeamId"));
-		highlight.setHighlightSubTyp(rs.getInt("SubTyp"));
+		highlight.setMatchEventID(rs.getInt("MATCH_EVENT_ID"));
 		highlight.setSpielerHeim(rs.getBoolean("SpielerHeim"));
 		highlight.setGehilfeID(rs.getInt("GehilfeID"));
 		highlight.setGehilfeName(DBManager.deleteEscapeSequences(rs.getString("GehilfeName")));
 		highlight.setGehilfeHeim(rs.getBoolean("GehilfeHeim"));
 		highlight.setEventText(DBManager.deleteEscapeSequences(rs.getString("EventText")));
+		highlight.setM_eInjuryType(rs.getInt("INJURY_TYPE"));
 
 		return highlight;
 	}
 
-	Vector<MatchHighlight> getMatchHighlightsByTypIdAndPlayerId(int type, int playerId) {
-		Vector<MatchHighlight> matchHighlights = new Vector<MatchHighlight>();
+	ArrayList<MatchEvent> getMatchHighlightsByTypIdAndPlayerId(int type, int playerId) {
+		ArrayList<MatchEvent> matchHighlights = new ArrayList<>();
 
 		String sql = "SELECT * FROM " + getTableName() + " WHERE TYP=" + type + " AND "
 				+ "SpielerId=" + playerId + " ORDER BY Minute, HeimTore, GastTore";

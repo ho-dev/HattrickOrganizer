@@ -2,7 +2,7 @@ package module.playeranalysis.experience;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.match.MatchHighlight;
+import core.model.match.MatchEvent;
 import core.model.match.MatchLineup;
 import core.model.player.Player;
 import core.util.HOLogger;
@@ -11,10 +11,7 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 
 final class Spieler {
 	static double fehlerAbsolutZuSigma = 0.66;
@@ -227,9 +224,9 @@ final class Spieler {
 				matchIds.add(new Integer(matchId));
 			}
 			rs.close();
-			Vector<MatchHighlight> highlights = DBManager.instance().getMatchHighlightsByTypIdAndPlayerId(5, id);
-			for (Iterator<MatchHighlight> iterator = highlights.iterator(); iterator.hasNext();) {
-				MatchHighlight matchHighlight = iterator.next();
+			ArrayList<MatchEvent> highlights = DBManager.instance().getMatchHighlightsByTypIdAndPlayerId(5, id);
+			for (Iterator<MatchEvent> iterator = highlights.iterator(); iterator.hasNext();) {
+				MatchEvent matchHighlight = iterator.next();
 				matchIds.add(Integer.valueOf(matchHighlight.getMatchId()));
 			}
 			

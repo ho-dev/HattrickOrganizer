@@ -62,10 +62,10 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TEAMSMILIES[5], "gui/bilder/smilies/E-Team.png");
 		put(TEAMSMILIES[6], "gui/bilder/smilies/F-Team.png");
 
-		put(WEATHER[0], "gui/bilder/Fugue/weather-rain.png");
-		put(WEATHER[1], "gui/bilder/Fugue/weather-clouds.png");
-		put(WEATHER[2], "gui/bilder/Fugue/weather-cloudy.png");
-		put(WEATHER[3], "gui/bilder/Fugue/weather.png");
+		put(WEATHER[0], "gui/bilder/match_events/weather0.png");
+		put(WEATHER[1], "gui/bilder/match_events/weather1.png");
+		put(WEATHER[2], "gui/bilder/match_events/weather2.png");
+		put(WEATHER[3], "gui/bilder/match_events/weather3.png");
 		put(WEATHER_EFFECT_GOOD, "gui/bilder/Fugue/tick-small.png");
 		put(WEATHER_EFFECT_BAD, "gui/bilder/Fugue/cross-small.png");
 		put(WEATHER_RAIN_POS, "gui/bilder/Fugue/weather-rain-pos-se.png");
@@ -92,10 +92,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(YELLOWCARD, "gui/bilder/verwarnung_1.png");
 		put(TWOCARDS, "gui/bilder/verwarnung_2.png");
 
-		put(PATCH, "gui/bilder/angeschlagen.png");
-		put(INJURED, "gui/bilder/verletzt.png");
-		put(PATCHSMALL, "gui/bilder/angeschlagen_klein.png");
-		put(INJUREDSMALL, "gui/bilder/verletzt_klein.png");
+//		put(BRUISED_SMALL, "gui/bilder/angeschlagen_klein.png");
+//		put(INJURED_SMALL, "gui/bilder/verletzt_klein.png");
 
 		put(PRINTER, "gui/bilder/Drucken.png");
 		put(DISK, "gui/bilder/disk.png");
@@ -128,26 +126,31 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TRICKOT, "gui/bilder/Trickot.png");
 
 		// Highlights
+		put(BRUISED, "gui/bilder/match_events/plaster.png");
+		put(INJURED, "gui/bilder/match_events/injury(red).png");
 		put(GOAL, "gui/bilder/highlights/Fussball.png");
 		put(GOAL_FREEKICK, "gui/bilder/highlights/Fussball_Freistoss.png");
-		put(GOAL_MID, "gui/bilder/highlights/Fussball_Mitte.png");
-		put(GOAL_LEFT, "gui/bilder/highlights/Fussball_Links.png");
-		put(GOAL_RIGHT, "gui/bilder/highlights/Fussball_Rechts.png");
+		put(GOAL_MID, "gui/bilder/match_events/goal_C.png");
+		put(GOAL_LEFT, "gui/bilder/match_events/goal_L.png");
+		put(GOAL_RIGHT, "gui/bilder/match_events/goal_R.png");
 		put(GOAL_PENALTY, "gui/bilder/highlights/Fussball_Elfmeter.png");
-		put(GOAL_FREEKICK2, "gui/bilder/highlights/Fussball_FreistossIndirekt.png");
+		put(CONVERTED_PENALTY, "gui/bilder/match_events/converted_penalty.png");
+		put(GOAL_IFK, "gui/bilder/highlights/Fussball_FreistossIndirekt.png");
 		put(GOAL_LONGSHOT, "gui/bilder/highlights/Fussball_Longshot.png");
 		put(GOAL_SPECIAL, "gui/bilder/highlights/Fussball_Spezial.png");
 		put(GOAL_COUNTER, "gui/bilder/highlights/Fussball_Konter.png");
 		put(NOGOAL, "gui/bilder/highlights/KeinFussball.png");
-		put(NOGOAL_FREEKICK, "gui/bilder/highlights/KeinFussball_Freistoss.png");
-		put(NOGOAL_MID, "gui/bilder/highlights/KeinFussball_Mitte.png");
-		put(NOGOAL_LEFT, "gui/bilder/highlights/KeinFussball_Links.png");
-		put(NOGOAL_RIGHT, "gui/bilder/highlights/KeinFussball_Rechts.png");
-		put(NOGOAL_PENALTY, "gui/bilder/highlights/KeinFussball_Elfmeter.png");
-		put(NOGOAL_FREEKICK, "gui/bilder/highlights/KeinFussball_FreistossIndirekt.png");
-		put(NOGOAL_LONGSHOT, "gui/bilder/highlights/KeinFussball_Longshot.png");
-		put(NOGOAL_SPECIAL, "gui/bilder/highlights/KeinFussball_Spezial.png");
-		put(NOGOAL_COUNTER, "gui/bilder/highlights/KeinFussball_Konter.png");
+		put(NO_GOAL_FREEKICK, "gui/bilder/highlights/KeinFussball_Freistoss.png");
+		put(NO_GOAL_MID, "gui/bilder/highlights/KeinFussball_Mitte.png");
+		put(NO_GOAL_LEFT, "gui/bilder/highlights/KeinFussball_Links.png");
+		put(NO_GOAL_RIGHT, "gui/bilder/highlights/KeinFussball_Rechts.png");
+		put(NO_GOAL_PENALTY, "gui/bilder/highlights/KeinFussball_Elfmeter.png");
+		put(NO_GOAL_FREEKICK, "gui/bilder/highlights/KeinFussball_FreistossIndirekt.png");
+		put(NO_GOAL_LONGSHOT, "gui/bilder/highlights/KeinFussball_Longshot.png");
+		put(NO_GOAL_SPECIAL, "gui/bilder/highlights/KeinFussball_Spezial.png");
+		put(NO_GOAL_COUNTER, "gui/bilder/highlights/KeinFussball_Konter.png");
+
+		put(ME_206, "gui/bilder/match_events/me_206.png");
 
 		put(STAR, "gui/bilder/star.gif");
 		put(STAR_GRAY, "gui/bilder/star_grey.png");
@@ -221,6 +224,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(WHITE_RED_CLOCK, "gui/bilder/white-red-clock.png");
 
 		put(RATING_GRAPH, "gui/bilder/rating-graph.png");
+
+		put(UNKOWN, "gui/bilder/unknown.png");
 	}
 
 	private void initBooleans() {

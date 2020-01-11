@@ -2,7 +2,7 @@ package module.specialEvents.table;
 
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.match.MatchHighlight;
+import core.model.match.MatchEvent;
 import module.specialEvents.MatchRow;
 import module.specialEvents.SpecialEventsDM;
 
@@ -40,15 +40,15 @@ public class SETypeTableCellRenderer extends DefaultTableCellRenderer {
 		return component;
 	}
 
-	private ImageIcon getOwnerIcon(MatchHighlight highlight, boolean home, int heimId, int gastId) {
+	private ImageIcon getOwnerIcon(MatchEvent highlight, boolean home, int heimId, int gastId) {
 		ImageIcon icon = null;
 		if (home) {
 			// Create home icon
 			if (highlight.getTeamID() == heimId) {
-				if (SpecialEventsDM.isPositiveWeatherSE(highlight)) {
+				if (highlight.isPositiveSpecialtyWeatherSE()) {
 					// Positive weather SE for home team
 					return ThemeManager.getIcon(HOIconName.ARROW_RIGHT1);
-				} else if (SpecialEventsDM.isNegativeWeatherSE(highlight)) {
+				} else if (highlight.isPositiveSpecialtyWeatherSE()) {
 					// Negative weather SE for home team
 					return ThemeManager.getIcon(HOIconName.ARROW_RIGHT2);
 				} else if (!SpecialEventsDM.isNegativeSE(highlight)) {
@@ -56,8 +56,7 @@ public class SETypeTableCellRenderer extends DefaultTableCellRenderer {
 					return ThemeManager.getIcon(HOIconName.ARROW_RIGHT1);
 				}
 			} else {
-				if (!SpecialEventsDM.isWeatherSE(highlight)
-						&& SpecialEventsDM.isNegativeSE(highlight)) {
+				if (!highlight.isSpecialtyWeatherSE() && SpecialEventsDM.isNegativeSE(highlight)) {
 					// Negative non-weather SE against home team
 					return ThemeManager.getIcon(HOIconName.ARROW_RIGHT2);
 				}
@@ -65,10 +64,10 @@ public class SETypeTableCellRenderer extends DefaultTableCellRenderer {
 		} else {
 			// Create guest icon
 			if (highlight.getTeamID() == gastId) {
-				if (SpecialEventsDM.isPositiveWeatherSE(highlight)) {
+				if (highlight.isPositiveSpecialtyWeatherSE()) {
 					// Positive weather SE for guest team
 					ThemeManager.getIcon(HOIconName.ARROW_LEFT1);
-				} else if (SpecialEventsDM.isNegativeWeatherSE(highlight)) {
+				} else if (highlight.isNegativeSpecialtyWeatherSE()) {
 					// Negative weather SE for guest team
 					return ThemeManager.getIcon(HOIconName.ARROW_LEFT2);
 				} else if (!SpecialEventsDM.isNegativeSE(highlight)) {
@@ -76,8 +75,7 @@ public class SETypeTableCellRenderer extends DefaultTableCellRenderer {
 					return ThemeManager.getIcon(HOIconName.ARROW_LEFT1);
 				}
 			} else {
-				if (!SpecialEventsDM.isWeatherSE(highlight)
-						&& SpecialEventsDM.isNegativeSE(highlight)) {
+				if (!highlight.isSpecialtyWeatherSE() && SpecialEventsDM.isNegativeSE(highlight)) {
 					// Negative non-weather SE against guest team
 					return ThemeManager.getIcon(HOIconName.ARROW_LEFT2);
 				}

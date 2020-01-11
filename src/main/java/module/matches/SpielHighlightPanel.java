@@ -6,8 +6,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.match.IMatchHighlight;
-import core.model.match.MatchHighlight;
+import core.model.match.MatchEvent;
 import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
 
@@ -105,51 +104,66 @@ public class SpielHighlightPanel extends LazyImagePanel {
 			gastTeamToreLabel.setText(info.getGastTore() + " (" + details.getGuestHalfTimeGoals()
 					+ ") ");
 
-			// Highlights anzeigen
-			JLabel playerlabel = null;
+			JLabel playerlabel ;
 			JLabel resultlabel = null;
 
-			List<MatchHighlight> matchHighlights = details.getHighlights();
+			List<MatchEvent> matchHighlights = details.getHighlights();
+			ImageIcon icon;
+			Boolean bEventHighlighted;
+
+			int homeScore = 0;
+			int visitorScore = 0;
+			String scoreText;
 
 			for (int i = 0; i < matchHighlights.size(); i++) {
-				MatchHighlight highlight = matchHighlights.get(i);
+				scoreText = "";
+				MatchEvent highlight = matchHighlights.get(i);
 
-				// Label vorbereiten
-				ImageIcon icon = MatchesHelper.getImageIcon4SpielHighlight(highlight);
+				if (highlight.isGoalEvent() || highlight.isNonGoalEvent() || highlight.isBruisedOrInjured())
+				{
+					bEventHighlighted = true;
+				}
+				else
+				{
+					bEventHighlighted = false;
+				}
 
-				// Soll Highlight auch angezeigt werden? (Nur wenn Grafik
-				// vorhanden ist)
-				if (icon != null) {
-					// Spielername
+				// Displaying the event
+				if (bEventHighlighted) {
+
+					icon = highlight.getIcon();
+
 					String spielername = highlight.getSpielerName();
 					if (spielername.length() > 30) {
 						spielername = spielername.substring(0, 29);
 					}
 
-					spielername += (" (" + highlight.getMinute() + ".)");
+					spielername += (" (" + highlight.getMinute() + "')");
 					playerlabel = new JLabel(spielername, icon, SwingConstants.LEFT);
-					playerlabel.setForeground(MatchesHelper.getColor4SpielHighlight(
-							highlight.getHighlightTyp(), highlight.getHighlightSubTyp()));
-					if (highlight.isWeatherSEHighlight()) {
-						playerlabel.setToolTipText(removeHtml(highlight.getEventText()));
-					} else {
-						playerlabel.setToolTipText(MatchHighlight.getTooltiptext(
-								highlight.getHighlightTyp(), highlight.getHighlightSubTyp()));
-					}
+					playerlabel.setForeground(MatchesHelper.getColor4SpielHighlight(highlight));
 
-					// Steht Müll drin!
-					if (highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_ERFOLGREICH) {
-						resultlabel = new JLabel(highlight.getHeimTore() + " : "
-								+ highlight.getGastTore());
-					} else {
-						resultlabel = new JLabel("");
-					}
+					playerlabel.setToolTipText(MatchEvent.getEventTextDescription(highlight.getiMatchEventID()));
 
-					// Labels in den Highlightvector hinzufügen
+					if (highlight.isGoalEvent()) {
+						if (highlight.getTeamID() == teamid) {
+							// home goal
+							homeScore ++;
+							scoreText = "<html><b>" + homeScore + "</b> - " + visitorScore + "</html>";
+						}
+						else {
+							// visitors goal
+							visitorScore ++;
+							scoreText = "<html>" + homeScore + "- <strong>" + visitorScore + "</strong></html>";
+						}
+						}
+
+					resultlabel = new JLabel(scoreText);
+
+				    // Add labels to the highlight vector
 					highlightLabels.add(playerlabel);
 					highlightLabels.add(resultlabel);
 
-					// Heimaktion
+					// Home action
 					if (highlight.getTeamID() == info.getHeimID()) {
 						constraints.anchor = GridBagConstraints.WEST;
 						constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -181,8 +195,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 				}
 			}
 
-			// --updaten--
-			// Sterne für Sieger!
+			// stars for winner !
 			if (info.getMatchStatus() != MatchKurzInfo.FINISHED) {
 				heimTeamNameLabel.setIcon(null);
 				gastTeamNameLabel.setIcon(null);
@@ -203,18 +216,10 @@ public class SpielHighlightPanel extends LazyImagePanel {
 		}
 	}
 
-	private void addListeners() {
-		this.matchesModel.addMatchModelChangeListener(new MatchModelChangeListener() {
-
-			@Override
-			public void matchChanged() {
-				setNeedsRefresh(true);
-			}
-		});
-	}
+	private void addListeners() {this.matchesModel.addMatchModelChangeListener(() -> setNeedsRefresh(true));}
 
 	private void initComponents() {
-		highlightLabels = new ArrayList<Component>();
+		highlightLabels = new ArrayList<>();
 
 		setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
 

@@ -15,7 +15,7 @@ import core.model.Tournament.TournamentDetails;
 import core.model.UserParameter;
 import core.model.WorldDetailLeague;
 import core.model.XtraData;
-import core.model.match.MatchHighlight;
+import core.model.match.MatchEvent;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupPlayer;
@@ -49,12 +49,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 public class DBManager {
 	// ~ Static fields/initializers
@@ -1294,7 +1289,7 @@ public class DBManager {
 	/**
 	 * Gibt die MatchHighlights zu einem Match zurück
 	 */
-	public Vector<MatchHighlight> getMatchHighlights(int matchId) {
+	public ArrayList<MatchEvent> getMatchHighlights(int matchId) {
 		return ((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME))
 				.getMatchHighlights(matchId);
 	}
@@ -1304,7 +1299,7 @@ public class DBManager {
 
 	}
 
-	public Vector<MatchHighlight> getMatchHighlightsByTypIdAndPlayerId(
+	public ArrayList<MatchEvent> getMatchHighlightsByTypIdAndPlayerId(
 			int type, int playerId) {
 		return ((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME))
 				.getMatchHighlightsByTypIdAndPlayerId(type, playerId);

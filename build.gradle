@@ -341,7 +341,6 @@ task cleanBuild{
     }
 }
 
-
 task pushmd {
     doLast {
         copy {
@@ -563,6 +562,21 @@ task compute_sha_sums(){
         Process p = Runtime.getRuntime().exec(command)
     }
 }
+
+task resetDB(){
+    group 'tool'
+    description 'copy the database from existing install into project'
+
+    doFirst {println("Reseting DB: copying DB from `D:\\Program Files\\HattrickOrganizerDev` into  ${projectDir}")}
+
+    copy {
+        from "D:\\Program Files\\HattrickOrganizerDev\\db"
+        into "${projectDir}\\db"
+    }
+
+    doLast {println("Reseting DB: done !")}
+
+    }
 
 //apply plugin: 'com.github.breadmoirai.github-release'
 //githubRelease {

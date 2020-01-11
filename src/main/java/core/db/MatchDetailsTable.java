@@ -1,11 +1,12 @@
 package core.db;
 
-import core.model.match.MatchHighlight;
+import core.model.match.MatchEvent;
 import core.model.match.Matchdetails;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Vector;
 
 final class MatchDetailsTable extends AbstractTable {
@@ -121,8 +122,7 @@ final class MatchDetailsTable extends AbstractTable {
 				details.setSoldRoof(rs.getInt("soldRoof"));
 				details.setSoldVIP(rs.getInt("soldVIP"));
 				details.setMatchreport(DBManager.deleteEscapeSequences(rs.getString("Matchreport")));
-				Vector<MatchHighlight> vMatchHighlights = DBManager.instance().getMatchHighlights(matchId);
-				//Alle Highlights in die Details packen
+				ArrayList<MatchEvent> vMatchHighlights = DBManager.instance().getMatchHighlights(matchId);
 				details.setHighlights(vMatchHighlights);
 				details.setStatisics();
 			}
@@ -141,15 +141,16 @@ final class MatchDetailsTable extends AbstractTable {
 	 */
 	void storeMatchDetails(Matchdetails details) {
 		if (details != null) {
-			//Vorhandene Einträge entfernen
+
 			final String[] where = { "MatchID" };
 			final String[] werte = { "" + details.getMatchID()};
-			delete(where, werte);
-			String sql = null;
 
-			//saven
+			//Remove existing entries
+			delete(where, werte);
+
+			String sql;
+
 			try {
-				//insert vorbereiten
 				sql =
 					"INSERT INTO "+getTableName()+" ( MatchID, ArenaId, ArenaName, Fetchdatum, GastId, GastName, GastEinstellung, GastTore, "
 						+ "GastLeftAtt, GastLeftDef, GastMidAtt, GastMidDef, GastMidfield, GastRightAtt, GastRightDef, GASTHATSTATS, GastTacticSkill, GastTacticType, "
@@ -242,13 +243,13 @@ final class MatchDetailsTable extends AbstractTable {
 
 				adapter.executeUpdate(sql);
 
-				//Highlights
+				//Store Match Events
 				((MatchHighlightsTable) DBManager.instance().getTable(MatchHighlightsTable.TABLENAME))
 											.storeMatchHighlights(details);
 
-				//Workaround, wenn das Spiel nicht auf Finished gesetzt wird in den MatchKurzInfos
+				//Workaround if the game is not set to Finished in MatchKurzInfos
 				if (details.getZuschauer() > 0) {
-					//Spiel ist auf jeden Fall fertig!
+					//Game is definitely done!
 					sql = "UPDATE MATCHESKURZINFO SET Status=1, HeimTore=" + details.getHomeGoals() + " , GastTore=" + details.getGuestGoals() + "  WHERE MatchID=" + details.getMatchID();
 					adapter.executeUpdate(sql);
 				}

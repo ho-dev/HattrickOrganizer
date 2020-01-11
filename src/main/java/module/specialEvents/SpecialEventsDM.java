@@ -2,8 +2,7 @@ package module.specialEvents;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.match.IMatchHighlight;
-import core.model.match.MatchHighlight;
+import core.model.match.MatchEvent;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
 import core.model.match.Matchdetails;
@@ -116,7 +115,7 @@ public class SpecialEventsDM {
 
 	private List<MatchRow> getMatchRows(MatchKurzInfo kurzInfos, Matchdetails details, Filter filter) {
 		List<MatchRow> matchLines = new ArrayList<MatchRow>();
-		List<MatchHighlight> highlights = getMatchHighlights(details, filter);
+		List<MatchEvent> highlights = getMatchHighlights(details, filter);
 
 		if (!highlights.isEmpty() || !filter.isShowMatchesWithSEOnly()) {
 			// the matchline
@@ -140,7 +139,7 @@ public class SpecialEventsDM {
 			matchRow.setMatchHeaderLine(true);
 			matchLines.add(matchRow);
 
-			for (MatchHighlight highlight : highlights) {
+			for (MatchEvent highlight : highlights) {
 				if (!isFirst) {
 					matchRow = new MatchRow();
 					matchRow.setMatch(match);
@@ -154,11 +153,11 @@ public class SpecialEventsDM {
 		return matchLines;
 	}
 
-	private List<MatchHighlight> getMatchHighlights(Matchdetails details, Filter filter) {
-		List<MatchHighlight> allHighlights = details.getHighlights();
-		List<MatchHighlight> filteredHighlights = new ArrayList<MatchHighlight>();
+	private List<MatchEvent> getMatchHighlights(Matchdetails details, Filter filter) {
+		List<MatchEvent> allHighlights = details.getHighlights();
+		List<MatchEvent> filteredHighlights = new ArrayList<MatchEvent>();
 
-		for (MatchHighlight highlight : allHighlights) {
+		for (MatchEvent highlight : allHighlights) {
 			if (checkForSE(highlight, filter)) {
 				filteredHighlights.add(highlight);
 			}
@@ -167,87 +166,41 @@ public class SpecialEventsDM {
 		return filteredHighlights;
 	}
 
-	public static boolean isNegativeSE(MatchHighlight highlight) {
-		if (highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_ERFOLGREICH
-				|| highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_FEHLGESCHLAGEN) {
+	public static boolean isNegativeSE(MatchEvent highlight) {
+		if (highlight.isGoalEvent() || highlight.isNonGoalEvent()) {
 			// Chances (miss/goal)
-			if (highlight.getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_SCHLECHTE_KONDITION_BALLVERLUST_TOR
-					|| highlight.getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_UNERFAHREN_TOR
-					|| highlight.getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_BALLVERLUST_TOR) {
+			if (highlight.getiMatchEventID() == MatchEvent.MatchEventID.SE_TIRED_DEFENDER_MISTAKE_STRIKER_SCORES.ordinal()
+					|| highlight.getiMatchEventID() == MatchEvent.MatchEventID.SE_INEXPERIENCED_DEFENDER_CAUSES_GOAL.ordinal()
+					|| highlight.getiMatchEventID() == MatchEvent.MatchEventID.SE_GOAL_UNPREDICTABLE_MISTAKE.ordinal()) {
 				return true;
 			}
-		} else if (isNegativeWeatherSE(highlight)) {
+		} else if (highlight.isNegativeSpecialtyWeatherSE()) {
 			// negative Weather SE
 			return true;
 		}
 		return false;
 	}
 
-	public static EventType getEventType(MatchHighlight highlight) {
-		if (isWeatherSE(highlight)) {
-			return EventType.WEATHERSE;
-		} else if (highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_ERFOLGREICH
-				|| highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_FEHLGESCHLAGEN) {
-			switch (highlight.getHighlightSubTyp()) {
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_PASS_VORLAGE_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_PASS_ABGEFANGEN_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_BALL_ERKAEMPFT_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_BALLVERLUST_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_SCHNELLER_ANGREIFER_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_SCHNELLER_ANGREIFER_PASS_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_SCHLECHTE_KONDITION_BALLVERLUST_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_ECKBALL_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_ECKBALL_KOPFTOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_ERFAHRENER_ANGREIFER_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_UNERFAHREN_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_QUERPASS_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_AUSSERGEWOEHNLICHER_PASS_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_TECHNIKER_ANGREIFER_TOR:
-				return EventType.SPECIALTYSE;
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_EINS:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_ZWEI:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_DREI:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_VIER:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_FUENF:
-				return EventType.COUNTER;
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_2:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_3:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_4:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_5:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_6:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_7:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_8:
-				return EventType.FREEKICK;
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_2:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_3:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_4:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_5:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_6:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_7:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_8:
-				return EventType.PENALTY;
-			case IMatchHighlight.HIGHLIGHT_SUB_INDIRECT_FREEKICK_1:
-			case IMatchHighlight.HIGHLIGHT_SUB_INDIRECT_FREEKICK_2:
-				return EventType.IFK;
-			case IMatchHighlight.HIGHLIGHT_SUB_LONGHSHOT_1:
-			case IMatchHighlight.HIGHLIGHT_SUB_WEITSCHUSS_TOR:
-				return EventType.LONGSHOT;
-			}
-		}
-		return null;
+	public static EventType getEventType(MatchEvent highlight) {
+		if (highlight.isSpecialtyWeatherSE()) {return EventType.SPECIALTY_WEATHER_SE;}
+		else if(highlight.isSpecialtyNonWeatherSE()) {return EventType.SPECIALTY_NON_WEATHER_SE;}
+		else if(highlight.isOtherSE()) {return EventType.NON_SPECIALTY_SE;}
+		else if(highlight.isCounterAttack()) {return EventType.COUNTER_ATTACK;}
+		else if(highlight.isFreeKick()) {return EventType.FREEKICK;}
+		else if(highlight.isPenalty()) {return EventType.PENALTY;}
+		else if(highlight.isLongShot()) {return EventType.LONGSHOT;}
+		else {return null;}
 	}
 
-	private boolean checkForSE(MatchHighlight highlight, Filter filter) {
+	private boolean checkForSE(MatchEvent highlight, Filter filter) {
 		EventType eventType = getEventType(highlight);
 		if (eventType == null) {
 			return false;
-		} else if (!filter.isShowSpecialitySE() && eventType == EventType.SPECIALTYSE) {
+		} else if (!filter.isShowSpecialitySE() && eventType == EventType.SPECIALTY_NON_WEATHER_SE) {
 			return false;
-		} else if (!filter.isShowWeatherSE() && eventType == EventType.WEATHERSE) {
+		} else if (!filter.isShowWeatherSE() && eventType == EventType.SPECIALTY_WEATHER_SE) {
 			return false;
-		} else if (!filter.isShowCounterAttack() && eventType == EventType.COUNTER) {
+		} else if (!filter.isShowCounterAttack() && eventType == EventType.COUNTER_ATTACK) {
 			return false;
 		} else if (!filter.isShowFreeKick() && eventType == EventType.FREEKICK) {
 			return false;
@@ -289,235 +242,34 @@ public class SpecialEventsDM {
 		return true;
 	}
 
-	public static boolean isWeatherSE(MatchHighlight highlight) {
-		return (isPositiveWeatherSE(highlight) || isNegativeWeatherSE(highlight));
+
+	public static String getSEText(MatchEvent highlight) {return highlight.getEventTextDescription();}
+
+	private boolean isInvolved(int playerId, MatchEvent highlight) {
+		return (playerId == highlight.getGehilfeID() || playerId == highlight.getSpielerID());
 	}
 
-	public static boolean isPositiveWeatherSE(MatchHighlight highlight) {
-		if (highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_SPEZIAL) {
-			if (highlight.getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_PLAYER_POWERFUL_RAINY
-					|| highlight.getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_PLAYER_TECHNICAL_SUNNY) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static boolean isNegativeWeatherSE(MatchHighlight highlight) {
-		if (highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_SPEZIAL) {
-			if (highlight.getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_PLAYER_TECHNICAL_RAINY
-					|| highlight.getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_PLAYER_POWERFUL_SUNNY
-					|| highlight.getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_PLAYER_QUICK_RAINY
-					|| highlight.getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_PLAYER_QUICK_SUNNY) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static String getSEText(MatchHighlight highlight) {
-
-		if (isWeatherSE(highlight)) {
-			switch (highlight.getHighlightSubTyp()) {
-			case IMatchHighlight.HIGHLIGHT_SUB_PLAYER_TECHNICAL_RAINY:
-				return getLangStr("WEATHER_TECHNICAL_RAINY");
-			case IMatchHighlight.HIGHLIGHT_SUB_PLAYER_POWERFUL_RAINY:
-				return getLangStr("WEATHER_POWERFUL_RAINY");
-			case IMatchHighlight.HIGHLIGHT_SUB_PLAYER_TECHNICAL_SUNNY:
-				return getLangStr("WEATHER_TECHNICAL_SUNNY");
-			case IMatchHighlight.HIGHLIGHT_SUB_PLAYER_POWERFUL_SUNNY:
-				return getLangStr("WEATHER_POWERFUL_SUNNY");
-			case IMatchHighlight.HIGHLIGHT_SUB_PLAYER_QUICK_RAINY:
-				return getLangStr("WEATHER_QUICK_RAINY");
-			case IMatchHighlight.HIGHLIGHT_SUB_PLAYER_QUICK_SUNNY:
-				return getLangStr("WEATHER_QUICK_SUNNY");
-			}
-		} else if (highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_ERFOLGREICH
-				|| highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_FEHLGESCHLAGEN) {
-			// Non-weather SE
-			switch (highlight.getHighlightSubTyp()) {
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_PASS_VORLAGE_TOR:
-				return getLangStr("UNVORHERSEHBAR_PASS_VORLAGE_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_PASS_ABGEFANGEN_TOR:
-				return getLangStr("UNVORHERSEHBAR_PASS_ABGEFANGEN_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_WEITSCHUSS_TOR:
-				return getLangStr("WEITSCHUSS_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_BALL_ERKAEMPFT_TOR:
-				return getLangStr("UNVORHERSEHBAR_BALL_ERKAEMPFT_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_BALLVERLUST_TOR:
-				return getLangStr("UNVORHERSEHBAR_BALLVERLUST_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_SCHNELLER_ANGREIFER_TOR:
-				return getLangStr("SCHNELLER_ANGREIFER_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_SCHNELLER_ANGREIFER_PASS_TOR:
-				return getLangStr("SCHNELLER_ANGREIFER_PASS_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_SCHLECHTE_KONDITION_BALLVERLUST_TOR:
-				return getLangStr("SCHLECHTE_KONDITION_BALLVERLUST_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_ECKBALL_TOR:
-				return getLangStr("ECKBALL_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_ECKBALL_KOPFTOR:
-				return getLangStr("ECKBALL_KOPFTOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_ERFAHRENER_ANGREIFER_TOR:
-				return getLangStr("ERFAHRENER_ANGREIFER_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_UNERFAHREN_TOR:
-				return getLangStr("UNERFAHREN_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_QUERPASS_TOR:
-				return getLangStr("QUERPASS_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_AUSSERGEWOEHNLICHER_PASS_TOR:
-				return getLangStr("AUSSERGEWOEHNLICHER_PASS_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_TECHNIKER_ANGREIFER_TOR:
-				return getLangStr("TECHNIKER_ANGREIFER_TOR");
-			case IMatchHighlight.HIGHLIGHT_SUB_QUICK_RUSH_STOPPED_BY_DEF:
-				return getLangStr("QUICK_RUSH_STOPPED_BY_DEF");
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_EINS:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_ZWEI:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_DREI:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_VIER:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_FUENF:
-				return getLangStr("ls.match.event.counter-attack");
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_2:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_3:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_4:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_5:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_6:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_7:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_8:
-				return getLangStr("highlight_freekick");
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_2:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_3:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_4:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_5:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_6:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_7:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_8:
-				return getLangStr("highlight_penalty");
-			case IMatchHighlight.HIGHLIGHT_SUB_INDIRECT_FREEKICK_1:
-			case IMatchHighlight.HIGHLIGHT_SUB_INDIRECT_FREEKICK_2:
-				return getLangStr("IFK");
-			case IMatchHighlight.HIGHLIGHT_SUB_LONGHSHOT_1:
-				return getLangStr("ls.match.event.longshot");
-			}
-
-		}
-		return "unknown";
-	}
-
-	private boolean isInvolved(int playerId, MatchHighlight highlight) {
-		if (isWeatherSE(highlight)) {
-			return playerId == highlight.getSpielerID();
-		} else if (highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_ERFOLGREICH
-				|| highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_FEHLGESCHLAGEN) {
-			switch (highlight.getHighlightSubTyp()) {
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_PASS_VORLAGE_TOR:
-				return (playerId == highlight.getGehilfeID() || playerId == highlight
-						.getSpielerID());
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_PASS_ABGEFANGEN_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_WEITSCHUSS_TOR:
-				return playerId == highlight.getSpielerID();
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_BALL_ERKAEMPFT_TOR:
-				return (playerId == highlight.getGehilfeID() || playerId == highlight
-						.getSpielerID());
-			case IMatchHighlight.HIGHLIGHT_SUB_SCHNELLER_ANGREIFER_TOR:
-				return playerId == highlight.getSpielerID();
-			case IMatchHighlight.HIGHLIGHT_SUB_SCHNELLER_ANGREIFER_PASS_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_ECKBALL_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_ECKBALL_KOPFTOR:
-				return (playerId == highlight.getGehilfeID() || playerId == highlight
-						.getSpielerID());
-			case IMatchHighlight.HIGHLIGHT_SUB_ERFAHRENER_ANGREIFER_TOR:
-				return playerId == highlight.getSpielerID();
-			case IMatchHighlight.HIGHLIGHT_SUB_QUERPASS_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_AUSSERGEWOEHNLICHER_PASS_TOR:
-				return (playerId == highlight.getGehilfeID() || playerId == highlight
-						.getSpielerID());
-			case IMatchHighlight.HIGHLIGHT_SUB_TECHNIKER_ANGREIFER_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_EINS:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_ZWEI:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_DREI:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_VIER:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_FUENF:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_2:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_3:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_4:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_5:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_6:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_7:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_8:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_2:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_3:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_4:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_5:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_6:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_7:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_8:
-			case IMatchHighlight.HIGHLIGHT_SUB_INDIRECT_FREEKICK_1:
-			case IMatchHighlight.HIGHLIGHT_SUB_INDIRECT_FREEKICK_2:
-			case IMatchHighlight.HIGHLIGHT_SUB_LONGHSHOT_1:
-				return playerId == highlight.getSpielerID();
-			}
-		}
-		return false;
-	}
-
-	private static String findName(MatchHighlight highlight) {
-		if (isWeatherSE(highlight)) {
-			return highlight.getSpielerName();
-		} else if (highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_ERFOLGREICH
-				|| highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_FEHLGESCHLAGEN) {
-			switch (highlight.getHighlightSubTyp()) {
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_PASS_VORLAGE_TOR:
-				return highlight.getGehilfeName() + " - " + highlight.getSpielerName();
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_PASS_ABGEFANGEN_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_WEITSCHUSS_TOR:
-				return highlight.getSpielerName();
-			case IMatchHighlight.HIGHLIGHT_SUB_UNVORHERSEHBAR_BALL_ERKAEMPFT_TOR:
-				return highlight.getGehilfeName() + " - " + highlight.getSpielerName();
-			case IMatchHighlight.HIGHLIGHT_SUB_SCHNELLER_ANGREIFER_TOR:
-				return highlight.getSpielerName();
-			case IMatchHighlight.HIGHLIGHT_SUB_SCHNELLER_ANGREIFER_PASS_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_ECKBALL_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_ECKBALL_KOPFTOR:
-				return highlight.getGehilfeName() + " - " + highlight.getSpielerName();
-			case IMatchHighlight.HIGHLIGHT_SUB_ERFAHRENER_ANGREIFER_TOR:
-				return highlight.getSpielerName();
-			case IMatchHighlight.HIGHLIGHT_SUB_QUERPASS_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_AUSSERGEWOEHNLICHER_PASS_TOR:
-				return highlight.getGehilfeName() + " - " + highlight.getSpielerName();
-			case IMatchHighlight.HIGHLIGHT_SUB_TECHNIKER_ANGREIFER_TOR:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_EINS:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_ZWEI:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_DREI:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_VIER:
-			case IMatchHighlight.HIGHLIGHT_SUB_KONTERANGRIFF_FUENF:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_2:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_3:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_4:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_5:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_6:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_7:
-			case IMatchHighlight.HIGHLIGHT_SUB_FREISTOSS_8:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_2:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_3:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_4:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_5:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_6:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_7:
-			case IMatchHighlight.HIGHLIGHT_SUB_ELFMETER_8:
-			case IMatchHighlight.HIGHLIGHT_SUB_INDIRECT_FREEKICK_1:
-			case IMatchHighlight.HIGHLIGHT_SUB_INDIRECT_FREEKICK_2:
-			case IMatchHighlight.HIGHLIGHT_SUB_LONGHSHOT_1:
-				return highlight.getSpielerName();
+	private static String findName(MatchEvent highlight) {
+		if (highlight.isSpecialtyWeatherSE()) {return highlight.getSpielerName();}
+		else if (highlight.isGoalEvent() || highlight.isNonGoalEvent()) {
+			MatchEvent.MatchEventID me = MatchEvent.MatchEventID.values()[highlight.getiMatchEventID()];
+			switch (me) {
+				case SE_GOAL_UNPREDICTABLE_LONG_PASS:
+				case SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION:
+				case SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES:
+				case SE_GOAL_CORNER_TO_ANYONE:
+				case SE_GOAL_CORNER_HEAD_SPECIALIST:
+				case SE_WINGER_TO_HEAD_SPEC_SCORES:  // #137
+				case SE_WINGER_TO_ANYONE_SCORES: // #138
+					return highlight.getGehilfeName() + " - " + highlight.getSpielerName();
+				default:
+					return highlight.getSpielerName();
 			}
 		}
 		return "?";
 	}
 
-	public static String getSpielerName(MatchHighlight highlight) {
+	public static String getSpielerName(MatchEvent highlight) {
 		String name = "";
 		// if(highlight.getTeamID() == teamId && !isNegativeSE(highlight))
 		if (highlight.getTeamID() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
@@ -525,7 +277,7 @@ public class SpecialEventsDM {
 			if (!isNegativeSE(highlight)) {
 				// positive SE (our player) -> black
 				name = findName(highlight) + "|*";
-			} else if (isNegativeWeatherSE(highlight)) {
+			} else if (highlight.isNegativeSpecialtyWeatherSE()) {
 				// negative weather SE (our player) -> red
 				name = findName(highlight) + "|-";
 			} else {
@@ -535,8 +287,7 @@ public class SpecialEventsDM {
 			}
 		} else {
 			// other team has an SE
-
-			if (!isWeatherSE(highlight) && isNegativeSE(highlight)) {
+			if (!highlight.isSpecialtyWeatherSE() && isNegativeSE(highlight)) {
 				// negative SE (our player helps the other team) -> red
 				name = highlight.getGehilfeName() + "|-";
 			} else {

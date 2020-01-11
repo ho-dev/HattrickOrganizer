@@ -29,6 +29,14 @@
     </a>
 </td>
 </tr>
+<tr>
+  <td>Documentation</td>
+  <td>
+  <a href='https://ho.readthedocs.io/en/latest/?badge=latest'>
+    <img src='https://readthedocs.org/projects/ho/badge/?version=latest' alt='Documentation Status' />
+</a>
+</td>
+</tr>
 </table>
 
 -----------------
@@ -56,19 +64,19 @@
 If you want to contribute or see current translation status please visit HO translation [website](https://poeditor.com/join/project/jCaWGL1JCl).   
 Please open a request if the language you are interested in is not listed.
 
-## Development workflow
+## Documentation
 
-A single master branch record the history of the project.
+Documentation for HO! is located at https://ho.readthedocs.io/
 
-To contribute features, you should clone the repository, create a tracking branch for develop and create the feature.
-When the feature is ready, you can make a pull request to merge that feature into master. 
-Please read the [contribution guide](contributing.md) first.
+## Acknowledgements
 
+The following companies are kindly supporting HO open source project:
 
-## Releases
+<a href="https://www.jetbrains.com/?from=HO"> <img src="https://user-images.githubusercontent.com/1136496/54837108-e40f7f80-4cc5-11e9-9ea9-047856d17bb4.png" alt="Jetbrains" width="46" height="50"> </a> [**Jetbrains**](https://www.jetbrains.com/?from=HO) with its full-featured development toolbox
 
-When a release is ready, we fork a release branch from master. 
+<a href="https://poeditor.com"> <img src="https://user-images.githubusercontent.com/1136496/54937829-795c7f00-4f25-11e9-8394-eb96ddea54fd.png" alt="POEditor" width="46" height="50"> </a> [**POEditor**](https://poeditor.com) with its awesome localization tool
 
+<a href="https://www.syntevo.com/smartgit/"> <img src="https://user-images.githubusercontent.com/1136496/57284884-5d1a3900-70b2-11e9-9917-15a7d2f2c83c.png" alt="SmartGit" width="46" height="50"> </a> [**Syntevo**](https://www.syntevo.com/smartgit/) with its powerful and multi-platform graphical Git client
 
 ## Dependencies
 
@@ -103,12 +111,3 @@ these here.
   * License: Apache License, version 2.0
   * For details, see [``docs/Licences/ospackage/LICENSE.txt``](Licences/ospackage/LICENSE.txt)
 
-## Acknowledgements
-
-The following companies are kindly supporting HO open source project:
-
-<a href="https://www.jetbrains.com/?from=HO"> <img src="https://user-images.githubusercontent.com/1136496/54837108-e40f7f80-4cc5-11e9-9ea9-047856d17bb4.png" alt="Jetbrains" width="46" height="50"> </a> [**Jetbrains**](https://www.jetbrains.com/?from=HO) with its full-featured development toolbox
-
-<a href="https://poeditor.com"> <img src="https://user-images.githubusercontent.com/1136496/54937829-795c7f00-4f25-11e9-8394-eb96ddea54fd.png" alt="POEditor" width="46" height="50"> </a> [**POEditor**](https://poeditor.com) with its awesome localization tool
-
-<a href="https://www.syntevo.com/smartgit/"> <img src="https://user-images.githubusercontent.com/1136496/57284884-5d1a3900-70b2-11e9-9917-15a7d2f2c83c.png" alt="SmartGit" width="46" height="50"> </a> [**Syntevo**](https://www.syntevo.com/smartgit/) with its powerful and multi-platform graphical Git client

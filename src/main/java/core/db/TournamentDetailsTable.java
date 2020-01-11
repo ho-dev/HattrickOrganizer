@@ -1,14 +1,10 @@
 package core.db;
 
 import core.model.Tournament.TournamentDetails;
-import core.model.match.MatchHighlight;
-import core.model.match.Matchdetails;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
 import java.sql.Types;
-import java.text.SimpleDateFormat;
-import java.util.Vector;
 
 import static core.util.DateTimeUtils.DateToSQLtimeStamp;
 

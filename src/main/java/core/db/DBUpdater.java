@@ -663,7 +663,7 @@ final class DBUpdater {
 	}
 
 	private void updateDBv26(int DBVersion, int version) throws SQLException {
-		// HO 3.0
+		// HO 2.1
 
 		// store [Matches].MatchContextId into MATCHESKURZINFO table
 		if (!columnExistsInTable("MatchContextId", MatchesKurzInfoTable.TABLENAME)) {
@@ -728,6 +728,23 @@ final class DBUpdater {
 		//create TournamentDetailsTable
 		if (!tableExists(TournamentDetailsTable.TABLENAME)) {
 			dbManager.getTable(TournamentDetailsTable.TABLENAME).createTable();
+		}
+
+
+		if (!columnExistsInTable("MATCH_EVENT_ID", MatchHighlightsTable.TABLENAME)) {
+			try {
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN MATCH_EVENT_ID INTEGER");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EVENT_INDEX INTEGER");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN INJURY_TYPE TINYINT");
+				m_clJDBCAdapter.executeUpdate("UPDATE MATCHHIGHLIGHTS SET MATCH_EVENT_ID = (TYP * 10) + SUBTYP");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP HEIMTORE");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP GASTTORE");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP TYP");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP SUBTYP");
+			}
+			catch (Exception e){
+				HOLogger.instance().error(DBUpdater.class,	"DB Corrupted !! Updating to 2.1, MATCH_EVENT_ID column missing in MATCHHIGHLIGHTS and creation not possible !!");
+			}
 		}
 
 

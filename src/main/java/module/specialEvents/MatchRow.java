@@ -1,11 +1,11 @@
 package module.specialEvents;
 
-import core.model.match.MatchHighlight;
+import core.model.match.MatchEvent;
 
 public class MatchRow {
 
 	private Match match;
-	private MatchHighlight matchHighlight;
+	private MatchEvent matchHighlight;
 	private boolean isMatchHeaderLine;
 	private int matchCount;	
 
@@ -25,11 +25,11 @@ public class MatchRow {
 		this.isMatchHeaderLine = isMatchHeaderLine;
 	}
 
-	public MatchHighlight getMatchHighlight() {
+	public MatchEvent getMatchHighlight() {
 		return matchHighlight;
 	}
 
-	public void setMatchHighlight(MatchHighlight matchHighlight) {
+	public void setMatchHighlight(MatchEvent matchHighlight) {
 		this.matchHighlight = matchHighlight;
 	}
 
