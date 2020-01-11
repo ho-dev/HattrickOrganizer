@@ -53,37 +53,37 @@ final class FarbPanel extends ImagePanel implements ActionListener {
     	HOVerwaltung hoVerwaltung = HOVerwaltung.instance();
         if (actionEvent.getSource()==bruisedButton) {
             Color color = JColorChooser.showDialog(this,
-            		hoVerwaltung.getLanguageString("ls.player.injurystatus.bruised"), temp.FG_ANGESCHLAGEN);
+            		hoVerwaltung.getLanguageString("ls.player.injurystatus.bruised"), temp.FG_BRUISED);
 
             if (color != null) {
-                temp.FG_ANGESCHLAGEN = color;
+                temp.FG_BRUISED = color;
                 OptionManager.instance().setReInitNeeded();
                 refresh();
             }
         } else if (actionEvent.getSource()==injuredButton) {
             Color color = JColorChooser.showDialog(this,
-            		hoVerwaltung.getLanguageString("ls.player.injurystatus.injured"),temp.FG_VERLETZT);
+            		hoVerwaltung.getLanguageString("ls.player.injurystatus.injured"),temp.FG_INJURED);
 
             if (color != null) {
-            	temp.FG_VERLETZT = color;
+            	temp.FG_INJURED = color;
                 OptionManager.instance().setReInitNeeded();
                 refresh();
             }
         } else if (actionEvent.getSource()==twoCardsButton) {
             Color color = JColorChooser.showDialog(this,
-            		hoVerwaltung.getLanguageString("ls.player.warningstatus.twobookings"),temp.FG_ZWEIKARTEN);
+            		hoVerwaltung.getLanguageString("ls.player.warningstatus.twobookings"),temp.FG_TWO_YELLOW_CARDS);
 
             if (color != null) {
-            	temp.FG_ZWEIKARTEN = color;
+            	temp.FG_TWO_YELLOW_CARDS = color;
                 OptionManager.instance().setReInitNeeded();
                 refresh();
             }
         } else if (actionEvent.getSource()==redCardButton) {
             Color color = JColorChooser.showDialog(this,
-            		hoVerwaltung.getLanguageString("ls.player.warningstatus.suspended"),temp.FG_GESPERRT);
+            		hoVerwaltung.getLanguageString("ls.player.warningstatus.suspended"),temp.FG_RED_CARD);
 
             if (color != null) {
-            	temp.FG_GESPERRT = color;
+            	temp.FG_RED_CARD = color;
                 OptionManager.instance().setReInitNeeded();
                 refresh();
             }
@@ -104,10 +104,10 @@ final class FarbPanel extends ImagePanel implements ActionListener {
 
     //---------------Hilfsmethoden--------------------------------------
     public final void refresh() {
-        bruisedButton.setBackground(temp.FG_ANGESCHLAGEN);
-        injuredButton.setBackground(temp.FG_VERLETZT);
-        twoCardsButton.setBackground(temp.FG_ZWEIKARTEN);
-        redCardButton.setBackground(temp.FG_GESPERRT);
+        bruisedButton.setBackground(temp.FG_BRUISED);
+        injuredButton.setBackground(temp.FG_INJURED);
+        twoCardsButton.setBackground(temp.FG_TWO_YELLOW_CARDS);
+        redCardButton.setBackground(temp.FG_RED_CARD);
         transferButton.setBackground(temp.FG_TRANSFERMARKT);
     }
 
@@ -136,16 +136,16 @@ final class FarbPanel extends ImagePanel implements ActionListener {
         panel.add(themeComboBox);
 
         label = new JLabel("  " + HOVerwaltung.instance().getLanguageString("ls.player.injurystatus.bruised"));
-        addRowPanel(panel,label, bruisedButton, temp.FG_ANGESCHLAGEN);
+        addRowPanel(panel,label, bruisedButton, temp.FG_BRUISED);
 
         label = new JLabel("  " + HOVerwaltung.instance().getLanguageString("ls.player.injurystatus.injured"));
-        addRowPanel(panel,label, injuredButton, temp.FG_VERLETZT);
+        addRowPanel(panel,label, injuredButton, temp.FG_INJURED);
 
         label = new JLabel("  " + HOVerwaltung.instance().getLanguageString("ls.player.warningstatus.twobookings"));
-        addRowPanel(panel,label, twoCardsButton, temp.FG_ZWEIKARTEN);
+        addRowPanel(panel,label, twoCardsButton, temp.FG_TWO_YELLOW_CARDS);
 
         label = new JLabel("  " + HOVerwaltung.instance().getLanguageString("ls.player.warningstatus.suspended"));
-        addRowPanel(panel,label, redCardButton, temp.FG_GESPERRT);
+        addRowPanel(panel,label, redCardButton, temp.FG_RED_CARD);
 
         label = new JLabel("  " + HOVerwaltung.instance().getLanguageString("Transfermarkt"));
         addRowPanel(panel,label, transferButton, temp.FG_TRANSFERMARKT);

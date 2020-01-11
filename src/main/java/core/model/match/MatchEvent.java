@@ -1,8 +1,13 @@
 package core.model.match;
 
+import core.gui.theme.HOIconName;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 
-public class MatchHighlight implements core.model.match.IMatchHighlight {
+import javax.swing.*;
+import java.util.HashMap;
+
+public class MatchEvent {
 
     private String m_sEventText = "";
 
@@ -16,13 +21,25 @@ public class MatchHighlight implements core.model.match.IMatchHighlight {
 
     private int m_iGastTore;
 
-     private int m_iGehilfeID;
+    private int m_iGehilfeID;
 
     private int m_iHeimTore;
 
     private int m_iMatchEventCategory;
 
     private int m_iMatchEventID;
+
+    public int getM_iMatchEventIndex() {
+        return m_iMatchEventIndex;
+    }
+
+    public void setM_iMatchEventIndex(int m_iMatchEventIndex) {
+        this.m_iMatchEventIndex = m_iMatchEventIndex;
+    }
+
+    private int m_iMatchEventIndex;
+
+    private MatchEventID m_matchEventID;
 
     private int m_iMinute;
 
@@ -32,17 +49,355 @@ public class MatchHighlight implements core.model.match.IMatchHighlight {
 
     private int matchId;
 
+    public enum MatchEventID
+    {
+        PLAYERS_ENTER_THE_FIELD(19), TACTICAL_DISPOSITION(20), PLAYER_NAMES_IN_LINEUP(21), PLAYERS_FROM_NEIGHBORHOOD_USED(22), SAME_FORMATION_BOTH_TEAMS(23), TEAM_FORMATIONS_DIFFERENT(24),
+        REGIONAL_DERBY(25), NEUTRAL_GROUND(26), AWAY_IS_ACTUALLY_HOME(27), SPECTATORS_OR_VENUE_RAIN(30), SPECTATORS_OR_VENUE_CLOUDY(31), SPECTATORS_OR_VENUE_FAIR_WEATHER(32),
+        SPECTATORS_OR_VENUE_SUNNY(33), ARENA_EXTENDED_WITH_TEMPORARY_SEATS(35), ONLY_VENUE_RAIN(36), ONLY_VENUE_CLOUDY(37), ONLY_VENUE_FAIR_WEATHER(38), ONLY_VENUE_SUNNY(39),
+        DOMINATED(40), BEST_PLAYER(41), WORST_PLAYER(42), HALF_TIME_RESULTS(45), HATTRICK_COMMENT(46), NO_TEAM_DOMINATED(47), PENALTY_CONTEST_GOAL_BY_TECHNICAL_NO_NERVES(55),
+        PENALTY_CONTEST_GOAL_NO_NERVES(56), PENALTY_CONTEST_GOAL_IN_SPITE_OF_NERVES(57), PENALTY_CONTEST_NO_GOAL_BECAUSE_OF_NERVES(58), PENALTY_CONTEST_NO_GOAL_IN_SPITE_OF_NO_NERVES(59),
+        UNDERESTIMATION(60), ORGANIZATION_BREAKS(61), WITHDRAW(62), REMOVE_UNDERESTIMATION_AT_PAUSE(63), REORGANIZE(64), NERVES_IN_IMPORTANT_THRILLING_GAME(65),
+        REMOVE_UNDERESTIMATION_AT_PAUSE_GOALDIFF_IS_0(66), REMOVE_UNDERESTIMATION_AT_PAUSE_GOALDIFF_IS_1(67), SUCCESSFUL_PRESSING(68), REMOVE_UNDERESTIMATION(69), EXTENSION(70),
+        PENALTY_CONTEST_AFTER_EXTENSION(71), EXTENSION_DECIDED(72), AFTER_22_PENALTIES_TOSSING_COIN(73), ADDED_TIME(75), NO_ADDED_TIME(76), NEW_CAPTAIN(80),
+        NEW_SET_PIECES_TAKER(81), INJURED_BUT_KEEPS_PLAYING(90), MODERATELY_INJURED_LEAVES_FIELD(91), BADLY_INJURED_LEAVES_FIELD(92), INJURED_AND_NO_REPLACEMENT_EXISTED(93),
+        INJURED_AFTER_FOUL_BUT_CONTINUES(94), INJURED_AFTER_FOUL_AND_EXITS(95), INJURED_AFTER_FOUL_AND_NO_REPLACEMENT_EXISTED(96), KEEPER_INJURED_FIELD_PLAYER_HAS_TO_TAKE_HIS_PLACE(97),
+        REDUCING_GOAL_HOME_TEAM_FREE_KICK(100), REDUCING_GOAL_HOME_TEAM_MIDDLE(101), REDUCING_GOAL_HOME_TEAM_LEFT_WING(102), REDUCING_GOAL_HOME_TEAM_RIGHT_WING(103),
+        REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL(104), SE_GOAL_UNPREDICTABLE_LONG_PASS(105), SE_GOAL_UNPREDICTABLE_SCORES_ON_HIS_OWN(106), GOAL_LONG_SHOT_NO_TACTIC(107),
+        SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION(108), SE_GOAL_UNPREDICTABLE_MISTAKE(109), EQUALIZER_GOAL_HOME_TEAM_FREE_KICK(110), EQUALIZER_GOAL_HOME_TEAM_MIDDLE(111),
+        EQUALIZER_GOAL_HOME_TEAM_LEFT_WING(112), EQUALIZER_GOAL_HOME_TEAM_RIGHT_WING(113), EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL(114), SE_QUICK_SCORES_AFTER_RUSH(115),
+        SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES(116), SE_TIRED_DEFENDER_MISTAKE_STRIKER_SCORES(117), SE_GOAL_CORNER_TO_ANYONE(118), SE_GOAL_CORNER_HEAD_SPECIALIST(119),
+        GOAL_TO_TAKE_LEAD_HOME_TEAM_FREE_KICK(120), GOAL_TO_TAKE_LEAD_HOME_TEAM_MIDDLE(121), GOAL_TO_TAKE_LEAD_HOME_TEAM_LEFT_WING(122), GOAL_TO_TAKE_LEAD_HOME_TEAM_RIGHT_WING(123),
+        GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL(124), SE_GOAL_UNPREDICTABLE_OWN_GOAL(125), INCREASE_GOAL_HOME_TEAM_FREE_KICK(130), INCREASE_GOAL_HOME_TEAM_MIDDLE(131),
+        INCREASE_GOAL_HOME_TEAM_LEFT_WING(132), INCREASE_GOAL_HOME_TEAM_RIGHT_WING(133), INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL(134), SE_EXPERIENCED_FORWARD_SCORES(135),
+        SE_INEXPERIENCED_DEFENDER_CAUSES_GOAL(136), SE_WINGER_TO_HEAD_SPEC_SCORES(137), SE_WINGER_TO_ANYONE_SCORES(138), SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER(139),
+        COUNTER_ATTACK_GOAL_FREE_KICK(140), COUNTER_ATTACK_GOAL_MIDDLE(141), COUNTER_ATTACK_GOAL_LEFT(142), COUNTER_ATTACK_GOAL_RIGHT(143), REDUCING_GOAL_AWAY_TEAM_FREE_KICK(150),
+        REDUCING_GOAL_AWAY_TEAM_MIDDLE(151), REDUCING_GOAL_AWAY_TEAM_LEFT_WING(152), REDUCING_GOAL_AWAY_TEAM_RIGHT_WING(153), REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL(154),
+        EQUALIZER_GOAL_AWAY_TEAM_FREE_KICK(160), EQUALIZER_GOAL_AWAY_TEAM_MIDDLE(161), EQUALIZER_GOAL_AWAY_TEAM_LEFT_WING(162), EQUALIZER_GOAL_AWAY_TEAM_RIGHT_WING(163),
+        EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL(164), GOAL_TO_TAKE_LEAD_AWAY_TEAM_FREE_KICK(170), GOAL_TO_TAKE_LEAD_AWAY_TEAM_MIDDLE(171), GOAL_TO_TAKE_LEAD_AWAY_TEAM_LEFT_WING(172),
+        GOAL_TO_TAKE_LEAD_AWAY_TEAM_RIGHT_WING(173), GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL(174), INCREASE_GOAL_AWAY_TEAM_FREE_KICK(180), INCREASE_GOAL_AWAY_TEAM_MIDDLE(181),
+        INCREASE_GOAL_AWAY_TEAM_LEFT_WING(182), INCREASE_GOAL_AWAY_TEAM_RIGHT_WING(183), INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL(184), GOAL_INDIRECT_FREE_KICK(185),
+        COUNTER_ATTACK_GOAL_INDIRECT_FREE_KICK(186), GOAL_LONG_SHOT(187), SE_GOAL_POWERFUL_NORMAL_FORWARD_GENERATES_EXTRA_CHANCE(190), NO_REDUCING_GOAL_HOME_TEAM_FREE_KICK(200),
+        NO_REDUCING_GOAL_HOME_TEAM_MIDDLE(201), NO_REDUCING_GOAL_HOME_TEAM_LEFT_WING(202), NO_REDUCING_GOAL_HOME_TEAM_RIGHT_WING(203), NO_REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL(204),
+        SE_NO_GOAL_UNPREDICTABLE_LONG_PASS(205), SE_NO_GOAL_UNPREDICTABLE_ALMOST_SCORES(206), NO_GOAL_LONG_SHOT_NO_TACTIC(207), SE_NO_GOAL_UNPREDICTABLE_SPECIAL_ACTION(208),
+        SE_NO_GOAL_UNPREDICTABLE_MISTAKE(209), NO_EQUALIZER_GOAL_HOME_TEAM_FREE_KICK(210), NO_EQUALIZER_GOAL_HOME_TEAM_MIDDLE(211), NO_EQUALIZER_GOAL_HOME_TEAM_LEFT_WING(212),
+        NO_EQUALIZER_GOAL_HOME_TEAM_RIGHT_WING(213), NO_EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL(214), SE_SPEEDY_MISSES_AFTER_RUSH(215), SE_QUICK_RUSHES_PASSES_BUT_RECEIVER_FAILS(216),
+        SE_TIRED_DEFENDER_MISTAKE_BUT_NO_GOAL(217), SE_NO_GOAL_CORNER_TO_ANYONE(218), SE_NO_GOAL_CORNER_HEAD_SPECIALIST(219), NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_FREE_KICK(220),
+        NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_MIDDLE(221), NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_LEFT_WING(222), NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_RIGHT_WING(223), NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL(224),
+        SE_NO_GOAL_UNPREDICTABLE_OWN_GOAL_ALMOST(225), NO_INCREASE_GOAL_HOME_TEAM_FREE_KICK(230), NO_INCREASE_GOAL_HOME_TEAM_MIDDLE(231), NO_INCREASE_GOAL_HOME_TEAM_LEFT_WING(232),
+        NO_INCREASE_GOAL_HOME_TEAM_RIGHT_WING(233), NO_INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL(234), SE_EXPERIENCED_FORWARD_FAILS_TO_SCORE(235), SE_INEXPERIENCED_DEFENDER_ALMOST_CAUSES_GOAL(236),
+        SE_WINGER_TO_SOMEONE_NO_GOAL(237), SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER_NO_GOAL(239), COUNTER_ATTACK_NO_GOAL_FREE_KICK(240), COUNTER_ATTACK_NO_GOAL_MIDDLE(241), COUNTER_ATTACK_NO_GOAL_LEFT(242),
+        COUNTER_ATTACK_NO_GOAL_RIGHT(243), NO_REDUCING_GOAL_AWAY_TEAM_FREE_KICK(250), NO_REDUCING_GOAL_AWAY_TEAM_MIDDLE(251), NO_REDUCING_GOAL_AWAY_TEAM_LEFT_WING(252),
+        NO_REDUCING_GOAL_AWAY_TEAM_RIGHT_WING(253), NO_REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL(254), NO_EQUALIZER_GOAL_AWAY_TEAM_FREE_KICK(260), NO_EQUALIZER_GOAL_AWAY_TEAM_MIDDLE(261),
+        NO_EQUALIZER_GOAL_AWAY_TEAM_LEFT_WING(262), NO_EQUALIZER_GOAL_AWAY_TEAM_RIGHT_WING(263), NO_EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL(264), NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_FREE_KICK(270),
+        NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_MIDDLE(271), NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_LEFT_WING(272), NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_RIGHT_WING(273), NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL(274),
+        NO_INCREASE_GOAL_AWAY_TEAM_FREE_KICK(280), NO_INCREASE_GOAL_AWAY_TEAM_MIDDLE(281), NO_INCREASE_GOAL_AWAY_TEAM_LEFT_WING(282), NO_INCREASE_GOAL_AWAY_TEAM_RIGHT_WING(283),
+        NO_INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL(284), NO_GOAL_INDIRECT_FREE_KICK(285), COUNTER_ATTACK_NO_GOAL_INDIRECT_FREE_KICK(286), NO_GOAL_LONG_SHOT(287), NO_GOAL_LONG_SHOT_DEFENDED(288),
+        SE_QUICK_RUSHES_STOPPED_BY_QUICK_DEFENDER(289), SE_NO_GOAL_POWERFUL_NORMAL_FORWARD_GENERATES_EXTRA_CHANCE(290), SE_TECHNICAL_SUFFERS_FROM_RAIN(301), SE_POWERFUL_THRIVES_IN_RAIN(302),
+        SE_TECHNICAL_THRIVES_IN_SUN(303), SE_POWERFUL_SUFFERS_FROM_SUN(304), SE_QUICK_LOSES_IN_RAIN(305), SE_QUICK_LOSES_IN_SUN(306), SE_SUPPORT_PLAYER_BOOST_SUCCEEDED(307),
+        SE_SUPPORT_PLAYER_BOOST_FAILED_AND_ORGANIZATION_DROPPED(308), SE_SUPPORT_PLAYER_BOOST_FAILED(309), SE_POWERFUL_DEFENSIVE_INNER_PRESSES_CHANCE(310), TACTIC_TYPE_PRESSING(331),
+        TACTIC_TYPE_COUNTER_ATTACKING(332), TACTIC_TYPE_ATTACK_IN_MIDDLE(333), TACTIC_TYPE_ATTACK_ON_WINGS(334), TACTIC_TYPE_PLAY_CREATIVELY(335), TACTIC_TYPE_LONG_SHOTS(336),
+        TACTIC_ATTACK_IN_MIDDLE_USED(343), TACTIC_ATTACK_ON_WINGS_USED(344), PLAYER_SUBSTITUTION_TEAM_IS_BEHIND(350), PLAYER_SUBSTITUTION_TEAM_IS_AHEAD(351), PLAYER_SUBSTITUTION_MINUTE(352),
+        CHANGE_OF_TACTIC_TEAM_IS_BEHIND(360), CHANGE_OF_TACTIC_TEAM_IS_AHEAD(361), CHANGE_OF_TACTIC_MINUTE(362), PLAYER_POSITION_SWAP_TEAM_IS_BEHIND(370), PLAYER_POSITION_SWAP_TEAM_IS_AHEAD(371),
+        PLAYER_POSITION_SWAP_MINUTE(372), MAN_MARKING_SUCCESS_SHORT_DISTANCE(380), MAN_MARKING_SUCCESS_LONG_DISTANCE(381), MAN_MARKED_CHANGED_FROM_SHORT_TO_LONG_DISTANCE(382),
+        MAN_MARKED_CHANGED_FROM_LONG_TO_SHORT_DISTANCE(383), MAN_MARKER_PENALTY_NO_MAN_MARKED_ON_THE_FIELD(384), MAN_MARKER_CHANGED_FROM_SHORT_TO_LONG_DISTANCE(385), MAN_MARKER_CHANGED_FROM_LONG_TO_SHORT_DISTANCE(386),
+        MAN_MARKER_PENALTY_MAN_MARKED_NOT_IN_MARKING_POSITION(387), MAN_MARKER_PENALTY_MAN_MARKER_NOT_IN_MARKING_POSITION(388), MAN_MARKER_PENALTY_NO_MAN_MARKED_IN_OPPONENT_TEAM(389), RAINY_WEATHER_MANY_PLAYERS_AFFECTED(390),
+        SUNNY_WEATHER_MANY_PLAYERS_AFFECTED(391), INJURY_KNEE_LEFT(401), INJURY_KNEE_RIGHT(402), INJURY_THIGH_LEFT(403), INJURY_THIGH_RIGHT(404), INJURY_FOOT_LEFT(405), INJURY_FOOT_RIGHT(406),
+        INJURY_ANKLE_LEFT(407), INJURY_ANKLE_RIGHT(408), INJURY_CALF_LEFT(409), INJURY_CALF_RIGHT(410), INJURY_GROIN_LEFT(411), INJURY_GROIN_RIGHT(412), INJURY_COLLARBONE(413), INJURY_BACK(414),
+        INJURY_HAND_LEFT(415), INJURY_HAND_RIGHT(416), INJURY_ARM_LEFT(417), INJURY_ARM_RIGHT(418), INJURY_SHOULDER_LEFT(419), INJURY_SHOULDER_RIGHT(420), INJURY_RIB(421), INJURY_HEAD(422),
+        INJURED_BY_FOUL(423), INJURED_PLAYER_REPLACED(424), NO_REPLACEMENT_FOR_INJURED_PLAYER(425), FIELD_PLAYER_HAS_TO_TAKE_INJURED_KEEPERS_PLACE(426), PLAYER_INJURED_WAS_REGAINER_SO_GOT_BRUISED_INSTEAD(427),
+        PLAYER_GOT_THIRD_YELLOW_CARD_MISSES_NEXT_MATCH(450), WITH_THIS_STANDING_TEAM_X_WILL_RELEGATE_TO_CUP_Y(451), PLAYER_CURRENT_TEAM_MATCHES_100S_ANNIVERSARY(452), PLAYER_POSSIBLY_THE_LAST_GAME_IN_THIS_TEAM(453),
+        DOCTOR_REPORT_OF_INJURY_LENGTH(454), NEW_STAR_PLAYER_OF_THE_TEAM(455), PLAYER_CAREER_GOALS_MULTIPLE_OF_50(456), PLAYER_LEAGUE_GOALS_THIS_SEASON(457), PLAYER_CUP_GOALS_THIS_SEASON(458), BENCH_PLAYER_WARMING_UP(459),
+        FANS_SHOCKED_BY_LOSING(460), FANS_UPSET_BY_LOSING(461), FANS_SURPRISED_BY_WINNING(462), FANS_EXCITED_BY_WINNING(463), EXACT_NUMBER_OF_SPECTATORS(464), TEAM_SHOULD_WIN_MATCH_TO_SECURE_WINNING_THE_LEAGUE(465),
+        TEAM_SHOULD_WIN_MATCH_TO_HAVE_CHANCE_OF_WINNING_LEAGUE(466), THE_WINNER_OF_THIS_MATCH_IF_THERE_IS_ONE_CAN_HAVE_A_CHANCE_OF_WINNING_THE_LEAGUE(467), TEAM_SHOULD_WIN_MATCH_TO_MAKE_SURE_THEY_DONT_DEMOTE(468),
+        TEAM_SHOULD_WIN_MATCH_TO_HAVE_A_CHANCE_OF_NOT_DEMOTING(469), THE_LOSER_OF_THIS_MATCH_WILL_DEMOTE(470), HOMETEAM_OR_AWAYTEAM_HAS_MOST_POSSESSION_IN_BEGINNING_OF_MATCH(471), EQUAL_POSSESSION_IN_BEGINNING_OF_MATCH(472),
+        CAREER_ENDING_INJURY(473), POSSESSION_SHIFTED(474), LOW_ATTENDANCE_BECAUSE_OF_FAN_MOOD(475), EXTRA_SECURITY_BECAUSE_OF_FAN_MOOD(476), BOTH_TEAMS_FANS_ARE_ANGRY(477), TEAM_WILL_HAVE_BEST_CUP_RUN_IF_WIN(478),
+        BOTH_TEAMS_COULD_HAVE_BEST_CUP_RUN_IF_WIN_COMPETING(479), CURRENT_ROUND_IS_TEAMS_BEST_CUP_RUN(480), NEW_FORMATION_TODAY(481), TEAMS_USING_THE_SAME_STYLE_OF_PLAY(482), TEAMS_USING_DIFFERENT_STYLES_OF_PLAY(483),
+        ONE_TEAMS_STYLE_OF_PLAY(484), TEAM_OF_OLDIES(485), TEAM_IS_AGGRESSIVE(486), TEAM_HAS_ONLY_HOMEGROWN_PLAYERS(487), TEAM_HAS_ALL_PLAYERS_FROM_SAME_COUNTRY(488), COMEBACK_AFTER_A_LONG_INJURY(489),
+        PREVIOUS_MATCH_CUP_SIMILAR_OUTCOME(490), PREVIOUS_MATCH_CUP_DIFFERENT_OUTCOME(491), PREVIOUS_MATCH_LEAGUE_SIMILAR_OUTCOME(492), PREVIOUS_MATCH_LEAGUE_DIFFERENT_OUTCOME(493), TEAM_HAS_THE_BALL_BUT_IS_NOT_ATTACKING(494),
+        TEAM_HAS_THE_BALL_AND_HAS_STARTED_ATTACKING(495), BOTH_TEAMS_WALKOVER(500), HOME_TEAM_WALKOVER(501), AWAY_TEAM_WALKOVER(502), BOTH_TEAMS_BREAK_GAME_2_PLAYERS_REMAINING(503), HOME_TEAM_BREAKS_GAME_2_PLAYERS_REMAINING(504),
+        AWAY_TEAM_BREAKS_GAME_2_PLAYERS_REMAINING(505), YELLOW_CARD_NASTY_PLAY(510), YELLOW_CARD_CHEATING(511), RED_CARD_2ND_WARNING_NASTY_PLAY(512), RED_CARD_2ND_WARNING_CHEATING(513), RED_CARD_WITHOUT_WARNING(514),
+        SECOND_HALF_STARTED(597), MATCH_STARTED(598), MATCH_FINISHED(599), CONGRATULATIONS_TO_THE_WINNER(601), WINNER_ADVANCES_TO_NEXT_CUP_ROUND_NO_RELEGATION_CUP_FOR_LOSER(602),
+        WINNER_ADVANCES_TO_NEXT_CUP_ROUND_AND_LOSER_RELEGATES_TO_CUP_X(603), MATCH_ENDED_IN_A_TIE(604), END_OF_MATCH_CONGRATULATIONS_TEAM_WON_THE_LEAGUE(605), END_OF_MATCH_SAD_THAT_TEAM_WILL_DEMOTE_DIRECTLY(606),
+        HATTRICK_ANNIVERSARY(650), TEAM_ANNIVERSARY(651), EVENTOMATIC_MANAGER_TAUNTS_OPPONENT(700), EVENTOMATIC_MANAGER_PRAISES_OPPONENT(701), EVENTOMATIC_MANAGER_ASKS_FANS_FOR_SUPPORT(702),
+        EVENTOMATIC_MANAGER_EXPECTS_GREAT_SHOW(703), EVENTOMATIC_MANAGER_HONOURS_CLUB_LEGACY(704);
+
+        private final int value;
+
+        MatchEventID(final int newValue) {
+            value = newValue;
+        }
+
+        public int getValue() { return value; }
+
+        // Reverse-lookup map for getting a MatchEvent from its value
+        private static final HashMap<Integer, MatchEventID> lookup = new HashMap<>();
+
+        static {
+            for (MatchEventID me : MatchEventID.values()) {
+                lookup.put(me.getValue(), me);
+            }
+        }
+
+        public static MatchEventID fromMatchEventID(int iMatchEventID) {
+            return lookup.get(iMatchEventID);
+        }
+
+    }
+
+    public Matchdetails.eInjuryType getM_eInjuryType() {
+        return m_eInjuryType;
+    }
+
+    public void setM_eInjuryType(Matchdetails.eInjuryType m_eInjuryType) {
+        this.m_eInjuryType = m_eInjuryType;
+    }
+
+    public void setM_eInjuryType(int i_InjuryType) {
+        this.m_eInjuryType = Matchdetails.eInjuryType.fromInteger(i_InjuryType);
+    }
+
+    public Matchdetails.eInjuryType m_eInjuryType;
+
+
+    public enum MatchEventCategory {
+        MATCH_EVENT_GOAL(1),
+        MATCH_EVENT_CARDS(5);
+//        /** Information */
+//        public static final int HIGHLIGHT_INFORMATION = 0;
+//
+//        /** Success -> Goal */
+//        public static final int HIGHLIGHT_ERFOLGREICH = 1;
+//
+//        /** Failure -> No Goal */
+//        public static final int HIGHLIGHT_FEHLGESCHLAGEN = 2;
+//
+//        /** Special */
+//        public static final int HIGHLIGHT_SPEZIAL = 3;
+//
+//        /** Cards */
+//        public static final int HIGHLIGHT_KARTEN = 5;
+
+        private final int value;
+
+        MatchEventCategory(final int newValue) {
+            value = newValue;
+        }
+
+        public int getValue() { return value; }
+    }
+
+    //This is used for the mapping of Match Event and icons
+    public static HashMap<MatchEventID, String> mapMatchEventIcons = new HashMap<MatchEventID, String>() {{
+
+        put(MatchEventID.ONLY_VENUE_RAIN, HOIconName.WEATHER[0]); //#36
+        put(MatchEventID.ONLY_VENUE_CLOUDY, HOIconName.WEATHER[1]); //#37
+        put(MatchEventID.ONLY_VENUE_FAIR_WEATHER, HOIconName.WEATHER[2]); //#38
+        put(MatchEventID.ONLY_VENUE_SUNNY, HOIconName.WEATHER[3]); //#39
+
+        put(MatchEventID.INJURED_BUT_KEEPS_PLAYING, HOIconName.BRUISED_SMALL); //#90
+        put(MatchEventID.MODERATELY_INJURED_LEAVES_FIELD, HOIconName.INJURED_SMALL); //#91
+        put(MatchEventID.BADLY_INJURED_LEAVES_FIELD, HOIconName.INJURED_SMALL); //#92
+        put(MatchEventID.INJURED_AND_NO_REPLACEMENT_EXISTED, HOIconName.INJURED_SMALL); //#93
+        put(MatchEventID.INJURED_AFTER_FOUL_BUT_CONTINUES, HOIconName.BRUISED_SMALL); //#94
+        put(MatchEventID.INJURED_AFTER_FOUL_AND_EXITS, HOIconName.INJURED_SMALL); //#95
+        put(MatchEventID.INJURED_AFTER_FOUL_AND_NO_REPLACEMENT_EXISTED, HOIconName.INJURED_SMALL); //#96
+        put(MatchEventID.KEEPER_INJURED_FIELD_PLAYER_HAS_TO_TAKE_HIS_PLACE, HOIconName.INJURED_SMALL); //#97
+
+        put(MatchEventID.REDUCING_GOAL_HOME_TEAM_FREE_KICK, HOIconName.GOAL_FREEKICK); //#100
+        put(MatchEventID.REDUCING_GOAL_HOME_TEAM_MIDDLE, HOIconName.GOAL_MID); //#101
+        put(MatchEventID.REDUCING_GOAL_HOME_TEAM_LEFT_WING, HOIconName.GOAL_LEFT); //#102
+        put(MatchEventID.REDUCING_GOAL_HOME_TEAM_RIGHT_WING, HOIconName.GOAL_RIGHT); //#103
+        put(MatchEventID.REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL, HOIconName.GOAL_PENALTY); //#104
+        put(MatchEventID.SE_GOAL_UNPREDICTABLE_LONG_PASS, HOIconName.GOAL_SPECIAL); //#105
+        put(MatchEventID.SE_GOAL_UNPREDICTABLE_SCORES_ON_HIS_OWN, HOIconName.GOAL_SPECIAL); //#106
+        put(MatchEventID.GOAL_LONG_SHOT_NO_TACTIC, HOIconName.GOAL_LONGSHOT); //#107
+        put(MatchEventID.SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION, HOIconName.GOAL_SPECIAL); //#108
+        put(MatchEventID.SE_GOAL_UNPREDICTABLE_MISTAKE, HOIconName.GOAL_SPECIAL); //#109
+
+        put(MatchEventID.EQUALIZER_GOAL_HOME_TEAM_FREE_KICK, HOIconName.GOAL_FREEKICK); //#110
+        put(MatchEventID.EQUALIZER_GOAL_HOME_TEAM_MIDDLE, HOIconName.GOAL_MID); //#111
+        put(MatchEventID.EQUALIZER_GOAL_HOME_TEAM_LEFT_WING, HOIconName.GOAL_LEFT); //#112
+        put(MatchEventID.EQUALIZER_GOAL_HOME_TEAM_RIGHT_WING, HOIconName.GOAL_RIGHT); //#113
+        put(MatchEventID.EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL, HOIconName.GOAL_PENALTY); //#114
+        put(MatchEventID.SE_QUICK_SCORES_AFTER_RUSH, HOIconName.GOAL_SPECIAL); //#115
+        put(MatchEventID.SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES, HOIconName.GOAL_SPECIAL); //#116
+        put(MatchEventID.SE_TIRED_DEFENDER_MISTAKE_STRIKER_SCORES, HOIconName.GOAL_SPECIAL); //#117
+        put(MatchEventID.SE_GOAL_CORNER_TO_ANYONE, HOIconName.GOAL_SPECIAL); //#118
+        put(MatchEventID.SE_GOAL_CORNER_HEAD_SPECIALIST, HOIconName.GOAL_SPECIAL); //#119
+
+        put(MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_FREE_KICK, HOIconName.GOAL_FREEKICK); //#120
+        put(MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_MIDDLE, HOIconName.GOAL_MID); //#121
+        put(MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_LEFT_WING, HOIconName.GOAL_LEFT); //#122
+        put(MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_RIGHT_WING, HOIconName.GOAL_RIGHT); //#123
+        put(MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL, HOIconName.GOAL_PENALTY); //#124
+
+        put(MatchEventID.INCREASE_GOAL_HOME_TEAM_FREE_KICK, HOIconName.GOAL_FREEKICK); //#130
+        put(MatchEventID.INCREASE_GOAL_HOME_TEAM_MIDDLE, HOIconName.GOAL_MID); //#131
+        put(MatchEventID.INCREASE_GOAL_HOME_TEAM_LEFT_WING, HOIconName.GOAL_LEFT); //#132
+        put(MatchEventID.INCREASE_GOAL_HOME_TEAM_RIGHT_WING, HOIconName.GOAL_RIGHT); //#133
+        put(MatchEventID.INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL, HOIconName.CONVERTED_PENALTY); //#134
+        put(MatchEventID.SE_EXPERIENCED_FORWARD_SCORES, HOIconName.GOAL_SPECIAL); //#135
+        put(MatchEventID.SE_INEXPERIENCED_DEFENDER_CAUSES_GOAL, HOIconName.GOAL_SPECIAL); //#136
+        put(MatchEventID.SE_WINGER_TO_HEAD_SPEC_SCORES, HOIconName.GOAL_SPECIAL); //#137
+        put(MatchEventID.SE_WINGER_TO_ANYONE_SCORES, HOIconName.GOAL_SPECIAL); //#138
+        put(MatchEventID.SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER, HOIconName.GOAL_SPECIAL); //#139
+
+        put(MatchEventID.COUNTER_ATTACK_GOAL_FREE_KICK, HOIconName.GOAL_COUNTER); //#140
+        put(MatchEventID.COUNTER_ATTACK_GOAL_MIDDLE, HOIconName.GOAL_COUNTER); //#141
+        put(MatchEventID.COUNTER_ATTACK_GOAL_LEFT, HOIconName.GOAL_COUNTER); //#142
+        put(MatchEventID.COUNTER_ATTACK_GOAL_RIGHT, HOIconName.GOAL_COUNTER); //#143
+
+        put(MatchEventID.REDUCING_GOAL_AWAY_TEAM_FREE_KICK, HOIconName.GOAL_FREEKICK); //#150
+        put(MatchEventID.REDUCING_GOAL_AWAY_TEAM_MIDDLE, HOIconName.GOAL_MID); //#151
+        put(MatchEventID.REDUCING_GOAL_AWAY_TEAM_LEFT_WING, HOIconName.GOAL_LEFT); //#152
+        put(MatchEventID.REDUCING_GOAL_AWAY_TEAM_RIGHT_WING, HOIconName.GOAL_RIGHT); //#153
+        put(MatchEventID.REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL, HOIconName.GOAL_PENALTY); //#154
+
+        put(MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_FREE_KICK, HOIconName.GOAL_FREEKICK); //#160
+        put(MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_MIDDLE, HOIconName.GOAL_MID); //#161
+        put(MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_LEFT_WING, HOIconName.GOAL_LEFT); //#162
+        put(MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_RIGHT_WING, HOIconName.GOAL_RIGHT); //#163
+        put(MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL, HOIconName.GOAL_PENALTY); //#164
+
+        put(MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_FREE_KICK, HOIconName.GOAL_FREEKICK); //#170
+        put(MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_MIDDLE, HOIconName.GOAL_MID); //#171
+        put(MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_LEFT_WING, HOIconName.GOAL_LEFT); //#172
+        put(MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_RIGHT_WING, HOIconName.GOAL_RIGHT); //#173
+        put(MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL, HOIconName.GOAL_PENALTY); //#174
+
+        put(MatchEventID.INCREASE_GOAL_AWAY_TEAM_FREE_KICK, HOIconName.GOAL_FREEKICK); //#180
+        put(MatchEventID.INCREASE_GOAL_AWAY_TEAM_MIDDLE, HOIconName.GOAL_MID); //#181
+        put(MatchEventID.INCREASE_GOAL_AWAY_TEAM_LEFT_WING, HOIconName.GOAL_LEFT); //#182
+        put(MatchEventID.INCREASE_GOAL_AWAY_TEAM_RIGHT_WING, HOIconName.GOAL_RIGHT); //#183
+        put(MatchEventID.INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL, HOIconName.GOAL_PENALTY); //#184
+        put(MatchEventID.GOAL_INDIRECT_FREE_KICK, HOIconName.GOAL_IFK); //#185
+        put(MatchEventID.COUNTER_ATTACK_GOAL_INDIRECT_FREE_KICK, HOIconName.GOAL_COUNTER); //#186
+        put(MatchEventID.GOAL_LONG_SHOT, HOIconName.GOAL_LONGSHOT); //#187
+
+        put(MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_FREE_KICK, HOIconName.NO_GOAL_FREEKICK); //#200
+        put(MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_MIDDLE, HOIconName.NO_GOAL_MID); //#201
+        put(MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_LEFT_WING, HOIconName.NO_GOAL_LEFT); //#202
+        put(MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_RIGHT_WING, HOIconName.NO_GOAL_RIGHT); //#203
+        put(MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL, HOIconName.NO_GOAL_PENALTY); //#204
+        put(MatchEventID.SE_NO_GOAL_UNPREDICTABLE_LONG_PASS, HOIconName.NO_GOAL_SPECIAL); //#205
+        put(MatchEventID.SE_NO_GOAL_UNPREDICTABLE_ALMOST_SCORES, HOIconName.ME_206); //#206
+        put(MatchEventID.NO_GOAL_LONG_SHOT_NO_TACTIC, HOIconName.NO_GOAL_LONGSHOT); //#207
+        put(MatchEventID.SE_NO_GOAL_UNPREDICTABLE_SPECIAL_ACTION, HOIconName.NO_GOAL_SPECIAL); //#208
+        put(MatchEventID.SE_NO_GOAL_UNPREDICTABLE_MISTAKE, HOIconName.NO_GOAL_SPECIAL); //#209
+
+        put(MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_FREE_KICK, HOIconName.NO_GOAL_FREEKICK); //#210
+        put(MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_MIDDLE, HOIconName.NO_GOAL_MID); //#211
+        put(MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_LEFT_WING, HOIconName.NO_GOAL_LEFT); //#212
+        put(MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_RIGHT_WING, HOIconName.NO_GOAL_RIGHT); //#213
+        put(MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL, HOIconName.NO_GOAL_PENALTY); //#214
+        put(MatchEventID.SE_QUICK_SCORES_AFTER_RUSH, HOIconName.NO_GOAL_SPECIAL); //#215
+        put(MatchEventID.SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES, HOIconName.NO_GOAL_SPECIAL); //#216
+        put(MatchEventID.SE_TIRED_DEFENDER_MISTAKE_STRIKER_SCORES, HOIconName.NO_GOAL_SPECIAL); //#217
+        put(MatchEventID.SE_NO_GOAL_CORNER_TO_ANYONE, HOIconName.NO_GOAL_SPECIAL); //#218
+        put(MatchEventID.SE_NO_GOAL_CORNER_HEAD_SPECIALIST, HOIconName.NO_GOAL_SPECIAL); //#219
+
+        put(MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_FREE_KICK, HOIconName.NO_GOAL_FREEKICK); //#220
+        put(MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_MIDDLE, HOIconName.NO_GOAL_MID); //#221
+        put(MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_LEFT_WING, HOIconName.NO_GOAL_LEFT); //#222
+        put(MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_RIGHT_WING, HOIconName.NO_GOAL_RIGHT); //#223
+        put(MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL, HOIconName.NO_GOAL_PENALTY); //#224
+
+        put(MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_FREE_KICK, HOIconName.NO_GOAL_FREEKICK); //#230
+        put(MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_MIDDLE, HOIconName.NO_GOAL_MID); //#231
+        put(MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_LEFT_WING, HOIconName.NO_GOAL_LEFT); //#232
+        put(MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_RIGHT_WING, HOIconName.NO_GOAL_RIGHT); //#233
+        put(MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL, HOIconName.NO_GOAL_PENALTY); //#234
+        put(MatchEventID.SE_EXPERIENCED_FORWARD_SCORES, HOIconName.NO_GOAL_SPECIAL); //#235
+        put(MatchEventID.SE_INEXPERIENCED_DEFENDER_CAUSES_GOAL, HOIconName.NO_GOAL_SPECIAL); //#236
+        put(MatchEventID.SE_WINGER_TO_HEAD_SPEC_SCORES, HOIconName.NO_GOAL_SPECIAL); //#237
+        put(MatchEventID.SE_WINGER_TO_ANYONE_SCORES, HOIconName.NO_GOAL_SPECIAL); //#238
+        put(MatchEventID.SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER, HOIconName.NO_GOAL_SPECIAL); //#239
+
+        put(MatchEventID.COUNTER_ATTACK_NO_GOAL_FREE_KICK, HOIconName.NO_GOAL_COUNTER); //#240
+        put(MatchEventID.COUNTER_ATTACK_NO_GOAL_MIDDLE, HOIconName.NO_GOAL_COUNTER); //#241
+        put(MatchEventID.COUNTER_ATTACK_NO_GOAL_LEFT, HOIconName.NO_GOAL_COUNTER); //#242
+        put(MatchEventID.COUNTER_ATTACK_NO_GOAL_RIGHT, HOIconName.NO_GOAL_COUNTER); //#243
+
+        put(MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_FREE_KICK, HOIconName.NO_GOAL_FREEKICK); //#250
+        put(MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_MIDDLE, HOIconName.NO_GOAL_MID); //#251
+        put(MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_LEFT_WING, HOIconName.NO_GOAL_LEFT); //#252
+        put(MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_RIGHT_WING, HOIconName.NO_GOAL_RIGHT); //#253
+        put(MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL, HOIconName.NO_GOAL_PENALTY); //#254
+
+        put(MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_FREE_KICK, HOIconName.NO_GOAL_FREEKICK); //#260
+        put(MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_MIDDLE, HOIconName.NO_GOAL_MID); //#261
+        put(MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_LEFT_WING, HOIconName.NO_GOAL_LEFT); //#262
+        put(MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_RIGHT_WING, HOIconName.NO_GOAL_RIGHT); //#263
+        put(MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL, HOIconName.NO_GOAL_PENALTY); //#264
+
+        put(MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_FREE_KICK, HOIconName.NO_GOAL_FREEKICK); //#270
+        put(MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_MIDDLE, HOIconName.NO_GOAL_MID); //#271
+        put(MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_LEFT_WING, HOIconName.NO_GOAL_LEFT); //#272
+        put(MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_RIGHT_WING, HOIconName.NO_GOAL_RIGHT); //#273
+        put(MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL, HOIconName.NO_GOAL_PENALTY); //#274
+
+        put(MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_FREE_KICK, HOIconName.NO_GOAL_FREEKICK); //#280
+        put(MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_MIDDLE, HOIconName.NO_GOAL_MID); //#281
+        put(MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_LEFT_WING, HOIconName.NO_GOAL_LEFT); //#282
+        put(MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_RIGHT_WING, HOIconName.NO_GOAL_RIGHT); //#283
+        put(MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL, HOIconName.NO_GOAL_PENALTY); //#284
+        put(MatchEventID.NO_GOAL_INDIRECT_FREE_KICK, HOIconName.NO_GOAL_IFK); //#285
+        put(MatchEventID.COUNTER_ATTACK_NO_GOAL_INDIRECT_FREE_KICK, HOIconName.NO_GOAL_COUNTER); //#286
+        put(MatchEventID.NO_GOAL_LONG_SHOT, HOIconName.NO_GOAL_LONGSHOT); //#287
+
+        put(MatchEventID.SE_TECHNICAL_SUFFERS_FROM_RAIN, HOIconName.WEATHER_RAIN_NEG); //#301
+        put(MatchEventID.SE_POWERFUL_THRIVES_IN_RAIN, HOIconName.WEATHER_RAIN_POS); //#302
+        put(MatchEventID.SE_TECHNICAL_THRIVES_IN_SUN, HOIconName.WEATHER_SUN_POS); //#303
+        put(MatchEventID.SE_POWERFUL_SUFFERS_FROM_SUN, HOIconName.WEATHER_SUN_NEG); //#304
+        put(MatchEventID.SE_QUICK_LOSES_IN_RAIN, HOIconName.WEATHER_RAIN_NEG); //#305
+        put(MatchEventID.SE_QUICK_LOSES_IN_SUN, HOIconName.WEATHER_SUN_NEG); //#306
+
+        put(MatchEventID.YELLOW_CARD_NASTY_PLAY, HOIconName.YELLOWCARD); //#510
+        put(MatchEventID.YELLOW_CARD_CHEATING, HOIconName.YELLOWCARD); //#511
+        put(MatchEventID.RED_CARD_2ND_WARNING_NASTY_PLAY, HOIconName.REDCARD); //#512
+        put(MatchEventID.RED_CARD_2ND_WARNING_CHEATING, HOIconName.REDCARD); //#513
+        put(MatchEventID.RED_CARD_WITHOUT_WARNING, HOIconName.REDCARD); //#514
+    }};
+
 
     /**
      * Creates a new instance of MatchHighlight
      */
-    public MatchHighlight() {
+    public MatchEvent() {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
 
+    public boolean isBruisedOrInjured()
+    {
+        return ( isBruised() || isInjured());
+    }
 
+    // TODO: change this one
+    public boolean isBruised()
+    {
+        return m_eInjuryType == Matchdetails.eInjuryType.BRUISE;
+    }
 
+    public boolean isInjured()
+    {
+        return m_eInjuryType == Matchdetails.eInjuryType.INJURY;
+    }
+
+    public boolean isRedCard()
+    {
+        return ( (this.m_iMatchEventID == 12) || (this.m_iMatchEventID == 13) || (this.m_iMatchEventID == 14));
+    }
+
+    public boolean isGoalEvent()
+    {
+        return ( (this.m_iMatchEventID>=100) && (this.m_iMatchEventID<200) );
+    }
+
+    public boolean isNonGoalEvent()
+    {
+        return ( (this.m_iMatchEventID>=200) && (this.m_iMatchEventID<300) );
+    }
 
     /**
      * Setter for property m_sEventText.
@@ -163,10 +518,15 @@ public class MatchHighlight implements core.model.match.IMatchHighlight {
 
     public final void setMatchEventID(int m_iMatchEventID) {
         this.m_iMatchEventID = m_iMatchEventID;
+        this.m_matchEventID = MatchEventID.fromMatchEventID(m_iMatchEventID);
     }
 
-    public final int getMatchEventID() {
+    public final int getiMatchEventID() {
         return m_iMatchEventID;
+    }
+
+    public final MatchEventID getMatchEventID() {
+        return this.m_matchEventID;
     }
 
     public final void setMatchEventCategory(int m_iMatchEventCategory) {this.m_iMatchEventCategory = m_iMatchEventCategory;}
@@ -265,24 +625,151 @@ public class MatchHighlight implements core.model.match.IMatchHighlight {
 
 
     /**
-     * Check, if the highlight is a weather SE highlight.
+     * Check, if it is a Counter Attack event
      */
-    public boolean isWeatherSEHighlight() {
-    	return
-    			(m_iMatchEventCategory ==  MATCH_EVENT_SE_TECHNICAL_SUFFERS_FROM_RAIN ||
-    					m_iMatchEventCategory == MATCH_EVENT_SE_POWERFUL_THRIVES_IN_RAIN ||
-    					m_iMatchEventCategory == MATCH_EVENT_SE_TECHNICAL_THRIVES_IN_SUN ||
-    					m_iMatchEventCategory == MATCH_EVENT_SE_POWERFUL_SUFFERS_FROM_SUN ||
-    					m_iMatchEventCategory == MATCH_EVENT_SE_QUICK_LOSES_IN_RAIN ||
-    					m_iMatchEventCategory == MATCH_EVENT_SE_QUICK_LOSES_IN_SUN);
+    public boolean isCounterAttack() {return this.m_matchEventID.name().startsWith("COUNTER_ATTACK_");}
+
+    /**
+     * Check, if it is a free kick event
+     */
+    public boolean isFreeKick() {
+        return ( (this.m_matchEventID.name().contains("FREE_KICK")) &&
+                (! this.m_matchEventID.name().startsWith("COUNTER_ATTACK_")));
     }
 
-    public static String getTooltiptext(int subtyp) {
-        
+    /**
+     * Check, if it is a penalty event
+     */
+    public boolean isPenalty() {
+        return
+               (this.m_matchEventID ==  MatchEventID.REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL ||       // #104
+               this.m_matchEventID == MatchEventID.EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL ||        // #114
+               this.m_matchEventID == MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL ||     // #124
+               this.m_matchEventID == MatchEventID.INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL ||         // #134
+               this.m_matchEventID == MatchEventID.REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL ||         // #154
+               this.m_matchEventID == MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL ||        // #164
+               this.m_matchEventID == MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL ||     // #174
+               this.m_matchEventID == MatchEventID.INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL ||         // #184
+               this.m_matchEventID ==  MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL ||     // #204
+               this.m_matchEventID == MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL ||     // #214
+               this.m_matchEventID == MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL ||  // #224
+               this.m_matchEventID == MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL ||      // #234
+               this.m_matchEventID == MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL ||      // #254
+               this.m_matchEventID == MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL ||     // #264
+               this.m_matchEventID == MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL ||  // #274
+               this.m_matchEventID == MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL) ;      // #284
+    }
 
-                default:
-                    return "";
+    /**
+     * Check, if it is a long shot event
+     */
+    public boolean isLongShot() {
+        return
+                (this.m_matchEventID ==  MatchEventID.GOAL_LONG_SHOT_NO_TACTIC ||     // #107
+                this.m_matchEventID == MatchEventID.GOAL_LONG_SHOT ||                 // #187
+                this.m_matchEventID == MatchEventID.NO_GOAL_LONG_SHOT_NO_TACTIC ||    // #207
+                this.m_matchEventID == MatchEventID.NO_GOAL_LONG_SHOT ||              // #287
+                this.m_matchEventID == MatchEventID.NO_GOAL_LONG_SHOT_DEFENDED) ;     // #288
+    }
+
+
+
+    /**
+     * Check, if it is a Special Event
+     */
+    public boolean isSE() {
+        return this.m_matchEventID.name().startsWith("SE_");
+    }
+
+
+    /**
+     * Check, if it is a SE not related to specialty (SetPieces, stamina and XP)
+     */
+    public boolean isOtherSE() {
+        return
+                (this.m_matchEventID ==  MatchEventID.SE_TIRED_DEFENDER_MISTAKE_STRIKER_SCORES ||
+                this.m_matchEventID == MatchEventID.SE_TIRED_DEFENDER_MISTAKE_BUT_NO_GOAL ||
+                this.m_matchEventID == MatchEventID.SE_GOAL_CORNER_TO_ANYONE ||
+                this.m_matchEventID == MatchEventID.SE_NO_GOAL_CORNER_TO_ANYONE ||
+                this.m_matchEventID == MatchEventID.SE_EXPERIENCED_FORWARD_SCORES ||
+                this.m_matchEventID == MatchEventID.SE_EXPERIENCED_FORWARD_FAILS_TO_SCORE ||
+                this.m_matchEventID == MatchEventID.SE_INEXPERIENCED_DEFENDER_CAUSES_GOAL ||
+                this.m_matchEventID == MatchEventID.SE_INEXPERIENCED_DEFENDER_ALMOST_CAUSES_GOAL);
+    }
+
+
+    /**
+     * Check, if it is a Specialty Special Event, i.e SE but not weather
+     */
+    public boolean isSpecialtyNonWeatherSE() {
+        return (this.isSE() && (!this.isSpecialtyWeatherSE()) );
+    }
+
+
+    /**
+     * Check, if it is a SE related both to player specialty and weather
+     */
+    public boolean isSpecialtyWeatherSE() {
+    	return
+    			(this.m_matchEventID ==  MatchEventID.SE_TECHNICAL_SUFFERS_FROM_RAIN ||
+                this.m_matchEventID == MatchEventID.SE_POWERFUL_THRIVES_IN_RAIN ||
+                this.m_matchEventID == MatchEventID.SE_TECHNICAL_THRIVES_IN_SUN ||
+                this.m_matchEventID == MatchEventID.SE_POWERFUL_SUFFERS_FROM_SUN ||
+                this.m_matchEventID == MatchEventID.SE_QUICK_LOSES_IN_RAIN ||
+                this.m_matchEventID == MatchEventID.SE_QUICK_LOSES_IN_SUN);
+    }
+
+    /**
+     * Check, if it is a positive SE related both to player specialty and weather
+     */
+    public boolean isPositiveSpecialtyWeatherSE() {
+        return
+                (m_iMatchEventID ==  MatchEventID.SE_TECHNICAL_THRIVES_IN_SUN.value ||
+                 m_iMatchEventID == MatchEventID.SE_POWERFUL_THRIVES_IN_RAIN.value);
+    }
+
+    /**
+     * Check, if it is a negative SE related both to player specialty and weather
+     */
+    public boolean isNegativeSpecialtyWeatherSE() {
+        return (this.isSpecialtyWeatherSE() && (! this.isPositiveSpecialtyWeatherSE()));
+    }
+
+    public String getEventTextDescription() {
+        return getEventTextDescription(m_matchEventID.value);
         }
 
+    public static String getEventTextDescription(int iMatchEventID) {
+        return HOVerwaltung.instance().getLanguageString("MatchEvent_"+iMatchEventID);
     }
-}
+
+    public ImageIcon getIcon() {
+
+        MatchEventID me = this.getMatchEventID();
+
+        if (me == null) { return null;}
+
+//        ImageIcon icon;
+//
+//        if(this.isSpecialtyWeatherSE()) {
+//            String iconName = MatchEvent.mapMatchEventIcons.getOrDefault(me, HOIconName.UNKOWN);
+//            icon = ThemeManager.getScaledIcon(iconName, 16, 10);
+//        }
+//        else {
+//            icon = ThemeManager.getIcon(MatchEvent.mapMatchEventIcons.getOrDefault(me, HOIconName.UNKOWN));
+//        }
+
+        ImageIcon icon;
+
+        if (isBruised()) {
+            icon = ThemeManager.getIcon(HOIconName.BRUISED);}
+        else if (isInjured()) {
+            icon = ThemeManager.getIcon(HOIconName.INJURED);}
+        else {
+            icon = ThemeManager.getIcon(MatchEvent.mapMatchEventIcons.getOrDefault(me, HOIconName.UNKOWN));}
+        return icon;
+
+    }
+
+
+    }

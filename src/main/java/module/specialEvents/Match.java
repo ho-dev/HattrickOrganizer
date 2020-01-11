@@ -1,6 +1,6 @@
 package module.specialEvents;
 
-import core.model.match.MatchHighlight;
+import core.model.match.MatchEvent;
 import core.model.match.MatchType;
 import core.model.match.Weather;
 
@@ -18,7 +18,7 @@ public class Match {
 	private String hostingTeam;
 	private String visitingTeam;
 	private String matchResult;
-	private MatchHighlight matchHighlight;
+	private MatchEvent matchHighlight;
 	private MatchType matchType;
 
 	public Date getMatchDate() {
@@ -77,11 +77,11 @@ public class Match {
 		this.matchResult = matchResult;
 	}
 
-	public MatchHighlight getMatchHighlight() {
+	public MatchEvent getMatchHighlight() {
 		return matchHighlight;
 	}
 
-	public void setMatchHighlight(MatchHighlight matchHighlight) {
+	public void setMatchHighlight(MatchEvent matchHighlight) {
 		this.matchHighlight = matchHighlight;
 	}
 

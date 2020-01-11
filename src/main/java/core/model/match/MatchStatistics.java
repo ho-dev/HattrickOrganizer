@@ -4,8 +4,11 @@ import core.db.DBManager;
 import core.util.HOLogger;
 import module.lineup.substitution.model.Substitution;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import static core.model.match.MatchEvent.MatchEventID;
 
 public class MatchStatistics {
 
@@ -306,24 +309,21 @@ public class MatchStatistics {
 	public int getMatchEndMinute(int spielerId) {
 
 		int endMinute = 0;
-		Vector<MatchHighlight> hls = DBManager.instance().getMatchDetails(matchId).getHighlights();
+		ArrayList<MatchEvent> hls = DBManager.instance().getMatchDetails(matchId).getHighlights();
 
 		for (int i = 0; i < hls.size(); i++) {
-			if ((hls.get(i).getHighlightTyp() == IMatchHighlight.HIGHLIGHT_KARTEN)
-					&& (hls.get(i).getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_SPIELENDE)) {
-				endMinute = hls.get(i).getMinute();
-			}
-			else if ((hls.get(i).getHighlightTyp() == IMatchHighlight.HIGHLIGHT_KARTEN)
-					&& (hls.get(i).getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_ROT
-					|| hls.get(i).getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_GELB_ROT_HARTER_EINSATZ
-					|| hls.get(i).getHighlightSubTyp() == IMatchHighlight.HIGHLIGHT_SUB_GELB_ROT_UNFAIR)
-					&&  hls.get(i).getSpielerID() == spielerId) {
-				endMinute = hls.get(i).getMinute();
-				break;
-			}
-		}
-		return endMinute;
-	}
+			MatchEventID me = MatchEventID.fromMatchEventID(hls.get(i).getiMatchEventID());
+			if (me == MatchEventID.MATCH_FINISHED){endMinute = hls.get(i).getMinute();}
+			else if ((me == MatchEventID.RED_CARD_2ND_WARNING_NASTY_PLAY	||
+					  me == MatchEventID.RED_CARD_2ND_WARNING_CHEATING ||
+					  me == MatchEventID.RED_CARD_WITHOUT_WARNING ||
+					  me == MatchEventID.MODERATELY_INJURED_LEAVES_FIELD ||
+					  me == MatchEventID.BADLY_INJURED_LEAVES_FIELD ||
+					  me == MatchEventID.INJURED_AND_NO_REPLACEMENT_EXISTED ||
+					  me == MatchEventID.INJURED_AFTER_FOUL_AND_EXITS)  &&
+					hls.get(i).getSpielerID() == spielerId) {endMinute = hls.get(i).getMinute();}}
+		 return endMinute;
+	    }
 
 	private boolean isOldie() {
 		Vector<MatchLineupPlayer> mlps = teamLineup.getAufstellung();

@@ -4,9 +4,12 @@ import core.db.DBManager;
 import core.model.Tournament.TournamentDetails;
 import core.model.match.*;
 import core.util.HOLogger;
+
+import java.util.ArrayList;
 import java.util.Vector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import static core.net.OnlineWorker.getTournamentDetails;
 
@@ -32,18 +35,21 @@ public class XMLMatchdetailsParser {
                 md = new Matchdetails();
 
                 readGeneral(doc, md);
-                // Match lineup needs to be available, if not -> ignore match highlights/report
-                if (matchLineup == null) {
-                	// reduced log level as this happens each and every match download.
-                	HOLogger.instance().debug(XMLMatchdetailsParser.class, 
-                			"XMLMatchdetailsParser["+md.getMatchID()+"]: Cannot parse matchreport from matchdetails, lineup MUST be available!");
-                } else {
-                    readHighlights(doc, md, matchLineup);
-                    parseMatchReport(md);
-                }
                 readArena(doc, md);
                 readGuestTeam(doc, md);
                 readHomeTeam(doc, md);
+				readInjuries(doc, md);
+
+				// Match lineup needs to be available, if not -> ignore match highlights/report
+				if (matchLineup == null) {
+					// reduced log level as this happens each and every match download.
+					HOLogger.instance().debug(XMLMatchdetailsParser.class,
+							"XMLMatchdetailsParser["+md.getMatchID()+"]: Cannot parse matchreport from matchdetails, lineup MUST be available!");
+				} else {
+					readHighlights(doc, md, matchLineup);
+					parseMatchReport(md);
+				}
+
                 md.setStatisics();
 			} catch (Exception e) {
 	            HOLogger.instance().log(XMLMatchdetailsParser.class, e);
@@ -54,6 +60,47 @@ public class XMLMatchdetailsParser {
         return md;
     }
 
+	/**
+	 * read the match injuries from XML
+	 *
+	 * @param doc 	XML document
+	 * @param md	match details
+	 *
+	 */
+	private static void readInjuries(Document doc, Matchdetails md) {
+		final ArrayList<Matchdetails.Injury> mdInjuries = new ArrayList<>();
+
+		Element root, ele;
+		NodeList injuryList ;
+		int InjuryPlayerID, InjuryTeamID, InjuryType, InjuryMinute, MatchPart;
+		Matchdetails.Injury injury;
+
+		try {
+			//get Injuries element
+			root = doc.getDocumentElement();
+			ele = (Element) root.getElementsByTagName("Injuries").item(0);
+			injuryList = ele.getElementsByTagName("Injury");
+
+			//now go through the injuries
+			for (int n=0; n < injuryList.getLength(); n++) {
+				root = (Element) injuryList.item(n);
+				InjuryPlayerID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("InjuryPlayerID").item(0)));
+				InjuryTeamID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("InjuryTeamID").item(0)));
+				InjuryType = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("InjuryType").item(0)));
+				InjuryMinute = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("InjuryMinute").item(0)));
+				MatchPart = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("MatchPart").item(0)));
+				injury = new Matchdetails.Injury(InjuryPlayerID, InjuryTeamID, InjuryType, InjuryMinute, MatchPart);
+				mdInjuries.add(injury);
+			}
+
+			md.setM_Injuries(mdInjuries);
+		}
+
+		catch (Exception e) {
+			HOLogger.instance().log(XMLMatchdetailsParser.class, e);
+		}
+
+	}
     /**
      * read the match highlights from XML
      *
@@ -62,50 +109,37 @@ public class XMLMatchdetailsParser {
      *
      */
     private static void readHighlights(Document doc, Matchdetails md, MatchLineup lineup) {
-        final Vector<MatchHighlight> myHighlights = new Vector<MatchHighlight>();
-        final Vector<Integer> broken = new Vector<Integer>();
-        Element ele = null;
-        Element eventList = null;
-        Element root = null;
+        final ArrayList<MatchEvent> matchEvents = new ArrayList<>();
+        final Vector<Integer> broken = new Vector<Integer>(); // TODO: I guess this one can be deleted if things are done properly (akasolace)
+        Element root, ele;
+        NodeList eventList;
+		int iMinute, iSubjectPlayerID, iSubjectTeamID, iObjectPlayerID, iMatchEventID;
+		String eventtext;
 
-        try {
+		try {
             //get Root element
             root = doc.getDocumentElement();
             root = (Element) root.getElementsByTagName("Match").item(0);
             //get both teams
             ele = (Element) root.getElementsByTagName("HomeTeam").item(0);
-            final String homeTeamID = XMLManager.getFirstChildNodeValue((Element) ele.getElementsByTagName("HomeTeamID")
-                                                                                                        .item(0));
-            
+            final String homeTeamID = XMLManager.getFirstChildNodeValue((Element) ele.getElementsByTagName("HomeTeamID").item(0));
             final Vector<Vector<String>> homeTeamPlayers = parseLineup (lineup.getHeim().getAufstellung());
             final Vector<Vector<String>> awayTeamPlayers = parseLineup (lineup.getGast().getAufstellung());
+			ele = (Element) root.getElementsByTagName("EventList").item(0);
 
-            //now go through the eventlist and add everything together
-            eventList = (Element) root.getElementsByTagName("EventList").item(0);
+			eventList = ele.getElementsByTagName("Event");
 
-            int homeGoals = 0;
-            int awayGoals = 0;
-            int n = 0;
-
-            while (n < eventList.getElementsByTagName("Event").getLength()) {
-            	root = (Element) eventList.getElementsByTagName("Event").item(n);
+			//now go through the match events
+            for (int n=0; n < eventList.getLength(); n++) {
+            	root = (Element) eventList.item(n);
 
             	//get values from xml
-            	final int minute = (Integer.valueOf(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("Minute")
-            					.item(0))))
-            					.intValue();
-            	final int subjectplayerid = (Integer.valueOf(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("SubjectPlayerID")
-            					.item(0))))
-            					.intValue();
-            	final int subjectteamid = (Integer.valueOf(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("SubjectTeamID")
-            					.item(0))))
-            					.intValue();
-            	final int objectplayerid = (Integer.valueOf(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("ObjectPlayerID")
-            					.item(0))))
-            					.intValue();
+            	iMinute = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("Minute").item(0)));
+            	iSubjectPlayerID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("SubjectPlayerID").item(0)));
+            	iSubjectTeamID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("SubjectTeamID").item(0)));
+            	iObjectPlayerID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("ObjectPlayerID").item(0)));
 
-            	String eventtext = XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("EventText")
-            			.item(0));
+            	eventtext = XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("EventText").item(0));
             	eventtext = eventtext.replaceAll("&lt;", "<");
             	eventtext = eventtext.replaceAll("&gt;", ">");
             	eventtext = eventtext.replaceAll("/>", ">");
@@ -113,20 +147,9 @@ public class XMLMatchdetailsParser {
             	eventtext = eventtext.replaceAll("&amp;", "&");
 
             	// Convert the ID to type and subtype.
-            	int eventKey = (Integer.valueOf(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("EventTypeID")
-            					.item(0))))
-								.intValue();
-            	final int highlighttyp = (int) Math.floor(eventKey/100);
-            	final int highlightsubtyp = eventKey - highlighttyp*100;
-
-            	//determine new score
-            	if (highlighttyp == IMatchHighlight.HIGHLIGHT_ERFOLGREICH) {
-            		if (String.valueOf(subjectteamid).equals(homeTeamID)) {
-            			homeGoals++;
-            		} else {
-            			awayGoals++;
-            		}
-            	}
+            	iMatchEventID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("EventTypeID").item(0)));
+            	MatchEvent me = new MatchEvent();
+            	me.setMatchEventID(iMatchEventID);
 
             	//get names for players
             	String subjectplayername = "";
@@ -134,7 +157,7 @@ public class XMLMatchdetailsParser {
             	boolean subHome = true;
             	boolean objHome = true;
 
-            	if (minute > 0) {
+            	if (iMinute > 0) {
             		int i = 0;
 
             		while (i < homeTeamPlayers.size()) {
@@ -145,11 +168,11 @@ public class XMLMatchdetailsParser {
 
             			final Vector<String> tmpPlayer = homeTeamPlayers.get(i);
 
-            			if (tmpPlayer.get(0).toString().equals(String.valueOf(subjectplayerid))) {
+            			if (tmpPlayer.get(0).toString().equals(String.valueOf(iSubjectPlayerID))) {
             				subjectplayername = tmpPlayer.get(1).toString();
             			}
 
-            			if (tmpPlayer.get(0).toString().equals(String.valueOf(objectplayerid))) {
+            			if (tmpPlayer.get(0).toString().equals(String.valueOf(iObjectPlayerID))) {
             				objectplayername = tmpPlayer.get(1).toString();
             			}
 
@@ -166,12 +189,12 @@ public class XMLMatchdetailsParser {
 
             			final Vector<String> tmpPlayer = awayTeamPlayers.get(i);
 
-            			if (tmpPlayer.get(0).toString().equals(String.valueOf(subjectplayerid))) {
+            			if (tmpPlayer.get(0).toString().equals(String.valueOf(iSubjectPlayerID))) {
             				subjectplayername = tmpPlayer.get(1).toString();
             				subHome = false;
             			}
 
-            			if (tmpPlayer.get(0).toString().equals(String.valueOf(objectplayerid))) {
+            			if (tmpPlayer.get(0).toString().equals(String.valueOf(iObjectPlayerID))) {
             				objectplayername = tmpPlayer.get(1).toString();
             				objHome = false;
             			}
@@ -181,8 +204,8 @@ public class XMLMatchdetailsParser {
             	}
 
             	//add single player
-            	if (minute > 0) {
-            		switch ((highlighttyp * 100) + highlightsubtyp) {
+            	if (iMinute > 0) {
+            		switch (iMatchEventID) {
             		case 40:
             		case 45:
             		case 47:
@@ -206,40 +229,40 @@ public class XMLMatchdetailsParser {
 
             		default:
 
-            			if (subjectplayername.equals("") && (subjectplayerid != 0)) {
-            				if (eventtext.indexOf(String.valueOf(subjectplayerid)) >= 0) {
+            			if (subjectplayername.equals("") && (iSubjectPlayerID != 0)) {
+            				if (eventtext.indexOf(String.valueOf(iSubjectPlayerID)) >= 0) {
             					String plname = eventtext.substring(eventtext.indexOf(String
-            							.valueOf(subjectplayerid)));
+            							.valueOf(iSubjectPlayerID)));
             					plname = plname.substring(plname.indexOf(">") + 1);
             					plname = plname.substring(0, plname.indexOf("<"));
             					subjectplayername = plname;
 
             					final Vector<String> tmpplay = new Vector<String>();
-            					tmpplay.add(String.valueOf(subjectplayerid));
+            					tmpplay.add(String.valueOf(iSubjectPlayerID));
             					tmpplay.add(plname);
 
-            					if (homeTeamID.equals(String.valueOf(subjectteamid))) {
+            					if (homeTeamID.equals(String.valueOf(iSubjectTeamID))) {
             						homeTeamPlayers.add(tmpplay);
             					} else {
             						awayTeamPlayers.add(tmpplay);
             						subHome = false;
             					}
             				} else {
-            					subjectplayername = String.valueOf(subjectplayerid);
-            					broken.add(new Integer(myHighlights.size()));
+            					subjectplayername = String.valueOf(iSubjectPlayerID);
+            					broken.add(new Integer(matchEvents.size()));
             				}
             			}
 
-	            		if (objectplayername.equals("") && (objectplayerid != 0)) {
-	            			if (eventtext.indexOf(String.valueOf(objectplayerid)) >= 0) {
+	            		if (objectplayername.equals("") && (iObjectPlayerID != 0)) {
+	            			if (eventtext.indexOf(String.valueOf(iObjectPlayerID)) >= 0) {
 	            				String plname = eventtext.substring(eventtext.indexOf(String
-	            						.valueOf(objectplayerid)));
+	            						.valueOf(iObjectPlayerID)));
 	            				plname = plname.substring(plname.indexOf(">") + 1);
 	            				plname = plname.substring(0, plname.indexOf("<"));
 	            				objectplayername = plname;
 	
 	            				final Vector<String> tmpplay = new Vector<String>();
-	            				tmpplay.add(String.valueOf(objectplayerid));
+	            				tmpplay.add(String.valueOf(iObjectPlayerID));
 	            				tmpplay.add(plname);
 	
 	            				//there is no easy solution to find out for which team this
@@ -247,8 +270,8 @@ public class XMLMatchdetailsParser {
 	            				//in home team, so we go like this
 	            				homeTeamPlayers.add(tmpplay);
 	            			} else {
-	            				objectplayername = String.valueOf(objectplayerid);
-	            				broken.add(Integer.valueOf(myHighlights.size()));
+	            				objectplayername = String.valueOf(iObjectPlayerID);
+	            				broken.add(Integer.valueOf(matchEvents.size()));
 	            			}
 	            		}
             		}
@@ -274,16 +297,16 @@ public class XMLMatchdetailsParser {
 
             		boolean replaceend = false;
 
-            		if (eventtext.indexOf(String.valueOf(subjectplayerid)) >= 0) {
+            		if (eventtext.indexOf(String.valueOf(iSubjectPlayerID)) >= 0) {
             			eventtext = eventtext.replaceAll("(?i)<A HREF=\"/Club/Players/Player\\.aspx\\?playerId="
-            					+ subjectplayerid + ".*?>",
+            					+ iSubjectPlayerID + ".*?>",
             					"<FONT COLOR=" + subplayerColor + "#><B>");
             			replaceend = true;
             		}
 
-            		if (eventtext.indexOf(String.valueOf(objectplayerid)) >= 0) {
+            		if (eventtext.indexOf(String.valueOf(iObjectPlayerID)) >= 0) {
             			eventtext = eventtext.replaceAll("(?i)<A HREF=\"/Club/Players/Player\\.aspx\\?playerId="
-            					+ objectplayerid + ".*?>",
+            					+ iObjectPlayerID + ".*?>",
             					"<FONT COLOR=" + objplayerColor + "#><B>");
             			replaceend = true;
             		}
@@ -294,35 +317,44 @@ public class XMLMatchdetailsParser {
             	}
 
             	//generate MatchHighlight and add to list
-            	final MatchHighlight myHighlight = new MatchHighlight();
-            	myHighlight.setHighlightTyp(highlighttyp);
-            	myHighlight.setHighlightSubTyp(highlightsubtyp);
-            	myHighlight.setMinute(minute);
-            	myHighlight.setHeimTore(homeGoals);
-            	myHighlight.setGastTore(awayGoals);
-            	myHighlight.setSpielerID(subjectplayerid);
+            	final MatchEvent myHighlight = new MatchEvent();
+            	myHighlight.setM_iMatchEventIndex(n+1);
+            	myHighlight.setMatchEventID(iMatchEventID);
+            	myHighlight.setMinute(iMinute);
+            	myHighlight.setSpielerID(iSubjectPlayerID);
             	myHighlight.setSpielerName(subjectplayername);
             	myHighlight.setSpielerHeim(subHome);
-            	myHighlight.setTeamID(subjectteamid);
-            	myHighlight.setGehilfeID(objectplayerid);
+            	myHighlight.setTeamID(iSubjectTeamID);
+            	myHighlight.setGehilfeID(iObjectPlayerID);
             	myHighlight.setGehilfeName(objectplayername);
             	myHighlight.setGehilfeHeim(objHome);
             	myHighlight.setEventText(eventtext);
-            	myHighlights.add(myHighlight);
+
+            	// Treat injury
+				if ((iMatchEventID==90) || ((iMatchEventID==94)))
+					{myHighlight.setM_eInjuryType(Matchdetails.eInjuryType.BRUISE);}
+				else if ((iMatchEventID==91) || (iMatchEventID==92) || (iMatchEventID==93) || (iMatchEventID==96))
+					{myHighlight.setM_eInjuryType(Matchdetails.eInjuryType.INJURY);}
+				else if ((iMatchEventID>=401) && (iMatchEventID<=423))
+				{
+					myHighlight.setM_eInjuryType(getInjuryType(iMinute, iSubjectPlayerID, md.getM_Injuries()));
+				}
+				else
+				{
+					myHighlight.setM_eInjuryType(Matchdetails.eInjuryType.NA);
+				}
+
+            	matchEvents.add(myHighlight);
 
             	//break if end of match (due to some corrupt xmls)
-            	if ((highlighttyp == IMatchHighlight.HIGHLIGHT_KARTEN)
-            			&& (highlightsubtyp == IMatchHighlight.HIGHLIGHT_SUB_SPIELENDE)) {
-            		break;
-            	}
+            	if (myHighlight.getMatchEventID() == MatchEvent.MatchEventID.MATCH_FINISHED) {break;}
 
-            	n++;
             }
 
             // check for redcarded highlights
             for (int i = 0; i < broken.size(); i++) {
-            	final int tmpid = ((Integer) broken.get(i)).intValue();
-            	final MatchHighlight tmp = (MatchHighlight) myHighlights.get(tmpid);
+            	final int tmpid = (broken.get(i)).intValue();
+            	final MatchEvent tmp = matchEvents.get(tmpid);
 
             	String subjectplayername = "";
             	String objectplayername = "";
@@ -387,7 +419,7 @@ public class XMLMatchdetailsParser {
             			objplayerColor = "#990000";
             		}
 
-            		String eventtext = tmp.getEventText();
+            		eventtext = tmp.getEventText();
             		boolean replaceend = false;
 
             		if (eventtext.indexOf(String.valueOf(tmp.getSpielerID())) >= 0) {
@@ -415,10 +447,9 @@ public class XMLMatchdetailsParser {
             		tmp.setEventText(eventtext);
             	}
             }
-            md.setHighlights(myHighlights);
+            md.setHighlights(matchEvents);
         } catch (Exception e) {
         	HOLogger.instance().log(XMLMatchdetailsParser.class, e);
-        	md = null;
         }
     }
 
@@ -447,12 +478,12 @@ public class XMLMatchdetailsParser {
      * @param md	match details
      */
     private static void parseMatchReport(Matchdetails md) {
-        Vector<MatchHighlight> highlights = md.getHighlights();
+        ArrayList<MatchEvent> highlights = md.getHighlights();
 
         final StringBuffer report = new StringBuffer();
 
         for (int k = 0; k < highlights.size(); k++) {
-            final MatchHighlight tmp = (MatchHighlight) highlights.get(k);
+            final MatchEvent tmp = (MatchEvent) highlights.get(k);
             report.append(tmp.getEventText()+" ");
         }
 
@@ -501,29 +532,6 @@ public class XMLMatchdetailsParser {
             md = null;
         }
     }
-
-	private static void readMatchType(Document doc, Matchdetails md) {
-		Element ele = null;
-		Element root = null;
-
-		root = doc.getDocumentElement();
-
-		try {
-			//Daten füllen
-			ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
-			md.setFetchDatumFromString(ele.getFirstChild().getNodeValue());
-
-			//MatchData
-			root = (Element) root.getElementsByTagName("Match").item(0);
-			ele = (Element) root.getElementsByTagName("MatchID").item(0);
-			md.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
-			ele = (Element) root.getElementsByTagName("MatchDate").item(0);
-			md.setSpielDatumFromString(ele.getFirstChild().getNodeValue());
-		} catch (Exception e) {
-			HOLogger.instance().log(XMLMatchdetailsParser.class,e);
-			md = null;
-		}
-	}
 
     private static void readGeneral(Document doc, Matchdetails md) {
         Element ele = null;
@@ -665,7 +673,22 @@ public class XMLMatchdetailsParser {
             }
         } catch (Exception e) {
             HOLogger.instance().log(XMLMatchdetailsParser.class, e);
-            md = null;
         }
     }
+
+	private static Matchdetails.eInjuryType getInjuryType(int iMinute, int iPlayerID, ArrayList<Matchdetails.Injury> injuries)
+	{
+		for (Matchdetails.Injury injury : injuries )
+		{
+			if ( (injury.getInjuryPlayerID() == iPlayerID) && (injury.getInjuryPlayerID() == iPlayerID))
+			{
+				return injury.getInjuryType();
+			}
+		}
+
+		HOLogger.instance().log(XMLMatchdetailsParser.class, "the injured player was not listed !!! This is not normal ");
+		return Matchdetails.eInjuryType.NA;
+
+	}
+
 }

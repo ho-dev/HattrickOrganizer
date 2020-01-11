@@ -2,8 +2,7 @@ package module.specialEvents.table;
 
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.match.IMatchHighlight;
-import core.model.match.MatchHighlight;
+import core.model.match.MatchEvent;
 import module.specialEvents.MatchRow;
 import module.specialEvents.SpecialEventsDM;
 
@@ -27,13 +26,13 @@ public class ChanceTableCellRenderer extends DefaultTableCellRenderer {
 
 		Icon icon = null;
 		MatchRow matchRow = (MatchRow) value;
-		MatchHighlight highlight = matchRow.getMatchHighlight();
+		MatchEvent highlight = matchRow.getMatchHighlight();
 		if (highlight != null) {
-			if (highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_ERFOLGREICH) {
+			if (highlight.isGoalEvent()) {
 				icon = ThemeManager.getIcon(HOIconName.GOAL);
-			} else if (highlight.getHighlightTyp() == IMatchHighlight.HIGHLIGHT_FEHLGESCHLAGEN) {
+			} else if (highlight.isNonGoalEvent()) {
 				icon = ThemeManager.getIcon(HOIconName.NOGOAL);
-			} else if (SpecialEventsDM.isWeatherSE(highlight)) {
+			} else if (highlight.isSpecialtyWeatherSE()) {
 				icon = ThemeManager.getIcon(HOIconName.WEATHER[matchRow.getMatch().getWeather()
 						.getId()]);
 			}
