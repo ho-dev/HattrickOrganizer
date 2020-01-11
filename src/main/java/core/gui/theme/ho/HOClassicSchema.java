@@ -88,13 +88,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(SHOW_MATCH, "gui/bilder/ShowMatch.gif");
 		put(DOWNLOAD_MATCH, "gui/bilder/DownloadMatch.gif");
 
-		put(REDCARD, "gui/bilder/disqualifiziert.gif");
-		put(YELLOWCARD, "gui/bilder/verwarnung_1.png");
-		put(TWOCARDS, "gui/bilder/verwarnung_2.png");
-
-//		put(BRUISED_SMALL, "gui/bilder/angeschlagen_klein.png");
-//		put(INJURED_SMALL, "gui/bilder/verletzt_klein.png");
-
 		put(PRINTER, "gui/bilder/Drucken.png");
 		put(DISK, "gui/bilder/disk.png");
 		put(LOCKED, "gui/bilder/Locked.gif");
@@ -126,7 +119,11 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TRICKOT, "gui/bilder/Trickot.png");
 
 		// Player Overview
-		put(INJURED_SMALL, "gui/bilder/injury(red)-small.png");
+		put(INJURED_SMALL, "gui/bilder/player overview/injured.png");
+		put(BRUISED_SMALL, "gui/bilder/player overview/bruised.png");
+		put(REDCARD, "gui/bilder/player overview/red_card.png");
+		put(YELLOWCARD, "gui/bilder/player overview/yellow_card.png");
+		put(TWOCARDS, "gui/bilder/player overview/dual_yellow_card.png");
 
 		// Highlights
 		put(BRUISED, "gui/bilder/match_events/plaster.png");

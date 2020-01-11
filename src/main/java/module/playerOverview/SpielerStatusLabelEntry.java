@@ -82,7 +82,7 @@ public class SpielerStatusLabelEntry extends DoppelLabelEntry {
 
             if (player.getVerletzt() == 0) {
                 getRechts().setText("");
-                getRechts().setIcon(ThemeManager.getIcon(HOIconName.BRUISED));
+                getRechts().setIcon(ThemeManager.getIcon(HOIconName.BRUISED_SMALL));
             } else if (player.getVerletzt() > 0) {
                 if(player.getVerletzt() != 999) {
                     getRechts().setText(player.getVerletzt() + "");

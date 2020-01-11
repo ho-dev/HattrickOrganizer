@@ -31,7 +31,7 @@ public class ChanceTableCellRenderer extends DefaultTableCellRenderer {
 			if (highlight.isGoalEvent()) {
 				icon = ThemeManager.getIcon(HOIconName.GOAL);
 			} else if (highlight.isNonGoalEvent()) {
-				icon = ThemeManager.getIcon(HOIconName.NOGOAL);
+				icon = ThemeManager.getIcon(HOIconName.MISS);
 			} else if (highlight.isSpecialtyWeatherSE()) {
 				icon = ThemeManager.getIcon(HOIconName.WEATHER[matchRow.getMatch().getWeather()
 						.getId()]);
