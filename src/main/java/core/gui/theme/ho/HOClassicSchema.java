@@ -125,6 +125,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LOGO16_DEV, "gui/bilder/Logo-16px_dev.png");
 		put(TRICKOT, "gui/bilder/Trickot.png");
 
+		// Player Overview
+		put(INJURED_SMALL, "gui/bilder/injury(red)-small.png");
+
 		// Highlights
 		put(BRUISED, "gui/bilder/match_events/plaster.png");
 		put(INJURED, "gui/bilder/match_events/injury(red).png");

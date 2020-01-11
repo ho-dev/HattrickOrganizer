@@ -9,7 +9,7 @@ import core.gui.theme.ThemeManager;
 import core.model.player.Player;
 
 import javax.swing.SwingConstants;
-
+import java.awt.*;
 
 
 public class SpielerStatusLabelEntry extends DoppelLabelEntry {
@@ -84,8 +84,14 @@ public class SpielerStatusLabelEntry extends DoppelLabelEntry {
                 getRechts().setText("");
                 getRechts().setIcon(ThemeManager.getIcon(HOIconName.BRUISED));
             } else if (player.getVerletzt() > 0) {
-                getRechts().setText(player.getVerletzt() + "");
-                getRechts().setIcon(ThemeManager.getIcon(HOIconName.INJURED));
+                if(player.getVerletzt() != 999) {
+                    getRechts().setText(player.getVerletzt() + "");
+                }
+                else {
+                    getRechts().setText("\u221E");
+                }
+                getRechts().setIcon(ThemeManager.getIcon(HOIconName.INJURED_SMALL));
+                getRechts().setFont(new Font("Serif", Font.BOLD, 14));
             } else {
                 getRechts().clear();
             }
