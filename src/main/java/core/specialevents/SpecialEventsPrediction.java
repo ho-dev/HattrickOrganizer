@@ -22,14 +22,14 @@ public class SpecialEventsPrediction {
         chanceCreationProbability = p;
     }
 
-    public SpecialEventsPrediction(SpecialEventsPrediction se){
+    public SpecialEventsPrediction(SpecialEventsPrediction se) {
         this.chanceCreationProbability = se.chanceCreationProbability;
         this.eventType = se.eventType;
-        this.goalProbability  = se.goalProbability;
+        this.goalProbability = se.goalProbability;
         if (se.involvedOpponentPositions != null) {
             this.involvedOpponentPositions = new HashSet<>(se.involvedOpponentPositions);
         }
-        if( se.involvedPositions!=null){
+        if (se.involvedPositions != null) {
             this.involvedPositions = new HashSet<>(se.involvedPositions);
         }
         this.responsiblePosition = se.responsiblePosition;
@@ -96,17 +96,17 @@ public class SpecialEventsPrediction {
         if (valueAtMaxProbability > valueAtNullProbability) {
             if (value <= valueAtNullProbability) return null;
             if (value > valueAtMaxProbability)
-                return new SpecialEventsPrediction(position, eventName, valueAtMaxProbability);
+                return new SpecialEventsPrediction(position, eventName, maxProbability);
         } else {
             if (value >= valueAtNullProbability) return null;
             if (value < valueAtMaxProbability)
-                return new SpecialEventsPrediction(position, eventName, valueAtMaxProbability);
+                return new SpecialEventsPrediction(position, eventName, maxProbability);
         }
         double f = maxProbability - maxProbability / (valueAtNullProbability - valueAtMaxProbability) * (value - valueAtMaxProbability);  // linear fit
         return new SpecialEventsPrediction(position, eventName, f);
     }
 
-    public void setChanceCreationProbability(double p){
+    public void setChanceCreationProbability(double p) {
         this.chanceCreationProbability = p;
     }
 
@@ -123,10 +123,10 @@ public class SpecialEventsPrediction {
     }
 
     public String getEventTypeAsString() {
-       return this.eventType.toString();
+        return this.eventType.toString();
     }
 
-    public ISpecialEventPredictionAnalyzer.SpecialEventType getEventType(){
+    public ISpecialEventPredictionAnalyzer.SpecialEventType getEventType() {
         return this.eventType;
     }
 }

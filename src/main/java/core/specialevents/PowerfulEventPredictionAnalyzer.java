@@ -43,7 +43,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
                 case IMatchRoleID.centralForward:
                 case IMatchRoleID.rightForward:
 
-                    if( position.getTaktik() == IMatchRoleID.NORMAL){
+                    if (position.getTaktik() == IMatchRoleID.NORMAL) {
                         getPowerfulNormalForward(ret, position);
                     }
                     break;
@@ -51,7 +51,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
                 case IMatchRoleID.rightInnerMidfield:
                 case IMatchRoleID.centralInnerMidfield:
                 case IMatchRoleID.leftInnerMidfield:
-                    if ( position.getTaktik() == IMatchRoleID.DEFENSIVE){
+                    if (position.getTaktik() == IMatchRoleID.DEFENSIVE) {
                         getSittingMidfielder(ret, position);
                     }
                     break;
@@ -60,19 +60,46 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
         return ret;
     }
 
-    private void getSittingMidfielder(Vector<SpecialEventsPrediction> ret, MatchRoleID position) {
-
-
+    // PDIMs reduces goal chances of opponent teams
+    // => chance probability < 0 to display it in opponents column
+    // => goal probability > 0  to reduce opponents goals
+    private void getSittingMidfielder(Vector<SpecialEventsPrediction> ret, MatchRoleID position, MatchRoleID opponentScorer) {
+        Player p = analyse.getPlayer(position.getSpielerId());
+        Player op = analyse.getOpponentPlayer(opponentScorer.getSpielerId());
+        SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, SpecialEventType.PDIM,
+                -.1, 10, -10,
+                p.getDEFskill() + p.getKondition() - op.getSCskill() - op.getKondition()
+        );
+        if (se != null) {
+            double goalP = analyse.getOpponentGoalProbability(opponentScorer);
+            if (goalP > 0) {
+                se.setInvolvedOpponentPosition(opponentScorer);
+                se.setGoalProbability(-se.getChanceCreationProbability() * goalP);
+                ret.add(se);
+            }
+        }
     }
 
-    private void getPowerfulNormalForward(Vector<SpecialEventsPrediction> ret, MatchRoleID position) {
-        int overcrowding=0;
-        for (  int i = IMatchRoleID.rightForward; i <= IMatchRoleID.leftForward; i++){
-            if ( i != position.getId()){
+    private void getSittingMidfielder(Vector<SpecialEventsPrediction> ret, MatchRoleID position) {
+        double overcrowdingFactor = getOvercrowding(position, IMatchRoleID.rightInnerMidfield, IMatchRoleID.leftInnerMidfield, IMatchRoleID.DEFENSIVE);
+
+        // Any opponent player, except keeper, could be involved
+        for (int i = IMatchRoleID.rightBack; i <= IMatchRoleID.leftForward; i++) {
+            MatchRoleID opponentScorer = analyse.getOpponentPosition(i);
+            if (opponentScorer.getSpielerId() != 0) {
+                getSittingMidfielder(ret, position, opponentScorer);
+            }
+        }
+    }
+
+    private double getOvercrowding(MatchRoleID position, int right, int left, byte taktik) {
+        int overcrowding = 0;
+        for (int i = right; i <= left; i++) {
+            if (i != position.getId()) {
                 MatchRoleID mid = this.analyse.getPosition(i);
-                if ( mid.getTaktik() == IMatchRoleID.DEFENSIVE){
+                if (mid.getTaktik() == taktik) {
                     Player p = analyse.getPlayer(mid.getSpielerId());
-                    if ( p.hasSpeciality(Speciality.POWERFUL) ) {
+                    if (p.hasSpeciality(Speciality.POWERFUL)) {
                         overcrowding++;
                     }
                 }
@@ -80,18 +107,23 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
         }
 
         double overcrowdingFactor = 1;
-        if ( overcrowding == 1){
-            overcrowdingFactor = 1.6/2;
-        }
-        else if ( overcrowding == 2){
-            overcrowdingFactor = 2./3.;
+        if (overcrowding == 1) {
+            overcrowdingFactor = 1.6 / 2;
+        } else if (overcrowding == 2) {
+            overcrowdingFactor = 2. / 3.;
         }
 
-        double defence=0;
-        for ( int i = IMatchRoleID.rightCentralDefender; i <= IMatchRoleID.leftCentralDefender; i++){
+        return overcrowdingFactor;
+    }
+
+    private void getPowerfulNormalForward(Vector<SpecialEventsPrediction> ret, MatchRoleID position) {
+        double overcrowdingFactor = getOvercrowding(position, IMatchRoleID.rightForward, IMatchRoleID.leftForward, IMatchRoleID.NORMAL);
+
+        double defence = 0;
+        for (int i = IMatchRoleID.rightCentralDefender; i <= IMatchRoleID.leftCentralDefender; i++) {
             Player opponentDefender = analyse.getOpponentPlayerByPosition(i);
-            if ( opponentDefender != null ) {
-                defence+=opponentDefender.getDEFskill();
+            if (opponentDefender != null) {
+                defence += opponentDefender.getDEFskill();
             }
         }
 
@@ -100,9 +132,9 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
                 0.5, 10, -20,
                 p.getPMskill() - defence);
 
-        if ( se != null){
-            se.setChanceCreationProbability(se.getChanceCreationProbability()*overcrowdingFactor);
-            se.setGoalProbability(analyse.getGoalProbability(position)*se.getChanceCreationProbability());
+        if (se != null) {
+            se.setChanceCreationProbability(se.getChanceCreationProbability() * overcrowdingFactor);
+            se.setGoalProbability(analyse.getGoalProbability(position) * se.getChanceCreationProbability());
             ret.add(se);
         }
     }
