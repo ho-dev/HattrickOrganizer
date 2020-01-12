@@ -73,13 +73,20 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(WEATHER_SUN_POS, "gui/bilder/Fugue/weather-sun-pos-se.png");
 		put(WEATHER_SUN_NEG, "gui/bilder/Fugue/weather-sun-neg-se.png");
 
-		put(SPECIAL[1], "gui/bilder/spec1.png");
-		put(SPECIAL[2], "gui/bilder/spec2.png");
-		put(SPECIAL[3], "gui/bilder/spec3.png");
-		put(SPECIAL[4], "gui/bilder/spec4.png");
-		put(SPECIAL[5], "gui/bilder/spec5.png");
-		put(SPECIAL[6], "gui/bilder/spec6.png");
-		put(SPECIAL[8], "gui/bilder/spec8.png");
+		put(SPECIALTIES[1], "gui/bilder/match_events/speciality-1.png");
+		put(SPECIALTIES[2], "gui/bilder/match_events/speciality-2.png");
+		put(SPECIALTIES[3], "gui/bilder/match_events/speciality-3.png");
+		put(SPECIALTIES[4], "gui/bilder/match_events/speciality-4.png");
+		put(SPECIALTIES[5], "gui/bilder/match_events/speciality-5.png");
+		put(SPECIALTIES[6], "gui/bilder/match_events/speciality-6.png");
+		put(SPECIALTIES[8], "gui/bilder/match_events/speciality-8.png");
+		put(SPECIALTIES_SMALL[1], "gui/bilder/player overview/speciality-1-small.png");
+		put(SPECIALTIES_SMALL[2], "gui/bilder/player overview/speciality-2-small.png");
+		put(SPECIALTIES_SMALL[3], "gui/bilder/player overview/speciality-3-small.png");
+		put(SPECIALTIES_SMALL[4], "gui/bilder/player overview/speciality-4-small.png");
+		put(SPECIALTIES_SMALL[5], "gui/bilder/player overview/speciality-5-small.png");
+		put(SPECIALTIES_SMALL[6], "gui/bilder/player overview/speciality-6-small.png");
+		put(SPECIALTIES_SMALL[8], "gui/bilder/player overview/speciality-8-small.png");
 
 		put(TOOTHEDWHEEL, "gui/bilder/zahnrad.png");
 		put(HAND, "gui/bilder/Manuell.png");
@@ -126,8 +133,12 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TWOCARDS, "gui/bilder/player overview/dual_yellow_card.png");
 
 		// Highlights
+		put(FORMATION, "gui/bilder/match_events/mo-select(green).svg");
+
 		put(BRUISED, "gui/bilder/match_events/plaster.png");
 		put(INJURED, "gui/bilder/match_events/injury(red).png");
+		put(REPLACEMENT, "gui/bilder/match_events/in-out.png");
+
 		put(GOAL, "gui/bilder/match_events/goal.png");
 		put(MISS, "gui/bilder/match_events/miss.png");
 		put(GOAL_FREEKICK, "gui/bilder/highlights/Fussball_Freistoss.png");
@@ -148,6 +159,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(NO_GOAL_LONGSHOT, "gui/bilder/highlights/KeinFussball_Longshot.png");
 		put(NO_GOAL_SPECIAL, "gui/bilder/highlights/KeinFussball_Spezial.png");
 		put(NO_GOAL_COUNTER, "gui/bilder/highlights/KeinFussball_Konter.png");
+
+		put(PRESSING, "gui/bilder/match_events/pressing(green).png");
 
 		put(ME_206, "gui/bilder/match_events/me_206.png");
 

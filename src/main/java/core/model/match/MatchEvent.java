@@ -189,15 +189,40 @@ public class MatchEvent {
     //This is used for the mapping of Match Event and icons
     public static HashMap<MatchEventID, String> mapMatchEventIcons = new HashMap<MatchEventID, String>() {{
 
+        put(MatchEventID.TACTICAL_DISPOSITION, HOIconName.FORMATION); //#20
+        put(MatchEventID.PLAYER_NAMES_IN_LINEUP, HOIconName.FORMATION); //#21
+
+        put(MatchEventID.PLAYERS_FROM_NEIGHBORHOOD_USED, null);    //#22
+        put(MatchEventID.SAME_FORMATION_BOTH_TEAMS, null);         //#23
+        put(MatchEventID.TEAM_FORMATIONS_DIFFERENT, null);         //#24
+        put(MatchEventID.REGIONAL_DERBY, null);                    //#25
+        put(MatchEventID.NEUTRAL_GROUND, null);                    //#26
+        put(MatchEventID.AWAY_IS_ACTUALLY_HOME, null);             //#27
+
+        put(MatchEventID.SPECTATORS_OR_VENUE_RAIN, HOIconName.WEATHER[0]); //#30
+        put(MatchEventID.SPECTATORS_OR_VENUE_CLOUDY, HOIconName.WEATHER[1]); //#31
+        put(MatchEventID.SPECTATORS_OR_VENUE_FAIR_WEATHER, HOIconName.WEATHER[2]); //#32
+        put(MatchEventID.SPECTATORS_OR_VENUE_SUNNY, HOIconName.WEATHER[3]); //#33
+
         put(MatchEventID.ONLY_VENUE_RAIN, HOIconName.WEATHER[0]); //#36
         put(MatchEventID.ONLY_VENUE_CLOUDY, HOIconName.WEATHER[1]); //#37
         put(MatchEventID.ONLY_VENUE_FAIR_WEATHER, HOIconName.WEATHER[2]); //#38
         put(MatchEventID.ONLY_VENUE_SUNNY, HOIconName.WEATHER[3]); //#39
 
+        put(MatchEventID.DOMINATED, null);              //#40
+        put(MatchEventID.BEST_PLAYER, null);           //#41
+        put(MatchEventID.WORST_PLAYER, null);          //#42
+        put(MatchEventID.HALF_TIME_RESULTS, null);     //#45
+        put(MatchEventID.HATTRICK_COMMENT, null);      //#46
+        put(MatchEventID.NO_TEAM_DOMINATED, null);     //#47
+
+
         put(MatchEventID.PENALTY_CONTEST_GOAL_NO_NERVES, HOIconName.GOAL); //#56
         put(MatchEventID.PENALTY_CONTEST_GOAL_IN_SPITE_OF_NERVES, HOIconName.GOAL); //#57
         put(MatchEventID.PENALTY_CONTEST_NO_GOAL_BECAUSE_OF_NERVES, HOIconName.MISS); //#58
         put(MatchEventID.PENALTY_CONTEST_NO_GOAL_IN_SPITE_OF_NO_NERVES, HOIconName.MISS); //#59
+
+        put(MatchEventID.SUCCESSFUL_PRESSING, HOIconName.PRESSING); //#68
 
         put(MatchEventID.INJURED_BUT_KEEPS_PLAYING, HOIconName.BRUISED); //#90
         put(MatchEventID.MODERATELY_INJURED_LEAVES_FIELD, HOIconName.INJURED); //#91
@@ -357,6 +382,10 @@ public class MatchEvent {
         put(MatchEventID.SE_QUICK_LOSES_IN_RAIN, HOIconName.WEATHER_RAIN_NEG); //#305
         put(MatchEventID.SE_QUICK_LOSES_IN_SUN, HOIconName.WEATHER_SUN_NEG); //#306
 
+        put(MatchEventID.TACTIC_TYPE_PRESSING, HOIconName.PRESSING); //#331
+
+        put(MatchEventID.INJURED_PLAYER_REPLACED, HOIconName.REPLACEMENT); //#424
+
         put(MatchEventID.YELLOW_CARD_NASTY_PLAY, HOIconName.YELLOWCARD); //#510
         put(MatchEventID.YELLOW_CARD_CHEATING, HOIconName.YELLOWCARD); //#511
         put(MatchEventID.RED_CARD_2ND_WARNING_NASTY_PLAY, HOIconName.REDCARD); //#512
@@ -389,9 +418,19 @@ public class MatchEvent {
         return m_eInjuryType == Matchdetails.eInjuryType.INJURY;
     }
 
+    public boolean isBooked()
+    {
+        return ( isYelloCard() || isRedCard());
+    }
+
+    public boolean isYelloCard()
+    {
+        return ( (m_iMatchEventID == 510) || (m_iMatchEventID == 511));
+    }
+
     public boolean isRedCard()
     {
-        return ( (this.m_iMatchEventID == 12) || (this.m_iMatchEventID == 13) || (this.m_iMatchEventID == 14));
+        return ( (m_iMatchEventID == 512) || (m_iMatchEventID == 513) || (m_iMatchEventID == 514));
     }
 
     public boolean isGoalEvent()

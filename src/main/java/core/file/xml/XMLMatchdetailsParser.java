@@ -335,7 +335,7 @@ public class XMLMatchdetailsParser {
 					{myHighlight.setM_eInjuryType(Matchdetails.eInjuryType.BRUISE);}
 				else if ((iMatchEventID==91) || (iMatchEventID==92) || (iMatchEventID==93) || (iMatchEventID==96))
 					{myHighlight.setM_eInjuryType(Matchdetails.eInjuryType.INJURY);}
-				else if ((iMatchEventID>=401) && (iMatchEventID<=423))
+				else if ((iMatchEventID>=401) && (iMatchEventID<=422))
 				{
 					myHighlight.setM_eInjuryType(getInjuryType(iMinute, iSubjectPlayerID, md.getM_Injuries()));
 				}

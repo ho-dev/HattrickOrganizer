@@ -99,10 +99,6 @@ public class SpielHighlightPanel extends LazyImagePanel {
 			removeHighlights(); 
 			
 			Matchdetails details = this.matchesModel.getDetails();
-			heimTeamToreLabel.setText(info.getHeimTore() + " (" + details.getHomeHalfTimeGoals()
-					+ ") ");
-			gastTeamToreLabel.setText(info.getGastTore() + " (" + details.getGuestHalfTimeGoals()
-					+ ") ");
 
 			JLabel playerlabel ;
 			JLabel resultlabel = null;
@@ -111,21 +107,31 @@ public class SpielHighlightPanel extends LazyImagePanel {
 			ImageIcon icon;
 			Boolean bEventHighlighted;
 
-			int homeScore = 0;
-			int visitorScore = 0;
+			int myScore = 0;
+			int oppScore = 0;
+			int myScore_ht = 0;
+			int oppScore_ht = 0;
+
 			String scoreText;
+			boolean iScored;
 
 			for (int i = 0; i < matchHighlights.size(); i++) {
 				scoreText = "";
 				MatchEvent highlight = matchHighlights.get(i);
 
-				if (highlight.isGoalEvent() || highlight.isNonGoalEvent() || highlight.isBruisedOrInjured())
+				if (highlight.isGoalEvent() || highlight.isNonGoalEvent() || highlight.isBruisedOrInjured() || highlight.isBooked()
+						|| (highlight.getMatchEventID() == MatchEvent.MatchEventID.INJURED_PLAYER_REPLACED))
 				{
 					bEventHighlighted = true;
 				}
 				else
 				{
 					bEventHighlighted = false;
+					if (highlight.getMatchEventID() == MatchEvent.MatchEventID.SECOND_HALF_STARTED)
+					{
+						myScore_ht = myScore;
+						oppScore_ht = oppScore;
+					}
 				}
 
 				// Displaying the event
@@ -137,25 +143,42 @@ public class SpielHighlightPanel extends LazyImagePanel {
 					if (spielername.length() > 30) {
 						spielername = spielername.substring(0, 29);
 					}
-
 					spielername += (" (" + highlight.getMinute() + "')");
-					playerlabel = new JLabel(spielername, icon, SwingConstants.LEFT);
-					playerlabel.setForeground(MatchesHelper.getColor4SpielHighlight(highlight));
-
-					playerlabel.setToolTipText(MatchEvent.getEventTextDescription(highlight.getiMatchEventID()));
 
 					if (highlight.isGoalEvent()) {
-						if (highlight.getTeamID() == teamid) {
-							// home goal
-							homeScore ++;
-							scoreText = "<html><b>" + homeScore + "</b> - " + visitorScore + "</html>";
+						iScored = (highlight.getTeamID() == teamid);
+
+						if (iScored && info.isHomeMatch()) {
+							myScore++;
+							scoreText = "<html><b>" + myScore + "</b> - " + oppScore + "</html>";
+						} else if (iScored && (!info.isHomeMatch())) {
+							myScore++;
+							scoreText = "<html>" + oppScore + " - " + "<b>" + myScore + "</b></html>";
+						} else if ((!iScored) && info.isHomeMatch()) {
+							oppScore++;
+							scoreText = "<html>" + myScore + " - " + "<b>" + oppScore + "</b></html>";
+						} else {
+							oppScore++;
+							scoreText = "<html><b>" + oppScore + "</b> - " + myScore + "</html>";
 						}
-						else {
-							// visitors goal
-							visitorScore ++;
-							scoreText = "<html>" + homeScore + "- <strong>" + visitorScore + "</strong></html>";
+					}
+
+					else if(highlight.getMatchEventID() == MatchEvent.MatchEventID.INJURED_PLAYER_REPLACED)
+					{
+						spielername = highlight.getSpielerName();
+						if (spielername.length() > 30) {
+							spielername = spielername.substring(0, 29);
 						}
-						}
+
+						String playerEntering =  highlight.getGehilfeName();
+						if (playerEntering.length() > 30) { playerEntering = playerEntering.substring(0, 29);}
+
+						spielername = "<html>" + spielername + "<br>" + playerEntering + " (" + highlight.getMinute() + "')</html>";
+
+					}
+					playerlabel = new JLabel(spielername, icon, SwingConstants.LEFT);
+					playerlabel.setForeground(MatchesHelper.getColor4SpielHighlight(highlight));
+					playerlabel.setToolTipText(MatchEvent.getEventTextDescription(highlight.getiMatchEventID()));
 
 					resultlabel = new JLabel(scoreText);
 
@@ -213,6 +236,16 @@ public class SpielHighlightPanel extends LazyImagePanel {
 				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY,
 						Color.WHITE));
 			}
+
+			if (info.isHomeMatch()) {
+				heimTeamToreLabel.setText(myScore + " (" + myScore_ht + ") ");
+				gastTeamToreLabel.setText(oppScore + " (" + oppScore_ht + ") ");
+			}
+			else{
+				heimTeamToreLabel.setText(oppScore + " (" + oppScore_ht + ") ");
+				gastTeamToreLabel.setText(myScore + " (" + myScore_ht + ") ");
+			}
+
 		}
 	}
 

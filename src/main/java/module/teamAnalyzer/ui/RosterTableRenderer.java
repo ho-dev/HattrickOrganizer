@@ -56,7 +56,7 @@ public class RosterTableRenderer extends DefaultTableCellRenderer {
 
             if (column == 9) {
                 int v = Integer.parseInt((String) value);
-                ImageIcon icon =ThemeManager.getIcon(HOIconName.SPECIAL[v]);
+                ImageIcon icon =ThemeManager.getIcon(HOIconName.SPECIALTIES[v]);
                 setIcon(icon);
                 setText("");
                 return this;

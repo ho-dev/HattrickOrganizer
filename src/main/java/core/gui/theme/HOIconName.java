@@ -8,7 +8,8 @@ public interface HOIconName {
 
 	 String[] MATCHICONS	= {"LEAGUE", "QUALIFICATION", "FRIENDLY", "NATIONAL_CUP", "EMERALD_CUP", "RUBY_CUP", "SAPPHIRE_CUP", "LADDER", "TOURNAMENT", "SINGLE", "MASTERS", "DEFAULT", "CONSOLANTE_CUP", "DIVISION_BATTLE"};
 	 String[] WEATHER 		= { "weather0", "weather1", "weather2", "weather3"};
-	 String[] SPECIAL 		= { "","special1","special2","special3","special4","special5", "special6", "special7", "special8"};
+	 String[] SPECIALTIES = { "","special1","special2","special3","special4","special5", "special6", "special7", "special8"};
+	 String[] SPECIALTIES_SMALL = { "","special1_small","special2_small","special3_small","special4_small","special5_small", "special6_small", "special7_small", "special8_small"};
 	 String[] TEAMSMILIES 	= { "", "A-Team.png","B-Team.png", "C-Team.png", "D-Team.png", "E-Team.png", "F-Team.png" };
 	 String[] MANUELLSMILIES = { "", "1bigsmile.png","2smile.png", "3normal.png", "4sad.png", "5verysad.png","6clown.png", "7trainer.png", "8dollar.png", "9coach.png" };
 
@@ -67,6 +68,8 @@ public interface HOIconName {
 
 	// Highlights
 
+	String REPLACEMENT = "replacement";
+
 	String ME_206 = "me_206";
 
 	String GOAL			= "goal";
@@ -91,6 +94,10 @@ public interface HOIconName {
 	String NO_GOAL_LONGSHOT = "keintor_longshot";
 	String NO_GOAL_SPECIAL = "keintor_special";
 	String NO_GOAL_COUNTER = "keintor_counter";
+
+	String PRESSING = "pressing";
+	String FORMATION  = "formation";
+
 
 	String STAR = "star";
 	String STAR_GRAY = "star_gray";
