@@ -2057,6 +2057,7 @@ public class Lineup{
 					spSP = p.getSPskill();
 				}
 			}
+			n++;
 		}
 		if ( n > 1){
 			teamAtt/=n;

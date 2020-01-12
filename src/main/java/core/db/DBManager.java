@@ -860,6 +860,11 @@ public class DBManager {
 				.isMatchLineupVorhanden(matchid);
 	}
 
+	public boolean isMatchIFKRatingInDB(int matchid) {
+		return ((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME))
+				.isMatchIFKRatingAvailable(matchid);
+	}
+
 	public boolean isDerbyInfoInDb(int matchId){
 		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).hasDerbyInfo(matchId);
 	}
@@ -1870,4 +1875,5 @@ public class DBManager {
 
 		return buffer.toString();
 	}
+
 }

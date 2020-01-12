@@ -157,7 +157,8 @@ final class MatchDetailsTable extends AbstractTable {
 						+ "GastLeftAtt, GastLeftDef, GastMidAtt, GastMidDef, GastMidfield, GastRightAtt, GastRightDef, GASTHATSTATS, GastTacticSkill, GastTacticType, "
 						+ "HeimId, HeimName, HeimEinstellung, HeimTore, HeimLeftAtt, HeimLeftDef, HeimMidAtt, HeimMidDef, HeimMidfield, HeimRightAtt, HeimRightDef, HEIMHATSTATS, "
 						+ "HeimTacticSkill, HeimTacticType, SpielDatum, WetterId, Zuschauer, "
-						+ "Matchreport, RegionID, soldTerraces, soldBasic, soldRoof, soldVIP"
+						+ "Matchreport, RegionID, soldTerraces, soldBasic, soldRoof, soldVIP, "
+						+ "RatingIndirectSetPiecesAtt, RatingIndirectSetPiecesDef "
 						+ ") VALUES ("
 						+ details.getMatchID()
 						+ ", "
@@ -240,6 +241,10 @@ final class MatchDetailsTable extends AbstractTable {
 						+ details.getSoldRoof()
 						+ ", "
 						+ details.getSoldVIP()
+						+ ", "
+						+ details.getRatingIndirectSetPiecesAtt()
+						+ ", "
+						+ details.getRatingIndirectSetPiecesDef()
 						+ ")";
 
 				adapter.executeUpdate(sql);
@@ -259,5 +264,21 @@ final class MatchDetailsTable extends AbstractTable {
 				HOLogger.instance().log(getClass(),e);
 			}
 		}
-	}	
+	}
+
+	public boolean isMatchIFKRatingAvailable(int matchId){
+		try {
+			final String sql = "SELECT RatingIndirectSetPiecesDef FROM " + getTableName() + " WHERE MatchId=" + matchId;
+			final ResultSet rs = adapter.executeQuery(sql);
+			rs.beforeFirst();
+			if (rs.next()) {
+				int rating = rs.getInt(1);
+				return !rs.wasNull();
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),
+					"DatenbankZugriff.isMatchIFKRatingAvailable : " + e);
+		}
+		return false;
+	}
 }
