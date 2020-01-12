@@ -98,6 +98,8 @@ public class MatchPopulator {
         }
         mr.setHatStats(mr.computeHatStats());
         mr.setLoddarStats(mr.computeLoddarStats());
+        mr.setIndirectSetPiecesAtt(aMatchDetail.getRatingIndirectSetPiecesAtt());
+        mr.setIndirectSetPiecesAtt(aMatchDetail.getRatingIndirectSetPiecesDef());
         return mr;
     }
 

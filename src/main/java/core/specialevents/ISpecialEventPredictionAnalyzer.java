@@ -7,20 +7,22 @@ import java.util.List;
 public interface ISpecialEventPredictionAnalyzer {
 
     enum SpecialEventType {
+        CORNER,
+        CORNER_HEAD,
         EXPERIENCE,
+        QUICK_PASS,
+        QUICK_SCORES,
         PNF,
         PDIM,
+        TECHNICAL_HEAD,
         UNPREDICTABLE,              // special action
         UNPREDICTABLE_LONGPASS,
         UNPREDICTABLE_MISTAKE,
         UNPREDICTABLE_OWNGOAL,
         UNPREDICTABLE_SCORES,
         WINGER_SCORER,
-        WINGER_HEAD,
-        QUICK_PASS,
-        QUICK_SCORES,
-        TECHNICAL_HEAD
+        WINGER_HEAD
     }
 
-    List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse,  MatchRoleID position);
+    void analyzePosition(SpecialEventsPredictionManager.Analyse analyse,  MatchRoleID position);
 }

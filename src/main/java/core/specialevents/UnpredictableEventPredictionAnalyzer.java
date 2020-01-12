@@ -51,75 +51,73 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
     // are about 31% but if you increase your passing to 15 then you drop it to 18%
 
     @Override
-    public List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
+    public void analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
 
         this.analyse = analyse;
 
-        Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();
         int id = position.getSpielerId();
         Player p = analyse.getPlayer(id);
         if (p.hasSpeciality(Speciality.UNPREDICTABLE)) {
             switch (position.getId()) {
                 case IMatchRoleID.keeper:
-                    getUnpredictableLongPass(ret, position);
+                    getUnpredictableLongPass( position);
                     break;
                 case IMatchRoleID.rightBack:
-                    getUnpredictableLongPass(ret, position);
-                    getUnpredictableMistake(ret, position);
-                    getUnpredictableSpecialAction(ret, position, IMatchRoleID.leftBack, IMatchRoleID.leftCentralDefender, 0);
+                    getUnpredictableLongPass( position);
+                    getUnpredictableMistake( position);
+                    getUnpredictableSpecialAction( position, IMatchRoleID.leftBack, IMatchRoleID.leftCentralDefender, 0);
                     break;
                 case IMatchRoleID.leftCentralDefender:
                 case IMatchRoleID.middleCentralDefender:
                 case IMatchRoleID.rightCentralDefender:
-                    getUnpredictableLongPass(ret, position);
-                    getUnpredictableMistake(ret, position);
-                    getUnpredictableSpecialAction(ret, position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
+                    getUnpredictableLongPass(position);
+                    getUnpredictableMistake( position);
+                    getUnpredictableSpecialAction( position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
                     break;
                 case IMatchRoleID.leftBack:
-                    getUnpredictableLongPass(ret, position);
-                    getUnpredictableMistake(ret, position);
-                    getUnpredictableSpecialAction(ret, position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack, 0);
+                    getUnpredictableLongPass(position);
+                    getUnpredictableMistake( position);
+                    getUnpredictableSpecialAction( position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack, 0);
                     break;
 
                 case IMatchRoleID.rightInnerMidfield:
                 case IMatchRoleID.centralInnerMidfield:
                 case IMatchRoleID.leftInnerMidfield:
-                    getUnpredictableMistake(ret, position);
-                    getUnpredictableScores(ret, position, 0);
-                    getUnpredictableSpecialAction(ret, position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
+                    getUnpredictableMistake(position);
+                    getUnpredictableScores( position, 0);
+                    getUnpredictableSpecialAction( position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
                     break;
 
                 case IMatchRoleID.rightWinger:
-                    getUnpredictableScores(ret, position, 3);
-                    getUnpredictableSpecialAction(ret, position, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack,0);
-                    getUnpredictableOwnGoal(ret, position);
+                    getUnpredictableScores( position, 3);
+                    getUnpredictableSpecialAction( position, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack,0);
+                    getUnpredictableOwnGoal(position);
                     break;
                 case IMatchRoleID.leftWinger:
-                    getUnpredictableScores(ret, position, 3);
-                    getUnpredictableSpecialAction(ret, position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack,0);
-                    getUnpredictableOwnGoal(ret, position);
+                    getUnpredictableScores( position, 3);
+                    getUnpredictableSpecialAction( position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack,0);
+                    getUnpredictableOwnGoal( position);
                     break;
 
                 case IMatchRoleID.rightForward:
-                    getUnpredictableSpecialAction(ret, position, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack,0);
-                    getUnpredictableOwnGoal(ret, position);
+                    getUnpredictableSpecialAction( position, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack,0);
+                    getUnpredictableOwnGoal(position);
                     break;
                 case IMatchRoleID.leftForward:
-                    getUnpredictableSpecialAction(ret, position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack,0);
-                    getUnpredictableOwnGoal(ret, position);
+                    getUnpredictableSpecialAction( position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack,0);
+                    getUnpredictableOwnGoal(position);
                     break;
                 case IMatchRoleID.centralForward:
-                    getUnpredictableSpecialAction(ret, position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
-                    getUnpredictableOwnGoal(ret, position);
+                    getUnpredictableSpecialAction( position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
+                    getUnpredictableOwnGoal(position);
                     break;
                 default:
                     break;
             }
         }
-        return ret;
     }
 
-    private void getUnpredictableOwnGoal(Vector<SpecialEventsPrediction> ret, MatchRoleID position) {
+    private void getUnpredictableOwnGoal( MatchRoleID position) {
         Player p = this.analyse.getPlayer(position.getSpielerId());
         Player keeper = this.analyse.getPlayerByPosition(IMatchRoleID.keeper);
         double gkSkill=0;
@@ -134,11 +132,11 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
         );
 
         if ( se != null){
-            ret.add(se);
+            analyse.addSpecialEventPrediction(se);
         }
     }
 
-    private void getUnpredictableSpecialAction(Vector<SpecialEventsPrediction> ret, MatchRoleID position, int leftCentralDefender, int middleCentralDefender, int rightCentralDefender) {
+    private void getUnpredictableSpecialAction( MatchRoleID position, int leftCentralDefender, int middleCentralDefender, int rightCentralDefender) {
         // Calculate opponent Defence skill
         Player p = this.analyse.getPlayer(position.getSpielerId());
         double opponentDefenceSkill = 0;
@@ -173,28 +171,28 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
                 .5, 10, -10,
                 p.getPSskill() + p.getErfahrung() - opponentDefenceSkill - opponentExperience);
         if ( se != null){
-            getPassReceivers(ret, se);
+            getPassReceivers(se);
         }
     }
 
-    private void getUnpredictableScores(Vector<SpecialEventsPrediction> ret, MatchRoleID position, double wingerScoreBonus) {
+    private void getUnpredictableScores( MatchRoleID position, double wingerScoreBonus) {
         SpecialEventsPrediction scorerSpecialEvent = this.analyse.getScorerSpecialEvent(position,
                 SpecialEventType.UNPREDICTABLE_SCORES,
                 wingerScoreBonus);
         if ( scorerSpecialEvent != null){
-            ret.add(scorerSpecialEvent);
+            analyse.addSpecialEventPrediction(scorerSpecialEvent);
         }
     }
 
-    private void getUnpredictableMistake(Vector<SpecialEventsPrediction> ret, MatchRoleID position) {
-        getUnpredictableMistake(ret, position, IMatchRoleID.leftWinger, 3);
-        getUnpredictableMistake(ret, position, IMatchRoleID.rightWinger, 3);
-        getUnpredictableMistake(ret, position, IMatchRoleID.leftForward,0);
-        getUnpredictableMistake(ret, position, IMatchRoleID.centralForward,0);
-        getUnpredictableMistake(ret, position, IMatchRoleID.rightForward,0);
+    private void getUnpredictableMistake( MatchRoleID position) {
+        getUnpredictableMistake( position, IMatchRoleID.leftWinger, 3);
+        getUnpredictableMistake( position, IMatchRoleID.rightWinger, 3);
+        getUnpredictableMistake( position, IMatchRoleID.leftForward,0);
+        getUnpredictableMistake( position, IMatchRoleID.centralForward,0);
+        getUnpredictableMistake( position, IMatchRoleID.rightForward,0);
     }
 
-    private void getUnpredictableMistake(Vector<SpecialEventsPrediction> ret, MatchRoleID position, int opponentPos, double wingerScoreBonus) {
+    private void getUnpredictableMistake( MatchRoleID position, int opponentPos, double wingerScoreBonus) {
         Player p = this.analyse.getPlayer(position.getSpielerId());
         Player op = this.analyse.getOpponentPlayerByPosition(opponentPos);
         if ( op != null){
@@ -209,11 +207,12 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
                 double scores = analyse.getOpponentGoalProbability(omid,wingerScoreBonus);
                 se.setGoalProbability(se.getChanceCreationProbability()*scores);
                 se.addInvolvedOpponentPosition(omid);
+                analyse.addSpecialEventPrediction(se);
             }
         }
     }
     
-    private void getUnpredictableLongPass(Vector<SpecialEventsPrediction> ret, MatchRoleID position) {
+    private void getUnpredictableLongPass( MatchRoleID position) {
         Player p = this.analyse.getPlayer(position.getSpielerId());
         for (int i = IMatchRoleID.rightInnerMidfield; i <= IMatchRoleID.leftInnerMidfield; i++) {
             Player opp = this.analyse.getOpponentPlayerByPosition(i);
@@ -227,29 +226,29 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
 
                 if (se != null) {
                     se.addInvolvedOpponentPosition(this.analyse.getOpponentPosition(i));
-                    getPassReceivers(ret, se);
+                    getPassReceivers(se);
                 }
             }
         }
     }
 
-    private void getPassReceivers(Vector<SpecialEventsPrediction> ret, SpecialEventsPrediction se) {
+    private void getPassReceivers( SpecialEventsPrediction se) {
         final double wingerScoreBonus = 3;
-        getPassReceiver(ret, se, IMatchRoleID.rightWinger, wingerScoreBonus);
-        getPassReceiver(ret, se, IMatchRoleID.leftWinger, wingerScoreBonus);
-        getPassReceiver(ret, se, IMatchRoleID.leftForward, 0);
-        getPassReceiver(ret, se, IMatchRoleID.centralForward, 0);
-        getPassReceiver(ret, se, IMatchRoleID.rightForward, 0);
+        getPassReceiver( se, IMatchRoleID.rightWinger, wingerScoreBonus);
+        getPassReceiver( se, IMatchRoleID.leftWinger, wingerScoreBonus);
+        getPassReceiver( se, IMatchRoleID.leftForward, 0);
+        getPassReceiver( se, IMatchRoleID.centralForward, 0);
+        getPassReceiver( se, IMatchRoleID.rightForward, 0);
     }
 
-    private void getPassReceiver(Vector<SpecialEventsPrediction> ret, SpecialEventsPrediction se, int pos, double wingerScoreBonus) {
+    private void getPassReceiver( SpecialEventsPrediction se, int pos, double wingerScoreBonus) {
         Player passReceiver = this.analyse.getPlayerByPosition(pos);
         if (passReceiver != null) {
             double score = analyse.getGoalProbability(analyse.getPosition(pos), wingerScoreBonus);
             SpecialEventsPrediction e = new SpecialEventsPrediction(se); // make a copy
             e.setGoalProbability(e.getChanceCreationProbability() * score);
             e.addInvolvedPosition(analyse.getPosition(pos));
-            ret.add(e);
+            analyse.addSpecialEventPrediction(e);
         }
     }
 }

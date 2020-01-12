@@ -5,6 +5,8 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
@@ -43,7 +45,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
 
     private SpecialEventsPredictionManager.Analyse analyse;
     @Override
-    public List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
+    public void analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
         this.analyse = analyse;
         int id = position.getSpielerId();
         Player p = analyse.getPlayer(id);
@@ -52,35 +54,58 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
             switch (position.getId()) {
                 case IMatchRoleID.leftWinger:
                 case IMatchRoleID.leftForward:
-                    return getQuickEvents( position, IMatchRoleID.rightBack, IMatchRoleID.rightCentralDefender,0, false);
+                     getQuickEvents( position, IMatchRoleID.rightBack, IMatchRoleID.rightCentralDefender,0, false);
+                     break;
                 case IMatchRoleID.rightWinger:
                 case IMatchRoleID.rightForward:
-                    return getQuickEvents( position, IMatchRoleID.leftBack, IMatchRoleID.leftCentralDefender, 0, false);
+                    getQuickEvents( position, IMatchRoleID.leftBack, IMatchRoleID.leftCentralDefender, 0, false);
+                    break;
                 case IMatchRoleID.centralForward:
                 case IMatchRoleID.centralInnerMidfield:
-                    return getQuickEvents( position, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender, IMatchRoleID.leftCentralDefender, true);
+                    getQuickEvents( position, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender, IMatchRoleID.leftCentralDefender, true);
+                    break;
                 case IMatchRoleID.leftInnerMidfield:
-                    return getQuickEvents( position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack, IMatchRoleID.middleCentralDefender, false);
+                     getQuickEvents( position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack, IMatchRoleID.middleCentralDefender, false);
+                     break;
                 case IMatchRoleID.rightInnerMidfield:
-                    return getQuickEvents( position, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack, IMatchRoleID.middleCentralDefender,false);
+                     getQuickEvents( position, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack, IMatchRoleID.middleCentralDefender,false);
+                     break;
             }
         }
-        return new Vector<SpecialEventsPrediction>();
-    }
+     }
 
-    private Vector<SpecialEventsPrediction> getQuickEvents(
+    private void  getQuickEvents(
             MatchRoleID position,
             int block100PercentIfQuick,
             int block25PercentIfQuick,
             int block25PercentIfQuick2,
             boolean useQuick2ForPassCalculation
     ) {
+        double goalProbabilityFactor = 0;   // used if block100Percent player is a quick one
+        HashSet<IMatchRoleID> involvedOpponents = new HashSet<>();
+        Player p = analyse.getOpponentPlayerByPosition(block100PercentIfQuick);
+        if (p == null || !p.hasSpeciality(Speciality.QUICK)) {
+            goalProbabilityFactor = 1;
+            p = analyse.getOpponentPlayerByPosition(block25PercentIfQuick);
+            if (p != null && p.hasSpeciality(Speciality.QUICK)) {
+                goalProbabilityFactor *= .75;
+                involvedOpponents.add(analyse.getOpponentPosition(block25PercentIfQuick));
+            }
 
-        Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();
+            if (block25PercentIfQuick2 != 0) {
+                p = analyse.getOpponentPlayerByPosition(block25PercentIfQuick2);
+                if (p != null && p.hasSpeciality(Speciality.QUICK)) {
+                    goalProbabilityFactor *= .75;
+                    involvedOpponents.add(analyse.getOpponentPosition(block25PercentIfQuick2));
+                }
+            }
+        } else {
+            involvedOpponents.add(analyse.getOpponentPosition(block100PercentIfQuick));
+        }
 
         // Quick - scores
         for (int pos = IMatchRoleID.rightBack; pos <= IMatchRoleID.leftBack; pos++) {
-            getQuickScoresEvent(ret, position, pos);
+            getQuickScoresEvent( position, pos, goalProbabilityFactor, involvedOpponents);
         }
 
         // Quick - pass
@@ -108,39 +133,14 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
             opponentDefenceSkill /= n;
         }
 
-        getQuickPassEvent(ret, position, IMatchRoleID.rightWinger, opponentDefenceSkill);
-        getQuickPassEvent(ret, position, IMatchRoleID.leftWinger, opponentDefenceSkill);
-        getQuickPassEvent(ret, position, IMatchRoleID.rightForward, opponentDefenceSkill);
-        getQuickPassEvent(ret, position, IMatchRoleID.centralForward, opponentDefenceSkill);
-        getQuickPassEvent(ret, position, IMatchRoleID.leftForward, opponentDefenceSkill);
-
-        for (SpecialEventsPrediction se : ret) {
-            double goalProbabilityFactor = 0;   // used if block100Percent player is a quick one
-            Player p = analyse.getOpponentPlayerByPosition(block100PercentIfQuick);
-            if (p == null || !p.hasSpeciality(Speciality.QUICK)) {
-                goalProbabilityFactor = 1;
-                p = analyse.getOpponentPlayerByPosition(block25PercentIfQuick);
-                if (p != null && p.hasSpeciality(Speciality.QUICK)) {
-                    goalProbabilityFactor *= .75;
-                    se.addInvolvedOpponentPosition(analyse.getOpponentPosition(block25PercentIfQuick));
-                }
-
-                if (block25PercentIfQuick2 != 0) {
-                    p = analyse.getOpponentPlayerByPosition(block25PercentIfQuick2);
-                    if (p != null && p.hasSpeciality(Speciality.QUICK)) {
-                        goalProbabilityFactor *= .75;
-                        se.addInvolvedOpponentPosition(analyse.getOpponentPosition(block25PercentIfQuick2));
-                    }
-                }
-            } else {
-                se.addInvolvedOpponentPosition(analyse.getOpponentPosition(block100PercentIfQuick));
-            }
-            se.setGoalProbability(se.getGoalProbability() * goalProbabilityFactor);
-        }
-        return ret;
+        getQuickPassEvent( position, IMatchRoleID.rightWinger, opponentDefenceSkill, goalProbabilityFactor, involvedOpponents);
+        getQuickPassEvent( position, IMatchRoleID.leftWinger, opponentDefenceSkill, goalProbabilityFactor, involvedOpponents);
+        getQuickPassEvent( position, IMatchRoleID.rightForward, opponentDefenceSkill, goalProbabilityFactor, involvedOpponents);
+        getQuickPassEvent( position, IMatchRoleID.centralForward, opponentDefenceSkill, goalProbabilityFactor, involvedOpponents);
+        getQuickPassEvent( position, IMatchRoleID.leftForward, opponentDefenceSkill, goalProbabilityFactor, involvedOpponents);
     }
 
-    private void getQuickPassEvent(Vector<SpecialEventsPrediction> ret, MatchRoleID position, int passReceiver, double opponentDefenceSkill)
+    private void getQuickPassEvent(MatchRoleID position, int passReceiver, double opponentDefenceSkill, double goalProbabilityFactor, HashSet<IMatchRoleID> involvedOpponents)
     {
         if ( passReceiver == position.getId()) return;
         Player scorer = analyse.getPlayerByPosition(passReceiver);
@@ -154,13 +154,14 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
                 1, 20, -10,
                 min(20, p.getPSskill()) - min(20, opponentDefenceSkill));
         if ( se != null){
+            se.setInvolvedPositions(involvedOpponents);
             se.addInvolvedPosition(analyse.getPosition(passReceiver));
-            se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(analyse.getPosition(passReceiver)));
-            ret.add(se);
+            se.setGoalProbability(goalProbabilityFactor * se.getChanceCreationProbability() * analyse.getGoalProbability(analyse.getPosition(passReceiver)));
+            analyse.addSpecialEventPrediction(se);
         }
     }
 
-    private void getQuickScoresEvent(Vector<SpecialEventsPrediction> ret, MatchRoleID position, int pos) {
+    private void getQuickScoresEvent( MatchRoleID position, int pos, double goalProbabilityFactor, HashSet<IMatchRoleID> involvedOpponents) {
         Player opp = analyse.getOpponentPlayerByPosition(pos);
         if (opp == null) return;
         Player p = analyse.getPlayer(position.getSpielerId());
@@ -172,9 +173,10 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
                 1, 20, -10,
                 min(20, p.getSCskill()) - min(20, opp.getDEFskill()));
         if ( se != null ) {
+            se.setInvolvedPositions(involvedOpponents);
             se.addInvolvedOpponentPosition(analyse.getOpponentPosition(pos));
-            se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(position));
-            ret.add(se);
+            se.setGoalProbability(goalProbabilityFactor * se.getChanceCreationProbability() * analyse.getGoalProbability(position));
+            analyse.addSpecialEventPrediction(se);
         }
     }
 

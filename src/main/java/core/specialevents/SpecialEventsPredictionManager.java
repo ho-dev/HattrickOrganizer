@@ -16,6 +16,7 @@ import module.teamAnalyzer.vo.MatchDetail;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.teamAnalyzer.vo.PlayerPerformance;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -25,7 +26,7 @@ import static java.lang.Math.min;
 public class SpecialEventsPredictionManager {
 
     static private OppPlayerSkillEstimator oppPlayerSkillEstimator = new OppPlayerSkillEstimator();
-    static Vector<ISpecialEventPredictionAnalyzer> analyzers;
+    static ArrayList<ISpecialEventPredictionAnalyzer> analyzers;
     private Lineup lineup = null;
     private Lineup opponentLineup = null;
     private HashMap<Integer, Player> playerInLineup = new HashMap<Integer, Player>();
@@ -37,6 +38,8 @@ public class SpecialEventsPredictionManager {
         private Lineup opponentLineup = null;
         private HashMap<Integer, Player> playerInLineup;
         private HashMap<Integer, Player> opponentPlayerInLineup;
+        private Double opponentRatingIndirectSetPiecesDef;
+        private Double ratingIndirectSetPiecesAtt;
 
         public Analyse(Lineup lineup, Lineup oppLineup, HashMap<Integer, Player> player, HashMap<Integer, Player> oppPlayer) {
             this.lineup = lineup;
@@ -46,14 +49,18 @@ public class SpecialEventsPredictionManager {
         }
 
         public void analyzeLineup() {
-            this.specialEventsPredictions = new Vector<SpecialEventsPrediction>();
+            this.specialEventsPredictions = new ArrayList<>();
             for (ISpecialEventPredictionAnalyzer analyzer : analyzers) {
                 for (IMatchRoleID position : lineup.getFieldPositions()) {
                     MatchRoleID mid = (MatchRoleID) position;
                     if (mid.getSpielerId() == 0) continue;
-                    this.specialEventsPredictions.addAll(analyzer.analyzePosition(this, mid));
+                    analyzer.analyzePosition(this, mid);
                 }
             }
+        }
+
+        public void addSpecialEventPrediction(SpecialEventsPrediction se){
+            this.specialEventsPredictions.add(se);
         }
 
         public Lineup getLineup() {
@@ -148,19 +155,41 @@ public class SpecialEventsPredictionManager {
                     scorer.getSCskill() -  goalkeeperSkill);
         }
 
+        public double getOpponentRatingIndirectSetPiecesDef() {
+            if ( opponentRatingIndirectSetPiecesDef ==null){
+                this.opponentRatingIndirectSetPiecesDef = this.opponentLineup.getRatingIndirectSetPiecesDef();
+            }
+            return opponentRatingIndirectSetPiecesDef;
+        }
+
+        public void setOpponentRatingIndirectSetPiecesDef(double ratingIndirectSetPiecesDef) {
+            this.opponentRatingIndirectSetPiecesDef = ratingIndirectSetPiecesDef;
+        }
+
+        public Double getRatingIndirectSetPiecesAtt() {
+            if ( this.ratingIndirectSetPiecesAtt == null){
+                this.ratingIndirectSetPiecesAtt = this.lineup.getRatingIndirectSetPiecesAtt();
+            }
+            return ratingIndirectSetPiecesAtt;
+        }
+
+        public void setRatingIndirectSetPiecesAtt(double ratingIndirectSetPiecesAtt) {
+            this.ratingIndirectSetPiecesAtt = ratingIndirectSetPiecesAtt;
+        }
     }
 
     private Analyse teamAnalyse;
     private Analyse opponentAnalyse;
 
     private void initAnalyzers() {
-        analyzers = new Vector<ISpecialEventPredictionAnalyzer>();
+        analyzers = new ArrayList<>();
         analyzers.add(new ExperienceEventPredictionAnalyzer());
         analyzers.add(new UnpredictableEventPredictionAnalyzer());
         analyzers.add(new WingerEventPredictionAnalyzer());
         analyzers.add(new PowerfulEventPredictionAnalyzer());
         analyzers.add(new QuickEventPredictionAnalyzer());
         analyzers.add(new TechnicalEventPredictionAnalyzer());
+        analyzers.add(new CornerEventPredictionAnalyzer());
     }
 
     public SpecialEventsPredictionManager() {
@@ -173,6 +202,8 @@ public class SpecialEventsPredictionManager {
         this.teamAnalyse = new Analyse(this.lineup, opponentLineup, playerInLineup, opponentPlayerInLineup);
         this.teamAnalyse.analyzeLineup();
         this.opponentAnalyse = new Analyse(opponentLineup, this.lineup, opponentPlayerInLineup, playerInLineup);
+        this.opponentAnalyse.setOpponentRatingIndirectSetPiecesDef(opponentMatch.getRatingIndirectSetPiecesDef());
+        this.opponentAnalyse.setRatingIndirectSetPiecesAtt(opponentMatch.getRatingIndirectSetPiecesAtt());
         this.opponentAnalyse.analyzeLineup();
     }
 

@@ -120,4 +120,12 @@ public class MatchDetail {
 
         return buffer.toString();
     }
+
+    public double getRatingIndirectSetPiecesDef() {
+        return this.rating.getIndirectSetPiecesDef();
+    }
+
+    public double getRatingIndirectSetPiecesAtt() {
+        return this.rating.getIndirectSetPiecesAtt();
+    }
 }

@@ -3,14 +3,10 @@ package module.teamAnalyzer.vo;
 import core.model.HOVerwaltung;
 import core.model.Ratings;
 import core.model.match.IMatchDetails;
-import core.model.match.Matchdetails;
 import core.util.UTF8Control;
 
-import javax.swing.*;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -38,6 +34,8 @@ public class MatchRating {
     private double LoddarStat;
     private int attitude;
     private int style_of_play;
+    private double indirectSetPiecesAtt;
+    private double indirectSetPiecesDef;
 
     public int getTacticSkill() {
         return tacticSkill;
@@ -552,5 +550,21 @@ public class MatchRating {
     private double hq(double _value) {
         int value = double2HTint(_value);
         return (2.0f * value) / (value + 80.0f);
+    }
+
+    public double getIndirectSetPiecesAtt() {
+        return indirectSetPiecesAtt;
+    }
+
+    public void setIndirectSetPiecesAtt(double indirectSetPiecesAtt) {
+        this.indirectSetPiecesAtt = indirectSetPiecesAtt;
+    }
+
+    public double getIndirectSetPiecesDef() {
+        return indirectSetPiecesDef;
+    }
+
+    public void setIndirectSetPiecesDef(double indirectSetPiecesDef) {
+        this.indirectSetPiecesDef = indirectSetPiecesDef;
     }
 }

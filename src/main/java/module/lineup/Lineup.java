@@ -2032,4 +2032,65 @@ public class Lineup{
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		return gson.toJson(this);
 	}
+
+	/**
+	► IFK:
+	off IFK = 0.5*mAtt + 0.3*mSP + 0.09*SPshooter
+	def IFK = 0.4*mDef + .3*mSP + 0.1*SPgk + 0.08*GKgk
+
+	mAtt: outfield players attack skill average
+	mDEf: outfield players defence skill average
+	 */
+	public double getRatingIndirectSetPiecesAtt() {
+		double teamAtt = 0; // team score sum
+		double teamSP = 0;  // team set pieces sum
+		double spSP = 0;    // set pieces taker set pieces
+		int n = 0;
+
+		for (IMatchRoleID pos : m_vFieldPositions) {
+			MatchRoleID mid = (MatchRoleID) pos;
+			Player p = this.getPlayerByPositionID(mid.getId());
+			if ( p != null){
+				teamAtt += p.getSCskill();
+				teamSP += p.getSPskill();
+				if ( p.getSpielerID() == getKicker()){
+					spSP = p.getSPskill();
+				}
+			}
+		}
+		if ( n > 1){
+			teamAtt/=n;
+			teamSP /=n;
+		}
+		return .5*teamAtt + .3*teamSP + .09*spSP;
+	}
+
+	public double getRatingIndirectSetPiecesDef() {
+		double teamDef = 0; // team defence sum
+		double teamSP = 0;  // team set pieces sum
+		double spGK = 0;    // keeper's set pieces
+		double gkGK = 0;  	// keeper's keeper skill
+		int n = 0;
+
+		Player keeper = getPlayerByPositionID(IMatchRoleID.keeper);
+		if ( keeper != null){
+			spGK = keeper.getSPskill();
+			gkGK = keeper.getGKskill();
+		}
+
+		for (IMatchRoleID pos : m_vFieldPositions) {
+			MatchRoleID mid = (MatchRoleID) pos;
+			Player p = this.getPlayerByPositionID(mid.getId());
+			if ( p != null){
+				teamDef += p.getDEFskill();
+				teamSP += p.getSPskill();
+			}
+		}
+		if ( n > 1){
+			teamDef/=n;
+			teamSP /=n;
+		}
+		return .4*teamDef + .3*teamSP + .1*spGK + .08*gkGK;
+	}
+
 }

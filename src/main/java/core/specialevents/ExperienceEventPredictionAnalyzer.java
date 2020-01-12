@@ -12,8 +12,8 @@ import static java.lang.Math.abs;
 public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictionAnalyzer {
 
     @Override
-    public List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
-        Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();
+    public void analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
+
         int id = position.getSpielerId();
         Player p = analyse.getPlayer(id);
         SpecialEventsPrediction se=null;
@@ -47,8 +47,7 @@ public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictio
         }
         if ( se != null){
             se.setGoalProbability(se.getChanceCreationProbability()/4);
-            ret.add(se);
+            analyse.addSpecialEventPrediction(se);
         }
-        return ret;
     }
 }

@@ -28,24 +28,22 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
     private SpecialEventsPredictionManager.Analyse analyse;
 
     @Override
-    public List<SpecialEventsPrediction> analyzePosition(SpecialEventsPredictionManager.Analyse analyse,MatchRoleID position) {
+    public void analyzePosition(SpecialEventsPredictionManager.Analyse analyse,MatchRoleID position) {
         this.analyse = analyse;
-        Vector<SpecialEventsPrediction> ret = new Vector<SpecialEventsPrediction>();
         int id = position.getSpielerId();
         if ( id != 0) {
             switch (position.getId()) {
                 case IMatchRoleID.leftWinger:
-                    getWingerEvents(ret, position, IMatchRoleID.rightBack, IMatchRoleID.rightCentralDefender);
+                    getWingerEvents(position, IMatchRoleID.rightBack, IMatchRoleID.rightCentralDefender);
                     break;
                 case IMatchRoleID.rightWinger:
-                    getWingerEvents(ret, position, IMatchRoleID.leftBack, IMatchRoleID.leftCentralDefender);
+                    getWingerEvents( position, IMatchRoleID.leftBack, IMatchRoleID.leftCentralDefender);
                     break;
             }
         }
-        return ret;
     }
 
-    private void getWingerEvents(Vector<SpecialEventsPrediction> ret, MatchRoleID position, int back, int centralDefender) {
+    private void getWingerEvents( MatchRoleID position, int back, int centralDefender) {
         double defence = 0;
         double ndefence = 0;
         Player oppDefender = this.analyse.getOpponentPlayerByPosition(back);
@@ -65,24 +63,24 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
         // for each pass receiver
         for ( int i = IMatchRoleID.rightWinger; i<= IMatchRoleID.leftForward; i++){
             if ( i != position.getId()){ // passReceiver is not the winger himself
-                getWingerEvents(ret, position, i, defence);
+                getWingerEvents( position, i, defence);
             }
         }
     }
 
-    private void getWingerEvents(Vector<SpecialEventsPrediction> ret, MatchRoleID position, int passReceiver, double defence) {
+    private void getWingerEvents( MatchRoleID position, int passReceiver, double defence) {
         MatchRoleID scorerId = analyse.getPosition(passReceiver);
         Player scorer = analyse.getPlayer(scorerId.getSpielerId());
         if ( scorer != null) {
             if (scorer.hasSpeciality(Speciality.HEAD)) {
-                getWingerEvent(ret, position, scorerId, defence, SpecialEventType.WINGER_HEAD, 3);
+                getWingerEvent( position, scorerId, defence, SpecialEventType.WINGER_HEAD, 3);
             } else {
-                getWingerEvent(ret, position, scorerId, defence, SpecialEventType.WINGER_SCORER, 0);
+                getWingerEvent( position, scorerId, defence, SpecialEventType.WINGER_SCORER, 0);
             }
         }
     }
 
-    private void getWingerEvent(Vector<SpecialEventsPrediction> ret, MatchRoleID position, MatchRoleID scorer, double defence, SpecialEventType type, double bonus) {
+    private void getWingerEvent( MatchRoleID position, MatchRoleID scorer, double defence, SpecialEventType type, double bonus) {
         Player winger = analyse.getPlayer(position.getSpielerId());
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, type,
                 .2, 10, -10,
@@ -92,7 +90,7 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
             Player involvedPlayer = analyse.getPlayer(scorer.getSpielerId());
             se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(scorer, bonus));
             se.setInvolvedPosition(scorer);
-            ret.add(se);
+            analyse.addSpecialEventPrediction(se);
         }
     }
 }
