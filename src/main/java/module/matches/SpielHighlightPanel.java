@@ -177,7 +177,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 
 					}
 					playerlabel = new JLabel(spielername, icon, SwingConstants.LEFT);
-					playerlabel.setForeground(MatchesHelper.getColor4SpielHighlight(highlight));
+//					playerlabel.setForeground(MatchesHelper.getColor4SpielHighlight(highlight));
 					playerlabel.setToolTipText(MatchEvent.getEventTextDescription(highlight.getiMatchEventID()));
 
 					resultlabel = new JLabel(scoreText);
@@ -406,13 +406,4 @@ public class SpielHighlightPanel extends LazyImagePanel {
 		this.highlightLabels.clear();
 	}
 
-	/**
-	 * Strip HTML from text.
-	 */
-	private String removeHtml(String in) {
-		if (in == null)
-			return in;
-		else
-			return in.replaceAll("<.*?>", "");
-	}
 }

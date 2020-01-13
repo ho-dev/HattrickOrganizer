@@ -5,7 +5,9 @@ path_to_folder = "D:\\Perso\\Code\\HO\\src\\main\\resources\\gui\\bilder\\match_
 
 combinations = {"missed_penalty.png": ("miss.png", "penalty.png", "v"),
                 "converted_penalty.png": ("goal.png", "penalty.png", "v"),
-                "me_206.png": ("miss.png", "speciality-4.png", "v")}
+                "me_136.png": ("experience.png", "goal.png", "h"),
+                "me_206.png": ("miss.png", "speciality-4.png", "v"),
+                "me_207.png": ("miss.png", "longshot.png", "v")}
 
 def get_concat_h(im1, im2, out):
     dst = Image.new("RGBA", (im1.width + im2.width, im1.height), (255, 0, 0, 0))

@@ -128,11 +128,16 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		// Player Overview
 		put(INJURED_SMALL, "gui/bilder/player overview/injured.png");
 		put(BRUISED_SMALL, "gui/bilder/player overview/bruised.png");
-		put(REDCARD, "gui/bilder/player overview/red_card.png");
-		put(YELLOWCARD, "gui/bilder/player overview/yellow_card.png");
-		put(TWOCARDS, "gui/bilder/player overview/dual_yellow_card.png");
+		put(YELLOWCARD_SMALL, "gui/bilder/player overview/yellow-card(yellow)-small.png");
+		put(TWOYELLOWCARDS_SMALL, "gui/bilder/player overview/yellow-card-x2(yellow)-small.png");
+		put(REDCARD_SMALL, "gui/bilder/player overview/red-card(red)-small.png");
 
 		// Highlights
+
+		put(YELLOWCARD, "gui/bilder/match_events/yellow-card(yellow).png");
+		put(TWOYELLOWCARDS, "gui/bilder/match_events/yellow-card-x2(yellow)png");
+		put(REDCARD, "gui/bilder/match_events/red-card(red)png");
+
 		put(FORMATION, "gui/bilder/match_events/mo-select(green).svg");
 
 		put(BRUISED, "gui/bilder/match_events/plaster.png");
@@ -162,7 +167,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		put(PRESSING, "gui/bilder/match_events/pressing(green).png");
 
+		put(ME_136, "gui/bilder/match_events/me_136.png");
 		put(ME_206, "gui/bilder/match_events/me_206.png");
+		put(ME_207, "gui/bilder/match_events/me_207.png");
 
 		put(STAR, "gui/bilder/star.gif");
 		put(STAR_GRAY, "gui/bilder/star_grey.png");

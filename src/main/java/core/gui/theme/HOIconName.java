@@ -28,9 +28,6 @@ public interface HOIconName {
 	 String WEATHER_EFFECT_GOOD 	= "weather.effect.1";
 	 String WEATHER_EFFECT_BAD 	= "weather.effect.-1";
 
-	 String REDCARD 		= "redCard";
-	 String YELLOWCARD 		= "yellowCard";
-	 String TWOCARDS 		= "twoCards";
 	 String BRUISED         = "patch";
 	 String INJURED 		= "injured";
 	 String BRUISED_SMALL   = "patch.small";
@@ -66,10 +63,21 @@ public interface HOIconName {
 	 String LOGO16_DEV		= "logo16_dev";
 	 String TRICKOT 			= "trickot";
 
-	// Highlights
+	// Player overview ======================================================================================
+	String REDCARD_SMALL = "redCard-small";
+	String YELLOWCARD_SMALL = "yellowCard-small";
+	String TWOYELLOWCARDS_SMALL = "twoYellowCards-small";
+
+
+	// Match Events ===============================================================================================
+	String REDCARD = "redCard";
+	String YELLOWCARD = "yellowCard";
+	String TWOYELLOWCARDS = "twoYellowCards";
 
 	String REPLACEMENT = "replacement";
 
+	String ME_136 = "me_136";
+	String ME_207 = "me_207";
 	String ME_206 = "me_206";
 
 	String GOAL			= "goal";

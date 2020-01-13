@@ -71,11 +71,11 @@ public class SpielerStatusLabelEntry extends DoppelLabelEntry {
 	public final void updateComponent() {
         if (player != null) {
             if (player.isGesperrt()) {
-                getLinks().setIcon(ThemeManager.getIcon(HOIconName.REDCARD));
+                getLinks().setIcon(ThemeManager.getIcon(HOIconName.REDCARD_SMALL));
             } else if (player.getGelbeKarten() == 1) {
-                getLinks().setIcon(ThemeManager.getIcon(HOIconName.YELLOWCARD));
+                getLinks().setIcon(ThemeManager.getIcon(HOIconName.YELLOWCARD_SMALL));
             } else if (player.getGelbeKarten() >= 2) {
-                getLinks().setIcon(ThemeManager.getIcon(HOIconName.TWOCARDS));
+                getLinks().setIcon(ThemeManager.getIcon(HOIconName.TWOYELLOWCARDS_SMALL));
             } else {
                 getLinks().clear();
             }

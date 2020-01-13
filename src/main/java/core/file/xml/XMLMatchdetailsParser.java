@@ -369,12 +369,12 @@ public class XMLMatchdetailsParser {
 
             		final Vector<String> tmpPlayer = homeTeamPlayers.get(j);
 
-            		if (tmpPlayer.get(0).toString().equals(String.valueOf(tmp.getSpielerID()))) {
-            			subjectplayername = tmpPlayer.get(1).toString();
+            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getSpielerID()))) {
+            			subjectplayername = tmpPlayer.get(1);
             		}
 
-            		if (tmpPlayer.get(0).toString().equals(String.valueOf(tmp.getGehilfeID()))) {
-            			objectplayername = tmpPlayer.get(1).toString();
+            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getGehilfeID()))) {
+            			objectplayername = tmpPlayer.get(1);
             		}
 
             		j++;
@@ -389,13 +389,13 @@ public class XMLMatchdetailsParser {
 
             		final Vector<String> tmpPlayer = awayTeamPlayers.get(j);
 
-            		if (tmpPlayer.get(0).toString().equals(String.valueOf(tmp.getSpielerID()))) {
-            			subjectplayername = tmpPlayer.get(1).toString();
+            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getSpielerID()))) {
+            			subjectplayername = tmpPlayer.get(1);
             			subHome = false;
             		}
 
-            		if (tmpPlayer.get(0).toString().equals(String.valueOf(tmp.getGehilfeID()))) {
-            			objectplayername = tmpPlayer.get(1).toString();
+            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getGehilfeID()))) {
+            			objectplayername = tmpPlayer.get(1);
             			objHome = false;
             		}
 
