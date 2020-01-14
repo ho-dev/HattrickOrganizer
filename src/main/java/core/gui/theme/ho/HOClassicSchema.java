@@ -127,7 +127,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		// Player Overview
 		put(INJURED_SMALL, "gui/bilder/player overview/injured.png");
-		put(BRUISED_SMALL, "gui/bilder/player overview/bruised.png");
+		put(BRUISED_SMALL, "gui/bilder/player overview/plaster-small.png");
 		put(YELLOWCARD_SMALL, "gui/bilder/player overview/yellow-card(yellow)-small.png");
 		put(TWOYELLOWCARDS_SMALL, "gui/bilder/player overview/yellow-card-x2(yellow)-small.png");
 		put(REDCARD_SMALL, "gui/bilder/player overview/red-card(red)-small.png");
@@ -157,9 +157,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(GOAL_SPECIAL, "gui/bilder/highlights/Fussball_Spezial.png");
 		put(GOAL_COUNTER, "gui/bilder/highlights/Fussball_Konter.png");
 		put(NO_GOAL_FREEKICK, "gui/bilder/highlights/KeinFussball_Freistoss.png");
-		put(NO_GOAL_MID, "gui/bilder/highlights/KeinFussball_Mitte.png");
-		put(NO_GOAL_LEFT, "gui/bilder/highlights/KeinFussball_Links.png");
-		put(NO_GOAL_RIGHT, "gui/bilder/highlights/KeinFussball_Rechts.png");
+		put(NO_GOAL_MID, "gui/bilder/match_events/miss_C.png");
+		put(NO_GOAL_LEFT, "gui/bilder/match_events/miss_L.png");
+		put(NO_GOAL_RIGHT, "gui/bilder/match_events/miss_R.png");
 		put(NO_GOAL_FREEKICK, "gui/bilder/highlights/KeinFussball_FreistossIndirekt.png");
 		put(NO_GOAL_LONGSHOT, "gui/bilder/highlights/KeinFussball_Longshot.png");
 		put(NO_GOAL_SPECIAL, "gui/bilder/highlights/KeinFussball_Spezial.png");
@@ -167,9 +167,14 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		put(PRESSING, "gui/bilder/match_events/pressing(green).png");
 
+		put(ME_116, "gui/bilder/match_events/me_116.png");
 		put(ME_136, "gui/bilder/match_events/me_136.png");
+		put(ME_141, "gui/bilder/match_events/me_141.png");
+		put(ME_142, "gui/bilder/match_events/me_142.png");
+		put(ME_170, "gui/bilder/match_events/me_170.png");
 		put(ME_206, "gui/bilder/match_events/me_206.png");
 		put(ME_207, "gui/bilder/match_events/me_207.png");
+		put(ME_237, "gui/bilder/match_events/me_237.png");
 
 		put(STAR, "gui/bilder/star.gif");
 		put(STAR_GRAY, "gui/bilder/star_grey.png");
