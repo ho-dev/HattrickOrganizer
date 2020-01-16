@@ -77,13 +77,18 @@ public interface HOIconName {
 	String REPLACEMENT = "replacement";
 
 	String ME_116 = "me_116";
+	String ME_118 = "me_118";
+	String ME_135 = "me_135";
 	String ME_136 = "me_136";
 	String ME_141 = "me_141";
 	String ME_142 = "me_142";
 	String ME_170 = "me_170";
+	String ME_184 = "me_184";
+	String ME_185 = "me_185";
 	String ME_207 = "me_207";
 	String ME_206 = "me_206";
 	String ME_237 = "me_237";
+	String ME_280 = "me_280";
 
 	String GOAL			= "goal";
 	String MISS			= "miss";
