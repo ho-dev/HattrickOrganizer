@@ -187,7 +187,7 @@ Why a new Special Events framework?
  Example: Same skills as before. The difference is that the ball receiver is easier to score now since he is a header.
  The chances are 80% and 84% respectively.
 
- TODO: Corner to Anyone
+ Corner to Anyone - DONE: CornerEventPredictionAnalyzer
  You need a good set pieces taker and your offensive indirect set pieces will be tested against the defensive indirect
  set pieces of your opponent. If the ball receiver has good enough scoring skills to pass the keeper, then it’s a goal.
 
@@ -200,7 +200,7 @@ Why a new Special Events framework?
  pieces of your opponent is at 11. The ball receiver has 13 scoring and the keeper has 15 goalkeeping. Then you have
  76% chances to score. But if your set piecer is just 6 on skill level, your chances drop to 69%.
 
- TODO: Corner to Head
+ Corner to Head- DONE: CornerEventPredictionAnalyzer
  Same as the previous one, but instead of a good scoring player, you just need to win the fight between the headers of
  the two teams.
 
