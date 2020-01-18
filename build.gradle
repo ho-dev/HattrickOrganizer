@@ -58,13 +58,16 @@ versionProps.store(versionPropsFile.newWriter(), null)
 
 version = major + '.' + minor + '.' + development_stage + '.' + buildNumber
 
+if (!resetDir) {
+    resetDir = "D:\\Program Files\\HattrickOrganizerDev\\db"
+}
 
 ext {
     nsis_exe_path = "C:\\Program Files (x86)\\NSIS\\makensis.exe"
     nsis_confPath = "${projectDir}\\buildResources\\Win\\nsis"
     nsis_scriptName = "${nsis_confPath}\\makeWinInstaller.nsi"
     target_dir = "${buildDir}\\artefacts"
-    osx_app_dir_sourcedir = "${projectDir}\\buildResources\\Mac"
+    osx_app_dir_sourcedir = "${projectDir}/buildResources/Mac"
     python_script = "${projectDir}\\buildResources\\Generic\\generate_hash.py"
 }
 
@@ -164,11 +167,11 @@ distributions {
 // Configure macAppBundle task =======================
 macAppBundle {
     mainClassName = "HOLauncher"
-    icon = "${project.ext.osx_app_dir_sourcedir}\\HO.icns"
+    icon = "${project.ext.osx_app_dir_sourcedir}/HO.icns"
     bundleJRE = false // true #issue-198
     javaProperties.put("apple.laf.useScreenMenuBar", "true")
     javaProperties.put("apple.awt.showGrowBox", "true")
-    backgroundImage = "${project.ext.osx_app_dir_sourcedir}\\Back.png"
+    backgroundImage = "${project.ext.osx_app_dir_sourcedir}/Back.png"
 }
 
 // Configure ospackage and buildDeb tasks ============
@@ -567,10 +570,10 @@ task resetDB(){
     group 'tool'
     description 'copy the database from existing install into project'
 
-    doFirst {println("Reseting DB: copying DB from `D:\\Program Files\\HattrickOrganizerDev` into  ${projectDir}")}
+    doFirst {println("Reseting DB: copying DB from `${resetDir}` into  ${projectDir}")}
 
     copy {
-        from "D:\\Program Files\\HattrickOrganizerDev\\db"
+        from resetDir
         into "${projectDir}\\db"
     }
 
