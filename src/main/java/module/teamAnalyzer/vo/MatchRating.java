@@ -187,13 +187,13 @@ public class MatchRating {
     }
 
     public MatchRating(Map<String, String> matchRating) {
-        this.centralAttack = intHT2loatHT(Integer.parseInt(matchRating.get("RatingMidAtt")));
-        this.centralDefense = intHT2loatHT(Integer.parseInt(matchRating.get("RatingMidDef")));
-        this.leftAttack = intHT2loatHT(Integer.parseInt(matchRating.get("RatingLeftAtt")));
-        this.leftDefense = intHT2loatHT(Integer.parseInt(matchRating.get("RatingLeftDef")));
-        this.midfield = intHT2loatHT(Integer.parseInt(matchRating.get("RatingMidfield")));
-        this.rightAttack = intHT2loatHT(Integer.parseInt(matchRating.get("RatingRightAtt")));
-        this.rightDefense = intHT2loatHT(Integer.parseInt(matchRating.get("RatingRightDef")));
+        this.centralAttack = intHT2floatHT(Integer.parseInt(matchRating.get("RatingMidAtt")));
+        this.centralDefense = intHT2floatHT(Integer.parseInt(matchRating.get("RatingMidDef")));
+        this.leftAttack = intHT2floatHT(Integer.parseInt(matchRating.get("RatingLeftAtt")));
+        this.leftDefense = intHT2floatHT(Integer.parseInt(matchRating.get("RatingLeftDef")));
+        this.midfield = intHT2floatHT(Integer.parseInt(matchRating.get("RatingMidfield")));
+        this.rightAttack = intHT2floatHT(Integer.parseInt(matchRating.get("RatingRightAtt")));
+        this.rightDefense = intHT2floatHT(Integer.parseInt(matchRating.get("RatingRightDef")));
         this.tacticSkill = Integer.parseInt(matchRating.get("TacticSkill"));
         this.tacticType = Integer.parseInt(matchRating.get("TacticType"));
         HatStats = computeHatStats();
@@ -520,7 +520,7 @@ public class MatchRating {
         return float2HTint((float) x);
     }
 
-    public final double intHT2loatHT(int x) {
+    public final double intHT2floatHT(int x) {
         return (double) (((x - 1.0f) / 4.0f) + 1.0f);
     }
 
@@ -560,11 +560,19 @@ public class MatchRating {
         this.indirectSetPiecesAtt = indirectSetPiecesAtt;
     }
 
+    public void setIndirectSetPiecesAtt(int indirectSetPiecesAtt) {
+        this.indirectSetPiecesAtt = intHT2floatHT(indirectSetPiecesAtt);
+    }
+
     public double getIndirectSetPiecesDef() {
         return indirectSetPiecesDef;
     }
 
     public void setIndirectSetPiecesDef(double indirectSetPiecesDef) {
         this.indirectSetPiecesDef = indirectSetPiecesDef;
+    }
+
+    public void setIndirectSetPiecesDef(int indirectSetPiecesDef) {
+        this.indirectSetPiecesDef = intHT2floatHT(indirectSetPiecesDef);
     }
 }

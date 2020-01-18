@@ -16,6 +16,8 @@ public class MatchDetail {
     /** ArrayList of Player performance for this game */
     private List<PlayerPerformance> playerPerf = new ArrayList<PlayerPerformance>();
 
+    private int setPiecesTaker = -1;
+
     /** Match to which the details are reffered */
     private Match match;
 
@@ -127,5 +129,13 @@ public class MatchDetail {
 
     public double getRatingIndirectSetPiecesAtt() {
         return this.rating.getIndirectSetPiecesAtt();
+    }
+
+    public int getSetPiecesTaker() {
+        return setPiecesTaker;
+    }
+
+    public void setSetPiecesTaker(int setPiecesTaker) {
+        this.setPiecesTaker = setPiecesTaker;
     }
 }

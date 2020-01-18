@@ -315,7 +315,14 @@ public class SpecialEventsPrediction {
     }
 
     public void setInvolvedPositions(HashSet<IMatchRoleID> m_cInvolvedPositions) {
-        this.involvedPositions = m_cInvolvedPositions;
+        if (this.involvedPositions == null) {
+            this.involvedPositions = new HashSet<IMatchRoleID>();
+
+        } else {
+            this.involvedPositions.clear();
+        }
+
+        this.involvedPositions.addAll(m_cInvolvedPositions);
     }
 
     public void setInvolvedPosition(MatchRoleID mid) {
@@ -336,6 +343,17 @@ public class SpecialEventsPrediction {
 
     public HashSet<IMatchRoleID> getInvolvedOpponentPositions() {
         return involvedOpponentPositions;
+    }
+
+    public void setInvolvedOpponentPositions(HashSet<IMatchRoleID> m_cInvolvedPositions) {
+        if (this.involvedOpponentPositions == null) {
+            this.involvedOpponentPositions = new HashSet<IMatchRoleID>();
+
+        } else {
+            this.involvedOpponentPositions.clear();
+        }
+
+        this.involvedOpponentPositions.addAll(involvedOpponentPositions);
     }
 
     public void setInvolvedOpponentPosition(MatchRoleID mid) {

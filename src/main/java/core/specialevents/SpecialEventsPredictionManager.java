@@ -224,10 +224,11 @@ public class SpecialEventsPredictionManager {
 
     public void setOpponentLineup(MatchDetail opponentMatch) {
         this.opponentLineup = new Lineup();
+        this.opponentLineup.setKicker(opponentMatch.getSetPiecesTaker());
         for (PlayerPerformance playerPerformance : opponentMatch.getPerformances()) {
             if (playerPerformance.getStatus() <= PlayerDataManager.AVAILABLE) {     // if status is UNKNOWN user has to download players info
                 this.opponentLineup.setPosition(playerPerformance.getMatchRoleID());
-                // playerPerformance -> PLayer
+                // playerPerformance -> Player
                 OpponentPlayer player = (OpponentPlayer) this.opponentPlayerInLineup.get(playerPerformance.getSpielerId());
                 if (player == null) {
                     PlayerInfo latestPlayerInfo = PlayerDataManager.getLatestPlayerInfo(playerPerformance.getSpielerId());

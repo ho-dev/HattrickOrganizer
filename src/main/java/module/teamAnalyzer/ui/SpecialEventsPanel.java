@@ -135,6 +135,9 @@ public class SpecialEventsPanel extends JPanel {
 
         Vector<String> involvedPlayerNames = new Vector<>();
         for ( Player p : involved){
+            if ( p == null){
+                continue;
+            }
             involvedPlayerNames.add(p.getName());
         }
         Vector<Object> rowData = new Vector<Object>();

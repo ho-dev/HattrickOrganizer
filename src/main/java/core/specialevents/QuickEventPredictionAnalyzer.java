@@ -154,7 +154,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
                 1, 20, -10,
                 min(20, p.getPSskill()) - min(20, opponentDefenceSkill));
         if ( se != null){
-            se.setInvolvedPositions(involvedOpponents);
+            se.setInvolvedOpponentPositions(involvedOpponents);
             se.addInvolvedPosition(analyse.getPosition(passReceiver));
             se.setGoalProbability(goalProbabilityFactor * se.getChanceCreationProbability() * analyse.getGoalProbability(analyse.getPosition(passReceiver)));
             analyse.addSpecialEventPrediction(se);
@@ -170,10 +170,10 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
                 position,
                 SpecialEventType.QUICK_SCORES,
-                1, 20, -10,
-                min(20, p.getSCskill()) - min(20, opp.getDEFskill()));
+                .5, 10, -10,
+                p.getSCskill() - opp.getDEFskill());
         if ( se != null ) {
-            se.setInvolvedPositions(involvedOpponents);
+            se.setInvolvedOpponentPositions(involvedOpponents);
             se.addInvolvedOpponentPosition(analyse.getOpponentPosition(pos));
             se.setGoalProbability(goalProbabilityFactor * se.getChanceCreationProbability() * analyse.getGoalProbability(position));
             analyse.addSpecialEventPrediction(se);
