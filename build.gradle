@@ -58,6 +58,9 @@ versionProps.store(versionPropsFile.newWriter(), null)
 
 version = major + '.' + minor + '.' + development_stage + '.' + buildNumber
 
+if (!resetDir) {
+    resetDir = "D:\\Program Files\\HattrickOrganizerDev\\db"
+}
 
 ext {
     nsis_exe_path = "C:\\Program Files (x86)\\NSIS\\makensis.exe"
@@ -567,10 +570,10 @@ task resetDB(){
     group 'tool'
     description 'copy the database from existing install into project'
 
-    doFirst {println("Reseting DB: copying DB from `D:\\Program Files\\HattrickOrganizerDev` into  ${projectDir}")}
+    doFirst {println("Reseting DB: copying DB from `${resetDir}` into  ${projectDir}")}
 
     copy {
-        from "D:\\Program Files\\HattrickOrganizerDev\\db"
+        from resetDir
         into "${projectDir}\\db"
     }
 
