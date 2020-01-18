@@ -67,7 +67,7 @@ ext {
     nsis_confPath = "${projectDir}\\buildResources\\Win\\nsis"
     nsis_scriptName = "${nsis_confPath}\\makeWinInstaller.nsi"
     target_dir = "${buildDir}\\artefacts"
-    osx_app_dir_sourcedir = "${projectDir}\\buildResources\\Mac"
+    osx_app_dir_sourcedir = "${projectDir}/buildResources/Mac"
     python_script = "${projectDir}\\buildResources\\Generic\\generate_hash.py"
 }
 
@@ -167,11 +167,11 @@ distributions {
 // Configure macAppBundle task =======================
 macAppBundle {
     mainClassName = "HOLauncher"
-    icon = "${project.ext.osx_app_dir_sourcedir}\\HO.icns"
+    icon = "${project.ext.osx_app_dir_sourcedir}/HO.icns"
     bundleJRE = false // true #issue-198
     javaProperties.put("apple.laf.useScreenMenuBar", "true")
     javaProperties.put("apple.awt.showGrowBox", "true")
-    backgroundImage = "${project.ext.osx_app_dir_sourcedir}\\Back.png"
+    backgroundImage = "${project.ext.osx_app_dir_sourcedir}/Back.png"
 }
 
 // Configure ospackage and buildDeb tasks ============
