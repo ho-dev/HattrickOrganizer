@@ -2,7 +2,7 @@
  
    - fixes issue #__  
    
-   - if not fixing an existing issue, comments explainging the purpose of the PR should be provided)
+   - if not fixing an existing issue, comments explaining the purpose of the PR should be provided)
  
  
 2. changelog and release_notes ...
