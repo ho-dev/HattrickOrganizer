@@ -1,6 +1,6 @@
 //============ plugins and external jar dependencies ===================================================================
 plugins {
-    id "edu.sc.seis.macAppBundle" version "2.2.3"
+    id "edu.sc.seis.macAppBundle" version "2.3.0"
     id "nebula.ospackage" version "5.0.4"
     id 'de.jansauer.poeditor' version '1.0.0'
     id "org.kordamp.markdown.convert" version "1.2.0"
@@ -44,7 +44,7 @@ dependencies {
 def major = '2'
 def minor = '1'
 def development_stage = '0'
-def releaseArtefacts = false
+def releaseArtefacts = true
 
 //====================================================================================================================
 
@@ -58,9 +58,6 @@ versionProps.store(versionPropsFile.newWriter(), null)
 
 version = major + '.' + minor + '.' + development_stage + '.' + buildNumber
 
-if (!resetDir) {
-    resetDir = "D:\\Program Files\\HattrickOrganizerDev\\db"
-}
 
 ext {
     nsis_exe_path = "C:\\Program Files (x86)\\NSIS\\makensis.exe"
@@ -525,13 +522,13 @@ task AddResourcesAndZipMacApp {
 
         println("zipping MacApp distribution")
         task(ZipMacAppDistribution, type: Tar) {
-            archiveName = "${project.macAppBundle.appName}_${project.version}_macOS.zip"
-            destinationDir = file("${project.ext.target_dir}")
+            archiveFileName = "${project.macAppBundle.appName}_${project.version}_macOS.zip"
+            destinationDirectory = file("${project.ext.target_dir}")
             from ("${buildDir}\\macApp") {exclude("**\\JavaAppLauncher")}
             from ("${buildDir}\\macApp") {
                 include("**\\JavaAppLauncher")
                 fileMode=0755}
-        }.execute()
+        }
 
     }
 
@@ -569,6 +566,10 @@ task compute_sha_sums(){
 task resetDB(){
     group 'tool'
     description 'copy the database from existing install into project'
+
+    if (! project.hasProperty('resetDir')) {
+        ext.resetDir = "D:\\Program Files\\HattrickOrganizerDev\\db"
+    }
 
     doFirst {println("Reseting DB: copying DB from `${resetDir}` into  ${projectDir}")}
 
