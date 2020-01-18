@@ -9,7 +9,7 @@ import core.gui.theme.ThemeManager;
 import core.model.player.Player;
 
 import javax.swing.SwingConstants;
-
+import java.awt.*;
 
 
 public class SpielerStatusLabelEntry extends DoppelLabelEntry {
@@ -71,21 +71,27 @@ public class SpielerStatusLabelEntry extends DoppelLabelEntry {
 	public final void updateComponent() {
         if (player != null) {
             if (player.isGesperrt()) {
-                getLinks().setIcon(ThemeManager.getIcon(HOIconName.REDCARD));
+                getLinks().setIcon(ThemeManager.getIcon(HOIconName.REDCARD_SMALL));
             } else if (player.getGelbeKarten() == 1) {
-                getLinks().setIcon(ThemeManager.getIcon(HOIconName.YELLOWCARD));
+                getLinks().setIcon(ThemeManager.getIcon(HOIconName.YELLOWCARD_SMALL));
             } else if (player.getGelbeKarten() >= 2) {
-                getLinks().setIcon(ThemeManager.getIcon(HOIconName.TWOCARDS));
+                getLinks().setIcon(ThemeManager.getIcon(HOIconName.TWOYELLOWCARDS_SMALL));
             } else {
                 getLinks().clear();
             }
 
             if (player.getVerletzt() == 0) {
                 getRechts().setText("");
-                getRechts().setIcon(ThemeManager.getIcon(HOIconName.BRUISED));
+                getRechts().setIcon(ThemeManager.getIcon(HOIconName.BRUISED_SMALL));
             } else if (player.getVerletzt() > 0) {
-                getRechts().setText(player.getVerletzt() + "");
-                getRechts().setIcon(ThemeManager.getIcon(HOIconName.INJURED));
+                if(player.getVerletzt() != 999) {
+                    getRechts().setText(player.getVerletzt() + "");
+                }
+                else {
+                    getRechts().setText("\u221E");
+                }
+                getRechts().setIcon(ThemeManager.getIcon(HOIconName.INJURED_SMALL));
+                getRechts().setFont(new Font("Serif", Font.BOLD, 14));
             } else {
                 getRechts().clear();
             }

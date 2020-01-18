@@ -150,7 +150,7 @@ public class PlayerPanel extends JPanel {
 			if (lineup.getPlayerId() == 0) {
 				specialEventImage.setIcon(null);
 			} else {
-				specialEventImage.setIcon(ThemeManager.getIcon(HOIconName.SPECIAL[specialEvent]));
+				specialEventImage.setIcon(ThemeManager.getIcon(HOIconName.SPECIALTIES[specialEvent]));
 			}
 
 			positionField.setText(MatchRoleID.getNameForPosition((byte) lineup.getPosition()));

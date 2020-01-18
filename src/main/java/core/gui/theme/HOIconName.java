@@ -8,7 +8,8 @@ public interface HOIconName {
 
 	 String[] MATCHICONS	= {"LEAGUE", "QUALIFICATION", "FRIENDLY", "NATIONAL_CUP", "EMERALD_CUP", "RUBY_CUP", "SAPPHIRE_CUP", "LADDER", "TOURNAMENT", "SINGLE", "MASTERS", "DEFAULT", "CONSOLANTE_CUP", "DIVISION_BATTLE"};
 	 String[] WEATHER 		= { "weather0", "weather1", "weather2", "weather3"};
-	 String[] SPECIAL 		= { "","special1","special2","special3","special4","special5", "special6", "special7", "special8"};
+	 String[] SPECIALTIES = { "","special1","special2","special3","special4","special5", "special6", "special7", "special8"};
+	 String[] SPECIALTIES_SMALL = { "","special1_small","special2_small","special3_small","special4_small","special5_small", "special6_small", "special7_small", "special8_small"};
 	 String[] TEAMSMILIES 	= { "", "A-Team.png","B-Team.png", "C-Team.png", "D-Team.png", "E-Team.png", "F-Team.png" };
 	 String[] MANUELLSMILIES = { "", "1bigsmile.png","2smile.png", "3normal.png", "4sad.png", "5verysad.png","6clown.png", "7trainer.png", "8dollar.png", "9coach.png" };
 
@@ -27,9 +28,6 @@ public interface HOIconName {
 	 String WEATHER_EFFECT_GOOD 	= "weather.effect.1";
 	 String WEATHER_EFFECT_BAD 	= "weather.effect.-1";
 
-	 String REDCARD 		= "redCard";
-	 String YELLOWCARD 		= "yellowCard";
-	 String TWOCARDS 		= "twoCards";
 	 String BRUISED         = "patch";
 	 String INJURED 		= "injured";
 	 String BRUISED_SMALL   = "patch.small";
@@ -65,31 +63,59 @@ public interface HOIconName {
 	 String LOGO16_DEV		= "logo16_dev";
 	 String TRICKOT 			= "trickot";
 
-	// Highlights
+	// Player overview ======================================================================================
+	String REDCARD_SMALL = "redCard-small";
+	String YELLOWCARD_SMALL = "yellowCard-small";
+	String TWOYELLOWCARDS_SMALL = "twoYellowCards-small";
 
+
+	// Match Events ===============================================================================================
+	String REDCARD = "redCard";
+	String YELLOWCARD = "yellowCard";
+	String TWOYELLOWCARDS = "twoYellowCards";
+
+	String REPLACEMENT = "replacement";
+
+	String ME_116 = "me_116";
+	String ME_118 = "me_118";
+	String ME_135 = "me_135";
+	String ME_136 = "me_136";
+	String ME_141 = "me_141";
+	String ME_142 = "me_142";
+	String ME_170 = "me_170";
+	String ME_184 = "me_184";
+	String ME_185 = "me_185";
+	String ME_207 = "me_207";
 	String ME_206 = "me_206";
+	String ME_237 = "me_237";
+	String ME_280 = "me_280";
 
-	String GOAL			= "tor";
+	String GOAL			= "goal";
+	String MISS			= "miss";
 	String GOAL_FREEKICK 	= "tor_freistoss";
 	String GOAL_MID		= "tor_mitte";
 	String GOAL_LEFT		= "tor_links";
 	String GOAL_RIGHT		= "tor_rechts";
 	String GOAL_PENALTY	= "tor_elfmeter";
 	String CONVERTED_PENALTY = "convertedPenalty";
+	String MISSED_PENALTY = "missedPenalty";
 	String GOAL_IFK = "tor_indirect_freekick";
 	String GOAL_LONGSHOT	= "tor_longshot";
 	String GOAL_SPECIAL	= "tor_special";
 	String GOAL_COUNTER	= "tor_counter";
-	String NOGOAL			= "keintor";
 	String NO_GOAL_FREEKICK = "keintor_freistoss";
 	String NO_GOAL_MID = "keintor_mitte";
 	String NO_GOAL_LEFT = "keintor_links";
 	String NO_GOAL_RIGHT = "keintor_rechts";
-	String NO_GOAL_PENALTY = "keintor_elfmeter";
+
 	String NO_GOAL_IFK = "keintor_indirect_freekick";
 	String NO_GOAL_LONGSHOT = "keintor_longshot";
 	String NO_GOAL_SPECIAL = "keintor_special";
 	String NO_GOAL_COUNTER = "keintor_counter";
+
+	String PRESSING = "pressing";
+	String FORMATION  = "formation";
+
 
 	String STAR = "star";
 	String STAR_GRAY = "star_gray";

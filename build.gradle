@@ -627,26 +627,32 @@ poeditor {
     trans type:'properties', lang: 'bg', file: 'src\\main\\resources\\sprache\\Bulgarian.properties'
     trans type:'properties', lang: 'ca', file: 'src\\main\\resources\\sprache\\Catalan.properties'
     trans type:'properties', lang: 'hr', file: 'src\\main\\resources\\sprache\\Hrvatski(Croatian).properties'
+    trans type:'properties', lang: 'cs', file: 'src\\main\\resources\\sprache\\Czech.properties'
     trans type:'properties', lang: 'da', file: 'src\\main\\resources\\sprache\\Danish.properties'
     trans type:'properties', lang: 'nl', file: 'src\\main\\resources\\sprache\\Nederlands.properties'
     trans type:'properties', lang: 'fi', file: 'src\\main\\resources\\sprache\\Finnish.properties'
     trans type:'properties', lang: 'fr', file: 'src\\main\\resources\\sprache\\French.properties'
     trans type:'properties', lang: 'de', file: 'src\\main\\resources\\sprache\\Deutsch.properties'
+    trans type:'properties', lang: 'el', file: 'src\\main\\resources\\sprache\\Greeklish.properties'
     trans type:'properties', lang: 'he', file: 'src\\main\\resources\\sprache\\Hebrew.properties' //Hebrew
     trans type:'properties', lang: 'hu', file: 'src\\main\\resources\\sprache\\Magyar.properties'  //Hungarian
     trans type:'properties', lang: 'it', file: 'src\\main\\resources\\sprache\\Italiano.properties'
     trans type:'properties', lang: 'ko', file: 'src\\main\\resources\\sprache\\Hangul(Korean).properties'
     trans type:'properties', lang: 'lv', file: 'src\\main\\resources\\sprache\\Latvija.properties' //Lettonie
+    trans type:'properties', lang: 'lt', file: 'src\\main\\resources\\sprache\\Lithuanian.properties'
     trans type:'properties', lang: 'fa', file: 'src\\main\\resources\\sprache\\Persian.properties'
     trans type:'properties', lang: 'pl', file: 'src\\main\\resources\\sprache\\Polish.properties'
     trans type:'properties', lang: 'pt', file: 'src\\main\\resources\\sprache\\Portugues.properties'
     trans type:'properties', lang: 'pt-br', file: 'src\\main\\resources\\sprache\\PortuguesBrasil.properties'
+    trans type:'properties', lang: 'ro', file: 'src\\main\\resources\\sprache\\Romanian.properties'
     trans type:'properties', lang: 'ru', file: 'src\\main\\resources\\sprache\\Russian.properties'
     trans type:'properties', lang: 'sr-cyrl', file: 'src\\main\\resources\\sprache\\Serbian (Cyrillic).properties'
     trans type:'properties', lang: 'sk', file: 'src\\main\\resources\\sprache\\Slovak.properties' //Slovak
     trans type:'properties', lang: 'es', file: 'src\\main\\resources\\sprache\\Spanish.properties'
     trans type:'properties', lang: 'sv', file: 'src\\main\\resources\\sprache\\Svenska.properties' //Swedish
     trans type:'properties', lang: 'tr', file: 'src\\main\\resources\\sprache\\Turkish.properties'
+
+
 }
 
 markdownToHtml {
