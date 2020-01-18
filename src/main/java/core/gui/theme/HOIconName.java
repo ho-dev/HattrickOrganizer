@@ -86,9 +86,11 @@ public interface HOIconName {
 	String ME_184 = "me_184";
 	String ME_185 = "me_185";
 	String ME_207 = "me_207";
-	String ME_206 = "me_206";
+	String ME_NO_GOAL_UNPREDICTABLE = "me_no_goal_unpredictable";
 	String ME_237 = "me_237";
 	String ME_280 = "me_280";
+	String ME_285 = "me_285";
+	String ME_286 = "me_286";
 
 	String GOAL			= "goal";
 	String MISS			= "miss";
