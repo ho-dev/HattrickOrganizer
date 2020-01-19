@@ -135,8 +135,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		// Highlights
 
 		put(YELLOWCARD, "gui/bilder/match_events/yellow-card(yellow).png");
-		put(TWOYELLOWCARDS, "gui/bilder/match_events/yellow-card-x2(yellow)png");
-		put(REDCARD, "gui/bilder/match_events/red-card(red)png");
+		put(REDCARD, "gui/bilder/match_events/red-card(red).png");
 
 		put(FORMATION, "gui/bilder/match_events/mo-select(green).svg");
 
@@ -173,15 +172,19 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(ME_136, "gui/bilder/match_events/me_136.png");
 		put(ME_141, "gui/bilder/match_events/me_141.png");
 		put(ME_142, "gui/bilder/match_events/me_142.png");
-		put(ME_170, "gui/bilder/match_events/me_170.png");
+		put(ME_GOAL_AND_WHISTLE, "gui/bilder/match_events/me_goal_and_whistle.png");
 		put(ME_184, "gui/bilder/match_events/me_184.png");
 		put(ME_185, "gui/bilder/match_events/me_185.png");
 		put(ME_NO_GOAL_UNPREDICTABLE, "gui/bilder/match_events/me_no_goal_unpredictable.png");
 		put(ME_207, "gui/bilder/match_events/me_207.png");
+		put(ME_215, "gui/bilder/match_events/me_215.png");
+        put(ME_236, "gui/bilder/match_events/me_236.png");
 		put(ME_237, "gui/bilder/match_events/me_237.png");
-		put(ME_280, "gui/bilder/match_events/me_280.png");
+		put(ME_243, "gui/bilder/match_events/me_243.png");
+		put(ME_MISS_AND_WHISTLE, "gui/bilder/match_events/me_miss_and_whistle.png");
 		put(ME_285, "gui/bilder/match_events/me_285.png");
 		put(ME_286, "gui/bilder/match_events/me_286.png");
+		put(ME_YELLOW_THEN_RED, "gui/bilder/match_events/me_YellowThenRed.png");
 
 		put(STAR, "gui/bilder/star.gif");
 		put(STAR_GRAY, "gui/bilder/star_grey.png");

@@ -120,7 +120,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 				MatchEvent highlight = matchHighlights.get(i);
 
 				if (highlight.isGoalEvent() || highlight.isNonGoalEvent() || highlight.isBruisedOrInjured() || highlight.isBooked()
-						|| (highlight.getMatchEventID() == MatchEvent.MatchEventID.INJURED_PLAYER_REPLACED))
+						|| highlight.isSubstitution())
 				{
 					bEventHighlighted = true;
 				}
@@ -157,7 +157,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 						}
 					}
 
-					else if(highlight.getMatchEventID() == MatchEvent.MatchEventID.INJURED_PLAYER_REPLACED)
+					else if(highlight.isSubstitution())
 					{
 						spielername = highlight.getSpielerName();
 						if (spielername.length() > 30) {

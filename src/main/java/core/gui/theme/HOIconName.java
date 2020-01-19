@@ -72,7 +72,6 @@ public interface HOIconName {
 	// Match Events ===============================================================================================
 	String REDCARD = "redCard";
 	String YELLOWCARD = "yellowCard";
-	String TWOYELLOWCARDS = "twoYellowCards";
 
 	String REPLACEMENT = "replacement";
 
@@ -82,15 +81,19 @@ public interface HOIconName {
 	String ME_136 = "me_136";
 	String ME_141 = "me_141";
 	String ME_142 = "me_142";
-	String ME_170 = "me_170";
+	String ME_GOAL_AND_WHISTLE = "me_goal_and_whistle";
 	String ME_184 = "me_184";
 	String ME_185 = "me_185";
 	String ME_207 = "me_207";
+	String ME_215 = "me_215";
 	String ME_NO_GOAL_UNPREDICTABLE = "me_no_goal_unpredictable";
+    String ME_236 = "me_236";
 	String ME_237 = "me_237";
-	String ME_280 = "me_280";
+	String ME_243 = "me_243";
+	String ME_MISS_AND_WHISTLE = "me_miss_and_whistle";
 	String ME_285 = "me_285";
 	String ME_286 = "me_286";
+	String ME_YELLOW_THEN_RED= "me_YellowThenRed";
 
 	String GOAL			= "goal";
 	String MISS			= "miss";
