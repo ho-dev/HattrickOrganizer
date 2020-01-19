@@ -3,6 +3,7 @@ package core.specialevents;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
@@ -213,7 +214,7 @@ Why a new Special Events framework?
  Info: Both events might lead to a yellow card for the offensive team, but if your player is already carded he will be
  extra careful so the risk of a second yellow is lower than it would otherwise have been.
 
- TODO: Experienced Forward Scores
+ Experienced Forward Scores DONE: ExperienceEventPredictionAnalyzer
 
  If your forward has great experience compared to the average experience of the opponents, and also high enough scoring
  to outwit the keeper, you might end up with a goal.
@@ -221,7 +222,7 @@ Why a new Special Events framework?
  Example: If your forward has 10 experience against an average of 8 and his scoring is 13 against a 15 goalkeeper, your
  chances are 33% to score. But if the experience was at 15, your chances increase to 38%.
 
- TODO: Inexperienced Defender
+ Inexperienced Defender DONE: ExperienceEventPredictionAnalyzer
 
  If your defender has low experience compared to the average experience of the opposing team, an opposing player may be
  able to win the ball and then get a crack at scoring.
@@ -230,7 +231,7 @@ Why a new Special Events framework?
  average experience of 12, will give the opponent 20% to score. But if you increase your defender experience to 12, you
  will drop this to 16%.
 
- TODO: Tired Defender Mistake
+ Tired Defender Mistake DONE: StaminaEventPredictionAnalyzer
 
  During the second half only, if one of your defenders have far lower stamina than an opponent player, he can take the
  chance to pass you and go 1-1 with the goalkeeper.
@@ -238,13 +239,13 @@ Why a new Special Events framework?
  Example: If the opponent player is Forward with 13 scoring against your keeper with 15 goalkeeping, the chance to score
  is 41% (57% if same player is a Winger instead)
 
- TODO Resilient
+ Resilient DONE this speciality has no impact on special events
 
  If they get injured, their injuries will be less severe than they would otherwise have been, and they heal faster. They
  will also have their skill drop kick in at a slightly higher age than other players. To reflect the wider scope of
  their vigor and durability, this specialty will be renamed “Resilient.”
 
- Overcrowding Penalty for Unique Players
+ Overcrowding Penalty for Unique Players DONE
 
  With the new specialties, we have 3 unique combinations of specialties and positions: Technical Defensive Forwards
  (TDF), Powerful Normal Forwards (PNF) and Powerful Defensive Inner Midfielders (PDIM). If you field two of the same
@@ -280,8 +281,8 @@ public class SpecialEventsPrediction {
     private double goalProbability = 0;
     private ISpecialEventPredictionAnalyzer.SpecialEventType eventType;
     private IMatchRoleID responsiblePosition;
-    private HashSet<IMatchRoleID> involvedPositions;
-    private HashSet<IMatchRoleID> involvedOpponentPositions;
+    private ArrayList<IMatchRoleID> involvedPositions;
+    private ArrayList<IMatchRoleID> involvedOpponentPositions;
 
     public SpecialEventsPrediction(IMatchRoleID position, ISpecialEventPredictionAnalyzer.SpecialEventType type, double p) {
         responsiblePosition = position;
@@ -294,10 +295,10 @@ public class SpecialEventsPrediction {
         this.eventType = se.eventType;
         this.goalProbability = se.goalProbability;
         if (se.involvedOpponentPositions != null) {
-            this.involvedOpponentPositions = new HashSet<>(se.involvedOpponentPositions);
+            this.involvedOpponentPositions = new ArrayList<>(se.involvedOpponentPositions);
         }
         if (se.involvedPositions != null) {
-            this.involvedPositions = new HashSet<>(se.involvedPositions);
+            this.involvedPositions = new ArrayList<>(se.involvedPositions);
         }
         this.responsiblePosition = se.responsiblePosition;
     }
@@ -310,13 +311,13 @@ public class SpecialEventsPrediction {
         this.responsiblePosition = responsiblePosition;
     }
 
-    public HashSet<IMatchRoleID> getInvolvedPositions() {
+    public ArrayList<IMatchRoleID> getInvolvedPositions() {
         return involvedPositions;
     }
 
-    public void setInvolvedPositions(HashSet<IMatchRoleID> m_cInvolvedPositions) {
+    public void setInvolvedPositions(ArrayList<IMatchRoleID> m_cInvolvedPositions) {
         if (this.involvedPositions == null) {
-            this.involvedPositions = new HashSet<IMatchRoleID>();
+            this.involvedPositions = new ArrayList<IMatchRoleID>();
 
         } else {
             this.involvedPositions.clear();
@@ -327,7 +328,7 @@ public class SpecialEventsPrediction {
 
     public void setInvolvedPosition(MatchRoleID mid) {
         if (this.involvedPositions == null) {
-            this.involvedPositions = new HashSet<IMatchRoleID>();
+            this.involvedPositions = new ArrayList<IMatchRoleID>();
         } else {
             this.involvedPositions.clear();
         }
@@ -336,18 +337,18 @@ public class SpecialEventsPrediction {
 
     public void addInvolvedPosition(MatchRoleID mid) {
         if (this.involvedPositions == null) {
-            this.involvedPositions = new HashSet<IMatchRoleID>();
+            this.involvedPositions = new ArrayList<IMatchRoleID>();
         }
         this.involvedPositions.add(mid);
     }
 
-    public HashSet<IMatchRoleID> getInvolvedOpponentPositions() {
+    public ArrayList<IMatchRoleID> getInvolvedOpponentPositions() {
         return involvedOpponentPositions;
     }
 
-    public void setInvolvedOpponentPositions(HashSet<IMatchRoleID> m_cInvolvedPositions) {
+    public void setInvolvedOpponentPositions(ArrayList<IMatchRoleID> m_cInvolvedPositions) {
         if (this.involvedOpponentPositions == null) {
-            this.involvedOpponentPositions = new HashSet<IMatchRoleID>();
+            this.involvedOpponentPositions = new ArrayList<IMatchRoleID>();
 
         } else {
             this.involvedOpponentPositions.clear();
@@ -358,7 +359,7 @@ public class SpecialEventsPrediction {
 
     public void setInvolvedOpponentPosition(MatchRoleID mid) {
         if (this.involvedOpponentPositions == null) {
-            this.involvedOpponentPositions = new HashSet<IMatchRoleID>();
+            this.involvedOpponentPositions = new ArrayList<IMatchRoleID>();
         } else {
             this.involvedOpponentPositions.clear();
         }
@@ -367,7 +368,7 @@ public class SpecialEventsPrediction {
 
     public void addInvolvedOpponentPosition(MatchRoleID mid) {
         if (this.involvedOpponentPositions == null) {
-            this.involvedOpponentPositions = new HashSet<IMatchRoleID>();
+            this.involvedOpponentPositions = new ArrayList<IMatchRoleID>();
         }
         this.involvedOpponentPositions.add(mid);
     }

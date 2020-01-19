@@ -191,6 +191,10 @@ public class CalcVariables {
 		this.setPieces.skillValue = setPieces;
 		this.setPieces.priority = 1;
 	}
+
+	public double getStamina(){
+		return stamina;
+	}
 	
 	public class Skill {
 		Skill(int skillType) {

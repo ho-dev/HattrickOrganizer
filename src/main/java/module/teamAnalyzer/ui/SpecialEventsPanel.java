@@ -11,10 +11,8 @@ import module.teamAnalyzer.vo.TeamLineup;
 import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Vector;
 
 
 public class SpecialEventsPanel extends JPanel {
@@ -67,9 +65,9 @@ public class SpecialEventsPanel extends JPanel {
         table.setModel(tableModel);
 
         List<SpecialEventsPrediction> teamEvents = specialEventsPredictionManager.getTeamEvents();
-        HashSet<IMatchRoleID> involvedPositions;
+        ArrayList<IMatchRoleID> involvedPositions;
         for ( SpecialEventsPrediction se : teamEvents){
-            HashSet<Player> involved = new HashSet<Player>();
+            ArrayList<Player> involved = new ArrayList<Player>();
             involvedPositions = se.getInvolvedPositions();
             if ( involvedPositions != null) {
                 for (IMatchRoleID id : involvedPositions) {
@@ -98,7 +96,7 @@ public class SpecialEventsPanel extends JPanel {
 
         List<SpecialEventsPrediction> opponentEvents = specialEventsPredictionManager.getOpponentEvents();
         for ( SpecialEventsPrediction se : opponentEvents){
-            HashSet<Player> involved = new HashSet<Player>();
+            ArrayList<Player> involved = new ArrayList<Player>();
 
             involvedPositions = se.getInvolvedPositions();
             if ( involvedPositions != null) {
@@ -131,9 +129,9 @@ public class SpecialEventsPanel extends JPanel {
         this.resultLabel.setText(String.format("Result: %.2f : %.2f", scores, opponentScores));
     }
 
-    private Vector<Object> getRow(String kind, Player player, Player opponentPlayer, HashSet<Player> involved, double probability, Double scores, Double scoresOpponent) {
+    private Vector<Object> getRow(String kind, Player player, Player opponentPlayer, ArrayList<Player> involved, double probability, Double scores, Double scoresOpponent) {
 
-        Vector<String> involvedPlayerNames = new Vector<>();
+        ArrayList<String> involvedPlayerNames = new ArrayList<>();
         for ( Player p : involved){
             if ( p == null){
                 continue;

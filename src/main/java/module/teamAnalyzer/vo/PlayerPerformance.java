@@ -2,6 +2,7 @@ package module.teamAnalyzer.vo;
 
 import core.model.match.MatchLineupPlayer;
 import core.model.player.MatchRoleID;
+import module.teamAnalyzer.manager.PlayerDataManager;
 
 
 /**
@@ -79,6 +80,16 @@ public class PlayerPerformance {
         return status;
     }
 
+    public String getStatusAsText() {
+        switch (status){
+            default:
+            case PlayerDataManager.UNKNOWN: return "Unknown";
+            case PlayerDataManager.AVAILABLE: return "Available";
+            case PlayerDataManager.INJURED: return "Injured";
+            case PlayerDataManager.SUSPENDED: return "Suspended";
+            case PlayerDataManager.SOLD: return "Sold";
+        }
+    }
     public byte getTaktik() {
         return mlp.getTaktik();
     }

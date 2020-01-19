@@ -14,6 +14,7 @@ public interface ISpecialEventPredictionAnalyzer {
         QUICK_SCORES,
         PNF,
         PDIM,
+        STAMINA,
         TECHNICAL_HEAD,
         UNPREDICTABLE,              // special action
         UNPREDICTABLE_LONGPASS,

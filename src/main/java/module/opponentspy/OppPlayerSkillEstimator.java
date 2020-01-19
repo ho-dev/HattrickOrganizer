@@ -53,7 +53,6 @@ public class OppPlayerSkillEstimator {
         return createPlayer(null, role, calcPlayer);
     }
     
-    
     private OpponentPlayer createPlayer(OpponentPlayer player, int role, CalcVariables calcPlayer) { 
 		
     	if (player == null)
@@ -75,6 +74,7 @@ public class OppPlayerSkillEstimator {
     	player.setSubskill4Pos(PlayerSkill.SCORING, getSubskillFromSkill(calcPlayer.getScoring()));
     	player.setStandards ((int)Math.floor(calcPlayer.getSetPieces()));
     	player.setSubskill4Pos(PlayerSkill.SET_PIECES, getSubskillFromSkill(calcPlayer.getSetPieces()));
+    	player.setKondition((int) Math.floor(calcPlayer.getStamina()));
     	
     	return player;
     }

@@ -190,6 +190,7 @@ public class SpecialEventsPredictionManager {
         analyzers.add(new QuickEventPredictionAnalyzer());
         analyzers.add(new TechnicalEventPredictionAnalyzer());
         analyzers.add(new CornerEventPredictionAnalyzer());
+        analyzers.add(new StaminaEventPredictionAnalyzer());
     }
 
     public SpecialEventsPredictionManager() {
@@ -223,6 +224,9 @@ public class SpecialEventsPredictionManager {
     }
 
     public void setOpponentLineup(MatchDetail opponentMatch) {
+
+        HOLogger.instance().debug(getClass(), opponentMatch.getMatchDetail().getMatchDate().toString());
+
         this.opponentLineup = new Lineup();
         this.opponentLineup.setKicker(opponentMatch.getSetPiecesTaker());
         for (PlayerPerformance playerPerformance : opponentMatch.getPerformances()) {
@@ -252,12 +256,13 @@ public class SpecialEventsPredictionManager {
                     player.setPlayerSpecialty(spec);
 
                     String pInfo = String.format(
-                            "Name=%s, Age=%d, TSI=%d, Wage=%d, Form=%d, Experience=%d, GK=%d, DEF=%d, WI=%d, PM=%d , PS=%d, SC=%d, SP=%d",
+                            "Name=%s, Age=%d, TSI=%d, Wage=%d, Form=%d, Stamina=%d, Experience=%d, GK=%d, DEF=%d, WI=%d, PM=%d , PS=%d, SC=%d, SP=%d, Status=%s",
                             player.getName(),
                             player.getAlter(),
                             player.getTSI(),
                             player.getGehalt(),
                             player.getForm(),
+                            player.getKondition(),
                             player.getErfahrung(),
                             player.getGKskill(),
                             player.getDEFskill(),
@@ -265,7 +270,8 @@ public class SpecialEventsPredictionManager {
                             player.getPMskill(),
                             player.getPSskill(),
                             player.getSCskill(),
-                            player.getSPskill()
+                            player.getSPskill(),
+                            playerPerformance.getStatusAsText()
                     );
                     HOLogger.instance().debug(getClass(), pInfo);
 

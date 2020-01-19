@@ -6,11 +6,6 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Vector;
-
-import static java.lang.Math.min;
 
 public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAnalyzer {
 
@@ -82,7 +77,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
             boolean useQuick2ForPassCalculation
     ) {
         double goalProbabilityFactor = 0;   // used if block100Percent player is a quick one
-        HashSet<IMatchRoleID> involvedOpponents = new HashSet<>();
+        ArrayList<IMatchRoleID> involvedOpponents = new ArrayList<>();
         Player p = analyse.getOpponentPlayerByPosition(block100PercentIfQuick);
         if (p == null || !p.hasSpeciality(Speciality.QUICK)) {
             goalProbabilityFactor = 1;
@@ -140,7 +135,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
         getQuickPassEvent( position, IMatchRoleID.leftForward, opponentDefenceSkill, goalProbabilityFactor, involvedOpponents);
     }
 
-    private void getQuickPassEvent(MatchRoleID position, int passReceiver, double opponentDefenceSkill, double goalProbabilityFactor, HashSet<IMatchRoleID> involvedOpponents)
+    private void getQuickPassEvent(MatchRoleID position, int passReceiver, double opponentDefenceSkill, double goalProbabilityFactor, ArrayList<IMatchRoleID> involvedOpponents)
     {
         if ( passReceiver == position.getId()) return;
         Player scorer = analyse.getPlayerByPosition(passReceiver);
@@ -151,8 +146,8 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
                 position,
                 SpecialEventType.QUICK_PASS,
-                1, 20, -10,
-                min(20, p.getPSskill()) - min(20, opponentDefenceSkill));
+                .5, 10, -10,
+                p.getPSskill() - opponentDefenceSkill);
         if ( se != null){
             se.setInvolvedOpponentPositions(involvedOpponents);
             se.addInvolvedPosition(analyse.getPosition(passReceiver));
@@ -161,7 +156,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
         }
     }
 
-    private void getQuickScoresEvent( MatchRoleID position, int pos, double goalProbabilityFactor, HashSet<IMatchRoleID> involvedOpponents) {
+    private void getQuickScoresEvent(MatchRoleID position, int pos, double goalProbabilityFactor, ArrayList<IMatchRoleID> involvedOpponents) {
         Player opp = analyse.getOpponentPlayerByPosition(pos);
         if (opp == null) return;
         Player p = analyse.getPlayer(position.getSpielerId());
