@@ -1,6 +1,6 @@
 //============ plugins and external jar dependencies ===================================================================
 plugins {
-    id "edu.sc.seis.macAppBundle" version "2.2.3"
+    id "edu.sc.seis.macAppBundle" version "2.3.0"
     id "nebula.ospackage" version "5.0.4"
     id 'de.jansauer.poeditor' version '1.0.0'
     id "org.kordamp.markdown.convert" version "1.2.0"
@@ -44,7 +44,7 @@ dependencies {
 def major = '3'
 def minor = '0'
 def development_stage = '0'
-def releaseArtefacts = false
+def releaseArtefacts = true
 
 //====================================================================================================================
 
@@ -64,7 +64,7 @@ ext {
     nsis_confPath = "${projectDir}\\buildResources\\Win\\nsis"
     nsis_scriptName = "${nsis_confPath}\\makeWinInstaller.nsi"
     target_dir = "${buildDir}\\artefacts"
-    osx_app_dir_sourcedir = "${projectDir}\\buildResources\\Mac"
+    osx_app_dir_sourcedir = "${projectDir}/buildResources/Mac"
     python_script = "${projectDir}\\buildResources\\Generic\\generate_hash.py"
 }
 
@@ -164,11 +164,11 @@ distributions {
 // Configure macAppBundle task =======================
 macAppBundle {
     mainClassName = "HOLauncher"
-    icon = "${project.ext.osx_app_dir_sourcedir}\\HO.icns"
+    icon = "${project.ext.osx_app_dir_sourcedir}/HO.icns"
     bundleJRE = false // true #issue-198
     javaProperties.put("apple.laf.useScreenMenuBar", "true")
     javaProperties.put("apple.awt.showGrowBox", "true")
-    backgroundImage = "${project.ext.osx_app_dir_sourcedir}\\Back.png"
+    backgroundImage = "${project.ext.osx_app_dir_sourcedir}/Back.png"
 }
 
 // Configure ospackage and buildDeb tasks ============
@@ -522,13 +522,13 @@ task AddResourcesAndZipMacApp {
 
         println("zipping MacApp distribution")
         task(ZipMacAppDistribution, type: Tar) {
-            archiveName = "${project.macAppBundle.appName}_${project.version}_macOS.zip"
-            destinationDir = file("${project.ext.target_dir}")
+            archiveFileName = "${project.macAppBundle.appName}_${project.version}_macOS.zip"
+            destinationDirectory = file("${project.ext.target_dir}")
             from ("${buildDir}\\macApp") {exclude("**\\JavaAppLauncher")}
             from ("${buildDir}\\macApp") {
                 include("**\\JavaAppLauncher")
                 fileMode=0755}
-        }.execute()
+        }
 
     }
 
@@ -567,10 +567,14 @@ task resetDB(){
     group 'tool'
     description 'copy the database from existing install into project'
 
-    doFirst {println("Reseting DB: copying DB from `D:\\Program Files\\HattrickOrganizerDev` into  ${projectDir}")}
+    if (! project.hasProperty('resetDir')) {
+        ext.resetDir = "D:\\Program Files\\HattrickOrganizerDev\\db"
+    }
+
+    doFirst {println("Reseting DB: copying DB from `${resetDir}` into  ${projectDir}")}
 
     copy {
-        from "D:\\Program Files\\HattrickOrganizerDev\\db"
+        from resetDir
         into "${projectDir}\\db"
     }
 

@@ -107,13 +107,13 @@ public class SpielHighlightPanel extends LazyImagePanel {
 			ImageIcon icon;
 			Boolean bEventHighlighted;
 
-			int myScore = 0;
-			int oppScore = 0;
-			int myScore_ht = 0;
-			int oppScore_ht = 0;
+			int homeScore = 0;
+			int guestScore = 0;
+			int homeScore_ht = 0;
+			int guestScore_ht = 0;
 
 			String scoreText;
-			boolean iScored;
+			boolean homeAction = false;
 
 			for (int i = 0; i < matchHighlights.size(); i++) {
 				scoreText = "";
@@ -129,14 +129,15 @@ public class SpielHighlightPanel extends LazyImagePanel {
 					bEventHighlighted = false;
 					if (highlight.getMatchEventID() == MatchEvent.MatchEventID.SECOND_HALF_STARTED)
 					{
-						myScore_ht = myScore;
-						oppScore_ht = oppScore;
+						homeScore_ht = homeScore;
+						guestScore_ht = guestScore;
 					}
 				}
 
 				// Displaying the event
 				if (bEventHighlighted) {
 
+					homeAction = (highlight.getTeamID() == info.getHeimID());
 					icon = highlight.getIcon();
 
 					String spielername = highlight.getSpielerName();
@@ -146,20 +147,13 @@ public class SpielHighlightPanel extends LazyImagePanel {
 					spielername += (" (" + highlight.getMinute() + "')");
 
 					if (highlight.isGoalEvent()) {
-						iScored = (highlight.getTeamID() == teamid);
-
-						if (iScored && info.isHomeMatch()) {
-							myScore++;
-							scoreText = "<html><b>" + myScore + "</b> - " + oppScore + "</html>";
-						} else if (iScored && (!info.isHomeMatch())) {
-							myScore++;
-							scoreText = "<html>" + oppScore + " - " + "<b>" + myScore + "</b></html>";
-						} else if ((!iScored) && info.isHomeMatch()) {
-							oppScore++;
-							scoreText = "<html>" + myScore + " - " + "<b>" + oppScore + "</b></html>";
-						} else {
-							oppScore++;
-							scoreText = "<html><b>" + oppScore + "</b> - " + myScore + "</html>";
+						if (homeAction) {
+							homeScore++;
+							scoreText = "<html><b>" + homeScore + "</b> - " + guestScore + "</html>";
+						}
+						else {
+							guestScore++;
+							scoreText = "<html>" + homeScore + " - <b>" + guestScore + "</b></html>";
 						}
 					}
 
@@ -192,8 +186,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 					highlightLabels.add(resultlabel);
 
 					// Match Events Label
-
-					if (highlight.getTeamID() == info.getHeimID()) {
+					if (homeAction) {
 						playerlabel.setBorder(new CompoundBorder(
 								BorderFactory.createMatteBorder(0, 5, 0, 0, Color.decode("#6ECDEA")),
 								BorderFactory.createEmptyBorder(0, 5, 0, 0)));
@@ -256,14 +249,8 @@ public class SpielHighlightPanel extends LazyImagePanel {
 						Color.WHITE));
 			}
 
-			if (info.isHomeMatch()) {
-				heimTeamToreLabel.setText(myScore + " (" + myScore_ht + ") ");
-				gastTeamToreLabel.setText(oppScore + " (" + oppScore_ht + ") ");
-			}
-			else{
-				heimTeamToreLabel.setText(oppScore + " (" + oppScore_ht + ") ");
-				gastTeamToreLabel.setText(myScore + " (" + myScore_ht + ") ");
-			}
+			heimTeamToreLabel.setText(homeScore + " (" + homeScore_ht + ") ");
+			gastTeamToreLabel.setText(guestScore + " (" + guestScore_ht + ") ");
 
 		}
 	}

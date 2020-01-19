@@ -176,10 +176,12 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(ME_170, "gui/bilder/match_events/me_170.png");
 		put(ME_184, "gui/bilder/match_events/me_184.png");
 		put(ME_185, "gui/bilder/match_events/me_185.png");
-		put(ME_206, "gui/bilder/match_events/me_206.png");
+		put(ME_NO_GOAL_UNPREDICTABLE, "gui/bilder/match_events/me_no_goal_unpredictable.png");
 		put(ME_207, "gui/bilder/match_events/me_207.png");
 		put(ME_237, "gui/bilder/match_events/me_237.png");
 		put(ME_280, "gui/bilder/match_events/me_280.png");
+		put(ME_285, "gui/bilder/match_events/me_285.png");
+		put(ME_286, "gui/bilder/match_events/me_286.png");
 
 		put(STAR, "gui/bilder/star.gif");
 		put(STAR_GRAY, "gui/bilder/star_grey.png");
