@@ -110,20 +110,20 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		final ArrayList<MatchKurzInfo> liste = new ArrayList<MatchKurzInfo>();
 
 		// Ohne Matchid nur AlleSpiele möglich!
-		if ((teamId < 0) && (matchtyp != SpielePanel.ALLE_SPIELE)) {
+		if ((teamId < 0) && (matchtyp != SpielePanel.ALL_MATCHS)) {
 			return new MatchKurzInfo[0];
 		}
 
 		try {
 			sql.append("SELECT * FROM ").append(getTableName());
 
-			if ((teamId > -1) && (matchtyp != SpielePanel.ALLE_SPIELE)
-					&& (matchtyp != SpielePanel.NUR_FREMDE_SPIELE)) {
+			if ((teamId > -1) && (matchtyp != SpielePanel.ALL_MATCHS)
+					&& (matchtyp != SpielePanel.OTHER_TEAM_MATCHS)) {
 				sql.append(" WHERE ( GastID = " + teamId + " OR HeimID = "
 						+ teamId + " )");
 			}
 
-			if ((teamId > -1) && (matchtyp == SpielePanel.NUR_FREMDE_SPIELE)) {
+			if ((teamId > -1) && (matchtyp == SpielePanel.OTHER_TEAM_MATCHS)) {
 				sql.append(" WHERE ( GastID != " + teamId + " AND HeimID != "
 						+ teamId + " )");
 			}
