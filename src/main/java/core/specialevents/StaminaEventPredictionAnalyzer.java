@@ -4,6 +4,17 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 
+/*
+ Tired Defender Mistake
+
+ During the second half only, if one of your defenders have far lower stamina than an opponent player, he can take the
+ chance to pass you and go 1-1 with the goalkeeper.
+
+ Example: If the opponent player is Forward with 13 scoring against your keeper with 15 goalkeeping, the chance to score
+ is 41% (57% if same player is a Winger instead)
+
+ */
+
 public class StaminaEventPredictionAnalyzer implements ISpecialEventPredictionAnalyzer {
     private SpecialEventsPredictionManager.Analyse analyse;
 
