@@ -5,6 +5,7 @@ import core.constants.TeamConfidence;
 import core.constants.TeamSpirit;
 import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
+import core.db.User;
 import core.gui.Refreshable;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.RatingTableEntry;
@@ -911,30 +912,30 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	// so we need addAllStyleOfPlayItems() after every updateStyleOfPlayBox()
 	private void updateStyleOfPlayBox(int oldValue)
 	{
-		// remove all combo box items and add new ones.
-		
-		List<Integer> legalValues = getValidStyleOfPlayValues();
-		
-		m_jcbStyleOfPlay.removeAllItems();
-		
-		for (int value : legalValues)
-		{
-			CBItem cbItem;
-			
-			if (value == 0) {
-				cbItem = new CBItem(neutral_sop, value);
-			} else if (value > 0) {
-				cbItem = new CBItem((value * 10) + "% " + offensive_sop, value);
-			} else {
-				cbItem = new CBItem((Math.abs(value) * 10) + "% " + defensive_sop, value);
+		if (!User.getCurrentUser().isNtTeam()) {
+			// remove all combo box items and add new ones.
+			List<Integer> legalValues = getValidStyleOfPlayValues();
+
+			m_jcbStyleOfPlay.removeAllItems();
+
+			for (int value : legalValues) {
+				CBItem cbItem;
+
+				if (value == 0) {
+					cbItem = new CBItem(neutral_sop, value);
+				} else if (value > 0) {
+					cbItem = new CBItem((value * 10) + "% " + offensive_sop, value);
+				} else {
+					cbItem = new CBItem((Math.abs(value) * 10) + "% " + defensive_sop, value);
+				}
+				m_jcbStyleOfPlay.addItem(cbItem);
+
 			}
-			m_jcbStyleOfPlay.addItem(cbItem);
-			
+			// Set trainer default value
+			setStyleOfPlay(getDefaultTrainerStyleOfPlay());
+			// Attempt to set the old value. If it is not possible it will do nothing.
+			setStyleOfPlay(oldValue);
 		}
-		// Set trainer default value
-		setStyleOfPlay(getDefaultTrainerStyleOfPlay());
-		// Attempt to set the old value. If it is not possible it will do nothing.
-		setStyleOfPlay(oldValue);
 	}
 	// this is needed so that you can load every style of play value from stored lineups
 	public void addAllStyleofPlayItems() {
