@@ -31,7 +31,7 @@ public class MatchesHighlightsTable extends JTable {
     }
     
     private Object[][] getValues(int matchtyp){
-    	if(matchtyp == SpielePanel.ALLE_SPIELE || matchtyp == SpielePanel.NUR_FREMDE_SPIELE){
+    	if(matchtyp == SpielePanel.ALL_MATCHS || matchtyp == SpielePanel.OTHER_TEAM_MATCHS){
          	return new Object[0][0];
          }
     	MatchesHighlightsStat[] rows = DBManager.instance().getChancesStat(true,matchtyp);

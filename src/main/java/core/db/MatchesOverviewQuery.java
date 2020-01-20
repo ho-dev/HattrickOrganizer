@@ -1,12 +1,7 @@
 package core.db;
 
 import core.model.HOVerwaltung;
-import core.model.match.IMatchDetails;
-import core.model.match.MatchType;
-import core.model.match.Matchdetails;
-import core.model.match.MatchesHighlightsStat;
-import core.model.match.MatchesOverviewRow;
-import core.model.match.Weather;
+import core.model.match.*;
 import core.util.HOLogger;
 import module.matches.SpielePanel;
 import module.matches.statistics.MatchesOverviewCommonPanel;
@@ -14,6 +9,9 @@ import module.matches.statistics.MatchesOverviewCommonPanel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+
+import static core.model.match.MatchEvent.isGoalEvent;
 
 
 class MatchesOverviewQuery  {
@@ -105,6 +103,16 @@ class MatchesOverviewQuery  {
 
 	}
 
+
+	private static String MatchEventsIDListToString(List<MatchEvent.MatchEventID> matchEvents){
+		String res = "";
+		for (MatchEvent.MatchEventID meID : matchEvents)
+		{
+			res += meID.getValue() + ", ";
+		}
+		return res.substring(0, res.length() - 2);
+	}
+
 	/**
 	 * SELECT TYP, COUNT(*)  FROM  MATCHHIGHLIGHTS join MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID
 WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING TYP in (1,2) ORDER BY TYP
@@ -115,19 +123,19 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 	public static MatchesHighlightsStat[] getChancesStat(boolean ownTeam, int matchtype ){
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
-		MatchesHighlightsStat[] rows = new MatchesHighlightsStat[12];
-		rows[0] = new MatchesHighlightsStat("highlight_penalty", "4,14,24,34,54,64,74,84");
-		rows[1] = new MatchesHighlightsStat("highlight_freekick", "0,10,20,30,50,60,70,80");
-		rows[2] = new MatchesHighlightsStat("highlight_links", "2,12,22,32,52,62,72,82");
-		rows[3] = new MatchesHighlightsStat("highlight_middle", "1,11,21,31,51,61,71,81");
-		rows[4] = new MatchesHighlightsStat("highlight_rechts", "3,13,23,33,53,63,73,83");
-		rows[5] = new MatchesHighlightsStat("IFK", "85,86");
-		rows[6] = new MatchesHighlightsStat("ls.match.event.longshot", "87");
-		rows[7] = new MatchesHighlightsStat("highlight_counter", "40,41,42,43");
-		rows[8] = new MatchesHighlightsStat("highlight_special","5,6,7,8,9,15,16,17,18,19,25,35,36,37,38,39");
-		rows[9] = new MatchesHighlightsStat("highlight_yellowcard","5", "10,11");
-		rows[10] = new MatchesHighlightsStat("highlight_redcard","5", "12,13,14");
-		rows[11] = new MatchesHighlightsStat("ls.player.injurystatus.injured","0","90,91,92,93,94,95,96,97");
+		MatchesHighlightsStat[] rows = new MatchesHighlightsStat[9];
+		rows[0] = new MatchesHighlightsStat("highlight_penalty", MatchEventsIDListToString(MatchEvent.penaltyME));
+		rows[1] = new MatchesHighlightsStat("highlight_freekick",  MatchEventsIDListToString(MatchEvent.freekickME));
+		rows[2] = new MatchesHighlightsStat("highlight_links", MatchEventsIDListToString(MatchEvent.leftAttackME));
+		rows[3] = new MatchesHighlightsStat("highlight_middle", MatchEventsIDListToString(MatchEvent.CentralAttackME));
+		rows[4] = new MatchesHighlightsStat("highlight_rechts", MatchEventsIDListToString(MatchEvent.RightAttackME));
+		rows[5] = new MatchesHighlightsStat("IFK", MatchEventsIDListToString(MatchEvent.IFKME));
+		rows[6] = new MatchesHighlightsStat("ls.match.event.longshot", MatchEventsIDListToString(MatchEvent.LSME));
+		rows[7] = new MatchesHighlightsStat("highlight_counter", MatchEventsIDListToString(MatchEvent.CounterAttackME));
+		rows[8] = new MatchesHighlightsStat("highlight_special", MatchEventsIDListToString(MatchEvent.specialME));
+//		rows[9] = new MatchesHighlightsStat("highlight_yellowcard", MatchEventsIDListToString(MatchEvent.yellowCardME));
+//		rows[10] = new MatchesHighlightsStat("highlight_redcard", MatchEventsIDListToString(MatchEvent.redCardME));
+//		rows[11] = new MatchesHighlightsStat("ls.player.injurystatus.injured","0","90,91,92,93,94,95,96,97");
 
 		for (int i = 0; i < rows.length; i++) {
 			if(!rows[i].isTitle())
@@ -139,29 +147,30 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 
 	private static void fillMatchesOverviewChanceRow(boolean ownTeam, int teamId, MatchesHighlightsStat row, int matchtype){
 		StringBuilder sql = new StringBuilder(200);
-		ResultSet rs = null;
-		sql.append("SELECT TYP, COUNT(*) AS C FROM  MATCHHIGHLIGHTS join MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID ");
-		sql.append("WHERE TEAMID ");
-		if(!ownTeam)
-			sql.append("!");
-		sql.append("=").append(teamId).append(" AND SUBTYP IN(");
+		ResultSet rs;
+		int iMatchEventID;
+		int iConverted= -1;
+		int iMissed= -1;
+		sql.append("SELECT MATCH_EVENT_ID, COUNT(*) AS C FROM MATCHHIGHLIGHTS JOIN MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID WHERE TEAMID");
+		if(!ownTeam) {sql.append("!");}
+		sql.append("=").append(teamId).append(" AND MATCH_EVENT_ID IN(");
 		sql.append(row.getSubtyps()).append(")");
 		sql.append(getMatchTypWhereClause(matchtype));
-		sql.append(" GROUP BY TYP HAVING TYP in (");
-		sql.append(row.getTypes());
-		sql.append(") ORDER BY TYP");
+		sql.append(" GROUP BY MATCH_EVENT_ID");
 		rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
 		try {
-			int typ = 0;
-			while(rs.next()){
-				typ = rs.getInt("TYP");
-				if(typ == 1 )
-					row.setGoals(rs.getInt("C"));
-				if(typ == 2 || typ == 5 || typ == 0)
-					row.setNoGoals(rs.getInt("C"));
-			}
+			iConverted = 0;
+			iMissed = 0;
+			while(rs.next()) {
+				iMatchEventID = rs.getInt("MATCH_EVENT_ID");
+				if (isGoalEvent(iMatchEventID)) {iConverted += rs.getInt("C");}
+				else {iMissed += rs.getInt("C"); }
+			         }
 			rs.close();
-		} catch (SQLException e) {
+			row.setGoals(iConverted);
+			row.setNoGoals(iMissed);
+		}
+			catch (SQLException e) {
 			HOLogger.instance().log(MatchesOverviewQuery.class, e);
 		}
 	}

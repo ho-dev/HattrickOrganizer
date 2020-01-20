@@ -5,7 +5,9 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class MatchEvent {
 
@@ -426,20 +428,9 @@ public class MatchEvent {
         return ( isYelloCard() || isRedCard());
     }
 
-    public boolean isYelloCard()
-    {
-        return ( (m_iMatchEventID == 510) || (m_iMatchEventID == 511));
-    }
+    public boolean isGoalEvent() { return isGoalEvent(m_iMatchEventID); }
 
-    public boolean isRedCard()
-    {
-        return ( (m_iMatchEventID == 512) || (m_iMatchEventID == 513) || (m_iMatchEventID == 514));
-    }
-
-    public boolean isGoalEvent()
-    {
-        return ( (this.m_iMatchEventID>=100) && (this.m_iMatchEventID<200) );
-    }
+    public static boolean isGoalEvent(int iMatchEventID) {return ( (iMatchEventID>=100) && (iMatchEventID<200) );}
 
     public boolean isNonGoalEvent()
     {
@@ -550,14 +541,6 @@ public class MatchEvent {
         return m_sGehilfeName;
     }
 
-    /**
-     * Setter for property m_iHeimTore.
-     *
-     * @param m_iHeimTore New value of property m_iHeimTore.
-     */
-    public final void setHeimTore(int m_iHeimTore) {
-        this.m_iHeimTore = m_iHeimTore;
-    }
 
     /**
      * Getter for property m_iHeimTore.
@@ -677,41 +660,205 @@ public class MatchEvent {
     }
 
 
+    public boolean isYelloCard() {return yellowCardME.contains(this.m_matchEventID) ; }
+
+    public static List<MatchEventID> yellowCardME = Arrays.asList(
+            MatchEventID.YELLOW_CARD_NASTY_PLAY,                // #510
+            MatchEventID.YELLOW_CARD_CHEATING)  ;              // #511
+
+    public boolean isRedCard() {return redCardME.contains(this.m_matchEventID) ; }
+
+    public static List<MatchEventID> redCardME = Arrays.asList(
+            MatchEventID.RED_CARD_2ND_WARNING_NASTY_PLAY,          // #512
+            MatchEventID.RED_CARD_2ND_WARNING_CHEATING,            // #513
+            MatchEventID.RED_CARD_WITHOUT_WARNING)  ;              // #514
+
+
+
+    public boolean isSpecialEvent() {return specialME.contains(this.m_matchEventID) ; }
+
+    public static List<MatchEventID> specialME = Arrays.asList(
+            MatchEventID.SE_GOAL_UNPREDICTABLE_LONG_PASS,                                         // #105
+            MatchEventID.SE_GOAL_UNPREDICTABLE_SCORES_ON_HIS_OWN,                                 // #106
+            MatchEventID.SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION,                                    // #108
+            MatchEventID.SE_GOAL_UNPREDICTABLE_MISTAKE,                                           // #109
+            MatchEventID.SE_QUICK_SCORES_AFTER_RUSH,                                              // #115
+            MatchEventID.SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES,                              // #116
+            MatchEventID.SE_TIRED_DEFENDER_MISTAKE_STRIKER_SCORES,                                // #117
+            MatchEventID.SE_GOAL_CORNER_TO_ANYONE,                                                // #118
+            MatchEventID.SE_GOAL_CORNER_HEAD_SPECIALIST,                                          // #119
+            MatchEventID.SE_GOAL_UNPREDICTABLE_OWN_GOAL,                                          // #125
+            MatchEventID.SE_EXPERIENCED_FORWARD_SCORES,                                           // #135
+            MatchEventID.SE_INEXPERIENCED_DEFENDER_CAUSES_GOAL,                                   // #136
+            MatchEventID.SE_WINGER_TO_HEAD_SPEC_SCORES,                                           // #137
+            MatchEventID.SE_WINGER_TO_ANYONE_SCORES,                                              // #138
+            MatchEventID.SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER,                                    // #139
+            MatchEventID.SE_GOAL_POWERFUL_NORMAL_FORWARD_GENERATES_EXTRA_CHANCE,                  // #190
+            MatchEventID.SE_NO_GOAL_UNPREDICTABLE_LONG_PASS,                                      // #205
+            MatchEventID.SE_NO_GOAL_UNPREDICTABLE_ALMOST_SCORES,                                  // #206
+            MatchEventID.SE_NO_GOAL_UNPREDICTABLE_SPECIAL_ACTION,                                 // #208
+            MatchEventID.SE_NO_GOAL_UNPREDICTABLE_MISTAKE,                                        // #209
+            MatchEventID.SE_SPEEDY_MISSES_AFTER_RUSH,                                             // #215
+            MatchEventID.SE_QUICK_RUSHES_PASSES_BUT_RECEIVER_FAILS,                               // #216
+            MatchEventID.SE_TIRED_DEFENDER_MISTAKE_BUT_NO_GOAL,                                   // #217
+            MatchEventID.SE_NO_GOAL_CORNER_TO_ANYONE,                                             // #218
+            MatchEventID.SE_NO_GOAL_CORNER_HEAD_SPECIALIST,                                       // #219
+            MatchEventID.SE_NO_GOAL_UNPREDICTABLE_OWN_GOAL_ALMOST,                                // #225
+            MatchEventID.SE_EXPERIENCED_FORWARD_FAILS_TO_SCORE,                                   // #235
+            MatchEventID.SE_INEXPERIENCED_DEFENDER_ALMOST_CAUSES_GOAL,                            // #236
+            MatchEventID.SE_WINGER_TO_SOMEONE_NO_GOAL,                                            // #237
+            MatchEventID.SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER_NO_GOAL,                            // #239
+            MatchEventID.SE_QUICK_RUSHES_STOPPED_BY_QUICK_DEFENDER,                               // #289
+            MatchEventID.SE_NO_GOAL_POWERFUL_NORMAL_FORWARD_GENERATES_EXTRA_CHANCE)  ;            // #290
+
+    public boolean isIFK() {return IFKME.contains(this.m_matchEventID) ; }
+
+    public static List<MatchEventID> IFKME = Arrays.asList(
+            MatchEventID.GOAL_INDIRECT_FREE_KICK,                // #185
+            MatchEventID.NO_GOAL_INDIRECT_FREE_KICK)  ;          // #285
+
+
+
+    public boolean isLS() {return LSME.contains(this.m_matchEventID) ; }
+
+    public static List<MatchEventID> LSME = Arrays.asList(
+            MatchEventID.GOAL_LONG_SHOT_NO_TACTIC,                // #107
+            MatchEventID.GOAL_LONG_SHOT,                          // #187
+            MatchEventID.NO_GOAL_LONG_SHOT_NO_TACTIC,            // #207
+            MatchEventID.NO_GOAL_LONG_SHOT_NO_TACTIC) ;          // #287)
+
     /**
      * Check, if it is a Counter Attack event
      */
-    public boolean isCounterAttack() {return this.m_matchEventID.name().startsWith("COUNTER_ATTACK_");}
+    public boolean isCounterAttack() {return CounterAttackME.contains(this.m_matchEventID) ; }
+
+    public static List<MatchEventID> CounterAttackME = Arrays.asList(
+            MatchEventID.COUNTER_ATTACK_GOAL_FREE_KICK,                 // #140
+            MatchEventID.COUNTER_ATTACK_GOAL_MIDDLE,                    // #141
+            MatchEventID.COUNTER_ATTACK_GOAL_LEFT,                      // #142
+            MatchEventID.COUNTER_ATTACK_GOAL_RIGHT,                     // #143
+            MatchEventID.COUNTER_ATTACK_GOAL_INDIRECT_FREE_KICK,        // #186
+            MatchEventID.COUNTER_ATTACK_NO_GOAL_FREE_KICK,              // #240
+            MatchEventID.COUNTER_ATTACK_NO_GOAL_MIDDLE,                 // #241
+            MatchEventID.COUNTER_ATTACK_NO_GOAL_LEFT,                   // #242
+            MatchEventID.COUNTER_ATTACK_NO_GOAL_RIGHT,                  // #243
+            MatchEventID.COUNTER_ATTACK_NO_GOAL_INDIRECT_FREE_KICK);    // #286
+
+            /**
+             * Check, if it is an attack on Right wing
+             */
+    public boolean isCentralAttack() {return CentralAttackME.contains(this.m_matchEventID) ; }
+
+    public static List<MatchEventID> CentralAttackME = Arrays.asList(
+            MatchEventID.REDUCING_GOAL_HOME_TEAM_MIDDLE,                // #101
+            MatchEventID.EQUALIZER_GOAL_HOME_TEAM_MIDDLE,               // #111
+            MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_MIDDLE,            // #121
+            MatchEventID.INCREASE_GOAL_HOME_TEAM_MIDDLE,                // #131
+            MatchEventID.REDUCING_GOAL_AWAY_TEAM_MIDDLE,                // #151
+            MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_MIDDLE,               // #161
+            MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_MIDDLE,            // #171
+            MatchEventID.INCREASE_GOAL_AWAY_TEAM_MIDDLE,                // #181
+            MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_MIDDLE,             // #201
+            MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_MIDDLE,            // #211
+            MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_MIDDLE,         // #221
+            MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_MIDDLE,             // #231
+            MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_MIDDLE,             // #251
+            MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_MIDDLE,            // #261
+            MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_MIDDLE,         // #271
+            MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_MIDDLE) ;           // #281)
+
+    /**
+     * Check, if it is an attack on Right wing
+     */
+    public boolean isRightAttack() {return RightAttackME.contains(this.m_matchEventID) ; }
+
+    public static List<MatchEventID> RightAttackME = Arrays.asList(
+            MatchEventID.REDUCING_GOAL_HOME_TEAM_RIGHT_WING,                // #103
+            MatchEventID.EQUALIZER_GOAL_HOME_TEAM_RIGHT_WING,               // #113
+            MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_RIGHT_WING,            // #123
+            MatchEventID.INCREASE_GOAL_HOME_TEAM_RIGHT_WING,                // #133
+            MatchEventID.REDUCING_GOAL_AWAY_TEAM_RIGHT_WING,                // #153
+            MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_RIGHT_WING,               // #163
+            MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_RIGHT_WING,            // #173
+            MatchEventID.INCREASE_GOAL_AWAY_TEAM_RIGHT_WING,                // #183
+            MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_RIGHT_WING,             // #203
+            MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_RIGHT_WING,            // #213
+            MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_RIGHT_WING,         // #223
+            MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_RIGHT_WING,             // #233
+            MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_RIGHT_WING,             // #253
+            MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_RIGHT_WING,            // #263
+            MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_RIGHT_WING,         // #273
+            MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_RIGHT_WING) ;           // #283)
+
+
+    /**
+     * Check, if it is an attack on left wing
+     */
+    public boolean isLeftAttack() {return leftAttackME.contains(this.m_matchEventID) ; }
+
+    public static List<MatchEventID> leftAttackME = Arrays.asList(
+            MatchEventID.REDUCING_GOAL_HOME_TEAM_LEFT_WING,                // #102
+            MatchEventID.EQUALIZER_GOAL_HOME_TEAM_LEFT_WING,               // #112
+            MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_LEFT_WING,            // #122
+            MatchEventID.INCREASE_GOAL_HOME_TEAM_LEFT_WING,                // #132
+            MatchEventID.REDUCING_GOAL_AWAY_TEAM_LEFT_WING,                // #152
+            MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_LEFT_WING,               // #162
+            MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_LEFT_WING,            // #172
+            MatchEventID.INCREASE_GOAL_AWAY_TEAM_LEFT_WING,                // #182
+            MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_LEFT_WING,             // #202
+            MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_LEFT_WING,            // #212
+            MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_LEFT_WING,         // #222
+            MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_LEFT_WING,             // #232
+            MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_LEFT_WING,             // #252
+            MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_LEFT_WING,            // #262
+            MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_LEFT_WING,         // #272
+            MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_LEFT_WING) ;           // #282)
 
     /**
      * Check, if it is a free kick event
      */
-    public boolean isFreeKick() {
-        return ( (this.m_matchEventID.name().contains("FREE_KICK")) &&
-                (! this.m_matchEventID.name().startsWith("COUNTER_ATTACK_")));
-    }
+    public boolean isFreeKick() {return freekickME.contains(this.m_matchEventID) ; }
+
+    public static List<MatchEventID> freekickME = Arrays.asList(
+            MatchEventID.REDUCING_GOAL_HOME_TEAM_FREE_KICK,                // #100
+            MatchEventID.EQUALIZER_GOAL_HOME_TEAM_FREE_KICK,               // #110
+            MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_FREE_KICK,            // #120
+            MatchEventID.INCREASE_GOAL_HOME_TEAM_FREE_KICK,                // #130
+            MatchEventID.REDUCING_GOAL_AWAY_TEAM_FREE_KICK,                // #150
+            MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_FREE_KICK,               // #160
+            MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_FREE_KICK,            // #170
+            MatchEventID.INCREASE_GOAL_AWAY_TEAM_FREE_KICK,                // #180
+            MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_FREE_KICK,             // #200
+            MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_FREE_KICK,            // #210
+            MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_FREE_KICK,         // #220
+            MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_FREE_KICK,             // #230
+            MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_FREE_KICK,             // #250
+            MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_FREE_KICK,            // #260
+            MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_FREE_KICK,         // #270
+            MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_FREE_KICK) ;           // #280)
 
     /**
      * Check, if it is a penalty event
      */
-    public boolean isPenalty() {
-        return
-               (this.m_matchEventID ==  MatchEventID.REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL ||       // #104
-               this.m_matchEventID == MatchEventID.EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL ||        // #114
-               this.m_matchEventID == MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL ||     // #124
-               this.m_matchEventID == MatchEventID.INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL ||         // #134
-               this.m_matchEventID == MatchEventID.REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL ||         // #154
-               this.m_matchEventID == MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL ||        // #164
-               this.m_matchEventID == MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL ||     // #174
-               this.m_matchEventID == MatchEventID.INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL ||         // #184
-               this.m_matchEventID ==  MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL ||     // #204
-               this.m_matchEventID == MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL ||     // #214
-               this.m_matchEventID == MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL ||  // #224
-               this.m_matchEventID == MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL ||      // #234
-               this.m_matchEventID == MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL ||      // #254
-               this.m_matchEventID == MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL ||     // #264
-               this.m_matchEventID == MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL ||  // #274
-               this.m_matchEventID == MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL) ;      // #284
-    }
+    public boolean isPenalty() {return penaltyME.contains(this.m_matchEventID) ; }
+
+    public static List<MatchEventID> penaltyME = Arrays.asList(
+                                    MatchEventID.REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,                // #104
+                                    MatchEventID.EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,               // #114
+                                    MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL,            // #124
+                                    MatchEventID.INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,                // #134
+                                    MatchEventID.REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,                // #154
+                                    MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,               // #164
+                                    MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL,            // #174
+                                    MatchEventID.INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,                // #184
+                                    MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,             // #204
+                                    MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,            // #214
+                                    MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL,         // #224
+                                    MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,             // #234
+                                    MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,             // #254
+                                    MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,            // #264
+                                    MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL,         // #274
+                                    MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL) ;           // #284)
 
     /**
      * Check, if it is a long shot event
@@ -802,15 +949,6 @@ public class MatchEvent {
 
         if (me == null) { return null;}
 
-//        ImageIcon icon;
-//
-//        if(this.isSpecialtyWeatherSE()) {
-//            String iconName = MatchEvent.mapMatchEventIcons.getOrDefault(me, HOIconName.UNKOWN);
-//            icon = ThemeManager.getScaledIcon(iconName, 16, 10);
-//        }
-//        else {
-//            icon = ThemeManager.getIcon(MatchEvent.mapMatchEventIcons.getOrDefault(me, HOIconName.UNKOWN));
-//        }
 
         ImageIcon icon;
 
