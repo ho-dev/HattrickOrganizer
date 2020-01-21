@@ -600,7 +600,7 @@ public final class SpielePanel extends LazyImagePanel {
 						+ hov.getLanguageString("SerieAuswaertsNiederlage") + ")", scrollpane1);
 //		pane.addTab(hov.getLanguageString("Statistik") + " (" + hov.getLanguageString("Allgemein")
 //				+ ")", scrollpane2);
-		pane.addTab(hov.getLanguageString("Statistik") + " (" + hov.getLanguageString("Highlights")
+		pane.addTab(hov.getLanguageString("Statistik") + " (" + hov.getLanguageString("Tore")
 				+ ")", scrollpane3);
 		panel.add(pane, BorderLayout.CENTER);
 
