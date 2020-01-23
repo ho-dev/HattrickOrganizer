@@ -75,8 +75,9 @@ public interface HOIconName {
 
 	String REPLACEMENT = "replacement";
 
-	String ME_116 = "me_116";
+	String ME_GOAL_AND_QUICK = "me_goal_and_quick";
 	String ME_118 = "me_118";
+	String ME_GOAL_AND_HEAD_SPEC = "me_goal_and_head_spec";
 	String ME_135 = "me_135";
 	String ME_136 = "me_136";
 	String ME_141 = "me_141";
