@@ -218,7 +218,7 @@ public class MatchEvent {
         put(MatchEventID.HATTRICK_COMMENT, null);      //#46
         put(MatchEventID.NO_TEAM_DOMINATED, null);     //#47
 
-
+        put(MatchEventID.PENALTY_CONTEST_GOAL_BY_TECHNICAL_NO_NERVES, HOIconName.ME_GOAL_AND_TECHNICAL); //#55
         put(MatchEventID.PENALTY_CONTEST_GOAL_NO_NERVES, HOIconName.GOAL); //#56
         put(MatchEventID.PENALTY_CONTEST_GOAL_IN_SPITE_OF_NERVES, HOIconName.GOAL); //#57
         put(MatchEventID.PENALTY_CONTEST_NO_GOAL_BECAUSE_OF_NERVES, HOIconName.MISS); //#58
@@ -412,7 +412,6 @@ public class MatchEvent {
         return ( isBruised() || isInjured());
     }
 
-    // TODO: change this one
     public boolean isBruised()
     {
         return m_eInjuryType == Matchdetails.eInjuryType.BRUISE;
@@ -427,6 +426,16 @@ public class MatchEvent {
     {
         return ( isYelloCard() || isRedCard());
     }
+
+    public boolean isPenaltyContestGoalEvent() {
+        return ( (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_GOAL_BY_TECHNICAL_NO_NERVES) || (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_GOAL_NO_NERVES) ||
+                (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_GOAL_IN_SPITE_OF_NERVES) );
+    }
+
+    public boolean isPenaltyContestNoGoalEvent() {
+        return ( (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_NO_GOAL_BECAUSE_OF_NERVES) || (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_NO_GOAL_IN_SPITE_OF_NO_NERVES));
+    }
+
 
     public boolean isGoalEvent() { return isGoalEvent(m_iMatchEventID); }
 

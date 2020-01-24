@@ -5,6 +5,7 @@ path_to_folder = "D:\\Perso\\Code\\HO\\src\\main\\resources\\gui\\bilder\\match_
 
 combinations = {"missed_penalty.png": (("miss.png", "penalty.png"), "v"),
                 "converted_penalty.png": (("goal.png", "penalty.png"), "v"),
+                "me_goal_and_technical.png": (("goal.png", "speciality-1.png"), "v"),    #55
                 "me_goal_and_quick.png": (("goal.png", "speciality-2.png"), "v"),    #115, 116
                 "me_118.png": (("goal.png", "corner.png"), "v"),
                 "me_goal_and_head_spec.png": (("goal.png", "speciality-5.png"), "v"),   #119
