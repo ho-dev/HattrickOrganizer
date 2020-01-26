@@ -29,20 +29,20 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 	}
 
 	private void initIcons() {
-		put(MATCHICONS[0], "gui/bilder/league_match_icon.png");
-		put(MATCHICONS[1], "gui/bilder/qualification_match_icon.png");
-		put(MATCHICONS[2], "gui/bilder/friendly_match_icon.png");
-		put(MATCHICONS[3], "gui/bilder/national_cup_match_icon.png");
-		put(MATCHICONS[4], "gui/bilder/emerald_cup_match_icon.png");
-		put(MATCHICONS[5], "gui/bilder/ruby_cup_match_icon.png");
-		put(MATCHICONS[6], "gui/bilder/sapphire_cup_match_icon.png");
-		put(MATCHICONS[7], "gui/bilder/ladder_match_icon.png");
-		put(MATCHICONS[8], "gui/bilder/tournament_match_icon.png");
-		put(MATCHICONS[9], "gui/bilder/single_match_icon.png");
-		put(MATCHICONS[10], "gui/bilder/masters_match_icon.png");
+		put(MATCHICONS[0], "gui/bilder/match_types/matchtype-League.png");
+		put(MATCHICONS[1], "gui/bilder/match_types/matchtype-qualification.png");
+		put(MATCHICONS[2], "gui/bilder/match_types/matchtype-Friendly.png");
+		put(MATCHICONS[3], "gui/bilder/match_types/matchtype-matchCupA.png");  //national
+		put(MATCHICONS[4], "gui/bilder/match_types/matchtype-matchCupB1.png");  //emerald
+		put(MATCHICONS[5], "gui/bilder/match_types/matchtype-matchCupB2.png");  //ruby
+		put(MATCHICONS[6], "gui/bilder/match_types/matchtype-matchCupB3.png");  //sapphir
+		put(MATCHICONS[7], "gui/bilder/match_types/matchtype-tournament-ladder.png");
+		put(MATCHICONS[8], "gui/bilder/match_types/matchtype-tournament.png");
+		put(MATCHICONS[9], "gui/bilder/match_types/matchtype-single-match.png");
+		put(MATCHICONS[10], "gui/bilder/match_types/matchtype-matchMasters.png");
 		put(MATCHICONS[11], "gui/bilder/default_match_icon.gif");
-		put(MATCHICONS[12], "gui/bilder/consolante_cup_match_icon.png");
-		put(MATCHICONS[13], "gui/bilder/division_battle_match_icon.png");
+		put(MATCHICONS[12], "gui/bilder/match_types/matchtype-matchCupC.png");  //consolante
+		put(MATCHICONS[13], "gui/bilder/match_types/matchtype-battle.png");
 
 		put(MANUELLSMILIES[1], "gui/bilder/smilies/1bigsmile.gif");
 		put(MANUELLSMILIES[2], "gui/bilder/smilies/2smile.gif");
@@ -180,8 +180,12 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(ME_NO_GOAL_UNPREDICTABLE, "gui/bilder/match_events/me_no_goal_unpredictable.png");
 		put(ME_207, "gui/bilder/match_events/me_207.png");
 		put(ME_215, "gui/bilder/match_events/me_215.png");
+		put(ME_MISSED_CORNER, "gui/bilder/match_events/missed_corner.png");
         put(ME_236, "gui/bilder/match_events/me_236.png");
 		put(ME_237, "gui/bilder/match_events/me_237.png");
+		put(ME_240, "gui/bilder/match_events/me_240.png");
+		put(ME_241, "gui/bilder/match_events/me_241.png");
+		put(ME_242, "gui/bilder/match_events/me_242.png");
 		put(ME_243, "gui/bilder/match_events/me_243.png");
 		put(ME_MISS_AND_WHISTLE, "gui/bilder/match_events/me_miss_and_whistle.png");
 		put(ME_285, "gui/bilder/match_events/me_285.png");

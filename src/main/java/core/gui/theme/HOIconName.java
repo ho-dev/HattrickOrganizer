@@ -88,9 +88,13 @@ public interface HOIconName {
 	String ME_185 = "me_185";
 	String ME_207 = "me_207";
 	String ME_215 = "me_215";
+	String ME_MISSED_CORNER = "missed_corner";
 	String ME_NO_GOAL_UNPREDICTABLE = "me_no_goal_unpredictable";
     String ME_236 = "me_236";
 	String ME_237 = "me_237";
+	String ME_240 = "me_240";
+	String ME_241 = "me_241";
+	String ME_242 = "me_242";
 	String ME_243 = "me_243";
 	String ME_MISS_AND_WHISTLE = "me_miss_and_whistle";
 	String ME_285 = "me_285";
@@ -103,7 +107,6 @@ public interface HOIconName {
 	String GOAL_MID		= "tor_mitte";
 	String GOAL_LEFT		= "tor_links";
 	String GOAL_RIGHT		= "tor_rechts";
-	String GOAL_PENALTY	= "tor_elfmeter";
 	String CONVERTED_PENALTY = "convertedPenalty";
 	String MISSED_PENALTY = "missedPenalty";
 	String GOAL_IFK = "tor_indirect_freekick";
