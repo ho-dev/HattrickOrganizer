@@ -1,5 +1,7 @@
 package core.model.match;
 
+import core.db.DBManager;
+import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import module.lineup.Lineup;
@@ -22,6 +24,8 @@ public class MatchLineupTeam {
 	private int m_iStyleOfPlay;
 	// null player to fill empty spots
 	private final static MatchLineupPlayer NULLPLAYER = new MatchLineupPlayer(-1, 0, -1, -1d, "", 0);
+	private MatchType matchType = MatchType.NONE;
+	private int matchId;
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -29,11 +33,12 @@ public class MatchLineupTeam {
 	/**
 	 * Creates a new instance of MatchLineupTeam
 	 */
-	public MatchLineupTeam(String teamName, int teamID, int erfahrung, int styleOfPlay) {
+	public MatchLineupTeam(int matchId, String teamName, int teamID, int erfahrung, int styleOfPlay) {
 		m_sTeamName = teamName;
 		m_iErfahrung = erfahrung;
 		m_iTeamID = teamID;
 		m_iStyleOfPlay = styleOfPlay;
+		this.matchId = matchId;
 	}
 
 	// ~ Methods
@@ -357,5 +362,15 @@ public class MatchLineupTeam {
 		else {
 			return Lineup.SYS_MURKS;
 		}
+	}
+
+	public MatchType getMatchType() {
+		if (matchType == MatchType.NONE) {
+			MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId);
+			if ( info != null){
+				matchType = info.getMatchTyp();
+			}
+		}
+		return matchType;
 	}
 }

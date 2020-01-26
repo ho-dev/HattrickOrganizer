@@ -665,6 +665,11 @@ final class DBUpdater {
 	private void updateDBv26(int DBVersion, int version) throws SQLException {
 		// HO 2.1
 
+		if (!columnExistsInTable("SubExperience", SpielerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN SubExperience REAL");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN NationalTeamID INTEGER");
+		}
+
 		// store [Matches].MatchContextId into MATCHESKURZINFO table
 		if (!columnExistsInTable("MatchContextId", MatchesKurzInfoTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN MatchContextId INTEGER");

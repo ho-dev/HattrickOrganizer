@@ -3,10 +3,7 @@ package core.training;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
-import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupTeam;
-import core.model.match.MatchStatistics;
-import core.model.match.MatchType;
+import core.model.match.*;
 import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.HTCalendar;
@@ -20,6 +17,8 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JOptionPane;
+
+import static java.lang.Math.max;
 
 /**
  * Class that extract data from Database and calculates TrainingWeek and TrainingPoints earned from
@@ -114,6 +113,7 @@ public class TrainingManager {
 	        	int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 	        	TrainingWeekPlayer tp = new TrainingWeekPlayer();
 	            tp.Name(player.getName());
+	            int minutes=0;
 	        	for (int i=0; i<matches.size(); i++) {
 	                final int matchId = (matches.get(i)).intValue();
 
@@ -149,8 +149,24 @@ public class TrainingManager {
 	                if (wt.getSecondaryTrainingSkillOsmosisTrainingPositions() != null) {
 	                	tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillOsmosisTrainingPositions()));
 	                }
-	            }
+
+					output.addExperienceIncrease(max(90,tp.getMinutesPlayed()-minutes), mlt.getMatchType() );
+	                minutes = tp.getMinutesPlayed();
+
+				}
 	            TrainingPoints trp = new TrainingPoints(wt.getPrimaryTraining(tp), wt.getSecondaryTraining(tp));
+
+	        	// get experience increase of national matches
+				if  ( player.getNationalTeamID() != 0 ){
+					List<MatchKurzInfo> nationalMatches = getNationalMatchesForExperience(player, trainingDate);
+					for ( MatchKurzInfo info : nationalMatches){
+						MatchLineupTeam mlt = getNationalMatchLineup(player.getNationalTeamID(), info.getMatchID());
+						MatchStatistics ms = new MatchStatistics(info.getMatchID(), mlt);
+						int mins = ms.getStaminaMinutesPlayedInPositions(playerID);
+						output.addExperienceIncrease(mins, info.getMatchTyp());
+					}
+				}
+
 	    		if (TrainingManager.TRAININGDEBUG) {
 					HOLogger.instance().debug(getClass(), "Week " + train.getHattrickWeek()
 	            		+": Player " + player.getName() + " (" + playerID + ")"
@@ -167,7 +183,20 @@ public class TrainingManager {
         return output;
     }
 
-    /*
+	private MatchLineupTeam getNationalMatchLineup(int nationalTeamID, int matchID) {
+
+    	// TODO:
+		return null;
+	}
+
+	private List<MatchKurzInfo> getNationalMatchesForExperience(Player player, Calendar trainingDate) {
+
+		// TODO:
+
+		return null;
+	}
+
+	/*
      * Recalculates all sub skills for all players
      *
      * @param showBar show progress bar

@@ -111,7 +111,7 @@ public class OnlineWorker {
 					JOptionPane.showMessageDialog(parent, getLangString("NO_HRF_ERROR"),
 							getLangString("NO_HRF_ERROR"), 1);
 				} else {
-					// Create HOModelo from the hrf data
+					// Create HOModel from the hrf data
 					HOModel homodel = HRFStringParser.parse(hrf);
 					if (homodel == null) {
 						// Info

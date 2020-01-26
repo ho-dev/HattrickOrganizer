@@ -321,6 +321,8 @@ public class Player {
      * along the course of the game
      */
     private int GameStartingTime = 0;
+    private int nationalTeamId=0;
+    private double subExperience;
 
     public int getGameStartingTime() {
         return GameStartingTime;
@@ -379,6 +381,7 @@ public class Player {
         m_dSubTorschuss = Double.parseDouble(properties.getProperty("malsub", "0"));
         m_dSubTorwart = Double.parseDouble(properties.getProperty("mlvsub", "0"));
         m_dSubVerteidigung = Double.parseDouble(properties.getProperty("bacsub", "0"));
+        subExperience = Double.parseDouble(properties.getProperty("experiencesub", "0"));
 
         //TSI, alles vorher durch 1000 teilen
         m_clhrfDate = hrfdate;
@@ -425,6 +428,7 @@ public class Player {
         }
         m_iLaenderspiele = Integer.parseInt(properties.getProperty("caps", "0"));
         m_iU20Laenderspiele = Integer.parseInt(properties.getProperty("capsU20", "0"));
+        nationalTeamId = Integer.parseInt(properties.getProperty("nationalTeamID","0"));
 
         //Subskills berechnen
         //Wird beim Speichern des HRFs aufgerufen, da hier nicht unbedingt die notwendigen Daten vorhanden sind
@@ -1959,6 +1963,14 @@ public class Player {
 
         incrementSubskills(originalPlayer, assistants, trainerlevel, intensity, stamina,
                 wt.getSecondaryTrainingSkill(), tp.getSecondary(), wt, staff);
+
+        addExperienceSub(trForPlayer.getExperienceSub());
+
+    }
+
+    private void addExperienceSub(double experienceSub) {
+        this.subExperience += experienceSub;
+        if ( this.subExperience > .99) this.subExperience = .99;
     }
 
 
@@ -2218,6 +2230,21 @@ public class Player {
         this.m_bTrainingBlock = isBlocked;
     }
 
+    public int getNationalTeamID() {
+        return nationalTeamId;
+    }
+
+    public void setNationalTeamId( int id){
+        this.nationalTeamId=id;
+    }
+
+    public double getSubExperience() {
+        return this.subExperience;
+    }
+
+    public void setSubExperience( double experience){
+        this.subExperience = experience;
+    }
 }
 
 class PositionContribute {
