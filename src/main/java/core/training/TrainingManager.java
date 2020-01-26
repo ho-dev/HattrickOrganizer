@@ -158,7 +158,7 @@ public class TrainingManager {
 	            TrainingPoints trp = new TrainingPoints(wt.getPrimaryTraining(tp), wt.getSecondaryTraining(tp));
 
 	        	// get experience increase of national matches
-				if  ( player.getNationalTeamID() != 0 ){
+				/*if  ( player.getNationalTeamID() != 0 ){
 					List<MatchKurzInfo> nationalMatches = getNationalMatchesForExperience(player, trainingDate);
 					for ( MatchKurzInfo info : nationalMatches){
 						MatchLineupTeam mlt = getNationalMatchLineup(player.getNationalTeamID(), info.getMatchID());
@@ -166,7 +166,7 @@ public class TrainingManager {
 						int mins = ms.getStaminaMinutesPlayedInPositions(playerID);
 						output.addExperienceIncrease(mins, info.getMatchTyp());
 					}
-				}
+				}*/
 
 	    		if (TrainingManager.TRAININGDEBUG) {
 					HOLogger.instance().debug(getClass(), "Week " + train.getHattrickWeek()
