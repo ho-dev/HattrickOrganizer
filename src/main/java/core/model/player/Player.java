@@ -1453,6 +1453,10 @@ public class Player {
             case PlayerSkill.SET_PIECES:
                 value = m_dSubStandards;
                 break;
+
+            case PlayerSkill.EXPERIENCE:
+                value = subExperience;
+                break;
         }
         return (float) Math.min(0.999, value);
     }
@@ -1479,6 +1483,9 @@ public class Player {
                 break;
             case PlayerSkill.SET_PIECES:
                 m_dSubStandards = value;
+                break;
+            case PlayerSkill.EXPERIENCE:
+                subExperience = value;
                 break;
         }
     }
@@ -2135,7 +2142,7 @@ public class Player {
      * @param old
      */
     public void copySubSkills(Player old) {
-        for (int skillType = 0; skillType < PlayerSkill.EXPERIENCE; skillType++) {
+        for (int skillType = 0; skillType <= PlayerSkill.EXPERIENCE; skillType++) {
 
             if ((skillType == PlayerSkill.FORM) || (skillType == PlayerSkill.STAMINA)) {
                 continue;
