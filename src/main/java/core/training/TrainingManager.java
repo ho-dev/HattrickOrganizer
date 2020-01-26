@@ -18,7 +18,7 @@ import java.util.Locale;
 
 import javax.swing.JOptionPane;
 
-import static java.lang.Math.max;
+import static java.lang.Integer.min;
 
 /**
  * Class that extract data from Database and calculates TrainingWeek and TrainingPoints earned from
@@ -150,7 +150,7 @@ public class TrainingManager {
 	                	tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillOsmosisTrainingPositions()));
 	                }
 
-					output.addExperienceIncrease(max(90,tp.getMinutesPlayed()-minutes), mlt.getMatchType() );
+					output.addExperienceIncrease(min(90,tp.getMinutesPlayed()-minutes), mlt.getMatchType() );
 	                minutes = tp.getMinutesPlayed();
 
 				}
