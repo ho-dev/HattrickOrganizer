@@ -19,9 +19,13 @@ combinations = {"missed_penalty.png": (("miss.png", "penalty.png"), "v"),
                 "me_no_goal_unpredictable.png": (("miss.png", "speciality-4.png"), "v"),   #206, 208
                 "me_207.png": (("miss.png", "longshot.png"), "v"),
                 "me_215.png": (("miss.png", "speciality-2.png"), "v"),
-                "me_miss_and_whistle.png": (("miss.png", "whistle.png"), "v"),    #230, 280
+                "missed_corner.png": (("miss.png", "corner.png"), "v"),
+                "me_miss_and_whistle.png": (("miss.png", "whistle.png"), "v"),    #260, 230, 280
                 "me_236.png": (("miss.png", "experience.png"), "h"),
                 "me_237.png": (("miss.png", "winger.png"), "v"),
+                "me_240.png": (("miss.png", "counter_attack.png", "whistle.png"), "v3"),
+                "me_241.png": (("miss_C.png", "counter_attack.png"), "v"),
+                "me_242.png": (("miss_L.png", "counter_attack.png"), "v"),
                 "me_243.png": (("miss_R.png", "counter_attack.png"), "v"),
                 "me_285.png": (("miss.png", "indirect.png"), "v"),
                 "me_286.png": (("miss.png", "counter_attack.png", "indirect.png"), "v3"),
