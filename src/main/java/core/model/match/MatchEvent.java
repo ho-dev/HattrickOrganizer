@@ -218,7 +218,7 @@ public class MatchEvent {
         put(MatchEventID.HATTRICK_COMMENT, null);      //#46
         put(MatchEventID.NO_TEAM_DOMINATED, null);     //#47
 
-
+        put(MatchEventID.PENALTY_CONTEST_GOAL_BY_TECHNICAL_NO_NERVES, HOIconName.ME_GOAL_AND_TECHNICAL); //#55
         put(MatchEventID.PENALTY_CONTEST_GOAL_NO_NERVES, HOIconName.GOAL); //#56
         put(MatchEventID.PENALTY_CONTEST_GOAL_IN_SPITE_OF_NERVES, HOIconName.GOAL); //#57
         put(MatchEventID.PENALTY_CONTEST_NO_GOAL_BECAUSE_OF_NERVES, HOIconName.MISS); //#58
@@ -251,11 +251,11 @@ public class MatchEvent {
         put(MatchEventID.EQUALIZER_GOAL_HOME_TEAM_LEFT_WING, HOIconName.GOAL_LEFT); //#112
         put(MatchEventID.EQUALIZER_GOAL_HOME_TEAM_RIGHT_WING, HOIconName.GOAL_RIGHT); //#113
         put(MatchEventID.EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL, HOIconName.CONVERTED_PENALTY); //#114
-        put(MatchEventID.SE_QUICK_SCORES_AFTER_RUSH, HOIconName.GOAL_SPECIAL); //#115
-        put(MatchEventID.SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES, HOIconName.ME_116); //#116
+        put(MatchEventID.SE_QUICK_SCORES_AFTER_RUSH, HOIconName.ME_GOAL_AND_QUICK); //#115
+        put(MatchEventID.SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES, HOIconName.ME_GOAL_AND_QUICK); //#116
         put(MatchEventID.SE_TIRED_DEFENDER_MISTAKE_STRIKER_SCORES, HOIconName.GOAL_SPECIAL); //#117
         put(MatchEventID.SE_GOAL_CORNER_TO_ANYONE, HOIconName.ME_118); //#118
-        put(MatchEventID.SE_GOAL_CORNER_HEAD_SPECIALIST, HOIconName.GOAL_SPECIAL); //#119
+        put(MatchEventID.SE_GOAL_CORNER_HEAD_SPECIALIST, HOIconName.ME_GOAL_AND_HEAD_SPEC); //#119
 
         put(MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_FREE_KICK, HOIconName.GOAL_FREEKICK); //#120
         put(MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_MIDDLE, HOIconName.GOAL_MID); //#121
@@ -412,7 +412,6 @@ public class MatchEvent {
         return ( isBruised() || isInjured());
     }
 
-    // TODO: change this one
     public boolean isBruised()
     {
         return m_eInjuryType == Matchdetails.eInjuryType.BRUISE;
@@ -427,6 +426,16 @@ public class MatchEvent {
     {
         return ( isYelloCard() || isRedCard());
     }
+
+    public boolean isPenaltyContestGoalEvent() {
+        return ( (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_GOAL_BY_TECHNICAL_NO_NERVES) || (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_GOAL_NO_NERVES) ||
+                (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_GOAL_IN_SPITE_OF_NERVES) );
+    }
+
+    public boolean isPenaltyContestNoGoalEvent() {
+        return ( (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_NO_GOAL_BECAUSE_OF_NERVES) || (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_NO_GOAL_IN_SPITE_OF_NO_NERVES));
+    }
+
 
     public boolean isGoalEvent() { return isGoalEvent(m_iMatchEventID); }
 
