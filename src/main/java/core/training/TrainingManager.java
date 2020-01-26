@@ -150,7 +150,8 @@ public class TrainingManager {
 	                	tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillOsmosisTrainingPositions()));
 	                }
 
-					output.addExperienceIncrease(min(90,tp.getMinutesPlayed()-minutes), mlt.getMatchType() );
+	                int experienceMinutes = tp.getMinutesPlayed() - minutes;
+					output.addExperienceIncrease(min(90,experienceMinutes), mlt.getMatchType() );
 	                minutes = tp.getMinutesPlayed();
 
 				}
