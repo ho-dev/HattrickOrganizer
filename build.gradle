@@ -562,7 +562,7 @@ githubRelease {
     repo = 'HO'
     releaseAssets = file("$target_dir").listFiles()
     token = _token
-
+    def  githubReleaseMessage = ""
     if (releaseArtefacts) {
         if (development_stage == '0') {
             tagName = "dev"
@@ -571,7 +571,7 @@ githubRelease {
             body = "Latest development version aimed at developers. \n It can (will soon or late break your database))"
             prerelease = true
             overwrite = true
-            println  "DEVELOPMENT version has been released on GitHub"
+            githubReleaseMessage = "DEVELOPMENT version has been released on GitHub"
         } else if (development_stage == '1') {
             tagName = "BETA"
             releaseName = "BETA"
@@ -579,13 +579,14 @@ githubRelease {
             body = "..................."
             prerelease = true
             overwrite = true
-            println("BETA version has been released on GitHub.\nBuild ... Release on ....")
+            githubReleaseMessage = "BETA version has been released on GitHub.\nBuild ... Release on ...."
         } else if (development_stage == '2') {
-            println "automatic release of stable version has not been implemented yet !!"
+            githubReleaseMessage = "automatic release of stable version has not been implemented yet !!"
         }
     }
 
 }
+
 
 
 //// make every other task depend on 'initializer'
