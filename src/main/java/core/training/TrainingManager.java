@@ -120,7 +120,6 @@ public class TrainingManager {
 	                //Get the MatchLineup by id
 	                MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(matchId, myID);
 	                MatchStatistics ms = new MatchStatistics(matchId, mlt);
-
 					MatchType type = mlt.getMatchType();
 					if ( type != MatchType.MASTERS) { // MASTERS counts only for experience
 						if (wt.getPrimaryTrainingSkillPositions() != null) {
@@ -182,7 +181,7 @@ public class TrainingManager {
         }
         return output;
     }
-
+    
 	/*
      * Recalculates all sub skills for all players
      *
