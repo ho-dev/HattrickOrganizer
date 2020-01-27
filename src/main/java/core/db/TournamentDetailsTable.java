@@ -32,7 +32,7 @@ public final class TournamentDetailsTable extends AbstractTable {
 		columns[10]= new ColumnDescriptor("NextMatchRoundDate",Types.TIMESTAMP,true); //The date of the next match round. During matches this will be the Next match round.
 		columns[11]= new ColumnDescriptor("IsMatchesOngoing",Types.BOOLEAN,false);
 		columns[12]= new ColumnDescriptor("Creator_UserID",Types.INTEGER,false);
-		columns[13]= new ColumnDescriptor("Creator_Loginname",Types.INTEGER,true);
+		columns[13]= new ColumnDescriptor("Creator_Loginname",Types.VARCHAR,true, 256);
 	}
 
 	@Override
@@ -83,6 +83,7 @@ public final class TournamentDetailsTable extends AbstractTable {
 	 */
 	void storeTournamentDetails(TournamentDetails oTournamentDetails) {
 		StringBuilder sql = new StringBuilder(200);
+
 		try {
 			sql.append("INSERT INTO ").append(getTableName());
 			sql.append(" (TOURNAMENTID, NAME, TOURNAMENTTYPE, SEASON, LOGOURL, TROPHYTYPE, NUMBEROFTEAMS, NUMBEROFGROUPS, " +
@@ -97,7 +98,7 @@ public final class TournamentDetailsTable extends AbstractTable {
 			}
 			else
 			{
-				sql.append(oTournamentDetails.getLogoUrl() +", ");
+				sql.append("'" + oTournamentDetails.getLogoUrl() +"', ");
 			}
 			sql.append(oTournamentDetails.getTrophyType() +", ");
 			sql.append(oTournamentDetails.getNumberOfTeams() +", ");
@@ -115,8 +116,15 @@ public final class TournamentDetailsTable extends AbstractTable {
 				sql.append("false, ");
 			}
 			sql.append(oTournamentDetails.getCreator_UserId() +", ");
-			sql.append(oTournamentDetails.getCreator_Loginname());
-			sql.append(")");
+
+			if (oTournamentDetails.getCreator_Loginname() == null)
+			{
+				sql.append("null)");
+			}
+			else
+			{
+				sql.append("'" + oTournamentDetails.getCreator_Loginname() +"')");
+			}
 			adapter.executeUpdate(sql.toString());
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),
