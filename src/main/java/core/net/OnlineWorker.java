@@ -266,22 +266,6 @@ public class OnlineWorker {
 	 *
 	 * @param matchid
 	 *            ID for the match to be downloaded
-	 * @param match
-	 *            MatchKurzInfo of the match
-	 * @param refresh
-	 *            If true the match will always be downloaded.
-	 *
-	 * @return true if the match is in the db afterwards
-	 */
-
-
-	/**
-	 * Downloads a match with the given criteria and stores it in the database.
-	 * If a match is already in the db, and refresh is false, nothing is
-	 * downloaded.
-	 *
-	 * @param matchid
-	 *            ID for the match to be downloaded
 	 * @param matchType
 	 *            matchType for the match to be downloaded.
 	 * @param refresh
