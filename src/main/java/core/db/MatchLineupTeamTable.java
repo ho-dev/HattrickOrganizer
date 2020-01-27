@@ -41,7 +41,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 
 			rs.first();
 
-			team = new MatchLineupTeam(DBManager.deleteEscapeSequences(rs.getString("TeamName")), 
+			team = new MatchLineupTeam(matchID, DBManager.deleteEscapeSequences(rs.getString("TeamName")),
 										teamID, rs.getInt("Erfahrung"), rs.getInt("StyleOfPlay"));
 			team.setAufstellung(DBManager.instance().getMatchLineupPlayers(matchID, teamID));
 			

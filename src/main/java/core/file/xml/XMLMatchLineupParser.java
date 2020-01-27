@@ -83,7 +83,7 @@ public class XMLMatchLineupParser {
 			ml.setSpielDatum(ele.getFirstChild().getNodeValue());
 
 			// team adden
-			MatchLineupTeam team = createTeam((Element) root.getElementsByTagName("Team").item(0));
+			MatchLineupTeam team = createTeam(ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
 
 			if (team.getTeamID() == ml.getHeimId()) {
 				ml.setHeim(team);
@@ -199,7 +199,7 @@ public class XMLMatchLineupParser {
 	}
 
 
-	private static MatchLineupTeam createTeam(Element ele) {
+	private static MatchLineupTeam createTeam(int matchID, Element ele) {
 		Element tmp = (Element) ele.getElementsByTagName("TeamID").item(0);
 		int teamId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("ExperienceLevel").item(0);
@@ -208,7 +208,7 @@ public class XMLMatchLineupParser {
 		int styleOfPlay = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("TeamName").item(0);
 		String teamName = tmp.getFirstChild().getNodeValue();
-		MatchLineupTeam team = new MatchLineupTeam(teamName, teamId, erfahrung, styleOfPlay);
+		MatchLineupTeam team = new MatchLineupTeam(matchID, teamName, teamId, erfahrung, styleOfPlay);
 
 		Element starting = (Element) ele.getElementsByTagName("StartingLineup").item(0);
 		Element subs = (Element) ele.getElementsByTagName("Substitutions").item(0);
