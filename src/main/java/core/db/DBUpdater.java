@@ -684,6 +684,10 @@ final class DBUpdater {
 		if (!tableExists(TournamentDetailsTable.TABLENAME)) {
 			dbManager.getTable(TournamentDetailsTable.TABLENAME).createTable();
 		}
+		else
+		{
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TOURNAMENTDETAILS ALTER COLUMN Creator_Loginname VARCHAR (256)");
+		}
 
 
 		if (!columnExistsInTable("MATCH_EVENT_ID", MatchHighlightsTable.TABLENAME)) {

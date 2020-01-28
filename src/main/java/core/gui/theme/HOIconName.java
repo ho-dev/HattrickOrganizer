@@ -76,18 +76,21 @@ public interface HOIconName {
 	String REPLACEMENT = "replacement";
 
 	String ME_GOAL_AND_QUICK = "me_goal_and_quick";
+	String ME_GOAL_AND_UNPREDICTABLE = "me_goal_and_unpredictable";
 	String ME_118 = "me_118";
 	String ME_GOAL_AND_HEAD_SPEC = "me_goal_and_head_spec";
 	String ME_GOAL_AND_TECHNICAL = "me_goal_and_technical";
 	String ME_135 = "me_135";
 	String ME_136 = "me_136";
+	String ME_140 = "me_140";
 	String ME_141 = "me_141";
 	String ME_142 = "me_142";
+	String ME_143 = "me_143";
 	String ME_GOAL_AND_WHISTLE = "me_goal_and_whistle";
 	String ME_184 = "me_184";
 	String ME_185 = "me_185";
 	String ME_207 = "me_207";
-	String ME_215 = "me_215";
+	String ME_ME_MISS_AND_QUICK = "me_me_miss_and_quick";
 	String ME_MISSED_CORNER = "missed_corner";
 	String ME_NO_GOAL_UNPREDICTABLE = "me_no_goal_unpredictable";
     String ME_236 = "me_236";

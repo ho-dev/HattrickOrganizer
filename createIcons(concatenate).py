@@ -6,19 +6,22 @@ path_to_folder = "D:\\Perso\\Code\\HO\\src\\main\\resources\\gui\\bilder\\match_
 combinations = {"missed_penalty.png": (("miss.png", "penalty.png"), "v"),
                 "converted_penalty.png": (("goal.png", "penalty.png"), "v"),
                 "me_goal_and_technical.png": (("goal.png", "speciality-1.png"), "v"),    #55
+                "me_goal_and_unpredictable.png": (("goal.png", "speciality-4.png"), "v"),    #106
                 "me_goal_and_quick.png": (("goal.png", "speciality-2.png"), "v"),    #115, 116
                 "me_118.png": (("goal.png", "corner.png"), "v"),
                 "me_goal_and_head_spec.png": (("goal.png", "speciality-5.png"), "v"),   #119
                 "me_135.png": (("goal.png", "experience.png"), "v"),
                 "me_136.png": (("experience.png", "goal.png"), "h"),
+                "me_140.png": (("goal.png", "counter_attack.png", "whistle.png"), "v3"),
                 "me_141.png": (("goal_C.png", "counter_attack.png"), "v"),
                 "me_142.png": (("goal_L.png", "counter_attack.png"), "v"),
+                "me_143.png": (("goal_R.png", "counter_attack.png"), "v"),
                 "me_goal_and_whistle.png": (("goal.png", "whistle.png"), "v"),   #150, 170
                 "me_184.png": (("goal.png", "penalty.png"), "v"),
                 "me_185.png": (("goal.png", "indirect.png"), "v"),
                 "me_no_goal_unpredictable.png": (("miss.png", "speciality-4.png"), "v"),   #206, 208
                 "me_207.png": (("miss.png", "longshot.png"), "v"),
-                "me_215.png": (("miss.png", "speciality-2.png"), "v"),
+                "me_miss_and_quick.png": (("miss.png", "speciality-2.png"), "v"),   #215, 216
                 "missed_corner.png": (("miss.png", "corner.png"), "v"),
                 "me_miss_and_whistle.png": (("miss.png", "whistle.png"), "v"),    #260, 230, 280
                 "me_236.png": (("miss.png", "experience.png"), "h"),
