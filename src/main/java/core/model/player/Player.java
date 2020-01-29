@@ -592,9 +592,13 @@ public class Player {
      * @return String of age & agedays format is "YY (DDD)"
      */
     public String getAlterWithAgeDaysAsString() {
+        return getAgeWithDaysAsString(new Date());
+    }
+
+    public String getAgeWithDaysAsString(Date date) {
         // format = yy (ddd)
         long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-        long now = new Date().getTime();
+        long now = date.getTime();
         long diff = (now - hrftime) / (1000 * 60 * 60 * 24);
         int years = getAlter();
         int days = getAgeDays();
@@ -603,8 +607,11 @@ public class Player {
             days -= 112;
             years++;
         }
+        while (days < 0) {
+            days += 112;
+            years--;
+        }
         String retVal = years + " (" + days + ")";
-
         return retVal;
     }
 
