@@ -139,12 +139,20 @@ final public class UserColumnFactory {
                 Player player = spielerCBItem.getSpieler();
                 Timestamp matchDate = spielerCBItem.getMatchdetails().getSpielDatum();
                 System.out.println(spielerCBItem.getMatchdate());
-                String ageString = player.getAdjustedAgeFromDate(matchDate);
-                return new ColorLabelEntry(player.getDoubleAgeFromDate(matchDate),
-                        ageString,
-                        ColorLabelEntry.FG_STANDARD,
-                        ColorLabelEntry.BG_STANDARD,
-                        SwingConstants.LEFT);
+
+                if (matchDate != null) {
+                    String ageString = player.getAdjustedAgeFromDate(matchDate);
+                    return new ColorLabelEntry(player.getDoubleAgeFromDate(matchDate),
+                            ageString,
+                            ColorLabelEntry.FG_STANDARD,
+                            ColorLabelEntry.BG_STANDARD,
+                            SwingConstants.LEFT);
+                } else {
+                    return new ColorLabelEntry("",
+                            ColorLabelEntry.FG_STANDARD,
+                            ColorLabelEntry.BG_STANDARD,
+                            SwingConstants.LEFT);
+                }
             }
         };
 

@@ -1,9 +1,11 @@
 package core.gui.model;
 
+import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.model.match.Matchdetails;
 import core.model.player.Player;
+import core.net.OnlineWorker;
 
 import java.util.Vector;
 
@@ -122,12 +124,18 @@ public class PlayerAnalysisModel extends HOTableModel {
     	m_clData = new Object[m_vSpielerMatchCBItem.size()][tmpDisplayedColumns.length];
     	
     	for (int i = 0; i < m_vSpielerMatchCBItem.size(); i++) {
-           	final SpielerMatchCBItem spielerCBItem = ((SpielerMatchCBItem) m_vSpielerMatchCBItem
-                    .get(i));
-            final Player aktuellerPlayer = spielerCBItem.getSpieler();
-            final Matchdetails matchdetails = spielerCBItem.getMatchdetails();
- 
-    		for (int j = 0; j < tmpDisplayedColumns.length; j++) {
+			final SpielerMatchCBItem spielerCBItem = m_vSpielerMatchCBItem.get(i);
+			final Player aktuellerPlayer = spielerCBItem.getSpieler();
+			Matchdetails matchdetails = spielerCBItem.getMatchdetails();
+
+			matchdetails = checkMatchDetailsPresent(spielerCBItem, matchdetails);
+
+			// If we didn't manage to get details for this match, skip as we can do no more.
+			if (matchdetails == null) {
+				continue;
+			}
+
+			for (int j = 0; j < tmpDisplayedColumns.length; j++) {
     			if(tmpDisplayedColumns[j] instanceof PlayerColumn)
     				m_clData[i][j] = ((PlayerColumn)tmpDisplayedColumns[j]).getTableEntry(aktuellerPlayer,null);
     			if(tmpDisplayedColumns[j] instanceof MatchDetailsColumn)
@@ -140,8 +148,18 @@ public class PlayerAnalysisModel extends HOTableModel {
     		}
     	}
     }
- 
-    /**
+
+	private Matchdetails checkMatchDetailsPresent(SpielerMatchCBItem spielerCBItem, Matchdetails matchdetails) {
+		if (matchdetails.getMatchID() == -1) {
+			boolean success = OnlineWorker.downloadMatchData(spielerCBItem.getMatchID(), spielerCBItem.getMatchTyp(), true);
+			if (success) {
+				matchdetails = DBManager.instance().getMatchDetails(spielerCBItem.getMatchID());
+			}
+		}
+		return matchdetails;
+	}
+
+	/**
      * Player neu setzen
      */
     public final void setValues(Vector<SpielerMatchCBItem> spielermatchCBItem) {
