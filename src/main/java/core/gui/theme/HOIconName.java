@@ -74,6 +74,7 @@ public interface HOIconName {
 	String YELLOWCARD = "yellowCard";
 
 	String REPLACEMENT = "replacement";
+	String ROTATE ="rotate";
 
 	String ME_GOAL_AND_QUICK = "me_goal_and_quick";
 	String ME_GOAL_AND_UNPREDICTABLE = "me_goal_and_unpredictable";
@@ -121,7 +122,6 @@ public interface HOIconName {
 	String NO_GOAL_LEFT = "keintor_links";
 	String NO_GOAL_RIGHT = "keintor_rechts";
 
-	String NO_GOAL_IFK = "keintor_indirect_freekick";
 	String NO_GOAL_LONGSHOT = "keintor_longshot";
 	String NO_GOAL_SPECIAL = "keintor_special";
 	String NO_GOAL_COUNTER = "keintor_counter";

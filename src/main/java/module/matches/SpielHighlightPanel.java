@@ -101,7 +101,8 @@ public class SpielHighlightPanel extends LazyImagePanel {
 				MatchEvent highlight = matchHighlights.get(i);
 
 				if (highlight.isGoalEvent() || highlight.isNonGoalEvent() || highlight.isBruisedOrInjured() || highlight.isBooked()
-						|| highlight.isSubstitution() || highlight.isPenaltyContestGoalEvent() || highlight.isPenaltyContestNoGoalEvent())
+						|| highlight.isSubstitution() || highlight.isPenaltyContestGoalEvent() || highlight.isPenaltyContestNoGoalEvent() ||
+				     highlight.isChangeOfTactic())
 				{
 					bEventHighlighted = true;
 				}

@@ -142,6 +142,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(BRUISED, "gui/bilder/match_events/plaster.png");
 		put(INJURED, "gui/bilder/match_events/injury(red).png");
 		put(REPLACEMENT, "gui/bilder/match_events/in-out.png");
+		put(ROTATE, "gui/bilder/match_events/rotate.png");
 
 		put(GOAL, "gui/bilder/match_events/goal.png");
 		put(MISS, "gui/bilder/match_events/miss.png");
