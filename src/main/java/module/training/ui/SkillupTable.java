@@ -41,7 +41,7 @@ public class SkillupTable extends JTable {
 		SkillupTableModel model = (SkillupTableModel) getModel();
 		ISkillup skillup = model.getSkillup(convertRowIndexToModel(rowAtPoint(e.getPoint())));
 
-		if (skillup != null && skillup.getTrainType() == ISkillup.SKILLUP_REAL) {
+		if (skillup != null ) {
 			return java.text.DateFormat.getDateTimeInstance().format(skillup.getDate());
 		}
 
