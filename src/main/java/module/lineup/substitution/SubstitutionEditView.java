@@ -4,6 +4,7 @@ import core.datatype.CBItem;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.util.Helper;
+import module.lineup.Lineup;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
@@ -49,6 +50,11 @@ public class SubstitutionEditView extends JPanel {
 	private JSlider whenSlider;
 	private WhenTextField whenTextField;
 
+	private Lineup lineup;
+	private Substitution substitution;
+	private Integer oldHatStats;
+	private JLabel hatstatsChangeField;
+
 	public SubstitutionEditView(MatchOrderType orderType) {
 		this.orderType = orderType;
 		initComponents();
@@ -92,15 +98,23 @@ public class SubstitutionEditView extends JPanel {
 		}
 	}
 
+	private Integer Hatstats()
+	{
+		return  lineup.getRatings().getHatStats().get(-90d);	// 90 minutes average
+	}
+
 	/**
 	 * Initializes the view with the given {@link Substitution}. The given
 	 * object will not be changed. To retrieve the data from the view, use
 	 * {@link #getSubstitution()} method.
-	 * 
+	 *
+	 * @param lineup
 	 * @param sub
-	 *            the substitution to initialize the view.
 	 */
-	public void init(Substitution sub) {
+	public void init(Lineup lineup, Substitution sub) {
+		this.lineup = lineup;
+		this.substitution  = sub;
+		this.oldHatStats = Hatstats();
 		this.orderType = sub.getOrderType();
 
 		if (sub.getSubjectPlayerID() != -1) {
@@ -143,6 +157,8 @@ public class SubstitutionEditView extends JPanel {
 				.getId());
 		this.whenTextField.setValue(Integer.valueOf(sub
 				.getMatchMinuteCriteria()));
+
+		this.hatstatsChangeField.setText(HatStatsChange());
 	}
 
 	/**
@@ -446,10 +462,26 @@ public class SubstitutionEditView extends JPanel {
 		gbc.insets = new Insets(4, 2, 4, 10);
 		add(this.standingComboBox, gbc);
 
+		JLabel hatstatsLabel = new JLabel("HatStats:");
+		gbc.gridx = 0;
+		gbc.gridy++;
+		gbc.insets = new Insets(4, 10, 4, 2);
+		add(hatstatsLabel, gbc);
+
+		this.hatstatsChangeField = new JLabel(HatStatsChange());
+		gbc.gridx = 1;
+		gbc.insets = new Insets(4, 2, 4, 10);
+		add(this.hatstatsChangeField, gbc);
+
 		// dummy to consume all extra space
 		gbc.gridy++;
 		gbc.weighty = 1.0;
 		add(new JPanel(), gbc);
+	}
+
+	private String HatStatsChange() {
+		if (oldHatStats == null) return "";
+		return this.oldHatStats + "->" + Hatstats();
 	}
 
 	private boolean isSubstitution() {

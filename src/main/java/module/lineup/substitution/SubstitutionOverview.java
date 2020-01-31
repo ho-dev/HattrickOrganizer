@@ -67,6 +67,7 @@ public class SubstitutionOverview extends JPanel {
 	private PositionSwapAction positionSwapAction;
 	private SubstitutionAction substitutionAction;
 	private Lineup lineup;
+	private ArrayList<Substitution> substitutionBackup;
 
 	public SubstitutionOverview(Lineup lineup) {
 		this.lineup = lineup;
@@ -278,8 +279,14 @@ public class SubstitutionOverview extends JPanel {
 	private void doNewOrder(MatchOrderType orderType) {
 		SubstitutionEditDialog dlg = getSubstitutionEditDialog(orderType);
 		dlg.setLocationRelativeTo(SubstitutionOverview.this);
+		BackupLineupSubstitutions();
+		Substitution newSub = new Substitution();
+		newSub.setOrderType(orderType);
+		lineup.getSubstitutionList().add(newSub);
+		dlg.init(lineup, newSub);
 		dlg.setVisible(true);
 
+		// TODO: Cancel restores old lineup
 		if (!dlg.isCanceled()) {
 			Substitution sub = dlg.getSubstitution();
 			sub.setPlayerOrderId(getNextOrderID());
@@ -326,14 +333,16 @@ public class SubstitutionOverview extends JPanel {
 	private void editSelectedSubstitution() {
 		int selectedRowIndex = substitutionTable.getSelectedRow();
 		if (selectedRowIndex != -1) {
+			BackupLineupSubstitutions();
 			final Substitution sub = ((SubstitutionsTableModel) substitutionTable.getModel())
 					.getRow(selectedRowIndex).getSubstitution();
 
 			SubstitutionEditDialog dlg = getSubstitutionEditDialog(sub.getOrderType());
 			dlg.setLocationRelativeTo(SubstitutionOverview.this);
-			dlg.init(sub);
+			dlg.init(lineup, sub);
 			dlg.setVisible(true);
 
+			// TODO: Cancel restores old lineup
 			if (!dlg.isCanceled()) {
 				sub.merge(dlg.getSubstitution());
 				((SubstitutionsTableModel) substitutionTable.getModel()).fireTableRowsUpdated(
@@ -342,6 +351,19 @@ public class SubstitutionOverview extends JPanel {
 				selectSubstitution(sub);
 			}
 		}
+	}
+
+	private void BackupLineupSubstitutions() {
+		this.substitutionBackup = new ArrayList<Substitution>();
+		for ( Substitution s : this.lineup.getSubstitutionList()){
+			Substitution backup = new Substitution();
+			backup.merge(s);
+			this.substitutionBackup.add(backup);
+		}
+	}
+
+	private void RestoreLineupSubstitutions(){
+		this.lineup.setSubstitionList(this.substitutionBackup);
 	}
 
 	private void updateOrderIDs() {

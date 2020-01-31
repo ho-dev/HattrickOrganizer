@@ -4,6 +4,7 @@ import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.util.GUIUtils;
 import module.lineup.AufstellungsDetailPanel;
+import module.lineup.Lineup;
 import module.lineup.LineupPanel;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
@@ -44,10 +45,10 @@ public class SubstitutionEditDialog extends JDialog {
 		initDialog();
 	}
 
-	public void init(Substitution sub) {
+	public void init(Lineup lineup, Substitution sub) {
 		this.orderType = sub.getOrderType();
 		setDlgTitle();
-		this.behaviourView.init(sub);
+		this.behaviourView.init(lineup, sub);
 	}
 
 	public boolean isCanceled() {
