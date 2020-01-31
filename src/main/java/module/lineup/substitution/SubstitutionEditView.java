@@ -54,6 +54,7 @@ public class SubstitutionEditView extends JPanel {
 	private Substitution substitution;
 	private Integer oldHatStats;
 	private JLabel hatstatsChangeField;
+	private boolean initDone=false;
 
 	public SubstitutionEditView(MatchOrderType orderType) {
 		this.orderType = orderType;
@@ -159,6 +160,7 @@ public class SubstitutionEditView extends JPanel {
 				.getMatchMinuteCriteria()));
 
 		this.hatstatsChangeField.setText(HatStatsChange());
+		initDone=true;
 	}
 
 	/**
@@ -170,6 +172,11 @@ public class SubstitutionEditView extends JPanel {
 	 */
 	public Substitution getSubstitution() {
 		Substitution sub = new Substitution();
+		return getSubstitution(sub);
+	}
+
+	public Substitution getSubstitution(Substitution sub)
+	{
 		sub.setBehaviour((byte) getSelectedId(this.behaviourComboBox));
 		sub.setRedCardCriteria(RedCardCriteria
 				.getById((byte) getSelectedId(this.redCardsComboBox)));
@@ -219,6 +226,17 @@ public class SubstitutionEditView extends JPanel {
 		return -1;
 	}
 
+	void RatingRecalc()
+	{
+		if ( substitution == null || initDone == false) return;
+		if ( substitution.getSubjectPlayerID() !=  -1 &&
+				(isNewBehaviour() || substitution.getPlayerOrderId() != -1)){
+			getSubstitution(substitution);
+			this.lineup.setRatings();
+			this.hatstatsChangeField.setText(HatStatsChange());
+		}
+	}
+
 	private void addListeners() {
 		// ChangeListener that will updates the "when" textfield with the number
 		// of minutes when slider changed
@@ -226,8 +244,7 @@ public class SubstitutionEditView extends JPanel {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				whenTextField.setValue(Integer.valueOf(whenSlider.getModel()
-						.getValue()));
+				whenTextField.setValue(Integer.valueOf(whenSlider.getModel().getValue()));
 			}
 		});
 
@@ -244,8 +261,22 @@ public class SubstitutionEditView extends JPanel {
 						} else {
 							whenSlider.setValue(-1);
 						}
+						RatingRecalc();
 					}
 				});
+
+
+		ItemListener ratingRecalcListener = new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				RatingRecalc();
+			}
+		};
+
+		this.playerComboBox.addItemListener( ratingRecalcListener);
+		this.playerInComboBox.addItemListener(ratingRecalcListener);
+		this.positionComboBox.addItemListener(ratingRecalcListener);
+		this.behaviourComboBox.addItemListener(ratingRecalcListener);
 
 		if (!isPositionSwap()) {
 			// ItemListener that will update the PositionChooser if selection in
