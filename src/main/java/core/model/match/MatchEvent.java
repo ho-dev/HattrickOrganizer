@@ -240,10 +240,10 @@ public class MatchEvent {
         put(MatchEventID.REDUCING_GOAL_HOME_TEAM_LEFT_WING, HOIconName.GOAL_LEFT); //#102
         put(MatchEventID.REDUCING_GOAL_HOME_TEAM_RIGHT_WING, HOIconName.GOAL_RIGHT); //#103
         put(MatchEventID.REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL, HOIconName.CONVERTED_PENALTY); //#104
-        put(MatchEventID.SE_GOAL_UNPREDICTABLE_LONG_PASS, HOIconName.GOAL_SPECIAL); //#105
+        put(MatchEventID.SE_GOAL_UNPREDICTABLE_LONG_PASS, HOIconName.ME_GOAL_AND_UNPREDICTABLE); //#105
         put(MatchEventID.SE_GOAL_UNPREDICTABLE_SCORES_ON_HIS_OWN, HOIconName.ME_GOAL_AND_UNPREDICTABLE); //#106
         put(MatchEventID.GOAL_LONG_SHOT_NO_TACTIC, HOIconName.GOAL_LONGSHOT); //#107
-        put(MatchEventID.SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION, HOIconName.GOAL_SPECIAL); //#108
+        put(MatchEventID.SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION, HOIconName.ME_GOAL_AND_UNPREDICTABLE); //#108
         put(MatchEventID.SE_GOAL_UNPREDICTABLE_MISTAKE, HOIconName.GOAL_SPECIAL); //#109
 
         put(MatchEventID.EQUALIZER_GOAL_HOME_TEAM_FREE_KICK, HOIconName.GOAL_FREEKICK); //#110
@@ -389,6 +389,10 @@ public class MatchEvent {
         put(MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_AHEAD , HOIconName.REPLACEMENT); //#351
         put(MatchEventID.PLAYER_SUBSTITUTION_MINUTE, HOIconName.REPLACEMENT); //#352
 
+        put(MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_BEHIND, HOIconName.ROTATE); //#360
+        put(MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_AHEAD, HOIconName.ROTATE); //#361
+        put(MatchEventID.CHANGE_OF_TACTIC_MINUTE, HOIconName.ROTATE); //#362
+
         put(MatchEventID.INJURED_PLAYER_REPLACED, HOIconName.REPLACEMENT); //#424
 
         put(MatchEventID.YELLOW_CARD_NASTY_PLAY, HOIconName.YELLOWCARD); //#510
@@ -436,6 +440,9 @@ public class MatchEvent {
         return ( (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_NO_GOAL_BECAUSE_OF_NERVES) || (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_NO_GOAL_IN_SPITE_OF_NO_NERVES));
     }
 
+    public boolean isChangeOfTactic() {
+        return ( (this.m_matchEventID == MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_BEHIND) ||(this.m_matchEventID == MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_AHEAD) || (this.m_matchEventID == MatchEventID.CHANGE_OF_TACTIC_MINUTE));
+    }
 
     public boolean isGoalEvent() { return isGoalEvent(m_iMatchEventID); }
 

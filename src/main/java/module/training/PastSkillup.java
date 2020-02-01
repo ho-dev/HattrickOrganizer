@@ -28,6 +28,8 @@ public class PastSkillup implements ISkillup {
     /** Value of skill */
     private int value;
 
+    private String age;
+
     //~ Methods ------------------------------------------------------------------------------------
     public void setDate(Date date) {
         this.date = date;
@@ -115,5 +117,14 @@ public class PastSkillup implements ISkillup {
         buffer.append("]"); //$NON-NLS-1$
 
         return buffer.toString();
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    @Override
+    public String getAge() {
+        return age;
     }
 }

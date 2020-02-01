@@ -15,6 +15,8 @@ public interface ISkillup {
 
 	public abstract int getTrainType();
 
+	public abstract String getAge();
+
 	/**
 	* Get Training type
 	*
