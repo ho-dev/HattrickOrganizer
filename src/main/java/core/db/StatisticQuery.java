@@ -42,7 +42,7 @@ public class StatisticQuery {
 					tempwerte[0] = rs.getDouble("Marktwert");
 					tempwerte[1] = rs.getDouble("Gehalt") / faktor;
 					tempwerte[2] = rs.getDouble("Fuehrung");
-					tempwerte[3] = rs.getDouble("Erfahrung");
+					tempwerte[3] = rs.getDouble("Erfahrung") + rs.getDouble("SubExperience");
 					tempwerte[4] = rs.getDouble("Form");
 					tempwerte[5] = rs.getDouble("Kondition");
 					tempwerte[6] = rs.getDouble("Torwart") + rs.getDouble("SubTorwart");
