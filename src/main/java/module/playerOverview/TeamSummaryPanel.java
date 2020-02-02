@@ -10,12 +10,16 @@ import javax.swing.*;
 import java.util.Vector;
 
 /**
- * This panel displays a TSI and form summary below the list of players in the squad.
+ * This panel displays team summary below the list of players in the squad.
  */
 public class TeamSummaryPanel extends ImagePanel {
 
+    private final JLabel numPlayerLabel = new JLabel();
+    private final JLabel averageAgeLabel = new JLabel();
+    private final JLabel averageSalaryLabel = new JLabel();
     private final JLabel totalTsiLabel = new JLabel();
     private final JLabel averageTsiLabel = new JLabel();
+    private final JLabel averageStaminaLabel = new JLabel();
     private final JLabel averageFormLabel = new JLabel();
 
     private Vector<Player> players;
@@ -32,8 +36,12 @@ public class TeamSummaryPanel extends ImagePanel {
         final BoxLayout layout = new BoxLayout(this, BoxLayout.LINE_AXIS);
         this.setLayout(layout);
 
+        createField(HOVerwaltung.instance().getLanguageString("ls.team.numplayers"), numPlayerLabel);
+        createField(HOVerwaltung.instance().getLanguageString("ls.team.averageage"), averageAgeLabel);
+        createField(HOVerwaltung.instance().getLanguageString("ls.team.averagesalary"), averageSalaryLabel);
         createField(HOVerwaltung.instance().getLanguageString("ls.team.totaltsi"), totalTsiLabel);
         createField(HOVerwaltung.instance().getLanguageString("ls.team.averagetsi"), averageTsiLabel);
+        createField(HOVerwaltung.instance().getLanguageString("ls.team.averagestamina"), averageStaminaLabel);
         createField(HOVerwaltung.instance().getLanguageString("ls.team.averageform"), averageFormLabel);
     }
 
@@ -43,7 +51,7 @@ public class TeamSummaryPanel extends ImagePanel {
         this.add(label);
         this.add(Box.createHorizontalStrut(10));
         this.add(fieldLabel);
-        this.add(Box.createHorizontalStrut(50));
+        this.add(Box.createHorizontalStrut(25));
     }
 
     public void setPlayers(Vector<Player> players) {
@@ -53,13 +61,23 @@ public class TeamSummaryPanel extends ImagePanel {
     public void reInit() {
         long totalTsi = players.stream().mapToLong(Player::getTSI).sum();
         double averageTsi = players.stream().mapToDouble(Player::getTSI).average().orElse(0.0);
+        double averageAge = players.stream().mapToDouble(Player::getAlterWithAgeDays).average().orElse(0.0);
+        double averageSalary = players.stream().mapToDouble(Player::getGehalt).average().orElse(0.0) / UserParameter.instance().faktorGeld;
 
-        double averageForm =  players.stream().mapToDouble(Player::getForm).average().orElse(0.0);
+        double averageStamina = players.stream().mapToDouble(Player::getKondition).average().orElse(0.0);
+        double averageForm = players.stream().mapToDouble(Player::getForm).average().orElse(0.0);
 
+        numPlayerLabel.setText(String.valueOf(players.size()));
+        averageAgeLabel.setText(Helper.getNumberFormat(false, 1)
+                .format(Helper.round(averageAge, 1)));
+        averageSalaryLabel.setText(Helper.getNumberFormat(true, 2)
+                .format(Helper.round(averageSalary, 2)));
         totalTsiLabel.setText(Helper.getNumberFormat(false, 0)
                 .format(Helper.round(totalTsi, 0)));
         averageTsiLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
                 .format(Helper.round(averageTsi, 2)));
+        averageStaminaLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(Helper.round(averageStamina, 2)));
         averageFormLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
                 .format(Helper.round(averageForm, 2)));
     }
