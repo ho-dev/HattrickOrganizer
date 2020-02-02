@@ -1,5 +1,7 @@
 package module.playerOverview;
 
+import core.gui.RefreshManager;
+import core.gui.Refreshable;
 import core.gui.comp.panel.DoubleLabelPanel;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
@@ -16,7 +18,7 @@ import java.util.Vector;
 /**
  * This panel displays team summary below the list of players in the squad.
  */
-public class TeamSummaryPanel extends ImagePanel implements ChangeListener {
+public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refreshable {
 
     private final DoubleLabelPanel numPlayerLabel = new DoubleLabelPanel();
     private final DoubleLabelPanel averageAgeLabel = new DoubleLabelPanel();
@@ -32,9 +34,9 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener {
     private TeamSummaryModel model;
 
     public TeamSummaryPanel(TeamSummaryModel model) {
-        this.model = model;
         initComponents();
-        reInit();
+        RefreshManager.instance().registerRefreshable(this);
+        setModel(model);
     }
 
     private void initComponents() {
@@ -58,7 +60,7 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener {
         this.add(label);
         this.add(Box.createHorizontalStrut(10));
         this.add(fieldLabel);
-        this.add(Box.createHorizontalStrut(25));
+        this.add(Box.createHorizontalStrut(15));
     }
 
     private void setComparisonField(Number val, DoubleLabelPanel label) {
@@ -80,10 +82,16 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener {
 
     public void setModel(TeamSummaryModel model) {
         this.model = model;
+        reInit();
     }
 
+    @Override
     public void reInit() {
+        model.setComparisonPlayers(null);
+        display();
+    }
 
+    private void display() {
         TeamSummaryModel.TeamStatistics stats = model.getTeamStatistics();
         TeamSummaryModel.TeamStatistics comparisonStats = model.getComparisonTeamStatistics();
 
@@ -141,7 +149,11 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener {
         Vector<Player> comparisonPlayers = SpielerTrainingsVergleichsPanel.getVergleichsPlayer();
         if (comparisonPlayers != null) {
             model.setComparisonPlayers(comparisonPlayers);
-            reInit();
+            display();
         }
+    }
+
+    @Override
+    public void refresh() {
     }
 }
