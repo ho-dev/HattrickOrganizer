@@ -165,8 +165,12 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 		scrollPane.getVerticalScrollBar().setBlockIncrement(100);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		panel.add(spielerTrainingsVergleichsPanel, BorderLayout.CENTER);
-		panel.add(new JScrollPane(new RemoveGruppenPanel(spielerUebersichtTable)),
-				BorderLayout.NORTH);
+		panel.add(new JScrollPane(new RemoveGruppenPanel(spielerUebersichtTable)), BorderLayout.NORTH);
+
+		if (teamSummaryPanel != null) {
+			spielerTrainingsVergleichsPanel.addChangeListener(teamSummaryPanel);
+		}
+
 		return panel;
 	}
 
@@ -219,7 +223,9 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 
 		overviewPanel.add(splitPane, BorderLayout.CENTER);
 
-		teamSummaryPanel = new TeamSummaryPanel(HOVerwaltung.instance().getModel().getAllSpieler());
+		TeamSummaryModel teamSummaryModel = new TeamSummaryModel();
+		teamSummaryModel.setPlayers(HOVerwaltung.instance().getModel().getAllSpieler());
+		teamSummaryPanel = new TeamSummaryPanel(teamSummaryModel);
 		overviewPanel.add(teamSummaryPanel, BorderLayout.SOUTH);
 
 		return overviewPanel;

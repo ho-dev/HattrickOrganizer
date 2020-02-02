@@ -1,5 +1,6 @@
 package module.playerOverview;
 
+import core.gui.comp.panel.DoubleLabelPanel;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -7,25 +8,31 @@ import core.model.player.Player;
 import core.util.Helper;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.util.Vector;
 
 /**
  * This panel displays team summary below the list of players in the squad.
  */
-public class TeamSummaryPanel extends ImagePanel {
+public class TeamSummaryPanel extends ImagePanel implements ChangeListener {
 
-    private final JLabel numPlayerLabel = new JLabel();
-    private final JLabel averageAgeLabel = new JLabel();
-    private final JLabel averageSalaryLabel = new JLabel();
-    private final JLabel totalTsiLabel = new JLabel();
-    private final JLabel averageTsiLabel = new JLabel();
-    private final JLabel averageStaminaLabel = new JLabel();
-    private final JLabel averageFormLabel = new JLabel();
+    private final DoubleLabelPanel numPlayerLabel = new DoubleLabelPanel();
+    private final DoubleLabelPanel averageAgeLabel = new DoubleLabelPanel();
+    private final DoubleLabelPanel averageSalaryLabel = new DoubleLabelPanel();
+    private final DoubleLabelPanel totalTsiLabel = new DoubleLabelPanel();
+    private final DoubleLabelPanel averageTsiLabel = new DoubleLabelPanel();
+    private final DoubleLabelPanel averageStaminaLabel = new DoubleLabelPanel();
+    private final DoubleLabelPanel averageFormLabel = new DoubleLabelPanel();
 
-    private Vector<Player> players;
+    // Darker shared of green for better visibility of greyish bg.
+    private final static Color DARK_GREEN = new Color(0, 102, 0);
 
-    public TeamSummaryPanel(Vector<Player> players) {
-        this.players = players;
+    private TeamSummaryModel model;
+
+    public TeamSummaryPanel(TeamSummaryModel model) {
+        this.model = model;
         initComponents();
         reInit();
     }
@@ -45,7 +52,7 @@ public class TeamSummaryPanel extends ImagePanel {
         createField(HOVerwaltung.instance().getLanguageString("ls.team.averageform"), averageFormLabel);
     }
 
-    private void createField(String labelName, JLabel fieldLabel) {
+    private void createField(String labelName, JComponent fieldLabel) {
         JLabel label;
         label = new JLabel(labelName);
         this.add(label);
@@ -54,31 +61,87 @@ public class TeamSummaryPanel extends ImagePanel {
         this.add(Box.createHorizontalStrut(25));
     }
 
-    public void setPlayers(Vector<Player> players) {
-        this.players = players;
+    private void setComparisonField(Number val, DoubleLabelPanel label) {
+        if (val != null && val.floatValue() != 0.0) {
+            JLabel rightLabel = new JLabel();
+            if (val.floatValue() > 0.0) {
+                rightLabel.setText(String.format("+%.2f", val.floatValue()));
+                rightLabel.setForeground(DARK_GREEN);
+            } else {
+                rightLabel.setText(String.format("%.2f", val.floatValue()));
+                rightLabel.setForeground(Color.RED);
+            }
+
+            label.setRightLabel(rightLabel);
+        } else {
+            label.setRightLabel(new JLabel());
+        }
+    }
+
+    public void setModel(TeamSummaryModel model) {
+        this.model = model;
     }
 
     public void reInit() {
-        long totalTsi = players.stream().mapToLong(Player::getTSI).sum();
-        double averageTsi = players.stream().mapToDouble(Player::getTSI).average().orElse(0.0);
-        double averageAge = players.stream().mapToDouble(Player::getAlterWithAgeDays).average().orElse(0.0);
-        double averageSalary = players.stream().mapToDouble(Player::getGehalt).average().orElse(0.0) / UserParameter.instance().faktorGeld;
 
-        double averageStamina = players.stream().mapToDouble(Player::getKondition).average().orElse(0.0);
-        double averageForm = players.stream().mapToDouble(Player::getForm).average().orElse(0.0);
+        TeamSummaryModel.TeamStatistics stats = model.getTeamStatistics();
+        TeamSummaryModel.TeamStatistics comparisonStats = model.getComparisonTeamStatistics();
 
-        numPlayerLabel.setText(String.valueOf(players.size()));
-        averageAgeLabel.setText(Helper.getNumberFormat(false, 1)
-                .format(Helper.round(averageAge, 1)));
-        averageSalaryLabel.setText(Helper.getNumberFormat(true, 2)
-                .format(Helper.round(averageSalary, 2)));
-        totalTsiLabel.setText(Helper.getNumberFormat(false, 0)
-                .format(Helper.round(totalTsi, 0)));
-        averageTsiLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
-                .format(Helper.round(averageTsi, 2)));
-        averageStaminaLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
-                .format(Helper.round(averageStamina, 2)));
-        averageFormLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
-                .format(Helper.round(averageForm, 2)));
+        JLabel numPlayerLeftLabel = new JLabel();
+        numPlayerLeftLabel.setText(String.valueOf(stats.numPlayers));
+        numPlayerLabel.setLeftLabel(numPlayerLeftLabel);
+
+        setComparisonField(comparisonStats.numPlayers, numPlayerLabel);
+
+        JLabel averageAgeLeftLabel = new JLabel();
+        averageAgeLeftLabel.setText(Helper.getNumberFormat(false, 1)
+                .format(Helper.round(stats.averageAge, 1)));
+        averageAgeLabel.setLeftLabel(averageAgeLeftLabel);
+
+        setComparisonField(comparisonStats.averageAge, averageAgeLabel);
+
+        JLabel averageSalaryLeftLabel = new JLabel();
+        averageSalaryLeftLabel.setText(Helper.getNumberFormat(true, 2)
+                .format(Helper.round(stats.averageSalary, 2)));
+        averageSalaryLabel.setLeftLabel(averageSalaryLeftLabel);
+
+        setComparisonField(comparisonStats.averageSalary, averageSalaryLabel);
+
+        JLabel totalTsiLeftLabel = new JLabel();
+        totalTsiLeftLabel.setText(Helper.getNumberFormat(false, 0)
+                .format(Helper.round(stats.totalTsi, 0)));
+        totalTsiLabel.setLeftLabel(totalTsiLeftLabel);
+
+        setComparisonField(comparisonStats.totalTsi, totalTsiLabel);
+
+        JLabel averageTsiLeftLabel = new JLabel();
+        averageTsiLeftLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(Helper.round(stats.averageTsi, 2)));
+        averageTsiLabel.setLeftLabel(averageTsiLeftLabel);
+
+        setComparisonField(comparisonStats.averageTsi, averageTsiLabel);
+
+        JLabel averageStaminaLeftLabel = new JLabel();
+        averageStaminaLeftLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(Helper.round(stats.averageStamina, 2)));
+        averageStaminaLabel.setLeftLabel(averageStaminaLeftLabel);
+
+        setComparisonField(comparisonStats.averageStamina, averageStaminaLabel);
+
+        JLabel averageFormLeftLabel = new JLabel();
+        averageFormLeftLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(Helper.round(stats.averageForm, 2)));
+        averageFormLabel.setLeftLabel(averageFormLeftLabel);
+
+        setComparisonField(comparisonStats.averageForm, averageFormLabel);
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        Vector<Player> comparisonPlayers = SpielerTrainingsVergleichsPanel.getVergleichsPlayer();
+        if (comparisonPlayers != null) {
+            model.setComparisonPlayers(comparisonPlayers);
+            reInit();
+        }
     }
 }

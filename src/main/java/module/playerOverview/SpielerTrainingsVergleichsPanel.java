@@ -14,6 +14,8 @@ import core.model.player.Player;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.DefaultListModel;
@@ -23,6 +25,8 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionListener;
 
 
@@ -44,6 +48,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 
     private JButton m_jbLoeschen = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
     private JList m_jlHRFs = new JList();
+    private List<ChangeListener> changeListeners = new ArrayList<>();
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -114,7 +119,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
     }
 
     /**
-     * Handle vlaueChanged() events.
+     * Handle valueChanged() events.
      */
 	public final void valueChanged(javax.swing.event.ListSelectionEvent listSelectionEvent) {
 		// Markierung vorhanden
@@ -135,10 +140,12 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 			m_jbLoeschen.setEnabled(false);
 		}
 
+        ChangeEvent changeEvent = new ChangeEvent(this);
+        fireChangeEvent(changeEvent);
+
 		// Nur manuelles Update der Tabelle, kein reInit, damit die Sortierung
 		// bleibt.
 		HOMainFrame.instance().getSpielerUebersichtPanel().refreshHRFVergleich();
-
 		// gui.RefreshManager.instance().doReInit();
 	}
 
@@ -201,6 +208,16 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
         //Beim Initialisieren hier den Listener hinzufügen
         if (init) {
             m_jlHRFs.addListSelectionListener(this);
+        }
+    }
+
+    public void addChangeListener(ChangeListener changeListener) {
+	    changeListeners.add(changeListener);
+    }
+
+    private void fireChangeEvent(ChangeEvent event) {
+	    for (ChangeListener listener: changeListeners) {
+	        listener.stateChanged(event);
         }
     }
 }
