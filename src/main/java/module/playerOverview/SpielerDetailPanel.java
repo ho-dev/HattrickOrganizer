@@ -8,7 +8,6 @@ import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.datatype.CBItem;
 import core.db.DBManager;
-//import core.epv.EPVData;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
@@ -170,6 +169,9 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpMarketValue = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+
+
+
     // Third Row, Columns 1 & 2
     private final JTextArea m_jtaNotes = new JTextArea(5, 12);
     // Third Row, Column 3
@@ -178,6 +180,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private final JButton m_jbAnalysisBottom = new JButton(ThemeManager.getIcon(HOIconName.GOTOANALYSEBOTTOM));
     private final JButton m_jbOffsets = new JButton(ThemeManager.getIcon(HOIconName.OFFSET));
     private final JButton m_jbTrainingBlock = new JButton(ThemeManager.getIcon(HOIconName.TRAININGBLOCK));
+
     // Ratings Column
     private final DoppelLabelEntry m_jpRatingKeeper = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
     private final DoppelLabelEntry m_jpRatingCentralDefender = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
@@ -198,6 +201,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private final DoppelLabelEntry m_jpRatingForward = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
     private final DoppelLabelEntry m_jpRatingForwardTowardsWing = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
     private final DoppelLabelEntry m_jpRatingForwardDefensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+
     // Players
     private Player m_clPlayer;
     private Player m_clComparisonPlayer;
@@ -390,8 +394,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jpStatus.setPlayer(m_clPlayer);
         m_jcbUserBestPosition.removeItemListener(this);
         m_jcbUserBestPosition.removeAllItems();
-        for (CBItem item : getPositions()
-        ) {
+        for (CBItem item : getPositions()) {
             m_jcbUserBestPosition.addItem(item);
         }
         Helper.markierenComboBox(m_jcbUserBestPosition, m_clPlayer.getUserPosFlag());

@@ -44,23 +44,19 @@ public final class ModuleManager {
 	}
 
 	private void initMap(Map<Integer, IModule> map) {
-		map.put(Integer.valueOf(IModule.PLAYEROVERVIEW),
-				new PlayerOverviewModule());
+		map.put(Integer.valueOf(IModule.PLAYEROVERVIEW), new PlayerOverviewModule());
 		map.put(Integer.valueOf(IModule.LINEUP), new LineupModule());
 		map.put(Integer.valueOf(IModule.SERIES), new SeriesModule());
 		map.put(Integer.valueOf(IModule.MATCHES), new MatchesModule());
-		map.put(Integer.valueOf(IModule.PLAYERANALYSIS),
-				new PlayerAnalysisModule());
+		map.put(Integer.valueOf(IModule.PLAYERANALYSIS), new PlayerAnalysisModule());
 		map.put(Integer.valueOf(IModule.STATISTICS), new StatisticsModule());
 		map.put(Integer.valueOf(IModule.TRANSFERS), new TransfersModule());
 		map.put(Integer.valueOf(IModule.TRAINING), new TrainingModule());
 		map.put(Integer.valueOf(IModule.MISC), new MiscModule());
 		map.put(Integer.valueOf(IModule.TEAMANALYZER), new TeamAnalyzerModule());
 		map.put(Integer.valueOf(IModule.TSFORECAST), new TSForecastModule());
-		map.put(Integer.valueOf(IModule.SPECIALEVENTS),
-				new SpecialEventsModule());
-		map.put(Integer.valueOf(IModule.TEAM_OF_THE_WEEK),
-				new TeamOfTheWeekModule());
+		map.put(Integer.valueOf(IModule.SPECIALEVENTS), new SpecialEventsModule());
+		map.put(Integer.valueOf(IModule.TEAM_OF_THE_WEEK), new TeamOfTheWeekModule());
 		map.put(Integer.valueOf(IModule.EVIL_CARD), new EvilCardModule());
 		map.put(Integer.valueOf(IModule.IFA), new IfaModule());
 		map.put(Integer.valueOf(IModule.MATCHESANALYZER), new MatchesAnalyzerModule());

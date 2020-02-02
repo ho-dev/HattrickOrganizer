@@ -66,9 +66,7 @@ public abstract class LazyImagePanel extends ImagePanel {
 				};
 				RefreshManager.instance().registerRefreshable(this.refreshable);
 			} else {
-				if (this.refreshable != null) {
-					RefreshManager.instance().unregisterRefreshable(this.refreshable);
-				}
+				RefreshManager.instance().unregisterRefreshable(this.refreshable);
 			}
 		}
 	}
