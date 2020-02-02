@@ -642,10 +642,10 @@ public class Player {
     }
 
     /**
-     * Get the full i18n'd string representation the players age. Includes
+     * Get the full i18n'd string representing the player's age. Includes
      * the birthday indicator as well.
      *
-     * @return the full i18n'd string representation the players age
+     * @return the full i18n'd string representing the player's age
      */
     public String getAgeStringFull() {
         long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
