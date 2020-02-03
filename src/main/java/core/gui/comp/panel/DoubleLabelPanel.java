@@ -20,6 +20,7 @@ public class DoubleLabelPanel extends JPanel {
 
     private void addLabels() {
         final FlowLayout layout = new FlowLayout();
+        layout.setVgap(0);
         setLayout(layout);
         // Fix right label width to avoid components moving when values change.
         rightLabel.setMinimumSize(new Dimension(90, 10));
