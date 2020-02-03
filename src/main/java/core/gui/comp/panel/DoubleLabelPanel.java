@@ -15,29 +15,24 @@ public class DoubleLabelPanel extends JPanel {
 
     public DoubleLabelPanel() {
         setOpaque(false);
+        addLabels();
+    }
 
-        setPreferredSize(new Dimension(90, 10));
-        setMinimumSize(new Dimension(90, 40));
-        setMinimumSize(new Dimension(90, 10));
-
-        final GridLayout layout = new GridLayout(1, 2);
+    private void addLabels() {
+        final FlowLayout layout = new FlowLayout();
         setLayout(layout);
+        // Fix right label width to avoid components moving when values change.
+        rightLabel.setMinimumSize(new Dimension(90, 10));
+        rightLabel.setMaximumSize(new Dimension(90, 10));
+        rightLabel.setPreferredSize(new Dimension(90, 10));
 
         add(leftLabel);
         add(rightLabel);
     }
 
-    public JLabel getLeftLabel() {
-        return leftLabel;
-    }
-
     public void setLeftLabel(JLabel leftLabel) {
         this.leftLabel = leftLabel;
         updateComponent();
-    }
-
-    public JLabel getRightLabel() {
-        return rightLabel;
     }
 
     public void setRightLabel(JLabel rightLabel) {
@@ -46,8 +41,7 @@ public class DoubleLabelPanel extends JPanel {
 
     public void updateComponent() {
         this.removeAll();
-        add(leftLabel);
-        add(rightLabel);
+        addLabels();
         revalidate();
         repaint();
     }

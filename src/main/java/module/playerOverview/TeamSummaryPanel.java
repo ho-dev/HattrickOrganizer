@@ -63,16 +63,23 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
         this.add(Box.createHorizontalStrut(15));
     }
 
-    private void setComparisonField(Number val, DoubleLabelPanel label) {
+    private void setComparisonField(Number val, DoubleLabelPanel label, int numDecimals) {
         if (val != null && val.floatValue() != 0.0) {
             JLabel rightLabel = new JLabel();
+
+            String value;
+            if (numDecimals == 0) {
+                value = String.format("%d", val.intValue());
+            } else {
+                value = String.format("%.2f", val.floatValue());
+            }
             if (val.floatValue() > 0.0) {
-                rightLabel.setText(String.format("+%.2f", val.floatValue()));
+                value = "+" + value;
                 rightLabel.setForeground(DARK_GREEN);
             } else {
-                rightLabel.setText(String.format("%.2f", val.floatValue()));
                 rightLabel.setForeground(Color.RED);
             }
+            rightLabel.setText(value);
 
             label.setRightLabel(rightLabel);
         } else {
@@ -99,49 +106,49 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
         numPlayerLeftLabel.setText(String.valueOf(stats.numPlayers));
         numPlayerLabel.setLeftLabel(numPlayerLeftLabel);
 
-        setComparisonField(comparisonStats.numPlayers, numPlayerLabel);
+        setComparisonField(comparisonStats.numPlayers, numPlayerLabel, 0);
 
         JLabel averageAgeLeftLabel = new JLabel();
         averageAgeLeftLabel.setText(Helper.getNumberFormat(false, 1)
                 .format(Helper.round(stats.averageAge, 1)));
         averageAgeLabel.setLeftLabel(averageAgeLeftLabel);
 
-        setComparisonField(comparisonStats.averageAge, averageAgeLabel);
+        setComparisonField(comparisonStats.averageAge, averageAgeLabel, 2);
 
         JLabel averageSalaryLeftLabel = new JLabel();
         averageSalaryLeftLabel.setText(Helper.getNumberFormat(true, 2)
                 .format(Helper.round(stats.averageSalary, 2)));
         averageSalaryLabel.setLeftLabel(averageSalaryLeftLabel);
 
-        setComparisonField(comparisonStats.averageSalary, averageSalaryLabel);
+        setComparisonField(comparisonStats.averageSalary, averageSalaryLabel, 0);
 
         JLabel totalTsiLeftLabel = new JLabel();
         totalTsiLeftLabel.setText(Helper.getNumberFormat(false, 0)
                 .format(Helper.round(stats.totalTsi, 0)));
         totalTsiLabel.setLeftLabel(totalTsiLeftLabel);
 
-        setComparisonField(comparisonStats.totalTsi, totalTsiLabel);
+        setComparisonField(comparisonStats.totalTsi, totalTsiLabel, 0);
 
         JLabel averageTsiLeftLabel = new JLabel();
         averageTsiLeftLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
                 .format(Helper.round(stats.averageTsi, 2)));
         averageTsiLabel.setLeftLabel(averageTsiLeftLabel);
 
-        setComparisonField(comparisonStats.averageTsi, averageTsiLabel);
+        setComparisonField(comparisonStats.averageTsi, averageTsiLabel, 0);
 
         JLabel averageStaminaLeftLabel = new JLabel();
         averageStaminaLeftLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
                 .format(Helper.round(stats.averageStamina, 2)));
         averageStaminaLabel.setLeftLabel(averageStaminaLeftLabel);
 
-        setComparisonField(comparisonStats.averageStamina, averageStaminaLabel);
+        setComparisonField(comparisonStats.averageStamina, averageStaminaLabel, 2);
 
         JLabel averageFormLeftLabel = new JLabel();
         averageFormLeftLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
                 .format(Helper.round(stats.averageForm, 2)));
         averageFormLabel.setLeftLabel(averageFormLeftLabel);
 
-        setComparisonField(comparisonStats.averageForm, averageFormLabel);
+        setComparisonField(comparisonStats.averageForm, averageFormLabel, 2);
     }
 
     @Override
