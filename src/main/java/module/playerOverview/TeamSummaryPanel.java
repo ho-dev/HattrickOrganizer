@@ -69,9 +69,11 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
 
             String value;
             if (numDecimals == 0) {
-                value = String.format("%d", val.intValue());
+                value = Helper.getNumberFormat(false, numDecimals)
+                        .format(Helper.round(val.intValue(), numDecimals));
             } else {
-                value = String.format("%.2f", val.floatValue());
+                value = Helper.getNumberFormat(false, numDecimals)
+                        .format(Helper.round(val.floatValue(), numDecimals));
             }
             if (val.floatValue() > 0.0) {
                 value = "+" + value;
