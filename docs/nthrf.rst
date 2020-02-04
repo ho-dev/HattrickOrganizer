@@ -48,5 +48,6 @@ NTHRF
    file you just saved to have the data of your selection.
 -  You will see the internationals immediately in the list of players.
 
-14. Note : You can only download the Nthrf file once per HO session! -
-    the download button remains disabled after the first activation.
+
+.. note::
+    You can only download the Nthrf file once per HO session! - the download button remains disabled after the first activation.
