@@ -35,7 +35,7 @@ NTHRF
    written on it
 -  Click on it and a link appears just below the button while opening a hattrick page in your browser (if this page does not open, copy and paste the link in the browser)
 -  The link looks like this: https://chpp.hattrick.org/oauth/authorize.aspx.…
--  Enter your login details as requested, Hattrick will give you a code that you should copy into HO! (you can use :kbd:`Control-c` and :kbd:`Control-v`)
+-  Enter your login details as requested, Hattrick will give you a code that you should copy into HO! (you can use ``CTRL-C`` and ``CTRL-V``)
 
 12. Download
 
