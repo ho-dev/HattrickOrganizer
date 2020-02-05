@@ -75,24 +75,26 @@ Changelist HO! 2.1
 ## Translations
   - HO! is currently available in 36 languages thanks to the work of 45 translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
   - Translators contribution since the previous release (number of translated terms):
+
+
 | username       | nb translated terms |
 |----------------|:-------------------:|
-| sich           |         524         |
-| Moorhuhninho   |         332         |
-| Boy            |         193         |
-| Saleh          |         185         |
-| Motavali       |         181         |
-| Sergejs        |         114         |
-| TeamBMW        |          81         |
-| Juan           |          67         |
-| Lidegand       |          56         |
-| Globe96        |          46         |
-| Zigmas         |          45         |
-| dzsoo          |          44         |
-| murko          |          38         |
-| Baler0         |          28         |
-| taimikko       |          21         |
-| Ricardo        |          18         |
-| DavidatorusF   |          17         |
-| brokenelevator |          3          |
-| Massimo        |          3          |
+| sich           | 524                 |
+| Moorhuhninho   | 332                 |
+| Boy            | 193                 |
+| Saleh          | 185                 |
+| Motavali       | 181                 |
+| Sergejs        | 114                 |
+| TeamBMW        | 81                  |
+| Juan           | 67                  |
+| Lidegand       | 56                  |
+| Globe96        | 46                  |
+| Zigmas         | 45                  |
+| dzsoo          | 44                  |
+| murko          | 38                  |
+| Baler0         | 28                  |
+| taimikko       | 21                  |
+| Ricardo        | 18                  |
+| DavidatorusF   | 17                  |
+| brokenelevator | 3                   |
+| Massimo        | 3                   |
