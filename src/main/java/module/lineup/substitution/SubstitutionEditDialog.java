@@ -107,6 +107,7 @@ public class SubstitutionEditDialog extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				behaviourView.setSubstitution();
 				canceled = false;
 				dispose();
 			}

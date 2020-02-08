@@ -286,16 +286,15 @@ public class SubstitutionOverview extends JPanel {
 		dlg.init(lineup, newSub);
 		dlg.setVisible(true);
 
-		// TODO: Cancel restores old lineup
 		if (!dlg.isCanceled()) {
-			Substitution sub = dlg.getSubstitution();
-			sub.setPlayerOrderId(getNextOrderID());
-			this.lineup.getSubstitutionList().add(sub);
+			newSub.setPlayerOrderId(getNextOrderID());
 			updateOrderIDs();
 			refresh();
-			selectSubstitution(sub);
+			selectSubstitution(newSub);
 			HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setLabels();
-
+		}
+		else {
+			RestoreLineupSubstitutions();
 		}
 	}
 
@@ -342,13 +341,14 @@ public class SubstitutionOverview extends JPanel {
 			dlg.init(lineup, sub);
 			dlg.setVisible(true);
 
-			// TODO: Cancel restores old lineup
 			if (!dlg.isCanceled()) {
-				sub.merge(dlg.getSubstitution());
 				((SubstitutionsTableModel) substitutionTable.getModel()).fireTableRowsUpdated(
 						selectedRowIndex, selectedRowIndex);
 				refresh();
 				selectSubstitution(sub);
+			}
+			else {
+				RestoreLineupSubstitutions();
 			}
 		}
 	}

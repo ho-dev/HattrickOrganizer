@@ -229,9 +229,9 @@ public class SubstitutionEditView extends JPanel {
 	void RatingRecalc()
 	{
 		if ( substitution == null || initDone == false) return;
+		setSubstitution();
 		if ( substitution.getSubjectPlayerID() !=  -1 &&
-				(isNewBehaviour() || substitution.getPlayerOrderId() != -1)){
-			getSubstitution(substitution);
+				(isNewBehaviour() || substitution.getObjectPlayerID() != -1)){
 			this.lineup.setRatings();
 			this.hatstatsChangeField.setText(HatStatsChange());
 		}
@@ -274,8 +274,8 @@ public class SubstitutionEditView extends JPanel {
 		};
 
 		this.playerComboBox.addItemListener( ratingRecalcListener);
-		this.playerInComboBox.addItemListener(ratingRecalcListener);
-		this.positionComboBox.addItemListener(ratingRecalcListener);
+		if (this.playerInComboBox != null )  this.playerInComboBox.addItemListener(ratingRecalcListener);
+		if (this.positionComboBox != null )  this.positionComboBox.addItemListener(ratingRecalcListener);
 		this.behaviourComboBox.addItemListener(ratingRecalcListener);
 
 		if (!isPositionSwap()) {
@@ -525,5 +525,9 @@ public class SubstitutionEditView extends JPanel {
 
 	private boolean isNewBehaviour() {
 		return this.orderType == MatchOrderType.NEW_BEHAVIOUR;
+	}
+
+	public void setSubstitution() {
+		getSubstitution(this.substitution);
 	}
 }
