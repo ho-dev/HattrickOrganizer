@@ -78,11 +78,16 @@ public interface HOIconName {
 
 	String ME_GOAL_AND_QUICK = "me_goal_and_quick";
 	String ME_GOAL_AND_UNPREDICTABLE = "me_goal_and_unpredictable";
+	String ME_109 = "me_109";
+	String ME_117 = "me_117";
 	String ME_118 = "me_118";
 	String ME_GOAL_AND_HEAD_SPEC = "me_goal_and_head_spec";
 	String ME_GOAL_AND_TECHNICAL = "me_goal_and_technical";
 	String ME_135 = "me_135";
 	String ME_136 = "me_136";
+	String ME_137 = "me_137";
+	String ME_138 = "me_138";
+    String ME_139 = "me_138";
 	String ME_140 = "me_140";
 	String ME_141 = "me_141";
 	String ME_142 = "me_142";
@@ -90,12 +95,19 @@ public interface HOIconName {
 	String ME_GOAL_AND_WHISTLE = "me_goal_and_whistle";
 	String ME_184 = "me_184";
 	String ME_185 = "me_185";
-	String ME_207 = "me_207";
+	String ME_186 = "me_186";
+	String ME_209 = "me_209";
+	String ME_217 = "me_217";
+	String ME_NO_GOAL_AND_HEAD_SPEC = "me_no_goal_and_head_spec";
 	String ME_ME_MISS_AND_QUICK = "me_me_miss_and_quick";
 	String ME_MISSED_CORNER = "missed_corner";
 	String ME_NO_GOAL_UNPREDICTABLE = "me_no_goal_unpredictable";
+	String ME_GOAL_LONGSHOT_PNG = "me_goal_longshot.png";
+	String ME_MISS_LONGSHOT_PNG =  "me_miss_longshot.png";
+	String ME_235 = "me_235";
     String ME_236 = "me_236";
 	String ME_237 = "me_237";
+    String ME_239 = "me_239";
 	String ME_240 = "me_240";
 	String ME_241 = "me_241";
 	String ME_242 = "me_242";
@@ -107,24 +119,14 @@ public interface HOIconName {
 
 	String GOAL			= "goal";
 	String MISS			= "miss";
-	String GOAL_FREEKICK 	= "tor_freistoss";
 	String GOAL_MID		= "tor_mitte";
 	String GOAL_LEFT		= "tor_links";
 	String GOAL_RIGHT		= "tor_rechts";
 	String CONVERTED_PENALTY = "convertedPenalty";
 	String MISSED_PENALTY = "missedPenalty";
-	String GOAL_IFK = "tor_indirect_freekick";
-	String GOAL_LONGSHOT	= "tor_longshot";
-	String GOAL_SPECIAL	= "tor_special";
-	String GOAL_COUNTER	= "tor_counter";
-	String NO_GOAL_FREEKICK = "keintor_freistoss";
 	String NO_GOAL_MID = "keintor_mitte";
 	String NO_GOAL_LEFT = "keintor_links";
 	String NO_GOAL_RIGHT = "keintor_rechts";
-
-	String NO_GOAL_LONGSHOT = "keintor_longshot";
-	String NO_GOAL_SPECIAL = "keintor_special";
-	String NO_GOAL_COUNTER = "keintor_counter";
 
 	String PRESSING = "pressing";
 	String FORMATION  = "formation";

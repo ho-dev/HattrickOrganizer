@@ -146,24 +146,14 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		put(GOAL, "gui/bilder/match_events/goal.png");
 		put(MISS, "gui/bilder/match_events/miss.png");
-		put(GOAL_FREEKICK, "gui/bilder/highlights/Fussball_Freistoss.png");
 		put(GOAL_MID, "gui/bilder/match_events/goal_C.png");
 		put(GOAL_LEFT, "gui/bilder/match_events/goal_L.png");
 		put(GOAL_RIGHT, "gui/bilder/match_events/goal_R.png");
 		put(CONVERTED_PENALTY, "gui/bilder/match_events/converted_penalty.png");
 		put(MISSED_PENALTY, "gui/bilder/match_events/missed_penalty.png");
-		put(GOAL_IFK, "gui/bilder/highlights/Fussball_FreistossIndirekt.png");
-		put(GOAL_LONGSHOT, "gui/bilder/highlights/Fussball_Longshot.png");
-		put(GOAL_SPECIAL, "gui/bilder/highlights/Fussball_Spezial.png");
-		put(GOAL_COUNTER, "gui/bilder/highlights/Fussball_Konter.png");
-		put(NO_GOAL_FREEKICK, "gui/bilder/highlights/KeinFussball_Freistoss.png");
 		put(NO_GOAL_MID, "gui/bilder/match_events/miss_C.png");
 		put(NO_GOAL_LEFT, "gui/bilder/match_events/miss_L.png");
 		put(NO_GOAL_RIGHT, "gui/bilder/match_events/miss_R.png");
-		put(NO_GOAL_FREEKICK, "gui/bilder/highlights/KeinFussball_FreistossIndirekt.png");
-		put(NO_GOAL_LONGSHOT, "gui/bilder/highlights/KeinFussball_Longshot.png");
-		put(NO_GOAL_SPECIAL, "gui/bilder/highlights/KeinFussball_Spezial.png");
-		put(NO_GOAL_COUNTER, "gui/bilder/highlights/KeinFussball_Konter.png");
 
 		put(PRESSING, "gui/bilder/match_events/pressing(green).png");
 
@@ -171,9 +161,14 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(ME_GOAL_AND_HEAD_SPEC, "gui/bilder/match_events/me_goal_and_head_spec.png");
 		put(ME_GOAL_AND_TECHNICAL, "gui/bilder/match_events/me_goal_and_technical.png");
 		put(ME_GOAL_AND_UNPREDICTABLE, "gui/bilder/match_events/me_goal_and_unpredictable.png");
+		put(ME_109, "gui/bilder/match_events/me_109.png");
+		put(ME_117, "gui/bilder/match_events/me_117.png");
 		put(ME_118, "gui/bilder/match_events/me_118.png");
 		put(ME_135, "gui/bilder/match_events/me_135.png");
 		put(ME_136, "gui/bilder/match_events/me_136.png");
+		put(ME_137, "gui/bilder/match_events/me_137.png");
+		put(ME_138, "gui/bilder/match_events/me_138.png");
+        put(ME_139, "gui/bilder/match_events/me_139.png");
 		put(ME_140, "gui/bilder/match_events/me_140.png");
 		put(ME_141, "gui/bilder/match_events/me_141.png");
 		put(ME_142, "gui/bilder/match_events/me_142.png");
@@ -182,17 +177,24 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(ME_184, "gui/bilder/match_events/me_184.png");
 		put(ME_185, "gui/bilder/match_events/me_185.png");
 		put(ME_NO_GOAL_UNPREDICTABLE, "gui/bilder/match_events/me_no_goal_unpredictable.png");
-		put(ME_207, "gui/bilder/match_events/me_207.png");
+		put(ME_GOAL_LONGSHOT_PNG, "gui/bilder/match_events/me_goal_longshot.png");
+		put(ME_MISS_LONGSHOT_PNG, "gui/bilder/match_events/me_miss_longshot.png");
+		put(ME_209, "gui/bilder/match_events/me_209.png");
+		put(ME_217, "gui/bilder/match_events/me_217.png");
+		put(ME_NO_GOAL_AND_HEAD_SPEC, "gui/bilder/match_events/me_no_goal_and_head_spec.png");
 		put(ME_ME_MISS_AND_QUICK, "gui/bilder/match_events/me_miss_and_quick.png");
 		put(ME_MISSED_CORNER, "gui/bilder/match_events/missed_corner.png");
+		put(ME_235, "gui/bilder/match_events/me_235.png");
         put(ME_236, "gui/bilder/match_events/me_236.png");
 		put(ME_237, "gui/bilder/match_events/me_237.png");
+        put(ME_239, "gui/bilder/match_events/me_239.png");
 		put(ME_240, "gui/bilder/match_events/me_240.png");
 		put(ME_241, "gui/bilder/match_events/me_241.png");
 		put(ME_242, "gui/bilder/match_events/me_242.png");
 		put(ME_243, "gui/bilder/match_events/me_243.png");
 		put(ME_MISS_AND_WHISTLE, "gui/bilder/match_events/me_miss_and_whistle.png");
 		put(ME_285, "gui/bilder/match_events/me_285.png");
+		put(ME_186, "gui/bilder/match_events/me_186.png");
 		put(ME_286, "gui/bilder/match_events/me_286.png");
 		put(ME_YELLOW_THEN_RED, "gui/bilder/match_events/me_YellowThenRed.png");
 

@@ -10,7 +10,6 @@ import core.model.player.Player;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 
 import javax.swing.JPanel;
@@ -21,11 +20,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
- * Bietet Übersicht über alle Player (main class of the package)
+ * Overview of all the players on the team (main class of the package)
  */
 public class SpielerUebersichtsPanel extends ImagePanel {
 
@@ -37,6 +34,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	private SpielerTrainingsVergleichsPanel spielerTrainingsVergleichsPanel;
 	private SpielerUebersichtNamenTable spielerUebersichtTableName;
 	private PlayerOverviewTable spielerUebersichtTable;
+	private TeamSummaryPanel teamSummaryPanel;
 
 	/**
 	 * Creates a new SpielerUebersichtsPanel object. (Players view panel)
@@ -99,8 +97,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	public final void refreshHRFVergleich() {
 		spielerUebersichtTable.refreshHRFVergleich();
 
-		Player player = spielerUebersichtTable.getSorter().getSpieler(
-				spielerUebersichtTable.getSelectedRow());
+		Player player = spielerUebersichtTable.getSorter().getSpieler(spielerUebersichtTable.getSelectedRow());
 		spielerDetailPanel.setSpieler(player);
 	}
 
@@ -168,22 +165,28 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 		scrollPane.getVerticalScrollBar().setBlockIncrement(100);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		panel.add(spielerTrainingsVergleichsPanel, BorderLayout.CENTER);
-		panel.add(new JScrollPane(new RemoveGruppenPanel(spielerUebersichtTable)),
-				BorderLayout.NORTH);
+		panel.add(new JScrollPane(new RemoveGruppenPanel(spielerUebersichtTable)), BorderLayout.NORTH);
+
+		if (teamSummaryPanel != null) {
+			spielerTrainingsVergleichsPanel.addChangeListener(teamSummaryPanel);
+		}
+
 		return panel;
 	}
 
 	/*
-	 * Initialise the players table
+	 * Initialise the players tables
 	 */
 	private Component initSpielerTabelle() {
+
+		JPanel overviewPanel = new JPanel();
+		overviewPanel.setLayout(new BorderLayout());
 
 		// table with the player's details
 		spielerUebersichtTable = new PlayerOverviewTable();
 
 		// table with the player's name
-		spielerUebersichtTableName = new SpielerUebersichtNamenTable(
-				spielerUebersichtTable.getSorter());
+		spielerUebersichtTableName = new SpielerUebersichtNamenTable(spielerUebersichtTable.getSorter());
 
 		JScrollPane scrollpane = new JScrollPane(spielerUebersichtTableName);
 		scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -195,20 +198,18 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 
 		final JScrollBar bar = scrollpane.getVerticalScrollBar();
 		final JScrollBar bar2 = scrollpane2.getVerticalScrollBar();
-		// setVisibile(false) does not have an effect, so we set the size to
+
+		// setVisible(false) does not have an effect, so we set the size to
 		// false. We can't disable the scrollbar with VERTICAL_SCROLLBAR_NEVER
 		// because this will disable mouse wheel scrolling.
 		bar.setPreferredSize(new Dimension(0, 0));
 
 		// Synchronize vertical scrolling
-		AdjustmentListener adjustmentListener = new AdjustmentListener() {
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent e) {
-				if (e.getSource() == bar2) {
-					bar.setValue(e.getValue());
-				} else {
-					bar2.setValue(e.getValue());
-				}
+		AdjustmentListener adjustmentListener = e -> {
+			if (e.getSource() == bar2) {
+				bar.setValue(e.getValue());
+			} else {
+				bar2.setValue(e.getValue());
 			}
 		};
 		bar.addAdjustmentListener(adjustmentListener);
@@ -220,7 +221,14 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setDividerLocation(UserParameter.instance().playerTablePanel_horizontalSplitPane);
 
-		return splitPane;
+		overviewPanel.add(splitPane, BorderLayout.CENTER);
+
+		TeamSummaryModel teamSummaryModel = new TeamSummaryModel();
+		teamSummaryModel.setPlayers(HOVerwaltung.instance().getModel().getAllSpieler());
+		teamSummaryPanel = new TeamSummaryPanel(teamSummaryModel);
+		overviewPanel.add(teamSummaryPanel, BorderLayout.SOUTH);
+
+		return overviewPanel;
 	}
 
 	private void selectRow(JTable table, int row) {
@@ -237,33 +245,25 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 */
 	private void addTableSelectionListeners() {
 		spielerUebersichtTable.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
+				e -> {
+					if (e.getValueIsAdjusting())
+						return;
 
-					@Override
-					public void valueChanged(ListSelectionEvent e) {
-						if (e.getValueIsAdjusting())
-							return;
-
-						selectRow(spielerUebersichtTableName,
-								spielerUebersichtTable.getSelectedRow());
-					}
+					selectRow(spielerUebersichtTableName,
+							spielerUebersichtTable.getSelectedRow());
 				});
 
 		spielerUebersichtTableName.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
+				e -> {
+					if (e.getValueIsAdjusting())
+						return;
 
-					@Override
-					public void valueChanged(ListSelectionEvent e) {
-						if (e.getValueIsAdjusting())
-							return;
-
-						int row = spielerUebersichtTableName.getSelectedRow();
-						selectRow(spielerUebersichtTable, row);
-						if (row > -1) {
-							Player player = spielerUebersichtTable.getSorter().getSpieler(row);
-							if (player != null) {
-								HOMainFrame.instance().setActualSpieler(player);
-							}
+					int row = spielerUebersichtTableName.getSelectedRow();
+					selectRow(spielerUebersichtTable, row);
+					if (row > -1) {
+						Player player = spielerUebersichtTable.getSorter().getSpieler(row);
+						if (player != null) {
+							HOMainFrame.instance().setActualSpieler(player);
 						}
 					}
 				});

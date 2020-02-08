@@ -70,7 +70,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
     }
 
     /**
-     * Method that populate this panel for the selected player
+     * Method that populates this panel for the selected player
      */
     private void loadFromModel() {
         if (this.model.getActivePlayer() == null) {

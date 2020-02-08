@@ -38,7 +38,7 @@ dependencies {
 
 def major = '2'
 def minor = '1'
-def development_stage = '0'
+def development_stage = '1'
 def releaseArtefacts = false
 
 // region configuration ==============================================================================================
@@ -573,13 +573,13 @@ githubRelease {
             overwrite = true
             githubReleaseMessage = "DEVELOPMENT version has been released on GitHub"
         } else if (development_stage == '1') {
-            tagName = "BETA"
-            releaseName = "BETA"
+            tagName = major + "." + minor
+            releaseName = major + "." + minor
             targetCommitish = "master"
             body = "..................."
             prerelease = true
             overwrite = true
-            githubReleaseMessage = "BETA version has been released on GitHub.\nBuild ... Release on ...."
+            githubReleaseMessage = major + "." + minor + " BETA version has been released on GitHub.\nBuild ... Release on ...."
         } else if (development_stage == '2') {
             githubReleaseMessage = "automatic release of stable version has not been implemented yet !!"
         }
