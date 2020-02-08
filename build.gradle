@@ -38,7 +38,7 @@ dependencies {
 
 def major = '2'
 def minor = '1'
-def development_stage = '1'
+def development_stage = '0'
 def releaseArtefacts = false
 
 // region configuration ==============================================================================================
@@ -75,6 +75,11 @@ application {
 //  configure java plugin --------------------------------
 java {
     compileJava.options.encoding = 'UTF-8'
+}
+
+//  configure markdownToHtml --------------------------------
+markdownToHtml {
+    markdownToHtml.tables = true  // Configuration
 }
 
 // Configure poeditor plugin ================================
@@ -524,6 +529,7 @@ task compute_sha_sums(dependsOn: updatebuildreferences){
     doLast {
         String command = "cmd /c D:\\Anaconda3\\python ${python_script}"
         Process p = Runtime.getRuntime().exec(command)
+        releaseAssetsNames = file("$target_dir").listFiles()
     }
 }
 
@@ -556,13 +562,28 @@ markdownToHtml {
     markdownToHtml.hardwraps = true
 }
 
+
+
+task ReleaseToGitHub(dependsOn: tasks.getByName('githubRelease')){
+    group 'ho'
+    doLast {
+        if (development_stage == '0') {
+            println "DEVELOPMENT version has been released on GitHub"
+        } else if (development_stage == '1') {
+            println major + "." + minor + " BETA version has been released on GitHub.\nBuild ... Release on ...."
+        } else if (development_stage == '2') {
+            println "automatic release of stable version has not been implemented yet !!"
+        }
+    }
+}
+
 githubRelease {
     def _token = GITHUB_TOKEN  // required token for your personal access with repo permissions
     owner = 'akasolace'
     repo = 'HO'
     releaseAssets = file("$target_dir").listFiles()
     token = _token
-    def  githubReleaseMessage = ""
+
     if (releaseArtefacts) {
         if (development_stage == '0') {
             tagName = "dev"
@@ -571,7 +592,6 @@ githubRelease {
             body = "Latest development version aimed at developers. \n It can (will soon or late break your database))"
             prerelease = true
             overwrite = true
-            githubReleaseMessage = "DEVELOPMENT version has been released on GitHub"
         } else if (development_stage == '1') {
             tagName = major + "." + minor
             releaseName = major + "." + minor
@@ -579,9 +599,7 @@ githubRelease {
             body = "..................."
             prerelease = true
             overwrite = true
-            githubReleaseMessage = major + "." + minor + " BETA version has been released on GitHub.\nBuild ... Release on ...."
         } else if (development_stage == '2') {
-            githubReleaseMessage = "automatic release of stable version has not been implemented yet !!"
         }
     }
 
@@ -602,6 +620,7 @@ markdownToHtml.dependsOn pushmd
 buildDeb.dependsOn installDist
 buildRpm.dependsOn installDist
 createApp.dependsOn installDist
+//tasks.getByName('githubRelease').dependsOn compute_sha_sums
 
 
 
