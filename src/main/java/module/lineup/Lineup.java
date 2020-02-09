@@ -1749,6 +1749,9 @@ public class Lineup{
 	 */
 	public void UpdateLineupWithMatchOrder(Substitution sub){
 		MatchRoleID matchRoleIDPlayer, matchRoleIDaffectedPlayer;
+		int newRoleId;
+		byte tactic;
+
 		Player ObjectPlayer;
 		switch (sub.getOrderType()) {
 			case SUBSTITUTION:
@@ -1772,13 +1775,49 @@ public class Lineup{
 					break;
 				}
 				ObjectPlayer.setGameStartingTime(sub.getMatchMinuteCriteria());
-				byte tactic = sub.getBehaviour();
+				tactic = sub.getBehaviour();
 				if (tactic == -1) tactic = matchRoleIDaffectedPlayer.getTaktik();
-				this.setSpielerAtPosition(matchRoleIDaffectedPlayer.getId(), matchRoleIDPlayer.getSpielerId(), tactic);
+				newRoleId = sub.getRoleId();
+				if ( newRoleId != -1 ) {
+					if (  getPositionById(newRoleId).getSpielerId() == 0){
+						if ( newRoleId != matchRoleIDaffectedPlayer.getId() ) {
+							setSpielerAtPosition(matchRoleIDaffectedPlayer.getId(), 0, MatchRoleID.NORMAL);  // clear old position
+						}
+					}
+					else {
+						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
+						break;
+					}
+				}
+				else {
+					newRoleId = matchRoleIDaffectedPlayer.getId();
+				}
+				setSpielerAtPosition(newRoleId, matchRoleIDPlayer.getSpielerId(), tactic);
+				break;
+
+			case POSITION_SWAP:
+				matchRoleIDaffectedPlayer = getPositionBySpielerId(sub.getSubjectPlayerID());
+				matchRoleIDPlayer = getPositionBySpielerId(sub.getObjectPlayerID());
+				matchRoleIDaffectedPlayer.setSpielerId(sub.getObjectPlayerID());
+				matchRoleIDPlayer.setSpielerId(sub.getSubjectPlayerID());
+				break;
+
+			case NEW_BEHAVIOUR:
+				newRoleId = sub.getRoleId();
+				if ( newRoleId == -1 )  newRoleId = getPositionBySpielerId(sub.getSubjectPlayerID()).getId();
+				else if ( newRoleId != getPositionBySpielerId(sub.getSubjectPlayerID()).getId()
+						&& getPositionById(newRoleId).getSpielerId() > 0 ){
+					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
+					break;
+				}
+				tactic = sub.getBehaviour();
+				if ( tactic == -1)  tactic = MatchRoleID.NORMAL;
+				setSpielerAtPosition(newRoleId, sub.getSubjectPlayerID(), tactic);
 				break;
 
 			default:
 				HOLogger.instance().error(Lineup.class, String.format("Incorrect Prediction Rating: the following match order has not been considered: %s", sub.getOrderType()));
+				break;
 		}
 	}
 
