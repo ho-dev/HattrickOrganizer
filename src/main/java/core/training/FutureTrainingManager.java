@@ -182,7 +182,9 @@ public class FutureTrainingManager {
 							
 				processTraining(wt, trp, tw);
 			}
-		}		
+		}
+		// TODO: if we want to do the change of https://github.com/akasolace/HO/issues/296
+		// we could set trainingsSpeed to the maximum found instead of the average
 		trainingSpeed /= weeksPassed;
 		FuturePlayer fp = new FuturePlayer();				
 		fp.setAttack(getFinalValue(PlayerSkill.SCORING));		
