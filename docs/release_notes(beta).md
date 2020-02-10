@@ -61,15 +61,17 @@ Changelist HO! 2.1
   - Fix training for secondary cups #306
   - Track experience acquisition #199
   - Fix training forecast displaying wrong skill up #368
+ - Fix the trainee marking of future training plan #296  
 
 
 ## Misc
-  - Out of bond exception for Hall of Fame players #350
-  - Summary line in player overview presenting tram value (avg TSI, total TSI, avg form, ….) #373
+  - Out of bound exception for Hall of Fame players #350
+  - Summary line in player overview presenting team value (avg TSI, total TSI, avg form, ….) #373
   - Team analyzer: Fix HatStats and LoddarStats always displaying zero #324
   - Fix MatchDayPanel download button not available while the match is over #330 
   - Fix MatchDayPanel null pointer exception #337
   - Fix a bug when downloading data while having a generation match planned #365
+  - Team analyzer: Fix display issue in case of a team walkover #377
 
 
 ## Translations

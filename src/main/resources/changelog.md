@@ -59,6 +59,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - Fix training for secondary cups #306
   - Track experience acquisition #199
   - Fix training forecast displaying wrong skill up #368
+  - Fix the trainee marking of future training plan #296
 
 
 ## Misc
