@@ -38,8 +38,8 @@ dependencies {
 
 def major = '2'
 def minor = '1'
-def development_stage = '0'
-def releaseArtefacts = false
+def development_stage = '2'
+def releaseArtefacts = true
 
 // region configuration ==============================================================================================
 println "Configuration start"
@@ -529,7 +529,6 @@ task compute_sha_sums(dependsOn: updatebuildreferences){
     doLast {
         String command = "cmd /c D:\\Anaconda3\\python ${python_script}"
         Process p = Runtime.getRuntime().exec(command)
-        releaseAssetsNames = file("$target_dir").listFiles()
     }
 }
 
@@ -600,6 +599,12 @@ githubRelease {
             prerelease = true
             overwrite = true
         } else if (development_stage == '2') {
+            tagName = major + "." + minor
+            releaseName = major + "." + minor
+            targetCommitish = "master"
+            body = "..................."
+            prerelease = false
+            overwrite = true
         }
     }
 
