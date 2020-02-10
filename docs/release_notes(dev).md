@@ -61,6 +61,7 @@ Changelist HO! 2.1
   - Fix training for secondary cups #306
   - Track experience acquisition #199
   - Fix training forecast displaying wrong skill up #368
+  - Fix the trainee marking of future training plan #296
 
 
 ## Misc
