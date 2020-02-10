@@ -83,9 +83,8 @@ public class MatchesHighlightsStat {
 	public String getPerformanceString(){
 		if(isTitle())
 			return "";
-		if(goals == -1)
-			return " - ";
-		return String.valueOf((goals*100/(goals+noGoals))+" %");
+		if((goals == -1) || ((goals+noGoals)==0)) {return " - ";}
+		return goals*100/(goals+noGoals)+" %";
 	}
 	public boolean isTitle() {
 		return goals==-1&&noGoals==-1;

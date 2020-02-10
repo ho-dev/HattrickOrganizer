@@ -8,6 +8,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ho.HOTheme;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.player.Player;
 import core.net.login.ProxyDialog;
 import core.util.HOLogger;
 
@@ -20,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -274,6 +276,12 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		// Lastly, so that the matches for training are there
 		if (bOK && m_jchHRF.isSelected()) {
 			OnlineWorker.getHrf(this);
+			List<Player> player = hov.getModel().getAllSpieler();
+			for ( Player p : player){
+				if ( p.getNationalTeamID() != 0){
+					OnlineWorker.getMatches(p.getNationalTeamID(), false, true, true);
+				}
+			}
 		}
 	}
 }

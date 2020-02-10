@@ -102,7 +102,7 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
 	
 	
 	public void refresh(int matchtypes) {
-		 if(matchtypes == SpielePanel.ALLE_SPIELE || matchtypes == SpielePanel.NUR_FREMDE_SPIELE){
+		 if(matchtypes == SpielePanel.ALL_MATCHS || matchtypes == SpielePanel.OTHER_TEAM_MATCHS){
 			 clear();
 			 return;
 		 }

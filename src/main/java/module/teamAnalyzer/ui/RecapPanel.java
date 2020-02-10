@@ -164,9 +164,17 @@ public class RecapPanel extends JPanel {
 
             // Columns 12-15
             rowData.add(df.format(matchDetail.getStars()));
-            rowData.add(df.format(matchDetail.getRating().getHatStats()));
+            if (matchDetail.getRating().getHatStats() >= 0) {
+                rowData.add(df.format(matchDetail.getRating().getHatStats()));
+            } else {
+                rowData.add("");
+            }
             rowData.add(df.format(matchDetail.getRating().getSquad()));
-            rowData.add(df.format(matchDetail.getRating().getSquad() / matchDetail.getStars()));
+            if (matchDetail.getStars() != 0.0) {
+                rowData.add(df.format(matchDetail.getRating().getSquad() / matchDetail.getStars()));
+            } else {
+                rowData.add("");
+            }
 
             DecimalFormat df2 = new DecimalFormat("###.##"); //$NON-NLS-1$
 

@@ -20,7 +20,7 @@ final class SpielerTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[56];
+		columns = new ColumnDescriptor[58];
 		columns[0] = new ColumnDescriptor("HRF_ID", Types.INTEGER, false);
 		columns[1] = new ColumnDescriptor("Datum", Types.TIMESTAMP, false);
 		columns[2] = new ColumnDescriptor("GelbeKarten", Types.INTEGER, false);
@@ -77,6 +77,8 @@ final class SpielerTable extends AbstractTable {
 		columns[53] = new ColumnDescriptor("TrainingBlock", Types.BOOLEAN, false);
 		columns[54] = new ColumnDescriptor("Loyalty", Types.INTEGER, false);
 		columns[55] = new ColumnDescriptor("HomeGrown", Types.BOOLEAN, false);
+		columns[56] = new ColumnDescriptor("NationalTeamID", Types.INTEGER, true);
+		columns[57] = new ColumnDescriptor("SubExperience", Types.REAL, false);
 	}
 
 	@Override
@@ -112,7 +114,9 @@ final class SpielerTable extends AbstractTable {
 			statement.append( "iCharakter , iAnsehen , iAgressivitaet , Fuehrung , Erfahrung , Gehalt , ");
 			statement.append( "Bonus , Land , Marktwert , Verletzt , ToreFreund , ToreLiga , TorePokal , ");
 			statement.append( "ToreGesamt , Hattrick , Bewertung , TrainerTyp, Trainer, HRF_ID, Datum, ");
-			statement.append( "PlayerNumber, TransferListed,  Caps, CapsU20, TrainingBlock, Loyalty, HomeGrown ) VALUES(");
+			statement.append( "PlayerNumber, TransferListed,  Caps, CapsU20, TrainingBlock, Loyalty, HomeGrown, ");
+			statement.append( "SubExperience, NationalTeamID ");
+			statement.append(") VALUES(");
 			statement.append(player.getGelbeKarten()).append(",");
 						
 			statement.append(player.getSpielerID()).append(",");
@@ -170,7 +174,9 @@ final class SpielerTable extends AbstractTable {
 			statement.append(player.getU20Laenderspiele()).append(",");
 			statement.append(player.hasTrainingBlock()).append(",");
 			statement.append(player.getLoyalty()).append(",");
-			statement.append(player.isHomeGrown()).append(")");
+			statement.append(player.isHomeGrown()).append(",");
+			statement.append(player.getSubExperience()).append(",");
+			statement.append(player.getNationalTeamID()).append(")");
 			adapter.executeUpdate(statement.toString());
 			}
 	}
@@ -543,8 +549,11 @@ final class SpielerTable extends AbstractTable {
             player.setSubskill4Pos(PlayerSkill.PASSING,rs.getFloat("SubPasspiel"));
             player.setSubskill4Pos(PlayerSkill.WINGER,rs.getFloat("SubFluegel"));
             player.setSubskill4Pos(PlayerSkill.SCORING,rs.getFloat("SubTorschuss"));
-            player.setSubskill4Pos(PlayerSkill.SET_PIECES,rs.getFloat("SubStandards"));
-           
+			player.setSubskill4Pos(PlayerSkill.SET_PIECES,rs.getFloat("SubStandards"));
+
+			player.setSubExperience(rs.getFloat("SubExperience"));
+			player.setNationalTeamId(rs.getInt("NationalTeamID"));
+
             player.setGelbeKarten(rs.getInt("GelbeKarten"));
             player.setVerletzt(rs.getInt("Verletzt"));
             player.setToreFreund(rs.getInt("ToreFreund"));

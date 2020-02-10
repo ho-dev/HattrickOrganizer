@@ -26,36 +26,40 @@ public class SkillupTableModel extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		return 3;
+		return 4;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		ISkillup skillup = this.data.get(rowIndex);
 		switch (columnIndex) {
-		case 0:
-			return PlayerSkill.toString(skillup.getType()) + ": "
-					+ PlayerAbility.getNameForSkill(skillup.getValue(), true);
-		case 1:
-			return skillup.getHtWeek();
-		case 2:
-			return skillup.getHtSeason();
-		default:
-			return null;
+			case 0:
+				return PlayerSkill.toString(skillup.getType()) + ": "
+						+ PlayerAbility.getNameForSkill(skillup.getValue(), true);
+			case 1:
+				return skillup.getHtWeek();
+			case 2:
+				return skillup.getHtSeason();
+			case 3:
+				return skillup.getAge();
+			default:
+				return null;
 		}
 	}
 
 	@Override
 	public String getColumnName(int column) {
 		switch (column) {
-		case 0:
-			return HOVerwaltung.instance().getLanguageString("ls.team.trainingtype");
-		case 1:
-			return HOVerwaltung.instance().getLanguageString("Week");
-		case 2:
-			return HOVerwaltung.instance().getLanguageString("Season");
-		default:
-			return "";
+			case 0:
+				return HOVerwaltung.instance().getLanguageString("ls.team.trainingtype");
+			case 1:
+				return HOVerwaltung.instance().getLanguageString("Week");
+			case 2:
+				return HOVerwaltung.instance().getLanguageString("Season");
+			case 3:
+				return HOVerwaltung.instance().getLanguageString("ls.player.age");
+			default:
+				return "";
 		}
 	}
 

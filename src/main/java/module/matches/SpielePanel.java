@@ -45,7 +45,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -66,8 +65,8 @@ public final class SpielePanel extends LazyImagePanel {
 	public static final int NUR_GESPIELTEN_SPIELE = 10;
 	/** Only tournament matches of supplied team */
 	public static final int NUR_EIGENE_TOURNAMENTSPIELE = 7;
-	/** Only Matches without suplied team */
-	public static final int NUR_FREMDE_SPIELE = 6;
+	/** Only Other Team Matches*/
+	public static final int OTHER_TEAM_MATCHS = 6;
 	/** Only friendly Matches of suplied team */
 	public static final int NUR_EIGENE_FREUNDSCHAFTSSPIELE = 5;
 	/** Only league Matches of suplied team */
@@ -82,7 +81,7 @@ public final class SpielePanel extends LazyImagePanel {
 	public static final int ONLY_SECONDARY_CUP = 9;
 	/** Only Qualifification matchs */
 	public static final int ONLY_QUALIF_MATCHES = 8;
-	public static final int ALLE_SPIELE = 0;
+	public static final int ALL_MATCHS = 0;
 	private static final long serialVersionUID = -6337569355347545083L;
 	private AufstellungsSternePanel aufstellungGastPanel;
 	private AufstellungsSternePanel aufstellungHeimPanel;
@@ -102,7 +101,7 @@ public final class SpielePanel extends LazyImagePanel {
 	private SpielHighlightPanel matchHighlightPanel;
 	private MatchesTable matchesTable;
 	private MatchesOverviewTable matchesOverviewTable;
-	private MatchesOverviewCommonPanel matchesOverviewCommonPanel;
+//	private MatchesOverviewCommonPanel matchesOverviewCommonPanel;
 	private MatchesHighlightsTable matchesHighlightsTable;
 	private StaerkenvergleichPanel teamsComparePanel;
 	private MatchesModel matchesModel;
@@ -415,7 +414,7 @@ public final class SpielePanel extends LazyImagePanel {
 				int id = ((CBItem) m_jcbSpieleFilter.getSelectedItem()).getId();
 				matchesTable.refresh(id);
 				matchesOverviewTable.refresh(id);
-				matchesOverviewCommonPanel.refresh(id);
+//				matchesOverviewCommonPanel.refresh(id);
 				matchesHighlightsTable.refresh(id);
 				UserParameter.instance().spieleFilter = id;
 
@@ -551,7 +550,7 @@ public final class SpielePanel extends LazyImagePanel {
 
 		CBItem[] matchesFilter = {
 				new CBItem(HOVerwaltung.instance().getLanguageString("AlleSpiele"),
-						SpielePanel.ALLE_SPIELE),
+						SpielePanel.ALL_MATCHS),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneSpiele"),
 						SpielePanel.NUR_EIGENE_SPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePflichtspiele"),
@@ -570,7 +569,7 @@ public final class SpielePanel extends LazyImagePanel {
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneTournamentsspiele"),
 						SpielePanel.NUR_EIGENE_TOURNAMENTSPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurFremdeSpiele"),
-						SpielePanel.NUR_FREMDE_SPIELE) };
+						SpielePanel.OTHER_TEAM_MATCHS) };
 
 		m_jcbSpieleFilter = new JComboBox(matchesFilter);
 		Helper.markierenComboBox(m_jcbSpieleFilter, UserParameter.instance().spieleFilter);
@@ -584,9 +583,9 @@ public final class SpielePanel extends LazyImagePanel {
 		matchesOverviewTable = new MatchesOverviewTable(UserParameter.instance().spieleFilter);
 		JScrollPane scrollpane1 = new JScrollPane(matchesOverviewTable);
 
-		matchesOverviewCommonPanel = new MatchesOverviewCommonPanel(
-				UserParameter.instance().spieleFilter);
-		JScrollPane scrollpane2 = new JScrollPane(matchesOverviewCommonPanel);
+//		matchesOverviewCommonPanel = new MatchesOverviewCommonPanel(
+//				UserParameter.instance().spieleFilter);
+//		JScrollPane scrollpane2 = new JScrollPane(matchesOverviewCommonPanel);
 
 		matchesHighlightsTable = new MatchesHighlightsTable(UserParameter.instance().spieleFilter);
 		JScrollPane scrollpane3 = new JScrollPane(matchesHighlightsTable);
@@ -599,9 +598,9 @@ public final class SpielePanel extends LazyImagePanel {
 						+ hov.getLanguageString("SerieAuswaertsSieg") + "-"
 						+ hov.getLanguageString("SerieAuswaertsUnendschieden") + "-"
 						+ hov.getLanguageString("SerieAuswaertsNiederlage") + ")", scrollpane1);
-		pane.addTab(hov.getLanguageString("Statistik") + " (" + hov.getLanguageString("Allgemein")
-				+ ")", scrollpane2);
-		pane.addTab(hov.getLanguageString("Statistik") + " (" + hov.getLanguageString("Highlights")
+//		pane.addTab(hov.getLanguageString("Statistik") + " (" + hov.getLanguageString("Allgemein")
+//				+ ")", scrollpane2);
+		pane.addTab(hov.getLanguageString("Statistik") + " (" + hov.getLanguageString("Tore")
 				+ ")", scrollpane3);
 		panel.add(pane, BorderLayout.CENTER);
 

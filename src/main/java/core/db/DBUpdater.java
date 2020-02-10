@@ -665,6 +665,11 @@ final class DBUpdater {
 	private void updateDBv26(int DBVersion, int version) throws SQLException {
 		// HO 2.1
 
+		if (!columnExistsInTable("SubExperience", SpielerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN SubExperience REAL");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN NationalTeamID INTEGER");
+		}
+
 		// store [Matches].MatchContextId into MATCHESKURZINFO table
 		if (!columnExistsInTable("MatchContextId", MatchesKurzInfoTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN MatchContextId INTEGER");
@@ -739,6 +744,10 @@ final class DBUpdater {
 		if (!tableExists(TournamentDetailsTable.TABLENAME)) {
 			dbManager.getTable(TournamentDetailsTable.TABLENAME).createTable();
 		}
+		else
+		{
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TOURNAMENTDETAILS ALTER COLUMN Creator_Loginname VARCHAR (256)");
+		}
 
 
 		if (!columnExistsInTable("MATCH_EVENT_ID", MatchHighlightsTable.TABLENAME)) {
@@ -746,7 +755,7 @@ final class DBUpdater {
 				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN MATCH_EVENT_ID INTEGER");
 				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EVENT_INDEX INTEGER");
 				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN INJURY_TYPE TINYINT");
-				m_clJDBCAdapter.executeUpdate("UPDATE MATCHHIGHLIGHTS SET MATCH_EVENT_ID = (TYP * 10) + SUBTYP");
+				m_clJDBCAdapter.executeUpdate("UPDATE MATCHHIGHLIGHTS SET MATCH_EVENT_ID = (TYP * 100) + SUBTYP WHERE MATCH_EVENT_ID IS NULL");
 				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP HEIMTORE");
 				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP GASTTORE");
 				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP TYP");

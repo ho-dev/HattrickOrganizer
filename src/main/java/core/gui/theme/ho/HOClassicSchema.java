@@ -29,20 +29,20 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 	}
 
 	private void initIcons() {
-		put(MATCHICONS[0], "gui/bilder/league_match_icon.png");
-		put(MATCHICONS[1], "gui/bilder/qualification_match_icon.png");
-		put(MATCHICONS[2], "gui/bilder/friendly_match_icon.png");
-		put(MATCHICONS[3], "gui/bilder/national_cup_match_icon.png");
-		put(MATCHICONS[4], "gui/bilder/emerald_cup_match_icon.png");
-		put(MATCHICONS[5], "gui/bilder/ruby_cup_match_icon.png");
-		put(MATCHICONS[6], "gui/bilder/sapphire_cup_match_icon.png");
-		put(MATCHICONS[7], "gui/bilder/ladder_match_icon.png");
-		put(MATCHICONS[8], "gui/bilder/tournament_match_icon.png");
-		put(MATCHICONS[9], "gui/bilder/single_match_icon.png");
-		put(MATCHICONS[10], "gui/bilder/masters_match_icon.png");
+		put(MATCHICONS[0], "gui/bilder/match_types/matchtype-League.png");
+		put(MATCHICONS[1], "gui/bilder/match_types/matchtype-qualification.png");
+		put(MATCHICONS[2], "gui/bilder/match_types/matchtype-Friendly.png");
+		put(MATCHICONS[3], "gui/bilder/match_types/matchtype-matchCupA.png");  //national
+		put(MATCHICONS[4], "gui/bilder/match_types/matchtype-matchCupB1.png");  //emerald
+		put(MATCHICONS[5], "gui/bilder/match_types/matchtype-matchCupB2.png");  //ruby
+		put(MATCHICONS[6], "gui/bilder/match_types/matchtype-matchCupB3.png");  //sapphir
+		put(MATCHICONS[7], "gui/bilder/match_types/matchtype-tournament-ladder.png");
+		put(MATCHICONS[8], "gui/bilder/match_types/matchtype-tournament.png");
+		put(MATCHICONS[9], "gui/bilder/match_types/matchtype-single-match.png");
+		put(MATCHICONS[10], "gui/bilder/match_types/matchtype-matchMasters.png");
 		put(MATCHICONS[11], "gui/bilder/default_match_icon.gif");
-		put(MATCHICONS[12], "gui/bilder/consolante_cup_match_icon.png");
-		put(MATCHICONS[13], "gui/bilder/division_battle_match_icon.png");
+		put(MATCHICONS[12], "gui/bilder/match_types/matchtype-matchCupC.png");  //consolante
+		put(MATCHICONS[13], "gui/bilder/match_types/matchtype-battle.png");
 
 		put(MANUELLSMILIES[1], "gui/bilder/smilies/1bigsmile.gif");
 		put(MANUELLSMILIES[2], "gui/bilder/smilies/2smile.gif");
@@ -135,53 +135,68 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		// Highlights
 
 		put(YELLOWCARD, "gui/bilder/match_events/yellow-card(yellow).png");
-		put(TWOYELLOWCARDS, "gui/bilder/match_events/yellow-card-x2(yellow)png");
-		put(REDCARD, "gui/bilder/match_events/red-card(red)png");
+		put(REDCARD, "gui/bilder/match_events/red-card(red).png");
 
 		put(FORMATION, "gui/bilder/match_events/mo-select(green).svg");
 
 		put(BRUISED, "gui/bilder/match_events/plaster.png");
 		put(INJURED, "gui/bilder/match_events/injury(red).png");
 		put(REPLACEMENT, "gui/bilder/match_events/in-out.png");
+		put(ROTATE, "gui/bilder/match_events/rotate.png");
 
 		put(GOAL, "gui/bilder/match_events/goal.png");
 		put(MISS, "gui/bilder/match_events/miss.png");
-		put(GOAL_FREEKICK, "gui/bilder/highlights/Fussball_Freistoss.png");
 		put(GOAL_MID, "gui/bilder/match_events/goal_C.png");
 		put(GOAL_LEFT, "gui/bilder/match_events/goal_L.png");
 		put(GOAL_RIGHT, "gui/bilder/match_events/goal_R.png");
 		put(CONVERTED_PENALTY, "gui/bilder/match_events/converted_penalty.png");
 		put(MISSED_PENALTY, "gui/bilder/match_events/missed_penalty.png");
-		put(GOAL_IFK, "gui/bilder/highlights/Fussball_FreistossIndirekt.png");
-		put(GOAL_LONGSHOT, "gui/bilder/highlights/Fussball_Longshot.png");
-		put(GOAL_SPECIAL, "gui/bilder/highlights/Fussball_Spezial.png");
-		put(GOAL_COUNTER, "gui/bilder/highlights/Fussball_Konter.png");
-		put(NO_GOAL_FREEKICK, "gui/bilder/highlights/KeinFussball_Freistoss.png");
 		put(NO_GOAL_MID, "gui/bilder/match_events/miss_C.png");
 		put(NO_GOAL_LEFT, "gui/bilder/match_events/miss_L.png");
 		put(NO_GOAL_RIGHT, "gui/bilder/match_events/miss_R.png");
-		put(NO_GOAL_FREEKICK, "gui/bilder/highlights/KeinFussball_FreistossIndirekt.png");
-		put(NO_GOAL_LONGSHOT, "gui/bilder/highlights/KeinFussball_Longshot.png");
-		put(NO_GOAL_SPECIAL, "gui/bilder/highlights/KeinFussball_Spezial.png");
-		put(NO_GOAL_COUNTER, "gui/bilder/highlights/KeinFussball_Konter.png");
 
 		put(PRESSING, "gui/bilder/match_events/pressing(green).png");
 
-		put(ME_116, "gui/bilder/match_events/me_116.png");
+		put(ME_GOAL_AND_QUICK, "gui/bilder/match_events/me_goal_and_quick.png");
+		put(ME_GOAL_AND_HEAD_SPEC, "gui/bilder/match_events/me_goal_and_head_spec.png");
+		put(ME_GOAL_AND_TECHNICAL, "gui/bilder/match_events/me_goal_and_technical.png");
+		put(ME_GOAL_AND_UNPREDICTABLE, "gui/bilder/match_events/me_goal_and_unpredictable.png");
+		put(ME_109, "gui/bilder/match_events/me_109.png");
+		put(ME_117, "gui/bilder/match_events/me_117.png");
 		put(ME_118, "gui/bilder/match_events/me_118.png");
 		put(ME_135, "gui/bilder/match_events/me_135.png");
 		put(ME_136, "gui/bilder/match_events/me_136.png");
+		put(ME_137, "gui/bilder/match_events/me_137.png");
+		put(ME_138, "gui/bilder/match_events/me_138.png");
+        put(ME_139, "gui/bilder/match_events/me_139.png");
+		put(ME_140, "gui/bilder/match_events/me_140.png");
 		put(ME_141, "gui/bilder/match_events/me_141.png");
 		put(ME_142, "gui/bilder/match_events/me_142.png");
-		put(ME_170, "gui/bilder/match_events/me_170.png");
+		put(ME_143, "gui/bilder/match_events/me_143.png");
+		put(ME_GOAL_AND_WHISTLE, "gui/bilder/match_events/me_goal_and_whistle.png");
 		put(ME_184, "gui/bilder/match_events/me_184.png");
 		put(ME_185, "gui/bilder/match_events/me_185.png");
 		put(ME_NO_GOAL_UNPREDICTABLE, "gui/bilder/match_events/me_no_goal_unpredictable.png");
-		put(ME_207, "gui/bilder/match_events/me_207.png");
+		put(ME_GOAL_LONGSHOT_PNG, "gui/bilder/match_events/me_goal_longshot.png");
+		put(ME_MISS_LONGSHOT_PNG, "gui/bilder/match_events/me_miss_longshot.png");
+		put(ME_209, "gui/bilder/match_events/me_209.png");
+		put(ME_217, "gui/bilder/match_events/me_217.png");
+		put(ME_NO_GOAL_AND_HEAD_SPEC, "gui/bilder/match_events/me_no_goal_and_head_spec.png");
+		put(ME_ME_MISS_AND_QUICK, "gui/bilder/match_events/me_miss_and_quick.png");
+		put(ME_MISSED_CORNER, "gui/bilder/match_events/missed_corner.png");
+		put(ME_235, "gui/bilder/match_events/me_235.png");
+        put(ME_236, "gui/bilder/match_events/me_236.png");
 		put(ME_237, "gui/bilder/match_events/me_237.png");
-		put(ME_280, "gui/bilder/match_events/me_280.png");
+        put(ME_239, "gui/bilder/match_events/me_239.png");
+		put(ME_240, "gui/bilder/match_events/me_240.png");
+		put(ME_241, "gui/bilder/match_events/me_241.png");
+		put(ME_242, "gui/bilder/match_events/me_242.png");
+		put(ME_243, "gui/bilder/match_events/me_243.png");
+		put(ME_MISS_AND_WHISTLE, "gui/bilder/match_events/me_miss_and_whistle.png");
 		put(ME_285, "gui/bilder/match_events/me_285.png");
+		put(ME_186, "gui/bilder/match_events/me_186.png");
 		put(ME_286, "gui/bilder/match_events/me_286.png");
+		put(ME_YELLOW_THEN_RED, "gui/bilder/match_events/me_YellowThenRed.png");
 
 		put(STAR, "gui/bilder/star.gif");
 		put(STAR_GRAY, "gui/bilder/star_grey.png");

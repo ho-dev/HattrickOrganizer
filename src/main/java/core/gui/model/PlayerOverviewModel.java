@@ -36,7 +36,7 @@ public final  class PlayerOverviewModel extends HOTableModel {
 	private void initialize() {
 		UserColumn[] basic =  UserColumnFactory.createPlayerBasicArray();
 		columns = new UserColumn[49];
-		columns[0] =basic[0];
+		columns[0] = basic[0];
 		columns[48] = basic[1];
 		
 		UserColumn[] skills =  UserColumnFactory.createPlayerSkillArray();
@@ -156,7 +156,7 @@ public final  class PlayerOverviewModel extends HOTableModel {
     	m_clData = new Object[m_vPlayers.size()][tmpDisplayedColumns.length];
     	
     	for (int i = 0; i < m_vPlayers.size(); i++) {
-    		final Player aktuellerPlayer = (Player) m_vPlayers.get(i);
+    		final Player aktuellerPlayer = m_vPlayers.get(i);
     		final Player vergleichsPlayer = getVergleichsSpieler(aktuellerPlayer);
     		
     		for (int j = 0; j < tmpDisplayedColumns.length; j++) {
@@ -171,7 +171,7 @@ public final  class PlayerOverviewModel extends HOTableModel {
     public final void reInitData() {
     	UserColumn [] tmpDisplayedColumns = getDisplayedColumns();
         for (int i = 0; i < m_vPlayers.size(); i++) {
-            final Player aktuellerPlayer = (Player) m_vPlayers.get(i);
+            final Player aktuellerPlayer = m_vPlayers.get(i);
             
             for (int j = 0; j < tmpDisplayedColumns.length; j++) {
 				if(tmpDisplayedColumns[j].getId() == UserColumnFactory.NAME

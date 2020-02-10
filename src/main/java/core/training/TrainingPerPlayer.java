@@ -1,6 +1,7 @@
 package core.training;
 
 import core.model.HOVerwaltung;
+import core.model.match.MatchType;
 import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.HelperWrapper;
@@ -10,6 +11,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
+
+import static core.model.match.MatchType.*;
 
 
 /**
@@ -22,8 +25,9 @@ public class TrainingPerPlayer  {
     private TrainingPoints _TrainingPair = null;
     private Date _TrainingDate = null;
     private TrainingPerWeek _TrainingWeek;
-    
-    //~ Constructors -------------------------------------------------------------------------------
+	private double experienceSub=0;
+
+	//~ Constructors -------------------------------------------------------------------------------
 
     /**
      * Creates a new TrainingPerPlayer object.
@@ -180,5 +184,31 @@ public class TrainingPerPlayer  {
 	public void setTrainingWeek(TrainingPerWeek trainingWeek) {
 		this._TrainingWeek = trainingWeek;
 	}
-    
+
+    public void addExperienceIncrease(int minutes, MatchType matchType) {
+		double p = 0;
+		switch (matchType){
+			case CUP: p = 2; break;
+			case EMERALDCUP:
+			case RUBYCUP:
+			case SAPPHIRECUP:
+			case CONSOLANTECUP: p = .5; break;
+			case FRIENDLYNORMAL:
+			case FRIENDLYCUPRULES: p = .1; break;
+			case INTFRIENDLYCUPRULES:
+			case INTFRIENDLYNORMAL: p = .2; break;
+			case LEAGUE: p = 1; break;
+			case MASTERS: p = 5; break;
+			case NATIONALCOMPCUPRULES:
+			case NATIONALCOMPNORMAL: p = 10.; break;
+			case NATIONALFRIENDLY: p = 2. ; break;
+			case QUALIFICATION: p = 2.; break;
+			case INTSPIEL:
+		}
+		this.experienceSub += minutes * p / 90. / 28.571;
+    }
+
+	public double getExperienceSub() {
+		return experienceSub;
+	}
 }

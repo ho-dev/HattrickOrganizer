@@ -8,6 +8,7 @@ import core.model.player.Player;
 import core.util.HTCalendarFactory;
 import core.util.HelperWrapper;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,9 +62,10 @@ public class OldTrainingManager {
 											.getTrainingDate()).getTime();
 
 					su = getSkillup(trainingDate);
-					su.setValue(Math.round(Skills.getSkillValue(player, skill)) - count);
+					su.setValue(player.getValue4Skill4(skill) - count);
 					su.setType(skill);
 					su.setTrainType(ISkillup.SKILLUP_REAL);
+					su.setAge(player.getAgeWithDaysAsString(trainingDate));
 					allSkillups.add(su);
 
 					if (skill == PlayerSkill.KEEPER || skill == PlayerSkill.DEFENDING

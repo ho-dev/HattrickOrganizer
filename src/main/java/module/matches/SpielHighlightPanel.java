@@ -35,13 +35,12 @@ public class SpielHighlightPanel extends LazyImagePanel {
 	private static final long serialVersionUID = -6491501224900464573L;
 	private GridBagConstraints constraints;
 	private GridBagLayout layout;
-	private JLabel gastTeamNameLabel;
-	private JLabel gastTeamToreLabel;
-	private JLabel heimTeamNameLabel;
-	private JLabel heimTeamToreLabel;
+	private JLabel matchTeamsAndScores;
+	private JLabel penaltyContestresults;
 	private JPanel panel;
 	private List<Component> highlightLabels;
 	private final MatchesModel matchesModel;
+	private boolean bPenaltyContest = false;
 
 	/**
 	 * Creates a new SpielHighlightPanel object.
@@ -70,34 +69,15 @@ public class SpielHighlightPanel extends LazyImagePanel {
 
 	@Override
 	protected void update() {
+		clear();
 		MatchKurzInfo info = this.matchesModel.getMatch();
 		if (info == null) {
-			clear();
 			return;
 		}
 
-		if (info.getMatchStatus() != MatchKurzInfo.FINISHED) {
-			clear();
-		}
-		
-		heimTeamNameLabel.setText(info.getHeimName());
-		gastTeamNameLabel.setText(info.getGastName());
-
-		int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		if (info.getHeimID() == teamid) {
-			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.TEAM_FG));
-		} else {
-			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
-		}
-
-		if (info.getGastID() == teamid) {
-			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.TEAM_FG));
-		} else {
-			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
-		}
 
 		if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
-			removeHighlights(); 
+			clear();
 			
 			Matchdetails details = this.matchesModel.getDetails();
 
@@ -109,29 +89,26 @@ public class SpielHighlightPanel extends LazyImagePanel {
 
 			int homeScore = 0;
 			int guestScore = 0;
-			int homeScore_ht = 0;
-			int guestScore_ht = 0;
+			int homePenalitiesScored=0;
+			int guestPenalitiesScored=0;
 
 			String scoreText;
-			boolean homeAction = false;
+			boolean homeAction;
+
 
 			for (int i = 0; i < matchHighlights.size(); i++) {
 				scoreText = "";
 				MatchEvent highlight = matchHighlights.get(i);
 
 				if (highlight.isGoalEvent() || highlight.isNonGoalEvent() || highlight.isBruisedOrInjured() || highlight.isBooked()
-						|| (highlight.getMatchEventID() == MatchEvent.MatchEventID.INJURED_PLAYER_REPLACED))
+						|| highlight.isSubstitution() || highlight.isPenaltyContestGoalEvent() || highlight.isPenaltyContestNoGoalEvent() ||
+				     highlight.isChangeOfTactic())
 				{
 					bEventHighlighted = true;
 				}
 				else
 				{
 					bEventHighlighted = false;
-					if (highlight.getMatchEventID() == MatchEvent.MatchEventID.SECOND_HALF_STARTED)
-					{
-						homeScore_ht = homeScore;
-						guestScore_ht = guestScore;
-					}
 				}
 
 				// Displaying the event
@@ -157,7 +134,12 @@ public class SpielHighlightPanel extends LazyImagePanel {
 						}
 					}
 
-					else if(highlight.getMatchEventID() == MatchEvent.MatchEventID.INJURED_PLAYER_REPLACED)
+					if (highlight.isPenaltyContestGoalEvent()) {
+						if (homeAction) {homePenalitiesScored++;}
+						else {guestPenalitiesScored++;}
+					}
+
+					else if(highlight.isSubstitution())
 					{
 						spielername = highlight.getSpielerName();
 						if (spielername.length() > 30) {
@@ -176,7 +158,6 @@ public class SpielHighlightPanel extends LazyImagePanel {
 						public Dimension getMinimumSize() {
 							return new Dimension(48, 30);
 						}};
-//					playerlabel.setForeground(MatchesHelper.getColor4SpielHighlight(highlight));
 					playerlabel.setToolTipText(MatchEvent.getEventTextDescription(highlight.getiMatchEventID()));
 
 					resultlabel = new JLabel(scoreText);
@@ -224,33 +205,36 @@ public class SpielHighlightPanel extends LazyImagePanel {
 					constraints.gridy = i + 4;
 					constraints.gridwidth = 1;
 					layout.setConstraints(resultlabel, constraints);
-
-
 					panel.add(resultlabel);
+				}
+
+				else if (highlight.getMatchEventID() == MatchEvent.MatchEventID.PENALTY_CONTEST_AFTER_EXTENSION)
+				{
+					constraints.anchor = GridBagConstraints.CENTER;
+					constraints.fill = GridBagConstraints.HORIZONTAL;
+					constraints.weightx = 1.0;
+					constraints.gridx = 0;
+					constraints.gridy = i + 4;
+					constraints.gridwidth = 5;
+					JLabel penaltyContestLabel = new JLabel(HOVerwaltung.instance().getLanguageString("MatchEvent_71_report"), SwingConstants.CENTER);
+					Font f = penaltyContestLabel.getFont();
+					penaltyContestLabel.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+					penaltyContestLabel.setBackground(Color.lightGray);
+					penaltyContestLabel.setOpaque(true);
+					layout.setConstraints(penaltyContestLabel, constraints);
+					panel.add(penaltyContestLabel);
+					highlightLabels.add(penaltyContestLabel);
+					bPenaltyContest = true;
 				}
 			}
 
-			// stars for winner !
-			if (info.getMatchStatus() != MatchKurzInfo.FINISHED) {
-				heimTeamNameLabel.setIcon(null);
-				gastTeamNameLabel.setIcon(null);
-			} else if (info.getHeimTore() > info.getGastTore()) {
-				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
-						Color.WHITE));
-				gastTeamNameLabel.setIcon(null);
-			} else if (info.getHeimTore() < info.getGastTore()) {
-				heimTeamNameLabel.setIcon(null);
-				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
-						Color.WHITE));
-			} else {
-				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY,
-						Color.WHITE));
-				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY,
-						Color.WHITE));
-			}
+			String title = info.getHeimName() + "  " + homeScore + "   -   " + guestScore + "  " + info.getGastName() ;
+			matchTeamsAndScores.setText(title);
 
-			heimTeamToreLabel.setText(homeScore + " (" + homeScore_ht + ") ");
-			gastTeamToreLabel.setText(guestScore + " (" + guestScore_ht + ") ");
+			if (bPenaltyContest) {
+				String subtitle = HOVerwaltung.instance().getLanguageString("penalites") + "  (" + homePenalitiesScored + "-" + guestPenalitiesScored + ")";
+				penaltyContestresults.setText(subtitle);
+			}
 
 		}
 	}
@@ -266,7 +250,6 @@ public class SpielHighlightPanel extends LazyImagePanel {
 		GridBagConstraints mainconstraints = new GridBagConstraints();
 		mainconstraints.anchor = GridBagConstraints.NORTH;
 		mainconstraints.fill = GridBagConstraints.HORIZONTAL;
-//		mainconstraints.weighty = 0.1;
 		mainconstraints.weightx = 0.0;
 		mainconstraints.insets = new Insets(4, 6, 4, 6);
 
@@ -275,7 +258,6 @@ public class SpielHighlightPanel extends LazyImagePanel {
 		layout = new GridBagLayout();
 		constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.NORTH;
-//		constraints.weighty = 0.0;
 		constraints.weightx = 0.0;
 		constraints.insets = new Insets(5, 3, 2, 2);
 
@@ -285,104 +267,30 @@ public class SpielHighlightPanel extends LazyImagePanel {
 				BorderFactory.createEmptyBorder(10, 5, 10, 0)));
 		panel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
 
-//		// Platzhalter
-		JLabel label = new JLabel("   ");
-//		constraints.anchor = GridBagConstraints.WEST;
-//		constraints.fill = GridBagConstraints.HORIZONTAL;
-//		constraints.weightx = 0.0;
-//		constraints.gridx = 4;
-//		constraints.gridy = 1;
-//		constraints.gridheight = 30;
-//		constraints.gridwidth = 1;
-//		layout.setConstraints(label, constraints);
-//		panel.add(label);
-
-//		label = new JLabel(HOVerwaltung.instance().getLanguageString("Heim"));
-//		label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize() + 1));
-//		label.setHorizontalAlignment(SwingConstants.CENTER);
-//		constraints.anchor = GridBagConstraints.CENTER;
-//		constraints.fill = GridBagConstraints.HORIZONTAL;
-//		constraints.weightx = 0.0;
-//		constraints.gridx = 2;
-//		constraints.gridy = 1;
-//		constraints.gridwidth = 2;
-//		constraints.gridheight = 1;
-//		layout.setConstraints(label, constraints);
-//		panel.add(label);
-//
-//		label = new JLabel(HOVerwaltung.instance().getLanguageString("Gast"));
-//		label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize() + 1));
-//		label.setHorizontalAlignment(SwingConstants.CENTER);
-//		constraints.anchor = GridBagConstraints.CENTER;
-//		constraints.fill = GridBagConstraints.HORIZONTAL;
-//		constraints.weightx = 0.0;
-//		constraints.gridx = 5;
-//		constraints.gridy = 1;
-//		constraints.gridwidth = 2;
-//		layout.setConstraints(label, constraints);
-//		panel.add(label);
-
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.weightx = 0.0;
-		constraints.gridx = 3;
-		constraints.gridy = 1;
-		constraints.gridwidth = 1;
-		heimTeamNameLabel = new JLabel();
-		heimTeamNameLabel.setPreferredSize(new Dimension(140, 14));
-		heimTeamNameLabel.setFont(heimTeamNameLabel.getFont().deriveFont(Font.BOLD));
-		layout.setConstraints(heimTeamNameLabel, constraints);
-		panel.add(heimTeamNameLabel);
 
 		constraints.anchor = GridBagConstraints.EAST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.weightx = 0.0;
-		constraints.gridx = 3;
-		constraints.gridy = 2;
-		heimTeamToreLabel = new JLabel();
-		heimTeamToreLabel.setFont(heimTeamToreLabel.getFont().deriveFont(Font.BOLD));
-		layout.setConstraints(heimTeamToreLabel, constraints);
-		panel.add(heimTeamToreLabel);
-
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.weightx = 0.0;
-		constraints.gridx = 4;
+		constraints.gridx = 2;
 		constraints.gridy = 1;
-		gastTeamNameLabel = new JLabel();
-		gastTeamNameLabel.setPreferredSize(new Dimension(140, 14));
-		gastTeamNameLabel.setFont(gastTeamNameLabel.getFont().deriveFont(Font.BOLD));
-		layout.setConstraints(gastTeamNameLabel, constraints);
-		panel.add(gastTeamNameLabel);
+		constraints.gridwidth = 4;
+		matchTeamsAndScores = new JLabel("", SwingConstants.CENTER);
+		matchTeamsAndScores.setFont(matchTeamsAndScores.getFont().deriveFont(Font.BOLD));
+		layout.setConstraints(matchTeamsAndScores, constraints);
+		panel.add(matchTeamsAndScores);
 
 		constraints.anchor = GridBagConstraints.EAST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.weightx = 0.0;
-		constraints.gridx = 4;
+		constraints.gridx = 2;
 		constraints.gridy = 2;
-		gastTeamToreLabel = new JLabel();
-		gastTeamToreLabel.setFont(gastTeamToreLabel.getFont().deriveFont(Font.BOLD));
-		layout.setConstraints(gastTeamToreLabel, constraints);
-		panel.add(gastTeamToreLabel);
+		constraints.gridwidth = 4;
+		penaltyContestresults = new JLabel("", SwingConstants.CENTER);
+		penaltyContestresults.setFont(penaltyContestresults.getFont().deriveFont(Font.BOLD));
+		layout.setConstraints(penaltyContestresults, constraints);
+		panel.add(penaltyContestresults);
 
-//		// Platzhalter
-//		constraints.anchor = GridBagConstraints.EAST;
-//		constraints.fill = GridBagConstraints.HORIZONTAL;
-//		constraints.weightx = 0.0;
-//		constraints.gridx = 7;
-//		constraints.gridy = 2;
-//		label = new JLabel("    ");
-//		layout.setConstraints(label, constraints);
-//		panel.add(label);
 
-//		constraints.anchor = GridBagConstraints.EAST;
-//		constraints.fill = GridBagConstraints.HORIZONTAL;
-//		constraints.weightx = 0.0;
-//		constraints.gridx = 0;
-//		constraints.gridy = 3;
-//		label = new JLabel(" ");
-//		layout.setConstraints(label, constraints);
-//		panel.add(label);
 
 		mainconstraints.gridx = 0;
 		mainconstraints.gridy = 0;
@@ -397,13 +305,10 @@ public class SpielHighlightPanel extends LazyImagePanel {
 	 */
 	private void clear() {
 		removeHighlights();
+		matchTeamsAndScores.setText(" ");
+		penaltyContestresults.setText(" ");
+		bPenaltyContest = false;
 
-		heimTeamNameLabel.setText(" ");
-		gastTeamNameLabel.setText(" ");
-		heimTeamToreLabel.setText(" ");
-		gastTeamToreLabel.setText(" ");
-		heimTeamNameLabel.setIcon(null);
-		gastTeamNameLabel.setIcon(null);
 	}
 
 	private void removeHighlights() {

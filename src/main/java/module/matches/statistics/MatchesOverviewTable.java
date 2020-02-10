@@ -33,7 +33,7 @@ public class MatchesOverviewTable extends JTable {
 
         if (tableModel == null) {
         	tableModel = UserColumnController.instance().getMatchesOverview1ColumnModel();
-        	if(matchtyp == SpielePanel.ALLE_SPIELE || matchtyp == SpielePanel.NUR_FREMDE_SPIELE){
+        	if(matchtyp == SpielePanel.ALL_MATCHS || matchtyp == SpielePanel.OTHER_TEAM_MATCHS){
             	MatchesOverviewRow[] tmp = new MatchesOverviewRow[0];
             	tableModel.setValues(tmp);
             } else {
@@ -103,7 +103,7 @@ public class MatchesOverviewTable extends JTable {
     }
     
     public void refresh(int matchtypen) {
-        if(matchtypen == SpielePanel.ALLE_SPIELE || matchtypen == SpielePanel.NUR_FREMDE_SPIELE){
+        if(matchtypen == SpielePanel.ALL_MATCHS || matchtypen == SpielePanel.OTHER_TEAM_MATCHS){
         	MatchesOverviewRow[] tmp = new MatchesOverviewRow[0];
         	tableModel.setValues(tmp);
         } else {

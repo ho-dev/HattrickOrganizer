@@ -103,7 +103,7 @@ public class OnlineWorker {
 					JOptionPane.showMessageDialog(parent, getLangString("NO_HRF_ERROR"),
 							getLangString("NO_HRF_ERROR"), 1);
 				} else {
-					// Create HOModelo from the hrf data
+					// Create HOModel from the hrf data
 					HOModel homodel = HRFStringParser.parse(hrf);
 					if (homodel == null) {
 						// Info
@@ -250,22 +250,6 @@ public class OnlineWorker {
 		}
 		return allMatches;
 	}
-
-	/**
-	 * Downloads a match with the given criteria and stores it in the database.
-	 * If a match is already in the db, and refresh is false, nothing is
-	 * downloaded.
-	 *
-	 * @param matchid
-	 *            ID for the match to be downloaded
-	 * @param match
-	 *            MatchKurzInfo of the match
-	 * @param refresh
-	 *            If true the match will always be downloaded.
-	 *
-	 * @return true if the match is in the db afterwards
-	 */
-
 
 	/**
 	 * Downloads a match with the given criteria and stores it in the database.

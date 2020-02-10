@@ -321,6 +321,8 @@ public class Player {
      * along the course of the game
      */
     private int GameStartingTime = 0;
+    private int nationalTeamId=0;
+    private double subExperience;
 
     public int getGameStartingTime() {
         return GameStartingTime;
@@ -379,6 +381,7 @@ public class Player {
         m_dSubTorschuss = Double.parseDouble(properties.getProperty("malsub", "0"));
         m_dSubTorwart = Double.parseDouble(properties.getProperty("mlvsub", "0"));
         m_dSubVerteidigung = Double.parseDouble(properties.getProperty("bacsub", "0"));
+        subExperience = Double.parseDouble(properties.getProperty("experiencesub", "0"));
 
         //TSI, alles vorher durch 1000 teilen
         m_clhrfDate = hrfdate;
@@ -425,6 +428,7 @@ public class Player {
         }
         m_iLaenderspiele = Integer.parseInt(properties.getProperty("caps", "0"));
         m_iU20Laenderspiele = Integer.parseInt(properties.getProperty("capsU20", "0"));
+        nationalTeamId = Integer.parseInt(properties.getProperty("nationalTeamID","0"));
 
         //Subskills berechnen
         //Wird beim Speichern des HRFs aufgerufen, da hier nicht unbedingt die notwendigen Daten vorhanden sind
@@ -588,9 +592,13 @@ public class Player {
      * @return String of age & agedays format is "YY (DDD)"
      */
     public String getAlterWithAgeDaysAsString() {
+        return getAgeWithDaysAsString(new Date());
+    }
+
+    public String getAgeWithDaysAsString(Date date) {
         // format = yy (ddd)
         long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-        long now = new Date().getTime();
+        long now = date.getTime();
         long diff = (now - hrftime) / (1000 * 60 * 60 * 24);
         int years = getAlter();
         int days = getAgeDays();
@@ -599,8 +607,11 @@ public class Player {
             days -= 112;
             years++;
         }
+        while (days < 0) {
+            days += 112;
+            years--;
+        }
         String retVal = years + " (" + days + ")";
-
         return retVal;
     }
 
@@ -631,10 +642,10 @@ public class Player {
     }
 
     /**
-     * Get the full i18n'd string represention the players age. Includes
-     * the birthay indicator as well.
+     * Get the full i18n'd string representing the player's age. Includes
+     * the birthday indicator as well.
      *
-     * @return the full i18n'd string represention the players age
+     * @return the full i18n'd string representing the player's age
      */
     public String getAgeStringFull() {
         long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
@@ -1454,6 +1465,10 @@ public class Player {
             case PlayerSkill.SET_PIECES:
                 value = m_dSubStandards;
                 break;
+
+            case PlayerSkill.EXPERIENCE:
+                value = subExperience;
+                break;
         }
         return (float) Math.min(0.999, value);
     }
@@ -1480,6 +1495,9 @@ public class Player {
                 break;
             case PlayerSkill.SET_PIECES:
                 m_dSubStandards = value;
+                break;
+            case PlayerSkill.EXPERIENCE:
+                subExperience = value;
                 break;
         }
     }
@@ -1964,6 +1982,14 @@ public class Player {
 
         incrementSubskills(originalPlayer, assistants, trainerlevel, intensity, stamina,
                 wt.getSecondaryTrainingSkill(), tp.getSecondary(), wt, staff);
+
+        addExperienceSub(trForPlayer.getExperienceSub());
+
+    }
+
+    private void addExperienceSub(double experienceSub) {
+        this.subExperience += experienceSub;
+        if ( this.subExperience > .99) this.subExperience = .99;
     }
 
 
@@ -2128,7 +2154,7 @@ public class Player {
      * @param old
      */
     public void copySubSkills(Player old) {
-        for (int skillType = 0; skillType < PlayerSkill.EXPERIENCE; skillType++) {
+        for (int skillType = 0; skillType <= PlayerSkill.EXPERIENCE; skillType++) {
 
             if ((skillType == PlayerSkill.FORM) || (skillType == PlayerSkill.STAMINA)) {
                 continue;
@@ -2223,6 +2249,21 @@ public class Player {
         this.m_bTrainingBlock = isBlocked;
     }
 
+    public int getNationalTeamID() {
+        return nationalTeamId;
+    }
+
+    public void setNationalTeamId( int id){
+        this.nationalTeamId=id;
+    }
+
+    public double getSubExperience() {
+        return this.subExperience;
+    }
+
+    public void setSubExperience( double experience){
+        this.subExperience = experience;
+    }
 }
 
 class PositionContribute {

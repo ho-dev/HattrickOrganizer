@@ -1,6 +1,11 @@
 package core.training;
 
+import core.model.HOVerwaltung;
+import core.model.XtraData;
+import module.transfer.test.HTWeek;
+
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * New Training Class
@@ -134,11 +139,31 @@ public class TrainingPerWeek  {
 	 * @return	training date
 	 */
 	public Timestamp getTrainingDate() {
+	    if ( trainingDate == null){
+            HTWeek week = new HTWeek();
+            week.setSeason(this._HTSeason);
+            week.setWeek(this._HTWeek);
+            Date d = week.toDate();
+            long trainingOffset = getTrainingOffset();
+            trainingDate = new Timestamp(new Date(d.getTime()+trainingOffset).getTime());
+        }
         return trainingDate;
 	}
-	
-	
-	/**
+
+	private static long trainingOffset=-1;
+    private static  long getTrainingOffset() {
+        if ( trainingOffset == -1) {
+            Date trainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate();
+            HTWeek thisWeek = new HTWeek();
+            thisWeek.setSeason(HOVerwaltung.instance().getModel().getBasics().getSeason());
+            thisWeek.setWeek(HOVerwaltung.instance().getModel().getBasics().getSpieltag());
+            trainingOffset = trainingDate.getTime() - thisWeek.toDate().getTime();
+        }
+        return trainingOffset;
+    }
+
+
+    /**
 	 *  Sets the date of the training at the start of this training week.
 	 *	
 	 * @param Timestamp with the training date.

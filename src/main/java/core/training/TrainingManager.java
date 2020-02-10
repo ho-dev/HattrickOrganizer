@@ -3,10 +3,7 @@ package core.training;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
-import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupTeam;
-import core.model.match.MatchStatistics;
-import core.model.match.MatchType;
+import core.model.match.*;
 import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.HTCalendar;
@@ -20,6 +17,8 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JOptionPane;
+
+import static java.lang.Integer.min;
 
 /**
  * Class that extract data from Database and calculates TrainingWeek and TrainingPoints earned from
@@ -110,47 +109,63 @@ public class TrainingManager {
         WeeklyTrainingType wt = WeeklyTrainingType.instance(train.getTrainingType());
         if (wt != null) {
 	        try {
-	        	List<Integer> matches = getMatchesForTraining(trainingDate);
+	        	List<Integer> matches = getOwnMatchesForTraining(trainingDate);
 	        	int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 	        	TrainingWeekPlayer tp = new TrainingWeekPlayer();
 	            tp.Name(player.getName());
+	            int minutes=0;
 	        	for (int i=0; i<matches.size(); i++) {
 	                final int matchId = (matches.get(i)).intValue();
 
 	                //Get the MatchLineup by id
 	                MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(matchId, myID);
 	                MatchStatistics ms = new MatchStatistics(matchId, mlt);
+					MatchType type = mlt.getMatchType();
+					if ( type != MatchType.MASTERS) { // MASTERS counts only for experience
+						if (wt.getPrimaryTrainingSkillPositions() != null) {
+							tp.addPrimarySkillPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillPositions()));
+						}
+						if (wt.getPrimaryTrainingSkillBonusPositions() != null) {
+							tp.addPrimarySkillBonusPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillBonusPositions()));
+						}
+						if (wt.getPrimaryTrainingSkillSecondaryTrainingPositions() != null) {
+							tp.addPrimarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillSecondaryTrainingPositions()));
+						}
+						if (wt.getPrimaryTrainingSkillOsmosisTrainingPositions() != null) {
+							tp.addPrimarySkillOsmosisPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillOsmosisTrainingPositions()));
+						}
+						if (wt.getSecondaryTrainingSkillPositions() != null) {
+							tp.addSecondarySkillPrimaryMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillPositions()));
+						}
+						if (wt.getSecondaryTrainingSkillBonusPositions() != null) {
+							tp.addSecondarySkillBonusMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillBonusPositions()));
+						}
+						if (wt.getSecondaryTrainingSkillSecondaryTrainingPositions() != null) {
+							tp.addSecondarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillSecondaryTrainingPositions()));
+						}
+						if (wt.getSecondaryTrainingSkillOsmosisTrainingPositions() != null) {
+							tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillOsmosisTrainingPositions()));
+						}
+					}
+					output.addExperienceIncrease(min(90,tp.getMinutesPlayed() - minutes), type );
+	                minutes = tp.getMinutesPlayed();
 
-	                if (wt.getPrimaryTrainingSkillPositions() != null) {
-	                	tp.addPrimarySkillPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillPositions()));
-	                }
-	                if (wt.getPrimaryTrainingSkillBonusPositions() != null)
-	                {
-	                	tp.addPrimarySkillBonusPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillBonusPositions()));
-	                }
-	                if (wt.getPrimaryTrainingSkillSecondaryTrainingPositions() != null)
-	                {
-	                	tp.addPrimarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillSecondaryTrainingPositions()));
-	                }
-	                if (wt.getPrimaryTrainingSkillOsmosisTrainingPositions() != null) {
-	                	tp.addPrimarySkillOsmosisPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillOsmosisTrainingPositions()));
-	                }
-	                if (wt.getSecondaryTrainingSkillPositions() != null) {
-	                	tp.addSecondarySkillPrimaryMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillPositions()));
-	                }
-	                if (wt.getSecondaryTrainingSkillBonusPositions() != null)
-	                {
-	                	tp.addSecondarySkillBonusMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillBonusPositions()));
-	                }
-	                if (wt.getSecondaryTrainingSkillSecondaryTrainingPositions() != null)
-	                {
-	                	tp.addSecondarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillSecondaryTrainingPositions()));
-	                }
-	                if (wt.getSecondaryTrainingSkillOsmosisTrainingPositions() != null) {
-	                	tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillOsmosisTrainingPositions()));
-	                }
-	            }
+				}
 	            TrainingPoints trp = new TrainingPoints(wt.getPrimaryTraining(tp), wt.getSecondaryTraining(tp));
+
+	        	// get experience increase of national matches
+				if  ( player.getNationalTeamID() != 0 && player.getNationalTeamID() != myID){
+					List<Integer> nationalMatches = getMatchesForTraining(player.getNationalTeamID(), trainingDate);
+					for (Integer i : nationalMatches){
+						MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(i, player.getNationalTeamID());
+						MatchStatistics ms = new MatchStatistics(i, mlt);
+						minutes = ms.getStaminaMinutesPlayedInPositions(playerID);
+						if ( minutes > 0 ) {
+							output.addExperienceIncrease(min(90,minutes), mlt.getMatchType());
+						}
+					}
+				}
+
 	    		if (TrainingManager.TRAININGDEBUG) {
 					HOLogger.instance().debug(getClass(), "Week " + train.getHattrickWeek()
 	            		+": Player " + player.getName() + " (" + playerID + ")"
@@ -166,8 +181,8 @@ public class TrainingManager {
         }
         return output;
     }
-
-    /*
+    
+	/*
      * Recalculates all sub skills for all players
      *
      * @param showBar show progress bar
@@ -183,17 +198,22 @@ public class TrainingManager {
 
     //----------------------------------- Utility Methods ----------------------------------------------------------
 
+	public List<Integer> getOwnMatchesForTraining (Calendar trainingDate) {
+		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		return getMatchesForTraining(teamId, trainingDate);
+	}
+
     /**
      * Creates a list of matches for the specified training
      *
-     * @param trainingDate	use this trainingDate
+	 * @param teamId	own team Id or national team Id
+	 * @param trainingDate	use this trainingDate
      * @return	list of matchIds (type Integer)
      */
-    public List<Integer> getMatchesForTraining (Calendar trainingDate) {
+    public List<Integer> getMatchesForTraining (int teamId, Calendar trainingDate) {
         List<Integer> matches = new ArrayList<Integer>();
-
         try {
-        	final ResultSet matchRS = DBManager.instance().getAdapter().executeQuery(createQuery(trainingDate));
+        	final ResultSet matchRS = DBManager.instance().getAdapter().executeQuery(createQuery(teamId, trainingDate));
 
         	if (matchRS == null) {
         		// in case of no return values
@@ -220,32 +240,35 @@ public class TrainingManager {
      *
      * @return the query
      */
-    private String createQuery(Calendar calendar) {
-        final Timestamp ts = new Timestamp(calendar.getTimeInMillis());
-        final Calendar old = (Calendar) calendar.clone();
+    private String createQuery(int teamId, Calendar calendar) {
+		final Timestamp ts = new Timestamp(calendar.getTimeInMillis());
+		final Calendar old = (Calendar) calendar.clone();
 
-        // set time one week back
-        old.add(Calendar.WEEK_OF_YEAR, -1);
+		// set time one week back
+		old.add(Calendar.WEEK_OF_YEAR, -1);
 
-        final Timestamp ots = new Timestamp(old.getTimeInMillis());
-        final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-        final String sdbquery = "SELECT MATCHID FROM MATCHESKURZINFO WHERE " + "( HEIMID=" + teamId
-                                + " OR GASTID=" + teamId + " ) " + "AND MatchDate BETWEEN '"
-                                + ots.toString() + "' AND '" + ts.toString() + "' "
-                                + " AND (MatchTyp=" + MatchType.QUALIFICATION.getId()
-                                + " OR MatchTyp=" + MatchType.LEAGUE.getId()
-                                + " OR MatchTyp=" + MatchType.CUP.getId()
-        						+ " OR MatchTyp=" + MatchType.FRIENDLYNORMAL.getId()
-        						+ " OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId()
-        						+ " OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId()
-								+ " OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId()
-								+ " OR MatchTyp=" + MatchType.EMERALDCUP.getId()
-								+ " OR MatchTyp=" + MatchType.RUBYCUP.getId()
-								+ " OR MatchTyp=" + MatchType.SAPPHIRECUP.getId()
-								+ " OR MatchTyp=" + MatchType.CONSOLANTECUP.getId() + " )"
-        						+ " AND STATUS=" + MatchKurzInfo.FINISHED 
-                                + " ORDER BY MatchDate DESC";
+		final Timestamp ots = new Timestamp(old.getTimeInMillis());
+		final String sdbquery = "SELECT MATCHID FROM MATCHESKURZINFO WHERE " + "( HEIMID=" + teamId
+				+ " OR GASTID=" + teamId + " ) " + "AND MatchDate BETWEEN '"
+				+ ots.toString() + "' AND '" + ts.toString() + "' "
+				+ " AND (MatchTyp=" + MatchType.QUALIFICATION.getId()
+				+ " OR MatchTyp=" + MatchType.LEAGUE.getId()
+				+ " OR MatchTyp=" + MatchType.CUP.getId()
+				+ " OR MatchTyp=" + MatchType.FRIENDLYNORMAL.getId()
+				+ " OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId()
+				+ " OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId()
+				+ " OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId()
+				+ " OR MatchTyp=" + MatchType.EMERALDCUP.getId()
+				+ " OR MatchTyp=" + MatchType.RUBYCUP.getId()
+				+ " OR MatchTyp=" + MatchType.SAPPHIRECUP.getId()
+				+ " OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()
+				+ " OR MatchTyp=" + MatchType.MASTERS.getId()				// masters and national team is needed for experience sub
+				+ " OR MatchTyp=" + MatchType.NATIONALCOMPCUPRULES.getId()
+				+ " OR MatchTyp=" + MatchType.NATIONALCOMPNORMAL.getId()
+				+ " OR MatchTyp=" + MatchType.NATIONALFRIENDLY.getId()
+				+ " ) AND STATUS=" + MatchKurzInfo.FINISHED
+				+ " ORDER BY MatchDate DESC";
 
-        return sdbquery;
-    }
+		return sdbquery;
+	}
 }

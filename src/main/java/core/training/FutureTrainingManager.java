@@ -9,6 +9,7 @@ import core.model.player.ISkillup;
 import core.model.player.Player;
 import core.util.HelperWrapper;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -79,6 +80,7 @@ public class FutureTrainingManager {
 		int position = HelperWrapper.instance().getPosition(player.getIdealPosition());
 		// Iterate thru all the future training weeks
 		for (int index = startWeekNumber; index <= finalWeekNumber; index++) {
+			int trainingSpeed=0;
 			weeksPassed++;
 			TrainingPerWeek tw = this.futureTrainings.get(index-1);
 			int trType = tw.getTrainingType();
@@ -180,10 +182,12 @@ public class FutureTrainingManager {
 				// Depending on the type of training, update the proper skill with the provided training points
 							
 				processTraining(wt, trp, tw);
+				if ( this.trainingSpeed < trainingSpeed) {
+					this.trainingSpeed = trainingSpeed;
+				}
 			}
 		}		
-		trainingSpeed /= weeksPassed;
-		FuturePlayer fp = new FuturePlayer();				
+		FuturePlayer fp = new FuturePlayer();
 		fp.setAttack(getFinalValue(PlayerSkill.SCORING));		
 		fp.setCross(getFinalValue(PlayerSkill.WINGER));
 		fp.setDefense(getFinalValue(PlayerSkill.DEFENDING));
@@ -367,6 +371,8 @@ public class FutureTrainingManager {
 			su.setType(wt.getPrimaryTrainingSkill());
 			su.setValue(player.getValue4Skill4(wt.getPrimaryTrainingSkill()) + finalSkillup[primaryPos]);
 			su.setTrainType(ISkillup.SKILLUP_FUTURE);
+			su.setDate(new Date(tw.getTrainingDate().getTime()));
+			su.setAge(player.getAgeWithDaysAsString(su.getDate()));
 			futureSkillups.add(su);
 		}
 		if (secondarySubForThisWeek > 0) {
@@ -378,6 +384,8 @@ public class FutureTrainingManager {
 				su.setType(wt.getSecondaryTrainingSkill());
 				su.setValue(player.getValue4Skill4(wt.getSecondaryTrainingSkill()) + finalSkillup[secondaryPos]);
 				su.setTrainType(ISkillup.SKILLUP_FUTURE);
+				su.setDate(new Date(tw.getTrainingDate().getTime()));
+				su.setAge(player.getAgeWithDaysAsString(su.getDate()));
 				futureSkillups.add(su);
 			}
 		}
