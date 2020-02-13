@@ -36,66 +36,68 @@ final class DBUpdater {
 				HOLogger.instance().log(getClass(), "Updating DB to version " + DBVersion + "...");
 
 				switch (version) { // hint: fall though (no breaks) is intended
-									// here
-				case 0:
-				case 1:
-				case 2:
-				case 3:
-					HOLogger.instance().log(getClass(), "DB version " + DBVersion + " is to old");
-					try {
-						JOptionPane.showMessageDialog(null,
-								"DB is too old.\nPlease update first to HO 1.431", "Error",
-								JOptionPane.ERROR_MESSAGE);
-					} catch (Exception e) {
-						HOLogger.instance().log(getClass(), e);
-					}
-					System.exit(0);
-				case 5:
-					updateDBv6();
-				case 6:
-					updateDBv7();
-				case 7:
-					updateDBv8();
-				case 8:
-					updateDBv9();
-				case 9:
-					updateDBv10();
-				case 10:
-					updateDBv11();
-				case 11:
-					updateDBv12(DBVersion, version);
-				case 4:
-					// in Beta 1.432 Rev 1906, the DBVersion was set to '4' by
-					// mistake.
-					// to fix that, we just execute updateDBTo1432() in this
-					// case
-				case 12:
-				case 13:
-				case 14:
-				case 15:
-				case 16:
-				case 17:
-					updateDBTo1432(DBVersion, version);
-				case 18:
-					updateDBv19(DBVersion, version);
-				case 19:
-					updateDBv20(DBVersion, version);
-				case 20:
-					updateDBv21(DBVersion, version);
-                case 21:
-                    updateDBv22(DBVersion, version);
-                case 22:
-                    updateDBv23(DBVersion, version);
-                case 23:
-					//MATCHREPORT was made longer here but not in table definition
-					//to fix this mistake and not repeat code
-					//updateDBv24 is falling through to updateDBv25
-                case 24:
-                    updateDBv25(DBVersion, version);
-				case 25:
-					updateDBv26(DBVersion, version);
+					// here
+					case 0:
+					case 1:
+					case 2:
+					case 3:
+						HOLogger.instance().log(getClass(), "DB version " + DBVersion + " is to old");
+						try {
+							JOptionPane.showMessageDialog(null,
+									"DB is too old.\nPlease update first to HO 1.431", "Error",
+									JOptionPane.ERROR_MESSAGE);
+						} catch (Exception e) {
+							HOLogger.instance().log(getClass(), e);
+						}
+						System.exit(0);
+					case 5:
+						updateDBv6();
+					case 6:
+						updateDBv7();
+					case 7:
+						updateDBv8();
+					case 8:
+						updateDBv9();
+					case 9:
+						updateDBv10();
+					case 10:
+						updateDBv11();
+					case 11:
+						updateDBv12(DBVersion, version);
+					case 4:
+						// in Beta 1.432 Rev 1906, the DBVersion was set to '4' by
+						// mistake.
+						// to fix that, we just execute updateDBTo1432() in this
+						// case
+					case 12:
+					case 13:
+					case 14:
+					case 15:
+					case 16:
+					case 17:
+						updateDBTo1432(DBVersion, version);
+					case 18:
+						updateDBv19(DBVersion, version);
+					case 19:
+						updateDBv20(DBVersion, version);
+					case 20:
+						updateDBv21(DBVersion, version);
+					case 21:
+						updateDBv22(DBVersion, version);
+					case 22:
+						updateDBv23(DBVersion, version);
+					case 23:
+						//MATCHREPORT was made longer here but not in table definition
+						//to fix this mistake and not repeat code
+						//updateDBv24 is falling through to updateDBv25
+					case 24:
+						updateDBv25(DBVersion, version);
+					case 25:
+						updateDBv26(DBVersion, version);
+					case 26:
+					case 299:
+						updateDBv300(DBVersion, version);
 				}
-				
 
 				HOLogger.instance().log(getClass(), "done.");
 			} catch (Exception e) {
@@ -104,6 +106,86 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
+	}
+
+	private void updateDBVersion(int DBVersion, int version ){
+		if (version < DBVersion) {
+			if(!HO.isDevelopment()) {
+				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
+				dbManager.saveUserParameter("DBVersion", DBVersion);
+			} else {
+				HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
+				dbManager.saveUserParameter("DBVersion", DBVersion - 1);
+			}
+		} else {
+			HOLogger.instance().info(DBUpdater.class,
+					"Update done, db version number will NOT be increased from " + version
+							+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
+		}
+	}
+
+	private void updateDBv300(int DBVersion, int version) throws SQLException {
+		// HO 3.0
+		//store ArenaId into MATCHESKURZINFO table
+		if (!columnExistsInTable("ArenaId", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN ArenaId INTEGER");
+		}
+
+		//store RegionId into MATCHESKURZINFO table
+		if (!columnExistsInTable("RegionId", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN RegionId INTEGER");
+		}
+
+		//store Weather into MATCHESKURZINFO table
+		if (!columnExistsInTable("Weather", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN Weather INTEGER");
+		}
+
+		//store WeatherForecast into MATCHESKURZINFO table
+		if (!columnExistsInTable("WeatherForecast", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN WeatherForecast INTEGER");
+		}
+
+		//store isDerby into MATCHESKURZINFO table
+		if (!columnExistsInTable("isDerby", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN isDerby BOOLEAN");
+		}
+
+		//store isNeutral into MATCHESKURZINFO table
+		if (!columnExistsInTable("isNeutral", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN isNeutral BOOLEAN");
+		}
+
+		//store Salary into TA_PLAYER table
+		if (!columnExistsInTable("SALARY", TAPlayerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN SALARY INTEGER");
+		}
+
+		//store Stamina  into TA_PLAYER table
+		if (!columnExistsInTable("STAMINA", TAPlayerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN STAMINA INTEGER");
+		}
+
+		//store MotherClubBonus  into TA_PLAYER table
+		if (!columnExistsInTable("MOTHERCLUBBONUS", TAPlayerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN MOTHERCLUBBONUS BOOLEAN");
+		}
+
+		//store Loyalty  into TA_PLAYER table
+		if (!columnExistsInTable("LOYALTY", TAPlayerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN LOYALTY INTEGER");
+		}
+
+		//store RATINGINDIRECTSETPIECESATT  into MATCHDETAILS table
+		if (!columnExistsInTable("RATINGINDIRECTSETPIECESATT", MatchDetailsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESATT INTEGER");
+		}
+
+		//store RATINGINDIRECTSETPIECESDEF  into MATCHDETAILS table
+		if (!columnExistsInTable("RATINGINDIRECTSETPIECESDEF", MatchDetailsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESDEF INTEGER");
+		}
+		updateDBVersion(DBVersion, version);
 	}
 
 	/**
@@ -680,66 +762,6 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN TournamentTypeID INTEGER");
 		}
 
-		//store ArenaId into MATCHESKURZINFO table
-		if (!columnExistsInTable("ArenaId", MatchesKurzInfoTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN ArenaId INTEGER");
-		}
-
-		//store RegionId into MATCHESKURZINFO table
-		if (!columnExistsInTable("RegionId", MatchesKurzInfoTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN RegionId INTEGER");
-		}
-
-		//store Weather into MATCHESKURZINFO table
-		if (!columnExistsInTable("Weather", MatchesKurzInfoTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN Weather INTEGER");
-		}
-
-		//store WeatherForecast into MATCHESKURZINFO table
-		if (!columnExistsInTable("WeatherForecast", MatchesKurzInfoTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN WeatherForecast INTEGER");
-		}
-
-		//store isDerby into MATCHESKURZINFO table
-		if (!columnExistsInTable("isDerby", MatchesKurzInfoTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN isDerby BOOLEAN");
-		}
-
-		//store isNeutral into MATCHESKURZINFO table
-		if (!columnExistsInTable("isNeutral", MatchesKurzInfoTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN isNeutral BOOLEAN");
-		}
-
-		//store Salary into TA_PLAYER table
-		if (!columnExistsInTable("SALARY", TAPlayerTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN SALARY INTEGER");
-		}
-
-		//store Stamina  into TA_PLAYER table
-		if (!columnExistsInTable("STAMINA", TAPlayerTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN STAMINA INTEGER");
-		}
-
-		//store MotherClubBonus  into TA_PLAYER table
-		if (!columnExistsInTable("MOTHERCLUBBONUS", TAPlayerTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN MOTHERCLUBBONUS BOOLEAN");
-		}
-
-		//store Loyalty  into TA_PLAYER table
-		if (!columnExistsInTable("LOYALTY", TAPlayerTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN LOYALTY INTEGER");
-		}
-
-		//store RATINGINDIRECTSETPIECESATT  into MATCHDETAILS table
-		if (!columnExistsInTable("RATINGINDIRECTSETPIECESATT", MatchDetailsTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESATT INTEGER");
-		}
-
-		//store RATINGINDIRECTSETPIECESDEF  into MATCHDETAILS table
-		if (!columnExistsInTable("RATINGINDIRECTSETPIECESDEF", MatchDetailsTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESDEF INTEGER");
-		}
-
 		//create TournamentDetailsTable
 		if (!tableExists(TournamentDetailsTable.TABLENAME)) {
 			dbManager.getTable(TournamentDetailsTable.TABLENAME).createTable();
@@ -748,7 +770,6 @@ final class DBUpdater {
 		{
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE TOURNAMENTDETAILS ALTER COLUMN Creator_Loginname VARCHAR (256)");
 		}
-
 
 		if (!columnExistsInTable("MATCH_EVENT_ID", MatchHighlightsTable.TABLENAME)) {
 			try {
