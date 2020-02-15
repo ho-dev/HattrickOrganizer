@@ -177,6 +177,11 @@ public class XMLTeamDetailsParser {
 			root = (Element) team.getElementsByTagName("Region").item(0);
 			ele = (Element) root.getElementsByTagName("RegionID").item(0);
 			hash.put("RegionID", (XMLManager.getFirstChildNodeValue(ele)));
+
+			if (team.getElementsByTagName("TeamRank").getLength() > 0) {
+				hash.put("TeamRank", team.getElementsByTagName("TeamRank").item(0).getTextContent());
+			}
+
 		} catch (Exception e) {
 			HOLogger.instance().log(XMLTeamDetailsParser.class, e);
 		}
@@ -187,7 +192,7 @@ public class XMLTeamDetailsParser {
 	
 	public static List<TeamInfo> getTeamInfoFromString(String input) {
 		Document doc = XMLManager.parseString(input);
-		List<TeamInfo> ret = new ArrayList<TeamInfo>();
+		List<TeamInfo> ret = new ArrayList<>();
 		
 		Element root = doc.getDocumentElement();
 		root = (Element) root.getElementsByTagName("Teams").item(0);

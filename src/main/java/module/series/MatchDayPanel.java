@@ -16,25 +16,13 @@ import core.net.OnlineWorker;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
-import module.matches.MatchesModel;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Vector;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 /**
  * Display a matchday

@@ -13,22 +13,12 @@ import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.Vector;
-
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 
 /**
  * A panel with a league table

@@ -644,7 +644,7 @@ public class MyConnector {
 		int iResponse = 200;
 		boolean tryAgain = true;
 		try {
-			while (tryAgain == true) {
+			while (tryAgain) {
 				OAuthRequest request = new OAuthRequest(Verb.GET, surl);
 				infoHO(request);
 				if (m_OAAccessToken == null || m_OAAccessToken.getToken().length() == 0) {
