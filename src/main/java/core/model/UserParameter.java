@@ -250,11 +250,11 @@ public final class UserParameter extends Configuration {
     public int training_mainSplitPane = 300;
     public int training_lowerLeftSplitPane = 200;
     public int training_pastFutureTrainingsSplitPane = 200;
-
-    public int teamAnalyzer_LowerLeftSplitPane = 100;
-    public int teamAnalyzer_MiddleLeftSplitPane = 250;
-    public int teamAnalyzer_UpperLeftSplitPane = 450;
-    public int teamAnalyzer_MainSplitPane = 300;
+    
+    public int teamAnalyzer_SimButtonSplitPane = 667;
+    public int teamAnalyzer_RatingPanelSplitPane = 143;
+    public int teamAnalyzer_FilterPanelSplitPane = 237;
+    public int teamAnalyzer_MainPanelSplitPane = 532;
     public int teamAnalyzer_BottomSplitPane = 500;
     //Breite der BestPos-Spalte
 
@@ -599,10 +599,10 @@ public final class UserParameter extends Configuration {
         map.put("training_rightSplitPane", String.valueOf(training_rightSplitPane));
         map.put("training_mainSplitPane", String.valueOf(training_mainSplitPane));
         map.put("training_lowerLeftSplitPane", String.valueOf(training_lowerLeftSplitPane));
-        map.put("teamAnalyzer_LowerLeftSplitPane", String.valueOf(teamAnalyzer_LowerLeftSplitPane));
-        map.put("teamAnalyzer_MiddleLeftSplitPane", String.valueOf(teamAnalyzer_MiddleLeftSplitPane));
-        map.put("teamAnalyzer_UpperLeftSplitPane", String.valueOf(teamAnalyzer_UpperLeftSplitPane));
-        map.put("teamAnalyzer_MainSplitPane", String.valueOf(teamAnalyzer_MainSplitPane));
+        map.put("teamAnalyzer_SimButtonSplitPane", String.valueOf(teamAnalyzer_SimButtonSplitPane));
+        map.put("teamAnalyzer_RatingPanelSplitPane", String.valueOf(teamAnalyzer_RatingPanelSplitPane));
+        map.put("teamAnalyzer_FilterPanelSplitPane", String.valueOf(teamAnalyzer_FilterPanelSplitPane));
+        map.put("teamAnalyzer_MainPanelSplitPane", String.valueOf(teamAnalyzer_MainPanelSplitPane));
         map.put("teamAnalyzer_BottomSplitPane", String.valueOf(teamAnalyzer_BottomSplitPane));
         map.put("training_pastFutureTrainingsSplitPane", String.valueOf(training_pastFutureTrainingsSplitPane));
         map.put("RatingChartFrame_Combined", String.valueOf(RatingChartFrame_Combined));
@@ -823,10 +823,10 @@ public final class UserParameter extends Configuration {
         training_rightSplitPane = getIntValue(values, "training_rightSplitPane");
         training_mainSplitPane = getIntValue(values, "training_mainSplitPane");
         training_lowerLeftSplitPane = getIntValue(values, "training_lowerLeftSplitPane");
-        teamAnalyzer_LowerLeftSplitPane = getIntValue(values, "teamAnalyzer_LowerLeftSplitPane");
-        teamAnalyzer_MiddleLeftSplitPane = getIntValue(values, "teamAnalyzer_MiddleLeftSplitPane");
-        teamAnalyzer_UpperLeftSplitPane = getIntValue(values, "teamAnalyzer_UpperLeftSplitPane");
-        teamAnalyzer_MainSplitPane = getIntValue(values, "teamAnalyzer_MainSplitPane");
+        teamAnalyzer_SimButtonSplitPane = getIntValue(values, "teamAnalyzer_SimButtonSplitPane");
+        teamAnalyzer_RatingPanelSplitPane = getIntValue(values, "teamAnalyzer_RatingPanelSplitPane");
+        teamAnalyzer_FilterPanelSplitPane = getIntValue(values, "teamAnalyzer_FilterPanelSplitPane");
+        teamAnalyzer_MainPanelSplitPane = getIntValue(values, "teamAnalyzer_MainPanelSplitPane");
         teamAnalyzer_BottomSplitPane = getIntValue(values, "teamAnalyzer_BottomSplitPane");
         training_pastFutureTrainingsSplitPane = getIntValue(values, "training_pastFutureTrainingsSplitPane");
 

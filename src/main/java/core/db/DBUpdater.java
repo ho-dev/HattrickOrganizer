@@ -126,6 +126,15 @@ final class DBUpdater {
 
 	private void updateDBv300(int DBVersion, int version) throws SQLException {
 		// HO 3.0
+
+		// delete old divider locations
+		m_clJDBCAdapter
+				.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_LowerLefSplitPane'");
+		m_clJDBCAdapter
+				.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_UpperLeftSplitPane'");
+		m_clJDBCAdapter
+				.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_MainSplitPane'");
+
 		//store ArenaId into MATCHESKURZINFO table
 		if (!columnExistsInTable("ArenaId", MatchesKurzInfoTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN ArenaId INTEGER");

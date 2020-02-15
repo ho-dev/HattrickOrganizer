@@ -64,28 +64,28 @@ public class TeamAnalyzerPanel extends LazyPanel {
 		buttonPanel.add(simButton, BorderLayout.CENTER);
 
 		JSplitPane splitPaneSub = new JSplitPane(JSplitPane.VERTICAL_SPLIT, ratingPanel, specialEventsPanel);
-		splitPaneSub.setDividerLocation(UserParameter.instance().teamAnalyzer_MiddleLeftSplitPane);
+		splitPaneSub.setDividerLocation(UserParameter.instance().teamAnalyzer_RatingPanelSplitPane);
 		splitPaneSub.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.teamAnalyzer_MiddleLeftSplitPane));
+				new DividerListener(DividerListener.teamAnalyzer_RatingPanelSplitPane));
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, filterPanel, splitPaneSub);
-		splitPane.setDividerLocation(UserParameter.instance().teamAnalyzer_UpperLeftSplitPane);
+		splitPane.setDividerLocation(UserParameter.instance().teamAnalyzer_FilterPanelSplitPane);
 		splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.teamAnalyzer_UpperLeftSplitPane));
+				new DividerListener(DividerListener.teamAnalyzer_FilterPanelSplitPane));
 
 		JSplitPane splitPaneLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT, splitPane, buttonPanel);
 		splitPaneLeft.setDividerSize(1);
 		splitPaneLeft.setResizeWeight(1);
-		splitPaneLeft.setDividerLocation(UserParameter.instance().teamAnalyzer_LowerLeftSplitPane);
+		splitPaneLeft.setDividerLocation(UserParameter.instance().teamAnalyzer_SimButtonSplitPane);
 		splitPaneLeft.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.teamAnalyzer_LowerLeftSplitPane));
+				new DividerListener(DividerListener.teamAnalyzer_SimButtonSplitPane));
 
 
 		JSplitPane splitPaneUpper = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPaneLeft,
 				mainPanel);
-		splitPaneUpper.setDividerLocation(UserParameter.instance().teamAnalyzer_MainSplitPane);
+		splitPaneUpper.setDividerLocation(UserParameter.instance().teamAnalyzer_MainPanelSplitPane);
 		splitPaneUpper.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.teamAnalyzer_MainSplitPane));
+				new DividerListener(DividerListener.teamAnalyzer_MainPanelSplitPane));
 
 		JSplitPane splitPaneMain = new JSplitPane(JSplitPane.VERTICAL_SPLIT, splitPaneUpper,
 				recapPanel);
