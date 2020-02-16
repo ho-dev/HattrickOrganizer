@@ -160,12 +160,12 @@ public class Lineup{
 			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.rightCentralDefender, Integer
 					.parseInt(properties.getProperty("rightcentraldefender", "0")), Byte
 					.parseByte(properties.getProperty("order_rightcentraldefender", "0"))));
-			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftCentralDefender, Integer
-					.parseInt(properties.getProperty("leftcentraldefender", "0")), Byte
-					.parseByte(properties.getProperty("order_leftcentraldefender", "0"))));
 			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.middleCentralDefender, Integer
 					.parseInt(properties.getProperty("middlecentraldefender", "0")), Byte
 					.parseByte(properties.getProperty("order_middlecentraldefender", "0"))));
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftCentralDefender, Integer
+					.parseInt(properties.getProperty("leftcentraldefender", "0")), Byte
+					.parseByte(properties.getProperty("order_leftcentraldefender", "0"))));
 			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftBack, Integer
 					.parseInt(properties.getProperty("leftback", "0")), Byte.parseByte(properties
 					.getProperty("order_leftback", "0"))));
@@ -175,24 +175,24 @@ public class Lineup{
 			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.rightInnerMidfield, Integer
 					.parseInt(properties.getProperty("rightinnermidfield", "0")), Byte.parseByte(properties
 					.getProperty("order_rightinnermidfield", "0"))));
-			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftInnerMidfield, Integer
-					.parseInt(properties.getProperty("leftinnermidfield", "0")), Byte.parseByte(properties
-					.getProperty("order_leftinnermidfield", "0"))));
 			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.centralInnerMidfield, Integer
 					.parseInt(properties.getProperty("middleinnermidfield", "0")), Byte.parseByte(properties
 					.getProperty("order_centralinnermidfield", "0"))));
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftInnerMidfield, Integer
+					.parseInt(properties.getProperty("leftinnermidfield", "0")), Byte.parseByte(properties
+					.getProperty("order_leftinnermidfield", "0"))));
 			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftWinger, Integer
 					.parseInt(properties.getProperty("leftwinger", "0")), Byte.parseByte(properties
 					.getProperty("order_leftwinger", "0"))));
 			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.rightForward, Integer
 					.parseInt(properties.getProperty("rightforward", "0")), Byte.parseByte(properties
 					.getProperty("order_rightforward", "0"))));
-			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftForward, Integer
-					.parseInt(properties.getProperty("leftforward", "0")), Byte.parseByte(properties
-					.getProperty("order_leftforward", "0"))));
 			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.centralForward, Integer
 					.parseInt(properties.getProperty("centralforward", "0")), Byte.parseByte(properties
 					.getProperty("order_centralforward", "0"))));
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftForward, Integer
+					.parseInt(properties.getProperty("leftforward", "0")), Byte.parseByte(properties
+					.getProperty("order_leftforward", "0"))));
 
 			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substGK1, Integer.parseInt(properties.getProperty("substgk1", "0")), (byte) 0));
 			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substCD1, Integer.parseInt(properties.getProperty("substcd1", "0")), (byte) 0));
