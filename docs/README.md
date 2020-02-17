@@ -78,6 +78,9 @@ The following companies are kindly supporting HO open source project:
 
 <a href="https://www.syntevo.com/smartgit/"> <img src="https://user-images.githubusercontent.com/1136496/57284884-5d1a3900-70b2-11e9-9917-15a7d2f2c83c.png" alt="SmartGit" width="46" height="50"> </a> [**Syntevo**](https://www.syntevo.com/smartgit/) with its powerful and multi-platform graphical Git client
 
+<a href="https://anvil.works/"> <img src="https://user-images.githubusercontent.com/1136496/74674400-8d4e4680-51b1-11ea-80ea-d04d554a30ba.png" alt="Anvil" width="46" height="50"> </a> [**Anvil**](https://www.syntevo.com/smartgit/): Full stack web apps
+with nothing but Python
+
 ## Dependencies
 
 HO bundles a number of libraries that are compatibly licensed.  We list
