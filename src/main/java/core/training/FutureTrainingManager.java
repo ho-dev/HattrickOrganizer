@@ -80,7 +80,6 @@ public class FutureTrainingManager {
 		int position = HelperWrapper.instance().getPosition(player.getIdealPosition());
 		// Iterate thru all the future training weeks
 		for (int index = startWeekNumber; index <= finalWeekNumber; index++) {
-			int trainingSpeed=0;
 			weeksPassed++;
 			TrainingPerWeek tw = this.futureTrainings.get(index-1);
 			int trType = tw.getTrainingType();
@@ -182,12 +181,12 @@ public class FutureTrainingManager {
 				// Depending on the type of training, update the proper skill with the provided training points
 							
 				processTraining(wt, trp, tw);
-				if ( this.trainingSpeed < trainingSpeed) {
-					this.trainingSpeed = trainingSpeed;
-				}
 			}
-		}		
-		FuturePlayer fp = new FuturePlayer();
+		}
+		// TODO: if we want to do the change of https://github.com/akasolace/HO/issues/296
+		// we could set trainingsSpeed to the maximum found instead of the average
+		trainingSpeed /= weeksPassed;
+		FuturePlayer fp = new FuturePlayer();				
 		fp.setAttack(getFinalValue(PlayerSkill.SCORING));		
 		fp.setCross(getFinalValue(PlayerSkill.WINGER));
 		fp.setDefense(getFinalValue(PlayerSkill.DEFENDING));

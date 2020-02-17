@@ -4,6 +4,7 @@ import core.datatype.CBItem;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.util.Helper;
+import module.lineup.Lineup;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
@@ -49,6 +50,12 @@ public class SubstitutionEditView extends JPanel {
 	private JSlider whenSlider;
 	private WhenTextField whenTextField;
 
+	private Lineup lineup;
+	private Substitution substitution;
+	private Integer oldHatStats;
+	private JLabel hatstatsChangeField;
+	private boolean initDone=false;
+
 	public SubstitutionEditView(MatchOrderType orderType) {
 		this.orderType = orderType;
 		initComponents();
@@ -92,15 +99,23 @@ public class SubstitutionEditView extends JPanel {
 		}
 	}
 
+	private Integer Hatstats()
+	{
+		return  lineup.getRatings().getHatStats().get(-90d);	// 90 minutes average
+	}
+
 	/**
 	 * Initializes the view with the given {@link Substitution}. The given
 	 * object will not be changed. To retrieve the data from the view, use
 	 * {@link #getSubstitution()} method.
-	 * 
+	 *
+	 * @param lineup
 	 * @param sub
-	 *            the substitution to initialize the view.
 	 */
-	public void init(Substitution sub) {
+	public void init(Lineup lineup, Substitution sub) {
+		this.lineup = lineup;
+		this.substitution  = sub;
+		this.oldHatStats = Hatstats();
 		this.orderType = sub.getOrderType();
 
 		if (sub.getSubjectPlayerID() != -1) {
@@ -143,6 +158,9 @@ public class SubstitutionEditView extends JPanel {
 				.getId());
 		this.whenTextField.setValue(Integer.valueOf(sub
 				.getMatchMinuteCriteria()));
+
+		this.hatstatsChangeField.setText(HatStatsChange());
+		initDone=true;
 	}
 
 	/**
@@ -154,6 +172,11 @@ public class SubstitutionEditView extends JPanel {
 	 */
 	public Substitution getSubstitution() {
 		Substitution sub = new Substitution();
+		return getSubstitution(sub);
+	}
+
+	public Substitution getSubstitution(Substitution sub)
+	{
 		sub.setBehaviour((byte) getSelectedId(this.behaviourComboBox));
 		sub.setRedCardCriteria(RedCardCriteria
 				.getById((byte) getSelectedId(this.redCardsComboBox)));
@@ -203,6 +226,17 @@ public class SubstitutionEditView extends JPanel {
 		return -1;
 	}
 
+	void RatingRecalc()
+	{
+		if ( substitution == null || initDone == false) return;
+		setSubstitution();
+		if ( substitution.getSubjectPlayerID() !=  -1 &&
+				(isNewBehaviour() || substitution.getObjectPlayerID() != -1)){
+			this.lineup.setRatings();
+			this.hatstatsChangeField.setText(HatStatsChange());
+		}
+	}
+
 	private void addListeners() {
 		// ChangeListener that will updates the "when" textfield with the number
 		// of minutes when slider changed
@@ -210,8 +244,7 @@ public class SubstitutionEditView extends JPanel {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				whenTextField.setValue(Integer.valueOf(whenSlider.getModel()
-						.getValue()));
+				whenTextField.setValue(Integer.valueOf(whenSlider.getModel().getValue()));
 			}
 		});
 
@@ -228,8 +261,22 @@ public class SubstitutionEditView extends JPanel {
 						} else {
 							whenSlider.setValue(-1);
 						}
+						RatingRecalc();
 					}
 				});
+
+
+		ItemListener ratingRecalcListener = new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				RatingRecalc();
+			}
+		};
+
+		this.playerComboBox.addItemListener( ratingRecalcListener);
+		if (this.playerInComboBox != null )  this.playerInComboBox.addItemListener(ratingRecalcListener);
+		if (this.positionComboBox != null )  this.positionComboBox.addItemListener(ratingRecalcListener);
+		this.behaviourComboBox.addItemListener(ratingRecalcListener);
 
 		if (!isPositionSwap()) {
 			// ItemListener that will update the PositionChooser if selection in
@@ -446,10 +493,26 @@ public class SubstitutionEditView extends JPanel {
 		gbc.insets = new Insets(4, 2, 4, 10);
 		add(this.standingComboBox, gbc);
 
+		JLabel hatstatsLabel = new JLabel("HatStats:");
+		gbc.gridx = 0;
+		gbc.gridy++;
+		gbc.insets = new Insets(4, 10, 4, 2);
+		add(hatstatsLabel, gbc);
+
+		this.hatstatsChangeField = new JLabel(HatStatsChange());
+		gbc.gridx = 1;
+		gbc.insets = new Insets(4, 2, 4, 10);
+		add(this.hatstatsChangeField, gbc);
+
 		// dummy to consume all extra space
 		gbc.gridy++;
 		gbc.weighty = 1.0;
 		add(new JPanel(), gbc);
+	}
+
+	private String HatStatsChange() {
+		if (oldHatStats == null) return "";
+		return this.oldHatStats + "->" + Hatstats();
 	}
 
 	private boolean isSubstitution() {
@@ -462,5 +525,9 @@ public class SubstitutionEditView extends JPanel {
 
 	private boolean isNewBehaviour() {
 		return this.orderType == MatchOrderType.NEW_BEHAVIOUR;
+	}
+
+	public void setSubstitution() {
+		getSubstitution(this.substitution);
 	}
 }
