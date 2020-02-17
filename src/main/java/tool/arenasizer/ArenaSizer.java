@@ -73,7 +73,7 @@ public class ArenaSizer {
         return new Stadium[]{arenaMax, arenaNormal, arenaMin};
     }
 
-    private Stadium createArena(int size,Stadium current){
+    private Stadium createArena(int size, Stadium current){
     	Stadium tmp = new Stadium();
     	BigDecimal sizeNumber = new BigDecimal(size);
     	tmp.setStehplaetze(TERRACES_PERCENT.multiply(sizeNumber).intValue());

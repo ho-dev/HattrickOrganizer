@@ -28,7 +28,15 @@ public class XMLTeamDetailsParser {
 	private XMLTeamDetailsParser() {
 	}
 
-	public static String fetchRegionID(String xmlFile, int teamId) {
+	public static String fetchRegionID(String xmlFile) {
+		return fetchTeamDetail(xmlFile, "Region", "RegionID");
+	}
+
+	public static String fetchArenaID(String xmlFile) {
+		return fetchTeamDetail(xmlFile, "Arena", "ArenaID");
+	}
+
+	private static String fetchTeamDetail(String xmlFile, String section, String attribute){
 		try {
 			Document doc = XMLManager.parseString(xmlFile);
 
@@ -41,8 +49,8 @@ public class XMLTeamDetailsParser {
 
 			// Root wechseln
 			root = (Element) root.getElementsByTagName("Team").item(0);
-			root = (Element) root.getElementsByTagName("Region").item(0);
-			Element ele = (Element) root.getElementsByTagName("RegionID").item(0);
+			root = (Element) root.getElementsByTagName(section).item(0);
+			Element ele = (Element) root.getElementsByTagName(attribute).item(0);
 			return XMLManager.getFirstChildNodeValue(ele);
 		} catch (Exception ex) {
 			HOLogger.instance().log(XMLTeamDetailsParser.class, ex);
@@ -98,20 +106,25 @@ public class XMLTeamDetailsParser {
 			hash.put("HasSupporter", supportStatus);
 
 			// We need to find the correct team
-			
-			root = (Element) doc.getDocumentElement().getElementsByTagName("Teams").item(0);
-			
-			NodeList list = root.getElementsByTagName("Team");
+
 			Element team = null;
-			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-				team = (Element) list.item(i);
-				
-				ele = (Element) team.getElementsByTagName("TeamID").item(0);
-				if (Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)) == teamId) {
-					break;
+			ele = (Element) doc.getDocumentElement().getElementsByTagName("Teams").item(0);
+			if ( ele != null) {
+				root = ele;
+				NodeList list = root.getElementsByTagName("Team");
+				for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+					team = (Element) list.item(i);
+
+					ele = (Element) team.getElementsByTagName("TeamID").item(0);
+					if (Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)) == teamId) {
+						break;
+					}
 				}
 			}
-			
+			else {
+				team = (Element)doc.getDocumentElement().getElementsByTagName("Team").item(0);
+			}
+
 			if (team == null) { 
 				return hash;
 			}

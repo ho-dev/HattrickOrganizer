@@ -98,6 +98,8 @@ public class MatchPopulator {
         }
         mr.setHatStats(mr.computeHatStats());
         mr.setLoddarStats(mr.computeLoddarStats());
+        mr.setIndirectSetPiecesAtt(aMatchDetail.getRatingIndirectSetPiecesAtt());
+        mr.setIndirectSetPiecesDef(aMatchDetail.getRatingIndirectSetPiecesDef());
         return mr;
     }
 
@@ -128,6 +130,11 @@ public class MatchPopulator {
 
                 matchDetail.addMatchLineupPlayer(pp);
             }
+        }
+
+        MatchLineupPlayer setPieces = tmpLineupTeam.getPlayerByPosition(IMatchRoleID.setPieces);
+        if ( setPieces != null){
+            matchDetail.setSetPiecesTaker(setPieces.getSpielerId());
         }
 
         MatchRating rating = buildMatchRating(tmpMatch);

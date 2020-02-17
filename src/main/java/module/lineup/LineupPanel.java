@@ -6,6 +6,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.model.match.Weather;
 import core.model.player.Player;
 import module.playerOverview.PlayerTable;
 import module.playerOverview.SpielerUebersichtNamenTable;
@@ -161,8 +162,12 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		verticalSplitPaneLow = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
 
 		aufstellungsVergleichHistoryPanel = new AufstellungsVergleichHistoryPanel();
+
+		final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+		final Weather weather = aufstellung.getWeather();
+
 //		aufstellungsAssistentPanel = new AufstellungsAssistentPanelNew();
-		aufstellungsAssistentPanel = new AufstellungsAssistentPanel();
+		aufstellungsAssistentPanel = new AufstellungsAssistentPanel(weather);
 
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("", ThemeManager.getScaledIcon(HOIconName.BALL, 13, 13), new JScrollPane(

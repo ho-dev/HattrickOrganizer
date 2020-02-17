@@ -6,7 +6,33 @@ import java.util.List;
 import core.constants.player.PlayerSkill;
 
 public class CalcVariables {
+
+	public int age;
+	public int ageDays;
+	public int injuryStatus;
+	public double form;
+	public double stamina;
+	public int tsi;
+	public int wage;
+	public boolean isPlayingAbroad;
+	public int role;
+	public int specialty;
+
+	private Skill 	goalkeeping	= new Skill(PlayerSkill.KEEPER);
+	private Skill 	playmaking	= new Skill(PlayerSkill.PLAYMAKING);
+	private Skill 	defending	= new Skill(PlayerSkill.DEFENDING);
+	private Skill 	wing		= new Skill(PlayerSkill.WINGER);
+	private Skill 	scoring		= new Skill(PlayerSkill.SCORING);
+	private Skill 	passing		= new Skill(PlayerSkill.PASSING);
+	private Skill 	setPieces	= new Skill(PlayerSkill.SET_PIECES);	
 	
+	private List<Skill> skills;
+	
+	public int 		calculatedTSI;
+	public int		calculatedWage;
+	public int 		goalkeeperCalculatedWage;
+	public int 		goalkeeperCalculatedTSI;
+
 	public CalcVariables() {
 		skills = new ArrayList<Skill>();
 		skills.add(goalkeeping);
@@ -16,11 +42,10 @@ public class CalcVariables {
 		skills.add(scoring);
 		skills.add(passing);
 		skills.add(setPieces);
-		
 	}
-	
+
 	public CalcVariables(CalcVariables value) {
-		
+
 		this.age = value.age;
 		this.ageDays = value.ageDays;
 		this.defending = value.defending;
@@ -39,39 +64,13 @@ public class CalcVariables {
 		this.wage = value.wage;
 		this.wing = value.wing;
 		this.skills = value.skills;
-		
+
 		this.calculatedTSI = value.calculatedTSI;
 		this.calculatedWage = value.calculatedWage;
 		this.goalkeeperCalculatedTSI = value.goalkeeperCalculatedTSI;
 		this.goalkeeperCalculatedWage = value.goalkeeperCalculatedWage;
-		
+
 	}
-	
-	public int age;
-	public int ageDays;
-	public int injuryStatus;
-	public double form;
-	public double stamina;
-	public int tsi;
-	public int wage;
-	public boolean isPlayingAbroad;
-	public int role;
-	public int specialty;
-	
-	private Skill 	goalkeeping	= new Skill(PlayerSkill.KEEPER);
-	private Skill 	playmaking	= new Skill(PlayerSkill.PLAYMAKING);
-	private Skill 	defending	= new Skill(PlayerSkill.DEFENDING);
-	private Skill 	wing		= new Skill(PlayerSkill.WINGER);
-	private Skill 	scoring		= new Skill(PlayerSkill.SCORING);
-	private Skill 	passing		= new Skill(PlayerSkill.PASSING);
-	private Skill 	setPieces	= new Skill(PlayerSkill.SET_PIECES);	
-	
-	private List<Skill> skills;
-	
-	public int 		calculatedTSI;
-	public int		calculatedWage;
-	public int 		goalkeeperCalculatedWage;
-	public int 		goalkeeperCalculatedTSI;
 
 	public void setSkillPriority(int skillType, int priority) {
 		for (Skill skill : skills) {
@@ -103,12 +102,6 @@ public class CalcVariables {
 		this.goalkeeping.priority = 1;
 	}
 	
-	// Remove me
-	public void setGoalkeeping(double skillValue, int priority) {
-		this.goalkeeping.priority = priority;
-		this.goalkeeping.skillValue = 1;
-	}
-	
 	public void setGoalkeeping(double skillValue, double priority) {
 		this.goalkeeping.priority = priority;
 		this.goalkeeping.skillValue = skillValue;
@@ -118,12 +111,7 @@ public class CalcVariables {
 		return playmaking.skillValue;
 	}
 	
-	// remove me
-	public void setPlaymaking(double skillValue, int priority) {
-		this.playmaking.priority = priority;
-		this.playmaking.skillValue = 1;
-	}
-	
+
 	public void setPlaymaking(double skillValue, double priority) {
 		this.playmaking.priority = priority;
 		this.playmaking.skillValue = skillValue;
@@ -143,12 +131,6 @@ public class CalcVariables {
 		this.defending.skillValue = skillValue;
 	}
 
-	// Remove me
-	public void setDefending(double skillValue, int priority) {
-		this.defending.priority = priority;
-		this.defending.skillValue = 1;
-	}
-	
 	public void setDefending(double defending) {
 		this.defending.skillValue = defending;
 		this.defending.priority = 1;
@@ -163,12 +145,6 @@ public class CalcVariables {
 		this.wing.skillValue = skillValue;
 	}
 	
-	// Remove me
-	public void setWing(double skillValue, int priority) {
-		this.wing.priority = priority;
-		this.wing.skillValue = 1;
-	}
-
 	public void setWing(double wing) {
 		this.wing.skillValue = wing;
 		this.wing.priority = 1;
@@ -181,12 +157,6 @@ public class CalcVariables {
 	public void setScoring(double skillValue, double priority) {
 		this.scoring.priority = priority;
 		this.scoring.skillValue = skillValue;
-	}
-	
-	// Remove me
-	public void setScoring(double skillValue, int priority) {
-		this.scoring.priority = priority;
-		this.scoring.skillValue = 1;
 	}
 
 	public void setScoring(double scoring) {
@@ -203,12 +173,6 @@ public class CalcVariables {
 		this.passing.skillValue = skillValue;
 	}
 	
-	// Remove me
-	public void setPassing(double skillValue, int priority) {
-		this.passing.priority = priority;
-		this.passing.skillValue = 1;
-	}
-
 	public void setPassing(double passing) {
 		this.passing.skillValue = passing;
 		this.passing.priority = 1;
@@ -223,16 +187,13 @@ public class CalcVariables {
 		this.setPieces.skillValue = skillValue;
 	}
 
-	// Remove me
-	public void setSetPieces(double skillValue, int priority) {
-		this.setPieces.priority = priority;
-		this.setPieces.skillValue = 1;
-	}
-
-
 	public void setSetPieces(double setPieces) {
 		this.setPieces.skillValue = setPieces;
 		this.setPieces.priority = 1;
+	}
+
+	public double getStamina(){
+		return stamina;
 	}
 	
 	public class Skill {
@@ -245,7 +206,4 @@ public class CalcVariables {
 		public double priority = 0;
 		public boolean isMainSkill = false;
 	}
-	
-	
-	
 }

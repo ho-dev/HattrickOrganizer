@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 public class Matchdetails implements core.model.match.IMatchDetails {
 
-	private String m_sArenaName = "";
+    private String m_sArenaName = "";
     private String m_sGastName = "";
     private String m_sHeimName = "";
     private String m_sMatchreport = "";
@@ -70,19 +70,29 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     private int m_iZuschauer;
 
-    /** Spectators in category Terraces, is 0 if not our home match **/
+    /**
+     * Spectators in category Terraces, is 0 if not our home match
+     **/
     private int soldTerraces = -1;
 
-    /** Spectators in category Basic, is 0 if not our home match **/
+    /**
+     * Spectators in category Basic, is 0 if not our home match
+     **/
     private int soldBasic = -1;
 
-    /** Spectators in category Roof, is 0 if not our home match **/
+    /**
+     * Spectators in category Roof, is 0 if not our home match
+     **/
     private int soldRoof = -1;
 
-    /** Spectators in category VIP, is 0 if not our home match **/
+    /**
+     * Spectators in category VIP, is 0 if not our home match
+     **/
     private int soldVIP = -1;
 
     private int m_iRegionId;
+    private int ratingIndirectSetPiecesAtt = -1;
+    private int ratingIndirectSetPiecesDef = -1;
 
     public ArrayList<Injury> getM_Injuries() {
         return m_Injuries;
@@ -94,18 +104,36 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     public ArrayList<Injury> m_Injuries = new ArrayList<>();
 
+    public void setRatingIndirectSetPiecesAtt(int ratingIndirectSetPiecesAtt) {
+        this.ratingIndirectSetPiecesAtt = ratingIndirectSetPiecesAtt;
+    }
+
+    public void setRatingIndirectSetPiecesDef(int ratingIndirectSetPiecesDef) {
+        this.ratingIndirectSetPiecesDef = ratingIndirectSetPiecesDef;
+    }
+
+    public int getRatingIndirectSetPiecesDef() {
+        return ratingIndirectSetPiecesDef;
+    }
+
+    public int getRatingIndirectSetPiecesAtt() {
+        return ratingIndirectSetPiecesAtt;
+    }
+
     public enum eInjuryType {
         NA(0), BRUISE(1), INJURY(2);
         private final int value;
 
-        public int getValue() { return value; }
+        public int getValue() {
+            return value;
+        }
 
         eInjuryType(final int newValue) {
             value = newValue;
         }
 
         public static eInjuryType fromInteger(int x) {
-            switch(x) {
+            switch (x) {
                 case 0:
                     return NA;
                 case 1:
@@ -118,7 +146,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     }
 
-    public static class Injury{
+    public static class Injury {
         public int getInjuryPlayerID() {
             return InjuryPlayerID;
         }
@@ -132,7 +160,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         }
 
 
-
         int InjuryPlayerID;
         int InjuryTeamID;
         eInjuryType InjuryType;
@@ -144,11 +171,15 @@ public class Matchdetails implements core.model.match.IMatchDetails {
             InjuryTeamID = injuryTeamID;
             InjuryMinute = injuryMinute;
             MatchPart = matchPart;
-            if (_injuryType == eInjuryType.BRUISE.value) {InjuryType = eInjuryType.BRUISE;}
-            else if(_injuryType == eInjuryType.INJURY.value) {InjuryType = eInjuryType.INJURY;}
-            else{HOLogger.instance().log(getClass(), "Injury type not recognized !!");}
+            if (_injuryType == eInjuryType.BRUISE.value) {
+                InjuryType = eInjuryType.BRUISE;
+            } else if (_injuryType == eInjuryType.INJURY.value) {
+                InjuryType = eInjuryType.INJURY;
+            } else {
+                HOLogger.instance().log(getClass(), "Injury type not recognized !!");
             }
         }
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -211,64 +242,64 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                 return core.model.HOVerwaltung.instance().getLanguageString("ls.team.tactic.playcreatively");
 
             case TAKTIK_LONGSHOTS:
-            	return core.model.HOVerwaltung.instance().getLanguageString("ls.team.tactic.longshots");
+                return core.model.HOVerwaltung.instance().getLanguageString("ls.team.tactic.longshots");
 
             default:
                 return core.model.HOVerwaltung.instance().getLanguageString("Unbestimmt");
         }
     }
-    
- // get the used tactic name in short form
- 		public static String getShortTacticName(int type) {
- 			HOVerwaltung hov = HOVerwaltung.instance();
- 			String tacticName;
- 			
- 			switch(type) {
- 			case core.model.match.IMatchDetails.TAKTIK_NORMAL:
- 				tacticName = hov.getLanguageString("ls.team.tactic_short.normal");
- 				break;
- 			case core.model.match.IMatchDetails.TAKTIK_PRESSING:
- 				tacticName = hov.getLanguageString("ls.team.tactic_short.pressing");
- 				break;
- 			case core.model.match.IMatchDetails.TAKTIK_KONTER:
- 				tacticName = hov.getLanguageString("ls.team.tactic_short.counter-attacks");
- 				break;
- 			case core.model.match.IMatchDetails.TAKTIK_MIDDLE:
- 				tacticName = hov.getLanguageString("ls.team.tactic_short.attackinthemiddle");
- 				break;
- 			case core.model.match.IMatchDetails.TAKTIK_WINGS:
- 				tacticName = hov.getLanguageString("ls.team.tactic_short.attackonwings");
- 				break;
- 			case core.model.match.IMatchDetails.TAKTIK_LONGSHOTS:
- 				tacticName = hov.getLanguageString("ls.team.tactic_short.longshots");
- 				break;
- 			case core.model.match.IMatchDetails.TAKTIK_CREATIVE:
- 				tacticName = hov.getLanguageString("ls.team.tactic_short.playcreatively");
- 				break;
- 			default:
- 				tacticName = HOVerwaltung.instance().getLanguageString("Unbestimmt");
- 				break;
- 			}
- 			return tacticName;
- 		}
+
+    // get the used tactic name in short form
+    public static String getShortTacticName(int type) {
+        HOVerwaltung hov = HOVerwaltung.instance();
+        String tacticName;
+
+        switch (type) {
+            case core.model.match.IMatchDetails.TAKTIK_NORMAL:
+                tacticName = hov.getLanguageString("ls.team.tactic_short.normal");
+                break;
+            case core.model.match.IMatchDetails.TAKTIK_PRESSING:
+                tacticName = hov.getLanguageString("ls.team.tactic_short.pressing");
+                break;
+            case core.model.match.IMatchDetails.TAKTIK_KONTER:
+                tacticName = hov.getLanguageString("ls.team.tactic_short.counter-attacks");
+                break;
+            case core.model.match.IMatchDetails.TAKTIK_MIDDLE:
+                tacticName = hov.getLanguageString("ls.team.tactic_short.attackinthemiddle");
+                break;
+            case core.model.match.IMatchDetails.TAKTIK_WINGS:
+                tacticName = hov.getLanguageString("ls.team.tactic_short.attackonwings");
+                break;
+            case core.model.match.IMatchDetails.TAKTIK_LONGSHOTS:
+                tacticName = hov.getLanguageString("ls.team.tactic_short.longshots");
+                break;
+            case core.model.match.IMatchDetails.TAKTIK_CREATIVE:
+                tacticName = hov.getLanguageString("ls.team.tactic_short.playcreatively");
+                break;
+            default:
+                tacticName = HOVerwaltung.instance().getLanguageString("Unbestimmt");
+                break;
+        }
+        return tacticName;
+    }
 
     public final int getGuestHalfTimeGoals() {
-    	ArrayList<MatchEvent> highLights = getHighlights();
-    	for (MatchEvent iMatchHighlight : highLights) {
-			if(iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
-				return iMatchHighlight.getGastTore();
-		}
-    	return -1;
-	}
-
-	public final int getHomeHalfTimeGoals() {
         ArrayList<MatchEvent> highLights = getHighlights();
-    	for (MatchEvent iMatchHighlight : highLights) {
-			if(iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
-				return iMatchHighlight.getHeimTore();
-		}
-    	return -1;
-	}
+        for (MatchEvent iMatchHighlight : highLights) {
+            if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
+                return iMatchHighlight.getGastTore();
+        }
+        return -1;
+    }
+
+    public final int getHomeHalfTimeGoals() {
+        ArrayList<MatchEvent> highLights = getHighlights();
+        for (MatchEvent iMatchHighlight : highLights) {
+            if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
+                return iMatchHighlight.getHeimTore();
+        }
+        return -1;
+    }
 
     /**
      * Setter for property m_iArenaID.
@@ -331,18 +362,18 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         try {
             //Hattrick
             final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                                                                                           java.util.Locale.GERMANY);
+                    java.util.Locale.GERMANY);
 
             m_clFetchDatum = new java.sql.Timestamp(simpleFormat.parse(date).getTime());
         } catch (Exception e) {
             try {
                 //Hattrick
                 final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
-                                                                                               java.util.Locale.GERMANY);
+                        java.util.Locale.GERMANY);
 
                 m_clFetchDatum = new java.sql.Timestamp(simpleFormat.parse(date).getTime());
             } catch (Exception ex) {
-                HOLogger.instance().log(getClass(),ex);
+                HOLogger.instance().log(getClass(), ex);
                 m_clFetchDatum = null;
                 return false;
             }
@@ -355,7 +386,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      * Method that extract the formation from the full match comment
      *
      * @param home true for home lineup, false for away
-     *
      * @return The formation type 4-4-2 or 5-3-2 etc
      */
     public final String getFormation(boolean home) {
@@ -591,7 +621,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     public final int getGuestRightDef() {
         return m_iGuestRightDef;
     }
-    
+
     /**
      * Getter for property m_iGuestHatStats.
      *
@@ -600,17 +630,17 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     public final int getGuestHatStats() {
         return m_iGuestHatStats;
     }
-    
-	/**
-	 * Setter for property m_iGuestHatStats
-	 */
-	public void setGuestHatStats() {
+
+    /**
+     * Setter for property m_iGuestHatStats
+     */
+    public void setGuestHatStats() {
         int m_iGuestHatStats = this.m_iGuestLeftDef + this.m_iGuestMidDef + this.m_iGuestRightDef;
-        m_iGuestHatStats += this.m_iGuestMidfield * 3 ;
+        m_iGuestHatStats += this.m_iGuestMidfield * 3;
         m_iGuestHatStats += this.m_iGuestLeftAtt + this.m_iGuestMidAtt + this.m_iGuestRightAtt;
-		this.m_iGuestHatStats = m_iGuestHatStats;
-	}
-	
+        this.m_iGuestHatStats = m_iGuestHatStats;
+    }
+
 
     /**
      * Setter for property m_iGuestTacticSkill.
@@ -730,7 +760,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     public final float getHomeGesamtstaerke(boolean absolut) {
         double res = getHomeHatStats();
         if (!absolut) {
-        	res /= 9d;
+            res /= 9d;
         }
 
         return (float) res;
@@ -881,23 +911,23 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     }
 
     /**
-	 * @return the m_iHomeHatStats
-	 */
-	public int getM_iHomeHatStats() {
-		return m_iHomeHatStats;
-	}
+     * @return the m_iHomeHatStats
+     */
+    public int getM_iHomeHatStats() {
+        return m_iHomeHatStats;
+    }
 
-	/**
-	 * Setter for property m_iHomeHatStats
-	 */
-	public void setHomeHatStats() {
+    /**
+     * Setter for property m_iHomeHatStats
+     */
+    public void setHomeHatStats() {
         int m_iHomeHatStats = this.m_iHomeLeftDef + this.m_iHomeMidDef + this.m_iHomeRightDef;
-        m_iHomeHatStats += this.m_iHomeMidfield * 3 ;
+        m_iHomeHatStats += this.m_iHomeMidfield * 3;
         m_iHomeHatStats += this.m_iHomeLeftAtt + this.m_iHomeMidAtt + this.m_iHomeRightAtt;
-		this.m_iHomeHatStats = m_iHomeHatStats;
-	}
+        this.m_iHomeHatStats = m_iHomeHatStats;
+    }
 
-	/**
+    /**
      * Setter for property m_iHomeTacticSkill.
      *
      * @param m_iHomeTacticSkill New value of property m_iHomeTacticSkill.
@@ -937,7 +967,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      * Method that extract a lineup from the full match comment
      *
      * @param home true for home lineup, false for away
-     *
      * @return The list of last names that started the match
      */
     public final List<String> getLineup(boolean home) {
@@ -1043,18 +1072,18 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         try {
             //Hattrick
             final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                                                                                           java.util.Locale.GERMANY);
+                    java.util.Locale.GERMANY);
 
             m_clSpielDatum = new java.sql.Timestamp(simpleFormat.parse(date).getTime());
         } catch (Exception e) {
             try {
                 //Hattrick
                 final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
-                                                                                               java.util.Locale.GERMANY);
+                        java.util.Locale.GERMANY);
 
                 m_clSpielDatum = new java.sql.Timestamp(simpleFormat.parse(date).getTime());
             } catch (Exception ex) {
-                HOLogger.instance().log(getClass(),ex);
+                HOLogger.instance().log(getClass(), ex);
                 m_clSpielDatum = null;
                 return false;
             }
@@ -1067,7 +1096,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      * Method that extract a lineup from the full match comment
      *
      * @param home true for home lineup, false for away
-     *
      * @return The Lineup object
      */
     public final TeamLineup getTeamLineup(boolean home) {
@@ -1154,94 +1182,94 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     /**
      * Set the region ID of the match's arena
+     *
      * @param regionId
      */
-    public void setRegionId (int regionId) {
-    	this.m_iRegionId = regionId;
+    public void setRegionId(int regionId) {
+        this.m_iRegionId = regionId;
     }
 
     /**
      * Get the region ID of this match's arena
+     *
      * @return
      */
-    public int getRegionId () {
-    	return m_iRegionId;
+    public int getRegionId() {
+        return m_iRegionId;
     }
 
-	/**
-	 * @return the soldTerraces
-	 */
-	public int getSoldTerraces() {
-		return soldTerraces;
-	}
-
-	/**
-	 * @param soldTerraces the soldTerraces to set
-	 */
-	public void setSoldTerraces(int soldTerraces) {
-		this.soldTerraces = soldTerraces;
-	}
-
-	/**
-	 * @return the soldBasic
-	 */
-	public int getSoldBasic() {
-		return soldBasic;
-	}
-
-	/**
-	 * @param soldBasic the soldBasic to set
-	 */
-	public void setSoldBasic(int soldBasic) {
-		this.soldBasic = soldBasic;
-	}
-
-	/**
-	 * @return the soldRoof
-	 */
-	public int getSoldRoof() {
-		return soldRoof;
-	}
-
-	/**
-	 * @param soldRoof the soldRoof to set
-	 */
-	public void setSoldRoof(int soldRoof) {
-		this.soldRoof = soldRoof;
-	}
-
-	/**
-	 * @return the soldVIP
-	 */
-	public int getSoldVIP() {
-		return soldVIP;
-	}
-
-	/**
-	 * @param soldVIP the soldVIP to set
-	 */
-	public void setSoldVIP(int soldVIP) {
-		this.soldVIP = soldVIP;
-	}
-
-	
-	public void setStatisics()
-	{
-		this.setHomeHatStats();
-		this.setGuestHatStats();
-	}
-	
-	
-	public final int getHomeHatStats()
-    {
-    	return this.m_iHomeHatStats;
+    /**
+     * @return the soldTerraces
+     */
+    public int getSoldTerraces() {
+        return soldTerraces;
     }
-	public final int getAwayHatStats()
-    {
-		return this.m_iGuestHatStats;
+
+    /**
+     * @param soldTerraces the soldTerraces to set
+     */
+    public void setSoldTerraces(int soldTerraces) {
+        this.soldTerraces = soldTerraces;
     }
-	public final double getHomeLoddarStats()
-	{
+
+    /**
+     * @return the soldBasic
+     */
+    public int getSoldBasic() {
+        return soldBasic;
+    }
+
+    /**
+     * @param soldBasic the soldBasic to set
+     */
+    public void setSoldBasic(int soldBasic) {
+        this.soldBasic = soldBasic;
+    }
+
+    /**
+     * @return the soldRoof
+     */
+    public int getSoldRoof() {
+        return soldRoof;
+    }
+
+    /**
+     * @param soldRoof the soldRoof to set
+     */
+    public void setSoldRoof(int soldRoof) {
+        this.soldRoof = soldRoof;
+    }
+
+    /**
+     * @return the soldVIP
+     */
+    public int getSoldVIP() {
+        return soldVIP;
+    }
+
+    /**
+     * @param soldVIP the soldVIP to set
+     */
+    public void setSoldVIP(int soldVIP) {
+        this.soldVIP = soldVIP;
+    }
+
+
+    public void setStatisics() {
+        this.setHomeHatStats();
+        this.setGuestHatStats();
+    }
+
+
+    public final int getHomeHatStats() {
+        return this.m_iHomeHatStats;
+    }
+
+    public final int getAwayHatStats() {
+        return this.m_iGuestHatStats;
+    }
+
+    public final double getHomeLoddarStats() {
         final double MIDFIELD_SHIFT = 0.0;
         final double COUNTERATTACK_WEIGHT = 0.25;
         final double DEFENSE_WEIGHT = 0.47;
@@ -1274,21 +1302,20 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
         // Calculate attack rating
         final double attackStrength = (ATTACK_WEIGHT + counterCorrection) * ((correctedCentralWeigth * hq(getHomeMidAtt()))
-                                      + (correctedWingerWeight * (hq(getHomeLeftAtt()) + hq(getHomeRightAtt()))));
+                + (correctedWingerWeight * (hq(getHomeLeftAtt()) + hq(getHomeRightAtt()))));
 
         // Calculate defense rating
         final double defenseStrength = DEFENSE_WEIGHT * ((CENTRAL_WEIGHT * hq(getHomeMidDef()))
-                                       + (WINGER_WEIGTH * (hq(getHomeLeftDef()) + hq(getHomeRightDef()))));
+                + (WINGER_WEIGTH * (hq(getHomeLeftDef()) + hq(getHomeRightDef()))));
 
         // Calculate midfield rating
         final double midfieldFactor = MIDFIELD_SHIFT + ((1 - MIDFIELD_SHIFT) * hq(getHomeMidfield()));
 
         // Calculate and return the LoddarStats rating
         return 80 * midfieldFactor * (defenseStrength + attackStrength);
-	}
+    }
 
-	public final double getAwayLoddarStats()
-	{
+    public final double getAwayLoddarStats() {
         final double MIDFIELD_SHIFT = 0.0;
         final double COUNTERATTACK_WEIGHT = 0.25;
         final double DEFENSE_WEIGHT = 0.47;
@@ -1321,21 +1348,20 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
         // Calculate attack rating
         final double attackStrength = (ATTACK_WEIGHT + counterCorrection) * ((correctedCentralWeigth * hq(getGuestMidAtt()))
-                                      + (correctedWingerWeight * (hq(getGuestLeftAtt()) + hq(getGuestRightAtt()))));
+                + (correctedWingerWeight * (hq(getGuestLeftAtt()) + hq(getGuestRightAtt()))));
 
         // Calculate defense rating
         final double defenseStrength = DEFENSE_WEIGHT * ((CENTRAL_WEIGHT * hq(getGuestMidDef()))
-                                       + (WINGER_WEIGTH * (hq(getGuestLeftDef()) + hq(getGuestRightDef()))));
+                + (WINGER_WEIGTH * (hq(getGuestLeftDef()) + hq(getGuestRightDef()))));
 
         // Calculate midfield rating
         final double midfieldFactor = MIDFIELD_SHIFT + ((1 - MIDFIELD_SHIFT) * hq(getGuestMidfield()));
 
         // Calculate and return the LoddarStats rating
         return 80 * midfieldFactor * (defenseStrength + attackStrength);
-	}
+    }
 
-	 private double hq(double value)
-	 {
-	        return (2 * value) / (value + 80);
-	 }
+    private double hq(double value) {
+        return (2 * value) / (value + 80);
+    }
 }

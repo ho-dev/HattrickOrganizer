@@ -2,7 +2,6 @@ package core.model;
 
 import core.datatype.CBItem;
 import core.db.DBManager;
-import core.file.ExampleFileFilter;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.net.login.LoginWaitDialog;
@@ -10,7 +9,6 @@ import core.training.TrainingManager;
 import core.util.HOLogger;
 import core.util.UTF8Control;
 import module.lineup.Lineup;
-import core.HO;
 
 import java.sql.Timestamp;
 import java.text.MessageFormat;

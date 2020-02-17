@@ -126,7 +126,7 @@ public class RatingPredictionManager {
 		Hashtable<Double, Lineup> _LineupEvolution = new Hashtable<>();
 
 		// reset start time
-		for (IMatchRoleID matchRoleID: startingLineup.getPositionen()) {
+		for (IMatchRoleID matchRoleID: startingLineup.getFieldPositions()) {
 			MatchRoleID mid = (MatchRoleID)matchRoleID;
 			Player player = startingLineup.getPlayerByPositionID(mid.getId());
 			if (player != null) {

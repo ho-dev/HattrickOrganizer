@@ -1,5 +1,7 @@
 package module.lineup;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
@@ -12,6 +14,8 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionConfig;
 import core.rating.RatingPredictionManager;
+import core.specialevents.SpecialEventsPrediction;
+import core.specialevents.SpecialEventsPredictionManager;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
@@ -21,6 +25,9 @@ import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
 import java.sql.Timestamp;
 import java.util.*;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 
 public class Lineup{
@@ -45,30 +52,66 @@ public class Lineup{
 	private LineupAssistant m_clAssi = new LineupAssistant();
 
 	/** positions */
-	private Vector<IMatchRoleID> m_vPositionen = new Vector<IMatchRoleID>();
+	@SerializedName("positions")
+	@Expose
+	private Vector<IMatchRoleID> m_vFieldPositions = new Vector<IMatchRoleID>();
+	/** bench */
+	@SerializedName("bench")
+	@Expose
+	private Vector<IMatchRoleID> m_vBenchPositions = new Vector<IMatchRoleID>();
+	@SerializedName("substitutions")
+	@Expose
 	private List<Substitution> substitutions = new ArrayList<Substitution>();
+	@SerializedName("kickers")
+	@Expose
 	private List<MatchRoleID> penaltyTakers = new ArrayList<MatchRoleID>();
 
-	/** Attitude */
-	private int m_iAttitude;
-
 	/** captain */
+	@SerializedName("captain")
+	@Expose
 	private int m_iKapitaen = -1;
 
 	/** set pieces take */
+	@SerializedName("setPieces")
+	@Expose
 	private int m_iKicker = -1;
 
-	/** TacticType */
-	private int m_iTacticType;
-	
-	/** Style of play */
-	private int m_iStyleOfPlay;
-	
+	private class Settings {
+		/** Attitude */
+		@SerializedName("speechLevel")
+		@Expose
+		private int m_iAttitude;
+
+		/** TacticType */
+		@SerializedName("tactic")
+		@Expose
+		private int m_iTacticType;
+
+		/** Style of play */
+		@SerializedName("coachModifier")
+		@Expose
+		private int m_iStyleOfPlay;
+
+		@SerializedName("newLineup")
+		@Expose
+		private String newLineup = new String(""); //newLineup should always be empty.
+
+	};
+
+	@SerializedName("settings")
+	@Expose
+	Settings settings = new Settings();
+
 	/** PullBackMinute **/
 	private int pullBackMinute = 90; // no pull back
 
 	/** Home/Away/AwayDerby */
 	private short m_sLocation = -1;
+
+	private int m_iArenaId = -1;
+	private int m_iRegionId = -1;
+	private Weather m_cWeather = Weather.NULL;
+	private Weather.Forecast m_cWeatherForecast = Weather.Forecast.NULL;
 
 	private boolean pullBackOverride;
 
@@ -87,7 +130,10 @@ public class Lineup{
 	}
 
 	private Ratings oRatings;
-	
+
+	//private List<SpecialEventsPrediction> m_vSpecialEventsPredictions;
+	//private SpecialEventsPredictionManager m_cSpecialEventsPredictionManager;
+
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
 
@@ -106,76 +152,78 @@ public class Lineup{
 	public Lineup(Properties properties) {
 		try {					
 			// Positionen erzeugen
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.keeper, Integer
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.keeper, Integer
 					.parseInt(properties.getProperty("keeper", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightBack, Integer
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.rightBack, Integer
 					.parseInt(properties.getProperty("rightback", "0")), Byte.parseByte(properties
 					.getProperty("order_rightback", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightCentralDefender, Integer
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.rightCentralDefender, Integer
 					.parseInt(properties.getProperty("rightcentraldefender", "0")), Byte
 					.parseByte(properties.getProperty("order_rightcentraldefender", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftCentralDefender, Integer
-					.parseInt(properties.getProperty("leftcentraldefender", "0")), Byte
-					.parseByte(properties.getProperty("order_leftcentraldefender", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.middleCentralDefender, Integer
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.middleCentralDefender, Integer
 					.parseInt(properties.getProperty("middlecentraldefender", "0")), Byte
 					.parseByte(properties.getProperty("order_middlecentraldefender", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftBack, Integer
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftCentralDefender, Integer
+					.parseInt(properties.getProperty("leftcentraldefender", "0")), Byte
+					.parseByte(properties.getProperty("order_leftcentraldefender", "0"))));
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftBack, Integer
 					.parseInt(properties.getProperty("leftback", "0")), Byte.parseByte(properties
 					.getProperty("order_leftback", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightWinger, Integer
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.rightWinger, Integer
 					.parseInt(properties.getProperty("rightwinger", "0")), Byte
 					.parseByte(properties.getProperty("order_rightwinger", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightInnerMidfield, Integer
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.rightInnerMidfield, Integer
 					.parseInt(properties.getProperty("rightinnermidfield", "0")), Byte.parseByte(properties
 					.getProperty("order_rightinnermidfield", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftInnerMidfield, Integer
-					.parseInt(properties.getProperty("leftinnermidfield", "0")), Byte.parseByte(properties
-					.getProperty("order_leftinnermidfield", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.centralInnerMidfield, Integer
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.centralInnerMidfield, Integer
 					.parseInt(properties.getProperty("middleinnermidfield", "0")), Byte.parseByte(properties
 					.getProperty("order_centralinnermidfield", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftWinger, Integer
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftInnerMidfield, Integer
+					.parseInt(properties.getProperty("leftinnermidfield", "0")), Byte.parseByte(properties
+					.getProperty("order_leftinnermidfield", "0"))));
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftWinger, Integer
 					.parseInt(properties.getProperty("leftwinger", "0")), Byte.parseByte(properties
 					.getProperty("order_leftwinger", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightForward, Integer
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.rightForward, Integer
 					.parseInt(properties.getProperty("rightforward", "0")), Byte.parseByte(properties
 					.getProperty("order_rightforward", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftForward, Integer
-					.parseInt(properties.getProperty("leftforward", "0")), Byte.parseByte(properties
-					.getProperty("order_leftforward", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.centralForward, Integer
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.centralForward, Integer
 					.parseInt(properties.getProperty("centralforward", "0")), Byte.parseByte(properties
 					.getProperty("order_centralforward", "0"))));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substGK1, Integer.parseInt(properties.getProperty("substgk1", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substGK2, Integer.parseInt(properties.getProperty("substgk2", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substCD1, Integer.parseInt(properties.getProperty("substcd1", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substCD2, Integer.parseInt(properties.getProperty("substcd2", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substWB1, Integer.parseInt(properties.getProperty("substwb1", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substWB2, Integer.parseInt(properties.getProperty("substwb2", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substIM1, Integer.parseInt(properties.getProperty("substim1", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substIM2, Integer.parseInt(properties.getProperty("substim2", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substWI1, Integer.parseInt(properties.getProperty("substwi1", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substWI2, Integer.parseInt(properties.getProperty("substwi2", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substFW1, Integer.parseInt(properties.getProperty("substfw1", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substFW2, Integer.parseInt(properties.getProperty("substfw2", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substXT1, Integer.parseInt(properties.getProperty("substxt1", "0")), (byte) 0));
-			m_vPositionen.add(new MatchRoleID(IMatchRoleID.substXT2, Integer.parseInt(properties.getProperty("substxt2", "0")), (byte) 0));
+			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftForward, Integer
+					.parseInt(properties.getProperty("leftforward", "0")), Byte.parseByte(properties
+					.getProperty("order_leftforward", "0"))));
+
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substGK1, Integer.parseInt(properties.getProperty("substgk1", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substCD1, Integer.parseInt(properties.getProperty("substcd1", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWB1, Integer.parseInt(properties.getProperty("substwb1", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substIM1, Integer.parseInt(properties.getProperty("substim1", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWI1, Integer.parseInt(properties.getProperty("substwi1", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substFW1, Integer.parseInt(properties.getProperty("substfw1", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substXT1, Integer.parseInt(properties.getProperty("substxt1", "0")), (byte) 0));
+
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substGK2, Integer.parseInt(properties.getProperty("substgk2", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substCD2, Integer.parseInt(properties.getProperty("substcd2", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWB2, Integer.parseInt(properties.getProperty("substwb2", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substIM2, Integer.parseInt(properties.getProperty("substim2", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWI2, Integer.parseInt(properties.getProperty("substwi2", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substFW2, Integer.parseInt(properties.getProperty("substfw2", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substXT2, Integer.parseInt(properties.getProperty("substxt2", "0")), (byte) 0));
 
 			if (properties.getProperty("tactictype").equals("null")) // to avoid exception when match is finish
-				m_iTacticType = 0;
+				settings.m_iTacticType = 0;
 			else
-				m_iTacticType = Integer.parseInt(properties.getProperty("tactictype", "0"));
+				settings.m_iTacticType = Integer.parseInt(properties.getProperty("tactictype", "0"));
 
 			if (properties.getProperty("installning").equals("null")) // to avoid exception when match is finish
-				m_iAttitude = 0;
+				settings.m_iAttitude = 0;
 			else
-				m_iAttitude = Integer.parseInt(properties.getProperty("installning", "0"));
+				settings.m_iAttitude = Integer.parseInt(properties.getProperty("installning", "0"));
 
 			if (properties.getProperty("styleofplay").equals("null")) // to avoid exception when match is finish
-				m_iStyleOfPlay = 0;
+				settings.m_iStyleOfPlay = 0;
 			else
-				m_iStyleOfPlay = Integer.parseInt(properties.getProperty("styleofplay", "0"));
+				settings.m_iStyleOfPlay = Integer.parseInt(properties.getProperty("styleofplay", "0"));
 
 			// and read the sub contents
 			for (int i = 0; i < 5; i++) {
@@ -241,7 +289,8 @@ public class Lineup{
 		} catch (Exception e) {
 			HOLogger.instance().warning(getClass(), "Aufstellung.<init1>: " + e);
 			HOLogger.instance().log(getClass(), e);
-			m_vPositionen.removeAllElements();
+			m_vFieldPositions.removeAllElements();
+			m_vBenchPositions.removeAllElements();
 			initPositionen553();
 		}
 
@@ -263,7 +312,7 @@ public class Lineup{
 		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel()
 				.getTeam(),
 				(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(),
-				m_iStyleOfPlay, RatingPredictionConfig.getInstance()).getTacticLevelAowAim());
+				settings.m_iStyleOfPlay, RatingPredictionConfig.getInstance()).getTacticLevelAowAim());
 	}
 
 	/**
@@ -274,7 +323,7 @@ public class Lineup{
 	public final float getTacticLevelCounter() {
 		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel()
 				.getTeam(),
-				(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
+				(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), settings.m_iStyleOfPlay,
 				RatingPredictionConfig.getInstance()).getTacticLevelCounter());
 	}
 
@@ -286,7 +335,7 @@ public class Lineup{
 	public final float getTacticLevelPressing() {
 		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel()
 				.getTeam(),
-				(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
+				(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), settings.m_iStyleOfPlay,
 				RatingPredictionConfig.getInstance()).getTacticLevelPressing());
 	}
 
@@ -298,7 +347,7 @@ public class Lineup{
 	public final float getTacticLevelLongShots() {
 		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel()
 				.getTeam(),
-				(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay,
+				(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), settings.m_iStyleOfPlay,
 				RatingPredictionConfig.getInstance()).getTacticLevelLongShots());
 	}
 
@@ -325,7 +374,7 @@ public class Lineup{
 	 *            New value of property m_iAttitude.
 	 */
 	public final void setAttitude(int m_iAttitude) {
-		this.m_iAttitude = m_iAttitude;
+		this.settings.m_iAttitude = m_iAttitude;
 	}
 
 	/**
@@ -334,7 +383,7 @@ public class Lineup{
 	 * @return Value of property m_iAttitude.
 	 */
 	public final int getAttitude() {
-		return m_iAttitude;
+		return settings.m_iAttitude;
 	}
 	
 	public String getAttitudeName(int attitude) {
@@ -359,11 +408,11 @@ public class Lineup{
 	}
 
 	public void setStyleOfPlay(int style) {
-		m_iStyleOfPlay = style;
+		settings.m_iStyleOfPlay = style;
 	}
 	
 	public int getStyleOfPlay() {
-		return m_iStyleOfPlay;
+		return settings.m_iStyleOfPlay;
 	}
 
 	/**
@@ -378,7 +427,7 @@ public class Lineup{
 
 		if (players != null) {
 			for (Player player : players) {
-				if (m_clAssi.isPlayerInStartingEleven(player.getSpielerID(), m_vPositionen)) {
+				if (m_clAssi.isPlayerInStartingEleven(player.getSpielerID(), m_vFieldPositions)) {
 					int curPlayerId = player.getSpielerID();
 					float curCaptainsValue = HOVerwaltung.instance().getModel().getLineup()
 							.getAverageExperience(curPlayerId);
@@ -402,7 +451,7 @@ public class Lineup{
 			players = HOVerwaltung.instance().getModel().getAllSpieler();
 		}
 
-		Vector<IMatchRoleID> noKeeper = new Vector<IMatchRoleID>(m_vPositionen);
+		Vector<IMatchRoleID> noKeeper = new Vector<IMatchRoleID>(m_vFieldPositions);
 
 		for (IMatchRoleID pos : noKeeper) {
 			MatchRoleID p = (MatchRoleID) pos;
@@ -456,7 +505,7 @@ public class Lineup{
 
 		if (players != null) {
 			for (Player player : players) {
-				if (m_clAssi.isPlayerInStartingEleven(player.getSpielerID(), m_vPositionen)) {
+				if (m_clAssi.isPlayerInStartingEleven(player.getSpielerID(), m_vFieldPositions)) {
 					value += player.getErfahrung();
 					if (captainsId > 0) {
 						if (captainsId == player.getSpielerID()) {
@@ -478,8 +527,21 @@ public class Lineup{
 		}
 		return value;
 	}
+	
+	/* moved to team analyzers TeamReport.addSpecialEvents
+	public List<SpecialEventsPrediction> getSpecialEventsPredictions() {
+		return m_vSpecialEventsPredictions;
+	}
 
 
+	public void setSpecialEvents()
+	{
+		if ( this.m_cSpecialEventsPredictionManager == null){
+			this.m_cSpecialEventsPredictionManager = new SpecialEventsPredictionManager();
+		}
+		this.m_vSpecialEventsPredictions = this.m_cSpecialEventsPredictionManager.analyzeLineup(this);
+	}
+*/
 	 public void setRatings() {
 		 final RatingPredictionManager rpManager;
 		 Ratings oRatings = new Ratings();
@@ -487,7 +549,7 @@ public class Lineup{
 
 		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
 			rpManager = new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam(),
-					(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), m_iStyleOfPlay, RatingPredictionConfig.getInstance());
+					(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), settings.m_iStyleOfPlay, RatingPredictionConfig.getInstance());
 //			rpManager.flushStaminaEffect();
 //			this.printLineup();
 			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings(bForm, true));
@@ -660,7 +722,7 @@ public class Lineup{
 	/**
 	 * Setter for property m_sHeimspiel.
 	 * 
-	 * @param m_sHeimspiel
+	 * @param location
 	 *            New value of property m_sHeimspiel.
 	 */
 	public final void setLocation(short location) {
@@ -673,41 +735,96 @@ public class Lineup{
 	 * @return the location constant for the match
 	 */
 	public final short getLocation() {
-		if (m_sLocation < 0) {
-			try {
-				final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-				final MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(teamId,
-						MatchKurzInfo.UPCOMING);
-				MatchKurzInfo match = null;
-
-				if ((matches == null) || (matches.length < 1)) {
-					m_sLocation = IMatchDetails.LOCATION_AWAY;
-					HOLogger.instance().error(getClass(), "no match to determine location");
-					return m_sLocation;
-				}
-
-				final List<MatchKurzInfo> sMatches = orderMatches(matches);
-				match = sMatches.get(0);
-
-				if (match == null) {
-					m_sLocation = IMatchDetails.LOCATION_AWAY;
-					HOLogger.instance().error(getClass(), "no match to determine location");
-					return m_sLocation;
-				}
-
-				if (match.getMatchTyp().isOfficial()) {m_sLocation = (match.getHeimID() == teamId) ? IMatchDetails.LOCATION_HOME: IMatchDetails.LOCATION_AWAY;}
-				else {m_sLocation = IMatchDetails.LOCATION_TOURNAMENT;}
-
-				// TODO: Manage away derby : To decide away derby we need hold of the region (likely both download and db work needed)
-
-			} catch (Exception e) {
-				HOLogger.instance().error(getClass(), "getHeimspiel: " + e);
-				m_sLocation = 0;
-			}
-		}
-		// HOLogger.instance().debug(getClass(), "getHeimspiel: " +
-		// m_sLocation);
+		if ( m_sLocation == -1 && !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
 		return m_sLocation;
+	}
+
+	public final void setArenaId(int id){
+		this.m_iArenaId=id;
+	}
+	public final int getArenaId()
+	{
+		if ( m_iArenaId == -1  && !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
+		return m_iArenaId;
+	}
+
+	public void setRegionId(int id){
+		this.m_iRegionId=id;
+	}
+	public final int getRegionId()
+	{
+		if (m_iRegionId == -1 && !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
+		return  m_iRegionId;
+	}
+
+	public final  void setWeather( Weather weather)
+	{
+		this.m_cWeather = weather;
+	}
+
+	public final Weather getWeather()
+	{
+		if (this.m_cWeather == Weather.NULL && !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
+		return  m_cWeather;
+	}
+
+	public final void setWeatherForecast(Weather.Forecast weatherForecast){
+		this.m_cWeatherForecast = weatherForecast;
+	}
+
+	public final Weather.Forecast getWeatherForecast()
+	{
+		if (this.m_cWeatherForecast == Weather.Forecast.NULL &&  !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
+		return  m_cWeatherForecast;
+	}
+
+	private final boolean isUpcomingMatchLoaded(){return m_iArenaId>=0; }
+	private final void getUpcomingMatch() {
+		try {
+			final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+			final MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(teamId,
+					MatchKurzInfo.UPCOMING);
+			final List<MatchKurzInfo> sMatches = orderMatches(matches);
+			MatchKurzInfo match = sMatches.get(0);
+			if (match == null) {
+				m_sLocation = IMatchDetails.LOCATION_AWAY;
+				m_iArenaId = 0;
+				m_iRegionId = 0;
+				m_cWeather = Weather.NULL;
+				m_cWeatherForecast = Weather.Forecast.NULL;
+				HOLogger.instance().error(getClass(), "no match to determine location");
+				return;
+			}
+
+
+			if (match.getMatchTyp().isOfficial()) {
+				if (match.isNeutral()) {
+					m_sLocation = IMatchDetails.LOCATION_NEUTRAL;    // could be overwritten if it is also a derby
+				}
+				if (match.isDerby()) {
+					m_sLocation = IMatchDetails.LOCATION_AWAYDERBY;
+				}
+				if (!match.isNeutral() && !match.isDerby()) {
+					if (match.isHomeMatch()) {
+						m_sLocation = IMatchDetails.LOCATION_HOME;
+					} else {
+						m_sLocation = IMatchDetails.LOCATION_AWAY;
+					}
+				}
+			} else {
+				m_sLocation = IMatchDetails.LOCATION_TOURNAMENT;
+			}
+
+			m_iArenaId = match.getArenaId();
+			m_iRegionId = match.getRegionId();
+			m_cWeather = match.getWeather();
+			m_cWeatherForecast = match.getWeatherForecast();
+
+		} catch (Exception e) {
+			HOLogger.instance().error(getClass(), "getHeimspiel: " + e);
+			m_sLocation = 0;
+		}
+
 	}
 
 	/**
@@ -809,14 +926,17 @@ public class Lineup{
 		}
 	}
 
-
-
-
 	/**
 	 * Get the position object by position id.
 	 */
 	public final MatchRoleID getPositionById(int id) {
-		for (IMatchRoleID position : m_vPositionen) {
+		for (IMatchRoleID position : m_vFieldPositions) {
+			MatchRoleID spielerPosition = (MatchRoleID) position;
+			if (spielerPosition.getId() == id) {
+				return spielerPosition;
+			}
+		}
+		for (IMatchRoleID position : m_vBenchPositions) {
 			MatchRoleID spielerPosition = (MatchRoleID) position;
 			if (spielerPosition.getId() == id) {
 				return spielerPosition;
@@ -829,7 +949,13 @@ public class Lineup{
 	 * Get the position object by player id.
 	 */
 	public final MatchRoleID getPositionBySpielerId(int playerid) {
-		for (IMatchRoleID position : m_vPositionen) {
+		MatchRoleID ret = getPositionByPlayerId(playerid, m_vFieldPositions);
+		if ( ret == null ) ret = getPositionByPlayerId(playerid, m_vBenchPositions);
+		return ret;
+	}
+
+	private MatchRoleID getPositionByPlayerId(int playerid, Vector<IMatchRoleID> positions) {
+		for (IMatchRoleID position : positions) {
 			MatchRoleID spielerPosition = (MatchRoleID) position;
 			if (spielerPosition.getSpielerId() == playerid) {
 				return spielerPosition;
@@ -856,11 +982,26 @@ public class Lineup{
 			initPositionen553();
 			for (IMatchRoleID pos : positions) {
 				MatchRoleID spos = (MatchRoleID) pos;
-				for (int j = 0; j < m_vPositionen.size(); j++) {
-					if (((MatchRoleID) m_vPositionen.get(j)).getId() == spos.getId()) {
-						m_vPositionen.setElementAt(spos, j);
-					}
-				}
+				setPosition(spos);
+			}
+		}
+	}
+
+	public final void setPosition(MatchRoleID pos)
+	{
+		if ( pos.isFieldMatchRoleId() ){
+			setPosition(m_vFieldPositions, pos);
+		}
+		else{
+			setPosition(m_vBenchPositions, pos);
+		}
+	}
+
+	private void setPosition(Vector<IMatchRoleID> m_vPositionen, MatchRoleID spos) {
+		for (int j = 0; j < m_vPositionen.size(); j++) {
+			if (((MatchRoleID) m_vPositionen.get(j)).getId() == spos.getId()) {
+				m_vPositionen.setElementAt(spos, j);
+				return;
 			}
 		}
 	}
@@ -878,7 +1019,18 @@ public class Lineup{
 	 * @return Value of property m_vPositionen.
 	 */
 	public final Vector<IMatchRoleID> getPositionen() {
-		return m_vPositionen;
+		Vector<IMatchRoleID> ret = new Vector<IMatchRoleID>();
+		if (m_vFieldPositions!=null) ret.addAll(m_vFieldPositions);
+		if (m_vBenchPositions!=null) ret.addAll(m_vBenchPositions);
+		return ret;
+	}
+
+	public final Vector<IMatchRoleID> getFieldPositions(){
+		return m_vFieldPositions;
+	}
+
+	public final Vector<IMatchRoleID> getBenchPositions(){
+		return m_vBenchPositions;
 	}
 
 	/**
@@ -913,9 +1065,19 @@ public class Lineup{
 	 * Place a player to a certain position and check/solve dependencies.
 	 */
 	public final void setSpielerAtPosition(int positionID, int playerID) {
+		final MatchRoleID position = getPositionById(positionID);
 		//if player changed in starting eleven or substitute it has to be remove from previous occupied place in starting eleven or substitute
-		if(!IMatchRoleID.aBackupssMatchRoleID.contains(positionID)){
-			MatchRoleID iRole;
+		if( !position.isBackupsMatchRoleID()) { //!IMatchRoleID.aBackupssMatchRoleID.contains(positionID)){
+			MatchRoleID oldPlayerRole = getPositionBySpielerId(playerID);
+			if(oldPlayerRole != null && oldPlayerRole.isBackupsMatchRoleID() == false){
+				oldPlayerRole.setSpielerId(0, this);
+				if ( oldPlayerRole.isSubstitutesMatchRoleID()){
+					removeObjectPlayerFromSubstitutions(playerID);
+				}
+			}
+
+
+			/*MatchRoleID iRole;
 			int iPlayerID;
 
 			// player is being set in starting 11
@@ -933,6 +1095,7 @@ public class Lineup{
 				}
 			}
 
+
 			// player is being set as a sub
 			else if (IMatchRoleID.aSubstitutesMatchRoleID.contains(positionID)) {
 				// but player was already set in starting 11, hence it has to be removed from previously occupied position
@@ -947,42 +1110,61 @@ public class Lineup{
 					}
 				}
 
-			}
+			}*/
 
 		}
 
-		final MatchRoleID position = getPositionById(positionID);
+		//final MatchRoleID position = getPositionById(positionID);
 		position.setSpielerId(playerID, this);
 
+	}
+
+	/**
+	 * Player is no longer on the bench and must be removed from substitution list
+	 * if it was planned that he should replace another player
+	 */
+	private void removeObjectPlayerFromSubstitutions(int playerID) {
+		for(Substitution substitution: this.substitutions){
+			if (substitution.getOrderType() == MatchOrderType.SUBSTITUTION &&
+					substitution.getObjectPlayerID() == playerID){
+				this.substitutions.remove(substitution);
+				break;
+			}
+		}
 	}
 
 	/**
 	 * Check, if the player is in the lineup.
 	 */
 	public final boolean isPlayerInLineup(int spielerId) {
-		return m_clAssi.isPlayerInLineup(spielerId, m_vPositionen);
+		//return m_clAssi.isPlayerInLineup(spielerId, m_vPositionen);
+		return getPositionBySpielerId(spielerId) != null;
 	}
 
 	/**
 	 * Check, if the player is in the starting 11.
 	 */
 	public final boolean isPlayerInStartingEleven(int spielerId) {
-		return m_clAssi.isPlayerInStartingEleven(spielerId, m_vPositionen);
+		//return m_clAssi.isPlayerInStartingEleven(spielerId, m_vPositionen);
+		return getPositionByPlayerId(spielerId, m_vFieldPositions) != null;
 	}
 
 	/**
 	 * Check, if the player is a subsitute
 	 */
 	public final boolean isPlayerASub(int spielerId) {
-		return m_clAssi.isPlayerASub(spielerId, m_vPositionen);
+		//return m_clAssi.isPlayerASub(spielerId, m_vPositionen);
+		final MatchRoleID role = getPositionByPlayerId(spielerId, m_vBenchPositions);
+		return role != null && role.isBackupsMatchRoleID() == false;
 	}
 
 	/**
 	 * Check, if the player is a substitute or a backup.
 	 */
 	public final boolean isSpielerInReserve(int spielerId) {
-		return (m_clAssi.isPlayerInLineup(spielerId, m_vPositionen) && !m_clAssi
-				.isPlayerInStartingEleven(spielerId, m_vPositionen));
+		//return (m_clAssi.isPlayerInLineup(spielerId, m_vPositionen) && !m_clAssi
+		//			.isPlayerInStartingEleven(spielerId, m_vPositionen));
+		return getPositionByPlayerId(spielerId, m_vBenchPositions) != null;
 	}
 
 
@@ -1072,7 +1254,7 @@ public class Lineup{
 	 *            New value of property m_iTacticType.
 	 */
 	public final void setTacticType(int m_iTacticType) {
-		this.m_iTacticType = m_iTacticType;
+		this.settings.m_iTacticType = m_iTacticType;
 	}
 
 	/**
@@ -1081,7 +1263,7 @@ public class Lineup{
 	 * @return Value of property m_iTacticType.
 	 */
 	public final int getTacticType() {
-		return m_iTacticType;
+		return settings.m_iTacticType;
 	}
 
 	/**
@@ -1140,8 +1322,9 @@ public class Lineup{
 	 * Check if the players are still in the team (not sold or fired).
 	 */
 	public final void checkAufgestellteSpieler() {
-		if (m_vPositionen != null) {
-			for (IMatchRoleID pos : m_vPositionen) {
+
+		//if (m_vPositionen != null) {
+			for (IMatchRoleID pos : getPositionen()) {
 				MatchRoleID position = (MatchRoleID) pos;
 				// existiert Player noch ?
 				if ((HOVerwaltung.instance().getModel() != null)
@@ -1150,7 +1333,7 @@ public class Lineup{
 					position.setSpielerId(0, this);
 				}
 			}
-		}
+		//}
 	}
 
 	/**
@@ -1159,7 +1342,7 @@ public class Lineup{
 	public final void doAufstellung(List<Player> player, byte reihenfolge, boolean mitForm,
 									boolean idealPosFirst, boolean ignoreVerletzung, boolean ignoreSperren,
 									float wetterBonus, Weather weather) {
-		m_clAssi.doAufstellung(m_vPositionen, player, reihenfolge, mitForm, idealPosFirst,
+		m_clAssi.doAufstellung(m_vFieldPositions, player, reihenfolge, mitForm, idealPosFirst,
 				ignoreVerletzung, ignoreSperren, wetterBonus, weather);
 		setAutoKicker(null);
 		setAutoKapitaen(null);
@@ -1300,6 +1483,11 @@ public class Lineup{
 			clone.setLocation(getLocation());
 			clone.setPullBackMinute(getPullBackMinute());
 			clone.setPullBackOverride(isPullBackOverride());
+			clone.setWeather(getWeather());
+			clone.setWeatherForecast(getWeatherForecast());
+			clone.setArenaId(getArenaId());
+			clone.setRegionId(getRegionId());
+
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), "Aufstellung.duplicate: " + e);
 		}
@@ -1412,8 +1600,10 @@ public class Lineup{
 	 */
 	public final void load(String name) {
 		final Lineup temp = DBManager.instance().getAufstellung(NO_HRF_VERBINDUNG, name);
-		m_vPositionen = null;
-		m_vPositionen = temp.getPositionen();
+		m_vFieldPositions = null;
+		m_vBenchPositions = null;
+		m_vFieldPositions = temp.getFieldPositions();
+		m_vBenchPositions = temp.getBenchPositions();
 		m_iKicker = temp.getKicker();
 		m_iKapitaen = temp.getKapitaen();
 	}
@@ -1424,8 +1614,10 @@ public class Lineup{
 	public final void load4HRF() {
 		final Lineup temp = DBManager.instance().getAufstellung(
 				HOVerwaltung.instance().getModel().getID(), "HRF");
-		m_vPositionen = null;
-		m_vPositionen = temp.getPositionen();
+		m_vFieldPositions = null;
+		m_vBenchPositions = null;
+		m_vFieldPositions = temp.getFieldPositions();
+		m_vBenchPositions = temp.getBenchPositions();
 		m_iKicker = temp.getKicker();
 		m_iKapitaen = temp.getKapitaen();
 	}
@@ -1434,7 +1626,7 @@ public class Lineup{
 	 * Load a system from the DB.
 	 */
 	public final void loadAufstellungsSystem(String name) {
-		m_vPositionen = DBManager.instance().getSystemPositionen(NO_HRF_VERBINDUNG, name);
+		setPositionen(DBManager.instance().getSystemPositionen(NO_HRF_VERBINDUNG, name));
 		checkAufgestellteSpieler();
 	}
 
@@ -1442,7 +1634,7 @@ public class Lineup{
 	 * Remove all players from all positions.
 	 */
 	public final void resetAufgestellteSpieler() {
-		m_clAssi.resetPositionsbesetzungen(m_vPositionen);
+		m_clAssi.resetPositionsbesetzungen(getPositionen());
 	}
 
 	/**
@@ -1450,20 +1642,20 @@ public class Lineup{
 	 */
 	public final void resetReserveBank() {
 		// Nur Reservespieler
-		final Vector<IMatchRoleID> vReserve = new Vector<IMatchRoleID>();
-		for (IMatchRoleID pos : m_vPositionen) {
+		/*final Vector<IMatchRoleID> vReserve = new Vector<IMatchRoleID>();
+		for (IMatchRoleID pos : m_vPositions) {
 			if (((MatchRoleID) pos).getId() >= IMatchRoleID.startReserves) {
 				vReserve.add(pos);
 			}
-		}
-		m_clAssi.resetPositionsbesetzungen(vReserve);
+		}*/
+		m_clAssi.resetPositionsbesetzungen(m_vBenchPositions);
 	}
 
 	/**
 	 * Resets the orders for all positions to normal
 	 */
 	public final void resetPositionOrders() {
-		m_clAssi.resetPositionOrders(m_vPositionen);
+		m_clAssi.resetPositionOrders(m_vFieldPositions);
 	}
 
 	/**
@@ -1485,7 +1677,7 @@ public class Lineup{
 	 * Save the current system in the DB.
 	 */
 	public final void saveAufstellungsSystem(String name) {
-		DBManager.instance().saveSystemPositionen(NO_HRF_VERBINDUNG, m_vPositionen, name);
+		DBManager.instance().saveSystemPositionen(NO_HRF_VERBINDUNG, getPositionen(), name);
 	}
 
 	/**
@@ -1552,7 +1744,7 @@ public class Lineup{
 	private int getAnzPosImSystem(byte positionId) {
 		int anzahl = 0;
 
-		for (IMatchRoleID pos : m_vPositionen) {
+		for (IMatchRoleID pos : m_vFieldPositions) {
 			MatchRoleID position = (MatchRoleID) pos;
 			if ((positionId == position.getPosition())
 					&& (position.getId() < IMatchRoleID.startReserves)
@@ -1571,9 +1763,9 @@ public class Lineup{
 	public boolean hasFreePosition() {
 		int numPlayers = 0;
 
-		for (IMatchRoleID pos : m_vPositionen) {
+		for (IMatchRoleID pos : m_vFieldPositions) {
 			MatchRoleID position = (MatchRoleID) pos;
-			if ((IMatchRoleID.aFieldMatchRoleID.contains(position.getId())) && (position.getSpielerId() != 0)) numPlayers++;
+			if (position.getSpielerId() != 0) numPlayers++;
 		    }
 		if (numPlayers == 11) return false;
 		return true;
@@ -1601,10 +1793,9 @@ public class Lineup{
 	private float calcTeamStk(List<Player> player, byte positionId, boolean useForm) {
 		float stk = 0.0f;
 		if (player != null) {
-			for (IMatchRoleID pos : m_vPositionen) {
+			for (IMatchRoleID pos : m_vFieldPositions) {
 				MatchRoleID position = (MatchRoleID) pos;
-				if ((position.getPosition() == positionId)
-						&& (position.getId() < IMatchRoleID.startReserves)) {
+				if (position.getPosition() == positionId) {
 					stk += calcPlayerStk(player, position.getSpielerId(), positionId, useForm);
 				}
 			}
@@ -1666,38 +1857,43 @@ public class Lineup{
 	 * Initializes the 553 lineup
 	 */
 	private void initPositionen553() {
-		if (m_vPositionen != null) {
-			m_vPositionen.removeAllElements();
-		} else m_vPositionen = new Vector<>();
+		if (m_vFieldPositions != null) {
+			m_vFieldPositions.removeAllElements();
+		} else m_vFieldPositions = new Vector<>();
+		if (m_vBenchPositions != null) {
+			m_vBenchPositions.removeAllElements();
+		} else m_vBenchPositions = new Vector<>();
 
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.keeper, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightBack, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightCentralDefender, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.middleCentralDefender, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftCentralDefender, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftBack, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightWinger, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightInnerMidfield, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.centralInnerMidfield, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftInnerMidfield, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftWinger, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.rightForward, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.centralForward, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.leftForward, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substGK1, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substGK2, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substCD1, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substCD2, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substWB1, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substWB2, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substIM1, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substIM2, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substFW1, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substFW2, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substWI1, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substWI2, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substXT1, 0, (byte) 0));
-		m_vPositionen.add(new MatchRoleID(IMatchRoleID.substXT2, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.keeper, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.rightBack, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.rightCentralDefender, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.middleCentralDefender, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftCentralDefender, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftBack, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.rightWinger, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.rightInnerMidfield, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.centralInnerMidfield, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftInnerMidfield, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftWinger, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.rightForward, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.centralForward, 0, (byte) 0));
+		m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.leftForward, 0, (byte) 0));
+
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substGK1, 0, (byte) 0));
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substCD1, 0, (byte) 0));
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWB1, 0, (byte) 0));
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substIM1, 0, (byte) 0));
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substFW1, 0, (byte) 0));
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWI1, 0, (byte) 0));
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substXT1, 0, (byte) 0));
+
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substGK2, 0, (byte) 0));
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substCD2, 0, (byte) 0));
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWB2, 0, (byte) 0));
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substIM2, 0, (byte) 0));
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substFW2, 0, (byte) 0));
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWI2, 0, (byte) 0));
+		m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substXT2, 0, (byte) 0));
 
 		for (int i = 0; i < 10; i++) {
 			penaltyTakers.add(new MatchRoleID(IMatchRoleID.penaltyTaker1 + i, 0, (byte) 0));
@@ -1829,6 +2025,73 @@ public class Lineup{
 
 
 		}
+	}
+
+	public String toJson()
+	{
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		return gson.toJson(this);
+	}
+
+	/**
+	► IFK:
+	off IFK = 0.5*mAtt + 0.3*mSP + 0.09*SPshooter
+	def IFK = 0.4*mDef + .3*mSP + 0.1*SPgk + 0.08*GKgk
+
+	mAtt: outfield players attack skill average
+	mDEf: outfield players defence skill average
+	 */
+	public double getRatingIndirectSetPiecesAtt() {
+		double teamAtt = 0; // team score sum
+		double teamSP = 0;  // team set pieces sum
+		double spSP = 0;    // set pieces taker set pieces
+		int n = 0;
+
+		for (IMatchRoleID pos : m_vFieldPositions) {
+			MatchRoleID mid = (MatchRoleID) pos;
+			Player p = this.getPlayerByPositionID(mid.getId());
+			if ( p != null){
+				teamAtt += p.getSCskill();
+				teamSP += p.getSPskill();
+				if ( p.getSpielerID() == getKicker()){
+					spSP = p.getSPskill();
+				}
+			}
+			n++;
+		}
+		if ( n > 1){
+			teamAtt/=n;
+			teamSP /=n;
+		}
+		return .5*teamAtt + .3*teamSP + .09*spSP;
+	}
+
+	public double getRatingIndirectSetPiecesDef() {
+		double teamDef = 0; // team defence sum
+		double teamSP = 0;  // team set pieces sum
+		double spGK = 0;    // keeper's set pieces
+		double gkGK = 0;  	// keeper's keeper skill
+		int n = 0;
+
+		Player keeper = getPlayerByPositionID(IMatchRoleID.keeper);
+		if ( keeper != null){
+			spGK = keeper.getSPskill();
+			gkGK = keeper.getGKskill();
+		}
+
+		for (IMatchRoleID pos : m_vFieldPositions) {
+			MatchRoleID mid = (MatchRoleID) pos;
+			Player p = this.getPlayerByPositionID(mid.getId());
+			if ( p != null){
+				teamDef += p.getDEFskill();
+				teamSP += p.getSPskill();
+			}
+		}
+		if ( n > 1){
+			teamDef/=n;
+			teamSP /=n;
+		}
+		return .4*teamDef + .3*teamSP + .1*spGK + .08*gkGK;
 	}
 
 }

@@ -1,6 +1,9 @@
 // %3625019770:hoplugins.teamAnalyzer.report%
 package module.teamAnalyzer.report;
 
+import core.model.HOVerwaltung;
+import core.specialevents.SpecialEventsPredictionManager;
+import module.lineup.Lineup;
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.vo.MatchDetail;
 import module.teamAnalyzer.vo.MatchRating;
@@ -31,6 +34,8 @@ public class TeamReport {
     /** Number of matches considered */
     private int matchNumber;
 
+    private SpecialEventsPredictionManager specialEventsPredictionManager;
+
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -46,6 +51,10 @@ public class TeamReport {
     //~ Methods ------------------------------------------------------------------------------------
     public MatchRating getRating() {
         return rating;
+    }
+
+    public SpecialEventsPredictionManager getSpecialEventsPredictionManager() {
+        return specialEventsPredictionManager;
     }
 
     /**
@@ -76,7 +85,18 @@ public class TeamReport {
 
         addRating(matchDetail.getRating());
         addStars(matchDetail.getStars());
+        addSpecialEvents(matchDetail);
         matchNumber++;
+    }
+
+    private void addSpecialEvents(MatchDetail matchDetail)
+    {
+        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+
+        if ( this.specialEventsPredictionManager == null){
+            this.specialEventsPredictionManager = new SpecialEventsPredictionManager();
+        }
+        this.specialEventsPredictionManager.analyzeLineup(lineup, matchDetail);
     }
 
     /**
@@ -140,4 +160,5 @@ public class TeamReport {
 
         return rat;
     }
+
 }

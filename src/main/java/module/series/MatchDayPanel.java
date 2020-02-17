@@ -117,15 +117,18 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         long gameFinishTime = 0;
         long nowTime = (new Date()).getTime();
 
-        boolean gameFinished = false;
+        boolean gameFinished; // Hat das Spiel schon stattgefunden
         if (paarung != null) {
             gameFinishTime = paarung.getDatum().getTime();
             gameFinishTime = gameFinishTime + 3 * 60 * 60 * 1000L; //assuming 3 hours to make sure the game is finished
+            // if paarung was not updated regularly, it could happen that hatStattgefunden would fail
             gameFinished = paarung.hatStattgefunden() || gameFinishTime < nowTime;
         }
+        else {
+            gameFinished = false;
+        }
 
-        // Hat das Spiel schon stattgefunden
-        if ((paarung != null) && gameFinished) {
+        if ( gameFinished ) {
             //Match already in the database
             if (DBManager.instance().isMatchVorhanden(paarung.getMatchId())) {
                 button.setToolTipText(HOVerwaltung.instance().getLanguageString(

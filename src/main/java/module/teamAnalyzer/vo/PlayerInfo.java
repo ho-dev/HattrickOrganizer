@@ -10,9 +10,13 @@ public class PlayerInfo {
     int form;
     int playerId;
     int specialEvent;
-    int status = PlayerDataManager.SOLD;
+    int status = PlayerDataManager.UNKNOWN;
     int tSI;
     int teamId;
+    int salary; // Money in SEK
+    int stamina;
+    boolean motherClubBonus;
+    int loyalty;
 
     //~ Methods ------------------------------------------------------------------------------------
     public void setAge(int i) {
@@ -87,13 +91,45 @@ public class PlayerInfo {
         return teamId;
     }
 
+    public void setSalary(int salary) {
+        this.salary = salary;
+    }
+
+    public int getSalary() {
+        return salary;
+    }
+
+    public void setStamina(int stamina) {
+        this.stamina = stamina;
+    }
+
+    public int getStamina() {
+        return this.stamina;
+    }
+
+    public void setMotherClubBonus(boolean bonus) {
+        this.motherClubBonus = bonus;
+    }
+
+    public boolean getMotherClubBonus() {
+        return this.motherClubBonus;
+    }
+
+    public void setLoyalty(int loyalty) {
+        this.loyalty = loyalty;
+    }
+
+    public int getLoyalty() {
+        return this.loyalty;
+    }
+
     /**
      * toString methode: creates a String representation of the object
      *
      * @return the String representation
      */
     @Override
-	public String toString() {
+    public String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer.append("PlayerInfo[");
         buffer.append("name = " + name);
@@ -105,6 +141,10 @@ public class PlayerInfo {
         buffer.append(", status = " + status);
         buffer.append(", tSI = " + tSI);
         buffer.append(", teamId = " + teamId);
+        buffer.append(", salary = " + salary);
+        buffer.append(", stamina = " + stamina);
+        buffer.append(", motherClubBonus = " + motherClubBonus);
+        buffer.append(", loyalty = " + loyalty);
         buffer.append("]");
         return buffer.toString();
     }

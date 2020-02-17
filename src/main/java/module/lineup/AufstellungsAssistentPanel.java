@@ -3,6 +3,7 @@ package module.lineup;
 
 import core.datatype.CBItem;
 import core.gui.HOMainFrame;
+import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.model.AufstellungCBItem;
 import core.gui.theme.HOColorName;
@@ -44,7 +45,7 @@ import javax.swing.border.MatteBorder;
 /**
  * Die automatische Aufstellung wird hier konfiguriert und gestartet
  */
-public class AufstellungsAssistentPanel extends ImagePanel implements ActionListener, ItemListener,
+public class AufstellungsAssistentPanel extends ImagePanel implements Refreshable, ActionListener, ItemListener,
 		IAufstellungsAssistentPanel {
 
 	private static final long serialVersionUID = 5271343329674809429L;
@@ -110,8 +111,8 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 	/**
 	 * Creates a new AufstellungsAssistentPanel object.
 	 */
-	public AufstellungsAssistentPanel() {
-		initComponents();
+	public AufstellungsAssistentPanel(Weather weather) {
+		initComponents(weather);
 	}
 
 	// ~ Methods
@@ -221,7 +222,10 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 
 	@Override
 	public void setWeather(Weather weather) {
-		m_jcbWetter.setSelectedIndex(weather.getId());
+		if (weather==Weather.NULL) weather=Weather.PARTIALLY_CLOUDY;
+		if (m_jcbWetter.getSelectedIndex() != weather.getId()){
+			m_jcbWetter.setSelectedIndex(weather.getId());
+		}
 	}
 
 	@Override
@@ -537,7 +541,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 		return false;
 	}
 
-	private void initComponents() {
+	private void initComponents(Weather weather) {
 		setLayout(new BorderLayout());
 
 		JPanel panel = new ImagePanel();
@@ -549,7 +553,9 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 
 		m_jcbWetter.setToolTipText(hoVerwaltung
 				.getLanguageString("tt_AufstellungsAssistent_Wetter"));
-		m_jcbWetter.setSelectedIndex(1);
+
+		if ( weather == Weather.NULL) weather = Weather.PARTIALLY_CLOUDY;
+		m_jcbWetter.setSelectedIndex(weather.getId());
 		m_jcbWetter.setPreferredSize(new Dimension(50, 20));
 		m_jcbWetter.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
 		m_jcbWetter.setRenderer(new core.gui.comp.renderer.WeatherListCellRenderer());
@@ -629,5 +635,19 @@ public class AufstellungsAssistentPanel extends ImagePanel implements ActionList
 		m_jbOK.addActionListener(this);
 		panel.add(m_jbOK);
 		add(panel, BorderLayout.SOUTH);
+
+		core.gui.RefreshManager.instance().registerRefreshable(this);
 	}
-}
+
+	@Override
+	public void reInit() {
+		final HOModel homodel = HOVerwaltung.instance().getModel();
+		final Lineup lineup = homodel.getLineupWithoutRatingRecalc();
+		final Weather weather = lineup.getWeather();
+		setWeather(weather);
+	}
+
+	@Override
+	public void refresh() {
+		reInit();
+	}}

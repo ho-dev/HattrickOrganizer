@@ -34,7 +34,7 @@ class SkillAdjuster {
 			if (needMoreMainSkill(calcPlayer)) {
 				// Reduce all subskills by 1. Then increase all skills until reaching wage or tsi limit.
 			
-				System.out.println("Need main");
+				// /System.out.println("Need main");
 				
 				for (Skill skill : calcPlayer.getSkills()) {
 					if (!skill.isMainSkill)
@@ -46,7 +46,7 @@ class SkillAdjuster {
 			else if (needMoreSecondarySkills(calcPlayer)) {
 				// Reduce mainskill by 1 and adjust all skills until limit
 	
-				System.out.println("Need Subs");
+				/// System.out.println("Need Subs");
 				
 				for (Skill skill : calcPlayer.getSkills()) {
 					if (skill.isMainSkill)
@@ -57,13 +57,13 @@ class SkillAdjuster {
 			}
 			else {
 				// We need neither? 
-				System.out.println("Need neither?!");
+				// System.out.println("Need neither?!");
 				break;
 			}
 		}
 		
 		// TODO TEMP REMOVE
-		System.out.println("RepeatCount: " + repeatCount);
+		//System.out.println("RepeatCount: " + repeatCount);
 	}
 	
 	private boolean areWeSatisfied(CalcVariables calcPlayer) {
@@ -111,21 +111,21 @@ class SkillAdjuster {
 	
 			
 		while (!isDoneCalculating(calcPlayer, direction)) {
-
-			adjustAllSkillsOnce(calcPlayer, direction);
+			if ( !adjustAllSkillsOnce(calcPlayer, direction) ) break;	// no adjustments anymore
 			calculateWageAndTSI(calcPlayer);
 		}
 		
 	}
-	
-	
-	private void adjustAllSkillsOnce(CalcVariables calcPlayer, Direction direction) {
+
+	private boolean adjustAllSkillsOnce(CalcVariables calcPlayer, Direction direction) {
 		double delta = (direction == Direction.Up) ? SKILL_DELTA
 				: (0 - SKILL_DELTA);
 
+		boolean ret = false;
 		for (Skill skill : calcPlayer.getSkills()) {
-			adjustSkillOnce(skill, delta);
+			ret = ret || adjustSkillOnce(skill, delta);
 		}
+		return ret;
 	}
 	
 	private void adjustMainSkillsOnce(CalcVariables calcPlayer, Direction direction) {
@@ -148,31 +148,35 @@ class SkillAdjuster {
 		}
 	}
 
-	private void adjustSkillOnce(Skill skill, double delta) {
-		if (skill.skillValue >= 2) {
-			double priority = skill.isMainSkill ? 1 : skill.priority;
-			skill.skillValue += delta * priority;
+	private boolean adjustSkillOnce(Skill skill, double delta)
+	{
+		double priority = skill.isMainSkill ? 1 : skill.priority;
+		skill.skillValue += delta * priority;
+
+		if ( skill.skillValue <= 2 ){
+			skill.skillValue = 2;
+			return false;
 		}
-		
-		skill.skillValue = Math.max(skill.skillValue, 2);
+		return true;
 	}
 
 	private boolean isDoneCalculating(CalcVariables calcPlayer,
 			Direction direction) {
-		boolean result = false;
-
 		
 		if (direction == Direction.Up) {
+			if ( calcPlayer.calculatedTSI <= 0 || calcPlayer.calculatedWage <= 0){
+				return true;	// Cancel, because of problems with too old players
+			}
 			if ((calcPlayer.calculatedTSI >= calcPlayer.tsi)
 					|| (calcPlayer.calculatedWage >= calcPlayer.wage))
-				result = true;
+				return true;
 		} else {
 			if ((calcPlayer.calculatedTSI <= calcPlayer.tsi)
 					|| (calcPlayer.calculatedWage <= calcPlayer.wage))
-				result = true;
+				return  true;
 		}
 
-		return result;
+		return false;
 	}
 	
 	protected void calculateWageAndTSI(CalcVariables calcPlayer) {
@@ -185,8 +189,8 @@ class SkillAdjuster {
 
 	  double yearlyDrop = 0.125;
 
-	// 0 to 8 years of drop
-	   int yearsOfDrop = Math.min(Math.max(0, age - 27), 8);
+		// 0 to 8 years of drop
+	   int yearsOfDrop = Math.min(Math.max(0, age - 27), 7);
 	   
 	   return 1 - (yearlyDrop * yearsOfDrop);
 	}
@@ -253,10 +257,10 @@ class SkillAdjuster {
 	}
 
 	private double getAgeWageDropMultiplier (int age){
-		
+
 		double yearlyWageDropPercentage = Math.max (0.1, 0.1 * (age - 27));
-		double ageWageDrop = Math.min(yearlyWageDropPercentage, 1);
-		
+		double ageWageDrop = Math.min(yearlyWageDropPercentage, 0.9);
+
 		return 1 - ageWageDrop;
 	}
 	
@@ -298,7 +302,9 @@ class SkillAdjuster {
 		wage *= (1 + 0.0025*setPieces);
 		
 		wage *= getAgeWageDropMultiplier(calcPlayer.age);
-		
+
+		if ( wage < 2500) wage = 2500;
+
 		calcPlayer.calculatedWage = (int)wage;
 		return calcPlayer.calculatedWage;
 	}

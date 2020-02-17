@@ -1,6 +1,8 @@
 // %3414899912:hoplugins.teamAnalyzer.vo%
 package module.teamAnalyzer.vo;
 
+import core.specialevents.SpecialEventsPredictionManager;
+
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -24,6 +26,8 @@ public class TeamLineup {
 
     /** Number of stars */
     private double stars;
+
+    private SpecialEventsPredictionManager specialEventsPrediction;
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -87,4 +91,12 @@ public class TeamLineup {
 
         return buffer.toString();
     }
+
+    public void setSpecialEventsPrediction(SpecialEventsPredictionManager specialEventsPredictionManager) {
+        this.specialEventsPrediction = specialEventsPredictionManager;
+    }
+    public SpecialEventsPredictionManager getSpecialEventsPrediction() {
+        return specialEventsPrediction;
+    }
+
 }

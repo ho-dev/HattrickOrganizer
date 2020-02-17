@@ -68,6 +68,7 @@ public class RecapListSelectionListener implements ListSelectionListener {
 
                 SystemManager.getPlugin().getMainPanel().reload(lineup, week, season);
                 SystemManager.getPlugin().getRatingPanel().reload(lineup);
+                SystemManager.getPlugin().getSpecialEventsPanel().reload(lineup);
             }
         }
     }

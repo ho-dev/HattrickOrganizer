@@ -12,24 +12,26 @@ import java.util.Vector;
 
 public final class PositionenTable extends AbstractTable {
 
-	/** tablename **/
+	/**
+	 * tablename
+	 **/
 	public final static String TABLENAME = "POSITIONEN";
-	
-	protected PositionenTable(JDBCAdapter  adapter){
-		super(TABLENAME,adapter);
+
+	protected PositionenTable(JDBCAdapter adapter) {
+		super(TABLENAME, adapter);
 	}
-	
+
 
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[5];
-		columns[0]= new ColumnDescriptor("HRF_ID",Types.INTEGER,false);
-		columns[1]= new ColumnDescriptor("ID",Types.INTEGER,false);
-		columns[2]= new ColumnDescriptor("Aufstellungsname",Types.VARCHAR,false,256);
-		columns[3]= new ColumnDescriptor("SpielerID",Types.INTEGER,false);
-		columns[4]= new ColumnDescriptor("Taktik",Types.INTEGER,false);
+		columns[0] = new ColumnDescriptor("HRF_ID", Types.INTEGER, false);
+		columns[1] = new ColumnDescriptor("ID", Types.INTEGER, false);
+		columns[2] = new ColumnDescriptor("Aufstellungsname", Types.VARCHAR, false, 256);
+		columns[3] = new ColumnDescriptor("SpielerID", Types.INTEGER, false);
+		columns[4] = new ColumnDescriptor("Taktik", Types.INTEGER, false);
 	}
-	
+
 	/**
 	 * lädt System Positionen
 	 */
@@ -39,7 +41,7 @@ public final class PositionenTable extends AbstractTable {
 		String sql = null;
 		final Vector<IMatchRoleID> ret = new Vector<IMatchRoleID>();
 
-		sql = "SELECT * FROM "+getTableName()+" WHERE HRF_ID = " + hrfID + " AND Aufstellungsname ='" + sysName + "'";
+		sql = "SELECT * FROM " + getTableName() + " WHERE HRF_ID = " + hrfID + " AND Aufstellungsname ='" + sysName + "'";
 		rs = adapter.executeQuery(sql);
 
 		try {
@@ -47,41 +49,41 @@ public final class PositionenTable extends AbstractTable {
 				rs.beforeFirst();
 
 				while (rs.next()) {
-					
+
 					int roleID = rs.getInt("ID");
 					int behavior = rs.getByte("Taktik");
 					int playerID = rs.getInt("SpielerID");
-					
-					switch (behavior) {
-					case IMatchRoleID.OLD_EXTRA_DEFENDER :
-						roleID = IMatchRoleID.middleCentralDefender;
-						behavior = IMatchRoleID.NORMAL;
-						break;
-					case IMatchRoleID.OLD_EXTRA_MIDFIELD :
-						roleID = IMatchRoleID.centralInnerMidfield;
-						behavior = IMatchRoleID.NORMAL;
-						break;
-					case IMatchRoleID.OLD_EXTRA_FORWARD :
-						roleID = IMatchRoleID.centralForward;
-						behavior = IMatchRoleID.NORMAL;
-						break;
-					case IMatchRoleID.OLD_EXTRA_DEFENSIVE_FORWARD :
-						roleID = IMatchRoleID.centralForward;
-						behavior = IMatchRoleID.DEFENSIVE;
-				}
 
-				roleID = MatchRoleID.convertOldRoleToNew(roleID);
-					
+					switch (behavior) {
+						case IMatchRoleID.OLD_EXTRA_DEFENDER:
+							roleID = IMatchRoleID.middleCentralDefender;
+							behavior = IMatchRoleID.NORMAL;
+							break;
+						case IMatchRoleID.OLD_EXTRA_MIDFIELD:
+							roleID = IMatchRoleID.centralInnerMidfield;
+							behavior = IMatchRoleID.NORMAL;
+							break;
+						case IMatchRoleID.OLD_EXTRA_FORWARD:
+							roleID = IMatchRoleID.centralForward;
+							behavior = IMatchRoleID.NORMAL;
+							break;
+						case IMatchRoleID.OLD_EXTRA_DEFENSIVE_FORWARD:
+							roleID = IMatchRoleID.centralForward;
+							behavior = IMatchRoleID.DEFENSIVE;
+					}
+
+					roleID = MatchRoleID.convertOldRoleToNew(roleID);
+
 					if (playerID < 0) {
 						playerID = 0;
 					}
-					
-					pos = new MatchRoleID(roleID, playerID, (byte)behavior);
+
+					pos = new MatchRoleID(roleID, playerID, (byte) behavior);
 					ret.add(pos);
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getSystemPositionen: " + e);
+			HOLogger.instance().log(getClass(), "DatenbankZugriff.getSystemPositionen: " + e);
 		}
 
 		return ret;
@@ -98,14 +100,13 @@ public final class PositionenTable extends AbstractTable {
 		DBManager.instance().deleteSystem(hrfId, sysName);
 
 		//speichern vorbereiten
-		for (int i = 0;(positionen != null) && (sysName != null) && (i < positionen.size()); i++) {
+		for (int i = 0; (positionen != null) && (sysName != null) && (i < positionen.size()); i++) {
 			pos = (MatchRoleID) positionen.elementAt(i);
-			statement = "INSERT INTO "+getTableName()+" ( HRF_ID, ID, Aufstellungsname, SpielerID, Taktik ) VALUES(";
+			statement = "INSERT INTO " + getTableName() + " ( HRF_ID, ID, Aufstellungsname, SpielerID, Taktik ) VALUES(";
 			statement += ("" + hrfId + "," + pos.getId() + ",'" + sysName + "'," + pos.getSpielerId() + "," + pos.getTaktik() + " )");
-
 			adapter.executeUpdate(statement);
 		}
-	}	
+	}
 
-    }
+}
 

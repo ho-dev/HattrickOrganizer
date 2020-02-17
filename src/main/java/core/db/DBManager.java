@@ -56,7 +56,7 @@ public class DBManager {
 	// -----------------------------------------------------------------
 
 	/** database version */
-	private static final int DBVersion = 26; // DBVersion 26 introduce for HO 3.0 version
+	private static final int DBVersion = 300; // DBVersion 26 introduce for HO 3.0 version
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
@@ -860,6 +860,18 @@ public class DBManager {
 				.isMatchLineupVorhanden(matchid);
 	}
 
+	public boolean isMatchIFKRatingInDB(int matchid) {
+		return ((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME))
+				.isMatchIFKRatingAvailable(matchid);
+	}
+
+	public boolean isDerbyInfoInDb(int matchId){
+		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).hasDerbyInfo(matchId);
+	}
+
+	public boolean hasUnsureWeatherForecast(int matchId){
+		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).hasUnsureWeatherForecast(matchId);
+	}
 	// ------------------------------- MatchesKurzInfoTable
 	// -------------------------------------------------
 
@@ -892,6 +904,11 @@ public class DBManager {
 	public MatchKurzInfo[] getMatchesKurzInfo(int teamId) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfo(teamId);
+	}
+
+	public MatchKurzInfo getLastMatchesKurzInfo(int teamId){
+		return  ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
+				.getLastMatchesKurzInfo(teamId);
 	}
 
 	/**
@@ -985,7 +1002,7 @@ public class DBManager {
 	/**
 	 * speichert die Finanzen
 	 */
-	public void saveStadion(int hrfId, tool.arenasizer.Stadium stadion) {
+	public void saveStadion(int hrfId, Stadium stadion) {
 		((StadionTable) getTable(StadionTable.TABLENAME)).saveStadion(hrfId,
 				stadion);
 	}
@@ -1858,4 +1875,5 @@ public class DBManager {
 
 		return buffer.toString();
 	}
+
 }

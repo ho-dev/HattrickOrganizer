@@ -36,9 +36,11 @@ public interface IMatchDetails {
     short LOCATION_AWAY = 0;
     /** home match */
     short LOCATION_HOME = 1;
-    /** away derby */
+    /** (away) derby */
     short LOCATION_AWAYDERBY = 2;
     /** Tournament */
     short LOCATION_TOURNAMENT = 3;
+    /** neutral */
+    short LOCATION_NEUTRAL= 4;
 
 }

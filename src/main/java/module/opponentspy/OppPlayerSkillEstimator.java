@@ -41,19 +41,17 @@ public class OppPlayerSkillEstimator {
 		calcPlayer.tsi = player.getTSI();
 		calcPlayer.wage = player.getGehalt();
 		calcPlayer.role = player.getCalculationRole();
-		
+
 		return calcPlayer;
 	}
-	
-    
-    public OpponentPlayer calcPlayer(int age, int wage, int tsi, double form, double stamina, int spec, int role) {
+
+    public OpponentPlayer calcPlayer(int age, int wage, int tsi, double form, double stamina, int spec, int role, int injury_status) {
        			
-    	CalcVariables calcPlayer = calcPlayerBaseProvider.getCalcPlayerBase(age, wage, tsi, form, stamina, spec, role);
+    	CalcVariables calcPlayer = calcPlayerBaseProvider.getCalcPlayerBase(age, wage, tsi, form, stamina, spec, role, injury_status);
         skillAdjuster.AdjustPlayer(calcPlayer);
     	
         return createPlayer(null, role, calcPlayer);
     }
-    
     
     private OpponentPlayer createPlayer(OpponentPlayer player, int role, CalcVariables calcPlayer) { 
 		
@@ -76,6 +74,7 @@ public class OppPlayerSkillEstimator {
     	player.setSubskill4Pos(PlayerSkill.SCORING, getSubskillFromSkill(calcPlayer.getScoring()));
     	player.setStandards ((int)Math.floor(calcPlayer.getSetPieces()));
     	player.setSubskill4Pos(PlayerSkill.SET_PIECES, getSubskillFromSkill(calcPlayer.getSetPieces()));
+    	player.setKondition((int) Math.floor(calcPlayer.getStamina()));
     	
     	return player;
     }

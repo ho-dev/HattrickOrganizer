@@ -54,12 +54,13 @@ public class HattrickManager {
 	    	if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
 	    		continue;
 	    	}
-	    	
+
+	    	boolean refresh = !DBManager.instance().isMatchLineupInDB(match.getMatchID())
+                    || !DBManager.instance().isMatchIFKRatingInDB(match.getMatchID());
 	    	if (!filter.isAutomatic() 
-	    		||	(filter.isAcceptedMatch(new Match(match))
-	    				&& !DBManager.instance().isMatchLineupInDB(match.getMatchID()))) {
+	    		||	(filter.isAcceptedMatch(new Match(match)) && refresh)) {
 	    		
-	    		OnlineWorker.downloadMatchData(match.getMatchID(), match.getMatchTyp(), false);
+	    		OnlineWorker.downloadMatchData(match, refresh);
    			}
 	    	
 	    	limit--;
@@ -99,7 +100,7 @@ public class HattrickManager {
         String xml = "";
 
         try {
-			xml = MyConnector.instance().getHattrickXMLFile("/common/chppxml.axd?file=players&TeamID=" + teamId);
+			xml = MyConnector.instance().getHattrickXMLFile("/common/chppxml.axd?file=players&version=2.4&TeamID=" + teamId);
         } catch (Exception e) {
             return;
         }
@@ -144,8 +145,21 @@ public class HattrickManager {
             int tsi = getIntValue(matchesList, i, "TSI");
             player.setTSI(tsi);
 
-            String name = getValue(matchesList, i, "PlayerName");
-            player.setName(name);
+            int salary = getIntValue(matchesList, i, "Salary");
+            player.setSalary(salary);
+
+            String lastname = getValue(matchesList, i, "LastName");
+            String firstName = getValue(matchesList, i, "FirstName");
+            player.setName(firstName + " " + lastname);
+
+            int stamina = getIntValue(matchesList, i, "StaminaSkill");
+            player.setStamina(stamina);
+
+            boolean motherClubBonus = getValue(matchesList, i, "MotherClubBonus").equals("True");
+            player.setMotherClubBonus(motherClubBonus);
+
+            int loyalty = getIntValue(matchesList, i, "Loyalty");
+            player.setLoyalty(loyalty);
 
             players.add(player);
         }

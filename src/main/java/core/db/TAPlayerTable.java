@@ -24,7 +24,7 @@ final class TAPlayerTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[9];
+		columns = new ColumnDescriptor[13];
 		columns[0] = new ColumnDescriptor("TEAMID", Types.INTEGER, false);
 		columns[1] = new ColumnDescriptor("PLAYERID", Types.INTEGER, true);
 		columns[2] = new ColumnDescriptor("STATUS", Types.INTEGER, true);
@@ -34,6 +34,10 @@ final class TAPlayerTable extends AbstractTable {
 		columns[6] = new ColumnDescriptor("AGE", Types.INTEGER, true);
 		columns[7] = new ColumnDescriptor("EXPERIENCE", Types.INTEGER, true);
 		columns[8] = new ColumnDescriptor("WEEK", Types.INTEGER, true);
+		columns[9] = new ColumnDescriptor("SALARY", Types.INTEGER, true);
+		columns[10] = new ColumnDescriptor("STAMINA", Types.INTEGER, true);
+		columns[11] = new ColumnDescriptor("MOTHERCLUBBONUS", Types.BOOLEAN, true);
+		columns[12] = new ColumnDescriptor("LOYALTY", Types.INTEGER, true);
 	}
 
 	@Override
@@ -61,6 +65,10 @@ final class TAPlayerTable extends AbstractTable {
 				info.setTeamId(rs.getInt("TEAMID"));
 				info.setExperience(rs.getInt("EXPERIENCE"));
 				info.setStatus(rs.getInt("STATUS"));
+				info.setSalary(rs.getInt("SALARY"));
+				info.setStamina(rs.getInt("STAMINA"));
+				info.setMotherClubBonus(rs.getBoolean("MOTHERCLUBBONUS"));
+				info.setMotherClubBonus(rs.getBoolean("LOYALTY"));
 				return info;
 			}
 		} catch (SQLException e) {
@@ -109,11 +117,21 @@ final class TAPlayerTable extends AbstractTable {
 				.instance()
 				.getAdapter()
 				.executeUpdate(
-						"insert into " + TABLENAME + " values (" + info.getTeamId() + ", "
-								+ info.getPlayerId() + ", " + info.getStatus() + " , "
-								+ info.getSpecialEvent() + ", " + info.getTSI() + ", "
-								+ info.getForm() + ", " + info.getAge() + ", "
-								+ info.getExperience() + ", " + PlayerDataManager.getCurrentWeekNumber() + ")");
+						"insert into " + TABLENAME + " values ("
+								+ info.getTeamId() + ", "
+								+ info.getPlayerId() + ", "
+								+ info.getStatus() + " , "
+								+ info.getSpecialEvent() + ", "
+								+ info.getTSI() + ", "
+								+ info.getForm() + ", "
+								+ info.getAge() + ", "
+								+ info.getExperience() + ", "
+								+ PlayerDataManager.getCurrentWeekNumber() + ", "
+								+ info.getSalary() + ", "
+								+ info.getStamina()+ ", "
+								+ info.getMotherClubBonus() + ", "
+								+ info.getLoyalty()
+								+")");
 	}
 
 	void updatePlayer(PlayerInfo info) {
@@ -121,10 +139,17 @@ final class TAPlayerTable extends AbstractTable {
 				.instance()
 				.getAdapter()
 				.executeUpdate(
-						"update " + TABLENAME + " set " + "   SPECIALEVENT="
-								+ info.getSpecialEvent() + " , TSI=" + info.getTSI() + " , FORM="
-								+ +info.getForm() + " , AGE=" + info.getAge() + " , EXPERIENCE="
-								+ info.getExperience() + " , STATUS=" + info.getStatus()
+						"update " + TABLENAME + " set "
+								+ "   SPECIALEVENT=" + info.getSpecialEvent()
+								+ " , TSI=" + info.getTSI()
+								+ " , FORM=" +info.getForm()
+								+ " , AGE=" + info.getAge()
+								+ " , EXPERIENCE=" + info.getExperience()
+								+ " , STATUS=" + info.getStatus()
+								+ " , SALARY=" + info.getSalary()
+								+ " , STAMINA=" + info.getStamina()
+								+ " , MOTHERCLUBBONUS=" + info.getMotherClubBonus()
+								+ " , LOYALTY =" + info.getLoyalty()
 								+ " where PLAYERID=" + info.getPlayerId() + " and WEEK="
 								+ PlayerDataManager.getCurrentWeekNumber());
 	}
