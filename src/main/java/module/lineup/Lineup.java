@@ -1342,7 +1342,7 @@ public class Lineup{
 	public final void doAufstellung(List<Player> player, byte reihenfolge, boolean mitForm,
 									boolean idealPosFirst, boolean ignoreVerletzung, boolean ignoreSperren,
 									float wetterBonus, Weather weather) {
-		m_clAssi.doAufstellung(m_vFieldPositions, player, reihenfolge, mitForm, idealPosFirst,
+		m_clAssi.doAufstellung(getPositionen(), player, reihenfolge, mitForm, idealPosFirst,
 				ignoreVerletzung, ignoreSperren, wetterBonus, weather);
 		setAutoKicker(null);
 		setAutoKapitaen(null);
