@@ -77,11 +77,11 @@ public class MatchKurzInfo implements Comparable<Object> {
 	public final void setRegionId(int id) {this.m_iRegionId=id;}
 	public final int getRegionId(){return this.m_iRegionId;}
 	public final void setIsDerby(Boolean is) {this.m_iIsDerby=is;}
-	public final boolean isDerby(){return this.m_iIsDerby.equals(Boolean.TRUE);}
+	public final boolean isDerby(){return this.m_iIsDerby != null && this.m_iIsDerby.equals(Boolean.TRUE);}
 	public final Boolean getIsDerby(){return this.m_iIsDerby;}
 	public final void setIsNeutral(Boolean is) {this.m_iIsNeutral=is;}
 	public final Boolean getIsNeutral(){return this.m_iIsNeutral;}
-	public final boolean isNeutral(){return this.m_iIsNeutral.equals(Boolean.TRUE);}
+	public final boolean isNeutral(){return this.m_iIsNeutral != null && this.m_iIsNeutral.equals(Boolean.TRUE);}
 	public final void setWeather( Weather w){this.m_iWeather=w;}
 	public final Weather getWeather(){return m_iWeather;}
 	public final void setWeatherForecast( Weather.Forecast wf){this.m_iWeatherForecast=wf;}
