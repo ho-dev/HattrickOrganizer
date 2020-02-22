@@ -153,7 +153,7 @@ public class FutureTrainingManager {
 					}
 				}
 			}
-		}		
+		}
 		FuturePlayer fp = new FuturePlayer();
 		fp.setAttack(getFinalValue(PlayerSkill.SCORING));		
 		fp.setCross(getFinalValue(PlayerSkill.WINGER));
@@ -175,7 +175,7 @@ public class FutureTrainingManager {
 	 * @param skillIndex	index of the skill
 	 * @return				value for this skill
 	 */
-	private double getFinalValue(int skillIndex) {		
+	private double getFinalValue(int skillIndex) {
 		int pos = getSkillPosition(skillIndex);
 		return finalSkill[pos];
 	}
