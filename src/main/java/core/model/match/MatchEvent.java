@@ -53,6 +53,7 @@ public class MatchEvent {
 
     public enum MatchEventID
     {
+        UNKNOWN_MATCHEVENT(-1),
         PLAYERS_ENTER_THE_FIELD(19), TACTICAL_DISPOSITION(20), PLAYER_NAMES_IN_LINEUP(21), PLAYERS_FROM_NEIGHBORHOOD_USED(22), SAME_FORMATION_BOTH_TEAMS(23), TEAM_FORMATIONS_DIFFERENT(24),
         REGIONAL_DERBY(25), NEUTRAL_GROUND(26), AWAY_IS_ACTUALLY_HOME(27), SPECTATORS_OR_VENUE_RAIN(30), SPECTATORS_OR_VENUE_CLOUDY(31), SPECTATORS_OR_VENUE_FAIR_WEATHER(32),
         SPECTATORS_OR_VENUE_SUNNY(33), ARENA_EXTENDED_WITH_TEMPORARY_SEATS(35), ONLY_VENUE_RAIN(36), ONLY_VENUE_CLOUDY(37), ONLY_VENUE_FAIR_WEATHER(38), ONLY_VENUE_SUNNY(39),
@@ -141,7 +142,11 @@ public class MatchEvent {
         }
 
         public static MatchEventID fromMatchEventID(int iMatchEventID) {
-            return lookup.get(iMatchEventID);
+            MatchEventID ret = lookup.get(iMatchEventID);
+            if ( ret == null){
+                ret = UNKNOWN_MATCHEVENT;
+            }
+            return ret;
         }
 
     }
