@@ -1994,8 +1994,18 @@ public class Lineup{
 			case POSITION_SWAP:
 				matchRoleIDaffectedPlayer = getPositionBySpielerId(sub.getSubjectPlayerID());
 				matchRoleIDPlayer = getPositionBySpielerId(sub.getObjectPlayerID());
-				matchRoleIDaffectedPlayer.setSpielerId(sub.getObjectPlayerID());
-				matchRoleIDPlayer.setSpielerId(sub.getSubjectPlayerID());
+				if ( matchRoleIDaffectedPlayer != null && matchRoleIDPlayer != null ){
+					matchRoleIDaffectedPlayer.setSpielerId(sub.getObjectPlayerID());
+					matchRoleIDPlayer.setSpielerId(sub.getSubjectPlayerID());
+				}
+				else {
+					if ( matchRoleIDaffectedPlayer == null ){
+						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", sub.getSubjectPlayerID()));
+					}
+					if ( matchRoleIDPlayer == null ){
+						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", sub.getObjectPlayerID()));
+					}
+				}
 				break;
 
 			case NEW_BEHAVIOUR:
