@@ -542,22 +542,27 @@ task resetDB(){
 
     doFirst {println("Reseting DB: copying DB from `${resetDir}` into  ${projectDir}")}
 
-    copy {
-        from resetDir
-        into "${projectDir}\\db"
-    }
+    try {
+	    copy {
+	        from resetDir
+	        into "${projectDir}/db"
+	    }
+	    doLast { println("Reseting DB: done !") }
 
-    doLast {println("Reseting DB: done !")}
-
+    } catch (java.lang.Exception e) {
+    	println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false;
     }
+}	  
+
+
 
 poeditorPull {
     outputs.upToDateWhen { false }
 }
 
 markdownToHtml {
-    sourceDir = new File("${projectDir}\\docs\\changelog\\md")
-    outputDir = new File("${projectDir}\\docs\\changelog\\html")
+    sourceDir = new File("${projectDir}/docs/changelog/md")
+    outputDir = new File("${projectDir}/docs/changelog/html")
     markdownToHtml.hardwraps = true
 }
 
@@ -627,6 +632,10 @@ buildRpm.dependsOn installDist
 createApp.dependsOn installDist
 //tasks.getByName('githubRelease').dependsOn compute_sha_sums
 
+
+poeditorPull.onlyIf {
+	project.hasProperty('apiKey') && project.hasProperty('projectId')
+}
 
 
 //task makeosX(type: GradleBuild) {
