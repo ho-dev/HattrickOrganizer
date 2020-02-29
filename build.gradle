@@ -145,6 +145,7 @@ distributions {
 }
 
 // Configure macAppBundle task =======================
+apply plugin: 'edu.sc.seis.macAppBundle'
 macAppBundle {
     mainClassName = "HOLauncher"
     icon = "${project.ext.osx_app_dir_sourcedir}/HO.icns"
@@ -428,15 +429,15 @@ task ZipDistribution(dependsOn: 'makeWinInstallerTask', type:Zip) {
 task AddResourcesMacApp(dependsOn: createApp) {
     dependsOn 'init', 'createApp'
     doLast {
-	    def baseMacAppDir = "${buildDir}\\macApp\\${project.macAppBundle.appName}.app"
-	    def macAppDir = "${baseMacAppDir}\\Contents\\Java"
+	    def baseMacAppDir = "${buildDir}/macApp/${project.macAppBundle.appName}.app"
+	    def macAppDir = "${baseMacAppDir}/Contents/Java"
         println("adding resources folder")
         copy {
-            from "${projectDir}\\src\\main\\resources\\changelog.html"
+            from "${projectDir}/src/main/resources/changelog.html"
             into "${baseMacAppDir}"
         }
-        delete "${macAppDir}\\hamcrest-core-1.3.jar"
-        delete "${macAppDir}\\junit-4.12.jar"
+        delete "${macAppDir}/hamcrest-core-1.3.jar"
+        delete "${macAppDir}/junit-4.12.jar"
 
         }
     }
