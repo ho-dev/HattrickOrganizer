@@ -345,10 +345,17 @@ public class OnlineWorker {
 					else {
 						otherId = info.getHeimID();
 					}
-					Map<String, String> otherTeam = getTeam(otherId);
-					info.setIsDerby( getRegionId(otherTeam) == HOVerwaltung.instance().getModel().getBasics().getRegionId());
-					info.setIsNeutral( info.getArenaId() != HOVerwaltung.instance().getModel().getStadium().getArenaId()
-										&& info.getArenaId() != getArenaId(otherTeam));
+					if ( otherId > 0 ) {
+						Map<String, String> otherTeam = getTeam(otherId);
+						info.setIsDerby(getRegionId(otherTeam) == HOVerwaltung.instance().getModel().getBasics().getRegionId());
+						info.setIsNeutral(info.getArenaId() != HOVerwaltung.instance().getModel().getStadium().getArenaId()
+								&& info.getArenaId() != getArenaId(otherTeam));
+					}
+					else {
+						// Verlegenheitstruppe 08/15
+						info.setIsDerby(false);
+						info.setIsNeutral(false);
+					}
 				}
 
 				MatchLineup lineup = null;
