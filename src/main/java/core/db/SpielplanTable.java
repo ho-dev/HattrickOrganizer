@@ -129,7 +129,8 @@ final class SpielplanTable extends AbstractTable {
 		int ligaid = -1;
 
 		try {
-			final String sql = "SELECT LigaID FROM "+getTableName()+" WHERE Saison=" + seasonid;
+			// in the event of league changes, there may be several entries per season=> select the newest
+			final String sql = "SELECT LigaID FROM "+getTableName()+" WHERE Saison=" + seasonid + " ORDER BY FETCHDATE DESC";
 			final ResultSet rs = adapter.executeQuery(sql);
 
 			if (rs.first()) {
@@ -148,27 +149,32 @@ final class SpielplanTable extends AbstractTable {
 	void storeSpielplan(Spielplan plan) {
 		if (plan != null) {
 			try {
-				String sql = "SELECT LigaID FROM "+getTableName()+" WHERE LigaID = " + plan.getLigaId() + " AND Saison = " + plan.getSaison();
-				ResultSet result = null;
 				boolean update = false;
 
 				try {
-					//prüfen ob update oder insert
-					//"SELECT LigaID FROM Spielplan" );
-					result = adapter.executeQuery(sql);
-					result.first();
-					result.getInt("LigaID");
+					// at the end of a season the league could be changed in case of
+					// league relegation, rise or manager in lower leagues could select new leagues
 
-					//wenn bishier durchläuft update = true
+					// check if update or create
+					// first we have to check if there is a fixture of the current season
+					String sql = "SELECT LigaID FROM "+getTableName()+" WHERE Saison = " + plan.getSaison();
+					ResultSet result = adapter.executeQuery(sql);;
+					result.first();
+					int currentLeague = result.getInt("LigaID");
+					if ( currentLeague != plan.getLigaId()){
+						// if so, and the league id does NOT match, then this plan is not a plan of our team. ignore it!
+						return;
+					}
+					// if the league id matches do an update
 					update = true;
 				} catch (Exception e) {
-					//Error
+					// if no entry of the current season is found, create a new one
 					update = false;
 				}
 
 				//Plan aktualisieren
 				if (update) {
-					sql =
+					String sql =
 						"UPDATE "+getTableName()+" SET LigaName='"
 							+ plan.getLigaName()
 							+ "', FetchDate='"
@@ -184,7 +190,7 @@ final class SpielplanTable extends AbstractTable {
 				} else {
 					//Erstmal Spielplan
 					//insert vorbereiten
-					sql = "INSERT INTO "+getTableName()+" ( LigaID , LigaName , Saison, FetchDate ) VALUES(";
+					String sql = "INSERT INTO "+getTableName()+" ( LigaID , LigaName , Saison, FetchDate ) VALUES(";
 					sql += (plan.getLigaId() + "," + "'" + plan.getLigaName() + "'," + plan.getSaison() + ",'" + plan.getFetchDate().toString() + "'" + " )");
 					adapter.executeUpdate(sql);
 				}
