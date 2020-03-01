@@ -198,16 +198,16 @@ public class Lineup{
 			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substCD1, Integer.parseInt(properties.getProperty("substcd1", "0")), (byte) 0));
 			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWB1, Integer.parseInt(properties.getProperty("substwb1", "0")), (byte) 0));
 			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substIM1, Integer.parseInt(properties.getProperty("substim1", "0")), (byte) 0));
-			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWI1, Integer.parseInt(properties.getProperty("substwi1", "0")), (byte) 0));
 			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substFW1, Integer.parseInt(properties.getProperty("substfw1", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWI1, Integer.parseInt(properties.getProperty("substwi1", "0")), (byte) 0));
 			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substXT1, Integer.parseInt(properties.getProperty("substxt1", "0")), (byte) 0));
 
 			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substGK2, Integer.parseInt(properties.getProperty("substgk2", "0")), (byte) 0));
 			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substCD2, Integer.parseInt(properties.getProperty("substcd2", "0")), (byte) 0));
 			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWB2, Integer.parseInt(properties.getProperty("substwb2", "0")), (byte) 0));
 			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substIM2, Integer.parseInt(properties.getProperty("substim2", "0")), (byte) 0));
-			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWI2, Integer.parseInt(properties.getProperty("substwi2", "0")), (byte) 0));
 			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substFW2, Integer.parseInt(properties.getProperty("substfw2", "0")), (byte) 0));
+			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substWI2, Integer.parseInt(properties.getProperty("substwi2", "0")), (byte) 0));
 			m_vBenchPositions.add(new MatchRoleID(IMatchRoleID.substXT2, Integer.parseInt(properties.getProperty("substxt2", "0")), (byte) 0));
 
 			if (properties.getProperty("tactictype").equals("null")) // to avoid exception when match is finish
@@ -1994,8 +1994,18 @@ public class Lineup{
 			case POSITION_SWAP:
 				matchRoleIDaffectedPlayer = getPositionBySpielerId(sub.getSubjectPlayerID());
 				matchRoleIDPlayer = getPositionBySpielerId(sub.getObjectPlayerID());
-				matchRoleIDaffectedPlayer.setSpielerId(sub.getObjectPlayerID());
-				matchRoleIDPlayer.setSpielerId(sub.getSubjectPlayerID());
+				if ( matchRoleIDaffectedPlayer != null && matchRoleIDPlayer != null ){
+					matchRoleIDaffectedPlayer.setSpielerId(sub.getObjectPlayerID());
+					matchRoleIDPlayer.setSpielerId(sub.getSubjectPlayerID());
+				}
+				else {
+					if ( matchRoleIDaffectedPlayer == null ){
+						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", sub.getSubjectPlayerID()));
+					}
+					if ( matchRoleIDPlayer == null ){
+						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", sub.getObjectPlayerID()));
+					}
+				}
 				break;
 
 			case NEW_BEHAVIOUR:
