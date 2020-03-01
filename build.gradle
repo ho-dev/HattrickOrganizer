@@ -243,12 +243,12 @@ task makeAll(type: GradleBuild){
 
 }
 
-task preparingBuild {
+task preparingBuild(dependsOn: clean) {
     group 'sub tasks'
     doLast {
         //     Deleting build project     ---------------------------------------------------------------------
         println("Deleting build and execution files ....")
-        project.delete(files("${buildDir}/"))
+        //project.delete(files("${buildDir}/")) #389 --> replaced by dependency on clean
         project.delete(files("${projectDir}/db"))
         project.delete(files("${projectDir}/logs"))
         project.delete(files("${projectDir}/themes"))
@@ -623,8 +623,8 @@ githubRelease {
 //    task.dependsOn preparingBuild
 //}
 
-//compileJava.dependsOn preparingBuild
-//installDist.dependsOn createLanguageFileList
+compileJava.dependsOn preparingBuild
+installDist.dependsOn createLanguageFileList
 poeditorPull.dependsOn pullhtml
 markdownToHtml.dependsOn pushmd
 buildDeb.dependsOn installDist
