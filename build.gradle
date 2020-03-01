@@ -48,7 +48,7 @@ ext {
     nsis_exe_path = "C:\\Program Files (x86)\\NSIS\\makensis.exe"
     nsis_confPath = "${projectDir}\\buildResources\\Win\\nsis"
     nsis_scriptName = "${nsis_confPath}\\makeWinInstaller.nsi"
-    target_dir = "${buildDir}\\artefacts"
+    target_dir = "${buildDir}/artefacts"
     osx_app_dir_sourcedir = "${projectDir}/buildResources/Mac"
     python_script = "${projectDir}\\buildResources\\Generic\\generate_hash.py"
 }
@@ -145,7 +145,6 @@ distributions {
 }
 
 // Configure macAppBundle task =======================
-apply plugin: 'edu.sc.seis.macAppBundle'
 macAppBundle {
     mainClassName = "HOLauncher"
     icon = "${project.ext.osx_app_dir_sourcedir}/HO.icns"
@@ -250,10 +249,10 @@ task preparingBuild {
         //     Deleting build project     ---------------------------------------------------------------------
         println("Deleting build and execution files ....")
         project.delete(files("${buildDir}/"))
-        project.delete(files("${projectDir}\\db"))
-        project.delete(files("${projectDir}\\logs"))
-        project.delete(files("${projectDir}\\themes"))
-        project.delete(files("${projectDir}\\user.xml"))
+        project.delete(files("${projectDir}/db"))
+        project.delete(files("${projectDir}/logs"))
+        project.delete(files("${projectDir}/themes"))
+        project.delete(files("${projectDir}/user.xml"))
         //     Creating Target directory ...  ---------------------------------------------------------------------
         mkdir project.ext.target_dir
     }
@@ -624,8 +623,8 @@ githubRelease {
 //    task.dependsOn preparingBuild
 //}
 
-compileJava.dependsOn preparingBuild
-installDist.dependsOn createLanguageFileList
+//compileJava.dependsOn preparingBuild
+//installDist.dependsOn createLanguageFileList
 poeditorPull.dependsOn pullhtml
 markdownToHtml.dependsOn pushmd
 buildDeb.dependsOn installDist
