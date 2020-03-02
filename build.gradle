@@ -634,7 +634,7 @@ createApp.dependsOn installDist
 
 
 poeditorPull.onlyIf {
-	project.hasProperty('apiKey') && project.hasProperty('projectId')
+	project.hasProperty('POEDITOR_APIKEY') && project.hasProperty('apiKey') && project.hasProperty('projectId')
 }
 
 
