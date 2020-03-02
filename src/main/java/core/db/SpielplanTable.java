@@ -152,8 +152,9 @@ final class SpielplanTable extends AbstractTable {
 				boolean update = false;
 
 				try {
+
 					// at the end of a season the league could be changed in case of
-					// league relegation, rise or manager in lower leagues could select new leagues
+					// league relegation or rise and manager in lower leagues could select new leagues
 
 					// check if update or create
 					// first we have to check if there is a fixture of the current season
