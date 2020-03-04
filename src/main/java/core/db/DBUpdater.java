@@ -127,6 +127,39 @@ final class DBUpdater {
 	private void updateDBv300(int DBVersion, int version) throws SQLException {
 		// HO 3.0
 
+		// Delete league plans which are not of our own team
+		try {
+			// find own league plans
+			int teamId = getTeamId();
+			// select saison,ligaid from paarung where heimid=520472 group by saison,ligaid
+			HashMap<Integer, Integer> ownLeaguePlans = new HashMap<Integer, Integer>();
+			ResultSet rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from paarung where heimid=" + teamId + " group by saison,ligaid");
+			if (rs != null) {
+				while (rs.next()) {
+					int saison = rs.getInt(1);
+					int league = rs.getInt(2);
+					ownLeaguePlans.put(saison, league);
+				}
+				rs.close();
+			}
+			// delete entries in SPIELPLAN and PAARUNG which are not from own team
+			rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from spielplan");
+			if (rs != null) {
+				while (rs.next()) {
+					int saison = rs.getInt(1);
+					int league = rs.getInt(2);
+					if (ownLeaguePlans.get(saison) != league) {
+						// league is not our own one
+						m_clJDBCAdapter.executeUpdate("DELETE FROM spielplan WHERE ligaid=" + league + " and saison=" + saison);
+						m_clJDBCAdapter.executeUpdate("DELETE FROM paarung WHERE ligaid=" + league + " and saison=" + saison);
+					}
+				}
+				rs.close();
+			}
+		} catch (SQLException e) {
+			HOLogger.instance().log(getClass(), e);
+		}
+
 		// delete old divider locations
 		m_clJDBCAdapter
 				.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_LowerLefSplitPane'");
@@ -195,6 +228,21 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESDEF INTEGER");
 		}
 		updateDBVersion(DBVersion, version);
+	}
+
+	private int getTeamId() {
+		try {
+			ResultSet rs = m_clJDBCAdapter.executeQuery("select teamid from basics limit 1");
+			if (rs != null) {
+				rs.first();
+				int ret =  rs.getInt(1);
+				rs.close();
+				return ret;
+			}
+		} catch (SQLException e) {
+			HOLogger.instance().log(getClass(), e);
+		}
+		return 0;
 	}
 
 	/**

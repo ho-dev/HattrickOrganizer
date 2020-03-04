@@ -24,7 +24,7 @@
 <tr>
   <td>License</td>
   <td>
-    <a href="https://github.com/akasolace/HO/blob/1.435/LICENSE">
+    <a href="https://github.com/akasolace/HO/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/licence-LGPL%203.0-lightgrey.svg" alt="license" />
     </a>
 </td>
