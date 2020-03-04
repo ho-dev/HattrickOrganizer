@@ -3,6 +3,7 @@ package core.model.match;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.util.HOLogger;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -148,6 +149,7 @@ public class MatchEvent {
             MatchEventID ret = lookup.get(iMatchEventID);
             if ( ret == null){
                 ret = UNKNOWN_MATCHEVENT;
+                HOLogger.instance().log(MatchEventID.class, "UNKNOWN_MATCHEVENT: " + iMatchEventID);
             }
             return ret;
         }
