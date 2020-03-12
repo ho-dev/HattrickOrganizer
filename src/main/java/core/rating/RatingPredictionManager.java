@@ -1240,18 +1240,18 @@ public class RatingPredictionManager {
      */
     public float getTacticLevelCounter()
     {
-        float deDefender = 0.0F;
-        float psDefender = 0.0F;
-        double playerContribution = 0d;
+		Weather weather = HOMainFrame.getWetter();
+
+        double playerContribution;
     	RatingPredictionParameter params = config.getTacticsParameters();
+		List<Integer> allDefenders = Arrays.asList(IMatchRoleID.rightBack, IMatchRoleID.rightCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack);
     	double retVal = 0;
-        for(int pos = IMatchRoleID.rightBack; pos <= IMatchRoleID.leftBack; pos++)
+        for(int pos : allDefenders)
         {
-        	playerContribution = 0d;
             Player player = startingLineup.getPlayerByPositionID(pos);
             if(player != null) {
-            		playerContribution = (params.getParam("counter", "multiPs", 1.0) * calcPlayerStrength(-1, player, PASSING, true, false, null, false));
-            		playerContribution += (params.getParam("counter", "multiDe", 1.0) * calcPlayerStrength(-1, player, DEFENDING, true, false, null, false));
+            		playerContribution = (params.getParam("counter", "multiPs", 1.0) * calcPlayerStrength(-1, player, PASSING, true, true, weather, true));
+            		playerContribution += (params.getParam("counter", "multiDe", 1.0) * calcPlayerStrength(-1, player, DEFENDING, true, true, weather, true));
             		playerContribution *= params.getParam("counter", "playerPostMulti", 1.0);
             		playerContribution += params.getParam("counter", "playerPostDelta", 0);
             		retVal += playerContribution;
@@ -1259,7 +1259,7 @@ public class RatingPredictionManager {
         }
         retVal *= params.getParam("counter", "postMulti", 1.0);
         retVal += params.getParam("counter", "postDelta", 0);
-    	retVal = applyCommonProps (retVal, params, "counter");
+//    	retVal = applyCommonProps (retVal, params, "counter");
     	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);
     	return (float)retVal;
     }

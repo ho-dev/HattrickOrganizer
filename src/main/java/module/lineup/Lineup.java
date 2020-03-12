@@ -321,10 +321,9 @@ public class Lineup{
 	 * @return tactic level
 	 */
 	public final float getTacticLevelCounter() {
-		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel()
-				.getTeam(),
+		return (new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam(),
 				(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), settings.m_iStyleOfPlay,
-				RatingPredictionConfig.getInstance()).getTacticLevelCounter());
+				RatingPredictionConfig.getInstance())).getTacticLevelCounter();
 	}
 
 	/**
