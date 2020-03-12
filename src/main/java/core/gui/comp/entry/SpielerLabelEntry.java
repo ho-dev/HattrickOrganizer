@@ -1,4 +1,3 @@
-// %2768837177:de.hattrickorganizer.gui.templates%
 package core.gui.comp.entry;
 
 import core.constants.player.PlayerSpeciality;
@@ -13,9 +12,7 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
 import core.util.Helper;
-
 import java.awt.*;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -26,18 +23,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 
-/**
- *
- */
 public final class SpielerLabelEntry implements IHOTableEntry {
 
-    //~ Instance fields ----------------------------------------------------------------------------
-
-    /**
-     * Icon for playing creatively
-     */
-
-    //   private ImageIcon            m_clLeer                   =   new ImageIcon( new java.awt.image.BufferedImage( 14, 14, java.awt.image.BufferedImage.TYPE_INT_ARGB ) );
     private Player m_clPlayer;
     private JComponent m_clComponent;
     private final JLabel m_jlGroup = new JLabel();
@@ -57,11 +44,8 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private boolean m_bSelect = false;
     private boolean m_bAssit = false;
 
-    //~ Constructors -------------------------------------------------------------------------------
 
-    /**
-     * Label für den Spielernamen (je nach Status)
-     */
+     // Label for the player name (depending on status)
     public SpielerLabelEntry(Player player, MatchRoleID positionAktuell,
                              float positionsbewertung, boolean showTrikot, boolean showWetterwarnung) {
         m_clPlayer = player;
@@ -73,6 +57,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         createComponent();
     }
 
+    // Label for the player name (depending on status)
     public SpielerLabelEntry(Player player, MatchRoleID positionAktuell,
                              float positionsbewertung, boolean showTrikot, boolean showWetterwarnung, boolean customName, String customNameText, boolean multiLine) {
         m_clPlayer = player;
@@ -96,9 +81,6 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         this.m_sCustomNameString = m_sCustomNameString;
     }
 
-    /**
-     * Gibt eine passende Komponente zurück
-     */
     public final JComponent getComponent(boolean isSelected) {
         if (m_bSelect)
             m_clComponent.setBackground(Color.LIGHT_GRAY);
@@ -130,7 +112,6 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         return m_clPlayer;
     }
 
-    //----Zugriff----------------------------
     public final void clear() {
         m_clPlayer = null;
         m_clCurrentPlayerPosition = null;
@@ -139,9 +120,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         updateComponent();
     }
 
-    /**
-     * Vergleich zum Sortieren
-     */
+
     public final int compareTo(IHOTableEntry obj) {
         if (obj instanceof SpielerLabelEntry) {
             final SpielerLabelEntry entry = (SpielerLabelEntry) obj;
@@ -273,25 +252,15 @@ public final class SpielerLabelEntry implements IHOTableEntry {
 
         if (m_clPlayer != null) {
             //Name
-            m_jlName.setText(m_clPlayer.getName());
-
+            m_jlName.setText(m_clPlayer.getShortName());
             m_jlName.setOpaque(false);
             m_jlName.setForeground(getForegroundForSpieler(m_clPlayer));
 
-            //Trikot
-            if (m_bShowTrikot) {
-                m_jlName.setIcon(ImageUtilities.getImage4Position(m_clCurrentPlayerPosition,
-                        m_clPlayer
-                                .getTrikotnummer()));
+            //Shirt
+            if (m_bShowTrikot) {m_jlName.setIcon(ImageUtilities.getImage4Position(m_clCurrentPlayerPosition,
+                        m_clPlayer.getTrikotnummer()));
                 showGroupIcon();
             }
-
-
-            //            else if ( m_bShowTrikot )
-            //            {
-            //                m_jlName.setIcon ( m_clLeer );
-            //                m_jlGruppe.setIcon ( tools.Helper.getImageIcon4MiniGruppe ( m_clSpieler.getTeamInfoSmilie () ) );
-            //            }
 
             updateDisplay(m_clPlayer);
         }
@@ -340,7 +309,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             if (m_bCustomName == true) {
                 m_jlName.setText(m_sCustomNameString);
             } else {
-                m_jlName.setText(m_clPlayer.getName());
+                m_jlName.setText(m_clPlayer.getShortName());
             }
 
             //Trikot
