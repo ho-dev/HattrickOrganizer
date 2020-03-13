@@ -93,6 +93,7 @@ final class DBUpdater {
                 case 24:
                     updateDBv25(DBVersion, version);
 				case 25:
+				case 26: // repair corrupt database initialized by HO 2.1
 					updateDBv26(DBVersion, version);
 				}
 				
