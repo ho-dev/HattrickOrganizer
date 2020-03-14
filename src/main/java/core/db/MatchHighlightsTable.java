@@ -19,21 +19,20 @@ final class MatchHighlightsTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[14];
+		columns = new ColumnDescriptor[13];
 		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false);
-		columns[1] = new ColumnDescriptor("GastTore", Types.INTEGER, false);
-		columns[2] = new ColumnDescriptor("HeimTore", Types.INTEGER, false);
-		columns[3] = new ColumnDescriptor("Typ", Types.INTEGER, false);
-		columns[4] = new ColumnDescriptor("Minute", Types.INTEGER, false);
-		columns[5] = new ColumnDescriptor("SpielerId", Types.INTEGER, false);
-		columns[6] = new ColumnDescriptor("SpielerName", Types.VARCHAR, false, 256);
-		columns[7] = new ColumnDescriptor("TeamId", Types.INTEGER, false);
-		columns[8] = new ColumnDescriptor("SubTyp", Types.INTEGER, false);
-		columns[9] = new ColumnDescriptor("SpielerHeim", Types.BOOLEAN, false);
-		columns[10] = new ColumnDescriptor("GehilfeID", Types.INTEGER, false);
-		columns[11] = new ColumnDescriptor("GehilfeName", Types.VARCHAR, false, 256);
-		columns[12] = new ColumnDescriptor("GehilfeHeim", Types.BOOLEAN, false);
-		columns[13] = new ColumnDescriptor("EventText", Types.VARCHAR, false, 5000);
+		columns[1] = new ColumnDescriptor("Minute", Types.INTEGER, false);
+		columns[2] = new ColumnDescriptor("SpielerId", Types.INTEGER, false);
+		columns[3] = new ColumnDescriptor("SpielerName", Types.VARCHAR, false, 256);
+		columns[4] = new ColumnDescriptor("TeamId", Types.INTEGER, false);
+		columns[5] = new ColumnDescriptor("SpielerHeim", Types.BOOLEAN, false);
+		columns[6] = new ColumnDescriptor("GehilfeID", Types.INTEGER, false);
+		columns[7] = new ColumnDescriptor("GehilfeName", Types.VARCHAR, false, 256);
+		columns[8] = new ColumnDescriptor("GehilfeHeim", Types.BOOLEAN, false);
+		columns[9] = new ColumnDescriptor("EventText", Types.VARCHAR, false, 5000);
+		columns[10] = new ColumnDescriptor("MATCH_EVENT_ID", Types.INTEGER, false);
+		columns[11] = new ColumnDescriptor("EVENT_INDEX", Types.INTEGER, false);
+		columns[12] = new ColumnDescriptor("INJURY_TYPE", Types.TINYINT, false);
 	}
 
 	@Override

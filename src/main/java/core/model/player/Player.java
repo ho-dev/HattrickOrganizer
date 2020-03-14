@@ -17,6 +17,7 @@ import core.training.TrainingPerWeek;
 import core.training.TrainingPoints;
 import core.training.WeeklyTrainingType;
 import core.util.Helper;
+import core.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -1211,14 +1212,19 @@ public class Player {
      * Getter for shortName
      *
      * @return returns the fist letter of the first Name + a "." and the last name
-     * eg: James Bond = J. Bond
+     * eg: James Bond = J. Bond, unless the string is already empty — in which
+     * case it is deemed short enough, and returned.
      */
     public String getShortName() {
         String fullName = getName();
-        String initial = fullName.substring(0, 1);
-        String lastName = getLastName();
-        return initial + ". " + lastName;
 
+        if (StringUtils.isEmpty(fullName)) {
+            return fullName;
+        } else {
+            String initial = fullName.substring(0, 1);
+            String lastName = getLastName();
+            return initial + ". " + lastName;
+        }
     }
 
     /**
