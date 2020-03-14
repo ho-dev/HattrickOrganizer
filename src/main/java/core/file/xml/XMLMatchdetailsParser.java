@@ -79,21 +79,23 @@ public class XMLMatchdetailsParser {
 			//get Injuries element
 			root = doc.getDocumentElement();
 			ele = (Element) root.getElementsByTagName("Injuries").item(0);
-			injuryList = ele.getElementsByTagName("Injury");
+			if ( ele != null )
+			{
+				injuryList = ele.getElementsByTagName("Injury");
+				//now go through the injuries
+				for (int n=0; n < injuryList.getLength(); n++) {
+					root = (Element) injuryList.item(n);
+					InjuryPlayerID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("InjuryPlayerID").item(0)));
+					InjuryTeamID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("InjuryTeamID").item(0)));
+					InjuryType = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("InjuryType").item(0)));
+					InjuryMinute = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("InjuryMinute").item(0)));
+					MatchPart = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("MatchPart").item(0)));
+					injury = new Matchdetails.Injury(InjuryPlayerID, InjuryTeamID, InjuryType, InjuryMinute, MatchPart);
+					mdInjuries.add(injury);
+				}
 
-			//now go through the injuries
-			for (int n=0; n < injuryList.getLength(); n++) {
-				root = (Element) injuryList.item(n);
-				InjuryPlayerID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("InjuryPlayerID").item(0)));
-				InjuryTeamID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("InjuryTeamID").item(0)));
-				InjuryType = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("InjuryType").item(0)));
-				InjuryMinute = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("InjuryMinute").item(0)));
-				MatchPart = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("MatchPart").item(0)));
-				injury = new Matchdetails.Injury(InjuryPlayerID, InjuryTeamID, InjuryType, InjuryMinute, MatchPart);
-				mdInjuries.add(injury);
+				md.setM_Injuries(mdInjuries);
 			}
-
-			md.setM_Injuries(mdInjuries);
 		}
 
 		catch (Exception e) {
@@ -513,9 +515,9 @@ public class XMLMatchdetailsParser {
             }
             
             ele = (Element) root.getElementsByTagName("WeatherID").item(0);
-            md.setWetterId(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+            if ( ele != null ) md.setWetterId(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("SoldTotal").item(0);
-            md.setZuschauer(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setZuschauer(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             // Get spectator distribution, if available
             if (root.getElementsByTagName("SoldTerraces").getLength() > 0) {
             	ele = (Element) root.getElementsByTagName("SoldTerraces").item(0);
@@ -593,34 +595,34 @@ public class XMLMatchdetailsParser {
 
             //Data
             ele = (Element) root.getElementsByTagName("AwayTeamID").item(0);
-            md.setGastId(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setGastId(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("AwayTeamName").item(0);
-            md.setGastName(ele.getFirstChild().getNodeValue());
+			if ( ele != null ) md.setGastName(ele.getFirstChild().getNodeValue());
             ele = (Element) root.getElementsByTagName("AwayGoals").item(0);
-            md.setGuestGoals(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setGuestGoals(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("TacticType").item(0);
-            md.setGuestTacticType(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setGuestTacticType(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("TacticSkill").item(0);
-            md.setGuestTacticSkill(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setGuestTacticSkill(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingMidfield").item(0);
-            md.setGuestMidfield(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setGuestMidfield(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingRightDef").item(0);
-            md.setGuestRightDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setGuestRightDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingMidDef").item(0);
-            md.setGuestMidDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setGuestMidDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingLeftDef").item(0);
-            md.setGuestLeftDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setGuestLeftDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingRightAtt").item(0);
-            md.setGuestRightAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setGuestRightAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingMidAtt").item(0);
-            md.setGuestMidAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setGuestMidAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingLeftAtt").item(0);
-            md.setGuestLeftAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setGuestLeftAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
 
 			ele = (Element) root.getElementsByTagName("RatingIndirectSetPiecesAtt").item(0);
-			md.setRatingIndirectSetPiecesAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setRatingIndirectSetPiecesAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
 			ele = (Element) root.getElementsByTagName("RatingIndirectSetPiecesDef").item(0);
-			md.setRatingIndirectSetPiecesDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setRatingIndirectSetPiecesDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
 
 			try {
                 ele = (Element) root.getElementsByTagName("TeamAttitude").item(0);
@@ -647,34 +649,34 @@ public class XMLMatchdetailsParser {
 
             //Data
             ele = (Element) root.getElementsByTagName("HomeTeamID").item(0);
-            md.setHeimId(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setHeimId(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("HomeTeamName").item(0);
-            md.setHeimName(ele.getFirstChild().getNodeValue());
+			if ( ele != null ) md.setHeimName(ele.getFirstChild().getNodeValue());
             ele = (Element) root.getElementsByTagName("HomeGoals").item(0);
-            md.setHomeGoals(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setHomeGoals(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("TacticType").item(0);
-            md.setHomeTacticType(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setHomeTacticType(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("TacticSkill").item(0);
-            md.setHomeTacticSkill(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setHomeTacticSkill(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingMidfield").item(0);
-            md.setHomeMidfield(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setHomeMidfield(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingRightDef").item(0);
-            md.setHomeRightDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setHomeRightDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingMidDef").item(0);
-            md.setHomeMidDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setHomeMidDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingLeftDef").item(0);
-            md.setHomeLeftDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setHomeLeftDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingRightAtt").item(0);
-            md.setHomeRightAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setHomeRightAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingMidAtt").item(0);
-            md.setHomeMidAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setHomeMidAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("RatingLeftAtt").item(0);
-            md.setHomeLeftAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setHomeLeftAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
 
 			ele = (Element) root.getElementsByTagName("RatingIndirectSetPiecesAtt").item(0);
-			md.setRatingIndirectSetPiecesAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setRatingIndirectSetPiecesAtt(Integer.parseInt(ele.getFirstChild().getNodeValue()));
 			ele = (Element) root.getElementsByTagName("RatingIndirectSetPiecesDef").item(0);
-			md.setRatingIndirectSetPiecesDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			if ( ele != null ) md.setRatingIndirectSetPiecesDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
 
 			try {
                 ele = (Element) root.getElementsByTagName("TeamAttitude").item(0);
