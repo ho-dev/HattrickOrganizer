@@ -1196,6 +1196,10 @@ public class Lineup{
 
 	public void setPenaltyTakers(List<MatchRoleID> positions) {
 		this.penaltyTakers = new ArrayList<MatchRoleID>(positions);
+		// chpp match order requires exactly 11 penalty takers
+		for ( int i=this.penaltyTakers.size(); i<11; i++){
+			this.penaltyTakers.add(new MatchRoleID(0,0,IMatchRoleID.NORMAL));
+		}
 	}
 
 	/**
