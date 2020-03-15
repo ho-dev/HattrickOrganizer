@@ -11,6 +11,8 @@ FAQ for developers
   Build and run using: IntelliJ IDEA
   Run tests using: IntelliJ IDEA
 
+.. image:: static/pictures/ijsettings.png
+
 ----
 
 * **Gradle: could not get unknown property ``POEDITOR_APIKEY`` for object of type ``de.jansauer.poeditor.POEditorExtension``**
