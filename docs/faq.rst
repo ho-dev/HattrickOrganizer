@@ -5,6 +5,7 @@ FAQ for developers
 ===============================
 
 * **IntelliJ IDEA performs gradle tasks before starting HO**
+
   These gradle tasks are only required to generate the release artifacts of HO. If you only want to simply run/debug HO in the IDE use the following settings (invoke Ctrl+Alt+S):
 
   Settings->Build, Execution, Deployment->Build Tools->Gradle
