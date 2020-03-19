@@ -16,9 +16,7 @@ FAQ for developers
 
   Run tests using: IntelliJ IDEA
 
-
 .. image:: static/pictures/ijsettings.png
-
 
 ----
 
