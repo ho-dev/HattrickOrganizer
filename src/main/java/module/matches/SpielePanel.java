@@ -31,7 +31,6 @@ import core.prediction.engine.TeamRatings;
 import core.util.Helper;
 import module.lineup.Lineup;
 import module.matches.statistics.MatchesHighlightsTable;
-import module.matches.statistics.MatchesOverviewCommonPanel;
 import module.matches.statistics.MatchesOverviewTable;
 import module.teamAnalyzer.ui.RatingUtil;
 
@@ -97,11 +96,11 @@ public final class SpielePanel extends LazyImagePanel {
 	private JTabbedPane matchDetailsTabbedPane;
 	private ManschaftsBewertungsPanel m_jpManschaftsBewertungsPanel;
 	private ManschaftsBewertungs2Panel m_jpManschaftsBewertungs2Panel;
-	private MatchberichtPanel matchReportPanel;
+	private MatchReportPanel matchReportPanel;
 	private SpielHighlightPanel matchHighlightPanel;
 	private MatchesTable matchesTable;
 	private MatchesOverviewTable matchesOverviewTable;
-//	private MatchesOverviewCommonPanel matchesOverviewCommonPanel;
+	//	private MatchesOverviewCommonPanel matchesOverviewCommonPanel;
 	private MatchesHighlightsTable matchesHighlightsTable;
 	private StaerkenvergleichPanel teamsComparePanel;
 	private MatchesModel matchesModel;
@@ -225,7 +224,7 @@ public final class SpielePanel extends LazyImagePanel {
 			Lineup aufstellung = HOVerwaltung.instance().getModel().getLineup();
 
 			aufstellung.clearLineup(); // To make sure the old one is
-										// gone.
+			// gone.
 
 			if (teamspieler != null) {
 				for (MatchLineupPlayer player : teamspieler) {
@@ -386,21 +385,21 @@ public final class SpielePanel extends LazyImagePanel {
 	private int getTacticStrength(Lineup lineup, int tacticType) {
 		double tacticLevel = 1d;
 		switch (tacticType) {
-		case IMatchDetails.TAKTIK_KONTER:
-			tacticLevel = lineup.getTacticLevelCounter();
-			break;
-		case IMatchDetails.TAKTIK_MIDDLE:
-			tacticLevel = lineup.getTacticLevelAimAow();
-			break;
-		case IMatchDetails.TAKTIK_PRESSING:
-			tacticLevel = lineup.getTacticLevelPressing();
-			break;
-		case IMatchDetails.TAKTIK_WINGS:
-			tacticLevel = lineup.getTacticLevelAimAow();
-			break;
-		case IMatchDetails.TAKTIK_LONGSHOTS:
-			tacticLevel = lineup.getTacticLevelLongShots();
-			break;
+			case IMatchDetails.TAKTIK_KONTER:
+				tacticLevel = lineup.getTacticLevelCounter();
+				break;
+			case IMatchDetails.TAKTIK_MIDDLE:
+				tacticLevel = lineup.getTacticLevelAimAow();
+				break;
+			case IMatchDetails.TAKTIK_PRESSING:
+				tacticLevel = lineup.getTacticLevelPressing();
+				break;
+			case IMatchDetails.TAKTIK_WINGS:
+				tacticLevel = lineup.getTacticLevelAimAow();
+				break;
+			case IMatchDetails.TAKTIK_LONGSHOTS:
+				tacticLevel = lineup.getTacticLevelLongShots();
+				break;
 		}
 		tacticLevel -= 1;
 		return (int) Math.max(tacticLevel, 0);
@@ -495,8 +494,8 @@ public final class SpielePanel extends LazyImagePanel {
 		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Highlights"),
 				new JScrollPane(matchHighlightPanel));
 
-		// Matchbericht
-		matchReportPanel = new MatchberichtPanel(true, this.matchesModel);
+		// Match report
+		matchReportPanel = new MatchReportPanel(this.matchesModel);
 		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Matchbericht"),
 				matchReportPanel);
 

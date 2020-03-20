@@ -394,6 +394,7 @@ public class MatchEvent {
         put(MatchEventID.SE_QUICK_LOSES_IN_SUN, HOIconName.WEATHER_SUN_NEG); //#306
 
         put(MatchEventID.TACTIC_TYPE_PRESSING, HOIconName.PRESSING); //#331
+        put(MatchEventID.TACTIC_TYPE_ATTACK_ON_WINGS, HOIconName.AOW); //#334
 
         put(MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_BEHIND, HOIconName.REPLACEMENT); //#350
         put(MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_AHEAD , HOIconName.REPLACEMENT); //#351
@@ -402,6 +403,8 @@ public class MatchEvent {
         put(MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_BEHIND, HOIconName.ROTATE); //#360
         put(MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_AHEAD, HOIconName.ROTATE); //#361
         put(MatchEventID.CHANGE_OF_TACTIC_MINUTE, HOIconName.ROTATE); //#362
+
+        put(MatchEventID.RAINY_WEATHER_MANY_PLAYERS_AFFECTED, null); //#390
 
         put(MatchEventID.INJURED_PLAYER_REPLACED, HOIconName.REPLACEMENT); //#424
 
@@ -461,6 +464,18 @@ public class MatchEvent {
     public boolean isNonGoalEvent()
     {
         return ( (this.m_iMatchEventID>=200) && (this.m_iMatchEventID<300) );
+    }
+
+    public boolean isNeutralEvent()
+    {
+        int id = this.m_iMatchEventID;
+        return ( (id == 23) || (id == 24) || (id == 25) || (id == 27) ||
+                 ( (id >= 30) && (id <= 33)) ||
+                 (id == 35) || (id == 40) || (id == 61) || (id == 64) ||
+                 (id == 68) || (id == 75) || ( (id >= 331) && (id <= 336)) ||
+                (id == 451) || (id == 454) || (id == 456) || (id == 457) ||
+                (id == 458) || (id == 464) || (id == 465) || (id == 466) ||
+                (id == 468) || (id == 469) );
     }
 
     public boolean isSubstitution()
@@ -983,7 +998,13 @@ public class MatchEvent {
         else if (isInjured()) {
             icon = ThemeManager.getIcon(HOIconName.INJURED);}
         else {
-            icon = ThemeManager.getIcon(MatchEvent.mapMatchEventIcons.getOrDefault(me, HOIconName.UNKOWN));}
+            String sIcon = MatchEvent.mapMatchEventIcons.getOrDefault(me, HOIconName.UNKOWN);
+            if (sIcon == null) {
+                return null;
+            } else {
+                icon = ThemeManager.getIcon(sIcon);
+            }
+        }
         return icon;
 
     }

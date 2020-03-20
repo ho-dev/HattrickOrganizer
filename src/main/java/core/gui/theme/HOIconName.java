@@ -131,6 +131,8 @@ public interface HOIconName {
 	String PRESSING = "pressing";
 	String FORMATION  = "formation";
 
+	String AOW = "aow";
+
 
 	String STAR = "star";
 	String STAR_GRAY = "star_gray";
