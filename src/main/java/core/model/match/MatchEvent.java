@@ -235,6 +235,7 @@ public class MatchEvent {
         put(MatchEventID.PENALTY_CONTEST_NO_GOAL_IN_SPITE_OF_NO_NERVES, HOIconName.MISS); //#59
 
         put(MatchEventID.SUCCESSFUL_PRESSING, HOIconName.PRESSING); //#68
+        put(MatchEventID.ADDED_TIME, null); //#75
 
         put(MatchEventID.INJURED_BUT_KEEPS_PLAYING, HOIconName.BRUISED); //#90
         put(MatchEventID.MODERATELY_INJURED_LEAVES_FIELD, HOIconName.INJURED); //#91
@@ -413,6 +414,8 @@ public class MatchEvent {
         put(MatchEventID.RED_CARD_2ND_WARNING_NASTY_PLAY, HOIconName.ME_YELLOW_THEN_RED); //#512
         put(MatchEventID.RED_CARD_2ND_WARNING_CHEATING, HOIconName.ME_YELLOW_THEN_RED); //#513
         put(MatchEventID.RED_CARD_WITHOUT_WARNING, HOIconName.REDCARD); //#514
+
+        put(MatchEventID.MATCH_FINISHED, null); //#599
     }};
 
 

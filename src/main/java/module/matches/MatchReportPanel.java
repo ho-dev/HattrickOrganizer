@@ -83,6 +83,7 @@ public class MatchReportPanel extends LazyImagePanel {
 			List<MatchEvent> matchHighlights = details.getHighlights();
 			ImageIcon icon;
 			Boolean bEventHighlighted;
+			Boolean bMatchFinished = false;
 
 			int homePenalitiesScored=0;
 			int guestPenalitiesScored=0;
@@ -93,6 +94,11 @@ public class MatchReportPanel extends LazyImagePanel {
 			for (int i = 0; i < matchHighlights.size(); i++) {
 				MatchEvent highlight = matchHighlights.get(i);
 				bEventHighlighted = true;
+
+				if (highlight.getiMatchEventID() == MatchEvent.MatchEventID.MATCH_FINISHED.getValue())
+				{
+					bMatchFinished = true;
+				}
 
 				if (highlight.getEventText().isEmpty())
 				{
@@ -154,7 +160,8 @@ public class MatchReportPanel extends LazyImagePanel {
 						timeLabel.setBackground(Color.decode("#a6a6a6"));
 					}
 
-					timeLabel.setText(highlight.getMinute()+"'");
+					if (bMatchFinished && (highlight.getiMatchEventID() != MatchEvent.MatchEventID.MATCH_FINISHED.getValue())){timeLabel.setText("i");}
+					else{timeLabel.setText(highlight.getMinute()+"'");}
 					timeLabel.setOpaque(true);
 					f = timeLabel.getFont();
 					timeLabel.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
