@@ -1,6 +1,11 @@
 *Please visit the HO! forum in the CHPP section of Hattrick if you have any questions!
 If you find a bug, please open an issue on [GitHub](https://github.com/akasolace/HO/issues)*
 
+# Changelist HO! 3.0
+
+## Matches
+  - Match Report: now similar to HT match report  #339
+
 
 # Changelist HO! 2.1
 

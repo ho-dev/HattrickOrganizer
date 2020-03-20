@@ -1,4 +1,3 @@
-// %4112883594:de.hattrickorganizer.gui.matches%
 package module.matches;
 
 import core.gui.comp.panel.LazyImagePanel;
@@ -8,23 +7,20 @@ import core.model.HOVerwaltung;
 import core.model.match.MatchEvent;
 import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 
-/**
- * Zeigt die Stärken eines Matches an.
- */
+
 public class MatchReportPanel extends LazyImagePanel {
 
 	private static final long serialVersionUID = -9014579382145462648L;
@@ -32,7 +28,6 @@ public class MatchReportPanel extends LazyImagePanel {
 	private GridBagLayout layout;
 	private JLabel penaltyContestresults;
 	private JPanel panel;
-	JScrollPane pane;
 	private List<Component> highlightLabels;
 	private final MatchesModel matchesModel;
 	private boolean bPenaltyContest = false;
@@ -51,19 +46,12 @@ public class MatchReportPanel extends LazyImagePanel {
 		public int getValue() { return value; }
 	}
 
-	/**
-	 * Creates a new SpielHighlightPanel object.
-	 */
+
 	public MatchReportPanel(MatchesModel matchesModel) {
 		this(matchesModel, false);
 	}
 
-	/**
-	 * Creates a new SpielHighlightPanel object.
-	 *
-	 * @param print
-	 *            if true: use printer version (no colored background)
-	 */
+
 	public MatchReportPanel(MatchesModel matchesModel, boolean print) {
 		super(print);
 		this.matchesModel = matchesModel;
@@ -90,7 +78,7 @@ public class MatchReportPanel extends LazyImagePanel {
 
 			Matchdetails details = this.matchesModel.getDetails();
 
-			JLabel timeLabel, playerlabel, matchEventPlayer;
+			JLabel timeLabel, eventIcon, eventDescription;
 
 			List<MatchEvent> matchHighlights = details.getHighlights();
 			ImageIcon icon;
@@ -101,7 +89,6 @@ public class MatchReportPanel extends LazyImagePanel {
 
 			ActionTypeCategory actionType;
 			Font f;
-
 
 			for (int i = 0; i < matchHighlights.size(); i++) {
 				MatchEvent highlight = matchHighlights.get(i);
@@ -135,48 +122,9 @@ public class MatchReportPanel extends LazyImagePanel {
 
 					icon = highlight.getIcon();
 
-//					String spielername = highlight.getSpielerName();
-//					if (spielername.length() > 30) {
-//						spielername = spielername.substring(0, 29);
-//					}
-//					spielername += (" (" + highlight.getMinute() + "')");
-//
-//					if (highlight.isGoalEvent()) {
-//						if (homeAction) {
-//							homeScore++;
-//							scoreText = "<html><b>" + homeScore + "</b> - " + guestScore + "</html>";
-//						}
-//						else {
-//							guestScore++;
-//							scoreText = "<html>" + homeScore + " - <b>" + guestScore + "</b></html>";
-//						}
-//					}
 
-//					if (highlight.isPenaltyContestGoalEvent()) {
-//						if (homeAction) {homePenalitiesScored++;}
-//						else {guestPenalitiesScored++;}
-//					}
-//
-//					else if(highlight.isSubstitution())
-//					{
-//						spielername = highlight.getSpielerName();
-//						if (spielername.length() > 30) {
-//							spielername = spielername.substring(0, 29);
-//						}
-//
-//						String playerEntering =  highlight.getGehilfeName();
-//						if (playerEntering.length() > 30) { playerEntering = playerEntering.substring(0, 29);}
-//
-//						spielername = "<html>" + spielername + "<br>" + playerEntering + " (" + highlight.getMinute() + "')</html>";
-//
-//					}
-					playerlabel = new JLabel("", icon, SwingConstants.LEFT);
-//					{
-//						@Override
-//						public Dimension getMinimumSize() {
-//							return new Dimension(48, 30);
-//						}};
-					playerlabel.setToolTipText(MatchEvent.getEventTextDescription(highlight.getiMatchEventID()));
+					eventIcon = new JLabel("", icon, SwingConstants.LEFT);
+					eventIcon.setToolTipText(MatchEvent.getEventTextDescription(highlight.getiMatchEventID()));
 
 					timeLabel = new JLabel("", SwingConstants.CENTER)
 					{
@@ -193,16 +141,16 @@ public class MatchReportPanel extends LazyImagePanel {
 
 					// Match Events Label
 					if (actionType == ActionTypeCategory.ACTION_TYPE_HOME) {
-						playerlabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+						eventIcon.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0));
 						timeLabel.setBackground(Color.decode("#6ECDEA"));
 					}
 					else if (actionType == ActionTypeCategory.ACTION_TYPE_AWAY)
 					{
-						playerlabel.setBorder(BorderFactory.createEmptyBorder(0, 41, 0, 0));
+						eventIcon.setBorder(BorderFactory.createEmptyBorder(0, 22, 0, 0));
 						timeLabel.setBackground(Color.decode("#d15e5e"));
 					}
 					else {
-						playerlabel.setBorder(BorderFactory.createEmptyBorder(0, 23, 0, 0));
+						eventIcon.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 0));
 						timeLabel.setBackground(Color.decode("#a6a6a6"));
 					}
 
@@ -212,13 +160,11 @@ public class MatchReportPanel extends LazyImagePanel {
 					timeLabel.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
 					constraints.anchor = GridBagConstraints.LINE_START;
 					constraints.fill = GridBagConstraints.BOTH;
-//					constraints.fill = GridBagConstraints.VERTICAL;
-
 					constraints.weightx = 0.0;
 					constraints.gridx = 2;
 					constraints.gridy = i + 4;
 					constraints.gridwidth = 1;
-					constraints.insets = new Insets(10,0,0,20);
+					constraints.insets = new Insets(10,0,0,10);
 					layout.setConstraints(timeLabel, constraints);
 					panel.add(timeLabel);
 
@@ -226,30 +172,28 @@ public class MatchReportPanel extends LazyImagePanel {
 					constraints.fill = GridBagConstraints.HORIZONTAL;
 					constraints.fill = GridBagConstraints.VERTICAL;
 					constraints.weightx = 0.0;
-//					constraints.weighty = 1.0;
 					constraints.gridy = i + 4;
 					constraints.gridwidth = 1;
 					constraints.gridx = 3;
-					constraints.insets = new Insets(10,0,0,20);
-					layout.setConstraints(playerlabel, constraints);
-					panel.add(playerlabel);
+					constraints.insets = new Insets(10,0,0,10);
+					layout.setConstraints(eventIcon, constraints);
+					panel.add(eventIcon);
 
-					matchEventPlayer = new JLabel("<html>"+highlight.getEventText()+"</html>");
-					matchEventPlayer.setVerticalAlignment(JLabel.CENTER);
-					highlightLabels.add(matchEventPlayer);
+					eventDescription = new JLabel();
+					eventDescription.setText("<html><body style='width: 350px'>"+highlight.getEventText()+"</p></html>");
+					highlightLabels.add(eventDescription);
 					constraints.anchor = GridBagConstraints.LINE_START;
 					constraints.fill = GridBagConstraints.HORIZONTAL;
 					constraints.weightx = 1.0;
-//					constraints.weighty = 2.0;
 					constraints.gridy = i + 4;
 					constraints.gridwidth = 1;
 					constraints.gridx = 4;
 					constraints.insets = new Insets(10,0,0,0);
-					layout.setConstraints(matchEventPlayer, constraints);
-					panel.add(matchEventPlayer);
+					layout.setConstraints(eventDescription, constraints);
+					panel.add(eventDescription);
 
 					// Add labels to the highlight vector
-					highlightLabels.add(playerlabel);
+					highlightLabels.add(eventIcon);
 					highlightLabels.add(timeLabel);
 
 				}
@@ -274,9 +218,6 @@ public class MatchReportPanel extends LazyImagePanel {
 				}
 			}
 
-//			String title = info.getHeimName() + "  " + homeScore + "   -   " + guestScore + "  " + info.getGastName() ;
-//			matchTeamsAndScores.setText(title);
-
 			if (bPenaltyContest) {
 				String subtitle = HOVerwaltung.instance().getLanguageString("penalites") + "  (" + homePenalitiesScored + "-" + guestPenalitiesScored + ")";
 				penaltyContestresults.setText(subtitle);
@@ -292,14 +233,17 @@ public class MatchReportPanel extends LazyImagePanel {
 
 		setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
 
+		setLayout(new BorderLayout());
+
+		JPanel wrappingPanel = new JPanel();
+		wrappingPanel.setLayout(new BorderLayout());
+
 		GridBagLayout mainlayout = new GridBagLayout();
 		GridBagConstraints mainconstraints = new GridBagConstraints();
 		mainconstraints.anchor = GridBagConstraints.NORTH;
 		mainconstraints.fill = GridBagConstraints.HORIZONTAL;
 		mainconstraints.weightx = 1.0;
 		mainconstraints.insets = new Insets(4, 6, 4, 6);
-
-		setLayout(mainlayout);
 
 		layout = new GridBagLayout();
 		panel = new JPanel(layout);
@@ -308,26 +252,9 @@ public class MatchReportPanel extends LazyImagePanel {
 				BorderFactory.createEmptyBorder(10, 5, 10, 0)));
 		panel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
 
-
-//		constraints.anchor = GridBagConstraints.EAST;
-//		constraints.fill = GridBagConstraints.HORIZONTAL;
-//		constraints.weightx = 1.0;
-//		constraints.gridx = 2;
-//		constraints.gridy = 1;
-//		constraints.gridwidth = 4;
-//		matchTeamsAndScores = new JLabel("", SwingConstants.CENTER);
-//		matchTeamsAndScores.setFont(matchTeamsAndScores.getFont().deriveFont(Font.BOLD));
-//		layout.setConstraints(matchTeamsAndScores, constraints);
-//		panel.add(matchTeamsAndScores);
-
 		constraints = new GridBagConstraints();
-//		constraints.anchor = GridBagConstraints.EAST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.insets = new Insets(4, 6, 4, 6);
-//		constraints.weightx = 0.0;
-//		constraints.gridx = 2;
-//		constraints.gridy = 2;
-//		constraints.gridwidth = 4;
 		penaltyContestresults = new JLabel("", SwingConstants.CENTER);
 		penaltyContestresults.setFont(penaltyContestresults.getFont().deriveFont(Font.BOLD));
 		layout.setConstraints(penaltyContestresults, constraints);
@@ -337,12 +264,9 @@ public class MatchReportPanel extends LazyImagePanel {
 		mainconstraints.gridy = 0;
 
 		mainlayout.setConstraints(panel, mainconstraints);
-		add(panel);
 
-//		pane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-//				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-//		mainlayout.setConstraints(pane, mainconstraints);
-//		add(pane);
+		wrappingPanel.add(new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        add(wrappingPanel);
 
 		clear();
 	}
@@ -352,7 +276,6 @@ public class MatchReportPanel extends LazyImagePanel {
 	 */
 	private void clear() {
 		removeHighlights();
-//		matchTeamsAndScores.setText(" ");
 		penaltyContestresults.setText(" ");
 		bPenaltyContest = false;
 
