@@ -96,7 +96,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
         for (int i = right; i <= left; i++) {
             if (i != position.getId()) {
                 MatchRoleID mid = this.analyse.getPosition(i);
-                if (mid.getTaktik() == taktik) {
+                if (mid.getSpielerId() != 0 && mid.getTaktik() == taktik) {
                     Player p = analyse.getPlayer(mid.getSpielerId());
                     if (p.hasSpeciality(Speciality.POWERFUL)) {
                         overcrowding++;
