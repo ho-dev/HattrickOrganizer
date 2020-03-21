@@ -29,14 +29,13 @@ public class TechnicalEventPredictionAnalyzer implements ISpecialEventPrediction
     public void analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
         this.analyse = analyse;
         int id = position.getSpielerId();
-        if (id == 0) return;
         Player p = analyse.getPlayer(id);
-        double scoreBoost = 1;
+        double scoreBoost=1;
         if (p.hasSpeciality(Speciality.TECHNICAL)) {
             switch (position.getId()) {
                 case IMatchRoleID.leftWinger:
                 case IMatchRoleID.rightWinger:
-                    scoreBoost *= 48. / 38.;
+                    scoreBoost *= 48./38.;
                 case IMatchRoleID.leftForward:
                 case IMatchRoleID.rightForward:
                 case IMatchRoleID.centralForward:
@@ -45,28 +44,28 @@ public class TechnicalEventPredictionAnalyzer implements ISpecialEventPrediction
                 case IMatchRoleID.rightInnerMidfield:
                     // Look for Heads in opponent team
                     getTechHeadEvent(position, IMatchRoleID.rightInnerMidfield, scoreBoost);
-                    getTechHeadEvent(position, IMatchRoleID.centralInnerMidfield, scoreBoost);
-                    getTechHeadEvent(position, IMatchRoleID.leftInnerMidfield, scoreBoost);
-                    getTechHeadEvent(position, IMatchRoleID.rightBack, scoreBoost);
-                    getTechHeadEvent(position, IMatchRoleID.leftBack, scoreBoost);
-                    getTechHeadEvent(position, IMatchRoleID.rightCentralDefender, scoreBoost);
-                    getTechHeadEvent(position, IMatchRoleID.middleCentralDefender, scoreBoost);
-                    getTechHeadEvent(position, IMatchRoleID.leftCentralDefender, scoreBoost);
+                    getTechHeadEvent( position, IMatchRoleID.centralInnerMidfield, scoreBoost);
+                    getTechHeadEvent( position, IMatchRoleID.leftInnerMidfield, scoreBoost);
+                    getTechHeadEvent( position, IMatchRoleID.rightBack, scoreBoost);
+                    getTechHeadEvent( position, IMatchRoleID.leftBack, scoreBoost);
+                    getTechHeadEvent( position, IMatchRoleID.rightCentralDefender, scoreBoost);
+                    getTechHeadEvent( position, IMatchRoleID.middleCentralDefender, scoreBoost);
+                    getTechHeadEvent( position, IMatchRoleID.leftCentralDefender, scoreBoost);
             }
         }
     }
 
     private void getTechHeadEvent( MatchRoleID position, int opponentPosition, double scoreBoost) {
         Player opp = analyse.getOpponentPlayerByPosition(opponentPosition);
-        if (opp == null || position.getSpielerId() == 0) return;
-        if (opp.hasSpeciality(Speciality.HEAD)) {
+        if ( opp == null)return;
+        if ( opp.hasSpeciality(Speciality.HEAD)){
             Player p = analyse.getPlayer(position.getSpielerId());
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position,
                     SpecialEventType.TECHNICAL_HEAD,
                     1., 20, -20,
-                    p.getSCskill() + p.getErfahrung() - opp.getDEFskill() - opp.getErfahrung()
-            );
-            if (se != null) {
+                    p.getSCskill()+p.getErfahrung() - opp.getDEFskill() - opp.getErfahrung()
+                    );
+            if  ( se != null ) {
                 se.addInvolvedOpponentPosition(analyse.getOpponentPosition(opponentPosition));
                 se.setGoalProbability(scoreBoost * se.getChanceCreationProbability() * analyse.getGoalProbability(position));
                 analyse.addSpecialEventPrediction(se);

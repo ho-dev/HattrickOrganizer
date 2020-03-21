@@ -73,7 +73,7 @@ public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictio
 
     private void getExperienceEvents(MatchRoleID position, int i) {
         Player oppDefender = analyse.getOpponentPlayerByPosition(i);
-        if ( oppDefender!=null && position.getSpielerId() != 0){
+        if ( oppDefender!=null){
             Player p = analyse.getPlayer(position.getSpielerId());
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
                     position,

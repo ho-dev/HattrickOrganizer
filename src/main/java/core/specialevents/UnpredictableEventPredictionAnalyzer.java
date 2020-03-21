@@ -56,7 +56,6 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
         this.analyse = analyse;
 
         int id = position.getSpielerId();
-        if ( id == 0 ) return;
         Player p = analyse.getPlayer(id);
         if (p.hasSpeciality(Speciality.UNPREDICTABLE)) {
             switch (position.getId()) {
@@ -119,11 +118,10 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
     }
 
     private void getUnpredictableOwnGoal( MatchRoleID position) {
-        if (position.getSpielerId() == 0) return;
         Player p = this.analyse.getPlayer(position.getSpielerId());
         Player keeper = this.analyse.getPlayerByPosition(IMatchRoleID.keeper);
-        double gkSkill = 0;
-        if (keeper != null) {
+        double gkSkill=0;
+        if (keeper != null){
             gkSkill = keeper.getGKskill();
         }
 
@@ -133,14 +131,13 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
                 20 - p.getPSskill() - gkSkill
         );
 
-        if (se != null) {
+        if ( se != null){
             analyse.addSpecialEventPrediction(se);
         }
     }
 
     private void getUnpredictableSpecialAction( MatchRoleID position, int leftCentralDefender, int middleCentralDefender, int rightCentralDefender) {
         // Calculate opponent Defence skill
-        if (position.getSpielerId() == 0) return;
         Player p = this.analyse.getPlayer(position.getSpielerId());
         double opponentDefenceSkill = 0;
         double opponentExperience = 0;
@@ -173,7 +170,7 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, SpecialEventType.UNPREDICTABLE,
                 .5, 10, -10,
                 p.getPSskill() + p.getErfahrung() - opponentDefenceSkill - opponentExperience);
-        if (se != null) {
+        if ( se != null){
             getPassReceivers(se);
         }
     }
@@ -198,7 +195,7 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
     private void getUnpredictableMistake( MatchRoleID position, int opponentPos, double wingerScoreBonus) {
         Player p = this.analyse.getPlayer(position.getSpielerId());
         Player op = this.analyse.getOpponentPlayerByPosition(opponentPos);
-        if ( op != null && p != null){
+        if ( op != null){
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position,
                     SpecialEventType.UNPREDICTABLE_MISTAKE,
                     -.5,10, -10,
@@ -216,7 +213,6 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
     }
     
     private void getUnpredictableLongPass( MatchRoleID position) {
-        if (position.getSpielerId() == 0) return;
         Player p = this.analyse.getPlayer(position.getSpielerId());
         for (int i = IMatchRoleID.rightInnerMidfield; i <= IMatchRoleID.leftInnerMidfield; i++) {
             Player opp = this.analyse.getOpponentPlayerByPosition(i);
