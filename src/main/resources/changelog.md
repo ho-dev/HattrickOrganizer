@@ -5,6 +5,9 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ## Matches
   - Match Report: now similar to HT match report  #339
+  
+## Player Analysis
+  - fix age of player in player analysis table #422
 
 
 # Changelist HO! 2.1
