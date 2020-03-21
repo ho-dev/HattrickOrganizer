@@ -252,6 +252,7 @@ public class XMLMatchdetailsParser {
             				} else {
             					subjectplayername = String.valueOf(iSubjectPlayerID);
             					broken.add(new Integer(matchEvents.size()));
+								HOLogger.instance().log(XMLMatchdetailsParser.class, String.format("Match event ID %d occuring at minute %d",iMatchEventID, iMinute));
             				}
             			}
 
@@ -348,8 +349,8 @@ public class XMLMatchdetailsParser {
 
             	matchEvents.add(myHighlight);
 
-            	//break if end of match (due to some corrupt xmls)
-            	if (myHighlight.getMatchEventID() == MatchEvent.MatchEventID.MATCH_FINISHED) {break;}
+//            	break if end of match (due to some corrupt xmls)
+//            	if (myHighlight.getMatchEventID() == MatchEvent.MatchEventID.MATCH_FINISHED) {break;}
 
             }
 
