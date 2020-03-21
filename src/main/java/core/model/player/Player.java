@@ -597,13 +597,12 @@ public class Player {
     }
 
     public String getAgeWithDaysAsString(Date date) {
-        // format = yy (ddd)
-        long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-        return getAgeWithDaysAsString(date.getTime(), hrftime);
+        return getAgeWithDaysAsString(date.getTime());
     }
 
-    private String getAgeWithDaysAsString(long now, long hrftime)
+    private String getAgeWithDaysAsString(long now)
     {
+        long hrftime = getHrfDate().getTime();
         long diff = (now - hrftime) / (1000 * 60 * 60 * 24);
         int years = getAlter();
         int days = getAgeDays();
@@ -626,10 +625,10 @@ public class Player {
      * used for the age column in player analysis tab
      *
      * @return String of age & agedays & offset combined,
-     * format is "YY.DDD"
+     * format is "YY (DDD)"
      */
     public String getAdjustedAgeFromDate(Timestamp t) {
-        return getAgeWithDaysAsString(t.getTime(), getHrfDate().getTime());
+        return getAgeWithDaysAsString(t.getTime());
     }
 
     /**
