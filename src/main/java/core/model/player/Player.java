@@ -599,7 +599,11 @@ public class Player {
     public String getAgeWithDaysAsString(Date date) {
         // format = yy (ddd)
         long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-        long now = date.getTime();
+        return getAgeWithDaysAsString(date.getTime(), hrftime);
+    }
+
+    private String getAgeWithDaysAsString(long now, long hrftime)
+    {
         long diff = (now - hrftime) / (1000 * 60 * 60 * 24);
         int years = getAlter();
         int days = getAgeDays();
@@ -625,21 +629,7 @@ public class Player {
      * format is "YY.DDD"
      */
     public String getAdjustedAgeFromDate(Timestamp t) {
-        // format = yy.ddd
-        Calendar hrftime = Calendar.getInstance();
-        Calendar date = Calendar.getInstance();
-        hrftime.setTime(HOVerwaltung.instance().getModel().getBasics().getDatum());
-        date.setTime(t);
-        long diff = calendarDaysBetween(hrftime, date);
-        int years = getAlter();
-        int days = getAgeDays();
-        days -= diff;
-        while (days < 0) {
-            days = 112 + days;
-            years--;
-        }
-        String retVal = years + "." + days;
-        return retVal;
+        return getAgeWithDaysAsString(t.getTime(), getHrfDate().getTime());
     }
 
     /**
