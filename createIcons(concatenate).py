@@ -45,6 +45,7 @@ combinations = {"missed_penalty.png": (("miss.png", "penalty.png"), "v"),
                 "me_243.png": (("miss_R.png", "counter_attack.png"), "v"),
                 "me_285.png": (("miss.png", "indirect.png"), "v"),
                 "me_286.png": (("miss.png", "counter_attack.png", "indirect.png"), "v3"),
+                "me_289.png": (("speciality-2-negative.png", "speciality-2.png"), "h"),
                 "me_YellowThenRed.png": (("yellow-card(yellow).png", "red-card(red).png"), "v")   #512, 513
                 }
 

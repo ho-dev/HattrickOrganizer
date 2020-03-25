@@ -138,7 +138,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(REDCARD, "gui/bilder/match_events/red-card(red).png");
 
 		put(FORMATION, "gui/bilder/match_events/mo-select(green).png");
-		put(AOW, "gui/bilder/match_events/aow.png");
+
 
 		put(BRUISED, "gui/bilder/match_events/plaster.png");
 		put(INJURED, "gui/bilder/match_events/injury(red).png");
@@ -156,12 +156,21 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(NO_GOAL_LEFT, "gui/bilder/match_events/miss_L.png");
 		put(NO_GOAL_RIGHT, "gui/bilder/match_events/miss_R.png");
 
-		put(PRESSING, "gui/bilder/match_events/pressing(green).png");
+		put(TACTIC_PRESSING, "gui/bilder/match_events/tactic_pressing(green).png");
+		put(TACTIC_COUNTER_ATTACKING, "gui/bilder/match_events/tactic_counter_attack.png");
+		put(TACTIC_AIM, "gui/bilder/match_events/tactic_aim.png");
+		put(TACTIC_AOW, "gui/bilder/match_events/tactic_aow.png");
+		put(TACTIC_PLAY_CREATIVELY, "gui/bilder/match_events/tactic_play_creatively.png");
+		put(TACTIC_LONG_SHOTS, "gui/bilder/match_events/tactic_long_shots.png");
 
 		put(ME_GOAL_AND_QUICK, "gui/bilder/match_events/me_goal_and_quick.png");
 		put(ME_GOAL_AND_HEAD_SPEC, "gui/bilder/match_events/me_goal_and_head_spec.png");
 		put(ME_GOAL_AND_TECHNICAL, "gui/bilder/match_events/me_goal_and_technical.png");
 		put(ME_GOAL_AND_UNPREDICTABLE, "gui/bilder/match_events/me_goal_and_unpredictable.png");
+		put(PIECES, "gui/bilder/match_events/pieces.png");
+		put(CONFUSION, "gui/bilder/match_events/confusion.png");
+		put(REORGANIZE, "gui/bilder/match_events/reorganize.png");
+		put(CAPTAIN, "gui/bilder/match_events/captain.png");
 		put(ME_109, "gui/bilder/match_events/me_109.png");
 		put(ME_117, "gui/bilder/match_events/me_117.png");
 		put(ME_118, "gui/bilder/match_events/me_118.png");
@@ -197,6 +206,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(ME_285, "gui/bilder/match_events/me_285.png");
 		put(ME_186, "gui/bilder/match_events/me_186.png");
 		put(ME_286, "gui/bilder/match_events/me_286.png");
+		put(ME_289, "gui/bilder/match_events/me_289.png");
 		put(ME_YELLOW_THEN_RED, "gui/bilder/match_events/me_YellowThenRed.png");
 
 		put(STAR, "gui/bilder/star.gif");

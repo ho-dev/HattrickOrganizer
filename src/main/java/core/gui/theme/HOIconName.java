@@ -115,6 +115,7 @@ public interface HOIconName {
 	String ME_MISS_AND_WHISTLE = "me_miss_and_whistle";
 	String ME_285 = "me_285";
 	String ME_286 = "me_286";
+	String ME_289 = "me_289";
 	String ME_YELLOW_THEN_RED= "me_YellowThenRed";
 
 	String GOAL			= "goal";
@@ -124,15 +125,24 @@ public interface HOIconName {
 	String GOAL_RIGHT		= "tor_rechts";
 	String CONVERTED_PENALTY = "convertedPenalty";
 	String MISSED_PENALTY = "missedPenalty";
+	String PIECES = "pieces";
+	String CONFUSION = "confusion";
+	String REORGANIZE = "reorganize";
+	String CAPTAIN = "captain";
 	String NO_GOAL_MID = "keintor_mitte";
 	String NO_GOAL_LEFT = "keintor_links";
 	String NO_GOAL_RIGHT = "keintor_rechts";
 
-	String PRESSING = "pressing";
+
 	String FORMATION  = "formation";
 
-	String AOW = "aow";
-
+	// tactic type
+	String TACTIC_PRESSING = "tactic_pressing";
+	String TACTIC_COUNTER_ATTACKING = "tactic_counter_attacking";
+	String TACTIC_AIM = "tactic_aim";
+	String TACTIC_AOW = "tactic_aow";
+	String TACTIC_PLAY_CREATIVELY = "tactic_play_creatively";
+	String TACTIC_LONG_SHOTS = "tactic_long_shots";
 
 	String STAR = "star";
 	String STAR_GRAY = "star_gray";
