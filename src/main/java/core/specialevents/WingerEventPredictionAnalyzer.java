@@ -81,6 +81,7 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
     }
 
     private void getWingerEvent( MatchRoleID position, MatchRoleID scorer, double defence, SpecialEventType type, double bonus) {
+        if (position.getSpielerId() == 0 || scorer.getSpielerId() == 0) return;
         Player winger = analyse.getPlayer(position.getSpielerId());
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, type,
                 .2, 10, -10,

@@ -35,6 +35,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
         this.analyse = analyse;
 
         int id = position.getSpielerId();
+        if (id == 0) return;
         Player p = analyse.getPlayer(id);
         if (p.hasSpeciality(Speciality.POWERFUL)) {
 
@@ -62,7 +63,8 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
     // PDIMs reduces goal chances of opponent teams
     // => chance probability < 0 to display it in opponents column
     // => goal probability > 0  to reduce opponents goals
-    private void getSittingMidfielder( MatchRoleID position, MatchRoleID opponentScorer) {
+    private void getSittingMidfielder(MatchRoleID position, MatchRoleID opponentScorer) {
+        if (position.getSpielerId() == 0 || opponentScorer.getSpielerId() == 0) return;
         Player p = analyse.getPlayer(position.getSpielerId());
         Player op = analyse.getOpponentPlayer(opponentScorer.getSpielerId());
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, SpecialEventType.PDIM,
@@ -79,14 +81,14 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
         }
     }
 
-    private void getSittingMidfielder( MatchRoleID position) {
+    private void getSittingMidfielder(MatchRoleID position) {
         double overcrowdingFactor = getOvercrowding(position, IMatchRoleID.rightInnerMidfield, IMatchRoleID.leftInnerMidfield, IMatchRoleID.DEFENSIVE);
 
         // Any opponent player, except keeper, could be involved
         for (int i = IMatchRoleID.rightBack; i <= IMatchRoleID.leftForward; i++) {
             MatchRoleID opponentScorer = analyse.getOpponentPosition(i);
             if (opponentScorer.getSpielerId() != 0) {
-                getSittingMidfielder( position, opponentScorer);
+                getSittingMidfielder(position, opponentScorer);
             }
         }
     }
@@ -115,7 +117,9 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
         return overcrowdingFactor;
     }
 
-    private void getPowerfulNormalForward( MatchRoleID position) {
+    private void getPowerfulNormalForward(MatchRoleID position) {
+        if (position.getSpielerId() == 0) return;
+        ;
         double overcrowdingFactor = getOvercrowding(position, IMatchRoleID.rightForward, IMatchRoleID.leftForward, IMatchRoleID.NORMAL);
 
         double defence = 0;
