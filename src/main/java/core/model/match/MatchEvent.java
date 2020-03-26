@@ -234,8 +234,14 @@ public class MatchEvent {
         put(MatchEventID.PENALTY_CONTEST_NO_GOAL_BECAUSE_OF_NERVES, HOIconName.MISS); //#58
         put(MatchEventID.PENALTY_CONTEST_NO_GOAL_IN_SPITE_OF_NO_NERVES, HOIconName.MISS); //#59
 
-        put(MatchEventID.SUCCESSFUL_PRESSING, HOIconName.PRESSING); //#68
+        put(MatchEventID.ORGANIZATION_BREAKS, HOIconName.CONFUSION); //#61
+        put(MatchEventID.REORGANIZE, HOIconName.REORGANIZE); //#64
+        put(MatchEventID.SUCCESSFUL_PRESSING, HOIconName.TACTIC_PRESSING); //#68
+        put(MatchEventID.EXTENSION, null); //#70
         put(MatchEventID.ADDED_TIME, null); //#75
+
+        put(MatchEventID.NEW_CAPTAIN, HOIconName.CAPTAIN); //#80
+        put(MatchEventID.NEW_SET_PIECES_TAKER, HOIconName.PIECES); //#81
 
         put(MatchEventID.INJURED_BUT_KEEPS_PLAYING, HOIconName.BRUISED); //#90
         put(MatchEventID.MODERATELY_INJURED_LEAVES_FIELD, HOIconName.INJURED); //#91
@@ -386,6 +392,7 @@ public class MatchEvent {
         put(MatchEventID.NO_GOAL_INDIRECT_FREE_KICK, HOIconName.ME_285); //#285
         put(MatchEventID.COUNTER_ATTACK_NO_GOAL_INDIRECT_FREE_KICK, HOIconName.ME_286); //#286
         put(MatchEventID.NO_GOAL_LONG_SHOT, HOIconName.ME_MISS_LONGSHOT_PNG); //#287
+        put(MatchEventID.SE_QUICK_RUSHES_STOPPED_BY_QUICK_DEFENDER, HOIconName.ME_289); //#289
 
         put(MatchEventID.SE_TECHNICAL_SUFFERS_FROM_RAIN, HOIconName.WEATHER_RAIN_NEG); //#301
         put(MatchEventID.SE_POWERFUL_THRIVES_IN_RAIN, HOIconName.WEATHER_RAIN_POS); //#302
@@ -394,8 +401,12 @@ public class MatchEvent {
         put(MatchEventID.SE_QUICK_LOSES_IN_RAIN, HOIconName.WEATHER_RAIN_NEG); //#305
         put(MatchEventID.SE_QUICK_LOSES_IN_SUN, HOIconName.WEATHER_SUN_NEG); //#306
 
-        put(MatchEventID.TACTIC_TYPE_PRESSING, HOIconName.PRESSING); //#331
-        put(MatchEventID.TACTIC_TYPE_ATTACK_ON_WINGS, HOIconName.AOW); //#334
+        put(MatchEventID.TACTIC_TYPE_PRESSING, HOIconName.TACTIC_PRESSING); //#331
+        put(MatchEventID.TACTIC_TYPE_COUNTER_ATTACKING, HOIconName.TACTIC_COUNTER_ATTACKING); //#332
+        put(MatchEventID.TACTIC_TYPE_ATTACK_IN_MIDDLE, HOIconName.TACTIC_AIM); //#333
+        put(MatchEventID.TACTIC_TYPE_ATTACK_ON_WINGS, HOIconName.TACTIC_AOW); //#334
+        put(MatchEventID.TACTIC_TYPE_PLAY_CREATIVELY, HOIconName.TACTIC_PLAY_CREATIVELY); //#335
+        put(MatchEventID.TACTIC_TYPE_LONG_SHOTS, HOIconName.TACTIC_LONG_SHOTS); //#336
 
         put(MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_BEHIND, HOIconName.REPLACEMENT); //#350
         put(MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_AHEAD , HOIconName.REPLACEMENT); //#351
@@ -406,6 +417,7 @@ public class MatchEvent {
         put(MatchEventID.CHANGE_OF_TACTIC_MINUTE, HOIconName.ROTATE); //#362
 
         put(MatchEventID.RAINY_WEATHER_MANY_PLAYERS_AFFECTED, null); //#390
+        put(MatchEventID.SUNNY_WEATHER_MANY_PLAYERS_AFFECTED, null); //#391
 
         put(MatchEventID.INJURED_PLAYER_REPLACED, HOIconName.REPLACEMENT); //#424
 
@@ -473,9 +485,8 @@ public class MatchEvent {
     {
         int id = this.m_iMatchEventID;
         return ( (id == 23) || (id == 24) || (id == 25) || (id == 27) ||
-                 ( (id >= 30) && (id <= 33)) ||
-                 (id == 35) || (id == 40) || (id == 61) || (id == 64) ||
-                 (id == 68) || (id == 75) || ( (id >= 331) && (id <= 336)) ||
+                 ( (id >= 30) && (id <= 33)) ||  (id == 35)  ||
+                 (id == 68) || (id == 75) ||
                 (id == 451) || (id == 454) || (id == 456) || (id == 457) ||
                 (id == 458) || (id == 464) || (id == 465) || (id == 466) ||
                 (id == 468) || (id == 469) );
