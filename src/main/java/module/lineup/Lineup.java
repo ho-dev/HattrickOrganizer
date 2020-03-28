@@ -629,7 +629,7 @@ public class Lineup{
 	 * convert reduced float rating (1.00....20.99) to original integer HT
 	 * rating (1...80) one +0.5 is because of correct rounding to integer
 	 */
-	public static final int HTfloat2int(double x) {
+	public static int HTfloat2int(double x) {
 		return (int) (((x - 1.0f) * 4.0f) + 1.0f);
 	}
 
@@ -777,8 +777,8 @@ public class Lineup{
 		return  m_cWeatherForecast;
 	}
 
-	private final boolean isUpcomingMatchLoaded(){return m_iArenaId>=0; }
-	private final void getUpcomingMatch() {
+	private boolean isUpcomingMatchLoaded(){return m_iArenaId>=0; }
+	private void getUpcomingMatch() {
 		try {
 			final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 			final MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(teamId,
@@ -836,9 +836,7 @@ public class Lineup{
 	private List<MatchKurzInfo> orderMatches(MatchKurzInfo[] inMatches) {
 		final List<MatchKurzInfo> matches = new ArrayList<MatchKurzInfo>();
 		if (inMatches != null && inMatches.length > 0) {
-			for (MatchKurzInfo m : inMatches) {
-				matches.add(m);
-			}
+			matches.addAll(Arrays.asList(inMatches));
 
 			// Flipped the sign of the return value to get newest first -
 			// blaghaid
@@ -1068,7 +1066,7 @@ public class Lineup{
 		//if player changed in starting eleven or substitute it has to be remove from previous occupied place in starting eleven or substitute
 		if( !position.isBackupsMatchRoleID()) { //!IMatchRoleID.aBackupssMatchRoleID.contains(positionID)){
 			MatchRoleID oldPlayerRole = getPositionBySpielerId(playerID);
-			if(oldPlayerRole != null && oldPlayerRole.isBackupsMatchRoleID() == false){
+			if(oldPlayerRole != null && !oldPlayerRole.isBackupsMatchRoleID()){
 				oldPlayerRole.setSpielerId(0, this);
 				if ( oldPlayerRole.isSubstitutesMatchRoleID()){
 					removeObjectPlayerFromSubstitutions(playerID);
@@ -1154,7 +1152,7 @@ public class Lineup{
 	public final boolean isPlayerASub(int spielerId) {
 		//return m_clAssi.isPlayerASub(spielerId, m_vPositionen);
 		final MatchRoleID role = getPositionByPlayerId(spielerId, m_vBenchPositions);
-		return role != null && role.isBackupsMatchRoleID() == false;
+		return role != null && !role.isBackupsMatchRoleID();
 	}
 
 	/**
@@ -1564,7 +1562,7 @@ public class Lineup{
 		}
 	}
 
-	private final void swapContentAtPositions(int pos1, int pos2) {
+	private void swapContentAtPositions(int pos1, int pos2) {
 		int id1 = 0;
 		int id2 = 0;
 		byte tac1 = -1;
@@ -1770,8 +1768,7 @@ public class Lineup{
 			MatchRoleID position = (MatchRoleID) pos;
 			if (position.getSpielerId() != 0) numPlayers++;
 		    }
-		if (numPlayers == 11) return false;
-		return true;
+		return numPlayers != 11;
 
 	}
 

@@ -228,7 +228,7 @@ public class SubstitutionEditView extends JPanel {
 
 	void RatingRecalc()
 	{
-		if ( substitution == null || initDone == false) return;
+		if ( substitution == null || !initDone) return;
 		setSubstitution();
 		if ( substitution.getSubjectPlayerID() !=  -1 &&
 				(isNewBehaviour() || substitution.getObjectPlayerID() != -1)){

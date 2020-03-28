@@ -11,6 +11,7 @@ import core.util.HOLogger;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -990,9 +991,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
             for (int i = 0; i < zones.length; i++) {
                 final String[] pNames = zones[i].split(",");
 
-                for (int j = 0; j < pNames.length; j++) {
-                    lineup.add(pNames[j]);
-                }
+                lineup.addAll(Arrays.asList(pNames));
             }
 
             return lineup;

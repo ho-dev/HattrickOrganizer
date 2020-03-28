@@ -118,7 +118,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
             n++;
             opponentDefenceSkill += opp.getDEFskill();
         }
-        if (useQuick2ForPassCalculation == true && block25PercentIfQuick2 != 0) {
+        if (useQuick2ForPassCalculation && block25PercentIfQuick2 != 0) {
             opp = analyse.getOpponentPlayerByPosition(block25PercentIfQuick2);
             if (opp != null) {
                 n++;
