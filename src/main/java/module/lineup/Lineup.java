@@ -128,7 +128,7 @@ public class Lineup{
 	}
 
 	private Ratings oRatings;
-	
+
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
 
