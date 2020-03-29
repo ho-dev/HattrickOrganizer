@@ -4,13 +4,8 @@ import core.gui.print.ComponentPrintObject;
 import core.gui.print.PrintController;
 import core.util.HOLogger;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
-
-import javax.swing.JDialog;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Dialog zum Drucken der Ligatabelle

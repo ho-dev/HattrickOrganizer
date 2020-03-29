@@ -23,6 +23,7 @@ dependencies {
     compile 'org.hsqldb:hsqldb:2.4.1'
     compile 'junit:junit:4.12'
     compile 'com.google.code.gson:gson:2.8.5'
+    compile 'com.squareup.okhttp3:okhttp:4.3.1'
 }
 
 
@@ -310,7 +311,7 @@ task CreateDistribution (dependsOn: installDist) {
                 rename "Logo_stable.ico", "Logo.ico"
             }
         }
-        
+
         copy {
             from "${projectDir}\\src\\main\\resources\\prediction"
             into "${distribDir}\\prediction"
@@ -552,7 +553,7 @@ task resetDB(){
     } catch (java.lang.Exception e) {
     	println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false;
     }
-}	  
+}
 
 
 
