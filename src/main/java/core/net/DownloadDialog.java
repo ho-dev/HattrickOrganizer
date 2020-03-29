@@ -9,6 +9,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ho.HOTheme;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.player.Player;
 import core.net.login.ProxyDialog;
 import core.util.HOLogger;
@@ -130,11 +131,16 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 		// Download Filter
 
-		DefaultMutableTreeNode filterRoot = new DownloadFilter();
+		DownloadFilter filterRoot = new DownloadFilter();
 		CheckBoxTree downloadFilter = new CheckBoxTree();
-		downloadFilter.setSize(180, 180);
 		downloadFilter.setModel(new DefaultTreeModel(filterRoot));
-		normalDownloadPanel.add(downloadFilter);
+
+		downloadFilter.checkSubTree(filterRoot.getCurrentMatchPath(), core.model.UserParameter.instance().currentMatchlist);
+		downloadFilter.checkSubTree(filterRoot.getTeamDataPath(), core.model.UserParameter.instance().xmlDownload);
+		downloadFilter.checkSubTree(filterRoot.getSeriesDataPath(), UserParameter.instance().fixtures);
+
+		normalDownloadPanel.setLayout(new BorderLayout());
+		normalDownloadPanel.add(new JScrollPane(downloadFilter), BorderLayout.CENTER);
 
 		m_jchHRF.setToolTipText(hov.getLanguageString("download.teamdata.tt"));
 		m_jchOwnFixtures.setToolTipText(hov.getLanguageString("download.currentmatches.tt"));

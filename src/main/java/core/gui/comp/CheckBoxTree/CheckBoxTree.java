@@ -221,4 +221,10 @@ public class CheckBoxTree extends JTree {
             checkedPaths.remove(tp);
         }
     }
+
+    public void checkSubTree( DefaultMutableTreeNode node, boolean check){
+        TreePath tp = new TreePath(node.getPath());
+        checkSubTree(tp, check);
+        updatePredecessorsWithCheckMode(tp,check);
+    }
 }
