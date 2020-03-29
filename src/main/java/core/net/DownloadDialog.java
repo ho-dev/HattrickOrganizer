@@ -152,7 +152,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 //		normalDownloadPanel.add(m_jchOwnFixtures);
 //		normalDownloadPanel.add(m_jchFixtures);
 
-		normalDownloadPanel.setSize(200, 200);
+		normalDownloadPanel.setSize(240, 200);
 		normalDownloadPanel.setLocation(10, 10);
 		getContentPane().add(normalDownloadPanel);
 
@@ -189,8 +189,8 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 		specialDownload.add(oldFixturePanel);
 
-		specialDownload.setSize(300, 200);
-		specialDownload.setLocation(220, 10);
+		specialDownload.setSize(260, 200);
+		specialDownload.setLocation(260, 10);
 		getContentPane().add(specialDownload);
 
 		m_jbDownload.setToolTipText(hov.getLanguageString("tt_Download_Start"));
