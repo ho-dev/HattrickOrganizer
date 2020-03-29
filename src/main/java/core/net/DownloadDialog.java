@@ -4,6 +4,7 @@ package core.net;
 import core.datatype.CBItem;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
+import core.gui.comp.CheckBoxTree.CheckBoxTree;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ho.HOTheme;
 import core.model.HOModel;
@@ -36,6 +37,8 @@ import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerDateModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 
 /**
@@ -120,8 +123,18 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		setResizable(false);
 		setContentPane(new ImagePanel(null));
 
+
+
 		final JPanel normalDownloadPanel = new ImagePanel(new GridLayout(3, 1, 4, 4));
 		normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("ls.button.download")));
+
+		// Download Filter
+
+		DefaultMutableTreeNode filterRoot = new DownloadFilter();
+		CheckBoxTree downloadFilter = new CheckBoxTree();
+		downloadFilter.setSize(180, 180);
+		downloadFilter.setModel(new DefaultTreeModel(filterRoot));
+		normalDownloadPanel.add(downloadFilter);
 
 		m_jchHRF.setToolTipText(hov.getLanguageString("download.teamdata.tt"));
 		m_jchOwnFixtures.setToolTipText(hov.getLanguageString("download.currentmatches.tt"));
@@ -129,9 +142,9 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		m_jchHRF.setOpaque(false);
 		m_jchOwnFixtures.setOpaque(false);
 		m_jchFixtures.setOpaque(false);
-		normalDownloadPanel.add(m_jchHRF);
-		normalDownloadPanel.add(m_jchOwnFixtures);
-		normalDownloadPanel.add(m_jchFixtures);
+//		normalDownloadPanel.add(m_jchHRF);
+//		normalDownloadPanel.add(m_jchOwnFixtures);
+//		normalDownloadPanel.add(m_jchFixtures);
 
 		normalDownloadPanel.setSize(200, 200);
 		normalDownloadPanel.setLocation(10, 10);
