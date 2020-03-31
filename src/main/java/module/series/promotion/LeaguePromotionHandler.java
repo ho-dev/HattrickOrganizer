@@ -52,17 +52,6 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
         return Arrays.stream(activeWeeks).boxed().collect(Collectors.toList()).contains(week) && supportedLeagues.contains(seriesId);
     }
 
-    public void initLeagueStatus() {
-        new SwingWorker<Void, Void>() {
-
-            @Override
-            protected Void doInBackground() {
-                fetchLeagueStatus();
-                return null;
-            }
-        }.execute();
-    }
-
     public LeagueStatus getLeagueStatus() {
         if (leagueStatus == null) {
             leagueStatus = fetchLeagueStatus();
