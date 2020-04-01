@@ -12,3 +12,4 @@ Functionalities
     second_team
     feedback
     transfer_scout
+    promotion_demotion

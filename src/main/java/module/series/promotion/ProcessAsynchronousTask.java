@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Processes a queue of elements in a queue by calling a closure being executed
@@ -37,7 +38,7 @@ public class ProcessAsynchronousTask<T> {
 
     final Queue<T> queue = new LinkedBlockingQueue<>();
 
-    private int errorCount = 0;
+    private final AtomicInteger errorCount = new AtomicInteger();
 
     /**
      * Adds an element to the queue for processing.
@@ -74,14 +75,14 @@ public class ProcessAsynchronousTask<T> {
     }
 
     public int getErrorCount() {
-        return errorCount;
+        return errorCount.get();
     }
 
     public void incErrorCount() {
-        errorCount++;
+        errorCount.incrementAndGet();
     }
 
     public void resetErrorCount() {
-        errorCount = 0;
+        errorCount.set(0);
     }
 }
