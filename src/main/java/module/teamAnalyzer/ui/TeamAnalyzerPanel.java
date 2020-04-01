@@ -1,6 +1,5 @@
 package module.teamAnalyzer.ui;
 
-import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -59,9 +58,7 @@ public class TeamAnalyzerPanel extends LazyPanel {
 
 		setLayout(new BorderLayout());
 
-		JPanel buttonPanel = new ImagePanel(new BorderLayout());
 		simButton = new JButton(HOVerwaltung.instance().getLanguageString("Simulate"));
-		buttonPanel.add(simButton, BorderLayout.CENTER);
 
 		JSplitPane splitPaneSub = new JSplitPane(JSplitPane.VERTICAL_SPLIT, ratingPanel, specialEventsPanel);
 		splitPaneSub.setDividerLocation(UserParameter.instance().teamAnalyzer_RatingPanelSplitPane);
@@ -73,15 +70,12 @@ public class TeamAnalyzerPanel extends LazyPanel {
 		splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
 				new DividerListener(DividerListener.teamAnalyzer_FilterPanelSplitPane));
 
-		JSplitPane splitPaneLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT, splitPane, buttonPanel);
-		splitPaneLeft.setDividerSize(1);
-		splitPaneLeft.setResizeWeight(1);
-		splitPaneLeft.setDividerLocation(UserParameter.instance().teamAnalyzer_SimButtonSplitPane);
-		splitPaneLeft.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.teamAnalyzer_SimButtonSplitPane));
+		JPanel mainLeftPanel = new JPanel();
+		mainLeftPanel.setLayout(new BorderLayout());
+		mainLeftPanel.add(splitPane, BorderLayout.CENTER);
+		mainLeftPanel.add(simButton, BorderLayout.SOUTH);
 
-
-		JSplitPane splitPaneUpper = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPaneLeft,
+		JSplitPane splitPaneUpper = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainLeftPanel,
 				mainPanel);
 		splitPaneUpper.setDividerLocation(UserParameter.instance().teamAnalyzer_MainPanelSplitPane);
 		splitPaneUpper.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
