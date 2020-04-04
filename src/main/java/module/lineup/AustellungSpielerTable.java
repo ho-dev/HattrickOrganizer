@@ -147,11 +147,13 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 		setOpaque(false);
 
 		if (tableModel == null) {
-			tableModel = UserColumnController.instance().getLineupModel();// ();
+			tableModel = UserColumnController.instance().getLineupModel();
 
 			tableModel.setValues(HOVerwaltung.instance().getModel().getAllSpieler());
 			tableSorter = new TableSorter(tableModel,
-					tableModel.getPositionInArray(UserColumnFactory.ID), getSortSpalte());
+					tableModel.getPositionInArray(UserColumnFactory.ID),
+					getSortSpalte(),
+					tableModel.getPositionInArray(UserColumnFactory.NAME));
 
 			ToolTipHeader header = new ToolTipHeader(getColumnModel());
 			header.setToolTipStrings(tableModel.getTooltips());
