@@ -2,49 +2,72 @@ package core.net;
 
 import core.model.HOVerwaltung;
 
-import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DownloadFilter extends DefaultMutableTreeNode {
 
     private static HOVerwaltung hov = HOVerwaltung.instance();
-    private DefaultMutableTreeNode dCurrentmatches = new DefaultMutableTreeNode( hov.getLanguageString("download.currentmatches") );
-    private DefaultMutableTreeNode dSeriesdata= new DefaultMutableTreeNode( hov.getLanguageString("download.seriesdata") );
-    private DefaultMutableTreeNode dTeamdata = new DefaultMutableTreeNode( hov.getLanguageString("download.teamdata") );
-    private DefaultMutableTreeNode dOfficialmatches = new DefaultMutableTreeNode("Official Matches");
-    private DefaultMutableTreeNode dIntegratedmatches = new DefaultMutableTreeNode("Integrated Matches");
+    private DefaultMutableTreeNode currentMatches = new DefaultMutableTreeNode(hov.getLanguageString("download.currentmatches"));
+    private DefaultMutableTreeNode seriesData = new DefaultMutableTreeNode(hov.getLanguageString("download.seriesdata"));
+    private DefaultMutableTreeNode teamData = new DefaultMutableTreeNode(hov.getLanguageString("download.teamdata"));
+    private DefaultMutableTreeNode officialMatches = new DefaultMutableTreeNode("Official Matches");
+    private DefaultMutableTreeNode integratedMatches = new DefaultMutableTreeNode("Integrated Matches");
+    private DefaultMutableTreeNode singleMatches = new DefaultMutableTreeNode("Single Matches");
+    private DefaultMutableTreeNode ladderMatches = new DefaultMutableTreeNode("Ladder Matches");
+    private DefaultMutableTreeNode tournamentGroupMatches = new DefaultMutableTreeNode("Tournament Group Matches");
+    private DefaultMutableTreeNode tournamentPlayoffMatches = new DefaultMutableTreeNode("Tournament Playoff Matches");
+    private DefaultMutableTreeNode divisionBattleMatches = new DefaultMutableTreeNode("Division Battle Matches");
 
-    public DownloadFilter()
-    {
+    public DownloadFilter() {
         super("DownloadFilter");
 
-        this.add(dCurrentmatches);
-        this.add(dSeriesdata);
-        this.add(dTeamdata);
+        this.add(currentMatches);
+        this.add(seriesData);
+        this.add(teamData);
 
-        dCurrentmatches.add(dOfficialmatches);
-        dCurrentmatches.add(dIntegratedmatches);
+        currentMatches.add(officialMatches);
+        currentMatches.add(integratedMatches);
 
-        dIntegratedmatches.add(new DefaultMutableTreeNode("Single"));
-        dIntegratedmatches.add(new DefaultMutableTreeNode("Ladder"));
-        dIntegratedmatches.add(new DefaultMutableTreeNode("Tournament group"));
-        dIntegratedmatches.add(new DefaultMutableTreeNode("Tournament playoff"));
-        dIntegratedmatches.add(new DefaultMutableTreeNode("division battle"));
+        integratedMatches.add(singleMatches);
+        integratedMatches.add(ladderMatches);
+        integratedMatches.add(tournamentGroupMatches);
+        integratedMatches.add(tournamentPlayoffMatches);
+        integratedMatches.add(divisionBattleMatches);
     }
 
-    public DefaultMutableTreeNode getCurrentMatchPath() {
-        return this.dCurrentmatches;
+    public DefaultMutableTreeNode getCurrentMatches() {
+        return this.currentMatches;
     }
 
-    public DefaultMutableTreeNode getTeamDataPath() {
-        return this.dTeamdata;
+    public DefaultMutableTreeNode getTeamData() {
+        return this.teamData;
     }
 
-    public DefaultMutableTreeNode getSeriesDataPath() {
-        return this.dSeriesdata;
+    public DefaultMutableTreeNode getSeriesData() {
+        return this.seriesData;
+    }
+
+    public DefaultMutableTreeNode getOfficialMatches() {
+        return this.officialMatches;
+    }
+
+    public DefaultMutableTreeNode getSingleMatches() {
+        return this.singleMatches;
+    }
+
+    public DefaultMutableTreeNode getLadderMatches() {
+        return this.ladderMatches;
+    }
+
+    public DefaultMutableTreeNode getTournamentGroupMatches() {
+        return this.tournamentGroupMatches;
+    }
+
+    public DefaultMutableTreeNode getTournamentPlayoffMatches() {
+        return this.tournamentPlayoffMatches;
+    }
+
+    public DefaultMutableTreeNode getDivisionBattleMatches() {
+        return this.divisionBattleMatches;
     }
 }

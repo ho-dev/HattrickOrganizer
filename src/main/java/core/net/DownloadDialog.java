@@ -38,7 +38,6 @@ import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerDateModel;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 
@@ -57,8 +56,11 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	final private JButton m_jbDownload = new JButton(hov.getLanguageString("ls.button.download"));
 	private JButton m_jbProxy = new JButton(hov.getLanguageString("ConfigureProxy"));
 	private JCheckBox m_jchOldFixtures = new JCheckBox(hov.getLanguageString("download.oldseriesdata"), false);
-	private JCheckBox m_jchOwnFixtures = new JCheckBox(hov.getLanguageString("download.currentmatches"),
-			core.model.UserParameter.instance().currentMatchlist);
+//	private JCheckBox m_jchOwnFixtures = new JCheckBox(hov.getLanguageString("download.currentmatches"),
+//			core.model.UserParameter.instance().currentMatchlist);
+	private DownloadFilter filterRoot = new DownloadFilter();
+	private CheckBoxTree downloadFilter = new CheckBoxTree();
+
 	private JCheckBox m_jchHRF = new JCheckBox(hov.getLanguageString("download.teamdata"),
 			core.model.UserParameter.instance().xmlDownload);
 	private JCheckBox m_jchMatchArchive = new JCheckBox(hov.getLanguageString("download.oldmatches"), false);
@@ -131,23 +133,37 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 		// Download Filter
 
-		DownloadFilter filterRoot = new DownloadFilter();
-		CheckBoxTree downloadFilter = new CheckBoxTree();
-		downloadFilter.setModel(new DefaultTreeModel(filterRoot));
+		final DefaultTreeModel newModel = new DefaultTreeModel(filterRoot);
+		downloadFilter.setModel(newModel);
+		newModel.reload();
 
-		downloadFilter.checkSubTree(filterRoot.getCurrentMatchPath(), core.model.UserParameter.instance().currentMatchlist);
-		downloadFilter.checkSubTree(filterRoot.getTeamDataPath(), core.model.UserParameter.instance().xmlDownload);
-		downloadFilter.checkSubTree(filterRoot.getSeriesDataPath(), UserParameter.instance().fixtures);
+		// Current Matches
+		// - Official Matches
+		//    currentMatchlist selects now the node OfficialMatches.
+		//    It is the first subitem of current Matches in the Filter tree
+		downloadFilter.checkNode(filterRoot.getOfficialMatches(), UserParameter.instance().downloadCurrentMatchlist);
+		// - Integrated matches
+		downloadFilter.checkNode(filterRoot.getSingleMatches(), UserParameter.instance().downloadSingleMatches);
+		downloadFilter.checkNode(filterRoot.getLadderMatches(), UserParameter.instance().downloadLadderMatches);
+		downloadFilter.checkNode(filterRoot.getTournamentGroupMatches(), UserParameter.instance().downloadTournamentGroupMatches);
+		downloadFilter.checkNode(filterRoot.getTournamentPlayoffMatches(), UserParameter.instance().downloadTournamentPlayoffMatches);
+		downloadFilter.checkNode(filterRoot.getDivisionBattleMatches(), UserParameter.instance().downloadDivisionBattleMatches);
+
+		// Team Data
+		downloadFilter.checkNode(filterRoot.getTeamData(), UserParameter.instance().xmlDownload);
+
+		// Series Data (fixtures)
+		downloadFilter.checkNode(filterRoot.getSeriesData(), UserParameter.instance().fixtures);
 
 		normalDownloadPanel.setLayout(new BorderLayout());
 		normalDownloadPanel.add(new JScrollPane(downloadFilter), BorderLayout.CENTER);
 
-		m_jchHRF.setToolTipText(hov.getLanguageString("download.teamdata.tt"));
-		m_jchOwnFixtures.setToolTipText(hov.getLanguageString("download.currentmatches.tt"));
-		m_jchFixtures.setToolTipText(hov.getLanguageString("download.seriesdata.tt"));
-		m_jchHRF.setOpaque(false);
-		m_jchOwnFixtures.setOpaque(false);
-		m_jchFixtures.setOpaque(false);
+//		m_jchHRF.setToolTipText(hov.getLanguageString("download.teamdata.tt"));
+//		m_jchOwnFixtures.setToolTipText(hov.getLanguageString("download.currentmatches.tt"));
+//		m_jchFixtures.setToolTipText(hov.getLanguageString("download.seriesdata.tt"));
+//		m_jchHRF.setOpaque(false);
+//		m_jchOwnFixtures.setOpaque(false);
+//		m_jchFixtures.setOpaque(false);
 //		normalDownloadPanel.add(m_jchHRF);
 //		normalDownloadPanel.add(m_jchOwnFixtures);
 //		normalDownloadPanel.add(m_jchFixtures);
@@ -248,8 +264,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		int teamId = model.getBasics().getTeamId();
 		
 		// Always test that teamId exists, it won't on the very first download
-		
-		if (m_jchOwnFixtures.isSelected() && (teamId > 0)) {
+		if ( this.downloadFilter.isChecked(filterRoot.getCurrentMatches())  && (teamId > 0)) {
 			// Only get lineups for own fixtures
 			bOK = (OnlineWorker.getMatches(teamId, false, true, true) != null);
 			if (bOK) {

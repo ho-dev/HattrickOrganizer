@@ -42,7 +42,7 @@ public final class DownloadPanel extends ImagePanel
     public final void itemStateChanged(java.awt.event.ItemEvent itemEvent) {        
         core.model.UserParameter.temp().xmlDownload = m_jchXMLDownload.isSelected();
         core.model.UserParameter.temp().fixtures = m_jchFixtures.isSelected();
-        core.model.UserParameter.temp().currentMatchlist = m_jchCurrentMatchlist.isSelected();
+        core.model.UserParameter.temp().downloadCurrentMatchlist = m_jchCurrentMatchlist.isSelected();
         core.model.UserParameter.temp().showHRFSaveDialog = m_jchShowSaveDialog.isSelected();
     }
 
@@ -70,7 +70,7 @@ public final class DownloadPanel extends ImagePanel
 		m_jchCurrentMatchlist = new JCheckBox(core.model.HOVerwaltung.instance().getLanguageString("download.currentmatches"));
 		m_jchCurrentMatchlist.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString("download.currentmatches.tt"));
 		m_jchCurrentMatchlist.setOpaque(false);
-		m_jchCurrentMatchlist.setSelected(core.model.UserParameter.temp().currentMatchlist);
+		m_jchCurrentMatchlist.setSelected(core.model.UserParameter.temp().downloadCurrentMatchlist);
 		m_jchCurrentMatchlist.addItemListener(this);
 		placement.gridy = 1;
 		add(m_jchCurrentMatchlist, placement);

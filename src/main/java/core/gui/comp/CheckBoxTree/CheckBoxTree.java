@@ -118,10 +118,10 @@ public class CheckBoxTree extends JTree {
             if (cn == null) {
                 return this;
             }
+
             checkBox.setSelected(cn.isSelected);
             checkBox.setText(obj.toString());
             checkBox.setOpaque(cn.isSelected && cn.hasChildren && !cn.allChildrenSelected);
-
             return this;
         }
     }
@@ -222,9 +222,15 @@ public class CheckBoxTree extends JTree {
         }
     }
 
-    public void checkSubTree( DefaultMutableTreeNode node, boolean check){
+    public void checkNode(DefaultMutableTreeNode node, boolean check){
         TreePath tp = new TreePath(node.getPath());
         checkSubTree(tp, check);
         updatePredecessorsWithCheckMode(tp,check);
+    }
+
+    public boolean isChecked(DefaultMutableTreeNode node){
+        TreePath tp = new TreePath(node.getPath());
+        CheckedNode cn = nodesCheckingState.get(tp);
+        return cn.isSelected;
     }
 }
