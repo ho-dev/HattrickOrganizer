@@ -555,6 +555,9 @@ public class OnlineWorker {
 			// Store in DB if store is true
 			if (store) {
 				waitDialog.setValue(80);
+
+				matches = FilterUserSelection(matches);
+
 				DBManager.instance().storeMatchKurzInfos(
 						matches.toArray(new MatchKurzInfo[matches.size()]));
 
@@ -580,6 +583,65 @@ public class OnlineWorker {
 		}
 		waitDialog.setVisible(false);
 		return matches;
+	}
+
+	private static List<MatchKurzInfo> FilterUserSelection(List<MatchKurzInfo> matches) {
+
+		ArrayList<MatchKurzInfo> ret = new ArrayList<>();
+		for (MatchKurzInfo m: matches) {
+			switch (m.getMatchTyp()) {
+				case INTSPIEL:
+				case NATIONALCOMPNORMAL:
+				case NATIONALCOMPCUPRULES:
+				case NATIONALFRIENDLY:
+				case PREPARATION:
+				case EMERALDCUP:
+				case RUBYCUP:
+				case SAPPHIRECUP:
+				case CONSOLANTECUP:
+				case LEAGUE:
+				case QUALIFICATION:
+				case CUP:
+				case FRIENDLYNORMAL:
+				case FRIENDLYCUPRULES:
+				case INTFRIENDLYNORMAL:
+				case INTFRIENDLYCUPRULES:
+				case MASTERS:
+					if (UserParameter.instance().downloadCurrentMatchlist) {
+						ret.add(m);
+					}
+					break;
+				case TOURNAMENTGROUP:
+					if (UserParameter.instance().downloadTournamentGroupMatches) {
+						ret.add(m);
+					}
+					break;
+				case TOURNAMENTPLAYOFF:
+					if (UserParameter.instance().downloadTournamentPlayoffMatches) {
+						ret.add(m);
+					}
+					break;
+				case SINGLE:
+					if (UserParameter.instance().downloadSingleMatches) {
+						ret.add(m);
+					}
+					break;
+				case LADDER:
+					if (UserParameter.instance().downloadLadderMatches) {
+						ret.add(m);
+					}
+					break;
+				case DIVISIONBATTLE:
+					if (UserParameter.instance().downloadDivisionBattleMatches) {
+						ret.add(m);
+					}
+					break;
+				default:
+					HOLogger.instance().warning(OnlineWorker.class, "Unknown Matchtyp:" + m.getMatchTyp() + ". Is not downloaded!");
+					break;
+			}
+		}
+		return ret;
 	}
 
 	/**

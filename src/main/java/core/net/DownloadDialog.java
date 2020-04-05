@@ -262,7 +262,18 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		boolean bOK = true;
 		HOModel model = hov.getModel();
 		int teamId = model.getBasics().getTeamId();
-		
+
+		// Save Dialog's settings
+		// the chpp-api only allows to download all current matches, the dialog settings only filters the match
+		// types which of them should be stored in HO database. The settings are interpreted elsewhere.
+		// Dialogs node "Current Matches" is checked, if any of the following is checked
+		UserParameter.instance().downloadCurrentMatchlist = downloadFilter.isChecked(filterRoot.getOfficialMatches());
+		UserParameter.instance().downloadDivisionBattleMatches = downloadFilter.isChecked(filterRoot.getDivisionBattleMatches());
+		UserParameter.instance().downloadTournamentPlayoffMatches = downloadFilter.isChecked(filterRoot.getTournamentPlayoffMatches());
+		UserParameter.instance().downloadTournamentGroupMatches = downloadFilter.isChecked(filterRoot.getTournamentGroupMatches());
+		UserParameter.instance().downloadLadderMatches = downloadFilter.isChecked(filterRoot.getLadderMatches());
+		UserParameter.instance().downloadSingleMatches = downloadFilter.isChecked(filterRoot.getSingleMatches());
+
 		// Always test that teamId exists, it won't on the very first download
 		if ( this.downloadFilter.isChecked(filterRoot.getCurrentMatches())  && (teamId > 0)) {
 			// Only get lineups for own fixtures
@@ -285,28 +296,23 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		}
 
 		if (bOK && m_jchOldFixtures.isSelected() && (teamId > 0)) {
-			if (m_jlOldSeasons.getSelectedValues() != null) {
-				final Object[] saisons = m_jlOldSeasons.getSelectedValues();
-				for (int i = 0; i < saisons.length; i++) {
-					if (saisons[i] instanceof CBItem) {
-						// Liga
-						final int saisonid = ((CBItem)saisons[i]).getId();
+			for (Object s : m_jlOldSeasons.getSelectedValuesList()) {
+				if (s instanceof CBItem) {
+					final int seasonId = ((CBItem) s).getId();
+					// Abfragen!
+					final LigaAuswahlDialog auswahlDialog = new LigaAuswahlDialog(this, seasonId);
+					final int leagueId = auswahlDialog.getLigaID();
 
-						// Abfragen!
-						final LigaAuswahlDialog auswahlDialog = new LigaAuswahlDialog(this, saisonid);
-						final int ligaid = auswahlDialog.getLigaID();
-
-						if (ligaid > -2) {
-							bOK = OnlineWorker.getSpielplan(saisonid, ligaid);
-						}
-						if (!bOK) {
-							break;
-						}
+					if (leagueId > -2) {
+						bOK = OnlineWorker.getSpielplan(seasonId, leagueId);
+					}
+					if (!bOK) {
+						break;
 					}
 				}
 			}
 		}
-		
+
 		// Lastly, so that the matches for training are there
 		if (bOK && m_jchHRF.isSelected()) {
 			OnlineWorker.getHrf(this);
