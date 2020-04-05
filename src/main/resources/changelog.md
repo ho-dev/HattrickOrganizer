@@ -3,6 +3,9 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 # Changelist HO! 3.0
 
+## Squad
+  - Fix Sorting by Position #397
+
 ## Matches
   - Match Report: now similar to HT match report  #339
 

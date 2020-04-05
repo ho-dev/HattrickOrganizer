@@ -4,13 +4,15 @@ package core.gui.comp.table;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.model.PlayerOverviewModel;
+import core.gui.model.UserColumnFactory;
 import core.model.player.Player;
 import core.util.HOLogger;
 import module.lineup.LineupTableModel;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
@@ -18,44 +20,63 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+/**
+ * Decorator for the {@link TableModel} class that ensures that the table data is sorted.
+ *
+ * <p>The order of the sorted rows are maintained in the <code>indexes</code> instance variable,
+ * which is then used to retrieved the <em>i</em>th row by using the mapping between the index
+ * in <code>indexes</code> and the index of the row.  For example, if <code>indexes</code> is
+ * <code>{ 4, 2, 0, 3, 1 }</code>, the first row is at index 4 in the model, the second is at
+ * index 2, etc.</p>
+ *
+ * <p>TableSorter supports a “three-way” sorting approach, based on the number of clicks.
+ * If the <code>thirdColSort</code> is set (i.e. equal to or greater than 0), the behaviour is
+ * as follows when sorting column with index <code>thirdColSort</code>:</p>
+ * <ul>
+ *     <li>First click: reverts order,</li>
+ *     <li>Second click: back to original order,</li>
+ *     <li>Third click: sort by <code>thirdColSort</code> column.</li>
+ * </ul>
+ */
 public class TableSorter extends TableMap {
 
 	private static final long serialVersionUID = 1132334126127788944L;
-	private Vector<Integer> sortingColumns;
+	private List<Integer> sortingColumns;
     private int[] indexes;
     private boolean ascending;
 
     private int currentColumn;
-    private int idSpalte;
+
+    // index of the column representing the ID
+    private int idColumn;
     private int m_iInitSortColumnIndex = -1;
-    private int thirdColSort = -1;
-    private int iThirdSort = 0;
+
+    private int thirdColSort = -1; // index of the column using “special” sorting on third click.
+    private int iThirdSort = 0; // click count to detect if third click.
     boolean isThirdSort = false;
 
-    public TableSorter() {
-        sortingColumns = new Vector<Integer>();
-        ascending = false;
-        currentColumn = -1;
-        indexes = new int[0];
-    }
-
-    public TableSorter(TableModel tablemodel, int idSpalte, int initsortcolumnindex) {
-        this.idSpalte = idSpalte;
+    public TableSorter(TableModel tablemodel, int idColumn, int initsortcolumnindex) {
+        this.idColumn = idColumn;
         this.m_iInitSortColumnIndex = initsortcolumnindex;
-        sortingColumns = new Vector<Integer>();
-        ascending = false;
+        sortingColumns = new ArrayList<>();
+        ascending = isAscending(tablemodel, initsortcolumnindex);
         currentColumn = -1;
         setModel(tablemodel);
     }
 
-    public TableSorter(TableModel tablemodel, int idSpalte, int initsortcolumnindex, int thirdColSort) {
-        this.idSpalte = idSpalte;
+    public TableSorter(TableModel tablemodel, int idColumn, int initsortcolumnindex, int thirdColSort) {
+        this.idColumn = idColumn;
         this.m_iInitSortColumnIndex = initsortcolumnindex;
-        sortingColumns = new Vector<Integer>();
+        sortingColumns = new ArrayList<>();
         this.thirdColSort = thirdColSort;
-        ascending = true;
+        ascending = isAscending(tablemodel, initsortcolumnindex);
         currentColumn = -1;
         setModel(tablemodel);
+    }
+
+    private boolean isAscending(TableModel tablemodel, int initsortcolumnindex) {
+        return tablemodel instanceof HOTableModel &&
+                ((HOTableModel)tablemodel).getPositionInArray(UserColumnFactory.BEST_POSITION) != initsortcolumnindex;
     }
 
     @Override
@@ -64,13 +85,18 @@ public class TableSorter extends TableMap {
         reallocateIndexes();
     }
 
+    /**
+     * Maps a match id to the row that contains it.
+     *
+     * @param matchid ID of the match to find.
+     * @return int – Row in the table containing the match's details.
+     *               Returns -1 if the match <code>matchid</code> cannot be found.
+     */
     public final int getRow4Match(int matchid) {
         if (matchid > 0) {
             for (int i = 0; i < getRowCount(); i++) {
                 try {
-                    if (matchid == (int) ((ColorLabelEntry) getValueAt(i,idSpalte))
-                                   .getNumber()) {
-                        //Die Zeile zurückgeben, muss vorher gemapped werden
+                    if (matchid == (int) ((ColorLabelEntry) getValueAt(i, idColumn)).getNumber()) {
                         return indexes[i];
                     }
                 } catch (Exception e) {
@@ -82,16 +108,19 @@ public class TableSorter extends TableMap {
         return -1;
     }
 
+    /**
+     * Maps a player id to the row that contains his entry.
+     *
+     * @param spielerid ID of the player to find.
+     * @return int – Row in the table containing the player's details.
+     *               Returns -1 if the player with id <code>spielerid</code> cannot be found.
+     */
     public final int getRow4Spieler(int spielerid) {
-        //Kann < 0 für Tempspieler sein if ( spielerid > 0 )
+        // Can be negative if the player is a temporary player (for ex. in transfer scout).
         if (spielerid != 0) {
             for (int i = 0; i < getRowCount(); i++) {
                 try {
-                    if (spielerid == Integer.parseInt(((core.gui.comp.entry.ColorLabelEntry) getValueAt(i,
-                                                                                                                       idSpalte))
-                                                      .getText())) {
-                        //Die Zeile zurückgeben, muss vorher gemapped werden
-                        // indexes[i];
+                    if (spielerid == Integer.parseInt(((ColorLabelEntry) getValueAt(i, idColumn)).getText())) {
                         return i;
                     }
                 } catch (Exception e) {
@@ -107,7 +136,7 @@ public class TableSorter extends TableMap {
         if (row > -1) {
             try {
                 return ((module.transfer.scout.TransferTableModel) getModel())
-                       .getScoutEintrag(Integer.parseInt(((ColorLabelEntry) getValueAt(row, idSpalte)).getText()));
+                       .getScoutEintrag(Integer.parseInt(((ColorLabelEntry) getValueAt(row, idColumn)).getText()));
             } catch (Exception e) {
                 HOLogger.instance().log(getClass(),"TableSorter.getScoutEintrag: " + e);
                 return null;
@@ -121,15 +150,14 @@ public class TableSorter extends TableMap {
     public final Player getSpieler(int row) {
         if (row > -1) {
             try {
-            	final int id = Integer.parseInt(((ColorLabelEntry) getValueAt(row,idSpalte)).getText());
+            	final int id = Integer.parseInt(((ColorLabelEntry) getValueAt(row, idColumn)).getText());
 
-                
                 if (getModel() instanceof PlayerOverviewModel) {
                     return ((PlayerOverviewModel) getModel()).getSpieler(id);
                 } else if (getModel() instanceof LineupTableModel) {
                     return ((LineupTableModel) getModel()).getSpieler(id);
                 } else {
-                    throw new Exception("Tablemodel umbekannt!");
+                    throw new Exception("Tablemodel unbekannt!");
                 }
             } catch (Exception e) {
                 HOLogger.instance().log(getClass(),e);
@@ -147,19 +175,15 @@ public class TableSorter extends TableMap {
 
     @Override
 	public final Object getValueAt(int i, int j) {
-
         if ((i < 0) || (j < 0)) {
             return null;
-        } 
-        
+        }
+
         return getModel().getValueAt(indexes[i], j);
-       
     }
 
     public final void addMouseListenerToHeaderInTable(JTable jtable) {
-        final TableSorter sorter = this;
         final JTable tableView = jtable;
-
         final JTableHeader jtableheader = tableView.getTableHeader();
 
         //Listener schon vorhanden
@@ -178,7 +202,12 @@ public class TableSorter extends TableMap {
 
                 if ((mouseevent.getClickCount() == 1) && (j != -1)) {
                     boolean flag = ascending;
-                    
+
+                    // If column sorted is different to the current one, sort by natural order.
+                    if (currentColumn != j) {
+                        flag = isAscending(getModel(), j);
+                    }
+
                     if (thirdColSort == i) {
                         isThirdSort = false;
                         iThirdSort++;
@@ -193,7 +222,7 @@ public class TableSorter extends TableMap {
                         flag = !flag;
                     }
 
-                    sorter.sortByColumn(j, flag);
+                    TableSorter.this.sortByColumn(j, flag);
                 }
             }
         };
@@ -204,8 +233,8 @@ public class TableSorter extends TableMap {
     public final int compare(int i, int j) {
 
         for (int k = 0; k < sortingColumns.size(); k++) {
-            final Integer integer = sortingColumns.elementAt(k);
-            final int l = compareRowsByColumn(i, j, integer.intValue());
+            final Integer integer = sortingColumns.get(k);
+            final int l = compareRowsByColumn(i, j, integer);
 
             if (l != 0) {
                 return ascending ? l : (-l);
@@ -215,7 +244,7 @@ public class TableSorter extends TableMap {
         return 0;
     }
 
-    private final int compareRowsByColumn(int i, int j, int k) {
+    private int compareRowsByColumn(int i, int j, int k) {
         final Object obj = getModel().getValueAt(i, k);
         final Object obj1 = getModel().getValueAt(j, k);
 
@@ -235,9 +264,11 @@ public class TableSorter extends TableMap {
             && obj1 instanceof IHOTableEntry) {
             final IHOTableEntry colorLabelentry1 = (IHOTableEntry) getModel().getValueAt(i, k);
             final IHOTableEntry colorLabelentry2 = (IHOTableEntry) getModel().getValueAt(j, k);
-            return isThirdSort?colorLabelentry1.compareToThird(colorLabelentry2):colorLabelentry1.compareTo(colorLabelentry2);
-        } 
-        
+            return isThirdSort ?
+                    colorLabelentry1.compareToThird(colorLabelentry2) :
+                    colorLabelentry1.compareTo(colorLabelentry2);
+        }
+
         final Object obj2 = getModel().getValueAt(i, k);
         final String s2 = obj2.toString();
         final Object obj3 = getModel().getValueAt(j, k);
@@ -249,18 +280,17 @@ public class TableSorter extends TableMap {
         }
 
         return (i2 <= 0) ? 0 : 1;
-        
+
     }
 
     public final void initsort() {
-        //InitSortColumnIndex
-        if (m_iInitSortColumnIndex > 0) {
+        // Sort, including when m_iInitSortColumnIndex is first column
+        if (m_iInitSortColumnIndex >= 0) {
             final int j = m_iInitSortColumnIndex;
             final boolean flag = ascending;
             sortByColumn(j, flag);
         }
     }
-
 
     public final void reallocateIndexes() {
         final int i = getModel().getRowCount();
@@ -271,6 +301,10 @@ public class TableSorter extends TableMap {
         }
     }
 
+    /**
+     * Sorts the data from the model based on the values stored in <code>sortingColumns</code>
+     * (using {@link #compare(int, int)}), and stores the resulting order of rows in <code>indexes</code>.
+     */
     public final void shuttlesort(int[] ai, int[] ai1, int i, int j) {
         if ((j - i) < 2) {
             return;
@@ -300,11 +334,11 @@ public class TableSorter extends TableMap {
         }
     }
 
-    private final void sortByColumn(int i, boolean flag) {
+    private void sortByColumn(int i, boolean flag) {
         ascending = flag;
         currentColumn = i;
-        sortingColumns.removeAllElements();
-        sortingColumns.addElement(Integer.valueOf(i));
+        sortingColumns.clear();
+        sortingColumns.add(i);
         shuttlesort(indexes.clone(), indexes, 0, indexes.length);
         super.tableChanged(new TableModelEvent(this));
     }
