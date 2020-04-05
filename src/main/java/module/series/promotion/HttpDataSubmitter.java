@@ -61,10 +61,11 @@ public class HttpDataSubmitter implements DataSubmitter {
                     supportedLeagues.add(arr.getAsJsonArray().get(0).getAsInt());
                 }
 
+                response.close();
                 return supportedLeagues;
             }
 
-
+            response.close();
         } catch (Exception e) {
             HOLogger.instance().error(
                     HttpDataSubmitter.class,
@@ -88,9 +89,13 @@ public class HttpDataSubmitter implements DataSubmitter {
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
-                callback.apply(response.body().string());
-            }
+                String body = response.body().string();
 
+                response.close();
+                callback.apply(body);
+            } else {
+                response.close();
+            }
         } catch (Exception e) {
             HOLogger.instance().error(
                     HttpDataSubmitter.class,
@@ -179,10 +184,13 @@ public class HttpDataSubmitter implements DataSubmitter {
 
                     HOLogger.instance().info(HttpDataSubmitter.class, "Block locked: " + blockInfo.blockId);
 
+                    response.close();
                     return blockInfo;
                 } else {
                     BlockInfo blockInfo = new BlockInfo();
                     blockInfo.status = obj.get("HTTP Status Code").getAsInt();
+
+                    response.close();
                     return blockInfo;
                 }
             }
@@ -215,7 +223,10 @@ public class HttpDataSubmitter implements DataSubmitter {
                 String promotionStatus = response.body().string();
                 HOLogger.instance().info(HttpDataSubmitter.class, "Status: " + promotionStatus);
 
+                response.close();
                 return promotionStatus;
+            } else {
+                response.close();
             }
 
         } catch (Exception e) {

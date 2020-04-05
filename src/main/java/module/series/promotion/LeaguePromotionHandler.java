@@ -114,6 +114,32 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
         worker.execute();
     }
 
+    public void pollPromotionStatus() {
+        final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                HOLogger.instance().info(LeaguePromotionHandler.class, "Polling until status available");
+
+                boolean polling;
+                do {
+                    LeagueStatus status = fetchLeagueStatus();
+                    polling = (status != LeagueStatus.AVAILABLE);
+
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        HOLogger.instance().warning(LeaguePromotionHandler.class,
+                                "Interrupted Thread: " + e.getMessage());
+                    }
+                } while (polling);
+                fireChangeEvent(new ChangeEvent(LeaguePromotionHandler.this));
+                return null;
+            }
+        };
+
+        worker.execute();
+    }
+
     public BlockInfo lockBlock(int leagueId) {
         DataSubmitter submitter = HttpDataSubmitter.instance();
         return submitter.lockBlock(leagueId);
