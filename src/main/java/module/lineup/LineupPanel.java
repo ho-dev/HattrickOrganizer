@@ -14,12 +14,10 @@ import module.playerOverview.SpielerUebersichtNamenTable;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -31,7 +29,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /**
- * Panel zum Darstellen aller SpielerPositionen
+ * Panel to display players' positions.
  */
 public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
@@ -39,14 +37,13 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	private IAufstellungsAssistentPanel aufstellungsAssistentPanel;
 	private AufstellungsDetailPanel aufstellungsDetailPanel;
 	private LineupPositionsPanel aufstellungsPositionsPanel;
-	private AufstellungsVergleichHistoryPanel aufstellungsVergleichHistoryPanel;
 	private AustellungSpielerTable aufstellungSpielerTable;
 	private JSplitPane horizontalLeftSplitPane;
 	private JSplitPane horizontalRightSplitPane;
 	private JSplitPane verticalSplitPane;
 	private JSplitPane verticalSplitPaneLow;
 	private SpielerUebersichtNamenTable aufstellungSpielerTableName;
-	private List<Updateable> updateables = new ArrayList<Updateable>();
+	private List<Updateable> updateables = new ArrayList<>();
 
 	/**
 	 * Creates a new AufstellungsPanel object.
@@ -132,7 +129,6 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	 * Setzt die Player und Taktiken der einzelnen PositionsPanels neu
 	 */
 	public final void update() {
-		HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 		aufstellungsPositionsPanel.refresh();
 		aufstellungsDetailPanel.refresh();
 		aufstellungSpielerTable.refresh();
@@ -161,17 +157,16 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
 		verticalSplitPaneLow = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
 
-		aufstellungsVergleichHistoryPanel = new AufstellungsVergleichHistoryPanel();
+		final AufstellungsVergleichHistoryPanel aufstellungsVergleichHistoryPanel = new AufstellungsVergleichHistoryPanel();
 
 		final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 		final Weather weather = aufstellung.getWeather();
 
-//		aufstellungsAssistentPanel = new AufstellungsAssistentPanelNew();
 		aufstellungsAssistentPanel = new AufstellungsAssistentPanel(weather);
 
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("", ThemeManager.getScaledIcon(HOIconName.BALL, 13, 13), new JScrollPane(
-				(Component)aufstellungsAssistentPanel));
+		tabbedPane.addTab("", ThemeManager.getScaledIcon(HOIconName.BALL, 13, 13),
+				new JScrollPane((Component)aufstellungsAssistentPanel));
 		tabbedPane.addTab("", ThemeManager.getIcon(HOIconName.DISK),
 				aufstellungsVergleichHistoryPanel);
 
@@ -192,20 +187,17 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		UserParameter param = UserParameter.instance();
 		verticalSplitPaneLow.setDividerLocation(param.aufstellungsPanel_verticalSplitPaneLow);
 		horizontalLeftSplitPane.setDividerLocation(param.aufstellungsPanel_horizontalLeftSplitPane);
-		horizontalRightSplitPane
-				.setDividerLocation(param.aufstellungsPanel_horizontalRightSplitPane);
+		horizontalRightSplitPane.setDividerLocation(param.aufstellungsPanel_horizontalRightSplitPane);
 		verticalSplitPane.setDividerLocation(param.aufstellungsPanel_verticalSplitPane);
 
 		add(verticalSplitPane, BorderLayout.CENTER);
 	}
 
 	private Component initSpielerTabelle() {
-		final JPanel panel = new JPanel(new BorderLayout());
-
 		aufstellungSpielerTable = new AustellungSpielerTable();
+		aufstellungSpielerTableName = new SpielerUebersichtNamenTable(aufstellungSpielerTable.getSorter());
 
-		aufstellungSpielerTableName = new SpielerUebersichtNamenTable(
-				aufstellungSpielerTable.getSorter());
+		final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
 		JScrollPane scrollpane = new JScrollPane(aufstellungSpielerTableName);
 		scrollpane.setPreferredSize(new Dimension(170, 100));
@@ -217,30 +209,27 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
 		final JScrollBar bar = scrollpane.getVerticalScrollBar();
 		final JScrollBar bar2 = scrollpane2.getVerticalScrollBar();
-		// setVisibile(false) does not have an effect, so we set the size to
+		// setVisible(false) does not have an effect, so we set the size to
 		// false
 		// we can't disable the scrollbar with VERTICAL_SCROLLBAR_NEVER
 		// because this will disable mouse wheel scrolling
 		bar.setPreferredSize(new Dimension(0, 0));
 
 		// Synchronize vertical scrolling
-		AdjustmentListener adjustmentListener = new AdjustmentListener() {
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent e) {
-				if (e.getSource() == bar2) {
-					bar.setValue(e.getValue());
-				} else {
-					bar2.setValue(e.getValue());
-				}
+		AdjustmentListener adjustmentListener = e -> {
+			if (e.getSource() == bar2) {
+				bar.setValue(e.getValue());
+			} else {
+				bar2.setValue(e.getValue());
 			}
 		};
 		bar.addAdjustmentListener(adjustmentListener);
 		bar2.addAdjustmentListener(adjustmentListener);
 
-		panel.add(scrollpane, BorderLayout.WEST);
-		panel.add(scrollpane2, BorderLayout.CENTER);
+		splitPane.add(scrollpane);
+		splitPane.add(scrollpane2);
 
-		return panel;
+		return splitPane;
 	}
 
 	private void addListeners() {

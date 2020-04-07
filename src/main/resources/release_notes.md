@@ -8,6 +8,9 @@ Changelist HO! 3.0
 ## Squad
   - Fix Sorting by Position #397
 
+## Lineup
+  - Make Name column resizable in players' table #382
+
 ## League Details
  - Promotion / Demotion status displayed on week 14 and 15 of season. #247
 
