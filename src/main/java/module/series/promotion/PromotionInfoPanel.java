@@ -51,6 +51,9 @@ public class PromotionInfoPanel extends JPanel {
                             if (promotionHandler.getLeagueStatus() == LeagueStatus.AVAILABLE) {
                                 final LeaguePromotionInfo promotionStatus = promotionHandler.getPromotionStatus(seriesId, teamId);
                                 createPromotionInfoLabel(promotionStatus);
+                            } else if (promotionHandler.getLeagueStatus() == LeagueStatus.BEING_PROCESSED) {
+                                createBeingProcessedLabel();
+                                promotionHandler.pollPromotionStatus();
                             }
                         }
                     });
@@ -97,6 +100,20 @@ public class PromotionInfoPanel extends JPanel {
         JLabel infoLeagueData = new JLabel(createPromotionStatusDisplayString(promotionStatus));
         infoLeagueData.setFont(defaultFont);
         this.add(infoLeagueData);
+
+        this.revalidate();
+        this.repaint();
+    }
+
+    private void createBeingProcessedLabel() {
+        this.removeAll();
+
+        final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
+        JLabel processingLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
+                "pd_status.download.pending",
+                basics.getLiga()));
+        processingLabel.setFont(defaultFont);
+        this.add(processingLabel);
 
         this.revalidate();
         this.repaint();
