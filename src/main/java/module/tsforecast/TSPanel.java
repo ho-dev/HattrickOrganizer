@@ -27,6 +27,7 @@ package module.tsforecast;
 import core.constants.TeamConfidence;
 import core.constants.TeamSpirit;
 import core.constants.player.PlayerAbility;
+import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
@@ -97,7 +98,7 @@ class TSPanel extends JPanel {
 
   TSPanel() {
     setDoubleBuffered( true);
-    setBackground( Color.white);
+    setBackground(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
   }
 
   void addCurve( Curve curve, boolean first) {
@@ -179,15 +180,9 @@ protected void paintComponent( Graphics g) {
         x = (double)HRFDate.get( Calendar.DAY_OF_YEAR) + (double)HRFDate.get( Calendar.HOUR_OF_DAY)/24D
             - (double)deltaX + (double)deltaYear + (double)dayOffset;
         iSpirit = (int)((curve.getSpirit() * (double)m_iMaxY) / m_dValues);
-/*if( curve.getMatchDay() == 1)
-ErrorLog.writeln("Day1 " + x + " = " + HRFDate.get( Calendar.DAY_OF_YEAR)  + " + " + (double)HRFDate.get( Calendar.HOUR_OF_DAY)/24D
-                          + " - " + deltaX  + " + " + deltaYear  + " + " + dayOffset);
-*/
+
         if( curve.getPointType() == Curve.RESET_PT) {
           graphics2d.drawString( "R", (int)(x * m_dFactor + (double)m_iCoordX0), m_iMaxY + DYFrame - 2 - iSpirit);
-/*ErrorLog.writeln("Reset " + x + " = " + HRFDate.get( Calendar.DAY_OF_YEAR)  + " + " + (double)HRFDate.get( Calendar.HOUR_OF_DAY)/24D
-                          + " - " + deltaX  + " + " + deltaYear  + " + " + dayOffset);
-*/
         }
         else if( curve.getAttitude() != IMatchDetails.EINSTELLUNG_NORMAL
               && curve.getAttitude() != IMatchDetails.EINSTELLUNG_UNBEKANNT) {
@@ -208,7 +203,7 @@ ErrorLog.writeln("Day1 " + x + " = " + HRFDate.get( Calendar.DAY_OF_YEAR)  + " +
 
 
   private void drawIndicators( Graphics2D graphics2d, Curve curve) {
-    graphics2d.setColor(Color.black);
+    graphics2d.setColor(Color.BLACK);
     if(curve.first()) {
       GregorianCalendar gregoriancalendar = new GregorianCalendar();
       GregorianCalendar gregoriancalendar1 = new GregorianCalendar();
@@ -280,13 +275,13 @@ ErrorLog.writeln("Day1 " + x + " = " + HRFDate.get( Calendar.DAY_OF_YEAR)  + " +
     String str = null;
     graphics2d.setFont( font);
     for( int i = 0; i < m_dValues; i++) { // values 0-10.2
-      graphics2d.setColor( Color.lightGray);
+      graphics2d.setColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
       graphics2d.drawLine( m_iCoordX0, (int)(m_iMaxY+DYFrame - i*m_iMaxY/m_dValues),
                            m_iMaxX,    (int)(m_iMaxY+DYFrame - i*m_iMaxY/m_dValues));
 
       // draw scale for teamspirit
       if( m_bShowTeamspiritScale) {
-        graphics2d.setColor( Color.black);
+        graphics2d.setColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
         str = TeamSpirit.toString( i);
         rectangle2d = new TextLayout( str, font, fontrendercontext).getBounds();
         if( i < m_dValues-1)
@@ -300,18 +295,18 @@ ErrorLog.writeln("Day1 " + x + " = " + HRFDate.get( Calendar.DAY_OF_YEAR)  + " +
 
       // draw scale for confidence
 	if( m_bShowConfidenceScale && i < m_dValues-1) {
-        graphics2d.setColor( Color.blue);
+        graphics2d.setColor(ThemeManager.getColor(HOColorName.TSFORECAST_ALT_COLOR));
         str = TeamConfidence.toString( i);
         rectangle2d = new TextLayout( str, font, fontrendercontext).getBounds();
         graphics2d.drawString( str, m_iCoordX0 - (int)rectangle2d.getWidth() - 5,
                                (int)(m_iMaxY+DYFrame - (i+1)*m_iMaxY/m_dValues + 3));
 	}
-      graphics2d.setColor( Color.darkGray);
+      graphics2d.setColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
       graphics2d.drawLine( m_iCoordX0-3, (int)(m_iMaxY+DYFrame - i*m_iMaxY/m_dValues),
                            m_iCoordX0+3, (int)(m_iMaxY+DYFrame - i*m_iMaxY/m_dValues));
     }
 
-    graphics2d.setColor( Color.darkGray);
+    graphics2d.setColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
     // x-axis
     graphics2d.drawLine(m_iCoordX0-3, m_iMaxY+DYFrame, m_iMaxX, m_iMaxY+DYFrame);
     graphics2d.drawLine(m_iCoordX0-3, DYFrame, m_iMaxX, DYFrame);
@@ -355,7 +350,7 @@ ErrorLog.writeln("Day1 " + x + " = " + HRFDate.get( Calendar.DAY_OF_YEAR)  + " +
     // current season
     graphics2d.setColor( lightBlue);
     graphics2d.fillRect( iXX2, DYFrame, iXX3-iXX2, m_iMaxY);
-    graphics2d.setColor(Color.blue);
+    graphics2d.setColor(ThemeManager.getColor(HOColorName.TSFORECAST_ALT_COLOR));
     graphics2d.drawString( HOVerwaltung.instance().getLanguageString( "Season") + " " + iSeason,
                            iXX2 + (iXX3-iXX2)/2, iYText);
 //ErrorLog.writeln("Saisonstart(F): "+ (double) iCurrentSeasonStart*m_dFactor);
@@ -408,7 +403,7 @@ ErrorLog.writeln("Day1 " + x + " = " + HRFDate.get( Calendar.DAY_OF_YEAR)  + " +
       graphics2d.setColor(Color.lightGray);
       graphics2d.drawRect( (int)((double)(saturday)*m_dFactor+(double)m_iCoordX0), DYFrame,
                            (int)(2D*m_dFactor-1.0D), m_iMaxY);
-      graphics2d.setColor(Color.black);
+      graphics2d.setColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
       graphics2d.drawString( iSeasonWeek+"",
                              (int)((double)(saturday+3)*m_dFactor+(double)m_iCoordX0),
                              m_iMaxY+2*DYFrame+DYAxis- (UserParameter.instance().schriftGroesse));

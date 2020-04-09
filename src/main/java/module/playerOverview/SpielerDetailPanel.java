@@ -379,12 +379,12 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
         if (lineup.isPlayerInLineup(m_clPlayer.getSpielerID())
                 && (lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()) != null)) {
-            m_jpPositioned.setIcon(ImageUtilities.getImage4Position(lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()),
+            m_jpPositioned.setIcon(ImageUtilities.getJerseyIcon(lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()),
                     m_clPlayer.getTrikotnummer()));
             m_jpPositioned.setText(MatchRoleID.getNameForPosition(lineup.getPositionBySpielerId(m_clPlayer.getSpielerID())
                     .getPosition()));
         } else {
-            m_jpPositioned.setIcon(ImageUtilities.getImage4Position(null, m_clPlayer.getTrikotnummer()));
+            m_jpPositioned.setIcon(ImageUtilities.getJerseyIcon(null, m_clPlayer.getTrikotnummer()));
             m_jpPositioned.setText("");
         }
         //Rating

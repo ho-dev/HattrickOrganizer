@@ -29,20 +29,6 @@ final class MatchesTable extends JTable {
 		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	}
 
-	public int[][] getSpaltenreihenfolge() {
-		final int[][] reihenfolge = new int[m_clTableModel.getColumnCount()][2];
-
-		for (int i = 0; i < m_clTableModel.getColumnCount(); i++) {
-			// Modelindex
-			reihenfolge[i][0] = i;
-
-			// ViewIndex
-			reihenfolge[i][1] = convertColumnIndexToView(i);
-		}
-
-		return reihenfolge;
-	}
-
 	public final void saveColumnOrder() {
 		final UserColumn[] columns = m_clTableModel.getDisplayedColumns();
 		final TableColumnModel tableColumnModel = getColumnModel();

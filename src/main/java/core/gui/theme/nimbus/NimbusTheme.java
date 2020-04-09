@@ -1,8 +1,11 @@
 package core.gui.theme.nimbus;
 
-import core.gui.theme.FontUtil;
+import core.gui.comp.panel.ImagePanel;
+import core.gui.comp.panel.RasenPanel;
+import core.gui.theme.*;
 import core.model.UserParameter;
 import core.util.HOLogger;
+import core.util.OSUtils;
 
 import java.awt.Font;
 
@@ -15,12 +18,20 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.DimensionUIResource;
 
 
-public class NimbusTheme {
-	
-	private NimbusTheme() {
+public class NimbusTheme implements Theme {
+
+	public final static String THEME_NAME = "Nimbus";
+
+	public String getName() {
+		return THEME_NAME;
 	}
-	
-	public static boolean enableNimbusTheme(int fontSize) {
+
+	@Override
+	public boolean loadTheme() {
+		return enableTheme(UserParameter.instance().schriftGroesse);
+	}
+
+	public boolean enableTheme(int fontSize) {
 		try {
 			LookAndFeelInfo nimbus = null;
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -31,7 +42,7 @@ public class NimbusTheme {
 		    }
 			
 			if (nimbus != null) {
-				if (System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH).startsWith("mac")) {
+				if (OSUtils.isMac()) {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 					Object mbUI = UIManager.get("MenuBarUI");
 					Object mUI = UIManager.get("MenuUI");
@@ -53,7 +64,6 @@ public class NimbusTheme {
 				UIDefaults uid = UIManager.getLookAndFeelDefaults();
 				final String fontName = FontUtil.getFontName(UserParameter.instance().sprachDatei);
 				final Font userFont = new Font((fontName != null ? fontName : "SansSerif"), Font.PLAIN, fontSize);
-//				final Font smallFont = new Font((fontName != null ? fontName : "SansSerif"), Font.PLAIN, (fontSize-1));
 				final Font boldFont = new Font((fontName != null ? fontName : "SansSerif"), Font.BOLD, fontSize);
 				uid.put("defaultFont", userFont);
 				uid.put("DesktopIcon.font", userFont);
@@ -63,7 +73,7 @@ public class NimbusTheme {
 				uid.put("FormattedTextField.font", userFont);
 				uid.put("Spinner.font", userFont);
 				uid.put("PopupMenuSeparator.font", userFont);
-				uid.put("Table.font", userFont); // smallFont
+				uid.put("Table.font", userFont);
 				uid.put("TextArea.font", userFont);
 				uid.put("Slider.font", userFont);
 				uid.put("InternalFrameTitlePane.font", userFont);
@@ -82,7 +92,7 @@ public class NimbusTheme {
 				uid.put("CheckBox.font", userFont);
 				uid.put("ToggleButton.font", userFont);
 				uid.put("TabbedPane.font", userFont);
-				uid.put("TableHeader.font", userFont); // smallFont
+				uid.put("TableHeader.font", userFont);
 				uid.put("List.font", userFont);
 				uid.put("PopupMenu.font", userFont);
 				uid.put("ToolTip.font", userFont);
@@ -107,15 +117,17 @@ public class NimbusTheme {
 				uid.put("SliderTrack.font", userFont);
 				uid.put("TitledBorder.font", boldFont);
 				
-				uid.put("Table.intercellSpacing", new DimensionUIResource(1, 1)); //new DimensionUIResource(1, 1)
+				uid.put("Table.intercellSpacing", new DimensionUIResource(1, 1));
 				uid.put("Table.showGrid", Boolean.TRUE);
 				uid.put("Table.gridColor", new ColorUIResource(214, 217, 223));
-				
-				//uid.put("Table.editor".contentMargins	InsetsUIResource	javax.swing.plaf.InsetsUIResource[top=3,left=5,bottom=3,right=5]
+
 				BorderUIResource tableBorder = new BorderUIResource(BorderFactory.createEmptyBorder(2, 3, 2, 3));
 				uid.put("Table.cellNoFocusBorder", tableBorder);
 				uid.put("Table.focusCellHighlightBorder", tableBorder);
-				
+
+				RasenPanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND).getImage());
+				ImagePanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND).getImage());
+
 				return true;
 			}
 		} catch (Exception e) {

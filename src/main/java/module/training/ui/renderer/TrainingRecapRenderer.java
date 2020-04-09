@@ -3,6 +3,8 @@ package module.training.ui.renderer;
 
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import module.training.ui.TrainingLegendPanel;
@@ -16,7 +18,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 
 /**
- * Rendered for the TrainingRecap Table
+ * Renderer for the TrainingRecap Table (Prediction)
  *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
@@ -25,8 +27,11 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 	 *
 	 */
 	private static final long serialVersionUID = -4088001127909689247L;
-	private static final Color SELECTION_BG = new java.awt.Color(210, 210, 210);
-    private static final Color BIRTHDAY_BG = new java.awt.Color(255, 240, 175);
+
+	private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
+	private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
+	private static final Color TABLE_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
+    private static final Color BIRTHDAY_BG = ThemeManager.getColor(HOColorName.TRAINING_BIRTHDAY_BG);
     //~ Methods ------------------------------------------------------------------------------------
 
     /* (non-Javadoc)
@@ -38,11 +43,11 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
         // Reset default values
-        this.setForeground(Color.BLACK);
+        this.setForeground(TABLE_FG);
         if (isSelected)
         	this.setBackground(SELECTION_BG);
         else
-        	this.setBackground(Color.WHITE);
+        	this.setBackground(TABLE_BG);
 
         String text = null;
         String tooltip = null;
@@ -55,7 +60,7 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 
             // fetch playerId (last column) from table
         	playerId = Integer.parseInt((String)table.getValueAt(row, table.getColumnCount()-1));
-        	Player player =HOVerwaltung.instance().getModel().getSpieler(playerId);
+        	Player player = HOVerwaltung.instance().getModel().getSpieler(playerId);
         	realPlayerAge = player.getAlterWithAgeDays();
 
         	/** If there is some kind of skillup information
@@ -69,11 +74,10 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
         		String[] skills = s.split(" "); //$NON-NLS-1$
         		int skillType = Integer.parseInt(skills[0]);
         		int change = Integer.parseInt((skills[2])); // +1: skillup; -1: skilldrop
-//        		Color color = Skills.getSkillColor(skillType);
         		icon = TrainingLegendPanel.getSkillupTypeIcon(skillType, change);
         		double val = Double.parseDouble(skills[1]);
         		String skillLevelName = PlayerAbility.getNameForSkill(val, true);
-        		tooltip =PlayerSkill.toString(skillType)+": " + skillLevelName;
+        		tooltip = PlayerSkill.toString(skillType)+": " + skillLevelName;
         		text = skillLevelName;
         	}
 

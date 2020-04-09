@@ -1,7 +1,9 @@
 package module.teamAnalyzer.ui.lineup;
 
 import core.gui.comp.panel.ImagePanel;
+import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
+import core.gui.theme.ThemeManager;
 import core.module.config.ModuleConfig;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ui.RatingUtil;
@@ -43,9 +45,11 @@ class RatingBox extends JPanel {
         mainPanel.add(opponentValue);
         add(mainPanel);
 
-        myValue.setForeground(Color.BLACK);
-        opponentValue.setForeground(Color.BLACK);
-        setForeground(Color.BLACK);
+        final Color foreground = ThemeManager.getColor(HOColorName.LABEL_FG);
+
+        myValue.setForeground(foreground);
+        opponentValue.setForeground(foreground);
+        setForeground(foreground);
         setOpaque(false);
         setFont(getFont().deriveFont(Font.BOLD, core.model.UserParameter.instance().schriftGroesse + 3));
     }

@@ -19,7 +19,7 @@ import javax.swing.JTable;
 public class HODefaultTableCellRenderer implements javax.swing.table.TableCellRenderer {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    public static Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);//new java.awt.Color(235, 235, 235);
+    public static Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
     public static Color SELECTION_FG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_FG);
     //~ Methods ------------------------------------------------------------------------------------
 

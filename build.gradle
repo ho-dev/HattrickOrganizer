@@ -29,6 +29,9 @@ dependencies {
     implementation 'org.hsqldb:hsqldb:2.4.1'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.okhttp3:okhttp:4.3.1'
+    implementation 'com.github.weisj:darklaf-core:2.1.1'
+    implementation 'com.github.weisj:darklaf-theme:2.1.1'
+    implementation 'com.formdev:svgSalamander:1.1.2.1'
     testImplementation 'junit:junit:4.12'
 }
 
@@ -101,21 +104,6 @@ sourceSets {
         resources {
             srcDirs = ["src/test/resources"]
         }
-    }
-    // Cf. https://youtrack.jetbrains.com/issue/IDEA-197469
-    // at compile time, put resources in same directories as classes
-    main.output.resourcesDir = main.java.outputDir
-}
-
-// at run time, make Gradle use the module path
-run {
-    inputs.property("moduleName", moduleName)
-    doFirst {
-        jvmArgs = [
-                '--module-path', classpath.asPath,
-                '--module', "$moduleName/$mainClassName"
-        ]
-        classpath = files()
     }
 }
 
@@ -303,7 +291,7 @@ buildRpm {
 
 // ==========  my tasks ================================================================================================
 
-task makeAll(type: GradleBuild){
+task makeAll(type: GradleBuild) {
     group 'ho'
     description 'Create ZipDistribution, Windows, MacOS and Linux binaries'
     tasks = ['preparingBuild', 'pushmd', 'markdownToHtml', 'pullhtml', 'poeditorPull', 'createLanguageFileList',

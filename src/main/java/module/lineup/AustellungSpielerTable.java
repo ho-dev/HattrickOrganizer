@@ -24,8 +24,13 @@ import java.awt.event.MouseAdapter;
 import javax.swing.JTable;
 import javax.swing.table.TableColumnModel;
 
-public final class AustellungSpielerTable extends JTable implements core.gui.Refreshable,
-		PlayerTable {
+/**
+ * Table displaying the players' details in Lineup tab.
+ *
+ * <p>The name of the players is displayed in {@link module.playerOverview.SpielerUebersichtNamenTable},
+ * which is the same table class used in the Squad tab.</p>
+ */
+public final class AustellungSpielerTable extends JTable implements core.gui.Refreshable, PlayerTable {
 
 	private static final long serialVersionUID = -8295456454328467793L;
 
@@ -77,7 +82,7 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 	 * Return width of BestPos column
 	 */
 	protected int getBestPosWidth() {
-		return getColumnModel().getColumn(getColumnModel().getColumnIndex(Integer.valueOf(3)))
+		return getColumnModel().getColumn(getColumnModel().getColumnIndex(3))
 				.getWidth();
 	}
 
@@ -142,7 +147,7 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 			final TableColumnModel columnModel = getColumnModel();
 
 			for (int i = 0; i < tableModel.getColumnCount(); i++) {
-				columnModel.getColumn(i).setIdentifier(new Integer(i));
+				columnModel.getColumn(i).setIdentifier(i);
 			}
 
 			int[][] targetColumn = tableModel.getColumnOrder();

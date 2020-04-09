@@ -1,6 +1,7 @@
 package module.tsforecast;
 
 import core.db.DBManager;
+import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
@@ -84,8 +85,8 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 		gridbagconstraints.fill = GridBagConstraints.NONE;
 		gridbagconstraints.insets = new Insets(5, 5, 5, 5);
 
-		m_jpSettingsPanel = new JPanel();
-		m_jpSettingsPanel.setOpaque(false);
+		m_jpSettingsPanel = new ImagePanel();
+		m_jpSettingsPanel.setOpaque(true);
 		m_jpSettingsPanel.setLayout(new BoxLayout(m_jpSettingsPanel, BoxLayout.Y_AXIS));
 
 		createSettingsPanel(m_jpSettingsPanel);
@@ -293,7 +294,7 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 
 	private void createGamesPanel(JPanel jpanel) {
 		if (m_jpGamesPanel == null) {
-			m_jpGamesPanel = new JPanel();
+			m_jpGamesPanel = new ImagePanel();
 			m_jpGamesPanel.setLayout(new GridBagLayout());
 		}
 		jpanel.remove(m_jpGamesPanel);
@@ -305,7 +306,7 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 
 		int iCmdID = 0;
 		JLabel jlabel = new JLabel(" PIC  N  MOTS");
-		jlabel.setOpaque(true);
+
 		gridbagconstraints.insets = new Insets(10, 0, 2, 0);
 		gridbagconstraints.gridy = 0;
 		m_jpGamesPanel.add(jlabel, gridbagconstraints);

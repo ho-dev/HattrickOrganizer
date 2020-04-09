@@ -3,15 +3,16 @@ package module.teamAnalyzer.ui;
 
 import core.gui.comp.entry.RatingTableEntry;
 import core.gui.comp.panel.ImagePanel;
+import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
+import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.module.config.ModuleConfig;
 import core.util.HelperWrapper;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
-import module.teamAnalyzer.report.TacticReport;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.teamAnalyzer.vo.SpotLineup;
 
@@ -28,16 +29,19 @@ import javax.swing.SwingConstants;
 
 public class PlayerPanel extends JPanel {
 
+	private final Color PANEL_BG = ThemeManager.getColor(HOColorName.PANEL_BG);
+	private final Color LABEL_FG = ThemeManager.getColor(HOColorName.LABEL_FG);
+
 	private static final long serialVersionUID = 1838357704496299083L;
 	protected JLabel appearanceField = new JLabel("", SwingConstants.RIGHT);
 	protected JLabel nameField = new JLabel("", SwingConstants.LEFT);
-	protected JLabel positionField = createLabel("", Color.BLACK, 0);
+	protected JLabel positionField = createLabel("", LABEL_FG, 0);
 	protected JLabel positionImage = new JLabel();
 	protected JLabel specialEventImage = new JLabel();
 	protected JPanel ratingPanel = new JPanel();
 	protected TacticPanel tacticPanel = new TacticPanel();
-	private JPanel mainPanel;
-	private PlayerInfoPanel infoPanel = new PlayerInfoPanel();
+	private final JPanel mainPanel;
+	private final PlayerInfoPanel infoPanel = new PlayerInfoPanel();
 
 	protected boolean containsPlayer = false;
 
@@ -47,8 +51,7 @@ public class PlayerPanel extends JPanel {
 	public PlayerPanel() {
 		setLayout(new BorderLayout());
 
-		Font nFont = new Font(nameField.getFont().getFontName(), Font.BOLD, nameField.getFont()
-				.getSize());
+		Font nFont = new Font(nameField.getFont().getFontName(), Font.BOLD, nameField.getFont().getSize());
 
 		nameField.setFont(nFont);
 
@@ -91,7 +94,7 @@ public class PlayerPanel extends JPanel {
 	}
 
 	protected Color getBackGround() {
-		return Color.WHITE;
+		return PANEL_BG;
 	}
 
 	public Dimension getDefaultSize() {
@@ -167,23 +170,23 @@ public class PlayerPanel extends JPanel {
 			updateRatingPanel(0);
 			positionImage.setIcon(ImageUtilities.getImage4Position(0, (byte) 0, 0));
 			specialEventImage.setIcon(null);
-			tacticPanel.reload(new ArrayList<TacticReport>());
+			tacticPanel.reload(new ArrayList<>());
 		}
 	}
 
 	protected void setPlayerStatus(int status) {
 		switch (status) {
 		case PlayerDataManager.INJURED:
-			nameField.setForeground(Color.RED);
+			nameField.setForeground(UserParameter.instance().FG_INJURED);
 			break;
 		case PlayerDataManager.SUSPENDED:
-			nameField.setForeground(Color.RED);
+			nameField.setForeground(UserParameter.instance().FG_RED_CARD);
 			break;
 		case PlayerDataManager.SOLD:
-			nameField.setForeground(Color.BLUE);
+			nameField.setForeground(UserParameter.instance().FG_TRANSFERMARKT);
 			break;
 		default:
-			nameField.setForeground(Color.BLACK);
+			nameField.setForeground(LABEL_FG);
 			break;
 		}
 	}
@@ -198,16 +201,14 @@ public class PlayerPanel extends JPanel {
 
 		JPanel starPanel = (JPanel) new RatingTableEntry((int) Math.round(rating * 2), true)
 				.getComponent(false);
-		starPanel.setBackground(getBackGround());
 		ratingPanel.add(starPanel, BorderLayout.WEST);
 		ratingPanel.setOpaque(true);
-		ratingPanel.setBackground(getBackGround());
 	}
 
 	private JLabel createLabel(String text, Color farbe, int Bordertype) {
 		JLabel bla = new JLabel(text);
 
-		bla.setHorizontalAlignment(0);
+		bla.setHorizontalAlignment(JLabel.HORIZONTAL);
 		bla.setForeground(farbe);
 		bla.setBorder(BorderFactory.createEtchedBorder(Bordertype));
 

@@ -1,9 +1,6 @@
 package core.gui.theme;
 
 
-
-
-
 /**
  * Constants for Colors used in HO.
  * Modules can use them too.
@@ -83,6 +80,7 @@ public interface HOColorName {
 	public static final String SHIRT_SUBFORWARD 		= "shirt.subFor";
 	public static final String SHIRT 					= "shirt";
 
+	// Statistics
 	public static final String STAT_LEADERSHIP 			= "stat.leadership";
 	public static final String STAT_EXPERIENCE 			= "stat.experience";;
 	public static final String STAT_FORM 				= "stat.form";;
@@ -120,6 +118,8 @@ public interface HOColorName {
 	public static final String STAT_CONFIDENCE			= "stat.confidence";
 	public static final String STAT_HATSTATS			= "stat.hatstats";
 	public static final String STAT_LODDAR				= "stat.loddar";
+	public static final String STAT_PANEL_BG = "stat.panel.bg";
+	public static final String STAT_PANEL_FG = "stat.panel.fg";
 
 	public static final String MATCHHIGHLIGHT_FAILED_FG	= "matchHighlight.failed.fg";
 
@@ -139,6 +139,11 @@ public interface HOColorName {
 	public static final String LINEUP_POS_MIN_BORDER	= "lineup.pos.min.border";
 	public static final String SUBST_CHANGED_VALUE_BG   = "substitution.changed.value.bg";
 
+	public static final String LINEUP_PARTIAL_TRAINING  = "lineup.partial.training.bg";
+	public static final String LINEUP_FULL_TRAINING     = "lineup.full.training.bg";
+
+	public static final String LINEUP_RATING_BORDER = "lineup.rating.border";
+
 	//1.431
 	public static final String MATCHDETAILS_PROGRESSBAR_GREEN = "matchdetails.progressbar.green";
 	public static final String MATCHDETAILS_PROGRESSBAR_RED = "matchdetails.progressbar.red";
@@ -150,4 +155,34 @@ public interface HOColorName {
 	public static final String TA_TEAM_TOURNAMENT_NEXT = "teamanalyzer.teamlist.nexttournament";
 	public static final String TA_TEAM_TOURNAMENT = "teamanalyzer.teamlist.tournament";
 
+	//1.434
+	// Matches Analyzer
+	public static final String MATCHESANALYZER_DEFAULT_FONT = "matchesanalyzer.font.default";
+	public static final String MATCHESANALYZER_DEFAULT_BG = "matchesanalyzer.bg.default";
+	public static final String MATCHESANALYZER_MATCH_BG = "matchesanalyzer.bg.match";
+	public static final String MATCHESANALYZER_LINEUP_BG = "matchesanalyzer.bg.lineup";
+	public static final String MATCHESANALYZER_STATS_BG = "matchesanalyzer.bg.stats";
+	public static final String MATCHESANALYZER_POSITIVE_BAR_BG = "matchesanalyzer.bg.positivebar";
+	public static final String MATCHESANALYZER_NEGATIVE_BAR_BG = "matchesanalyzer.bg.negativebar";
+	public static final String MATCHESANALYZER_OVERALL_BG = "matchesanalyzer.bg.overall";
+	public static final String MATCHESANALYZER_PANELS_BORDER = "matchesanalyzer.border";
+	public static final String MATCHESANALYZER_FIELD_LINES = "matchesanalyzer.field.line";
+	public static final String MATCHESANALYZER_FILED_GRASS = "matchesanalyzer.field.grass";
+	public static final String MATCHESANALYZER_TEAM_LEAGUE_NEXT = "matchesanalyzer.cbox.league";
+	public static final String MATCHESANALYZER_TEAM_CUP_NEXT = "matchesanalyzer.cbox.cup";
+	public static final String MATCHESANALYZER_TEAM_TOURNAMENT_NEXT = "matchesanalyzer.cbox.tournamentnext";
+	public static final String MATCHESANALYZER_TEAM_TOURNAMENT = "matchesanalyzer.cbox.tournament";
+	public static final String MATCHESANALYZER_TEAM_MYTEAM = "matchesanalyzer.cbox.myteam";
+
+	// Training
+	public static final String TRAINING_BIRTHDAY_BG = "training.birthday.bg";
+
+	// TS Forecast
+	public static final String TSFORECAST_ALT_COLOR = "tsforecast.alt.color";
+
+	// HRF Explorer
+	public static final String HRF_GREEN_BG = "hrf.green.bg";
+	public static final String HRF_LIGHTBLUE_BG = "hrf.lightblue.bg";
+	public static final String HRF_DARKBLUE_BG = "hrf.darkblue.bg";
+	public static final String HRF_RED_BG = "hrf.red.bg";
 }

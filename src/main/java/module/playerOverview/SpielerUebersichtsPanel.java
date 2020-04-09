@@ -7,19 +7,10 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.Player;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.AdjustmentListener;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JViewport;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 
 /**
  * Overview of all the players on the team (main class of the package)

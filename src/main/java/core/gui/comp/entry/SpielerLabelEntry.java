@@ -20,8 +20,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
-
 
 public final class SpielerLabelEntry implements IHOTableEntry {
 
@@ -74,21 +72,12 @@ public final class SpielerLabelEntry implements IHOTableEntry {
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    /**
-     * Set the custom player name. Will only be used if m_bCustomName is true, a setting available in alternate constructor.
-     */
-    public void setM_sCustomNameString(String m_sCustomNameString) {
-        this.m_sCustomNameString = m_sCustomNameString;
-    }
-
     public final JComponent getComponent(boolean isSelected) {
-        if (m_bSelect)
-            m_clComponent.setBackground(Color.LIGHT_GRAY);
-        else if (m_bAssit)
-            m_clComponent.setBackground(new Color(220, 220, 220));
-        else
-            m_clComponent.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG : ColorLabelEntry.BG_STANDARD);
-        m_clComponent.setToolTipText(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getText());
+        m_clComponent.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG : ColorLabelEntry.BG_STANDARD);
+
+        if (TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getText() != null) {
+            m_clComponent.setToolTipText(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getText());
+        }
 
         m_jlName.setForeground(getForegroundForSpieler(m_clPlayer));
         m_jlName.setFont(isSelected ? m_jlName.getFont().deriveFont(Font.BOLD) : m_jlName.getFont().deriveFont(Font.PLAIN));
@@ -159,7 +148,6 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         final GridBagConstraints constraints = new GridBagConstraints();
 
         m_clComponent.setLayout(layout);
-        m_clComponent.setBorder(new LineBorder(Color.WHITE, 1));
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.anchor = GridBagConstraints.WEST;
         constraints.weightx = 1.0;
@@ -255,13 +243,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             m_jlName.setText(m_clPlayer.getFullName());
             m_jlName.setOpaque(false);
             m_jlName.setForeground(getForegroundForSpieler(m_clPlayer));
-
-            //Shirt
-            if (m_bShowTrikot) {m_jlName.setIcon(ImageUtilities.getImage4Position(m_clCurrentPlayerPosition,
-                        m_clPlayer.getTrikotnummer()));
-                showGroupIcon();
-            }
-
+            showJersey();
             updateDisplay(m_clPlayer);
         }
 
@@ -271,16 +253,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     public final void updateComponent() {
         if (m_clPlayer != null) {
             m_jlName.setForeground(getForegroundForSpieler(m_clPlayer));
-
-            //Trikot
-            //&& m_clSpielerPositionAktuell != null )
-            if (m_bShowTrikot) {
-                m_jlName.setIcon(ImageUtilities.getImage4Position(m_clCurrentPlayerPosition,
-                        m_clPlayer
-                                .getTrikotnummer()));
-                showGroupIcon();
-            }
-
+            showJersey();
             updateDisplay(m_clPlayer);
 
         } else {
@@ -306,18 +279,13 @@ public final class SpielerLabelEntry implements IHOTableEntry {
                 m_jlName.setForeground(getForegroundForSpieler(m_clPlayer));
             }
 
-            if (m_bCustomName == true) {
+            if (m_bCustomName) {
                 m_jlName.setText(m_sCustomNameString);
             } else {
                 m_jlName.setText(m_clPlayer.getShortName());
             }
 
-            //Trikot
-            if (m_bShowTrikot) {
-                m_jlName.setIcon(ImageUtilities.getImage4Position(m_clCurrentPlayerPosition, m_clPlayer.getTrikotnummer()));
-                showGroupIcon();
-            }
-
+            showJersey();
             updateDisplay(m_clPlayer);
 
         } else {
@@ -326,6 +294,17 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         }
 
         m_clComponent.setPreferredSize(new Dimension(Helper.calcCellWidth(130), Helper.calcCellWidth(18)));  // Was 150,18 - setting lower solved lineup problem
+    }
+
+    private void showJersey() {
+        // Jersey
+        if (m_bShowTrikot) {
+            m_jlName.setIcon(ImageUtilities.getJerseyIcon(
+                    m_clCurrentPlayerPosition,
+                    m_clPlayer.getTrikotnummer()
+            ));
+            showGroupIcon();
+        }
     }
 
 
@@ -398,7 +377,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         else if (player.getGelbeKarten() == 2) {
             color = userParameter.FG_TWO_YELLOW_CARDS;
         } else {
-            color = userParameter.FG_STANDARD;
+            color = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
         }
 
         return color;

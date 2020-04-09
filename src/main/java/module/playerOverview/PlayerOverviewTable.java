@@ -13,7 +13,7 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.Helper;
 
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 
 
@@ -41,7 +41,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 	 */
 	public final int getBestPosWidth() {
 		return getColumnModel().getColumn(
-				getColumnModel().getColumnIndex(Integer.valueOf(tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION))))
+				getColumnModel().getColumnIndex(tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION)))
 				.getWidth();
 	}
 
@@ -156,7 +156,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 
 			TableColumnModel tableColumnModel = getColumnModel();
 			for (int i = 0; i < tableModel.getColumnCount(); i++) {
-				tableColumnModel.getColumn(i).setIdentifier(new Integer(i));
+				tableColumnModel.getColumn(i).setIdentifier(i);
 			}
 
 			int[][] targetColumn = tableModel.getColumnOrder();
@@ -166,7 +166,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 
 			if (targetColumn != null) {
 				for (int i = 0; i < targetColumn.length; i++) {
-					this.moveColumn(getColumnModel().getColumnIndex(Integer.valueOf(targetColumn[i][0])), targetColumn[i][1]);
+					this.moveColumn(getColumnModel().getColumnIndex(targetColumn[i][0]), targetColumn[i][1]);
 				}
 			}
 
@@ -179,7 +179,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		}
 
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		setSelectionMode(0);
+		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		setRowSelectionAllowed(true);
 		tableSorter.initsort();
 	}

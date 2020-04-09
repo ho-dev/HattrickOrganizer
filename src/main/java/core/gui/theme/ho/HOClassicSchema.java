@@ -124,7 +124,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LOGO16_STABLE, "gui/bilder/Logo-16px_stable.png");
 		put(LOGO16_BETA, "gui/bilder/Logo-16px_beta.png");
 		put(LOGO16_DEV, "gui/bilder/Logo-16px_dev.png");
-		put(TRICKOT, "gui/bilder/Trickot.png");
+		//put(TRICKOT, "gui/bilder/Trickot.png");
+		put(TRICKOT, "gui/bilder/jerseys.svg");
 
 		// Player Overview
 		put(INJURED_SMALL, "gui/bilder/player overview/injured.png");
@@ -370,6 +371,11 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LINEUP_POS_MIN_BORDER, "light_gray");
 		put(SUBST_CHANGED_VALUE_BG, "lightGreen");
 
+		put(LINEUP_RATING_BORDER, Color.BLACK);
+
+		put(LINEUP_PARTIAL_TRAINING, new Color(34, 255, 255));
+		put(LINEUP_FULL_TRAINING, new Color(0, 0, 255));
+
 		// shirts
 		put(SHIRT_KEEPER, "black");
 		put(SHIRT_CENTRALDEFENCE, new Color(0, 0, 220));
@@ -421,6 +427,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(STAT_CONFIDENCE, Color.CYAN);
 		put(STAT_HATSTATS, Color.YELLOW);
 		put(STAT_LODDAR, new Color(150, 20, 20));
+		put(STAT_PANEL_BG, Color.WHITE);
+		put(STAT_PANEL_FG, Color.DARK_GRAY);
 
 		// matchtypes
 		put(MATCHTYPE_BG, "white");
@@ -457,6 +465,18 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		// Colours for alternating rows in table
 		put(TABLE_LEAGUE_EVEN, Color.WHITE);
 		put(TABLE_LEAGUE_ODD, new Color(240, 240, 240));
+
+		// Training
+		put(TRAINING_BIRTHDAY_BG, new Color(255, 240, 175));
+
+		// TS Forecast
+		put(TSFORECAST_ALT_COLOR, Color.BLUE);
+
+		// HRF Explorer
+		put(HOColorName.HRF_GREEN_BG, new Color(220,255,220));
+		put(HOColorName.HRF_LIGHTBLUE_BG, new Color(235,235,255));
+		put(HOColorName.HRF_DARKBLUE_BG, new Color(220,220,255));
+		put(HOColorName.HRF_RED_BG, new Color(255,200,200));
 	}
 
 	public Color getDefaultColor(String key) {

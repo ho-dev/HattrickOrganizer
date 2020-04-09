@@ -12,6 +12,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ## Highlights
 
+   - [FEAT] Improved HO themes, and implemented dark mode. #85
 
 ## Detailed Changelog
 
