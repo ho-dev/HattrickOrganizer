@@ -6,6 +6,9 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ## Squad
   - Fix Sorting by Position #397
 
+## Lineup
+  - Make Name column resizable in players' table #382
+
 ## Matches
   - Match Report: now similar to HT match report  #339
 
