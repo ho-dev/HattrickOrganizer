@@ -98,7 +98,12 @@ public final class UserParameter extends Configuration {
     /**
      * Current Matchlist Download checked in Download Dialog?
      */
-    public boolean currentMatchlist = true;
+    public boolean downloadCurrentMatchlist = true;
+    public boolean downloadSingleMatches = true;
+    public boolean downloadLadderMatches = true;
+    public boolean downloadTournamentGroupMatches = true;
+    public boolean downloadTournamentPlayoffMatches = true;
+    public boolean downloadDivisionBattleMatches = true;
 
     //Release Channel options
     public String ReleaseChannel = "Stable";
@@ -444,7 +449,12 @@ public final class UserParameter extends Configuration {
         map.put("xmlDownload", String.valueOf(xmlDownload));
         map.put("ReleaseChannel", String.valueOf(ReleaseChannel));
         map.put("fixtures", String.valueOf(fixtures));
-        map.put("currentMatchlist", String.valueOf(currentMatchlist));
+        map.put("currentMatchlist", String.valueOf(downloadCurrentMatchlist));
+        map.put("downloadLadderMatches", String.valueOf(downloadLadderMatches));
+        map.put("downloadSingleMatches", String.valueOf(downloadSingleMatches));
+        map.put("downloadTournamentGroupMatches", String.valueOf(downloadTournamentGroupMatches));
+        map.put("downloadTournamentPlayoffMatches", String.valueOf(downloadTournamentPlayoffMatches));
+        map.put("downloadDivisionBattleMatches", String.valueOf(downloadDivisionBattleMatches));
         map.put("showHRFSaveDialog", String.valueOf(showHRFSaveDialog));
         map.put("spieleranalyseVertikal", String.valueOf(spieleranalyseVertikal));
         map.put("statistikAlleBeschriftung", String.valueOf(statistikAlleBeschriftung));
@@ -664,7 +674,12 @@ public final class UserParameter extends Configuration {
         xmlDownload = getBooleanValue(values, "xmlDownload");
         ReleaseChannel = getStringValue(values, "ReleaseChannel");
         fixtures = getBooleanValue(values, "fixtures");
-        currentMatchlist = getBooleanValue(values, "currentMatchlist");
+        downloadCurrentMatchlist = getBooleanValue(values, "currentMatchlist");
+        downloadSingleMatches = getBooleanValue(values, "downloadSingleMatches");
+        downloadLadderMatches = getBooleanValue(values, "downloadLadderMatches");
+        downloadTournamentGroupMatches = getBooleanValue(values, "downloadTournamentGroupMatches");
+        downloadTournamentPlayoffMatches = getBooleanValue(values, "downloadTournamentPlayoffMatches");
+        downloadDivisionBattleMatches = getBooleanValue(values, "downloadDivisionBattleMatches");
         showHRFSaveDialog = getBooleanValue(values, "showHRFSaveDialog");
         spieleranalyseVertikal = getBooleanValue(values, "spieleranalyseVertikal");
         statistikAlleBeschriftung = getBooleanValue(values, "statistikAlleBeschriftung");

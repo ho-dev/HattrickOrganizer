@@ -718,7 +718,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		// already 11 on the field.
 
 		if (!incomingEmpty && !containsPlayer && m_iId >= IMatchRoleID.startLineup
-				&& m_iId < IMatchRoleID.startReserves && lineup.hasFreePosition() == false) {
+				&& m_iId < IMatchRoleID.startReserves && !lineup.hasFreePosition()) {
 			HOLogger.instance().debug(getClass(),
 					"Blocked from setting player at position: " + m_iSpielerId + " " + m_iId);
 			return;

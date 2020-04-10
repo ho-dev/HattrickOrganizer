@@ -277,9 +277,9 @@ Why a new Special Events framework?
 
 public class SpecialEventsPrediction {
 
-    private double chanceCreationProbability = 0;
+    private double chanceCreationProbability;
     private double goalProbability = 0;
-    private ISpecialEventPredictionAnalyzer.SpecialEventType eventType;
+    private final ISpecialEventPredictionAnalyzer.SpecialEventType eventType;
     private IMatchRoleID responsiblePosition;
     private ArrayList<IMatchRoleID> involvedPositions;
     private ArrayList<IMatchRoleID> involvedOpponentPositions;
@@ -354,7 +354,7 @@ public class SpecialEventsPrediction {
             this.involvedOpponentPositions.clear();
         }
 
-        this.involvedOpponentPositions.addAll(involvedOpponentPositions);
+        this.involvedOpponentPositions.addAll(m_cInvolvedPositions);
     }
 
     public void setInvolvedOpponentPosition(MatchRoleID mid) {

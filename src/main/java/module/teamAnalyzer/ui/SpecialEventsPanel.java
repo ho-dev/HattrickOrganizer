@@ -16,11 +16,11 @@ import java.util.List;
 
 
 public class SpecialEventsPanel extends JPanel {
-    private JTable table;
+    private final JTable table;
     private BaseTableModel tableModel;
-    private JLabel resultLabel;
+    private final JLabel resultLabel;
 
-    private String[] columns = {
+    private final String[] columns = {
             "Kind",
             "Player",
             "Opponent Player",

@@ -9,6 +9,9 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ## Lineup
   - Make Name column resizable in players' table #382
 
+## Download
+  - Download of current matches are selectable by match type  #290
+
 ## Matches
   - Match Report: now similar to HT match report  #339
 

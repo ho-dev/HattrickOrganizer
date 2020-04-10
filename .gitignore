@@ -137,3 +137,4 @@ local.properties
 .DS_Store
 /updateDB.py
 /.idea/jarRepositories.xml
+.idea/
