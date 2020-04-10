@@ -282,6 +282,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		put(RATING_GRAPH, "gui/bilder/rating-graph.png");
 
+		put(SPINNER, "gui/bilder/spinner.gif");
+
 		put(UNKOWN, "gui/bilder/unknown.png");
 	}
 

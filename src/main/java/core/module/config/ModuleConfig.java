@@ -140,6 +140,15 @@ public class ModuleConfig {
 		return values;
 	}
 
+	public final int[] getIntArray(String key, int[] defaultValue) {
+		int[] values = getIntArray(key);
+		if (values == null || values.length == 0) {
+			return defaultValue;
+		} else {
+			return values;
+		}
+	}
+
 	public void setIntArray(String key, int[] intArray) {
 		StringBuilder tmp = new StringBuilder();
 		for (int i = 0; i < intArray.length; i++) {

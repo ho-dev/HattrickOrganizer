@@ -9,27 +9,14 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import module.series.promotion.*;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.text.DateFormat;
 import java.util.Calendar;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  * Panel, das die Ligatabelle sowie das letzte und das nächste Spiel enthält
@@ -39,18 +26,27 @@ public class SeriesPanel extends LazyImagePanel {
 	private static final long serialVersionUID = -5179683183917344230L;
 	private JButton printButton;
 	private JButton deleteButton;
-	private JComboBox seasonComboBox;
+	private JComboBox<Spielplan> seasonComboBox;
 	private SeriesTablePanel seriesTable;
 	private MatchDayPanel[] matchDayPanels;
 	private SeriesHistoryPanel seriesHistoryPanel;
 	private Model model;
 
+	private PromotionInfoPanel promotionInfoPanel;
+	private LeaguePromotionHandler promotionHandler;
+
 	@Override
 	protected void initialize() {
+		initPromotionHandler();
 		initComponents();
 		fillSaisonCB();
 		addListeners();
 		registerRefreshable(true);
+	}
+
+	private void initPromotionHandler() {
+		promotionHandler = new LeaguePromotionHandler();
+		promotionInfoPanel = new PromotionInfoPanel(promotionHandler);
 	}
 
 	@Override
@@ -215,6 +211,10 @@ public class SeriesPanel extends LazyImagePanel {
 		printButton.setLocation(255, 5);
 		toolbarPanel.add(printButton);
 
+		promotionInfoPanel.setSize(500, 40);
+		promotionInfoPanel.setLocation(290, 0);
+		toolbarPanel.add(promotionInfoPanel);
+
 		toolbarPanel.setPreferredSize(new Dimension(240, 35));
 		panel.add(toolbarPanel, BorderLayout.NORTH);
 
@@ -322,8 +322,8 @@ public class SeriesPanel extends LazyImagePanel {
 	}
 
 	private void markierungInfo() {
-		for (int i = 0; i < matchDayPanels.length; i++) {
-			matchDayPanels[i].changeSaison();
+		for (MatchDayPanel matchDayPanel : matchDayPanels) {
+			matchDayPanel.changeSaison();
 		}
 	}
 }

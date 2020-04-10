@@ -6,14 +6,8 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.series.TabellenVerlaufEintrag;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Zeigt den Tabellenverlauf der Saison als Grafik an

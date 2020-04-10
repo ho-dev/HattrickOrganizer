@@ -3,16 +3,25 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 # Changelist HO! 3.0
 
+## Squad
+  - Fix Sorting by Position #397
+
+## Lineup
+  - Make Name column resizable in players' table #382
+
 ## Matches
   - Match Report: now similar to HT match report  #339
-  
+
 ## Player Analysis
   - fix age of player in player analysis table #422
+
+## League Details
+ - Promotion / Demotion status displayed on week 14 and 15 of season. #247
 
 
 # Changelist HO! 2.1
 
-## Some numbers: 
+## Some numbers:
   - 350 commits
   - 903 files changed (51,839 additions and 34,085 deletions)
   - 8 contributors
@@ -35,7 +44,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - Harmonization of absolute vs relative player contribution/performance #282
       - In squad and Lineup, are calculated both the absolute and the relative contribution of a player to the ratings
         - The absolute is more or less what would be the sum of his contribution to the 7 sectors
-        - The relative contribution helps to determine the best position for a given player. It is the absolute contribution corrected by a factor. This allows accounting for that some positions contributes more to the total ratings than others 
+        - The relative contribution helps to determine the best position for a given player. It is the absolute contribution corrected by a factor. This allows accounting for that some positions contributes more to the total ratings than others
   - In various tab, allow sorting by position and ratings #293
   - Fix decimal negative difference #295
 
@@ -74,7 +83,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - Out of bound exception for Hall of Fame players #350
   - Summary line in player overview presenting team value (avg TSI, total TSI, avg form, ….) #373
   - Team analyzer: Fix HatStats and LoddarStats always displaying zero #324
-  - Fix MatchDayPanel download button not available while the match is over #330 
+  - Fix MatchDayPanel download button not available while the match is over #330
   - Fix MatchDayPanel null pointer exception #337
   - Fix a bug when downloading data while having a generation match planned #365
   - Team analyzer: Fix display issue in case of a team walkover #377
@@ -83,8 +92,8 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ## Translations
   - HO! is currently available in 36 languages thanks to the work of 45 translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
   - Translators contribution since the previous release (number of translated terms):
-  
-  
+
+
 | username       | nb translated terms |
 |----------------|:-------------------:|
 | sich           | 524                 |
@@ -111,18 +120,18 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 # Changelist HO! 2.0
 
 ## Added
-  - Menu 
+  - Menu
     - checks software update and changelog under help #82 (Windows / Linux you can upgrade to the next version of HO using the update function)
     - check the release channel you want use (DEV/BETA/Stable)
     - **according to the channel version used, you will see the new logo and banner #84**
-    
+
   - Lineup
     - **Add new lineup substitutes (with wingback and extra) #120 #105**
     - **Blue border on your trained player #44**
     - **Green mark near player name for minutes based training according to the one chosen under training tab #44**
     - Fix for translation in the menu from style of play #119
     - Display only players lastname to improve lisibility #126
-    - Better use of space to improve visibility #133 
+    - Better use of space to improve visibility #133
     - Remove broken/useless buttons #132
     - Support for download of non official Lineups (fixed in 1437)
     - Grey background for player on the field or on the bench #146
@@ -159,7 +168,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 
 
-    
+
 
 
 ## Fixed
@@ -175,7 +184,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
  - Error message instead exception when receive bad xml #140
  - Some database fixes
 
- 
+
 # Changelist HO! 1.436
 
 ## Fixed
@@ -196,7 +205,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
  - wrong link in menu bout HO!  (bug #43)
  - small bugs related to update process on all platforms (bug #57)
  - wages/prices are formatted as team local currency as opposed to host system currency (bug #93)
- 
+
 ## Added
  - possibility for user to select and save release channel preference (DEV/BETA/STABLE)
  - display release notes before HO update
@@ -246,11 +255,11 @@ Changelist HO! 1.434
 
 - Changes done related to Style of Play being introduced.
 - Max number of orders is dependent on Tactical Assistant level.
-- A warning appears if you somehow have more orders than allowed to.	
+- A warning appears if you somehow have more orders than allowed to.
 - Added download and storage of style of play to match orders.
 - Caution: style of play is always 0 if you haven't set a new default lineup for the upcoming match.
 - Added support in lineup details (right panel).
-- A combo box near the top to select style of play. 
+- A combo box near the top to select style of play.
 - The available choices depend on trainer type and Tactical Assistant level.
 - A combo box near trainer choice to set a different number of tactical assistants in this panel only.
 - Rating calculation uses style of play. The calculation uses a linear fit between the set values for

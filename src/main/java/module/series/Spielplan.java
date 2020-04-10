@@ -1,10 +1,6 @@
 package module.series;
 
-import core.model.series.LigaTabelle;
-import core.model.series.LigaTabellenEintrag;
-import core.model.series.Paarung;
-import core.model.series.TabellenVerlaufEintrag;
-import core.model.series.Tabellenverlauf;
+import core.model.series.*;
 import core.util.HOLogger;
 import core.util.Helper;
 
