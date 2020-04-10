@@ -11,6 +11,9 @@ Changelist HO! 3.0
 ## Lineup
   - Make Name column resizable in players' table #382
 
+## Download
+  - Download of current matches are selectable by match type  #290
+
 ## League Details
  - Promotion / Demotion status displayed on week 14 and 15 of season. #247
 

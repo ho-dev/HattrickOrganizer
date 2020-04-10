@@ -15,7 +15,9 @@ import javax.swing.event.ChangeEvent;
 
 
 /**
- * Checkboxes in Download Dialog checked or not 
+ * Checkboxes in Download Dialog checked or not
+ *
+ * (DownloadPanel is not used anymore - the download options are now stored in DownloadDialog)
  */
 public final class DownloadPanel extends ImagePanel
     implements javax.swing.event.ChangeListener, java.awt.event.ItemListener

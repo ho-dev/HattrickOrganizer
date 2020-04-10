@@ -38,6 +38,7 @@ import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerDateModel;
+import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeModel;
 
 
@@ -56,19 +57,17 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	final private JButton m_jbDownload = new JButton(hov.getLanguageString("ls.button.download"));
 	private JButton m_jbProxy = new JButton(hov.getLanguageString("ConfigureProxy"));
 	private JCheckBox m_jchOldFixtures = new JCheckBox(hov.getLanguageString("download.oldseriesdata"), false);
-//	private JCheckBox m_jchOwnFixtures = new JCheckBox(hov.getLanguageString("download.currentmatches"),
-//			core.model.UserParameter.instance().currentMatchlist);
 	private DownloadFilter filterRoot = new DownloadFilter();
 	private CheckBoxTree downloadFilter = new CheckBoxTree();
 
-	private JCheckBox m_jchHRF = new JCheckBox(hov.getLanguageString("download.teamdata"),
-			core.model.UserParameter.instance().xmlDownload);
+	private JCheckBox m_jchHRF = new JCheckBox(hov.getLanguageString("download.teamdata"),	core.model.UserParameter.instance().xmlDownload);
 	private JCheckBox m_jchMatchArchive = new JCheckBox(hov.getLanguageString("download.oldmatches"), false);
-	private JCheckBox m_jchFixtures = new JCheckBox(hov.getLanguageString("download.seriesdata"), core.model.UserParameter
-			.instance().fixtures);
+	private JCheckBox m_jchFixtures = new JCheckBox(hov.getLanguageString("download.seriesdata"), core.model.UserParameter.instance().fixtures);
 	private JList m_jlOldSeasons = new JList();
 	private SpinnerDateModel m_clSpinnerModel = new SpinnerDateModel();
 	private JSpinner m_jsSpinner = new JSpinner(m_clSpinnerModel);
+	private JCheckBox m_jchShowSaveDialog = new JCheckBox(hov.getLanguageString("Show_SaveHRF_Dialog"), core.model.UserParameter.instance().showHRFSaveDialog);
+
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -126,8 +125,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		setResizable(false);
 		setContentPane(new ImagePanel(null));
 
-
-
 		final JPanel normalDownloadPanel = new ImagePanel(new GridLayout(3, 1, 4, 4));
 		normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("ls.button.download")));
 
@@ -157,18 +154,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 		normalDownloadPanel.setLayout(new BorderLayout());
 		normalDownloadPanel.add(new JScrollPane(downloadFilter), BorderLayout.CENTER);
-
-//		m_jchHRF.setToolTipText(hov.getLanguageString("download.teamdata.tt"));
-//		m_jchOwnFixtures.setToolTipText(hov.getLanguageString("download.currentmatches.tt"));
-//		m_jchFixtures.setToolTipText(hov.getLanguageString("download.seriesdata.tt"));
-//		m_jchHRF.setOpaque(false);
-//		m_jchOwnFixtures.setOpaque(false);
-//		m_jchFixtures.setOpaque(false);
-//		normalDownloadPanel.add(m_jchHRF);
-//		normalDownloadPanel.add(m_jchOwnFixtures);
-//		normalDownloadPanel.add(m_jchFixtures);
-
-		normalDownloadPanel.setSize(240, 200);
+		normalDownloadPanel.setSize(240, 280);
 		normalDownloadPanel.setLocation(10, 10);
 		getContentPane().add(normalDownloadPanel);
 
@@ -201,11 +187,22 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		((JSpinner.DateEditor) m_jsSpinner.getEditor()).getFormat().applyPattern("dd.MM.yyyy");
 		matchArchivePanel.add(m_jsSpinner, BorderLayout.EAST);
 
-		oldFixturePanel.add(matchArchivePanel, BorderLayout.SOUTH);
+		// Show HRF FileDialog
+		m_jchShowSaveDialog.setToolTipText(hov.getLanguageString("tt_Optionen_Show_SaveHRF_Dialog"));
+		m_jchShowSaveDialog.setOpaque(false);
+		m_jchShowSaveDialog.addActionListener(this);
+
+		final JPanel diverseOptionsPanel = new JPanel(new BorderLayout(1,2));
+		diverseOptionsPanel.add(matchArchivePanel, BorderLayout.NORTH);
+		diverseOptionsPanel.add(m_jchShowSaveDialog, BorderLayout.SOUTH);
+
+		oldFixturePanel.add(diverseOptionsPanel, BorderLayout.SOUTH);
 
 		specialDownload.add(oldFixturePanel);
 
-		specialDownload.setSize(260, 200);
+
+
+		specialDownload.setSize(260, 280);
 		specialDownload.setLocation(260, 10);
 		getContentPane().add(specialDownload);
 
@@ -213,7 +210,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		m_jbDownload.addActionListener(this);
 		m_jbDownload.setFont(m_jbDownload.getFont().deriveFont(Font.BOLD));
 		m_jbDownload.setSize(140, 30);
-		m_jbDownload.setLocation(10, 220);
+		m_jbDownload.setLocation(10, 300);
 		InputMap buttonKeys = m_jbDownload.getInputMap(JButton.WHEN_FOCUSED);
 		buttonKeys.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0,false), "pressed");
 		buttonKeys.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0,true), "released");
@@ -224,17 +221,17 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		m_jbProxy.addActionListener(this);
 		m_jbProxy.setFont(m_jbProxy.getFont().deriveFont(Font.BOLD));
 		m_jbProxy.setSize(140, 30);
-		m_jbProxy.setLocation(195, 220);
+		m_jbProxy.setLocation(195, 300);
 
 		getContentPane().add(m_jbProxy);
 
 		m_jbAbort.setToolTipText(hov.getLanguageString("tt_Download_Abbrechen"));
 		m_jbAbort.addActionListener(this);
 		m_jbAbort.setSize(140, 30);
-		m_jbAbort.setLocation(380, 220);
+		m_jbAbort.setLocation(380, 300);
 		getContentPane().add(m_jbAbort);
 
-		setSize(530, 280);
+		setSize(530, 360);
 
 		final Dimension size = getToolkit().getScreenSize();
 
@@ -273,6 +270,10 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		UserParameter.instance().downloadTournamentGroupMatches = downloadFilter.isChecked(filterRoot.getTournamentGroupMatches());
 		UserParameter.instance().downloadLadderMatches = downloadFilter.isChecked(filterRoot.getLadderMatches());
 		UserParameter.instance().downloadSingleMatches = downloadFilter.isChecked(filterRoot.getSingleMatches());
+
+		UserParameter.instance().showHRFSaveDialog = m_jchShowSaveDialog.isSelected();
+		UserParameter.instance().xmlDownload = m_jchHRF.isSelected();
+		UserParameter.instance().fixtures = m_jchFixtures.isSelected();
 
 		// Always test that teamId exists, it won't on the very first download
 		if ( this.downloadFilter.isChecked(filterRoot.getCurrentMatches())  && (teamId > 0)) {
