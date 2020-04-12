@@ -17,6 +17,8 @@ Changelist HO! 3.0
 ## League Details
  - Promotion / Demotion status displayed on week 14 and 15 of season. #247
 
+## Team Analysis
+  - special events prediction #299
 
 Changelist HO! 2.1
 ====================
