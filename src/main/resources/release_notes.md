@@ -21,6 +21,9 @@ Changelist HO! 3.0
  - Fix negative skill values in training history #444
 
 
+## Team Analysis
+  - special events prediction #299
+
 Changelist HO! 2.1
 ====================
 
