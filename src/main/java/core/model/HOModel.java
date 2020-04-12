@@ -6,9 +6,11 @@ import core.db.DBManager;
 //import core.epv.EPV;
 import core.model.misc.Basics;
 import core.model.misc.Finanzen;
+import core.model.misc.TrainingEvent;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.series.Liga;
+import core.net.OnlineWorker;
 import core.training.SkillDrops;
 import core.training.TrainingPerWeek;
 import core.training.TrainingManager;
@@ -455,8 +457,21 @@ public class HOModel {
     					if (TrainingManager.TRAININGDEBUG) {
     						HOLogger.instance().debug(HOModel.class, "Old player for id "+player.getSpielerID()+" = null");
     					}
+    					// Player appears the first time
+						// - was bought new
+						// - promoted from youth
+						// - it is the first hrf ever loaded
     					old = new Player();
-    					old.setSpielerID(-1);
+    					old.setSpielerID(player.getSpielerID());
+    					old.copySkills(player);
+    					List<TrainingEvent> events =  player.downloadTrainingEvents();
+    					if ( events != null){
+    						for (TrainingEvent event: events){
+    							if ( !event.isAfter(player.getHrfDate())){
+									old.setValue4Skill4(event.getSkillID(), event.getOldLevel());
+								}
+							}
+						}
     				}
 
     				// Always copy subskills as the first thing

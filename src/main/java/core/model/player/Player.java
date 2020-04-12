@@ -9,6 +9,8 @@ import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
 import core.model.StaffMember;
 import core.model.match.Weather;
+import core.model.misc.TrainingEvent;
+import core.net.OnlineWorker;
 import core.rating.RatingPredictionManager;
 import core.training.SkillDrops;
 import core.training.TrainingManager;
@@ -2258,6 +2260,10 @@ public class Player {
 
     public void setSubExperience( double experience){
         this.subExperience = experience;
+    }
+
+    public List<TrainingEvent> downloadTrainingEvents() {
+        return OnlineWorker.getTrainingEvents(this.m_iSpielerID);
     }
 }
 
