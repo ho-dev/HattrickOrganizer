@@ -10,7 +10,6 @@ import core.model.misc.TrainingEvent;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.series.Liga;
-import core.net.OnlineWorker;
 import core.training.SkillDrops;
 import core.training.TrainingPerWeek;
 import core.training.TrainingManager;
