@@ -62,7 +62,7 @@ public class OldTrainingManager {
 											.getTrainingDate()).getTime();
 
 					su = getSkillup(trainingDate);
-					su.setValue(player.getValue4Skill4(skill) - count);
+					su.setValue((Integer) element[2]);
 					su.setType(skill);
 					su.setTrainType(ISkillup.SKILLUP_REAL);
 					su.setAge(player.getAgeWithDaysAsString(trainingDate));
