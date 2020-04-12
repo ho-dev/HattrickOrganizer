@@ -469,8 +469,12 @@ public class Player {
     }
 
     /**
-     * liefert das Datum des letzen LevelAufstiegs für den angeforderten Skill Vector filled with
-     * object[] [0] = Time der Änderung [1] = Boolean: false=Keine Änderung gefunden
+     * gives information of skill ups
+     * returns vector of
+     * object[]
+     *      [0] = date of skill up
+     *      [1] = Boolean: false=no skill up found
+     *      [2] = skill value
      */
     public Vector<Object[]> getAllLevelUp(int skill) {
         return DBManager.instance().getAllLevelUp(skill, m_iSpielerID);

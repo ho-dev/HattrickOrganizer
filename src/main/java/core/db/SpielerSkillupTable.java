@@ -100,7 +100,7 @@ final class SpielerSkillupTable extends AbstractTable {
 			Object[] element = iter.next();
 			int code = ((Integer) element[4]).intValue();			
 			if (code==skillCode) {
-				v.add(new Object[] { element[2], Boolean.TRUE});						
+				v.add(new Object[] { element[2], Boolean.TRUE, element[3]});
 			}
 		}
 		return v;
