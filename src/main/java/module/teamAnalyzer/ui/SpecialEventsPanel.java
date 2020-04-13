@@ -1,6 +1,7 @@
 package module.teamAnalyzer.ui;
 
 import core.gui.model.BaseTableModel;
+import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.specialevents.SpecialEventsPrediction;
@@ -19,18 +20,17 @@ public class SpecialEventsPanel extends JPanel {
     private final JTable table;
     private BaseTableModel tableModel;
     private final JLabel resultLabel;
+    private static HOVerwaltung hov = HOVerwaltung.instance();
 
     private final String[] columns = {
-            "Kind",
-            "Player",
-            "Opponent Player",
-            "Involved Player",
-            "Prob.",
-            "Scores",
-            "Opponent Scores"
+            hov.getLanguageString("Event"),
+            hov.getLanguageString("Spieler"),
+            hov.getLanguageString("ls.teamanalyzer.opponent_player"),
+            hov.getLanguageString("ls.teamanalyzer.involved_player"),
+            hov.getLanguageString("ls.teamanalyzer.probability"),
+            hov.getLanguageString("ls.teamanalyzer.scores"),
+            hov.getLanguageString("ls.teamanalyzer.opponent_scores")
     };
-
-
 
     public SpecialEventsPanel(){
         Vector<Object> data = new Vector<Object>();
@@ -47,11 +47,11 @@ public class SpecialEventsPanel extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-        JLabel start = new JLabel("Special Events");
+        JLabel start = new JLabel(hov.getLanguageString("ls.teamanalyzer.special_events"));
         add(start, BorderLayout.PAGE_START);
         add(scrollPane);
 
-        resultLabel = new JLabel( "Result: 0.00 - 0.00");
+        resultLabel = new JLabel( hov.getLanguageString("ls.teamanalyzer.result") + ": 0.00 - 0.00");
         add(resultLabel, BorderLayout.PAGE_END);
 
     }
@@ -126,7 +126,7 @@ public class SpecialEventsPanel extends JPanel {
 
         double scores = specialEventsPredictionManager.getResultScores();
         double opponentScores = specialEventsPredictionManager.getOpponentResultScores();
-        this.resultLabel.setText(String.format("Result: %.2f : %.2f", scores, opponentScores));
+        this.resultLabel.setText(String.format(hov.getLanguageString("ls.teamanalyzer.result") + ": %.2f : %.2f", scores, opponentScores));
     }
 
     private Vector<Object> getRow(String kind, Player player, Player opponentPlayer, ArrayList<Player> involved, double probability, Double scores, Double scoresOpponent) {

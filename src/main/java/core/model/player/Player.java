@@ -926,6 +926,10 @@ public class Player {
         m_clhrfDate = timestamp;
     }
 
+    public void setHrfDate() {
+        Date now = new Date();
+        setHrfDate(new Timestamp(now.getTime()));
+    }
 
     /**
      * calculate the contribution for the ideal position
@@ -2269,6 +2273,7 @@ public class Player {
     public List<TrainingEvent> downloadTrainingEvents() {
         return OnlineWorker.getTrainingEvents(this.m_iSpielerID);
     }
+
 }
 
 class PositionContribute {

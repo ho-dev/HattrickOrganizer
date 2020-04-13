@@ -28,6 +28,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemListener;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -193,6 +195,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     public final void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(m_jbAddTempSpieler)) {
             final Player tempPlayer = new Player();
+            tempPlayer.setHrfDate();
             tempPlayer.setNationalitaet(HOVerwaltung.instance().getModel().getBasics().getLand());
             tempPlayer.setSpielerID(module.transfer.scout.TransferEingabePanel
                     .getNextTempSpielerID());
