@@ -924,6 +924,10 @@ public class Player {
         m_clhrfDate = timestamp;
     }
 
+    public void setHrfDate() {
+        Date now = new Date();
+        setHrfDate(new Timestamp(now.getTime()));
+    }
 
     /**
      * calculate the contribution for the ideal position
@@ -2263,6 +2267,7 @@ public class Player {
     public void setSubExperience( double experience){
         this.subExperience = experience;
     }
+
 }
 
 class PositionContribute {
