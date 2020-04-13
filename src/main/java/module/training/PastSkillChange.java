@@ -1,13 +1,13 @@
 package module.training;
 
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 import java.util.Date;
 
 
 /**
  * Base Object for the Skillup table
  */
-public class PastSkillup implements ISkillup {
+public class PastSkillChange implements ISkillChange {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Skillup Date */
@@ -29,6 +29,7 @@ public class PastSkillup implements ISkillup {
     private int value;
 
     private String age;
+    private boolean isSkillup=true;
 
     //~ Methods ------------------------------------------------------------------------------------
     public void setDate(Date date) {
@@ -99,6 +100,11 @@ public class PastSkillup implements ISkillup {
         return value;
     }
 
+    @Override
+    public boolean isSkillup() {
+        return isSkillup;
+    }
+
     /**
      * toString methode: creates a String representation of the object
      *
@@ -108,7 +114,12 @@ public class PastSkillup implements ISkillup {
 	public String toString() {
         StringBuffer buffer = new StringBuffer();
 
-        buffer.append("Skillup["); //$NON-NLS-1$
+        if ( isSkillup) {
+            buffer.append("Skillup["); //$NON-NLS-1$
+        }
+        else {
+            buffer.append("Skilldrop["); //$NON-NLS-1$
+        }
         buffer.append(", type = " + type); //$NON-NLS-1$
         buffer.append(", value = " + value); //$NON-NLS-1$
         buffer.append(", htSeason = " + htSeason); //$NON-NLS-1$
@@ -126,5 +137,9 @@ public class PastSkillup implements ISkillup {
     @Override
     public String getAge() {
         return age;
+    }
+
+    public void setSkillup(boolean skillup) {
+        isSkillup = skillup;
     }
 }

@@ -2,12 +2,15 @@ package core.training;
 
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
+import core.gui.comp.entry.SkillEntry;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.HelperWrapper;
+import module.opponentspy.CalcVariables;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +33,7 @@ public class FutureTrainingManager {
 	/** Active player */
 	private Player player;
 	private List<TrainingPerWeek> futureTrainings;
-	private List<ISkillup> futureSkillups;
+	private List<ISkillChange> futureSkillups;
 	private int weeksPassed = 0;
 	private double trainingSpeed;
 
@@ -47,7 +50,7 @@ public class FutureTrainingManager {
 	public FutureTrainingManager(Player p, List<TrainingPerWeek> trainings, int cotrainer,
                                  int trainerLvl, List<StaffMember> staff) {
 		this.player = p;
-		this.futureSkillups = new ArrayList<ISkillup>();
+		this.futureSkillups = new ArrayList<ISkillChange>();
 		this.coTrainer = cotrainer;
 		this.trainer = trainerLvl;
 		this.futureTrainings = trainings;
@@ -57,7 +60,7 @@ public class FutureTrainingManager {
 
 	public FuturePlayer previewPlayer(int startWeekNumber,int finalWeekNumber) {
 
-		this.futureSkillups = new ArrayList<ISkillup>();
+		this.futureSkillups = new ArrayList<ISkillChange>();
 				
 		// Sets the actual training levels
 		actual[0] = getOffset(PlayerSkill.KEEPER);
@@ -230,7 +233,7 @@ public class FutureTrainingManager {
 	*
 	* @return List of Skillups
 	*/
-	public List<ISkillup> getFutureSkillups() {
+	public List<ISkillChange> getFutureSkillups() {
 		return futureSkillups;
 	}
 
@@ -365,12 +368,12 @@ public class FutureTrainingManager {
 		// add sub to skill
 		finalSub[primaryPos] += Math.min(1.0f, primarySubForThisWeek);
 		if (checkSkillup(primaryPos)) {
-			PlayerSkillup su = new PlayerSkillup();
+			PlayerSkillChange su = new PlayerSkillChange();
 			su.setHtSeason(tw.getHattrickSeason());
 			su.setHtWeek(tw.getHattrickWeek());
 			su.setType(wt.getPrimaryTrainingSkill());
 			su.setValue(player.getValue4Skill4(wt.getPrimaryTrainingSkill()) + finalSkillup[primaryPos]);
-			su.setTrainType(ISkillup.SKILLUP_FUTURE);
+			su.setTrainType(ISkillChange.SKILLUP_FUTURE);
 			su.setDate(new Date(tw.getTrainingDate().getTime()));
 			su.setAge(player.getAgeWithDaysAsString(su.getDate()));
 			futureSkillups.add(su);
@@ -378,17 +381,24 @@ public class FutureTrainingManager {
 		if (secondarySubForThisWeek > 0) {
 			finalSub[secondaryPos] += Math.min(1.0f, secondarySubForThisWeek);
 			if (checkSkillup(secondaryPos)) {
-				PlayerSkillup su = new PlayerSkillup();
+				PlayerSkillChange su = new PlayerSkillChange();
 				su.setHtSeason(tw.getHattrickSeason());
 				su.setHtWeek(tw.getHattrickWeek());
 				su.setType(wt.getSecondaryTrainingSkill());
 				su.setValue(player.getValue4Skill4(wt.getSecondaryTrainingSkill()) + finalSkillup[secondaryPos]);
-				su.setTrainType(ISkillup.SKILLUP_FUTURE);
+				su.setTrainType(ISkillChange.SKILLUP_FUTURE);
 				su.setDate(new Date(tw.getTrainingDate().getTime()));
 				su.setAge(player.getAgeWithDaysAsString(su.getDate()));
 				futureSkillups.add(su);
 			}
 		}
+
+		// TODO: Check for skill downs on all positions except those which got training
+		for ( int skill = PlayerSkill.KEEPER; skill <= PlayerSkill.SET_PIECES; skill++) {
+			if (skill == wt.getPrimaryTrainingSkill()) continue;
+			if (skill == wt.getSecondaryTrainingSkill()) continue;
+		}
+
 	}
 
 	/**

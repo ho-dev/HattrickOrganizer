@@ -1,7 +1,7 @@
 // %3284418725:hoplugins.trainingExperience.vo%
 package module.training;
 
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 import core.model.player.Player;
 
 
@@ -10,10 +10,10 @@ import core.model.player.Player;
  *
  * @author NetHyperon
  */
-public class SkillChange {
+public class PlayerSkillChange {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private ISkillup skillup;
+    private ISkillChange skillup;
     private Player player;
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ public class SkillChange {
      * @param player Player
      * @param skillup Skillup
      */
-    public SkillChange(Player player, ISkillup skillup) {
+    public PlayerSkillChange(Player player, ISkillChange skillup) {
         this.player = player;
         this.skillup = skillup;
     }
@@ -45,7 +45,7 @@ public class SkillChange {
      *
      * @return Skillup
      */
-    public ISkillup getSkillup() {
+    public ISkillChange getSkillup() {
         return skillup;
     }
 }

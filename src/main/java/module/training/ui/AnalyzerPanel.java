@@ -6,11 +6,11 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.GUIUtils;
 import module.training.OldTrainingManager;
-import module.training.SkillChange;
+import module.training.PlayerSkillChange;
 import module.training.ui.model.ChangesTableModel;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.ModelChangeListener;
@@ -62,8 +62,8 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	private JTable changesTable;
 	private JCheckBox oldPlayersCheckBox;
 	private Map<Integer, ButtonModel> buttonModels = new HashMap<Integer, ButtonModel>();
-	private Map<Integer, List<SkillChange>> skillups;
-	private Map<Integer, List<SkillChange>> skillupsOld;
+	private Map<Integer, List<PlayerSkillChange>> skillups;
+	private Map<Integer, List<PlayerSkillChange>> skillupsOld;
 	private final TrainingModel model;
 
 	/**
@@ -108,7 +108,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	 * Sets the model for skill changes table.
 	 */
 	private void updateTableModel() {
-		List<SkillChange> values = new ArrayList<SkillChange>();
+		List<PlayerSkillChange> values = new ArrayList<PlayerSkillChange>();
 
 		for (Iterator<Integer> iter = this.buttonModels.keySet().iterator(); iter.hasNext();) {
 			Integer skillType = iter.next();
@@ -124,9 +124,9 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 			}
 		}
 
-		Collections.sort(values, new Comparator<SkillChange>() {
+		Collections.sort(values, new Comparator<PlayerSkillChange>() {
 			@Override
-			public int compare(SkillChange sc1, SkillChange sc2) {
+			public int compare(PlayerSkillChange sc1, PlayerSkillChange sc2) {
 				if (sc1.getSkillup().getHtSeason() > sc2.getSkillup().getHtSeason()) {
 					return -1;
 				} else if (sc1.getSkillup().getHtSeason() < sc2.getSkillup().getHtSeason()) {
@@ -219,23 +219,23 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	 * 
 	 * @return Map of skillups
 	 */
-	private Map<Integer, List<SkillChange>> getSkillups(List<Player> players) {
-		Map<Integer, List<SkillChange>> skillupsByType = new HashMap<Integer, List<SkillChange>>();
+	private Map<Integer, List<PlayerSkillChange>> getSkillups(List<Player> players) {
+		Map<Integer, List<PlayerSkillChange>> skillupsByType = new HashMap<Integer, List<PlayerSkillChange>>();
 
 		for (Player player : players) {
 			OldTrainingManager otm = new OldTrainingManager(player);
-			List<ISkillup> skillups = otm.getAllSkillups();
+			List<ISkillChange> skillups = otm.getAllSkillups();
 
-			for (ISkillup skillup : skillups) {
+			for (ISkillChange skillup : skillups) {
 				Integer skillType = new Integer(skillup.getType());
-				List<SkillChange> skillChanges = skillupsByType.get(skillType);
+				List<PlayerSkillChange> playerSkillChanges = skillupsByType.get(skillType);
 
-				if (skillChanges == null) {
-					skillChanges = new ArrayList<SkillChange>();
-					skillupsByType.put(skillType, skillChanges);
+				if (playerSkillChanges == null) {
+					playerSkillChanges = new ArrayList<PlayerSkillChange>();
+					skillupsByType.put(skillType, playerSkillChanges);
 				}
 
-				skillChanges.add(new SkillChange(player, skillup));
+				playerSkillChanges.add(new PlayerSkillChange(player, skillup));
 			}
 		}
 

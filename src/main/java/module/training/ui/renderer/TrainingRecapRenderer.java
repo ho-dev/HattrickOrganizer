@@ -64,6 +64,8 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
         	 * e.g. "3 10" for outstanding playmaking)
         	 */
 
+        	// TODO: Handle skill downs (other icon count = -1)
+
         	if (s != null && s.length() > 0) {
         		String[] skills = s.split(" "); //$NON-NLS-1$
         		int skillType = Integer.parseInt(skills[0]);

@@ -4,7 +4,7 @@ package module.training.ui;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.model.HOVerwaltung;
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.ModelChangeListener;
 import module.training.ui.model.SkillupTableModel;
@@ -65,7 +65,7 @@ public class SkillupPanel extends LazyPanel {
 	 * Populate the table
 	 */
 	private void loadFromModel() {
-		List<ISkillup> skillups = new ArrayList<ISkillup>();
+		List<ISkillChange> skillups = new ArrayList<ISkillChange>();
 		if (this.model.getActivePlayer() != null) {
 			skillups.addAll(this.model.getSkillupManager().getTrainedSkillups());
 			skillups.addAll(this.model.getFutureTrainingManager().getFutureSkillups());

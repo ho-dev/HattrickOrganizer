@@ -3,7 +3,7 @@ package module.training.ui.model;
 
 import core.constants.player.PlayerAbility;
 import core.model.HOVerwaltung;
-import module.training.SkillChange;
+import module.training.PlayerSkillChange;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class ChangesTableModel extends AbstractTableModel {
 
 	public final static int COL_PLAYER_ID = 6;
 	private static final long serialVersionUID = -9082549798814304017L;
-	private List<SkillChange> values;
+	private List<PlayerSkillChange> values;
 	private String[] colNames = new String[7];
 
 		/**
@@ -29,7 +29,7 @@ public class ChangesTableModel extends AbstractTableModel {
 	 * @param values
 	 *            List of values to show in table.
 	 */
-	public ChangesTableModel(List<SkillChange> values) {
+	public ChangesTableModel(List<PlayerSkillChange> values) {
 		super();
 		HOVerwaltung hoV = HOVerwaltung.instance();
 		this.colNames[0] = hoV.getLanguageString("Week");
@@ -72,7 +72,7 @@ public class ChangesTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		SkillChange change = values.get(rowIndex);
+		PlayerSkillChange change = values.get(rowIndex);
 
 		switch (columnIndex) {
 		case 0:

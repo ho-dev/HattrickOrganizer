@@ -3,12 +3,11 @@ package module.training;
 
 import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.HTCalendarFactory;
 import core.util.HelperWrapper;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,9 +21,9 @@ import java.util.List;
 public class OldTrainingManager {
 
 	/** List of all skill up */
-	private List<ISkillup> allSkillups = new ArrayList<ISkillup>();
+	private List<ISkillChange> allSkillups = new ArrayList<ISkillChange>();
 	/** List of trained skill up */
-	private List<ISkillup> trainSkillups = new ArrayList<ISkillup>();
+	private List<ISkillChange> trainSkillups = new ArrayList<ISkillChange>();
 
 	/**
 	 * Calculates data for the player
@@ -36,8 +35,8 @@ public class OldTrainingManager {
 			return;
 		}
 
-		allSkillups = new ArrayList<ISkillup>();
-		trainSkillups = new ArrayList<ISkillup>();
+		allSkillups = new ArrayList<ISkillChange>();
+		trainSkillups = new ArrayList<ISkillChange>();
 
 		for (int skill = 0; skill < 10; skill++) {
 			// Skip Form ups
@@ -49,7 +48,7 @@ public class OldTrainingManager {
 			int count = 0;
 
 			for (Object[] element : levelUps) {
-				PastSkillup su = null;
+				PastSkillChange su = null;
 
 				try {
 					Date htDate = HelperWrapper.instance().getHattrickDate(
@@ -64,7 +63,7 @@ public class OldTrainingManager {
 					su = getSkillup(trainingDate);
 					su.setValue((Integer) element[2]);
 					su.setType(skill);
-					su.setTrainType(ISkillup.SKILLUP_REAL);
+					su.setTrainType(ISkillChange.SKILLUP_REAL);
 					su.setAge(player.getAgeWithDaysAsString(trainingDate));
 					allSkillups.add(su);
 
@@ -93,7 +92,7 @@ public class OldTrainingManager {
 	 * 
 	 * @return list of all skillups
 	 */
-	public List<ISkillup> getAllSkillups() {
+	public List<ISkillChange> getAllSkillups() {
 		return allSkillups;
 	}
 
@@ -103,7 +102,7 @@ public class OldTrainingManager {
 	 * 
 	 * @return list of trained skillups
 	 */
-	public List<ISkillup> getTrainedSkillups() {
+	public List<ISkillChange> getTrainedSkillups() {
 		return trainSkillups;
 	}
 
@@ -116,9 +115,9 @@ public class OldTrainingManager {
 	 * 
 	 * @return a skillup object with season and week value
 	 */
-	private PastSkillup getSkillup(Date skillupDate) {
+	private PastSkillChange getSkillup(Date skillupDate) {
 
-		PastSkillup skillup = new PastSkillup();
+		PastSkillChange skillup = new PastSkillChange();
 
 		skillup.setHtSeason(HTCalendarFactory.getHTSeason(skillupDate));
 		skillup.setHtWeek(HTCalendarFactory.getHTWeek(skillupDate));
@@ -127,15 +126,15 @@ public class OldTrainingManager {
 		return skillup;
 	}
 
-	private class SkillupComperator implements Comparator<ISkillup> {
+	private class SkillupComperator implements Comparator<ISkillChange> {
 
 		/**
 		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 		 */
 		@Override
-		public int compare(ISkillup o1, ISkillup o2) {
-			ISkillup skillup1 = o1;
-			ISkillup skillup2 = o2;
+		public int compare(ISkillChange o1, ISkillChange o2) {
+			ISkillChange skillup1 = o1;
+			ISkillChange skillup2 = o2;
 
 			if (skillup1.getDate().before(skillup2.getDate())) {
 				return -1;

@@ -7,7 +7,7 @@ import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.BaseTableModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
@@ -212,17 +212,17 @@ public class TrainingRecapPanel extends LazyImagePanel {
             FutureTrainingManager ftm = new FutureTrainingManager(player,
                     this.model.getFutureTrainings(), 0,
                     this.model.getTrainerLevel(), this.model.getAssistants());
-            List<ISkillup> su = ftm.getFutureSkillups();
+            List<ISkillChange> su = ftm.getFutureSkillups();
 
             // Skip player!
             if (su.size() == 0) {
                 continue;
             }
 
-            HashMap<String, ISkillup> maps = new HashMap<String, ISkillup>();
+            HashMap<String, ISkillChange> maps = new HashMap<String, ISkillChange>();
 
-            for (Iterator<ISkillup> iterator = su.iterator(); iterator.hasNext(); ) {
-                ISkillup skillup = iterator.next();
+            for (Iterator<ISkillChange> iterator = su.iterator(); iterator.hasNext(); ) {
+                ISkillChange skillup = iterator.next();
                 maps.put(skillup.getHtSeason() + " " + skillup.getHtWeek(), skillup);
             }
 
@@ -239,7 +239,7 @@ public class TrainingRecapPanel extends LazyImagePanel {
             row.add(Integer.toString(player.getSpielerID()));
 
             for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
-                ISkillup s = (ISkillup) maps.get(columns.get(i + fixedColumns));
+                ISkillChange s = (ISkillChange) maps.get(columns.get(i + fixedColumns));
 
                 if (s == null) {
                     row.add("");

@@ -1,13 +1,13 @@
 package core.training;
 
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 
 import java.util.Date;
 
 /**
  * Base Object for the Skillup table
  */
-public class PlayerSkillup implements ISkillup
+public class PlayerSkillChange implements ISkillChange
 {
 
     /** Skillup Date */
@@ -27,6 +27,9 @@ public class PlayerSkillup implements ISkillup
 
     /** Value of skill */
     private int value;
+
+    // isSkillup true: new Value is greater than old one
+    private boolean isSkillup=true;
 
     private String age;
 
@@ -126,7 +129,12 @@ public class PlayerSkillup implements ISkillup
     {
         StringBuffer buffer = new StringBuffer();
 
-        buffer.append("Skillup["); //$NON-NLS-1$
+        if ( this.isSkillup ) {
+            buffer.append("Skillup["); //$NON-NLS-1$
+        }
+        else {
+            buffer.append("Skilldrop["); //$NON-NLS-1$
+        }
         buffer.append(", type = " + type); //$NON-NLS-1$
         buffer.append(", value = " + value); //$NON-NLS-1$
         buffer.append(", htSeason = " + htSeason); //$NON-NLS-1$
@@ -144,5 +152,14 @@ public class PlayerSkillup implements ISkillup
 
     public void setAge(String age) {
         this.age = age;
+    }
+
+    @Override
+    public boolean isSkillup() {
+        return isSkillup;
+    }
+
+    public void setSkillup(boolean skillup) {
+        isSkillup = skillup;
     }
 }
