@@ -125,7 +125,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         if (obj instanceof SpielerLabelEntry) {
             final SpielerLabelEntry entry = (SpielerLabelEntry) obj;
 
-            return m_clPlayer.getName().compareTo(entry.getSpieler().getName());
+            return m_clPlayer.getFullName().compareTo(entry.getSpieler().getFullName());
         }
 
         return 0;
@@ -142,7 +142,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             } else if (num1 > num2) {
                 return 1;
             } else {
-                return entry.getSpieler().getName().compareTo(m_clPlayer.getName());
+                return entry.getSpieler().getLastName().compareTo(m_clPlayer.getLastName());
             }
         }
         return 0;

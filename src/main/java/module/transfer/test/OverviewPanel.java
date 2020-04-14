@@ -151,7 +151,7 @@ public class OverviewPanel extends JPanel {
 				// + wage.getWage() + " for age " + ageAt);
 			} else {
 				System.out
-						.println("####- " + player.getName() + " wage not found for age " + ageAt);
+						.println("####- " + player.getFullName() + " wage not found for age " + ageAt);
 				allWagesFound = false;
 			}
 
@@ -198,7 +198,7 @@ public class OverviewPanel extends JPanel {
 					return player;
 				}
 			} else {
-				if (player.getName().equals(playerName)) {
+				if (player.getFullName().equals(playerName)) {
 					return player;
 				}
 			}

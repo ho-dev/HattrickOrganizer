@@ -167,7 +167,7 @@ public class TrainingRecapPanel extends LazyImagePanel {
         if (player != null) {
             for (int i = 0; i < this.recapTable.getLockedTable().getRowCount(); i++) {
                 String name = (String) this.recapTable.getLockedTable().getValueAt(i, 0);
-                if (player.getName().equals(name)) {
+                if (player.getFullName().equals(name)) {
                     int viewIndex = this.recapTable.getLockedTable().convertRowIndexToView(i);
                     this.recapTable.getLockedTable().setRowSelectionInterval(viewIndex, viewIndex);
                     break;
@@ -228,7 +228,7 @@ public class TrainingRecapPanel extends LazyImagePanel {
 
             Vector<String> row = new Vector<String>();
 
-            row.add(player.getName());
+            row.add(player.getFullName());
             row.add(player.getAlterWithAgeDaysAsString());
             byte bIdealPosition = player.getIdealPosition();
             row.add(MatchRoleID.getNameForPosition(bIdealPosition)

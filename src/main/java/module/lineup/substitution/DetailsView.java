@@ -131,10 +131,10 @@ public class DetailsView extends JPanel {
 			orderType = LanguageStringLookup.getOrderType(this.substitution.getOrderType());
 
 			Player out = hoModel.getSpieler(this.substitution.getSubjectPlayerID());
-			playerOut = (out != null) ? out.getName() : "";
+			playerOut = (out != null) ? out.getFullName() : "";
 			if (this.substitution.getSubjectPlayerID() != this.substitution.getObjectPlayerID()) {
 				Player in = hoModel.getSpieler(this.substitution.getObjectPlayerID());
-				playerIn = (in != null) ? in.getName() : "";
+				playerIn = (in != null) ? in.getFullName() : "";
 			}
 
 			if (this.substitution.getMatchMinuteCriteria() > 0) {

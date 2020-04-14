@@ -449,7 +449,7 @@ public class FilterPanel extends JPanel {
 
 			@Override
 			public int compare(Player o1, Player o2) {
-				return o1.getName().compareTo(o2.getName());
+				return o1.getFullName().compareTo(o2.getFullName());
 			}
 		};
 
@@ -458,7 +458,7 @@ public class FilterPanel extends JPanel {
 				.getAllSpieler());
 		Collections.sort(players, comparator);
 		for (Player player : players) {
-			playerItems.add(new PlayerCBItem(player.getName(), player.getSpielerID(), player
+			playerItems.add(new PlayerCBItem(player.getFullName(), player.getSpielerID(), player
 					.getPlayerSpecialty()));
 		}
 
@@ -469,7 +469,7 @@ public class FilterPanel extends JPanel {
 				playerItems.add(null);
 			}
 			for (Player player : players) {
-				playerItems.add(new PlayerCBItem(player.getName(), player.getSpielerID(), player
+				playerItems.add(new PlayerCBItem(player.getFullName(), player.getSpielerID(), player
 						.getPlayerSpecialty()));
 			}
 		}

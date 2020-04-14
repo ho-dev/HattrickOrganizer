@@ -48,7 +48,7 @@ final class SpielerOffsetDialog extends JDialog implements ActionListener {
 	protected SpielerOffsetDialog(javax.swing.JFrame owner, Player player) {
 		super(owner, true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setTitle(HOVerwaltung.instance().getLanguageString("OffsetTitle") + " " + player.getName());
+		setTitle(HOVerwaltung.instance().getLanguageString("OffsetTitle") + " " + player.getShortName());
 
 		m_clPlayer = player;
 
