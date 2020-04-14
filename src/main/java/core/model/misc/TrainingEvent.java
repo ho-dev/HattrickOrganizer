@@ -2,6 +2,9 @@ package core.model.misc;
 
 import core.util.HTCalendar;
 import core.util.HTCalendarFactory;
+import module.opponentspy.CalcVariables;
+import module.training.Skills;
+
 import java.sql.Timestamp;
 import java.util.Map;
 
@@ -86,5 +89,9 @@ public class TrainingEvent {
         HTCalendar c = HTCalendarFactory.createTrainingCalendar(hrfDate);
         int cSeason = c.getHTSeason();
         return this.season>cSeason || this.season==cSeason && this.matchRound > c.getHTWeek();
+    }
+
+    public int getPlayerSkill() {
+        return Skills.HTSkillID.valueOf(this.skillID).getValue();
     }
 }

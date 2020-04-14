@@ -467,7 +467,7 @@ public class HOModel {
     					if ( events != null){
     						for (TrainingEvent event: events){
     							if ( !event.isAfter(player.getHrfDate())){
-									old.setValue4Skill4(event.getSkillID(), event.getOldLevel());
+									old.setValue4Skill4(event.getPlayerSkill(), event.getOldLevel());
 								}
 							}
 						}

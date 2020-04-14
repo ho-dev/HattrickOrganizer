@@ -3,8 +3,11 @@ package module.training;
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
 import core.model.player.Player;
+import module.series.promotion.HttpDataSubmitter;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class that manages all the relation of Skills
@@ -12,6 +15,59 @@ import java.awt.Color;
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class Skills {
+
+    /*
+        Value	Description
+        1	Goaltending
+        2	Stamina
+        3	Set pieces
+        4	Defending
+        5	Scoring
+        6	Winger
+        7	Passing
+        8	Playmaking
+        9	Trainer
+        10	Leadership
+        11	Experience
+     */
+
+    public enum HTSkillID {
+        GOALKEEPER(1),
+        STAMINA(2),
+        SET_PIECES(3),
+        DEFENDING(4),
+        SCORING(5),
+        WINGER(6),
+        PASSING(7),
+        PLAYMAKING(8),
+        TRAINER(9),
+        LEADERSHIP(10),
+        EXPERIENCE(11);
+
+        private int value;
+        private static Map map = new HashMap<>();
+
+        private HTSkillID(int value) {
+            this.value = value;
+        }
+
+        // Init mapping
+        static {
+            for (HTSkillID skill : HTSkillID.values()) {
+                map.put(skill.value, skill);
+            }
+        }
+
+        public static HTSkillID valueOf(int skill) {
+            return (HTSkillID) map.get(skill);
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+    };
+
     //~ Methods ------------------------------------------------------------------------------------
     public static int getSkillAtPosition(int position) {
         switch (position) {
