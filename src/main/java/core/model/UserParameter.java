@@ -366,6 +366,9 @@ public final class UserParameter extends Configuration {
     public boolean CombinedRatingChartPanel_Values = false;
     public boolean CombinedRatingChartPanel_HelpLines = false;
 
+    // Promotion/Demotion test
+    public boolean promotionManagerTest = false;
+
     //Alternative Positions
     public float alternativePositionsTolerance = .03f;
 
@@ -633,6 +636,8 @@ public final class UserParameter extends Configuration {
         map.put("CombinedRatingChartPanel_HelpLines", String.valueOf(CombinedRatingChartPanel_HelpLines));
         map.put("alternativePositionsTolerance", String.valueOf(alternativePositionsTolerance));
 
+        map.put("promotionManagerTest", String.valueOf(promotionManagerTest));
+
         return map;
     }
 
@@ -862,6 +867,8 @@ public final class UserParameter extends Configuration {
         CombinedRatingChartPanel_Values = getBooleanValue(values, "CombinedRatingChartPanel_Values");
         CombinedRatingChartPanel_HelpLines = getBooleanValue(values, "CombinedRatingChartPanel_HelpLines");
         alternativePositionsTolerance = getFloatValue(values, "alternativePositionsTolerance");
+
+        promotionManagerTest = getBooleanValue(values, "promotionManagerTest");
     }
 
 }
