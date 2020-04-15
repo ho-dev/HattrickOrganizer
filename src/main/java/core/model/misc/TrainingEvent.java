@@ -2,10 +2,12 @@ package core.model.misc;
 
 import core.util.HTCalendar;
 import core.util.HTCalendarFactory;
-import module.opponentspy.CalcVariables;
+import core.util.HelperWrapper;
 import module.training.Skills;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 public class TrainingEvent {
@@ -28,13 +30,31 @@ public class TrainingEvent {
     private int dayNumber;
     // An integer to show which season the event was recorded. The season is related to the league of the team of the player. Ranges from 1 to 7
 
+    private Timestamp eventDate;
+    // undocumented feature
+
+    public Timestamp getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(Timestamp eventDate) {
+        this.eventDate = eventDate;
+    }
+
     public TrainingEvent(Map<String, String> trainingEvent) {
-        this.skillID =  Integer.parseInt(trainingEvent.get("SkillID"));
-        this.oldLevel =  Integer.parseInt(trainingEvent.get("OldLevel"));
-        this.newLevel =  Integer.parseInt(trainingEvent.get("NewLevel"));
-        this.season =  Integer.parseInt(trainingEvent.get("Season"));
-        this.matchRound =  Integer.parseInt(trainingEvent.get("MatchRound"));
-        this.dayNumber =  Integer.parseInt(trainingEvent.get("DayNumber"));
+        this.skillID = Integer.parseInt(trainingEvent.get("SkillID"));
+        this.oldLevel = Integer.parseInt(trainingEvent.get("OldLevel"));
+        this.newLevel = Integer.parseInt(trainingEvent.get("NewLevel"));
+        this.season = Integer.parseInt(trainingEvent.get("Season"));
+        this.matchRound = Integer.parseInt(trainingEvent.get("MatchRound"));
+        this.dayNumber = Integer.parseInt(trainingEvent.get("DayNumber"));
+
+        String eventdatestr = trainingEvent.get("EventDate");
+        try {
+            this.eventDate = new Timestamp(HelperWrapper.instance().getHattrickDate(eventdatestr).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getSkillID() {
@@ -83,12 +103,6 @@ public class TrainingEvent {
 
     public void setDayNumber(int dayNumber) {
         this.dayNumber = dayNumber;
-    }
-
-    public boolean isAfter(Timestamp hrfDate) {
-        HTCalendar c = HTCalendarFactory.createTrainingCalendar(hrfDate);
-        int cSeason = c.getHTSeason();
-        return this.season>cSeason || this.season==cSeason && this.matchRound > c.getHTWeek();
     }
 
     public int getPlayerSkill() {

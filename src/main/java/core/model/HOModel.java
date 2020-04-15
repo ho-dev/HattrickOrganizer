@@ -466,7 +466,7 @@ public class HOModel {
     					List<TrainingEvent> events =  player.downloadTrainingEvents();
     					if ( events != null){
     						for (TrainingEvent event: events){
-    							if ( !event.isAfter(player.getHrfDate())){
+    							if ( event.getEventDate().compareTo(player.getHrfDate())<=0){
 									old.setValue4Skill4(event.getPlayerSkill(), event.getOldLevel());
 								}
 							}
