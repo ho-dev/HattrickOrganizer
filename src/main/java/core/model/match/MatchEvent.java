@@ -418,6 +418,7 @@ public class MatchEvent {
         put(MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_BEHIND, HOIconName.ROTATE); //#360
         put(MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_AHEAD, HOIconName.ROTATE); //#361
         put(MatchEventID.CHANGE_OF_TACTIC_MINUTE, HOIconName.ROTATE); //#362
+        put(MatchEventID.PLAYER_POSITION_SWAP_MINUTE, HOIconName.SWAP); //#372
 
         put(MatchEventID.RAINY_WEATHER_MANY_PLAYERS_AFFECTED, null); //#390
         put(MatchEventID.SUNNY_WEATHER_MANY_PLAYERS_AFFECTED, null); //#391
