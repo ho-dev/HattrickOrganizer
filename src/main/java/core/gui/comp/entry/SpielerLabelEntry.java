@@ -252,7 +252,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
 
         if (m_clPlayer != null) {
             //Name
-            m_jlName.setText(m_clPlayer.getShortName());
+            m_jlName.setText(m_clPlayer.getFullName());
             m_jlName.setOpaque(false);
             m_jlName.setForeground(getForegroundForSpieler(m_clPlayer));
 
