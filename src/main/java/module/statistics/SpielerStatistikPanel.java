@@ -117,7 +117,7 @@ class SpielerStatistikPanel extends LazyImagePanel {
 			public void actionPerformed(ActionEvent e) {
 				if (m_jcbSpieler.getSelectedItem() != null) {
 					String name = ((SpielerCBItem) m_jcbSpieler.getSelectedItem()).getSpieler()
-							.getName();
+							.getFullName();
 					m_clStatistikPanel.doPrint(name);
 				}
 			}
@@ -497,7 +497,7 @@ class SpielerStatistikPanel extends LazyImagePanel {
 		List<Player> players = HOVerwaltung.instance().getModel().getAllSpieler();
 		List<SpielerCBItem> spielerCBItems = new ArrayList<SpielerCBItem>(players.size());
 		for (Player player : players) {
-			spielerCBItems.add(new SpielerCBItem(player.getName(), 0f, player));
+			spielerCBItems.add(new SpielerCBItem(player.getFullName(), 0f, player));
 		}
 		Collections.sort(spielerCBItems);
 
@@ -505,7 +505,7 @@ class SpielerStatistikPanel extends LazyImagePanel {
 		List<Player> oldPlayers = HOVerwaltung.instance().getModel().getAllOldSpieler();
 		List<SpielerCBItem> spielerOldCBItems = new ArrayList<SpielerCBItem>(players.size());
 		for (Player player : oldPlayers) {
-			spielerOldCBItems.add(new SpielerCBItem(player.getName(), 0f, player));
+			spielerOldCBItems.add(new SpielerCBItem(player.getFullName(), 0f, player));
 		}
 		Collections.sort(spielerOldCBItems);
 

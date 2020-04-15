@@ -367,7 +367,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 						&& lastLineup.getAufstellung()
 								.isPlayerInStartingEleven(player.getSpielerID())) {
 					include = false;
-					HOLogger.instance().log(getClass(), "Exclude: " + player.getName());
+					HOLogger.instance().log(getClass(), "Exclude: " + player.getFullName());
 				}
 
 				if (include) {

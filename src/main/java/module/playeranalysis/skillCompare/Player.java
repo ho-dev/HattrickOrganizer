@@ -8,7 +8,9 @@ import core.model.player.IMatchRoleID;
 public class Player
 {
 	private core.model.player.Player m_Player;
-	private String m_Name;
+	private String m_FirstName;
+	private String m_NickName;
+	private String m_LastName;
 	private int m_Age;
 	private int m_ID;
 	private int m_Wages;
@@ -448,7 +450,9 @@ public class Player
 	public void setPlayerValues()
 	{
 		setID(m_Player.getSpielerID());
-		setName(m_Player.getName());
+		setFirstName(m_Player.getFirstName());
+		setNickName(m_Player.getNickName());
+		setLastName(m_Player.getLastName());
 		setAge(m_Player.getAlter());
 		setWages(m_Player.getGehalt());
 		setTSI(m_Player.getTSI());
@@ -715,11 +719,26 @@ public class Player
 	public void setOldStamina(int val) {
 		m_OldStamina = val;
 	}
-	public String getName() {
-		return m_Name;
+	public String getFirstName() {
+		return m_FirstName;
 	}
-	public void setName(String name) {
-		m_Name = name;
+	public void setFirstName(String name) {
+		m_FirstName = name;
+	}
+	public String getNickName() {
+		return m_NickName;
+	}
+	public void setNickName(String name) {
+		m_NickName = name;
+	}
+	public String getLastName() {
+		return m_LastName;
+	}
+	public void setLastName(String name) {
+		m_LastName = name;
+	}
+	public String getFulltName() {
+		return m_FirstName + " " + m_NickName + " " + m_LastName;
 	}
 	public int getNationality() {
 		return m_Nationality;

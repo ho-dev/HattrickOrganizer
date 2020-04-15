@@ -136,13 +136,13 @@ public class SpecialEventsPanel extends JPanel {
             if ( p == null){
                 continue;
             }
-            involvedPlayerNames.add(p.getName());
+            involvedPlayerNames.add(p.getFullName());
         }
         Vector<Object> rowData = new Vector<Object>();
 
         rowData.add(kind);
-        rowData.add(player!=null?player.getName():"");
-        rowData.add(opponentPlayer!=null?opponentPlayer.getName():"");
+        rowData.add(player!=null?player.getFullName():"");
+        rowData.add(opponentPlayer!=null?opponentPlayer.getFullName():"");
         rowData.add(involvedPlayerNames);
 
         DecimalFormat df = new DecimalFormat("#.00");

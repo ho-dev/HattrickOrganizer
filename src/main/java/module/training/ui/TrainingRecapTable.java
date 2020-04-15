@@ -56,7 +56,7 @@ public class TrainingRecapTable extends JScrollPane {
 
                 this.setOpaque(true);
                 this.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
-                this.setText(player.getName());
+                this.setText(player.getFullName());
 
                 tooltip = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getText();
                 if (tooltip == null) {

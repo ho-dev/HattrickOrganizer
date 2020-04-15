@@ -580,7 +580,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
 
         //Minimized
         if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getSpieler() != null)) {
-            m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getName());
+            m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getShortName());
             m_jlPlayer.setIcon(ImageUtilities.getImage4Position(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
                     m_clSelectedPlayer.getSpieler().getTrikotnummer()));
         } else {
@@ -650,7 +650,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
 
         //Minimized
         if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getSpieler() != null)) {
-            m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getName());
+            m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getShortName());
             m_jlPlayer.setIcon(ImageUtilities.getImage4Position(lineup.getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
                     m_clSelectedPlayer.getSpieler()
                             .getTrikotnummer()));
@@ -775,7 +775,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
      */
     private SpielerCBItem createSpielerCBItem(SpielerCBItem item, Player player) {
         if (player != null) {
-            String spielerName = player.getLastName();
+            String spielerName = player.getShortName();
 
             if (m_iPositionID == IMatchRoleID.setPieces) {
                 item.setValues(spielerName,

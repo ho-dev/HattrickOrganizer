@@ -199,7 +199,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             tempPlayer.setNationalitaet(HOVerwaltung.instance().getModel().getBasics().getLand());
             tempPlayer.setSpielerID(module.transfer.scout.TransferEingabePanel
                     .getNextTempSpielerID());
-            tempPlayer.setName("Temp " + Math.abs(1000 + tempPlayer.getSpielerID()));
+            tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getSpielerID()));
             tempPlayer.setAlter(getAge());
             tempPlayer.setAgeDays(getAgeDays());
             tempPlayer.setErfahrung(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
@@ -244,7 +244,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     }
 
     private void setCBs() {
-        m_jlName.setText(m_clPlayer.getName());
+        m_jlName.setText(m_clPlayer.getFullName());
         jtfAge.setText(m_clPlayer.getAlter() + "." + m_clPlayer.getAgeDays());
         Helper.markierenComboBox(m_jcbForm, m_clPlayer.getForm());
         Helper.markierenComboBox(m_jcbErfahrung, m_clPlayer.getErfahrung());

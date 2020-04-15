@@ -75,7 +75,7 @@ public final class PlayerRetriever {
         for (final Iterator<Player> iter = players.iterator(); iter.hasNext();) {
             player = iter.next();
 
-            if (Objects.equals(player.getName(), transfer.getPlayerName())) {
+            if (Objects.equals(player.getFullName(), transfer.getPlayerName())) {   //TODO: check this is not broken
                 matches.add(player);
             }
         }

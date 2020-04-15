@@ -28,7 +28,7 @@ public class PlayerPositionItem {
 			builder.append(" ) ");
 		}
 		if (this.player != null) {
-			builder.append(this.player.getName());
+			builder.append(this.player.getFullName());
 		}
 
 		return builder.toString();
