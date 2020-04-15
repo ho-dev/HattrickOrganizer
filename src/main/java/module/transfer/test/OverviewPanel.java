@@ -3,6 +3,7 @@ package module.transfer.test;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.util.HOLogger;
 import module.transfer.PlayerTransfer;
 
 import java.awt.BorderLayout;
@@ -150,8 +151,7 @@ public class OverviewPanel extends JPanel {
 				// System.out.println("####- " + player.getName() + " wage is "
 				// + wage.getWage() + " for age " + ageAt);
 			} else {
-				System.out
-						.println("####- " + player.getFullName() + " wage not found for age " + ageAt);
+				HOLogger.instance().log(getClass(),"####- " + player.getFullName() + " wage not found for age " + ageAt);
 				allWagesFound = false;
 			}
 
