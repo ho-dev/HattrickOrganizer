@@ -609,7 +609,7 @@ public class HOModel {
     	}
     	
     	int playerID = after.getSpielerID();
-    	String playerName = after.getName();
+    	String playerName = after.getFullName();
     	TrainingPerWeek train = TrainingWeekManager.instance().getTrainingWeek(getXtraDaten().getTrainingDate());
     	if (train == null) { 
     		// Just say no to logging crashes.

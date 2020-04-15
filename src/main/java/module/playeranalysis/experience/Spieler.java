@@ -49,7 +49,7 @@ final class Spieler {
 		einsaetzeNachVorletzterAufwertung = null;
 		einsaetzeMitAktualisierungNachVorletzterAufwertung = null;
 		id = inPlayer.getSpielerID();
-		name = inPlayer.getName();
+		name = inPlayer.getFullName();
 		alter = inPlayer.getAlter();
 		erfahrung = inPlayer.getErfahrung();
 		erfahrungMin = erfahrung;

@@ -1039,7 +1039,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 			for (int u = 0; u < tmpAnzahl; u++) {
 				tmpPlayer = m_V_setPlayers.elementAt(u);
 				if (("" + tmpPlayer.getId()).compareTo(id) == 0) {
-					l_SpielerName.setText("" + tmpPlayer.getName());
+					l_SpielerName.setText("" + tmpPlayer.getFulltName());
 					break;
 				}
 			}

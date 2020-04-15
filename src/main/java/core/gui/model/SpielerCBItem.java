@@ -112,7 +112,7 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
             } else if (getPositionsBewertung() < cbitem.getPositionsBewertung()) {
                 return 1;
             } else {
-                return getSpieler().getName().compareTo(cbitem.getSpieler().getName());
+                return getSpieler().getLastName().compareTo(cbitem.getSpieler().getLastName());
             }
         } else if (cbitem.getSpieler() == null) {
             return -1;

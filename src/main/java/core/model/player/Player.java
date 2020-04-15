@@ -54,7 +54,9 @@ public class Player {
     /**
      * Name
      */
-    private String m_sName = "";
+    private String m_sFirstName = "";
+    private String m_sNickName = "";
+    private String m_sLastName = "";
 
     /**
      * TeamInfo Smilie Filename
@@ -352,7 +354,9 @@ public class Player {
         // Separate first, nick and last names are available. Utilize them?
 
         m_iSpielerID = Integer.parseInt(properties.getProperty("id", "0"));
-        m_sName = properties.getProperty("name", "");
+        m_sFirstName = properties.getProperty("firstname", "");
+        m_sNickName = properties.getProperty("nickname", "");
+        m_sLastName = properties.getProperty("lastname", "");
         m_iAlter = Integer.parseInt(properties.getProperty("ald", "0"));
         m_iAgeDays = Integer.parseInt(properties.getProperty("agedays", "0"));
         m_iKondition = Integer.parseInt(properties.getProperty("uth", "0"));
@@ -1184,46 +1188,57 @@ public class Player {
 //		return HOVerwaltung.instance().getModel().getEPV().getPrice(data);
 //    }
 
-    /**
-     * Setter for property m_sName.
-     *
-     * @param m_sName New value of property m_sName.
-     */
-    public void setName(java.lang.String m_sName) {
-        this.m_sName = m_sName;
+
+    public void setFirstName(java.lang.String m_sName) {
+        this.m_sFirstName = m_sName;
     }
 
-    /**
-     * Getter for property m_sName.
-     *
-     * @return Value of property m_sName.
-     */
-    public java.lang.String getName() {
-        return DBManager.deleteEscapeSequences(m_sName);
+    public java.lang.String getFirstName() {
+        return DBManager.deleteEscapeSequences(m_sFirstName);
+    }
+
+    public void setNickName(java.lang.String m_sName) {
+        this.m_sNickName = m_sName;
+    }
+
+    public java.lang.String getNickName() {
+        return DBManager.deleteEscapeSequences(m_sNickName);
+    }
+
+    public void setLastName(java.lang.String m_sName) {
+        this.m_sLastName = m_sName;
     }
 
     public java.lang.String getLastName() {
-        String lastName = this.getName();
-        return lastName.substring(lastName.lastIndexOf(" ") + 1);
+        return DBManager.deleteEscapeSequences(m_sLastName);
     }
+
+
 
     /**
      * Getter for shortName
-     *
-     * @return returns the fist letter of the first Name + a "." and the last name
-     * eg: James Bond = J. Bond, unless the string is already empty — in which
-     * case it is deemed short enough, and returned.
+     * eg: James Bond = J. Bond
+     * Nickname are ignored
      */
     public String getShortName() {
-        String fullName = getName();
 
-        if (StringUtils.isEmpty(fullName)) {
-            return fullName;
-        } else {
-            String initial = fullName.substring(0, 1);
-            String lastName = getLastName();
-            return initial + ". " + lastName;
+        if (getFirstName().isEmpty())
+        {
+            return getLastName();
         }
+        return getFirstName().substring(0, 1) + ". " + getLastName();
+
+        }
+
+
+    public java.lang.String getFullName() {
+
+        if (getNickName().isEmpty())
+        {
+            return getFirstName() + " " +getLastName();
+        }
+
+        return getFirstName() + " '" + getNickName() + "' " +getLastName();
     }
 
     /**

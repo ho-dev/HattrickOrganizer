@@ -358,7 +358,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
      * set values of the player to fields
      */
     private void setLabels() {
-        m_jpName.setText(m_clPlayer.getName());
+        m_jpName.setText(m_clPlayer.getShortName());
         m_jpName.setFGColor(SpielerLabelEntry.getForegroundForSpieler(m_clPlayer));
         m_jpAge.setText(m_clPlayer.getAgeStringFull());
         m_jpNationality.setIcon(ImageUtilities.getFlagIcon(m_clPlayer.getNationalitaet()));

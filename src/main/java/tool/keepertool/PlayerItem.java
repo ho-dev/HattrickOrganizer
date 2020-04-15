@@ -27,7 +27,7 @@ public class PlayerItem {
         tsi = player.getTSI();
         form = player.getForm();
         id = player.getSpielerID();
-        name = player.getName();
+        name = player.getFullName();
     }
 
     /**

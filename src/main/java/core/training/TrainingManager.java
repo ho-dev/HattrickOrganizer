@@ -100,7 +100,7 @@ public class TrainingManager {
         	c2s = " ("+htc2.getHTSeason()+"."+htc2.getHTWeek()+")";
 
         	HOLogger.instance().debug(getClass(),
-        			"Start calcWeeklyTraining for "+ player.getName()+", zeitpunkt="+((timestamp!=null)?timestamp.toString()+c1s:"")
+        			"Start calcWeeklyTraining for "+ player.getFullName()+", zeitpunkt="+((timestamp!=null)?timestamp.toString()+c1s:"")
         			+ ", trainDate="+train.getTrainingDate().toString()+c2s);
         }
 
@@ -112,7 +112,7 @@ public class TrainingManager {
 	        	List<Integer> matches = getOwnMatchesForTraining(trainingDate);
 	        	int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 	        	TrainingWeekPlayer tp = new TrainingWeekPlayer();
-	            tp.Name(player.getName());
+	            tp.Name(player.getFullName());
 	            int minutes=0;
 	        	for (int i=0; i<matches.size(); i++) {
 	                final int matchId = (matches.get(i)).intValue();
@@ -168,7 +168,7 @@ public class TrainingManager {
 
 	    		if (TrainingManager.TRAININGDEBUG) {
 					HOLogger.instance().debug(getClass(), "Week " + train.getHattrickWeek()
-	            		+": Player " + player.getName() + " (" + playerID + ")"
+	            		+": Player " + player.getFullName() + " (" + playerID + ")"
 	            		+" played total " + tp.getMinutesPlayed() + " mins for training purposes and got "
 	            		+ wt.getPrimaryTraining(tp) + " primary training points and "
 	            		+ wt.getSecondaryTraining(tp) + " secondary training points");
