@@ -133,6 +133,8 @@ public interface HOIconName {
 	String NO_GOAL_LEFT = "keintor_links";
 	String NO_GOAL_RIGHT = "keintor_rechts";
 
+	String ME_SWAP = "me_swap";
+
 
 	String FORMATION  = "formation";
 

@@ -190,7 +190,7 @@ public class PositionChooser extends JPanel {
 			this.player = player;
 			if (isOccupied()) {
 				setBackground(COLOR_POS_OCCUPIED);
-				setToolTipText(player.getName());
+				setToolTipText(player.getFullName());
 			} else {
 				setBackground(COLOR_POS_DEFAULT);
 				setToolTipText(null);

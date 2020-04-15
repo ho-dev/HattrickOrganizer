@@ -153,7 +153,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		List<SpielerCBItem> spielerCBItems = new ArrayList<SpielerCBItem>(players.size());
 
 		for (Player player : players) {
-			spielerCBItems.add(new SpielerCBItem(player.getName(), 0f, player));
+			spielerCBItems.add(new SpielerCBItem(player.getFullName(), 0f, player));
 		}
 		Collections.sort(spielerCBItems);
 
@@ -162,7 +162,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		List<SpielerCBItem> spielerOldCBItems = new ArrayList<SpielerCBItem>(oldPlayers.size());
 
 		for (Player player : oldPlayers) {
-			spielerOldCBItems.add(new SpielerCBItem(player.getName(), 0f, player));
+			spielerOldCBItems.add(new SpielerCBItem(player.getFullName(), 0f, player));
 		}
 		Collections.sort(spielerOldCBItems);
 

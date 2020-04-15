@@ -14,8 +14,6 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionConfig;
 import core.rating.RatingPredictionManager;
-import core.specialevents.SpecialEventsPrediction;
-import core.specialevents.SpecialEventsPredictionManager;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
@@ -652,7 +650,7 @@ public class Lineup{
 
 
 	/**
-	 * Get the short name for a fomation constant.
+	 * Get the short name for a formation constant.
 	 */
 	public static String getNameForSystem(byte system) {
 		String name;
@@ -777,25 +775,26 @@ public class Lineup{
 		return  m_cWeatherForecast;
 	}
 
-	private boolean isUpcomingMatchLoaded(){return m_iArenaId>=0; }
+	private boolean isUpcomingMatchLoaded() { return m_iArenaId>=0; }
+
 	private void getUpcomingMatch() {
 		try {
 			final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 			final MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(teamId,
 					MatchKurzInfo.UPCOMING);
 			final List<MatchKurzInfo> sMatches = orderMatches(matches);
-			MatchKurzInfo match = sMatches.get(0);
-			if (match == null) {
-				m_sLocation = IMatchDetails.LOCATION_AWAY;
+
+			if (sMatches.isEmpty() || sMatches.get(0) == null) {
+				m_sLocation = 0;
 				m_iArenaId = 0;
 				m_iRegionId = 0;
 				m_cWeather = Weather.NULL;
 				m_cWeatherForecast = Weather.Forecast.NULL;
-				HOLogger.instance().error(getClass(), "no match to determine location");
+				HOLogger.instance().warning(getClass(), "no match to determine location");
 				return;
 			}
 
-
+			MatchKurzInfo match = sMatches.get(0);
 			if (match.getMatchTyp().isOfficial()) {
 				if (match.isNeutral()) {
 					m_sLocation = IMatchDetails.LOCATION_NEUTRAL;    // could be overwritten if it is also a derby
@@ -820,7 +819,7 @@ public class Lineup{
 			m_cWeatherForecast = match.getWeatherForecast();
 
 		} catch (Exception e) {
-			HOLogger.instance().error(getClass(), "getHeimspiel: " + e);
+			HOLogger.instance().error(getClass(), "getUpcomingMatch: " + e);
 			m_sLocation = 0;
 		}
 

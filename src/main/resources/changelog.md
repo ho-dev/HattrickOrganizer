@@ -18,8 +18,14 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ## Player Analysis
   - fix age of player in player analysis table #422
 
+## Team Analysis
+  - special events prediction #299
+
 ## League Details
  - Promotion / Demotion status displayed on week 14 and 15 of season. #247
+
+## Training 
+ - Fix negative skill values in training history #444
 
 
 # Changelist HO! 2.1

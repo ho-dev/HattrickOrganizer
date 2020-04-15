@@ -12,6 +12,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+// code is from https://stackoverflow.com/a/21851201/289466 by user SomethingSomething on Stack Overflow.
+// public methods checkNode and isChecked are added
+
 public class CheckBoxTree extends JTree {
 
     // Defining data structure that will enable to fast check-indicate the state of each node
