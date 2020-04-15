@@ -227,6 +227,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
             final Player player = getSelectedPlayer();
+            setPlayerTooltip(player);
 
             //set player
             if (itemEvent.getSource().equals(m_jcbPlayer)) {
@@ -266,7 +267,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                 setTaktik(getTactic(), player);
             } else if (itemEvent.getSource().equals(m_jcbTactic)) {
                 aufstellung.getPositionById(m_iPositionID).setTaktik(getTactic());
-
             }
 
             //Adjust tactic values
@@ -278,6 +278,16 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             m_clUpdater.update();
         }
     }
+
+    private void setPlayerTooltip(Player player) {
+                if (player != null) {
+                        String playerName = player.getFullName();
+                        setToolTipText(playerName);
+                        m_jlPlayer.setToolTipText(playerName);
+                        m_jlPosition.setToolTipText(playerName);
+                        m_jcbPlayer.setToolTipText(playerName);
+                    }
+            }
 
     /**
      * Update the list of player in the ComboBox except for backup
@@ -490,6 +500,8 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         }
 
         setTaktik(getTactic(), aktuellerPlayer);
+
+        setPlayerTooltip(m_clSelectedPlayer.getSpieler());
     }
 
 
