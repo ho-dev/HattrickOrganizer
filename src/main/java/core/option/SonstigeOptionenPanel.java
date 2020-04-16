@@ -79,6 +79,7 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
     private SliderPanel m_jslWetterEffekt;
     private SliderPanel m_jslFutureWeeks;
     private SliderPanel m_jslAlternativePositionsTolerance;
+    private JCheckBox m_jcbPromotionStatusTest;
 
     /**
      * Creates a new SonstigeOptionenPanel object.
@@ -102,6 +103,8 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
     public final void itemStateChanged(ItemEvent itemEvent) {
         // Kein Selected Event!
         core.model.UserParameter.temp().zahlenFuerSkill = m_jchZahlenBewertung.isSelected();
+        UserParameter.temp().promotionManagerTest = m_jcbPromotionStatusTest.isSelected();
+
         if (itemEvent.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
             core.model.UserParameter.temp().faktorGeld = ((GeldFaktorCBItem) m_jcbWaehrung.getSelectedItem()).getFaktor();
             core.model.UserParameter.temp().TimeZoneDifference = ((CBItem) m_jcbTimeZoneDifference.getSelectedItem()).getId();
@@ -110,8 +113,9 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
             core.model.UserParameter.temp().standardsortierung = ((CBItem) m_jcbSortierung.getSelectedItem()).getId();
             core.model.UserParameter.temp().skin = ((String) m_jcbSkin.getSelectedItem());
         }
-        if ((!core.model.UserParameter.temp().sprachDatei.equals(core.model.UserParameter.instance().sprachDatei))
-                || (core.model.UserParameter.temp().TimeZoneDifference != core.model.UserParameter.instance().TimeZoneDifference))
+        if (!core.model.UserParameter.temp().sprachDatei.equals(core.model.UserParameter.instance().sprachDatei)
+                || (core.model.UserParameter.temp().TimeZoneDifference != core.model.UserParameter.instance().TimeZoneDifference)
+                || (UserParameter.temp().promotionManagerTest != UserParameter.instance().promotionManagerTest))
             OptionManager.instance().setRestartNeeded();
         if (core.model.UserParameter.temp().zahlenFuerSkill != core.model.UserParameter.instance().zahlenFuerSkill)
             OptionManager.instance().setReInitNeeded();
@@ -146,7 +150,7 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
      * Init components
      */
     private void initComponents() {
-        setLayout(new GridLayout(12, 1, 4, 4));
+        setLayout(new GridLayout(13, 1, 4, 4));
 
         m_jslDeadline = new SliderPanel(HOVerwaltung.instance().getLanguageString("TransferWecker"), 60, 0, 1f / 60000f, 1.0f, 120);
         m_jslDeadline.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_TransferWecker"));
@@ -233,5 +237,10 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
         m_jslAlternativePositionsTolerance.addChangeListener(this);
         add(m_jslAlternativePositionsTolerance);
 
+        m_jcbPromotionStatusTest = new JCheckBox(HOVerwaltung.instance().getLanguageString("PMStatusTest"));
+        m_jcbPromotionStatusTest.setOpaque(false);
+        m_jcbPromotionStatusTest.setSelected(UserParameter.temp().promotionManagerTest);
+        m_jcbPromotionStatusTest.addItemListener(this);
+        add(m_jcbPromotionStatusTest);
     }
 }
