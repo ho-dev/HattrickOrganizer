@@ -51,6 +51,7 @@ public class XMLTrainingEventsParser {
         extract(item, map, "Season");
         extract(item, map, "MatchRound");
         extract(item, map, "DayNumber");
+        extract(item, map, "EventDate");
 
         return map;
     }

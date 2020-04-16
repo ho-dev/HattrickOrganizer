@@ -113,6 +113,16 @@ public class HOModel {
         return m_vPlayer;
     }
 
+    // Method is called in calcSubskills from historic HOModel instances
+	// HOVerwaltung manages the HOModel with the current player list
+    public final boolean isCurrentPlayer(int playerId)
+	{
+		for ( Player p : HOVerwaltung.instance().getModel().getAllSpieler()){ // could differ from this.m_vPlayer
+			if ( p.getSpielerID() == playerId) return true;
+		}
+		return false;
+	}
+
     /**
      * Setzt neue Aufstellung
      */
@@ -452,7 +462,7 @@ public class HOModel {
  
     				// The version of the player from last hrf
     				Player old = players.get(String.valueOf(player.getSpielerID()));
-    				if (old == null) {
+    				if (old == null ) {
     					if (TrainingManager.TRAININGDEBUG) {
     						HOLogger.instance().debug(HOModel.class, "Old player for id "+player.getSpielerID()+" = null");
     					}
@@ -463,11 +473,13 @@ public class HOModel {
     					old = new Player();
     					old.setSpielerID(player.getSpielerID());
     					old.copySkills(player);
-    					List<TrainingEvent> events =  player.downloadTrainingEvents();
-    					if ( events != null){
-    						for (TrainingEvent event: events){
-    							if ( event.getEventDate().compareTo(player.getHrfDate())<=0){
-									old.setValue4Skill4(event.getPlayerSkill(), event.getOldLevel());
+    					if (isCurrentPlayer(player.getSpielerID())) {
+							List<TrainingEvent> events = player.downloadTrainingEvents();
+							if (events != null) {
+								for (TrainingEvent event : events) {
+									if (event.getEventDate().compareTo(player.getHrfDate()) <= 0) {
+										old.setValue4Skill4(event.getPlayerSkill(), event.getOldLevel());
+									}
 								}
 							}
 						}
