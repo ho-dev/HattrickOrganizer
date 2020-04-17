@@ -134,7 +134,7 @@ final class DBUpdater {
 				while (rs.next()) {
 					int saison = rs.getInt(1);
 					int league = rs.getInt(2);
-					if (ownLeaguePlans.get(saison) != league) {
+					if (!ownLeaguePlans.containsKey(saison) || ownLeaguePlans.get(saison) != league) {
 						// league is not our own one
 						m_clJDBCAdapter.executeUpdate("DELETE FROM spielplan WHERE ligaid=" + league + " and saison=" + saison);
 						m_clJDBCAdapter.executeUpdate("DELETE FROM paarung WHERE ligaid=" + league + " and saison=" + saison);
