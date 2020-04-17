@@ -923,6 +923,9 @@ public class Player {
     }
 
     public Timestamp getHrfDate() {
+        if ( m_clhrfDate == null){
+            m_clhrfDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
+        }
         return m_clhrfDate;
     }
 
