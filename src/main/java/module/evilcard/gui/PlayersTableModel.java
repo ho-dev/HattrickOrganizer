@@ -224,7 +224,7 @@ class PlayersTableModel extends AbstractTableModel {
 
 			int id = player.getSpielerID();
 			
-			data[row][COL_NAME] = player.getName();
+			data[row][COL_NAME] = player.getFullName();
 			data[row][COL_ID] = new Integer(id);
 			data[row][COL_AGGRESSIVITY] = new Aggressive(player);
 			data[row][COL_HONESTY] = new Honesty(player);

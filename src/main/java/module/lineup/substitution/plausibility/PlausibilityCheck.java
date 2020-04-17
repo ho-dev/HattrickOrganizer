@@ -71,11 +71,11 @@ public class PlausibilityCheck {
 			case PLAYERIN_NOT_IN_LINEUP:
 			case PLAYERIN_NOT_REAL:
 				return HOVerwaltung.instance().getLanguageString(problem.getLanguageKey(),
-						getPlayerIn(substitution).getName());
+						getPlayerIn(substitution).getFullName());
 			case PLAYEROUT_NOT_IN_LINEUP:
 			case PLAYEROUT_NOT_REAL:
 				return HOVerwaltung.instance().getLanguageString(problem.getLanguageKey(),
-						getPlayerOut(substitution).getName());
+						getPlayerOut(substitution).getFullName());
 			default:
 				return HOVerwaltung.instance().getLanguageString(problem.getLanguageKey());
 			}
@@ -83,7 +83,7 @@ public class PlausibilityCheck {
 			switch ((Uncertainty) problem) {
 			case SAME_TACTIC:
 				return HOVerwaltung.instance().getLanguageString(problem.getLanguageKey(),
-						getPlayerOut(substitution).getName(),
+						getPlayerOut(substitution).getFullName(),
 						LanguageStringLookup.getBehaviour(substitution.getBehaviour()));
 			}
 		}

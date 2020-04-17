@@ -408,6 +408,9 @@ public class MatchEvent {
         put(MatchEventID.TACTIC_TYPE_PLAY_CREATIVELY, HOIconName.TACTIC_PLAY_CREATIVELY); //#335
         put(MatchEventID.TACTIC_TYPE_LONG_SHOTS, HOIconName.TACTIC_LONG_SHOTS); //#336
 
+        put(MatchEventID.TACTIC_ATTACK_IN_MIDDLE_USED, HOIconName.TACTIC_AIM); //#343
+        put(MatchEventID.TACTIC_ATTACK_ON_WINGS_USED, HOIconName.TACTIC_AOW); //#344
+
         put(MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_BEHIND, HOIconName.REPLACEMENT); //#350
         put(MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_AHEAD , HOIconName.REPLACEMENT); //#351
         put(MatchEventID.PLAYER_SUBSTITUTION_MINUTE, HOIconName.REPLACEMENT); //#352
@@ -415,6 +418,7 @@ public class MatchEvent {
         put(MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_BEHIND, HOIconName.ROTATE); //#360
         put(MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_AHEAD, HOIconName.ROTATE); //#361
         put(MatchEventID.CHANGE_OF_TACTIC_MINUTE, HOIconName.ROTATE); //#362
+        put(MatchEventID.PLAYER_POSITION_SWAP_MINUTE, HOIconName.SWAP); //#372
 
         put(MatchEventID.RAINY_WEATHER_MANY_PLAYERS_AFFECTED, null); //#390
         put(MatchEventID.SUNNY_WEATHER_MANY_PLAYERS_AFFECTED, null); //#391

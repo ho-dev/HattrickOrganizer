@@ -80,7 +80,7 @@ public class ChangesTableModel extends AbstractTableModel {
 		case 1:
 			return Integer.toString(change.getSkillup().getHtSeason());
 		case 2:
-			return change.getPlayer().getName();
+			return change.getPlayer().getFullName();
 		case 3:
 			return Integer.toString(change.getSkillup().getType());
 		case 4:

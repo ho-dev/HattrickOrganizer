@@ -88,7 +88,7 @@ public class FutureTrainingManager {
 			TrainingPerWeek tw = this.futureTrainings.get(index-1);
 			int trType = tw.getTrainingType();
 			TrainingWeekPlayer tp = new TrainingWeekPlayer();
-			tp.Name(player.getName());
+			tp.Name(player.getFullName());
 			WeeklyTrainingType wt = WeeklyTrainingType.instance(trType);
 			if (wt != null) {
 				boolean bFound = false;

@@ -614,7 +614,7 @@ public class PenaltyTakersView extends JPanel {
 			case 0:
 				return getInLineupVal(taker.getPlayer());
 			case 1:
-				return taker.getPlayer().getName();
+				return taker.getPlayer().getFullName();
 			case 2:
 				return taker.getExperience();
 			case 3:

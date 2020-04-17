@@ -145,7 +145,7 @@ public class CsvPlayerExport {
 				Player curPlayer = (Player)iter.next();
 
 				String [] outCols = {
-						"" + curPlayer.getName(),
+						"" + curPlayer.getFullName(),
 						"" + curPlayer.getSpielerID(),
 						"" + curPlayer.getTrikotnummer(),
 						"" + curPlayer.getAlter(),

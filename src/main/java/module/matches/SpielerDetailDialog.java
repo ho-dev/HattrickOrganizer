@@ -218,9 +218,9 @@ final class SpielerDetailDialog extends JDialog {
 			return;
 		}
 
-		HOLogger.instance().log(getClass(), "Show Player: " + player.getName());
+		HOLogger.instance().log(getClass(), "Show Player: " + player.getFullName());
 
-		setTitle(player.getName() + " (" + player.getSpielerID() + ")");
+		setTitle(player.getFullName() + " (" + player.getSpielerID() + ")");
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public final void windowClosing(WindowEvent e) {
@@ -247,7 +247,7 @@ final class SpielerDetailDialog extends JDialog {
 		Player m_clVergleichsPlayer = HOVerwaltung.instance().getModel()
 				.getSpieler(m_clPlayer.getSpielerID());
 
-		m_jpName.setText(m_clPlayer.getName());
+		m_jpName.setText(m_clPlayer.getFullName());
 		m_jpName.setFGColor(SpielerLabelEntry.getForegroundForSpieler(m_clPlayer));
 		m_jpAlter.setText(m_clPlayer.getAlter() + "");
 		m_jpNationalitaet.setIcon(ImageUtilities.getFlagIcon(m_clPlayer.getNationalitaet()));

@@ -485,7 +485,7 @@ public class SubstitutionOverview extends JPanel {
 				return LanguageStringLookup.getOrderType(sub.getOrderType());
 			case SUBJECTPLAYER_COL_IDX:
 				Player out = hoModel.getSpieler(sub.getSubjectPlayerID());
-				return (out != null) ? out.getName() : "";
+				return (out != null) ? out.getFullName() : "";
 			case ORDERTYPE_ICON_COL_IDX:
 				return sub.getBehaviour();
 			case OBJECTPLAYER_COL_IDX:
@@ -493,7 +493,7 @@ public class SubstitutionOverview extends JPanel {
 				if (sub.getOrderType() != MatchOrderType.NEW_BEHAVIOUR) {
 					in = hoModel.getSpieler(sub.getObjectPlayerID());
 				}
-				return (in != null) ? in.getName() : "";
+				return (in != null) ? in.getFullName() : "";
 
 			case WHEN_COL_IDX:
 				if (sub.getMatchMinuteCriteria() > 0) {

@@ -58,7 +58,7 @@ public class EPVData implements Cloneable {
      * Creates a new EPVData object.
      */
     public EPVData(Player s) {
-        setPlayerName(s.getName());
+        setPlayerName(s.getFullName());
         setAge(s.getAlter());
         setAgeDays(s.getAgeDays());
         setTSI(s.getTSI());

@@ -145,7 +145,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 								return 1;
 							}
 						} else {
-							return sc1.getPlayer().getName().compareTo(sc2.getPlayer().getName());
+							return sc1.getPlayer().getFullName().compareTo(sc2.getPlayer().getFullName());
 						}
 					}
 				}

@@ -140,7 +140,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 						&& lastLineup.getAufstellung()
 								.isPlayerInStartingEleven(player.getSpielerID())) {
 					include = false;
-					HOLogger.instance().log(getClass(), "Exclude: " + player.getName());
+					HOLogger.instance().log(getClass(), "Exclude: " + player.getFullName());
 				}
 
 				if (include) {

@@ -63,7 +63,7 @@ final class SpielerTrainingBlockDialog extends JDialog implements ActionListener
 			HOVerwaltung.instance().getLanguageString(
 				"TrainingBlock")
 				+ " "
-				+ player.getName());
+				+ player.getFullName());
 
 		m_clPlayer = player;
 

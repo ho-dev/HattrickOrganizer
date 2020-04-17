@@ -109,21 +109,6 @@ final class DBUpdater {
 		}
 	}
 
-	private void updateDBVersion(int DBVersion, int version ){
-		if (version < DBVersion) {
-			if(!HO.isDevelopment()) {
-				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
-				dbManager.saveUserParameter("DBVersion", DBVersion);
-			} else {
-				HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
-				dbManager.saveUserParameter("DBVersion", DBVersion - 1);
-			}
-		} else {
-			HOLogger.instance().info(DBUpdater.class,
-					"Update done, db version number will NOT be increased from " + version
-							+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
-		}
-	}
 
 	private void updateDBv300(int DBVersion, int version) throws SQLException {
 		// HO 3.0
@@ -149,7 +134,7 @@ final class DBUpdater {
 				while (rs.next()) {
 					int saison = rs.getInt(1);
 					int league = rs.getInt(2);
-					if (ownLeaguePlans.get(saison) != league) {
+					if (!ownLeaguePlans.containsKey(saison) || ownLeaguePlans.get(saison) != league) {
 						// league is not our own one
 						m_clJDBCAdapter.executeUpdate("DELETE FROM spielplan WHERE ligaid=" + league + " and saison=" + saison);
 						m_clJDBCAdapter.executeUpdate("DELETE FROM paarung WHERE ligaid=" + league + " and saison=" + saison);
@@ -228,7 +213,31 @@ final class DBUpdater {
 		if (!columnExistsInTable("RATINGINDIRECTSETPIECESDEF", MatchDetailsTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESDEF INTEGER");
 		}
+
+		//store FirstName, Nickname  into Playertable
+		if (!columnExistsInTable("FirstName", SpielerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN FirstName VARCHAR (100)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN NickName VARCHAR (100)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ALTER COLUMN Name RENAME TO LastName");
+		}
+
 		updateDBVersion(DBVersion, version);
+	}
+
+	private void updateDBVersion(int DBVersion, int version ){
+		if (version < DBVersion) {
+			if(!HO.isDevelopment()) {
+				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
+				dbManager.saveUserParameter("DBVersion", DBVersion);
+			} else {
+				HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
+				dbManager.saveUserParameter("DBVersion", DBVersion - 1);
+			}
+		} else {
+			HOLogger.instance().info(DBUpdater.class,
+					"Update done, db version number will NOT be increased from " + version
+							+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
+		}
 	}
 
 	private int getTeamId() {
@@ -860,6 +869,8 @@ final class DBUpdater {
 							+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
+
+
 	/**
 	 * Automatic update of User Configuration parameters
 	 * 

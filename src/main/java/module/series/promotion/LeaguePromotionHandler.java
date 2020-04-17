@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import core.db.DBManager;
 import core.gui.event.ChangeEventHandler;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.misc.Basics;
 import core.module.config.ModuleConfig;
 import core.util.HOLogger;
@@ -49,7 +50,9 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
         List<Integer> supportedLeagues = HttpDataSubmitter.instance().fetchSupportedLeagues();
         int[] activeWeeks = ModuleConfig.instance().getIntArray("PromotionStatus_ActiveWeeks", new int[] { 14, 15 });
         int week = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
-        return Arrays.stream(activeWeeks).boxed().collect(Collectors.toList()).contains(week) && supportedLeagues.contains(seriesId);
+        return UserParameter.instance().promotionManagerTest ||
+                (Arrays.stream(activeWeeks).boxed().collect(Collectors.toList()).contains(week) &&
+                        supportedLeagues.contains(seriesId));
     }
 
     public LeagueStatus getLeagueStatus() {

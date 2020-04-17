@@ -59,7 +59,7 @@ public class TestDialog extends JDialog {
 
 			@Override
 			public int compare(Player o1, Player o2) {
-				return o1.getName().compareTo(o2.getName());
+				return o1.getFullName().compareTo(o2.getFullName());
 			}
 		});
 
@@ -191,7 +191,7 @@ public class TestDialog extends JDialog {
 
 		@Override
 		public String toString() {
-			return player.getName();
+			return player.getFullName();
 		}
 
 		public Player getPlayer() {

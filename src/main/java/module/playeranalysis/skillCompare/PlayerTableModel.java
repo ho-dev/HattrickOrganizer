@@ -158,7 +158,7 @@ public class PlayerTableModel extends DefaultTableModel{
 				data[counter][4] = Float.valueOf(tmpPlayer.getBestPosition() + (tmpPlayer.getBestPositionRating()) / 1000);
 			}
 
-			data[counter][1] = tmpPlayer.getName()+";"+tmpPlayer.getSpeciality();
+			data[counter][1] = tmpPlayer.getFulltName()+";"+tmpPlayer.getSpeciality();
 			data[counter][2] = Integer.valueOf(tmpPlayer.getNationality());
 			data[counter][3] = Integer.valueOf(tmpPlayer.getAge());
 			data[counter][5] = tmpPlayer.getGroup();
