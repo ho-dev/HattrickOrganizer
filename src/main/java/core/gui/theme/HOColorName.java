@@ -7,7 +7,6 @@ package core.gui.theme;
 /**
  * Constants for Colors used in HO.
  * Modules can use them too.
- * @see IGui.getColor(String key)
  */
 public interface HOColorName {
 
@@ -123,6 +122,14 @@ public interface HOColorName {
 	public static final String STAT_LODDAR				= "stat.loddar";
 
 	public static final String MATCHHIGHLIGHT_FAILED_FG	= "matchHighlight.failed.fg";
+
+	public static final String FORM_STREAK_WIN = "form.streak.win";
+	public static final String FORM_STREAK_DRAW = "form.streak.draw";
+	public static final String FORM_STREAK_DEFEAT = "form.streak.defeat";
+	public static final String FORM_STREAK_UNKNOWN = "form.streak.unknown";
+
+	public static final String TABLE_LEAGUE_EVEN = "table.league.even";
+	public static final String TABLE_LEAGUE_ODD = "table.league.odd";
 
 	//lineup
 

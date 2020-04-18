@@ -15,6 +15,7 @@ Changelist HO! 3.0
   - Download of current matches are selectable by match type  #290
 
 ## League Details
+ - Simplification of league table and screen re-arranged. #238
  - Promotion / Demotion status displayed on week 14 and 15 of season. #247
 
 ## Training 
