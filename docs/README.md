@@ -114,3 +114,6 @@ these here.
   * License: Apache License, version 2.0
   * For details, see [``docs/Licences/ospackage/LICENSE.txt``](Licences/ospackage/LICENSE.txt)
 
+* OkHttp
+  * License: Apache License, version 2.0
+  * For details, see [``http://www.apache.org/licenses/LICENSE-2.0.txt``](http://www.apache.org/licenses/LICENSE-2.0.txt)
