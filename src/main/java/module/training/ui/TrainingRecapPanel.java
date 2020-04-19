@@ -244,7 +244,7 @@ public class TrainingRecapPanel extends LazyImagePanel {
                 if (s == null) {
                     row.add("");
                 } else {
-                    row.add(s.getType() + " " + s.getValue());
+                    row.add(s.getType() + " " + s.getValue() + " " + s.getChange());
                 }
             }
 

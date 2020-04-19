@@ -29,7 +29,7 @@ public class PastSkillChange implements ISkillChange {
     private int value;
 
     private String age;
-    private boolean isSkillup=true;
+    private int change=1;
 
     //~ Methods ------------------------------------------------------------------------------------
     public void setDate(Date date) {
@@ -101,8 +101,8 @@ public class PastSkillChange implements ISkillChange {
     }
 
     @Override
-    public boolean isSkillup() {
-        return isSkillup;
+    public int getChange() {
+        return change;
     }
 
     /**
@@ -114,7 +114,7 @@ public class PastSkillChange implements ISkillChange {
 	public String toString() {
         StringBuffer buffer = new StringBuffer();
 
-        if ( isSkillup) {
+        if ( change>0) {
             buffer.append("Skillup["); //$NON-NLS-1$
         }
         else {
@@ -139,7 +139,7 @@ public class PastSkillChange implements ISkillChange {
         return age;
     }
 
-    public void setSkillup(boolean skillup) {
-        isSkillup = skillup;
+    public void setChange(int skillup) {
+        change = skillup;
     }
 }

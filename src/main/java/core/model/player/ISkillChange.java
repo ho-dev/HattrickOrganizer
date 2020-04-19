@@ -31,5 +31,5 @@ public interface ISkillChange {
 	*/
 	public abstract int getValue();
 
-	public abstract boolean isSkillup();
+	public abstract int getChange();
 }

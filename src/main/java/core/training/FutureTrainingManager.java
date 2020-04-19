@@ -2,18 +2,18 @@ package core.training;
 
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.gui.comp.entry.SkillEntry;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.HelperWrapper;
-import module.opponentspy.CalcVariables;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static java.lang.Integer.max;
 
 /**
  * Class that manages the prevision of training effect in the future
@@ -28,7 +28,7 @@ public class FutureTrainingManager {
 	public double[] finalSub = new double[8];
 
 	/** Number of skill ups with maximum training */
-	public int[] finalSkillup = new int[8];
+	public int[] finalSkill = new int[8];
 
 	/** Active player */
 	private Player player;
@@ -58,24 +58,27 @@ public class FutureTrainingManager {
 		previewPlayer(UserParameter.instance().futureWeeks);
 	}
 
+	private static int skillIndex[] = {
+			PlayerSkill.KEEPER,
+			PlayerSkill.PLAYMAKING,
+			PlayerSkill.PASSING,
+			PlayerSkill.WINGER,
+			PlayerSkill.DEFENDING,
+			PlayerSkill.SCORING,
+			PlayerSkill.SET_PIECES,
+			PlayerSkill.STAMINA
+	};
+
 	public FuturePlayer previewPlayer(int startWeekNumber,int finalWeekNumber) {
 
 		this.futureSkillups = new ArrayList<ISkillChange>();
 				
-		// Sets the actual training levels
-		actual[0] = getOffset(PlayerSkill.KEEPER);
-		actual[1] = getOffset(PlayerSkill.PLAYMAKING);
-		actual[2] = getOffset(PlayerSkill.PASSING);
-		actual[3] = getOffset(PlayerSkill.WINGER);
-		actual[4] = getOffset(PlayerSkill.DEFENDING);
-		actual[5] = getOffset(PlayerSkill.SCORING);
-		actual[6] = getOffset(PlayerSkill.SET_PIECES);
-		actual[7] = getOffset(PlayerSkill.STAMINA);
-		
-		// rest the other 4 arrays min and max level are equals to actual at beginning
-		for (int i = 0; i < 8; i++) {
+		for ( int i=0; i<8; i++){
+			// Sets the actual training levels
+			actual[i] = getOffset(skillIndex[i]);
+			// rest the other 4 arrays min and max level are equals to actual at beginning
 			finalSub[i] = actual[i];
-			finalSkillup[i] = 0;
+			finalSkill[i] = this.player.getValue4Skill4(skillIndex[i]);
 		}
 
 		trainingSpeed = 0;
@@ -83,6 +86,13 @@ public class FutureTrainingManager {
 		int position = HelperWrapper.instance().getPosition(player.getIdealPosition());
 		// Iterate thru all the future training weeks
 		for (int index = startWeekNumber; index <= finalWeekNumber; index++) {
+
+			// process skill drops
+			int age = this.player.getAlter() + (this.player.getAgeDays() + index*7)/112;
+			for ( int i=0; i<8; i++){
+				finalSub[i] -= SkillDrops.instance().getSkillDrop((int)finalSkill[i], age, skillIndex[i])/100;
+			}
+
 			int trainingSpeed=0;
 			weeksPassed++;
 			TrainingPerWeek tw = this.futureTrainings.get(index-1);
@@ -188,6 +198,22 @@ public class FutureTrainingManager {
 				if ( this.trainingSpeed < trainingSpeed) {
 					this.trainingSpeed = trainingSpeed;
 				}
+
+				for ( int i=0; i<8; i++){
+					int change = checkSkillChange(i);
+					if (change!=0) {
+						PlayerSkillChange su = new PlayerSkillChange();
+						su.setHtSeason(tw.getHattrickSeason());
+						su.setHtWeek(tw.getHattrickWeek());
+						su.setType(skillIndex[i]);
+						su.setValue(finalSkill[i]);
+						su.setTrainType(ISkillChange.SKILLUP_FUTURE);
+						su.setDate(new Date(tw.getTrainingDate().getTime()));
+						su.setAge(player.getAgeWithDaysAsString(su.getDate()));
+						su.setChange(change);
+						futureSkillups.add(su);
+					}
+				}
 			}
 		}		
 		FuturePlayer fp = new FuturePlayer();
@@ -212,11 +238,8 @@ public class FutureTrainingManager {
 	 * @return				value for this skill
 	 */
 	private double getFinalValue(int skillIndex) {		
-		double value = player.getValue4Skill4(skillIndex);
 		int pos = getSkillPosition(skillIndex);
-		value = value + finalSkillup[pos];
-		value = value + finalSub[pos];		
-		return value;
+		return finalSkill[pos] +  finalSub[pos];
 	}
 
 	/**
@@ -260,18 +283,18 @@ public class FutureTrainingManager {
 	* @return
 	*/
 	public int[] getMaxup() {
-		return finalSkillup;
+		return finalSkill;
 	}
 
 	/**
 	* Return the offset and sub for the skill
 	*
-	* @param skillIndex the skill index to analyze
+	* @param skill  the skill index to analyze
 	*
 	* @return the sub with offset of a player
 	*/
-	private double getOffset(int skillIndex) {
-		double offset = player.getSubskill4Pos(skillIndex);
+	private double getOffset(int skill) {
+		double offset = player.getSubskill4Pos(skill);
 		return offset;
 	}
 
@@ -284,7 +307,7 @@ public class FutureTrainingManager {
 	//private double getTrainingLength(int trType, int skillIndex, int intensity, int staminaTrainingPart) {
 	private double getTrainingLength(WeeklyTrainingType wt, TrainingPerWeek tw) {
 		int pos = getSkillPosition(wt.getPrimaryTrainingSkill());
-		int curSkillUps = finalSkillup[pos];
+		int curSkillUps = finalSkill[pos];
 		int age = player.getAlter();
 		int ageDays = player.getAgeDays();
 		int realSkill = player.getValue4Skill4(wt.getPrimaryTrainingSkill());
@@ -301,7 +324,7 @@ public class FutureTrainingManager {
 
 	private double getSecondaryTrainingLength(WeeklyTrainingType wt, TrainingPerWeek tw) {
 		int pos = getSkillPosition(wt.getSecondaryTrainingSkill());
-		int curSkillUps = finalSkillup[pos];
+		int curSkillUps = finalSkill[pos];
 		int age = player.getAlter();
 		int ageDays = player.getAgeDays();
 		int realSkill = player.getValue4Skill4(wt.getSecondaryTrainingSkill());
@@ -319,9 +342,12 @@ public class FutureTrainingManager {
 	* Checks if a skillup has happened
 	*
 	*
-	* @return true if skillup happened
+	* @return
+	 * 1 if skillup happened
+	 * -1 if skilldrop
+	 * 0 no change
 	*/
-	private boolean checkSkillup(int pos) {
+	private int checkSkillChange(int pos) {
 		if (finalSub[pos] >= 1) {
 //			Alternative 1: Set sub=0 after a skillup 
 //			(We will use this, until the training speed formula is optimized)
@@ -331,13 +357,19 @@ public class FutureTrainingManager {
 //			Alternative 2: Use overflow sub after a skillup
 //			(This would be more accurate. But only if the underlaying formula is exact) 
 			finalSub[pos] -= 1;
-
-			finalSkillup[pos]++;
-
-			return true;
+			finalSkill[pos]++;
+			return 1;
+		} else if (finalSub[pos] < 0) {
+			if (finalSkill[pos] <= 0) {
+				finalSkill[pos] = 0;
+				finalSub[pos] = 0;
+				return 0;
+			}
+			finalSub[pos] += 1;
+			finalSkill[pos]--;
+			return -1;
 		}
-
-		return false;
+		return 0;
 	}
 
 	/**
@@ -367,36 +399,8 @@ public class FutureTrainingManager {
 		
 		// add sub to skill
 		finalSub[primaryPos] += Math.min(1.0f, primarySubForThisWeek);
-		if (checkSkillup(primaryPos)) {
-			PlayerSkillChange su = new PlayerSkillChange();
-			su.setHtSeason(tw.getHattrickSeason());
-			su.setHtWeek(tw.getHattrickWeek());
-			su.setType(wt.getPrimaryTrainingSkill());
-			su.setValue(player.getValue4Skill4(wt.getPrimaryTrainingSkill()) + finalSkillup[primaryPos]);
-			su.setTrainType(ISkillChange.SKILLUP_FUTURE);
-			su.setDate(new Date(tw.getTrainingDate().getTime()));
-			su.setAge(player.getAgeWithDaysAsString(su.getDate()));
-			futureSkillups.add(su);
-		}
 		if (secondarySubForThisWeek > 0) {
 			finalSub[secondaryPos] += Math.min(1.0f, secondarySubForThisWeek);
-			if (checkSkillup(secondaryPos)) {
-				PlayerSkillChange su = new PlayerSkillChange();
-				su.setHtSeason(tw.getHattrickSeason());
-				su.setHtWeek(tw.getHattrickWeek());
-				su.setType(wt.getSecondaryTrainingSkill());
-				su.setValue(player.getValue4Skill4(wt.getSecondaryTrainingSkill()) + finalSkillup[secondaryPos]);
-				su.setTrainType(ISkillChange.SKILLUP_FUTURE);
-				su.setDate(new Date(tw.getTrainingDate().getTime()));
-				su.setAge(player.getAgeWithDaysAsString(su.getDate()));
-				futureSkillups.add(su);
-			}
-		}
-
-		// TODO: Check for skill downs on all positions except those which got training
-		for ( int skill = PlayerSkill.KEEPER; skill <= PlayerSkill.SET_PIECES; skill++) {
-			if (skill == wt.getPrimaryTrainingSkill()) continue;
-			if (skill == wt.getSecondaryTrainingSkill()) continue;
 		}
 
 	}
