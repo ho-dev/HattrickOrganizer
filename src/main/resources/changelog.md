@@ -27,6 +27,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ## Training 
  - Fix negative skill values in training history #444
+ - improve subskill calculation of players with skillups in first week in team #188
 
 
 # Changelist HO! 2.1
