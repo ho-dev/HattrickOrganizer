@@ -13,6 +13,7 @@ import core.model.Tournament.TournamentDetails;
 import core.model.UserParameter;
 import core.model.match.*;
 import core.model.misc.Regiondetails;
+import core.model.misc.TrainingEvent;
 import core.model.player.Player;
 import core.net.login.LoginWaitDialog;
 import core.training.TrainingManager;
@@ -1035,6 +1036,21 @@ public class OnlineWorker {
 		}
 		catch(Exception e){
 			String msg = getLangString("Downloadfehler") + " : Error fetching region details :";
+			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
+					JOptionPane.ERROR_MESSAGE);
+			HOLogger.instance().error(OnlineWorker.class, e.getMessage());
+		}
+		return null;
+	}
+
+	public static List<TrainingEvent> getTrainingEvents(int playerId ){
+		try{
+			String xml = MyConnector.instance().getTrainingEvents(playerId);
+			return XMLTrainingEventsParser.parseTrainingEvents(xml);
+		}
+		catch(Exception e){
+			String msg = getLangString("Downloadfehler") + " : Error fetching training events :";
 			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);

@@ -20,6 +20,7 @@ Changelist HO! 3.0
 
 ## Training 
  - Fix negative skill values in training history #444
+ - improve subskill calculation of players with skillups in first week in team #188
 
 
 ## Team Analysis
