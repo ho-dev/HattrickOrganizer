@@ -218,11 +218,14 @@ public class SeriesPanel extends LazyImagePanel {
 		toolbarPanel.setPreferredSize(new Dimension(240, 35));
 		panel.add(toolbarPanel, BorderLayout.NORTH);
 
+		JPanel leagueStatsPanel = new ImagePanel(new GridLayout(1, 2));
+		leagueStatsPanel.add(initLigaTabelle());
+		leagueStatsPanel.add(initTabellenverlaufStatistik());
+
 		final JPanel tablePanel = new ImagePanel(new BorderLayout());
-		tablePanel.add(initLigaTabelle(), BorderLayout.NORTH);
+		tablePanel.add(leagueStatsPanel, BorderLayout.NORTH);
 
 		final JPanel historyPanel = new ImagePanel(new BorderLayout());
-		historyPanel.add(initTabellenverlaufStatistik(), BorderLayout.NORTH);
 		historyPanel.add(initSpielPlan(), BorderLayout.CENTER);
 
 		tablePanel.add(historyPanel, BorderLayout.CENTER);

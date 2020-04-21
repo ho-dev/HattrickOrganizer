@@ -465,6 +465,16 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(MATCHESANALYZER_TEAM_TOURNAMENT_NEXT,	new Color(0, 51, 255));
 		put(MATCHESANALYZER_TEAM_TOURNAMENT,		new Color(0, 179, 255));
 		put(MATCHESANALYZER_TEAM_MYTEAM,			"black");
+
+		// Colours for form streak in league details
+		put(FORM_STREAK_WIN, new Color(73, 146, 45));
+		put(FORM_STREAK_DRAW, new Color(111, 111, 111));
+		put(FORM_STREAK_DEFEAT, new Color(224, 51, 51));
+		put(FORM_STREAK_UNKNOWN, new Color(170, 170, 170));
+
+		// Colours for alternating rows in table
+		put(TABLE_LEAGUE_EVEN, Color.WHITE);
+		put(TABLE_LEAGUE_ODD, new Color(240, 240, 240));
 	}
 
 	public Color getDefaultColor(String key) {
