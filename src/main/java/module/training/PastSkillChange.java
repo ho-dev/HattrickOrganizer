@@ -1,13 +1,13 @@
 package module.training;
 
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 import java.util.Date;
 
 
 /**
  * Base Object for the Skillup table
  */
-public class PastSkillup implements ISkillup {
+public class PastSkillChange implements ISkillChange {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Skillup Date */
@@ -26,9 +26,10 @@ public class PastSkillup implements ISkillup {
     private int type;
 
     /** Value of skill */
-    private int value;
+    private double value;
 
     private String age;
+    private int change=1;
 
     //~ Methods ------------------------------------------------------------------------------------
     public void setDate(Date date) {
@@ -86,7 +87,7 @@ public class PastSkillup implements ISkillup {
      *
      * @param newValue
      */
-    public void setValue(int newValue) {
+    public void setValue(double newValue) {
         value = newValue;
     }
 
@@ -95,8 +96,11 @@ public class PastSkillup implements ISkillup {
      *
      * @return value
      */
-    public int getValue() {
-        return value;
+    public double getValue() { return value; }
+
+    @Override
+    public int getChange() {
+        return change;
     }
 
     /**
@@ -108,7 +112,12 @@ public class PastSkillup implements ISkillup {
 	public String toString() {
         StringBuffer buffer = new StringBuffer();
 
-        buffer.append("Skillup["); //$NON-NLS-1$
+        if ( change>0) {
+            buffer.append("Skillup["); //$NON-NLS-1$
+        }
+        else {
+            buffer.append("Skilldrop["); //$NON-NLS-1$
+        }
         buffer.append(", type = " + type); //$NON-NLS-1$
         buffer.append(", value = " + value); //$NON-NLS-1$
         buffer.append(", htSeason = " + htSeason); //$NON-NLS-1$
@@ -126,5 +135,9 @@ public class PastSkillup implements ISkillup {
     @Override
     public String getAge() {
         return age;
+    }
+
+    public void setChange(int skillup) {
+        change = skillup;
     }
 }

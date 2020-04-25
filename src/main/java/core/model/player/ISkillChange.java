@@ -2,7 +2,7 @@ package core.model.player;
 
 import java.util.Date;
 
-public interface ISkillup {
+public interface ISkillChange {
 	
 	/** Real Skillup happened in the past */
 	public static final int SKILLUP_REAL = 0;
@@ -29,5 +29,7 @@ public interface ISkillup {
 	*
 	* @return value
 	*/
-	public abstract int getValue();
+	public abstract double getValue();
+
+	public abstract int getChange();
 }

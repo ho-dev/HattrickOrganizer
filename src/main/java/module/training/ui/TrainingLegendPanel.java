@@ -77,15 +77,18 @@ public class TrainingLegendPanel extends JPanel {
 
         ImageIcon icon =  ImageUtilities.getImageIcon4Veraenderung(count,true);
 
-        int farbwert = Math.min(240, 90 + (50 * count));
+        int colCount = count;
+        if ( colCount < 0) colCount = -count;
+
+        int farbwert = Math.min(240, 90 + (50 * colCount));
         Color iconColor = new Color(0, farbwert, 0);
         Image image = ReplaceImageColor(icon.getImage(), iconColor, color);
 
-        farbwert = Math.min(255, 105 + (50 * count));
+        farbwert = Math.min(255, 105 + (50 * colCount));
         iconColor = new Color(40, farbwert, 40);
         image = ReplaceImageColor(image, iconColor, lcolor);
 
-        if (count > 2) {
+        if (colCount > 2) {
             image = ReplaceImageColor(image, Color.white, Color.magenta);
             image = ReplaceImageColor(image, Color.black, Color.white);
             image = ReplaceImageColor(image, Color.magenta, Color.black);

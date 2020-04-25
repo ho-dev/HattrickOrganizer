@@ -3,7 +3,7 @@ package module.training;
 import core.db.DBManager;
 import core.db.JDBCAdapter;
 import core.model.HOVerwaltung;
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.HTCalendarFactory;
 
@@ -44,7 +44,7 @@ public class EffectDAO {
      */
     public static void reload() {
         try {
-            Map<String,List<ISkillup>> weeklySkillups = new HashMap<String,List<ISkillup>>();
+            Map<String,List<ISkillChange>> weeklySkillups = new HashMap<String,List<ISkillChange>>();
 
             // Loop through all player (also old players) to get all trained skillups.
             // Group these skillups by season and week.
@@ -55,15 +55,15 @@ public class EffectDAO {
             for (Iterator<Player> iterPlayers = players.iterator(); iterPlayers.hasNext();) {
                 Player player = (Player) iterPlayers.next();
                 OldTrainingManager otm = new OldTrainingManager(player);
-                List<ISkillup> skillups = otm.getTrainedSkillups();
+                List<ISkillChange> skillups = otm.getTrainedSkillups();
 
-                for (Iterator<ISkillup> iterSkillups = skillups.iterator(); iterSkillups.hasNext();) {
-                    ISkillup skillup = (ISkillup) iterSkillups.next();
+                for (Iterator<ISkillChange> iterSkillups = skillups.iterator(); iterSkillups.hasNext();) {
+                    ISkillChange skillup = (ISkillChange) iterSkillups.next();
                     String key = skillup.getHtSeason() + "-" + skillup.getHtWeek(); //$NON-NLS-1$
-                    List<ISkillup> collectedSkillups = weeklySkillups.get(key);
+                    List<ISkillChange> collectedSkillups = weeklySkillups.get(key);
 
                     if (collectedSkillups == null) {
-                        collectedSkillups = new Vector<ISkillup>();
+                        collectedSkillups = new Vector<ISkillChange>();
                         weeklySkillups.put(key, collectedSkillups);
                     }
 
@@ -161,11 +161,11 @@ public class EffectDAO {
 
                 if (weeklySkillups.containsKey(key)) {
 
-                    List<ISkillup> wsList = weeklySkillups.get(key);
+                    List<ISkillChange> wsList = weeklySkillups.get(key);
                     week.setAmountSkillups(wsList.size());
 
                     if (wsList.size() > 0) {
-                        ISkillup su = (ISkillup) wsList.get(0);
+                        ISkillChange su = (ISkillChange) wsList.get(0);
                         week.setTrainingType(su.getType());
                     }
                 }

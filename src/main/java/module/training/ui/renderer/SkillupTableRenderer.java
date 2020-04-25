@@ -7,8 +7,9 @@
  */
 package module.training.ui.renderer;
 
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 import module.training.Skills;
+import module.training.ui.TrainingLegendPanel;
 import module.training.ui.model.SkillupTableModel;
 
 import java.awt.Color;
@@ -35,8 +36,15 @@ public class SkillupTableRenderer extends DefaultTableCellRenderer {
 				row, column);
 
 		SkillupTableModel model = (SkillupTableModel)table.getModel();
-		ISkillup skillup = model.getSkillup(table.convertRowIndexToModel(row));
-		if (skillup.getTrainType() == ISkillup.SKILLUP_FUTURE) {
+		ISkillChange skillup = model.getSkillup(table.convertRowIndexToModel(row));
+
+		if ( column == 0 ){
+			setIcon(TrainingLegendPanel.getSkillupTypeIcon(skillup.getType(), skillup.getChange()));
+		}
+		else {
+			setIcon(null);
+		}
+		if (skillup.getTrainType() == ISkillChange.SKILLUP_FUTURE) {
 			cell.setForeground(Skills.getSkillColor(skillup.getType()));
 		} else {
 			cell.setForeground(Color.BLACK);

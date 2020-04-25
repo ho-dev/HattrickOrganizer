@@ -60,16 +60,18 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 
         	/** If there is some kind of skillup information
         	 * in the table cell (s) -> extract it
-        	 * (it is in the format "SKILLTYPE SKILLLEVEL",
-        	 * e.g. "3 10" for outstanding playmaking)
+        	 * (it is in the format "SKILLTYPE SKILLLEVEL CHANGE",
+        	 * e.g. "3 10.00 1"  for skillup to outstanding playmaking)
+			 *      "3 10.99 -1" for skilldrop to outstanding playmaking
         	 */
 
         	if (s != null && s.length() > 0) {
         		String[] skills = s.split(" "); //$NON-NLS-1$
         		int skillType = Integer.parseInt(skills[0]);
+        		int change = Integer.parseInt((skills[2])); // +1: skillup; -1: skilldrop
 //        		Color color = Skills.getSkillColor(skillType);
-        		icon = TrainingLegendPanel.getSkillupTypeIcon(skillType, 1);
-        		int val = Integer.parseInt(skills[1]);
+        		icon = TrainingLegendPanel.getSkillupTypeIcon(skillType, change);
+        		double val = Double.parseDouble(skills[1]);
         		String skillLevelName = PlayerAbility.getNameForSkill(val, true);
         		tooltip =PlayerSkill.toString(skillType)+": " + skillLevelName;
         		text = skillLevelName;

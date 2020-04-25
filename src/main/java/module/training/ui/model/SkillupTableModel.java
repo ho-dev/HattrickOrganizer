@@ -3,7 +3,7 @@ package module.training.ui.model;
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ import javax.swing.table.AbstractTableModel;
 public class SkillupTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1636458081835657412L;
-	private List<ISkillup> data;
+	private List<ISkillChange> data;
 
-	public void setData(List<ISkillup> data) {
+	public void setData(List<ISkillChange> data) {
 		this.data = data;
 		fireTableDataChanged();
 	}
@@ -31,7 +31,7 @@ public class SkillupTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		ISkillup skillup = this.data.get(rowIndex);
+		ISkillChange skillup = this.data.get(rowIndex);
 		switch (columnIndex) {
 			case 0:
 				return PlayerSkill.toString(skillup.getType()) + ": "
@@ -51,7 +51,7 @@ public class SkillupTableModel extends AbstractTableModel {
 	public String getColumnName(int column) {
 		switch (column) {
 			case 0:
-				return HOVerwaltung.instance().getLanguageString("ls.team.trainingtype");
+				return HOVerwaltung.instance().getLanguageString("ls.player.skill");
 			case 1:
 				return HOVerwaltung.instance().getLanguageString("Week");
 			case 2:
@@ -63,7 +63,7 @@ public class SkillupTableModel extends AbstractTableModel {
 		}
 	}
 
-	public ISkillup getSkillup(int row) {
+	public ISkillChange getSkillup(int row) {
 		return this.data.get(row);
 	}
 }

@@ -1,7 +1,7 @@
 // %827897234:hoplugins.trainingExperience.ui%
 package module.training.ui;
 
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 import module.training.ui.model.SkillupTableModel;
 
 import java.awt.event.MouseEvent;
@@ -39,7 +39,7 @@ public class SkillupTable extends JTable {
 	@Override
 	public String getToolTipText(MouseEvent e) {
 		SkillupTableModel model = (SkillupTableModel) getModel();
-		ISkillup skillup = model.getSkillup(convertRowIndexToModel(rowAtPoint(e.getPoint())));
+		ISkillChange skillup = model.getSkillup(convertRowIndexToModel(rowAtPoint(e.getPoint())));
 
 		if (skillup != null ) {
 			return java.text.DateFormat.getDateTimeInstance().format(skillup.getDate());

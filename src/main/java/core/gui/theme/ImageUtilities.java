@@ -177,7 +177,7 @@ public class ImageUtilities {
 	                }
 	
 	                int farbwert = Math.min(240, 90 - (50 * wert));
-	                g2d.setColor(new Color(farbwert, 0, 0));
+	                g2d.setColor(new Color(0, farbwert, 0));
 	                g2d.fillPolygon(xpoints, ypoints, xpoints.length);
 	
 	                //Polygonrahmen

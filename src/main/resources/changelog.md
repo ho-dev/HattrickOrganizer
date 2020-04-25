@@ -59,8 +59,9 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ### Training
 
-- [NEW] Training tab now shows information about skill devaluation #444
-- [FIX]  Fix an issue when new player had a skill increase on first training and before it was ever imported into HO! #188
+- [NEW] Training tab now shows information about skill devaluation #286
+- [FIX] Training history table skill values of players with more than one skill devaluations fixed #444
+- [FIX] fix an issue when new player had a skill increase on first training and before it was ever imported into HO! #188
 
 
 ### Misc

@@ -1,13 +1,13 @@
 package core.training;
 
-import core.model.player.ISkillup;
+import core.model.player.ISkillChange;
 
 import java.util.Date;
 
 /**
  * Base Object for the Skillup table
  */
-public class PlayerSkillup implements ISkillup
+public class PlayerSkillChange implements ISkillChange
 {
 
     /** Skillup Date */
@@ -26,7 +26,9 @@ public class PlayerSkillup implements ISkillup
     private int type;
 
     /** Value of skill */
-    private int value;
+    private double value;
+
+    private int change;
 
     private String age;
 
@@ -100,7 +102,7 @@ public class PlayerSkillup implements ISkillup
 *
 * @param newValue
 */
-    public void setValue(int newValue)
+    public void setValue(double newValue)
     {
         value = newValue;
     }
@@ -111,7 +113,7 @@ public class PlayerSkillup implements ISkillup
 * @return value
 */
     @Override
-	public int getValue()
+	public double getValue()
     {
         return value;
     }
@@ -126,7 +128,12 @@ public class PlayerSkillup implements ISkillup
     {
         StringBuffer buffer = new StringBuffer();
 
-        buffer.append("Skillup["); //$NON-NLS-1$
+        if ( change>0) {
+            buffer.append("Skillup["); //$NON-NLS-1$
+        }
+        else if ( change < 0){
+            buffer.append("Skilldrop["); //$NON-NLS-1$
+        }
         buffer.append(", type = " + type); //$NON-NLS-1$
         buffer.append(", value = " + value); //$NON-NLS-1$
         buffer.append(", htSeason = " + htSeason); //$NON-NLS-1$
@@ -144,5 +151,14 @@ public class PlayerSkillup implements ISkillup
 
     public void setAge(String age) {
         this.age = age;
+    }
+
+    @Override
+    public int getChange() {
+        return change;
+    }
+
+    public void setChange(int skillup) {
+        change = skillup;
     }
 }
