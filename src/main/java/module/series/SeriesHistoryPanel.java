@@ -4,13 +4,16 @@ package module.series;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.series.TabellenVerlaufEintrag;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * Zeigt den Tabellenverlauf der Saison als Grafik an
+ * Shows the history of the league table as a graph.
+ *
+ * <p>The graph is drawn using {@link Graphics} primitives.</p>
  */
 final class SeriesHistoryPanel extends JPanel {
 
@@ -29,7 +32,7 @@ final class SeriesHistoryPanel extends JPanel {
 
 	private Color STANDARD_FOREGROUND = ThemeManager.getColor(HOColorName.LEAGUE_FG);
 	private TabellenVerlaufEintrag[] m_clVerlaufeintraege;
-	private final int VEREINSNAMENBREITE = 180;
+	private final int TEAM_NAME_WIDTH = 180;
 	private final Model model;
 
 	/**
@@ -37,7 +40,7 @@ final class SeriesHistoryPanel extends JPanel {
 	 */
 	protected SeriesHistoryPanel(Model model) {
 		this.model = model;
-		setPreferredSize(new Dimension(700, 130));
+		setPreferredSize(new Dimension(700, 240));
 		initValues();
 	}
 
@@ -60,9 +63,9 @@ final class SeriesHistoryPanel extends JPanel {
 			final int anzahlPlaetze = m_clVerlaufeintraege.length + 1;
 			final int anzahlSpieltage = m_clVerlaufeintraege[0].getPlatzierungen().length;
 			final int abstandVertikal = getHeight() / (anzahlPlaetze + 1);
-			final int abstandHorizontal = (getWidth() - VEREINSNAMENBREITE) / anzahlSpieltage;
+			final int abstandHorizontal = (getWidth() - TEAM_NAME_WIDTH) / anzahlSpieltage;
 
-			final int fontsize = getHeight() / (anzahlPlaetze + 2);
+			final int fontsize = UserParameter.instance().schriftGroesse;
 			final Font fettFont = new Font("sansserif", Font.BOLD, fontsize);
 			final Font normalFont = new Font("sansserif", Font.PLAIN, fontsize);
 
@@ -70,9 +73,9 @@ final class SeriesHistoryPanel extends JPanel {
 			g2d.setColor(ThemeManager.getColor(HOColorName.LEAGUEHISTORY_CROSS_FG));
 
 			// Vertikal
-			g2d.drawLine(getWidth() - VEREINSNAMENBREITE, 0, getWidth() - VEREINSNAMENBREITE,
+			g2d.drawLine(getWidth() - TEAM_NAME_WIDTH, 0, getWidth() - TEAM_NAME_WIDTH,
 					getHeight());
-			g2d.drawLine(getWidth() - VEREINSNAMENBREITE + 1, 0, getWidth() - VEREINSNAMENBREITE
+			g2d.drawLine(getWidth() - TEAM_NAME_WIDTH + 1, 0, getWidth() - TEAM_NAME_WIDTH
 					+ 1, getHeight());
 
 			// Horizontal
@@ -94,7 +97,7 @@ final class SeriesHistoryPanel extends JPanel {
 				g2d.drawLine(abstandHorizontal * i, 0, abstandHorizontal * i, getHeight());
 			}
 
-			// Platzierung und Vereinsnamen
+			// Position and Team name
 			for (int i = 0; i < m_clVerlaufeintraege.length; i++) {
 				// Platzierung
 				if (m_clVerlaufeintraege[i].getTeamId() == aktuelleTeamId) {
@@ -106,12 +109,9 @@ final class SeriesHistoryPanel extends JPanel {
 				}
 
 				g2d.setFont(fettFont);
-				g2d.drawString((i + 1) + ".", (getWidth() + 7) - VEREINSNAMENBREITE, (getHeight()
+				g2d.drawString((i + 1) + ".", (getWidth() + 7) - TEAM_NAME_WIDTH, (getHeight()
 						/ anzahlPlaetze * (i + 1))
-						+ abstandVertikal);
-
-				// Vereinsnamen
-				g2d.setFont(normalFont);
+						+ abstandVertikal - (fontsize / 2));
 
 				// Eigenes Team blau machen
 				if (m_clVerlaufeintraege[i].getTeamId() == aktuelleTeamId) {
@@ -124,22 +124,27 @@ final class SeriesHistoryPanel extends JPanel {
 				g2d.drawString(
 						m_clVerlaufeintraege[i].getTeamName().substring(0,
 								Math.min(30, m_clVerlaufeintraege[i].getTeamName().length())),
-						(getWidth() + 20) - VEREINSNAMENBREITE,
-						(getHeight() / anzahlPlaetze * (i + 1)) + abstandVertikal);
+						(getWidth() + 20) - TEAM_NAME_WIDTH,
+						(getHeight() / anzahlPlaetze * (i + 1)) + abstandVertikal - (fontsize / 2));
 			}
 
 			// Spieltage
 			for (int i = 1; i <= anzahlSpieltage; i++) {
-				g2d.setColor(Color.black);
-				g2d.drawString(i + ".", ((abstandHorizontal * (i - 0.5f)) - 2), abstandVertikal - 2);
+				g2d.setFont(normalFont);
+				g2d.setColor(Color.BLACK);
+				g2d.drawString(String.valueOf(i), ((abstandHorizontal * (i - 0.5f)) - 2), abstandVertikal - 2);
 			}
+
+			final Stroke thinkStroke = new BasicStroke();
 
 			// Linien zeichnen
 			for (int i = 0; i < m_clVerlaufeintraege.length; i++) {
 				final int[] platzierungen = m_clVerlaufeintraege[i].getPlatzierungen();
 
+				g2d.setStroke(thinkStroke);
 				if (m_clVerlaufeintraege[i].getTeamId() == aktuelleTeamId) {
 					g2d.setColor(ThemeManager.getColor(HOColorName.TEAM_FG));
+					g2d.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
 				} else if (i < COLOR4LINES.length) {
 					g2d.setColor(COLOR4LINES[i]);
 				} else {
@@ -148,18 +153,10 @@ final class SeriesHistoryPanel extends JPanel {
 
 				// Erste Linie vom Namen
 				g2d.drawLine(
-						getWidth() - VEREINSNAMENBREITE - 5,
+						getWidth() - TEAM_NAME_WIDTH - 5,
 						(int) ((getHeight() / anzahlPlaetze * (i + 0.7f)) + abstandVertikal),
 						(int) (abstandHorizontal * (platzierungen.length - 0.5)),
 						(int) ((getHeight() / anzahlPlaetze * (platzierungen[platzierungen.length - 1] - 0.3f)) + abstandVertikal));
-
-				if (m_clVerlaufeintraege[i].getTeamId() == aktuelleTeamId) {
-					g2d.drawLine(
-							getWidth() - VEREINSNAMENBREITE - 5,
-							(int) ((getHeight() / anzahlPlaetze * (i + 0.7f)) + abstandVertikal) - 1,
-							(int) (abstandHorizontal * (platzierungen.length - 0.5)),
-							(int) ((getHeight() / anzahlPlaetze * (platzierungen[platzierungen.length - 1] - 0.3f)) + abstandVertikal) - 1);
-				}
 
 				for (int j = 0; j < (platzierungen.length - 1); j++) {
 					g2d.drawLine(
@@ -167,14 +164,6 @@ final class SeriesHistoryPanel extends JPanel {
 							(int) ((getHeight() / anzahlPlaetze * (platzierungen[j] - 0.3f)) + abstandVertikal),
 							(int) (abstandHorizontal * (j + 1.5)),
 							(int) ((getHeight() / anzahlPlaetze * (platzierungen[j + 1] - 0.3f)) + abstandVertikal));
-
-					if (m_clVerlaufeintraege[i].getTeamId() == aktuelleTeamId) {
-						g2d.drawLine(
-								(int) (abstandHorizontal * (j + 0.5)),
-								(int) ((getHeight() / anzahlPlaetze * (platzierungen[j] - 0.3f)) + abstandVertikal) - 1,
-								(int) (abstandHorizontal * (j + 1.5)),
-								(int) ((getHeight() / anzahlPlaetze * (platzierungen[j + 1] - 0.3f)) + abstandVertikal) - 1);
-					}
 				}
 
 				// Letzte Linie bis zu Ende
@@ -183,14 +172,6 @@ final class SeriesHistoryPanel extends JPanel {
 						(int) ((getHeight() / anzahlPlaetze * (platzierungen[0] - 0.3f)) + abstandVertikal),
 						(int) (abstandHorizontal * 0.5),
 						(int) ((getHeight() / anzahlPlaetze * (platzierungen[0] - 0.3f)) + abstandVertikal));
-
-				if (m_clVerlaufeintraege[i].getTeamId() == aktuelleTeamId) {
-					g2d.drawLine(
-							5,
-							(int) ((getHeight() / anzahlPlaetze * (platzierungen[0] - 0.3f)) + abstandVertikal) - 1,
-							(int) (abstandHorizontal * 0.5),
-							(int) ((getHeight() / anzahlPlaetze * (platzierungen[0] - 0.3f)) + abstandVertikal) - 1);
-				}
 			}
 		}
 	}

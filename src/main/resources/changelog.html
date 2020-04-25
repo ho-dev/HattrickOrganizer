@@ -1,37 +1,111 @@
 <p><em>Please visit the HO! forum in the CHPP section of Hattrick if you have any questions!<br/>If you find a bug, please open an issue on <a href="https://github.com/akasolace/HO/issues">GitHub</a></em></p>
 <h1>Changelist HO! 3.0</h1>
-<h2>Squad</h2>
+<h2>Some numbers:</h2>
 <ul>
-  <li>Fix Sorting by Position #397</li>
+  <li>57 commits</li>
+  <li>229 files changed (9,659 additions and 2,828 deletions)</li>
+  <li>27 issues closed</li>
+  <li>4 contributors</li>
 </ul>
-<h2>Lineup</h2>
+<h2>Highlights</h2>
 <ul>
-  <li>Make Name column resizable in players' table #382</li>
+  <li>
+  <p>[Download] Full control on which game to download (e.g. exclude HTO integrated games) #290</p></li>
+  <li>
+  <p>[Team Analyser] impact of special events on score for both you and your opponent based on latest lineup information #299</p></li>
+  <li>
+  <p>[Matched] new match report mocking HT full report #421</p></li>
+  <li>
+  <p>[FIX] HO! will now automatically recognize league change at the beginning of the season #391</p></li>
 </ul>
-<h2>Download</h2>
+<h2>Detailed Changelog</h2>
+<h3>Download</h3>
 <ul>
-  <li>Download of current matches are selectable by match type #290</li>
+  <li>[NEW] Full control on which game to download (e.g. exclude HTO integrated games) #290</li>
 </ul>
-<h2>Matches</h2>
+<h3>Squad</h3>
 <ul>
-  <li>Match Report: now similar to HT match report #339</li>
+  <li>[FIX] ordering of best position is now saved on closing #397</li>
 </ul>
-<h2>Player Analysis</h2>
+<h3>Team Analyser</h3>
 <ul>
-  <li>fix age of player in player analysis table #422</li>
+  <li>[NEW] impact of special events on score for both you and your opponent based on latest lineup information #299</li>
 </ul>
-<h2>Team Analysis</h2>
+<h3>Rating</h3>
 <ul>
-  <li>special events prediction #299</li>
+  <li>[NEW] impact of match orders on rating is now directly visible from the subsitution tab, helping finding the best time for subsitution change #294</li>
+  <li>[FIX] all match orders are now consider in minute-bases prediction rating (behaviour change, position wap ...). Until now only substitution were considered #385</li>
+  <li>[FIX] counterattackrating calculation beyond divine has been fixed #398</li>
 </ul>
-<h2>League Details</h2>
+<h3>Matches</h3>
 <ul>
-  <li>Promotion / Demotion status displayed on week 14 and 15 of season. #247</li>
+  <li>[NEW] new match report mocking HT full report #421</li>
+  <li>[FIX] Matches Overview NPE #396</li>
 </ul>
-<h2>Training</h2>
+<h3>Lineup</h3>
 <ul>
-  <li>Fix negative skill values in training history #444</li>
+  <li>[FIX] to improve visibility, only last name is displayed in combo box, but the full player name is available via infobull on mouse hovering #394</li>
+  <li>[FIX] player name column is now resizable #382</li>
 </ul>
+<h3>Training</h3>
+<ul>
+  <li>[NEW] Training tab now shows information about skill devaluation #444</li>
+  <li>[FIX] Fix an issue when new player had a skill increase on first training and before it was ever imported into HO! #188</li>
+</ul>
+<h3>Misc</h3>
+<ul>
+  <li>[FIX] player age calculation is now correct #422</li>
+  <li>[FIX] Index Out Of Bounds Exception at startup on new DBs #448</li>
+  <li>[FIX] fix multiple display issues about player names (composed name, nicknames) #451</li>
+</ul>
+<h3>League</h3>
+<ul>
+  <li>[NEW] information about new league will be available as soon as last game of the season has been played #247</li>
+  <li>[FIX] HO! will now automatically recognize league change at the begining of the season #391</li>
+</ul>
+<h2>Translations</h2>
+<ul>
+  <li>HO! is currently available in 36 languages thanks to the work of 56 translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on <a href="https://poeditor.com/join/project/jCaWGL1JCl">POeditor</a>:</li>
+  <li>Translators contribution since the previous release (number of translated terms):</li>
+</ul>
+<table>
+  <thead>
+    <tr>
+      <th>username </th>
+      <th align="center">nb translated terms </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Lidegand </td>
+      <td align="center">345 </td>
+    </tr>
+    <tr>
+      <td>Saleh </td>
+      <td align="center">65 </td>
+    </tr>
+    <tr>
+      <td>Mauro Aranda </td>
+      <td align="center">62 </td>
+    </tr>
+    <tr>
+      <td>Saleh </td>
+      <td align="center">185 </td>
+    </tr>
+    <tr>
+      <td>mondstern </td>
+      <td align="center">40 </td>
+    </tr>
+    <tr>
+      <td>sich </td>
+      <td align="center">10 </td>
+    </tr>
+    <tr>
+      <td>h3t3r0 </td>
+      <td align="center">9 </td>
+    </tr>
+  </tbody>
+</table>
 <h1>Changelist HO! 2.1</h1>
 <h2>Some numbers:</h2>
 <ul>

@@ -152,6 +152,19 @@ public class MyConnector {
 		return getCHPPWebFile(url);
 	}
 
+	/**
+	 * Fetch training events of player
+	 *
+	 * @param playerId
+	 *            id of the region to fetch
+	 * @return training events xml
+	 *
+	 * @throws IOException
+	 */
+	public String getTrainingEvents(int playerId){
+		String url = htUrl + "?file=trainingevents&playerID=" + playerId;
+		return getCHPPWebFile(url);
+	}
 
 	/**
 	 * holt die Finanzen

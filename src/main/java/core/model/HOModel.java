@@ -6,6 +6,7 @@ import core.db.DBManager;
 //import core.epv.EPV;
 import core.model.misc.Basics;
 import core.model.misc.Finanzen;
+import core.model.misc.TrainingEvent;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.series.Liga;
@@ -111,6 +112,16 @@ public class HOModel {
     public final Vector<Player> getAllSpieler() {
         return m_vPlayer;
     }
+
+    // Method is called in calcSubskills from historic HOModel instances
+	// HOVerwaltung manages the HOModel with the current player list
+    public final boolean isCurrentPlayer(int playerId)
+	{
+		for ( Player p : HOVerwaltung.instance().getModel().getAllSpieler()){ // could differ from this.m_vPlayer
+			if ( p.getSpielerID() == playerId) return true;
+		}
+		return false;
+	}
 
     /**
      * Setzt neue Aufstellung
@@ -451,12 +462,27 @@ public class HOModel {
  
     				// The version of the player from last hrf
     				Player old = players.get(String.valueOf(player.getSpielerID()));
-    				if (old == null) {
+    				if (old == null ) {
     					if (TrainingManager.TRAININGDEBUG) {
     						HOLogger.instance().debug(HOModel.class, "Old player for id "+player.getSpielerID()+" = null");
     					}
+    					// Player appears the first time
+						// - was bought new
+						// - promoted from youth
+						// - it is the first hrf ever loaded
     					old = new Player();
-    					old.setSpielerID(-1);
+    					old.setSpielerID(player.getSpielerID());
+    					old.copySkills(player);
+    					if (isCurrentPlayer(player.getSpielerID())) {
+							List<TrainingEvent> events = player.downloadTrainingEvents();
+							if (events != null) {
+								for (TrainingEvent event : events) {
+									if (event.getEventDate().compareTo(player.getHrfDate()) <= 0) {
+										old.setValue4Skill4(event.getPlayerSkill(), event.getOldLevel());
+									}
+								}
+							}
+						}
     				}
 
     				// Always copy subskills as the first thing
