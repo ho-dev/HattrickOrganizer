@@ -51,7 +51,7 @@ public class SkillupTableModel extends AbstractTableModel {
 	public String getColumnName(int column) {
 		switch (column) {
 			case 0:
-				return HOVerwaltung.instance().getLanguageString("ls.team.trainingtype");
+				return HOVerwaltung.instance().getLanguageString("ls.player.skill");
 			case 1:
 				return HOVerwaltung.instance().getLanguageString("Week");
 			case 2:

@@ -26,7 +26,7 @@ public class PlayerSkillChange implements ISkillChange
     private int type;
 
     /** Value of skill */
-    private int value;
+    private double value;
 
     private int change;
 
@@ -102,7 +102,7 @@ public class PlayerSkillChange implements ISkillChange
 *
 * @param newValue
 */
-    public void setValue(int newValue)
+    public void setValue(double newValue)
     {
         value = newValue;
     }
@@ -113,7 +113,7 @@ public class PlayerSkillChange implements ISkillChange
 * @return value
 */
     @Override
-	public int getValue()
+	public double getValue()
     {
         return value;
     }

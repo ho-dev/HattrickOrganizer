@@ -89,7 +89,7 @@ public final class PlayerAbility {
 		}
 	}
 
-	public static String getNameForSkill(float bewertungwertfloat, boolean zahlen, boolean isMatch) {
+	public static String getNameForSkill(double bewertungwertfloat, boolean zahlen, boolean isMatch) {
 	    String bewertung = null;
 	    int bewertungwert = (int) bewertungwertfloat;
 
@@ -126,15 +126,15 @@ public final class PlayerAbility {
 	    return bewertung;
 	}
 
-	public static String getNameForSkill(boolean isMatch, float bewertungwert) {
+	public static String getNameForSkill(boolean isMatch, double bewertungwert) {
 	    return getNameForSkill(bewertungwert, UserParameter.instance().zahlenFuerSkill, isMatch);
 	}
 
-	public static String getNameForSkill(float bewertungwert, boolean zahlen) {
+	public static String getNameForSkill(double bewertungwert, boolean zahlen) {
 	    return getNameForSkill(bewertungwert, zahlen, false);
 	}
 
-	public static String getNameForSkill(float bewertung) {
+	public static String getNameForSkill(double bewertung) {
 	    return getNameForSkill(bewertung, UserParameter.instance().zahlenFuerSkill);
 	}
 

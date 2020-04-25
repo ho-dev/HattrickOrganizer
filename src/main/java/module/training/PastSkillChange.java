@@ -26,7 +26,7 @@ public class PastSkillChange implements ISkillChange {
     private int type;
 
     /** Value of skill */
-    private int value;
+    private double value;
 
     private String age;
     private int change=1;
@@ -87,7 +87,7 @@ public class PastSkillChange implements ISkillChange {
      *
      * @param newValue
      */
-    public void setValue(int newValue) {
+    public void setValue(double newValue) {
         value = newValue;
     }
 
@@ -96,9 +96,7 @@ public class PastSkillChange implements ISkillChange {
      *
      * @return value
      */
-    public int getValue() {
-        return value;
-    }
+    public double getValue() { return value; }
 
     @Override
     public int getChange() {

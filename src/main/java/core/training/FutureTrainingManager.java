@@ -8,6 +8,7 @@ import core.model.player.FuturePlayer;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.HelperWrapper;
+import module.training.Skills;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +29,7 @@ public class FutureTrainingManager {
 	public double[] finalSub = new double[8];
 
 	/** Number of skill ups with maximum training */
-	public int[] finalSkill = new int[8];
+	public double[] finalSkill = new double[8];
 
 	/** Active player */
 	private Player player;
@@ -78,7 +79,7 @@ public class FutureTrainingManager {
 			actual[i] = getOffset(skillIndex[i]);
 			// rest the other 4 arrays min and max level are equals to actual at beginning
 			finalSub[i] = actual[i];
-			finalSkill[i] = this.player.getValue4Skill4(skillIndex[i]);
+			finalSkill[i] = Skills.getSkillValue(this.player,skillIndex[i]);
 		}
 
 		trainingSpeed = 0;
@@ -239,7 +240,7 @@ public class FutureTrainingManager {
 	 */
 	private double getFinalValue(int skillIndex) {		
 		int pos = getSkillPosition(skillIndex);
-		return finalSkill[pos] +  finalSub[pos];
+		return finalSkill[pos];
 	}
 
 	/**
@@ -268,23 +269,6 @@ public class FutureTrainingManager {
 		return (int)(trainingSpeed * 100.0);
 	}
 
-	/**
-	* Get the array of the maximum training sub
-	*
-	* @return
-	*/
-	public double[] getMax() {
-		return finalSub;
-	}
-
-	/**
-	* Get the array of the maximum number of skillup
-	*
-	* @return
-	*/
-	public int[] getMaxup() {
-		return finalSkill;
-	}
 
 	/**
 	* Return the offset and sub for the skill
@@ -307,13 +291,13 @@ public class FutureTrainingManager {
 	//private double getTrainingLength(int trType, int skillIndex, int intensity, int staminaTrainingPart) {
 	private double getTrainingLength(WeeklyTrainingType wt, TrainingPerWeek tw) {
 		int pos = getSkillPosition(wt.getPrimaryTrainingSkill());
-		int curSkillUps = finalSkill[pos];
+		//double curSkillUps = finalSkill[pos];
 		int age = player.getAlter();
 		int ageDays = player.getAgeDays();
 		int realSkill = player.getValue4Skill4(wt.getPrimaryTrainingSkill());
 		// Set age and skill for simulation
 		player.setAlter (age + (int)Math.floor((ageDays + 7*weeksPassed)/112d));
-		player.setValue4Skill4 (wt.getPrimaryTrainingSkill(), realSkill+curSkillUps);
+		player.setValue4Skill4 (wt.getPrimaryTrainingSkill(), (int)finalSkill[pos]);
 		double limit = wt.getTrainingLength(player, coTrainer, trainer, tw.getTrainingIntensity(), tw.getStaminaPart(), staff);
 //		HOLogger.instance().debug(getClass(), "getTrLen for "+player.getName()+": weeksPassed="+weeksPassed+", age="+player.getAlter()+", skill="+getSkillValue(player, skillIndex)+", limit="+limit);
 		// Undo simulation changes on player
@@ -324,13 +308,13 @@ public class FutureTrainingManager {
 
 	private double getSecondaryTrainingLength(WeeklyTrainingType wt, TrainingPerWeek tw) {
 		int pos = getSkillPosition(wt.getSecondaryTrainingSkill());
-		int curSkillUps = finalSkill[pos];
+		//double curSkillUps = finalSkill[pos];
 		int age = player.getAlter();
 		int ageDays = player.getAgeDays();
 		int realSkill = player.getValue4Skill4(wt.getSecondaryTrainingSkill());
 		// Set age and skill for simulation
 		player.setAlter (age + (int)Math.floor((ageDays + 7*weeksPassed)/112d));
-		player.setValue4Skill4 (wt.getSecondaryTrainingSkill(), realSkill+curSkillUps);
+		player.setValue4Skill4 (wt.getSecondaryTrainingSkill(), (int)finalSkill[pos]);
 		double limit = wt.getSecondaryTrainingLength(player, coTrainer, trainer, tw.getTrainingIntensity(), tw.getStaminaPart(), staff);
 //		HOLogger.instance().debug(getClass(), "getTrLen for "+player.getName()+": weeksPassed="+weeksPassed+", age="+player.getAlter()+", skill="+getSkillValue(player, skillIndex)+", limit="+limit);
 		// Undo simulation changes on player
@@ -357,7 +341,8 @@ public class FutureTrainingManager {
 //			Alternative 2: Use overflow sub after a skillup
 //			(This would be more accurate. But only if the underlaying formula is exact) 
 			finalSub[pos] -= 1;
-			finalSkill[pos]++;
+			int v = (int)finalSkill[pos]+1;
+			finalSkill[pos] = finalSub[pos]+v;
 			return 1;
 		} else if (finalSub[pos] < 0) {
 			if (finalSkill[pos] <= 0) {
@@ -366,7 +351,13 @@ public class FutureTrainingManager {
 				return 0;
 			}
 			finalSub[pos] += 1;
-			finalSkill[pos]--;
+			int v = (int)finalSkill[pos]-1;
+			if ( v < 0){
+				finalSkill[pos]=0;
+			}
+			else {
+				finalSkill[pos] = finalSub[pos] + v;
+			}
 			return -1;
 		}
 		return 0;

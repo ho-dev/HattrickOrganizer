@@ -29,7 +29,7 @@ public interface ISkillChange {
 	*
 	* @return value
 	*/
-	public abstract int getValue();
+	public abstract double getValue();
 
 	public abstract int getChange();
 }
