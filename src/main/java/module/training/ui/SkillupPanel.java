@@ -31,6 +31,8 @@ public class SkillupPanel extends LazyPanel {
 	private SkillupTable table;
 	private TrainingModel model;
 
+	private JLabel title;
+
 	/**
 	 * Creates a new SkillupPanel object.
 	 */
@@ -67,6 +69,7 @@ public class SkillupPanel extends LazyPanel {
 	private void loadFromModel() {
 		List<ISkillChange> skillups = new ArrayList<ISkillChange>();
 		if (this.model.getActivePlayer() != null) {
+			this.title.setText(HOVerwaltung.instance().getLanguageString("TrainingHistory")+ " " + this.model.getActivePlayer().getFullName());
 			skillups.addAll(this.model.getSkillupManager().getTrainedSkillups());
 			skillups.addAll(this.model.getFutureTrainingManager().getFutureSkillups());
 			Collections.reverse(skillups);
@@ -106,11 +109,11 @@ public class SkillupPanel extends LazyPanel {
 		JPanel headerPanel = new ImagePanel();
 		headerPanel.setOpaque(false);
 
-		JLabel l = new JLabel(HOVerwaltung.instance().getLanguageString("TrainingHistory"),
+		title = new JLabel(HOVerwaltung.instance().getLanguageString("TrainingHistory"),
 				SwingConstants.CENTER);
 
-		l.setOpaque(false);
-		headerPanel.add(l, BorderLayout.CENTER);
+		title.setOpaque(false);
+		headerPanel.add(title, BorderLayout.CENTER);
 
 		setLayout(new BorderLayout());
 		add(headerPanel, BorderLayout.NORTH);
