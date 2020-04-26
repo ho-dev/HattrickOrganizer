@@ -291,7 +291,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             HOMainFrame.instance().showTab(IModule.PLAYERANALYSIS);
             HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Bottom(m_clPlayer.getSpielerID());
         } else if (actionevent.getSource().equals(m_jbOffsets)) {
-            new SpielerOffsetDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
+            new PlayerSubskillOffsetDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
         } else if (actionevent.getSource().equals(m_jbTrainingBlock)) {
             new SpielerTrainingBlockDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
         }

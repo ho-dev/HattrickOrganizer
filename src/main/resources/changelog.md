@@ -28,9 +28,12 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 - [NEW] Full control on which game to download (e.g. exclude HTO integrated games)  #290
 
+
 ### Squad
 
   - [FIX] ordering of best position is now saved on closing #397
+  - [NEW] manual adjustment of experience level (similar to other skills) #463
+
 
 ### Team Analyser
 
@@ -42,7 +45,6 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
  - [NEW] impact of match orders on rating is now directly visible from the subsitution tab, helping finding the best time for subsitution change  #294
  - [FIX] all match orders are now consider in minute-bases prediction rating (behaviour change, position wap ...). Until now only substitution were considered #385
  - [FIX] counterattackrating calculation beyond divine has been fixed #398
-
 
 
 ### Matches
@@ -75,7 +77,6 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
    - [NEW] information about new league will be available as soon as last game of the season has been played #247
    - [FIX] HO! will now automatically recognize league change at the begining of the season #391
-
 
 
 ## Translations
