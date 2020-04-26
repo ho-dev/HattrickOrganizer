@@ -78,15 +78,21 @@ public class TrainingLegendPanel extends JPanel {
         ImageIcon icon =  ImageUtilities.getImageIcon4Veraenderung(count,true);
 
         int colCount = count;
-        if ( colCount < 0) colCount = -count;
+        if ( count < 0) colCount = -count;
 
-        int farbwert = Math.min(240, 90 + (50 * colCount));
-        Color iconColor = new Color(0, farbwert, 0);
-        Image image = ReplaceImageColor(icon.getImage(), iconColor, color);
-
-        farbwert = Math.min(255, 105 + (50 * colCount));
-        iconColor = new Color(40, farbwert, 40);
-        image = ReplaceImageColor(image, iconColor, lcolor);
+        int fillColorValue = Math.min(240, 90 + (50 * colCount));
+        int drawColorValue = Math.min(255, 105 + (50 * colCount));
+        Color iconFillColor, iconDrawColor;
+        if ( count > 0){
+            iconFillColor = new Color(0, fillColorValue, 0);
+            iconDrawColor = new Color(40, drawColorValue, 40);
+        }
+        else {
+            iconFillColor = new Color(fillColorValue, 0,0);
+            iconDrawColor = new Color(drawColorValue, 40,40);
+        }
+        Image image = ReplaceImageColor(icon.getImage(), iconFillColor, color);
+        image = ReplaceImageColor(image, iconDrawColor, lcolor);
 
         if (colCount > 2) {
             image = ReplaceImageColor(image, Color.white, Color.magenta);
@@ -99,9 +105,9 @@ public class TrainingLegendPanel extends JPanel {
 
     public static Image ReplaceImageColor(Image image, Color oldColor, Color newColor) {
         FilteredImageSource filteredimagesource = new FilteredImageSource(image.getSource(),
-                                                                          ((new ColorReplaceFilter(oldColor,
-                                                                                                                                newColor,
-                                                                                                                                null))));
+                ((new ColorReplaceFilter(oldColor,
+                        newColor,
+                        null))));
 
         return Toolkit.getDefaultToolkit().createImage(((filteredimagesource)));
     }
