@@ -359,9 +359,9 @@ public class MatchRating {
 
 
     public final int computeHatStats() {
-        int mid = double2HTint(this.midfield);
-        int def = double2HTint(this.leftDefense) + double2HTint(this.centralDefense) + double2HTint(this.rightDefense);
-        int att = double2HTint(this.leftAttack) + double2HTint(this.centralAttack) + double2HTint(this.rightAttack);
+        int mid = (int)this.midfield;
+        int def = (int)(this.leftDefense + this.centralDefense + this.rightDefense);
+        int att = (int)(this.leftAttack + this.centralAttack + this.rightAttack);
         return 3 * mid + def + att;
     }
 
@@ -548,16 +548,11 @@ public class MatchRating {
      * Hattrick Quality function
      */
     private double hq(double _value) {
-        int value = double2HTint(_value);
-        return (2.0f * value) / (value + 80.0f);
+        return (2.0f * _value) / (_value + 80.0f);
     }
 
     public double getIndirectSetPiecesAtt() {
         return indirectSetPiecesAtt;
-    }
-
-    public void setIndirectSetPiecesAtt(double indirectSetPiecesAtt) {
-        this.indirectSetPiecesAtt = indirectSetPiecesAtt;
     }
 
     public void setIndirectSetPiecesAtt(int indirectSetPiecesAtt) {
@@ -566,10 +561,6 @@ public class MatchRating {
 
     public double getIndirectSetPiecesDef() {
         return indirectSetPiecesDef;
-    }
-
-    public void setIndirectSetPiecesDef(double indirectSetPiecesDef) {
-        this.indirectSetPiecesDef = indirectSetPiecesDef;
     }
 
     public void setIndirectSetPiecesDef(int indirectSetPiecesDef) {

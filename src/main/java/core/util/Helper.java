@@ -264,36 +264,20 @@ public class Helper {
         return Helper.round(wert, 1);
     }
 
-    /**
-     * Round a double value
-     *
-     */
-    public static double round(double wert, int nachkommastellen) {
-        //Wert mit 10^nachkommastellen multiplizieren
-        final double dwert = wert * Math.pow(10.0, nachkommastellen);
 
-        //Nachkommastellen abschneiden
-//        final long lwert = Math.round(dwert);
-        final double lwert = (int) dwert;
-
-        //Wert wieder durch 10^nachkommastellen teilen und zurückgeben
-        return (lwert / Math.pow(10.0, nachkommastellen));
+    /** Round a double value*/
+    public static double round(double value, int nbDecimals) {
+    	double corr = Math.pow(10.0, nbDecimals);
+        return Math.round(value * corr) /corr;
     }
 
     /**
      * Round a float value
      *
      */
-    public static float round(float wert, int nachkommastellen) {
-        //Wert mit 10^nachkommastellen multiplizieren
-        final float dwert = wert * (int)Math.pow(10.0, nachkommastellen);
-
-        //Nachkommastellen abschneiden
-//        final long lwert = Math.round(dwert);
-        final float lwert = (int) dwert;
-
-        //Wert wieder durch 10^nachkommastellen teilen und zurückgeben
-        return (lwert / (int)Math.pow(10.0, nachkommastellen));
+    public static float round(float value, int nbDecimals) {
+		double corr = Math.pow(10.0, nbDecimals);
+		return (float)(Math.round(value * corr) /corr);
     }
 
     /**
