@@ -40,7 +40,7 @@ Changelist HO! 3.0
 ### Team Analyser
 
  - [NEW] impact of special events on score for both you and your opponent based on latest lineup information #299
-
+ - [FIX] fix calculation of HatStats and Loddar in TeamAnalyzer #464
 
 ### Rating
 

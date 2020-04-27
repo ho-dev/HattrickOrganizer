@@ -39,7 +39,7 @@ dependencies {
 
 def major = '3'
 def minor = '0'
-def development_stage = '0'
+def development_stage = '1'
 def releaseArtefacts = false
 
 // region configuration ==============================================================================================

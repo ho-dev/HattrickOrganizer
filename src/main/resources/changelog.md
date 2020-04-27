@@ -38,7 +38,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ### Team Analyser
 
  - [NEW] impact of special events on score for both you and your opponent based on latest lineup information #299
-
+ - [FIX] fix calculation of HatStats and Loddar in TeamAnalyzer #464
 
 ### Rating
 

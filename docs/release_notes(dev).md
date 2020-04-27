@@ -30,21 +30,23 @@ Changelist HO! 3.0
 
 - [NEW] Full control on which game to download (e.g. exclude HTO integrated games)  #290
 
+
 ### Squad
 
   - [FIX] ordering of best position is now saved on closing #397
+  - [NEW] manual adjustment of experience level (similar to other skills) #463
+
 
 ### Team Analyser
 
  - [NEW] impact of special events on score for both you and your opponent based on latest lineup information #299
-
+ - [FIX] fix calculation of HatStats and Loddar in TeamAnalyzer #464
 
 ### Rating
 
  - [NEW] impact of match orders on rating is now directly visible from the subsitution tab, helping finding the best time for subsitution change  #294
  - [FIX] all match orders are now consider in minute-bases prediction rating (behaviour change, position wap ...). Until now only substitution were considered #385
  - [FIX] counterattackrating calculation beyond divine has been fixed #398
-
 
 
 ### Matches
@@ -61,8 +63,9 @@ Changelist HO! 3.0
 
 ### Training
 
-- [NEW] Training tab now shows information about skill devaluation #444
-- [FIX]  Fix an issue when new player had a skill increase on first training and before it was ever imported into HO! #188
+- [NEW] Training tab now shows information about skill devaluation #286
+- [FIX] Training history table skill values of players with more than one skill devaluations fixed #444
+- [FIX] fix an issue when new player had a skill increase on first training and before it was ever imported into HO! #188
 
 
 ### Misc
@@ -76,7 +79,6 @@ Changelist HO! 3.0
 
    - [NEW] information about new league will be available as soon as last game of the season has been played #247
    - [FIX] HO! will now automatically recognize league change at the begining of the season #391
-
 
 
 ## Translations
