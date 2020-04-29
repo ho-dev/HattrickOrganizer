@@ -6,6 +6,7 @@ import module.playeranalysis.PlayerAnalysisModule;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
@@ -98,6 +99,8 @@ final class DBUpdater {
 					case 27:
 					case 299:
 						updateDBv300(DBVersion, version);
+					case 300:
+						updateDBv301(DBVersion, version);
 				}
 
 				HOLogger.instance().log(getClass(), "done.");
@@ -106,6 +109,45 @@ final class DBUpdater {
 			}
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
+		}
+	}
+
+	private void updateDBv301(int dbVersion, int version) {
+
+		try {
+			if (!columnExistsInTable("EVENT_INDEX", MatchHighlightsTable.TABLENAME)) {
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EVENT_INDEX INTEGER");
+			}
+
+			if (!columnExistsInTable("INJURY_TYPE", MatchHighlightsTable.TABLENAME)) {
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN INJURY_TYPE TINYINT");
+			}
+
+			if (columnExistsInTable("TYP", MatchHighlightsTable.TABLENAME)) {
+				m_clJDBCAdapter.executeUpdate("UPDATE MATCHHIGHLIGHTS SET MATCH_EVENT_ID = (TYP * 100) + SUBTYP WHERE MATCH_EVENT_ID IS NULL");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP TYP");
+			}
+
+			Arrays.asList("HEIMTORE", "GASTTORE", "SUBTYP").forEach(s -> {
+				try {
+					if (columnExistsInTable(s, MatchHighlightsTable.TABLENAME)) {
+						m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP " + s);
+					}
+				} catch (SQLException e) {
+					HOLogger.instance().log(getClass(), e);
+				}
+			});
+
+			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_heimid_idx ON MATCHDETAILS (HEIMID)");
+			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_gastid_idx ON MATCHDETAILS (GASTID)");
+			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_heimid_idx ON MATCHESKURZINFO (HEIMID)");
+			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_gastid_idx ON MATCHESKURZINFO (GASTID)");
+			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_teamid_idx ON MATCHHIGHLIGHTS (TEAMID)");
+			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_eventid_idx ON MATCHHIGHLIGHTS (MATCH_EVENT_ID)");
+
+			updateDBVersion(dbVersion, version);
+		} catch (SQLException e) {
+			HOLogger.instance().log(getClass(), e);
 		}
 	}
 
@@ -224,7 +266,7 @@ final class DBUpdater {
 		updateDBVersion(DBVersion, version);
 	}
 
-	private void updateDBVersion(int DBVersion, int version ){
+	private void updateDBVersion(int DBVersion, int version) {
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
