@@ -13,13 +13,14 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ## Highlights
 
 
-- [Download] Full control on which game to download (e.g. exclude HTO integrated games)  #290
+- [Download] Full control on which game to download (e.g. exclude HTO integrated games)
 
-- [Team Analyser] impact of special events on score for both you and your opponent based on latest lineup information #299
+- [League] information about new league will be available as soon as last game of the season has been played
 
-- [Matched] new match report mocking HT full report #421
+- [Team Analyser] impact of special events on score for both you and your opponent based on latest lineup information
 
-- [FIX] HO! will now automatically recognize league change at the beginning of the season #391
+- [Matches] new match report mocking HT full report
+
 
 
 ## Detailed Changelog
