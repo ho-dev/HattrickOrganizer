@@ -28,7 +28,7 @@ public class BooleanColumn extends UserColumn {
 	 * @return Boolean
 	 */
 	public Boolean getValue(Player player){
-		return Boolean.valueOf(player.isSpielberechtigt());
+		return Boolean.valueOf(player.getCanBeSelectedByAssistant());
 	}
 	
 }

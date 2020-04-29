@@ -73,31 +73,36 @@ public class LineupTableModel extends HOTableModel {
 
 	}
 
-	/**
-	 * Listener für die Checkboxen zum Autoaufstellen
-	 */
-	public final void setSpielberechtigung() {
-		try {
-			for (int i = 0; i < this.getRowCount(); i++) {
-				final int id = Integer
-						.parseInt(((core.gui.comp.entry.ColorLabelEntry) getValueAt(i,
-								getColumnIndexOfDisplayedColumn(UserColumnFactory.ID))).getText());
-				final Player player = getSpieler(id);
-
-				if ((player != null)
-						&& (player.isSpielberechtigt() != ((Boolean) getValueAt(i,
-								getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP)))
-								.booleanValue())) {
-					player.setSpielberechtigt(((Boolean) getValueAt(i,
-							getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP)))
-							.booleanValue());
-				}
-
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), e);
-		}
+	@Override
+	public final int getColumnIndexOfDisplayedColumn(int searchId) {
+		return super.getColumnIndexOfDisplayedColumn(searchId);
 	}
+
+//	/**
+//	 * Listener for the checkboxes of autolineup
+//	 */
+//	public final void setSpielberechtigung() {
+//		try {
+//			for (int i = 0; i < this.getRowCount(); i++) {
+//				final int id = Integer
+//						.parseInt(((core.gui.comp.entry.ColorLabelEntry) getValueAt(i,
+//								getColumnIndexOfDisplayedColumn(UserColumnFactory.ID))).getText());
+//				final Player player = getSpieler(id);
+//
+//				if ((player != null)
+//						&& (player.isSpielberechtigt() != ((Boolean) getValueAt(i,
+//								getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP)))
+//								.booleanValue())) {
+//					player.setSpielberechtigt(((Boolean) getValueAt(i,
+//							getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP)))
+//							.booleanValue());
+//				}
+//
+//			}
+//		} catch (Exception e) {
+//			HOLogger.instance().log(getClass(), e);
+//		}
+//	}
 
 	public final Player getSpieler(int id) {
 		if (id > 0) {
