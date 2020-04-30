@@ -53,6 +53,7 @@ Changelist HO! 3.0
 
 - [NEW] new match report mocking HT full report #421
 - [FIX] Matches Overview NPE #396
+- [FIX] NPE when trying to simulate upcoming games #472
 
 
 ### Lineup
