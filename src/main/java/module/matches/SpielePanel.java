@@ -366,13 +366,13 @@ public final class SpielePanel extends LazyImagePanel {
 	private TeamData getOwnLineupRatings(MatchPredictionManager manager) {
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
 		TeamRatings teamRatings = manager.generateTeamRatings(
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getMidfield().get(0))), //FIXME: replace t0 rating with 90 minute average rating
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getLeftDefense().get(0))),   //FIXME: replace t0 rating with 90 minute average rating
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getCentralDefense().get(0))), //FIXME: replace t0 rating with 90 minute average rating
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getRightDefense().get(0))), //FIXME: replace t0 rating with 90 minute average rating
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getLeftAttack().get(0))),  //FIXME: replace t0 rating with 90 minute average rating
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getCentralAttack().get(0))),  //FIXME: replace t0 rating with 90 minute average rating
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getRightAttack().get(0)))); //FIXME: replace t0 rating with 90 minute average rating
+				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getMidfield().get(-90d))),
+				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getLeftDefense().get(-90d))),
+				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getCentralDefense().get(-90d))),
+				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getRightDefense().get(-90d))),
+				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getLeftAttack().get(-90d))),
+				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getCentralAttack().get(-90d))),
+				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getRightAttack().get(-90d))));
 
 		int tactic = lineup.getTacticType();
 		return manager.generateTeamData(HOVerwaltung.instance().getModel().getBasics()
