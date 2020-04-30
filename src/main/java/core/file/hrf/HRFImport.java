@@ -18,6 +18,7 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.io.File;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
@@ -78,12 +79,12 @@ public class HRFImport {
 						// Info
 						frame.getInfoPanel().setLangInfoText(getLangStr("HRFSave"));
 
-						// Datei schon importiert worden?
-						String oldHRFName = DBManager.instance().getHRFName4Date(
-								homodel.getBasics().getDatum());
+						// file already imported?
+						java.sql.Timestamp HRFts = homodel.getBasics().getDatum();
+						String oldHRFName = DBManager.instance().getHRFName4Date(HRFts);
 
 						if (choice == null || !choice.applyToAll ) {
-							choice = askForImportAgain(frame, oldHRFName);
+							choice = bStoreHRF(frame, HRFts, oldHRFName);
 							if (choice.cancel) {
 								// chaneled -> bail out here
 								break;
@@ -164,14 +165,20 @@ public class HRFImport {
 		return HOVerwaltung.instance().getLanguageString(key);
 	}
 	
-	private UserChoice askForImportAgain(Component parent, String oldHRFName) {
+	private UserChoice bStoreHRF(Component parent, Timestamp HRF_date, String oldHRFName) {
 		UserChoice choice = new UserChoice();
-		
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
+		String text = getLangStr("HRFfrom") + " " + dateFormat.format(HRF_date);
+
+		if (oldHRFName!=null)
+		{text += "\n(" + getLangStr("HRFinDB") + " " + oldHRFName + ")";}
+
+		text += "\n" + getLangStr("ErneutImportieren");
+
 		JCheckBox applyToAllCheckBox = new JCheckBox(getLangStr("hrfImport.applyToAll"));
-		Object[] o = {getLangStr("ErneutImportieren") + " " + oldHRFName, applyToAllCheckBox};
-		int value = JOptionPane.showConfirmDialog(parent, 
-				o,
-				getLangStr("confirmation.title"), JOptionPane.YES_NO_CANCEL_OPTION);
+		Object[] o = {text, applyToAllCheckBox};
+		int value = JOptionPane.showConfirmDialog(parent, o, getLangStr("confirmation.title"), JOptionPane.YES_NO_CANCEL_OPTION);
 		
 		if (value == JOptionPane.CANCEL_OPTION) {
 			choice.cancel = true;

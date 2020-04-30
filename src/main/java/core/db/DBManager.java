@@ -767,14 +767,8 @@ public class DBManager {
 	}
 
 	/**
-	 * gibt es ein HRFFile in der Datenbank mit dem gleichen Dateimodifieddatum
-	 * schon?
-	 * 
-	 * @param date
-	 *            der letzten Dateiänderung der zu vergleichenden Datei
-	 * 
-	 * @return Das Datum der Datei, an den die Datei importiert wurde oder null,
-	 *         wenn keine passende Datei vorhanden ist
+	 is there is an HRFFile in the database with the same date?
+	 * @return The date of the file to which the file was imported or zero if no suitable file is available
 	 */
 	public String getHRFName4Date(Timestamp date) {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHrfName4Date(date);

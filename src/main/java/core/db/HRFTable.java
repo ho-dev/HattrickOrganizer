@@ -166,7 +166,7 @@ public final class HRFTable extends AbstractTable {
 	 *         wenn keine passende Datei vorhanden ist
 	 */
 	String getHrfName4Date(Timestamp date) {
-		ResultSet rs = null;
+		ResultSet rs;
 		final String statement = "select Name from " + getTableName() + " where Datum='"
 				+ date.toString() + "'";
 
@@ -184,7 +184,7 @@ public final class HRFTable extends AbstractTable {
 			HOLogger.instance().log(getClass(), "DatenbankZugriff.getName4Date " + e);
 		}
 
-		// Fehler oder nix gefunden
+		// Error or nothing found
 		return null;
 	}
 
