@@ -44,8 +44,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		columns[14] = new ColumnDescriptor("TournamentTypeID", Types.INTEGER, true); // 3 = League with playoffs , 4 = Cup
 		columns[15] = new ColumnDescriptor("ArenaId", Types.INTEGER, true); //  arena id
 		columns[16] = new ColumnDescriptor("RegionId", Types.INTEGER, true); // region id
-		columns[17] = new ColumnDescriptor("isDerby", Types.INTEGER, true); // 0=false, 1=true, -1=unknown
-		columns[18] = new ColumnDescriptor("isNeutral", Types.INTEGER, true); // 0=false, 1=true, -1=unknown
+		columns[17] = new ColumnDescriptor("isDerby", Types.BOOLEAN, true); //
+		columns[18] = new ColumnDescriptor("isNeutral", Types.BOOLEAN, true); // 0=false, 1=true, -1=unknown
 		columns[19] = new ColumnDescriptor("Weather", Types.INTEGER, true); // 0=rainy, ...
 		columns[20] = new ColumnDescriptor("WeatherForecast", Types.INTEGER, true); // 0=happened, ...
 
