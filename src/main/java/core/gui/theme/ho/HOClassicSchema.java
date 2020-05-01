@@ -255,9 +255,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		
 		put(HOME, "gui/bilder/home.png");
 		put(AWAY, "gui/bilder/away.png");
-		
-		put(PIC, "gui/bilder/pic.png");
-		put(MOTS, "gui/bilder/mots.png");
 
 		// Train bar
 		put(TRAINBAR_FT, "gui/bilder/trainpreview/trainpre_ft.png");

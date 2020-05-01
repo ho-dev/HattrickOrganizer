@@ -184,9 +184,6 @@ public interface HOIconName {
 	
 	String HOME = "home";
 	String AWAY = "away";
-	
-	String PIC = "pic";
-	String MOTS = "mots";
 
 	String TRAINBAR_FT = "trainpre_ft";
 	String TRAINBAR_PT = "trainpre_pt";
