@@ -150,22 +150,4 @@ public interface HOColorName {
 	public static final String TA_TEAM_TOURNAMENT_NEXT = "teamanalyzer.teamlist.nexttournament";
 	public static final String TA_TEAM_TOURNAMENT = "teamanalyzer.teamlist.tournament";
 
-	//1.434
-	// Matches Analyzer
-	public static final String MATCHESANALYZER_DEFAULT_FONT = "matchesanalyzer.font.default";
-	public static final String MATCHESANALYZER_DEFAULT_BG = "matchesanalyzer.bg.default";
-	public static final String MATCHESANALYZER_MATCH_BG = "matchesanalyzer.bg.match";
-	public static final String MATCHESANALYZER_LINEUP_BG = "matchesanalyzer.bg.lineup";
-	public static final String MATCHESANALYZER_STATS_BG = "matchesanalyzer.bg.stats";
-	public static final String MATCHESANALYZER_POSITIVE_BAR_BG = "matchesanalyzer.bg.positivebar";
-	public static final String MATCHESANALYZER_NEGATIVE_BAR_BG = "matchesanalyzer.bg.negativebar";
-	public static final String MATCHESANALYZER_OVERALL_BG = "matchesanalyzer.bg.overall";
-	public static final String MATCHESANALYZER_PANELS_BORDER = "matchesanalyzer.border";
-	public static final String MATCHESANALYZER_FIELD_LINES = "matchesanalyzer.field.line";
-	public static final String MATCHESANALYZER_FILED_GRASS = "matchesanalyzer.field.grass";
-	public static final String MATCHESANALYZER_TEAM_LEAGUE_NEXT = "matchesanalyzer.cbox.league";
-	public static final String MATCHESANALYZER_TEAM_CUP_NEXT = "matchesanalyzer.cbox.cup";
-	public static final String MATCHESANALYZER_TEAM_TOURNAMENT_NEXT = "matchesanalyzer.cbox.tournamentnext";
-	public static final String MATCHESANALYZER_TEAM_TOURNAMENT = "matchesanalyzer.cbox.tournament";
-	public static final String MATCHESANALYZER_TEAM_MYTEAM = "matchesanalyzer.cbox.myteam";
 }
