@@ -53,6 +53,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 - [NEW] new match report mocking HT full report #421
 - [FIX] Matches Overview NPE #396
 - [FIX] NPE when trying to simulate upcoming games #472
+- [NEW] removed Match Analyzer module #477
 
 
 ### Lineup
