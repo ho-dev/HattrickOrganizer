@@ -56,6 +56,7 @@ Changelist HO! 3.0
 - [FIX] NPE when trying to simulate upcoming games #472
 - [FIX] Improved performance when first displaying the tab when the database contains lots of matches #471
 - [FIX] Improved performance when exiting HO when the database is big #471
+- [NEW] removed Match Analyzer module #477
 
 
 ### Lineup

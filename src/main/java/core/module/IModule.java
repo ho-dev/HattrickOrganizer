@@ -27,7 +27,7 @@ public interface IModule {
 	public static final int EVIL_CARD		= 15;
 	public static final int IFA				= 16;
 	public static final int FLAGSCOLLECTOR	= 17;
-	public static final int MATCHESANALYZER	= 18;
+	//public static final int MATCHESANALYZER	= 18;
 	int OPPONENTSPY = 19;
 	
 	public int getModuleId();
