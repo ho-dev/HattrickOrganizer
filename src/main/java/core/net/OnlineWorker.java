@@ -586,7 +586,7 @@ public class OnlineWorker {
 		return matches;
 	}
 
-	private static List<MatchKurzInfo> FilterUserSelection(List<MatchKurzInfo> matches) {
+	public static List<MatchKurzInfo> FilterUserSelection(List<MatchKurzInfo> matches) {
 
 		ArrayList<MatchKurzInfo> ret = new ArrayList<>();
 		for (MatchKurzInfo m: matches) {
