@@ -213,10 +213,11 @@ public class Lineup{
 			else
 				settings.m_iTacticType = Integer.parseInt(properties.getProperty("tactictype", "0"));
 
-			if (properties.getProperty("installning").equals("null")) // to avoid exception when match is finish
+			String attitude = properties.getProperty("installning", "0");
+			if (attitude.equals("null") | attitude.equals("")) // to avoid exception when match is finish
 				settings.m_iAttitude = 0;
 			else
-				settings.m_iAttitude = Integer.parseInt(properties.getProperty("installning", "0"));
+				settings.m_iAttitude = Integer.parseInt(attitude);
 
 			if (properties.getProperty("styleofplay").equals("null")) // to avoid exception when match is finish
 				settings.m_iStyleOfPlay = 0;

@@ -51,11 +51,14 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	}
 
-	@Override
-	protected String[] getCreateIndizeStatements() {
-		return new String[] { "CREATE INDEX IMATCHKURZINFO_1 ON "
-				+ getTableName() + "(" + columns[0].getColumnName() + ")" };
-	}
+    @Override
+    protected String[] getCreateIndizeStatements() {
+        return new String[]{
+                "CREATE INDEX IMATCHKURZINFO_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")",
+                "CREATE INDEX matchkurzinfo_heimid_idx ON "+ getTableName() + "(" + columns[3].getColumnName() + ")",
+                "CREATE INDEX matchkurzinfo_gastid_idx ON "+ getTableName() + "(" + columns[5].getColumnName() + ")",
+        };
+    }
 
 	MatchKurzInfo getMatchesKurzInfo(int teamId, int matchtyp, int statistic,
 			boolean home) {

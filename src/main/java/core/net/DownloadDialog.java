@@ -10,6 +10,7 @@ import core.gui.theme.ho.HOTheme;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.login.ProxyDialog;
 import core.util.HOLogger;
@@ -284,10 +285,10 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			}
 		}
 		if (bOK && m_jchMatchArchive.isSelected() && (teamId > 0)) {
-			bOK = (OnlineWorker.getMatchArchive(teamId, m_clSpinnerModel.getDate(), true) != null);
-			if (bOK) {
-				// Get all lineups for matches, if they don't exist already
-				OnlineWorker.getAllLineups();
+			List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, m_clSpinnerModel.getDate(), false);
+			allmatches = OnlineWorker.FilterUserSelection(allmatches);
+			for ( MatchKurzInfo i: allmatches ) {
+				OnlineWorker.downloadMatchData(i, true);
 			}
 		}
 

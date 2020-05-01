@@ -30,13 +30,11 @@ public class JDBCAdapter {
 	public final void disconnect() {
 		try {
 			if (User.getCurrentUser().isHSQLDB()) {
-				m_clStatement.execute("SHUTDOWN COMPACT");
+				m_clStatement.execute("SHUTDOWN");
 			}
 			m_clConnection.close();
 			m_clConnection = null;
 		} catch (Exception e) {
-			// vapEngine.Verwaltung.instance ().writeLog (
-			// "JDBCAdapter.disconnect : " + e.getMessage() );
 			HOLogger.instance().error(getClass(), "JDBCAdapter.disconnect : " + e);
 			m_clConnection = null;
 		}
