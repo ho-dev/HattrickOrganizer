@@ -115,6 +115,10 @@ final class DBUpdater {
 	private void updateDBv301(int dbVersion, int version) {
 
 		try {
+
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isDerby SET DATA TYPE BOOLEAN");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isNeutral SET DATA TYPE BOOLEAN");
+
 			if (!columnExistsInTable("EVENT_INDEX", MatchHighlightsTable.TABLENAME)) {
 				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EVENT_INDEX INTEGER");
 			}
