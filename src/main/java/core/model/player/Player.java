@@ -319,6 +319,10 @@ public class Player {
      */
     private boolean m_bTrainingBlock = false;
 
+    // LastMAtch
+    private String m_lastMatchDate;
+    private double m_lastMatchRating=0;
+
 
     /**
      * specifying at what time –in minutes- that player entered the field
@@ -436,6 +440,13 @@ public class Player {
         m_iLaenderspiele = Integer.parseInt(properties.getProperty("caps", "0"));
         m_iU20Laenderspiele = Integer.parseInt(properties.getProperty("capsU20", "0"));
         nationalTeamId = Integer.parseInt(properties.getProperty("nationalTeamID","0"));
+
+        // #461-lastmatch
+        m_lastMatchDate =  properties.getProperty("lastmatch_date");
+        if(m_lastMatchDate!=null) {
+            m_lastMatchRating = 2*Double.parseDouble(properties.getProperty("lastmatch_rating", "0"));
+            System.out.println(m_sLastName+"="+m_iBewertung+"?"+m_lastMatchRating);
+        }
 
         //Subskills berechnen
         //Wird beim Speichern des HRFs aufgerufen, da hier nicht unbedingt die notwendigen Daten vorhanden sind
@@ -1718,6 +1729,22 @@ public class Player {
      */
     public int getTrainerTyp() {
         return m_iTrainerTyp;
+    }
+
+    /**
+     * Last match
+     * @return date
+     */
+    public String getLastMatchDate(){
+        return m_lastMatchDate;
+    }
+
+    /**
+     * Last match
+     * @return rating
+     */
+    public double getLastMatchRating(){
+        return m_lastMatchRating;
     }
 
     /**

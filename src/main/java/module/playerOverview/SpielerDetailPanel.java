@@ -84,6 +84,9 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private RatingTableEntry m_jpRating = new RatingTableEntry();
     private final ColorLabelEntry m_jpBestPosition = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+    private final ColorLabelEntry m_jpLastMatch = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
+            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+
     // Top Row, column 2
     private final JComboBox m_jcbSquad = new JComboBox(HOIconName.TEAMSMILIES);
     private final JComboBox m_jcbInformation = new JComboBox(HOIconName.MANUELLSMILIES);
@@ -95,6 +98,8 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT), new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT));
     private JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
+    private RatingTableEntry m_jpLastMatchRating = new RatingTableEntry();
+
     // Top Row, column 3
     private final ColorLabelEntry m_jpLeadership = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -361,6 +366,11 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jpName.setText(m_clPlayer.getShortName());
         m_jpName.setFGColor(SpielerLabelEntry.getForegroundForSpieler(m_clPlayer));
         m_jpAge.setText(m_clPlayer.getAgeStringFull());
+        m_jpLastMatch.setText(m_clPlayer.getLastMatchDate());
+        if (m_clPlayer.getLastMatchRating() > 0) {
+            m_jpLastMatchRating.setYellowStar(true);
+            m_jpLastMatchRating.setRating((float)m_clPlayer.getLastMatchRating());
+        }
         m_jpNationality.setIcon(ImageUtilities.getFlagIcon(m_clPlayer.getNationalitaet()));
         if (m_clPlayer.isHomeGrown())
             m_jpMotherClub.setIcon(ThemeManager.getIcon(HOIconName.HOMEGROWN));
@@ -689,6 +699,10 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         initNormalLabel(0, 5, constraints, layout, panel, label);
         initNormalField(1, 5, constraints, layout, panel, m_jpBestPosition.getComponent(false));
 
+        label = new JLabel(HOVerwaltung.instance().getLanguageString("LastMatchDate"));
+        initNormalLabel(0, 6, constraints, layout, panel, label);
+        initNormalField(1, 6, constraints, layout, panel, m_jpLastMatch.getComponent(false));
+
         // ***** Block 2
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Gruppe"));
         initNormalLabel(4, 0, constraints, layout, panel, label);
@@ -741,6 +755,11 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         constraints.gridwidth = 2;
         layout.setConstraints(m_jcbUserBestPosition, constraints);
         panel.add(m_jcbUserBestPosition);
+
+
+        label = new JLabel(HOVerwaltung.instance().getLanguageString("LastMatchRating"));
+        initNormalLabel(4, 6, constraints, layout, panel, label);
+        initNormalField(5, 6, constraints, layout, panel, m_jpLastMatchRating.getComponent(false));
 
         //empty row
         label = new JLabel();

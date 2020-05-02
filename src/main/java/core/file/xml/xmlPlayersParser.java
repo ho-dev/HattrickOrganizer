@@ -143,11 +143,24 @@ public class xmlPlayersParser {
 
                 //Trainer
                 try {
-                    root = (Element) root.getElementsByTagName("TrainerData").item(0);
-                    ele = (Element) root.getElementsByTagName("TrainerType").item(0);
+                    Element tmp_Trainer = (Element) root.getElementsByTagName("TrainerData").item(0);
+                    ele = (Element) tmp_Trainer.getElementsByTagName("TrainerType").item(0);
                     hash.put("TrainerType", (XMLManager.getFirstChildNodeValue(ele)));
-                    ele = (Element) root.getElementsByTagName("TrainerSkill").item(0);
+                    ele = (Element) tmp_Trainer.getElementsByTagName("TrainerSkill").item(0);
                     hash.put("TrainerSkill", (XMLManager.getFirstChildNodeValue(ele)));
+                } catch (Exception ep) {
+                }
+
+                //LastMatch #461
+                try {
+                    Element tmp_lm = (Element) root.getElementsByTagName("LastMatch").item(0);
+                    ele = (Element) tmp_lm.getElementsByTagName("Date").item(0);
+                    hash.put("LastMatch_Date", (XMLManager.getFirstChildNodeValue(ele)));
+                    ele = (Element) tmp_lm.getElementsByTagName("Rating").item(0);
+                    hash.put("LastMatch_Rating", (XMLManager.getFirstChildNodeValue(ele)));
+                    //ele = (Element) tmp_lm.getElementsByTagName("MatchId").item(0);
+                    //System.out.println(ele.getFirstChild().getNodeValue());
+
                 } catch (Exception ep) {
                 }
 

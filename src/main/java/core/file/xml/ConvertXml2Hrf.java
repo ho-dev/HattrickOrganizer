@@ -912,6 +912,15 @@ public class ConvertXml2Hrf {
 				buffer.append("TrainerType=").append('\n');
 				buffer.append("TrainerSkill=").append('\n');
 			}
+			if (ht.get("LastMatch_Date") != null) {
+				buffer.append("LastMatch_Date=")
+						.append(ht.get("LastMatch_Date")).append('\n');
+				buffer.append("LastMatch_Rating=")
+						.append(ht.get("LastMatch_Rating").toString()).append('\n');
+			} else {
+				buffer.append("LastMatch_Date=").append('\n');
+				buffer.append("LastMatch_Rating=").append('\n');
+			}
 
 			if ((matchLineupTeam != null)
 					&& (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get(
