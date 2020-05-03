@@ -143,10 +143,8 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
         ChangeEvent changeEvent = new ChangeEvent(this);
         fireChangeEvent(changeEvent);
 
-		// Nur manuelles Update der Tabelle, kein reInit, damit die Sortierung
-		// bleibt.
+		// Manual update of the table, so no reInit to keep the current sorting.
 		HOMainFrame.instance().getSpielerUebersichtPanel().refreshHRFVergleich();
-		// gui.RefreshManager.instance().doReInit();
 	}
 
     /**
