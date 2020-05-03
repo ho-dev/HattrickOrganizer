@@ -76,6 +76,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
    - [FIX] player age calculation is now correct #422
    - [FIX] Index Out Of Bounds Exception at startup on new DBs #448
    - [FIX] fix multiple display issues about player names (composed name, nicknames)  #451
+   - [FIX] removed deprecated training block feature  #486
    
 
 ### League
