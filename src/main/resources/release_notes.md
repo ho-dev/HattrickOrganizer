@@ -35,6 +35,7 @@ Changelist HO! 3.0
 
   - [FIX] ordering of best position is now saved on closing #397
   - [NEW] manual adjustment of experience level (similar to other skills) #463
+  - [FIX] Fix team summary comparison after new download from HT #475
 
 
 ### Team Analyser

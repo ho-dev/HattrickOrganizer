@@ -34,6 +34,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
   - [FIX] ordering of best position is now saved on closing #397
   - [NEW] manual adjustment of experience level (similar to other skills) #463
+  - [FIX] Fix team summary comparison after new download from HT #475
 
 
 ### Team Analyser
