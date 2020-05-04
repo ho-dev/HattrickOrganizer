@@ -33,10 +33,10 @@ public class DrawIcon implements Icon {
 
         if (direction == UPWARD_DIRECTION) {
             g2.setColor(WIN_COLOR);
-            g2.fillPolygon(new int[]{12, 20, 16}, new int[]{12, 12, 18}, 3);
+            g2.fillPolygon(new int[]{12, 20, 16}, new int[]{18, 18, 12}, 3);
         } else {
             g2.setColor(DEFEAT_COLOR);
-            g2.fillPolygon(new int[]{12, 20, 16}, new int[]{18, 18, 12}, 3);
+            g2.fillPolygon(new int[]{12, 20, 16}, new int[]{12, 12, 18}, 3);
         }
     }
 
