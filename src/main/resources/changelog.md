@@ -4,9 +4,9 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 # Changelist HO! 3.0
 
 ## Some numbers: 
-  - 57 commits
-  - 229 files changed (9,659 additions and 2,828 deletions)
-  - 27 issues closed
+  - 86 commits
+  - 290 files changed (10,884 additions and 6,285 deletions)
+  - 39 issues closed
   - 4 contributors
 
 

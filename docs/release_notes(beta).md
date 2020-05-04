@@ -6,9 +6,9 @@ layout: page
 Changelist HO! 3.0
 
 ## Some numbers: 
-  - 57 commits
-  - 229 files changed (9,659 additions and 2,828 deletions)
-  - 27 issues closed
+  - 86 commits
+  - 290 files changed (10,884 additions and 6,285 deletions)
+  - 39 issues closed
   - 4 contributors
 
 
@@ -35,6 +35,7 @@ Changelist HO! 3.0
 
   - [FIX] ordering of best position is now saved on closing #397
   - [NEW] manual adjustment of experience level (similar to other skills) #463
+  - [FIX] Fix team summary comparison after new download from HT #475
 
 
 ### Team Analyser
@@ -53,6 +54,10 @@ Changelist HO! 3.0
 
 - [NEW] new match report mocking HT full report #421
 - [FIX] Matches Overview NPE #396
+- [FIX] NPE when trying to simulate upcoming games #472
+- [FIX] Improved performance when first displaying the tab when the database contains lots of matches #471
+- [FIX] Improved performance when exiting HO when the database is big #471
+- [NEW] removed Match Analyzer module #477
 
 
 ### Lineup
@@ -73,6 +78,7 @@ Changelist HO! 3.0
    - [FIX] player age calculation is now correct #422
    - [FIX] Index Out Of Bounds Exception at startup on new DBs #448
    - [FIX] fix multiple display issues about player names (composed name, nicknames)  #451
+   - [FIX] removed deprecated training block feature  #486
    
 
 ### League

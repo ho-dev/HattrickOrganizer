@@ -2,21 +2,21 @@
 <h1>Changelist HO! 3.0</h1>
 <h2>Some numbers:</h2>
 <ul>
-  <li>57 commits</li>
-  <li>229 files changed (9,659 additions and 2,828 deletions)</li>
-  <li>27 issues closed</li>
+  <li>86 commits</li>
+  <li>290 files changed (10,884 additions and 6,285 deletions)</li>
+  <li>39 issues closed</li>
   <li>4 contributors</li>
 </ul>
 <h2>Highlights</h2>
 <ul>
   <li>
-  <p>[Download] Full control on which game to download (e.g. exclude HTO integrated games) #290</p></li>
+  <p>[Download] Full control on which game to download (e.g. exclude HTO integrated games)</p></li>
   <li>
-  <p>[Team Analyser] impact of special events on score for both you and your opponent based on latest lineup information #299</p></li>
+  <p>[League] information about new league will be available as soon as last game of the season has been played</p></li>
   <li>
-  <p>[Matched] new match report mocking HT full report #421</p></li>
+  <p>[Team Analyser] impact of special events on score for both you and your opponent based on latest lineup information</p></li>
   <li>
-  <p>[FIX] HO! will now automatically recognize league change at the beginning of the season #391</p></li>
+  <p>[Matches] new match report mocking HT full report</p></li>
 </ul>
 <h2>Detailed Changelog</h2>
 <h3>Download</h3>
@@ -27,6 +27,7 @@
 <ul>
   <li>[FIX] ordering of best position is now saved on closing #397</li>
   <li>[NEW] manual adjustment of experience level (similar to other skills) #463</li>
+  <li>[FIX] Fix team summary comparison after new download from HT #475</li>
 </ul>
 <h3>Team Analyser</h3>
 <ul>
@@ -43,6 +44,10 @@
 <ul>
   <li>[NEW] new match report mocking HT full report #421</li>
   <li>[FIX] Matches Overview NPE #396</li>
+  <li>[FIX] NPE when trying to simulate upcoming games #472</li>
+  <li>[FIX] Improved performance when first displaying the tab when the database contains lots of matches #471</li>
+  <li>[FIX] Improved performance when exiting HO when the database is big #471</li>
+  <li>[NEW] removed Match Analyzer module #477</li>
 </ul>
 <h3>Lineup</h3>
 <ul>
@@ -60,6 +65,7 @@
   <li>[FIX] player age calculation is now correct #422</li>
   <li>[FIX] Index Out Of Bounds Exception at startup on new DBs #448</li>
   <li>[FIX] fix multiple display issues about player names (composed name, nicknames) #451</li>
+  <li>[FIX] removed deprecated training block feature #486</li>
 </ul>
 <h3>League</h3>
 <ul>
