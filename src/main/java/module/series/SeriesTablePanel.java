@@ -243,9 +243,9 @@ class SeriesTablePanel extends ImagePanel {
 
 						((DoppelLabelEntry) tableValues[j][0]).getLinks().setText("");
 						((DoppelLabelEntry) tableValues[j][0]).getLinks().setFontStyle(Font.BOLD);
-						if (eintrag.getPosition() > eintrag.getAltePosition()) {
+						if (eintrag.getPosition() < eintrag.getAltePosition()) {
 							((DoppelLabelEntry) tableValues[j][0]).getLinks().setIcon(new DrawIcon(DrawIcon.UPWARD_DIRECTION));
-						} else if (eintrag.getPosition() < eintrag.getAltePosition()) {
+						} else if (eintrag.getPosition() > eintrag.getAltePosition()) {
 							((DoppelLabelEntry) tableValues[j][0]).getLinks().setIcon(new DrawIcon(DrawIcon.DOWNWARD_DIRECTION));
 						}
 

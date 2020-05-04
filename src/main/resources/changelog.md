@@ -84,6 +84,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
    - [NEW] information about new league will be available as soon as last game of the season has been played #247
    - [FIX] HO! will now automatically recognize league change at the begining of the season #391
+   - [FIX] Fix position arrows colour in series table #499
 
 
 ## Translations
