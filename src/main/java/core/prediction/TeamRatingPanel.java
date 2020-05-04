@@ -34,6 +34,8 @@ class TeamRatingPanel extends JPanel implements ItemListener {
     private JComboBox[][] values = new JComboBox[8][2];
     private int row;
 
+    private boolean ratingsChanged = false;
+
     //~ Constructors -------------------------------------------------------------------------------
 
     TeamRatingPanel(TeamData team) {
@@ -98,6 +100,8 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         add(taktikpanel, m_clConstraints);
 
         setOpaque(false);
+
+        ratingsChanged = false;
     }
 
     final void setTeamData(TeamData teamdata) {
@@ -141,6 +145,8 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         subLvl = ((int) ratings.getLeftAttack() - 1) - (lvl * 4);
         values[6][0].setSelectedIndex(lvl);
         values[6][1].setSelectedIndex(subLvl);
+
+        ratingsChanged = false;
     }
 
     final TeamData getTeamData() {
@@ -159,13 +165,16 @@ class TeamRatingPanel extends JPanel implements ItemListener {
     }
 
     public final void itemStateChanged(ItemEvent e) {
-        //Taktik
-        if (values[7][0].getSelectedItem() instanceof RatingItem
-            && (((RatingItem) values[7][0].getSelectedItem()).getValue() == IMatchDetails.TAKTIK_NORMAL)) {
-            values[7][1].setEnabled(false);
-        } else {
-            values[7][1].setEnabled(true);
+        if ( e.getSource() == values[7][0]){
+            //Taktik
+            if (values[7][0].getSelectedItem() instanceof RatingItem
+                    && (((RatingItem) values[7][0].getSelectedItem()).getValue() == IMatchDetails.TAKTIK_NORMAL)) {
+                values[7][1].setEnabled(false);
+            } else {
+                values[7][1].setEnabled(true);
+            }
         }
+        ratingsChanged = true;
     }
 
     private double getValue(int row) {
@@ -190,6 +199,10 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         values[row][1].setSelectedIndex(subLvl);
         m_clConstraints.gridx = 2;
         add(values[row][1], m_clConstraints);
+
+        values[row][0].addItemListener(this);
+        values[row][1].addItemListener(this);
+
         row++;
     }
 
@@ -220,5 +233,9 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         tactics.add(new RatingItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_WINGS), IMatchDetails.TAKTIK_WINGS));
         tactics.add(new RatingItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_CREATIVE),IMatchDetails.TAKTIK_CREATIVE));
         tactics.add(new RatingItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_LONGSHOTS), IMatchDetails.TAKTIK_LONGSHOTS));
+    }
+
+    public boolean isRatingsChanged() {
+        return ratingsChanged;
     }
 }

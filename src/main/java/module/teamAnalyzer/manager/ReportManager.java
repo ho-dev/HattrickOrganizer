@@ -1,11 +1,14 @@
 package module.teamAnalyzer.manager;
 
 import core.module.config.ModuleConfig;
+import core.prediction.engine.TeamData;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.report.TeamReport;
+import module.teamAnalyzer.ui.RecapPanel;
 import module.teamAnalyzer.ui.TeamAnalyzerPanel;
 import module.teamAnalyzer.vo.Match;
 import module.teamAnalyzer.vo.MatchDetail;
+import module.teamAnalyzer.vo.Team;
 import module.teamAnalyzer.vo.TeamLineup;
 
 import java.util.ArrayList;
@@ -14,6 +17,9 @@ import java.util.List;
 
 public class ReportManager {
     //~ Static fields/initializers -----------------------------------------------------------------
+    // adjustedLineup is used by MatchPrediction to store MatchRatings adjusted by the user
+    public static TeamLineup adjustedLineup;
+
     public static TeamLineup lineup;
     private static List<MatchDetail> matchDetails;
 
@@ -87,5 +93,20 @@ public class ReportManager {
         }
 
         TeamAnalyzerPanel.filter.setMatches(filterList);
+    }
+
+    public static void SetAdjustedLineup(TeamData opponentTeamData) {
+        TeamLineupBuilder builder = new TeamLineupBuilder(lineup);
+        adjustedLineup = builder.getLineup();
+
+        adjustedLineup.getRating().setCentralAttack(opponentTeamData.getRatings().getMiddleAttack());
+        adjustedLineup.getRating().setCentralDefense(opponentTeamData.getRatings().getMiddleDef());
+        adjustedLineup.getRating().setLeftAttack(opponentTeamData.getRatings().getLeftAttack());
+        adjustedLineup.getRating().setLeftDefense(opponentTeamData.getRatings().getLeftDef());
+        adjustedLineup.getRating().setMidfield(opponentTeamData.getRatings().getMidfield());
+        adjustedLineup.getRating().setRightAttack(opponentTeamData.getRatings().getRightAttack());
+        adjustedLineup.getRating().setRightDefense(opponentTeamData.getRatings().getRightDef());
+
+        SystemManager.updateUI();
     }
 }

@@ -8,6 +8,8 @@ import core.model.UserParameter;
 import core.prediction.engine.MatchPredictionManager;
 import core.prediction.engine.MatchResult;
 import core.prediction.engine.TeamData;
+import module.teamAnalyzer.manager.ReportManager;
+import module.teamAnalyzer.vo.TeamLineup;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -74,6 +76,10 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 
 	public final void actionPerformed(ActionEvent e) {
 		calculateNMatches(getNumberOfMatches());
+		if ( opponentTeamPanel.isRatingsChanged()){
+			// user has changed the match ratings
+			ReportManager.SetAdjustedLineup(opponentTeamPanel.getTeamData());
+		}
 	}
 
 	/**
