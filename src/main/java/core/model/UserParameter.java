@@ -234,6 +234,7 @@ public final class UserParameter extends Configuration {
     public float TRAINING_OFFSET_INTENSITY = 1.0f;
     //Timezone
     public int TimeZoneDifference;
+    public boolean TRAINING_SHOW_SKILLDROPS = true;
 
     //Number of decimals
     public int nbDecimals = 2;
@@ -540,6 +541,7 @@ public final class UserParameter extends Configuration {
         map.put("AlterFaktor", String.valueOf(TRAINING_OFFSET_AGE));
         map.put("CoTrainerFaktor", String.valueOf(TRAINING_OFFSET_ASSISTANTS));
         map.put("IntensitaetFaktor", String.valueOf(TRAINING_OFFSET_INTENSITY));
+        map.put("TrainingPredictionShowSkillDrops", String.valueOf(TRAINING_SHOW_SKILLDROPS));
         map.put("MinIdealPosStk", String.valueOf(MinIdealPosStk));
         map.put("TrainerFaktor", String.valueOf(TrainerFaktor));
         map.put("WetterEffektBonus", String.valueOf(WetterEffektBonus));
@@ -768,6 +770,7 @@ public final class UserParameter extends Configuration {
         TRAINING_OFFSET_AGE = getFloatValue(values, "AlterFaktor");
         TRAINING_OFFSET_ASSISTANTS = getFloatValue(values, "CoTrainerFaktor");
         TRAINING_OFFSET_INTENSITY = getFloatValue(values, "IntensitaetFaktor");
+        TRAINING_SHOW_SKILLDROPS = getBooleanValue(values, "TrainingPredictionShowSkillDrops");
         MinIdealPosStk = getFloatValue(values, "MinIdealPosStk");
         TrainerFaktor = getFloatValue(values, "TrainerFaktor");
         WetterEffektBonus = getFloatValue(values, "WetterEffektBonus");
