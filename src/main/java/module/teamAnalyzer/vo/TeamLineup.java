@@ -42,6 +42,14 @@ public class TeamLineup {
         return spotLineups.get(spot);
     }
 
+    public HashMap<Integer, SpotLineup> getSpotLineups(){
+        return spotLineups;
+    }
+
+    public void setSpotLineups(HashMap<Integer, SpotLineup> in){
+        spotLineups = in;
+    }
+
     public void setRating(MatchRating rating) {
         this.rating = rating;
     }

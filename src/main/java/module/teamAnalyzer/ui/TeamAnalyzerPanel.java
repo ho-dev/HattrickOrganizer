@@ -129,7 +129,7 @@ public class TeamAnalyzerPanel extends LazyPanel {
 		getFilterPanel().reload();
 
 		getMainPanel().reload(lineup, 0, 0);
-		getRecapPanel().reload(lineup);
+		getRecapPanel().reload(lineup, ReportManager.adjustedLineup);
 		getRatingPanel().reload(lineup);
 
 		getSpecialEventsPanel().reload(lineup);

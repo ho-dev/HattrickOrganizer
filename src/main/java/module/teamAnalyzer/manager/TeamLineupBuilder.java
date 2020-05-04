@@ -6,6 +6,7 @@ import module.teamAnalyzer.report.PositionReport;
 import module.teamAnalyzer.report.SpotReport;
 import module.teamAnalyzer.report.TacticReport;
 import module.teamAnalyzer.report.TeamReport;
+import module.teamAnalyzer.vo.MatchRating;
 import module.teamAnalyzer.vo.PlayerAppearance;
 import module.teamAnalyzer.vo.SpotLineup;
 import module.teamAnalyzer.vo.TeamLineup;
@@ -43,6 +44,22 @@ public class TeamLineupBuilder {
                 teamLineup.setSpotLineup(spotLineup, spot);
             }
         }
+    }
+
+    public TeamLineupBuilder(TeamLineup lineup) {
+        teamLineup = new TeamLineup();
+        teamLineup.setRating( new MatchRating());
+        teamLineup.getRating().setRightDefense(lineup.getRating().getRightDefense());
+        teamLineup.getRating().setRightAttack(lineup.getRating().getRightAttack());
+        teamLineup.getRating().setMidfield(lineup.getRating().getMidfield());
+        teamLineup.getRating().setLeftDefense(lineup.getRating().getLeftDefense());
+        teamLineup.getRating().setLeftAttack(lineup.getRating().getLeftAttack());
+        teamLineup.getRating().setCentralDefense(lineup.getRating().getCentralDefense());
+        teamLineup.getRating().setCentralAttack(lineup.getRating().getCentralAttack());
+        teamLineup.setSpecialEventsPrediction(lineup.getSpecialEventsPrediction());
+
+        teamLineup.setStars(lineup.getStars());
+        teamLineup.setSpotLineups(lineup.getSpotLineups());
     }
 
     //~ Methods ------------------------------------------------------------------------------------

@@ -9,6 +9,7 @@ import core.model.match.Matchdetails;
 import core.module.config.ModuleConfig;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.MatchPopulator;
+import module.teamAnalyzer.manager.TeamLineupBuilder;
 import module.teamAnalyzer.ui.controller.RecapListSelectionListener;
 import module.teamAnalyzer.ui.model.UiRecapTableModel;
 import module.teamAnalyzer.vo.Match;
@@ -68,6 +69,8 @@ public class RecapPanel extends JPanel {
     "" //$NON-NLS-1$
     };
 
+    private TeamLineup adjustedLineup;
+
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -78,57 +81,27 @@ public class RecapPanel extends JPanel {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public void reload(TeamLineup lineup) {
+    public void reload(TeamLineup lineup, TeamLineup adjusted) {
         // Empty model
         while (tableModel.getRowCount() > 0) {
             tableModel.removeRow(0);
         }
 
-        MatchRating averageRating = null;
-        double stars = 0;
-
-        if (lineup != null) {
-            averageRating = lineup.getRating();
-            stars = lineup.getStars();
+        if ( adjusted != null) {
+            TeamLineupBuilder builder = new TeamLineupBuilder(adjusted);
+            adjustedLineup = builder.getLineup();
         }
-
+        else {
+            adjustedLineup = null;
+        }
         List<MatchDetail> list = MatchPopulator.getAnalyzedMatch();
         Vector<Object> rowData;
 
         if (list.size() > 1) {
-            rowData = new Vector<Object>();
-            rowData.add(HOVerwaltung.instance().getLanguageString("Durchschnitt"));
-            rowData.add(VALUE_NA);
-            rowData.add(VALUE_NA);
-            rowData.add(VALUE_NA);
-            rowData.add(VALUE_NA);
-            setRating(rowData, averageRating);
-
-            DecimalFormat df = new DecimalFormat("###.#");
-
-            rowData.add(df.format(stars));
-            if(averageRating!=null) {
-	            rowData.add(df.format(averageRating.getHatStats()));
-	            rowData.add(df.format(averageRating.getSquad()));
-	            if (stars > 0) {
-	            	rowData.add(df.format(averageRating.getSquad() / stars));
-	            } else {
-	            	rowData.add(df.format(0));
-	            }
-                rowData.add(df.format(averageRating.getLoddarStats()));
-            } else {
-            	rowData.add(df.format(0));
-	            rowData.add(df.format(0));
-	            rowData.add(df.format(0));
-                rowData.add(df.format(0));
-            }
-            rowData.add(VALUE_NA);
-            rowData.add(VALUE_NA);
-            rowData.add(VALUE_NA);
-            rowData.add(VALUE_NA);
-            rowData.add("");
-            rowData.add("");
-            tableModel.addRow(rowData);
+            rowData = AddSpecialLineup(lineup, HOVerwaltung.instance().getLanguageString("Durchschnitt") );
+            if( rowData != null) tableModel.addRow(rowData);
+            rowData = AddSpecialLineup(adjustedLineup, HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.Adjusted"));
+            if( rowData != null) tableModel.addRow(rowData);
             table.getSelectionModel().setSelectionInterval(0, 0);
         }
 
@@ -242,6 +215,47 @@ public class RecapPanel extends JPanel {
         // Hide 'match type' and 'is home match?' columns.
         setColumnInvisible(20);
         setColumnInvisible(21);
+    }
+
+    private Vector<Object> AddSpecialLineup(TeamLineup lineup, String lineupName) {
+        if ( lineup == null) return null;
+
+        MatchRating rating = lineup.getRating();
+        double stars = lineup.getStars();
+        Vector<Object> rowData = new Vector<Object>();
+        rowData.add(lineupName);
+        rowData.add(VALUE_NA);
+        rowData.add(VALUE_NA);
+        rowData.add(VALUE_NA);
+        rowData.add(VALUE_NA);
+        setRating(rowData, lineup.getRating());
+
+        DecimalFormat df = new DecimalFormat("###.#");
+
+        rowData.add(df.format(stars));
+        if(rating !=null) {
+            rowData.add(df.format(rating.getHatStats()));
+            rowData.add(df.format(rating.getSquad()));
+            if (stars > 0) {
+                rowData.add(df.format(rating.getSquad() / stars));
+            } else {
+                rowData.add(df.format(0));
+            }
+            rowData.add(df.format(rating.getLoddarStats()));
+        } else {
+            rowData.add(df.format(0));
+            rowData.add(df.format(0));
+            rowData.add(df.format(0));
+            rowData.add(df.format(0));
+        }
+        rowData.add(VALUE_NA);
+        rowData.add(VALUE_NA);
+        rowData.add(VALUE_NA);
+        rowData.add(VALUE_NA);
+        rowData.add("");
+        rowData.add("");
+
+        return rowData;
     }
 
     private void setColumnInvisible(int col) {
