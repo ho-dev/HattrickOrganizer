@@ -37,6 +37,7 @@ final class TrainingsOptionenPanel extends ImagePanel implements ActionListener 
     private TrainingAdjustmentPanel m_jtapOsmosis;
 
     private JCheckBox m_jcSkillDrops = new JCheckBox(HOVerwaltung.instance().getLanguageString("skillDrops"));
+    private JCheckBox m_jcSkillDropsInPrediction = new JCheckBox(HOVerwaltung.instance().getLanguageString("ls.options.training.showSkillDrops"));
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -61,13 +62,14 @@ final class TrainingsOptionenPanel extends ImagePanel implements ActionListener 
         UserParameter.temp().TrainerFaktor = m_jtapCoachFactor.getValue();
         UserParameter.temp().TRAINING_OFFSET_ASSISTANTS = m_jtapAssisstantFactor.getValue();
         UserParameter.temp().TRAINING_OFFSET_INTENSITY = m_jtapIntensityFactor.getValue();
+        UserParameter.temp().TRAINING_SHOW_SKILLDROPS = this.m_jcSkillDropsInPrediction.isSelected();
         SkillDrops.instance().setActive(m_jcSkillDrops.isSelected());
 
         OptionManager.instance().setReInitNeeded();
     }
 
     private void initComponents() {
-    	setLayout(new GridLayout(15, 1, 4, 0));
+    	setLayout(new GridLayout(16, 1, 4, 0));
 
         JLabel label = new JLabel("   " +
         		core.model.HOVerwaltung.instance().getLanguageString("VoraussichtlicheTrainingwochen"));
@@ -127,6 +129,10 @@ final class TrainingsOptionenPanel extends ImagePanel implements ActionListener 
         m_jcSkillDrops.setSelected(SkillDrops.instance().isActive());
         m_jcSkillDrops.addActionListener(this);
         add(m_jcSkillDrops);
+
+        m_jcSkillDropsInPrediction.setSelected(UserParameter.temp().TRAINING_SHOW_SKILLDROPS);
+        m_jcSkillDropsInPrediction.addActionListener(this);
+        add(m_jcSkillDropsInPrediction);
     }
 
 	@Override
@@ -135,8 +141,9 @@ final class TrainingsOptionenPanel extends ImagePanel implements ActionListener 
 				&& (m_jcSkillDrops.isSelected() != SkillDrops.instance().isActive())) {
 			SkillDrops.instance().setActive(m_jcSkillDrops.isSelected());
 		}
+		else if ( event.getSource() == m_jcSkillDropsInPrediction){
+		    UserParameter.temp().TRAINING_SHOW_SKILLDROPS = m_jcSkillDropsInPrediction.isSelected();
+        }
 
 	}
-
-
 }

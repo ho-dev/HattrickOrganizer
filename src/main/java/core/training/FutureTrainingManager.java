@@ -203,6 +203,7 @@ public class FutureTrainingManager {
 				for ( int i=0; i<8; i++){
 					int change = checkSkillChange(i);
 					if (change!=0) {
+						if ( UserParameter.instance().TRAINING_SHOW_SKILLDROPS == false && change < 0) continue;
 						PlayerSkillChange su = new PlayerSkillChange();
 						su.setHtSeason(tw.getHattrickSeason());
 						su.setHtWeek(tw.getHattrickWeek());
