@@ -3,100 +3,103 @@ title: HO release notes
 layout: page
 ---
 
-Changelist HO! 2.1
-====================
+Changelist HO! 3.0
 
 ## Some numbers: 
-  - 350 commits
-  - 903 files changed (51,839 additions and 34,085 deletions)
-  - 8 contributors
+  - 86 commits
+  - 290 files changed (10,884 additions and 6,285 deletions)
+  - 39 issues closed
+  - 4 contributors
 
 
-## Documentation
- - Documentation moved to [Read the docs](https://ho.readthedocs.io/)
+## Highlights
 
 
-## GUI
- - New icons across the app: specialty, match type, match events, ...
+- [Download] Full control on which game to download (e.g. exclude HTO integrated games)  #290
 
-## Download
-- Warning when "not possible to fetch data at the moment because this team is currently playing a game" #291
+- [Team Analyser] impact of special events on score for both you and your opponent based on latest lineup information #299
 
+- [Matched] new match report mocking HT full report #421
 
-## Player details
-  - Best positions are highlighted #213
-    - In the preference (bottom of tab “Misc”) you can set the tolerance level to highlight the player's alternative positions
-  - Harmonization of absolute vs relative player contribution/performance #282
-      - In squad and Lineup, are calculated both the absolute and the relative contribution of a player to the ratings
-        - The absolute is more or less what would be the sum of his contribution to the 7 sectors
-        - The relative contribution helps to determine the best position for a given player. It is the absolute contribution corrected by a factor. This allows accounting for that some positions contributes more to the total ratings than others 
-  - In various tab, allow sorting by position and ratings #293
-  - Fix decimal negative difference #295
+- [FIX] HO! will now automatically recognize league change at the beginning of the season #391
 
 
-## Lineup
-  - Fix set-pieces taker slot when reloading saved match lineup  #316
-  - Fix “exclude last Lineup” when doing manual lineup #328
+## Detailed Changelog
+
+### Download
+
+- [NEW] Full control on which game to download (e.g. exclude HTO integrated games)  #290
 
 
-## Rating
-  - Fix a bug that was causing faulty ratings  #292
-  - Fix Hatstats and Loddarstats in Teamanalyser #321
+### Squad
+
+  - [FIX] ordering of best position is now saved on closing #397
+  - [NEW] manual adjustment of experience level (similar to other skills) #463
+  - [FIX] Fix team summary comparison after new download from HT #475
 
 
-## Matches
-  - Division battle match icon + game specifics #284 #310 #313
-  - Fix "show my cup games" #320 #323 #326
-  - Match Highlights: complete rewrite - full support of all match events  #344
-  - Match modules, cleaning of statistics tabs #355
+### Team Analyser
+
+ - [NEW] impact of special events on score for both you and your opponent based on latest lineup information #299
+ - [FIX] fix calculation of HatStats and Loddar in TeamAnalyzer #464
+
+### Rating
+
+ - [NEW] impact of match orders on rating is now directly visible from the subsitution tab, helping finding the best time for subsitution change  #294
+ - [FIX] all match orders are now consider in minute-bases prediction rating (behaviour change, position wap ...). Until now only substitution were considered #385
+ - [FIX] counterattackrating calculation beyond divine has been fixed #398
 
 
-## NT
-  - Extended style of play options #191
+### Matches
+
+- [NEW] new match report mocking HT full report #421
+- [FIX] Matches Overview NPE #396
+- [FIX] NPE when trying to simulate upcoming games #472
+- [FIX] Improved performance when first displaying the tab when the database contains lots of matches #471
+- [FIX] Improved performance when exiting HO when the database is big #471
+- [NEW] removed Match Analyzer module #477
 
 
-## Training
-  - Training week preview in Training Tabs #234
-  - Stamina training preview  #125 #311
-  - Fix training for secondary cups #306
-  - Track experience acquisition #199
-  - Fix training forecast displaying wrong skill up #368
- - Fix the trainee marking of future training plan #296  
+### Lineup
+
+- [FIX] to improve visibility, only last name is displayed in combo box, but the full player name is available via infobull on mouse hovering  #394
+- [FIX] player name column is now resizable  #382
 
 
-## Misc
-  - Out of bound exception for Hall of Fame players #350
-  - Summary line in player overview presenting team value (avg TSI, total TSI, avg form, ….) #373
-  - Team analyzer: Fix HatStats and LoddarStats always displaying zero #324
-  - Fix MatchDayPanel download button not available while the match is over #330 
-  - Fix MatchDayPanel null pointer exception #337
-  - Fix a bug when downloading data while having a generation match planned #365
-  - Team analyzer: Fix display issue in case of a team walkover #377
+### Training
+
+- [NEW] Training tab now shows information about skill devaluation #286
+- [FIX] Training history table skill values of players with more than one skill devaluations fixed #444
+- [FIX] fix an issue when new player had a skill increase on first training and before it was ever imported into HO! #188
+
+
+### Misc
+
+   - [FIX] player age calculation is now correct #422
+   - [FIX] Index Out Of Bounds Exception at startup on new DBs #448
+   - [FIX] fix multiple display issues about player names (composed name, nicknames)  #451
+   - [FIX] removed deprecated training block feature  #486
+   
+
+### League
+
+   - [NEW] information about new league will be available as soon as last game of the season has been played #247
+   - [FIX] HO! will now automatically recognize league change at the begining of the season #391
+   - [FIX] Fix position arrows colour in series table #499
 
 
 ## Translations
-  - HO! is currently available in 36 languages thanks to the work of 45 translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
+  - HO! is currently available in 36 languages thanks to the work of 56 translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
   - Translators contribution since the previous release (number of translated terms):
 
 
 | username       | nb translated terms |
 |----------------|:-------------------:|
-| sich           | 524                 |
-| Moorhuhninho   | 332                 |
-| Boy            | 193                 |
+| Lidegand       | 345                 |
+| Saleh          | 65                  |
+| Mauro Aranda   | 62                  |
 | Saleh          | 185                 |
-| Motavali       | 181                 |
-| Sergejs        | 114                 |
-| TeamBMW        | 81                  |
-| Juan           | 67                  |
-| Lidegand       | 56                  |
-| Globe96        | 46                  |
-| Zigmas         | 45                  |
-| dzsoo          | 44                  |
-| murko          | 38                  |
-| Baler0         | 28                  |
-| taimikko       | 21                  |
-| Ricardo        | 18                  |
-| DavidatorusF   | 17                  |
-| brokenelevator | 3                   |
-| Massimo        | 3                   |
+| mondstern      | 40                  |
+| sich           | 10                  |
+| h3t3r0         | 9                   |
+

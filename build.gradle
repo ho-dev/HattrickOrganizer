@@ -39,8 +39,8 @@ dependencies {
 
 def major = '3'
 def minor = '0'
-def development_stage = '1'
-def releaseArtefacts = false
+def development_stage = '2'
+def releaseArtefacts = true
 
 // region configuration ==============================================================================================
 println "Configuration start"
