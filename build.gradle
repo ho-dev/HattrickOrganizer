@@ -250,7 +250,7 @@ task preparingBuild(dependsOn: clean) {
         //     Deleting build project     ---------------------------------------------------------------------
         println("Deleting build and execution files ....")
         //project.delete(files("${buildDir}/")) #389 --> replaced by dependency on clean
-        //project.delete(files("${projectDir}/db"))
+        project.delete(files("${projectDir}/db"))
         project.delete(files("${projectDir}/logs"))
         project.delete(files("${projectDir}/themes"))
         project.delete(files("${projectDir}/user.xml"))

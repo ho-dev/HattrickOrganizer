@@ -83,7 +83,6 @@ public class StaffTable extends AbstractTable{
 						+ " ( HrfID, index, id, stafftype, level, cost, name ) VALUES(";
 				sql += hrfId + "," + index + "," + staff.getId() + "," + staff.getStaffType().getId() + "," +
 						staff.getLevel() + "," + staff.getCost() + ",'" + staff.getName() + "')";
-				System.out.println(sql);
 				adapter.executeUpdate(sql);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(), "DB.storeStaff Error " + e);

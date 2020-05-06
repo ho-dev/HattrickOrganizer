@@ -158,8 +158,8 @@ public class xmlPlayersParser {
                     hash.put("LastMatch_Date", (XMLManager.getFirstChildNodeValue(ele)));
                     ele = (Element) tmp_lm.getElementsByTagName("Rating").item(0);
                     hash.put("LastMatch_Rating", (XMLManager.getFirstChildNodeValue(ele)));
-                    //ele = (Element) tmp_lm.getElementsByTagName("MatchId").item(0);
-                    //System.out.println(ele.getFirstChild().getNodeValue());
+                    ele = (Element) tmp_lm.getElementsByTagName("MatchId").item(0);
+                    hash.put("LastMatch_id", (XMLManager.getFirstChildNodeValue(ele)));
 
                 } catch (Exception ep) {
                 }

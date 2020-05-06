@@ -322,6 +322,7 @@ public class Player {
     // LastMAtch
     private String m_lastMatchDate;
     private double m_lastMatchRating=0;
+    private int m_lastMatchId=0;
 
 
     /**
@@ -445,7 +446,7 @@ public class Player {
         m_lastMatchDate =  properties.getProperty("lastmatch_date");
         if(m_lastMatchDate!=null) {
             m_lastMatchRating = 2*Double.parseDouble(properties.getProperty("lastmatch_rating", "0"));
-            System.out.println(m_sLastName+"="+m_iBewertung+"?"+m_lastMatchRating);
+            m_lastMatchId = Integer.parseInt(properties.getProperty("lastmatch_id","0"));
         }
 
         //Subskills berechnen
@@ -1745,6 +1746,26 @@ public class Player {
      */
     public double getLastMatchRating(){
         return m_lastMatchRating;
+    }
+
+    /**
+     * Last match id
+     * @return id
+     */
+    public int getLastMatchId(){
+        return m_lastMatchId;
+    }
+
+    /**
+     * Set last match £461
+     * @param date
+     * @param rating
+     * @param id
+     */
+    public void setLastMatchDetails(String date, int rating, int id){
+        m_lastMatchDate = date;
+        m_lastMatchRating = rating;
+        m_lastMatchId = id;
     }
 
     /**
