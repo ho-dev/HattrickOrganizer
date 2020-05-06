@@ -62,6 +62,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 - [FIX] to improve visibility, only last name is displayed in combo box, but the full player name is available via infobull on mouse hovering  #394
 - [FIX] player name column is now resizable  #382
+- [FIX] substitute player can now occupy more than one bench position #506
 
 
 ### Training
