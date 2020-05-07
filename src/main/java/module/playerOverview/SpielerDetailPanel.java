@@ -1141,6 +1141,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jbAnalysisBottom.setEnabled(false);
         m_jbOffsets.setEnabled(false);
         m_jbTrainingBlock.setEnabled(false);
+        m_jpLastMatchRating.clear();
     }
 
     public CBItem[] getPositions() {
