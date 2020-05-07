@@ -1,6 +1,74 @@
 *Please visit the HO! forum in the CHPP section of Hattrick if you have any questions!
 If you find a bug, please open an issue on [GitHub](https://github.com/akasolace/HO/issues)*
 
+# Changelist HO! 4.0
+
+## Some numbers: 
+  - xxx commits
+  - xxx files changed (xxx additions and xxx deletions)
+  - xx issues closed
+  - xx contributors
+
+
+## Highlights
+
+
+## Detailed Changelog
+
+### Download
+
+
+### Squad
+
+
+### Team Analyser
+
+### Rating
+
+
+### Matches
+
+
+### Lineup
+
+
+### Training
+
+
+### Misc
+
+
+### League
+
+
+## Translations
+  - HO! is currently available in xx languages thanks to the work of xx translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
+  - Translators contribution since the previous release (number of translated terms):
+
+
+| username       | nb translated terms |
+|----------------|:-------------------:|
+
+
+
+
+# Changelist HO! 3.1
+
+## Some numbers: 
+  - xxx commits
+  - xxx files changed (xxx additions and xxx deletions)
+  - xx issues closed
+  - xx contributors
+
+## Highlights
+
+## Detailed Changelog
+
+### Lineup
+- [FIX] substitute player can now occupy more than one bench position #506
+
+
+
 # Changelist HO! 3.0
 
 ## Some numbers: 
@@ -62,7 +130,6 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 - [FIX] to improve visibility, only last name is displayed in combo box, but the full player name is available via infobull on mouse hovering  #394
 - [FIX] player name column is now resizable  #382
-- [FIX] substitute player can now occupy more than one bench position #506
 
 
 ### Training
