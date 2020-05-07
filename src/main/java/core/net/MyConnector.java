@@ -448,7 +448,7 @@ public class MyConnector {
 	 * Get Players
 	 */
 	public String getPlayers(int teamId) throws IOException {
-		String url = htUrl + "?file=players&version=" + VERSION_PLAYERS+"&teamID=" + teamId;
+		String url = htUrl + "?file=players&version=" + VERSION_PLAYERS+"&includeMatchInfo=true&teamID=" + teamId;
 		return getCHPPWebFile(url);
 	}
 

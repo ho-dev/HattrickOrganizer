@@ -23,7 +23,7 @@ public class LineupTableModel extends HOTableModel {
 
 	private void initialize() {
 		UserColumn[] basic = UserColumnFactory.createPlayerBasicArray();
-		columns = new UserColumn[49];
+		columns = new UserColumn[50];
 		columns[0] = basic[0];
 		columns[48] = basic[1];
 
@@ -61,6 +61,7 @@ public class LineupTableModel extends HOTableModel {
 		columns[46] = add[7];
 		columns[47] = add[8];
 		columns[41] = add[9];
+		columns[49] = add[12];
 	}
 
 	@Override
