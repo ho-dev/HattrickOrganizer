@@ -6,22 +6,22 @@ layout: page
 Changelist HO! 3.0
 
 ## Some numbers: 
-  - 86 commits
-  - 290 files changed (10,884 additions and 6,285 deletions)
-  - 39 issues closed
+  - 90 commits
+  - 293 files changed (11,027 additions and 6,341 deletions)
+  - 42 issues closed
   - 4 contributors
 
 
 ## Highlights
 
 
-- [Download] Full control on which game to download (e.g. exclude HTO integrated games)  #290
+  - in case of promotion/demotion information about the new league will be available as soon as last game of the season has been played
 
-- [Team Analyser] impact of special events on score for both you and your opponent based on latest lineup information #299
+  - impact of special events on score for both you and your opponent based on latest lineup information
 
-- [Matched] new match report mocking HT full report #421
-
-- [FIX] HO! will now automatically recognize league change at the beginning of the season #391
+  - new match report mocking HT full report
+  
+  - full control on which game to download (e.g. exclude HTO integrated games)
 
 
 ## Detailed Changelog
@@ -68,7 +68,7 @@ Changelist HO! 3.0
 
 ### Training
 
-- [NEW] Training tab now shows information about skill devaluation #286
+- [NEW] Training tab now shows information about skill devaluation (this can be disable in preference) #286
 - [FIX] Training history table skill values of players with more than one skill devaluations fixed #444
 - [FIX] fix an issue when new player had a skill increase on first training and before it was ever imported into HO! #188
 
@@ -83,7 +83,7 @@ Changelist HO! 3.0
 
 ### League
 
-   - [NEW] information about new league will be available as soon as last game of the season has been played #247
+   - [NEW] in case of promotion/demotion information about the new league will be available as soon as last game of the season has been played #247
    - [FIX] HO! will now automatically recognize league change at the begining of the season #391
    - [FIX] Fix position arrows colour in series table #499
 
@@ -95,11 +95,11 @@ Changelist HO! 3.0
 
 | username       | nb translated terms |
 |----------------|:-------------------:|
-| Lidegand       | 345                 |
+| Lidegand       | 378                 |
 | Saleh          | 65                  |
 | Mauro Aranda   | 62                  |
-| Saleh          | 185                 |
+| sich           | 58                  |
 | mondstern      | 40                  |
-| sich           | 10                  |
 | h3t3r0         | 9                   |
+| murko          | 6                   |
 
