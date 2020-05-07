@@ -35,70 +35,72 @@ final class DBUpdater {
 			try {
 				HOLogger.instance().log(getClass(), "Updating DB to version " + DBVersion + "...");
 
-				switch (version) { // hint: fall though (no breaks) is intended
-					// here
-					case 0:
-					case 1:
-					case 2:
-					case 3:
-						HOLogger.instance().log(getClass(), "DB version " + DBVersion + " is to old");
-						try {
-							JOptionPane.showMessageDialog(null,
-									"DB is too old.\nPlease update first to HO 1.431", "Error",
-									JOptionPane.ERROR_MESSAGE);
-						} catch (Exception e) {
-							HOLogger.instance().log(getClass(), e);
-						}
-						System.exit(0);
-					case 5:
-						updateDBv6();
-					case 6:
-						updateDBv7();
-					case 7:
-						updateDBv8();
-					case 8:
-						updateDBv9();
-					case 9:
-						updateDBv10();
-					case 10:
-						updateDBv11();
-					case 11:
-						updateDBv12(DBVersion, version);
-					case 4:
-						// in Beta 1.432 Rev 1906, the DBVersion was set to '4' by
-						// mistake.
-						// to fix that, we just execute updateDBTo1432() in this
-						// case
-					case 12:
-					case 13:
-					case 14:
-					case 15:
-					case 16:
-					case 17:
-						updateDBTo1432(DBVersion, version);
-					case 18:
-						updateDBv19(DBVersion, version);
-					case 19:
-						updateDBv20(DBVersion, version);
-					case 20:
-						updateDBv21(DBVersion, version);
-					case 21:
-						updateDBv22(DBVersion, version);
-					case 22:
-						updateDBv23(DBVersion, version);
-					case 23:
-						//MATCHREPORT was made longer here but not in table definition
-						//to fix this mistake and not repeat code
-						//updateDBv24 is falling through to updateDBv25
-					case 24:
-						updateDBv25(DBVersion, version);
-					case 25:
-					case 26: // repair corrupt MATCHHIGHLIGHTSTABLE initialized by HO 2.1
-						updateDBv26(DBVersion, version);
-					case 27:
-					case 299:
-						updateDBv300(DBVersion, version);
-				}
+                switch (version) { // hint: fall though (no breaks) is intended
+                    // here
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                        HOLogger.instance().log(getClass(), "DB version " + DBVersion + " is to old");
+                        try {
+                            JOptionPane.showMessageDialog(null,
+                                    "DB is too old.\nPlease update first to HO 1.431", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        } catch (Exception e) {
+                            HOLogger.instance().log(getClass(), e);
+                        }
+                        System.exit(0);
+                    case 5:
+                        updateDBv6();
+                    case 6:
+                        updateDBv7();
+                    case 7:
+                        updateDBv8();
+                    case 8:
+                        updateDBv9();
+                    case 9:
+                        updateDBv10();
+                    case 10:
+                        updateDBv11();
+                    case 11:
+                        updateDBv12(DBVersion, version);
+                    case 4:
+                        // in Beta 1.432 Rev 1906, the DBVersion was set to '4' by
+                        // mistake.
+                        // to fix that, we just execute updateDBTo1432() in this
+                        // case
+                    case 12:
+                    case 13:
+                    case 14:
+                    case 15:
+                    case 16:
+                    case 17:
+                        updateDBTo1432(DBVersion, version);
+                    case 18:
+                        updateDBv19(DBVersion, version);
+                    case 19:
+                        updateDBv20(DBVersion, version);
+                    case 20:
+                        updateDBv21(DBVersion, version);
+                    case 21:
+                        updateDBv22(DBVersion, version);
+                    case 22:
+                        updateDBv23(DBVersion, version);
+                    case 23:
+                        //MATCHREPORT was made longer here but not in table definition
+                        //to fix this mistake and not repeat code
+                        //updateDBv24 is falling through to updateDBv25
+                    case 24:
+                        updateDBv25(DBVersion, version);
+                    case 25:
+                    case 26: // repair corrupt MATCHHIGHLIGHTSTABLE initialized by HO 2.1
+                        updateDBv26(DBVersion, version);
+                    case 27:
+                    case 299:
+                        updateDBv300(DBVersion, version);
+                    case 300:
+                        updateDBv301(DBVersion, version);
+                }
 
 				HOLogger.instance().log(getClass(), "done.");
 			} catch (Exception e) {
@@ -108,6 +110,21 @@ final class DBUpdater {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
 	}
+
+    private void updateDBv301(int DBVersion, int version) throws SQLException {
+
+        if (!columnExistsInTable("LastMatchDate", SpielerTable.TABLENAME)) {
+            m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchDate VARCHAR (100)");
+        }
+        if (!columnExistsInTable("LastMatchRating", SpielerTable.TABLENAME)) {
+            m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchRating INTEGER");
+        }
+        if (!columnExistsInTable("LastMatchId", SpielerTable.TABLENAME)) {
+            m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchId INTEGER");
+        }
+
+        updateDBVersion(DBVersion, version);
+    }
 
 
 	private void updateDBv300(int DBVersion, int version) throws SQLException {
@@ -295,7 +312,7 @@ final class DBUpdater {
 
 	/**
 	 * Update DB structure to v8
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	private void updateDBv8() throws Exception {
@@ -445,7 +462,7 @@ final class DBUpdater {
 	 * Updates the database to the 1.432 release. This method might be executed
 	 * multiple times (since there are beta releases) so make sure that every
 	 * statement added here CAN be exceuted multiple times.
-	 * 
+	 *
 	 * @param DBVersion
 	 * @param version
 	 * @throws SQLException
@@ -596,15 +613,15 @@ final class DBUpdater {
 		}
 	}
 
-	
+
 	// Follow this pattern in the future. Only set db version if not
 	// development, or if the current db is more than one version old. The
 	// last update should be made during first run of a non development
 	// version.
 	private void updateDBv19(int DBVersion, int version) throws SQLException {
-		
+
 		// 1.433 stuff.
-		
+
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
@@ -619,30 +636,30 @@ final class DBUpdater {
 					+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
-	
+
 	private void updateDBv20(int DBVersion, int version) throws SQLException {
 		// 1.434
-		
+
 		if (!tableExists(StaffTable.TABLENAME)) {
 			dbManager.getTable(StaffTable.TABLENAME).createTable();
 		}
-		
+
 		if (!columnExistsInTable("TacticAssist", VereinTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE " + VereinTable.TABLENAME + " ADD COLUMN TacticAssist INTEGER");
 		}
-		
+
 		if (!columnExistsInTable("FormAssist", VereinTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE " + VereinTable.TABLENAME + " ADD COLUMN FormAssist INTEGER");
 		}
-		
+
 		if (!columnExistsInTable("StyleOfPlay", AufstellungTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE " + AufstellungTable.TABLENAME + " ADD COLUMN StyleOfPlay INTEGER");
 		}
-		
+
 		if (!columnExistsInTable("StyleOfPlay", MatchLineupTeamTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE " + MatchLineupTeamTable.TABLENAME + " ADD COLUMN StyleOfPlay INTEGER");
 		}
-		
+
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
@@ -657,23 +674,23 @@ final class DBUpdater {
 					+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
-	
+
 	private void updateDBv21(int DBVersion, int version) throws SQLException {
 		// 1.435 BETA
 		if (columnExistsInTable("MATCHREPORT", MatchDetailsTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ALTER COLUMN MATCHREPORT SET DATA TYPE VARCHAR(15000)"); // fix an existing bug - maybe 15 000 is not enough
 		}
-		
+
 		if (!columnExistsInTable("HEIMHATSTATS", MatchDetailsTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HEIMHATSTATS INTEGER");
 			m_clJDBCAdapter.executeUpdate("UPDATE MATCHDETAILS SET HEIMHATSTATS = HEIMLEFTATT + HEIMRIGHTATT + HEIMMIDATT + 3 * HEIMMIDFIELD + HEIMLEFTDEF + HEIMRIGHTDEF + HEIMMIDDEF");
 		}
-		
+
 		if (!columnExistsInTable("GASTHATSTATS", MatchDetailsTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GASTHATSTATS INTEGER");
 			m_clJDBCAdapter.executeUpdate("UPDATE MATCHDETAILS SET GASTHATSTATS = GASTLEFTATT + GASTRIGHTATT + GASTMIDATT + 3 * GASTMIDFIELD + GASTLEFTDEF + GASTRIGHTDEF + GASTMIDDEF");
 		}
-		
+
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ALTER COLUMN EVENTTEXT SET DATA TYPE VARCHAR(5000)"); // fix existing bug
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ALTER COLUMN HEIMTORE INTEGER"); // fix existing bug
 
@@ -719,7 +736,7 @@ final class DBUpdater {
                             + " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
         }
     }
-	
+
     private void updateDBv23(int DBVersion, int version) throws SQLException {
         // 1.436 BETA
 
@@ -743,7 +760,7 @@ final class DBUpdater {
                             + " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
         }
     }
-	
+
 	private void updateDBv25(int DBVersion, int version) throws SQLException {
 		// 1.436
 
@@ -873,13 +890,13 @@ final class DBUpdater {
 
 	/**
 	 * Automatic update of User Configuration parameters
-	 * 
+	 *
 	 * This method is similar to the updateDB() method above The main difference
 	 * is that it is based on the HO release version instead of the DB version
-	 * 
+	 *
 	 * In development mode, we execute the current update steps again (just like
 	 * in updateBD()).
-	 * 
+	 *
 	 * @author flattermann <flattermannHO@gmail.com>
 	 */
 	void updateConfig() {
@@ -891,7 +908,7 @@ final class DBUpdater {
 		/**
 		 * We have to use separate 'if-then' clauses for each conf version
 		 * (ascending order) because a user might have skipped some HO releases
-		 * 
+		 *
 		 * DO NOT use 'if-then-else' here, as this would ignores some updates!
 		 */
 		if (lastConfigUpdate < 1.4101 || (HO.isDevelopment() && lastConfigUpdate == 1.4101)) {
@@ -925,7 +942,7 @@ final class DBUpdater {
 			HOLogger.instance().log(getClass(), "Updating configuration to version 1.431...");
 			updateConfigTo1431(HO.isDevelopment() && lastConfigUpdate == 1.431);
 		}
-		
+
 		if (lastConfigUpdate < 1.434 || (HO.isDevelopment() && lastConfigUpdate == 1.434)) {
 			HOLogger.instance().log(getClass(), "Updating configuration to version 1.434...");
 			updateConfigTo1434(HO.isDevelopment() && lastConfigUpdate == 1.434);
@@ -1019,7 +1036,7 @@ final class DBUpdater {
 		// always set the LastConfUpdate as last step
 		dbManager.saveUserParameter("LastConfUpdate", 1.431);
 	}
-	
+
 	private void updateConfigTo1434(boolean alreadyApplied) {
 
 		if (!alreadyApplied) {
