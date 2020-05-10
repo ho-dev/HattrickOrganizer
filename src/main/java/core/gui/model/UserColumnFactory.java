@@ -81,6 +81,12 @@ final public class UserColumnFactory {
      **/
     public static final int AUTO_LINEUP = 510;
 
+
+    /**
+     * id from the column BEST_POSITION
+     **/
+    public static final int LAST_MATCH = 461;
+
     /**
      * @return PlayerCBItem[]
      */
@@ -968,6 +974,18 @@ final public class UserColumnFactory {
                 setPreferredWidth(35);
                 return home;
             }
+        };
+
+        playerAdditionalArray[12] = new PlayerColumn(LAST_MATCH, "LastMatchRating", 50) {
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                if (player.getLastMatchRating() > 0) {
+                    //
+                    return new RatingTableEntry((float) player.getLastMatchRating(), true);
+                }
+                return new RatingTableEntry();
+            }
+
         };
 
         return playerAdditionalArray;
