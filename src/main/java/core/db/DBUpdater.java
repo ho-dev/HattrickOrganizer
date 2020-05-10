@@ -98,8 +98,9 @@ final class DBUpdater {
 						updateDBv26(DBVersion, version);
 					case 27:
 					case 299:
-						updateDBv300(DBVersion, version);
 					case 300:
+					case 301: // Bug#509 requires another update run of v300
+						updateDBv300(DBVersion, version);
 						updateDBv301(DBVersion, version);
 				}
 
@@ -158,39 +159,6 @@ final class DBUpdater {
 
 	private void updateDBv300(int DBVersion, int version) throws SQLException {
 		// HO 3.0
-
-		// Delete league plans which are not of our own team
-		try {
-			// find own league plans
-			int teamId = getTeamId();
-			// select saison,ligaid from paarung where heimid=520472 group by saison,ligaid
-			HashMap<Integer, Integer> ownLeaguePlans = new HashMap<Integer, Integer>();
-			ResultSet rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from paarung where heimid=" + teamId + " group by saison,ligaid");
-			if (rs != null) {
-				while (rs.next()) {
-					int saison = rs.getInt(1);
-					int league = rs.getInt(2);
-					ownLeaguePlans.put(saison, league);
-				}
-				rs.close();
-			}
-			// delete entries in SPIELPLAN and PAARUNG which are not from own team
-			rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from spielplan");
-			if (rs != null) {
-				while (rs.next()) {
-					int saison = rs.getInt(1);
-					int league = rs.getInt(2);
-					if (!ownLeaguePlans.containsKey(saison) || ownLeaguePlans.get(saison) != league) {
-						// league is not our own one
-						m_clJDBCAdapter.executeUpdate("DELETE FROM spielplan WHERE ligaid=" + league + " and saison=" + saison);
-						m_clJDBCAdapter.executeUpdate("DELETE FROM paarung WHERE ligaid=" + league + " and saison=" + saison);
-					}
-				}
-				rs.close();
-			}
-		} catch (SQLException e) {
-			HOLogger.instance().log(getClass(), e);
-		}
 
 		// delete old divider locations
 		m_clJDBCAdapter
@@ -265,6 +233,39 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN FirstName VARCHAR (100)");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN NickName VARCHAR (100)");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ALTER COLUMN Name RENAME TO LastName");
+		}
+
+		// Delete league plans which are not of our own team
+		try {
+			// find own league plans
+			int teamId = getTeamId();
+			// select saison,ligaid from paarung where heimid=520472 group by saison,ligaid
+			HashMap<Integer, Integer> ownLeaguePlans = new HashMap<Integer, Integer>();
+			ResultSet rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from paarung where heimid=" + teamId + " group by saison,ligaid");
+			if (rs != null) {
+				while (rs.next()) {
+					int saison = rs.getInt(1);
+					int league = rs.getInt(2);
+					ownLeaguePlans.put(saison, league);
+				}
+				rs.close();
+			}
+			// delete entries in SPIELPLAN and PAARUNG which are not from own team
+			rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from spielplan");
+			if (rs != null) {
+				while (rs.next()) {
+					int saison = rs.getInt(1);
+					int league = rs.getInt(2);
+					if (!ownLeaguePlans.containsKey(saison) || ownLeaguePlans.get(saison) != league) {
+						// league is not our own one
+						m_clJDBCAdapter.executeUpdate("DELETE FROM spielplan WHERE ligaid=" + league + " and saison=" + saison);
+						m_clJDBCAdapter.executeUpdate("DELETE FROM paarung WHERE ligaid=" + league + " and saison=" + saison);
+					}
+				}
+				rs.close();
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), e);
 		}
 
 		updateDBVersion(DBVersion, version);
