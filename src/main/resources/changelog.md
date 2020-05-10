@@ -20,6 +20,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ### Squad
 
+   - [FIX] Remove lag in sync between tables in Squad #465
 
 ### Team Analyser
 

@@ -3,9 +3,9 @@ title: HO release notes
 layout: page
 ---
 
-Changelist HO! 3.0
+Changelist HO! 4.0
 
-## Some numbers: 
+## Some numbers:
   - xxx commits
   - xxx files changed (xxx additions and xxx deletions)
   - xx issues closed
@@ -22,6 +22,7 @@ Changelist HO! 3.0
 
 ### Squad
 
+  - [FIX] Remove lag in sync between tables in Squad #465
 
 ### Team Analyser
 
