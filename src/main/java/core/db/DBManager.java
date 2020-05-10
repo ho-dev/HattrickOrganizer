@@ -56,7 +56,8 @@ public class DBManager {
 	// -----------------------------------------------------------------
 
 	/** database version */
-	private static final int DBVersion = 301; // DBVersion 26 introduce for HO 3.0 version
+	private static final int DBVersion = 302; // HO 3.0 version
+
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
@@ -767,14 +768,8 @@ public class DBManager {
 	}
 
 	/**
-	 * gibt es ein HRFFile in der Datenbank mit dem gleichen Dateimodifieddatum
-	 * schon?
-	 * 
-	 * @param date
-	 *            der letzten Dateiänderung der zu vergleichenden Datei
-	 * 
-	 * @return Das Datum der Datei, an den die Datei importiert wurde oder null,
-	 *         wenn keine passende Datei vorhanden ist
+	 is there is an HRFFile in the database with the same date?
+	 * @return The date of the file to which the file was imported or zero if no suitable file is available
 	 */
 	public String getHRFName4Date(Timestamp date) {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHrfName4Date(date);

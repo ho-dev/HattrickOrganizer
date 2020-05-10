@@ -6,6 +6,7 @@ import module.playeranalysis.PlayerAnalysisModule;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
@@ -34,73 +35,74 @@ final class DBUpdater {
 		if (version != DBVersion) {
 			try {
 				HOLogger.instance().log(getClass(), "Updating DB to version " + DBVersion + "...");
+				switch (version) { // hint: fall though (no breaks) is intended
+					// here
+					case 0:
+					case 1:
+					case 2:
+					case 3:
+						HOLogger.instance().log(getClass(), "DB version " + DBVersion + " is to old");
+						try {
+							JOptionPane.showMessageDialog(null,
+									"DB is too old.\nPlease update first to HO 1.431", "Error",
+									JOptionPane.ERROR_MESSAGE);
+						} catch (Exception e) {
+							HOLogger.instance().log(getClass(), e);
+						}
+						System.exit(0);
+					case 5:
+						updateDBv6();
+					case 6:
+						updateDBv7();
+					case 7:
+						updateDBv8();
+					case 8:
+						updateDBv9();
+					case 9:
+						updateDBv10();
+					case 10:
+						updateDBv11();
+					case 11:
+						updateDBv12(DBVersion, version);
+					case 4:
+						// in Beta 1.432 Rev 1906, the DBVersion was set to '4' by
+						// mistake.
+						// to fix that, we just execute updateDBTo1432() in this
+						// case
+					case 12:
+					case 13:
+					case 14:
+					case 15:
+					case 16:
+					case 17:
+						updateDBTo1432(DBVersion, version);
+					case 18:
+						updateDBv19(DBVersion, version);
+					case 19:
+						updateDBv20(DBVersion, version);
+					case 20:
+						updateDBv21(DBVersion, version);
+					case 21:
+						updateDBv22(DBVersion, version);
+					case 22:
+						updateDBv23(DBVersion, version);
+					case 23:
+						//MATCHREPORT was made longer here but not in table definition
+						//to fix this mistake and not repeat code
+						//updateDBv24 is falling through to updateDBv25
+					case 24:
+						updateDBv25(DBVersion, version);
+					case 25:
+					case 26: // repair corrupt MATCHHIGHLIGHTSTABLE initialized by HO 2.1
+						updateDBv26(DBVersion, version);
+					case 27:
+					case 299:
+					case 300:
+					case 301: // Bug#509 requires another update run of v300
+						updateDBv300(DBVersion, version);
+						updateDBv301(DBVersion, version);
+				}
 
-                switch (version) { // hint: fall though (no breaks) is intended
-                    // here
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                        HOLogger.instance().log(getClass(), "DB version " + DBVersion + " is to old");
-                        try {
-                            JOptionPane.showMessageDialog(null,
-                                    "DB is too old.\nPlease update first to HO 1.431", "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                        } catch (Exception e) {
-                            HOLogger.instance().log(getClass(), e);
-                        }
-                        System.exit(0);
-                    case 5:
-                        updateDBv6();
-                    case 6:
-                        updateDBv7();
-                    case 7:
-                        updateDBv8();
-                    case 8:
-                        updateDBv9();
-                    case 9:
-                        updateDBv10();
-                    case 10:
-                        updateDBv11();
-                    case 11:
-                        updateDBv12(DBVersion, version);
-                    case 4:
-                        // in Beta 1.432 Rev 1906, the DBVersion was set to '4' by
-                        // mistake.
-                        // to fix that, we just execute updateDBTo1432() in this
-                        // case
-                    case 12:
-                    case 13:
-                    case 14:
-                    case 15:
-                    case 16:
-                    case 17:
-                        updateDBTo1432(DBVersion, version);
-                    case 18:
-                        updateDBv19(DBVersion, version);
-                    case 19:
-                        updateDBv20(DBVersion, version);
-                    case 20:
-                        updateDBv21(DBVersion, version);
-                    case 21:
-                        updateDBv22(DBVersion, version);
-                    case 22:
-                        updateDBv23(DBVersion, version);
-                    case 23:
-                        //MATCHREPORT was made longer here but not in table definition
-                        //to fix this mistake and not repeat code
-                        //updateDBv24 is falling through to updateDBv25
-                    case 24:
-                        updateDBv25(DBVersion, version);
-                    case 25:
-                    case 26: // repair corrupt MATCHHIGHLIGHTSTABLE initialized by HO 2.1
-                        updateDBv26(DBVersion, version);
-                    case 27:
-                    case 299:
-                        updateDBv300(DBVersion, version);
-                    case 300:
-                        updateDBv301(DBVersion, version);
-                }
 
 				HOLogger.instance().log(getClass(), "done.");
 			} catch (Exception e) {
@@ -111,9 +113,27 @@ final class DBUpdater {
 		}
 	}
 
-    private void updateDBv301(int DBVersion, int version) throws SQLException {
 
-        if (!columnExistsInTable("LastMatchDate", SpielerTable.TABLENAME)) {
+	private void updateDBv301(int dbVersion, int version) throws SQLException {
+		try {
+
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isDerby SET DATA TYPE BOOLEAN");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isNeutral SET DATA TYPE BOOLEAN");
+
+			if (!columnExistsInTable("EVENT_INDEX", MatchHighlightsTable.TABLENAME)) {
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EVENT_INDEX INTEGER");
+			}
+
+			if (!columnExistsInTable("INJURY_TYPE", MatchHighlightsTable.TABLENAME)) {
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN INJURY_TYPE TINYINT");
+			}
+
+			if (columnExistsInTable("TYP", MatchHighlightsTable.TABLENAME)) {
+				m_clJDBCAdapter.executeUpdate("UPDATE MATCHHIGHLIGHTS SET MATCH_EVENT_ID = (TYP * 100) + SUBTYP WHERE MATCH_EVENT_ID IS NULL");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP TYP");
+			}
+
+       if (!columnExistsInTable("LastMatchDate", SpielerTable.TABLENAME)) {
             m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchDate VARCHAR (100)");
         }
         if (!columnExistsInTable("LastMatchRating", SpielerTable.TABLENAME)) {
@@ -122,46 +142,34 @@ final class DBUpdater {
         if (!columnExistsInTable("LastMatchId", SpielerTable.TABLENAME)) {
             m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchId INTEGER");
         }
+      
+			Arrays.asList("HEIMTORE", "GASTTORE", "SUBTYP").forEach(s -> {
+				try {
+					if (columnExistsInTable(s, MatchHighlightsTable.TABLENAME)) {
+						m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP " + s);
+					}
+				} catch (SQLException e) {
+					HOLogger.instance().log(getClass(), e);
+				}
+			});
 
-        updateDBVersion(DBVersion, version);
-    }
+			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_heimid_idx ON MATCHDETAILS (HEIMID)");
+			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_gastid_idx ON MATCHDETAILS (GASTID)");
+			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_heimid_idx ON MATCHESKURZINFO (HEIMID)");
+			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_gastid_idx ON MATCHESKURZINFO (GASTID)");
+			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_teamid_idx ON MATCHHIGHLIGHTS (TEAMID)");
+			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_eventid_idx ON MATCHHIGHLIGHTS (MATCH_EVENT_ID)");
+
+			updateDBVersion(dbVersion, version);
+      
+		} catch (SQLException e) {
+			HOLogger.instance().log(getClass(), e);
+		}
+	}
 
 
 	private void updateDBv300(int DBVersion, int version) throws SQLException {
 		// HO 3.0
-
-		// Delete league plans which are not of our own team
-		try {
-			// find own league plans
-			int teamId = getTeamId();
-			// select saison,ligaid from paarung where heimid=520472 group by saison,ligaid
-			HashMap<Integer, Integer> ownLeaguePlans = new HashMap<Integer, Integer>();
-			ResultSet rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from paarung where heimid=" + teamId + " group by saison,ligaid");
-			if (rs != null) {
-				while (rs.next()) {
-					int saison = rs.getInt(1);
-					int league = rs.getInt(2);
-					ownLeaguePlans.put(saison, league);
-				}
-				rs.close();
-			}
-			// delete entries in SPIELPLAN and PAARUNG which are not from own team
-			rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from spielplan");
-			if (rs != null) {
-				while (rs.next()) {
-					int saison = rs.getInt(1);
-					int league = rs.getInt(2);
-					if (!ownLeaguePlans.containsKey(saison) || ownLeaguePlans.get(saison) != league) {
-						// league is not our own one
-						m_clJDBCAdapter.executeUpdate("DELETE FROM spielplan WHERE ligaid=" + league + " and saison=" + saison);
-						m_clJDBCAdapter.executeUpdate("DELETE FROM paarung WHERE ligaid=" + league + " and saison=" + saison);
-					}
-				}
-				rs.close();
-			}
-		} catch (SQLException e) {
-			HOLogger.instance().log(getClass(), e);
-		}
 
 		// delete old divider locations
 		m_clJDBCAdapter
@@ -238,10 +246,43 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ALTER COLUMN Name RENAME TO LastName");
 		}
 
+		// Delete league plans which are not of our own team
+		try {
+			// find own league plans
+			int teamId = getTeamId();
+			// select saison,ligaid from paarung where heimid=520472 group by saison,ligaid
+			HashMap<Integer, Integer> ownLeaguePlans = new HashMap<Integer, Integer>();
+			ResultSet rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from paarung where heimid=" + teamId + " group by saison,ligaid");
+			if (rs != null) {
+				while (rs.next()) {
+					int saison = rs.getInt(1);
+					int league = rs.getInt(2);
+					ownLeaguePlans.put(saison, league);
+				}
+				rs.close();
+			}
+			// delete entries in SPIELPLAN and PAARUNG which are not from own team
+			rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from spielplan");
+			if (rs != null) {
+				while (rs.next()) {
+					int saison = rs.getInt(1);
+					int league = rs.getInt(2);
+					if (!ownLeaguePlans.containsKey(saison) || ownLeaguePlans.get(saison) != league) {
+						// league is not our own one
+						m_clJDBCAdapter.executeUpdate("DELETE FROM spielplan WHERE ligaid=" + league + " and saison=" + saison);
+						m_clJDBCAdapter.executeUpdate("DELETE FROM paarung WHERE ligaid=" + league + " and saison=" + saison);
+					}
+				}
+				rs.close();
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), e);
+		}
+
 		updateDBVersion(DBVersion, version);
 	}
 
-	private void updateDBVersion(int DBVersion, int version ){
+	private void updateDBVersion(int DBVersion, int version) {
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);

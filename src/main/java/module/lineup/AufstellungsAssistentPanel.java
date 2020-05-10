@@ -354,7 +354,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 					.get(i);
 
 			//If the player is eligible to play and either all groups are selected or the one to which the player belongs
-			if (player.isSpielberechtigt()
+			if (player.getCanBeSelectedByAssistant()
 					&& (((this.getGroup().trim().equals("") || player.getTeamInfoSmilie().equals(
 							this.getGroup())) && !m_jchNot.isSelected()) || (!player
 							.getTeamInfoSmilie().equals(this.getGroup()) && m_jchNot.isSelected()))) {

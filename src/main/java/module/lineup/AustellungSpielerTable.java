@@ -3,6 +3,7 @@ package module.lineup;
 import core.db.DBManager;
 import core.gui.RefreshManager;
 import core.gui.comp.entry.ColorLabelEntry;
+import core.gui.comp.entry.SpielerLabelEntry;
 import core.gui.comp.renderer.BooleanTableCellRenderer;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.TableSorter;
@@ -194,12 +195,15 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 	}
 
 	private void addListeners() {
-		// TODO not sure what this is for. should be done by the editor??
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(java.awt.event.MouseEvent mouseEvent) {
-				if (getSelectedRow() > -1) {
-					tableModel.setSpielberechtigung();
+				int selectedRow = getSelectedRow();
+				boolean bSelected;
+				if (selectedRow > -1) {
+					Player selectedPlayer = ((SpielerLabelEntry) tableSorter.getValueAt(selectedRow,tableModel.getColumnIndexOfDisplayedColumn(UserColumnFactory.NAME))).getSpieler();
+					bSelected = (boolean)tableSorter.getValueAt(selectedRow, tableModel.getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP));
+					selectedPlayer.setCanBeSelectedByAssistant(bSelected);
 				}
 			}
 		});

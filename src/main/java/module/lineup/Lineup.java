@@ -213,10 +213,11 @@ public class Lineup{
 			else
 				settings.m_iTacticType = Integer.parseInt(properties.getProperty("tactictype", "0"));
 
-			if (properties.getProperty("installning").equals("null")) // to avoid exception when match is finish
+			String attitude = properties.getProperty("installning", "0");
+			if (attitude.equals("null") | attitude.equals("")) // to avoid exception when match is finish
 				settings.m_iAttitude = 0;
 			else
-				settings.m_iAttitude = Integer.parseInt(properties.getProperty("installning", "0"));
+				settings.m_iAttitude = Integer.parseInt(attitude);
 
 			if (properties.getProperty("styleofplay").equals("null")) // to avoid exception when match is finish
 				settings.m_iStyleOfPlay = 0;
@@ -1062,52 +1063,15 @@ public class Lineup{
 	 */
 	public final void setSpielerAtPosition(int positionID, int playerID) {
 		final MatchRoleID position = getPositionById(positionID);
-		//if player changed in starting eleven or substitute it has to be remove from previous occupied place in starting eleven or substitute
+		//if player changed is in starting eleven it has to be remove from previous occupied place
 		if( !position.isBackupsMatchRoleID()) { //!IMatchRoleID.aBackupssMatchRoleID.contains(positionID)){
 			MatchRoleID oldPlayerRole = getPositionBySpielerId(playerID);
-			if(oldPlayerRole != null && !oldPlayerRole.isBackupsMatchRoleID()){
+			if(oldPlayerRole != null && oldPlayerRole.isFieldMatchRoleId()){
 				oldPlayerRole.setSpielerId(0, this);
 				if ( oldPlayerRole.isSubstitutesMatchRoleID()){
 					removeObjectPlayerFromSubstitutions(playerID);
 				}
 			}
-
-
-			/*MatchRoleID iRole;
-			int iPlayerID;
-
-			// player is being set in starting 11
-			if (IMatchRoleID.aFieldMatchRoleID.contains(positionID)) {
-				// but player was already set in starting 11 or as a sub, hence it has to be removed from previously occupied position
-				if (this.isPlayerInStartingEleven(playerID) || this.isPlayerASub(playerID)) {
-					for (int i = 0; i < m_vPositionen.size(); i++) {
-						iRole = (MatchRoleID) m_vPositionen.get(i);
-						iPlayerID = iRole.getSpielerId();
-						// player is removed from previous position as player on the field or as substitute
-						if (iPlayerID == playerID) {
-							iRole.setSpielerId(0, this);
-						}
-					}
-				}
-			}
-
-
-			// player is being set as a sub
-			else if (IMatchRoleID.aSubstitutesMatchRoleID.contains(positionID)) {
-				// but player was already set in starting 11, hence it has to be removed from previously occupied position
-				if (this.isPlayerInStartingEleven(playerID)) {
-					for (int i = 0; i < m_vPositionen.size(); i++) {
-						iRole = (MatchRoleID) m_vPositionen.get(i);
-						iPlayerID = iRole.getSpielerId();
-						// player is removed from previous position as player on the field or as substitute
-						if (iPlayerID == playerID) {
-							iRole.setSpielerId(0, this);
-						}
-					}
-				}
-
-			}*/
-
 		}
 
 		//final MatchRoleID position = getPositionById(positionID);

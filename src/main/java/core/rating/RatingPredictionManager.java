@@ -418,8 +418,8 @@ public class RatingPredictionManager {
         }
         
         retVal *= params.getParam(sectionName, "multiplier", 1);
-        retVal += params.getParam(sectionName, "delta", 0);
-        
+		retVal = Math.pow(retVal, params.getParam(sectionName, "power", 1));
+		retVal += params.getParam(sectionName, "delta", 0);
 //    	System.out.println ("applyCommonProps: section "+sectionName+", before="+inVal+", after="+retVal);
     	return retVal;
     }

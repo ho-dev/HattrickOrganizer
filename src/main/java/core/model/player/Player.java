@@ -19,7 +19,6 @@ import core.training.TrainingPerWeek;
 import core.training.TrainingPoints;
 import core.training.WeeklyTrainingType;
 import core.util.Helper;
-import core.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -44,7 +43,7 @@ public class Player {
     /**
      * canPlay
      */
-    private Boolean m_bSpielberechtigt;
+    private Boolean m_bCanBeSelectedByAssistant;
 
     /**
      * Manual Smilie Filename
@@ -1400,22 +1399,22 @@ public class Player {
     /**
      * setzt ob der User den Player zum Spiel zulässt
      */
-    public void setSpielberechtigt(boolean flag) {
-        m_bSpielberechtigt = Boolean.valueOf(flag);
+    public void setCanBeSelectedByAssistant(boolean flag) {
+        m_bCanBeSelectedByAssistant = Boolean.valueOf(flag);
         DBManager.instance().saveSpielerSpielberechtigt(m_iSpielerID,
                 flag);
     }
 
     /**
-     * gibt an ob der User den Player zum Spiel zulässt
+     * indicates whether the user allows the player to play
      */
-    public boolean isSpielberechtigt() {
-        //Nur pr�fen, wenn nicht Spielberechtigt: Reduziert Zugriffe!
-        if (m_bSpielberechtigt == null) {
-            m_bSpielberechtigt = Boolean.valueOf(DBManager.instance().getSpielerSpielberechtigt(m_iSpielerID));
+    public boolean getCanBeSelectedByAssistant() {
+        //Only check if not authorized to play: Reduced access!
+        if (m_bCanBeSelectedByAssistant == null) {
+            m_bCanBeSelectedByAssistant = Boolean.valueOf(DBManager.instance().getSpielerSpielberechtigt(m_iSpielerID));
         }
 
-        return m_bSpielberechtigt.booleanValue();
+        return m_bCanBeSelectedByAssistant.booleanValue();
 
     }
 

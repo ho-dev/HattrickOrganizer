@@ -33,7 +33,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	private SpielerTrainingsSimulatorPanel spielerTrainingsSimulatorPanel;
 	private SpielerTrainingsVergleichsPanel spielerTrainingsVergleichsPanel;
 	private SpielerUebersichtNamenTable spielerUebersichtTableName;
-	private PlayerOverviewTable spielerUebersichtTable;
+	private PlayerOverviewTable playerOverviewTable;
 	private TeamSummaryPanel teamSummaryPanel;
 
 	/**
@@ -52,7 +52,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 */
 	public void setPlayer(Player player) {
 		spielerUebersichtTableName.setSpieler(player.getSpielerID());
-		spielerUebersichtTable.setSpieler(player.getSpielerID());
+		playerOverviewTable.setSpieler(player.getSpielerID());
 		spielerDetailPanel.setSpieler(player);
 		spielerTrainingsSimulatorPanel.setSpieler(player);
 	}
@@ -61,7 +61,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 * Returns Width of the best position column
 	 */
 	public final int getBestPosWidth() {
-		return spielerUebersichtTable.getBestPosWidth();
+		return playerOverviewTable.getBestPosWidth();
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	}
 
 	public final void saveColumnOrder() {
-		spielerUebersichtTable.saveColumnOrder();
+		playerOverviewTable.saveColumnOrder();
 	}
 
 	// ----------------------Refresh--
@@ -87,7 +87,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 */
 	public final void refresh() {
 		spielerDetailPanel.refresh();
-		spielerUebersichtTable.refresh();
+		playerOverviewTable.refresh();
 	}
 
 	/**
@@ -95,9 +95,9 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 * translate) Renewed all the columns that are affected by a comparison with
 	 */
 	public final void refreshHRFVergleich() {
-		spielerUebersichtTable.refreshHRFVergleich();
+		playerOverviewTable.refreshHRFVergleich();
 
-		Player player = spielerUebersichtTable.getSorter().getSpieler(spielerUebersichtTable.getSelectedRow());
+		Player player = playerOverviewTable.getSorter().getSpieler(playerOverviewTable.getSelectedRow());
 		spielerDetailPanel.setSpieler(player);
 	}
 
@@ -165,7 +165,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 		scrollPane.getVerticalScrollBar().setBlockIncrement(100);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		panel.add(spielerTrainingsVergleichsPanel, BorderLayout.CENTER);
-		panel.add(new JScrollPane(new RemoveGruppenPanel(spielerUebersichtTable)), BorderLayout.NORTH);
+		panel.add(new JScrollPane(new RemoveGruppenPanel(playerOverviewTable)), BorderLayout.NORTH);
 
 		if (teamSummaryPanel != null) {
 			spielerTrainingsVergleichsPanel.addChangeListener(teamSummaryPanel);
@@ -183,16 +183,16 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 		overviewPanel.setLayout(new BorderLayout());
 
 		// table with the player's details
-		spielerUebersichtTable = new PlayerOverviewTable();
+		playerOverviewTable = new PlayerOverviewTable();
 
 		// table with the player's name
-		spielerUebersichtTableName = new SpielerUebersichtNamenTable(spielerUebersichtTable.getSorter());
+		spielerUebersichtTableName = new SpielerUebersichtNamenTable(playerOverviewTable.getSorter());
 
 		JScrollPane scrollpane = new JScrollPane(spielerUebersichtTableName);
 		scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollpane.setPreferredSize(new Dimension(170, 100));
 
-		JScrollPane scrollpane2 = new JScrollPane(spielerUebersichtTable);
+		JScrollPane scrollpane2 = new JScrollPane(playerOverviewTable);
 		scrollpane2.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 		scrollpane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
@@ -244,24 +244,19 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 * the players name and the table with the players details in sync.
 	 */
 	private void addTableSelectionListeners() {
-		spielerUebersichtTable.getSelectionModel().addListSelectionListener(
+		playerOverviewTable.getSelectionModel().addListSelectionListener(
 				e -> {
-					if (e.getValueIsAdjusting())
-						return;
-
-					selectRow(spielerUebersichtTableName,
-							spielerUebersichtTable.getSelectedRow());
+					selectRow(spielerUebersichtTableName, playerOverviewTable.getSelectedRow());
 				});
 
 		spielerUebersichtTableName.getSelectionModel().addListSelectionListener(
 				e -> {
-					if (e.getValueIsAdjusting())
-						return;
+					final int row = spielerUebersichtTableName.getSelectedRow();
+					selectRow(playerOverviewTable, row);
 
-					int row = spielerUebersichtTableName.getSelectedRow();
-					selectRow(spielerUebersichtTable, row);
+					// Set player on HOMainFrame to notify other tabs.
 					if (row > -1) {
-						Player player = spielerUebersichtTable.getSorter().getSpieler(row);
+						Player player = playerOverviewTable.getSorter().getSpieler(row);
 						if (player != null) {
 							HOMainFrame.instance().setActualSpieler(player);
 						}

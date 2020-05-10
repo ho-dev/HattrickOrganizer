@@ -37,9 +37,9 @@ dependencies {
 // 1 for BETA status
 // 2 for STABLE status
 
-def major = '3'
+def major = '4'
 def minor = '0'
-def development_stage = '1'
+def development_stage = '0'
 def releaseArtefacts = false
 
 // region configuration ==============================================================================================

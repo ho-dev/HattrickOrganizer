@@ -1,0 +1,33 @@
+# analysis performed by akasolace
+
+[general]
+delta                = 0.75
+power                = 1.165
+trainerOff           = 1.1
+trainerDef           = 0.9
+trainerNeutral       = 1.0
+tacticLongshots      = 0.970577
+pullback             = -0.25
+
+[passing_allsides]
+IM_norm               = 0.050313432755287685
+IM_off                = 0.07470782439421504
+IM_def                = 0.027443690593793278
+IM_tw                 = 0.03506693798095808
+WI_norm               = 0.01677114425176256
+WI_off                = 0.019820443206628482
+WI_def                = 0.0076232473871648
+WI_tm                 = 0.02439439163892736
+FW_norm               = 0.050313432755287685
+FW_def                = 0.08080642230394688
+FW_def.technical      = 0.08080642230394688
+FW_tw                 = 0.03506693798095808
+
+[scoring_allsides]
+IM_norm               = 0.03354228850352512
+IM_off                = 0.047264133800421756
+IM_def                = 0.019820443206628482
+FW_norm               = 0.152464947743296
+FW_def                = 0.08538037073624577
+FW_def.technical      = 0.08538037073624577
+FW_tw                 = 0.10062686551057537

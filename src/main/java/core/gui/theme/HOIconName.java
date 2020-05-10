@@ -43,7 +43,6 @@ public interface HOIconName {
 	 String GOTOANALYSEBOTTOM = "gotoAnalyseBottom";
 	 String OFFSET 			= "offset";
 	 String GOTOSTATISTIK 	= "gotoStatistik";
-	 String TRAININGBLOCK 	= "trainingblock";
 
 	 String MAXLINEUP		 = "maxLineup";
 	 String RELOAD 			= "reload";
@@ -184,9 +183,6 @@ public interface HOIconName {
 	
 	String HOME = "home";
 	String AWAY = "away";
-	
-	String PIC = "pic";
-	String MOTS = "mots";
 
 	String TRAINBAR_FT = "trainpre_ft";
 	String TRAINBAR_PT = "trainpre_pt";

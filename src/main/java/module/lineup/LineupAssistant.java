@@ -436,7 +436,7 @@ public class LineupAssistant {
 					&& ((bestPlayer == null) || (bestStk < aktuStk))
 					&& ((ignoreSperre) || (!player.isGesperrt()))
 					&& ((ignoreVerletzung) || (player.getVerletzt() < 1))
-					&& (player.isSpielberechtigt())) {
+					&& (player.getCanBeSelectedByAssistant())) {
 				bestPlayer = player;
 				bestStk = aktuStk;
 			}
@@ -472,7 +472,7 @@ public class LineupAssistant {
 					&& ((ignoreSperre) || (!player.isGesperrt()))
 					&& ((ignoreVerletzung) || (player.getVerletzt() < 1))
 					&& (aktuStk > core.model.UserParameter.instance().MinIdealPosStk)
-					&& (!player.isTrainer()) && (player.isSpielberechtigt())) {
+					&& (!player.isTrainer()) && (player.getCanBeSelectedByAssistant())) {
 				bestPlayer = player;
 				bestStk = aktuStk;
 			}

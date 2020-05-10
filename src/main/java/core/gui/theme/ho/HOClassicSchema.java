@@ -105,7 +105,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(GOTOANALYSEBOTTOM, "gui/bilder/gotoAnalyseBottom.png");
 		put(OFFSET, "gui/bilder/offset.png");
 		put(GOTOSTATISTIK, "gui/bilder/gotoStatistik.png");
-		put(TRAININGBLOCK, "gui/bilder/trainingblock.png");
 
 		put(MAXLINEUP, "gui/bilder/MaxAufstellung.png");
 		put(RELOAD, "gui/bilder/Reload.png");
@@ -255,9 +254,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		
 		put(HOME, "gui/bilder/home.png");
 		put(AWAY, "gui/bilder/away.png");
-		
-		put(PIC, "gui/bilder/pic.png");
-		put(MOTS, "gui/bilder/mots.png");
 
 		// Train bar
 		put(TRAINBAR_FT, "gui/bilder/trainpreview/trainpre_ft.png");
@@ -447,24 +443,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TA_TEAM_CUP_NEXT, Color.GREEN);
 		put(TA_TEAM_TOURNAMENT_NEXT, new Color(0, 51, 255)); // Darkish blue
 		put(TA_TEAM_TOURNAMENT, new Color(0, 179, 255)); // Lightish blue
-		
-		// Matches Analyzer
-		put(MATCHESANALYZER_DEFAULT_FONT,			"black");
-		put(MATCHESANALYZER_DEFAULT_BG,				"white");
-		put(MATCHESANALYZER_MATCH_BG,				new Color(220, 220, 255));
-		put(MATCHESANALYZER_LINEUP_BG,				"lightGreen");
-		put(MATCHESANALYZER_POSITIVE_BAR_BG,		new Color(34, 139, 34));
-		put(MATCHESANALYZER_NEGATIVE_BAR_BG,		new Color(246, 34, 23));
-		put(MATCHESANALYZER_STATS_BG,				"lightYellow");
-		put(MATCHESANALYZER_OVERALL_BG,				"light_gray");
-		put(MATCHESANALYZER_PANELS_BORDER,			"light_gray");
-		put(MATCHESANALYZER_FIELD_LINES,			"white");
-		put(MATCHESANALYZER_FILED_GRASS,			new Color(64, 130, 61));
-		put(MATCHESANALYZER_TEAM_LEAGUE_NEXT,		Color.RED);
-		put(MATCHESANALYZER_TEAM_CUP_NEXT,			Color.GREEN);
-		put(MATCHESANALYZER_TEAM_TOURNAMENT_NEXT,	new Color(0, 51, 255));
-		put(MATCHESANALYZER_TEAM_TOURNAMENT,		new Color(0, 179, 255));
-		put(MATCHESANALYZER_TEAM_MYTEAM,			"black");
 
 		// Colours for form streak in league details
 		put(FORM_STREAK_WIN, new Color(73, 146, 45));

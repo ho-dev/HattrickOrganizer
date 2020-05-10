@@ -181,7 +181,6 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private final JButton m_jbAnalysisTop = new JButton(ThemeManager.getIcon(HOIconName.GOTOANALYSETOP));
     private final JButton m_jbAnalysisBottom = new JButton(ThemeManager.getIcon(HOIconName.GOTOANALYSEBOTTOM));
     private final JButton m_jbOffsets = new JButton(ThemeManager.getIcon(HOIconName.OFFSET));
-    private final JButton m_jbTrainingBlock = new JButton(ThemeManager.getIcon(HOIconName.TRAININGBLOCK));
 
     // Ratings Column
     private final DoppelLabelEntry m_jpRatingKeeper = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
@@ -294,8 +293,6 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Bottom(m_clPlayer.getSpielerID());
         } else if (actionevent.getSource().equals(m_jbOffsets)) {
             new PlayerSubskillOffsetDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
-        } else if (actionevent.getSource().equals(m_jbTrainingBlock)) {
-            new SpielerTrainingBlockDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
         }
     }
 
@@ -564,15 +561,10 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jpInTeamSince.setText(temp);
         m_jtaNotes.setEditable(true);
         m_jtaNotes.setText(DBManager.instance().getSpielerNotiz(m_clPlayer.getSpielerID()));
-//        EPVData data = new EPVData(m_clPlayer);
-//        double price = HOVerwaltung.instance().getModel().getEPV().getPrice(data);
-//        final String epvtext = Helper.getNumberFormat(true, 0).format(price);
-//        m_jpMarketValue.setText( epvtext );
         m_jbStatistics.setEnabled(true);
         m_jbAnalysisTop.setEnabled(true);
         m_jbAnalysisBottom.setEnabled(true);
         m_jbOffsets.setEnabled(true);
-        m_jbTrainingBlock.setEnabled(true);
     }
 
     private void showNormal(DoppelLabelEntry labelEntry, byte playerPosition) {
@@ -928,7 +920,6 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         initButton(m_jbAnalysisTop, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse1"), buttonpanel);
         initButton(m_jbAnalysisBottom, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse2"), buttonpanel);
         initButton(m_jbOffsets, HOVerwaltung.instance().getLanguageString("tt_Spieler_offset"), buttonpanel);
-        initButton(m_jbTrainingBlock, HOVerwaltung.instance().getLanguageString("TrainingBlock"), buttonpanel);
 
         setPosition(constraints, 8, 15);
         constraints.weightx = 1.0;
@@ -1140,7 +1131,6 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jbAnalysisTop.setEnabled(false);
         m_jbAnalysisBottom.setEnabled(false);
         m_jbOffsets.setEnabled(false);
-        m_jbTrainingBlock.setEnabled(false);
         m_jpLastMatchRating.clear();
     }
 
