@@ -432,6 +432,12 @@ public class MatchEvent {
         put(MatchEventID.RED_CARD_WITHOUT_WARNING, HOIconName.REDCARD); //#514
 
         put(MatchEventID.MATCH_FINISHED, null); //#599
+
+        put(MatchEventID.EVENTOMATIC_MANAGER_TAUNTS_OPPONENT, null); // #700
+        put(MatchEventID.EVENTOMATIC_MANAGER_PRAISES_OPPONENT, null); // #701
+        put(MatchEventID.EVENTOMATIC_MANAGER_ASKS_FANS_FOR_SUPPORT, null); // #702
+        put(MatchEventID.EVENTOMATIC_MANAGER_EXPECTS_GREAT_SHOW, null); // #703
+        put(MatchEventID.EVENTOMATIC_MANAGER_HONOURS_CLUB_LEGACY, null); // #704
     }};
 
 
