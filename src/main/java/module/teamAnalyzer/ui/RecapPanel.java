@@ -283,9 +283,9 @@ public class RecapPanel extends JPanel {
     }
 
     private void jbInit() {
-        Vector<Object> data = new Vector<Object>();
+        Vector<Vector<Object>> data = new Vector<>();
 
-        tableModel = new UiRecapTableModel(data, new Vector<String>(Arrays.asList(columns)));
+        tableModel = new UiRecapTableModel(data, new Vector<>(Arrays.asList(columns)));
 
         sorter = new RecapTableSorter(tableModel);
         table = new JTable(sorter);

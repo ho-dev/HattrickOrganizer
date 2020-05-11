@@ -200,47 +200,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	// ~ Methods
 	// ------------------------------------------------------------------------------------
 
-	/**
-	 * This method creates a MacOS specific listener for the quit operation
-	 * ("Command-Q")
-	 * 
-	 * We need to use reflections here, because the com.apple.eawt.* classes are
-	 * Apple specific
-	 * 
-	 * @author flattermann <flattermannHO@gmail.com>
-	 */
-	private void addMacOSListener() {
-		HOLogger.instance().debug(getClass(), "Mac OS detected. Activating specific listeners...");
-		try {
-			// Create the Application
-			Class<?> applicationClass = Class.forName("com.apple.eawt.Application");
-			Object appleApp = applicationClass.newInstance();
-
-			// Create the ApplicationListener
-			Class<?> applicationListenerClass = Class.forName("com.apple.eawt.ApplicationListener");
-			Object appleListener = Proxy.newProxyInstance(getClass().getClassLoader(),
-					new Class[] { applicationListenerClass }, new InvocationHandler() {
-						@Override
-						public Object invoke(Object proxy, Method method, Object[] args) {
-							if (method.getName().equals("handleQuit")) {
-								HOLogger.instance()
-										.debug(getClass(),
-												"ApplicationListener.handleQuit() fired! Quitting MacOS Application!");
-								shutdown();
-							}
-							return null;
-						}
-					});
-
-			// Register the ApplicationListener
-			Method addApplicationListenerMethod = applicationClass.getDeclaredMethod(
-					"addApplicationListener", new Class[] { applicationListenerClass });
-			addApplicationListenerMethod.invoke(appleApp, new Object[] { appleListener });
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public void addApplicationClosingListener(ApplicationClosingListener listener) {
 		if (!this.applicationClosingListener.contains(listener)) {
 			this.applicationClosingListener.add(listener);
@@ -894,10 +853,5 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			}
 
 		});
-
-		// Catch Apple-Q for MacOS
-		if (isMac()) {
-			addMacOSListener();
-		}
 	}
 }

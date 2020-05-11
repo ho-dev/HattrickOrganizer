@@ -29,7 +29,7 @@ public class BaseTableModel extends DefaultTableModel {
 	 * @param columnNames
 	 *            Vector of column names
 	 */
-	public BaseTableModel(Vector<Object> data, Vector<?> columnNames) {
+	public BaseTableModel(Vector<Vector<Object>> data, Vector<?> columnNames) {
 		super(data, columnNames);
 	}
 

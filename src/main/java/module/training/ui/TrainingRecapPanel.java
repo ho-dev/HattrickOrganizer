@@ -255,7 +255,7 @@ public class TrainingRecapPanel extends LazyImagePanel {
         // Sort the players
         Collections.sort(players, new TrainingComparator(3, fixedColumns));
 
-        BaseTableModel tableModel = new BaseTableModel(new Vector<Object>(), columns);
+        BaseTableModel tableModel = new BaseTableModel(new Vector<Vector<Object>>(), columns);
         // and add them to the model
         for (Vector<String> row : players) {
             tableModel.addRow(row);

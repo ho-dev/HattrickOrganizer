@@ -28,7 +28,7 @@ public class UiRecapTableModel extends BaseTableModel {
      * @param vector Vector of table data
      * @param vector2 Vector of column names
      */
-    public UiRecapTableModel(Vector<Object> vector, Vector<String> vector2) {
+    public UiRecapTableModel(Vector<Vector<Object>> vector, Vector<String> vector2) {
         super(vector, vector2);
     }
 

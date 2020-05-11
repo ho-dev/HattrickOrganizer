@@ -41,7 +41,7 @@ public class RatingPanel extends JPanel {
 
     //~ Methods ------------------------------------------------------------------------------------
     public void reload(TeamLineup lineup) {
-        tableModel = new UiRatingTableModel(new Vector<Object>(), new Vector<String>(Arrays.asList(columns)));
+        tableModel = new UiRatingTableModel(new Vector<>(), new Vector<>(Arrays.asList(columns)));
         table.setModel(tableModel);
 
         if ((lineup == null) || (!ModuleConfig.instance().getBoolean(SystemManager.ISLINEUP))) {
@@ -79,7 +79,7 @@ public class RatingPanel extends JPanel {
     }
 
     private Vector<Object> getRow(String label, double myRating, double opponentRating) {
-        Vector<Object> rowData = new Vector<Object>();
+        Vector<Object> rowData = new Vector<>();
 
         rowData.add(label);
         rowData.add("" + getRating((int) myRating));
@@ -92,7 +92,6 @@ public class RatingPanel extends JPanel {
         else
         	relativeVal = 0;
 
-//        System.out.println ("mR="+myRating+", oR="+opponentRating+", rV="+relativeVal);
         String relValString = (int)(relativeVal * 100) + "%";
 
         // Add a character indicating more or less than 50%
@@ -111,9 +110,9 @@ public class RatingPanel extends JPanel {
     }
 
     private void jbInit() {
-        Vector<Object> data = new Vector<Object>();
+        Vector<Vector<Object>> data = new Vector<>();
 
-        tableModel = new UiRatingTableModel(data, new Vector<String>(Arrays.asList(columns)));
+        tableModel = new UiRatingTableModel(data, new Vector<>(Arrays.asList(columns)));
         table = new JTable(tableModel);
 
         table.setDefaultRenderer(Object.class, new RatingTableCellRenderer());
