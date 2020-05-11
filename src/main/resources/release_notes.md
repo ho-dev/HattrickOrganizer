@@ -31,6 +31,7 @@ Changelist HO! 4.0
 
 ### Matches
 
+  - [FIX] Some icons fixes in match report
 
 ### Lineup
 
