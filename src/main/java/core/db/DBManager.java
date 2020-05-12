@@ -56,7 +56,8 @@ public class DBManager {
 	// -----------------------------------------------------------------
 
 	/** database version */
-	private static final int DBVersion = 301; // DBVersion 26 introduce for HO 3.0 version
+	private static final int DBVersion = 302; // HO 3.0 version
+
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);

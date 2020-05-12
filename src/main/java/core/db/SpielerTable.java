@@ -20,7 +20,7 @@ final class SpielerTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[60];
+		columns = new ColumnDescriptor[63];
 		columns[0] = new ColumnDescriptor("HRF_ID", Types.INTEGER, false);
 		columns[1] = new ColumnDescriptor("Datum", Types.TIMESTAMP, false);
 		columns[2] = new ColumnDescriptor("GelbeKarten", Types.INTEGER, false);
@@ -81,6 +81,9 @@ final class SpielerTable extends AbstractTable {
 		columns[57] = new ColumnDescriptor("HomeGrown", Types.BOOLEAN, false);
 		columns[58] = new ColumnDescriptor("NationalTeamID", Types.INTEGER, true);
 		columns[59] = new ColumnDescriptor("SubExperience", Types.REAL, false);
+		columns[60] = new ColumnDescriptor("LastMatchDate", Types.VARCHAR, true, 100);
+		columns[61] = new ColumnDescriptor("LastMatchRating", Types.INTEGER, true);
+		columns[62] = new ColumnDescriptor("LastMatchId", Types.INTEGER, true);
 	}
 
 	@Override
@@ -117,14 +120,15 @@ final class SpielerTable extends AbstractTable {
 			statement.append( "Bonus , Land , Marktwert , Verletzt , ToreFreund , ToreLiga , TorePokal , ");
 			statement.append( "ToreGesamt , Hattrick , Bewertung , TrainerTyp, Trainer, HRF_ID, Datum, ");
 			statement.append( "PlayerNumber, TransferListed,  Caps, CapsU20, TrainingBlock, Loyalty, HomeGrown, ");
-			statement.append( "SubExperience, NationalTeamID ");
+			statement.append( "SubExperience, NationalTeamID, ");
+			statement.append( "LastMatchDate, LastMatchRating, LastMatchId ");
 			statement.append(") VALUES(");
 			statement.append(player.getGelbeKarten()).append(",");
 						
 			statement.append(player.getSpielerID()).append(",");
 			statement.append("'").append(DBManager.insertEscapeSequences(player.getFirstName())).append("',");
-			statement.append("'").append(player.getNickName()).append("',");
-			statement.append("'").append(player.getLastName()).append("',");
+			statement.append("'").append(DBManager.insertEscapeSequences(player.getNickName())).append("',");
+			statement.append("'").append(DBManager.insertEscapeSequences(player.getLastName())).append("',");
 			statement.append(player.getAlter()).append(",");
 			statement.append(player.getAgeDays()).append(",");
 			statement.append(player.getKondition()).append(",");
@@ -180,7 +184,10 @@ final class SpielerTable extends AbstractTable {
 			statement.append(player.getLoyalty()).append(",");
 			statement.append(player.isHomeGrown()).append(",");
 			statement.append(player.getSubExperience()).append(",");
-			statement.append(player.getNationalTeamID()).append(")");
+			statement.append(player.getNationalTeamID()).append(",");
+			statement.append("'").append(player.getLastMatchDate()).append("',");
+			statement.append(player.getLastMatchRating()).append(",");
+			statement.append(player.getLastMatchId()).append(")");
 			adapter.executeUpdate(statement.toString());
 			}
 	}
@@ -576,7 +583,17 @@ final class SpielerTable extends AbstractTable {
             player.setU20Laenderspiele(rs.getInt("CapsU20"));
 
             // Training block
-            player.setTrainingBlock(rs.getBoolean("TrainingBlock"));
+			player.setTrainingBlock(rs.getBoolean("TrainingBlock"));
+
+
+			// LastMatch
+			try {
+
+				player.setLastMatchDetails(DBManager.deleteEscapeSequences(rs.getString("LastMatchDate")),
+						rs.getInt("LastMatchRating"), rs.getInt("LastMatchId"));
+			} catch (Exception e) {
+
+			}
             
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),e);

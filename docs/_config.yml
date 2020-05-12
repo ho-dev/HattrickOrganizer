@@ -1,9 +1,1 @@
-theme: jekyll-theme-tactile
-plugins:
-  - jekyll-relative-links
-relative_links:
-  enabled: true
-  collections: true
-exclude:
-  - contributing.md
-  - README.md
+theme: jekyll-theme-cayman

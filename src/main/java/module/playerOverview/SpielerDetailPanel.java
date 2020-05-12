@@ -37,9 +37,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -84,6 +82,9 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private RatingTableEntry m_jpRating = new RatingTableEntry();
     private final ColorLabelEntry m_jpBestPosition = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+    private RatingTableEntry m_jpLastMatchRating = new RatingTableEntry();
+    private JLabel m_lastMatchLink = null;
+
     // Top Row, column 2
     private final JComboBox m_jcbSquad = new JComboBox(HOIconName.TEAMSMILIES);
     private final JComboBox m_jcbInformation = new JComboBox(HOIconName.MANUELLSMILIES);
@@ -95,6 +96,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT), new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT));
     private JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
+
     // Top Row, column 3
     private final ColorLabelEntry m_jpLeadership = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -179,7 +181,6 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private final JButton m_jbAnalysisTop = new JButton(ThemeManager.getIcon(HOIconName.GOTOANALYSETOP));
     private final JButton m_jbAnalysisBottom = new JButton(ThemeManager.getIcon(HOIconName.GOTOANALYSEBOTTOM));
     private final JButton m_jbOffsets = new JButton(ThemeManager.getIcon(HOIconName.OFFSET));
-    private final JButton m_jbTrainingBlock = new JButton(ThemeManager.getIcon(HOIconName.TRAININGBLOCK));
 
     // Ratings Column
     private final DoppelLabelEntry m_jpRatingKeeper = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
@@ -292,8 +293,6 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Bottom(m_clPlayer.getSpielerID());
         } else if (actionevent.getSource().equals(m_jbOffsets)) {
             new PlayerSubskillOffsetDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
-        } else if (actionevent.getSource().equals(m_jbTrainingBlock)) {
-            new SpielerTrainingBlockDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
         }
     }
 
@@ -361,6 +360,12 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jpName.setText(m_clPlayer.getShortName());
         m_jpName.setFGColor(SpielerLabelEntry.getForegroundForSpieler(m_clPlayer));
         m_jpAge.setText(m_clPlayer.getAgeStringFull());
+        if (m_clPlayer.getLastMatchRating() > 0) {
+            m_jpLastMatchRating.setYellowStar(true);
+            m_jpLastMatchRating.setRating((float)m_clPlayer.getLastMatchRating());
+            m_jpLastMatchRating.setText(m_clPlayer.getLastMatchDate());
+            m_jpLastMatchRating.getLabelMatch();
+        }
         m_jpNationality.setIcon(ImageUtilities.getFlagIcon(m_clPlayer.getNationalitaet()));
         if (m_clPlayer.isHomeGrown())
             m_jpMotherClub.setIcon(ThemeManager.getIcon(HOIconName.HOMEGROWN));
@@ -556,15 +561,10 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jpInTeamSince.setText(temp);
         m_jtaNotes.setEditable(true);
         m_jtaNotes.setText(DBManager.instance().getSpielerNotiz(m_clPlayer.getSpielerID()));
-//        EPVData data = new EPVData(m_clPlayer);
-//        double price = HOVerwaltung.instance().getModel().getEPV().getPrice(data);
-//        final String epvtext = Helper.getNumberFormat(true, 0).format(price);
-//        m_jpMarketValue.setText( epvtext );
         m_jbStatistics.setEnabled(true);
         m_jbAnalysisTop.setEnabled(true);
         m_jbAnalysisBottom.setEnabled(true);
         m_jbOffsets.setEnabled(true);
-        m_jbTrainingBlock.setEnabled(true);
     }
 
     private void showNormal(DoppelLabelEntry labelEntry, byte playerPosition) {
@@ -688,6 +688,19 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         label = new JLabel(HOVerwaltung.instance().getLanguageString("BestePosition"));
         initNormalLabel(0, 5, constraints, layout, panel, label);
         initNormalField(1, 5, constraints, layout, panel, m_jpBestPosition.getComponent(false));
+
+        label = new JLabel(HOVerwaltung.instance().getLanguageString("LastMatchRating"));
+        initNormalLabel(0, 6, constraints, layout, panel, label);
+        initNormalField(1, 6, constraints, layout, panel, m_jpLastMatchRating.getComponent(false));
+        m_lastMatchLink = m_jpLastMatchRating.getLabelMatch();
+        m_lastMatchLink.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(m_clPlayer!=null){
+                    HOMainFrame.instance().showMatch(m_clPlayer.getLastMatchId());
+                }
+            }
+        });
 
         // ***** Block 2
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Gruppe"));
@@ -907,7 +920,6 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         initButton(m_jbAnalysisTop, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse1"), buttonpanel);
         initButton(m_jbAnalysisBottom, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse2"), buttonpanel);
         initButton(m_jbOffsets, HOVerwaltung.instance().getLanguageString("tt_Spieler_offset"), buttonpanel);
-        initButton(m_jbTrainingBlock, HOVerwaltung.instance().getLanguageString("TrainingBlock"), buttonpanel);
 
         setPosition(constraints, 8, 15);
         constraints.weightx = 1.0;
@@ -1119,7 +1131,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jbAnalysisTop.setEnabled(false);
         m_jbAnalysisBottom.setEnabled(false);
         m_jbOffsets.setEnabled(false);
-        m_jbTrainingBlock.setEnabled(false);
+        m_jpLastMatchRating.clear();
     }
 
     public CBItem[] getPositions() {

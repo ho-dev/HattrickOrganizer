@@ -2,17 +2,17 @@
 package core.gui.comp.entry;
 
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 
-import java.awt.Color;
+import java.awt.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class RatingTableEntry extends AbstractHOTableEntry {
     //~ Static fields/initializers -----------------------------------------------------------------
@@ -27,10 +27,12 @@ public class RatingTableEntry extends AbstractHOTableEntry {
     private static ImageIcon HALFSTARIMAGEICON;
     private static ImageIcon FULLGREYSTARIMAGEICON;
     private static ImageIcon HALFGREYSTARIMAGEICON;
+    private static ImageIcon BALLIMAGEICON;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
     private JComponent m_clComponent = new JPanel();
+    private JLabel text = new JLabel("");
     private String m_sTooltip = "";
     private boolean m_bYellowStar;
     private float m_fRating;
@@ -48,6 +50,11 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         m_fRating = 0.0F;
         m_bYellowStar = true;
         createComponent();
+
+        if (BALLIMAGEICON == null) {
+            BALLIMAGEICON = ThemeManager.getScaledIcon(HOIconName.BALL, 14, 14);
+        }
+        text.setIcon(BALLIMAGEICON);
     }
 
     /**
@@ -60,6 +67,11 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         setRating(f);
 
         createComponent();
+
+        if (BALLIMAGEICON == null) {
+            BALLIMAGEICON = ThemeManager.getScaledIcon(HOIconName.BALL, 14, 14);
+        }
+        text.setIcon(BALLIMAGEICON);
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -95,6 +107,23 @@ public class RatingTableEntry extends AbstractHOTableEntry {
     public final void setToolTipText(String text) {
         m_sTooltip = text;
         updateComponent();
+    }
+
+    public final void setText(String t) {
+
+        try {
+            //2020-05-06 09:30:00
+            Date date=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(t);
+            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+            text.setText("  ("+dateFormat.format(date)+")");
+        } catch (ParseException e) {
+        }
+        updateComponent();
+
+        m_clComponent.add(new JLabel("  "));
+        m_clComponent.add(text);
+        text.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        m_clComponent.repaint();
     }
 
     public final void setYellowStar(boolean value) {
@@ -253,8 +282,8 @@ public class RatingTableEntry extends AbstractHOTableEntry {
 		updateComponent();
 	}
 
-	public Color getBgColor() {
-		return bgColor;
+	public JLabel getLabelMatch() {
+		return text;
 	}
 
 	public void setBgColor(Color bgColor) {

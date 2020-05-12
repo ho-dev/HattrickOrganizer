@@ -1,0 +1,36 @@
+# analysis performed by akasolace
+
+[general]
+delta                = 0.75
+power                = 1.165
+squareMod            = 0
+cubeMod              = 0
+home                 = 1.199529
+awayDerby            = 1.113699
+pic                  = 0.839949
+mots                 = 1.109650
+teamSpiritPreMulti   = 0.147832
+teamSpiritPower      = 0.417779
+extraMulti           = 1.000
+tacticCounter        = 0.930000
+tacticLongshots      = 0.950323
+
+[playmaking_allsides]
+CD_norm    = 0.027686125
+CD_off     = 0.0442978
+CD_tw      = 0.016611675
+WB_norm    = 0.016611675
+WB_off     = 0.0221489
+WB_def     = 0.01107445
+WB_tm      = 0.0221489
+IM_norm    = 0.1107445
+IM_off     = 0.10520727499999999
+IM_def     = 0.10520727499999999
+IM_tw      = 0.09967005
+WI_norm    = 0.049835025
+WI_off     = 0.03322335
+WI_def     = 0.03322335
+WI_tm      = 0.060909475000000005
+FW_norm    = 0.027686125
+FW_def     = 0.038760575
+FW_tw      = 0.016611675

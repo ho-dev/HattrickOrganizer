@@ -1,0 +1,66 @@
+# analysis performed by akasolace
+
+[general]
+delta                = 0.75
+power                = 1.165
+trainerOff           = 1.1
+trainerDef           = 0.9
+trainerNeutral       = 1.0
+tacticLongshots       = 0.972980
+pullback             = -0.25
+
+[passing_middle]
+IM_norm               = 0.02170326084434105
+IM_off                = 0.0300506688613953
+IM_def                = 0.011686371223875952
+
+[passing_allsides]
+FW_norm               = 0.023372742447751903
+FW_def                = 0.05175392970573635
+FW_def.technical      = 0.06844874573984484
+
+[passing_thisside]
+IM_norm               = 0.0434065216886821
+IM_off                = 0.0601013377227906
+IM_def                = 0.023372742447751903
+IM_tw                 = 0.05175392970573635
+WI_norm               = 0.0434065216886821
+WI_off                = 0.04841496649891465
+WI_def                = 0.035059113671627846
+WI_tm                 = 0.02504222405116275
+FW_tw                 = 0.035059113671627846
+
+[passing_otherside]
+FW_tw                 = 0.0100168896204651
+
+[winger_thisside]
+CD_tw                  = 0.0434065216886821
+WB_norm                = 0.09849941460124015
+WB_off                 = 0.11519423063534864
+WB_tm                  = 0.058431856119379746
+WB_def                 = 0.07512667215348826
+IM_tw                 = 0.09849941460124015
+WI_norm               = 0.1435754178933331
+WI_off                = 0.166948160341085
+WI_def                = 0.11519423063534864
+WI_tm                 = 0.1235416386524029
+FW_tw                 = 0.10684682261829441
+
+[winger_allsides]
+FW_norm               = 0.0400675584818604
+FW_def                = 0.02170326084434105
+FW_def.technical      = 0.02170326084434105
+
+[winger_otherside]
+FW_tw                 = 0.035059113671627846
+
+[scoring_allsides]
+FW_norm               = 0.04507600329209296
+FW_def                = 0.02170326084434105
+FW_def.technical      = 0.02170326084434105
+
+[scoring_otherside]
+FW_tw                 = 0.031720150464806154
+
+[scoring_thisside]
+FW_tw                 = 0.08514356177395335

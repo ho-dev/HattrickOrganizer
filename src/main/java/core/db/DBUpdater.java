@@ -35,7 +35,6 @@ final class DBUpdater {
 		if (version != DBVersion) {
 			try {
 				HOLogger.instance().log(getClass(), "Updating DB to version " + DBVersion + "...");
-
 				switch (version) { // hint: fall though (no breaks) is intended
 					// here
 					case 0:
@@ -98,10 +97,12 @@ final class DBUpdater {
 						updateDBv26(DBVersion, version);
 					case 27:
 					case 299:
-						updateDBv300(DBVersion, version);
 					case 300:
+					case 301: // Bug#509 requires another update run of v300
+						updateDBv300(DBVersion, version);
 						updateDBv301(DBVersion, version);
 				}
+
 
 				HOLogger.instance().log(getClass(), "done.");
 			} catch (Exception e) {
@@ -112,8 +113,8 @@ final class DBUpdater {
 		}
 	}
 
-	private void updateDBv301(int dbVersion, int version) {
 
+	private void updateDBv301(int dbVersion, int version) throws SQLException {
 		try {
 
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isDerby SET DATA TYPE BOOLEAN");
@@ -132,6 +133,16 @@ final class DBUpdater {
 				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP TYP");
 			}
 
+       if (!columnExistsInTable("LastMatchDate", SpielerTable.TABLENAME)) {
+            m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchDate VARCHAR (100)");
+        }
+        if (!columnExistsInTable("LastMatchRating", SpielerTable.TABLENAME)) {
+            m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchRating INTEGER");
+        }
+        if (!columnExistsInTable("LastMatchId", SpielerTable.TABLENAME)) {
+            m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchId INTEGER");
+        }
+      
 			Arrays.asList("HEIMTORE", "GASTTORE", "SUBTYP").forEach(s -> {
 				try {
 					if (columnExistsInTable(s, MatchHighlightsTable.TABLENAME)) {
@@ -150,6 +161,7 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_eventid_idx ON MATCHHIGHLIGHTS (MATCH_EVENT_ID)");
 
 			updateDBVersion(dbVersion, version);
+      
 		} catch (SQLException e) {
 			HOLogger.instance().log(getClass(), e);
 		}
@@ -158,39 +170,6 @@ final class DBUpdater {
 
 	private void updateDBv300(int DBVersion, int version) throws SQLException {
 		// HO 3.0
-
-		// Delete league plans which are not of our own team
-		try {
-			// find own league plans
-			int teamId = getTeamId();
-			// select saison,ligaid from paarung where heimid=520472 group by saison,ligaid
-			HashMap<Integer, Integer> ownLeaguePlans = new HashMap<Integer, Integer>();
-			ResultSet rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from paarung where heimid=" + teamId + " group by saison,ligaid");
-			if (rs != null) {
-				while (rs.next()) {
-					int saison = rs.getInt(1);
-					int league = rs.getInt(2);
-					ownLeaguePlans.put(saison, league);
-				}
-				rs.close();
-			}
-			// delete entries in SPIELPLAN and PAARUNG which are not from own team
-			rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from spielplan");
-			if (rs != null) {
-				while (rs.next()) {
-					int saison = rs.getInt(1);
-					int league = rs.getInt(2);
-					if (!ownLeaguePlans.containsKey(saison) || ownLeaguePlans.get(saison) != league) {
-						// league is not our own one
-						m_clJDBCAdapter.executeUpdate("DELETE FROM spielplan WHERE ligaid=" + league + " and saison=" + saison);
-						m_clJDBCAdapter.executeUpdate("DELETE FROM paarung WHERE ligaid=" + league + " and saison=" + saison);
-					}
-				}
-				rs.close();
-			}
-		} catch (SQLException e) {
-			HOLogger.instance().log(getClass(), e);
-		}
 
 		// delete old divider locations
 		m_clJDBCAdapter
@@ -267,6 +246,39 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ALTER COLUMN Name RENAME TO LastName");
 		}
 
+		// Delete league plans which are not of our own team
+		try {
+			// find own league plans
+			int teamId = getTeamId();
+			// select saison,ligaid from paarung where heimid=520472 group by saison,ligaid
+			HashMap<Integer, Integer> ownLeaguePlans = new HashMap<Integer, Integer>();
+			ResultSet rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from paarung where heimid=" + teamId + " group by saison,ligaid");
+			if (rs != null) {
+				while (rs.next()) {
+					int saison = rs.getInt(1);
+					int league = rs.getInt(2);
+					ownLeaguePlans.put(saison, league);
+				}
+				rs.close();
+			}
+			// delete entries in SPIELPLAN and PAARUNG which are not from own team
+			rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from spielplan");
+			if (rs != null) {
+				while (rs.next()) {
+					int saison = rs.getInt(1);
+					int league = rs.getInt(2);
+					if (!ownLeaguePlans.containsKey(saison) || ownLeaguePlans.get(saison) != league) {
+						// league is not our own one
+						m_clJDBCAdapter.executeUpdate("DELETE FROM spielplan WHERE ligaid=" + league + " and saison=" + saison);
+						m_clJDBCAdapter.executeUpdate("DELETE FROM paarung WHERE ligaid=" + league + " and saison=" + saison);
+					}
+				}
+				rs.close();
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), e);
+		}
+
 		updateDBVersion(DBVersion, version);
 	}
 
@@ -341,7 +353,7 @@ final class DBUpdater {
 
 	/**
 	 * Update DB structure to v8
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	private void updateDBv8() throws Exception {
@@ -491,7 +503,7 @@ final class DBUpdater {
 	 * Updates the database to the 1.432 release. This method might be executed
 	 * multiple times (since there are beta releases) so make sure that every
 	 * statement added here CAN be exceuted multiple times.
-	 * 
+	 *
 	 * @param DBVersion
 	 * @param version
 	 * @throws SQLException
@@ -642,15 +654,15 @@ final class DBUpdater {
 		}
 	}
 
-	
+
 	// Follow this pattern in the future. Only set db version if not
 	// development, or if the current db is more than one version old. The
 	// last update should be made during first run of a non development
 	// version.
 	private void updateDBv19(int DBVersion, int version) throws SQLException {
-		
+
 		// 1.433 stuff.
-		
+
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
@@ -665,30 +677,30 @@ final class DBUpdater {
 					+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
-	
+
 	private void updateDBv20(int DBVersion, int version) throws SQLException {
 		// 1.434
-		
+
 		if (!tableExists(StaffTable.TABLENAME)) {
 			dbManager.getTable(StaffTable.TABLENAME).createTable();
 		}
-		
+
 		if (!columnExistsInTable("TacticAssist", VereinTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE " + VereinTable.TABLENAME + " ADD COLUMN TacticAssist INTEGER");
 		}
-		
+
 		if (!columnExistsInTable("FormAssist", VereinTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE " + VereinTable.TABLENAME + " ADD COLUMN FormAssist INTEGER");
 		}
-		
+
 		if (!columnExistsInTable("StyleOfPlay", AufstellungTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE " + AufstellungTable.TABLENAME + " ADD COLUMN StyleOfPlay INTEGER");
 		}
-		
+
 		if (!columnExistsInTable("StyleOfPlay", MatchLineupTeamTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE " + MatchLineupTeamTable.TABLENAME + " ADD COLUMN StyleOfPlay INTEGER");
 		}
-		
+
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
@@ -703,23 +715,23 @@ final class DBUpdater {
 					+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
-	
+
 	private void updateDBv21(int DBVersion, int version) throws SQLException {
 		// 1.435 BETA
 		if (columnExistsInTable("MATCHREPORT", MatchDetailsTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ALTER COLUMN MATCHREPORT SET DATA TYPE VARCHAR(15000)"); // fix an existing bug - maybe 15 000 is not enough
 		}
-		
+
 		if (!columnExistsInTable("HEIMHATSTATS", MatchDetailsTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HEIMHATSTATS INTEGER");
 			m_clJDBCAdapter.executeUpdate("UPDATE MATCHDETAILS SET HEIMHATSTATS = HEIMLEFTATT + HEIMRIGHTATT + HEIMMIDATT + 3 * HEIMMIDFIELD + HEIMLEFTDEF + HEIMRIGHTDEF + HEIMMIDDEF");
 		}
-		
+
 		if (!columnExistsInTable("GASTHATSTATS", MatchDetailsTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GASTHATSTATS INTEGER");
 			m_clJDBCAdapter.executeUpdate("UPDATE MATCHDETAILS SET GASTHATSTATS = GASTLEFTATT + GASTRIGHTATT + GASTMIDATT + 3 * GASTMIDFIELD + GASTLEFTDEF + GASTRIGHTDEF + GASTMIDDEF");
 		}
-		
+
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ALTER COLUMN EVENTTEXT SET DATA TYPE VARCHAR(5000)"); // fix existing bug
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ALTER COLUMN HEIMTORE INTEGER"); // fix existing bug
 
@@ -765,7 +777,7 @@ final class DBUpdater {
                             + " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
         }
     }
-	
+
     private void updateDBv23(int DBVersion, int version) throws SQLException {
         // 1.436 BETA
 
@@ -789,7 +801,7 @@ final class DBUpdater {
                             + " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
         }
     }
-	
+
 	private void updateDBv25(int DBVersion, int version) throws SQLException {
 		// 1.436
 
@@ -919,13 +931,13 @@ final class DBUpdater {
 
 	/**
 	 * Automatic update of User Configuration parameters
-	 * 
+	 *
 	 * This method is similar to the updateDB() method above The main difference
 	 * is that it is based on the HO release version instead of the DB version
-	 * 
+	 *
 	 * In development mode, we execute the current update steps again (just like
 	 * in updateBD()).
-	 * 
+	 *
 	 * @author flattermann <flattermannHO@gmail.com>
 	 */
 	void updateConfig() {
@@ -937,7 +949,7 @@ final class DBUpdater {
 		/**
 		 * We have to use separate 'if-then' clauses for each conf version
 		 * (ascending order) because a user might have skipped some HO releases
-		 * 
+		 *
 		 * DO NOT use 'if-then-else' here, as this would ignores some updates!
 		 */
 		if (lastConfigUpdate < 1.4101 || (HO.isDevelopment() && lastConfigUpdate == 1.4101)) {
@@ -971,7 +983,7 @@ final class DBUpdater {
 			HOLogger.instance().log(getClass(), "Updating configuration to version 1.431...");
 			updateConfigTo1431(HO.isDevelopment() && lastConfigUpdate == 1.431);
 		}
-		
+
 		if (lastConfigUpdate < 1.434 || (HO.isDevelopment() && lastConfigUpdate == 1.434)) {
 			HOLogger.instance().log(getClass(), "Updating configuration to version 1.434...");
 			updateConfigTo1434(HO.isDevelopment() && lastConfigUpdate == 1.434);
@@ -1065,7 +1077,7 @@ final class DBUpdater {
 		// always set the LastConfUpdate as last step
 		dbManager.saveUserParameter("LastConfUpdate", 1.431);
 	}
-	
+
 	private void updateConfigTo1434(boolean alreadyApplied) {
 
 		if (!alreadyApplied) {
