@@ -5,6 +5,7 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
+import core.model.match.MatchType;
 
 import java.awt.*;
 import java.text.DateFormat;
@@ -32,7 +33,7 @@ public class RatingTableEntry extends AbstractHOTableEntry {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private JComponent m_clComponent = new JPanel();
-    private JLabel text = new JLabel("");
+    private JLabel matchLink = new JLabel("");
     private String m_sTooltip = "";
     private boolean m_bYellowStar;
     private float m_fRating;
@@ -50,11 +51,6 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         m_fRating = 0.0F;
         m_bYellowStar = true;
         createComponent();
-
-        if (BALLIMAGEICON == null) {
-            BALLIMAGEICON = ThemeManager.getScaledIcon(HOIconName.BALL, 14, 14);
-        }
-        text.setIcon(BALLIMAGEICON);
     }
 
     /**
@@ -67,11 +63,6 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         setRating(f);
 
         createComponent();
-
-        if (BALLIMAGEICON == null) {
-            BALLIMAGEICON = ThemeManager.getScaledIcon(HOIconName.BALL, 14, 14);
-        }
-        text.setIcon(BALLIMAGEICON);
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -109,20 +100,28 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         updateComponent();
     }
 
-    public final void setText(String t) {
+    /**
+     * Create match link
+     * steffano
+     * @param t
+     * @param matchType
+     */
+    public final void setMatchInfo(String t, MatchType matchType) {
 
         try {
             //2020-05-06 09:30:00
             Date date=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(t);
             DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-            text.setText("  ("+dateFormat.format(date)+")");
+            matchLink.setText("  ("+dateFormat.format(date)+")");
+            BALLIMAGEICON = ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]);
+            matchLink.setIcon(BALLIMAGEICON);
         } catch (ParseException e) {
         }
         updateComponent();
 
         m_clComponent.add(new JLabel("  "));
-        m_clComponent.add(text);
-        text.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        m_clComponent.add(matchLink);
+        matchLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
         m_clComponent.repaint();
     }
 
@@ -283,7 +282,7 @@ public class RatingTableEntry extends AbstractHOTableEntry {
 	}
 
 	public JLabel getLabelMatch() {
-		return text;
+		return matchLink;
 	}
 
 	public void setBgColor(Color bgColor) {
