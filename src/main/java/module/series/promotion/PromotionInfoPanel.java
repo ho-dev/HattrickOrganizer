@@ -32,7 +32,6 @@ public class PromotionInfoPanel extends JPanel {
         setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setBorder(new EmptyBorder(0, 10, 0, 0));
-        setPreferredSize(new Dimension(500, 40));
 
         SwingUtilities.invokeLater(() -> {
 
@@ -121,15 +120,17 @@ public class PromotionInfoPanel extends JPanel {
 
     private String createPromotionStatusDisplayString(LeaguePromotionInfo leaguePromotionInfo) {
         List<String> leagueDetails = Collections.EMPTY_LIST;
+        List<Map<String, String>> teamDetails = Collections.EMPTY_LIST;
         if (!leaguePromotionInfo.teams.isEmpty() && !leaguePromotionInfo.teams.contains(-1)) {
             final DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
 
-            leagueDetails = leaguePromotionInfo.teams
+            teamDetails = leaguePromotionInfo.teams
                     .stream()
-                    .map(teamId -> {
-                        Map<String, String> teamInfo = downloadCountryDetails.getTeamSeries(teamId);
-                        return teamInfo.get("LeagueLevelUnitName");
-                    })
+                    .map(teamId -> downloadCountryDetails.getTeamSeries(teamId))
+                    .collect(Collectors.toList());
+            leagueDetails = teamDetails
+                    .stream()
+                    .map(teamInfo -> teamInfo.get("LeagueLevelUnitName"))
                     .collect(Collectors.toList());
         }
 
@@ -137,7 +138,14 @@ public class PromotionInfoPanel extends JPanel {
             return HOVerwaltung.instance().getLanguageString("pd_status." + leaguePromotionInfo.status.name());
         } else {
             return HOVerwaltung.instance().getLanguageString("pd_status." + leaguePromotionInfo.status.name(),
-                    String.join(", ", leagueDetails));
+                    String.join(", ", leagueDetails),
+                    String.join(", ", teamDetails.stream()
+                            .map(stringStringMap -> stringStringMap.get("TeamName"))
+                            .collect(Collectors.toList())),
+                    String.join(", ", teamDetails.stream()
+                            .map(stringStringMap -> stringStringMap.get("TeamID"))
+                            .collect(Collectors.toList()))
+                    );
         }
     }
 }
