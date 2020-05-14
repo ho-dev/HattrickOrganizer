@@ -24,6 +24,7 @@ import core.gui.theme.ThemeManager;
 import core.model.FactorObject;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
+import core.model.match.MatchKurzInfo;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -362,8 +363,9 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jpAge.setText(m_clPlayer.getAgeStringFull());
         if (m_clPlayer.getLastMatchRating() > 0) {
             m_jpLastMatchRating.setYellowStar(true);
+            MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(m_clPlayer.getLastMatchId());
             m_jpLastMatchRating.setRating((float)m_clPlayer.getLastMatchRating());
-            m_jpLastMatchRating.setText(m_clPlayer.getLastMatchDate());
+            m_jpLastMatchRating.setMatchInfo(m_clPlayer.getLastMatchDate(), info.getMatchTyp());
             m_jpLastMatchRating.getLabelMatch();
         }
         m_jpNationality.setIcon(ImageUtilities.getFlagIcon(m_clPlayer.getNationalitaet()));
@@ -681,17 +683,9 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         initNormalLabel(0, 3, constraints, layout, panel, label);
         initNormalField(1, 3, constraints, layout, panel, m_jpPositioned.getComponent(false));
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Rating"));
-        initNormalLabel(0, 4, constraints, layout, panel, label);
-        initNormalField(1, 4, constraints, layout, panel, m_jpRating.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("BestePosition"));
-        initNormalLabel(0, 5, constraints, layout, panel, label);
-        initNormalField(1, 5, constraints, layout, panel, m_jpBestPosition.getComponent(false));
-
         label = new JLabel(HOVerwaltung.instance().getLanguageString("LastMatchRating"));
-        initNormalLabel(0, 6, constraints, layout, panel, label);
-        initNormalField(1, 6, constraints, layout, panel, m_jpLastMatchRating.getComponent(false));
+        initNormalLabel(0, 4, constraints, layout, panel, label);
+        initNormalField(1, 4, constraints, layout, panel, m_jpLastMatchRating.getComponent(false));
         m_lastMatchLink = m_jpLastMatchRating.getLabelMatch();
         m_lastMatchLink.addMouseListener(new MouseAdapter() {
             @Override
@@ -701,6 +695,10 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
                 }
             }
         });
+
+        label = new JLabel(HOVerwaltung.instance().getLanguageString("BestePosition"));
+        initNormalLabel(0, 5, constraints, layout, panel, label);
+        initNormalField(1, 5, constraints, layout, panel, m_jpBestPosition.getComponent(false));
 
         // ***** Block 2
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Gruppe"));
