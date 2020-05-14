@@ -258,8 +258,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	 */
 	private void startDownload() {
 		boolean bOK = true;
-		HOModel model = hov.getModel();
-		int teamId = model.getBasics().getTeamId();
 
 		// Save Dialog's settings
 		// the chpp-api only allows to download all current matches, the dialog settings only filters the match
@@ -276,52 +274,55 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		UserParameter.instance().xmlDownload = m_jchHRF.isSelected();
 		UserParameter.instance().fixtures = m_jchFixtures.isSelected();
 
-		// Always test that teamId exists, it won't on the very first download
-		if ( this.downloadFilter.isChecked(filterRoot.getCurrentMatches())  && (teamId > 0)) {
-			// Only get lineups for own fixtures
-			bOK = (OnlineWorker.getMatches(teamId, false, true, true) != null);
-			if (bOK) {
-				OnlineWorker.getAllLineups();
-			}
-		}
-		if (bOK && m_jchMatchArchive.isSelected() && (teamId > 0)) {
-			List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, m_clSpinnerModel.getDate(), false);
-			allmatches = OnlineWorker.FilterUserSelection(allmatches);
-			for ( MatchKurzInfo i: allmatches ) {
-				OnlineWorker.downloadMatchData(i, true);
-			}
-		}
-
-		if (bOK && m_jchFixtures.isSelected() && (teamId > 0)) {
-			// Always get actual season and league
-			OnlineWorker.getSpielplan(-1, model.getXtraDaten().getLeagueLevelUnitID());
-		}
-
-		if (bOK && m_jchOldFixtures.isSelected() && (teamId > 0)) {
-			for (Object s : m_jlOldSeasons.getSelectedValuesList()) {
-				if (s instanceof CBItem) {
-					final int seasonId = ((CBItem) s).getId();
-					// Abfragen!
-					final LigaAuswahlDialog auswahlDialog = new LigaAuswahlDialog(this, seasonId);
-					final int leagueId = auswahlDialog.getLigaID();
-
-					if (leagueId > -2) {
-						bOK = OnlineWorker.getSpielplan(seasonId, leagueId);
-					}
-					if (!bOK) {
-						break;
-					}
+		if (m_jchHRF.isSelected()) {
+			bOK = OnlineWorker.getHrf(this);
+			List<Player> player = hov.getModel().getAllSpieler();
+			for (Player p : player) {
+				if (p.getNationalTeamID() != 0) {
+					OnlineWorker.getMatches(p.getNationalTeamID(), false, true, true);
 				}
 			}
 		}
 
-		// Lastly, so that the matches for training are there
-		if (bOK && m_jchHRF.isSelected()) {
-			OnlineWorker.getHrf(this);
-			List<Player> player = hov.getModel().getAllSpieler();
-			for ( Player p : player){
-				if ( p.getNationalTeamID() != 0){
-					OnlineWorker.getMatches(p.getNationalTeamID(), false, true, true);
+		HOModel model = hov.getModel();
+		int teamId = model.getBasics().getTeamId();
+
+		if (teamId > 0) {
+			if (this.downloadFilter.isChecked(filterRoot.getCurrentMatches())) {
+				// Only get lineups for own fixtures
+				bOK = (OnlineWorker.getMatches(teamId, false, true, true) != null);
+				if (bOK) {
+					OnlineWorker.getAllLineups();
+				}
+			}
+			if (bOK && m_jchMatchArchive.isSelected()) {
+				List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, m_clSpinnerModel.getDate(), false);
+				allmatches = OnlineWorker.FilterUserSelection(allmatches);
+				for (MatchKurzInfo i : allmatches) {
+					OnlineWorker.downloadMatchData(i, true);
+				}
+			}
+
+			if (bOK && m_jchFixtures.isSelected()) {
+				// Always get actual season and league
+				OnlineWorker.getSpielplan(-1, model.getXtraDaten().getLeagueLevelUnitID());
+			}
+
+			if (bOK && m_jchOldFixtures.isSelected()) {
+				for (Object s : m_jlOldSeasons.getSelectedValuesList()) {
+					if (s instanceof CBItem) {
+						final int seasonId = ((CBItem) s).getId();
+						// Abfragen!
+						final LigaAuswahlDialog auswahlDialog = new LigaAuswahlDialog(this, seasonId);
+						final int leagueId = auswahlDialog.getLigaID();
+
+						if (leagueId > -2) {
+							bOK = OnlineWorker.getSpielplan(seasonId, leagueId);
+						}
+						if (!bOK) {
+							break;
+						}
+					}
 				}
 			}
 		}
