@@ -134,6 +134,7 @@ public interface IMatchRoleID {
     byte EXTRA = 30;
     byte FORWARD_DEF_TECH = 98;
     byte COACH = 99;
+    byte UNSELECTABLE = 101;
     List<Integer> aPositionBehaviours = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 21);
 
     
