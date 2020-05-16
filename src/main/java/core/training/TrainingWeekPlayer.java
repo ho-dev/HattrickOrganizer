@@ -21,8 +21,6 @@ public class TrainingWeekPlayer {
 			_PrimarySkillPositionMinutes = 90;
 		else
 			_PrimarySkillPositionMinutes += minutes;
-		
-		_TotalMinutesPlayed += minutes;
 	}
 	public int getPrimarySkillPositionMinutes()
 	{
@@ -34,8 +32,6 @@ public class TrainingWeekPlayer {
 			_PrimarySkillBonusPositionMinutes = 90;
 		else
 			_PrimarySkillBonusPositionMinutes += minutes;
-		
-		_TotalMinutesPlayed += minutes;
 	}
 	public int getPrimarySkillBonusPositionMinutes()
 	{
@@ -47,8 +43,6 @@ public class TrainingWeekPlayer {
 			_PrimarySkillSecondaryPositionMinutes = 90;
 		else
 			_PrimarySkillSecondaryPositionMinutes += minutes;
-		
-		_TotalMinutesPlayed += minutes;
 	}
 	public int getPrimarySkillSecondaryPositionMinutes()
 	{
@@ -60,8 +54,6 @@ public class TrainingWeekPlayer {
 			_PrimarySkillOsmosisPositionMinutes = 90;
 		else
 			_PrimarySkillOsmosisPositionMinutes += minutes;
-		
-		_TotalMinutesPlayed += minutes;
 	}
 	public int getPrimarySkillOsmosisPositionMinutes()
 	{
@@ -111,7 +103,11 @@ public class TrainingWeekPlayer {
 	{
 		return _SecondarySkillOsmosisPositionMinutes;
 	}
-	public int getMinutesPlayed()
+
+	public void addTotalMinutesPlayed(int minutes){
+		this._TotalMinutesPlayed += minutes;
+	}
+	public int getTotalMinutesPlayed()
 	{
 		return _TotalMinutesPlayed;
 	}
