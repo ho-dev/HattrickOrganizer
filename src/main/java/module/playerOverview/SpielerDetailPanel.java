@@ -50,6 +50,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 import static core.model.player.IMatchRoleID.UNKNOWN;
+import static core.model.player.IMatchRoleID.UNSELECTABLE;
 
 /**
  * Shows player details for the selected player
@@ -1139,11 +1140,12 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
         byte[] altPositions = m_clPlayer.getAlternativePositions();
 
-        CBItem[] positions = new CBItem[allPos.length];
+        CBItem[] positions = new CBItem[allPos.length + 1];
 
-        int k = 0;
-        positions[k] = new CBItem(MatchRoleID.getNameForPosition(UNKNOWN), UNKNOWN);
-        k++;
+        positions[0] = new CBItem(MatchRoleID.getNameForPosition(UNKNOWN), UNKNOWN);
+        positions[1] = new CBItem(MatchRoleID.getNameForPosition(UNSELECTABLE), UNSELECTABLE);
+
+        int k = 2;
         String text = "";
         for (FactorObject allPo : allPos) {
             if (allPo.getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;

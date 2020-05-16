@@ -88,8 +88,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(SPECIALTIES_SMALL[6], "gui/bilder/player overview/speciality-6-small.png");
 		put(SPECIALTIES_SMALL[8], "gui/bilder/player overview/speciality-8-small.png");
 
-		put(TOOTHEDWHEEL, "gui/bilder/zahnrad.png");
-		put(HAND, "gui/bilder/Manuell.png");
+		put(TOOTHEDWHEEL, "gui/bilder/automatic.png");
+		put(HAND, "gui/bilder/manual.png");
 
 		put(NO_MATCH, "gui/bilder/NoMatch.gif");
 		put(SHOW_MATCH, "gui/bilder/ShowMatch.gif");

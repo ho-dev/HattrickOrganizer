@@ -1,6 +1,7 @@
 package module.lineup;
 
 import core.db.DBManager;
+import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.SpielerLabelEntry;
@@ -13,9 +14,11 @@ import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.Helper;
 import module.playerOverview.PlayerTable;
+import module.playerOverview.SpielerUebersichtsPanel;
 
 import java.awt.event.MouseAdapter;
 
@@ -204,6 +207,15 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 					Player selectedPlayer = ((SpielerLabelEntry) tableSorter.getValueAt(selectedRow,tableModel.getColumnIndexOfDisplayedColumn(UserColumnFactory.NAME))).getSpieler();
 					bSelected = (boolean)tableSorter.getValueAt(selectedRow, tableModel.getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP));
 					selectedPlayer.setCanBeSelectedByAssistant(bSelected);
+					if(bSelected)
+					{
+						// this player has been made selectable from the Lineup tab, for consistency we set its position to undefined
+						selectedPlayer.setUserPosFlag(IMatchRoleID.UNKNOWN);
+					}
+					else {
+						selectedPlayer.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
+					}
+					HOMainFrame.instance().getSpielerUebersichtPanel().update();
 				}
 			}
 		});
