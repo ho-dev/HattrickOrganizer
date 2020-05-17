@@ -66,7 +66,7 @@ Please open a request if the language you are interested in is not listed.
 
 ## Documentation
 
-Documentation for HO! is located at https://ho.readthedocs.io/
+Documentation for HO! is located [here] (https://ho.readthedocs.io/)
 
 ## Acknowledgements
 
