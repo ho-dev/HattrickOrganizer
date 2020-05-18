@@ -394,9 +394,9 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		} else if (source.equals(m_jmHomepageItem)) { // Homepage
 			openURL("https://akasolace.github.io/HO/");
 		} else if (source.equals(m_jmWikiItem)) { // User Guide
-			openURL("https://github.com/akasolace/HO/wiki");
+			openURL("https://ho.readthedocs.io/");
 		} else if (source.equals(m_jmReportAbug)){ // Report a bug
-			openURL("https://github.com/akasolace/HO/issues");
+			openURL("https://github.com/akasolace/HO/issues/new/choose");
 		}
 
 		else if (source.equals(m_jmCheckUpdate)) {
