@@ -1,14 +1,16 @@
 package core.net;
 
+import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.builder.api.OAuth1SignatureType;
+import com.github.scribejava.core.model.*;
+import com.github.scribejava.core.oauth.OAuth10aService;
 import core.file.xml.Extension;
 import core.file.xml.XMLCHPPPreParser;
 import core.file.xml.XMLExtensionParser;
-import core.file.xml.XMLNewsParser;
 import core.file.xml.XMLTeamDetailsParser;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
-import core.model.News;
 import core.model.UserParameter;
 import core.model.match.MatchType;
 import core.net.login.OAuthDialog;
@@ -41,16 +43,8 @@ import java.util.zip.InflaterInputStream;
 
 import javax.swing.JOptionPane;
 
-import org.scribe.builder.ServiceBuilder;
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
-import org.scribe.model.SignatureType;
-import org.scribe.model.Token;
-import org.scribe.model.Verb;
-import org.scribe.oauth.OAuthService;
 import org.w3c.dom.Document;
 
-//import sun.misc.BASE64Encoder;
 import java.util.Base64;
 
 
@@ -70,18 +64,17 @@ public class MyConnector {
 	private final static String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";
 	private final static String CONSUMER_SECRET = "2/Td)Cprd/?q`nAbkAL//F+eGD@KnnCc>)dQgtP,p+p";
 	private ProxySettings proxySettings;
-	private OAuthService m_OAService;
-	private Token m_OAAccessToken;
+	private OAuth10aService m_OAService;
+	private OAuth1AccessToken m_OAAccessToken;
 	private static boolean DEBUGSAVE = false;
 
 	/**
 	 * Creates a new instance of MyConnector.
 	 */
 	private MyConnector() {
-		m_OAService = new ServiceBuilder().provider(HattrickAPI.class)
-				.apiKey(Helper.decryptString(CONSUMER_KEY))
+		m_OAService = new ServiceBuilder(Helper.decryptString(CONSUMER_KEY))
 				.apiSecret(Helper.decryptString(CONSUMER_SECRET))
-				.signatureType(SignatureType.Header).build();
+				.build(new HattrickAPI());
 		m_OAAccessToken = createOAAccessToken();
 	}
 
@@ -664,7 +657,7 @@ public class MyConnector {
 					iResponse = 401;
 				} else {
 					m_OAService.signRequest(m_OAAccessToken, request);
-					response = request.send();
+					response = m_OAService.execute(request);
 					iResponse = response.getCode();
 				}
 				switch (iResponse) {
@@ -721,7 +714,7 @@ public class MyConnector {
 			Response response = null;
 			OAuthRequest request = new OAuthRequest(Verb.GET, surl);
 			infoHO(request);
-			response = request.send();
+			response = m_OAService.execute(request);
 			int iResponse = response.getCode();
 			switch (iResponse) {
 			case 200:
@@ -767,7 +760,7 @@ public class MyConnector {
 		int iResponse;
 		boolean tryAgain = true;
 		try {
-			while (tryAgain == true) {
+			while (tryAgain) {
 				OAuthRequest request = new OAuthRequest(Verb.POST, surl);
 				for (Map.Entry<String, String> entry : bodyParas.entrySet()) {
 					request.addBodyParameter(entry.getKey(), entry.getValue());
@@ -778,7 +771,7 @@ public class MyConnector {
 					iResponse = 401;
 				} else {
 					m_OAService.signRequest(m_OAAccessToken, request);
-					response = request.send();
+					response = m_OAService.execute(request);
 					iResponse = response.getCode();
 				}
 				switch (iResponse) {
@@ -799,7 +792,7 @@ public class MyConnector {
 						}
 						m_OAAccessToken = authDialog.getAccessToken();
 						if (m_OAAccessToken == null) {
-							m_OAAccessToken = new Token(
+							m_OAAccessToken = new OAuth1AccessToken(
 									Helper.decryptString(core.model.UserParameter.instance().AccessToken),
 									Helper.decryptString(core.model.UserParameter.instance().TokenSecret));
 						}
@@ -866,8 +859,8 @@ public class MyConnector {
 
 	private void infoHO(OAuthRequest request) {
 		request.addHeader("accept-language", "en");
-		request.setConnectionKeepAlive(true);
-		request.setConnectTimeout(60, TimeUnit.SECONDS);
+//		request.setConnectionKeepAlive(true);
+//		request.setConnectTimeout(60, TimeUnit.SECONDS);
 		request.addHeader("accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*");
 		request.addHeader("accept-encoding", "gzip, deflate");
 		request.addHeader("user-agent", m_sIDENTIFIER);
@@ -927,8 +920,10 @@ public class MyConnector {
 		}
 	}
 
-	private Token createOAAccessToken() {
-		return new Token(Helper.decryptString(UserParameter.instance().AccessToken),
-				Helper.decryptString(UserParameter.instance().TokenSecret));
+	private OAuth1AccessToken createOAAccessToken() {
+		return new OAuth1AccessToken(
+				Helper.decryptString(UserParameter.instance().AccessToken),
+				Helper.decryptString(UserParameter.instance().TokenSecret)
+		);
 	}
 }

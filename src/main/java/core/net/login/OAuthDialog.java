@@ -1,5 +1,8 @@
 package core.net.login;
 
+import com.github.scribejava.core.model.OAuth1AccessToken;
+import com.github.scribejava.core.model.OAuth1RequestToken;
+import com.github.scribejava.core.oauth.OAuth10aService;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
@@ -7,7 +10,6 @@ import core.model.UserParameter;
 import core.util.BrowserLauncher;
 import core.util.HOLogger;
 import core.util.Helper;
-import core.util.StringUtils;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -25,10 +27,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.scribe.model.Token;
-import org.scribe.model.Verifier;
-import org.scribe.oauth.OAuthService;
-
 public class OAuthDialog extends JDialog {
 
 	private static final long serialVersionUID = 1798304851624958795L;
@@ -42,12 +40,12 @@ public class OAuthDialog extends JDialog {
 	private String m_sUserURL;
 	private boolean m_bUserCancel = false;
 	private boolean m_bFirstTry = true;
-	private OAuthService m_service;
-	private Token m_AccessToken;
-	private Token m_RequestToken;
+	private OAuth10aService m_service;
+	private OAuth1AccessToken m_AccessToken;
+	private OAuth1RequestToken m_RequestToken;
 	private String scopes = "";
 
-	public OAuthDialog(HOMainFrame mainFrame, OAuthService service, String scope) {
+	public OAuthDialog(HOMainFrame mainFrame, OAuth10aService service, String scope) {
 		super(mainFrame, HOVerwaltung.instance().getLanguageString(
 				"oauth.Title"), true);
 
@@ -77,13 +75,12 @@ public class OAuthDialog extends JDialog {
 	}
 
 	private void doAuthorize() {
-		Verifier verifier = new Verifier(m_jtfAuthString.getText().trim());
 		try {
-			m_AccessToken = m_service.getAccessToken(m_RequestToken, verifier);
+			m_AccessToken = m_service.getAccessToken(m_RequestToken, m_jtfAuthString.getText().trim());
 			UserParameter.instance().AccessToken = Helper
 					.cryptString(m_AccessToken.getToken());
 			UserParameter.instance().TokenSecret = Helper
-					.cryptString(m_AccessToken.getSecret());
+					.cryptString(m_AccessToken.getTokenSecret());
 
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(),
@@ -97,7 +94,7 @@ public class OAuthDialog extends JDialog {
 		return m_bUserCancel;
 	}
 
-	public Token getAccessToken() {
+	public OAuth1AccessToken getAccessToken() {
 		return m_AccessToken;
 	}
 

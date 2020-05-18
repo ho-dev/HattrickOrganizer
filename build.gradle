@@ -1,33 +1,53 @@
+import java.text.SimpleDateFormat
+
 // region ============ plugins and external jar dependencies ===================================================================
 plugins {
     id 'java'
     id 'application'
-    id "edu.sc.seis.macAppBundle" version "2.3.0"
-    id "nebula.ospackage" version "5.0.4"
+    id "nebula.ospackage" version "8.3.0"
     id 'de.jansauer.poeditor' version '1.0.0'
     id "org.kordamp.markdown.convert" version "1.2.0"
     id "com.dorongold.task-tree" version "1.5"
     id "com.github.breadmoirai.github-release" version "2.2.10"
+    id 'org.beryx.jlink' version '2.19.0'
 }
 
+apply plugin: 'java'
+apply plugin: 'application'
+
 repositories {
+    mavenCentral()
     jcenter()
 }
 
 //============  external jar dependencies ==========
 dependencies {
-    compile 'com.google.guava:guava:27.1-jre'
-    compile 'com.jgoodies:jgoodies-looks:2.7.0'
-    compile 'com.toedter:jcalendar:1.4'
-    compile 'org.scribe:scribe:1.3.0'
-    compile 'org.hsqldb:hsqldb:2.4.1'
-    compile 'junit:junit:4.12'
-    compile 'com.google.code.gson:gson:2.8.5'
-    compile 'com.squareup.okhttp3:okhttp:4.3.1'
+    implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'com.toedter:jcalendar:1.4'
+    implementation 'com.github.scribejava:scribejava-core:6.9.0'
+    implementation 'org.hsqldb:hsqldb:2.4.1'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.okhttp3:okhttp:4.3.1'
+    testImplementation 'junit:junit:4.12'
 }
 
-
 // endregion
+
+compileJava {
+    inputs.property("moduleName", 'ho')
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'java.desktop',
+                '--add-modules', 'java.sql',
+                '--add-modules', 'okhttp3',
+                '--add-modules', 'scribejava.core',
+                '--add-modules', 'com.google.gson',
+                '--add-exports', 'java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED'
+        ]
+        classpath = files()
+    }
+}
 
 
 //  Version ============================================================
@@ -54,7 +74,6 @@ ext {
     python_script = "${projectDir}\\buildResources\\Generic\\generate_hash.py"
 }
 
-
 // Define build number =================
 def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
@@ -70,12 +89,14 @@ println "Project:  $project.name $project.version ....................."
 
 //  configure application plugin --------------------------------
 application {
-    mainClassName = 'HOLauncher'
+    mainClassName = 'core.HOLauncher'
 }
 
 //  configure java plugin --------------------------------
 java {
     compileJava.options.encoding = 'UTF-8'
+    sourceCompatibility = JavaVersion.VERSION_14
+    targetCompatibility = JavaVersion.VERSION_14
 }
 
 //  configure markdownToHtml --------------------------------
@@ -116,8 +137,6 @@ poeditor {
     trans type:'properties', lang: 'es', file: 'src\\main\\resources\\sprache\\Spanish.properties'
     trans type:'properties', lang: 'sv', file: 'src\\main\\resources\\sprache\\Svenska.properties' //Swedish
     trans type:'properties', lang: 'tr', file: 'src\\main\\resources\\sprache\\Turkish.properties'
-
-
 }
 
 
@@ -126,17 +145,13 @@ jar {
     archiveFileName = "HO.jar"
     manifest {
         attributes 'Manifest-Version': 1.0, 'Implementation-Title': 'HO', 'Implementation-Version': project.version,
-                   'Main-Class': 'HOLauncher',
+                   'Main-Class': 'core.HOLauncher',
                     "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
     }
 
     exclude "/*.jar", "/*.ico", "/*.png", "/*.md", "/*.html"
 
 }
-
-
-import java.text.SimpleDateFormat
-
 
 // Configure distribution task =======================
 distributions {
@@ -146,22 +161,22 @@ distributions {
 }
 
 // Configure macAppBundle task =======================
-macAppBundle {
-    mainClassName = "HOLauncher"
-    icon = "${project.ext.osx_app_dir_sourcedir}/HO.icns"
-    bundleJRE = false // true #issue-198
-    javaProperties.put("apple.laf.useScreenMenuBar", "true")
-    javaProperties.put("apple.awt.showGrowBox", "true")
-    backgroundImage = "${project.ext.osx_app_dir_sourcedir}/Back.png"
-}
+//macAppBundle {
+//    mainClassName = "HOLauncher"
+//    icon = "${project.ext.osx_app_dir_sourcedir}/HO.icns"
+//    bundleJRE = false // true #issue-198
+//    javaProperties.put("apple.laf.useScreenMenuBar", "true")
+//    javaProperties.put("apple.awt.showGrowBox", "true")
+//    backgroundImage = "${project.ext.osx_app_dir_sourcedir}/Back.png"
+//}
 
 // Configure ospackage and buildDeb tasks ============
 ospackage {
-        packageName = 'ho'
-        os = LINUX // only applied to RPM
-        packager 'aksolace'
-        summary ' HattrickOrganizer! \n Manager tool for http://www.hattrick.org'
-        license = 'LGPL'
+    packageName = 'ho'
+    os = LINUX // only applied to RPM
+    packager 'akasolace'
+    summary ' HattrickOrganizer! \n Manager tool for http://www.hattrick.org'
+    license = 'LGPL'
 
 
     into '/usr'
@@ -219,8 +234,8 @@ ospackage {
 }
 
 buildDeb {
-        requires("openjdk-8-jre | openjdk-9-jre | openjdk-10-jre | openjdk-11-jre")
-        link('/usr/bin/ho', '/usr/bin/ho.sh')
+    requires("openjdk-8-jre | openjdk-9-jre | openjdk-10-jre | openjdk-11-jre")
+    link('/usr/bin/ho', '/usr/bin/ho.sh')
 }
 
 buildRpm {
@@ -240,7 +255,8 @@ task makeAll(type: GradleBuild){
     description 'Create ZipDistribution, Windows, MacOS and Linux binaries'
     tasks = ['preparingBuild', 'pushmd', 'markdownToHtml', 'pullhtml', 'poeditorPull', 'createLanguageFileList',
              'installDist', 'CreateDistribution', 'makeWinInstallerTask', 'ZipDistribution','buildDeb',
-             'finishDeb', 'buildRpm', 'finishRpm', 'createApp', 'AddResourcesMacApp', 'ZipMacAppDistribution', 'updatebuildreferences', 'compute_sha_sums']
+             'finishDeb', 'buildRpm', 'finishRpm', 'AddResourcesMacApp', 'ZipMacAppDistribution',
+             'updatebuildreferences', 'compute_sha_sums']
 
 }
 
@@ -381,7 +397,8 @@ task makeWinInstallerTask (dependsOn: CreateDistribution) {
         def DOUTFILE="${project.ext.target_dir}\\HO_${project.version}_Win32_Installer.exe"
         exec {
             executable nsis_exe_path
-            args "-V2", "-NOCD", "-DBUILDDIR=${DBUILDDIR}", "-DHOVERSION='${project.version}'", "-DCONFPATH=${nsis_confPath}", "-DOUTFILE='${DOUTFILE}'", "${project.ext.nsis_scriptName}"
+            args "-V2", "-NOCD", "-DBUILDDIR=${DBUILDDIR}", "-DHOVERSION='${project.version}'",
+                    "-DCONFPATH=${nsis_confPath}", "-DOUTFILE='${DOUTFILE}'", "${project.ext.nsis_scriptName}"
         }
 
     }
@@ -409,9 +426,9 @@ task finishRpm(dependsOn: buildRpm) {
             include("*.rpm")
             into("${buildDir}/artefacts")
             rename { filename -> filename.replace('.noarch', '').replace('~','_').replace('ho','HO')}
-            }
         }
     }
+}
 
 task ZipDistribution(dependsOn: 'makeWinInstallerTask', type:Zip) {
     group 'sub tasks'
@@ -426,11 +443,11 @@ task ZipDistribution(dependsOn: 'makeWinInstallerTask', type:Zip) {
     }
 }
 
-task AddResourcesMacApp(dependsOn: createApp) {
-    dependsOn 'init', 'createApp'
+task AddResourcesMacApp() {
+    dependsOn 'init'
     doLast {
-	    def baseMacAppDir = "${buildDir}/macApp/${project.macAppBundle.appName}.app"
-	    def macAppDir = "${baseMacAppDir}/Contents/Java"
+        def baseMacAppDir = "${buildDir}/macApp/${project.macAppBundle.appName}.app"
+        def macAppDir = "${baseMacAppDir}/Contents/Java"
         println("adding resources folder")
         copy {
             from "${projectDir}/src/main/resources/changelog.html"
@@ -439,8 +456,8 @@ task AddResourcesMacApp(dependsOn: createApp) {
         delete "${macAppDir}/hamcrest-core-1.3.jar"
         delete "${macAppDir}/junit-4.12.jar"
 
-        }
     }
+}
 
 task ZipMacAppDistribution(type: Tar, dependsOn: 'AddResourcesMacApp') {
     archiveFileName = "${project.name}_${project.version}_macOS.zip"
@@ -515,11 +532,10 @@ task createLanguageFileList(dependsOn: poeditorPull)  {
     }
 
     doLast {
-            println("listing available translation ")
-            lTranslationFiles = lTranslationFiles.collect { it.take(it.lastIndexOf('.'))}
-            File lstFile = new File("${projectDir}\\src\\main\\resources\\sprache\\ListLanguages.txt")
-            lstFile.withWriter{ out -> lTranslationFiles.each {out.println it}
-           }
+        println("listing available translation ")
+        lTranslationFiles = lTranslationFiles.collect { it.take(it.lastIndexOf('.'))}
+        File lstFile = new File("${projectDir}\\src\\main\\resources\\sprache\\ListLanguages.txt")
+        lstFile.withWriter{ out -> lTranslationFiles.each {out.println it} }
     }
 
 }
@@ -616,7 +632,21 @@ githubRelease {
 
 }
 
+jlink {
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = 'HO'
+        jvmArgs = ['-Dapple.laf.useScreenMenuBar=true', '-Dapple.awt.showGroupBox=true']
+    }
 
+//     mergedModule {
+//         requires 'java.desktop'
+//         requires 'java.sql';
+//         requires 'okhttp3';
+//         requires 'scribejava.core';
+//         requires 'com.google.gson';
+//    }
+}
 
 //// make every other task depend on 'initializer'
 //// matching() and all() are "live" so any tasks declared after this line will also depend on 'initializer'
@@ -630,12 +660,12 @@ poeditorPull.dependsOn pullhtml
 markdownToHtml.dependsOn pushmd
 buildDeb.dependsOn installDist
 buildRpm.dependsOn installDist
-createApp.dependsOn installDist
+//createApp.dependsOn installDist
 //tasks.getByName('githubRelease').dependsOn compute_sha_sums
 
 
 poeditorPull.onlyIf {
-	project.hasProperty('POEDITOR_APIKEY') && project.ext.properties.POEDITOR_APIKEY!=''
+    project.hasProperty('POEDITOR_APIKEY') && project.ext.properties.POEDITOR_APIKEY!=''
 }
 
 

@@ -5,13 +5,13 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.match.MatchesHighlightsStat;
 import core.model.match.MatchesOverviewRow;
+import core.util.StringUtils;
 
 import java.awt.Component;
 
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-import org.hsqldb.lib.StringUtil;
 
 
 class MatchesOverviewRenderer extends DefaultTableCellRenderer {
@@ -26,7 +26,7 @@ class MatchesOverviewRenderer extends DefaultTableCellRenderer {
 		setIcon(null);
 		setHorizontalAlignment(SwingConstants.CENTER);
 		
-		if(StringUtil.isEmpty(value.toString()))
+		if(StringUtils.isEmpty(value.toString()))
 			setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
 		else
 			setBackground(ThemeManager.getColor(HOColorName.MATCHTYPE_LEAGUE_BG));

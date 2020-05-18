@@ -10,7 +10,6 @@ import core.gui.comp.tabbedPane.HOTabbedPane;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.gui.theme.ho.HOTheme;
-import core.gui.theme.jgoodies.JGoodiesTheme;
 import core.gui.theme.nimbus.NimbusTheme;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
@@ -688,10 +687,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private void setDefaultFont(int size) {
 		try {
 			boolean succ = false;
-			if (UserParameter.instance().skin != null
-					&& UserParameter.instance().skin.startsWith("JGoodies")) {
-				succ = JGoodiesTheme.enableJGoodiesTheme(UserParameter.instance().skin, size);
-			} else if ("System".equalsIgnoreCase(UserParameter.instance().skin)) {
+			if ("System".equalsIgnoreCase(UserParameter.instance().skin)) {
 				try {
 					LookAndFeelInfo win = null;
 					for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
