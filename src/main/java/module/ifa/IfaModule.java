@@ -14,7 +14,7 @@ public class IfaModule extends DefaultModule {
 
 	@Override
 	public KeyStroke getKeyStroke() {
-		return KeyStroke.getKeyStroke(KeyEvent.VK_5, KeyEvent.CTRL_MASK);
+		return KeyStroke.getKeyStroke(KeyEvent.VK_4, KeyEvent.CTRL_MASK);
 	}
 
 	@Override
