@@ -95,6 +95,7 @@ public interface HOIconName {
 	String ME_184 = "me_184";
 	String ME_185 = "me_185";
 	String ME_186 = "me_186";
+	String ME_190 = "me_190";
 	String ME_209 = "me_209";
 	String ME_217 = "me_217";
 	String ME_NO_GOAL_AND_HEAD_SPEC = "me_no_goal_and_head_spec";
@@ -115,6 +116,7 @@ public interface HOIconName {
 	String ME_285 = "me_285";
 	String ME_286 = "me_286";
 	String ME_289 = "me_289";
+	String ME_290 = "me_290";
 	String ME_YELLOW_THEN_RED= "me_YellowThenRed";
 
 	String GOAL			= "goal";

@@ -185,6 +185,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(ME_GOAL_AND_WHISTLE, "gui/bilder/match_events/me_goal_and_whistle.png");
 		put(ME_184, "gui/bilder/match_events/me_184.png");
 		put(ME_185, "gui/bilder/match_events/me_185.png");
+		put(ME_190, "gui/bilder/match_events/me_190.png");
 		put(ME_NO_GOAL_UNPREDICTABLE, "gui/bilder/match_events/me_no_goal_unpredictable.png");
 		put(ME_GOAL_LONGSHOT_PNG, "gui/bilder/match_events/me_goal_longshot.png");
 		put(ME_MISS_LONGSHOT_PNG, "gui/bilder/match_events/me_miss_longshot.png");
@@ -206,6 +207,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(ME_186, "gui/bilder/match_events/me_186.png");
 		put(ME_286, "gui/bilder/match_events/me_286.png");
 		put(ME_289, "gui/bilder/match_events/me_289.png");
+		put(ME_290, "gui/bilder/match_events/me_290.png");
 		put(ME_YELLOW_THEN_RED, "gui/bilder/match_events/me_YellowThenRed.png");
 		put(ME_SWAP, "gui/bilder/match_events/swap.png");
 
