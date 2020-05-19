@@ -37,10 +37,33 @@ public final class Verein {
     private int m_iJugend;
     /** Investition */
     private int m_iJugendGeld;
-    /** Physiotherapeuten */
-    private int m_iMasseure; // No longer used
     /** Pressesprecher */
     private int m_iSpokePersonLevels;
+
+    public int getGlobalRanking() {
+        return m_iGlobalRanking;
+    }
+
+    /** Power Ranking */
+    private int m_iGlobalRanking;
+
+    public int getLeagueRanking() {
+        return m_iLeagueRanking;
+    }
+
+    private int m_iLeagueRanking;
+
+    public int getRegionRanking() {
+        return m_iRegionRanking;
+    }
+
+    private int m_iRegionRanking;
+
+    public int getPowerRating() {
+        return m_iPowerRating;
+    }
+
+    private int m_iPowerRating;
     /** Psychologen */
     private int m_iSportPsychologistLevels;
     /** Siege */
@@ -51,6 +74,7 @@ public final class Verein {
 
     /** Ungeschlagen für # Spiele */
     private int m_iUngeschlagen;
+
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -67,7 +91,6 @@ public final class Verein {
         m_iAssistantTrainerLevels = DF.parse(properties.getProperty("hjtranare", "0")).intValue();
         m_iSportPsychologistLevels = DF.parse(properties.getProperty("psykolog", "0")).intValue();
         m_iSpokePersonLevels = DF.parse(properties.getProperty("presstalesman", "0")).intValue();
-        m_iMasseure = DF.parse(properties.getProperty("massor", "0")).intValue();
         m_iMedicLevels = DF.parse(properties.getProperty("lakare", "0")).intValue();
         m_iJugend = DF.parse(properties.getProperty("juniorverksamhet", "0")).intValue();
         m_iFans = DF.parse(properties.getProperty("fanclub", "0")).intValue();
@@ -76,6 +99,10 @@ public final class Verein {
         m_iFinancialDirectorLevels = DF.parse(properties.getProperty("financialdirectorlevels", "0")).intValue();
         m_iFormCoachLevels = DF.parse(properties.getProperty("formcoachlevels", "0")).intValue();
         m_iTacticalAssistantLevels = DF.parse(properties.getProperty("tacticalassistantlevels", "0")).intValue();
+        m_iGlobalRanking = DF.parse(properties.getProperty("globalranking", "0")).intValue();
+        m_iLeagueRanking = DF.parse(properties.getProperty("leagueranking", "0")).intValue();
+        m_iRegionRanking = DF.parse(properties.getProperty("regionranking", "0")).intValue();
+        m_iPowerRating = DF.parse(properties.getProperty("powerrating", "0")).intValue();
     }
 
     /**
@@ -86,7 +113,6 @@ public final class Verein {
             m_iAssistantTrainerLevels = rs.getInt("COTrainer");
             m_iSportPsychologistLevels = rs.getInt("Pschyologen");
             m_iSpokePersonLevels = rs.getInt("PRManager");
-            m_iMasseure = rs.getInt("Physiologen");
             m_iMedicLevels = rs.getInt("Aerzte");
             m_iJugend = rs.getInt("Jugend");
             m_iFans = rs.getInt("Fans");
@@ -95,6 +121,10 @@ public final class Verein {
             m_iTacticalAssistantLevels = rs.getInt("TacticAssist");
             m_iFormCoachLevels = rs.getInt("FormAssist");
             m_iFinancialDirectorLevels = rs.getInt("Finanzberater");
+            m_iGlobalRanking = rs.getInt("globalranking");
+            m_iLeagueRanking = rs.getInt("leagueranking");
+            m_iRegionRanking = rs.getInt("regionranking");
+            m_iPowerRating = rs.getInt("powerrating");
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),"Konstruktor Verein: " + e.toString());
         }
@@ -256,34 +286,7 @@ public final class Verein {
         this.m_iJugendGeld = m_iJugendGeld;
     }
 
-    /**
-     * Getter for property m_iJugendGeld.
-     *
-     * @return Value of property m_iJugendGeld.
-     */
-    public int getJugendGeld() {
-        return m_iJugendGeld;
-    }
 
-    /**
-     * Setter for property m_iMasseure.
-     *
-     * @param m_iMasseure New value of property m_iMasseure.
-     */
-    @Deprecated
-    public void setMasseure(int m_iMasseure) {
-        this.m_iMasseure = m_iMasseure;
-    }
-
-    /**
-     * Getter for property m_iMasseure.
-     *
-     * @return Value of property m_iMasseure.
-     */
-    @Deprecated
-    public int getMasseure() {
-        return m_iMasseure;
-    }
 
     /**
      * Setter for property m_iPRManager.

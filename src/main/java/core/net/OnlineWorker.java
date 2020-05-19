@@ -113,21 +113,15 @@ public class OnlineWorker {
 						Helper.showMessage(parent, getLangString("Importfehler"),
 								getLangString("Fehler"), JOptionPane.ERROR_MESSAGE);
 					} else {
+						// save the model in the database
 						homodel.saveHRF();
+
 						homodel.setSpielplan(hov.getModel().getSpielplan());
 
 						// Add old players to the model
 						homodel.setAllOldSpieler(DBManager.instance().getAllSpieler());
 						// Only update when the model is newer than existing
 						if (isNewModel(homodel)) {
-							Date lastTrainingDate = Calendar.getInstance().getTime();
-							Date lastEconomyDate = lastTrainingDate;
-							if (hov.getModel().getXtraDaten().getTrainingDate() != null) {
-								lastTrainingDate = new Date(hov.getModel().getXtraDaten()
-										.getTrainingDate().getTime());
-								lastEconomyDate = new Date(hov.getModel().getXtraDaten()
-										.getEconomyDate().getTime());
-							}
 							// Reimport Skillup
 							DBManager.instance().checkSkillup(homodel);
 							// Show

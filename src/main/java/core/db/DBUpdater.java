@@ -133,15 +133,15 @@ final class DBUpdater {
 				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP TYP");
 			}
 
-       if (!columnExistsInTable("LastMatchDate", SpielerTable.TABLENAME)) {
-            m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchDate VARCHAR (100)");
-        }
-        if (!columnExistsInTable("LastMatchRating", SpielerTable.TABLENAME)) {
-            m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchRating INTEGER");
-        }
-        if (!columnExistsInTable("LastMatchId", SpielerTable.TABLENAME)) {
-            m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchId INTEGER");
-        }
+		   if (!columnExistsInTable("LastMatchDate", SpielerTable.TABLENAME)) {
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchDate VARCHAR (100)");
+			}
+			if (!columnExistsInTable("LastMatchRating", SpielerTable.TABLENAME)) {
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchRating INTEGER");
+			}
+			if (!columnExistsInTable("LastMatchId", SpielerTable.TABLENAME)) {
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchId INTEGER");
+			}
       
 			Arrays.asList("HEIMTORE", "GASTTORE", "SUBTYP").forEach(s -> {
 				try {
@@ -159,6 +159,26 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_gastid_idx ON MATCHESKURZINFO (GASTID)");
 			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_teamid_idx ON MATCHHIGHLIGHTS (TEAMID)");
 			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_eventid_idx ON MATCHHIGHLIGHTS (MATCH_EVENT_ID)");
+
+			Arrays.asList("GlobalRanking", "LeagueRanking", "RegionRanking", "PowerRating").forEach(s -> {
+				try {
+					if (! columnExistsInTable(s, VereinTable.TABLENAME)) {
+						m_clJDBCAdapter.executeUpdate(String.format("ALTER TABLE VEREIN ADD COLUMN %s INTEGER", s));
+					}
+				} catch (SQLException e) {
+					HOLogger.instance().log(getClass(), e);
+				}
+			});
+
+			Arrays.asList("TWTrainer", "Physiologen").forEach(s -> {
+				try {
+					if (columnExistsInTable(s, VereinTable.TABLENAME)) {
+						m_clJDBCAdapter.executeUpdate("ALTER TABLE VEREIN DROP " + s);
+					}
+				} catch (SQLException e) {
+					HOLogger.instance().log(getClass(), e);
+				}
+			});
 
 			updateDBVersion(dbVersion, version);
       

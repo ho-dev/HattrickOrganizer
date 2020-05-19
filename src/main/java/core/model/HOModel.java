@@ -706,10 +706,8 @@ public class HOModel {
     }
    
     /**
-     * speichert das Model in der DB
+     * save the model in the database
      */
-
-    //java.sql.Timestamp hrfDateiDatum )
     public final synchronized void saveHRF() {
         DBManager.instance().saveHRF(m_iID,
         		java.text.DateFormat.getDateTimeInstance().format(new java.util.Date(

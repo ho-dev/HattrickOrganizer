@@ -15,21 +15,23 @@ final class VereinTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns 	= new ColumnDescriptor[14];
+		columns 	= new ColumnDescriptor[16];
 		columns[0]	= new ColumnDescriptor( "HRF_ID",		Types.INTEGER,false, true );
-		columns[1]	= new ColumnDescriptor( "TWTrainer",	Types.INTEGER,false );
-		columns[2]	= new ColumnDescriptor( "COTrainer",	Types.INTEGER,false );
-		columns[3]	= new ColumnDescriptor( "Physiologen",	Types.INTEGER,false );
-		columns[4]	= new ColumnDescriptor( "Pschyologen",	Types.INTEGER,false );
-		columns[5]	= new ColumnDescriptor( "Finanzberater",Types.INTEGER,false );
-		columns[6]	= new ColumnDescriptor( "PRManager",	Types.INTEGER,false );
-		columns[7]	= new ColumnDescriptor( "Aerzte",		Types.INTEGER,false );
-		columns[8]	= new ColumnDescriptor( "Jugend",		Types.INTEGER,false );
-		columns[9]	= new ColumnDescriptor( "Siege",		Types.INTEGER,false );
-		columns[10]	= new ColumnDescriptor( "Ungeschlagen",	Types.INTEGER,false );
-		columns[11]	= new ColumnDescriptor( "Fans",			Types.INTEGER,false );
-		columns[12]	= new ColumnDescriptor( "TacticAssist",	Types.INTEGER,false );
-		columns[13]	= new ColumnDescriptor( "FormAssist",	Types.INTEGER,false );
+		columns[1]	= new ColumnDescriptor( "COTrainer",		Types.INTEGER,false );
+		columns[2]	= new ColumnDescriptor( "Pschyologen",	Types.INTEGER,false );
+		columns[3]	= new ColumnDescriptor( "Finanzberater", Types.INTEGER,false );
+		columns[4]	= new ColumnDescriptor( "PRManager",		Types.INTEGER,false );
+		columns[5]	= new ColumnDescriptor( "Aerzte",		Types.INTEGER,false );
+		columns[6]	= new ColumnDescriptor( "Jugend",		Types.INTEGER,false );
+		columns[7]	= new ColumnDescriptor( "Siege",			Types.INTEGER,false );
+		columns[8]	= new ColumnDescriptor( "Ungeschlagen",	Types.INTEGER,false );
+		columns[9]	= new ColumnDescriptor( "Fans",			Types.INTEGER,false );
+		columns[10]	= new ColumnDescriptor( "TacticAssist",	Types.INTEGER,false );
+		columns[11]	= new ColumnDescriptor( "FormAssist",	Types.INTEGER,false );
+		columns[12]	= new ColumnDescriptor( "GlobalRanking",	Types.INTEGER,false );
+		columns[13]	= new ColumnDescriptor( "LeagueRanking",	Types.INTEGER,false );
+		columns[14]	= new ColumnDescriptor( "RegionRanking",	Types.INTEGER,false );
+		columns[15]	= new ColumnDescriptor( "PowerRating",	Types.INTEGER,false );
 	}
 
 	@Override
@@ -41,23 +43,20 @@ final class VereinTable extends AbstractTable {
 	 * speichert das Verein
 	 */
 	void saveVerein(int hrfId, Verein verein) {
-		String statement = null;
+		String statement ;
 		final String[] awhereS = { "HRF_ID" };
 		final String[] awhereV = { "" + hrfId };
 
 		if (verein != null) {
-			//erst Vorhandene Aufstellung löschen
+			//first delete existing entry
 			delete( awhereS, awhereV );
 
-			//insert vorbereiten
-			statement = "INSERT INTO "+getTableName()+" ( TWTrainer , COTrainer , Physiologen , Pschyologen , Finanzberater , PRManager , Aerzte , Jugend , Siege , Ungeschlagen , Fans , TacticAssist , FormAssist, HRF_ID ) VALUES(";
+			//create sql insertion statement
+			statement = "INSERT INTO "+getTableName()+" ( COTrainer , Pschyologen , Finanzberater , PRManager , Aerzte , Jugend , Siege , " +
+					"Ungeschlagen , Fans , GlobalRanking , LeagueRanking , RegionRanking , PowerRating , TacticAssist , FormAssist, HRF_ID ) VALUES(";
 			statement
 				+= (""
-					+ 0
-					+ ","
 					+ verein.getCoTrainer()
-					+ ","
-					+ verein.getMasseure()
 					+ ","
 					+ verein.getPsychologen()
 					+ ","
@@ -75,6 +74,14 @@ final class VereinTable extends AbstractTable {
 					+ ","
 					+ verein.getFans()
 					+ ","
+					+ verein.getGlobalRanking()
+					+ ","
+					+ verein.getLeagueRanking()
+					+ ","
+					+ verein.getRegionRanking()
+					+ ","
+					+ verein.getPowerRating()
+					+ ","
 					+ verein.getTacticalAssistantLevels()
 					+ ","
 					+ verein.getFormCoachLevels()
@@ -89,9 +96,9 @@ final class VereinTable extends AbstractTable {
 	 * lädt die Basics zum angegeben HRF file ein
 	 */
 	Verein getVerein(int hrfID) {
-		ResultSet rs = null;
+		ResultSet rs ;
 		Verein verein = null;
-		String sql = null;
+		String sql ;
 
 		sql = "SELECT * FROM "+getTableName()+" WHERE HRF_ID = " + hrfID;
 		rs = adapter.executeQuery(sql);
