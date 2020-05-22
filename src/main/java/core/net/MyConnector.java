@@ -610,14 +610,6 @@ public class MyConnector {
 		return "-1";
 	}
 
-	public String fetchArenaID(int teamId)
-	{
-		String xml = fetchTeamDetails(teamId);
-		if ( xml.length()>0){
-			return XMLTeamDetailsParser.fetchArenaID(xml);
-		}
-		return "-1";
-	}
 
 	public String fetchTeamDetails(int teamId)
 	{
@@ -638,14 +630,6 @@ public class MyConnector {
 		return getNonCHPPWebFile(url, false);
 	}
 
-//	public String getUsalWebPage(String url, boolean displaysettingsScreen) throws IOException {
-//		if (displaysettingsScreen) {
-//			// Show Proxy Screen
-//			new ProxyDialog(HOMainFrame.instance());
-//		}
-//
-//		return getWebPage(url, true);
-//	}
 
 	/**
 	 * Get a web page using a URLconnection.
