@@ -44,6 +44,7 @@ import module.teamAnalyzer.vo.PlayerInfo;
 import module.transfer.PlayerTransfer;
 import module.transfer.scout.ScoutEintrag;
 import tool.arenasizer.Stadium;
+import org.hsqldb.error.ErrorCode;
 
 import java.io.File;
 import java.sql.ResultSet;
@@ -146,7 +147,10 @@ public class DBManager {
 				String msg = e.getMessage();
 				boolean recover = User.getCurrentUser().isHSQLDB();
 
-				if (msg.indexOf("The database is already in use by another process") > -1) {
+				if ((msg.indexOf("The database is already in use by another process") > -1)	||
+						(e instanceof SQLException &&
+							(((SQLException)e).getErrorCode() == ErrorCode.LOCK_FILE_ACQUISITION_FAILURE ||
+									((SQLException)e).getErrorCode() == ErrorCode.LOCK_FILE_ACQUISITION_FAILURE * -1))) {
 					if ((msg.indexOf("Permission denied") > -1)
 							|| msg.indexOf("system cannot find the path") > -1) {
 						msg = "Could not write to database. Make sure you have write access to the HO directory and its sub-directories.\n"
