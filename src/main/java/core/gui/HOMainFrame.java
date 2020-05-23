@@ -170,7 +170,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		if(teamName.equals("")){
 		setTitle("HO! - Hattrick Organizer " + getVersionString());}
 		else{
-			setTitle("HO! - Hattrick Organizer " + getVersionString() + " - " + teamName);}
+			setTitle("HO! - Hattrick Organizer " + getVersionString() + " - " + teamName
+					+ " - " + System.getProperty("java.version"));}
 
 		if (HO.isDevelopment()) {
 			this.setIconImage(ThemeManager.getIcon(HOIconName.LOGO16_DEV).getImage());

@@ -6,17 +6,16 @@ plugins {
     id 'application'
     id "nebula.ospackage" version "8.3.0"
     id 'de.jansauer.poeditor' version '1.0.0'
-    id "org.kordamp.markdown.convert" version "1.2.0"
+    id 'org.kordamp.gradle.markdown' version '2.2.0'
     id "com.dorongold.task-tree" version "1.5"
     id "com.github.breadmoirai.github-release" version "2.2.10"
+
+    // Plugins for java 14 packaging.
+    id 'org.javamodularity.moduleplugin' version '1.6.0'
     id 'org.beryx.jlink' version '2.19.0'
 }
 
-apply plugin: 'java'
-apply plugin: 'application'
-
 repositories {
-    mavenCentral()
     jcenter()
 }
 
@@ -32,23 +31,6 @@ dependencies {
 }
 
 // endregion
-
-compileJava {
-    inputs.property("moduleName", 'ho')
-    doFirst {
-        options.compilerArgs = [
-                '--module-path', classpath.asPath,
-                '--add-modules', 'java.desktop',
-                '--add-modules', 'java.sql',
-                '--add-modules', 'okhttp3',
-                '--add-modules', 'scribejava.core',
-                '--add-modules', 'com.google.gson',
-                '--add-exports', 'java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED'
-        ]
-        classpath = files()
-    }
-}
-
 
 //  Version ============================================================
 // Major.minor.Development_stage.Build
@@ -160,15 +142,24 @@ distributions {
     }
 }
 
-// Configure macAppBundle task =======================
-//macAppBundle {
-//    mainClassName = "HOLauncher"
-//    icon = "${project.ext.osx_app_dir_sourcedir}/HO.icns"
-//    bundleJRE = false // true #issue-198
-//    javaProperties.put("apple.laf.useScreenMenuBar", "true")
-//    javaProperties.put("apple.awt.showGrowBox", "true")
-//    backgroundImage = "${project.ext.osx_app_dir_sourcedir}/Back.png"
-//}
+// Configure jlink task =======================
+jlink {
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    mergedModule {
+        requires 'java.desktop'
+        requires 'java.sql'
+    }
+    launcher {
+        name = 'HO'
+        jvmArgs = ['-Dapple.laf.useScreenMenuBar=true', '-Dapple.awt.showGrowBox=true']
+    }
+    jpackage {
+        imageOptions = [
+                '--icon', "${projectDir}/buildResources/Mac/HO.icns",
+                '--resource-dir', "${projectDir}/buildResources/Mac"
+        ]
+    }
+}
 
 // Configure ospackage and buildDeb tasks ============
 ospackage {
@@ -549,7 +540,7 @@ task compute_sha_sums(dependsOn: updatebuildreferences){
     }
 }
 
-task resetDB(){
+task resetDB {
     group 'tool'
     description 'copy the database from existing install into project'
 
@@ -629,23 +620,6 @@ githubRelease {
             overwrite = true
         }
     }
-
-}
-
-jlink {
-    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
-    launcher {
-        name = 'HO'
-        jvmArgs = ['-Dapple.laf.useScreenMenuBar=true', '-Dapple.awt.showGroupBox=true']
-    }
-
-//     mergedModule {
-//         requires 'java.desktop'
-//         requires 'java.sql';
-//         requires 'okhttp3';
-//         requires 'scribejava.core';
-//         requires 'com.google.gson';
-//    }
 }
 
 //// make every other task depend on 'initializer'

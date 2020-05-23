@@ -128,6 +128,5 @@ public class Credits {
 				HOLogger.instance().log(HOMainFrame.class, ex);
 			}
 		}
-
 	}
 }
