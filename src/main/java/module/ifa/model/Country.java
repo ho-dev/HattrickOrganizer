@@ -22,7 +22,7 @@ public class Country {
 	}
 
 	public ImageIcon getCountryFlag() {
-		return ImageUtilities.getFlagIcon(this.countryId);
+		return ImageUtilities.getCountryFlagIcon(this.countryId);
 	}
 
 }
