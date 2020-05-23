@@ -38,7 +38,9 @@ public class SystemManager {
 	public final static String ISSHOWPLAYERINFO = "TA_isShowPlayerInfo";
 	public final static String ISCHECKTEAMNAME = "TA_isCheckTeamName";
 
-	/** The Selected Team */
+	/**
+	 * The Selected Team
+	 */
 	private static Team selectedTeam;
 
 	/** Boolean for the updating process being ongoing */
