@@ -8,8 +8,9 @@ import core.model.UserParameter;
 import core.prediction.engine.MatchPredictionManager;
 import core.prediction.engine.MatchResult;
 import core.prediction.engine.TeamData;
-import module.teamAnalyzer.manager.ReportManager;
-import module.teamAnalyzer.vo.TeamLineup;
+import core.prediction.engine.TeamRatings;
+import module.teamAnalyzer.SystemManager;
+import module.teamAnalyzer.vo.MatchRating;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -73,12 +74,20 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 		return slider.getValue();
 	}
 
-
 	public final void actionPerformed(ActionEvent e) {
 		calculateNMatches(getNumberOfMatches());
 		if ( opponentTeamPanel.isRatingsChanged()){
 			// user has changed the match ratings
-			ReportManager.SetAdjustedLineup(opponentTeamPanel.getTeamData());
+			TeamRatings adjusted = opponentTeamPanel.getTeamData().getRatings();
+			MatchRating newRatings = new MatchRating();
+			newRatings.setRightDefense(adjusted.getRightDef());
+			newRatings.setRightAttack(adjusted.getRightAttack());
+			newRatings.setMidfield(adjusted.getMidfield());
+			newRatings.setLeftDefense(adjusted.getLeftDef());
+			newRatings.setLeftAttack(adjusted.getLeftAttack());
+			newRatings.setCentralDefense(adjusted.getMiddleDef());
+			newRatings.setCentralAttack(adjusted.getMiddleAttack());
+			SystemManager.teamReport.adjustRatingsLineup(newRatings);
 		}
 	}
 

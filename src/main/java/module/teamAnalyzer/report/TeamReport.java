@@ -2,15 +2,20 @@
 package module.teamAnalyzer.report;
 
 import core.model.HOVerwaltung;
+import core.module.config.ModuleConfig;
 import core.specialevents.SpecialEventsPredictionManager;
 import module.lineup.Lineup;
+import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
+import module.teamAnalyzer.manager.TeamLineupBuilder;
 import module.teamAnalyzer.vo.MatchDetail;
 import module.teamAnalyzer.vo.MatchRating;
 import module.teamAnalyzer.vo.PlayerPerformance;
+import module.teamAnalyzer.vo.TeamLineup;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -20,32 +25,81 @@ import java.util.Map;
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class TeamReport {
+
+    private TeamLineup adjustedRatingsLineup;
+    private TeamLineup averageRatingslineup;
+    private List<MatchDetail> matchDetails;
+    private SpecialEventsPredictionManager specialEventsPredictionManager;
+
+    private int selection=0;
+
+
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Map of SpotReport */
-    private Map<Integer,SpotReport> spotReports;
+    private Map<Integer,SpotReport> spotReports = new LinkedHashMap<>();
 
     /** Match Ratings */
-    private MatchRating rating;
+    private MatchRating rating  = new MatchRating();
 
     /** Average stars */
-    private double averageStars;
+    private double averageStars = 0d;
 
     /** Number of matches considered */
-    private int matchNumber;
+    private int matchNumber = 0;
 
-    private SpecialEventsPredictionManager specialEventsPredictionManager;
 
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
      * Creates a new TeamReport object.
      */
-    public TeamReport() {
-        spotReports = new LinkedHashMap<Integer,SpotReport>();
-        rating = new MatchRating();
-        matchNumber = 0;
-        averageStars = 0d;
+    public TeamReport(List<MatchDetail> matchDetails) {
+        this.matchDetails = matchDetails;
+        for (MatchDetail m:matchDetails ) {
+            addMatch(m, ModuleConfig.instance().getBoolean(SystemManager.ISSHOWUNAVAILABLE));
+        }
+        this.averageRatingslineup = new TeamLineupBuilder(this)
+                .setName(HOVerwaltung.instance().getLanguageString("Durchschnitt")).build();
+    }
+
+    private TeamReport(MatchDetail matchDetail) {
+        addMatch(matchDetail,ModuleConfig.instance().getBoolean(SystemManager.ISSHOWUNAVAILABLE));
+        this.averageRatingslineup = new TeamLineupBuilder(this).setMatchDetail(matchDetail).build();
+    }
+
+    public int size() {
+        int ret = this.matchDetails.size()+1;
+        if ( this.adjustedRatingsLineup != null) ret++;
+        return ret;
+    }
+
+    public TeamLineup getLineup(int selection)
+    {
+        this.selection=selection;
+        if ( selection == 0 ){
+            return this.averageRatingslineup;
+        }
+        else {
+            int offset = 1;
+            if (this.adjustedRatingsLineup != null) {
+                if (selection == 1) {
+                    return this.adjustedRatingsLineup;
+                }
+                offset = 2;
+            }
+            int matchNumber = selection - offset;
+            // create a team report of one single match
+            TeamReport report = new TeamReport(matchDetails.get(matchNumber));
+            return report.getLineup(0);
+        }
+    }
+
+    public void adjustRatingsLineup(MatchRating newRatings) {
+        // copy of selected lineup
+        adjustedRatingsLineup =  new TeamLineupBuilder(new TeamReport(getLineup(selection).getMatchDetail()))
+                .setMatchRating(newRatings)
+                .setName(HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.Adjusted")).build();
     }
 
     //~ Methods ------------------------------------------------------------------------------------

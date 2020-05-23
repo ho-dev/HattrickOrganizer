@@ -5,7 +5,6 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.module.config.ModuleConfig;
 import module.teamAnalyzer.SystemManager;
-import module.teamAnalyzer.manager.ReportManager;
 import module.teamAnalyzer.ui.controller.SimButtonListener;
 import module.teamAnalyzer.vo.Filter;
 import module.teamAnalyzer.vo.TeamLineup;
@@ -125,14 +124,12 @@ public class TeamAnalyzerPanel extends LazyPanel {
 	}
 
 	public void reload() {
-		TeamLineup lineup = ReportManager.getLineup();
 		getFilterPanel().reload();
+		getMainPanel().reload(SystemManager.teamReport.getLineup(0), 0, 0);
+		getRecapPanel().reload(SystemManager.teamReport);
+		getRatingPanel().reload(SystemManager.teamReport.getLineup(0));
 
-		getMainPanel().reload(lineup, 0, 0);
-		getRecapPanel().reload(lineup, ReportManager.adjustedLineup);
-		getRatingPanel().reload(lineup);
-
-		getSpecialEventsPanel().reload(lineup);
+		getSpecialEventsPanel().reload(SystemManager.teamReport.getLineup(0));
 
 		if (ModuleConfig.instance().getBoolean(SystemManager.ISLINEUP)) {
 			this.simButton.setVisible(true);

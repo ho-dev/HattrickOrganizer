@@ -9,7 +9,7 @@ import core.model.match.Matchdetails;
 import core.module.config.ModuleConfig;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.MatchPopulator;
-import module.teamAnalyzer.manager.TeamLineupBuilder;
+import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.controller.RecapListSelectionListener;
 import module.teamAnalyzer.ui.model.UiRecapTableModel;
 import module.teamAnalyzer.vo.Match;
@@ -81,97 +81,18 @@ public class RecapPanel extends JPanel {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public void reload(TeamLineup lineup, TeamLineup adjusted) {
+    public void reload(TeamReport teamReport) {
         // Empty model
         while (tableModel.getRowCount() > 0) {
             tableModel.removeRow(0);
         }
 
-        if ( adjusted != null) {
-            TeamLineupBuilder builder = new TeamLineupBuilder(adjusted);
-            adjustedLineup = builder.getLineup();
-        }
-        else {
-            adjustedLineup = null;
-        }
-        List<MatchDetail> list = MatchPopulator.getAnalyzedMatch();
-        Vector<Object> rowData;
-
-        if (list.size() > 1) {
-            rowData = AddSpecialLineup(lineup, HOVerwaltung.instance().getLanguageString("Durchschnitt") );
-            if( rowData != null) tableModel.addRow(rowData);
-            rowData = AddSpecialLineup(adjustedLineup, HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.Adjusted"));
-            if( rowData != null) tableModel.addRow(rowData);
-            table.getSelectionModel().setSelectionInterval(0, 0);
+        for ( int i =0; i < SystemManager.teamReport.size(); i++){
+            tableModel.addRow(AddLineup(SystemManager.teamReport.getLineup(i)));
         }
 
-        for (Iterator<MatchDetail> iter = list.iterator(); iter.hasNext();) {
-            MatchDetail matchDetail = (MatchDetail) iter.next();
-
-            rowData = new Vector<Object>();
-
-            Match match = matchDetail.getMatchDetail();
-
-            MatchType matchType = match.getMatchType();
-            boolean isHomeMatch = match.isHome();
-
-            // Columns 0-2
-            if (isHomeMatch) {
-                rowData.add(match.getAwayTeam());
-                rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
-                rowData.add(match.getHomeGoals() + GOALS_SPACE + match.getAwayGoals());
-            } else {
-                rowData.add("* " + match.getHomeTeam()); //$NON-NLS-1$
-                rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
-                rowData.add(match.getAwayGoals() + GOALS_SPACE + match.getHomeGoals());
-            }
-
-            // Columns 3 & 4
-            rowData.add(match.getWeek() + ""); //$NON-NLS-1$
-            rowData.add(match.getSeason() + ""); //$NON-NLS-1$
-
-            // Columns 5-11
-            setRating(rowData, matchDetail.getRating());
-
-            DecimalFormat df = new DecimalFormat("###.#"); //$NON-NLS-1$
-
-            // Columns 12-15
-            rowData.add(df.format(matchDetail.getStars()));
-            if (matchDetail.getRating().getHatStats() >= 0) {
-                rowData.add(df.format(matchDetail.getRating().getHatStats()));
-            } else {
-                rowData.add("");
-            }
-            rowData.add(df.format(matchDetail.getRating().getSquad()));
-            if (matchDetail.getStars() != 0.0) {
-                rowData.add(df.format(matchDetail.getRating().getSquad() / matchDetail.getStars()));
-            } else {
-                rowData.add("");
-            }
-
-            DecimalFormat df2 = new DecimalFormat("###.##"); //$NON-NLS-1$
-
-            // Columns 16-17
-            rowData.add(df2.format(matchDetail.getRating().getLoddarStats()));
-            rowData.add(Matchdetails.getNameForTaktik(matchDetail.getTacticCode()));
-
-            // Column 18
-            if (matchDetail.getTacticCode() == 0) {
-                rowData.add(VALUE_NA);
-            } else {
-                rowData.add(PlayerAbility.getNameForSkill(matchDetail.getTacticLevel(), false));
-            }
-
-            // Columns 19-21
-            rowData.add(matchDetail.getFormation());
-            rowData.add(new Integer(matchType.getId()));
-            rowData.add(new Boolean(isHomeMatch));
-
-            tableModel.addRow(rowData);
-        }
-
-        if (list.size() == 0) {
-            rowData = new Vector<Object>();
+        if (SystemManager.teamReport.size() == 0) {
+            Vector<Object> rowData = new Vector<Object>();
             rowData.add(HOVerwaltung.instance().getLanguageString("RecapPanel.NoMatch")); //$NON-NLS-1$
             tableModel.addRow(rowData);
         }
@@ -217,44 +138,57 @@ public class RecapPanel extends JPanel {
         setColumnInvisible(21);
     }
 
-    private Vector<Object> AddSpecialLineup(TeamLineup lineup, String lineupName) {
+    private Vector<Object> AddLineup(TeamLineup lineup) {
         if ( lineup == null) return null;
 
-        MatchRating rating = lineup.getRating();
-        double stars = lineup.getStars();
         Vector<Object> rowData = new Vector<Object>();
-        rowData.add(lineupName);
-        rowData.add(VALUE_NA);
-        rowData.add(VALUE_NA);
-        rowData.add(VALUE_NA);
-        rowData.add(VALUE_NA);
+
+        rowData.add(lineup.getName());
+        MatchType matchType = lineup.getMatchType();
+        rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()])); // NONE->Default, TODO: check if that is OK
+        rowData.add(lineup.getResult());
+
+
+        // Columns 3 & 4
+        rowData.add(lineup.getWeek()); //$NON-NLS-1$
+        rowData.add(lineup.getSeason()); //$NON-NLS-1$
+
+        // Columns 5-11
         setRating(rowData, lineup.getRating());
 
-        DecimalFormat df = new DecimalFormat("###.#");
+        DecimalFormat df = new DecimalFormat("###.#"); //$NON-NLS-1$
 
-        rowData.add(df.format(stars));
-        if(rating !=null) {
-            rowData.add(df.format(rating.getHatStats()));
-            rowData.add(df.format(rating.getSquad()));
-            if (stars > 0) {
-                rowData.add(df.format(rating.getSquad() / stars));
-            } else {
-                rowData.add(df.format(0));
-            }
-            rowData.add(df.format(rating.getLoddarStats()));
+        // Columns 12-15
+        rowData.add(df.format(lineup.getStars()));
+        if (lineup.getRating().getHatStats() >= 0) {
+            rowData.add(df.format(lineup.getRating().getHatStats()));
         } else {
-            rowData.add(df.format(0));
-            rowData.add(df.format(0));
-            rowData.add(df.format(0));
-            rowData.add(df.format(0));
+            rowData.add("");
         }
-        rowData.add(VALUE_NA);
-        rowData.add(VALUE_NA);
-        rowData.add(VALUE_NA);
-        rowData.add(VALUE_NA);
-        rowData.add("");
-        rowData.add("");
+        rowData.add(df.format(lineup.getRating().getSquad()));
+        if (lineup.getStars() != 0.0) {
+            rowData.add(df.format(lineup.getRating().getSquad() / lineup.getStars()));
+        } else {
+            rowData.add("");
+        }
 
+        DecimalFormat df2 = new DecimalFormat("###.##"); //$NON-NLS-1$
+
+        // Columns 16-17
+        rowData.add(df2.format(lineup.getRating().getLoddarStats()));
+        rowData.add(Matchdetails.getNameForTaktik(lineup.getTacticCode()));
+
+        // Column 18
+        if (lineup.getTacticCode() == 0) {
+            rowData.add(VALUE_NA);
+        } else {
+            rowData.add(PlayerAbility.getNameForSkill(lineup.getTacticLevel(), false));
+        }
+
+        // Columns 19-21
+        rowData.add(lineup.getFormation());
+        rowData.add(new Integer(matchType.getId()));
+        rowData.add(new Boolean(lineup.isHomeMatch()));
         return rowData;
     }
 

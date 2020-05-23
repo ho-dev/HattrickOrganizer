@@ -5,12 +5,16 @@ import core.model.HOVerwaltung;
 import module.teamAnalyzer.manager.MatchManager;
 import module.teamAnalyzer.manager.MatchPopulator;
 import module.teamAnalyzer.manager.NameManager;
-import module.teamAnalyzer.manager.ReportManager;
 import module.teamAnalyzer.manager.TeamManager;
+import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.TeamAnalyzerPanel;
+import module.teamAnalyzer.vo.Match;
+import module.teamAnalyzer.vo.MatchDetail;
 import module.teamAnalyzer.vo.Team;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This is a class where all the relevant and shared plugin info are kept
@@ -32,27 +36,39 @@ public class SystemManager {
 	public final static String ISSHOWPLAYERINFO = "TA_isShowPlayerInfo";
 	public final static String ISCHECKTEAMNAME = "TA_isCheckTeamName";
 
-	/** The Selected Team */
+	/**
+	 * The Selected Team
+	 */
 	private static Team selectedTeam;
 
-	/** The next league opponent team */
+	/**
+	 * The next league opponent team
+	 */
 	private static Team leagueOpponent;
 
-	/** The next cup/friendly opponent team */
+	/**
+	 * The next cup/friendly opponent team
+	 */
 	private static Team cupOpponent;
 
-	/** The next tournament opponent team */
+	/**
+	 * The next tournament opponent team
+	 */
 	private static Team tournamentOpponent;
 
-	/** Boolean for the updating process being ongoing */
+	/**
+	 * Boolean for the updating process being ongoing
+	 */
 	private static boolean updating = false;
 
-	/** Reference to the plugin itself */
+	/**
+	 * Reference to the plugin itself
+	 */
 	private static TeamAnalyzerPanel plugin;
 
 	/**
 	 * Set the active team
-	 * 
+	 *
 	 * @param team
 	 */
 	public static void setActiveTeam(Team team) {
@@ -61,7 +77,7 @@ public class SystemManager {
 
 	/**
 	 * Get the active team ID
-	 * 
+	 *
 	 * @return
 	 */
 	public static int getActiveTeamId() {
@@ -70,7 +86,7 @@ public class SystemManager {
 
 	/**
 	 * Get the active team Name
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getActiveTeamName() {
@@ -79,7 +95,7 @@ public class SystemManager {
 
 	/**
 	 * Get next cup/friendly opponent team Id
-	 * 
+	 *
 	 * @return
 	 */
 	public static int getCupOpponentId() {
@@ -88,7 +104,7 @@ public class SystemManager {
 
 	/**
 	 * Get next league opponent team Id
-	 * 
+	 *
 	 * @return
 	 */
 	public static int getLeagueOpponentId() {
@@ -97,7 +113,7 @@ public class SystemManager {
 
 	/**
 	 * Get next tournament opponent team Id
-	 * 
+	 *
 	 * @return
 	 */
 	public static int getTournamentOpponentId() {
@@ -106,7 +122,7 @@ public class SystemManager {
 
 	/**
 	 * Returns the main Plugin class
-	 * 
+	 *
 	 * @return
 	 */
 	public static TeamAnalyzerPanel getPlugin() {
@@ -115,9 +131,8 @@ public class SystemManager {
 
 	/**
 	 * Initialize the instance
-	 * 
-	 * @param aPlugin
-	 *            main plugin class
+	 *
+	 * @param aPlugin main plugin class
 	 */
 	public static void initialize(TeamAnalyzerPanel aPlugin) {
 		plugin = aPlugin;
@@ -151,7 +166,7 @@ public class SystemManager {
 			NameManager.clean();
 			TeamAnalyzerPanel.filter.setMatches(new ArrayList<String>());
 
-			ReportManager.clean();
+			teamReport = null; //ReportManager.clean();
 			MatchPopulator.clean();
 			MatchManager.clean();
 			plugin.getMainPanel().reload(null, 0, 0);
@@ -173,12 +188,26 @@ public class SystemManager {
 		}
 	}
 
+	public static TeamReport teamReport;
+
 	/**
 	 * Recalculate the report
 	 */
 	public static void updateReport() {
 		updating = true;
-		ReportManager.updateReport();
+		List<MatchDetail> matchDetails = MatchManager.getMatchDetails();
+		if (MatchPopulator.getAnalyzedMatch().size() > 0) {
+			teamReport = new TeamReport(matchDetails);
+		} else {
+			teamReport = null;
+		}
+		List<String> filterList = new ArrayList<String>();
+		for (Iterator<Match> iter = MatchManager.getSelectedMatches().iterator(); iter.hasNext(); ) {
+			Match match = iter.next();
+
+			filterList.add("" + match.getMatchId());
+		}
+		TeamAnalyzerPanel.filter.setMatches(filterList);
 		updating = false;
 		updateUI();
 	}
