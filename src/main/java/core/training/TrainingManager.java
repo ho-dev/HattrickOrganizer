@@ -122,34 +122,18 @@ public class TrainingManager {
 	                MatchStatistics ms = new MatchStatistics(matchId, mlt);
 					MatchType type = mlt.getMatchType();
 					if ( type != MatchType.MASTERS) { // MASTERS counts only for experience
-						if (wt.getPrimaryTrainingSkillPositions() != null) {
-							tp.addPrimarySkillPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillPositions()));
-						}
-						if (wt.getPrimaryTrainingSkillBonusPositions() != null) {
-							tp.addPrimarySkillBonusPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillBonusPositions()));
-						}
-						if (wt.getPrimaryTrainingSkillSecondaryTrainingPositions() != null) {
-							tp.addPrimarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillSecondaryTrainingPositions()));
-						}
-						if (wt.getPrimaryTrainingSkillOsmosisTrainingPositions() != null) {
-							tp.addPrimarySkillOsmosisPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillOsmosisTrainingPositions()));
-						}
-						if (wt.getSecondaryTrainingSkillPositions() != null) {
-							tp.addSecondarySkillPrimaryMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillPositions()));
-						}
-						if (wt.getSecondaryTrainingSkillBonusPositions() != null) {
-							tp.addSecondarySkillBonusMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillBonusPositions()));
-						}
-						if (wt.getSecondaryTrainingSkillSecondaryTrainingPositions() != null) {
-							tp.addSecondarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillSecondaryTrainingPositions()));
-						}
-						if (wt.getSecondaryTrainingSkillOsmosisTrainingPositions() != null) {
-							tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillOsmosisTrainingPositions()));
-						}
+						tp.addPrimarySkillPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillPositions()));
+						tp.addPrimarySkillBonusPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillBonusPositions()));
+						tp.addPrimarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillSecondaryTrainingPositions()));
+						tp.addPrimarySkillOsmosisPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillOsmosisTrainingPositions()));
+						tp.addSecondarySkillPrimaryMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillPositions()));
+						tp.addSecondarySkillBonusMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillBonusPositions()));
+						tp.addSecondarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillSecondaryTrainingPositions()));
+						tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillOsmosisTrainingPositions()));
 					}
-					output.addExperienceIncrease(min(90,tp.getMinutesPlayed() - minutes), type );
-	                minutes = tp.getMinutesPlayed();
-
+					tp.addTotalMinutesPlayed(ms.getTrainMinutesPlayedInPositions(playerID, null));
+					output.addExperienceIncrease(min(90,tp.getTotalMinutesPlayed() - minutes), type );
+	                minutes = tp.getTotalMinutesPlayed();
 				}
 	            TrainingPoints trp = new TrainingPoints(wt.getPrimaryTraining(tp), wt.getSecondaryTraining(tp));
 
@@ -169,7 +153,7 @@ public class TrainingManager {
 	    		if (TrainingManager.TRAININGDEBUG) {
 					HOLogger.instance().debug(getClass(), "Week " + train.getHattrickWeek()
 	            		+": Player " + player.getFullName() + " (" + playerID + ")"
-	            		+" played total " + tp.getMinutesPlayed() + " mins for training purposes and got "
+	            		+" played total " + tp.getTotalMinutesPlayed() + " mins for training purposes and got "
 	            		+ wt.getPrimaryTraining(tp) + " primary training points and "
 	            		+ wt.getSecondaryTraining(tp) + " secondary training points");
 	    		}

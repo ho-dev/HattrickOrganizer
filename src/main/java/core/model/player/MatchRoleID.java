@@ -29,7 +29,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	 */
 	public static final CBItem[] POSITIONEN = {
 			new CBItem(MatchRoleID.getNameForPosition(UNKNOWN), UNKNOWN),
-			new CBItem(MatchRoleID.getNameForPosition(COACH), COACH),
+			new CBItem(MatchRoleID.getNameForPosition(UNSELECTABLE), UNSELECTABLE),
 			new CBItem(MatchRoleID.getNameForPosition(KEEPER), KEEPER),
 			new CBItem(MatchRoleID.getNameForPosition(CENTRAL_DEFENDER), CENTRAL_DEFENDER),
 			new CBItem(MatchRoleID.getNameForPosition(CENTRAL_DEFENDER_OFF), CENTRAL_DEFENDER_OFF),
@@ -426,11 +426,10 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		case SUBSTITUTED3:
 			return HOVerwaltung.instance().getLanguageString("Ausgewechselt");
 
-		case COACH:
-			return HOVerwaltung.instance().getLanguageString("Trainer");
+		case UNSELECTABLE:
+			return HOVerwaltung.instance().getLanguageString("Unselectable");
 
-			// HOLogger.instance().log(getClass(), "Unbestimmte Position: " +
-			// posId );
+
 		default:
 			return HOVerwaltung.instance().getLanguageString("Unbestimmt");
 		}

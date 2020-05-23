@@ -27,6 +27,7 @@ combinations = {"missed_penalty.png": (("miss.png", "penalty.png"), "v"),
                 "me_184.png": (("goal.png", "penalty.png"), "v"),
                 "me_185.png": (("goal.png", "indirect.png"), "v"),
                 "me_186.png": (("goal.png", "counter_attack.png", "indirect.png"), "v3"),
+                "me_190.png": (("goal.png", "speciality-3.png"), "v"),
                 "me_no_goal_unpredictable.png": (("miss.png", "speciality-4.png"), "v"),   #205, 206, 208
                 "me_miss_longshot.png": (("miss.png", "longshot.png"), "v"),   #207, 287
                 "me_209.png": (("miss.png", "speciality-4-negative.png"), "h"),
@@ -46,6 +47,7 @@ combinations = {"missed_penalty.png": (("miss.png", "penalty.png"), "v"),
                 "me_285.png": (("miss.png", "indirect.png"), "v"),
                 "me_286.png": (("miss.png", "counter_attack.png", "indirect.png"), "v3"),
                 "me_289.png": (("speciality-2-negative.png", "speciality-2.png"), "h"),
+                "me_290.png": (("miss.png", "speciality-3.png"), "v"),
                 "me_YellowThenRed.png": (("yellow-card(yellow).png", "red-card(red).png"), "v")   #512, 513
                 }
 

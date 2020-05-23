@@ -24,6 +24,7 @@ import core.gui.theme.ThemeManager;
 import core.model.FactorObject;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
+import core.model.match.MatchKurzInfo;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -49,6 +50,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 import static core.model.player.IMatchRoleID.UNKNOWN;
+import static core.model.player.IMatchRoleID.UNSELECTABLE;
 
 /**
  * Shows player details for the selected player
@@ -362,9 +364,12 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jpAge.setText(m_clPlayer.getAgeStringFull());
         if (m_clPlayer.getLastMatchRating() > 0) {
             m_jpLastMatchRating.setYellowStar(true);
-            m_jpLastMatchRating.setRating((float)m_clPlayer.getLastMatchRating());
-            m_jpLastMatchRating.setText(m_clPlayer.getLastMatchDate());
-            m_jpLastMatchRating.getLabelMatch();
+            MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(m_clPlayer.getLastMatchId());
+            if (info != null) {
+                m_jpLastMatchRating.setRating((float)m_clPlayer.getLastMatchRating());
+                m_jpLastMatchRating.setMatchInfo(m_clPlayer.getLastMatchDate(), info.getMatchTyp());
+                m_jpLastMatchRating.getLabelMatch();
+            }
         }
         m_jpNationality.setIcon(ImageUtilities.getFlagIcon(m_clPlayer.getNationalitaet()));
         if (m_clPlayer.isHomeGrown())
@@ -681,17 +686,9 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         initNormalLabel(0, 3, constraints, layout, panel, label);
         initNormalField(1, 3, constraints, layout, panel, m_jpPositioned.getComponent(false));
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Rating"));
-        initNormalLabel(0, 4, constraints, layout, panel, label);
-        initNormalField(1, 4, constraints, layout, panel, m_jpRating.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("BestePosition"));
-        initNormalLabel(0, 5, constraints, layout, panel, label);
-        initNormalField(1, 5, constraints, layout, panel, m_jpBestPosition.getComponent(false));
-
         label = new JLabel(HOVerwaltung.instance().getLanguageString("LastMatchRating"));
-        initNormalLabel(0, 6, constraints, layout, panel, label);
-        initNormalField(1, 6, constraints, layout, panel, m_jpLastMatchRating.getComponent(false));
+        initNormalLabel(0, 4, constraints, layout, panel, label);
+        initNormalField(1, 4, constraints, layout, panel, m_jpLastMatchRating.getComponent(false));
         m_lastMatchLink = m_jpLastMatchRating.getLabelMatch();
         m_lastMatchLink.addMouseListener(new MouseAdapter() {
             @Override
@@ -701,6 +698,10 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
                 }
             }
         });
+
+        label = new JLabel(HOVerwaltung.instance().getLanguageString("BestePosition"));
+        initNormalLabel(0, 5, constraints, layout, panel, label);
+        initNormalField(1, 5, constraints, layout, panel, m_jpBestPosition.getComponent(false));
 
         // ***** Block 2
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Gruppe"));
@@ -1139,11 +1140,12 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
         byte[] altPositions = m_clPlayer.getAlternativePositions();
 
-        CBItem[] positions = new CBItem[allPos.length];
+        CBItem[] positions = new CBItem[allPos.length + 1];
 
-        int k = 0;
-        positions[k] = new CBItem(MatchRoleID.getNameForPosition(UNKNOWN), UNKNOWN);
-        k++;
+        positions[0] = new CBItem(MatchRoleID.getNameForPosition(UNKNOWN), UNKNOWN);
+        positions[1] = new CBItem(MatchRoleID.getNameForPosition(UNSELECTABLE), UNSELECTABLE);
+
+        int k = 2;
         String text = "";
         for (FactorObject allPo : allPos) {
             if (allPo.getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;

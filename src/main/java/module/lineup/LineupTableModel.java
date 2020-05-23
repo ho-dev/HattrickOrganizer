@@ -47,12 +47,7 @@ public class LineupTableModel extends HOTableModel {
 		columns[2] = add[1];
 		columns[3] = add[2];
 
-		columns[4] = new BooleanColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28) {
-			@Override
-			public boolean isEditable() {
-				return false;
-			}
-		};
+		columns[4] = new BooleanColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28);
 		columns[5] = add[3];
 		columns[6] = add[4];
 		columns[7] = add[5];
@@ -167,9 +162,13 @@ public class LineupTableModel extends HOTableModel {
 				if (tmpDisplayedColumns[j].getId() == UserColumnFactory.NAME
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.LINUP
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.BEST_POSITION
-						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.GROUP)
-					m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(
-							aktuellerPlayer, null);
+						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.GROUP
+				        )
+				{m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(aktuellerPlayer, null);}
+				else if (tmpDisplayedColumns[j].getId() == UserColumnFactory.AUTO_LINEUP)
+				{
+					m_clData[i][j] = aktuellerPlayer.getCanBeSelectedByAssistant();
+				}
 			}
 		}
 	}

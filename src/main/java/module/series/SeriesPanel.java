@@ -211,7 +211,7 @@ public class SeriesPanel extends LazyImagePanel {
 		printButton.setLocation(255, 5);
 		toolbarPanel.add(printButton);
 
-		promotionInfoPanel.setSize(500, 40);
+		promotionInfoPanel.setSize(650, 40);
 		promotionInfoPanel.setLocation(290, 0);
 		toolbarPanel.add(promotionInfoPanel);
 

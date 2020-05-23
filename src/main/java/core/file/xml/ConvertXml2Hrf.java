@@ -264,9 +264,6 @@ public class ConvertXml2Hrf {
 		
 		waitDialog.setValue(100);
 
-		// dialog zum Saven anzeigen
-		// speichern
-		// writeHRF( dateiname );
 		return buffer.toString();
 	}
 
@@ -332,10 +329,6 @@ public class ConvertXml2Hrf {
 				.append('\n');
 		buffer.append("owner=").append(teamdetailsDataMap.get("Loginname"))
 				.append('\n');
-		buffer.append("ownerEmail=").append(teamdetailsDataMap.get("Email"))
-				.append('\n');
-		buffer.append("ownerICQ=").append(teamdetailsDataMap.get("ICQ"))
-				.append('\n');
 		buffer.append("ownerHomepage=")
 				.append(teamdetailsDataMap.get("HomePage")).append('\n');
 		buffer.append("countryID=").append(worldDataMap.get("CountryID"))
@@ -355,32 +348,21 @@ public class ConvertXml2Hrf {
 			Map<String, String> economyDataMap, Map<String, String> teamdetailsDataMap,
 			StringBuilder buffer) {
 		buffer.append("[club]\n");
-		buffer.append("hjTranare=")
-				.append(clubDataMap.get("AssistantTrainers")).append('\n');
-		buffer.append("psykolog=").append(clubDataMap.get("Psychologists"))
-				.append('\n');
-		buffer.append("presstalesman=")
-				.append(clubDataMap.get("PressSpokesmen")).append('\n');
-//		buffer.append("massor=").append(clubDataMap.get("Physiotherapists"))
-//				.append('\n');
-		buffer.append("lakare=").append(clubDataMap.get("Doctors"))
-				.append('\n');
-		buffer.append("financialDirectorLevels=").append(clubDataMap.get("FinancialDirectorLevels"))
-		.append('\n');
-		buffer.append("formCoachLevels=").append(clubDataMap.get("FormCoachLevels"))
-		.append('\n');
-		buffer.append("tacticalAssistantLevels=").append(clubDataMap.get("TacticalAssistantLevels"))
-		.append('\n');
-		buffer.append("juniorverksamhet=")
-				.append(clubDataMap.get("YouthLevel")).append('\n');
-		buffer.append("undefeated=")
-				.append(teamdetailsDataMap.get("NumberOfUndefeated"))
-				.append('\n');
-		buffer.append("victories=")
-				.append(teamdetailsDataMap.get("NumberOfVictories"))
-				.append('\n');
-		buffer.append("fanclub=").append(economyDataMap.get("FanClubSize"))
-				.append('\n');
+		buffer.append("hjTranare=").append(clubDataMap.get("AssistantTrainers")).append('\n');
+		buffer.append("psykolog=").append(clubDataMap.get("Psychologists")).append('\n');
+		buffer.append("presstalesman=").append(clubDataMap.get("PressSpokesmen")).append('\n');
+		buffer.append("lakare=").append(clubDataMap.get("Doctors")).append('\n');
+		buffer.append("financialDirectorLevels=").append(clubDataMap.get("FinancialDirectorLevels")).append('\n');
+		buffer.append("formCoachLevels=").append(clubDataMap.get("FormCoachLevels")).append('\n');
+		buffer.append("tacticalAssistantLevels=").append(clubDataMap.get("TacticalAssistantLevels")).append('\n');
+		buffer.append("juniorverksamhet=").append(clubDataMap.get("YouthLevel")).append('\n');
+		buffer.append("undefeated=").append(teamdetailsDataMap.get("NumberOfUndefeated")).append('\n');
+		buffer.append("victories=").append(teamdetailsDataMap.get("NumberOfVictories")).append('\n');
+		buffer.append("fanclub=").append(economyDataMap.get("FanClubSize")).append('\n');
+		buffer.append("GlobalRanking=").append(teamdetailsDataMap.get("GlobalRanking")).append('\n');
+		buffer.append("LeagueRanking=").append(teamdetailsDataMap.get("LeagueRanking")).append('\n');
+		buffer.append("RegionRanking=").append(teamdetailsDataMap.get("RegionRanking")).append('\n');
+		buffer.append("PowerRating=").append(teamdetailsDataMap.get("PowerRating")).append('\n');
 	}
 
 	/**

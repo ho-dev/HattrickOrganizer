@@ -64,45 +64,33 @@ public class XMLTeamDetailsParser {
 	}
 
 	private static Map<String, String> parseDetails(Document doc, int teamId) {
-		Element ele = null;
-		Element root = null;
+		Element ele, root;
 		Map<String, String> hash = new core.file.xml.MyHashtable();
 
 		if (doc == null) {
 			return hash;
 		}
 
-		// Tabelle erstellen
 		root = doc.getDocumentElement();
 
 		try {
-			// Daten füllen
-			// Fetchdate
+
+			// FetchedDate
 			ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
 			hash.put("FetchedDate", (XMLManager.getFirstChildNodeValue(ele)));
 
-			// Root wechseln
+			// User
 			root = (Element) root.getElementsByTagName("User").item(0);
 			ele = (Element) root.getElementsByTagName("Loginname").item(0);
 			hash.put("Loginname", (XMLManager.getFirstChildNodeValue(ele)));
 			ele = (Element) root.getElementsByTagName("LastLoginDate").item(0);
 			hash.put("LastLoginDate", (XMLManager.getFirstChildNodeValue(ele)));
-
-			// Is this in the xml? - Blaghaid
-			ele = (Element) root.getElementsByTagName("Email").item(0);
-			hash.put("Email", (XMLManager.getFirstChildNodeValue(ele)));
-
-			ele = (Element) root.getElementsByTagName("ICQ").item(0);
-			hash.put("ICQ", (XMLManager.getFirstChildNodeValue(ele)));
-
 			ele = (Element) root.getElementsByTagName("SupporterTier").item(0);
-			
 			String supportValue = XMLManager.getFirstChildNodeValue(ele);
 			String supportStatus = "False";
 			if (supportValue.trim().length() > 0) {
 				supportStatus = "True";
 			}
-			
 			hash.put("HasSupporter", supportStatus);
 
 			// We need to find the correct team
@@ -145,7 +133,6 @@ public class XMLTeamDetailsParser {
 			hash.put("LeagueID", (XMLManager.getFirstChildNodeValue(ele)));
 
 			try {
-				root = (Element) team.getElementsByTagName("LeagueLevelUnit").item(0);
 				ele = (Element) team.getElementsByTagName("LeagueLevel").item(0);
 				hash.put("LeagueLevel", (XMLManager.getFirstChildNodeValue(ele)));
 				ele = (Element) team.getElementsByTagName("LeagueLevelUnitName").item(0);
@@ -177,6 +164,17 @@ public class XMLTeamDetailsParser {
 			root = (Element) team.getElementsByTagName("Region").item(0);
 			ele = (Element) root.getElementsByTagName("RegionID").item(0);
 			hash.put("RegionID", (XMLManager.getFirstChildNodeValue(ele)));
+
+			// Power Rating
+			Element PowerRating = (Element)doc.getDocumentElement().getElementsByTagName("PowerRating").item(0);
+			ele = (Element) PowerRating.getElementsByTagName("GlobalRanking").item(0);
+			hash.put("GlobalRanking", (XMLManager.getFirstChildNodeValue(ele)));
+			ele = (Element) PowerRating.getElementsByTagName("LeagueRanking").item(0);
+			hash.put("LeagueRanking", (XMLManager.getFirstChildNodeValue(ele)));
+			ele = (Element) PowerRating.getElementsByTagName("RegionRanking").item(0);
+			hash.put("RegionRanking", (XMLManager.getFirstChildNodeValue(ele)));
+			ele = (Element) PowerRating.getElementsByTagName("PowerRating").item(0);
+			hash.put("PowerRating", (XMLManager.getFirstChildNodeValue(ele)));
 
 			if (team.getElementsByTagName("TeamRank").getLength() > 0) {
 				hash.put("TeamRank", team.getElementsByTagName("TeamRank").item(0).getTextContent());

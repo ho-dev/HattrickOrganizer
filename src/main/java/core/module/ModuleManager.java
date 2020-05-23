@@ -2,7 +2,6 @@ package core.module;
 
 import core.model.UserParameter;
 import core.module.config.ModuleConfig;
-import module.evilcard.EvilCardModule;
 import module.ifa.IfaModule;
 import module.lineup.LineupModule;
 import module.matches.MatchesModule;
@@ -56,9 +55,7 @@ public final class ModuleManager {
 		map.put(Integer.valueOf(IModule.TSFORECAST), new TSForecastModule());
 		map.put(Integer.valueOf(IModule.SPECIALEVENTS), new SpecialEventsModule());
 		map.put(Integer.valueOf(IModule.TEAM_OF_THE_WEEK), new TeamOfTheWeekModule());
-		map.put(Integer.valueOf(IModule.EVIL_CARD), new EvilCardModule());
 		map.put(Integer.valueOf(IModule.IFA), new IfaModule());
-		//map.put(Integer.valueOf(IModule.MATCHESANALYZER), new MatchesAnalyzerModule());
 	}
 
 	private void initialize() {

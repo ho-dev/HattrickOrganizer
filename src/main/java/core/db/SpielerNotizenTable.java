@@ -240,10 +240,7 @@ final class SpielerNotizenTable extends AbstractTable {
 
 				//Insert falls kein passender Eintrag gefunden wurde
 				if (adapter.executeUpdate(statement) < 1) {
-					//erst Vorhandene Aufstellung löschen
-					//deleteSpielerNotizTabelle( awhereS, awhereV );
-					//insert vorbereiten
-					createEntry(spielerId,"","","",true,flag, false);
+					createEntry(spielerId,"","","",true, flag, false);
 				}
 			} catch (Exception e) {
 			}

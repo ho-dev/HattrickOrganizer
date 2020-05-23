@@ -1397,16 +1397,15 @@ public class Player {
     }
 
     /**
-     * setzt ob der User den Player zum Spiel zulässt
+     * set whether or not that player can be selected by the assistant
      */
     public void setCanBeSelectedByAssistant(boolean flag) {
         m_bCanBeSelectedByAssistant = Boolean.valueOf(flag);
-        DBManager.instance().saveSpielerSpielberechtigt(m_iSpielerID,
-                flag);
+        DBManager.instance().saveSpielerSpielberechtigt(m_iSpielerID,  flag);
     }
 
     /**
-     * indicates whether the user allows the player to play
+     * get whether or not that player can be selected by the assistant
      */
     public boolean getCanBeSelectedByAssistant() {
         //Only check if not authorized to play: Reduced access!
@@ -1824,6 +1823,7 @@ public class Player {
     public void setUserPosFlag(byte flag) {
         m_bUserPosFlag = flag;
         DBManager.instance().saveSpielerUserPosFlag(m_iSpielerID, m_bUserPosFlag);
+        this.setCanBeSelectedByAssistant(flag != IMatchRoleID.UNSELECTABLE);
     }
 
     /**

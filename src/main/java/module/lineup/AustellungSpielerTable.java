@@ -1,6 +1,7 @@
 package module.lineup;
 
 import core.db.DBManager;
+import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.SpielerLabelEntry;
@@ -13,6 +14,7 @@ import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.Helper;
 import module.playerOverview.PlayerTable;
@@ -27,13 +29,9 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 
 	private static final long serialVersionUID = -8295456454328467793L;
 
-	// ~ Instance fields
-	// ----------------------------------------------------------------------------
 	private LineupTableModel tableModel;
 	private TableSorter tableSorter;
 
-	// ~ Constructors
-	// -------------------------------------------------------------------------------
 	protected AustellungSpielerTable() {
 		super();
 
@@ -46,8 +44,6 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 		RefreshManager.instance().registerRefreshable(this);
 	}
 
-	// ~ Methods
-	// ------------------------------------------------------------------------------------
 	@Override
 	public void setSpieler(int spielerid) {
 		int index = tableSorter.getRow4Spieler(spielerid);
@@ -74,11 +70,11 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 	@Override
 	public void refresh() {
 		reInitModel();
-		repaint(); // TODO fire TableModelEvent instead
+		repaint();
 	}
 
 	/**
-	 * Breite der BestPosSpalte zurückgeben
+	 * Return width of BestPos column
 	 */
 	protected int getBestPosWidth() {
 		return getColumnModel().getColumn(getColumnModel().getColumnIndex(Integer.valueOf(3)))
@@ -86,15 +82,12 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 	}
 
 	/**
-	 * Gibt die Spalte für die Sortierung zurück
+	 *Returns the column for sorting
 	 */
 	protected int getSortSpalte() {
 		switch (core.model.UserParameter.instance().standardsortierung) {
 		case UserParameter.SORT_NAME:
 			return tableModel.getPositionInArray(UserColumnFactory.NAME);
-
-		case UserParameter.SORT_BESTPOS:
-			return tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
 
 		case UserParameter.SORT_AUFGESTELLT:
 			return tableModel.getPositionInArray(UserColumnFactory.LINUP);
@@ -115,19 +108,6 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 		return tableSorter;
 	}
 
-	protected int[][] getSpaltenreihenfolge() {
-		final int[][] reihenfolge = new int[tableModel.getColumnCount()][2];
-
-		for (int i = 0; i < tableModel.getColumnCount(); i++) {
-			// Modelindex
-			reihenfolge[i][0] = i;
-
-			// ViewIndex
-			reihenfolge[i][1] = convertColumnIndexToView(i);
-		}
-
-		return reihenfolge;
-	}
 
 	public final void saveColumnOrder() {
 		final UserColumn[] columns = tableModel.getDisplayedColumns();
@@ -141,9 +121,6 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 		DBManager.instance().saveHOColumnModel(tableModel);
 	}
 
-	/**
-	 * Initialisiert das Model
-	 */
 	private void initModel() {
 		setOpaque(false);
 
@@ -169,7 +146,6 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 			}
 
 			int[][] targetColumn = tableModel.getColumnOrder();
-			// Reihenfolge -> nach [][1] sortieren
 			targetColumn = Helper.sortintArray(targetColumn, 1);
 
 			if (targetColumn != null) {
@@ -183,7 +159,7 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 			tableSorter.addMouseListenerToHeaderInTable(this);
 			tableModel.setColumnsSize(getColumnModel());
 		} else {
-			// Werte neu setzen
+			// Reset values
 			tableModel.setValues(HOVerwaltung.instance().getModel().getAllSpieler());
 			tableSorter.reallocateIndexes();
 		}
@@ -204,6 +180,15 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 					Player selectedPlayer = ((SpielerLabelEntry) tableSorter.getValueAt(selectedRow,tableModel.getColumnIndexOfDisplayedColumn(UserColumnFactory.NAME))).getSpieler();
 					bSelected = (boolean)tableSorter.getValueAt(selectedRow, tableModel.getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP));
 					selectedPlayer.setCanBeSelectedByAssistant(bSelected);
+					if(bSelected)
+					{
+						// this player has been made selectable from the Lineup tab, for consistency we set its position to undefined
+						selectedPlayer.setUserPosFlag(IMatchRoleID.UNKNOWN);
+					}
+					else {
+						selectedPlayer.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
+					}
+					HOMainFrame.instance().getSpielerUebersichtPanel().update();
 				}
 			}
 		});

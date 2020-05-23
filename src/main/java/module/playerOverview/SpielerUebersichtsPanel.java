@@ -102,9 +102,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	}
 
 	/**
-	 * Refeshed die Tabelle hier und im Aufstellungspanel, wenn die Gruppen/Info
-	 * geändert wurde (Google translate) Refeshed the table here and in the
-	 * installation panel, where the groups / info was changed
+	 Refeshes the table here and in the lineup panel when the groups / info has been changed
 	 */
 	public final void update() {
 		refresh();

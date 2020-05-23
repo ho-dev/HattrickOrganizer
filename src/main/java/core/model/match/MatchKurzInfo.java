@@ -1,6 +1,7 @@
 package core.model.match;
 
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.util.HOLogger;
@@ -263,27 +264,17 @@ public class MatchKurzInfo implements Comparable<Object> {
 		if (this.matchDateTimestamp == null) {
 			if (!StringUtils.isEmpty(this.m_sMatchDate)) {
 				try {
-					// Hattrick
-					SimpleDateFormat simpleFormat = new SimpleDateFormat(
-							"yyyy-MM-dd HH:mm:ss");
-					this.matchDateTimestamp = new Timestamp(simpleFormat.parse(
-							m_sMatchDate).getTime());
-				} catch (Exception e) {
-					try {
-						// Hattrick
-						SimpleDateFormat simpleFormat = new SimpleDateFormat(
-								"yyyy-MM-dd");
-						this.matchDateTimestamp = new Timestamp(simpleFormat
-								.parse(m_sMatchDate).getTime());
-					} catch (Exception ex) {
-						HOLogger.instance().log(getClass(), ex);
-					}
-				}
+					SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					final Long duration = UserParameter.instance().TimeZoneDifference * 3600 * 1000L;
+					this.matchDateTimestamp = new Timestamp(simpleFormat.parse(m_sMatchDate).getTime() + duration);
+				  }
+				catch (Exception e) {
+						HOLogger.instance().log(getClass(), e);
+					 }
 			} else {
 				this.matchDateTimestamp = null;
 			}
 		}
-
 		return this.matchDateTimestamp;
 	}
 
