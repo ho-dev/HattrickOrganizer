@@ -6,10 +6,8 @@ import module.teamAnalyzer.report.PositionReport;
 import module.teamAnalyzer.report.SpotReport;
 import module.teamAnalyzer.report.TacticReport;
 import module.teamAnalyzer.report.TeamReport;
-import module.teamAnalyzer.vo.MatchRating;
-import module.teamAnalyzer.vo.PlayerAppearance;
-import module.teamAnalyzer.vo.SpotLineup;
-import module.teamAnalyzer.vo.TeamLineup;
+import module.teamAnalyzer.vo.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,7 +19,7 @@ import java.util.TreeSet;
 public class TeamLineupBuilder {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private TeamLineup teamLineup;
+    private TeamLineup teamLineup = new TeamLineup();
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -29,7 +27,6 @@ public class TeamLineupBuilder {
      * Creates a new TeamLineupBuilder object.
      */
     public TeamLineupBuilder(TeamReport teamReport) {
-        teamLineup = new TeamLineup();
         teamLineup.setRating(teamReport.getRating());
         teamLineup.setStars(teamReport.getStars());
         teamLineup.setSpecialEventsPrediction(teamReport.getSpecialEventsPredictionManager());
@@ -46,24 +43,23 @@ public class TeamLineupBuilder {
         }
     }
 
-    public TeamLineupBuilder(TeamLineup lineup) {
-        teamLineup = new TeamLineup();
-        teamLineup.setRating( new MatchRating());
-        teamLineup.getRating().setRightDefense(lineup.getRating().getRightDefense());
-        teamLineup.getRating().setRightAttack(lineup.getRating().getRightAttack());
-        teamLineup.getRating().setMidfield(lineup.getRating().getMidfield());
-        teamLineup.getRating().setLeftDefense(lineup.getRating().getLeftDefense());
-        teamLineup.getRating().setLeftAttack(lineup.getRating().getLeftAttack());
-        teamLineup.getRating().setCentralDefense(lineup.getRating().getCentralDefense());
-        teamLineup.getRating().setCentralAttack(lineup.getRating().getCentralAttack());
-        teamLineup.setSpecialEventsPrediction(lineup.getSpecialEventsPrediction());
+    public TeamLineupBuilder setMatchDetail(MatchDetail m){
+        this.teamLineup.setMatchDetail(m);
+        return this;
+    }
 
-        teamLineup.setStars(lineup.getStars());
-        teamLineup.setSpotLineups(lineup.getSpotLineups());
+    public TeamLineupBuilder setName(String name){
+        this.teamLineup.setName(name);
+        return this;
+    }
+
+    public TeamLineupBuilder setMatchRating(MatchRating newRatings) {
+        this.teamLineup.setRating(newRatings);
+        return this;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public TeamLineup getLineup() {
+    public TeamLineup build() {
         return teamLineup;
     }
 
@@ -191,4 +187,5 @@ public class TeamLineupBuilder {
 
         return spotLineup;
     }
+
 }

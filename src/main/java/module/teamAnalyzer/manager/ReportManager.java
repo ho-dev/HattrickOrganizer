@@ -14,13 +14,12 @@ import module.teamAnalyzer.vo.TeamLineup;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
+/*
 public class ReportManager {
     //~ Static fields/initializers -----------------------------------------------------------------
     // adjustedLineup is used by MatchPrediction to store MatchRatings adjusted by the user
-    public static TeamLineup adjustedLineup;
-
-    public static TeamLineup lineup;
+    private static TeamLineup adjustedRatingsLineup;
+    private static TeamLineup averageRatingslineup;
     private static List<MatchDetail> matchDetails;
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -48,6 +47,9 @@ public class ReportManager {
     public static TeamLineup getLineup() {
         return lineup;
     }
+    public static TeamLineup getAdjustedLineup() {
+        return adjustedLineup;
+    }
 
     public static void buildReport(List<?> matchDetails) {
         TeamReport report = new TeamReport();
@@ -63,9 +65,6 @@ public class ReportManager {
         lineup = builder.getLineup();
     }
 
-    /**
-     *
-     */
     public static void clean() {
         lineup = null;
         matchDetails = new ArrayList<MatchDetail>();
@@ -109,4 +108,6 @@ public class ReportManager {
 
         SystemManager.updateUI();
     }
+
 }
+        */

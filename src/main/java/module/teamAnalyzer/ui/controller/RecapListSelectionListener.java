@@ -3,7 +3,6 @@ package module.teamAnalyzer.ui.controller;
 import core.model.UserParameter;
 import core.util.HTCalendarFactory;
 import module.teamAnalyzer.SystemManager;
-import module.teamAnalyzer.manager.ReportManager;
 import module.teamAnalyzer.ui.RecapPanel;
 import module.teamAnalyzer.ui.RecapTableSorter;
 import module.teamAnalyzer.ui.model.UiRecapTableModel;
@@ -23,7 +22,7 @@ import javax.swing.event.ListSelectionListener;
  */
 public class RecapListSelectionListener implements ListSelectionListener {
 
-	private String selectedTacticType = RecapPanel.VALUE_NA;
+    private String selectedTacticType = RecapPanel.VALUE_NA;
     private String selectedTacticSkill = RecapPanel.VALUE_NA;
     private RecapTableSorter sorter = null;
     private UiRecapTableModel tableModel = null;
@@ -32,14 +31,14 @@ public class RecapListSelectionListener implements ListSelectionListener {
      * Consructor.
      */
     public RecapListSelectionListener(RecapTableSorter sorter, UiRecapTableModel tableModel) {
-    	this.sorter = sorter;
-    	this.tableModel = tableModel;
+        this.sorter = sorter;
+        this.tableModel = tableModel;
     }
 
     /**
      * Handle value changed events.
      */
-	public void valueChanged(ListSelectionEvent e) {
+    public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) {
             return;
         }
@@ -51,27 +50,21 @@ public class RecapListSelectionListener implements ListSelectionListener {
             selectedTacticType = String.valueOf(tableModel.getValueAt(selectedRow, 17));
             selectedTacticSkill = String.valueOf(tableModel.getValueAt(selectedRow, 18));
 
-            if (selectedRow == 0) {
-                TeamLineup lineup = ReportManager.getLineup();
+            TeamLineup lineup = SystemManager.teamReport.getLineup(selectedRow);
+            int week = lineup.getWeek();
+            int season = lineup.getSeason();
+            if (week < 0) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.HOUR, UserParameter.instance().TimeZoneDifference);
-
-                int week = HTCalendarFactory.getHTWeek(calendar.getTime());
-                int season =HTCalendarFactory.getHTSeason(calendar.getTime());
-                
-                SystemManager.getPlugin().getMainPanel().reload(lineup, week, season);
-                SystemManager.getPlugin().getRatingPanel().reload(lineup);
-            } else {
-                TeamLineup lineup = ReportManager.getLineup(selectedRow);
-                int week = Integer.parseInt("" + tableModel.getValueAt(selectedRow, 3));
-                int season = Integer.parseInt("" + tableModel.getValueAt(selectedRow, 4));
-
-                SystemManager.getPlugin().getMainPanel().reload(lineup, week, season);
-                SystemManager.getPlugin().getRatingPanel().reload(lineup);
-                SystemManager.getPlugin().getSpecialEventsPanel().reload(lineup);
+                week = HTCalendarFactory.getHTWeek(calendar.getTime());
+                season = HTCalendarFactory.getHTSeason(calendar.getTime());
             }
+            SystemManager.getPlugin().getMainPanel().reload(lineup, week, season);
+            SystemManager.getPlugin().getRatingPanel().reload(lineup);
+            SystemManager.getPlugin().getSpecialEventsPanel().reload(lineup);
         }
     }
+
 
 	/**
 	 * Get the currently selected tactic type as i18ned string.

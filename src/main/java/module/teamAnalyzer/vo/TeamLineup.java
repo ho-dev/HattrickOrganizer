@@ -1,6 +1,7 @@
 // %3414899912:hoplugins.teamAnalyzer.vo%
 package module.teamAnalyzer.vo;
 
+import core.model.match.MatchType;
 import core.specialevents.SpecialEventsPredictionManager;
 
 import java.util.Arrays;
@@ -15,16 +16,26 @@ import java.util.HashMap;
 public class TeamLineup {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    /** Rating of the team on the field */
+    private String name;
+
+    private MatchDetail matchDetail;
+
+    /**
+     * Rating of the team on the field
+     */
     private MatchRating rating;
 
-    /** Array of the 11 SpotLineup object representing the single spot.
-     *  Changed to a HashMap with roleID (from HO) as key... */
+    /**
+     * Array of the 11 SpotLineup object representing the single spot.
+     * Changed to a HashMap with roleID (from HO) as key...
+     */
 
     private HashMap<Integer, SpotLineup> spotLineups = new HashMap<Integer, SpotLineup>();
     //private SpotLineup[] spotLineups = new SpotLineup[11];
 
-    /** Number of stars */
+    /**
+     * Number of stars
+     */
     private double stars;
 
     private SpecialEventsPredictionManager specialEventsPrediction;
@@ -35,18 +46,17 @@ public class TeamLineup {
      * Returns the SpotLineup for the spot
      *
      * @param spot desired spot
-     *
      * @return a spot lineup
      */
     public final SpotLineup getSpotLineup(int spot) {
         return spotLineups.get(spot);
     }
 
-    public HashMap<Integer, SpotLineup> getSpotLineups(){
+    public HashMap<Integer, SpotLineup> getSpotLineups() {
         return spotLineups;
     }
 
-    public void setSpotLineups(HashMap<Integer, SpotLineup> in){
+    public void setSpotLineups(HashMap<Integer, SpotLineup> in) {
         spotLineups = in;
     }
 
@@ -62,7 +72,7 @@ public class TeamLineup {
      * Sets the spot place with the passes SpotLineup
      *
      * @param detail SpotLineup object
-     * @param spot spot to be filled with the object
+     * @param spot   spot to be filled with the object
      */
     public void setSpotLineup(SpotLineup detail, int spot) {
         spotLineups.put(spot, detail);
@@ -83,8 +93,8 @@ public class TeamLineup {
      * @return the String representation
      */
     @SuppressWarnings("unchecked")
-	@Override
-	public String toString() {
+    @Override
+    public String toString() {
         StringBuffer buffer = new StringBuffer();
 
         buffer.append("TeamLineup[");
@@ -103,8 +113,91 @@ public class TeamLineup {
     public void setSpecialEventsPrediction(SpecialEventsPredictionManager specialEventsPredictionManager) {
         this.specialEventsPrediction = specialEventsPredictionManager;
     }
+
     public SpecialEventsPredictionManager getSpecialEventsPrediction() {
         return specialEventsPrediction;
     }
 
+    public MatchDetail getMatchDetail() {
+        return matchDetail;
+    }
+
+    public void setMatchDetail(MatchDetail matchDetail) {
+        this.matchDetail = matchDetail;
+    }
+
+    public String getName() {
+        if (this.matchDetail != null) {
+            Match match = this.matchDetail.getMatchDetail();
+            if (match.isHome()) {
+                return match.getAwayTeam();
+            }
+            return "* " + match.getHomeTeam();
+        }
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public MatchType getMatchType() {
+        if (this.matchDetail != null) {
+            return this.matchDetail.getMatchDetail().getMatchType();
+        }
+        return MatchType.NONE;
+    }
+
+    public String getResult() {
+        if (this.matchDetail != null) {
+            Match match = this.matchDetail.getMatchDetail();
+            if (match.isHome()) {
+                return match.getHomeGoals() + "-" + match.getAwayGoals();
+            }
+            return match.getAwayGoals() + "-" + match.getHomeGoals();
+        }
+        return "---";
+    }
+
+    public int getWeek() {
+        if (this.matchDetail != null) {
+            return this.matchDetail.getMatchDetail().getWeek();
+        }
+        return -1;
+    }
+
+    public int getSeason() {
+        if (this.matchDetail != null) {
+            return this.matchDetail.getMatchDetail().getSeason();
+        }
+        return -1;
+    }
+
+    public int getTacticCode() {
+        if (this.matchDetail != null) {
+            return this.matchDetail.getTacticCode();
+        }
+        return 0;
+    }
+
+    public int getTacticLevel() {
+        if (this.matchDetail != null) {
+            return this.matchDetail.getTacticLevel();
+        }
+        return 0;
+    }
+
+    public String getFormation() {
+        if (this.matchDetail != null) {
+            return this.matchDetail.getFormation();
+        }
+        return "---";
+    }
+
+    public boolean isHomeMatch() {
+        if (this.matchDetail != null) {
+            return this.matchDetail.getMatchDetail().isHome();
+        }
+        return false;
+    }
 }

@@ -5,12 +5,16 @@ import core.model.HOVerwaltung;
 import module.teamAnalyzer.manager.MatchManager;
 import module.teamAnalyzer.manager.MatchPopulator;
 import module.teamAnalyzer.manager.NameManager;
-import module.teamAnalyzer.manager.ReportManager;
 import module.teamAnalyzer.manager.TeamManager;
+import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.TeamAnalyzerPanel;
+import module.teamAnalyzer.vo.Match;
+import module.teamAnalyzer.vo.MatchDetail;
 import module.teamAnalyzer.vo.Team;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This is a class where all the relevant and shared plugin info are kept
@@ -96,7 +100,7 @@ public class SystemManager {
 			NameManager.clean();
 			TeamAnalyzerPanel.filter.setMatches(new ArrayList<String>());
 
-			ReportManager.clean();
+			teamReport = null; //ReportManager.clean();
 			MatchPopulator.clean();
 			MatchManager.clean();
 			plugin.getMainPanel().reload(null, 0, 0);
@@ -115,12 +119,26 @@ public class SystemManager {
 		}
 	}
 
+	public static TeamReport teamReport;
+
 	/**
 	 * Recalculate the report
 	 */
 	public static void updateReport() {
 		updating = true;
-		ReportManager.updateReport();
+		List<MatchDetail> matchDetails = MatchManager.getMatchDetails();
+		if (MatchPopulator.getAnalyzedMatch().size() > 0) {
+			teamReport = new TeamReport(matchDetails);
+		} else {
+			teamReport = null;
+		}
+		List<String> filterList = new ArrayList<String>();
+		for (Iterator<Match> iter = MatchManager.getSelectedMatches().iterator(); iter.hasNext(); ) {
+			Match match = iter.next();
+
+			filterList.add("" + match.getMatchId());
+		}
+		TeamAnalyzerPanel.filter.setMatches(filterList);
 		updating = false;
 		updateUI();
 	}
