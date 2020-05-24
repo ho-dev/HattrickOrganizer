@@ -88,7 +88,7 @@ public class TeamReport {
             int matchNumber = selection - offset;
             // create a team report of one single match
             TeamReport report = new TeamReport(matchDetails.get(matchNumber));
-            return report.getLineup(1);
+            return report.getLineup(0);
         }
     }
 

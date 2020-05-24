@@ -87,7 +87,7 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 			newRatings.setLeftAttack(adjusted.getLeftAttack());
 			newRatings.setCentralDefense(adjusted.getMiddleDef());
 			newRatings.setCentralAttack(adjusted.getMiddleAttack());
-			SystemManager.getTeamReport().adjustRatingsLineup(newRatings);
+			SystemManager.adjustRatingsLineup(newRatings);
 		}
 	}
 

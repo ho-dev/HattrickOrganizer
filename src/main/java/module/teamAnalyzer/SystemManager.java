@@ -10,6 +10,7 @@ import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.TeamAnalyzerPanel;
 import module.teamAnalyzer.vo.Match;
 import module.teamAnalyzer.vo.MatchDetail;
+import module.teamAnalyzer.vo.MatchRating;
 import module.teamAnalyzer.vo.Team;
 
 import java.util.ArrayList;
@@ -160,5 +161,10 @@ public class SystemManager {
 			teamReport = new TeamReport(new ArrayList<>()); // create an empty team report
 		}
 		return teamReport;
+	}
+
+	public static void adjustRatingsLineup(MatchRating newRatings) {
+		getTeamReport().adjustRatingsLineup(newRatings);
+		updateUI();
 	}
 }
