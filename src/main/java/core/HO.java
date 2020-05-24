@@ -12,27 +12,20 @@ import core.model.UserParameter;
 import core.training.TrainingManager;
 import core.util.ExceptionHandler;
 import core.util.HOLogger;
-//import core.util.IOUtils;
-//import java.io.BufferedReader;
+import core.util.OSUtils;
 import java.io.File;
-//import java.io.InputStream;
-//import java.io.InputStreamReader;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 /**
  * Main HO starter class.
  *
  * @author thomas.werth
  */
-
-
-
 public class HO {
 
 
@@ -56,24 +49,24 @@ public class HO {
 	 */
 
 	public static boolean isDevelopment() {
-		return versionType == "DEV";
+		return "DEV".equalsIgnoreCase(versionType);
 	}
 	public static boolean isBeta() {
-		return versionType == "BETA";
+		return "BETA".equalsIgnoreCase(versionType);
 	}
 	public static boolean isRelease() {
-		return versionType == "RELEASE";
+		return "RELEASE".equalsIgnoreCase(versionType);
 	}
 	public static String getVersionString() {
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
 		nf.setMinimumFractionDigits(3);
 		String txt = nf.format(VERSION);
 
-		if (versionType=="BETA") {
+		if (isBeta()) {
 			txt += " BETA (r" + RevisionNumber + ")";
 		}
 
-		else if (versionType=="DEV") {
+		else if (isDevelopment()) {
 			txt += " DEV (r" + RevisionNumber + ")";
 		}
 
@@ -89,6 +82,11 @@ public class HO {
 	 */
 	public static void main(String[] args) {
 		final long start = System.currentTimeMillis();
+
+		if (OSUtils.isMac()) {
+			System.setProperty("apple.laf.useScreenMenuBar", "true");
+			System.setProperty("apple.awt.showGroupBox", "true");
+		}
 
 		System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
@@ -125,13 +123,11 @@ public class HO {
 					versionType = "RELEASE";
 					break;
 			}
-			}
-
-            else {
-                HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
-                VERSION = 0d;
-				versionType = "DEV";
-            }
+        } else {
+        	HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
+        	VERSION = 0d;
+        	versionType = "DEV";
+        }
 
 		// Usermanagement Login-Dialog
 		try {
@@ -196,7 +192,6 @@ public class HO {
 
 		interuptionsWindow.setInfoText(5, "Load latest Data");
 		HOVerwaltung.instance().loadLatestHoModel();
-//		HOVerwaltung.instance().getModel().setLineups(HOVerwaltung.instance().getModel().getID());
 		interuptionsWindow.setInfoText(6, "Load  XtraDaten");
 
 		// TableColumn
@@ -236,8 +231,4 @@ public class HO {
 	public static int getRevisionNumber() {
 	return RevisionNumber;
 	}
-
-    public static String getversionType() {
-        return versionType;
-    }
 }

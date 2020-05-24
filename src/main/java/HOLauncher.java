@@ -79,8 +79,4 @@ public class HOLauncher {
 		}
 		return true;
 	}
-
-
-	
-
 }
