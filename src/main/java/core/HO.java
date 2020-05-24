@@ -13,18 +13,12 @@ import core.training.TrainingManager;
 import core.util.ExceptionHandler;
 import core.util.HOLogger;
 import core.util.OSUtils;
-//import core.util.IOUtils;
-//import java.io.BufferedReader;
 import java.io.File;
-//import java.io.InputStream;
-//import java.io.InputStreamReader;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Main HO starter class.

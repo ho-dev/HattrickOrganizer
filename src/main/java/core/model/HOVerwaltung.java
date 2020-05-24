@@ -80,7 +80,10 @@ public class HOVerwaltung {
 
 	public void setResource(String pfad) {
 		try {
-			 languageBundle = ResourceBundle.getBundle("sprache." + pfad, new UTF8Control());
+                    languageBundle = ResourceBundle.getBundle("sprache." + pfad, new UTF8Control());
+                } catch (UnsupportedOperationException e) {
+                    // ResourceBundle.Control not supported in named modules in JDK9+
+                    languageBundle = ResourceBundle.getBundle("sprache." + pfad);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);
 		}

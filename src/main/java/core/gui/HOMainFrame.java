@@ -48,9 +48,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
@@ -157,20 +154,17 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 						+ System.getProperty("java.vendor") + ")");
 
 		RefreshManager.instance().registerRefreshable(this);
-
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		setDefaultFont(UserParameter.instance().schriftGroesse);
-
 
 		String teamName = DBManager.instance().getBasics(DBManager.instance().getLatestHrfId()).getTeamName();
 
-		if(teamName.equals("")) {
-            setTitle("HO! - Hattrick Organizer " + getVersionString());
-        } else {
-			setTitle("HO! - Hattrick Organizer " + getVersionString() + " - " + teamName
-					+ " - " + System.getProperty("java.version"));
-        }
+            if (teamName.equals("")) {
+                setTitle("HO! - Hattrick Organizer " + getVersionString());
+            } else {
+                setTitle("HO! - Hattrick Organizer " + getVersionString() + " - " + teamName
+                        + " - " + System.getProperty("java.version"));
+            }
 
 
 		if (HO.isDevelopment()) {
