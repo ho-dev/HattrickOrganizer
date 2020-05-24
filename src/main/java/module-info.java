@@ -4,4 +4,5 @@ open module ho {
     requires okhttp3;
     requires scribejava.core;
     requires com.google.gson;
+    requires com.google.common;
 }
