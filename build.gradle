@@ -81,6 +81,25 @@ java {
     targetCompatibility = JavaVersion.VERSION_14
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java"]
+        }
+        resources {
+            srcDirs = ["src/main/java", "src/main/resources"]
+        }
+    }
+    test {
+        java {
+            srcDirs = ["src/test/java"]
+        }
+        resources {
+            srcDirs = ["src/test/resources"]
+        }
+    }
+}
+
 //  configure markdownToHtml --------------------------------
 markdownToHtml {
     markdownToHtml.tables = true  // Configuration

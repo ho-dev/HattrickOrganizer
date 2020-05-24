@@ -335,8 +335,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 				Timestamp from = new Timestamp(cal.getTimeInMillis());
 				HOVerwaltung.instance().recalcSubskills(true, from);
 			}
-		} else if (source.equals(m_jmFullScreenItem)) { // Toggle full screen
-														// mode
+		} else if (source.equals(m_jmFullScreenItem)) { // Toggle full screen mode
 			FullScreen.instance().toggle(this);
 		} else if (source.equals(m_jmBeendenItem)) { // Quit
 			// Restore normal window mode (i.e. leave full screen)
@@ -354,11 +353,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 
 		else if (source.equals(m_jmCheckUpdate)) {
-			if (OSUtils.isMac()) {
-				UpdateController.check4update(true);
-			} else {
-				UpdateController.check4update(false);
-			}
+			UpdateController.check4update(OSUtils.isMac());
 		}
 		else if (source.equals(m_jmChangelog)) {
 			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
