@@ -119,7 +119,7 @@ public class SystemManager {
 		}
 	}
 
-	public static TeamReport teamReport;
+	private static TeamReport teamReport;
 
 	/**
 	 * Recalculate the report
@@ -153,5 +153,12 @@ public class SystemManager {
 			// And the options calls this function after modification.
 			plugin.reload();
 		}
+	}
+
+	public static TeamReport getTeamReport() {
+		if ( teamReport == null){
+			teamReport = new TeamReport(new ArrayList<>()); // create an empty team report
+		}
+		return teamReport;
 	}
 }
