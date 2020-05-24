@@ -731,7 +731,7 @@ final public class UserColumnFactory {
         playerAdditionalArray[1] = new PlayerColumn(20, " ", "ls.player.nationality", 25) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                return new ColorLabelEntry(ImageUtilities.getFlagIcon(player.getNationalitaet()),
+                return new ColorLabelEntry(ImageUtilities.getCountryFlagIcon(player.getNationalitaet()),
                         player.getNationalitaet(),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);

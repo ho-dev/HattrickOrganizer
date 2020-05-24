@@ -96,7 +96,7 @@ public class FlagPanel extends JPanel {
 			FlagLabel flagLabel = new FlagLabel(flagDisplayModel);
 			flagLabel.setCountryId(leagues[i].getCountryId());
 			flagLabel.setCountryName(leagues[i].getCountryName());
-			flagLabel.setIcon(ImageUtilities.getFlagIcon(flagLabel.getCountryId()));
+			flagLabel.setIcon(ImageUtilities.getCountryFlagIcon(flagLabel.getCountryId()));
 			flagLabel.setToolTipText(flagLabel.getCountryName());
 
 			if ((away && ifaModel.isVisited(leagues[i].getCountryId()))
