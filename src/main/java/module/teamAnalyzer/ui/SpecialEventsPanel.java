@@ -57,6 +57,7 @@ public class SpecialEventsPanel extends JPanel {
     }
 
     public void reload(TeamLineup teamLineup) {
+        tableModel.removeAllRows();
         if ( teamLineup==null) return;
         SpecialEventsPredictionManager specialEventsPredictionManager = teamLineup.getSpecialEventsPrediction();
         if (specialEventsPredictionManager == null) return;
