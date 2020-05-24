@@ -12,6 +12,7 @@ import core.model.UserParameter;
 import core.training.TrainingManager;
 import core.util.ExceptionHandler;
 import core.util.HOLogger;
+import core.util.OSUtils;
 //import core.util.IOUtils;
 //import java.io.BufferedReader;
 import java.io.File;
@@ -56,24 +57,24 @@ public class HO {
 	 */
 
 	public static boolean isDevelopment() {
-		return versionType == "DEV";
+		return "DEV".equalsIgnoreCase(versionType);
 	}
 	public static boolean isBeta() {
-		return versionType == "BETA";
+		return "BETA".equalsIgnoreCase(versionType);
 	}
 	public static boolean isRelease() {
-		return versionType == "RELEASE";
+		return "RELEASE".equalsIgnoreCase(versionType);
 	}
 	public static String getVersionString() {
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
 		nf.setMinimumFractionDigits(3);
 		String txt = nf.format(VERSION);
 
-		if (versionType=="BETA") {
+		if (isBeta()) {
 			txt += " BETA (r" + RevisionNumber + ")";
 		}
 
-		else if (versionType=="DEV") {
+		else if (isDevelopment()) {
 			txt += " DEV (r" + RevisionNumber + ")";
 		}
 
@@ -89,6 +90,11 @@ public class HO {
 	 */
 	public static void main(String[] args) {
 		final long start = System.currentTimeMillis();
+
+		if (OSUtils.isMac()) {
+			System.setProperty("apple.laf.useScreenMenuBar", "true");
+			System.setProperty("apple.awt.showGroupBox", "true");
+		}
 
 		System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
@@ -125,13 +131,11 @@ public class HO {
 					versionType = "RELEASE";
 					break;
 			}
-			}
-
-            else {
-                HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
-                VERSION = 0d;
-				versionType = "DEV";
-            }
+        } else {
+        	HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
+        	VERSION = 0d;
+        	versionType = "DEV";
+        }
 
 		// Usermanagement Login-Dialog
 		try {
@@ -236,8 +240,4 @@ public class HO {
 	public static int getRevisionNumber() {
 	return RevisionNumber;
 	}
-
-    public static String getversionType() {
-        return versionType;
-    }
 }

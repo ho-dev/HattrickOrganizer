@@ -26,6 +26,7 @@ import core.option.OptionenDialog;
 import core.option.db.DatabaseOptionsDialog;
 import core.util.BrowserLauncher;
 import core.util.HOLogger;
+import core.util.OSUtils;
 import core.util.StringUtils;
 import module.lineup.AufstellungsAssistentPanelNew;
 import module.lineup.IAufstellungsAssistentPanel;
@@ -79,11 +80,8 @@ import javax.swing.text.DefaultEditorKit;
  */
 public final class HOMainFrame extends JFrame implements Refreshable, ActionListener {
 
-	public static final int BUSY = 0;
-	public static final int READY = 1;
 	private static final long serialVersionUID = -6333275250973872365L;
 	private static HOMainFrame m_clHOMainFrame;
-	private static int status = READY;
 	private InfoPanel m_jpInfoPanel;
 	private final JMenuBar m_jmMenuBar = new JMenuBar();
 	// Top level Menu
@@ -164,14 +162,16 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		setDefaultFont(UserParameter.instance().schriftGroesse);
 
-		
+
 		String teamName = DBManager.instance().getBasics(DBManager.instance().getLatestHrfId()).getTeamName();
 
-		if(teamName.equals("")){
-		setTitle("HO! - Hattrick Organizer " + getVersionString());}
-		else{
+		if(teamName.equals("")) {
+            setTitle("HO! - Hattrick Organizer " + getVersionString());
+        } else {
 			setTitle("HO! - Hattrick Organizer " + getVersionString() + " - " + teamName
-					+ " - " + System.getProperty("java.version"));}
+					+ " - " + System.getProperty("java.version"));
+        }
+
 
 		if (HO.isDevelopment()) {
 			this.setIconImage(ThemeManager.getIcon(HOIconName.LOGO16_DEV).getImage());
@@ -191,10 +191,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		initMenue();
 
 		RefreshManager.instance().doRefresh();
-	}
-
-	final public static boolean isMac() {
-		return (System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH).indexOf("mac") != -1);
 	}
 
 	// ~ Methods
@@ -300,7 +296,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	 */
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
-		HOMainFrame.setHOStatus(HOMainFrame.BUSY);
 		final Object source = actionEvent.getSource();
 
 		if (source.equals(m_jmImportItem)) { // HRF Import
@@ -359,11 +354,9 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 
 		else if (source.equals(m_jmCheckUpdate)) {
-			if(isMac()) {
+			if (OSUtils.isMac()) {
 				UpdateController.check4update(true);
-			}
-			else
-			{
+			} else {
 				UpdateController.check4update(false);
 			}
 		}
@@ -372,8 +365,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 				try {
 					File jarFile = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
 					URI logFile;
-					if (!isMac()) {logFile = jarFile.getParentFile().toPath().resolve("changelog.html").toUri();}
-					else {logFile = jarFile.getParentFile().getParentFile().getParentFile().toPath().resolve("changelog.html").toUri();}
+					if (!OSUtils.isMac()) {
+						logFile = jarFile.getParentFile().toPath().resolve("changelog.html").toUri();
+					} else {
+						logFile = jarFile.getParentFile().getParentFile().getParentFile().toPath().resolve("changelog.html").toUri();
+					}
 					Desktop.getDesktop().browse(logFile);
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(this, HOVerwaltung.instance().getLanguageString("Changelog.error"), HOVerwaltung.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
@@ -381,8 +377,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 				}
 			}
 		}
-
-		HOMainFrame.setHOStatus(HOMainFrame.READY);
 	}
 
 	private void openURL(String url) {
@@ -674,7 +668,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 	/**
 	 * Zeigt das Tab an (Nicht Index, sondern Konstante benutzen!
-	 * 
+	 *
 	 * @param tabnumber
 	 *            number of the tab to show
 	 */
@@ -741,17 +735,16 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 					UIManager.setLookAndFeel(laf);
 				}
 			}
-			
+
 			// #177 Standard shortcuts for copy/cut/paste don't work in MacOSX if LookAndFeel changes
-			if (succ && System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH)
-						.startsWith("mac")) {
+			if (succ && OSUtils.isMac()) {
 				InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
 				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
 				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
 				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
 				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
 			}
-			
+
 			SwingUtilities.updateComponentTreeUI(this);
 		} catch (Exception e) {
 			HOLogger.instance().log(HOMainFrame.class, e);
@@ -817,11 +810,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		DBManager.instance().saveUserParameter();
 	}
 
-
-	public static void setHOStatus(int i) {
-		status = i;
-	}
-
 	private void addListeners() {
 		addWindowListener(new WindowAdapter() {
 			/**
@@ -830,7 +818,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			 * System.exit is called only in the case when @see shutdown() is
 			 * called in advance. This event is called when switching into full
 			 * screen mode, too.
-			 * 
+			 *
 			 * @param windowEvent
 			 *            is ignored
 			 */
