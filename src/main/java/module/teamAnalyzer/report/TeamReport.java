@@ -13,10 +13,7 @@ import module.teamAnalyzer.vo.MatchRating;
 import module.teamAnalyzer.vo.PlayerPerformance;
 import module.teamAnalyzer.vo.TeamLineup;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -28,7 +25,7 @@ public class TeamReport {
 
     private TeamLineup adjustedRatingsLineup;
     private TeamLineup averageRatingslineup;
-    private List<MatchDetail> matchDetails;
+    private List<MatchDetail> matchDetails = new ArrayList<>();
     private SpecialEventsPredictionManager specialEventsPredictionManager;
 
     private int selection=0;
@@ -55,7 +52,6 @@ public class TeamReport {
      * Creates a new TeamReport object.
      */
     public TeamReport(List<MatchDetail> matchDetails) {
-        this.matchDetails = matchDetails;
         for (MatchDetail m:matchDetails ) {
             addMatch(m, ModuleConfig.instance().getBoolean(SystemManager.ISSHOWUNAVAILABLE));
         }
@@ -76,6 +72,7 @@ public class TeamReport {
 
     public TeamLineup getLineup(int selection)
     {
+        if (this.matchDetails == null || this.matchDetails.size()==0)return null;
         this.selection=selection;
         if ( selection == 0 ){
             return this.averageRatingslineup;
@@ -91,7 +88,7 @@ public class TeamReport {
             int matchNumber = selection - offset;
             // create a team report of one single match
             TeamReport report = new TeamReport(matchDetails.get(matchNumber));
-            return report.getLineup(0);
+            return report.getLineup(1);
         }
     }
 
@@ -133,6 +130,8 @@ public class TeamReport {
      * @param showUnavailable consider also unavailable or not
      */
     public void addMatch(MatchDetail matchDetail, boolean showUnavailable) {
+        this.matchDetails.add(matchDetail);
+
         for (Iterator<PlayerPerformance> iter = matchDetail.getPerformances().iterator(); iter.hasNext();) {
             addPerformance( iter.next(), showUnavailable);
         }
@@ -215,4 +214,7 @@ public class TeamReport {
         return rat;
     }
 
+    public void selectLineup(int i) {
+        this.selection=i;
+    }
 }

@@ -87,15 +87,13 @@ public class RecapPanel extends JPanel {
             tableModel.removeRow(0);
         }
 
-        for ( int i =0; i < SystemManager.teamReport.size(); i++){
-            tableModel.addRow(AddLineup(SystemManager.teamReport.getLineup(i)));
+        if ( teamReport.size() < 2 ) return; // no matches loaded
+
+        for ( int i =0; i < teamReport.size(); i++){
+            tableModel.addRow(AddLineup(teamReport.getLineup(i)));
         }
 
-        if (SystemManager.teamReport.size() == 0) {
-            Vector<Object> rowData = new Vector<Object>();
-            rowData.add(HOVerwaltung.instance().getLanguageString("RecapPanel.NoMatch")); //$NON-NLS-1$
-            tableModel.addRow(rowData);
-        }
+        teamReport.selectLineup(0);
 
         setColumnWidth(0, 100);
         setColumnWidth(1, 20);
@@ -145,13 +143,23 @@ public class RecapPanel extends JPanel {
 
         rowData.add(lineup.getName());
         MatchType matchType = lineup.getMatchType();
-        rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()])); // NONE->Default, TODO: check if that is OK
+        if ( matchType != MatchType.NONE){
+            rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
+        }
+        else {
+            rowData.add(VALUE_NA);
+        }
         rowData.add(lineup.getResult());
 
-
         // Columns 3 & 4
-        rowData.add(lineup.getWeek()); //$NON-NLS-1$
-        rowData.add(lineup.getSeason()); //$NON-NLS-1$
+        if ( matchType != MatchType.NONE) {
+            rowData.add(lineup.getWeek()); //$NON-NLS-1$
+            rowData.add(lineup.getSeason()); //$NON-NLS-1$
+        }
+        else {
+            rowData.add(VALUE_NA);
+            rowData.add(VALUE_NA);
+        }
 
         // Columns 5-11
         setRating(rowData, lineup.getRating());
@@ -176,7 +184,12 @@ public class RecapPanel extends JPanel {
 
         // Columns 16-17
         rowData.add(df2.format(lineup.getRating().getLoddarStats()));
-        rowData.add(Matchdetails.getNameForTaktik(lineup.getTacticCode()));
+        if ( matchType != MatchType.NONE) {
+            rowData.add(Matchdetails.getNameForTaktik(lineup.getTacticCode()));
+        }
+        else{
+            rowData.add(VALUE_NA);
+        }
 
         // Column 18
         if (lineup.getTacticCode() == 0) {
