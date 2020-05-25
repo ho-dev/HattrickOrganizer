@@ -1,7 +1,8 @@
 package core.net;
 
-import com.github.scribejava.core.builder.api.DefaultApi10a;
-import com.github.scribejava.core.model.Verb;
+import org.scribe.builder.api.DefaultApi10a;
+import org.scribe.model.Token;
+import org.scribe.model.Verb;
 
 public class HattrickAPI extends DefaultApi10a {
 	
@@ -14,8 +15,8 @@ public class HattrickAPI extends DefaultApi10a {
 	}
 
 	@Override
-	protected String getAuthorizationBaseUrl() {
-		return AUTHORIZATION_URL;
+	public String getAuthorizationUrl(Token requestToken) {
+		return String.format(AUTHORIZATION_URL + "?oauth_token=%s", requestToken.getToken());
 	}
 
 	@Override

@@ -1,9 +1,6 @@
 package core.net;
 
-import com.github.scribejava.core.builder.ServiceBuilder;
-import com.github.scribejava.core.builder.api.OAuth1SignatureType;
-import com.github.scribejava.core.model.*;
-import com.github.scribejava.core.oauth.OAuth10aService;
+
 import core.file.xml.Extension;
 import core.file.xml.XMLCHPPPreParser;
 import core.file.xml.XMLExtensionParser;
@@ -36,12 +33,19 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 import javax.swing.JOptionPane;
+
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+import org.scribe.model.SignatureType;
+import org.scribe.model.Token;
+import org.scribe.model.Verb;
+import org.scribe.oauth.OAuthService;
 
 import org.w3c.dom.Document;
 
@@ -64,17 +68,17 @@ public class MyConnector {
 	private final static String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";
 	private final static String CONSUMER_SECRET = "2/Td)Cprd/?q`nAbkAL//F+eGD@KnnCc>)dQgtP,p+p";
 	private ProxySettings proxySettings;
-	private OAuth10aService m_OAService;
-	private OAuth1AccessToken m_OAAccessToken;
+	private OAuthService m_OAService;
+	private Token m_OAAccessToken;
 	private static boolean DEBUGSAVE = false;
 
 	/**
 	 * Creates a new instance of MyConnector.
 	 */
 	private MyConnector() {
-		m_OAService = new ServiceBuilder(Helper.decryptString(CONSUMER_KEY))
-				.apiSecret(Helper.decryptString(CONSUMER_SECRET))
-				.build(new HattrickAPI());
+		m_OAService = new ServiceBuilder().provider(HattrickAPI.class)
+				.apiKey(Helper.decryptString(CONSUMER_KEY))
+				.signatureType(SignatureType.Header).build();
 		m_OAAccessToken = createOAAccessToken();
 	}
 
@@ -657,7 +661,7 @@ public class MyConnector {
 					iResponse = 401;
 				} else {
 					m_OAService.signRequest(m_OAAccessToken, request);
-					response = m_OAService.execute(request);
+					response = request.send();
 					iResponse = response.getCode();
 				}
 				switch (iResponse) {
@@ -714,7 +718,7 @@ public class MyConnector {
 			Response response = null;
 			OAuthRequest request = new OAuthRequest(Verb.GET, surl);
 			infoHO(request);
-			response = m_OAService.execute(request);
+			response = request.send();
 			int iResponse = response.getCode();
 			switch (iResponse) {
 			case 200:
@@ -771,7 +775,7 @@ public class MyConnector {
 					iResponse = 401;
 				} else {
 					m_OAService.signRequest(m_OAAccessToken, request);
-					response = m_OAService.execute(request);
+					response = request.send();
 					iResponse = response.getCode();
 				}
 				switch (iResponse) {
@@ -792,7 +796,7 @@ public class MyConnector {
 						}
 						m_OAAccessToken = authDialog.getAccessToken();
 						if (m_OAAccessToken == null) {
-							m_OAAccessToken = new OAuth1AccessToken(
+							m_OAAccessToken = new Token(
 									Helper.decryptString(core.model.UserParameter.instance().AccessToken),
 									Helper.decryptString(core.model.UserParameter.instance().TokenSecret));
 						}
@@ -920,10 +924,8 @@ public class MyConnector {
 		}
 	}
 
-	private OAuth1AccessToken createOAAccessToken() {
-		return new OAuth1AccessToken(
-				Helper.decryptString(UserParameter.instance().AccessToken),
-				Helper.decryptString(UserParameter.instance().TokenSecret)
-		);
+	private Token createOAAccessToken() {
+		return new Token(Helper.decryptString(UserParameter.instance().AccessToken),
+				Helper.decryptString(UserParameter.instance().TokenSecret));
 	}
 }
