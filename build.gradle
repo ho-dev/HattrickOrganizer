@@ -66,6 +66,7 @@ versionProps['buildNumber'] = buildNumber
 versionProps.store(versionPropsFile.newWriter(), null)
 
 project.version = major + '.' + minor + '.' + development_stage + '.' + buildNumber
+def moduleVersion = project.version
 
 println "Project:  $project.name $project.version ....................."
 
@@ -79,6 +80,7 @@ java {
     compileJava.options.encoding = 'UTF-8'
     sourceCompatibility = JavaVersion.VERSION_14
     targetCompatibility = JavaVersion.VERSION_14
+    modularity.inferModulePath.set(true)
 }
 
 sourceSets {
@@ -97,6 +99,21 @@ sourceSets {
         resources {
             srcDirs = ["src/test/resources"]
         }
+    }
+    //Cf. https://youtrack.jetbrains.com/issue/IDEA-197469
+    // at compile time, put resources in same directories as classes
+    main.output.resourcesDir = main.java.outputDir
+}
+
+// at run time, make Gradle use the module path
+run {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                '--module', "$moduleName/$mainClassName"
+        ]
+        classpath = files()
     }
 }
 
