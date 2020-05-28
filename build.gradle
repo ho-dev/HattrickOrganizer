@@ -584,14 +584,17 @@ task resetDB {
         ext.resetDir = "D:\\Program Files\\HattrickOrganizerDev\\db"
     }
 
-    doFirst {println("Reseting DB: copying DB from `${resetDir}` into  ${projectDir}")}
+    doFirst {println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")}
 
     try {
-	    copy {
-	        from resetDir
-	        into "${projectDir}/db"
-	    }
-	    doLast { println("Reseting DB: done !") }
+	    doLast {
+            copy {
+                from resetDir
+                into "${projectDir}/db"
+            }
+
+            println("Resetting DB: done !")
+        }
 
     } catch (java.lang.Exception e) {
     	println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false;

@@ -154,16 +154,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setDefaultFont(UserParameter.instance().schriftGroesse);
 
-		String teamName = DBManager.instance().getBasics(DBManager.instance().getLatestHrfId()).getTeamName();
-
-            if (teamName.equals("")) {
-                setTitle("HO! - Hattrick Organizer " + getVersionString());
-            } else {
-                setTitle("HO! - Hattrick Organizer " + getVersionString() + " - " + teamName
-                        + " - " + System.getProperty("java.version"));
-            }
-
-
+		setFrameTitle();
 		setFrameIconImage();
 
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -174,6 +165,20 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		initMenue();
 
 		RefreshManager.instance().doRefresh();
+	}
+
+	private void setFrameTitle() {
+		String teamName = DBManager.instance().getBasics(DBManager.instance().getLatestHrfId()).getTeamName();
+
+		String frameTitle = "HO! - Hattrick Organizer " + getVersionString();
+		if (!StringUtils.isEmpty(teamName)) {
+			frameTitle += " - " + teamName;
+		}
+		if (!HO.isRelease()) {
+			frameTitle += " - " + System.getProperty("java.version");
+		}
+
+		setTitle(frameTitle);
 	}
 
 	private void setFrameIconImage() {
@@ -368,7 +373,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 					}
 					Desktop.getDesktop().browse(logFile);
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(this, HOVerwaltung.instance().getLanguageString("Changelog.error"), HOVerwaltung.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(this,
+							HOVerwaltung.instance().getLanguageString("Changelog.error"),
+							HOVerwaltung.instance().getLanguageString("Fehler"),
+							JOptionPane.ERROR_MESSAGE
+					);
 					e.printStackTrace();
 				}
 			}
