@@ -35,7 +35,7 @@ final class DBUpdater {
 		if (version != DBVersion) {
 			try {
 				HOLogger.instance().log(getClass(), "Updating DB to version " + DBVersion + "...");
-				switch (version) { // hint: fall though (no breaks) is intended
+				switch (version) { // hint: fall through (no breaks) is intended
 					// here
 					case 0:
 					case 1:
@@ -101,8 +101,9 @@ final class DBUpdater {
 					case 301: // Bug#509 requires another update run of v300
 						updateDBv300(DBVersion, version);
 						updateDBv301(DBVersion, version);
+					case 302:
+						updateDBv400(DBVersion, version);
 				}
-
 
 				HOLogger.instance().log(getClass(), "done.");
 			} catch (Exception e) {
@@ -111,6 +112,15 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
+	}
+
+	private void updateDBv400(int dbVersion, int version) {
+		// Delete existing values to provide sane defaults.
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'spielerUebersichtsPanel_horizontalRightSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_verticalSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalRightSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalLeftSplitPane'");
+		updateDBVersion(dbVersion, version);
 	}
 
 

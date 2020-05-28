@@ -1,9 +1,8 @@
 package core.util;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Window;
+import core.model.UserParameter;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
@@ -137,5 +136,25 @@ public class GUIUtils {
 			window.setLocation(componentCenter.x - window.getWidth() / 2, componentCenter.y
 					- window.getHeight() / 2);
 		}
+	}
+
+	/**
+	 * Returns the location of a point on the screen when giving the distance from the right
+	 * of the screen.
+	 *
+	 * @param width Distance from the right of the screen.
+	 * @param defaultWidth Width to be returned if calculated location is invalid.
+	 * @return int – Location of point <code>width</code> px from the right.
+	 */
+	public static int getLocationFromRight(int width, int defaultWidth) {
+		try {
+			final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			int calculatedWidth = screenSize.width - width;
+			return (calculatedWidth <= 0) ? defaultWidth : calculatedWidth;
+		} catch (Exception e) {
+			HOLogger.instance().warning(UserParameter.class, "Error computing width screen: " + e.getMessage());
+		}
+
+		return defaultWidth;
 	}
 }
