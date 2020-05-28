@@ -78,6 +78,7 @@ public class MyConnector {
 	private MyConnector() {
 		m_OAService = new ServiceBuilder().provider(HattrickAPI.class)
 				.apiKey(Helper.decryptString(CONSUMER_KEY))
+				.apiSecret(Helper.decryptString(CONSUMER_SECRET))
 				.signatureType(SignatureType.Header).build();
 		m_OAAccessToken = createOAAccessToken();
 	}
