@@ -35,7 +35,6 @@ public class HO {
 	public static int RevisionNumber;
     private static String versionType;
 
-
 	/**
 	 * Is this a development version? Note that a "development" version can a
 	 * release ("Beta" or "DEV" version). The DEVELOPMENT flag is used by the
@@ -59,6 +58,11 @@ public class HO {
 	public static boolean isRelease() {
 		return "RELEASE".equalsIgnoreCase(versionType);
 	}
+
+	public static String getVersionType() {
+		return versionType;
+	}
+
 	public static String getVersionString() {
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
 		nf.setMinimumFractionDigits(3);

@@ -52,11 +52,8 @@ import java.net.URI;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
-import java.util.Vector;
 
 import javax.swing.InputMap;
 import javax.swing.JFrame;
@@ -167,15 +164,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
             }
 
 
-		if (HO.isDevelopment()) {
-			this.setIconImage(ThemeManager.getIcon(HOIconName.LOGO16_DEV).getImage());
-		}
-		else if (HO.isBeta()) {
-			this.setIconImage(ThemeManager.getIcon(HOIconName.LOGO16_BETA).getImage());
-		}
-		else {
-			this.setIconImage(ThemeManager.getIcon(HOIconName.LOGO16_STABLE).getImage());
-		}
+		setFrameIconImage();
 
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addListeners();
@@ -187,8 +176,26 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		RefreshManager.instance().doRefresh();
 	}
 
-	// ~ Methods
-	// ------------------------------------------------------------------------------------
+	private void setFrameIconImage() {
+
+		String iconName = HOIconName.LOGO16_STABLE;
+		if (!HO.isRelease()) {
+			iconName = HOIconName.LOGO16 + "_" + HO.getVersionType().toLowerCase();
+		}
+
+		final Image iconImage = ThemeManager.getIcon(iconName).getImage();
+
+		if (OSUtils.isMac()) {
+			try {
+                final Taskbar taskbar = Taskbar.getTaskbar();
+				taskbar.setIconImage(iconImage);
+			} catch (final UnsupportedOperationException e) {
+				HOLogger.instance().error(HOMainFrame.class, "OS doesn't support operation: " + e.getMessage());
+			}
+		} else {
+			this.setIconImage(iconImage);
+		}
+	}
 
 	public void addApplicationClosingListener(ApplicationClosingListener listener) {
 		if (!this.applicationClosingListener.contains(listener)) {
