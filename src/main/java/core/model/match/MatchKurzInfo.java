@@ -269,8 +269,16 @@ public class MatchKurzInfo implements Comparable<Object> {
 					this.matchDateTimestamp = new Timestamp(simpleFormat.parse(m_sMatchDate).getTime() + duration);
 				  }
 				catch (Exception e) {
-						HOLogger.instance().log(getClass(), e);
-					 }
+					try {
+						// Hattrick
+						SimpleDateFormat simpleFormat = new SimpleDateFormat(
+								"yyyy-MM-dd");
+						this.matchDateTimestamp = new Timestamp(simpleFormat
+								.parse(m_sMatchDate).getTime());
+					} catch (Exception ex) {
+						HOLogger.instance().log(getClass(), ex);
+					}
+				}
 			} else {
 				this.matchDateTimestamp = null;
 			}
