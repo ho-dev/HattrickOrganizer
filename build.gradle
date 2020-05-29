@@ -102,9 +102,11 @@ sourceSets {
             srcDirs = ["src/test/resources"]
         }
     }
+    // Cf. https://youtrack.jetbrains.com/issue/IDEA-197469
+    // at compile time, put resources in same directories as classes
+    main.output.resourcesDir = main.java.outputDir
 }
 
-// Cf. https://youtrack.jetbrains.com/issue/IDEA-197469
 // at run time, make Gradle use the module path
 run {
     inputs.property("moduleName", moduleName)
