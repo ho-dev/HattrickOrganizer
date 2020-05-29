@@ -172,7 +172,6 @@ public class TrainingManager {
      * @param showBar show progress bar
      */
     public void recalcSubskills(boolean showBar) {
-    	HOMainFrame.setHOStatus(HOMainFrame.BUSY);
         if (JOptionPane.showConfirmDialog(HOMainFrame.instance(),
         		HOVerwaltung.instance().getLanguageString("SubskillRecalcFull"),
 				HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {

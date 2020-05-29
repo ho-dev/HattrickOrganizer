@@ -10,6 +10,8 @@ import core.gui.theme.Schema;
 import core.util.HOLogger;
 
 import java.awt.Color;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -474,6 +476,21 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 			try {
 				URL resource = HOClassicSchema.class.getClassLoader().getResource(path);
 				if (resource == null) {
+					try {
+						// This is a shameless hack to get resources to load from IntelliJ.
+						resource = new File("./src/main/resources" + path).toURI().toURL();
+
+						if (resource != null) {
+							image = new ImageIcon(resource);
+							cache.put(path, image);
+
+							return image;
+						}
+					} catch (MalformedURLException e) {
+						// At this point this is hopeless.
+						e.printStackTrace();
+					}
+
 					HOLogger.instance().log(Schema.class, path + " Not Found!!!");
 					return loadImageIcon("gui/bilder/Unknownflag.png");
 				}

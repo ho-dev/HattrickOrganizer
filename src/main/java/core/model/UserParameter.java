@@ -1,9 +1,11 @@
 package core.model;
 
 import core.db.DBManager;
+import core.util.GUIUtils;
+import core.util.HOLogger;
 import module.lineup.LineupAssistant;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.HashMap;
 
 
@@ -239,9 +241,9 @@ public final class UserParameter extends Configuration {
     //Number of decimals
     public int nbDecimals = 2;
     public int aufstellungsAssistentPanel_reihenfolge = LineupAssistant.AW_MF_ST;
-    public int aufstellungsPanel_horizontalLeftSplitPane = 450;
-    public int aufstellungsPanel_horizontalRightSplitPane = 200;
-    public int aufstellungsPanel_verticalSplitPane = 800;
+    public int aufstellungsPanel_horizontalLeftSplitPane = 600;
+    public int aufstellungsPanel_horizontalRightSplitPane = 600;
+    public int aufstellungsPanel_verticalSplitPane = GUIUtils.getLocationFromRight(400, 800);
 
     //AufstellungsPanel
     public int aufstellungsPanel_verticalSplitPaneLow = 250;
@@ -305,7 +307,8 @@ public final class UserParameter extends Configuration {
     public int spielerDetails_PositionY = 50;
     public int futureWeeks = 16;
     public int spielerUebersichtsPanel_horizontalLeftSplitPane = 700;
-    public int spielerUebersichtsPanel_horizontalRightSplitPane = 750;
+    public int spielerUebersichtsPanel_horizontalRightSplitPane = GUIUtils.getLocationFromRight(300, 750);
+
     public int spielerUebersichtsPanel_verticalSplitPane = 400;
     public int playerTablePanel_horizontalSplitPane = 200;
 
@@ -873,5 +876,4 @@ public final class UserParameter extends Configuration {
 
         promotionManagerTest = getBooleanValue(values, "promotionManagerTest");
     }
-
 }

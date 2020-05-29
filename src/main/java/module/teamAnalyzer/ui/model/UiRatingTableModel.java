@@ -31,7 +31,7 @@ public class UiRatingTableModel extends BaseTableModel {
      * @param vector Vector of table data
      * @param vector2 Vector of column names
      */
-    public UiRatingTableModel(Vector<Object> vector, Vector<String> vector2) {
+    public UiRatingTableModel(Vector<Vector<Object>> vector, Vector<String> vector2) {
         super(vector, vector2);
     }
 

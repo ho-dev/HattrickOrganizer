@@ -23,6 +23,7 @@ Changelist HO! 4.0
 ### Squad
 
   - [FIX] Remove lag in sync between tables in Squad #465
+  - [FEAT] Provide better default for initial position of player comparison divider.
 
 ### Team Analyser
 
@@ -35,6 +36,7 @@ Changelist HO! 4.0
 
 ### Lineup
 
+  - [FEAT] Provide better defaults for initial position of dividers.
 
 ### Training
 
