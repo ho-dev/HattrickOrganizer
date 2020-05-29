@@ -87,7 +87,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 		}
 		else if(column == 2) {
 			natWert = ((Integer)table.getValueAt(row,column)).intValue();
-			label.setIcon(ImageUtilities.getFlagIcon(natWert));
+			label.setIcon(ImageUtilities.getCountryFlagIcon(natWert));
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			label.setBackground(table.getBackground());
 		}

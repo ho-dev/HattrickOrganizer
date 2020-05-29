@@ -250,7 +250,7 @@ final class SpielerDetailDialog extends JDialog {
 		m_jpName.setText(m_clPlayer.getFullName());
 		m_jpName.setFGColor(SpielerLabelEntry.getForegroundForSpieler(m_clPlayer));
 		m_jpAlter.setText(m_clPlayer.getAlter() + "");
-		m_jpNationalitaet.setIcon(ImageUtilities.getFlagIcon(m_clPlayer.getNationalitaet()));
+		m_jpNationalitaet.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalitaet()));
 
 		if (HOVerwaltung.instance().getModel().getLineup()
 				.isPlayerInLineup(m_clPlayer.getSpielerID())

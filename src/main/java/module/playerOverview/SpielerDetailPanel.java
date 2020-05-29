@@ -371,7 +371,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
                 m_jpLastMatchRating.getLabelMatch();
             }
         }
-        m_jpNationality.setIcon(ImageUtilities.getFlagIcon(m_clPlayer.getNationalitaet()));
+        m_jpNationality.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalitaet()));
         if (m_clPlayer.isHomeGrown())
             m_jpMotherClub.setIcon(ThemeManager.getIcon(HOIconName.HOMEGROWN));
         else
