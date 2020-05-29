@@ -7,10 +7,10 @@ import java.util.HashMap;
 public class WorldDetailsManager {
 
 	private static WorldDetailsManager WMANAGER = null;
-	private static WorldDetailLeague[] leagues;
-	private static HashMap<Integer, WorldDetailLeague> countryMap = new HashMap<Integer, WorldDetailLeague>();
-	private static HashMap<Integer, WorldDetailLeague> leagueMap = new HashMap<Integer, WorldDetailLeague>();
-	private static int totalUsers;
+	private WorldDetailLeague[] leagues;
+	private HashMap<Integer, WorldDetailLeague> countryMap = new HashMap<Integer, WorldDetailLeague>();
+	private HashMap<Integer, WorldDetailLeague> leagueMap = new HashMap<Integer, WorldDetailLeague>();
+	private int totalUsers;
 
 	public static WorldDetailsManager instance() {
 		if (WMANAGER == null) {
@@ -23,7 +23,7 @@ public class WorldDetailsManager {
 		initialize();
 	}
 
-	private static void initialize() {
+	private void initialize() {
 		leagues = DBManager.instance().getAllWorldDetailLeagues();
 		leagueMap.clear();
 		countryMap.clear();
@@ -51,7 +51,7 @@ public class WorldDetailsManager {
 		return leagueMap.get(leagueId);
 	}
 
-	public static WorldDetailLeague getWorldDetailLeagueByCountryId(Integer countryId) {
+	public WorldDetailLeague getWorldDetailLeagueByCountryId(Integer countryId) {
 		if (countryMap.size() == 0)
 		{
 			initialize();

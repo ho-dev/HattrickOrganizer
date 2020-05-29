@@ -496,7 +496,7 @@ public class ImageUtilities {
 	}
 
 	public static ImageIcon getCountryFlagIcon(int iCountryID) {
-		WorldDetailLeague leagueDetail = WorldDetailsManager.getWorldDetailLeagueByCountryId(iCountryID);
+		WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(iCountryID);
 	    return getLeagueFlagIcon(leagueDetail.getLeagueId());
 	}
 
