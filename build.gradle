@@ -214,7 +214,7 @@ install4j {
 
 task media(type: com.install4j.gradle.Install4jTask) {
     dependsOn 'CreateDistribution'
-    projectFile = 'D:/Perso/Code/HO/HO.install4j'
+    projectFile = "${projectDir}/HO.install4j"
 
     buildIds = [60, 62, 63, 64, 172]
 
