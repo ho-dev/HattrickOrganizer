@@ -7,7 +7,6 @@ import core.model.UserParameter;
 import core.util.BrowserLauncher;
 import core.util.HOLogger;
 import core.util.Helper;
-import core.util.StringUtils;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;

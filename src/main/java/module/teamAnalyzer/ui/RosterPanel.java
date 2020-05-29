@@ -66,9 +66,9 @@ public class RosterPanel extends JPanel {
     }
 
     private void jbInit() {
-        Vector<Object> data = new Vector<Object> ();
+        Vector<Vector<Object>> data = new Vector<>();
 
-        tableModel = new UiRosterTableModel(data, new Vector<String>(Arrays.asList(columns)));
+        tableModel = new UiRosterTableModel(data, new Vector<>(Arrays.asList(columns)));
         table = new JTable(tableModel);
 
         // Set up tool tips for column headers.

@@ -1,14 +1,13 @@
 package core.net;
 
+
 import core.file.xml.Extension;
 import core.file.xml.XMLCHPPPreParser;
 import core.file.xml.XMLExtensionParser;
-import core.file.xml.XMLNewsParser;
 import core.file.xml.XMLTeamDetailsParser;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
-import core.model.News;
 import core.model.UserParameter;
 import core.model.match.MatchType;
 import core.net.login.OAuthDialog;
@@ -34,7 +33,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -48,9 +46,9 @@ import org.scribe.model.SignatureType;
 import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
+
 import org.w3c.dom.Document;
 
-//import sun.misc.BASE64Encoder;
 import java.util.Base64;
 
 
@@ -751,7 +749,7 @@ public class MyConnector {
 		int iResponse;
 		boolean tryAgain = true;
 		try {
-			while (tryAgain == true) {
+			while (tryAgain) {
 				OAuthRequest request = new OAuthRequest(Verb.POST, surl);
 				for (Map.Entry<String, String> entry : bodyParas.entrySet()) {
 					request.addBodyParameter(entry.getKey(), entry.getValue());
@@ -850,8 +848,8 @@ public class MyConnector {
 
 	private void infoHO(OAuthRequest request) {
 		request.addHeader("accept-language", "en");
-		request.setConnectionKeepAlive(true);
-		request.setConnectTimeout(60, TimeUnit.SECONDS);
+//		request.setConnectionKeepAlive(true);
+//		request.setConnectTimeout(60, TimeUnit.SECONDS);
 		request.addHeader("accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*");
 		request.addHeader("accept-encoding", "gzip, deflate");
 		request.addHeader("user-agent", m_sIDENTIFIER);

@@ -144,7 +144,7 @@ public class RatingPredictionConfig {
     private void initArrays (String predictionName) {
     	this.predictionName = predictionName;
 //		HOLogger.instance().debug(this.getClass(), "Checking for changed prediction files for type "+predictionName);
-		String prefix = predDir + File.separatorChar + predictionName + File.separatorChar;
+		String prefix = predDir + "/" + predictionName + "/";
     	sideDefenseParam.readFromFile(prefix + "sidedefense.dat");
     	centralDefenseParam.readFromFile(prefix + "centraldefense.dat");
     	midfieldParam.readFromFile(prefix + "midfield.dat");

@@ -35,7 +35,7 @@ public class UiFilterTableModel extends BaseTableModel {
      * @param data Vector of table data
      * @param columnNames Vector of column names
      */
-    public UiFilterTableModel(Vector<Object> data, Vector<String> columnNames) {
+    public UiFilterTableModel(Vector<Vector<Object>> data, Vector<String> columnNames) {
         super(data, columnNames);
     }
 
