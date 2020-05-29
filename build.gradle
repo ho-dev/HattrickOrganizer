@@ -10,6 +10,8 @@ plugins {
     id "com.dorongold.task-tree" version "1.5"
     id "com.github.breadmoirai.github-release" version "2.2.10"
 
+    id 'com.install4j.gradle' version '8.0.7'
+
     // Plugins for java 14 packaging.
     id 'org.javamodularity.moduleplugin' version '1.6.0'
     id 'org.beryx.jlink' version '2.19.0'
@@ -195,6 +197,30 @@ jlink {
     }
 }
 
+// configure install4j
+
+if (!hasProperty('install4jHomeDir')) {
+    File propertiesFile = file("${System.getProperty('user.home')}/.gradle/gradle.properties")
+    throw new RuntimeException("Specify install4jHomeDir in $propertiesFile")
+}
+
+install4j {
+    installDir = file(install4jHomeDir)
+    disableSigning = true
+//    mediaTypes = ['windows']
+}
+
+task media(type: com.install4j.gradle.Install4jTask) {
+    dependsOn 'CreateDistribution'
+    projectFile = 'D:/Perso/Code/HO/HO.install4j'
+
+    buildIds = [60, 62, 63, 64, 172]
+
+     variables = [HO_version: project.version]
+}
+
+
+
 // Configure ospackage and buildDeb tasks ============
 ospackage {
     packageName = 'ho'
@@ -287,16 +313,17 @@ task makeAll(type: GradleBuild){
 
 task preparingBuild(dependsOn: clean) {
     group 'sub tasks'
-    doLast {
-        //     Deleting build project     ---------------------------------------------------------------------
-        println("Deleting build and execution files ....")
-        //project.delete(files("${buildDir}/")) #389 --> replaced by dependency on clean
-        project.delete(files("${projectDir}/db"))
-        project.delete(files("${projectDir}/logs"))
-        project.delete(files("${projectDir}/themes"))
-        project.delete(files("${projectDir}/user.xml"))
-        //     Creating Target directory ...  ---------------------------------------------------------------------
-        mkdir project.ext.target_dir
+    if (releaseArtefacts) {
+        doLast {
+            //     Deleting build project     ---------------------------------------------------------------------
+            println("Deleting build and execution files ....")
+            project.delete(files("${projectDir}/db"))
+            project.delete(files("${projectDir}/logs"))
+            project.delete(files("${projectDir}/themes"))
+            project.delete(files("${projectDir}/user.xml"))
+            //     Creating Target directory ...  ---------------------------------------------------------------------
+            mkdir project.ext.target_dir
+        }
     }
 }
 
@@ -384,12 +411,12 @@ task CreateDistribution (dependsOn: installDist) {
         delete "${distribDir}\\bin"
         delete "${distribDir}\\lib"
 
-        println("renaming distribution")
-        copy {
-            from("${distribDir}")
-            into("${buildDir}/install/${project.version}")
-        }
-        delete "${distribDir}"
+//        println("renaming distribution")
+//        copy {
+//            from("${distribDir}")
+//            into("${buildDir}/install/${project.version}")
+//        }
+//        delete "${distribDir}"
 
         if (development_stage == '0') {
             delete "${buildDir}\\install\\${project.version}\\Logo_beta.ico"
@@ -600,7 +627,6 @@ task resetDB {
 }
 
 
-
 poeditorPull {
     outputs.upToDateWhen { false }
 }
@@ -610,7 +636,6 @@ markdownToHtml {
     outputDir = new File("${projectDir}/docs/changelog/html")
     markdownToHtml.hardwraps = true
 }
-
 
 
 task ReleaseToGitHub(dependsOn: tasks.getByName('githubRelease')){
