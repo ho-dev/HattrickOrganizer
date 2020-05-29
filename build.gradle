@@ -267,23 +267,23 @@ task CreateDistribution (dependsOn: installDist) {
         }
         if (development_stage == '0') {
             copy {
-                from "${projectDir}\\src\\main\\resources\\Logo_dev.ico"
+                from "${projectDir}\\src\\main\\resources\\Logo_dev.png"
                 into distribDir
-                rename "Logo_dev.ico", "Logo.ico"
+                rename "Logo_dev.png", "Logo.png"
             }
         }
         else if (development_stage == '1') {
             copy {
-                from "${projectDir}\\src\\main\\resources\\Logo_beta.ico"
+                from "${projectDir}\\src\\main\\resources\\Logo_beta.png"
                 into distribDir
-                rename "Logo_beta.ico", "Logo.ico"
+                rename "Logo_beta.png", "Logo.png"
             }
         }
         else {
             copy {
-                from "${projectDir}\\src\\main\\resources\\Logo_stable.ico"
+                from "${projectDir}\\src\\main\\resources\\Logo_stable.png"
                 into distribDir
-                rename "Logo_stable.ico", "Logo.ico"
+                rename "Logo_stable.png", "Logo.png"
             }
         }
 
