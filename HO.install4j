@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="8.0.7" transformSequenceNumber="8">
-  <directoryPresets config="D:/Perso/Code/HO/build/artefacts" />
+  <directoryPresets config="D:/Perso/Code/HO/build/install" />
   <application name="Hattrick Organizer" applicationId="7901-8968-2695-6971" mediaDir="D:/Perso/Code/HO/build/artefacts" shortName="HO" version="${compiler:HO_version}" convertDotsToUnderscores="false" macVolumeId="509e74c97593e805" javaMinVersion="11">
     <languages skipLanguageSelection="true">
       <additionalLanguages>
@@ -17,24 +17,7 @@
       <mountPoint id="58" />
     </mountPoints>
     <entries>
-      <dirEntry mountPoint="58" file="D:/Perso/Code/HO/src/main/resources/prediction" entryMode="subdir" subDirectory="prediction" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/animal-sniffer-annotations-1.17.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/checker-qual-2.5.2.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/commons-codec-1.4.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/error_prone_annotations-2.2.0.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/failureaccess-1.0.1.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/gson-2.8.5.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/guava-27.1-jre.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/hsqldb-2.4.1.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/j2objc-annotations-1.1.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/jcalendar-1.4.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/jgoodies-common-1.8.1.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/jgoodies-looks-2.7.0.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/jsr305-3.0.2.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/scribe-1.3.0.jar" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/out/production/resources/changelog.html" />
-      <fileEntry mountPoint="58" file="D:/Perso/Code/HO/build/libs/HO.jar" />
+      <dirEntry mountPoint="58" file="D:/Perso/Code/HO/build/install/XXX" subDirectory="XXX" />
     </entries>
   </files>
   <launchers>
