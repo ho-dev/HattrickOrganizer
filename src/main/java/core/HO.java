@@ -52,9 +52,11 @@ public class HO {
 	public static boolean isDevelopment() {
 		return "DEV".equalsIgnoreCase(versionType);
 	}
+
 	public static boolean isBeta() {
 		return "BETA".equalsIgnoreCase(versionType);
 	}
+
 	public static boolean isRelease() {
 		return "RELEASE".equalsIgnoreCase(versionType);
 	}
@@ -70,9 +72,7 @@ public class HO {
 
 		if (isBeta()) {
 			txt += " BETA (r" + RevisionNumber + ")";
-		}
-
-		else if (isDevelopment()) {
+		} else if (isDevelopment()) {
 			txt += " DEV (r" + RevisionNumber + ")";
 		}
 
@@ -112,8 +112,8 @@ public class HO {
 		}
 
 		// Get HO version from manifest
-        String sVERSION = HO.class.getPackage().getImplementationVersion();
-        if (sVERSION != null) {
+		String sVERSION = HO.class.getPackage().getImplementationVersion();
+		if (sVERSION != null) {
 			String[] aVersion = sVERSION.split("\\.");
 
 			VERSION = Double.parseDouble(aVersion[0] + "." + aVersion[1]);
@@ -198,7 +198,6 @@ public class HO {
 
 		interuptionsWindow.setInfoText(5, "Load latest Data");
 		HOVerwaltung.instance().loadLatestHoModel();
-//		HOVerwaltung.instance().getModel().setLineups(HOVerwaltung.instance().getModel().getID());
 		interuptionsWindow.setInfoText(6, "Load  XtraDaten");
 
 		// TableColumn
@@ -236,6 +235,6 @@ public class HO {
 	}
 
 	public static int getRevisionNumber() {
-	return RevisionNumber;
+		return RevisionNumber;
 	}
 }

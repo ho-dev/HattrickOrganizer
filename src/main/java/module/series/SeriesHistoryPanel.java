@@ -131,7 +131,7 @@ final class SeriesHistoryPanel extends JPanel {
 			// Spieltage
 			for (int i = 1; i <= anzahlSpieltage; i++) {
 				g2d.setFont(normalFont);
-				g2d.setColor(Color.BLACK);
+				g2d.setColor(STANDARD_FOREGROUND);
 				g2d.drawString(String.valueOf(i), ((abstandHorizontal * (i - 0.5f)) - 2), abstandVertikal - 2);
 			}
 

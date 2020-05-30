@@ -4,12 +4,15 @@ package core.option;
 import core.datatype.CBItem;
 import core.datatype.GeldFaktorCBItem;
 import core.gui.comp.panel.ImagePanel;
+import core.gui.theme.Theme;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.List;
 
 import javax.swing.JCheckBox;
 import javax.swing.event.ChangeEvent;
@@ -86,17 +89,6 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
      */
     public SonstigeOptionenPanel() {
         initComponents();
-    }
-
-    public static float getFaktorGeld4WaehrungsID(int id) {
-        for (int i = 0; i < SonstigeOptionenPanel.WAEHRUNGEN.length; i++) {
-            if (id == SonstigeOptionenPanel.WAEHRUNGEN[i].getId()) {
-                return SonstigeOptionenPanel.WAEHRUNGEN[i].getFaktor();
-            }
-        }
-
-        // nix gefunden
-        return 1.0f;
     }
 
     @Override
@@ -182,8 +174,12 @@ public final class SonstigeOptionenPanel extends ImagePanel implements ChangeLis
         m_jslSchriftgroesse.addChangeListener(this);
         add(m_jslSchriftgroesse);
 
-        m_jcbSkin = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("options.misc.skin"), new String[]{"Nimbus", "Classic", "JGoodies Green", //
-                "JGoodies Silver", "JGoodies Sky", "JGoodies Blue", "JGoodies Royale", "System"}, 120);
+        List<Theme> registeredThemes = ThemeManager.instance().getRegisteredThemes();
+        m_jcbSkin = new ComboBoxPanel(
+                HOVerwaltung.instance().getLanguageString("options.misc.skin"),
+                registeredThemes.stream().map(Theme::getName).toArray(),
+                120
+        );
         m_jcbSkin.setSelectedItem(core.model.UserParameter.temp().skin);
         m_jcbSkin.addItemListener(this);
         add(m_jcbSkin);

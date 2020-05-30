@@ -14,7 +14,6 @@ public class SpielerCBItemRenderer implements javax.swing.ListCellRenderer {
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    // public SpielerLabelEntry      m_clEntry  = new SpielerLabelEntry( null, null, 0f, true, true );
     public final java.awt.Component getListCellRendererComponent(javax.swing.JList jList,
                                                                  Object obj, int index,
                                                                  boolean isSelected,

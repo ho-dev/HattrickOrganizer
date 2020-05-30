@@ -10,7 +10,6 @@ import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
-import module.pluginFeedback.FeedbackPanel;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -23,8 +22,6 @@ import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-
-import static javax.swing.SwingConstants.HORIZONTAL;
 
 /**
  * Enthält die einzelnen Positionen
@@ -78,7 +75,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	public LineupPositionsPanel(LineupPanel panel) {
 		m_clLineupPanel = panel;
 		assistantPanel = panel.getAufstellungsAssistentPanel();
-		initComponentes();
+		initComponents();
 		RefreshManager.instance().registerRefreshable(this);
 	}
 
@@ -255,10 +252,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		bw.write("</position>");
 		bw.newLine();
 	}
-	
-////	private void savePenaltyTakers(BufferedWriter bw) {
-////
-//	}
 
 	@Override
 	public final void update() {
@@ -268,7 +261,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	/**
 	 * Erstellt die Komponenten
 	 */
-	private void initComponentes() {
+	private void initComponents() {
 		setLayout(new BorderLayout());
 
 		centerPanel = new javax.swing.JLayeredPane();

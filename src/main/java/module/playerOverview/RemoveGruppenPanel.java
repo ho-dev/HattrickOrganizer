@@ -24,12 +24,7 @@ import java.awt.image.ImageProducer;
 import java.text.DateFormat;
 import java.util.Vector;
 
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.JToggleButton;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 
 
 /**
@@ -214,8 +209,6 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
             }
 
             core.gui.HOMainFrame.instance().getAufstellungsPanel().update();
-
-            //gui.RefreshManager.instance ().doRefresh ();
         }
     }
 

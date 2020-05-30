@@ -3,7 +3,7 @@ package core.util;
 /**
  * Provides OS-specific utility functions.
  */
-public class OSUtils {
+public final class OSUtils {
     public final static String OS_NAME = System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH);
 
     private OSUtils() {

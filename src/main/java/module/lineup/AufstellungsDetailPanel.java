@@ -66,12 +66,11 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	private ColorLabelEntry m_jpErfahrungAktuellesSystem = new ColorLabelEntry("",
 			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
 			SwingConstants.CENTER);
-//	private ColorLabelEntry m_jpGesamtStaerkeText = new ColorLabelEntry("",
-//			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+
 	private ColorLabelEntry m_jpTaktikStaerke = new ColorLabelEntry("",
 			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
 			SwingConstants.CENTER);
-//	private RatingTableEntry m_jpGesamtStaerke = new RatingTableEntry();
+
 	private CBItem[] EINSTELLUNG = {
 			new CBItem(
 					HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool"),
@@ -345,8 +344,10 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			int exp = homodel.getLineupWithoutRatingRecalc().getTeamErfahrung4AktuellesSystem();
 			m_jpErfahrungAktuellesSystem.setText(PlayerAbility.toString(exp) + " (" + exp + ")");
 			m_jpErfahrungAktuellesSystem.setToolTipText(formationExperienceTooltip);
-			m_jpErfahrungAktuellesSystem.setFGColor(new Color(Math.min(
-					Math.max(((8 - exp) * 32) - 1, 0), 255), 0, 0));
+
+			// FIXME This works for light theme, but not for dark themes.
+			// m_jpErfahrungAktuellesSystem.setFGColor(new Color(Math.min(
+			//		Math.max(((8 - exp) * 32) - 1, 0), 255), 0, 0));
 		}
 	}
 
@@ -427,7 +428,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	}
 
 	/**
-	 * Set the tactic using it's constant.
+	 * Set the tactic using its constant.
 	 *
 	 * @param taktik
 	 *            the tactic constant

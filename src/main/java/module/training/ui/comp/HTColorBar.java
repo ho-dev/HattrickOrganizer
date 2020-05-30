@@ -2,6 +2,8 @@
 package module.training.ui.comp;
 
 import core.constants.player.PlayerSkill;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +24,7 @@ public final class HTColorBar extends JComponent {
     private float thirdValue;
     private int skillIndex;
 
-    Color COLOR_BACKGROUND = new Color(236, 236, 236);
+    Color COLOR_BACKGROUND = ThemeManager.getColor(HOColorName.PANEL_BG);
     Color COLOR_SKILL_GOOD = new Color(89, 150, 93); //Form, Stamina >6
     Color COLOR_SKILL_MEDIUM = new Color(241, 196, 10); //Form, Stamina >4 & <=6
     Color COLOR_SKILL_LOW = new Color(245, 161, 4); //Form, Stamina >2 & <=4

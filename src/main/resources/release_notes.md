@@ -14,6 +14,8 @@ Changelist HO! 4.0
 
 ## Highlights
 
+   - [FEAT] Improved HO themes, and implemented dark mode. #85
+
 
 ## Detailed Changelog
 

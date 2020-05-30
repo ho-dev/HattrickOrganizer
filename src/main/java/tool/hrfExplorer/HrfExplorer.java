@@ -5,6 +5,7 @@ import core.file.ExampleFileFilter;
 import core.gui.IRefreshable;
 import core.gui.RefreshManager;
 import core.gui.comp.panel.ImagePanel;
+import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -63,10 +64,10 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	private static final long serialVersionUID = -4187405421481083232L;
 	private MatchKurzInfo[] m_kurzInfo;				// Adapter für Spieleinfos, u.a. ob Friendly oder Liga
 	// Members für Farben
-	private Color gruen = new Color (220,255,220);
-	private Color hellblau = new Color (235,235,255);
-	private Color dunkelblau = new Color (220,220,255);
-	private Color rot = new Color (255,200,200);
+	private Color gruen = ThemeManager.getColor(HOColorName.HRF_GREEN_BG);
+	private Color hellblau = ThemeManager.getColor(HOColorName.HRF_LIGHTBLUE_BG);
+	private Color dunkelblau = ThemeManager.getColor(HOColorName.HRF_DARKBLUE_BG);
+	private Color rot = ThemeManager.getColor(HOColorName.HRF_RED_BG);
 	private Color m_LineColor;
 
 	//Members für die GUI

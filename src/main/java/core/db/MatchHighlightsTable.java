@@ -134,9 +134,11 @@ final class MatchHighlightsTable extends AbstractTable {
 				+ "SpielerId=" + playerId + " ORDER BY Minute, HeimTore, GastTore";
 		try {
 			ResultSet rs = adapter.executeQuery(sql);
-			rs.beforeFirst();
-			while (rs.next()) {
-				matchHighlights.add(createObject(rs));
+			if (rs != null) {
+				rs.beforeFirst();
+				while (rs.next()) {
+					matchHighlights.add(createObject(rs));
+				}
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);

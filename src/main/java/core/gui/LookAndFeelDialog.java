@@ -1,20 +1,14 @@
 package core.gui;
 
-import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import core.gui.theme.ColorIcon;
 
-import javax.swing.JDialog;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
-import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.swing.*;
+import javax.swing.table.*;
 
 public class LookAndFeelDialog extends JDialog {
 
@@ -31,24 +25,25 @@ public class LookAndFeelDialog extends JDialog {
 
 		JTable table = new JTable();
 		table.setAutoCreateRowSorter(true);
-		table.setModel(new MyTableModel(getLookAndFeelOverview()));		
+		table.setModel(new MyTableModel(getLookAndFeelOverview()));
+		table.setDefaultRenderer(Object.class, new ColorIconTableCellRenderer(table.getDefaultRenderer(Object.class)));
+
 		add(new JScrollPane(table), BorderLayout.CENTER);
 	}
 
 	/**
-	 * Gets a map containing a <code>String</code> representation of the Look
+	 * Gets a map containing an <code>Object</code> representation of the Look
 	 * and Feel keys and their values.
 	 * 
 	 * @return A map with laf keys and values.
 	 */
-	private static LinkedHashMap<String, String> getLookAndFeelOverview() {
+	private static LinkedHashMap<String, Object> getLookAndFeelOverview() {
 		Collection<String> keys = getLookAndFeelKeys();
 		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		for (String key : keys) {
 			Object val = defaults.get(key);
-			String strVal = (val != null) ? val.toString() : "null";
-			map.put(key, strVal);
+			map.put(key, (val != null) ? val : "null");
 		}
 		return map;
 	}
@@ -58,29 +53,22 @@ public class LookAndFeelDialog extends JDialog {
 	 * 
 	 * @return A sorted collection of all Look and Feel keys.
 	 */
-	private static Collection<String> getLookAndFeelKeys() {
-		ArrayList<String> list = new ArrayList<String>();
+	private static Collection<String> getLookAndFeelKeys() { ;
 		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
-		Iterator<Object> it = defaults.keySet().iterator();
-
-		while (it.hasNext()) {
-			list.add(it.next().toString());
-		}
-		Collections.sort(list);
-		return list;
+		return defaults.keySet().stream().map(Object::toString).sorted().collect(Collectors.toList());
 	}
 
-	private class MyTableModel extends AbstractTableModel {
+	private static class MyTableModel extends AbstractTableModel {
 
 		private String[] columns = { "Key", "Value" };
 
 		private static final long serialVersionUID = 6272326208121321089L;
-		private Map<String, String> data;
+		private Map<String, Object> data;
 		private List<String> keys;
 
-		public MyTableModel(Map<String, String> data) {
+		public MyTableModel(Map<String, Object> data) {
 			this.data = data;
-			this.keys = new ArrayList<String>(data.keySet());
+			this.keys = new ArrayList<>(data.keySet());
 		}
 
 		@Override
@@ -105,6 +93,35 @@ public class LookAndFeelDialog extends JDialog {
 		@Override
 		public String getColumnName(int column) {
 			return this.columns[column];
+		}
+	}
+
+
+	/**
+	 * Decorator renderer to display colours using {@link ColorIcon}.
+	 */
+	static class ColorIconTableCellRenderer implements TableCellRenderer {
+		TableCellRenderer tableCellRenderer;
+
+		public ColorIconTableCellRenderer(TableCellRenderer renderer) {
+			this.tableCellRenderer = renderer;
+		}
+
+
+		public Component getTableCellRendererComponent(JTable table, Object value,
+													   boolean isSelected, boolean hasFocus, int row, int column) {
+
+			Component comp = tableCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+			if (value instanceof Color) {
+				Color colorUI = (Color)value;
+				JLabel compLabel = (JLabel)comp;
+				compLabel.setIcon(new ColorIcon(colorUI));
+
+				return compLabel;
+			}
+
+			return comp;
 		}
 	}
 }

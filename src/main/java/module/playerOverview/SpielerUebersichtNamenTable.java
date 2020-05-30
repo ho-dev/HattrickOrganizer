@@ -7,7 +7,7 @@ import core.gui.comp.table.TableSorter;
 import core.gui.model.ReduzedTableModel;
 import core.model.player.Player;
 
-import javax.swing.JTable;
+import javax.swing.*;
 
 public class SpielerUebersichtNamenTable extends JTable implements Refreshable, PlayerTable {
 
@@ -23,7 +23,7 @@ public class SpielerUebersichtNamenTable extends JTable implements Refreshable, 
 		tableSorter = model;
 		model.addMouseListenerToHeaderInTable(this);
 		model.addTableModelListener(this);
-		setSelectionMode(0);
+		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		setModel(new ReduzedTableModel(model, 0));
 		setDefaultRenderer(java.lang.Object.class, new HODefaultTableCellRenderer());
 		RefreshManager.instance().registerRefreshable(this);
@@ -49,7 +49,6 @@ public class SpielerUebersichtNamenTable extends JTable implements Refreshable, 
 	@Override
 	public final void reInit() {
 		initModelNamen();
-
 		repaint();
 	}
 
@@ -63,7 +62,7 @@ public class SpielerUebersichtNamenTable extends JTable implements Refreshable, 
 	 * Initialisiert das Model für die Namen
 	 */
 	private void initModelNamen() {
-		setSelectionMode(0);
+		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		setRowSelectionAllowed(true);
 		getColumnModel().getColumn(0).setMinWidth(167);
 	}

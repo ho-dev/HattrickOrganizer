@@ -29,8 +29,6 @@ public class TrainingModulePanel extends LazyPanel {
 
 	private static final long serialVersionUID = -1313192105835561643L;
 	private TrainingModel model;
-	private boolean initialized = false;
-	private boolean needsRefresh = false;
 
 	@Override
 	protected void initialize() {

@@ -1,5 +1,6 @@
 package module.teamAnalyzer.ui;
 
+import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
@@ -18,7 +19,7 @@ public class UserTeamPlayerPanel extends PlayerPanel {
     //~ Methods ------------------------------------------------------------------------------------
     @Override
     protected Color getBackGround() {
-        return Color.LIGHT_GRAY;
+        return ThemeManager.getColor(HOColorName.PANEL_BG);
     }
 
     @Override
@@ -33,14 +34,15 @@ public class UserTeamPlayerPanel extends PlayerPanel {
         	
             nameField.setText(lineup.getName());
             setPlayerStatus(lineup.getStatus());
-            positionImage.setIcon(ImageUtilities.getImage4Position(lineup.getSpot(),
-                                                                                   (byte) lineup
-                                                                                   .getTacticCode(),0));
+            positionImage.setIcon(ImageUtilities.getImage4Position(
+                    lineup.getSpot(),
+                    (byte) lineup.getTacticCode(),
+                    0
+            ));
             specialEventImage.setIcon(ThemeManager.getIcon(HOIconName.SPECIALTIES[lineup.getSpecialEvent()]));
-            positionField.setText(MatchRoleID.getNameForPosition((byte) lineup
-                                                                                    .getPosition()));
+            positionField.setText(MatchRoleID.getNameForPosition((byte) lineup.getPosition()));
             updateRatingPanel(lineup.getRating());
-            tacticPanel.reload(new ArrayList<TacticReport>());
+            tacticPanel.reload(new ArrayList<>());
         } else {
         	containsPlayer = false;
         	
@@ -49,10 +51,7 @@ public class UserTeamPlayerPanel extends PlayerPanel {
             updateRatingPanel(0);
             positionImage.setIcon(ImageUtilities.getImage4Position(0, (byte) 0,0));
             specialEventImage.setIcon(null);
-            tacticPanel.reload(new ArrayList<TacticReport>());
+            tacticPanel.reload(new ArrayList<>());
         }
-    }
-
-    protected void updateSpecialEvent() {
     }
 }

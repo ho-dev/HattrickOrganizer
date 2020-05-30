@@ -28,7 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
 
 /**
  * Recap Panel when future preview of skillups is shown ("Prediction" tab,
@@ -42,8 +42,6 @@ public class TrainingRecapPanel extends LazyImagePanel {
     private static final int fixedColumns = 5;
     private TrainingRecapTable recapTable;
     private final TrainingModel model;
-    private boolean initialized = false;
-    private boolean needsRefresh = false;
 
     /**
      * Creates a new TrainingRecapPanel object.
@@ -78,8 +76,6 @@ public class TrainingRecapPanel extends LazyImagePanel {
             public void refresh() {
                 if (isShowing()) {
                     reload();
-                } else {
-                    needsRefresh = true;
                 }
             }
         });
@@ -186,7 +182,6 @@ public class TrainingRecapPanel extends LazyImagePanel {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         recapTable = new TrainingRecapTable(table, fixedColumns);
-        recapTable.getScrollTable().setDefaultRenderer(Object.class, new TrainingRecapRenderer());
 
         // Hide the last column
         JTable scrollTable = recapTable.getScrollTable();
