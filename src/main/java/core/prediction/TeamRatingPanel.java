@@ -159,8 +159,11 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         rat.setMiddleAttack(getValue(5));
         rat.setRightAttack(getValue(6));
 
-        final TeamData teamData = new TeamData(teamName, rat, values[7][0].getSelectedIndex(),
-                                               values[7][1].getSelectedIndex());
+        int tactic = values[7][0].getSelectedIndex();
+        if ( tactic>4) tactic+=2; // special values for longshot and creativ
+
+        final TeamData teamData = new TeamData(teamName, rat, tactic,
+                                               values[7][1].getSelectedIndex()+1);
         return teamData;
     }
 

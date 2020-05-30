@@ -3,6 +3,7 @@ package module.teamAnalyzer.report;
 
 import core.model.HOVerwaltung;
 import core.module.config.ModuleConfig;
+import core.prediction.engine.TeamData;
 import core.specialevents.SpecialEventsPredictionManager;
 import module.lineup.Lineup;
 import module.teamAnalyzer.SystemManager;
@@ -92,10 +93,10 @@ public class TeamReport {
         }
     }
 
-    public void adjustRatingsLineup(MatchRating newRatings) {
+    public void adjustRatingsLineup(TeamData newRatings) {
         // copy of selected lineup
         adjustedRatingsLineup =  new TeamLineupBuilder(new TeamReport(getLineup(selection).getMatchDetail()))
-                .setMatchRating(newRatings)
+                .setTeamData(newRatings)
                 .setName(HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.Adjusted")).build();
     }
 

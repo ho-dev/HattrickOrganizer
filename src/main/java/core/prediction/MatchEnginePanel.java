@@ -79,16 +79,7 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 		TeamRatingPanel opponentPanel = getOpponentPanel();
 		if ( opponentPanel.isRatingsChanged()){
 			// user has changed the match ratings
-			TeamRatings adjusted = opponentPanel.getTeamData().getRatings();
-			MatchRating newRatings = new MatchRating();
-			newRatings.setRightDefense(adjusted.getRightDef());
-			newRatings.setRightAttack(adjusted.getRightAttack());
-			newRatings.setMidfield(adjusted.getMidfield());
-			newRatings.setLeftDefense(adjusted.getLeftDef());
-			newRatings.setLeftAttack(adjusted.getLeftAttack());
-			newRatings.setCentralDefense(adjusted.getMiddleDef());
-			newRatings.setCentralAttack(adjusted.getMiddleAttack());
-			SystemManager.adjustRatingsLineup(newRatings);
+			SystemManager.adjustRatingsLineup(opponentPanel.getTeamData());
 		}
 	}
 
