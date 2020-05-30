@@ -2,6 +2,8 @@ package module.teamAnalyzer.manager;
 
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
+import core.prediction.engine.TeamData;
+import core.prediction.engine.TeamRatings;
 import module.teamAnalyzer.report.PositionReport;
 import module.teamAnalyzer.report.SpotReport;
 import module.teamAnalyzer.report.TacticReport;
@@ -53,8 +55,21 @@ public class TeamLineupBuilder {
         return this;
     }
 
-    public TeamLineupBuilder setMatchRating(MatchRating newRatings) {
-        this.teamLineup.setRating(newRatings);
+    public TeamLineupBuilder setTeamData(TeamData teamData) {
+        MatchRating rating = new MatchRating();
+        TeamRatings tr = teamData.getRatings();
+        rating.setCentralAttack(tr.getMiddleAttack());
+        rating.setCentralDefense(tr.getMiddleDef());
+        rating.setLeftAttack(tr.getLeftAttack());
+        rating.setLeftDefense(tr.getLeftDef());
+        rating.setMidfield(tr.getMidfield());
+        rating.setRightAttack(tr.getRightAttack());
+        rating.setRightDefense(tr.getRightDef());
+        rating.setHatStats(rating.computeHatStats());
+        rating.setLoddarStats(rating.computeLoddarStats());
+        this.teamLineup.setRating(rating);
+        this.teamLineup.setAdjustedTacticCode(teamData.getTacticType());
+        this.teamLineup.setAdjustedTacticLevel(teamData.getTacticLevel());
         return this;
     }
 

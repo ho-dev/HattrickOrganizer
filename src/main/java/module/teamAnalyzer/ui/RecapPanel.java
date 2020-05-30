@@ -184,15 +184,16 @@ public class RecapPanel extends JPanel {
 
         // Columns 16-17
         rowData.add(df2.format(lineup.getRating().getLoddarStats()));
-        if ( matchType != MatchType.NONE) {
-            rowData.add(Matchdetails.getNameForTaktik(lineup.getTacticCode()));
+        int tactic = lineup.getTacticCode();
+        if ( tactic != -1) {
+            rowData.add(Matchdetails.getNameForTaktik(tactic));
         }
         else{
             rowData.add(VALUE_NA);
         }
 
         // Column 18
-        if (lineup.getTacticCode() == 0) {
+        if (lineup.getTacticCode() <= 0) {
             rowData.add(VALUE_NA);
         } else {
             rowData.add(PlayerAbility.getNameForSkill(lineup.getTacticLevel(), false));

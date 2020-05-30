@@ -16,7 +16,11 @@ import java.util.HashMap;
 public class TeamLineup {
     //~ Instance fields ----------------------------------------------------------------------------
 
+    // average, adjusted, opponent team name
     private String name;
+    // adjusted values
+    private Integer adjustedTacticCode;
+    private Integer adjustedTacticLevel;
 
     private MatchDetail matchDetail;
 
@@ -174,17 +178,23 @@ public class TeamLineup {
     }
 
     public int getTacticCode() {
+        if ( this.adjustedTacticCode != null){
+            return this.adjustedTacticCode;
+        }
         if (this.matchDetail != null) {
             return this.matchDetail.getTacticCode();
         }
-        return 0;
+        return -1;
     }
 
     public int getTacticLevel() {
+        if ( this.adjustedTacticLevel != null){
+            return this.adjustedTacticLevel;
+        }
         if (this.matchDetail != null) {
             return this.matchDetail.getTacticLevel();
         }
-        return 0;
+        return -1;
     }
 
     public String getFormation() {
@@ -199,5 +209,13 @@ public class TeamLineup {
             return this.matchDetail.getMatchDetail().isHome();
         }
         return false;
+    }
+
+    public void setAdjustedTacticCode(Integer adjustedTacticCode) {
+        this.adjustedTacticCode = adjustedTacticCode;
+    }
+
+    public void setAdjustedTacticLevel(Integer adjustedTacticLevel) {
+        this.adjustedTacticLevel = adjustedTacticLevel;
     }
 }

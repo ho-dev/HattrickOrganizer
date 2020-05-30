@@ -2,6 +2,7 @@
 package module.teamAnalyzer;
 
 import core.model.HOVerwaltung;
+import core.prediction.engine.TeamData;
 import module.teamAnalyzer.manager.MatchManager;
 import module.teamAnalyzer.manager.MatchPopulator;
 import module.teamAnalyzer.manager.NameManager;
@@ -163,7 +164,7 @@ public class SystemManager {
 		return teamReport;
 	}
 
-	public static void adjustRatingsLineup(MatchRating newRatings) {
+	public static void adjustRatingsLineup(TeamData newRatings) {
 		getTeamReport().adjustRatingsLineup(newRatings);
 		updateUI();
 	}
