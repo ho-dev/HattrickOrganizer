@@ -6,6 +6,8 @@ import com.kitfox.svg.app.beans.SVGIcon;
 import com.kitfox.svg.xml.StyleSheet;
 import com.kitfox.svg.xml.StyleSheetRule;
 import core.model.UserParameter;
+import core.model.WorldDetailLeague;
+import core.model.WorldDetailsManager;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
@@ -441,8 +443,13 @@ public class ImageUtilities {
 		return komplettIcon;
 	}
 
-	public static ImageIcon getFlagIcon(int country) {
-	    return ThemeManager.instance().classicSchema.loadImageIcon("flags/"+ country + "flag.png");
+	public static ImageIcon getCountryFlagIcon(int iCountryID) {
+		WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(iCountryID);
+	    return getLeagueFlagIcon(leagueDetail.getLeagueId());
+	}
+
+	public static ImageIcon getLeagueFlagIcon(int iLeague) {
+		return ThemeManager.instance().classicSchema.loadImageIcon("flags/"+ iLeague + "flag.png");
 	}
 
 	public static BufferedImage toBufferedImage(Image image) {

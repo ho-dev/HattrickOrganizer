@@ -52,6 +52,11 @@ public class WorldDetailsManager {
 	}
 
 	public WorldDetailLeague getWorldDetailLeagueByCountryId(Integer countryId) {
+		if (countryMap.size() == 0)
+		{
+			initialize();
+		}
+
 		return countryMap.get(countryId);
 	}
 
