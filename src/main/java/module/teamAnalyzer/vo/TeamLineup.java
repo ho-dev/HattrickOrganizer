@@ -5,6 +5,7 @@ import core.model.match.MatchType;
 import core.specialevents.SpecialEventsPredictionManager;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 
@@ -34,7 +35,7 @@ public class TeamLineup {
      * Changed to a HashMap with roleID (from HO) as key...
      */
 
-    private HashMap<Integer, SpotLineup> spotLineups = new HashMap<Integer, SpotLineup>();
+    private HashMap<Integer, SpotLineup> spotLineups = new HashMap<>();
     //private SpotLineup[] spotLineups = new SpotLineup[11];
 
     /**
@@ -96,17 +97,16 @@ public class TeamLineup {
      *
      * @return the String representation
      */
-    @SuppressWarnings("unchecked")
     @Override
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         buffer.append("TeamLineup[");
 
         if (spotLineups == null) {
             buffer.append("spotLineups = " + "null");
         } else {
-            buffer.append("spotLineups = " + Arrays.asList(spotLineups).toString());
+            buffer.append("spotLineups = ").append(Collections.singletonList(spotLineups).toString());
         }
 
         buffer.append("]");
@@ -132,7 +132,7 @@ public class TeamLineup {
 
     public String getName() {
         if (this.matchDetail != null) {
-            Match match = this.matchDetail.getMatchDetail();
+            Match match = this.matchDetail.getMatch();
             if (match.isHome()) {
                 return match.getAwayTeam();
             }
@@ -147,14 +147,14 @@ public class TeamLineup {
 
     public MatchType getMatchType() {
         if (this.matchDetail != null) {
-            return this.matchDetail.getMatchDetail().getMatchType();
+            return this.matchDetail.getMatch().getMatchType();
         }
         return MatchType.NONE;
     }
 
     public String getResult() {
         if (this.matchDetail != null) {
-            Match match = this.matchDetail.getMatchDetail();
+            Match match = this.matchDetail.getMatch();
             if (match.isHome()) {
                 return match.getHomeGoals() + "-" + match.getAwayGoals();
             }
@@ -165,14 +165,14 @@ public class TeamLineup {
 
     public int getWeek() {
         if (this.matchDetail != null) {
-            return this.matchDetail.getMatchDetail().getWeek();
+            return this.matchDetail.getMatch().getWeek();
         }
         return -1;
     }
 
     public int getSeason() {
         if (this.matchDetail != null) {
-            return this.matchDetail.getMatchDetail().getSeason();
+            return this.matchDetail.getMatch().getSeason();
         }
         return -1;
     }
@@ -206,7 +206,7 @@ public class TeamLineup {
 
     public boolean isHomeMatch() {
         if (this.matchDetail != null) {
-            return this.matchDetail.getMatchDetail().isHome();
+            return this.matchDetail.getMatch().isHome();
         }
         return false;
     }

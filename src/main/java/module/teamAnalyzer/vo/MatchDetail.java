@@ -14,7 +14,7 @@ public class MatchDetail {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** ArrayList of Player performance for this game */
-    private List<PlayerPerformance> playerPerf = new ArrayList<PlayerPerformance>();
+    private List<PlayerPerformance> playerPerf = new ArrayList<>();
 
     private int setPiecesTaker = -1;
 
@@ -60,7 +60,7 @@ public class MatchDetail {
         return formation;
     }
 
-    public Match getMatchDetail() {
+    public Match getMatch() {
         return match;
     }
 
@@ -112,15 +112,12 @@ public class MatchDetail {
      */
     @Override
 	public String toString() {
-        StringBuffer buffer = new StringBuffer();
 
-        buffer.append("MatchDetail[");
-        buffer.append("playerPerf = " + playerPerf);
-        buffer.append(", match = " + match);
-        buffer.append(", rating = " + rating);
-        buffer.append("]");
-
-        return buffer.toString();
+        return "MatchDetail[" +
+                "playerPerf = " + playerPerf +
+                ", match = " + match +
+                ", rating = " + rating +
+                "]";
     }
 
     public double getRatingIndirectSetPiecesDef() {
