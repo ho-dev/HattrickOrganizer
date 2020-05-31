@@ -19,9 +19,11 @@ public class TeamLineup {
 
     // average, adjusted, opponent team name
     private String name;
+    private MatchType matchType=MatchType.NONE;
     // adjusted values
     private Integer adjustedTacticCode;
     private Integer adjustedTacticLevel;
+
 
     private MatchDetail matchDetail;
 
@@ -145,7 +147,12 @@ public class TeamLineup {
         this.name = name;
     }
 
+    public void setMatchType(MatchType type){ this.matchType = type;}
+
     public MatchType getMatchType() {
+        if (this.matchType != MatchType.NONE){
+            return matchType;
+        }
         if (this.matchDetail != null) {
             return this.matchDetail.getMatch().getMatchType();
         }

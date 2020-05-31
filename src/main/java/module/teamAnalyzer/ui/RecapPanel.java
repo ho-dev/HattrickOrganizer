@@ -19,6 +19,7 @@ import module.teamAnalyzer.vo.TeamLineup;
 
 import java.awt.BorderLayout;
 import java.text.DecimalFormat;
+import java.time.temporal.ValueRange;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -139,7 +140,7 @@ public class RecapPanel extends JPanel {
     private Vector<Object> AddLineup(TeamLineup lineup) {
         if ( lineup == null) return null;
 
-        Vector<Object> rowData = new Vector<Object>();
+        Vector<Object> rowData = new Vector<>();
 
         rowData.add(lineup.getName());
         MatchType matchType = lineup.getMatchType();
@@ -152,14 +153,13 @@ public class RecapPanel extends JPanel {
         rowData.add(lineup.getResult());
 
         // Columns 3 & 4
-        if ( matchType != MatchType.NONE) {
-            rowData.add(lineup.getWeek()); //$NON-NLS-1$
-            rowData.add(lineup.getSeason()); //$NON-NLS-1$
-        }
-        else {
-            rowData.add(VALUE_NA);
-            rowData.add(VALUE_NA);
-        }
+        int week = lineup.getWeek();
+        if ( week > 0) rowData.add(week);
+        else rowData.add(VALUE_NA);
+
+        int season = lineup.getSeason();
+        if ( season>0)rowData.add(season);
+        else rowData.add(VALUE_NA);
 
         // Columns 5-11
         setRating(rowData, lineup.getRating());
@@ -201,8 +201,8 @@ public class RecapPanel extends JPanel {
 
         // Columns 19-21
         rowData.add(lineup.getFormation());
-        rowData.add(new Integer(matchType.getId()));
-        rowData.add(new Boolean(lineup.isHomeMatch()));
+        rowData.add(matchType.getId());
+        rowData.add(lineup.isHomeMatch());
         return rowData;
     }
 
@@ -236,6 +236,7 @@ public class RecapPanel extends JPanel {
         row.add(getRating((int) rating.getRightAttack()));
         row.add(getRating((int) rating.getCentralAttack()));
         row.add(getRating((int) rating.getLeftAttack()));
+
     }
 
     private String getRating(int rating) {
