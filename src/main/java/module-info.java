@@ -4,5 +4,5 @@ open module ho {
 //    requires okhttp3;
     requires scribe;
     requires com.google.gson;
-    requires com.google.common;
+//    requires com.google.common;
 }

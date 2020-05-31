@@ -1,12 +1,11 @@
 package core.model.player;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.primitives.Ints;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  *
@@ -56,8 +55,8 @@ public interface IMatchRoleID {
     int substXT2 = 213; // 	Backup (Extra)
     List<Integer> aBackupssMatchRoleID = IntStream.rangeClosed(207, 213).boxed().collect(Collectors.toList());
     List<Integer> aSubsAndBackupssMatchRoleID = IntStream.rangeClosed(200, 213).boxed().collect(Collectors.toList());
-    List<Integer> aFieldMSubsAndBackupMatchRoleID = Lists.newArrayList(Iterables.concat(aFieldMatchRoleID, aSubsAndBackupssMatchRoleID));
-    List<Integer> aFieldAndSubsMatchRoleID = Lists.newArrayList(Iterables.concat(aFieldMatchRoleID, aSubstitutesMatchRoleID));
+    List<Integer> aFieldMSubsAndBackupMatchRoleID = Stream.of(aFieldMatchRoleID, aSubsAndBackupssMatchRoleID).flatMap(Collection::stream).collect(Collectors.toList());
+    List<Integer> aFieldAndSubsMatchRoleID = Stream.of(aFieldMatchRoleID, aSubstitutesMatchRoleID).flatMap(Collection::stream).collect(Collectors.toList());
 
     // SetPieces Taker and Captain
     int setPieces = 17;
@@ -139,21 +138,21 @@ public interface IMatchRoleID {
 
     
     // The old role IDs used for mapping old data to new format
-     List<Integer> oldKeeper = Ints.asList(new int[] {1});
-     List<Integer>oldRightBack = Ints.asList(new int[] {2});
-     List<Integer>oldRightCentralDefender = Ints.asList(new int[] {3});
-     List<Integer>oldLeftCentralDefender = Ints.asList(new int[] {4});
-     List<Integer>oldLeftBack = Ints.asList(new int[] {5});
-     List<Integer>oldRightWinger = Ints.asList(new int[] {6});
-     List<Integer>oldRightInnerMidfielder = Ints.asList(new int[] {7});
-     List<Integer>oldLeftInnerMidfielder = Ints.asList(new int[] {8});
-     List<Integer>oldLeftWinger = Ints.asList(new int[] {9});
-     List<Integer>oldRightForward = Ints.asList(new int[] {10});
-     List<Integer>oldLeftForward = Ints.asList(new int[] {11});
-     List<Integer>oldSubstKeeper = Ints.asList(new int[] {12, 114});
-     List<Integer>oldSubstDefender = Ints.asList(new int[] {13, 115});
-     List<Integer>oldSubstMidfielder = Ints.asList(new int[] {14, 116});
-     List<Integer>oldSubstWinger = Ints.asList(new int[] {15, 117});
-     List<Integer>oldSubstForward = Ints.asList(new int[] {16, 118});
+     List<Integer> oldKeeper = List.of(1);
+     List<Integer>oldRightBack = List.of(2);
+     List<Integer>oldRightCentralDefender = List.of(3);
+     List<Integer>oldLeftCentralDefender = List.of(4);
+     List<Integer>oldLeftBack = List.of(5);
+     List<Integer>oldRightWinger = List.of(6);
+     List<Integer>oldRightInnerMidfielder = List.of(7);
+     List<Integer>oldLeftInnerMidfielder = List.of(8);
+     List<Integer>oldLeftWinger = List.of(9);
+     List<Integer>oldRightForward = List.of(10);
+     List<Integer>oldLeftForward = List.of(11);
+     List<Integer>oldSubstKeeper = List.of(12, 114);
+     List<Integer>oldSubstDefender = List.of(13, 115);
+     List<Integer>oldSubstMidfielder = List.of(14, 116);
+     List<Integer>oldSubstWinger = List.of(15, 117);
+     List<Integer>oldSubstForward = List.of(16, 118);
     
 }

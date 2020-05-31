@@ -18,7 +18,6 @@ repositories {
 
 //============  external jar dependencies ==========
 dependencies {
-    implementation 'com.google.guava:guava:29.0-jre'
     implementation 'com.toedter:jcalendar:1.4'
     implementation 'org.scribe:scribe:1.3.0'
     implementation 'org.hsqldb:hsqldb:2.4.1'
