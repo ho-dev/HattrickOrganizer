@@ -95,8 +95,10 @@ public class TeamReport {
 
     public void adjustRatingsLineup(TeamData newRatings) {
         // copy of selected lineup
-        adjustedRatingsLineup =  new TeamLineupBuilder(new TeamReport(getLineup(selection).getMatchDetail()))
+        MatchDetail matchDetail = getLineup(selection).getMatchDetail();
+        adjustedRatingsLineup =  new TeamLineupBuilder(new TeamReport(matchDetail))
                 .setTeamData(newRatings)
+                .setMatchType(matchDetail.getMatch().getMatchType())
                 .setName(HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.Adjusted")).build();
     }
 
@@ -133,8 +135,8 @@ public class TeamReport {
     public void addMatch(MatchDetail matchDetail, boolean showUnavailable) {
         this.matchDetails.add(matchDetail);
 
-        for (Iterator<PlayerPerformance> iter = matchDetail.getPerformances().iterator(); iter.hasNext();) {
-            addPerformance( iter.next(), showUnavailable);
+        for (PlayerPerformance playerPerformance : matchDetail.getPerformances()) {
+            addPerformance(playerPerformance, showUnavailable);
         }
 
         addRating(matchDetail.getRating());
@@ -210,9 +212,7 @@ public class TeamReport {
      * @return the new average number
      */
     private double updateAverage(double oldValue, double newValue) {
-        double rat = ((oldValue * matchNumber) + newValue) / (matchNumber + 1);
-
-        return rat;
+        return ((oldValue * matchNumber) + newValue) / (matchNumber + 1);
     }
 
     public void selectLineup(int i) {
