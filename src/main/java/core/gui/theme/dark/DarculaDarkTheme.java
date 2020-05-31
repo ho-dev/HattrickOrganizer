@@ -5,11 +5,10 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.DarculaTheme;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import core.util.HOLogger;
 
 import javax.swing.*;
 import java.awt.*;
-
-import static core.gui.theme.HOColorName.TSFORECAST_ALT_COLOR;
 
 public class DarculaDarkTheme extends DarkTheme {
 
@@ -28,7 +27,6 @@ public class DarculaDarkTheme extends DarkTheme {
         try {
             LafManager.setTheme(new DarculaTheme());
             UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
-
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
 
             final Color neutralGrey = new Color(80, 80, 80);
@@ -51,7 +49,7 @@ public class DarculaDarkTheme extends DarkTheme {
             // defaults defined by darklaf
             ThemeManager.instance().put(HOColorName.LEAGUE_TITLE_BG, defaults.getColor("TableHeader.background"));
             ThemeManager.instance().put(HOColorName.TABLE_LEAGUE_EVEN, defaults.getColor("Table.background"));
-            ThemeManager.instance().put(HOColorName.TABLE_LEAGUE_ODD, defaults.getColor("Table.alternateRowBackground"));
+            ThemeManager.instance().put(HOColorName.TABLE_LEAGUE_ODD, defaults.getColor("Table.backgroundAlternative"));
             ThemeManager.instance().put(HOColorName.LEAGUE_FG, defaults.getColor("Table.foreground"));
             ThemeManager.instance().put(HOColorName.LEAGUE_BG, defaults.getColor("Table.background"));
             ThemeManager.instance().put(HOColorName.TEAM_FG, new Color(100, 131, 226));
@@ -83,7 +81,7 @@ public class DarculaDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.STAT_PANEL_FG, defaults.getColor("Label.foreground"));
 
             // TS Forecast
-            ThemeManager.instance().put(TSFORECAST_ALT_COLOR, new Color(160, 160, 210));
+            ThemeManager.instance().put(HOColorName.TSFORECAST_ALT_COLOR, new Color(160, 160, 210));
 
             // HRF Explorer
             ThemeManager.instance().put(HOColorName.HRF_GREEN_BG, new Color(56, 76, 53));
@@ -93,7 +91,11 @@ public class DarculaDarkTheme extends DarkTheme {
 
             return super.enableTheme();
         } catch (Exception e) {
-            e.printStackTrace();
+            HOLogger.instance().warning(getClass(),
+                    String.format("Error loading %s: %s",
+                            THEME_NAME,
+                            e.getMessage()
+                    ));
             return false;
         }
     }

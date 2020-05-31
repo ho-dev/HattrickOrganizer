@@ -53,7 +53,7 @@ public final class ThemeManager {
 		themes.put(DarculaDarkTheme.THEME_NAME, new DarculaDarkTheme());
 // Comment out those themes for now as they are not ready yet.
 //		themes.put(HighContrastTheme.THEME_NAME, new HighContrastTheme());
-//		themes.put(SolarizedDarkTheme.THEME_NAME, new SolarizedDarkTheme());
+		themes.put(SolarizedDarkTheme.THEME_NAME, new SolarizedDarkTheme());
 		themes.put(SolarizedLightTheme.THEME_NAME, new SolarizedLightTheme());
 		themes.put(SystemTheme.THEME_NAME, new SystemTheme());
 
