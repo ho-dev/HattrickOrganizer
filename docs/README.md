@@ -61,12 +61,12 @@
 
 ## Localization
 
-If you want to contribute or see current translation status please visit HO translation [website](https://poeditor.com/join/project/jCaWGL1JCl).   
+If you want to contribute or see current translation status please visit HO translation [website](https://poeditor.com/join/project/jCaWGL1JCl).
 Please open a request if the language you are interested in is not listed.
 
 ## Documentation
 
-Documentation for HO! is located [here](https://ho.readthedocs.io/)
+Documentation for HO! is located [here](https://ho.readthedocs.io/).
 
 ## Acknowledgements
 
@@ -93,23 +93,15 @@ these here.
 * hsqldb
   * License: has its own licence based on BSD
   * For details, see [``docs/Licences/hsqldb/LICENSE.txt``](Licences/hsqldb/LICENSE.txt)
-  
+
 * jcalendar
   * License: LGPL
   * For details, see [``http://www.gnu.org/licenses/lgpl.html``](http://www.gnu.org/licenses/lgpl.html)
-  
-* JGoodies Looks 2.70
-  * License: BSD 2-clause
-  * For details, see [``https://mvnrepository.com/artifact/com.jgoodies/jgoodies-looks/2.7.0``](https://mvnrepository.com/artifact/com.jgoodies/jgoodies-looks/2.7.0)
-  
-* macAppBundle
-  * License: Apache License, version 2.0
-  * For details, see [``docs/Licences/macAppBundle/LICENSE.txt``](Licences/macAppBundle/LICENSE.txt)
 
 * scribe
   * License: MIT
   * For details, see [``docs/Licences/scribe/LICENSE.txt``](Licences/scribe/LICENSE.txt)
-  
+
 * ospackage
   * License: Apache License, version 2.0
   * For details, see [``docs/Licences/ospackage/LICENSE.txt``](Licences/ospackage/LICENSE.txt)
@@ -117,3 +109,7 @@ these here.
 * OkHttp
   * License: Apache License, version 2.0
   * For details, see [``http://www.apache.org/licenses/LICENSE-2.0.txt``](http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+* darklaf
+  * License: MIT
+  * For details, see [``docs/Licences/darklaf/README``](Licences/darklaf/LICENSE)
