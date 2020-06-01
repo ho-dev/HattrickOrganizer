@@ -94,8 +94,6 @@ public class RecapPanel extends JPanel {
             tableModel.addRow(AddLineup(teamReport.getLineup(i)));
         }
 
-        teamReport.selectLineup(0);
-
         setColumnWidth(0, 100);
         setColumnWidth(1, 20);
         setColumnWidth(2, 40);

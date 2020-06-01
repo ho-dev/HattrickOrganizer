@@ -57,20 +57,7 @@ public class TeamLineupBuilder {
     }
 
     public TeamLineupBuilder setTeamData(TeamData teamData) {
-        MatchRating rating = new MatchRating();
-        TeamRatings tr = teamData.getRatings();
-        rating.setCentralAttack(tr.getMiddleAttack());
-        rating.setCentralDefense(tr.getMiddleDef());
-        rating.setLeftAttack(tr.getLeftAttack());
-        rating.setLeftDefense(tr.getLeftDef());
-        rating.setMidfield(tr.getMidfield());
-        rating.setRightAttack(tr.getRightAttack());
-        rating.setRightDefense(tr.getRightDef());
-        rating.setHatStats(rating.computeHatStats());
-        rating.setLoddarStats(rating.computeLoddarStats());
-        this.teamLineup.setRating(rating);
-        this.teamLineup.setAdjustedTacticCode(teamData.getTacticType());
-        this.teamLineup.setAdjustedTacticLevel(teamData.getTacticLevel());
+        this.teamLineup.setTeamData(teamData);
         return this;
     }
 
