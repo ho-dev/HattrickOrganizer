@@ -46,28 +46,28 @@ public class RecapPanel extends JPanel {
     private UiRecapTableModel tableModel;
     private RecapListSelectionListener recapListener = null;
     private String[] columns = {
-    		HOVerwaltung.instance().getLanguageString("RecapPanel.Game"), //$NON-NLS-1$
-    		HOVerwaltung.instance().getLanguageString("Type"), //$NON-NLS-1$
-    		HOVerwaltung.instance().getLanguageString("ls.match.result"),
-    		HOVerwaltung.instance().getLanguageString("Week"), //$NON-NLS-1$
-    		HOVerwaltung.instance().getLanguageString("Season"), //$NON-NLS-1$
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.midfield"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centraldefence"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftdefence"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightattack"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centralattack"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftattack"),
-    		HOVerwaltung.instance().getLanguageString("RecapPanel.Stars"), //$NON-NLS-1$
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.squad"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.smartsquad"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"),
-    HOVerwaltung.instance().getLanguageString("ls.team.tactic"),
-    HOVerwaltung.instance().getLanguageString("ls.team.tacticalskill"),
-    HOVerwaltung.instance().getLanguageString("ls.team.formation"),
-    "", //$NON-NLS-1$
-    "" //$NON-NLS-1$
+            HOVerwaltung.instance().getLanguageString("RecapPanel.Game"), //$NON-NLS-1$
+            HOVerwaltung.instance().getLanguageString("Type"), //$NON-NLS-1$
+            HOVerwaltung.instance().getLanguageString("ls.match.result"),
+            HOVerwaltung.instance().getLanguageString("Week"), //$NON-NLS-1$
+            HOVerwaltung.instance().getLanguageString("Season"), //$NON-NLS-1$
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.midfield"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centraldefence"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftdefence"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightattack"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centralattack"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftattack"),
+            HOVerwaltung.instance().getLanguageString("RecapPanel.Stars"), //$NON-NLS-1$
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.squad"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.smartsquad"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"),
+            HOVerwaltung.instance().getLanguageString("ls.team.tactic"),
+            HOVerwaltung.instance().getLanguageString("ls.team.tacticalskill"),
+            HOVerwaltung.instance().getLanguageString("ls.team.formation"),
+            "", //$NON-NLS-1$ columns 20 and 21 are only used by the RecapTableRenderer
+            "" //$NON-NLS-1$
     };
 
     private TeamLineup adjustedLineup;
@@ -132,9 +132,10 @@ public class RecapPanel extends JPanel {
             setColumnInvisible(16);
         }
 
-        // Hide 'match type' and 'is home match?' columns.
+        // Hide 'match type' and 'is home match?' columns. (used by RecapTableRenderer)
         setColumnInvisible(20);
         setColumnInvisible(21);
+
     }
 
     private Vector<Object> AddLineup(TeamLineup lineup) {
@@ -142,7 +143,10 @@ public class RecapPanel extends JPanel {
 
         Vector<Object> rowData = new Vector<>();
 
+        // Column 1
         rowData.add(lineup.getName());
+
+        // Column 2
         MatchType matchType = lineup.getMatchType();
         if ( matchType != MatchType.NONE){
             rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
@@ -152,11 +156,12 @@ public class RecapPanel extends JPanel {
         }
         rowData.add(lineup.getResult());
 
-        // Columns 3 & 4
+        // Column 3
         int week = lineup.getWeek();
         if ( week > 0) rowData.add(week);
         else rowData.add(VALUE_NA);
 
+        // Column 4
         int season = lineup.getSeason();
         if ( season>0)rowData.add(season);
         else rowData.add(VALUE_NA);
@@ -203,6 +208,7 @@ public class RecapPanel extends JPanel {
         rowData.add(lineup.getFormation());
         rowData.add(matchType.getId());
         rowData.add(lineup.isHomeMatch());
+
         return rowData;
     }
 
@@ -271,6 +277,10 @@ public class RecapPanel extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         add(scrollPane);
+
+        // Hide 'match type' and 'is home match?' columns. (used by RecapTableRenderer)
+        setColumnInvisible(20);
+        setColumnInvisible(21);
     }
 
     public String getSelectedTacticType() {
