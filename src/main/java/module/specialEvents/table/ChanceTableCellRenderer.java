@@ -4,10 +4,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.match.MatchEvent;
 import module.specialEvents.MatchRow;
-import module.specialEvents.SpecialEventsDM;
-
 import java.awt.Component;
-
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -25,9 +22,10 @@ public class ChanceTableCellRenderer extends DefaultTableCellRenderer {
 				hasFocus, row, column);
 
 		Icon icon = null;
-		MatchRow matchRow = (MatchRow) value;
-		MatchEvent highlight = matchRow.getMatchHighlight();
-		if (highlight != null) {
+
+		if (value != null) {
+			MatchRow matchRow = (MatchRow) value;
+			MatchEvent highlight = matchRow.getMatchHighlight();
 			if (highlight.isGoalEvent()) {
 				icon = ThemeManager.getIcon(HOIconName.GOAL);
 			} else if (highlight.isNonGoalEvent()) {

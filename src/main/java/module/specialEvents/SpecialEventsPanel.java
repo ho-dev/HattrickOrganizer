@@ -1,19 +1,15 @@
 package module.specialEvents;
 
-import static module.specialEvents.SpecialEventsTableModel.AWAYEVENTCOLUMN;
+import static module.specialEvents.SpecialEventsTableModel.MATCH_DATE_TYPE_COLUMN;
 import static module.specialEvents.SpecialEventsTableModel.AWAYTACTICCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.AWAYTEAMCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.CHANCECOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.EVENTTYPCOLUMN;
-import static module.specialEvents.SpecialEventsTableModel.HOMEEVENTCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.HOMETACTICCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.HOMETEAMCOLUMN;
-import static module.specialEvents.SpecialEventsTableModel.MATCHDATECOLUMN;
-import static module.specialEvents.SpecialEventsTableModel.MATCHIDCOLUMN;
-import static module.specialEvents.SpecialEventsTableModel.MATCHTYPECOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.MINUTECOLUMN;
-import static module.specialEvents.SpecialEventsTableModel.NAMECOLUMN;
-import static module.specialEvents.SpecialEventsTableModel.SETEXTCOLUMN;
+import static module.specialEvents.SpecialEventsTableModel.PLAYER_NAME_COLUMN;
+import static module.specialEvents.SpecialEventsTableModel.EVENTTEXTCOLUMN;
 import core.gui.ApplicationClosingListener;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
@@ -23,12 +19,10 @@ import module.specialEvents.filter.FilterChangeEvent;
 import module.specialEvents.filter.FilterChangeListener;
 import module.specialEvents.filter.FilterHelper;
 import module.specialEvents.table.ChanceTableCellRenderer;
-import module.specialEvents.table.DateTableCellRenderer;
 import module.specialEvents.table.DefaultSETableCellRenderer;
 import module.specialEvents.table.EventTypeTableCellRenderer;
-import module.specialEvents.table.MatchTypeTableCellRenderer;
+import module.specialEvents.table.MatchDateTypeTableCellRenderer;
 import module.specialEvents.table.PlayerNameTableCellRenderer;
-import module.specialEvents.table.SETypeTableCellRenderer;
 import module.specialEvents.table.TacticsTableCellRenderer;
 
 import java.awt.BorderLayout;
@@ -62,21 +56,9 @@ public class SpecialEventsPanel extends LazyImagePanel {
 		FilterHelper.loadSettings(this.filter);
 		setLayout(new BorderLayout());
 
-		this.filter.addFilterChangeListener(new FilterChangeListener() {
+		this.filter.addFilterChangeListener(evt -> setTableData());
 
-			@Override
-			public void filterChanged(FilterChangeEvent evt) {
-				setTableData();
-			}
-		});
-
-		HOMainFrame.instance().addApplicationClosingListener(new ApplicationClosingListener() {
-
-			@Override
-			public void applicationClosing() {
-				FilterHelper.saveSettings(filter);
-			}
-		});
+		HOMainFrame.instance().addApplicationClosingListener(() -> FilterHelper.saveSettings(filter));
 
 		JPanel filterPanel = new FilterPanel(filter);
 		specialEventsTable = new SpecialEventsTable();
@@ -88,26 +70,13 @@ public class SpecialEventsPanel extends LazyImagePanel {
 		specialEventsTable.setDefaultRenderer(Object.class, new DefaultSETableCellRenderer());
 		TacticsTableCellRenderer tacticsTableCellRenderer = new TacticsTableCellRenderer();
 
-		TableColumn matchDateColumn = columnModel.getColumn(MATCHDATECOLUMN);
-		matchDateColumn.setPreferredWidth(75);
-		matchDateColumn.setCellRenderer(new DateTableCellRenderer());
-
-		columnModel.getColumn(MATCHIDCOLUMN).setPreferredWidth(66);
-
-		TableColumn matchTypeColumn = columnModel.getColumn(MATCHTYPECOLUMN);
-		matchTypeColumn.setMaxWidth(25);
-		matchTypeColumn.setPreferredWidth(25);
-		matchTypeColumn.setCellRenderer(new MatchTypeTableCellRenderer());
-
-		columnModel.getColumn(HOMETACTICCOLUMN).setPreferredWidth(37);
+		TableColumn matchDateTypeColumn = columnModel.getColumn(MATCH_DATE_TYPE_COLUMN);
+		matchDateTypeColumn.setPreferredWidth(125);
+		matchDateTypeColumn.setCellRenderer(new MatchDateTypeTableCellRenderer());
 
 		TableColumn homeTacticColumn = columnModel.getColumn(HOMETACTICCOLUMN);
+		homeTacticColumn.setPreferredWidth(37);
 		homeTacticColumn.setCellRenderer(tacticsTableCellRenderer);
-
-		TableColumn homeEventColumn = columnModel.getColumn(HOMEEVENTCOLUMN);
-		homeEventColumn.setMaxWidth(20);
-		homeEventColumn.setPreferredWidth(20);
-		homeEventColumn.setCellRenderer(new SETypeTableCellRenderer(false));
 
 		TableColumn homeTeamColumn = columnModel.getColumn(HOMETEAMCOLUMN);
 		homeTeamColumn.setPreferredWidth(150);
@@ -117,11 +86,6 @@ public class SpecialEventsPanel extends LazyImagePanel {
 
 		TableColumn awayTeamColumn = columnModel.getColumn(AWAYTEAMCOLUMN);
 		awayTeamColumn.setPreferredWidth(150);
-
-		TableColumn awayEventColumn = columnModel.getColumn(AWAYEVENTCOLUMN);
-		awayEventColumn.setMaxWidth(20);
-		awayEventColumn.setPreferredWidth(20);
-		awayEventColumn.setCellRenderer(new SETypeTableCellRenderer(true));
 
 		TableColumn awayTacticColumn = columnModel.getColumn(AWAYTACTICCOLUMN);
 		awayTacticColumn.setPreferredWidth(37);
@@ -140,16 +104,15 @@ public class SpecialEventsPanel extends LazyImagePanel {
 		eventTypeColumn.setPreferredWidth(23);
 		eventTypeColumn.setCellRenderer(new EventTypeTableCellRenderer());
 
-		TableColumn settExtColumn = columnModel.getColumn(SETEXTCOLUMN);
+		TableColumn settExtColumn = columnModel.getColumn(EVENTTEXTCOLUMN);
 		settExtColumn.setPreferredWidth(270);
 
-		TableColumn nameColumn = columnModel.getColumn(NAMECOLUMN);
+		TableColumn nameColumn = columnModel.getColumn(PLAYER_NAME_COLUMN);
 		nameColumn.setPreferredWidth(200);
 		nameColumn.setCellRenderer(new PlayerNameTableCellRenderer());
 		specialEventsTable.setRowHeight(20);
 
-		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, filterPanel,
-				new JScrollPane(specialEventsTable));
+		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, filterPanel, new JScrollPane(specialEventsTable));
 		splitPane.setDividerSize(5);
 		splitPane.setContinuousLayout(true);
 		add(splitPane, BorderLayout.CENTER);

@@ -203,12 +203,11 @@ public class HO {
 		// TableColumn
 		UserColumnController.instance().load();
 
-		// Die Währung auf die aus dem HRF setzen
-		float faktorgeld = (float) HOVerwaltung.instance().getModel().getXtraDaten()
-				.getCurrencyRate();
+		// Set the currency from HRF
+		float fxRate = (float) HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate();
 
-		if (faktorgeld > -1) {
-			UserParameter.instance().faktorGeld = faktorgeld;
+		if (fxRate > -1) {
+			UserParameter.instance().faktorGeld = fxRate;
 		}
 
 		// Training

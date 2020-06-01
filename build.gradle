@@ -26,6 +26,7 @@ dependencies {
     implementation 'com.github.weisj:darklaf-core:2.2.0'
     implementation 'com.github.weisj:darklaf-theme:2.2.0'
     implementation 'com.formdev:svgSalamander:1.1.2.1'
+    compile 'org.javatuples:javatuples:1.2'
     testImplementation 'junit:junit:4.12'
 }
 

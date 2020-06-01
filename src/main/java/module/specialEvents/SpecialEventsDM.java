@@ -118,15 +118,14 @@ public class SpecialEventsDM {
 		List<MatchEvent> highlights = getMatchHighlights(details, filter);
 
 		if (!highlights.isEmpty() || !filter.isShowMatchesWithSEOnly()) {
-			// the matchline
+
 			Match match = new Match();
 			match.setHostingTeam(kurzInfos.getHeimName());
 			match.setHostingTeamId(kurzInfos.getHeimID());
 			match.setHostingTeamTactic(details.getHomeTacticType());
 			match.setMatchDate(new Date(kurzInfos.getMatchDateAsTimestamp().getTime()));
 			match.setMatchId(kurzInfos.getMatchID());
-			match.setMatchResult(String.valueOf(kurzInfos.getHeimTore()) + " - "
-					+ String.valueOf(kurzInfos.getGastTore()));
+			match.setMatchResult(kurzInfos.getHeimTore() + " - " + kurzInfos.getGastTore());
 			match.setVisitingTeam(kurzInfos.getGastName());
 			match.setVisitingTeamId(kurzInfos.getGastID());
 			match.setVisitingTeamTactic(details.getGuestTacticType());
