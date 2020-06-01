@@ -67,6 +67,7 @@ public class SystemManager {
 	 * Reference to the plugin itself
 	 */
 	private static TeamAnalyzerPanel plugin;
+	private static int reportedTeamId;
 
 	/**
 	 * Set the active team
@@ -166,7 +167,7 @@ public class SystemManager {
 	public static void refresh() {
 		if (plugin != null) {
 			NameManager.clean();
-			TeamAnalyzerPanel.filter.setMatches(new ArrayList<String>());
+			TeamAnalyzerPanel.filter.setMatches(new ArrayList<>());
 
 			teamReport = null; //ReportManager.clean();
 			MatchPopulator.clean();
@@ -199,14 +200,15 @@ public class SystemManager {
 		updating = true;
 		List<MatchDetail> matchDetails = MatchManager.getMatchDetails();
 		if (MatchPopulator.getAnalyzedMatch().size() > 0) {
-			teamReport = new TeamReport(matchDetails);
+			if (getActiveTeamId() != getReportedTeamId()) {
+				teamReport = new TeamReport(matchDetails);
+				setReportedTeamId(getActiveTeamId());
+			}
 		} else {
 			teamReport = null;
 		}
-		List<String> filterList = new ArrayList<String>();
-		for (Iterator<Match> iter = MatchManager.getSelectedMatches().iterator(); iter.hasNext(); ) {
-			Match match = iter.next();
-
+		List<String> filterList = new ArrayList<>();
+		for (Match match : MatchManager.getSelectedMatches()) {
 			filterList.add("" + match.getMatchId());
 		}
 		TeamAnalyzerPanel.filter.setMatches(filterList);
@@ -236,5 +238,13 @@ public class SystemManager {
 	public static void adjustRatingsLineup(TeamData newRatings) {
 		getTeamReport().adjustRatingsLineup(newRatings);
 		updateUI();
+	}
+
+	public static int getReportedTeamId() {
+		return reportedTeamId;
+	}
+
+	public static void setReportedTeamId(int reportedTeamId) {
+		SystemManager.reportedTeamId = reportedTeamId;
 	}
 }
