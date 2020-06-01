@@ -50,7 +50,9 @@ public class TeamReport {
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
-     * Creates a new TeamReport object.
+     * Creates a new TeamReport object including all filtered matches of the team
+     *
+     * @param matchDetails list of matches of the team report
      */
     public TeamReport(List<MatchDetail> matchDetails) {
         for (MatchDetail m:matchDetails ) {
@@ -60,17 +62,33 @@ public class TeamReport {
                 .setName(HOVerwaltung.instance().getLanguageString("Durchschnitt")).build();
     }
 
+    /**
+     * TeamReport of one single match (used internally only)
+     *
+     * @param matchDetail The match of the report is stored in averageRatingslineup
+     */
     private TeamReport(MatchDetail matchDetail) {
         addMatch(matchDetail,ModuleConfig.instance().getBoolean(SystemManager.ISSHOWUNAVAILABLE));
         this.averageRatingslineup = new TeamLineupBuilder(this).setMatchDetail(matchDetail).build();
     }
 
+    /**
+     * Number of existing lineups in the team report
+     *
+     * @return number of matches plus the average lineup and adjusted lineup if it exists
+     */
     public int size() {
-        int ret = this.matchDetails.size()+1;
-        if ( this.adjustedRatingsLineup != null) ret++;
+        int ret = this.matchDetails.size() + 1;
+        if (this.adjustedRatingsLineup != null) ret++;
         return ret;
     }
 
+    /**
+     * Get a lineup from the team report
+     *
+     * @param selection index of the required lineup
+     * @return selected team lineup
+     */
     public TeamLineup getLineup(int selection)
     {
         if (this.matchDetails == null || this.matchDetails.size()==0)return null;
@@ -93,13 +111,22 @@ public class TeamReport {
         }
     }
 
+    /**
+     * Set adjusted Lineup
+     *
+     * @param newRatings the team data copied to the new adjusted lineup
+     */
     public void adjustRatingsLineup(TeamData newRatings) {
         // copy of selected lineup
-        MatchDetail matchDetail = getLineup(selection).getMatchDetail();
-        adjustedRatingsLineup =  new TeamLineupBuilder(new TeamReport(matchDetail))
-                .setTeamData(newRatings)
-                .setMatchType(matchDetail.getMatch().getMatchType())
-                .setName(HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.Adjusted")).build();
+        if (selection == 1 && adjustedRatingsLineup != null) {
+            adjustedRatingsLineup.setTeamData(newRatings);
+        } else {
+            MatchDetail matchDetail = getLineup(selection).getMatchDetail();
+            adjustedRatingsLineup = new TeamLineupBuilder(new TeamReport(matchDetail))
+                    .setTeamData(newRatings)
+                    .setMatchType(matchDetail.getMatch().getMatchType())
+                    .setName(HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.Adjusted")).build();
+        }
     }
 
     //~ Methods ------------------------------------------------------------------------------------

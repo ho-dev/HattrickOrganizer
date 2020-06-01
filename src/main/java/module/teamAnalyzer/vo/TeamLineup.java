@@ -2,6 +2,8 @@
 package module.teamAnalyzer.vo;
 
 import core.model.match.MatchType;
+import core.prediction.engine.TeamData;
+import core.prediction.engine.TeamRatings;
 import core.specialevents.SpecialEventsPredictionManager;
 
 import java.util.Arrays;
@@ -224,5 +226,22 @@ public class TeamLineup {
 
     public void setAdjustedTacticLevel(Integer adjustedTacticLevel) {
         this.adjustedTacticLevel = adjustedTacticLevel;
+    }
+
+    public void setTeamData(TeamData teamData) {
+        MatchRating rating = new MatchRating();
+        TeamRatings tr = teamData.getRatings();
+        rating.setCentralAttack(tr.getMiddleAttack());
+        rating.setCentralDefense(tr.getMiddleDef());
+        rating.setLeftAttack(tr.getLeftAttack());
+        rating.setLeftDefense(tr.getLeftDef());
+        rating.setMidfield(tr.getMidfield());
+        rating.setRightAttack(tr.getRightAttack());
+        rating.setRightDefense(tr.getRightDef());
+        rating.setHatStats(rating.computeHatStats());
+        rating.setLoddarStats(rating.computeLoddarStats());
+        this.setRating(rating);
+        this.setAdjustedTacticCode(teamData.getTacticType());
+        this.setAdjustedTacticLevel(teamData.getTacticLevel());
     }
 }
