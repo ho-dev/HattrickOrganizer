@@ -17,10 +17,9 @@ public class SpecialEventsTableModel extends AbstractTableModel {
 	static final int AWAYTEAMCOLUMN = 4;
 	static final int AWAYTACTICCOLUMN = 5;
 	static final int MINUTECOLUMN = 6;
-	static final int CHANCECOLUMN = 7;
-	static final int EVENTTYPCOLUMN = 8;
-	static final int EVENTTEXTCOLUMN = 9;
-	static final int PLAYER_NAME_COLUMN = 10;
+	static final int EVENTTYPCOLUMN = 7;
+	static final int EVENTTEXTCOLUMN = 8;
+	static final int PLAYER_NAME_COLUMN = 9;
 	static final List<Integer> HEADER_ROWS = List.of(MATCH_DATE_TYPE_COLUMN, HOMETACTICCOLUMN, HOMETEAMCOLUMN, RESULTCOLUMN, AWAYTEAMCOLUMN, AWAYTACTICCOLUMN);
 
 	private List<MatchRow> data;
@@ -39,14 +38,13 @@ public class SpecialEventsTableModel extends AbstractTableModel {
 		if ((!matchRow.isMatchHeaderLine()) & HEADER_ROWS.contains(column)) return null;
 
 		return switch (column) {
-			case MATCH_DATE_TYPE_COLUMN -> Triplet.with(matchRow.getMatch().getMatchDate(), matchRow.getMatch().getMatchType(), matchRow.getMatch().getMatchId());
+			case MATCH_DATE_TYPE_COLUMN -> Pair.with(matchRow.getMatch().getMatchDate(), matchRow.getMatch().getMatchType());
 			case HOMETACTICCOLUMN -> matchRow.getMatch().getHostingTeamTactic();
 			case HOMETEAMCOLUMN -> matchRow.getMatch().getHostingTeam();
 			case RESULTCOLUMN -> matchRow.getMatch().getMatchResult();
 			case AWAYTEAMCOLUMN -> matchRow.getMatch().getVisitingTeam();
 			case AWAYTACTICCOLUMN -> matchRow.getMatch().getVisitingTeamTactic();
 			case MINUTECOLUMN -> matchRow.getMatchHighlight().getMinute();
-			case CHANCECOLUMN -> matchRow;
 			case EVENTTYPCOLUMN -> matchRow.getMatchHighlight();
 			case EVENTTEXTCOLUMN -> SpecialEventsDM.getSEText(matchRow.getMatchHighlight());
 			case PLAYER_NAME_COLUMN -> SpecialEventsDM.getSpielerName(matchRow.getMatchHighlight());
@@ -63,36 +61,21 @@ public class SpecialEventsTableModel extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		return 11;
+		return 10;
 	}
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		switch (columnIndex) {
-		case MATCH_DATE_TYPE_COLUMN:
-			return HOVerwaltung.instance().getLanguageString("ls.match");
-		case HOMETACTICCOLUMN:
-			return HOVerwaltung.instance().getLanguageString("ls.team.tactic");
-		case HOMETEAMCOLUMN:
-			return HOVerwaltung.instance().getLanguageString("Heim");
-		case AWAYTEAMCOLUMN:
-			return HOVerwaltung.instance().getLanguageString("Gast");
-		case AWAYTACTICCOLUMN:
-			return HOVerwaltung.instance().getLanguageString("ls.team.tactic");
-		case MINUTECOLUMN:
-			return HOVerwaltung.instance().getLanguageString("Min");
-		case EVENTTEXTCOLUMN:
-			return HOVerwaltung.instance().getLanguageString("Event");
-		case PLAYER_NAME_COLUMN:
-			return HOVerwaltung.instance().getLanguageString("Spieler");
-		case CHANCECOLUMN:
-		case RESULTCOLUMN:
-			return HOVerwaltung.instance().getLanguageString("ls.match.result");
-		case EVENTTYPCOLUMN:
-			return " ";
-		default:
-			return super.getColumnName(columnIndex);
-		}
+		return switch (columnIndex) {
+			case MATCH_DATE_TYPE_COLUMN -> HOVerwaltung.instance().getLanguageString("SpieleDetails");
+			case HOMETACTICCOLUMN, AWAYTACTICCOLUMN -> HOVerwaltung.instance().getLanguageString("ls.team.tactic");
+			case HOMETEAMCOLUMN -> HOVerwaltung.instance().getLanguageString("Heim");
+			case AWAYTEAMCOLUMN -> HOVerwaltung.instance().getLanguageString("Gast");
+			case EVENTTEXTCOLUMN -> HOVerwaltung.instance().getLanguageString("Event");
+			case PLAYER_NAME_COLUMN -> HOVerwaltung.instance().getLanguageString("Spieler");
+			case RESULTCOLUMN -> HOVerwaltung.instance().getLanguageString("ls.match.result");
+			default -> " ";
+		};
 	}
 
 	public MatchRow getMatchRow(int index) {

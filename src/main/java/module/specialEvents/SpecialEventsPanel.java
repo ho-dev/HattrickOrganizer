@@ -3,39 +3,32 @@ package module.specialEvents;
 import static module.specialEvents.SpecialEventsTableModel.MATCH_DATE_TYPE_COLUMN;
 import static module.specialEvents.SpecialEventsTableModel.AWAYTACTICCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.AWAYTEAMCOLUMN;
-import static module.specialEvents.SpecialEventsTableModel.CHANCECOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.EVENTTYPCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.HOMETACTICCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.HOMETEAMCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.MINUTECOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.PLAYER_NAME_COLUMN;
 import static module.specialEvents.SpecialEventsTableModel.EVENTTEXTCOLUMN;
-import core.gui.ApplicationClosingListener;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.LazyImagePanel;
 import module.specialEvents.filter.Filter;
-import module.specialEvents.filter.FilterChangeEvent;
-import module.specialEvents.filter.FilterChangeListener;
 import module.specialEvents.filter.FilterHelper;
-import module.specialEvents.table.ChanceTableCellRenderer;
 import module.specialEvents.table.DefaultSETableCellRenderer;
 import module.specialEvents.table.EventTypeTableCellRenderer;
 import module.specialEvents.table.MatchDateTypeTableCellRenderer;
 import module.specialEvents.table.PlayerNameTableCellRenderer;
 import module.specialEvents.table.TacticsTableCellRenderer;
-
-import java.awt.BorderLayout;
-
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 public class SpecialEventsPanel extends LazyImagePanel {
 
-	private static final long serialVersionUID = 1L;
 	private static SpecialEventsTable specialEventsTable;
 	private Filter filter;
 
@@ -49,6 +42,7 @@ public class SpecialEventsPanel extends LazyImagePanel {
 	@Override
 	protected void update() {
 		setTableData();
+		updateRowHeights();
 	}
 
 	private void initComponents() {
@@ -94,11 +88,6 @@ public class SpecialEventsPanel extends LazyImagePanel {
 		TableColumn minuteColumn = columnModel.getColumn(MINUTECOLUMN);
 		minuteColumn.setPreferredWidth(27);
 
-		TableColumn chanceColumn = columnModel.getColumn(CHANCECOLUMN);
-		chanceColumn.setMaxWidth(23);
-		chanceColumn.setPreferredWidth(23);
-		chanceColumn.setCellRenderer(new ChanceTableCellRenderer());
-
 		TableColumn eventTypeColumn = columnModel.getColumn(EVENTTYPCOLUMN);
 		eventTypeColumn.setMaxWidth(23);
 		eventTypeColumn.setPreferredWidth(23);
@@ -110,7 +99,19 @@ public class SpecialEventsPanel extends LazyImagePanel {
 		TableColumn nameColumn = columnModel.getColumn(PLAYER_NAME_COLUMN);
 		nameColumn.setPreferredWidth(200);
 		nameColumn.setCellRenderer(new PlayerNameTableCellRenderer());
-		specialEventsTable.setRowHeight(20);
+		
+		specialEventsTable.addMouseListener(new MouseAdapter() {
+								  public void mousePressed(MouseEvent me) {
+									  JTable table = (JTable) me.getSource();
+									  Point p = me.getPoint();
+									  int col = table.columnAtPoint(p);
+									  if (col == MATCH_DATE_TYPE_COLUMN) {
+										  // your valueChanged overridden method
+										  int matchID = 18113459; // find how to get it for real
+										  HOMainFrame.instance().showMatch(matchID); // only if match ID not null
+											  }
+										  }
+									  });
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, filterPanel, new JScrollPane(specialEventsTable));
 		splitPane.setDividerSize(5);
@@ -122,10 +123,23 @@ public class SpecialEventsPanel extends LazyImagePanel {
 		CursorToolkit.startWaitCursor(this);
 		try {
 			SpecialEventsDM specialEventsDM = new SpecialEventsDM();
-			((SpecialEventsTableModel) specialEventsTable.getModel()).setData(specialEventsDM
-					.getRows(this.filter));
+			((SpecialEventsTableModel) specialEventsTable.getModel()).setData(specialEventsDM.getRows(this.filter));
 		} finally {
 			CursorToolkit.stopWaitCursor(this);
 		}
 	}
+
+	private void updateRowHeights()
+	{
+		int rowHeight = 20;
+
+		for (int iRow = 0; iRow < specialEventsTable.getRowCount(); iRow++)
+		{
+			TableCellRenderer renderer = specialEventsTable.getCellRenderer(iRow, EVENTTYPCOLUMN);
+			Component comp = specialEventsTable.prepareRenderer(renderer, iRow, EVENTTYPCOLUMN);
+			rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+			specialEventsTable.setRowHeight(iRow, rowHeight);
+		}
+	}
+
 }

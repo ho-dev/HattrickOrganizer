@@ -1,11 +1,10 @@
 package module.specialEvents.table;
 
-import core.model.HOVerwaltung;
+import core.gui.theme.HOIconName;
+import core.gui.theme.ThemeManager;
 import core.model.match.IMatchDetails;
-
 import java.awt.Component;
-
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class TacticsTableCellRenderer extends DefaultTableCellRenderer {
@@ -16,38 +15,24 @@ public class TacticsTableCellRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 			boolean hasFocus, int row, int column) {
 
-		String tactic = null;
+		Icon icon = null;
+
 		if (value != null) {
-			int tacticId = ((Integer) value).intValue();
-			switch (tacticId) {
-			case IMatchDetails.TAKTIK_NORMAL:
-				tactic = "";
-				break;
-			case IMatchDetails.TAKTIK_PRESSING:
-				tactic = HOVerwaltung.instance().getLanguageString("ls.team.tactic_short.pressing");
-				break;
-			case IMatchDetails.TAKTIK_KONTER:
-				tactic = HOVerwaltung.instance().getLanguageString("ls.team.tactic_short.counter-attacks");
-				break;
-			case IMatchDetails.TAKTIK_MIDDLE:
-				tactic = HOVerwaltung.instance().getLanguageString("ls.team.tactic_short.attackinthemiddle");
-				break;
-			case IMatchDetails.TAKTIK_WINGS:
-				tactic = HOVerwaltung.instance().getLanguageString("ls.team.tactic_short.attackonwings");
-				break;
-			case IMatchDetails.TAKTIK_CREATIVE:
-				tactic = HOVerwaltung.instance().getLanguageString("ls.team.tactic_short.playcreatively");
-				break;
-			case IMatchDetails.TAKTIK_LONGSHOTS:
-				tactic = HOVerwaltung.instance().getLanguageString("ls.team.tactic_short.longshots");
-				break;
-			default:
-				tactic = " ? " + tacticId;
-			}
+			int tacticId = (Integer) value;
+			icon = switch (tacticId) {
+				case IMatchDetails.TAKTIK_PRESSING -> ThemeManager.getIcon(HOIconName.TACTIC_PRESSING);
+				case IMatchDetails.TAKTIK_KONTER -> ThemeManager.getIcon(HOIconName.TACTIC_COUNTER_ATTACKING);
+				case IMatchDetails.TAKTIK_MIDDLE -> ThemeManager.getIcon(HOIconName.TACTIC_AIM);
+				case IMatchDetails.TAKTIK_WINGS -> ThemeManager.getIcon(HOIconName.TACTIC_AOW);
+				case IMatchDetails.TAKTIK_CREATIVE -> ThemeManager.getIcon(HOIconName.TACTIC_PLAY_CREATIVELY);
+				case IMatchDetails.TAKTIK_LONGSHOTS -> ThemeManager.getIcon(HOIconName.TACTIC_LONG_SHOTS);
+				default -> null;
+			};
+
 		}
 
-		Component component = super.getTableCellRendererComponent(table, tactic, isSelected,
-				hasFocus, row, column);
+		JLabel component = (JLabel) super.getTableCellRendererComponent(table, "", isSelected, hasFocus, row, column);
+		component.setIcon(icon);
 		RowColorDecorator.decorate(table, row, component, isSelected);
 		return component;
 	}

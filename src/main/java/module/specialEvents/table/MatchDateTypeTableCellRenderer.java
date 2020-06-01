@@ -30,20 +30,13 @@ public class MatchDateTypeTableCellRenderer extends DefaultTableCellRenderer {
 			component.setIcon(null);
 		}
 		else {
-			Triplet oMatchDateMatchType = (Triplet) value;
+			Pair oMatchDateMatchType = (Pair) value;
 			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 			Date oMatchDate = (Date) oMatchDateMatchType.getValue0();
 			component.setText("  (" + dateFormat.format(oMatchDate) + ")");
 			MatchType oMatchType = (MatchType) oMatchDateMatchType.getValue1();
 			ImageIcon oMatchTypeIcon = ThemeManager.getIcon(HOIconName.MATCHICONS[oMatchType.getIconArrayIndex()]);
 			component.setIcon(oMatchTypeIcon);
-			Integer oMatchID = (Integer) oMatchDateMatchType.getValue2();
-			component.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					HOMainFrame.instance().showMatch(oMatchID);
-				}
-			});
 		}
 		RowColorDecorator.decorate(table, row, component, isSelected);
 		return component;
