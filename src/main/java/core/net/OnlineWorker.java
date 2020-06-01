@@ -142,14 +142,7 @@ public class OnlineWorker {
 						// Info
 						setInfoMsg(getLangString("HRFErfolg"));
 
-						try {
-							waitDlg.setVisible(false);
-							saveHRFToFile(parent,hrf);
-						} catch (IOException e) {
-							Helper.showMessage(HOMainFrame.instance(),
-									"Failed to save downloaded file.\nError: " + e.getMessage(),
-									getLangString("Fehler"), JOptionPane.ERROR_MESSAGE);
-						}
+						saveHRFToFile(parent,hrf);
 					}
 				}
 			}
@@ -1091,7 +1084,7 @@ public class OnlineWorker {
 	 *            the HRF data as string
 	 * @throws IOException
 	 */
-	private static void saveHRFToFile(JDialog parent, String hrfData) throws IOException {
+	private static void saveHRFToFile(JDialog parent, String hrfData) {
 		setInfoMsg(getLangString("HRFSave"));
 
 		File path = new File(UserParameter.instance().hrfImport_HRFPath);
@@ -1115,7 +1108,13 @@ public class OnlineWorker {
 
 			// Save
 			if (value == JOptionPane.OK_OPTION) {
-				saveFile(file.getPath(), hrfData);
+				try {
+					saveFile(file.getPath(), hrfData);
+				} catch (IOException e) {
+					Helper.showMessage(HOMainFrame.instance(),
+							HOVerwaltung.instance().getLanguageString("Show_SaveHRF_Failed") + " " + file.getParentFile()  +".\nError: " + e.getMessage(),
+							getLangString("Fehler"), JOptionPane.ERROR_MESSAGE);
+				}
 			} else {
 				// Canceled
 				setInfoMsg(getLangString("HRFAbbruch"), InfoPanel.FEHLERFARBE);
