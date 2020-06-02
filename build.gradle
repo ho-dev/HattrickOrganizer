@@ -29,6 +29,7 @@ dependencies {
     compile 'org.javatuples:javatuples:1.2'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-text
     compile group: 'org.apache.commons', name: 'commons-text', version: '1.8'
+    compile 'org.jetbrains:annotations:16.0.2'
     testImplementation 'junit:junit:4.12'
 }
 

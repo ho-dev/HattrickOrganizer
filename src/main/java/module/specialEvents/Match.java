@@ -4,7 +4,6 @@ import core.model.match.MatchEvent;
 import core.model.match.MatchType;
 import core.model.match.Weather;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.Date;
 
 public class Match {
