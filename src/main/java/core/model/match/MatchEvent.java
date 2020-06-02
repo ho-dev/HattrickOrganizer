@@ -983,7 +983,9 @@ public class MatchEvent {
                 this.m_matchEventID == MatchEventID.SE_TECHNICAL_THRIVES_IN_SUN ||
                 this.m_matchEventID == MatchEventID.SE_POWERFUL_SUFFERS_FROM_SUN ||
                 this.m_matchEventID == MatchEventID.SE_QUICK_LOSES_IN_RAIN ||
-                this.m_matchEventID == MatchEventID.SE_QUICK_LOSES_IN_SUN);
+                this.m_matchEventID == MatchEventID.SE_QUICK_LOSES_IN_SUN ||
+                this.m_matchEventID == MatchEventID.RAINY_WEATHER_MANY_PLAYERS_AFFECTED||
+                this.m_matchEventID == MatchEventID.SUNNY_WEATHER_MANY_PLAYERS_AFFECTED);
     }
 
     /**

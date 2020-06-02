@@ -4,7 +4,6 @@ import static module.specialEvents.SpecialEventsTableModel.AWAYTACTICCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.EVENTCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.HOMETACTICCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.MATCH_DATE_TYPE_COLUMN;
-import static module.specialEvents.SpecialEventsTableModel.PLAYER_NAME_COLUMN;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +28,6 @@ public class SpecialEventsTable extends JTable {
 		int modelColumnIndex = convertColumnIndexToModel(colIndex);
 		MatchRow row = ((SpecialEventsTableModel) getModel()).getMatchRow(convertRowIndexToModel(rowIndex));
 		return switch (modelColumnIndex) {
-			case PLAYER_NAME_COLUMN -> HOVerwaltung.instance().getLanguageString("TipName");
 			case EVENTCOLUMN -> getEventText(row);
 			case AWAYTACTICCOLUMN -> getTacticToolTipText(row, false);
 			case HOMETACTICCOLUMN -> getTacticToolTipText(row, true);

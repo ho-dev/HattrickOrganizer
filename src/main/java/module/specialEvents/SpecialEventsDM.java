@@ -9,6 +9,8 @@ import core.model.match.Matchdetails;
 import core.model.match.Weather;
 import core.model.player.Player;
 import module.specialEvents.filter.Filter;
+import org.jetbrains.annotations.Nullable;
+
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -165,20 +167,15 @@ public class SpecialEventsDM {
 	}
 
 	public static boolean isNegativeSE(MatchEvent highlight) {
-		if (highlight.isGoalEvent() || highlight.isNonGoalEvent()) {
-			// Chances (miss/goal)
-			if (highlight.getiMatchEventID() == MatchEvent.MatchEventID.SE_TIRED_DEFENDER_MISTAKE_STRIKER_SCORES.ordinal()
-					|| highlight.getiMatchEventID() == MatchEvent.MatchEventID.SE_INEXPERIENCED_DEFENDER_CAUSES_GOAL.ordinal()
-					|| highlight.getiMatchEventID() == MatchEvent.MatchEventID.SE_GOAL_UNPREDICTABLE_MISTAKE.ordinal()) {
+			if (highlight.getMatchEventID() == MatchEvent.MatchEventID.SE_TIRED_DEFENDER_MISTAKE_STRIKER_SCORES
+					|| highlight.getMatchEventID() == MatchEvent.MatchEventID.SE_INEXPERIENCED_DEFENDER_CAUSES_GOAL
+					|| highlight.getMatchEventID() == MatchEvent.MatchEventID.SE_GOAL_UNPREDICTABLE_MISTAKE) {
 				return true;
 			}
-		} else if (highlight.isNegativeSpecialtyWeatherSE()) {
-			// negative Weather SE
-			return true;
-		}
-		return false;
+		return highlight.isNegativeSpecialtyWeatherSE();
 	}
 
+	@Nullable
 	public static EventType getEventType(MatchEvent highlight) {
 		if (highlight.isSpecialtyWeatherSE()) {return EventType.SPECIALTY_WEATHER_SE;}
 		else if(highlight.isSpecialtyNonWeatherSE()) {return EventType.SPECIALTY_NON_WEATHER_SE;}
@@ -252,19 +249,11 @@ public class SpecialEventsDM {
 	private static String findName(MatchEvent highlight) {
 		if (highlight.isSpecialtyWeatherSE()) {return highlight.getSpielerName();}
 		else if (highlight.isGoalEvent() || highlight.isNonGoalEvent()) {
-			MatchEvent.MatchEventID me = MatchEvent.MatchEventID.values()[highlight.getiMatchEventID()];
-			switch (me) {
-				case SE_GOAL_UNPREDICTABLE_LONG_PASS:
-				case SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION:
-				case SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES:
-				case SE_GOAL_CORNER_TO_ANYONE:
-				case SE_GOAL_CORNER_HEAD_SPECIALIST:
-				case SE_WINGER_TO_HEAD_SPEC_SCORES:  // #137
-				case SE_WINGER_TO_ANYONE_SCORES: // #138
-					return highlight.getGehilfeName() + " - " + highlight.getSpielerName();
-				default:
-					return highlight.getSpielerName();
-			}
+			return switch (highlight.getMatchEventID()) {
+				case SE_GOAL_UNPREDICTABLE_LONG_PASS, SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION, SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES, SE_GOAL_CORNER_TO_ANYONE,
+						SE_GOAL_CORNER_HEAD_SPECIALIST, SE_WINGER_TO_HEAD_SPEC_SCORES, SE_WINGER_TO_ANYONE_SCORES -> highlight.getGehilfeName() + " - " + highlight.getSpielerName();
+				default -> highlight.getSpielerName();
+			};
 		}
 		return "?";
 	}
@@ -273,27 +262,9 @@ public class SpecialEventsDM {
 		String name = "";
 		// if(highlight.getTeamID() == teamId && !isNegativeSE(highlight))
 		if (highlight.getTeamID() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
-			// Our team has an SE
-			if (!isNegativeSE(highlight)) {
-				// positive SE (our player) -> black
-				name = findName(highlight) + "|*";
-			} else if (highlight.isNegativeSpecialtyWeatherSE()) {
-				// negative weather SE (our player) -> red
-				name = findName(highlight) + "|-";
-			} else {
-				// Negative SE of other Team
-				// negative SE (other player helps our team) -> gray
-				name = highlight.getGehilfeName() + "|#";
-			}
-		} else {
-			// other team has an SE
-			if (!highlight.isSpecialtyWeatherSE() && isNegativeSE(highlight)) {
-				// negative SE (our player helps the other team) -> red
-				name = highlight.getGehilfeName() + "|-";
-			} else {
-				// SE from other team -> gray
-				name = findName(highlight) + "|#";
-			}
+			name = findName(highlight) + "|*";} // -> black
+		else {
+			name = findName(highlight) + "|-"; // -> red
 		}
 		return name;
 	}
