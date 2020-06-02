@@ -8,9 +8,7 @@ import module.specialEvents.SpecialEventsDM;
 
 import java.awt.Component;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class EventTypeTableCellRenderer extends DefaultTableCellRenderer {
@@ -21,15 +19,18 @@ public class EventTypeTableCellRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 			boolean hasFocus, int row, int column) {
 
-		JLabel component = (JLabel) super.getTableCellRendererComponent(table, "", isSelected,
-				hasFocus, row, column);
-
 		MatchEvent matchHighlight = (MatchEvent) value;
+		Icon icon = null;
+		String eventText = null;
+
 		if (matchHighlight != null) {
-			component.setIcon(matchHighlight.getIcon());
-		} else {
-			component.setIcon(null);
+			icon = matchHighlight.getIcon();
+			eventText = " " + SpecialEventsDM.getSEText(matchHighlight);
 		}
+
+		JLabel component = (JLabel) super.getTableCellRendererComponent(table, eventText, isSelected, hasFocus, row, column);
+		component.setIcon(icon);
+
 		RowColorDecorator.decorate(table, row, component, isSelected);
 
 		return component;

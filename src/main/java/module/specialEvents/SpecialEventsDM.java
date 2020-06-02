@@ -241,7 +241,9 @@ public class SpecialEventsDM {
 	}
 
 
-	public static String getSEText(MatchEvent highlight) {return highlight.getEventTextDescription();}
+	public static String getSEText(MatchEvent highlight) {
+		return String.format("%s (%s)", highlight.getEventTextDescription(), highlight.getiMatchEventID());
+	}
 
 	private boolean isInvolved(int playerId, MatchEvent highlight) {
 		return (playerId == highlight.getGehilfeID() || playerId == highlight.getSpielerID());

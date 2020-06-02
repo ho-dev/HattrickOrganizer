@@ -2,7 +2,6 @@ package module.specialEvents;
 
 import core.model.HOVerwaltung;
 import org.apache.commons.text.WordUtils;
-import org.javatuples.Triplet;
 import org.jetbrains.annotations.Nullable;
 import org.javatuples.Pair;
 
@@ -18,9 +17,8 @@ public class SpecialEventsTableModel extends AbstractTableModel {
 	static final int AWAYTEAMCOLUMN = 4;
 	static final int AWAYTACTICCOLUMN = 5;
 	static final int MINUTECOLUMN = 6;
-	static final int EVENTTYPCOLUMN = 7;
-	static final int EVENTTEXTCOLUMN = 8;
-	static final int PLAYER_NAME_COLUMN = 9;
+	static final int EVENTCOLUMN = 7;
+	static final int PLAYER_NAME_COLUMN = 8;
 	static final List<Integer> HEADER_ROWS = List.of(MATCH_DATE_TYPE_COLUMN, HOMETACTICCOLUMN, HOMETEAMCOLUMN, RESULTCOLUMN, AWAYTEAMCOLUMN, AWAYTACTICCOLUMN);
 
 	private List<MatchRow> data;
@@ -45,9 +43,8 @@ public class SpecialEventsTableModel extends AbstractTableModel {
 			case RESULTCOLUMN -> matchRow.getMatch().getMatchResult();
 			case AWAYTEAMCOLUMN -> matchRow.getMatch().getVisitingTeam();
 			case AWAYTACTICCOLUMN -> matchRow.getMatch().getVisitingTeamTactic();
-			case MINUTECOLUMN -> matchRow.getMatchHighlight().getMinute();
-			case EVENTTYPCOLUMN -> matchRow.getMatchHighlight();
-			case EVENTTEXTCOLUMN -> SpecialEventsDM.getSEText(matchRow.getMatchHighlight());
+			case MINUTECOLUMN -> matchRow.getMatchHighlight().getMinute() + "'";
+			case EVENTCOLUMN -> matchRow.getMatchHighlight();
 			case PLAYER_NAME_COLUMN -> SpecialEventsDM.getSpielerName(matchRow.getMatchHighlight());
 			default -> null; };
 	 }
@@ -62,7 +59,7 @@ public class SpecialEventsTableModel extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		return 10;
+		return 9;
 	}
 
 	@Override
@@ -72,7 +69,7 @@ public class SpecialEventsTableModel extends AbstractTableModel {
 			case HOMETACTICCOLUMN, AWAYTACTICCOLUMN -> WordUtils.capitalizeFully(getLangStr("ls.team.tactic"));
 			case HOMETEAMCOLUMN -> WordUtils.capitalizeFully(getLangStr("Heim"));
 			case AWAYTEAMCOLUMN -> WordUtils.capitalizeFully(getLangStr("Gast"));
-			case EVENTTEXTCOLUMN -> WordUtils.capitalizeFully(getLangStr("Event"));
+			case EVENTCOLUMN -> WordUtils.capitalizeFully(getLangStr("Event"));
 			case PLAYER_NAME_COLUMN -> WordUtils.capitalizeFully(getLangStr("Spieler"));
 			case RESULTCOLUMN -> WordUtils.capitalizeFully(getLangStr("ls.match.result"));
 			default -> " ";

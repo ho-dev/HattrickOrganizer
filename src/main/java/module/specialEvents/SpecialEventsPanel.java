@@ -3,12 +3,11 @@ package module.specialEvents;
 import static module.specialEvents.SpecialEventsTableModel.MATCH_DATE_TYPE_COLUMN;
 import static module.specialEvents.SpecialEventsTableModel.AWAYTACTICCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.AWAYTEAMCOLUMN;
-import static module.specialEvents.SpecialEventsTableModel.EVENTTYPCOLUMN;
+import static module.specialEvents.SpecialEventsTableModel.EVENTCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.HOMETACTICCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.HOMETEAMCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.MINUTECOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.PLAYER_NAME_COLUMN;
-import static module.specialEvents.SpecialEventsTableModel.EVENTTEXTCOLUMN;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.LazyImagePanel;
@@ -65,39 +64,39 @@ public class SpecialEventsPanel extends LazyImagePanel {
 		TacticsTableCellRenderer tacticsTableCellRenderer = new TacticsTableCellRenderer();
 
 		TableColumn matchDateTypeColumn = columnModel.getColumn(MATCH_DATE_TYPE_COLUMN);
-		matchDateTypeColumn.setPreferredWidth(125);
+		matchDateTypeColumn.setPreferredWidth(110);
 		matchDateTypeColumn.setCellRenderer(new MatchDateTypeTableCellRenderer());
 
 		TableColumn homeTacticColumn = columnModel.getColumn(HOMETACTICCOLUMN);
-		homeTacticColumn.setPreferredWidth(37);
+		homeTacticColumn.setPreferredWidth(30);
 		homeTacticColumn.setCellRenderer(tacticsTableCellRenderer);
 
 		TableColumn homeTeamColumn = columnModel.getColumn(HOMETEAMCOLUMN);
-		homeTeamColumn.setPreferredWidth(150);
+		homeTeamColumn.setPreferredWidth(110);
 
 		TableColumn resultColumn = columnModel.getColumn(SpecialEventsTableModel.RESULTCOLUMN);
-		resultColumn.setPreferredWidth(40);
+		resultColumn.setPreferredWidth(30);
 
 		TableColumn awayTeamColumn = columnModel.getColumn(AWAYTEAMCOLUMN);
-		awayTeamColumn.setPreferredWidth(150);
+		awayTeamColumn.setPreferredWidth(110);
 
 		TableColumn awayTacticColumn = columnModel.getColumn(AWAYTACTICCOLUMN);
-		awayTacticColumn.setPreferredWidth(37);
+		awayTacticColumn.setPreferredWidth(30);
 		awayTacticColumn.setCellRenderer(tacticsTableCellRenderer);
 
 		TableColumn minuteColumn = columnModel.getColumn(MINUTECOLUMN);
-		minuteColumn.setPreferredWidth(27);
+		minuteColumn.setPreferredWidth(25);
+		minuteColumn.setMinWidth(25);
+		minuteColumn.setMaxWidth(30);
 
-		TableColumn eventTypeColumn = columnModel.getColumn(EVENTTYPCOLUMN);
-		eventTypeColumn.setMaxWidth(23);
-		eventTypeColumn.setPreferredWidth(23);
+		TableColumn eventTypeColumn = columnModel.getColumn(EVENTCOLUMN);
+		minuteColumn.setPreferredWidth(270);
+		minuteColumn.setMinWidth(100);
 		eventTypeColumn.setCellRenderer(new EventTypeTableCellRenderer());
 
-		TableColumn settExtColumn = columnModel.getColumn(EVENTTEXTCOLUMN);
-		settExtColumn.setPreferredWidth(270);
 
 		TableColumn nameColumn = columnModel.getColumn(PLAYER_NAME_COLUMN);
-		nameColumn.setPreferredWidth(200);
+		nameColumn.setPreferredWidth(150);
 		nameColumn.setCellRenderer(new PlayerNameTableCellRenderer());
 
 		specialEventsTable.addMouseListener(new MouseAdapter() {
@@ -106,9 +105,8 @@ public class SpecialEventsPanel extends LazyImagePanel {
 									  Point p = me.getPoint();
 									  int col = table.columnAtPoint(p);
 									  if (col == MATCH_DATE_TYPE_COLUMN) {
-										  // your valueChanged overridden method
-										  int matchID = 18113459; // find how to get it for real
-										  HOMainFrame.instance().showMatch(matchID); // only if match ID not null
+										  int matchID = 18113459; // TODO find how to get it for real
+										  HOMainFrame.instance().showMatch(matchID); // TODO only if match ID not null
 											  }
 										  }
 									  });
@@ -135,8 +133,8 @@ public class SpecialEventsPanel extends LazyImagePanel {
 
 		for (int iRow = 0; iRow < specialEventsTable.getRowCount(); iRow++)
 		{
-			TableCellRenderer renderer = specialEventsTable.getCellRenderer(iRow, EVENTTYPCOLUMN);
-			Component comp = specialEventsTable.prepareRenderer(renderer, iRow, EVENTTYPCOLUMN);
+			TableCellRenderer renderer = specialEventsTable.getCellRenderer(iRow, EVENTCOLUMN);
+			Component comp = specialEventsTable.prepareRenderer(renderer, iRow, EVENTCOLUMN);
 			rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
 			specialEventsTable.setRowHeight(iRow, rowHeight);
 		}
