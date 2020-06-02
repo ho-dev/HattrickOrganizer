@@ -1,6 +1,7 @@
 package module.specialEvents;
 
 import core.model.HOVerwaltung;
+import core.model.match.MatchEvent;
 import org.apache.commons.text.WordUtils;
 import org.jetbrains.annotations.Nullable;
 import org.javatuples.Pair;
@@ -36,6 +37,7 @@ public class SpecialEventsTableModel extends AbstractTableModel {
 		// if not a match event line and not a header line -> return null
 		if ((!matchRow.isMatchHeaderLine()) & HEADER_ROWS.contains(column)) return null;
 
+		MatchEvent highlight = matchRow.getMatchHighlight();
 		return switch (column) {
 			case MATCH_DATE_TYPE_COLUMN -> Pair.with(matchRow.getMatch().getMatchDate(), matchRow.getMatch().getMatchType());
 			case HOMETACTICCOLUMN -> matchRow.getMatch().getHostingTeamTactic();
@@ -43,9 +45,9 @@ public class SpecialEventsTableModel extends AbstractTableModel {
 			case RESULTCOLUMN -> matchRow.getMatch().getMatchResult();
 			case AWAYTEAMCOLUMN -> matchRow.getMatch().getVisitingTeam();
 			case AWAYTACTICCOLUMN -> matchRow.getMatch().getVisitingTeamTactic();
-			case MINUTECOLUMN -> matchRow.getMatchHighlight().getMinute() + "'";
-			case EVENTCOLUMN -> matchRow.getMatchHighlight();
-			case PLAYER_NAME_COLUMN -> SpecialEventsDM.getSpielerName(matchRow.getMatchHighlight());
+			case MINUTECOLUMN -> (highlight == null) ? null : highlight.getMinute() + "'";
+			case EVENTCOLUMN -> highlight;
+			case PLAYER_NAME_COLUMN -> (highlight == null) ? null : SpecialEventsDM.getSpielerName(highlight);
 			default -> null; };
 	 }
 
