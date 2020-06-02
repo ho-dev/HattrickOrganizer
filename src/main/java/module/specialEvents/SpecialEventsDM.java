@@ -239,7 +239,7 @@ public class SpecialEventsDM {
 
 
 	public static String getSEText(MatchEvent highlight) {
-		return String.format("%s (%s)", highlight.getEventTextDescription(), highlight.getiMatchEventID());
+		return String.format("(%s) %s", highlight.getiMatchEventID(), highlight.getEventTextDescription());
 	}
 
 	private boolean isInvolved(int playerId, MatchEvent highlight) {

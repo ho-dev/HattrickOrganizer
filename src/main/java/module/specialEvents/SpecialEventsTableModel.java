@@ -41,14 +41,26 @@ public class SpecialEventsTableModel extends AbstractTableModel {
 		return switch (column) {
 			case MATCH_DATE_TYPE_COLUMN -> Pair.with(matchRow.getMatch().getMatchDate(), matchRow.getMatch().getMatchType());
 			case HOMETACTICCOLUMN -> matchRow.getMatch().getHostingTeamTactic();
-			case HOMETEAMCOLUMN -> matchRow.getMatch().getHostingTeam();
+			case HOMETEAMCOLUMN -> formatTeamName(matchRow.getMatch(), matchRow.getMatch().getHostingTeam());
 			case RESULTCOLUMN -> matchRow.getMatch().getMatchResult();
-			case AWAYTEAMCOLUMN -> matchRow.getMatch().getVisitingTeam();
+			case AWAYTEAMCOLUMN -> formatTeamName(matchRow.getMatch(), matchRow.getMatch().getVisitingTeam());
 			case AWAYTACTICCOLUMN -> matchRow.getMatch().getVisitingTeamTactic();
 			case MINUTECOLUMN -> ((highlight == null) || (highlight.getMinute() == 0)) ? null : highlight.getMinute() + "'";
 			case EVENTCOLUMN -> highlight;
 			case PLAYER_NAME_COLUMN -> (highlight == null) ? null : Pair.with(SpecialEventsDM.getSpielerName(highlight), highlight.getSpielerID());
 			default -> null; };
+	 }
+
+	 private String formatTeamName(Match oMatch, String teamName)
+	 {
+	 	if (oMatch.isWinningTeam(teamName))
+		 {
+		 	return "<html><B>" + teamName + "</B></html>";
+		 }
+	 	else
+		 {
+			 return teamName;
+		 }
 	 }
 
 	@Override

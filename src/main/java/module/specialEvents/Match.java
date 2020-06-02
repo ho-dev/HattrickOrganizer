@@ -73,6 +73,35 @@ public class Match {
 		return matchResult;
 	}
 
+	public boolean isWinningTeam(int iTeamID) {
+		Integer iWinningTeamID = getWinningTeamID();
+		if (iWinningTeamID == null) return false;
+		return iWinningTeamID == iTeamID;
+	}
+
+	public boolean isWinningTeam(String teamName) {
+		Integer iTeamID = hostingTeamId;
+		if (visitingTeam.equals(teamName)) iTeamID = visitingTeamId;
+		else if (! hostingTeam.equals(teamName)) return false; // should never occur
+		return isWinningTeam(iTeamID);
+	}
+
+	public @Nullable Integer getWinningTeamID() {
+		String[] aResult = matchResult.split("-");
+		int homeScore = Integer.parseInt(aResult[0].trim());
+		int visitorScore = Integer.parseInt(aResult[1].trim());
+		if (homeScore > visitorScore) return hostingTeamId;
+		else if (homeScore < visitorScore) return visitingTeamId;
+		return null;
+	}
+
+	public @Nullable String getWinningTeamName() {
+		Integer iWinningTeamID = getWinningTeamID();
+		if (iWinningTeamID == null) return null;
+		else if (iWinningTeamID == hostingTeamId) return hostingTeam;
+		else return hostingTeam;
+	}
+
 	public void setMatchResult(String matchResult) {
 		this.matchResult = matchResult;
 	}
