@@ -21,6 +21,8 @@ import module.specialEvents.table.TacticsTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
@@ -105,11 +107,21 @@ public class SpecialEventsPanel extends LazyImagePanel {
 									  Point p = me.getPoint();
 									  int col = table.columnAtPoint(p);
 									  if (col == MATCH_DATE_TYPE_COLUMN) {
-										  int matchID = 18113459; // TODO find how to get it for real
-										  HOMainFrame.instance().showMatch(matchID); // TODO only if match ID not null
-											  }
+										  try {
+										  		SpecialEventsTableModel model = (SpecialEventsTableModel) table.getModel();
+										  		int matchID = model.getMatchRow(table.rowAtPoint(p)).getMatch().getMatchId();
+										  		if (me.isShiftDown()) {
+											 	  Desktop.getDesktop().browse(URI.create(String.format("http://www.hattrick.org/Club/Matches/Match.aspx?matchID=%s", matchID)));
+											  	}
+										  		else {
+										  			HOMainFrame.instance().showMatch(matchID);
+												}
 										  }
-									  });
+									   catch (IOException e) {
+										  e.printStackTrace();
+									  }
+									  }}});
+
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, filterPanel, new JScrollPane(specialEventsTable));
 		splitPane.setDividerSize(5);
