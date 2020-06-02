@@ -22,6 +22,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -85,18 +86,17 @@ public class SpecialEventsPanel extends LazyImagePanel {
 		awayTacticColumn.setCellRenderer(tacticsTableCellRenderer);
 
 		TableColumn minuteColumn = columnModel.getColumn(MINUTECOLUMN);
-		minuteColumn.setPreferredWidth(25);
-		minuteColumn.setMinWidth(25);
+		minuteColumn.setPreferredWidth(30);
+		minuteColumn.setMinWidth(30);
 		minuteColumn.setMaxWidth(30);
 
 		TableColumn eventTypeColumn = columnModel.getColumn(EVENTCOLUMN);
-		minuteColumn.setPreferredWidth(270);
-		minuteColumn.setMinWidth(100);
+		eventTypeColumn.setPreferredWidth(270);
+		eventTypeColumn.setMinWidth(200);
 		eventTypeColumn.setCellRenderer(new EventTypeTableCellRenderer());
 
-
 		TableColumn nameColumn = columnModel.getColumn(PLAYER_NAME_COLUMN);
-		nameColumn.setPreferredWidth(150);
+		nameColumn.setPreferredWidth(110);
 		nameColumn.setCellRenderer(new PlayerNameTableCellRenderer());
 
 		specialEventsTable.addMouseListener(new MouseAdapter() {

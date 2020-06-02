@@ -25,6 +25,7 @@ public class PlayerNameTableCellRenderer extends DefaultTableCellRenderer {
 		JLabel label = (JLabel) super.getTableCellRendererComponent(table, "", isSelected,
 				hasFocus, row, column);
 
+
 		if (!StringUtils.isEmpty(playerName)) {
 			String rName = playerName.substring(0, playerName.length() - 2);
 			String rType = playerName.substring(playerName.length() - 1);
