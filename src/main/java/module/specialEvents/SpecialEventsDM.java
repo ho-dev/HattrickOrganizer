@@ -9,7 +9,6 @@ import core.model.match.Matchdetails;
 import core.model.match.Weather;
 import core.model.player.Player;
 import module.specialEvents.filter.Filter;
-
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

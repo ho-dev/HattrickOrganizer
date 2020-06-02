@@ -50,7 +50,7 @@ public class SpecialEventsPanel extends LazyImagePanel {
 		FilterHelper.loadSettings(this.filter);
 		setLayout(new BorderLayout());
 
-		this.filter.addFilterChangeListener(evt -> setTableData());
+		this.filter.addFilterChangeListener(evt -> update());
 
 		HOMainFrame.instance().addApplicationClosingListener(() -> FilterHelper.saveSettings(filter));
 
@@ -99,7 +99,7 @@ public class SpecialEventsPanel extends LazyImagePanel {
 		TableColumn nameColumn = columnModel.getColumn(PLAYER_NAME_COLUMN);
 		nameColumn.setPreferredWidth(200);
 		nameColumn.setCellRenderer(new PlayerNameTableCellRenderer());
-		
+
 		specialEventsTable.addMouseListener(new MouseAdapter() {
 								  public void mousePressed(MouseEvent me) {
 									  JTable table = (JTable) me.getSource();
