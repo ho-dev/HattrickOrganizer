@@ -9,10 +9,8 @@ import static module.specialEvents.SpecialEventsTableModel.EVENTTEXTCOLUMN;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
 import org.jetbrains.annotations.Nullable;
-
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 
@@ -20,16 +18,7 @@ public class SpecialEventsTable extends JTable {
 
 	@Override
 	protected JTableHeader createDefaultTableHeader() {
-		return new JTableHeader(columnModel) {
-
-			@Override
-			public String getToolTipText(MouseEvent e) {
-				Point p = e.getPoint();
-				int modelIndex = convertColumnIndexToModel(columnModel.getColumnIndexAtX(p.x));
-				return getModel().getColumnName(modelIndex);
-			}
-
-		};
+		return new JTableHeader(columnModel) {};
 	}
 
 	@Nullable
@@ -39,7 +28,6 @@ public class SpecialEventsTable extends JTable {
 		int rowIndex = rowAtPoint(p);
 		int colIndex = columnAtPoint(p);
 		int modelColumnIndex = convertColumnIndexToModel(colIndex);
-		int modelRowIndex = convertRowIndexToModel(rowIndex);
 		MatchRow row = ((SpecialEventsTableModel) getModel()).getMatchRow(convertRowIndexToModel(rowIndex));
 		return switch (modelColumnIndex) {
 			case PLAYER_NAME_COLUMN -> HOVerwaltung.instance().getLanguageString("TipName");
@@ -57,8 +45,7 @@ public class SpecialEventsTable extends JTable {
 	}
 
 	private String getTacticToolTipText(MatchRow row, boolean homeTeam) {
-		int tactic = (homeTeam) ? row.getMatch().getHostingTeamTactic() : row.getMatch()
-				.getVisitingTeamTactic();
+		int tactic = (homeTeam) ? row.getMatch().getHostingTeamTactic() : row.getMatch().getVisitingTeamTactic();
 		return switch (tactic) {
 			case IMatchDetails.TAKTIK_NORMAL -> getLangStr("ls.team.tactic.normal");
 			case IMatchDetails.TAKTIK_PRESSING -> getLangStr("ls.team.tactic.pressing");
@@ -67,7 +54,7 @@ public class SpecialEventsTable extends JTable {
 			case IMatchDetails.TAKTIK_WINGS -> getLangStr("ls.team.tactic.attackonwings");
 			case IMatchDetails.TAKTIK_CREATIVE -> getLangStr("ls.team.tactic.playcreatively");
 			case IMatchDetails.TAKTIK_LONGSHOTS -> getLangStr("ls.team.tactic.longshots");
-			default -> "unknown";
+			default -> "";
 		};
 	}
 	

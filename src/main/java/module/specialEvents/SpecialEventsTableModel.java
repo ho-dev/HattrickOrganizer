@@ -1,6 +1,7 @@
 package module.specialEvents;
 
 import core.model.HOVerwaltung;
+import org.apache.commons.text.WordUtils;
 import org.javatuples.Triplet;
 import org.jetbrains.annotations.Nullable;
 import org.javatuples.Pair;
@@ -67,13 +68,13 @@ public class SpecialEventsTableModel extends AbstractTableModel {
 	@Override
 	public String getColumnName(int columnIndex) {
 		return switch (columnIndex) {
-			case MATCH_DATE_TYPE_COLUMN -> HOVerwaltung.instance().getLanguageString("SpieleDetails");
-			case HOMETACTICCOLUMN, AWAYTACTICCOLUMN -> HOVerwaltung.instance().getLanguageString("ls.team.tactic");
-			case HOMETEAMCOLUMN -> HOVerwaltung.instance().getLanguageString("Heim");
-			case AWAYTEAMCOLUMN -> HOVerwaltung.instance().getLanguageString("Gast");
-			case EVENTTEXTCOLUMN -> HOVerwaltung.instance().getLanguageString("Event");
-			case PLAYER_NAME_COLUMN -> HOVerwaltung.instance().getLanguageString("Spieler");
-			case RESULTCOLUMN -> HOVerwaltung.instance().getLanguageString("ls.match.result");
+			case MATCH_DATE_TYPE_COLUMN -> WordUtils.capitalizeFully(getLangStr("SpieleDetails"));
+			case HOMETACTICCOLUMN, AWAYTACTICCOLUMN -> WordUtils.capitalizeFully(getLangStr("ls.team.tactic"));
+			case HOMETEAMCOLUMN -> WordUtils.capitalizeFully(getLangStr("Heim"));
+			case AWAYTEAMCOLUMN -> WordUtils.capitalizeFully(getLangStr("Gast"));
+			case EVENTTEXTCOLUMN -> WordUtils.capitalizeFully(getLangStr("Event"));
+			case PLAYER_NAME_COLUMN -> WordUtils.capitalizeFully(getLangStr("Spieler"));
+			case RESULTCOLUMN -> WordUtils.capitalizeFully(getLangStr("ls.match.result"));
 			default -> " ";
 		};
 	}
@@ -81,4 +82,9 @@ public class SpecialEventsTableModel extends AbstractTableModel {
 	public MatchRow getMatchRow(int index) {
 		return this.data.get(index);
 	}
+
+	private String getLangStr(String key) {
+		return HOVerwaltung.instance().getLanguageString(key);
+	}
+
 }
