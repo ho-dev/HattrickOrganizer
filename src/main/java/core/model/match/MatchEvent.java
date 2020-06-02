@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class MatchEvent {
 
@@ -880,6 +882,15 @@ public class MatchEvent {
             MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_LEFT_WING,            // #262
             MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_LEFT_WING,         // #272
             MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_LEFT_WING) ;           // #282)
+
+
+    /**
+     * Check, if it is a man marking  event
+     */
+    public boolean isManMarking() {
+        List<Integer> man_markingME = IntStream.range(380, 390).boxed().collect(Collectors.toList());
+        return man_markingME.contains(m_matchEventID.value) ; }
+
 
     /**
      * Check, if it is a free kick event

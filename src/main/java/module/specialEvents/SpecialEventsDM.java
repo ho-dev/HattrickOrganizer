@@ -182,6 +182,7 @@ public class SpecialEventsDM {
 		else if(highlight.isOtherSE()) {return EventType.NON_SPECIALTY_SE;}
 		else if(highlight.isCounterAttack()) {return EventType.COUNTER_ATTACK;}
 		else if(highlight.isFreeKick()) {return EventType.FREEKICK;}
+		else if(highlight.isManMarking()) {return EventType.MANMARKING;}
 		else if(highlight.isPenalty()) {return EventType.PENALTY;}
 		else if(highlight.isLongShot()) {return EventType.LONGSHOT;}
 		else {return null;}
@@ -201,7 +202,7 @@ public class SpecialEventsDM {
 			return false;
 		} else if (!filter.isShowPenalty() && eventType == EventType.PENALTY) {
 			return false;
-		} else if (!filter.isShowFreeKickIndirect() && eventType == EventType.IFK) {
+		} else if (!filter.isShowManMarking() && eventType == EventType.MANMARKING) {
 			return false;
 		} else if (!filter.isShowLongShot() && eventType == EventType.LONGSHOT) {
 			return false;
