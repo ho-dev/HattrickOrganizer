@@ -78,10 +78,10 @@ The following companies are kindly supporting HO open source project:
 
 <a href="https://www.syntevo.com/smartgit/"> <img src="https://user-images.githubusercontent.com/1136496/57284884-5d1a3900-70b2-11e9-9917-15a7d2f2c83c.png" alt="SmartGit" width="50" height="34"> </a> [**Syntevo**](https://www.syntevo.com/smartgit/) with its powerful and multi-platform graphical Git client
 
-<a href="https://anvil.works/"> <img src="https://user-images.githubusercontent.com/1136496/74674400-8d4e4680-51b1-11ea-80ea-d04d554a30ba.png" width="34" height="34" alt="Anvil"> </a> [**Anvil**](https://www.syntevo.com/smartgit/): Full stack web apps
+<a href="https://anvil.works/"> <img src="https://user-images.githubusercontent.com/1136496/74674400-8d4e4680-51b1-11ea-80ea-d04d554a30ba.png" width="34" height="34" alt="Anvil"> </a> [**Anvil**](https://anvil.works/): Full stack web apps
 with nothing but Python
 
-<a href="https://anvil.works/"> <img src="https://user-images.githubusercontent.com/1136496/83647200-f026ea80-a5b4-11ea-80de-5f6cb9583783.png" alt="Intall4j" width="92" height="26"> </a> [**Install4j**](https://https://www.ej-technologies.com/products/install4j/overview.html/): powerful multi-platform Java installer builder that generates native installers and application launchers for Java applications
+<a href="https://https://www.ej-technologies.com/products/install4j/overview.html/"> <img src="https://user-images.githubusercontent.com/1136496/83647200-f026ea80-a5b4-11ea-80de-5f6cb9583783.png" alt="Intall4j" width="92" height="26"> </a> [**Install4j**](https://https://www.ej-technologies.com/products/install4j/overview.html/): powerful multi-platform Java installer builder that generates native installers and application launchers for Java applications
 
 ## Dependencies
 
