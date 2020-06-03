@@ -109,13 +109,9 @@ public class SpecialEventsPanel extends LazyImagePanel {
 									  if (col == MATCH_DATE_TYPE_COLUMN) {
 										  try {
 										  		SpecialEventsTableModel model = (SpecialEventsTableModel) table.getModel();
-										  		int matchID = model.getMatchRow(table.rowAtPoint(p)).getMatch().getMatchId();
-										  		if (me.isShiftDown()) {
-											 	  Desktop.getDesktop().browse(URI.create(String.format("http://www.hattrick.org/Club/Matches/Match.aspx?matchID=%s", matchID)));
-											  	}
-										  		else {
-										  			HOMainFrame.instance().showMatch(matchID);
-												}
+										  		Match oMatch = model.getMatchRow(table.rowAtPoint(p)).getMatch();
+										  		if (me.isShiftDown()) { Desktop.getDesktop().browse(oMatch.getHTURL());}
+										  		else {HOMainFrame.instance().showMatch(oMatch.getMatchId());}
 										  }
 									   catch (IOException e) {
 										  e.printStackTrace();

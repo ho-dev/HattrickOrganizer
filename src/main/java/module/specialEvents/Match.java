@@ -4,6 +4,8 @@ import core.model.match.MatchEvent;
 import core.model.match.MatchType;
 import core.model.match.Weather;
 import org.jetbrains.annotations.Nullable;
+
+import java.net.URI;
 import java.util.Date;
 
 public class Match {
@@ -145,4 +147,12 @@ public class Match {
 	public void setMatchType(MatchType matchType) {
 		this.matchType = matchType;
 	}
+
+	public URI getHTURL(){
+		if (matchType.isOfficial()) {
+			return URI.create(String.format("http://www.hattrick.org/Club/Matches/Match.aspx?matchID=%s", matchId));
+		}
+		return URI.create(String.format("https://www80.hattrick.org/Club/Matches/Match.aspx?matchID=%s&SourceSystem=HTOIntegrated", matchId));
+	}
+
 }

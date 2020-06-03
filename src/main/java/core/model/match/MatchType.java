@@ -86,18 +86,8 @@ public enum MatchType {
 	}
 
 	public String getSourceString() {
-		switch (this) {
-			case SINGLE:
-			case LADDER:
-			case TOURNAMENTGROUP :
-			case TOURNAMENTPLAYOFF :
-			case DIVISIONBATTLE:{
-				return "htointegrated";
-			}
-			default: {
-				return "hattrick";
-			}
-		}
+		if (isOfficial()) return "hattrick";
+		return "htointegrated";
 	}
 
 	public boolean isCupRules() {
