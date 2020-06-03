@@ -17,8 +17,8 @@ public class FilterHelper {
 				"SpecialEvents_ShowOwnPlayersOnly", Boolean.FALSE));
 		filter.setShowFreeKick(ModuleConfig.instance().getBoolean("SpecialEvents_ShowFreeKick",
 				Boolean.TRUE));
-		filter.setShowFreeKickIndirect(ModuleConfig.instance().getBoolean(
-				"SpecialEvents_ShowFreeKickIndirect", Boolean.TRUE));
+		filter.setShowManMarking(ModuleConfig.instance().getBoolean(
+				"specialEvents.filter.se.man_marking", Boolean.TRUE));
 		filter.setShowFriendlies(ModuleConfig.instance().getBoolean("SpecialEvents_ShowFriendlies",
 				Boolean.TRUE));
 		filter.setShowLeague(ModuleConfig.instance().getBoolean("SpecialEvents_ShowLeague",
@@ -55,8 +55,7 @@ public class FilterHelper {
 		ModuleConfig.instance().setBoolean("SpecialEvents_ShowOwnPlayersOnly",
 				filter.isShowOwnPlayersOnly());
 		ModuleConfig.instance().setBoolean("SpecialEvents_ShowFreeKick", filter.isShowFreeKick());
-		ModuleConfig.instance().setBoolean("SpecialEvents_ShowFreeKickIndirect",
-				filter.isShowFreeKickIndirect());
+		ModuleConfig.instance().setBoolean("specialEvents.filter.se.man_marking", filter.isShowManMarking());
 		ModuleConfig.instance().setBoolean("SpecialEvents_ShowFriendlies",
 				filter.isShowFriendlies());
 		ModuleConfig.instance().setBoolean("SpecialEvents_ShowLeague", filter.isShowLeague());

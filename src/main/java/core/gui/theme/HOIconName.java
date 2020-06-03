@@ -119,6 +119,7 @@ public interface HOIconName {
 	String ME_289 = "me_289";
 	String ME_290 = "me_290";
 	String ME_YELLOW_THEN_RED= "me_YellowThenRed";
+	String ME_MAN_MARKING = "me_man_marking";
 
 	String GOAL			= "goal";
 	String MISS			= "miss";

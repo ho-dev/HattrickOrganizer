@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class MatchEvent {
 
@@ -421,6 +423,9 @@ public class MatchEvent {
         put(MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_AHEAD, HOIconName.ROTATE); //#361
         put(MatchEventID.CHANGE_OF_TACTIC_MINUTE, HOIconName.ROTATE); //#362
         put(MatchEventID.PLAYER_POSITION_SWAP_MINUTE, HOIconName.SWAP); //#372
+
+        put(MatchEventID.MAN_MARKING_SUCCESS_SHORT_DISTANCE, HOIconName.ME_MAN_MARKING); //#380
+        put(MatchEventID.MAN_MARKING_SUCCESS_LONG_DISTANCE, HOIconName.ME_MAN_MARKING); //#381
 
         put(MatchEventID.RAINY_WEATHER_MANY_PLAYERS_AFFECTED, null); //#390
         put(MatchEventID.SUNNY_WEATHER_MANY_PLAYERS_AFFECTED, null); //#391
@@ -881,6 +886,15 @@ public class MatchEvent {
             MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_LEFT_WING,         // #272
             MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_LEFT_WING) ;           // #282)
 
+
+    /**
+     * Check, if it is a man marking  event
+     */
+    public boolean isManMarking() {
+        List<Integer> man_markingME = IntStream.range(380, 382).boxed().collect(Collectors.toList());
+        return man_markingME.contains(m_matchEventID.value) ; }
+
+
     /**
      * Check, if it is a free kick event
      */
@@ -983,7 +997,9 @@ public class MatchEvent {
                 this.m_matchEventID == MatchEventID.SE_TECHNICAL_THRIVES_IN_SUN ||
                 this.m_matchEventID == MatchEventID.SE_POWERFUL_SUFFERS_FROM_SUN ||
                 this.m_matchEventID == MatchEventID.SE_QUICK_LOSES_IN_RAIN ||
-                this.m_matchEventID == MatchEventID.SE_QUICK_LOSES_IN_SUN);
+                this.m_matchEventID == MatchEventID.SE_QUICK_LOSES_IN_SUN ||
+                this.m_matchEventID == MatchEventID.RAINY_WEATHER_MANY_PLAYERS_AFFECTED||
+                this.m_matchEventID == MatchEventID.SUNNY_WEATHER_MANY_PLAYERS_AFFECTED);
     }
 
     /**

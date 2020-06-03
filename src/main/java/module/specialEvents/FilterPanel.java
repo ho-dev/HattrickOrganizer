@@ -47,8 +47,8 @@ public class FilterPanel extends JPanel {
 	private JCheckBox specialitySECheckBox;
 	private JCheckBox weatherSECheckBox;
 	private JCheckBox counterAttackSECheckBox;
+	private JCheckBox manMarkingSECheckBox;
 	private JCheckBox freeKickSECheckBox;
-	private JCheckBox freeKickIndirectSECheckBox;
 	private JCheckBox penaltySECheckBox;
 	private JCheckBox longshotSECheckBox;
 	// player
@@ -84,8 +84,8 @@ public class FilterPanel extends JPanel {
 		this.specialitySECheckBox.setSelected(this.filter.isShowSpecialitySE());
 		this.weatherSECheckBox.setSelected(this.filter.isShowWeatherSE());
 		this.counterAttackSECheckBox.setSelected(this.filter.isShowCounterAttack());
+		this.manMarkingSECheckBox.setSelected(this.filter.isShowManMarking());
 		this.freeKickSECheckBox.setSelected(this.filter.isShowFreeKick());
-		this.freeKickIndirectSECheckBox.setSelected(this.filter.isShowFreeKickIndirect());
 		this.penaltySECheckBox.setSelected(this.filter.isShowPenalty());
 		this.longshotSECheckBox.setSelected(this.filter.isShowLongShot());
 
@@ -175,8 +175,8 @@ public class FilterPanel extends JPanel {
 					filter.setShowCounterAttack(selected);
 				} else if (source == freeKickSECheckBox) {
 					filter.setShowFreeKick(selected);
-				} else if (source == freeKickIndirectSECheckBox) {
-					filter.setShowFreeKickIndirect(selected);
+				} else if (source == manMarkingSECheckBox) {
+					filter.setShowManMarking(selected);
 				} else if (source == penaltySECheckBox) {
 					filter.setShowPenalty(selected);
 				} else if (source == longshotSECheckBox) {
@@ -205,7 +205,7 @@ public class FilterPanel extends JPanel {
 		this.weatherSECheckBox.addActionListener(checkBoxListener);
 		this.counterAttackSECheckBox.addActionListener(checkBoxListener);
 		this.freeKickSECheckBox.addActionListener(checkBoxListener);
-		this.freeKickIndirectSECheckBox.addActionListener(checkBoxListener);
+		this.manMarkingSECheckBox.addActionListener(checkBoxListener);
 		this.penaltySECheckBox.addActionListener(checkBoxListener);
 		this.longshotSECheckBox.addActionListener(checkBoxListener);
 		this.currentOwnPlayersCheckBox.addActionListener(checkBoxListener);
@@ -255,10 +255,10 @@ public class FilterPanel extends JPanel {
 		gbc.gridy = 0;
 		panel.add(this.freeKickSECheckBox, gbc);
 
-		this.freeKickIndirectSECheckBox = new JCheckBox();
-		this.freeKickIndirectSECheckBox.setText(getLangStr("IFK"));
+		this.manMarkingSECheckBox = new JCheckBox();
+		this.manMarkingSECheckBox.setText(getLangStr("specialEvents.filter.se.man_marking"));
 		gbc.gridy = 1;
-		panel.add(this.freeKickIndirectSECheckBox, gbc);
+		panel.add(this.manMarkingSECheckBox, gbc);
 
 		this.penaltySECheckBox = new JCheckBox();
 		this.penaltySECheckBox.setText(getLangStr("highlight_penalty"));
