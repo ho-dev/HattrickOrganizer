@@ -891,7 +891,7 @@ public class MatchEvent {
      * Check, if it is a man marking  event
      */
     public boolean isManMarking() {
-        List<Integer> man_markingME = IntStream.range(380, 390).boxed().collect(Collectors.toList());
+        List<Integer> man_markingME = IntStream.range(380, 382).boxed().collect(Collectors.toList());
         return man_markingME.contains(m_matchEventID.value) ; }
 
 
