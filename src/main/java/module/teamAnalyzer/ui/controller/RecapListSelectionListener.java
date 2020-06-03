@@ -24,8 +24,8 @@ public class RecapListSelectionListener implements ListSelectionListener {
 
     private String selectedTacticType = RecapPanel.VALUE_NA;
     private String selectedTacticSkill = RecapPanel.VALUE_NA;
-    private RecapTableSorter sorter = null;
-    private UiRecapTableModel tableModel = null;
+    private RecapTableSorter sorter;
+    private UiRecapTableModel tableModel;
 
     /**
      * Consructor.
@@ -51,13 +51,17 @@ public class RecapListSelectionListener implements ListSelectionListener {
             selectedTacticSkill = String.valueOf(tableModel.getValueAt(selectedRow, 18));
 
             TeamLineup lineup = SystemManager.getTeamReport().getLineup(selectedRow);
-            int week = lineup.getWeek();
-            int season = lineup.getSeason();
-            if (week < 0) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.HOUR, UserParameter.instance().TimeZoneDifference);
-                week = HTCalendarFactory.getHTWeek(calendar.getTime());
-                season = HTCalendarFactory.getHTSeason(calendar.getTime());
+            int week = 0;
+            int season = 0;
+            if (lineup != null) {
+                week = lineup.getWeek();
+                season = lineup.getSeason();
+                if (week < 0) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.HOUR, UserParameter.instance().TimeZoneDifference);
+                    week = HTCalendarFactory.getHTWeek(calendar.getTime());
+                    season = HTCalendarFactory.getHTSeason(calendar.getTime());
+                }
             }
             SystemManager.getPlugin().getMainPanel().reload(lineup, week, season);
             SystemManager.getPlugin().getRatingPanel().reload(lineup);
