@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="8.0.7" transformSequenceNumber="8">
-  <directoryPresets config="./build/install" />
-  <application name="Hattrick Organizer" applicationId="7901-8968-2695-6971" mediaDir="./build/artefacts" shortName="HO" version="${compiler:HO_version}" convertDotsToUnderscores="false" macVolumeId="509e74c97593e805" javaMinVersion="11">
+  <directoryPresets config="." />
+  <application name="Hattrick Organizer" applicationId="7901-8968-2695-6971" mediaDir="${compiler:projectDir}/build/artefacts" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}" shortName="HO" version="${compiler:HO_version}" allPathsRelative="true" convertDotsToUnderscores="false" macVolumeId="509e74c97593e805" javaMinVersion="11">
     <languages skipLanguageSelection="true">
       <additionalLanguages>
         <language id="fr" />
@@ -10,6 +10,7 @@
     </languages>
     <variables>
       <variable name="HO_version" value="4.0" />
+      <variable name="projectDir" value="D:/Perso/Code/HO" />
     </variables>
   </application>
   <files>
@@ -17,7 +18,7 @@
       <mountPoint id="58" />
     </mountPoints>
     <entries>
-      <dirEntry mountPoint="58" file="./build/install/XXX" subDirectory="XXX" />
+      <dirEntry mountPoint="58" file="${compiler:projectDir}/build/install/XXX" subDirectory="XXX" />
     </entries>
   </files>
   <launchers>
@@ -35,7 +36,7 @@
         </modulePath>
       </java>
       <iconImageFiles>
-        <file path="./build/install/XXX/Logo.png" />
+        <file path="${compiler:projectDir}/build/install/XXX/Logo.png" />
       </iconImageFiles>
     </launcher>
   </launchers>
@@ -46,16 +47,64 @@
           <screen id="1" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
             <actions>
               <action id="22" beanClass="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" actionElevationType="none" rollbackBarrierExitCode="0">
-			    <serializedBean>
+                <serializedBean>
                   <property name="obtainIfAdminMac" type="boolean" value="true" />
                   <property name="obtainIfNormalMac" type="boolean" value="true" />
                 </serializedBean>
-			  </action>
-			</actions>
+              </action>
+            </actions>
           </screen>
         </startup>
         <screens>
           <screen id="2" beanClass="com.install4j.runtime.beans.screens.WelcomeScreen" styleId="41" rollbackBarrierExitCode="0">
+            <styleOverrides>
+              <styleOverride name="Customize banner image" enabled="true">
+                <group id="174" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
+                  <serializedBean>
+                    <property name="backgroundColor">
+                      <object class="java.awt.Color">
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                      </object>
+                    </property>
+                    <property name="borderSides">
+                      <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
+                        <property name="bottom" type="boolean" value="true" />
+                      </object>
+                    </property>
+                    <property name="imageEdgeBackgroundColor">
+                      <object class="java.awt.Color">
+                        <int>25</int>
+                        <int>143</int>
+                        <int>220</int>
+                        <int>255</int>
+                      </object>
+                    </property>
+                    <property name="imageEdgeBorder" type="boolean" value="true" />
+                    <property name="imageFile">
+                      <object class="com.install4j.api.beans.ExternalFile">
+                        <string>${compiler:projectDir}/utils/buildResources/install_banner.png</string>
+                      </object>
+                    </property>
+                    <property name="insets">
+                      <object class="java.awt.Insets">
+                        <int>5</int>
+                        <int>10</int>
+                        <int>10</int>
+                        <int>10</int>
+                      </object>
+                    </property>
+                  </serializedBean>
+                  <externalParametrizationPropertyNames>
+                    <propertyName>imageAnchor</propertyName>
+                    <propertyName>imageEdgeBackgroundColor</propertyName>
+                    <propertyName>imageFile</propertyName>
+                  </externalParametrizationPropertyNames>
+                </group>
+              </styleOverride>
+            </styleOverrides>
             <actions>
               <action id="7" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" rollbackBarrierExitCode="0" multiExec="true">
                 <serializedBean>
@@ -176,6 +225,54 @@ return console.askOkCancel(message, true);
             </formComponents>
           </screen>
           <screen id="20" beanClass="com.install4j.runtime.beans.screens.FinishedScreen" styleId="41" rollbackBarrierExitCode="0" finishScreen="true">
+            <styleOverrides>
+              <styleOverride name="Customize banner image" enabled="true">
+                <group id="175" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
+                  <serializedBean>
+                    <property name="backgroundColor">
+                      <object class="java.awt.Color">
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                      </object>
+                    </property>
+                    <property name="borderSides">
+                      <object class="com.install4j.runtime.beans.formcomponents.BorderSides">
+                        <property name="bottom" type="boolean" value="true" />
+                      </object>
+                    </property>
+                    <property name="imageEdgeBackgroundColor">
+                      <object class="java.awt.Color">
+                        <int>25</int>
+                        <int>143</int>
+                        <int>220</int>
+                        <int>255</int>
+                      </object>
+                    </property>
+                    <property name="imageEdgeBorder" type="boolean" value="true" />
+                    <property name="imageFile">
+                      <object class="com.install4j.api.beans.ExternalFile">
+                        <string>${compiler:projectDir}/utils/buildResources/install_banner.png</string>
+                      </object>
+                    </property>
+                    <property name="insets">
+                      <object class="java.awt.Insets">
+                        <int>5</int>
+                        <int>10</int>
+                        <int>10</int>
+                        <int>10</int>
+                      </object>
+                    </property>
+                  </serializedBean>
+                  <externalParametrizationPropertyNames>
+                    <propertyName>imageAnchor</propertyName>
+                    <propertyName>imageEdgeBackgroundColor</propertyName>
+                    <propertyName>imageFile</propertyName>
+                  </externalParametrizationPropertyNames>
+                </group>
+              </styleOverride>
+            </styleOverrides>
             <formComponents>
               <formComponent id="21" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetBottom="10">
                 <serializedBean>
@@ -458,16 +555,15 @@ return console.askYesNo(message, true);
     </styles>
   </installerGui>
   <mediaSets>
-    <windows name="Windows" id="60" mediaFileName="HOSetup-${compiler:HO_version}-x64" />
-    <macosFolder name="macOS Folder" id="166" />
-    <linuxRPM name="Linux RPM" id="62" />
-    <linuxDeb name="Linux Deb Archive" id="63" />
-    <windowsArchive name="Windows Archive" id="64" />
-    <macosArchive name="macOS Single Bundle Archive" id="170" launcherId="59" />
+    <windows name="Windows" id="60" mediaFileName="HOSetup-${compiler:HO_version}" />
+    <windowsArchive name="Windows Archive" id="64" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-win" installDir="." />
+    <linuxRPM name="Linux RPM" id="62" installDir="$HOME/.ho" dependencies="openjdk-11-jre" />
+    <linuxDeb name="Linux Deb Archive" id="63" installDir="$HOME/.ho" dependencies="openjdk-11-jre" description="Hattrick Organizer !" />
+    <unixArchive name="Unix Archive" id="173" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix" installDir="." />
     <macos name="macOS Single Bundle" id="172" launcherId="59" />
   </mediaSets>
   <buildIds buildAll="false">
-    <mediaSet refId="170" />
+    <mediaSet refId="64" />
   </buildIds>
   <buildOptions verbose="true" />
 </install4j>

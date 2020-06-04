@@ -15,6 +15,7 @@ Changelist HO! 4.0
 ## Highlights
 
    - [FEAT] Improved HO themes, and implemented dark mode. #85
+   - [BUG] Complete rewrite of Special Even modules
 
 
 ## Detailed Changelog
