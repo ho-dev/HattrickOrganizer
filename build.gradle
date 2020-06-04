@@ -1,6 +1,5 @@
 import java.text.SimpleDateFormat
 
-// region ============ plugins and external jar dependencies ===================================================================
 plugins {
     id 'java'
     id 'application'
@@ -14,7 +13,6 @@ repositories {
     jcenter()
 }
 
-//============  external jar dependencies ==========
 dependencies {
     implementation 'com.toedter:jcalendar:1.4'
     implementation 'org.scribe:scribe:1.3.0'
@@ -30,12 +28,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
-// endregion
+
 
 //  Version ============================================================
-// Major.minor.Development_stage.Build
 // Development_stage (DEV:0  BETA:1  STABLE:2)
-
 def major = '4'
 def minor = '0'
 def development_stage = '0'
@@ -58,7 +54,6 @@ versionProps['buildNumber'] = buildNumber
 versionProps.store(versionPropsFile.newWriter(), null)
 
 project.version = major + '.' + minor + '.' + development_stage + '.' + buildNumber
-def moduleVersion = project.version
 
 println "Project:  $project.name $project.version ....................."
 
@@ -104,33 +99,33 @@ poeditor {
     apiKey = POEDITOR_APIKEY
     projectId = '206221'
 
-    trans type:'properties', lang: 'bg', file: 'src\\main\\resources\\sprache\\Bulgarian.properties'
-    trans type:'properties', lang: 'ca', file: 'src\\main\\resources\\sprache\\Catalan.properties'
-    trans type:'properties', lang: 'hr', file: 'src\\main\\resources\\sprache\\Hrvatski(Croatian).properties'
-    trans type:'properties', lang: 'cs', file: 'src\\main\\resources\\sprache\\Czech.properties'
-    trans type:'properties', lang: 'da', file: 'src\\main\\resources\\sprache\\Danish.properties'
-    trans type:'properties', lang: 'nl', file: 'src\\main\\resources\\sprache\\Nederlands.properties'
-    trans type:'properties', lang: 'fi', file: 'src\\main\\resources\\sprache\\Finnish.properties'
-    trans type:'properties', lang: 'fr', file: 'src\\main\\resources\\sprache\\French.properties'
-    trans type:'properties', lang: 'de', file: 'src\\main\\resources\\sprache\\Deutsch.properties'
-    trans type:'properties', lang: 'el', file: 'src\\main\\resources\\sprache\\Greeklish.properties'
-    trans type:'properties', lang: 'he', file: 'src\\main\\resources\\sprache\\Hebrew.properties' //Hebrew
-    trans type:'properties', lang: 'hu', file: 'src\\main\\resources\\sprache\\Magyar.properties'  //Hungarian
-    trans type:'properties', lang: 'it', file: 'src\\main\\resources\\sprache\\Italiano.properties'
-    trans type:'properties', lang: 'ko', file: 'src\\main\\resources\\sprache\\Hangul(Korean).properties'
-    trans type:'properties', lang: 'lv', file: 'src\\main\\resources\\sprache\\Latvija.properties' //Lettonie
-    trans type:'properties', lang: 'lt', file: 'src\\main\\resources\\sprache\\Lithuanian.properties'
-    trans type:'properties', lang: 'fa', file: 'src\\main\\resources\\sprache\\Persian.properties'
-    trans type:'properties', lang: 'pl', file: 'src\\main\\resources\\sprache\\Polish.properties'
-    trans type:'properties', lang: 'pt', file: 'src\\main\\resources\\sprache\\Portugues.properties'
-    trans type:'properties', lang: 'pt-br', file: 'src\\main\\resources\\sprache\\PortuguesBrasil.properties'
-    trans type:'properties', lang: 'ro', file: 'src\\main\\resources\\sprache\\Romanian.properties'
-    trans type:'properties', lang: 'ru', file: 'src\\main\\resources\\sprache\\Russian.properties'
+    trans type:'properties', lang: 'bg',      file: 'src\\main\\resources\\sprache\\Bulgarian.properties'
+    trans type:'properties', lang: 'ca',      file: 'src\\main\\resources\\sprache\\Catalan.properties'
+    trans type:'properties', lang: 'hr',      file: 'src\\main\\resources\\sprache\\Hrvatski(Croatian).properties'
+    trans type:'properties', lang: 'cs',      file: 'src\\main\\resources\\sprache\\Czech.properties'
+    trans type:'properties', lang: 'da',      file: 'src\\main\\resources\\sprache\\Danish.properties'
+    trans type:'properties', lang: 'nl',      file: 'src\\main\\resources\\sprache\\Nederlands.properties'
+    trans type:'properties', lang: 'fi',      file: 'src\\main\\resources\\sprache\\Finnish.properties'
+    trans type:'properties', lang: 'fr',      file: 'src\\main\\resources\\sprache\\French.properties'
+    trans type:'properties', lang: 'de',      file: 'src\\main\\resources\\sprache\\Deutsch.properties'
+    trans type:'properties', lang: 'el',      file: 'src\\main\\resources\\sprache\\Greeklish.properties'
+    trans type:'properties', lang: 'he',      file: 'src\\main\\resources\\sprache\\Hebrew.properties' //Hebrew
+    trans type:'properties', lang: 'hu',      file: 'src\\main\\resources\\sprache\\Magyar.properties'  //Hungarian
+    trans type:'properties', lang: 'it',      file: 'src\\main\\resources\\sprache\\Italiano.properties'
+    trans type:'properties', lang: 'ko',      file: 'src\\main\\resources\\sprache\\Hangul(Korean).properties'
+    trans type:'properties', lang: 'lv',      file: 'src\\main\\resources\\sprache\\Latvija.properties' //Lettonie
+    trans type:'properties', lang: 'lt',      file: 'src\\main\\resources\\sprache\\Lithuanian.properties'
+    trans type:'properties', lang: 'fa',      file: 'src\\main\\resources\\sprache\\Persian.properties'
+    trans type:'properties', lang: 'pl',      file: 'src\\main\\resources\\sprache\\Polish.properties'
+    trans type:'properties', lang: 'pt',      file: 'src\\main\\resources\\sprache\\Portugues.properties'
+    trans type:'properties', lang: 'pt-br',   file: 'src\\main\\resources\\sprache\\PortuguesBrasil.properties'
+    trans type:'properties', lang: 'ro',      file: 'src\\main\\resources\\sprache\\Romanian.properties'
+    trans type:'properties', lang: 'ru',      file: 'src\\main\\resources\\sprache\\Russian.properties'
     trans type:'properties', lang: 'sr-cyrl', file: 'src\\main\\resources\\sprache\\Serbian(Cyrillic).properties'
-    trans type:'properties', lang: 'sk', file: 'src\\main\\resources\\sprache\\Slovak.properties' //Slovak
-    trans type:'properties', lang: 'es', file: 'src\\main\\resources\\sprache\\Spanish.properties'
-    trans type:'properties', lang: 'sv', file: 'src\\main\\resources\\sprache\\Svenska.properties' //Swedish
-    trans type:'properties', lang: 'tr', file: 'src\\main\\resources\\sprache\\Turkish.properties'
+    trans type:'properties', lang: 'sk',      file: 'src\\main\\resources\\sprache\\Slovak.properties' //Slovak
+    trans type:'properties', lang: 'es',      file: 'src\\main\\resources\\sprache\\Spanish.properties'
+    trans type:'properties', lang: 'sv',      file: 'src\\main\\resources\\sprache\\Svenska.properties' //Swedish
+    trans type:'properties', lang: 'tr',      file: 'src\\main\\resources\\sprache\\Turkish.properties'
 }
 
 
@@ -173,7 +168,21 @@ task media(type: com.install4j.gradle.Install4jTask) {
     dependsOn 'CreateDistribution'
     projectFile = "${projectDir}/utils/buildResources/HO.install4j"
     buildIds = [60, 62, 63, 64, 172, 173]
-    variables = [HO_version: project.version, projectDir: projectDir]
+    String versionType
+
+    switch(development_stage) {
+        case '0':
+            versionType = "-DEV"
+            break;
+        case '1':
+            versionType = "-BETA"
+            break;
+        default:
+            versionType = ""
+            break;
+    }
+
+    variables = [HO_version: project.version, projectDir: projectDir, versionType: versionType]
 }
 
 task preparingBuild(dependsOn: clean) {
@@ -248,16 +257,6 @@ task CreateDistribution (dependsOn: installDist) {
         copy {
             from "${projectDir}\\src\\main\\resources\\prediction"
             into "${distribDir}\\prediction"
-        }
-
-        copy {
-            from "${projectDir}\\buildResources\\Win\\HO.bat"
-            into "${distribDir}"
-        }
-        copy {
-            from "${projectDir}\\buildResources\\Linux\\ho.sh"
-            into "${distribDir}"
-            fileMode = 0755
         }
 
         copy {

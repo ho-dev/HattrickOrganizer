@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="8.0.7" transformSequenceNumber="8">
   <directoryPresets config="." />
-  <application name="Hattrick Organizer" applicationId="7901-8968-2695-6971" mediaDir="${compiler:projectDir}/build/artefacts" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}" shortName="HO" version="${compiler:HO_version}" allPathsRelative="true" convertDotsToUnderscores="false" macVolumeId="509e74c97593e805" javaMinVersion="11">
+  <application name="Hattrick Organizer" applicationId="7901-8968-2695-6971" mediaDir="${compiler:projectDir}/build/artefacts" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}" shortName="HO" version="${compiler:HO_version}" allPathsRelative="true" convertDotsToUnderscores="false" macVolumeId="509e74c97593e805" javaMinVersion="11">
     <languages skipLanguageSelection="true">
       <additionalLanguages>
         <language id="fr" />
@@ -11,6 +11,7 @@
     <variables>
       <variable name="HO_version" value="4.0" />
       <variable name="projectDir" value="D:/Perso/Code/HO" />
+      <variable name="versionType" />
     </variables>
   </application>
   <files>
@@ -36,7 +37,7 @@
         </modulePath>
       </java>
       <iconImageFiles>
-        <file path="${compiler:projectDir}/build/install/XXX/Logo.png" />
+        <file path="${compiler:projectDir}/utils/buildResources/Logo.png" />
       </iconImageFiles>
     </launcher>
   </launchers>
@@ -555,11 +556,11 @@ return console.askYesNo(message, true);
     </styles>
   </installerGui>
   <mediaSets>
-    <windows name="Windows" id="60" mediaFileName="HOSetup-${compiler:HO_version}" />
-    <windowsArchive name="Windows Archive" id="64" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-win" installDir="." />
+    <windows name="Windows" id="60" mediaFileName="HOSetup-${compiler:HO_version}${compiler:versionType}" />
+    <windowsArchive name="Windows Archive" id="64" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-win${compiler:versionType}" installDir="." />
     <linuxRPM name="Linux RPM" id="62" installDir="$HOME/.ho" dependencies="openjdk-11-jre" />
     <linuxDeb name="Linux Deb Archive" id="63" installDir="$HOME/.ho" dependencies="openjdk-11-jre" description="Hattrick Organizer !" />
-    <unixArchive name="Unix Archive" id="173" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix" installDir="." />
+    <unixArchive name="Unix Archive" id="173" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix${compiler:versionType}" installDir="." />
     <macos name="macOS Single Bundle" id="172" launcherId="59" />
   </mediaSets>
   <buildIds buildAll="false">
