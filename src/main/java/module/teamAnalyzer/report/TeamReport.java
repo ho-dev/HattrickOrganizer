@@ -92,7 +92,6 @@ public class TeamReport {
     public TeamLineup getLineup(int selection)
     {
         if (this.matchDetails == null || this.matchDetails.size()==0)return null;
-        this.selection=selection;
         if ( selection == 0 ){
             return this.averageRatingslineup;
         }
@@ -117,9 +116,12 @@ public class TeamReport {
      * @param newRatings the team data copied to the new adjusted lineup
      */
     public void adjustRatingsLineup(TeamData newRatings) {
-        // copy of selected lineup
-        if (selection == 1 && adjustedRatingsLineup != null) {
+        if (adjustedRatingsLineup != null) {
             adjustedRatingsLineup.setTeamData(newRatings);
+        } else if (selection == 0) {
+            adjustedRatingsLineup = new TeamLineupBuilder(this)
+                    .setTeamData(newRatings)
+                    .build();
         } else {
             MatchDetail matchDetail = getLineup(selection).getMatchDetail();
             adjustedRatingsLineup = new TeamLineupBuilder(new TeamReport(matchDetail))
@@ -127,6 +129,7 @@ public class TeamReport {
                     .setMatchType(matchDetail.getMatch().getMatchType())
                     .setName(HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.Adjusted")).build();
         }
+        selectLineup(1); // select the adjusted lineup
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -184,9 +187,6 @@ public class TeamReport {
 
     /**
      * Add a performance to the correct SpotReport
-     *
-     * @param pp
-     * @param showUnavailable
      */
     private void addPerformance(PlayerPerformance pp, boolean showUnavailable) {
         if ((!showUnavailable) && (pp.getStatus() != PlayerDataManager.AVAILABLE)) {
@@ -232,17 +232,26 @@ public class TeamReport {
 
     /**
      * Generic calculate average method
-     *
-     * @param oldValue
-     * @param newValue
-     *
      * @return the new average number
      */
     private double updateAverage(double oldValue, double newValue) {
         return ((oldValue * matchNumber) + newValue) / (matchNumber + 1);
     }
 
-    public void selectLineup(int i) {
+    public TeamLineup selectLineup(int i) {
         this.selection=i;
+        return getLineup(i);
+    }
+
+    public TeamLineup getSelectedLineup() {
+        return getLineup(this.selection);
+    }
+
+    public int getSelection(){
+        return this.selection;
+    }
+
+    public void  setSelection(int selection){
+        this.selection = selection;
     }
 }

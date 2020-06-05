@@ -83,6 +83,7 @@ public class RecapPanel extends JPanel {
 
     //~ Methods ------------------------------------------------------------------------------------
     public void reload(TeamReport teamReport) {
+        int selection = teamReport.getSelection(); // save selection
         // Empty model
         while (tableModel.getRowCount() > 0) {
             tableModel.removeRow(0);
@@ -93,6 +94,7 @@ public class RecapPanel extends JPanel {
         for ( int i =0; i < teamReport.size(); i++){
             tableModel.addRow(AddLineup(teamReport.getLineup(i)));
         }
+        teamReport.setSelection(selection); // restore selection
 
         setColumnWidth(0, 100);
         setColumnWidth(1, 20);

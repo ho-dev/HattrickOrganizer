@@ -94,8 +94,6 @@ public class TeamAnalyzerPanel extends LazyPanel {
 
 	/**
 	 * Returns the Filter Panel
-	 * 
-	 * @return
 	 */
 	public FilterPanel getFilterPanel() {
 		return filterPanel;
@@ -103,8 +101,6 @@ public class TeamAnalyzerPanel extends LazyPanel {
 
 	/**
 	 * Returns the rating panel
-	 * 
-	 * @return
 	 */
 	public RatingPanel getRatingPanel() {
 		return ratingPanel;
@@ -116,8 +112,6 @@ public class TeamAnalyzerPanel extends LazyPanel {
 
 	/**
 	 * Returns the recap panel
-	 * 
-	 * @return
 	 */
 	RecapPanel getRecapPanel() {
 		return recapPanel;
@@ -126,16 +120,12 @@ public class TeamAnalyzerPanel extends LazyPanel {
 	public void reload() {
 		getFilterPanel().reload();
 		TeamReport teamReport = SystemManager.getTeamReport();
-		getMainPanel().reload(teamReport.getLineup(0), 0, 0);
+		getMainPanel().reload(teamReport.getSelectedLineup(), 0, 0);
 		getRecapPanel().reload(teamReport);
-		getRatingPanel().reload(teamReport.getLineup(0));
+		getRatingPanel().reload(teamReport.getSelectedLineup());
 
-		getSpecialEventsPanel().reload(teamReport.getLineup(0));
+		getSpecialEventsPanel().reload(teamReport.getSelectedLineup());
 
-		if (ModuleConfig.instance().getBoolean(SystemManager.ISLINEUP)) {
-			this.simButton.setVisible(true);
-		} else {
-			this.simButton.setVisible(false);
-		}
+		this.simButton.setVisible(ModuleConfig.instance().getBoolean(SystemManager.ISLINEUP));
 	}
 }
