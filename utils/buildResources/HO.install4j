@@ -558,8 +558,8 @@ return console.askYesNo(message, true);
   <mediaSets>
     <windows name="Windows" id="60" mediaFileName="HOSetup-${compiler:HO_version}${compiler:versionType}" />
     <windowsArchive name="Windows Archive" id="64" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-win${compiler:versionType}" installDir="." />
-    <linuxRPM name="Linux RPM" id="62" installDir="$HOME/.ho" dependencies="openjdk-11-jre" />
-    <linuxDeb name="Linux Deb Archive" id="63" installDir="$HOME/.ho" dependencies="openjdk-11-jre" description="Hattrick Organizer !" />
+    <linuxRPM name="Linux RPM" id="62" dependencies="openjdk-11-jre" />
+    <linuxDeb name="Linux Deb Archive" id="63" dependencies="openjdk-11-jre" description="Hattrick Organizer !" />
     <unixArchive name="Unix Archive" id="173" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix${compiler:versionType}" installDir="." />
     <macos name="macOS Single Bundle" id="172" launcherId="59" />
   </mediaSets>

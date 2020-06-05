@@ -28,7 +28,7 @@ public class HOLauncher {
 				if (!file.delete()) System.err.print("zip file could not be deleted after update !");
 			}
 		}
-//		HO.main(args);
+		HO.main(args);
 	}
 
 	private static void update(String zipFile, String _destDir) throws IOException {

@@ -29,13 +29,12 @@ dependencies {
 }
 
 
-
 //  Version ============================================================
 // Development_stage (DEV:0  BETA:1  STABLE:2)
 def major = '4'
 def minor = '0'
 def development_stage = '0'
-def releaseArtefacts = true
+def releaseArtefacts = false
 
 // region configuration ==============================================================================================
 println "Configuration start"
