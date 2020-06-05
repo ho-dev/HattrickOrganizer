@@ -23,24 +23,14 @@
     </entries>
   </files>
   <launchers>
-    <launcher name="HO" id="59">
-      <executable name="HO" iconSet="true" executableDir="." redirectStdout="true" executableMode="gui" singleInstance="true" />
+    <launcher name="HO" id="59" unixMode="777">
+      <executable name="HO" iconSet="true" redirectStdout="true" executableMode="gui" singleInstance="true" />
       <java mainClass="core.HOLauncher">
         <classPath>
-          <archive location="HO.jar" failOnError="false" />
-          <directory location="." failOnError="false" />
+          <scanDirectory location="." failOnError="false" />
+          <directory location="prediction" failOnError="false" />
         </classPath>
       </java>
-      <customScript>HOHOME="~/.ho"
-HOHOME="`eval echo $HOHOME`"
-
-if [ ! -d "${HOHOME}" ]
-then
-    echo "creating ${HOHOME}"
-    mkdir -m 755 "${HOHOME}"
-fi
-
-cd "${HOHOME}"</customScript>
       <iconImageFiles>
         <file path="${compiler:projectDir}/utils/buildResources/Logo.png" />
       </iconImageFiles>
