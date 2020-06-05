@@ -28,13 +28,8 @@
       <java mainClass="core.HOLauncher">
         <classPath>
           <archive location="HO.jar" failOnError="false" />
-          <scanDirectory location="." failOnError="false" />
+          <directory location="." failOnError="false" />
         </classPath>
-        <modulePath>
-          <archive location="gson-2.8.5.jar" failOnError="false" />
-          <archive location="guava-27.1-jre.jar" failOnError="false" />
-          <archive location="scribe-1.3.0.jar" failOnError="false" />
-        </modulePath>
       </java>
       <customScript>HOHOME="~/.ho"
 HOHOME="`eval echo $HOHOME`"
