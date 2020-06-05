@@ -24,8 +24,6 @@ import java.util.Hashtable;
 
 import javax.swing.*;
 
-import static com.kitfox.svg.app.beans.SVGIcon.INTERP_BILINEAR;
-
 public class ImageUtilities {
 
     /** Hashtable mit Veränderungspfeilgrafiken nach Integer als Key */
@@ -535,9 +533,9 @@ public class ImageUtilities {
 		Color trickotfarbe = null;
 		Icon komplettIcon = null;
 		StringBuilder key = new StringBuilder(20);
-		// Im Cache nachsehen
+
 		key.append("trickot_").append(posid).append("_").append(taktik).append("_").append(trickotnummer);
-		//komplettIcon = ThemeManager.getIcon(key.toString());
+		komplettIcon = ThemeManager.getIcon(key.toString());
 
 		if (komplettIcon == null) {
 			trickotfarbe = getJerseyColorByPosition(posid);
@@ -555,7 +553,7 @@ public class ImageUtilities {
 				icon.setSvgUniverse(new SVGUniverse());
 				icon.setPreferredSize(new Dimension(20, 16));
 				icon.setAutosize(SVGIcon.AUTOSIZE_BESTFIT);
-				icon.setInterpolation(INTERP_BILINEAR);
+				icon.setInterpolation(SVGIcon.INTERP_BILINEAR);
 				icon.setAntiAlias(true);
 
 				icon.setSvgURI(svgURI);
@@ -589,6 +587,7 @@ public class ImageUtilities {
 				}
 
 				komplettIcon = icon;
+				ThemeManager.instance().put(key.toString(), komplettIcon);
 			}
 		}
 
