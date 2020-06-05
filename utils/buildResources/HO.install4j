@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="8.0.7" transformSequenceNumber="8">
   <directoryPresets config="." />
-  <application name="Hattrick Organizer" applicationId="7901-8968-2695-6971" mediaDir="${compiler:projectDir}/build/artefacts" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}" shortName="HO" version="${compiler:HO_version}" allPathsRelative="true" convertDotsToUnderscores="false" macVolumeId="509e74c97593e805" javaMinVersion="11">
+  <application name="Hattrick Organizer" applicationId="7901-8968-2695-6971" mediaDir="${compiler:projectDir}/build/artefacts" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}" shortName="HO" version="${compiler:HO_version}" allPathsRelative="true" convertDotsToUnderscores="false" macVolumeId="509e74c97593e805" javaMinVersion="14">
     <languages skipLanguageSelection="true">
       <additionalLanguages>
         <language id="fr" />
@@ -36,6 +36,16 @@
           <archive location="scribe-1.3.0.jar" failOnError="false" />
         </modulePath>
       </java>
+      <customScript>HOHOME="~/.ho"
+HOHOME="`eval echo $HOHOME`"
+
+if [ ! -d "${HOHOME}" ]
+then
+    echo "creating ${HOHOME}"
+    mkdir -m 755 "${HOHOME}"
+fi
+
+cd "${HOHOME}"</customScript>
       <iconImageFiles>
         <file path="${compiler:projectDir}/utils/buildResources/Logo.png" />
       </iconImageFiles>
