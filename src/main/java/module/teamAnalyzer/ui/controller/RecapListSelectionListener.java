@@ -50,7 +50,7 @@ public class RecapListSelectionListener implements ListSelectionListener {
             selectedTacticType = String.valueOf(tableModel.getValueAt(selectedRow, 17));
             selectedTacticSkill = String.valueOf(tableModel.getValueAt(selectedRow, 18));
 
-            TeamLineup lineup = SystemManager.getTeamReport().getLineup(selectedRow);
+            TeamLineup lineup = SystemManager.getTeamReport().selectLineup(selectedRow);
             int week = 0;
             int season = 0;
             if (lineup != null) {
