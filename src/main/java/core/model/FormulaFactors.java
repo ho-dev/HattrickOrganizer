@@ -140,7 +140,7 @@ public class FormulaFactors {
      * Import star formulas from the default XML.
      */
     public void importDefaults() {
-        readFromXML("prediction" + File.separatorChar + "defaults.xml");
+        readFromXML("prediction/defaults.xml");
     }
 
 

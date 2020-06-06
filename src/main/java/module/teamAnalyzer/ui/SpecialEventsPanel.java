@@ -33,7 +33,7 @@ public class SpecialEventsPanel extends JPanel {
     };
 
     public SpecialEventsPanel(){
-        Vector<Object> data = new Vector<Object>();
+        Vector<Vector<Object>> data = new Vector<>();
 
         tableModel = new BaseTableModel(data, new Vector<String>(Arrays.asList(columns)));
         table = new JTable(tableModel);
@@ -62,7 +62,7 @@ public class SpecialEventsPanel extends JPanel {
         SpecialEventsPredictionManager specialEventsPredictionManager = teamLineup.getSpecialEventsPrediction();
         if (specialEventsPredictionManager == null) return;
 
-        tableModel = new BaseTableModel(new Vector<Object>(), new Vector<String>(Arrays.asList(columns)));
+        tableModel = new BaseTableModel(new Vector<>(), new Vector<>(Arrays.asList(columns)));
         table.setModel(tableModel);
 
         List<SpecialEventsPrediction> teamEvents = specialEventsPredictionManager.getTeamEvents();
@@ -139,7 +139,7 @@ public class SpecialEventsPanel extends JPanel {
             }
             involvedPlayerNames.add(p.getFullName());
         }
-        Vector<Object> rowData = new Vector<Object>();
+        Vector<Object> rowData = new Vector<>();
 
         rowData.add(kind);
         rowData.add(player!=null?player.getFullName():"");

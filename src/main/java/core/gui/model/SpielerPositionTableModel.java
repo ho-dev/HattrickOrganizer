@@ -146,7 +146,7 @@ public class SpielerPositionTableModel extends AbstractTableModel {
             final float[] rating = m_playersEvaluation.get(i);
 
             //Position
-            m_clData[i][0] = new ColorLabelEntry(ImageUtilities.getImage4Position(MatchRoleID
+            m_clData[i][0] = new ColorLabelEntry(ImageUtilities.getJerseyIcon(MatchRoleID
                                                                     .getHTPosidForHOPosition4Image((byte) rating[3]),
                                                                     (byte) 0, 0),
                                                  -MatchRoleID.getSortId((byte) rating[3],

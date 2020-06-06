@@ -8,6 +8,7 @@ import core.gui.comp.entry.SpielerLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.model.SpielerCBItem;
 import core.gui.model.SpielerCBItemRenderer;
+import core.gui.theme.HOBooleanName;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
@@ -17,7 +18,6 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionManager;
 import core.training.TrainingPreviewPlayers;
-import core.util.HOLogger;
 import core.util.Helper;
 
 import java.awt.*;
@@ -30,10 +30,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
+import javax.swing.*;
+import javax.swing.border.*;
 
 
 /**
@@ -47,7 +45,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     protected static int PLAYER_POSITION_PANEL_HEIGHT_FULL = Helper.calcCellWidth(95);
     // Used for positions with no tactics box
     protected static int PLAYER_POSITION_PANEL_HEIGHT_REDUCED = Helper.calcCellWidth(70);
-
 
     protected static int MINI_PLAYER_POSITION_PANEL_WIDTH = Helper.calcCellWidth(120);
     protected static int MINI_PLAYER_POSITION_PANEL_HEIGHT = Helper.calcCellWidth(32);
@@ -70,7 +67,8 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     private int tacticOrder = -1;
 
     private final GridBagLayout layout = new GridBagLayout();
-    private JLayeredPane jlp = new JLayeredPane();
+    private final JLayeredPane jlp = new JLayeredPane();
+    private int layerIndex = 0;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -84,8 +82,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     /**
      * Creates a new SpielerPositionsPanel object.
      */
-    private PlayerPositionPanel(Updateable updater, int positionsID, boolean print,
-                                boolean minimize) {
+    private PlayerPositionPanel(Updateable updater, int positionsID, boolean print, boolean minimize) {
         super(print || minimize);
 
         m_clUpdater = updater;
@@ -179,12 +176,12 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             fl.setAlignment(FlowLayout.CENTER);
             setLayout(fl);
 
-            setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+            setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
             constraints.gridx = 0;
             constraints.gridy = 0;
             constraints.gridwidth = 1;
-            jlp.add(m_jlPosition, constraints, 1);
+            jlp.add(m_jlPosition, constraints, layerIndex);
 
             constraints.gridx = 0;
             constraints.gridy = 1;
@@ -192,7 +189,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             m_jcbPlayer.addFocusListener(this);
             m_jcbPlayer.setMaximumRowCount(10);
             m_jcbPlayer.setRenderer(new SpielerCBItemRenderer());
-            jlp.add(m_jcbPlayer, constraints, 1);
+            jlp.add(m_jcbPlayer, constraints, layerIndex);
 
             if (!aenderbar) {
                 m_jcbPlayer.setEnabled(false);
@@ -210,7 +207,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                 }
 
                 m_jcbTactic.setBackground(m_jcbPlayer.getBackground());
-                jlp.add(m_jcbTactic, constraints, 1);
+                jlp.add(m_jcbTactic, constraints, layerIndex);
                 setPreferredSize(new Dimension(PLAYER_POSITION_PANEL_WIDTH, PLAYER_POSITION_PANEL_HEIGHT_FULL));
             } else {
                 setPreferredSize(new Dimension(PLAYER_POSITION_PANEL_WIDTH, PLAYER_POSITION_PANEL_HEIGHT_REDUCED));
@@ -343,7 +340,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                     playerId = aktuellerPlayer.getSpielerID();
                 } else {
                     // We want to disable the player selection box if there is already 11 players on the field and this is an on field position.
-                    if ((HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().hasFreePosition() == false) &&
+                    if ((!HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().hasFreePosition()) &&
                             (m_iPositionID >= IMatchRoleID.keeper) && (m_iPositionID < IMatchRoleID.startReserves)) {
                         m_jcbPlayer.setEnabled(false);
                     } else {
@@ -492,7 +489,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         //Minimized
         if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getSpieler() != null)) {
             m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getShortName());
-            m_jlPlayer.setIcon(ImageUtilities.getImage4Position(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
+            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
                     m_clSelectedPlayer.getSpieler().getTrikotnummer()));
         } else {
             m_jlPlayer.setText("");
@@ -593,7 +590,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         //Minimized
         if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getSpieler() != null)) {
             m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getShortName());
-            m_jlPlayer.setIcon(ImageUtilities.getImage4Position(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
+            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
                     m_clSelectedPlayer.getSpieler().getTrikotnummer()));
         } else {
             m_jlPlayer.setText("");
@@ -642,11 +639,17 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                     m_jlPosition.setText(nameForPosition);
 
                     if (MatchRoleID.isFullTrainPosition(position.getPosition(), nextWeekTrain)) {
-                        this.setBackground(Color.BLUE);
+                        this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED,
+                                    ThemeManager.getColor(HOColorName.LINEUP_FULL_TRAINING),
+                                    ThemeManager.getColor(HOColorName.LINEUP_FULL_TRAINING).darker()
+                        ));
                     } else if (MatchRoleID.isPartialTrainPosition(position.getPosition(), nextWeekTrain)) {
-                        this.setBackground(Color.CYAN);
+                        this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED,
+                                ThemeManager.getColor(HOColorName.LINEUP_PARTIAL_TRAINING),
+                                ThemeManager.getColor(HOColorName.LINEUP_PARTIAL_TRAINING).darker()
+                        ));
                     } else {
-                        this.setBackground(Color.WHITE);
+                        this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
                     }
                 }
                 // Subs
@@ -663,7 +666,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         //Minimized
         if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getSpieler() != null)) {
             m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getShortName());
-            m_jlPlayer.setIcon(ImageUtilities.getImage4Position(lineup.getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
+            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(lineup.getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
                     m_clSelectedPlayer.getSpieler()
                             .getTrikotnummer()));
         } else {
@@ -883,7 +886,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     }
 
     public void addSwapItem(Component c) {
-        jlp.add(c, 1);
+        jlp.add(c, layerIndex);
     }
 
     public void addAssistantOverlay(LineupAssistantSelectorOverlay overlay) {
@@ -896,7 +899,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         constraints.gridy = 0;
         constraints.gridwidth = 2;
         constraints.gridheight = 3;
-        jlp.add(overlay, constraints, 2);
+        jlp.add(overlay, constraints, layerIndex+1);
         repaint();
     }
 

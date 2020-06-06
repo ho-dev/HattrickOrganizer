@@ -43,6 +43,12 @@ final class AufstellungsRatingPanel extends RasenPanel {
 
     private static final long serialVersionUID = -8938268226990652913L;
 
+    private final static Color LABEL_BG = ThemeManager.getColor(HOColorName.LEAGUE_BG);
+    private final static Color LABEL_FG = ThemeManager.getColor(HOColorName.LEAGUE_FG);
+
+
+    private final static Color RATING_BORDER = ThemeManager.getColor(HOColorName.LINEUP_RATING_BORDER);
+
     //~ Static fields/initializers -----------------------------------------------------------------
     public static final boolean REIHENFOLGE_STURM2VERTEIDIGUNG = false;
 
@@ -59,41 +65,41 @@ final class AufstellungsRatingPanel extends RasenPanel {
     double loddar;
 
     private ColorLabelEntry m_clBottomCenterCompare = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+            LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private ColorLabelEntry m_clBottomCenterMain = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+            LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
     private ColorLabelEntry m_clBottomLeftCompare = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+            LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private ColorLabelEntry m_clBottomLeftMain = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+            LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
     private ColorLabelEntry m_clBottomRightCompare = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+            LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private ColorLabelEntry m_clBottomRightMain = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+            LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
     private ColorLabelEntry m_clMiddleCompare = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+            LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private ColorLabelEntry m_clMiddleMain = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+            LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
     private ColorLabelEntry m_clTopCenterCompare = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+            LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private ColorLabelEntry m_clTopCenterMain = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+            LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
     private ColorLabelEntry m_clTopLeftCompare = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+            LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private ColorLabelEntry m_clTopLeftMain = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+            LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
     private ColorLabelEntry m_clTopRightCompare = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+            LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private ColorLabelEntry m_clTopRightMain = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+            LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
     private ColorLabelEntry m_clHatstatMain = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+            LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
     private ColorLabelEntry m_clLoddarMain = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.RIGHT);
+            LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
     private ColorLabelEntry m_clHatstatCompare = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+            LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private ColorLabelEntry m_clLoddarCompare = new ColorLabelEntry("",
-            Color.BLACK, Color.WHITE, SwingConstants.CENTER);
+            LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private Dimension GROESSE = new Dimension(Helper.calcCellWidth(80), Helper.calcCellWidth(25));
     private JLabel m_clBottomCenterText = new JLabel("", SwingConstants.LEFT);
     private JLabel m_clBottomLeftText = new JLabel("", SwingConstants.LEFT);
@@ -393,21 +399,21 @@ final class AufstellungsRatingPanel extends RasenPanel {
         temppanel.add(tempcomponent);
 
         innerpanel = new JPanel(new GridLayout(2, 1));
-        innerpanel.setBackground(Color.white);
-        innerpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        innerpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
+        innerpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         innerpanel.add(m_clTopCenterText);
         innerpanel.add(temppanel);
 
-        m_clTopCenterPanel.setBackground(Color.WHITE);
+        m_clTopCenterPanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         m_clTopCenterText.setFont(m_clTopCenterText.getFont().deriveFont(m_clTopCenterText.getFont().getSize2D() - 1f));
         m_clTopCenterText.setOpaque(true);
         m_clTopCenterPanel.add(innerpanel, BorderLayout.CENTER);
         m_clTopCenterPanel.setPreferredSize(GROESSE);
 
         mainpanel = new JPanel(new BorderLayout());
-        mainpanel.setBackground(Color.white);
+        mainpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         mainpanel.add(m_clTopCenterPanel, BorderLayout.CENTER);
-        mainpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        mainpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         subconstraints.gridx = 2;
         subconstraints.gridy = 1;
         subconstraints.gridwidth = 3;
@@ -454,21 +460,21 @@ final class AufstellungsRatingPanel extends RasenPanel {
         temppanel.add(tempcomponent);
 
         innerpanel = new JPanel(new GridLayout(2, 1));
-        innerpanel.setBackground(Color.white);
-        innerpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        innerpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
+        innerpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         innerpanel.add(m_clTopLeftText);
         innerpanel.add(temppanel);
 
-        m_clTopLeftPanel.setBackground(Color.WHITE);
+        m_clTopLeftPanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         m_clTopLeftText.setFont(m_clTopLeftText.getFont().deriveFont(m_clTopLeftText.getFont().getSize2D() - 1f));
         m_clTopLeftText.setOpaque(true);
         m_clTopLeftPanel.add(innerpanel, BorderLayout.CENTER);
         m_clTopLeftPanel.setPreferredSize(GROESSE);
 
         mainpanel = new JPanel(new BorderLayout());
-        mainpanel.setBackground(Color.white);
+        mainpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         mainpanel.add(m_clTopLeftPanel, BorderLayout.CENTER);
-        mainpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        mainpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         subconstraints.gridx = 1;
         subconstraints.gridy = 2;
         subconstraints.gridwidth = 2;
@@ -500,21 +506,21 @@ final class AufstellungsRatingPanel extends RasenPanel {
         temppanel.add(tempcomponent);
 
         innerpanel = new JPanel(new GridLayout(2, 1));
-        innerpanel.setBackground(Color.white);
-        innerpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        innerpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
+        innerpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         innerpanel.add(m_clTopRightText);
         innerpanel.add(temppanel);
 
-        m_clTopRightPanel.setBackground(Color.WHITE);
+        m_clTopRightPanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         m_clTopRightText.setFont(m_clTopRightText.getFont().deriveFont(m_clTopRightText.getFont().getSize2D() - 1f));
         m_clTopRightText.setOpaque(true);
         m_clTopRightPanel.add(innerpanel, BorderLayout.CENTER);
         m_clTopRightPanel.setPreferredSize(GROESSE);
 
         mainpanel = new JPanel(new BorderLayout());
-        mainpanel.setBackground(Color.white);
+        mainpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         mainpanel.add(m_clTopRightPanel, BorderLayout.CENTER);
-        mainpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        mainpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         subconstraints.gridx = 4;
         subconstraints.gridy = 2;
         subconstraints.gridwidth = 2;
@@ -575,21 +581,21 @@ final class AufstellungsRatingPanel extends RasenPanel {
         temppanel.add(tempcomponent);
 
         innerpanel = new JPanel(new GridLayout(2, 1));
-        innerpanel.setBackground(Color.white);
-        innerpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        innerpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
+        innerpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         innerpanel.add(m_clMiddleText);
         innerpanel.add(temppanel);
 
-        m_clMiddlePanel.setBackground(Color.WHITE);
+        m_clMiddlePanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         m_clMiddleText.setFont(m_clMiddleText.getFont().deriveFont(m_clMiddleText.getFont().getSize2D() - 1f));
         m_clMiddleText.setOpaque(true);
         m_clMiddlePanel.add(innerpanel, BorderLayout.CENTER);
         m_clMiddlePanel.setPreferredSize(GROESSE);
 
         mainpanel = new JPanel(new BorderLayout());
-        mainpanel.setBackground(Color.white);
+        mainpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         mainpanel.add(m_clMiddlePanel, BorderLayout.CENTER);
-        mainpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        mainpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         subconstraints.gridx = 2;
         subconstraints.gridy = 4;
         subconstraints.gridwidth = 3;
@@ -649,21 +655,21 @@ final class AufstellungsRatingPanel extends RasenPanel {
         temppanel.add(tempcomponent);
 
         innerpanel = new JPanel(new GridLayout(2, 1));
-        innerpanel.setBackground(Color.white);
-        innerpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        innerpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
+        innerpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         innerpanel.add(m_clBottomLeftText);
         innerpanel.add(temppanel);
 
-        m_clBottomLeftPanel.setBackground(Color.WHITE);
+        m_clBottomLeftPanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         m_clBottomLeftText.setFont(m_clBottomLeftText.getFont().deriveFont(m_clBottomLeftText.getFont().getSize2D() - 1f));
         m_clBottomLeftText.setOpaque(true);
         m_clBottomLeftPanel.add(innerpanel, BorderLayout.CENTER);
         m_clBottomLeftPanel.setPreferredSize(GROESSE);
 
         mainpanel = new JPanel(new BorderLayout());
-        mainpanel.setBackground(Color.white);
+        mainpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         mainpanel.add(m_clBottomLeftPanel, BorderLayout.CENTER);
-        mainpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        mainpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         subconstraints.gridx = 1;
         subconstraints.gridy = 6;
         subconstraints.gridwidth = 2;
@@ -696,21 +702,21 @@ final class AufstellungsRatingPanel extends RasenPanel {
         temppanel.add(tempcomponent);
 
         innerpanel = new JPanel(new GridLayout(2, 1));
-        innerpanel.setBackground(Color.white);
-        innerpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        innerpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
+        innerpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         innerpanel.add(m_clBottomRightText);
         innerpanel.add(temppanel);
 
-        m_clBottomRightPanel.setBackground(Color.WHITE);
+        m_clBottomRightPanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         m_clBottomRightText.setFont(m_clBottomRightText.getFont().deriveFont(m_clBottomRightText.getFont().getSize2D() - 1f));
         m_clBottomRightText.setOpaque(true);
         m_clBottomRightPanel.add(innerpanel, BorderLayout.CENTER);
         m_clBottomRightPanel.setPreferredSize(GROESSE);
 
         mainpanel = new JPanel(new BorderLayout());
-        mainpanel.setBackground(Color.white);
+        mainpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         mainpanel.add(m_clBottomRightPanel, BorderLayout.CENTER);
-        mainpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        mainpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         subconstraints.gridx = 4;
         subconstraints.gridy = 6;
         subconstraints.gridwidth = 2;
@@ -756,8 +762,8 @@ final class AufstellungsRatingPanel extends RasenPanel {
         subconstraints.weightx = 3.0;
 
         innerpanel = new JPanel(new GridLayout(2, 2));
-        innerpanel.setBackground(Color.white);
-        innerpanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        innerpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
+        innerpanel.setBorder(BorderFactory.createLineBorder(RATING_BORDER));
 
         //Hatstats
         temppanel = new JPanel(new GridLayout(1, 3));
@@ -792,13 +798,13 @@ final class AufstellungsRatingPanel extends RasenPanel {
         innerpanel.add(temppanel);
 
         //Main
-        m_clHTSLoddarPanel.setBackground(Color.WHITE);
+        m_clHTSLoddarPanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         m_clHTSLoddarPanel.add(innerpanel, BorderLayout.CENTER);
 
         mainpanel = new JPanel(new BorderLayout());
-        mainpanel.setBackground(Color.white);
+        mainpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         mainpanel.add(m_clHTSLoddarPanel, BorderLayout.CENTER);
-        mainpanel.setBorder(BorderFactory.createLineBorder(Color.black));
+        mainpanel.setBorder(BorderFactory.createLineBorder(RATING_BORDER));
         subconstraints.gridx = 1;
         subconstraints.gridy = 7;
         subconstraints.gridwidth = 1;
@@ -820,21 +826,21 @@ final class AufstellungsRatingPanel extends RasenPanel {
         temppanel.add(tempcomponent);
 
         innerpanel = new JPanel(new GridLayout(2, 1));
-        innerpanel.setBackground(Color.white);
-        innerpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        innerpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
+        innerpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         innerpanel.add(m_clBottomCenterText);
         innerpanel.add(temppanel);
 
-        m_clBottomCenterPanel.setBackground(Color.WHITE);
+        m_clBottomCenterPanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         m_clBottomCenterText.setFont(m_clBottomCenterText.getFont().deriveFont(m_clBottomCenterText.getFont().getSize2D() - 1f));
         m_clBottomCenterText.setOpaque(true);
         m_clBottomCenterPanel.add(innerpanel, BorderLayout.CENTER);
         m_clBottomCenterPanel.setPreferredSize(GROESSE);
 
         mainpanel = new JPanel(new BorderLayout());
-        mainpanel.setBackground(Color.white);
+        mainpanel.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
         mainpanel.add(m_clBottomCenterPanel, BorderLayout.CENTER);
-        mainpanel.setBorder(BorderFactory.createLineBorder(Color.white));
+        mainpanel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BG)));
         subconstraints.gridx = 3;
         subconstraints.gridy = 7;
         subconstraints.gridwidth = 3;

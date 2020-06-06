@@ -23,7 +23,7 @@ public class Filter {
 	private boolean showWeatherSE = true;
 	private boolean showCounterAttack = true;
 	private boolean showFreeKick = true;
-	private boolean showFreeKickIndirect = true;
+	private boolean showManMarking = true;
 	private boolean showPenalty = true;
 	private boolean showLongShot = true;
 	// player
@@ -168,13 +168,13 @@ public class Filter {
 		}
 	}
 
-	public boolean isShowFreeKickIndirect() {
-		return showFreeKickIndirect;
+	public boolean isShowManMarking() {
+		return showManMarking;
 	}
 
-	public void setShowFreeKickIndirect(boolean showFreeKickIndirect) {
-		if (this.showFreeKickIndirect != showFreeKickIndirect) {
-			this.showFreeKickIndirect = showFreeKickIndirect;
+	public void setShowManMarking(boolean _showManMarking) {
+		if (this.showManMarking != _showManMarking) {
+			this.showManMarking = _showManMarking;
 			fireFilterChanged();
 		}
 	}

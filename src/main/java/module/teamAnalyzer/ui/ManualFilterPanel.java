@@ -58,7 +58,7 @@ public class ManualFilterPanel extends JPanel {
 	 * Re-init the UI components.
 	 */
 	public void reload() {
-		tableModel = new UiFilterTableModel(new Vector<Object>(), COLUMN_NAMES);
+		tableModel = new UiFilterTableModel(new Vector<>(), COLUMN_NAMES);
 		table.setModel(tableModel);
 		availableMatches = MatchManager.getAllMatches();
 
@@ -175,7 +175,7 @@ public class ManualFilterPanel extends JPanel {
 		setLayout(new BorderLayout());
 		setOpaque(false);
 
-		Vector<Object> data = new Vector<Object>();
+		Vector<Vector<Object>> data = new Vector<>();
 
 		tableModel = new UiFilterTableModel(data, COLUMN_NAMES);
 		table = new JTable(tableModel);

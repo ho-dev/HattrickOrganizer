@@ -12,18 +12,13 @@ import core.model.UserParameter;
 import core.training.TrainingManager;
 import core.util.ExceptionHandler;
 import core.util.HOLogger;
-//import core.util.IOUtils;
-//import java.io.BufferedReader;
+import core.util.OSUtils;
 import java.io.File;
-//import java.io.InputStream;
-//import java.io.InputStreamReader;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Main HO starter class.
@@ -40,7 +35,6 @@ public class HO {
 	public static int RevisionNumber;
     private static String versionType;
 
-
 	/**
 	 * Is this a development version? Note that a "development" version can a
 	 * release ("Beta" or "DEV" version). The DEVELOPMENT flag is used by the
@@ -56,24 +50,29 @@ public class HO {
 	 */
 
 	public static boolean isDevelopment() {
-		return versionType == "DEV";
+		return "DEV".equalsIgnoreCase(versionType);
 	}
+
 	public static boolean isBeta() {
-		return versionType == "BETA";
+		return "BETA".equalsIgnoreCase(versionType);
 	}
+
 	public static boolean isRelease() {
-		return versionType == "RELEASE";
+		return "RELEASE".equalsIgnoreCase(versionType);
 	}
+
+	public static String getVersionType() {
+		return versionType;
+	}
+
 	public static String getVersionString() {
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
 		nf.setMinimumFractionDigits(3);
 		String txt = nf.format(VERSION);
 
-		if (versionType=="BETA") {
+		if (isBeta()) {
 			txt += " BETA (r" + RevisionNumber + ")";
-		}
-
-		else if (versionType=="DEV") {
+		} else if (isDevelopment()) {
 			txt += " DEV (r" + RevisionNumber + ")";
 		}
 
@@ -89,6 +88,11 @@ public class HO {
 	 */
 	public static void main(String[] args) {
 		final long start = System.currentTimeMillis();
+
+		if (OSUtils.isMac()) {
+			System.setProperty("apple.laf.useScreenMenuBar", "true");
+			System.setProperty("apple.awt.showGroupBox", "true");
+		}
 
 		System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
@@ -108,8 +112,8 @@ public class HO {
 		}
 
 		// Get HO version from manifest
-        String sVERSION = HO.class.getPackage().getImplementationVersion();
-        if (sVERSION != null) {
+		String sVERSION = HO.class.getPackage().getImplementationVersion();
+		if (sVERSION != null) {
 			String[] aVersion = sVERSION.split("\\.");
 
 			VERSION = Double.parseDouble(aVersion[0] + "." + aVersion[1]);
@@ -125,13 +129,11 @@ public class HO {
 					versionType = "RELEASE";
 					break;
 			}
-			}
-
-            else {
-                HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
-                VERSION = 0d;
-				versionType = "DEV";
-            }
+        } else {
+        	HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
+        	VERSION = 0d;
+        	versionType = "DEV";
+        }
 
 		// Usermanagement Login-Dialog
 		try {
@@ -196,18 +198,16 @@ public class HO {
 
 		interuptionsWindow.setInfoText(5, "Load latest Data");
 		HOVerwaltung.instance().loadLatestHoModel();
-//		HOVerwaltung.instance().getModel().setLineups(HOVerwaltung.instance().getModel().getID());
 		interuptionsWindow.setInfoText(6, "Load  XtraDaten");
 
 		// TableColumn
 		UserColumnController.instance().load();
 
-		// Die Währung auf die aus dem HRF setzen
-		float faktorgeld = (float) HOVerwaltung.instance().getModel().getXtraDaten()
-				.getCurrencyRate();
+		// Set the currency from HRF
+		float fxRate = (float) HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate();
 
-		if (faktorgeld > -1) {
-			UserParameter.instance().faktorGeld = faktorgeld;
+		if (fxRate > -1) {
+			UserParameter.instance().faktorGeld = fxRate;
 		}
 
 		// Training
@@ -234,10 +234,6 @@ public class HO {
 	}
 
 	public static int getRevisionNumber() {
-	return RevisionNumber;
+		return RevisionNumber;
 	}
-
-    public static String getversionType() {
-        return versionType;
-    }
 }

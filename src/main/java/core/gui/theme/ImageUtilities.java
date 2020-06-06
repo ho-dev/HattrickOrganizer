@@ -1,5 +1,10 @@
 package core.gui.theme;
 
+import com.kitfox.svg.*;
+import com.kitfox.svg.animation.AnimationElement;
+import com.kitfox.svg.app.beans.SVGIcon;
+import com.kitfox.svg.xml.StyleSheet;
+import com.kitfox.svg.xml.StyleSheetRule;
 import core.model.UserParameter;
 import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
@@ -7,15 +12,17 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
 import java.awt.*;
+import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageProducer;
 import java.awt.image.PixelGrabber;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Hashtable;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
 public class ImageUtilities {
 
@@ -43,11 +50,11 @@ public class ImageUtilities {
 	public static Image getImageDurchgestrichen(Image image,Color helleFarbe, Color dunkleFarbe) {
 	    try {
 	        final BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-	
+
 	        final java.awt.Graphics2D g2d = (java.awt.Graphics2D) bufferedImage.getGraphics();
-	
+
 	        g2d.drawImage(image, 0, 0, null);
-	
+
 	        //Kreuz zeichnen
 	        g2d.setColor(helleFarbe);
 	        g2d.drawLine(0, 0, bufferedImage.getWidth() - 1, bufferedImage.getHeight());
@@ -62,8 +69,7 @@ public class ImageUtilities {
 	}
 
 	/**
-	 * Macht eine Farbe in dem Bild transparent
-	 *
+	 * Makes a colour in the image transparent.
 	 */
 	public static Image makeColorTransparent(Image im, int minred, int mingreen,
 	                                                  int minblue, int maxred, int maxgreen,
@@ -74,37 +80,35 @@ public class ImageUtilities {
 	}
 
 	/**
-	 * Kopiert das zweite Image auf das erste
-	 *
+	 * Makes a colour in the image transparent.
+	 */
+	public static Image makeColorTransparent(Image im, Color color) {
+		Image image = null;
+
+		//Cache durchsuchen
+		image = (Image) m_clTransparentsCache.get(im);
+
+		//Nicht im Cache -> laden
+		if (image == null) {
+			final ImageProducer ip = new FilteredImageSource(im.getSource(), new TransparentFilter(color));
+			image = Toolkit.getDefaultToolkit().createImage(ip);
+
+			//Bild in den Cache hinzufügen
+			m_clTransparentsCache.put(im, image);
+		}
+
+		return image;
+	}
+
+	/**
+	 * Copies the second image on the first image.
 	 */
 	public static Image merge(Image background, Image foreground) {
 	    final BufferedImage image = new BufferedImage(
 	    		background.getWidth(null), background.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 	    image.getGraphics().drawImage(background, 0, 0, null);
 	    image.getGraphics().drawImage(foreground, 0, 0, null);
-	
-	    return image;
-	}
 
-	/**
-	 * Macht eine Farbe in dem Bild transparent
-	 *
-	 */
-	public static Image makeColorTransparent(Image im, Color color) {
-	    Image image = null;
-	
-	    //Cache durchsuchen
-	    image = (Image) m_clTransparentsCache.get(im);
-	
-	    //Nicht im Cache -> laden
-	    if (image == null) {
-	        final ImageProducer ip = new FilteredImageSource(im.getSource(), new TransparentFilter(color));
-	        image = Toolkit.getDefaultToolkit().createImage(ip);
-	
-	        //Bild in den Cache hinzufügen
-	        m_clTransparentsCache.put(im, image);
-	    }
-	
 	    return image;
 	}
 
@@ -374,77 +378,19 @@ public class ImageUtilities {
 		komplettIcon = ThemeManager.getIcon(key.toString());
 		
 		if (komplettIcon == null) {
-			switch (posid) {
-				case IMatchRoleID.keeper: {
-					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_KEEPER);
-					break;
-				}
-	
-				case IMatchRoleID.rightCentralDefender:
-				case IMatchRoleID.leftCentralDefender:
-				case IMatchRoleID.middleCentralDefender: {
-					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_CENTRALDEFENCE);
-					break;
-				}
-	
-				case IMatchRoleID.leftBack:
-				case IMatchRoleID.rightBack: {
-					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WINGBACK);
-					break;
-				}
-	
-				case IMatchRoleID.rightInnerMidfield:
-				case IMatchRoleID.leftInnerMidfield:
-				case IMatchRoleID.centralInnerMidfield: {
-					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_MIDFIELD);
-					break;
-				}
-	
-				case IMatchRoleID.leftWinger:
-				case IMatchRoleID.rightWinger: {
-					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WING);
-					break;
-				}
-	
-				case IMatchRoleID.rightForward:
-				case IMatchRoleID.leftForward:
-				case IMatchRoleID.centralForward: {
-					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_FORWARD);
-					break;
-				}
-	
-				case IMatchRoleID.substGK1: {
-					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBKEEPER);
-					break;
-				}
-	
-				case IMatchRoleID.substCD1: {
-					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBDEFENCE);
-					break;
-				}
-	
-				case IMatchRoleID.substIM1: {
-					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBMIDFIELD);
-					break;
-				}
-	
-				case IMatchRoleID.substWI1: {
-					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBWING);
-					break;
-				}
-	
-				case IMatchRoleID.substFW1: {
-					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBFORWARD);
-					break;
-				}
-	
-				default:
-					trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT);
-			}
-	
+			trickotfarbe = getJerseyColorByPosition(posid);
+
 			// Bild laden, transparenz hinzu, trikofarbe wechseln
-			trickotImage = changeColor(changeColor(makeColorTransparent(ThemeManager.getIcon(HOIconName.TRICKOT).getImage(),
-					Color.WHITE), Color.BLACK, trickotfarbe), new Color(100, 100, 100), trickotfarbe.brighter());
+			trickotImage = changeColor(
+					changeColor(
+							makeColorTransparent(
+									ThemeManager.getIcon(HOIconName.TRICKOT).getImage(),
+									Color.WHITE
+							),
+							Color.WHITE,
+							trickotfarbe),
+					new Color(100, 100, 100),
+					trickotfarbe.brighter());
 			komplettIcon = new ImageIcon(trickotImage);
 			BufferedImage largeImage = new BufferedImage(28, 14, BufferedImage.TYPE_INT_ARGB);
 			// Large Icon
@@ -496,7 +442,7 @@ public class ImageUtilities {
 	}
 
 	public static ImageIcon getCountryFlagIcon(int iCountryID) {
-		WorldDetailLeague leagueDetail = WorldDetailsManager.getWorldDetailLeagueByCountryId(iCountryID);
+		WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(iCountryID);
 	    return getLeagueFlagIcon(leagueDetail.getLeagueId());
 	}
 
@@ -573,5 +519,168 @@ public class ImageUtilities {
         // Get the image's color model  
         ColorModel cm = pg.getColorModel();  
         return cm.hasAlpha();  
-    }  
+    }
+
+	public static Icon getJerseyIcon(MatchRoleID position, int trickotnummer) {
+		if (position == null) {
+			return ImageUtilities.getJerseyIcon(0, (byte) 0, trickotnummer);
+		}
+
+		return ImageUtilities.getJerseyIcon(position.getId(), position.getTaktik(), trickotnummer);
+	}
+
+    public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer) {
+		Color trickotfarbe = null;
+		Icon komplettIcon = null;
+		StringBuilder key = new StringBuilder(20);
+
+		key.append("trickot_").append(posid).append("_").append(taktik).append("_").append(trickotnummer);
+		komplettIcon = ThemeManager.getIcon(key.toString());
+
+		if (komplettIcon == null) {
+			trickotfarbe = getJerseyColorByPosition(posid);
+
+			URI svgURI = null;
+
+			try {
+				svgURI = ImageUtilities.class.getClassLoader().getResource("gui/bilder/jerseys.svg").toURI();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			if (svgURI != null) {
+				SVGIcon icon = new SVGIcon();
+				icon.setSvgUniverse(new SVGUniverse());
+				icon.setPreferredSize(new Dimension(20, 16));
+				icon.setAutosize(SVGIcon.AUTOSIZE_BESTFIT);
+				icon.setInterpolation(SVGIcon.INTERP_BILINEAR);
+				icon.setAntiAlias(true);
+
+				icon.setSvgURI(svgURI);
+
+				SVGDiagram diagram = icon.getSvgUniverse().getDiagram(svgURI);
+				SVGRoot root = diagram.getRoot();
+				StyleSheet ss = new StyleSheet();
+				root.setStyleSheet(ss);
+
+				String rgbColour = getHexColor(trickotfarbe);
+				ss.addStyleRule(new StyleSheetRule("fill", "path", "jersey"), rgbColour);
+				ss.addStyleRule(new StyleSheetRule("fill", "path", "collar"), rgbColour);
+
+				double brightness = ImageUtilities.getBrightness(trickotfarbe);
+
+				if (brightness < 130) {
+					ss.addStyleRule(new StyleSheetRule("fill", "text", "num"), "white");
+				} else {
+					ss.addStyleRule(new StyleSheetRule("fill", "text", "num"), "black");
+				}
+
+				if (trickotnummer > 0 && trickotnummer < 50) {
+					Text element = (Text)diagram.getElement("number");
+					element.appendText(String.valueOf(trickotnummer));
+					try {
+						element.setAttribute("x", AnimationElement.AT_XML, String.valueOf(trickotnummer).length() > 1 ? "57.5": "61");
+						element.rebuild();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
+				komplettIcon = icon;
+				ThemeManager.instance().put(key.toString(), komplettIcon);
+			}
+		}
+
+		return komplettIcon;
+	}
+
+	private static Color getJerseyColorByPosition(int posid) {
+		Color trickotfarbe;
+		switch (posid) {
+			case IMatchRoleID.keeper: {
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_KEEPER);
+				break;
+			}
+
+			case IMatchRoleID.rightCentralDefender:
+			case IMatchRoleID.leftCentralDefender:
+			case IMatchRoleID.middleCentralDefender: {
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_CENTRALDEFENCE);
+				break;
+			}
+
+			case IMatchRoleID.leftBack:
+			case IMatchRoleID.rightBack: {
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WINGBACK);
+				break;
+			}
+
+			case IMatchRoleID.rightInnerMidfield:
+			case IMatchRoleID.leftInnerMidfield:
+			case IMatchRoleID.centralInnerMidfield: {
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_MIDFIELD);
+				break;
+			}
+
+			case IMatchRoleID.leftWinger:
+			case IMatchRoleID.rightWinger: {
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WING);
+				break;
+			}
+
+			case IMatchRoleID.rightForward:
+			case IMatchRoleID.leftForward:
+			case IMatchRoleID.centralForward: {
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_FORWARD);
+				break;
+			}
+
+			case IMatchRoleID.substGK1: {
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBKEEPER);
+				break;
+			}
+
+			case IMatchRoleID.substCD1: {
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBDEFENCE);
+				break;
+			}
+
+			case IMatchRoleID.substIM1: {
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBMIDFIELD);
+				break;
+			}
+
+			case IMatchRoleID.substWI1: {
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBWING);
+				break;
+			}
+
+			case IMatchRoleID.substFW1: {
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBFORWARD);
+				break;
+			}
+
+			default:
+				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT);
+		}
+		return trickotfarbe;
+	}
+
+	public static double getBrightness(Color colour) {
+		return Math.sqrt(0.241 * colour.getRed()*colour.getRed()
+				+ 0.691 * colour.getGreen()*colour.getGreen()
+				+ 0.068 * colour.getBlue()*colour.getBlue());
+	}
+
+	private static String getHexColor(Color colour) {
+		return "#" + String.format("%1$02X", colour.getRed()) +
+				String.format("%1$02X", colour.getGreen()) +
+				String.format("%1$02X", colour.getBlue());
+	}
+
+	public static Color getColorFromHex(String hexColour) {
+		return new Color(Integer.valueOf(hexColour.substring(1, 3), 16),
+				Integer.valueOf(hexColour.substring(3, 5), 16),
+				Integer.valueOf(hexColour.substring(5, 7), 16));
+	}
 }

@@ -1,79 +1,39 @@
 package module.specialEvents;
 
-import static module.specialEvents.SpecialEventsTableModel.AWAYEVENTCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.AWAYTACTICCOLUMN;
-import static module.specialEvents.SpecialEventsTableModel.EVENTTYPCOLUMN;
-import static module.specialEvents.SpecialEventsTableModel.HOMEEVENTCOLUMN;
+import static module.specialEvents.SpecialEventsTableModel.EVENTCOLUMN;
 import static module.specialEvents.SpecialEventsTableModel.HOMETACTICCOLUMN;
-import static module.specialEvents.SpecialEventsTableModel.MATCHTYPECOLUMN;
-import static module.specialEvents.SpecialEventsTableModel.NAMECOLUMN;
-import static module.specialEvents.SpecialEventsTableModel.SETEXTCOLUMN;
+import static module.specialEvents.SpecialEventsTableModel.MATCH_DATE_TYPE_COLUMN;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
-import core.util.HOLogger;
-
+import org.jetbrains.annotations.Nullable;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 
 public class SpecialEventsTable extends JTable {
 
-	private static final long serialVersionUID = 8656004206333977669L;
-
 	@Override
 	protected JTableHeader createDefaultTableHeader() {
-		return new JTableHeader(columnModel) {
-
-			private static final long serialVersionUID = 203261496086729638L;
-
-			@Override
-			public String getToolTipText(MouseEvent e) {
-				String tip = null;
-				Point p = e.getPoint();
-				int index = columnModel.getColumnIndexAtX(p.x);
-				int modelIndex = convertColumnIndexToModel(columnModel.getColumnIndexAtX(p.x));
-				if (modelIndex == HOMEEVENTCOLUMN || modelIndex == AWAYEVENTCOLUMN) {
-					tip = HOVerwaltung.instance().getLanguageString("Tip4");
-				} else {
-					tip = getModel().getColumnName(modelIndex);
-
-				}
-				return tip;
-			}
-
-		};
+		return new JTableHeader(columnModel) {};
 	}
 
+	@Nullable
 	@Override
 	public String getToolTipText(MouseEvent e) {
-		String tip = null;
 		Point p = e.getPoint();
 		int rowIndex = rowAtPoint(p);
 		int colIndex = columnAtPoint(p);
 		int modelColumnIndex = convertColumnIndexToModel(colIndex);
-		int modelRowIndex = convertRowIndexToModel(rowIndex);
-		MatchRow row = ((SpecialEventsTableModel) getModel())
-				.getMatchRow(convertRowIndexToModel(rowIndex));
-		switch (modelColumnIndex) {
-		case HOMEEVENTCOLUMN:
-		case AWAYEVENTCOLUMN:
-			return HOVerwaltung.instance().getLanguageString("Tip4");
-		case NAMECOLUMN:
-			return HOVerwaltung.instance().getLanguageString("TipName");
-		case EVENTTYPCOLUMN:
-		case SETEXTCOLUMN:
-			return getEventText(row);
-		case AWAYTACTICCOLUMN:
-			return getTacticToolTipText(row, false);
-		case HOMETACTICCOLUMN:
-			return getTacticToolTipText(row, true);
-		case MATCHTYPECOLUMN:
-			return row.getMatch().getMatchType().getName();
-		default:
-			return null;
-		}
+		MatchRow row = ((SpecialEventsTableModel) getModel()).getMatchRow(convertRowIndexToModel(rowIndex));
+		return switch (modelColumnIndex) {
+			case EVENTCOLUMN -> getEventText(row);
+			case AWAYTACTICCOLUMN -> getTacticToolTipText(row, false);
+			case HOMETACTICCOLUMN -> getTacticToolTipText(row, true);
+			case MATCH_DATE_TYPE_COLUMN -> row.getMatch().getMatchType().getName();
+			default -> null;
+		};
 	}
 
 	@Override
@@ -82,26 +42,17 @@ public class SpecialEventsTable extends JTable {
 	}
 
 	private String getTacticToolTipText(MatchRow row, boolean homeTeam) {
-		int tactic = (homeTeam) ? row.getMatch().getHostingTeamTactic() : row.getMatch()
-				.getVisitingTeamTactic();
-		switch (tactic) {
-		case IMatchDetails.TAKTIK_NORMAL:
-			return getLangStr("ls.team.tactic.normal");
-		case IMatchDetails.TAKTIK_PRESSING:
-			return getLangStr("ls.team.tactic.pressing");
-		case IMatchDetails.TAKTIK_KONTER:
-			return getLangStr("ls.team.tactic.counter-attacks");
-		case IMatchDetails.TAKTIK_MIDDLE:
-			return getLangStr("ls.team.tactic.attackinthemiddle");
-		case IMatchDetails.TAKTIK_WINGS:
-			return getLangStr("ls.team.tactic.attackonwings");
-		case IMatchDetails.TAKTIK_CREATIVE:
-			return getLangStr("ls.team.tactic.playcreatively");
-		case IMatchDetails.TAKTIK_LONGSHOTS:
-			return getLangStr("ls.team.tactic.longshots");
-		default:
-			return "unknown";
-		}
+		int tactic = (homeTeam) ? row.getMatch().getHostingTeamTactic() : row.getMatch().getVisitingTeamTactic();
+		return switch (tactic) {
+			case IMatchDetails.TAKTIK_NORMAL -> getLangStr("ls.team.tactic.normal");
+			case IMatchDetails.TAKTIK_PRESSING -> getLangStr("ls.team.tactic.pressing");
+			case IMatchDetails.TAKTIK_KONTER -> getLangStr("ls.team.tactic.counter-attacks");
+			case IMatchDetails.TAKTIK_MIDDLE -> getLangStr("ls.team.tactic.attackinthemiddle");
+			case IMatchDetails.TAKTIK_WINGS -> getLangStr("ls.team.tactic.attackonwings");
+			case IMatchDetails.TAKTIK_CREATIVE -> getLangStr("ls.team.tactic.playcreatively");
+			case IMatchDetails.TAKTIK_LONGSHOTS -> getLangStr("ls.team.tactic.longshots");
+			default -> "";
+		};
 	}
 	
 	private String getEventText(MatchRow row) {
@@ -113,16 +64,6 @@ public class SpecialEventsTable extends JTable {
 		return "";
 	}
 
-	private void showDebug(Exception exr) {
-		HOLogger.instance().error(this.getClass(), exr);
-	}
-	
-
-	/**
-	 * Convenience method.
-	 * @param key
-	 * @return
-	 */
 	private String getLangStr(String key) {
 		return HOVerwaltung.instance().getLanguageString(key);
 	}

@@ -4,6 +4,7 @@
 package module.training.ui;
 
 import core.constants.player.PlayerSkill;
+import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import module.training.Skills;
@@ -22,7 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class TrainingLegendPanel extends JPanel {
+public class TrainingLegendPanel extends ImagePanel {
     //~ Constructors -------------------------------------------------------------------------------
 	private static final long serialVersionUID = 7019803928403346886L;
 
@@ -33,8 +34,6 @@ public class TrainingLegendPanel extends JPanel {
         this.setLayout(new GridLayout(2, 5));
 
         JLabel title = new JLabel(HOVerwaltung.instance().getLanguageString("Legenda"), SwingConstants.LEFT); //$NON-NLS-1$
-
-        title.setForeground(Color.BLACK);
         this.add(title);
 
         for (int i = 0; i < 4; i++) {

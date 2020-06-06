@@ -268,7 +268,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 		cBox.setFocusable(false);
 
 		if (this.buttonModels.containsKey(skillType)) {
-			cBox.setModel((ButtonModel) this.buttonModels.get(skillType));
+			cBox.setModel(this.buttonModels.get(skillType));
 		} else {
 			this.buttonModels.put(skillType, cBox.getModel());
 			if (change > 0) {
@@ -308,7 +308,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 
 		this.oldPlayersCheckBox = new JCheckBox();
 		this.oldPlayersCheckBox.setOpaque(false);
-		this.oldPlayersCheckBox.setText(HOVerwaltung.instance().getLanguageString("IncludeOld")); //$NON-NLS-1$
+		this.oldPlayersCheckBox.setText(HOVerwaltung.instance().getLanguageString("IncludeOld"));
 		this.oldPlayersCheckBox.setFocusable(false);
 		this.oldPlayersCheckBox.setSelected(false);
 		this.oldPlayersCheckBox.addActionListener(this);

@@ -12,6 +12,8 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ## Highlights
 
+   - [FEAT] Improved HO themes, and implemented dark mode. #85
+   - [BUG] Complete rewrite of Special Even modules
 
 ## Detailed Changelog
 
@@ -21,6 +23,8 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ### Squad
 
    - [FIX] Remove lag in sync between tables in Squad #465
+   - [FEAT] Provide better default for initial position of player comparison divider.
+
 
 ### Team Analyser
 
@@ -33,6 +37,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ### Lineup
 
+  - [FEAT] Provide better defaults for initial position of dividers.
 
 ### Training
 

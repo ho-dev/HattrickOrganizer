@@ -3,6 +3,8 @@ package module.statistics;
 import core.gui.model.StatistikModel;
 import core.gui.print.ComponentPrintObject;
 import core.gui.print.PrintController;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
 
@@ -194,14 +196,17 @@ public class StatistikPanel extends JPanel {
 			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
 
+			final Color panelBackground = ThemeManager.getColor(HOColorName.STAT_PANEL_BG);
+			final Color panelForeground = ThemeManager.getColor(HOColorName.STAT_PANEL_FG);
+
 			// Initialsierung des Fensters
 			final Rectangle r = getBounds();
 			final int b = r.width - 1;
 			final int h = r.height - 1;
 
-			g.setColor(Color.white);
+			g.setColor(panelBackground);
 			g.fillRect(1, 1, b - 1, h - 1);
-			g.setColor(Color.darkGray);
+			g.setColor(panelForeground);
 
 			int schriftgroesse = core.model.UserParameter.instance().schriftGroesse + 2;
 
@@ -296,7 +301,7 @@ public class StatistikPanel extends JPanel {
 								(int) (h - SU - (yAbstand * i)));
 					}
 
-					g.setColor(Color.black);
+					g.setColor(panelForeground);
 					g.drawLine(SL - 5, (int) (h - SU - (yAbstand * i)), SL + 5,
 							(int) (h - SU - (yAbstand * i)));
 
@@ -435,19 +440,21 @@ public class StatistikPanel extends JPanel {
 			y2 = this.getHeight() - SU + 25;
 			x2 = (int) ((((double) (b - SL - SR)) / (m_clYAchseBeschriftung.length) * (m_clYAchseBeschriftung.length - 1)) + SL);
 
+			final Color foregroundColor = ThemeManager.getColor(HOColorName.STAT_PANEL_FG);
+
 			for (int i = 0; i < m_clYAchseBeschriftung.length; i++) {
 				y2 = this.getHeight() - SU + 15;
 				x2 = (int) ((((double) (b - SL - SR)) / (m_clYAchseBeschriftung.length) * (m_clYAchseBeschriftung.length
 						- i - 1)) + SL);
 
-				g.setColor(Color.black);
+				g.setColor(foregroundColor);
 				if ((i % abstandBeschriftung) == 0) {
 					if (hilfslinien) {
 						g.setColor(Color.lightGray);
 						g.drawLine(x2, this.getHeight() - SU, x2, SO);
 					}
 
-					g.setColor(Color.black);
+					g.setColor(foregroundColor);
 
 					final int xpos = x2
 							- (g.getFontMetrics().stringWidth(m_clYAchseBeschriftung[i]) / 2);
@@ -492,7 +499,7 @@ public class StatistikPanel extends JPanel {
 				g.drawLine(x1, y1, x2, y2);
 				g.drawLine(x1, y1 + 1, x2, y2 + 1);
 				if (beschriftung && ((i % abstandBeschriftung) == 0)) {
-					g.setColor(Color.darkGray);
+					g.setColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
 
 					final int xpos = x2
 							- (g.getFontMetrics().stringWidth(

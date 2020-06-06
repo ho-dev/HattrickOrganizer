@@ -141,7 +141,7 @@ public final class UpdateController {
     }
 
     public static String get_HO_zip_download_url(String full_version, double version, String versionType) {
-        if (versionType == "DEV") {
+        if (versionType.equals("DEV")) {
             return "https://github.com/akasolace/HO/releases/download/dev/HO_" + full_version + ".zip";
         } else {
             String ver = Double.toString(version);
@@ -186,18 +186,12 @@ public final class UpdateController {
     }
 
     public static boolean compareTwoVersions(VersionInfo a, VersionInfo b) {
-        if (a.getVersion() > b.getVersion() ||
-                (a.getVersion() == b.getVersion() && a.getBuild() > b.getBuild()))
-            return true;
-
-        return false;
+        return a.getVersion() > b.getVersion() ||
+                (a.getVersion() == b.getVersion() && a.getBuild() > b.getBuild());
     }
 
     public static boolean compareToCurrentVersions(VersionInfo a) {
-        if (a.getVersion() > HO.VERSION ||
-                (a.getVersion() == HO.VERSION && a.getBuild() > HO.getRevisionNumber()))
-            return true;
-
-        return false;
+        return a.getVersion() > HO.VERSION ||
+                (a.getVersion() == HO.VERSION && a.getBuild() > HO.getRevisionNumber());
     }
 }

@@ -35,7 +35,7 @@ final class DBUpdater {
 		if (version != DBVersion) {
 			try {
 				HOLogger.instance().log(getClass(), "Updating DB to version " + DBVersion + "...");
-				switch (version) { // hint: fall though (no breaks) is intended
+				switch (version) { // hint: fall through (no breaks) is intended
 					// here
 					case 0:
 					case 1:
@@ -107,7 +107,6 @@ final class DBUpdater {
 						updateDBv400(DBVersion, version);
 				}
 
-
 				HOLogger.instance().log(getClass(), "done.");
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(), e);
@@ -118,12 +117,16 @@ final class DBUpdater {
 	}
 
 	private void updateDBv400(int dbVersion, int version) {
-		// db update of version 4.0
-
+		// Delete existing values to provide sane defaults.
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'spielerUebersichtsPanel_horizontalRightSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_verticalSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalRightSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalLeftSplitPane'");
 		updateDBVersion(dbVersion, version);
 	}
 
-	private void updateDBv301(int dbVersion, int version) {
+
+	private void updateDBv301(int dbVersion, int version) throws SQLException {
 		try {
 
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isDerby SET DATA TYPE BOOLEAN");

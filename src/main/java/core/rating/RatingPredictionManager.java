@@ -20,7 +20,7 @@ import module.lineup.substitution.model.Substitution;
 import java.sql.Timestamp;
 import java.util.*;
 
-import static com.google.common.math.DoubleMath.fuzzyEquals;
+import static core.util.MathUtils.fuzzyEquals;
 
 public class RatingPredictionManager {
 	//~ Class constants ----------------------------------------------------------------------------

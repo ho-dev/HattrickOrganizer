@@ -58,7 +58,6 @@ public class RefreshManager {
         }
         System.gc();
         Thread.yield();
-		HOMainFrame.setHOStatus(HOMainFrame.READY);        
     }
 
     /**
@@ -76,7 +75,6 @@ public class RefreshManager {
 
         System.gc();
         Thread.yield();
-		HOMainFrame.setHOStatus(HOMainFrame.READY);        
     }
 
     public void registerRefreshable(IRefreshable refreshable) {

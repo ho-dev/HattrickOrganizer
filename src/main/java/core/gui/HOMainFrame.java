@@ -9,9 +9,6 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.tabbedPane.HOTabbedPane;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.gui.theme.ho.HOTheme;
-import core.gui.theme.jgoodies.JGoodiesTheme;
-import core.gui.theme.nimbus.NimbusTheme;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -27,6 +24,7 @@ import core.option.OptionenDialog;
 import core.option.db.DatabaseOptionsDialog;
 import core.util.BrowserLauncher;
 import core.util.HOLogger;
+import core.util.OSUtils;
 import core.util.StringUtils;
 import module.lineup.AufstellungsAssistentPanelNew;
 import module.lineup.IAufstellungsAssistentPanel;
@@ -48,18 +46,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
-import java.util.Vector;
 
 import javax.swing.InputMap;
 import javax.swing.JFrame;
@@ -71,20 +63,14 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.text.DefaultEditorKit;
 
 /**
  * The Main HO window
  */
 public final class HOMainFrame extends JFrame implements Refreshable, ActionListener {
 
-	public static final int BUSY = 0;
-	public static final int READY = 1;
 	private static final long serialVersionUID = -6333275250973872365L;
 	private static HOMainFrame m_clHOMainFrame;
-	private static int status = READY;
 	private InfoPanel m_jpInfoPanel;
 	private final JMenuBar m_jmMenuBar = new JMenuBar();
 	// Top level Menu
@@ -142,6 +128,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	 */
 	private HOMainFrame() {
 
+		if (OSUtils.isMac()) {
+			System.setProperty("apple.laf.useScreenMenuBar", "true");
+            System.setProperty("apple.awt.showGroupBox", "true");
+		}
+
 		// Log HO! version
 		HOLogger.instance().info(getClass(),
 				"This is HO! version " + getVersionString() + ", have fun!");
@@ -155,33 +146,16 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		// Log Java version
 		HOLogger.instance().info(
-				getClass(),
-				"Using java: " + System.getProperty("java.version") + " ("
-						+ System.getProperty("java.vendor") + ")");
+                getClass(),
+                "Using java: " + System.getProperty("java.version") + " ("
+                + System.getProperty("java.vendor") + ")");
 
 		RefreshManager.instance().registerRefreshable(this);
-
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		SwingUtilities.updateComponentTreeUI(this);
 
-		setDefaultFont(UserParameter.instance().schriftGroesse);
-
-		
-		String teamName = DBManager.instance().getBasics(DBManager.instance().getLatestHrfId()).getTeamName();
-
-		if(teamName.equals("")){
-		setTitle("HO! - Hattrick Organizer " + getVersionString());}
-		else{
-			setTitle("HO! - Hattrick Organizer " + getVersionString() + " - " + teamName);}
-
-		if (HO.isDevelopment()) {
-			this.setIconImage(ThemeManager.getIcon(HOIconName.LOGO16_DEV).getImage());
-		}
-		else if (HO.isBeta()) {
-			this.setIconImage(ThemeManager.getIcon(HOIconName.LOGO16_BETA).getImage());
-		}
-		else {
-			this.setIconImage(ThemeManager.getIcon(HOIconName.LOGO16_STABLE).getImage());
-		}
+		setFrameTitle();
+		setFrameIconImage();
 
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addListeners();
@@ -193,51 +167,37 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		RefreshManager.instance().doRefresh();
 	}
 
-	final public static boolean isMac() {
-		return (System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH).indexOf("mac") != -1);
+	private void setFrameTitle() {
+		String teamName = DBManager.instance().getBasics(DBManager.instance().getLatestHrfId()).getTeamName();
+
+		String frameTitle = "HO! - Hattrick Organizer " + getVersionString();
+		if (!StringUtils.isEmpty(teamName)) {
+			frameTitle += " - " + teamName;
+		}
+		if (!HO.isRelease()) {
+			frameTitle += " - " + System.getProperty("java.version");
+		}
+
+		setTitle(frameTitle);
 	}
 
-	// ~ Methods
-	// ------------------------------------------------------------------------------------
+	private void setFrameIconImage() {
+		String iconName = HOIconName.LOGO16_STABLE;
+		if (!HO.isRelease()) {
+			iconName = HOIconName.LOGO16 + "_" + HO.getVersionType().toLowerCase();
+		}
 
-	/**
-	 * This method creates a MacOS specific listener for the quit operation
-	 * ("Command-Q")
-	 * 
-	 * We need to use reflections here, because the com.apple.eawt.* classes are
-	 * Apple specific
-	 * 
-	 * @author flattermann <flattermannHO@gmail.com>
-	 */
-	private void addMacOSListener() {
-		HOLogger.instance().debug(getClass(), "Mac OS detected. Activating specific listeners...");
-		try {
-			// Create the Application
-			Class<?> applicationClass = Class.forName("com.apple.eawt.Application");
-			Object appleApp = applicationClass.newInstance();
+		final Image iconImage = ThemeManager.getIcon(iconName).getImage();
 
-			// Create the ApplicationListener
-			Class<?> applicationListenerClass = Class.forName("com.apple.eawt.ApplicationListener");
-			Object appleListener = Proxy.newProxyInstance(getClass().getClassLoader(),
-					new Class[] { applicationListenerClass }, new InvocationHandler() {
-						@Override
-						public Object invoke(Object proxy, Method method, Object[] args) {
-							if (method.getName().equals("handleQuit")) {
-								HOLogger.instance()
-										.debug(getClass(),
-												"ApplicationListener.handleQuit() fired! Quitting MacOS Application!");
-								shutdown();
-							}
-							return null;
-						}
-					});
-
-			// Register the ApplicationListener
-			Method addApplicationListenerMethod = applicationClass.getDeclaredMethod(
-					"addApplicationListener", new Class[] { applicationListenerClass });
-			addApplicationListenerMethod.invoke(appleApp, new Object[] { appleListener });
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (OSUtils.isMac()) {
+			try {
+                final Taskbar taskbar = Taskbar.getTaskbar();
+				taskbar.setIconImage(iconImage);
+			} catch (final UnsupportedOperationException e) {
+				HOLogger.instance().error(HOMainFrame.class, "OS doesn't support operation: " + e.getMessage());
+			}
+		} else {
+			this.setIconImage(iconImage);
 		}
 	}
 
@@ -341,7 +301,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	 */
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
-		HOMainFrame.setHOStatus(HOMainFrame.BUSY);
 		final Object source = actionEvent.getSource();
 
 		if (source.equals(m_jmImportItem)) { // HRF Import
@@ -381,8 +340,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 				Timestamp from = new Timestamp(cal.getTimeInMillis());
 				HOVerwaltung.instance().recalcSubskills(true, from);
 			}
-		} else if (source.equals(m_jmFullScreenItem)) { // Toggle full screen
-														// mode
+		} else if (source.equals(m_jmFullScreenItem)) { // Toggle full screen mode
 			FullScreen.instance().toggle(this);
 		} else if (source.equals(m_jmBeendenItem)) { // Quit
 			// Restore normal window mode (i.e. leave full screen)
@@ -400,30 +358,29 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 
 		else if (source.equals(m_jmCheckUpdate)) {
-			if(isMac()) {
-				UpdateController.check4update(true);
-			}
-			else
-			{
-				UpdateController.check4update(false);
-			}
+			UpdateController.check4update(OSUtils.isMac());
 		}
 		else if (source.equals(m_jmChangelog)) {
 			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
 				try {
 					File jarFile = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
 					URI logFile;
-					if (!isMac()) {logFile = jarFile.getParentFile().toPath().resolve("changelog.html").toUri();}
-					else {logFile = jarFile.getParentFile().getParentFile().getParentFile().toPath().resolve("changelog.html").toUri();}
+					if (!OSUtils.isMac()) {
+						logFile = jarFile.getParentFile().toPath().resolve("changelog.html").toUri();
+					} else {
+						logFile = jarFile.getParentFile().getParentFile().getParentFile().toPath().resolve("changelog.html").toUri();
+					}
 					Desktop.getDesktop().browse(logFile);
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(this, HOVerwaltung.instance().getLanguageString("Changelog.error"), HOVerwaltung.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(this,
+							HOVerwaltung.instance().getLanguageString("Changelog.error"),
+							HOVerwaltung.instance().getLanguageString("Fehler"),
+							JOptionPane.ERROR_MESSAGE
+					);
 					e.printStackTrace();
 				}
 			}
 		}
-
-		HOMainFrame.setHOStatus(HOMainFrame.READY);
 	}
 
 	private void openURL(String url) {
@@ -509,7 +466,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		getContentPane().add(getInfoPanel(), BorderLayout.SOUTH);
 
 		setLocation(UserParameter.instance().hoMainFrame_PositionX,
-				UserParameter.instance().hoMainFrame_PositionY);
+                    UserParameter.instance().hoMainFrame_PositionY);
 		setSize(UserParameter.instance().hoMainFrame_width,
 				UserParameter.instance().hoMainFrame_height);
 	}
@@ -519,8 +476,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	 */
 	public void initMenue() {
 		// Kein F10!
-		((InputMap) UIManager.get("Table.ancestorInputMap")).remove(KeyStroke.getKeyStroke(
-				KeyEvent.VK_F2, 0));
+		((InputMap) UIManager.get("Table.ancestorInputMap")).remove(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 
 		m_jmDownloadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
 		m_jmDownloadItem.addActionListener(this);
@@ -553,7 +509,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		// Toggle full screen mode
 		if (FullScreen.instance().isFullScreenSupported(this)) {
 			m_jmFullScreenItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11,
-					KeyEvent.SHIFT_DOWN_MASK));
+                                                                     KeyEvent.SHIFT_DOWN_MASK));
 		} else {
 			m_jmFullScreenItem.setEnabled(false);
 		}
@@ -577,14 +533,14 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 				showTabMenuItem.putClientProperty("MODULE", activeModules[i]);
 				showTabMenuItem.addActionListener(new ActionListener() {
 
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						JMenuItem item = (JMenuItem) e.getSource();
-						IModule module = (IModule) item.getClientProperty("MODULE");
-						getTabbedPane().showTab(module.getModuleId());
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            JMenuItem item = (JMenuItem) e.getSource();
+                            IModule module = (IModule) item.getClientProperty("MODULE");
+                            getTabbedPane().showTab(module.getModuleId());
 
-					}
-				});
+                        }
+                    });
 				m_jmFunctions.add(showTabMenuItem);
 			}
 			if (activeModules[i].hasMenu()) {
@@ -662,14 +618,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	}
 
 	/**
-	 * OptionsPanels for Modules
-	 */
-	public void addOptionPanel(String name, JPanel optionpanel) {
-		m_vOptionPanels.add(optionpanel);
-		m_vOptionPanelNames.add(name);
-	}
-
-	/**
 	 * Reinit, set currency.
 	 */
 	@Override
@@ -677,7 +625,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		// Die Währung auf die aus dem HRF setzen
 		try {
 			float faktorgeld = (float) HOVerwaltung.instance().getModel().getXtraDaten()
-					.getCurrencyRate();
+                .getCurrencyRate();
 
 			if (faktorgeld > -1) {
 				UserParameter.instance().faktorGeld = faktorgeld;
@@ -700,22 +648,21 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	// --------------------------------------------------------------
 	public void showMatch(final int matchid) {
 		m_jtpTabbedPane.showTab(IModule.MATCHES);
-		final SpielePanel matchesPanel = (SpielePanel) getTabbedPane().getModulePanel(
-				IModule.MATCHES);
+		final SpielePanel matchesPanel = (SpielePanel) getTabbedPane().getModulePanel(IModule.MATCHES);
 		SwingUtilities.invokeLater(new Runnable() {
 
-			@Override
-			public void run() {
-				matchesPanel.showMatch(matchid);
-			}
-		});
+                @Override
+                public void run() {
+                    matchesPanel.showMatch(matchid);
+                }
+            });
 	}
 
 	// ----------------Hilfsmethoden---------------------------------
 
 	/**
 	 * Zeigt das Tab an (Nicht Index, sondern Konstante benutzen!
-	 * 
+	 *
 	 * @param tabnumber
 	 *            number of the tab to show
 	 */
@@ -723,86 +670,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		m_jtpTabbedPane.showTab(tabnumber);
 	}
 
-	/**
-	 * Set the default font size.
-	 */
-	private void setDefaultFont(int size) {
-		try {
-			boolean succ = false;
-			if (UserParameter.instance().skin != null
-					&& UserParameter.instance().skin.startsWith("JGoodies")) {
-				succ = JGoodiesTheme.enableJGoodiesTheme(UserParameter.instance().skin, size);
-			} else if ("System".equalsIgnoreCase(UserParameter.instance().skin)) {
-				try {
-					LookAndFeelInfo win = null;
-					for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-						if ("Windows".equals(info.getName())) {
-							win = info;
-							break;
-						}
-					}
-					if (win != null) {
-						HOLogger.instance().log(getClass(), "Use " + win.getName() + " l&f");
-						UIManager.setLookAndFeel(win.getClassName());
-					} else {
-						HOLogger.instance().log(getClass(), "Use System l&f...");
-						UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					}
-					// TODO: font size
-					SwingUtilities.updateComponentTreeUI(this);
-					succ = true;
-				} catch (Exception e) {
-					succ = false;
-				}
-			} else if (!"Classic".equalsIgnoreCase(UserParameter.instance().skin)) {
-				// Nimbus is the default theme
-				succ = NimbusTheme.enableNimbusTheme(size);
-			}
-			if (!succ) {
-				final MetalLookAndFeel laf = new MetalLookAndFeel();
-				MetalLookAndFeel.setCurrentTheme(new HOTheme(
-						UserParameter.instance().schriftGroesse));
-
-				// Um die systemweite MenuBar von Mac OS X zu verwenden
-				// http://www.pushing-pixels.org/?p=366
-				if (System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH)
-						.startsWith("mac")) {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					Object mbUI = UIManager.get("MenuBarUI");
-					Object mUI = UIManager.get("MenuUI");
-					Object cbmiUI = UIManager.get("CheckBoxMenuItemUI");
-					Object rbmiUI = UIManager.get("RadioButtonMenuItemUI");
-					Object pmUI = UIManager.get("PopupMenuUI");
-
-					UIManager.setLookAndFeel(laf);
-
-					UIManager.put("MenuBarUI", mbUI);
-					UIManager.put("MenuUI", mUI);
-					UIManager.put("CheckBoxMenuItemUI", cbmiUI);
-					UIManager.put("RadioButtonMenuItemUI", rbmiUI);
-					UIManager.put("PopupMenuUI", pmUI);
-				} else {
-					UIManager.setLookAndFeel(laf);
-				}
-			}
-			
-			// #177 Standard shortcuts for copy/cut/paste don't work in MacOSX if LookAndFeel changes
-			if (succ && System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH)
-						.startsWith("mac")) {
-				InputMap im = (InputMap) UIManager.get("TextField.focusInputMap");
-				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
-				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
-				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
-				im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
-			}
-			
-			SwingUtilities.updateComponentTreeUI(this);
-		} catch (Exception e) {
-			HOLogger.instance().log(HOMainFrame.class, e);
-		}
-	}
-
-	/**
+    /**
 	 * Holt die Parameter aus den Dialogen und speichert sie in der DB
 	 */
 	@SuppressWarnings("deprecation")
@@ -812,18 +680,17 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		parameter.hoMainFrame_PositionX = Math.max(getLocation().x, 0);
 		parameter.hoMainFrame_PositionY = Math.max(getLocation().y, 0);
 		parameter.hoMainFrame_width = Math.min(getSize().width, getToolkit().getScreenSize().width
-				- parameter.hoMainFrame_PositionX);
+                                               - parameter.hoMainFrame_PositionX);
 		parameter.hoMainFrame_height = Math.min(getSize().height,
-				getToolkit().getScreenSize().height - parameter.hoMainFrame_PositionY);
+                                                getToolkit().getScreenSize().height - parameter.hoMainFrame_PositionY);
 
 		final IAufstellungsAssistentPanel aap = getAufstellungsPanel()
-				.getAufstellungsAssistentPanel();
+            .getAufstellungsAssistentPanel();
 
 		parameter.bestPostWidth = Math.max(getSpielerUebersichtPanel().getBestPosWidth(),
-				getAufstellungsPanel().getBestPosWidth());
+                                           getAufstellungsPanel().getBestPosWidth());
 
-		parameter.aufstellungsAssistentPanel_gruppe = AufstellungsAssistentPanelNew.asString(aap
-				.getGroups());
+		parameter.aufstellungsAssistentPanel_gruppe = AufstellungsAssistentPanelNew.asString(aap.getGroups());
 		parameter.aufstellungsAssistentPanel_reihenfolge = aap.getOrder();
 		parameter.aufstellungsAssistentPanel_not = aap.isNotGroup();
 		parameter.aufstellungsAssistentPanel_cbfilter = aap.isGroupFilter();
@@ -861,11 +728,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		DBManager.instance().saveUserParameter();
 	}
 
-
-	public static void setHOStatus(int i) {
-		status = i;
-	}
-
 	private void addListeners() {
 		addWindowListener(new WindowAdapter() {
 			/**
@@ -874,7 +736,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			 * System.exit is called only in the case when @see shutdown() is
 			 * called in advance. This event is called when switching into full
 			 * screen mode, too.
-			 * 
+			 *
 			 * @param windowEvent
 			 *            is ignored
 			 */
@@ -894,10 +756,5 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			}
 
 		});
-
-		// Catch Apple-Q for MacOS
-		if (isMac()) {
-			addMacOSListener();
-		}
 	}
 }

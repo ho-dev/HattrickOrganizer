@@ -18,13 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionListener;
@@ -153,7 +147,10 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 	private void initComponents() {
 		setLayout(new BorderLayout());
 
-		add(new JLabel(HOVerwaltung.instance().getLanguageString("VergleichsHRF")), BorderLayout.NORTH);
+        final JLabel hrfComparisonLabel = new JLabel(HOVerwaltung.instance().getLanguageString("VergleichsHRF"));
+        hrfComparisonLabel.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 0));
+
+		add(hrfComparisonLabel, BorderLayout.NORTH);
 		m_jlHRFs.setOpaque(false);
 		// use the default renderer for all non-classic skins
 		if ("Classic".equals(UserParameter.instance().skin)) {

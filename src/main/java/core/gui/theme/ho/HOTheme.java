@@ -1,8 +1,11 @@
 package core.gui.theme.ho;
 
-import core.gui.theme.FontUtil;
+import core.gui.comp.panel.ImagePanel;
+import core.gui.comp.panel.RasenPanel;
+import core.gui.theme.*;
 import core.model.UserParameter;
 import core.util.HOLogger;
+import core.util.OSUtils;
 
 import java.awt.Font;
 import java.util.Enumeration;
@@ -10,13 +13,13 @@ import java.util.Enumeration;
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
-import javax.swing.plaf.metal.DefaultMetalTheme;
+import javax.swing.plaf.metal.*;
 
 
 /**
  * Theme configuring HO colors, fonts and sizes.
  */
-public class HOTheme extends DefaultMetalTheme {
+public class HOTheme extends DefaultMetalTheme implements Theme {
     private static final ColorUIResource primary1 = new ColorUIResource(106, 104, 100);
     private static final ColorUIResource primary2 = new ColorUIResource(159, 156, 150);
     private static final ColorUIResource primary3 = new ColorUIResource(212, 208, 200);
@@ -25,23 +28,14 @@ public class HOTheme extends DefaultMetalTheme {
     private static final ColorUIResource secondary3 = new ColorUIResource(212, 208, 200);
     private static FontUIResource TEXTFONT;
 
-    //~ Constructors -------------------------------------------------------------------------------
-    /**
-     * Creates a new HOTheme object.
-     *
-     * @param fontSize font size (e.g. from user parameters)
-     */
-    public HOTheme(int fontSize) {
-        super();
-       	final String fontName = FontUtil.getFontName(UserParameter.instance().sprachDatei);
-		HOLogger.instance().log(getClass(), "Use Font: " + fontName + " [lang:" + UserParameter.instance().sprachDatei + "]");
-		TEXTFONT = new FontUIResource((fontName != null ? fontName : "SansSerif"), Font.PLAIN, fontSize);
-		setUIFont(TEXTFONT);
-        //Ausnahme TitledBorderfont nicht Bold
-        UIManager.put("TitledBorder.font", TEXTFONT);
-    }
+    public final static String THEME_NAME = "Classic";
 
     //~ Methods ------------------------------------------------------------------------------------
+
+    @Override
+    public String getName() {
+        return THEME_NAME;
+    }
 
     @Override
 	public final FontUIResource getControlTextFont() {
@@ -129,5 +123,34 @@ public class HOTheme extends DefaultMetalTheme {
 		} catch (Exception e) {
 			//HOLogger.instance().log(HO.class, "Error(setUIFont): " + e);
 		}
+    }
+
+    public boolean loadTheme() {
+        boolean success = true;
+
+        try {
+            final String fontName = FontUtil.getFontName(UserParameter.instance().sprachDatei);
+            HOLogger.instance().log(getClass(), "Use Font: " + fontName + " [lang:" + UserParameter.instance().sprachDatei + "]");
+            TEXTFONT = new FontUIResource((fontName != null ? fontName : "SansSerif"),
+                    Font.PLAIN,
+                    UserParameter.instance().schriftGroesse);
+            setUIFont(TEXTFONT);
+            UIManager.put("TitledBorder.font", TEXTFONT);
+
+            if (!OSUtils.isMac()) {
+                final MetalLookAndFeel laf = new MetalLookAndFeel();
+                MetalLookAndFeel.setCurrentTheme(this);
+                UIManager.setLookAndFeel(laf);
+            } else {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            }
+
+            RasenPanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND).getImage());
+            ImagePanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND).getImage());
+
+        } catch (Exception e) {
+            success = false;
+        }
+        return success;
     }
 }

@@ -16,6 +16,8 @@ package module.tsforecast;
  * @author  michael.roux
  */
 
+import core.gui.comp.panel.ImagePanel;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -29,7 +31,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-final class CheckBox extends JPanel {
+final class CheckBox extends ImagePanel {
 
 	private static final long serialVersionUID = 1L;
 	private JCheckBox m_checkBox;

@@ -1,6 +1,8 @@
 package module.training.ui.renderer;
 
 import core.constants.player.PlayerSkill;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 import module.training.ui.TrainingLegendPanel;
 
 import java.awt.Color;
@@ -19,6 +21,7 @@ public class ChangeTableRenderer extends DefaultTableCellRenderer {
 
 	private static final long serialVersionUID = -8664774318961127994L;
     private static final Color SILVER = new Color(239, 239, 239);
+    private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -33,13 +36,13 @@ public class ChangeTableRenderer extends DefaultTableCellRenderer {
 
         boolean isOld = ((Boolean) table.getValueAt(row, 5)).booleanValue();
 
-        if (!isSelected) {
-            if (isOld) {
-                this.setBackground(SILVER);
-            } else {
-                this.setBackground(Color.WHITE);
-            }
-        }
+//        if (!isSelected) {
+//            if (isOld) {
+//                this.setBackground(SILVER);
+//            } else {
+//                this.setBackground(TABLE_BG);
+//            }
+//        }
 
         if (column == 3) {
             try {

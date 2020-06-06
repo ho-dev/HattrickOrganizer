@@ -165,7 +165,6 @@ public class TeamPanel extends JPanel {
     }
 
     private void setMyTeam() {
-        //List<UserTeamPlayerPanel> list = new ArrayList<UserTeamPlayerPanel>();
     	HashMap<Integer, UserTeamPlayerPanel> list = new HashMap<Integer, UserTeamPlayerPanel>();
     	Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 

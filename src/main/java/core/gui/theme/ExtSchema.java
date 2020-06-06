@@ -73,8 +73,7 @@ public class ExtSchema extends Schema {
 		if (image == null) {
 			try {
 
-				Image logo = Toolkit.getDefaultToolkit().createImage(
-						getResource(path));
+				Image logo = Toolkit.getDefaultToolkit().createImage(getResource(path));
 
 				if (logo == null) {
 					HOLogger.instance().log(Schema.class,

@@ -123,8 +123,7 @@ public final  class PlayerOverviewModel extends HOTableModel {
         for (int i = 0;
              (SpielerTrainingsVergleichsPanel.getVergleichsPlayer() != null)
              && (i < SpielerTrainingsVergleichsPanel.getVergleichsPlayer().size()); i++) {
-            final Player vergleichsPlayer = (Player) SpielerTrainingsVergleichsPanel.getVergleichsPlayer()
-                                                                                       .get(i);
+            final Player vergleichsPlayer = SpielerTrainingsVergleichsPanel.getVergleichsPlayer().get(i);
 
             if (vergleichsPlayer.getSpielerID() == id) {
                 //Treffer
@@ -143,8 +142,7 @@ public final  class PlayerOverviewModel extends HOTableModel {
      * Gibt den Player aus dem ersten HRF, wo der Player aufgetauch ist, zurück
      */
     private Player getVergleichsSpielerFirstHRF(Player vorlage) {
-        return core.db.DBManager.instance().getSpielerFirstHRF(vorlage
-                                                                                     .getSpielerID());
+        return core.db.DBManager.instance().getSpielerFirstHRF(vorlage.getSpielerID());
     }
     
 //  -----initialisierung-----------------------------------------

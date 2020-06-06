@@ -47,11 +47,11 @@ final class TabCloseIcon implements Icon {
 	}
 
 	/**
-	 * just delegate
+	 * Returns the total width of the close icon, including <code>xOffset</code>.
 	 */
 	@Override
 	public int getIconWidth() {
-		return mIcon.getIconWidth();
+		return mIcon.getIconWidth() + xOffset;
 	}
 
 	/**
@@ -70,5 +70,4 @@ final class TabCloseIcon implements Icon {
 			mTabbedPane.remove(index);
 		}
 	}
-
 }

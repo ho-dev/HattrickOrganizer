@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +56,10 @@ public class FileLoader {
 	 * <em>-1</em> if the file has not been found
 	 */ 
 	public long getFileLastModified(String fileName) {
+		if (! fileName.startsWith("/"))
+		{
+			fileName = "/" + fileName;
+		}
 		if (!fileStatusesCache.containsKey(fileName)) {
 			// inserts the file in the cache if not yet available
 			this.getFileInputStream(fileName);
@@ -76,6 +82,11 @@ public class FileLoader {
 	 * @return the InputStream related to the fileName or <em>null</em> if the file doesn't exist
 	 */
 	public InputStream getFileInputStream(String fileName) {
+		if (! fileName.startsWith("/"))
+		{
+			fileName = "/" + fileName;
+		}
+
 		if (fileStatusesCache.get(fileName)==FileLoadingStatus.NOT_FOUND) return null;
 		boolean fileUnknown = fileStatusesCache.get(fileName)==null;
 		
@@ -100,7 +111,7 @@ public class FileLoader {
 		}
 		
 		if (fileUnknown || fileStatusesCache.get(fileName)==FileLoadingStatus.INSIDE_JAR) {
-			InputStream is = this.getClass().getClassLoader().getResourceAsStream(fileName);
+			InputStream is = FileLoader.class.getResourceAsStream(fileName);
 			if (is!=null) {
 				if (fileUnknown) {
 					fileStatusesCache.put(fileName, FileLoadingStatus.INSIDE_JAR);

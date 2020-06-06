@@ -6,6 +6,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
+import module.training.ui.renderer.TrainingRecapRenderer;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -48,9 +49,7 @@ public class TrainingRecapTable extends JScrollPane {
             this.setToolTipText("");
 
             if (column == 0) {
-                String text = null;
                 String tooltip = null;
-                Icon icon = null;
                 int playerId = Integer.parseInt((String) table.getValueAt(row, table.getColumnCount() - 1));
                 Player player = HOVerwaltung.instance().getModel().getSpieler(playerId);
 
@@ -142,6 +141,9 @@ public class TrainingRecapTable extends JScrollPane {
         setRowHeaderView(fixed);
 
         fixed.setDefaultRenderer(Object.class, new FixedTrainingRecapRenderer());
+        scroll.setDefaultRenderer(Object.class, new TrainingRecapRenderer());
+        // Required for darklaf, see https://github.com/weisJ/darklaf/issues/164
+        scroll.setDefaultRenderer(String.class, new TrainingRecapRenderer());
 
         setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
     }

@@ -17,6 +17,7 @@ package module.tsforecast;
  * @author  michael.roux
  */
 
+import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -33,15 +34,14 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 
-final class FutureMatchBox extends JPanel {
+final class FutureMatchBox extends ImagePanel {
 
 	private static final long serialVersionUID = 1L;
 	private JRadioButton m_rbPIC = null;
 	private JRadioButton m_rbNORM = null;
 	private JRadioButton m_rbMOTS = null;
 
-	public FutureMatchBox(String text, String tooltip, int iCmd, int iSelected,
-			MatchType iType) {
+	public FutureMatchBox(String text, String tooltip, int iCmd, int iSelected, MatchType iType) {
 		m_rbPIC = new JRadioButton();
 		m_rbPIC.setActionCommand("P" + iCmd);
 		m_rbPIC.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool"));
@@ -77,9 +77,7 @@ final class FutureMatchBox extends JPanel {
 		add(m_rbMOTS, gridbagconstraints);
 
 		gridbagconstraints.gridx = 3;
-		JLabel lIcon = new JLabel(
-				ThemeManager.getIcon(HOIconName.MATCHICONS[iType
-						.getIconArrayIndex()]));
+		JLabel lIcon = new JLabel(ThemeManager.getIcon(HOIconName.MATCHICONS[iType.getIconArrayIndex()]));
 		lIcon.setToolTipText(iType.getName());
 		add(lIcon, gridbagconstraints);
 
