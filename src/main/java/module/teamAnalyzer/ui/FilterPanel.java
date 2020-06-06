@@ -77,15 +77,6 @@ public class FilterPanel extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Check, if the selected opponent is among the next 2 teams (allows full
-	 * update according to CHPP rules).
-	 */
-	private boolean isNextOpponent() {
-		return ((SystemManager.getActiveTeamId() == SystemManager.getCupOpponentId()) //
-		|| (SystemManager.getActiveTeamId() == SystemManager.getLeagueOpponentId()));
-	}
-
-	/**
 	 * Update GUI elements.
 	 */
 	public void reload() {
