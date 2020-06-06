@@ -146,16 +146,11 @@ distributions {
     }
 }
 
-
-// configure install4j
-if (!hasProperty('install4jHomeDir')) {
-    File propertiesFile = file("${System.getProperty('user.home')}/.gradle/gradle.properties")
-    throw new RuntimeException("Specify install4jHomeDir in $propertiesFile")
-}
-
 install4j {
-    installDir = file(install4jHomeDir)
-    disableSigning = true
+    if ( hasProperty('install4jHomeDir') ) {
+        installDir = file(install4jHomeDir)
+        disableSigning = true
+    }
 }
 
 // endregion ======================================================================================================================
