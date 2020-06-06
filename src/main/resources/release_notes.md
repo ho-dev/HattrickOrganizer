@@ -30,6 +30,8 @@ Changelist HO! 4.0
 
 ### Team Analyser
 
+ - [FEAT] Save adjusted lineup ratings of MatchPredictionPanel in an extra row #66
+
 ### Rating
 
 
