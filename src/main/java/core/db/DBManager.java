@@ -948,7 +948,11 @@ public class DBManager {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfo(teamId, matchtyp, asc);
 	}
-	
+
+	public MatchKurzInfo[] getMatchesKurzInfoUpComing(int teamId) {
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
+				.getMatchesKurzInfoUpComing(teamId);
+	}
 
 	public MatchKurzInfo getMatchesKurzInfo(int teamId, int matchtyp,
 			int statistic, boolean home) {

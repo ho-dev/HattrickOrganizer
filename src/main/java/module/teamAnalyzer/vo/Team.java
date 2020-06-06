@@ -6,7 +6,7 @@ package module.teamAnalyzer.vo;
  *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
-public class Team {
+public class Team implements Comparable<Team> {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Name of the team */
@@ -18,6 +18,7 @@ public class Team {
     // A hack for custom coloring of tournament teams in a renderer
     private boolean tournament = false;
 
+    private int matchType = -1;
     // Timestamp when next match is played
     private java.sql.Timestamp time;
 
@@ -38,11 +39,22 @@ public class Team {
         time = t;
     }
 
+    public java.sql.Timestamp getTime() {
+        return time;
+    }
+
     public int getTeamId() {
         return teamId;
     }
 
-    
+    public void setMatchType(int matchType) {
+        this.matchType = matchType;
+    }
+
+    public int getMatchType() {
+        return matchType;
+    }
+
     public boolean isTournament() {
 		return tournament;
 	}
@@ -87,5 +99,10 @@ public class Team {
             return true;
 
         return false;
+    }
+
+    @Override
+    public int compareTo(Team team) {
+        return this.getTime().compareTo(team.getTime());
     }
 }
