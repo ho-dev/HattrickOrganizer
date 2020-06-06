@@ -7,13 +7,17 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 - [FIX] substitute player can now occupy more than one bench position #506
 
+## Team Analyser
+
+ - [FIX] Show consolation cup in team analyser drop-down
+
 ## Misc
 
 - [FIX] Avoid potential infinite loop at startup. [#584]
 
 # Changelist HO! 3.0
 
-## Some numbers: 
+## Some numbers:
   - 90 commits
   - 293 files changed (11,027 additions and 6,341 deletions)
   - 42 issues closed
@@ -28,7 +32,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - impact of special events on score for both you and your opponent based on latest lineup information
 
   - new match report mocking HT full report
-  
+
   - full control on which game to download (e.g. exclude HTO integrated games)
 
 
@@ -88,7 +92,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
    - [FIX] Index Out Of Bounds Exception at startup on new DBs #448
    - [FIX] fix multiple display issues about player names (composed name, nicknames)  #451
    - [FIX] removed deprecated training block feature  #486
-   
+
 
 ### League
 

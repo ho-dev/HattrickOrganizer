@@ -35,15 +35,6 @@ public class SystemManager {
 	/** The Selected Team */
 	private static Team selectedTeam;
 
-	/** The next league opponent team */
-	private static Team leagueOpponent;
-
-	/** The next cup/friendly opponent team */
-	private static Team cupOpponent;
-
-	/** The next tournament opponent team */
-	private static Team tournamentOpponent;
-
 	/** Boolean for the updating process being ongoing */
 	private static boolean updating = false;
 
@@ -78,33 +69,6 @@ public class SystemManager {
 	}
 
 	/**
-	 * Get next cup/friendly opponent team Id
-	 * 
-	 * @return
-	 */
-	public static int getCupOpponentId() {
-		return cupOpponent.getTeamId();
-	}
-
-	/**
-	 * Get next league opponent team Id
-	 * 
-	 * @return
-	 */
-	public static int getLeagueOpponentId() {
-		return leagueOpponent.getTeamId();
-	}
-
-	/**
-	 * Get next tournament opponent team Id
-	 * 
-	 * @return
-	 */
-	public static int getTournamentOpponentId() {
-		return tournamentOpponent.getTeamId();
-	}
-
-	/**
 	 * Returns the main Plugin class
 	 * 
 	 * @return
@@ -121,26 +85,7 @@ public class SystemManager {
 	 */
 	public static void initialize(TeamAnalyzerPanel aPlugin) {
 		plugin = aPlugin;
-		leagueOpponent = TeamManager.getNextLeagueOpponent();
-		cupOpponent = TeamManager.getNextCupOpponent();
-		tournamentOpponent = TeamManager.getNextTournamentOpponent();
-
-		if (leagueOpponent.getTeamId() == 0 && cupOpponent.getTeamId() == 0
-				&& tournamentOpponent.getTeamId() == 0) {
-			Team team = new Team();
-
-			team.setName(HOVerwaltung.instance().getModel().getBasics().getTeamName());
-			team.setTeamId(HOVerwaltung.instance().getModel().getBasics().getTeamId());
-			setActiveTeam(team);
-		} else if (leagueOpponent.isBefore(cupOpponent)
-				&& leagueOpponent.isBefore(tournamentOpponent)) {
-			// League is the next match
-			setActiveTeam(leagueOpponent);
-		} else if (cupOpponent.isBefore(tournamentOpponent)) {
-			setActiveTeam(cupOpponent);
-		} else {
-			setActiveTeam(tournamentOpponent);
-		}
+		setActiveTeam(TeamManager.getFirstTeam());
 	}
 
 	/**
@@ -164,9 +109,6 @@ public class SystemManager {
 	 */
 	public static void refreshData() {
 		if (!updating) {
-			leagueOpponent = TeamManager.getNextLeagueOpponent();
-			cupOpponent = TeamManager.getNextCupOpponent();
-			tournamentOpponent = TeamManager.getNextTournamentOpponent();
 			NameManager.clean();
 			TeamManager.clean();
 			refresh();
