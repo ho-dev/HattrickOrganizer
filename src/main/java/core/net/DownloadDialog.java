@@ -39,7 +39,6 @@ import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerDateModel;
-import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeModel;
 
 
@@ -276,7 +275,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 		if (m_jchHRF.isSelected()) {
 			bOK = OnlineWorker.getHrf(this);
-			List<Player> player = hov.getModel().getAllSpieler();
+			List<Player> player = hov.getModel().getCurrentPlayer();
 			for (Player p : player) {
 				if (p.getNationalTeamID() != 0) {
 					OnlineWorker.getMatches(p.getNationalTeamID(), false, true, true);

@@ -8,7 +8,6 @@ import core.gui.comp.entry.SpielerLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.model.SpielerCBItem;
 import core.gui.model.SpielerCBItemRenderer;
-import core.gui.theme.HOBooleanName;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
@@ -293,7 +292,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         Player aktuellerPlayer = null;
         playerId = -1;
         if (m_iPositionID == IMatchRoleID.setPieces) {
-            aktuellerPlayer = HOVerwaltung.instance().getModel().getSpieler(HOVerwaltung.instance()
+            aktuellerPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(HOVerwaltung.instance()
                     .getModel()
                     .getLineupWithoutRatingRecalc()
                     .getKicker());
@@ -318,7 +317,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                 player = tmpPlayer;
             }
         } else if (m_iPositionID == IMatchRoleID.captain) {
-            aktuellerPlayer = HOVerwaltung.instance().getModel().getSpieler(HOVerwaltung.instance()
+            aktuellerPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(HOVerwaltung.instance()
                     .getModel()
                     .getLineupWithoutRatingRecalc()
                     .getKapitaen());
@@ -332,7 +331,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                     .getPositionById(m_iPositionID);
 
             if (position != null) {
-                aktuellerPlayer = HOVerwaltung.instance().getModel().getSpieler(position
+                aktuellerPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position
                         .getSpielerId());
 
                 if (aktuellerPlayer != null) {
@@ -410,7 +409,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         //Get currently setup player in that position
         final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionById(m_iPositionID);
         if (position != null) {
-            selectedPlayer = HOVerwaltung.instance().getModel().getSpieler(position.getSpielerId());
+            selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position.getSpielerId());
             setTaktik(position.getTaktik(), selectedPlayer);
         }
 

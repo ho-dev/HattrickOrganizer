@@ -14,11 +14,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -93,7 +89,7 @@ class Spielertabelle extends JTable {
 
 		@Override
 		public int getRowCount() {
-			return HOVerwaltung.instance().getModel().getAllSpieler().size();
+			return HOVerwaltung.instance().getModel().getCurrentPlayer().size();
 		}
 
 		@Override
@@ -517,14 +513,13 @@ class Spielertabelle extends JTable {
 	}
 
 	void aktualisieren() {
-		Vector<Player> allePlayer = HOVerwaltung.instance().getModel()
-				.getAllSpieler();
+		List<Player> allePlayer = HOVerwaltung.instance().getModel()
+				.getCurrentPlayer();
 		spielerSortierung = new SpielerSortierung[allePlayer.size()];
 		spieler = new Vector<Spieler>(allePlayer.size());
 		int pos = 0;
-		for (Enumeration<Player> el = allePlayer.elements(); el
-				.hasMoreElements();) {
-			spieler.add(new Spieler(el.nextElement()));
+		for ( Player p: allePlayer){
+			spieler.add(new Spieler(p));
 			spielerSortierung[pos] = new SpielerSortierung(pos);
 			pos++;
 		}

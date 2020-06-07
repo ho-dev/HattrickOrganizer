@@ -346,12 +346,10 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 			}
 		}
 
-		final Vector<Player> vPlayer = new Vector<Player>();
-		final Vector<Player> allePlayer = hoModel.getAllSpieler();
+		final List<Player> vPlayer = new Vector<Player>();
+		final List<Player> allePlayer = hoModel.getCurrentPlayer();
 
-		for (int i = 0; i < allePlayer.size(); i++) {
-			final Player player = (Player) allePlayer
-					.get(i);
+		for ( Player player: allePlayer){
 
 			//If the player is eligible to play and either all groups are selected or the one to which the player belongs
 			if (player.getCanBeSelectedByAssistant()

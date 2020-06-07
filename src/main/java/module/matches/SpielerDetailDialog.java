@@ -245,7 +245,7 @@ final class SpielerDetailDialog extends JDialog {
 
 	private void setLabels(Player m_clPlayer) {
 		Player m_clVergleichsPlayer = HOVerwaltung.instance().getModel()
-				.getSpieler(m_clPlayer.getSpielerID());
+				.getCurrentPlayer(m_clPlayer.getSpielerID());
 
 		m_jpName.setText(m_clPlayer.getFullName());
 		m_jpName.setFGColor(SpielerLabelEntry.getForegroundForSpieler(m_clPlayer));

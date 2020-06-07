@@ -52,7 +52,7 @@ class RosterPanel extends JPanel {
         players.removeAllItems();
         players.addItem(new PlayerItem());
 
-        for (Iterator<Player> iter = HOVerwaltung.instance().getModel().getAllSpieler().iterator();
+        for (Iterator<Player> iter = HOVerwaltung.instance().getModel().getCurrentPlayer().iterator();
              iter.hasNext();) {
             final Player element = iter.next();
 

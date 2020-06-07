@@ -216,7 +216,7 @@ public class SpecialEventsDM {
 
 		if (filter.isShowOwnPlayersOnly()) {
 			List<Player> players = new ArrayList<Player>();
-			players.addAll(HOVerwaltung.instance().getModel().getAllSpieler());
+			players.addAll(HOVerwaltung.instance().getModel().getCurrentPlayer());
 			if (!filter.isShowCurrentOwnPlayersOnly()) {
 				players.addAll(HOVerwaltung.instance().getModel().getAllOldSpieler());
 			}

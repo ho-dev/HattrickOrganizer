@@ -14,7 +14,6 @@ import core.training.FutureTrainingManager;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.ModelChangeListener;
 import module.training.ui.model.TrainingModel;
-import module.training.ui.renderer.TrainingRecapRenderer;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -200,7 +199,7 @@ public class TrainingRecapPanel extends LazyImagePanel {
     private TableModel createTableModel() {
 
         Vector<String> columns = getColumns();
-        List<Player> list = HOVerwaltung.instance().getModel().getAllSpieler();
+        List<Player> list = HOVerwaltung.instance().getModel().getCurrentPlayer();
         List<Vector<String>> players = new ArrayList<Vector<String>>();
 
         for (Player player : list) {

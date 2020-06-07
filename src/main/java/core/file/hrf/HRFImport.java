@@ -124,7 +124,7 @@ public class HRFImport {
 			// Aufstellung in liste als Aktuelle Aufstellungsetzen und als
 			// Angezeigte Aufstellung
 			AufstellungsVergleichHistoryPanel.setHRFAufstellung(hom.getLineup(),
-					hom.getLastAufstellung());
+					hom.getPreviousLineup());
 			AufstellungsVergleichHistoryPanel.setAngezeigteAufstellung(new AufstellungCBItem(
 					getLangStr("AktuelleAufstellung"), hom.getLineup()));
 

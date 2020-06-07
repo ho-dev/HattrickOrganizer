@@ -56,7 +56,7 @@ public class PluginFeedback {
 
         // Input Checks
         if (lineup != null && rating != null) {
-            List<Player> playerList = HOVerwaltung.instance().getModel().getAllSpieler();
+            List<Player> playerList = HOVerwaltung.instance().getModel().getCurrentPlayer();
             //for (int i = 0; i < playerList.size() - 3; i++) {
             //    playerList.remove(i);
             //}

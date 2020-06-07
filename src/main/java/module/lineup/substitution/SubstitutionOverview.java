@@ -484,14 +484,14 @@ public class SubstitutionOverview extends JPanel {
 			case ORDERTYPE_COL_IDX:
 				return LanguageStringLookup.getOrderType(sub.getOrderType());
 			case SUBJECTPLAYER_COL_IDX:
-				Player out = hoModel.getSpieler(sub.getSubjectPlayerID());
+				Player out = hoModel.getCurrentPlayer(sub.getSubjectPlayerID());
 				return (out != null) ? out.getFullName() : "";
 			case ORDERTYPE_ICON_COL_IDX:
 				return sub.getBehaviour();
 			case OBJECTPLAYER_COL_IDX:
 				Player in = null;
 				if (sub.getOrderType() != MatchOrderType.NEW_BEHAVIOUR) {
-					in = hoModel.getSpieler(sub.getObjectPlayerID());
+					in = hoModel.getCurrentPlayer(sub.getObjectPlayerID());
 				}
 				return (in != null) ? in.getFullName() : "";
 

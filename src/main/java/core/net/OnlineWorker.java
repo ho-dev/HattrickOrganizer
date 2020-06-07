@@ -131,7 +131,7 @@ public class OnlineWorker {
 							TrainingManager.instance().refreshTrainingWeeks();
 							homodel.calcSubskills();
 							AufstellungsVergleichHistoryPanel.setHRFAufstellung(
-									homodel.getLineup(), homodel.getLastAufstellung());
+									homodel.getLineup(), homodel.getPreviousLineup());
 							AufstellungsVergleichHistoryPanel
 									.setAngezeigteAufstellung(new AufstellungCBItem(
 											getLangString("AktuelleAufstellung"), homodel

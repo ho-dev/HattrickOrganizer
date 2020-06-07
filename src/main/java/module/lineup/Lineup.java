@@ -420,7 +420,7 @@ public class Lineup{
 		float maxValue = -1;
 
 		if (players == null) {
-			players = HOVerwaltung.instance().getModel().getAllSpieler();
+			players = HOVerwaltung.instance().getModel().getCurrentPlayer();
 		}
 
 		if (players != null) {
@@ -446,7 +446,7 @@ public class Lineup{
 		int form = -1;
 
 		if (players == null) {
-			players = HOVerwaltung.instance().getModel().getAllSpieler();
+			players = HOVerwaltung.instance().getModel().getCurrentPlayer();
 		}
 
 		Vector<IMatchRoleID> noKeeper = new Vector<IMatchRoleID>(m_vFieldPositions);
@@ -499,7 +499,7 @@ public class Lineup{
 		float value = 0;
 
 		Player captain = null;
-		List<Player> players = HOVerwaltung.instance().getModel().getAllSpieler();
+		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayer();
 
 		if (players != null) {
 			for (Player player : players) {
@@ -889,7 +889,7 @@ public class Lineup{
 	public Player getPlayerByPositionID(int positionId) {
 		try {
 			return HOVerwaltung.instance().getModel()
-					.getSpieler(getPositionById(positionId).getSpielerId());
+					.getCurrentPlayer(getPositionById(positionId).getSpielerId());
 		} catch (Exception e) {
 			HOLogger.instance()
 					.error(getClass(), "getPlayerByPositionID(" + positionId + "): " + e);
@@ -901,7 +901,7 @@ public class Lineup{
 		String playerName;
 
 		try {
-			return HOVerwaltung.instance().getModel().getSpieler(getPositionById(positionId).getSpielerId()).getShortName();
+			return HOVerwaltung.instance().getModel().getCurrentPlayer(getPositionById(positionId).getSpielerId()).getShortName();
 		} catch (Exception e) {
 			return "           ";
 		}
@@ -1292,7 +1292,7 @@ public class Lineup{
 				MatchRoleID position = (MatchRoleID) pos;
 				// existiert Player noch ?
 				if ((HOVerwaltung.instance().getModel() != null)
-						&& (HOVerwaltung.instance().getModel().getSpieler(position.getSpielerId()) == null)) {
+						&& (HOVerwaltung.instance().getModel().getCurrentPlayer(position.getSpielerId()) == null)) {
 					// nein dann zuweisung aufheben
 					position.setSpielerId(0, this);
 				}

@@ -41,14 +41,13 @@ public class HOModel {
     private Lineup m_clAufstellung;
     private Lineup m_clLastAufstellung;
     private Basics m_clBasics;
-//    private EPV epv = new EPV();
     private Finanzen m_clFinanzen;
     private Liga m_clLiga;
     private Spielplan m_clSpielplan;
     private Stadium m_clStadium;
     private Team m_clTeam;
-    private Vector<Player> m_vOldPlayer = new Vector<Player>();
-    private Vector<Player> m_vPlayer = new Vector<Player>();
+    private static List<Player> m_vOldPlayer;
+    private List<Player> m_vPlayer;
     private Verein m_clVerein;
     private XtraData m_clXtraDaten;
     private int m_iID = -1;
@@ -66,12 +65,16 @@ public class HOModel {
         }
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+	public HOModel(int id) {
+		m_iID = id;
+	}
+
+	//~ Methods ------------------------------------------------------------------------------------
 
 
 	public void setLineups(int id) {
 		this.setAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
-		this.setLastAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
+		this.setPreviousLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
 	}
 
     /**
@@ -100,28 +103,24 @@ public class HOModel {
     /**
      * Gibt alle alten Player (nicht mehr im Team befindliche) zurück
      */
-    public final Vector<Player> getAllOldSpieler() {
+    public final List<Player> getAllOldSpieler() {
+    	if ( m_vOldPlayer == null){
+    		m_vOldPlayer = DBManager.instance().getAllSpieler();
+		}
         return m_vOldPlayer;
     }
 
     //---------Player--------------------------------------
 
     /**
-     * Gibt alle Player zurück
+     * Returns all current players
      */
-    public final Vector<Player> getAllSpieler() {
+    public final List<Player> getCurrentPlayer() {
+    	if ( m_vPlayer == null){
+			m_vPlayer = DBManager.instance().getSpieler(this.m_iID);
+		}
         return m_vPlayer;
     }
-
-    // Method is called in calcSubskills from historic HOModel instances
-	// HOVerwaltung manages the HOModel with the current player list
-    public final boolean isCurrentPlayer(int playerId)
-	{
-		for ( Player p : HOVerwaltung.instance().getModel().getAllSpieler()){ // could differ from this.m_vPlayer
-			if ( p.getSpielerID() == playerId) return true;
-		}
-		return false;
-	}
 
     /**
      * Setzt neue Aufstellung
@@ -136,11 +135,17 @@ public class HOModel {
      * returns the lineup
      */
     public final Lineup getLineup() {
+		if (m_clAufstellung == null){
+			m_clAufstellung = DBManager.instance().getAufstellung(this.m_iID, Lineup.DEFAULT_NAME);
+		}
 		m_clAufstellung.setRatings();
         return m_clAufstellung;
     }
 
 	public final Lineup getCurrentLineup() {
+    	if (m_clAufstellung == null){
+    		m_clAufstellung = DBManager.instance().getAufstellung(this.m_iID, Lineup.DEFAULT_NAME);
+		}
 		return m_clAufstellung;
 	}
 
@@ -148,7 +153,7 @@ public class HOModel {
 	 * returns the lineup
 	 */
 	public final Lineup getLineupWithoutRatingRecalc() {
-		return m_clAufstellung;
+		return getCurrentLineup();
 	}
 
     /**
@@ -161,15 +166,14 @@ public class HOModel {
     //----------Basics----------------------------------------
 
     /**
-     * Gibt die Basics zurück
+     * Returns Basic information
      */
     public final Basics getBasics() {
+    	if ( m_clBasics == null){
+    		m_clBasics = DBManager.instance().getBasics(this.m_iID);
+		}
         return m_clBasics;
     }
-
-//    public final EPV getEPV() {
-//        return epv;
-//    }
 
     /**
      * Setzt neue Finanzen
@@ -181,9 +185,12 @@ public class HOModel {
     //-------Finanzen---------------------------------------
 
     /**
-     * Gibt die Finanzen zurück
+     * Returns finance information
      */
     public final Finanzen getFinanzen() {
+		if ( m_clFinanzen == null){
+			m_clFinanzen = DBManager.instance().getFinanzen(this.m_iID);
+		}
         return m_clFinanzen;
     }
 
@@ -210,14 +217,17 @@ public class HOModel {
     /**
      * Setzt neue Aufstellung
      */
-    public final void setLastAufstellung(Lineup aufstellung) {
+    public final void setPreviousLineup(Lineup aufstellung) {
         m_clLastAufstellung = aufstellung;
     }
 
     /**
-     * Gibt die Aufstellung zurück
+     * Returns previous lineup
      */
-    public final Lineup getLastAufstellung() {
+    public final Lineup getPreviousLineup() {
+    	if ( m_clLastAufstellung == null){
+    		m_clLastAufstellung = DBManager.instance().getAufstellung(this.m_iID, Lineup.DEFAULT_NAMELAST);
+		}
         return m_clLastAufstellung;
     }
 
@@ -231,29 +241,30 @@ public class HOModel {
     //----------Liga----------------------------------------
 
     /**
-     * Gibt die Basics zurück
+     * Returns league information
      */
     public final Liga getLiga() {
+    	if  ( m_clLiga == null){
+    		m_clLiga = DBManager.instance().getLiga(this.m_iID);
+		}
         return m_clLiga;
     }
 
     /**
-     * Setzt einen neuen SpielerVector
+     * Set Player list of the current team
      */
-    public final void setSpieler(Vector<Player> playerVector) {
+    public final void setCurrentPlayer(Vector<Player> playerVector) {
         m_vPlayer = playerVector;
     }
 
     /**
-     * Gibt den Player mit der ID zurück
+     * Returns Player of the current team with given Id
      */
-    public final Player getSpieler(int id) {
-        for (int i = 0; (m_vPlayer != null) && (i < m_vPlayer.size()); i++) {
-            if (((Player) m_vPlayer.elementAt(i)).getSpielerID() == id) {
-                return (Player) m_vPlayer.elementAt(i);
-            }
-        }
-
+    public final Player getCurrentPlayer(int id) {
+    	for ( Player p : getCurrentPlayer()){
+    		if ( p.getSpielerID()==id)
+    			return p;
+		}
         return null;
     }
 
@@ -269,11 +280,14 @@ public class HOModel {
     //-----------------------Spielplan----------------------------------------//
 
     /**
-     * Getter for property m_clSpielplan.
+     * Getter for property m_clSpielplan. (Attention: This is only valid for the current model)
      *
      * @return Value of property m_clSpielplan.
      */
     public final module.series.Spielplan getSpielplan() {
+    	if ( m_clSpielplan == null){
+    		m_clSpielplan = DBManager.instance().getSpielplan(-1, -1); // valid only for the current Model
+		}
         return m_clSpielplan;
     }
 
@@ -287,9 +301,12 @@ public class HOModel {
     //--------Stadium----------------------------------------
 
     /**
-     * Gibt das Stadium zurück
+     * Returns stadium information
      */
     public final Stadium getStadium() {
+    	if ( m_clStadium == null){
+    		m_clStadium = DBManager.instance().getStadion(this.m_iID);
+		}
         return m_clStadium;
     }
 
@@ -308,6 +325,9 @@ public class HOModel {
      * @return
      */
     public List<StaffMember> getStaff() {
+    	if ( m_clStaff == null){
+    		m_clStaff = DBManager.instance().getStaffByHrfId(this.m_iID);
+		}
     	return m_clStaff;
     }
     
@@ -324,6 +344,9 @@ public class HOModel {
      * Gibt das Team zurück
      */
     public final Team getTeam() {
+    	if ( m_clTeam == null){
+    		m_clTeam = DBManager.instance().getTeam(this.m_iID);
+		}
         return m_clTeam;
     }
 
@@ -331,20 +354,15 @@ public class HOModel {
      * Gibt den Trainer zurück
      */
     public final Player getTrainer() {
-    	Player trainer = null;
-        for (int i = 0; (m_vPlayer != null) && (i < m_vPlayer.size()); i++) {
-            if (((Player) m_vPlayer.elementAt(i)).isTrainer()) {
-            	if (trainer==null) {
-            		trainer = (Player) m_vPlayer.elementAt(i);
-            	} else {
-					Player tmp = (Player) m_vPlayer.elementAt(i);
-            		if (tmp.getTrainer()>trainer.getTrainer()) {
-            			trainer = tmp;
-            		}
-            	}
-            }
-        }
-        
+		Player trainer = null;
+    	for ( Player p : getCurrentPlayer()){
+			if ( p.isTrainer()){
+				if (trainer == null || p.getTrainer() > trainer.getTrainer()){
+					trainer = p;
+				}
+			}
+		}
+
         // Nt team protection, they may have no coach:
         if (trainer == null)
         {
@@ -366,9 +384,12 @@ public class HOModel {
     //----------Verein----------------------------------------
 
     /**
-     * Gibt den Verein zurück
+     * Returns club information
      */
     public final Verein getVerein() {
+    	if  ( m_clVerein == null){
+    		m_clVerein = DBManager.instance().getVerein(this.m_iID);
+		}
         return m_clVerein;
     }
 
@@ -387,6 +408,9 @@ public class HOModel {
      * @return Value of property m_clXtraDaten.
      */
     public final core.model.XtraData getXtraDaten() {
+    	if ( m_clXtraDaten == null) {
+    		m_clXtraDaten = DBManager.instance().getXtraDaten(this.m_iID);
+		}
         return m_clXtraDaten;
     }
 
@@ -404,21 +428,24 @@ public class HOModel {
 
     	boolean doOnce = false;
     	
-    	final Vector<Player> vPlayer = getAllSpieler();
-    	final java.sql.Timestamp calcDate = m_clBasics.getDatum();
+    	final List<Player> vPlayer = getCurrentPlayer();
+    	final java.sql.Timestamp calcDate = getBasics().getDatum();
     	
     	final int previousHrfId = DBManager.instance().getPreviousHRF(m_iID);
     	
-    	Timestamp previousTrainingDate = null;
-    	Timestamp actualTrainingDate = null;
+    	Timestamp trainingDateOfPreviousHRF = null;
+    	Timestamp trainingDateOfCurrentHRF = getXtraDaten().getTrainingDate();
     	if (previousHrfId > -1) {
-    		previousTrainingDate = DBManager.instance()
+    		trainingDateOfPreviousHRF = DBManager.instance()
     									.getXtraDaten(previousHrfId)
     									.getTrainingDate();
-    		actualTrainingDate = m_clXtraDaten.getTrainingDate();
     	}
+    	else {
+    		// handle the very first hrf download
+			trainingDateOfPreviousHRF = new Timestamp(0); // fetch all trainings before the first hrf was loaded
+		}
     	
-    	if ((previousTrainingDate != null) && (actualTrainingDate != null)) {
+    	if ((trainingDateOfPreviousHRF != null) && (trainingDateOfCurrentHRF != null)) {
     		// Training Happened
 
     		// Find TrainingPerWeeks that should be processed (those since last training).
@@ -428,11 +455,11 @@ public class HOModel {
     			// We want to add all weeks with nextTraining after the previous date, and stop
     			// when we are after the current date.
     			
-    			if (tpw.getNextTrainingDate().after(actualTrainingDate)) {
+    			if (tpw.getNextTrainingDate().after(trainingDateOfCurrentHRF)) {
     				break;
     			}
     			
-    			if (tpw.getNextTrainingDate().after(previousTrainingDate)) {
+    			if (tpw.getNextTrainingDate().after(trainingDateOfPreviousHRF)) {
     				trainingList.add(tpw);
     			}
     		}
@@ -448,20 +475,18 @@ public class HOModel {
     		}
     		
     		// Generate a map with spielers from the last hrf.
-    		final Map<String, Player> players = new HashMap<String, Player>();
-    		for (Iterator<Player> iter = DBManager.instance().getSpieler(previousHrfId).iterator();
-				 iter.hasNext();) {
-    			final Player element = iter.next();
-    			players.put(String.valueOf(element.getSpielerID()), element);
+    		final Map<Integer, Player> players = new HashMap<>();
+    		for ( Player p: DBManager.instance().getSpieler(previousHrfId)){
+    			players.put(p.getSpielerID(), p);
     		}
 
     		// Train each player
-    		for (int i = 0; i < vPlayer.size(); i++) {
+    		//for (int i = 0; i < vPlayer.size(); i++) {
+			for  ( Player player : vPlayer){
     			try {
-    				final Player player = vPlayer.get(i);
- 
+
     				// The version of the player from last hrf
-    				Player old = players.get(String.valueOf(player.getSpielerID()));
+    				Player old = players.get(player.getSpielerID());
     				if (old == null ) {
     					if (TrainingManager.TRAININGDEBUG) {
     						HOLogger.instance().debug(HOModel.class, "Old player for id "+player.getSpielerID()+" = null");
@@ -473,7 +498,8 @@ public class HOModel {
     					old = new Player();
     					old.setSpielerID(player.getSpielerID());
     					old.copySkills(player);
-    					if (isCurrentPlayer(player.getSpielerID())) {
+    					if (HOVerwaltung.instance().getModel().getCurrentPlayer(player.getSpielerID()) != null){
+    						// PLayer is in current team (not an historical player)
 							List<TrainingEvent> events = player.downloadTrainingEvents();
 							if (events != null) {
 								for (TrainingEvent event : events) {
@@ -551,7 +577,7 @@ public class HOModel {
 	    							tpw.getTrainingIntensity(),
 	    							tpw.getStaminaPart(),
 	    							tpw,
-	    							m_clStaff);
+	    							getStaff());
 	    					
 	    					if (iter.hasNext()) {
 	    						// Use calculated skills and subskills as "old" if there is another week in line... 
@@ -564,7 +590,6 @@ public class HOModel {
 	    				}
     				}
 
-
     				/**
     				 * Start of debug
     				 */
@@ -572,11 +597,11 @@ public class HOModel {
     					 HelperWrapper helper = HelperWrapper.instance();
     					HTCalendar htcP;
     					String htcPs = "";
-    					if (previousTrainingDate != null) {
-    						htcP = HTCalendarFactory.createTrainingCalendar(new Date(previousTrainingDate.getTime()));
+    					if (trainingDateOfPreviousHRF != null) {
+    						htcP = HTCalendarFactory.createTrainingCalendar(new Date(trainingDateOfPreviousHRF.getTime()));
     						htcPs = " ("+htcP.getHTSeason()+"."+htcP.getHTWeek()+")";
     					}
-    					HTCalendar htcA = HTCalendarFactory.createTrainingCalendar(new Date((actualTrainingDate.getTime())));
+    					HTCalendar htcA = HTCalendarFactory.createTrainingCalendar(new Date((trainingDateOfCurrentHRF.getTime())));
     					String htcAs = " ("+htcA.getHTSeason()+"."+htcA.getHTWeek()+")";
     					HTCalendar htcC = HTCalendarFactory.createTrainingCalendar(new Date((calcDate.getTime())));
     					String htcCs = " ("+htcC.getHTSeason()+"."+htcC.getHTWeek()+")";
@@ -585,8 +610,8 @@ public class HOModel {
     					HOLogger.instance().debug(HOModel.class,
     							"WeeksCalculated="+trainingList.size()+", trArt="+(trWeek==null?"null":""+trWeek.getTrainingType())
     							+ ", numPl="+ vPlayer.size()+", calcDate="+calcDate.toString()+htcCs
-    							+ ", act="+actualTrainingDate.toString() +htcAs
-    							+ ", prev="+(previousTrainingDate==null?"null":previousTrainingDate.toString()+htcPs)
+    							+ ", act="+trainingDateOfCurrentHRF.toString() +htcAs
+    							+ ", prev="+(trainingDateOfPreviousHRF==null?"null":trainingDateOfPreviousHRF.toString()+htcPs)
     							+ " ("+previousHrfId+")");
 
     					if (trainingList.size() > 0)
@@ -604,7 +629,7 @@ public class HOModel {
     		}
 
     		//Player
-    		DBManager.instance().saveSpieler(m_iID, m_vPlayer, m_clBasics.getDatum());
+    		DBManager.instance().saveSpieler(m_iID, getCurrentPlayer(), getBasics().getDatum());
     	}
     }
 
