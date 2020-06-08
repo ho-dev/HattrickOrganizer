@@ -9,6 +9,7 @@ import core.model.match.Matchdetails;
 import core.module.config.ModuleConfig;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.MatchPopulator;
+import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.controller.RecapListSelectionListener;
 import module.teamAnalyzer.ui.model.UiRecapTableModel;
 import module.teamAnalyzer.vo.Match;
@@ -18,6 +19,7 @@ import module.teamAnalyzer.vo.TeamLineup;
 
 import java.awt.BorderLayout;
 import java.text.DecimalFormat;
+import java.time.temporal.ValueRange;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -44,29 +46,31 @@ public class RecapPanel extends JPanel {
     private UiRecapTableModel tableModel;
     private RecapListSelectionListener recapListener = null;
     private String[] columns = {
-    		HOVerwaltung.instance().getLanguageString("RecapPanel.Game"), //$NON-NLS-1$
-    		HOVerwaltung.instance().getLanguageString("Type"), //$NON-NLS-1$
-    		HOVerwaltung.instance().getLanguageString("ls.match.result"),
-    		HOVerwaltung.instance().getLanguageString("Week"), //$NON-NLS-1$
-    		HOVerwaltung.instance().getLanguageString("Season"), //$NON-NLS-1$
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.midfield"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centraldefence"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftdefence"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightattack"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centralattack"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftattack"),
-    		HOVerwaltung.instance().getLanguageString("RecapPanel.Stars"), //$NON-NLS-1$
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.squad"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.smartsquad"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"),
-    HOVerwaltung.instance().getLanguageString("ls.team.tactic"),
-    HOVerwaltung.instance().getLanguageString("ls.team.tacticalskill"),
-    HOVerwaltung.instance().getLanguageString("ls.team.formation"),
-    "", //$NON-NLS-1$
-    "" //$NON-NLS-1$
+            HOVerwaltung.instance().getLanguageString("RecapPanel.Game"), //$NON-NLS-1$
+            HOVerwaltung.instance().getLanguageString("Type"), //$NON-NLS-1$
+            HOVerwaltung.instance().getLanguageString("ls.match.result"),
+            HOVerwaltung.instance().getLanguageString("Week"), //$NON-NLS-1$
+            HOVerwaltung.instance().getLanguageString("Season"), //$NON-NLS-1$
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.midfield"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centraldefence"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftdefence"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightattack"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centralattack"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftattack"),
+            HOVerwaltung.instance().getLanguageString("RecapPanel.Stars"), //$NON-NLS-1$
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.squad"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.smartsquad"),
+            HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"),
+            HOVerwaltung.instance().getLanguageString("ls.team.tactic"),
+            HOVerwaltung.instance().getLanguageString("ls.team.tacticalskill"),
+            HOVerwaltung.instance().getLanguageString("ls.team.formation"),
+            "", //$NON-NLS-1$ columns 20 and 21 are only used by the RecapTableRenderer
+            "" //$NON-NLS-1$
     };
+
+    private TeamLineup adjustedLineup;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -78,130 +82,19 @@ public class RecapPanel extends JPanel {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public void reload(TeamLineup lineup) {
+    public void reload(TeamReport teamReport) {
+        int selection = teamReport.getSelection(); // save selection
         // Empty model
         while (tableModel.getRowCount() > 0) {
             tableModel.removeRow(0);
         }
 
-        MatchRating averageRating = null;
-        double stars = 0;
+        if ( teamReport.size() < 2 ) return; // no matches loaded
 
-        if (lineup != null) {
-            averageRating = lineup.getRating();
-            stars = lineup.getStars();
+        for ( int i =0; i < teamReport.size(); i++){
+            tableModel.addRow(AddLineup(teamReport.getLineup(i)));
         }
-
-        List<MatchDetail> list = MatchPopulator.getAnalyzedMatch();
-        Vector<Object> rowData;
-
-        if (list.size() > 1) {
-            rowData = new Vector<Object>();
-            rowData.add(HOVerwaltung.instance().getLanguageString("Durchschnitt"));
-            rowData.add(VALUE_NA);
-            rowData.add(VALUE_NA);
-            rowData.add(VALUE_NA);
-            rowData.add(VALUE_NA);
-            setRating(rowData, averageRating);
-
-            DecimalFormat df = new DecimalFormat("###.#");
-
-            rowData.add(df.format(stars));
-            if(averageRating!=null) {
-	            rowData.add(df.format(averageRating.getHatStats()));
-	            rowData.add(df.format(averageRating.getSquad()));
-	            if (stars > 0) {
-	            	rowData.add(df.format(averageRating.getSquad() / stars));
-	            } else {
-	            	rowData.add(df.format(0));
-	            }
-                rowData.add(df.format(averageRating.getLoddarStats()));
-            } else {
-            	rowData.add(df.format(0));
-	            rowData.add(df.format(0));
-	            rowData.add(df.format(0));
-                rowData.add(df.format(0));
-            }
-            rowData.add(VALUE_NA);
-            rowData.add(VALUE_NA);
-            rowData.add(VALUE_NA);
-            rowData.add(VALUE_NA);
-            rowData.add("");
-            rowData.add("");
-            tableModel.addRow(rowData);
-            table.getSelectionModel().setSelectionInterval(0, 0);
-        }
-
-        for (Iterator<MatchDetail> iter = list.iterator(); iter.hasNext();) {
-            MatchDetail matchDetail = (MatchDetail) iter.next();
-
-            rowData = new Vector<Object>();
-
-            Match match = matchDetail.getMatchDetail();
-
-            MatchType matchType = match.getMatchType();
-            boolean isHomeMatch = match.isHome();
-
-            // Columns 0-2
-            if (isHomeMatch) {
-                rowData.add(match.getAwayTeam());
-                rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
-                rowData.add(match.getHomeGoals() + GOALS_SPACE + match.getAwayGoals());
-            } else {
-                rowData.add("* " + match.getHomeTeam()); //$NON-NLS-1$
-                rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
-                rowData.add(match.getAwayGoals() + GOALS_SPACE + match.getHomeGoals());
-            }
-
-            // Columns 3 & 4
-            rowData.add(match.getWeek() + ""); //$NON-NLS-1$
-            rowData.add(match.getSeason() + ""); //$NON-NLS-1$
-
-            // Columns 5-11
-            setRating(rowData, matchDetail.getRating());
-
-            DecimalFormat df = new DecimalFormat("###.#"); //$NON-NLS-1$
-
-            // Columns 12-15
-            rowData.add(df.format(matchDetail.getStars()));
-            if (matchDetail.getRating().getHatStats() >= 0) {
-                rowData.add(df.format(matchDetail.getRating().getHatStats()));
-            } else {
-                rowData.add("");
-            }
-            rowData.add(df.format(matchDetail.getRating().getSquad()));
-            if (matchDetail.getStars() != 0.0) {
-                rowData.add(df.format(matchDetail.getRating().getSquad() / matchDetail.getStars()));
-            } else {
-                rowData.add("");
-            }
-
-            DecimalFormat df2 = new DecimalFormat("###.##"); //$NON-NLS-1$
-
-            // Columns 16-17
-            rowData.add(df2.format(matchDetail.getRating().getLoddarStats()));
-            rowData.add(Matchdetails.getNameForTaktik(matchDetail.getTacticCode()));
-
-            // Column 18
-            if (matchDetail.getTacticCode() == 0) {
-                rowData.add(VALUE_NA);
-            } else {
-                rowData.add(PlayerAbility.getNameForSkill(matchDetail.getTacticLevel(), false));
-            }
-
-            // Columns 19-21
-            rowData.add(matchDetail.getFormation());
-            rowData.add(new Integer(matchType.getId()));
-            rowData.add(new Boolean(isHomeMatch));
-
-            tableModel.addRow(rowData);
-        }
-
-        if (list.size() == 0) {
-            rowData = new Vector<Object>();
-            rowData.add(HOVerwaltung.instance().getLanguageString("RecapPanel.NoMatch")); //$NON-NLS-1$
-            tableModel.addRow(rowData);
-        }
+        teamReport.setSelection(selection); // restore selection
 
         setColumnWidth(0, 100);
         setColumnWidth(1, 20);
@@ -239,9 +132,84 @@ public class RecapPanel extends JPanel {
             setColumnInvisible(16);
         }
 
-        // Hide 'match type' and 'is home match?' columns.
+        // Hide 'match type' and 'is home match?' columns. (used by RecapTableRenderer)
         setColumnInvisible(20);
         setColumnInvisible(21);
+
+    }
+
+    private Vector<Object> AddLineup(TeamLineup lineup) {
+        if ( lineup == null) return null;
+
+        Vector<Object> rowData = new Vector<>();
+
+        // Column 1
+        rowData.add(lineup.getName());
+
+        // Column 2
+        MatchType matchType = lineup.getMatchType();
+        if ( matchType != MatchType.NONE){
+            rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
+        }
+        else {
+            rowData.add(VALUE_NA);
+        }
+        rowData.add(lineup.getResult());
+
+        // Column 3
+        int week = lineup.getWeek();
+        if ( week > 0) rowData.add(week);
+        else rowData.add(VALUE_NA);
+
+        // Column 4
+        int season = lineup.getSeason();
+        if ( season>0)rowData.add(season);
+        else rowData.add(VALUE_NA);
+
+        // Columns 5-11
+        setRating(rowData, lineup.getRating());
+
+        DecimalFormat df = new DecimalFormat("###.#"); //$NON-NLS-1$
+
+        // Columns 12-15
+        rowData.add(df.format(lineup.getStars()));
+        if (lineup.getRating().getHatStats() >= 0) {
+            rowData.add(df.format(lineup.getRating().getHatStats()));
+        } else {
+            rowData.add("");
+        }
+        rowData.add(df.format(lineup.getRating().getSquad()));
+        if (lineup.getStars() != 0.0) {
+            rowData.add(df.format(lineup.getRating().getSquad() / lineup.getStars()));
+        } else {
+            rowData.add("");
+        }
+
+        DecimalFormat df2 = new DecimalFormat("###.##"); //$NON-NLS-1$
+
+        // Columns 16-17
+        rowData.add(df2.format(lineup.getRating().getLoddarStats()));
+        int tactic = lineup.getTacticCode();
+        if ( tactic != -1) {
+            rowData.add(Matchdetails.getNameForTaktik(tactic));
+        }
+        else{
+            rowData.add(VALUE_NA);
+        }
+
+        // Column 18
+        if (lineup.getTacticCode() <= 0) {
+            rowData.add(VALUE_NA);
+        } else {
+            rowData.add(PlayerAbility.getNameForSkill(lineup.getTacticLevel(), false));
+        }
+
+        // Columns 19-21
+        rowData.add(lineup.getFormation());
+        rowData.add(matchType.getId());
+        rowData.add(lineup.isHomeMatch());
+
+        return rowData;
     }
 
     private void setColumnInvisible(int col) {
@@ -274,6 +242,7 @@ public class RecapPanel extends JPanel {
         row.add(getRating((int) rating.getRightAttack()));
         row.add(getRating((int) rating.getCentralAttack()));
         row.add(getRating((int) rating.getLeftAttack()));
+
     }
 
     private String getRating(int rating) {
@@ -308,6 +277,10 @@ public class RecapPanel extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         add(scrollPane);
+
+        // Hide 'match type' and 'is home match?' columns. (used by RecapTableRenderer)
+        setColumnInvisible(20);
+        setColumnInvisible(21);
     }
 
     public String getSelectedTacticType() {

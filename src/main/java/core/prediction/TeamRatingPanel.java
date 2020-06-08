@@ -34,6 +34,8 @@ class TeamRatingPanel extends JPanel implements ItemListener {
     private JComboBox[][] values = new JComboBox[8][2];
     private int row;
 
+    private boolean ratingsChanged;
+
     //~ Constructors -------------------------------------------------------------------------------
 
     TeamRatingPanel(TeamData team) {
@@ -50,7 +52,7 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         m_clConstraints.insets = new Insets(1, 1, 1, 1);
         setLayout(m_clLayout);
 
-        final TeamRatings tr = (TeamRatings) team.getRatings();
+        final TeamRatings tr = team.getRatings();
         final core.model.HOVerwaltung verwaltung = core.model.HOVerwaltung
                                                                    .instance();
         addLine(tr.getMidfield(), verwaltung.getLanguageString("ls.match.ratingsector.midfield"));
@@ -88,6 +90,7 @@ class TeamRatingPanel extends JPanel implements ItemListener {
 
         values[row][1] = new JComboBox(levels.toArray());
         values[row][1].setSelectedIndex(Math.min(team.getTacticLevel(), 19)); // limit tactic strength to divine
+        values[row][1].addItemListener(this);
 
         if (team.getTacticType() == IMatchDetails.TAKTIK_NORMAL) {
             values[row][1].setEnabled(false);
@@ -98,12 +101,14 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         add(taktikpanel, m_clConstraints);
 
         setOpaque(false);
+
+        ratingsChanged = false;
     }
 
     final void setTeamData(TeamData teamdata) {
         teamName = teamdata.getTeamName();
 
-        final TeamRatings ratings = (TeamRatings) teamdata.getRatings();
+        final TeamRatings ratings = teamdata.getRatings();
         int lvl = 0;
         int subLvl = 0;
 
@@ -141,31 +146,39 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         subLvl = ((int) ratings.getLeftAttack() - 1) - (lvl * 4);
         values[6][0].setSelectedIndex(lvl);
         values[6][1].setSelectedIndex(subLvl);
+
+        ratingsChanged = false;
     }
 
     final TeamData getTeamData() {
         final TeamRatings rat = new TeamRatings();
         rat.setMidfield(getValue(0));
-        rat.setLeftDef(getValue(1));
+        rat.setRightDef(getValue(1));
         rat.setMiddleDef(getValue(2));
-        rat.setRightDef(getValue(3));
-        rat.setLeftAttack(getValue(4));
+        rat.setLeftDef(getValue(3));
+        rat.setRightAttack(getValue(4));
         rat.setMiddleAttack(getValue(5));
-        rat.setRightAttack(getValue(6));
+        rat.setLeftAttack(getValue(6));
 
-        final TeamData teamData = new TeamData(teamName, rat, values[7][0].getSelectedIndex(),
-                                               values[7][1].getSelectedIndex());
+        int tactic = values[7][0].getSelectedIndex();
+        if ( tactic>4) tactic+=2; // special values for longshot and creativ
+
+        final TeamData teamData = new TeamData(teamName, rat, tactic,
+                                               values[7][1].getSelectedIndex()+1);
         return teamData;
     }
 
     public final void itemStateChanged(ItemEvent e) {
-        //Taktik
-        if (values[7][0].getSelectedItem() instanceof RatingItem
-            && (((RatingItem) values[7][0].getSelectedItem()).getValue() == IMatchDetails.TAKTIK_NORMAL)) {
-            values[7][1].setEnabled(false);
-        } else {
-            values[7][1].setEnabled(true);
+        if ( e.getSource() == values[7][0]){
+            //Taktik
+            if (values[7][0].getSelectedItem() instanceof RatingItem
+                    && (((RatingItem) values[7][0].getSelectedItem()).getValue() == IMatchDetails.TAKTIK_NORMAL)) {
+                values[7][1].setEnabled(false);
+            } else {
+                values[7][1].setEnabled(true);
+            }
         }
+        ratingsChanged = true;
     }
 
     private double getValue(int row) {
@@ -190,11 +203,15 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         values[row][1].setSelectedIndex(subLvl);
         m_clConstraints.gridx = 2;
         add(values[row][1], m_clConstraints);
+
+        values[row][0].addItemListener(this);
+        values[row][1].addItemListener(this);
+
         row++;
     }
 
     private void initLevel() {
-        subLevels = new ArrayList<RatingItem>();
+        subLevels = new ArrayList<>();
 
         final HOVerwaltung verwaltung = HOVerwaltung.instance();
         subLevels.add(new RatingItem(verwaltung.getLanguageString("verylow"), 0));
@@ -204,7 +221,7 @@ class TeamRatingPanel extends JPanel implements ItemListener {
     }
 
     private void initSubLevel() {
-        levels = new ArrayList<RatingItem>();
+        levels = new ArrayList<>();
 
         for (int i = 1; i < 26; i++) {
             levels.add(new RatingItem(PlayerAbility.getNameForSkill(i, false), i));
@@ -220,5 +237,9 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         tactics.add(new RatingItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_WINGS), IMatchDetails.TAKTIK_WINGS));
         tactics.add(new RatingItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_CREATIVE),IMatchDetails.TAKTIK_CREATIVE));
         tactics.add(new RatingItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_LONGSHOTS), IMatchDetails.TAKTIK_LONGSHOTS));
+    }
+
+    public boolean isRatingsChanged() {
+        return ratingsChanged;
     }
 }

@@ -31,41 +31,37 @@ final class ModuleConfigTable extends AbstractTable {
 
 	/**
 	 * update & insert method
-	 * @param obj
 	 */
 	void saveConfig(Map<String, Object> values) {
-		int updated = 0;
-		String key = null;
+		int updated;
+		String key;
 
 		final Set<String> keys = values.keySet();
-		for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-			key = iter.next();
+		for (String s : keys) {
+			key = s;
 			updated = updateConfig(key, values.get(key));
-			if (updated == 0) 
+			if (updated == 0)
 				insertConfig(key, values.get(key));
 		} // for		
 	}
 
-	/**
-	 * 
-	 * @param obj
-	 */
-	Map<String,Object> findAll() {
-		final HashMap<String,Object> values = new HashMap<String,Object>();
-		final StringBuilder sql = new StringBuilder(100);
-		sql.append("SELECT * FROM ").append(getTableName());
-		try {
-			final ResultSet rs = adapter.executeQuery(sql.toString());
-		
-			while(rs.next())
-				values.put(rs.getString(this.columns[0].getColumnName()), createObject( rs.getString(this.columns[1].getColumnName()),rs.getInt(this.columns[2].getColumnName())));
-		
-				rs.close();
-		} catch (SQLException e) {
-			HOLogger.instance().error(this.getClass(), e);
-		}
-		return values;
-	}
+	 Map<String,Object> findAll() {
+		 final HashMap<String, Object> values = new HashMap<>();
+		 final StringBuilder sql = new StringBuilder(100);
+		 sql.append("SELECT * FROM ").append(getTableName());
+		 try {
+			 final ResultSet rs = adapter.executeQuery(sql.toString());
+			 if (rs != null) {
+				 while (rs.next()) {
+					 values.put(rs.getString(this.columns[0].getColumnName()), createObject(rs.getString(this.columns[1].getColumnName()), rs.getInt(this.columns[2].getColumnName())));
+				 }
+				 rs.close();
+			 }
+		 } catch (SQLException e) {
+			 HOLogger.instance().error(this.getClass(), e);
+		 }
+		 return values;
+	 }
 	
 	private int updateConfig(String key, Object value)  {
 		if(key == null)
@@ -95,10 +91,9 @@ final class ModuleConfigTable extends AbstractTable {
 	}
 	
 	void deleteConfig(String key) {
-		StringBuilder sql = new StringBuilder(100);
-		sql.append("DELETE FROM ").append(getTableName()).append(" WHERE ").append(this.columns[0].getColumnName());
-		sql.append(" = '").append(key).append("'");
-		adapter.executeUpdate(sql.toString());
+		String sql = "DELETE FROM " + getTableName() + " WHERE " + this.columns[0].getColumnName() +
+				" = '" + key + "'";
+		adapter.executeUpdate(sql);
 	}
 	
 	private int getType(Object obj){
@@ -138,7 +133,7 @@ final class ModuleConfigTable extends AbstractTable {
 	@Override
 	protected void insertDefaultValues(){
 		if(findAll().size() == 0){
-			HashMap<String, Object> defaults = new HashMap<String, Object>();
+			HashMap<String, Object> defaults = new HashMap<>();
 			defaults.put("TA_numericRating", Boolean.FALSE);
 			defaults.put("TA_descriptionRating", Boolean.TRUE);
 			defaults.put("TA_lineupCompare", Boolean.TRUE);

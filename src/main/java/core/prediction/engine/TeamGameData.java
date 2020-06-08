@@ -11,7 +11,7 @@ class TeamGameData extends TeamData {
     TeamGameData(int _action, double possess, double rchance, double lchance,
                         double mchance, double rrisk, double lrisk, double mrisk, int type,
                         int level) {
-        super("", new TeamRatings(possess, rrisk, mrisk, lrisk, rchance, mchance, lchance), type,
+        super("", new TeamRatings(possess, lrisk, mrisk, rrisk, lchance, mchance, rchance), type,
               level);
         actionNumber = _action;
         actionAlreadyPlayed = 0;
