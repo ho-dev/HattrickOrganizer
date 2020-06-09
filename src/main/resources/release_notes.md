@@ -46,6 +46,7 @@ Changelist HO! 4.0
 
 ### Misc
 
+  - [FEAT] Remove jcalendar dependency.
 
 ### League
 
