@@ -149,7 +149,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 	}
 
 	private void fillSpielerCB() {
-		List<Player> players = HOVerwaltung.instance().getModel().getAllSpieler();
+		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayer();
 		List<SpielerCBItem> spielerCBItems = new ArrayList<SpielerCBItem>(players.size());
 
 		for (Player player : players) {

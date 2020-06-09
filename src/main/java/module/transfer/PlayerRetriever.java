@@ -35,7 +35,7 @@ public final class PlayerRetriever {
      *         could be found.
      */
     public static Player getPlayer(int id) {
-        final Player player = HOVerwaltung.instance().getModel().getSpieler(id);
+        final Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(id);
 
         if (player == null) {
             final List<Player> oldPlayers = HOVerwaltung.instance().getModel().getAllOldSpieler();
@@ -67,7 +67,7 @@ public final class PlayerRetriever {
         if (player != null) return player;
 
         List<Player> players = new ArrayList<Player>();
-        players.addAll(HOVerwaltung.instance().getModel().getAllSpieler());
+        players.addAll(HOVerwaltung.instance().getModel().getCurrentPlayer());
         players.addAll(HOVerwaltung.instance().getModel().getAllOldSpieler());
 
         List<Player> matches = new ArrayList<Player>();

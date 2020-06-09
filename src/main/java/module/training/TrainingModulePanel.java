@@ -49,7 +49,7 @@ public class TrainingModulePanel extends LazyPanel {
 
 		if (oldPlayer != null) {
 			Player player = HOVerwaltung.instance().getModel()
-					.getSpieler(oldPlayer.getSpielerID());
+					.getCurrentPlayer(oldPlayer.getSpielerID());
 			this.model.setActivePlayer(player);
 		}
 	}

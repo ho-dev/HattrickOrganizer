@@ -142,7 +142,9 @@ public class HOVerwaltung {
 					waitDialog.setValue((int) ((i * 100d) / hrfListe.size()));
 				}
 				s1 = System.currentTimeMillis();
-				final HOModel model = this.loadModel((hrfListe.get(i)).getId());
+				//final HOModel model = this.loadModel((hrfListe.get(i)).getId());
+
+				HOModel model = new HOModel(hrfListe.get(i).getId());
 				lSum += (System.currentTimeMillis() - s1);
 				s2 = System.currentTimeMillis();
 				model.calcSubskills();
@@ -174,10 +176,10 @@ public class HOVerwaltung {
 	 */
 	protected HOModel loadModel(int id) {
 		final HOModel model = new HOModel();
-		model.setSpieler(DBManager.instance().getSpieler(id));
+		model.setCurrentPlayer(DBManager.instance().getSpieler(id));
 		model.setAllOldSpieler(DBManager.instance().getAllSpieler());
 		model.setAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
-		model.setLastAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
+		model.setPreviousLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
 		model.setBasics(DBManager.instance().getBasics(id));
 		model.setFinanzen(DBManager.instance().getFinanzen(id));
 		model.setLiga(DBManager.instance().getLiga(id));

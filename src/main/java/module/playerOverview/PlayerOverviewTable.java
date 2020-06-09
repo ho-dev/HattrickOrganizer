@@ -141,7 +141,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 
 		if (tableModel == null) {
 			tableModel = UserColumnController.instance().getPlayerOverviewModel();
-			tableModel.setValues(HOVerwaltung.instance().getModel().getAllSpieler());
+			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayer());
 			tableSorter = new TableSorter(tableModel,
 					tableModel.getPositionInArray(UserColumnFactory.ID),
 					getSortSpalte(),
@@ -174,7 +174,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 			tableModel.setColumnsSize(getColumnModel());
 		} else {
 			// Werte neu setzen
-			tableModel.setValues(HOVerwaltung.instance().getModel().getAllSpieler());
+			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayer());
 			tableSorter.reallocateIndexes();
 		}
 

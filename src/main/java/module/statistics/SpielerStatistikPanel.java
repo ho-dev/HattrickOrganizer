@@ -494,7 +494,7 @@ class SpielerStatistikPanel extends LazyImagePanel {
 	}
 
 	private void initSpielerCB() {
-		List<Player> players = HOVerwaltung.instance().getModel().getAllSpieler();
+		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayer();
 		List<SpielerCBItem> spielerCBItems = new ArrayList<SpielerCBItem>(players.size());
 		for (Player player : players) {
 			spielerCBItems.add(new SpielerCBItem(player.getFullName(), 0f, player));

@@ -207,7 +207,7 @@ public class HRFStringParser {
 
 
 				} else if (entity.toString().equalsIgnoreCase(LASTLINEUP)) {
-					hoModel.setLastAufstellung(new Lineup(MatchRoleID.convertOldRoleToNew(properties)));
+					hoModel.setPreviousLineup(new Lineup(MatchRoleID.convertOldRoleToNew(properties)));
 				} else if (entity.toString().equalsIgnoreCase(STAFF)) {
 					hoModel.setStaff(parseStaff(properties));
 				}
@@ -228,7 +228,7 @@ public class HRFStringParser {
 		// resetted . So later trainer could be found by searching for player
 		// having trainerType != -1
 		if (trainerID > -1) {
-			List<Player> players = hoModel.getAllSpieler();
+			List<Player> players = hoModel.getCurrentPlayer();
 			for (Player player : players) {
 				if (player.isTrainer() && player.getSpielerID() != trainerID) {
 					player.setTrainer(-1);

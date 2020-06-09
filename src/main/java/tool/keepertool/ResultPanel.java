@@ -106,7 +106,7 @@ class ResultPanel extends JPanel {
         set.addActionListener(new ActionListener() {
                 @Override
 				public void actionPerformed(ActionEvent arg0) {
-                    final Player sp = HOVerwaltung.instance().getModel().getSpieler(id);
+                    final Player sp = HOVerwaltung.instance().getModel().getCurrentPlayer(id);
                     double decimals = average - sp.getGKskill()
                                       - sp.getSubskill4Pos(PlayerSkill.KEEPER);
 
@@ -124,7 +124,7 @@ class ResultPanel extends JPanel {
                                                                                                                           .getID(),
                                                                                    core.model.HOVerwaltung.instance()
                                                                                                                           .getModel()
-                                                                                                                          .getAllSpieler(),
+                                                                                                                          .getCurrentPlayer(),
                                                                                    core.model.HOVerwaltung.instance()
                                                                                                                           .getModel()
                                                                                                                           .getBasics()

@@ -69,7 +69,7 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 					.getLineupWithoutRatingRecalc().duplicate());
 			m_clHRFLastAufstellung = new AufstellungCBItem(HOVerwaltung.instance()
 					.getLanguageString("LetzteAufstellung"), HOVerwaltung.instance().getModel()
-					.getLastAufstellung().duplicate());
+					.getPreviousLineup().duplicate());
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "Err: " + e);
 		}

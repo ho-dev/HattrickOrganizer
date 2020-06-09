@@ -52,7 +52,7 @@ public class TestDialog extends JDialog {
 
 	private void initComponents() {
 		getContentPane().setLayout(new BorderLayout());
-		List<Player> player = HOVerwaltung.instance().getModel().getAllSpieler();
+		List<Player> player = HOVerwaltung.instance().getModel().getCurrentPlayer();
 		player.addAll(HOVerwaltung.instance().getModel().getAllOldSpieler());
 
 		Collections.sort(player, new Comparator<Player>() {

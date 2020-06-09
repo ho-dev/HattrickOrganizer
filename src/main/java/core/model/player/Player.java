@@ -454,7 +454,7 @@ public class Player {
         //Offsets aus dem aktuellen HRF holen
         final core.model.HOModel oldmodel = core.model.HOVerwaltung.instance()
                 .getModel();
-        final Player oldPlayer = oldmodel.getSpieler(m_iSpielerID);
+        final Player oldPlayer = oldmodel.getCurrentPlayer(m_iSpielerID);
 
         if (oldPlayer != null) {
             // Training block

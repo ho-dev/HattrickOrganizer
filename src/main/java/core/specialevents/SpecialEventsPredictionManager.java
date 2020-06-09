@@ -216,7 +216,7 @@ public class SpecialEventsPredictionManager {
             MatchRoleID mid = (MatchRoleID) matchRoleID;
             if (mid.getSpielerId() == 0) continue;
             if (!this.playerInLineup.containsKey(mid.getSpielerId())) {
-                Player player = model.getSpieler(mid.getSpielerId());
+                Player player = model.getCurrentPlayer(mid.getSpielerId());
                 if (player != null) {
                     this.playerInLineup.put(player.getSpielerID(), player);
                 }

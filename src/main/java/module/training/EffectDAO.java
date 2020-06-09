@@ -48,7 +48,7 @@ public class EffectDAO {
 
             // Loop through all player (also old players) to get all trained skillups.
             // Group these skillups by season and week.
-            List<Player> players = new Vector<Player>(HOVerwaltung.instance().getModel().getAllSpieler());
+            List<Player> players = new Vector<Player>(HOVerwaltung.instance().getModel().getCurrentPlayer());
 
             players.addAll(HOVerwaltung.instance().getModel().getAllOldSpieler());
 

@@ -45,6 +45,7 @@ Changelist HO! 4.0
 
 ### Training
 
+  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512 
 
 ### Misc
 
