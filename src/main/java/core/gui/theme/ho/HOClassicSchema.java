@@ -103,10 +103,10 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(EMPTY, "gui/bilder/empty.gif");
 		put(INFO, "gui/bilder/info.gif");
 		put(FEEDBACK, "gui/bilder/feedback.gif");
-		put(GOTOANALYSETOP, "gui/bilder/gotoAnalyseTop.png");
-		put(GOTOANALYSEBOTTOM, "gui/bilder/gotoAnalyseBottom.png");
-		put(OFFSET, "gui/bilder/offset.png");
-		put(GOTOSTATISTIK, "gui/bilder/gotoStatistik.png");
+		put(GOTOANALYSETOP, "gui/bilder/gotoAnalyseTop.svg");
+		put(GOTOANALYSEBOTTOM, "gui/bilder/gotoAnalyseBottom.svg");
+		put(OFFSET, "gui/bilder/offset.svg");
+		put(GOTOSTATISTIK, "gui/bilder/gotoStatistik.svg");
 
 		put(MAXLINEUP, "gui/bilder/MaxAufstellung.png");
 		put(RELOAD, "gui/bilder/Reload.png");
@@ -288,6 +288,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(SPINNER, "gui/bilder/spinner.gif");
 
 		put(UNKOWN, "gui/bilder/unknown.png");
+
+		// Empty icon to avoid exceptions
+		put(EMPTY_SVG, "gui/bilder/empty.svg");
 	}
 
 	private void initBooleans() {

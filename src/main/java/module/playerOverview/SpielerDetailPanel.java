@@ -33,22 +33,13 @@ import core.util.Helper;
 import module.lineup.Lineup;
 import module.statistics.StatistikMainPanel;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.*;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
+import static core.gui.theme.HOIconName.*;
+import static core.gui.theme.ImageUtilities.getSvgIcon;
 import static core.model.player.IMatchRoleID.UNKNOWN;
 import static core.model.player.IMatchRoleID.UNSELECTABLE;
 
@@ -179,10 +170,10 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     // Third Row, Columns 1 & 2
     private final JTextArea m_jtaNotes = new JTextArea(5, 12);
     // Third Row, Column 3
-    private final JButton m_jbStatistics = new JButton(ThemeManager.getIcon(HOIconName.GOTOSTATISTIK));
-    private final JButton m_jbAnalysisTop = new JButton(ThemeManager.getIcon(HOIconName.GOTOANALYSETOP));
-    private final JButton m_jbAnalysisBottom = new JButton(ThemeManager.getIcon(HOIconName.GOTOANALYSEBOTTOM));
-    private final JButton m_jbOffsets = new JButton(ThemeManager.getIcon(HOIconName.OFFSET));
+    private final JButton m_jbStatistics = new JButton(getSvgIcon(GOTOSTATISTIK));
+    private final JButton m_jbAnalysisTop = new JButton(getSvgIcon(GOTOANALYSETOP));
+    private final JButton m_jbAnalysisBottom = new JButton(getSvgIcon(GOTOANALYSEBOTTOM));
+    private final JButton m_jbOffsets = new JButton(getSvgIcon(HOIconName.OFFSET));
 
     // Ratings Column
     private final DoppelLabelEntry m_jpRatingKeeper = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);

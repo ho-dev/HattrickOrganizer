@@ -214,4 +214,6 @@ public interface HOIconName {
 	String SPINNER = "spinner";
 
 	String UNKOWN = "unknown";
+
+	String EMPTY_SVG = "empty_svg";
 }

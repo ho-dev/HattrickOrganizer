@@ -173,6 +173,10 @@ public final class ThemeManager {
 		return instance().getImageIcon(key);
 	}
 
+	public static Object getIconPath(String key){
+		return instance().get(key);
+	}
+
 	public static ImageIcon getScaledIcon(String key,int x,int y){
 		return instance().getScaledImageIcon(key,x,y);
 	}
