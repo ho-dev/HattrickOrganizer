@@ -124,7 +124,7 @@ class ResultPanel extends JPanel {
                                                                                                                           .getID(),
                                                                                    core.model.HOVerwaltung.instance()
                                                                                                                           .getModel()
-                                                                                                                          .getCurrentPlayer(),
+                                                                                                                          .getCurrentPlayers(),
                                                                                    core.model.HOVerwaltung.instance()
                                                                                                                           .getModel()
                                                                                                                           .getBasics()

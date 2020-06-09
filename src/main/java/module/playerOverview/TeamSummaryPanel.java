@@ -97,7 +97,7 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
     @Override
     public void reInit() {
         model.setComparisonPlayers(model.getPlayers());
-        model.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayer());
+        model.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());
         display();
     }
 

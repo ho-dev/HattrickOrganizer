@@ -176,13 +176,13 @@ public class HOVerwaltung {
 	 */
 	protected HOModel loadModel(int id) {
 		final HOModel model = new HOModel();
-		model.setCurrentPlayer(DBManager.instance().getSpieler(id));
-		model.setAllOldSpieler(DBManager.instance().getAllSpieler());
-		model.setAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
+		model.setCurrentPlayers(DBManager.instance().getSpieler(id));
+		model.setFormerPlayers(DBManager.instance().getAllSpieler());
+		model.setLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
 		model.setPreviousLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
 		model.setBasics(DBManager.instance().getBasics(id));
-		model.setFinanzen(DBManager.instance().getFinanzen(id));
-		model.setLiga(DBManager.instance().getLiga(id));
+		model.setFinance(DBManager.instance().getFinanzen(id));
+		model.setLeague(DBManager.instance().getLiga(id));
 		model.setStadium(DBManager.instance().getStadion(id));
 		model.setTeam(DBManager.instance().getTeam(id));
 		model.setVerein(DBManager.instance().getVerein(id));

@@ -21,7 +21,6 @@ import core.util.Helper;
 import module.teamAnalyzer.ui.RatingUtil;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -267,7 +266,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 						// Model packen, da immer die aktuelle Aufstellung
 						// genommen wird
 						// vergleichsaufstellung.updateRatingPredictionConfig();
-						homodel.setAufstellung(vergleichsaufstellung);
+						homodel.setLineup(vergleichsaufstellung);
 						m_jpRating.setTopRight(vergleichsaufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
 						m_jpRating.setTopCenter(vergleichsaufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
 						m_jpRating.setTopLeft(vergleichsaufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
@@ -277,7 +276,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 						m_jpRating.setBottomLeft(vergleichsaufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
 
 						// Put back the right Lineup
-						homodel.setAufstellung(aufstellung);
+						homodel.setLineup(aufstellung);
 					}
 				}
 			}

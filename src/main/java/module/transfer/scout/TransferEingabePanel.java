@@ -203,7 +203,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             tempPlayer.setLoyalty(((CBItem)jcbLoyalty.getSelectedItem()).getId());
             tempPlayer.setFuehrung(((CBItem)jcbLeadership.getSelectedItem()).getId());
             tempPlayer.setHomeGrown(jchHomegrown.isSelected());
-            HOVerwaltung.instance().getModel().addSpieler(tempPlayer);
+            HOVerwaltung.instance().getModel().addPlayer(tempPlayer);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
         }

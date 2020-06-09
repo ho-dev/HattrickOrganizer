@@ -83,7 +83,7 @@ public class HistoryCurve extends Curve {
 
 	private void readPastMatches() throws SQLException {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
-		Liga iliga = HOVerwaltung.instance().getModel().getLiga();
+		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
 
 		Curve.Point pLastLeagueMatch = null;
 		GregorianCalendar dateOfLastLeagueMatch = new GregorianCalendar();

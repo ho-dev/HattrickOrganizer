@@ -132,7 +132,7 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 		if (tableModel == null) {
 			tableModel = UserColumnController.instance().getLineupModel();
 
-			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayer());
+			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
 			tableSorter = new TableSorter(tableModel,
 					tableModel.getPositionInArray(UserColumnFactory.ID),
 					getSortSpalte(),
@@ -165,7 +165,7 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 			tableModel.setColumnsSize(getColumnModel());
 		} else {
 			// Reset values
-			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayer());
+			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
 			tableSorter.reallocateIndexes();
 		}
 

@@ -167,7 +167,7 @@ final class SpielerSkillupTable extends AbstractTable {
 	// -------------------------------- Importing PArt ----------------------------------------------
 
 	void importNewSkillup(HOModel homodel) {
-		List<Player> players = homodel.getCurrentPlayer();
+		List<Player> players = homodel.getCurrentPlayers();
 		for ( Player nPlayer : players){
 			Player oPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(nPlayer.getSpielerID());
 			if (oPlayer!=null) {

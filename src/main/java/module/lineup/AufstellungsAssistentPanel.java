@@ -347,7 +347,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 		}
 
 		final List<Player> vPlayer = new Vector<Player>();
-		final List<Player> allePlayer = hoModel.getCurrentPlayer();
+		final List<Player> allePlayer = hoModel.getCurrentPlayers();
 
 		for ( Player player: allePlayer){
 

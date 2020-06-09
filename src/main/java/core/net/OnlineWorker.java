@@ -119,7 +119,7 @@ public class OnlineWorker {
 						homodel.setSpielplan(hov.getModel().getSpielplan());
 
 						// Add old players to the model
-						homodel.setAllOldSpieler(DBManager.instance().getAllSpieler());
+						homodel.setFormerPlayers(DBManager.instance().getAllSpieler());
 						// Only update when the model is newer than existing
 						if (isNewModel(homodel)) {
 							// Reimport Skillup

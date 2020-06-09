@@ -2,7 +2,6 @@ package module.lineup.exchange;
 
 import core.db.DBManager;
 import core.gui.CursorToolkit;
-import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.renderer.DateTimeTableCellRenderer;
@@ -31,7 +30,6 @@ import java.awt.event.ActionListener;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -221,7 +219,7 @@ public class UploadDownloadPanel extends LazyPanel {
 		MatchRating HOmatchRating = new MatchRating(LD, CD, RD, MF, LA, CA, RA, tacticType, tacticSkill);
 
 		// restore previous Lineup
-		HOVerwaltung.instance().getModel().setAufstellung(currLineup);
+		HOVerwaltung.instance().getModel().setLineup(currLineup);
 		instance().getAufstellungsPanel().update();
 
 		new RatingComparisonDialog(HOmatchRating, HTmatchRating);
@@ -340,7 +338,7 @@ public class UploadDownloadPanel extends LazyPanel {
 			if (showDialog) {
 			JOptionPane.showMessageDialog(instance(),  HOVerwaltung.instance().getLanguageString("lineup.download.success"), HOVerwaltung.instance()
 					.getLanguageString("lineup.download.title"), messageType);}
-			HOVerwaltung.instance().getModel().setAufstellung(lineup);
+			HOVerwaltung.instance().getModel().setLineup(lineup);
 			instance().getAufstellungsPanel().update();
 		}
 	}

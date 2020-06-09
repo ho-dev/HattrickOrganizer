@@ -28,8 +28,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemListener;
-import java.sql.Date;
-import java.sql.Timestamp;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -215,11 +213,11 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             tempPlayer.setSpielaufbau(((CBItem) m_jcbSpielaufbau.getSelectedItem()).getId());
             tempPlayer.setLoyalty(((CBItem) m_jcbLoyalty.getSelectedItem()).getId());
             tempPlayer.setHomeGrown(m_jchHomegrown.isSelected());
-            HOVerwaltung.instance().getModel().addSpieler(tempPlayer);
+            HOVerwaltung.instance().getModel().addPlayer(tempPlayer);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
         } else if (e.getSource().equals(m_jbRemoveTempSpieler)) {
-            HOVerwaltung.instance().getModel().removeSpieler(m_clPlayer);
+            HOVerwaltung.instance().getModel().removePlayer(m_clPlayer);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
         }

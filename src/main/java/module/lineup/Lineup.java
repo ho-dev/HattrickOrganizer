@@ -420,7 +420,7 @@ public class Lineup{
 		float maxValue = -1;
 
 		if (players == null) {
-			players = HOVerwaltung.instance().getModel().getCurrentPlayer();
+			players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		}
 
 		if (players != null) {
@@ -446,7 +446,7 @@ public class Lineup{
 		int form = -1;
 
 		if (players == null) {
-			players = HOVerwaltung.instance().getModel().getCurrentPlayer();
+			players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		}
 
 		Vector<IMatchRoleID> noKeeper = new Vector<IMatchRoleID>(m_vFieldPositions);
@@ -499,7 +499,7 @@ public class Lineup{
 		float value = 0;
 
 		Player captain = null;
-		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayer();
+		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 
 		if (players != null) {
 			for (Player player : players) {
