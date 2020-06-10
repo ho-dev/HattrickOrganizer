@@ -415,6 +415,9 @@ public class HOModel {
      * Add a player to the current player list
      */
     public final void addPlayer(Player player) {
+    	if (m_vPlayer == null) {
+    		m_vPlayer = new Vector<>();
+		}
         m_vPlayer.add(player);
     }
 
@@ -679,7 +682,9 @@ public class HOModel {
      * Remove a Player
      */
     public final void removePlayer(Player player) {
-        m_vPlayer.remove(player);
+    	if ( m_vPlayer != null) {
+			m_vPlayer.remove(player);
+		}
     }
    
     /**
@@ -688,30 +693,30 @@ public class HOModel {
     public final synchronized void saveHRF() {
         DBManager.instance().saveHRF(m_iID,
         		java.text.DateFormat.getDateTimeInstance().format(new java.util.Date(
-        				System.currentTimeMillis())), m_clBasics.getDatum());
+        				System.currentTimeMillis())), getBasics().getDatum());
 
         //basics
-        DBManager.instance().saveBasics(m_iID, m_clBasics);
+        DBManager.instance().saveBasics(m_iID, getBasics());
         //Verein
-        DBManager.instance().saveVerein(m_iID, m_clVerein);
+        DBManager.instance().saveVerein(m_iID, getClub());
         //Team
-        DBManager.instance().saveTeam(m_iID, m_clTeam);
+        DBManager.instance().saveTeam(m_iID, getTeam());
         //Finanzen
-        DBManager.instance().saveFinanzen(m_iID, m_clFinanzen, m_clBasics.getDatum());
+        DBManager.instance().saveFinanzen(m_iID, getFinance(), getBasics().getDatum());
         //Stadion
-        DBManager.instance().saveStadion(m_iID, m_clStadium);
+        DBManager.instance().saveStadion(m_iID, getStadium());
         //Liga
-        DBManager.instance().saveLiga(m_iID, m_clLiga);
+        DBManager.instance().saveLiga(m_iID, getLeague());
         //Aufstellung + aktu Sys als Standard saven
-        DBManager.instance().saveAufstellung(m_iID, m_clAufstellung, Lineup.DEFAULT_NAME);
+        DBManager.instance().saveAufstellung(m_iID, getCurrentLineup(), Lineup.DEFAULT_NAME);
         //Aufstellung + aktu Sys als Standard saven
-        DBManager.instance().saveAufstellung(m_iID, m_clLastAufstellung, Lineup.DEFAULT_NAMELAST);
+        DBManager.instance().saveAufstellung(m_iID, getPreviousLineup(), Lineup.DEFAULT_NAMELAST);
         //Xtra Daten
-        DBManager.instance().saveXtraDaten(m_iID, m_clXtraDaten);
+        DBManager.instance().saveXtraDaten(m_iID, getXtraDaten());
         //Player
-        DBManager.instance().saveSpieler(m_iID, m_vPlayer, m_clBasics.getDatum());
+        DBManager.instance().saveSpieler(m_iID, getCurrentPlayers(), getBasics().getDatum());
         //Staff
-        DBManager.instance().saveStaff(m_iID, m_clStaff);
+        DBManager.instance().saveStaff(m_iID, getStaff());
     }
 
     /**
