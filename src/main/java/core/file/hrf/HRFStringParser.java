@@ -173,7 +173,7 @@ public class HRFStringParser {
 				}
 				// club
 				else if (entity.toString().equalsIgnoreCase(CLUB)) {
-					hoModel.setVerein(new Verein(properties));
+					hoModel.setClub(new Verein(properties));
 				}
 				// team
 				else if (entity.toString().equalsIgnoreCase(TEAM)) {

@@ -165,8 +165,8 @@ class SeriesTablePanel extends ImagePanel {
 	private void initSeriesTable() {
 		// Entrys mit Werten füllen
 		// Ein Model vorhanden?
-		if ((HOVerwaltung.instance().getModel().getSpielplan() != null)
-				&& (HOVerwaltung.instance().getModel().getSpielplan().getSaison() > 0)) {
+		if ((HOVerwaltung.instance().getModel().getFixtures() != null)
+				&& (HOVerwaltung.instance().getModel().getFixtures().getSaison() > 0)) {
 			// Daten in die Tabelle füllen
 			reinitTabelle();
 		}

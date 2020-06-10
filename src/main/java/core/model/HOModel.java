@@ -272,7 +272,7 @@ public class HOModel {
      *
      * @param m_clSpielplan New value of property m_clSpielplan.
      */
-    public final void setSpielplan(module.series.Spielplan m_clSpielplan) {
+    public final void setFixtures(module.series.Spielplan m_clSpielplan) {
         this.m_clSpielplan = m_clSpielplan;
     }
 
@@ -283,7 +283,7 @@ public class HOModel {
      *
      * @return Value of property m_clSpielplan.
      */
-    public final module.series.Spielplan getSpielplan() {
+    public final module.series.Spielplan getFixtures() {
     	if ( m_clSpielplan == null){
     		m_clSpielplan = DBManager.instance().getSpielplan(-1, -1); // valid only for the current Model
 		}
@@ -374,7 +374,7 @@ public class HOModel {
     /**
      * Sets club information
      */
-    public final void setVerein(Verein verein) {
+    public final void setClub(Verein verein) {
         m_clVerein = verein;
     }
 
@@ -383,7 +383,7 @@ public class HOModel {
     /**
      * Returns club information
      */
-    public final Verein getVerein() {
+    public final Verein getClub() {
     	if  ( m_clVerein == null){
     		m_clVerein = DBManager.instance().getVerein(this.m_iID);
 		}
@@ -674,21 +674,6 @@ public class HOModel {
     				);
     	}
     }
-    public final void loadStdAufstellung() {
-        m_clAufstellung = DBManager.instance().getAufstellung(-1,
-                                                                                            Lineup.DEFAULT_NAME);
-
-        //prüfen ob alle aufgstellen Player noch existieren
-        m_clAufstellung.checkAufgestellteSpieler();
-    }
-
-    public final void loadStdLastAufstellung() {
-        m_clLastAufstellung = DBManager.instance().getAufstellung(-1,
-                                                                                                Lineup.DEFAULT_NAMELAST);
-
-        //prüfen ob alle aufgstellen Player noch existieren
-        m_clLastAufstellung.checkAufgestellteSpieler();
-    }
 
     /**
      * Remove a Player
@@ -732,7 +717,7 @@ public class HOModel {
     /**
      * Save match schedule in database
      */
-    public final synchronized void saveSpielplan2DB() {
+    public final synchronized void saveFixtures() {
         if (m_clSpielplan != null) 
             DBManager.instance().storeSpielplan(m_clSpielplan);
     }

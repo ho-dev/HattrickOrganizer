@@ -324,7 +324,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			setTaktik(aufstellung.getTacticType());
 			m_jpTaktikStaerke.setText(getTaktikString());
 
-			setTacticalAssistants(homodel.getVerein().getTacticalAssistantLevels());
+			setTacticalAssistants(homodel.getClub().getTacticalAssistantLevels());
 			setStyleOfPlay(aufstellung.getStyleOfPlay());
 			setEinstellung(aufstellung.getAttitude());
 			setLocation(aufstellung.getLocation());
@@ -555,7 +555,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(((CBItem) m_jcbStyleOfPlay.getSelectedItem()).getId());
 				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbTacticalAssistants)) {
-				HOVerwaltung.instance().getModel().getVerein().setTacticalAssistantLevels(((CBItem) m_jcbTacticalAssistants.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getClub().setTacticalAssistantLevels(((CBItem) m_jcbTacticalAssistants.getSelectedItem()).getId());
 				// Number of tactical assistants changed
 					doSilentRefresh = true; // To save the item change display
 					updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay()); // Attempt to set the old value, otherwise trainer default.
@@ -946,7 +946,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		int tacticalAssistants;
 		try {
 			trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
-			tacticalAssistants = HOVerwaltung.instance().getModel().getVerein().getTacticalAssistantLevels();
+			tacticalAssistants = HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
 			
 		} catch (Exception e) {
 			trainer = 2;

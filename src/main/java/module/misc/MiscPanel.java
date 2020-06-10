@@ -58,7 +58,7 @@ final class MiscPanel extends JPanel {
 
 
     void setLabels() {
-        final Verein verein = HOVerwaltung.instance().getModel().getVerein();
+        final Verein verein = HOVerwaltung.instance().getModel().getClub();
         final Finanzen finanzen = HOVerwaltung.instance().getModel().getFinance();
 
         DecimalFormat df = new DecimalFormat("###,###,###,##0");
