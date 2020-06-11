@@ -146,11 +146,10 @@ distributions {
     }
 }
 
+
 install4j {
-    if ( hasProperty('install4jHomeDir') ) {
-        installDir = file(install4jHomeDir)
-        disableSigning = true
-    }
+    installDir = file(install4jHomeDir)
+    disableSigning = true
 }
 
 // endregion ======================================================================================================================
@@ -333,7 +332,7 @@ released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 
 task createLanguageFileList(dependsOn: poeditorPull)  {
     group 'sub tasks'
-    outputs.upToDateWhen { false }
+//    outputs.upToDateWhen { false }
 
     def lTranslationFiles = []
     fileTree(dir: "${projectDir}\\src\\main\\resources\\sprache", include: '*.properties').visit {
