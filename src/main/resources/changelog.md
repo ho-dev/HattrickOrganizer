@@ -47,6 +47,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ### Misc
 
+  - [FIX] ExperienceViewer removed #503 
 
 ### League
 

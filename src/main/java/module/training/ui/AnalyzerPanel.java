@@ -98,8 +98,8 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 
 	@Override
 	protected void update() {
-		this.skillups = getSkillups(HOVerwaltung.instance().getModel().getCurrentPlayer());
-		this.skillupsOld = getSkillups(HOVerwaltung.instance().getModel().getAllOldSpieler());
+		this.skillups = getSkillups(HOVerwaltung.instance().getModel().getCurrentPlayers());
+		this.skillupsOld = getSkillups(HOVerwaltung.instance().getModel().getFormerPlayers());
 		updateFilterPanel();
 		updateTableModel();		
 	}

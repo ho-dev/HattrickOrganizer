@@ -116,10 +116,10 @@ public class OnlineWorker {
 						// save the model in the database
 						homodel.saveHRF();
 
-						homodel.setSpielplan(hov.getModel().getSpielplan());
+						homodel.setFixtures(hov.getModel().getFixtures());
 
 						// Add old players to the model
-						homodel.setAllOldSpieler(DBManager.instance().getAllSpieler());
+						homodel.setFormerPlayers(DBManager.instance().getAllSpieler());
 						// Only update when the model is newer than existing
 						if (isNewModel(homodel)) {
 							// Reimport Skillup
@@ -717,10 +717,10 @@ public class OnlineWorker {
 		}
 		if (bOK) {
 			HOModel hom = hov.getModel();
-			hom.setSpielplan(XMLSpielplanParser.parseSpielplanFromString(leagueFixtures));
+			hom.setFixtures(XMLSpielplanParser.parseSpielplanFromString(leagueFixtures));
 			waitDialog.setValue(70);
 			// Save to DB
-			hom.saveSpielplan2DB();
+			hom.saveFixtures();
 			waitDialog.setValue(90);
 		}
 		waitDialog.setVisible(false);

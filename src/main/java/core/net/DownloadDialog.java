@@ -275,7 +275,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 		if (m_jchHRF.isSelected()) {
 			bOK = OnlineWorker.getHrf(this);
-			List<Player> player = hov.getModel().getCurrentPlayer();
+			List<Player> player = hov.getModel().getCurrentPlayers();
 			for (Player p : player) {
 				if (p.getNationalTeamID() != 0) {
 					OnlineWorker.getMatches(p.getNationalTeamID(), false, true, true);

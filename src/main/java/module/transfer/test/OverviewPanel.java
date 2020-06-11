@@ -191,7 +191,7 @@ public class OverviewPanel extends JPanel {
 	}
 
 	private Player getPlayer(int playerId, String playerName) {
-		List<Player> all = HOVerwaltung.instance().getModel().getAllOldSpieler();
+		List<Player> all = HOVerwaltung.instance().getModel().getFormerPlayers();
 		for (Player player : all) {
 			if (playerId != 0) {
 				if (player.getSpielerID() == playerId) {

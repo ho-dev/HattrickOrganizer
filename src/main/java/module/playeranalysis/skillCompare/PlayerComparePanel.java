@@ -677,7 +677,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	 * 
 	 */
 	private void getAllPlayers() {
-		m_V_allPlayers = HOVerwaltung.instance().getModel().getCurrentPlayer();
+		m_V_allPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		m_numberOfPlayers = m_V_allPlayers.size();
 		m_ar_allPlayers = new module.playeranalysis.skillCompare.Player[m_numberOfPlayers];
 		int i=0;

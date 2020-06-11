@@ -213,7 +213,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 		overviewPanel.add(splitPane, BorderLayout.CENTER);
 
 		TeamSummaryModel teamSummaryModel = new TeamSummaryModel();
-		teamSummaryModel.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayer());
+		teamSummaryModel.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		teamSummaryPanel = new TeamSummaryPanel(teamSummaryModel);
 		overviewPanel.add(teamSummaryPanel, BorderLayout.SOUTH);
 

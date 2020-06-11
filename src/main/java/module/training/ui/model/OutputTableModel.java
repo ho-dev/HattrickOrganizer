@@ -198,7 +198,7 @@ public class OutputTableModel extends AbstractTableModel {
      * Refill the table with the new training based on the last changes
      */
     public void fillWithData() {
-        this.data = new ArrayList<Player>(HOVerwaltung.instance().getModel().getCurrentPlayer());
+        this.data = new ArrayList<Player>(HOVerwaltung.instance().getModel().getCurrentPlayers());
         fireTableDataChanged();
     }
 

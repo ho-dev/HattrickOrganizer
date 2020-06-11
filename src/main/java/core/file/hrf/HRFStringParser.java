@@ -169,11 +169,11 @@ public class HRFStringParser {
 				}
 				// league
 				else if (entity.toString().equalsIgnoreCase(LEAGUE)) {
-					hoModel.setLiga(new Liga(properties));
+					hoModel.setLeague(new Liga(properties));
 				}
 				// club
 				else if (entity.toString().equalsIgnoreCase(CLUB)) {
-					hoModel.setVerein(new Verein(properties));
+					hoModel.setClub(new Verein(properties));
 				}
 				// team
 				else if (entity.toString().equalsIgnoreCase(TEAM)) {
@@ -181,11 +181,11 @@ public class HRFStringParser {
 				}
 				// lineup
 				else if (entity.toString().equalsIgnoreCase(LINEUP)) {
-					hoModel.setAufstellung(new Lineup(MatchRoleID.convertOldRoleToNew(properties)));
+					hoModel.setLineup(new Lineup(MatchRoleID.convertOldRoleToNew(properties)));
 				}
 				// economy
 				else if (entity.toString().equalsIgnoreCase(ECONOMY)) {
-					hoModel.setFinanzen(new Finanzen(properties));
+					hoModel.setFinance(new Finanzen(properties));
 				}
 				// arena
 				else if (entity.toString().equalsIgnoreCase(ARENA)) {
@@ -193,7 +193,7 @@ public class HRFStringParser {
 				}
 				// player
 				else if (entity.toString().equalsIgnoreCase(PLAYER)) {
-					hoModel.addSpieler(new Player(properties, hrfdate));
+					hoModel.addPlayer(new Player(properties, hrfdate));
 				}
 				// Xtra
 				else if (entity.toString().equalsIgnoreCase(XTRA)) {
@@ -228,7 +228,7 @@ public class HRFStringParser {
 		// resetted . So later trainer could be found by searching for player
 		// having trainerType != -1
 		if (trainerID > -1) {
-			List<Player> players = hoModel.getCurrentPlayer();
+			List<Player> players = hoModel.getCurrentPlayers();
 			for (Player player : players) {
 				if (player.isTrainer() && player.getSpielerID() != trainerID) {
 					player.setTrainer(-1);

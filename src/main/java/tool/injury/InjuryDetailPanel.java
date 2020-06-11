@@ -117,7 +117,7 @@ class InjuryDetailPanel extends JPanel {
         players.removeAllItems();
         players.addItem(new PlayerItem());
 
-        for (Iterator<Player> iter = HOVerwaltung.instance().getModel().getCurrentPlayer().iterator();
+        for (Iterator<Player> iter = HOVerwaltung.instance().getModel().getCurrentPlayers().iterator();
              iter.hasNext();) {
             final Player element = iter.next();
 

@@ -46,7 +46,7 @@ final class StaffPanel extends JPanel {
 	}
 
 	void setLabels() {
-		final Verein verein = HOVerwaltung.instance().getModel().getVerein();
+		final Verein verein = HOVerwaltung.instance().getModel().getClub();
 		if(verein != null){
 			assistantCoachesLabel.setText(verein.getCoTrainer() + "");
 			doctorsLabel.setText(verein.getAerzte() + "");

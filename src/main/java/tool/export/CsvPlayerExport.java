@@ -85,7 +85,7 @@ public class CsvPlayerExport {
 	private void doExport (File file) {
 		HOLogger.instance().debug(getClass(),
 				"Exporting all players as CSV to " + file.getName() + "...");
-		List<Player> list = HOVerwaltung.instance().getModel().getCurrentPlayer();
+		List<Player> list = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		try {
 			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
 

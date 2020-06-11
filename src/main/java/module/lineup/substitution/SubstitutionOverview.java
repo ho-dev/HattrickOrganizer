@@ -101,7 +101,7 @@ public class SubstitutionOverview extends JPanel {
 		model.setData(this.lineup.getSubstitutionList());
 
 		// Max order is 5 + the level of the tactical assistant.
-		int maxOrders = 5 + HOVerwaltung.instance().getModel().getVerein().getTacticalAssistantLevels();
+		int maxOrders = 5 + HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
 		
 		for (int i = 0; i < model.getRowCount(); i++) {
 			TableRow row = model.getRow(i);

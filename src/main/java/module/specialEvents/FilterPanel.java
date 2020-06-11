@@ -455,7 +455,7 @@ public class FilterPanel extends JPanel {
 
 		List<CBItem> playerItems = new ArrayList<CBItem>();
 		List<Player> players = new ArrayList<Player>(HOVerwaltung.instance().getModel()
-				.getCurrentPlayer());
+				.getCurrentPlayers());
 		Collections.sort(players, comparator);
 		for (Player player : players) {
 			playerItems.add(new PlayerCBItem(player.getFullName(), player.getSpielerID(), player
@@ -463,7 +463,7 @@ public class FilterPanel extends JPanel {
 		}
 
 		if (!currentPlayersOnly) {
-			players = new ArrayList<Player>(HOVerwaltung.instance().getModel().getAllOldSpieler());
+			players = new ArrayList<Player>(HOVerwaltung.instance().getModel().getFormerPlayers());
 			Collections.sort(players, comparator);
 			if (!players.isEmpty()) {
 				playerItems.add(null);

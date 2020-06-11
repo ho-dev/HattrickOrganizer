@@ -199,7 +199,7 @@ public class TrainingRecapPanel extends LazyImagePanel {
     private TableModel createTableModel() {
 
         Vector<String> columns = getColumns();
-        List<Player> list = HOVerwaltung.instance().getModel().getCurrentPlayer();
+        List<Player> list = HOVerwaltung.instance().getModel().getCurrentPlayers();
         List<Vector<String>> players = new ArrayList<Vector<String>>();
 
         for (Player player : list) {
