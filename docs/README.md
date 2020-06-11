@@ -96,10 +96,6 @@ these here.
   * License: has its own licence based on BSD
   * For details, see [``docs/Licences/hsqldb/LICENSE.txt``](Licences/hsqldb/LICENSE.txt)
 
-* jcalendar
-  * License: LGPL
-  * For details, see [``http://www.gnu.org/licenses/lgpl.html``](http://www.gnu.org/licenses/lgpl.html)
-
 * scribe
   * License: MIT
   * For details, see [``docs/Licences/scribe/LICENSE.txt``](Licences/scribe/LICENSE.txt)
