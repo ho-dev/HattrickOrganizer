@@ -291,8 +291,7 @@ public class DBManager {
 	 */
 	private void connect() throws Exception {
 		User user = User.getCurrentUser();
-		m_clJDBCAdapter.connect(user.getDbURL(), user.getUser(), user.getPwd(),
-				user.getDriver());
+		m_clJDBCAdapter.connect(user.getDbURL(), user.getUser(), user.getPwd(),	user.getDriver());
 	}
 
 	/**

@@ -210,8 +210,7 @@ public class User {
 
 	public final void setURL(String dbName) {
 		dbFolder = Paths.get(getDbParentFolder(), dbName).toString();
-		String _dbFolder = Paths.get(getDbParentFolder(), dbName, "/database").toString();
-		dbURL = "jdbc:hsqldb:file:" + _dbFolder;
+		dbURL = "jdbc:hsqldb:file:" + dbFolder + "/database";
 	}
 
 	public boolean setNtTeam(boolean isNtTeam) {
