@@ -21,7 +21,7 @@ class HrfDbDetails extends HrfDetails {
 	HrfDbDetails(int id) {
 		super();
 		
-		m_result = DBManager.instance().getAdapter().executeQuery("SELECT NAME,DATUM,LIGANAME,PUNKTE,TOREFUER,TOREGEGEN,PLATZ,TEAMID,TEAMNAME,SPIELTAG,SAISON,TRAININGSINTENSITAET,TRAININGSART,ISTIMMUNG,ISELBSTVERTRAUEN,COTRAINER,TWTRAINER,FANS,HRF_ID,(SELECT COUNT(*) FROM SPIELER WHERE HRF_ID = '" + id + "') AS \"ANZAHL\" FROM HRF a, LIGA b, BASICS c, TEAM d, VEREIN e WHERE a.HRF_ID = '" + id + "' AND b.HRF_ID=a.HRF_ID AND c.HRF_ID=a.HRF_ID AND d.HRF_ID=a.HRF_ID AND e.HRF_ID=a.HRF_ID");
+		m_result = DBManager.instance().getAdapter().executeQuery("SELECT NAME,DATUM,LIGANAME,PUNKTE,TOREFUER,TOREGEGEN,PLATZ,TEAMID,TEAMNAME,SPIELTAG,SAISON,TRAININGSINTENSITAET,TRAININGSART,ISTIMMUNG,ISELBSTVERTRAUEN,COTRAINER,FANS,HRF_ID,(SELECT COUNT(*) FROM SPIELER WHERE HRF_ID = '" + id + "') AS \"ANZAHL\" FROM HRF a, LIGA b, BASICS c, TEAM d, VEREIN e WHERE a.HRF_ID = '" + id + "' AND b.HRF_ID=a.HRF_ID AND c.HRF_ID=a.HRF_ID AND d.HRF_ID=a.HRF_ID AND e.HRF_ID=a.HRF_ID");
 		try {
 			while(m_result.next())	{
 				m_result.getObject(1);
@@ -49,7 +49,6 @@ class HrfDbDetails extends HrfDetails {
 					setStimmung(m_result.getInt("ISTIMMUNG"));
 					setSelbstvertrauen(m_result.getInt("ISELBSTVERTRAUEN"));
 					setAnzCoTrainer(m_result.getInt("COTRAINER"));
-					setAnzTwTrainer(m_result.getInt("TWTRAINER"));
 					setFans(m_result.getInt("FANS"));
 					setHrf_ID(m_result.getInt("HRF_ID"));
 					setTrArt(getTrArtInt());
