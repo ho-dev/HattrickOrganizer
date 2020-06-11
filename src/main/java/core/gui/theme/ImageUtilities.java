@@ -5,6 +5,7 @@ import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;
 import com.kitfox.svg.xml.StyleSheet;
 import com.kitfox.svg.xml.StyleSheetRule;
+import core.gui.theme.ho.HOClassicSchema;
 import core.model.UserParameter;
 import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
@@ -23,6 +24,8 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import javax.swing.*;
+
+import static com.kitfox.svg.app.beans.SVGIcon.INTERP_BILINEAR;
 
 public class ImageUtilities {
 
@@ -664,6 +667,37 @@ public class ImageUtilities {
 				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT);
 		}
 		return trickotfarbe;
+	}
+
+	public static SVGIcon getSvgIcon(String image) {
+		return (getSvgIcon(image, 24, 24));
+	}
+
+	public static SVGIcon getSvgIcon(String key, int width, int height) {
+		URI svgURI = null;
+		SVGIcon icon = new SVGIcon();
+
+		try {
+			Object imagePath = ThemeManager.getIconPath(key);
+			if (imagePath != null && imagePath instanceof String) {
+				svgURI = ImageUtilities.class.getClassLoader().getResource((String)imagePath).toURI();
+				if (svgURI != null) {
+					icon.setSvgUniverse(new SVGUniverse());
+					icon.setPreferredSize(new Dimension(width, height));
+					icon.setAutosize(SVGIcon.AUTOSIZE_BESTFIT);
+					icon.setInterpolation(INTERP_BILINEAR);
+					icon.setAntiAlias(true);
+					icon.setSvgURI(svgURI);
+					return icon;
+				}
+			}
+		} catch (Exception e) {	}
+
+		// To avoid infinite loop but will never happen
+		if (!key.equals(HOClassicSchema.EMPTY_SVG))
+			return 	getSvgIcon(HOClassicSchema.EMPTY_SVG);
+		else
+			return icon; // generate an exception, will never happen
 	}
 
 	public static double getBrightness(Color colour) {

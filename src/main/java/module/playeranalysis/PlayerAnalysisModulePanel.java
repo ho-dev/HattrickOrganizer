@@ -3,7 +3,6 @@ package module.playeranalysis;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
 import core.module.config.ModuleConfig;
-import module.playeranalysis.experience.ExperienceViewer;
 import module.playeranalysis.skillCompare.PlayerComparePanel;
 
 import java.awt.BorderLayout;
@@ -16,7 +15,6 @@ public class PlayerAnalysisModulePanel extends LazyImagePanel {
 	private JTabbedPane tabbedPane;
 	private SpielerAnalyseMainPanel spielerAnalyseMainPanel;
 	private PlayerComparePanel playerComparePanel;
-	private ExperienceViewer experienceViewer;
 	private boolean initialized = false;
 
 	public final void setSpieler4Bottom(int spielerid) {
@@ -46,9 +44,6 @@ public class PlayerAnalysisModulePanel extends LazyImagePanel {
 			if (ModuleConfig.instance().getBoolean(PlayerAnalysisModule.SHOW_PLAYERCOMPARE))
 				tabbedPane.add(getPlayerComparePanel(),
 						HOVerwaltung.instance().getLanguageString("PlayerCompare"));
-			if (ModuleConfig.instance().getBoolean(PlayerAnalysisModule.SHOW_EXPERIENCE))
-				tabbedPane.add(getExperienceViewer(),
-						HOVerwaltung.instance().getLanguageString("ExperienceViewer"));
 		}
 		return tabbedPane;
 	}
@@ -65,9 +60,4 @@ public class PlayerAnalysisModulePanel extends LazyImagePanel {
 		return playerComparePanel;
 	}
 
-	private ExperienceViewer getExperienceViewer() {
-		if (experienceViewer == null)
-			experienceViewer = new ExperienceViewer();
-		return experienceViewer;
-	}
 }

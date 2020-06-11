@@ -8,13 +8,14 @@ import core.gui.model.UserColumnFactory;
 import core.model.player.Player;
 import core.util.HOLogger;
 
+import java.util.List;
 import java.util.Vector;
 
 public class LineupTableModel extends HOTableModel {
 
 	private static final long serialVersionUID = 6706783648812506363L;
 
-	private Vector<Player> m_vPlayers;
+	private List<Player> m_vPlayers;
 
 	public LineupTableModel(int id) {
 		super(id, "Aufstellung");
@@ -115,7 +116,7 @@ public class LineupTableModel extends HOTableModel {
 	/**
 	 * Player neu setzen
 	 */
-	public final void setValues(Vector<Player> player) {
+	public final void setValues(List<Player> player) {
 		m_vPlayers = player;
 		initData();
 	}

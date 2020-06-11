@@ -33,8 +33,8 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 	}
 
 	private void initialize() {
-		this.players = HOVerwaltung.instance().getModel().getAllSpieler();
-		this.oldplayers = HOVerwaltung.instance().getModel().getAllOldSpieler();
+		this.players = HOVerwaltung.instance().getModel().getCurrentPlayers();
+		this.oldplayers = HOVerwaltung.instance().getModel().getFormerPlayers();
 
 		// Create the top panel
 		final JTabbedPane tabPane = new JTabbedPane();
@@ -68,13 +68,13 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		// Check for outdated players.
 		final List<Player> tmp = new Vector<Player>();
 		tmp.clear();
-		tmp.addAll(HOVerwaltung.instance().getModel().getAllSpieler());
+		tmp.addAll(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		tmp.removeAll(this.players);
 		allOutdated.addAll(tmp);
 
 		// Check for outdated old players.
 		tmp.clear();
-		tmp.addAll(HOVerwaltung.instance().getModel().getAllOldSpieler());
+		tmp.addAll(HOVerwaltung.instance().getModel().getFormerPlayers());
 		tmp.removeAll(this.oldplayers);
 		allOutdated.addAll(tmp);
 
@@ -114,8 +114,8 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 	 * @return List of transfers shown in the plugin
 	 */
 	private List<PlayerTransfer> reloadData() {
-		this.players = HOVerwaltung.instance().getModel().getAllSpieler();
-		this.oldplayers = HOVerwaltung.instance().getModel().getAllOldSpieler();
+		this.players = HOVerwaltung.instance().getModel().getCurrentPlayers();
+		this.oldplayers = HOVerwaltung.instance().getModel().getFormerPlayers();
 
 		final List<PlayerTransfer> transfers = DBManager.instance().getTransfers(0, true, true);
 

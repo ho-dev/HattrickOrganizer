@@ -9,7 +9,7 @@ import core.model.player.Player;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -61,15 +61,11 @@ final class AufstellungsGruppenPanel extends JPanel implements ActionListener {
     }
 
     private void gruppenMarkierung(String gruppenName) {
-        final Vector<Player> allePlayer = HOVerwaltung.instance().getModel().getAllSpieler();
-        final Lineup aufstellung = HOVerwaltung.instance()
-                                                                                                          .getModel()
-                                                                                                          .getLineup();
+        final List<Player> allePlayer = HOVerwaltung.instance().getModel().getCurrentPlayers();
+        final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineup();
 
         //Alle Player auf der Gruppe entfernen und die neuen reinsetzen
-        for (int i = 0; i < allePlayer.size(); i++) {
-            final Player player = allePlayer.get(i);
-
+        for (Player player : allePlayer) {
             //ein erste 11
             if (aufstellung.isPlayerInStartingEleven(player.getSpielerID())) {
                 player.setTeamInfoSmilie(gruppenName);
@@ -82,8 +78,6 @@ final class AufstellungsGruppenPanel extends JPanel implements ActionListener {
         }
 
         core.gui.HOMainFrame.instance().getAufstellungsPanel().update();
-
-        //gui.RefreshManager.instance ().doRefresh ();
     }
 
     private void initComponents() {

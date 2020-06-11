@@ -2,15 +2,21 @@
 package module.teamAnalyzer;
 
 import core.model.HOVerwaltung;
+import core.prediction.engine.TeamData;
 import module.teamAnalyzer.manager.MatchManager;
 import module.teamAnalyzer.manager.MatchPopulator;
 import module.teamAnalyzer.manager.NameManager;
-import module.teamAnalyzer.manager.ReportManager;
 import module.teamAnalyzer.manager.TeamManager;
+import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.TeamAnalyzerPanel;
+import module.teamAnalyzer.vo.Match;
+import module.teamAnalyzer.vo.MatchDetail;
+import module.teamAnalyzer.vo.MatchRating;
 import module.teamAnalyzer.vo.Team;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This is a class where all the relevant and shared plugin info are kept
@@ -40,6 +46,7 @@ public class SystemManager {
 
 	/** Reference to the plugin itself */
 	private static TeamAnalyzerPanel plugin;
+	private static int reportedTeamId;
 
 	/**
 	 * Set the active team
@@ -94,9 +101,9 @@ public class SystemManager {
 	public static void refresh() {
 		if (plugin != null) {
 			NameManager.clean();
-			TeamAnalyzerPanel.filter.setMatches(new ArrayList<String>());
+			TeamAnalyzerPanel.filter.setMatches(new ArrayList<>());
 
-			ReportManager.clean();
+			teamReport = null; //ReportManager.clean();
 			MatchPopulator.clean();
 			MatchManager.clean();
 			plugin.getMainPanel().reload(null, 0, 0);
@@ -115,12 +122,27 @@ public class SystemManager {
 		}
 	}
 
+	private static TeamReport teamReport;
+
 	/**
 	 * Recalculate the report
 	 */
 	public static void updateReport() {
 		updating = true;
-		ReportManager.updateReport();
+		List<MatchDetail> matchDetails = MatchManager.getMatchDetails();
+		if (MatchPopulator.getAnalyzedMatch().size() > 0) {
+			if (getActiveTeamId() != getReportedTeamId()) {
+				teamReport = new TeamReport(matchDetails);
+				setReportedTeamId(getActiveTeamId());
+			}
+		} else {
+			teamReport = null;
+		}
+		List<String> filterList = new ArrayList<>();
+		for (Match match : MatchManager.getSelectedMatches()) {
+			filterList.add("" + match.getMatchId());
+		}
+		TeamAnalyzerPanel.filter.setMatches(filterList);
 		updating = false;
 		updateUI();
 	}
@@ -135,5 +157,25 @@ public class SystemManager {
 			// And the options calls this function after modification.
 			plugin.reload();
 		}
+	}
+
+	public static TeamReport getTeamReport() {
+		if ( teamReport == null){
+			teamReport = new TeamReport(new ArrayList<>()); // create an empty team report
+		}
+		return teamReport;
+	}
+
+	public static void adjustRatingsLineup(TeamData newRatings) {
+		getTeamReport().adjustRatingsLineup(newRatings);
+		updateUI();
+	}
+
+	public static int getReportedTeamId() {
+		return reportedTeamId;
+	}
+
+	public static void setReportedTeamId(int reportedTeamId) {
+		SystemManager.reportedTeamId = reportedTeamId;
 	}
 }

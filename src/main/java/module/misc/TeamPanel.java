@@ -51,7 +51,7 @@ class TeamPanel extends JPanel {
 
     void setLabels() {
         final Basics basics = HOVerwaltung.instance().getModel().getBasics();
-        final Liga liga = HOVerwaltung.instance().getModel().getLiga();
+        final Liga liga = HOVerwaltung.instance().getModel().getLeague();
         final int teamId =  HOVerwaltung.instance().getModel().getBasics().getTeamId();
         if(teamId > 0){
 	        teamIdLabel.setText(basics.getTeamId()+"");

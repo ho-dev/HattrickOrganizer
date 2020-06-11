@@ -5,10 +5,9 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.module.config.ModuleConfig;
 import module.teamAnalyzer.SystemManager;
-import module.teamAnalyzer.manager.ReportManager;
+import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.controller.SimButtonListener;
 import module.teamAnalyzer.vo.Filter;
-import module.teamAnalyzer.vo.TeamLineup;
 import module.training.ui.comp.DividerListener;
 
 import java.awt.BorderLayout;
@@ -95,8 +94,6 @@ public class TeamAnalyzerPanel extends LazyPanel {
 
 	/**
 	 * Returns the Filter Panel
-	 * 
-	 * @return
 	 */
 	public FilterPanel getFilterPanel() {
 		return filterPanel;
@@ -104,8 +101,6 @@ public class TeamAnalyzerPanel extends LazyPanel {
 
 	/**
 	 * Returns the rating panel
-	 * 
-	 * @return
 	 */
 	public RatingPanel getRatingPanel() {
 		return ratingPanel;
@@ -117,27 +112,20 @@ public class TeamAnalyzerPanel extends LazyPanel {
 
 	/**
 	 * Returns the recap panel
-	 * 
-	 * @return
 	 */
 	RecapPanel getRecapPanel() {
 		return recapPanel;
 	}
 
 	public void reload() {
-		TeamLineup lineup = ReportManager.getLineup();
 		getFilterPanel().reload();
+		TeamReport teamReport = SystemManager.getTeamReport();
+		getMainPanel().reload(teamReport.getSelectedLineup(), 0, 0);
+		getRecapPanel().reload(teamReport);
+		getRatingPanel().reload(teamReport.getSelectedLineup());
 
-		getMainPanel().reload(lineup, 0, 0);
-		getRecapPanel().reload(lineup);
-		getRatingPanel().reload(lineup);
+		getSpecialEventsPanel().reload(teamReport.getSelectedLineup());
 
-		getSpecialEventsPanel().reload(lineup);
-
-		if (ModuleConfig.instance().getBoolean(SystemManager.ISLINEUP)) {
-			this.simButton.setVisible(true);
-		} else {
-			this.simButton.setVisible(false);
-		}
+		this.simButton.setVisible(ModuleConfig.instance().getBoolean(SystemManager.ISLINEUP));
 	}
 }

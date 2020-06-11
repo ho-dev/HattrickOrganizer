@@ -442,7 +442,7 @@ public class DBManager {
 	/**
 	 * speichert die Player
 	 */
-	public void saveSpieler(int hrfId, Vector<Player> player, Timestamp date) {
+	public void saveSpieler(int hrfId, List<Player> player, Timestamp date) {
 		((SpielerTable) getTable(SpielerTable.TABLENAME)).saveSpieler(hrfId,
                 player, date);
 	}

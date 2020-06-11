@@ -42,7 +42,7 @@ public class PlayerNameTableCellRenderer extends DefaultTableCellRenderer {
 			label.setText("");
 		}
 
-		Player oPlayer = HOVerwaltung.instance().getModel().getSpieler((int) oValue.getValue1());
+		Player oPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer((int) oValue.getValue1());
 		if (oPlayer != null) {
 			int iPlayerSpecialty = oPlayer.getPlayerSpecialty();
 			ImageIcon oPlayerSpecialty = ThemeManager.getIcon(HOIconName.SPECIALTIES_SMALL[iPlayerSpecialty]);

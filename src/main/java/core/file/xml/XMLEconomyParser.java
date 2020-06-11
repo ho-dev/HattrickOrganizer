@@ -73,7 +73,7 @@ public class XMLEconomyParser {
 				String supPop = XMLManager.getFirstChildNodeValue(ele);
 				if (supPop == null || supPop.trim().equals("")) {
 					supPop = ""
-							+ HOVerwaltung.instance().getModel().getFinanzen()
+							+ HOVerwaltung.instance().getModel().getFinance()
 									.getSupporter();
 				}
 				map.put("SupportersPopularity", supPop);

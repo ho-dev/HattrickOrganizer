@@ -152,7 +152,7 @@ abstract class ForecastCurve extends Curve {
 
 	private void readFutureMatches() throws SQLException {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
-		Liga iliga = HOVerwaltung.instance().getModel().getLiga();
+		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
 
 		// MASTERS_MATCH 7 ???
 
@@ -269,7 +269,7 @@ abstract class ForecastCurve extends Curve {
 
 	private void readPastMatches() throws SQLException {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
-		Liga iliga = HOVerwaltung.instance().getModel().getLiga();
+		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
 
 		GregorianCalendar gregoriancalendar = new GregorianCalendar();
 		gregoriancalendar.setTime(ibasics.getDatum());

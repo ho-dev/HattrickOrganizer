@@ -26,8 +26,8 @@ public class SpecialEventsPredictionManager {
     static ArrayList<ISpecialEventPredictionAnalyzer> analyzers;
     private Lineup lineup = null;
     private Lineup opponentLineup = null;
-    private final HashMap<Integer, Player> playerInLineup = new HashMap<Integer, Player>();
-    private final HashMap<Integer, Player> opponentPlayerInLineup = new HashMap<Integer, Player>();
+    private final HashMap<Integer, Player> playerInLineup = new HashMap<>();
+    private final HashMap<Integer, Player> opponentPlayerInLineup = new HashMap<>();
 
     public class Analyse {
         private List<SpecialEventsPrediction> specialEventsPredictions;
@@ -119,7 +119,7 @@ public class SpecialEventsPredictionManager {
         ){
             // Calc goalProbability - compare score skill with opponent goalkeeper skill
             MatchRoleID mid = (MatchRoleID) position;
-            Player scorer = getPlayer(mid.getSpielerId());;
+            Player scorer = getPlayer(mid.getSpielerId());
             int opponentGoalkeeperSkill = 0;
             Player keeper = getOpponentPlayerByPosition(IMatchRoleID.keeper);
             if (keeper != null) opponentGoalkeeperSkill = keeper.getGKskill();
@@ -147,7 +147,7 @@ public class SpecialEventsPredictionManager {
         ){
             // Calc goalProbability - compare score skill with opponent goalkeeper skill
             MatchRoleID mid = (MatchRoleID) position;
-            Player scorer = getOpponentPlayer(mid.getSpielerId());;
+            Player scorer = getOpponentPlayer(mid.getSpielerId());
             int goalkeeperSkill = 0;
             Player keeper = getPlayerByPosition(IMatchRoleID.keeper);
             if (keeper != null) goalkeeperSkill = keeper.getGKskill();
@@ -216,7 +216,7 @@ public class SpecialEventsPredictionManager {
             MatchRoleID mid = (MatchRoleID) matchRoleID;
             if (mid.getSpielerId() == 0) continue;
             if (!this.playerInLineup.containsKey(mid.getSpielerId())) {
-                Player player = model.getSpieler(mid.getSpielerId());
+                Player player = model.getCurrentPlayer(mid.getSpielerId());
                 if (player != null) {
                     this.playerInLineup.put(player.getSpielerID(), player);
                 }
@@ -226,7 +226,7 @@ public class SpecialEventsPredictionManager {
 
     public void setOpponentLineup(MatchDetail opponentMatch) {
 
-        HOLogger.instance().debug(getClass(), opponentMatch.getMatchDetail().getMatchDate().toString());
+        HOLogger.instance().debug(getClass(), opponentMatch.getMatch().getMatchDate().toString());
 
         this.opponentLineup = new Lineup();
         this.opponentLineup.setKicker(opponentMatch.getSetPiecesTaker());
@@ -281,7 +281,7 @@ public class SpecialEventsPredictionManager {
 
                 int positionId = playerPerformance.getPosition();
                 byte tacticId = playerPerformance.getTaktik();
-                MatchType matchtype = opponentMatch.getMatchDetail().getMatchType();
+                MatchType matchtype = opponentMatch.getMatch().getMatchType();
                 double ratingStart = playerPerformance.getRating();
                 double ratingEnd = playerPerformance.getRatingEnd();
                 PlayedPosition pos = new PlayedPosition(positionId, tacticId, matchtype, ratingStart, ratingEnd);
@@ -291,7 +291,7 @@ public class SpecialEventsPredictionManager {
                 // PLayer SOLD, SUSPENDED or INJURED
                 OpponentPlayer player = (OpponentPlayer) opponentPlayerInLineup.get(playerPerformance.getSpielerId());
                 if (player != null) {
-                    opponentPlayerInLineup.remove(player);
+                    opponentPlayerInLineup.remove(player.getSpielerID());
                 }
             }
         }

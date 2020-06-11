@@ -8,6 +8,9 @@ import core.model.UserParameter;
 import core.prediction.engine.MatchPredictionManager;
 import core.prediction.engine.MatchResult;
 import core.prediction.engine.TeamData;
+import core.prediction.engine.TeamRatings;
+import module.teamAnalyzer.SystemManager;
+import module.teamAnalyzer.vo.MatchRating;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -35,20 +38,20 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 	private MatchScoreDiffTable m_jtMatchScoreDiffTable;
 	private MatchScoreTable m_jtMatchScoreTable;
 	private PredictPanel predictPanel;
-	private TeamRatingPanel myTeamPanel;
-	private TeamRatingPanel opponentTeamPanel;
+	private TeamRatingPanel homeTeamPanel;
+	private TeamRatingPanel guestTeamPanel;
 	private boolean isHomeMatch = true;
 
-	public MatchEnginePanel(TeamData myTeamValues,
-			TeamData opponentTeamValues) {
-		if (opponentTeamValues.getTeamName().startsWith(
+	public MatchEnginePanel(TeamData homeTeamValues,
+			TeamData guestTeamValues) {
+		if (guestTeamValues.getTeamName().startsWith(
 				HOVerwaltung.instance().getModel().getBasics().getTeamName())) {
 			isHomeMatch = false;
 		}
-		myTeamPanel = new TeamRatingPanel(myTeamValues);
-		opponentTeamPanel = new TeamRatingPanel(opponentTeamValues);
-		predictPanel = new PredictPanel(myTeamValues.getTeamName(),
-				opponentTeamValues.getTeamName());
+		homeTeamPanel = new TeamRatingPanel(homeTeamValues);
+		guestTeamPanel = new TeamRatingPanel(guestTeamValues);
+		predictPanel = new PredictPanel(homeTeamValues.getTeamName(),
+				guestTeamValues.getTeamName());
 
 		m_jtMatchResultTable = new MatchResultTable(new MatchResult(),isHomeMatch);
 		m_jtMatchScoreTable = new MatchScoreTable(new MatchResult(),isHomeMatch);
@@ -58,12 +61,12 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 	}
 
 	public final void setGuestteam(TeamData guestteam) {
-		opponentTeamPanel.setTeamData(guestteam);
+		guestTeamPanel.setTeamData(guestteam);
 		predictPanel.setGuestTeamName(guestteam.getTeamName());
 	}
 
 	public final void setHometeam(TeamData hometeam) {
-		myTeamPanel.setTeamData(hometeam);
+		homeTeamPanel.setTeamData(hometeam);
 		predictPanel.setHomeTeamName(hometeam.getTeamName());
 	}
 
@@ -71,9 +74,20 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 		return slider.getValue();
 	}
 
-
 	public final void actionPerformed(ActionEvent e) {
 		calculateNMatches(getNumberOfMatches());
+		TeamRatingPanel opponentPanel = getOpponentPanel();
+		if ( opponentPanel.isRatingsChanged()){
+			// user has changed the match ratings
+			SystemManager.adjustRatingsLineup(opponentPanel.getTeamData());
+		}
+	}
+
+	private TeamRatingPanel getOpponentPanel() {
+		if ( isHomeMatch ){
+			return guestTeamPanel;
+		}
+		return homeTeamPanel;
 	}
 
 	/**
@@ -90,8 +104,8 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 		MatchResult result = new MatchResult();
 
 		for (int i = 0; i < match; i++) {
-			final TeamData team1 = myTeamPanel.getTeamData();
-			final TeamData team2 = opponentTeamPanel.getTeamData();
+			final TeamData team1 = homeTeamPanel.getTeamData();
+			final TeamData team2 = guestTeamPanel.getTeamData();
 			result.addMatchResult(MatchPredictionManager.instance()
 					.calculateMatchResult(team1, team2));
 			waitDialog.setValue((int) ((i * 100d) / match));
@@ -171,8 +185,8 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 		constraints.weightx = 0.0;
 		constraints.anchor = GridBagConstraints.NORTH;
 		constraints.fill = GridBagConstraints.NONE;
-		layout.setConstraints(myTeamPanel, constraints);
-		topPanel.add(myTeamPanel);
+		layout.setConstraints(homeTeamPanel, constraints);
+		topPanel.add(homeTeamPanel);
 
 		constraints.gridx = 4;
 		constraints.gridy = 0;
@@ -180,8 +194,8 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 		constraints.weightx = 0.0;
 		constraints.anchor = GridBagConstraints.NORTH;
 		constraints.fill = GridBagConstraints.NONE;
-		layout.setConstraints(opponentTeamPanel, constraints);
-		topPanel.add(opponentTeamPanel);
+		layout.setConstraints(guestTeamPanel, constraints);
+		topPanel.add(guestTeamPanel);
 
 		setLayout(new BorderLayout());
 		add(topPanel, BorderLayout.NORTH);

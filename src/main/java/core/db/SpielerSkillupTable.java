@@ -9,10 +9,7 @@ import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 final class SpielerSkillupTable extends AbstractTable {
 
@@ -170,23 +167,20 @@ final class SpielerSkillupTable extends AbstractTable {
 	// -------------------------------- Importing PArt ----------------------------------------------
 
 	void importNewSkillup(HOModel homodel) {
-		Vector<Player> players = homodel.getAllSpieler();
-		for (Iterator<Player> iter = players.iterator(); iter.hasNext();) {
-			Player nPlayer = iter.next();
-			Player oPlayer = HOVerwaltung.instance().getModel().getSpieler(nPlayer.getSpielerID());
+		List<Player> players = homodel.getCurrentPlayers();
+		for ( Player nPlayer : players){
+			Player oPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(nPlayer.getSpielerID());
 			if (oPlayer!=null) {
-				checkNewSkillup(nPlayer,nPlayer.getGKskill(),oPlayer.getGKskill(),PlayerSkill.KEEPER,homodel.getID());
-				checkNewSkillup(nPlayer,nPlayer.getPMskill(),oPlayer.getPMskill(),PlayerSkill.PLAYMAKING,homodel.getID());
-				checkNewSkillup(nPlayer,nPlayer.getPSskill(),oPlayer.getPSskill(),PlayerSkill.PASSING,homodel.getID());
-				checkNewSkillup(nPlayer,nPlayer.getWIskill(),oPlayer.getWIskill(),PlayerSkill.WINGER,homodel.getID());
-				checkNewSkillup(nPlayer,nPlayer.getDEFskill(),oPlayer.getDEFskill(),PlayerSkill.DEFENDING,homodel.getID());
-				checkNewSkillup(nPlayer,nPlayer.getSCskill(),oPlayer.getSCskill(),PlayerSkill.SCORING,homodel.getID());
-				checkNewSkillup(nPlayer,nPlayer.getSPskill(),oPlayer.getSPskill(),PlayerSkill.SET_PIECES,homodel.getID());
-				checkNewSkillup(nPlayer,nPlayer.getKondition(),oPlayer.getKondition(),PlayerSkill.STAMINA,homodel.getID());
-				checkNewSkillup(nPlayer,nPlayer.getErfahrung(),oPlayer.getErfahrung(),PlayerSkill.EXPERIENCE,homodel.getID());				
-				
+				checkNewSkillup(nPlayer, nPlayer.getGKskill(), oPlayer.getGKskill(), PlayerSkill.KEEPER, homodel.getID());
+				checkNewSkillup(nPlayer, nPlayer.getPMskill(), oPlayer.getPMskill(), PlayerSkill.PLAYMAKING, homodel.getID());
+				checkNewSkillup(nPlayer, nPlayer.getPSskill(), oPlayer.getPSskill(), PlayerSkill.PASSING, homodel.getID());
+				checkNewSkillup(nPlayer, nPlayer.getWIskill(), oPlayer.getWIskill(), PlayerSkill.WINGER, homodel.getID());
+				checkNewSkillup(nPlayer, nPlayer.getDEFskill(), oPlayer.getDEFskill(), PlayerSkill.DEFENDING, homodel.getID());
+				checkNewSkillup(nPlayer, nPlayer.getSCskill(), oPlayer.getSCskill(), PlayerSkill.SCORING, homodel.getID());
+				checkNewSkillup(nPlayer, nPlayer.getSPskill(), oPlayer.getSPskill(), PlayerSkill.SET_PIECES, homodel.getID());
+				checkNewSkillup(nPlayer, nPlayer.getKondition(), oPlayer.getKondition(), PlayerSkill.STAMINA, homodel.getID());
+				checkNewSkillup(nPlayer, nPlayer.getErfahrung(), oPlayer.getErfahrung(), PlayerSkill.EXPERIENCE, homodel.getID());
 			}
-			
 		}
 	}
 		

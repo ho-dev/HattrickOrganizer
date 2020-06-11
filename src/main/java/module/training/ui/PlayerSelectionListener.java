@@ -38,7 +38,7 @@ public class PlayerSelectionListener implements ListSelectionListener {
 				String playerId = (String) table.getValueAt(index, playerIdColumn);
 				if (StringUtils.isNumeric(playerId)) {
 					model.setActivePlayer(HOVerwaltung.instance().getModel()
-							.getSpieler(Integer.parseInt(playerId)));
+							.getCurrentPlayer(Integer.parseInt(playerId)));
 				} else {
 					model.setActivePlayer(null);
 				}

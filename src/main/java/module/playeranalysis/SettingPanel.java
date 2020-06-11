@@ -20,14 +20,11 @@ class SettingPanel extends JPanel {
 	public static ModuleConfig config = ModuleConfig.instance();
 	private static final long serialVersionUID = -5721035453587068724L;
 	private JCheckBox skillsCheckbox = new JCheckBox();
-	private JCheckBox experienceCheckbox = new JCheckBox();
 
 	SettingPanel() {
 		super();
 		skillsCheckbox.setSelected(config.getBoolean(PlayerAnalysisModule.SHOW_PLAYERCOMPARE));
 		skillsCheckbox.setOpaque(false);
-		experienceCheckbox.setSelected(config.getBoolean(PlayerAnalysisModule.SHOW_EXPERIENCE));
-		experienceCheckbox.setOpaque(false);
 		jbInit();
 	}
 
@@ -66,15 +63,6 @@ class SettingPanel extends JPanel {
 						skillsCheckbox.isSelected());
 			}
 		});
-
-		experienceCheckbox.addActionListener(new java.awt.event.ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				config.setBoolean(PlayerAnalysisModule.SHOW_EXPERIENCE,
-						experienceCheckbox.isSelected());
-			}
-		});
-
 	}
 
 	/**
@@ -87,8 +75,6 @@ class SettingPanel extends JPanel {
 		mainPanel.setOpaque(false);
 		mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("PlayerCompare"),
 				skillsCheckbox));
-		mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("ExperienceViewer"),
-				experienceCheckbox));
 		setLayout(new BorderLayout());
 		setOpaque(false);
 		add(mainPanel, BorderLayout.CENTER);

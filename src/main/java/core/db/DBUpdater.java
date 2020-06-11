@@ -102,7 +102,9 @@ final class DBUpdater {
 						updateDBv300(DBVersion, version);
 						updateDBv301(DBVersion, version);
 					case 302:
+					case 399:
 						updateDBv400(DBVersion, version);
+					case 400:
 				}
 
 				HOLogger.instance().log(getClass(), "done.");
@@ -281,7 +283,7 @@ final class DBUpdater {
 			// find own league plans
 			int teamId = getTeamId();
 			// select saison,ligaid from paarung where heimid=520472 group by saison,ligaid
-			HashMap<Integer, Integer> ownLeaguePlans = new HashMap<Integer, Integer>();
+			HashMap<Integer, Integer> ownLeaguePlans = new HashMap<>();
 			ResultSet rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from paarung where heimid=" + teamId + " group by saison,ligaid");
 			if (rs != null) {
 				while (rs.next()) {
@@ -346,7 +348,7 @@ final class DBUpdater {
 	/**
 	 * Update DB structure to v6
 	 */
-	private void updateDBv6() throws Exception {
+	private void updateDBv6() {
 
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN AGEDAYS INTEGER");
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE SCOUT ADD COLUMN AGEDAYS INTEGER");
@@ -383,10 +385,8 @@ final class DBUpdater {
 
 	/**
 	 * Update DB structure to v8
-	 *
-	 * @throws Exception
 	 */
-	private void updateDBv8() throws Exception {
+	private void updateDBv8()  {
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE Player ADD COLUMN TrainingBlock BOOLEAN");
 		m_clJDBCAdapter
 				.executeUpdate("UPDATE Player SET TrainingBlock=false WHERE TrainingBlock IS null");
@@ -399,7 +399,7 @@ final class DBUpdater {
 	/**
 	 * Update DB structure to v9
 	 */
-	private void updateDBv9() throws Exception {
+	private void updateDBv9() {
 		// Add new columns for spectator distribution
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE MatchDetails ADD COLUMN soldTerraces INTEGER");
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE MatchDetails ADD COLUMN soldBasic INTEGER");
@@ -433,7 +433,7 @@ final class DBUpdater {
 	/**
 	 * Update database to version 10.
 	 */
-	private void updateDBv10() throws Exception {
+	private void updateDBv10(){
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE TEAM ADD COLUMN iErfahrung442 INTEGER");
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE TEAM ADD COLUMN iErfahrung523 INTEGER");
 		m_clJDBCAdapter.executeUpdate("ALTER TABLE TEAM ADD COLUMN iErfahrung550 INTEGER");
@@ -457,10 +457,9 @@ final class DBUpdater {
 	/**
 	 * Update database to version 11.
 	 */
-	private void updateDBv11() throws Exception {
+	private void updateDBv11() {
 		// Problems in 1.431 release has shifted contents here to v12.
 		dbManager.saveUserParameter("DBVersion", 11);
-		return;
 	}
 
 	/**
@@ -534,9 +533,9 @@ final class DBUpdater {
 	 * multiple times (since there are beta releases) so make sure that every
 	 * statement added here CAN be exceuted multiple times.
 	 *
-	 * @param DBVersion
-	 * @param version
-	 * @throws SQLException
+	 * @param DBVersion required db version of the current HO version
+	 * @param version version of the loaded database
+	 * @throws SQLException exception
 	 */
 	private void updateDBTo1432(int DBVersion, int version) throws SQLException {
 		HOLogger.instance().info(
@@ -613,7 +612,7 @@ final class DBUpdater {
 			ResultSet rs = m_clJDBCAdapter.executeQuery("Select * from TEAMANALYZER_SETTINGS");
 			if (rs != null) {
 				try {
-					HashMap<String, Object> tmp = new HashMap<String, Object>();
+					HashMap<String, Object> tmp = new HashMap<>();
 					while (rs.next()) {
 						tmp.put("TA_" + rs.getString("NAME"),
 								Boolean.valueOf(rs.getBoolean("VALUE")));
@@ -689,7 +688,7 @@ final class DBUpdater {
 	// development, or if the current db is more than one version old. The
 	// last update should be made during first run of a non development
 	// version.
-	private void updateDBv19(int DBVersion, int version) throws SQLException {
+	private void updateDBv19(int DBVersion, int version)  {
 
 		// 1.433 stuff.
 
@@ -976,7 +975,7 @@ final class DBUpdater {
 
 		double lastConfigUpdate = ((UserConfigurationTable) dbManager
 				.getTable(UserConfigurationTable.TABLENAME)).getLastConfUpdate();
-		/**
+		/*
 		 * We have to use separate 'if-then' clauses for each conf version
 		 * (ascending order) because a user might have skipped some HO releases
 		 *
@@ -1179,7 +1178,8 @@ final class DBUpdater {
 		String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.SYSTEM_PRIMARYKEYS WHERE TABLE_NAME = '"
 				+ tableName.toUpperCase() + "'";
 		ResultSet rs = this.m_clJDBCAdapter.executeQuery(sql);
-		return rs.next();
+		if ( rs != null )return rs.next();
+		return false;
 	}
 
 	private boolean columnExistsInTable(String columnName, String tableName) throws SQLException {
@@ -1189,21 +1189,23 @@ final class DBUpdater {
 				+ columnName.toUpperCase()
 				+ "'";
 		ResultSet rs = this.m_clJDBCAdapter.executeQuery(sql);
-		return rs.next();
+		if ( rs != null )return rs.next();
+		return false;
 	}
 
 	private boolean tableExists(String tableName) throws SQLException {
 		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = '"
 				+ tableName.toUpperCase() + "'";
 		ResultSet rs = this.m_clJDBCAdapter.executeQuery(sql);
-		return rs.next();
-	}
+		if ( rs != null )return rs.next();
+		return false;	}
 
 	private boolean indexExists(String indexName, String tableName) throws SQLException {
 		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_INDEXINFO WHERE INDEX_NAME = '"
 				+ indexName.toUpperCase() + "' AND TABLE_NAME = '" + tableName.toUpperCase() + "'";
 		ResultSet rs = this.m_clJDBCAdapter.executeQuery(sql);
-		return rs.next();
+		if ( rs != null )return rs.next();
+		return false;
 	}
 
 	private void dropColumn(String column, String table) throws SQLException {

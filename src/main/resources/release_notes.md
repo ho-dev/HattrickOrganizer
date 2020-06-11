@@ -30,6 +30,8 @@ Changelist HO! 4.0
 
 ### Team Analyser
 
+ - [FEAT] Save adjusted lineup ratings of MatchPredictionPanel in an extra row #66
+
 ### Rating
 
 
@@ -43,10 +45,12 @@ Changelist HO! 4.0
 
 ### Training
 
+  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512 
 
 ### Misc
 
   - [FEAT] Remove jcalendar dependency.
+  - [FIX] ExperienceViewer removed #503 
 
 ### League
 

@@ -1,14 +1,16 @@
 package module.teamAnalyzer.manager;
 
 import core.model.HOVerwaltung;
+import core.model.match.MatchType;
 import core.model.player.IMatchRoleID;
+import core.prediction.engine.TeamData;
+import core.prediction.engine.TeamRatings;
 import module.teamAnalyzer.report.PositionReport;
 import module.teamAnalyzer.report.SpotReport;
 import module.teamAnalyzer.report.TacticReport;
 import module.teamAnalyzer.report.TeamReport;
-import module.teamAnalyzer.vo.PlayerAppearance;
-import module.teamAnalyzer.vo.SpotLineup;
-import module.teamAnalyzer.vo.TeamLineup;
+import module.teamAnalyzer.vo.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,7 +22,7 @@ import java.util.TreeSet;
 public class TeamLineupBuilder {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private TeamLineup teamLineup;
+    private TeamLineup teamLineup = new TeamLineup();
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -28,7 +30,6 @@ public class TeamLineupBuilder {
      * Creates a new TeamLineupBuilder object.
      */
     public TeamLineupBuilder(TeamReport teamReport) {
-        teamLineup = new TeamLineup();
         teamLineup.setRating(teamReport.getRating());
         teamLineup.setStars(teamReport.getStars());
         teamLineup.setSpecialEventsPrediction(teamReport.getSpecialEventsPredictionManager());
@@ -45,17 +46,30 @@ public class TeamLineupBuilder {
         }
     }
 
+    public TeamLineupBuilder setMatchDetail(MatchDetail m){
+        this.teamLineup.setMatchDetail(m);
+        return this;
+    }
+
+    public TeamLineupBuilder setName(String name){
+        this.teamLineup.setName(name);
+        return this;
+    }
+
+    public TeamLineupBuilder setTeamData(TeamData teamData) {
+        this.teamLineup.setTeamData(teamData);
+        return this;
+    }
+
     //~ Methods ------------------------------------------------------------------------------------
-    public TeamLineup getLineup() {
+    public TeamLineup build() {
         return teamLineup;
     }
 
     private Collection<TacticReport> getAllTactics(Collection<PositionReport> positions) {
-        Collection<TacticReport> tactics = new ArrayList<TacticReport>();
+        Collection<TacticReport> tactics = new ArrayList<>();
 
-        for (Iterator<PositionReport> iter = positions.iterator(); iter.hasNext();) {
-            PositionReport positionReport = iter.next();
-
+        for (PositionReport positionReport : positions) {
             tactics.addAll(positionReport.getTacticReports());
         }
 
@@ -106,11 +120,7 @@ public class TeamLineupBuilder {
             return true;
         }
 
-        if (tacticsReport[0].getAppearance() > tacticsReport[1].getAppearance()) {
-            return true;
-        }
-
-        return false;
+        return tacticsReport[0].getAppearance() > tacticsReport[1].getAppearance();
     }
 
     private PlayerAppearance[] getSortedAppearance(Collection<PlayerAppearance> appearance) {
@@ -119,9 +129,7 @@ public class TeamLineupBuilder {
         PlayerAppearance[] array = new PlayerAppearance[size];
         int i = 0;
 
-        for (Iterator<PlayerAppearance> iter = sorted.iterator(); iter.hasNext();) {
-            PlayerAppearance element = iter.next();
-
+        for (PlayerAppearance element : sorted) {
             array[i] = element;
             i++;
         }
@@ -130,7 +138,7 @@ public class TeamLineupBuilder {
     }
 
     private static<T> SortedSet<T> getSortedSet(Collection<T> beans, Comparator<T> comparator) {
-        final SortedSet<T> set = new TreeSet<T>(comparator);
+        final SortedSet<T> set = new TreeSet<>(comparator);
 
         if ((beans != null) && (beans.size() > 0)) {
             set.addAll(beans);
@@ -144,9 +152,7 @@ public class TeamLineupBuilder {
         TacticReport[] tacticsReport = new TacticReport[size];
         int i = 0;
 
-        for (Iterator<TacticReport> iter = sorted.iterator(); iter.hasNext();) {
-            TacticReport element = iter.next();
-
+        for (TacticReport element : sorted) {
             tacticsReport[i] = element;
             i++;
         }
@@ -173,5 +179,10 @@ public class TeamLineupBuilder {
         spotLineup.setPosition(getPosition(tacticsReport));
 
         return spotLineup;
+    }
+
+    public TeamLineupBuilder setMatchType(MatchType matchType) {
+        this.teamLineup.setMatchType(matchType);
+        return this;
     }
 }
