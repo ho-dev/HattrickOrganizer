@@ -118,10 +118,6 @@ public class User {
 		}
 	}
 
-	public boolean isHSQLDB() {
-		return getDriver().equalsIgnoreCase("org.hsqldb.jdbcDriver");
-	}
-
 	public static void save() {
 		try {
 			File file = getUserXMLfile(FILENAME);
@@ -129,6 +125,7 @@ public class User {
 			Boolean parentFolderCreated = false;
 
 			if(! parentFolder.exists()) parentFolderCreated = parentFolder.mkdirs();
+			else parentFolderCreated = true;
 			file.createNewFile();
 
 			if (! parentFolderCreated) {
@@ -212,8 +209,9 @@ public class User {
 	}
 
 	public final void setURL(String dbName) {
-		dbFolder = Paths.get(getDbParentFolder(), dbName, "/database").toString();
-		dbURL = "jdbc:hsqldb:file:" + dbFolder;
+		dbFolder = Paths.get(getDbParentFolder(), dbName).toString();
+		String _dbFolder = Paths.get(getDbParentFolder(), dbName, "/database").toString();
+		dbURL = "jdbc:hsqldb:file:" + _dbFolder;
 	}
 
 	public boolean setNtTeam(boolean isNtTeam) {

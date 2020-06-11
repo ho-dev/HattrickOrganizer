@@ -137,7 +137,7 @@ public class DBManager {
 			} catch (Exception e) {
 
 				String msg = e.getMessage();
-				boolean recover = User.getCurrentUser().isHSQLDB();
+				boolean recover = true;
 
 				if ((msg.indexOf("The database is already in use by another process") > -1)	||
 						(e instanceof SQLException &&

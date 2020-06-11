@@ -8,10 +8,7 @@ public final class OSUtils {
     public enum OS {WINDOWS, LINUX, MAC};
     private static OS os = determineOS();
 
-    public static OS getOS() {
-        HOLogger.instance().info(OSUtils.class, "inside OSUtils.getOS()" + OS_NAME + "   -> os " + os);
-        return os;
-    }
+    public static OS getOS() {return os;}
 
     public static boolean isMac() {
         return os == OS.MAC;

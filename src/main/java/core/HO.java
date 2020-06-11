@@ -149,10 +149,9 @@ public class HO {
 		final SplashFrame interuptionsWindow = new SplashFrame();
 
 		// Backup
-		if (User.getCurrentUser().isHSQLDB()) {
-			interuptionsWindow.setInfoText(1, "Backup Database");
-			BackupHelper.backup(new File(User.getCurrentUser().getDBName()));
-		}
+		interuptionsWindow.setInfoText(1, "Backup Database");
+		BackupHelper.backup(new File(User.getCurrentUser().getDBName()));
+
 
 		// Standardparameter aus der DB holen
 		interuptionsWindow.setInfoText(2, "Initialize Database");
