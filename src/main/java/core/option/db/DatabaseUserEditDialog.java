@@ -59,7 +59,7 @@ public class DatabaseUserEditDialog extends JDialog {
 
 	private void initData() {
 		this.nameTextField.setText(this.user.getName());
-		this.databaseLocationTextField.setText(this.user.getDBPath());
+		this.databaseLocationTextField.setText(this.user.getDBName());
 		this.numberOfBackupsTextField.setText(String.valueOf(this.user.getBackupLevel()));
 		if (this.user.isNtTeam())
 			ntTeamYes.setSelected(true);
@@ -232,7 +232,7 @@ public class DatabaseUserEditDialog extends JDialog {
 				if (checkDirectory()) {
 					user.setBackupLevel(Integer.parseInt(numberOfBackupsTextField.getText()));
 					user.setName(nameTextField.getText());
-					user.setPath(databaseLocationTextField.getText());
+					user.setURL(databaseLocationTextField.getText());
 					user.setNtTeam(ntTeamYes.isSelected());
 					canceled = false;
 					dispose();
@@ -298,7 +298,7 @@ public class DatabaseUserEditDialog extends JDialog {
 
 	private boolean isChanged() {
 		return (!this.user.getName().equals(this.nameTextField.getText()) ||
-				!this.user.getDBPath().equals(this.databaseLocationTextField.getText()) ||
+				!this.user.getDBName().equals(this.databaseLocationTextField.getText()) ||
 				!String.valueOf(this.user.getBackupLevel()).equals(this.numberOfBackupsTextField.getText()) ||
 				!(this.user.isNtTeam() == ntTeamYes.isSelected()));
 	}

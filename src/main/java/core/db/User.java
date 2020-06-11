@@ -1,23 +1,21 @@
 // %1916127255:de.hattrickorganizer.model%
 package core.db;
 
+import core.HO;
 import core.util.HOLogger;
+import core.util.OSUtils;
 import tool.updater.UpdateHelper;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 public class User {
-
 	private static List<User> users = null;
 	private static final String DEFAULT_FILE = "user.xml.default";
 	private static final String FILENAME = "user.xml";
@@ -26,16 +24,14 @@ public class User {
 	private String driver = "org.hsqldb.jdbcDriver";
 	private String name = "singleUser";
 	private String pwd = "";
-	private String url = "jdbc:hsqldb:file:db/database";
+	private String dbURL;
 	private String user = "sa";
 	private int backupLevel = 3;
 	private boolean isNtTeam = false;
+	private static String dbParentFolder;
+	private String dbFolder;
 
-	/**
-	 * Creates a new User object.
-	 */
-	private User() {
-	}
+	private User() {}
 
 	public static List<User> getAllUser() {
 		try {
@@ -65,6 +61,14 @@ public class User {
 		return driver;
 	}
 
+	public String getDbFolder() {
+		if (dbFolder == null) {
+			String _dbURL = this.getDbURL();
+			dbFolder = _dbURL.substring(17, _dbURL.length()-8);
+		}
+		return dbFolder;
+	}
+
 	public final String getName() {
 		return name;
 	}
@@ -83,24 +87,19 @@ public class User {
 	
 		Boolean save = false;
 		
-		File file = getFile(FILENAME);
-		users = new ArrayList<User>();
+		File file = getUserXMLfile(FILENAME);
+		users = new ArrayList<>();
 
 		if (!file.exists()) {
-			file = getFile(DEFAULT_FILE);
+			file = getUserXMLfile(DEFAULT_FILE);
 			save = true;
 		}
 		
 		if (file.exists()) {
-
 			Document doc = UpdateHelper.getDocument(file, ENCODING);
 			parseFile(doc.getChildNodes());
-		
-			if (save) {
-				save();
-			}
-			
-		} else {
+		   if (save) {save();}}
+		else {
 			users.add(new User());
 			save();
 		}
@@ -111,9 +110,9 @@ public class User {
 		}
 	}
 
-	public String getDBPath() {
+	public String getDBName() {
 		try {
-			return url.substring(url.indexOf("file") + 5, url.indexOf("database") - 1);
+			return dbURL.substring(dbURL.indexOf("file") + 5, dbURL.indexOf("database") - 1);
 		} catch (RuntimeException e) {
 			return "db";
 		}
@@ -125,14 +124,18 @@ public class User {
 
 	public static void save() {
 		try {
-			File file = getFile(FILENAME);
+			File file = getUserXMLfile(FILENAME);
+			File parentFolder = file.getParentFile();
+			Boolean parentFolderCreated = false;
 
-			if (!file.exists()) {
-				file.createNewFile();
+			if(! parentFolder.exists()) parentFolderCreated = parentFolder.mkdirs();
+			file.createNewFile();
+
+			if (! parentFolderCreated) {
+				HOLogger.instance().error(DBManager.class, "Could not initialize the xml file: " +  file);
 			}
-			
-			PrintWriter writer = new PrintWriter(new OutputStreamWriter(
-				    new FileOutputStream(file), ENCODING));
+
+		PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), ENCODING));
 
 			writer.println("<?xml version='1.0' encoding='" + ENCODING + "' ?>");
 			writer.println("<HoUsers>");
@@ -141,7 +144,7 @@ public class User {
 				User user = users.get(i);
 				writer.println(" <User>");
 				writer.println("   <Name><![CDATA[" + user.name + "]]></Name>");
-				writer.println("   <Url><![CDATA[" + user.url + "]]></Url>");
+				writer.println("   <Url><![CDATA[" + user.getDbURL() + "]]></Url>");
 				writer.println("   <User><![CDATA[" + user.user + "]]></User>");
 				writer.println("   <Password><![CDATA[" + user.pwd + "]]></Password>");
 				writer.println("   <Driver><![CDATA[" + user.driver + "]]></Driver>");
@@ -158,9 +161,35 @@ public class User {
 		}
 	}
 
-	public final String getUrl() {
-		return url;
+	public final String getDbURL() {
+		if (dbURL == null) {
+			setURL("db");
+		}
+		return dbURL;
 	}
+
+
+	public static String getDbParentFolder() {
+		if (dbParentFolder == null) determineDBpath();
+		return dbParentFolder;
+	}
+
+	private static void determineDBpath(){
+			if (! HO.isPortableVersion())
+			{
+				if (HO.getPlatform() == OSUtils.OS.LINUX) {
+					dbParentFolder = System.getProperty("user.home") + "/.ho";}
+				else if (HO.getPlatform() == OSUtils.OS.MAC) {
+					dbParentFolder =  System.getProperty("user.home") + "/Library/ApplicationSupport/HO";}
+				else {
+					dbParentFolder = System.getenv("AppData") + "/HO";
+				}
+			}
+			else {
+				dbParentFolder = System.getProperty("user.dir");
+			}
+
+		}
 
 	public final String getUser() {
 		return user;
@@ -182,8 +211,9 @@ public class User {
 		backupLevel = level;
 	}
 
-	public final void setPath(String path) {
-		url = "jdbc:hsqldb:file:" + path + "/database";
+	public final void setURL(String dbName) {
+		dbFolder = Paths.get(getDbParentFolder(), dbName, "/database").toString();
+		dbURL = "jdbc:hsqldb:file:" + dbFolder;
 	}
 
 	public boolean setNtTeam(boolean isNtTeam) {
@@ -194,36 +224,16 @@ public class User {
 	public static User addNewUser() {
 		User newUser = new User();
 		newUser.setName("user" + (users.size() + 1));
-		newUser.setPath("db" + (users.size() + 1));
+		newUser.setURL("db" + (users.size() + 1));
 		users.add(newUser);
 		return newUser;
 	}
 
-	@Override
-	public String toString() {
-		return name;
-	}
 
-	public static boolean isNameUnique(String name) {
-		for (User user : getAllUser()) {
-			if (user.getName().equalsIgnoreCase(name)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	public static boolean isDBPathUnique(String path) {
-		for (User user : getAllUser()) {
-			if (user.getDBPath().equalsIgnoreCase(path)) {
-				return false;
-			}
-		}
-		return true;
-	}
 
-	private static File getFile(String fileName) {
-		return new File(System.getProperty("user.dir") + File.separator + fileName);
+	private static File getUserXMLfile(String fileName) {
+		Path filePath = Paths.get(getDbParentFolder(), fileName);
+		return new File(String.valueOf(filePath));
 	}
 
 	private static void parseFile(NodeList elements) {
@@ -259,7 +269,7 @@ public class User {
 					}
 
 					if (element.getTagName().equals("Url")) {
-						url = txt.getData().trim();
+						dbURL = txt.getData().trim();
 					}
 
 					if (element.getTagName().equals("User")) {

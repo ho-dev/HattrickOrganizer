@@ -20,34 +20,24 @@ import javax.swing.SwingUtilities;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-/**
- * Main HO starter class.
- *
- * @author thomas.werth
- */
-
-
 
 public class HO {
-
 
     public static double VERSION;  // Version is set in build.gradle and exposed to HO via the manifest
 	public static int RevisionNumber;
     private static String versionType;
 
-	/**
-	 * Is this a development version? Note that a "development" version can a
-	 * release ("Beta" or "DEV" version). The DEVELOPMENT flag is used by the
-	 * ant build script. Keep around.
-	 */
+	public static boolean isPortableVersion() {
+		return portable_version;
+	}
 
-	/**
-	 * A RELEASE is when a build artifact gets delivered to users. Note that
-	 * even a DEVELOPMENT version can be a RELEASE ("Beta"). So when a version
-	 * is build (no matter if DEVELOPMENT or not), this flag should be set to
-	 * true. The main purpose for the flag is to disable code (unfinished new
-	 * features, debug code) which should not be seen in a release.
-	 */
+	private static boolean portable_version; // Used to determine along the os the location of te
+
+	public static OSUtils.OS getPlatform() {
+		return platform;
+	}
+
+	private static OSUtils.OS platform;
 
 	public static boolean isDevelopment() {
 		return "DEV".equalsIgnoreCase(versionType);
@@ -89,7 +79,10 @@ public class HO {
 	public static void main(String[] args) {
 		final long start = System.currentTimeMillis();
 
-		if (OSUtils.isMac()) {
+		portable_version = true;
+		platform = OSUtils.getOS();
+
+		if (platform == OSUtils.OS.MAC) {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
 			System.setProperty("apple.awt.showGroupBox", "true");
 		}
@@ -97,17 +90,17 @@ public class HO {
 		System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 
-		if ((args != null) && (args.length > 0)) {
-			String debugLvl = args[0].trim().toUpperCase();
-
-			if (debugLvl.equals("INFO")) {
-				HOLogger.instance().setLogLevel(HOLogger.INFORMATION);
-			} else if (debugLvl.equals("DEBUG")) {
-				HOLogger.instance().setLogLevel(HOLogger.DEBUG);
-			} else if (debugLvl.equals("WARNING")) {
-				HOLogger.instance().setLogLevel(HOLogger.WARNING);
-			} else if (debugLvl.equals("ERROR")) {
-				HOLogger.instance().setLogLevel(HOLogger.ERROR);
+		if (args != null) {
+			String arg;
+			for (String _arg : args) {
+				arg = _arg.trim().toUpperCase();
+				switch (arg) {
+					case "INFO" -> HOLogger.instance().setLogLevel(HOLogger.INFORMATION);
+					case "DEBUG" -> HOLogger.instance().setLogLevel(HOLogger.DEBUG);
+					case "WARNING" -> HOLogger.instance().setLogLevel(HOLogger.WARNING);
+					case "ERROR" -> HOLogger.instance().setLogLevel(HOLogger.ERROR);
+					case "INSTALLED" -> portable_version = false;
+				}
 			}
 		}
 
@@ -135,7 +128,7 @@ public class HO {
         	versionType = "DEV";
         }
 
-		// Usermanagement Login-Dialog
+		// Login selection in case of multi-users DB
 		try {
 			if (!User.getCurrentUser().isSingleUser()) {
 				JComboBox comboBox = new JComboBox(User.getAllUser().toArray());
@@ -158,7 +151,7 @@ public class HO {
 		// Backup
 		if (User.getCurrentUser().isHSQLDB()) {
 			interuptionsWindow.setInfoText(1, "Backup Database");
-			BackupHelper.backup(new File(User.getCurrentUser().getDBPath()));
+			BackupHelper.backup(new File(User.getCurrentUser().getDBName()));
 		}
 
 		// Standardparameter aus der DB holen

@@ -1,20 +1,14 @@
 package core.db;
 
+import core.HO;
 import core.datatype.CBItem;
 import core.db.backup.BackupDialog;
 import core.file.hrf.HRF;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.ArenaStatistikTableModel;
 import core.gui.model.SpielerMatchCBItem;
-import core.model.FactorObject;
-import core.model.HOModel;
-import core.model.HOParameter;
-import core.model.StaffMember;
-import core.model.Team;
+import core.model.*;
 import core.model.Tournament.TournamentDetails;
-import core.model.UserParameter;
-import core.model.WorldDetailLeague;
-import core.model.XtraData;
 import core.model.match.MatchEvent;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
@@ -53,8 +47,6 @@ import java.sql.Timestamp;
 import java.util.*;
 
 public class DBManager {
-	// ~ Static fields/initializers
-	// -----------------------------------------------------------------
 
 	/** database version */
 	private static final int DBVersion = 400; // HO 4.0 version
@@ -100,37 +92,37 @@ public class DBManager {
 	// //////////////////////////////////////////////////////////////////////////////
 	public static synchronized DBManager instance() {
 		if (m_clInstance == null) {
-			// HOLogger.instance().log(getClass(),"TSI: " + TSIDATE);
 
 			String errorMsg = null;
 			try {
-				String url = User.getCurrentUser().getUrl();
-				String filePart = url.substring("jdbc:hsqldb:file:".length());
-				String folder = new File(filePart).getAbsoluteFile()
-						.getParent();
-				File dbfolder = new File(folder);
+				User current_user = User.getCurrentUser();
+				String dbFolder = current_user.getDbFolder();
+
+				File dbfolder = new File(dbFolder);
 
 				if (!dbfolder.exists()) {
-					dbfolder.mkdirs();
-				}
-				
-				if (!dbfolder.canRead() || !dbfolder.canWrite()) {
-					errorMsg = "Could not write to database. Make sure you have write access to the HO directory and its sub-directories.\n"
-							+ "If under Windows make sure to stay out of Program Files or similar.\n"
-							+ dbfolder.getAbsolutePath();
+					File parentFolder = new File(current_user.getDbParentFolder());
+
+					Boolean dbDirectoryCreated = false;
+					if (parentFolder.canWrite()) {
+						dbDirectoryCreated = dbfolder.mkdirs();
+					} else {
+						errorMsg = "Could not initialize the database folder.";
+						errorMsg += "No writing rights to the following directory\n" + parentFolder.getAbsolutePath() + "\n";
+						errorMsg += "You can report this error by opening a new bug ticket on GitHub";
+					}
+					if (!dbDirectoryCreated) {
+						errorMsg = "Could not create the database folder.";
+					}
 				}
 
 			} catch (Exception e) {
-				errorMsg = "Can't connect to database: "
-						+ User.getCurrentUser().getUrl();
+				errorMsg = "Error encountered during database initialization: \n" + User.getCurrentUser().getDbURL();
 				e.printStackTrace();
 			}
 
 			if (errorMsg != null) {
-				javax.swing.JOptionPane
-						.showMessageDialog(null, errorMsg, "Fatal DB Error",
-								javax.swing.JOptionPane.ERROR_MESSAGE);
-				HOLogger.instance().error(null, errorMsg);
+				javax.swing.JOptionPane.showMessageDialog(null, errorMsg, "Fatal DB Error", javax.swing.JOptionPane.ERROR_MESSAGE);
 				System.exit(-1);
 			}
 
@@ -175,7 +167,7 @@ public class DBManager {
 					}
 				}
 
-				HOLogger.instance().error(null, msg);
+				HOLogger.instance().error(DBManager.class, msg);
 
 				System.exit(-1);
 			}
@@ -299,7 +291,7 @@ public class DBManager {
 	 */
 	private void connect() throws Exception {
 		User user = User.getCurrentUser();
-		m_clJDBCAdapter.connect(user.getUrl(), user.getUser(), user.getPwd(),
+		m_clJDBCAdapter.connect(user.getDbURL(), user.getUser(), user.getPwd(),
 				user.getDriver());
 	}
 
@@ -1393,27 +1385,6 @@ public class DBManager {
 				anzahlHRF, group);
 	}
 
-//	/**
-//	 * Sucht das letzte HRF zwischen dem angegebenen Datum und 6 Tagen davor
-//	 * Wird kein HRF gefunden wird -1 zurückgegeben
-//	 */
-//	public Timestamp getPreviousTrainingDate(int hrfId) {
-//		String sql = "select trainingdate from HRF, XTRADATA where HRF.hrf_id=XTRADATA.hrf_id and trainingdate < (select trainingdate from XTRADATA where hrf_id="
-//				+ hrfId + ") order by datum desc limit 1";
-//		final ResultSet rs = m_clJDBCAdapter.executeQuery(sql);
-//
-//		try {
-//			if (rs != null) {
-//				if (rs.first()) {
-//					return rs.getTimestamp("trainingdate");
-//				}
-//			}
-//		} catch (Exception e) {
-//			HOLogger.instance().log(getClass(),
-//					"DBZugriff.getPreviousTrainingDate: " + e.toString());
-//		}
-//		return null;
-//	}
 
 	public int getCountOfPlayedMatches(int playerId, boolean official) {
 		String sqlStmt = "select count(MATCHESKURZINFO.matchid) as MatchNumber FROM MATCHLINEUPPLAYER INNER JOIN MATCHESKURZINFO ON MATCHESKURZINFO.matchid = MATCHLINEUPPLAYER.matchid ";

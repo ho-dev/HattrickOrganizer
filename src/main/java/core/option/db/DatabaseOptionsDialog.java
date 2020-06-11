@@ -219,7 +219,7 @@ public class DatabaseOptionsDialog extends JDialog {
 			case 0:
 				return user.getName();
 			case 1:
-				return user.getDBPath();
+				return user.getDBName();
 			case 2:
 				return user.getBackupLevel();
 			case 3:
