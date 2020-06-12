@@ -148,7 +148,8 @@ distributions {
 
 
 install4j {
-    installDir = file(install4jHomeDir)
+    if (install4jHomeDir == null) installDir = file("foo")
+    else installDir = file(install4jHomeDir)
     disableSigning = true
 }
 
@@ -160,7 +161,7 @@ install4j {
 task media(type: com.install4j.gradle.Install4jTask) {
     dependsOn 'CreateDistribution'
     projectFile = "${projectDir}/utils/buildResources/HO.install4j"
-    buildIds = [60, 62, 63, 64, 172, 173]
+    buildIds = [60, 62, 63, 64, 172, 173, 464, 471, 473, 477, 481, 485]
     String versionType
 
     switch(development_stage) {
@@ -332,7 +333,7 @@ released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 
 task createLanguageFileList(dependsOn: poeditorPull)  {
     group 'sub tasks'
-//    outputs.upToDateWhen { false }
+    outputs.upToDateWhen { false }
 
     def lTranslationFiles = []
     fileTree(dir: "${projectDir}\\src\\main\\resources\\sprache", include: '*.properties').visit {

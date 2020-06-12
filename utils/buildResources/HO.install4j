@@ -34,6 +34,7 @@
       <variable name="projectDir" value="D:/Perso/Code/HO" />
       <variable name="versionType" />
     </variables>
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk14/jdk-14.0.1+7" />
   </application>
   <files defaultFileMode="666" defaultDirMode="777">
     <mountPoints>
@@ -58,6 +59,21 @@
     </launcher>
     <launcher name="HO" id="274" unixMode="777">
       <executable name="HO" iconSet="true" redirectStdout="true" executableMode="gui" singleInstance="true" />
+      <java mainClass="core.HOLauncher" arguments="installed">
+        <classPath>
+          <scanDirectory location="." failOnError="false" />
+          <directory location="prediction" failOnError="false" />
+        </classPath>
+      </java>
+      <desktopFile>Keywords=ho;hattrick;
+Comment=Manager tool for http://www.hattrick.org
+Categories=Game</desktopFile>
+      <iconImageFiles>
+        <file path="${compiler:projectDir}/utils/buildResources/Logo.png" />
+      </iconImageFiles>
+    </launcher>
+    <launcher name="HO - Win" id="497" unixMode="777">
+      <executable name="HO" iconSet="true" stderrFile="${installer:sys.appdataDir}/HO/error.log" redirectStdout="true" stdoutFile="${installer:sys.appdataDir}/HO/output.log" executableMode="gui" singleInstance="true" />
       <java mainClass="core.HOLauncher" arguments="installed">
         <classPath>
           <scanDirectory location="." failOnError="false" />
@@ -594,34 +610,82 @@ return console.askYesNo(message, true);
     </styles>
   </installerGui>
   <mediaSets>
-    <windows name="Windows" id="60" mediaFileName="HOSetup-${compiler:HO_version}${compiler:versionType}">
-      <excludedLaunchers>
-        <launcher id="59" />
-      </excludedLaunchers>
-    </windows>
     <windowsArchive name="Windows Archive" id="64" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-win${compiler:versionType}" installDir=".">
       <excludedLaunchers>
         <launcher id="274" />
+        <launcher id="497" />
       </excludedLaunchers>
     </windowsArchive>
-    <linuxRPM name="Linux RPM" id="62" dependencies="openjdk-11-jre">
+    <windowsArchive name="Windows Archive - JRE" id="481" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-win${compiler:versionType}-JRE" installDir=".">
       <excludedLaunchers>
-        <launcher id="59" />
+        <launcher id="274" />
+        <launcher id="497" />
       </excludedLaunchers>
-      <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
-    </linuxRPM>
-    <linuxDeb name="Linux Deb Archive" id="63" dependencies="openjdk-11-jre" description="Hattrick Organizer !" maintainerEmail="akasolace@ho">
+      <jreBundle jreBundleSource="generated" />
+    </windowsArchive>
+    <windows name="Windows" id="60" mediaFileName="HOSetup-${compiler:HO_version}${compiler:versionType}">
       <excludedLaunchers>
         <launcher id="59" />
+        <launcher id="274" />
+      </excludedLaunchers>
+      <jreBundle usePack200="false" />
+    </windows>
+    <windows name="Windows - JRE" id="485" mediaFileName="HOSetup-${compiler:HO_version}${compiler:versionType}-JRE">
+      <excludedLaunchers>
+        <launcher id="59" />
+        <launcher id="274" />
+      </excludedLaunchers>
+      <jreBundle usePack200="false" jreBundleSource="generated" />
+    </windows>
+    <linuxDeb name="Linux Deb" id="63" dependencies="openjdk-11-jre" description="Hattrick Organizer !" maintainerEmail="akasolace@ho">
+      <excludedLaunchers>
+        <launcher id="59" />
+        <launcher id="497" />
       </excludedLaunchers>
       <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
     </linuxDeb>
+    <linuxDeb name="Linux Deb  - JRE" id="471" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" description="Hattrick Organizer !" maintainerEmail="akasolace@ho">
+      <excludedLaunchers>
+        <launcher id="59" />
+        <launcher id="497" />
+      </excludedLaunchers>
+      <jreBundle jreBundleSource="generated" />
+      <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
+    </linuxDeb>
+    <linuxRPM name="Linux RPM" id="62" dependencies="openjdk-11-jre">
+      <excludedLaunchers>
+        <launcher id="59" />
+        <launcher id="497" />
+      </excludedLaunchers>
+      <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
+    </linuxRPM>
+    <linuxRPM name="Linux RPM - JRE" id="464" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE">
+      <excludedLaunchers>
+        <launcher id="59" />
+        <launcher id="497" />
+      </excludedLaunchers>
+      <jreBundle jreBundleSource="generated" />
+      <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
+    </linuxRPM>
     <unixArchive name="Unix Archive" id="173" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix${compiler:versionType}" installDir=".">
       <excludedLaunchers>
         <launcher id="274" />
+        <launcher id="497" />
       </excludedLaunchers>
     </unixArchive>
-    <macos name="macOS Single Bundle" id="172" launcherId="274" />
+    <unixArchive name="Unix Archive - JRE" id="477" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix${compiler:versionType}-JRE" installDir=".">
+      <excludedLaunchers>
+        <launcher id="274" />
+        <launcher id="497" />
+      </excludedLaunchers>
+      <jreBundle jreBundleSource="generated" />
+    </unixArchive>
+    <macos name="macOS Single Bundle" id="172" launcherId="274">
+      <jreBundle usePack200="false" />
+    </macos>
+    <macos name="macOS Single Bundle - JRE" id="473" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" launcherId="274">
+      <jreBundle usePack200="false" jreBundleSource="generated" />
+    </macos>
   </mediaSets>
   <buildIds buildAll="false">
     <mediaSet refId="64" />
