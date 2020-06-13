@@ -205,7 +205,7 @@ public class MatchEvent {
     }
 
     //This is used for the mapping of Match Event and icons
-    public static HashMap<MatchEventID, String> mapMatchEventIcons = new HashMap<MatchEventID, String>() {{
+    public static HashMap<MatchEventID, String> mapMatchEventIcons = new HashMap<>() {{
 
         put(MatchEventID.TACTICAL_DISPOSITION, HOIconName.FORMATION); //#20
         put(MatchEventID.PLAYER_NAMES_IN_LINEUP, HOIconName.FORMATION); //#21
@@ -1077,12 +1077,4 @@ public class MatchEvent {
         return icon;
 
     }
-
-    public static Comparator<MatchEvent> MatchEventMinuteComparator = new Comparator<MatchEvent>() {
-
-        public int compare(MatchEvent e1, MatchEvent e2) {
-            //ascending order
-            return e1.m_iMinute - e2.m_iMinute;
-        }
-    };
 }

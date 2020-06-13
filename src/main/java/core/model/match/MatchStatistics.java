@@ -25,8 +25,8 @@ public class MatchStatistics {
 			// Old match with no start lineup. Set start position like end
 			// position for all players.
 			Vector<MatchLineupPlayer> mlps = teamLineup.getAufstellung();
-			for (int i = 0; i < mlps.size(); i++) {
-				mlps.get(i).setStartPosition(mlps.get(i).getFieldPos());
+			for (MatchLineupPlayer mlp : mlps) {
+				mlp.setStartPosition(mlp.getFieldPos());
 			}
 		}
 	}
@@ -46,7 +46,7 @@ public class MatchStatistics {
 	public int getTrainMinutesPlayedInPositions(int spielerId, int[] accepted) {
 		if ( accepted!=null && accepted.length==0) return 0;	// NO positions are accepted
 		boolean inPosition = false;
-		MatchLineupPlayer player = (MatchLineupPlayer) teamLineup.getPlayerByID(spielerId);
+		MatchLineupPlayer player = teamLineup.getPlayerByID(spielerId);
 		List<Substitution> substitutions = teamLineup.getSubstitutions();
 
 		if (player == null) {
@@ -107,8 +107,8 @@ public class MatchStatistics {
 			if (accepted == null)
 				return true; // all positions are accepted, use an empty array if NO position should be accepted
 
-			for (int i = 0; i < accepted.length; i++) {
-				if (accepted[i] == pos) {
+			for (int value : accepted) {
+				if (value == pos) {
 					return true;
 				}
 			}
@@ -134,7 +134,7 @@ public class MatchStatistics {
 
 		if (arrIndex < 0) {
 			// We have run out of substitutions. Start lineup got answer
-			return ((MatchLineupPlayer) teamLineup.getPlayerByID(spielerId)).getStartPosition();
+			return (teamLineup.getPlayerByID(spielerId)).getStartPosition();
 		}
 
 		Substitution tmpSub = substitutions.get(arrIndex);
@@ -228,7 +228,7 @@ public class MatchStatistics {
 		// Check if the player is involved. If not keep checking back in time
 		// until match start.
 
-		Substitution tmpSub = null;
+		Substitution tmpSub;
 		for (int i = substitutions.size() - 1; i >= 0; i--) {
 
 			tmpSub = substitutions.get(i);
@@ -244,7 +244,7 @@ public class MatchStatistics {
 
 		// We survived all the subs, lets see if we found him in the starting
 		// lineup.
-		return ((MatchLineupPlayer) teamLineup.getPlayerByID(spielerId)).getStartPosition();
+		return (teamLineup.getPlayerByID(spielerId)).getStartPosition();
 	}
 
 	/**
@@ -254,10 +254,7 @@ public class MatchStatistics {
 	 * @return the last minute or -0 if not found
 	 */
 	public int getMatchEndMinute(int spielerId) {
-
 		ArrayList<MatchEvent> hls = DBManager.instance().getMatchDetails(matchId).getHighlights();
-		Collections.sort(hls, MatchEvent.MatchEventMinuteComparator); // TODO: check if this is necessary. load sorted from database is preferred
-
 		for (MatchEvent hl : hls) {
 			MatchEventID me = MatchEventID.fromMatchEventID(hl.getiMatchEventID());
 			if (me == MatchEventID.MATCH_FINISHED) {
@@ -273,8 +270,8 @@ public class MatchStatistics {
 
 	private boolean isOldie() {
 		Vector<MatchLineupPlayer> mlps = teamLineup.getAufstellung();
-		for (int i = 0; i < mlps.size(); i++) {
-			if (mlps.get(i).getStartPosition() > 0) {
+		for (MatchLineupPlayer mlp : mlps) {
+			if (mlp.getStartPosition() > 0) {
 				return false;
 			}
 		}
