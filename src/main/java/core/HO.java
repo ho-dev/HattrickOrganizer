@@ -14,9 +14,7 @@ import core.util.ExceptionHandler;
 import core.util.HOLogger;
 import core.util.OSUtils;
 import java.io.File;
-import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -26,33 +24,27 @@ public class HO {
     public static double VERSION;  // Version is set in build.gradle and exposed to HO via the manifest
 	public static int RevisionNumber;
     private static String versionType;
-
-	public static boolean isPortableVersion() {
-		return portable_version;
-	}
-
-	private static boolean portable_version; // Used to determine along the os the location of te
-
-	public static OSUtils.OS getPlatform() {
-		return platform;
-	}
-
 	private static OSUtils.OS platform;
-
-	public static boolean isDevelopment() {
-		return "DEV".equalsIgnoreCase(versionType);
-	}
-
-	public static boolean isBeta() {
-		return "BETA".equalsIgnoreCase(versionType);
-	}
-
-	public static boolean isRelease() {
-		return "RELEASE".equalsIgnoreCase(versionType);
-	}
+	private static boolean portable_version; // Used to determined the location of the DB
 
 	public static String getVersionType() {
 		return versionType;
+	}
+	public static int getRevisionNumber() {
+		return RevisionNumber;
+	}
+	public static boolean isPortableVersion() {
+		return portable_version;
+	}
+	public static OSUtils.OS getPlatform() {return platform; }
+	public static boolean isDevelopment() {
+		return "DEV".equalsIgnoreCase(versionType);
+	}
+	public static boolean isBeta() {
+		return "BETA".equalsIgnoreCase(versionType);
+	}
+	public static boolean isRelease() {
+		return "RELEASE".equalsIgnoreCase(versionType);
 	}
 
 	public static String getVersionString() {
@@ -62,7 +54,8 @@ public class HO {
 
 		if (isBeta()) {
 			txt += " BETA (r" + RevisionNumber + ")";
-		} else if (isDevelopment()) {
+		}
+		else if (isDevelopment()) {
 			txt += " DEV (r" + RevisionNumber + ")";
 		}
 
@@ -71,10 +64,7 @@ public class HO {
 
 
 	/**
-	 * Main method to start a HOMainFrame.
-	 *
-	 * @param args
-	 *            the command line arguments
+	 *  HO entry point
 	 */
 	public static void main(String[] args) {
 		final long start = System.currentTimeMillis();
@@ -131,7 +121,7 @@ public class HO {
 		// Login selection in case of multi-users DB
 		try {
 			if (!User.getCurrentUser().isSingleUser()) {
-				JComboBox comboBox = new JComboBox(User.getAllUser().toArray());
+				JComboBox comboBox = new JComboBox(User.getAllUser().stream().map(User::getTeamName).toArray());
 				int choice = JOptionPane.showConfirmDialog(null, comboBox, "Login",
 						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
@@ -145,15 +135,15 @@ public class HO {
 			HOLogger.instance().log(HO.class, ex);
 		}
 
-		// Startbild
+		// start display splash image
 		final SplashFrame interuptionsWindow = new SplashFrame();
 
 		// Backup
 		interuptionsWindow.setInfoText(1, "Backup Database");
-		BackupHelper.backup(new File(User.getCurrentUser().getDBName()));
+		BackupHelper.backup(new File(User.getCurrentUser().getDbFolder()));
 
 
-		// Standardparameter aus der DB holen
+		// Load user parameters from the DB
 		interuptionsWindow.setInfoText(2, "Initialize Database");
 		DBManager.instance().loadUserParameter();
 
@@ -192,40 +182,28 @@ public class HO {
 		HOVerwaltung.instance().loadLatestHoModel();
 		interuptionsWindow.setInfoText(6, "Load  XtraDaten");
 
-		// TableColumn
+		// Load table columns information
 		UserColumnController.instance().load();
 
 		// Set the currency from HRF
 		float fxRate = (float) HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate();
+		if (fxRate > -1) UserParameter.instance().faktorGeld = fxRate;
 
-		if (fxRate > -1) {
-			UserParameter.instance().faktorGeld = fxRate;
-		}
 
 		// Training
 		interuptionsWindow.setInfoText(7, "Initialize Training");
 
-		// Training erstellen -> dabei Trainingswochen berechnen auf Grundlage
-		// der manuellen DB Einträge
+		// Training estimation calculated on DB manual entries
 		TrainingManager.instance().refreshTrainingWeeks();
 
 		interuptionsWindow.setInfoText(8, "Prepare to show");
-		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(() -> {
+			HOMainFrame.instance().setVisible(true);
 
-			@Override
-			public void run() {
-				HOMainFrame.instance().setVisible(true);
-
-				// Startbild weg
-				interuptionsWindow.setVisible(false);
-				interuptionsWindow.dispose();
-
-				HOLogger.instance().log(HO.class, "Zeit:" + (System.currentTimeMillis() - start));
-			}
+			// stop display splash image
+			interuptionsWindow.setVisible(false);
+			interuptionsWindow.dispose();
 		});
 	}
 
-	public static int getRevisionNumber() {
-		return RevisionNumber;
-	}
 }

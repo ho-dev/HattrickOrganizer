@@ -27,7 +27,7 @@ public class DatabaseUserEditDialog extends JDialog {
 	private JButton saveButton;
 	private JButton cancelButton;
 	private JTextField nameTextField;
-	private JTextField databaseLocationTextField;
+	private JTextField databaseNameTextField;
 	private JTextField numberOfBackupsTextField;
 	private User user;
 	private boolean canceled = true;
@@ -58,8 +58,8 @@ public class DatabaseUserEditDialog extends JDialog {
 	}
 
 	private void initData() {
-		this.nameTextField.setText(this.user.getName());
-		this.databaseLocationTextField.setText(this.user.getDBName());
+		this.nameTextField.setText(this.user.getTeamName());
+		this.databaseNameTextField.setText(this.user.getDbName());
 		this.numberOfBackupsTextField.setText(String.valueOf(this.user.getBackupLevel()));
 		if (this.user.isNtTeam())
 			ntTeamYes.setSelected(true);
@@ -144,11 +144,11 @@ public class DatabaseUserEditDialog extends JDialog {
 		gbc.weightx = 0.0;
 		contentPanel.add(databaseLocationLabel, gbc);
 
-		this.databaseLocationTextField = new JTextField();
+		this.databaseNameTextField = new JTextField();
 		gbc.gridx = 1;
 		gbc.insets = new Insets(4, 2, 4, 0);
 		gbc.weightx = 1.0;
-		contentPanel.add(this.databaseLocationTextField, gbc);
+		contentPanel.add(this.databaseNameTextField, gbc);
 
 		this.fileChooserButton = new JButton("...");
 		gbc.gridx = 2;
@@ -225,18 +225,15 @@ public class DatabaseUserEditDialog extends JDialog {
 			}
 		});
 
-		this.saveButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (checkDirectory()) {
-					user.setBackupLevel(Integer.parseInt(numberOfBackupsTextField.getText()));
-					user.setName(nameTextField.getText());
-					user.setURL(databaseLocationTextField.getText());
-					user.setNtTeam(ntTeamYes.isSelected());
-					canceled = false;
-					dispose();
-				}
+		this.saveButton.addActionListener(e -> {
+			if (checkDirectory()) {
+				user.setBackupLevel(Integer.parseInt(numberOfBackupsTextField.getText()));
+				user.setName(nameTextField.getText());
+				user.setDbName(databaseNameTextField.getText());
+				user.setURL();
+				user.setNtTeam(ntTeamYes.isSelected());
+				canceled = false;
+				dispose();
 			}
 		});
 
@@ -265,7 +262,7 @@ public class DatabaseUserEditDialog extends JDialog {
 		};
 
 		this.nameTextField.getDocument().addDocumentListener(documentListener);
-		this.databaseLocationTextField.getDocument().addDocumentListener(documentListener);
+		this.databaseNameTextField.getDocument().addDocumentListener(documentListener);
 		this.numberOfBackupsTextField.getDocument().addDocumentListener(documentListener);
 		this.ntTeamNo.addActionListener(actionListener);
 		this.ntTeamYes.addActionListener(actionListener);
@@ -280,7 +277,7 @@ public class DatabaseUserEditDialog extends JDialog {
 		if (state == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
 			if (file != null) {
-				this.databaseLocationTextField.setText(file.getAbsolutePath());
+				this.databaseNameTextField.setText(file.getAbsolutePath());
 			}
 		}
 	}
@@ -288,7 +285,7 @@ public class DatabaseUserEditDialog extends JDialog {
 	private void checkCanSave() {
 		boolean canSave = StringUtils.isNumeric(this.numberOfBackupsTextField.getText())
 				&& !StringUtils.isEmpty(this.nameTextField.getText())
-				&& !StringUtils.isEmpty(this.databaseLocationTextField.getText());
+				&& !StringUtils.isEmpty(this.databaseNameTextField.getText());
 		if (!this.isNew) {
 			this.saveButton.setEnabled(isChanged() && canSave);
 		} else {
@@ -297,14 +294,14 @@ public class DatabaseUserEditDialog extends JDialog {
 	}
 
 	private boolean isChanged() {
-		return (!this.user.getName().equals(this.nameTextField.getText()) ||
-				!this.user.getDBName().equals(this.databaseLocationTextField.getText()) ||
+		return (!this.user.getTeamName().equals(this.nameTextField.getText()) ||
+				!this.user.getDbName().equals(this.databaseNameTextField.getText()) ||
 				!String.valueOf(this.user.getBackupLevel()).equals(this.numberOfBackupsTextField.getText()) ||
 				!(this.user.isNtTeam() == ntTeamYes.isSelected()));
 	}
 
 	private boolean checkDirectory() {
-		String path = this.databaseLocationTextField.getText();
+		String path = this.databaseNameTextField.getText();
 		File file = new File(path);
 
 		if (file.isFile()) {

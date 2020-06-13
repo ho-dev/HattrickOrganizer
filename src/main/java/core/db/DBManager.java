@@ -1,6 +1,5 @@
 package core.db;
 
-import core.HO;
 import core.datatype.CBItem;
 import core.db.backup.BackupDialog;
 import core.file.hrf.HRF;
@@ -37,9 +36,9 @@ import module.series.Spielplan;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.transfer.PlayerTransfer;
 import module.transfer.scout.ScoutEintrag;
+import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 import org.hsqldb.error.ErrorCode;
-
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -51,18 +50,17 @@ public class DBManager {
 	/** database version */
 	private static final int DBVersion = 400; // HO 4.0 version
 
-
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
 
 	/** singleton */
-	private static DBManager m_clInstance;
+	private static @Nullable DBManager m_clInstance;
 
 	// ~ Instance fields
 	// ----------------------------------------------------------------------------
 
 	/** DB-Adapter */
-	private JDBCAdapter m_clJDBCAdapter = null; // new JDBCAdapter();
+	private @Nullable JDBCAdapter m_clJDBCAdapter = null; // new JDBCAdapter();
 
 	/** all Tables */
 	private final Hashtable<String, AbstractTable> tables = new Hashtable<String, AbstractTable>();
@@ -219,31 +217,22 @@ public class DBManager {
 		tables.put(FinanzenTable.TABLENAME, new FinanzenTable(adapter));
 		tables.put(ScoutTable.TABLENAME, new ScoutTable(adapter));
 		tables.put(UserColumnsTable.TABLENAME, new UserColumnsTable(adapter));
-		tables.put(SpielerNotizenTable.TABLENAME, new SpielerNotizenTable(
-				adapter));
+		tables.put(SpielerNotizenTable.TABLENAME, new SpielerNotizenTable(adapter));
 		tables.put(SpielplanTable.TABLENAME, new SpielplanTable(adapter));
 		tables.put(PaarungTable.TABLENAME, new PaarungTable(adapter));
-		tables.put(MatchLineupTeamTable.TABLENAME, new MatchLineupTeamTable(
-				adapter));
+		tables.put(MatchLineupTeamTable.TABLENAME, new MatchLineupTeamTable(adapter));
 		tables.put(MatchLineupTable.TABLENAME, new MatchLineupTable(adapter));
 		tables.put(XtraDataTable.TABLENAME, new XtraDataTable(adapter));
-		tables.put(MatchLineupPlayerTable.TABLENAME,
-				new MatchLineupPlayerTable(adapter));
-		tables.put(MatchesKurzInfoTable.TABLENAME, new MatchesKurzInfoTable(
-				adapter));
+		tables.put(MatchLineupPlayerTable.TABLENAME,new MatchLineupPlayerTable(adapter));
+		tables.put(MatchesKurzInfoTable.TABLENAME, new MatchesKurzInfoTable(adapter));
 		tables.put(MatchDetailsTable.TABLENAME, new MatchDetailsTable(adapter));
-		tables.put(MatchHighlightsTable.TABLENAME, new MatchHighlightsTable(
-				adapter));
+		tables.put(MatchHighlightsTable.TABLENAME, new MatchHighlightsTable(adapter));
 		tables.put(TrainingsTable.TABLENAME, new TrainingsTable(adapter));
-		tables.put(FutureTrainingTable.TABLENAME, new FutureTrainingTable(
-				adapter));
-		tables.put(UserConfigurationTable.TABLENAME,
-				new UserConfigurationTable(adapter));
-		tables.put(SpielerSkillupTable.TABLENAME, new SpielerSkillupTable(
-				adapter));
+		tables.put(FutureTrainingTable.TABLENAME, new FutureTrainingTable(adapter));
+		tables.put(UserConfigurationTable.TABLENAME,new UserConfigurationTable(adapter));
+		tables.put(SpielerSkillupTable.TABLENAME, new SpielerSkillupTable(adapter));
 		tables.put(StaffTable.TABLENAME,  new StaffTable(adapter));
-		tables.put(MatchSubstitutionTable.TABLENAME,
-				new MatchSubstitutionTable(adapter));
+		tables.put(MatchSubstitutionTable.TABLENAME, new MatchSubstitutionTable(adapter));
 		tables.put(TransferTable.TABLENAME, new TransferTable(adapter));
 		tables.put(TransferTypeTable.TABLENAME, new TransferTypeTable(adapter));
 		tables.put(ModuleConfigTable.TABLENAME, new ModuleConfigTable(adapter));
@@ -251,8 +240,7 @@ public class DBManager {
 		tables.put(TAPlayerTable.TABLENAME, new TAPlayerTable(adapter));
 		tables.put(WorldDetailsTable.TABLENAME, new WorldDetailsTable(adapter));
 		tables.put(IfaMatchTable.TABLENAME, new IfaMatchTable(adapter));
-		tables.put(PenaltyTakersTable.TABLENAME,
-				new PenaltyTakersTable(adapter));
+		tables.put(PenaltyTakersTable.TABLENAME, new PenaltyTakersTable(adapter));
 		tables.put(MatchOrderTable.TABLENAME, new MatchOrderTable(adapter));
 		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(adapter));
 	}
@@ -266,9 +254,6 @@ public class DBManager {
 		return m_clJDBCAdapter;
 	}
 
-	/**
-	 * Set First start flag
-	 */
 	private void setFirstStart(boolean firststart) {
 		m_bFirstStart = firststart;
 	}
@@ -278,7 +263,7 @@ public class DBManager {
 	}
 
 	/**
-	 * trennt die Verbindung zur Datenbank
+	 * disconnect from database
 	 */
 	public void disconnect() {
 		m_clJDBCAdapter.disconnect();
@@ -287,11 +272,13 @@ public class DBManager {
 	}
 
 	/**
-	 * stellt die Verbindung zur DB her
+	 * connect to the database
 	 */
 	private void connect() throws Exception {
 		User user = User.getCurrentUser();
-		m_clJDBCAdapter.connect(user.getDbURL(), user.getUser(), user.getPwd(),	user.getDriver());
+		if (m_clJDBCAdapter != null) {
+			m_clJDBCAdapter.connect(user.getDbURL(), user.getUser(), user.getPwd(),	user.getDriver());
+		}
 	}
 
 	/**
@@ -312,19 +299,12 @@ public class DBManager {
 		return exists;
 	}
 
-	// ------------------------------- SpielerSkillupTable
-	// -------------------------------------------------
 
 	/**
-	 * liefert das Datum des letzen Levelups anhand key und value
-	 * 
-	 * @param skill
-	 *            integer code for the skill
-	 * @param spielerId
-	 * 			  player ID
-	 * 
-	 * @return [0] = Time der Änderung [1] = Boolean: false=Keine Änderung
-	 *         gefunden
+	 * get the date of the last level increase of given player
+	 * @param skill  integer code for the skill
+	 * @param spielerId  player ID
+	 * @return [0] = Time of change  [1] = Boolean: false=no skill change found
 	 */
 	public Object[] getLastLevelUp(int skill, int spielerId) {
 		return ((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
