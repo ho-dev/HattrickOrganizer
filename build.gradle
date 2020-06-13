@@ -145,11 +145,11 @@ distributions {
     }
 }
 
+
 install4j {
-    if ( hasProperty('install4jHomeDir') ) {
-        installDir = file(install4jHomeDir)
-        disableSigning = true
-    }
+    if (install4jHomeDir == null) installDir = file("foo")
+    else installDir = file(install4jHomeDir)
+    disableSigning = true
 }
 
 // endregion ======================================================================================================================
@@ -160,7 +160,7 @@ install4j {
 task media(type: com.install4j.gradle.Install4jTask) {
     dependsOn 'CreateDistribution'
     projectFile = "${projectDir}/utils/buildResources/HO.install4j"
-    buildIds = [60, 62, 63, 64, 172, 173]
+    buildIds = [60, 62, 63, 64, 172, 173, 464, 471, 473, 477, 481, 485]
     String versionType
 
     switch(development_stage) {

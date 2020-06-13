@@ -4,16 +4,29 @@ package core.util;
  * Provides OS-specific utility functions.
  */
 public final class OSUtils {
-    public final static String OS_NAME = System.getProperty("os.name").toLowerCase(java.util.Locale.ENGLISH);
+    public final static String OS_NAME = System.getProperty("os.name").toLowerCase();
+    public enum OS {WINDOWS, LINUX, MAC};
+    private static OS os = determineOS();
 
-    private OSUtils() {
-    }
+    public static OS getOS() {return os;}
 
-    /**
-     * Checks whether the current OS is Mac.
-     * @return boolean – true if Mac, false otherwise.
-     */
     public static boolean isMac() {
-        return OS_NAME.contains("mac");
+        return os == OS.MAC;
     }
+
+    public static boolean isWindows() {
+        return os == OS.WINDOWS;
+    }
+
+    public static boolean isLinux() {
+        return os == OS.LINUX;
+    }
+
+    private static OS determineOS() {
+        if (OS_NAME.contains("win")) os = OS.WINDOWS;
+        else if (OS_NAME.contains("mac")) os = OS.MAC;
+        else os = OS.LINUX;
+        return os;
+    }
+
 }

@@ -178,7 +178,7 @@ public class DatabaseOptionsDialog extends JDialog {
 		User user = getSelectedUser();
 		if (user != null) {
 			int res = JOptionPane.showConfirmDialog(this, HOVerwaltung.instance()
-					.getLanguageString("db.options.dlg.delete.question", user.getName()),
+					.getLanguageString("db.options.dlg.delete.question", user.getTeamName()),
 					HOVerwaltung.instance().getLanguageString("confirmation.title"),
 					JOptionPane.YES_NO_OPTION);
 			if (res == JOptionPane.YES_OPTION) {
@@ -206,7 +206,7 @@ public class DatabaseOptionsDialog extends JDialog {
 
 		private static final long serialVersionUID = 1975023278731081088L;
 		private String[] columnNames = new String[] {
-				HOVerwaltung.instance().getLanguageString("Benutzername"),
+				HOVerwaltung.instance().getLanguageString("teamSelect.teamName"),
 				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.dbPath"),
 				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.zips"),
 				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.nt")
@@ -217,9 +217,9 @@ public class DatabaseOptionsDialog extends JDialog {
 			User user = User.getAllUser().get(row);
 			switch (column) {
 			case 0:
-				return user.getName();
+				return user.getTeamName();
 			case 1:
-				return user.getDBPath();
+				return user.getDbName();
 			case 2:
 				return user.getBackupLevel();
 			case 3:

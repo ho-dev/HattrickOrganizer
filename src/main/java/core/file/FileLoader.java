@@ -4,11 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
-
 import core.util.HOLogger;
 
 /**
@@ -31,9 +28,9 @@ public class FileLoader {
 	Map<String, FileLoadingStatus> fileStatusesCache = null;
 	
 	private FileLoader() {
-		this.fileStatusesCache = new HashMap<String, FileLoadingStatus>();
+		this.fileStatusesCache = new HashMap<>();
 	}
-	
+
 	/**
 	 * Static method to be used in order to get an instance of the FileLoader
 	 * @return

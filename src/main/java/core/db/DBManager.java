@@ -6,15 +6,8 @@ import core.file.hrf.HRF;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.ArenaStatistikTableModel;
 import core.gui.model.SpielerMatchCBItem;
-import core.model.FactorObject;
-import core.model.HOModel;
-import core.model.HOParameter;
-import core.model.StaffMember;
-import core.model.Team;
+import core.model.*;
 import core.model.Tournament.TournamentDetails;
-import core.model.UserParameter;
-import core.model.WorldDetailLeague;
-import core.model.XtraData;
 import core.model.match.MatchEvent;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
@@ -43,9 +36,9 @@ import module.series.Spielplan;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.transfer.PlayerTransfer;
 import module.transfer.scout.ScoutEintrag;
+import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 import org.hsqldb.error.ErrorCode;
-
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,24 +46,21 @@ import java.sql.Timestamp;
 import java.util.*;
 
 public class DBManager {
-	// ~ Static fields/initializers
-	// -----------------------------------------------------------------
 
 	/** database version */
 	private static final int DBVersion = 400; // HO 4.0 version
-
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
 
 	/** singleton */
-	private static DBManager m_clInstance;
+	private static @Nullable DBManager m_clInstance;
 
 	// ~ Instance fields
 	// ----------------------------------------------------------------------------
 
 	/** DB-Adapter */
-	private JDBCAdapter m_clJDBCAdapter = null; // new JDBCAdapter();
+	private @Nullable JDBCAdapter m_clJDBCAdapter = null; // new JDBCAdapter();
 
 	/** all Tables */
 	private final Hashtable<String, AbstractTable> tables = new Hashtable<String, AbstractTable>();
@@ -100,37 +90,37 @@ public class DBManager {
 	// //////////////////////////////////////////////////////////////////////////////
 	public static synchronized DBManager instance() {
 		if (m_clInstance == null) {
-			// HOLogger.instance().log(getClass(),"TSI: " + TSIDATE);
 
 			String errorMsg = null;
 			try {
-				String url = User.getCurrentUser().getUrl();
-				String filePart = url.substring("jdbc:hsqldb:file:".length());
-				String folder = new File(filePart).getAbsoluteFile()
-						.getParent();
-				File dbfolder = new File(folder);
+				User current_user = User.getCurrentUser();
+				String dbFolder = current_user.getDbFolder();
+
+				File dbfolder = new File(dbFolder);
 
 				if (!dbfolder.exists()) {
-					dbfolder.mkdirs();
-				}
-				
-				if (!dbfolder.canRead() || !dbfolder.canWrite()) {
-					errorMsg = "Could not write to database. Make sure you have write access to the HO directory and its sub-directories.\n"
-							+ "If under Windows make sure to stay out of Program Files or similar.\n"
-							+ dbfolder.getAbsolutePath();
+					File parentFolder = new File(current_user.getDbParentFolder());
+
+					Boolean dbDirectoryCreated = false;
+					if (parentFolder.canWrite()) {
+						dbDirectoryCreated = dbfolder.mkdirs();
+					} else {
+						errorMsg = "Could not initialize the database folder.";
+						errorMsg += "No writing rights to the following directory\n" + parentFolder.getAbsolutePath() + "\n";
+						errorMsg += "You can report this error by opening a new bug ticket on GitHub";
+					}
+					if (!dbDirectoryCreated) {
+						errorMsg = "Could not create the database folder.";
+					}
 				}
 
 			} catch (Exception e) {
-				errorMsg = "Can't connect to database: "
-						+ User.getCurrentUser().getUrl();
+				errorMsg = "Error encountered during database initialization: \n" + User.getCurrentUser().getDbURL();
 				e.printStackTrace();
 			}
 
 			if (errorMsg != null) {
-				javax.swing.JOptionPane
-						.showMessageDialog(null, errorMsg, "Fatal DB Error",
-								javax.swing.JOptionPane.ERROR_MESSAGE);
-				HOLogger.instance().error(null, errorMsg);
+				javax.swing.JOptionPane.showMessageDialog(null, errorMsg, "Fatal DB Error", javax.swing.JOptionPane.ERROR_MESSAGE);
 				System.exit(-1);
 			}
 
@@ -145,7 +135,7 @@ public class DBManager {
 			} catch (Exception e) {
 
 				String msg = e.getMessage();
-				boolean recover = User.getCurrentUser().isHSQLDB();
+				boolean recover = true;
 
 				if ((msg.indexOf("The database is already in use by another process") > -1)	||
 						(e instanceof SQLException &&
@@ -175,7 +165,7 @@ public class DBManager {
 					}
 				}
 
-				HOLogger.instance().error(null, msg);
+				HOLogger.instance().error(DBManager.class, msg);
 
 				System.exit(-1);
 			}
@@ -227,31 +217,22 @@ public class DBManager {
 		tables.put(FinanzenTable.TABLENAME, new FinanzenTable(adapter));
 		tables.put(ScoutTable.TABLENAME, new ScoutTable(adapter));
 		tables.put(UserColumnsTable.TABLENAME, new UserColumnsTable(adapter));
-		tables.put(SpielerNotizenTable.TABLENAME, new SpielerNotizenTable(
-				adapter));
+		tables.put(SpielerNotizenTable.TABLENAME, new SpielerNotizenTable(adapter));
 		tables.put(SpielplanTable.TABLENAME, new SpielplanTable(adapter));
 		tables.put(PaarungTable.TABLENAME, new PaarungTable(adapter));
-		tables.put(MatchLineupTeamTable.TABLENAME, new MatchLineupTeamTable(
-				adapter));
+		tables.put(MatchLineupTeamTable.TABLENAME, new MatchLineupTeamTable(adapter));
 		tables.put(MatchLineupTable.TABLENAME, new MatchLineupTable(adapter));
 		tables.put(XtraDataTable.TABLENAME, new XtraDataTable(adapter));
-		tables.put(MatchLineupPlayerTable.TABLENAME,
-				new MatchLineupPlayerTable(adapter));
-		tables.put(MatchesKurzInfoTable.TABLENAME, new MatchesKurzInfoTable(
-				adapter));
+		tables.put(MatchLineupPlayerTable.TABLENAME,new MatchLineupPlayerTable(adapter));
+		tables.put(MatchesKurzInfoTable.TABLENAME, new MatchesKurzInfoTable(adapter));
 		tables.put(MatchDetailsTable.TABLENAME, new MatchDetailsTable(adapter));
-		tables.put(MatchHighlightsTable.TABLENAME, new MatchHighlightsTable(
-				adapter));
+		tables.put(MatchHighlightsTable.TABLENAME, new MatchHighlightsTable(adapter));
 		tables.put(TrainingsTable.TABLENAME, new TrainingsTable(adapter));
-		tables.put(FutureTrainingTable.TABLENAME, new FutureTrainingTable(
-				adapter));
-		tables.put(UserConfigurationTable.TABLENAME,
-				new UserConfigurationTable(adapter));
-		tables.put(SpielerSkillupTable.TABLENAME, new SpielerSkillupTable(
-				adapter));
+		tables.put(FutureTrainingTable.TABLENAME, new FutureTrainingTable(adapter));
+		tables.put(UserConfigurationTable.TABLENAME,new UserConfigurationTable(adapter));
+		tables.put(SpielerSkillupTable.TABLENAME, new SpielerSkillupTable(adapter));
 		tables.put(StaffTable.TABLENAME,  new StaffTable(adapter));
-		tables.put(MatchSubstitutionTable.TABLENAME,
-				new MatchSubstitutionTable(adapter));
+		tables.put(MatchSubstitutionTable.TABLENAME, new MatchSubstitutionTable(adapter));
 		tables.put(TransferTable.TABLENAME, new TransferTable(adapter));
 		tables.put(TransferTypeTable.TABLENAME, new TransferTypeTable(adapter));
 		tables.put(ModuleConfigTable.TABLENAME, new ModuleConfigTable(adapter));
@@ -259,8 +240,7 @@ public class DBManager {
 		tables.put(TAPlayerTable.TABLENAME, new TAPlayerTable(adapter));
 		tables.put(WorldDetailsTable.TABLENAME, new WorldDetailsTable(adapter));
 		tables.put(IfaMatchTable.TABLENAME, new IfaMatchTable(adapter));
-		tables.put(PenaltyTakersTable.TABLENAME,
-				new PenaltyTakersTable(adapter));
+		tables.put(PenaltyTakersTable.TABLENAME, new PenaltyTakersTable(adapter));
 		tables.put(MatchOrderTable.TABLENAME, new MatchOrderTable(adapter));
 		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(adapter));
 	}
@@ -274,9 +254,6 @@ public class DBManager {
 		return m_clJDBCAdapter;
 	}
 
-	/**
-	 * Set First start flag
-	 */
 	private void setFirstStart(boolean firststart) {
 		m_bFirstStart = firststart;
 	}
@@ -286,7 +263,7 @@ public class DBManager {
 	}
 
 	/**
-	 * trennt die Verbindung zur Datenbank
+	 * disconnect from database
 	 */
 	public void disconnect() {
 		m_clJDBCAdapter.disconnect();
@@ -295,12 +272,13 @@ public class DBManager {
 	}
 
 	/**
-	 * stellt die Verbindung zur DB her
+	 * connect to the database
 	 */
 	private void connect() throws Exception {
 		User user = User.getCurrentUser();
-		m_clJDBCAdapter.connect(user.getUrl(), user.getUser(), user.getPwd(),
-				user.getDriver());
+		if (m_clJDBCAdapter != null) {
+			m_clJDBCAdapter.connect(user.getDbURL(), user.getUser(), user.getPwd(),	user.getDriver());
+		}
 	}
 
 	/**
@@ -321,19 +299,12 @@ public class DBManager {
 		return exists;
 	}
 
-	// ------------------------------- SpielerSkillupTable
-	// -------------------------------------------------
 
 	/**
-	 * liefert das Datum des letzen Levelups anhand key und value
-	 * 
-	 * @param skill
-	 *            integer code for the skill
-	 * @param spielerId
-	 * 			  player ID
-	 * 
-	 * @return [0] = Time der Änderung [1] = Boolean: false=Keine Änderung
-	 *         gefunden
+	 * get the date of the last level increase of given player
+	 * @param skill  integer code for the skill
+	 * @param spielerId  player ID
+	 * @return [0] = Time of change  [1] = Boolean: false=no skill change found
 	 */
 	public Object[] getLastLevelUp(int skill, int spielerId) {
 		return ((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
@@ -1393,27 +1364,6 @@ public class DBManager {
 				anzahlHRF, group);
 	}
 
-//	/**
-//	 * Sucht das letzte HRF zwischen dem angegebenen Datum und 6 Tagen davor
-//	 * Wird kein HRF gefunden wird -1 zurückgegeben
-//	 */
-//	public Timestamp getPreviousTrainingDate(int hrfId) {
-//		String sql = "select trainingdate from HRF, XTRADATA where HRF.hrf_id=XTRADATA.hrf_id and trainingdate < (select trainingdate from XTRADATA where hrf_id="
-//				+ hrfId + ") order by datum desc limit 1";
-//		final ResultSet rs = m_clJDBCAdapter.executeQuery(sql);
-//
-//		try {
-//			if (rs != null) {
-//				if (rs.first()) {
-//					return rs.getTimestamp("trainingdate");
-//				}
-//			}
-//		} catch (Exception e) {
-//			HOLogger.instance().log(getClass(),
-//					"DBZugriff.getPreviousTrainingDate: " + e.toString());
-//		}
-//		return null;
-//	}
 
 	public int getCountOfPlayedMatches(int playerId, boolean official) {
 		String sqlStmt = "select count(MATCHESKURZINFO.matchid) as MatchNumber FROM MATCHLINEUPPLAYER INNER JOIN MATCHESKURZINFO ON MATCHESKURZINFO.matchid = MATCHLINEUPPLAYER.matchid ";

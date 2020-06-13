@@ -14,55 +14,37 @@ import core.util.ExceptionHandler;
 import core.util.HOLogger;
 import core.util.OSUtils;
 import java.io.File;
-import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import java.text.NumberFormat;
 import java.util.Locale;
-
-/**
- * Main HO starter class.
- *
- * @author thomas.werth
- */
-
 
 
 public class HO {
 
-
     public static double VERSION;  // Version is set in build.gradle and exposed to HO via the manifest
 	public static int RevisionNumber;
     private static String versionType;
-
-	/**
-	 * Is this a development version? Note that a "development" version can a
-	 * release ("Beta" or "DEV" version). The DEVELOPMENT flag is used by the
-	 * ant build script. Keep around.
-	 */
-
-	/**
-	 * A RELEASE is when a build artifact gets delivered to users. Note that
-	 * even a DEVELOPMENT version can be a RELEASE ("Beta"). So when a version
-	 * is build (no matter if DEVELOPMENT or not), this flag should be set to
-	 * true. The main purpose for the flag is to disable code (unfinished new
-	 * features, debug code) which should not be seen in a release.
-	 */
-
-	public static boolean isDevelopment() {
-		return "DEV".equalsIgnoreCase(versionType);
-	}
-
-	public static boolean isBeta() {
-		return "BETA".equalsIgnoreCase(versionType);
-	}
-
-	public static boolean isRelease() {
-		return "RELEASE".equalsIgnoreCase(versionType);
-	}
+	private static OSUtils.OS platform;
+	private static boolean portable_version; // Used to determined the location of the DB
 
 	public static String getVersionType() {
 		return versionType;
+	}
+	public static int getRevisionNumber() {
+		return RevisionNumber;
+	}
+	public static boolean isPortableVersion() {
+		return portable_version;
+	}
+	public static OSUtils.OS getPlatform() {return platform; }
+	public static boolean isDevelopment() {
+		return "DEV".equalsIgnoreCase(versionType);
+	}
+	public static boolean isBeta() {
+		return "BETA".equalsIgnoreCase(versionType);
+	}
+	public static boolean isRelease() {
+		return "RELEASE".equalsIgnoreCase(versionType);
 	}
 
 	public static String getVersionString() {
@@ -72,7 +54,8 @@ public class HO {
 
 		if (isBeta()) {
 			txt += " BETA (r" + RevisionNumber + ")";
-		} else if (isDevelopment()) {
+		}
+		else if (isDevelopment()) {
 			txt += " DEV (r" + RevisionNumber + ")";
 		}
 
@@ -81,15 +64,15 @@ public class HO {
 
 
 	/**
-	 * Main method to start a HOMainFrame.
-	 *
-	 * @param args
-	 *            the command line arguments
+	 *  HO entry point
 	 */
 	public static void main(String[] args) {
 		final long start = System.currentTimeMillis();
 
-		if (OSUtils.isMac()) {
+		portable_version = true;
+		platform = OSUtils.getOS();
+
+		if (platform == OSUtils.OS.MAC) {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
 			System.setProperty("apple.awt.showGroupBox", "true");
 		}
@@ -97,17 +80,17 @@ public class HO {
 		System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 
-		if ((args != null) && (args.length > 0)) {
-			String debugLvl = args[0].trim().toUpperCase();
-
-			if (debugLvl.equals("INFO")) {
-				HOLogger.instance().setLogLevel(HOLogger.INFORMATION);
-			} else if (debugLvl.equals("DEBUG")) {
-				HOLogger.instance().setLogLevel(HOLogger.DEBUG);
-			} else if (debugLvl.equals("WARNING")) {
-				HOLogger.instance().setLogLevel(HOLogger.WARNING);
-			} else if (debugLvl.equals("ERROR")) {
-				HOLogger.instance().setLogLevel(HOLogger.ERROR);
+		if (args != null) {
+			String arg;
+			for (String _arg : args) {
+				arg = _arg.trim().toUpperCase();
+				switch (arg) {
+					case "INFO" -> HOLogger.instance().setLogLevel(HOLogger.INFORMATION);
+					case "DEBUG" -> HOLogger.instance().setLogLevel(HOLogger.DEBUG);
+					case "WARNING" -> HOLogger.instance().setLogLevel(HOLogger.WARNING);
+					case "ERROR" -> HOLogger.instance().setLogLevel(HOLogger.ERROR);
+					case "INSTALLED" -> portable_version = false;
+				}
 			}
 		}
 
@@ -135,10 +118,10 @@ public class HO {
         	versionType = "DEV";
         }
 
-		// Usermanagement Login-Dialog
+		// Login selection in case of multi-users DB
 		try {
 			if (!User.getCurrentUser().isSingleUser()) {
-				JComboBox comboBox = new JComboBox(User.getAllUser().toArray());
+				JComboBox comboBox = new JComboBox(User.getAllUser().stream().map(User::getTeamName).toArray());
 				int choice = JOptionPane.showConfirmDialog(null, comboBox, "Login",
 						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
@@ -152,16 +135,15 @@ public class HO {
 			HOLogger.instance().log(HO.class, ex);
 		}
 
-		// Startbild
+		// start display splash image
 		final SplashFrame interuptionsWindow = new SplashFrame();
 
 		// Backup
-		if (User.getCurrentUser().isHSQLDB()) {
-			interuptionsWindow.setInfoText(1, "Backup Database");
-			BackupHelper.backup(new File(User.getCurrentUser().getDBPath()));
-		}
+		interuptionsWindow.setInfoText(1, "Backup Database");
+		BackupHelper.backup(new File(User.getCurrentUser().getDbFolder()));
 
-		// Standardparameter aus der DB holen
+
+		// Load user parameters from the DB
 		interuptionsWindow.setInfoText(2, "Initialize Database");
 		DBManager.instance().loadUserParameter();
 
@@ -200,40 +182,28 @@ public class HO {
 		HOVerwaltung.instance().loadLatestHoModel();
 		interuptionsWindow.setInfoText(6, "Load  XtraDaten");
 
-		// TableColumn
+		// Load table columns information
 		UserColumnController.instance().load();
 
 		// Set the currency from HRF
 		float fxRate = (float) HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate();
+		if (fxRate > -1) UserParameter.instance().faktorGeld = fxRate;
 
-		if (fxRate > -1) {
-			UserParameter.instance().faktorGeld = fxRate;
-		}
 
 		// Training
 		interuptionsWindow.setInfoText(7, "Initialize Training");
 
-		// Training erstellen -> dabei Trainingswochen berechnen auf Grundlage
-		// der manuellen DB Einträge
+		// Training estimation calculated on DB manual entries
 		TrainingManager.instance().refreshTrainingWeeks();
 
 		interuptionsWindow.setInfoText(8, "Prepare to show");
-		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(() -> {
+			HOMainFrame.instance().setVisible(true);
 
-			@Override
-			public void run() {
-				HOMainFrame.instance().setVisible(true);
-
-				// Startbild weg
-				interuptionsWindow.setVisible(false);
-				interuptionsWindow.dispose();
-
-				HOLogger.instance().log(HO.class, "Zeit:" + (System.currentTimeMillis() - start));
-			}
+			// stop display splash image
+			interuptionsWindow.setVisible(false);
+			interuptionsWindow.dispose();
 		});
 	}
 
-	public static int getRevisionNumber() {
-		return RevisionNumber;
-	}
 }

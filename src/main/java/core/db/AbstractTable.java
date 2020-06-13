@@ -29,9 +29,7 @@ public abstract class AbstractTable {
 		initColumns();
 	}
 	
-	protected String getTableType() {
-		return(User.getCurrentUser().isHSQLDB())?"CACHED":"";
-	}
+	protected String getTableType() {return"CACHED";}
 	
 	protected abstract void initColumns();
 	
