@@ -192,15 +192,13 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		m_jchShowSaveDialog.setOpaque(false);
 		m_jchShowSaveDialog.addActionListener(this);
 
-		final JPanel diverseOptionsPanel = new JPanel(new BorderLayout(1,2));
+		final JPanel diverseOptionsPanel = new ImagePanel(new BorderLayout(1,2));
 		diverseOptionsPanel.add(matchArchivePanel, BorderLayout.NORTH);
 		diverseOptionsPanel.add(m_jchShowSaveDialog, BorderLayout.SOUTH);
 
 		oldFixturePanel.add(diverseOptionsPanel, BorderLayout.SOUTH);
 
 		specialDownload.add(oldFixturePanel);
-
-
 
 		specialDownload.setSize(260, 280);
 		specialDownload.setLocation(260, 10);
@@ -231,7 +229,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		m_jbAbort.setLocation(380, 300);
 		getContentPane().add(m_jbAbort);
 
-		setSize(530, 360);
+		setSize(530, 380);
 
 		final Dimension size = getToolkit().getScreenSize();
 
