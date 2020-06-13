@@ -328,7 +328,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		} else if (source.equals(m_jmTraining2)) { // recalc training (7 weeks)
 			Calendar cal = Calendar.getInstance();
 			cal.setLenient(true);
-			cal.add(Calendar.WEEK_OF_YEAR, -7); // half season
+			int weeks = 7;
+			cal.add(Calendar.WEEK_OF_YEAR, -weeks); // half season
 			if (JOptionPane.showConfirmDialog(
 					this,
 					HOVerwaltung.instance().getLanguageString(

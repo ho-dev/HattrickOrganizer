@@ -1,10 +1,12 @@
 package core.model.match;
 
 import core.db.DBManager;
+import core.model.player.MatchRoleID;
 import core.util.HOLogger;
 import module.lineup.substitution.model.Substitution;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -55,7 +57,7 @@ public class MatchStatistics {
 		int minPlayed = 0;
 
 		// Those in the starting lineup entered at minute 0
-		if (isInAcceptedPositions(player.getStartPosition(), accepted)) {
+		if (isInAcceptedFieldPositions(player.getStartPosition(), accepted)) {
 			enterMin = 0;
 			inPosition = true;
 		}
@@ -65,25 +67,23 @@ public class MatchStatistics {
 		// after the substitution (on the substitution minute). Work through the
 		// list, and add minutes depending on
 		// entering/leaving the accepted position list.
-		Substitution sub;
-		for (int i = 0; i < substitutions.size(); i++) {
-			sub = substitutions.get(i);
-			if (sub == null) {
+		for (Substitution substitution : substitutions) {
+			if (substitution == null) {
 				HOLogger.instance().debug(getClass(),
 						"getMinutesPlayedError, null in substitution list");
 				break;
 			}
 
-			if ((sub.getObjectPlayerID() == spielerId) || (sub.getSubjectPlayerID() == spielerId)) {
-				int newpos = getPlayerFieldPositionAtMinute(spielerId, sub.getMatchMinuteCriteria());
-				boolean newPosAccepted = isInAcceptedPositions(newpos, accepted);
+			if ((substitution.getObjectPlayerID() == spielerId) || (substitution.getSubjectPlayerID() == spielerId)) {
+				int newpos = getPlayerFieldPositionAtMinute(spielerId, substitution.getMatchMinuteCriteria());
+				boolean newPosAccepted = isInAcceptedFieldPositions(newpos, accepted);
 				if (inPosition && !newPosAccepted) {
 					// He left a counting position.
-					minPlayed += sub.getMatchMinuteCriteria() - enterMin;
+					minPlayed += substitution.getMatchMinuteCriteria() - enterMin;
 					inPosition = false;
 				} else if (!inPosition && newPosAccepted) {
 					// He entered a counting position
-					enterMin = sub.getMatchMinuteCriteria();
+					enterMin = substitution.getMatchMinuteCriteria();
 					inPosition = true;
 				}
 			}
@@ -102,13 +102,15 @@ public class MatchStatistics {
 		return getTrainMinutesPlayedInPositions(spielerId, null);
 	}
 	
-	private boolean isInAcceptedPositions(int pos, int[] accepted) {
-		if (accepted == null)
-			return true; // all positions are accepted, use an empty array if NO position should be accepted
+	private boolean isInAcceptedFieldPositions(int pos, int[] accepted) {
+		if ( MatchRoleID.isFieldMatchRoleId(pos) ) {
+			if (accepted == null)
+				return true; // all positions are accepted, use an empty array if NO position should be accepted
 
-		for (int i = 0; i < accepted.length; i++) {
-			if (accepted[i] == pos) {
-				return true;
+			for (int i = 0; i < accepted.length; i++) {
+				if (accepted[i] == pos) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -249,26 +251,25 @@ public class MatchStatistics {
 	 * Returns the last minute of the match. Usually 90, but there could be
 	 * overtime.
 	 * 
-	 * @return the last minute or -1 if not found
+	 * @return the last minute or -0 if not found
 	 */
 	public int getMatchEndMinute(int spielerId) {
 
-		int endMinute = 0;
 		ArrayList<MatchEvent> hls = DBManager.instance().getMatchDetails(matchId).getHighlights();
+		Collections.sort(hls, MatchEvent.MatchEventMinuteComparator); // TODO: check if this is necessary. load sorted from database is preferred
 
-		for (int i = 0; i < hls.size(); i++) {
-			MatchEventID me = MatchEventID.fromMatchEventID(hls.get(i).getiMatchEventID());
-			if (me == MatchEventID.MATCH_FINISHED){endMinute = hls.get(i).getMinute();}
-			else if ((me == MatchEventID.RED_CARD_2ND_WARNING_NASTY_PLAY	||
-					  me == MatchEventID.RED_CARD_2ND_WARNING_CHEATING ||
-					  me == MatchEventID.RED_CARD_WITHOUT_WARNING ||
-					  me == MatchEventID.MODERATELY_INJURED_LEAVES_FIELD ||
-					  me == MatchEventID.BADLY_INJURED_LEAVES_FIELD ||
-					  me == MatchEventID.INJURED_AND_NO_REPLACEMENT_EXISTED ||
-					  me == MatchEventID.INJURED_AFTER_FOUL_AND_EXITS)  &&
-					hls.get(i).getSpielerID() == spielerId) {endMinute = hls.get(i).getMinute();}}
-		 return endMinute;
-	    }
+		for (MatchEvent hl : hls) {
+			MatchEventID me = MatchEventID.fromMatchEventID(hl.getiMatchEventID());
+			if (me == MatchEventID.MATCH_FINISHED) {
+				return hl.getMinute();
+			} else if (hl.getSpielerID() == spielerId) {
+				if (hl.isInjured() || hl.isRedCard()) {
+					return hl.getMinute();
+				}
+			}
+		}
+		return 0;
+	}
 
 	private boolean isOldie() {
 		Vector<MatchLineupPlayer> mlps = teamLineup.getAufstellung();
