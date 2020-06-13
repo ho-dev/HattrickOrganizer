@@ -60,7 +60,7 @@ public class User {
 			if (HO.getPlatform() == OSUtils.OS.LINUX) {
 				dbParentFolder = System.getProperty("user.home") + "/.ho";}
 			else if (HO.getPlatform() == OSUtils.OS.MAC) {
-				dbParentFolder =  System.getProperty("user.home") + "/Library/ApplicationSupport/HO";}
+				dbParentFolder =  System.getProperty("user.home") + "/Library/Application/Support/HO";}
 			else {
 				dbParentFolder = System.getenv("AppData") + "/HO";
 			}
