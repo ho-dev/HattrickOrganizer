@@ -66,7 +66,8 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	/** ID */
 	private int m_iId = -1;
 
-	public boolean isFieldMatchRoleId(){ return m_iId>=keeper && m_iId <=leftForward;}
+	public static boolean isFieldMatchRoleId(int pos){return pos>=keeper && pos <=leftForward;}
+	public boolean isFieldMatchRoleId(){ return isFieldMatchRoleId(this.m_iId); }
 	public boolean isSubstitutesMatchRoleID () { return m_iId>=substGK1 && m_iId<= substXT1;}
 	public boolean isBackupsMatchRoleID(){ return m_iId>=substGK2 && m_iId<= substXT2;}
 

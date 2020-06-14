@@ -7,6 +7,7 @@ import core.util.HOLogger;
 
 import javax.swing.*;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,8 +55,7 @@ public class MatchEvent {
 
     private int matchId;
 
-    public enum MatchEventID
-    {
+    public enum MatchEventID {
         UNKNOWN_MATCHEVENT(-1),
         PLAYERS_ENTER_THE_FIELD(19), TACTICAL_DISPOSITION(20), PLAYER_NAMES_IN_LINEUP(21), PLAYERS_FROM_NEIGHBORHOOD_USED(22), SAME_FORMATION_BOTH_TEAMS(23), TEAM_FORMATIONS_DIFFERENT(24),
         REGIONAL_DERBY(25), NEUTRAL_GROUND(26), AWAY_IS_ACTUALLY_HOME(27), SPECTATORS_OR_VENUE_RAIN(30), SPECTATORS_OR_VENUE_CLOUDY(31), SPECTATORS_OR_VENUE_FAIR_WEATHER(32),
@@ -136,7 +136,9 @@ public class MatchEvent {
             value = newValue;
         }
 
-        public int getValue() { return value; }
+        public int getValue() {
+            return value;
+        }
 
         // Reverse-lookup map for getting a MatchEvent from its value
         private static final HashMap<Integer, MatchEventID> lookup = new HashMap<>();
@@ -149,7 +151,7 @@ public class MatchEvent {
 
         public static MatchEventID fromMatchEventID(int iMatchEventID) {
             MatchEventID ret = lookup.get(iMatchEventID);
-            if ( ret == null){
+            if (ret == null) {
                 ret = UNKNOWN_MATCHEVENT;
                 HOLogger.instance().log(MatchEventID.class, "UNKNOWN_MATCHEVENT: " + iMatchEventID);
             }
@@ -197,11 +199,13 @@ public class MatchEvent {
             value = newValue;
         }
 
-        public int getValue() { return value; }
+        public int getValue() {
+            return value;
+        }
     }
 
     //This is used for the mapping of Match Event and icons
-    public static HashMap<MatchEventID, String> mapMatchEventIcons = new HashMap<MatchEventID, String>() {{
+    public static HashMap<MatchEventID, String> mapMatchEventIcons = new HashMap<>() {{
 
         put(MatchEventID.TACTICAL_DISPOSITION, HOIconName.FORMATION); //#20
         put(MatchEventID.PLAYER_NAMES_IN_LINEUP, HOIconName.FORMATION); //#21
@@ -416,7 +420,7 @@ public class MatchEvent {
         put(MatchEventID.TACTIC_ATTACK_ON_WINGS_USED, HOIconName.TACTIC_AOW); //#344
 
         put(MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_BEHIND, HOIconName.REPLACEMENT); //#350
-        put(MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_AHEAD , HOIconName.REPLACEMENT); //#351
+        put(MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_AHEAD, HOIconName.REPLACEMENT); //#351
         put(MatchEventID.PLAYER_SUBSTITUTION_MINUTE, HOIconName.REPLACEMENT); //#352
 
         put(MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_BEHIND, HOIconName.ROTATE); //#360
@@ -456,63 +460,60 @@ public class MatchEvent {
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    public boolean isBruisedOrInjured()
-    {
-        return ( isBruised() || isInjured());
+    public boolean isBruisedOrInjured() {
+        return (isBruised() || isInjured());
     }
 
-    public boolean isBruised()
-    {
+    public boolean isBruised() {
         return m_eInjuryType == Matchdetails.eInjuryType.BRUISE;
     }
 
-    public boolean isInjured()
-    {
+    public boolean isInjured() {
         return m_eInjuryType == Matchdetails.eInjuryType.INJURY;
     }
 
-    public boolean isBooked()
-    {
-        return ( isYelloCard() || isRedCard());
+    public boolean isBooked() {
+        return (isYelloCard() || isRedCard());
     }
 
     public boolean isPenaltyContestGoalEvent() {
-        return ( (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_GOAL_BY_TECHNICAL_NO_NERVES) || (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_GOAL_NO_NERVES) ||
-                (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_GOAL_IN_SPITE_OF_NERVES) );
+        return ((this.m_matchEventID == MatchEventID.PENALTY_CONTEST_GOAL_BY_TECHNICAL_NO_NERVES) || (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_GOAL_NO_NERVES) ||
+                (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_GOAL_IN_SPITE_OF_NERVES));
     }
 
     public boolean isPenaltyContestNoGoalEvent() {
-        return ( (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_NO_GOAL_BECAUSE_OF_NERVES) || (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_NO_GOAL_IN_SPITE_OF_NO_NERVES));
+        return ((this.m_matchEventID == MatchEventID.PENALTY_CONTEST_NO_GOAL_BECAUSE_OF_NERVES) || (this.m_matchEventID == MatchEventID.PENALTY_CONTEST_NO_GOAL_IN_SPITE_OF_NO_NERVES));
     }
 
     public boolean isChangeOfTactic() {
-        return ( (this.m_matchEventID == MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_BEHIND) ||(this.m_matchEventID == MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_AHEAD) || (this.m_matchEventID == MatchEventID.CHANGE_OF_TACTIC_MINUTE));
+        return ((this.m_matchEventID == MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_BEHIND) || (this.m_matchEventID == MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_AHEAD) || (this.m_matchEventID == MatchEventID.CHANGE_OF_TACTIC_MINUTE));
     }
 
-    public boolean isGoalEvent() { return isGoalEvent(m_iMatchEventID); }
-
-    public static boolean isGoalEvent(int iMatchEventID) {return ( (iMatchEventID>=100) && (iMatchEventID<200) );}
-
-    public boolean isNonGoalEvent()
-    {
-        return ( (this.m_iMatchEventID>=200) && (this.m_iMatchEventID<300) );
+    public boolean isGoalEvent() {
+        return isGoalEvent(m_iMatchEventID);
     }
 
-    public boolean isNeutralEvent()
-    {
+    public static boolean isGoalEvent(int iMatchEventID) {
+        return ((iMatchEventID >= 100) && (iMatchEventID < 200));
+    }
+
+    public boolean isNonGoalEvent() {
+        return ((this.m_iMatchEventID >= 200) && (this.m_iMatchEventID < 300));
+    }
+
+    public boolean isNeutralEvent() {
         int id = this.m_iMatchEventID;
-        return ( (id == 23) || (id == 24) || (id == 25) || (id == 27) ||
-                 ( (id >= 30) && (id <= 33)) ||  (id == 35)  ||
-                 (id == 68) || (id == 75) ||
+        return ((id == 23) || (id == 24) || (id == 25) || (id == 27) ||
+                ((id >= 30) && (id <= 33)) || (id == 35) ||
+                (id == 68) || (id == 75) ||
                 (id == 451) || (id == 454) || (id == 456) || (id == 457) ||
                 (id == 458) || (id == 464) || (id == 465) || (id == 466) ||
-                (id == 468) || (id == 469) );
+                (id == 468) || (id == 469));
     }
 
-    public boolean isSubstitution()
-    {
-        return ( (this.m_matchEventID == MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_BEHIND) || (this.m_matchEventID == MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_AHEAD) ||
-                (this.m_matchEventID == MatchEventID.PLAYER_SUBSTITUTION_MINUTE) || (this.m_matchEventID == MatchEventID.INJURED_PLAYER_REPLACED) );
+    public boolean isSubstitution() {
+        return ((this.m_matchEventID == MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_BEHIND) || (this.m_matchEventID == MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_AHEAD) ||
+                (this.m_matchEventID == MatchEventID.PLAYER_SUBSTITUTION_MINUTE) || (this.m_matchEventID == MatchEventID.INJURED_PLAYER_REPLACED));
     }
 
     /**
@@ -525,14 +526,14 @@ public class MatchEvent {
     }
 
     public final int getMatchId() {
-		return matchId;
-	}
+        return matchId;
+    }
 
-	public final void setMatchId(int matchId) {
-		this.matchId = matchId;
-	}
+    public final void setMatchId(int matchId) {
+        this.matchId = matchId;
+    }
 
-	/**
+    /**
      * Getter for property m_sEventText.
      *
      * @return Value of property m_sEventText.
@@ -637,9 +638,13 @@ public class MatchEvent {
         return this.m_matchEventID;
     }
 
-    public final void setMatchEventCategory(int m_iMatchEventCategory) {this.m_iMatchEventCategory = m_iMatchEventCategory;}
+    public final void setMatchEventCategory(int m_iMatchEventCategory) {
+        this.m_iMatchEventCategory = m_iMatchEventCategory;
+    }
 
-    public final int getMatchEventCategory() {return m_iMatchEventCategory;}
+    public final int getMatchEventCategory() {
+        return m_iMatchEventCategory;
+    }
 
     /**
      * Setter for property m_iMinute.
@@ -732,22 +737,27 @@ public class MatchEvent {
     }
 
 
-    public boolean isYelloCard() {return yellowCardME.contains(this.m_matchEventID) ; }
+    public boolean isYelloCard() {
+        return yellowCardME.contains(this.m_matchEventID);
+    }
 
     public static List<MatchEventID> yellowCardME = Arrays.asList(
             MatchEventID.YELLOW_CARD_NASTY_PLAY,                // #510
-            MatchEventID.YELLOW_CARD_CHEATING)  ;              // #511
+            MatchEventID.YELLOW_CARD_CHEATING);              // #511
 
-    public boolean isRedCard() {return redCardME.contains(this.m_matchEventID) ; }
+    public boolean isRedCard() {
+        return redCardME.contains(this.m_matchEventID);
+    }
 
     public static List<MatchEventID> redCardME = Arrays.asList(
             MatchEventID.RED_CARD_2ND_WARNING_NASTY_PLAY,          // #512
             MatchEventID.RED_CARD_2ND_WARNING_CHEATING,            // #513
-            MatchEventID.RED_CARD_WITHOUT_WARNING)  ;              // #514
+            MatchEventID.RED_CARD_WITHOUT_WARNING);              // #514
 
 
-
-    public boolean isSpecialEvent() {return specialME.contains(this.m_matchEventID) ; }
+    public boolean isSpecialEvent() {
+        return specialME.contains(this.m_matchEventID);
+    }
 
     public static List<MatchEventID> specialME = Arrays.asList(
             MatchEventID.SE_GOAL_UNPREDICTABLE_LONG_PASS,                                         // #105
@@ -781,28 +791,33 @@ public class MatchEvent {
             MatchEventID.SE_WINGER_TO_SOMEONE_NO_GOAL,                                            // #237
             MatchEventID.SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER_NO_GOAL,                            // #239
             MatchEventID.SE_QUICK_RUSHES_STOPPED_BY_QUICK_DEFENDER,                               // #289
-            MatchEventID.SE_NO_GOAL_POWERFUL_NORMAL_FORWARD_GENERATES_EXTRA_CHANCE)  ;            // #290
+            MatchEventID.SE_NO_GOAL_POWERFUL_NORMAL_FORWARD_GENERATES_EXTRA_CHANCE);            // #290
 
-    public boolean isIFK() {return IFKME.contains(this.m_matchEventID) ; }
+    public boolean isIFK() {
+        return IFKME.contains(this.m_matchEventID);
+    }
 
     public static List<MatchEventID> IFKME = Arrays.asList(
             MatchEventID.GOAL_INDIRECT_FREE_KICK,                // #185
-            MatchEventID.NO_GOAL_INDIRECT_FREE_KICK)  ;          // #285
+            MatchEventID.NO_GOAL_INDIRECT_FREE_KICK);          // #285
 
 
-
-    public boolean isLS() {return LSME.contains(this.m_matchEventID) ; }
+    public boolean isLS() {
+        return LSME.contains(this.m_matchEventID);
+    }
 
     public static List<MatchEventID> LSME = Arrays.asList(
             MatchEventID.GOAL_LONG_SHOT_NO_TACTIC,                // #107
             MatchEventID.GOAL_LONG_SHOT,                          // #187
             MatchEventID.NO_GOAL_LONG_SHOT_NO_TACTIC,            // #207
-            MatchEventID.NO_GOAL_LONG_SHOT_NO_TACTIC) ;          // #287)
+            MatchEventID.NO_GOAL_LONG_SHOT_NO_TACTIC);          // #287)
 
     /**
      * Check, if it is a Counter Attack event
      */
-    public boolean isCounterAttack() {return CounterAttackME.contains(this.m_matchEventID) ; }
+    public boolean isCounterAttack() {
+        return CounterAttackME.contains(this.m_matchEventID);
+    }
 
     public static List<MatchEventID> CounterAttackME = Arrays.asList(
             MatchEventID.COUNTER_ATTACK_GOAL_FREE_KICK,                 // #140
@@ -816,10 +831,12 @@ public class MatchEvent {
             MatchEventID.COUNTER_ATTACK_NO_GOAL_RIGHT,                  // #243
             MatchEventID.COUNTER_ATTACK_NO_GOAL_INDIRECT_FREE_KICK);    // #286
 
-            /**
-             * Check, if it is an attack on Right wing
-             */
-    public boolean isCentralAttack() {return CentralAttackME.contains(this.m_matchEventID) ; }
+    /**
+     * Check, if it is an attack on Right wing
+     */
+    public boolean isCentralAttack() {
+        return CentralAttackME.contains(this.m_matchEventID);
+    }
 
     public static List<MatchEventID> CentralAttackME = Arrays.asList(
             MatchEventID.REDUCING_GOAL_HOME_TEAM_MIDDLE,                // #101
@@ -837,12 +854,14 @@ public class MatchEvent {
             MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_MIDDLE,             // #251
             MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_MIDDLE,            // #261
             MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_MIDDLE,         // #271
-            MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_MIDDLE) ;           // #281)
+            MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_MIDDLE);           // #281)
 
     /**
      * Check, if it is an attack on Right wing
      */
-    public boolean isRightAttack() {return RightAttackME.contains(this.m_matchEventID) ; }
+    public boolean isRightAttack() {
+        return RightAttackME.contains(this.m_matchEventID);
+    }
 
     public static List<MatchEventID> RightAttackME = Arrays.asList(
             MatchEventID.REDUCING_GOAL_HOME_TEAM_RIGHT_WING,                // #103
@@ -860,13 +879,15 @@ public class MatchEvent {
             MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_RIGHT_WING,             // #253
             MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_RIGHT_WING,            // #263
             MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_RIGHT_WING,         // #273
-            MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_RIGHT_WING) ;           // #283)
+            MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_RIGHT_WING);           // #283)
 
 
     /**
      * Check, if it is an attack on left wing
      */
-    public boolean isLeftAttack() {return leftAttackME.contains(this.m_matchEventID) ; }
+    public boolean isLeftAttack() {
+        return leftAttackME.contains(this.m_matchEventID);
+    }
 
     public static List<MatchEventID> leftAttackME = Arrays.asList(
             MatchEventID.REDUCING_GOAL_HOME_TEAM_LEFT_WING,                // #102
@@ -884,7 +905,7 @@ public class MatchEvent {
             MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_LEFT_WING,             // #252
             MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_LEFT_WING,            // #262
             MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_LEFT_WING,         // #272
-            MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_LEFT_WING) ;           // #282)
+            MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_LEFT_WING);           // #282)
 
 
     /**
@@ -892,13 +913,16 @@ public class MatchEvent {
      */
     public boolean isManMarking() {
         List<Integer> man_markingME = IntStream.range(380, 382).boxed().collect(Collectors.toList());
-        return man_markingME.contains(m_matchEventID.value) ; }
+        return man_markingME.contains(m_matchEventID.value);
+    }
 
 
     /**
      * Check, if it is a free kick event
      */
-    public boolean isFreeKick() {return freekickME.contains(this.m_matchEventID) ; }
+    public boolean isFreeKick() {
+        return freekickME.contains(this.m_matchEventID);
+    }
 
     public static List<MatchEventID> freekickME = Arrays.asList(
             MatchEventID.REDUCING_GOAL_HOME_TEAM_FREE_KICK,                // #100
@@ -916,43 +940,44 @@ public class MatchEvent {
             MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_FREE_KICK,             // #250
             MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_FREE_KICK,            // #260
             MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_FREE_KICK,         // #270
-            MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_FREE_KICK) ;           // #280)
+            MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_FREE_KICK);           // #280)
 
     /**
      * Check, if it is a penalty event
      */
-    public boolean isPenalty() {return penaltyME.contains(this.m_matchEventID) ; }
+    public boolean isPenalty() {
+        return penaltyME.contains(this.m_matchEventID);
+    }
 
     public static List<MatchEventID> penaltyME = Arrays.asList(
-                                    MatchEventID.REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,                // #104
-                                    MatchEventID.EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,               // #114
-                                    MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL,            // #124
-                                    MatchEventID.INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,                // #134
-                                    MatchEventID.REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,                // #154
-                                    MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,               // #164
-                                    MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL,            // #174
-                                    MatchEventID.INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,                // #184
-                                    MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,             // #204
-                                    MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,            // #214
-                                    MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL,         // #224
-                                    MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,             // #234
-                                    MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,             // #254
-                                    MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,            // #264
-                                    MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL,         // #274
-                                    MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL) ;           // #284)
+            MatchEventID.REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,                // #104
+            MatchEventID.EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,               // #114
+            MatchEventID.GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL,            // #124
+            MatchEventID.INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,                // #134
+            MatchEventID.REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,                // #154
+            MatchEventID.EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,               // #164
+            MatchEventID.GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL,            // #174
+            MatchEventID.INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,                // #184
+            MatchEventID.NO_REDUCING_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,             // #204
+            MatchEventID.NO_EQUALIZER_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,            // #214
+            MatchEventID.NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_PENALTY_KICK_NORMAL,         // #224
+            MatchEventID.NO_INCREASE_GOAL_HOME_TEAM_PENALTY_KICK_NORMAL,             // #234
+            MatchEventID.NO_REDUCING_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,             // #254
+            MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL,            // #264
+            MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_PENALTY_KICK_NORMAL,         // #274
+            MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_PENALTY_KICK_NORMAL);           // #284)
 
     /**
      * Check, if it is a long shot event
      */
     public boolean isLongShot() {
         return
-                (this.m_matchEventID ==  MatchEventID.GOAL_LONG_SHOT_NO_TACTIC ||     // #107
-                this.m_matchEventID == MatchEventID.GOAL_LONG_SHOT ||                 // #187
-                this.m_matchEventID == MatchEventID.NO_GOAL_LONG_SHOT_NO_TACTIC ||    // #207
-                this.m_matchEventID == MatchEventID.NO_GOAL_LONG_SHOT ||              // #287
-                this.m_matchEventID == MatchEventID.NO_GOAL_LONG_SHOT_DEFENDED) ;     // #288
+                (this.m_matchEventID == MatchEventID.GOAL_LONG_SHOT_NO_TACTIC ||     // #107
+                        this.m_matchEventID == MatchEventID.GOAL_LONG_SHOT ||                 // #187
+                        this.m_matchEventID == MatchEventID.NO_GOAL_LONG_SHOT_NO_TACTIC ||    // #207
+                        this.m_matchEventID == MatchEventID.NO_GOAL_LONG_SHOT ||              // #287
+                        this.m_matchEventID == MatchEventID.NO_GOAL_LONG_SHOT_DEFENDED);     // #288
     }
-
 
 
     /**
@@ -968,14 +993,14 @@ public class MatchEvent {
      */
     public boolean isOtherSE() {
         return
-                (this.m_matchEventID ==  MatchEventID.SE_TIRED_DEFENDER_MISTAKE_STRIKER_SCORES ||
-                this.m_matchEventID == MatchEventID.SE_TIRED_DEFENDER_MISTAKE_BUT_NO_GOAL ||
-                this.m_matchEventID == MatchEventID.SE_GOAL_CORNER_TO_ANYONE ||
-                this.m_matchEventID == MatchEventID.SE_NO_GOAL_CORNER_TO_ANYONE ||
-                this.m_matchEventID == MatchEventID.SE_EXPERIENCED_FORWARD_SCORES ||
-                this.m_matchEventID == MatchEventID.SE_EXPERIENCED_FORWARD_FAILS_TO_SCORE ||
-                this.m_matchEventID == MatchEventID.SE_INEXPERIENCED_DEFENDER_CAUSES_GOAL ||
-                this.m_matchEventID == MatchEventID.SE_INEXPERIENCED_DEFENDER_ALMOST_CAUSES_GOAL);
+                (this.m_matchEventID == MatchEventID.SE_TIRED_DEFENDER_MISTAKE_STRIKER_SCORES ||
+                        this.m_matchEventID == MatchEventID.SE_TIRED_DEFENDER_MISTAKE_BUT_NO_GOAL ||
+                        this.m_matchEventID == MatchEventID.SE_GOAL_CORNER_TO_ANYONE ||
+                        this.m_matchEventID == MatchEventID.SE_NO_GOAL_CORNER_TO_ANYONE ||
+                        this.m_matchEventID == MatchEventID.SE_EXPERIENCED_FORWARD_SCORES ||
+                        this.m_matchEventID == MatchEventID.SE_EXPERIENCED_FORWARD_FAILS_TO_SCORE ||
+                        this.m_matchEventID == MatchEventID.SE_INEXPERIENCED_DEFENDER_CAUSES_GOAL ||
+                        this.m_matchEventID == MatchEventID.SE_INEXPERIENCED_DEFENDER_ALMOST_CAUSES_GOAL);
     }
 
 
@@ -983,7 +1008,7 @@ public class MatchEvent {
      * Check, if it is a Specialty Special Event, i.e SE but not weather
      */
     public boolean isSpecialtyNonWeatherSE() {
-        return (this.isSE() && (!this.isSpecialtyWeatherSE()) );
+        return (this.isSE() && (!this.isSpecialtyWeatherSE()));
     }
 
 
@@ -991,15 +1016,15 @@ public class MatchEvent {
      * Check, if it is a SE related both to player specialty and weather
      */
     public boolean isSpecialtyWeatherSE() {
-    	return
-    			(this.m_matchEventID ==  MatchEventID.SE_TECHNICAL_SUFFERS_FROM_RAIN ||
-                this.m_matchEventID == MatchEventID.SE_POWERFUL_THRIVES_IN_RAIN ||
-                this.m_matchEventID == MatchEventID.SE_TECHNICAL_THRIVES_IN_SUN ||
-                this.m_matchEventID == MatchEventID.SE_POWERFUL_SUFFERS_FROM_SUN ||
-                this.m_matchEventID == MatchEventID.SE_QUICK_LOSES_IN_RAIN ||
-                this.m_matchEventID == MatchEventID.SE_QUICK_LOSES_IN_SUN ||
-                this.m_matchEventID == MatchEventID.RAINY_WEATHER_MANY_PLAYERS_AFFECTED||
-                this.m_matchEventID == MatchEventID.SUNNY_WEATHER_MANY_PLAYERS_AFFECTED);
+        return
+                (this.m_matchEventID == MatchEventID.SE_TECHNICAL_SUFFERS_FROM_RAIN ||
+                        this.m_matchEventID == MatchEventID.SE_POWERFUL_THRIVES_IN_RAIN ||
+                        this.m_matchEventID == MatchEventID.SE_TECHNICAL_THRIVES_IN_SUN ||
+                        this.m_matchEventID == MatchEventID.SE_POWERFUL_SUFFERS_FROM_SUN ||
+                        this.m_matchEventID == MatchEventID.SE_QUICK_LOSES_IN_RAIN ||
+                        this.m_matchEventID == MatchEventID.SE_QUICK_LOSES_IN_SUN ||
+                        this.m_matchEventID == MatchEventID.RAINY_WEATHER_MANY_PLAYERS_AFFECTED ||
+                        this.m_matchEventID == MatchEventID.SUNNY_WEATHER_MANY_PLAYERS_AFFECTED);
     }
 
     /**
@@ -1007,39 +1032,41 @@ public class MatchEvent {
      */
     public boolean isPositiveSpecialtyWeatherSE() {
         return
-                (m_iMatchEventID ==  MatchEventID.SE_TECHNICAL_THRIVES_IN_SUN.value ||
-                 m_iMatchEventID == MatchEventID.SE_POWERFUL_THRIVES_IN_RAIN.value);
+                (m_iMatchEventID == MatchEventID.SE_TECHNICAL_THRIVES_IN_SUN.value ||
+                        m_iMatchEventID == MatchEventID.SE_POWERFUL_THRIVES_IN_RAIN.value);
     }
 
     /**
      * Check, if it is a negative SE related both to player specialty and weather
      */
     public boolean isNegativeSpecialtyWeatherSE() {
-        return (this.isSpecialtyWeatherSE() && (! this.isPositiveSpecialtyWeatherSE()));
+        return (this.isSpecialtyWeatherSE() && (!this.isPositiveSpecialtyWeatherSE()));
     }
 
     public String getEventTextDescription() {
         return getEventTextDescription(m_matchEventID.value);
-        }
+    }
 
     public static String getEventTextDescription(int iMatchEventID) {
-        return HOVerwaltung.instance().getLanguageString("MatchEvent_"+iMatchEventID);
+        return HOVerwaltung.instance().getLanguageString("MatchEvent_" + iMatchEventID);
     }
 
     public ImageIcon getIcon() {
 
         MatchEventID me = this.getMatchEventID();
 
-        if (me == null) { return null;}
+        if (me == null) {
+            return null;
+        }
 
 
         ImageIcon icon;
 
         if (isBruised()) {
-            icon = ThemeManager.getIcon(HOIconName.BRUISED);}
-        else if (isInjured()) {
-            icon = ThemeManager.getIcon(HOIconName.INJURED);}
-        else {
+            icon = ThemeManager.getIcon(HOIconName.BRUISED);
+        } else if (isInjured()) {
+            icon = ThemeManager.getIcon(HOIconName.INJURED);
+        } else {
             String sIcon = MatchEvent.mapMatchEventIcons.getOrDefault(me, HOIconName.UNKOWN);
             if (sIcon == null) {
                 return null;
@@ -1050,6 +1077,4 @@ public class MatchEvent {
         return icon;
 
     }
-
-
-    }
+}
