@@ -35,7 +35,7 @@ public class User {
 
     // getters and setters
 	public String getDbName() {return dbName;}
-	public void setDbName(String dbName) {this.dbName = dbName;	}
+	public void setDbName(String dbName) {this.dbName = dbName; }
 	public final String getDriver() {return driver;	}
 	public String getDbFolder() {return dbFolder;}
 	public final String getTeamName() {return name;}
@@ -55,12 +55,12 @@ public class User {
 	public static String getDbParentFolder() {return dbParentFolder;}
 
 	private static void setDBParentFolder(){
-		if (! HO.isPortableVersion())
-		{
+		if (! HO.isPortableVersion()) {
 			if (HO.getPlatform() == OSUtils.OS.LINUX) {
 				dbParentFolder = System.getProperty("user.home") + "/.ho";}
 			else if (HO.getPlatform() == OSUtils.OS.MAC) {
-				dbParentFolder =  System.getProperty("user.home") + "/Library/Application/Support/HO";}
+				dbParentFolder =  System.getProperty("user.home") + "/Library/Application Support/HO";
+			}
 			else {
 				dbParentFolder = System.getenv("AppData") + "/HO";
 			}
@@ -68,10 +68,7 @@ public class User {
 		else {
 			dbParentFolder = System.getProperty("user.dir");
 		}
-
 	}
-
-
 
 	private User() {}
 
@@ -96,8 +93,6 @@ public class User {
 
 		setDBParentFolder(); // this determine the location of the db folder base on os and installation type
 		File file = getUserXMLfile(FILENAME);
-
-
 
 		if (file.exists()) {
 			try {
@@ -124,7 +119,6 @@ public class User {
 			this_user.dbFolder = Paths.get(dbParentFolder, this_user.dbName).toString();
 		}
 	}
-
 
 	public static void save() {
 		try {
@@ -174,12 +168,6 @@ public class User {
 		return dbURL;
 	}
 
-
-
-
-
-
-
 	public static User addNewUser() {
 		User newUser = new User();
 		newUser.setName("user" + (users.size() + 1));
@@ -188,8 +176,6 @@ public class User {
 		users.add(newUser);
 		return newUser;
 	}
-
-
 
 	private static File getUserXMLfile(String fileName) {
 		Path filePath = Paths.get(getDbParentFolder(), fileName);
