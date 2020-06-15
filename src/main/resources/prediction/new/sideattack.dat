@@ -6,61 +6,62 @@ power                = 1.165
 trainerOff           = 1.1
 trainerDef           = 0.9
 trainerNeutral       = 1.0
+confidence           = 0.0525
 tacticLongshots       = 0.972980
 pullback             = -0.25
 
 [passing_middle]
-IM_norm               = 0.02170326084434105
-IM_off                = 0.0300506688613953
-IM_def                = 0.011686371223875952
+IM_norm               = 0.02483
+IM_off                = 0.03438
+IM_def                = 0.013370000000000002
 
 [passing_allsides]
-FW_norm               = 0.023372742447751903
-FW_def                = 0.05175392970573635
-FW_def.technical      = 0.06844874573984484
+FW_norm               = 0.026740000000000003
+FW_def                = 0.05921
+FW_def.technical      = 0.07830999999999999
 
 [passing_thisside]
-IM_norm               = 0.0434065216886821
-IM_off                = 0.0601013377227906
-IM_def                = 0.023372742447751903
-IM_tw                 = 0.05175392970573635
-WI_norm               = 0.0434065216886821
-WI_off                = 0.04841496649891465
-WI_def                = 0.035059113671627846
-WI_tm                 = 0.02504222405116275
-FW_tw                 = 0.035059113671627846
+IM_norm               = 0.04966
+IM_off                = 0.06876
+IM_def                = 0.026740000000000003
+IM_tw                 = 0.05921
+WI_norm               = 0.04966
+WI_off                = 0.055389999999999995
+WI_def                = 0.04011
+WI_tm                 = 0.02865
+FW_tw                 = 0.04011
 
 [passing_otherside]
-FW_tw                 = 0.0100168896204651
+FW_tw                 = 0.01146
 
 [winger_thisside]
-CD_tw                  = 0.0434065216886821
-WB_norm                = 0.09849941460124015
-WB_off                 = 0.11519423063534864
-WB_tm                  = 0.058431856119379746
-WB_def                 = 0.07512667215348826
-IM_tw                 = 0.09849941460124015
-WI_norm               = 0.1435754178933331
-WI_off                = 0.166948160341085
-WI_def                = 0.11519423063534864
-WI_tm                 = 0.1235416386524029
-FW_tw                 = 0.10684682261829441
+CD_tw                  = 0.04966
+WB_norm                = 0.11269
+WB_off                 = 0.13179
+WB_tm                  = 0.06684999999999999
+WB_def                 = 0.08595
+IM_tw                 = 0.11269
+WI_norm               = 0.16426
+WI_off                = 0.191
+WI_def                = 0.13179
+WI_tm                 = 0.14134
+FW_tw                 = 0.12224
 
 [winger_allsides]
-FW_norm               = 0.0400675584818604
-FW_def                = 0.02170326084434105
-FW_def.technical      = 0.02170326084434105
+FW_norm               = 0.04584
+FW_def                = 0.02483
+FW_def.technical      = 0.02483
 
 [winger_otherside]
-FW_tw                 = 0.035059113671627846
+FW_tw                 = 0.04011
 
 [scoring_allsides]
-FW_norm               = 0.04507600329209296
-FW_def                = 0.02170326084434105
-FW_def.technical      = 0.02170326084434105
+FW_norm               = 0.051570000000000005
+FW_def                = 0.02483
+FW_def.technical      = 0.02483
 
 [scoring_otherside]
-FW_tw                 = 0.031720150464806154
+FW_tw                 = 0.03629
 
 [scoring_thisside]
-FW_tw                 = 0.08514356177395335
+FW_tw                 = 0.09741
