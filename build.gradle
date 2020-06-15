@@ -348,14 +348,6 @@ task createLanguageFileList(dependsOn: poeditorPull)  {
 
 }
 
-task compute_sha_sums(dependsOn: updatebuildreferences){
-    group 'sub tasks'
-    description 'compute sha sums of binaries and store them in files'
-    doLast {
-        String command = "cmd /c D:\\Anaconda3\\python ${python_script}"
-        Process p = Runtime.getRuntime().exec(command)
-    }
-}
 
 task resetDB {
     group 'tool'
