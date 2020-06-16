@@ -3,20 +3,12 @@ package module.playerOverview;
 
 import core.gui.print.ComponentPrintObject;
 import core.gui.print.PrintController;
-import core.gui.theme.HOIconName;
-import core.gui.theme.LightGrayFilter;
-import core.gui.theme.ThemeManager;
+import core.gui.theme.*;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.HOLogger;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.FilteredImageSource;
@@ -38,36 +30,36 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
 
 	//~ Instance fields ----------------------------------------------------------------------------
 
-    private final JButton doButton = new JButton(ThemeManager.getIcon(HOIconName.TURN));
-    private final JButton m_jbDrucken = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
-    private final JToggleButton aGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[1]).getImage(), 0.5f)));
-	private final JToggleButton aGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[1]).getImage(), 0.5f)));
-	private final JToggleButton bGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[2]).getImage(), 0.5f)));
-	private final JToggleButton bGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[2]).getImage(), 0.5f)));
-	private final JToggleButton cGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[3]).getImage(), 0.5f)));
-	private final JToggleButton cGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[3]).getImage(), 0.5f)));
-	private final JToggleButton dGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[4]).getImage(), 0.5f)));
-	private final JToggleButton dGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[4]).getImage(), 0.5f)));
-	private final JToggleButton eGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[5]).getImage(), 0.5f)));
-	private final JToggleButton eGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[5]).getImage(), 0.5f)));
-    private final JToggleButton fGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[6]).getImage(), 0.5f)));
-	private final JToggleButton fGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[6]).getImage(), 0.5f)));
-    private final JToggleButton noGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.NO_TEAM).getImage(), 0.5f)));
-	private final JToggleButton noGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.NO_TEAM).getImage(), 0.5f)));
+    private final JButton doButton = new JButton(ImageUtilities.getSvgIcon(HOIconName.TURN));
+    private final JButton m_jbDrucken = new JButton(ImageUtilities.getSvgIcon(HOIconName.PRINTER));
+    private final JToggleButton aGruppe = new JToggleButton(
+            GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[1], 12, 12, "0.25"));
+	private final JToggleButton aGruppe2 = new JToggleButton(
+            GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[1], 12, 12, "0.25"));
+	private final JToggleButton bGruppe = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[2],12, 12, "0.25"));
+	private final JToggleButton bGruppe2 = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[2], 12, 12, "0.25"));
+	private final JToggleButton cGruppe = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[3], 12, 12, "0.25"));
+	private final JToggleButton cGruppe2 = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[3], 12, 12, "0.25"));
+	private final JToggleButton dGruppe = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[4], 12, 12, "0.25"));
+	private final JToggleButton dGruppe2 = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[4], 12, 12, "0.25"));
+	private final JToggleButton eGruppe = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[5], 12, 12, "0.25"));
+	private final JToggleButton eGruppe2 = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[5], 12, 12, "0.25"));
+    private final JToggleButton fGruppe = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[6], 12, 12, "0.25"));
+	private final JToggleButton fGruppe2 = new JToggleButton(
+            GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[6], 12, 12, "0.25"));
+    private final JToggleButton noGruppe = new JToggleButton(
+            GroupTeam.getGroupIcon("", 12, 12, "0.25"));
+	private final JToggleButton noGruppe2 = new JToggleButton(
+            GroupTeam.getGroupIcon("", 12, 12, "0.25"));
     private PlayerOverviewTable m_clTable;
 
     // ~ Constructors
@@ -101,17 +93,17 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
         if (button.equals(noGruppe) || button.equals(noGruppe2)) {
             return "";
         } else if (button.equals(aGruppe) || button.equals(aGruppe2)) {
-            return HOIconName.TEAMSMILIES[1];
+            return GroupTeam.TEAMSMILIES[1];
         } else if (button.equals(bGruppe) || button.equals(bGruppe2)) {
-            return HOIconName.TEAMSMILIES[2];
+            return GroupTeam.TEAMSMILIES[2];
         } else if (button.equals(cGruppe) || button.equals(cGruppe2)) {
-            return HOIconName.TEAMSMILIES[3];
+            return GroupTeam.TEAMSMILIES[3];
         } else if (button.equals(dGruppe) || button.equals(dGruppe2)) {
-            return HOIconName.TEAMSMILIES[4];
+            return GroupTeam.TEAMSMILIES[4];
         } else if (button.equals(eGruppe) || button.equals(eGruppe2)) {
-            return HOIconName.TEAMSMILIES[5];
+            return GroupTeam.TEAMSMILIES[5];
         } else if (button.equals(fGruppe) || button.equals(fGruppe2)) {
-            return HOIconName.TEAMSMILIES[6];
+            return GroupTeam.TEAMSMILIES[6];
         } else {
             return "";
         }
@@ -231,37 +223,37 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
         layout.setConstraints(noGruppe, constraints);
         bg.add(noGruppe);
         add(noGruppe);
-        initButton(aGruppe,tooltipFrom,HOIconName.TEAMSMILIES[1]);
+        initButton(aGruppe,tooltipFrom, GroupTeam.TEAMSMILIES[1]);
         constraints.gridx = 1;
         constraints.gridy = 0;
         layout.setConstraints(aGruppe, constraints);
         bg.add(aGruppe);
         add(aGruppe);
-        initButton(bGruppe,tooltipFrom,HOIconName.TEAMSMILIES[2]);
+        initButton(bGruppe,tooltipFrom, GroupTeam.TEAMSMILIES[2]);
         constraints.gridx = 2;
         constraints.gridy = 0;
         layout.setConstraints(bGruppe, constraints);
         bg.add(bGruppe);
         add(bGruppe);
-        initButton(cGruppe,tooltipFrom,HOIconName.TEAMSMILIES[3]);
+        initButton(cGruppe,tooltipFrom, GroupTeam.TEAMSMILIES[3]);
         constraints.gridx = 3;
         constraints.gridy = 0;
         layout.setConstraints(cGruppe, constraints);
         bg.add(cGruppe);
         add(cGruppe);
-        initButton(dGruppe,tooltipFrom,HOIconName.TEAMSMILIES[4]);
+        initButton(dGruppe,tooltipFrom, GroupTeam.TEAMSMILIES[4]);
         constraints.gridx = 4;
         constraints.gridy = 0;
         layout.setConstraints(dGruppe, constraints);
         bg.add(dGruppe);
         add(dGruppe);
-        initButton(eGruppe,tooltipFrom,HOIconName.TEAMSMILIES[5]);
+        initButton(eGruppe,tooltipFrom, GroupTeam.TEAMSMILIES[5]);
         constraints.gridx = 5;
         constraints.gridy = 0;
         layout.setConstraints(eGruppe, constraints);
         bg.add(eGruppe);
         add(eGruppe);
-        initButton(fGruppe,tooltipFrom,HOIconName.TEAMSMILIES[6]);
+        initButton(fGruppe,tooltipFrom, GroupTeam.TEAMSMILIES[6]);
         constraints.gridx = 6;
         constraints.gridy = 0;
         layout.setConstraints(fGruppe, constraints);
@@ -270,43 +262,43 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
 
         final ButtonGroup bg2 = new ButtonGroup();
 
-        initButton(noGruppe2,tooltipTo,HOIconName.NO_TEAM);
+        initButton(noGruppe2,tooltipTo, GroupTeam.NO_TEAM);
         constraints.gridx = 0;
         constraints.gridy = 1;
         layout.setConstraints(noGruppe2, constraints);
         bg2.add(noGruppe2);
         add(noGruppe2);
-        initButton(aGruppe2,tooltipTo,HOIconName.TEAMSMILIES[1]);
+        initButton(aGruppe2,tooltipTo, GroupTeam.TEAMSMILIES[1]);
         constraints.gridx = 1;
         constraints.gridy = 1;
         layout.setConstraints(aGruppe2, constraints);
         bg2.add(aGruppe2);
         add(aGruppe2);
-        initButton(bGruppe2,tooltipTo,HOIconName.TEAMSMILIES[2]);
+        initButton(bGruppe2,tooltipTo, GroupTeam.TEAMSMILIES[2]);
         constraints.gridx = 2;
         constraints.gridy = 1;
         layout.setConstraints(bGruppe2, constraints);
         bg2.add(bGruppe2);
         add(bGruppe2);
-        initButton(cGruppe2,tooltipTo,HOIconName.TEAMSMILIES[3]);
+        initButton(cGruppe2,tooltipTo, GroupTeam.TEAMSMILIES[3]);
         constraints.gridx = 3;
         constraints.gridy = 1;
         layout.setConstraints(cGruppe2, constraints);
         bg2.add(cGruppe2);
         add(cGruppe2);
-        initButton(dGruppe2,tooltipTo,HOIconName.TEAMSMILIES[4]);
+        initButton(dGruppe2,tooltipTo, GroupTeam.TEAMSMILIES[4]);
         constraints.gridx = 4;
         constraints.gridy = 1;
         layout.setConstraints(dGruppe2, constraints);
         bg2.add(dGruppe2);
         add(dGruppe2);
-        initButton(eGruppe2,tooltipTo,HOIconName.TEAMSMILIES[5]);
+        initButton(eGruppe2,tooltipTo, GroupTeam.TEAMSMILIES[5]);
         constraints.gridx = 5;
         constraints.gridy = 1;
         layout.setConstraints(eGruppe2, constraints);
         bg2.add(eGruppe2);
         add(eGruppe2);
-        initButton(fGruppe2,tooltipTo,HOIconName.TEAMSMILIES[6]);
+        initButton(fGruppe2,tooltipTo, GroupTeam.TEAMSMILIES[6]);
         constraints.gridx = 6;
         constraints.gridy = 1;
         layout.setConstraints(fGruppe2, constraints);
@@ -336,7 +328,7 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
     private void initButton(JToggleButton button,String tooltip,String key){
     	button.setToolTipText(tooltip);
     	button.setPreferredSize(new Dimension(16, 16));
-    	button.setSelectedIcon(ThemeManager.getIcon(key));
+        button.setSelectedIcon(GroupTeam.getGroupIcon(key));
     	button.addActionListener(this);
     }
 

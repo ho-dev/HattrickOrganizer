@@ -1,7 +1,7 @@
 // %3364174802:de.hattrickorganizer.gui.model%
 package core.gui.comp.entry;
 
-import core.gui.theme.ThemeManager;
+import core.gui.theme.GroupTeam;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 
@@ -106,13 +106,13 @@ public class SmilieEntry extends DoppelLabelEntry {
 	public final void updateComponent() {
         if (player != null) {
             if ((player.getTeamInfoSmilie() != null) && !player.getTeamInfoSmilie().equals("")) {
-                team.setIcon(ThemeManager.getIcon(player.getTeamInfoSmilie()));
+                team.setIcon(GroupTeam.getGroupIcon(player.getTeamInfoSmilie(), 16, 16));
             } else {
                 team.clear();
             }
 
             if ((player.getManuellerSmilie() != null) && !player.getManuellerSmilie().equals("")) {
-                manuell.setIcon(ThemeManager.getIcon(player.getManuellerSmilie()));
+                manuell.setIcon(GroupTeam.getGroupIcon(player.getManuellerSmilie(), 16, 16));
             } else {
                 manuell.clear();
             }

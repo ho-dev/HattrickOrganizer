@@ -7,6 +7,7 @@ import core.gui.model.SpielerCBItem;
 import core.gui.model.SpielerCBItemRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
@@ -212,7 +213,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 
 		panel.add(playerComboBox);
 
-		printButton = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
+		printButton = new JButton(ImageUtilities.getSvgIcon(HOIconName.PRINTER));
 		printButton.setSize(25, 25);
 		printButton.setLocation(220, 5);
 

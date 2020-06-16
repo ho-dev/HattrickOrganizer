@@ -7,6 +7,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import module.series.promotion.*;
@@ -204,7 +205,7 @@ public class SeriesPanel extends LazyImagePanel {
 		deleteButton.setBackground(ThemeManager.getColor(HOColorName.BUTTON_BG));
 		toolbarPanel.add(deleteButton);
 
-		printButton = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
+		printButton = new JButton(ImageUtilities.getSvgIcon(HOIconName.PRINTER));
 		printButton.setToolTipText(HOVerwaltung.instance().getLanguageString(
 				"tt_Ligatabelle_SaisonDrucken"));
 		printButton.setSize(25, 25);

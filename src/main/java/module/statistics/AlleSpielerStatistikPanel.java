@@ -22,7 +22,9 @@ import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.StatistikModel;
+import core.gui.theme.GroupTeam;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -231,7 +233,7 @@ public class AlleSpielerStatistikPanel extends LazyImagePanel {
 		constraints2.gridwidth = 2;
 		constraints2.fill = GridBagConstraints.NONE;
 		constraints2.anchor = GridBagConstraints.WEST;
-		m_jbPrint = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
+		m_jbPrint = new JButton(ImageUtilities.getSvgIcon(HOIconName.PRINTER));
 		m_jbPrint.setToolTipText(hov.getLanguageString("tt_Statistik_drucken"));
 		m_jbPrint.setPreferredSize(new Dimension(25, 25));
 		layout2.setConstraints(m_jbPrint, constraints2);
@@ -272,7 +274,7 @@ public class AlleSpielerStatistikPanel extends LazyImagePanel {
 		panel2.add(label);
 		constraints2.gridx = 0;
 		constraints2.gridy = 4;
-		m_jcbGruppe = new JComboBox(HOIconName.TEAMSMILIES);
+		m_jcbGruppe = new JComboBox(GroupTeam.TEAMSMILIES);
 		m_jcbGruppe.setRenderer(new core.gui.comp.renderer.SmilieListCellRenderer());
 		m_jcbGruppe.setBackground(ThemeManager.getColor(TABLEENTRY_BG));
 		m_jcbGruppe.setMaximumRowCount(25);
