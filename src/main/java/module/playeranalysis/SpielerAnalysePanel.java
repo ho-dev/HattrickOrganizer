@@ -1,6 +1,9 @@
 // %4061149036:de.hattrickorganizer.gui.playeranalysis%
 package module.playeranalysis;
 
+import core.db.DBManager;
+import core.gui.HOMainFrame;
+import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.SpielerCBItem;
@@ -9,18 +12,15 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -93,6 +93,51 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 				}
 			}
 		});
+		m_jtSpielerMatchesTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try{
+					int columnMATCHID=54;
+					core.gui.comp.entry.ColorLabelEntry colorLabelEntry = (ColorLabelEntry) m_jtSpielerMatchesTable.getValueAt(m_jtSpielerMatchesTable.getSelectedRow(),columnMATCHID);
+					int matchId = Integer.parseInt(colorLabelEntry.getText());
+					if(e.getClickCount()==2  && m_jtSpielerMatchesTable.getSelectedRow()>=0){
+						HOMainFrame.instance().showMatch(Integer.parseInt(colorLabelEntry.getText()));
+					}else if(e.getClickCount()==1 && e.isShiftDown()){
+						MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
+						getHTURL(matchId+"",info.getMatchTyp().isOfficial());
+					}
+				}catch (Exception ex){
+
+				}
+
+			}
+		});
+	}
+
+	public void getHTURL(String matchId, boolean isOfficial){
+		URI url;
+		if (isOfficial) {
+			url = URI.create(String.format("http://www.hattrick.org/Club/Matches/Match.aspx?matchID=%s", matchId));
+		}else
+			url= URI.create(String.format("https://www.hattrick.org/Club/Matches/Match.aspx?matchID=%s&SourceSystem=HTOIntegrated", matchId));
+
+		if(Desktop.isDesktopSupported()){
+			Desktop desktop = Desktop.getDesktop();
+			try {
+				desktop.browse(url);
+			} catch (IOException   e) {}
+		}else{
+			String os = System.getProperty("os.name").toLowerCase();
+			Runtime runtime = Runtime.getRuntime();
+			try {
+				if(os.indexOf("win") >= 0)
+					runtime.exec("rundll32 url.dll,FileProtocolHandler " + url);
+				else if(os.indexOf("mac") >= 0)
+					runtime.exec("open " + url);
+				else
+					runtime.exec("firefox " + url);
+			} catch (IOException e) {}
+		}
 	}
 
 	/**
