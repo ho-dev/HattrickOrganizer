@@ -22,7 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageProducer;
 import java.text.DateFormat;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -195,13 +195,11 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
     private void gruppenMarkierung() {
         //Von beiden Gruppen ein Button selektiert
         if ((getSelectedButton(true) != null) && (getSelectedButton(false) != null)) {
-            final Vector<Player> allePlayer = HOVerwaltung.instance().getModel().getAllSpieler();
+            final List<Player> allePlayer = HOVerwaltung.instance().getModel().getCurrentPlayers();
             final String suchName = getName4Button(getSelectedButton(true));
             final String ersatzName = getName4Button(getSelectedButton(false));
 
-            for (int i = 0; i < allePlayer.size(); i++) {
-                final Player player = allePlayer.get(i);
-
+            for (Player player : allePlayer){
                 //Player in der Gruppe
                 if (player.getTeamInfoSmilie().equals(suchName)) {
                     player.setTeamInfoSmilie(ersatzName);

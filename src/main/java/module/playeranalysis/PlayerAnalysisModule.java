@@ -13,8 +13,7 @@ import core.module.config.ModuleConfig;
 public final class PlayerAnalysisModule extends DefaultModule {
 	static final String SHOW_GAMEANALYSIS = "PA_PlayerAnalysis";
 	public static final String SHOW_PLAYERCOMPARE = "PA_PlayerCompare";
-	static final String SHOW_EXPERIENCE = "PA_Experience";
-	
+
 	public PlayerAnalysisModule(){
 		super(true);
 		initialize();
@@ -23,9 +22,6 @@ public final class PlayerAnalysisModule extends DefaultModule {
 	private void initialize() {
 		if(! ModuleConfig.instance().containsKey(SHOW_PLAYERCOMPARE))
 			ModuleConfig.instance().setBoolean(SHOW_PLAYERCOMPARE, false);
-		
-		if(! ModuleConfig.instance().containsKey(SHOW_EXPERIENCE))
-			ModuleConfig.instance().setBoolean(SHOW_EXPERIENCE, false);
 		
 	}
 

@@ -57,7 +57,7 @@ final class FinancePanel extends JPanel {
     }
 
     void setLabels() {
-        final Finanzen finances = HOVerwaltung.instance().getModel().getFinanzen();
+        final Finanzen finances = HOVerwaltung.instance().getModel().getFinance();
         final float factor = core.model.UserParameter.instance().faktorGeld;
 
         if (currentFinance) {

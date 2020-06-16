@@ -109,7 +109,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// All Player Positions Inform First 11
 		List<Player> selectedPlayers = new ArrayList<>();
 		List<Player> assitPlayers = new ArrayList<>();
-		List<Player> allPlayers = HOVerwaltung.instance().getModel().getAllSpieler();
+		List<Player> allPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		List<Player> filteredPlayers = new ArrayList<>();
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 

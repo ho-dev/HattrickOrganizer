@@ -1,43 +1,34 @@
-// %2388812641:de.hattrickorganizer.tools.backup%
 package core.db.backup;
 
 import core.db.User;
 import core.file.ExampleFileFilter;
 import core.util.HOLogger;
-
 import java.io.File;
-import java.io.FileFilter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * HSQL DB zipper
- * 
  * @author Thorsten Dietz
  */
 public class BackupHelper {
 
-	/**
-	 * zip and delete db
-	 * 
-	 * @param dbDirectory
-	 */
+	// zip and delete db
 	public static void backup(File dbDirectory) {
 		Calendar now = Calendar.getInstance();
 
-		if (!dbDirectory.exists()) {
-			return;
-		}
+		if (!dbDirectory.exists()) {return;}
 
 		File[] filesToBackup = getFilesToBackup(dbDirectory);
-		if (filesToBackup.length == 0) {
-			return;
-		}
+		if (filesToBackup.length == 0) {return;}
 
-		HOZip zOut = null;
+		HOZip zOut;
 		try {
-			zOut = new HOZip(dbDirectory + File.separator + "db_" + User.getCurrentUser().getName()
-					+ "-" + now.get(Calendar.YEAR) + "-" + (now.get(Calendar.MONTH) + 1) + "-"
-					+ now.get(Calendar.DAY_OF_MONTH) + ".zip");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+			zOut = new HOZip(dbDirectory + File.separator + "db_" + User.getCurrentUser().getTeamName()
+					+ "-" + sdf.format(new Date()) + ".zip");
 
 			for (File file : filesToBackup) {
 				zOut.addFile(file);
@@ -53,9 +44,6 @@ public class BackupHelper {
 
 	/**
 	 * delete old zip files, which are out of backuplevel
-	 * 
-	 * @param dbDirectory
-	 *            directory of the database
 	 */
 	private static void deleteOldFiles(File dbDirectory) {
 		File toDelete = null;
@@ -75,14 +63,10 @@ public class BackupHelper {
 	}
 
 	private static File[] getFilesToBackup(File dbDirectory) {
-		return dbDirectory.listFiles(new FileFilter() {
-
-			@Override
-			public boolean accept(File file) {
-				String name = file.getName();
-				return (name.endsWith(".script") || name.endsWith(".data")
-						|| name.endsWith(".backup") || name.endsWith(".properties"));
-			}
+		return dbDirectory.listFiles(file -> {
+			String name = file.getName();
+			return (name.endsWith(".script") || name.endsWith(".data")
+					|| name.endsWith(".backup") || name.endsWith(".properties"));
 		});
 	}
 

@@ -56,7 +56,7 @@ public class LineupMasterView extends JPanel {
 		this.tabbedPane.addTab(hov.getLanguageString("subs.Title"), this.substitutionOverview);
 
 		this.penaltyTakersView = new PenaltyTakersView();
-		this.penaltyTakersView.setPlayers(hov.getModel().getAllSpieler());
+		this.penaltyTakersView.setPlayers(hov.getModel().getCurrentPlayers());
 		this.penaltyTakersView.setLineup(hov.getModel().getLineupWithoutRatingRecalc());
 		this.tabbedPane.addTab(hov.getLanguageString("lineup.penaltytakers.tab.title"),
 				this.penaltyTakersView);
@@ -115,7 +115,7 @@ public class LineupMasterView extends JPanel {
 	
 	private void refreshView() {
 		this.substitutionOverview.setLineup(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc());
-		this.penaltyTakersView.setPlayers(HOVerwaltung.instance().getModel().getAllSpieler());
+		this.penaltyTakersView.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		this.penaltyTakersView.setLineup(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc());
 	}
 }

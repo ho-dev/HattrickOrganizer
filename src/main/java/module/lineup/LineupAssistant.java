@@ -404,7 +404,7 @@ public class LineupAssistant {
 	 *         team, <code>false</code> otherwise.
 	 */
 	public static boolean isPlayerInTeam(int playerID) {
-		List<Player> players = HOVerwaltung.instance().getModel().getAllSpieler();
+		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		for (Player player : players) {
 			if (player.getSpielerID() == playerID) {
 				return true;

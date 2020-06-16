@@ -92,10 +92,10 @@ public class PlausibilityCheck {
 	}
 
 	private static Player getPlayerIn(Substitution substitution) {
-		return HOVerwaltung.instance().getModel().getSpieler(substitution.getObjectPlayerID());
+		return HOVerwaltung.instance().getModel().getCurrentPlayer(substitution.getObjectPlayerID());
 	}
 
 	private static Player getPlayerOut(Substitution substitution) {
-		return HOVerwaltung.instance().getModel().getSpieler(substitution.getSubjectPlayerID());
+		return HOVerwaltung.instance().getModel().getCurrentPlayer(substitution.getSubjectPlayerID());
 	}
 }

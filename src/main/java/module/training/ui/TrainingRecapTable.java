@@ -51,7 +51,7 @@ public class TrainingRecapTable extends JScrollPane {
             if (column == 0) {
                 String tooltip = null;
                 int playerId = Integer.parseInt((String) table.getValueAt(row, table.getColumnCount() - 1));
-                Player player = HOVerwaltung.instance().getModel().getSpieler(playerId);
+                Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(playerId);
 
                 this.setOpaque(true);
                 this.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));

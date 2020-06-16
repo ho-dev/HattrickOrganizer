@@ -53,6 +53,6 @@ class UpdateTSIPanel extends AbstractInjuryPanel {
         setInputMsg(HOVerwaltung.instance().getLanguageString("Injury4"));
         setOutputMsg(msg);
         setHeader(HOVerwaltung.instance().getLanguageString("Injury3"));
-        setInputValue(HOVerwaltung.instance().getModel().getVerein().getAerzte() + "");
+        setInputValue(HOVerwaltung.instance().getModel().getClub().getAerzte() + "");
     }
 }

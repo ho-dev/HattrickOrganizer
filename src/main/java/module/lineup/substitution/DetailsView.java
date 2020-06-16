@@ -130,10 +130,10 @@ public class DetailsView extends JPanel {
 			HOModel hoModel = HOVerwaltung.instance().getModel();
 			orderType = LanguageStringLookup.getOrderType(this.substitution.getOrderType());
 
-			Player out = hoModel.getSpieler(this.substitution.getSubjectPlayerID());
+			Player out = hoModel.getCurrentPlayer(this.substitution.getSubjectPlayerID());
 			playerOut = (out != null) ? out.getFullName() : "";
 			if (this.substitution.getSubjectPlayerID() != this.substitution.getObjectPlayerID()) {
-				Player in = hoModel.getSpieler(this.substitution.getObjectPlayerID());
+				Player in = hoModel.getCurrentPlayer(this.substitution.getObjectPlayerID());
 				playerIn = (in != null) ? in.getFullName() : "";
 			}
 

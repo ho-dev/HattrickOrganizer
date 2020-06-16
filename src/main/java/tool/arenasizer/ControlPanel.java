@@ -148,7 +148,7 @@ class ControlPanel extends JPanel implements ActionListener{
     private void initStadium() {
         //Nur, wenn es eine HRFArena ist
         Stadium m_clStadium = HOVerwaltung.instance().getModel().getStadium();
-        int fans = HOVerwaltung.instance().getModel().getVerein().getFans();
+        int fans = HOVerwaltung.instance().getModel().getClub().getFans();
 
         m_jtfFans.setText( fans + "");
         terracesField.setText(m_clStadium.getStehplaetze() + "");

@@ -142,7 +142,9 @@ public class HOVerwaltung {
 					waitDialog.setValue((int) ((i * 100d) / hrfListe.size()));
 				}
 				s1 = System.currentTimeMillis();
-				final HOModel model = this.loadModel((hrfListe.get(i)).getId());
+				//final HOModel model = this.loadModel((hrfListe.get(i)).getId());
+
+				HOModel model = new HOModel(hrfListe.get(i).getId());
 				lSum += (System.currentTimeMillis() - s1);
 				s2 = System.currentTimeMillis();
 				model.calcSubskills();
@@ -174,18 +176,18 @@ public class HOVerwaltung {
 	 */
 	protected HOModel loadModel(int id) {
 		final HOModel model = new HOModel();
-		model.setSpieler(DBManager.instance().getSpieler(id));
-		model.setAllOldSpieler(DBManager.instance().getAllSpieler());
-		model.setAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
-		model.setLastAufstellung(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
+		model.setCurrentPlayers(DBManager.instance().getSpieler(id));
+		model.setFormerPlayers(DBManager.instance().getAllSpieler());
+		model.setLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
+		model.setPreviousLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
 		model.setBasics(DBManager.instance().getBasics(id));
-		model.setFinanzen(DBManager.instance().getFinanzen(id));
-		model.setLiga(DBManager.instance().getLiga(id));
+		model.setFinance(DBManager.instance().getFinanzen(id));
+		model.setLeague(DBManager.instance().getLiga(id));
 		model.setStadium(DBManager.instance().getStadion(id));
 		model.setTeam(DBManager.instance().getTeam(id));
-		model.setVerein(DBManager.instance().getVerein(id));
+		model.setClub(DBManager.instance().getVerein(id));
 		model.setID(id);
-		model.setSpielplan(DBManager.instance().getSpielplan(-1, -1));
+		model.setFixtures(DBManager.instance().getSpielplan(-1, -1));
 		model.setXtraDaten(DBManager.instance().getXtraDaten(id));
 		model.setStaff(DBManager.instance().getStaffByHrfId(id));
 		

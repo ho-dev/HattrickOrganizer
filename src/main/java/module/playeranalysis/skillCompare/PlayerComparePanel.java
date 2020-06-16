@@ -24,6 +24,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -80,7 +81,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	private JComboBox m_CB_Nr_SetPieces;
 	private JComboBox m_CB_Nr_Loyalty;
 	private Vector<module.playeranalysis.skillCompare.Player> m_V_setPlayers;
-	private Vector<core.model.player.Player> m_V_allPlayers;
+	private List<core.model.player.Player> m_V_allPlayers;
 	private module.playeranalysis.skillCompare.Player[] m_ar_allPlayers;
 	private module.playeranalysis.skillCompare.Player[] m_ar_setPlayers;
 	private CBItem[] m_rating = PlayerAbility.ITEMS;
@@ -484,9 +485,9 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 			for (int i = 0; i < m_i_ptmTopCount; i++) {
 				int spielerID = ((Integer) m_playerTableModelTop.getValueAt(i,
 						m_playerTableModelTop.getColumnCount() - 1)).intValue();
-				int pos = HOVerwaltung.instance().getModel().getSpieler(spielerID)
+				int pos = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID)
 						.getIdealPosition();
-				String group = HOVerwaltung.instance().getModel().getSpieler(spielerID)
+				String group = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID)
 						.getTeamInfoSmilie();
 				// System.out.println(cbType +":"+group);
 				if (cbType == 1 && pos == 0 || cbType == 2 && (pos > 0 && pos < 8) || cbType == 3
@@ -601,7 +602,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		for (int i = 0; i < m_playerTableModelTop.getRowCount(); i++) {
 			spielerID = ((Integer) m_playerTableModelTop.getValueAt(i,
 					m_playerTableModelTop.getColumnCount() - 1)).intValue();
-			core.model.player.Player player = HOVerwaltung.instance().getModel().getSpieler(spielerID);
+			core.model.player.Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID);
 			m_playerTableModelTop.setValueAt(player.getTeamInfoSmilie(), i, 5);
 			if (player.getTeamInfoSmilie().equals("A-Team.png")
 					&& m_CB_type.getSelectedIndex() == 6
@@ -676,11 +677,13 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	 * 
 	 */
 	private void getAllPlayers() {
-		m_V_allPlayers = HOVerwaltung.instance().getModel().getAllSpieler();
+		m_V_allPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		m_numberOfPlayers = m_V_allPlayers.size();
 		m_ar_allPlayers = new module.playeranalysis.skillCompare.Player[m_numberOfPlayers];
-		for (int counter = 0; counter < m_numberOfPlayers; counter++) {
-			m_ar_allPlayers[counter] = new module.playeranalysis.skillCompare.Player(m_V_allPlayers.elementAt(counter));
+		int i=0;
+		for ( core.model.player.Player p : m_V_allPlayers){
+			m_ar_allPlayers[i] = new module.playeranalysis.skillCompare.Player(p);
+			i++;
 		}
 	}
 

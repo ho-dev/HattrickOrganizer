@@ -116,12 +116,26 @@ final class DBUpdater {
 		}
 	}
 
-	private void updateDBv400(int dbVersion, int version) {
+	private void updateDBv400(int dbVersion, int version){
 		// Delete existing values to provide sane defaults.
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'spielerUebersichtsPanel_horizontalRightSplitPane'");
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_verticalSplitPane'");
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalRightSplitPane'");
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalLeftSplitPane'");
+
+		// use defaults player formula from defaults.xml by resetting the value in the database
+		try {
+		AbstractTable faktorenTab = dbManager.getTable(FaktorenTable.TABLENAME);
+		if (faktorenTab != null) {
+			faktorenTab.dropTable();
+			faktorenTab.createTable();
+			}
+		}
+		catch (SQLException throwables) {
+			HOLogger.instance().error(getClass(), "updateDBv400:  Faktoren table could not be reset");
+			throwables.printStackTrace();
+		}
+
 		updateDBVersion(dbVersion, version);
 	}
 

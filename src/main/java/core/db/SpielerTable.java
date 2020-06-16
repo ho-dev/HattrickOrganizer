@@ -7,6 +7,7 @@ import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.List;
 import java.util.Vector;
 
 final class SpielerTable extends AbstractTable {
@@ -195,7 +196,7 @@ final class SpielerTable extends AbstractTable {
 	/**
 	 * speichert die Player
 	 */
-	void saveSpieler(int hrfId, Vector<Player> spieler, Timestamp date) {
+	void saveSpieler(int hrfId, List<Player> spieler, Timestamp date) {
 //		String statement = null;
 		final String[] awhereS = { "HRF_ID" };
 		final String[] awhereV = { "" + hrfId };
@@ -205,10 +206,8 @@ final class SpielerTable extends AbstractTable {
 			// Delete old values
 			delete(awhereS, awhereV);
 
-			for (int i = 0; i < spieler.size(); i++) {
-				player = (Player) spieler.elementAt(i);
-				
-				saveSpieler (hrfId, player, date);
+			for ( Player p: spieler){
+				saveSpieler(hrfId, p, date);
 			}
 		}
 	}

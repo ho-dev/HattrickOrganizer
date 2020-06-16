@@ -55,7 +55,7 @@ final class ArenaPanel extends JPanel {
     public void reInit() {
     	HOModel model = HOVerwaltung.instance().getModel();
         m_clStadium = model.getStadium();
-        m_clStadien = m_clArenaSizer.calcConstructionArenas(m_clStadium,model.getVerein().getFans());
+        m_clStadien = m_clArenaSizer.calcConstructionArenas(m_clStadium,model.getClub().getFans());
         //Entrys mit Werten füllen
         reinitTable();
     }

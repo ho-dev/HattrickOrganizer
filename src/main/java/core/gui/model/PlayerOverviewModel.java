@@ -5,6 +5,7 @@ import core.gui.comp.table.UserColumn;
 import core.model.player.Player;
 import module.playerOverview.SpielerTrainingsVergleichsPanel;
 
+import java.util.List;
 import java.util.Vector;
 
 
@@ -18,7 +19,7 @@ public final  class PlayerOverviewModel extends HOTableModel {
 	private static final long serialVersionUID = 5149408240369536138L;
 	
 	/** all players **/
-	private Vector<Player> m_vPlayers;
+	private List<Player> m_vPlayers;
 	
 	/**
 	 * constructor
@@ -86,7 +87,7 @@ public final  class PlayerOverviewModel extends HOTableModel {
     /**
      * Player neu setzen
      */
-    public final void setValues(Vector<Player> player) {
+    public final void setValues(List<Player> player) {
     	m_vPlayers = player;
         initData();
     }

@@ -60,7 +60,7 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 
             // fetch playerId (last column) from table
         	playerId = Integer.parseInt((String)table.getValueAt(row, table.getColumnCount()-1));
-        	Player player = HOVerwaltung.instance().getModel().getSpieler(playerId);
+        	Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(playerId);
         	realPlayerAge = player.getAlterWithAgeDays();
 
         	/** If there is some kind of skillup information

@@ -14,8 +14,11 @@ Changelist HO! 4.0
 
 ## Highlights
 
+  - New build process:
+    - **HO! now requires Java 14 but artefacts including JRE are made available**
+    - directory structure has changed (db location, log files, ...)
    - [FEAT] Improved HO themes, and implemented dark mode. #85
-   - [BUG] Complete rewrite of Special Even modules
+   - [BUG] Complete rewrite of Special Events module
 
 
 ## Detailed Changelog
@@ -45,9 +48,12 @@ Changelist HO! 4.0
 
 ### Training
 
+  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512 
 
 ### Misc
 
+  - [FEAT] Remove jcalendar dependency.
+  - [FIX] ExperienceViewer removed #503 
 
 ### League
 

@@ -29,9 +29,7 @@ public class JDBCAdapter {
 	 */
 	public final void disconnect() {
 		try {
-			if (User.getCurrentUser().isHSQLDB()) {
-				m_clStatement.execute("SHUTDOWN");
-			}
+			m_clStatement.execute("SHUTDOWN");
 			m_clConnection.close();
 			m_clConnection = null;
 		} catch (Exception e) {

@@ -3,6 +3,7 @@ package module.playerOverview;
 import core.model.UserParameter;
 import core.model.player.Player;
 
+import java.util.List;
 import java.util.Vector;
 
 public class TeamSummaryModel {
@@ -17,18 +18,18 @@ public class TeamSummaryModel {
         double averageForm;
     }
 
-    private Vector<Player> players;
-    private Vector<Player> comparisonPlayers;
+    private List<Player> players;
+    private List<Player> comparisonPlayers;
 
-    public Vector<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 
-    public void setPlayers(Vector<Player> players) {
+    public void setPlayers(List<Player> players) {
         this.players = players;
     }
 
-    public void setComparisonPlayers(Vector<Player> comparisonPlayers) {
+    public void setComparisonPlayers(List<Player> comparisonPlayers) {
         this.comparisonPlayers = comparisonPlayers;
     }
 
@@ -61,7 +62,7 @@ public class TeamSummaryModel {
         return deltaStats;
     }
 
-    private TeamStatistics computeTeamStatistics(Vector<Player> players) {
+    private TeamStatistics computeTeamStatistics(List<Player> players) {
         TeamStatistics stats = new TeamStatistics();
 
         stats.numPlayers = players.size();
