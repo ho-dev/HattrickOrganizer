@@ -6,6 +6,7 @@ import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.UserParameter;
 
@@ -86,7 +87,7 @@ public class SpielerAnalyseMainPanel extends LazyImagePanel {
 
 		JPanel panel = new ImagePanel(new BorderLayout());
 
-		arrangeButton = new JButton(ThemeManager.getIcon(HOIconName.TURN));
+		arrangeButton = new JButton(ImageUtilities.getSvgIcon(HOIconName.TURN));
 		arrangeButton.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString(
 				"tt_SpielerAnalyse_drehen"));
 		arrangeButton.setPreferredSize(new Dimension(24, 24));

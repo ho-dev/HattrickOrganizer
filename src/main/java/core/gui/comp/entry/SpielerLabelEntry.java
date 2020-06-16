@@ -3,10 +3,7 @@ package core.gui.comp.entry;
 import core.constants.player.PlayerSpeciality;
 import core.gui.HOMainFrame;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
-import core.gui.theme.HOColorName;
-import core.gui.theme.HOIconName;
-import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
+import core.gui.theme.*;
 import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -314,7 +311,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         if (teamInfoSmilie.trim().equals(""))
             m_jlGroup.setIcon(ImageUtilities.MINILEER);
         else
-            m_jlGroup.setIcon(ThemeManager.getScaledIcon(teamInfoSmilie, 10, 10));
+            m_jlGroup.setIcon(GroupTeam.getGroupIcon(teamInfoSmilie, 10, 10));
     }
 
     private void setEmptyLabel() {

@@ -6,6 +6,7 @@ import core.gui.comp.table.TableSorter;
 import core.gui.print.ComponentPrintObject;
 import core.gui.print.PrintController;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
@@ -42,7 +43,7 @@ public class TransferScoutPanel extends ImagePanel implements MouseListener, Key
     private TransferEingabePanel m_jpTransferEingabePanel;
     private TransferTable m_jtTransferTable;
     private JPanel toolbar;
-    private JButton jbPrint = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
+    private JButton jbPrint = new JButton(ImageUtilities.getSvgIcon(HOIconName.PRINTER));
 
     //~ Constructors -------------------------------------------------------------------------------
 

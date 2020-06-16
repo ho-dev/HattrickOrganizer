@@ -13,6 +13,7 @@ import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.MatchesColumnModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -518,7 +519,7 @@ public final class SpielePanel extends LazyImagePanel {
 		deleteButton.setEnabled(false);
 		buttonPanel.add(deleteButton);
 
-		printButton = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
+		printButton = new JButton(ImageUtilities.getSvgIcon(HOIconName.PRINTER));
 		printButton.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Spiel_drucken"));
 		printButton.setPreferredSize(new Dimension(24, 24));
 		printButton.setEnabled(false);
