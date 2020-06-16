@@ -6,6 +6,7 @@ import core.gui.HOMainFrame;
 import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.model.AufstellungCBItem;
+import core.gui.theme.GroupTeam;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
@@ -75,7 +76,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 	private final JCheckBox m_jchVerletzte = new JCheckBox(HOVerwaltung.instance()
 			.getLanguageString("Verletze_aufstellen"),
 			core.model.UserParameter.instance().aufstellungsAssistentPanel_verletzt);
-	private final JComboBox m_jcbGruppe = new JComboBox(HOIconName.TEAMSMILIES);
+	private final JComboBox m_jcbGruppe = new JComboBox(GroupTeam.TEAMSMILIES);
 
 	private final JComboBox m_jcbWetter = new JComboBox(Helper.WETTER);
 	private final CBItem[] REIHENFOLGE = {

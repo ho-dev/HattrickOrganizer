@@ -674,6 +674,9 @@ public class ImageUtilities {
 	}
 
 	public static SVGIcon getSvgIcon(String key, int width, int height) {
+		return getSvgIcon(key,  width, height, null, null, null);
+	}
+	public static SVGIcon getSvgIcon(String key, int width, int height, String fill, String stroke, String opacity) {
 		URI svgURI = null;
 		SVGIcon icon = new SVGIcon();
 
@@ -688,6 +691,21 @@ public class ImageUtilities {
 					icon.setInterpolation(INTERP_BILINEAR);
 					icon.setAntiAlias(true);
 					icon.setSvgURI(svgURI);
+
+					if (fill != null || stroke != null || opacity != null)
+					{
+						SVGDiagram diagram = icon.getSvgUniverse().getDiagram(svgURI);
+						SVGRoot root = diagram.getRoot();
+
+						StyleSheet ss = new StyleSheet();
+						root.setStyleSheet(ss);
+						if (fill != null)
+							ss.addStyleRule(new StyleSheetRule("fill", "path", null), fill);
+						if (stroke != null)
+							ss.addStyleRule(new StyleSheetRule("stroke", "path", null), stroke);
+						if (opacity != null)
+							ss.addStyleRule(new StyleSheetRule("opacity", "path", null), opacity);
+					}
 					return icon;
 				}
 			}

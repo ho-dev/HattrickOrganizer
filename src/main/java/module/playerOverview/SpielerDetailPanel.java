@@ -17,10 +17,7 @@ import core.gui.comp.entry.RatingTableEntry;
 import core.gui.comp.entry.SpielerLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.renderer.SmilieListCellRenderer;
-import core.gui.theme.HOColorName;
-import core.gui.theme.HOIconName;
-import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
+import core.gui.theme.*;
 import core.model.FactorObject;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
@@ -79,7 +76,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private JLabel m_lastMatchLink = null;
 
     // Top Row, column 2
-    private final JComboBox m_jcbSquad = new JComboBox(HOIconName.TEAMSMILIES);
+    private final JComboBox m_jcbSquad = new JComboBox(GroupTeam.TEAMSMILIES);
     private final JComboBox m_jcbInformation = new JComboBox(HOIconName.MANUELLSMILIES);
     private SpielerStatusLabelEntry m_jpStatus = new SpielerStatusLabelEntry();
     private final DoppelLabelEntry m_jpSalary = new DoppelLabelEntry(new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,

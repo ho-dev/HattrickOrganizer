@@ -1,8 +1,7 @@
 // %3622084902:de.hattrickorganizer.gui.lineup%
 package module.lineup;
 
-import core.gui.theme.HOIconName;
-import core.gui.theme.ThemeManager;
+import core.gui.theme.GroupTeam;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 
@@ -25,12 +24,12 @@ final class AufstellungsGruppenPanel extends JPanel implements ActionListener {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private JButton aGruppe = new JButton(ThemeManager.getIcon(HOIconName.TEAMSMILIES[1]));
-    private JButton bGruppe = new JButton(ThemeManager.getIcon(HOIconName.TEAMSMILIES[2]));
-    private JButton cGruppe = new JButton(ThemeManager.getIcon(HOIconName.TEAMSMILIES[3]));
-    private JButton dGruppe = new JButton(ThemeManager.getIcon(HOIconName.TEAMSMILIES[4]));
-    private JButton eGruppe = new JButton(ThemeManager.getIcon(HOIconName.TEAMSMILIES[5]));
-    private JButton fGruppe = new JButton(ThemeManager.getIcon(HOIconName.TEAMSMILIES[6]));
+	private JButton aGruppe = new JButton(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[1], 16, 16));
+    private JButton bGruppe = new JButton(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[2], 16, 16));
+    private JButton cGruppe = new JButton(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[3], 16, 16));
+    private JButton dGruppe = new JButton(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[4], 16, 16));
+    private JButton eGruppe = new JButton(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[5], 16, 16));
+    private JButton fGruppe = new JButton(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[6], 16, 16));
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -46,17 +45,17 @@ final class AufstellungsGruppenPanel extends JPanel implements ActionListener {
     @Override
 	public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(aGruppe)) {
-            gruppenMarkierung(HOIconName.TEAMSMILIES[1]);
+            gruppenMarkierung(GroupTeam.TEAMSMILIES[1]);
         } else if (e.getSource().equals(bGruppe)) {
-            gruppenMarkierung(HOIconName.TEAMSMILIES[2]);
+            gruppenMarkierung(GroupTeam.TEAMSMILIES[2]);
         } else if (e.getSource().equals(cGruppe)) {
-            gruppenMarkierung(HOIconName.TEAMSMILIES[3]);
+            gruppenMarkierung(GroupTeam.TEAMSMILIES[3]);
         } else if (e.getSource().equals(dGruppe)) {
-            gruppenMarkierung(HOIconName.TEAMSMILIES[4]);
+            gruppenMarkierung(GroupTeam.TEAMSMILIES[4]);
         } else if (e.getSource().equals(eGruppe)) {
-            gruppenMarkierung(HOIconName.TEAMSMILIES[5]);
+            gruppenMarkierung(GroupTeam.TEAMSMILIES[5]);
         } else if (e.getSource().equals(fGruppe)) {
-            gruppenMarkierung(HOIconName.TEAMSMILIES[6]);
+            gruppenMarkierung(GroupTeam.TEAMSMILIES[6]);
         }
     }
 

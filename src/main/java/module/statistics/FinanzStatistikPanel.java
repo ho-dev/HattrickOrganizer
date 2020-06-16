@@ -8,6 +8,7 @@ import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.StatistikModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -214,7 +215,7 @@ public class FinanzStatistikPanel extends LazyImagePanel {
 		constraints2.gridwidth = 2;
 		constraints2.fill = GridBagConstraints.NONE;
 		constraints2.anchor = GridBagConstraints.WEST;
-		m_jbDrucken = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
+		m_jbDrucken = new JButton(ImageUtilities.getSvgIcon(HOIconName.PRINTER));
 		m_jbDrucken.setToolTipText(getLangStr("tt_Statistik_drucken"));
 		m_jbDrucken.setPreferredSize(new Dimension(25, 25));
 		layout2.setConstraints(m_jbDrucken, constraints2);

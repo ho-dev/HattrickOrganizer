@@ -604,15 +604,15 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 					m_playerTableModelTop.getColumnCount() - 1)).intValue();
 			core.model.player.Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID);
 			m_playerTableModelTop.setValueAt(player.getTeamInfoSmilie(), i, 5);
-			if (player.getTeamInfoSmilie().equals("A-Team.png")
+			if (player.getTeamInfoSmilie().equals("A-Team")
 					&& m_CB_type.getSelectedIndex() == 6
-					|| player.getTeamInfoSmilie().equals("B-Team.png")
+					|| player.getTeamInfoSmilie().equals("B-Team")
 					&& m_CB_type.getSelectedIndex() == 7
-					|| player.getTeamInfoSmilie().equals("C-Team.png")
+					|| player.getTeamInfoSmilie().equals("C-Team")
 					&& m_CB_type.getSelectedIndex() == 8
-					|| player.getTeamInfoSmilie().equals("D-Team.png")
+					|| player.getTeamInfoSmilie().equals("D-Team")
 					&& m_CB_type.getSelectedIndex() == 9
-					|| player.getTeamInfoSmilie().equals("E-Team.png")
+					|| player.getTeamInfoSmilie().equals("E-Team")
 					&& m_CB_type.getSelectedIndex() == 10
 					|| m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
 				m_playerTableModelTop.setValueAt(Boolean.TRUE, i, 0);
@@ -814,11 +814,11 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				String gruppe = "";
 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
-				if (gruppe.equals("A-Team.png")
+				if (gruppe.equals("A-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
 					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
 							m_playerTableModelTop.getColumnCount() - 1)).intValue());
-				} else if (gruppe.equals("A-Team.png")
+				} else if (gruppe.equals("A-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
 				}
@@ -831,11 +831,11 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				String gruppe = "";
 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
-				if (gruppe.equals("B-Team.png")
+				if (gruppe.equals("B-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
 					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
 							m_playerTableModelTop.getColumnCount() - 1)).intValue());
-				} else if (gruppe.equals("B-Team.png")
+				} else if (gruppe.equals("B-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
 				}
@@ -848,11 +848,11 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				String gruppe = "";
 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
-				if (gruppe.equals("C-Team.png")
+				if (gruppe.equals("C-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
 					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
 							m_playerTableModelTop.getColumnCount() - 1)).intValue());
-				} else if (gruppe.equals("C-Team.png")
+				} else if (gruppe.equals("C-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
 				}
@@ -865,11 +865,11 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				String gruppe = "";
 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
-				if (gruppe.equals("D-Team.png")
+				if (gruppe.equals("D-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
 					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
 							m_playerTableModelTop.getColumnCount() - 1)).intValue());
-				} else if (gruppe.equals("D-Team.png")
+				} else if (gruppe.equals("D-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
 				}
@@ -881,11 +881,11 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				String gruppe = "";
 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
-				if (gruppe.equals("E-Team.png")
+				if (gruppe.equals("E-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
 					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
 							m_playerTableModelTop.getColumnCount() - 1)).intValue());
-				} else if (gruppe.equals("E-Team.png")
+				} else if (gruppe.equals("E-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
 				}
