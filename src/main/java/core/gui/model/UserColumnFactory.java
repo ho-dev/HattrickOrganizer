@@ -533,6 +533,14 @@ final public class UserColumnFactory {
                         ColorLabelEntry.FG_STANDARD, background,
                         SwingConstants.RIGHT);
             }
+
+            @Override
+            public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem) {
+                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
+                return new ColorLabelEntry(spielerCBItem.getMatchID()+"",
+                        ColorLabelEntry.FG_STANDARD, background,
+                        SwingConstants.CENTER);
+            }
         };
 
         return matchesArray;
