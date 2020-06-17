@@ -19,12 +19,12 @@ import java.util.Vector;
 public class PlayerAnalysisModel extends HOTableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2953738895366809237L;
 	private Vector<SpielerMatchCBItem> m_vSpielerMatchCBItem;
 
-	
+
 	/**
 	 * constructor
 	 *
@@ -34,9 +34,9 @@ public class PlayerAnalysisModel extends HOTableModel {
 		super.instance = instance;
 		initialize();
 	}
-	
+
 	private void initialize() {
-		columns = new UserColumn[54];
+		columns = new UserColumn[55];
 
 		final UserColumn[] add =  UserColumnFactory.createPlayerAdditionalArray();
 		final MatchKurzInfoColumn [] matches = UserColumnFactory.createMatchesArray();
@@ -69,7 +69,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 		columns[18] = skills[2];
 		columns[19] = skills[3];
 		columns[20] = skills[4];
-		
+
 		columns[21] = skills[5];
 		columns[22] = skills[6];
 		columns[23] = skills[7];
@@ -83,7 +83,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 		columns[30] = positions[2];
 		columns[31] = positions[3];
 		columns[32] = positions[4];
-		
+
 		columns[33] = positions[5];
 		columns[34] = positions[6];
 		columns[35] = positions[7];
@@ -95,7 +95,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 		columns[40] = positions[12];
 		columns[41] = positions[13];
 		columns[42] = positions[14];
-		
+
 		columns[43] = positions[15];
 		columns[44] = positions[16];
 		columns[45] = positions[17];
@@ -105,14 +105,16 @@ public class PlayerAnalysisModel extends HOTableModel {
 		columns[48] = goals[1];
 		columns[49] = goals[2];
 		columns[50] = goals[3];
-							
+
 		columns[51] = add[7];
 		columns[52] = add[8];
 		columns[53] = cbItems[4];
-	}
-	
 
- 
+		columns[54] = matches[7];
+	}
+
+
+
 //  -----initialisierung-----------------------------------------
 
     /**
@@ -122,7 +124,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 	protected void initData() {
     	UserColumn [] tmpDisplayedColumns = getDisplayedColumns();
     	m_clData = new Object[m_vSpielerMatchCBItem.size()][tmpDisplayedColumns.length];
-    	
+
     	for (int i = 0; i < m_vSpielerMatchCBItem.size(); i++) {
 			final SpielerMatchCBItem spielerCBItem = m_vSpielerMatchCBItem.get(i);
 			final Player aktuellerPlayer = spielerCBItem.getSpieler();
@@ -144,7 +146,7 @@ public class PlayerAnalysisModel extends HOTableModel {
     				m_clData[i][j] = ((MatchKurzInfoColumn)tmpDisplayedColumns[j]).getTableEntry(spielerCBItem);
     			if(tmpDisplayedColumns[j] instanceof PlayerCBItem)
     				m_clData[i][j] = ((PlayerCBItem)tmpDisplayedColumns[j]).getTableEntry(spielerCBItem);
-    			
+
     		}
     	}
     }
