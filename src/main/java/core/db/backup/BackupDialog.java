@@ -1,6 +1,7 @@
 package core.db.backup;
 
-import core.db.User;
+import core.db.user.User;
+import core.db.user.UserManager;
 import core.file.ExampleFileFilter;
 import core.file.ZipHelper;
 import core.gui.comp.panel.ImagePanel;
@@ -80,7 +81,7 @@ public final class BackupDialog extends JDialog implements ActionListener {
 
 	private JScrollPane getList() {
 
-		File dbDirectory = new File(User.getCurrentUser().getDbName());
+		File dbDirectory = new File(UserManager.instance().getCurrentUser().getDbFolder());
 		ExampleFileFilter filter = new ExampleFileFilter("zip");
 		filter.setIgnoreDirectories(true);
 		File[] files = dbDirectory.listFiles(filter);
@@ -94,7 +95,7 @@ public final class BackupDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == okButton) {
 			try {
-				ZipHelper.unzip((File) list.getSelectedValue(), new File(User.getCurrentUser().getDbName()));
+				ZipHelper.unzip((File) list.getSelectedValue(), new File(UserManager.instance().getCurrentUser().getDbFolder()));
 			} catch (Exception e1) {
 				HOLogger.instance().log(getClass(), e1);
 			}

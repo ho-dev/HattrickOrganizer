@@ -1,9 +1,9 @@
-// %3852537837:de.hattrickorganizer.gui%
 package core.gui;
 
 import core.HO;
 import core.db.DBManager;
-import core.db.User;
+import core.db.user.User;
+import core.db.user.UserManager;
 import core.file.hrf.HRFImport;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.tabbedPane.HOTabbedPane;
@@ -307,7 +307,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		if (source.equals(m_jmImportItem)) { // HRF Import
 			new HRFImport(this);
 		} else if (source.equals(m_jmDownloadItem)) { // HRF Download
-			if (User.getCurrentUser().isNtTeam())
+			if (UserManager.instance().getCurrentUser().isNtTeam())
 				JOptionPane.showMessageDialog(HOMainFrame.instance(), MainPanel.getInstance(),
 						HOVerwaltung.instance().getLanguageString("HRFDownload"), JOptionPane.PLAIN_MESSAGE);
 			else

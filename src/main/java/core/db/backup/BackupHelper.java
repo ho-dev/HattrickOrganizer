@@ -1,6 +1,7 @@
 package core.db.backup;
 
-import core.db.User;
+import core.db.user.User;
+import core.db.user.UserManager;
 import core.file.ExampleFileFilter;
 import core.util.HOLogger;
 import java.io.File;
@@ -27,7 +28,7 @@ public class BackupHelper {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-			zOut = new HOZip(dbDirectory + File.separator + "db_" + User.getCurrentUser().getTeamName()
+			zOut = new HOZip(dbDirectory + File.separator + "db_" + UserManager.instance().getCurrentUser().getTeamName()
 					+ "-" + sdf.format(new Date()) + ".zip");
 
 			for (File file : filesToBackup) {
@@ -50,7 +51,7 @@ public class BackupHelper {
 		ExampleFileFilter filter = new ExampleFileFilter("zip");
 		filter.setIgnoreDirectories(true);
 		File[] files = dbDirectory.listFiles(filter);
-		if (files.length > User.getCurrentUser().getBackupLevel()) {
+		if (files.length > UserManager.instance().getCurrentUser().getBackupLevel()) {
 			for (int i = 0; i < files.length; i++) {
 				if (i == 0
 						|| (toDelete != null && toDelete.lastModified() > files[i].lastModified())) {

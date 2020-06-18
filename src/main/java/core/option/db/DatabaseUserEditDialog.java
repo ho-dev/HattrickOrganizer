@@ -1,6 +1,6 @@
 package core.option.db;
 
-import core.db.User;
+import core.db.user.User;
 import core.gui.comp.NumericDocument;
 import core.model.HOVerwaltung;
 import core.util.GUIUtils;
@@ -216,13 +216,9 @@ public class DatabaseUserEditDialog extends JDialog {
 			}
 		});
 
-		this.cancelButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				canceled = true;
-				dispose();
-			}
+		this.cancelButton.addActionListener(e -> {
+			canceled = true;
+			dispose();
 		});
 
 		this.saveButton.addActionListener(e -> {
@@ -230,8 +226,8 @@ public class DatabaseUserEditDialog extends JDialog {
 				user.setBackupLevel(Integer.parseInt(numberOfBackupsTextField.getText()));
 				user.setName(nameTextField.getText());
 				user.setDbName(databaseNameTextField.getText());
-				user.setURL();
 				user.setNtTeam(ntTeamYes.isSelected());
+				user.fillUserInfos();
 				canceled = false;
 				dispose();
 			}

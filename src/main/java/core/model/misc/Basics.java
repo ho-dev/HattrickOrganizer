@@ -1,9 +1,8 @@
-// %214693493:de.hattrickorganizer.model%
 package core.model.misc;
 
-import core.db.User;
+import core.db.user.User;
+import core.db.user.UserManager;
 import core.util.HOLogger;
-
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Properties;
@@ -324,7 +323,7 @@ public final class Basics  {
      * @return true if it's a national team.
      */
     public boolean isNationalTeam() {
-        return User.getCurrentUser().isNtTeam();
+        return UserManager.instance().getCurrentUser().isNtTeam();
     }
 
 	/**
