@@ -39,7 +39,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.model.OAuthRequest;
@@ -683,9 +683,19 @@ public class MyConnector {
 					break;
 				case 401:
 					if (authDialog == null) {
+
+						HOMainFrame mainFrame = null;
+                        // If the main frame is not in the process of loading, use it,
+                        // otherwise use null frame.
+						if (!HOMainFrame.launching.get()) {
+							mainFrame = HOMainFrame.instance();
+						}
+
 						// disable WaitCursor to unblock GUI
-						CursorToolkit.stopWaitCursor(HOMainFrame.instance().getRootPane());
-						authDialog = new OAuthDialog(HOMainFrame.instance(), m_OAService, "");
+						if (mainFrame != null) {
+							CursorToolkit.stopWaitCursor(mainFrame.getRootPane());
+						}
+						authDialog = new OAuthDialog(mainFrame, m_OAService, "");
 					}
 					authDialog.setVisible(true);
 					// A way out for a user unable to authorize for some reason

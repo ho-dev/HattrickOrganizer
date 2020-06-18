@@ -13,3 +13,7 @@ Changelist HO! 3.1
 ### Lineup
 
 - [FIX] substitute player can now occupy more than one bench position #506
+
+### Misc
+
+- [FIX] Avoid potential infinite loop at startup. [#584]
