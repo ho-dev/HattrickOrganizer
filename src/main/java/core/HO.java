@@ -149,7 +149,7 @@ public class HO {
 
 		// init Theme
 		try {
-			ThemeManager.instance().setCurrentTheme(UserParameter.instance().theme);
+			ThemeManager.instance().setCurrentTheme();
 		} catch (Exception e) {
 			HOLogger.instance().log(HO.class, "Can´t load Theme:" + UserParameter.instance().theme);
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Can´t load Theme: "

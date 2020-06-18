@@ -3,7 +3,6 @@ package core.gui.theme;
 
 import core.gui.HOMainFrame;
 import core.gui.theme.dark.DarculaDarkTheme;
-import core.gui.theme.dark.HighContrastTheme;
 import core.gui.theme.dark.SolarizedDarkTheme;
 import core.gui.theme.ho.HOClassicSchema;
 import core.gui.theme.ho.HOTheme;
@@ -19,9 +18,6 @@ import java.awt.Image;
 import java.awt.event.*;
 import java.io.File;
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -32,7 +28,6 @@ public final class ThemeManager {
 	private final File themesDir = new File("themes");
 
 	HOClassicSchema classicSchema = new HOClassicSchema();
-	private ExtSchema extSchema;
 
 	private final Map<String, Theme> themes = new LinkedHashMap<>();
 
@@ -73,13 +68,6 @@ public final class ThemeManager {
 
 	public static Color getColor(String key) {
 		Object obj = null;
-		if(instance().extSchema != null){
-			obj = instance().extSchema.getThemeColor(key);
-			if(obj != null && obj instanceof Color)
-				return (Color)obj;
-			if(obj != null && obj instanceof String)
-				return getColor(obj.toString());
-		}
 
 		obj = instance().classicSchema.getThemeColor(key);
 		if(obj!= null && obj instanceof Color)
@@ -98,8 +86,6 @@ public final class ThemeManager {
 
 	public boolean isSet(String key){
 		Boolean tmp = null;
-		if(extSchema != null)
-			tmp = (Boolean)extSchema.get(key);
 		if(tmp == null)
 			tmp = (Boolean)classicSchema.get(key);
 		if(tmp == null)
@@ -113,9 +99,6 @@ public final class ThemeManager {
 
 	public Object get(String key){
 		Object tmp = null;
-		if(extSchema != null)
-			tmp = extSchema.get(key);
-
 		if(tmp == null)
 			tmp = classicSchema.get(key);
 
@@ -127,12 +110,6 @@ public final class ThemeManager {
 
 	private ImageIcon getImageIcon(String key){
 		Object tmp = null;
-		if(extSchema != null){
-			tmp = extSchema.get(key);
-			if(tmp != null){
-				return extSchema.loadImageIcon(tmp.toString());
-			}
-		}
 		tmp = classicSchema.get(key);
 		if(tmp == null)
 			return null;
@@ -143,28 +120,16 @@ public final class ThemeManager {
 
 	private ImageIcon getScaledImageIcon(String key, int x, int y){
 		ImageIcon tmp = null;
-		if(extSchema != null){
-			tmp = (ImageIcon)extSchema.get(key+"("+x+","+y+")");
-			if(tmp == null){
-				tmp = getImageIcon(key);
+		tmp = (ImageIcon) classicSchema.get(key + "(" + x + "," + y + ")");
+		if (tmp == null) {
+			tmp = getImageIcon(key);
 
-				if(tmp != null){
-					tmp = new ImageIcon(tmp.getImage().getScaledInstance(x, y,Image.SCALE_SMOOTH));
-					extSchema.put(key+"("+x+","+y+")",tmp);
-				}
-			}
-
-		} else {
-			tmp = (ImageIcon)classicSchema.get(key+"("+x+","+y+")");
-			if(tmp == null){
-				tmp = getImageIcon(key);
-
-				if(tmp != null){
-					tmp = new ImageIcon(tmp.getImage().getScaledInstance(x, y,Image.SCALE_SMOOTH));
-					classicSchema.put(key+"("+x+","+y+")",tmp);
-				}
+			if (tmp != null) {
+				tmp = new ImageIcon(tmp.getImage().getScaledInstance(x, y, Image.SCALE_SMOOTH));
+				classicSchema.put(key + "(" + x + "," + y + ")", tmp);
 			}
 		}
+
 
 		return tmp;
 	}
@@ -187,25 +152,13 @@ public final class ThemeManager {
 
 	private ImageIcon getTransparentImageIcon(String key,Color color){
 		ImageIcon tmp = null;
-		if(extSchema != null){
-			tmp = (ImageIcon)extSchema.get(key+"(T)");
-			if(tmp == null){
-				tmp = getImageIcon(key);
+		tmp = (ImageIcon) classicSchema.get(key + "(T)");
+		if (tmp == null) {
+			tmp = getImageIcon(key);
 
-				if(tmp != null){
-					tmp = new ImageIcon(ImageUtilities.makeColorTransparent(tmp.getImage(),color));
-					extSchema.put(key+"(T)",tmp);
-				}
-			}
-		} else {
-			tmp = (ImageIcon)classicSchema.get(key+"(T)");
-			if(tmp == null){
-				tmp = getImageIcon(key);
-
-				if(tmp != null){
-					tmp = new ImageIcon(ImageUtilities.makeColorTransparent(tmp.getImage(),color));
-					classicSchema.put(key+"(T)",tmp);
-				}
+			if (tmp != null) {
+				tmp = new ImageIcon(ImageUtilities.makeColorTransparent(tmp.getImage(), color));
+				classicSchema.put(key + "(T)", tmp);
 			}
 		}
 		return tmp;
@@ -215,38 +168,7 @@ public final class ThemeManager {
 		return instance().classicSchema.loadImageIcon(datei).getImage();
 	}
 
-	public ExtSchema loadSchema(String name) throws Exception {
-		ExtSchema theme = null;
-		File themeFile = new File(themesDir,name+".zip");
-		if(themeFile.exists()){
-			ZipFile zipFile = new ZipFile(themeFile);
-			Properties p = new Properties();
-			ZipEntry dataEntry = zipFile.getEntry(ExtSchema.fileName);
-			if(dataEntry == null)
-				throw new Exception("data.txt is missing");
-			p.load(zipFile.getInputStream(dataEntry));
-			theme = new ExtSchema(themeFile,p);
-
-			// check
-			Collection<Object> c = p.values();
-			for (Iterator<Object> iterator = c.iterator(); iterator.hasNext();) {
-				String txt = iterator.next().toString().trim();
-				if(	Pattern.matches("([^\\s]+(\\.(?i)(jpg|png|gif|bmp))$)", txt)){
-					ZipEntry tmp = zipFile.getEntry(txt);
-						if(tmp == null)
-							throw new Exception(txt+" is missing");
-					}
-			} // for
-		} else {
-			throw new Exception("File "+name+".zip is missing");
-		}
-		return theme;
-	}
-
-	public void setCurrentTheme(String name) throws Exception {
-		if (name != null && !name.equals(classicSchema.getName())) {
-			extSchema = loadSchema(name);
-		}
+	public void setCurrentTheme() {
 
 		try {
 			boolean success = false;
