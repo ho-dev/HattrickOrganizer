@@ -5,7 +5,8 @@ import core.constants.TeamConfidence;
 import core.constants.TeamSpirit;
 import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
-import core.db.User;
+import core.db.user.User;
+import core.db.user.UserManager;
 import core.gui.Refreshable;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
@@ -908,7 +909,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	// so we need addAllStyleOfPlayItems() after every updateStyleOfPlayBox()
 	private void updateStyleOfPlayBox(int oldValue)
 	{
-		if (!User.getCurrentUser().isNtTeam()) {
+		if (!UserManager.instance().getCurrentUser().isNtTeam()) {
 			// remove all combo box items and add new ones.
 			List<Integer> legalValues = getValidStyleOfPlayValues();
 

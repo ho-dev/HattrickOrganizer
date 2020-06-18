@@ -1,9 +1,9 @@
 package core.option.db;
 
-import core.db.User;
+import core.db.user.User;
+import core.db.user.UserManager;
 import core.model.HOVerwaltung;
 import core.util.GUIUtils;
-
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,7 +11,6 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -53,22 +52,15 @@ public class DatabaseOptionsDialog extends JDialog {
 			}
 		});
 
-		this.newButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				User user = User.addNewUser();
-				DatabaseUserEditDialog dlg = new DatabaseUserEditDialog(DatabaseOptionsDialog.this,
-						user, true);
-				dlg.setVisible(true);
-
-				if (dlg.isCanceled()) {
-					User.getAllUser().remove(user);
-				} else {
-					saveAndReload();
-				}
+		this.newButton.addActionListener(e -> {
+			User newUser = User.createDefaultUser();
+			DatabaseUserEditDialog dlg = new DatabaseUserEditDialog(DatabaseOptionsDialog.this, newUser, true);
+			dlg.setVisible(true);
+			if (! dlg.isCanceled()) {
+				UserManager.instance().addUser(newUser);
+				saveAndReload();
 			}
-		});
+		    });
 
 		this.editButton.addActionListener(new ActionListener() {
 
@@ -101,7 +93,7 @@ public class DatabaseOptionsDialog extends JDialog {
 	}
 
 	private void saveAndReload() {
-		User.save();
+		UserManager.instance().save();
 		((MyTableModel) this.table.getModel()).fireTableDataChanged();
 	}
 
@@ -182,7 +174,7 @@ public class DatabaseOptionsDialog extends JDialog {
 					HOVerwaltung.instance().getLanguageString("confirmation.title"),
 					JOptionPane.YES_NO_OPTION);
 			if (res == JOptionPane.YES_OPTION) {
-				User.getAllUser().remove(user);
+				UserManager.instance().getAllUser().remove(user);
 				saveAndReload();
 			}
 		}
@@ -214,7 +206,7 @@ public class DatabaseOptionsDialog extends JDialog {
 
 		@Override
 		public Object getValueAt(int row, int column) {
-			User user = User.getAllUser().get(row);
+			User user = UserManager.instance().getAllUser().get(row);
 			switch (column) {
 			case 0:
 				return user.getTeamName();
@@ -238,7 +230,7 @@ public class DatabaseOptionsDialog extends JDialog {
 
 		@Override
 		public int getRowCount() {
-			return User.getAllUser().size();
+			return UserManager.instance().getAllUser().size();
 		}
 
 		@Override
@@ -247,7 +239,7 @@ public class DatabaseOptionsDialog extends JDialog {
 		}
 
 		public User getSelectedUser(int row) {
-			return User.getAllUser().get(row);
+			return UserManager.instance().getAllUser().get(row);
 		}
 	}
 }

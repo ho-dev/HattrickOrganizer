@@ -138,3 +138,4 @@ local.properties
 /updateDB.py
 /.idea/jarRepositories.xml
 .idea/
+/users.json

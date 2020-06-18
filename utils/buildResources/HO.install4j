@@ -72,7 +72,7 @@ Categories=Game</desktopFile>
         <file path="${compiler:projectDir}/utils/buildResources/Logo.png" />
       </iconImageFiles>
     </launcher>
-    <launcher name="HO - Win" id="497" unixMode="777">
+    <launcher name="HO - Win" id="497" unixMode="777" menuName="HO">
       <executable name="HO" iconSet="true" stderrFile="${installer:sys.appdataDir}/HO/error.log" redirectStdout="true" stdoutFile="${installer:sys.appdataDir}/HO/output.log" executableMode="gui" singleInstance="true" />
       <java mainClass="core.HOLauncher" arguments="installed">
         <classPath>

@@ -1,8 +1,9 @@
 package core;
 
 import core.db.DBManager;
-import core.db.User;
+import core.db.user.User;
 import core.db.backup.BackupHelper;
+import core.db.user.UserManager;
 import core.gui.HOMainFrame;
 import core.gui.SplashFrame;
 import core.gui.model.UserColumnController;
@@ -120,13 +121,14 @@ public class HO {
 
 		// Login selection in case of multi-users DB
 		try {
-			if (!User.getCurrentUser().isSingleUser()) {
-				JComboBox comboBox = new JComboBox(User.getAllUser().stream().map(User::getTeamName).toArray());
+			if (!UserManager.instance().isSingleUser()) {
+
+				JComboBox comboBox = new JComboBox(UserManager.instance().getAllUser().stream().map(User::getTeamName).toArray());
 				int choice = JOptionPane.showConfirmDialog(null, comboBox, "Login",
 						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 
 				if (choice == JOptionPane.OK_OPTION) {
-					User.INDEX = comboBox.getSelectedIndex();
+					UserManager.instance().setINDEX(comboBox.getSelectedIndex());
 				} else {
 					System.exit(0);
 				}
@@ -140,7 +142,7 @@ public class HO {
 
 		// Backup
 		interuptionsWindow.setInfoText(1, "Backup Database");
-		BackupHelper.backup(new File(User.getCurrentUser().getDbFolder()));
+		BackupHelper.backup(new File(UserManager.instance().getCurrentUser().getDbFolder()));
 
 
 		// Load user parameters from the DB

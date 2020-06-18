@@ -2,6 +2,8 @@ package core.db;
 
 import core.datatype.CBItem;
 import core.db.backup.BackupDialog;
+import core.db.user.User;
+import core.db.user.UserManager;
 import core.file.hrf.HRF;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.ArenaStatistikTableModel;
@@ -93,13 +95,13 @@ public class DBManager {
 
 			String errorMsg = null;
 			try {
-				User current_user = User.getCurrentUser();
+				User current_user = UserManager.instance().getCurrentUser();
 				String dbFolder = current_user.getDbFolder();
 
 				File dbfolder = new File(dbFolder);
 
 				if (!dbfolder.exists()) {
-					File parentFolder = new File(current_user.getDbParentFolder());
+					File parentFolder = new File(UserManager.instance().getDbParentFolder());
 
 					Boolean dbDirectoryCreated = false;
 					if (parentFolder.canWrite()) {
@@ -115,7 +117,7 @@ public class DBManager {
 				}
 
 			} catch (Exception e) {
-				errorMsg = "Error encountered during database initialization: \n" + User.getCurrentUser().getDbURL();
+				errorMsg = "Error encountered during database initialization: \n" + UserManager.instance().getCurrentUser().getDbURL();
 				e.printStackTrace();
 			}
 
@@ -275,9 +277,9 @@ public class DBManager {
 	 * connect to the database
 	 */
 	private void connect() throws Exception {
-		User user = User.getCurrentUser();
+		User current_user = UserManager.instance().getCurrentUser();
 		if (m_clJDBCAdapter != null) {
-			m_clJDBCAdapter.connect(user.getDbURL(), user.getUser(), user.getPwd(),	user.getDriver());
+			m_clJDBCAdapter.connect(current_user.getDbURL(), current_user.getDbUsername(), current_user.getDbPwd(), UserManager.instance().getDriver());
 		}
 	}
 
