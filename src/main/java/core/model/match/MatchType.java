@@ -139,6 +139,10 @@ public enum MatchType {
 		switch (this) {
 			case LEAGUE :
 			case QUALIFICATION :
+			case EMERALDCUP :
+			case RUBYCUP :
+			case SAPPHIRECUP :
+			case CONSOLANTECUP :
 			case CUP :
 			case FRIENDLYNORMAL :
 			case FRIENDLYCUPRULES :
@@ -152,22 +156,6 @@ public enum MatchType {
 		}
 	}
 
-	/** Returns true for all cup matches
-	 *
-	 * @return true if the match is national cup
-	 */
-	public boolean isCupMatch() {
-		switch (this) {
-			case EMERALDCUP :
-			case RUBYCUP :
-			case SAPPHIRECUP :
-			case CONSOLANTECUP :
-			case CUP :
-				return true;
-			default:
-				return false;
-		}
-	}
 
 	public boolean isTournament() {
 		switch (this) {

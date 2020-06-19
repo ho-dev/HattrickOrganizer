@@ -699,7 +699,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
                     if(e.isShiftDown()){
                         int matchId = m_clPlayer.getLastMatchId();
                         MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
-                        getHTURL(matchId+"",info.getMatchTyp().isOfficial()|| info.getMatchTyp().isCupMatch());
+                        getHTURL(matchId+"",info.getMatchTyp().isOfficial());
                     }else
                     HOMainFrame.instance().showMatch(m_clPlayer.getLastMatchId());
                 }
