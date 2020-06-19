@@ -241,11 +241,12 @@ public class OAuthDialog extends JDialog {
 		this.setSize(400, 500);
 		pack();
 
-		Dimension size = m_clMainFrame.getToolkit().getScreenSize();
-		if (size.width > this.getSize().width) { // open dialog in the middle of
-													// the screen
-			this.setLocation((size.width / 2) - (this.getSize().width / 2),
-					(size.height / 2) - (this.getSize().height / 2));
+		if (m_clMainFrame != null) {
+			Dimension size = m_clMainFrame.getToolkit().getScreenSize();
+			if (size.width > this.getSize().width) { // open dialog in the middle of the screen
+				this.setLocation((size.width / 2) - (this.getSize().width / 2),
+						(size.height / 2) - (this.getSize().height / 2));
+			}
 		}
 	}
 }

@@ -60,6 +60,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.InputMap;
 import javax.swing.JFrame;
@@ -107,6 +108,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private final JMenuItem m_jmFullScreenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.fullscreen"));
 	private final JMenuItem m_jmBeendenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.quit"));
 
+	public static AtomicBoolean launching = new AtomicBoolean(false);
 
 	// -----------  Functions
 
@@ -141,6 +143,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	 * Singleton
 	 */
 	private HOMainFrame() {
+		launching.set(true);
 
 		// Log HO! version
 		HOLogger.instance().info(getClass(),
@@ -191,6 +194,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		initMenue();
 
 		RefreshManager.instance().doRefresh();
+		launching.set(false);
 	}
 
 	final public static boolean isMac() {
