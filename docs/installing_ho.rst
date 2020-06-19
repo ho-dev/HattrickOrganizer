@@ -8,9 +8,11 @@ There are packages for the various OS, for different installation type
 and with or without bundled JRE. In case you are not sure which one you
 should download please read the first section of this document.
 
-*Select the right package*
+Select the right package
+**************************
 
-**Installers or portable application**
+Installers or portable application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can use HO! on Windows, Linux and macOS.
 
@@ -22,7 +24,8 @@ have many portable versions. Hence, before upgrading your main HO! you
 could decide to download a new version as a portable application to test
 it first.
 
-**Manage Java dependency or use a bundled version**
+Manage Java dependency or use a bundled version
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Hattrick Organizer! requires Java. HO! 3.0 requires a JRE >= 8.0 and HO!
 4.0 a JRE ≥= 14.0. Starting with HO! 4.0, you are not force to install
@@ -33,39 +36,51 @@ The HO! packages bundled with a JRE can be identified by their name
 explicitly mentioning it. Those packages are also much heavier as they
 contain the JRE.
 
-**Latest stable version**
+Latest stable version
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 All versions of HO! can be downloaded from the release page but usually
 you will want only to use the latest `stable
 version <https://github.com/akasolace/HO/releases/tag/tag_stable>`__
 
-**Directory structure**
+Directory structure
+****************************************************
 
 In the follow, the running application file are referring to: - /db -
 user.json - error.log and output.log
 
-**``/db`` folder contains whole you data. It is by far the most
+:guilabel:`/db` folder contains whole you data. It is by far the most
 important elements and the one you should always backup** before doing
 anything fancy like testing a development version. In case you have
 multiple team you will have multiple db folder.
 
-``user.json`` is the file linking your db folders to the user. In case
+:guilabel:`user.json` is the file linking your db folders to the user. In case
 you have a single team and you kept HO! default it will look like:
-``[   {     "teamName": "user",     "dbName": "db",     "backupLevel": 3,     "isNtTeam": false   } ]``
+
+.. code-block:: json
+   :linenos:
+   
+   [   {     "teamName": "user",     "dbName": "db",     "backupLevel": 3,     "isNtTeam": false   } ]
 
 If you have multiple teams, it could be like:
-``[   {     "teamName": "FC Team",     "dbName": "db",     "backupLevel": 5,     "isNtTeam": false   },   {     "teamName": "Reserve Team",     "dbName": "db_reserve",     "backupLevel": 3,     "isNtTeam": false   },   {     "teamName": "National Team XXX",     "dbName": "dbNationalTeam",     "backupLevel": 3,     "isNtTeam": true   } ]``
 
--  ``error.log`` and ``output.log`` are here for debug purposes
+.. code-block:: json
+   :linenos:
+   
+   [   {     "teamName": "FC Team",     "dbName": "db",     "backupLevel": 5,     "isNtTeam": false   },   {     "teamName": "Reserve Team",     "dbName": "db_reserve",     "backupLevel": 3,     "isNtTeam": false   },   {     "teamName": "National Team XXX",     "dbName": "dbNationalTeam",     "backupLevel": 3,     "isNtTeam": true   } ]
 
-***Portable application***
+:guilabel:`error.log` and :guilabel:`output.log` are here for debug purposes
+
+Portable application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you are using a portable application all the files and folder will be
 created within the application directory. You can move this directory
 (e.g. on a USB stick or a network drive) and the app will continue to
 work as expected.
 
-***Windows***
+Windows
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you installed HO! in Windows. You should have a HO! link in your
 start menu that points toward the program executable. By default, HO!
@@ -74,7 +89,8 @@ files will be located in ``%appdata%\HO``
 
 ``TODO:  info about warning not signed app !!!``
 
-***Linux***
+Linux
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you installed HO! in Linux. You should have a HO! launcher that
 points toward the program executable. By default, HO! installs itself in
@@ -82,7 +98,8 @@ points toward the program executable. By default, HO! installs itself in
 except the ``error.log`` and ``output.log`` files which will created in
 the installation directory
 
-***macOS***
+macOS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you installed HO! in macOS. You usually have drag and drop HO! in
 your applications folder. The running application files will be located
@@ -91,27 +108,38 @@ in ``/Library/Application Support/HO`` except the ``error.log`` and
 
 ``TODO:  info about warning not signed app !!! / security settings ?``
 
-**Update**
+Update
+********************
 
 ``TODO:  after upgrade functionality has been restored !!``
 
-***How to upgrade from HO! 3.0 to HO! 4.0***
+
+How to upgrade from HO! 3.0 to HO! 4.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It will not be possible to directly upgrade from HO! 3.0 to HO! 4.0. The
 upgrade requires some manual steps. For example let's take the complex
 case mentioned above of a user having 3 teams. In HO! 3.0 its
 ``user.xml`` file is something like:
 
-``<?xml version='1.0' encoding='UTF-8' ?> <HoUsers>  <User>    <Name><![CDATA[FC Team]]></Name>    <Url><![CDATA[jdbc:hsqldb:file:db/database]]></Url>    <User><![CDATA[sa]]></User>    <Password><![CDATA[]]></Password>    <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    <BackupLevel>3</BackupLevel>  </User>  <User>    <Name><![CDATA[Reserve Team]]></Name>    <Url><![CDATA[jdbc:hsqldb:file:db_reserve/database]]></Url>    <User><![CDATA[sa]]></User>    <Password><![CDATA[]]></Password>    <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    <BackupLevel>3</BackupLevel>  </User>  <User>    <Name><![CDATA[National Team XXX]]></Name>    <Url><![CDATA[jdbc:hsqldb:file:dbNationalTeam/database]]></Url>    <User><![CDATA[sa]]></User>    <Password><![CDATA[]]></Password>    <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    <BackupLevel>3</BackupLevel>  </User> </HoUsers>``
+.. code-block:: json
+   :linenos:
+   
+    <?xml version='1.0' encoding='UTF-8' ?> <HoUsers>  <User>    <Name><![CDATA[FC Team]]></Name>    <Url><![CDATA[jdbc:hsqldb:file:db/database]]></Url>    <User><![CDATA[sa]]></User>    <Password><![CDATA[]]></Password>    <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    <BackupLevel>3</BackupLevel>  </User>  <User>    <Name><![CDATA[Reserve Team]]></Name>    <Url><![CDATA[jdbc:hsqldb:file:db_reserve/database]]></Url>    <User><![CDATA[sa]]></User>    <Password><![CDATA[]]></Password>    <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    <BackupLevel>3</BackupLevel>  </User>  <User>    <Name><![CDATA[National Team XXX]]></Name>    <Url><![CDATA[jdbc:hsqldb:file:dbNationalTeam/database]]></Url>    <User><![CDATA[sa]]></User>    <Password><![CDATA[]]></Password>    <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    <BackupLevel>3</BackupLevel>  </User> </HoUsers>
 
 This user should perform a fresh install of HO!. Launch HO! and create 2
 additional users (c.f. :ref:``second_team``)
 
 In the end, the new ``user.json`` should be like:
 
-``[   {     "teamName": "FC Team",     "dbName": "db",     "backupLevel": 5,     "isNtTeam": false   },   {     "teamName": "Reserve Team",     "dbName": "db_reserve",     "backupLevel": 3,     "isNtTeam": false   },   {     "teamName": "National Team XXX",     "dbName": "dbNationalTeam",     "backupLevel": 3,     "isNtTeam": true   } ]``
+.. code-block:: json
+   :linenos:
+   
+   [   {     "teamName": "FC Team",     "dbName": "db",     "backupLevel": 5,     "isNtTeam": false   },   {     "teamName": "Reserve Team",     "dbName": "db_reserve",     "backupLevel": 3,     "isNtTeam": false   },   {     "teamName": "National Team XXX",     "dbName": "dbNationalTeam",     "backupLevel": 3,     "isNtTeam": true   } ]
 
-**First connexion**
+
+First connexion
+**********************
 
 For the first connection "F11" or, in the menu bar, "file" -> "download"
 
@@ -151,7 +179,8 @@ Please note that you should not enter your Hattrick password in any
 third-party tools, make sure you do not enter your Hattrick password
 anywhere in HO.
 
-**HRFs files**
+HRFs files
+**********************
 
 Storage of your hrf: it is not mandatory but if you decide to store
 them, please make sure to select a folder in which you have writing
@@ -161,7 +190,8 @@ For another team: In the "Team Selection" window, select your other team
 Then select the folder where you want to store his hrf (another folder
 than that of your first team)
 
-**Modules**
+Modules
+***********
 
 All modules are not enabled by default, select and set the ones you plan
 to use (File → Preferences → Modules tab)
@@ -173,7 +203,8 @@ to use (File → Preferences → Modules tab)
 for "team analyzer" and "Player analysis", there are other options that
 can be activated.
 
-**Restoring database**
+Restoring database
+**********************
 
 If you encounter any problem, make a backup from your folder db (and
 file user.xml if you have more than one team)
@@ -182,7 +213,8 @@ In your db folder are zip files. Extract one of them into your current
 folder. You get a warning message if you want to overwrite existing
 files, confirm it with “Yes”.
 
-**Add another team to HO**
+Add another team to HO
+*********************************
 
 It is possible to have multiple teams managed by HO! (c.f.
 :ref:``second_team``)
