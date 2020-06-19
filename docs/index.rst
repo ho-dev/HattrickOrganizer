@@ -20,6 +20,7 @@ Features
 .. toctree::
     :hidden:
 
+	installing_ho
+	functionalities
     contributing
-    functionalities
     faq
