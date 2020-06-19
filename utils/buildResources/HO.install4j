@@ -87,6 +87,21 @@ Categories=Game</desktopFile>
         <file path="${compiler:projectDir}/utils/buildResources/Logo.png" />
       </iconImageFiles>
     </launcher>
+    <launcher name="HO - Mac" id="606" unixMode="777" menuName="HO">
+      <executable name="HO" iconSet="true" stderrFile="${installer:sys.appdataDir}/HO/error.log" redirectStdout="true" stdoutFile="${installer:sys.appdataDir}/HO/output.log" executableMode="gui" singleInstance="true" />
+      <java mainClass="core.HOLauncher" arguments="installed">
+        <classPath>
+          <scanDirectory location="." failOnError="false" />
+          <directory location="prediction" failOnError="false" />
+        </classPath>
+      </java>
+      <desktopFile>Keywords=ho;hattrick;
+Comment=Manager tool for http://www.hattrick.org
+Categories=Game</desktopFile>
+      <iconImageFiles>
+        <file path="${compiler:projectDir}/utils/buildResources/Logo.png" />
+      </iconImageFiles>
+    </launcher>
   </launchers>
   <installerGui>
     <applications>
@@ -680,10 +695,10 @@ return console.askYesNo(message, true);
       </excludedLaunchers>
       <jreBundle jreBundleSource="generated" />
     </unixArchive>
-    <macos name="macOS Single Bundle" id="172" launcherId="274">
+    <macos name="macOS Single Bundle" id="172" launcherId="606">
       <jreBundle usePack200="false" />
     </macos>
-    <macos name="macOS Single Bundle - JRE" id="473" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" launcherId="274">
+    <macos name="macOS Single Bundle - JRE" id="473" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" launcherId="606">
       <jreBundle usePack200="false" jreBundleSource="generated" />
     </macos>
   </mediaSets>
