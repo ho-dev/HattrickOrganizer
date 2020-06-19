@@ -2,7 +2,6 @@ package core.gui;
 
 import core.HO;
 import core.db.DBManager;
-import core.db.user.User;
 import core.db.user.UserManager;
 import core.file.hrf.HRFImport;
 import core.gui.comp.panel.ImagePanel;
@@ -53,6 +52,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.InputMap;
 import javax.swing.JFrame;
@@ -107,6 +107,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private final JMenuItem m_jmCheckUpdate = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"));
 	private final JMenuItem m_jmChangelog = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.changelog"));
 
+	public static AtomicBoolean launching = new AtomicBoolean(false);
+
 
 	// Components
 	private HOTabbedPane m_jtpTabbedPane;
@@ -128,10 +130,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	 * Singleton
 	 */
 	private HOMainFrame() {
+		launching.set(true);
 
 		if (OSUtils.isMac()) {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
-            System.setProperty("apple.awt.showGroupBox", "true");
+			System.setProperty("apple.awt.showGroupBox", "true");
 		}
 
 		// Log HO! version
@@ -166,6 +169,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		initMenue();
 
 		RefreshManager.instance().doRefresh();
+		launching.set(false);
 	}
 
 	private void setFrameTitle() {

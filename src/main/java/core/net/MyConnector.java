@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -411,7 +412,7 @@ public class MyConnector {
 		}
 		urlBuilder.append("&LastMatchDate=");
 		String dateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-		urlBuilder.append(URLEncoder.encode(dateString, "UTF-8"));
+		urlBuilder.append(URLEncoder.encode(dateString, StandardCharsets.UTF_8));
 		return getCHPPWebFile(urlBuilder.toString());
 	}
 
@@ -524,7 +525,7 @@ public class MyConnector {
 		try {
 			is = getNonCHPPWebFile(url, false);
 			if (is != null) {
-				br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+				br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 				VersionInfo ret = new VersionInfo();
 				String line;
 
@@ -665,9 +666,21 @@ public class MyConnector {
 					break;
 				case 401:
 					if (authDialog == null) {
+
+						HOMainFrame mainFrame = null;
+
+						// If the main frame is not in the process of loading, use it,
+						// otherwise use null frame.
+
+						if (!HOMainFrame.launching.get()) {
+							mainFrame = HOMainFrame.instance();
+						}
+
 						// disable WaitCursor to unblock GUI
-						CursorToolkit.stopWaitCursor(HOMainFrame.instance().getRootPane());
-						authDialog = new OAuthDialog(HOMainFrame.instance(), m_OAService, "");
+						if (mainFrame != null) {
+							CursorToolkit.stopWaitCursor(mainFrame.getRootPane());
+						}
+						authDialog = new OAuthDialog(mainFrame, m_OAService, "");
 					}
 					authDialog.setVisible(true);
 					// A way out for a user unable to authorize for some reason
@@ -828,7 +841,7 @@ public class MyConnector {
 		StringBuilder builder = new StringBuilder();
 		if (stream != null) {
 			BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(stream,
-					"UTF-8"));
+					StandardCharsets.UTF_8));
 			String line = bufferedreader.readLine();
 			if (line != null) {
 				builder.append(line);

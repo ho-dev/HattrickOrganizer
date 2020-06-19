@@ -32,16 +32,16 @@ public class OAuthDialog extends JDialog {
 
 	private static final long serialVersionUID = 1798304851624958795L;
 
-	private HOMainFrame m_clMainFrame;
-	private JButton m_jbOK = new JButton();
-	private JButton m_jbBrowse = new JButton();
-	private JButton m_jbCancel = new JButton();
-	private JTextField m_jtfAuthString = new JTextField();
-	private JTextField m_jtfAuthURL = new JTextField();
+	private final HOMainFrame m_clMainFrame;
+	private final JButton m_jbOK = new JButton();
+	private final JButton m_jbBrowse = new JButton();
+	private final JButton m_jbCancel = new JButton();
+	private final JTextField m_jtfAuthString = new JTextField();
+	private final JTextField m_jtfAuthURL = new JTextField();
 	private String m_sUserURL;
 	private boolean m_bUserCancel = false;
 	private boolean m_bFirstTry = true;
-	private OAuthService m_service;
+	private final OAuthService m_service;
 	private Token m_AccessToken;
 	private Token m_RequestToken;
 	private String scopes = "";
@@ -102,7 +102,7 @@ public class OAuthDialog extends JDialog {
 
 	@Override
 	public void setVisible(boolean b) {
-		if (m_bFirstTry == false) {
+		if (!m_bFirstTry) {
 			JOptionPane.showMessageDialog(null, HOVerwaltung.instance()
 					.getLanguageString("oauth.FailedTry"), HOVerwaltung
 					.instance().getLanguageString("oauth.FailedTryHeader"),
@@ -240,11 +240,12 @@ public class OAuthDialog extends JDialog {
 		this.setSize(400, 500);
 		pack();
 
-		Dimension size = m_clMainFrame.getToolkit().getScreenSize();
-		if (size.width > this.getSize().width) { // open dialog in the middle of
-													// the screen
-			this.setLocation((size.width / 2) - (this.getSize().width / 2),
-					(size.height / 2) - (this.getSize().height / 2));
+		if (m_clMainFrame != null) {
+			Dimension size = m_clMainFrame.getToolkit().getScreenSize();
+			if (size.width > this.getSize().width) { // open dialog in the middle of the screen
+				this.setLocation((size.width / 2) - (this.getSize().width / 2),
+						(size.height / 2) - (this.getSize().height / 2));
+			}
 		}
 	}
 }
