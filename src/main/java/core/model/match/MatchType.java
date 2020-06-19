@@ -129,6 +129,10 @@ public enum MatchType {
 		switch (this) {
 			case LEAGUE :
 			case QUALIFICATION :
+			case EMERALDCUP :
+			case RUBYCUP :
+			case SAPPHIRECUP :
+			case CONSOLANTECUP :
 			case CUP :
 			case FRIENDLYNORMAL :
 			case FRIENDLYCUPRULES :
@@ -141,6 +145,7 @@ public enum MatchType {
 				return false;
 		}
 	}
+
 
 	public boolean isTournament() {
 		switch (this) {
