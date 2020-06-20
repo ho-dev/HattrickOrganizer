@@ -10,7 +10,6 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.net.OnlineWorker;
 import core.util.HOLogger;
-import module.teamAnalyzer.vo.Match;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
