@@ -1973,8 +1973,14 @@ public class Lineup{
 
 			case NEW_BEHAVIOUR:
 				newRoleId = sub.getRoleId();
-				if ( newRoleId == -1 )  newRoleId = getPositionBySpielerId(sub.getSubjectPlayerID()).getId();
-				else if ( newRoleId != getPositionBySpielerId(sub.getSubjectPlayerID()).getId()
+				matchRoleIDaffectedPlayer = getPositionBySpielerId(sub.getSubjectPlayerID());
+				if (matchRoleIDaffectedPlayer == null)
+				{
+					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
+					break;
+				}
+				if ( newRoleId == -1 )  newRoleId = matchRoleIDaffectedPlayer.getId();
+				else if ( newRoleId != matchRoleIDaffectedPlayer.getId()
 						&& getPositionById(newRoleId).getSpielerId() > 0 ){
 					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
 					break;
