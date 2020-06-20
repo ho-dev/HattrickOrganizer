@@ -24,7 +24,7 @@ public class MatchDateTypeTableCellRenderer extends DefaultTableCellRenderer {
 			Date oMatchDate = (Date) oMatchDateMatchType.getValue0();
 			setText("  (" + dateFormat.format(oMatchDate) + ")");
 			MatchType oMatchType = (MatchType) oMatchDateMatchType.getValue1();
-			ImageIcon oMatchTypeIcon = ThemeManager.getIcon(HOIconName.MATCHICONS[oMatchType.getIconArrayIndex()]);
+			Icon oMatchTypeIcon = ThemeManager.getIcon(HOIconName.MATCHICONS[oMatchType.getIconArrayIndex()]);
 			setIcon(oMatchTypeIcon);
 		}
 		RowColorDecorator.decorate(table, row, this, isSelected);

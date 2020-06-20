@@ -18,17 +18,17 @@ import javax.swing.*;
 public class RatingTableEntry extends AbstractHOTableEntry {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static ImageIcon FULL10STARIMAGEICON;
-    private static ImageIcon FULLGREY10STARIMAGEICON;
-    private static ImageIcon FULL5STARIMAGEICON;
-    private static ImageIcon FULLGREY5STARIMAGEICON;
-    private static ImageIcon FULL50STARIMAGEICON;
-    private static ImageIcon FULLGREY50STARIMAGEICON;
-    private static ImageIcon FULLSTARIMAGEICON;
-    private static ImageIcon HALFSTARIMAGEICON;
-    private static ImageIcon FULLGREYSTARIMAGEICON;
-    private static ImageIcon HALFGREYSTARIMAGEICON;
-    private static ImageIcon BALLIMAGEICON;
+    private static Icon FULL10STARIMAGEICON;
+    private static Icon FULLGREY10STARIMAGEICON;
+    private static Icon FULL5STARIMAGEICON;
+    private static Icon FULLGREY5STARIMAGEICON;
+    private static Icon FULL50STARIMAGEICON;
+    private static Icon FULLGREY50STARIMAGEICON;
+    private static Icon FULLSTARIMAGEICON;
+    private static Icon HALFSTARIMAGEICON;
+    private static Icon FULLGREYSTARIMAGEICON;
+    private static Icon HALFGREYSTARIMAGEICON;
+    private static Icon BALLIMAGEICON;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -184,7 +184,7 @@ public class RatingTableEntry extends AbstractHOTableEntry {
      * @param yellowImage
      * @param grayImage
      */
-    private void addLabel(JComponent panel,ImageIcon yellowImage, ImageIcon grayImage){
+    private void addLabel(JComponent panel, Icon yellowImage, Icon grayImage) {
     	final JLabel jlabel = new JLabel((m_bYellowStar)?yellowImage:grayImage);
         jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         panel.add(jlabel);

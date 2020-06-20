@@ -1,11 +1,8 @@
 package core.gui.theme;
 
-import com.kitfox.svg.*;
-import com.kitfox.svg.animation.AnimationElement;
-import com.kitfox.svg.app.beans.SVGIcon;
-import com.kitfox.svg.xml.StyleSheet;
-import com.kitfox.svg.xml.StyleSheetRule;
-import core.gui.theme.ho.HOClassicSchema;
+import com.github.weisj.darklaf.icons.*;
+import core.icon.OverlayIcon;
+import core.icon.TextIcon;
 import core.model.UserParameter;
 import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
@@ -19,13 +16,12 @@ import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageProducer;
 import java.awt.image.PixelGrabber;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.swing.*;
-
-import static com.kitfox.svg.app.beans.SVGIcon.INTERP_BILINEAR;
 
 public class ImageUtilities {
 
@@ -37,6 +33,7 @@ public class ImageUtilities {
     /** Cache für Transparent gemachte Bilder */
     public static HashMap<Image,Image> m_clTransparentsCache = new HashMap<Image,Image>();
     public static ImageIcon MINILEER = new ImageIcon(new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB));
+
 	/**
 	 * Tauscht eine Farbe im Image durch eine andere
 	 *
@@ -359,7 +356,7 @@ public class ImageUtilities {
 	 * Return ImageIcon for Position
 	 *
 	 */
-	public static ImageIcon getImage4Position(MatchRoleID position, int trickotnummer) {
+	public static Icon getImage4Position(MatchRoleID position, int trickotnummer) {
 	    if (position == null) {
 	        return ImageUtilities.getImage4Position(0, (byte) 0, trickotnummer);
 	    }
@@ -371,10 +368,10 @@ public class ImageUtilities {
 	 * Return ImageIcon for Position
 	 *
 	 */
-	public static ImageIcon getImage4Position(int posid, byte taktik, int trickotnummer) {
+	public static Icon getImage4Position(int posid, byte taktik, int trickotnummer) {
 		Color trickotfarbe = null;
 		Image trickotImage = null;
-		ImageIcon komplettIcon = null;
+		Icon komplettIcon = null;
 		StringBuilder key = new StringBuilder(20);
 		// Im Cache nachsehen
 		key.append("trickot_").append(posid).append("_").append(taktik).append("_").append(trickotnummer);
@@ -387,7 +384,7 @@ public class ImageUtilities {
 			trickotImage = changeColor(
 					changeColor(
 							makeColorTransparent(
-									ThemeManager.getIcon(HOIconName.TRICKOT).getImage(),
+									iconToImage(ThemeManager.getIcon(HOIconName.TRICKOT)),
 									Color.WHITE
 							),
 							Color.WHITE,
@@ -397,7 +394,7 @@ public class ImageUtilities {
 			komplettIcon = new ImageIcon(trickotImage);
 			BufferedImage largeImage = new BufferedImage(28, 14, BufferedImage.TYPE_INT_ARGB);
 			// Large Icon
-			largeImage = (BufferedImage) merge(largeImage, komplettIcon.getImage());
+			largeImage = (BufferedImage) merge(largeImage, iconToImage(komplettIcon));
 			komplettIcon = new ImageIcon(largeImage);
 	
 		// return new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB );
@@ -431,7 +428,7 @@ public class ImageUtilities {
 				g2d.drawString(trickotnummer + "", xPosText, 13);
 	
 				// Zusammenführen
-				image = (BufferedImage) merge(image, komplettIcon.getImage());
+				image = (BufferedImage) merge(image, iconToImage(komplettIcon));
 	
 				// Icon erstellen und in den Cache packen
 				komplettIcon = new ImageIcon(image);
@@ -451,6 +448,10 @@ public class ImageUtilities {
 
 	public static ImageIcon getLeagueFlagIcon(int iLeague) {
 		return ThemeManager.instance().classicSchema.loadImageIcon("flags/"+ iLeague + "flag.png");
+	}
+
+	public static BufferedImage toBufferedImage(Icon icon) {
+		return toBufferedImage(iconToImage(icon));
 	}
 
 	public static BufferedImage toBufferedImage(Image image) {
@@ -533,69 +534,43 @@ public class ImageUtilities {
 	}
 
     public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer) {
-		Color trickotfarbe = null;
-		Icon komplettIcon = null;
-		StringBuilder key = new StringBuilder(20);
+        return getJerseyIcon(posid, taktik, trickotnummer, 20);
+    }
 
-		key.append("trickot_").append(posid).append("_").append(taktik).append("_").append(trickotnummer);
-		komplettIcon = ThemeManager.getIcon(key.toString());
+    public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer, int size) {
+        String key = "trickot_" + posid + "_" + taktik + "_" + trickotnummer + "_" + size;
+        Icon komplettIcon = ThemeManager.instance().getIcon(key);
+//		Icon komplettIcon = cachedMap.get(key);
 
-		if (komplettIcon == null) {
-			trickotfarbe = getJerseyColorByPosition(posid);
+        if (komplettIcon == null) {
+            Color jerseyColor = getJerseyColorByPosition(posid);
 
-			URI svgURI = null;
+            double brightness = ImageUtilities.getBrightness(jerseyColor);
+            Color textColor = brightness < 130 ? Color.WHITE : Color.BLACK;
 
-			try {
-				svgURI = ImageUtilities.class.getClassLoader().getResource("gui/bilder/jerseys.svg").toURI();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+            Map<Object, Object> colorMap = Map.of("jerseyColor", jerseyColor,
+                                                  "collarColor", jerseyColor,
+                                                  "outlineColor", textColor);
+            int width = size;
+            int height = Math.round(size * 16f / 20f);
+            Icon jerseyIcon = IconLoader.get().loadSVGIcon("gui/bilder/jerseys.svg",
+                                                           width, height, true, colorMap);
 
-			if (svgURI != null) {
-				SVGIcon icon = new SVGIcon();
-				icon.setSvgUniverse(new SVGUniverse());
-				icon.setPreferredSize(new Dimension(20, 16));
-				icon.setAutosize(SVGIcon.AUTOSIZE_BESTFIT);
-				icon.setInterpolation(SVGIcon.INTERP_BILINEAR);
-				icon.setAntiAlias(true);
+            Icon numberIcon = EmptyIcon.create(0);
+            if (trickotnummer > 0 && trickotnummer < 50) {
+                int baseline = Math.round(height * 13f / 16f);
+                int fontSize = Math.round(height * 8f / 16f);
+                numberIcon = new TextIcon(String.valueOf(trickotnummer),
+                                          textColor,
+                                          new Font(Font.SANS_SERIF, Font.BOLD, fontSize),
+                                          width, height, baseline);
+            }
+            komplettIcon = new OverlayIcon(jerseyIcon, numberIcon, size, size);
+            ThemeManager.instance().put(key, komplettIcon);
+        }
 
-				icon.setSvgURI(svgURI);
-
-				SVGDiagram diagram = icon.getSvgUniverse().getDiagram(svgURI);
-				SVGRoot root = diagram.getRoot();
-				StyleSheet ss = new StyleSheet();
-				root.setStyleSheet(ss);
-
-				String rgbColour = getHexColor(trickotfarbe);
-				ss.addStyleRule(new StyleSheetRule("fill", "path", "jersey"), rgbColour);
-				ss.addStyleRule(new StyleSheetRule("fill", "path", "collar"), rgbColour);
-
-				double brightness = ImageUtilities.getBrightness(trickotfarbe);
-
-				if (brightness < 130) {
-					ss.addStyleRule(new StyleSheetRule("fill", "text", "num"), "white");
-				} else {
-					ss.addStyleRule(new StyleSheetRule("fill", "text", "num"), "black");
-				}
-
-				if (trickotnummer > 0 && trickotnummer < 50) {
-					Text element = (Text)diagram.getElement("number");
-					element.appendText(String.valueOf(trickotnummer));
-					try {
-						element.setAttribute("x", AnimationElement.AT_XML, String.valueOf(trickotnummer).length() > 1 ? "57.5": "61");
-						element.rebuild();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-
-				komplettIcon = icon;
-				ThemeManager.instance().put(key.toString(), komplettIcon);
-			}
-		}
-
-		return komplettIcon;
-	}
+        return komplettIcon;
+    }
 
 	private static Color getJerseyColorByPosition(int posid) {
 		Color trickotfarbe;
@@ -669,35 +644,38 @@ public class ImageUtilities {
 		return trickotfarbe;
 	}
 
-	public static SVGIcon getSvgIcon(String image) {
-		return (getSvgIcon(image, 24, 24));
-	}
+    public static Icon getSvgIcon(String image) {
+        return (getSvgIcon(image, 24, 24));
+    }
 
-	public static SVGIcon getSvgIcon(String key, int width, int height) {
-		URI svgURI = null;
-		SVGIcon icon = new SVGIcon();
+    public static Icon getSvgIcon(String key, int width, int height) {
+        Object imagePath = ThemeManager.getIconPath(key);
+        return IconLoader.get().getIcon(Objects.requireNonNull(imagePath).toString(), width, height);
+    }
 
-		try {
-			Object imagePath = ThemeManager.getIconPath(key);
-			if (imagePath != null && imagePath instanceof String) {
-				svgURI = ImageUtilities.class.getClassLoader().getResource((String)imagePath).toURI();
-				if (svgURI != null) {
-					icon.setSvgUniverse(new SVGUniverse());
-					icon.setPreferredSize(new Dimension(width, height));
-					icon.setAutosize(SVGIcon.AUTOSIZE_BESTFIT);
-					icon.setInterpolation(INTERP_BILINEAR);
-					icon.setAntiAlias(true);
-					icon.setSvgURI(svgURI);
-					return icon;
-				}
-			}
-		} catch (Exception e) {	}
-
-		// To avoid infinite loop but will never happen
-		if (!key.equals(HOClassicSchema.EMPTY_SVG))
-			return 	getSvgIcon(HOClassicSchema.EMPTY_SVG);
-		else
-			return icon; // generate an exception, will never happen
+	/**
+	 * Transforms an icon into an image.
+	 * Cf. 	https://stackoverflow.com/a/5831357
+	 * @param icon
+	 * @return
+	 */
+	public static Image iconToImage(Icon icon) {
+		if (icon instanceof ImageIcon) {
+			return ((ImageIcon)icon).getImage();
+		}
+		else {
+			int w = icon.getIconWidth();
+			int h = icon.getIconHeight();
+			GraphicsEnvironment ge =
+					GraphicsEnvironment.getLocalGraphicsEnvironment();
+			GraphicsDevice gd = ge.getDefaultScreenDevice();
+			GraphicsConfiguration gc = gd.getDefaultConfiguration();
+			BufferedImage image = gc.createCompatibleImage(w, h, Transparency.BITMASK);
+			Graphics2D g = image.createGraphics();
+			icon.paintIcon(null, g, 0, 0);
+			g.dispose();
+			return image;
+		}
 	}
 
 	public static double getBrightness(Color colour) {
@@ -716,5 +694,13 @@ public class ImageUtilities {
 		return new Color(Integer.valueOf(hexColour.substring(1, 3), 16),
 				Integer.valueOf(hexColour.substring(3, 5), 16),
 				Integer.valueOf(hexColour.substring(5, 7), 16));
+	}
+
+	public static Icon getScaledIcon(Icon icon, int width, int height) {
+		if (icon instanceof DerivableIcon) {
+			return ((DerivableIcon<Icon>) icon).derive(width, height);
+		} else {
+			return new DerivableImageIcon(iconToImage(icon), width, height, Image.SCALE_SMOOTH);
+		}
 	}
 }

@@ -4,6 +4,7 @@ package module.playerOverview;
 import core.gui.print.ComponentPrintObject;
 import core.gui.print.PrintController;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.LightGrayFilter;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -41,33 +42,33 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
     private final JButton doButton = new JButton(ThemeManager.getIcon(HOIconName.TURN));
     private final JButton m_jbDrucken = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
     private final JToggleButton aGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[1]).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[1]), 0.5f)));
 	private final JToggleButton aGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[1]).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[1]), 0.5f)));
 	private final JToggleButton bGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[2]).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[2]), 0.5f)));
 	private final JToggleButton bGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[2]).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[2]), 0.5f)));
 	private final JToggleButton cGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[3]).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[3]), 0.5f)));
 	private final JToggleButton cGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[3]).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[3]), 0.5f)));
 	private final JToggleButton dGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[4]).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[4]), 0.5f)));
 	private final JToggleButton dGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[4]).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[4]), 0.5f)));
 	private final JToggleButton eGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[5]).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[5]), 0.5f)));
 	private final JToggleButton eGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[5]).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[5]), 0.5f)));
     private final JToggleButton fGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[6]).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[6]), 0.5f)));
 	private final JToggleButton fGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[6]).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[6]), 0.5f)));
     private final JToggleButton noGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.NO_TEAM).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.NO_TEAM), 0.5f)));
 	private final JToggleButton noGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.NO_TEAM).getImage(), 0.5f)));
+			makeGray(ThemeManager.getIcon(HOIconName.NO_TEAM), 0.5f)));
     private PlayerOverviewTable m_clTable;
 
     // ~ Constructors
@@ -344,8 +345,10 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
 	 * Tauscht eine Farbe im Image durch eine andere
 	 *
 	 */
-	private Image makeGray(Image im, float value) {
-	    final ImageProducer ip = new FilteredImageSource(im.getSource(), new LightGrayFilter(value));
+	private Image makeGray(Icon im, float value) {
+	    Image image = ImageUtilities.iconToImage(im);
+
+	    final ImageProducer ip = new FilteredImageSource(image.getSource(), new LightGrayFilter(value));
 	    return Toolkit.getDefaultToolkit().createImage(ip);
 	}
 }

@@ -145,8 +145,8 @@ public class HOTheme extends DefaultMetalTheme implements Theme {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
 
-            RasenPanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND).getImage());
-            ImagePanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND).getImage());
+            RasenPanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND));
+            ImagePanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND));
 
         } catch (Exception e) {
             success = false;

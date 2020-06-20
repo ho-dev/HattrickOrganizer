@@ -91,7 +91,7 @@ public class RasenPanel extends JPanel {
         m_bPrint = printing;
 
         if (background == null) {
-            background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND).getImage());
+            background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND));
         }
 
         setBackground(java.awt.Color.white);

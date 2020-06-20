@@ -6,14 +6,13 @@ import core.util.HelperWrapper;
 import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.ImageIcon;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class PlayerPositionTableCellRenderer extends DefaultTableCellRenderer {
     //~ Static fields/initializers -----------------------------------------------------------------
     private static final long serialVersionUID = 3258412837305923127L;
-    private static Map<Object,ImageIcon> map;
+    private static Map<Object, Icon> map;
 
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -21,7 +20,7 @@ public class PlayerPositionTableCellRenderer extends DefaultTableCellRenderer {
         super();
 
         if (map == null) {
-            map = new HashMap<Object,ImageIcon>();
+            map = new HashMap<>();
         }
 
     }
@@ -42,7 +41,7 @@ public class PlayerPositionTableCellRenderer extends DefaultTableCellRenderer {
 
             int pos = ((Integer) value).intValue();
 
-            ImageIcon icon;
+            Icon icon;
 
             // Check for cached icon first.
             if (map.containsKey(value)) {

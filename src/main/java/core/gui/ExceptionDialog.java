@@ -1,6 +1,7 @@
 package core.gui;
 
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.util.ExceptionUtils;
 import core.util.HOLogger;
@@ -14,13 +15,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 /**
  * 
@@ -33,8 +28,8 @@ public class ExceptionDialog extends JDialog {
 	private JTextArea textArea;
 	private JButton detailsButton;
 	private Dimension savedDetailsSize;
-	private ImageIcon showDetailsImage;
-	private ImageIcon hideDetailsImage;
+	private Icon showDetailsImage;
+	private Icon hideDetailsImage;
 	private Throwable throwable;
 
 	public ExceptionDialog(String msg, Throwable t) {
@@ -49,7 +44,7 @@ public class ExceptionDialog extends JDialog {
 		try {
 			this.showDetailsImage = ThemeManager.getIcon(HOIconName.CONTROL_DOUBLE_270);
 			this.hideDetailsImage = ThemeManager.getIcon(HOIconName.CONTROL_DOUBLE_090);
-			setIconImage(ThemeManager.getIcon(HOIconName.EXCLAMATION_RED).getImage());
+			setIconImage(ImageUtilities.iconToImage(ThemeManager.getIcon(HOIconName.EXCLAMATION_RED)));
 		} catch (Exception ex) {
 			HOLogger.instance().log(getClass(), ex);
 		}
