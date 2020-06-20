@@ -1241,20 +1241,16 @@ public class RatingPredictionManager {
     public float getTacticLevelCounter()
     {
 		Weather weather = HOMainFrame.getWetter();
-
-        double playerContribution;
+		double retVal = 0;
     	RatingPredictionParameter params = config.getTacticsParameters();
 		List<Integer> allDefenders = Arrays.asList(IMatchRoleID.rightBack, IMatchRoleID.rightCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack);
-    	double retVal = 0;
+
         for(int pos : allDefenders)
         {
             Player player = startingLineup.getPlayerByPositionID(pos);
             if(player != null) {
-            		playerContribution = (params.getParam("counter", "multiPs", 1.0) * calcPlayerStrength(-1, player, PASSING, true, true, weather, true));
-            		playerContribution += (params.getParam("counter", "multiDe", 1.0) * calcPlayerStrength(-1, player, DEFENDING, true, true, weather, true));
-            		playerContribution *= params.getParam("counter", "playerPostMulti", 1.0);
-            		playerContribution += params.getParam("counter", "playerPostDelta", 0);
-            		retVal += playerContribution;
+				retVal += (params.getParam("counter", "multiPs", 1.0) * calcPlayerStrength(-1, player, PASSING, true, true, weather, true));
+				retVal += (params.getParam("counter", "multiDe", 1.0) * calcPlayerStrength(-1, player, DEFENDING, true, true, weather, true));
             }
         }
         retVal *= params.getParam("counter", "postMulti", 1.0);
@@ -1293,28 +1289,25 @@ public class RatingPredictionManager {
     }
 
     /**
-     * get the tactic level for long shots
-     *
-     * @return tactic level
+     * @return the tactic level for long shots
      */
     public final float getTacticLevelLongShots() {
+		Weather weather = HOMainFrame.getWetter();
        	RatingPredictionParameter params = config.getTacticsParameters();
     	double retVal = 0;
-        for(int pos = IMatchRoleID.startLineup +1; pos < IMatchRoleID.startReserves; pos++)
+
+        for(int pos : IMatchRoleID.aOutfieldMatchRoleID)
         {
-            float scoring = 0.0F;
-            float setpieces = 0.0F;
-            Player player = startingLineup.getPlayerByPositionID(pos);
-            if(player != null) {
-            	scoring = 3*calcPlayerStrength(-1, player, SCORING, true, false, null, false);
-            	setpieces = calcPlayerStrength(-1, player, SETPIECES, true, false, null, false);
-                retVal += scoring;
-                retVal += setpieces;
-            }
+			Player player = startingLineup.getPlayerByPositionID(pos);
+			if(player != null) {
+				retVal += (params.getParam("longshots", "multiSc", 1.0) * calcPlayerStrength(-1, player, SCORING, true, true, weather, true));
+				retVal += (params.getParam("longshots", "multiSp", 1.0) * calcPlayerStrength(-1, player, SETPIECES, true, true, weather, true));
+			}
         }
-        
-        retVal *= params.getParam("longshots", "postMulti", 1.0);
-        retVal += params.getParam("longshots", "postDelta", 0);
+
+//      retVal *= params.getParam("longshots", "postMulti", 1.0);
+//		retVal = Math.pow(retVal, params.getParam("longshots", "postPower", 1));
+		retVal += params.getParam("longshots", "postDelta", 0);
     	retVal = applyCommonProps (retVal, params, "longshots");
     	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);
     	return (float)retVal;
