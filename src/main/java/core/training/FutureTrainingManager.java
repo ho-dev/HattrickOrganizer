@@ -94,7 +94,7 @@ public class FutureTrainingManager {
 				finalSub[i] -= SkillDrops.instance().getSkillDrop((int)finalSkill[i], age, skillIndex[i])/100;
 			}
 
-			int trainingSpeed=0;
+			double trainingSpeed=0;
 			weeksPassed++;
 			TrainingPerWeek tw = this.futureTrainings.get(index-1);
 			int trType = tw.getTrainingType();

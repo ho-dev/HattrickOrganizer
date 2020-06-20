@@ -64,7 +64,7 @@ public class StringUtils {
 		return (string == null) ? defaultStr : string;
 	}
 
-	public static String getResultString(int homeGoals, int awayGoals) {
+	public static String getResultString(int homeGoals, int awayGoals, String resultExtensionAbbreviation) {
 		final StringBuffer buffer = new StringBuffer();
 		if (homeGoals < 0 || awayGoals < 0)
 			return " - : - ";
@@ -79,8 +79,10 @@ public class StringUtils {
 		if (awayGoals < 10) {
 			buffer.append(" ");
 		}
-
 		buffer.append(awayGoals);
+		if(! resultExtensionAbbreviation.isEmpty()){
+			buffer.append(" "+resultExtensionAbbreviation);
+		}
 
 		return buffer.toString();
 	}

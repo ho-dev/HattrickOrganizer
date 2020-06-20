@@ -26,7 +26,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[21];
+		columns = new ColumnDescriptor[22];
 		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false, true); //The globally unique identifier of the match
 		columns[1] = new ColumnDescriptor("MatchTyp", Types.INTEGER, false); //Integer defining the type of match
 		columns[2] = new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256); // HomeTeamName
@@ -48,6 +48,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		columns[18] = new ColumnDescriptor("isNeutral", Types.BOOLEAN, true); // 0=false, 1=true, -1=unknown
 		columns[19] = new ColumnDescriptor("Weather", Types.INTEGER, true); // 0=rainy, ...
 		columns[20] = new ColumnDescriptor("WeatherForecast", Types.INTEGER, true); // 0=happened, ...
+		columns[21] = new ColumnDescriptor("Duration", Types.INTEGER, true); // 0=happened, ...
 
 	}
 
@@ -295,6 +296,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		if (rs.wasNull()) match.setWeather(Weather.NULL);
 		match.setWeatherForecast(Weather.Forecast.getById(rs.getInt("WeatherForecast")));
 		if ( rs.wasNull()) match.setWeatherForecast(Weather.Forecast.NULL);
+		match.setDuration(rs.getInt("Duration"));
 		return match;
 	}
 
@@ -466,7 +468,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			try {
 				sql = "INSERT INTO "
 						+ getTableName()
-						+ " (  MatchID, MatchContextId, TournamentTypeID, MatchTyp, CupLevel, CupLevelIndex, HeimName, HeimID, GastName, GastID, MatchDate, HeimTore, GastTore, Aufstellung, Status, ArenaId, RegionId, isDerby, isNeutral, Weather, WeatherForecast ) VALUES(";
+						+ " (  MatchID, MatchContextId, TournamentTypeID, MatchTyp, CupLevel, CupLevelIndex, HeimName, HeimID, GastName, GastID, MatchDate, HeimTore, GastTore, Aufstellung, Status, ArenaId, RegionId, isDerby, isNeutral, Weather, WeatherForecast, Duration ) VALUES(";
 				sql += (matches[i].getMatchID()
 						+ ","
 						+ matches[i].getMatchContextId()
@@ -497,7 +499,9 @@ final class MatchesKurzInfoTable extends AbstractTable {
 						+ matches[i].getIsDerby() + ", "
 						+ matches[i].getIsNeutral() + ", "
 						+ matches[i].getWeather().getId() + ", "
-						+ matches[i].getWeatherForecast().getId() + " )");
+						+ matches[i].getWeatherForecast().getId() + ", "
+						+ matches[i].getDuration()
+						+ " )");
 				adapter.executeUpdate(sql);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),

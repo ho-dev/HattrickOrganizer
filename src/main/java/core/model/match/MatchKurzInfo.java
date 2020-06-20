@@ -1,5 +1,6 @@
 package core.model.match;
 
+import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.cup.CupLevel;
@@ -63,7 +64,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	private int m_iMatchStatus = -1;
 	
 	/** HO user team ID */
-	private int user_team_id = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+	private static int user_team_id = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 	// TODO comments
 	private int m_iArenaId = -1;
@@ -72,6 +73,12 @@ public class MatchKurzInfo implements Comparable<Object> {
 	private Boolean m_iIsNeutral = null;
 	private Weather m_iWeather = Weather.NULL;
 	private Weather.Forecast m_iWeatherForecast = Weather.Forecast.NULL;
+
+	// Duration of the match (-1 if unknown or not played yet)
+	private int duration = -1;
+
+	// Details of the match, if available
+	private Matchdetails matchdetails;
 
 	public final void setArenaId(int id) {this.m_iArenaId=id;}
 	public final int getArenaId() {return this.m_iArenaId;}
@@ -413,5 +420,41 @@ public class MatchKurzInfo implements Comparable<Object> {
 	{
 		return m_iHeimID == user_team_id;
 	}
-	
+
+	// Return duration of the match in minutes
+	// -1 if match is not finished or duration is unknown
+	public int getDuration()
+	{
+		if ( duration == -1 && this.isFinished()){
+			Matchdetails matchdetails = getMatchdetails();
+			if ( matchdetails != null){
+				duration = matchdetails.getLastMinute();
+			}
+		}
+		return duration;
+	}
+
+	private boolean isFinished() {
+		return this.m_iMatchStatus == FINISHED;
+	}
+
+	// Set duration of the match in minutes
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+
+	// Return match result extension information as abbreviation string
+	// e. g. a.p. means after penalties. a.e. after extension
+	public String getResultExtensionAbbreviation() {
+		if ( getDuration() > 120 ) return HOVerwaltung.instance().getLanguageString("ls.match.after.penalties.abbreviation");
+		if ( getDuration() > 110 ) return HOVerwaltung.instance().getLanguageString("ls.match.after.extension.abbreviation");
+		return "";
+	}
+
+	public Matchdetails getMatchdetails() {
+		if (matchdetails==null){
+			matchdetails = DBManager.instance().getMatchDetails(getMatchID());
+		}
+		return matchdetails;
+	}
 }
