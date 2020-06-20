@@ -1,11 +1,9 @@
 package core.gui.theme;
 
-import com.kitfox.svg.*;
-import com.kitfox.svg.animation.AnimationElement;
-import com.kitfox.svg.app.beans.SVGIcon;
-import com.kitfox.svg.xml.StyleSheet;
-import com.kitfox.svg.xml.StyleSheetRule;
-import core.gui.theme.ho.HOClassicSchema;
+import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.icons.IconLoader;
+import core.icon.OverlayIcon;
+import core.icon.TextIcon;
 import core.model.UserParameter;
 import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
@@ -19,13 +17,12 @@ import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageProducer;
 import java.awt.image.PixelGrabber;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.swing.*;
-
-import static com.kitfox.svg.app.beans.SVGIcon.INTERP_BILINEAR;
 
 public class ImageUtilities {
 
@@ -533,69 +530,42 @@ public class ImageUtilities {
 	}
 
     public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer) {
-		Color trickotfarbe = null;
-		Icon komplettIcon = null;
-		StringBuilder key = new StringBuilder(20);
+        return getJerseyIcon(posid, taktik, trickotnummer, 20);
+    }
 
-		key.append("trickot_").append(posid).append("_").append(taktik).append("_").append(trickotnummer);
-		komplettIcon = ThemeManager.getIcon(key.toString());
+    public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer, int size) {
+        String key = "trickot_" + posid + "_" + taktik + "_" + trickotnummer + "_" + size;
+        Icon komplettIcon = ThemeManager.getIcon(key);
 
-		if (komplettIcon == null) {
-			trickotfarbe = getJerseyColorByPosition(posid);
+        if (komplettIcon == null) {
+            Color jerseyColor = getJerseyColorByPosition(posid);
 
-			URI svgURI = null;
+            double brightness = ImageUtilities.getBrightness(jerseyColor);
+            Color textColor = brightness < 130 ? Color.WHITE : Color.BLACK;
 
-			try {
-				svgURI = ImageUtilities.class.getClassLoader().getResource("gui/bilder/jerseys.svg").toURI();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+            Map<Object, Object> colorMap = Map.of("jerseyColor", jerseyColor,
+                                                  "collarColor", jerseyColor,
+                                                  "outlineColor", textColor);
+            int width = size;
+            int height = Math.round(size * 16f / 20f);
+            Icon jerseyIcon = IconLoader.get().loadSVGIcon("gui/bilder/jerseys.svg",
+                                                           width, height, true, colorMap);
 
-			if (svgURI != null) {
-				SVGIcon icon = new SVGIcon();
-				icon.setSvgUniverse(new SVGUniverse());
-				icon.setPreferredSize(new Dimension(20, 16));
-				icon.setAutosize(SVGIcon.AUTOSIZE_BESTFIT);
-				icon.setInterpolation(SVGIcon.INTERP_BILINEAR);
-				icon.setAntiAlias(true);
+            Icon numberIcon = EmptyIcon.create(0);
+            if (trickotnummer > 0 && trickotnummer < 50) {
+                int baseline = Math.round(height * 13f / 16f);
+                int fontSize = Math.round(height * 8f / 16f);
+                numberIcon = new TextIcon(String.valueOf(trickotnummer),
+                                          textColor,
+                                          new Font(Font.SANS_SERIF, Font.BOLD, fontSize),
+                                          width, height, baseline);
+            }
+            komplettIcon = new OverlayIcon(jerseyIcon, numberIcon, size, size);
+            ThemeManager.instance().put(key, komplettIcon);
+        }
 
-				icon.setSvgURI(svgURI);
-
-				SVGDiagram diagram = icon.getSvgUniverse().getDiagram(svgURI);
-				SVGRoot root = diagram.getRoot();
-				StyleSheet ss = new StyleSheet();
-				root.setStyleSheet(ss);
-
-				String rgbColour = getHexColor(trickotfarbe);
-				ss.addStyleRule(new StyleSheetRule("fill", "path", "jersey"), rgbColour);
-				ss.addStyleRule(new StyleSheetRule("fill", "path", "collar"), rgbColour);
-
-				double brightness = ImageUtilities.getBrightness(trickotfarbe);
-
-				if (brightness < 130) {
-					ss.addStyleRule(new StyleSheetRule("fill", "text", "num"), "white");
-				} else {
-					ss.addStyleRule(new StyleSheetRule("fill", "text", "num"), "black");
-				}
-
-				if (trickotnummer > 0 && trickotnummer < 50) {
-					Text element = (Text)diagram.getElement("number");
-					element.appendText(String.valueOf(trickotnummer));
-					try {
-						element.setAttribute("x", AnimationElement.AT_XML, String.valueOf(trickotnummer).length() > 1 ? "57.5": "61");
-						element.rebuild();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-
-				komplettIcon = icon;
-				ThemeManager.instance().put(key.toString(), komplettIcon);
-			}
-		}
-
-		return komplettIcon;
-	}
+        return komplettIcon;
+    }
 
 	private static Color getJerseyColorByPosition(int posid) {
 		Color trickotfarbe;
@@ -669,36 +639,14 @@ public class ImageUtilities {
 		return trickotfarbe;
 	}
 
-	public static SVGIcon getSvgIcon(String image) {
-		return (getSvgIcon(image, 24, 24));
-	}
+    public static Icon getSvgIcon(String image) {
+        return (getSvgIcon(image, 24, 24));
+    }
 
-	public static SVGIcon getSvgIcon(String key, int width, int height) {
-		URI svgURI = null;
-		SVGIcon icon = new SVGIcon();
-
-		try {
-			Object imagePath = ThemeManager.getIconPath(key);
-			if (imagePath != null && imagePath instanceof String) {
-				svgURI = ImageUtilities.class.getClassLoader().getResource((String)imagePath).toURI();
-				if (svgURI != null) {
-					icon.setSvgUniverse(new SVGUniverse());
-					icon.setPreferredSize(new Dimension(width, height));
-					icon.setAutosize(SVGIcon.AUTOSIZE_BESTFIT);
-					icon.setInterpolation(INTERP_BILINEAR);
-					icon.setAntiAlias(true);
-					icon.setSvgURI(svgURI);
-					return icon;
-				}
-			}
-		} catch (Exception e) {	}
-
-		// To avoid infinite loop but will never happen
-		if (!key.equals(HOClassicSchema.EMPTY_SVG))
-			return 	getSvgIcon(HOClassicSchema.EMPTY_SVG);
-		else
-			return icon; // generate an exception, will never happen
-	}
+    public static Icon getSvgIcon(String key, int width, int height) {
+        Object imagePath = ThemeManager.getIconPath(key);
+        return IconLoader.get().getIcon(Objects.requireNonNull(imagePath).toString(), width, height);
+    }
 
 	public static double getBrightness(Color colour) {
 		return Math.sqrt(0.241 * colour.getRed()*colour.getRed()
