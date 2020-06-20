@@ -36,7 +36,8 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ### Rating
 
-
+  - [BUG] Fixes Long Shots tactic level calculation
+  
 ### Matches
 
   - [FIX] Some icons fixes in match report

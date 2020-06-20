@@ -36,6 +36,7 @@ public interface IMatchRoleID {
     int centralForward = 112; // Middle forward
     int leftForward = 113; //Left forward
     List<Integer> aFieldMatchRoleID = IntStream.rangeClosed(100, 113).boxed().collect(Collectors.toList());
+    List<Integer> aOutfieldMatchRoleID = IntStream.rangeClosed(101, 113).boxed().collect(Collectors.toList());
 
     // Subs
     int substGK1 = 200; // 	Substitution (Keeper)

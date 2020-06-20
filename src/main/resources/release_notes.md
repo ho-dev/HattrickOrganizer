@@ -37,6 +37,7 @@ Changelist HO! 4.0
 
 ### Rating
 
+  - [BUG] Fixes Long Shots tactic level calculation
 
 ### Matches
 
