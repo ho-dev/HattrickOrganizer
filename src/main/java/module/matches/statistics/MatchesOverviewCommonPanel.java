@@ -112,10 +112,10 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
 		MatchKurzInfo info = getHighestMatch(home, away);
 		if(info != null){
 			teamNames[HighestVictory].setText(info.getHeimName()+" - "+info.getGastName());
-			resultLabels[HighestVictory].setText(StringUtils.getResultString(info.getHeimTore(),info.getGastTore()));
+			resultLabels[HighestVictory].setText(StringUtils.getResultString(info.getHeimTore(),info.getGastTore(), ""));
 		} else {
 			teamNames[HighestVictory].setText("");
-			resultLabels[HighestVictory].setText(StringUtils.getResultString(-1,-1));
+			resultLabels[HighestVictory].setText(StringUtils.getResultString(-1,-1, ""));
 		}
 		home = DBManager.instance().getMatchesKurzInfo(teamId, matchtypes, HighestDefeat, true);
 		away = DBManager.instance().getMatchesKurzInfo(teamId, matchtypes, HighestDefeat, false);
@@ -123,10 +123,10 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
 
 		if(info != null){
 			teamNames[HighestDefeat].setText(info.getHeimName()+" - "+info.getGastName());
-			resultLabels[HighestDefeat].setText(StringUtils.getResultString(info.getHeimTore(),info.getGastTore()));
+			resultLabels[HighestDefeat].setText(StringUtils.getResultString(info.getHeimTore(),info.getGastTore(), ""));
 		}else {
 			teamNames[HighestDefeat].setText("");
-			resultLabels[HighestDefeat].setText(StringUtils.getResultString(-1,-1));
+			resultLabels[HighestDefeat].setText(StringUtils.getResultString(-1,-1, ""));
 		}
 		for (int i = 2; i < resultLabels.length; i++) {
 			resultLabels[i].setText(""+DBManager.instance().getMatchesKurzInfoStatisticsCount(teamId, matchtypes, i));

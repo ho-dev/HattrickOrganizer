@@ -116,12 +116,16 @@ final class DBUpdater {
 		}
 	}
 
-	private void updateDBv400(int dbVersion, int version){
+	private void updateDBv400(int dbVersion, int version) throws SQLException {
 		// Delete existing values to provide sane defaults.
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'spielerUebersichtsPanel_horizontalRightSplitPane'");
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_verticalSplitPane'");
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalRightSplitPane'");
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalLeftSplitPane'");
+
+		if (!columnExistsInTable("Duration", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN Duration INTEGER ");
+		}
 
 		// use defaults player formula from defaults.xml by resetting the value in the database
 		try {

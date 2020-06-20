@@ -6,6 +6,7 @@
  */
 package core.model.match;
 
+import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
 
@@ -27,7 +28,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     private String m_sMatchreport = "";
     private Timestamp m_clFetchDatum;
     private Timestamp m_clSpielDatum;
-    private ArrayList<MatchEvent> m_vHighlights = new ArrayList<>();
+    private ArrayList<MatchEvent> m_vHighlights;
     private int m_iArenaID = -1;
     private int m_iGastId = -1;
 
@@ -119,6 +120,13 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     public int getRatingIndirectSetPiecesAtt() {
         return ratingIndirectSetPiecesAtt;
+    }
+
+    public int getLastMinute() {
+        if ( getHighlights().size()>0){
+            return getHighlights().get(getHighlights().size()-1).getMinute();
+        }
+        return -1;
     }
 
     public enum eInjuryType {
@@ -734,6 +742,9 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      * @return Value of property m_vHighlights.
      */
     public final ArrayList<MatchEvent> getHighlights() {
+        if ( m_vHighlights == null){
+            m_vHighlights = DBManager.instance().getMatchHighlights(this.m_iMatchID);
+        }
         return m_vHighlights;
     }
 

@@ -217,7 +217,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         homeTeam.setText(paarung.getHeimName());
         visitorTeam.setText(paarung.getGastName());
         if ((paarung.getToreHeim() > -1) && (paarung.getToreGast() > -1)) {
-            result.setText(StringUtils.getResultString(paarung.getToreHeim(), paarung.getToreGast()));
+            result.setText(StringUtils.getResultString(paarung.getToreHeim(), paarung.getToreGast(), ""));
 
             // HomeVictory
             if (paarung.getToreHeim() > paarung.getToreGast()) {
@@ -236,7 +236,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
                         Color.WHITE));
             }
         } else {
-            result.setText(StringUtils.getResultString(-1, -1));
+            result.setText(StringUtils.getResultString(-1, -1, ""));
             homeTeam.setIcon(ImageUtilities.NOIMAGEICON);
             visitorTeam.setIcon(ImageUtilities.NOIMAGEICON);
         }
