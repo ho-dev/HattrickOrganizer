@@ -41,6 +41,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ### Matches
 
   - [FIX] Some icons fixes in match report
+  - [FEAT] Information about extra time or penalty shoot out in match result #561
 
 ### Lineup
 

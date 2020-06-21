@@ -74,8 +74,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 	private Weather m_iWeather = Weather.NULL;
 	private Weather.Forecast m_iWeatherForecast = Weather.Forecast.NULL;
 
-	// Duration of the match (-1 if unknown or not played yet)
-	private int duration = -1;
+	// Duration of the match (null if unknown or not played yet)
+	private Integer duration;
 
 	// Details of the match, if available
 	private Matchdetails matchdetails;
@@ -422,13 +422,16 @@ public class MatchKurzInfo implements Comparable<Object> {
 	}
 
 	// Return duration of the match in minutes
-	// -1 if match is not finished or duration is unknown
-	public int getDuration()
+	// null, if match is not finished or duration is unknown
+	public Integer getDuration()
 	{
-		if ( duration == -1 && this.isFinished()){
+		if ( duration == null && this.isFinished()){
 			Matchdetails matchdetails = getMatchdetails();
 			if ( matchdetails != null){
 				duration = matchdetails.getLastMinute();
+				// Update duration (should happen only once)
+				MatchKurzInfo[] matches = {this};
+				DBManager.instance().storeMatchKurzInfos(matches);
 			}
 		}
 		return duration;
@@ -439,15 +442,19 @@ public class MatchKurzInfo implements Comparable<Object> {
 	}
 
 	// Set duration of the match in minutes
-	public void setDuration(int duration) {
+	public void setDuration(Integer duration) {
 		this.duration = duration;
 	}
 
 	// Return match result extension information as abbreviation string
 	// e. g. a.p. means after penalties. a.e. after extension
 	public String getResultExtensionAbbreviation() {
-		if ( getDuration() > 120 ) return HOVerwaltung.instance().getLanguageString("ls.match.after.penalties.abbreviation");
-		if ( getDuration() > 110 ) return HOVerwaltung.instance().getLanguageString("ls.match.after.extension.abbreviation");
+		if ( getDuration() != null) {
+			if (this.duration.intValue() > 120)
+				return HOVerwaltung.instance().getLanguageString("ls.match.after.penalties.abbreviation");
+			if (this.duration.intValue() > 110)
+				return HOVerwaltung.instance().getLanguageString("ls.match.after.extension.abbreviation");
+		}
 		return "";
 	}
 
