@@ -1,5 +1,7 @@
 package core.util;
 
+import core.model.HOVerwaltung;
+
 /**
  * Utility class for various String related operations.
  * 
@@ -64,26 +66,22 @@ public class StringUtils {
 		return (string == null) ? defaultStr : string;
 	}
 
-	public static String getResultString(int homeGoals, int awayGoals, String resultExtensionAbbreviation) {
-		final StringBuffer buffer = new StringBuffer();
-		if (homeGoals < 0 || awayGoals < 0)
-			return " - : - ";
+	private static String separator = HOVerwaltung.instance().getLanguageString("ls.match.result.separation");
 
+	public static String getResultString(int homeGoals, int awayGoals, String resultExtensionAbbreviation) {
+		if (homeGoals < 0 || awayGoals < 0)
+			return "  "+ separator;
+
+		final StringBuffer buffer = new StringBuffer();
 		if (homeGoals < 10) {
 			buffer.append(" ");
 		}
-
 		buffer.append(homeGoals);
-		buffer.append(" : ");
-
-		if (awayGoals < 10) {
-			buffer.append(" ");
-		}
+		buffer.append(separator);
 		buffer.append(awayGoals);
 		if(! resultExtensionAbbreviation.isEmpty()){
 			buffer.append(" "+resultExtensionAbbreviation);
 		}
-
 		return buffer.toString();
 	}
 }

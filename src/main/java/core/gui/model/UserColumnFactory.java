@@ -466,7 +466,7 @@ final public class UserColumnFactory {
                 return new ColorLabelEntry(StringUtils.getResultString(match.getHeimTore(),
                         match.getGastTore(), match.getResultExtensionAbbreviation()),
                         ColorLabelEntry.FG_STANDARD, background,
-                        SwingConstants.CENTER);
+                        SwingConstants.LEFT);
             }
 
             @Override
