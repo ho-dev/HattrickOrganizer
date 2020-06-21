@@ -48,7 +48,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		columns[18] = new ColumnDescriptor("isNeutral", Types.BOOLEAN, true); // 0=false, 1=true, -1=unknown
 		columns[19] = new ColumnDescriptor("Weather", Types.INTEGER, true); // 0=rainy, ...
 		columns[20] = new ColumnDescriptor("WeatherForecast", Types.INTEGER, true); // 0=happened, ...
-		columns[21] = new ColumnDescriptor("Duration", Types.INTEGER, true); // 0=happened, ...
+		columns[21] = new ColumnDescriptor("Duration", Types.INTEGER, true); // match duration in minutes
 
 	}
 
@@ -297,6 +297,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		match.setWeatherForecast(Weather.Forecast.getById(rs.getInt("WeatherForecast")));
 		if ( rs.wasNull()) match.setWeatherForecast(Weather.Forecast.NULL);
 		match.setDuration(rs.getInt("Duration"));
+		if ( rs.wasNull()) match.setDuration(null);
 		return match;
 	}
 
