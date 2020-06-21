@@ -42,6 +42,7 @@ Changelist HO! 4.0
 ### Matches
 
   - [FIX] Some icons fixes in match report
+  - [FEAT] Information about extra time or penalty shoot out in match result #561
 
 ### Lineup
 
