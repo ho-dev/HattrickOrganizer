@@ -66,7 +66,7 @@ public class StringUtils {
 		return (string == null) ? defaultStr : string;
 	}
 
-	private static String separator = HOVerwaltung.instance().getLanguageString("ls.match.result.separation");
+	private static String separator = " " + HOVerwaltung.instance().getLanguageString("ls.match.result.separation") + " ";
 
 	public static String getResultString(int homeGoals, int awayGoals, String resultExtensionAbbreviation) {
 		if (homeGoals < 0 || awayGoals < 0)
