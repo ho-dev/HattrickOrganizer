@@ -37,6 +37,14 @@ public class MatchesModel {
 		if (this.details == null && this.match != null) {
 			this.details = this.match.getMatchdetails();
 		}
+
+		 // test highlights
+		try {
+			var dummy = details.getHomeGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED);
+		}
+		catch ( Exception e){
+			HOLogger.instance().log(Matchdetails.class, "GoalsinPartError");
+		}
 		return this.details;
 	}
 	

@@ -950,6 +950,14 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         return m_vHighlights;
     }
 
+    public MatchEvent getMatchEvent(MatchEvent.MatchEventID eventId){
+        for ( var e: getHighlights())
+        {
+            if ( e.getMatchEventID() == eventId) return e;
+        }
+        return null;
+    }
+
     /**
      * Setter for property m_iHomeEinstellung.
      *
