@@ -47,6 +47,8 @@ public class MatchEvent {
 
     private MatchEventID m_matchEventID;
 
+    private MatchPartId matchPartId;
+
     private int m_iMinute;
 
     private int m_iSpielerID;
@@ -54,6 +56,14 @@ public class MatchEvent {
     private int m_iTeamID;
 
     private int matchId;
+
+    public MatchPartId getMatchPartId() {
+        return matchPartId;
+    }
+
+    public void setMatchPartId(MatchPartId matchPartId) {
+        this.matchPartId = matchPartId;
+    }
 
     public enum MatchEventID {
         UNKNOWN_MATCHEVENT(-1),
@@ -154,6 +164,45 @@ public class MatchEvent {
             if (ret == null) {
                 ret = UNKNOWN_MATCHEVENT;
                 HOLogger.instance().log(MatchEventID.class, "UNKNOWN_MATCHEVENT: " + iMatchEventID);
+            }
+            return ret;
+        }
+
+    }
+
+    public enum MatchPartId {
+        UNKNOWN_MATCHPART(-1),
+        BEFORE_THE_MATCH_STARTED(0),
+        FIRST_HALF(1),
+        SECOND_HALF(2),
+        OVERTIME(3),
+        PENALTY_CONTEST(4);
+
+        private final int value;
+
+        MatchPartId(final int newValue) {
+            value = newValue;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        // Reverse-lookup map for getting a MatchEvent from its value
+        private static final HashMap<Integer, MatchPartId> lookup = new HashMap<>();
+
+        static {
+            for (MatchPartId me : MatchPartId.values()) {
+                lookup.put(me.getValue(), me);
+            }
+        }
+
+        public static MatchPartId fromMatchPartId(Integer iMatchPartId) {
+            if ( iMatchPartId== null) return null;
+            MatchPartId ret = lookup.get(iMatchPartId);
+            if (ret == null) {
+                ret = UNKNOWN_MATCHPART;
+                HOLogger.instance().log(MatchPartId.class, "UNKNOWN_MATCHPART: " + iMatchPartId);
             }
             return ret;
         }
