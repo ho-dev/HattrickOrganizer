@@ -126,6 +126,9 @@ final class DBUpdater {
 		if (!columnExistsInTable("Duration", MatchesKurzInfoTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN Duration INTEGER ");
 		}
+		if (!columnExistsInTable("MatchPart", MatchHighlightsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN MatchPart INTEGER ");
+		}
 
 		// use defaults player formula from defaults.xml by resetting the value in the database
 		try {

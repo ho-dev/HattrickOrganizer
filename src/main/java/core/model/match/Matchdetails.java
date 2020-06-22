@@ -18,6 +18,7 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static core.util.StringUtils.getResultString;
 
 
 public class Matchdetails implements core.model.match.IMatchDetails {
@@ -127,6 +128,56 @@ public class Matchdetails implements core.model.match.IMatchDetails {
             return getHighlights().get(getHighlights().size()-1).getMinute();
         }
         return -1;
+    }
+
+    private int[] homeGoalsInParts;
+    private int[] guestGoalsInParts;
+
+    public int getHomeGoalsInPart(MatchEvent.MatchPartId matchPartId) throws Exception {
+        if ( homeGoalsInParts == null){
+            InitGoalsInParts();
+        }
+        return homeGoalsInParts[matchPartId.getValue()];
+    }
+    public int getGuestGoalsInPart(MatchEvent.MatchPartId matchPartId) throws Exception {
+        if ( guestGoalsInParts == null){
+            InitGoalsInParts();
+        }
+        return guestGoalsInParts[matchPartId.getValue()];
+    }
+
+    private void InitGoalsInParts() throws Exception {
+        homeGoalsInParts = new int[MatchEvent.MatchPartId.values().length];
+        guestGoalsInParts= new int[MatchEvent.MatchPartId.values().length];
+        for ( var event : getHighlights()){
+            if ( event.getMatchEventID().getValue()>99 && event.getMatchEventID().getValue()<200 ||
+                    event.getMatchEventID().getValue()>54 && event.getMatchEventID().getValue()<58
+            ){
+                // goal
+                int part=0;
+                var partId = event.getMatchPartId();
+                if (partId!=null ) part = partId.getValue();
+                if ( event.getTeamID() == this.m_iHeimId){
+                    homeGoalsInParts[part]++;
+                }
+                else{
+                    guestGoalsInParts[part]++;
+                }
+            }
+        }
+        // check
+        int sumHomeGoals=0;
+        for ( var i : homeGoalsInParts){
+            sumHomeGoals += i;
+        }
+        if ( sumHomeGoals != this.m_iHomeGoals)
+            throw new Exception("error in InitGoalsInParts");
+        int sumGuestGoals=0;
+        for ( var i : guestGoalsInParts){
+            sumGuestGoals += i;
+        }
+        if ( sumGuestGoals != this.m_iGuestGoals)
+            throw new Exception("error in InitGoalsInParts");
     }
 
     public enum eInjuryType {
@@ -746,6 +797,14 @@ public class Matchdetails implements core.model.match.IMatchDetails {
             m_vHighlights = DBManager.instance().getMatchHighlights(this.m_iMatchID);
         }
         return m_vHighlights;
+    }
+
+    public MatchEvent getMatchEvent(MatchEvent.MatchEventID eventId){
+        for ( var e: getHighlights())
+        {
+            if ( e.getMatchEventID() == eventId) return e;
+        }
+        return null;
     }
 
     /**

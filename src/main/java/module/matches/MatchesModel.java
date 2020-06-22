@@ -1,9 +1,11 @@
 package module.matches;
 
 import core.db.DBManager;
+import core.model.match.MatchEvent;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
+import core.util.HOLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,14 @@ public class MatchesModel {
 	public Matchdetails getDetails() {
 		if (this.details == null && this.match != null) {
 			this.details = DBManager.instance().getMatchDetails(this.match.getMatchID());
+		}
+
+		 // test highlights
+		try {
+			var dummy = details.getHomeGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED);
+		}
+		catch ( Exception e){
+			HOLogger.instance().log(Matchdetails.class, "GoalsinPartError");
 		}
 		return this.details;
 	}

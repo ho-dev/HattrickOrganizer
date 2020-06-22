@@ -115,7 +115,7 @@ public class XMLMatchdetailsParser {
         final Vector<Integer> broken = new Vector<Integer>(); // TODO: I guess this one can be deleted if things are done properly (akasolace)
         Element root, ele;
         NodeList eventList;
-		int iMinute, iSubjectPlayerID, iSubjectTeamID, iObjectPlayerID, iMatchEventID;
+		int iMinute, iSubjectPlayerID, iSubjectTeamID, iObjectPlayerID, iMatchEventID, iMatchPart;
 		String eventtext;
 
 		try {
@@ -140,6 +140,7 @@ public class XMLMatchdetailsParser {
             	iSubjectPlayerID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("SubjectPlayerID").item(0)));
             	iSubjectTeamID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("SubjectTeamID").item(0)));
             	iObjectPlayerID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("ObjectPlayerID").item(0)));
+            	iMatchPart = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("Match_Part").item(0)));
 
             	eventtext = XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("EventText").item(0));
             	eventtext = eventtext.replaceAll("&lt;", "<");
@@ -332,6 +333,7 @@ public class XMLMatchdetailsParser {
             	myHighlight.setGehilfeName(objectplayername);
             	myHighlight.setGehilfeHeim(objHome);
             	myHighlight.setEventText(eventtext);
+            	myHighlight.setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId(iMatchPart));
 
             	// Treat injury
 				if ((iMatchEventID==90) || ((iMatchEventID==94)))
