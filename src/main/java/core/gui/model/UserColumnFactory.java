@@ -705,7 +705,7 @@ final public class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createPlayerAdditionalArray() {
-        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[13];
+        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[12];
 
         playerAdditionalArray[0] = new PlayerColumn(10, " ", " ", 0) {
             @Override
@@ -925,16 +925,18 @@ final public class UserColumnFactory {
             }
         };
 
-        playerAdditionalArray[9] = new PlayerColumn(RATING, "Rating", 50) {
+        playerAdditionalArray[9] = new PlayerColumn(LAST_MATCH, "LastMatchRating", 50) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                if (player.getBewertung() > 0) {
-                    //Hat im letzen Spiel gespielt
-                    return new RatingTableEntry(player.getBewertung(), true);
+                if (player.getLastMatchRating() > 0) {
+                    //
+                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId());
+                    if(info==null){
+                        return new LastMatchLabelEntry((float) player.getLastMatchRating());
+                    }else
+                        return new LastMatchLabelEntry((float) player.getLastMatchRating(), player.getLastMatchDate(), info.getMatchTyp());
                 }
-
-                return new RatingTableEntry(player.getLetzteBewertung(), false);
-
+                return new LastMatchLabelEntry();
             }
 
         };
@@ -982,22 +984,6 @@ final public class UserColumnFactory {
                 setPreferredWidth(35);
                 return home;
             }
-        };
-
-        playerAdditionalArray[12] = new PlayerColumn(LAST_MATCH, "LastMatchRating", 50) {
-            @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                if (player.getLastMatchRating() > 0) {
-                    //
-                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId());
-                    if(info==null){
-                        return new LastMatchLabelEntry((float) player.getLastMatchRating());
-                    }else
-                       return new LastMatchLabelEntry((float) player.getLastMatchRating(), player.getLastMatchDate(), info.getMatchTyp());
-                }
-                return new LastMatchLabelEntry();
-            }
-
         };
 
         return playerAdditionalArray;

@@ -130,6 +130,8 @@ class UserColumnsTable extends AbstractTable {
 				tableIndex 	= rs.getInt(columns[2].getColumnName());
 				width 		= rs.getInt(columns[3].getColumnName());
 
+				if(modelIndex >=dbcolumns.length) continue;
+
 				dbcolumns[modelIndex].setIndex(tableIndex);
 				dbcolumns[modelIndex].setDisplay(true);
 				dbcolumns[modelIndex].setPreferredWidth(width);
