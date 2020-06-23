@@ -375,6 +375,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LINEUP_PARTIAL_TRAINING, new Color(34, 255, 255));
 		put(LINEUP_FULL_TRAINING, new Color(0, 0, 255));
 
+		put(LINEUP_PLAYER_SELECTED, Color.LIGHT_GRAY);
+		put(LINEUP_PLAYER_SUB, new Color(220, 220, 220));
+
 		// shirts
 		put(SHIRT_KEEPER, "black");
 		put(SHIRT_CENTRALDEFENCE, new Color(0, 0, 220));
