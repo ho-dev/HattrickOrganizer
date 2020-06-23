@@ -16,16 +16,7 @@ import java.util.Date;
 public class LastMatchLabelEntry extends AbstractHOTableEntry {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static ImageIcon FULL10STARIMAGEICON;
-    private static ImageIcon FULLGREY10STARIMAGEICON;
-    private static ImageIcon FULL5STARIMAGEICON;
-    private static ImageIcon FULLGREY5STARIMAGEICON;
-    private static ImageIcon FULL50STARIMAGEICON;
-    private static ImageIcon FULLGREY50STARIMAGEICON;
-    private static ImageIcon FULLSTARIMAGEICON;
-    private static ImageIcon HALFSTARIMAGEICON;
-    private static ImageIcon FULLGREYSTARIMAGEICON;
-    private static ImageIcon HALFGREYSTARIMAGEICON;
+    private static ImageIcon FULL10STARIMAGEICON,FULL5STARIMAGEICON,FULL50STARIMAGEICON,FULLSTARIMAGEICON,HALFSTARIMAGEICON;
     private static ImageIcon BALLIMAGEICON;
 
     //~ Instance fields ----------------------------------------------------------------------------
@@ -33,7 +24,6 @@ public class LastMatchLabelEntry extends AbstractHOTableEntry {
     private JComponent m_clComponent = new JPanel();
     private JLabel matchLink = new JLabel("");
     private String m_sTooltip = "";
-    private boolean m_bYellowStar=true;
     private float m_fRating;
     private Date m_lastMatchDate;
     private boolean isOpaque = true;
@@ -167,10 +157,9 @@ public class LastMatchLabelEntry extends AbstractHOTableEntry {
      * 
      * @param panel
      * @param yellowImage
-     * @param grayImage
      */
-    private void addLabel(JComponent panel,ImageIcon yellowImage, ImageIcon grayImage){
-    	final JLabel jlabel = new JLabel((m_bYellowStar)?yellowImage:grayImage);
+    private void addLabel(JComponent panel,ImageIcon yellowImage){
+    	final JLabel jlabel = new JLabel(yellowImage);
         jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         panel.add(jlabel);
     }
@@ -189,27 +178,27 @@ public class LastMatchLabelEntry extends AbstractHOTableEntry {
 		}
 
 		while (f >= 50) {
-			addLabel(panel, FULL50STARIMAGEICON, FULLGREY50STARIMAGEICON);
+			addLabel(panel, FULL50STARIMAGEICON);
 			f -= 50;
 		}
 
 		while (f >= 10) {
-			addLabel(panel, FULL10STARIMAGEICON, FULLGREY10STARIMAGEICON);
+			addLabel(panel, FULL10STARIMAGEICON);
 			f -= 10;
 		}
 
 		while (f >= 5) {
-			addLabel(panel, FULL5STARIMAGEICON, FULLGREY5STARIMAGEICON);
+			addLabel(panel, FULL5STARIMAGEICON);
 			f -= 5;
 		}
 
 		while (f >= 1) {
-			addLabel(panel, FULLSTARIMAGEICON, FULLGREYSTARIMAGEICON);
+			addLabel(panel, FULLSTARIMAGEICON);
 			f -= 1;
 		}
 
 		if (f == 0.5) {
-			addLabel(panel, HALFSTARIMAGEICON, HALFGREYSTARIMAGEICON);
+			addLabel(panel, HALFSTARIMAGEICON);
 		}
 	}
     
@@ -218,35 +207,18 @@ public class LastMatchLabelEntry extends AbstractHOTableEntry {
             FULL10STARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_10.png"),
                                                                                   210, 210, 185,
                                                                                   255, 255, 255));
-            FULLGREY10STARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_10_grey.png"),
-                                                                                      215, 215,
-                                                                                      215, 255,
-                                                                                      255, 255));
             FULL5STARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_5.png"),
                                                                                  210, 210, 185,
                                                                                  255, 255, 255));
-            FULLGREY5STARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_5_grey.png"),
-                                                                                     215, 215, 215,
-                                                                                     255, 255, 255));
             FULL50STARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_50.png"),
                                                                                   210, 210, 185,
                                                                                   255, 255, 255));
-            FULLGREY50STARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_50_grey.png"),
-                                                                                      215, 215,
-                                                                                      215, 255,
-                                                                                      255, 255));
             FULLSTARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star.gif"),
                                                                                 210, 210, 185, 255,
                                                                                 255, 255));
             HALFSTARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_half.gif"),
                                                                                 210, 210, 185, 255,
                                                                                 255, 255));
-            FULLGREYSTARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_grey.png"),
-                                                                                    215, 215, 215,
-                                                                                    255, 255, 255));
-            HALFGREYSTARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_grey_half.png"),
-                                                                                    215, 215, 215,
-                                                                                    255, 255, 255));
         }	
     }
 
