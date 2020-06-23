@@ -59,14 +59,16 @@
 </table>
 
 
+## Documentation
+
+Documentation for HO! is located [here](https://ho.readthedocs.io/).
+
+
 ## Localization
 
 If you want to contribute or see current translation status please visit HO translation [website](https://poeditor.com/join/project/jCaWGL1JCl).
 Please open a request if the language you are interested in is not listed.
 
-## Documentation
-
-Documentation for HO! is located [here](https://ho.readthedocs.io/).
 
 ## Acknowledgements
 
