@@ -16,8 +16,8 @@ import java.util.Date;
 public class LastMatchLabelEntry extends AbstractHOTableEntry {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static ImageIcon FULL10STARIMAGEICON,FULL5STARIMAGEICON,FULL50STARIMAGEICON,FULLSTARIMAGEICON,HALFSTARIMAGEICON;
-    private static ImageIcon BALLIMAGEICON;
+    private static Icon FULL10STARIMAGEICON,FULL5STARIMAGEICON,FULL50STARIMAGEICON,FULLSTARIMAGEICON,HALFSTARIMAGEICON;
+    private static Icon BALLIMAGEICON;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -158,7 +158,7 @@ public class LastMatchLabelEntry extends AbstractHOTableEntry {
      * @param panel
      * @param yellowImage
      */
-    private void addLabel(JComponent panel,ImageIcon yellowImage){
+    private void addLabel(JComponent panel, Icon yellowImage) {
     	final JLabel jlabel = new JLabel(yellowImage);
         jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         panel.add(jlabel);
