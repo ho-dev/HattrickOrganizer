@@ -540,7 +540,7 @@ public class ImageUtilities {
     public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer, int size) {
         String key = "trickot_" + posid + "_" + taktik + "_" + trickotnummer + "_" + size;
         Icon komplettIcon = ThemeManager.instance().getIcon(key);
-//		Icon komplettIcon = cachedMap.get(key);
+
 
         if (komplettIcon == null) {
             Color jerseyColor = getJerseyColorByPosition(posid);

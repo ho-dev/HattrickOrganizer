@@ -16,8 +16,10 @@ public class JerseyIconTest {
 
             JPanel content = new JPanel();
             content.setLayout(new BorderLayout());
+
             Icon icon = ImageUtilities.getJerseyIcon(IMatchRoleID.keeper, (byte) 0, 49);
             JLabel label = new JLabel(ImageUtilities.getScaledIcon(icon, 100, 100));
+
             content.add(label);
             content.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
