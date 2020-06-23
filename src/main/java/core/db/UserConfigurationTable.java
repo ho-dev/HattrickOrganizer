@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 /**
  * The Table UserConfiguration contain all User properties.
@@ -171,7 +172,7 @@ final class UserConfigurationTable extends AbstractTable {
 	 * @param obj
 	 */
 	void store(Configuration obj) {
-		final HashMap<String, String> values = obj.getValues();
+		final Map<String, String> values = obj.getValues();
 		final Set<String> keys = values.keySet();
 		for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
 			String key = iter.next();
