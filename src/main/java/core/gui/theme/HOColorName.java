@@ -144,6 +144,9 @@ public interface HOColorName {
 
 	public static final String LINEUP_RATING_BORDER = "lineup.rating.border";
 
+	String LINEUP_PLAYER_SELECTED = "lineup.player.selected";
+	String LINEUP_PLAYER_SUB = "lineup.player.sub";
+
 	//1.431
 	public static final String MATCHDETAILS_PROGRESSBAR_GREEN = "matchdetails.progressbar.green";
 	public static final String MATCHDETAILS_PROGRESSBAR_RED = "matchdetails.progressbar.red";
