@@ -3,7 +3,9 @@ package module.playerOverview;
 
 import core.gui.print.ComponentPrintObject;
 import core.gui.print.PrintController;
+
 import core.gui.theme.*;
+
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.HOLogger;
@@ -60,6 +62,7 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
             GroupTeam.getGroupIcon("", 12, 12, "0.25"));
 	private final JToggleButton noGruppe2 = new JToggleButton(
             GroupTeam.getGroupIcon("", 12, 12, "0.25"));
+
     private PlayerOverviewTable m_clTable;
 
     // ~ Constructors
@@ -336,8 +339,10 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
 	 * Tauscht eine Farbe im Image durch eine andere
 	 *
 	 */
-	private Image makeGray(Image im, float value) {
-	    final ImageProducer ip = new FilteredImageSource(im.getSource(), new LightGrayFilter(value));
+	private Image makeGray(Icon im, float value) {
+	    Image image = ImageUtilities.iconToImage(im);
+
+	    final ImageProducer ip = new FilteredImageSource(image.getSource(), new LightGrayFilter(value));
 	    return Toolkit.getDefaultToolkit().createImage(ip);
 	}
 }

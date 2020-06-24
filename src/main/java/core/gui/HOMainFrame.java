@@ -8,6 +8,7 @@ import core.file.hrf.HRFImport;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.tabbedPane.HOTabbedPane;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
@@ -187,7 +188,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			iconName = HOIconName.LOGO16 + "_" + HO.getVersionType().toLowerCase();
 		}
 
-		final Image iconImage = ThemeManager.getIcon(iconName).getImage();
+		final Image iconImage = ImageUtilities.iconToImage(ThemeManager.getIcon(iconName));
 
 		if (OSUtils.isMac()) {
 			try {

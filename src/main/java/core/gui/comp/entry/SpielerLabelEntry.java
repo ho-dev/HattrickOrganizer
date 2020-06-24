@@ -10,13 +10,7 @@ import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
 import core.util.Helper;
 import java.awt.*;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 public final class SpielerLabelEntry implements IHOTableEntry {
 
@@ -329,7 +323,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         if (m_bShowWeatherEffect) {
             int effect = PlayerSpeciality.getWeatherEffect(HOMainFrame.getWetter(), player.getPlayerSpecialty());
             if (effect != 0) {
-                final ImageIcon wettericon = ThemeManager.getIcon("weather.effect." + effect);
+                final Icon wettericon = ThemeManager.getIcon("weather.effect." + effect);
                 m_jlWeatherEffect.setIcon(wettericon);
             }
         }
