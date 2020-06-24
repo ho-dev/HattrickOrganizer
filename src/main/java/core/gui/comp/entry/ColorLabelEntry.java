@@ -11,10 +11,7 @@ import core.util.Helper;
 import java.awt.Color;
 import java.awt.Font;
 
-import javax.swing.Icon;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 
 public class ColorLabelEntry extends JLabel implements IHOTableEntry {

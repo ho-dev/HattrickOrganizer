@@ -94,7 +94,7 @@ public class ImagePanel extends JPanel {
         m_bPrint = printing;
 
         if (background == null) {
-        	 background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND).getImage());
+            background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND));
         }
     }
 }

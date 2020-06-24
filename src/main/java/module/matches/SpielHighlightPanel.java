@@ -20,11 +20,7 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 
 /**
@@ -84,7 +80,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 			JLabel playerlabel, matchEventPlayer, resultlabel ;
 
 			List<MatchEvent> matchHighlights = details.getHighlights();
-			ImageIcon icon;
+			Icon icon;
 			Boolean bEventHighlighted;
 
 			int homeScore = 0;

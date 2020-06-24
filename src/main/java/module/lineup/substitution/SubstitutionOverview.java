@@ -655,7 +655,7 @@ public class SubstitutionOverview extends JPanel {
 					hasFocus, row, column);
 			SubstitutionsTableModel tblModel = (SubstitutionsTableModel) table.getModel();
 			Substitution sub = tblModel.getRow(row).getSubstitution();
-			ImageIcon icon;
+			Icon icon;
 			switch (sub.getOrderType()) {
 			case SUBSTITUTION:
 				icon = ThemeManager.getIcon(HOIconName.SUBSTITUTION);

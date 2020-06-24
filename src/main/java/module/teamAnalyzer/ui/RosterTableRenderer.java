@@ -11,9 +11,7 @@ import module.teamAnalyzer.vo.PlayerInfo;
 import java.awt.Color;
 import java.awt.Component;
 
-import javax.swing.ImageIcon;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 
@@ -56,7 +54,7 @@ public class RosterTableRenderer extends DefaultTableCellRenderer {
 
             if (column == 9) {
                 int v = Integer.parseInt((String) value);
-                ImageIcon icon =ThemeManager.getIcon(HOIconName.SPECIALTIES[v]);
+                Icon icon = ThemeManager.getIcon(HOIconName.SPECIALTIES[v]);
                 setIcon(icon);
                 setText("");
                 return this;

@@ -93,8 +93,16 @@ public final class ThemeManager {
 		return tmp;
 	}
 
-	public void put(String key,Object value){
+	public void put(String key, Object value){
 		classicSchema.put(key, value);
+	}
+
+	private  <T> T get(String key, Class<T> type) {
+		Object obj = classicSchema.get(key);
+		if (type.isInstance(obj)) {
+			return type.cast(obj);
+		}
+		return null;
 	}
 
 	public Object get(String key){
@@ -108,56 +116,49 @@ public final class ThemeManager {
 		return tmp;
 	}
 
-	private ImageIcon getImageIcon(String key){
-		Object tmp = null;
-		tmp = classicSchema.get(key);
+	private Icon getIconImpl(String key){
+		Object tmp = classicSchema.get(key);
 		if(tmp == null)
 			return null;
-		if(tmp instanceof ImageIcon)
-			return (ImageIcon)tmp;
+		if(tmp instanceof Icon)
+			return (Icon)tmp;
 		return classicSchema.loadImageIcon(tmp.toString());
 	}
 
-	private ImageIcon getScaledImageIcon(String key, int x, int y){
-		ImageIcon tmp = null;
-		tmp = (ImageIcon) classicSchema.get(key + "(" + x + "," + y + ")");
-		if (tmp == null) {
-			tmp = getImageIcon(key);
-
-			if (tmp != null) {
-				tmp = new ImageIcon(tmp.getImage().getScaledInstance(x, y, Image.SCALE_SMOOTH));
-				classicSchema.put(key + "(" + x + "," + y + ")", tmp);
-			}
+	private Icon getScaledIconImpl(String key, int x, int y){
+		String scaledKey = key + "(" + x + "," + y + ")";
+		Icon icon = get(scaledKey, Icon.class);
+		if (icon == null) {
+			icon = ImageUtilities.getScaledIcon(getIconImpl(key), x, y);
+			if (icon != null) put(scaledKey, icon);
 		}
-
-
-		return tmp;
+		return icon;
 	}
 
-	public static ImageIcon getIcon(String key){
-		return instance().getImageIcon(key);
+	public static Icon getIcon(String key) {
+		return instance().getIconImpl(key);
 	}
 
 	public static Object getIconPath(String key){
 		return instance().get(key);
 	}
 
-	public static ImageIcon getScaledIcon(String key,int x,int y){
-		return instance().getScaledImageIcon(key,x,y);
+	public static Icon getScaledIcon(String key,int x,int y){
+		return instance().getScaledIconImpl(key, x, y);
 	}
 
-	public static ImageIcon getTransparentIcon(String key,Color color){
+	public static Icon getTransparentIcon(String key,Color color){
 		return instance().getTransparentImageIcon(key, color);
 	}
 
-	private ImageIcon getTransparentImageIcon(String key,Color color){
-		ImageIcon tmp = null;
+	private Icon getTransparentImageIcon(String key,Color color){
+		Icon tmp = null;
 		tmp = (ImageIcon) classicSchema.get(key + "(T)");
 		if (tmp == null) {
-			tmp = getImageIcon(key);
+			tmp = getIconImpl(key);
 
-			if (tmp != null) {
-				tmp = new ImageIcon(ImageUtilities.makeColorTransparent(tmp.getImage(), color));
+			if (tmp instanceof ImageIcon) {
+				tmp = new ImageIcon(ImageUtilities.makeColorTransparent(((ImageIcon)tmp).getImage(), color));
 				classicSchema.put(key + "(T)", tmp);
 			}
 		}

@@ -16,13 +16,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 
 
@@ -38,7 +32,7 @@ public class UserColumnsPanel extends JPanel implements ActionListener{
 	private JComboBox m_jcbColumnModel 	= null;
 	private JTable table 				= null;
 	private final String [] columnNames = new String[]{" ", HOVerwaltung.instance().getLanguageString("column")};
-	private final ImageIcon lockedImage 	= ThemeManager.getIcon(HOIconName.LOCKED);
+	private final Icon lockedImage = ThemeManager.getIcon(HOIconName.LOCKED);
 	protected UserColumnsPanel(){
 		initComponents();
 	}
