@@ -157,7 +157,8 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                 int part=0;
                 var partId = event.getMatchPartId();
                 if (partId!=null ) part = partId.getValue();
-                if ( event.getTeamID() == this.m_iHeimId){
+                if ( event.getTeamID() == this.m_iHeimId ||
+                        event.getTeamID()  <= 0 && this.m_iHeimId <= 0){ // Verlegenheitstruppe has id < 0 are stored as 0 in event
                     homeGoalsInParts[part]++;
                 }
                 else{
