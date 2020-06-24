@@ -355,12 +355,12 @@ public class ImageUtilities {
 	 * Return ImageIcon for Position
 	 *
 	 */
-	public static ImageIcon getImage4Position(MatchRoleID position, int trickotnummer) {
-	    if (position == null) {
-	        return ImageUtilities.getImage4Position(0, (byte) 0, trickotnummer);
-	    }
-	
-	    return ImageUtilities.getImage4Position(position.getId(), position.getTaktik(), trickotnummer);
+	public static Icon getImage4Position(MatchRoleID position, int trickotnummer) {
+		if (position == null) {
+			return ImageUtilities.getImage4Position(0, (byte) 0, trickotnummer);
+		}
+
+		return ImageUtilities.getImage4Position(position.getId(), position.getTaktik(), trickotnummer);
 	}
 
 	/**
