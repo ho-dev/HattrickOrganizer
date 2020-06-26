@@ -6,7 +6,6 @@ import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.CheckBoxTree.CheckBoxTree;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.theme.ho.HOTheme;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -119,9 +118,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	 * Initialize the GUI components.
 	 */
 	private void initComponents() {
-		if (HOTheme.getDefaultFont() != null) {
-			setFont(HOTheme.getDefaultFont());
-		}
 		setResizable(false);
 		setContentPane(new ImagePanel(null));
 
