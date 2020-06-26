@@ -677,7 +677,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	}
 
     /**
-	 * Holt die Parameter aus den Dialogen und speichert sie in der DB
+	 * Fetches the parameters from the dialogs and saves them in the DB
 	 */
 	@SuppressWarnings("deprecation")
 	private void saveUserParameter() {
@@ -715,7 +715,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			getSpielerUebersichtPanel().saveColumnOrder();
 		}
 
-		// AufstellungsPanel
+		// Lineup Panel
 		if (getTabbedPane().isModuleTabVisible(IModule.LINEUP)) {
 			final int[] ap = getAufstellungsPanel().getDividerLocations();
 			parameter.aufstellungsPanel_verticalSplitPaneLow = ap[0];
