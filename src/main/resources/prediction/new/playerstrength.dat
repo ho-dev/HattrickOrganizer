@@ -27,10 +27,6 @@
 
 
 # =================  Parameters ===============================
-homegrownbonus=0.5
-loyaltyMax=1
-loyaltySkillMax=20 
-
 formMin=1
 formMax=8
 formDelta=0
