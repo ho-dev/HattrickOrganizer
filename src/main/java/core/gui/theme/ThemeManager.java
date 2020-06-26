@@ -5,10 +5,8 @@ import core.gui.HOMainFrame;
 import core.gui.theme.dark.DarculaDarkTheme;
 import core.gui.theme.dark.SolarizedDarkTheme;
 import core.gui.theme.ho.HOClassicSchema;
-import core.gui.theme.ho.HOTheme;
 import core.gui.theme.light.SolarizedLightTheme;
 import core.gui.theme.nimbus.NimbusTheme;
-import core.gui.theme.system.SystemTheme;
 import core.model.UserParameter;
 import core.util.HOLogger;
 import core.util.OSUtils;
@@ -43,14 +41,12 @@ public final class ThemeManager {
 	}
 
 	private void initialize() {
-		themes.put(HOTheme.THEME_NAME, new HOTheme());
 		themes.put(NimbusTheme.THEME_NAME, new NimbusTheme());
 		themes.put(DarculaDarkTheme.THEME_NAME, new DarculaDarkTheme());
 // Comment out those themes for now as they are not ready yet.
 //		themes.put(HighContrastTheme.THEME_NAME, new HighContrastTheme());
 		themes.put(SolarizedDarkTheme.THEME_NAME, new SolarizedDarkTheme());
 		themes.put(SolarizedLightTheme.THEME_NAME, new SolarizedLightTheme());
-		themes.put(SystemTheme.THEME_NAME, new SystemTheme());
 
 		if (!themesDir.exists()) {
 			themesDir.mkdir();
