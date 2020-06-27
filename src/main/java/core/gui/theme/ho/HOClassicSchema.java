@@ -123,7 +123,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LOGO16_STABLE, "gui/bilder/Logo-16px_stable.png");
 		put(LOGO16_BETA, "gui/bilder/Logo-16px_beta.png");
 		put(LOGO16_DEV, "gui/bilder/Logo-16px_dev.png");
-		//put(TRICKOT, "gui/bilder/Trickot.png");
 		put(TRICKOT, "gui/bilder/jerseys.svg");
 
 		// Player Overview
@@ -132,6 +131,12 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(YELLOWCARD_SMALL, "gui/bilder/player overview/yellow-card(yellow)-small.png");
 		put(TWOYELLOWCARDS_SMALL, "gui/bilder/player overview/yellow-card-x2(yellow)-small.png");
 		put(REDCARD_SMALL, "gui/bilder/player overview/red-card(red)-small.png");
+
+		put(INJURED_TINY, "img/icons/made/injury(red).svg");
+		put(BRUISED_TINY, "img/icons/official/icomoon/SVG/injury.svg");
+		put(TRANSFERLISTED_TINY, "img/icons/official/icomoon/SVG/transferlisted.svg");
+		put(SUSPENDED_TINY, "img/icons/made/red-card(red).svg");
+		put(TWOYELLOW_TINY, "img/icons/made/yellow-card-x2(yellow).svg");
 
 		// Highlights
 
@@ -483,6 +488,14 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(HOColorName.HRF_LIGHTBLUE_BG, new Color(235,235,255));
 		put(HOColorName.HRF_DARKBLUE_BG, new Color(220,220,255));
 		put(HOColorName.HRF_RED_BG, new Color(255,200,200));
+
+		// Player State colours
+		put(HOColorName.FG_STANDARD, Color.BLACK);
+		put(HOColorName.FG_TRANSFERLISTED, new Color(0, 180, 0));
+		put(HOColorName.FG_BRUISED, new Color(100, 0, 0));
+		put(HOColorName.FG_INJURED, new Color(200, 0, 0));
+		put(HOColorName.FG_TWO_YELLOW_CARDS, new Color(100, 100, 0));
+		put(HOColorName.FG_RED_CARD, new Color(200, 20, 20));
 	}
 
 	public Color getDefaultColor(String key) {

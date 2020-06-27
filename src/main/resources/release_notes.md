@@ -59,6 +59,7 @@ Changelist HO! 4.0
   - [FIX] Avoid potential infinite loop at startup. [#584]
   - [FIX] Layout issue in multiple screen setup. [#618]
   - [FEAT] Remove all printing functionality.
+  - [FEAT] Remove player state colour, and display icons instead in Lineup.
 
 ### League
 

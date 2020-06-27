@@ -2,6 +2,7 @@ package core.model;
 
 import core.db.DBManager;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * User configuration. Loaded when HO starts and saved when HO! exits.
@@ -35,7 +36,7 @@ public final class HOParameter extends Configuration {
     //------Konstanten-----------------------------------------------
 	public int lastNews = -1;
 	public float EpvRelease = 1f;
-	public float RatingsRelease = 1f;	
+	public float RatingsRelease = 1f;
     public int DBVersion = DBManager.getVersion();
 
     /** @deprecated since HO! 1.431 */
@@ -47,11 +48,11 @@ public final class HOParameter extends Configuration {
     public int HOUsers = 0;
 
 	@Override
-	public HashMap<String,String> getValues() {
-		HashMap<String,String> map = new HashMap<String,String>();
+	public Map<String,String> getValues() {
+		Map<String,String> map = new HashMap<>();
 		map.put("lastNews",String.valueOf(lastNews));
 		map.put("EpvRelease",String.valueOf(EpvRelease));
-		map.put("RatingsRelease",String.valueOf(RatingsRelease));		
+		map.put("RatingsRelease",String.valueOf(RatingsRelease));
 		map.put("DBVersion",String.valueOf(DBVersion));
 		//map.put("HOTotalUsers",String.valueOf(HOTotalUsers));
 		//map.put("HOUsers",String.valueOf(HOUsers));
@@ -59,10 +60,10 @@ public final class HOParameter extends Configuration {
 	}
 
 	@Override
-	public void setValues(HashMap<String,String> values) {
+	public void setValues(Map<String,String> values) {
 		DBVersion = getIntValue(values,"DBVersion");
 		//HOTotalUsers = getIntValue(values,"HOTotalUsers");
-		//HOUsers = getIntValue(values,"HOUsers");		
+		//HOUsers = getIntValue(values,"HOUsers");
 		lastNews = getIntValue(values,"lastNews");
 		EpvRelease = getFloatValue(values,"EpvRelease");
 		RatingsRelease = getFloatValue(values,"RatingsRelease");
