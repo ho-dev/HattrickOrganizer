@@ -8,6 +8,7 @@ package core.model.match;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.net.OnlineWorker;
 import core.util.HOLogger;
 
 import java.sql.Timestamp;
@@ -150,20 +151,26 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         homeGoalsInParts = new int[MatchEvent.MatchPartId.values().length];
         guestGoalsInParts= new int[MatchEvent.MatchPartId.values().length];
         for ( var event : getHighlights()){
-            if ( event.getMatchEventID().getValue()>99 && event.getMatchEventID().getValue()<200 ||
-                    event.getMatchEventID().getValue()>54 && event.getMatchEventID().getValue()<58
-            ){
+            var eventId = event.getMatchEventID().getValue();
+            if ( eventId>99 && eventId<200 ||
+                    eventId>54 && eventId<58
+            ) {
                 // goal
-                int part=0;
+                int part = 0;
                 var partId = event.getMatchPartId();
-                if (partId!=null ) part = partId.getValue();
-                if ( event.getTeamID() == this.m_iHeimId ||
-                        event.getTeamID()  <= 0 && this.m_iHeimId <= 0){ // Verlegenheitstruppe has id < 0 are stored as 0 in event
+                if (partId != null) part = partId.getValue();
+                if (event.getTeamID() == this.m_iHeimId ||
+                        event.getTeamID() <= 0 && this.m_iHeimId <= 0) { // Verlegenheitstruppe has id < 0 are stored as 0 in event
                     homeGoalsInParts[part]++;
-                }
-                else{
+                } else {
                     guestGoalsInParts[part]++;
                 }
+            }
+            else if ( eventId == MatchEvent.MatchEventID.HOME_TEAM_WALKOVER.getValue()){
+                guestGoalsInParts[0] = 5;
+            }
+            else if ( eventId == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER.getValue()){
+                homeGoalsInParts[0] = 5;
             }
         }
         // check
@@ -794,8 +801,12 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      * @return Value of property m_vHighlights.
      */
     public final ArrayList<MatchEvent> getHighlights() {
-        if ( m_vHighlights == null){
+        if ( m_vHighlights == null || m_vHighlights.size() == 0){
             m_vHighlights = DBManager.instance().getMatchHighlights(this.m_iMatchID);
+            if ( m_vHighlights.size()==0){
+                OnlineWorker.downloadMatchData(this.m_iMatchID, this.m_MatchTyp, true);
+                m_vHighlights = DBManager.instance().getMatchHighlights((this.m_iMatchID));
+            }
         }
         return m_vHighlights;
     }

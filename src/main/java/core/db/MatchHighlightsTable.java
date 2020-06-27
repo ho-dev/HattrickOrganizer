@@ -73,7 +73,7 @@ final class MatchHighlightsTable extends AbstractTable {
 					sql.append(highlight.getGehilfeID()).append(", '");
 					sql.append(DBManager.insertEscapeSequences(highlight.getGehilfeName())).append("', ");
 					sql.append(highlight.getGehilfeHeim()).append(", ");
-					sql.append(highlight.getM_eInjuryType().getValue()).append(", '");
+					sql.append(highlight.getM_eInjuryType().getValue()).append(", ");
 					sql.append(highlight.getMatchPartId().getValue()).append(", '");
 					sql.append(DBManager.insertEscapeSequences(highlight.getEventText())).append("') ");
 					adapter.executeUpdate(sql.toString());
