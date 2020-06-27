@@ -64,6 +64,7 @@
        style="fill-opacity:1;stroke-width:0.411874;stroke-linejoin:round;stroke-opacity:1"
        fill="url(#fillColor)"
        stroke="url(#strokeColor)"
+       opacity="0.25"
        id="rect20" />
   </g>
 </svg>

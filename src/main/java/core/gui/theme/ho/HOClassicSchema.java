@@ -57,6 +57,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(MANUELLSMILIES[9], "gui/bilder/smilies/9coach.gif");
 
 		put(GROUP_TEAM, "gui/bilder/smilies/Group-Team.svg");
+		put(GROUP_TEAM_OPACITY, "gui/bilder/smilies/Group-Team-opacity.svg");
+		put(GROUP_TEAM_CLEAN, "gui/bilder/smilies/Group-Team-clean.svg");
 
 		put(WEATHER[0], "gui/bilder/match_events/weather0.png");
 		put(WEATHER[1], "gui/bilder/match_events/weather1.png");

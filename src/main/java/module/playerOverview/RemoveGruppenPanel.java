@@ -1,23 +1,16 @@
 // %3482096464:de.hattrickorganizer.gui.playeroverview%
 package module.playerOverview;
 
-import core.gui.print.ComponentPrintObject;
-import core.gui.print.PrintController;
-import core.gui.print.PrintController;
-import core.gui.theme.HOIconName;
-import core.gui.theme.ImageUtilities;
-import core.gui.theme.LightGrayFilter;
-import core.gui.theme.ThemeManager;
+import core.gui.theme.*;
+
 import core.model.HOVerwaltung;
 import core.model.player.Player;
-import core.util.HOLogger;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageProducer;
-import java.text.DateFormat;
 import java.util.List;
 
 import javax.swing.*;
@@ -34,36 +27,37 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
 
 	//~ Instance fields ----------------------------------------------------------------------------
 
-    private final JButton doButton = new JButton(ThemeManager.getIcon(HOIconName.TURN));
-    private final JButton m_jbDrucken = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
-    private final JToggleButton aGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[1]), 0.5f)));
-	private final JToggleButton aGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[1]), 0.5f)));
-	private final JToggleButton bGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[2]), 0.5f)));
-	private final JToggleButton bGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[2]), 0.5f)));
-	private final JToggleButton cGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[3]), 0.5f)));
-	private final JToggleButton cGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[3]), 0.5f)));
-	private final JToggleButton dGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[4]), 0.5f)));
-	private final JToggleButton dGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[4]), 0.5f)));
-	private final JToggleButton eGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[5]), 0.5f)));
-	private final JToggleButton eGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[5]), 0.5f)));
-    private final JToggleButton fGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[6]), 0.5f)));
-	private final JToggleButton fGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.TEAMSMILIES[6]), 0.5f)));
-    private final JToggleButton noGruppe = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.NO_TEAM), 0.5f)));
-	private final JToggleButton noGruppe2 = new JToggleButton(new ImageIcon(
-			makeGray(ThemeManager.getIcon(HOIconName.NO_TEAM), 0.5f)));
+    private final JButton doButton = new JButton(ImageUtilities.getSvgIcon(HOIconName.TURN));
+    private final JButton m_jbClean = new JButton(ImageUtilities.getSvgIcon(HOIconName.GROUP_TEAM_CLEAN));
+    private final JToggleButton aGruppe = new JToggleButton(
+            GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[1], 12, 12, "0.25"));
+	private final JToggleButton aGruppe2 = new JToggleButton(
+            GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[1], 12, 12, "0.25"));
+	private final JToggleButton bGruppe = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[2],12, 12, "0.25"));
+	private final JToggleButton bGruppe2 = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[2], 12, 12, "0.25"));
+	private final JToggleButton cGruppe = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[3], 12, 12, "0.25"));
+	private final JToggleButton cGruppe2 = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[3], 12, 12, "0.25"));
+	private final JToggleButton dGruppe = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[4], 12, 12, "0.25"));
+	private final JToggleButton dGruppe2 = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[4], 12, 12, "0.25"));
+	private final JToggleButton eGruppe = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[5], 12, 12, "0.25"));
+	private final JToggleButton eGruppe2 = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[5], 12, 12, "0.25"));
+    private final JToggleButton fGruppe = new JToggleButton(
+			GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[6], 12, 12, "0.25"));
+	private final JToggleButton fGruppe2 = new JToggleButton(
+            GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[6], 12, 12, "0.25"));
+    private final JToggleButton noGruppe = new JToggleButton(
+            GroupTeam.getGroupIcon("", 12, 12, "0.25"));
+	private final JToggleButton noGruppe2 = new JToggleButton(
+            GroupTeam.getGroupIcon("", 12, 12, "0.25"));
+
     private PlayerOverviewTable m_clTable;
 
     // ~ Constructors
@@ -81,8 +75,8 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
     public final void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(doButton)) {
             gruppenMarkierung();
-        } else if (e.getSource().equals(m_jbDrucken)) {
-            drucken();
+        } else if (e.getSource().equals(m_jbClean)) {
+            groupsClear();
         }
 
         //Von beiden Gruppen ein Button selektiert // Nach gruppenMarkierung werden die Button wieder unselected
@@ -154,37 +148,19 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
     /**
      * Drucken der Spielerübersicht
      */
-    private void drucken() {
-        try {
-            //Damit nur bestimmte Spalten gedruckt werden ist eine spezielle Tabelle notwendig.
-            //Das Scrollpane benötigt man, damit die Spaltenbeschriftung auch angezeigt wird.
-            final SpielerUebersichtPrintTable table = new SpielerUebersichtPrintTable(m_clTable);
-            final JScrollPane scrollPane = new JScrollPane(table);
-            scrollPane.setPreferredSize(new Dimension(table.getPreferredSize().width + 10,
-                                                      table.getPreferredSize().height + 70));
-            scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-            scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-            scrollPane.getViewport().setBackground(Color.WHITE);
+    private void groupsClear() {
+        final List<Player> allePlayer = HOVerwaltung.instance().getModel().getCurrentPlayers();
+        boolean update = false;
 
-            final PrintController printController = PrintController.getInstance();
-
-            final java.util.Calendar calendar = java.util.Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
-
-            final String titel = HOVerwaltung.instance().getLanguageString("Spieleruebersicht")
-                                 + " - "
-                                 + HOVerwaltung.instance().getModel().getBasics().getTeamName()
-                                 + " - "
-                                 + DateFormat.getDateTimeInstance().format(calendar.getTime());
-            printController.add(new ComponentPrintObject(printController.getPf(),
-                                                                                        titel,
-                                                                                        scrollPane,
-                                                                                        core.gui.print.ComponentPrintObject.NICHTSICHTBAR));
-
-            printController.print();
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(),e);
+        for (Player player : allePlayer){
+            //Player in der Gruppe
+            if (!player.getTeamInfoSmilie().equals("")) {
+                player.setTeamInfoSmilie("");
+                update = true;
+            }
         }
+        if (update)
+            core.gui.HOMainFrame.instance().getAufstellungsPanel().update();
     }
 
 
@@ -319,14 +295,14 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
         layout.setConstraints(doButton, constraints);
         add(doButton);
 
-        m_jbDrucken.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Spieler_drucken"));
-        m_jbDrucken.setPreferredSize(new Dimension(28, 28));
-        m_jbDrucken.addActionListener(this);
+        m_jbClean.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Group_team_clear"));
+        m_jbClean.setPreferredSize(new Dimension(28, 28));
+        m_jbClean.addActionListener(this);
         constraints.gridx = 8;
         constraints.gridy = 0;
         constraints.gridheight = 2;
-        layout.setConstraints(m_jbDrucken, constraints);
-        add(m_jbDrucken);
+        layout.setConstraints(m_jbClean, constraints);
+        add(m_jbClean);
     }
 
     private void initButton(JToggleButton button,String tooltip,String key){
