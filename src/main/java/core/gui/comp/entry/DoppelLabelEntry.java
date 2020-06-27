@@ -1,6 +1,9 @@
 // %1884453469:de.hattrickorganizer.gui.templates%
 package core.gui.comp.entry;
 
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
+
 import java.awt.Color;
 
 import javax.swing.JComponent;
@@ -8,7 +11,7 @@ import javax.swing.SwingConstants;
 
 
 /**
- * Ein Panel mit zwei Labels, um zwei Werte in einer Spalte anzuzeigen ( Wert, Verbesserung )
+ * A panel with two labels to display two values in the same column, e.g. (value, diff).
  */
 public class DoppelLabelEntry extends AbstractHOTableEntry {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -16,6 +19,8 @@ public class DoppelLabelEntry extends AbstractHOTableEntry {
     private DoppelLabel m_clComponent = new DoppelLabel();
     private IHOTableEntry m_clLinks;
     private IHOTableEntry m_clRechts;
+
+    private final static Color DIFF_COLOR = ThemeManager.getColor(HOColorName.FG_INJURED);
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -33,7 +38,7 @@ public class DoppelLabelEntry extends AbstractHOTableEntry {
         super();
         m_clLinks = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, color,
                                         SwingConstants.RIGHT);
-        m_clRechts = new ColorLabelEntry("", core.model.UserParameter.instance().FG_INJURED, color,
+        m_clRechts = new ColorLabelEntry("", DIFF_COLOR, color,
                                          SwingConstants.CENTER);
         createComponent();
     }
@@ -85,10 +90,6 @@ public class DoppelLabelEntry extends AbstractHOTableEntry {
 
     public final IHOTableEntry getTableEntryLinks() {
         return m_clLinks;
-    }
-
-    public final IHOTableEntry getTableRechts() {
-        return m_clRechts;
     }
 
 	public final void clear() {
