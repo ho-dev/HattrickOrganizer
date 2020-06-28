@@ -289,7 +289,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                         homeGoalsInParts[part]++;
 
                 } else {
-
                     guestGoalsInParts[part]++;
                 }
             }
