@@ -446,18 +446,6 @@ public class MatchKurzInfo implements Comparable<Object> {
 		this.duration = duration;
 	}
 
-	// Return match result extension information as abbreviation string
-	// e. g. a.p. means after penalties. a.e. after extension
-	public String getResultExtensionAbbreviation() {
-		if ( getDuration() != null) {
-			if (this.duration.intValue() > 120)
-				return HOVerwaltung.instance().getLanguageString("ls.match.after.penalties.abbreviation");
-			if (this.duration.intValue() > 110)
-				return HOVerwaltung.instance().getLanguageString("ls.match.after.extension.abbreviation");
-		}
-		return "";
-	}
-
 	public Matchdetails getMatchdetails() {
 		if (matchdetails==null){
 			matchdetails = Matchdetails.getMatchdetails(getMatchID(), getMatchTyp());

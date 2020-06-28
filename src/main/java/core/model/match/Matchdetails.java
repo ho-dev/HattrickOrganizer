@@ -10,6 +10,7 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.net.OnlineWorker;
 import core.util.HOLogger;
+import module.teamAnalyzer.vo.Match;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -98,12 +99,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     private int ratingIndirectSetPiecesAtt = -1;
     private int ratingIndirectSetPiecesDef = -1;
 
-    /*
-    goals of each part [0..4] of the match (see MatchEvent.MatchPartId)
-     */
-    private Integer[] homeGoalsInParts;
-    private Integer[] guestGoalsInParts;
-
     public ArrayList<Injury> getM_Injuries() {
         return m_Injuries;
     }
@@ -114,15 +109,122 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     public ArrayList<Injury> m_Injuries = new ArrayList<>();
 
+    /*
+    goals of each part [0..4] of the match (see MatchEvent.MatchPartId)
+     */
+    private Integer[] homeGoalsInParts;
+    private Integer[] guestGoalsInParts;
+
+    public String getResultInPart(MatchEvent.MatchPartId part){
+        if ( homeGoalsInParts != null){
+            return getResultString(homeGoalsInParts[part.getValue()], guestGoalsInParts[part.getValue()], "");
+        }
+        return "";
+    }
+
+    public String getResultAfterPart(MatchEvent.MatchPartId part) {
+        if (homeGoalsInParts != null) {
+            int home = 0;
+            int guest = 0;
+            for (var p = MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED.getValue(); p <= part.getValue(); p++) {
+                if (homeGoalsInParts[p] != null) {
+                    home += homeGoalsInParts[p];
+                    guest += guestGoalsInParts[p];
+                }
+            }
+            return getResultString(home, guest, "");
+        }
+        if (part == MatchEvent.MatchPartId.SECOND_HALF && this.getLastMinute() < 110 ||
+                part == MatchEvent.MatchPartId.OVERTIME && this.getLastMinute() < 121 ||
+                part == MatchEvent.MatchPartId.PENALTY_CONTEST) {
+            return getResult();
+        }
+        return "";
+    }
+
+    public String getResult(){
+        if ( this.getFetchDatum() != null){
+            return getResultString(this.m_iHomeGoals, this.m_iGuestGoals,"");
+        }
+        return getResultString(-1,-1,"");
+    }
+
+    // Return match result extension information as abbreviation string
+    // e. g. a.p. means after penalties. a.e. after extension
+    public String getResultExtensionAbbreviation() {
+        return getResultExtensionAbbreviation(getLastMinuteFromPartInfo());
+    }
+
+    private int getLastMinuteFromPartInfo(){
+        if ( homeGoalsInParts != null){
+            if ( homeGoalsInParts[4] != null ) return 130;
+            if ( homeGoalsInParts[3] != null ) return 120;
+            return 90;
+        }
+        return getLastMinute();
+    }
+
+    public static  String getResultExtensionAbbreviation(Integer duration){
+        if ( duration != null) {
+            if (duration.intValue() > 120)
+                return HOVerwaltung.instance().getLanguageString("ls.match.after.penalties.abbreviation");
+            if (duration.intValue() > 110)
+                return HOVerwaltung.instance().getLanguageString("ls.match.after.extension.abbreviation");
+        }
+        return "";
+    }
+
+    // results like : 2 - 4 a.p.
+    public String getResultEx(){
+        return getResultString(this.m_iHomeGoals, this.m_iGuestGoals, getResultExtensionAbbreviation());
+    }
+
+    // results like : 1 - 1 (2 - 4 a.p.)
+    public String getResultLong(){
+        String res = getResultAfterPart(MatchEvent.MatchPartId.SECOND_HALF);
+        if ( getLastMinuteFromPartInfo() > 110){
+            res += " (" + getResultEx() + ")";
+        }
+        return res;
+    }
+
+    /*
+    Reloading match details is real expensive, so there is a limit of maximum reloads per session
+    Reasons to reload match details:
+    - match details do not contain highlights
+    - highlights do not contain match part (column is introduced with #561 in HO V4.0)
+     */
+    private static int maxMatchdetailsReloadsPerSession = 10;
+
+    // Enable explicit download of match details (e. g. invoked by user clicks)
+    public static Matchdetails getMatchdetails(int matchId, MatchType type, boolean force)
+    {
+        if ( force && maxMatchdetailsReloadsPerSession==0){
+            maxMatchdetailsReloadsPerSession=1;
+        }
+        return getMatchdetails(matchId, type);
+    }
+
     // Matchdetails factory, checks if database object needs an update from chpp (OnlineWorker)
+    // Number of implicite updates per session is limited to maxMatchdetailsReloadsPerSession
     public static Matchdetails getMatchdetails(int matchId, MatchType type){
         var ret = DBManager.instance().getMatchDetails(matchId);
-
-        if ( ret != null && ret.getFetchDatum()!=null) {
+        if ( maxMatchdetailsReloadsPerSession>0 && ret != null && ret.getFetchDatum()!=null && type.isOfficial()) {
             var events = ret.getHighlights();
             if (events == null || events.size() == 0 || events.get(0).getMatchPartId() == null) {
-                OnlineWorker.downloadMatchData(matchId, type, true);
-                ret = DBManager.instance().getMatchDetails((matchId));
+                HOLogger.instance().info(Matchdetails.class,
+                        "Reload Matchdetails id: "+matchId
+                        +" type:" + type.getName()
+                        +" events:" + (events==null? "null": events.size())
+                );
+                try {
+                    OnlineWorker.downloadMatchData(matchId, type, true);
+                    ret = DBManager.instance().getMatchDetails((matchId));
+                }
+                catch (Exception ex){
+                    HOLogger.instance().error(Matchdetails.class, ex.getMessage());
+                }
+                maxMatchdetailsReloadsPerSession--;
             }
         }
         return ret;
@@ -151,13 +253,13 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         return -1;
     }
 
-    public int getHomeGoalsInPart(MatchEvent.MatchPartId matchPartId) throws Exception {
+    public Integer getHomeGoalsInPart(MatchEvent.MatchPartId matchPartId) throws Exception {
         if ( homeGoalsInParts == null){
             InitGoalsInParts();
         }
         return homeGoalsInParts[matchPartId.getValue()];
     }
-    public int getGuestGoalsInPart(MatchEvent.MatchPartId matchPartId) throws Exception {
+    public Integer getGuestGoalsInPart(MatchEvent.MatchPartId matchPartId) throws Exception {
         if ( guestGoalsInParts == null){
             InitGoalsInParts();
         }
@@ -836,20 +938,15 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     public final ArrayList<MatchEvent> getHighlights() {
         if ( m_vHighlights == null || m_vHighlights.size() == 0){
             m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchID());
+            /* recursiv call in downloadMatchData
             if ( m_vHighlights.size()==0){
+
                 OnlineWorker.downloadMatchData(this.m_iMatchID, this.m_MatchTyp, true);
                 m_vHighlights = DBManager.instance().getMatchHighlights((this.m_iMatchID));
             }
+        */
         }
         return m_vHighlights;
-    }
-
-    public MatchEvent getMatchEvent(MatchEvent.MatchEventID eventId){
-        for ( var e: getHighlights())
-        {
-            if ( e.getMatchEventID() == eventId) return e;
-        }
-        return null;
     }
 
     /**

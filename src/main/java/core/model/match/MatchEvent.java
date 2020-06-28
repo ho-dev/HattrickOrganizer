@@ -34,6 +34,7 @@ public class MatchEvent {
     private int m_iMatchEventCategory;
 
     private int m_iMatchEventID;
+    private Integer eventVariation;
 
     public int getM_iMatchEventIndex() {
         return m_iMatchEventIndex;
@@ -63,6 +64,14 @@ public class MatchEvent {
 
     public void setMatchPartId(MatchPartId matchPartId) {
         this.matchPartId = matchPartId;
+    }
+
+    public void setEventVariation(Integer iEventVariation) {
+        this.eventVariation = iEventVariation;
+    }
+
+    public Integer getEventVariation() {
+        return eventVariation;
     }
 
     public enum MatchEventID {
