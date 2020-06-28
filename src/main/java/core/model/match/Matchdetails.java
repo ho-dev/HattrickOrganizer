@@ -1306,19 +1306,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         return true;
     }
 
-    private MatchLineupTeam teamLineup;
-
-    /**
-     * Load the lineup of user's team
-     * @return MatchLineupTeam
-     */
-    public MatchLineupTeam getTeamLineup() {
-        if ( teamLineup == null){
-            teamLineup = DBManager.instance().getMatchLineupTeam(this.getMatchID(), MatchKurzInfo.user_team_id);
-        }
-        return teamLineup;
-    }
-
     /**
      * Method that extract a lineup from the full match comment
      *
