@@ -4,18 +4,12 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
+import javax.swing.*;
 
 
 public class TorLabelEntry extends AbstractHOTableEntry {
 
-    private static ImageIcon BALLIMAGEICON;
+    private static Icon BALLIMAGEICON;
 
     private JComponent m_clComponent = new JPanel();
     private int m_iTore;

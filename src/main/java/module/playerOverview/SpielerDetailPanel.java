@@ -353,8 +353,8 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
      */
     private void setLabels() {
         m_jpName.setText(m_clPlayer.getShortName());
-        m_jpName.setFGColor(SpielerLabelEntry.getForegroundForSpieler(m_clPlayer));
         m_jpAge.setText(m_clPlayer.getAgeStringFull());
+        m_jpLastMatchRating.clear();
         if (m_clPlayer.getLastMatchRating() > 0) {
             m_jpLastMatchRating.setYellowStar(true);
             MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(m_clPlayer.getLastMatchId());

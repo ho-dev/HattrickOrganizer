@@ -34,7 +34,7 @@ public class RatingComparisonPanel extends JPanel {
 	JLabel hatstats = new JLabel("");
 	JLabel name = new JLabel("");
 
-	BufferedImage background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.RATINGCOMPARISON_BACKGROUND).getImage());
+	BufferedImage background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.RATINGCOMPARISON_BACKGROUND));
 
 
 	public void setMatchRating(MatchRating _data) {

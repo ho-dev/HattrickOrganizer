@@ -144,6 +144,9 @@ public interface HOColorName {
 
 	public static final String LINEUP_RATING_BORDER = "lineup.rating.border";
 
+	String LINEUP_PLAYER_SELECTED = "lineup.player.selected";
+	String LINEUP_PLAYER_SUB = "lineup.player.sub";
+
 	//1.431
 	public static final String MATCHDETAILS_PROGRESSBAR_GREEN = "matchdetails.progressbar.green";
 	public static final String MATCHDETAILS_PROGRESSBAR_RED = "matchdetails.progressbar.red";
@@ -185,4 +188,12 @@ public interface HOColorName {
 	public static final String HRF_LIGHTBLUE_BG = "hrf.lightblue.bg";
 	public static final String HRF_DARKBLUE_BG = "hrf.darkblue.bg";
 	public static final String HRF_RED_BG = "hrf.red.bg";
+
+	// Player State colours
+	String FG_STANDARD = "player.state.standard";
+	String FG_TRANSFERLISTED = "player.state.transferlisted";
+	String FG_INJURED = "player.state.injured";
+	String FG_BRUISED = "player.state.bruised";
+	String FG_TWO_YELLOW_CARDS = "player.state.two-yellow-cards";
+	String FG_RED_CARD = "player.state.red-card";
 }

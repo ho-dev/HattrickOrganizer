@@ -57,6 +57,9 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.LINEUP_POS_MIN_BG, blueishColour);
             ThemeManager.instance().put(HOColorName.LINEUP_RATING_BORDER, Color.GRAY);
 
+            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SELECTED, new Color(60, 63, 65));
+            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SUB, new Color(48, 54, 56));
+
             // Matches
             ThemeManager.instance().put(HOColorName.MATCHTYPE_LEAGUE_BG, new Color(95, 86, 38));
             ThemeManager.instance().put(HOColorName.MATCHTYPE_BG, new Color(60, 60, 60));

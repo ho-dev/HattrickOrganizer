@@ -50,13 +50,14 @@ Changelist HO! 4.0
 
 ### Training
 
-  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512 
+  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512
 
 ### Misc
 
   - [FEAT] Remove jcalendar dependency.
-  - [FIX] ExperienceViewer removed #503 
+  - [FIX] ExperienceViewer removed #503
   - [FIX] Avoid potential infinite loop at startup. [#584]
+  - [FEAT] Remove player state colour, and display icons instead in Lineup.
 
 ### League
 

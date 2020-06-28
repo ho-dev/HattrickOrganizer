@@ -8,7 +8,7 @@
 <tr>
   <td>Latest Release</td>
   <td>
-    <a href="https://github.com/akasolace/HO/releases/tag/stable">
+    <a href="https://github.com/akasolace/HO/releases/tag/3.0">
     <img src="https://img.shields.io/badge/HO-3.0-brightgreen.svg" alt="latest release" />
     </a>
   </td>
@@ -59,14 +59,16 @@
 </table>
 
 
+## Documentation
+
+Documentation for HO! is located [here](https://ho.readthedocs.io/).
+
+
 ## Localization
 
 If you want to contribute or see current translation status please visit HO translation [website](https://poeditor.com/join/project/jCaWGL1JCl).
 Please open a request if the language you are interested in is not listed.
 
-## Documentation
-
-Documentation for HO! is located [here](https://ho.readthedocs.io/).
 
 ## Acknowledgements
 

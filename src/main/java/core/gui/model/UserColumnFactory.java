@@ -3,13 +3,8 @@ package core.gui.model;
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
 //import core.epv.EPVData;
-import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.DoppelLabelEntry;
-import core.gui.comp.entry.HomegrownEntry;
-import core.gui.comp.entry.IHOTableEntry;
-import core.gui.comp.entry.RatingTableEntry;
-import core.gui.comp.entry.SmilieEntry;
-import core.gui.comp.entry.SpielerLabelEntry;
+import core.db.DBManager;
+import core.gui.comp.entry.*;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
@@ -994,9 +989,13 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 if (player.getLastMatchRating() > 0) {
                     //
-                    return new RatingTableEntry((float) player.getLastMatchRating(), true);
+                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId());
+                    if(info==null){
+                        return new LastMatchLabelEntry((float) player.getLastMatchRating());
+                    }else
+                       return new LastMatchLabelEntry((float) player.getLastMatchRating(), player.getLastMatchDate(), info.getMatchTyp());
                 }
-                return new RatingTableEntry();
+                return new LastMatchLabelEntry();
             }
 
         };
