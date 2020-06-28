@@ -5,9 +5,12 @@ import core.model.match.Matchdetails;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Vector;
+
+import static core.db.DbUtil.getNullableInt;
 
 final class MatchDetailsTable extends AbstractTable {
 
@@ -136,20 +139,32 @@ final class MatchDetailsTable extends AbstractTable {
 				details.setMatchreport(DBManager.deleteEscapeSequences(rs.getString("Matchreport")));
 				details.setRatingIndirectSetPiecesAtt(rs.getInt("RatingIndirectSetPiecesAtt"));
 				details.setRatingIndirectSetPiecesDef(rs.getInt("RatingIndirectSetPiecesDef"));
-				var homeGoalsInPart = new Integer[MatchEvent.MatchPartId.values().length];
-				homeGoalsInPart[0] = rs.getInt("HomeGoal0");
-				homeGoalsInPart[1] = rs.getInt("HomeGoal1");
-				homeGoalsInPart[2] = rs.getInt("HomeGoal2");
-				homeGoalsInPart[3] = rs.getInt("HomeGoal3");
-				homeGoalsInPart[4] = rs.getInt("HomeGoal4");
-				var guestGoalsInPart = new Integer[MatchEvent.MatchPartId.values().length];
-				guestGoalsInPart[0] = rs.getInt("GuestGoal0");
-				guestGoalsInPart[1] = rs.getInt("GuestGoal1");
-				guestGoalsInPart[2] = rs.getInt("GuestGoal2");
-				guestGoalsInPart[3] = rs.getInt("GuestGoal3");
-				guestGoalsInPart[4] = rs.getInt("GuestGoal4");
-				details.setHomeGoalsInPart(homeGoalsInPart);
-				details.setGuestGoalsInPart(guestGoalsInPart);
+				var homeGoalsInPart = new Integer[]{
+						getNullableInt(rs, "HomeGoal0"),
+						getNullableInt(rs, "HomeGoal1"),
+						getNullableInt(rs, "HomeGoal2"),
+						getNullableInt(rs, "HomeGoal3"),
+						getNullableInt(rs, "HomeGoal4")
+				};
+				var guestGoalsInPart = new Integer[]{
+						getNullableInt(rs, "GuestGoal0"),
+						getNullableInt(rs, "GuestGoal1"),
+						getNullableInt(rs, "GuestGoal2"),
+						getNullableInt(rs, "GuestGoal3"),
+						getNullableInt(rs, "GuestGoal4")
+				};
+				if ( hasValues(homeGoalsInPart)){
+					details.setHomeGoalsInPart(homeGoalsInPart);
+				}
+				else {
+					details.setHomeGoalsInPart(null);
+				}
+				if ( hasValues(guestGoalsInPart)){
+					details.setGuestGoalsInPart(guestGoalsInPart);
+				}
+				else {
+					details.setGuestGoalsInPart(null);
+				}
 				ArrayList<MatchEvent> vMatchHighlights = DBManager.instance().getMatchHighlights(matchId);
 				details.setHighlights(vMatchHighlights);
 				details.setStatisics();
@@ -161,9 +176,14 @@ final class MatchDetailsTable extends AbstractTable {
 
 		return details;
 	}
-	
 
-	
+	private boolean hasValues(Integer[] goalsInPart) {
+		for( var i : goalsInPart){
+			if ( i != null) return true;
+		}
+		return false;
+	}
+
 	/**
 	 * speichert die MatchDetails
 	 */

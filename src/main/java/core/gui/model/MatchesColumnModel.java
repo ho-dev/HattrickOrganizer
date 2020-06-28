@@ -62,7 +62,7 @@ public final class MatchesColumnModel extends HOTableModel {
 				if (j != 5 && j != 6) {
 					m_clData[i][j] = ((MatchKurzInfoColumn) tmpDisplayedColumns[j]).getTableEntry(m_clMatches[i]);
 				} else {  // HatStats calculations need information from match details
-					Matchdetails oMD = Matchdetails.getMatchdetails(m_clMatches[i].getMatchID(), m_clMatches[i].getMatchTyp());
+					var oMD = m_clMatches[i].getMatchdetails();
 					m_clData[i][j] = ((MatchKurzInfoColumn) tmpDisplayedColumns[j]).getTableEntry(m_clMatches[i], oMD);
 				}
 			}
