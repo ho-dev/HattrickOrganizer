@@ -16,19 +16,15 @@ import java.awt.GridBagConstraints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import javax.swing.BorderFactory;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 public final class MinuteTogglerPanel extends JPanel {
 	
-	private ImageIcon whiteGreenClock = ThemeManager.getScaledIcon(HOIconName.WHITE_GREEN_CLOCK, 20, 20);
-	private ImageIcon greenWhiteClock = ThemeManager.getScaledIcon(HOIconName.GREEN_WHITE_CLOCK, 20, 20);
-	private ImageIcon whiteRedClock = ThemeManager.getScaledIcon(HOIconName.WHITE_RED_CLOCK, 20, 20);
-	private ImageIcon redWhiteClock = ThemeManager.getScaledIcon(HOIconName.RED_WHITE_CLOCK, 20, 20);
-	private ImageIcon ratingsGraphIcon = ThemeManager.getScaledIcon(HOIconName.RATING_GRAPH, 20, 20);
+	private Icon whiteGreenClock = ThemeManager.getScaledIcon(HOIconName.WHITE_GREEN_CLOCK, 20, 20);
+	private Icon greenWhiteClock = ThemeManager.getScaledIcon(HOIconName.GREEN_WHITE_CLOCK, 20, 20);
+	private Icon whiteRedClock = ThemeManager.getScaledIcon(HOIconName.WHITE_RED_CLOCK, 20, 20);
+	private Icon redWhiteClock = ThemeManager.getScaledIcon(HOIconName.RED_WHITE_CLOCK, 20, 20);
+	private Icon ratingsGraphIcon = ThemeManager.getScaledIcon(HOIconName.RATING_GRAPH, 20, 20);
 	private JLabel ratingsGraph = new JLabel(ratingsGraphIcon);
 	private JLabel avg90Clock = new JLabel(whiteGreenClock);
 	private JLabel avg120Clock = new JLabel(redWhiteClock);

@@ -33,7 +33,6 @@ public class UserTeamPlayerPanel extends PlayerPanel {
         	containsPlayer = true;
         	
             nameField.setText(lineup.getName());
-            setPlayerStatus(lineup.getStatus());
             positionImage.setIcon(ImageUtilities.getImage4Position(
                     lineup.getSpot(),
                     (byte) lineup.getTacticCode(),

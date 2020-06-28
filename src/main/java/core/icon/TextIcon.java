@@ -1,9 +1,11 @@
 package core.icon;
 
+import com.github.weisj.darklaf.icons.DerivableIcon;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class TextIcon implements Icon {
+public class TextIcon implements Icon, DerivableIcon<TextIcon> {
 
     private final String text;
     private final Color color;
@@ -44,5 +46,12 @@ public class TextIcon implements Icon {
     @Override
     public int getIconHeight() {
         return height;
+    }
+
+    @Override
+    public TextIcon derive(int width, int height) {
+        int base = Math.round(height * ((float) this.baseline / this.height));
+        Font f = font.deriveFont(height * (font.getSize2D() / this.height));
+        return new TextIcon(text, color, f, width, height, base);
     }
 }

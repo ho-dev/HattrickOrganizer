@@ -112,25 +112,13 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 	 * Gibt die Spalte für die Sortierung zurück
 	 */
 	private int getSortSpalte() {
-		switch (UserParameter.instance().standardsortierung) {
-		case UserParameter.SORT_NAME:
-			return tableModel.getPositionInArray(UserColumnFactory.NAME);
-
-		case UserParameter.SORT_BESTPOS:
-			return tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
-
-		case UserParameter.SORT_AUFGESTELLT:
-			return tableModel.getPositionInArray(UserColumnFactory.LINUP);
-
-		case UserParameter.SORT_GRUPPE:
-			return tableModel.getPositionInArray(UserColumnFactory.GROUP);
-
-		case UserParameter.SORT_BEWERTUNG:
-			return tableModel.getPositionInArray(UserColumnFactory.RATING);
-
-		default:
-			return tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
-		}
+		return switch (UserParameter.instance().standardsortierung) {
+			case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
+			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINUP);
+			case UserParameter.SORT_GRUPPE -> tableModel.getPositionInArray(UserColumnFactory.GROUP);
+			case UserParameter.SORT_BEWERTUNG -> tableModel.getPositionInArray(UserColumnFactory.RATING);
+			default -> tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
+		};
 	}
 
 	/**

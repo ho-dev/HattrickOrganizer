@@ -6,7 +6,6 @@ import core.model.player.Player;
 import module.playerOverview.SpielerTrainingsVergleichsPanel;
 
 import java.util.List;
-import java.util.Vector;
 
 
 /**

@@ -1,9 +1,12 @@
 package core.icon;
 
+import com.github.weisj.darklaf.icons.DerivableIcon;
+import core.gui.theme.ImageUtilities;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class OverlayIcon implements Icon {
+public class OverlayIcon implements Icon, DerivableIcon<OverlayIcon> {
 
     private final Icon icon;
     private final Icon overlay;
@@ -39,5 +42,14 @@ public class OverlayIcon implements Icon {
     @Override
     public int getIconHeight() {
         return height;
+    }
+
+    @Override
+    public OverlayIcon derive(int width, int height) {
+        Icon derivedIcon = ImageUtilities.getScaledIcon(icon, width * icon.getIconWidth() / this.width,
+                                                        height * icon.getIconHeight() / this.height);
+        Icon derivedOverlay = ImageUtilities.getScaledIcon(overlay, width * overlay.getIconWidth() / this.width,
+                                                           height * overlay.getIconHeight() / this.height);
+        return new OverlayIcon(derivedIcon, derivedOverlay, width, height);
     }
 }

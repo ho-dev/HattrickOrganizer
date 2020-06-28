@@ -50,8 +50,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 
 // Referenced classes of package hoplugins.tsforecast:
@@ -82,8 +81,8 @@ class TSPanel extends JPanel {
   public static final Color lightRed    = new Color(255, 230, 230);
   public static final Color lightYellow = new Color(255, 255, 200);
 
-  private final ImageIcon m_newImage   = ThemeManager.getIcon(HOIconName.MATCHICONS[2]);
-  private final ImageIcon m_startImage = ThemeManager.getIcon(HOIconName.MANUELLSMILIES[7]);
+  private final Icon m_newImage   = ThemeManager.getIcon(HOIconName.MATCHICONS[2]);
+  private final Icon m_startImage = ThemeManager.getIcon(HOIconName.MANUELLSMILIES[7]);
 
 
   private GregorianCalendar m_startDate  = null;
@@ -239,18 +238,18 @@ protected void paintComponent( Graphics g) {
                                    (int)((double)l * m_dFactor + (double)m_iCoordX0), ((m_iMaxY + 10) - 2 - i1) + 24);
             break;
           case Curve.NEW_TRAINER_PT:
-            graphics2d.drawImage(  m_newImage.getImage(),
+            graphics2d.drawImage(  ImageUtilities.iconToImage(m_newImage),
                                    (int)((double)l * m_dFactor + (double)m_iCoordX0), (m_iMaxY + 10) - 2 - i1,
-                                   m_newImage.getImageObserver());
+                    ((ImageIcon)m_newImage).getImageObserver());
             graphics2d.drawString( HOVerwaltung.instance().getLanguageString("trainer_exchange"),
                                    (int)((double)l * m_dFactor + (double)m_iCoordX0), (m_iMaxY + 10) - 2 - i1 - 2);
             graphics2d.drawString( PlayerAbility.getNameForSkill((int)curve.getSpirit(), true),
                                    (int)((double)l * m_dFactor + (double)m_iCoordX0), ((m_iMaxY + 10) - 2 - i1) + 24);
             break;
           case Curve.START_TRAINER_PT:
-            graphics2d.drawImage(  m_startImage.getImage(),
+            graphics2d.drawImage(  ImageUtilities.iconToImage(m_startImage),
                                    (int)((double)l * m_dFactor + (double)m_iCoordX0), (m_iMaxY + 10) - 2 - i1,
-                                   m_startImage.getImageObserver());
+                    ((ImageIcon)m_startImage).getImageObserver());
             graphics2d.drawString( HOVerwaltung.instance().getLanguageString("ls.team.coachingskill"),
                                    (int)((double)l * m_dFactor + (double)m_iCoordX0), (m_iMaxY + 10) - 2 - i1 - 2);
             graphics2d.drawString( PlayerAbility.getNameForSkill((int)curve.getSpirit(), true),

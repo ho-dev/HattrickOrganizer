@@ -72,8 +72,8 @@ public class NimbusTheme extends BaseTheme {
 				uid.put("Table.cellNoFocusBorder", tableBorder);
 				uid.put("Table.focusCellHighlightBorder", tableBorder);
 
-				RasenPanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND).getImage());
-				ImagePanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND).getImage());
+				RasenPanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND));
+				ImagePanel.background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND));
 
 				return true;
 			}

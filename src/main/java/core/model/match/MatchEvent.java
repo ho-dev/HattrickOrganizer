@@ -1107,7 +1107,7 @@ public class MatchEvent {
         return HOVerwaltung.instance().getLanguageString("MatchEvent_" + iMatchEventID);
     }
 
-    public ImageIcon getIcon() {
+    public Icon getIcon() {
 
         MatchEventID me = this.getMatchEventID();
 
@@ -1116,7 +1116,7 @@ public class MatchEvent {
         }
 
 
-        ImageIcon icon;
+        Icon icon;
 
         if (isBruised()) {
             icon = ThemeManager.getIcon(HOIconName.BRUISED);
