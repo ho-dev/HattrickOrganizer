@@ -219,14 +219,13 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                         +" events:" + (events==null? "null": events.size())
                 );
                 try {
-                    if ( OnlineWorker.downloadMatchData(matchId, type, true) ) {
-                        ret = DBManager.instance().getMatchDetails((matchId));
-                        maxMatchdetailsReloadsPerSession--;
-                    }
+                    OnlineWorker.downloadMatchData(matchId, type, true);
+                    ret = DBManager.instance().getMatchDetails((matchId));
                 }
                 catch (Exception ex){
                     HOLogger.instance().error(Matchdetails.class, ex.getMessage());
                 }
+                maxMatchdetailsReloadsPerSession--;
             }
         }
         return ret;
