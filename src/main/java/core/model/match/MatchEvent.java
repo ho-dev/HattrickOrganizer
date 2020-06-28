@@ -171,7 +171,6 @@ public class MatchEvent {
     }
 
     public enum MatchPartId {
-        UNKNOWN_MATCHPART(-1),
         BEFORE_THE_MATCH_STARTED(0),
         FIRST_HALF(1),
         SECOND_HALF(2),
@@ -201,7 +200,6 @@ public class MatchEvent {
             if ( iMatchPartId== null) return null;
             MatchPartId ret = lookup.get(iMatchPartId);
             if (ret == null) {
-                ret = UNKNOWN_MATCHPART;
                 HOLogger.instance().log(MatchPartId.class, "UNKNOWN_MATCHPART: " + iMatchPartId);
             }
             return ret;

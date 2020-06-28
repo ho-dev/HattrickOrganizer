@@ -98,6 +98,12 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     private int ratingIndirectSetPiecesAtt = -1;
     private int ratingIndirectSetPiecesDef = -1;
 
+    /*
+    goals of each part [0..4] of the match (see MatchEvent.MatchPartId)
+     */
+    private Integer[] homeGoalsInParts;
+    private Integer[] guestGoalsInParts;
+
     public ArrayList<Injury> getM_Injuries() {
         return m_Injuries;
     }
@@ -107,6 +113,20 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     }
 
     public ArrayList<Injury> m_Injuries = new ArrayList<>();
+
+    // Matchdetails factory, checks if database object needs an update from chpp (OnlineWorker)
+    public static Matchdetails getMatchdetails(int matchId, MatchType type){
+        var ret = DBManager.instance().getMatchDetails(matchId);
+
+        if ( ret != null && ret.getFetchDatum()!=null) {
+            var events = ret.getHighlights();
+            if (events == null || events.size() == 0 || events.get(0).getMatchPartId() == null) {
+                OnlineWorker.downloadMatchData(matchId, type, true);
+                ret = DBManager.instance().getMatchDetails((matchId));
+            }
+        }
+        return ret;
+    }
 
     public void setRatingIndirectSetPiecesAtt(int ratingIndirectSetPiecesAtt) {
         this.ratingIndirectSetPiecesAtt = ratingIndirectSetPiecesAtt;
@@ -131,9 +151,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         return -1;
     }
 
-    private int[] homeGoalsInParts;
-    private int[] guestGoalsInParts;
-
     public int getHomeGoalsInPart(MatchEvent.MatchPartId matchPartId) throws Exception {
         if ( homeGoalsInParts == null){
             InitGoalsInParts();
@@ -148,21 +165,27 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     }
 
     private void InitGoalsInParts() throws Exception {
-        homeGoalsInParts = new int[MatchEvent.MatchPartId.values().length];
-        guestGoalsInParts= new int[MatchEvent.MatchPartId.values().length];
+        homeGoalsInParts = new Integer[MatchEvent.MatchPartId.values().length];
+        guestGoalsInParts= new Integer[MatchEvent.MatchPartId.values().length];
         for ( var event : getHighlights()){
+            int part = 0;
+            var partId = event.getMatchPartId();
+            if (partId != null) part = partId.getValue();
+            if ( homeGoalsInParts[part] == null) {
+                homeGoalsInParts[part] = 0;
+                guestGoalsInParts[part] = 0;
+            }
             var eventId = event.getMatchEventID().getValue();
             if ( eventId>99 && eventId<200 ||
                     eventId>54 && eventId<58
             ) {
                 // goal
-                int part = 0;
-                var partId = event.getMatchPartId();
-                if (partId != null) part = partId.getValue();
                 if (event.getTeamID() == this.m_iHeimId ||
                         event.getTeamID() <= 0 && this.m_iHeimId <= 0) { // Verlegenheitstruppe has id < 0 are stored as 0 in event
-                    homeGoalsInParts[part]++;
+                        homeGoalsInParts[part]++;
+
                 } else {
+
                     guestGoalsInParts[part]++;
                 }
             }
@@ -173,7 +196,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                 homeGoalsInParts[0] = 5;
             }
         }
-        // check
+        /*/ check
         int sumHomeGoals=0;
         for ( var i : homeGoalsInParts){
             sumHomeGoals += i;
@@ -186,6 +209,16 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         }
         if ( sumGuestGoals != this.m_iGuestGoals)
             throw new Exception("error in InitGoalsInParts");
+
+         */
+    }
+
+    public void setHomeGoalsInPart(Integer[] homeGoalsInPart) {
+        this.homeGoalsInParts = homeGoalsInPart;
+    }
+
+    public void setGuestGoalsInPart(Integer[] guestGoalsInPart) {
+        this.guestGoalsInParts = guestGoalsInPart;
     }
 
     public enum eInjuryType {
@@ -802,7 +835,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      */
     public final ArrayList<MatchEvent> getHighlights() {
         if ( m_vHighlights == null || m_vHighlights.size() == 0){
-            m_vHighlights = DBManager.instance().getMatchHighlights(this.m_iMatchID);
+            m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchID());
             if ( m_vHighlights.size()==0){
                 OnlineWorker.downloadMatchData(this.m_iMatchID, this.m_MatchTyp, true);
                 m_vHighlights = DBManager.instance().getMatchHighlights((this.m_iMatchID));

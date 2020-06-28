@@ -104,10 +104,8 @@ public class MatchPopulator {
     }
 
     private MatchDetail populateMatch(Match aMatch) {
-    	Matchdetails tmpMatch = DBManager.instance().getMatchDetails(aMatch.getMatchId());
-
+    	Matchdetails tmpMatch = Matchdetails.getMatchdetails(aMatch.getMatchId(), aMatch.getMatchType());
         MatchDetail matchDetail = new MatchDetail(aMatch);
-
         MatchLineupTeam tmpLineupTeam = null;
 
         if (isHome(tmpMatch)) {

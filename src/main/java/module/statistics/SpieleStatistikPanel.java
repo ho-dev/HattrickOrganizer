@@ -485,8 +485,7 @@ public class SpieleStatistikPanel extends LazyImagePanel {
 
 			// Infos zusammenstellen
 			for (int i = 0; i < anzahl; i++) {
-				Matchdetails details = DBManager.instance().getMatchDetails(
-						matchkurzinfos[matchkurzinfos.length - i - 1].getMatchID());
+				Matchdetails details = matchkurzinfos[matchkurzinfos.length - i - 1].getMatchdetails();
 
 				int bewertungwert = 0;
 				double loddarStats = 0;

@@ -19,7 +19,7 @@ final class MatchDetailsTable extends AbstractTable {
 	
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[43];
+		columns = new ColumnDescriptor[53];
 		columns[0]= new ColumnDescriptor("MatchID",Types.INTEGER,false,true);
 		columns[1]= new ColumnDescriptor("ArenaId",Types.INTEGER,false);
 		columns[2]= new ColumnDescriptor("ArenaName",Types.VARCHAR,false,256);
@@ -63,6 +63,16 @@ final class MatchDetailsTable extends AbstractTable {
 		columns[40]= new ColumnDescriptor("soldVIP",Types.INTEGER,false);
 		columns[41]= new ColumnDescriptor("RatingIndirectSetPiecesDef",Types.INTEGER,true);
 		columns[42]= new ColumnDescriptor("RatingIndirectSetPiecesAtt",Types.INTEGER,true);
+		columns[43]= new ColumnDescriptor("HomeGoal0",Types.INTEGER,true);
+		columns[44]= new ColumnDescriptor("HomeGoal1",Types.INTEGER,true);
+		columns[45]= new ColumnDescriptor("HomeGoal2",Types.INTEGER,true);
+		columns[46]= new ColumnDescriptor("HomeGoal3",Types.INTEGER,true);
+		columns[47]= new ColumnDescriptor("HomeGoal4",Types.INTEGER,true);
+		columns[48]= new ColumnDescriptor("GuestGoal0",Types.INTEGER,true);
+		columns[49]= new ColumnDescriptor("GuestGoal1",Types.INTEGER,true);
+		columns[50]= new ColumnDescriptor("GuestGoal2",Types.INTEGER,true);
+		columns[51]= new ColumnDescriptor("GuestGoal3",Types.INTEGER,true);
+		columns[52]= new ColumnDescriptor("GuestGoal4",Types.INTEGER,true);
 	}
 	
 	@Override
@@ -126,6 +136,20 @@ final class MatchDetailsTable extends AbstractTable {
 				details.setMatchreport(DBManager.deleteEscapeSequences(rs.getString("Matchreport")));
 				details.setRatingIndirectSetPiecesAtt(rs.getInt("RatingIndirectSetPiecesAtt"));
 				details.setRatingIndirectSetPiecesDef(rs.getInt("RatingIndirectSetPiecesDef"));
+				var homeGoalsInPart = new Integer[MatchEvent.MatchPartId.values().length];
+				homeGoalsInPart[0] = rs.getInt("HomeGoal0");
+				homeGoalsInPart[1] = rs.getInt("HomeGoal1");
+				homeGoalsInPart[2] = rs.getInt("HomeGoal2");
+				homeGoalsInPart[3] = rs.getInt("HomeGoal3");
+				homeGoalsInPart[4] = rs.getInt("HomeGoal4");
+				var guestGoalsInPart = new Integer[MatchEvent.MatchPartId.values().length];
+				guestGoalsInPart[0] = rs.getInt("GuestGoal0");
+				guestGoalsInPart[1] = rs.getInt("GuestGoal1");
+				guestGoalsInPart[2] = rs.getInt("GuestGoal2");
+				guestGoalsInPart[3] = rs.getInt("GuestGoal3");
+				guestGoalsInPart[4] = rs.getInt("GuestGoal4");
+				details.setHomeGoalsInPart(homeGoalsInPart);
+				details.setGuestGoalsInPart(guestGoalsInPart);
 				ArrayList<MatchEvent> vMatchHighlights = DBManager.instance().getMatchHighlights(matchId);
 				details.setHighlights(vMatchHighlights);
 				details.setStatisics();
@@ -161,7 +185,9 @@ final class MatchDetailsTable extends AbstractTable {
 						+ "HeimId, HeimName, HeimEinstellung, HeimTore, HeimLeftAtt, HeimLeftDef, HeimMidAtt, HeimMidDef, HeimMidfield, HeimRightAtt, HeimRightDef, HEIMHATSTATS, "
 						+ "HeimTacticSkill, HeimTacticType, SpielDatum, WetterId, Zuschauer, "
 						+ "Matchreport, RegionID, soldTerraces, soldBasic, soldRoof, soldVIP, "
-						+ "RatingIndirectSetPiecesAtt, RatingIndirectSetPiecesDef "
+						+ "RatingIndirectSetPiecesAtt, RatingIndirectSetPiecesDef, "
+						+ "HomeGoal0, HomeGoal1, HomeGoal2, HomeGoal3, HomeGoal4, "
+						+ "GuestGoal0, GuestGoal1, GuestGoal2, GuestGoal3, GuestGoal4 "
 						+ ") VALUES ("
 						+ details.getMatchID()
 						+ ", "
@@ -248,6 +274,26 @@ final class MatchDetailsTable extends AbstractTable {
 						+ details.getRatingIndirectSetPiecesAtt()
 						+ ", "
 						+ details.getRatingIndirectSetPiecesDef()
+						+ ", "
+						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED)
+						+ ", "
+						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.FIRST_HALF)
+						+ ", "
+						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.SECOND_HALF)
+						+ ", "
+						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.OVERTIME)
+						+ ", "
+						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.PENALTY_CONTEST)
+						+ ", "
+						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED)
+						+ ", "
+						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.FIRST_HALF)
+						+ ", "
+						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.SECOND_HALF)
+						+ ", "
+						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.OVERTIME)
+						+ ", "
+						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.PENALTY_CONTEST)
 						+ ")";
 
 				adapter.executeUpdate(sql);

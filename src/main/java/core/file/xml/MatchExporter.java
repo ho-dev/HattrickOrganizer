@@ -117,7 +117,7 @@ public class MatchExporter {
 
 	private static boolean isValidMatch(MatchKurzInfo info, Matchdetails details, Date startingDate, boolean strict, boolean skipPullBack) {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		if ((info.getMatchStatus() != MatchKurzInfo.FINISHED) || (details.getMatchID() == -1)) {
+		if ((info.getMatchStatus() != MatchKurzInfo.FINISHED) ||  details == null || (details.getMatchID() == -1)) {
 			HOLogger.instance().debug(MatchExporter.class, "Ignoring match " + info.getMatchID() + ": not finished");
 			return false;
 		}
