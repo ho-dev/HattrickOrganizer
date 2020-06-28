@@ -460,7 +460,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 
 	public Matchdetails getMatchdetails() {
 		if (matchdetails==null){
-			matchdetails = DBManager.instance().getMatchDetails(getMatchID());
+			matchdetails = Matchdetails.getMatchdetails(getMatchID(), getMatchTyp());
 		}
 		return matchdetails;
 	}

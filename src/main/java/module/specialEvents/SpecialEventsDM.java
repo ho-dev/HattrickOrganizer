@@ -30,8 +30,7 @@ public class SpecialEventsDM {
 		if (matches != null) {
 			int matchCount = 1;
 			for (MatchKurzInfo matchKurzInfo : matches) {
-				Matchdetails details = DBManager.instance().getMatchDetails(
-						matchKurzInfo.getMatchID());
+				Matchdetails details = matchKurzInfo.getMatchdetails();
 				if (!filterOutByTactic(details, filter)) {
 					List<MatchRow> rows = getMatchRows(matchKurzInfo, details, filter);
 					if (rows != null && !rows.isEmpty()) {
