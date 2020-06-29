@@ -7,15 +7,13 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
+import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
 import core.util.Helper;
 import java.awt.*;
 import javax.swing.*;
-import java.util.List;
-
-import static core.gui.theme.HOIconName.*;
 
 public final class SpielerLabelEntry implements IHOTableEntry {
 
@@ -27,9 +25,8 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private final JLabel m_jlSpezialitaet = new JLabel();
     private final JLabel m_jlWeatherEffect = new JLabel();
     private final JLabel m_jlTrainUp = new JLabel();
-
     private MatchRoleID m_clCurrentPlayerPosition;
-    private final boolean m_bShowTrikot;
+    private boolean m_bShowTrikot;
     private boolean m_bShowWeatherEffect = true;
     private boolean m_bCustomName = false;
     private String m_sCustomNameString = "";
@@ -39,13 +36,8 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private boolean m_bSelect = false;
     private boolean m_bAssit = false;
 
-    private JLabel transferlistedLabel;
-    private JLabel injuredLabel;
-    private JLabel bruisedLabel;
-    private JLabel suspendedLabel;
-    private JLabel twoYellowCardsLabel;
 
-    // Label for the player name (depending on status)
+     // Label for the player name (depending on status)
     public SpielerLabelEntry(Player player, MatchRoleID positionAktuell,
                              float positionsbewertung, boolean showTrikot, boolean showWetterwarnung) {
         m_clPlayer = player;
@@ -87,7 +79,10 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             m_clComponent.setToolTipText(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getText());
         }
 
+        m_jlName.setForeground(getForegroundForSpieler(m_clPlayer));
         m_jlName.setFont(isSelected ? m_jlName.getFont().deriveFont(Font.BOLD) : m_jlName.getFont().deriveFont(Font.PLAIN));
+
+        m_jlSkill.setForeground(getForegroundForSpieler(m_clPlayer));
         m_jlSkill.setFont(isSelected ? m_jlSkill.getFont().deriveFont(Font.BOLD) : m_jlSkill.getFont().deriveFont(Font.PLAIN));
 
         return m_clComponent;
@@ -141,7 +136,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         }
         return 0;
     }
-    //-------------------------------------------------------------
+    //-------------------------------------------------------------    
 
     /**
      * Erstellt eine passende Komponente
@@ -174,18 +169,18 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         spezPanel.setOpaque(false);
 
         if (!m_bMultiLine) {
-            // Weather effect
+            //Wetterwarnung
             m_jlWeatherEffect.setBackground(ColorLabelEntry.BG_STANDARD);
             m_jlWeatherEffect.setOpaque(false);
             m_jlWeatherEffect.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
             spezPanel.add(m_jlWeatherEffect);
 
-            // Speciality
+            //Spezialität
             m_jlSpezialitaet.setBackground(ColorLabelEntry.BG_STANDARD);
             m_jlSpezialitaet.setOpaque(false);
             spezPanel.add(m_jlSpezialitaet);
 
-            // Rating
+            //Bewertung
             m_jlSkill.setBackground(ColorLabelEntry.BG_STANDARD);
             m_jlSkill.setOpaque(false);
             m_jlSkill.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
@@ -215,9 +210,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             m_jlSpezialitaet.setOpaque(false);
             spezPanel.add(m_jlSpezialitaet);
 
-            addPlayerStatusIcons(spezPanel);
-
-            // Weather effect
+            //Wetterwarnung
             m_jlWeatherEffect.setBackground(ColorLabelEntry.BG_STANDARD);
             m_jlWeatherEffect.setOpaque(false);
             m_jlWeatherEffect.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
@@ -249,6 +242,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             //Name
             m_jlName.setText(m_clPlayer.getFullName());
             m_jlName.setOpaque(false);
+            m_jlName.setForeground(getForegroundForSpieler(m_clPlayer));
             showJersey();
             updateDisplay(m_clPlayer);
         }
@@ -256,43 +250,19 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         m_clComponent.setPreferredSize(new Dimension(Helper.calcCellWidth(150), Helper.calcCellWidth(18)));
     }
 
-    private void addPlayerStatusIcons(JPanel infoPanel) {
-        transferlistedLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, 12, 12));
-        infoPanel.add(transferlistedLabel);
-
-        injuredLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(INJURED_TINY, 12, 12));
-        infoPanel.add(injuredLabel);
-
-        bruisedLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(BRUISED_TINY, 12, 12));
-        infoPanel.add(bruisedLabel);
-
-        suspendedLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(SUSPENDED_TINY, 12, 12));
-        infoPanel.add(suspendedLabel);
-
-        twoYellowCardsLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(TWOYELLOW_TINY, 12, 12));
-        infoPanel.add(twoYellowCardsLabel);
-    }
-
-    private JLabel createPlayerStatusLabel(Icon icon) {
-        final JLabel playerStatusLabel = new JLabel(icon);
-        playerStatusLabel.setBackground(ColorLabelEntry.BG_STANDARD);
-        playerStatusLabel.setOpaque(false);
-        playerStatusLabel.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
-
-        return playerStatusLabel;
-    }
-
     public final void updateComponent() {
         if (m_clPlayer != null) {
+            m_jlName.setForeground(getForegroundForSpieler(m_clPlayer));
             showJersey();
             updateDisplay(m_clPlayer);
+
         } else {
             setEmptyLabel();
         }
     }
 
     /**
-     * Update the entry.
+     * Aktualisierung des Entrys
      */
     public final void updateComponent(Player player, MatchRoleID positionAktuell,
                                       float positionsbewertung, boolean alternativePosition, String nameText) {
@@ -303,6 +273,12 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         m_sCustomNameString = nameText;
 
         if (m_clPlayer != null) {
+            if (m_clPlayer.isOld()) {
+                m_jlName.setForeground(ThemeManager.getColor(HOColorName.PLAYER_OLD_FG));//Color.GRAY);
+            } else {
+                m_jlName.setForeground(getForegroundForSpieler(m_clPlayer));
+            }
+
             if (m_bCustomName) {
                 m_jlName.setText(m_sCustomNameString);
             } else {
@@ -372,31 +348,38 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             m_jlSkill.setText("");
         }
 
-        m_jlTrainUp.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getIcon());
+        m_jlTrainUp.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getIcon());
+    }
 
-        if (m_bMultiLine) {
-            List.of(injuredLabel,
-                    bruisedLabel,
-                    transferlistedLabel,
-                    suspendedLabel,
-                    twoYellowCardsLabel)
-                    .forEach(label -> label.setIcon(null));
+    //--------------static------------------------------
+    // Color player name depending of status (injured, warned, ...)
+    public static Color getForegroundForSpieler(Player player) {
+        Color color;
+        UserParameter userParameter = core.model.UserParameter.instance();
 
-            if (player.getVerletzt() > 0) {
-                injuredLabel.setIcon(ImageUtilities.getSvgIcon(INJURED_TINY, 12, 12));
-            } else if (player.getVerletzt() == 0) {
-                bruisedLabel.setIcon(ImageUtilities.getSvgIcon(BRUISED_TINY, 12, 12));
-            }
-            if (player.getTransferlisted() > 0) {
-                transferlistedLabel.setIcon(ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, 12, 12));
-            }
-            if (player.isGesperrt()) {
-                suspendedLabel.setIcon(ImageUtilities.getSvgIcon(SUSPENDED_TINY, 12, 12));
-            } else if (player.getGelbeKarten() == 2) {
-                twoYellowCardsLabel.setIcon(ImageUtilities.getSvgIcon(TWOYELLOW_TINY, 12, 12));
-            }
-
-            suspendedLabel.getParent().repaint();
+        //On transfert market
+        if (player.getTransferlisted() > 0) {
+            color = userParameter.FG_TRANSFERMARKT;
         }
+        //Injured
+        else if (player.getVerletzt() > 0) {
+            color = userParameter.FG_INJURED;
+        }
+        //Disabled
+        else if (player.isGesperrt()) {
+            color = userParameter.FG_RED_CARD;
+        }
+        //Yellow card
+        else if (player.getVerletzt() == 0) {
+            color = userParameter.FG_BRUISED;
+        }
+        //Red card
+        else if (player.getGelbeKarten() == 2) {
+            color = userParameter.FG_TWO_YELLOW_CARDS;
+        } else {
+            color = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
+        }
+
+        return color;
     }
 }

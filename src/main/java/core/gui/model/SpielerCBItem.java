@@ -17,7 +17,7 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 
     protected static int PLAYER_COMBO_HEIGHT = Helper.calcCellWidth(35);
     public static javax.swing.JLabel m_jlLeer = new javax.swing.JLabel(" ");
-    public SpielerLabelEntry m_clEntry;
+    public SpielerLabelEntry m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true);
     private Player m_clPlayer;
     private String m_sText;
     private float m_fPositionsBewertung;
