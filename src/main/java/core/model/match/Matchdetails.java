@@ -164,12 +164,14 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         return getLastMinute();
     }
 
+    static String afterPenalties = HOVerwaltung.instance().getLanguageString("ls.match.after.penalties.abbreviation");
+    static String afterExtension = HOVerwaltung.instance().getLanguageString("ls.match.after.extension.abbreviation");
     public static  String getResultExtensionAbbreviation(Integer duration){
         if ( duration != null) {
             if (duration.intValue() > 120)
-                return HOVerwaltung.instance().getLanguageString("ls.match.after.penalties.abbreviation");
+                return afterPenalties;
             if (duration.intValue() > 110)
-                return HOVerwaltung.instance().getLanguageString("ls.match.after.extension.abbreviation");
+                return afterExtension;
         }
         return "";
     }
