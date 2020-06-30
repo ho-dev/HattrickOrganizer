@@ -91,6 +91,7 @@ public class MatchStatistics {
 		// Done with substitutions, add end if necessary
 
 		if (inPosition) {
+			// TODO: if opponent is walkover +=90
 			minPlayed += getMatchEndMinute(spielerId) - enterMin;
 		}
 
