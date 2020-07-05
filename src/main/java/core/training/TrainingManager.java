@@ -1,5 +1,6 @@
 package core.training;
 
+import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.HOMainFrame;

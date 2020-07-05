@@ -219,13 +219,14 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                         +" events:" + (events==null? "null": events.size())
                 );
                 try {
-                    OnlineWorker.downloadMatchData(matchId, type, true);
-                    ret = DBManager.instance().getMatchDetails((matchId));
+                    if ( OnlineWorker.downloadMatchData(matchId, type, true) ) {
+                        ret = DBManager.instance().getMatchDetails((matchId));
+                        maxMatchdetailsReloadsPerSession--;
+                    }
                 }
                 catch (Exception ex){
                     HOLogger.instance().error(Matchdetails.class, ex.getMessage());
                 }
-                maxMatchdetailsReloadsPerSession--;
             }
         }
         return ret;
@@ -1302,6 +1303,19 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         }
 
         return true;
+    }
+
+    private MatchLineupTeam teamLineup;
+
+    /**
+     * Load the lineup of user's team
+     * @return MatchLineupTeam
+     */
+    public MatchLineupTeam getTeamLineup() {
+        if ( teamLineup == null){
+            teamLineup = DBManager.instance().getMatchLineupTeam(this.getMatchID(), MatchKurzInfo.user_team_id);
+        }
+        return teamLineup;
     }
 
     /**
