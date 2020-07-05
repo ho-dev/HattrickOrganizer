@@ -229,7 +229,7 @@ public class OutputTableModel extends AbstractTableModel {
      * @return training point offset, if any
      */
     private double getOffset(Player player, int skill) {
-        double offset = player.getSubskill4Pos(skill);
+        double offset = player.getSub4Skill(skill);
         double length = getTrainingLength(player, skill);
         return offset * length;
     }

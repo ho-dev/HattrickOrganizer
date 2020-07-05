@@ -231,7 +231,7 @@ public class HRFStringParser {
 			List<Player> players = hoModel.getCurrentPlayers();
 			for (Player player : players) {
 				if (player.isTrainer() && player.getSpielerID() != trainerID) {
-					player.setTrainer(-1);
+					player.setTrainerSkill(-1);
 					player.setTrainerTyp(-1);
 				}
 			}

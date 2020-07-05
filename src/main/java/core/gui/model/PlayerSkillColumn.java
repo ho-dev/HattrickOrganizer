@@ -62,7 +62,7 @@ class PlayerSkillColumn extends PlayerColumn {
                 false, 0);
 		}
 		return new SkillEntry(getSkill(player)
-                + player.getSubskill4Pos(skill),
+                + player.getSub4Skill(skill),
               ColorLabelEntry.FG_STANDARD,
               background);
 	}
@@ -82,9 +82,9 @@ class PlayerSkillColumn extends PlayerColumn {
 		
 		return new ColorLabelEntry(getSkill(player)
                 - getSkill(comparePlayer),
-                  player.getSubskill4Pos(skill)
+                  player.getSub4Skill(skill)
                 - comparePlayer
-                  .getSubskill4Pos(skill),
+                  .getSub4Skill(skill),
                 !comparePlayer.isOld(),
                 background,
                 true);

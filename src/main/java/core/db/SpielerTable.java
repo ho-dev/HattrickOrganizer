@@ -7,6 +7,7 @@ import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -141,13 +142,13 @@ final class SpielerTable extends AbstractTable {
 			statement.append(player.getSCskill()).append(",");
 			statement.append(player.getPSskill()).append(",");
 			statement.append(player.getSPskill()).append(",");
-			statement.append(player.getSubskill4PosAccurate(PlayerSkill.KEEPER)).append(",");
-			statement.append(player.getSubskill4PosAccurate(PlayerSkill.DEFENDING)).append(",");
-			statement.append(player.getSubskill4PosAccurate(PlayerSkill.PLAYMAKING)).append(",");
-			statement.append(player.getSubskill4PosAccurate(PlayerSkill.WINGER)).append(",");
-			statement.append(player.getSubskill4PosAccurate(PlayerSkill.SCORING)).append(",");
-			statement.append(player.getSubskill4PosAccurate(PlayerSkill.PASSING)).append(",");
-			statement.append(player.getSubskill4PosAccurate(PlayerSkill.SET_PIECES)).append(",");
+			statement.append(player.getSub4SkillAccurate(PlayerSkill.KEEPER)).append(",");
+			statement.append(player.getSub4SkillAccurate(PlayerSkill.DEFENDING)).append(",");
+			statement.append(player.getSub4SkillAccurate(PlayerSkill.PLAYMAKING)).append(",");
+			statement.append(player.getSub4SkillAccurate(PlayerSkill.WINGER)).append(",");
+			statement.append(player.getSub4SkillAccurate(PlayerSkill.SCORING)).append(",");
+			statement.append(player.getSub4SkillAccurate(PlayerSkill.PASSING)).append(",");
+			statement.append(player.getSub4SkillAccurate(PlayerSkill.SET_PIECES)).append(",");
 			// Training offsets below
 			statement.append("0,");
 			statement.append("0,");
@@ -174,7 +175,7 @@ final class SpielerTable extends AbstractTable {
 			statement.append(player.getHattrick()).append(",");
 			statement.append(player.getBewertung()).append(",");
 			statement.append(player.getTrainerTyp()).append(",");
-			statement.append(player.getTrainer()).append(",");
+			statement.append(player.getTrainerSkill()).append(",");
 			statement.append(hrfId).append(",");
 			statement.append("'").append(date.toString()).append("',");
 			statement.append(player.getTrikotnummer()).append(",");
@@ -248,30 +249,31 @@ final class SpielerTable extends AbstractTable {
 	/**
 	 * lädt die Player zum angegeben HRF file ein
 	 */
-	Vector<Player> getSpieler(int hrfID) {
+	List<Player> getSpieler(int hrfID) {
 		ResultSet rs = null;
 		Player player = null;
 		String sql = null;
-		final Vector<Player> ret = new Vector<Player>();
+		final ArrayList<Player> ret = new ArrayList<>();
+		if ( hrfID > -1) {
 
-		sql = "SELECT * from "+getTableName()+" WHERE HRF_ID = " + hrfID;
-		rs = adapter.executeQuery(sql);
+			sql = "SELECT * from " + getTableName() + " WHERE HRF_ID = " + hrfID;
+			rs = adapter.executeQuery(sql);
 
-		try {
-			if (rs != null) {
-				rs.beforeFirst();
+			try {
+				if (rs != null) {
+					rs.beforeFirst();
 
-				while (rs.next()) {
-					player = createObject(rs);
+					while (rs.next()) {
+						player = createObject(rs);
 
-					//HOLogger.instance().log(getClass(), player.getSpielerID () );
-					ret.add(player);
+						//HOLogger.instance().log(getClass(), player.getSpielerID () );
+						ret.add(player);
+					}
 				}
+			} catch (Exception e) {
+				HOLogger.instance().log(getClass(), "DatenbankZugriff.getPlayer: " + e);
 			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getPlayer: " + e);
 		}
-
 		return ret;
 	}
 
@@ -575,7 +577,7 @@ final class SpielerTable extends AbstractTable {
             player.setHattrick(rs.getInt("Hattrick"));
             player.setBewertung(rs.getInt("Bewertung"));
             player.setTrainerTyp(rs.getInt("TrainerTyp"));
-            player.setTrainer(rs.getInt("Trainer"));
+            player.setTrainerSkill(rs.getInt("Trainer"));
             player.setTrikotnummer(rs.getInt("PlayerNumber"));
             player.setTransferlisted(rs.getInt("TransferListed"));
             player.setLaenderspiele(rs.getInt("Caps"));

@@ -1456,8 +1456,8 @@ public class Player {
     /**
      * berechnet den Subskill pro position
      */
-    public float getSubskill4Pos(int skill) {
-        return Math.min(0.99f, Helper.round(getSubskill4PosAccurate(skill), 2));
+    public float getSub4Skill(int skill) {
+        return Math.min(0.99f, Helper.round(getSub4SkillAccurate(skill), 2));
     }
 
     /**
@@ -1467,7 +1467,7 @@ public class Player {
      * @param skill
      * @return subskill between 0.0-0.999
      */
-    public float getSubskill4PosAccurate(int skill) {
+    public float getSub4SkillAccurate(int skill) {
         double value = 0;
 
         switch (skill) {
@@ -1692,7 +1692,7 @@ public class Player {
      *
      * @param m_iTrainer New value of property m_iTrainer.
      */
-    public void setTrainer(int m_iTrainer) {
+    public void setTrainerSkill(int m_iTrainer) {
         this.m_iTrainer = m_iTrainer;
     }
 
@@ -1701,7 +1701,7 @@ public class Player {
      *
      * @return Value of property m_iTrainer.
      */
-    public int getTrainer() {
+    public int getTrainerSkill() {
         return m_iTrainer;
     }
 
@@ -1841,7 +1841,7 @@ public class Player {
     /**
      * get Skillvalue 4 skill
      */
-    public int getValue4Skill4(int skill) {
+    public int getValue4Skill(int skill) {
         switch (skill) {
             case PlayerSkill.KEEPER:
                 return m_iTorwart;
@@ -1890,7 +1890,7 @@ public class Player {
      * @param skill the skill to change
      * @param value the new skill value
      */
-    public void setValue4Skill4(int skill, int value) {
+    public void setValue4Skill(int skill, int value) {
         switch (skill) {
             case PlayerSkill.KEEPER:
                 setTorwart(value);
@@ -2005,7 +2005,7 @@ public class Player {
             /* Carry subskill over skillup */
             gain = 0.0f;
         }
-        setSubskill4Pos(skill, Math.min(0.99f, getSubskill4PosAccurate(skill) + gain));
+        setSubskill4Pos(skill, Math.min(0.99f, getSub4SkillAccurate(skill) + gain));
     }
 
     /**
@@ -2082,14 +2082,14 @@ public class Player {
                 continue;
             }
 
-            if (getValue4Skill4(skillType) >= 1) {
-                float drop = weeks * SkillDrops.instance().getSkillDrop(getValue4Skill4(skillType), originalPlayer.getAlter(), skillType);
+            if (getValue4Skill(skillType) >= 1) {
+                float drop = weeks * SkillDrops.instance().getSkillDrop(getValue4Skill(skillType), originalPlayer.getAlter(), skillType);
 
                 // Only bother if there is drop, there is something to drop from,
                 //and check that the player has not popped
-                if ((drop > 0) && (originalPlayer.getSubskill4PosAccurate(skillType) > 0)
-                        && (getValue4Skill4(skillType) == originalPlayer.getValue4Skill4(skillType))) {
-                    setSubskill4Pos(skillType, Math.max(0, getSubskill4PosAccurate(skillType) - drop / 100));
+                if ((drop > 0) && (originalPlayer.getSub4SkillAccurate(skillType) > 0)
+                        && (getValue4Skill(skillType) == originalPlayer.getValue4Skill(skillType))) {
+                    setSubskill4Pos(skillType, Math.max(0, getSub4SkillAccurate(skillType) - drop / 100));
                 }
             }
         }
@@ -2134,13 +2134,13 @@ public class Player {
         float loy = RatingPredictionManager.getLoyaltyHomegrownBonus(this);
 
         String key = fo.getPosition() + ":"
-                + Helper.round(getGKskill() + getSubskill4Pos(PlayerSkill.KEEPER) + loy, 2) + "|"
-                + Helper.round(getPMskill() + getSubskill4Pos(PlayerSkill.PLAYMAKING) + loy, 2) + "|"
-                + Helper.round(getDEFskill() + getSubskill4Pos(PlayerSkill.DEFENDING) + loy, 2) + "|"
-                + Helper.round(getWIskill() + getSubskill4Pos(PlayerSkill.WINGER) + loy, 2) + "|"
-                + Helper.round(getPSskill() + getSubskill4Pos(PlayerSkill.PASSING) + loy, 2) + "|"
-                + Helper.round(getSPskill() + getSubskill4Pos(PlayerSkill.SET_PIECES) + loy, 2) + "|"
-                + Helper.round(getSCskill() + getSubskill4Pos(PlayerSkill.SCORING) + loy, 2) + "|"
+                + Helper.round(getGKskill() + getSub4Skill(PlayerSkill.KEEPER) + loy, 2) + "|"
+                + Helper.round(getPMskill() + getSub4Skill(PlayerSkill.PLAYMAKING) + loy, 2) + "|"
+                + Helper.round(getDEFskill() + getSub4Skill(PlayerSkill.DEFENDING) + loy, 2) + "|"
+                + Helper.round(getWIskill() + getSub4Skill(PlayerSkill.WINGER) + loy, 2) + "|"
+                + Helper.round(getPSskill() + getSub4Skill(PlayerSkill.PASSING) + loy, 2) + "|"
+                + Helper.round(getSPskill() + getSub4Skill(PlayerSkill.SET_PIECES) + loy, 2) + "|"
+                + Helper.round(getSCskill() + getSub4Skill(PlayerSkill.SCORING) + loy, 2) + "|"
                 + getForm() + "|"
                 + getKondition() + "|"
                 + getErfahrung() + "|"
@@ -2231,7 +2231,7 @@ public class Player {
             }
 
             if (!check4SkillUp(skillType, old)) {
-                setSubskill4Pos(skillType, old.getSubskill4PosAccurate(skillType));
+                setSubskill4Pos(skillType, old.getSub4SkillAccurate(skillType));
             } else {
                 setSubskill4Pos(skillType, 0);
             }
@@ -2247,7 +2247,7 @@ public class Player {
     public void copySkills(Player old) {
 
         for (int skillType = 0; skillType <= PlayerSkill.LOYALTY; skillType++) {
-            setValue4Skill4(skillType, old.getValue4Skill4(skillType));
+            setValue4Skill(skillType, old.getValue4Skill(skillType));
         }
     }
 
@@ -2258,7 +2258,7 @@ public class Player {
      * @param skillType The ID of the skill to perform drop on.
      */
     public void dropSubskills(int skillType) {
-        if (getValue4Skill4(skillType) > 0) {
+        if (getValue4Skill(skillType) > 0) {
             // non-existent has no subskill.
             setSubskill4Pos(skillType, 0.999f);
 
@@ -2287,7 +2287,7 @@ public class Player {
      */
     protected boolean check4SkillUp(int skill, Player oldPlayer) {
         if ((oldPlayer != null) && (oldPlayer.getSpielerID() > 0))
-            return oldPlayer.getValue4Skill4(skill) < getValue4Skill4(skill);
+            return oldPlayer.getValue4Skill(skill) < getValue4Skill(skill);
         return false;
     }
 
@@ -2297,7 +2297,7 @@ public class Player {
     public boolean check4SkillDown(int skill, Player oldPlayer) {
         if (skill < PlayerSkill.EXPERIENCE)
             if ((oldPlayer != null) && (oldPlayer.getSpielerID() > 0))
-                return oldPlayer.getValue4Skill4(skill) > getValue4Skill4(skill);
+                return oldPlayer.getValue4Skill(skill) > getValue4Skill(skill);
         return false;
     }
 

@@ -35,7 +35,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 
 	//~ Static fields/initializers -----------------------------------------------------------------
 
-    private static Vector<Player> vergleichsPlayer = new Vector<Player>();
+    private static List<Player> vergleichsPlayer = new ArrayList<>();
     private static boolean vergleichsMarkierung;
 
     //~ Instance fields ----------------------------------------------------------------------------
@@ -63,7 +63,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
     /**
      * Gibt die Vergleichsspieler zurück
      */
-    public static Vector<Player> getVergleichsPlayer() {
+    public static List<Player> getVergleichsPlayer() {
         return vergleichsPlayer;
     }
 
@@ -94,7 +94,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
             }
 
             loadHRFListe(false);
-            vergleichsPlayer.removeAllElements();
+            vergleichsPlayer.clear(); // .removeAllElements();
 
             // HRF Deleted, recalculate Skillups
 			DBManager.instance().reimportSkillup();
@@ -129,7 +129,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 		}
 		// Keine Markierung -> Alles löschen
 		else {
-			vergleichsPlayer.removeAllElements();
+			vergleichsPlayer.clear();
 			vergleichsMarkierung = false;
 			m_jbLoeschen.setEnabled(false);
 		}
