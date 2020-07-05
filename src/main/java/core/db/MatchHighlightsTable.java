@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 
+import static core.db.DbUtil.getNullableInt;
+
 final class MatchHighlightsTable extends AbstractTable {
 	final static String TABLENAME = "MATCHHIGHLIGHTS";
 
@@ -57,8 +59,7 @@ final class MatchHighlightsTable extends AbstractTable {
 			try {
 				final ArrayList<MatchEvent> vHighlights = details.getHighlights();
 				HOLogger.instance().debug(getClass(), "count of highlights: " + vHighlights.size());
-				for (int i = 0; i < vHighlights.size(); i++) {
-					final MatchEvent highlight = vHighlights.get(i);
+				for (final MatchEvent highlight : vHighlights) {
 					StringBuilder sql = new StringBuilder(100);
 
 					sql.append("INSERT INTO ").append(getTableName());
@@ -126,11 +127,8 @@ final class MatchHighlightsTable extends AbstractTable {
 		highlight.setGehilfeHeim(rs.getBoolean("GehilfeHeim"));
 		highlight.setEventText(DBManager.deleteEscapeSequences(rs.getString("EventText")));
 		highlight.setM_eInjuryType(rs.getInt("INJURY_TYPE"));
-		highlight.setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId(rs.getInt("MatchPart")));
-		if ( rs.wasNull()) highlight.setMatchPartId(null);
-		highlight.setEventVariation(rs.getInt("EventVariation"));
-		if ( rs.wasNull()) highlight.setEventVariation(null);
-
+		highlight.setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId(getNullableInt(rs,"MatchPart")));
+		highlight.setEventVariation(getNullableInt(rs, "EventVariation"));
 		return highlight;
 	}
 
