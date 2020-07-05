@@ -1,6 +1,5 @@
 package core.training;
 
-import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
@@ -15,7 +14,6 @@ import core.util.HTCalendar;
 import core.util.HTCalendarFactory;
 import core.util.HelperWrapper;
 
-import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -81,10 +79,9 @@ public class TrainingManager {
     public TrainingPerPlayer calculateWeeklyTrainingForPlayer(Player inputPlayer,
                                                               TrainingPerWeek train, Timestamp timestamp) {
         //playerID HIER SETZEN
-        final Player player = inputPlayer;
-        final int playerID = player.getSpielerID();
+		final int playerID = inputPlayer.getSpielerID();
 
-        TrainingPerPlayer output = new TrainingPerPlayer(player);
+        TrainingPerPlayer output = new TrainingPerPlayer(inputPlayer);
         if (timestamp != null)
         	output.setTimestamp(timestamp);
         if (train == null || train.getTrainingType() < 0) {
@@ -94,16 +91,15 @@ public class TrainingManager {
         	HTCalendar htc1 = HTCalendarFactory.createTrainingCalendar();
         	HTCalendar htc2 = HTCalendarFactory.createTrainingCalendar();
         	String c1s = "";
-        	String c2s = "";
-        	if (timestamp != null) {
+			if (timestamp != null) {
         		htc1.setTime(timestamp);
         		c1s = " ("+htc1.getHTSeason()+"."+htc1.getHTWeek()+")";
         	}
         	htc2.setTime(train.getTrainingDate());
-        	c2s = " ("+htc2.getHTSeason()+"."+htc2.getHTWeek()+")";
+			String c2s = " (" + htc2.getHTSeason() + "." + htc2.getHTWeek() + ")";
 
         	HOLogger.instance().debug(getClass(),
-        			"Start calcWeeklyTraining for "+ player.getFullName()+", zeitpunkt="+((timestamp!=null)?timestamp.toString()+c1s:"")
+        			"Start calcWeeklyTraining for "+ inputPlayer.getFullName()+", zeitpunkt="+((timestamp!=null)?timestamp.toString()+c1s:"")
         			+ ", trainDate="+train.getTrainingDate().toString()+c2s);
         }
 
@@ -116,7 +112,7 @@ public class TrainingManager {
 	        	var matches = train.getMatches();
 	        	int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 	        	TrainingWeekPlayer tp = new TrainingWeekPlayer();
-	            tp.Name(player.getFullName());
+	            tp.Name(inputPlayer.getFullName());
 	            int minutes=0;
 	        	for (var match : matches) {
 	                //Get the MatchLineup by id
@@ -134,18 +130,17 @@ public class TrainingManager {
 						tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillOsmosisTrainingPositions()));
 					}
 					tp.addTotalMinutesPlayed(ms.getTrainMinutesPlayedInPositions(playerID, null));
-					// TODO: if not walkover match
 					output.addExperienceIncrease(min(90,tp.getTotalMinutesPlayed() - minutes), type );
 	                minutes = tp.getTotalMinutesPlayed();
 				}
 	            TrainingPoints trp = new TrainingPoints(wt.getPrimaryTraining(tp), wt.getSecondaryTraining(tp));
 
 	        	// get experience increase of national matches
-				if  ( player.getNationalTeamID() != 0 && player.getNationalTeamID() != myID){
+				if  ( inputPlayer.getNationalTeamID() != 0 && inputPlayer.getNationalTeamID() != myID){
 					// TODO check if national matches are stored in database
-					var nationalMatches = train.getMatches(player.getNationalTeamID());
+					var nationalMatches = train.getMatches(inputPlayer.getNationalTeamID());
 					for (var match : nationalMatches){
-						MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(match.getMatchID(), player.getNationalTeamID());
+						MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(match.getMatchID(), inputPlayer.getNationalTeamID());
 						MatchStatistics ms = new MatchStatistics(match, mlt);
 						minutes = ms.getStaminaMinutesPlayedInPositions(playerID);
 						if ( minutes > 0 ) {
@@ -156,7 +151,7 @@ public class TrainingManager {
 
 	    		if (TrainingManager.TRAININGDEBUG) {
 					HOLogger.instance().debug(getClass(), "Week " + train.getHattrickWeek()
-	            		+": Player " + player.getFullName() + " (" + playerID + ")"
+	            		+": Player " + inputPlayer.getFullName() + " (" + playerID + ")"
 	            		+" played total " + tp.getTotalMinutesPlayed() + " mins for training purposes and got "
 	            		+ wt.getPrimaryTraining(tp) + " primary training points and "
 	            		+ wt.getSecondaryTraining(tp) + " secondary training points");
@@ -182,82 +177,6 @@ public class TrainingManager {
             HOVerwaltung.instance().recalcSubskills(showBar, null);
         }
     }
-
-    //----------------------------------- Utility Methods ----------------------------------------------------------
-
-	public List<Integer> getOwnMatchesForTraining (Calendar trainingDate) {
-		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		return getMatchesForTraining(teamId, trainingDate);
-	}
-
-    /**
-     * Creates a list of matches for the specified training
-     *
-	 * @param teamId	own team Id or national team Id
-	 * @param trainingDate	use this trainingDate
-     * @return	list of matchIds (type Integer)
-     */
-    public List<Integer> getMatchesForTraining (int teamId, Calendar trainingDate) {
-        List<Integer> matches = new ArrayList<Integer>();
-        try {
-        	final ResultSet matchRS = DBManager.instance().getAdapter().executeQuery(createQuery(teamId, trainingDate));
-
-        	if (matchRS == null) {
-        		// in case of no return values
-        		return matches;
-        	}
-
-        	while (matchRS.next()) {
-        		final int matchId = matchRS.getInt("MATCHID");
-        		matches.add(new Integer(matchId));
-        	}
-
-            matchRS.close();
-        } catch (Exception e1) {
-            HOLogger.instance().log(getClass(),e1);
-        }
-
-        return matches;
-    }
-
-    /**
-     * Creates the query to extract the list of matchId for each Training
-     *
-     * @param calendar TrainingDate
-     *
-     * @return the query
-     */
-    private String createQuery(int teamId, Calendar calendar) {
-		final Timestamp ts = new Timestamp(calendar.getTimeInMillis());
-		final Calendar old = (Calendar) calendar.clone();
-
-		// set time one week back
-		old.add(Calendar.WEEK_OF_YEAR, -1);
-
-		final Timestamp ots = new Timestamp(old.getTimeInMillis());
-		final String sdbquery = "SELECT MATCHID FROM MATCHESKURZINFO WHERE " + "( HEIMID=" + teamId
-				+ " OR GASTID=" + teamId + " ) " + "AND MatchDate BETWEEN '"
-				+ ots.toString() + "' AND '" + ts.toString() + "' "
-				+ " AND (MatchTyp=" + MatchType.QUALIFICATION.getId()
-				+ " OR MatchTyp=" + MatchType.LEAGUE.getId()
-				+ " OR MatchTyp=" + MatchType.CUP.getId()
-				+ " OR MatchTyp=" + MatchType.FRIENDLYNORMAL.getId()
-				+ " OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId()
-				+ " OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId()
-				+ " OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId()
-				+ " OR MatchTyp=" + MatchType.EMERALDCUP.getId()
-				+ " OR MatchTyp=" + MatchType.RUBYCUP.getId()
-				+ " OR MatchTyp=" + MatchType.SAPPHIRECUP.getId()
-				+ " OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()
-				+ " OR MatchTyp=" + MatchType.MASTERS.getId()				// masters and national team is needed for experience sub
-				+ " OR MatchTyp=" + MatchType.NATIONALCOMPCUPRULES.getId()
-				+ " OR MatchTyp=" + MatchType.NATIONALCOMPNORMAL.getId()
-				+ " OR MatchTyp=" + MatchType.NATIONALFRIENDLY.getId()
-				+ " ) AND STATUS=" + MatchKurzInfo.FINISHED
-				+ " ORDER BY MatchDate DESC";
-
-		return sdbquery;
-	}
 
 	public void calculateTraining(Timestamp nextTrainingDate,
 								  List<TrainingPerWeek> trainingList,
@@ -417,22 +336,20 @@ public class TrainingManager {
 		int beforeSkill = 0;
 		int afterSkill = 0;
 
-		String changes="";
+		var changes= new StringBuilder();
 		for ( var s = PlayerSkill.KEEPER; s <= PlayerSkill.EXPERIENCE; s++){
 			var oldValue = before.getValue4Skill(s);
 			var oldSub = before.getSub4Skill(s);
 			var newValue = after.getValue4Skill(s);
 			var newSub = after.getSub4Skill(s);
 			if ( oldSub != newSub || oldValue != newValue){
-				if ( !changes.isEmpty() ){
-					changes+= "; ";
-				}
-				changes += PlayerSkill.toString(s) + ": " + oldValue + "." + oldSub
-							+ "->" + newValue + "." + newSub;
+				if ( changes.length() != 0 ) changes.append("; ");
+				changes.append(PlayerSkill.toString(s)).append(": ").append(oldValue).append(".").append(oldSub)
+						.append("->").append(newValue).append(".").append(newSub);
 			}
 		}
-		if ( !changes.isEmpty()){
-			HOLogger.instance().debug(getClass(), playerID + "|" + playerName + "|" + age + "|" + changes);
+		if ( changes.length() > 0){
+			HOLogger.instance().debug(getClass(), playerID + "|" + playerName + "|" + age + "|" + changes.toString());
 		}
 	}
 
