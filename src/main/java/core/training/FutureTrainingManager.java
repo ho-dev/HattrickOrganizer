@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static java.lang.Integer.max;
-
 /**
  * Class that manages the prevision of training effect in the future
  *
@@ -279,7 +277,7 @@ public class FutureTrainingManager {
 	* @return the sub with offset of a player
 	*/
 	private double getOffset(int skill) {
-		double offset = player.getSubskill4Pos(skill);
+		double offset = player.getSub4Skill(skill);
 		return offset;
 	}
 
@@ -295,15 +293,15 @@ public class FutureTrainingManager {
 		//double curSkillUps = finalSkill[pos];
 		int age = player.getAlter();
 		int ageDays = player.getAgeDays();
-		int realSkill = player.getValue4Skill4(wt.getPrimaryTrainingSkill());
+		int realSkill = player.getValue4Skill(wt.getPrimaryTrainingSkill());
 		// Set age and skill for simulation
 		player.setAlter (age + (int)Math.floor((ageDays + 7*weeksPassed)/112d));
-		player.setValue4Skill4 (wt.getPrimaryTrainingSkill(), (int)finalSkill[pos]);
+		player.setValue4Skill(wt.getPrimaryTrainingSkill(), (int)finalSkill[pos]);
 		double limit = wt.getTrainingLength(player, coTrainer, trainer, tw.getTrainingIntensity(), tw.getStaminaPart(), staff);
 //		HOLogger.instance().debug(getClass(), "getTrLen for "+player.getName()+": weeksPassed="+weeksPassed+", age="+player.getAlter()+", skill="+getSkillValue(player, skillIndex)+", limit="+limit);
 		// Undo simulation changes on player
 		player.setAlter(age);
-		player.setValue4Skill4 (wt.getPrimaryTrainingSkill(), realSkill);
+		player.setValue4Skill(wt.getPrimaryTrainingSkill(), realSkill);
 		return limit;
 	}
 
@@ -312,15 +310,15 @@ public class FutureTrainingManager {
 		//double curSkillUps = finalSkill[pos];
 		int age = player.getAlter();
 		int ageDays = player.getAgeDays();
-		int realSkill = player.getValue4Skill4(wt.getSecondaryTrainingSkill());
+		int realSkill = player.getValue4Skill(wt.getSecondaryTrainingSkill());
 		// Set age and skill for simulation
 		player.setAlter (age + (int)Math.floor((ageDays + 7*weeksPassed)/112d));
-		player.setValue4Skill4 (wt.getSecondaryTrainingSkill(), (int)finalSkill[pos]);
+		player.setValue4Skill(wt.getSecondaryTrainingSkill(), (int)finalSkill[pos]);
 		double limit = wt.getSecondaryTrainingLength(player, coTrainer, trainer, tw.getTrainingIntensity(), tw.getStaminaPart(), staff);
 //		HOLogger.instance().debug(getClass(), "getTrLen for "+player.getName()+": weeksPassed="+weeksPassed+", age="+player.getAlter()+", skill="+getSkillValue(player, skillIndex)+", limit="+limit);
 		// Undo simulation changes on player
 		player.setAlter(age);
-		player.setValue4Skill4 (wt.getSecondaryTrainingSkill(), realSkill);
+		player.setValue4Skill(wt.getSecondaryTrainingSkill(), realSkill);
 		return limit;
 	}
 	/**

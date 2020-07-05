@@ -268,6 +268,8 @@ public class OnlineWorker {
 
 	public static boolean downloadMatchData( MatchKurzInfo info, boolean refresh)
 	{
+		if ( HOMainFrame.launching.get() ) return false; // do not call this on HO launch
+
 		waitDialog = getWaitDialog();
 		// Only download if not present in the database, or if refresh is true
 		int matchid = info.getMatchID();

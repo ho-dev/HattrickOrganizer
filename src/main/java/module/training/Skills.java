@@ -3,7 +3,6 @@ package module.training;
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
 import core.model.player.Player;
-import module.series.promotion.HttpDataSubmitter;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -151,34 +150,34 @@ public class Skills {
     public static float getSkillValue(Player player, int skillIndex) {
         switch (skillIndex) {
             case PlayerSkill.KEEPER:
-                return player.getGKskill() + player.getSubskill4Pos(skillIndex);
+                return player.getGKskill() + player.getSub4Skill(skillIndex);
 
             case PlayerSkill.PLAYMAKING:
-                return player.getPMskill() + player.getSubskill4Pos(skillIndex);
+                return player.getPMskill() + player.getSub4Skill(skillIndex);
 
             case PlayerSkill.PASSING:
-                return player.getPSskill() + player.getSubskill4Pos(skillIndex);
+                return player.getPSskill() + player.getSub4Skill(skillIndex);
 
             case PlayerSkill.WINGER:
-                return player.getWIskill() + player.getSubskill4Pos(skillIndex);
+                return player.getWIskill() + player.getSub4Skill(skillIndex);
 
             case PlayerSkill.DEFENDING:
-                return player.getDEFskill() + player.getSubskill4Pos(skillIndex);
+                return player.getDEFskill() + player.getSub4Skill(skillIndex);
 
             case PlayerSkill.SCORING:
-                return player.getSCskill() + player.getSubskill4Pos(skillIndex);
+                return player.getSCskill() + player.getSub4Skill(skillIndex);
 
             case PlayerSkill.SET_PIECES:
-                return player.getSPskill() + player.getSubskill4Pos(skillIndex);
+                return player.getSPskill() + player.getSub4Skill(skillIndex);
 
             case PlayerSkill.STAMINA:
-                return player.getKondition() + player.getSubskill4Pos(skillIndex);
+                return player.getKondition() + player.getSub4Skill(skillIndex);
 
             case PlayerSkill.FORM:
-                return player.getForm() + player.getSubskill4Pos(skillIndex);
+                return player.getForm() + player.getSub4Skill(skillIndex);
 
             case PlayerSkill.EXPERIENCE:
-                return player.getErfahrung() + player.getSubskill4Pos(skillIndex);
+                return player.getErfahrung() + player.getSub4Skill(skillIndex);
         }
 
         return 0;

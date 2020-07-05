@@ -463,7 +463,7 @@ public class Lineup{
 			for (Player player : players) {
 				if (m_clAssi.isPlayerInStartingEleven(player.getSpielerID(), noKeeper)) {
 					double sp = (double) player.getSPskill()
-							+ player.getSubskill4Pos(PlayerSkill.SET_PIECES)
+							+ player.getSub4Skill(PlayerSkill.SET_PIECES)
 							+ RatingPredictionManager.getLoyaltyHomegrownBonus(player);
 					if (sp > maxStandard) {
 						maxStandard = sp;

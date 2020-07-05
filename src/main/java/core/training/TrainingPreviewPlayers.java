@@ -141,28 +141,30 @@ public class TrainingPreviewPlayers implements Refreshable {
 
         getMatchesForTraining();
 
-        for (int i = 0; i < lMatchStats.size(); i++) {
+        //for (int i = 0; i < lMatchStats.size(); i++) {
+        for ( var ms : lMatchStats){
 
             if (weekTrainTyp.getPrimaryTrainingSkillPositions() != null) {
-                fullTrain += lMatchStats.get(i).getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillPositions());
+                fullTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillPositions());
                 if (fullTrain > 90)
                     fullTrain = 90;
             }
             if (weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions() != null) {
-                partialTrain += lMatchStats.get(i).getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions());
+                partialTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions());
                 if (partialTrain > 90)
                     partialTrain = 90;
             }
             // If player receive training, don't display stamina icon
             if (fullTrain == 0 && partialTrain == 0) {
-                iStamina += lMatchStats.get(i).getStaminaMinutesPlayedInPositions(playerID);
+                iStamina += ms.getStaminaMinutesPlayedInPositions(playerID);
                 if (iStamina > 90)
                     iStamina = 90;
             }
         }
 
-        for (int i = 0; i < lLinueupPos.size(); i++) {
-            MatchRoleID roleId = lLinueupPos.get(i).getPositionBySpielerId(playerID);
+        //for (int i = 0; i < lLinueupPos.size(); i++) {
+        for ( var pos: lLinueupPos ){
+            MatchRoleID roleId = pos.getPositionBySpielerId(playerID);
 
             if (roleId != null) {
                 if (weekTrainTyp.getPrimaryTrainingSkillPositions() != null) {
@@ -200,14 +202,18 @@ public class TrainingPreviewPlayers implements Refreshable {
     private void getMatchesForTraining() {
 
         if (!isFuturMatchInit) {
-            final int lastHrfId = DBManager.instance().getLatestHrfId();
-            List<MatchObj> matches = new ArrayList<>();
+            var lastTraining = TrainingManager.instance().getLastTrainingWeek();
+
+
+            //final int lastHrfId = DBManager.instance().getLatestHrfId();
+            //List<MatchObj> matches = new ArrayList<>();
             lMatchStats = new ArrayList<>();
             lLinueupPos = new ArrayList<>();
             isFuturMatchInit = true;
 
 
-            if (lastHrfId > -1) {
+            if (lastTraining != null) {
+                /*
                 Timestamp previousTrainingDate = DBManager.instance()
                         .getXtraDaten(lastHrfId)
                         .getTrainingDate();
@@ -238,28 +244,29 @@ public class TrainingPreviewPlayers implements Refreshable {
                     } catch (Exception e1) {
                         HOLogger.instance().log(getClass(), e1);
                     }
-
                     for (int i = 0; i < matches.size(); i++) {
 
                         final MatchObj matchInfo = (matches.get(i));
+*/
 
-                        if (matchInfo.getStatus() == MatchKurzInfo.FINISHED) {
-                            //Get the MatchLineup by id
-                            MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(matchInfo.getMatchid(), myID);
-                            lMatchStats.add(new MatchStatistics(matchInfo.getMatchid(), mlt));
 
-                        }
-                        else if (matchInfo.getStatus() == MatchKurzInfo.UPCOMING) {
-                            LineupPosition lineuppos = DBManager.instance().getMatchOrder(matchInfo.getMatchid(), MatchType.getById(matchInfo.getMatchtyp()));
-                            if (lineuppos != null)
-                                lLinueupPos.add(lineuppos);
-                       }
+                weekTrainTyp = WeeklyTrainingType.instance(lastTraining.getTrainingType());
+                for (var matchInfo : lastTraining.getMatches()) {
+                    if (matchInfo.getMatchStatus() == MatchKurzInfo.FINISHED) {
+                        //Get the MatchLineup by id
+                        //MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(matchInfo.getMatchID(), MatchKurzInfo.user_team_id);
+                        var mlt = matchInfo.getMatchdetails().getTeamLineup();
+                        lMatchStats.add(new MatchStatistics(matchInfo, mlt));
+                    } else if (matchInfo.getMatchStatus() == MatchKurzInfo.UPCOMING) {
+                        LineupPosition lineuppos = DBManager.instance().getMatchOrder(matchInfo.getMatchID(), matchInfo.getMatchTyp());
+                        if (lineuppos != null)
+                            lLinueupPos.add(lineuppos);
                     }
                 }
             }
         }
     }
-
+    
     /**
      * create request for getting matchs
      *
