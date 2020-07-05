@@ -355,7 +355,7 @@ public class DBManager {
 	/**
 	 * lädt die Player zum angegeben HRF file ein
 	 */
-	public Vector<Player> getSpieler(int hrfID) {
+	public List<Player> getSpieler(int hrfID) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.getSpieler(hrfID);
 	}

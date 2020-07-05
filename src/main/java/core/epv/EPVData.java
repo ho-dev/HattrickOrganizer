@@ -63,15 +63,15 @@ public class EPVData implements Cloneable {
         setAgeDays(s.getAgeDays());
         setTSI(s.getTSI());
         setForm(s.getForm());
-        setStamina(s.getKondition() + s.getSubskill4Pos(PlayerSkill.STAMINA));
-        setGoalKeeping(s.getGKskill() + s.getSubskill4Pos(PlayerSkill.KEEPER));
+        setStamina(s.getKondition() + s.getSub4Skill(PlayerSkill.STAMINA));
+        setGoalKeeping(s.getGKskill() + s.getSub4Skill(PlayerSkill.KEEPER));
         setPlayMaking(s.getPMskill()
-                      + s.getSubskill4Pos(PlayerSkill.PLAYMAKING));
-        setPassing(s.getPSskill() + s.getSubskill4Pos(PlayerSkill.PASSING));
-        setWing(s.getWIskill() + s.getSubskill4Pos(PlayerSkill.WINGER));
-        setDefense(s.getDEFskill() + s.getSubskill4Pos(PlayerSkill.DEFENDING));
-        setAttack(s.getSCskill() + s.getSubskill4Pos(PlayerSkill.SCORING));
-        setSetPieces(s.getSPskill() + s.getSubskill4Pos(PlayerSkill.SET_PIECES));
+                      + s.getSub4Skill(PlayerSkill.PLAYMAKING));
+        setPassing(s.getPSskill() + s.getSub4Skill(PlayerSkill.PASSING));
+        setWing(s.getWIskill() + s.getSub4Skill(PlayerSkill.WINGER));
+        setDefense(s.getDEFskill() + s.getSub4Skill(PlayerSkill.DEFENDING));
+        setAttack(s.getSCskill() + s.getSub4Skill(PlayerSkill.SCORING));
+        setSetPieces(s.getSPskill() + s.getSub4Skill(PlayerSkill.SET_PIECES));
 
         setExperience(s.getErfahrung());
         setLeadership(s.getFuehrung());

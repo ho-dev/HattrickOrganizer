@@ -1,17 +1,26 @@
 package core.training;
 
+import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.XtraData;
+import core.model.match.MatchKurzInfo;
+import core.model.match.MatchType;
+import core.util.HOLogger;
 import module.transfer.test.HTWeek;
 
+import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * New Training Class
  */
 public class TrainingPerWeek  {
     //~ Instance fields ----------------------------------------------------------------------------
+    private MatchKurzInfo[] matches;
 
     private int _HTSeason = -1;
     private int _HTWeek = -1;
@@ -207,7 +216,31 @@ public class TrainingPerWeek  {
 	public void setAssistants(int assistants) {
 		this.assistants = assistants;
 	}
-	
-	
-	
+
+    public MatchKurzInfo[] getMatches() {
+        if (matches == null) {
+            matches = getMatches(MatchKurzInfo.user_team_id);
+        }
+        return matches;
+    }
+
+    public MatchKurzInfo[] getMatches(int teamId) {
+
+        final Calendar old = Calendar.getInstance();
+        old.setTimeInMillis(this.trainingDate.getTime());
+        // set time one week back
+        old.add(Calendar.WEEK_OF_YEAR, -1);
+
+        final Timestamp ots = new Timestamp(old.getTimeInMillis());
+        final String sdbquery = "SELECT * FROM MATCHESKURZINFO WHERE "
+                + "( HEIMID=" + teamId
+                + " OR GASTID=" + teamId + " )"
+                + " AND MatchDate BETWEEN '" + ots.toString() + "' AND '" + this.trainingDate.toString() + "' "
+                + " AND MatchTyp>" + MatchType.NONE.getId()
+                + " AND MatchTyp<" + MatchType.TOURNAMENTGROUP.getId()
+                + " AND STATUS=" + MatchKurzInfo.FINISHED
+                + " ORDER BY MatchDate DESC";
+
+        return DBManager.instance().getMatchesKurzInfo(sdbquery);
+    }
 }

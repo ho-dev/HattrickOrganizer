@@ -103,6 +103,13 @@ public class TrainingWeekManager {
     	return null;
     }
 
+    public TrainingPerWeek getLastTrainingWeek(){
+    	var list = getTrainingList();
+    	if ( list.size()>0){
+    		return list.get(list.size()-1);
+		}
+    	return null;
+	}
     
     /** Returns a list of TraingPerWeek, one for each week since the first hrf.
      * 
