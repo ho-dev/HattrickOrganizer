@@ -1,6 +1,5 @@
 package core.training;
 
-import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
@@ -131,7 +130,6 @@ public class TrainingManager {
 						tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillOsmosisTrainingPositions()));
 					}
 					tp.addTotalMinutesPlayed(ms.getTrainMinutesPlayedInPositions(playerID, null));
-					// TODO: if not walkover match
 					output.addExperienceIncrease(min(90,tp.getTotalMinutesPlayed() - minutes), type );
 	                minutes = tp.getTotalMinutesPlayed();
 				}
