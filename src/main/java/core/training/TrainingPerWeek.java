@@ -2,18 +2,13 @@ package core.training;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.XtraData;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
-import core.util.HOLogger;
 import module.transfer.test.HTWeek;
 
-import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * New Training Class
@@ -41,12 +36,6 @@ public class TrainingPerWeek  {
     }
     /**
      * Creates a new Training object.
-     *
-     * @param week
-     * @param year
-     * @param trType
-     * @param intensity
-     * @param stamina
      */
     public TrainingPerWeek(int week, int year, int trType, int intensity, int stamina) {
         this._Week = week;
@@ -120,19 +109,17 @@ public class TrainingPerWeek  {
      */
     @Override
 	public final String toString() {
-        final StringBuffer buffer = new StringBuffer();
-        buffer.append("TrainingPerWeek[");
-        buffer.append("intensity = " + _Intensity);
-        buffer.append(", staminaTrainingPart = " + _Stamina);
-        buffer.append(", typ = " + _TrainingType);
-        buffer.append(", week = " + _Week);
-        buffer.append(", year = " + _Year);
-        buffer.append(", hattrickWeek = " + _HTWeek);
-        buffer.append(", hattrickSeason = " + _HTSeason);
-        buffer.append(", trainDate = " + trainingDate);
-        buffer.append(", hrfId = " + _HRFID);
-        buffer.append("]");
-        return buffer.toString();
+        return "TrainingPerWeek[" +
+                "intensity = " + _Intensity +
+                ", staminaTrainingPart = " + _Stamina +
+                ", typ = " + _TrainingType +
+                ", week = " + _Week +
+                ", year = " + _Year +
+                ", hattrickWeek = " + _HTWeek +
+                ", hattrickSeason = " + _HTSeason +
+                ", trainDate = " + trainingDate +
+                ", hrfId = " + _HRFID +
+                "]";
     }
 	public int getPreviousHrfId() {
 		return _PreviousHRFID;
@@ -175,7 +162,7 @@ public class TrainingPerWeek  {
     /**
 	 *  Sets the date of the training at the start of this training week.
 	 *	
-	 * @param Timestamp with the training date.
+	 * @param date with the training date.
 	 */
 	public void setTrainingDate(Timestamp date) {
 		trainingDate = date;
@@ -193,7 +180,7 @@ public class TrainingPerWeek  {
 	/**
 	 * Sets the time of the next training. 
 	 * 
-	 * @param A Timestamp containing the time
+	 * @param t Timestamp containing the time
 	 */
 	public void setNextTrainingDate(Timestamp t) {
 		nextTrainingDate = t;
