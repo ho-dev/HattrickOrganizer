@@ -245,6 +245,7 @@ public class DBManager {
 		tables.put(PenaltyTakersTable.TABLENAME, new PenaltyTakersTable(adapter));
 		tables.put(MatchOrderTable.TABLENAME, new MatchOrderTable(adapter));
 		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(adapter));
+		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((adapter)));
 	}
 
 	AbstractTable getTable(String tableName) {
