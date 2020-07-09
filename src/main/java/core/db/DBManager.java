@@ -27,6 +27,7 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.model.series.Liga;
 import core.model.series.Paarung;
+import core.training.FuturePlayerTraining;
 import core.training.TrainingPerWeek;
 import core.util.HOLogger;
 import core.util.ExceptionUtils;
@@ -1832,4 +1833,8 @@ public class DBManager {
 		return buffer.toString();
 	}
 
+	public List<FuturePlayerTraining> getFuturePlayerTrainings(int playerId) {
+		return ((FuturePlayerTrainingTable) getTable(FuturePlayerTrainingTable.TABLENAME))
+				.getFuturePlayerTrainingPlan(playerId);
+	}
 }

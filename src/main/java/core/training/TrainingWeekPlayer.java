@@ -1,7 +1,10 @@
 package core.training;
 
+import core.model.player.Player;
+import core.util.HelperWrapper;
+
 public class TrainingWeekPlayer {
-	private String pName = "";
+	private Player player;
 	private int _PrimarySkillPositionMinutes = 0;
 	private int _PrimarySkillBonusPositionMinutes = 0;
 	private int _PrimarySkillSecondaryPositionMinutes = 0;
@@ -12,8 +15,9 @@ public class TrainingWeekPlayer {
 	private int _SecondarySkillOsmosisPositionMinutes = 0;
 	private int _TotalMinutesPlayed = 0;
 
-	public TrainingWeekPlayer()
+	public TrainingWeekPlayer(Player player)
 	{
+		this.player = player;
 	}
 	public void addPrimarySkillPositionMinutes(int minutes)
 	{
@@ -113,14 +117,37 @@ public class TrainingWeekPlayer {
 	}
 	public String Name()
 	{
-		return pName;
-	}
-	public void Name(String sName)
-	{
-		pName = sName;
+		return this.player.getFullName();
 	}
 	public boolean PlayerHasPlayed()
 	{
 		return _TotalMinutesPlayed > 0;
+	}
+
+
+
+	public FuturePlayerTraining.Priority getFutureTrainingPrio(WeeklyTrainingType wt, int hattrickSeason, int hattrickWeek) {
+
+		// get Prio from user plan
+		FuturePlayerTraining.Priority prio = player.getTrainingPriority(hattrickSeason, hattrickWeek);
+		if (prio != null) return prio;
+
+		// get Prio from best position
+		int position = HelperWrapper.instance().getPosition(player.getIdealPosition());
+
+		for ( var p: wt.getPrimaryTrainingSkillBonusPositions()){
+			if ( p == position) return FuturePlayerTraining.Priority.BONUS_TRAINING;
+		}
+		for ( var p: wt.getPrimaryTrainingSkillPositions()){
+			if ( p == position) return FuturePlayerTraining.Priority.FULL_TRAINING;
+		}
+		for ( var p: wt.getPrimaryTrainingSkillSecondaryTrainingPositions()){
+			if ( p == position) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
+		}
+		for ( var p: wt.getPrimaryTrainingSkillOsmosisTrainingPositions()){
+			if ( p == position) return FuturePlayerTraining.Priority.OSMOSIS_TRAINING;
+		}
+
+		return null; // No training
 	}
 }

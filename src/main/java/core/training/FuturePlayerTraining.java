@@ -5,8 +5,10 @@ import java.util.Map;
 
 public class FuturePlayerTraining {
     public enum Priority {
-        PRIMARY_PRIO(1),
-        SECONDARY_PRIO(2);
+        OSMOSIS_TRAINING(0),
+        PARTIAL_TRAINING(1),
+        FULL_TRAINING(2),
+        BONUS_TRAINING(3);
 
         private int value;
         private static HashMap<Integer,Priority> map = new HashMap<>();
@@ -68,5 +70,13 @@ public class FuturePlayerTraining {
     public void setToWeek(Integer toWeek) {
         this.toWeek = toWeek;
     }
+
+    public boolean isInWeek(int hattrickSeason, int hattrickWeek) {
+        if ( this.fromSeason < hattrickSeason || this.fromSeason == hattrickSeason && this.fromWeek <= hattrickWeek ){
+            return toSeason == null || toSeason > hattrickSeason || toSeason == hattrickSeason && toWeek >= hattrickWeek;
+        }
+        return false;
+    }
+
 
 }
