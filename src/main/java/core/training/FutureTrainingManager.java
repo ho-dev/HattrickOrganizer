@@ -49,7 +49,7 @@ public class FutureTrainingManager {
 	public FutureTrainingManager(Player p, List<TrainingPerWeek> trainings, int cotrainer,
                                  int trainerLvl, List<StaffMember> staff) {
 		this.player = p;
-		this.futureSkillups = new ArrayList<ISkillChange>();
+		this.futureSkillups = new ArrayList<>();
 		this.coTrainer = cotrainer;
 		this.trainer = trainerLvl;
 		this.futureTrainings = trainings;
@@ -57,7 +57,7 @@ public class FutureTrainingManager {
 		previewPlayer(UserParameter.instance().futureWeeks);
 	}
 
-	private static int skillIndex[] = {
+	private static int[] skillIndex = {
 			PlayerSkill.KEEPER,
 			PlayerSkill.PLAYMAKING,
 			PlayerSkill.PASSING,
@@ -70,7 +70,7 @@ public class FutureTrainingManager {
 
 	public FuturePlayer previewPlayer(int startWeekNumber,int finalWeekNumber) {
 
-		this.futureSkillups = new ArrayList<ISkillChange>();
+		this.futureSkillups = new ArrayList<>();
 				
 		for ( int i=0; i<8; i++){
 			// Sets the actual training levels
@@ -96,122 +96,59 @@ public class FutureTrainingManager {
 			weeksPassed++;
 			TrainingPerWeek tw = this.futureTrainings.get(index-1);
 			int trType = tw.getTrainingType();
-			TrainingWeekPlayer tp = new TrainingWeekPlayer();
-			tp.Name(player.getFullName());
+			TrainingWeekPlayer tp = new TrainingWeekPlayer(player);
+
 			WeeklyTrainingType wt = WeeklyTrainingType.instance(trType);
 			if (wt != null) {
-				boolean bFound = false;
-				for (int i = 0; i < wt.getPrimaryTrainingSkillPositions().length; i++)
-				{
-					if(wt.getPrimaryTrainingSkillPositions()[i] == position) {
-						tp.addPrimarySkillPositionMinutes(90);
-						trainingSpeed += 1.0;
-						bFound = true;
-						if (wt.getPrimaryTrainingSkillBonusPositions() != null) {
-							for (int j = 0; j < wt.getPrimaryTrainingSkillBonusPositions().length; j++) {
-								if (wt.getPrimaryTrainingSkillBonusPositions()[j] == position) {
-									trainingSpeed += wt.getPrimaryTrainingSkillBonus();
-									tp.addPrimarySkillBonusPositionMinutes(90);
-									break;
-								}
-							}
-						}
-						break;
-					}
-				}
-				if(!bFound) {
-					if (wt.getPrimaryTrainingSkillSecondaryTrainingPositions() != null) {
-						for (int i = 0; i < wt.getPrimaryTrainingSkillSecondaryTrainingPositions().length; i++)
-						{
-							if(wt.getPrimaryTrainingSkillSecondaryTrainingPositions()[i] == position) {
-								tp.addPrimarySkillSecondaryPositionMinutes(90);
-								trainingSpeed += 1.0 / wt.getPrimaryTrainingSkillSecondaryBaseLengthRate();
-								bFound = true;
-								break;
-							}
-						}
-					}
-				}
-				if (!bFound) {
-					if (wt.getPrimaryTrainingSkillOsmosisTrainingPositions() != null) {
-						for (int i = 0; i < wt.getPrimaryTrainingSkillOsmosisTrainingPositions().length; i++)
-						{
-							if(wt.getPrimaryTrainingSkillOsmosisTrainingPositions()[i] == position) {
-								tp.addPrimarySkillOsmosisPositionMinutes(90);
-								trainingSpeed += 1.0 / wt.getPrimaryTrainingSkillOsmosisBaseLengthRate();
-								bFound = true;
-								break;
-							}
-						}
-					}
-				}
-				bFound = false;
-				if (wt.getSecondaryTrainingSkillPositions() != null) {
-					for (int i = 0; i < wt.getSecondaryTrainingSkillPositions().length; i++)
-					{
-						if(wt.getSecondaryTrainingSkillPositions()[i] == position) {
-							tp.addSecondarySkillPrimaryMinutes(90);
-							bFound = true;
-							if (wt.getSecondaryTrainingSkillBonusPositions() != null) {
-								for (int j = 0; j < wt.getSecondaryTrainingSkillBonusPositions().length; j++) {
-									if (wt.getSecondaryTrainingSkillBonusPositions()[j] == position) {
-										tp.addSecondarySkillBonusMinutes(90);
-										break;
-									}
-								}
-							}
-							break;
-						}
-					}
-				}
-				if(!bFound) {
-					if (wt.getSecondaryTrainingSkillSecondaryTrainingPositions() != null) {
-						for (int i = 0; i < wt.getSecondaryTrainingSkillSecondaryTrainingPositions().length; i++)
-						{
-							if(wt.getSecondaryTrainingSkillSecondaryTrainingPositions()[i] == position) {
-								tp.addSecondarySkillSecondaryPositionMinutes(90);
-								bFound = true;
-								break;
-							}
-						}
-					}
-				}
-				if (!bFound) {
-					if (wt.getSecondaryTrainingSkillOsmosisTrainingPositions() != null) {
-						for (int i = 0; i < wt.getSecondaryTrainingSkillOsmosisTrainingPositions().length; i++)
-						{
-							if(wt.getSecondaryTrainingSkillOsmosisTrainingPositions()[i] == position) {
-								tp.addSecondarySkillOsmosisTrainingMinutes(90);
-								bFound = true;
-								break;
-							}
-						}
-					}
-				}
-				TrainingPoints trp = new TrainingPoints(wt.getPrimaryTraining(tp), wt.getSecondaryTraining(tp));
-				//System.out.println(wt.getName() + ", " + wt.getTrainingType() + ", Week: " + weeksPassed + ", " + player.getName() + ", Position: " + position + ", Primary: " + trp.getPrimary() + ", Secondary: " + trp.getSecondary());
-		//			HOLogger.instance().log(getClass(),position + " " + point + " " + tw.getTyp());
-				// Depending on the type of training, update the proper skill with the provided training points
-							
-				processTraining(wt, trp, tw);
-				if ( this.trainingSpeed < trainingSpeed) {
-					this.trainingSpeed = trainingSpeed;
-				}
+				var trainingPrio = tp.getFutureTrainingPrio(wt, tw.getHattrickSeason(), tw.getHattrickWeek());
 
-				for ( int i=0; i<8; i++){
-					int change = checkSkillChange(i);
-					if (change!=0) {
-						if ( UserParameter.instance().TRAINING_SHOW_SKILLDROPS == false && change < 0) continue;
-						PlayerSkillChange su = new PlayerSkillChange();
-						su.setHtSeason(tw.getHattrickSeason());
-						su.setHtWeek(tw.getHattrickWeek());
-						su.setType(skillIndex[i]);
-						su.setValue(finalSkill[i]);
-						su.setTrainType(ISkillChange.SKILLUP_FUTURE);
-						su.setDate(new Date(tw.getTrainingDate().getTime()));
-						su.setAge(player.getAgeWithDaysAsString(su.getDate()));
-						su.setChange(change);
-						futureSkillups.add(su);
+				if ( trainingPrio != null ) {
+					switch (trainingPrio) {
+						case FULL_TRAINING:
+							tp.addPrimarySkillPositionMinutes(90);
+							tp.addSecondarySkillBonusMinutes(90);
+							trainingSpeed = 1;
+							break;
+						case BONUS_TRAINING:
+							tp.addPrimarySkillPositionMinutes(90);
+							tp.addPrimarySkillBonusPositionMinutes(90);
+							trainingSpeed = 1 + wt.getPrimaryTrainingSkillBonus();
+							break;
+						case PARTIAL_TRAINING:
+							tp.addPrimarySkillSecondaryPositionMinutes(90);
+							tp.addSecondarySkillSecondaryPositionMinutes(90);
+							trainingSpeed = 1.0 / wt.getPrimaryTrainingSkillSecondaryBaseLengthRate();
+							break;
+						case OSMOSIS_TRAINING:
+							tp.addPrimarySkillOsmosisPositionMinutes(90);
+							tp.addSecondarySkillOsmosisTrainingMinutes(90);
+							trainingSpeed += 1.0 / wt.getPrimaryTrainingSkillOsmosisBaseLengthRate();
+							break;
+						default:
+							break;
+					}
+
+					TrainingPoints trp = new TrainingPoints(wt.getPrimaryTraining(tp), wt.getSecondaryTraining(tp));
+					processTraining(wt, trp, tw);
+					if (this.trainingSpeed < trainingSpeed) {
+						this.trainingSpeed = trainingSpeed;
+					}
+
+					for (int i = 0; i < 8; i++) {
+						int change = checkSkillChange(i);
+						if (change != 0) {
+							if (!UserParameter.instance().TRAINING_SHOW_SKILLDROPS && change < 0) continue;
+							PlayerSkillChange su = new PlayerSkillChange();
+							su.setHtSeason(tw.getHattrickSeason());
+							su.setHtWeek(tw.getHattrickWeek());
+							su.setType(skillIndex[i]);
+							su.setValue(finalSkill[i]);
+							su.setTrainType(ISkillChange.SKILLUP_FUTURE);
+							su.setDate(new Date(tw.getTrainingDate().getTime()));
+							su.setAge(player.getAgeWithDaysAsString(su.getDate()));
+							su.setChange(change);
+							futureSkillups.add(su);
+						}
 					}
 				}
 			}
@@ -245,7 +182,7 @@ public class FutureTrainingManager {
 	/**
 	* Get the array of the actual training sub
 	*
-	* @return
+	* @return current training subs
 	*/
 	public double[] getActual() {
 		return actual;
@@ -277,8 +214,7 @@ public class FutureTrainingManager {
 	* @return the sub with offset of a player
 	*/
 	private double getOffset(int skill) {
-		double offset = player.getSub4Skill(skill);
-		return offset;
+		return player.getSub4Skill(skill);
 	}
 
 	/**
@@ -403,31 +339,17 @@ public class FutureTrainingManager {
 	 * @return				the primary training type
 	 */
 	private int getPrimaryTrainingForSkill (int skillIndex) {
-		switch (skillIndex) {
-			case PlayerSkill.KEEPER :
-				return TrainingType.GOALKEEPING;
+		return switch (skillIndex) {
+			case PlayerSkill.KEEPER -> TrainingType.GOALKEEPING;
+			case PlayerSkill.PLAYMAKING -> TrainingType.PLAYMAKING;
+			case PlayerSkill.PASSING -> TrainingType.SHORT_PASSES;
+			case PlayerSkill.WINGER -> TrainingType.CROSSING_WINGER;
+			case PlayerSkill.DEFENDING -> TrainingType.DEFENDING;
+			case PlayerSkill.SCORING -> TrainingType.SCORING;
+			case PlayerSkill.SET_PIECES -> TrainingType.SET_PIECES;
+			default -> 0;
+		};
 
-			case PlayerSkill.PLAYMAKING :
-				return TrainingType.PLAYMAKING;
-
-			case PlayerSkill.PASSING :
-				return TrainingType.SHORT_PASSES;
-
-			case PlayerSkill.WINGER :
-				return TrainingType.CROSSING_WINGER;
-
-			case PlayerSkill.DEFENDING :
-				return TrainingType.DEFENDING;
-
-			case PlayerSkill.SCORING :
-				return TrainingType.SCORING;
-
-			case PlayerSkill.SET_PIECES :
-				return TrainingType.SET_PIECES;
-
-		}
-
-		return 0;
 	}
 
 	/**
@@ -438,64 +360,31 @@ public class FutureTrainingManager {
 	 * @return			the trained skill
 	 */
 	private int getSkillForTraining (int trType) {
-		switch (trType) {
-			case TrainingType.GOALKEEPING:
-				return PlayerSkill.KEEPER;
+		return switch (trType) {
+			case TrainingType.GOALKEEPING -> PlayerSkill.KEEPER;
+			case TrainingType.PLAYMAKING -> PlayerSkill.PLAYMAKING;
+			case TrainingType.SHORT_PASSES, TrainingType.THROUGH_PASSES -> PlayerSkill.PASSING;
+			case TrainingType.CROSSING_WINGER, TrainingType.WING_ATTACKS -> PlayerSkill.WINGER;
+			case TrainingType.DEFENDING, TrainingType.DEF_POSITIONS -> PlayerSkill.DEFENDING;
+			case TrainingType.SCORING, TrainingType.SHOOTING -> PlayerSkill.SCORING;
+			case TrainingType.SET_PIECES -> PlayerSkill.SET_PIECES;
+			default -> 0;
+		};
 
-			case TrainingType.PLAYMAKING:
-				return PlayerSkill.PLAYMAKING;
-
-			case TrainingType.SHORT_PASSES:
-			case TrainingType.THROUGH_PASSES:
-				return PlayerSkill.PASSING;
-
-			case TrainingType.CROSSING_WINGER:
-			case TrainingType.WING_ATTACKS:
-				return PlayerSkill.WINGER;
-
-			case TrainingType.DEFENDING:
-			case TrainingType.DEF_POSITIONS:
-				return PlayerSkill.DEFENDING;
-
-			case TrainingType.SCORING:
-			case TrainingType.SHOOTING:
-				return PlayerSkill.SCORING;
-
-			case TrainingType.SET_PIECES:
-				return PlayerSkill.SET_PIECES;
-
-		}
-
-		return 0;
 	}
 
 	private int getSkillPosition(int skillIndex) {
-		switch (skillIndex) {
-			case PlayerSkill.KEEPER :
-				return 0;
-
-			case PlayerSkill.PLAYMAKING :
-				return 1;
-
-			case PlayerSkill.PASSING :
-				return 2;
-
-			case PlayerSkill.WINGER :
-				return 3;
-
-			case PlayerSkill.DEFENDING :
-				return 4;
-
-			case PlayerSkill.SCORING :
-				return 5;
-
-			case PlayerSkill.SET_PIECES :
-				return 6;
-
-			case PlayerSkill.STAMINA :
-				return 7;
-		}
-		return 0;
+		return switch (skillIndex) {
+			case PlayerSkill.KEEPER -> 0;
+			case PlayerSkill.PLAYMAKING -> 1;
+			case PlayerSkill.PASSING -> 2;
+			case PlayerSkill.WINGER -> 3;
+			case PlayerSkill.DEFENDING -> 4;
+			case PlayerSkill.SCORING -> 5;
+			case PlayerSkill.SET_PIECES -> 6;
+			case PlayerSkill.STAMINA -> 7;
+			default -> 0;
+		};
 
 	}
 

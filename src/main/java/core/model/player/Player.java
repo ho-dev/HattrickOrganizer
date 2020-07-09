@@ -12,12 +12,7 @@ import core.model.match.Weather;
 import core.model.misc.TrainingEvent;
 import core.net.OnlineWorker;
 import core.rating.RatingPredictionManager;
-import core.training.SkillDrops;
-import core.training.TrainingManager;
-import core.training.TrainingPerPlayer;
-import core.training.TrainingPerWeek;
-import core.training.TrainingPoints;
-import core.training.WeeklyTrainingType;
+import core.training.*;
 import core.util.Helper;
 
 import java.sql.Timestamp;
@@ -30,8 +25,8 @@ public class Player {
     /**
      * Cache for player contribution (Hashtable<String, Float>)
      */
-    private static Hashtable<String, Object> PlayerAbsoluteContributionCache = new Hashtable<String, Object>();
-    private static Hashtable<String, Object> PlayerRelativeContributionCache = new Hashtable<String, Object>();
+    private static Hashtable<String, Object> PlayerAbsoluteContributionCache = new Hashtable<>();
+    private static Hashtable<String, Object> PlayerRelativeContributionCache = new Hashtable<>();
     // constants for lineup HT-ML export
     private static final String BREAK = "[br]";
     private static final String O_BRACKET = "[";
@@ -204,7 +199,7 @@ public class Player {
      */
     private int m_iTSI;
 
-    /** bonus in Prozent */
+    /* bonus in Prozent */
 
     //protected int       m_iBonus            =   0;
 
@@ -353,8 +348,7 @@ public class Player {
     /**
      * Erstellt einen Player aus den Properties einer HRF Datei
      */
-    public Player(java.util.Properties properties, Timestamp hrfdate)
-            throws Exception {
+    public Player(java.util.Properties properties, Timestamp hrfdate) {
         // Separate first, nick and last names are available. Utilize them?
 
         m_iSpielerID = Integer.parseInt(properties.getProperty("id", "0"));
@@ -584,8 +578,7 @@ public class Player {
         long diff = (now - hrftime) / (1000 * 60 * 60 * 24);
         int years = getAlter();
         int days = getAgeDays();
-        double retVal = years + (double) (days + diff) / 112;
-        return retVal;
+        return years + (double) (days + diff) / 112;
     }
 
 
@@ -604,8 +597,7 @@ public class Player {
         long diff = Math.abs((hrftime - time)) / (1000 * 60 * 60 * 24);
         int years = getAlter();
         int days = getAgeDays();
-        double retVal = years + (double) (days - diff) / 112;
-        return retVal;
+        return years + (double) (days - diff) / 112;
     }
 
     /**
@@ -636,8 +628,7 @@ public class Player {
             days += 112;
             years--;
         }
-        String retVal = years + " (" + days + ")";
-        return retVal;
+        return years + " (" + days + ")";
     }
 
     /**
@@ -671,7 +662,7 @@ public class Player {
             years++;
             birthday = true;
         }
-        StringBuffer ret = new StringBuffer();
+        StringBuilder ret = new StringBuilder();
         ret.append(years);
         ret.append(" ");
         ret.append(HOVerwaltung.instance().getLanguageString("ls.player.age.years"));
@@ -795,9 +786,8 @@ public class Player {
         // make sure to apply the same values as in prediction/*/playerStrength.dat
         //
         // We return the experience bonus in percent (0% = no bonus, 100% = doubled player strength...)
-        float bonus = (float) (0.0716 * Math.sqrt(experience));
 
-        return bonus;
+        return (float) (0.0716 * Math.sqrt(experience));
     }
 
     /**
@@ -918,7 +908,6 @@ public class Player {
     /**
      * Setter for m_bHomeGrown
      *
-     * @return Value of property m_bHomeGrown.
      */
     public void setHomeGrown(boolean hg) {
         m_bHomeGrown = hg;
@@ -971,6 +960,7 @@ public class Player {
         return calcPosValue(getIdealPosition(), mitForm, normalized, nb_decimal);
     }
 
+    private byte idealPos = IMatchRoleID.UNKNOWN;
     /**
      * Calculate Player Ideal Position
      */
@@ -979,22 +969,22 @@ public class Player {
         final byte flag = getUserPosFlag();
 
         if (flag == IMatchRoleID.UNKNOWN) {
-            final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
-            byte idealPos = IMatchRoleID.UNKNOWN;
-            float maxStk = -1.0f;
-            byte currPosition;
-            float contrib;
+            if ( idealPos == IMatchRoleID.UNKNOWN) {
+                final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
+                float maxStk = -1.0f;
+                byte currPosition;
+                float contrib;
 
-            for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
-                if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
-                currPosition = allPos[i].getPosition();
-                contrib = calcPosValue(currPosition, true, true);
-                if (contrib > maxStk) {
-                    maxStk = contrib;
-                    idealPos = currPosition;
+                for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
+                    if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
+                    currPosition = allPos[i].getPosition();
+                    contrib = calcPosValue(currPosition, true, true);
+                    if (contrib > maxStk) {
+                        maxStk = contrib;
+                        idealPos = currPosition;
+                    }
                 }
             }
-
             return idealPos;
         }
 
@@ -1007,7 +997,6 @@ public class Player {
     public byte[] getAlternativePositions() {
 
         List<PositionContribute> positions = new ArrayList<>();
-        byte[] alternativePositions;
         final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
         byte currPosition;
         PositionContribute currPositionContribute;
@@ -1019,19 +1008,16 @@ public class Player {
             positions.add(currPositionContribute);
         }
 
-        positions.sort(new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                float f1 = ((PositionContribute) o1).getContribute();
-                float f2 = ((PositionContribute) o2).getContribute();
-                return Float.compare(f2, f1);
-            }
+        positions.sort((Comparator) (o1, o2) -> {
+            float f1 = ((PositionContribute) o1).getContribute();
+            float f2 = ((PositionContribute) o2).getContribute();
+            return Float.compare(f2, f1);
         });
 
-        alternativePositions = new byte[positions.size()];
+        byte[] alternativePositions = new byte[positions.size()];
         float tolerance = 1f - core.model.UserParameter.instance().alternativePositionsTolerance;
 
-        int i = 0;
+        int i;
         for (i = 0; i < positions.size(); i++) {
             if (positions.get(i).getContribute() >= positions.get(0).getContribute() * tolerance) {
                 alternativePositions[i] = positions.get(i).getPosition();
@@ -1102,7 +1088,7 @@ public class Player {
         int tage = 0;
         final Timestamp datum = (Timestamp) getLastLevelUp(skill)[0];
         final Timestamp heute = new Timestamp(System.currentTimeMillis());
-        long diff = 0;
+        long diff;
 
         if (datum != null) {
             diff = heute.getTime() - datum.getTime();
@@ -1191,17 +1177,6 @@ public class Player {
     public int getTSI() {
         return m_iTSI;
     }
-
-    /**
-     * Returns the estimated value of this player (EPV)
-     *
-     * @return EPV
-     */
-//    public double getEPV() {
-//		EPVData data = HOVerwaltung.instance().getModel().getEPV().getEPVData(this);
-//		return HOVerwaltung.instance().getModel().getEPV().getPrice(data);
-//    }
-
 
     public void setFirstName(java.lang.String m_sName) {
         this.m_sFirstName = m_sName;
@@ -1400,7 +1375,7 @@ public class Player {
      * set whether or not that player can be selected by the assistant
      */
     public void setCanBeSelectedByAssistant(boolean flag) {
-        m_bCanBeSelectedByAssistant = Boolean.valueOf(flag);
+        m_bCanBeSelectedByAssistant = flag;
         DBManager.instance().saveSpielerSpielberechtigt(m_iSpielerID,  flag);
     }
 
@@ -1410,10 +1385,10 @@ public class Player {
     public boolean getCanBeSelectedByAssistant() {
         //Only check if not authorized to play: Reduced access!
         if (m_bCanBeSelectedByAssistant == null) {
-            m_bCanBeSelectedByAssistant = Boolean.valueOf(DBManager.instance().getSpielerSpielberechtigt(m_iSpielerID));
+            m_bCanBeSelectedByAssistant = DBManager.instance().getSpielerSpielberechtigt(m_iSpielerID);
         }
 
-        return m_bCanBeSelectedByAssistant.booleanValue();
+        return m_bCanBeSelectedByAssistant;
 
     }
 
@@ -1464,74 +1439,35 @@ public class Player {
      * Returns accurate subskill number. If you need subskill for UI
      * purpose it is better to use getSubskill4Pos()
      *
-     * @param skill
+     * @param skill skill number
      * @return subskill between 0.0-0.999
      */
     public float getSub4SkillAccurate(int skill) {
-        double value = 0;
+        double value = switch (skill) {
+            case PlayerSkill.KEEPER -> m_dSubTorwart;
+            case PlayerSkill.PLAYMAKING -> m_dSubSpielaufbau;
+            case PlayerSkill.DEFENDING -> m_dSubVerteidigung;
+            case PlayerSkill.PASSING -> m_dSubPasspiel;
+            case PlayerSkill.WINGER -> m_dSubFluegelspiel;
+            case PlayerSkill.SCORING -> m_dSubTorschuss;
+            case PlayerSkill.SET_PIECES -> m_dSubStandards;
+            case PlayerSkill.EXPERIENCE -> subExperience;
+            default -> 0;
+        };
 
-        switch (skill) {
-            case PlayerSkill.KEEPER:
-                value = m_dSubTorwart;
-                break;
-
-            case PlayerSkill.PLAYMAKING:
-                value = m_dSubSpielaufbau;
-                break;
-
-            case PlayerSkill.DEFENDING:
-                value = m_dSubVerteidigung;
-                break;
-
-            case PlayerSkill.PASSING:
-                value = m_dSubPasspiel;
-                break;
-
-            case PlayerSkill.WINGER:
-                value = m_dSubFluegelspiel;
-                break;
-
-            case PlayerSkill.SCORING:
-                value = m_dSubTorschuss;
-                break;
-
-            case PlayerSkill.SET_PIECES:
-                value = m_dSubStandards;
-                break;
-
-            case PlayerSkill.EXPERIENCE:
-                value = subExperience;
-                break;
-        }
         return (float) Math.min(0.999, value);
     }
 
     public void setSubskill4Pos(int skill, float value) {
         switch (skill) {
-            case PlayerSkill.KEEPER:
-                m_dSubTorwart = value;
-                break;
-            case PlayerSkill.PLAYMAKING:
-                m_dSubSpielaufbau = value;
-                break;
-            case PlayerSkill.DEFENDING:
-                m_dSubVerteidigung = value;
-                break;
-            case PlayerSkill.PASSING:
-                m_dSubPasspiel = value;
-                break;
-            case PlayerSkill.WINGER:
-                m_dSubFluegelspiel = value;
-                break;
-            case PlayerSkill.SCORING:
-                m_dSubTorschuss = value;
-                break;
-            case PlayerSkill.SET_PIECES:
-                m_dSubStandards = value;
-                break;
-            case PlayerSkill.EXPERIENCE:
-                subExperience = value;
-                break;
+            case PlayerSkill.KEEPER -> m_dSubTorwart = value;
+            case PlayerSkill.PLAYMAKING -> m_dSubSpielaufbau = value;
+            case PlayerSkill.DEFENDING -> m_dSubVerteidigung = value;
+            case PlayerSkill.PASSING -> m_dSubPasspiel = value;
+            case PlayerSkill.WINGER -> m_dSubFluegelspiel = value;
+            case PlayerSkill.SCORING -> m_dSubTorschuss = value;
+            case PlayerSkill.SET_PIECES -> m_dSubStandards = value;
+            case PlayerSkill.EXPERIENCE -> subExperience = value;
         }
     }
 
@@ -1842,46 +1778,21 @@ public class Player {
      * get Skillvalue 4 skill
      */
     public int getValue4Skill(int skill) {
-        switch (skill) {
-            case PlayerSkill.KEEPER:
-                return m_iTorwart;
-
-            case PlayerSkill.PLAYMAKING:
-                return m_iSpielaufbau;
-
-            case PlayerSkill.DEFENDING:
-                return m_iVerteidigung;
-
-            case PlayerSkill.PASSING:
-                return m_iPasspiel;
-
-            case PlayerSkill.WINGER:
-                return m_iFluegelspiel;
-
-            case PlayerSkill.SCORING:
-                return m_iTorschuss;
-
-            case PlayerSkill.SET_PIECES:
-                return m_iStandards;
-
-            case PlayerSkill.STAMINA:
-                return m_iKondition;
-
-            case PlayerSkill.EXPERIENCE:
-                return m_iErfahrung;
-
-            case PlayerSkill.FORM:
-                return m_iForm;
-
-            case PlayerSkill.LEADERSHIP:
-                return m_iFuehrung;
-
-            case PlayerSkill.LOYALTY:
-                return m_iLoyalty;
-
-            default:
-                return 0;
-        }
+        return switch (skill) {
+            case PlayerSkill.KEEPER -> m_iTorwart;
+            case PlayerSkill.PLAYMAKING -> m_iSpielaufbau;
+            case PlayerSkill.DEFENDING -> m_iVerteidigung;
+            case PlayerSkill.PASSING -> m_iPasspiel;
+            case PlayerSkill.WINGER -> m_iFluegelspiel;
+            case PlayerSkill.SCORING -> m_iTorschuss;
+            case PlayerSkill.SET_PIECES -> m_iStandards;
+            case PlayerSkill.STAMINA -> m_iKondition;
+            case PlayerSkill.EXPERIENCE -> m_iErfahrung;
+            case PlayerSkill.FORM -> m_iForm;
+            case PlayerSkill.LEADERSHIP -> m_iFuehrung;
+            case PlayerSkill.LOYALTY -> m_iLoyalty;
+            default -> 0;
+        };
     }
 
     /**
@@ -1892,52 +1803,18 @@ public class Player {
      */
     public void setValue4Skill(int skill, int value) {
         switch (skill) {
-            case PlayerSkill.KEEPER:
-                setTorwart(value);
-                break;
-
-            case PlayerSkill.PLAYMAKING:
-                setSpielaufbau(value);
-                break;
-
-            case PlayerSkill.PASSING:
-                setPasspiel(value);
-                break;
-
-            case PlayerSkill.WINGER:
-                setFluegelspiel(value);
-                break;
-
-            case PlayerSkill.DEFENDING:
-                setVerteidigung(value);
-                break;
-
-            case PlayerSkill.SCORING:
-                setTorschuss(value);
-                break;
-
-            case PlayerSkill.SET_PIECES:
-                setStandards(value);
-                break;
-
-            case PlayerSkill.STAMINA:
-                setKondition(value);
-                break;
-
-            case PlayerSkill.EXPERIENCE:
-                setErfahrung(value);
-                break;
-
-            case PlayerSkill.FORM:
-                setForm(value);
-                break;
-
-            case PlayerSkill.LEADERSHIP:
-                setFuehrung(value);
-                break;
-
-            case PlayerSkill.LOYALTY:
-                setLoyalty(value);
+            case PlayerSkill.KEEPER -> setTorwart(value);
+            case PlayerSkill.PLAYMAKING -> setSpielaufbau(value);
+            case PlayerSkill.PASSING -> setPasspiel(value);
+            case PlayerSkill.WINGER -> setFluegelspiel(value);
+            case PlayerSkill.DEFENDING -> setVerteidigung(value);
+            case PlayerSkill.SCORING -> setTorschuss(value);
+            case PlayerSkill.SET_PIECES -> setStandards(value);
+            case PlayerSkill.STAMINA -> setKondition(value);
+            case PlayerSkill.EXPERIENCE -> setErfahrung(value);
+            case PlayerSkill.FORM -> setForm(value);
+            case PlayerSkill.LEADERSHIP -> setFuehrung(value);
+            case PlayerSkill.LOYALTY -> setLoyalty(value);
         }
     }
 
@@ -2124,7 +2001,7 @@ public class Player {
             PlayerRelativeContributionCache.clear();
             PlayerAbsoluteContributionCache.put("lastChange", new Date());
         }
-        /**
+        /*
          * Create a key for the Hashtable cache
          * We cache every star rating to speed up calculation
          * (calling RPM.calcPlayerStrength() is quite expensive and
@@ -2150,9 +2027,9 @@ public class Player {
         if (PlayerAbsoluteContributionCache.containsKey(key)) {
             // System.out.println ("Using star rating from cache, key="+key+", tablesize="+starRatingCache.size());
             if (normalized) {
-                return ((Float) PlayerRelativeContributionCache.get(key)).floatValue();
+                return (Float) PlayerRelativeContributionCache.get(key);
             } else {
-                return ((Float) PlayerAbsoluteContributionCache.get(key)).floatValue();
+                return (Float) PlayerAbsoluteContributionCache.get(key);
             }
         }
 
@@ -2339,6 +2216,18 @@ public class Player {
         return OnlineWorker.getTrainingEvents(this.m_iSpielerID);
     }
 
+    private List<FuturePlayerTraining> futurePlayerTrainings;
+    public FuturePlayerTraining.Priority getTrainingPriority(int hattrickSeason, int hattrickWeek) {
+
+        if ( futurePlayerTrainings == null){
+            futurePlayerTrainings = DBManager.instance().getFuturePlayerTrainings(this.getSpielerID());
+        }
+        for ( var t : futurePlayerTrainings){
+            if ( t.isInWeek(hattrickSeason,hattrickWeek)) return t.getPriority();
+        }
+
+        return null;
+    }
 }
 
 class PositionContribute {

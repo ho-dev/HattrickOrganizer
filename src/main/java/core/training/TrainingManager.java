@@ -111,8 +111,7 @@ public class TrainingManager {
 	        	//List<Integer> matches = getOwnMatchesForTraining(trainingDate);
 	        	var matches = train.getMatches();
 	        	int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-	        	TrainingWeekPlayer tp = new TrainingWeekPlayer();
-	            tp.Name(inputPlayer.getFullName());
+	        	TrainingWeekPlayer tp = new TrainingWeekPlayer(inputPlayer);
 	            int minutes=0;
 	        	for (var match : matches) {
 	                //Get the MatchLineup by id
