@@ -546,7 +546,6 @@ public class OnlineWorker {
 				waitDialog.setValue(80);
 
 				matches = FilterUserSelection(matches);
-
 				DBManager.instance().storeMatchKurzInfos(
 						matches.toArray(new MatchKurzInfo[matches.size()]));
 

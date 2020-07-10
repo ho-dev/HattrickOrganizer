@@ -286,8 +286,6 @@ public class MatchKurzInfo implements Comparable<Object> {
 						HOLogger.instance().log(getClass(), ex);
 					}
 				}
-			} else {
-				this.matchDateTimestamp = null;
 			}
 		}
 		return this.matchDateTimestamp;
@@ -354,7 +352,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 		return m_mtMatchTyp;
 	}
 
-	public CupLevel geCupLevel() {
+	public CupLevel getCupLevel() {
 		return m_mtCupLevel;
 	}
 
@@ -362,7 +360,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 		this.m_mtCupLevel = _CupLevel;
 	}
 
-	public CupLevelIndex geCupLevelIndex() {
+	public CupLevelIndex getCupLevelIndex() {
 		return m_mtCupLevelIndex;
 	}
 
@@ -429,9 +427,6 @@ public class MatchKurzInfo implements Comparable<Object> {
 			Matchdetails matchdetails = getMatchdetails();
 			if ( matchdetails != null){
 				duration = matchdetails.getLastMinute();
-				// Update duration (should happen only once)
-				MatchKurzInfo[] matches = {this};
-				DBManager.instance().storeMatchKurzInfos(matches);
 			}
 		}
 		return duration;

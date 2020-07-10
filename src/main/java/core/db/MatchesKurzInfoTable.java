@@ -458,50 +458,50 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	 * Saves matches into storeMatchKurzInfo table
 	 */
 	void storeMatchKurzInfos(MatchKurzInfo[] matches) {
+		if ( matches == null)return;
 		String sql;
 		final String[] where = { "MatchID" };
 		final String[] werte = new String[1];
 
-		for (int i = 0; (matches != null) && (i < matches.length); i++) {
-			werte[0] = "" + matches[i].getMatchID();
+		for ( var match : matches){
+
+			werte[0] = "" + match.getMatchID();
 			delete(where, werte);
 
 			try {
 				sql = "INSERT INTO "
 						+ getTableName()
 						+ " (  MatchID, MatchContextId, TournamentTypeID, MatchTyp, CupLevel, CupLevelIndex, HeimName, HeimID, GastName, GastID, MatchDate, HeimTore, GastTore, Aufstellung, Status, ArenaId, RegionId, isDerby, isNeutral, Weather, WeatherForecast, Duration ) VALUES(";
-				sql += (matches[i].getMatchID()
+				sql += (match.getMatchID()
 						+ ","
-						+ matches[i].getMatchContextId()
+						+ match.getMatchContextId()
 						+ ","
-						+ matches[i].getTournamentTypeID()
+						+ match.getTournamentTypeID()
 						+ ","
-						+ matches[i].getMatchTyp().getId()
+						+ match.getMatchTyp().getId()
 						+ ","
-						+ matches[i].geCupLevel().getId()
+						+ match.getCupLevel().getId()
 						+ ","
-						+ matches[i].geCupLevelIndex().getId()
+						+ match.getCupLevelIndex().getId()
 						+ ", '"
-						+ DBManager.insertEscapeSequences(matches[i]
-								.getHeimName())
+						+ DBManager.insertEscapeSequences(match.getHeimName())
 						+ "', "
-						+ matches[i].getHeimID()
+						+ match.getHeimID()
 						+ ", '"
-						+ DBManager.insertEscapeSequences(matches[i]
-								.getGastName()) + "', ");
-				sql += (matches[i].getGastID() + ", '"
-						+ matches[i].getMatchDate() + "', "
-						+ matches[i].getHeimTore() + ", "
-						+ matches[i].getGastTore() + ", "
-						+ matches[i].isOrdersGiven() + ", "
-						+ matches[i].getMatchStatus() + ", "
-						+ matches[i].getArenaId() + ", "
-						+ matches[i].getRegionId() + ", "
-						+ matches[i].getIsDerby() + ", "
-						+ matches[i].getIsNeutral() + ", "
-						+ matches[i].getWeather().getId() + ", "
-						+ matches[i].getWeatherForecast().getId() + ", "
-						+ matches[i].getDuration()
+						+ DBManager.insertEscapeSequences(match.getGastName()) + "', ");
+				sql += (match.getGastID() + ", '"
+						+ match.getMatchDate() + "', "
+						+ match.getHeimTore() + ", "
+						+ match.getGastTore() + ", "
+						+ match.isOrdersGiven() + ", "
+						+ match.getMatchStatus() + ", "
+						+ match.getArenaId() + ", "
+						+ match.getRegionId() + ", "
+						+ match.getIsDerby() + ", "
+						+ match.getIsNeutral() + ", "
+						+ match.getWeather().getId() + ", "
+						+ match.getWeatherForecast().getId() + ", "
+						+ match.getDuration()
 						+ " )");
 				adapter.executeUpdate(sql);
 			} catch (Exception e) {
@@ -513,21 +513,30 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	}
 
 	void update(MatchKurzInfo match) {
-		StringBuilder sql = new StringBuilder();
-		sql.append("UPDATE ").append(getTableName()).append(" SET ");
-		sql.append("HeimName='");
-		sql.append(DBManager.insertEscapeSequences(match.getHeimName()));
-		sql.append("', HeimID=").append(match.getHeimID());
-		sql.append(", GastName='");
-		sql.append(DBManager.insertEscapeSequences(match.getGastName()));
-		sql.append("', GastID=").append(match.getGastID());
-		sql.append(", MatchDate='").append(match.getMatchDate());
-		sql.append("', HeimTore=").append(match.getHeimTore());
-		sql.append(", GastTore=").append(match.getGastTore());
-		sql.append(", Aufstellung=").append(match.isOrdersGiven());
-		sql.append(", Status=").append(match.getMatchStatus());
-		sql.append(" WHERE MatchID=").append(match.getMatchID());
-		sql.append(" AND MatchTyp=").append(match.getMatchTyp().getId());
+		StringBuilder sql = new StringBuilder()
+				.append("UPDATE ").append(getTableName()).append(" SET ")
+				.append("HeimName='").append(DBManager.insertEscapeSequences(match.getHeimName()))
+				.append("', HeimID=").append(match.getHeimID())
+				.append(", GastName='").append(DBManager.insertEscapeSequences(match.getGastName()))
+				.append("', GastID=").append(match.getGastID())
+				.append(", MatchDate='").append(match.getMatchDate())
+				.append("', HeimTore=").append(match.getHeimTore())
+				.append(", GastTore=").append(match.getGastTore())
+				.append(", Aufstellung=").append(match.isOrdersGiven())
+				.append(", Status=").append(match.getMatchStatus())
+				.append(", MatchContextId=").append(match.getMatchContextId())
+				.append(", TournamentTypeID=").append(match.getTournamentTypeID())
+				.append(", CupLevel=").append(match.getCupLevel().getId())
+				.append(", CupLevelIndex=").append(match.getCupLevelIndex().getId())
+				.append(", ArenaId=").append(match.getArenaId())
+				.append(", RegionId=").append(match.getRegionId())
+				.append(", isDerby=").append(match.getIsDerby())
+				.append(", isNeutral=").append(match.isNeutral())
+				.append(", Weather=").append(match.getWeather().getId())
+				.append(", WeatherForecast=").append(match.getWeatherForecast().getId())
+				.append(", Duration=").append(match.getDuration())
+				.append(" WHERE MatchID=").append(match.getMatchID())
+				.append(" AND MatchTyp=").append(match.getMatchTyp().getId());
 		adapter.executeUpdate(sql.toString());
 	}
 
