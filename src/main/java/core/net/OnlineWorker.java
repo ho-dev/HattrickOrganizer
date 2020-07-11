@@ -371,6 +371,7 @@ public class OnlineWorker {
 								"Error downloading match. Details is null: " + matchid);
 						return false;
 					}
+					info.setDuration(details.getLastMinute());
 					info.setGastTore(details.getGuestGoals());
 					info.setHeimTore(details.getHomeGoals());
 					info.setGastID(lineup.getGastId());
@@ -545,7 +546,6 @@ public class OnlineWorker {
 				waitDialog.setValue(80);
 
 				matches = FilterUserSelection(matches);
-
 				DBManager.instance().storeMatchKurzInfos(
 						matches.toArray(new MatchKurzInfo[matches.size()]));
 

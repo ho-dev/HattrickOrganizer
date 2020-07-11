@@ -284,8 +284,7 @@ public final class SpielePanel extends LazyImagePanel {
 
 	private void simulateMatch() {
 		if (matchesModel.getMatch() != null) {
-			Matchdetails details = DBManager.instance().getMatchDetails(
-					matchesModel.getMatch().getMatchID());
+			Matchdetails details = matchesModel.getDetails();
 			MatchPredictionManager manager = MatchPredictionManager.instance();
 			int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 			boolean homeMatch = false;

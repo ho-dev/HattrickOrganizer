@@ -57,7 +57,7 @@ public abstract class AbstractTable {
 		
 		final StringBuffer sql = new StringBuffer("DELETE FROM ");
 		sql.append(getTableName());
-		if (whereColumns != null && whereValues != null && whereColumns.length == whereValues.length) {
+
 		//Where bedingungen beachten
 		if ((whereValues != null) && (whereColumns != null) && (whereColumns.length == whereValues.length) && (whereValues.length > 0)) {
 			sql.append(" WHERE " + whereColumns[0] + " = " + whereValues[0]);
@@ -66,12 +66,9 @@ public abstract class AbstractTable {
 				sql.append(" AND " + whereColumns[i] + " = " + whereValues[i]);
 			}
 		}
-		}
-	return adapter.executeUpdate(sql.toString());
-	
+		return adapter.executeUpdate(sql.toString());
+	}
 
-	
-}
 	public void createTable() throws SQLException {
 		if(!tableExists(getTableName())){
 			ColumnDescriptor[] columns = getColumns();

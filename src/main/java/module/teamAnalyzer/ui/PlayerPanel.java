@@ -129,6 +129,8 @@ public class PlayerPanel extends JPanel {
 			containsPlayer = true;			
 
 			nameField.setText(getPlayerName(lineup.getName()));
+			setPlayerStatus(lineup.getStatus());
+
 			appearanceField.setText("" + lineup.getAppearance());
 
 			if (ModuleConfig.instance().getBoolean(SystemManager.ISSHOWPLAYERINFO)) {
@@ -169,6 +171,23 @@ public class PlayerPanel extends JPanel {
 			positionImage.setIcon(ImageUtilities.getImage4Position(0, (byte) 0, 0));
 			specialEventImage.setIcon(null);
 			tacticPanel.reload(new ArrayList<>());
+		}
+	}
+
+	protected void setPlayerStatus(int status) {
+		switch (status) {
+		case PlayerDataManager.INJURED:
+			nameField.setForeground(UserParameter.instance().FG_INJURED);
+			break;
+		case PlayerDataManager.SUSPENDED:
+			nameField.setForeground(UserParameter.instance().FG_RED_CARD);
+			break;
+		case PlayerDataManager.SOLD:
+			nameField.setForeground(UserParameter.instance().FG_TRANSFERMARKT);
+			break;
+		default:
+			nameField.setForeground(LABEL_FG);
+			break;
 		}
 	}
 

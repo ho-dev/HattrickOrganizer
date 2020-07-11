@@ -109,8 +109,7 @@ public class SpielePrintDialog extends JDialog {
 		if (info != null) {
 			// Selektiertes Spiel des Models holen und alle 3 Panel informieren
 			try {
-				final Matchdetails details = DBManager.instance()
-						.getMatchDetails(info.getMatchID());
+				final Matchdetails details = info.getMatchdetails();
 
 				if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					m_jpAufstellungHeimPanel.refresh(info.getMatchID(), info.getHeimID());

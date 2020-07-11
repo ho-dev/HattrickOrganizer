@@ -33,6 +33,7 @@ import javax.swing.JTabbedPane;
 public class OptionenDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
+	private FarbPanel m_jpFarben;
 	private FormelPanel m_jpFormeln;
 	private SonstigeOptionenPanel m_jpSonstigeOptionen;
 	private TrainingsOptionenPanel m_jpTrainingsOptionen;
@@ -94,6 +95,11 @@ public class OptionenDialog extends JDialog {
 		// Modules
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Module"), new JScrollPane(
 				new ModuleConfigPanel()));
+
+		// Colors
+		m_jpFarben = new FarbPanel();
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Farben"), new JScrollPane(
+				m_jpFarben));
 
 		// Formula
 		m_jpFormeln = new FormelPanel();

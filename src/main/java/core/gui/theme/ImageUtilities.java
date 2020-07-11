@@ -645,20 +645,12 @@ public class ImageUtilities {
 	}
 
     public static Icon getSvgIcon(String image) {
-        return getSvgIcon(image, 24, 24);
+        return (getSvgIcon(image, 24, 24));
     }
 
     public static Icon getSvgIcon(String key, int width, int height) {
-		final String index = key + "_" + width + "_" + height;
-		Icon icon = ThemeManager.getIcon(index);
-
-		if (icon == null) {
-			Object imagePath = ThemeManager.getIconPath(key);
-			icon = IconLoader.get().getIcon(Objects.requireNonNull(imagePath).toString(), width, height);
-			ThemeManager.instance().put(index, icon);
-		}
-
-		return icon;
+        Object imagePath = ThemeManager.getIconPath(key);
+        return IconLoader.get().getIcon(Objects.requireNonNull(imagePath).toString(), width, height);
     }
 
 	/**
