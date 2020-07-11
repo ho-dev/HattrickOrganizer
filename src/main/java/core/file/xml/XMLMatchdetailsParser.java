@@ -253,7 +253,7 @@ public class XMLMatchdetailsParser {
             					}
             				} else {
             					subjectplayername = String.valueOf(iSubjectPlayerID);
-            					broken.add(new Integer(matchEvents.size()));
+            					broken.add(matchEvents.size());
 								HOLogger.instance().log(XMLMatchdetailsParser.class, String.format("Match event ID %d occuring at minute %d",iMatchEventID, iMinute));
             				}
             			}
