@@ -178,7 +178,13 @@ public class TrainingRecapPanel extends LazyImagePanel {
 
         JTable table = new JTable(createTableModel());
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        //table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.setColumnSelectionAllowed(true);
+        ListSelectionModel columnSelectionModel = columnModel.getSelectionModel();
+        columnSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        ListSelectionModel rowSelectionModel = table.getSelectionModel();
+        rowSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         recapTable = new TrainingRecapTable(table, fixedColumns);
 
