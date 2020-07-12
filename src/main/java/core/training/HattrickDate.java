@@ -2,12 +2,17 @@ package core.training;
 
 /**
  * Hattrick Date Object
+ *
+ * The accuracy is weekly
  */
 public class HattrickDate {
     /** season */
     private int _Season;
 
-    /** Week */
+    /**
+     * Week
+     * Number of week. Is between 1 and 16.
+     */
     private int _Week;
 
     public HattrickDate(int hattrickSeason, int hattrickWeek) {
@@ -68,6 +73,12 @@ public class HattrickDate {
         return buffer.toString();
     }
 
+    /**
+     * Check if this date is between given dates
+     * @param from HattrickDate, must be less or equal to
+     * @param to HattrickDate, must be greater or equal from, if null an open end is assumed
+     * @return true if this date is between to and from
+     */
     public boolean isBetween(HattrickDate from, HattrickDate to) {
         if ( from.getSeason() < _Season || from.getSeason() == _Season && from.getWeek() <= _Week ){
             return to == null || to.getSeason() > _Season || to.getSeason() == _Season && to.getWeek() >= _Week;
@@ -75,10 +86,19 @@ public class HattrickDate {
         return false;
     }
 
+    /**
+     * Check if this date is after the given date
+     * @param date to compare with, if null an open end is assumed (=> return false)
+     * @return true, if this date is after given date
+     */
     public boolean isAfter(HattrickDate date) {
         return date != null && (this.getSeason() > date.getSeason() || this.getSeason()==date.getSeason() && this.getWeek() > date.getWeek());
     }
 
+    /**
+     * Add weeks to the date
+     * @param i Number of weeks to add. Could be a negative number
+     */
     public void addWeeks(int i) {
         this._Week += i;
         while ( this._Week > 16){

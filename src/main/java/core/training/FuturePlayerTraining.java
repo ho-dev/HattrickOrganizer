@@ -5,30 +5,16 @@ import java.util.Map;
 
 public class FuturePlayerTraining {
 
-    public HattrickDate getFrom() {
-        return from;
-    }
-
-    public void setFrom(HattrickDate from) {
-        this.from = from;
-    }
-
-    public HattrickDate getTo() {
-        return to;
-    }
-
-    public void setTo(HattrickDate to) {
-        this.to = to;
-    }
 
     public enum Priority {
-        OSMOSIS_TRAINING(0),
-        PARTIAL_TRAINING(1),
-        FULL_TRAINING(2),
-        BONUS_TRAINING(3);
+        NO_TRAINING(0),
+        OSMOSIS_TRAINING(1),
+        PARTIAL_TRAINING(2),
+        FULL_TRAINING(3),
+        BONUS_TRAINING(4);
 
         private int value;
-        private static HashMap<Integer,Priority> map = new HashMap<>();
+        private static HashMap<Integer, Priority> map = new HashMap<>();
 
         Priority(int value) {
             this.value = value;
@@ -49,14 +35,26 @@ public class FuturePlayerTraining {
         }
     }
 
+    /**
+     * Player Id
+     */
     private int playerId;
+    /**
+     * first week of training interval
+     */
     private HattrickDate from;
+    /**
+     * last week of training interval (null if training is planned forever)
+     */
     private HattrickDate to;
+    /**
+     * priority of the training (overrides automatic determination by best position)
+     */
     private Priority priority;
 
-    public FuturePlayerTraining(int playerId, FuturePlayerTraining.Priority prio, HattrickDate from, HattrickDate to){
-        this.playerId=playerId;
-        this.priority= prio;
+    public FuturePlayerTraining(int playerId, FuturePlayerTraining.Priority prio, HattrickDate from, HattrickDate to) {
+        this.playerId = playerId;
+        this.priority = prio;
         this.from = from;
         this.to = to;
     }
@@ -77,29 +75,51 @@ public class FuturePlayerTraining {
         this.playerId = playerId;
     }
 
+    public HattrickDate getFrom() {
+        return from;
+    }
+
+    public void setFrom(HattrickDate from) {
+        this.from = from;
+    }
+
+    public HattrickDate getTo() {
+        return to;
+    }
+
+    public void setTo(HattrickDate to) {
+        this.to = to;
+    }
+
+    /**
+     * check if week is during the planned training interval
+     * @param week week to test
+     * @return true if week is during current interval
+     */
     public boolean isInWeek(HattrickDate week) {
         return week.isBetween(this.from, this.to);
     }
 
     /**
      * Cut the given time interval from the current training interval
+     *
      * @param from HattrickDate
-     * @param to HattrickDate
-     * * @return false if remaining training interval is not empty
-     *          true if training is completely replaced by the given interval
+     * @param to   HattrickDate
+     *
+     * @return false if remaining training interval is not empty
+     *          true if training is completely replaced by the new interval
      */
     public boolean cut(HattrickDate from, HattrickDate to) {
-        if ( from.isAfter(this.to) || this.from.isAfter(to)){
+        if (from.isAfter(this.to) || this.from.isAfter(to)) {
             // this is outside the given interval
             return false;
         }
 
-        if ( this.from.isAfter(from)){
+        if (this.from.isAfter(from)) {
             this.from = to;
             this.from.addWeeks(1);
             return false;
-        }
-        else if ( from.isAfter(this.from)){
+        } else if (from.isAfter(this.from)) {
             this.to = from;
             this.to.addWeeks(-1);
             return false;
