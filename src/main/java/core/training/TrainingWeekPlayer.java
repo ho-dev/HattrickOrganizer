@@ -124,8 +124,6 @@ public class TrainingWeekPlayer {
 		return _TotalMinutesPlayed > 0;
 	}
 
-
-
 	public FuturePlayerTraining.Priority getFutureTrainingPrio(WeeklyTrainingType wt, HattrickDate hattrickWeek) {
 
 		// get Prio from user plan

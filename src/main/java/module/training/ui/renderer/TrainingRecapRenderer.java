@@ -88,19 +88,21 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
         	}
 
             if (playerId > 0) {
-            	// Check if player has individual training plan
-				var prio = player.getTrainingPriority(new HattrickDate((String)table.getColumnModel().getColumn(column).getHeaderValue()));
-				if ( prio != null ){
-					switch (prio){
-						case FULL_TRAINING:
-							this.setBackground(FULL_TRAINING_BG);
-							break;
-						case PARTIAL_TRAINING:
-							this.setBackground(PARTIAL_TRAINING_BG);
-							break;
-						case OSMOSIS_TRAINING:
-							this.setBackground(OSMOSIS_TRAINING_BG);
-							break;
+            	if (!isSelected) {
+					// Check if player has individual training plan
+					var prio = player.getTrainingPriority(new HattrickDate((String) table.getColumnModel().getColumn(column).getHeaderValue()));
+					if (prio != null) {
+						switch (prio) {
+							case FULL_TRAINING:
+								this.setBackground(FULL_TRAINING_BG);
+								break;
+							case PARTIAL_TRAINING:
+								this.setBackground(PARTIAL_TRAINING_BG);
+								break;
+							case OSMOSIS_TRAINING:
+								this.setBackground(OSMOSIS_TRAINING_BG);
+								break;
+						}
 					}
 				}
             	// Check if player has birthday
@@ -119,7 +121,9 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
             		} else {
             			tooltip = "<html>" + tooltip + "<br>" + ageText + "</html>";
             		}
-            		this.setBackground(BIRTHDAY_BG);
+            		if (!isSelected){
+						this.setBackground(BIRTHDAY_BG);
+					}
             	}
             }
 
