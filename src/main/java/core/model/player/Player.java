@@ -2240,6 +2240,8 @@ public class Player {
             }
         }
         futurePlayerTrainings.add(new FuturePlayerTraining(this.getSpielerID(), prio, fromWeek, toWeek));
+
+        DBManager.instance().storeFuturePlayerTrainings(this.getSpielerID(), futurePlayerTrainings);
     }
 }
 

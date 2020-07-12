@@ -1837,4 +1837,10 @@ public class DBManager {
 		return ((FuturePlayerTrainingTable) getTable(FuturePlayerTrainingTable.TABLENAME))
 				.getFuturePlayerTrainingPlan(playerId);
 	}
+
+	public void storeFuturePlayerTrainings(int spielerID, List<FuturePlayerTraining> futurePlayerTrainings) {
+		((FuturePlayerTrainingTable) getTable(FuturePlayerTrainingTable.TABLENAME))
+				.storeFuturePlayerTrainings(spielerID, futurePlayerTrainings);
+
+	}
 }

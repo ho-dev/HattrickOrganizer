@@ -25,7 +25,7 @@ public class FuturePlayerTrainingTable extends AbstractTable {
 
     @Override
     protected void initColumns() {
-        columns = new ColumnDescriptor[] {
+        columns = new ColumnDescriptor[]{
                 new ColumnDescriptor("playerId", Types.INTEGER, false),
                 new ColumnDescriptor("fromWeek", Types.INTEGER, false),
                 new ColumnDescriptor("fromSeason", Types.INTEGER, false),
@@ -36,10 +36,11 @@ public class FuturePlayerTrainingTable extends AbstractTable {
     }
 
     List<FuturePlayerTraining> getFuturePlayerTrainingPlan(int playerId) {
-        String query = "select * from " +
-                TABLENAME +
-                " where playerId=" + playerId;
-        ResultSet rs = adapter.executeQuery(query);
+        var query = new StringBuilder("select * from ")
+                .append(getTableName())
+                .append(" where playerId=")
+                .append(playerId);
+        ResultSet rs = adapter.executeQuery(query.toString());
         try {
             if (rs != null) {
                 var ret = new ArrayList<FuturePlayerTraining>();
@@ -55,38 +56,6 @@ public class FuturePlayerTrainingTable extends AbstractTable {
         return null;
     }
 
-    Map<Integer, FuturePlayerTraining> getFuturePlayerTraining(int season, int week){
-
-        String query = "select * from " +
-                TABLENAME +
-                " where (fromSeason < " + season +
-                " or " +
-                "fromSeason=" + season + " and fromWeek <= " + week + ")" +
-                " and ( toSeason is null or toSeason > " + season +
-                " or toSeason = " + season + " and toWeek >= " + week + ")";
-
-        ResultSet rs = adapter.executeQuery(query);
-
-        try {
-            if (rs != null) {
-
-                var ret = new Hashtable<Integer, FuturePlayerTraining>();
-                rs.beforeFirst();
-
-                while (rs.next()) {
-                    var train = createFuturePlayerTraining(rs);
-                    ret.put(train.getPlayerId(), train);
-                }
-
-                return ret;
-            }
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
-        }
-
-        return null;
-    }
-
     private FuturePlayerTraining createFuturePlayerTraining(ResultSet rs) throws SQLException {
         var playerid = rs.getInt("playerId");
         var fromSeason = rs.getInt("fromSeason");
@@ -94,12 +63,35 @@ public class FuturePlayerTrainingTable extends AbstractTable {
         var from = new HattrickDate(fromSeason, fromWeek);
         HattrickDate to = null;
         var toSeason = DbUtil.getNullableInt(rs, "toSeason");
-        if ( toSeason != null) {
+        if (toSeason != null) {
             var toWeek = DbUtil.getNullableInt(rs, "toWeek");
             to = new HattrickDate(toSeason, toWeek);
         }
         var prio = FuturePlayerTraining.Priority.valueOf(rs.getInt("prio"));
-        return  new FuturePlayerTraining(playerid, prio, from, to);
+        return new FuturePlayerTraining(playerid, prio, from, to);
     }
 
+    public void storeFuturePlayerTrainings(int spielerID, List<FuturePlayerTraining> futurePlayerTrainings) {
+        final String[] where = {"playerId"};
+        final String[] werte = {String.valueOf(spielerID)};
+        try {
+            delete(where, werte);
+
+            for (var t : futurePlayerTrainings) {
+                var sql = new StringBuilder("INSERT INTO ")
+                        .append(getTableName())
+                        .append(" (  playerId, prio, fromSeason, fromWeek, toSeason, toWeek ) VALUES(")
+                        .append(t.getPlayerId()).append(", ")
+                        .append(t.getPriority().getValue()).append(", ")
+                        .append(t.getFrom().getSeason()).append(", ")
+                        .append(t.getFrom().getWeek()).append(", ")
+                        .append(t.getTo() != null ? t.getTo().getSeason() : null).append(", ")
+                        .append(t.getTo() != null ? t.getTo().getWeek() : null)
+                        .append(")");
+                adapter.executeUpdate(sql.toString());
+            }
+        } catch (Exception e) {
+            HOLogger.instance().log(getClass(), e);
+        }
+    }
 }
