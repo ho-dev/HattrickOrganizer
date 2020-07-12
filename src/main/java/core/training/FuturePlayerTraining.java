@@ -115,13 +115,14 @@ public class FuturePlayerTraining {
             return false;
         }
 
-        if (this.from.isAfter(from)) {
-            this.from = to;
-            this.from.addWeeks(1);
-            return false;
-        } else if (from.isAfter(this.from)) {
+        if (from.isAfter(this.from)) {
             this.to = from;
             this.to.addWeeks(-1);
+            return false;
+        }
+        if ( to != null && this.to.isAfter(to)) {
+            this.from = to;
+            this.from.addWeeks(1);
             return false;
         }
         return true; // completely replaced

@@ -1,6 +1,3 @@
-/**
- *
- */
 package core.gui.theme.ho;
 
 import core.gui.theme.HOBooleanName;
@@ -476,7 +473,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TRAINING_BIRTHDAY_BG, new Color(255, 240, 175));
 		put(TRAINING_FULL_BG,"lightGreen");
 		put(TRAINING_PARTIAL_BG,"lightYellow");
-		put(TRAINING_OSMOSIS_BG,"lightRed");
+		put(TRAINING_OSMOSIS_BG, new Color(255,200,200));
 
 		// TS Forecast
 		put(TSFORECAST_ALT_COLOR, Color.BLUE);
@@ -498,7 +495,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 	@Override
 	public ImageIcon loadImageIcon(String path) {
-		ImageIcon image = null;
+		ImageIcon image;
 
 		image = (ImageIcon) cache.get(path);
 		if (image == null) {
@@ -508,18 +505,14 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 					try {
 						// This is a shameless hack to get resources to load from IntelliJ.
 						resource = new File("./src/main/resources" + path).toURI().toURL();
-
-						if (resource != null) {
-							image = new ImageIcon(resource);
-							cache.put(path, image);
-
-							return image;
-						}
-					} catch (MalformedURLException e) {
+						image = new ImageIcon(resource);
+						cache.put(path, image);
+						return image;
+					}
+					catch (MalformedURLException e) {
 						// At this point this is hopeless.
 						e.printStackTrace();
 					}
-
 					HOLogger.instance().log(Schema.class, path + " Not Found!!!");
 					return loadImageIcon("gui/bilder/Unknownflag.png");
 				}

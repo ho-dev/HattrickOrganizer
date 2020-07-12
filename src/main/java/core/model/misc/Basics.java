@@ -2,6 +2,7 @@ package core.model.misc;
 
 import core.db.user.User;
 import core.db.user.UserManager;
+import core.training.HattrickDate;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -51,7 +52,7 @@ public final class Basics  {
     /**
      * Creates a new Basics object.
      */
-    public Basics(Properties properties) throws Exception {
+    public Basics(Properties properties) {
         try {
             m_clDatum = setDatumByString(properties.getProperty("date"));
         } catch (Exception e) {
@@ -64,8 +65,8 @@ public final class Basics  {
             m_iTeamId = 0;
         }
 
-        m_sTeamName = properties.getProperty("teamname", "").toString();
-        m_sManager = properties.getProperty("owner", "").toString();
+        m_sTeamName = properties.getProperty("teamname", "");
+        m_sManager = properties.getProperty("owner", "");
 
         try {
         	if (properties.containsKey("activationdate") && (!properties.getProperty("activationdate").equals("0"))) {
@@ -116,7 +117,7 @@ public final class Basics  {
     /**
      * Creates a new Basics object.
      */
-    public Basics(ResultSet rs) throws Exception {
+    public Basics(ResultSet rs) {
         try {
             m_iTeamId = rs.getInt("TeamID");
             m_sTeamName = core.db.DBManager.deleteEscapeSequences(rs.getString("TeamName"));
@@ -297,6 +298,10 @@ public final class Basics  {
      */
     public int getSpieltag() {
         return m_iSpieltag;
+    }
+
+    public HattrickDate getHattrickWeek(){
+        return new HattrickDate(this.m_iSeason, this.m_iSpieltag);
     }
 
     /**

@@ -2221,6 +2221,16 @@ public class Player {
     public List<FuturePlayerTraining> getFuturePlayerTrainings(){
         if ( futurePlayerTrainings == null){
             futurePlayerTrainings = DBManager.instance().getFuturePlayerTrainings(this.getSpielerID());
+            if (futurePlayerTrainings.size()>0) {
+                var start = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
+                var remove = new ArrayList<FuturePlayerTraining>();
+                for (var t : futurePlayerTrainings) {
+                    if ( start.isAfter(t.getTo())){
+                        remove.add(t);
+                    }
+                }
+                futurePlayerTrainings.removeAll(remove);
+            }
         }
         return futurePlayerTrainings;
     }
@@ -2234,11 +2244,13 @@ public class Player {
     }
 
     public void setFutureTraining(FuturePlayerTraining.Priority prio, HattrickDate fromWeek, HattrickDate toWeek) {
+        var removeIntervals = new ArrayList<FuturePlayerTraining>();
         for ( var t : getFuturePlayerTrainings() ){
             if ( t.cut(fromWeek, toWeek)){
-                futurePlayerTrainings.remove(t);
+                removeIntervals.add(t);
             }
         }
+        futurePlayerTrainings.removeAll(removeIntervals);
         futurePlayerTrainings.add(new FuturePlayerTraining(this.getSpielerID(), prio, fromWeek, toWeek));
 
         DBManager.instance().storeFuturePlayerTrainings(this.getSpielerID(), futurePlayerTrainings);

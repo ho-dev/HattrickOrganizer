@@ -69,25 +69,17 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
     }
 
     private void addListeners() {
-        RefreshManager.instance().registerRefreshable(new IRefreshable() {
-
-            @Override
-            public void refresh() {
-                if (isShowing()) {
-                    reload();
-                }
+        RefreshManager.instance().registerRefreshable(() -> {
+            if (isShowing()) {
+                reload();
             }
         });
 
-        this.model.addModelChangeListener(new ModelChangeListener() {
-
-            @Override
-            public void modelChanged(ModelChange change) {
-                if (change == ModelChange.ACTIVE_PLAYER) {
-                    selectPlayerFromModel();
-                } else {
-                    reload();
-                }
+        this.model.addModelChangeListener(change -> {
+            if (change == ModelChange.ACTIVE_PLAYER) {
+                selectPlayerFromModel();
+            } else {
+                reload();
             }
         });
     }
@@ -98,7 +90,7 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
      * @return List of string
      */
     private Vector<String> getColumns() {
-        Vector<String> columns = new Vector<String>();
+        Vector<String> columns = new Vector<>();
 
         columns.add(HOVerwaltung.instance().getLanguageString("Spieler"));
         columns.add(HOVerwaltung.instance().getLanguageString("ls.player.age"));
@@ -106,19 +98,13 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
         columns.add("Speed");
         columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
 
-        int actualSeason = HOVerwaltung.instance().getModel().getBasics().getSeason();
-        int actualWeek = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
+        var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek(); //.getSpieltag();
 
         // We are in the middle where season has not been updated!
         try {
             if (HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate()
                     .after(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
-                actualWeek++;
-
-                if (actualWeek == 17) {
-                    actualWeek = 1;
-                    actualSeason++;
-                }
+                actualWeek.addWeeks(1);
             }
         } catch (Exception e1) {
             // Null when first time HO is launched
@@ -126,10 +112,11 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
 
         for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
             // calculate the week and season of the future training
-            int week = (actualWeek + i) - 1;
-            int season = actualSeason + (week / 16);
-            week = (week % 16) + 1;
-            columns.add(season + " " + week);
+            //int week = (actualWeek + i) - 1;
+            //int season = actualSeason + (week / 16);
+            //week = (week % 16) + 1;
+            columns.add(actualWeek.getSeason() + " " + actualWeek.getWeek());
+            actualWeek.addWeeks(1);
         }
 
         columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
@@ -241,7 +228,7 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
 
         Vector<String> columns = getColumns();
         List<Player> list = HOVerwaltung.instance().getModel().getCurrentPlayers();
-        List<Vector<String>> players = new ArrayList<Vector<String>>();
+        List<Vector<String>> players = new ArrayList<>();
 
         for (Player player : list) {
             FutureTrainingManager ftm = new FutureTrainingManager(player,
@@ -256,14 +243,14 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
             }
 */
 
-            HashMap<String, ISkillChange> maps = new HashMap<String, ISkillChange>();
+            HashMap<String, ISkillChange> maps = new HashMap<>();
             for ( var s: skillChanges){
             //for (Iterator<ISkillChange> iterator = su.iterator(); iterator.hasNext(); ) {
             //    ISkillChange skillup = iterator.next();
                 maps.put(s.getHtSeason() + " " + s.getHtWeek(), s);
             }
 
-            Vector<String> row = new Vector<String>();
+            Vector<String> row = new Vector<>();
 
             row.add(player.getFullName());
             row.add(player.getAlterWithAgeDaysAsString());
@@ -276,7 +263,7 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
             row.add(Integer.toString(player.getSpielerID()));
 
             for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
-                ISkillChange s = (ISkillChange) maps.get(columns.get(i + fixedColumns));
+                ISkillChange s = maps.get(columns.get(i + fixedColumns));
 
                 if (s == null) {
                     row.add("");
@@ -290,9 +277,9 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
         }
 
         // Sort the players
-        Collections.sort(players, new TrainingComparator(3, fixedColumns));
+        players.sort(new TrainingComparator(3, fixedColumns));
 
-        BaseTableModel tableModel = new BaseTableModel(new Vector<Vector<Object>>(), columns);
+        BaseTableModel tableModel = new BaseTableModel(new Vector<>(), columns);
         // and add them to the model
         for (Vector<String> row : players) {
             tableModel.addRow(row);
