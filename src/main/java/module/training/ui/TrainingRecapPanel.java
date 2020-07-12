@@ -207,6 +207,7 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
         trainingPrioPopUp.add(partialTrainingMenuItem);
         trainingPrioPopUp.add(osmosisTrainingMenuItem);
         trainingPrioPopUp.add(noTrainingMenuItem);
+        table.setComponentPopupMenu(trainingPrioPopUp);
 
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -246,18 +247,20 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
             FutureTrainingManager ftm = new FutureTrainingManager(player,
                     this.model.getFutureTrainings(), 0,
                     this.model.getTrainerLevel(), this.model.getAssistants());
-            List<ISkillChange> su = ftm.getFutureSkillups();
+            List<ISkillChange> skillChanges = ftm.getFutureSkillups();
 
+            /*
             // Skip player!
             if (su.size() == 0) {
                 continue;
             }
+*/
 
             HashMap<String, ISkillChange> maps = new HashMap<String, ISkillChange>();
-
-            for (Iterator<ISkillChange> iterator = su.iterator(); iterator.hasNext(); ) {
-                ISkillChange skillup = iterator.next();
-                maps.put(skillup.getHtSeason() + " " + skillup.getHtWeek(), skillup);
+            for ( var s: skillChanges){
+            //for (Iterator<ISkillChange> iterator = su.iterator(); iterator.hasNext(); ) {
+            //    ISkillChange skillup = iterator.next();
+                maps.put(s.getHtSeason() + " " + s.getHtWeek(), s);
             }
 
             Vector<String> row = new Vector<String>();
@@ -306,9 +309,9 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
         var cols = table.getSelectedColumns();
         if (cols == null) return;
 
-        var from = getWeek(getColumns().get(cols[0]));
+        var from = getWeek(getColumns().get(cols[0]+fixedColumns));
         HattrickDate to = null;
-        var toColNr = cols[cols.length - 1];
+        var toColNr = cols[cols.length - 1]+fixedColumns;
         if (toColNr < getColumns().size()) {
             to = getWeek(getColumns().get(toColNr));
         }
@@ -333,7 +336,6 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
     }
 
     private HattrickDate getWeek(String s) {
-        var nr = s.split(" ");
-        return new HattrickDate(Integer.parseInt(nr[0]), Integer.parseInt(nr[1]));
+        return new HattrickDate(s);
     }
 }

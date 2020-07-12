@@ -32,7 +32,7 @@ public class TrainingRecapTable extends JScrollPane {
     private JTable scroll;
 
     /**
-     * Fixed table rendere to add special background colors depending on training speed
+     * Fixed table renderer to add special background colors depending on training speed
      */
     private class FixedTrainingRecapRenderer extends DefaultTableCellRenderer {
         private static final long serialVersionUID = 7666144967819145974L;

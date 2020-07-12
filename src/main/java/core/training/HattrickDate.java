@@ -20,6 +20,17 @@ public class HattrickDate {
         this._Week = hattrickWeek;
     }
 
+    public HattrickDate(String s) {
+        var nr = s.split(" ");
+        if (nr.length == 2) {
+            this._Season = Integer.parseInt(nr[0]);
+            this._Week = Integer.parseInt(nr[1]);
+        } else {
+            this._Week = 0;
+            this._Season = 0;
+        }
+    }
+
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
