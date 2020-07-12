@@ -126,10 +126,10 @@ public class TrainingWeekPlayer {
 
 
 
-	public FuturePlayerTraining.Priority getFutureTrainingPrio(WeeklyTrainingType wt, int hattrickSeason, int hattrickWeek) {
+	public FuturePlayerTraining.Priority getFutureTrainingPrio(WeeklyTrainingType wt, HattrickDate hattrickWeek) {
 
 		// get Prio from user plan
-		FuturePlayerTraining.Priority prio = player.getTrainingPriority(hattrickSeason, hattrickWeek);
+		FuturePlayerTraining.Priority prio = player.getTrainingPriority(hattrickWeek);
 		if (prio != null) return prio;
 
 		// get Prio from best position

@@ -100,7 +100,7 @@ public class FutureTrainingManager {
 
 			WeeklyTrainingType wt = WeeklyTrainingType.instance(trType);
 			if (wt != null) {
-				var trainingPrio = tp.getFutureTrainingPrio(wt, tw.getHattrickSeason(), tw.getHattrickWeek());
+				var trainingPrio = tp.getFutureTrainingPrio(wt, new HattrickDate(tw.getHattrickSeason(), tw.getHattrickWeek()));
 
 				if ( trainingPrio != null ) {
 					switch (trainingPrio) {

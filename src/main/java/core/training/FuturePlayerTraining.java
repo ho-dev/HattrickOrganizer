@@ -4,6 +4,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FuturePlayerTraining {
+
+    public HattrickDate getFrom() {
+        return from;
+    }
+
+    public void setFrom(HattrickDate from) {
+        this.from = from;
+    }
+
+    public HattrickDate getTo() {
+        return to;
+    }
+
+    public void setTo(HattrickDate to) {
+        this.to = to;
+    }
+
     public enum Priority {
         OSMOSIS_TRAINING(0),
         PARTIAL_TRAINING(1),
@@ -33,11 +50,16 @@ public class FuturePlayerTraining {
     }
 
     private int playerId;
-    private int fromSeason;
-    private int fromWeek;
-    private Integer toSeason;
-    private Integer toWeek;
+    private HattrickDate from;
+    private HattrickDate to;
     private Priority priority;
+
+    public FuturePlayerTraining(int playerId, FuturePlayerTraining.Priority prio, HattrickDate from, HattrickDate to){
+        this.playerId=playerId;
+        this.priority= prio;
+        this.from = from;
+        this.to = to;
+    }
 
     public Priority getPriority() {
         return priority;
@@ -55,28 +77,34 @@ public class FuturePlayerTraining {
         this.playerId = playerId;
     }
 
-    public void setFromSeason(int fromSeason) {
-        this.fromSeason = fromSeason;
+    public boolean isInWeek(HattrickDate week) {
+        return week.isBetween(this.from, this.to);
     }
 
-    public void setFromWeek(int fromWeek) {
-        this.fromWeek = fromWeek;
-    }
-
-    public void setToSeason(Integer toSeason) {
-        this.toSeason = toSeason;
-    }
-
-    public void setToWeek(Integer toWeek) {
-        this.toWeek = toWeek;
-    }
-
-    public boolean isInWeek(int hattrickSeason, int hattrickWeek) {
-        if ( this.fromSeason < hattrickSeason || this.fromSeason == hattrickSeason && this.fromWeek <= hattrickWeek ){
-            return toSeason == null || toSeason > hattrickSeason || toSeason == hattrickSeason && toWeek >= hattrickWeek;
+    /**
+     * Cut the given time interval from the current training interval
+     * @param from HattrickDate
+     * @param to HattrickDate
+     * * @return false if remaining training interval is not empty
+     *          true if training is completely replaced by the given interval
+     */
+    public boolean cut(HattrickDate from, HattrickDate to) {
+        if ( from.isAfter(this.to) || this.from.isAfter(to)){
+            // this is outside the given interval
+            return false;
         }
-        return false;
-    }
 
+        if ( this.from.isAfter(from)){
+            this.from = to;
+            this.from.addWeeks(1);
+            return false;
+        }
+        else if ( from.isAfter(this.from)){
+            this.to = from;
+            this.to.addWeeks(-1);
+            return false;
+        }
+        return true; // completely replaced
+    }
 
 }

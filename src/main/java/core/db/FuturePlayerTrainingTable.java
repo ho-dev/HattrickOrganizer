@@ -2,6 +2,7 @@ package core.db;
 
 
 import core.training.FuturePlayerTraining;
+import core.training.HattrickDate;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -87,15 +88,18 @@ public class FuturePlayerTrainingTable extends AbstractTable {
     }
 
     private FuturePlayerTraining createFuturePlayerTraining(ResultSet rs) throws SQLException {
-        var train = new FuturePlayerTraining();
-        train.setPlayerId(rs.getInt("playerId"));
-        train.setFromSeason(rs.getInt("fromSeason"));
-        train.setFromWeek(rs.getInt("fromWeek"));
-        train.setToSeason(DbUtil.getNullableInt(rs, "toSeason"));
-        train.setToWeek(DbUtil.getNullableInt(rs, "toWeek"));
-        train.setPriority(FuturePlayerTraining.Priority.valueOf(rs.getInt("prio")));
-
-        return train;
+        var playerid = rs.getInt("playerId");
+        var fromSeason = rs.getInt("fromSeason");
+        var fromWeek = rs.getInt("fromWeek");
+        var from = new HattrickDate(fromSeason, fromWeek);
+        HattrickDate to = null;
+        var toSeason = DbUtil.getNullableInt(rs, "toSeason");
+        if ( toSeason != null) {
+            var toWeek = DbUtil.getNullableInt(rs, "toWeek");
+            to = new HattrickDate(toSeason, toWeek);
+        }
+        var prio = FuturePlayerTraining.Priority.valueOf(rs.getInt("prio"));
+        return  new FuturePlayerTraining(playerid, prio, from, to);
     }
 
 }
