@@ -474,7 +474,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TRAINING_BIRTHDAY_BG, new Color(255, 240, 175));
 		put(TRAINING_FULL_BG,"lightGreen");
 		put(TRAINING_PARTIAL_BG,"lightYellow");
-		put(TRAINING_OSMOSIS_BG, new Color(255,200,200));
+		put(TRAINING_OSMOSIS_BG, Color.LIGHT_GRAY);
 
 		// TS Forecast
 		put(TSFORECAST_ALT_COLOR, Color.BLUE);

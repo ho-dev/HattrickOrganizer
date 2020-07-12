@@ -294,7 +294,7 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
         var player = model.getActivePlayer();
         if (player == null) return;
         var cols = table.getSelectedColumns();
-        if (cols == null) return;
+        if (cols == null || cols.length == 0) return;
 
         var from = getWeek(getColumns().get(cols[0]+fixedColumns));
         HattrickDate to = null;
@@ -319,6 +319,7 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
         }
         if (isTrainingPrioItem) {
             player.setFutureTraining( prio, from, to);
+            reload();
         }
     }
 
