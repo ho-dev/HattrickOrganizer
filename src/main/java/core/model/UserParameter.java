@@ -2,7 +2,6 @@ package core.model;
 
 import core.db.DBManager;
 import core.util.GUIUtils;
-import core.util.HOLogger;
 import module.lineup.LineupAssistant;
 
 import java.awt.*;
@@ -258,20 +257,12 @@ public final class UserParameter extends Configuration {
     public int training_mainSplitPane = 300;
     public int training_lowerLeftSplitPane = 200;
     public int training_pastFutureTrainingsSplitPane = 200;
-    
+
     public int teamAnalyzer_SimButtonSplitPane = 667;
     public int teamAnalyzer_RatingPanelSplitPane = 143;
     public int teamAnalyzer_FilterPanelSplitPane = 237;
     public int teamAnalyzer_MainPanelSplitPane = 532;
     public int teamAnalyzer_BottomSplitPane = 500;
-    //Breite der BestPos-Spalte
-
-    /**
-     * @since 1.361
-     * @deprecated column width configurable
-     */
-    @Deprecated
-    public int bestPostWidth = 140;
 
     //Wecker vor der Deadliniezeit
     public int deadlineFrist = 300000;
@@ -566,7 +557,6 @@ public final class UserParameter extends Configuration {
         map.put("aufstellungsPanel_horizontalRightSplitPane", String.valueOf(aufstellungsPanel_horizontalRightSplitPane));
         map.put("aufstellungsPanel_verticalSplitPane", String.valueOf(aufstellungsPanel_verticalSplitPane));
         map.put("aufstellungsPanel_verticalSplitPaneLow", String.valueOf(aufstellungsPanel_verticalSplitPaneLow));
-        map.put("bestPostWidth", String.valueOf(bestPostWidth));
         map.put("deadlineFrist", String.valueOf(deadlineFrist));
         map.put("hoMainFrame_PositionX", String.valueOf(hoMainFrame_PositionX));
         map.put("hoMainFrame_PositionY", String.valueOf(hoMainFrame_PositionY));
@@ -796,7 +786,6 @@ public final class UserParameter extends Configuration {
         aufstellungsPanel_horizontalRightSplitPane = getIntValue(values, "aufstellungsPanel_horizontalRightSplitPane");
         aufstellungsPanel_verticalSplitPane = getIntValue(values, "aufstellungsPanel_verticalSplitPane");
         aufstellungsPanel_verticalSplitPaneLow = getIntValue(values, "aufstellungsPanel_verticalSplitPaneLow");
-        bestPostWidth = getIntValue(values, "bestPostWidth");
         deadlineFrist = getIntValue(values, "deadlineFrist");
         hoMainFrame_PositionX = getIntValue(values, "hoMainFrame_PositionX");
         hoMainFrame_PositionY = getIntValue(values, "hoMainFrame_PositionY");
