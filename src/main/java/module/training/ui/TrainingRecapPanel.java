@@ -10,12 +10,15 @@ import core.model.UserParameter;
 import core.model.player.ISkillChange;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.training.FuturePlayerTraining;
 import core.training.FutureTrainingManager;
+import core.training.HattrickDate;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.ModelChangeListener;
 import module.training.ui.model.TrainingModel;
 
-import java.awt.BorderLayout;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,10 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.*;
 
 /**
@@ -35,7 +35,7 @@ import javax.swing.table.*;
  *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
-public class TrainingRecapPanel extends LazyImagePanel {
+public class TrainingRecapPanel extends LazyImagePanel implements ActionListener {
 
     private static final long serialVersionUID = 7240288702397251461L;
     private static final int fixedColumns = 5;
@@ -171,12 +171,20 @@ public class TrainingRecapPanel extends LazyImagePanel {
         }
     }
 
+
+    private JMenuItem fullTrainingMenuItem;
+    private JMenuItem partialTrainingMenuItem;
+    private JMenuItem osmosisTrainingMenuItem;
+    private JMenuItem noTrainingMenuItem;
+    private JPopupMenu trainingPrioPopUp;
+    private JTable table;
+
     private void reAddTable() {
         if (recapTable != null) {
             remove(recapTable);
         }
 
-        JTable table = new JTable(createTableModel());
+        table = new JTable(createTableModel());
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         //table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         TableColumnModel columnModel = table.getColumnModel();
@@ -185,6 +193,32 @@ public class TrainingRecapPanel extends LazyImagePanel {
         columnSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         ListSelectionModel rowSelectionModel = table.getSelectionModel();
         rowSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        fullTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.training.prio.full"));
+        fullTrainingMenuItem.addActionListener(this);
+        partialTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.training.prio.partial"));
+        partialTrainingMenuItem.addActionListener(this);
+        osmosisTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.training.prio.osmosis"));
+        osmosisTrainingMenuItem.addActionListener(this);
+        noTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.training.prio.no"));
+        noTrainingMenuItem.addActionListener(this);
+        trainingPrioPopUp = new JPopupMenu();
+        trainingPrioPopUp.add(fullTrainingMenuItem);
+        trainingPrioPopUp.add(partialTrainingMenuItem);
+        trainingPrioPopUp.add(osmosisTrainingMenuItem);
+        trainingPrioPopUp.add(noTrainingMenuItem);
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (table.getSelectedRow() < 0)
+                    return;
+
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+                    trainingPrioPopUp.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
 
         recapTable = new TrainingRecapTable(table, fixedColumns);
 
@@ -262,5 +296,44 @@ public class TrainingRecapPanel extends LazyImagePanel {
         }
 
         return tableModel;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Training Priority Popup Menu Actions
+        var player = model.getActivePlayer();
+        if (player == null) return;
+        var cols = table.getSelectedColumns();
+        if (cols == null) return;
+
+        var from = getWeek(getColumns().get(cols[0]));
+        HattrickDate to = null;
+        var toColNr = cols[cols.length - 1];
+        if (toColNr < getColumns().size()) {
+            to = getWeek(getColumns().get(toColNr));
+        }
+
+        FuturePlayerTraining.Priority prio = null;
+        boolean isTrainingPrioItem = false;
+        if (e.getSource().equals(fullTrainingMenuItem)) {
+            prio = FuturePlayerTraining.Priority.FULL_TRAINING;
+            isTrainingPrioItem = true;
+        } else if (e.getSource().equals(partialTrainingMenuItem)) {
+            prio = FuturePlayerTraining.Priority.PARTIAL_TRAINING;
+            isTrainingPrioItem = true;
+        } else if (e.getSource().equals(osmosisTrainingMenuItem)) {
+            prio = FuturePlayerTraining.Priority.OSMOSIS_TRAINING;
+            isTrainingPrioItem = true;
+        } else if (e.getSource().equals(noTrainingMenuItem)) {
+            isTrainingPrioItem = true;
+        }
+        if (isTrainingPrioItem) {
+            player.setFutureTraining( prio, from, to);
+        }
+    }
+
+    private HattrickDate getWeek(String s) {
+        var nr = s.split(" ");
+        return new HattrickDate(Integer.parseInt(nr[0]), Integer.parseInt(nr[1]));
     }
 }

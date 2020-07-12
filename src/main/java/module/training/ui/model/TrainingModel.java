@@ -25,8 +25,6 @@ public class TrainingModel {
 	private OldTrainingManager skillupManager;
 	private FutureTrainingManager futureTrainingManager;
 	private final List<ModelChangeListener> listeners = new ArrayList<ModelChangeListener>();
-	
-
 
 	public Player getActivePlayer() {
 		return activePlayer;

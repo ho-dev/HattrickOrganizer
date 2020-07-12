@@ -113,8 +113,6 @@ public class TrainingWeekManager {
     
     /** Returns a list of TraingPerWeek, one for each week since the first hrf.
      * 
-     * @param overrides An input list of TrainingPerWeek that will override the info for the same
-     * 		week based on hrf content.
      * @return The list of TrainingPerWeek.
      */
     private static List<TrainingPerWeek> generateTrainingList() {
@@ -383,7 +381,6 @@ public class TrainingWeekManager {
      * @return Hattrick Date
      */
     private static HattrickDate calculateByDifference(int actualSeason, int actualWeek, int pastWeek) {
-        final HattrickDate date = new HattrickDate();
 
         // We need to subtract 1 week because we got the first hrf after download. This contains
         // the training info for the previous week.
@@ -394,8 +391,9 @@ public class TrainingWeekManager {
             actualSeason = actualSeason - a;
             actualWeek = actualWeek + (a * 16);
         }
-        date.setSeason(actualSeason + (actualWeek / 16));
-        date.setWeek((actualWeek % 16) + 1);
-        return date;
+        var s = actualSeason + (actualWeek / 16);
+        var w = (actualWeek % 16) + 1;
+
+        return new HattrickDate(s,w);
     }
 }

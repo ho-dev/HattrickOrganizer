@@ -10,6 +10,11 @@ public class HattrickDate {
     /** Week */
     private int _Week;
 
+    public HattrickDate(int hattrickSeason, int hattrickWeek) {
+        this._Season = hattrickSeason;
+        this._Week = hattrickWeek;
+    }
+
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
@@ -61,5 +66,28 @@ public class HattrickDate {
         buffer.append(", season = " + _Season);
         buffer.append("]");
         return buffer.toString();
+    }
+
+    public boolean isBetween(HattrickDate from, HattrickDate to) {
+        if ( from.getSeason() < _Season || from.getSeason() == _Season && from.getWeek() <= _Week ){
+            return to == null || to.getSeason() > _Season || to.getSeason() == _Season && to.getWeek() >= _Week;
+        }
+        return false;
+    }
+
+    public boolean isAfter(HattrickDate date) {
+        return date != null && (this.getSeason() > date.getSeason() || this.getSeason()==date.getSeason() && this.getWeek() > date.getWeek());
+    }
+
+    public void addWeeks(int i) {
+        this._Week += i;
+        while ( this._Week > 16){
+            this._Season++;
+            this._Week -= 16;
+        }
+        while ( this._Week < 1){
+            this._Season--;
+            this._Week += 16;
+        }
     }
 }

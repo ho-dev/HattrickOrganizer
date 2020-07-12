@@ -2217,16 +2217,29 @@ public class Player {
     }
 
     private List<FuturePlayerTraining> futurePlayerTrainings;
-    public FuturePlayerTraining.Priority getTrainingPriority(int hattrickSeason, int hattrickWeek) {
 
+    public List<FuturePlayerTraining> getFuturePlayerTrainings(){
         if ( futurePlayerTrainings == null){
             futurePlayerTrainings = DBManager.instance().getFuturePlayerTrainings(this.getSpielerID());
         }
-        for ( var t : futurePlayerTrainings){
-            if ( t.isInWeek(hattrickSeason,hattrickWeek)) return t.getPriority();
+        return futurePlayerTrainings;
+    }
+
+    public FuturePlayerTraining.Priority getTrainingPriority(HattrickDate hattrickWeek) {
+        for ( var t : getFuturePlayerTrainings()){
+            if ( t.isInWeek(hattrickWeek)) return t.getPriority();
         }
 
         return null;
+    }
+
+    public void setFutureTraining(FuturePlayerTraining.Priority prio, HattrickDate fromWeek, HattrickDate toWeek) {
+        for ( var t : getFuturePlayerTrainings() ){
+            if ( t.cut(fromWeek, toWeek)){
+                futurePlayerTrainings.remove(t);
+            }
+        }
+        futurePlayerTrainings.add(new FuturePlayerTraining(this.getSpielerID(), prio, fromWeek, toWeek));
     }
 }
 
