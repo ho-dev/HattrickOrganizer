@@ -7,6 +7,8 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.training.HattrickDate;
+import core.util.HOLogger;
 import module.training.ui.TrainingLegendPanel;
 
 import java.awt.Color;
@@ -31,7 +33,11 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 	private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
 	private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
 	private static final Color TABLE_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
-    private static final Color BIRTHDAY_BG = ThemeManager.getColor(HOColorName.TRAINING_BIRTHDAY_BG);
+	private static final Color BIRTHDAY_BG = ThemeManager.getColor(HOColorName.TRAINING_BIRTHDAY_BG);
+	private static final Color FULL_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_FULL_BG);
+	private static final Color PARTIAL_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_PARTIAL_BG);
+	private static final Color OSMOSIS_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_OSMOSIS_BG);
+
     //~ Methods ------------------------------------------------------------------------------------
 
     /* (non-Javadoc)
@@ -82,6 +88,21 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
         	}
 
             if (playerId > 0) {
+            	// Check if player has individual training plan
+				var prio = player.getTrainingPriority(new HattrickDate((String)table.getColumnModel().getColumn(column).getHeaderValue()));
+				if ( prio != null ){
+					switch (prio){
+						case FULL_TRAINING:
+							this.setBackground(FULL_TRAINING_BG);
+							break;
+						case PARTIAL_TRAINING:
+							this.setBackground(PARTIAL_TRAINING_BG);
+							break;
+						case OSMOSIS_TRAINING:
+							this.setBackground(OSMOSIS_TRAINING_BG);
+							break;
+					}
+				}
             	// Check if player has birthday
             	// every row is an additional week
             	int calcPlayerAgePrevCol = (int) (realPlayerAge + column*7d/112d);
@@ -109,6 +130,7 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
     		this.setText(text);
     		this.setIcon(icon);
         } catch (Exception e) {
+			HOLogger.instance().error(e.getClass(), e);
         }
         return this;
     }
