@@ -54,8 +54,9 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ### Misc
 
   - [FEAT] Remove jcalendar dependency.
-  - [FIX] ExperienceViewer removed #503 
+  - [FIX] ExperienceViewer removed #503
   - [FIX] Avoid potential infinite loop at startup. [#584]
+  - [FIX] Layout issue in multiple screen setup. [#618]
 
 ### League
 

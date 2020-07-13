@@ -55,8 +55,9 @@ Changelist HO! 4.0
 ### Misc
 
   - [FEAT] Remove jcalendar dependency.
-  - [FIX] ExperienceViewer removed #503 
+  - [FIX] ExperienceViewer removed #503
   - [FIX] Avoid potential infinite loop at startup. [#584]
+  - [FIX] Layout issue in multiple screen setup. [#618]
 
 ### League
 
