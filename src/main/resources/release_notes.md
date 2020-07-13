@@ -17,3 +17,4 @@ Changelist HO! 3.1
 ### Misc
 
 - [FIX] Avoid potential infinite loop at startup. [#584]
+- [FIX] Fix NoClassDefFoundError in Deb package. [#589]
