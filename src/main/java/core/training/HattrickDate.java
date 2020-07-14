@@ -121,4 +121,28 @@ public class HattrickDate {
             this._Week += 16;
         }
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof HattrickDate)) {
+            return false;
+        }
+
+        HattrickDate d = (HattrickDate) o;
+
+        return d.getSeason() == this.getSeason() &&
+                d.getWeek() == this.getWeek();
+    }
+
+    //Idea from effective Java : Item 9
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + getWeek();
+        result = 31 * result + getSeason();
+        return result;
+    }
 }
