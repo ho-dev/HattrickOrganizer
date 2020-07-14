@@ -7,6 +7,10 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 - [FIX] substitute player can now occupy more than one bench position #506
 
+## Team Analyser
+
+ - [FIX] Show consolation cup in team analyser drop-down
+
 ## Misc
 
 - [FIX] Avoid potential infinite loop at startup. [#584]
