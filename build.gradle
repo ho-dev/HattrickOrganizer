@@ -169,6 +169,9 @@ ospackage {
     from(jar.outputs.files) {
         into 'lib\\ho'
     }
+    from(configurations.runtime) {
+        into 'lib\\ho'
+    }
     from("${projectDir}\\src\\main\\resources\\sprache") {
         into 'lib\\ho\\sprache'
     }
@@ -181,11 +184,6 @@ ospackage {
 
     from("${projectDir}\\src\\main\\resources\\themes") {
         into 'lib\\ho\\themes'
-    }
-
-    from("${projectDir}\\src\\main\\resources") {
-        include "**/*.jar"
-        into "lib\\ho"
     }
 
     from("${projectDir}\\src\\main\\resources") {
