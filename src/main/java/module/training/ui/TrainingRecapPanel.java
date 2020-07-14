@@ -208,7 +208,7 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
             }
         });
 
-        recapTable = new TrainingRecapTable(table, fixedColumns);
+        recapTable = new TrainingRecapTable(this.model, table, fixedColumns);
 
         // Hide the last column
         JTable scrollTable = recapTable.getScrollTable();
@@ -236,17 +236,8 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
                     this.model.getTrainerLevel(), this.model.getAssistants());
             List<ISkillChange> skillChanges = ftm.getFutureSkillups();
 
-            /*
-            // Skip player!
-            if (su.size() == 0) {
-                continue;
-            }
-*/
-
             HashMap<String, ISkillChange> maps = new HashMap<>();
             for ( var s: skillChanges){
-            //for (Iterator<ISkillChange> iterator = su.iterator(); iterator.hasNext(); ) {
-            //    ISkillChange skillup = iterator.next();
                 maps.put(s.getHtSeason() + " " + s.getHtWeek(), s);
             }
 

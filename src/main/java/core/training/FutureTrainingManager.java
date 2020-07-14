@@ -100,7 +100,7 @@ public class FutureTrainingManager {
 
 			WeeklyTrainingType wt = WeeklyTrainingType.instance(trType);
 			if (wt != null) {
-				var trainingPrio = tp.getFutureTrainingPrio(wt, new HattrickDate(tw.getHattrickSeason(), tw.getHattrickWeek()));
+				var trainingPrio = tp.getFutureTrainingPrio(wt, tw.getHattrickDate());
 
 				if ( trainingPrio != null ) {
 					switch (trainingPrio) {
@@ -139,8 +139,8 @@ public class FutureTrainingManager {
 						if (change != 0) {
 							if (!UserParameter.instance().TRAINING_SHOW_SKILLDROPS && change < 0) continue;
 							PlayerSkillChange su = new PlayerSkillChange();
-							su.setHtSeason(tw.getHattrickSeason());
-							su.setHtWeek(tw.getHattrickWeek());
+							su.setHtSeason(tw.getHattrickDate().getSeason());
+							su.setHtWeek(tw.getHattrickDate().getWeek());
 							su.setType(skillIndex[i]);
 							su.setValue(finalSkill[i]);
 							su.setTrainType(ISkillChange.SKILLUP_FUTURE);

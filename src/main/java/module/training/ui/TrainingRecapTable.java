@@ -6,6 +6,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
+import module.training.ui.model.TrainingModel;
 import module.training.ui.renderer.TrainingRecapRenderer;
 
 import java.awt.Color;
@@ -30,6 +31,8 @@ public class TrainingRecapTable extends JScrollPane {
     private static final long serialVersionUID = 7666144967819145973L;
     private JTable fixed;
     private JTable scroll;
+
+    private TrainingModel trainingModel;
 
     /**
      * Fixed table renderer to add special background colors depending on training speed
@@ -92,9 +95,10 @@ public class TrainingRecapTable extends JScrollPane {
      * @param main         Table to show
      * @param fixedColumns number of fixed columns
      */
-    public TrainingRecapTable(JTable main, int fixedColumns) {
+    public TrainingRecapTable(TrainingModel model, JTable main, int fixedColumns) {
         super(main);
         scroll = main;
+        trainingModel = model;
 
         fixed = new JTable(scroll.getModel());
         fixed.setFocusable(false);
@@ -141,9 +145,9 @@ public class TrainingRecapTable extends JScrollPane {
         setRowHeaderView(fixed);
 
         fixed.setDefaultRenderer(Object.class, new FixedTrainingRecapRenderer());
-        scroll.setDefaultRenderer(Object.class, new TrainingRecapRenderer());
+        scroll.setDefaultRenderer(Object.class, new TrainingRecapRenderer(this.trainingModel));
         // Required for darklaf, see https://github.com/weisJ/darklaf/issues/164
-        scroll.setDefaultRenderer(String.class, new TrainingRecapRenderer());
+        scroll.setDefaultRenderer(String.class, new TrainingRecapRenderer(this.trainingModel));
 
         setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
     }

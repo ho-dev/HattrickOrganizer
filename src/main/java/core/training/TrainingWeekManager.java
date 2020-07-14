@@ -231,16 +231,11 @@ public class TrainingWeekManager {
    					newTpw.setHrfId(-1);
    					newTpw.setTrainingDate(old.getNextTrainingDate());
    					newTpw.setAssistants(old.getAssistants());
-   					
-   					int htWeek = old.getHattrickWeek() + 1;
-   					if (htWeek == 17) {
-   						newTpw.setHattrickWeek(1);
-   						newTpw.setHattrickSeason(1 + old.getHattrickSeason());
-   					} else {
-   						newTpw.setHattrickWeek(htWeek);
-   						newTpw.setHattrickSeason(old.getHattrickSeason());
-   					}
-   					
+
+   					var newWeek = old.getHattrickDate();
+   					newWeek.addWeeks(1);
+   					newTpw.setHattrickDate(newWeek);
+
    					old = newTpw;
    					output.add(newTpw);
    					// The previous date is already set at the start of loop.
@@ -361,8 +356,7 @@ public class TrainingWeekManager {
         for (int index = 0; index < trainNumber; index++) {
             train = input.get(index);
             htDate = calculateByDifference(actualSeason, actualWeek, trainNumber - index);
-            train.setHattrickSeason(htDate.getSeason());
-            train.setHattrickWeek(htDate.getWeek());
+            train.setHattrickDate(htDate);
             train.setHrfId(train.getHrfId());
             train.setPreviousHrfId(DBManager.instance().getPreviousHRF(train.getHrfId()));
          }

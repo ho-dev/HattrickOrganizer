@@ -68,13 +68,13 @@ public class FutureTrainingsTableModel extends AbstractTrainingsTableModel {
 		List<TrainingPerWeek> futureTrainings = DBManager.instance().getFutureTrainingsVector();
 
 		for (TrainingPerWeek training : this.trainings) {
-			Object[] aobj = (new Object[] {
-					training.getHattrickWeek() + "",
-					training.getHattrickSeason() + "",
+			Object[] aobj = (new Object[]{
+					training.getHattrickDate().getWeek() + "",
+					training.getHattrickDate().getSeason() + "",
 					new CBItem(TrainingType.toString(training.getTrainingType()),
 							training.getTrainingType()),
-					new Integer(training.getTrainingIntensity()),
-					new Integer(training.getStaminaPart()) });
+							training.getTrainingIntensity(),
+							training.getStaminaPart()});
 
 			// Add object to be visualized to the table model
 			p_V_data.add(aobj);

@@ -17,8 +17,6 @@ public class TrainingPerWeek  {
     //~ Instance fields ----------------------------------------------------------------------------
     private MatchKurzInfo[] matches;
 
-    private int _HTSeason = -1;
-    private int _HTWeek = -1;
     private int _HRFID;
     private int _Intensity = -1;
     private int _Stamina = -1;
@@ -29,7 +27,8 @@ public class TrainingPerWeek  {
     private Timestamp nextTrainingDate = null;
     private Timestamp trainingDate = null;
     private int assistants = -1;
-    
+    private HattrickDate hattrickDate;
+
     //~ Constructors -------------------------------------------------------------------------------
     public TrainingPerWeek() {
     	
@@ -46,21 +45,6 @@ public class TrainingPerWeek  {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public final void setHattrickSeason(int i) {
-        _HTSeason = i;
-    }
-
-    public final int getHattrickSeason() {
-        return _HTSeason;
-    }
-
-    public final void setHattrickWeek(int i) {
-        _HTWeek = i;
-    }
-
-    public final int getHattrickWeek() {
-        return _HTWeek;
-    }
 
     public final void setHrfId(int i) {
         _HRFID = i;
@@ -115,8 +99,8 @@ public class TrainingPerWeek  {
                 ", typ = " + _TrainingType +
                 ", week = " + _Week +
                 ", year = " + _Year +
-                ", hattrickWeek = " + _HTWeek +
-                ", hattrickSeason = " + _HTSeason +
+                ", hattrickWeek = " + this.hattrickDate.getWeek() +
+                ", hattrickSeason = " + this.hattrickDate.getSeason() +
                 ", trainDate = " + trainingDate +
                 ", hrfId = " + _HRFID +
                 "]";
@@ -137,8 +121,8 @@ public class TrainingPerWeek  {
 	public Timestamp getTrainingDate() {
 	    if ( trainingDate == null){
             HTWeek week = new HTWeek();
-            week.setSeason(this._HTSeason);
-            week.setWeek(this._HTWeek);
+            week.setSeason(this.hattrickDate.getSeason());
+            week.setWeek(this.hattrickDate.getWeek());
             Date d = week.toDate();
             long trainingOffset = getTrainingOffset();
             trainingDate = new Timestamp(new Date(d.getTime()+trainingOffset).getTime());
@@ -229,5 +213,13 @@ public class TrainingPerWeek  {
                 + " ORDER BY MatchDate DESC";
 
         return DBManager.instance().getMatchesKurzInfo(sdbquery);
+    }
+
+    public HattrickDate getHattrickDate() {
+        return hattrickDate;
+    }
+
+    public void setHattrickDate(HattrickDate hattrickDate) {
+        this.hattrickDate = hattrickDate;
     }
 }

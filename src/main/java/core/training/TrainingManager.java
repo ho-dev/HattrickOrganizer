@@ -149,7 +149,7 @@ public class TrainingManager {
 				}
 
 	    		if (TrainingManager.TRAININGDEBUG) {
-					HOLogger.instance().debug(getClass(), "Week " + train.getHattrickWeek()
+					HOLogger.instance().debug(getClass(), "Week " + train.getHattrickDate().getWeek()
 	            		+": Player " + inputPlayer.getFullName() + " (" + playerID + ")"
 	            		+" played total " + tp.getTotalMinutesPlayed() + " mins for training purposes and got "
 	            		+ wt.getPrimaryTraining(tp) + " primary training points and "

@@ -7,9 +7,14 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.training.FutureTrainingManager;
 import core.training.HattrickDate;
+import core.training.TrainingManager;
+import core.training.WeeklyTrainingType;
 import core.util.HOLogger;
 import module.training.ui.TrainingLegendPanel;
+import module.training.ui.TrainingRecapTable;
+import module.training.ui.model.TrainingModel;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -28,6 +33,7 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
     /**
 	 *
 	 */
+    private TrainingModel trainingModel;
 	private static final long serialVersionUID = -4088001127909689247L;
 
 	private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
@@ -38,7 +44,11 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 	private static final Color PARTIAL_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_PARTIAL_BG);
 	private static final Color OSMOSIS_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_OSMOSIS_BG);
 
-    //~ Methods ------------------------------------------------------------------------------------
+	public TrainingRecapRenderer(TrainingModel trainingModel) {
+		this.trainingModel = trainingModel;
+	}
+
+	//~ Methods ------------------------------------------------------------------------------------
 
     /* (non-Javadoc)
      * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
@@ -47,6 +57,9 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                    boolean hasFocus, int row, int column) {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+        var training = this.trainingModel.getFutureTrainings().get(column);
+		WeeklyTrainingType wt = WeeklyTrainingType.instance(training.getTrainingType());
 
         // Reset default values
         this.setForeground(TABLE_FG);
@@ -90,14 +103,16 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
             if (playerId > 0) {
             	if (!isSelected) {
 					// Check if player has individual training plan
-					var prio = player.getTrainingPriority(new HattrickDate((String) table.getColumnModel().getColumn(column).getHeaderValue()));
+					var prio = player.getTrainingPriority(training.getHattrickDate());
 					if (prio != null) {
 						switch (prio) {
 							case FULL_TRAINING:
 								this.setBackground(FULL_TRAINING_BG);
 								break;
 							case PARTIAL_TRAINING:
-								this.setBackground(PARTIAL_TRAINING_BG);
+								if (wt.getPrimaryTrainingSkillSecondaryTrainingPositions() != null) {
+									this.setBackground(PARTIAL_TRAINING_BG);
+								}
 								break;
 							case OSMOSIS_TRAINING:
 								this.setBackground(OSMOSIS_TRAINING_BG);
