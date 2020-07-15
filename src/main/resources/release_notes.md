@@ -50,7 +50,7 @@ Changelist HO! 4.0
 
 ### Training
 
-  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512 
+  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512
 
 ### Misc
 
@@ -58,6 +58,7 @@ Changelist HO! 4.0
   - [FIX] ExperienceViewer removed #503
   - [FIX] Avoid potential infinite loop at startup. [#584]
   - [FIX] Layout issue in multiple screen setup. [#618]
+  - [FEAT] Remove all printing functionality.
 
 ### League
 

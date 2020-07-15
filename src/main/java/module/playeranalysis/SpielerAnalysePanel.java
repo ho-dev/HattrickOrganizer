@@ -39,7 +39,6 @@ import javax.swing.ScrollPaneConstants;
  */
 public class SpielerAnalysePanel extends LazyImagePanel {
 	private static final long serialVersionUID = 7705544952029589545L;
-	private JButton printButton;
 	private JComboBox playerComboBox;
 	private JSplitPane horizontalSplitPane;
 	private SpielerMatchesTable m_jtSpielerMatchesTable;
@@ -76,14 +75,6 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 	}
 
 	private void addListeners() {
-		this.printButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				drucken();
-			}
-		});
-
 		this.playerComboBox.addItemListener(new ItemListener() {
 
 			@Override
@@ -137,59 +128,6 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 				else
 					runtime.exec("firefox " + url);
 			} catch (IOException e) {}
-		}
-	}
-
-	/**
-	 * Drucken der SpielerAnalyse
-	 */
-	private void drucken() {
-		try {
-			final JPanel panel = new JPanel(new BorderLayout());
-			panel.setBackground(Color.WHITE);
-
-			// Damit nur bestimmte Spalten gedruckt werden ist eine spezielle
-			// Tabelle notwendig.
-			// Das Scrollpane benötigt man, damit die Spaltenbeschriftung auch
-			// angezeigt wird.
-			final SpielerMatchesTable table = new SpielerMatchesTable(
-					((SpielerCBItem) playerComboBox.getSelectedItem()).getSpieler().getSpielerID(),
-					columnModelInstance);
-			JScrollPane scrollPane = new JScrollPane(table);
-			scrollPane.setPreferredSize(new Dimension(table.getPreferredSize().width + 10, table
-					.getPreferredSize().height + 70));
-			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-			scrollPane.getViewport().setBackground(Color.WHITE);
-
-			panel.add(scrollPane, BorderLayout.NORTH);
-
-			final SpielerPositionTable table2 = new SpielerPositionTable(
-					((SpielerCBItem) playerComboBox.getSelectedItem()).getSpieler().getSpielerID());
-			scrollPane = new JScrollPane(table2);
-			scrollPane.setPreferredSize(new Dimension(table2.getPreferredSize().width + 10, table2
-					.getPreferredSize().height + 70));
-			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-			scrollPane.getViewport().setBackground(Color.WHITE);
-
-			panel.add(scrollPane, BorderLayout.SOUTH);
-
-			final core.gui.print.PrintController printController = core.gui.print.PrintController
-					.getInstance();
-
-			final java.util.Calendar calendar = java.util.Calendar.getInstance();
-			calendar.setTimeInMillis(System.currentTimeMillis());
-
-			final String titel = HOVerwaltung.instance().getLanguageString("SpielerAnalyse")
-					+ " - " + HOVerwaltung.instance().getModel().getBasics().getTeamName() + " - "
-					+ java.text.DateFormat.getDateTimeInstance().format(calendar.getTime());
-			printController.add(new core.gui.print.ComponentPrintObject(printController.getPf(),
-					titel, panel, core.gui.print.ComponentPrintObject.NICHTSICHTBAR));
-
-			printController.print();
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), e);
 		}
 	}
 
@@ -256,12 +194,6 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		playerComboBox.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
 
 		panel.add(playerComboBox);
-
-		printButton = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
-		printButton.setSize(25, 25);
-		printButton.setLocation(220, 5);
-
-		panel.add(printButton);
 
 		panel.setPreferredSize(new Dimension(220, 35));
 
