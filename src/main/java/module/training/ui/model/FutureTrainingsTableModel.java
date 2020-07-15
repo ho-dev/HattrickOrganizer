@@ -81,5 +81,6 @@ public class FutureTrainingsTableModel extends AbstractTrainingsTableModel {
 		}
 
 		fireTableDataChanged();
+
 	}
 }
