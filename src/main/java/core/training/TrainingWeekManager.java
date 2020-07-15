@@ -233,9 +233,10 @@ public class TrainingWeekManager {
    					newTpw.setAssistants(old.getAssistants());
 
    					var newWeek = old.getHattrickDate();
-   					newWeek.addWeeks(1);
-   					newTpw.setHattrickDate(newWeek);
-
+   					if ( newWeek != null ) {
+						newWeek.addWeeks(1);
+						newTpw.setHattrickDate(newWeek);
+					}
    					old = newTpw;
    					output.add(newTpw);
    					// The previous date is already set at the start of loop.
