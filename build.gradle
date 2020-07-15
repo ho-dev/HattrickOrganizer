@@ -353,14 +353,9 @@ task resetDB {
     group 'tool'
     description 'copy the database from existing install into project'
 
-    if (! project.hasProperty('resetDir')) {
-        ext.resetDir = "D:\\Program Files\\HattrickOrganizerDev\\db"
-    }
-
-    doFirst {println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")}
-
     try {
 	    doLast {
+            println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")
             copy {
                 from resetDir
                 into "${projectDir}/db"
