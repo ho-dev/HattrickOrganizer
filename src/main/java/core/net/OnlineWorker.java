@@ -136,8 +136,6 @@ public class OnlineWorker {
 									.setAngezeigteAufstellung(new AufstellungCBItem(
 											getLangString("AktuelleAufstellung"), homodel
 													.getLineup()));
-							homf.getAufstellungsPanel().getAufstellungsPositionsPanel()
-									.exportOldLineup("Actual");
 						}
 						// Info
 						setInfoMsg(getLangString("HRFErfolg"));

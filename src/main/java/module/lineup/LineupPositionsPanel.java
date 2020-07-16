@@ -181,86 +181,15 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		lineup.checkAufgestellteSpieler();
 	}
 
-	public void exportOldLineup(String name) {
-		File dir = new File("Lineups/"
-				+ HOVerwaltung.instance().getModel().getBasics().getManager());
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
 
-		try {
-			File f = new File(dir, name + ".dat");
-			BufferedWriter bw = new BufferedWriter(new FileWriter(f));
-			bw.write("<lineup>");
-			bw.newLine();
-			saveDetail(bw, m_clKeeper);
-			saveDetail(bw, m_clRightBack);
-			saveDetail(bw, m_clRightCentralDefender);
-			saveDetail(bw, m_clMiddleCentralDefender);
-			saveDetail(bw, m_clLeftCentralDefender);
-			saveDetail(bw, m_clLeftBack);
-			saveDetail(bw, m_clRightWinger);
-			saveDetail(bw, m_clRightInnerMidfielder);
-			saveDetail(bw, m_clCentralInnerMidfielder);
-			saveDetail(bw, m_clLeftInnerMidfielder);
-			saveDetail(bw, m_clLeftWinger);
-			saveDetail(bw, m_clRightForward);
-			saveDetail(bw, m_clCentralForward);
-			saveDetail(bw, m_clLeftForward);
-			saveDetail(bw, m_clSubstKeeper1);
-			saveDetail(bw, m_clSubstKeeper2);
-			saveDetail(bw, m_clSubstCD1);
-			saveDetail(bw, m_clSubstCD2);
-			saveDetail(bw, m_clSubstWB1);
-			saveDetail(bw, m_clSubstWB2);
-			saveDetail(bw, m_clSubstIM1);
-			saveDetail(bw, m_clSubstIM2);
-			saveDetail(bw, m_clSubstFwd1);
-			saveDetail(bw, m_clSubstFwd2);
-			saveDetail(bw, m_clSubstWI1);
-			saveDetail(bw, m_clSubstWI2);
-			saveDetail(bw, m_clSubstXtr1);
-			saveDetail(bw, m_clSubstXtr2);
-			saveDetail(bw, m_clSetPieceTaker);
-			saveDetail(bw, m_clCaptain);
 
-			bw.write("<tacticType>" + m_clLineupPanel.getAufstellungsDetailPanel().getTaktik()
-					+ "</tacticType>");
-			bw.newLine();
-			bw.write("<matchType>" + m_clLineupPanel.getAufstellungsDetailPanel().getEinstellung()
-					+ "</matchType>");
-			bw.newLine();
-			bw.write("</lineup>");
-			bw.newLine();
-			bw.flush();
-			bw.close();
-		} catch (IOException e) {
-			HOLogger.instance().log(getClass(), e);
-		}
-	}
-
-	private void saveDetail(BufferedWriter bw, PlayerPositionPanel positionPanel)
-			throws IOException {
-		bw.write("<position>");
-		bw.newLine();
-		bw.write("<code>" + positionPanel.getPositionsID() + "</code>");
-		bw.newLine();
-		bw.write("<player>" + positionPanel.getPlayerId() + "</player>");
-		bw.newLine();
-		bw.write("<tactic>" + positionPanel.getTacticOrder() + "</tactic>");
-		bw.newLine();
-		bw.write("</position>");
-		bw.newLine();
-	}
 
 	@Override
 	public final void update() {
 		m_clLineupPanel.update();
 	}
 
-	/**
-	 * Erstellt die Komponenten
-	 */
+
 	private void initComponents() {
 		setLayout(new BorderLayout());
 
