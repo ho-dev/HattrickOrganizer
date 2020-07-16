@@ -128,8 +128,6 @@ public class HRFImport {
 			AufstellungsVergleichHistoryPanel.setAngezeigteAufstellung(new AufstellungCBItem(
 					getLangStr("AktuelleAufstellung"), hom.getLineup()));
 
-			HOMainFrame.instance().getAufstellungsPanel().getAufstellungsPositionsPanel()
-					.exportOldLineup("Actual");
 			// Refreshen aller Fenster
 			RefreshManager.instance().doReInit();
 		}
