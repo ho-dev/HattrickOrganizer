@@ -14,6 +14,7 @@ import core.net.OnlineWorker;
 import core.rating.RatingPredictionManager;
 import core.training.*;
 import core.util.Helper;
+import core.util.HelperWrapper;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -2235,12 +2236,28 @@ public class Player {
         return futurePlayerTrainings;
     }
 
-    public FuturePlayerTraining.Priority getTrainingPriority(HattrickDate hattrickWeek) {
+    public FuturePlayerTraining.Priority getTrainingPriority(WeeklyTrainingType wt, HattrickDate hattrickWeek) {
         for ( var t : getFuturePlayerTrainings()){
             if ( t.isInWeek(hattrickWeek)) return t.getPriority();
         }
 
-        return null;
+        // get Prio from best position
+        int position = HelperWrapper.instance().getPosition(this.getIdealPosition());
+
+        for ( var p: wt.getPrimaryTrainingSkillBonusPositions()){
+            if ( p == position) return FuturePlayerTraining.Priority.BONUS_TRAINING;
+        }
+        for ( var p: wt.getPrimaryTrainingSkillPositions()){
+            if ( p == position) return FuturePlayerTraining.Priority.FULL_TRAINING;
+        }
+        for ( var p: wt.getPrimaryTrainingSkillSecondaryTrainingPositions()){
+            if ( p == position) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
+        }
+        for ( var p: wt.getPrimaryTrainingSkillOsmosisTrainingPositions()){
+            if ( p == position) return FuturePlayerTraining.Priority.OSMOSIS_TRAINING;
+        }
+
+        return null; // No training
     }
 
     public void setFutureTraining(FuturePlayerTraining.Priority prio, HattrickDate fromWeek, HattrickDate toWeek) {

@@ -125,27 +125,6 @@ public class TrainingWeekPlayer {
 	}
 
 	public FuturePlayerTraining.Priority getFutureTrainingPrio(WeeklyTrainingType wt, HattrickDate hattrickWeek) {
-
-		// get Prio from user plan
-		FuturePlayerTraining.Priority prio = player.getTrainingPriority(hattrickWeek);
-		if (prio != null) return prio;
-
-		// get Prio from best position
-		int position = HelperWrapper.instance().getPosition(player.getIdealPosition());
-
-		for ( var p: wt.getPrimaryTrainingSkillBonusPositions()){
-			if ( p == position) return FuturePlayerTraining.Priority.BONUS_TRAINING;
-		}
-		for ( var p: wt.getPrimaryTrainingSkillPositions()){
-			if ( p == position) return FuturePlayerTraining.Priority.FULL_TRAINING;
-		}
-		for ( var p: wt.getPrimaryTrainingSkillSecondaryTrainingPositions()){
-			if ( p == position) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
-		}
-		for ( var p: wt.getPrimaryTrainingSkillOsmosisTrainingPositions()){
-			if ( p == position) return FuturePlayerTraining.Priority.OSMOSIS_TRAINING;
-		}
-
-		return null; // No training
+		return  player.getTrainingPriority(wt, hattrickWeek);
 	}
 }
