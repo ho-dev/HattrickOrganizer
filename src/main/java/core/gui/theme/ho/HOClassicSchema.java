@@ -97,7 +97,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(SHOW_MATCH, "gui/bilder/ShowMatch.gif");
 		put(DOWNLOAD_MATCH, "gui/bilder/DownloadMatch.gif");
 
-		put(PRINTER, "gui/bilder/Drucken.png");
 		put(DISK, "gui/bilder/disk.png");
 		put(LOCKED, "gui/bilder/Locked.gif");
 		put(EMPTY, "gui/bilder/empty.gif");

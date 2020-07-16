@@ -71,7 +71,6 @@ public class AlleSpielerStatistikPanel extends LazyImagePanel {
 	private ImageCheckbox m_jchVerteidigung;
 	private ImageCheckbox m_jchTSI;
 	private ImageCheckbox m_jchWages;
-	private JButton m_jbPrint;
 	private JButton m_jbUbernehmen;
 	private JCheckBox m_jchInscription;
 	private JCheckBox m_jchHelpLines;
@@ -120,8 +119,6 @@ public class AlleSpielerStatistikPanel extends LazyImagePanel {
 				HOVerwaltung hov = HOVerwaltung.instance();
 				if (e.getSource() == m_jbUbernehmen) {
 					initStatistik();
-				} else if (e.getSource() == m_jbPrint) {
-					m_clStatistikPanel.doPrint(hov.getLanguageString("Verein"));
 				} else if (e.getSource() == m_jchHelpLines) {
 					m_clStatistikPanel.setHilfslinien(m_jchHelpLines.isSelected());
 					gup.statistikAlleHilfslinien = m_jchHelpLines.isSelected();
@@ -182,7 +179,6 @@ public class AlleSpielerStatistikPanel extends LazyImagePanel {
 			}
 		};
 
-		m_jbPrint.addActionListener(actionListener);
 		m_jbUbernehmen.addActionListener(actionListener);
 		m_jchHelpLines.addActionListener(actionListener);
 		m_jchInscription.addActionListener(actionListener);
@@ -225,17 +221,6 @@ public class AlleSpielerStatistikPanel extends LazyImagePanel {
 		GridBagLayout layout2 = new GridBagLayout();
 		panel2 = new ImagePanel();
 		panel2.setLayout(layout2);
-
-		constraints2.gridx = 0;
-		constraints2.gridy = 0;
-		constraints2.gridwidth = 2;
-		constraints2.fill = GridBagConstraints.NONE;
-		constraints2.anchor = GridBagConstraints.WEST;
-		m_jbPrint = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
-		m_jbPrint.setToolTipText(hov.getLanguageString("tt_Statistik_drucken"));
-		m_jbPrint.setPreferredSize(new Dimension(25, 25));
-		layout2.setConstraints(m_jbPrint, constraints2);
-		panel2.add(m_jbPrint);
 
 		label = new JLabel(hov.getLanguageString("Wochen"));
 		constraints2.anchor = GridBagConstraints.WEST;
