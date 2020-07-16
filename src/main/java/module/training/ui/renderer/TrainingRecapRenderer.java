@@ -102,15 +102,15 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 
             if (playerId > 0) {
             	if (!isSelected) {
-					// Check if player has individual training plan
-					var prio = player.getTrainingPriority(training.getHattrickDate());
+            		// Check player's training priority
+					var prio = player.getTrainingPriority(wt, training.getHattrickDate());
 					if (prio != null) {
 						switch (prio) {
 							case FULL_TRAINING:
 								this.setBackground(FULL_TRAINING_BG);
 								break;
 							case PARTIAL_TRAINING:
-								if (wt.getPrimaryTrainingSkillSecondaryTrainingPositions() != null) {
+								if (wt.getPrimaryTrainingSkillSecondaryTrainingPositions().length > 0) {
 									this.setBackground(PARTIAL_TRAINING_BG);
 								}
 								break;

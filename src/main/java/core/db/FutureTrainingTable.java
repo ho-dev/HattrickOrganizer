@@ -74,18 +74,13 @@ public final class FutureTrainingTable extends AbstractTable {
 		}
 
 		for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
-			
-			// calculate the week and season of the future training
-			var week = actualDate;
-			week.addWeeks(i);
-	
 			// load the training from DB
 			TrainingPerWeek train = null;
 
 			for ( var t : vTrainings){
 			//for (Iterator<TrainingPerWeek> iter = vTrainings.iterator(); iter.hasNext();) {
 			//	TrainingPerWeek tmp = (TrainingPerWeek) iter.next();
-				if (t.getHattrickDate().equals(week)) {
+				if (t.getHattrickDate().equals(actualDate)) {
 					train = t;
 					break;
 				}
@@ -94,13 +89,14 @@ public final class FutureTrainingTable extends AbstractTable {
 			// if not found create it and saves it
 			if (train == null) {
 				train = new TrainingPerWeek();
-				train.setHattrickDate(week);
+				train.setHattrickDate(actualDate);
 				train.setTrainingIntensity(-1);
 				train.setStaminaPart(-1);
 				train.setTrainingType(-1);
 				saveFutureTraining(train);				
 			}
 			futures.add(train);
+			actualDate.addWeeks(1);
 		}		
 
 		return futures;
