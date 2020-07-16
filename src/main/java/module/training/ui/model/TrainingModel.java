@@ -7,6 +7,8 @@ import core.model.StaffType;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.TrainingPerWeek;
+import core.training.TrainingWeekManager;
+import core.training.WeeklyTrainingType;
 import module.training.OldTrainingManager;
 
 import java.util.ArrayList;
@@ -185,4 +187,13 @@ public class TrainingModel {
 		}
 	}
 
+	public boolean isPartialTrainingAvailable(int[] weeks) {
+		for ( var w : weeks){
+			var t = getFutureTrainings().get(w);
+			if (WeeklyTrainingType.instance(t.getTrainingType()).getPrimaryTrainingSkillSecondaryTrainingPositions().length > 0 ) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

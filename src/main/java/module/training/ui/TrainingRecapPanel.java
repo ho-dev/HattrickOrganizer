@@ -194,7 +194,7 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
         trainingPrioPopUp.add(partialTrainingMenuItem);
         trainingPrioPopUp.add(osmosisTrainingMenuItem);
         trainingPrioPopUp.add(noTrainingMenuItem);
-        table.setComponentPopupMenu(trainingPrioPopUp);
+        //table.setComponentPopupMenu(trainingPrioPopUp);
 
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -203,6 +203,8 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
                     return;
 
                 if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+                    var cols = table.getSelectedColumns();
+                    partialTrainingMenuItem.setEnabled(model.isPartialTrainingAvailable(cols));
                     trainingPrioPopUp.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
