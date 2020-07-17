@@ -110,12 +110,14 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 								this.setBackground(FULL_TRAINING_BG);
 								break;
 							case PARTIAL_TRAINING:
-								if (wt.getPrimaryTrainingSkillSecondaryTrainingPositions().length > 0) {
+								if (this.trainingModel.isPartialTrainingAvailable(new int [] {column})) {
 									this.setBackground(PARTIAL_TRAINING_BG);
 								}
 								break;
 							case OSMOSIS_TRAINING:
-								this.setBackground(OSMOSIS_TRAINING_BG);
+								if ( this.trainingModel.isOsmosisTrainingAvailable(new int[]{column})){
+									this.setBackground(OSMOSIS_TRAINING_BG);
+								}
 								break;
 						}
 					}
