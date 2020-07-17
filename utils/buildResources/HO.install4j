@@ -57,7 +57,7 @@
         <file path="${compiler:projectDir}/utils/buildResources/Logo.png" />
       </iconImageFiles>
     </launcher>
-    <launcher name="HO" id="274" unixMode="777">
+    <launcher name="HO - Linux" id="274" unixMode="777" menuName="HO">
       <executable name="HO" iconSet="true" stderrFile="${installer:sys.userHome}/.ho/logs/error.log" redirectStdout="true" stdoutFile="${installer:sys.userHome}/.ho/output.log" executableMode="gui" singleInstance="true" />
       <java mainClass="core.HOLauncher" arguments="installed">
         <classPath>
@@ -625,16 +625,18 @@ return console.askYesNo(message, true);
     </styles>
   </installerGui>
   <mediaSets>
-    <windowsArchive name="Windows Archive" id="64" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-win${compiler:versionType}" installDir=".">
+    <windowsArchive name="Windows Archive" id="64" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win${compiler:versionType}" installDir=".">
       <excludedLaunchers>
         <launcher id="274" />
         <launcher id="497" />
+        <launcher id="606" />
       </excludedLaunchers>
     </windowsArchive>
-    <windowsArchive name="Windows Archive - JRE" id="481" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-win${compiler:versionType}-JRE" installDir=".">
+    <windowsArchive name="Windows Archive - JRE" id="481" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win${compiler:versionType}-JRE" installDir=".">
       <excludedLaunchers>
         <launcher id="274" />
         <launcher id="497" />
+        <launcher id="606" />
       </excludedLaunchers>
       <jreBundle jreBundleSource="generated" />
     </windowsArchive>
@@ -642,6 +644,7 @@ return console.askYesNo(message, true);
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="274" />
+        <launcher id="606" />
       </excludedLaunchers>
       <jreBundle usePack200="false" />
     </windows>
@@ -649,6 +652,7 @@ return console.askYesNo(message, true);
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="274" />
+        <launcher id="606" />
       </excludedLaunchers>
       <jreBundle usePack200="false" jreBundleSource="generated" />
     </windows>
@@ -656,6 +660,7 @@ return console.askYesNo(message, true);
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="497" />
+        <launcher id="606" />
       </excludedLaunchers>
       <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
     </linuxDeb>
@@ -663,6 +668,7 @@ return console.askYesNo(message, true);
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="497" />
+        <launcher id="606" />
       </excludedLaunchers>
       <jreBundle jreBundleSource="generated" />
       <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
@@ -671,6 +677,7 @@ return console.askYesNo(message, true);
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="497" />
+        <launcher id="606" />
       </excludedLaunchers>
       <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
     </linuxRPM>
@@ -678,20 +685,23 @@ return console.askYesNo(message, true);
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="497" />
+        <launcher id="606" />
       </excludedLaunchers>
       <jreBundle jreBundleSource="generated" />
       <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
     </linuxRPM>
-    <unixArchive name="Unix Archive" id="173" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix${compiler:versionType}" installDir=".">
+    <unixArchive name="Unix Archive" id="173" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-unix${compiler:versionType}" installDir=".">
       <excludedLaunchers>
         <launcher id="274" />
         <launcher id="497" />
+        <launcher id="606" />
       </excludedLaunchers>
     </unixArchive>
-    <unixArchive name="Unix Archive - JRE" id="477" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix${compiler:versionType}-JRE" installDir=".">
+    <unixArchive name="Unix Archive - JRE" id="477" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-unix${compiler:versionType}-JRE" installDir=".">
       <excludedLaunchers>
         <launcher id="274" />
         <launcher id="497" />
+        <launcher id="606" />
       </excludedLaunchers>
       <jreBundle jreBundleSource="generated" />
     </unixArchive>

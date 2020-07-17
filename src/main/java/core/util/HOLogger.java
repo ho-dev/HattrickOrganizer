@@ -34,30 +34,32 @@ public class HOLogger {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String fileName = "HO-" + dateFormat.format(new Date()) + ".log";
 		String errorMsg;
+		Boolean logFolderExist = true;
 
 		logsFolderName = Paths.get(UserManager.instance().getDbParentFolder() , "logs").toString();
 		logsFolder = new File(logsFolderName);
 		
 		if (!logsFolder.exists()) {
+			logFolderExist = false;
 			File parentFolder = new File(UserManager.instance().getDbParentFolder());
 
-			Boolean dbDirectoryCreated = false;
 			if (parentFolder.canWrite()) {
-				dbDirectoryCreated = parentFolder.mkdirs();
+				logFolderExist = parentFolder.mkdirs();
 			}
-			if (!dbDirectoryCreated) {
+			if (!logFolderExist) {
 				errorMsg = "Could not initialize the log folder.\n";
 				errorMsg += "Check you have writing rights to the following directory\n" + parentFolder.getAbsolutePath() + "\n";
+				System.err.println(errorMsg);
 			}
 		}
-		
+
+		if (logFolderExist){
 		try {
 			deleteOldLogs(logsFolder);
 			File logFile = new File(logsFolder, fileName);
 
 			if (logFile.exists()) {
-				final boolean bdelete = logFile.delete();
-				if (! bdelete) {System.err.println("Unable to delete "+logFile.toString());}
+				if (! logFile.delete()) {System.err.println("Unable to delete " + logFile.toString());}
 			}
 
 			logWriter = new FileWriter(logFile);
@@ -66,18 +68,19 @@ public class HOLogger {
 			System.err.println(errorMsg);
 			e.printStackTrace();
 		}
+		}
 	}
 
 	
 	private void deleteOldLogs(File dir){
 		ExampleFileFilter filter = new ExampleFileFilter("log");
-		 filter.setIgnoreDirectories(true);
-		 File[] files = dir.listFiles(filter);
-		 for (int i = 0; i < files.length; i++) {
-			 long diff = System.currentTimeMillis() - files[i].lastModified();
-			 long days = (diff / (1000 * 60 * 60 * 24));
-			 if( days > 90)
-				 files[i].delete(); 
+		filter.setIgnoreDirectories(true);
+		File[] files = dir.listFiles(filter);
+		for (File file : files) {
+			long diff = System.currentTimeMillis() - file.lastModified();
+			long days = (diff / (1000 * 60 * 60 * 24));
+			if (days > 90)
+				if (! file.delete()) {System.err.println("Unable to delete " + file.toString());}
 		}
 	}
 	
