@@ -3,7 +3,6 @@ package core.model;
 import core.db.DBManager;
 import core.util.GUIUtils;
 import module.lineup.LineupAssistant;
-
 import java.awt.*;
 import java.util.HashMap;
 
@@ -865,4 +864,5 @@ public final class UserParameter extends Configuration {
 
         promotionManagerTest = getBooleanValue(values, "promotionManagerTest");
     }
+
 }

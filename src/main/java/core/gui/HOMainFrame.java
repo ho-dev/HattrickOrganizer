@@ -706,7 +706,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			getSpielerUebersichtPanel().saveColumnOrder();
 		}
 
-		// AufstellungsPanel
+		// Lineup Panel
 		if (getTabbedPane().isModuleTabVisible(IModule.LINEUP)) {
 			final int[] ap = getAufstellungsPanel().getDividerLocations();
 			parameter.aufstellungsPanel_verticalSplitPaneLow = ap[0];

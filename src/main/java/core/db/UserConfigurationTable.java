@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 /**
  * The Table UserConfiguration contain all User properties.
@@ -117,6 +118,24 @@ final class UserConfigurationTable extends AbstractTable {
 		return value;
 	}
 
+	private HashMap<String, String> getAllStringValues() {
+		final StringBuffer sql = new StringBuffer(100);
+		sql.append("SELECT * FROM ");
+		sql.append(getTableName());
+
+		HashMap<String, String> map = new HashMap<>();
+		final ResultSet rs = adapter.executeQuery(sql.toString());
+		try {
+			while (rs.next()) {
+				map.put(rs.getString("CONFIG_KEY"), rs.getString("CONFIG_VALUE"));
+			}
+			rs.close();
+		} catch (SQLException e) {
+			HOLogger.instance().log(getClass(), e);
+		}
+		return map;
+	}
+
 
 	int getDBVersion() {
 		int version = 0;
@@ -184,14 +203,18 @@ final class UserConfigurationTable extends AbstractTable {
 	 * @param obj
 	 */
 	void load(Configuration obj) {
-		final HashMap<String,String> values = new HashMap<String,String>();
-		final Set<String> keys = obj.getValues().keySet();
-		for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-			String key = iter.next();
-			String value = getStringValue(key);
-			values.put(key, (value != null) ? value : obj.getValues().get(key));
-		}
-		obj.setValues(values);
+		// initialize with default value
+		final HashMap<String,String> map = obj.getValues();
+		final HashMap<String,String> storedValues = getAllStringValues();
+
+		map.forEach((key, value) -> {
+			final String storedValue = storedValues.get(key);
+
+			// this will allow to detect further problems
+			if (storedValue == null) HOLogger.instance().error(UserConfigurationTable.class, String.format("parameter %s is not stored in UserConfigurationTable", key));
+			else map.put(key, storedValue); // update map with value store in DB (in UserConfiguration table)
+		});
+		obj.setValues(map);
 	}
 
 }

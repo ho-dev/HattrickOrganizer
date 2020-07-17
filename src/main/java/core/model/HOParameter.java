@@ -1,12 +1,7 @@
-// %844311304:gui%
 package core.model;
 
 import core.db.DBManager;
-
 import java.util.HashMap;
-
-
-
 
 /**
  * User configuration. Loaded when HO starts and saved when HO! exits.
