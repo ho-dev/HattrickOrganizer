@@ -79,15 +79,25 @@ created within the application directory. You can move this directory
 (e.g. on a USB stick or a network drive) and the app will continue to
 work as expected.
 
+
+Installed application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Under Windows and MacOS, you might have warning about the fact that HO! is a non-signed app.
+You should still feel perfectly safe to install it, the message only means we are not paying 
+an (expensive) digital certificate to sign a free app. If you are interested on that topic, you can find more information 
+`here <https://medium.com/vchaincodenotary/developers-unite-against-the-expensive-and-cumbersome-code-signing-certificates-d54342016a64>`__
+
+
+
 Windows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you installed HO! in Windows. You should have a HO! link in your
 start menu that points toward the program executable. By default, HO!
 installs itself in ``C:\Program Files\HO``. The running application
-files will be located in ``%appdata%\HO``
+documents (``db/``, ``logs/`` and ``users.json``) will be located in ``%appdata%\HO``
 
-``TODO:  info about warning not signed app !!!``
 
 Linux
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -106,7 +116,6 @@ your applications folder. The running application files will be located
 in ``/Library/Application Support/HO`` except the ``error.log`` and
 ``output.log`` files which will created in the installation directory
 
-``TODO:  info about warning not signed app !!! / security settings ?``
 
 Update
 ********************
