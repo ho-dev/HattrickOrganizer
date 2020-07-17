@@ -3,10 +3,6 @@ package module.transfer.scout;
 import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.table.TableSorter;
-import core.gui.print.ComponentPrintObject;
-import core.gui.print.PrintController;
-import core.gui.theme.HOIconName;
-import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
 
@@ -14,15 +10,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -32,7 +24,7 @@ import javax.swing.ScrollPaneConstants;
 /**
  * The TransferScout main Panel
  */
-public class TransferScoutPanel extends ImagePanel implements MouseListener, KeyListener, ActionListener {
+public class TransferScoutPanel extends ImagePanel implements MouseListener, KeyListener {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -42,7 +34,6 @@ public class TransferScoutPanel extends ImagePanel implements MouseListener, Key
     private TransferEingabePanel m_jpTransferEingabePanel;
     private TransferTable m_jtTransferTable;
     private JPanel toolbar;
-    private JButton jbPrint = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -79,37 +70,6 @@ public class TransferScoutPanel extends ImagePanel implements MouseListener, Key
         }
 
         m_jtTransferTable.refresh();
-    }
-
-    /**
-     * Drucken der Transferscouttabelle
-     */
-    public final void drucken() {
-        try {
-            //Damit nur bestimmte Spalten gedruckt werden ist eine spezielle Tabelle notwendig.
-            //Das Scrollpane benötigt man, damit die Spaltenbeschriftung auch angezeigt wird.
-            final TransferTable table = new TransferTable();
-            final JScrollPane scrollPane = new JScrollPane(table);
-            scrollPane.setPreferredSize(new Dimension(table.getPreferredSize().width + 10,
-                                                      table.getPreferredSize().height + 70));
-            scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-            scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-            scrollPane.getViewport().setBackground(Color.white);
-
-            final PrintController printController = PrintController.getInstance();
-            final java.util.Calendar calendar = java.util.Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
-            final String title = HOVerwaltung.instance().getLanguageString("TransferScout")
-                                 + " - "
-                                 + HOVerwaltung.instance().getModel().getBasics().getTeamName()
-                                 + " - "
-                                 + java.text.DateFormat.getDateTimeInstance().format(calendar.getTime());
-            printController.add(new ComponentPrintObject(printController.getPf(), title,
-            		scrollPane, ComponentPrintObject.NICHTSICHTBAR));
-            printController.print();
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(),e);
-        }
     }
 
     public final void keyPressed(KeyEvent keyEvent) {
@@ -190,7 +150,6 @@ public class TransferScoutPanel extends ImagePanel implements MouseListener, Key
     private void initComponents() {
         setLayout(new BorderLayout());
 
-        add(getToolBar(),BorderLayout.NORTH);
         verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, initTransferTable(),
                                            initTransferEingabePanel());
 
@@ -202,16 +161,6 @@ public class TransferScoutPanel extends ImagePanel implements MouseListener, Key
         m_clScoutThread = ScoutThread.start(DBManager.instance().getScoutList());
     }
 
-    
-    private JPanel getToolBar(){
-    	if(toolbar == null){
-    		toolbar = new ImagePanel(new FlowLayout(FlowLayout.LEADING));
-    		jbPrint.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Transferscout_drucken"));
-            jbPrint.addActionListener(this);
-            toolbar.add(jbPrint);
-    	}
-    	return toolbar;
-    }
     private Component initTransferEingabePanel() {
         m_jpTransferEingabePanel = new TransferEingabePanel(this);
         return new JScrollPane(m_jpTransferEingabePanel);
@@ -226,11 +175,4 @@ public class TransferScoutPanel extends ImagePanel implements MouseListener, Key
         scrollpane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
         return scrollpane;
     }
-
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(jbPrint)) {
-            drucken();
-        }
-		
-	}
 }

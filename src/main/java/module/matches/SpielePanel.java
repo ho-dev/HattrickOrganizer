@@ -85,7 +85,6 @@ public final class SpielePanel extends LazyImagePanel {
 	private AufstellungsSternePanel aufstellungGastPanel;
 	private AufstellungsSternePanel aufstellungHeimPanel;
 	private JButton adoptLineupButton;
-	private JButton printButton;
 	private JButton deleteButton;
 	private JButton reloadMatchButton;
 	private JButton simulateMatchButton;
@@ -143,21 +142,6 @@ public final class SpielePanel extends LazyImagePanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				deleteSelectedMatches();
-			}
-		});
-
-		this.printButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (matchesModel.getMatch() != null) {
-					final SpielePrintDialog printDialog = new SpielePrintDialog(matchesModel);
-					printDialog.doPrint(matchesModel.getMatch().getHeimName() + " : "
-							+ matchesModel.getMatch().getGastName() + " - "
-							+ matchesModel.getMatch().getMatchDate());
-					printDialog.setVisible(false);
-					printDialog.dispose();
-				}
 			}
 		});
 
@@ -284,8 +268,7 @@ public final class SpielePanel extends LazyImagePanel {
 
 	private void simulateMatch() {
 		if (matchesModel.getMatch() != null) {
-			Matchdetails details = DBManager.instance().getMatchDetails(
-					matchesModel.getMatch().getMatchID());
+			Matchdetails details = matchesModel.getDetails();
 			MatchPredictionManager manager = MatchPredictionManager.instance();
 			int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 			boolean homeMatch = false;
@@ -518,12 +501,6 @@ public final class SpielePanel extends LazyImagePanel {
 		deleteButton.setEnabled(false);
 		buttonPanel.add(deleteButton);
 
-		printButton = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
-		printButton.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Spiel_drucken"));
-		printButton.setPreferredSize(new Dimension(24, 24));
-		printButton.setEnabled(false);
-		buttonPanel.add(printButton);
-
 		adoptLineupButton = new JButton(ThemeManager.getIcon(HOIconName.GETLINEUP));
 		adoptLineupButton.setToolTipText(HOVerwaltung.instance().getLanguageString(
 				"tt_Spiel_aufstellunguebernehmen"));
@@ -631,7 +608,6 @@ public final class SpielePanel extends LazyImagePanel {
 			// Alle Panels zurücksetzen
 			reloadMatchButton.setEnabled(false);
 			deleteButton.setEnabled(false);
-			printButton.setEnabled(false);
 			adoptLineupButton.setEnabled(false);
 			simulateMatchButton.setEnabled(false);
 
@@ -667,10 +643,8 @@ public final class SpielePanel extends LazyImagePanel {
 			} else {
 				adoptLineupButton.setEnabled(false);
 			}
-			printButton.setEnabled(true);
 		} else {
 			adoptLineupButton.setEnabled(false);
-			printButton.setEnabled(false);
 		}
 	}
 }

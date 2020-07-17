@@ -117,7 +117,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private Vector<JPanel> m_vOptionPanels = new Vector<JPanel>();
 
 	private boolean isAppTerminated = false; // set when HO should be terminated
-	private List<ApplicationClosingListener> applicationClosingListener = new ArrayList<ApplicationClosingListener>();
+	private final List<ApplicationClosingListener> applicationClosingListener = new ArrayList<>();
 
 	// Menu color depending of version
 	private final Color c_beta = new Color(162, 201, 255);
@@ -409,13 +409,13 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 			// TODO: instead of calling XY.instance().save() from here, those classes should register an ApplicationClosingListener
 			HOLogger.instance().debug(getClass(), "Shutting down HO!");
-			// aktuelle UserParameter speichern
+			// save current UserParameter
 			saveUserParameter();
 			HOLogger.instance().debug(getClass(), "UserParameters saved");
-			// Scoutliste speichern
+			// Save scout list
 			getTransferScoutPanel().getScoutPanel().saveScoutListe();
 			HOLogger.instance().debug(getClass(), "ScoutList saved");
-			// Faktoren saven
+			// Save formula factors
 			FormulaFactors.instance().save();
 			HOLogger.instance().debug(getClass(), "FormulaFactors saved");
 			// Save module configs
@@ -425,9 +425,10 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			DBManager.instance().disconnect();
 			HOLogger.instance().debug(getClass(), "Disconnected");
 			HOLogger.instance().debug(getClass(), "Shutdown complete!");
-			// Dispose führt zu einem windowClosed, sobald alle windowClosing
-			// (Modules) durch sind
+
 			isAppTerminated = true; // enable System.exit in windowClosed()
+
+			// Dispose makes frame windowClosed as soon as all modules windowClosing all complete.
 			try {
 				dispose();
 			} catch (Exception e) {
@@ -438,7 +439,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	}
 
 	/**
-	 * Frame aufbauen
+	 * Builds frame.
 	 */
 	public void initComponents() {
 		javax.swing.ToolTipManager.sharedInstance().setDismissDelay(5000);
@@ -472,7 +473,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		getContentPane().add(getInfoPanel(), BorderLayout.SOUTH);
 
 		setLocation(UserParameter.instance().hoMainFrame_PositionX,
-                    UserParameter.instance().hoMainFrame_PositionY);
+				    UserParameter.instance().hoMainFrame_PositionY);
 		setSize(UserParameter.instance().hoMainFrame_width,
 				UserParameter.instance().hoMainFrame_height);
 	}
@@ -481,7 +482,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	 * Initialize the menu.
 	 */
 	public void initMenue() {
-		// Kein F10!
+		// No F10!
 		((InputMap) UIManager.get("Table.ancestorInputMap")).remove(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 
 		m_jmDownloadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
@@ -501,7 +502,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		m_jmFile.addSeparator();
 
-		// Optionen
+		// Options
 		m_jmOptionen.addActionListener(this);
 		m_jmFile.add(m_jmOptionen);
 		databaseMenu.add(databaseOptionsMenu);
@@ -524,7 +525,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		m_jmFile.addSeparator();
 
-		// Beenden
+		// Quit
 		m_jmBeendenItem.addActionListener(this);
 		m_jmFile.add(m_jmBeendenItem);
 
@@ -537,16 +538,12 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 				JMenuItem showTabMenuItem = new JMenuItem(activeModules[i].getDescription());
 				showTabMenuItem.setAccelerator(activeModules[i].getKeyStroke());
 				showTabMenuItem.putClientProperty("MODULE", activeModules[i]);
-				showTabMenuItem.addActionListener(new ActionListener() {
+				showTabMenuItem.addActionListener(e -> {
+					JMenuItem item = (JMenuItem) e.getSource();
+					IModule module = (IModule) item.getClientProperty("MODULE");
+					getTabbedPane().showTab(module.getModuleId());
+				});
 
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            JMenuItem item = (JMenuItem) e.getSource();
-                            IModule module = (IModule) item.getClientProperty("MODULE");
-                            getTabbedPane().showTab(module.getModuleId());
-
-                        }
-                    });
 				m_jmFunctions.add(showTabMenuItem);
 			}
 			if (activeModules[i].hasMenu()) {
@@ -586,13 +583,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 
 		SwingUtilities.updateComponentTreeUI(m_jmMenuBar);
-
-		// Adden
 		this.setJMenuBar(m_jmMenuBar);
 	}
 
 	/**
-	 * Proxyeinstellungen
+	 * Proxy setup.
 	 */
 	private void initProxy() {
 		if (UserParameter.instance().ProxyAktiv) {
@@ -628,7 +623,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	 */
 	@Override
 	public void reInit() {
-		// Die Währung auf die aus dem HRF setzen
+		// Set the currency from the HRF file.
 		try {
 			float faktorgeld = (float) HOVerwaltung.instance().getModel().getXtraDaten()
                 .getCurrencyRate();
@@ -637,14 +632,12 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 				UserParameter.instance().faktorGeld = faktorgeld;
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(HOMainFrame.class, "Währungsanpassung gescheitert!");
+			HOLogger.instance().log(HOMainFrame.class, "Currency changed failed! " + e.getMessage());
 		}
 	}
 
-	// ------Refreshfunktionen-------------------------------
-
 	/**
-	 * Wird bei einer Datenänderung aufgerufen
+	 * Called when data is changed.
 	 */
 	@Override
 	public void refresh() {
@@ -664,37 +657,35 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
             });
 	}
 
-	// ----------------Hilfsmethoden---------------------------------
+	// ----------------Helper methods---------------------------------
 
 	/**
-	 * Zeigt das Tab an (Nicht Index, sondern Konstante benutzen!
+	 * Shows the tab associated with module with ID <code>moduleId</code>.
 	 *
-	 * @param tabnumber
-	 *            number of the tab to show
+	 * @param moduleId
+	 *            ID of the module whose tab should be shown.
 	 */
-	public void showTab(int tabnumber) {
-		m_jtpTabbedPane.showTab(tabnumber);
+	public void showTab(int moduleId) {
+		m_jtpTabbedPane.showTab(moduleId);
 	}
 
     /**
-	 * Fetches the parameters from the dialogs and saves them in the DB
+	 * Gets the current user parameters, and stores them in the database.
 	 */
-	@SuppressWarnings("deprecation")
 	private void saveUserParameter() {
 		UserParameter parameter = UserParameter.instance();
 
 		parameter.hoMainFrame_PositionX = Math.max(getLocation().x, 0);
 		parameter.hoMainFrame_PositionY = Math.max(getLocation().y, 0);
-		parameter.hoMainFrame_width = Math.min(getSize().width, getToolkit().getScreenSize().width
-                                               - parameter.hoMainFrame_PositionX);
+
+		final GraphicsDevice currentDevice = this.getGraphicsConfiguration().getDevice();
+
+		parameter.hoMainFrame_width = Math.min(getSize().width,
+				getToolkit().getScreenSize().width-parameter.hoMainFrame_PositionX+currentDevice.getDefaultConfiguration().getBounds().x);
 		parameter.hoMainFrame_height = Math.min(getSize().height,
-                                                getToolkit().getScreenSize().height - parameter.hoMainFrame_PositionY);
+				getToolkit().getScreenSize().height-parameter.hoMainFrame_PositionY+currentDevice.getDefaultConfiguration().getBounds().y);
 
-		final IAufstellungsAssistentPanel aap = getAufstellungsPanel()
-            .getAufstellungsAssistentPanel();
-
-		parameter.bestPostWidth = Math.max(getSpielerUebersichtPanel().getBestPosWidth(),
-                                           getAufstellungsPanel().getBestPosWidth());
+		final IAufstellungsAssistentPanel aap = getAufstellungsPanel().getAufstellungsAssistentPanel();
 
 		parameter.aufstellungsAssistentPanel_gruppe = AufstellungsAssistentPanelNew.asString(aap.getGroups());
 		parameter.aufstellungsAssistentPanel_reihenfolge = aap.getOrder();

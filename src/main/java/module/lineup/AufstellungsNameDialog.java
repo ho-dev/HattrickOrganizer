@@ -173,8 +173,6 @@ final class AufstellungsNameDialog extends JDialog implements ActionListener {
 
 	private void saveLineup(Lineup lineup, String name) {
 		lineup.save(nameTextField.getText());
-		HOMainFrame.instance().getAufstellungsPanel().getAufstellungsPositionsPanel()
-				.exportOldLineup(name);
 		this.canceled = false;
 	}
 }

@@ -42,6 +42,7 @@ Changelist HO! 4.0
 ### Matches
 
   - [FIX] Some icons fixes in match report
+  - [FEAT] Information about extra time or penalty shoot out in match result #561
 
 ### Lineup
 
@@ -49,13 +50,15 @@ Changelist HO! 4.0
 
 ### Training
 
-  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512 
+  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512
 
 ### Misc
 
   - [FEAT] Remove jcalendar dependency.
-  - [FIX] ExperienceViewer removed #503 
+  - [FIX] ExperienceViewer removed #503
   - [FIX] Avoid potential infinite loop at startup. [#584]
+  - [FIX] Layout issue in multiple screen setup. [#618]
+  - [FEAT] Remove all printing functionality.
 
 ### League
 

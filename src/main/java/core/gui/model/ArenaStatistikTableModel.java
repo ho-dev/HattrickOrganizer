@@ -274,7 +274,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				colIndex++;
 
 			    //Ergebnis
-			    m_clData[i][colIndex] = new ColorLabelEntry(StringUtils.getResultString(match.getHeimTore(), match.getGastTore()),
+			    m_clData[i][colIndex] = new ColorLabelEntry(StringUtils.getResultString(match.getHeimTore(), match.getGastTore(), ""),
 			    		ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
 			    //Sterne für Sieger!
 			    if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {

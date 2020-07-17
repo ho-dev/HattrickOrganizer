@@ -59,13 +59,12 @@ public final class MatchesColumnModel extends HOTableModel {
 		for (int i = 0; i < m_clMatches.length; i++) {
 
 			for (int j = 0; j < tmpDisplayedColumns.length; j++) {
-				if(j!=5 && j!=6) 
-				{
+				if (j != 5 && j != 6) {
 					m_clData[i][j] = ((MatchKurzInfoColumn) tmpDisplayedColumns[j]).getTableEntry(m_clMatches[i]);
+				} else {  // HatStats calculations need information from match details
+					var oMD = m_clMatches[i].getMatchdetails();
+					m_clData[i][j] = ((MatchKurzInfoColumn) tmpDisplayedColumns[j]).getTableEntry(m_clMatches[i], oMD);
 				}
-				else {  // HatStats calculations need information from match details
-					Matchdetails oMD = DBManager.instance().getMatchDetails(m_clMatches[i].getMatchID());
-				m_clData[i][j] = ((MatchKurzInfoColumn) tmpDisplayedColumns[j]).getTableEntry(m_clMatches[i], oMD);}
 			}
 
 		}
