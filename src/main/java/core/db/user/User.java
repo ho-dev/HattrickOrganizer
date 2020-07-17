@@ -53,13 +53,6 @@ public class User{
 
 	public final @NotNull String getDbURL() {return dbURL;}
 
-//	public void setURL() {
-//		if (HO.isPortableVersion()) dbURL = "jdbc:hsqldb:file:" + dbName + "/database";
-//		else dbURL = "jdbc:hsqldb:file:" + dbFolder + "/database";
-//	}
-//
-//
-
 	public User(BaseUser bu){
 		baseUser = bu;
 		this.fillUserInfos();
