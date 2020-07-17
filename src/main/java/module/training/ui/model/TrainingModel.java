@@ -196,4 +196,14 @@ public class TrainingModel {
 		}
 		return false;
 	}
+
+    public boolean isOsmosisTrainingAvailable(int[] weeks) {
+		for ( var w : weeks){
+			var t = getFutureTrainings().get(w);
+			if (WeeklyTrainingType.instance(t.getTrainingType()).getPrimaryTrainingSkillOsmosisTrainingPositions().length > 0 ) {
+				return true;
+			}
+		}
+		return false;
+    }
 }

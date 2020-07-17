@@ -181,13 +181,13 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
         ListSelectionModel rowSelectionModel = table.getSelectionModel();
         rowSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        fullTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.training.prio.full"));
+        fullTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.fulltrain"));
         fullTrainingMenuItem.addActionListener(this);
-        partialTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.training.prio.partial"));
+        partialTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.partialtrain"));
         partialTrainingMenuItem.addActionListener(this);
-        osmosisTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.training.prio.osmosis"));
+        osmosisTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.osmosistrain"));
         osmosisTrainingMenuItem.addActionListener(this);
-        noTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.training.prio.no"));
+        noTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.notrain"));
         noTrainingMenuItem.addActionListener(this);
         trainingPrioPopUp = new JPopupMenu();
         trainingPrioPopUp.add(fullTrainingMenuItem);
@@ -205,6 +205,7 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
                 if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
                     var cols = table.getSelectedColumns();
                     partialTrainingMenuItem.setEnabled(model.isPartialTrainingAvailable(cols));
+                    osmosisTrainingMenuItem.setEnabled(model.isOsmosisTrainingAvailable(cols));
                     trainingPrioPopUp.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
