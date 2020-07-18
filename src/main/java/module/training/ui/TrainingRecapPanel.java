@@ -202,7 +202,7 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
                 if (table.getSelectedRow() < 0)
                     return;
 
-                if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+                if ( e.getComponent() instanceof JTable ) {
                     var cols = table.getSelectedColumns();
                     partialTrainingMenuItem.setEnabled(model.isPartialTrainingAvailable(cols));
                     osmosisTrainingMenuItem.setEnabled(model.isOsmosisTrainingAvailable(cols));
