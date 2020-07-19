@@ -1,5 +1,6 @@
 package core.model.player;
 
+import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
@@ -2237,18 +2238,23 @@ public class Player {
     }
 
     public FuturePlayerTraining.Priority getTrainingPriority(WeeklyTrainingType wt, HattrickDate hattrickWeek) {
-        for ( var t : getFuturePlayerTrainings()){
-            if ( t.isInWeek(hattrickWeek)) return t.getPriority();
+        for ( var t : getFuturePlayerTrainings()) {
+            if (hattrickWeek.isBetween(t.getFrom(), t.getTo())) {
+                return t.getPriority();
+            }
         }
 
         // get Prio from best position
         int position = HelperWrapper.instance().getPosition(this.getIdealPosition());
 
         for ( var p: wt.getPrimaryTrainingSkillBonusPositions()){
-            if ( p == position) return FuturePlayerTraining.Priority.BONUS_TRAINING;
+            if ( p == position) return FuturePlayerTraining.Priority.FULL_TRAINING;
         }
         for ( var p: wt.getPrimaryTrainingSkillPositions()){
-            if ( p == position) return FuturePlayerTraining.Priority.FULL_TRAINING;
+            if ( p == position) {
+                if ( wt.getTrainingType() == TrainingType.SET_PIECES) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
+                return FuturePlayerTraining.Priority.FULL_TRAINING;
+            }
         }
         for ( var p: wt.getPrimaryTrainingSkillSecondaryTrainingPositions()){
             if ( p == position) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
@@ -2263,12 +2269,15 @@ public class Player {
     public void setFutureTraining(FuturePlayerTraining.Priority prio, HattrickDate fromWeek, HattrickDate toWeek) {
         var removeIntervals = new ArrayList<FuturePlayerTraining>();
         for ( var t : getFuturePlayerTrainings() ){
-            if ( t.cut(fromWeek, toWeek)){
+            if ( t.cut(fromWeek, toWeek) ||
+                    t.cut(new HattrickDate(0,0), HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())){
                 removeIntervals.add(t);
             }
         }
         futurePlayerTrainings.removeAll(removeIntervals);
-        futurePlayerTrainings.add(new FuturePlayerTraining(this.getSpielerID(), prio, fromWeek, toWeek));
+        if ( prio != null){
+            futurePlayerTrainings.add(new FuturePlayerTraining(this.getSpielerID(), prio, fromWeek, toWeek));
+        }
 
         DBManager.instance().storeFuturePlayerTrainings(this.getSpielerID(), futurePlayerTrainings);
     }

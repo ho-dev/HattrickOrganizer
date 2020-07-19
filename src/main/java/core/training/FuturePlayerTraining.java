@@ -10,8 +10,7 @@ public class FuturePlayerTraining {
         NO_TRAINING(0),
         OSMOSIS_TRAINING(1),
         PARTIAL_TRAINING(2),
-        FULL_TRAINING(3),
-        BONUS_TRAINING(4);
+        FULL_TRAINING(3);
 
         private int value;
         private static HashMap<Integer, Priority> map = new HashMap<>();

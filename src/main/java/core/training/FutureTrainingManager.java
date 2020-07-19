@@ -68,7 +68,7 @@ public class FutureTrainingManager {
 			PlayerSkill.STAMINA
 	};
 
-	public FuturePlayer previewPlayer(int startWeekNumber,int finalWeekNumber) {
+	public FuturePlayer previewPlayer(int numberOfWeeks) {
 
 		this.futureSkillups = new ArrayList<>();
 				
@@ -84,17 +84,17 @@ public class FutureTrainingManager {
 		weeksPassed = 0;
 		int position = HelperWrapper.instance().getPosition(player.getIdealPosition());
 		// Iterate thru all the future training weeks
-		for (int index = startWeekNumber; index <= finalWeekNumber; index++) {
+		for (int week = 1; week <= numberOfWeeks; week++) {
 
 			// process skill drops
-			int age = this.player.getAlter() + (this.player.getAgeDays() + index*7)/112;
+			int age = this.player.getAlter() + (this.player.getAgeDays() + week*7)/112;
 			for ( int i=0; i<8; i++){
 				finalSub[i] -= SkillDrops.instance().getSkillDrop((int)finalSkill[i], age, skillIndex[i])/100;
 			}
 
 			double trainingSpeed=0;
 			weeksPassed++;
-			TrainingPerWeek tw = this.futureTrainings.get(index-1);
+			TrainingPerWeek tw = this.futureTrainings.get(week-1);
 			int trType = tw.getTrainingType();
 			TrainingWeekPlayer tp = new TrainingWeekPlayer(player);
 
@@ -109,15 +109,16 @@ public class FutureTrainingManager {
 							tp.addSecondarySkillBonusMinutes(90);
 							trainingSpeed = 1;
 							break;
-						case BONUS_TRAINING:
-							tp.addPrimarySkillPositionMinutes(90);
-							tp.addPrimarySkillBonusPositionMinutes(90);
-							trainingSpeed = 1 + wt.getPrimaryTrainingSkillBonus();
-							break;
 						case PARTIAL_TRAINING:
-							tp.addPrimarySkillSecondaryPositionMinutes(90);
-							tp.addSecondarySkillSecondaryPositionMinutes(90);
-							trainingSpeed = 1.0 / wt.getPrimaryTrainingSkillSecondaryBaseLengthRate();
+							if ( wt.getTrainingType() == TrainingType.SET_PIECES){
+								tp.addPrimarySkillPositionMinutes(90);
+								trainingSpeed = 1;
+							}
+							else {
+								tp.addPrimarySkillSecondaryPositionMinutes(90);
+								tp.addSecondarySkillSecondaryPositionMinutes(90);
+								trainingSpeed = 1.0 / wt.getPrimaryTrainingSkillSecondaryBaseLengthRate();
+							}
 							break;
 						case OSMOSIS_TRAINING:
 							tp.addPrimarySkillOsmosisPositionMinutes(90);
@@ -386,10 +387,6 @@ public class FutureTrainingManager {
 			default -> 0;
 		};
 
-	}
-
-	public FuturePlayer previewPlayer(int weekNumber) {
-		return previewPlayer(1,weekNumber);
 	}
 
 }

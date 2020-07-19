@@ -84,42 +84,44 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
         });
     }
 
+    private Vector<String> columns;
     /**
      * Get Columns name
      *
      * @return List of string
      */
     private Vector<String> getColumns() {
-        Vector<String> columns = new Vector<>();
+        if (columns == null) {
+            columns = new Vector<>();
+            columns.add(HOVerwaltung.instance().getLanguageString("Spieler"));
+            columns.add(HOVerwaltung.instance().getLanguageString("ls.player.age"));
+            columns.add(HOVerwaltung.instance().getLanguageString("BestePosition"));
+            columns.add("Speed");
+            columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
 
-        columns.add(HOVerwaltung.instance().getLanguageString("Spieler"));
-        columns.add(HOVerwaltung.instance().getLanguageString("ls.player.age"));
-        columns.add(HOVerwaltung.instance().getLanguageString("BestePosition"));
-        columns.add("Speed");
-        columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
+            var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek(); //.getSpieltag();
 
-        var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek(); //.getSpieltag();
+            // We are in the middle where season has not been updated!
+            try {
+                if (HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate()
+                        .after(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
+                    actualWeek.addWeeks(1);
+                }
+            } catch (Exception e1) {
+                // Null when first time HO is launched
+            }
 
-        // We are in the middle where season has not been updated!
-        try {
-            if (HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate()
-                    .after(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
+            for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
+                // calculate the week and season of the future training
+                //int week = (actualWeek + i) - 1;
+                //int season = actualSeason + (week / 16);
+                //week = (week % 16) + 1;
+                columns.add(actualWeek.getSeason() + " " + actualWeek.getWeek());
                 actualWeek.addWeeks(1);
             }
-        } catch (Exception e1) {
-            // Null when first time HO is launched
-        }
 
-        for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
-            // calculate the week and season of the future training
-            //int week = (actualWeek + i) - 1;
-            //int season = actualSeason + (week / 16);
-            //week = (week % 16) + 1;
-            columns.add(actualWeek.getSeason() + " " + actualWeek.getWeek());
-            actualWeek.addWeeks(1);
+            columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
         }
-
-        columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
 
         return columns;
     }
@@ -293,28 +295,20 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
         var from = getWeek(getColumns().get(cols[0]+fixedColumns));
         HattrickDate to = null;
         var toColNr = cols[cols.length - 1]+fixedColumns;
-        if (toColNr < getColumns().size()) {
+        if (toColNr < getColumns().size()-2) {
             to = getWeek(getColumns().get(toColNr));
         }
 
-        FuturePlayerTraining.Priority prio = null;
-        boolean isTrainingPrioItem = false;
         if (e.getSource().equals(fullTrainingMenuItem)) {
-            prio = FuturePlayerTraining.Priority.FULL_TRAINING;
-            isTrainingPrioItem = true;
+            player.setFutureTraining( FuturePlayerTraining.Priority.FULL_TRAINING, from, to);
         } else if (e.getSource().equals(partialTrainingMenuItem)) {
-            prio = FuturePlayerTraining.Priority.PARTIAL_TRAINING;
-            isTrainingPrioItem = true;
+            player.setFutureTraining( FuturePlayerTraining.Priority.PARTIAL_TRAINING, from, to);
         } else if (e.getSource().equals(osmosisTrainingMenuItem)) {
-            prio = FuturePlayerTraining.Priority.OSMOSIS_TRAINING;
-            isTrainingPrioItem = true;
+            player.setFutureTraining( FuturePlayerTraining.Priority.OSMOSIS_TRAINING, from, to);
         } else if (e.getSource().equals(noTrainingMenuItem)) {
-            isTrainingPrioItem = true;
+            player.setFutureTraining( null, from, to);
         }
-        if (isTrainingPrioItem) {
-            player.setFutureTraining( prio, from, to);
-            reload();
-        }
+        reload();
     }
 
     private HattrickDate getWeek(String s) {
