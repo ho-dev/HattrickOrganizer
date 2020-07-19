@@ -187,10 +187,15 @@ public class TrainingModel {
 		}
 	}
 
+	// full training: Primary Training Position && ! set pieces || Bonus Position (&& set pieces)
+	// partial training: Secondary Training Position || primary Training Position && set pieces)
 	public boolean isPartialTrainingAvailable(int[] weeks) {
 		for ( var w : weeks){
 			var t = getFutureTrainings().get(w);
-			if (WeeklyTrainingType.instance(t.getTrainingType()).getPrimaryTrainingSkillSecondaryTrainingPositions().length > 0 ) {
+			var tt = WeeklyTrainingType.instance(t.getTrainingType());
+			if (tt.getPrimaryTrainingSkillSecondaryTrainingPositions().length > 0 ||
+					tt.getPrimaryTrainingSkillBonusPositions().length > 0
+			) {
 				return true;
 			}
 		}
