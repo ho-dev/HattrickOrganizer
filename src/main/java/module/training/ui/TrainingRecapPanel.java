@@ -41,6 +41,13 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
     private static final int fixedColumns = 5;
     private TrainingRecapTable recapTable;
     private final TrainingModel model;
+    private JMenuItem fullTrainingMenuItem;
+    private JMenuItem partialTrainingMenuItem;
+    private JMenuItem osmosisTrainingMenuItem;
+    private JMenuItem noTrainingMenuItem;
+    private JPopupMenu trainingPrioPopUp;
+    private JTable table;
+    private Vector<String> columns;
 
     /**
      * Creates a new TrainingRecapPanel object.
@@ -84,7 +91,6 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
         });
     }
 
-    private Vector<String> columns;
     /**
      * Get Columns name
      *
@@ -159,14 +165,6 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
             }
         }
     }
-
-
-    private JMenuItem fullTrainingMenuItem;
-    private JMenuItem partialTrainingMenuItem;
-    private JMenuItem osmosisTrainingMenuItem;
-    private JMenuItem noTrainingMenuItem;
-    private JPopupMenu trainingPrioPopUp;
-    private JTable table;
 
     private void reAddTable() {
         if (recapTable != null) {
