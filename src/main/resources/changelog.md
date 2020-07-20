@@ -51,6 +51,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
   - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512
   - [FIX] Fix bug of training effect of Walkover matches #623
+  - [FEAT] Individual training plans for each player in training preview #587
 
 ### Misc
 

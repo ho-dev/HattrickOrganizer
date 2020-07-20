@@ -320,7 +320,6 @@ public class Player {
     private double m_lastMatchRating=0;
     private int m_lastMatchId=0;
 
-
     /**
      * specifying at what time –in minutes- that player entered the field
      * This parameter is only used by RatingPredictionManager to calculate the stamina effect
@@ -329,6 +328,11 @@ public class Player {
     private int GameStartingTime = 0;
     private int nationalTeamId=0;
     private double subExperience;
+
+    /**
+     * future training priorities planed by the user
+     */
+    private List<FuturePlayerTraining> futurePlayerTrainings;
 
     public int getGameStartingTime() {
         return GameStartingTime;
@@ -2218,7 +2222,6 @@ public class Player {
         return OnlineWorker.getTrainingEvents(this.m_iSpielerID);
     }
 
-    private List<FuturePlayerTraining> futurePlayerTrainings;
 
     public List<FuturePlayerTraining> getFuturePlayerTrainings(){
         if ( futurePlayerTrainings == null){
@@ -2237,6 +2240,17 @@ public class Player {
         return futurePlayerTrainings;
     }
 
+    /**
+     * Get the training priority of a hattrick week. If user training plan is given for the week this user selection is
+     * returned. If no user plan is available, the training priority is determined by the player's best position.
+     *
+     * @param wt
+     *  used to get priority depending from the player's best position.
+     * @param hattrickWeek
+     *  the training week
+     * @return
+     *  the training priority
+     */
     public FuturePlayerTraining.Priority getTrainingPriority(WeeklyTrainingType wt, HattrickDate hattrickWeek) {
         for ( var t : getFuturePlayerTrainings()) {
             if (hattrickWeek.isBetween(t.getFrom(), t.getTo())) {
@@ -2266,6 +2280,14 @@ public class Player {
         return null; // No training
     }
 
+    /**
+     * Set training priority for a time interval.
+     * Previously saved trainings of this interval are overwritten or deleted.
+     *
+     * @param prio new training priority for the given time interval
+     * @param fromWeek first week with new training priority
+     * @param toWeek last week with new training priority
+     */
     public void setFutureTraining(FuturePlayerTraining.Priority prio, HattrickDate fromWeek, HattrickDate toWeek) {
         var removeIntervals = new ArrayList<FuturePlayerTraining>();
         for ( var t : getFuturePlayerTrainings() ){
@@ -2278,7 +2300,6 @@ public class Player {
         if ( prio != null){
             futurePlayerTrainings.add(new FuturePlayerTraining(this.getSpielerID(), prio, fromWeek, toWeek));
         }
-
         DBManager.instance().storeFuturePlayerTrainings(this.getSpielerID(), futurePlayerTrainings);
     }
 }
