@@ -8,9 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 public class FuturePlayerTrainingTable extends AbstractTable {
 
@@ -36,11 +34,11 @@ public class FuturePlayerTrainingTable extends AbstractTable {
     }
 
     List<FuturePlayerTraining> getFuturePlayerTrainingPlan(int playerId) {
-        var query = new StringBuilder("select * from ")
-                .append(getTableName())
-                .append(" where playerId=")
-                .append(playerId);
-        ResultSet rs = adapter.executeQuery(query.toString());
+        String query = "select * from " +
+                getTableName() +
+                " where playerId=" +
+                playerId;
+        ResultSet rs = adapter.executeQuery(query);
         try {
             if (rs != null) {
                 var ret = new ArrayList<FuturePlayerTraining>();
@@ -63,8 +61,8 @@ public class FuturePlayerTrainingTable extends AbstractTable {
         var from = new HattrickDate(fromSeason, fromWeek);
         HattrickDate to = null;
         var toSeason = DbUtil.getNullableInt(rs, "toSeason");
-        if (toSeason != null) {
-            var toWeek = DbUtil.getNullableInt(rs, "toWeek");
+        var toWeek = DbUtil.getNullableInt(rs, "toWeek");
+        if (toSeason != null && toWeek != null) {
             to = new HattrickDate(toSeason, toWeek);
         }
         var prio = FuturePlayerTraining.Priority.valueOf(rs.getInt("prio"));
@@ -78,17 +76,17 @@ public class FuturePlayerTrainingTable extends AbstractTable {
             delete(where, werte);
 
             for (var t : futurePlayerTrainings) {
-                var sql = new StringBuilder("INSERT INTO ")
-                        .append(getTableName())
-                        .append(" (  playerId, prio, fromSeason, fromWeek, toSeason, toWeek ) VALUES(")
-                        .append(t.getPlayerId()).append(", ")
-                        .append(t.getPriority().getValue()).append(", ")
-                        .append(t.getFrom().getSeason()).append(", ")
-                        .append(t.getFrom().getWeek()).append(", ")
-                        .append(t.getTo() != null ? t.getTo().getSeason() : null).append(", ")
-                        .append(t.getTo() != null ? t.getTo().getWeek() : null)
-                        .append(")");
-                adapter.executeUpdate(sql.toString());
+                String sql = "INSERT INTO " +
+                        getTableName() +
+                        " (  playerId, prio, fromSeason, fromWeek, toSeason, toWeek ) VALUES(" +
+                        t.getPlayerId() + ", " +
+                        t.getPriority().getValue() + ", " +
+                        t.getFrom().getSeason() + ", " +
+                        t.getFrom().getWeek() + ", " +
+                        (t.getTo() != null ? t.getTo().getSeason() : null) + ", " +
+                        (t.getTo() != null ? t.getTo().getWeek() : null) +
+                        ")";
+                adapter.executeUpdate(sql);
             }
         } catch (Exception e) {
             HOLogger.instance().log(getClass(), e);
