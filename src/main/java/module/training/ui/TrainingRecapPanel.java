@@ -1,7 +1,6 @@
 // %776182880:hoplugins.trainingExperience.ui%
 package module.training.ui;
 
-import core.gui.IRefreshable;
 import core.gui.RefreshManager;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.BaseTableModel;
@@ -10,19 +9,15 @@ import core.model.UserParameter;
 import core.model.player.ISkillChange;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.training.FuturePlayerTraining;
 import core.training.FutureTrainingManager;
 import core.training.HattrickDate;
 import module.training.ui.model.ModelChange;
-import module.training.ui.model.ModelChangeListener;
 import module.training.ui.model.TrainingModel;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -35,17 +30,13 @@ import javax.swing.table.*;
  *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
-public class TrainingRecapPanel extends LazyImagePanel implements ActionListener {
+public class TrainingRecapPanel extends LazyImagePanel  {
 
     private static final long serialVersionUID = 7240288702397251461L;
     private static final int fixedColumns = 5;
     private TrainingRecapTable recapTable;
     private final TrainingModel model;
-    private JMenuItem fullTrainingMenuItem;
-    private JMenuItem partialTrainingMenuItem;
-    private JMenuItem osmosisTrainingMenuItem;
-    private JMenuItem noTrainingMenuItem;
-    private JPopupMenu trainingPrioPopUp;
+    private FutureTrainingPrioPopup trainingPrioPopUp;
     private JTable table;
     private Vector<String> columns;
 
@@ -173,7 +164,6 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
 
         table = new JTable(createTableModel());
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        //table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.setColumnSelectionAllowed(true);
         ListSelectionModel columnSelectionModel = columnModel.getSelectionModel();
@@ -181,21 +171,7 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
         ListSelectionModel rowSelectionModel = table.getSelectionModel();
         rowSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        fullTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.fulltrain"));
-        fullTrainingMenuItem.addActionListener(this);
-        partialTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.partialtrain"));
-        partialTrainingMenuItem.addActionListener(this);
-        osmosisTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.osmosistrain"));
-        osmosisTrainingMenuItem.addActionListener(this);
-        noTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.notrain"));
-        noTrainingMenuItem.addActionListener(this);
-        trainingPrioPopUp = new JPopupMenu();
-        trainingPrioPopUp.add(fullTrainingMenuItem);
-        trainingPrioPopUp.add(partialTrainingMenuItem);
-        trainingPrioPopUp.add(osmosisTrainingMenuItem);
-        trainingPrioPopUp.add(noTrainingMenuItem);
-        //table.setComponentPopupMenu(trainingPrioPopUp);
-
+        trainingPrioPopUp = new FutureTrainingPrioPopup(this, model);
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -204,8 +180,7 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
 
                 if ( e.getComponent() instanceof JTable ) {
                     var cols = table.getSelectedColumns();
-                    partialTrainingMenuItem.setEnabled(model.isPartialTrainingAvailable(cols));
-                    osmosisTrainingMenuItem.setEnabled(model.isOsmosisTrainingAvailable(cols));
+                    trainingPrioPopUp.setSelectedColumns(cols);
                     trainingPrioPopUp.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
@@ -280,36 +255,5 @@ public class TrainingRecapPanel extends LazyImagePanel implements ActionListener
         }
 
         return tableModel;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // Training Priority Popup Menu Actions
-        var player = model.getActivePlayer();
-        if (player == null) return;
-        var cols = table.getSelectedColumns();
-        if (cols == null || cols.length == 0) return;
-
-        var from = getWeek(getColumns().get(cols[0]+fixedColumns));
-        HattrickDate to = null;
-        var toColNr = cols[cols.length - 1]+fixedColumns;
-        if (toColNr < getColumns().size()-2) {
-            to = getWeek(getColumns().get(toColNr));
-        }
-
-        if (e.getSource().equals(fullTrainingMenuItem)) {
-            player.setFutureTraining( FuturePlayerTraining.Priority.FULL_TRAINING, from, to);
-        } else if (e.getSource().equals(partialTrainingMenuItem)) {
-            player.setFutureTraining( FuturePlayerTraining.Priority.PARTIAL_TRAINING, from, to);
-        } else if (e.getSource().equals(osmosisTrainingMenuItem)) {
-            player.setFutureTraining( FuturePlayerTraining.Priority.OSMOSIS_TRAINING, from, to);
-        } else if (e.getSource().equals(noTrainingMenuItem)) {
-            player.setFutureTraining( null, from, to);
-        }
-        reload();
-    }
-
-    private HattrickDate getWeek(String s) {
-        return new HattrickDate(s);
     }
 }

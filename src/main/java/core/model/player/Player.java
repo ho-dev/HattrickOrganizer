@@ -2302,6 +2302,13 @@ public class Player {
         }
         DBManager.instance().storeFuturePlayerTrainings(this.getSpielerID(), futurePlayerTrainings);
     }
+
+    public String getBestPositionInfo() {
+        return MatchRoleID.getNameForPosition(getIdealPosition())
+                + " ("
+                +  getIdealPosStaerke(true, true, 1)
+                + "%)";
+    }
 }
 
 class PositionContribute {
