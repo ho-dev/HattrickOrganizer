@@ -27,6 +27,7 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,6 +59,7 @@ public class OutputPanel extends LazyImagePanel {
     private JButton importButton;
     private JButton calculateButton;
     private final TrainingModel model;
+    private FutureTrainingPrioPopup trainingPrioPopUp;
 
     /**
      * Creates a new OutputPanel object.
@@ -80,6 +82,18 @@ public class OutputPanel extends LazyImagePanel {
     @Override
     protected void update() {
         ((OutputTableModel) outputTable.getModel()).fillWithData();
+        trainingPrioPopUp = new FutureTrainingPrioPopup(this, model);
+        outputTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (outputTable.getSelectedRow() < 0)
+                    return;
+                if (e.getComponent() instanceof JTable) {
+                    trainingPrioPopUp.updateActivePlayer();
+                    trainingPrioPopUp.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
     }
 
     /**
@@ -98,10 +112,10 @@ public class OutputPanel extends LazyImagePanel {
         String input = tf.getText();
         if (value == JOptionPane.YES_OPTION && !StringUtils.isEmpty(input)) {
 
-            Integer matchID = new Integer(input);
+            Integer matchID = Integer.valueOf(input);
 
             if (HelperWrapper.instance().isUserMatch(input, MatchType.LEAGUE)) {
-                if (OnlineWorker.downloadMatchData(matchID.intValue(), MatchType.LEAGUE, false)) {
+                if (OnlineWorker.downloadMatchData(matchID, MatchType.LEAGUE, false)) {
                     Helper.showMessage(null,
                             HOVerwaltung.instance().getLanguageString("MatchImported"),
                             HOVerwaltung.instance().getLanguageString("ImportOK"), 1);
@@ -119,29 +133,17 @@ public class OutputPanel extends LazyImagePanel {
                 new PlayerSelectionListener(this.model, this.outputTable,
                         OutputTableModel.COL_PLAYER_ID));
 
-        this.importButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                importMatches();
-            }
+        this.importButton.addActionListener(arg0 -> importMatches());
+
+        this.calculateButton.addActionListener(arg0 -> {
+            // recalcSubskills() causes UI update via RefreshManager, so no
+            // need to update UI ourself
+            TrainingManager.instance().recalcSubskills(true);
         });
 
-        this.calculateButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                // recalcSubskills() causes UI update via RefreshManager, so no
-                // need to update UI ourself
-                TrainingManager.instance().recalcSubskills(true);
-            }
-        });
-
-        this.model.addModelChangeListener(new ModelChangeListener() {
-
-            @Override
-            public void modelChanged(ModelChange change) {
-                if (change == ModelChange.ACTIVE_PLAYER) {
-                    selectPlayerFromModel();
-                }
+        this.model.addModelChangeListener(change -> {
+            if (change == ModelChange.ACTIVE_PLAYER) {
+                selectPlayerFromModel();
             }
         });
     }
@@ -178,17 +180,10 @@ public class OutputPanel extends LazyImagePanel {
             TableColumn column = outputTable.getColumnModel().getColumn(i);
 
             switch (i) {
-                case 0:
-                    column.setPreferredWidth(150);
-                    break;
-                case 1:
-                    column.setPreferredWidth(60);
-                    break;
-                case 2:
-                    column.setPreferredWidth(140);
-                    break;
-                default:
-                    column.setPreferredWidth(70);
+                case 0 -> column.setPreferredWidth(150);
+                case 1 -> column.setPreferredWidth(60);
+                case 2 -> column.setPreferredWidth(140);
+                default -> column.setPreferredWidth(70);
             }
         }
 

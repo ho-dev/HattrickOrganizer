@@ -82,9 +82,12 @@ public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListen
         this.cols = cols;
         partialTrainingMenuItem.setEnabled(model.isPartialTrainingAvailable(cols));
         osmosisTrainingMenuItem.setEnabled(model.isOsmosisTrainingAvailable(cols));
+        updateActivePlayer();
+    }
+
+    public void updateActivePlayer() {
         if ( model.getActivePlayer() != null) {
             bestPositionTrainingMenuItem.setText(model.getActivePlayer().getBestPositionInfo());
         }
     }
-
 }

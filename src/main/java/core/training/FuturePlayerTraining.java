@@ -1,5 +1,8 @@
 package core.training;
 
+import core.model.HOVerwaltung;
+
+import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +34,16 @@ public class FuturePlayerTraining {
 
         public int getValue() {
             return value;
+        }
+
+        public String toString(){
+            return switch (value) {
+                case 3 -> HOVerwaltung.instance().getLanguageString("trainpre.fulltrain");
+                case 2 -> HOVerwaltung.instance().getLanguageString("trainpre.partialtrain");
+                case 1 -> HOVerwaltung.instance().getLanguageString("trainpre.osmosistrain");
+                case 0 -> HOVerwaltung.instance().getLanguageString("trainpre.notrain");
+                default -> "";
+            };
         }
     }
 

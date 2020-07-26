@@ -8,7 +8,7 @@ import core.training.FutureTrainingManager;
 import core.training.WeeklyTrainingType;
 import core.util.Helper;
 import module.training.Skills;
-import module.training.ui.comp.BestPositionCell;
+import module.training.ui.comp.TrainingPriorityCell;
 import module.training.ui.comp.PlayerNameCell;
 import module.training.ui.comp.VerticalIndicator;
 
@@ -28,13 +28,13 @@ public class OutputTableModel extends AbstractTableModel {
 
     public final static int COL_PLAYER_ID = 11;
     private static final long serialVersionUID = -1695207352334612268L;
-    private List<Player> data = new ArrayList<Player>();
+    private List<Player> data = new ArrayList<>();
     private final TrainingModel model;
 
     /**
      * Constructor
      *
-     * @param model
+     * @param model the training model
      */
     public OutputTableModel(TrainingModel model) {
         this.model = model;
@@ -47,28 +47,14 @@ public class OutputTableModel extends AbstractTableModel {
      */
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        switch (columnIndex) {
-            case 0:
-                return PlayerNameCell.class;
-            case 1:
-            case 2:
-                return BestPositionCell.class;
-            case COL_PLAYER_ID:
-                return String.class;
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-                return VerticalIndicator.class;
-            case 12:
-                return Integer.class;
-            default:
-                return super.getColumnClass(columnIndex);
-        }
+        return switch (columnIndex) {
+            case 0 -> PlayerNameCell.class;
+            case 1, 2 -> TrainingPriorityCell.class;
+            case COL_PLAYER_ID -> String.class;
+            case 3, 4, 5, 6, 7, 8, 9, 10 -> VerticalIndicator.class;
+            case 12 -> Integer.class;
+            default -> super.getColumnClass(columnIndex);
+        };
 
     }
 
@@ -89,36 +75,22 @@ public class OutputTableModel extends AbstractTableModel {
      */
     @Override
     public String getColumnName(int columnIndex) {
-        switch (columnIndex) {
-            case 0:
-                return HOVerwaltung.instance().getLanguageString("Spieler");
-            case 1:
-                return HOVerwaltung.instance().getLanguageString("ls.player.age");
-            case 2:
-                return HOVerwaltung.instance().getLanguageString("BestePosition");
-            case 3:
-                return HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper");
-            case 4:
-                return HOVerwaltung.instance().getLanguageString("ls.player.skill.defending");
-            case 5:
-                return HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking");
-            case 6:
-                return HOVerwaltung.instance().getLanguageString("ls.player.skill.passing");
-            case 7:
-                return HOVerwaltung.instance().getLanguageString("ls.player.skill.winger");
-            case 8:
-                return HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
-            case 9:
-                return HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
-            case 10:
-                return HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
-            case COL_PLAYER_ID:
-                return HOVerwaltung.instance().getLanguageString("ls.player.id");
-            case 12:
-                return "speed";
-            default:
-                return "";
-        }
+        return switch (columnIndex) {
+            case 0 -> HOVerwaltung.instance().getLanguageString("Spieler");
+            case 1 -> HOVerwaltung.instance().getLanguageString("ls.player.age");
+            case 2 -> HOVerwaltung.instance().getLanguageString("trainpre.priority");
+            case 3 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper");
+            case 4 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.defending");
+            case 5 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking");
+            case 6 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.passing");
+            case 7 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.winger");
+            case 8 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
+            case 9 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
+            case 10 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
+            case COL_PLAYER_ID -> HOVerwaltung.instance().getLanguageString("ls.player.id");
+            case 12 -> "speed";
+            default -> "";
+        };
     }
 
     /*
@@ -159,46 +131,32 @@ public class OutputTableModel extends AbstractTableModel {
                 this.model.getFutureTrainings(), 0,
                 this.model.getTrainerLevel(), this.model.getAssistants());
 
-        switch (columnIndex) {
-            case 0:
-                // Spielername
-                return createPlayerNameCell(player, ftm.getTrainingSpeed());
-            case 1:
-                // Spieleralter
-                return player.getAlterWithAgeDaysAsString();
-            case 2:
-                // Beste Postion
-                return createBestPositionCell(player);
-            case 3:
-                return createIcon(player, PlayerSkill.KEEPER);
-            case 4:
-                return createIcon(player, PlayerSkill.DEFENDING);
-            case 5:
-                return createIcon(player, PlayerSkill.PLAYMAKING);
-            case 6:
-                return createIcon(player, PlayerSkill.PASSING);
-            case 7:
-                return createIcon(player, PlayerSkill.WINGER);
-            case 8:
-                return createIcon(player, PlayerSkill.SCORING);
-            case 9:
-                return createIcon(player, PlayerSkill.SET_PIECES);
-            case 10:
-                return createIcon(player, PlayerSkill.STAMINA);
-            case COL_PLAYER_ID:
-                return Integer.toString(player.getSpielerID());
-            case 12:
-                return ftm.getTrainingSpeed();
-            default:
-                return "";
-        }
+        // Spielername
+        // Spieleralter
+        // Beste Postion
+        return switch (columnIndex) {
+            case 0 -> createPlayerNameCell(player, ftm.getTrainingSpeed());
+            case 1 -> player.getAlterWithAgeDaysAsString();
+            case 2 -> createBestPositionCell(player);
+            case 3 -> createIcon(player, PlayerSkill.KEEPER);
+            case 4 -> createIcon(player, PlayerSkill.DEFENDING);
+            case 5 -> createIcon(player, PlayerSkill.PLAYMAKING);
+            case 6 -> createIcon(player, PlayerSkill.PASSING);
+            case 7 -> createIcon(player, PlayerSkill.WINGER);
+            case 8 -> createIcon(player, PlayerSkill.SCORING);
+            case 9 -> createIcon(player, PlayerSkill.SET_PIECES);
+            case 10 -> createIcon(player, PlayerSkill.STAMINA);
+            case COL_PLAYER_ID -> Integer.toString(player.getSpielerID());
+            case 12 -> ftm.getTrainingSpeed();
+            default -> "";
+        };
     }
 
     /**
      * Refill the table with the new training based on the last changes
      */
     public void fillWithData() {
-        this.data = new ArrayList<Player>(HOVerwaltung.instance().getModel().getCurrentPlayers());
+        this.data = new ArrayList<>(HOVerwaltung.instance().getModel().getCurrentPlayers());
         fireTableDataChanged();
     }
 
@@ -244,23 +202,16 @@ public class OutputTableModel extends AbstractTableModel {
     private VerticalIndicator createIcon(Player player, int skillIndex) {
         double point = getOffset(player, skillIndex);
         double trainingLength = getTrainingLength(player, skillIndex);
-
-        VerticalIndicator vi = new VerticalIndicator(Helper.round(point, 1), Helper.round(
+        return new VerticalIndicator(Helper.round(point, 1), Helper.round(
                 trainingLength, 1));
-
-        return vi;
     }
 
     private PlayerNameCell createPlayerNameCell(Player player, int speed) {
-        PlayerNameCell pnc = new PlayerNameCell(player, speed);
-
-        return pnc;
+        return new PlayerNameCell(player, speed);
     }
 
-    private BestPositionCell createBestPositionCell(Player player) {
-        BestPositionCell bpc = new BestPositionCell(player);
-
-        return bpc;
+    private TrainingPriorityCell createBestPositionCell(Player player) {
+        return new TrainingPriorityCell(player, model.getFutureTrainings().get(0).getHattrickDate());
     }
 
 }

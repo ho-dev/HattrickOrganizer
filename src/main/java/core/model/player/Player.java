@@ -2309,6 +2309,17 @@ public class Player {
                 +  getIdealPosStaerke(true, true, 1)
                 + "%)";
     }
+
+    public String getTrainingPriorityInformation(HattrickDate nextWeek) {
+        for ( var t : getFuturePlayerTrainings()) {
+            if (nextWeek.isBetween(t.getFrom(), t.getTo())) {
+                return t.getPriority().toString();
+            }
+        }
+
+        return getBestPositionInfo();
+
+    }
 }
 
 class PositionContribute {
