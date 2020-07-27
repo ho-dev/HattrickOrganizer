@@ -1,8 +1,6 @@
 package tool.updater;
 
-import core.HO;
 import core.util.HOLogger;
-
 import java.text.*;
 import java.util.Date;
 import java.util.Locale;
@@ -16,6 +14,7 @@ public class VersionInfo {
 	private double version;
 	private String fullVersion;
 	private int build;
+	private double updateCriteria;
 	private Date released;
 	private String versionType;
 	final static private DecimalFormat DECF = new DecimalFormat("0.000##");
@@ -37,11 +36,11 @@ public class VersionInfo {
 		nf.setMinimumFractionDigits(3);
 		String txt = nf.format(version);
 
-		if (versionType=="BETA") {
+		if (versionType.equals("BETA")) {
 			txt += " BETA (r" + build + ")";
 		}
 
-		else if (versionType=="DEV") {
+		else if (versionType.equals("DEV")) {
 			txt += " DEV (r" + build + ")";
 		}
 
@@ -50,7 +49,9 @@ public class VersionInfo {
 
 
 
-
+	public double getUpdateCriteria (){
+		return updateCriteria;
+	}
 
 	public double getVersion() {
 		return version;
@@ -81,6 +82,11 @@ public class VersionInfo {
 		}
 	}
 
+	public void setUpdateCriteria(String sUpdateCriteria) {
+		String[] aUpdateCriteria = sUpdateCriteria.split("\\.");
+		this.updateCriteria = Double.parseDouble(aUpdateCriteria[0] + "." + aUpdateCriteria[1]);
+	}
+
 
 	public int getBuild() {
 		return build;
@@ -107,6 +113,9 @@ public class VersionInfo {
 			}
 			else if ("released".equals(key)) {
 				setReleasedDate(DATF.parse(val));
+			}
+			else if ("min_version_for_auto_update".equals(key)) {
+				setUpdateCriteria(val);
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "Error parsing " + key + " / " + val + " : " + e);

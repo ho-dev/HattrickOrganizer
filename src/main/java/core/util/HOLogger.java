@@ -44,7 +44,7 @@ public class HOLogger {
 			File parentFolder = new File(UserManager.instance().getDbParentFolder());
 
 			if (parentFolder.canWrite()) {
-				logFolderExist = parentFolder.mkdirs();
+				logFolderExist = logsFolder.mkdirs();
 			}
 			if (!logFolderExist) {
 				errorMsg = "Could not initialize the log folder.\n";

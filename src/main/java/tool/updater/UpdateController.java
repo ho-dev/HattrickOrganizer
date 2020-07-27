@@ -1,16 +1,11 @@
 package tool.updater;
 
-import java.io.*;
-import java.util.zip.ZipFile;
 import javax.swing.JOptionPane;
-
+import com.install4j.api.launcher.ApplicationLauncher;
 import core.HO;
-import core.file.ZipHelper;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.net.MyConnector;
-import core.net.login.LoginWaitDialog;
-import core.util.HOLogger;
 
 public final class UpdateController {
 
@@ -27,38 +22,42 @@ public final class UpdateController {
         VersionInfo betaVersion = MyConnector.instance().getLatestBetaVersion();
         VersionInfo stableVersion = MyConnector.instance().getLatestStableVersion();
         VersionInfo updVersion = null;
+        Boolean autoUpdateRequirementsMet = false;
 
+        // check if version available based on channel
         switch (core.model.UserParameter.temp().ReleaseChannel) {
-            case "Stable":
-                if (compareToCurrentVersions(stableVersion)) {
+        case "Stable":
+            if (compareToCurrentVersions(stableVersion)) {updVersion = stableVersion;}
+            if (canAutoUpdate(stableVersion)) {autoUpdateRequirementsMet = true;}
+            break;
+        case "Beta":
+            if (compareTwoVersions(stableVersion, betaVersion)) {
+                if (compareToCurrentVersions(stableVersion))
                     updVersion = stableVersion;
-                }
-                break;
-            case "Beta":
-                if (compareTwoVersions(stableVersion, betaVersion)) {
-                    if (compareToCurrentVersions(stableVersion))
-                        updVersion = stableVersion;
-                }
-                else if (compareToCurrentVersions(betaVersion)) {
+            }
+            else if (compareToCurrentVersions(betaVersion)) {
+                updVersion = betaVersion;
+            }
+            if (canAutoUpdate(betaVersion)) {autoUpdateRequirementsMet = true;}
+            break;
+        default:
+            if (compareTwoVersions(stableVersion, devVersion)) {
+                if (compareToCurrentVersions(stableVersion))
+                    updVersion = stableVersion;
+            }
+            else if (compareTwoVersions(betaVersion, devVersion)) {
+                if (compareToCurrentVersions(betaVersion))
                     updVersion = betaVersion;
-                }
-                break;
-            default:
-                if (compareTwoVersions(stableVersion, devVersion)) {
-                    if (compareToCurrentVersions(stableVersion))
-                        updVersion = stableVersion;
-                }
-                else if (compareTwoVersions(betaVersion, devVersion)) {
-                    if (compareToCurrentVersions(betaVersion))
-                        updVersion = betaVersion;
-                }
-                else if (compareToCurrentVersions(devVersion)) {
-                    updVersion = devVersion;
-                }
-                break;
-        }
+            }
+            else if (compareToCurrentVersions(devVersion)) {
+                updVersion = devVersion;
+            }
+            if (canAutoUpdate(devVersion)) {autoUpdateRequirementsMet = true;}
+            break;
+    }
 
-        if (updVersion != null) {
+        // a version has been found and auto update is allowed
+        if ((updVersion != null) && autoUpdateRequirementsMet) {
             String versionType = updVersion.getversionType();
             String updateAvailable;
             String releaseNoteUrl;
@@ -125,7 +124,10 @@ public final class UpdateController {
                     updateHO(updVersion.getfullVersion(), updVersion.getVersion(), versionType);
                 }
             }
-        } else {
+        }
+
+        // no update available
+        else if (updVersion == null){
             final int currRev = HO.getRevisionNumber();
             JOptionPane.showMessageDialog(HOMainFrame.instance(), HOVerwaltung.instance()
                     .getLanguageString("updatenotavailable")
@@ -138,14 +140,21 @@ public final class UpdateController {
                     .getLanguageString("ls.menu.file.update.ho"), JOptionPane.INFORMATION_MESSAGE);
 
         }
+
+        else {
+            JOptionPane.showMessageDialog(HOMainFrame.instance(), "auto update not possible, a fresh install is required !",    // TODO: put this as a language string
+                    HOVerwaltung.instance().getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"),
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+
     }
 
     public static String get_HO_zip_download_url(String full_version, double version, String versionType) {
         if (versionType.equals("DEV")) {
-            return "https://github.com/akasolace/HO/releases/download/dev/HO_" + full_version + ".zip";
+            return "https://github.com/akasolace/HO/releases/download/dev/HO-" + full_version + "-portable-win-DEV.zip";
         } else {
             String ver = Double.toString(version);
-            return "https://github.com/akasolace/HO/releases/download/" + ver + "/HO_" + full_version + ".zip";
+            return "https://github.com/akasolace/HO/releases/download/" + ver + "/HO-" + full_version + "-portable-win-DEV.zip";
         }
     }
 
@@ -154,35 +163,39 @@ public final class UpdateController {
     }
 
     public static void updateHO(final String urlString) {
-        File tmp = new File("update.zip");
-        LoginWaitDialog wait = new LoginWaitDialog(HOMainFrame.instance());
-        wait.setVisible(true);
-        HOLogger.instance().debug(UpdateController.class, "Try to download: " + urlString);
-        if (!UpdateHelper.download(urlString, tmp)) {
-            wait.setVisible(false);
-            return;
-        }
-        wait.setVisible(false);
-        ZipFile zipFile = null;
-        try {
-            zipFile = new ZipFile("update.zip");
-            String dir = System.getProperty("user.dir");
-            ZipHelper.extractFile(zipFile, "buildResources/Win/HO.bat", dir);
-            ZipHelper.extractFile(zipFile, "buildResources/Linux/HO.sh", dir);
-            ZipHelper.extractFile(zipFile, "HOUpdater.class", dir);
-        } catch (Exception e) {
-            HOLogger.instance().log(UpdateController.class, e);
-            return;
-        } finally {
-            ZipHelper.close(zipFile);
-        }
-        JOptionPane.showMessageDialog(null,
-                HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
-                        .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
-                        .getLanguageString("ls.menu.file.update.ho"),
-                JOptionPane.INFORMATION_MESSAGE);
+//        File tmp = new File("update.zip");
+//        LoginWaitDialog wait = new LoginWaitDialog(HOMainFrame.instance());
+//        wait.setVisible(true);
+//        HOLogger.instance().debug(UpdateController.class, "Try to download: " + urlString);
+//        if (!UpdateHelper.download(urlString, tmp)) {
+//            wait.setVisible(false);
+//            return;
+//        }
+//        wait.setVisible(false);
+//
+//        JOptionPane.showMessageDialog(null,
+//                HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
+//                        .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
+//                        .getLanguageString("ls.menu.file.update.ho"),
+//                JOptionPane.INFORMATION_MESSAGE);
+//
+//        HOMainFrame.instance().shutdown();
+// This will return immediately if you call it from the EDT,
+// otherwise it will block until the installer application exits
+        ApplicationLauncher.launchApplicationInProcess("814", null, new ApplicationLauncher.Callback() {
+                    public void exited(int exitValue) {
+                        //TODO add your code here (not invoked on event dispatch thread)
+                        String aa = "dgdg";
+                    }
 
-        HOMainFrame.instance().shutdown();
+                    public void prepareShutdown() {
+                        //TODO add your code here (not invoked on event dispatch thread)
+                        String aa = "dgdgdgdgdgdg";
+                    }
+                }, ApplicationLauncher.WindowMode.FRAME, null
+        );
+
+
     }
 
     public static boolean compareTwoVersions(VersionInfo a, VersionInfo b) {
@@ -190,8 +203,16 @@ public final class UpdateController {
                 (a.getVersion() == b.getVersion() && a.getBuild() > b.getBuild());
     }
 
+    // returns true is a more recent than current version
     public static boolean compareToCurrentVersions(VersionInfo a) {
         return a.getVersion() > HO.VERSION ||
-                (a.getVersion() == HO.VERSION && a.getBuild() > HO.getRevisionNumber());
+                ((a.getVersion() == HO.VERSION) && (a.getBuild() > HO.getRevisionNumber()));
     }
+
+
+    public static boolean canAutoUpdate(VersionInfo a) {
+        if (HO.VERSION == 0.0) return true; // This is to test updater in debug mode
+        return (HO.VERSION >= a.getUpdateCriteria());
+    }
+
 }
