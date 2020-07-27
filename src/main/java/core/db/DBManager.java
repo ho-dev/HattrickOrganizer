@@ -27,6 +27,7 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.model.series.Liga;
 import core.model.series.Paarung;
+import core.training.FuturePlayerTraining;
 import core.training.TrainingPerWeek;
 import core.util.HOLogger;
 import core.util.ExceptionUtils;
@@ -245,6 +246,7 @@ public class DBManager {
 		tables.put(PenaltyTakersTable.TABLENAME, new PenaltyTakersTable(adapter));
 		tables.put(MatchOrderTable.TABLENAME, new MatchOrderTable(adapter));
 		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(adapter));
+		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((adapter)));
 	}
 
 	AbstractTable getTable(String tableName) {
@@ -355,7 +357,7 @@ public class DBManager {
 	/**
 	 * lädt die Player zum angegeben HRF file ein
 	 */
-	public Vector<Player> getSpieler(int hrfID) {
+	public List<Player> getSpieler(int hrfID) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.getSpieler(hrfID);
 	}
@@ -1831,4 +1833,14 @@ public class DBManager {
 		return buffer.toString();
 	}
 
+	public List<FuturePlayerTraining> getFuturePlayerTrainings(int playerId) {
+		return ((FuturePlayerTrainingTable) getTable(FuturePlayerTrainingTable.TABLENAME))
+				.getFuturePlayerTrainingPlan(playerId);
+	}
+
+	public void storeFuturePlayerTrainings(int spielerID, List<FuturePlayerTraining> futurePlayerTrainings) {
+		((FuturePlayerTrainingTable) getTable(FuturePlayerTrainingTable.TABLENAME))
+				.storeFuturePlayerTrainings(spielerID, futurePlayerTrainings);
+
+	}
 }

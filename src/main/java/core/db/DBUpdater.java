@@ -156,6 +156,11 @@ final class DBUpdater {
 			throwables.printStackTrace();
 		}
 
+		//create FuturePlayerTrainingTable
+		if (!tableExists(FuturePlayerTrainingTable.TABLENAME)) {
+			dbManager.getTable(FuturePlayerTrainingTable.TABLENAME).createTable();
+		}
+
 		updateDBVersion(dbVersion, version);
 	}
 

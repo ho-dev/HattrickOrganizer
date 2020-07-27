@@ -14,6 +14,9 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import static core.db.DbUtil.getNullableBoolean;
+import static core.db.DbUtil.getNullableInt;
+
 /**
  * Class used to store in DB, [Matches] Table fetched via CHPP
  */
@@ -288,16 +291,11 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		match.setOrdersGiven(rs.getBoolean("Aufstellung"));
 		match.setArenaId(rs.getInt("ArenaId"));
 		match.setRegionId(rs.getInt("RegionId"));
-		match.setIsDerby(rs.getBoolean("isDerby"));
-		if (rs.wasNull()) match.setIsDerby(null);
-		match.setIsNeutral(rs.getBoolean("isNeutral"));
-		if (rs.wasNull()) match.setIsNeutral(null);
-		match.setWeather(Weather.getById(rs.getInt("Weather")));
-		if (rs.wasNull()) match.setWeather(Weather.NULL);
-		match.setWeatherForecast(Weather.Forecast.getById(rs.getInt("WeatherForecast")));
-		if ( rs.wasNull()) match.setWeatherForecast(Weather.Forecast.NULL);
-		match.setDuration(rs.getInt("Duration"));
-		if ( rs.wasNull()) match.setDuration(null);
+		match.setIsDerby(getNullableBoolean(rs, "isDerby"));
+		match.setIsNeutral(getNullableBoolean(rs, "isNeutral"));
+		match.setWeather(Weather.getById(getNullableInt(rs,"Weather")));
+		match.setWeatherForecast(Weather.Forecast.getById(getNullableInt(rs,"WeatherForecast")));
+		match.setDuration(getNullableInt(rs, "Duration"));
 		return match;
 	}
 

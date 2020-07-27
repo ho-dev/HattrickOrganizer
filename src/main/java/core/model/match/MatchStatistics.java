@@ -15,10 +15,10 @@ import static core.model.match.MatchEvent.MatchEventID;
 public class MatchStatistics {
 
 	private MatchLineupTeam teamLineup;
-	private int matchId;
+	private MatchKurzInfo match;
 
-	public MatchStatistics(int matchid, MatchLineupTeam team) {
-		this.matchId = matchid;
+	public MatchStatistics(MatchKurzInfo match, MatchLineupTeam team) {
+		this.match = match;
 		teamLineup = team;
 
 		if (isOldie()) {
@@ -40,24 +40,38 @@ public class MatchStatistics {
 	 *            the id of the player
 	 * @param accepted
 	 *            An array of integers specifying the positions which should be
-	 *            accepted. If null, all positions are accepted.
-	 * @return the number of minutes played in the specified positions
+	 *            accepted.
+	 *            If null, all field positions are accepted. (used for experience increase)
+	 * @return the number of minutes played in the specified positions.
+	 * 			Special handling of walkover matches:
+	 * 			 0 minutes is returned in case of walkover matches when all field positions are accepted
+	 * 			(experience does not increase in such cases),
+	 * 			90 minutes is returned if accepted field positions are given (training does increase)
 	 */
 	public int getTrainMinutesPlayedInPositions(int spielerId, int[] accepted) {
 		if ( accepted!=null && accepted.length==0) return 0;	// NO positions are accepted
 		boolean inPosition = false;
 		MatchLineupPlayer player = teamLineup.getPlayerByID(spielerId);
-		List<Substitution> substitutions = teamLineup.getSubstitutions();
-
 		if (player == null) {
 			return 0;
 		}
 
+		List<Substitution> substitutions = teamLineup.getSubstitutions();
 		int enterMin = -1;
 		int minPlayed = 0;
 
 		// Those in the starting lineup entered at minute 0
 		if (isInAcceptedFieldPositions(player.getStartPosition(), accepted)) {
+			if ( match.isWalkoverMatch()) {
+				// Opponent team did not appear
+				if (accepted != null) {
+					// Normal training
+					return 90;
+				}
+				// No experience
+				return 0;
+			}
+
 			enterMin = 0;
 			inPosition = true;
 		}
@@ -89,7 +103,6 @@ public class MatchStatistics {
 			}
 		}
 		// Done with substitutions, add end if necessary
-
 		if (inPosition) {
 			minPlayed += getMatchEndMinute(spielerId) - enterMin;
 		}
@@ -172,7 +185,7 @@ public class MatchStatistics {
 				HOLogger.instance().debug(
 						getClass(),
 						"getPlayerFieldPostitionAfterSubstitution had a playerOut fall through. "
-								+ matchId + " " + spielerId + " " + tmpSub.getPlayerOrderId());
+								+ match.getMatchID() + " " + spielerId + " " + tmpSub.getPlayerOrderId());
 			}
 
 			if (tmpSub.getObjectPlayerID() == spielerId) {
@@ -197,14 +210,14 @@ public class MatchStatistics {
 				HOLogger.instance().debug(
 						getClass(),
 						"getPlayerFieldPostitionAfterSubstitution had a playerIn fall through. "
-								+ matchId + " " + spielerId + " " + tmpSub.getPlayerOrderId());
+								+ match.getMatchID() + " " + spielerId + " " + tmpSub.getPlayerOrderId());
 			}
 		} // End for loop
 
 		HOLogger.instance().debug(
 				getClass(),
 				"getPlayerFieldPostitionAfterSubstitution reached the end, which should never happen "
-						+ matchId + " " + spielerId + " " + tmpSub.getPlayerOrderId());
+						+ match.getMatchID() + " " + spielerId + " " + tmpSub.getPlayerOrderId());
 		return -1;
 	}
 
@@ -254,7 +267,7 @@ public class MatchStatistics {
 	 * @return the last minute or -0 if not found
 	 */
 	public int getMatchEndMinute(int spielerId) {
-		ArrayList<MatchEvent> hls = DBManager.instance().getMatchDetails(matchId).getHighlights();
+		var hls = match.getMatchdetails().getHighlights(); // DBManager.instance().getMatchDetails(matchId).getHighlights();
 		for (MatchEvent hl : hls) {
 			MatchEventID me = MatchEventID.fromMatchEventID(hl.getiMatchEventID());
 			if (me == MatchEventID.MATCH_FINISHED) {

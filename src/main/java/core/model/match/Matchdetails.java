@@ -220,13 +220,14 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                         +" events:" + (events==null? "null": events.size())
                 );
                 try {
-                    OnlineWorker.downloadMatchData(matchId, type, true);
-                    ret = DBManager.instance().getMatchDetails((matchId));
+                    if ( OnlineWorker.downloadMatchData(matchId, type, true) ) {
+                        ret = DBManager.instance().getMatchDetails((matchId));
+                        maxMatchdetailsReloadsPerSession--;
+                    }
                 }
                 catch (Exception ex){
                     HOLogger.instance().error(Matchdetails.class, ex.getMessage());
                 }
-                maxMatchdetailsReloadsPerSession--;
             }
         }
         return ret;
@@ -940,13 +941,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     public final ArrayList<MatchEvent> getHighlights() {
         if ( m_vHighlights == null || m_vHighlights.size() == 0){
             m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchID());
-            /* recursiv call in downloadMatchData
-            if ( m_vHighlights.size()==0){
-
-                OnlineWorker.downloadMatchData(this.m_iMatchID, this.m_MatchTyp, true);
-                m_vHighlights = DBManager.instance().getMatchHighlights((this.m_iMatchID));
-            }
-        */
         }
         return m_vHighlights;
     }
@@ -1303,6 +1297,19 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         }
 
         return true;
+    }
+
+    private MatchLineupTeam teamLineup;
+
+    /**
+     * Load the lineup of user's team
+     * @return MatchLineupTeam
+     */
+    public MatchLineupTeam getTeamLineup() {
+        if ( teamLineup == null){
+            teamLineup = DBManager.instance().getMatchLineupTeam(this.getMatchID(), MatchKurzInfo.user_team_id);
+        }
+        return teamLineup;
     }
 
     /**

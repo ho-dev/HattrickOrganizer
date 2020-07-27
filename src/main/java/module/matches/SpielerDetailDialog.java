@@ -296,31 +296,31 @@ final class SpielerDetailDialog extends JDialog {
 			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
 			m_jpKondition2.clear();
 			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.KEEPER))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.KEEPER))
 					+ "");
 			m_jpTorwart2.clear();
 			m_jpVerteidigung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getDEFskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.DEFENDING))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING))
 					+ "");
 			m_jpVerteidigung2.clear();
 			m_jpSpielaufbau.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPMskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING))
 					+ "");
 			m_jpSpielaufbau2.clear();
 			m_jpPasspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPSskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.PASSING))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.PASSING))
 					+ "");
 			m_jpPasspiel2.clear();
 			m_jpFluegelspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getWIskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.WINGER))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.WINGER))
 					+ "");
 			m_jpFluegelspiel2.clear();
 			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSPskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES))
 					+ "");
 			m_jpStandards2.clear();
 			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSCskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.SCORING))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.SCORING))
 					+ "");
 			m_jpTorschuss2.clear();
 			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getErfahrung()) + "");
@@ -357,60 +357,60 @@ final class SpielerDetailDialog extends JDialog {
 			m_jpKondition2.setGraphicalChangeValue(m_clVergleichsPlayer.getKondition()
 					- m_clPlayer.getKondition(), !m_clVergleichsPlayer.isOld(), true);
 			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.KEEPER))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.KEEPER))
 					+ "");
 			m_jpTorwart2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getGKskill() - m_clPlayer.getGKskill(),
-					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.KEEPER)
-							- m_clPlayer.getSubskill4Pos(PlayerSkill.KEEPER),
+					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.KEEPER)
+							- m_clPlayer.getSub4Skill(PlayerSkill.KEEPER),
 					!m_clVergleichsPlayer.isOld(), true);
 			m_jpVerteidigung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getDEFskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.DEFENDING))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING))
 					+ "");
 			m_jpVerteidigung2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getDEFskill() - m_clPlayer.getDEFskill(),
-					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.DEFENDING)
-							- m_clPlayer.getSubskill4Pos(PlayerSkill.DEFENDING),
+					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.DEFENDING)
+							- m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING),
 					!m_clVergleichsPlayer.isOld(), true);
 			m_jpSpielaufbau.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPMskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING))
 					+ "");
 			m_jpSpielaufbau2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getPMskill() - m_clPlayer.getPMskill(),
-					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING)
-							- m_clPlayer.getSubskill4Pos(PlayerSkill.PLAYMAKING),
+					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.PLAYMAKING)
+							- m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING),
 					!m_clVergleichsPlayer.isOld(), true);
 			m_jpPasspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPSskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.PASSING))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.PASSING))
 					+ "");
 			m_jpPasspiel2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getPSskill() - m_clPlayer.getPSskill(),
-					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.PASSING)
-							- m_clPlayer.getSubskill4Pos(PlayerSkill.PASSING),
+					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.PASSING)
+							- m_clPlayer.getSub4Skill(PlayerSkill.PASSING),
 					!m_clVergleichsPlayer.isOld(), true);
 			m_jpFluegelspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getWIskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.WINGER))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.WINGER))
 					+ "");
 			m_jpFluegelspiel2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getWIskill() - m_clPlayer.getWIskill(),
-					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.WINGER)
-							- m_clPlayer.getSubskill4Pos(PlayerSkill.WINGER),
+					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.WINGER)
+							- m_clPlayer.getSub4Skill(PlayerSkill.WINGER),
 					!m_clVergleichsPlayer.isOld(), true);
 			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSPskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES))
 					+ "");
 			m_jpStandards2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getSPskill() - m_clPlayer.getSPskill(),
-					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES)
-							- m_clPlayer.getSubskill4Pos(PlayerSkill.SET_PIECES),
+					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.SET_PIECES)
+							- m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES),
 					!m_clVergleichsPlayer.isOld(), true);
 			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSCskill()
-					+ m_clPlayer.getSubskill4Pos(PlayerSkill.SCORING))
+					+ m_clPlayer.getSub4Skill(PlayerSkill.SCORING))
 					+ "");
 			m_jpTorschuss2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getSCskill() - m_clPlayer.getSCskill(),
-					m_clVergleichsPlayer.getSubskill4Pos(PlayerSkill.SCORING)
-							- m_clPlayer.getSubskill4Pos(PlayerSkill.SCORING),
+					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.SCORING)
+							- m_clPlayer.getSub4Skill(PlayerSkill.SCORING),
 					!m_clVergleichsPlayer.isOld(), true);
 			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getErfahrung()) + "");
 			m_jpErfahrung2.setGraphicalChangeValue(m_clVergleichsPlayer.getErfahrung()

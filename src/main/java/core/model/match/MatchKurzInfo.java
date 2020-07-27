@@ -64,7 +64,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	private int m_iMatchStatus = -1;
 	
 	/** HO user team ID */
-	private static int user_team_id = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+	public static int user_team_id = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 	// TODO comments
 	private int m_iArenaId = -1;
@@ -446,5 +446,31 @@ public class MatchKurzInfo implements Comparable<Object> {
 			matchdetails = Matchdetails.getMatchdetails(getMatchID(), getMatchTyp());
 		}
 		return matchdetails;
+	}
+
+	private Boolean isWalkoverMatch;
+	// return true, if the opponent team didn't appear. The match was won by 5-0
+	public boolean isWalkoverMatch() {
+		if ( isWalkoverMatch == null) {
+			isWalkoverMatch = false;
+			if (getDuration() == 0) {
+				// Duration of walk over matches is 0 minutes
+				for (var e : getMatchdetails().getHighlights()) {
+					if ( e.getMatchEventID() == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER ) {
+						if ( this.isHomeMatch() == true ) {
+							isWalkoverMatch = true;
+						}
+						break;
+					}
+					else if ( e.getMatchEventID() == MatchEvent.MatchEventID.HOME_TEAM_WALKOVER){
+						if ( this.isHomeMatch() != true){
+							isWalkoverMatch = true;
+						}
+						break;
+					}
+				}
+			}
+		}
+		return isWalkoverMatch;
 	}
 }

@@ -7,6 +7,8 @@ import core.model.StaffType;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.TrainingPerWeek;
+import core.training.TrainingWeekManager;
+import core.training.WeeklyTrainingType;
 import module.training.OldTrainingManager;
 
 import java.util.ArrayList;
@@ -20,13 +22,11 @@ public class TrainingModel {
 	/** the current level of the coach */
 	private int trainerLevel;
 	private StaffMember staffMember = new StaffMember();
-	private  List<StaffMember> staff = new ArrayList<StaffMember>();
+	private  List<StaffMember> staff = new ArrayList<>();
 	private List<TrainingPerWeek> futureTrainings;
 	private OldTrainingManager skillupManager;
 	private FutureTrainingManager futureTrainingManager;
-	private final List<ModelChangeListener> listeners = new ArrayList<ModelChangeListener>();
-	
-
+	private final List<ModelChangeListener> listeners = new ArrayList<>();
 
 	public Player getActivePlayer() {
 		return activePlayer;
@@ -89,12 +89,12 @@ public class TrainingModel {
 
 	public List<TrainingPerWeek> getFutureTrainings() {
 		if (this.futureTrainings == null) {
-			this.futureTrainings = new ArrayList<TrainingPerWeek>();
+			this.futureTrainings = new ArrayList<>();
 			Object[] aobj;
 
 			TrainingPerWeek oldTrain = null;
 			List<TrainingPerWeek> futureTrainings = DBManager.instance().getFutureTrainingsVector();
-			List<TrainingPerWeek> futureTrainingsToSave = new ArrayList<TrainingPerWeek>();
+			List<TrainingPerWeek> futureTrainingsToSave = new ArrayList<>();
 
 			for (TrainingPerWeek training : futureTrainings) {
 
@@ -187,4 +187,45 @@ public class TrainingModel {
 		}
 	}
 
+	// full training: Primary Training Position && ! set pieces || Bonus Position (&& set pieces)
+	// partial training: Secondary Training Position || primary Training Position && set pieces)
+	public boolean isPartialTrainingAvailable(int[] weeks) {
+		for ( var w : weeks){
+			var t = getFutureTrainings().get(w);
+			if ( isPartialTrainingAvailable(t)) return true;
+		}
+		return false;
+	}
+
+    public boolean isOsmosisTrainingAvailable(int[] weeks) {
+		for ( var w : weeks){
+			var t = getFutureTrainings().get(w);
+			if ( isOsmosisTrainingAvailable(t)) return true;
+		}
+		return false;
+    }
+
+	public boolean isPartialTrainingAvailable() {
+		for ( var t : getFutureTrainings()){
+			if ( isPartialTrainingAvailable(t)) return true;
+		}
+		return false;
+	}
+
+	private boolean isPartialTrainingAvailable(TrainingPerWeek t) {
+		var tt = WeeklyTrainingType.instance(t.getTrainingType());
+		return tt.getPrimaryTrainingSkillSecondaryTrainingPositions().length > 0 ||
+				tt.getPrimaryTrainingSkillBonusPositions().length > 0;
+	}
+
+	public boolean isOsmosisTrainingAvailable() {
+		for ( var t : getFutureTrainings()){
+			if ( isOsmosisTrainingAvailable(t)) return true;
+		}
+		return false;
+	}
+
+	private boolean isOsmosisTrainingAvailable(TrainingPerWeek t) {
+		return WeeklyTrainingType.instance(t.getTrainingType()).getPrimaryTrainingSkillOsmosisTrainingPositions().length > 0;
+	}
 }

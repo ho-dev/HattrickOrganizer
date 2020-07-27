@@ -3,6 +3,7 @@ package core.model;
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
+import core.model.match.MatchKurzInfo;
 import core.model.misc.Basics;
 import core.model.misc.Finanzen;
 import core.model.misc.TrainingEvent;
@@ -252,7 +253,7 @@ public class HOModel {
     /**
      * Set Player list of the current team
      */
-    public final void setCurrentPlayers(Vector<Player> playerVector) {
+    public final void setCurrentPlayers(List<Player> playerVector) {
         m_vPlayer = playerVector;
     }
 
@@ -354,7 +355,7 @@ public class HOModel {
 		Player trainer = null;
     	for ( Player p : getCurrentPlayers()){
 			if ( p.isTrainer()){
-				if (trainer == null || p.getTrainer() > trainer.getTrainer()){
+				if (trainer == null || p.getTrainerSkill() > trainer.getTrainerSkill()){
 					trainer = p;
 				}
 			}
@@ -364,7 +365,7 @@ public class HOModel {
         if (trainer == null)
         {
         	trainer = new Player();
-        	trainer.setTrainer(7);
+        	trainer.setTrainerSkill(7);
         	trainer.setTrainerTyp(2); // neutral;
         }
         
@@ -460,223 +461,42 @@ public class HOModel {
     			}
     			
     			if (tpw.getNextTrainingDate().after(trainingDateOfPreviousHRF)) {
-    				trainingList.add(tpw);
+    			    if(TrainingManager.TRAININGDEBUG) {
+                        HTCalendar htcP;
+                        String htcPs = "";
+                        htcP = HTCalendarFactory.createTrainingCalendar(new Date(trainingDateOfPreviousHRF.getTime()));
+                        htcPs = " (" + htcP.getHTSeason() + "." + htcP.getHTWeek() + ")";
+                        HTCalendar htcA = HTCalendarFactory.createTrainingCalendar(new Date((trainingDateOfCurrentHRF.getTime())));
+                        String htcAs = " (" + htcA.getHTSeason() + "." + htcA.getHTWeek() + ")";
+                        HTCalendar htcC = HTCalendarFactory.createTrainingCalendar(new Date((calcDate.getTime())));
+                        String htcCs = " (" + htcC.getHTSeason() + "." + htcC.getHTWeek() + ")";
+
+                        HOLogger.instance().debug(HOModel.class,
+                                "trArt="+ tpw.getTrainingType()
+                                        + ", numPl=" + vPlayer.size()
+                                        + ", calcDate=" + calcDate.toString() + htcCs
+                                        + ", act=" + trainingDateOfCurrentHRF.toString() + htcAs
+                                        + ", prev=" + (trainingDateOfPreviousHRF == null ? "null" : trainingDateOfPreviousHRF.toString() + htcPs)
+                                        + " (" + previousHrfId + ")");
+                    }
+
+                    trainingList.add(tpw);
     			}
     		}
     		
-    		// Get the trainer skill
-    		int trainerLevel;
-    		Player trainer = getTrainer();
-    		trainerLevel = trainer.getTrainer();
+    		TrainingManager.instance().calculateTraining(
+    		        getXtraDaten().getTrainingDate(),
+    				trainingList,
+					getCurrentPlayers(),
+					DBManager.instance().getSpieler(previousHrfId),
+					getTrainer().getTrainerSkill(),
+                    getStaff());
 
-    		// Generate a map with spielers from the last hrf.
-    		final Map<Integer, Player> players = new HashMap<>();
-    		for ( Player p: DBManager.instance().getSpieler(previousHrfId)){
-    			players.put(p.getSpielerID(), p);
-    		}
-
-    		// Train each player
-    		//for (int i = 0; i < vPlayer.size(); i++) {
-			for  ( Player player : vPlayer){
-    			try {
-
-    				// The version of the player from last hrf
-    				Player old = players.get(player.getSpielerID());
-    				if (old == null ) {
-    					if (TrainingManager.TRAININGDEBUG) {
-    						HOLogger.instance().debug(HOModel.class, "Old player for id "+player.getSpielerID()+" = null");
-    					}
-    					// Player appears the first time
-						// - was bought new
-						// - promoted from youth
-						// - it is the first hrf ever loaded
-    					old = new Player();
-    					old.setSpielerID(player.getSpielerID());
-    					old.copySkills(player);
-    					if (HOVerwaltung.instance().getModel().getCurrentPlayer(player.getSpielerID()) != null){
-    						// PLayer is in current team (not an historical player)
-							List<TrainingEvent> events = player.downloadTrainingEvents();
-							if (events != null) {
-								for (TrainingEvent event : events) {
-									if (event.getEventDate().compareTo(player.getHrfDate()) <= 0) {
-										old.setValue4Skill4(event.getPlayerSkill(), event.getOldLevel());
-									}
-								}
-							}
-						}
-    				}
-
-    				// Always copy subskills as the first thing
-    				player.copySubSkills(old);
-    				
-    				// Always check skill drop if drop calculations are active.
-    				if (SkillDrops.instance().isActive()) {
-    					for (int skillType=0; skillType < PlayerSkill.EXPERIENCE; skillType++) {
-    						if ((skillType == PlayerSkill.FORM) || (skillType == PlayerSkill.STAMINA)) { 
-    							continue;
-    						}
-    						if (player.check4SkillDown(skillType, old)) {
-    							player.dropSubskills(skillType);
-    						}
-    					}
-    				}
-
-    				if (trainingList.size() > 0 ) {
-    					// Training happened
-
-	    				// Perform training for all "untrained weeks"
-    				
-	    				// An "old" player we can mess with.
-	    				Player tmpOld = new Player();
-						tmpOld.copySkills(old);
-						tmpOld.copySubSkills(old);
-						tmpOld.setSpielerID(old.getSpielerID());
-						tmpOld.setAlter(old.getAlter());
-	
-	    				Player calculationPlayer = null;
-	    				TrainingPerWeek tpw;
-	    				Iterator<TrainingPerWeek> iter = trainingList.iterator(); 
-	    				while (iter.hasNext()) {
-	    					tpw = iter.next();
-	    					
-	    					if (tpw == null) {
-	    						continue;
-	    					}
-	    					
-	    					// The "player" is only the relevant Player for the current Hrf. All previous
-	    					// training weeks (if any), should be calculated based on "old", and the result
-	    					// of the previous week.
-	    					
-	    					if (getXtraDaten().getTrainingDate().getTime() == tpw.getNextTrainingDate().getTime()) {
-	    						// It is the same week as this model.
-	    						
-	    						if (calculationPlayer != null) {
-	    							// We have run previous calculations because of missing training weeks. 
-	    							// Subskills may have changed, but no skillup can have happened. Copy subskills.
-	    							
-	    							player.copySubSkills(calculationPlayer);
-	    						}
-	    						calculationPlayer = player;
-	    	
-	    					} else {
-	    						// An old week
-	    						calculationPlayer = new Player();
-	    						calculationPlayer.copySkills(tmpOld);
-	    						calculationPlayer.copySubSkills(tmpOld);
-	    						calculationPlayer.setSpielerID(tmpOld.getSpielerID());
-	    						calculationPlayer.setAlter(tmpOld.getAlter());
-	    					}
-	    		
-	    					calculationPlayer.calcIncrementalSubskills(tmpOld, tpw.getAssistants(),
-	    							trainerLevel,
-	    							tpw.getTrainingIntensity(),
-	    							tpw.getStaminaPart(),
-	    							tpw,
-	    							getStaff());
-	    					
-	    					if (iter.hasNext()) {
-	    						// Use calculated skills and subskills as "old" if there is another week in line... 
-	    						tmpOld = new Player();
-	    						tmpOld.copySkills(calculationPlayer);
-	    						tmpOld.copySubSkills(calculationPlayer);
-	    						tmpOld.setSpielerID(calculationPlayer.getSpielerID());
-	    						tmpOld.setAlter(calculationPlayer.getAlter());
-	    					}
-	    				}
-    				}
-
-    				/*
-    				 * Start of debug
-    				 */
-    				if (TrainingManager.TRAININGDEBUG) {
-    					 HelperWrapper helper = HelperWrapper.instance();
-    					HTCalendar htcP;
-    					String htcPs = "";
-						htcP = HTCalendarFactory.createTrainingCalendar(new Date(trainingDateOfPreviousHRF.getTime()));
-						htcPs = " ("+htcP.getHTSeason()+"."+htcP.getHTWeek()+")";
-    					HTCalendar htcA = HTCalendarFactory.createTrainingCalendar(new Date((trainingDateOfCurrentHRF.getTime())));
-    					String htcAs = " ("+htcA.getHTSeason()+"."+htcA.getHTWeek()+")";
-    					HTCalendar htcC = HTCalendarFactory.createTrainingCalendar(new Date((calcDate.getTime())));
-    					String htcCs = " ("+htcC.getHTSeason()+"."+htcC.getHTWeek()+")";
-
-    					TrainingPerWeek trWeek = TrainingWeekManager.instance().getTrainingWeek(getXtraDaten().getTrainingDate());
-    					HOLogger.instance().debug(HOModel.class,
-    							"WeeksCalculated="+trainingList.size()+", trArt="+(trWeek==null?"null":""+trWeek.getTrainingType())
-    							+ ", numPl="+ vPlayer.size()+", calcDate="+calcDate.toString()+htcCs
-    							+ ", act="+trainingDateOfCurrentHRF.toString() +htcAs
-    							+ ", prev="+(trainingDateOfPreviousHRF==null?"null":trainingDateOfPreviousHRF.toString()+htcPs)
-    							+ " ("+previousHrfId+")");
-
-    					if (trainingList.size() > 0)
-    						logPlayerProgress (old, player);
-
-    				}
-    				/*
-    				 * End of debug
-    				 */
-
-    			} catch (Exception e) {
-    				HOLogger.instance().log(getClass(),e);
-    				HOLogger.instance().log(getClass(),"Model calcSubskill: " + e);
-    			}
-    		}
-
-    		//Player
+    		// store new values of current players
     		DBManager.instance().saveSpieler(m_iID, getCurrentPlayers(), getBasics().getDatum());
     	}
     }
     
-    private void logPlayerProgress (Player before, Player after) {
-    	
-    	if ((after == null) || (before == null)) {	
-    		// crash due to non paranoid logging is too silly
-    		return;
-    	}
-    	
-    	int playerID = after.getSpielerID();
-    	String playerName = after.getFullName();
-    	TrainingPerWeek train = TrainingWeekManager.instance().getTrainingWeek(getXtraDaten().getTrainingDate());
-    	if (train == null) { 
-    		// Just say no to logging crashes.
-    		return;
-    	}
-    	
-    	int trLevel = train.getTrainingIntensity();
-    	int trArt = train.getTrainingType();
-    	String trArtString = TrainingType.toString(trArt);
-    	int trStPart = train.getStaminaPart();
-    	int age = after.getAlter();
-    	int skill = -1;
-		int beforeSkill = 0;
-		int afterSkill = 0;
-		switch (trArt) {
-			case TrainingType.WING_ATTACKS, TrainingType.CROSSING_WINGER -> skill = PlayerSkill.WINGER;
-			case TrainingType.SET_PIECES -> skill = PlayerSkill.SET_PIECES;
-			case TrainingType.DEF_POSITIONS, TrainingType.DEFENDING -> skill = PlayerSkill.DEFENDING;
-			case TrainingType.SHOOTING, TrainingType.SCORING -> skill = PlayerSkill.SCORING;
-			case TrainingType.SHORT_PASSES, TrainingType.THROUGH_PASSES -> skill = PlayerSkill.PASSING;
-			case TrainingType.PLAYMAKING -> skill = PlayerSkill.PLAYMAKING;
-			case TrainingType.GOALKEEPING -> skill = PlayerSkill.KEEPER;
-		}
-    	if (skill >= 0) {
-    		beforeSkill = before.getValue4Skill4(skill);
-    		afterSkill = after.getValue4Skill4(skill);
-    		int beforeStamina = before.getKondition();
-    		int afterStamina = after.getKondition();
-    		double beforeSub = before.getSubskill4Pos(skill);
-    		double afterSub = after.getSubskill4Pos(skill);
-
-
-    		HOLogger.instance().debug(getClass(), "TrLog:" + m_iID + "|"
-    				+ m_clBasics.getSeason() + "|" + m_clBasics.getSpieltag() + "|"
-    				+ playerID + "|" + playerName + "|" + age + "|"
-    				+ trArt + "|" + trArtString + "|" + trLevel + "|" + trStPart + "|"
-    				+ beforeStamina + "|" + afterStamina + "|"
-    				+ beforeSkill + "|" + core.util.Helper.round(beforeSub, 2) + "|"
-    				+ afterSkill + "|" + core.util.Helper.round(afterSub, 2)
-    				);
-    	}
-    }
 
     /**
      * Remove a Player

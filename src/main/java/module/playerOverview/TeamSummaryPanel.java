@@ -156,7 +156,7 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        Vector<Player> comparisonPlayers = SpielerTrainingsVergleichsPanel.getVergleichsPlayer();
+        var comparisonPlayers = SpielerTrainingsVergleichsPanel.getVergleichsPlayer();
         if (comparisonPlayers != null) {
             model.setComparisonPlayers(comparisonPlayers);
             display();

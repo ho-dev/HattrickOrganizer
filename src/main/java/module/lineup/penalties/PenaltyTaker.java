@@ -33,16 +33,16 @@ public class PenaltyTaker {
 
 	public double getScoring() {
 		return ((double) this.player.getSCskill())
-				+ this.player.getSubskill4Pos(PlayerSkill.SCORING);
+				+ this.player.getSub4Skill(PlayerSkill.SCORING);
 	}
 
 	public double getSetPieces() {
 		return ((double) this.player.getSPskill())
-				+ this.player.getSubskill4Pos(PlayerSkill.SET_PIECES);
+				+ this.player.getSub4Skill(PlayerSkill.SET_PIECES);
 	}
 
 	public double getExperience() {
 		return ((double) this.player.getErfahrung())
-				+ this.player.getSubskill4Pos(PlayerSkill.EXPERIENCE);
+				+ this.player.getSub4Skill(PlayerSkill.EXPERIENCE);
 	}
 }

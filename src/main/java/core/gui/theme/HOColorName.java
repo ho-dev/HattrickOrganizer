@@ -179,6 +179,9 @@ public interface HOColorName {
 
 	// Training
 	public static final String TRAINING_BIRTHDAY_BG = "training.birthday.bg";
+	public static final String TRAINING_FULL_BG = "training.full.bg";
+	public static final String TRAINING_PARTIAL_BG = "training.partial.bg";
+	public static final String TRAINING_OSMOSIS_BG = "training.osmosis.bg";
 
 	// TS Forecast
 	public static final String TSFORECAST_ALT_COLOR = "tsforecast.alt.color";
