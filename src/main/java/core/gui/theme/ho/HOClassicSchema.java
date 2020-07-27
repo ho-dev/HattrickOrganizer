@@ -137,6 +137,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TRANSFERLISTED_TINY, "img/icons/official/icomoon/SVG/transferlisted.svg");
 		put(SUSPENDED_TINY, "img/icons/made/red-card(red).svg");
 		put(TWOYELLOW_TINY, "img/icons/made/yellow-card-x2(yellow).svg");
+		put(ONEYELLOW_TINY, "img/icons/made/yellow-card(yellow).svg");
 
 		// Highlights
 

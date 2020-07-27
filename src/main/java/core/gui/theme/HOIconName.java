@@ -37,6 +37,7 @@ public interface HOIconName {
 	 String INJURED_TINY = "injured.tiny";
 	 String SUSPENDED_TINY = "suspended.tiny";
 	 String TWOYELLOW_TINY = "twoyellow.tiny";
+	 String ONEYELLOW_TINY = "oneyellow.tiny";
 	 String TRANSFERLISTED_TINY = "transferlisted.tiny";
 
 	 String DISK 			= "disk";

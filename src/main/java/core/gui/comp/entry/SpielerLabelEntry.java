@@ -44,6 +44,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private JLabel bruisedLabel;
     private JLabel suspendedLabel;
     private JLabel twoYellowCardsLabel;
+    private JLabel oneYellowCardLabel;
 
     // Label for the player name (depending on status)
     public SpielerLabelEntry(Player player, MatchRoleID positionAktuell,
@@ -271,6 +272,9 @@ public final class SpielerLabelEntry implements IHOTableEntry {
 
         twoYellowCardsLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(TWOYELLOW_TINY, 12, 12));
         infoPanel.add(twoYellowCardsLabel);
+
+        oneYellowCardLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(ONEYELLOW_TINY, 12, 12));
+        infoPanel.add(oneYellowCardLabel);
     }
 
     private JLabel createPlayerStatusLabel(Icon icon) {
@@ -379,7 +383,8 @@ public final class SpielerLabelEntry implements IHOTableEntry {
                     bruisedLabel,
                     transferlistedLabel,
                     suspendedLabel,
-                    twoYellowCardsLabel)
+                    twoYellowCardsLabel,
+                    oneYellowCardLabel)
                     .forEach(label -> label.setIcon(null));
 
             if (player.getVerletzt() > 0) {
@@ -394,6 +399,8 @@ public final class SpielerLabelEntry implements IHOTableEntry {
                 suspendedLabel.setIcon(ImageUtilities.getSvgIcon(SUSPENDED_TINY, 12, 12));
             } else if (player.getGelbeKarten() == 2) {
                 twoYellowCardsLabel.setIcon(ImageUtilities.getSvgIcon(TWOYELLOW_TINY, 12, 12));
+            } else if (player.getGelbeKarten() == 1) {
+                oneYellowCardLabel.setIcon(ImageUtilities.getSvgIcon(ONEYELLOW_TINY, 12, 12));
             }
 
             suspendedLabel.getParent().repaint();
