@@ -25,21 +25,17 @@ public class EventTypeTableCellRenderer extends DefaultTableCellRenderer {
 		if (matchHighlight != null) {
 			icon = matchHighlight.getIcon();
 			eventText = " " + SpecialEventsDM.getSEText(matchHighlight);
-		}
 
-		if (matchHighlight.getMatchEventID() == RAINY_WEATHER_MANY_PLAYERS_AFFECTED) {
-			icon = ThemeManager.getIcon(HOIconName.WEATHER[0]);
-		}
-		else if (matchHighlight.getMatchEventID() == SUNNY_WEATHER_MANY_PLAYERS_AFFECTED)
-		{
-			icon = ThemeManager.getIcon(HOIconName.WEATHER[3]);
+			if (matchHighlight.getMatchEventID() == RAINY_WEATHER_MANY_PLAYERS_AFFECTED) {
+				icon = ThemeManager.getIcon(HOIconName.WEATHER[0]);
+			} else if (matchHighlight.getMatchEventID() == SUNNY_WEATHER_MANY_PLAYERS_AFFECTED) {
+				icon = ThemeManager.getIcon(HOIconName.WEATHER[3]);
+			}
 		}
 
 		JLabel component = (JLabel) super.getTableCellRendererComponent(table, eventText, isSelected, hasFocus, row, column);
 		component.setIcon(icon);
-
 		RowColorDecorator.decorate(table, row, component, isSelected);
-
 		return component;
 	}
 

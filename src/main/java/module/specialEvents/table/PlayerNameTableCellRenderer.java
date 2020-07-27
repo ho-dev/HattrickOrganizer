@@ -20,7 +20,14 @@ public class PlayerNameTableCellRenderer extends DefaultTableCellRenderer {
 			boolean hasFocus, int row, int column) {
 
 		Pair oValue = (Pair) value;
-		String playerName = (String) oValue.getValue0();
+		String playerName;
+		if ( oValue != null )
+		{
+			playerName =(String) oValue.getValue0();
+		}
+		else {
+			playerName = "";
+		}
 
 		JLabel label = (JLabel) super.getTableCellRendererComponent(table, "", isSelected,
 				hasFocus, row, column);
@@ -42,17 +49,15 @@ public class PlayerNameTableCellRenderer extends DefaultTableCellRenderer {
 			label.setText("");
 		}
 
-		Player oPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer((int) oValue.getValue1());
-		if (oPlayer != null) {
-			int iPlayerSpecialty = oPlayer.getPlayerSpecialty();
-			Icon oPlayerSpecialty = ThemeManager.getIcon(HOIconName.SPECIALTIES_SMALL[iPlayerSpecialty]);
-			label.setIcon(oPlayerSpecialty);
+		Icon oPlayerSpecialty = null;
+		if ( oValue != null ) {
+			Player oPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer((int) oValue.getValue1());
+			if (oPlayer != null) {
+				int iPlayerSpecialty = oPlayer.getPlayerSpecialty();
+				oPlayerSpecialty = ThemeManager.getIcon(HOIconName.SPECIALTIES_SMALL[iPlayerSpecialty]);
+			}
 		}
-		else
-		{
-			label.setIcon(null);
-		}
-
+		label.setIcon(oPlayerSpecialty);
 		RowColorDecorator.decorate(table, row, label, isSelected);
 		return label;
 	}
