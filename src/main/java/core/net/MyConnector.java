@@ -18,6 +18,7 @@ import core.util.Helper;
 import core.util.IOUtils;
 import core.util.StringUtils;
 import core.util.XMLUtils;
+import org.jetbrains.annotations.Nullable;
 import tool.updater.VersionInfo;
 import core.HO;
 
@@ -710,32 +711,26 @@ public class MyConnector {
 		return returnString;
 	}
 
-	private InputStream getNonCHPPWebFile(String surl, boolean showErrorMessage) {
+	private @Nullable InputStream getNonCHPPWebFile(String surl, boolean showErrorMessage) {
 		InputStream returnStream = null;
 		try {
-			Response response = null;
+			Response response;
 			OAuthRequest request = new OAuthRequest(Verb.GET, surl);
 			infoHO(request);
 			response = request.send();
 			int iResponse = response.getCode();
-			switch (iResponse) {
-			case 200:
-			case 201:
-				returnStream = getResultStream(response);
-				break;
-			case 407:
-				throw new RuntimeException(
-						"Download Error\nHTTP Response Code 407: Proxy authentication required.");
-			default:
-				throw new RuntimeException("Download Error\nHTTP Response Code: " + iResponse);
-			}
-		} catch (Exception sox) {
+			returnStream = switch (iResponse) {
+				case 200, 201 -> getResultStream(response);
+				case 404 -> throw new RuntimeException("Download Update Error: code 404: the following page does not exist: " + surl);
+				case 407 -> throw new RuntimeException("Download Update Error: code 407: Proxy authentication required.");
+				default -> throw new RuntimeException("Download Update Error: code: " + iResponse); };
+		}
+		catch (Exception sox) {
 			HOLogger.instance().error(getClass(), sox);
 			if (showErrorMessage)
 				JOptionPane.showMessageDialog(null, sox.getMessage() + "\nURL: " + surl,
 						HOVerwaltung.instance().getLanguageString("Fehler"),
 						JOptionPane.ERROR_MESSAGE);
-			returnStream = null;
 		}
 		return returnStream;
 	}

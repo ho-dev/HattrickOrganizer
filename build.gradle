@@ -11,9 +11,13 @@ plugins {
 
 repositories {
     jcenter()
+    maven {
+        url 'https://maven.ej-technologies.com/repository'
+    }
 }
 
 dependencies {
+    implementation 'com.install4j:install4j-runtime:8.0.7'
     implementation 'org.scribe:scribe:1.3.0'
     implementation 'org.hsqldb:hsqldb:2.4.1'
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -33,7 +37,8 @@ dependencies {
 def major = '4'
 def minor = '0'
 def development_stage = '0'
-def releaseArtefacts = false
+def releaseArtefacts = true
+def min_version_auto_update = '4.0' // project minimum version for project auto-update, can be used to force fresh install in case of compatibility break
 
 // region configuration ==============================================================================================
 println "Configuration start"
@@ -159,10 +164,60 @@ install4j {
 
 // region my tasks ================================================================================================
 
+task makeAllmedias(dependsOn: 'media'){
+    doLast {
+        if (releaseArtefacts) {
+            // push DEV_upddate.xml at every release
+            copy {
+                from "${projectDir}/build/artefacts/updates.xml"
+                into "${projectDir}/build/artefacts"
+                rename "updates.xml", "DEV_update.xml"
+            }
+            // push BETA_update.xml if beta or stable has been released     ---------------------------------------------------------------------
+            if (development_stage != '0') {
+                copy {
+                    from "${projectDir}/build/artefacts/updates.xml"
+                    into "${projectDir}/build/artefacts"
+                    rename "updates.xml", "BETA_update.xml"
+                }
+            }
+            // push STABLE_update.xml only if a new stable version has been released
+            if (development_stage == '2') {
+                copy {
+                    from "${projectDir}/build/artefacts/updates.xml"
+                    into "${projectDir}/build/artefacts"
+                    rename "updates.xml", "STABLE_update.xml"
+                }
+            }
+            delete {
+                delete(files("${projectDir}/build/artefacts/updates.xml"))
+            }
+        }
+    }
+}
+
+
+
 task media(type: com.install4j.gradle.Install4jTask) {
-    dependsOn 'CreateDistribution'
+    group 'sub tasks'
+    dependsOn 'updatebuildreferences'
     projectFile = "${projectDir}/utils/buildResources/HO.install4j"
-    buildIds = [60, 62, 63, 64, 172, 173, 464, 471, 473, 477, 481, 485]
+
+    // 60 -> Windows Setup
+    // 62  -> Linux rpm
+    // 63 -> Linux deb
+    // 64 -> Windows archive
+    // 172 -> macOS Single Bundle
+    // 173 -> Unix Archive
+    // 464  -> Linux rpm JRE
+    // 471 -> Linux deb JRE
+    // 477 -> Unix Archive JRE
+    // 473 -> macOS Single Bundle JRE
+    // 481 -> Windows archive JRE
+    // 485 -> Windows JRE
+
+//    buildIds = [60, 62, 63, 64, 172, 173, 464, 471, 473, 477, 481, 485]
+    buildIds = [60, 63, 64, 173]  // TODO: replace full buildIDs list before opening PR
     String versionType
 
     switch(development_stage) {
@@ -279,7 +334,7 @@ task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
     }
 }
 
-task updatebuildreferences(dependsOn: ZipDistribution){
+task updatebuildreferences(dependsOn: CreateDistribution){
     doLast {
         if (releaseArtefacts) {
             println("artefacts have to be uploaded or it will break update process !!!")
@@ -287,6 +342,7 @@ task updatebuildreferences(dependsOn: ZipDistribution){
             // always update latest.html
             new File("$projectDir/docs/latest.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
+min_version_for_auto_update=$min_version_auto_update
 """
             println("latest.html has been updated")
 
@@ -301,6 +357,7 @@ released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
             if (development_stage != '0') {
                 new File("$projectDir/docs/latestbeta.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
+min_version_for_auto_update=$min_version_auto_update
 """
                 println("latestbeta.html has been updated")
                 copy {
@@ -316,6 +373,7 @@ released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
             if (development_stage == '2') {
                 new File("$projectDir/docs/lateststable.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
+min_version_for_auto_update=$min_version_auto_update
 """
                 println("lateststable.html has been updated")
                 copy {
@@ -432,6 +490,7 @@ compileJava.dependsOn preparingBuild
 installDist.dependsOn createLanguageFileList
 poeditorPull.dependsOn pullhtml
 markdownToHtml.dependsOn pushmd
+
 
 poeditorPull.onlyIf {
     project.hasProperty('POEDITOR_APIKEY') && project.ext.properties.POEDITOR_APIKEY!=''

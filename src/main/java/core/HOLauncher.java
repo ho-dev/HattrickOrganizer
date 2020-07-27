@@ -1,15 +1,23 @@
 package core;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HOLauncher {
 
 	public static void main(String[] args) {
+
+		File f = new File("."); // current directory
+		try {
+			JOptionPane.showMessageDialog(new JFrame(),"Application is starting in: " + f.getCanonicalPath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		String updateFileName = "update.zip";
 		boolean updateSuccess=true;
 		File file = new File(updateFileName);
@@ -37,7 +45,7 @@ public class HOLauncher {
 		Boolean file_to_be_updated;
 		String fileName;
 		byte[] buffer = new byte[1024];
-		final List<String> updateFolders = List.of(".install4j/.*", "prediction/.*", ".*.jar", ".*changelog.html", ".*HO.exe");
+		final List<String> updateFolders = List.of("prediction/.*", "\\.\\/.*\\.jar", "\\.\\/changelog\\.html");
 		File destDir = new File(_destDir);
 		ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
 		ZipEntry zipEntry = zis.getNextEntry();
@@ -45,10 +53,8 @@ public class HOLauncher {
 			if (! zipEntry.isDirectory()) {
 				file_to_be_updated = false;
 				fileName = zipEntry.getName();
-				if (fileName.startsWith("./")) fileName = fileName.substring(2);
 				for (String regex : updateFolders) {
 					pattern = Pattern.compile(regex, Pattern.MULTILINE);
-					pattern.matcher(fileName).matches();
 					if (pattern.matcher(fileName).matches()) {
 						file_to_be_updated = true;
 						break;
