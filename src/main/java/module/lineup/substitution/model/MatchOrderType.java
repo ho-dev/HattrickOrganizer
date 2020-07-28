@@ -15,7 +15,9 @@ public enum MatchOrderType {
 	@SerializedName("1")
 	NEW_BEHAVIOUR((byte) 1),
 	@SerializedName("3")
-	POSITION_SWAP((byte) 3);
+	POSITION_SWAP((byte) 3),
+	@SerializedName("4")
+	MAN_MARKING((byte) 4);
 
 	private final byte id;
 
