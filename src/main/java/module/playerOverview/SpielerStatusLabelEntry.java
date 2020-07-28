@@ -4,21 +4,31 @@ package module.playerOverview;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoppelLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.icon.StatusIcon;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.player.Player;
 
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import java.awt.*;
 
-
+/**
+ * Displays the status of a player using icons.
+ *
+ * <p>SpielerStatusLabelEntry is a {@link DoppelLabelEntry} that displays:</p>
+ * <ul>
+ *     <li>On the left, card status and whether the player is transferlisted;</li>
+ *     <li>On the right, injury details.</li>
+ * </ul>
+ */
 public class SpielerStatusLabelEntry extends DoppelLabelEntry {
+
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private ColorLabelEntry verletzung = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
+    private final ColorLabelEntry injury = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
                                                              ColorLabelEntry.BG_STANDARD,
                                                              SwingConstants.RIGHT);
-    private ColorLabelEntry verwarnungen = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
+    private final ColorLabelEntry warnings = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
                                                                ColorLabelEntry.BG_STANDARD,
                                                                SwingConstants.LEFT);
     private Player player;
@@ -30,7 +40,7 @@ public class SpielerStatusLabelEntry extends DoppelLabelEntry {
      */
     public SpielerStatusLabelEntry() {
         super();
-        this.setLabels(verwarnungen, verletzung);
+        this.setLabels(warnings, injury);
     }
 
     public final void setPlayer(Player player) {
@@ -53,13 +63,7 @@ public class SpielerStatusLabelEntry extends DoppelLabelEntry {
                 } else if (entry.getPlayer().getVerletzt() < getPlayer().getVerletzt()) {
                     return -1;
                 } else {
-                    if (entry.getPlayer().getGelbeKarten() > getPlayer().getGelbeKarten()) {
-                        return 1;
-                    } else if (entry.getPlayer().getGelbeKarten() < getPlayer().getGelbeKarten()) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
+                    return Integer.compare(entry.getPlayer().getGelbeKarten(), getPlayer().getGelbeKarten());
                 }
             }
         }
@@ -70,15 +74,8 @@ public class SpielerStatusLabelEntry extends DoppelLabelEntry {
     @Override
 	public final void updateComponent() {
         if (player != null) {
-            if (player.isGesperrt()) {
-                getLinks().setIcon(ThemeManager.getIcon(HOIconName.REDCARD_SMALL));
-            } else if (player.getGelbeKarten() == 1) {
-                getLinks().setIcon(ThemeManager.getIcon(HOIconName.YELLOWCARD_SMALL));
-            } else if (player.getGelbeKarten() >= 2) {
-                getLinks().setIcon(ThemeManager.getIcon(HOIconName.TWOYELLOWCARDS_SMALL));
-            } else {
-                getLinks().clear();
-            }
+            getLinks().clear();
+            getLinks().setIcon(new StatusIcon(player));
 
             if (player.getVerletzt() == 0) {
                 getRechts().setText("");
@@ -99,7 +96,5 @@ public class SpielerStatusLabelEntry extends DoppelLabelEntry {
             getLinks().clear();
             getRechts().clear();
         }
-
-        //super.updateComponent();
     }
 }
