@@ -3,16 +3,10 @@ package core.option;
 import core.model.HOVerwaltung;
 import core.gui.comp.panel.ImagePanel;
 
-import java.awt.Insets;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.JCheckBox;
-import javax.swing.ButtonGroup;
-import javax.swing.JRadioButton;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 
 /**
@@ -61,6 +55,7 @@ public final class ReleaseChannelPanel extends ImagePanel
 
 	private void initComponents() {
 		setLayout(new GridBagLayout());
+		setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 
 		GridBagConstraints placement;
 
@@ -100,6 +95,7 @@ public final class ReleaseChannelPanel extends ImagePanel
 		m_jta_Description.setLineWrap(true);
 		m_jta_Description.setWrapStyleWord(true);
 		m_jta_Description.setEditable(false);
+		m_jta_Description.setPreferredSize(new Dimension(430, 200));
 		placement = new GridBagConstraints();
 		placement.insets = new Insets(25, 0, 25, 0);
 		placement.fill = GridBagConstraints.BOTH;
