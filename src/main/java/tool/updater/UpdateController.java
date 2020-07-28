@@ -1,11 +1,11 @@
 package tool.updater;
 
 import javax.swing.JOptionPane;
-import com.install4j.api.launcher.ApplicationLauncher;
 import core.HO;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.net.MyConnector;
+import core.util.Updater;
 
 public final class UpdateController {
 
@@ -182,18 +182,7 @@ public final class UpdateController {
 //        HOMainFrame.instance().shutdown();
 // This will return immediately if you call it from the EDT,
 // otherwise it will block until the installer application exits
-        ApplicationLauncher.launchApplicationInProcess("814", null, new ApplicationLauncher.Callback() {
-                    public void exited(int exitValue) {
-                        //TODO add your code here (not invoked on event dispatch thread)
-                        String aa = "dgdg";
-                    }
-
-                    public void prepareShutdown() {
-                        //TODO add your code here (not invoked on event dispatch thread)
-                        String aa = "dgdgdgdgdgdg";
-                    }
-                }, ApplicationLauncher.WindowMode.FRAME, null
-        );
+        Updater.update(); // TODO: in the future remove all this and points directly from the gui
 
 
     }

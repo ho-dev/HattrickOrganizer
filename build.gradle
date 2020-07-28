@@ -152,10 +152,8 @@ distributions {
 
 
 install4j {
-    if (hasProperty('install4jHomeDir')){
-        if (install4jHomeDir != null) installDir = file(install4jHomeDir)
-        else installDir = file("foo")
-    }
+    if (install4jHomeDir == null) installDir = file("foo")
+    else installDir = file(install4jHomeDir)
     disableSigning = true
 }
 
@@ -167,30 +165,20 @@ install4j {
 task makeAllmedias(dependsOn: 'media'){
     doLast {
         if (releaseArtefacts) {
-            // push DEV_upddate.xml at every release
+            // publish updatesDEV.xml at every release
             copy {
                 from "${projectDir}/build/artefacts/updates.xml"
                 into "${projectDir}/build/artefacts"
-                rename "updates.xml", "DEV_update.xml"
+                rename "updates.xml", "updatesDEV.xml"
             }
-            // push BETA_update.xml if beta or stable has been released     ---------------------------------------------------------------------
+
+            // publish updatesBETA.xml if beta or stable has been released     ---------------------------------------------------------------------
             if (development_stage != '0') {
                 copy {
                     from "${projectDir}/build/artefacts/updates.xml"
-                    into "${projectDir}/build/artefacts"
-                    rename "updates.xml", "BETA_update.xml"
+                    into "${projectDir}/build/artefacts/"
+                    rename "updates.xml", "updatesBETA.xml"
                 }
-            }
-            // push STABLE_update.xml only if a new stable version has been released
-            if (development_stage == '2') {
-                copy {
-                    from "${projectDir}/build/artefacts/updates.xml"
-                    into "${projectDir}/build/artefacts"
-                    rename "updates.xml", "STABLE_update.xml"
-                }
-            }
-            delete {
-                delete(files("${projectDir}/build/artefacts/updates.xml"))
             }
         }
     }
@@ -348,7 +336,7 @@ min_version_for_auto_update=$min_version_auto_update
 
             copy {
                 from "${projectDir}\\src\\main\\resources\\release_notes.md"
-                into "$projectDir/docs"
+                into "$projectDir/docs/release_notes"
                 rename { filename -> filename.replace('release_notes', 'release_notes(dev)')}
             }
             println("release notes of DEV version have been updated")
@@ -362,7 +350,7 @@ min_version_for_auto_update=$min_version_auto_update
                 println("latestbeta.html has been updated")
                 copy {
                     from "${projectDir}\\src\\main\\resources\\release_notes.md"
-                    into "$projectDir/docs"
+                    into "$projectDir/docs/release_notes"
                     rename { filename -> filename.replace('release_notes', 'release_notes(beta)')}
                 }
                 println("release notes of BETA version have been updated")
@@ -378,7 +366,7 @@ min_version_for_auto_update=$min_version_auto_update
                 println("lateststable.html has been updated")
                 copy {
                     from "${projectDir}\\src\\main\\resources\\release_notes.md"
-                    into "$projectDir/docs"
+                    into "$projectDir/docs/release_notes"
                     rename { filename -> filename.replace('release_notes', 'release_notes(stable)')}
                 }
                 println("release notes of STABLE version have been updated")
