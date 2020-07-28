@@ -107,7 +107,7 @@ public class SubstitutionEditView extends JPanel {
 	/**
 	 * Initializes the view with the given {@link Substitution}. The given
 	 * object will not be changed. To retrieve the data from the view, use
-	 * {@link #getSubstitution()} method.
+	 * {@link #getSubstitution(int)} method.
 	 *
 	 * @param lineup
 	 * @param sub
@@ -164,58 +164,47 @@ public class SubstitutionEditView extends JPanel {
 	}
 
 	/**
-	 * Gets a new {@link ISubstitution} which represents the values chosen in
+	 * Gets a new {@link Substitution} which represents the values chosen in
 	 * the view. Note that <i>new</i> is returned and not the one which may be
-	 * provided to the {@link #init(ISubstitution)} method.
+	 * provided to the {@link #init(Lineup, Substitution)} method.
 	 * 
-	 * @return
+	 * @param nextOrderID
+	 * @return new Substitution
 	 */
-	public Substitution getSubstitution() {
-		Substitution sub = new Substitution();
-		return getSubstitution(sub);
-	}
-
-	public Substitution getSubstitution(Substitution sub)
-	{
-		sub.setBehaviour((byte) getSelectedId(this.behaviourComboBox));
-		sub.setRedCardCriteria(RedCardCriteria
-				.getById((byte) getSelectedId(this.redCardsComboBox)));
-		sub.setStanding(GoalDiffCriteria
-				.getById((byte) getSelectedId(this.standingComboBox)));
-		sub.setMatchMinuteCriteria(((Integer) this.whenTextField.getValue())
-				.byteValue());
-		sub.setOrderType(this.orderType);
-		PlayerPositionItem item = (PlayerPositionItem) this.playerComboBox
-				.getSelectedItem();
+	public Substitution getSubstitution(int nextOrderID) {
+		int playerInID = -1;
+		int subjectPlayerID = -1;
+		var item = (PlayerPositionItem) this.playerComboBox.getSelectedItem();
 		if (item != null) {
-			sub.setObjectPlayerID(item.getSpieler().getSpielerID());
-		}
-
-		// sub.setPlayerOrderId(id); ???????????
-		if (!isPositionSwap()) {
-			item = (PlayerPositionItem) this.positionComboBox.getSelectedItem();
-			if (item != null) {
-				if (item.getSpieler() != null) {
-					sub.setRoleId(item.getPosition().byteValue());
-				}
-				sub.setRoleId(item.getPosition().byteValue());
-			}
-		}
-
-		item = (PlayerPositionItem) this.playerComboBox.getSelectedItem();
-		if (item != null) {
-			sub.setSubjectPlayerID(item.getSpieler().getSpielerID());
+			subjectPlayerID = item.getSpieler().getSpielerID();
 		}
 		if (isPositionSwap() || isSubstitution()) {
 			item = (PlayerPositionItem) this.playerInComboBox.getSelectedItem();
 			if (item != null) {
-				sub.setObjectPlayerID(item.getSpieler().getSpielerID());
+				playerInID = item.getSpieler().getSpielerID();
 			}
 		} else if (isNewBehaviour()) {
 			// the player should be both object and subject, per API.
-			sub.setObjectPlayerID(sub.getSubjectPlayerID());
+			playerInID = subjectPlayerID;
 		}
-		return sub;
+		byte roleId = -1;
+		if (!isPositionSwap()) {
+			item = (PlayerPositionItem) this.positionComboBox.getSelectedItem();
+			if (item != null) {
+				roleId = item.getPosition().byteValue();
+			}
+		}
+		return new Substitution(
+				nextOrderID,
+				playerInID,
+				subjectPlayerID,
+				this.orderType.getId(),
+				((Integer) this.whenTextField.getValue()).byteValue(),
+				roleId,
+				(byte) getSelectedId(this.behaviourComboBox),
+				RedCardCriteria.getById((byte) getSelectedId(this.redCardsComboBox)),
+				GoalDiffCriteria.getById((byte) getSelectedId(this.standingComboBox))
+				);
 	}
 
 	private int getSelectedId(JComboBox comboBox) {
@@ -229,7 +218,7 @@ public class SubstitutionEditView extends JPanel {
 	void RatingRecalc()
 	{
 		if ( substitution == null || !initDone) return;
-		setSubstitution();
+		this.substitution = getSubstitution(-1);
 		if ( substitution.getSubjectPlayerID() !=  -1 &&
 				(isNewBehaviour() || substitution.getObjectPlayerID() != -1)){
 			this.lineup.setRatings();
@@ -525,9 +514,5 @@ public class SubstitutionEditView extends JPanel {
 
 	private boolean isNewBehaviour() {
 		return this.orderType == MatchOrderType.NEW_BEHAVIOUR;
-	}
-
-	public void setSubstitution() {
-		getSubstitution(this.substitution);
 	}
 }

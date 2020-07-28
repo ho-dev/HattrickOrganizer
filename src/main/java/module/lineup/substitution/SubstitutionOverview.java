@@ -280,8 +280,7 @@ public class SubstitutionOverview extends JPanel {
 		SubstitutionEditDialog dlg = getSubstitutionEditDialog(orderType);
 		dlg.setLocationRelativeTo(SubstitutionOverview.this);
 		BackupLineupSubstitutions();
-		Substitution newSub = new Substitution();
-		newSub.setOrderType(orderType);
+		Substitution newSub = new Substitution(orderType);
 		lineup.getSubstitutionList().add(newSub);
 		dlg.init(lineup, newSub);
 		dlg.setVisible(true);
@@ -356,8 +355,16 @@ public class SubstitutionOverview extends JPanel {
 	private void BackupLineupSubstitutions() {
 		this.substitutionBackup = new ArrayList<Substitution>();
 		for ( Substitution s : this.lineup.getSubstitutionList()){
-			Substitution backup = new Substitution();
-			backup.merge(s);
+			Substitution backup = new Substitution(s.getPlayerOrderId(),
+					s.getObjectPlayerID(),
+					s.getSubjectPlayerID(),
+					s.getOrderType().getId(),
+					s.getMatchMinuteCriteria(),
+					s.getRoleId(),
+					s.getBehaviour(),
+					s.getRedCardCriteria(),
+					s.getStanding()
+					);
 			this.substitutionBackup.add(backup);
 		}
 	}

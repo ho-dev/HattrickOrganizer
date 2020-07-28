@@ -247,28 +247,26 @@ public class Lineup{
 						}
 					}
 
-					Substitution sub = new Substitution();
-					sub.setPlayerOrderId(Integer.parseInt(properties.getProperty("subst" + i
-							+ "playerorderid")));
-					sub.setObjectPlayerID(playerIn);
-					sub.setSubjectPlayerID(playerOut);
-					sub.setOrderType(matchOrderType);
-					sub.setMatchMinuteCriteria(Byte.parseByte(properties.getProperty("subst" + i
-							+ "matchminutecriteria")));
-					sub.setRoleId(Byte.parseByte(properties.getProperty("subst" + i + "pos")));
-					sub.setBehaviour(Byte.parseByte(properties.getProperty("subst" + i
-							+ "behaviour")));
-					sub.setRedCardCriteria(RedCardCriteria.getById(Byte.parseByte(properties
-							.getProperty("subst" + i + "card"))));
-					
 					// bugfix: i had a HRF where subst0standing was missing
 					String val = properties.getProperty("subst" + i + "standing");
+					GoalDiffCriteria goalDiffCriteria;
 					if (StringUtils.isNumeric(val)) {
-						sub.setStanding(GoalDiffCriteria.getById(Byte.parseByte(val)));
+						goalDiffCriteria = GoalDiffCriteria.getById(Byte.parseByte(val));
 					} else {
-						sub.setStanding(GoalDiffCriteria.ANY_STANDING);
+						goalDiffCriteria = GoalDiffCriteria.ANY_STANDING;
 					}
-					
+
+					Substitution sub = new Substitution(
+							Integer.parseInt(properties.getProperty("subst" + i + "playerorderid")),
+							playerIn,
+							playerOut,
+							orderTypeId,
+							Byte.parseByte(properties.getProperty("subst" + i + "matchminutecriteria")),
+							Byte.parseByte(properties.getProperty("subst" + i + "pos")),
+							Byte.parseByte(properties.getProperty("subst" + i + "behaviour")),
+							RedCardCriteria.getById(Byte.parseByte(properties.getProperty("subst" + i + "card"))),
+							goalDiffCriteria);
+
 					this.substitutions.add(sub);
 				} else {
 					break;

@@ -38,12 +38,30 @@ public class Substitution {
 	private GoalDiffCriteria standing = GoalDiffCriteria.ANY_STANDING;
 
 	public Substitution(int playerOrderID, int playerIn, int subjectPlayerID,
-			MatchOrderType orderType, byte matchMinuteCriteria, byte roleId, byte behaviour,
+			byte orderType, byte matchMinuteCriteria, byte roleId, byte behaviour,
 			RedCardCriteria card, GoalDiffCriteria standing) {
 		this.playerOrderID = playerOrderID;
 		this.objectPlayerID = playerIn;
 		this.subjectPlayerID = subjectPlayerID;
-		this.orderType = orderType;
+
+		if (orderType == MatchOrderType.POSITION_SWAP.getId()) {
+			this.orderType = MatchOrderType.POSITION_SWAP;
+		}
+		else if ( orderType == MatchOrderType.MAN_MARKING.getId() ){
+			this.orderType = MatchOrderType.MAN_MARKING;
+		}
+		else {
+			// NEW_BEHAVIOUR and SUBSTITUTION have the same id
+			if (playerIn == subjectPlayerID) {
+				this.orderType = MatchOrderType.NEW_BEHAVIOUR;
+			} else if ((playerIn <= 0 || subjectPlayerID <= 0)) {
+				// allows the correct retrieval of some cases
+				this.orderType = MatchOrderType.NEW_BEHAVIOUR;
+			} else {
+				this.orderType = MatchOrderType.SUBSTITUTION;
+			}
+		}
+
 		this.matchMinuteCriteria = matchMinuteCriteria;
 		this.roleId = roleId;
 		this.behaviour = behaviour;
@@ -51,7 +69,8 @@ public class Substitution {
 		this.standing = standing;
 	}
 
-	public Substitution() {
+	public Substitution(MatchOrderType orderType) {
+		this.orderType = orderType;
 	}
 
 	public int getPlayerOrderId() {
@@ -100,10 +119,6 @@ public class Substitution {
 		return orderType;
 	}
 
-	public void setOrderType(MatchOrderType orderType) {
-		this.orderType = orderType;
-	}
-
 	public byte getMatchMinuteCriteria() {
 		return matchMinuteCriteria;
 	}
@@ -140,27 +155,6 @@ public class Substitution {
 
 	public void setStanding(GoalDiffCriteria standing) {
 		this.standing = standing;
-	}
-
-	/**
-	 * Merges the data from the given <code>Substitution</code> into this
-	 * <code>Substitution</code>. This method should be used e.g. when a model
-	 * has to be updated with data from a different <code>Substitution</code>
-	 * instance but and object identity has to be preserved.
-	 * 
-	 * @param other
-	 *            the <code>Substitution</code> to get the data from.
-	 */
-	public void merge(Substitution other) {
-		setBehaviour(other.getBehaviour());
-		setRedCardCriteria(other.getRedCardCriteria());
-		setMatchMinuteCriteria(other.getMatchMinuteCriteria());
-		setOrderType(other.getOrderType());
-		setObjectPlayerID(other.getObjectPlayerID());
-		setPlayerOrderId(other.getPlayerOrderId());
-		setSubjectPlayerID(other.getSubjectPlayerID());
-		setRoleId(other.getRoleId());
-		setStanding(other.getStanding());
 	}
 
 }

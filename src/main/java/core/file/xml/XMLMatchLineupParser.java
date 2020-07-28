@@ -333,18 +333,7 @@ public class XMLMatchLineupParser {
 		if (tmp != null) {
 			behaviour = Byte.parseByte(XMLManager.getFirstChildNodeValue(tmp));
 		}
-
-		MatchOrderType matchOrderType;
-		if (orderTypeId == 3) {
-			matchOrderType = MatchOrderType.POSITION_SWAP;
-		} else {
-			if (playerIn == playerOut) {
-				matchOrderType = MatchOrderType.NEW_BEHAVIOUR;
-			} else {
-				matchOrderType = MatchOrderType.SUBSTITUTION;
-			}
-		}
-		return new Substitution(playerOrderID, playerIn, playerOut, matchOrderType,
+		return new Substitution(playerOrderID, playerIn, playerOut, orderTypeId,
 				matchMinuteCriteria, pos, behaviour, RedCardCriteria.getById(card),
 				GoalDiffCriteria.getById(standing));
 	}
