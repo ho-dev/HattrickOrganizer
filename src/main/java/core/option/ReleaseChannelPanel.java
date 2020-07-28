@@ -2,12 +2,12 @@ package core.option;
 
 import core.model.HOVerwaltung;
 import core.gui.comp.panel.ImagePanel;
-
 import java.awt.*;
 import java.awt.event.ItemEvent;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
+import core.util.Updater;
+import static core.util.Updater.ReleaseChannel.byLabel;
 
 /**
  * Controls for release channel with description
@@ -18,21 +18,20 @@ public final class ReleaseChannelPanel extends ImagePanel
 	implements javax.swing.event.ChangeListener, java.awt.event.ItemListener {
 
 	//~ Static fields/initializers -----------------------------------------------------------------
-
-	private static final long serialVersionUID = 1L;
-	private JRadioButton m_jrb_Stable = new JRadioButton("Stable", false);
-	private JRadioButton m_jrb_Beta = new JRadioButton("Beta", false);
-	private JRadioButton m_jrb_Dev = new JRadioButton("Dev", false);
-	private	ButtonGroup m_bg_ButtonGroup = new ButtonGroup();
-	private JLabel m_jl_PleaseSelect = new JLabel(HOVerwaltung.instance().getLanguageString("options.release_channels_pleaseSelect"));
-	private JTextArea m_jta_Description = new JTextArea("", 8, 1);
+	private final JRadioButton m_jrb_Stable = new JRadioButton(Updater.ReleaseChannel.STABLE.label, false);
+	private final JRadioButton m_jrb_Beta = new JRadioButton(Updater.ReleaseChannel.BETA.label, false);
+	private final JRadioButton m_jrb_Dev = new JRadioButton(Updater.ReleaseChannel.DEV.label, false);
+	private final ButtonGroup m_bg_ButtonGroup = new ButtonGroup();
+	private final JLabel m_jl_PleaseSelect = new JLabel(HOVerwaltung.instance().getLanguageString("options.release_channels_pleaseSelect"));
+	private final JTextArea m_jta_Description = new JTextArea("", 8, 1);
+	private Updater.ReleaseChannel rc;
     private JCheckBox m_jchUpdateCheck;
 
-	//~ Constructors -------------------------------------------------------------------------------
+	public Updater.ReleaseChannel getRc() {
+		return rc;
+	}
 
-	/**
-	* Creates a new ReleaseChannelPanel object.
-	*/
+	//Constructors
 	public ReleaseChannelPanel() {
 		initComponents();
 	}
@@ -41,12 +40,15 @@ public final class ReleaseChannelPanel extends ImagePanel
 
 	public final void itemStateChanged(ItemEvent itemEvent) {
 		JRadioButton source = (JRadioButton)itemEvent.getItem();
+		String ReleaseChannelLabel;
 		if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-			core.model.UserParameter.temp().ReleaseChannel = source.getText();
+			ReleaseChannelLabel = source.getText();
+			core.model.UserParameter.temp().ReleaseChannel = ReleaseChannelLabel;
 			m_jta_Description.setText(
 					core.model.HOVerwaltung.instance().getLanguageString("options.release_channels_" +
 					source.getText().toUpperCase(java.util.Locale.ENGLISH) + "_desc")
 				);
+			rc = Updater.ReleaseChannel.byLabel(ReleaseChannelLabel);
 		}
 		core.model.UserParameter.temp().updateCheck = m_jchUpdateCheck.isSelected();
 	}
