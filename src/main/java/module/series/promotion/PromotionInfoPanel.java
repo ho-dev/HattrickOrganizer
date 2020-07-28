@@ -2,6 +2,8 @@ package module.series.promotion;
 
 import core.db.DBManager;
 import core.gui.HOMainFrame;
+import core.gui.comp.panel.ImagePanel;
+import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -19,17 +21,17 @@ import java.util.stream.Collectors;
 /**
  * Panel displaying the main details about Promotion / Demotion status.
  */
-public class PromotionInfoPanel extends JPanel {
+public class PromotionInfoPanel extends ImagePanel {
 
     private final LeaguePromotionHandler promotionHandler;
     private final HOVerwaltung verwaltung = HOVerwaltung.instance();
 
     // Force font when loading panel, otherwise chooses a different from default.
-    private final Font defaultFont = new Font("SansSerif", Font.PLAIN, UserParameter.instance().schriftGroesse);
+    private final Font defaultFont = new Font("SansSerif", Font.BOLD, UserParameter.instance().schriftGroesse+1);
+    private final Color fgColor = ThemeManager.getColor(HOColorName.FG_PROMOTION_INFO);
 
     public PromotionInfoPanel(LeaguePromotionHandler promotionHandler) {
         this.promotionHandler = promotionHandler;
-        setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setBorder(new EmptyBorder(0, 10, 0, 0));
 
@@ -70,6 +72,7 @@ public class PromotionInfoPanel extends JPanel {
         this.add(downloadLeagueButton);
         final JLabel downloadLabel = new JLabel(verwaltung.getLanguageString("pd_status.download.unavailable.data"));
         downloadLabel.setFont(defaultFont);
+        downloadLabel.setForeground(fgColor);
         this.add(downloadLabel);
 
         downloadLeagueButton.setToolTipText(verwaltung.getLanguageString("pd_status.download.data"));
@@ -98,6 +101,7 @@ public class PromotionInfoPanel extends JPanel {
         this.removeAll();
         JLabel infoLeagueData = new JLabel(createPromotionStatusDisplayString(promotionStatus));
         infoLeagueData.setFont(defaultFont);
+        infoLeagueData.setForeground(fgColor);
         this.add(infoLeagueData);
 
         this.revalidate();
@@ -112,6 +116,7 @@ public class PromotionInfoPanel extends JPanel {
                 "pd_status.download.pending",
                 basics.getLiga()));
         processingLabel.setFont(defaultFont);
+        processingLabel.setForeground(fgColor);
         this.add(processingLabel);
 
         this.revalidate();
@@ -126,7 +131,7 @@ public class PromotionInfoPanel extends JPanel {
 
             teamDetails = leaguePromotionInfo.teams
                     .stream()
-                    .map(teamId -> downloadCountryDetails.getTeamSeries(teamId))
+                    .map(downloadCountryDetails::getTeamSeries)
                     .collect(Collectors.toList());
             leagueDetails = teamDetails
                     .stream()

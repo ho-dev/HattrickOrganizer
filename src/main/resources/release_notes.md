@@ -50,7 +50,7 @@ Changelist HO! 4.0
 
 ### Training
 
-  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512 
+  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512
   - [FIX] Fix bug of training effect of Walkover matches #623
   - [FEAT] Individual training plans for each player in training preview #587
 
@@ -65,6 +65,7 @@ Changelist HO! 4.0
 
 ### League
 
+  - [FEAT] Make Promotion status more visible. [#521]
 
 ## Translations
   - HO! is currently available in xx languages thanks to the work of xx translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):

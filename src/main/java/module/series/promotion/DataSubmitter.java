@@ -1,6 +1,7 @@
 package module.series.promotion;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 public interface DataSubmitter {
@@ -26,9 +27,9 @@ public interface DataSubmitter {
      * Locks a block for processing for league with ID <code>leagueId</code>.
      *
      * @param leagueId ID of the league for which we are locking a block.
-     * @return BlockInfo – Details about the locked block.  Returns <code>null</code> if no block available.
+     * @return Optinal<BlockInfo> – Details about the locked block.  Returns empty optional if no block available.
      */
-    BlockInfo lockBlock(int leagueId);
+    Optional<BlockInfo> lockBlock(int leagueId);
 
     /**
      * Submits the data for a block whose details are held in <code>blockInfo</code> as String representing
@@ -44,7 +45,7 @@ public interface DataSubmitter {
      *
      * @param leagueId League ID of the team.
      * @param teamId Team Id of the team.
-     * @return
+     * @return Optional<String> – Optional containing the status of the team, empty if not found.
      */
-    String getPromotionStatus(int leagueId, int teamId);
+    Optional<String> getPromotionStatus(int leagueId, int teamId);
 }
