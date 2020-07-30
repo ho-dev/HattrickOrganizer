@@ -159,7 +159,7 @@ public class OptionenDialog extends JDialog {
 		ModuleManager.instance().saveTemp();
 
 		//save release channel information in java store
-		Updater.saveReleaseChannelPreference(m_jpReleaseChannelsPanel.getRc());
+		Updater.instance().saveReleaseChannelPreference(m_jpReleaseChannelsPanel.getRc());
 
 		if (OptionManager.instance().isRestartNeeded()) {
 			Helper.showMessage(OptionenDialog.this,
