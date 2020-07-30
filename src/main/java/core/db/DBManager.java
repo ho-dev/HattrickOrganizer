@@ -999,7 +999,7 @@ public class DBManager {
 	}
 	
 	/**
-	 * Stores a list of StaffMembers
+	 * Stores a list of StaffMembersF
 	 * 
 	 * @param hrfId The hrfId
 	 * @param list The staff objects

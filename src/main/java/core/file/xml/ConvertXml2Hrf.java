@@ -735,42 +735,44 @@ public class ConvertXml2Hrf {
 				buffer.append("order_rightForward=").append(getPlayerOrderForNextLineup("RightForwardOrder",nextLineup)).append('\n');
 				buffer.append("order_leftForward=").append(getPlayerOrderForNextLineup("LeftForwardOrder",nextLineup)).append('\n');
 				buffer.append("order_centralForward=").append(getPlayerOrderForNextLineup("CentralForwardOrder",	nextLineup)).append('\n');
-	
-				for (int i = 0; i < 5; i++) {
-					String substNext = "subst" + i;
-					if (nextLineup.get(substNext + "playerOrderID") != null) {
-						buffer.append(substNext)
-								.append("playerOrderID=")
-								.append(nextLineup.get(substNext + "playerOrderID"))
-								.append('\n');
-						buffer.append(substNext).append("playerIn=")
-								.append(nextLineup.get(substNext + "playerIn"))
-								.append('\n');
-						buffer.append(substNext).append("playerOut=")
-								.append(nextLineup.get(substNext + "playerOut"))
-								.append('\n');
-						buffer.append(substNext).append("orderType=")
-								.append(nextLineup.get(substNext + "orderType"))
-								.append('\n');
-						buffer.append(substNext)
-								.append("matchMinuteCriteria=")
-								.append(nextLineup.get(substNext
-										+ "matchMinuteCriteria")).append('\n');
-						buffer.append(substNext).append("pos=")
-								.append(nextLineup.get(substNext + "pos"))
-								.append('\n');
-						buffer.append(substNext).append("behaviour=")
-								.append(nextLineup.get(substNext + "behaviour"))
-								.append('\n');
-						buffer.append(substNext).append("card=")
-								.append(nextLineup.get(substNext + "card"))
-								.append('\n');
-						buffer.append(substNext).append("standing=")
-								.append(nextLineup.get(substNext + "standing"))
-								.append('\n');
-					}
+
+				int iSub=0;
+				while (true) {
+					String substNext = "subst" + iSub++;
+
+					if (nextLineup.get(substNext + "playerOrderID") == null) break;
+
+					buffer.append(substNext)
+							.append("playerOrderID=")
+							.append(nextLineup.get(substNext + "playerOrderID"))
+							.append('\n');
+					buffer.append(substNext).append("playerIn=")
+							.append(nextLineup.get(substNext + "playerIn"))
+							.append('\n');
+					buffer.append(substNext).append("playerOut=")
+							.append(nextLineup.get(substNext + "playerOut"))
+							.append('\n');
+					buffer.append(substNext).append("orderType=")
+							.append(nextLineup.get(substNext + "orderType"))
+							.append('\n');
+					buffer.append(substNext)
+							.append("matchMinuteCriteria=")
+							.append(nextLineup.get(substNext
+									+ "matchMinuteCriteria")).append('\n');
+					buffer.append(substNext).append("pos=")
+							.append(nextLineup.get(substNext + "pos"))
+							.append('\n');
+					buffer.append(substNext).append("behaviour=")
+							.append(nextLineup.get(substNext + "behaviour"))
+							.append('\n');
+					buffer.append(substNext).append("card=")
+							.append(nextLineup.get(substNext + "card"))
+							.append('\n');
+					buffer.append(substNext).append("standing=")
+							.append(nextLineup.get(substNext + "standing"))
+							.append('\n');
 				}
-	
+
 				for (int i = 0; i < 11; i++) {
 					String key = "PenaltyTaker" + i;
 					buffer.append("penalty").append(i).append("=")

@@ -145,7 +145,7 @@ public class Lineup{
 	 * Probably up for change with new XML?
 	 */
 	public Lineup(Properties properties) {
-		try {					
+		try {
 			// Positionen erzeugen
 			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.keeper, Integer
 					.parseInt(properties.getProperty("keeper", "0")), (byte) 0));
@@ -222,56 +222,16 @@ public class Lineup{
 				settings.m_iStyleOfPlay = Integer.parseInt(properties.getProperty("styleofplay", "0"));
 
 			// and read the sub contents
-			for (int i = 0; i < 5; i++) {
-
-				if ((properties.getProperty("subst" + i + "playerorderid") != null)
-						&& (Integer.parseInt(properties.getProperty("subst" + i + "playerorderid")) >= 0)) {
-
-					byte orderTypeId = Byte.parseByte(properties.getProperty("subst" + i
-							+ "ordertype"));
-					int playerIn = Integer.parseInt(properties
-							.getProperty("subst" + i + "playerin"));
-					int playerOut = Integer.parseInt(properties.getProperty("subst" + i
-							+ "playerout"));
-					MatchOrderType matchOrderType;
-					if (orderTypeId == 3) {
-						matchOrderType = MatchOrderType.POSITION_SWAP;
-					} else {
-						if (playerIn == playerOut) {
-							matchOrderType = MatchOrderType.NEW_BEHAVIOUR;
-						} else if ((playerIn <= 0 || playerOut <= 0)) {
-							// allows the correct retrieval of some cases
-							matchOrderType = MatchOrderType.NEW_BEHAVIOUR;
-						} else {
-							matchOrderType = MatchOrderType.SUBSTITUTION;
-						}
-					}
-
-					// bugfix: i had a HRF where subst0standing was missing
-					String val = properties.getProperty("subst" + i + "standing");
-					GoalDiffCriteria goalDiffCriteria;
-					if (StringUtils.isNumeric(val)) {
-						goalDiffCriteria = GoalDiffCriteria.getById(Byte.parseByte(val));
-					} else {
-						goalDiffCriteria = GoalDiffCriteria.ANY_STANDING;
-					}
-
-					Substitution sub = new Substitution(
-							Integer.parseInt(properties.getProperty("subst" + i + "playerorderid")),
-							playerIn,
-							playerOut,
-							orderTypeId,
-							Byte.parseByte(properties.getProperty("subst" + i + "matchminutecriteria")),
-							Byte.parseByte(properties.getProperty("subst" + i + "pos")),
-							Byte.parseByte(properties.getProperty("subst" + i + "behaviour")),
-							RedCardCriteria.getById(Byte.parseByte(properties.getProperty("subst" + i + "card"))),
-							goalDiffCriteria);
-
-					this.substitutions.add(sub);
-				} else {
+			int iSub = 0;
+			while(true){
+				var subs = getSubstitution(properties, iSub++);
+				if (subs != null) {
+					this.substitutions.add(subs);
+				}
+				else {
 					break;
 				}
-			}
+			};
 
 			// Add the penalty takers
 
@@ -295,6 +255,34 @@ public class Lineup{
 			HOLogger.instance().warning(getClass(), "Aufstellung.<init2>: " + e);
 			HOLogger.instance().log(getClass(), e);
 		}
+	}
+
+	private Substitution getSubstitution(Properties properties, int i) {
+		var prefix = "subst" + i;
+		var playerorderString = properties.getProperty(prefix + "playerorderid");
+		if (playerorderString == null) return null;
+		var playerorderid = Integer.parseInt(playerorderString);
+		if (playerorderid < 0) return null;
+
+		// bugfix: i had a HRF where subst0standing was missing
+		String val = properties.getProperty(prefix + "standing");
+		GoalDiffCriteria goalDiffCriteria;
+		if (StringUtils.isNumeric(val)) {
+			goalDiffCriteria = GoalDiffCriteria.getById(Byte.parseByte(val));
+		} else {
+			goalDiffCriteria = GoalDiffCriteria.ANY_STANDING;
+		}
+
+		return  new Substitution(
+				Integer.parseInt(properties.getProperty(prefix + "playerorderid")),
+				Integer.parseInt(properties.getProperty(prefix + "playerin")),
+				Integer.parseInt(properties.getProperty(prefix + "playerout")),
+				Byte.parseByte(properties.getProperty(prefix + "ordertype")),
+				Byte.parseByte(properties.getProperty(prefix + "matchminutecriteria")),
+				Byte.parseByte(properties.getProperty(prefix + "pos")),
+				Byte.parseByte(properties.getProperty(prefix + "behaviour")),
+				RedCardCriteria.getById(Byte.parseByte(properties.getProperty(prefix + "card"))),
+				goalDiffCriteria);
 	}
 
 	/**
