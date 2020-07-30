@@ -3,17 +3,11 @@ package core.util;
 import com.install4j.api.launcher.ApplicationLauncher;
 import core.gui.HOMainFrame;
 import core.option.ReleaseChannelPanel;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Updater {
-
-    private static final String DEV_UPDATE_XML_URL = "https://github.com/akasolace/HO/releases/download/dev/updatesDEV.xml";
-    private static final String BETA_UPDATE_XML_URL = "http://www.updatesBETA.xml";
-    private static final String STABLE_UPDATE_XML_URL = "http://www.updates.xml";
-    private static final String UPDATER_APPLICATION_ID = "814";
 
     public enum ReleaseChannel {
         DEV("Dev", 0, DEV_UPDATE_XML_URL),
@@ -55,22 +49,65 @@ public class Updater {
         }
     }
 
-    public static void saveReleaseChannelPreference(ReleaseChannel rc){
+    private static final String DEV_UPDATE_XML_URL = "https://github.com/akasolace/HO/releases/download/dev/updatesDEV.xml";
+    private static final String BETA_UPDATE_XML_URL = "http://www.updatesBETA.xml";
+    private static final String STABLE_UPDATE_XML_URL = "http://www.updates.xml";
+    private static final String UPDATER_APPLICATION_ID = "814";
+    private String mediaID;
+    private static Updater clUpdater;
+
+
+    /**
+     * Creates a new instance of ReleaseChannel
+     */
+    private Updater() {
         try {
-            com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", rc.xmlURL), true);
-        }
-        catch (IOException e) {
-            HOLogger.instance().error(ReleaseChannelPanel.class, "can't store release channel preference in java store" + e.toString());
+            mediaID = com.install4j.api.launcher.Variables.getCompilerVariable("mediaID");
+        } catch (IOException e) {
+            mediaID = null;
+            HOLogger.instance().error(Updater.class, "can't determine mediaID information" + e.toString());
         }
     }
 
-    public static void update() {
+    public static Updater instance() {
+        if (clUpdater == null) {
+            clUpdater = new Updater();
+        }
+        return clUpdater;
+    }
+
+    public void saveReleaseChannelPreference(ReleaseChannel rc){
+        try {
+            com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", rc.xmlURL), mediaID, true);
+            Map<String, Object> data;
+            data = com.install4j.api.launcher.Variables.loadFromPreferenceStore(mediaID, true);
+            HOLogger.instance().info(ReleaseChannelPanel.class, data);
+            data = com.install4j.api.launcher.Variables.loadFromPreferenceStore("60", true);
+            HOLogger.instance().info(ReleaseChannelPanel.class, data);
+        }
+        catch (IOException e) {
+            HOLogger.instance().error(Updater.class, "can't store release channel preference in java store" + e.toString());
+        }
+    }
+
+    public void update() {
+        Map<String, Object> data;
+        try {
+            data = com.install4j.api.launcher.Variables.loadFromPreferenceStore(mediaID, true);
+            HOLogger.instance().info(ReleaseChannelPanel.class, data);
+            data = com.install4j.api.launcher.Variables.loadFromPreferenceStore("60", true);
+            HOLogger.instance().info(ReleaseChannelPanel.class, data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         ApplicationLauncher.launchApplicationInProcess(UPDATER_APPLICATION_ID, null, new ApplicationLauncher.Callback() {
                     public void exited(int exitValue) {
-                        HOLogger.instance().log(ReleaseChannelPanel.class,"installer exited with value: " + exitValue);
+                        HOLogger.instance().info(Updater.class,"installer exited with value: " + exitValue);
                     }
 
                     public void prepareShutdown() {
+                        HOLogger.instance().info(Updater.class,"prepare to shutdown !");
                         HOMainFrame.instance().shutdown();
                     }
                 }, ApplicationLauncher.WindowMode.FRAME, null

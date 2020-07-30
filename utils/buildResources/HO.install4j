@@ -33,6 +33,7 @@
       <variable name="HO_version" value="4.0" />
       <variable name="projectDir" value="D:/Perso/Code/HO" />
       <variable name="versionType" />
+      <variable name="mediaID" value="${compiler:sys.mediaId}" />
     </variables>
     <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk14/jdk-14.0.1+7" />
   </application>
@@ -448,6 +449,11 @@ return console.askYesNo(message, true);
         <startup>
           <screen id="815" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
             <actions>
+              <action id="951" beanClass="com.install4j.runtime.beans.actions.registry.LoadInstallerVariablesAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="packageName" type="string">${compiler:sys.mediaId}</property>
+                </serializedBean>
+              </action>
               <action id="844" beanClass="com.install4j.runtime.beans.actions.update.CheckForUpdateAction" actionElevationType="none" failureStrategy="quit">
                 <serializedBean>
                   <property name="url" type="string">${installer:updatesUrl?:${compiler:sys.updatesUrl}}</property>
@@ -1026,9 +1032,6 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
-      <excludedBeans>
-        <bean refId="814" />
-      </excludedBeans>
     </windowsArchive>
     <windowsArchive name="Windows Archive - JRE" id="481" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win${compiler:versionType}-JRE" installDir=".">
       <excludedLaunchers>
@@ -1036,9 +1039,6 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
-      <excludedBeans>
-        <bean refId="814" />
-      </excludedBeans>
       <jreBundle jreBundleSource="generated" />
     </windowsArchive>
     <windows name="Windows" id="60" mediaFileName="HOSetup-${compiler:HO_version}${compiler:versionType}">
