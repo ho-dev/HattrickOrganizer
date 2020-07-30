@@ -182,7 +182,7 @@ public final class UpdateController {
 //        HOMainFrame.instance().shutdown();
 // This will return immediately if you call it from the EDT,
 // otherwise it will block until the installer application exits
-        Updater.update(); // TODO: in the future remove all this and points directly from the gui
+        Updater.instance().update(); // TODO: in the future remove all this and points directly from the gui
 
 
     }
