@@ -272,7 +272,9 @@ public class XMLMatchLineupParser {
 			substitutions.add(s);
 			// We need to make sure the players involved are in the team lineup
 			// If missing, we only know the ID
-			if ((s.getObjectPlayerID() > 0) && (team.getPlayerByID(s.getObjectPlayerID()) == null)) {
+			if ((s.getObjectPlayerID() > 0) &&
+					(team.getPlayerByID(s.getObjectPlayerID()) == null) &&
+					s.getOrderType() != MatchOrderType.MAN_MARKING) { // in case of MAN_MARKING the Object Player is an opponent player
 				team.add2Aufstellung(new MatchLineupPlayer(-1, -1, s.getObjectPlayerID(), -1d, "",
 						-1));
 			}
