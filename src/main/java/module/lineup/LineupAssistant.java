@@ -577,27 +577,6 @@ public class LineupAssistant {
 				}
 			}
 		}
-
-//		// Now fill the additional XYZ positions
-//		for (int i = 0; (zusPos != null) && (vPlayer != null) && (i < zusPos.size()); i++) {
-//			pos = (MatchRoleID) zusPos.elementAt(i);
-//
-//			// Ignore already assigned positions and substitutes
-//			if ((pos.getSpielerId() > 0) || (pos.getId() >= IMatchRoleID.startReserves)) {
-//				continue;
-//			}
-//
-//			// nur diese Pos
-//			if (pos.getPosition() == position) {
-//				player = getBestSpieler(position, mitForm, ignoreVerletzung, ignoreSperre,
-//                        vPlayer, positionen);
-//
-//				// position besetzen
-//				if (player != null) {
-//					pos.setSpielerId(player.getSpielerID());
-//				}
-//			}
-//		}
 	}
 
 	/**

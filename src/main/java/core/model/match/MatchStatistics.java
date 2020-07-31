@@ -3,6 +3,7 @@ package core.model.match;
 import core.db.DBManager;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;
+import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
 
 import java.util.ArrayList;
@@ -56,7 +57,6 @@ public class MatchStatistics {
 			return 0;
 		}
 
-		List<Substitution> substitutions = teamLineup.getSubstitutions();
 		int enterMin = -1;
 		int minPlayed = 0;
 
@@ -76,6 +76,7 @@ public class MatchStatistics {
 			inPosition = true;
 		}
 
+		List<Substitution> substitutions = teamLineup.getSubstitutions();
 		// The substitutions are sorted on minute. Look for substitutions
 		// involving the player, and check his position
 		// after the substitution (on the substitution minute). Work through the
@@ -88,17 +89,19 @@ public class MatchStatistics {
 				break;
 			}
 
-			if ((substitution.getObjectPlayerID() == spielerId) || (substitution.getSubjectPlayerID() == spielerId)) {
-				int newpos = getPlayerFieldPositionAtMinute(spielerId, substitution.getMatchMinuteCriteria());
-				boolean newPosAccepted = isInAcceptedFieldPositions(newpos, accepted);
-				if (inPosition && !newPosAccepted) {
-					// He left a counting position.
-					minPlayed += substitution.getMatchMinuteCriteria() - enterMin;
-					inPosition = false;
-				} else if (!inPosition && newPosAccepted) {
-					// He entered a counting position
-					enterMin = substitution.getMatchMinuteCriteria();
-					inPosition = true;
+			if (substitution.getOrderType() == MatchOrderType.SUBSTITUTION) {
+				if ((substitution.getObjectPlayerID() == spielerId) || (substitution.getSubjectPlayerID() == spielerId)) {
+					int newpos = getPlayerFieldPositionAtMinute(spielerId, substitution.getMatchMinuteCriteria());
+					boolean newPosAccepted = isInAcceptedFieldPositions(newpos, accepted);
+					if (inPosition && !newPosAccepted) {
+						// He left a counting position.
+						minPlayed += substitution.getMatchMinuteCriteria() - enterMin;
+						inPosition = false;
+					} else if (!inPosition && newPosAccepted) {
+						// He entered a counting position
+						enterMin = substitution.getMatchMinuteCriteria();
+						inPosition = true;
+					}
 				}
 			}
 		}
@@ -152,7 +155,10 @@ public class MatchStatistics {
 
 		Substitution tmpSub = substitutions.get(arrIndex);
 
-		if ((tmpSub.getObjectPlayerID() != spielerId) && (tmpSub.getSubjectPlayerID() != spielerId)) {
+		if ((tmpSub.getObjectPlayerID() != spielerId) &&
+				(tmpSub.getSubjectPlayerID() != spielerId)
+				|| tmpSub.getOrderType() == MatchOrderType.MAN_MARKING		// man marking order has no influence on positions
+		) {
 			// This substitution is not exciting, check the next one
 			return getPlayerFieldPostitionAfterSubstitution(spielerId, arrIndex - 1, substitutions);
 		}

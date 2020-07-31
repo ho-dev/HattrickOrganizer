@@ -95,10 +95,12 @@ public class DetailsView extends JPanel {
 				this.playerInLabel.setText("");
 				break;
 			case POSITION_SWAP:
-				this.playerLabel.setText(HOVerwaltung.instance().getLanguageString(
-						"subs.Reposition"));
-				this.playerInLabel.setText(HOVerwaltung.instance().getLanguageString(
-						"subs.RepositionWith"));
+				this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Reposition"));
+				this.playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.RepositionWith"));
+				break;
+			case MAN_MARKING:
+				this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.manMarkingPlayer"));
+				this.playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.manMarkedOpponentPlayer"));
 				break;
 			}
 		} else {
