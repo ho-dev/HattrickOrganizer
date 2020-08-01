@@ -152,8 +152,10 @@ distributions {
 
 
 install4j {
-    if (install4jHomeDir == null) installDir = file("foo")
-    else installDir = file(install4jHomeDir)
+//    if (install4jHomeDir == null) installDir = file("foo")
+//    else installDir = file(install4jHomeDir)
+    if ((hasProperty('install4jHomeDir')) || ((install4jHomeDir != null) )) installDir = file(install4jHomeDir)
+    else installDir = file("foo")
     disableSigning = true
 }
 
@@ -203,9 +205,10 @@ task media(type: com.install4j.gradle.Install4jTask) {
     // 473 -> macOS Single Bundle JRE
     // 481 -> Windows archive JRE
     // 485 -> Windows JRE
+    // 1062 -> Unix installer
 
-//    buildIds = [60, 62, 63, 64, 172, 173, 464, 471, 473, 477, 481, 485]
-    buildIds = [60, 63, 64, 173]  // TODO: replace full buildIDs list before opening PR
+//    buildIds = [60, 62, 63, 64, 172, 173, 464, 471, 473, 477, 481, 485, 1062]
+    buildIds = [60, 63, 64, 173, 1062]  // TODO: replace full buildIDs list before opening PR
     String versionType
 
     switch(development_stage) {

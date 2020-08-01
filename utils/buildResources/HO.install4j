@@ -106,7 +106,7 @@ Categories=Game</desktopFile>
   </launchers>
   <installerGui>
     <applications>
-      <application id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication">
+      <application id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" actionElevationType="elevated">
         <startup>
           <screen id="1" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
             <actions>
@@ -120,7 +120,7 @@ Categories=Game</desktopFile>
           </screen>
         </startup>
         <screens>
-          <screen id="2" beanClass="com.install4j.runtime.beans.screens.WelcomeScreen" styleId="41" rollbackBarrierExitCode="0">
+          <screen id="2" beanClass="com.install4j.runtime.beans.screens.WelcomeScreen" actionElevationType="elevated" styleId="41" rollbackBarrierExitCode="0">
             <styleOverrides>
               <styleOverride name="Customize banner image" enabled="true">
                 <group id="174" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
@@ -209,7 +209,7 @@ return console.askOkCancel(message, true);
               </formComponent>
             </formComponents>
           </screen>
-          <screen id="8" beanClass="com.install4j.runtime.beans.screens.InstallationDirectoryScreen" rollbackBarrierExitCode="0">
+          <screen id="8" beanClass="com.install4j.runtime.beans.screens.InstallationDirectoryScreen" actionElevationType="elevated" rollbackBarrierExitCode="0">
             <condition>!context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
             <actions>
               <action id="11" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" rollbackBarrierExitCode="0" multiExec="true">
@@ -569,6 +569,7 @@ context.goForward(1, true, true);
             <actions>
               <action name="Download location" id="817" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
                 <serializedBean>
+                  <property name="responseFileVariable" type="boolean" value="true" />
                   <property name="script">
                     <object class="com.install4j.api.beans.ScriptProperty">
                       <property name="value" type="string">context.getVariable("updaterDownloadLocation") + File.separator + ((UpdateDescriptorEntry)context.getVariable("updateDescriptorEntry")).getFileName()</property>
@@ -1112,6 +1113,13 @@ return true;</property>
     <macos name="macOS Single Bundle - JRE" id="473" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" launcherId="606">
       <jreBundle usePack200="false" jreBundleSource="generated" />
     </macos>
+    <unixInstaller name="Unix Installer" id="1062" includeAllDownloadableComponents="true" customInstallBaseDir="/opt/">
+      <excludedLaunchers>
+        <launcher id="59" />
+        <launcher id="497" />
+        <launcher id="606" />
+      </excludedLaunchers>
+    </unixInstaller>
   </mediaSets>
   <buildIds buildAll="false">
     <mediaSet refId="64" />

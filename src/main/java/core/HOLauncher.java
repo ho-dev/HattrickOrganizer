@@ -33,13 +33,14 @@ public class HOLauncher {
 				e.printStackTrace();
 			}
 			if (updateSuccess) {
-				if (!file.delete()) System.err.print("zip file could not be deleted after update !");
+				if (!file.delete()) System.err.print("zip file could not be deleted after update !: " + file.getAbsolutePath() );
 			}
 		}
 		HO.main(args);
 	}
 
 	private static void update(String zipFile, String _destDir) throws IOException {
+		System.err.print("zip file is  :" +zipFile ); // TODO remove this
 		int len;
 		Pattern pattern;
 		Boolean file_to_be_updated;
@@ -78,6 +79,7 @@ public class HOLauncher {
 		}
 			zis.closeEntry();
 			zis.close();
+			System.err.print("zip file has been closed !" ); // TODO remove this
 		}
 
 	private static File updateFile(File destinationDir, ZipEntry zipEntry) throws IOException {

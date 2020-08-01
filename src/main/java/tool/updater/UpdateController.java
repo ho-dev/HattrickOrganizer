@@ -5,7 +5,11 @@ import core.HO;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.net.MyConnector;
+import core.net.login.LoginWaitDialog;
+import core.util.HOLogger;
 import core.util.Updater;
+
+import java.io.File;
 
 public final class UpdateController {
 
@@ -163,27 +167,31 @@ public final class UpdateController {
     }
 
     public static void updateHO(final String urlString) {
-//        File tmp = new File("update.zip");
-//        LoginWaitDialog wait = new LoginWaitDialog(HOMainFrame.instance());
-//        wait.setVisible(true);
-//        HOLogger.instance().debug(UpdateController.class, "Try to download: " + urlString);
-//        if (!UpdateHelper.download(urlString, tmp)) {
-//            wait.setVisible(false);
-//            return;
-//        }
-//        wait.setVisible(false);
-//
-//        JOptionPane.showMessageDialog(null,
-//                HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
-//                        .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
-//                        .getLanguageString("ls.menu.file.update.ho"),
-//                JOptionPane.INFORMATION_MESSAGE);
-//
-//        HOMainFrame.instance().shutdown();
-// This will return immediately if you call it from the EDT,
-// otherwise it will block until the installer application exits
-        Updater.instance().update(); // TODO: in the future remove all this and points directly from the gui
+        if (HO.isPortableVersion()) {
+            // HO! manage the (partial) update
+        File tmp = new File("update.zip");
+        LoginWaitDialog wait = new LoginWaitDialog(HOMainFrame.instance());
+        wait.setVisible(true);
+        if (!UpdateHelper.download(urlString, tmp)) {
+            wait.setVisible(false);
+            HOLogger.instance().error(UpdateController.class, "Could not download: " + urlString);
+            return;
+        }
+        wait.setVisible(false);
 
+        JOptionPane.showMessageDialog(null,
+                HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
+                        .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
+                        .getLanguageString("ls.menu.file.update.ho"),
+                JOptionPane.INFORMATION_MESSAGE);
+
+        HOMainFrame.instance().shutdown();
+
+        }
+        else {
+            // making update via install4J
+            Updater.instance().update();
+        }
 
     }
 
