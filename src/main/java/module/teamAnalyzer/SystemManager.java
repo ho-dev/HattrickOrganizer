@@ -65,6 +65,9 @@ public class SystemManager {
 	 * @return
 	 */
 	public static int getActiveTeamId() {
+		if ( selectedTeam == null){
+			selectedTeam = TeamManager.getFirstTeam();
+		}
 		return selectedTeam.getTeamId();
 	}
 

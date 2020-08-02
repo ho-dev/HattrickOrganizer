@@ -102,15 +102,19 @@ public class SubstitutionOverview extends JPanel {
 
 		// Max order is 5 + the level of the tactical assistant.
 		int maxOrders = 5 + HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
-		
-		for (int i = 0; i < model.getRowCount(); i++) {
-			TableRow row = model.getRow(i);
-			if (i > (maxOrders - 1)) {
-				row.setProblem(Error.TOO_MANY_ORDERS);
+
+		for (var row : model.rows) {
+			var subs = row.getSubstitution();
+			if (subs.getOrderType() != MatchOrderType.MAN_MARKING) {
+				maxOrders--;
+				if (maxOrders < 0) {
+					row.setProblem(Error.TOO_MANY_ORDERS);
+				}
 			} else {
 				row.setProblem(PlausibilityCheck.checkForProblem(this.lineup, row.getSubstitution()));
 			}
 		}
+
 		detailsView.refresh();
 		((SubstitutionsTableModel) this.substitutionTable.getModel()).sort();
 
@@ -122,13 +126,9 @@ public class SubstitutionOverview extends JPanel {
 
 	private void addListeners() {
 		this.substitutionTable.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
-
-					@Override
-					public void valueChanged(ListSelectionEvent e) {
-						if (!e.getValueIsAdjusting()) {
-							tableSelectionChanged();
-						}
+				e -> {
+					if (!e.getValueIsAdjusting()) {
+						tableSelectionChanged();
 					}
 				});
 
@@ -141,13 +141,7 @@ public class SubstitutionOverview extends JPanel {
 			}
 		});
 
-		this.substitutionTable.getModel().addTableModelListener(new TableModelListener() {
-
-			@Override
-			public void tableChanged(TableModelEvent e) {
-				removeAllAction.setEnabled(substitutionTable.getRowCount() > 0);
-			}
-		});
+		this.substitutionTable.getModel().addTableModelListener(e -> removeAllAction.setEnabled(substitutionTable.getRowCount() > 0));
 
 		this.substitutionTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "edit");
@@ -353,7 +347,7 @@ public class SubstitutionOverview extends JPanel {
 	}
 
 	private void BackupLineupSubstitutions() {
-		this.substitutionBackup = new ArrayList<Substitution>();
+		this.substitutionBackup = new ArrayList<>();
 		for ( Substitution s : this.lineup.getSubstitutionList()){
 			Substitution backup = new Substitution(s.getPlayerOrderId(),
 					s.getObjectPlayerID(),
@@ -374,16 +368,10 @@ public class SubstitutionOverview extends JPanel {
 	}
 
 	private void updateOrderIDs() {
-		List<Substitution> list = new ArrayList<Substitution>(this.lineup.getSubstitutionList());
-		Comparator<Substitution> byOrderIDComparator = new Comparator<Substitution>() {
+		List<Substitution> list = new ArrayList<>(this.lineup.getSubstitutionList());
+		Comparator<Substitution> byOrderIDComparator = (o1, o2) -> o1.getPlayerOrderId() - o2.getPlayerOrderId();
 
-			@Override
-			public int compare(Substitution o1, Substitution o2) {
-				return o1.getPlayerOrderId() - o2.getPlayerOrderId();
-			}
-		};
-
-		Collections.sort(list, byOrderIDComparator);
+		list.sort(byOrderIDComparator);
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setPlayerOrderId(i);
 		}
@@ -419,7 +407,7 @@ public class SubstitutionOverview extends JPanel {
 		public static final int COLUMN_COUNT = 8;
 
 		private static final long serialVersionUID = 6969656858380680460L;
-		private List<TableRow> rows = new ArrayList<TableRow>();
+		private List<TableRow> rows = new ArrayList<>();
 		private String[] columnNames;
 		private Comparator<TableRow> rowComparator;
 
@@ -443,22 +431,18 @@ public class SubstitutionOverview extends JPanel {
 
 		public void sort() {
 			if (this.rowComparator == null) {
-				this.rowComparator = new Comparator<SubstitutionOverview.TableRow>() {
+				this.rowComparator = (o1, o2) -> {
+					Substitution s1 = o1.getSubstitution();
+					Substitution s2 = o2.getSubstitution();
 
-					@Override
-					public int compare(TableRow o1, TableRow o2) {
-						Substitution s1 = o1.getSubstitution();
-						Substitution s2 = o2.getSubstitution();
-
-						int ret = s1.getMatchMinuteCriteria() - s2.getMatchMinuteCriteria();
-						if (ret == 0) {
-							ret = s1.getPlayerOrderId() - s2.getPlayerOrderId();
-						}
-						return ret;
+					int ret = s1.getMatchMinuteCriteria() - s2.getMatchMinuteCriteria();
+					if (ret == 0) {
+						ret = s1.getPlayerOrderId() - s2.getPlayerOrderId();
 					}
+					return ret;
 				};
 			}
-			Collections.sort(this.rows, this.rowComparator);
+			this.rows.sort(this.rowComparator);
 			fireTableDataChanged();
 		}
 
@@ -466,7 +450,7 @@ public class SubstitutionOverview extends JPanel {
 			this.rows.clear();
 			for (Substitution sub : data) {
 				TableRow row = new TableRow();
-				row.setSub((Substitution) sub);
+				row.setSub(sub);
 				this.rows.add(row);
 			}
 			fireTableDataChanged();
@@ -491,21 +475,14 @@ public class SubstitutionOverview extends JPanel {
 			case ORDERTYPE_COL_IDX:
 				return LanguageStringLookup.getOrderType(sub.getOrderType());
 			case SUBJECTPLAYER_COL_IDX:
-				Player out = hoModel.getCurrentPlayer(sub.getSubjectPlayerID());
-				return (out != null) ? out.getFullName() : "";
+				return sub.getSubjectPlayerName();
 			case ORDERTYPE_ICON_COL_IDX:
 				return sub.getBehaviour();
 			case OBJECTPLAYER_COL_IDX:
-				Player in = null;
-				if (sub.getOrderType() != MatchOrderType.NEW_BEHAVIOUR) {
-					in = hoModel.getCurrentPlayer(sub.getObjectPlayerID());
-				}
-				return (in != null) ? in.getFullName() : "";
-
+				return sub.getObjectPlayerName();
 			case WHEN_COL_IDX:
 				if (sub.getMatchMinuteCriteria() > 0) {
-					return HOVerwaltung.instance().getLanguageString("subs.MinuteAfterX",
-							Integer.valueOf(sub.getMatchMinuteCriteria()));
+					return HOVerwaltung.instance().getLanguageString("subs.MinuteAfterX", (int) sub.getMatchMinuteCriteria());
 				}
 				return HOVerwaltung.instance().getLanguageString("subs.MinuteAnytime");
 			case STANDING_COL_IDX:
@@ -630,7 +607,7 @@ public class SubstitutionOverview extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			List<Substitution> subs = new ArrayList<Substitution>(lineup.getSubstitutionList());
+			List<Substitution> subs = new ArrayList<>(lineup.getSubstitutionList());
 			lineup.getSubstitutionList().removeAll(subs);
 			refresh();
 		}
@@ -656,27 +633,19 @@ public class SubstitutionOverview extends JPanel {
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value,
-				boolean isSelected, boolean hasFocus, int row, int column) {
+													   boolean isSelected, boolean hasFocus, int row, int column) {
 
 			JLabel component = (JLabel) super.getTableCellRendererComponent(table, "", isSelected,
 					hasFocus, row, column);
 			SubstitutionsTableModel tblModel = (SubstitutionsTableModel) table.getModel();
 			Substitution sub = tblModel.getRow(row).getSubstitution();
-			Icon icon;
-			switch (sub.getOrderType()) {
-			case SUBSTITUTION:
-				icon = ThemeManager.getIcon(HOIconName.SUBSTITUTION);
-				break;
-			case NEW_BEHAVIOUR:
-				icon = ThemeManager.getIcon(HOIconName.ARROW_MOVE);
-				break;
-			case POSITION_SWAP:
-				icon = ThemeManager.getIcon(HOIconName.ARROW_CIRCLE);
-				break;
-			default:
-				icon = null;
-				break;
-			}
+			Icon icon = switch (sub.getOrderType()) {
+				case SUBSTITUTION -> ThemeManager.getIcon(HOIconName.SUBSTITUTION);
+				case NEW_BEHAVIOUR -> ThemeManager.getIcon(HOIconName.ARROW_MOVE);
+				case POSITION_SWAP -> ThemeManager.getIcon(HOIconName.ARROW_CIRCLE);
+				case MAN_MARKING -> ThemeManager.getIcon(HOIconName.MAN_MARKING);
+				default -> null;
+			};
 			component.setIcon(icon);
 			return component;
 		}

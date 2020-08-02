@@ -24,7 +24,7 @@ final class TAPlayerTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[13];
+		columns = new ColumnDescriptor[14];
 		columns[0] = new ColumnDescriptor("TEAMID", Types.INTEGER, false);
 		columns[1] = new ColumnDescriptor("PLAYERID", Types.INTEGER, true);
 		columns[2] = new ColumnDescriptor("STATUS", Types.INTEGER, true);
@@ -38,6 +38,7 @@ final class TAPlayerTable extends AbstractTable {
 		columns[10] = new ColumnDescriptor("STAMINA", Types.INTEGER, true);
 		columns[11] = new ColumnDescriptor("MOTHERCLUBBONUS", Types.BOOLEAN, true);
 		columns[12] = new ColumnDescriptor("LOYALTY", Types.INTEGER, true);
+		columns[13] = new ColumnDescriptor("NAME", Types.VARCHAR, true, 100);
 	}
 
 	@Override
@@ -69,6 +70,7 @@ final class TAPlayerTable extends AbstractTable {
 				info.setStamina(rs.getInt("STAMINA"));
 				info.setMotherClubBonus(rs.getBoolean("MOTHERCLUBBONUS"));
 				info.setMotherClubBonus(rs.getBoolean("LOYALTY"));
+				info.setName(rs.getString("NAME"));
 				return info;
 			}
 		} catch (SQLException e) {
@@ -130,7 +132,8 @@ final class TAPlayerTable extends AbstractTable {
 								+ info.getSalary() + ", "
 								+ info.getStamina()+ ", "
 								+ info.getMotherClubBonus() + ", "
-								+ info.getLoyalty()
+								+ info.getLoyalty() + ", "
+								+ info.getName()
 								+")");
 	}
 
@@ -150,6 +153,7 @@ final class TAPlayerTable extends AbstractTable {
 								+ " , STAMINA=" + info.getStamina()
 								+ " , MOTHERCLUBBONUS=" + info.getMotherClubBonus()
 								+ " , LOYALTY =" + info.getLoyalty()
+								+ " , NAME ='" + info.getName() + "'"
 								+ " where PLAYERID=" + info.getPlayerId() + " and WEEK="
 								+ PlayerDataManager.getCurrentWeekNumber());
 	}

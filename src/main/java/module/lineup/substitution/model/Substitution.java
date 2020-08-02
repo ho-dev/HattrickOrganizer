@@ -2,6 +2,9 @@ package module.lineup.substitution.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import core.model.HOModel;
+import core.model.HOVerwaltung;
+import core.model.player.Player;
 
 
 /**
@@ -157,4 +160,31 @@ public class Substitution {
 		this.standing = standing;
 	}
 
+	String subjectPlayerName;
+	public String getSubjectPlayerName(){
+		if ( subjectPlayerName == null){
+			subjectPlayerName = getCurrentPlayerName(this.getSubjectPlayerID());
+		}
+		return subjectPlayerName;
+	}
+
+	private String getCurrentPlayerName(int id) {
+		Player p = HOVerwaltung.instance().getModel().getCurrentPlayer(id);
+		if (p != null) return p.getFullName();
+		return "";
+	}
+
+	String objectPlayerName;
+	public String getObjectPlayerName() {
+		if ( getObjectPlayerID() == getSubjectPlayerID()) return getSubjectPlayerName();
+		if ( objectPlayerName == null){
+			if ( getOrderType() != MatchOrderType.MAN_MARKING) {
+				objectPlayerName = getCurrentPlayerName(this.getObjectPlayerID());
+			}
+			else {
+				objectPlayerName = HOVerwaltung.instance().getModel().getOpponentPlayerName(this.getObjectPlayerID());
+			}
+		}
+		return objectPlayerName;
+	}
 }

@@ -86,22 +86,22 @@ public class DetailsView extends JPanel {
 			this.standingEntry.setBackground(ThemeManager.getColor(color));
 
 			switch (this.substitution.getOrderType()) {
-			case SUBSTITUTION:
-				this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Out"));
-				this.playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.In"));
-				break;
-			case NEW_BEHAVIOUR:
-				this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Player"));
-				this.playerInLabel.setText("");
-				break;
-			case POSITION_SWAP:
-				this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Reposition"));
-				this.playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.RepositionWith"));
-				break;
-			case MAN_MARKING:
-				this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.manMarkingPlayer"));
-				this.playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.manMarkedOpponentPlayer"));
-				break;
+				case SUBSTITUTION -> {
+					this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Out"));
+					this.playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.In"));
+				}
+				case NEW_BEHAVIOUR -> {
+					this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Player"));
+					this.playerInLabel.setText("");
+				}
+				case POSITION_SWAP -> {
+					this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Reposition"));
+					this.playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.RepositionWith"));
+				}
+				case MAN_MARKING -> {
+					this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.manMarkingPlayer"));
+					this.playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.manMarkedOpponentPlayer"));
+				}
 			}
 		} else {
 			this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Out"));
@@ -132,17 +132,13 @@ public class DetailsView extends JPanel {
 			HOModel hoModel = HOVerwaltung.instance().getModel();
 			orderType = LanguageStringLookup.getOrderType(this.substitution.getOrderType());
 
-			Player out = hoModel.getCurrentPlayer(this.substitution.getSubjectPlayerID());
-			playerOut = (out != null) ? out.getFullName() : "";
-			if (this.substitution.getSubjectPlayerID() != this.substitution.getObjectPlayerID()) {
-				Player in = hoModel.getCurrentPlayer(this.substitution.getObjectPlayerID());
-				playerIn = (in != null) ? in.getFullName() : "";
-			}
+			playerOut = this.substitution.getSubjectPlayerName();
+			playerIn = this.substitution.getObjectPlayerName();
 
 			if (this.substitution.getMatchMinuteCriteria() > 0) {
 				when = MessageFormat.format(
 						HOVerwaltung.instance().getLanguageString("subs.MinuteAfterX"),
-						Integer.valueOf(this.substitution.getMatchMinuteCriteria()));
+						(int) this.substitution.getMatchMinuteCriteria());
 			} else {
 				when = HOVerwaltung.instance().getLanguageString("subs.MinuteAnytime");
 			}

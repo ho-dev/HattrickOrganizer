@@ -143,6 +143,10 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal4 INTEGER ");
 		}
 
+		if (!columnExistsInTable("NAME", TAPlayerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN NAME VARCHAR (100) ");
+		}
+
 		// use defaults player formula from defaults.xml by resetting the value in the database
 		try {
 		AbstractTable faktorenTab = dbManager.getTable(FaktorenTable.TABLENAME);
@@ -166,78 +170,73 @@ final class DBUpdater {
 
 
 	private void updateDBv301(int dbVersion, int version) throws SQLException {
-		try {
 
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isDerby SET DATA TYPE BOOLEAN");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isNeutral SET DATA TYPE BOOLEAN");
+		m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isDerby SET DATA TYPE BOOLEAN");
+		m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isNeutral SET DATA TYPE BOOLEAN");
 
-			if (!columnExistsInTable("EVENT_INDEX", MatchHighlightsTable.TABLENAME)) {
-				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EVENT_INDEX INTEGER");
-			}
-
-			if (!columnExistsInTable("INJURY_TYPE", MatchHighlightsTable.TABLENAME)) {
-				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN INJURY_TYPE TINYINT");
-			}
-
-			if (columnExistsInTable("TYP", MatchHighlightsTable.TABLENAME)) {
-				m_clJDBCAdapter.executeUpdate("UPDATE MATCHHIGHLIGHTS SET MATCH_EVENT_ID = (TYP * 100) + SUBTYP WHERE MATCH_EVENT_ID IS NULL");
-				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP TYP");
-			}
-
-		   if (!columnExistsInTable("LastMatchDate", SpielerTable.TABLENAME)) {
-				m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchDate VARCHAR (100)");
-			}
-			if (!columnExistsInTable("LastMatchRating", SpielerTable.TABLENAME)) {
-				m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchRating INTEGER");
-			}
-			if (!columnExistsInTable("LastMatchId", SpielerTable.TABLENAME)) {
-				m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchId INTEGER");
-			}
-      
-			Arrays.asList("HEIMTORE", "GASTTORE", "SUBTYP").forEach(s -> {
-				try {
-					if (columnExistsInTable(s, MatchHighlightsTable.TABLENAME)) {
-						m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP " + s);
-					}
-				} catch (SQLException e) {
-					HOLogger.instance().log(getClass(), e);
-				}
-			});
-
-			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_heimid_idx ON MATCHDETAILS (HEIMID)");
-			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_gastid_idx ON MATCHDETAILS (GASTID)");
-			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_heimid_idx ON MATCHESKURZINFO (HEIMID)");
-			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_gastid_idx ON MATCHESKURZINFO (GASTID)");
-			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_teamid_idx ON MATCHHIGHLIGHTS (TEAMID)");
-			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_eventid_idx ON MATCHHIGHLIGHTS (MATCH_EVENT_ID)");
-
-			Arrays.asList("GlobalRanking", "LeagueRanking", "RegionRanking", "PowerRating").forEach(s -> {
-				try {
-					if (! columnExistsInTable(s, VereinTable.TABLENAME)) {
-						m_clJDBCAdapter.executeUpdate(String.format("ALTER TABLE VEREIN ADD COLUMN %s INTEGER", s));
-					}
-				} catch (SQLException e) {
-					HOLogger.instance().log(getClass(), e);
-				}
-			});
-
-			Arrays.asList("TWTrainer", "Physiologen").forEach(s -> {
-				try {
-					if (columnExistsInTable(s, VereinTable.TABLENAME)) {
-						m_clJDBCAdapter.executeUpdate("ALTER TABLE VEREIN DROP " + s);
-					}
-				} catch (SQLException e) {
-					HOLogger.instance().log(getClass(), e);
-				}
-			});
-
-			updateDBVersion(dbVersion, version);
-      
-		} catch (SQLException e) {
-			HOLogger.instance().log(getClass(), e);
+		if (!columnExistsInTable("EVENT_INDEX", MatchHighlightsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EVENT_INDEX INTEGER");
 		}
-	}
 
+		if (!columnExistsInTable("INJURY_TYPE", MatchHighlightsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN INJURY_TYPE TINYINT");
+		}
+
+		if (columnExistsInTable("TYP", MatchHighlightsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("UPDATE MATCHHIGHLIGHTS SET MATCH_EVENT_ID = (TYP * 100) + SUBTYP WHERE MATCH_EVENT_ID IS NULL");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP TYP");
+		}
+
+		if (!columnExistsInTable("LastMatchDate", SpielerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchDate VARCHAR (100)");
+		}
+		if (!columnExistsInTable("LastMatchRating", SpielerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchRating INTEGER");
+		}
+		if (!columnExistsInTable("LastMatchId", SpielerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchId INTEGER");
+		}
+
+		Arrays.asList("HEIMTORE", "GASTTORE", "SUBTYP").forEach(s -> {
+			try {
+				if (columnExistsInTable(s, MatchHighlightsTable.TABLENAME)) {
+					m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP " + s);
+				}
+			} catch (SQLException e) {
+				HOLogger.instance().log(getClass(), e);
+			}
+		});
+
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_heimid_idx ON MATCHDETAILS (HEIMID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_gastid_idx ON MATCHDETAILS (GASTID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_heimid_idx ON MATCHESKURZINFO (HEIMID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_gastid_idx ON MATCHESKURZINFO (GASTID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_teamid_idx ON MATCHHIGHLIGHTS (TEAMID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_eventid_idx ON MATCHHIGHLIGHTS (MATCH_EVENT_ID)");
+
+		Arrays.asList("GlobalRanking", "LeagueRanking", "RegionRanking", "PowerRating").forEach(s -> {
+			try {
+				if (!columnExistsInTable(s, VereinTable.TABLENAME)) {
+					m_clJDBCAdapter.executeUpdate(String.format("ALTER TABLE VEREIN ADD COLUMN %s INTEGER", s));
+				}
+			} catch (SQLException e) {
+				HOLogger.instance().log(getClass(), e);
+			}
+		});
+
+		Arrays.asList("TWTrainer", "Physiologen").forEach(s -> {
+			try {
+				if (columnExistsInTable(s, VereinTable.TABLENAME)) {
+					m_clJDBCAdapter.executeUpdate("ALTER TABLE VEREIN DROP " + s);
+				}
+			} catch (SQLException e) {
+				HOLogger.instance().log(getClass(), e);
+			}
+		});
+
+		updateDBVersion(dbVersion, version);
+
+	}
 
 	private void updateDBv300(int DBVersion, int version) throws SQLException {
 		// HO 3.0
@@ -653,8 +652,7 @@ final class DBUpdater {
 				try {
 					HashMap<String, Object> tmp = new HashMap<>();
 					while (rs.next()) {
-						tmp.put("TA_" + rs.getString("NAME"),
-								Boolean.valueOf(rs.getBoolean("VALUE")));
+						tmp.put("TA_" + rs.getString("NAME"), rs.getBoolean("VALUE"));
 					}
 					mConfigTable.saveConfig(tmp);
 				} catch (SQLException e) {
