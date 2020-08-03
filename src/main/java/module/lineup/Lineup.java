@@ -1099,7 +1099,7 @@ public class Lineup{
 
 
 	/**
-	 * Returns a list with the substitutions for this lineup.
+	 * Returns a list of match orders for this lineup.
 	 * 
 	 * @return the substitutions for this lineup. If there are no substitutions,
 	 *         an empty list will be returned.
@@ -1109,15 +1109,47 @@ public class Lineup{
 	}
 
 	/**
-	 * Sets the provided list of substitutions as the substitution list. A
-	 * proper list got max 5 positions.
+	 * Sets the provided list of match orders as list.
+	 *
+	 * list may contain a maximum of three substitutions
+	 * additional number of position swap and behaviour changes depends on tactic assistant level
+	 * list may contain one man marking order
+	 *
+	 * @param subs List of match orders
 	 */
-
 	public void setSubstitionList(List<Substitution> subs) {
 		if (subs == null) {
 			this.substitutions = new ArrayList<Substitution>();
 		} else {
 			this.substitutions = new ArrayList<Substitution>(subs);
+		}
+	}
+
+	/**
+	 * Set a new man marking match order.
+	 * An existing man marking order will be replaced by the new one.
+	 *
+	 * @param markerId id of own man marking player
+	 * @param opponentMarkedId id of opponents man marked player
+	 */
+	public void setManMarkingOrder(int markerId, int opponentMarkedId){
+		removeManMarkingOrder();	//there can only be one
+		var newSub = new Substitution(MatchOrderType.MAN_MARKING);
+		newSub.setSubjectPlayerID(markerId);
+		newSub.setObjectPlayerID(opponentMarkedId);
+		this.substitutions.add(newSub);
+	}
+
+	/**
+	 * Remove an existing man marking order.
+	 * Does nothing if no man marking order exists.
+	 */
+	public void removeManMarkingOrder() {
+		for ( var s : this.substitutions){
+			if ( s.getOrderType() == MatchOrderType.MAN_MARKING) {
+				this.substitutions.remove(s);
+				break;
+			}
 		}
 	}
 
@@ -1960,6 +1992,9 @@ public class Lineup{
 				setSpielerAtPosition(newRoleId, sub.getSubjectPlayerID(), tactic);
 				break;
 
+			case MAN_MARKING:
+				// TODO: handle man marking orders
+				break;
 			default:
 				HOLogger.instance().error(Lineup.class, String.format("Incorrect Prediction Rating: the following match order has not been considered: %s", sub.getOrderType()));
 				break;

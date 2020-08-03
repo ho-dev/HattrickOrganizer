@@ -8,7 +8,11 @@ import core.model.player.Player;
 
 
 /**
- * A class holding information about substitutions and order changes
+ * A class holding information about match orders
+ *  - substitutions,
+ *  - position swap
+ *  - behaviour change
+ *  - man marking
  * 
  * @author blaghaid
  * 

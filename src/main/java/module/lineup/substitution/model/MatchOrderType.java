@@ -3,7 +3,9 @@ package module.lineup.substitution.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Enum for the three order types used in substitutions/orders for the lineup.
+ * Enum for the match order types used in substitutions/orders for the lineup.
+ *
+ * man marking (4) is an undocumented feature
  * 
  */
 public enum MatchOrderType {
