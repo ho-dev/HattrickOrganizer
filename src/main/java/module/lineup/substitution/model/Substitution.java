@@ -33,7 +33,8 @@ public class Substitution {
 	private byte matchMinuteCriteria = -1;
 	@SerializedName("pos")
 	@Expose
-	private byte roleId = -1;
+	private byte pos = -1;			// json attribute 0-13
+	private byte roleId = -1;		// 100-113
 	@SerializedName("beh")
 	@Expose
 	private byte behaviour = -1;
@@ -70,7 +71,8 @@ public class Substitution {
 		}
 
 		this.matchMinuteCriteria = matchMinuteCriteria;
-		this.roleId = roleId;
+		setRoleId(roleId);
+
 		this.behaviour = behaviour;
 		this.card = card;
 		this.standing = standing;
@@ -138,7 +140,16 @@ public class Substitution {
 		return roleId;
 	}
 
-	public void setRoleId(byte roleId) { this.roleId = roleId; }
+	public void setRoleId(byte roleId)
+	{
+		this.roleId = roleId;
+		if ( roleId > 99){
+			this.pos = (byte) (roleId-100);
+		}
+		else {
+			this.pos = roleId;
+		}
+	}
 
 	public byte getBehaviour() {
 		return behaviour;
