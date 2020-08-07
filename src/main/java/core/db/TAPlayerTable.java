@@ -132,9 +132,8 @@ final class TAPlayerTable extends AbstractTable {
 								+ info.getSalary() + ", "
 								+ info.getStamina()+ ", "
 								+ info.getMotherClubBonus() + ", "
-								+ info.getLoyalty() + ", "
-								+ info.getName()
-								+")");
+								+ info.getLoyalty() + ", '"
+								+ DBManager.insertEscapeSequences(info.getName()) +"')");
 	}
 
 	void updatePlayer(PlayerInfo info) {
@@ -153,8 +152,8 @@ final class TAPlayerTable extends AbstractTable {
 								+ " , STAMINA=" + info.getStamina()
 								+ " , MOTHERCLUBBONUS=" + info.getMotherClubBonus()
 								+ " , LOYALTY =" + info.getLoyalty()
-								+ " , NAME ='" + info.getName() + "'"
-								+ " where PLAYERID=" + info.getPlayerId() + " and WEEK="
+								+ " , NAME ='" + DBManager.insertEscapeSequences(info.getName())
+								+ "' where PLAYERID=" + info.getPlayerId() + " and WEEK="
 								+ PlayerDataManager.getCurrentWeekNumber());
 	}
 
