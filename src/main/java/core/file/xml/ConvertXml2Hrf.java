@@ -736,41 +736,18 @@ public class ConvertXml2Hrf {
 				buffer.append("order_leftForward=").append(getPlayerOrderForNextLineup("LeftForwardOrder",nextLineup)).append('\n');
 				buffer.append("order_centralForward=").append(getPlayerOrderForNextLineup("CentralForwardOrder",	nextLineup)).append('\n');
 
-				int iSub=0;
-				while (true) {
-					String substNext = "subst" + iSub++;
-
-					if (nextLineup.get(substNext + "playerOrderID") == null) break;
-
-					buffer.append(substNext)
-							.append("playerOrderID=")
-							.append(nextLineup.get(substNext + "playerOrderID"))
-							.append('\n');
-					buffer.append(substNext).append("playerIn=")
-							.append(nextLineup.get(substNext + "playerIn"))
-							.append('\n');
-					buffer.append(substNext).append("playerOut=")
-							.append(nextLineup.get(substNext + "playerOut"))
-							.append('\n');
-					buffer.append(substNext).append("orderType=")
-							.append(nextLineup.get(substNext + "orderType"))
-							.append('\n');
-					buffer.append(substNext)
-							.append("matchMinuteCriteria=")
-							.append(nextLineup.get(substNext
-									+ "matchMinuteCriteria")).append('\n');
-					buffer.append(substNext).append("pos=")
-							.append(nextLineup.get(substNext + "pos"))
-							.append('\n');
-					buffer.append(substNext).append("behaviour=")
-							.append(nextLineup.get(substNext + "behaviour"))
-							.append('\n');
-					buffer.append(substNext).append("card=")
-							.append(nextLineup.get(substNext + "card"))
-							.append('\n');
-					buffer.append(substNext).append("standing=")
-							.append(nextLineup.get(substNext + "standing"))
-							.append('\n');
+				int iSub=-1;
+				String playerOrderIdString;
+				while ((playerOrderIdString = getMatchOrderInfo( nextLineup, ++iSub, "playerOrderID")) != null ) {
+					buffer.append(playerOrderIdString)
+							.append(getMatchOrderInfo(nextLineup, iSub, "playerIn"))
+							.append(getMatchOrderInfo(nextLineup, iSub, "playerOut"))
+							.append(getMatchOrderInfo(nextLineup, iSub, "orderType"))
+							.append(getMatchOrderInfo(nextLineup, iSub, "matchMinuteCriteria"))
+							.append(getMatchOrderInfo(nextLineup, iSub, "pos"))
+							.append(getMatchOrderInfo(nextLineup, iSub, "behaviour"))
+							.append(getMatchOrderInfo(nextLineup, iSub, "card"))
+							.append(getMatchOrderInfo(nextLineup, iSub, "standing"));
 				}
 
 				for (int i = 0; i < 11; i++) {
@@ -786,6 +763,13 @@ public class ConvertXml2Hrf {
 			}
 		}
 		return buffer.toString();
+	}
+
+	private static String getMatchOrderInfo(Map<String, String> nextLineup, int i, String key) {
+		String _key = "subst"+i+key;
+		var value = nextLineup.get(_key);
+		if ( value != null)	return _key + "=" + value + '\n';
+		return null;
 	}
 
 	/**
