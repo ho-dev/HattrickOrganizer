@@ -2,10 +2,17 @@ package module.lineup.substitution.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import core.model.HOModel;
+import core.model.HOVerwaltung;
+import core.model.player.Player;
 
 
 /**
- * A class holding information about substitutions and order changes
+ * A class holding information about match orders
+ *  - substitutions,
+ *  - position swap
+ *  - behaviour change
+ *  - man marking
  * 
  * @author blaghaid
  * 
@@ -26,7 +33,8 @@ public class Substitution {
 	private byte matchMinuteCriteria = -1;
 	@SerializedName("pos")
 	@Expose
-	private byte roleId = -1;
+	private byte pos = -1;			// json attribute 0-13
+	private byte roleId = -1;		// 100-113
 	@SerializedName("beh")
 	@Expose
 	private byte behaviour = -1;
@@ -38,20 +46,40 @@ public class Substitution {
 	private GoalDiffCriteria standing = GoalDiffCriteria.ANY_STANDING;
 
 	public Substitution(int playerOrderID, int playerIn, int subjectPlayerID,
-			MatchOrderType orderType, byte matchMinuteCriteria, byte roleId, byte behaviour,
+			byte orderType, byte matchMinuteCriteria, byte roleId, byte behaviour,
 			RedCardCriteria card, GoalDiffCriteria standing) {
 		this.playerOrderID = playerOrderID;
 		this.objectPlayerID = playerIn;
 		this.subjectPlayerID = subjectPlayerID;
-		this.orderType = orderType;
+
+		if (orderType == MatchOrderType.POSITION_SWAP.getId()) {
+			this.orderType = MatchOrderType.POSITION_SWAP;
+		}
+		else if ( orderType == MatchOrderType.MAN_MARKING.getId() ){
+			this.orderType = MatchOrderType.MAN_MARKING;
+		}
+		else {
+			// NEW_BEHAVIOUR and SUBSTITUTION have the same id
+			if (playerIn == subjectPlayerID) {
+				this.orderType = MatchOrderType.NEW_BEHAVIOUR;
+			} else if ((playerIn <= 0 || subjectPlayerID <= 0)) {
+				// allows the correct retrieval of some cases
+				this.orderType = MatchOrderType.NEW_BEHAVIOUR;
+			} else {
+				this.orderType = MatchOrderType.SUBSTITUTION;
+			}
+		}
+
 		this.matchMinuteCriteria = matchMinuteCriteria;
-		this.roleId = roleId;
+		setRoleId(roleId);
+
 		this.behaviour = behaviour;
 		this.card = card;
 		this.standing = standing;
 	}
 
-	public Substitution() {
+	public Substitution(MatchOrderType orderType) {
+		this.orderType = orderType;
 	}
 
 	public int getPlayerOrderId() {
@@ -100,10 +128,6 @@ public class Substitution {
 		return orderType;
 	}
 
-	public void setOrderType(MatchOrderType orderType) {
-		this.orderType = orderType;
-	}
-
 	public byte getMatchMinuteCriteria() {
 		return matchMinuteCriteria;
 	}
@@ -116,7 +140,16 @@ public class Substitution {
 		return roleId;
 	}
 
-	public void setRoleId(byte roleId) { this.roleId = roleId; }
+	public void setRoleId(byte roleId)
+	{
+		this.roleId = roleId;
+		if ( roleId > 99){
+			this.pos = (byte) (roleId-100);
+		}
+		else {
+			this.pos = roleId;
+		}
+	}
 
 	public byte getBehaviour() {
 		return behaviour;
@@ -142,25 +175,31 @@ public class Substitution {
 		this.standing = standing;
 	}
 
-	/**
-	 * Merges the data from the given <code>Substitution</code> into this
-	 * <code>Substitution</code>. This method should be used e.g. when a model
-	 * has to be updated with data from a different <code>Substitution</code>
-	 * instance but and object identity has to be preserved.
-	 * 
-	 * @param other
-	 *            the <code>Substitution</code> to get the data from.
-	 */
-	public void merge(Substitution other) {
-		setBehaviour(other.getBehaviour());
-		setRedCardCriteria(other.getRedCardCriteria());
-		setMatchMinuteCriteria(other.getMatchMinuteCriteria());
-		setOrderType(other.getOrderType());
-		setObjectPlayerID(other.getObjectPlayerID());
-		setPlayerOrderId(other.getPlayerOrderId());
-		setSubjectPlayerID(other.getSubjectPlayerID());
-		setRoleId(other.getRoleId());
-		setStanding(other.getStanding());
+	String subjectPlayerName;
+	public String getSubjectPlayerName(){
+		if ( subjectPlayerName == null){
+			subjectPlayerName = getCurrentPlayerName(this.getSubjectPlayerID());
+		}
+		return subjectPlayerName;
 	}
 
+	private String getCurrentPlayerName(int id) {
+		Player p = HOVerwaltung.instance().getModel().getCurrentPlayer(id);
+		if (p != null) return p.getFullName();
+		return "";
+	}
+
+	String objectPlayerName;
+	public String getObjectPlayerName() {
+		if ( getObjectPlayerID() == getSubjectPlayerID()) return getSubjectPlayerName();
+		if ( objectPlayerName == null){
+			if ( getOrderType() != MatchOrderType.MAN_MARKING) {
+				objectPlayerName = getCurrentPlayerName(this.getObjectPlayerID());
+			}
+			else {
+				objectPlayerName = HOVerwaltung.instance().getModel().getOpponentPlayerName(this.getObjectPlayerID());
+			}
+		}
+		return objectPlayerName;
+	}
 }

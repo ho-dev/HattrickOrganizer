@@ -47,6 +47,8 @@ Changelist HO! 4.0
 ### Lineup
 
   - [FEAT] Provide better defaults for initial position of dividers.
+  - [FIX] Fix bug in download of man marking match orders [#632]
+  - [FIX] Fix bug in upload of position change match orders [#633]
 
 ### Training
 

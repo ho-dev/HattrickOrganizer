@@ -187,6 +187,7 @@ public interface HOIconName {
 	String ARROW_CIRCLE = "arrow_circle_double";
 	String ARROW_MOVE = "arrow_move";
 	String SUBSTITUTION = "substitution";
+	String MAN_MARKING = "man_marking";
 	String IFA_VISITED  = "ifa_visited";
 	String INFORMATION  = "information";
 	String CHPP  = "chpp";

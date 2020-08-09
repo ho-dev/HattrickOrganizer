@@ -1,36 +1,29 @@
 package core.model;
 
-import core.constants.TrainingType;
-import core.constants.player.PlayerSkill;
 import core.db.DBManager;
-import core.model.match.MatchKurzInfo;
 import core.model.misc.Basics;
 import core.model.misc.Finanzen;
-import core.model.misc.TrainingEvent;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.series.Liga;
-import core.training.SkillDrops;
+import core.net.OnlineWorker;
 import core.training.TrainingPerWeek;
 import core.training.TrainingManager;
-import core.training.TrainingWeekManager;
 import core.util.HOLogger;
 import core.util.HTCalendar;
 import core.util.HTCalendarFactory;
-import core.util.HelperWrapper;
 import module.lineup.Lineup;
 import module.series.Spielplan;
+import module.teamAnalyzer.SystemManager;
+import module.teamAnalyzer.ht.HattrickManager;
+import module.teamAnalyzer.manager.PlayerDataManager;
 import tool.arenasizer.Stadium;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
-
 
 /**
  * This class bundles all models that belong to an HRF file - the data can also come from the database
@@ -269,6 +262,29 @@ public class HOModel {
     }
 
     /**
+     * Returns Player of opponent team (used for man marking)
+     * if there are lineups stored of the opponent team, these are used to get the information.
+     * Otherwise opponent teams players are downloaded.
+     * @param objectPlayerID the id of the opponent player
+     * @return opponent player's name
+     */
+    public String getOpponentPlayerName(int objectPlayerID) {
+
+        var lineupPos = DBManager.instance().getMatchInserts(objectPlayerID);
+        for ( var p : lineupPos){
+            return p.getSpielerName();
+        }
+
+        var teamId = SystemManager.getActiveTeamId();
+        HattrickManager.downloadPlayers(teamId);
+        var info = PlayerDataManager.getPlayerInfo(objectPlayerID);
+        if ( info != null){
+            return info.getName();
+        }
+        return null;
+    }
+
+    /**
      * Set the match schedule
      *
      * @param m_clSpielplan New value of property m_clSpielplan.
@@ -472,12 +488,7 @@ public class HOModel {
                         String htcCs = " (" + htcC.getHTSeason() + "." + htcC.getHTWeek() + ")";
 
                         HOLogger.instance().debug(HOModel.class,
-                                "trArt="+ tpw.getTrainingType()
-                                        + ", numPl=" + vPlayer.size()
-                                        + ", calcDate=" + calcDate.toString() + htcCs
-                                        + ", act=" + trainingDateOfCurrentHRF.toString() + htcAs
-                                        + ", prev=" + (trainingDateOfPreviousHRF == null ? "null" : trainingDateOfPreviousHRF.toString() + htcPs)
-                                        + " (" + previousHrfId + ")");
+                                "trArt=" + tpw.getTrainingType() + ", numPl=" + vPlayer.size() + ", calcDate=" + calcDate.toString() + htcCs + ", act=" + trainingDateOfCurrentHRF.toString() + htcAs + ", prev=" + (trainingDateOfPreviousHRF.toString() + htcPs) + " (" + previousHrfId + ")");
                     }
 
                     trainingList.add(tpw);
@@ -546,4 +557,5 @@ public class HOModel {
         if (m_clSpielplan != null) 
             DBManager.instance().storeSpielplan(m_clSpielplan);
     }
+
 }

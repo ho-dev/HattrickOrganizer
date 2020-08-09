@@ -1,11 +1,8 @@
 package module.lineup.substitution;
 
-import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.util.GUIUtils;
-import module.lineup.AufstellungsDetailPanel;
 import module.lineup.Lineup;
-import module.lineup.LineupPanel;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
 
@@ -55,8 +52,8 @@ public class SubstitutionEditDialog extends JDialog {
 		return this.canceled;
 	}
 
-	public Substitution getSubstitution() {
-		return this.behaviourView.getSubstitution();
+	public Substitution getSubstitution(int nextOrderID) {
+		return this.behaviourView.getSubstitution(nextOrderID);
 	}
 
 	private void initDialog() {
@@ -107,7 +104,6 @@ public class SubstitutionEditDialog extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				behaviourView.setSubstitution();
 				canceled = false;
 				dispose();
 			}

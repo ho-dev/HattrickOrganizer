@@ -147,7 +147,10 @@ distributions {
 
 
 install4j {
-    if (hasProperty('install4jHomeDir'))  installDir = file(install4jHomeDir)
+    if (hasProperty('install4jHomeDir')){
+        if (install4jHomeDir != null) installDir = file(install4jHomeDir)
+        else installDir = file("foo")
+    }
     disableSigning = true
 }
 
