@@ -708,13 +708,6 @@ public class DBManager {
 				maxId, asc);
 	}
 
-//	/**
-//	 * get HRF by Id
-//	 */
-//	public HRF getHrf(int hrfId) {
-//		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHRF(hrfId);
-//	}
-
 	/**
 	 * liefert die aktuelle Id des neuesten HRF-Files
 	 */
@@ -1208,12 +1201,7 @@ public class DBManager {
 	// ------------------------------- UserParameterTable
 	// -------------------------------------------------
 
-	/*
-	 * Speichert die Spaltenreihenfolge der Tabellen private void
-	 * saveTabellenSpaltenReihenfolge( int[][] spieleruebersicht, int[][]
-	 * aufstellung ) {}
-	 */
-	/*
+	/**
 	 * Lädt die UserParameter direkt in das UserParameter-SingeltonObjekt
 	 */
 	public void loadUserParameter() {
@@ -1237,19 +1225,19 @@ public class DBManager {
 	// -------------------------------------------------
 
 	/**
-	 * holt die Paarungen zum Plan aus der DB und added sie
+	 * Gets the fixtures for the given <code>plan</code> from the DB, and add them to that plan.
+	 *
+	 * @param plan Schedule for which the fixtures are retrieved, and to which they are added.
 	 */
 	protected void getPaarungen(Spielplan plan) {
 		((PaarungTable) getTable(PaarungTable.TABLENAME)).getPaarungen(plan);
 	}
 
 	/**
-	 * speichert die Paarungen zu einem Spielplan
+	 * Saves the fixtures to an existing game schedule ({@link Spielplan}).
 	 */
-	protected void storePaarung(Vector<Paarung> paarungen, int ligaId,
-			int saison) {
-		((PaarungTable) getTable(PaarungTable.TABLENAME)).storePaarung(
-				paarungen, ligaId, saison);
+	protected void storePaarung(List<Paarung> fixtures, int ligaId, int saison) {
+		((PaarungTable) getTable(PaarungTable.TABLENAME)).storePaarung(fixtures, ligaId, saison);
 	}
 
 	public void deletePaarungTabelle(String[] whereSpalten, String[] whereValues) {
@@ -1362,12 +1350,6 @@ public class DBManager {
 	public double[][] getFinanzen4Statistik(int anzahlHRF) {
 		return StatisticQuery.getFinanzen4Statistik(anzahlHRF);
 	}
-
-//	public double[][] getSpielerFinanzDaten4Statistik(int spielerId,
-//			int anzahlHRF) {
-//		return StatisticQuery.getSpielerFinanzDaten4Statistik(spielerId,
-//				anzahlHRF);
-//	}
 
 	public ArenaStatistikTableModel getArenaStatistikModel(int matchtyp) {
 		return StatisticQuery.getArenaStatistikModel(matchtyp);
@@ -1739,19 +1721,6 @@ public class DBManager {
 	public void updateTAPlayerInfo(PlayerInfo info) {
 		((TAPlayerTable) getTable(TAPlayerTable.TABLENAME)).updatePlayer(info);
 	}
-
-//	public void deleteTAOldPlayerInfos() {
-//		((TAPlayerTable) getTable(TAPlayerTable.TABLENAME)).deleteOldPlayers();
-//	}
-
-	/**
-	 * IFA
-	 */
-//
-//	public boolean isIFALeagueIDinDB(int leagueID, boolean homeAway) {
-//		return ((IfaMatchTable) getTable(IfaMatchTable.TABLENAME))
-//				.isLeagueIDinDB(leagueID, homeAway);
-//	}
 
 	public boolean isIFAMatchinDB(int matchId) {
 		return ((IfaMatchTable) getTable(IfaMatchTable.TABLENAME))

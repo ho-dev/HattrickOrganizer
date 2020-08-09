@@ -6,8 +6,9 @@ import core.model.series.Paarung;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.Vector;
+
+import java.util.List;
+
 
 
 class MatchLineupPlayer {
@@ -34,11 +35,9 @@ class MatchLineupPlayer {
         TeamID = -1;
         PositionCode = 0;
         Rating = -1F;
-
-        //        nname = "";
     }
 
-    MatchLineupPlayer(ResultSet rs,Vector<Paarung> matches) {
+    MatchLineupPlayer(ResultSet rs, List<Paarung> matches) {
         try {
             rs.next();
             TeamID = rs.getInt("TEAMID");
@@ -56,16 +55,15 @@ class MatchLineupPlayer {
     }
 
     
-    private String getTeamName(Vector<Paarung> matches,int teamId, int matchId){
-    	for (Iterator<Paarung> iterator = matches.iterator(); iterator.hasNext();) {
-			Paarung iPaarung = iterator.next();
-			if (iPaarung.getMatchId() != matchId)
-				continue;
-			if(teamId == iPaarung.getHeimId())
-            	return iPaarung.getHeimName();
-            else if(teamId == iPaarung.getGastId())
-            	return iPaarung.getGastName();
-		}
+    private String getTeamName(List<Paarung> matches,int teamId, int matchId){
+        for (Paarung iPaarung : matches) {
+            if (iPaarung.getMatchId() != matchId)
+                continue;
+            if (teamId == iPaarung.getHeimId())
+                return iPaarung.getHeimName();
+            else if (teamId == iPaarung.getGastId())
+                return iPaarung.getGastName();
+        }
     	return "";
     }
     

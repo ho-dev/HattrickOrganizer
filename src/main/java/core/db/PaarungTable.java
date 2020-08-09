@@ -6,7 +6,7 @@ import module.series.Spielplan;
 
 import java.sql.ResultSet;
 import java.sql.Types;
-import java.util.Vector;
+import java.util.List;
 
 
 public final class PaarungTable extends AbstractTable {
@@ -35,21 +35,21 @@ public final class PaarungTable extends AbstractTable {
 	}
 
 	/**
-	 * speichert die Paarungen zu einem Spielplan
+	 * Saves a list of games to a given game schedule, i.e. {@link Spielplan}.
 	 */
-	void storePaarung(Vector<Paarung> paarungen, int ligaId, int saison) {
+	void storePaarung(List<Paarung> fixtures, int ligaId, int saison) {
 		Paarung match = null;
 		String sql = null;
 
-		//falls paarungen zum eintragen vorhandene in Tabelle entfernen
-		if (paarungen != null) {
+		// Remove existing fixtures for the Spielplan if any exists.
+		if (fixtures != null) {
 			final String[] where = { "LigaID", "Saison" };
 			final String[] werte = { "" + ligaId, "" + saison };
 			delete(where, werte);			
 		}
 
-		for (int i = 0;(paarungen != null) && (i < paarungen.size()); i++) {
-			match = (Paarung) paarungen.elementAt(i);
+		for (int i = 0;(fixtures != null) && (i < fixtures.size()); i++) {
+			match = fixtures.get(i);
 
 			try {
 				//insert vorbereiten
