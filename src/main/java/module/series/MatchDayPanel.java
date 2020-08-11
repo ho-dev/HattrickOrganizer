@@ -22,10 +22,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
+
 
 /**
- * Display a matchday
+ * Display a game day.
  */
 final class MatchDayPanel extends JPanel implements ActionListener {
 
@@ -33,12 +34,12 @@ final class MatchDayPanel extends JPanel implements ActionListener {
     static final int NAECHSTER_SPIELTAG = -2;
     static final int LETZTER_SPIELTAG = -1;
 
-    private JButton[] buttons = new JButton[4];
-    private JLabel[] homeTeams = new JLabel[4];
-    private JLabel[] visitorTeams = new JLabel[4];
-    private JLabel[] results = new JLabel[4];
+    private final JButton[] buttons = new JButton[4];
+    private final JLabel[] homeTeams = new JLabel[4];
+    private final JLabel[] visitorTeams = new JLabel[4];
+    private final JLabel[] results = new JLabel[4];
     private int matchround = -1;
-    private static Color foreground = ThemeManager.getColor(HOColorName.LABEL_FG);
+    private static final Color foreground = ThemeManager.getColor(HOColorName.LABEL_FG);
     private final Model model;
 
     protected MatchDayPanel(Model model, int spieltag) {
@@ -98,9 +99,6 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
     private void setMatchButton(JButton button, Paarung paarung) {
         button.setPreferredSize(new Dimension(27, 18));
-        //paarung.getMatchId();
-        //MatchesModel
-        //matchesModel
 
         long gameFinishTime = 0;
         long nowTime = (new Date()).getTime();
@@ -146,7 +144,6 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
     private void fillLabels() {
         int spieltag = matchround;
-        Vector<Paarung> paarungen = null;
         final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
         if (this.model.getCurrentSeries() == null) {
@@ -174,7 +171,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
         }
 
-        paarungen = this.model.getCurrentSeries().getPaarungenBySpieltag(spieltag);
+       List<Paarung> paarungen = this.model.getCurrentSeries().getPaarungenBySpieltag(spieltag);
 
         String bordertext = HOVerwaltung.instance().getLanguageString("Spieltag") + " " + spieltag;
 
