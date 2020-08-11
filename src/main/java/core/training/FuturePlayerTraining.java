@@ -132,7 +132,7 @@ public class FuturePlayerTraining {
             this.to.addWeeks(-1);
             return false;
         }
-        if ( to != null && this.to.isAfter(to)) {
+        if ( to != null && (this.to == null || this.to.isAfter(to))) {
             this.from = to;
             this.from.addWeeks(1);
             return false;
