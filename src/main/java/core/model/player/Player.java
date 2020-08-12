@@ -2269,13 +2269,26 @@ public class Player {
                 + "%)";
     }
 
+    /**
+     * training priority information of the training panel
+     *
+     * @param nextWeek training priorities after this week will be considered
+     * @return if there is one user selected priority, the name of the priority is returned
+     *  if there are more than one selected priorities, "individual priorities" is returned
+     *  if is no user selected priority, the best position information is returned
+     */
     public String getTrainingPriorityInformation(HattrickDate nextWeek) {
+        String ret=null;
         for ( var t : getFuturePlayerTrainings()) {
-            if (nextWeek.isBetween(t.getFrom(), t.getTo())) {
-                return t.getPriority().toString();
+            if (!nextWeek.isAfter(t.getTo())){
+                if ( ret != null ){
+                    ret = HOVerwaltung.instance().getLanguageString("trainpre.individual.prios");
+                    break;
+                }
+                ret = t.getPriority().toString();
             }
         }
-
+        if ( ret != null ) return ret;
         return getBestPositionInfo();
 
     }
