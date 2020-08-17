@@ -499,6 +499,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(HOColorName.FG_INJURED, new Color(200, 0, 0));
 		put(HOColorName.FG_TWO_YELLOW_CARDS, new Color(100, 100, 0));
 		put(HOColorName.FG_RED_CARD, new Color(200, 20, 20));
+
+		// Promotion
+		put(HOColorName.FG_PROMOTION_INFO, new Color(238, 39, 39, 255));
 	}
 
 	public Color getDefaultColor(String key) {

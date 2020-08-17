@@ -66,6 +66,8 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ### League
 
+  - [FEAT] Make Promotion status more visible. [#521]
+
 
 ## Translations
   - HO! is currently available in xx languages thanks to the work of xx translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):

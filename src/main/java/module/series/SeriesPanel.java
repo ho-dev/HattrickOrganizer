@@ -180,8 +180,8 @@ public class SeriesPanel extends LazyImagePanel {
 		deleteButton.setBackground(ThemeManager.getColor(HOColorName.BUTTON_BG));
 		toolbarPanel.add(deleteButton);
 
-		promotionInfoPanel.setSize(650, 40);
-		promotionInfoPanel.setLocation(290, 0);
+		promotionInfoPanel.setSize(650, 30);
+		promotionInfoPanel.setLocation(290, 5);
 		toolbarPanel.add(promotionInfoPanel);
 
 		toolbarPanel.setPreferredSize(new Dimension(240, 35));

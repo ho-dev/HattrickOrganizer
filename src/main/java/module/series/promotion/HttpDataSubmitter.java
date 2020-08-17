@@ -13,9 +13,7 @@ import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.security.KeyStore;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -139,7 +137,7 @@ public class HttpDataSubmitter implements DataSubmitter {
     }
 
     @Override
-    public BlockInfo lockBlock(int leagueId) {
+    public Optional<BlockInfo> lockBlock(int leagueId) {
         HOLogger.instance().info(HttpDataSubmitter.class, String.format("Lock block for league %s...", leagueId));
 
         try {
@@ -185,13 +183,13 @@ public class HttpDataSubmitter implements DataSubmitter {
                     HOLogger.instance().info(HttpDataSubmitter.class, "Block locked: " + blockInfo.blockId);
 
                     response.close();
-                    return blockInfo;
+                    return Optional.of(blockInfo);
                 } else {
                     BlockInfo blockInfo = new BlockInfo();
                     blockInfo.status = obj.get("HTTP Status Code").getAsInt();
 
                     response.close();
-                    return blockInfo;
+                    return Optional.of(blockInfo);
                 }
             }
 
@@ -202,11 +200,11 @@ public class HttpDataSubmitter implements DataSubmitter {
             );
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public String getPromotionStatus(int leagueId, int teamId) {
+    public Optional<String> getPromotionStatus(int leagueId, int teamId) {
 
         try {
             final OkHttpClient client = initializeHttpsClient();
@@ -224,7 +222,7 @@ public class HttpDataSubmitter implements DataSubmitter {
                 HOLogger.instance().info(HttpDataSubmitter.class, "Status: " + promotionStatus);
 
                 response.close();
-                return promotionStatus;
+                return Optional.of(promotionStatus);
             } else {
                 response.close();
             }
@@ -237,7 +235,7 @@ public class HttpDataSubmitter implements DataSubmitter {
             );
         }
 
-        return null;
+        return Optional.empty();
     }
 
     private OkHttpClient initializeHttpsClient() throws Exception {
