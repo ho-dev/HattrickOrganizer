@@ -1,11 +1,8 @@
 package core.util;
 
 import com.install4j.api.launcher.ApplicationLauncher;
-import core.HO;
-import core.HOUpdater;
 import core.db.user.UserManager;
 import core.gui.HOMainFrame;
-import core.option.ReleaseChannelPanel;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

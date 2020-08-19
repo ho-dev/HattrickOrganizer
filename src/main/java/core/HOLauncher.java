@@ -1,7 +1,9 @@
 package core;
 
-import javax.swing.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -11,12 +13,7 @@ public class HOLauncher {
 
 	public static void main(String[] args) {
 
-		File f = new File("."); // current directory
-		try {
-			JOptionPane.showMessageDialog(new JFrame(),"Application is starting in: " + f.getCanonicalPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		File f = new File(".");
 
 		String updateFileName = "update.zip";
 		boolean updateSuccess=true;
@@ -33,24 +30,30 @@ public class HOLauncher {
 				e.printStackTrace();
 			}
 			if (updateSuccess) {
-				if (!file.delete()) System.err.print("zip file could not be deleted after update !: " + file.getAbsolutePath() );
+				try {
+					System.err.print("Trying to delete  " + file.toPath());
+					Files.delete(file.toPath());
+				} catch (IOException e) {
+					System.err.print("zip file could not be deleted after update !: " + e );
+				}
 			}
 		}
+		System.err.print("HOLauncher calls HO: " + Arrays.toString(args)); // TODO: to be deleted
 		HO.main(args);
 	}
 
 	private static void update(String zipFile, String _destDir) throws IOException {
-		System.err.print("zip file is  :" +zipFile ); // TODO remove this
 		int len;
 		Pattern pattern;
 		Boolean file_to_be_updated;
 		String fileName;
 		byte[] buffer = new byte[1024];
-		final List<String> updateFolders = List.of("prediction/.*", "\\.\\/.*\\.jar", "\\.\\/changelog\\.html");
+		final List<String> updateFolders = List.of("\\.\\/prediction/.*", "\\.\\/[^\\/]*\\.jar", "\\.\\/changelog\\.html");
 		File destDir = new File(_destDir);
 		ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
 		ZipEntry zipEntry = zis.getNextEntry();
 		while (zipEntry != null) {
+			System.err.print("zip entry: " + zipEntry.toString()); // TODO: to be deleted
 			if (! zipEntry.isDirectory()) {
 				file_to_be_updated = false;
 				fileName = zipEntry.getName();
@@ -62,6 +65,7 @@ public class HOLauncher {
 					}
 				}
 				if (file_to_be_updated) {
+					System.err.print("zip entry updated: " + zipEntry.toString()); // TODO: to be deleted
 					File destFile = new File(destDir, fileName);
 					File parentDirectory = destFile.getParentFile();
 					if (! parentDirectory.exists()) parentDirectory.mkdirs();
@@ -79,7 +83,6 @@ public class HOLauncher {
 		}
 			zis.closeEntry();
 			zis.close();
-			System.err.print("zip file has been closed !" ); // TODO remove this
 		}
 
 	private static File updateFile(File destinationDir, ZipEntry zipEntry) throws IOException {

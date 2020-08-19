@@ -152,8 +152,6 @@ distributions {
 
 
 install4j {
-//    if (install4jHomeDir == null) installDir = file("foo")
-//    else installDir = file(install4jHomeDir)
     if ((hasProperty('install4jHomeDir')) || ((install4jHomeDir != null) )) installDir = file(install4jHomeDir)
     else installDir = file("foo")
     disableSigning = true
@@ -164,25 +162,43 @@ install4j {
 
 // region my tasks ================================================================================================
 
-task makeAllmedias(dependsOn: 'media'){
+task makeAllmedias(dependsOn: 'media') {
     doLast {
         if (releaseArtefacts) {
-            // publish updatesDEV.xml at every release
-            copy {
-                from "${projectDir}/build/artefacts/updates.xml"
-                into "${projectDir}/build/artefacts"
-                rename "updates.xml", "updatesDEV.xml"
+
+            // DEV release
+            if (development_stage == '0') {
+                copy {
+                    from "${projectDir}/build/artefacts"
+                    into "${projectDir}/build/artefacts"
+                    include "updates.xml"
+                    rename "updates.xml", "updatesDEV.xml"
+                }
             }
 
-            // publish updatesBETA.xml if beta or stable has been released     ---------------------------------------------------------------------
-            if (development_stage != '0') {
+            // BETA release
+            else if (development_stage == '1') {
                 copy {
-                    from "${projectDir}/build/artefacts/updates.xml"
-                    into "${projectDir}/build/artefacts/"
+                    from "${projectDir}/build/artefacts"
+                    into "${projectDir}/build/artefacts"
+                    include "updates.xml"
                     rename "updates.xml", "updatesBETA.xml"
                 }
             }
+
+            // STABLE release
+            else {
+                copy {
+                    from "${projectDir}/build/artefacts"
+                    into "${projectDir}/build/artefacts"
+                    include "updates.xml"
+                    rename "updates.xml", "updatesSTABLE.xml"
+                }
+            }
+
+            delete "${projectDir}/build/artefacts/updates.xml"
         }
+        delete "${projectDir}/build/artefacts/output.txt"
     }
 }
 
@@ -194,21 +210,29 @@ task media(type: com.install4j.gradle.Install4jTask) {
     projectFile = "${projectDir}/utils/buildResources/HO.install4j"
 
     // 60 -> Windows Setup
+    // 485 -> Windows JRE
+
+    // 64 -> Windows archive
+    // 481 -> Windows archive JRE
+
+    // 172 -> macOS Single Bundle
+    // 473 -> macOS Single Bundle JRE
+
+    // 173 -> Unix Archive
+    // 477 -> Unix Archive JRE
+
+    // 1062 -> Unix installer
+    // 1064 -> Unix installer JRE
+
     // 62  -> Linux rpm
     // 63 -> Linux deb
-    // 64 -> Windows archive
-    // 172 -> macOS Single Bundle
-    // 173 -> Unix Archive
     // 464  -> Linux rpm JRE
     // 471 -> Linux deb JRE
-    // 477 -> Unix Archive JRE
-    // 473 -> macOS Single Bundle JRE
-    // 481 -> Windows archive JRE
-    // 485 -> Windows JRE
-    // 1062 -> Unix installer
+
+
 
 //    buildIds = [60, 62, 63, 64, 172, 173, 464, 471, 473, 477, 481, 485, 1062]
-    buildIds = [60, 63, 64, 173, 1062]  // TODO: replace full buildIDs list before opening PR
+    buildIds = [60, 64, 172, 173, 1062]  // TODO: put back JRE but exclude deb and rpm ??
     String versionType
 
     switch(development_stage) {
@@ -252,27 +276,28 @@ task pushmd(dependsOn: preparingBuild)  {
     }
 }
 
-task pullhtml (dependsOn: markdownToHtml){
-    group 'sub tasks'
-    outputs.upToDateWhen { false }
-    doLast {
-        copy {
-            from "${projectDir}\\docs\\changelog\\html\\changelog.html"
-            into "${projectDir}\\src\\main\\resources"
-        }
-    }
-}
+//task pullhtml (dependsOn: markdownToHtml){
+//    group 'sub tasks'
+//    outputs.upToDateWhen { false }
+//    doLast {
+//        copy {
+//            from "${projectDir}\\docs\\changelog\\html\\changelog.html"
+//            into "${projectDir}\\src\\main\\resources"
+//        }
+//    }
+//}
 
 task CreateDistribution (dependsOn: installDist) {
     group 'sub tasks'
     outputs.upToDateWhen { false }
     def distribDir = file("${buildDir}/install/XXX")
     doLast {
-        println("adding resources folder")
+
         copy {
-            from "${projectDir}\\src\\main\\resources\\changelog.html"
+            from "${projectDir}\\docs\\changelog\\html\\changelog.html"
             into "${projectDir}/utils/buildResources"
         }
+
         if (development_stage == '0') {
             copy {
                 from "${projectDir}/utils/buildResources/Logo_dev.png"
@@ -303,6 +328,11 @@ task CreateDistribution (dependsOn: installDist) {
         copy {
             from "${distribDir}/lib"
             include "**/*.jar"
+            into "${distribDir}"
+        }
+
+        copy {
+            from "${projectDir}\\docs\\changelog\\html\\changelog.html"
             into "${distribDir}"
         }
 
@@ -479,7 +509,7 @@ githubRelease {
 
 compileJava.dependsOn preparingBuild
 installDist.dependsOn createLanguageFileList
-poeditorPull.dependsOn pullhtml
+poeditorPull.dependsOn markdownToHtml
 markdownToHtml.dependsOn pushmd
 
 

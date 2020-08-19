@@ -110,13 +110,7 @@ Categories=Game</desktopFile>
         <startup>
           <screen id="1" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
             <actions>
-              <action id="22" beanClass="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" actionElevationType="none" rollbackBarrierExitCode="0">
-                <serializedBean>
-                  <property name="failIfNotRootUnix" type="boolean" value="true" />
-                  <property name="obtainIfAdminMac" type="boolean" value="true" />
-                  <property name="obtainIfNormalMac" type="boolean" value="true" />
-                </serializedBean>
-              </action>
+              <action id="22" beanClass="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" actionElevationType="none" rollbackBarrierExitCode="0" />
             </actions>
           </screen>
         </startup>
@@ -628,7 +622,7 @@ context.goForward(1, true, true);
                       </property>
                     </serializedBean>
                     <beans>
-                      <action name="Set installer arguments" id="824" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <action name="Set installer arguments" id="824" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" actionElevationType="elevated">
                         <serializedBean>
                           <property name="script">
                             <object class="com.install4j.api.beans.ScriptProperty">
@@ -1114,12 +1108,20 @@ return true;</property>
     <macos name="macOS Single Bundle - JRE" id="473" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" launcherId="606">
       <jreBundle usePack200="false" jreBundleSource="generated" />
     </macos>
-    <unixInstaller name="Unix Installer" id="1062" includeAllDownloadableComponents="true" customInstallBaseDir="/opt/">
+    <unixInstaller name="Unix Installer" id="1062" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix${compiler:versionType}" installDir=".ho" includeAllDownloadableComponents="true">
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
+    </unixInstaller>
+    <unixInstaller name="Unix Installer - JRE" id="1064" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix${compiler:versionType}-JRE" installDir=".ho" includeAllDownloadableComponents="true">
+      <excludedLaunchers>
+        <launcher id="59" />
+        <launcher id="497" />
+        <launcher id="606" />
+      </excludedLaunchers>
+      <jreBundle jreBundleSource="generated" />
     </unixInstaller>
   </mediaSets>
   <buildIds buildAll="false">
