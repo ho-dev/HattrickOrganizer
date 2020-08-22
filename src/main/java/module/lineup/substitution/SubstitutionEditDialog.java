@@ -52,10 +52,6 @@ public class SubstitutionEditDialog extends JDialog {
 		return this.canceled;
 	}
 
-	public Substitution getSubstitution(int nextOrderID) {
-		return this.behaviourView.getSubstitution(nextOrderID);
-	}
-
 	private void initDialog() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setDlgTitle();
@@ -64,18 +60,12 @@ public class SubstitutionEditDialog extends JDialog {
 	}
 
 	private void setDlgTitle() {
-		String dlgTitleKey = null;
-		switch (this.orderType) {
-		case NEW_BEHAVIOUR:
-			dlgTitleKey = "subs.TypeOrder";
-			break;
-		case SUBSTITUTION:
-			dlgTitleKey = "subs.TypeSub";
-			break;
-		case POSITION_SWAP:
-			dlgTitleKey = "subs.TypeSwap";
-			break;
-		}
+		String dlgTitleKey = switch (this.orderType) {
+			case NEW_BEHAVIOUR -> "subs.TypeOrder";
+			case SUBSTITUTION -> "subs.TypeSub";
+			case POSITION_SWAP -> "subs.TypeSwap";
+			default -> null;
+		};
 		setTitle(HOVerwaltung.instance().getLanguageString(dlgTitleKey));
 	}
 
