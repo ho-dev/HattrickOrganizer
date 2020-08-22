@@ -98,8 +98,7 @@ public class HTCalendar {
             return 0;
         }
         else {
-            final int week = elapsedWeeks
-                - ((elapsedWeeks / WEEK_IN_SEASON) * WEEK_IN_SEASON);
+            final int week = elapsedWeeks % WEEK_IN_SEASON;
 
             if (week != 0) {
                 return week;

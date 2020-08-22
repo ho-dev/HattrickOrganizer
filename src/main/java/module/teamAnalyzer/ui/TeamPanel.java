@@ -43,6 +43,8 @@ public class TeamPanel extends JPanel {
     private PlayerPanel centralAttacker = new PlayerPanel ();
     JPanel grassPanel = new RasenPanel();
 
+    private Lineup ownLineup;
+
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -89,34 +91,52 @@ public class TeamPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    public void reload(TeamLineup lineup, int week, int season) {
-        if (lineup != null) {
+    public void reload(TeamLineup teamLineup, int week, int season) {
+        if (teamLineup != null) {
             lineupPanel.getOpponentTeam().setTeamName(SystemManager.getActiveTeamName() + " ("
                                                       + SystemManager.getActiveTeamId() + ")");
-            keeper.reload(lineup.getSpotLineup(IMatchRoleID.keeper), week, season);
-            leftBack.reload(lineup.getSpotLineup(IMatchRoleID.leftBack), week, season);
-            leftCentral.reload(lineup.getSpotLineup(IMatchRoleID.leftCentralDefender), week, season);
-            rightCentral.reload(lineup.getSpotLineup(IMatchRoleID.rightCentralDefender), week, season);
-            rightBack.reload(lineup.getSpotLineup(IMatchRoleID.rightBack), week, season);
-            leftWinger.reload(lineup.getSpotLineup(IMatchRoleID.leftWinger), week, season);
-            leftMidfielder.reload(lineup.getSpotLineup(IMatchRoleID.leftInnerMidfield), week, season);
-            rightMidfielder.reload(lineup.getSpotLineup(IMatchRoleID.rightInnerMidfield), week, season);
-            rightWinger.reload(lineup.getSpotLineup(IMatchRoleID.rightWinger), week, season);
-            leftAttacker.reload(lineup.getSpotLineup(IMatchRoleID.leftForward), week, season);
-            rightAttacker.reload(lineup.getSpotLineup(IMatchRoleID.rightForward), week, season);
-            centralAttacker.reload(lineup.getSpotLineup(IMatchRoleID.centralForward), week, season);
-            centralMidfielder.reload(lineup.getSpotLineup(IMatchRoleID.centralInnerMidfield), week, season);
-            middleCentral.reload(lineup.getSpotLineup(IMatchRoleID.middleCentralDefender), week, season);
+            keeper.reload(teamLineup.getSpotLineup(IMatchRoleID.keeper), week, season);
+            leftBack.reload(teamLineup.getSpotLineup(IMatchRoleID.leftBack), week, season);
+            leftCentral.reload(teamLineup.getSpotLineup(IMatchRoleID.leftCentralDefender), week, season);
+            rightCentral.reload(teamLineup.getSpotLineup(IMatchRoleID.rightCentralDefender), week, season);
+            rightBack.reload(teamLineup.getSpotLineup(IMatchRoleID.rightBack), week, season);
+            leftWinger.reload(teamLineup.getSpotLineup(IMatchRoleID.leftWinger), week, season);
+            leftMidfielder.reload(teamLineup.getSpotLineup(IMatchRoleID.leftInnerMidfield), week, season);
+            rightMidfielder.reload(teamLineup.getSpotLineup(IMatchRoleID.rightInnerMidfield), week, season);
+            rightWinger.reload(teamLineup.getSpotLineup(IMatchRoleID.rightWinger), week, season);
+            leftAttacker.reload(teamLineup.getSpotLineup(IMatchRoleID.leftForward), week, season);
+            rightAttacker.reload(teamLineup.getSpotLineup(IMatchRoleID.rightForward), week, season);
+            centralAttacker.reload(teamLineup.getSpotLineup(IMatchRoleID.centralForward), week, season);
+            centralMidfielder.reload(teamLineup.getSpotLineup(IMatchRoleID.centralInnerMidfield), week, season);
+            middleCentral.reload(teamLineup.getSpotLineup(IMatchRoleID.middleCentralDefender), week, season);
             
-            lineupPanel.getOpponentTeam().setLeftAttack(lineup.getRating().getLeftAttack());
-            lineupPanel.getOpponentTeam().setLeftDefence(lineup.getRating().getLeftDefense());
-            lineupPanel.getOpponentTeam().setRightAttack(lineup.getRating().getRightAttack());
-            lineupPanel.getOpponentTeam().setRightDefence(lineup.getRating().getRightDefense());
-            lineupPanel.getOpponentTeam().setMiddleAttack(lineup.getRating().getCentralAttack());
-            lineupPanel.getOpponentTeam().setMiddleDefence(lineup.getRating().getCentralDefense());
-            lineupPanel.getOpponentTeam().setMidfield(lineup.getRating().getMidfield());
+            lineupPanel.getOpponentTeam().setLeftAttack(teamLineup.getRating().getLeftAttack());
+            lineupPanel.getOpponentTeam().setLeftDefence(teamLineup.getRating().getLeftDefense());
+            lineupPanel.getOpponentTeam().setRightAttack(teamLineup.getRating().getRightAttack());
+            lineupPanel.getOpponentTeam().setRightDefence(teamLineup.getRating().getRightDefense());
+            lineupPanel.getOpponentTeam().setMiddleAttack(teamLineup.getRating().getCentralAttack());
+            lineupPanel.getOpponentTeam().setMiddleDefence(teamLineup.getRating().getCentralDefense());
+            lineupPanel.getOpponentTeam().setMidfield(teamLineup.getRating().getMidfield());
 
             setMyTeam();
+
+            // Display man marking order
+            Lineup ownLineup = getOwnLineup();
+            var manMarkingOrder = ownLineup.getManMarkingOrder();
+            if ( manMarkingOrder != null ){
+                var manMarker = manMarkingOrder.getSubjectPlayerID();
+                var manMarkerPos = ownLineup.getPositionBySpielerId(manMarker);
+                var manMarkedPos = teamLineup.getPositionByPlayerId(manMarkingOrder.getObjectPlayerID());
+                if ( manMarkedPos > 0 ){
+                    // TODO: Draw man marking line
+                    lineupPanel.getMyTeam().getCentralForwardPanel();
+                }
+                else {
+                    // TODO: Display warning about failed man marking order
+                }
+            }
+
+
         } else {
             lineupPanel.getOpponentTeam().setTeamName(HOVerwaltung.instance().getLanguageString("TeamPanel.TeamMessage")); //$NON-NLS-1$
 
@@ -164,9 +184,10 @@ public class TeamPanel extends JPanel {
         grassPanel.repaint();
     }
 
+
     private void setMyTeam() {
     	HashMap<Integer, UserTeamPlayerPanel> list = new HashMap<Integer, UserTeamPlayerPanel>();
-    	Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        Lineup lineup = getOwnLineup();
 
         for (int spot : IMatchRoleID.aFieldMatchRoleID) {
             Player player = lineup.getPlayerByPositionID(spot);
@@ -174,7 +195,6 @@ public class TeamPanel extends JPanel {
 
             if (player != null) {
                 UserTeamSpotLineup spotLineup = new UserTeamSpotLineup();
-
                 spotLineup.setAppearance(0);
                 spotLineup.setName(getPlayerName(player.getFullName()));
                 spotLineup.setPlayerId(player.getSpielerID());
@@ -244,5 +264,16 @@ public class TeamPanel extends JPanel {
         	box.setPreferredSize(playerPanel.getDefaultSize());
         	panel.add(new javax.swing.Box(BoxLayout.X_AXIS));
         }
+    }
+
+    public Lineup getOwnLineup() {
+        if ( ownLineup == null) {
+            HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        }
+        return ownLineup;
+    }
+
+    public void setOwnLineup(Lineup ownLineup) {
+        this.ownLineup = ownLineup;
     }
 }

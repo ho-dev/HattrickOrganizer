@@ -244,4 +244,13 @@ public class TeamLineup {
         this.setAdjustedTacticCode(teamData.getTacticType());
         this.setAdjustedTacticLevel(teamData.getTacticLevel());
     }
+
+    public int getPositionByPlayerId(int objectPlayerID) {
+        for ( var i: this.spotLineups.entrySet()){
+            if ( i.getValue().getPlayerId() == objectPlayerID){
+                return i.getKey();
+            }
+        }
+        return 0;
+    }
 }
