@@ -163,7 +163,7 @@ public class SubstitutionEditView extends JPanel {
 	 * @return new Substitution
 	 */
 	public Substitution getSubstitution(int nextOrderID) {
-		if (this.substitution == null) {
+		if ( this.substitution == null){
 			this.substitution = new Substitution(this.orderType);
 		}
 		this.substitution.setPlayerOrderId(nextOrderID);
@@ -191,7 +191,6 @@ public class SubstitutionEditView extends JPanel {
 		this.substitution.setBehaviour((byte) getSelectedId(this.behaviourComboBox));
 		this.substitution.setRedCardCriteria(RedCardCriteria.getById((byte) getSelectedId(this.redCardsComboBox)));
 		this.substitution.setStanding(GoalDiffCriteria.getById((byte) getSelectedId(this.standingComboBox)));
-
 		return this.substitution;
 	}
 
