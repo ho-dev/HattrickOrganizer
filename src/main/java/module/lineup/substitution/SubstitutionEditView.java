@@ -10,32 +10,25 @@ import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
 import module.lineup.substitution.positionchooser.PositionChooser;
-import module.lineup.substitution.positionchooser.PositionSelectionEvent;
-import module.lineup.substitution.positionchooser.PositionSelectionListener;
 import module.lineup.substitution.positionchooser.PositionSelectionEvent.Change;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ItemEvent;
+import java.awt.*;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import static core.model.player.IMatchRoleID.aSubstitutesMatchRoleID;
 
+/**
+ * Panel displaying controls for substitution in the popup.
+ */
 public class SubstitutionEditView extends JPanel {
 
 	private static final long serialVersionUID = 6041242290064429972L;
@@ -99,9 +92,8 @@ public class SubstitutionEditView extends JPanel {
 		}
 	}
 
-	private Integer Hatstats()
-	{
-		return  lineup.getRatings().getHatStats().get(-90d);	// 90 minutes average
+	private Integer hatstats() {
+		return lineup.getRatings().getHatStats().get(-90d);	// 90 minutes average
 	}
 
 	/**
@@ -114,8 +106,8 @@ public class SubstitutionEditView extends JPanel {
 	 */
 	public void init(Lineup lineup, Substitution sub) {
 		this.lineup = lineup;
-		this.substitution  = sub;
-		this.oldHatStats = Hatstats();
+		this.substitution = sub;
+		this.oldHatStats = hatstats();
 		this.orderType = sub.getOrderType();
 
 		if (sub.getSubjectPlayerID() != -1) {
@@ -159,19 +151,19 @@ public class SubstitutionEditView extends JPanel {
 		this.whenTextField.setValue((int) sub.getMatchMinuteCriteria());
 
 		this.hatstatsChangeField.setText(HatStatsChange());
-		initDone=true;
+		initDone = true;
 	}
 
 	/**
 	 * Gets a new {@link Substitution} which represents the values chosen in
 	 * the view. Note that <i>new</i> is returned and not the one which may be
 	 * provided to the {@link #init(Lineup, Substitution)} method.
-	 * 
+	 *
 	 * @param nextOrderID
 	 * @return new Substitution
 	 */
 	public Substitution getSubstitution(int nextOrderID) {
-		if ( this.substitution == null){
+		if (this.substitution == null) {
 			this.substitution = new Substitution(this.orderType);
 		}
 		this.substitution.setPlayerOrderId(nextOrderID);
@@ -188,7 +180,7 @@ public class SubstitutionEditView extends JPanel {
 			// the player should be both object and subject, per API.
 			this.substitution.setObjectPlayerID(substitution.getSubjectPlayerID());
 		}
-		byte roleId = -1;
+
 		if (!isPositionSwap()) {
 			item = (PlayerPositionItem) this.positionComboBox.getSelectedItem();
 			if (item != null) {
@@ -199,6 +191,7 @@ public class SubstitutionEditView extends JPanel {
 		this.substitution.setBehaviour((byte) getSelectedId(this.behaviourComboBox));
 		this.substitution.setRedCardCriteria(RedCardCriteria.getById((byte) getSelectedId(this.redCardsComboBox)));
 		this.substitution.setStanding(GoalDiffCriteria.getById((byte) getSelectedId(this.standingComboBox)));
+
 		return this.substitution;
 	}
 
@@ -210,12 +203,11 @@ public class SubstitutionEditView extends JPanel {
 		return -1;
 	}
 
-	void RatingRecalc()
-	{
-		if ( substitution == null || !initDone) return;
+	private void ratingRecalc() {
+		if (substitution == null || !initDone) return;
 		this.substitution = getSubstitution(-1);
-		if ( substitution.getSubjectPlayerID() !=  -1 &&
-				(isNewBehaviour() || substitution.getObjectPlayerID() != -1)){
+		if (substitution.getSubjectPlayerID() !=  -1 &&
+				(isNewBehaviour() || substitution.getObjectPlayerID() != -1)) {
 			this.lineup.setRatings();
 			this.hatstatsChangeField.setText(HatStatsChange());
 		}
@@ -240,75 +232,50 @@ public class SubstitutionEditView extends JPanel {
 					@Override
 					public void propertyChange(PropertyChangeEvent evt) {
 						Integer value = (Integer) whenTextField.getValue();
-						if (value != null) {
-							whenSlider.setValue(value);
-						} else {
-							whenSlider.setValue(-1);
-						}
-						RatingRecalc();
+						whenSlider.setValue(Objects.requireNonNullElse(value, -1));
+						ratingRecalc();
 					}
 				});
 
 
-		ItemListener ratingRecalcListener = new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				RatingRecalc();
-			}
-		};
+		final ItemListener ratingRecalcListener = e -> ratingRecalc();
 
-		this.playerComboBox.addItemListener( ratingRecalcListener);
-		if (this.playerInComboBox != null )  this.playerInComboBox.addItemListener(ratingRecalcListener);
-		if (this.positionComboBox != null )  this.positionComboBox.addItemListener(ratingRecalcListener);
+		this.playerComboBox.addItemListener(ratingRecalcListener);
+		if (this.playerInComboBox != null)  this.playerInComboBox.addItemListener(ratingRecalcListener);
+		if (this.positionComboBox != null)  this.positionComboBox.addItemListener(ratingRecalcListener);
 		this.behaviourComboBox.addItemListener(ratingRecalcListener);
 
 		if (!isPositionSwap()) {
 			// ItemListener that will update the PositionChooser if selection in
 			// the position combobox changes
-			this.positionComboBox.addItemListener(new ItemListener() {
-
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-					PlayerPositionItem item = (PlayerPositionItem) positionComboBox
-							.getSelectedItem();
-					if (item != null) {
-						positionChooser.select(item.getPosition());
-					} else {
-						positionChooser.select(null);
-					}
+			this.positionComboBox.addItemListener(e -> {
+				PlayerPositionItem item = (PlayerPositionItem) positionComboBox.getSelectedItem();
+				if (item != null) {
+					positionChooser.select(item.getPosition());
+				} else {
+					positionChooser.select(null);
 				}
 			});
 
 			// PositionSelectionListener that will update position combobox
 			// selection if selection in the PositionChooser changes
-			this.positionChooser
-					.addPositionSelectionListener(new PositionSelectionListener() {
-
-						@Override
-						public void selectionChanged(
-								PositionSelectionEvent event) {
-							if (event.getChange() == Change.SELECTED) {
-								for (int i = 0; i < positionComboBox.getModel()
-										.getSize(); i++) {
-									PlayerPositionItem item = (PlayerPositionItem) positionComboBox
-											.getModel().getElementAt(i);
-									if (event.getPosition().equals(
-											item.getPosition())) {
-										if (item != positionComboBox
-												.getSelectedItem()) {
-											positionComboBox
-													.setSelectedItem(item);
-										}
-										break;
-									}
-								}
-							} else {
-								if (positionComboBox.getSelectedItem() != null) {
-									positionComboBox.setSelectedItem(null);
-								}
+			this.positionChooser.addPositionSelectionListener(event -> {
+				if (event.getChange() == Change.SELECTED) {
+					for (int i = 0; i < positionComboBox.getModel().getSize(); i++) {
+						PlayerPositionItem item = (PlayerPositionItem) positionComboBox.getModel().getElementAt(i);
+						if (event.getPosition().equals(item.getPosition())) {
+							if (item != positionComboBox.getSelectedItem()) {
+								positionComboBox.setSelectedItem(item);
 							}
+							break;
 						}
-					});
+					}
+				} else {
+					if (positionComboBox.getSelectedItem() != null) {
+						positionComboBox.setSelectedItem(null);
+					}
+				}
+			});
 		}
 	}
 
@@ -317,15 +284,13 @@ public class SubstitutionEditView extends JPanel {
 
 		JLabel playerLabel = new JLabel();
 		if (isSubstitution()) {
-			playerLabel.setText(HOVerwaltung.instance().getLanguageString(
-					"subs.Out"));
+			playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Out"));
 		} else if (isPositionSwap()) {
-			playerLabel.setText(HOVerwaltung.instance().getLanguageString(
-					"subs.Reposition"));
+			playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Reposition"));
 		} else {
-			playerLabel.setText(HOVerwaltung.instance().getLanguageString(
-					"subs.Player"));
+			playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Player"));
 		}
+
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridx = 0;
@@ -495,7 +460,7 @@ public class SubstitutionEditView extends JPanel {
 
 	private String HatStatsChange() {
 		if (oldHatStats == null) return "";
-		return this.oldHatStats + "->" + Hatstats();
+		return this.oldHatStats + "->" + hatstats();
 	}
 
 	private boolean isSubstitution() {

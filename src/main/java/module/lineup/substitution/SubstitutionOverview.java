@@ -4,9 +4,7 @@ import core.constants.UIConstants;
 import core.gui.HOMainFrame;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOModel;
 import core.model.HOVerwaltung;
-import core.model.player.Player;
 import core.util.GUIUtils;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
@@ -29,13 +27,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -46,14 +42,13 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
+/**
+ * Main Panel for Match Orders (i.e. substitutions) in the Lineup tab.
+ */
 public class SubstitutionOverview extends JPanel {
 
 	private static final long serialVersionUID = -625638866350314110L;
@@ -67,7 +62,7 @@ public class SubstitutionOverview extends JPanel {
 	private PositionSwapAction positionSwapAction;
 	private SubstitutionAction substitutionAction;
 	private Lineup lineup;
-	private ArrayList<Substitution> substitutionBackup;
+	private List<Substitution> substitutionBackup;
 
 	public SubstitutionOverview(Lineup lineup) {
 		this.lineup = lineup;
@@ -273,7 +268,7 @@ public class SubstitutionOverview extends JPanel {
 	private void doNewOrder(MatchOrderType orderType) {
 		SubstitutionEditDialog dlg = getSubstitutionEditDialog(orderType);
 		dlg.setLocationRelativeTo(SubstitutionOverview.this);
-		BackupLineupSubstitutions();
+		backupLineupSubstitutions();
 		Substitution newSub = new Substitution(orderType);
 		lineup.getSubstitutionList().add(newSub);
 		dlg.init(lineup, newSub);
@@ -287,7 +282,7 @@ public class SubstitutionOverview extends JPanel {
 			HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setLabels();
 		}
 		else {
-			RestoreLineupSubstitutions();
+			restoreLineupSubstitutions();
 		}
 	}
 
@@ -302,19 +297,8 @@ public class SubstitutionOverview extends JPanel {
 		return dlg;
 	}
 
-	private Substitution getSelectedSubstitution() {
-		int tableIndex = this.substitutionTable.getSelectedRow();
-		if (tableIndex != -1) {
-			int modelIndex = this.substitutionTable.convertRowIndexToModel(tableIndex);
-			return ((SubstitutionsTableModel) this.substitutionTable.getModel()).getRow(modelIndex)
-					.getSubstitution();
-		}
-		return null;
-	}
-
 	private void selectSubstitution(Substitution sub) {
-		SubstitutionsTableModel tblModel = (SubstitutionsTableModel) this.substitutionTable
-				.getModel();
+		SubstitutionsTableModel tblModel = (SubstitutionsTableModel) this.substitutionTable.getModel();
 		for (int i = 0; i < tblModel.getRowCount(); i++) {
 			if (tblModel.getRow(i).getSubstitution() == sub) {
 				this.substitutionTable.getSelectionModel().setSelectionInterval(i, i);
@@ -325,9 +309,9 @@ public class SubstitutionOverview extends JPanel {
 	private void editSelectedSubstitution() {
 		int selectedRowIndex = substitutionTable.getSelectedRow();
 		if (selectedRowIndex != -1) {
-			BackupLineupSubstitutions();
-			final Substitution sub = ((SubstitutionsTableModel) substitutionTable.getModel())
-					.getRow(selectedRowIndex).getSubstitution();
+			backupLineupSubstitutions();
+			final SubstitutionsTableModel tableModel = (SubstitutionsTableModel) substitutionTable.getModel();
+			final Substitution sub = tableModel.getRow(selectedRowIndex).getSubstitution();
 
 			SubstitutionEditDialog dlg = getSubstitutionEditDialog(sub.getOrderType());
 			dlg.setLocationRelativeTo(SubstitutionOverview.this);
@@ -335,20 +319,19 @@ public class SubstitutionOverview extends JPanel {
 			dlg.setVisible(true);
 
 			if (!dlg.isCanceled()) {
-				((SubstitutionsTableModel) substitutionTable.getModel()).fireTableRowsUpdated(
-						selectedRowIndex, selectedRowIndex);
+				tableModel.fireTableRowsUpdated(selectedRowIndex, selectedRowIndex);
 				refresh();
 				selectSubstitution(sub);
 			}
 			else {
-				RestoreLineupSubstitutions();
+				restoreLineupSubstitutions();
 			}
 		}
 	}
 
-	private void BackupLineupSubstitutions() {
+	private void backupLineupSubstitutions() {
 		this.substitutionBackup = new ArrayList<>();
-		for ( Substitution s : this.lineup.getSubstitutionList()){
+		for (Substitution s : this.lineup.getSubstitutionList()) {
 			Substitution backup = new Substitution(s.getPlayerOrderId(),
 					s.getObjectPlayerID(),
 					s.getSubjectPlayerID(),
@@ -363,7 +346,7 @@ public class SubstitutionOverview extends JPanel {
 		}
 	}
 
-	private void RestoreLineupSubstitutions(){
+	private void restoreLineupSubstitutions() {
 		this.lineup.setSubstitionList(this.substitutionBackup);
 	}
 
@@ -469,7 +452,6 @@ public class SubstitutionOverview extends JPanel {
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			Substitution sub = this.rows.get(rowIndex).getSubstitution();
-			HOModel hoModel = HOVerwaltung.instance().getModel();
 
 			switch (columnIndex) {
 			case ORDERTYPE_COL_IDX:

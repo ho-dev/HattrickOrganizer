@@ -102,6 +102,8 @@ public class Substitution {
 
 	public void setObjectPlayerID(int objectPlayerID) {
 		this.objectPlayerID = objectPlayerID;
+		// Clear object player name so it gets retrieved again.
+		this.objectPlayerName = null;
 	}
 
 	/**
@@ -120,8 +122,9 @@ public class Substitution {
 		// to get conform with CHPP API (playerout==playerin if its a 
 		// behaviour change)
 		if (this.orderType == MatchOrderType.NEW_BEHAVIOUR) {
-			this.objectPlayerID = subjectPlayerID;
+			setObjectPlayerID(subjectPlayerID);
 		}
+		this.subjectPlayerName = null;
 	}
 
 	public MatchOrderType getOrderType() {
