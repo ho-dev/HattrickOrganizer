@@ -156,8 +156,7 @@ public class SubstitutionEditView extends JPanel {
 				.getRedCardCriteria().getId());
 		Helper.markierenComboBox(this.standingComboBox, sub.getStanding()
 				.getId());
-		this.whenTextField.setValue(Integer.valueOf(sub
-				.getMatchMinuteCriteria()));
+		this.whenTextField.setValue((int) sub.getMatchMinuteCriteria());
 
 		this.hatstatsChangeField.setText(HatStatsChange());
 		initDone=true;
@@ -172,39 +171,35 @@ public class SubstitutionEditView extends JPanel {
 	 * @return new Substitution
 	 */
 	public Substitution getSubstitution(int nextOrderID) {
-		int playerInID = -1;
-		int subjectPlayerID = -1;
+		if ( this.substitution == null){
+			this.substitution = new Substitution(this.orderType);
+		}
+		this.substitution.setPlayerOrderId(nextOrderID);
 		var item = (PlayerPositionItem) this.playerComboBox.getSelectedItem();
 		if (item != null) {
-			subjectPlayerID = item.getSpieler().getSpielerID();
+			this.substitution.setSubjectPlayerID(item.getSpieler().getSpielerID());
 		}
 		if (isPositionSwap() || isSubstitution()) {
 			item = (PlayerPositionItem) this.playerInComboBox.getSelectedItem();
 			if (item != null) {
-				playerInID = item.getSpieler().getSpielerID();
+				this.substitution.setObjectPlayerID(item.getSpieler().getSpielerID());
 			}
 		} else if (isNewBehaviour()) {
 			// the player should be both object and subject, per API.
-			playerInID = subjectPlayerID;
+			this.substitution.setObjectPlayerID(substitution.getSubjectPlayerID());
 		}
 		byte roleId = -1;
 		if (!isPositionSwap()) {
 			item = (PlayerPositionItem) this.positionComboBox.getSelectedItem();
 			if (item != null) {
-				roleId = item.getPosition().byteValue();
+				this.substitution.setRoleId(item.getPosition().byteValue());
 			}
 		}
-		return new Substitution(
-				nextOrderID,
-				playerInID,
-				subjectPlayerID,
-				this.orderType.getId(),
-				((Integer) this.whenTextField.getValue()).byteValue(),
-				roleId,
-				(byte) getSelectedId(this.behaviourComboBox),
-				RedCardCriteria.getById((byte) getSelectedId(this.redCardsComboBox)),
-				GoalDiffCriteria.getById((byte) getSelectedId(this.standingComboBox))
-				);
+		this.substitution.setMatchMinuteCriteria(((Integer) this.whenTextField.getValue()).byteValue());
+		this.substitution.setBehaviour((byte) getSelectedId(this.behaviourComboBox));
+		this.substitution.setRedCardCriteria(RedCardCriteria.getById((byte) getSelectedId(this.redCardsComboBox)));
+		this.substitution.setStanding(GoalDiffCriteria.getById((byte) getSelectedId(this.standingComboBox)));
+		return this.substitution;
 	}
 
 	private int getSelectedId(JComboBox comboBox) {
@@ -233,7 +228,7 @@ public class SubstitutionEditView extends JPanel {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				whenTextField.setValue(Integer.valueOf(whenSlider.getModel().getValue()));
+				whenTextField.setValue(whenSlider.getModel().getValue());
 			}
 		});
 
@@ -246,7 +241,7 @@ public class SubstitutionEditView extends JPanel {
 					public void propertyChange(PropertyChangeEvent evt) {
 						Integer value = (Integer) whenTextField.getValue();
 						if (value != null) {
-							whenSlider.setValue(value.intValue());
+							whenSlider.setValue(value);
 						} else {
 							whenSlider.setValue(-1);
 						}
@@ -277,8 +272,7 @@ public class SubstitutionEditView extends JPanel {
 					PlayerPositionItem item = (PlayerPositionItem) positionComboBox
 							.getSelectedItem();
 					if (item != null) {
-						positionChooser.select(Integer.valueOf(item
-								.getPosition()));
+						positionChooser.select(item.getPosition());
 					} else {
 						positionChooser.select(null);
 					}
