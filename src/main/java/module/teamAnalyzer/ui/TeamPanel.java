@@ -8,7 +8,6 @@ import core.module.config.ModuleConfig;
 import module.lineup.Lineup;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
-import module.teamAnalyzer.report.TacticReport;
 import module.teamAnalyzer.ui.lineup.FormationPanel;
 import module.teamAnalyzer.vo.TeamLineup;
 import module.teamAnalyzer.vo.UserTeamSpotLineup;
@@ -39,6 +38,8 @@ public class TeamPanel extends JPanel {
     private PlayerPanel centralMidfielder = new PlayerPanel();
     private PlayerPanel centralAttacker = new PlayerPanel ();
     JPanel grassPanel = new RasenPanel();
+
+    ManMarkingOrderDisplay manMarkingOrderDisplay;
 
     private Lineup ownLineup;
 
@@ -126,8 +127,12 @@ public class TeamPanel extends JPanel {
                 var manMarkedPos = teamLineup.getPositionByPlayerId(manMarkingOrder.getObjectPlayerID());
                 if ( manMarkedPos > 0 ){
                     var from = lineupPanel.getMyTeam().getPanel(manMarkerPos);
-                    var to = lineupPanel.getOpponentTeam().getCentralForwardPanel();
-                    displayManMarkingOrder(from, to);
+                    var to = lineupPanel.getOpponentTeam().getPanel(manMarkedPos);
+                    if ( manMarkingOrderDisplay == null){
+                        manMarkingOrderDisplay = new ManMarkingOrderDisplay(grassPanel);
+                    }
+                    manMarkingOrderDisplay.set(from, to);
+                    manMarkingOrderDisplay.setVisible(true);
                 }
                 else {
                     // TODO: Display warning about failed man marking order
@@ -180,34 +185,6 @@ public class TeamPanel extends JPanel {
         lineupPanel.reload(ModuleConfig.instance().getBoolean(SystemManager.ISLINEUP),
         		ModuleConfig.instance().getBoolean(SystemManager.ISMIXEDLINEUP));
         grassPanel.repaint();
-    }
-
-    private void displayManMarkingOrder(JComponent from, JComponent to) {
-        var xfrom = from.getX() + from.getWidth() / 2;
-        var yfrom = from.getY();
-        var xto = to.getX() + to.getWidth() / 2;
-        var yto = to.getY() + to.getHeight();
-        drawArrow(xfrom, yfrom, xto, yto);
-    }
-
-    private final int ARR_SIZE = 4;
-
-    // adapted from aioobe, https://stackoverflow.com/questions/4112701/drawing-a-line-with-arrow-in-java
-    private void drawArrow(int xfrom, int yfrom, int xto, int yto) {
-        double dx = xto - xfrom, dy = yto - yfrom;
-        double angle = Math.atan2(dy, dx);
-        int len = (int) Math.sqrt(dx*dx + dy*dy);
-        AffineTransform at = AffineTransform.getTranslateInstance(xfrom, yfrom);
-        at.concatenate(AffineTransform.getRotateInstance(angle));
-
-        Graphics2D g = (Graphics2D) this.getGraphics().create();
-        g.transform(at);
-
-        // Draw horizontal arrow starting in (0, 0)
-        g.drawLine(0, 0, len, 0);
-        g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
-                new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
-
     }
 
     private void setMyTeam() {
@@ -300,5 +277,55 @@ public class TeamPanel extends JPanel {
 
     public void setOwnLineup(Lineup ownLineup) {
         this.ownLineup = ownLineup;
+    }
+
+    private class ManMarkingOrderDisplay extends JPanel {
+        private final int ARR_SIZE = 8;
+        int xfrom, yfrom, xto, yto;
+        JComponent parent;
+        public ManMarkingOrderDisplay(JPanel grassPanel) {
+            parent = grassPanel;
+            parent.add(this);
+        }
+
+        public void set(JPanel from, JPanel to) {
+            xfrom = x(from) + from.getWidth() / 2;
+            yfrom = y(from);
+            xto = x(to)  + to.getWidth() / 2;
+            yto = y(to)  + to.getHeight();
+        }
+
+        private int y(Container component) {
+            var ret = component.getY();
+            if ( component.getParent() != parent) ret += y(component.getParent());
+            return ret;
+        }
+
+        private int x(Container component) {
+            var ret = component.getX();
+            if ( component.getParent() != parent) ret += x(component.getParent());
+            return ret;
+        }
+
+        @Override
+        protected void paintComponent(Graphics gIn) {
+            // adapted from aioobe, https://stackoverflow.com/questions/4112701/drawing-a-line-with-arrow-in-java
+            double dx = xto - xfrom, dy = yto - yfrom;
+            double angle = Math.atan2(dy, dx);
+            int len = (int) Math.sqrt(dx*dx + dy*dy);
+            AffineTransform at = AffineTransform.getTranslateInstance(xfrom, yfrom);
+            at.concatenate(AffineTransform.getRotateInstance(angle));
+
+            Graphics2D g = (Graphics2D) gIn.create();
+            g.transform(at);
+
+            g.setPaint(Color.RED);
+            g.setStroke(new BasicStroke(5));
+            // Draw horizontal arrow starting in (0, 0)
+            g.drawLine(0, 0, len, 0);
+            g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
+                    new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
+        }
+
     }
 }
