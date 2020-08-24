@@ -1,15 +1,10 @@
 package core.util;
 
 import com.install4j.api.launcher.ApplicationLauncher;
-import core.db.user.UserManager;
 import core.gui.HOMainFrame;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Updater {
@@ -68,7 +63,6 @@ public class Updater {
     private Updater() {
         try {
             mediaID = com.install4j.api.launcher.Variables.getCompilerVariable("mediaID");
-            @Nullable String updateFilename = (String) com.install4j.api.launcher.Variables.getInstallerVariable("updaterDownloadFile");
         } catch (IOException e) {
             HOLogger.instance().error(Updater.class, "can't fetch updater variables" + e.toString());
         }
@@ -92,7 +86,21 @@ public class Updater {
 
     public void update() {
 
-        // TODO: for user who never changed release channel nothing is stored in peference store and this will fail, here we need to try loadfrompreferencestore() => if null, start by calling saveReleaseChannelPreference() before trying the update
+        try {
+            Map<String, Object> vPrefsStore = com.install4j.api.launcher.Variables.loadFromPreferenceStore(mediaID, true);
+            if ((vPrefsStore == null) || (! vPrefsStore.containsKey("updatesUrl")))
+            {
+                // user has never changed release channel via preference tab, hence no information available in java preference store
+                switch (core.model.UserParameter.temp().ReleaseChannel) {
+                    case "Stable" -> com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", STABLE_UPDATE_XML_URL), mediaID, true);
+                    case "Beta" -> com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", BETA_UPDATE_XML_URL), mediaID, true);
+                    default -> com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", DEV_UPDATE_XML_URL), mediaID, true);
+                }
+                HOLogger.instance().log(Updater.class, "release channel preference written for the first time in java store");
+            }
+        } catch (IOException e) {
+            HOLogger.instance().error(Updater.class, "error while fetching java store" + e.toString());
+        }
 
         ApplicationLauncher.launchApplicationInProcess(UPDATER_APPLICATION_ID, null, new ApplicationLauncher.Callback() {
                     public void exited(int exitValue) {
