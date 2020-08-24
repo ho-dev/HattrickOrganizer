@@ -58,10 +58,7 @@ public class Updater {
     private static final String BETA_UPDATE_XML_URL = "http://www.updatesBETA.xml";
     private static final String STABLE_UPDATE_XML_URL = "http://www.updates.xml";
     private static final String UPDATER_APPLICATION_ID = "814";
-    private static final List<String> MEDIA_IDS_LINUX_PACKAGES = Arrays.asList("62", "63", "464", "471");
-    private @Nullable String updateFilename = null;
     private @Nullable String mediaID = null;
-    private @Nullable String location = null;
     private static Updater clUpdater;
 
 
@@ -71,8 +68,7 @@ public class Updater {
     private Updater() {
         try {
             mediaID = com.install4j.api.launcher.Variables.getCompilerVariable("mediaID");
-            updateFilename = (String) com.install4j.api.launcher.Variables.getInstallerVariable("updaterDownloadFile");
-            location = UserManager.instance().getDbParentFolder();
+            @Nullable String updateFilename = (String) com.install4j.api.launcher.Variables.getInstallerVariable("updaterDownloadFile");
         } catch (IOException e) {
             HOLogger.instance().error(Updater.class, "can't fetch updater variables" + e.toString());
         }
@@ -111,13 +107,6 @@ public class Updater {
                     }
                 }, ApplicationLauncher.WindowMode.FRAME, null
         );
-
-        if(MEDIA_IDS_LINUX_PACKAGES.contains(mediaID))
-        {
-            JOptionPane.showMessageDialog(new JFrame(),"Create GUI asking to install .deb and .rpm manually and maybe offering to run ho.shutdown and calling script apt install .....deb");
-            // TODO see if I can recovered the downloaded file name and location for better message
-        }
-
 
     }
 }
