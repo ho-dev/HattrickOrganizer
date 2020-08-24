@@ -229,10 +229,7 @@ task media(type: com.install4j.gradle.Install4jTask) {
     // 464  -> Linux rpm JRE
     // 471 -> Linux deb JRE
 
-
-
-//    buildIds = [60, 62, 63, 64, 172, 173, 464, 471, 473, 477, 481, 485, 1062]
-    buildIds = [60, 64, 172, 173, 1062]  // TODO: put back JRE but exclude deb and rpm ??
+    buildIds = [60, 485, 64, 481, 172, 473, 173, 477, 1062, 1064]
     String versionType
 
     switch(development_stage) {
