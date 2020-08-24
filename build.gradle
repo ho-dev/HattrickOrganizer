@@ -276,16 +276,6 @@ task pushmd(dependsOn: preparingBuild)  {
     }
 }
 
-//task pullhtml (dependsOn: markdownToHtml){
-//    group 'sub tasks'
-//    outputs.upToDateWhen { false }
-//    doLast {
-//        copy {
-//            from "${projectDir}\\docs\\changelog\\html\\changelog.html"
-//            into "${projectDir}\\src\\main\\resources"
-//        }
-//    }
-//}
 
 task CreateDistribution (dependsOn: installDist) {
     group 'sub tasks'
