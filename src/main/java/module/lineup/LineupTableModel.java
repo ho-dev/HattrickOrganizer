@@ -6,10 +6,9 @@ import core.gui.comp.table.UserColumn;
 import core.gui.model.PlayerColumn;
 import core.gui.model.UserColumnFactory;
 import core.model.player.Player;
-import core.util.HOLogger;
 
 import java.util.List;
-import java.util.Vector;
+
 
 public class LineupTableModel extends HOTableModel {
 
@@ -61,44 +60,13 @@ public class LineupTableModel extends HOTableModel {
 
 	@Override
 	public final boolean isCellEditable(int row, int col) {
-		if (getValueAt(row, col) instanceof Boolean) {
-			return true;
-		}
-
-		return false;
-
+		return getValueAt(row, col) instanceof Boolean;
 	}
 
 	@Override
 	public final int getColumnIndexOfDisplayedColumn(int searchId) {
 		return super.getColumnIndexOfDisplayedColumn(searchId);
 	}
-
-//	/**
-//	 * Listener for the checkboxes of autolineup
-//	 */
-//	public final void setSpielberechtigung() {
-//		try {
-//			for (int i = 0; i < this.getRowCount(); i++) {
-//				final int id = Integer
-//						.parseInt(((core.gui.comp.entry.ColorLabelEntry) getValueAt(i,
-//								getColumnIndexOfDisplayedColumn(UserColumnFactory.ID))).getText());
-//				final Player player = getSpieler(id);
-//
-//				if ((player != null)
-//						&& (player.isSpielberechtigt() != ((Boolean) getValueAt(i,
-//								getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP)))
-//								.booleanValue())) {
-//					player.setSpielberechtigt(((Boolean) getValueAt(i,
-//							getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP)))
-//							.booleanValue());
-//				}
-//
-//			}
-//		} catch (Exception e) {
-//			HOLogger.instance().log(getClass(), e);
-//		}
-//	}
 
 	public final Player getSpieler(int id) {
 		if (id > 0) {
@@ -156,28 +124,18 @@ public class LineupTableModel extends HOTableModel {
 	public final void reInitData() {
 		UserColumn[] tmpDisplayedColumns = getDisplayedColumns();
 		for (int i = 0; i < m_vPlayers.size(); i++) {
-			final Player aktuellerPlayer = (Player) m_vPlayers.get(i);
+			final Player aktuellerPlayer = m_vPlayers.get(i);
 
 			for (int j = 0; j < tmpDisplayedColumns.length; j++) {
 				if (tmpDisplayedColumns[j].getId() == UserColumnFactory.NAME
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.LINUP
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.BEST_POSITION
-						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.GROUP
-				        )
-				{m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(aktuellerPlayer, null);}
-				else if (tmpDisplayedColumns[j].getId() == UserColumnFactory.AUTO_LINEUP)
-				{
+						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.GROUP) {
+					m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(aktuellerPlayer, null);
+				} else if (tmpDisplayedColumns[j].getId() == UserColumnFactory.AUTO_LINEUP) {
 					m_clData[i][j] = aktuellerPlayer.getCanBeSelectedByAssistant();
 				}
 			}
 		}
-	}
-
-	/**
-	 * Entfernt den Player aus der Tabelle
-	 */
-	public final void removeSpieler(Player player) {
-		m_vPlayers.remove(player);
-		initData();
 	}
 }

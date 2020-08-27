@@ -51,30 +51,17 @@ public class XMLMatchOrderParserNew {
 	}
 
 	private Substitution getOrder(Node orderNode) {
-		Substitution sub = new Substitution();
-		sub.setPlayerOrderId(Integer.parseInt(getChildValue(orderNode, "PlayerOrderID")));
-		sub.setMatchMinuteCriteria(Byte.parseByte(getChildValue(orderNode, "MatchMinuteCriteria")));
-		sub.setStanding(GoalDiffCriteria.getById(Byte.parseByte(getChildValue(orderNode,
-				"GoalDiffCriteria"))));
-		sub.setRedCardCriteria(RedCardCriteria.getById(Byte.parseByte(getChildValue(orderNode,
-				"RedCardCriteria"))));
-		sub.setSubjectPlayerID(Integer.parseInt(getChildValue(orderNode, "SubjectPlayerID")));
-		sub.setObjectPlayerID(Integer.parseInt(getChildValue(orderNode, "ObjectPlayerID")));
-		byte orderTypeId = Byte.parseByte(getChildValue(orderNode, "OrderType"));
-		MatchOrderType matchOrderType;
-		if (orderTypeId == 3) {
-			matchOrderType = MatchOrderType.POSITION_SWAP;
-		} else {
-			if (sub.getObjectPlayerID() == sub.getSubjectPlayerID()) {
-				matchOrderType = MatchOrderType.NEW_BEHAVIOUR;
-			} else {
-				matchOrderType = MatchOrderType.SUBSTITUTION;
-			}
-		}
-		sub.setOrderType(matchOrderType);
-		sub.setRoleId(Byte.parseByte(getChildValue(orderNode, "NewPositionId")));
-		sub.setBehaviour(Byte.parseByte(getChildValue(orderNode, "NewPositionBehaviour")));
-		return sub;
+		return new Substitution(
+				Integer.parseInt(getChildValue(orderNode, "PlayerOrderID")),
+				Integer.parseInt(getChildValue(orderNode, "ObjectPlayerID")),
+				Integer.parseInt(getChildValue(orderNode, "SubjectPlayerID")),
+				Byte.parseByte(getChildValue(orderNode, "OrderType")),
+				Byte.parseByte(getChildValue(orderNode, "MatchMinuteCriteria")),
+				Byte.parseByte(getChildValue(orderNode, "NewPositionId")),
+				Byte.parseByte(getChildValue(orderNode, "NewPositionBehaviour")),
+				RedCardCriteria.getById(Byte.parseByte(getChildValue(orderNode,"RedCardCriteria"))),
+				GoalDiffCriteria.getById(Byte.parseByte(getChildValue(orderNode,"GoalDiffCriteria")))
+		);
 	}
 
 	private MatchRoleID getPosition(Node playerNode) {

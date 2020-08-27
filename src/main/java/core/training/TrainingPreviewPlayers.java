@@ -5,16 +5,13 @@ import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupTeam;
 import core.model.match.MatchStatistics;
 import core.model.match.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.util.HOLogger;
 import module.lineup.LineupPosition;
 
-import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,7 +30,7 @@ public class TrainingPreviewPlayers implements Refreshable {
 
     private static TrainingPreviewPlayers m_clInstance;
 
-    private HashMap<Player, TrainingPreviewPlayer> players = new HashMap<Player, TrainingPreviewPlayer>();
+    private HashMap<Player, TrainingPreviewPlayer> players = new HashMap<>();
     private int nextWeekTraining = -1;
     private boolean isFuturMatchInit =false;
     private WeeklyTrainingType weekTrainTyp = null;
@@ -67,8 +64,8 @@ public class TrainingPreviewPlayers implements Refreshable {
     /**
      * get training preview of a player
      *
-     * @param player
-     * @return
+     * @param player Player
+     * @return TrainingPreviewPlayer
      */
     public TrainingPreviewPlayer getTrainPreviewPlayer(Player player) {
 
@@ -104,7 +101,7 @@ public class TrainingPreviewPlayers implements Refreshable {
     /**
      * get next training
      *
-     * @return:     training id
+     * @return     training id
      */
     public int getNextWeekTraining() {
 
@@ -141,28 +138,30 @@ public class TrainingPreviewPlayers implements Refreshable {
 
         getMatchesForTraining();
 
-        for (int i = 0; i < lMatchStats.size(); i++) {
+        //for (int i = 0; i < lMatchStats.size(); i++) {
+        for ( var ms : lMatchStats){
 
             if (weekTrainTyp.getPrimaryTrainingSkillPositions() != null) {
-                fullTrain += lMatchStats.get(i).getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillPositions());
+                fullTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillPositions());
                 if (fullTrain > 90)
                     fullTrain = 90;
             }
             if (weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions() != null) {
-                partialTrain += lMatchStats.get(i).getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions());
+                partialTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions());
                 if (partialTrain > 90)
                     partialTrain = 90;
             }
             // If player receive training, don't display stamina icon
             if (fullTrain == 0 && partialTrain == 0) {
-                iStamina += lMatchStats.get(i).getStaminaMinutesPlayedInPositions(playerID);
+                iStamina += ms.getStaminaMinutesPlayedInPositions(playerID);
                 if (iStamina > 90)
                     iStamina = 90;
             }
         }
 
-        for (int i = 0; i < lLinueupPos.size(); i++) {
-            MatchRoleID roleId = lLinueupPos.get(i).getPositionBySpielerId(playerID);
+        //for (int i = 0; i < lLinueupPos.size(); i++) {
+        for ( var pos: lLinueupPos ){
+            MatchRoleID roleId = pos.getPositionBySpielerId(playerID);
 
             if (roleId != null) {
                 if (weekTrainTyp.getPrimaryTrainingSkillPositions() != null) {
@@ -200,151 +199,27 @@ public class TrainingPreviewPlayers implements Refreshable {
     private void getMatchesForTraining() {
 
         if (!isFuturMatchInit) {
-            final int lastHrfId = DBManager.instance().getLatestHrfId();
-            List<MatchObj> matches = new ArrayList<>();
+            var lastTraining = TrainingManager.instance().getLastTrainingWeek();
+
             lMatchStats = new ArrayList<>();
             lLinueupPos = new ArrayList<>();
             isFuturMatchInit = true;
 
-
-            if (lastHrfId > -1) {
-                Timestamp previousTrainingDate = DBManager.instance()
-                        .getXtraDaten(lastHrfId)
-                        .getTrainingDate();
-
-                int nextWeekTrain = getNextWeekTraining();
-
-                if ((nextWeekTrain > -1) && (previousTrainingDate != null)){
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(previousTrainingDate);
-                    weekTrainTyp = WeeklyTrainingType.instance(nextWeekTrain);
-                    int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-
-                    try {
-                        final ResultSet matchRS = DBManager.instance().getAdapter().executeQuery(createQuery(cal));
-
-                        if (matchRS == null) {
-                            return;
-                        }
-
-                        while (matchRS.next()) {
-
-                            matches.add(new MatchObj(matchRS.getInt("MATCHID"),
-                                    matchRS.getInt("MATCHTYP"),
-                                    matchRS.getInt("STATUS")));
-                        }
-
-                        matchRS.close();
-                    } catch (Exception e1) {
-                        HOLogger.instance().log(getClass(), e1);
-                    }
-
-                    for (int i = 0; i < matches.size(); i++) {
-
-                        final MatchObj matchInfo = (matches.get(i));
-
-                        if (matchInfo.getStatus() == MatchKurzInfo.FINISHED) {
-                            //Get the MatchLineup by id
-                            MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(matchInfo.getMatchid(), myID);
-                            lMatchStats.add(new MatchStatistics(matchInfo.getMatchid(), mlt));
-
-                        }
-                        else if (matchInfo.getStatus() == MatchKurzInfo.UPCOMING) {
-                            LineupPosition lineuppos = DBManager.instance().getMatchOrder(matchInfo.getMatchid(), MatchType.getById(matchInfo.getMatchtyp()));
-                            if (lineuppos != null)
-                                lLinueupPos.add(lineuppos);
-                       }
+            if (lastTraining != null) {
+                weekTrainTyp = WeeklyTrainingType.instance(lastTraining.getTrainingType());
+                for (var matchInfo : lastTraining.getMatches()) {
+                    if (matchInfo.getMatchStatus() == MatchKurzInfo.FINISHED) {
+                        //Get the MatchLineup by id
+                        //MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(matchInfo.getMatchID(), MatchKurzInfo.user_team_id);
+                        var mlt = matchInfo.getMatchdetails().getTeamLineup();
+                        lMatchStats.add(new MatchStatistics(matchInfo, mlt));
+                    } else if (matchInfo.getMatchStatus() == MatchKurzInfo.UPCOMING) {
+                        LineupPosition lineuppos = DBManager.instance().getMatchOrder(matchInfo.getMatchID(), matchInfo.getMatchTyp());
+                        if (lineuppos != null)
+                            lLinueupPos.add(lineuppos);
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * create request for getting matchs
-     *
-     * @param calendar:     training week date
-     * @return
-     */
-    private String createQuery(Calendar calendar) {
-        final Timestamp ts = new Timestamp(calendar.getTimeInMillis());
-        final Calendar old = (Calendar) calendar.clone();
-
-        // set time one week back
-        old.add(Calendar.WEEK_OF_YEAR, -1);
-
-        final Timestamp ots = new Timestamp(old.getTimeInMillis());
-        final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-        final String sdbquery = "SELECT MATCHID,MATCHTYP,STATUS FROM MATCHESKURZINFO WHERE " + "( HEIMID=" + teamId
-                + " OR GASTID=" + teamId + " ) " + "AND MatchDate BETWEEN '"
-                + ots.toString() + "' AND '" + ts.toString() + "' "
-                + " AND (MatchTyp=" + MatchType.QUALIFICATION.getId()
-                + " OR MatchTyp=" + MatchType.LEAGUE.getId()
-                + " OR MatchTyp=" + MatchType.CUP.getId()
-                + " OR MatchTyp=" + MatchType.FRIENDLYNORMAL.getId()
-                + " OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId()
-                + " OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId()
-                + " OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId()
-                + " OR MatchTyp=" + MatchType.EMERALDCUP.getId()
-                + " OR MatchTyp=" + MatchType.RUBYCUP.getId()
-                + " OR MatchTyp=" + MatchType.SAPPHIRECUP.getId()
-                + " OR MatchTyp=" + MatchType.CONSOLANTECUP.getId() + " )"
-                + " AND (STATUS=" + MatchKurzInfo.FINISHED + " OR STATUS=" + MatchKurzInfo.UPCOMING + ")"
-                + " ORDER BY MatchDate DESC";
-        return sdbquery;
-    }
-
-    /**
-     * match object object
-     */
-    private static class MatchObj {
-
-        private int matchid;
-        private int matchtyp;
-        private int status;
-
-        //~ Constructors -------------------------------------------------------------------------------
-
-        /**
-         * create MatchObj object
-         *
-         * @param matchid:  match id
-         * @param matchtyp: match type
-         * @param status:   status of match (finish/upcoming)
-         */
-        public MatchObj(int matchid, int matchtyp, int status) {
-            this.matchid = matchid;
-            this.matchtyp = matchtyp;
-            this.status = status;
-        }
-
-        //~ Methods ------------------------------------------------------------------------------------
-
-        /**
-         * get match id
-         *
-         * @return  match id
-         */
-        public int getMatchid() {
-            return matchid;
-        }
-
-        /**
-         * get match type
-         *
-         * @return  match type
-         */
-        public int getMatchtyp() {
-            return matchtyp;
-        }
-
-        /**
-         * get match status
-         *
-         * @return  match status
-         */
-        public int getStatus() {
-            return status;
         }
     }
 }

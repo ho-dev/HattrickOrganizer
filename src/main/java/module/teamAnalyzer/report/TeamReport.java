@@ -254,4 +254,8 @@ public class TeamReport {
     public void  setSelection(int selection){
         this.selection = selection;
     }
+
+    public boolean isEmpty() {
+        return this.matchDetails.isEmpty();
+    }
 }

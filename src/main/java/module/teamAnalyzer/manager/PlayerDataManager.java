@@ -21,13 +21,15 @@ public class PlayerDataManager {
 		return DBManager.instance().getTALatestPlayerInfo(playerId);
 	}
 
+	public static PlayerInfo getPlayerInfo(int id) {
+		return DBManager.instance().getTAPlayerInfo(id, getCurrentHTWeek(), getCurrentHTSeason());
+	}
 	public static PlayerInfo getPlayerInfo(int id, int week, int season) {
 		return DBManager.instance().getTAPlayerInfo(id, week, season);
 	}
 
 	public static void update(List<PlayerInfo> players) {
-		for (Iterator<PlayerInfo> iter = players.iterator(); iter.hasNext();) {
-			PlayerInfo parsedPlayer = iter.next();
+		for (PlayerInfo parsedPlayer : players) {
 			setPlayer(parsedPlayer);
 		}
 	}

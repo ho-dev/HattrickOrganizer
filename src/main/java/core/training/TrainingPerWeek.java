@@ -1,10 +1,13 @@
 package core.training;
 
+import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.XtraData;
+import core.model.match.MatchKurzInfo;
+import core.model.match.MatchType;
 import module.transfer.test.HTWeek;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -12,9 +15,8 @@ import java.util.Date;
  */
 public class TrainingPerWeek  {
     //~ Instance fields ----------------------------------------------------------------------------
+    private MatchKurzInfo[] matches;
 
-    private int _HTSeason = -1;
-    private int _HTWeek = -1;
     private int _HRFID;
     private int _Intensity = -1;
     private int _Stamina = -1;
@@ -25,19 +27,14 @@ public class TrainingPerWeek  {
     private Timestamp nextTrainingDate = null;
     private Timestamp trainingDate = null;
     private int assistants = -1;
-    
+    private HattrickDate hattrickDate;
+
     //~ Constructors -------------------------------------------------------------------------------
     public TrainingPerWeek() {
     	
     }
     /**
      * Creates a new Training object.
-     *
-     * @param week
-     * @param year
-     * @param trType
-     * @param intensity
-     * @param stamina
      */
     public TrainingPerWeek(int week, int year, int trType, int intensity, int stamina) {
         this._Week = week;
@@ -48,21 +45,6 @@ public class TrainingPerWeek  {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public final void setHattrickSeason(int i) {
-        _HTSeason = i;
-    }
-
-    public final int getHattrickSeason() {
-        return _HTSeason;
-    }
-
-    public final void setHattrickWeek(int i) {
-        _HTWeek = i;
-    }
-
-    public final int getHattrickWeek() {
-        return _HTWeek;
-    }
 
     public final void setHrfId(int i) {
         _HRFID = i;
@@ -111,19 +93,17 @@ public class TrainingPerWeek  {
      */
     @Override
 	public final String toString() {
-        final StringBuffer buffer = new StringBuffer();
-        buffer.append("TrainingPerWeek[");
-        buffer.append("intensity = " + _Intensity);
-        buffer.append(", staminaTrainingPart = " + _Stamina);
-        buffer.append(", typ = " + _TrainingType);
-        buffer.append(", week = " + _Week);
-        buffer.append(", year = " + _Year);
-        buffer.append(", hattrickWeek = " + _HTWeek);
-        buffer.append(", hattrickSeason = " + _HTSeason);
-        buffer.append(", trainDate = " + trainingDate);
-        buffer.append(", hrfId = " + _HRFID);
-        buffer.append("]");
-        return buffer.toString();
+        return "TrainingPerWeek[" +
+                "intensity = " + _Intensity +
+                ", staminaTrainingPart = " + _Stamina +
+                ", typ = " + _TrainingType +
+                ", week = " + _Week +
+                ", year = " + _Year +
+                ", hattrickWeek = " + this.hattrickDate.getWeek() +
+                ", hattrickSeason = " + this.hattrickDate.getSeason() +
+                ", trainDate = " + trainingDate +
+                ", hrfId = " + _HRFID +
+                "]";
     }
 	public int getPreviousHrfId() {
 		return _PreviousHRFID;
@@ -141,8 +121,8 @@ public class TrainingPerWeek  {
 	public Timestamp getTrainingDate() {
 	    if ( trainingDate == null){
             HTWeek week = new HTWeek();
-            week.setSeason(this._HTSeason);
-            week.setWeek(this._HTWeek);
+            week.setSeason(this.hattrickDate.getSeason());
+            week.setWeek(this.hattrickDate.getWeek());
             Date d = week.toDate();
             long trainingOffset = getTrainingOffset();
             trainingDate = new Timestamp(new Date(d.getTime()+trainingOffset).getTime());
@@ -166,7 +146,7 @@ public class TrainingPerWeek  {
     /**
 	 *  Sets the date of the training at the start of this training week.
 	 *	
-	 * @param Timestamp with the training date.
+	 * @param date with the training date.
 	 */
 	public void setTrainingDate(Timestamp date) {
 		trainingDate = date;
@@ -184,7 +164,7 @@ public class TrainingPerWeek  {
 	/**
 	 * Sets the time of the next training. 
 	 * 
-	 * @param A Timestamp containing the time
+	 * @param t Timestamp containing the time
 	 */
 	public void setNextTrainingDate(Timestamp t) {
 		nextTrainingDate = t;
@@ -207,7 +187,39 @@ public class TrainingPerWeek  {
 	public void setAssistants(int assistants) {
 		this.assistants = assistants;
 	}
-	
-	
-	
+
+    public MatchKurzInfo[] getMatches() {
+        if (matches == null) {
+            matches = getMatches(MatchKurzInfo.user_team_id);
+        }
+        return matches;
+    }
+
+    public MatchKurzInfo[] getMatches(int teamId) {
+
+        final Calendar old = Calendar.getInstance();
+        old.setTimeInMillis(this.trainingDate.getTime());
+        // set time one week back
+        old.add(Calendar.WEEK_OF_YEAR, -1);
+
+        final Timestamp ots = new Timestamp(old.getTimeInMillis());
+        final String sdbquery = "SELECT * FROM MATCHESKURZINFO WHERE "
+                + "( HEIMID=" + teamId
+                + " OR GASTID=" + teamId + " )"
+                + " AND MatchDate BETWEEN '" + ots.toString() + "' AND '" + this.trainingDate.toString() + "' "
+                + " AND MatchTyp>" + MatchType.NONE.getId()
+                + " AND MatchTyp<" + MatchType.TOURNAMENTGROUP.getId()
+                + " AND STATUS=" + MatchKurzInfo.FINISHED
+                + " ORDER BY MatchDate DESC";
+
+        return DBManager.instance().getMatchesKurzInfo(sdbquery);
+    }
+
+    public HattrickDate getHattrickDate() {
+        return hattrickDate;
+    }
+
+    public void setHattrickDate(HattrickDate hattrickDate) {
+        this.hattrickDate = hattrickDate;
+    }
 }

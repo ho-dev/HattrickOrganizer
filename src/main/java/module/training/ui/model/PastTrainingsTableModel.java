@@ -62,8 +62,8 @@ public class PastTrainingsTableModel extends AbstractTrainingsTableModel {
 		// for each training week
 		for (TrainingPerWeek training : this.trainings) {
 			Object[] aobj = (new Object[] {
-					training.getHattrickWeek() + "",
-					training.getHattrickSeason() + "",
+					training.getHattrickDate().getWeek() + "",
+					training.getHattrickDate().getSeason() + "",
 					new CBItem(TrainingType.toString(training.getTrainingType()),
 							training.getTrainingType()),
 					new Integer(training.getTrainingIntensity()),

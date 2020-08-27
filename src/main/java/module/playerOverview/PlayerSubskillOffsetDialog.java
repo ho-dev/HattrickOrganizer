@@ -163,7 +163,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 				1,
 				1f,
 				80);
-		ret.setValue((float) m_clPlayer.getSubskill4Pos(skill) * 100f);
+		ret.setValue((float) m_clPlayer.getSub4Skill(skill) * 100f);
 		panel.add(ret);
 		return ret;
 	}

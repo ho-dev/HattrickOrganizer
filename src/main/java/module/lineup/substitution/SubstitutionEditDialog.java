@@ -1,11 +1,8 @@
 package module.lineup.substitution;
 
-import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.util.GUIUtils;
-import module.lineup.AufstellungsDetailPanel;
 import module.lineup.Lineup;
-import module.lineup.LineupPanel;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
 
@@ -55,10 +52,6 @@ public class SubstitutionEditDialog extends JDialog {
 		return this.canceled;
 	}
 
-	public Substitution getSubstitution() {
-		return this.behaviourView.getSubstitution();
-	}
-
 	private void initDialog() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setDlgTitle();
@@ -67,18 +60,12 @@ public class SubstitutionEditDialog extends JDialog {
 	}
 
 	private void setDlgTitle() {
-		String dlgTitleKey = null;
-		switch (this.orderType) {
-		case NEW_BEHAVIOUR:
-			dlgTitleKey = "subs.TypeOrder";
-			break;
-		case SUBSTITUTION:
-			dlgTitleKey = "subs.TypeSub";
-			break;
-		case POSITION_SWAP:
-			dlgTitleKey = "subs.TypeSwap";
-			break;
-		}
+		String dlgTitleKey = switch (this.orderType) {
+			case NEW_BEHAVIOUR -> "subs.TypeOrder";
+			case SUBSTITUTION -> "subs.TypeSub";
+			case POSITION_SWAP -> "subs.TypeSwap";
+			default -> null;
+		};
 		setTitle(HOVerwaltung.instance().getLanguageString(dlgTitleKey));
 	}
 
@@ -107,7 +94,6 @@ public class SubstitutionEditDialog extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				behaviourView.setSubstitution();
 				canceled = false;
 				dispose();
 			}

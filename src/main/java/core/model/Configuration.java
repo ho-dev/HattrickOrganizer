@@ -1,23 +1,20 @@
 package core.model;
 
-import java.awt.Color;
-import java.util.HashMap;
+import java.util.Map;
 
 
 public abstract class Configuration {
 
-	public String getStringValue(HashMap<String, String> values,String key) {
+	public String getStringValue(Map<String, String> values, String key) {
 		return String.valueOf(values.get(key)); 
 	}
 	
-	public boolean getBooleanValue(HashMap<String, String> values,String key) {
+	public boolean getBooleanValue(Map<String, String> values,String key) {
 		String value = String.valueOf(values.get(key));
-		if (value.equalsIgnoreCase("true"))
-			return true;
-		return false;
+		return "true".equalsIgnoreCase(value);
 	}
 
-	public int getIntValue(HashMap<String, String> values,String key) {
+	public int getIntValue(Map<String, String> values, String key) {
 		String value = String.valueOf(values.get(key));
 		try {
 			return Integer.parseInt(value);
@@ -26,7 +23,7 @@ public abstract class Configuration {
 		return 0;
 	}
 
-	public float getFloatValue(HashMap<String, String> values,String key) {
+	public float getFloatValue(Map<String, String> values,String key) {
 		String value = String.valueOf(values.get(key));
 		try {
 			return Float.parseFloat(value);
@@ -35,26 +32,17 @@ public abstract class Configuration {
 		return 0f;
 	}
 	
-	public Color getColorValue(HashMap<String, String> values, String key) {
-		String value = String.valueOf(values.get(key));
-		try {
-			return new Color(Integer.parseInt(value));
-		} catch (NumberFormatException e) {
-		}
-		return new Color(0);		
-	}
-	
 	/**
 	 * Values for saving in db.
 	 * 
-	 * @return HashMap
+	 * @return Map – map containing key-value pairs representing configuration values.
 	 */
-	public abstract HashMap<String, String> getValues();
+	public abstract Map<String, String> getValues();
 	
 	/**
 	 * load values to set properties in object
 	 * @param values
 	 */
-	public abstract void setValues(HashMap<String, String> values);
+	public abstract void setValues(Map<String, String> values);
 
 }

@@ -36,7 +36,7 @@ public final class MatchesOverviewColumnModel extends HOTableModel {
 			m_clData[i][2] = title?"":Integer.valueOf(rows[i].getWin());
 			m_clData[i][3] = title?"":Integer.valueOf(rows[i].getDraw());
 			m_clData[i][4] = title?"":Integer.valueOf(rows[i].getLoss());
-			m_clData[i][5] = title?"":String.valueOf(StringUtils.getResultString(rows[i].getHomeGoals(),rows[i].getAwayGoals()));
+			m_clData[i][5] = title?"":String.valueOf(StringUtils.getResultString(rows[i].getHomeGoals(),rows[i].getAwayGoals(), ""));
 		}
 		fireTableDataChanged();						
 	}

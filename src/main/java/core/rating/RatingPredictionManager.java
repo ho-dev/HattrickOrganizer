@@ -4,7 +4,6 @@ import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.gui.HOMainFrame;
 import core.model.Team;
-import core.model.UserParameter;
 import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
 import core.model.match.Weather;
@@ -789,18 +788,8 @@ public class RatingPredictionManager {
     }
 
     public static float getLoyaltyHomegrownBonus(Player player) {
-    	float bonus = 0f;
-    	 if (player.isHomeGrown()) {
-         	bonus += config.getPlayerStrengthParameters().getParam(RatingPredictionParameter.GENERAL, "homegrownbonus");
-         }
-         
-         // Loyalty bonus
-         bonus += (float)config.getPlayerStrengthParameters().getParam(RatingPredictionParameter.GENERAL, "loyaltyMax") 
-         			* player.getLoyalty()
-         			/ (float)config.getPlayerStrengthParameters().getParam(RatingPredictionParameter.GENERAL, "loyaltySkillMax");
-    	
-    	
-    	return bonus;
+    	if (player.isHomeGrown()) return 1.5f;
+    	else return (float)((player.getLoyalty()-1)/19.0);
     }
     
     public double[][] getAllPlayerStrength (double t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType, boolean useLeft, boolean useMiddle, boolean useRight) {
@@ -889,8 +878,8 @@ public class RatingPredictionManager {
             Object lastLvlUp[];
             float skill;
             float subSkill;
-            skill = player.getValue4Skill4(skillType);
-            float subskillFromDB = player.getSubskill4Pos(skillType);
+            skill = player.getValue4Skill(skillType);
+            float subskillFromDB = player.getSub4Skill(skillType);
 //            System.out.println ("t="+skillType+", o="+manualOffset+", s="+subskillFromDB);
             /**
              * If we know the last level up date from this player or
@@ -898,7 +887,7 @@ public class RatingPredictionManager {
              */
             if (subskillFromDB > 0 || 
             		(lastLvlUp = player.getLastLevelUp(skillType)) != null && (Timestamp)lastLvlUp[0] != null && ((Boolean)lastLvlUp[1]).booleanValue())
-                subSkill = player.getSubskill4Pos(skillType);
+                subSkill = player.getSub4Skill(skillType);
             else
             	/**
             	 * Try to guess the sub based on the skill level

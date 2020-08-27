@@ -81,7 +81,7 @@ public class MatchReportPanel extends LazyImagePanel {
 			JLabel timeLabel, eventIcon, eventDescription;
 
 			List<MatchEvent> matchHighlights = details.getHighlights();
-			ImageIcon icon;
+			Icon icon;
 			Boolean bEventHighlighted;
 			Boolean bMatchFinished = false;
 

@@ -27,6 +27,7 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.model.series.Liga;
 import core.model.series.Paarung;
+import core.training.FuturePlayerTraining;
 import core.training.TrainingPerWeek;
 import core.util.HOLogger;
 import core.util.ExceptionUtils;
@@ -62,7 +63,7 @@ public class DBManager {
 	// ----------------------------------------------------------------------------
 
 	/** DB-Adapter */
-	private @Nullable JDBCAdapter m_clJDBCAdapter = null; // new JDBCAdapter();
+	private @Nullable JDBCAdapter m_clJDBCAdapter; // new JDBCAdapter();
 
 	/** all Tables */
 	private final Hashtable<String, AbstractTable> tables = new Hashtable<String, AbstractTable>();
@@ -103,7 +104,7 @@ public class DBManager {
 				if (!dbfolder.exists()) {
 					File parentFolder = new File(UserManager.instance().getDbParentFolder());
 
-					Boolean dbDirectoryCreated = false;
+					boolean dbDirectoryCreated = false;
 					if (parentFolder.canWrite()) {
 						dbDirectoryCreated = dbfolder.mkdirs();
 					} else {
@@ -139,12 +140,12 @@ public class DBManager {
 				String msg = e.getMessage();
 				boolean recover = true;
 
-				if ((msg.indexOf("The database is already in use by another process") > -1)	||
+				if ((msg.contains("The database is already in use by another process"))	||
 						(e instanceof SQLException &&
 							(((SQLException)e).getErrorCode() == ErrorCode.LOCK_FILE_ACQUISITION_FAILURE ||
 									((SQLException)e).getErrorCode() == ErrorCode.LOCK_FILE_ACQUISITION_FAILURE * -1))) {
-					if ((msg.indexOf("Permission denied") > -1)
-							|| msg.indexOf("system cannot find the path") > -1) {
+					if ((msg.contains("Permission denied"))
+							|| msg.contains("system cannot find the path")) {
 						msg = "Could not write to database. Make sure you have write access to the HO directory and its sub-directories.\n"
 								+ "If under Windows make sure to stay out of Program Files or similar.";
 					} else {
@@ -245,10 +246,11 @@ public class DBManager {
 		tables.put(PenaltyTakersTable.TABLENAME, new PenaltyTakersTable(adapter));
 		tables.put(MatchOrderTable.TABLENAME, new MatchOrderTable(adapter));
 		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(adapter));
+		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((adapter)));
 	}
 
 	AbstractTable getTable(String tableName) {
-		return (AbstractTable) tables.get(tableName);
+		return tables.get(tableName);
 	}
 
 	// Accessor
@@ -355,7 +357,7 @@ public class DBManager {
 	/**
 	 * lädt die Player zum angegeben HRF file ein
 	 */
-	public Vector<Player> getSpieler(int hrfID) {
+	public List<Player> getSpieler(int hrfID) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.getSpieler(hrfID);
 	}
@@ -549,6 +551,17 @@ public class DBManager {
 				.getMatchLineupPlayers(matchID, teamID);
 	}
 
+	/**
+	 * Get match inserts of given Player
+	 * @param objectPlayerID id of the player
+	 * @return stored lineup positions of the player
+	 */
+	public List<MatchLineupPlayer> getMatchInserts(int objectPlayerID) {
+		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
+				.getMatchInserts(objectPlayerID);
+	}
+
+
 	// ------------------------------- AufstellungTable
 	// -------------------------------------------------
 
@@ -694,13 +707,6 @@ public class DBManager {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getAllHRFs(minId,
 				maxId, asc);
 	}
-
-//	/**
-//	 * get HRF by Id
-//	 */
-//	public HRF getHrf(int hrfId) {
-//		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHRF(hrfId);
-//	}
 
 	/**
 	 * liefert die aktuelle Id des neuesten HRF-Files
@@ -1196,11 +1202,6 @@ public class DBManager {
 	// -------------------------------------------------
 
 	/**
-	 * Speichert die Spaltenreihenfolge der Tabellen private void
-	 * saveTabellenSpaltenReihenfolge( int[][] spieleruebersicht, int[][]
-	 * aufstellung ) {}
-	 */
-	/**
 	 * Lädt die UserParameter direkt in das UserParameter-SingeltonObjekt
 	 */
 	public void loadUserParameter() {
@@ -1224,19 +1225,19 @@ public class DBManager {
 	// -------------------------------------------------
 
 	/**
-	 * holt die Paarungen zum Plan aus der DB und added sie
+	 * Gets the fixtures for the given <code>plan</code> from the DB, and add them to that plan.
+	 *
+	 * @param plan Schedule for which the fixtures are retrieved, and to which they are added.
 	 */
 	protected void getPaarungen(Spielplan plan) {
 		((PaarungTable) getTable(PaarungTable.TABLENAME)).getPaarungen(plan);
 	}
 
 	/**
-	 * speichert die Paarungen zu einem Spielplan
+	 * Saves the fixtures to an existing game schedule ({@link Spielplan}).
 	 */
-	protected void storePaarung(Vector<Paarung> paarungen, int ligaId,
-			int saison) {
-		((PaarungTable) getTable(PaarungTable.TABLENAME)).storePaarung(
-				paarungen, ligaId, saison);
+	protected void storePaarung(List<Paarung> fixtures, int ligaId, int saison) {
+		((PaarungTable) getTable(PaarungTable.TABLENAME)).storePaarung(fixtures, ligaId, saison);
 	}
 
 	public void deletePaarungTabelle(String[] whereSpalten, String[] whereValues) {
@@ -1350,12 +1351,6 @@ public class DBManager {
 		return StatisticQuery.getFinanzen4Statistik(anzahlHRF);
 	}
 
-//	public double[][] getSpielerFinanzDaten4Statistik(int spielerId,
-//			int anzahlHRF) {
-//		return StatisticQuery.getSpielerFinanzDaten4Statistik(spielerId,
-//				anzahlHRF);
-//	}
-
 	public ArenaStatistikTableModel getArenaStatistikModel(int matchtyp) {
 		return StatisticQuery.getArenaStatistikModel(matchtyp);
 	}
@@ -1378,7 +1373,7 @@ public class DBManager {
 			sqlStmt = sqlStmt + "and matchtyp >7";
 		}
 
-		final ResultSet rs = getAdapter().executeQuery(sqlStmt.toString());
+		final ResultSet rs = getAdapter().executeQuery(sqlStmt);
 
 		if (rs == null) {
 			return 0;
@@ -1400,11 +1395,11 @@ public class DBManager {
 	 * Returns a list of PlayerMatchCBItems for given playerID
 	 */
 	public Vector<SpielerMatchCBItem> getSpieler4Matches(int spielerid) {
-		final Vector<SpielerMatchCBItem> spielerMatchCBItems = new Vector<SpielerMatchCBItem>();
+		final Vector<SpielerMatchCBItem> spielerMatchCBItems = new Vector<>();
 
 		// Get list of all matches containing the playerID
 		try {
-			final Vector<SpielerMatchCBItem> tempSpielerMatchCBItems = new Vector<SpielerMatchCBItem>();
+			final Vector<SpielerMatchCBItem> tempSpielerMatchCBItems = new Vector<>();
 
 			final String sql = "SELECT DISTINCT MATCHLINEUPPLAYER.MatchID, MATCHLINEUPPLAYER.MatchID, MATCHLINEUPPLAYER.Rating, MATCHLINEUP.MatchDate, MATCHLINEUP.HeimName, MATCHLINEUP.HeimID, MATCHLINEUP.GastName, MATCHLINEUP.GastID, MATCHLINEUPPLAYER.HoPosCode, MATCHLINEUP.MatchTyp FROM MATCHLINEUPPLAYER, MATCHLINEUP WHERE MATCHLINEUPPLAYER.SpielerID="
 					+ spielerid
@@ -1433,8 +1428,7 @@ public class DBManager {
 			Date datum = null;
 
 			// Die Spielerdaten zu den Matches holen
-			for (int i = 0; i < tempSpielerMatchCBItems.size(); i++) {
-				final SpielerMatchCBItem item = tempSpielerMatchCBItems.get(i);
+			for (final SpielerMatchCBItem item : tempSpielerMatchCBItems) {
 				try {
 					datum = simpleFormat.parse(item.getMatchdate());
 				} catch (Exception e1) {
@@ -1453,7 +1447,7 @@ public class DBManager {
 						spielerid, filter);
 
 				// Matchdetails
-				final core.model.match.Matchdetails details = getMatchDetails(item
+				final Matchdetails details = getMatchDetails(item
 						.getMatchID());
 
 				// Stimmung und Selbstvertrauen
@@ -1603,12 +1597,12 @@ public class DBManager {
 
 	private void createAllTables() throws SQLException {
 		Object[] allTables = tables.values().toArray();
-		for (int i = 0; i < allTables.length; i++) {
-			AbstractTable table = (AbstractTable) allTables[i];
+		for (Object allTable : allTables) {
+			AbstractTable table = (AbstractTable) allTable;
 			table.createTable();
 			String[] statements = table.getCreateIndizeStatements();
-			for (int j = 0; j < statements.length; j++) {
-				m_clJDBCAdapter.executeUpdate(statements[j]);
+			for (String statement : statements) {
+				m_clJDBCAdapter.executeUpdate(statement);
 			}
 		}
 	}
@@ -1728,19 +1722,6 @@ public class DBManager {
 		((TAPlayerTable) getTable(TAPlayerTable.TABLENAME)).updatePlayer(info);
 	}
 
-//	public void deleteTAOldPlayerInfos() {
-//		((TAPlayerTable) getTable(TAPlayerTable.TABLENAME)).deleteOldPlayers();
-//	}
-
-	/**
-	 * IFA
-	 */
-//
-//	public boolean isIFALeagueIDinDB(int leagueID, boolean homeAway) {
-//		return ((IfaMatchTable) getTable(IfaMatchTable.TABLENAME))
-//				.isLeagueIDinDB(leagueID, homeAway);
-//	}
-
 	public boolean isIFAMatchinDB(int matchId) {
 		return ((IfaMatchTable) getTable(IfaMatchTable.TABLENAME))
 				.isMatchinDB(matchId);
@@ -1791,14 +1772,14 @@ public class DBManager {
 			return "";
 		}
 
-		final StringBuffer buffer = new StringBuffer();
+		final var buffer = new StringBuilder();
 		final char[] chars = text.toCharArray();
 
-		for (int i = 0; i < chars.length; i++) {
-			if (chars[i] == '§') {
+		for (char aChar : chars) {
+			if (aChar == '§') {
 				buffer.append("\\");
-			} else if (chars[i] != '#') {
-				buffer.append(chars[i]);
+			} else if (aChar != '#') {
+				buffer.append(aChar);
 			} else {
 				buffer.append("'");
 			}
@@ -1814,21 +1795,32 @@ public class DBManager {
 		if (text == null) {
 			return "";
 		}
-		final StringBuffer buffer = new StringBuffer();
+		final var buffer = new StringBuilder();
 		final char[] chars = text.toCharArray();
 
-		for (int i = 0; i < chars.length; i++) {
-			int code = (int) chars[i];
-			if ((chars[i] == '"') || (chars[i] == '\'') || (chars[i] == '´')) {
+		for (char aChar : chars) {
+			int code = (int) aChar;
+			if ((aChar == '"') || (aChar == '\'') || (aChar == '´')) {
 				buffer.append("#");
 			} else if (code == 92) {
 				buffer.append("§");
 			} else {
-				buffer.append(chars[i]);
+				buffer.append(aChar);
 			}
 		}
 
 		return buffer.toString();
+	}
+
+	public List<FuturePlayerTraining> getFuturePlayerTrainings(int playerId) {
+		return ((FuturePlayerTrainingTable) getTable(FuturePlayerTrainingTable.TABLENAME))
+				.getFuturePlayerTrainingPlan(playerId);
+	}
+
+	public void storeFuturePlayerTrainings(int spielerID, List<FuturePlayerTraining> futurePlayerTrainings) {
+		((FuturePlayerTrainingTable) getTable(FuturePlayerTrainingTable.TABLENAME))
+				.storeFuturePlayerTrainings(spielerID, futurePlayerTrainings);
+
 	}
 
 }

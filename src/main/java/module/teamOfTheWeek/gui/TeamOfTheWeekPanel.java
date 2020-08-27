@@ -275,7 +275,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 
 	private Map<String, MatchLineupPlayer> getPlayers(int week, Spielplan plan, boolean isBest) {
 		JDBCAdapter db = DBManager.instance().getAdapter();
-		Vector<Paarung> matchIDs;
+		List<Paarung> matchIDs;
 		if (week > 0)
 			matchIDs = plan.getPaarungenBySpieltag(week);
 		else {
@@ -306,7 +306,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		return spieler;
 	}
 
-	private List<MatchLineupPlayer> getPlayetAt(JDBCAdapter db, Vector<Paarung> matchIDs,
+	private List<MatchLineupPlayer> getPlayetAt(JDBCAdapter db, List<Paarung> matchIDs,
 			int position, int number, boolean isBest) {
 		ResultSet rs;
 		String posClase = "";

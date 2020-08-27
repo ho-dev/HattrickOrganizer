@@ -129,9 +129,6 @@ public class Lineup{
 
 	private Ratings oRatings;
 
-	//private List<SpecialEventsPrediction> m_vSpecialEventsPredictions;
-	//private SpecialEventsPredictionManager m_cSpecialEventsPredictionManager;
-
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
 
@@ -148,7 +145,7 @@ public class Lineup{
 	 * Probably up for change with new XML?
 	 */
 	public Lineup(Properties properties) {
-		try {					
+		try {
 			// Positionen erzeugen
 			m_vFieldPositions.add(new MatchRoleID(IMatchRoleID.keeper, Integer
 					.parseInt(properties.getProperty("keeper", "0")), (byte) 0));
@@ -225,58 +222,16 @@ public class Lineup{
 				settings.m_iStyleOfPlay = Integer.parseInt(properties.getProperty("styleofplay", "0"));
 
 			// and read the sub contents
-			for (int i = 0; i < 5; i++) {
-
-				if ((properties.getProperty("subst" + i + "playerorderid") != null)
-						&& (Integer.parseInt(properties.getProperty("subst" + i + "playerorderid")) >= 0)) {
-
-					byte orderTypeId = Byte.parseByte(properties.getProperty("subst" + i
-							+ "ordertype"));
-					int playerIn = Integer.parseInt(properties
-							.getProperty("subst" + i + "playerin"));
-					int playerOut = Integer.parseInt(properties.getProperty("subst" + i
-							+ "playerout"));
-					MatchOrderType matchOrderType;
-					if (orderTypeId == 3) {
-						matchOrderType = MatchOrderType.POSITION_SWAP;
-					} else {
-						if (playerIn == playerOut) {
-							matchOrderType = MatchOrderType.NEW_BEHAVIOUR;
-						} else if ((playerIn <= 0 || playerOut <= 0)) {
-							// allows the correct retrieval of some cases
-							matchOrderType = MatchOrderType.NEW_BEHAVIOUR;
-						} else {
-							matchOrderType = MatchOrderType.SUBSTITUTION;
-						}
-					}
-
-					Substitution sub = new Substitution();
-					sub.setPlayerOrderId(Integer.parseInt(properties.getProperty("subst" + i
-							+ "playerorderid")));
-					sub.setObjectPlayerID(playerIn);
-					sub.setSubjectPlayerID(playerOut);
-					sub.setOrderType(matchOrderType);
-					sub.setMatchMinuteCriteria(Byte.parseByte(properties.getProperty("subst" + i
-							+ "matchminutecriteria")));
-					sub.setRoleId(Byte.parseByte(properties.getProperty("subst" + i + "pos")));
-					sub.setBehaviour(Byte.parseByte(properties.getProperty("subst" + i
-							+ "behaviour")));
-					sub.setRedCardCriteria(RedCardCriteria.getById(Byte.parseByte(properties
-							.getProperty("subst" + i + "card"))));
-					
-					// bugfix: i had a HRF where subst0standing was missing
-					String val = properties.getProperty("subst" + i + "standing");
-					if (StringUtils.isNumeric(val)) {
-						sub.setStanding(GoalDiffCriteria.getById(Byte.parseByte(val)));
-					} else {
-						sub.setStanding(GoalDiffCriteria.ANY_STANDING);
-					}
-					
-					this.substitutions.add(sub);
-				} else {
+			int iSub = 0;
+			while(true){
+				var subs = getSubstitution(properties, iSub++);
+				if (subs != null) {
+					this.substitutions.add(subs);
+				}
+				else {
 					break;
 				}
-			}
+			};
 
 			// Add the penalty takers
 
@@ -300,6 +255,34 @@ public class Lineup{
 			HOLogger.instance().warning(getClass(), "Aufstellung.<init2>: " + e);
 			HOLogger.instance().log(getClass(), e);
 		}
+	}
+
+	private Substitution getSubstitution(Properties properties, int i) {
+		var prefix = "subst" + i;
+		var playerorderString = properties.getProperty(prefix + "playerorderid");
+		if (playerorderString == null) return null;
+		var playerorderid = Integer.parseInt(playerorderString);
+		if (playerorderid < 0) return null;
+
+		// bugfix: i had a HRF where subst0standing was missing
+		String val = properties.getProperty(prefix + "standing");
+		GoalDiffCriteria goalDiffCriteria;
+		if (StringUtils.isNumeric(val)) {
+			goalDiffCriteria = GoalDiffCriteria.getById(Byte.parseByte(val));
+		} else {
+			goalDiffCriteria = GoalDiffCriteria.ANY_STANDING;
+		}
+
+		return  new Substitution(
+				Integer.parseInt(properties.getProperty(prefix + "playerorderid")),
+				Integer.parseInt(properties.getProperty(prefix + "playerin")),
+				Integer.parseInt(properties.getProperty(prefix + "playerout")),
+				Byte.parseByte(properties.getProperty(prefix + "ordertype")),
+				Byte.parseByte(properties.getProperty(prefix + "matchminutecriteria")),
+				Byte.parseByte(properties.getProperty(prefix + "pos")),
+				Byte.parseByte(properties.getProperty(prefix + "behaviour")),
+				RedCardCriteria.getById(Byte.parseByte(properties.getProperty(prefix + "card"))),
+				goalDiffCriteria);
 	}
 
 	/**
@@ -463,7 +446,7 @@ public class Lineup{
 			for (Player player : players) {
 				if (m_clAssi.isPlayerInStartingEleven(player.getSpielerID(), noKeeper)) {
 					double sp = (double) player.getSPskill()
-							+ player.getSubskill4Pos(PlayerSkill.SET_PIECES)
+							+ player.getSub4Skill(PlayerSkill.SET_PIECES)
 							+ RatingPredictionManager.getLoyaltyHomegrownBonus(player);
 					if (sp > maxStandard) {
 						maxStandard = sp;
@@ -525,21 +508,8 @@ public class Lineup{
 		}
 		return value;
 	}
-	
-	/* moved to team analyzers TeamReport.addSpecialEvents
-	public List<SpecialEventsPrediction> getSpecialEventsPredictions() {
-		return m_vSpecialEventsPredictions;
-	}
 
 
-	public void setSpecialEvents()
-	{
-		if ( this.m_cSpecialEventsPredictionManager == null){
-			this.m_cSpecialEventsPredictionManager = new SpecialEventsPredictionManager();
-		}
-		this.m_vSpecialEventsPredictions = this.m_cSpecialEventsPredictionManager.analyzeLineup(this);
-	}
-*/
 	 public void setRatings() {
 		 final RatingPredictionManager rpManager;
 		 Ratings oRatings = new Ratings();
@@ -1129,7 +1099,7 @@ public class Lineup{
 
 
 	/**
-	 * Returns a list with the substitutions for this lineup.
+	 * Returns a list of match orders for this lineup.
 	 * 
 	 * @return the substitutions for this lineup. If there are no substitutions,
 	 *         an empty list will be returned.
@@ -1139,15 +1109,47 @@ public class Lineup{
 	}
 
 	/**
-	 * Sets the provided list of substitutions as the substitution list. A
-	 * proper list got max 5 positions.
+	 * Sets the provided list of match orders as list.
+	 *
+	 * list may contain a maximum of three substitutions
+	 * additional number of position swap and behaviour changes depends on tactic assistant level
+	 * list may contain one man marking order
+	 *
+	 * @param subs List of match orders
 	 */
-
 	public void setSubstitionList(List<Substitution> subs) {
 		if (subs == null) {
 			this.substitutions = new ArrayList<Substitution>();
 		} else {
 			this.substitutions = new ArrayList<Substitution>(subs);
+		}
+	}
+
+	/**
+	 * Set a new man marking match order.
+	 * An existing man marking order will be replaced by the new one.
+	 *
+	 * @param markerId id of own man marking player
+	 * @param opponentMarkedId id of opponents man marked player
+	 */
+	public void setManMarkingOrder(int markerId, int opponentMarkedId){
+		removeManMarkingOrder();	//there can only be one
+		var newSub = new Substitution(MatchOrderType.MAN_MARKING);
+		newSub.setSubjectPlayerID(markerId);
+		newSub.setObjectPlayerID(opponentMarkedId);
+		this.substitutions.add(newSub);
+	}
+
+	/**
+	 * Remove an existing man marking order.
+	 * Does nothing if no man marking order exists.
+	 */
+	public void removeManMarkingOrder() {
+		for ( var s : this.substitutions){
+			if ( s.getOrderType() == MatchOrderType.MAN_MARKING) {
+				this.substitutions.remove(s);
+				break;
+			}
 		}
 	}
 
@@ -1990,6 +1992,9 @@ public class Lineup{
 				setSpielerAtPosition(newRoleId, sub.getSubjectPlayerID(), tactic);
 				break;
 
+			case MAN_MARKING:
+				// TODO: handle man marking orders
+				break;
 			default:
 				HOLogger.instance().error(Lineup.class, String.format("Incorrect Prediction Rating: the following match order has not been considered: %s", sub.getOrderType()));
 				break;

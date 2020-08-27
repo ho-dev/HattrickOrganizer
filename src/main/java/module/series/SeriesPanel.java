@@ -15,16 +15,14 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.DateFormat;
-import java.util.Calendar;
 
 /**
- * Panel, das die Ligatabelle sowie das letzte und das nächste Spiel enthält
+ * Panel displaying the league table, as well as the series history graph.
  */
 public class SeriesPanel extends LazyImagePanel {
 
 	private static final long serialVersionUID = -5179683183917344230L;
-	private JButton printButton;
+
 	private JButton deleteButton;
 	private JComboBox<Spielplan> seasonComboBox;
 	private SeriesTablePanel seriesTable;
@@ -54,20 +52,6 @@ public class SeriesPanel extends LazyImagePanel {
 		fillSaisonCB();
 	}
 
-	private void print() {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(System.currentTimeMillis());
-
-		String titel = HOVerwaltung.instance().getLanguageString("Ligatabelle") + " - "
-				+ HOVerwaltung.instance().getModel().getBasics().getTeamName() + " - "
-				+ DateFormat.getDateTimeInstance().format(calendar.getTime());
-
-		SeriesPrintPanelDialog printDialog = new SeriesPrintPanelDialog(this.model);
-		printDialog.doPrint(titel);
-		printDialog.setVisible(false);
-		printDialog.dispose();
-	}
-
 	private void delete() {
 		if (seasonComboBox.getSelectedItem() != null) {
 			Spielplan spielplan = (Spielplan) seasonComboBox.getSelectedItem();
@@ -94,14 +78,6 @@ public class SeriesPanel extends LazyImagePanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				delete();
-			}
-		});
-
-		this.printButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				print();
 			}
 		});
 
@@ -204,15 +180,8 @@ public class SeriesPanel extends LazyImagePanel {
 		deleteButton.setBackground(ThemeManager.getColor(HOColorName.BUTTON_BG));
 		toolbarPanel.add(deleteButton);
 
-		printButton = new JButton(ThemeManager.getIcon(HOIconName.PRINTER));
-		printButton.setToolTipText(HOVerwaltung.instance().getLanguageString(
-				"tt_Ligatabelle_SaisonDrucken"));
-		printButton.setSize(25, 25);
-		printButton.setLocation(255, 5);
-		toolbarPanel.add(printButton);
-
-		promotionInfoPanel.setSize(650, 40);
-		promotionInfoPanel.setLocation(290, 0);
+		promotionInfoPanel.setSize(650, 30);
+		promotionInfoPanel.setLocation(290, 5);
 		toolbarPanel.add(promotionInfoPanel);
 
 		toolbarPanel.setPreferredSize(new Dimension(240, 35));

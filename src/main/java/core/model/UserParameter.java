@@ -2,11 +2,9 @@ package core.model;
 
 import core.db.DBManager;
 import core.util.GUIUtils;
-import core.util.HOLogger;
 import module.lineup.LineupAssistant;
-
-import java.awt.*;
 import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -27,16 +25,6 @@ public final class UserParameter extends Configuration {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    //Colors for player names
-    public Color FG_STANDARD = Color.black;
-    public Color FG_TRANSFERMARKT = new Color(0, 180, 0);
-    public Color FG_INJURED = new Color(200, 0, 0);
-    public Color FG_BRUISED = new Color(100, 0, 0);
-    public Color FG_TWO_YELLOW_CARDS = new Color(100, 100, 0);
-    public Color FG_RED_CARD = new Color(200, 20, 20);
-
-    //    public String LoginName = "";
-//    public String LoginPWD = "";
     public String AccessToken = "";
     public String TokenSecret = "";
 
@@ -258,20 +246,12 @@ public final class UserParameter extends Configuration {
     public int training_mainSplitPane = 300;
     public int training_lowerLeftSplitPane = 200;
     public int training_pastFutureTrainingsSplitPane = 200;
-    
+
     public int teamAnalyzer_SimButtonSplitPane = 667;
     public int teamAnalyzer_RatingPanelSplitPane = 143;
     public int teamAnalyzer_FilterPanelSplitPane = 237;
     public int teamAnalyzer_MainPanelSplitPane = 532;
     public int teamAnalyzer_BottomSplitPane = 500;
-    //Breite der BestPos-Spalte
-
-    /**
-     * @since 1.361
-     * @deprecated column width configurable
-     */
-    @Deprecated
-    public int bestPostWidth = 140;
 
     //Wecker vor der Deadliniezeit
     public int deadlineFrist = 300000;
@@ -419,16 +399,8 @@ public final class UserParameter extends Configuration {
     }
 
     @Override
-    public HashMap<String, String> getValues() {
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("FG_ANGESCHLAGEN", String.valueOf(FG_BRUISED.getRGB()));
-        map.put("FG_GESPERRT", String.valueOf(FG_RED_CARD.getRGB()));
-        map.put("FG_STANDARD", String.valueOf(FG_STANDARD.getRGB()));
-        map.put("FG_TRANSFERMARKT", String.valueOf(FG_TRANSFERMARKT.getRGB()));
-        map.put("FG_VERLETZT", String.valueOf(FG_INJURED.getRGB()));
-        map.put("FG_ZWEIKARTEN", String.valueOf(FG_TWO_YELLOW_CARDS.getRGB()));
-//		map.put("LoginName",String.valueOf(LoginName));
-//		map.put("LoginPWD",MyHelper.cryptString(String.valueOf(LoginPWD)));
+    public Map<String, String> getValues() {
+        Map<String, String> map = new HashMap<>();
 
         map.put("AccessToken", String.valueOf(AccessToken));
         map.put("TokenSecret", String.valueOf(TokenSecret));
@@ -566,7 +538,6 @@ public final class UserParameter extends Configuration {
         map.put("aufstellungsPanel_horizontalRightSplitPane", String.valueOf(aufstellungsPanel_horizontalRightSplitPane));
         map.put("aufstellungsPanel_verticalSplitPane", String.valueOf(aufstellungsPanel_verticalSplitPane));
         map.put("aufstellungsPanel_verticalSplitPaneLow", String.valueOf(aufstellungsPanel_verticalSplitPaneLow));
-        map.put("bestPostWidth", String.valueOf(bestPostWidth));
         map.put("deadlineFrist", String.valueOf(deadlineFrist));
         map.put("hoMainFrame_PositionX", String.valueOf(hoMainFrame_PositionX));
         map.put("hoMainFrame_PositionY", String.valueOf(hoMainFrame_PositionY));
@@ -647,16 +618,7 @@ public final class UserParameter extends Configuration {
     }
 
     @Override
-    public void setValues(HashMap<String, String> values) {
-        FG_BRUISED = getColorValue(values, "FG_ANGESCHLAGEN");
-        FG_RED_CARD = getColorValue(values, "FG_GESPERRT");
-        FG_STANDARD = getColorValue(values, "FG_STANDARD");
-        FG_TRANSFERMARKT = getColorValue(values, "FG_TRANSFERMARKT");
-        FG_INJURED = getColorValue(values, "FG_VERLETZT");
-        FG_TWO_YELLOW_CARDS = getColorValue(values, "FG_ZWEIKARTEN");
-
-//		LoginName = getStringValue(values,"LoginName");
-//		LoginPWD = MyHelper.decryptString(getStringValue(values,"LoginPWD"));
+    public void setValues(Map<String, String> values) {
         AccessToken = getStringValue(values, "AccessToken");
         TokenSecret = getStringValue(values, "TokenSecret");
 
@@ -796,7 +758,6 @@ public final class UserParameter extends Configuration {
         aufstellungsPanel_horizontalRightSplitPane = getIntValue(values, "aufstellungsPanel_horizontalRightSplitPane");
         aufstellungsPanel_verticalSplitPane = getIntValue(values, "aufstellungsPanel_verticalSplitPane");
         aufstellungsPanel_verticalSplitPaneLow = getIntValue(values, "aufstellungsPanel_verticalSplitPaneLow");
-        bestPostWidth = getIntValue(values, "bestPostWidth");
         deadlineFrist = getIntValue(values, "deadlineFrist");
         hoMainFrame_PositionX = getIntValue(values, "hoMainFrame_PositionX");
         hoMainFrame_PositionY = getIntValue(values, "hoMainFrame_PositionY");
@@ -876,4 +837,5 @@ public final class UserParameter extends Configuration {
 
         promotionManagerTest = getBooleanValue(values, "promotionManagerTest");
     }
+
 }

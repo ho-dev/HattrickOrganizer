@@ -267,7 +267,7 @@ class SeriesTablePanel extends ImagePanel {
 						((ColorLabelEntry) tableValues[j][5]).setText(eintrag.getG_Un() + "");
 						((ColorLabelEntry) tableValues[j][6]).setText(eintrag.getG_Nied() + "");
 						((ColorLabelEntry) tableValues[j][7]).setText(StringUtils.getResultString(
-								eintrag.getToreFuer(), eintrag.getToreGegen()));
+								eintrag.getToreFuer(), eintrag.getToreGegen(), ""));
 						((ColorLabelEntry) tableValues[j][8]).setSpecialNumber(
 								eintrag.getGesamtTorDiff(), false);
 

@@ -2,7 +2,6 @@ package core.gui.model;
 
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
-//import core.epv.EPVData;
 import core.db.DBManager;
 import core.gui.comp.entry.*;
 import core.gui.theme.HOColorName;
@@ -16,9 +15,7 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.util.HTCalendarFactory;
 import core.util.Helper;
-import core.util.StringUtils;
 import module.playerOverview.SpielerStatusLabelEntry;
 
 import java.awt.Color;
@@ -109,16 +106,15 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem) {
                 ColorLabelEntry colorLabelEntry = new ColorLabelEntry(ImageUtilities
-                        .getJerseyIcon(MatchRoleID
-                                        .getHTPosidForHOPosition4Image((byte) spielerCBItem
-                                                .getPosition()),
-                                (byte) 0, 0),
-                        -MatchRoleID.getSortId((byte) spielerCBItem
-                                .getPosition(), false),
+                        .getJerseyIcon(
+                                MatchRoleID.getHTPosidForHOPosition4Image((byte) spielerCBItem.getPosition()),
+                                (byte) 0,
+                                0
+                        ),
+                        -MatchRoleID.getSortId((byte) spielerCBItem.getPosition(), false),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-                colorLabelEntry.setText(MatchRoleID.getNameForPosition((byte) spielerCBItem
-                        .getPosition())
+                colorLabelEntry.setText(MatchRoleID.getNameForPosition((byte) spielerCBItem.getPosition())
                         + " ("
                         + spielerCBItem.getSpieler().calcPosValue((byte) spielerCBItem
                                 .getPosition(),
@@ -463,17 +459,15 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
                 final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
-                return new ColorLabelEntry(StringUtils.getResultString(match.getHeimTore(),
-                        match.getGastTore()),
+                return new ColorLabelEntry(match.getMatchdetails().getResultLong(),
                         ColorLabelEntry.FG_STANDARD, background,
-                        SwingConstants.CENTER);
+                        SwingConstants.LEFT);
             }
 
             @Override
             public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem) {
                 final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
-                return new ColorLabelEntry(StringUtils.getResultString(spielerCBItem.getMatchdetails().getHomeGoals(),
-                        spielerCBItem.getMatchdetails().getGuestGoals()),
+                return new ColorLabelEntry(spielerCBItem.getMatchdetails().getResultEx(),
                         ColorLabelEntry.FG_STANDARD, background,
                         SwingConstants.CENTER);
             }
@@ -540,164 +534,6 @@ final public class UserColumnFactory {
 
         return matchesArray;
     }
-
-
-    /*	*//**
-     *
-     * @return MatchKurzInfoColumn[]
-     *//*
-	public static MatchKurzInfoColumn[] createMatchesArray(){
-		final MatchKurzInfoColumn[] matchesArray = new MatchKurzInfoColumn[6];
-		matchesArray[0] = new MatchKurzInfoColumn(450,"Datum",70){
-			@Override
-			public IHOTableEntry getTableEntry(MatchKurzInfo match){
-				final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
-				return new ColorLabelEntry(match.getMatchDateAsTimestamp().getTime(),
-                        java.text.DateFormat.getDateTimeInstance().format(match
-                                .getMatchDateAsTimestamp()),
-                                ColorLabelEntry.FG_STANDARD, background,
-                                SwingConstants.LEFT);
-			}
-
-			@Override
-			public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem){
-				return new ColorLabelEntry(spielerCBItem.getMatchdate(),
-                    ColorLabelEntry.FG_STANDARD,
-                    ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
-			}
-		};
-
-		matchesArray[1] = new MatchKurzInfoColumn(460,"Spielart",20){
-			@Override
-			public IHOTableEntry getTableEntry(MatchKurzInfo match){
-				final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
-				return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHTYPES[match.getMatchTyp().getIconArrayIndex()]),
-                        match.getMatchTyp().getId(), ColorLabelEntry.FG_STANDARD,
-                        background, SwingConstants.CENTER);
-			}
-
-			@Override
-			public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem){
-				final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
-				return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHTYPES[spielerCBItem.getMatchTyp().getIconArrayIndex()]),
-                        spielerCBItem.getMatchTyp().getId(),
-                        ColorLabelEntry.FG_STANDARD, background,
-                        SwingConstants.CENTER);
-			}
-		};
-
-		matchesArray[2] = new MatchKurzInfoColumn(470,"Heim",60){
-			@Override
-			public IHOTableEntry getTableEntry(MatchKurzInfo match){
-				final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
-				ColorLabelEntry entry = new ColorLabelEntry(match.getHeimName(), ColorLabelEntry.FG_STANDARD,
-                        background, SwingConstants.LEFT);
-				entry.setFGColor((match.getHeimID() == HOVerwaltung.instance().getModel().getBasics()
-                        .getTeamId())?ThemeManager.getColor(HOColorName.TEAM_FG):ThemeManager.getColor(HOColorName.LABEL_FG));
-
-				if (match.getMatchStatus() != MatchKurzInfo.FINISHED)
-					entry.setIcon(ImageUtilities.NOIMAGEICON);
-				else if (match.getHeimTore() > match.getGastTore())
-					entry.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
-				else if (match.getHeimTore() < match.getGastTore())
-					entry.setIcon(ImageUtilities.NOIMAGEICON);
-				else
-					entry.setIcon(ThemeManager.getTransparentIcon("star_gray", Color.WHITE));
-				return entry;
-			}
-
-			@Override
-			public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem){
-				final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
-				ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getHeimteam() + "",
-                        ColorLabelEntry.FG_STANDARD, background,
-                        SwingConstants.LEFT);
-				entry.setFGColor((spielerCBItem.getHeimID() == HOVerwaltung.instance().getModel().getBasics()
-                        .getTeamId())?ThemeManager.getColor(HOColorName.TEAM_FG):ThemeManager.getColor(HOColorName.LABEL_FG));
-				return entry;
-			}
-
-			@Override
-			public void setSize(TableColumn column){
-				column.setMinWidth(60);
-				column.setPreferredWidth((preferredWidth==0)?160:preferredWidth);
-			}
-		};
-
-		matchesArray[3] = new MatchKurzInfoColumn(480,"Gast",60){
-			@Override
-			public IHOTableEntry getTableEntry(MatchKurzInfo match){
-				final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
-				ColorLabelEntry entry = new ColorLabelEntry(match.getGastName(), ColorLabelEntry.FG_STANDARD,
-                        background, SwingConstants.LEFT);
-				entry.setFGColor((match.getGastID() == HOVerwaltung.instance().getModel().getBasics()
-                        .getTeamId())?ThemeManager.getColor(HOColorName.TEAM_FG):ThemeManager.getColor(HOColorName.LABEL_FG));
-
-				if (match.getMatchStatus() != MatchKurzInfo.FINISHED)
-					entry.setIcon(ImageUtilities.NOIMAGEICON);
-				else if (match.getHeimTore() > match.getGastTore())
-					entry.setIcon(ImageUtilities.NOIMAGEICON);
-				else if (match.getHeimTore() < match.getGastTore())
-					entry.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
-				else
-					entry.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY, Color.WHITE));
-
-				return entry;
-			}
-
-			@Override
-			public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem){
-				final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
-				ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getGastteam() + "",
-                        ColorLabelEntry.FG_STANDARD, background,
-                        SwingConstants.LEFT);
-				entry.setFGColor((spielerCBItem.getGastID() == HOVerwaltung.instance().getModel().getBasics()
-                        .getTeamId())?ThemeManager.getColor(HOColorName.TEAM_FG):ThemeManager.getColor(HOColorName.LABEL_FG));
-				return entry;
-			}
-
-			@Override
-			public void setSize(TableColumn column){
-				column.setMinWidth(60);
-				column.setPreferredWidth((preferredWidth==0)?160:preferredWidth);
-			}
-		};
-
-		matchesArray[4] = new MatchKurzInfoColumn(490,"ls.match.result",45){
-			@Override
-			public IHOTableEntry getTableEntry(MatchKurzInfo match){
-				final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
-				return new ColorLabelEntry(StringUtils.getResultString(match.getHeimTore(),
-                        match.getGastTore()),
-                        	ColorLabelEntry.FG_STANDARD, background,
-                        	SwingConstants.CENTER);
-			}
-
-			@Override
-			public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem){
-				final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
-				return new ColorLabelEntry(StringUtils.getResultString(spielerCBItem.getMatchdetails().getHomeGoals(),
-						spielerCBItem.getMatchdetails().getGuestGoals()),
-                        	ColorLabelEntry.FG_STANDARD, background,
-                        	SwingConstants.CENTER);
-			}
-
-		};
-
-		matchesArray[5] = new MatchKurzInfoColumn(500,"ls.match.id",55){
-
-			@Override
-			public IHOTableEntry getTableEntry(MatchKurzInfo match){
-				final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
-				return new ColorLabelEntry(match.getMatchID(), match.getMatchID() + "",
-                        ColorLabelEntry.FG_STANDARD, background,
-                        SwingConstants.RIGHT);
-			}
-		};
-
-		return matchesArray;
-	}
-*/
 
     /**
      * creates an array of various player columns
@@ -929,25 +765,20 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 if (player.getLastMatchRating() > 0) {
-                    //
                     MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId());
-                    if(info==null){
+                    if (info == null) {
                         return new LastMatchLabelEntry((float) player.getLastMatchRating());
-                    }else
+                    } else {
                         return new LastMatchLabelEntry((float) player.getLastMatchRating(), player.getLastMatchDate(), info.getMatchTyp());
+                    }
                 }
                 return new LastMatchLabelEntry();
             }
-
         };
 
         playerAdditionalArray[10] = new PlayerColumn(436, "Marktwert", 140) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-//					EPVData data = HOVerwaltung.instance().getModel().getEPV().getEPVData(player);
-//					double price = HOVerwaltung.instance().getModel().getEPV().getPrice(data);
-//					final String text = Helper.getNumberFormat(true, 0).format(price);
-
                 if (playerCompare == null) {
 
                     return new DoppelLabelEntry(new ColorLabelEntry(0,
@@ -961,9 +792,7 @@ final public class UserColumnFactory {
                                     SwingConstants.RIGHT));
 
                 }
-//					EPVData comparedata = HOVerwaltung.instance().getModel().getEPV().getEPVData(playerCompare);
-                int htweek = HTCalendarFactory.getHTWeek(playerCompare.getHrfDate());
-//					double compareepv = HOVerwaltung.instance().getModel().getEPV().getPrice(comparedata, htweek);
+
                 return new DoppelLabelEntry(new ColorLabelEntry(0,
                         "",
                         ColorLabelEntry.FG_STANDARD,

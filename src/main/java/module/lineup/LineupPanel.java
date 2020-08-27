@@ -126,7 +126,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	}
 
 	/**
-	 * Setzt die Player und Taktiken der einzelnen PositionsPanels neu
+	 * Refresh the players and tactics of each Lineup panels
 	 */
 	public final void update() {
 		aufstellungsPositionsPanel.refresh();
@@ -134,10 +134,9 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		aufstellungSpielerTable.refresh();
 		aufstellungSpielerTableName.refresh();
 
-		// Tabelle und Details der Spielerübersicht refreshen
+		// Refresh the table and details of the player overview
 		core.gui.HOMainFrame.instance().getSpielerUebersichtPanel().refresh();
 
-		aufstellungsPositionsPanel.exportOldLineup("Actual");
 		fireUpdate();
 	}
 

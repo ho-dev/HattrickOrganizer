@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
 
 class HrfDetails {
@@ -49,7 +49,7 @@ class HrfDetails {
 	private int m_Fans;
 	private String m_TeamName;
 	private int m_TeamID;
-	private ImageIcon m_bild;
+	private Icon m_bild;
 
 	private ResultSet m_rs = null;
 	private GregorianCalendar gc = null;
@@ -228,7 +228,7 @@ class HrfDetails {
 	/**
 	 * @return Returns the m_bild.
 	 */
-	ImageIcon getBild() {
+	Icon getBild() {
 		return m_bild;
 	}
 
@@ -421,7 +421,7 @@ class HrfDetails {
 	 * @param iIcon
 	 *            The ImageIcon to set.
 	 */
-	void setBild(ImageIcon iIcon) {
+	void setBild(Icon iIcon) {
 		m_bild = iIcon;
 	}
 

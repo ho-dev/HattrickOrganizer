@@ -1,14 +1,13 @@
 package module.lineup.substitution.plausibility;
 
-import static module.lineup.substitution.model.MatchOrderType.NEW_BEHAVIOUR;
-import static module.lineup.substitution.model.MatchOrderType.POSITION_SWAP;
-import static module.lineup.substitution.model.MatchOrderType.SUBSTITUTION;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import module.lineup.Lineup;
 import module.lineup.LineupAssistant;
 import module.lineup.substitution.LanguageStringLookup;
 import module.lineup.substitution.model.Substitution;
+
+import static module.lineup.substitution.model.MatchOrderType.*;
 
 public class PlausibilityCheck {
 
@@ -46,22 +45,19 @@ public class PlausibilityCheck {
 			}
 		}
 
-		// check if players in lineup. (for NEW_BEHAVIOUR, there is only one
-		// player involved)
+		// check if players in lineup.
+		//  - for NEW_BEHAVIOUR, there is only one player involved
+		//  - for MAN_MARKING, the playerIn is member of the opponent team
 		if (substitution.getOrderType() != NEW_BEHAVIOUR
+				&& substitution.getOrderType() != MAN_MARKING
 				&& !lineup.isPlayerInLineup(objectPlayerID)) {
 			return Error.PLAYERIN_NOT_IN_LINEUP;
 		} else if (!lineup.isPlayerInLineup(subjectPlayerID)) {
 			return Error.PLAYEROUT_NOT_IN_LINEUP;
 		}
 
-		// when NEW_BEHAVIOUR, check that behaviour there is really a change
-//		if (substitution.getOrderType() == NEW_BEHAVIOUR) {
-//			MatchRoleID pos = lineup.getPositionBySpielerId(subjectPlayerID);
-//			if (pos.getTaktik() == substitution.getBehaviour()) {
-//				return Uncertainty.SAME_TACTIC;
-//			}
-//		}
+		//TODO: MAN_MARKING - check if playerIn is in opponent team
+
 		return null;
 	}
 

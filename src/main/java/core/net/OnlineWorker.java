@@ -136,8 +136,6 @@ public class OnlineWorker {
 									.setAngezeigteAufstellung(new AufstellungCBItem(
 											getLangString("AktuelleAufstellung"), homodel
 													.getLineup()));
-							homf.getAufstellungsPanel().getAufstellungsPositionsPanel()
-									.exportOldLineup("Actual");
 						}
 						// Info
 						setInfoMsg(getLangString("HRFErfolg"));
@@ -167,7 +165,7 @@ public class OnlineWorker {
 	 */
 	public static List<MatchKurzInfo> getMatchArchive(int teamId, Date firstDate, boolean store) {
 
-		List<MatchKurzInfo> allMatches = new ArrayList<MatchKurzInfo>();
+		List<MatchKurzInfo> allMatches = new ArrayList<>();
 		GregorianCalendar tempBeginn = new GregorianCalendar();
 		tempBeginn.setTime(firstDate);
 		GregorianCalendar tempEnd = new GregorianCalendar();
@@ -286,63 +284,62 @@ public class OnlineWorker {
 
 					waitDialog.setValue(10);
 					details = fetchDetails(matchid, info.getMatchTyp(), null, waitDialog);
-					info.setHeimID(details.getHeimId());
-					info.setGastID( details.getGastId());
-					info.setArenaId( details.getArenaID());
-					info.setMatchDate(details.getSpielDatum().toString());
-					int wetterId = details.getWetterId();
-					if ( wetterId != -1 ){
-						info.setMatchStatus(MatchKurzInfo.FINISHED);
-						info.setWeather(Weather.getById(details.getWetterId()));
-						info.setWeatherForecast(Weather.Forecast.HAPPENED);
-					}
-					else if ( info.getArenaId() > 0) {
-						info.setRegionId(details.getRegionId());
+					if ( details != null) {
+						info.setHeimID(details.getHeimId());
+						info.setGastID(details.getGastId());
+						info.setArenaId(details.getArenaID());
+						info.setMatchDate(details.getSpielDatum().toString());
+						int wetterId = details.getWetterId();
+						if (wetterId != -1) {
+							info.setMatchStatus(MatchKurzInfo.FINISHED);
+							info.setWeather(Weather.getById(details.getWetterId()));
+							info.setWeatherForecast(Weather.Forecast.HAPPENED);
+						} else if (info.getArenaId() > 0) {
+							info.setRegionId(details.getRegionId());
 
-						if ( info.getWeatherForecast().isSure() == false){
-							Regiondetails regiondetails = getRegionDetails(info.getRegionId());
-							SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-							java.sql.Timestamp matchDate = info.getMatchDateAsTimestamp();
-							java.sql.Timestamp weatherDate = regiondetails.getFetchDatum();
-							String wdate = fmt.format(weatherDate);
-							String mdate = fmt.format(matchDate);
-							if ( mdate.equals(wdate)) {
-								info.setWeatherForecast(Weather.Forecast.TODAY);
-								info.setWeather(regiondetails.getWeather());
-							}
-							else {
-								Calendar c = Calendar.getInstance();
-								c.setTime(fmt.parse(wdate));
-								c.add(Calendar.DATE, 1);
-								if ( fmt.format(c.getTime()).equals(mdate)){
-									info.setWeatherForecast(Weather.Forecast.TOMORROW);
+							if (!info.getWeatherForecast().isSure()) {
+								Regiondetails regiondetails = getRegionDetails(info.getRegionId());
+								if ( regiondetails != null) {
+									SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+									java.sql.Timestamp matchDate = info.getMatchDateAsTimestamp();
+									java.sql.Timestamp weatherDate = regiondetails.getFetchDatum();
+									String wdate = fmt.format(weatherDate);
+									String mdate = fmt.format(matchDate);
+									if (mdate.equals(wdate)) {
+										info.setWeatherForecast(Weather.Forecast.TODAY);
+										info.setWeather(regiondetails.getWeather());
+									} else {
+										Calendar c = Calendar.getInstance();
+										c.setTime(fmt.parse(wdate));
+										c.add(Calendar.DATE, 1);
+										if (fmt.format(c.getTime()).equals(mdate)) {
+											info.setWeatherForecast(Weather.Forecast.TOMORROW);
+										} else {
+											info.setWeatherForecast((Weather.Forecast.UNSURE));
+										}
+										info.setWeather(regiondetails.getWeatherTomorrow());
+									}
 								}
-								else {
-									info.setWeatherForecast((Weather.Forecast.UNSURE));
-								}
-								info.setWeather(regiondetails.getWeatherTomorrow());
 							}
 						}
-					}
 
-					// get the other team
-					int otherId;
-					if ( info.isHomeMatch()){
-						otherId = info.getGastID();
-					}
-					else {
-						otherId = info.getHeimID();
-					}
-					if ( otherId > 0 ) {
-						Map<String, String> otherTeam = getTeam(otherId);
-						info.setIsDerby(getRegionId(otherTeam) == HOVerwaltung.instance().getModel().getBasics().getRegionId());
-						info.setIsNeutral(info.getArenaId() != HOVerwaltung.instance().getModel().getStadium().getArenaId()
-								&& info.getArenaId() != getArenaId(otherTeam));
-					}
-					else {
-						// Verlegenheitstruppe 08/15
-						info.setIsDerby(false);
-						info.setIsNeutral(false);
+						// get the other team
+						int otherId;
+						if (info.isHomeMatch()) {
+							otherId = info.getGastID();
+						} else {
+							otherId = info.getHeimID();
+						}
+						if (otherId > 0) {
+							Map<String, String> otherTeam = getTeam(otherId);
+							info.setIsDerby(getRegionId(otherTeam) == HOVerwaltung.instance().getModel().getBasics().getRegionId());
+							info.setIsNeutral(info.getArenaId() != HOVerwaltung.instance().getModel().getStadium().getArenaId()
+									&& info.getArenaId() != getArenaId(otherTeam));
+						} else {
+							// Verlegenheitstruppe 08/15
+							info.setIsDerby(false);
+							info.setIsNeutral(false);
+						}
 					}
 				}
 
@@ -371,6 +368,7 @@ public class OnlineWorker {
 								"Error downloading match. Details is null: " + matchid);
 						return false;
 					}
+					info.setDuration(details.getLastMinute());
 					info.setGastTore(details.getGuestGoals());
 					info.setHeimTore(details.getHomeGoals());
 					info.setGastID(lineup.getGastId());
@@ -513,7 +511,7 @@ public class OnlineWorker {
 	public static List<MatchKurzInfo> getMatches(int teamId, boolean forceRefresh, boolean store,
 			boolean upcoming) {
 		String matchesString = "";
-		List<MatchKurzInfo> matches = new ArrayList<MatchKurzInfo>();
+		List<MatchKurzInfo> matches = new ArrayList<>();
 		boolean bOK = false;
 		waitDialog = getWaitDialog();
 		waitDialog.setVisible(true);
@@ -545,7 +543,6 @@ public class OnlineWorker {
 				waitDialog.setValue(80);
 
 				matches = FilterUserSelection(matches);
-
 				DBManager.instance().storeMatchKurzInfos(
 						matches.toArray(new MatchKurzInfo[matches.size()]));
 
@@ -562,7 +559,6 @@ public class OnlineWorker {
 						// No lineup or arenaId in DB
 						boolean result = downloadMatchData(curMatchId, match.getMatchTyp(), refresh);
 						if (!result) {
-							bOK = false;
 							break;
 						}
 					}
@@ -656,7 +652,6 @@ public class OnlineWorker {
 		// Lineups holen
 		lineUp1 = fetchLineup(matchId, teamId1, matchType);
 		if (lineUp1 != null) {
-			bOK = true;
 			waitDialog.setValue(50);
 			if (teamId2 > 0)
 				lineUp2 = fetchLineup(matchId, teamId2, matchType);
@@ -664,19 +659,19 @@ public class OnlineWorker {
 			// Merge the two
 			if ((lineUp2 != null)) {
 				if (lineUp1.getHeim() == null)
-					lineUp1.setHeim((MatchLineupTeam) lineUp2.getHeim());
+					lineUp1.setHeim(lineUp2.getHeim());
 				else if (lineUp1.getGast() == null)
-					lineUp1.setGast((MatchLineupTeam) lineUp2.getGast());
+					lineUp1.setGast(lineUp2.getGast());
 			} else {
 				// Get the 2nd lineup
 				if (lineUp1.getHeim() == null) {
 					lineUp2 = fetchLineup(matchId, lineUp1.getHeimId(), matchType);
 					if (lineUp2 != null)
-						lineUp1.setHeim((MatchLineupTeam) lineUp2.getHeim());
+						lineUp1.setHeim(lineUp2.getHeim());
 				} else {
 					lineUp2 = fetchLineup(matchId, lineUp1.getGastId(), matchType);
 					if (lineUp2 != null)
-						lineUp1.setGast((MatchLineupTeam) lineUp2.getGast());
+						lineUp1.setGast(lineUp2.getGast());
 				}
 			}
 		}
@@ -922,13 +917,13 @@ public class OnlineWorker {
 		final MatchKurzInfo[] infos = DBManager.instance().getMatchesKurzInfo(-1);
 		String haveLineups = "";
 		boolean bOK = false;
-		for (int i = 0; i < infos.length; i++) {
-			int curMatchId = infos[i].getMatchID();
+		for (MatchKurzInfo info : infos) {
+			int curMatchId = info.getMatchID();
 			if (!DBManager.instance().isMatchLineupInDB(curMatchId)) {
 				// Check if the lineup is available
-				if (infos[i].getMatchStatus() == MatchKurzInfo.FINISHED) {
+				if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					HOLogger.instance().debug(OnlineWorker.class, "Get Lineup : " + curMatchId);
-					bOK = downloadMatchData(curMatchId, infos[i].getMatchTyp(), false);
+					bOK = downloadMatchData(curMatchId, info.getMatchTyp(), false);
 					if (!bOK) {
 						break;
 					}

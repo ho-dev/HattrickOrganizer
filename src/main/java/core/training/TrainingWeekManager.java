@@ -103,11 +103,16 @@ public class TrainingWeekManager {
     	return null;
     }
 
+    public TrainingPerWeek getLastTrainingWeek(){
+    	var list = getTrainingList();
+    	if ( list.size()>0){
+    		return list.get(list.size()-1);
+		}
+    	return null;
+	}
     
     /** Returns a list of TraingPerWeek, one for each week since the first hrf.
      * 
-     * @param overrides An input list of TrainingPerWeek that will override the info for the same
-     * 		week based on hrf content.
      * @return The list of TrainingPerWeek.
      */
     private static List<TrainingPerWeek> generateTrainingList() {
@@ -226,16 +231,12 @@ public class TrainingWeekManager {
    					newTpw.setHrfId(-1);
    					newTpw.setTrainingDate(old.getNextTrainingDate());
    					newTpw.setAssistants(old.getAssistants());
-   					
-   					int htWeek = old.getHattrickWeek() + 1;
-   					if (htWeek == 17) {
-   						newTpw.setHattrickWeek(1);
-   						newTpw.setHattrickSeason(1 + old.getHattrickSeason());
-   					} else {
-   						newTpw.setHattrickWeek(htWeek);
-   						newTpw.setHattrickSeason(old.getHattrickSeason());
-   					}
-   					
+
+   					var newWeek = old.getHattrickDate();
+   					if ( newWeek != null ) {
+						newWeek.addWeeks(1);
+						newTpw.setHattrickDate(newWeek);
+					}
    					old = newTpw;
    					output.add(newTpw);
    					// The previous date is already set at the start of loop.
@@ -356,8 +357,7 @@ public class TrainingWeekManager {
         for (int index = 0; index < trainNumber; index++) {
             train = input.get(index);
             htDate = calculateByDifference(actualSeason, actualWeek, trainNumber - index);
-            train.setHattrickSeason(htDate.getSeason());
-            train.setHattrickWeek(htDate.getWeek());
+            train.setHattrickDate(htDate);
             train.setHrfId(train.getHrfId());
             train.setPreviousHrfId(DBManager.instance().getPreviousHRF(train.getHrfId()));
          }
@@ -376,7 +376,6 @@ public class TrainingWeekManager {
      * @return Hattrick Date
      */
     private static HattrickDate calculateByDifference(int actualSeason, int actualWeek, int pastWeek) {
-        final HattrickDate date = new HattrickDate();
 
         // We need to subtract 1 week because we got the first hrf after download. This contains
         // the training info for the previous week.
@@ -387,8 +386,9 @@ public class TrainingWeekManager {
             actualSeason = actualSeason - a;
             actualWeek = actualWeek + (a * 16);
         }
-        date.setSeason(actualSeason + (actualWeek / 16));
-        date.setWeek((actualWeek % 16) + 1);
-        return date;
+        var s = actualSeason + (actualWeek / 16);
+        var w = (actualWeek % 16) + 1;
+
+        return new HattrickDate(s,w);
     }
 }

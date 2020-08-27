@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updateDescriptor baseUrl="">
+  <entry targetMediaFileId="64" updatableVersionMin="" updatableVersionMax="" fileName="HO-4.0.0.3041-portable-win-DEV.zip" newVersion="4.0.0.3041" newMediaFileId="64" fileSize="18748937" md5Sum="f174124b0376ab43940f85b581a9ff82" sha256Sum="0333fe2049968c7f5d22cfe3a1572363213918f89a2ab09f248f3757b4c7c35a" bundledJre="" archive="true" singleBundle="false">
+    <comment language="en" />
+    <comment language="ar" />
+    <comment language="hr" />
+    <comment language="cs" />
+    <comment language="da" />
+    <comment language="nl" />
+    <comment language="fi" />
+    <comment language="fr" />
+    <comment language="de" />
+    <comment language="el" />
+    <comment language="he" />
+    <comment language="hu" />
+    <comment language="it" />
+    <comment language="ja" />
+    <comment language="ko" />
+    <comment language="no" />
+    <comment language="pl" />
+    <comment language="pt_BR" />
+    <comment language="pt" />
+    <comment language="ro" />
+    <comment language="ru" />
+    <comment language="es" />
+    <comment language="sv" />
+    <comment language="tr" />
+  </entry>
+  <entry targetMediaFileId="60" updatableVersionMin="" updatableVersionMax="" fileName="HOSetup-4.0.0.3041-DEV.exe" newVersion="4.0.0.3041" newMediaFileId="60" fileSize="20899840" md5Sum="01ab4f6866c89bd16131b23299129c27" sha256Sum="3c2d3776f86ce3e020e784ed2aab5840a025feffc293679e64171e64e27dc5ce" bundledJre="" archive="false" singleBundle="false">
+    <comment language="en" />
+    <comment language="ar" />
+    <comment language="hr" />
+    <comment language="cs" />
+    <comment language="da" />
+    <comment language="nl" />
+    <comment language="fi" />
+    <comment language="fr" />
+    <comment language="de" />
+    <comment language="el" />
+    <comment language="he" />
+    <comment language="hu" />
+    <comment language="it" />
+    <comment language="ja" />
+    <comment language="ko" />
+    <comment language="no" />
+    <comment language="pl" />
+    <comment language="pt_BR" />
+    <comment language="pt" />
+    <comment language="ro" />
+    <comment language="ru" />
+    <comment language="es" />
+    <comment language="sv" />
+    <comment language="tr" />
+  </entry>
+  <entry targetMediaFileId="63" updatableVersionMin="" updatableVersionMax="" fileName="HO-4.0.0.3041-DEV.deb" newVersion="4.0.0.3041" newMediaFileId="63" fileSize="18521686" md5Sum="4d2ade93bf9c4673c4a70baa290dc283" sha256Sum="ddf2c6a24336d133a4acc08874dbe2424d026867aa2cf329cdd2d44305813caf" bundledJre="" archive="true" singleBundle="false">
+    <comment language="en" />
+    <comment language="ar" />
+    <comment language="hr" />
+    <comment language="cs" />
+    <comment language="da" />
+    <comment language="nl" />
+    <comment language="fi" />
+    <comment language="fr" />
+    <comment language="de" />
+    <comment language="el" />
+    <comment language="he" />
+    <comment language="hu" />
+    <comment language="it" />
+    <comment language="ja" />
+    <comment language="ko" />
+    <comment language="no" />
+    <comment language="pl" />
+    <comment language="pt_BR" />
+    <comment language="pt" />
+    <comment language="ro" />
+    <comment language="ru" />
+    <comment language="es" />
+    <comment language="sv" />
+    <comment language="tr" />
+  </entry>
+  <entry targetMediaFileId="173" updatableVersionMin="" updatableVersionMax="" fileName="HO-4.0.0.3041-portable-unix-DEV.tar.gz" newVersion="4.0.0.3041" newMediaFileId="173" fileSize="18550898" md5Sum="c7193d6b735d3fc04b7abe0ce9941b4a" sha256Sum="cd584e9de5fd01d444a914c2cd3aa5926ad2f190dbfe3a8a1b34bc0bf969cdff" bundledJre="" archive="true" singleBundle="false">
+    <comment language="en" />
+    <comment language="ar" />
+    <comment language="hr" />
+    <comment language="cs" />
+    <comment language="da" />
+    <comment language="nl" />
+    <comment language="fi" />
+    <comment language="fr" />
+    <comment language="de" />
+    <comment language="el" />
+    <comment language="he" />
+    <comment language="hu" />
+    <comment language="it" />
+    <comment language="ja" />
+    <comment language="ko" />
+    <comment language="no" />
+    <comment language="pl" />
+    <comment language="pt_BR" />
+    <comment language="pt" />
+    <comment language="ro" />
+    <comment language="ru" />
+    <comment language="es" />
+    <comment language="sv" />
+    <comment language="tr" />
+  </entry>
+</updateDescriptor>
