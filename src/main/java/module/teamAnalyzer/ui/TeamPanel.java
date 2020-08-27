@@ -132,7 +132,6 @@ public class TeamPanel extends JPanel {
                         manMarkingOrderDisplay = new ManMarkingOrderDisplay(grassPanel);
                     }
                     manMarkingOrderDisplay.set(from, to);
-                    manMarkingOrderDisplay.setVisible(true);
                 }
                 else {
                     // TODO: Display warning about failed man marking order
@@ -323,7 +322,7 @@ public class TeamPanel extends JPanel {
             g.setStroke(new BasicStroke(5));
             // Draw horizontal arrow starting in (0, 0)
             g.drawLine(0, 0, len, 0);
-            g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
+            g.fillPolygon(new int[] {len+2, len-ARR_SIZE+2, len-ARR_SIZE+2, len+2},
                     new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
         }
 
