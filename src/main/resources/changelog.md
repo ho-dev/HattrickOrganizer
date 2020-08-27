@@ -14,6 +14,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
    - New build process:
      - **HO! now requires Java 14 but artefacts including JRE are made available**
+     - **in-app upgrade is now supported**
      - directory structure has changed (db location, log files, ...)
 
    - [FEAT] Improved HO themes, and implemented dark mode. #85

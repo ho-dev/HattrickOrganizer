@@ -63,6 +63,7 @@ public class HO {
 		return txt;
 	}
 
+	public static boolean isWindows(){ return platform == OSUtils.OS.WINDOWS;}
 
 	/**
 	 *  HO entry point
