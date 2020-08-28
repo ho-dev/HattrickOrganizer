@@ -149,16 +149,18 @@ final class DBUpdater {
 
 		// use defaults player formula from defaults.xml by resetting the value in the database
 		try {
-		AbstractTable faktorenTab = dbManager.getTable(FaktorenTable.TABLENAME);
-		if (faktorenTab != null) {
-			faktorenTab.dropTable();
-			faktorenTab.createTable();
+			AbstractTable faktorenTab = dbManager.getTable(FaktorenTable.TABLENAME);
+			if (faktorenTab != null) {
+				faktorenTab.dropTable();
+				faktorenTab.createTable();
 			}
-		}
-		catch (SQLException throwables) {
+		} catch (SQLException throwables) {
 			HOLogger.instance().error(getClass(), "updateDBv400:  Faktoren table could not be reset");
 			throwables.printStackTrace();
 		}
+
+
+		resetUserColumns();
 
 		//create FuturePlayerTrainingTable
 		if (!tableExists(FuturePlayerTrainingTable.TABLENAME)) {
@@ -166,6 +168,16 @@ final class DBUpdater {
 		}
 
 		updateDBVersion(dbVersion, version);
+	}
+
+	private void resetUserColumns() {
+		HOLogger.instance().debug(getClass(), "Resetting player overview rows.");
+		String sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 2000 AND 3000";
+		m_clJDBCAdapter.executeQuery(sql);
+
+		HOLogger.instance().debug(getClass(), "Resetting lineup overview rows.");
+		sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 3000 AND 4000";
+		m_clJDBCAdapter.executeQuery(sql);
 	}
 
 
@@ -1128,13 +1140,7 @@ final class DBUpdater {
 
 		if (!alreadyApplied) {
 			try {
-				HOLogger.instance().debug(getClass(), "Reseting player overview rows.");
-				String sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 2000 AND 3000";
-				m_clJDBCAdapter.executeQuery(sql);
-
-				HOLogger.instance().debug(getClass(), "Reseting lineup overview rows.");
-				sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 3000 AND 4000";
-				m_clJDBCAdapter.executeQuery(sql);
+				resetUserColumns();
 			} catch (Exception e) {
 				HOLogger.instance().debug(getClass(),
 						"Error updating to config 1431: " + e.getMessage());
