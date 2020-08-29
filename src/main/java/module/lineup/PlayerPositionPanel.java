@@ -24,10 +24,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -254,11 +252,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                     aufstellung.adjustBackupPlayers();
                 }
 
-                //Adjust colors
-                if (player != null) {
-                    m_jcbPlayer.setForeground(SpielerLabelEntry.getForegroundForSpieler(player));
-                }
-
                 //Taktikwerte anpassen
                 setTaktik(getTactic(), player);
             } else if (itemEvent.getSource().equals(m_jcbTactic)) {
@@ -476,12 +469,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             cbmodel.addElement(cbItems[i]);
         }
 
-        //Adjust CB color
-        // Color player name depending of status (injured, warned, ...)
-        if (aktuellerPlayer != null) {
-            m_jcbPlayer.setForeground(SpielerLabelEntry.getForegroundForSpieler(aktuellerPlayer));
-        }
-
         //Listener wieder hinzu
         m_jcbPlayer.addItemListener(this);
 
@@ -568,19 +555,13 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             }
         }
 
-        cbItems = Arrays.stream(cbItems).filter(value -> value != null).toArray(size -> new SpielerCBItem[size]);
+        cbItems = Arrays.stream(cbItems).filter(Objects::nonNull).toArray(SpielerCBItem[]::new);
 
         java.util.Arrays.sort(cbItems);
 
         for (int i = 0; i < cbItems.length; i++) {
             //All Other players
             cbmodel.addElement(cbItems[i]);
-        }
-
-        //Adjust CB color
-        // Color player name depending of status (injured, warned, ...)
-        if (selectedPlayer != null) {
-            m_jcbPlayer.setForeground(SpielerLabelEntry.getForegroundForSpieler(selectedPlayer));
         }
 
         //Listener wieder hinzu
@@ -794,7 +775,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             if (m_iPositionID == IMatchRoleID.setPieces) {
                 item.setValues(spielerName,
                         player.getSPskill()
-                                + player.getSubskill4Pos(PlayerSkill.SET_PIECES)
+                                + player.getSub4Skill(PlayerSkill.SET_PIECES)
                                 + RatingPredictionManager.getLoyaltyHomegrownBonus(player),
                         player, false);
                 return item;

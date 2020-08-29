@@ -3,7 +3,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 # Changelist HO! 4.0
 
-## Some numbers: 
+## Some numbers:
   - xxx commits
   - xxx files changed (xxx additions and xxx deletions)
   - xx issues closed
@@ -14,8 +14,9 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
    - New build process:
      - **HO! now requires Java 14 but artefacts including JRE are made available**
+     - **in-app upgrade is now supported**
      - directory structure has changed (db location, log files, ...)
-   
+
    - [FEAT] Improved HO themes, and implemented dark mode. #85
    - [BUG] Complete rewrite of Special Events module
 
@@ -37,26 +38,36 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ### Rating
 
   - [BUG] Fixes Long Shots tactic level calculation
-  
+
 ### Matches
 
   - [FIX] Some icons fixes in match report
+  - [FEAT] Information about extra time or penalty shoot out in match result #561
 
 ### Lineup
 
   - [FEAT] Provide better defaults for initial position of dividers.
+  - [FIX] Fix bug in download of man marking match orders [#632]
+  - [FIX] Fix bug in upload of position change match orders [#633]
 
 ### Training
 
-  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512 
+  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512
+  - [FIX] Fix bug of training effect of Walkover matches #623
+  - [FEAT] Individual training plans for each player in training preview #587
 
 ### Misc
 
   - [FEAT] Remove jcalendar dependency.
-  - [FIX] ExperienceViewer removed #503 
+  - [FIX] ExperienceViewer removed #503
   - [FIX] Avoid potential infinite loop at startup. [#584]
+  - [FIX] Layout issue in multiple screen setup. [#618]
+  - [FEAT] Remove all printing functionality.
+  - [FEAT] Remove player state colour, and display icons instead in Lineup.
 
 ### League
+
+  - [FEAT] Make Promotion status more visible. [#521]
 
 
 ## Translations
@@ -72,7 +83,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 # Changelist HO! 3.1
 
-## Some numbers: 
+## Some numbers:
   - xxx commits
   - xxx files changed (xxx additions and xxx deletions)
   - xx issues closed
@@ -89,7 +100,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 # Changelist HO! 3.0
 
-## Some numbers: 
+## Some numbers:
   - 90 commits
   - 293 files changed (11,027 additions and 6,341 deletions)
   - 42 issues closed
@@ -104,7 +115,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - impact of special events on score for both you and your opponent based on latest lineup information
 
   - new match report mocking HT full report
-  
+
   - full control on which game to download (e.g. exclude HTO integrated games)
 
 
@@ -163,7 +174,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
    - [FIX] Index Out Of Bounds Exception at startup on new DBs #448
    - [FIX] fix multiple display issues about player names (composed name, nicknames)  #451
    - [FIX] removed deprecated training block feature  #486
-   
+
 
 ### League
 

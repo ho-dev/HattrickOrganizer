@@ -107,7 +107,7 @@ public class TrainingModulePanel extends LazyPanel {
 		}
 		// Main coach
 		if (hoModel.getTrainer() != null) {
-			trainingModel.setTrainerLevel(hoModel.getTrainer().getTrainer());
+			trainingModel.setTrainerLevel(hoModel.getTrainer().getTrainerSkill());
 		} else {
 			trainingModel.setTrainerLevel(4);
 		}

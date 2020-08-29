@@ -9,152 +9,87 @@ import module.lineup.substitution.model.RedCardCriteria;
 public class LanguageStringLookup {
 
 	public static String getOrderType(MatchOrderType orderType) {
-		switch (orderType) {
-		case NEW_BEHAVIOUR:
-			return HOVerwaltung.instance().getLanguageString("subs.TypeOrder");
-		case POSITION_SWAP:
-			return HOVerwaltung.instance().getLanguageString("subs.TypeSwap");
-		case SUBSTITUTION:
-			return HOVerwaltung.instance().getLanguageString("subs.TypeSub");
-		default:
-			return null;
-		}
+		return switch (orderType) {
+			case NEW_BEHAVIOUR -> HOVerwaltung.instance().getLanguageString("subs.TypeOrder");
+			case POSITION_SWAP -> HOVerwaltung.instance().getLanguageString("subs.TypeSwap");
+			case SUBSTITUTION -> HOVerwaltung.instance().getLanguageString("subs.TypeSub");
+			case MAN_MARKING -> HOVerwaltung.instance().getLanguageString("subs.TypeManMarking");
+			default -> null;
+		};
 	}
 
 	public static String getBehaviour(byte id) {
-		switch (id) {
-		case (-1):
-			return HOVerwaltung.instance().getLanguageString("subs.BehNoChange");
-		case IMatchRoleID.NORMAL:
-			return HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal");
-		case IMatchRoleID.OFFENSIVE:
-			return HOVerwaltung.instance().getLanguageString("ls.player.behaviour.offensive");
-		case IMatchRoleID.DEFENSIVE:
-			return HOVerwaltung.instance().getLanguageString("ls.player.behaviour.defensive");
-		case IMatchRoleID.TOWARDS_MIDDLE:
-			return HOVerwaltung.instance().getLanguageString("ls.player.behaviour.towardsmiddle");
-		case IMatchRoleID.TOWARDS_WING:
-			return HOVerwaltung.instance().getLanguageString("ls.player.behaviour.towardswing");
-		default:
-			return "UNKNOWN_BEHAVIOUR";
-		}
+		return switch (id) {
+			case (-1) -> HOVerwaltung.instance().getLanguageString("subs.BehNoChange");
+			case IMatchRoleID.NORMAL -> HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal");
+			case IMatchRoleID.OFFENSIVE -> HOVerwaltung.instance().getLanguageString("ls.player.behaviour.offensive");
+			case IMatchRoleID.DEFENSIVE -> HOVerwaltung.instance().getLanguageString("ls.player.behaviour.defensive");
+			case IMatchRoleID.TOWARDS_MIDDLE -> HOVerwaltung.instance().getLanguageString("ls.player.behaviour.towardsmiddle");
+			case IMatchRoleID.TOWARDS_WING -> HOVerwaltung.instance().getLanguageString("ls.player.behaviour.towardswing");
+			default -> "UNKNOWN_BEHAVIOUR";
+		};
 	}
 
 	public static String getPosition(int id) {
-		switch (id) {
-		case IMatchRoleID.keeper:
-			return HOVerwaltung.instance().getLanguageString("subs.gk");
-		case IMatchRoleID.rightBack:
-			return HOVerwaltung.instance().getLanguageString("subs.rb");
-		case IMatchRoleID.rightCentralDefender:
-			return HOVerwaltung.instance().getLanguageString("subs.rcd");
-		case IMatchRoleID.middleCentralDefender:
-			return HOVerwaltung.instance().getLanguageString("subs.mcd");
-		case IMatchRoleID.leftCentralDefender:
-			return HOVerwaltung.instance().getLanguageString("subs.lcd");
-		case IMatchRoleID.leftBack:
-			return HOVerwaltung.instance().getLanguageString("subs.lb");
-		case IMatchRoleID.rightWinger:
-			return HOVerwaltung.instance().getLanguageString("subs.rw");
-		case IMatchRoleID.rightInnerMidfield:
-			return HOVerwaltung.instance().getLanguageString("subs.rim");
-		case IMatchRoleID.centralInnerMidfield:
-			return HOVerwaltung.instance().getLanguageString("subs.cim");
-		case IMatchRoleID.leftInnerMidfield:
-			return HOVerwaltung.instance().getLanguageString("subs.lim");
-		case IMatchRoleID.leftWinger:
-			return HOVerwaltung.instance().getLanguageString("subs.lw");
-		case IMatchRoleID.rightForward:
-			return HOVerwaltung.instance().getLanguageString("subs.rfw");
-		case IMatchRoleID.centralForward:
-			return HOVerwaltung.instance().getLanguageString("subs.cfw");
-		case IMatchRoleID.leftForward:
-			return HOVerwaltung.instance().getLanguageString("subs.lfw");
-		case IMatchRoleID.substGK1:
-			return HOVerwaltung.instance().getLanguageString("subs.subgk");
-		case IMatchRoleID.substWB1:
-			return HOVerwaltung.instance().getLanguageString("subs.subwb");
-		case IMatchRoleID.substCD1:
-			return HOVerwaltung.instance().getLanguageString("subs.subdef");
-		case IMatchRoleID.substIM1:
-			return HOVerwaltung.instance().getLanguageString("subs.submid");
-		case IMatchRoleID.substWI1:
-			return HOVerwaltung.instance().getLanguageString("subs.subwing");
-		case IMatchRoleID.substFW1:
-			return HOVerwaltung.instance().getLanguageString("subs.subfw");
-		case IMatchRoleID.substXT1:
-			return HOVerwaltung.instance().getLanguageString("subs.subxtra");
-		default:
-			return "";
-		}
+		return switch (id) {
+			case IMatchRoleID.keeper -> HOVerwaltung.instance().getLanguageString("subs.gk");
+			case IMatchRoleID.rightBack -> HOVerwaltung.instance().getLanguageString("subs.rb");
+			case IMatchRoleID.rightCentralDefender -> HOVerwaltung.instance().getLanguageString("subs.rcd");
+			case IMatchRoleID.middleCentralDefender -> HOVerwaltung.instance().getLanguageString("subs.mcd");
+			case IMatchRoleID.leftCentralDefender -> HOVerwaltung.instance().getLanguageString("subs.lcd");
+			case IMatchRoleID.leftBack -> HOVerwaltung.instance().getLanguageString("subs.lb");
+			case IMatchRoleID.rightWinger -> HOVerwaltung.instance().getLanguageString("subs.rw");
+			case IMatchRoleID.rightInnerMidfield -> HOVerwaltung.instance().getLanguageString("subs.rim");
+			case IMatchRoleID.centralInnerMidfield -> HOVerwaltung.instance().getLanguageString("subs.cim");
+			case IMatchRoleID.leftInnerMidfield -> HOVerwaltung.instance().getLanguageString("subs.lim");
+			case IMatchRoleID.leftWinger -> HOVerwaltung.instance().getLanguageString("subs.lw");
+			case IMatchRoleID.rightForward -> HOVerwaltung.instance().getLanguageString("subs.rfw");
+			case IMatchRoleID.centralForward -> HOVerwaltung.instance().getLanguageString("subs.cfw");
+			case IMatchRoleID.leftForward -> HOVerwaltung.instance().getLanguageString("subs.lfw");
+			case IMatchRoleID.substGK1 -> HOVerwaltung.instance().getLanguageString("subs.subgk");
+			case IMatchRoleID.substWB1 -> HOVerwaltung.instance().getLanguageString("subs.subwb");
+			case IMatchRoleID.substCD1 -> HOVerwaltung.instance().getLanguageString("subs.subdef");
+			case IMatchRoleID.substIM1 -> HOVerwaltung.instance().getLanguageString("subs.submid");
+			case IMatchRoleID.substWI1 -> HOVerwaltung.instance().getLanguageString("subs.subwing");
+			case IMatchRoleID.substFW1 -> HOVerwaltung.instance().getLanguageString("subs.subfw");
+			case IMatchRoleID.substXT1 -> HOVerwaltung.instance().getLanguageString("subs.subxtra");
+			default -> "";
+		};
 	}
 
 	public static String getStanding(GoalDiffCriteria standing) {
-		switch (standing) {
-		case ANY_STANDING:
-			return HOVerwaltung.instance().getLanguageString("subs.GoalAny");
-		case MATCH_IS_TIED:
-			return HOVerwaltung.instance().getLanguageString("subs.GoalTied");
-		case IN_THE_LEAD:
-			return HOVerwaltung.instance().getLanguageString("subs.GoalLead");
-		case DOWN:
-			return HOVerwaltung.instance().getLanguageString("subs.GoalDown");
-		case IN_THE_LEAD_BY_MORE_THAN_ONE:
-			return HOVerwaltung.instance()
-					.getLanguageString("subs.GoalLeadMT1");
-		case DOWN_BY_MORE_THAN_ONE:
-			return HOVerwaltung.instance()
-					.getLanguageString("subs.GoalDownMT1");
-		case NOT_DOWN:
-			return HOVerwaltung.instance()
-					.getLanguageString("subs.GoalNotDown");
-		case NOT_IN_THE_LEAD:
-			return HOVerwaltung.instance()
-					.getLanguageString("subs.GoalNotLead");
-		case IN_THE_LEAD_BY_MORE_THAN_TWO:
-			return HOVerwaltung.instance()
-					.getLanguageString("subs.GoalLeadMT2");
-		case DOWN_BY_MORE_THAN_TWO:
-			return HOVerwaltung.instance()
-					.getLanguageString("subs.GoalDownMT2");
-		case MATCH_IS_NOT_TIED:
-			return HOVerwaltung.instance()
-					.getLanguageString("subs.MatchIsNotTied");
-		default:
-			return "";
-		}
+		return switch (standing) {
+			case ANY_STANDING -> HOVerwaltung.instance().getLanguageString("subs.GoalAny");
+			case MATCH_IS_TIED -> HOVerwaltung.instance().getLanguageString("subs.GoalTied");
+			case IN_THE_LEAD -> HOVerwaltung.instance().getLanguageString("subs.GoalLead");
+			case DOWN -> HOVerwaltung.instance().getLanguageString("subs.GoalDown");
+			case IN_THE_LEAD_BY_MORE_THAN_ONE -> HOVerwaltung.instance().getLanguageString("subs.GoalLeadMT1");
+			case DOWN_BY_MORE_THAN_ONE -> HOVerwaltung.instance().getLanguageString("subs.GoalDownMT1");
+			case NOT_DOWN -> HOVerwaltung.instance().getLanguageString("subs.GoalNotDown");
+			case NOT_IN_THE_LEAD -> HOVerwaltung.instance().getLanguageString("subs.GoalNotLead");
+			case IN_THE_LEAD_BY_MORE_THAN_TWO -> HOVerwaltung.instance().getLanguageString("subs.GoalLeadMT2");
+			case DOWN_BY_MORE_THAN_TWO -> HOVerwaltung.instance().getLanguageString("subs.GoalDownMT2");
+			case MATCH_IS_NOT_TIED -> HOVerwaltung.instance().getLanguageString("subs.MatchIsNotTied");
+			default -> "";
+		};
 	}
 
 	public static String getRedCard(RedCardCriteria redCardCriteria) {
-		switch (redCardCriteria) {
-		case IGNORE:
-			return HOVerwaltung.instance().getLanguageString("subs.RedIgnore");
-		case MY_PLAYER:
-			return HOVerwaltung.instance().getLanguageString("subs.RedMy");
-		case OPPONENT_PLAYER:
-			return HOVerwaltung.instance().getLanguageString("subs.RedOpp");
-		case MY_CENTRAL_DEFENDER:
-			return HOVerwaltung.instance().getLanguageString("subs.RedMyCD");
-		case MY_MIDFIELDER:
-			return HOVerwaltung.instance().getLanguageString("subs.RedMyMF");
-		case MY_FORWARD:
-			return HOVerwaltung.instance().getLanguageString("subs.RedMyFW");
-		case MY_WING_BACK:
-			return HOVerwaltung.instance().getLanguageString("subs.RedMyWB");
-		case MY_WINGER:
-			return HOVerwaltung.instance().getLanguageString("subs.RedMyWI");
-		case OPPONENT_CENTRAL_DEFENDER:
-			return HOVerwaltung.instance().getLanguageString("subs.RedOppCD");
-		case OPPONENT_MIDFIELDER:
-			return HOVerwaltung.instance().getLanguageString("subs.RedOppMF");
-		case OPPONENT_FORAWARD:
-			return HOVerwaltung.instance().getLanguageString("subs.RedOppFW");
-		case OPPONENT_WING_BACK:
-			return HOVerwaltung.instance().getLanguageString("subs.RedOppWB");
-		case OPPONENT_WINGER:
-			return HOVerwaltung.instance().getLanguageString("subs.RedOppWi");
-		default:
-			return "";
-		}
+		return switch (redCardCriteria) {
+			case IGNORE -> HOVerwaltung.instance().getLanguageString("subs.RedIgnore");
+			case MY_PLAYER -> HOVerwaltung.instance().getLanguageString("subs.RedMy");
+			case OPPONENT_PLAYER -> HOVerwaltung.instance().getLanguageString("subs.RedOpp");
+			case MY_CENTRAL_DEFENDER -> HOVerwaltung.instance().getLanguageString("subs.RedMyCD");
+			case MY_MIDFIELDER -> HOVerwaltung.instance().getLanguageString("subs.RedMyMF");
+			case MY_FORWARD -> HOVerwaltung.instance().getLanguageString("subs.RedMyFW");
+			case MY_WING_BACK -> HOVerwaltung.instance().getLanguageString("subs.RedMyWB");
+			case MY_WINGER -> HOVerwaltung.instance().getLanguageString("subs.RedMyWI");
+			case OPPONENT_CENTRAL_DEFENDER -> HOVerwaltung.instance().getLanguageString("subs.RedOppCD");
+			case OPPONENT_MIDFIELDER -> HOVerwaltung.instance().getLanguageString("subs.RedOppMF");
+			case OPPONENT_FORAWARD -> HOVerwaltung.instance().getLanguageString("subs.RedOppFW");
+			case OPPONENT_WING_BACK -> HOVerwaltung.instance().getLanguageString("subs.RedOppWB");
+			case OPPONENT_WINGER -> HOVerwaltung.instance().getLanguageString("subs.RedOppWi");
+			default -> "";
+		};
 	}
 }

@@ -16,6 +16,7 @@ import javax.swing.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -93,19 +94,21 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
             protected Void doInBackground() {
                 continueProcessing = (leagueStatus == LeagueStatus.NOT_AVAILABLE);
                 do {
-                    final BlockInfo blockInfo = lockBlock(leagueId);
+                    final Optional<BlockInfo> blockInfo = lockBlock(leagueId);
+                    blockInfo.ifPresent(block -> {
+                        if (block.status == 200) {
+                            DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
+                            downloadCountryDetails.processSeries(block);
 
-                    if (blockInfo.status == 200) {
-                        DownloadCountryDetails downloadCountryDetails = new DownloadCountryDetails();
-                        downloadCountryDetails.processSeries(blockInfo);
+                            LeagueStatus status = fetchLeagueStatus();
+                            continueProcessing = (status == LeagueStatus.NOT_AVAILABLE);
+                        } else {
+                            HOLogger.instance().warning(LeaguePromotionHandler.class,
+                                    "Block locking status: " + block.status);
+                            continueProcessing = false;
+                        }
+                    });
 
-                        LeagueStatus status = fetchLeagueStatus();
-                        continueProcessing = (status == LeagueStatus.NOT_AVAILABLE);
-                    } else {
-                        HOLogger.instance().warning(LeaguePromotionHandler.class,
-                                "Block locking status: " + blockInfo.status);
-                        continueProcessing = false;
-                    }
                 } while (continueProcessing);
 
                 fireChangeEvent(new ChangeEvent(LeaguePromotionHandler.this));
@@ -143,7 +146,7 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
         worker.execute();
     }
 
-    public BlockInfo lockBlock(int leagueId) {
+    public Optional<BlockInfo> lockBlock(int leagueId) {
         DataSubmitter submitter = HttpDataSubmitter.instance();
         return submitter.lockBlock(leagueId);
     }
@@ -151,9 +154,9 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
     public LeaguePromotionInfo getPromotionStatus(int leagueId, int teamId) {
         DataSubmitter submitter = HttpDataSubmitter.instance();
 
-        String promotionInfo = submitter.getPromotionStatus(leagueId, teamId);
+        Optional<String> promotionInfo = submitter.getPromotionStatus(leagueId, teamId);
 
-        if (promotionInfo == null) {
+        if (promotionInfo.isEmpty()) {
             LeaguePromotionInfo leaguePromotionInfo = new LeaguePromotionInfo();
             leaguePromotionInfo.status = LeaguePromotionStatus.UNKNOWN;
 
@@ -161,7 +164,7 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
         }
 
         final Gson gson = new Gson();
-        final JsonObject obj = gson.fromJson(promotionInfo, JsonObject.class);
+        final JsonObject obj = gson.fromJson(promotionInfo.get(), JsonObject.class);
 
         LeaguePromotionInfo leaguePromotionInfo = new LeaguePromotionInfo();
         leaguePromotionInfo.status = LeaguePromotionStatus.codeToStatus(obj.get("status_desc").getAsString());

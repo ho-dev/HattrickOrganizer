@@ -11,9 +11,13 @@ plugins {
 
 repositories {
     jcenter()
+    maven {
+        url 'https://maven.ej-technologies.com/repository'
+    }
 }
 
 dependencies {
+    implementation 'com.install4j:install4j-runtime:8.0.7'
     implementation 'org.scribe:scribe:1.3.0'
     implementation 'org.hsqldb:hsqldb:2.4.1'
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -33,7 +37,8 @@ dependencies {
 def major = '4'
 def minor = '0'
 def development_stage = '0'
-def releaseArtefacts = false
+def releaseArtefacts = true
+def min_version_auto_update = '4.0' // project minimum version for project auto-update, can be used to force fresh install in case of compatibility break
 
 // region configuration ==============================================================================================
 println "Configuration start"
@@ -147,8 +152,8 @@ distributions {
 
 
 install4j {
-    if (install4jHomeDir == null) installDir = file("foo")
-    else installDir = file(install4jHomeDir)
+    if ((hasProperty('install4jHomeDir')) || ((install4jHomeDir != null) )) installDir = file(install4jHomeDir)
+    else installDir = file("foo")
     disableSigning = true
 }
 
@@ -157,10 +162,74 @@ install4j {
 
 // region my tasks ================================================================================================
 
+task makeAllmedias(dependsOn: 'media') {
+    doLast {
+        if (releaseArtefacts) {
+
+            // DEV release
+            if (development_stage == '0') {
+                copy {
+                    from "${projectDir}/build/artefacts"
+                    into "${projectDir}/build/artefacts"
+                    include "updates.xml"
+                    rename "updates.xml", "updatesDEV.xml"
+                }
+            }
+
+            // BETA release
+            else if (development_stage == '1') {
+                copy {
+                    from "${projectDir}/build/artefacts"
+                    into "${projectDir}/build/artefacts"
+                    include "updates.xml"
+                    rename "updates.xml", "updatesBETA.xml"
+                }
+            }
+
+            // STABLE release
+            else {
+                copy {
+                    from "${projectDir}/build/artefacts"
+                    into "${projectDir}/build/artefacts"
+                    include "updates.xml"
+                    rename "updates.xml", "updatesSTABLE.xml"
+                }
+            }
+
+            delete "${projectDir}/build/artefacts/updates.xml"
+        }
+        delete "${projectDir}/build/artefacts/output.txt"
+    }
+}
+
+
+
 task media(type: com.install4j.gradle.Install4jTask) {
-    dependsOn 'CreateDistribution'
+    group 'sub tasks'
+    dependsOn 'updatebuildreferences'
     projectFile = "${projectDir}/utils/buildResources/HO.install4j"
-    buildIds = [60, 62, 63, 64, 172, 173, 464, 471, 473, 477, 481, 485]
+
+    // 60 -> Windows Setup
+    // 485 -> Windows JRE
+
+    // 64 -> Windows archive
+    // 481 -> Windows archive JRE
+
+    // 172 -> macOS Single Bundle
+    // 473 -> macOS Single Bundle JRE
+
+    // 173 -> Unix Archive
+    // 477 -> Unix Archive JRE
+
+    // 1062 -> Unix installer
+    // 1064 -> Unix installer JRE
+
+    // 62  -> Linux rpm
+    // 63 -> Linux deb
+    // 464  -> Linux rpm JRE
+    // 471 -> Linux deb JRE
+
+    buildIds = [60, 485, 64, 481, 172, 473, 173, 477, 1062, 1064]
     String versionType
 
     switch(development_stage) {
@@ -204,27 +273,18 @@ task pushmd(dependsOn: preparingBuild)  {
     }
 }
 
-task pullhtml (dependsOn: markdownToHtml){
-    group 'sub tasks'
-    outputs.upToDateWhen { false }
-    doLast {
-        copy {
-            from "${projectDir}\\docs\\changelog\\html\\changelog.html"
-            into "${projectDir}\\src\\main\\resources"
-        }
-    }
-}
 
 task CreateDistribution (dependsOn: installDist) {
     group 'sub tasks'
     outputs.upToDateWhen { false }
     def distribDir = file("${buildDir}/install/XXX")
     doLast {
-        println("adding resources folder")
+
         copy {
-            from "${projectDir}\\src\\main\\resources\\changelog.html"
+            from "${projectDir}\\docs\\changelog\\html\\changelog.html"
             into "${projectDir}/utils/buildResources"
         }
+
         if (development_stage == '0') {
             copy {
                 from "${projectDir}/utils/buildResources/Logo_dev.png"
@@ -258,6 +318,11 @@ task CreateDistribution (dependsOn: installDist) {
             into "${distribDir}"
         }
 
+        copy {
+            from "${projectDir}\\docs\\changelog\\html\\changelog.html"
+            into "${distribDir}"
+        }
+
         delete "${distribDir}\\bin"
         delete "${distribDir}\\lib"
 
@@ -277,7 +342,7 @@ task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
     }
 }
 
-task updatebuildreferences(dependsOn: ZipDistribution){
+task updatebuildreferences(dependsOn: CreateDistribution){
     doLast {
         if (releaseArtefacts) {
             println("artefacts have to be uploaded or it will break update process !!!")
@@ -285,12 +350,13 @@ task updatebuildreferences(dependsOn: ZipDistribution){
             // always update latest.html
             new File("$projectDir/docs/latest.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
+min_version_for_auto_update=$min_version_auto_update
 """
             println("latest.html has been updated")
 
             copy {
                 from "${projectDir}\\src\\main\\resources\\release_notes.md"
-                into "$projectDir/docs"
+                into "$projectDir/docs/release_notes"
                 rename { filename -> filename.replace('release_notes', 'release_notes(dev)')}
             }
             println("release notes of DEV version have been updated")
@@ -299,11 +365,12 @@ released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
             if (development_stage != '0') {
                 new File("$projectDir/docs/latestbeta.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
+min_version_for_auto_update=$min_version_auto_update
 """
                 println("latestbeta.html has been updated")
                 copy {
                     from "${projectDir}\\src\\main\\resources\\release_notes.md"
-                    into "$projectDir/docs"
+                    into "$projectDir/docs/release_notes"
                     rename { filename -> filename.replace('release_notes', 'release_notes(beta)')}
                 }
                 println("release notes of BETA version have been updated")
@@ -314,11 +381,12 @@ released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
             if (development_stage == '2') {
                 new File("$projectDir/docs/lateststable.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
+min_version_for_auto_update=$min_version_auto_update
 """
                 println("lateststable.html has been updated")
                 copy {
                     from "${projectDir}\\src\\main\\resources\\release_notes.md"
-                    into "$projectDir/docs"
+                    into "$projectDir/docs/release_notes"
                     rename { filename -> filename.replace('release_notes', 'release_notes(stable)')}
                 }
                 println("release notes of STABLE version have been updated")
@@ -353,14 +421,9 @@ task resetDB {
     group 'tool'
     description 'copy the database from existing install into project'
 
-    if (! project.hasProperty('resetDir')) {
-        ext.resetDir = "D:\\Program Files\\HattrickOrganizerDev\\db"
-    }
-
-    doFirst {println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")}
-
     try {
 	    doLast {
+            println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")
             copy {
                 from resetDir
                 into "${projectDir}/db"
@@ -433,8 +496,9 @@ githubRelease {
 
 compileJava.dependsOn preparingBuild
 installDist.dependsOn createLanguageFileList
-poeditorPull.dependsOn pullhtml
+poeditorPull.dependsOn markdownToHtml
 markdownToHtml.dependsOn pushmd
+
 
 poeditorPull.onlyIf {
     project.hasProperty('POEDITOR_APIKEY') && project.ext.properties.POEDITOR_APIKEY!=''

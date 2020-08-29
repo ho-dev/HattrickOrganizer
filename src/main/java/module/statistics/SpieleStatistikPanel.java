@@ -65,7 +65,6 @@ public class SpieleStatistikPanel extends LazyImagePanel {
 	private ImageCheckbox m_jchStimmung;
 	private ImageCheckbox m_jchHatStats;
 	private ImageCheckbox m_jchLoddarStats;
-	private JButton m_jbDrucken;
 	private JButton m_jbUbernehmen;
 	private JCheckBox m_jchBeschriftung;
 	private JCheckBox m_jchHilflinien;
@@ -180,14 +179,6 @@ public class SpieleStatistikPanel extends LazyImagePanel {
 		m_jchStimmung.addActionListener(checkBoxActionListener);
 		m_jchSelbstvertrauen.addActionListener(checkBoxActionListener);
 
-		m_jbDrucken.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				m_clStatistikPanel.doPrint(getLangStr("Spiele"));
-			}
-		});
-
 		m_jbUbernehmen.addActionListener(new ActionListener() {
 
 			@Override
@@ -236,18 +227,6 @@ public class SpieleStatistikPanel extends LazyImagePanel {
 		constraints2.insets = new Insets(2, 2, 2, 2);
 
 		panel2.setLayout(layout2);
-
-		constraints2.gridx = 0;
-		constraints2.gridy = 0;
-		constraints2.gridwidth = 2;
-		constraints2.fill = GridBagConstraints.NONE;
-		constraints2.anchor = GridBagConstraints.WEST;
-		m_jbDrucken = new JButton(ImageUtilities.getSvgIcon(HOIconName.PRINTER));
-		m_jbDrucken.setToolTipText(HOVerwaltung.instance()
-				.getLanguageString("tt_Statistik_drucken"));
-		m_jbDrucken.setPreferredSize(new Dimension(25, 25));
-		layout2.setConstraints(m_jbDrucken, constraints2);
-		panel2.add(m_jbDrucken);
 
 		label = new JLabel(getLangStr("Wochen"));
 		constraints2.fill = GridBagConstraints.HORIZONTAL;
@@ -486,8 +465,7 @@ public class SpieleStatistikPanel extends LazyImagePanel {
 
 			// Infos zusammenstellen
 			for (int i = 0; i < anzahl; i++) {
-				Matchdetails details = DBManager.instance().getMatchDetails(
-						matchkurzinfos[matchkurzinfos.length - i - 1].getMatchID());
+				Matchdetails details = matchkurzinfos[matchkurzinfos.length - i - 1].getMatchdetails();
 
 				int bewertungwert = 0;
 				double loddarStats = 0;

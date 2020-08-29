@@ -1,6 +1,6 @@
 package core.gui;
 
-import core.gui.theme.ColorIcon;
+import core.gui.comp.icon.ColorIcon;
 
 import java.awt.*;
 import java.util.*;

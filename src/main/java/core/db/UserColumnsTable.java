@@ -106,7 +106,7 @@ class UserColumnsTable extends AbstractTable {
 		int tableIndex 	= 0;
 		int width		= 10;
 
-		final StringBuffer sql = new StringBuffer(100);
+		final StringBuilder sql = new StringBuilder(100);
 		int count = 0;
 		sql.append("SELECT * ");
 		sql.append(" FROM ");
@@ -117,14 +117,11 @@ class UserColumnsTable extends AbstractTable {
 		sql.append((model.getId()*1000));
 		sql.append(" AND ");
 		sql.append(((model.getId()+1)*1000));
-//		sql.append(" ORDER BY  ");
-//		sql.append( columns[2].getColumnName() );
-//		sql.append("  ");
 		ResultSet rs = adapter.executeQuery(sql.toString());
 		UserColumn[] dbcolumns = model.getColumns();
 		try {
 
-			while(rs.next()){
+			while (rs.next()) {
 
 				modelIndex 	= rs.getInt(columns[1].getColumnName());
 				tableIndex 	= rs.getInt(columns[2].getColumnName());
@@ -138,16 +135,14 @@ class UserColumnsTable extends AbstractTable {
 				count++;
 			}
 
-			if(count == 0){
-				insertDefault( model );
-				loadModel( model );
+			if (count == 0){
+				insertDefault(model);
+				loadModel(model);
 			}
 			rs.close();
 
 		} catch (SQLException e) {
 			HOLogger.instance().log(getClass(),e);
 		}
-
 	}
-
 }

@@ -6,7 +6,10 @@ import core.model.player.MatchRoleID;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import static core.model.player.IMatchRoleID.aFieldMSubsAndBackupMatchRoleID;
@@ -206,13 +209,12 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			
 			final String[] where = { "MatchID" , "TeamID", "RoleID", "SpielerID"};
 			final String[] werte = { "" + matchID, "" + teamID, "" + player.getId(), "" + player.getSpielerId()};			
-			delete(where, werte);			
-			String sql = null;
+			delete(where, werte);
 
 			//saven
 			try {
 				//insert vorbereiten
-				sql = "INSERT INTO "+getTableName()+" ( MatchID, TeamID, SpielerID, RoleID, Taktik, PositionCode, VName, NickName, Name, Rating, HoPosCode, STATUS, FIELDPOS, RatingStarsEndOfMatch, StartPosition, StartBehaviour ) VALUES(";
+				var sql = "INSERT INTO "+getTableName()+" ( MatchID, TeamID, SpielerID, RoleID, Taktik, PositionCode, VName, NickName, Name, Rating, HoPosCode, STATUS, FIELDPOS, RatingStarsEndOfMatch, StartPosition, StartBehaviour ) VALUES(";
 				sql
 					+= (matchID
 						+ ","
@@ -254,67 +256,68 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	}	
 
 	Vector<MatchLineupPlayer> getMatchLineupPlayers(int matchID, int teamID) {
-		MatchLineupPlayer player = null;
-		final Vector<MatchLineupPlayer> vec = new Vector<MatchLineupPlayer>();
-		String sql;
-		ResultSet rs;
-		int roleID;
-		int behavior;
-		int spielerID;
-		int startPos;
-		int startBeh;
-		double rating;
-		double ratingStarsEndOfMatch;
-		String vname;
-		String name;
-		String nickName;
-		int positionsCode;
-
 		try {
-			sql = "SELECT * FROM "+getTableName()+" WHERE MatchID = " + matchID + " AND TeamID = " + teamID;
-			rs = adapter.executeQuery(sql);
-
-			rs.beforeFirst();
-
-			while (rs.next()) {
-				roleID = rs.getInt("RoleID");
-				behavior = rs.getInt("Taktik");
-				spielerID = rs.getInt("SpielerID");
-				rating = rs.getDouble("Rating");
-				ratingStarsEndOfMatch = rs.getDouble("RatingStarsEndOfMatch");
-				vname = DBManager.deleteEscapeSequences(rs.getString("VName"));
-				nickName = DBManager.deleteEscapeSequences(rs.getString("NickName"));
-				name = DBManager.deleteEscapeSequences(rs.getString("Name"));
-				positionsCode = rs.getInt("PositionCode");
-				startPos = rs.getInt("StartPosition");
-				startBeh = rs.getInt("StartBehaviour");
-				
-				switch (behavior) {
-					case IMatchRoleID.OLD_EXTRA_DEFENDER :
-						roleID = IMatchRoleID.middleCentralDefender;
-						behavior = IMatchRoleID.NORMAL;
-						break;
-					case IMatchRoleID.OLD_EXTRA_MIDFIELD :
-						roleID = IMatchRoleID.centralInnerMidfield;
-						behavior = IMatchRoleID.NORMAL;
-						break;
-					case IMatchRoleID.OLD_EXTRA_FORWARD :
-						roleID = IMatchRoleID.centralForward;
-						behavior = IMatchRoleID.NORMAL;
-				}
-
-				roleID = MatchRoleID.convertOldRoleToNew(roleID);
-				
-				// Position code and field position was removed from constructor below.
-				player = new MatchLineupPlayer(roleID, behavior, spielerID, rating, vname, nickName, name, rs.getInt("STATUS"), ratingStarsEndOfMatch, startPos, startBeh);
-				vec.add(player);
-			}
+			var sql = "SELECT * FROM "+getTableName()+" WHERE MatchID = " + matchID + " AND TeamID = " + teamID;
+			return createMatchLineups(sql);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineupTeam Error" + e);
+		}
+		return new Vector<>();
+	}
+
+	public List<MatchLineupPlayer> getMatchInserts(int objectPlayerID)
+	{
+		try {
+			var sql = "SELECT * FROM "+getTableName()+" WHERE SpielerID = " + objectPlayerID;
+			return createMatchLineups(sql);
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),"DB.getMatchLineupTeam Error" + e);
+		}
+		return new Vector<>();
+	}
+
+	private Vector<MatchLineupPlayer> createMatchLineups(String sql) throws SQLException {
+		var vec = new Vector<MatchLineupPlayer>();
+		var rs = adapter.executeQuery(sql);
+		rs.beforeFirst();
+
+		while (rs.next()) {
+			var roleID = rs.getInt("RoleID");
+			var behavior = rs.getInt("Taktik");
+			var spielerID = rs.getInt("SpielerID");
+			var rating = rs.getDouble("Rating");
+			var ratingStarsEndOfMatch = rs.getDouble("RatingStarsEndOfMatch");
+			var vname = DBManager.deleteEscapeSequences(rs.getString("VName"));
+			var nickName = DBManager.deleteEscapeSequences(rs.getString("NickName"));
+			var name = DBManager.deleteEscapeSequences(rs.getString("Name"));
+			var positionsCode = rs.getInt("PositionCode");
+			var startPos = rs.getInt("StartPosition");
+			var startBeh = rs.getInt("StartBehaviour");
+			var status = rs.getInt("STATUS");
+
+			switch (behavior) {
+				case IMatchRoleID.OLD_EXTRA_DEFENDER -> {
+					roleID = IMatchRoleID.middleCentralDefender;
+					behavior = IMatchRoleID.NORMAL;
+				}
+				case IMatchRoleID.OLD_EXTRA_MIDFIELD -> {
+					roleID = IMatchRoleID.centralInnerMidfield;
+					behavior = IMatchRoleID.NORMAL;
+				}
+				case IMatchRoleID.OLD_EXTRA_FORWARD -> {
+					roleID = IMatchRoleID.centralForward;
+					behavior = IMatchRoleID.NORMAL;
+				}
+			}
+
+			roleID = MatchRoleID.convertOldRoleToNew(roleID);
+
+			// Position code and field position was removed from constructor below.
+			var player = new MatchLineupPlayer(roleID, behavior, spielerID, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh);
+			vec.add(player);
 		}
 
 		return vec;
 	}
-
 
 }

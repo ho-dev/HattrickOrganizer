@@ -1,12 +1,8 @@
 package module.statistics;
 
 import core.gui.model.StatistikModel;
-import core.gui.print.ComponentPrintObject;
-import core.gui.print.PrintController;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
-import core.util.HOLogger;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -14,9 +10,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.util.Calendar;
 
 import javax.swing.JPanel;
 
@@ -160,24 +154,6 @@ public class StatistikPanel extends JPanel {
 		}
 
 		repaint();
-	}
-
-	public final void doPrint(String titel) {
-		try {
-			PrintController printController = PrintController.getInstance();
-
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(System.currentTimeMillis());
-			titel += (" - " + HOVerwaltung.instance().getModel().getBasics().getTeamName() + " - " + DateFormat
-					.getDateTimeInstance().format(calendar.getTime()));
-
-			printController.add(new ComponentPrintObject(printController.getPf(), titel,
-					clonePanel(true), ComponentPrintObject.SICHTBARMAXIMIEREN));
-
-			printController.print();
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), e);
-		}
 	}
 
 	@Override

@@ -38,7 +38,9 @@ public class SystemManager {
 	public final static String ISSHOWPLAYERINFO = "TA_isShowPlayerInfo";
 	public final static String ISCHECKTEAMNAME = "TA_isCheckTeamName";
 
-	/** The Selected Team */
+	/**
+	 * The Selected Team
+	 */
 	private static Team selectedTeam;
 
 	/** Boolean for the updating process being ongoing */
@@ -63,6 +65,9 @@ public class SystemManager {
 	 * @return
 	 */
 	public static int getActiveTeamId() {
+		if ( selectedTeam == null){
+			selectedTeam = TeamManager.getFirstTeam();
+		}
 		return selectedTeam.getTeamId();
 	}
 
@@ -131,7 +136,7 @@ public class SystemManager {
 		updating = true;
 		List<MatchDetail> matchDetails = MatchManager.getMatchDetails();
 		if (MatchPopulator.getAnalyzedMatch().size() > 0) {
-			if (getActiveTeamId() != getReportedTeamId()) {
+			if (getActiveTeamId() != getReportedTeamId() || teamReport.isEmpty()) {
 				teamReport = new TeamReport(matchDetails);
 				setReportedTeamId(getActiveTeamId());
 			}

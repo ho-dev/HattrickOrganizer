@@ -42,17 +42,6 @@ public class SpielHighlightPanel extends LazyImagePanel {
 	 * Creates a new SpielHighlightPanel object.
 	 */
 	public SpielHighlightPanel(MatchesModel matchesModel) {
-		this(matchesModel, false);
-	}
-
-	/**
-	 * Creates a new SpielHighlightPanel object.
-	 * 
-	 * @param print
-	 *            if true: use printer version (no colored background)
-	 */
-	public SpielHighlightPanel(MatchesModel matchesModel, boolean print) {
-		super(print);
 		this.matchesModel = matchesModel;
 	}
 

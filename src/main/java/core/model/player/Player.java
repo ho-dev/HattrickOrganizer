@@ -1,5 +1,6 @@
 package core.model.player;
 
+import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
@@ -12,13 +13,9 @@ import core.model.match.Weather;
 import core.model.misc.TrainingEvent;
 import core.net.OnlineWorker;
 import core.rating.RatingPredictionManager;
-import core.training.SkillDrops;
-import core.training.TrainingManager;
-import core.training.TrainingPerPlayer;
-import core.training.TrainingPerWeek;
-import core.training.TrainingPoints;
-import core.training.WeeklyTrainingType;
+import core.training.*;
 import core.util.Helper;
+import core.util.HelperWrapper;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -30,8 +27,8 @@ public class Player {
     /**
      * Cache for player contribution (Hashtable<String, Float>)
      */
-    private static Hashtable<String, Object> PlayerAbsoluteContributionCache = new Hashtable<String, Object>();
-    private static Hashtable<String, Object> PlayerRelativeContributionCache = new Hashtable<String, Object>();
+    private static Hashtable<String, Object> PlayerAbsoluteContributionCache = new Hashtable<>();
+    private static Hashtable<String, Object> PlayerRelativeContributionCache = new Hashtable<>();
     // constants for lineup HT-ML export
     private static final String BREAK = "[br]";
     private static final String O_BRACKET = "[";
@@ -204,7 +201,7 @@ public class Player {
      */
     private int m_iTSI;
 
-    /** bonus in Prozent */
+    /* bonus in Prozent */
 
     //protected int       m_iBonus            =   0;
 
@@ -323,7 +320,6 @@ public class Player {
     private double m_lastMatchRating=0;
     private int m_lastMatchId=0;
 
-
     /**
      * specifying at what time –in minutes- that player entered the field
      * This parameter is only used by RatingPredictionManager to calculate the stamina effect
@@ -332,6 +328,11 @@ public class Player {
     private int GameStartingTime = 0;
     private int nationalTeamId=0;
     private double subExperience;
+
+    /**
+     * future training priorities planed by the user
+     */
+    private List<FuturePlayerTraining> futurePlayerTrainings;
 
     public int getGameStartingTime() {
         return GameStartingTime;
@@ -353,8 +354,7 @@ public class Player {
     /**
      * Erstellt einen Player aus den Properties einer HRF Datei
      */
-    public Player(java.util.Properties properties, Timestamp hrfdate)
-            throws Exception {
+    public Player(java.util.Properties properties, Timestamp hrfdate) {
         // Separate first, nick and last names are available. Utilize them?
 
         m_iSpielerID = Integer.parseInt(properties.getProperty("id", "0"));
@@ -532,47 +532,6 @@ public class Player {
     }
 
     /**
-     * Compute the number of calendar days between two Calendar objects.
-     * The desired value is the number of days of the month between the
-     * two Calendars, not the number of milliseconds' worth of days.
-     *
-     * @param startCal The earlier calendar
-     * @param endCal   The later calendar
-     * @return the number of calendar days of the month between startCal and endCal
-     */
-    public static long calendarDaysBetween(Calendar startCal, Calendar endCal) {
-
-        // Create copies so we don't update the original calendars.
-
-        Calendar start = Calendar.getInstance();
-        start.setTimeZone(startCal.getTimeZone());
-        start.setTimeInMillis(startCal.getTimeInMillis());
-
-        Calendar end = Calendar.getInstance();
-        end.setTimeZone(endCal.getTimeZone());
-        end.setTimeInMillis(endCal.getTimeInMillis());
-
-        // Set the copies to be at midnight, but keep the day information.
-
-        start.set(Calendar.HOUR_OF_DAY, 0);
-        start.set(Calendar.MINUTE, 0);
-        start.set(Calendar.SECOND, 0);
-        start.set(Calendar.MILLISECOND, 0);
-
-        end.set(Calendar.HOUR_OF_DAY, 0);
-        end.set(Calendar.MINUTE, 0);
-        end.set(Calendar.SECOND, 0);
-        end.set(Calendar.MILLISECOND, 0);
-
-        // At this point, each calendar is set to midnight on 
-        // their respective days. Now use TimeUnit.MILLISECONDS to
-        // compute the number of full days between the two of them.
-
-        return TimeUnit.MILLISECONDS.toDays(
-                Math.abs(end.getTimeInMillis() - start.getTimeInMillis()));
-    }
-
-    /**
      * Calculates full age with days and offset
      *
      * @return Double value of age & agedays & offset combined,
@@ -584,8 +543,7 @@ public class Player {
         long diff = (now - hrftime) / (1000 * 60 * 60 * 24);
         int years = getAlter();
         int days = getAgeDays();
-        double retVal = years + (double) (days + diff) / 112;
-        return retVal;
+        return years + (double) (days + diff) / 112;
     }
 
 
@@ -604,8 +562,7 @@ public class Player {
         long diff = Math.abs((hrftime - time)) / (1000 * 60 * 60 * 24);
         int years = getAlter();
         int days = getAgeDays();
-        double retVal = years + (double) (days - diff) / 112;
-        return retVal;
+        return years + (double) (days - diff) / 112;
     }
 
     /**
@@ -636,8 +593,7 @@ public class Player {
             days += 112;
             years--;
         }
-        String retVal = years + " (" + days + ")";
-        return retVal;
+        return years + " (" + days + ")";
     }
 
     /**
@@ -671,7 +627,7 @@ public class Player {
             years++;
             birthday = true;
         }
-        StringBuffer ret = new StringBuffer();
+        StringBuilder ret = new StringBuilder();
         ret.append(years);
         ret.append(" ");
         ret.append(HOVerwaltung.instance().getLanguageString("ls.player.age.years"));
@@ -795,9 +751,8 @@ public class Player {
         // make sure to apply the same values as in prediction/*/playerStrength.dat
         //
         // We return the experience bonus in percent (0% = no bonus, 100% = doubled player strength...)
-        float bonus = (float) (0.0716 * Math.sqrt(experience));
 
-        return bonus;
+        return (float) (0.0716 * Math.sqrt(experience));
     }
 
     /**
@@ -918,7 +873,6 @@ public class Player {
     /**
      * Setter for m_bHomeGrown
      *
-     * @return Value of property m_bHomeGrown.
      */
     public void setHomeGrown(boolean hg) {
         m_bHomeGrown = hg;
@@ -971,6 +925,7 @@ public class Player {
         return calcPosValue(getIdealPosition(), mitForm, normalized, nb_decimal);
     }
 
+    private byte idealPos = IMatchRoleID.UNKNOWN;
     /**
      * Calculate Player Ideal Position
      */
@@ -979,22 +934,22 @@ public class Player {
         final byte flag = getUserPosFlag();
 
         if (flag == IMatchRoleID.UNKNOWN) {
-            final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
-            byte idealPos = IMatchRoleID.UNKNOWN;
-            float maxStk = -1.0f;
-            byte currPosition;
-            float contrib;
+            if ( idealPos == IMatchRoleID.UNKNOWN) {
+                final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
+                float maxStk = -1.0f;
+                byte currPosition;
+                float contrib;
 
-            for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
-                if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
-                currPosition = allPos[i].getPosition();
-                contrib = calcPosValue(currPosition, true, true);
-                if (contrib > maxStk) {
-                    maxStk = contrib;
-                    idealPos = currPosition;
+                for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
+                    if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
+                    currPosition = allPos[i].getPosition();
+                    contrib = calcPosValue(currPosition, true, true);
+                    if (contrib > maxStk) {
+                        maxStk = contrib;
+                        idealPos = currPosition;
+                    }
                 }
             }
-
             return idealPos;
         }
 
@@ -1007,7 +962,6 @@ public class Player {
     public byte[] getAlternativePositions() {
 
         List<PositionContribute> positions = new ArrayList<>();
-        byte[] alternativePositions;
         final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
         byte currPosition;
         PositionContribute currPositionContribute;
@@ -1019,19 +973,16 @@ public class Player {
             positions.add(currPositionContribute);
         }
 
-        positions.sort(new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                float f1 = ((PositionContribute) o1).getContribute();
-                float f2 = ((PositionContribute) o2).getContribute();
-                return Float.compare(f2, f1);
-            }
+        positions.sort((Comparator) (o1, o2) -> {
+            float f1 = ((PositionContribute) o1).getContribute();
+            float f2 = ((PositionContribute) o2).getContribute();
+            return Float.compare(f2, f1);
         });
 
-        alternativePositions = new byte[positions.size()];
+        byte[] alternativePositions = new byte[positions.size()];
         float tolerance = 1f - core.model.UserParameter.instance().alternativePositionsTolerance;
 
-        int i = 0;
+        int i;
         for (i = 0; i < positions.size(); i++) {
             if (positions.get(i).getContribute() >= positions.get(0).getContribute() * tolerance) {
                 alternativePositions[i] = positions.get(i).getPosition();
@@ -1102,7 +1053,7 @@ public class Player {
         int tage = 0;
         final Timestamp datum = (Timestamp) getLastLevelUp(skill)[0];
         final Timestamp heute = new Timestamp(System.currentTimeMillis());
-        long diff = 0;
+        long diff;
 
         if (datum != null) {
             diff = heute.getTime() - datum.getTime();
@@ -1191,17 +1142,6 @@ public class Player {
     public int getTSI() {
         return m_iTSI;
     }
-
-    /**
-     * Returns the estimated value of this player (EPV)
-     *
-     * @return EPV
-     */
-//    public double getEPV() {
-//		EPVData data = HOVerwaltung.instance().getModel().getEPV().getEPVData(this);
-//		return HOVerwaltung.instance().getModel().getEPV().getPrice(data);
-//    }
-
 
     public void setFirstName(java.lang.String m_sName) {
         this.m_sFirstName = m_sName;
@@ -1400,7 +1340,7 @@ public class Player {
      * set whether or not that player can be selected by the assistant
      */
     public void setCanBeSelectedByAssistant(boolean flag) {
-        m_bCanBeSelectedByAssistant = Boolean.valueOf(flag);
+        m_bCanBeSelectedByAssistant = flag;
         DBManager.instance().saveSpielerSpielberechtigt(m_iSpielerID,  flag);
     }
 
@@ -1410,10 +1350,10 @@ public class Player {
     public boolean getCanBeSelectedByAssistant() {
         //Only check if not authorized to play: Reduced access!
         if (m_bCanBeSelectedByAssistant == null) {
-            m_bCanBeSelectedByAssistant = Boolean.valueOf(DBManager.instance().getSpielerSpielberechtigt(m_iSpielerID));
+            m_bCanBeSelectedByAssistant = DBManager.instance().getSpielerSpielberechtigt(m_iSpielerID);
         }
 
-        return m_bCanBeSelectedByAssistant.booleanValue();
+        return m_bCanBeSelectedByAssistant;
 
     }
 
@@ -1456,82 +1396,43 @@ public class Player {
     /**
      * berechnet den Subskill pro position
      */
-    public float getSubskill4Pos(int skill) {
-        return Math.min(0.99f, Helper.round(getSubskill4PosAccurate(skill), 2));
+    public float getSub4Skill(int skill) {
+        return Math.min(0.99f, Helper.round(getSub4SkillAccurate(skill), 2));
     }
 
     /**
      * Returns accurate subskill number. If you need subskill for UI
      * purpose it is better to use getSubskill4Pos()
      *
-     * @param skill
+     * @param skill skill number
      * @return subskill between 0.0-0.999
      */
-    public float getSubskill4PosAccurate(int skill) {
-        double value = 0;
+    public float getSub4SkillAccurate(int skill) {
+        double value = switch (skill) {
+            case PlayerSkill.KEEPER -> m_dSubTorwart;
+            case PlayerSkill.PLAYMAKING -> m_dSubSpielaufbau;
+            case PlayerSkill.DEFENDING -> m_dSubVerteidigung;
+            case PlayerSkill.PASSING -> m_dSubPasspiel;
+            case PlayerSkill.WINGER -> m_dSubFluegelspiel;
+            case PlayerSkill.SCORING -> m_dSubTorschuss;
+            case PlayerSkill.SET_PIECES -> m_dSubStandards;
+            case PlayerSkill.EXPERIENCE -> subExperience;
+            default -> 0;
+        };
 
-        switch (skill) {
-            case PlayerSkill.KEEPER:
-                value = m_dSubTorwart;
-                break;
-
-            case PlayerSkill.PLAYMAKING:
-                value = m_dSubSpielaufbau;
-                break;
-
-            case PlayerSkill.DEFENDING:
-                value = m_dSubVerteidigung;
-                break;
-
-            case PlayerSkill.PASSING:
-                value = m_dSubPasspiel;
-                break;
-
-            case PlayerSkill.WINGER:
-                value = m_dSubFluegelspiel;
-                break;
-
-            case PlayerSkill.SCORING:
-                value = m_dSubTorschuss;
-                break;
-
-            case PlayerSkill.SET_PIECES:
-                value = m_dSubStandards;
-                break;
-
-            case PlayerSkill.EXPERIENCE:
-                value = subExperience;
-                break;
-        }
         return (float) Math.min(0.999, value);
     }
 
     public void setSubskill4Pos(int skill, float value) {
         switch (skill) {
-            case PlayerSkill.KEEPER:
-                m_dSubTorwart = value;
-                break;
-            case PlayerSkill.PLAYMAKING:
-                m_dSubSpielaufbau = value;
-                break;
-            case PlayerSkill.DEFENDING:
-                m_dSubVerteidigung = value;
-                break;
-            case PlayerSkill.PASSING:
-                m_dSubPasspiel = value;
-                break;
-            case PlayerSkill.WINGER:
-                m_dSubFluegelspiel = value;
-                break;
-            case PlayerSkill.SCORING:
-                m_dSubTorschuss = value;
-                break;
-            case PlayerSkill.SET_PIECES:
-                m_dSubStandards = value;
-                break;
-            case PlayerSkill.EXPERIENCE:
-                subExperience = value;
-                break;
+            case PlayerSkill.KEEPER -> m_dSubTorwart = value;
+            case PlayerSkill.PLAYMAKING -> m_dSubSpielaufbau = value;
+            case PlayerSkill.DEFENDING -> m_dSubVerteidigung = value;
+            case PlayerSkill.PASSING -> m_dSubPasspiel = value;
+            case PlayerSkill.WINGER -> m_dSubFluegelspiel = value;
+            case PlayerSkill.SCORING -> m_dSubTorschuss = value;
+            case PlayerSkill.SET_PIECES -> m_dSubStandards = value;
+            case PlayerSkill.EXPERIENCE -> subExperience = value;
         }
     }
 
@@ -1692,7 +1593,7 @@ public class Player {
      *
      * @param m_iTrainer New value of property m_iTrainer.
      */
-    public void setTrainer(int m_iTrainer) {
+    public void setTrainerSkill(int m_iTrainer) {
         this.m_iTrainer = m_iTrainer;
     }
 
@@ -1701,7 +1602,7 @@ public class Player {
      *
      * @return Value of property m_iTrainer.
      */
-    public int getTrainer() {
+    public int getTrainerSkill() {
         return m_iTrainer;
     }
 
@@ -1841,47 +1742,22 @@ public class Player {
     /**
      * get Skillvalue 4 skill
      */
-    public int getValue4Skill4(int skill) {
-        switch (skill) {
-            case PlayerSkill.KEEPER:
-                return m_iTorwart;
-
-            case PlayerSkill.PLAYMAKING:
-                return m_iSpielaufbau;
-
-            case PlayerSkill.DEFENDING:
-                return m_iVerteidigung;
-
-            case PlayerSkill.PASSING:
-                return m_iPasspiel;
-
-            case PlayerSkill.WINGER:
-                return m_iFluegelspiel;
-
-            case PlayerSkill.SCORING:
-                return m_iTorschuss;
-
-            case PlayerSkill.SET_PIECES:
-                return m_iStandards;
-
-            case PlayerSkill.STAMINA:
-                return m_iKondition;
-
-            case PlayerSkill.EXPERIENCE:
-                return m_iErfahrung;
-
-            case PlayerSkill.FORM:
-                return m_iForm;
-
-            case PlayerSkill.LEADERSHIP:
-                return m_iFuehrung;
-
-            case PlayerSkill.LOYALTY:
-                return m_iLoyalty;
-
-            default:
-                return 0;
-        }
+    public int getValue4Skill(int skill) {
+        return switch (skill) {
+            case PlayerSkill.KEEPER -> m_iTorwart;
+            case PlayerSkill.PLAYMAKING -> m_iSpielaufbau;
+            case PlayerSkill.DEFENDING -> m_iVerteidigung;
+            case PlayerSkill.PASSING -> m_iPasspiel;
+            case PlayerSkill.WINGER -> m_iFluegelspiel;
+            case PlayerSkill.SCORING -> m_iTorschuss;
+            case PlayerSkill.SET_PIECES -> m_iStandards;
+            case PlayerSkill.STAMINA -> m_iKondition;
+            case PlayerSkill.EXPERIENCE -> m_iErfahrung;
+            case PlayerSkill.FORM -> m_iForm;
+            case PlayerSkill.LEADERSHIP -> m_iFuehrung;
+            case PlayerSkill.LOYALTY -> m_iLoyalty;
+            default -> 0;
+        };
     }
 
     /**
@@ -1890,54 +1766,20 @@ public class Player {
      * @param skill the skill to change
      * @param value the new skill value
      */
-    public void setValue4Skill4(int skill, int value) {
+    public void setValue4Skill(int skill, int value) {
         switch (skill) {
-            case PlayerSkill.KEEPER:
-                setTorwart(value);
-                break;
-
-            case PlayerSkill.PLAYMAKING:
-                setSpielaufbau(value);
-                break;
-
-            case PlayerSkill.PASSING:
-                setPasspiel(value);
-                break;
-
-            case PlayerSkill.WINGER:
-                setFluegelspiel(value);
-                break;
-
-            case PlayerSkill.DEFENDING:
-                setVerteidigung(value);
-                break;
-
-            case PlayerSkill.SCORING:
-                setTorschuss(value);
-                break;
-
-            case PlayerSkill.SET_PIECES:
-                setStandards(value);
-                break;
-
-            case PlayerSkill.STAMINA:
-                setKondition(value);
-                break;
-
-            case PlayerSkill.EXPERIENCE:
-                setErfahrung(value);
-                break;
-
-            case PlayerSkill.FORM:
-                setForm(value);
-                break;
-
-            case PlayerSkill.LEADERSHIP:
-                setFuehrung(value);
-                break;
-
-            case PlayerSkill.LOYALTY:
-                setLoyalty(value);
+            case PlayerSkill.KEEPER -> setTorwart(value);
+            case PlayerSkill.PLAYMAKING -> setSpielaufbau(value);
+            case PlayerSkill.PASSING -> setPasspiel(value);
+            case PlayerSkill.WINGER -> setFluegelspiel(value);
+            case PlayerSkill.DEFENDING -> setVerteidigung(value);
+            case PlayerSkill.SCORING -> setTorschuss(value);
+            case PlayerSkill.SET_PIECES -> setStandards(value);
+            case PlayerSkill.STAMINA -> setKondition(value);
+            case PlayerSkill.EXPERIENCE -> setErfahrung(value);
+            case PlayerSkill.FORM -> setForm(value);
+            case PlayerSkill.LEADERSHIP -> setFuehrung(value);
+            case PlayerSkill.LOYALTY -> setLoyalty(value);
         }
     }
 
@@ -2005,7 +1847,7 @@ public class Player {
             /* Carry subskill over skillup */
             gain = 0.0f;
         }
-        setSubskill4Pos(skill, Math.min(0.99f, getSubskill4PosAccurate(skill) + gain));
+        setSubskill4Pos(skill, Math.min(0.99f, getSub4SkillAccurate(skill) + gain));
     }
 
     /**
@@ -2082,14 +1924,14 @@ public class Player {
                 continue;
             }
 
-            if (getValue4Skill4(skillType) >= 1) {
-                float drop = weeks * SkillDrops.instance().getSkillDrop(getValue4Skill4(skillType), originalPlayer.getAlter(), skillType);
+            if (getValue4Skill(skillType) >= 1) {
+                float drop = weeks * SkillDrops.instance().getSkillDrop(getValue4Skill(skillType), originalPlayer.getAlter(), skillType);
 
                 // Only bother if there is drop, there is something to drop from,
                 //and check that the player has not popped
-                if ((drop > 0) && (originalPlayer.getSubskill4PosAccurate(skillType) > 0)
-                        && (getValue4Skill4(skillType) == originalPlayer.getValue4Skill4(skillType))) {
-                    setSubskill4Pos(skillType, Math.max(0, getSubskill4PosAccurate(skillType) - drop / 100));
+                if ((drop > 0) && (originalPlayer.getSub4SkillAccurate(skillType) > 0)
+                        && (getValue4Skill(skillType) == originalPlayer.getValue4Skill(skillType))) {
+                    setSubskill4Pos(skillType, Math.max(0, getSub4SkillAccurate(skillType) - drop / 100));
                 }
             }
         }
@@ -2124,7 +1966,7 @@ public class Player {
             PlayerRelativeContributionCache.clear();
             PlayerAbsoluteContributionCache.put("lastChange", new Date());
         }
-        /**
+        /*
          * Create a key for the Hashtable cache
          * We cache every star rating to speed up calculation
          * (calling RPM.calcPlayerStrength() is quite expensive and
@@ -2134,13 +1976,13 @@ public class Player {
         float loy = RatingPredictionManager.getLoyaltyHomegrownBonus(this);
 
         String key = fo.getPosition() + ":"
-                + Helper.round(getGKskill() + getSubskill4Pos(PlayerSkill.KEEPER) + loy, 2) + "|"
-                + Helper.round(getPMskill() + getSubskill4Pos(PlayerSkill.PLAYMAKING) + loy, 2) + "|"
-                + Helper.round(getDEFskill() + getSubskill4Pos(PlayerSkill.DEFENDING) + loy, 2) + "|"
-                + Helper.round(getWIskill() + getSubskill4Pos(PlayerSkill.WINGER) + loy, 2) + "|"
-                + Helper.round(getPSskill() + getSubskill4Pos(PlayerSkill.PASSING) + loy, 2) + "|"
-                + Helper.round(getSPskill() + getSubskill4Pos(PlayerSkill.SET_PIECES) + loy, 2) + "|"
-                + Helper.round(getSCskill() + getSubskill4Pos(PlayerSkill.SCORING) + loy, 2) + "|"
+                + Helper.round(getGKskill() + getSub4Skill(PlayerSkill.KEEPER) + loy, 2) + "|"
+                + Helper.round(getPMskill() + getSub4Skill(PlayerSkill.PLAYMAKING) + loy, 2) + "|"
+                + Helper.round(getDEFskill() + getSub4Skill(PlayerSkill.DEFENDING) + loy, 2) + "|"
+                + Helper.round(getWIskill() + getSub4Skill(PlayerSkill.WINGER) + loy, 2) + "|"
+                + Helper.round(getPSskill() + getSub4Skill(PlayerSkill.PASSING) + loy, 2) + "|"
+                + Helper.round(getSPskill() + getSub4Skill(PlayerSkill.SET_PIECES) + loy, 2) + "|"
+                + Helper.round(getSCskill() + getSub4Skill(PlayerSkill.SCORING) + loy, 2) + "|"
                 + getForm() + "|"
                 + getKondition() + "|"
                 + getErfahrung() + "|"
@@ -2150,9 +1992,9 @@ public class Player {
         if (PlayerAbsoluteContributionCache.containsKey(key)) {
             // System.out.println ("Using star rating from cache, key="+key+", tablesize="+starRatingCache.size());
             if (normalized) {
-                return ((Float) PlayerRelativeContributionCache.get(key)).floatValue();
+                return (Float) PlayerRelativeContributionCache.get(key);
             } else {
-                return ((Float) PlayerAbsoluteContributionCache.get(key)).floatValue();
+                return (Float) PlayerAbsoluteContributionCache.get(key);
             }
         }
 
@@ -2231,7 +2073,7 @@ public class Player {
             }
 
             if (!check4SkillUp(skillType, old)) {
-                setSubskill4Pos(skillType, old.getSubskill4PosAccurate(skillType));
+                setSubskill4Pos(skillType, old.getSub4SkillAccurate(skillType));
             } else {
                 setSubskill4Pos(skillType, 0);
             }
@@ -2247,7 +2089,7 @@ public class Player {
     public void copySkills(Player old) {
 
         for (int skillType = 0; skillType <= PlayerSkill.LOYALTY; skillType++) {
-            setValue4Skill4(skillType, old.getValue4Skill4(skillType));
+            setValue4Skill(skillType, old.getValue4Skill(skillType));
         }
     }
 
@@ -2258,7 +2100,7 @@ public class Player {
      * @param skillType The ID of the skill to perform drop on.
      */
     public void dropSubskills(int skillType) {
-        if (getValue4Skill4(skillType) > 0) {
+        if (getValue4Skill(skillType) > 0) {
             // non-existent has no subskill.
             setSubskill4Pos(skillType, 0.999f);
 
@@ -2287,7 +2129,7 @@ public class Player {
      */
     protected boolean check4SkillUp(int skill, Player oldPlayer) {
         if ((oldPlayer != null) && (oldPlayer.getSpielerID() > 0))
-            return oldPlayer.getValue4Skill4(skill) < getValue4Skill4(skill);
+            return oldPlayer.getValue4Skill(skill) < getValue4Skill(skill);
         return false;
     }
 
@@ -2297,7 +2139,7 @@ public class Player {
     public boolean check4SkillDown(int skill, Player oldPlayer) {
         if (skill < PlayerSkill.EXPERIENCE)
             if ((oldPlayer != null) && (oldPlayer.getSpielerID() > 0))
-                return oldPlayer.getValue4Skill4(skill) > getValue4Skill4(skill);
+                return oldPlayer.getValue4Skill(skill) > getValue4Skill(skill);
         return false;
     }
 
@@ -2339,6 +2181,117 @@ public class Player {
         return OnlineWorker.getTrainingEvents(this.m_iSpielerID);
     }
 
+
+    public List<FuturePlayerTraining> getFuturePlayerTrainings(){
+        if ( futurePlayerTrainings == null){
+            futurePlayerTrainings = DBManager.instance().getFuturePlayerTrainings(this.getSpielerID());
+            if (futurePlayerTrainings.size()>0) {
+                var start = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
+                var remove = new ArrayList<FuturePlayerTraining>();
+                for (var t : futurePlayerTrainings) {
+                    if ( start.isAfter(t.getTo())){
+                        remove.add(t);
+                    }
+                }
+                futurePlayerTrainings.removeAll(remove);
+            }
+        }
+        return futurePlayerTrainings;
+    }
+
+    /**
+     * Get the training priority of a hattrick week. If user training plan is given for the week this user selection is
+     * returned. If no user plan is available, the training priority is determined by the player's best position.
+     *
+     * @param wt
+     *  used to get priority depending from the player's best position.
+     * @param hattrickWeek
+     *  the training week
+     * @return
+     *  the training priority
+     */
+    public FuturePlayerTraining.Priority getTrainingPriority(WeeklyTrainingType wt, HattrickDate hattrickWeek) {
+        for ( var t : getFuturePlayerTrainings()) {
+            if (hattrickWeek.isBetween(t.getFrom(), t.getTo())) {
+                return t.getPriority();
+            }
+        }
+
+        // get Prio from best position
+        int position = HelperWrapper.instance().getPosition(this.getIdealPosition());
+
+        for ( var p: wt.getPrimaryTrainingSkillBonusPositions()){
+            if ( p == position) return FuturePlayerTraining.Priority.FULL_TRAINING;
+        }
+        for ( var p: wt.getPrimaryTrainingSkillPositions()){
+            if ( p == position) {
+                if ( wt.getTrainingType() == TrainingType.SET_PIECES) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
+                return FuturePlayerTraining.Priority.FULL_TRAINING;
+            }
+        }
+        for ( var p: wt.getPrimaryTrainingSkillSecondaryTrainingPositions()){
+            if ( p == position) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
+        }
+        for ( var p: wt.getPrimaryTrainingSkillOsmosisTrainingPositions()){
+            if ( p == position) return FuturePlayerTraining.Priority.OSMOSIS_TRAINING;
+        }
+
+        return null; // No training
+    }
+
+    /**
+     * Set training priority for a time interval.
+     * Previously saved trainings of this interval are overwritten or deleted.
+     *
+     * @param prio new training priority for the given time interval
+     * @param fromWeek first week with new training priority
+     * @param toWeek last week with new training priority
+     */
+    public void setFutureTraining(FuturePlayerTraining.Priority prio, HattrickDate fromWeek, HattrickDate toWeek) {
+        var removeIntervals = new ArrayList<FuturePlayerTraining>();
+        for ( var t : getFuturePlayerTrainings() ){
+            if ( t.cut(fromWeek, toWeek) ||
+                    t.cut(new HattrickDate(0,0), HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())){
+                removeIntervals.add(t);
+            }
+        }
+        futurePlayerTrainings.removeAll(removeIntervals);
+        if ( prio != null){
+            futurePlayerTrainings.add(new FuturePlayerTraining(this.getSpielerID(), prio, fromWeek, toWeek));
+        }
+        DBManager.instance().storeFuturePlayerTrainings(this.getSpielerID(), futurePlayerTrainings);
+    }
+
+    public String getBestPositionInfo() {
+        return MatchRoleID.getNameForPosition(getIdealPosition())
+                + " ("
+                +  getIdealPosStaerke(true, true, 1)
+                + "%)";
+    }
+
+    /**
+     * training priority information of the training panel
+     *
+     * @param nextWeek training priorities after this week will be considered
+     * @return if there is one user selected priority, the name of the priority is returned
+     *  if there are more than one selected priorities, "individual priorities" is returned
+     *  if is no user selected priority, the best position information is returned
+     */
+    public String getTrainingPriorityInformation(HattrickDate nextWeek) {
+        String ret=null;
+        for ( var t : getFuturePlayerTrainings()) {
+            if (!nextWeek.isAfter(t.getTo())){
+                if ( ret != null ){
+                    ret = HOVerwaltung.instance().getLanguageString("trainpre.individual.prios");
+                    break;
+                }
+                ret = t.getPriority().toString();
+            }
+        }
+        if ( ret != null ) return ret;
+        return getBestPositionInfo();
+
+    }
 }
 
 class PositionContribute {

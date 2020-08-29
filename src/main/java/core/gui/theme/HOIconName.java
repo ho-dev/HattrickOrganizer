@@ -35,7 +35,13 @@ public interface HOIconName {
 	 String BRUISED_SMALL   = "patch.small";
 	 String INJURED_SMALL   = "injured.small";
 
-	 String PRINTER 		= "printer";
+	 String BRUISED_TINY = "bruised.tiny";
+	 String INJURED_TINY = "injured.tiny";
+	 String SUSPENDED_TINY = "suspended.tiny";
+	 String TWOYELLOW_TINY = "twoyellow.tiny";
+	 String ONEYELLOW_TINY = "oneyellow.tiny";
+	 String TRANSFERLISTED_TINY = "transferlisted.tiny";
+
 	 String DISK 			= "disk";
 	 String LOCKED 			= "locked";
 	 String EMPTY 			= "empty";
@@ -183,10 +189,11 @@ public interface HOIconName {
 	String ARROW_CIRCLE = "arrow_circle_double";
 	String ARROW_MOVE = "arrow_move";
 	String SUBSTITUTION = "substitution";
+	String MAN_MARKING = "man_marking";
 	String IFA_VISITED  = "ifa_visited";
 	String INFORMATION  = "information";
 	String CHPP  = "chpp";
-	
+
 	String HOME = "home";
 	String AWAY = "away";
 

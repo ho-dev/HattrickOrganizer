@@ -1,9 +1,12 @@
 package module.matches;
 
 import core.db.DBManager;
+import core.model.match.MatchEvent;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
+import core.net.OnlineWorker;
+import core.util.HOLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +35,7 @@ public class MatchesModel {
 
 	public Matchdetails getDetails() {
 		if (this.details == null && this.match != null) {
-			this.details = DBManager.instance().getMatchDetails(this.match.getMatchID());
+			this.details = this.match.getMatchdetails();
 		}
 		return this.details;
 	}
@@ -40,6 +43,12 @@ public class MatchesModel {
 	public MatchLineupTeam getHomeTeamInfo() {
 		if (home == null && match != null) {
 			home = DBManager.instance().getMatchLineupTeam(match.getMatchID(), match.getHeimID());
+
+			if ( home == null){
+				// Lineup team was not stored (Verlegenheitstruppe)
+				var ok = OnlineWorker.downloadMatchData(match, true);
+				home = DBManager.instance().getMatchLineupTeam(match.getMatchID(), match.getHeimID());
+			}
 		}
 		return home;
 	}

@@ -43,9 +43,11 @@ COUNTRIES.append(Country("Bangladesh", 132, [209729, 209730, 209734]))
 COUNTRIES.append(Country("Barbados", 124, [123209, 123212, 123224]))
 COUNTRIES.append(Country("Belarus", 91, [60146, 60152, 60240, 115240, 245615]))
 COUNTRIES.append(Country("Belgium", 44, [8714, 8715, 8719, 9703, 12708, 22985]))
+COUNTRIES.append(Country("Belize", 158, [258540, 258541, 258545]))
 COUNTRIES.append(Country("Benin", 139, [238747, 238749, 238757]))
 COUNTRIES.append(Country("Bolivia", 74, [34840, 34866, 34901, 48704, 66096]))
 COUNTRIES.append(Country("Bosnia and Herzegovina", 69, [29726, 29727, 29731, 48768, 66352]))
+COUNTRIES.append(Country("Botswana", 160, [258582, 258583, 258587]))
 COUNTRIES.append(Country("Brazil", 16, [3229, 3230, 3234, 3250, 11047, 52757]))
 COUNTRIES.append(Country("Brunei", 136, [229917, 229918, 229926]))
 COUNTRIES.append(Country("Bulgaria", 62, [14234, 14235, 14239, 18953, 65840]))
@@ -106,6 +108,7 @@ COUNTRIES.append(Country("Lebanon", 120, [123111, 123112, 123116, 253359]))
 COUNTRIES.append(Country("Liechtenstein", 117, [123048, 123049, 123053, 203590]))
 COUNTRIES.append(Country("Lithuania", 66, [29747, 29748, 29752, 33687, 59885]))
 COUNTRIES.append(Country("Luxembourg", 84, [57433, 57498, 57502, 115304]))
+COUNTRIES.append(Country("Madagascar", 159, [258561, 258562, 258566]))
 COUNTRIES.append(Country("Malaysia", 45, [4213, 8735, 8739, 16900, 49429]))
 COUNTRIES.append(Country("Maldives", 144, [245935, 245937, 245945]))
 COUNTRIES.append(Country("Malta", 101, [88258, 88268, 88324, 88788, 203654]))
@@ -135,6 +138,7 @@ COUNTRIES.append(Country("Portugal", 25, [3705, 3706, 3710, 3726, 9767, 10023]))
 COUNTRIES.append(Country("Qatar", 141, [238789, 238855, 239119, 253295]))
 COUNTRIES.append(Country("Romania", 37, [3854, 3855, 3859, 3875, 3939, 21961]))
 COUNTRIES.append(Country("Russia", 35, [3187, 3188, 3192, 21897, 76480]))
+COUNTRIES.append(Country("Saint Vincent and the Grenadines", 157, [258519, 258520, 258524]))
 COUNTRIES.append(Country("São Tomé e Príncipe", 149, [258094, 258095, 258099, 258285]))
 COUNTRIES.append(Country("Saudi Arabia", 79, [48896, 48897, 48901, 245871, 253487]))
 COUNTRIES.append(Country("Scotland", 26, [3166, 3167, 3171, 8054, 29789]))
@@ -145,7 +149,7 @@ COUNTRIES.append(Country("Slovakia", 67, [29768, 29769, 29773, 65392, 88532]))
 COUNTRIES.append(Country("Slovenia", 64, [14213, 14214, 14218, 18889, 65584]))
 COUNTRIES.append(Country("South Africa", 27, [3161, 3162, 9351, 68656]))
 COUNTRIES.append(Country("South Korea", 30, [3140, 3141, 3145, 98132, 117416]))
-COUNTRIES.append(Country("Spain", 36, [3403, 3404, 3408, 3424, 5514, 14319, 38037]))
+COUNTRIES.append(Country("Spain", 36, [3403, 3404, 3408, 3424, [(5514, 5751), (5754, 5771)], 14319, 38037]))
 COUNTRIES.append(Country("Sri Lanka", 152, [258052, 258053, 258057, 258349]))
 COUNTRIES.append(Country("Suriname", 113, [98835, 98836, 98840]))
 COUNTRIES.append(Country("Sweden", 1, [1, 2, 6, 22, 86, 745]))
@@ -171,8 +175,13 @@ COUNTRIES.append(Country("Yemen", 133, [225688, 225693, 225697, 252911]))
 for country in COUNTRIES:
     ids = []
     for division, LeagueIDstart in enumerate(country.leagueStructure):
-        for i in range(SIZE[division]):
-            ids.append(LeagueIDstart+i)
+        if isinstance(LeagueIDstart, list):
+            # this should only apply to Spain (V.238 and V.239 have not consecutive IDs... It jumps from 5751 to 5754)
+            for iLeagueStart, iLeagueEnd in LeagueIDstart:
+                ids.extend(list(range(iLeagueStart, iLeagueEnd+1)))
+        else:
+            ids.extend(list(range(LeagueIDstart, LeagueIDstart+SIZE[division])))
+    assert sum(SIZE[:len(country.leagueStructure)]) == len(ids), "The generated list of division has not the expected length"
     ids = list(divide_chunks(ids, 100))
     dDivStructure = {}
     for blockID, block in enumerate(ids):
@@ -189,4 +198,3 @@ for country in COUNTRIES:
     print(r.text)
 
 print("process complete !")
-

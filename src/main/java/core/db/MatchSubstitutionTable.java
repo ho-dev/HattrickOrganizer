@@ -155,21 +155,8 @@ public class MatchSubstitutionTable extends AbstractTable {
 				byte orderId = (byte) rs.getInt("OrderType");
 				int playerIn = rs.getInt("PlayerIn");
 				int playerOut = rs.getInt("PlayerOut");
-				MatchOrderType matchOrderType;
-				if (orderId == 3) {
-					matchOrderType = MatchOrderType.POSITION_SWAP;
-				} else {
-					if (playerIn == playerOut) {
-						matchOrderType = MatchOrderType.NEW_BEHAVIOUR;
-					} else if ((playerIn <= 0 || playerOut <= 0)) {
-						// allows the correct retrieval of some cases
-						matchOrderType = MatchOrderType.NEW_BEHAVIOUR;
-					} else {
-						matchOrderType = MatchOrderType.SUBSTITUTION;
-					}
-				}
 				sub = new Substitution(rs.getInt("PlayerOrderID"), playerIn, playerOut,
-						matchOrderType, (byte) rs.getInt("MatchMinuteCriteria"),
+						orderId, (byte) rs.getInt("MatchMinuteCriteria"),
 						(byte) rs.getInt("Pos"), (byte) rs.getInt("Behaviour"),
 						RedCardCriteria.getById((byte) rs.getInt("Card")),
 						GoalDiffCriteria.getById((byte) rs.getInt("Standing")));

@@ -1,4 +1,4 @@
-package core.gui.theme;
+package core.gui.comp.icon;
 
 import javax.swing.*;
 import java.awt.*;

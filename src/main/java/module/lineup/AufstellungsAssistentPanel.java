@@ -398,8 +398,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 			if (entry.getValue() == null) {
 				boolean selected = true;
 				LineupAssistantSelectorOverlay laso = new LineupAssistantSelectorOverlay();
-				HashMap<String, String> upValues = core.model.UserParameter.instance()
-						.getValues();
+				Map<String, String> upValues = UserParameter.instance().getValues();
 				if (UserParameter.instance().assistantSaved) {
 					selected = core.model.UserParameter.instance().getBooleanValue(upValues,
 							"assistant" + entry.getKey().getPositionsID());

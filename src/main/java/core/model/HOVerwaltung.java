@@ -172,7 +172,8 @@ public class HOVerwaltung {
 	}
 
 	/**
-	 * interne Func die ein Model aus der DB lädt
+	 * internal method to load model from database
+	 * (lineup ratings are only correct if id is the latest one)
 	 */
 	protected HOModel loadModel(int id) {
 		final HOModel model = new HOModel();

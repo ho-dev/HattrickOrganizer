@@ -179,6 +179,9 @@ public interface HOColorName {
 
 	// Training
 	public static final String TRAINING_BIRTHDAY_BG = "training.birthday.bg";
+	public static final String TRAINING_FULL_BG = "training.full.bg";
+	public static final String TRAINING_PARTIAL_BG = "training.partial.bg";
+	public static final String TRAINING_OSMOSIS_BG = "training.osmosis.bg";
 
 	// TS Forecast
 	public static final String TSFORECAST_ALT_COLOR = "tsforecast.alt.color";
@@ -188,4 +191,16 @@ public interface HOColorName {
 	public static final String HRF_LIGHTBLUE_BG = "hrf.lightblue.bg";
 	public static final String HRF_DARKBLUE_BG = "hrf.darkblue.bg";
 	public static final String HRF_RED_BG = "hrf.red.bg";
+
+	// Player State colours
+	String FG_STANDARD = "player.state.standard";
+	String FG_TRANSFERLISTED = "player.state.transferlisted";
+	String FG_INJURED = "player.state.injured";
+	String FG_BRUISED = "player.state.bruised";
+	String FG_TWO_YELLOW_CARDS = "player.state.two-yellow-cards";
+	String FG_RED_CARD = "player.state.red-card";
+
+	// Promotion
+	String BG_PROMOTION_INFO = "promotion.info.bg";
+	String FG_PROMOTION_INFO = "promotion.info.fg";
 }

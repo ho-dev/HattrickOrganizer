@@ -1,6 +1,3 @@
-/**
- *
- */
 package core.gui.theme.ho;
 
 import core.gui.theme.HOBooleanName;
@@ -93,7 +90,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(SHOW_MATCH, "gui/bilder/ShowMatch.gif");
 		put(DOWNLOAD_MATCH, "gui/bilder/DownloadMatch.gif");
 
-		put(PRINTER, "gui/bilder/printer.svg");
 		put(DISK, "gui/bilder/disk.png");
 		put(LOCKED, "gui/bilder/Locked.gif");
 		put(EMPTY, "gui/bilder/empty.gif");
@@ -120,7 +116,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LOGO16_STABLE, "gui/bilder/Logo-16px_stable.png");
 		put(LOGO16_BETA, "gui/bilder/Logo-16px_beta.png");
 		put(LOGO16_DEV, "gui/bilder/Logo-16px_dev.png");
-		//put(TRICKOT, "gui/bilder/Trickot.png");
 		put(TRICKOT, "gui/bilder/jerseys.svg");
 
 		// Player Overview
@@ -129,6 +124,13 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(YELLOWCARD_SMALL, "gui/bilder/player overview/yellow-card(yellow)-small.png");
 		put(TWOYELLOWCARDS_SMALL, "gui/bilder/player overview/yellow-card-x2(yellow)-small.png");
 		put(REDCARD_SMALL, "gui/bilder/player overview/red-card(red)-small.png");
+
+		put(INJURED_TINY, "img/icons/made/injury(red).svg");
+		put(BRUISED_TINY, "img/icons/official/icomoon/SVG/injury.svg");
+		put(TRANSFERLISTED_TINY, "img/icons/official/icomoon/SVG/transferlisted.svg");
+		put(SUSPENDED_TINY, "img/icons/made/red-card(red).svg");
+		put(TWOYELLOW_TINY, "img/icons/made/yellow-card-x2(yellow).svg");
+		put(ONEYELLOW_TINY, "img/icons/made/yellow-card(yellow).svg");
 
 		// Highlights
 
@@ -250,6 +252,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(ARROW_CIRCLE, "gui/bilder/Fugue/arrow-circle-double-135.png");
 		put(ARROW_MOVE, "gui/bilder/Fugue/arrow-move-recoloured.png");
 		put(SUBSTITUTION, "gui/bilder/Fugue/arrow-circle-double-135-recoloured.png");
+		// TODO: create new icon for man marking
+		put(MAN_MARKING, "gui/bilder/Fugue/arrow-circle-double-135-recoloured.png");
 		put(IFA_VISITED, "gui/bilder/Fugue/status.png");
 		put(INFORMATION, "gui/bilder/Fugue/information-white.png");
 		put(CHPP, "gui/bilder/chpp.png");
@@ -471,6 +475,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		// Training
 		put(TRAINING_BIRTHDAY_BG, new Color(255, 240, 175));
+		put(TRAINING_FULL_BG,"lightGreen");
+		put(TRAINING_PARTIAL_BG,"lightYellow");
+		put(TRAINING_OSMOSIS_BG, Color.LIGHT_GRAY);
 
 		// TS Forecast
 		put(TSFORECAST_ALT_COLOR, Color.BLUE);
@@ -480,6 +487,17 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(HOColorName.HRF_LIGHTBLUE_BG, new Color(235,235,255));
 		put(HOColorName.HRF_DARKBLUE_BG, new Color(220,220,255));
 		put(HOColorName.HRF_RED_BG, new Color(255,200,200));
+
+		// Player State colours
+		put(HOColorName.FG_STANDARD, Color.BLACK);
+		put(HOColorName.FG_TRANSFERLISTED, new Color(0, 180, 0));
+		put(HOColorName.FG_BRUISED, new Color(100, 0, 0));
+		put(HOColorName.FG_INJURED, new Color(200, 0, 0));
+		put(HOColorName.FG_TWO_YELLOW_CARDS, new Color(100, 100, 0));
+		put(HOColorName.FG_RED_CARD, new Color(200, 20, 20));
+
+		// Promotion
+		put(HOColorName.FG_PROMOTION_INFO, new Color(238, 39, 39, 255));
 	}
 
 	public Color getDefaultColor(String key) {
@@ -492,7 +510,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 	@Override
 	public ImageIcon loadImageIcon(String path) {
-		ImageIcon image = null;
+		ImageIcon image;
 
 		image = (ImageIcon) cache.get(path);
 		if (image == null) {
@@ -502,18 +520,14 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 					try {
 						// This is a shameless hack to get resources to load from IntelliJ.
 						resource = new File("./src/main/resources" + path).toURI().toURL();
-
-						if (resource != null) {
-							image = new ImageIcon(resource);
-							cache.put(path, image);
-
-							return image;
-						}
-					} catch (MalformedURLException e) {
+						image = new ImageIcon(resource);
+						cache.put(path, image);
+						return image;
+					}
+					catch (MalformedURLException e) {
 						// At this point this is hopeless.
 						e.printStackTrace();
 					}
-
 					HOLogger.instance().log(Schema.class, path + " Not Found!!!");
 					return loadImageIcon("gui/bilder/Unknownflag.png");
 				}

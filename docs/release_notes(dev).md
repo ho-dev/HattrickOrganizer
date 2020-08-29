@@ -14,6 +14,12 @@ Changelist HO! 4.0
 
 ## Highlights
 
+  - New build process:
+    - **HO! now requires Java 14 but artefacts including JRE are made available**
+    - directory structure has changed (db location, log files, ...)
+   - [FEAT] Improved HO themes, and implemented dark mode. #85
+   - [BUG] Complete rewrite of Special Events module
+
 
 ## Detailed Changelog
 
@@ -23,24 +29,39 @@ Changelist HO! 4.0
 ### Squad
 
   - [FIX] Remove lag in sync between tables in Squad #465
+  - [FEAT] Provide better default for initial position of player comparison divider.
 
 ### Team Analyser
 
+ - [FEAT] Save adjusted lineup ratings of MatchPredictionPanel in an extra row #66
+
 ### Rating
 
+  - [BUG] Fixes Long Shots tactic level calculation
 
 ### Matches
 
   - [FIX] Some icons fixes in match report
+  - [FEAT] Information about extra time or penalty shoot out in match result #561
 
 ### Lineup
 
+  - [FEAT] Provide better defaults for initial position of dividers.
 
 ### Training
 
+  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512 
+  - [FIX] Fix bug of training effect of Walkover matches #623
+  - [FEAT] Individual training plans for each player in training preview #587
 
 ### Misc
 
+  - [FEAT] Remove jcalendar dependency.
+  - [FIX] ExperienceViewer removed #503
+  - [FIX] Avoid potential infinite loop at startup. [#584]
+  - [FIX] Layout issue in multiple screen setup. [#618]
+  - [FEAT] Remove all printing functionality.
+  - [FEAT] Remove player state colour, and display icons instead in Lineup.
 
 ### League
 

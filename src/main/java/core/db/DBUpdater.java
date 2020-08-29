@@ -116,103 +116,139 @@ final class DBUpdater {
 		}
 	}
 
-	private void updateDBv400(int dbVersion, int version){
+	private void updateDBv400(int dbVersion, int version) throws SQLException {
 		// Delete existing values to provide sane defaults.
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'spielerUebersichtsPanel_horizontalRightSplitPane'");
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_verticalSplitPane'");
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalRightSplitPane'");
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalLeftSplitPane'");
 
+		if (!columnExistsInTable("Duration", MatchesKurzInfoTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN Duration INTEGER ");
+		}
+		if (!columnExistsInTable("MatchPart", MatchHighlightsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN MatchPart INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EventVariation INTEGER ");
+		}
+		if (!columnExistsInTable("HomeGoal0", MatchDetailsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal0 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal1 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal2 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal3 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal4 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal0 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal1 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal2 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal3 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal4 INTEGER ");
+		}
+
+		if (!columnExistsInTable("NAME", TAPlayerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN NAME VARCHAR (100) ");
+		}
+
 		// use defaults player formula from defaults.xml by resetting the value in the database
 		try {
-		AbstractTable faktorenTab = dbManager.getTable(FaktorenTable.TABLENAME);
-		if (faktorenTab != null) {
-			faktorenTab.dropTable();
-			faktorenTab.createTable();
+			AbstractTable faktorenTab = dbManager.getTable(FaktorenTable.TABLENAME);
+			if (faktorenTab != null) {
+				faktorenTab.dropTable();
+				faktorenTab.createTable();
 			}
-		}
-		catch (SQLException throwables) {
+		} catch (SQLException throwables) {
 			HOLogger.instance().error(getClass(), "updateDBv400:  Faktoren table could not be reset");
 			throwables.printStackTrace();
+		}
+
+
+		resetUserColumns();
+
+		//create FuturePlayerTrainingTable
+		if (!tableExists(FuturePlayerTrainingTable.TABLENAME)) {
+			dbManager.getTable(FuturePlayerTrainingTable.TABLENAME).createTable();
 		}
 
 		updateDBVersion(dbVersion, version);
 	}
 
+	private void resetUserColumns() {
+		HOLogger.instance().debug(getClass(), "Resetting player overview rows.");
+		String sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 2000 AND 3000";
+		m_clJDBCAdapter.executeQuery(sql);
 
-	private void updateDBv301(int dbVersion, int version) throws SQLException {
-		try {
-
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isDerby SET DATA TYPE BOOLEAN");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isNeutral SET DATA TYPE BOOLEAN");
-
-			if (!columnExistsInTable("EVENT_INDEX", MatchHighlightsTable.TABLENAME)) {
-				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EVENT_INDEX INTEGER");
-			}
-
-			if (!columnExistsInTable("INJURY_TYPE", MatchHighlightsTable.TABLENAME)) {
-				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN INJURY_TYPE TINYINT");
-			}
-
-			if (columnExistsInTable("TYP", MatchHighlightsTable.TABLENAME)) {
-				m_clJDBCAdapter.executeUpdate("UPDATE MATCHHIGHLIGHTS SET MATCH_EVENT_ID = (TYP * 100) + SUBTYP WHERE MATCH_EVENT_ID IS NULL");
-				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP TYP");
-			}
-
-		   if (!columnExistsInTable("LastMatchDate", SpielerTable.TABLENAME)) {
-				m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchDate VARCHAR (100)");
-			}
-			if (!columnExistsInTable("LastMatchRating", SpielerTable.TABLENAME)) {
-				m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchRating INTEGER");
-			}
-			if (!columnExistsInTable("LastMatchId", SpielerTable.TABLENAME)) {
-				m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchId INTEGER");
-			}
-      
-			Arrays.asList("HEIMTORE", "GASTTORE", "SUBTYP").forEach(s -> {
-				try {
-					if (columnExistsInTable(s, MatchHighlightsTable.TABLENAME)) {
-						m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP " + s);
-					}
-				} catch (SQLException e) {
-					HOLogger.instance().log(getClass(), e);
-				}
-			});
-
-			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_heimid_idx ON MATCHDETAILS (HEIMID)");
-			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_gastid_idx ON MATCHDETAILS (GASTID)");
-			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_heimid_idx ON MATCHESKURZINFO (HEIMID)");
-			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_gastid_idx ON MATCHESKURZINFO (GASTID)");
-			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_teamid_idx ON MATCHHIGHLIGHTS (TEAMID)");
-			m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_eventid_idx ON MATCHHIGHLIGHTS (MATCH_EVENT_ID)");
-
-			Arrays.asList("GlobalRanking", "LeagueRanking", "RegionRanking", "PowerRating").forEach(s -> {
-				try {
-					if (! columnExistsInTable(s, VereinTable.TABLENAME)) {
-						m_clJDBCAdapter.executeUpdate(String.format("ALTER TABLE VEREIN ADD COLUMN %s INTEGER", s));
-					}
-				} catch (SQLException e) {
-					HOLogger.instance().log(getClass(), e);
-				}
-			});
-
-			Arrays.asList("TWTrainer", "Physiologen").forEach(s -> {
-				try {
-					if (columnExistsInTable(s, VereinTable.TABLENAME)) {
-						m_clJDBCAdapter.executeUpdate("ALTER TABLE VEREIN DROP " + s);
-					}
-				} catch (SQLException e) {
-					HOLogger.instance().log(getClass(), e);
-				}
-			});
-
-			updateDBVersion(dbVersion, version);
-      
-		} catch (SQLException e) {
-			HOLogger.instance().log(getClass(), e);
-		}
+		HOLogger.instance().debug(getClass(), "Resetting lineup overview rows.");
+		sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 3000 AND 4000";
+		m_clJDBCAdapter.executeQuery(sql);
 	}
 
+
+	private void updateDBv301(int dbVersion, int version) throws SQLException {
+
+		m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isDerby SET DATA TYPE BOOLEAN");
+		m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isNeutral SET DATA TYPE BOOLEAN");
+
+		if (!columnExistsInTable("EVENT_INDEX", MatchHighlightsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EVENT_INDEX INTEGER");
+		}
+
+		if (!columnExistsInTable("INJURY_TYPE", MatchHighlightsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN INJURY_TYPE TINYINT");
+		}
+
+		if (columnExistsInTable("TYP", MatchHighlightsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("UPDATE MATCHHIGHLIGHTS SET MATCH_EVENT_ID = (TYP * 100) + SUBTYP WHERE MATCH_EVENT_ID IS NULL");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP TYP");
+		}
+
+		if (!columnExistsInTable("LastMatchDate", SpielerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchDate VARCHAR (100)");
+		}
+		if (!columnExistsInTable("LastMatchRating", SpielerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchRating INTEGER");
+		}
+		if (!columnExistsInTable("LastMatchId", SpielerTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchId INTEGER");
+		}
+
+		Arrays.asList("HEIMTORE", "GASTTORE", "SUBTYP").forEach(s -> {
+			try {
+				if (columnExistsInTable(s, MatchHighlightsTable.TABLENAME)) {
+					m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP " + s);
+				}
+			} catch (SQLException e) {
+				HOLogger.instance().log(getClass(), e);
+			}
+		});
+
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_heimid_idx ON MATCHDETAILS (HEIMID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_gastid_idx ON MATCHDETAILS (GASTID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_heimid_idx ON MATCHESKURZINFO (HEIMID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_gastid_idx ON MATCHESKURZINFO (GASTID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_teamid_idx ON MATCHHIGHLIGHTS (TEAMID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_eventid_idx ON MATCHHIGHLIGHTS (MATCH_EVENT_ID)");
+
+		Arrays.asList("GlobalRanking", "LeagueRanking", "RegionRanking", "PowerRating").forEach(s -> {
+			try {
+				if (!columnExistsInTable(s, VereinTable.TABLENAME)) {
+					m_clJDBCAdapter.executeUpdate(String.format("ALTER TABLE VEREIN ADD COLUMN %s INTEGER", s));
+				}
+			} catch (SQLException e) {
+				HOLogger.instance().log(getClass(), e);
+			}
+		});
+
+		Arrays.asList("TWTrainer", "Physiologen").forEach(s -> {
+			try {
+				if (columnExistsInTable(s, VereinTable.TABLENAME)) {
+					m_clJDBCAdapter.executeUpdate("ALTER TABLE VEREIN DROP " + s);
+				}
+			} catch (SQLException e) {
+				HOLogger.instance().log(getClass(), e);
+			}
+		});
+
+		updateDBVersion(dbVersion, version);
+
+	}
 
 	private void updateDBv300(int DBVersion, int version) throws SQLException {
 		// HO 3.0
@@ -628,8 +664,7 @@ final class DBUpdater {
 				try {
 					HashMap<String, Object> tmp = new HashMap<>();
 					while (rs.next()) {
-						tmp.put("TA_" + rs.getString("NAME"),
-								Boolean.valueOf(rs.getBoolean("VALUE")));
+						tmp.put("TA_" + rs.getString("NAME"), rs.getBoolean("VALUE"));
 					}
 					mConfigTable.saveConfig(tmp);
 				} catch (SQLException e) {
@@ -1105,13 +1140,7 @@ final class DBUpdater {
 
 		if (!alreadyApplied) {
 			try {
-				HOLogger.instance().debug(getClass(), "Reseting player overview rows.");
-				String sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 2000 AND 3000";
-				m_clJDBCAdapter.executeQuery(sql);
-
-				HOLogger.instance().debug(getClass(), "Reseting lineup overview rows.");
-				sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 3000 AND 4000";
-				m_clJDBCAdapter.executeQuery(sql);
+				resetUserColumns();
 			} catch (Exception e) {
 				HOLogger.instance().debug(getClass(),
 						"Error updating to config 1431: " + e.getMessage());

@@ -2,25 +2,27 @@ package module.series;
 
 import core.model.series.*;
 import core.util.HOLogger;
-import core.util.Helper;
 
 import java.sql.Timestamp;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-
+/**
+ * Spielplan represents a game schedule, i.e. a particular season in a series.
+ */
 public class Spielplan  {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    /*LigaTabellen Member für Schnellzugriff nach Berechnung*/
     protected LigaTabelle m_clTabelle;
     protected String m_sLigaName = "";
     protected Tabellenverlauf m_clVerlauf;
     protected Timestamp m_clFetchDate;
-    protected Vector<Paarung> m_vEintraege = new Vector<Paarung>();
+    protected List<Paarung> m_vEintraege = new ArrayList<>();
     protected int m_iLigaId = -1;
     protected int m_iSaison = -1;
     //~ Constructors -------------------------------------------------------------------------------
-    //In DB immer nur ein einzigen Eintrag zu Spielplan pro Saison halten da alte Daten immer enthalten bleiben in neuem Plan
+    // Always keep a single entry per season in the db so old data is kept in the new schedule.
     /**
      * Creates a new instance of Spielplan
      */
@@ -28,7 +30,7 @@ public class Spielplan  {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public final Vector<Paarung> getEintraege() {
+    public final List<Paarung> getEintraege() {
         return m_vEintraege;
     }
 
@@ -73,7 +75,7 @@ public class Spielplan  {
      *
      * @param m_sLigaName New value of property m_sLigaName.
      */
-    public final void setLigaName(java.lang.String m_sLigaName) {
+    public final void setLigaName(String m_sLigaName) {
         this.m_sLigaName = m_sLigaName;
     }
 
@@ -82,53 +84,39 @@ public class Spielplan  {
      *
      * @return Value of property m_sLigaName.
      */
-    public final java.lang.String getLigaName() {
+    public final String getLigaName() {
         return m_sLigaName;
     }
 
     /**
-     * liefert die Spiele zu einem Spieltag
+     * Returns the list of fixtures for a match day.
+     *
+     * @param gameDay Day number.
+     * @return List – List of fixtures for a given match day.
      */
-    public final Vector<Paarung> getPaarungenBySpieltag(int spieltag) {
-        final Vector<Paarung> spiele = new Vector<Paarung>();
-        Paarung tmp = null;
-
-        for (int i = 0; i < m_vEintraege.size(); i++) {
-            tmp = (Paarung) m_vEintraege.elementAt(i);
-
-            if (tmp.getSpieltag() == spieltag) {
-                spiele.add(tmp);
-            }
-        }
-
-        return spiele;
+    public final List<Paarung> getPaarungenBySpieltag(final int gameDay) {
+        return m_vEintraege
+                .stream()
+                .filter(fixture -> fixture.getSpieltag() == gameDay)
+                .collect(Collectors.toList());
     }
+
 
     /////////////////////////////////////////////////////////////////////////////////7
     //Logik
     ///////////////////////////////////////////////////////////////////////////////7
 
     /**
-     * liefert die Spiele eines bestimmten Teams, sortiert nach Spieltagen
+     * Returns the games of a given team, sorted by match day.
+     *
+     * @param teamId ID of the team for which the fixtures are retrieved.
+     * @return Paarung[] – Array of fixtures of team, sorted by match day.
      */
-    public final Paarung[] getPaarungenByTeamId(int id) {
-        Paarung tmp = null;
-        final Vector<Paarung> spiele = new Vector<Paarung>();
-        Paarung[] aSpiele = null;
-
-        for (int i = 0; i < m_vEintraege.size(); i++) {
-            tmp = (Paarung) m_vEintraege.elementAt(i);
-
-            if ((tmp.getHeimId() == id) || (tmp.getGastId() == id)) {
-                spiele.add(tmp);
-            }
-        }
-
-        aSpiele = new Paarung[spiele.size()];
-        Helper.copyVector2Array(spiele, aSpiele);
-        java.util.Arrays.sort(aSpiele);
-
-        return aSpiele;
+    public final Paarung[] getPaarungenByTeamId(final int teamId) {
+        return m_vEintraege.stream()
+                .filter(fixture -> (fixture.getHeimId() == teamId) || (fixture.getGastId() == teamId))
+                .sorted()
+                .toArray(Paarung[]::new);
     }
 
     /**
@@ -186,13 +174,11 @@ public class Spielplan  {
     @Override
 	public final boolean equals(Object o) {
         if (o instanceof Spielplan) {
-            if ((m_iLigaId == ((Spielplan) o).getLigaId())
-                && (m_iSaison == ((Spielplan) o).getSaison())) {
-                return true;
-            }
+            return (m_iLigaId == ((Spielplan) o).getLigaId())
+                    && (m_iSaison == ((Spielplan) o).getSaison());
+        } else {
+            return false;
         }
-
-        return false;
     }
 
     @Override
@@ -204,7 +190,9 @@ public class Spielplan  {
     }
 
     /**
-     * berechnet die Positionierung vom SPieltag zuvor
+     * Retrieves the previous position in series table for each current position in <code>tabelle</code>.
+     *
+     * @param tabelle Current series table for which the previous positions are being set.
      */
     protected final void berechneAltePositionen(LigaTabelle tabelle) {
         LigaTabelle compare = null;
@@ -217,14 +205,14 @@ public class Spielplan  {
             return;
         }
 
-        spieltag = ((LigaTabellenEintrag) tabelle.getEintraege().elementAt(0)).getAnzSpiele() - 1;
+        spieltag = (tabelle.getEintraege().elementAt(0)).getAnzSpiele() - 1;
 
         if (spieltag > 0) {
             compare = berechneTabelle(spieltag);
             compare.sort();
 
             for (int i = 0; i < tabelle.getEintraege().size(); i++) {
-                tmp = (LigaTabellenEintrag) tabelle.getEintraege().elementAt(i);
+                tmp = tabelle.getEintraege().elementAt(i);
                 tmp2 = compare.getEintragByTeamId(tmp.getTeamId());
 
                 if (tmp2 != null) {
@@ -235,30 +223,28 @@ public class Spielplan  {
     }
 
     /**
-     * berechnet die Tabelle anhand des Spielplans
+     * Calculates the series table based on the games of a given match day.
      *
-     * @param maxSpieltag gibt an bis zu welchem Spieltag gerechnet werden soll (inklusive)
+     * @param maxMatchDay Game day up to which series table is computed.
+     * @return LigaTabelle – Computed series table.
      */
-    protected final LigaTabelle berechneTabelle(int maxSpieltag) {
+    protected final LigaTabelle berechneTabelle(int maxMatchDay) {
         final LigaTabelle tmp = new LigaTabelle();
-        final Vector<Paarung> spieltag = getPaarungenBySpieltag(maxSpieltag);
+        final List<Paarung> spieltag = getPaarungenBySpieltag(maxMatchDay);
 
-        //vorabInfos
         tmp.setLigaId(m_iLigaId);
         tmp.setLigaName(m_sLigaName);
 
         for (int i = 0; i < spieltag.size(); i++) {
-            //jeweils für Heim und Gast TabellenEinträge erstellen
-            tmp.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(((Paarung) spieltag
-                                                                         .elementAt(i)).getHeimId()),
-                                                   ((Paarung) spieltag.elementAt(i)).getHeimId(),
-                                                   ((Paarung) spieltag.elementAt(i)).getHeimName(),
-                                                   maxSpieltag));
-            tmp.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(((Paarung) spieltag
-                                                                         .elementAt(i)).getGastId()),
-                                                   ((Paarung) spieltag.elementAt(i)).getGastId(),
-                                                   ((Paarung) spieltag.elementAt(i)).getGastName(),
-                                                   maxSpieltag));
+            // Create table entries for home and away games.
+            tmp.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(spieltag.get(i).getHeimId()),
+                                                   spieltag.get(i).getHeimId(),
+                                                   spieltag.get(i).getHeimName(),
+                                                   maxMatchDay));
+            tmp.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(spieltag.get(i).getGastId()),
+                                                   spieltag.get(i).getGastId(),
+                                                   spieltag.get(i).getGastName(),
+                                                   maxMatchDay));
         }
 
         tmp.sort();
@@ -268,131 +254,132 @@ public class Spielplan  {
     }
 
     /**
-     * Erstellt einen TabellenEintrag aus den Spielen eines Vereins
-     * @param maxSpieltag gibt an bis zu welchem Spieltag die Tabelle berechnet werden soll ( 1-14 )
+     * Creates a league table from the matches of a team.
+     *
+     * @param maxSpieltag Day until which the table is being calculated (1–14)
      */
     protected final LigaTabellenEintrag berechneTabellenEintrag(Paarung[] spiele, int teamId,
                                                                 String name, int maxSpieltag) {
         final LigaTabellenEintrag eintrag = new LigaTabellenEintrag();
-        int anzSpiele = 0;
-        int hSieg = 0;
-        int hUn = 0;
-        int hNied = 0;
-        int aSieg = 0;
-        int aUn = 0;
-        int aNied = 0;
-        int hToreFuer = 0;
-        int hToreGegen = 0;
-        int aToreFuer = 0;
-        int aToreGegen = 0;
-        int hPunkte = 0;
-        int aPunkte = 0;
+        int gameNumber = 0;
+        int homeVictories = 0;
+        int homeDraws = 0;
+        int homeDefeats = 0;
+        int awayVictories = 0;
+        int awayDraws = 0;
+        int awayDefeats = 0;
+        int homeGoalsFor = 0;
+        int homeGoalsAgainst = 0;
+        int awayGoalsFor = 0;
+        int awayGoalsAgainst = 0;
+        int homePoints = 0;
+        int awayPoints = 0;
 
         eintrag.setTeamId(teamId);
         eintrag.setTeamName(name);
 
         for (int i = 0; (i < spiele.length) && (i < maxSpieltag); i++) {
-            //Spiel schon gespielt
+            // Games already played
             if (spiele[i].getToreHeim() > -1) {
-                //Anz Spiel erhöhen
-                anzSpiele++;
+                gameNumber++;
 
-                //Heimspiel ?
+                // Home game
                 if (spiele[i].getHeimId() == teamId) {
-                    //Sieg
+                    // Win
                     if (spiele[i].getToreHeim() > spiele[i].getToreGast()) {
                         eintrag.addSerienEintrag(spiele[i].getSpieltag() - 1,
                                                  LigaTabellenEintrag.H_SIEG);
-                        hPunkte += 3;
-                        hSieg += 1;
-                        hToreGegen += spiele[i].getToreGast();
-                        hToreFuer += spiele[i].getToreHeim();
+                        homePoints += 3;
+                        homeVictories += 1;
+                        homeGoalsAgainst += spiele[i].getToreGast();
+                        homeGoalsFor += spiele[i].getToreHeim();
                     }
-                    //Unentschieden
+                    // Draw
                     else if (spiele[i].getToreHeim() == spiele[i].getToreGast()) {
                         eintrag.addSerienEintrag(spiele[i].getSpieltag() - 1,
                                                  LigaTabellenEintrag.H_UN);
-                        hPunkte += 1;
-                        hUn += 1;
-                        hToreGegen += spiele[i].getToreGast();
-                        hToreFuer += spiele[i].getToreHeim();
+                        homePoints += 1;
+                        homeDraws += 1;
+                        homeGoalsAgainst += spiele[i].getToreGast();
+                        homeGoalsFor += spiele[i].getToreHeim();
                     }
-                    //Niederlage
+                    // Defeat
                     else if (spiele[i].getToreHeim() < spiele[i].getToreGast()) {
                         eintrag.addSerienEintrag(spiele[i].getSpieltag() - 1,
                                                  LigaTabellenEintrag.H_NIED);
-                        hNied += 1;
-                        hToreGegen += spiele[i].getToreGast();
-                        hToreFuer += spiele[i].getToreHeim();
+                        homeDefeats += 1;
+                        homeGoalsAgainst += spiele[i].getToreGast();
+                        homeGoalsFor += spiele[i].getToreHeim();
                     }
                 }
-                //Auswärts
+                // Away
                 else {
-                    //Niederlage
+                    // Defeat
                     if (spiele[i].getToreHeim() > spiele[i].getToreGast()) {
                         eintrag.addSerienEintrag(spiele[i].getSpieltag() - 1,
                                                  LigaTabellenEintrag.A_NIED);
 
-                        aNied += 1;
-                        aToreGegen += spiele[i].getToreHeim();
-                        aToreFuer += spiele[i].getToreGast();
+                        awayDefeats += 1;
+                        awayGoalsAgainst += spiele[i].getToreHeim();
+                        awayGoalsFor += spiele[i].getToreGast();
                     }
-                    //Unentschieden
+                    // Draw
                     else if (spiele[i].getToreHeim() == spiele[i].getToreGast()) {
                         eintrag.addSerienEintrag(spiele[i].getSpieltag() - 1,
                                                  LigaTabellenEintrag.A_UN);
 
-                        aPunkte += 1;
-                        aUn += 1;
-                        aToreGegen += spiele[i].getToreHeim();
-                        aToreFuer += spiele[i].getToreGast();
+                        awayPoints += 1;
+                        awayDraws += 1;
+                        awayGoalsAgainst += spiele[i].getToreHeim();
+                        awayGoalsFor += spiele[i].getToreGast();
                     }
-                    //Sieg
+                    // Win
                     else if (spiele[i].getToreHeim() < spiele[i].getToreGast()) {
                         eintrag.addSerienEintrag(spiele[i].getSpieltag() - 1,
                                                  LigaTabellenEintrag.A_SIEG);
 
-                        aPunkte += 3;
-                        aSieg += 1;
-                        aToreGegen += spiele[i].getToreHeim();
-                        aToreFuer += spiele[i].getToreGast();
+                        awayPoints += 3;
+                        awayVictories += 1;
+                        awayGoalsAgainst += spiele[i].getToreHeim();
+                        awayGoalsFor += spiele[i].getToreGast();
                     }
                 }
             }
         }
 
-        //Eintrag füllen
-        eintrag.setAnzSpiele(anzSpiele);
+        eintrag.setAnzSpiele(gameNumber);
 
         //home
-        eintrag.setH_Nied(hNied);
-        eintrag.setH_Siege(hSieg);
-        eintrag.setH_Un(hUn);
-        eintrag.setH_Punkte(hPunkte);
-        eintrag.setH_ToreFuer(hToreFuer);
-        eintrag.setH_ToreGegen(hToreGegen);
+        eintrag.setH_Nied(homeDefeats);
+        eintrag.setH_Siege(homeVictories);
+        eintrag.setH_Un(homeDraws);
+        eintrag.setH_Punkte(homePoints);
+        eintrag.setH_ToreFuer(homeGoalsFor);
+        eintrag.setH_ToreGegen(homeGoalsAgainst);
 
         //Away
-        eintrag.setA_Nied(aNied);
-        eintrag.setA_Siege(aSieg);
-        eintrag.setA_Un(aUn);
-        eintrag.setA_Punkte(aPunkte);
-        eintrag.setA_ToreFuer(aToreFuer);
-        eintrag.setA_ToreGegen(aToreGegen);
+        eintrag.setA_Nied(awayDefeats);
+        eintrag.setA_Siege(awayVictories);
+        eintrag.setA_Un(awayDraws);
+        eintrag.setA_Punkte(awayPoints);
+        eintrag.setA_ToreFuer(awayGoalsFor);
+        eintrag.setA_ToreGegen(awayGoalsAgainst);
 
-        //Gesamt
-        eintrag.setPunkte(aPunkte + hPunkte);
-        eintrag.setToreFuer(aToreFuer + hToreFuer);
-        eintrag.setToreGegen(aToreGegen + hToreGegen);
-        eintrag.setG_Nied(aNied + hNied);
-        eintrag.setG_Siege(aSieg + hSieg);
-        eintrag.setG_Un(aUn + hUn);
+        // Total
+        eintrag.setPunkte(awayPoints + homePoints);
+        eintrag.setToreFuer(awayGoalsFor + homeGoalsFor);
+        eintrag.setToreGegen(awayGoalsAgainst + homeGoalsAgainst);
+        eintrag.setG_Nied(awayDefeats + homeDefeats);
+        eintrag.setG_Siege(awayVictories + homeVictories);
+        eintrag.setG_Un(awayDraws + homeDraws);
 
         return eintrag;
     }
 
     /**
-     * erzeugt den Tabellenverlauf
+     * Creates the table history.
+     *
+     * @return Tabellenverlauf – Table position history.
      */
     protected final Tabellenverlauf generateTabellenVerlauf() {
         int spieltag = -1;
@@ -401,32 +388,25 @@ public class Spielplan  {
         TabellenVerlaufEintrag[] eintraege = null;
 
         try {
-        	spieltag = ((LigaTabellenEintrag) getTabelle().getEintraege().elementAt(0)).getAnzSpiele();
+        	spieltag = getTabelle().getEintraege().elementAt(0).getAnzSpiele();
             tabelle = new LigaTabelle[spieltag];
 
             for (int i = spieltag; i > 0; i--) {
-                //i-1 wegen Array
                 tabelle[i - 1] = berechneTabelle(i);
             }
 
-            //VerlaufEinträge erstellen
+            // Create history entries
             if (tabelle.length > 0) {
                 LigaTabellenEintrag tmp = null;
 
                 eintraege = new TabellenVerlaufEintrag[tabelle[spieltag - 1].getEintraege().size()];
 
-                //Für jeden Eintrag verlaufeintrag erstellen
                 for (int j = 0; j < tabelle[spieltag - 1].getEintraege().size(); j++) {
-                    //Platzierungen
                     final int[] positionen = new int[tabelle.length];
 
                     eintraege[j] = new TabellenVerlaufEintrag();
-                    eintraege[j].setTeamId(((LigaTabellenEintrag) tabelle[spieltag - 1].getEintraege()
-                                                                                       .elementAt(j))
-                                           .getTeamId());
-                    eintraege[j].setTeamName(((LigaTabellenEintrag) tabelle[spieltag - 1].getEintraege()
-                                                                                         .elementAt(j))
-                                             .getTeamName());
+                    eintraege[j].setTeamId(tabelle[spieltag - 1].getEintraege().elementAt(j).getTeamId());
+                    eintraege[j].setTeamName(tabelle[spieltag - 1].getEintraege().elementAt(j).getTeamName());
 
                     for (int i = 0; i < tabelle.length; i++) {
                         tmp = tabelle[i].getEintragByTeamId(eintraege[j].getTeamId());

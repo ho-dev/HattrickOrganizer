@@ -8,7 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Vector;
+
+import static core.db.DbUtil.getNullableInt;
 
 final class MatchHighlightsTable extends AbstractTable {
 	final static String TABLENAME = "MATCHHIGHLIGHTS";
@@ -19,7 +20,7 @@ final class MatchHighlightsTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[13];
+		columns = new ColumnDescriptor[15];
 		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false);
 		columns[1] = new ColumnDescriptor("Minute", Types.INTEGER, false);
 		columns[2] = new ColumnDescriptor("SpielerId", Types.INTEGER, false);
@@ -33,6 +34,8 @@ final class MatchHighlightsTable extends AbstractTable {
 		columns[10] = new ColumnDescriptor("MATCH_EVENT_ID", Types.INTEGER, false);
 		columns[11] = new ColumnDescriptor("EVENT_INDEX", Types.INTEGER, false);
 		columns[12] = new ColumnDescriptor("INJURY_TYPE", Types.TINYINT, false);
+		columns[13] = new ColumnDescriptor("MatchPart", Types.INTEGER, true);
+		columns[14] = new ColumnDescriptor("EventVariation", Types.INTEGER, true);
 	}
 
 	@Override
@@ -56,12 +59,11 @@ final class MatchHighlightsTable extends AbstractTable {
 			try {
 				final ArrayList<MatchEvent> vHighlights = details.getHighlights();
 				HOLogger.instance().debug(getClass(), "count of highlights: " + vHighlights.size());
-				for (int i = 0; i < vHighlights.size(); i++) {
-					final MatchEvent highlight = vHighlights.get(i);
+				for (final MatchEvent highlight : vHighlights) {
 					StringBuilder sql = new StringBuilder(100);
 
 					sql.append("INSERT INTO ").append(getTableName());
-					sql.append(" ( MatchId, Minute, EVENT_INDEX, SpielerId, SpielerName, TeamId, MATCH_EVENT_ID, SpielerHeim, GehilfeID, GehilfeName, GehilfeHeim, INJURY_TYPE, EventText ) VALUES (");
+					sql.append(" ( MatchId, Minute, EVENT_INDEX, SpielerId, SpielerName, TeamId, MATCH_EVENT_ID, SpielerHeim, GehilfeID, GehilfeName, GehilfeHeim, INJURY_TYPE, MatchPart, EventVariation, EventText) VALUES (");
 					sql.append(details.getMatchID()).append(", ");
 					sql.append(highlight.getMinute()).append(", ");
 					sql.append(highlight.getM_iMatchEventIndex()).append(", ");
@@ -73,7 +75,9 @@ final class MatchHighlightsTable extends AbstractTable {
 					sql.append(highlight.getGehilfeID()).append(", '");
 					sql.append(DBManager.insertEscapeSequences(highlight.getGehilfeName())).append("', ");
 					sql.append(highlight.getGehilfeHeim()).append(", ");
-					sql.append(highlight.getM_eInjuryType().getValue()).append(", '");
+					sql.append(highlight.getM_eInjuryType().getValue()).append(", ");
+					sql.append(highlight.getMatchPartId().getValue()).append(", ");
+					sql.append(highlight.getEventVariation()).append(", '");
 					sql.append(DBManager.insertEscapeSequences(highlight.getEventText())).append("') ");
 					adapter.executeUpdate(sql.toString());
 				}
@@ -123,7 +127,8 @@ final class MatchHighlightsTable extends AbstractTable {
 		highlight.setGehilfeHeim(rs.getBoolean("GehilfeHeim"));
 		highlight.setEventText(DBManager.deleteEscapeSequences(rs.getString("EventText")));
 		highlight.setM_eInjuryType(rs.getInt("INJURY_TYPE"));
-
+		highlight.setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId(getNullableInt(rs,"MatchPart")));
+		highlight.setEventVariation(getNullableInt(rs, "EventVariation"));
 		return highlight;
 	}
 

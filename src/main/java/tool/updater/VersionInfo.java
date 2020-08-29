@@ -1,8 +1,6 @@
 package tool.updater;
 
-import core.HO;
 import core.util.HOLogger;
-
 import java.text.*;
 import java.util.Date;
 import java.util.Locale;
@@ -37,19 +35,16 @@ public class VersionInfo {
 		nf.setMinimumFractionDigits(3);
 		String txt = nf.format(version);
 
-		if (versionType=="BETA") {
+		if (versionType.equals("BETA")) {
 			txt += " BETA (r" + build + ")";
 		}
 
-		else if (versionType=="DEV") {
+		else if (versionType.equals("DEV")) {
 			txt += " DEV (r" + build + ")";
 		}
 
 		return txt;
 	}
-
-
-
 
 
 	public double getVersion() {

@@ -54,7 +54,6 @@ public class FinanzStatistikPanel extends LazyImagePanel {
 	private ImageCheckbox m_jchStadion;
 	private ImageCheckbox m_jchTrainerstab;
 	private ImageCheckbox m_jchZuschauer;
-	private JButton m_jbDrucken;
 	private JButton m_jbUbernehmen;
 	private JCheckBox m_jchBeschriftung;
 	private JCheckBox m_jchHilflinien;
@@ -164,14 +163,6 @@ public class FinanzStatistikPanel extends LazyImagePanel {
 		m_jchMarktwert.addActionListener(checkBoxActionListener);
 		m_jchFans.addActionListener(checkBoxActionListener);
 
-		m_jbDrucken.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				m_clStatistikPanel.doPrint(getLangStr("Finanzen"));
-			}
-		});
-
 		m_jbUbernehmen.addActionListener(new ActionListener() {
 
 			@Override
@@ -209,17 +200,6 @@ public class FinanzStatistikPanel extends LazyImagePanel {
 		constraints2.insets = new Insets(2, 2, 2, 2);
 
 		panel2.setLayout(layout2);
-
-		constraints2.gridx = 0;
-		constraints2.gridy = 0;
-		constraints2.gridwidth = 2;
-		constraints2.fill = GridBagConstraints.NONE;
-		constraints2.anchor = GridBagConstraints.WEST;
-		m_jbDrucken = new JButton(ImageUtilities.getSvgIcon(HOIconName.PRINTER));
-		m_jbDrucken.setToolTipText(getLangStr("tt_Statistik_drucken"));
-		m_jbDrucken.setPreferredSize(new Dimension(25, 25));
-		layout2.setConstraints(m_jbDrucken, constraints2);
-		panel2.add(m_jbDrucken);
 
 		label = new JLabel(getLangStr("Wochen"));
 		constraints2.fill = GridBagConstraints.HORIZONTAL;

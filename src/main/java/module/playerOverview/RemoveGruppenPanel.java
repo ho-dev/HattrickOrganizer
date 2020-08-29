@@ -17,7 +17,7 @@ import javax.swing.*;
 
 
 /**
- * Alle Player der Gruppe werden einer Gruppe zugeordnet
+ * Panel handling group selection for the players.
  */
 public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
     implements ActionListener
@@ -79,7 +79,7 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
             groupsClear();
         }
 
-        //Von beiden Gruppen ein Button selektiert // Nach gruppenMarkierung werden die Button wieder unselected
+        // Button selected in both groups
         if ((getSelectedButton(true) != null) && (getSelectedButton(false) != null)) {
             doButton.setEnabled(true);
         } else {
@@ -107,8 +107,8 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
         }
     }
 
-    private JToggleButton getSelectedButton(boolean obereReihe) {
-        if (obereReihe) {
+    private JToggleButton getSelectedButton(boolean topRow) {
+        if (topRow) {
             if (noGruppe.isSelected()) {
                 return noGruppe;
             } else if (aGruppe.isSelected()) {
@@ -146,7 +146,7 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
     }
 
     /**
-     * Drucken der Spielerübersicht
+     * Clear current group assignment.
      */
     private void groupsClear() {
         final List<Player> allePlayer = HOVerwaltung.instance().getModel().getCurrentPlayers();
@@ -163,16 +163,15 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
             core.gui.HOMainFrame.instance().getAufstellungsPanel().update();
     }
 
-
     private void gruppenMarkierung() {
-        //Von beiden Gruppen ein Button selektiert
+        // Button selected in both groups
         if ((getSelectedButton(true) != null) && (getSelectedButton(false) != null)) {
             final List<Player> allePlayer = HOVerwaltung.instance().getModel().getCurrentPlayers();
             final String suchName = getName4Button(getSelectedButton(true));
             final String ersatzName = getName4Button(getSelectedButton(false));
 
             for (Player player : allePlayer){
-                //Player in der Gruppe
+                // Put player in the group.
                 if (player.getTeamInfoSmilie().equals(suchName)) {
                     player.setTeamInfoSmilie(ersatzName);
                 }
@@ -313,8 +312,7 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
     }
 
 	/**
-	 * Tauscht eine Farbe im Image durch eine andere
-	 *
+	 * creates a greyed out version of an {@link Icon}.
 	 */
 	private Image makeGray(Icon im, float value) {
 	    Image image = ImageUtilities.iconToImage(im);

@@ -1,10 +1,11 @@
-// %3619247323:de.hattrickorganizer.tools%
 package core.util;
 
+import core.db.user.User;
+import core.db.user.UserManager;
 import core.file.ExampleFileFilter;
-
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,6 +18,8 @@ public class HOLogger {
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 	private static HOLogger clLogger;
+	private static File logsFolder;
+	private static String logsFolderName;
 	public static final int DEBUG = 0;
 	public static final int INFORMATION = 1;
 	public static final int WARNING = 2;
@@ -29,37 +32,55 @@ public class HOLogger {
 	 */
 	private HOLogger() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String dirName = "logs";
 		String fileName = "HO-" + dateFormat.format(new Date()) + ".log";
-		try {
-			File dir = new File(dirName);
-			dir.mkdirs();
+		String errorMsg;
+		Boolean logFolderExist = true;
 
-			deleteOldLogs(dir);
-			File logFile = new File(dir, fileName);
+		logsFolderName = Paths.get(UserManager.instance().getDbParentFolder() , "logs").toString();
+		logsFolder = new File(logsFolderName);
+		
+		if (!logsFolder.exists()) {
+			logFolderExist = false;
+			File parentFolder = new File(UserManager.instance().getDbParentFolder());
+
+			if (parentFolder.canWrite()) {
+				logFolderExist = logsFolder.mkdirs();
+			}
+			if (!logFolderExist) {
+				errorMsg = "Could not initialize the log folder.\n";
+				errorMsg += "Check you have writing rights to the following directory\n" + parentFolder.getAbsolutePath() + "\n";
+				System.err.println(errorMsg);
+			}
+		}
+
+		if (logFolderExist){
+		try {
+			deleteOldLogs(logsFolder);
+			File logFile = new File(logsFolder, fileName);
 
 			if (logFile.exists()) {
-				logFile.delete();
+				if (! logFile.delete()) {System.err.println("Unable to delete " + logFile.toString());}
 			}
 
 			logWriter = new FileWriter(logFile);
 		} catch (Exception e) {
-			String msg = "Unable to create logfile: " + dirName + "/" + fileName;
-			System.err.println(msg);
+			errorMsg = "Unable to create logfile: " + logsFolder + "/" + fileName;
+			System.err.println(errorMsg);
 			e.printStackTrace();
+		}
 		}
 	}
 
 	
 	private void deleteOldLogs(File dir){
 		ExampleFileFilter filter = new ExampleFileFilter("log");
-		 filter.setIgnoreDirectories(true);
-		 File[] files = dir.listFiles(filter);
-		 for (int i = 0; i < files.length; i++) {
-			 long diff = System.currentTimeMillis() - files[i].lastModified();
-			 long days = (diff / (1000 * 60 * 60 * 24));
-			 if( days > 90)
-				 files[i].delete(); 
+		filter.setIgnoreDirectories(true);
+		File[] files = dir.listFiles(filter);
+		for (File file : files) {
+			long diff = System.currentTimeMillis() - file.lastModified();
+			long days = (diff / (1000 * 60 * 60 * 24));
+			if (days > 90)
+				if (! file.delete()) {System.err.println("Unable to delete " + file.toString());}
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package core.model.match;
 
+import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.cup.CupLevel;
@@ -63,7 +64,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	private int m_iMatchStatus = -1;
 	
 	/** HO user team ID */
-	private int user_team_id = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+	public static int user_team_id = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 	// TODO comments
 	private int m_iArenaId = -1;
@@ -72,6 +73,12 @@ public class MatchKurzInfo implements Comparable<Object> {
 	private Boolean m_iIsNeutral = null;
 	private Weather m_iWeather = Weather.NULL;
 	private Weather.Forecast m_iWeatherForecast = Weather.Forecast.NULL;
+
+	// Duration of the match (null if unknown or not played yet)
+	private Integer duration;
+
+	// Details of the match, if available
+	private Matchdetails matchdetails;
 
 	public final void setArenaId(int id) {this.m_iArenaId=id;}
 	public final int getArenaId() {return this.m_iArenaId;}
@@ -279,8 +286,6 @@ public class MatchKurzInfo implements Comparable<Object> {
 						HOLogger.instance().log(getClass(), ex);
 					}
 				}
-			} else {
-				this.matchDateTimestamp = null;
 			}
 		}
 		return this.matchDateTimestamp;
@@ -347,7 +352,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 		return m_mtMatchTyp;
 	}
 
-	public CupLevel geCupLevel() {
+	public CupLevel getCupLevel() {
 		return m_mtCupLevel;
 	}
 
@@ -355,7 +360,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 		this.m_mtCupLevel = _CupLevel;
 	}
 
-	public CupLevelIndex geCupLevelIndex() {
+	public CupLevelIndex getCupLevelIndex() {
 		return m_mtCupLevelIndex;
 	}
 
@@ -413,5 +418,59 @@ public class MatchKurzInfo implements Comparable<Object> {
 	{
 		return m_iHeimID == user_team_id;
 	}
-	
+
+	// Return duration of the match in minutes
+	// null, if match is not finished or duration is unknown
+	public Integer getDuration()
+	{
+		if ( duration == null && this.isFinished()){
+			Matchdetails matchdetails = getMatchdetails();
+			if ( matchdetails != null){
+				duration = matchdetails.getLastMinute();
+			}
+		}
+		return duration;
+	}
+
+	private boolean isFinished() {
+		return this.m_iMatchStatus == FINISHED;
+	}
+
+	// Set duration of the match in minutes
+	public void setDuration(Integer duration) {
+		this.duration = duration;
+	}
+
+	public Matchdetails getMatchdetails() {
+		if (matchdetails==null){
+			matchdetails = Matchdetails.getMatchdetails(getMatchID(), getMatchTyp());
+		}
+		return matchdetails;
+	}
+
+	private Boolean isWalkoverMatch;
+	// return true, if the opponent team didn't appear. The match was won by 5-0
+	public boolean isWalkoverMatch() {
+		if ( isWalkoverMatch == null) {
+			isWalkoverMatch = false;
+			if (getDuration() == 0) {
+				// Duration of walk over matches is 0 minutes
+				for (var e : getMatchdetails().getHighlights()) {
+					if ( e.getMatchEventID() == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER ) {
+						if ( this.isHomeMatch() == true ) {
+							isWalkoverMatch = true;
+						}
+						break;
+					}
+					else if ( e.getMatchEventID() == MatchEvent.MatchEventID.HOME_TEAM_WALKOVER){
+						if ( this.isHomeMatch() != true){
+							isWalkoverMatch = true;
+						}
+						break;
+					}
+				}
+			}
+		}
+		return isWalkoverMatch;
+	}
 }

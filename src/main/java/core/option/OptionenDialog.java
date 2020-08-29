@@ -1,4 +1,3 @@
-// %198737965:de.hattrickorganizer.gui.menu.option%
 package core.option;
 
 import core.gui.HOMainFrame;
@@ -11,7 +10,7 @@ import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
 import core.net.login.LoginWaitDialog;
 import core.util.Helper;
-
+import core.util.Updater;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -19,7 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -28,12 +26,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 /**
- * Ein Dialog mit allen Optionen für HO
+ * A dialog for all HO options/preferences
  */
 public class OptionenDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private FarbPanel m_jpFarben;
 	private FormelPanel m_jpFormeln;
 	private SonstigeOptionenPanel m_jpSonstigeOptionen;
 	private TrainingsOptionenPanel m_jpTrainingsOptionen;
@@ -95,11 +92,6 @@ public class OptionenDialog extends JDialog {
 		// Modules
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Module"), new JScrollPane(
 				new ModuleConfigPanel()));
-
-		// Colors
-		m_jpFarben = new FarbPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Farben"), new JScrollPane(
-				m_jpFarben));
 
 		// Formula
 		m_jpFormeln = new FormelPanel();
@@ -165,6 +157,10 @@ public class OptionenDialog extends JDialog {
 		UserParameter.saveTempParameter();
 		ModuleConfig.instance().save();
 		ModuleManager.instance().saveTemp();
+
+		//save release channel information in java store
+		Updater.instance().saveReleaseChannelPreference(m_jpReleaseChannelsPanel.getRc());
+
 		if (OptionManager.instance().isRestartNeeded()) {
 			Helper.showMessage(OptionenDialog.this,
 					HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), "",
