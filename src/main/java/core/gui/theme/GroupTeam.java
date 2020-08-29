@@ -26,7 +26,7 @@ public class GroupTeam {
     public static final String NO_TEAM = "No-Team";
 
     public static Icon getGroupIcon(String key) {
-        return getGroupIcon(key, 24, 24);
+        return getGroupIcon(key, 12, 12);
     }
 
     public static Icon getGroupIcon(String key, int width, int height) {
@@ -43,16 +43,12 @@ public class GroupTeam {
             Pair<String, String> props = groupIconProperties.getOrDefault(key, new Pair("#FFFFFF", "#FFFFFF"));
             String imagePath = (String)ThemeManager.getIconPath(HOIconName.GROUP_TEAM);
 
+            Map<Object, Object> colorMap = new HashMap<>();
+            colorMap.put("fillColor", ImageUtilities.getColorFromHex(props.getValue0()));
+            colorMap.put("strokeColor", ImageUtilities.getColorFromHex(props.getValue1()));
             if (opacity != null) {
-                // Workaround to apply opacity to SVGIcon.
-                // FIXME Issue with SVG rendering when *opacity* attribute set on LinearGradient
-                //UIManager.getDefaults().put("opacityVal", Float.valueOf(opacity).intValue() * 100);
-                imagePath = (String)ThemeManager.getIconPath(HOIconName.GROUP_TEAM_OPACITY);
+                colorMap.put("opacityVal", (int)(Float.parseFloat(opacity)*100));
             }
-            final Map<Object, Object> colorMap = Map.of(
-                    "fillColor", ImageUtilities.getColorFromHex(props.getValue0()),
-                    "strokeColor", ImageUtilities.getColorFromHex(props.getValue1())
-            );
 
             fullIcon = IconLoader.get().loadSVGIcon(imagePath, width, height, true, colorMap);
         }

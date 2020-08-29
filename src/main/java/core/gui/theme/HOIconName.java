@@ -13,7 +13,6 @@ public interface HOIconName {
 	 String[] MANUELLSMILIES = { "", "1bigsmile.png","2smile.png", "3normal.png", "4sad.png", "5verysad.png","6clown.png", "7trainer.png", "8dollar.png", "9coach.png" };
 
 	 String GROUP_TEAM = "Group-Team.svg";
-	 String GROUP_TEAM_OPACITY = "Group-Team-opacity.svg";
 	 String GROUP_TEAM_CLEAN = "Group-Team-clean.svg";
 
 	 String TOOTHEDWHEEL 	= "toothedWheel";

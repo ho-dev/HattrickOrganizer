@@ -27,10 +27,10 @@
     </rdf:RDF>
   </metadata>
   <defs id="colors">
-    <linearGradient id="fillColor">
+    <linearGradient id="fillColor" opacity="opacityVal">
       <stop offset="0" stop-color="#FF0000"/>
     </linearGradient>
-    <linearGradient id="strokeColor">
+    <linearGradient id="strokeColor" opacity="opacityVal">
       <stop offset="0" stop-color="#00FF00"/>
     </linearGradient>
   </defs>

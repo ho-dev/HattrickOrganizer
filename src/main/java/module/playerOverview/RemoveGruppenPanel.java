@@ -1,6 +1,8 @@
 // %3482096464:de.hattrickorganizer.gui.playeroverview%
 package module.playerOverview;
 
+import core.gui.HOMainFrame;
+import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.*;
 
 import core.model.HOVerwaltung;
@@ -19,9 +21,7 @@ import javax.swing.*;
 /**
  * Panel handling group selection for the players.
  */
-public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
-    implements ActionListener
-{
+public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
 
 	private static final long serialVersionUID = 3606384591123088694L;
 
@@ -80,11 +80,7 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
         }
 
         // Button selected in both groups
-        if ((getSelectedButton(true) != null) && (getSelectedButton(false) != null)) {
-            doButton.setEnabled(true);
-        } else {
-            doButton.setEnabled(false);
-        }
+        doButton.setEnabled((getSelectedButton(true) != null) && (getSelectedButton(false) != null));
     }
 
     private String getName4Button(JToggleButton button) {
@@ -152,15 +148,17 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
         final List<Player> allePlayer = HOVerwaltung.instance().getModel().getCurrentPlayers();
         boolean update = false;
 
-        for (Player player : allePlayer){
-            //Player in der Gruppe
+        for (Player player : allePlayer) {
             if (!player.getTeamInfoSmilie().equals("")) {
                 player.setTeamInfoSmilie("");
                 update = true;
             }
         }
-        if (update)
-            core.gui.HOMainFrame.instance().getAufstellungsPanel().update();
+
+        if (update) {
+            HOMainFrame.instance().getAufstellungsPanel().update();
+        }
+
     }
 
     private void gruppenMarkierung() {
@@ -306,18 +304,8 @@ public class RemoveGruppenPanel extends core.gui.comp.panel.ImagePanel
 
     private void initButton(JToggleButton button,String tooltip,String key){
     	button.setToolTipText(tooltip);
-    	button.setPreferredSize(new Dimension(16, 16));
-        button.setSelectedIcon(GroupTeam.getGroupIcon(key));
+    	button.setPreferredSize(new Dimension(18, 18));
+        button.setSelectedIcon(GroupTeam.getGroupIcon(key, 12, 12));
     	button.addActionListener(this);
     }
-
-	/**
-	 * creates a greyed out version of an {@link Icon}.
-	 */
-	private Image makeGray(Icon im, float value) {
-	    Image image = ImageUtilities.iconToImage(im);
-
-	    final ImageProducer ip = new FilteredImageSource(image.getSource(), new LightGrayFilter(value));
-	    return Toolkit.getDefaultToolkit().createImage(ip);
-	}
 }
