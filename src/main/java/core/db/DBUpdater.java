@@ -1171,7 +1171,12 @@ final class DBUpdater {
 
 		try {
 			if (!alreadyApplied) {
-				dbManager.saveUserParameter("ReleaseChannel", "Stable");
+				switch(HO.getVersionType()){
+					case "DEV" -> dbManager.saveUserParameter("ReleaseChannel", "Dev");
+					case "BETA" -> dbManager.saveUserParameter("ReleaseChannel", "Beta");
+					default -> dbManager.saveUserParameter("ReleaseChannel", "Stable");
+				}
+
 			}
 			dbManager.removeUserParameter("newsCheck");
 			dbManager.removeUserParameter("userCheck");

@@ -428,6 +428,12 @@ task resetDB {
                 from resetDir
                 into "${projectDir}/db"
             }
+            copy {
+                from "${resetDir}/../"
+                into "${projectDir}/"
+                include "users.json"
+            }
+
 
             println("Resetting DB: done !")
         }

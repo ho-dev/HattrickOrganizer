@@ -1,5 +1,6 @@
 package core.model;
 
+import core.HO;
 import core.db.DBManager;
 import core.util.GUIUtils;
 import module.lineup.LineupAssistant;
@@ -426,7 +427,13 @@ public final class UserParameter extends Configuration {
         map.put("aufstellungsAssistentPanel_notLast", String.valueOf(aufstellungsAssistentPanel_notLast));
         map.put("aufstellungsAssistentPanel_verletzt", String.valueOf(aufstellungsAssistentPanel_verletzt));
         map.put("xmlDownload", String.valueOf(xmlDownload));
-        map.put("ReleaseChannel", String.valueOf(ReleaseChannel));
+
+        switch(HO.getVersionType()){
+            case "DEV" -> ReleaseChannel = "Dev";
+            case "BETA" -> ReleaseChannel = "Beta";
+        }
+        map.put("ReleaseChannel", ReleaseChannel);
+
         map.put("fixtures", String.valueOf(fixtures));
         map.put("currentMatchlist", String.valueOf(downloadCurrentMatchlist));
         map.put("downloadLadderMatches", String.valueOf(downloadLadderMatches));
@@ -628,7 +635,6 @@ public final class UserParameter extends Configuration {
         ProxyPort = getStringValue(values, "ProxyPort");
         aufstellungsAssistentPanel_gruppe = getStringValue(values, "aufstellungsAssistentPanel_gruppe");
         hrfImport_HRFPath = DBManager.deleteEscapeSequences(getStringValue(values, "hrfImport_HRFPath"));
-//		htip = getStringValue(values,"htip");
         matchLineupImport_Path = getStringValue(values, "matchLineupImport_Path");
         spielPlanImport_Path = getStringValue(values, "spielPlanImport_Path");
         sprachDatei = getStringValue(values, "sprachDatei");
