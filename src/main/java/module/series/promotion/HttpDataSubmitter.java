@@ -239,7 +239,7 @@ public class HttpDataSubmitter implements DataSubmitter {
     }
 
     private OkHttpClient initializeHttpsClient() throws Exception {
-        final InputStream trustStoreStream = this.getClass().getClassLoader().getResourceAsStream("keystore.jks");
+        final InputStream trustStoreStream = this.getClass().getClassLoader().getResourceAsStream("truststore.jks");
 
         final KeyStore keystore = KeyStore.getInstance("JKS");
         keystore.load(trustStoreStream, "password".toCharArray());
