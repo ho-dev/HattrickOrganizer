@@ -69,8 +69,6 @@ public class HO {
 	 *  HO entry point
 	 */
 	public static void main(String[] args) {
-		final long start = System.currentTimeMillis();
-
 		portable_version = true;
 		platform = OSUtils.getOS();
 

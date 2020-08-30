@@ -1,6 +1,7 @@
 package core.util;
 
 import com.install4j.api.launcher.ApplicationLauncher;
+import core.HO;
 import core.gui.HOMainFrame;
 import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
@@ -77,6 +78,7 @@ public class Updater {
 
     public void saveReleaseChannelPreference(ReleaseChannel rc){
         try {
+            if (HO.getRevisionNumber() == 0) {mediaID = "HO_IDE_MEDIA_ID";} // we are testing from the IDE and media is not set by install4j
             com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", rc.xmlURL), mediaID, true);
         }
         catch (IOException e) {
