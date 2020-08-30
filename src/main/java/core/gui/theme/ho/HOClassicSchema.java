@@ -53,13 +53,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(MANUELLSMILIES[8], "gui/bilder/smilies/8dollar.gif");
 		put(MANUELLSMILIES[9], "gui/bilder/smilies/9coach.gif");
 
-		put(NO_TEAM, "gui/bilder/smilies/No-Team.png");
-		put(TEAMSMILIES[1], "gui/bilder/smilies/A-Team.png");
-		put(TEAMSMILIES[2], "gui/bilder/smilies/B-Team.png");
-		put(TEAMSMILIES[3], "gui/bilder/smilies/C-Team.png");
-		put(TEAMSMILIES[4], "gui/bilder/smilies/D-Team.png");
-		put(TEAMSMILIES[5], "gui/bilder/smilies/E-Team.png");
-		put(TEAMSMILIES[6], "gui/bilder/smilies/F-Team.png");
+		put(GROUP_TEAM, "gui/bilder/smilies/Group-Team.svg");
+		put(GROUP_TEAM_CLEAN, "gui/bilder/smilies/Group-Team-clean.svg");
 
 		put(WEATHER[0], "gui/bilder/match_events/weather0.png");
 		put(WEATHER[1], "gui/bilder/match_events/weather1.png");
@@ -110,7 +105,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(GETLINEUP, "gui/bilder/AufstellungUebernehmen.png");
 		put(SWAP, "gui/bilder/swap.png");
 		put(SWAPPRESSED, "gui/bilder/swap-pressed.png");
-		put(TURN, "gui/bilder/drehen.png");
+		put(TURN, "gui/bilder/rotate.svg");
 
 		put(CLEARASSIST, "gui/bilder/Assist_leeren.png");
 		put(STARTASSIST, "gui/bilder/Assist_start.png");

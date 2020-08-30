@@ -7,6 +7,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import module.series.promotion.*;
@@ -182,6 +183,7 @@ public class SeriesPanel extends LazyImagePanel {
 
 		promotionInfoPanel.setSize(650, 30);
 		promotionInfoPanel.setLocation(290, 5);
+
 		toolbarPanel.add(promotionInfoPanel);
 
 		toolbarPanel.setPreferredSize(new Dimension(240, 35));

@@ -10,10 +10,11 @@ public interface HOIconName {
 	 String[] WEATHER 		= { "weather0", "weather1", "weather2", "weather3"};
 	 String[] SPECIALTIES = { "","special1","special2","special3","special4","special5", "special6", "special7", "special8"};
 	 String[] SPECIALTIES_SMALL = { "","special1_small","special2_small","special3_small","special4_small","special5_small", "special6_small", "special7_small", "special8_small"};
-	 String[] TEAMSMILIES 	= { "", "A-Team.png","B-Team.png", "C-Team.png", "D-Team.png", "E-Team.png", "F-Team.png" };
 	 String[] MANUELLSMILIES = { "", "1bigsmile.png","2smile.png", "3normal.png", "4sad.png", "5verysad.png","6clown.png", "7trainer.png", "8dollar.png", "9coach.png" };
 
-	 String NO_TEAM 			= "No-Team.png";
+	 String GROUP_TEAM = "Group-Team.svg";
+	 String GROUP_TEAM_CLEAN = "Group-Team-clean.svg";
+
 	 String TOOTHEDWHEEL 	= "toothedWheel";
 	 String HAND 			= "hand";
 

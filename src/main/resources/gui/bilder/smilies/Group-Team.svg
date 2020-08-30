@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="svg78"
+   width="14"
+   height="14"
+   viewBox="0 0 14 14"
+   sodipodi:docname="A-Team.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)">
+  <metadata
+     id="metadata84">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs id="colors">
+    <linearGradient id="fillColor" opacity="opacityVal">
+      <stop offset="0" stop-color="#FF0000"/>
+    </linearGradient>
+    <linearGradient id="strokeColor" opacity="opacityVal">
+      <stop offset="0" stop-color="#00FF00"/>
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     inkscape:document-rotation="0"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1910"
+     inkscape:window-height="1024"
+     id="namedview80"
+     showgrid="false"
+     inkscape:zoom="26"
+     inkscape:cx="3.464497"
+     inkscape:cy="9.4541314"
+     inkscape:window-x="3"
+     inkscape:window-y="51"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g86" />
+  <g
+     inkscape:groupmode="layer"
+     inkscape:label="Image"
+     id="g86">
+    <path
+       d="M 0.22277381,0.23576449 H 13.869099 V 13.791278 H 0.22277381 Z"
+       style="fill-opacity:1;stroke-width:0.411874;stroke-linejoin:round;stroke-opacity:1"
+       fill="url(#fillColor)"
+       stroke="url(#strokeColor)"
+       id="rect20" />
+  </g>
+</svg>
