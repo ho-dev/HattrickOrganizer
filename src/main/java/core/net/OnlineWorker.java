@@ -178,17 +178,17 @@ public class OnlineWorker {
 		}
 
 		// Show wait Dialog
-		waitDialog = getWaitDialog();
-		waitDialog.setVisible(true);
+		showWaitDialog(1);
+
 		try {
 			String matchesString = "";
 
 			while (tempBeginn.before(endDate)) {
 				try {
-					waitDialog.setValue(10);
+					showWaitDialog(10);
 					matchesString = MyConnector.instance().getMatchesArchive(teamId, tempBeginn.getTime(),
 							tempEnd.getTime());
-					waitDialog.setValue(20);
+					showWaitDialog(20);
 				} catch (Exception e) {
 					// Info
 					String msg = getLangString("Downloadfehler")
@@ -196,11 +196,11 @@ public class OnlineWorker {
 					setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 					Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 							JOptionPane.ERROR_MESSAGE);
-					waitDialog.setVisible(false);
+					showWaitDialog(0);
 					return null;
 				}
 
-				waitDialog.setValue(40);
+				showWaitDialog(40);
 				List<MatchKurzInfo> matches = XMLMatchArchivParser
 						.parseMatchesFromString(matchesString);
 
@@ -219,7 +219,7 @@ public class OnlineWorker {
 			// Store in the db if store is true
 			if (store && (allMatches.size() > 0)) {
 
-				waitDialog.setValue(80);
+				showWaitDialog(80);
 				DBManager.instance().storeMatchKurzInfos(allMatches.toArray(new MatchKurzInfo[0]));
 
 				// Store full info for all matches
@@ -232,7 +232,7 @@ public class OnlineWorker {
 				}
 			}
 		} finally {
-			waitDialog.setVisible(false);
+			showWaitDialog(0);
 		}
 		return allMatches;
 	}
@@ -266,9 +266,14 @@ public class OnlineWorker {
 
 	public static boolean downloadMatchData( MatchKurzInfo info, boolean refresh)
 	{
-		waitDialog = getWaitDialog();
-		// Only download if not present in the database, or if refresh is true
 		int matchid = info.getMatchID();
+		if (matchid < 0) {
+			return false;
+		}
+
+		//waitDialog = getWaitDialog();
+		showWaitDialog(1);
+		// Only download if not present in the database, or if refresh is true
 		if (refresh || !DBManager.instance().isMatchVorhanden(matchid)
 				|| DBManager.instance().hasUnsureWeatherForecast(matchid)
 				|| !DBManager.instance().isMatchLineupInDB(matchid)
@@ -282,8 +287,8 @@ public class OnlineWorker {
 				boolean newInfo = info.getHeimID()<=0 || info.getGastID()<=0;
 				if ( newInfo || !info.getWeatherForecast().isSure()) {
 
-					waitDialog.setValue(10);
-					details = fetchDetails(matchid, info.getMatchTyp(), null, waitDialog);
+					showWaitDialog(10);
+					details = fetchDetails(matchid, info.getMatchTyp(), null);
 					if ( details != null) {
 						info.setHeimID(details.getHeimId());
 						info.setGastID(details.getGastId());
@@ -360,8 +365,8 @@ public class OnlineWorker {
 					}
 					
 					// Get details with highlights.
-					waitDialog.setValue(10);
-					details = fetchDetails(matchid, info.getMatchTyp(), lineup, waitDialog);
+					showWaitDialog(10);
+					details = fetchDetails(matchid, info.getMatchTyp(), lineup);
 
 					if (details == null) {
 						HOLogger.instance().error(OnlineWorker.class,
@@ -384,17 +389,17 @@ public class OnlineWorker {
 					success = true;
 				}
 				if (!success) {
-					waitDialog.setVisible(false);
+					showWaitDialog(0);
 					return false;
 				}
 			} catch (Exception ex) {
 				HOLogger.instance().error(OnlineWorker.class,
 						"downloadMatchData:  Error in downloading match: " + ex);
-				waitDialog.setVisible(false);
+				showWaitDialog(0);
 				return false;
 			}
 		}
-		waitDialog.setVisible(false);
+		showWaitDialog(0);
 		return true;
 	}
 
@@ -513,17 +518,15 @@ public class OnlineWorker {
 		String matchesString = "";
 		List<MatchKurzInfo> matches = new ArrayList<>();
 		boolean bOK = false;
-		waitDialog = getWaitDialog();
-		waitDialog.setVisible(true);
-		waitDialog.setValue(10);
+		showWaitDialog(10);
 
 		try {
 			matchesString = MyConnector.instance().getMatches(teamId, forceRefresh, upcoming);
 			bOK = (matchesString != null && matchesString.length() > 0);
 			if (bOK)
-				waitDialog.setValue(50);
+				showWaitDialog(50);
 			else
-				waitDialog.setVisible(false);
+				showWaitDialog(0);
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching matches: "
 					+ e.getMessage();
@@ -532,7 +535,7 @@ public class OnlineWorker {
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
 			HOLogger.instance().log(OnlineWorker.class, e);
-			waitDialog.setVisible(false);
+			showWaitDialog(0);
 			return null;
 		}
 		if (bOK) {
@@ -540,13 +543,13 @@ public class OnlineWorker {
 
 			// Store in DB if store is true
 			if (store) {
-				waitDialog.setValue(80);
+				showWaitDialog(80);
 
 				matches = FilterUserSelection(matches);
 				DBManager.instance().storeMatchKurzInfos(
 						matches.toArray(new MatchKurzInfo[matches.size()]));
 
-				waitDialog.setValue(100);
+				showWaitDialog(100);
 
 				// Automatically download additional match infos (lineup + arena)
 				for (MatchKurzInfo match : matches) {
@@ -565,7 +568,7 @@ public class OnlineWorker {
 				}
 			}
 		}
-		waitDialog.setVisible(false);
+		showWaitDialog(0);
 		return matches;
 	}
 
@@ -645,14 +648,12 @@ public class OnlineWorker {
 		MatchLineup lineUp2 = null;
 
 		// Wait Dialog zeigen
-		waitDialog = getWaitDialog();
-		waitDialog.setVisible(true);
-		waitDialog.setValue(10);
+		showWaitDialog(10);
 
 		// Lineups holen
 		lineUp1 = fetchLineup(matchId, teamId1, matchType);
 		if (lineUp1 != null) {
-			waitDialog.setValue(50);
+			showWaitDialog(50);
 			if (teamId2 > 0)
 				lineUp2 = fetchLineup(matchId, teamId2, matchType);
 
@@ -675,7 +676,7 @@ public class OnlineWorker {
 				}
 			}
 		}
-		waitDialog.setVisible(false);
+		showWaitDialog(0);
 		return lineUp1;
 	}
 
@@ -693,13 +694,11 @@ public class OnlineWorker {
 		boolean bOK = false;
 		String leagueFixtures = "";
 		HOVerwaltung hov = HOVerwaltung.instance();
-		waitDialog = getWaitDialog();
-		waitDialog.setVisible(true);
 		try {
-			waitDialog.setValue(10);
+			showWaitDialog(10);
 			leagueFixtures = MyConnector.instance().getLeagueFixtures(season, leagueID);
 			bOK = (leagueFixtures != null && leagueFixtures.length() > 0);
-			waitDialog.setValue(50);
+			showWaitDialog(50);
 		} catch (Exception e) {
 			HOLogger.instance().log(OnlineWorker.class, e);
 			String msg = getLangString("Downloadfehler") + " : Error fetching leagueFixture: "
@@ -707,26 +706,29 @@ public class OnlineWorker {
 			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
-			waitDialog.setVisible(false);
+			showWaitDialog(0);
 			return false;
 		}
 		if (bOK) {
 			HOModel hom = hov.getModel();
 			hom.setFixtures(XMLSpielplanParser.parseSpielplanFromString(leagueFixtures));
-			waitDialog.setValue(70);
+			showWaitDialog(70);
 			// Save to DB
 			hom.saveFixtures();
-			waitDialog.setValue(90);
+			showWaitDialog(90);
 		}
-		waitDialog.setVisible(false);
+		showWaitDialog(0);
 		return bOK;
 	}
 
-	protected static LoginWaitDialog getWaitDialog() {
-		if (waitDialog != null) {
-			return waitDialog;
+	protected static void showWaitDialog(int i) {
+		if (HOMainFrame.launching.get()) return;
+
+		if (waitDialog == null) {
+			waitDialog = new LoginWaitDialog(HOMainFrame.instance(), false);
 		}
-		return new LoginWaitDialog(HOMainFrame.instance(), false);
+		waitDialog.setValue(i);
+		waitDialog.setVisible(i > 0);
 	}
 
 	/**
@@ -741,88 +743,7 @@ public class OnlineWorker {
 	 */
 
 	public static String uploadMatchOrder(int matchId, MatchType matchType, Lineup lineup) {
-
 		String result;
-		// Tell the Connector that we will require match order rights.
-
-		/*
-		boolean bFirst = true;
-		StringBuilder orders = new StringBuilder();
-
-		orders.append("{\"positions\":[");
-		for (int pos : IMatchRoleID.aFieldMatchRoleID)
-		{
-			if (bFirst)
-			{orders.append(createPositionString(pos, lineup));
-			bFirst = false;}
-			else orders.append(',').append(createPositionString(pos, lineup));
-		}
-
-		orders.append("],\"bench\":[");
-		bFirst = true;
-		for (int pos : IMatchRoleID.aSubsAndBackupssMatchRoleID) {
-			if (bFirst) {
-				orders.append(createPositionString(pos, lineup));
-				bFirst = false;}
-		else orders.append(',').append(createPositionString(pos, lineup));
-		}
-
-		// penalty takers
-		List<MatchRoleID> shooters = lineup.getPenaltyTakers();
-		int penshooters = 0;
-
-		orders.append("],\"kickers\":[");
-		for (MatchRoleID pos : shooters) {
-			if (penshooters > 0) {
-				orders.append(',');
-			}
-			orders.append("{\"id\":\"").append(pos.getSpielerId());
-			orders.append("\",\"behaviour\":\"0\"}");
-			penshooters++;
-		}
-		// Always give 11 shooters. There is a CHPP error if the number given is not 0 or 11.
-		for (int i = 0 ; i < 11-penshooters; i++) {
-			if (penshooters > 0 || i > 0) {
-				orders.append(',');
-			}
-			orders.append("{\"id\":\"0");
-			orders.append("\",\"behaviour\":\"0\"}");
-		}
-
-		orders.append(String.format("],\"captain\": %s,",lineup.getKapitaen()));
-		orders.append(String.format("\"setPieces\": %s,",lineup.getKicker()));
-
-		orders.append("\"settings\":{\"tactic\":").append(lineup.getTacticType());
-		orders.append(",\"speechLevel\":").append(lineup.getAttitude());
-		orders.append(", \"newLineup\":\"\",");
-		orders.append("\"coachModifier\":").append(lineup.getStyleOfPlay());
-		orders.append("}, \"substitutions\":[");
-
-		Iterator<Substitution> iter = lineup.getSubstitutionList().iterator();
-		while (iter.hasNext()) {
-			Substitution sub = iter.next();
-			// playerout == playerin if its a behaviour change)
-			if (sub.getOrderType() == MatchOrderType.NEW_BEHAVIOUR) {
-				orders.append("{\"playerin\":").append(sub.getSubjectPlayerID()).append(",");
-			} else {
-				orders.append("{\"playerin\":").append(sub.getObjectPlayerID()).append(",");
-			}
-			orders.append("\"playerout\":").append(sub.getSubjectPlayerID()).append(",");
-			orders.append("\"orderType\":").append(sub.getOrderType().getId()).append(",");
-			orders.append("\"min\":").append(sub.getMatchMinuteCriteria()).append(",");
-
-			// The uploaded position is not a RoleId
-			byte pos = (byte) ((sub.getRoleId() == -1) ? -1 : sub.getRoleId() -100);
-			orders.append("\"pos\":").append(pos).append(",");
-			orders.append("\"beh\":").append(sub.getBehaviour()).append(",");
-			orders.append("\"card\":").append(sub.getRedCardCriteria().getId()).append(",");
-			orders.append("\"standing\":").append(sub.getStanding().getId()).append("}");
-			if (iter.hasNext()) {
-				orders.append(',');
-			}
-		}
-		orders.append("]}");*/
-
 		String orders = lineup.toJson();
 		try {
 			result = MyConnector.instance().setMatchOrder(matchId, HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchType, orders);
@@ -848,7 +769,7 @@ public class OnlineWorker {
 		return "{\"id\":" + id + ",\"behaviour\":" + behaviour + "}";
 	}
 
-	private static Matchdetails fetchDetails(int matchID, MatchType matchType, MatchLineup lineup, LoginWaitDialog waitDialog) {
+	private static Matchdetails fetchDetails(int matchID, MatchType matchType, MatchLineup lineup) {
 		String matchDetails = "";
 		Matchdetails details = null;
 
@@ -859,16 +780,16 @@ public class OnlineWorker {
 						"Unable to fetch details for match " + matchID);
 				return null;
 			}
-			waitDialog.setValue(20);
+			showWaitDialog(20);
 			details = XMLMatchdetailsParser.parseMachtdetailsFromString(matchDetails, lineup);
-			waitDialog.setValue(40);
+			showWaitDialog(40);
 			if (details == null) {
 				HOLogger.instance().warning(OnlineWorker.class,
 						"Unable to fetch details for match " + matchID);
 				return null;
 			}
 			String arenaString = MyConnector.instance().getArena(details.getArenaID());
-			waitDialog.setValue(50);
+			showWaitDialog(50);
 			String regionIdAsString = XMLArenaParser.parseArenaFromString(arenaString).get(
 					"RegionID");
 			details.setRegionId(Integer.parseInt(regionIdAsString));
@@ -878,10 +799,10 @@ public class OnlineWorker {
 			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
-			waitDialog.setVisible(false);
+			showWaitDialog(0);
 			return null;
 		}
-		waitDialog.setVisible(false);
+		showWaitDialog(0);
 		return details;
 	}
 

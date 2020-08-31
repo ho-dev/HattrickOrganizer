@@ -73,8 +73,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	// ----------------------Refresh--
 
 	/**
-	 * Refresh, wenn ein Player in der Aufstellung geändert wird (Google
-	 * translate) Refresh, if a player is changed in the statement
+	 * Refresh, if a player is changed in the lineup
 	 */
 	public final void refresh() {
 		spielerDetailPanel.refresh();

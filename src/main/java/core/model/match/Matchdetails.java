@@ -168,9 +168,9 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     static String afterExtension = HOVerwaltung.instance().getLanguageString("ls.match.after.extension.abbreviation");
     public static  String getResultExtensionAbbreviation(Integer duration){
         if ( duration != null) {
-            if (duration.intValue() > 120)
+            if (duration > 120)
                 return afterPenalties;
-            if (duration.intValue() > 110)
+            if (duration > 110)
                 return afterExtension;
         }
         return "";
@@ -207,29 +207,9 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         return getMatchdetails(matchId, type);
     }
 
-    // Matchdetails factory, checks if database object needs an update from chpp (OnlineWorker)
-    // Number of implicite updates per session is limited to maxMatchdetailsReloadsPerSession
     public static Matchdetails getMatchdetails(int matchId, MatchType type){
         var ret = DBManager.instance().getMatchDetails(matchId);
-        if ( maxMatchdetailsReloadsPerSession>0 && ret != null && ret.getFetchDatum()!=null && type.isOfficial()) {
-            var events = ret.getHighlights();
-            if (events == null || events.size() == 0 || events.get(0).getMatchPartId() == null) {
-                HOLogger.instance().info(Matchdetails.class,
-                        "Reload Matchdetails id: "+matchId
-                        +" type:" + type.getName()
-                        +" events:" + (events==null? "null": events.size())
-                );
-                try {
-                    if ( OnlineWorker.downloadMatchData(matchId, type, true) ) {
-                        ret = DBManager.instance().getMatchDetails((matchId));
-                        maxMatchdetailsReloadsPerSession--;
-                    }
-                }
-                catch (Exception ex){
-                    HOLogger.instance().error(Matchdetails.class, ex.getMessage());
-                }
-            }
-        }
+        ret.setMatchType(type);
         return ret;
     }
 
@@ -269,7 +249,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         return guestGoalsInParts[matchPartId.getValue()];
     }
 
-    private void InitGoalsInParts() throws Exception {
+    private void InitGoalsInParts() {
         homeGoalsInParts = new Integer[MatchEvent.MatchPartId.values().length];
         guestGoalsInParts= new Integer[MatchEvent.MatchPartId.values().length];
         for ( var event : getHighlights()){
@@ -339,15 +319,12 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         }
 
         public static eInjuryType fromInteger(int x) {
-            switch (x) {
-                case 0:
-                    return NA;
-                case 1:
-                    return BRUISE;
-                case 2:
-                    return INJURY;
-            }
-            return null;
+            return switch (x) {
+                case 0 -> NA;
+                case 1 -> BRUISE;
+                case 2 -> INJURY;
+                default -> null;
+            };
         }
 
     }
@@ -404,19 +381,12 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      * Gibt den Namen zu einer BewertungzurÃ¼ck
      */
     public static String getNameForEinstellung(int einstellung) {
-        switch (einstellung) {
-            case EINSTELLUNG_PIC:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool");
-
-            case EINSTELLUNG_NORMAL:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.normal");
-
-            case EINSTELLUNG_MOTS:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.matchoftheseason");
-
-            default:
-                return core.model.HOVerwaltung.instance().getLanguageString("Unbestimmt");
-        }
+        return switch (einstellung) {
+            case EINSTELLUNG_PIC -> HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool");
+            case EINSTELLUNG_NORMAL -> HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.normal");
+            case EINSTELLUNG_MOTS -> HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.matchoftheseason");
+            default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
+        };
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -428,64 +398,32 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      */
     public static String getNameForTaktik(int taktikTyp) {
 
-        switch (taktikTyp) {
-            case TAKTIK_NORMAL:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.team.tactic.normal");
-
-            case TAKTIK_PRESSING:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.team.tactic.pressing");
-
-            case TAKTIK_KONTER:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.team.tactic.counter-attacks");
-
-            case TAKTIK_MIDDLE:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.team.tactic.attackinthemiddle");
-
-            case TAKTIK_WINGS:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.team.tactic.attackonwings");
-
-            case TAKTIK_CREATIVE:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.team.tactic.playcreatively");
-
-            case TAKTIK_LONGSHOTS:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.team.tactic.longshots");
-
-            default:
-                return core.model.HOVerwaltung.instance().getLanguageString("Unbestimmt");
-        }
+        return switch (taktikTyp) {
+            case TAKTIK_NORMAL -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.normal");
+            case TAKTIK_PRESSING -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.pressing");
+            case TAKTIK_KONTER -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.counter-attacks");
+            case TAKTIK_MIDDLE -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.attackinthemiddle");
+            case TAKTIK_WINGS -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.attackonwings");
+            case TAKTIK_CREATIVE -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.playcreatively");
+            case TAKTIK_LONGSHOTS -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.longshots");
+            default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
+        };
     }
 
     // get the used tactic name in short form
     public static String getShortTacticName(int type) {
         HOVerwaltung hov = HOVerwaltung.instance();
-        String tacticName;
+        String tacticName = switch (type) {
+            case IMatchDetails.TAKTIK_NORMAL -> hov.getLanguageString("ls.team.tactic_short.normal");
+            case IMatchDetails.TAKTIK_PRESSING -> hov.getLanguageString("ls.team.tactic_short.pressing");
+            case IMatchDetails.TAKTIK_KONTER -> hov.getLanguageString("ls.team.tactic_short.counter-attacks");
+            case IMatchDetails.TAKTIK_MIDDLE -> hov.getLanguageString("ls.team.tactic_short.attackinthemiddle");
+            case IMatchDetails.TAKTIK_WINGS -> hov.getLanguageString("ls.team.tactic_short.attackonwings");
+            case IMatchDetails.TAKTIK_LONGSHOTS -> hov.getLanguageString("ls.team.tactic_short.longshots");
+            case IMatchDetails.TAKTIK_CREATIVE -> hov.getLanguageString("ls.team.tactic_short.playcreatively");
+            default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
+        };
 
-        switch (type) {
-            case core.model.match.IMatchDetails.TAKTIK_NORMAL:
-                tacticName = hov.getLanguageString("ls.team.tactic_short.normal");
-                break;
-            case core.model.match.IMatchDetails.TAKTIK_PRESSING:
-                tacticName = hov.getLanguageString("ls.team.tactic_short.pressing");
-                break;
-            case core.model.match.IMatchDetails.TAKTIK_KONTER:
-                tacticName = hov.getLanguageString("ls.team.tactic_short.counter-attacks");
-                break;
-            case core.model.match.IMatchDetails.TAKTIK_MIDDLE:
-                tacticName = hov.getLanguageString("ls.team.tactic_short.attackinthemiddle");
-                break;
-            case core.model.match.IMatchDetails.TAKTIK_WINGS:
-                tacticName = hov.getLanguageString("ls.team.tactic_short.attackonwings");
-                break;
-            case core.model.match.IMatchDetails.TAKTIK_LONGSHOTS:
-                tacticName = hov.getLanguageString("ls.team.tactic_short.longshots");
-                break;
-            case core.model.match.IMatchDetails.TAKTIK_CREATIVE:
-                tacticName = hov.getLanguageString("ls.team.tactic_short.playcreatively");
-                break;
-            default:
-                tacticName = HOVerwaltung.instance().getLanguageString("Unbestimmt");
-                break;
-        }
         return tacticName;
     }
 
@@ -598,12 +536,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         try {
             final Pattern p = Pattern.compile(".-.-.");
             final Matcher m = p.matcher(m_sMatchreport);
-            m.find();
-
-            if (!home) {
-                m.find();
-            }
-
             return m.group();
         } catch (RuntimeException e) {
             return "";
@@ -936,11 +868,34 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     /**
      * Getter for property m_vHighlights.
      *
+     *    checks if database object needs an update from chpp (OnlineWorker)
+     *    Number of implicite updates per session is limited to maxMatchdetailsReloadsPerSession
+     *
      * @return Value of property m_vHighlights.
      */
     public final ArrayList<MatchEvent> getHighlights() {
         if ( m_vHighlights == null || m_vHighlights.size() == 0){
             m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchID());
+
+            if ( maxMatchdetailsReloadsPerSession>0 && this.m_MatchTyp.isOfficial()) {
+                if ( m_vHighlights.size() == 0 || m_vHighlights.get(0).getMatchPartId() == null) {
+                    HOLogger.instance().info(Matchdetails.class,
+                            "Reload Matchdetails id: "+ this.getMatchID()
+                                    +" type:" + this.m_MatchTyp.getName()
+                                    +" events:" +  m_vHighlights.size()
+                    );
+                    try {
+                        if ( OnlineWorker.downloadMatchData(this.getMatchID(), this.m_MatchTyp, true) ) {
+                            m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchID());
+                            maxMatchdetailsReloadsPerSession--;
+                        }
+                    }
+                    catch (Exception ex){
+                        HOLogger.instance().error(Matchdetails.class, ex.getMessage());
+                    }
+                }
+            }
+
         }
         return m_vHighlights;
     }
@@ -1182,29 +1137,23 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         try {
             final Pattern p = Pattern.compile(".-.-.");
             final Matcher m = p.matcher(m_sMatchreport);
-            m.find();
-
-            if (!home) {
-                m.find();
-            }
-
             int start = m.end();
             start = m_sMatchreport.indexOf(":", start);
 
             final int end = m_sMatchreport.indexOf(".", start);
-            final List<String> lineup = new ArrayList<String>();
+            final List<String> lineup = new ArrayList<>();
 
             final String[] zones = m_sMatchreport.substring(start + 1, end).split(" - ");
 
-            for (int i = 0; i < zones.length; i++) {
-                final String[] pNames = zones[i].split(",");
+            for (String zone : zones) {
+                final String[] pNames = zone.split(",");
 
                 lineup.addAll(Arrays.asList(pNames));
             }
 
             return lineup;
         } catch (RuntimeException e) {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
     }
 
@@ -1324,12 +1273,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         try {
             final Pattern p = Pattern.compile(".-.-.");
             final Matcher m = p.matcher(m_sMatchreport);
-            m.find();
-
-            if (!home) {
-                m.find();
-            }
-
             int start = m.end();
             start = m_sMatchreport.indexOf(":", start);
 
@@ -1340,8 +1283,8 @@ public class Matchdetails implements core.model.match.IMatchDetails {
             for (int i = 0; i < zones.length; i++) {
                 final String[] pNames = zones[i].split(",");
 
-                for (int j = 0; j < pNames.length; j++) {
-                    lineup.add(pNames[j], i);
+                for (String pName : pNames) {
+                    lineup.add(pName, i);
                 }
             }
         } catch (RuntimeException e) {
@@ -1390,7 +1333,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     /**
      * check if numeric
      */
-    protected final static boolean isNumeric(String aText) {
+    protected static boolean isNumeric(String aText) {
         for (int k = 0; k < aText.length(); k++) {
             if (!((aText.charAt(k) >= '0') && (aText.charAt(k) <= '9'))) {
                 return false;
@@ -1403,7 +1346,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     /**
      * Set the region ID of the match's arena
      *
-     * @param regionId
+     * @param regionId region Id
      */
     public void setRegionId(int regionId) {
         this.m_iRegionId = regionId;
@@ -1412,7 +1355,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     /**
      * Get the region ID of this match's arena
      *
-     * @return
+     * @return int region Id
      */
     public int getRegionId() {
         return m_iRegionId;

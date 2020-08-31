@@ -459,7 +459,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
                 final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
-                return new ColorLabelEntry(match.getMatchdetails().getResultLong(),
+                return new ColorLabelEntry(match.getResultLong(),
                         ColorLabelEntry.FG_STANDARD, background,
                         SwingConstants.LEFT);
             }
@@ -591,12 +591,9 @@ final public class UserColumnFactory {
                 } else {
                     // Birthdays since compare
                     birthdays = (int) (Math.floor(player.getAlterWithAgeDays()) - Math.floor(playerCompare.getAlterWithAgeDays()));
-                    if (playerCompare.isOld())
-                        // Player was not in our team at compare date
-                        playerExists = false;
-                    else
-                        // Player was in our team at compare date
-                        playerExists = true;
+                    // Player was not in our team at compare date
+                    // Player was in our team at compare date
+                    playerExists = !playerCompare.isOld();
                 }
                 return new ColorLabelEntry(
                         birthdays,
@@ -798,7 +795,7 @@ final public class UserColumnFactory {
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD,
                         SwingConstants.RIGHT),
-                        new ColorLabelEntry((float) (0 - 0),
+                        new ColorLabelEntry((float) (0),
                                 ColorLabelEntry.BG_STANDARD,
                                 true, false, 0)
                 );
