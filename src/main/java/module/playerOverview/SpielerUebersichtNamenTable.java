@@ -1,13 +1,20 @@
 package module.playerOverview;
 
+import core.db.DBManager;
+import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.TableSorter;
 import core.gui.model.ReduzedTableModel;
+import core.model.HOVerwaltung;
+import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
+import core.net.HattrickLink;
 
 import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class SpielerUebersichtNamenTable extends JTable implements Refreshable, PlayerTable {
 
@@ -27,6 +34,18 @@ public class SpielerUebersichtNamenTable extends JTable implements Refreshable, 
 		setModel(new ReduzedTableModel(model, 0));
 		setDefaultRenderer(java.lang.Object.class, new HODefaultTableCellRenderer());
 		RefreshManager.instance().registerRefreshable(this);
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				int rowindex = getSelectedRow();
+				if (rowindex >= 0){
+					Player player = tableSorter.getSpieler(rowindex);
+					if(player!=null && e.isShiftDown()){
+						HattrickLink.showPlayer(player.getSpielerID());
+					}
+				}
+			}
+		});
 	}
 
 	// ~ Methods

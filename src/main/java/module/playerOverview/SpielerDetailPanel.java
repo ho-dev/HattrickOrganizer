@@ -26,6 +26,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.module.IModule;
+import core.net.HattrickLink;
 import core.util.Helper;
 import module.lineup.Lineup;
 import module.statistics.StatistikMainPanel;
@@ -687,7 +688,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
                     if(e.isShiftDown()){
                         int matchId = m_clPlayer.getLastMatchId();
                         MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
-                        getHTURL(matchId+"",info.getMatchTyp().isOfficial());
+                        HattrickLink.showMatch(matchId+"",info.getMatchTyp().isOfficial());
                     }else
                     HOMainFrame.instance().showMatch(m_clPlayer.getLastMatchId());
                 }
@@ -942,32 +943,6 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             initBlueField(i, constraints, layout, panel, playerPositionValues[i].getComponent(false));
         }
         add(panel, BorderLayout.CENTER);
-    }
-
-    public void getHTURL(String matchId, boolean isOfficial){
-        URI url;
-        if (isOfficial) {
-            url = URI.create(String.format("http://www.hattrick.org/Club/Matches/Match.aspx?matchID=%s", matchId));
-        }else
-            url= URI.create(String.format("https://www.hattrick.org/Club/Matches/Match.aspx?matchID=%s&SourceSystem=HTOIntegrated", matchId));
-
-        if(Desktop.isDesktopSupported()){
-            Desktop desktop = Desktop.getDesktop();
-            try {
-                desktop.browse(url);
-            } catch (IOException e) {}
-        }else{
-            String os = System.getProperty("os.name").toLowerCase();
-            Runtime runtime = Runtime.getRuntime();
-            try {
-                if(os.indexOf("win") >= 0)
-                    runtime.exec("rundll32 url.dll,FileProtocolHandler " + url);
-                else if(os.indexOf("mac") >= 0)
-                    runtime.exec("open " + url);
-                else
-                    runtime.exec("firefox " + url);
-            } catch (IOException e) {}
-        }
     }
 
     /**

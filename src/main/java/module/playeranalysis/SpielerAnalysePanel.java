@@ -9,31 +9,24 @@ import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.SpielerCBItem;
 import core.gui.model.SpielerCBItemRenderer;
 import core.gui.theme.HOColorName;
-import core.gui.theme.HOIconName;
-import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
-import core.util.HOLogger;
+import core.net.HattrickLink;
 import core.util.Helper;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JViewport;
-import javax.swing.ScrollPaneConstants;
 
 /**
  * Bietet Übersicht über alle Player
@@ -96,7 +89,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 						HOMainFrame.instance().showMatch(Integer.parseInt(colorLabelEntry.getText()));
 					}else if(e.getClickCount()==1 && e.isShiftDown()){
 						MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
-						getHTURL(matchId+"",info.getMatchTyp().isOfficial());
+						HattrickLink.showMatch(matchId+"",info.getMatchTyp().isOfficial());
 					}
 				}catch (Exception ex){
 
@@ -104,32 +97,6 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 
 			}
 		});
-	}
-
-	public void getHTURL(String matchId, boolean isOfficial){
-		URI url;
-		if (isOfficial) {
-			url = URI.create(String.format("http://www.hattrick.org/Club/Matches/Match.aspx?matchID=%s", matchId));
-		}else
-			url= URI.create(String.format("https://www.hattrick.org/Club/Matches/Match.aspx?matchID=%s&SourceSystem=HTOIntegrated", matchId));
-
-		if(Desktop.isDesktopSupported()){
-			Desktop desktop = Desktop.getDesktop();
-			try {
-				desktop.browse(url);
-			} catch (IOException   e) {}
-		}else{
-			String os = System.getProperty("os.name").toLowerCase();
-			Runtime runtime = Runtime.getRuntime();
-			try {
-				if(os.indexOf("win") >= 0)
-					runtime.exec("rundll32 url.dll,FileProtocolHandler " + url);
-				else if(os.indexOf("mac") >= 0)
-					runtime.exec("open " + url);
-				else
-					runtime.exec("firefox " + url);
-			} catch (IOException e) {}
-		}
 	}
 
 	private void fillSpielerCB() {
