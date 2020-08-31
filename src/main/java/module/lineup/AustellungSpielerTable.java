@@ -14,12 +14,15 @@ import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.model.match.MatchKurzInfo;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
+import core.net.HattrickLink;
 import core.util.Helper;
 import module.playerOverview.PlayerTable;
 
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JTable;
 import javax.swing.table.TableColumnModel;
@@ -47,6 +50,30 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 		setBackground(ColorLabelEntry.BG_STANDARD);
 		RefreshManager.instance().registerRefreshable(this);
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				int rowindex = getSelectedRow();
+				if (rowindex >= 0){
+					// Last match column
+					String columnName = tableSorter.getColumnName(columnAtPoint(e.getPoint()));
+					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
+
+					Player player = tableSorter.getSpieler(rowindex);
+					if(player!=null){
+						if(columnName.equalsIgnoreCase(lastMatchRating)){
+							if(e.isShiftDown()){
+								int matchId = player.getLastMatchId();
+								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
+								HattrickLink.showMatch(matchId + "", info.getMatchTyp().isOfficial());
+							}else if(e.getClickCount()==2) {
+								HOMainFrame.instance().showMatch(player.getLastMatchId());
+							}
+						}
+					}
+				}
+			}
+		});
 	}
 
 	@Override

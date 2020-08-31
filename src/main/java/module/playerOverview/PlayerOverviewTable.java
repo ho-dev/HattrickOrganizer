@@ -1,6 +1,7 @@
 package module.playerOverview;
 
 import core.db.DBManager;
+import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.TableSorter;
@@ -11,10 +12,15 @@ import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.model.match.MatchKurzInfo;
+import core.model.player.Player;
+import core.net.HattrickLink;
 import core.util.Helper;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 /**
@@ -34,6 +40,30 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 		RefreshManager.instance().registerRefreshable(this);
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				int rowindex = getSelectedRow();
+				if (rowindex >= 0){
+					// Last match column
+					String columnName = tableSorter.getColumnName(columnAtPoint(e.getPoint()));
+					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
+
+					Player player = tableSorter.getSpieler(rowindex);
+					if(player!=null){
+						if(columnName.equalsIgnoreCase(lastMatchRating)){
+							if(e.isShiftDown()){
+								int matchId = player.getLastMatchId();
+								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
+								HattrickLink.showMatch(matchId + "", info.getMatchTyp().isOfficial());
+							}else if(e.getClickCount()==2) {
+								HOMainFrame.instance().showMatch(player.getLastMatchId());
+							}
+						}
+					}
+				}
+			}
+		});
 	}
 
 	/**
