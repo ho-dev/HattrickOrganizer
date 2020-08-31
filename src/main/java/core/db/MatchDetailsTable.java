@@ -165,8 +165,6 @@ final class MatchDetailsTable extends AbstractTable {
 				else {
 					details.setGuestGoalsInPart(null);
 				}
-				ArrayList<MatchEvent> vMatchHighlights = DBManager.instance().getMatchHighlights(matchId);
-				details.setHighlights(vMatchHighlights);
 				details.setStatisics();
 			}
 		} catch (Exception e) {

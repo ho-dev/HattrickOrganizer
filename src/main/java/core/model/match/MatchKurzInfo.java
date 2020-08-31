@@ -11,6 +11,8 @@ import core.util.StringUtils;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
+import static core.util.StringUtils.getResultString;
+
 public class MatchKurzInfo implements Comparable<Object> {
 	// ~ Instance fields
 	// ----------------------------------------------------------------------------
@@ -457,13 +459,13 @@ public class MatchKurzInfo implements Comparable<Object> {
 				// Duration of walk over matches is 0 minutes
 				for (var e : getMatchdetails().getHighlights()) {
 					if ( e.getMatchEventID() == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER ) {
-						if ( this.isHomeMatch() == true ) {
+						if (this.isHomeMatch()) {
 							isWalkoverMatch = true;
 						}
 						break;
 					}
 					else if ( e.getMatchEventID() == MatchEvent.MatchEventID.HOME_TEAM_WALKOVER){
-						if ( this.isHomeMatch() != true){
+						if (!this.isHomeMatch()){
 							isWalkoverMatch = true;
 						}
 						break;
@@ -472,5 +474,12 @@ public class MatchKurzInfo implements Comparable<Object> {
 			}
 		}
 		return isWalkoverMatch;
+	}
+
+	public String getResultLong() {
+		if ( this.m_iMatchStatus != FINISHED){
+			return getResultString(-1,-1,"");
+		}
+		return getMatchdetails().getResultLong();
 	}
 }
