@@ -11,7 +11,7 @@ import java.util.stream.Stream;
  *
  * MatchRoleID according to CHPP documentation.
  * 
- * @author aksSolace
+ * @author akaSolace
  */
 public interface IMatchRoleID {
 

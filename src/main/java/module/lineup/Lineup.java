@@ -1153,6 +1153,15 @@ public class Lineup{
 		}
 	}
 
+	public Substitution getManMarkingOrder(){
+		for ( var s : this.substitutions){
+			if ( s.getOrderType() == MatchOrderType.MAN_MARKING) {
+				return s;
+			}
+		}
+		return null;
+	}
+
 	public List<MatchRoleID> getPenaltyTakers() {
 		return this.penaltyTakers;
 	}

@@ -61,6 +61,7 @@ public class SubstitutionOverview extends JPanel {
 	private BehaviorAction behaviorAction;
 	private PositionSwapAction positionSwapAction;
 	private SubstitutionAction substitutionAction;
+	private ManMarkingAction manMarkingAction;
 	private Lineup lineup;
 	private List<Substitution> substitutionBackup;
 
@@ -89,6 +90,7 @@ public class SubstitutionOverview extends JPanel {
 		this.behaviorAction = new BehaviorAction();
 		this.positionSwapAction = new PositionSwapAction();
 		this.substitutionAction = new SubstitutionAction();
+		this.manMarkingAction = new ManMarkingAction();
 	}
 
 	private void refresh() {
@@ -97,26 +99,36 @@ public class SubstitutionOverview extends JPanel {
 
 		// Max order is 5 + the level of the tactical assistant.
 		int maxOrders = 5 + HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
+		int nSubstitutions = 0;	// limit 3
+		int nManMarkings = 0;	// limit 1
+		int nOther = 0;			// limit maxOrders - nSubstitutions
 
 		for (var row : model.rows) {
 			var subs = row.getSubstitution();
-			if (subs.getOrderType() != MatchOrderType.MAN_MARKING) {
-				maxOrders--;
-				if (maxOrders < 0) {
-					row.setProblem(Error.TOO_MANY_ORDERS);
-				}
-			} else {
-				row.setProblem(PlausibilityCheck.checkForProblem(this.lineup, row.getSubstitution()));
+			switch (subs.getOrderType()) {
+				case SUBSTITUTION -> nSubstitutions++;
+				case MAN_MARKING -> nManMarkings++;
+				default -> nOther++;
+			}
+			row.setProblem(PlausibilityCheck.checkForProblem(this.lineup, row.getSubstitution()));
+			if ( nSubstitutions > 3 ){
+				row.setProblem(Error.TOO_MANY_ORDERS);
+			}
+			else if ( nSubstitutions+nOther>maxOrders){
+				row.setProblem(Error.TOO_MANY_ORDERS);
+			}
+			else if ( nManMarkings > 1){
+				row.setProblem(Error.TOO_MANY_ORDERS);
 			}
 		}
-
 		detailsView.refresh();
 		((SubstitutionsTableModel) this.substitutionTable.getModel()).sort();
 
-		boolean enableCreateActions = this.lineup.getSubstitutionList().size() < maxOrders;
-		this.behaviorAction.setEnabled(enableCreateActions);
-		this.positionSwapAction.setEnabled(enableCreateActions);
-		this.substitutionAction.setEnabled(enableCreateActions);
+		boolean enableCreateOtherActions = maxOrders-nOther-nSubstitutions>0;
+		this.behaviorAction.setEnabled(enableCreateOtherActions);
+		this.positionSwapAction.setEnabled(enableCreateOtherActions);
+		this.substitutionAction.setEnabled(nSubstitutions<3);
+		this.manMarkingAction.setEnabled(nManMarkings<1);
 	}
 
 	private void addListeners() {
@@ -255,12 +267,18 @@ public class SubstitutionOverview extends JPanel {
 		JButton positionSwapButton = new JButton();
 		gbc.gridy++;
 		gbc.insets = new Insets(2, 10, 2, 10);
-		gbc.weighty = 1.0;
 		buttonPanel.add(positionSwapButton, gbc);
 		positionSwapButton.setAction(this.positionSwapAction);
 
+		JButton manMarkingButton = new JButton();
+		gbc.gridy++;
+		gbc.insets = new Insets(2, 10, 2, 10);
+		gbc.weighty = 1.0;
+		buttonPanel.add(manMarkingButton, gbc);
+		manMarkingButton.setAction(this.manMarkingAction);
+
 		GUIUtils.equalizeComponentSizes(editButton, removeButton, removeAllButton, substitutionButton,
-				behaviorButton, positionSwapButton);
+				behaviorButton, positionSwapButton, manMarkingButton);
 
 		return buttonPanel;
 	}
@@ -287,7 +305,7 @@ public class SubstitutionOverview extends JPanel {
 	}
 
 	private SubstitutionEditDialog getSubstitutionEditDialog(MatchOrderType orderType) {
-		SubstitutionEditDialog dlg = null;
+		SubstitutionEditDialog dlg;
 		Window windowAncestor = SwingUtilities.getWindowAncestor(SubstitutionOverview.this);
 		if (windowAncestor instanceof Frame) {
 			dlg = new SubstitutionEditDialog((Frame) windowAncestor, orderType);
@@ -561,6 +579,20 @@ public class SubstitutionOverview extends JPanel {
 		}
 	}
 
+	private class ManMarkingAction extends AbstractAction {
+
+		private static final long serialVersionUID = 2005264416271904159L;
+
+		public ManMarkingAction() {
+			super(HOVerwaltung.instance().getLanguageString("subs.TypeManMarking"));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			doNewOrder(MatchOrderType.MAN_MARKING);
+		}
+	}
+
 	private class RemoveAction extends AbstractAction {
 
 		private static final long serialVersionUID = 715531467612457L;
@@ -626,7 +658,6 @@ public class SubstitutionOverview extends JPanel {
 				case NEW_BEHAVIOUR -> ThemeManager.getIcon(HOIconName.ARROW_MOVE);
 				case POSITION_SWAP -> ThemeManager.getIcon(HOIconName.ARROW_CIRCLE);
 				case MAN_MARKING -> ThemeManager.getIcon(HOIconName.MAN_MARKING);
-				default -> null;
 			};
 			component.setIcon(icon);
 			return component;

@@ -47,6 +47,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ### Lineup
 
   - [FEAT] Provide better defaults for initial position of dividers.
+  - [FEAT] Edit man marking match order [#660]
   - [FIX] Fix bug in download of man marking match orders [#632]
   - [FIX] Fix bug in upload of position change match orders [#633]
 

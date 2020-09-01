@@ -64,7 +64,7 @@ public class MyConnector {
 	private final static String VERSION_MATCHORDERS_NT = "2.1";
 	private final static String VERSION_MATCHLINEUP = "2.0";
 	private final static String VERSION_MATCHDETAILS = "3.0";
-	private final static String VERSION_PLAYERS = "2.1";
+	private final static String VERSION_PLAYERS = "2.4";
 	private final static String VERSION_WORLDDETAILS = "1.8";
 	private final static String VERSION_TOURNAMENTDETAILS = "1.0";
 	private final static String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";

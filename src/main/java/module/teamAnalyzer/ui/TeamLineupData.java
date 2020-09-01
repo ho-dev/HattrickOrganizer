@@ -1,5 +1,7 @@
 package module.teamAnalyzer.ui;
 
+import core.model.player.MatchRoleID;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -205,5 +207,25 @@ public class TeamLineupData {
      */
     public JLabel getTeamPanel() {
         return m_jlTeamName;
+    }
+
+    public JPanel getPanel(int pos) {
+        return switch (pos) {
+            case MatchRoleID.keeper -> this.m_clTorwart;
+            case MatchRoleID.leftBack -> this.m_clLinkeAussenVerteidiger;
+            case MatchRoleID.leftCentralDefender -> this.m_clLinkeInnenVerteidiger;
+            case MatchRoleID.middleCentralDefender -> this.m_clCentralInnenVerteidiger;
+            case MatchRoleID.rightCentralDefender -> this.m_clRechteInnenVerteidiger;
+            case MatchRoleID.rightBack -> this.m_clRechteAussenVerteidiger;
+            case MatchRoleID.rightWinger -> this.m_clRechteFluegel;
+            case MatchRoleID.rightInnerMidfield -> this.m_clRechteMittelfeld;
+            case MatchRoleID.centralInnerMidfield -> this.m_clCentralMittelfeld;
+            case MatchRoleID.leftInnerMidfield -> this.m_clLinkeMittelfeld;
+            case MatchRoleID.leftWinger -> this.m_clLinkeFluegel;
+            case MatchRoleID.rightForward -> this.m_clRechterSturm;
+            case MatchRoleID.centralForward -> this.m_clCentralSturm;
+            case MatchRoleID.leftForward -> this.m_clLinkerSturm;
+            default -> null;
+        };
     }
 }

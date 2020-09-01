@@ -1,6 +1,7 @@
 package module.lineup.substitution.plausibility;
 
 public enum Error implements Problem {
+	MANMARKING_PLAYER_MISSING("subs.plausibility.manmarking.playermissing"),
 	NEWBEHAVIOUR_PLAYER_MISSING("subs.plausibility.newbehaviour.playermissing"),
 	SUBSTITUTION_PLAYER_MISSING("subs.plausibility.substitution.playermissing"),
 	POSITIONSWAP_PLAYER_MISSING("subs.plausibility.positionswap.playermissing"),
@@ -12,7 +13,7 @@ public enum Error implements Problem {
 	
 	private String languageKey;
 
-	private Error(String languageKey) {
+	Error(String languageKey) {
 		this.languageKey = languageKey;
 	}
 

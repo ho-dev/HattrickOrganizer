@@ -8,20 +8,16 @@ import core.module.config.ModuleConfig;
 import module.lineup.Lineup;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
-import module.teamAnalyzer.report.TacticReport;
 import module.teamAnalyzer.ui.lineup.FormationPanel;
 import module.teamAnalyzer.vo.TeamLineup;
 import module.teamAnalyzer.vo.UserTeamSpotLineup;
 
-import java.awt.BorderLayout;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 
 public class TeamPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -42,6 +38,10 @@ public class TeamPanel extends JPanel {
     private PlayerPanel centralMidfielder = new PlayerPanel();
     private PlayerPanel centralAttacker = new PlayerPanel ();
     JPanel grassPanel = new RasenPanel();
+
+    ManMarkingOrderDisplay manMarkingOrderDisplay;
+
+    private Lineup ownLineup;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -89,34 +89,56 @@ public class TeamPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    public void reload(TeamLineup lineup, int week, int season) {
-        if (lineup != null) {
+    public void reload(TeamLineup teamLineup, int week, int season) {
+        if (teamLineup != null) {
             lineupPanel.getOpponentTeam().setTeamName(SystemManager.getActiveTeamName() + " ("
                                                       + SystemManager.getActiveTeamId() + ")");
-            keeper.reload(lineup.getSpotLineup(IMatchRoleID.keeper), week, season);
-            leftBack.reload(lineup.getSpotLineup(IMatchRoleID.leftBack), week, season);
-            leftCentral.reload(lineup.getSpotLineup(IMatchRoleID.leftCentralDefender), week, season);
-            rightCentral.reload(lineup.getSpotLineup(IMatchRoleID.rightCentralDefender), week, season);
-            rightBack.reload(lineup.getSpotLineup(IMatchRoleID.rightBack), week, season);
-            leftWinger.reload(lineup.getSpotLineup(IMatchRoleID.leftWinger), week, season);
-            leftMidfielder.reload(lineup.getSpotLineup(IMatchRoleID.leftInnerMidfield), week, season);
-            rightMidfielder.reload(lineup.getSpotLineup(IMatchRoleID.rightInnerMidfield), week, season);
-            rightWinger.reload(lineup.getSpotLineup(IMatchRoleID.rightWinger), week, season);
-            leftAttacker.reload(lineup.getSpotLineup(IMatchRoleID.leftForward), week, season);
-            rightAttacker.reload(lineup.getSpotLineup(IMatchRoleID.rightForward), week, season);
-            centralAttacker.reload(lineup.getSpotLineup(IMatchRoleID.centralForward), week, season);
-            centralMidfielder.reload(lineup.getSpotLineup(IMatchRoleID.centralInnerMidfield), week, season);
-            middleCentral.reload(lineup.getSpotLineup(IMatchRoleID.middleCentralDefender), week, season);
+            keeper.reload(teamLineup.getSpotLineup(IMatchRoleID.keeper), week, season);
+            leftBack.reload(teamLineup.getSpotLineup(IMatchRoleID.leftBack), week, season);
+            leftCentral.reload(teamLineup.getSpotLineup(IMatchRoleID.leftCentralDefender), week, season);
+            rightCentral.reload(teamLineup.getSpotLineup(IMatchRoleID.rightCentralDefender), week, season);
+            rightBack.reload(teamLineup.getSpotLineup(IMatchRoleID.rightBack), week, season);
+            leftWinger.reload(teamLineup.getSpotLineup(IMatchRoleID.leftWinger), week, season);
+            leftMidfielder.reload(teamLineup.getSpotLineup(IMatchRoleID.leftInnerMidfield), week, season);
+            rightMidfielder.reload(teamLineup.getSpotLineup(IMatchRoleID.rightInnerMidfield), week, season);
+            rightWinger.reload(teamLineup.getSpotLineup(IMatchRoleID.rightWinger), week, season);
+            leftAttacker.reload(teamLineup.getSpotLineup(IMatchRoleID.leftForward), week, season);
+            rightAttacker.reload(teamLineup.getSpotLineup(IMatchRoleID.rightForward), week, season);
+            centralAttacker.reload(teamLineup.getSpotLineup(IMatchRoleID.centralForward), week, season);
+            centralMidfielder.reload(teamLineup.getSpotLineup(IMatchRoleID.centralInnerMidfield), week, season);
+            middleCentral.reload(teamLineup.getSpotLineup(IMatchRoleID.middleCentralDefender), week, season);
             
-            lineupPanel.getOpponentTeam().setLeftAttack(lineup.getRating().getLeftAttack());
-            lineupPanel.getOpponentTeam().setLeftDefence(lineup.getRating().getLeftDefense());
-            lineupPanel.getOpponentTeam().setRightAttack(lineup.getRating().getRightAttack());
-            lineupPanel.getOpponentTeam().setRightDefence(lineup.getRating().getRightDefense());
-            lineupPanel.getOpponentTeam().setMiddleAttack(lineup.getRating().getCentralAttack());
-            lineupPanel.getOpponentTeam().setMiddleDefence(lineup.getRating().getCentralDefense());
-            lineupPanel.getOpponentTeam().setMidfield(lineup.getRating().getMidfield());
+            lineupPanel.getOpponentTeam().setLeftAttack(teamLineup.getRating().getLeftAttack());
+            lineupPanel.getOpponentTeam().setLeftDefence(teamLineup.getRating().getLeftDefense());
+            lineupPanel.getOpponentTeam().setRightAttack(teamLineup.getRating().getRightAttack());
+            lineupPanel.getOpponentTeam().setRightDefence(teamLineup.getRating().getRightDefense());
+            lineupPanel.getOpponentTeam().setMiddleAttack(teamLineup.getRating().getCentralAttack());
+            lineupPanel.getOpponentTeam().setMiddleDefence(teamLineup.getRating().getCentralDefense());
+            lineupPanel.getOpponentTeam().setMidfield(teamLineup.getRating().getMidfield());
 
             setMyTeam();
+
+            // Display man marking order
+            Lineup ownLineup = getOwnLineup();
+            var manMarkingOrder = ownLineup.getManMarkingOrder();
+            if ( manMarkingOrder != null ){
+                var manMarker = manMarkingOrder.getSubjectPlayerID();
+                var manMarkerPos = ownLineup.getPositionBySpielerId(manMarker).getId();
+                var manMarkedPos = teamLineup.getPositionByPlayerId(manMarkingOrder.getObjectPlayerID());
+                if ( manMarkedPos > 0 ){
+                    var from = lineupPanel.getMyTeam().getPanel(manMarkerPos);
+                    var to = lineupPanel.getOpponentTeam().getPanel(manMarkedPos);
+                    if ( manMarkingOrderDisplay == null){
+                        manMarkingOrderDisplay = new ManMarkingOrderDisplay(grassPanel);
+                    }
+                    manMarkingOrderDisplay.set(from, to);
+                }
+                else {
+                    // TODO: Display warning about failed man marking order
+                }
+            }
+
+
         } else {
             lineupPanel.getOpponentTeam().setTeamName(HOVerwaltung.instance().getLanguageString("TeamPanel.TeamMessage")); //$NON-NLS-1$
 
@@ -166,7 +188,7 @@ public class TeamPanel extends JPanel {
 
     private void setMyTeam() {
     	HashMap<Integer, UserTeamPlayerPanel> list = new HashMap<Integer, UserTeamPlayerPanel>();
-    	Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        Lineup lineup = getOwnLineup();
 
         for (int spot : IMatchRoleID.aFieldMatchRoleID) {
             Player player = lineup.getPlayerByPositionID(spot);
@@ -174,7 +196,6 @@ public class TeamPanel extends JPanel {
 
             if (player != null) {
                 UserTeamSpotLineup spotLineup = new UserTeamSpotLineup();
-
                 spotLineup.setAppearance(0);
                 spotLineup.setName(getPlayerName(player.getFullName()));
                 spotLineup.setPlayerId(player.getSpielerID());
@@ -244,5 +265,66 @@ public class TeamPanel extends JPanel {
         	box.setPreferredSize(playerPanel.getDefaultSize());
         	panel.add(new javax.swing.Box(BoxLayout.X_AXIS));
         }
+    }
+
+    public Lineup getOwnLineup() {
+        if ( ownLineup == null) {
+            ownLineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        }
+        return ownLineup;
+    }
+
+    public void setOwnLineup(Lineup ownLineup) {
+        this.ownLineup = ownLineup;
+    }
+
+    private class ManMarkingOrderDisplay extends JPanel {
+        private final int ARR_SIZE = 8;
+        int xfrom, yfrom, xto, yto;
+        JComponent parent;
+        public ManMarkingOrderDisplay(JPanel grassPanel) {
+            parent = grassPanel;
+            parent.add(this);
+        }
+
+        public void set(JPanel from, JPanel to) {
+            xfrom = x(from) + from.getWidth() / 2;
+            yfrom = y(from);
+            xto = x(to)  + to.getWidth() / 2;
+            yto = y(to)  + to.getHeight();
+        }
+
+        private int y(Container component) {
+            var ret = component.getY();
+            if ( component.getParent() != parent) ret += y(component.getParent());
+            return ret;
+        }
+
+        private int x(Container component) {
+            var ret = component.getX();
+            if ( component.getParent() != parent) ret += x(component.getParent());
+            return ret;
+        }
+
+        @Override
+        protected void paintComponent(Graphics gIn) {
+            // adapted from aioobe, https://stackoverflow.com/questions/4112701/drawing-a-line-with-arrow-in-java
+            double dx = xto - xfrom, dy = yto - yfrom;
+            double angle = Math.atan2(dy, dx);
+            int len = (int) Math.sqrt(dx*dx + dy*dy);
+            AffineTransform at = AffineTransform.getTranslateInstance(xfrom, yfrom);
+            at.concatenate(AffineTransform.getRotateInstance(angle));
+
+            Graphics2D g = (Graphics2D) gIn.create();
+            g.transform(at);
+
+            g.setPaint(Color.RED);
+            g.setStroke(new BasicStroke(5));
+            // Draw horizontal arrow starting in (0, 0)
+            g.drawLine(0, 0, len, 0);
+            g.fillPolygon(new int[] {len+2, len-ARR_SIZE+2, len-ARR_SIZE+2, len+2},
+                    new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
+        }
+
     }
 }

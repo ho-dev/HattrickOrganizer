@@ -52,33 +52,33 @@ public class SmilieEntry extends DoppelLabelEntry {
 
                 //Beide null -> Der ManuelleSmilie entscheidet
                 if (((entry.getPlayer().getTeamInfoSmilie() == null)
-                    || entry.getPlayer().getTeamInfoSmilie().equals(""))
-                    && ((getPlayer().getTeamInfoSmilie() == null)
-                    || getPlayer().getTeamInfoSmilie().equals(""))) {
+                        || entry.getPlayer().getTeamInfoSmilie().equals(""))
+                        && ((getPlayer().getTeamInfoSmilie() == null)
+                        || getPlayer().getTeamInfoSmilie().equals(""))) {
                     ergebnis = 0;
                 } else if ((entry.getPlayer().getTeamInfoSmilie() == null)
-                           || entry.getPlayer().getTeamInfoSmilie().equals("")) {
+                        || entry.getPlayer().getTeamInfoSmilie().equals("")) {
                     ergebnis = 1;
                 } else if ((getPlayer().getTeamInfoSmilie() == null)
-                           || getPlayer().getTeamInfoSmilie().equals("")) {
+                        || getPlayer().getTeamInfoSmilie().equals("")) {
                     ergebnis = -1;
                 } else {
                     ergebnis = entry.getPlayer().getTeamInfoSmilie().compareTo(getPlayer()
-                                                                                    .getTeamInfoSmilie());
+                            .getTeamInfoSmilie());
                 }
 
                 //Bei "Gleichstand" die Aufstellung beachten
                 if (ergebnis == 0) {
                     final MatchRoleID entrySort = core.model.HOVerwaltung.instance()
-                                                                                                                        .getModel()
-                                                                                                                        .getCurrentLineup()
-                                                                                                                        .getPositionBySpielerId(entry.getPlayer()
-                                                                                                                                                     .getSpielerID());
+                            .getModel()
+                            .getCurrentLineup()
+                            .getPositionBySpielerId(entry.getPlayer()
+                                    .getSpielerID());
                     final MatchRoleID sort = core.model.HOVerwaltung.instance()
-                                                                                                                   .getModel()
-                                                                                                                   .getCurrentLineup()
-                                                                                                                   .getPositionBySpielerId(getPlayer()
-                                                                                                                                               .getSpielerID());
+                            .getModel()
+                            .getCurrentLineup()
+                            .getPositionBySpielerId(getPlayer()
+                                    .getSpielerID());
 
                     if ((sort == null) && (entrySort == null)) {
                         ergebnis = 0;
