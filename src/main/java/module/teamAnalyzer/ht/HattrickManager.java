@@ -3,6 +3,7 @@ package module.teamAnalyzer.ht;
 
 import core.db.DBManager;
 import core.file.xml.XMLManager;
+import core.file.xml.xmlPlayersParser;
 import core.model.match.MatchKurzInfo;
 import core.net.MyConnector;
 import core.net.OnlineWorker;
@@ -96,75 +97,22 @@ public class HattrickManager {
      *
      * @param teamId teamid to download players for
      */
-    public static void downloadPlayers(int teamId) {
-        String xml = "";
-
+    public static List<PlayerInfo> downloadPlayers(int teamId) {
+        String xml;
         try {
-			xml = MyConnector.instance().getHattrickXMLFile("/common/chppxml.axd?file=players&version=2.4&TeamID=" + teamId);
+			xml = MyConnector.instance().getPlayers(teamId);
         } catch (Exception e) {
-            return;
+            return null;
         }
 
         List<PlayerInfo> players = new ArrayList<PlayerInfo>();
-        Document dom = XMLManager.parseString(xml);
-        Node matchesList = dom.getElementsByTagName("PlayerList").item(0);
-
-        for (int i = 0; i < (matchesList.getChildNodes().getLength() / 2); i++) {
-            PlayerInfo player = new PlayerInfo();
-            player.setTeamId(teamId);
-
-            int id = getIntValue(matchesList, i, "PlayerID");
-            player.setPlayerId(id);
-
-            int card = getIntValue(matchesList, i, "Cards");
-            int injury = getIntValue(matchesList, i, "InjuryLevel", -1);
-            int status = PlayerDataManager.AVAILABLE;
-
-            if (card == 3) {
-                status = PlayerDataManager.SUSPENDED;
-            }
-
-            if (injury > 0) {
-                status = PlayerDataManager.INJURED;
-            }
-
-            player.setStatus(status);
-
-            int se = getIntValue(matchesList, i, "Specialty");
-            player.setSpecialEvent(se);
-
-            int form = getIntValue(matchesList, i, "PlayerForm");
-            player.setForm(form);
-
-            int exp = getIntValue(matchesList, i, "Experience");
-            player.setExperience(exp);
-
-            int age = getIntValue(matchesList, i, "Age");
-            player.setAge(age);
-
-            int tsi = getIntValue(matchesList, i, "TSI");
-            player.setTSI(tsi);
-
-            int salary = getIntValue(matchesList, i, "Salary");
-            player.setSalary(salary);
-
-            String lastname = getValue(matchesList, i, "LastName");
-            String firstName = getValue(matchesList, i, "FirstName");
-            player.setName(firstName + " " + lastname);
-
-            int stamina = getIntValue(matchesList, i, "StaminaSkill");
-            player.setStamina(stamina);
-
-            boolean motherClubBonus = getValue(matchesList, i, "MotherClubBonus").equals("True");
-            player.setMotherClubBonus(motherClubBonus);
-
-            int loyalty = getIntValue(matchesList, i, "Loyalty");
-            player.setLoyalty(loyalty);
-
-            players.add(player);
+        var playerInfos = new xmlPlayersParser().parsePlayersFromString(xml);
+        for ( var i : playerInfos ) {
+            players.add(new PlayerInfo(i));
         }
 
         PlayerDataManager.update(players);
+        return players;
     }
 
     /**
@@ -180,9 +128,7 @@ public class HattrickManager {
 		String xml = MyConnector.instance().getHattrickXMLFile("/common/chppxml.axd?file=team&teamID=" + teamId);
         Document dom = XMLManager.parseString(xml);
         Document teamDocument = dom.getElementsByTagName("Team").item(0).getOwnerDocument();
-        String teamName = teamDocument.getElementsByTagName("TeamName").item(0).getFirstChild().getNodeValue();
-
-        return teamName;
+        return teamDocument.getElementsByTagName("TeamName").item(0).getFirstChild().getNodeValue();
     }
 
     /**

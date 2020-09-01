@@ -64,7 +64,7 @@ public class SubstitutionEditDialog extends JDialog {
 			case NEW_BEHAVIOUR -> "subs.TypeOrder";
 			case SUBSTITUTION -> "subs.TypeSub";
 			case POSITION_SWAP -> "subs.TypeSwap";
-			default -> null;
+			case MAN_MARKING -> "subs.TypeManMarking";
 		};
 		setTitle(HOVerwaltung.instance().getLanguageString(dlgTitleKey));
 	}

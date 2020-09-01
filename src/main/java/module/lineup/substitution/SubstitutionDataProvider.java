@@ -6,6 +6,9 @@ import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.Substitution;
+import module.teamAnalyzer.SystemManager;
+import module.teamAnalyzer.ht.HattrickManager;
+import module.teamAnalyzer.vo.PlayerInfo;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,7 +26,7 @@ public class SubstitutionDataProvider {
 	}
 
 	public static Map<Integer, PlayerPositionItem> getFieldAndSubPlayerPosition() {
-		LinkedHashMap<Integer, PlayerPositionItem> positionMap = new LinkedHashMap<Integer, PlayerPositionItem>();
+		LinkedHashMap<Integer, PlayerPositionItem> positionMap = new LinkedHashMap<>();
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
 		for (Integer i : aFieldAndSubsMatchRoleID) {
@@ -118,7 +121,7 @@ public class SubstitutionDataProvider {
 	 * @return an array with behaviour items
 	 */
 	public static List<CBItem> getBehaviourItems(boolean withInheritItem) {
-		List<CBItem> behaviourValues = new ArrayList<CBItem>();
+		List<CBItem> behaviourValues = new ArrayList<>();
 		HOVerwaltung hov = HOVerwaltung.instance();
 		if (withInheritItem) {
 			behaviourValues.add(new CBItem(hov.getLanguageString("subs.BehNoChange"), -1));
@@ -129,5 +132,10 @@ public class SubstitutionDataProvider {
 		behaviourValues.add(new CBItem(hov.getLanguageString("ls.player.behaviour.towardsmiddle"), 3));
 		behaviourValues.add(new CBItem(hov.getLanguageString("ls.player.behaviour.towardswing"), 4));
 		return behaviourValues;
+	}
+
+	public static List<PlayerInfo> getOpponentPlayers() {
+		int teamId = SystemManager.getActiveTeamId();
+		return  HattrickManager.downloadPlayers(teamId);
 	}
 }

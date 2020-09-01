@@ -1,8 +1,26 @@
 package module.teamAnalyzer.vo;
 
+import com.install4j.runtime.util.MinimumSizeTextArea;
+import core.file.xml.MyHashtable;
+import core.file.xml.XMLManager;
+import core.model.player.MatchRoleID;
 import module.teamAnalyzer.manager.PlayerDataManager;
+import org.w3c.dom.Element;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static core.model.player.MatchRoleID.getKurzNameForPosition;
+import static module.lineup.substitution.LanguageStringLookup.getPosition;
 
 public class PlayerInfo {
+    private Date lastMatchDate = null;
+    private int lastMatchId;
+    private int lastMatchPosition;
+    private int lastMatchPlayedMinutes;
+    private float lastMatchRatingEndOfGame;
+    private float rating;
     //~ Instance fields ----------------------------------------------------------------------------
     String name = "";
     int age;
@@ -17,6 +35,50 @@ public class PlayerInfo {
     int stamina;
     boolean motherClubBonus;
     int loyalty;
+
+    public PlayerInfo(MyHashtable i) {
+        this.age = Integer.parseInt(i.get("Age"));
+        this.experience = Integer.parseInt(i.get("Experience"));
+        this.form = Integer.parseInt(i.get("PlayerForm"));
+        this.loyalty = Integer.parseInt(i.get("Loyalty"));
+        this.motherClubBonus = Boolean.parseBoolean(i.get("MotherClubBonus"));
+        this.name = i.get("FirstName") + " " + i.get("LastName");
+        this.playerId = Integer.parseInt(i.get("PlayerID"));
+        this.salary = Integer.parseInt(i.get("Salary"));
+        this.specialEvent = Integer.parseInt(i.get("Specialty"));
+        this.stamina = Integer.parseInt(i.get("StaminaSkill"));
+
+        int cards = Integer.parseInt(i.get("Cards"));
+        int injury = Integer.parseInt(i.get("InjuryLevel"));
+        this.status = PlayerDataManager.AVAILABLE;
+
+        if (cards == 3) {
+            status = PlayerDataManager.SUSPENDED;
+        }
+
+        if (injury > 0) {
+            status = PlayerDataManager.INJURED;
+        }
+
+        this.teamId = Integer.parseInt(i.get("TeamID"));
+        this.tSI = Integer.parseInt(i.get("MarketValue"));
+
+        try {
+            this.lastMatchDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(i.get("LastMatch_Date"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        this.rating = Float.parseFloat(i.get("LastMatch_Rating"));
+        this.lastMatchId = Integer.parseInt(i.get("LastMatch_id"));
+        this.lastMatchPosition = Integer.parseInt(i.get("LastMatch_PositionCode"));
+        this.lastMatchPlayedMinutes = Integer.parseInt(i.get("LastMatch_PlayedMinutes"));
+        this.lastMatchRatingEndOfGame = Float.parseFloat(i.get("LastMatch_RatingEndOfGame"));
+    }
+
+    public PlayerInfo() {
+
+    }
 
     //~ Methods ------------------------------------------------------------------------------------
     public void setAge(int i) {
@@ -130,22 +192,39 @@ public class PlayerInfo {
      */
     @Override
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("PlayerInfo[");
-        buffer.append("name = " + name);
-        buffer.append(", age = " + age);
-        buffer.append(", experience = " + experience);
-        buffer.append(", form = " + form);
-        buffer.append(", playerId = " + playerId);
-        buffer.append(", specialEvent = " + specialEvent);
-        buffer.append(", status = " + status);
-        buffer.append(", tSI = " + tSI);
-        buffer.append(", teamId = " + teamId);
-        buffer.append(", salary = " + salary);
-        buffer.append(", stamina = " + stamina);
-        buffer.append(", motherClubBonus = " + motherClubBonus);
-        buffer.append(", loyalty = " + loyalty);
-        buffer.append("]");
-        return buffer.toString();
+        String buffer = getPosition(lastMatchPosition) +
+                " " + name +
+                ", age=" + age +
+                ", experience=" + experience +
+                ", form=" + form +
+                ", rating=" + rating +
+                ", status=" + status +
+                ", motherClubBonus=" + motherClubBonus +
+                ", loyalty=" + loyalty;
+        return buffer;
+    }
+
+    public Date getLastMatchDate() {
+        return lastMatchDate;
+    }
+
+    public int getLastMatchId() {
+        return lastMatchId;
+    }
+
+    public int getLastMatchPosition() {
+        return lastMatchPosition;
+    }
+
+    public int getLastMatchPlayedMinutes() {
+        return lastMatchPlayedMinutes;
+    }
+
+    public float getLastMatchRatingEndOfGame() {
+        return lastMatchRatingEndOfGame;
+    }
+
+    public float getRating() {
+        return rating;
     }
 }

@@ -22,10 +22,7 @@ public class xmlPlayersParser {
     //parse public
     ////////////////////////////////////////////////////////////////////////////////   
     public final Vector<MyHashtable> parsePlayersFromString(String inputStream) {
-        Document doc = null;
-
-        doc = XMLManager.parseString(inputStream);
-
+        Document doc = XMLManager.parseString(inputStream);
         return createListe(doc);
     }
 
@@ -39,7 +36,7 @@ public class xmlPlayersParser {
 
     //throws Exception
     protected final Vector<MyHashtable> createListe(Document doc) {
-        final Vector<MyHashtable> liste = new Vector<MyHashtable>();
+        final Vector<MyHashtable> liste = new Vector<>();
         MyHashtable hash = null;
         Element ele = null;
         Element root = null;
@@ -48,6 +45,8 @@ public class xmlPlayersParser {
         try {
             root = doc.getDocumentElement();
             root = (Element) root.getElementsByTagName("Team").item(0);
+            ele = (Element) root.getElementsByTagName("TeamID").item(0);
+            var teamID = XMLManager.getFirstChildNodeValue(ele);
             root = (Element) root.getElementsByTagName("PlayerList").item(0);
 
             //Einträge adden
@@ -60,6 +59,8 @@ public class xmlPlayersParser {
                 root = (Element) list.item(i);
 
                 //ht füllen
+                hash.put("TeamID", teamID);
+
                 ele = (Element) root.getElementsByTagName("PlayerID").item(0);
                 hash.put("PlayerID", (XMLManager.getFirstChildNodeValue(ele)));
                 ele = (Element) root.getElementsByTagName("FirstName").item(0);
@@ -160,6 +161,13 @@ public class xmlPlayersParser {
                     hash.put("LastMatch_Rating", (XMLManager.getFirstChildNodeValue(ele)));
                     ele = (Element) tmp_lm.getElementsByTagName("MatchId").item(0);
                     hash.put("LastMatch_id", (XMLManager.getFirstChildNodeValue(ele)));
+
+                    ele = (Element) tmp_lm.getElementsByTagName("PositionCode").item(0);
+                    hash.put("LastMatch_PositionCode", (XMLManager.getFirstChildNodeValue(ele)));
+                    ele = (Element) tmp_lm.getElementsByTagName("PlayedMinutes").item(0);
+                    hash.put("LastMatch_PlayedMinutes", (XMLManager.getFirstChildNodeValue(ele)));
+                    ele = (Element) tmp_lm.getElementsByTagName("RatingEndOfGame").item(0);
+                    hash.put("LastMatch_RatingEndOfGame", (XMLManager.getFirstChildNodeValue(ele)));
 
                 } catch (Exception ep) {
                 }
