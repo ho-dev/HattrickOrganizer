@@ -244,18 +244,18 @@ final public class UserColumnFactory {
      */
     public static PlayerSkillColumn[] createPlayerSkillArray() {
         final PlayerSkillColumn[] playerSkillArray = new PlayerSkillColumn[12];
-        playerSkillArray[0] = new PlayerSkillColumn(80, "ls.player.short_leadership", "ls.player.leadership", PlayerSkill.LEADERSHIP);
-        playerSkillArray[1] = new PlayerSkillColumn(90, "ls.player.short_experience", "ls.player.experience", PlayerSkill.EXPERIENCE);
-        playerSkillArray[2] = new PlayerSkillColumn(100, "ls.player.short_form", "ls.player.form", PlayerSkill.FORM);
-        playerSkillArray[3] = new PlayerSkillColumn(110, "ls.player.skill_short.stamina", "ls.player.skill.stamina", PlayerSkill.STAMINA);
-        playerSkillArray[4] = new PlayerSkillColumn(115, "ls.player.short_loyalty", "ls.player.loyalty", PlayerSkill.LOYALTY);
-        playerSkillArray[5] = new PlayerSkillColumn(120, "ls.player.skill_short.keeper", "ls.player.skill.keeper", PlayerSkill.KEEPER);
-        playerSkillArray[6] = new PlayerSkillColumn(130, "ls.player.skill_short.defending", "ls.player.skill.defending", PlayerSkill.DEFENDING);
-        playerSkillArray[7] = new PlayerSkillColumn(140, "ls.player.skill_short.playmaking", "ls.player.skill.playmaking", PlayerSkill.PLAYMAKING);
-        playerSkillArray[8] = new PlayerSkillColumn(150, "ls.player.skill_short.passing", "ls.player.skill.passing", PlayerSkill.PASSING);
-        playerSkillArray[9] = new PlayerSkillColumn(160, "ls.player.skill_short.winger", "ls.player.skill.winger", PlayerSkill.WINGER);
-        playerSkillArray[10] = new PlayerSkillColumn(170, "ls.player.skill_short.scoring", "ls.player.skill.scoring", PlayerSkill.SCORING);
-        playerSkillArray[11] = new PlayerSkillColumn(180, "ls.player.skill_short.setpieces", "ls.player.skill.setpieces", PlayerSkill.SET_PIECES);
+        playerSkillArray[0] = new PlayerSkillColumn(100, "ls.player.short_form", "ls.player.form", PlayerSkill.FORM);
+        playerSkillArray[1] = new PlayerSkillColumn(110, "ls.player.skill_short.stamina", "ls.player.skill.stamina", PlayerSkill.STAMINA);
+        playerSkillArray[2] = new PlayerSkillColumn(115, "ls.player.short_loyalty", "ls.player.loyalty", PlayerSkill.LOYALTY);
+        playerSkillArray[3] = new PlayerSkillColumn(120, "ls.player.skill_short.keeper", "ls.player.skill.keeper", PlayerSkill.KEEPER);
+        playerSkillArray[4] = new PlayerSkillColumn(130, "ls.player.skill_short.defending", "ls.player.skill.defending", PlayerSkill.DEFENDING);
+        playerSkillArray[5] = new PlayerSkillColumn(140, "ls.player.skill_short.playmaking", "ls.player.skill.playmaking", PlayerSkill.PLAYMAKING);
+        playerSkillArray[6] = new PlayerSkillColumn(150, "ls.player.skill_short.passing", "ls.player.skill.passing", PlayerSkill.PASSING);
+        playerSkillArray[7] = new PlayerSkillColumn(160, "ls.player.skill_short.winger", "ls.player.skill.winger", PlayerSkill.WINGER);
+        playerSkillArray[8] = new PlayerSkillColumn(170, "ls.player.skill_short.scoring", "ls.player.skill.scoring", PlayerSkill.SCORING);
+        playerSkillArray[9] = new PlayerSkillColumn(180, "ls.player.skill_short.setpieces", "ls.player.skill.setpieces", PlayerSkill.SET_PIECES);
+        playerSkillArray[10] = new PlayerSkillColumn(80, "ls.player.short_leadership", "ls.player.leadership", PlayerSkill.LEADERSHIP);
+        playerSkillArray[11] = new PlayerSkillColumn(90, "ls.player.short_experience", "ls.player.experience", PlayerSkill.EXPERIENCE);
 
         return playerSkillArray;
     }
@@ -577,7 +577,7 @@ final public class UserColumnFactory {
             }
         };
 
-        playerAdditionalArray[2] = new PlayerColumn(30, "ls.player.age", 40) {
+        playerAdditionalArray[2] = new PlayerColumn(30, "ls.player.age", 55) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 String ageString = player.getAlterWithAgeDaysAsString();
@@ -641,7 +641,7 @@ final public class UserColumnFactory {
         };
 
         // Position
-        playerAdditionalArray[4] = new PlayerColumn(LINUP, "Aufgestellt", 28) {
+        playerAdditionalArray[4] = new PlayerColumn(LINUP, " ","Aufgestellt", 28) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final HOModel model = HOVerwaltung.instance().getModel();
@@ -682,7 +682,7 @@ final public class UserColumnFactory {
             }
         };
 
-        playerAdditionalArray[6] = new PlayerColumn(70, "Status", 50) {
+        playerAdditionalArray[6] = new PlayerColumn(70, "Status", 80) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 SpielerStatusLabelEntry entry = new SpielerStatusLabelEntry();
@@ -758,7 +758,7 @@ final public class UserColumnFactory {
             }
         };
 
-        playerAdditionalArray[9] = new PlayerColumn(LAST_MATCH, "LastMatchRating", 50) {
+        playerAdditionalArray[9] = new PlayerColumn(LAST_MATCH, "LastMatchRating", 150) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 if (player.getLastMatchRating() > 0) {
