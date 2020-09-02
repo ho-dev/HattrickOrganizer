@@ -54,7 +54,7 @@ public class EffectDAO {
 
             for (Iterator<Player> iterPlayers = players.iterator(); iterPlayers.hasNext();) {
                 Player player = (Player) iterPlayers.next();
-                OldTrainingManager otm = new OldTrainingManager(player);
+                PastTrainingManager otm = new PastTrainingManager(player);
                 List<ISkillChange> skillups = otm.getTrainedSkillups();
 
                 for (Iterator<ISkillChange> iterSkillups = skillups.iterator(); iterSkillups.hasNext();) {
