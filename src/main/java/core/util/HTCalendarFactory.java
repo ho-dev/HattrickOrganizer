@@ -22,8 +22,6 @@ public final class HTCalendarFactory {
      * Creates a HTCalendar to calculate local values for a league,  using the economy date to flip
      * over to the next week.
      *
-     * @param model HO data model
-     *
      * @return a HTCalendar.
      */
     public static HTCalendar createEconomyCalendar() {
@@ -36,18 +34,33 @@ public final class HTCalendarFactory {
     	final HTCalendar calendar = new HTCalendar();
     	calendar.initialize(calMark);
     	calendar.setTime(model.getBasics().getDatum());
-
-    	final int correction = calendar.getHTSeason() - model.getBasics().getSeason();
-
-    	calendar.setSeasonCorrection(correction);
+    	calendar.setSeasonCorrection(getHTSeasonCorrection());
     	return calendar;
     }
 
-    /**
+    private static Integer htSeasonCorrection;
+	private static int getHTSeasonCorrection() {
+		if ( htSeasonCorrection == null){
+			HOModel model = HOVerwaltung.instance().getModel();
+			if (model == null || model.getXtraDaten() == null || model.getXtraDaten().getSeriesMatchDate() == null) {
+				return 0;
+			}
+
+			final Calendar calMark = Calendar.getInstance();
+			calMark.setTimeInMillis(model.getXtraDaten().getSeriesMatchDate().getTime());
+			final HTCalendar calendar = new HTCalendar();
+			calendar.initialize(calMark);
+			calendar.setTime(model.getXtraDaten().getSeriesMatchDate());
+
+			htSeasonCorrection = calendar.getHTSeason() - model.getBasics().getSeason();
+		}
+		return htSeasonCorrection;
+	}
+
+	/**
      * Creates a HTCalendar to calculate local values for a league,  using the economy date to flip
      * over to the next week.
      *
-     * @param model HO data model
      * @param date Date to set the calendar
      *
      * @return a HTCalendar.
@@ -89,7 +102,6 @@ public final class HTCalendarFactory {
      * Creates a HTCalendar to calculate local values for a league,  using the training date to
      * flip over to the next week.
      *
-     * @param model HO data model
      *
      * @return a HTCalendar.
      */
@@ -100,23 +112,17 @@ public final class HTCalendarFactory {
         calMark.setTimeInMillis(model.getXtraDaten().getTrainingDate().getTime());
 
         final HTCalendar calendar = new HTCalendar();
-
         calendar.initialize(calMark);
         calendar.setTime(model.getBasics().getDatum());
+		calendar.setSeasonCorrection(getHTSeasonCorrection());
 
-        final int correction = calendar.getHTSeason()
-            - model.getBasics().getSeason();
-
-        calendar.setSeasonCorrection(correction);
-
-        return calendar;
+		return calendar;
     }
 
     /**
      * Creates a HTCalendar to calculate local values for a league,  using the training date to
      * flip over to the next week.
      *
-     * @param model HO data model
      * @param date Date to set the calendar
      *
      * @return a HTCalendar.
@@ -134,12 +140,8 @@ public final class HTCalendarFactory {
 			cal = HTCalendarFactory.createTrainingCalendar(date);
 		else
 			cal = HTCalendarFactory.createEconomyCalendar(date);
-		if (cal != null)
-			return cal.getHTSeason();
-		else
-			return -1;
+		return cal.getHTSeason();
 	}
-    
 	/**
 	 * Get HT-Season of a given date (using the economy calendar)
 	 *
@@ -173,9 +175,6 @@ public final class HTCalendarFactory {
 			cal = HTCalendarFactory.createTrainingCalendar(date);
 		else
 			cal = HTCalendarFactory.createEconomyCalendar(date);
-		if (cal != null)
-			return cal.getHTWeek();
-		else
-			return -1;
+		return cal.getHTWeek();
 	}
 }
