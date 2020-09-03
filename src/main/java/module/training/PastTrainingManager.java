@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Class that keeps track of the past skillup for the active user
  */
-public class OldTrainingManager {
+public class PastTrainingManager {
 
 	/** List of all skill up */
 	private List<ISkillChange> allSkillups = new ArrayList<ISkillChange>();
@@ -30,7 +30,7 @@ public class OldTrainingManager {
 	 * 
 	 * @param player
 	 */
-	public OldTrainingManager(Player player) {
+	public PastTrainingManager(Player player) {
 		if (player == null) {
 			return;
 		}

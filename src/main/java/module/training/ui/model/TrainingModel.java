@@ -7,9 +7,8 @@ import core.model.StaffType;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.TrainingPerWeek;
-import core.training.TrainingWeekManager;
 import core.training.WeeklyTrainingType;
-import module.training.OldTrainingManager;
+import module.training.PastTrainingManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class TrainingModel {
 	private StaffMember staffMember = new StaffMember();
 	private  List<StaffMember> staff = new ArrayList<>();
 	private List<TrainingPerWeek> futureTrainings;
-	private OldTrainingManager skillupManager;
+	private PastTrainingManager skillupManager;
 	private FutureTrainingManager futureTrainingManager;
 	private final List<ModelChangeListener> listeners = new ArrayList<>();
 
@@ -80,9 +79,9 @@ public class TrainingModel {
 		}
 	}
 
-	public OldTrainingManager getSkillupManager() {
+	public PastTrainingManager getSkillupManager() {
 		if (this.skillupManager == null) {
-			this.skillupManager = new OldTrainingManager(this.activePlayer);
+			this.skillupManager = new PastTrainingManager(this.activePlayer);
 		}
 		return this.skillupManager;
 	}

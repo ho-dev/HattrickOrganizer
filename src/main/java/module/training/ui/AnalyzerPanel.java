@@ -9,7 +9,7 @@ import core.model.HOVerwaltung;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.GUIUtils;
-import module.training.OldTrainingManager;
+import module.training.PastTrainingManager;
 import module.training.PlayerSkillChange;
 import module.training.ui.model.ChangesTableModel;
 import module.training.ui.model.ModelChange;
@@ -223,7 +223,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 		Map<Integer, List<PlayerSkillChange>> skillupsByType = new HashMap<Integer, List<PlayerSkillChange>>();
 
 		for (Player player : players) {
-			OldTrainingManager otm = new OldTrainingManager(player);
+			PastTrainingManager otm = new PastTrainingManager(player);
 			List<ISkillChange> skillups = otm.getAllSkillups();
 
 			for (ISkillChange skillup : skillups) {
