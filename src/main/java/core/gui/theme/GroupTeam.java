@@ -50,7 +50,7 @@ public class GroupTeam {
                 colorMap.put("opacityVal", (int)(Float.parseFloat(opacity)*100));
             }
             else{
-                colorMap.put("opacityVal", 1);
+                colorMap.put("opacityVal", 100);
             }
 
             fullIcon = IconLoader.get().loadSVGIcon(imagePath, width, height, true, colorMap);
