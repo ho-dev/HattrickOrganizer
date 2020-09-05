@@ -285,7 +285,9 @@ public class OnlineWorker {
 				// Highlights will be missing.
 				// ArenaId==0 in division battles
 				boolean newInfo = info.getHeimID()<=0 || info.getGastID()<=0;
-				if ( newInfo || !info.getWeatherForecast().isSure()) {
+				Weather.Forecast weatherDetails = info.getWeatherForecast();
+				Boolean bWeatherKnown = ((weatherDetails != null) && weatherDetails.isSure());
+				if ( newInfo || !bWeatherKnown) {
 
 					showWaitDialog(10);
 					details = fetchDetails(matchid, info.getMatchTyp(), null);

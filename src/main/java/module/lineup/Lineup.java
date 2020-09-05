@@ -732,7 +732,7 @@ public class Lineup{
 
 	public final Weather getWeather()
 	{
-		if (this.m_cWeather == Weather.NULL && !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
+		if (m_cWeather == null || (m_cWeather == Weather.NULL && !isUpcomingMatchLoaded())) {getUpcomingMatch();	}
 		return  m_cWeather;
 	}
 
@@ -787,7 +787,10 @@ public class Lineup{
 			m_iArenaId = match.getArenaId();
 			m_iRegionId = match.getRegionId();
 			m_cWeather = match.getWeather();
+			if (m_cWeather == null) m_cWeather = Weather.NULL;
 			m_cWeatherForecast = match.getWeatherForecast();
+			if (m_cWeatherForecast == null) m_cWeatherForecast = Weather.Forecast.NULL;
+
 
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), "getUpcomingMatch: " + e);
