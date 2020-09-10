@@ -66,7 +66,6 @@ public class UserManager {
         else {
             for (BaseUser _baseUser : baseusers) {
                 User newUser = new User(_baseUser);
-                newUser.fillUserInfos();
                 users.add(newUser);
             }
         }

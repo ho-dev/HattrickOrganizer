@@ -199,7 +199,7 @@ public class DatabaseOptionsDialog extends JDialog {
 		private static final long serialVersionUID = 1975023278731081088L;
 		private String[] columnNames = new String[] {
 				HOVerwaltung.instance().getLanguageString("teamSelect.teamName"),
-				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.dbPath"),
+				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.dbName"),
 				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.zips"),
 				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.nt")
 		};
