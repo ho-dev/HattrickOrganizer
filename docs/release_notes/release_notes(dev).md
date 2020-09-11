@@ -48,19 +48,21 @@ Changelist HO! 4.0
 ### Lineup
 
   - [FEAT] Provide better defaults for initial position of dividers.
+  - [FEAT] Edit man marking match order [#660]
   - [FIX] Fix bug in download of man marking match orders [#632]
   - [FIX] Fix bug in upload of position change match orders [#633]
 
 ### Training
 
-  - [FIX] Subskill recalc takes into account training that took place before the first hrf download #512
-  - [FIX] Fix bug of training effect of Walkover matches #623
-  - [FEAT] Individual training plans for each player in training preview #587
+  - [FIX] Fix bug of season correction calculation. Training effect table shows wrong seasons in week 16 [#539]
+  - [FIX] Subskill recalc takes into account training that took place before the first hrf download [#512]
+  - [FIX] Fix bug of training effect of Walkover matches [#623]
+  - [FEAT] Individual training plans for each player in training preview [#587]
 
 ### Misc
 
   - [FEAT] Remove jcalendar dependency.
-  - [FIX] ExperienceViewer removed #503
+  - [FIX] ExperienceViewer removed [#503]
   - [FIX] Avoid potential infinite loop at startup. [#584]
   - [FIX] Layout issue in multiple screen setup. [#618]
   - [FEAT] Remove all printing functionality.

@@ -23,7 +23,6 @@ import javax.swing.event.DocumentListener;
 
 public class DatabaseUserEditDialog extends JDialog {
 
-	private JButton fileChooserButton;
 	private JButton saveButton;
 	private JButton cancelButton;
 	private JTextField nameTextField;
@@ -136,7 +135,7 @@ public class DatabaseUserEditDialog extends JDialog {
 		gbc.weightx = 1.0;
 		contentPanel.add(this.nameTextField, gbc);
 
-		JLabel databaseLocationLabel = new JLabel(getLangStr("db.options.dlg.label.dbPath"));
+		JLabel databaseLocationLabel = new JLabel(getLangStr("db.options.dlg.label.dbName"));
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.insets = new Insets(4, 4, 4, 2);
@@ -149,14 +148,6 @@ public class DatabaseUserEditDialog extends JDialog {
 		gbc.insets = new Insets(4, 2, 4, 0);
 		gbc.weightx = 1.0;
 		contentPanel.add(this.databaseNameTextField, gbc);
-
-		this.fileChooserButton = new JButton("...");
-		gbc.gridx = 2;
-		gbc.insets = new Insets(4, 0, 4, 0);
-		gbc.gridwidth = 0;
-		gbc.weightx = 0.0;
-		gbc.fill = GridBagConstraints.NONE;
-		contentPanel.add(this.fileChooserButton, gbc);
 
 		JLabel numberOfBackupsLabel = new JLabel(getLangStr("db.options.dlg.label.zips"));
 		gbc.gridx = 0;
@@ -208,13 +199,6 @@ public class DatabaseUserEditDialog extends JDialog {
 			}
 		});
 
-		this.fileChooserButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				openFileChooser();
-			}
-		});
 
 		this.cancelButton.addActionListener(e -> {
 			canceled = true;
@@ -222,15 +206,15 @@ public class DatabaseUserEditDialog extends JDialog {
 		});
 
 		this.saveButton.addActionListener(e -> {
-			if (checkDirectory()) {
-				user.setBackupLevel(Integer.parseInt(numberOfBackupsTextField.getText()));
-				user.setName(nameTextField.getText());
-				user.setDbName(databaseNameTextField.getText());
-				user.setNtTeam(ntTeamYes.isSelected());
-				user.fillUserInfos();
+//				user.setName(nameTextField.getText());
+//				user.setDbName(databaseNameTextField.getText());
+//				user.setNtTeam(ntTeamYes.isSelected());
+//				user.setBackupLevel(Integer.parseInt(numberOfBackupsTextField.getText()));
+//				user.fillUserInfos();
+				user = new User(nameTextField.getText(), databaseNameTextField.getText(), Integer.parseInt(numberOfBackupsTextField.getText()),
+						ntTeamYes.isSelected());
 				canceled = false;
 				dispose();
-			}
 		});
 
 		DocumentListener documentListener = new DocumentListener() {

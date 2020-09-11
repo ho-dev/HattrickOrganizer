@@ -28,34 +28,36 @@ public class LineupTableModel extends HOTableModel {
 		columns[48] = basic[1];
 
 		UserColumn[] skills = UserColumnFactory.createPlayerSkillArray();
-		for (int i = 10; i < skills.length + 10; i++) {
-			columns[i] = skills[i - 10];
+		int skillIndex = 9; // - 20
+		for (int i = 0; i < skills.length; i++) {
+			columns[skillIndex+i] = skills[i];
 		}
 
 		UserColumn[] positions = UserColumnFactory.createPlayerPositionArray();
-		for (int i = 22; i < positions.length + 22; i++) {
-			columns[i] = positions[i - 22];
+		int positionIndex = 23;//- 41
+		for (int i = 0; i < positions.length; i++) {
+			columns[positionIndex+i] = positions[i];
 		}
 
 		UserColumn[] goals = UserColumnFactory.createGoalsColumnsArray();
-		for (int i = 42; i < goals.length + 42; i++) {
-			columns[i] = goals[i - 42];
+		int goalsIndex = 42;//-45
+		for (int i = 0; i < goals.length; i++) {
+			columns[goalsIndex+i] = goals[i];
 		}
 
 		UserColumn[] add = UserColumnFactory.createPlayerAdditionalArray();
 		columns[1] = add[0];
 		columns[2] = add[1];
-		columns[3] = add[2];
-
-		columns[4] = new BooleanColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28);
-		columns[5] = add[3];
+		columns[3] = add[11];
+		columns[4] = add[2];
+		columns[5] = new BooleanColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28);
 		columns[6] = add[4];
 		columns[7] = add[5];
 		columns[8] = add[6];
-		columns[9] = add[11]; // Homegrown
+		columns[21] = add[3];
 		columns[46] = add[7];
 		columns[47] = add[8];
-		columns[41] = add[9];
+		columns[22] = add[9]; // lastmatch
 	}
 
 	@Override
