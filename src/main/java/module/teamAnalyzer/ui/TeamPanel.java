@@ -125,17 +125,21 @@ public class TeamPanel extends JPanel {
                 var manMarker = manMarkingOrder.getSubjectPlayerID();
                 var manMarkerPos = ownLineup.getPositionBySpielerId(manMarker).getId();
                 var manMarkedPos = teamLineup.getPositionByPlayerId(manMarkingOrder.getObjectPlayerID());
+                var from = lineupPanel.getMyTeam().getPanel(manMarkerPos);
+                if ( manMarkingOrderDisplay == null){
+                    manMarkingOrderDisplay = new ManMarkingOrderDisplay(grassPanel);
+                }
                 if ( manMarkedPos > 0 ){
-                    var from = lineupPanel.getMyTeam().getPanel(manMarkerPos);
                     var to = lineupPanel.getOpponentTeam().getPanel(manMarkedPos);
-                    if ( manMarkingOrderDisplay == null){
-                        manMarkingOrderDisplay = new ManMarkingOrderDisplay(grassPanel);
-                    }
                     manMarkingOrderDisplay.set(from, to);
                 }
                 else {
                     // TODO: Display warning about failed man marking order
+                    manMarkingOrderDisplay.set(from, from);
                 }
+            }
+            else if ( manMarkingOrderDisplay != null){
+                manMarkingOrderDisplay = null;
             }
 
 
@@ -308,6 +312,7 @@ public class TeamPanel extends JPanel {
 
         @Override
         protected void paintComponent(Graphics gIn) {
+            //super.paintComponent(gIn);
             // adapted from aioobe, https://stackoverflow.com/questions/4112701/drawing-a-line-with-arrow-in-java
             double dx = xto - xfrom, dy = yto - yfrom;
             double angle = Math.atan2(dy, dx);
