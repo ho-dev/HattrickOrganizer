@@ -105,19 +105,13 @@ public class RatingPredictionManager {
     	RatingPredictionManager.config = config;
     }
     
-    public RatingPredictionManager(Lineup _startingLineup, int i, Team iteam, short trainerType, int styleOfPlay, RatingPredictionConfig config)
+    public RatingPredictionManager(Lineup _startingLineup, Team iteam, short trainerType, int styleOfPlay, RatingPredictionConfig config)
     {
         this.startingLineup = _startingLineup;
         RatingPredictionManager.config = config;
         init(iteam, styleOfPlay);
         this.LineupEvolution = this.setLineupEvolution();
     }
-
-    public RatingPredictionManager(Lineup _startingLineup, Team team, short trainerType, int styleOfPlay, RatingPredictionConfig config)
-    {
-        this(_startingLineup, 0, team, trainerType, styleOfPlay, config);
-    }
-
 
     private Hashtable<Double, Lineup> setLineupEvolution()
 	{
