@@ -1465,8 +1465,7 @@ public class Player {
             }
         }
 
-        //database.DBZugriff.instance ().getTeamInfoSmilie( m_iSpielerID );
-        return m_sTeamInfoSmilie;
+        return m_sTeamInfoSmilie.replaceAll("\\.png$", "");
     }
 
     /**

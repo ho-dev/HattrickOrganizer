@@ -14,7 +14,6 @@ import core.gui.Refreshable;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoppelLabelEntry;
 import core.gui.comp.entry.RatingTableEntry;
-import core.gui.comp.entry.SpielerLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.renderer.SmilieListCellRenderer;
 import core.gui.theme.*;
@@ -33,8 +32,6 @@ import module.statistics.StatistikMainPanel;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.net.URI;
 
 import javax.swing.*;
 
@@ -79,7 +76,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private JLabel m_lastMatchLink = null;
 
     // Top Row, column 2
-    private final JComboBox m_jcbSquad = new JComboBox(GroupTeam.TEAMSMILIES);
+    private final JComboBox m_jcbSquad = new JComboBox(GroupTeamFactory.TEAMSMILIES);
     private final JComboBox m_jcbInformation = new JComboBox(HOIconName.MANUELLSMILIES);
     private SpielerStatusLabelEntry m_jpStatus = new SpielerStatusLabelEntry();
     private final DoppelLabelEntry m_jpSalary = new DoppelLabelEntry(new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,

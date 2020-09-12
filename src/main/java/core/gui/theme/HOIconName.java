@@ -14,6 +14,7 @@ public interface HOIconName {
 
 	 String GROUP_TEAM = "Group-Team.svg";
 	 String GROUP_TEAM_CLEAN = "Group-Team-clean.svg";
+	 String GREYED_OUT = "Group-Team-Greyed.svg";
 
 	 String TOOTHEDWHEEL 	= "toothedWheel";
 	 String HAND 			= "hand";
