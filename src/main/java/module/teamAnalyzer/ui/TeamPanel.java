@@ -288,14 +288,14 @@ public class TeamPanel extends JPanel {
         JComponent parent;
         public ManMarkingOrderDisplay(JPanel grassPanel) {
             parent = grassPanel;
-            parent.add(this);
+            parent.add(this,0);
         }
 
         public void set(JPanel from, JPanel to) {
-            xfrom = x(from) + from.getWidth() / 2;
-            yfrom = y(from);
-            xto = x(to)  + to.getWidth() / 2;
-            yto = y(to)  + to.getHeight();
+            xfrom = x(from) + (int) (from.getWidth() * 0.15);
+            yfrom = y(from) + (int) (from.getHeight() * 0.25);
+            xto = x(to) + (int) (to.getWidth() * 0.85);
+            yto = y(to) + (int) (to.getHeight() * 0.75);
         }
 
         private int y(Container component) {
@@ -326,8 +326,8 @@ public class TeamPanel extends JPanel {
             g.setPaint(Color.RED);
             g.setStroke(new BasicStroke(5));
             // Draw horizontal arrow starting in (0, 0)
-            g.drawLine(0, 0, len, 0);
-            g.fillPolygon(new int[] {len+2, len-ARR_SIZE+2, len-ARR_SIZE+2, len+2},
+            g.drawLine(0, 0, len-ARR_SIZE, 0);
+            g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
                     new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
         }
 
