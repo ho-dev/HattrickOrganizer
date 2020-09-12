@@ -2,7 +2,7 @@
 package core.gui.comp.renderer;
 
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.theme.GroupTeam;
+import core.gui.theme.GroupTeamFactory;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 
@@ -28,8 +28,8 @@ public final class SmilieListCellRenderer implements javax.swing.ListCellRendere
                                                                  Object obj, int index,
                                                                  boolean isSelected,
                                                                  boolean cellHasFocus) {
-        if (obj instanceof String && (obj != null) && !obj.equals("")) {
-            m_clEntry.setIcon(GroupTeam.getGroupIcon(obj.toString()));
+        if (obj instanceof String && !"".equals(obj)) {
+            m_clEntry.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(obj.toString()));
             return m_clEntry.getComponent(isSelected);
         }
 

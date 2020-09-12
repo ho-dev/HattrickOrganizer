@@ -654,6 +654,7 @@ public class ImageUtilities {
 
 		if (icon == null) {
 			Object imagePath = ThemeManager.getIconPath(key);
+
 			icon = IconLoader.get().getIcon(Objects.requireNonNull(imagePath).toString(), width, height);
 			ThemeManager.instance().put(index, icon);
 		}
