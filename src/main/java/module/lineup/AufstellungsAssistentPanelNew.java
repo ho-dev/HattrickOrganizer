@@ -4,7 +4,7 @@ import core.datatype.CBItem;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.theme.GroupTeam;
+import core.gui.theme.GroupTeamFactory;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -307,22 +307,22 @@ public class AufstellungsAssistentPanelNew extends ImagePanel implements
 		List<String> getGroups() {
 			List<String> list = new ArrayList<String>();
 			if (aBtn.isSelected()) {
-				list.add(GroupTeam.TEAMSMILIES[1]);
+				list.add(GroupTeamFactory.TEAMSMILIES[1]);
 			}
 			if (bBtn.isSelected()) {
-				list.add(GroupTeam.TEAMSMILIES[2]);
+				list.add(GroupTeamFactory.TEAMSMILIES[2]);
 			}
 			if (cBtn.isSelected()) {
-				list.add(GroupTeam.TEAMSMILIES[3]);
+				list.add(GroupTeamFactory.TEAMSMILIES[3]);
 			}
 			if (dBtn.isSelected()) {
-				list.add(GroupTeam.TEAMSMILIES[4]);
+				list.add(GroupTeamFactory.TEAMSMILIES[4]);
 			}
 			if (eBtn.isSelected()) {
-				list.add(GroupTeam.TEAMSMILIES[5]);
+				list.add(GroupTeamFactory.TEAMSMILIES[5]);
 			}
 			if (fBtn.isSelected()) {
-				list.add(GroupTeam.TEAMSMILIES[6]);
+				list.add(GroupTeamFactory.TEAMSMILIES[6]);
 			}
 			return list;
 		}
@@ -339,12 +339,12 @@ public class AufstellungsAssistentPanelNew extends ImagePanel implements
 
 		void setGroups(List<String> groups) {
 			List<String> list = (groups != null) ? groups : Collections.<String> emptyList();
-			this.aBtn.setSelected(list.contains(GroupTeam.TEAMSMILIES[1]));
-			this.bBtn.setSelected(list.contains(GroupTeam.TEAMSMILIES[2]));
-			this.cBtn.setSelected(list.contains(GroupTeam.TEAMSMILIES[3]));
-			this.dBtn.setSelected(list.contains(GroupTeam.TEAMSMILIES[4]));
-			this.eBtn.setSelected(list.contains(GroupTeam.TEAMSMILIES[5]));
-			this.fBtn.setSelected(list.contains(GroupTeam.TEAMSMILIES[6]));
+			this.aBtn.setSelected(list.contains(GroupTeamFactory.TEAMSMILIES[1]));
+			this.bBtn.setSelected(list.contains(GroupTeamFactory.TEAMSMILIES[2]));
+			this.cBtn.setSelected(list.contains(GroupTeamFactory.TEAMSMILIES[3]));
+			this.dBtn.setSelected(list.contains(GroupTeamFactory.TEAMSMILIES[4]));
+			this.eBtn.setSelected(list.contains(GroupTeamFactory.TEAMSMILIES[5]));
+			this.fBtn.setSelected(list.contains(GroupTeamFactory.TEAMSMILIES[6]));
 			// ungroupedBtn
 		}
 
@@ -355,37 +355,36 @@ public class AufstellungsAssistentPanelNew extends ImagePanel implements
 			Dimension btnSize = new Dimension(28, 28);
 			this.aBtn = new JToggleButton();
 			this.aBtn.setPreferredSize(btnSize);
-			this.aBtn.setIcon(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[1]));
+			this.aBtn.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[1]));
 			add(this.aBtn);
 
 			this.bBtn = new JToggleButton();
 			this.bBtn.setPreferredSize(btnSize);
-			this.bBtn.setIcon(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[2]));
+			this.bBtn.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[2]));
 			add(this.bBtn);
 
 			this.cBtn = new JToggleButton();
 			this.cBtn.setPreferredSize(btnSize);
-			this.cBtn.setIcon(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[3]));
+			this.cBtn.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[3]));
 			add(this.cBtn);
 
 			this.dBtn = new JToggleButton();
 			this.dBtn.setPreferredSize(btnSize);
-			this.dBtn.setIcon(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[4]));
+			this.dBtn.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[4]));
 			add(this.dBtn);
 
 			this.eBtn = new JToggleButton();
 			this.eBtn.setPreferredSize(btnSize);
-			this.eBtn.setIcon(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[5]));
+			this.eBtn.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[5]));
 			add(this.eBtn);
 
 			this.fBtn = new JToggleButton();
 			this.fBtn.setPreferredSize(btnSize);
-			this.fBtn.setIcon(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[6]));
+			this.fBtn.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[6]));
 			add(this.fBtn);
 			
 			this.ungroupedBtn  = new JToggleButton();
 			this.ungroupedBtn.setPreferredSize(btnSize);
-//			this.fBtn.setIcon(ThemeManager.getIcon(HOIconName.TEAMSMILIES[6]));
 			add(this.ungroupedBtn);
 		}
 	}

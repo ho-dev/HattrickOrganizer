@@ -1,7 +1,7 @@
 // %3622084902:de.hattrickorganizer.gui.lineup%
 package module.lineup;
 
-import core.gui.theme.GroupTeam;
+import core.gui.theme.GroupTeamFactory;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 
@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 
 
 /**
- * Hier lassen sich mit einem Klick alle aufgestellten Player einer Gruppe zuordnen
+ * Assign players to a given group in a single click.
  */
 final class AufstellungsGruppenPanel extends JPanel implements ActionListener {
 
@@ -24,12 +24,12 @@ final class AufstellungsGruppenPanel extends JPanel implements ActionListener {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private JButton aGruppe = new JButton(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[1], 16, 16));
-    private JButton bGruppe = new JButton(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[2], 16, 16));
-    private JButton cGruppe = new JButton(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[3], 16, 16));
-    private JButton dGruppe = new JButton(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[4], 16, 16));
-    private JButton eGruppe = new JButton(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[5], 16, 16));
-    private JButton fGruppe = new JButton(GroupTeam.getGroupIcon(GroupTeam.TEAMSMILIES[6], 16, 16));
+	private final JButton aGruppe = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[1]));
+    private final JButton bGruppe = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[2]));
+    private final JButton cGruppe = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[3]));
+    private final JButton dGruppe = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[4]));
+    private final JButton eGruppe = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[5]));
+    private final JButton fGruppe = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[6]));
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -38,24 +38,23 @@ final class AufstellungsGruppenPanel extends JPanel implements ActionListener {
      */
     public AufstellungsGruppenPanel() {
         this.setOpaque(false);
-
         initComponents();
     }
 
     @Override
 	public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(aGruppe)) {
-            gruppenMarkierung(GroupTeam.TEAMSMILIES[1]);
+            gruppenMarkierung(GroupTeamFactory.TEAMSMILIES[1]);
         } else if (e.getSource().equals(bGruppe)) {
-            gruppenMarkierung(GroupTeam.TEAMSMILIES[2]);
+            gruppenMarkierung(GroupTeamFactory.TEAMSMILIES[2]);
         } else if (e.getSource().equals(cGruppe)) {
-            gruppenMarkierung(GroupTeam.TEAMSMILIES[3]);
+            gruppenMarkierung(GroupTeamFactory.TEAMSMILIES[3]);
         } else if (e.getSource().equals(dGruppe)) {
-            gruppenMarkierung(GroupTeam.TEAMSMILIES[4]);
+            gruppenMarkierung(GroupTeamFactory.TEAMSMILIES[4]);
         } else if (e.getSource().equals(eGruppe)) {
-            gruppenMarkierung(GroupTeam.TEAMSMILIES[5]);
+            gruppenMarkierung(GroupTeamFactory.TEAMSMILIES[5]);
         } else if (e.getSource().equals(fGruppe)) {
-            gruppenMarkierung(GroupTeam.TEAMSMILIES[6]);
+            gruppenMarkierung(GroupTeamFactory.TEAMSMILIES[6]);
         }
     }
 
@@ -80,11 +79,6 @@ final class AufstellungsGruppenPanel extends JPanel implements ActionListener {
     }
 
     private void initComponents() {
-    	
-    	// Horizontal by Blaghaid - away with size specification
-    	
-        //setPreferredSize(new Dimension(20, 200));
-
         //Platzhalter
         add(new JLabel("   "));
         aGruppe.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_AufstellungsGruppe_Zuordnung"));

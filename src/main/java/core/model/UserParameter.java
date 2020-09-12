@@ -3,6 +3,7 @@ package core.model;
 import core.HO;
 import core.db.DBManager;
 import core.util.GUIUtils;
+import core.util.StringUtils;
 import module.lineup.LineupAssistant;
 import java.util.HashMap;
 import java.util.Map;
@@ -428,9 +429,11 @@ public final class UserParameter extends Configuration {
         map.put("aufstellungsAssistentPanel_verletzt", String.valueOf(aufstellungsAssistentPanel_verletzt));
         map.put("xmlDownload", String.valueOf(xmlDownload));
 
-        switch(HO.getVersionType()){
-            case "DEV" -> ReleaseChannel = "Dev";
-            case "BETA" -> ReleaseChannel = "Beta";
+        if (HO.getVersionType() != null) {
+            switch (HO.getVersionType()) {
+                case "DEV" -> ReleaseChannel = "Dev";
+                case "BETA" -> ReleaseChannel = "Beta";
+            }
         }
         map.put("ReleaseChannel", ReleaseChannel);
 
