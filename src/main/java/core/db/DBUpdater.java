@@ -123,6 +123,10 @@ final class DBUpdater {
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalRightSplitPane'");
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalLeftSplitPane'");
 
+		if ( !columnExistsInTable("SeasonOffset", BasicsTable.TABLENAME)){
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN SeasonOffset INTEGER");
+		}
+
 		if (!columnExistsInTable("Duration", MatchesKurzInfoTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN Duration INTEGER ");
 		}

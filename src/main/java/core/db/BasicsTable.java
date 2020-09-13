@@ -19,7 +19,7 @@ final class BasicsTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-        columns = new ColumnDescriptor[12];
+        columns = new ColumnDescriptor[13];
 		columns[0]= new ColumnDescriptor("HRF_ID",Types.INTEGER,false,true);
 		columns[1]= new ColumnDescriptor("Manager",Types.VARCHAR,false,127);
 		columns[2]= new ColumnDescriptor("TeamID",Types.INTEGER,false);
@@ -32,6 +32,7 @@ final class BasicsTable extends AbstractTable {
 		columns[9]= new ColumnDescriptor("Region",Types.INTEGER,false);
 		columns[10] = new ColumnDescriptor("HasSupporter", Types.BOOLEAN,false);
 		columns[11] = new ColumnDescriptor("ActivationDate", Types.TIMESTAMP,true);
+		columns[12]= new ColumnDescriptor("SeasonOffset",Types.INTEGER,true);
 	}
 
 	@Override
@@ -42,7 +43,7 @@ final class BasicsTable extends AbstractTable {
 	}
 	
 	/**
-	 * speichert die Basdics
+	 * save Basics
 	 *
 	 */
 	void saveBasics(int hrfId, core.model.misc.Basics basics) {
@@ -55,7 +56,7 @@ final class BasicsTable extends AbstractTable {
 			delete( awhereS, awhereV );
 
 			//insert vorbereiten
-			statement = "INSERT INTO "+getTableName()+" ( TeamID , Manager , TeamName , Land , Liga , Saison , Spieltag , HRF_ID, Datum, Region, HasSupporter, ActivationDate ) VALUES(";
+			statement = "INSERT INTO "+getTableName()+" ( TeamID , Manager , TeamName , Land , Liga , Saison, SeasonOffset , Spieltag , HRF_ID, Datum, Region, HasSupporter, ActivationDate ) VALUES(";
 			statement
 				+= (""
 					+ basics.getTeamId()
@@ -69,6 +70,8 @@ final class BasicsTable extends AbstractTable {
 					+ basics.getLiga()
 					+ ","
 					+ basics.getSeason()
+					+ ","
+					+ basics.getSeasonOffset()
 					+ ","
 					+ basics.getSpieltag()
 					+ ","

@@ -315,10 +315,9 @@ public class ConvertXml2Hrf {
 		buffer.append("[basics]\n");
 		buffer.append("application=HO\n");
 		buffer.append("appversion=").append(HO.VERSION).append('\n');
-		buffer.append("date=").append(teamdetailsDataMap.get("FetchedDate"))
-				.append('\n');
-		buffer.append("season=").append(worldDataMap.get("Season"))
-				.append('\n');
+		buffer.append("date=").append(teamdetailsDataMap.get("FetchedDate")).append('\n');
+		buffer.append("season=").append(worldDataMap.get("Season")).append('\n');
+		buffer.append("seasonOffset=").append(worldDataMap.get("SeasonOffset")).append('\n');
 		buffer.append("matchround=").append(worldDataMap.get("MatchRound"))
 				.append('\n');
 		buffer.append("teamID=").append(teamdetailsDataMap.get("TeamID"))

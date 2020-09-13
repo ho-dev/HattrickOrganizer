@@ -106,6 +106,8 @@ public class XMLWorldDetailsParser {
 					map.put("LeagueID", (XMLManager.getFirstChildNodeValue(ele)));
 					ele = (Element) root.getElementsByTagName("Season").item(0);
 					map.put("Season", (XMLManager.getFirstChildNodeValue(ele)));
+					ele = (Element) root.getElementsByTagName("SeasonOffset").item(0);
+					map.put("SeasonOffset", (XMLManager.getFirstChildNodeValue(ele)));
 					ele = (Element) root.getElementsByTagName("MatchRound").item(0);
 					map.put("MatchRound", (XMLManager.getFirstChildNodeValue(ele)));
 
