@@ -30,13 +30,16 @@ public final class Basics  {
     /** Land */
     private int m_iLand;
 
-    /** Liga */
+    /** The globally unique LeagueID. */
     private int m_iLiga;
 
-    /** Season */
+    /** The current season number of the league. */
     private int m_iSeason;
 
-    /** Spieltag */
+    /** The season offset to swedish's season. */
+    private int m_iSeasonOffset;
+
+    /** The current match round of the league. */
     private int m_iSpieltag;
 
     /** TeamId */
@@ -97,6 +100,12 @@ public final class Basics  {
         }
 
         try {
+            m_iSeasonOffset = Integer.parseInt(properties.getProperty("seasonOffset", "0"));
+        } catch (Exception e) {
+            m_iSeasonOffset = 0;
+        }
+
+        try {
             m_iSpieltag = Integer.parseInt(properties.getProperty("matchround", "0"));
         } catch (Exception e) {
             m_iSpieltag = 0;
@@ -125,6 +134,7 @@ public final class Basics  {
             m_iLand = rs.getInt("Land");
             m_iLiga = rs.getInt("Liga");
             m_iSeason = rs.getInt("Saison");
+            m_iSeasonOffset = rs.getInt("SeasonOffset");
             m_iSpieltag = rs.getInt("Spieltag");
             m_clDatum = rs.getTimestamp("Datum");
             m_iRegionId = rs.getInt("Region");
@@ -364,5 +374,13 @@ public final class Basics  {
      */
     public int getRegionId () {
     	return m_iRegionId;
+    }
+
+    public int getSeasonOffset() {
+        return m_iSeasonOffset;
+    }
+
+    public void setSeasonOffset(int seasonOffset) {
+        this.m_iSeasonOffset = seasonOffset;
     }
 }
