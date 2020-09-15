@@ -147,9 +147,34 @@ Based on the previous example, here below is a side by side comparison of ``user
 ``user.xml``:
 
 .. code-block:: json
-   :linenos:
    
-    <?xml version='1.0' encoding='UTF-8' ?> <HoUsers>  <User>    <Name><![CDATA[FC Team]]></Name>    <Url><![CDATA[jdbc:hsqldb:file:db/database]]></Url>    <User><![CDATA[sa]]></User>    <Password><![CDATA[]]></Password>    <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    <BackupLevel>3</BackupLevel>  </User>  <User>    <Name><![CDATA[Reserve Team]]></Name>    <Url><![CDATA[jdbc:hsqldb:file:db_reserve/database]]></Url>    <User><![CDATA[sa]]></User>    <Password><![CDATA[]]></Password>    <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    <BackupLevel>3</BackupLevel>  </User>  <User>    <Name><![CDATA[National Team XXX]]></Name>    <Url><![CDATA[jdbc:hsqldb:file:dbNationalTeam/database]]></Url>    <User><![CDATA[sa]]></User>    <Password><![CDATA[]]></Password>    <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    <BackupLevel>3</BackupLevel>  </User> </HoUsers>
+    <?xml version='1.0' encoding='UTF-8' ?> 
+    <HoUsers>  
+    <User>    
+      <Name><![CDATA[FC Team]]></Name>    
+      <Url><![CDATA[jdbc:hsqldb:file:db/database]]></Url>    
+      <User><![CDATA[sa]]></User>    
+      <Password><![CDATA[]]></Password>    
+      <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    
+      <BackupLevel>3</BackupLevel>  
+    </User>  
+    <User>    
+      <Name><![CDATA[Reserve Team]]></Name>    
+      <Url><![CDATA[jdbc:hsqldb:file:db_reserve/database]]></Url>    
+      <User><![CDATA[sa]]></User>    
+      <Password><![CDATA[]]></Password>    
+      <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    
+      <BackupLevel>3</BackupLevel>  
+    </User>  
+    <User>    
+      <Name><![CDATA[National Team XXX]]></Name>    
+      <Url><![CDATA[jdbc:hsqldb:file:dbNationalTeam/database]]></Url>    
+      <User><![CDATA[sa]]></User>    
+      <Password><![CDATA[]]></Password>   
+      <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    
+      <BackupLevel>3</BackupLevel>  
+    </User> 
+  </HoUsers>
 
 
 
