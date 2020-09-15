@@ -38,6 +38,14 @@ public final class HTCalendarFactory {
     	return calendar;
     }
 
+    /*
+    alternative to getHTSeasonCorrection based on worlddetails info SeasonOffset
+    (not used up to now)
+     */
+    private static int getSeasonOffset(){
+    	return HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
+	}
+
     private static Integer htSeasonCorrection;
 	private static int getHTSeasonCorrection() {
 		if ( htSeasonCorrection == null){
