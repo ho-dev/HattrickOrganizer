@@ -157,7 +157,26 @@ Based on the previous example, here below is a side by side comparison of ``user
 
 .. code-block:: json
    
-   [   {     "teamName": "FC Team",     "dbName": "db",     "backupLevel": 5,     "isNtTeam": false   },   {     "teamName": "Reserve Team",     "dbName": "db_reserve",     "backupLevel": 3,     "isNtTeam": false   },   {     "teamName": "National Team XXX",     "dbName": "dbNationalTeam",     "backupLevel": 3,     "isNtTeam": true   } ]
+   [ 
+   {     
+      "teamName": "FC Team",     
+      "dbName": "db",
+      "backupLevel": 5,
+      "isNtTeam": false
+      },
+      {
+       "teamName": "Reserve Team",     
+       "dbName": "db_reserve",     
+       "backupLevel": 3,     
+       "isNtTeam": false   
+       },   
+       {     
+       "teamName": "National Team XXX",     
+       "dbName": "dbNationalTeam",     
+       "backupLevel": 3,     
+       "isNtTeam": true   
+       } 
+      ]
 
 
 First connexion
