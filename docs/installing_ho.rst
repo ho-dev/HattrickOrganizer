@@ -121,7 +121,7 @@ in ``/Library/Application Support/HO`` except the ``error.log`` and
 How to upgrade from HO! 3.0 to HO! 4.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. danger::
+.. DANGER::
   Do not attempt upgrade before doing a backup of your db folder(s) !
 
 It will not be possible to directly upgrade from HO! 3.0 to HO! 4.0, some (quick) manual steps will be required.
@@ -146,7 +146,7 @@ Based on the previous example, here below is a side by side comparison of ``user
 
 ``user.xml``:
 
-.. code-block:: json
+.. code-block:: xml
    
     <?xml version='1.0' encoding='UTF-8' ?> 
     <HoUsers>  
