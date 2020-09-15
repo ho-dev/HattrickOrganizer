@@ -126,20 +126,39 @@ Update
 How to upgrade from HO! 3.0 to HO! 4.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It will not be possible to directly upgrade from HO! 3.0 to HO! 4.0. The
-upgrade requires some manual steps. For example let's take the complex
-case mentioned above of a user having 3 teams. In HO! 3.0 its
-``user.xml`` file is something like:
+.. danger::
+  first of all BACKUP YOUR DB !
+
+It will not be possible to directly upgrade from HO! 3.0 to HO! 4.0, some (quick) manual steps will be required.
+
+**If you have only one team and never played with database/user administration**, you only need to perform a fresh install of HO! 4.0 and to replace the content of the ``db`` folder with your existing database
+
+**If you have more than one team or that you played with database/user administration**, you will have to manually create a file user.json that preserve the structure logic of your user.xml file. In that case you need to perform the following steps:
+
+1) before upgrading, check your existing HO structure: :guilabel:`File>Database>Database/User administration`
+
+.. figure:: https://user-images.githubusercontent.com/1136496/93209267-28b29480-f75e-11ea-8c5f-5f34378fdee0.png
+
+2) close your HO then make a backup from your db(s), they are in your installation folder :ref:`directory-structure`
+
+3) install HO! 4.0
+
+4) Launch HO! and go to :guilabel:`File>Database>Database/User administration`. Use buttons :guilabel:`[Edit]` and :guilabel:`[Add]` to adjust the db structure to your need
+
+5) replace the contents of ``db`` folder(s) with the backup(s) you made at step 2
+
+Based on the previous example, here below is a side by side comparison of ``user.xml`` and ``user.json``
+
+``user.xml``:
 
 .. code-block:: json
    :linenos:
    
     <?xml version='1.0' encoding='UTF-8' ?> <HoUsers>  <User>    <Name><![CDATA[FC Team]]></Name>    <Url><![CDATA[jdbc:hsqldb:file:db/database]]></Url>    <User><![CDATA[sa]]></User>    <Password><![CDATA[]]></Password>    <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    <BackupLevel>3</BackupLevel>  </User>  <User>    <Name><![CDATA[Reserve Team]]></Name>    <Url><![CDATA[jdbc:hsqldb:file:db_reserve/database]]></Url>    <User><![CDATA[sa]]></User>    <Password><![CDATA[]]></Password>    <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    <BackupLevel>3</BackupLevel>  </User>  <User>    <Name><![CDATA[National Team XXX]]></Name>    <Url><![CDATA[jdbc:hsqldb:file:dbNationalTeam/database]]></Url>    <User><![CDATA[sa]]></User>    <Password><![CDATA[]]></Password>    <Driver><![CDATA[org.hsqldb.jdbcDriver]]></Driver>    <BackupLevel>3</BackupLevel>  </User> </HoUsers>
 
-This user should perform a fresh install of HO!. Launch HO! and create 2
-additional users (c.f. :ref:``second_team``)
 
-In the end, the new ``user.json`` should be like:
+
+``user.json``:
 
 .. code-block:: json
    :linenos:
