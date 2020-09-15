@@ -117,17 +117,12 @@ in ``/Library/Application Support/HO`` except the ``error.log`` and
 ``output.log`` files which will created in the installation directory
 
 
-Update
-********************
-
-``TODO:  after upgrade functionality has been restored !!``
-
 
 How to upgrade from HO! 3.0 to HO! 4.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. danger::
-  first of all BACKUP YOUR DB !
+  Do not attempt upgrade before doing a backup of your db folder(s) !
 
 It will not be possible to directly upgrade from HO! 3.0 to HO! 4.0, some (quick) manual steps will be required.
 
@@ -143,7 +138,7 @@ It will not be possible to directly upgrade from HO! 3.0 to HO! 4.0, some (quick
 
 3) install HO! 4.0
 
-4) Launch HO! and go to :guilabel:`File>Database>Database/User administration`. Use buttons :guilabel:`[Edit]` and :guilabel:`[Add]` to adjust the db structure to your need
+4) Launch HO! and go to :guilabel:`File>Database>Database/User administration`. Use buttons :guilabel:`[Edit]` and :guilabel:`[Add]` to adjust the db structure to your needs.
 
 5) replace the contents of ``db`` folder(s) with the backup(s) you made at step 2
 
@@ -161,7 +156,6 @@ Based on the previous example, here below is a side by side comparison of ``user
 ``user.json``:
 
 .. code-block:: json
-   :linenos:
    
    [   {     "teamName": "FC Team",     "dbName": "db",     "backupLevel": 5,     "isNtTeam": false   },   {     "teamName": "Reserve Team",     "dbName": "db_reserve",     "backupLevel": 3,     "isNtTeam": false   },   {     "teamName": "National Team XXX",     "dbName": "dbNationalTeam",     "backupLevel": 3,     "isNtTeam": true   } ]
 
