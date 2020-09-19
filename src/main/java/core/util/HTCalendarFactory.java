@@ -34,35 +34,12 @@ public final class HTCalendarFactory {
     	final HTCalendar calendar = new HTCalendar();
     	calendar.initialize(calMark);
     	calendar.setTime(model.getBasics().getDatum());
-    	calendar.setSeasonCorrection(getHTSeasonCorrection());
+    	calendar.setSeasonCorrection(getSeasonOffset());
     	return calendar;
     }
 
-    /*
-    alternative to getHTSeasonCorrection based on worlddetails info SeasonOffset
-    (not used up to now)
-     */
     private static int getSeasonOffset(){
     	return HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
-	}
-
-    private static Integer htSeasonCorrection;
-	private static int getHTSeasonCorrection() {
-		if ( htSeasonCorrection == null){
-			HOModel model = HOVerwaltung.instance().getModel();
-			if (model == null || model.getXtraDaten() == null || model.getXtraDaten().getSeriesMatchDate() == null) {
-				return 0;
-			}
-
-			final Calendar calMark = Calendar.getInstance();
-			calMark.setTimeInMillis(model.getXtraDaten().getSeriesMatchDate().getTime());
-			final HTCalendar calendar = new HTCalendar();
-			calendar.initialize(calMark);
-			calendar.setTime(model.getXtraDaten().getSeriesMatchDate());
-
-			htSeasonCorrection = calendar.getHTSeason() - model.getBasics().getSeason();
-		}
-		return htSeasonCorrection;
 	}
 
 	/**
@@ -122,7 +99,7 @@ public final class HTCalendarFactory {
         final HTCalendar calendar = new HTCalendar();
         calendar.initialize(calMark);
         calendar.setTime(model.getBasics().getDatum());
-		calendar.setSeasonCorrection(getHTSeasonCorrection());
+		calendar.setSeasonCorrection(getSeasonOffset());
 
 		return calendar;
     }
