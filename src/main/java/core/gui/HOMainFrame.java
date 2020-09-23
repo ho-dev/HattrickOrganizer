@@ -364,7 +364,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 
 		else if (source.equals(m_jmCheckUpdate)) {
-			UpdateController.check4update(OSUtils.isMac());
+			UpdateController.check4update();
 		}
 		else if (source.equals(m_jmChangelog)) {
 			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {

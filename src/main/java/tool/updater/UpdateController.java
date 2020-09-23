@@ -13,15 +13,14 @@ import java.io.File;
 
 public final class UpdateController {
 
-    public static final String UPDATES_URL = "http://ho1.sourceforge.net/onlinefiles";
-    private static final String DEV_URL = "https://akasolace.github.io/HO/release_notes(dev).html";
-    private static final String BETA_URL = "https://akasolace.github.io/HO/release_notes(beta).html";
-    private static final String STABLE_URL = "https://akasolace.github.io/HO/release_notes(stable).html";
+    private static final String DEV_URL = "https://akasolace.github.io/HO/release_notes/release_notes(dev).html";
+    private static final String BETA_URL = "https://akasolace.github.io/HO/release_notes/release_notes(beta).html";
+    private static final String STABLE_URL = "https://akasolace.github.io/HO/release_notes/release_notes(stable).html";
 
     /**
      * Check the external site for the latest version according to user preference regarding release channel
      */
-    public static void check4update(boolean isMac) {
+    public static void check4update() {
         VersionInfo devVersion = MyConnector.instance().getLatestVersion();
         VersionInfo betaVersion = MyConnector.instance().getLatestBetaVersion();
         VersionInfo stableVersion = MyConnector.instance().getLatestStableVersion();
