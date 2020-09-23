@@ -127,12 +127,13 @@ public final class UpdateController {
     }
 
     public static String get_HO_zip_download_url(String full_version, double version, String versionType) {
-        if (versionType.equals("DEV")) {
-            return "https://github.com/akasolace/HO/releases/download/dev/HO-" + full_version + "-portable-win-DEV.zip";
-        } else {
-            String ver = Double.toString(version);
-            return "https://github.com/akasolace/HO/releases/download/" + ver + "/HO-" + full_version + "-portable-win-DEV.zip";
-        }
+        String ver = Double.toString(version);
+
+        return switch (versionType) {
+            case "DEV" -> "https://github.com/akasolace/HO/releases/download/dev/HO-" + full_version + "-portable-win-DEV.zip";
+            case "BETA" -> "https://github.com/akasolace/HO/releases/download/" + ver + "/HO-" + full_version + "-portable-win-BETA.zip";
+            default -> "https://github.com/akasolace/HO/releases/download/" + ver + "/HO-" + full_version + "-portable-win.zip";
+        };
     }
 
     public static void updateHO(String full_version, double version, String versionType) {
