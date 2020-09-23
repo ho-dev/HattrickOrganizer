@@ -17,20 +17,47 @@ public class HOLauncher {
 		boolean updateSuccess = true;
 		File file = new File(updateFileName);
 		if (file.exists()) {
+			// update.zip exists
 			String dir = file.getAbsolutePath();
 			dir = dir.substring(0, dir.length() - 10);
-			try {
-				update(updateFileName, dir);
-			} catch (Exception e) {
-				updateSuccess = false;
-				System.err.print("update failed !");
-				e.printStackTrace();
-			}
-			if (updateSuccess) {
+
+			File mark_for_deletion = new File(dir + "//update_done.ini");
+			if (mark_for_deletion.exists()) {
+				// update.zip was not deleted after last update we are doing it now .......
 				try {
 					Files.delete(Path.of(file.getAbsolutePath()));
+					System.out.println("zip file has been deleted");
+					try {
+						Files.delete(Path.of(mark_for_deletion.getAbsolutePath()));
+						System.out.println("mark_for_deletion file has been deleted");
+					} catch (IOException e) {
+						System.err.print("mark_for_deletion file could not be deleted even at launch " + e);
+					}
 				} catch (IOException e) {
-					System.err.print("zip file could not be deleted after update !: " + e);
+					System.err.print("zip file could not be deleted even at launch " + e);
+				}
+			} else {
+				try {
+					update(updateFileName, dir);
+				} catch (Exception e) {
+					updateSuccess = false;
+					System.err.print("update failed !");
+					e.printStackTrace();
+				}
+				if (updateSuccess) {
+					try {
+						Files.delete(Path.of(file.getAbsolutePath()));
+					} catch (IOException e) {
+						System.err.print("zip file could not be deleted after update !: " + e);
+
+						// it is not clear why the process does not release properly the update file, we will try to delete it at next launch ....
+						try {
+							mark_for_deletion.createNewFile();
+							System.out.println("mark_for_deletion file has been created, zip file will be deleted at next launch");
+						} catch (IOException ioExceptionError) {
+							System.err.print("mark_for_deletion file could not be created neither: " + ioExceptionError);
+						}
+					}
 				}
 			}
 		}
