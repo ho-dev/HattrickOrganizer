@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.regex.Pattern;
@@ -17,7 +18,6 @@ public class HOLauncher {
 		boolean updateSuccess = true;
 		File file = new File(updateFileName);
 		if (file.exists()) {
-			// update.zip exists
 			String dir = file.getAbsolutePath();
 			dir = dir.substring(0, dir.length() - 10);
 
@@ -30,24 +30,35 @@ public class HOLauncher {
 					try {
 						Files.delete(Path.of(mark_for_deletion.getAbsolutePath()));
 						System.out.println("mark_for_deletion file has been deleted");
-					} catch (IOException e) {
+					}
+					catch (IOException e) {
 						System.err.print("mark_for_deletion file could not be deleted even at launch " + e);
 					}
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					System.err.print("zip file could not be deleted even at launch " + e);
 				}
-			} else {
+			}
+			else {
+				// update.zip exists and mark_for_deletion does not => we try to unzip ....
 				try {
 					update(updateFileName, dir);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					updateSuccess = false;
 					System.err.print("update failed !");
 					e.printStackTrace();
 				}
 				if (updateSuccess) {
 					try {
+						TimeUnit.SECONDS.sleep(5);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					try {
 						Files.delete(Path.of(file.getAbsolutePath()));
-					} catch (IOException e) {
+					}
+					catch (IOException e) {
 						System.err.print("zip file could not be deleted after update !: " + e);
 
 						// it is not clear why the process does not release properly the update file, we will try to delete it at next launch ....
