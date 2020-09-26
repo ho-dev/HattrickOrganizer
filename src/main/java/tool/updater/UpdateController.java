@@ -179,5 +179,4 @@ public final class UpdateController {
                 ((a.getVersion() == HO.VERSION) && (a.getBuild() > HO.getRevisionNumber()));
     }
 
-
 }
