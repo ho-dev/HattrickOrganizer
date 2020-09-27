@@ -131,8 +131,8 @@ public final class UpdateController {
 
         return switch (versionType) {
             case "DEV" -> "https://github.com/akasolace/HO/releases/download/dev/HO-" + full_version + "-portable-win-DEV.zip";
-            case "BETA" -> "https://github.com/akasolace/HO/releases/download/" + ver + "/HO-" + full_version + "-portable-win-BETA.zip";
-            default -> "https://github.com/akasolace/HO/releases/download/" + ver + "/HO-" + full_version + "-portable-win.zip";
+            case "BETA" -> "https://github.com/akasolace/HO/releases/download/tag_beta/HO-" + full_version + "-portable-win-BETA.zip";
+            default -> "https://github.com/akasolace/HO/releases/download/stable/HO-" + full_version + "-portable-win.zip";
         };
     }
 
