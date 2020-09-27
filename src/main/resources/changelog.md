@@ -4,40 +4,37 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 # Changelist HO! 4.0
 
 ## Some numbers:
-  - xxx commits
-  - xxx files changed (xxx additions and xxx deletions)
-  - xx issues closed
-  - xx contributors
+  - 203 commits
+  - 737 files changed (19 084 additions and 19 238 deletions)
+  - 85 issues closed
+  - 9 contributors
 
 
 ## Highlights
 
-   - New build process:
-     - **HO! now requires Java 14 but artefacts including JRE are made available**
-     - **in-app upgrade is now supported**
-     - directory structure has changed (db location, log files, ...)
-
+  - New build process:
+    - **HO! now requires Java 14 but artefacts including JRE are made available**
+    - **in-app upgrade is now supported**
+    - directory structure has changed (db location, log files, ...)
    - [FEAT] Improved HO themes, and implemented dark mode. #85
-   - [BUG] Complete rewrite of Special Events module
+   - [FEAT] Complete rewrite of Special Events module
+
 
 ## Detailed Changelog
-
-### Download
 
 
 ### Squad
 
-   - [FIX] Remove lag in sync between tables in Squad #465
-   - [FEAT] Provide better default for initial position of player comparison divider.
-
+  - [FIX] Remove lag in sync between tables in Squad #465
+  - [FIX] Provide better default for initial position of player comparison divider.
 
 ### Team Analyser
 
-   - [FEAT] Save adjusted lineup ratings of MatchPredictionPanel in an extra row #66
+ - [FEAT] Save adjusted lineup ratings of MatchPredictionPanel in an extra row #66
 
 ### Rating
 
-  - [BUG] Fixes Long Shots tactic level calculation
+  - [FIX] Fixes Long Shots tactic level calculation
 
 ### Matches
 
@@ -71,9 +68,8 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
   - [FEAT] Make Promotion status more visible. [#521]
 
-
 ## Translations
-  - HO! is currently available in xx languages thanks to the work of xx translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
+  - HO! is currently available in 35 languages thanks to the work of 78 translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
   - Translators contribution since the previous release (number of translated terms):
 
 

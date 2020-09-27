@@ -36,7 +36,7 @@ dependencies {
 // Development_stage (DEV:0  BETA:1  STABLE:2)
 def major = '4'
 def minor = '0'
-def development_stage = '0'
+def development_stage = '1'
 def releaseArtefacts = true
 def min_version_auto_update = '4.0' // project minimum version for project auto-update, can be used to force fresh install in case of compatibility break
 
@@ -164,44 +164,9 @@ install4j {
 
 task makeAllmedias(dependsOn: 'media') {
     doLast {
-        if (releaseArtefacts) {
-
-            // DEV release
-            if (development_stage == '0') {
-                copy {
-                    from "${projectDir}/build/artefacts"
-                    into "${projectDir}/build/artefacts"
-                    include "updates.xml"
-                    rename "updates.xml", "updatesDEV.xml"
-                }
-            }
-
-            // BETA release
-            else if (development_stage == '1') {
-                copy {
-                    from "${projectDir}/build/artefacts"
-                    into "${projectDir}/build/artefacts"
-                    include "updates.xml"
-                    rename "updates.xml", "updatesBETA.xml"
-                }
-            }
-
-            // STABLE release
-            else {
-                copy {
-                    from "${projectDir}/build/artefacts"
-                    into "${projectDir}/build/artefacts"
-                    include "updates.xml"
-                    rename "updates.xml", "updatesSTABLE.xml"
-                }
-            }
-
-            delete "${projectDir}/build/artefacts/updates.xml"
-        }
         delete "${projectDir}/build/artefacts/output.txt"
     }
 }
-
 
 
 task media(type: com.install4j.gradle.Install4jTask) {
@@ -272,7 +237,6 @@ task pushmd(dependsOn: preparingBuild)  {
         }
     }
 }
-
 
 task CreateDistribution (dependsOn: installDist) {
     group 'sub tasks'
@@ -479,21 +443,21 @@ githubRelease {
             tagName = "dev"
             releaseName = "dev"
             targetCommitish = "master"
-            body = "Latest development version aimed at developers. \n It can (will soon or late break your database))"
+            body = "Latest development version aimed at developers"
             prerelease = true
             overwrite = true
         } else if (development_stage == '1') {
-            tagName = major + "." + minor
-            releaseName = major + "." + minor
+            tagName = "beta"
+            releaseName = "beta"
             targetCommitish = "master"
-            body = "..................."
+            body = "Latest beta release"
             prerelease = true
             overwrite = true
         } else if (development_stage == '2') {
-            tagName = major + "." + minor
-            releaseName = major + "." + minor
+            tagName = "tag_stable"
+            releaseName = "tag_stable"
             targetCommitish = "master"
-            body = "..................."
+            body = "Latest stable release"
             prerelease = false
             overwrite = true
         }
