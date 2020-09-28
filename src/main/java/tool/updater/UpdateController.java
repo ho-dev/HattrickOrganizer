@@ -141,30 +141,31 @@ public final class UpdateController {
     }
 
     public static void updateHO(final String urlString) {
-        if (HO.isPortableVersion()) {
-            // HO! manage the (partial) update
-            File tmp = new File("update.zip");
-            LoginWaitDialog wait = new LoginWaitDialog(HOMainFrame.instance());
-            wait.setVisible(true);
-            if (!UpdateHelper.download(urlString, tmp)) {
-                wait.setVisible(false);
-                HOLogger.instance().error(UpdateController.class, "Could not download: " + urlString);
-                return;
-            }
-            wait.setVisible(false);
-
-            JOptionPane.showMessageDialog(null,
-                    HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
-                            .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
-                            .getLanguageString("ls.menu.file.update.ho"),
-                    JOptionPane.INFORMATION_MESSAGE);
-
-            HOMainFrame.instance().shutdown();
-        }
-        else {
-            // making update via install4J
-            Updater.instance().update();
-        }
+        Updater.instance().update();
+//        if (HO.isPortableVersion()) {
+//            // HO! manage the (partial) update
+//            File tmp = new File("update.zip");
+//            LoginWaitDialog wait = new LoginWaitDialog(HOMainFrame.instance());
+//            wait.setVisible(true);
+//            if (!UpdateHelper.download(urlString, tmp)) {
+//                wait.setVisible(false);
+//                HOLogger.instance().error(UpdateController.class, "Could not download: " + urlString);
+//                return;
+//            }
+//            wait.setVisible(false);
+//
+//            JOptionPane.showMessageDialog(null,
+//                    HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
+//                            .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
+//                            .getLanguageString("ls.menu.file.update.ho"),
+//                    JOptionPane.INFORMATION_MESSAGE);
+//
+//            HOMainFrame.instance().shutdown();
+//        }
+//        else {
+//            // making update via install4J
+//            Updater.instance().update();
+//        }
 
     }
 
