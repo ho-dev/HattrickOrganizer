@@ -36,7 +36,7 @@ dependencies {
 // Development_stage (DEV:0  BETA:1  STABLE:2)
 def major = '4'
 def minor = '0'
-def development_stage = '1'
+def development_stage = '0'
 def releaseArtefacts = true
 def min_version_auto_update = '4.0' // project minimum version for project auto-update, can be used to force fresh install in case of compatibility break
 
@@ -418,48 +418,80 @@ markdownToHtml {
 }
 
 
-task ReleaseToGitHub(dependsOn: tasks.getByName('githubRelease')){
-    group 'ho'
-    doLast {
-        if (development_stage == '0') {
-            println "DEVELOPMENT version has been released on GitHub"
-        } else if (development_stage == '1') {
-            println major + "." + minor + " BETA version has been released on GitHub.\nBuild ... Release on ...."
-        } else if (development_stage == '2') {
-            println "automatic release of stable version has not been implemented yet !!"
-        }
-    }
-}
 
-githubRelease {
+task releaseDEVtoGitHub() {
     def _token = GITHUB_TOKEN  // required token for your personal access with repo permissions
-    owner = 'akasolace'
-    repo = 'HO'
-    releaseAssets = file("$target_dir").listFiles()
-    token = _token
-
-    if (releaseArtefacts) {
-        if (development_stage == '0') {
+    doLast {
+        githubRelease {
+            owner = 'akasolace'
+            repo = 'HO'
+            releaseAssets = file("$target_dir").listFiles()
+            token = _token
             tagName = "dev"
             releaseName = "dev"
             targetCommitish = "master"
             body = "Latest development version aimed at developers"
             prerelease = true
             overwrite = true
-        } else if (development_stage == '1') {
+        }
+        println "DEVELOPMENT version is being released on GitHub"
+    }
+}
+
+task releaseBETAtoGitHub() {
+    def _token = GITHUB_TOKEN  // required token for your personal access with repo permissions
+    doLast {
+        githubRelease {
+            owner = 'akasolace'
+            repo = 'HO'
+            releaseAssets = file("$target_dir").listFiles()
+            token = _token
             tagName = "beta"
             releaseName = "beta"
             targetCommitish = "master"
             body = "Latest beta release"
             prerelease = true
             overwrite = true
-        } else if (development_stage == '2') {
+        }
+        println "BETA version is being released on GitHub"
+    }
+}
+
+task releaseSTABLEtoGitHub() {
+    def _token = GITHUB_TOKEN  // required token for your personal access with repo permissions
+    doLast {
+        githubRelease {
+            owner = 'akasolace'
+            repo = 'HO'
+            releaseAssets = file("$target_dir").listFiles()
+            token = _token
             tagName = "tag_stable"
-            releaseName = "tag_stable"
+            releaseName = "stable"
             targetCommitish = "master"
             body = "Latest stable release"
-            prerelease = false
+            prerelease = true
             overwrite = true
+        }
+        println "BETA version is being released on GitHub, release XX.XX should still be created manually"
+    }
+}
+
+
+releaseDEVtoGitHub.finalizedBy(tasks.getByName('githubRelease'))
+releaseBETAtoGitHub.finalizedBy(tasks.getByName('githubRelease'))
+releaseSTABLEtoGitHub.finalizedBy(tasks.getByName('githubRelease'))
+releaseBETAtoGitHub.dependsOn releaseDEVtoGitHub
+releaseSTABLEtoGitHub.dependsOn releaseBETAtoGitHub
+
+task releaseToGitHub {
+    group 'ho'
+    if (releaseArtefacts) {
+        if (development_stage == '0') {
+            dependsOn 'releaseDEVtoGitHub'
+        } else if (development_stage == '1') {
+            dependsOn 'releaseBETAtoGitHub'
+        } else {
+            dependsOn 'releaseSTABLEtoGitHub'
         }
     }
 }
