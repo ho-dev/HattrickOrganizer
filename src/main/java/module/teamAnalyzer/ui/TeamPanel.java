@@ -261,7 +261,7 @@ public class TeamPanel extends JPanel {
         panel.removeAll();
         
         // Don't add the panel of an empty position.
-        if (playerPanel.getContainsPlayer() == true) {
+        if (playerPanel.getContainsPlayer()) {
         	panel.add(playerPanel);
         } else {
         	// But leave a box the size of a player panel...
