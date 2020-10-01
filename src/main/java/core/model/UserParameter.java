@@ -429,12 +429,6 @@ public final class UserParameter extends Configuration {
         map.put("aufstellungsAssistentPanel_verletzt", String.valueOf(aufstellungsAssistentPanel_verletzt));
         map.put("xmlDownload", String.valueOf(xmlDownload));
 
-        if (HO.getVersionType() != null) {
-            switch (HO.getVersionType()) {
-                case "DEV" -> ReleaseChannel = "Dev";
-                case "BETA" -> ReleaseChannel = "Beta";
-            }
-        }
         map.put("ReleaseChannel", ReleaseChannel);
 
         map.put("fixtures", String.valueOf(fixtures));
