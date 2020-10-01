@@ -1075,7 +1075,29 @@ final class DBUpdater {
 			HOLogger.instance().log(getClass(), "Updating configuration to version 1.436...");
 			updateConfigTo1436(HO.isDevelopment() && lastConfigUpdate == 1.436);
 		}
+		if (lastConfigUpdate < 4.0 || (HO.isDevelopment() && lastConfigUpdate == 4.0)) {
+			HOLogger.instance().log(getClass(), "Updating configuration to version 4.0...");
+			updateConfigTo4000(HO.isDevelopment() && lastConfigUpdate == 4.0);
+		}
 
+	}
+
+	private void updateConfigTo4000(boolean alreadyApplied) {
+		try {
+			if (!alreadyApplied) {
+				switch(HO.getVersionType()){
+					case "DEV" -> dbManager.saveUserParameter("ReleaseChannel", "Dev");
+					case "BETA" -> dbManager.saveUserParameter("ReleaseChannel", "Beta");
+					default -> dbManager.saveUserParameter("ReleaseChannel", "Stable");
+				}
+
+			}
+		} catch (Exception e) {
+			HOLogger.instance().debug(getClass(),
+					"Error updating to config 4.0: " + e.getMessage());
+		}
+		// always set the LastConfUpdate as last step
+		dbManager.saveUserParameter("LastConfUpdate", 4.0);
 	}
 
 	private void updateConfigTo1410_1(boolean alreadyApplied) {
@@ -1172,15 +1194,9 @@ final class DBUpdater {
 	}
 
 	private void updateConfigTo1436(boolean alreadyApplied) {
-
 		try {
 			if (!alreadyApplied) {
-				switch(HO.getVersionType()){
-					case "DEV" -> dbManager.saveUserParameter("ReleaseChannel", "Dev");
-					case "BETA" -> dbManager.saveUserParameter("ReleaseChannel", "Beta");
-					default -> dbManager.saveUserParameter("ReleaseChannel", "Stable");
-				}
-
+				dbManager.saveUserParameter("ReleaseChannel", "Stable");
 			}
 			dbManager.removeUserParameter("newsCheck");
 			dbManager.removeUserParameter("userCheck");
