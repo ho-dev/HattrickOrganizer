@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class HOLauncher {
 
 	public static void main(String[] args) {
-		String updateFileName = "update.zip";
+		String updateFileName = "update.piz";
 		boolean updateSuccess = true;
 		File file = new File(updateFileName);
 		if (file.exists()) {
