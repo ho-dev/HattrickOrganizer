@@ -8,7 +8,9 @@ nb_flags = width // 20
 for i in range(nb_flags):
     icon = im.crop((i*20, 0, i*20+20, 12))
     if i != 0:
-        icon.save(f"D:/Perso/Code/HO/src/main/resources/flags/{i}flag.png")
+        # icon.save(f"D:/Perso/Code/HO/src/main/resources/flags/{i}flag.png")
+        icon.save(f"D:/Temp/flags/{i}flag.png")
     else:
-        icon.save(f"D:/Perso/Code/HO/src/main/resources/flags/{1_000}flag.png")
+        # icon.save(f"D:/Perso/Code/HO/src/main/resources/flags/{1_000}flag.png")
+        icon.save(f"D:/Temp/flags/{1_000}flag.png")
 
