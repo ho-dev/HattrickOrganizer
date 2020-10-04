@@ -443,7 +443,8 @@ public class ImageUtilities {
 
 	public static ImageIcon getCountryFlagIcon(int iCountryID) {
 		WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(iCountryID);
-	    return getLeagueFlagIcon(leagueDetail.getLeagueId());
+	    if ( leagueDetail != null ) return getLeagueFlagIcon(leagueDetail.getLeagueId());
+	    return  null;
 	}
 
 	public static ImageIcon getLeagueFlagIcon(int iLeague) {
