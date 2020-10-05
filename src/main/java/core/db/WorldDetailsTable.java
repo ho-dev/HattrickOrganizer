@@ -245,6 +245,11 @@ class WorldDetailsTable extends AbstractTable {
 		insertWorldDetailsLeague(new WorldDetailLeague(158,186,"Belize"));
 		insertWorldDetailsLeague(new WorldDetailLeague(159,183,"Madagascar"));
 		insertWorldDetailsLeague(new WorldDetailLeague(160,185,"Botswana"));
+		insertWorldDetailsLeague(new WorldDetailLeague(161,189,"Myanmar"));
+		insertWorldDetailsLeague(new WorldDetailLeague(162,187,"Zambia"));
+		insertWorldDetailsLeague(new WorldDetailLeague(163,191,"San Marino"));
+		insertWorldDetailsLeague(new WorldDetailLeague(164,188,"Haiti"));
+		insertWorldDetailsLeague(new WorldDetailLeague(165,190,"Puerto Rico"));
 		insertWorldDetailsLeague(new WorldDetailLeague(1000,1000,"International"));
 	}
 }

@@ -48,6 +48,11 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - [FIX] Fix bug in download of man marking match orders [#632]
   - [FIX] Fix bug in upload of position change match orders [#633]
 
+### IFA
+
+  - [FIX] add supports for 9 new leagues: Belize, Madagascar, Botswana, Saint Vincent and the Grenadines, Myanmar, Zambia, San Marino, Puerto Rico and Haiti [#539]
+  
+  
 ### Training
 
   - [FIX] Fix bug of season correction calculation. Training effect table shows wrong seasons in week 16 [#539]
