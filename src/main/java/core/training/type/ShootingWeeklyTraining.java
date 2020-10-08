@@ -28,13 +28,13 @@ public class ShootingWeeklyTraining extends WeeklyTrainingType {
 		_PrimaryTrainingBaseLength = ScoringWeeklyTraining.instance().getBaseTrainingLength(); // old was (float) 3.2 / (float) 0.45
 		_PrimaryTrainingSkillBaseLength = (_PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_SCORING) * 100 / 60;
 		_PrimaryTrainingSkillOsmosisLengthRate = 0;
-		_SecondaryTrainingSkillPositions = new int[]{ IMatchRoleID.keeper,
+		/*_SecondaryTrainingSkillPositions = new int[]{ IMatchRoleID.keeper,
 				IMatchRoleID.leftBack, IMatchRoleID.rightBack, IMatchRoleID.leftCentralDefender,
 				IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender,
 				IMatchRoleID.rightWinger, IMatchRoleID.leftWinger,
 				IMatchRoleID.leftInnerMidfield, IMatchRoleID.centralInnerMidfield,
 				IMatchRoleID.rightInnerMidfield, IMatchRoleID.leftForward,
-				IMatchRoleID.centralForward, IMatchRoleID.rightForward};
+				IMatchRoleID.centralForward, IMatchRoleID.rightForward};*/
 		_SecondaryTrainingSkillBaseLength = (SetPiecesWeeklyTraining.instance().getBaseTrainingLength() + UserParameter.instance().TRAINING_OFFSET_SETPIECES) / (float) 0.16;
 	}
 	public static WeeklyTrainingType instance() {

@@ -107,6 +107,7 @@ public class FutureTrainingManager {
 						case FULL_TRAINING:
 							tp.addPrimarySkillPositionMinutes(90);
 							tp.addSecondarySkillBonusMinutes(90);
+							tp.addSecondarySkillMinutes(90);
 							trainingSpeed = 1;
 							break;
 						case PARTIAL_TRAINING:

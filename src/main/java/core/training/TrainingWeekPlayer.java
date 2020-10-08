@@ -63,7 +63,7 @@ public class TrainingWeekPlayer {
 	{
 		return _PrimarySkillOsmosisPositionMinutes;
 	}
-	public void addSecondarySkillPrimaryMinutes(int minutes)
+	public void addSecondarySkillMinutes(int minutes)
 	{
 		if ((_SecondarySkillPositionMinutes + minutes) > 90)
 			_SecondarySkillPositionMinutes = 90;
