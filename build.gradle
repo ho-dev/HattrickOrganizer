@@ -36,7 +36,7 @@ dependencies {
 // Development_stage (DEV:0  BETA:1  STABLE:2)
 def major = '4'
 def minor = '0'
-def development_stage = '0'
+def development_stage = '1'
 def releaseArtefacts = true
 def min_version_auto_update = '4.0' // project minimum version for project auto-update, can be used to force fresh install in case of compatibility break
 
