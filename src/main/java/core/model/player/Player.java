@@ -19,7 +19,6 @@ import core.util.HelperWrapper;
 
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class Player {
     //~ Class fields -------------------------------------------------------------------------------
@@ -2219,19 +2218,19 @@ public class Player {
         // get Prio from best position
         int position = HelperWrapper.instance().getPosition(this.getIdealPosition());
 
-        for ( var p: wt.getPrimaryTrainingSkillBonusPositions()){
+        for ( var p: wt.getTrainingSkillBonusPositions()){
             if ( p == position) return FuturePlayerTraining.Priority.FULL_TRAINING;
         }
-        for ( var p: wt.getPrimaryTrainingSkillPositions()){
+        for ( var p: wt.getTrainingSkillPositions()){
             if ( p == position) {
                 if ( wt.getTrainingType() == TrainingType.SET_PIECES) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
                 return FuturePlayerTraining.Priority.FULL_TRAINING;
             }
         }
-        for ( var p: wt.getPrimaryTrainingSkillSecondaryTrainingPositions()){
+        for ( var p: wt.getTrainingSkillSecondaryTrainingPositions()){
             if ( p == position) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
         }
-        for ( var p: wt.getPrimaryTrainingSkillOsmosisTrainingPositions()){
+        for ( var p: wt.getTrainingSkillOsmosisTrainingPositions()){
             if ( p == position) return FuturePlayerTraining.Priority.OSMOSIS_TRAINING;
         }
 

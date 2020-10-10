@@ -213,8 +213,8 @@ public class TrainingModel {
 
 	private boolean isPartialTrainingAvailable(TrainingPerWeek t) {
 		var tt = WeeklyTrainingType.instance(t.getTrainingType());
-		return tt.getPrimaryTrainingSkillSecondaryTrainingPositions().length > 0 ||
-				tt.getPrimaryTrainingSkillBonusPositions().length > 0;
+		return tt.getTrainingSkillSecondaryTrainingPositions().length > 0 ||
+				tt.getTrainingSkillBonusPositions().length > 0;
 	}
 
 	public boolean isOsmosisTrainingAvailable() {
@@ -225,6 +225,6 @@ public class TrainingModel {
 	}
 
 	private boolean isOsmosisTrainingAvailable(TrainingPerWeek t) {
-		return WeeklyTrainingType.instance(t.getTrainingType()).getPrimaryTrainingSkillOsmosisTrainingPositions().length > 0;
+		return WeeklyTrainingType.instance(t.getTrainingType()).getTrainingSkillOsmosisTrainingPositions().length > 0;
 	}
 }

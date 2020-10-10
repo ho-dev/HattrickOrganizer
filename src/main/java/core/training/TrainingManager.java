@@ -119,14 +119,14 @@ public class TrainingManager {
 	                MatchStatistics ms = new MatchStatistics(match, mlt);
 					MatchType type = mlt.getMatchType();
 					if ( type != MatchType.MASTERS) { // MASTERS counts only for experience
-						tp.addPrimarySkillPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillPositions()));
-						tp.addPrimarySkillBonusPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillBonusPositions()));
-						tp.addPrimarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillSecondaryTrainingPositions()));
-						tp.addPrimarySkillOsmosisPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getPrimaryTrainingSkillOsmosisTrainingPositions()));
-						tp.addSecondarySkillPrimaryMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillPositions()));
-						tp.addSecondarySkillBonusMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillBonusPositions()));
-						tp.addSecondarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillSecondaryTrainingPositions()));
-						tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getSecondaryTrainingSkillOsmosisTrainingPositions()));
+						tp.addPrimarySkillPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillPositions()));
+						tp.addPrimarySkillBonusPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillBonusPositions()));
+						tp.addPrimarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillSecondaryTrainingPositions()));
+						tp.addPrimarySkillOsmosisPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillOsmosisTrainingPositions()));
+						tp.addSecondarySkillMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillPositions()));
+						tp.addSecondarySkillBonusMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillBonusPositions()));
+						tp.addSecondarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillSecondaryTrainingPositions()));
+						tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillOsmosisTrainingPositions()));
 					}
 					tp.addTotalMinutesPlayed(ms.getTrainMinutesPlayedInPositions(playerID, null));
 					output.addExperienceIncrease(min(90,tp.getTotalMinutesPlayed() - minutes), type );

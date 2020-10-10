@@ -6,15 +6,12 @@ import core.gui.Refreshable;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchStatistics;
-import core.model.match.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import module.lineup.LineupPosition;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -141,13 +138,13 @@ public class TrainingPreviewPlayers implements Refreshable {
         //for (int i = 0; i < lMatchStats.size(); i++) {
         for ( var ms : lMatchStats){
 
-            if (weekTrainTyp.getPrimaryTrainingSkillPositions() != null) {
-                fullTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillPositions());
+            if (weekTrainTyp.getTrainingSkillPositions() != null) {
+                fullTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getTrainingSkillPositions());
                 if (fullTrain > 90)
                     fullTrain = 90;
             }
-            if (weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions() != null) {
-                partialTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions());
+            if (weekTrainTyp.getTrainingSkillSecondaryTrainingPositions() != null) {
+                partialTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getTrainingSkillSecondaryTrainingPositions());
                 if (partialTrain > 90)
                     partialTrain = 90;
             }
@@ -164,17 +161,17 @@ public class TrainingPreviewPlayers implements Refreshable {
             MatchRoleID roleId = pos.getPositionBySpielerId(playerID);
 
             if (roleId != null) {
-                if (weekTrainTyp.getPrimaryTrainingSkillPositions() != null) {
-                    for (int k = 0; k < weekTrainTyp.getPrimaryTrainingSkillPositions().length; k++) {
-                        if (roleId.getId() == weekTrainTyp.getPrimaryTrainingSkillPositions()[k]) {
+                if (weekTrainTyp.getTrainingSkillPositions() != null) {
+                    for (int k = 0; k < weekTrainTyp.getTrainingSkillPositions().length; k++) {
+                        if (roleId.getId() == weekTrainTyp.getTrainingSkillPositions()[k]) {
                             fullFuturTrain = true;
                             break;
                         }
                     }
                 }
-                if (!fullFuturTrain && weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions() != null) {
-                    for (int k = 0; k < weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions().length; k++) {
-                        if (roleId.getId() == weekTrainTyp.getPrimaryTrainingSkillSecondaryTrainingPositions()[k]) {
+                if (!fullFuturTrain && weekTrainTyp.getTrainingSkillSecondaryTrainingPositions() != null) {
+                    for (int k = 0; k < weekTrainTyp.getTrainingSkillSecondaryTrainingPositions().length; k++) {
+                        if (roleId.getId() == weekTrainTyp.getTrainingSkillSecondaryTrainingPositions()[k]) {
                             partialFuturTrain = true;
                             break;
                         }

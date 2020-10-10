@@ -57,6 +57,10 @@ Changelist HO! 4.0
   - [FIX] Fix bug of training effect of Walkover matches [#623]
   - [FEAT] Individual training plans for each player in training preview [#587]
 
+### IFA
+
+  - [FIX] add supports for 9 new leagues: Belize, Madagascar, Botswana, Saint Vincent and the Grenadines, Myanmar, Zambia, San Marino, Puerto Rico and Haiti [#539]
+  
 ### Misc
 
   - [FEAT] Remove jcalendar dependency.

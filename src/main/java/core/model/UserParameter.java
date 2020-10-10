@@ -98,9 +98,9 @@ public final class UserParameter extends Configuration {
     public boolean downloadDivisionBattleMatches = true;
 
     //Release Channel options
-    public String ReleaseChannel = "Stable";
+    public String ReleaseChannel = null;
 
-    //Die Spieleranalyse wird vertikal untereinander gepackt oder nicht
+    //Whether or not the player analysis is packed vertically one below the other
     public boolean spieleranalyseVertikal = true;
     public boolean statistikAlleBeschriftung = true;
     public boolean statistikAlleErfahrung = true;
@@ -429,10 +429,13 @@ public final class UserParameter extends Configuration {
         map.put("aufstellungsAssistentPanel_verletzt", String.valueOf(aufstellungsAssistentPanel_verletzt));
         map.put("xmlDownload", String.valueOf(xmlDownload));
 
-        if (HO.getVersionType() != null) {
-            switch (HO.getVersionType()) {
-                case "DEV" -> ReleaseChannel = "Dev";
-                case "BETA" -> ReleaseChannel = "Beta";
+        if (ReleaseChannel == null) {
+            ReleaseChannel = "Stable";
+            if (HO.getVersionType() != null) {
+                switch (HO.getVersionType()) {
+                    case "DEV" -> ReleaseChannel = "Dev";
+                    case "BETA" -> ReleaseChannel = "Beta";
+                }
             }
         }
         map.put("ReleaseChannel", ReleaseChannel);

@@ -131,8 +131,8 @@ public final class UpdateController {
 
         return switch (versionType) {
             case "DEV" -> "https://github.com/akasolace/HO/releases/download/dev/HO-" + full_version + "-portable-win-DEV.zip";
-            case "BETA" -> "https://github.com/akasolace/HO/releases/download/" + ver + "/HO-" + full_version + "-portable-win-BETA.zip";
-            default -> "https://github.com/akasolace/HO/releases/download/" + ver + "/HO-" + full_version + "-portable-win.zip";
+            case "BETA" -> "https://github.com/akasolace/HO/releases/download/beta/HO-" + full_version + "-portable-win-BETA.zip";
+            default -> "https://github.com/akasolace/HO/releases/download/tag_stable/HO-" + full_version + "-portable-win.zip";
         };
     }
 
@@ -143,7 +143,7 @@ public final class UpdateController {
     public static void updateHO(final String urlString) {
         if (HO.isPortableVersion()) {
             // HO! manage the (partial) update
-            File tmp = new File("update.zip");
+            File tmp = new File("update.piz");
             LoginWaitDialog wait = new LoginWaitDialog(HOMainFrame.instance());
             wait.setVisible(true);
             if (!UpdateHelper.download(urlString, tmp)) {

@@ -22,10 +22,12 @@ public abstract class WeeklyTrainingType {
 	protected float _PrimaryTrainingSkillBaseLength = 0;
 	protected float _PrimaryTrainingSkillSecondaryLengthRate = 0;
 	protected float _PrimaryTrainingSkillOsmosisLengthRate = (float) 100 / (OSMOSIS_BASE_PERCENTAGE + UserParameter.instance().TRAINING_OFFSET_OSMOSIS); // 16%
+	/* secondary trainings position never differ from primary trainings positions
 	protected int[] _SecondaryTrainingSkillPositions = new int[0];
 	protected int[] _SecondaryTrainingSkillBonusPositions = new int[0];
 	protected int[] _SecondaryTrainingSkillSecondaryTrainingPositions = new int[0];
 	protected int[] _SecondaryTrainingSkillOsmosisTrainingPositions = new int[0];
+	*/
 	protected float _SecondaryTrainingSkillBonus = 0;
 	protected float _SecondaryTrainingSkillBaseLength = 0;
 	protected float _SecondaryTrainingSkillSecondaryLengthRate = 0;
@@ -160,19 +162,19 @@ public abstract class WeeklyTrainingType {
 		return _SecondaryTrainingSkillOsmosisLengthRate;
 	}
 	
-	public int[] getPrimaryTrainingSkillPositions() { 
+	public int[] getTrainingSkillPositions() {
 	 return _PrimaryTrainingSkillPositions;
 	}
-	public int[] getPrimaryTrainingSkillBonusPositions() {
+	public int[] getTrainingSkillBonusPositions() {
 		return _PrimaryTrainingSkillBonusPositions;
 	}
-	public int[] getPrimaryTrainingSkillSecondaryTrainingPositions() {
+	public int[] getTrainingSkillSecondaryTrainingPositions() {
 		return _PrimaryTrainingSkillSecondaryTrainingPositions;
 	}
-	public int[] getPrimaryTrainingSkillOsmosisTrainingPositions() {
+	public int[] getTrainingSkillOsmosisTrainingPositions() {
 		return _PrimaryTrainingSkillOsmosisTrainingPositions;
 	}
-	public int[] getSecondaryTrainingSkillPositions() {
+/*	public int[] getSecondaryTrainingSkillPositions() {
 		return _SecondaryTrainingSkillPositions;
 	}
 	public int[] getSecondaryTrainingSkillBonusPositions() {
@@ -184,7 +186,7 @@ public abstract class WeeklyTrainingType {
 	public int[] getSecondaryTrainingSkillOsmosisTrainingPositions() {
 		return _SecondaryTrainingSkillOsmosisTrainingPositions;
 	}
-
+*/
 	public double getPrimaryTraining(TrainingWeekPlayer tp)
 	{
 		double dPrimaryTraining = 0;
