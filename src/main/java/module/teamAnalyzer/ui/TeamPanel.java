@@ -118,30 +118,30 @@ public class TeamPanel extends JPanel {
 
             setMyTeam();
 
-            // Display man marking order
-            Lineup ownLineup = getOwnLineup();
-            var manMarkingOrder = ownLineup.getManMarkingOrder();
-            if ( manMarkingOrder != null ){
-                var manMarker = manMarkingOrder.getSubjectPlayerID();
-                var manMarkerPos = ownLineup.getPositionBySpielerId(manMarker).getId();
-                var manMarkedPos = teamLineup.getPositionByPlayerId(manMarkingOrder.getObjectPlayerID());
-                var from = lineupPanel.getMyTeam().getPanel(manMarkerPos);
-                if ( manMarkingOrderDisplay == null){
-                    manMarkingOrderDisplay = new ManMarkingOrderDisplay(grassPanel);
-                }
-                if ( manMarkedPos > 0 ){
-                    var to = lineupPanel.getOpponentTeam().getPanel(manMarkedPos);
-                    manMarkingOrderDisplay.set(from, to);
-                }
-                else {
-                    // TODO: Display warning about failed man marking order
-                    manMarkingOrderDisplay.set(from, from);
-                }
-            }
-            else if ( manMarkingOrderDisplay != null){
-                manMarkingOrderDisplay = null;
-            }
+            if ( this.lineupPanel.displayBothTeams() ) {
 
+                // Display man marking order
+                Lineup ownLineup = getOwnLineup();
+                var manMarkingOrder = ownLineup.getManMarkingOrder();
+                if (manMarkingOrder != null) {
+                    var manMarker = manMarkingOrder.getSubjectPlayerID();
+                    var manMarkerPos = ownLineup.getPositionBySpielerId(manMarker).getId();
+                    var manMarkedPos = teamLineup.getPositionByPlayerId(manMarkingOrder.getObjectPlayerID());
+                    var from = lineupPanel.getMyTeam().getPanel(manMarkerPos);
+                    if (manMarkingOrderDisplay == null) {
+                        manMarkingOrderDisplay = new ManMarkingOrderDisplay(grassPanel);
+                    }
+                    if (manMarkedPos > 0) {
+                        var to = lineupPanel.getOpponentTeam().getPanel(manMarkedPos);
+                        manMarkingOrderDisplay.set(from, to);
+                    } else {
+                        // TODO: Display warning about failed man marking order
+                        manMarkingOrderDisplay.set(from, from);
+                    }
+                } else if (manMarkingOrderDisplay != null) {
+                    manMarkingOrderDisplay = null;
+                }
+            }
 
         } else {
             lineupPanel.getOpponentTeam().setTeamName(HOVerwaltung.instance().getLanguageString("TeamPanel.TeamMessage")); //$NON-NLS-1$
@@ -191,7 +191,7 @@ public class TeamPanel extends JPanel {
     }
 
     private void setMyTeam() {
-    	HashMap<Integer, UserTeamPlayerPanel> list = new HashMap<Integer, UserTeamPlayerPanel>();
+    	HashMap<Integer, UserTeamPlayerPanel> list = new HashMap<>();
         Lineup lineup = getOwnLineup();
 
         for (int spot : IMatchRoleID.aFieldMatchRoleID) {
@@ -250,7 +250,7 @@ public class TeamPanel extends JPanel {
     }
 
     private String getPlayerName(String name) {
-        return " " + name.substring(0, 1) + "." +name.substring(name.indexOf(" ")+1);
+        return " " + name.charAt(0) + "." +name.substring(name.indexOf(" ")+1);
     }
     
     private int convertRating(double rating) {
@@ -267,7 +267,7 @@ public class TeamPanel extends JPanel {
         	// But leave a box the size of a player panel...
         	Box box = new Box(BoxLayout.X_AXIS);
         	box.setPreferredSize(playerPanel.getDefaultSize());
-        	panel.add(new javax.swing.Box(BoxLayout.X_AXIS));
+        	panel.add(box);
         }
     }
 
