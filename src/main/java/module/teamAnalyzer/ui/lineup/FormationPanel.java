@@ -54,8 +54,10 @@ public class FormationPanel extends JPanel {
      * Creates a new FormationPanel object.
      */
     public FormationPanel() {
-        setLayout(ModuleConfig.instance().getBoolean(SystemManager.ISLINEUP), ModuleConfig.instance().getBoolean(SystemManager.ISMIXEDLINEUP));
+        setLayout(displayBothTeams(), ModuleConfig.instance().getBoolean(SystemManager.ISMIXEDLINEUP));
     }
+
+    public boolean displayBothTeams() {return ModuleConfig.instance().getBoolean(SystemManager.ISLINEUP);}
 
     //~ Methods ------------------------------------------------------------------------------------
 
