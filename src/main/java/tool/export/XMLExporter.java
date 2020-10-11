@@ -17,7 +17,6 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.net.MyConnector;
-import core.net.login.LoginWaitDialog;
 import core.rating.RatingPredictionManager;
 import core.util.HOLogger;
 import module.lineup.Lineup;
@@ -115,17 +114,14 @@ public class XMLExporter  {
 
             if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
                 file = fileChooser.getSelectedFile();
-                waitDialog =new LoginWaitDialog(HOMainFrame.instance());
-                waitDialog.setVisible(true);
+				HOMainFrame.instance().setWaitInformation(0);
 				saveXML(file.getAbsolutePath(),new Timestamp(m_clSpinnerModel.getDate().getTime()));
             }
         } catch (Exception ex) {
             HOLogger.instance().log(getClass(),ex);
         }
 
-        if (waitDialog != null) {
-            waitDialog.setVisible(false);
-        }
+        HOMainFrame.instance().resetInformation();
     }
 
 

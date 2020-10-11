@@ -11,7 +11,6 @@ import core.model.WorldDetailsManager;
 import core.model.match.MatchType;
 import core.net.DownloadDialog;
 import core.net.MyConnector;
-import core.net.login.LoginWaitDialog;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
 import module.ifa.gif.Quantize;
@@ -67,9 +66,10 @@ public class PluginIfaUtils {
 			new DownloadDialog();
 		} while (retry == true && !(retry = false));
 
-		JWindow waitWindow = new LoginWaitDialog(HOMainFrame.instance());
+		//JWindow waitWindow = new LoginWaitDialog(HOMainFrame.instance());
 		try {
-			waitWindow.setVisible(true);
+			//waitWindow.setVisible(true);
+			HOMainFrame.instance().setWaitInformation(0);
 			if(time != null)
 			{
 				Date from = DateHelper.getDate(DBManager.instance()
@@ -84,9 +84,9 @@ public class PluginIfaUtils {
 					insertMatches(from, new Date());
 				}
 			}
-			waitWindow.setVisible(false);
+			HOMainFrame.instance().resetInformation();
 		} catch (Exception e) {
-			waitWindow.setVisible(false);
+			HOMainFrame.instance().resetInformation();
 			HOLogger.instance().error(PluginIfaUtils.class, e);
 			return false;
 		}

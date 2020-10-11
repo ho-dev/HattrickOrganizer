@@ -207,7 +207,7 @@ public class ProxyDialog extends JDialog {
 					(size.height / 2) - (this.getSize().height / 2));
 		}
 
-		new LoginWaitDialog(this);
+		HOMainFrame.instance().setWaitInformation(0);
 	}
 
 	private void addListeners() {

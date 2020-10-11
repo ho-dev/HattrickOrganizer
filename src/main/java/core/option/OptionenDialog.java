@@ -8,7 +8,6 @@ import core.model.UserParameter;
 import core.module.ModuleConfigPanel;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
-import core.net.login.LoginWaitDialog;
 import core.util.Helper;
 import core.util.Updater;
 import java.awt.BorderLayout;
@@ -167,10 +166,9 @@ public class OptionenDialog extends JDialog {
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 		if (OptionManager.instance().isReInitNeeded()) {
-			LoginWaitDialog waitdialog = new LoginWaitDialog(HOMainFrame.instance());
-			waitdialog.setVisible(true);
+			HOMainFrame.instance().setWaitInformation(0);
 			RefreshManager.instance().doReInit();
-			waitdialog.setVisible(false);
+			HOMainFrame.instance().resetInformation();
 		}
 	}
 }

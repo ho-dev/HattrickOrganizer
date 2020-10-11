@@ -103,10 +103,7 @@ final class AufstellungsNameDialog extends JDialog implements ActionListener {
 			}
 
 			if (checkName(nameTextField.getText(), true)) {
-				HOMainFrame
-						.instance()
-						.getInfoPanel()
-						.setLangInfoText(
+				HOMainFrame.instance().setInformation(
 								HOVerwaltung.instance().getLanguageString("Aufstellung") + " "
 										+ nameTextField.getText() + " "
 										+ HOVerwaltung.instance().getLanguageString("gespeichert"));
@@ -122,10 +119,7 @@ final class AufstellungsNameDialog extends JDialog implements ActionListener {
 						JOptionPane.YES_NO_OPTION);
 
 				if (value == JOptionPane.YES_OPTION) {
-					HOMainFrame
-							.instance()
-							.getInfoPanel()
-							.setLangInfoText(
+					HOMainFrame.instance().setInformation(
 									HOVerwaltung.instance().getLanguageString("Aufstellung")
 											+ " "
 											+ nameTextField.getText()

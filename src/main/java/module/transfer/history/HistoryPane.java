@@ -9,7 +9,6 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.net.login.LoginWaitDialog;
 import core.util.Helper;
 import core.util.CurrencyUtils;
 import module.training.ui.comp.DividerListener;
@@ -164,12 +163,9 @@ public class HistoryPane extends JSplitPane {
 
 	                if (choice == JOptionPane.YES_OPTION) {
 	                    try {
-	                        final JWindow waitWindow = new LoginWaitDialog(HOMainFrame.instance());
-	                        waitWindow.setVisible(true);
-
+	                        HOMainFrame.instance().setWaitInformation(0);
 	                        DBManager.instance().updateTeamTransfers(teamId);
-	                        waitWindow.setVisible(false);
-	                        waitWindow.dispose();
+                            HOMainFrame.instance().resetInformation();
 	                    } catch (Exception ex) {
 	                        ex.printStackTrace();
 	                    }

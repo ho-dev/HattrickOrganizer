@@ -24,7 +24,6 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
-import core.net.login.LoginWaitDialog;
 import core.util.HOLogger;
 import core.util.IOUtils;
 import module.lineup.substitution.model.Substitution;
@@ -56,15 +55,15 @@ public class ConvertXml2Hrf {
 	 * 
 	 * @throws IOException
 	 */
-	public static String createHrf(LoginWaitDialog waitDialog)
+	public static String createHrf()
 			throws IOException {
 		// init
 		StringBuilder buffer = new StringBuilder();
 
 		// Hashtable's füllen
 		final MyConnector mc = MyConnector.instance();
-		waitDialog.setValue(5);
-		
+		HOMainFrame.instance().setWaitInformation(5);
+
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		String teamDetails = mc.getTeamdetails(-1);
 		
@@ -95,12 +94,12 @@ public class ConvertXml2Hrf {
 		
 		Map<String, String> teamdetailsDataMap = XMLTeamDetailsParser
 				.parseTeamdetailsFromString(teamDetails, teamId);
-		waitDialog.setValue(10);
+		HOMainFrame.instance().setWaitInformation(10);
 		Map<String, String> clubDataMap = XMLClubParser.parseClubFromString(mc.getVerein(teamId));
-		waitDialog.setValue(15);
+		HOMainFrame.instance().setWaitInformation(15);
 		Map<String, String> ligaDataMap = XMLLeagueDetailsParser.parseLeagueDetailsFromString(mc.getLeagueDetails(teamdetailsDataMap.get("LeagueLevelUnitID")),
 						teamdetailsDataMap.get("TeamID").toString());
-		waitDialog.setValue(20);
+		HOMainFrame.instance().setWaitInformation(20);
 		Map<String, String> worldDataMap = XMLWorldDetailsParser.parseWorldDetailsFromString(
 				mc.getWorldDetails(Integer.parseInt(teamdetailsDataMap
 						.get("LeagueID").toString())),
@@ -135,25 +134,25 @@ public class ConvertXml2Hrf {
 				HOLogger.instance().error(ConvertXml2Hrf.class, "ConvertXML2Hrf: No primary team found!");
 			}
 		}
-		
-		
-		waitDialog.setValue(25);
+
+
+		HOMainFrame.instance().setWaitInformation(25);
 		MatchLineup matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(mc.getMatchLineup(-1, teamId,
 						MatchType.LEAGUE).toString());
-		waitDialog.setValue(30);
+		HOMainFrame.instance().setWaitInformation(30);
 		List<MyHashtable> playersData = new xmlPlayersParser()
 				.parsePlayersFromString(mc.getPlayers(teamId));
-		waitDialog.setValue(35);
+		HOMainFrame.instance().setWaitInformation(35);
 		Map<String, String> economyDataMap = XMLEconomyParser
 				.parseEconomyFromString(mc.getEconomy(teamId));
-		waitDialog.setValue(40);
+		HOMainFrame.instance().setWaitInformation(40);
 		Map<String, String> trainingDataMap = XMLTrainingParser
 				.parseTrainingFromString(mc.getTraining(teamId));
-		waitDialog.setValue(45);
+		HOMainFrame.instance().setWaitInformation(45);
 		List<MyHashtable> staffData = XMLStaffParser
 				.parseStaffFromString(mc.getStaff(teamId));
-		waitDialog.setValue(50);
-		
+		HOMainFrame.instance().setWaitInformation(50);
+
 		int arenaId = 0;
 		try {
 			arenaId = Integer.parseInt(teamdetailsDataMap.get("ArenaID"));
@@ -164,18 +163,18 @@ public class ConvertXml2Hrf {
 				.parseArenaFromString(mc.getArena(arenaId));
 
 		// MatchOrder
-		waitDialog.setValue(50);
+		HOMainFrame.instance().setWaitInformation(55);
 		List<MatchKurzInfo> matches = XMLMatchesParser
 				.parseMatchesFromString(mc.getMatches(Integer
 						.parseInt(teamdetailsDataMap.get("TeamID").toString()),
 						false, true));
-		waitDialog.setValue(52);
+		HOMainFrame.instance().setWaitInformation(57);
 
 		// Automatisch alle MatchLineups runterladen
 		Map<String, String> nextLineupDataMap = null;
 		for (MatchKurzInfo match : matches) {
 			if ((match.getMatchStatus() == MatchKurzInfo.UPCOMING)){
-				waitDialog.setValue(54);
+				HOMainFrame.instance().setWaitInformation(58);
 				// Match is always from the normal system, and league will do
 				// the trick as the type.
 				nextLineupDataMap = XMLMatchOrderParser
@@ -185,7 +184,7 @@ public class ConvertXml2Hrf {
 			}
 		}
 
-		waitDialog.setValue(55);
+		HOMainFrame.instance().setWaitInformation(59);
 
 		MatchLineupTeam matchLineupTeam = null;
 		int lastAttitude = 0;
@@ -214,46 +213,46 @@ public class ConvertXml2Hrf {
 		}
 
 		// Abschnitte erstellen
-		waitDialog.setValue(60);
+		HOMainFrame.instance().setWaitInformation(60);
 
 		// basics
 		createBasics(teamdetailsDataMap, worldDataMap, buffer);
-		waitDialog.setValue(65);
+		HOMainFrame.instance().setWaitInformation(65);
 
 		// Liga
 		createLeague(ligaDataMap, buffer);
-		waitDialog.setValue(70);
+		HOMainFrame.instance().setWaitInformation(70);
 
 		// Club
 		createClub(clubDataMap, economyDataMap, teamdetailsDataMap, buffer);
-		waitDialog.setValue(75);
+		HOMainFrame.instance().setWaitInformation(75);
 
 		// team
 		createTeam(trainingDataMap, buffer);
-		waitDialog.setValue(80);
+		HOMainFrame.instance().setWaitInformation(80);
 
 		// lineup
 		buffer.append(createLineUp(
 				String.valueOf(teamdetailsDataMap.get("TrainerID")),
 				nextLineupDataMap));
-		waitDialog.setValue(85);
+		HOMainFrame.instance().setWaitInformation(85);
 
 		// economy
 		createEconemy(economyDataMap, buffer);
-		waitDialog.setValue(90);
+		HOMainFrame.instance().setWaitInformation(90);
 
 		// Arena
 		createArena(arenaDataMap, buffer);
-		waitDialog.setValue(93);
+		HOMainFrame.instance().setWaitInformation(93);
 
 		// players
 		createPlayers(matchLineupTeam, playersData, buffer);
-		waitDialog.setValue(96);
+		HOMainFrame.instance().setWaitInformation(96);
 
 		// xtra Data
 		createWorld(clubDataMap, teamdetailsDataMap, trainingDataMap,
 				worldDataMap, buffer);
-		waitDialog.setValue(99);
+		HOMainFrame.instance().setWaitInformation(99);
 
 		// lineup from the last match
 		createLastLineUp(teamdetailsDataMap, matchLineupTeam, lastAttitude,
@@ -261,8 +260,8 @@ public class ConvertXml2Hrf {
 		
 		// staff
 		createStaff(staffData, buffer);
-		
-		waitDialog.setValue(100);
+
+		HOMainFrame.instance().setWaitInformation(100);
 
 		return buffer.toString();
 	}
