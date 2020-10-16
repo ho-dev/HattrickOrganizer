@@ -47,7 +47,7 @@
   </files>
   <launchers>
     <launcher name="HO (portable)" id="59" unixMode="777">
-      <executable name="HO" iconSet="true" stderrFile="./logs/error.log" redirectStdout="true" stdoutFile="./logs/output.log" executableMode="gui" singleInstance="true" />
+      <executable name="HO" iconSet="true" stderrFile="./logs/error.log" redirectStdout="true" stdoutFile="./logs/output.log" executableMode="gui" />
       <java mainClass="core.HOLauncher">
         <classPath>
           <scanDirectory location="." failOnError="false" />
@@ -59,7 +59,7 @@
       </iconImageFiles>
     </launcher>
     <launcher name="HO - Linux" id="274" unixMode="777" menuName="HO">
-      <executable name="HO" iconSet="true" stderrFile="${installer:sys.userHome}/.ho/logs/error.log" redirectStdout="true" stdoutFile="${installer:sys.userHome}/.ho/output.log" executableMode="gui" singleInstance="true" />
+      <executable name="HO" iconSet="true" stderrFile="${installer:sys.userHome}/.ho/logs/error.log" redirectStdout="true" stdoutFile="${installer:sys.userHome}/.ho/output.log" executableMode="gui" />
       <java mainClass="core.HOLauncher" arguments="installed">
         <classPath>
           <scanDirectory location="." failOnError="false" />
@@ -74,7 +74,7 @@ Categories=Game</desktopFile>
       </iconImageFiles>
     </launcher>
     <launcher name="HO - Win" id="497" unixMode="777" menuName="HO">
-      <executable name="HO" iconSet="true" stderrFile="${installer:sys.appdataDir}/HO/logs/error.log" redirectStdout="true" stdoutFile="${i${installer:sys.appdataDir}/HO/logs/output.log" executableMode="gui" singleInstance="true" />
+      <executable name="HO" iconSet="true" stderrFile="${installer:sys.appdataDir}/HO/logs/error.log" redirectStdout="true" stdoutFile="${i${installer:sys.appdataDir}/HO/logs/output.log" executableMode="gui" />
       <java mainClass="core.HOLauncher" arguments="installed">
         <classPath>
           <scanDirectory location="." failOnError="false" />
@@ -89,7 +89,7 @@ Categories=Game</desktopFile>
       </iconImageFiles>
     </launcher>
     <launcher name="HO - Mac" id="606" unixMode="777" menuName="HO">
-      <executable name="HO" iconSet="true" stderrFile="${installer:sys.appdataDir}/HO/logs/error.log" redirectStdout="true" stdoutFile="${installer:sys.appdataDir}/HO/logs/output.log" executableMode="gui" singleInstance="true" />
+      <executable name="HO" iconSet="true" stderrFile="${installer:sys.appdataDir}/HO/logs/error.log" redirectStdout="true" stdoutFile="${installer:sys.appdataDir}/HO/logs/output.log" executableMode="gui" />
       <java mainClass="core.HOLauncher" arguments="installed">
         <classPath>
           <scanDirectory location="." failOnError="false" />
