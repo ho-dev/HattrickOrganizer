@@ -1036,20 +1036,28 @@ public class Lineup{
 	 */
 	public final void setSpielerAtPosition(int positionID, int playerID) {
 		final MatchRoleID position = getPositionById(positionID);
-		//if player changed is in starting eleven it has to be remove from previous occupied place
-		if( !position.isBackupsMatchRoleID()) { //!IMatchRoleID.aBackupssMatchRoleID.contains(positionID)){
-			MatchRoleID oldPlayerRole = getPositionBySpielerId(playerID);
-			if(oldPlayerRole != null && oldPlayerRole.isFieldMatchRoleId()){
+		MatchRoleID oldPlayerRole = getPositionBySpielerId(playerID);
+		if(oldPlayerRole != null) {
+			if (position.isFieldMatchRoleId()) {
+				//if player changed is in starting eleven it has to be remove from previous occupied positions
 				oldPlayerRole.setSpielerId(0, this);
-				if ( oldPlayerRole.isSubstitutesMatchRoleID()){
+				if (oldPlayerRole.isSubstitutesMatchRoleID()) {
 					removeObjectPlayerFromSubstitutions(playerID);
+					// player can occupy multiple bench positions
+					oldPlayerRole = getPositionBySpielerId(playerID);
+					while ( oldPlayerRole != null){
+						oldPlayerRole.setSpielerId(0,this);
+						oldPlayerRole = getPositionBySpielerId(playerID);
+					}
+				}
+			} else {
+				// position is on bench (or backup), remove him from field position
+				if (oldPlayerRole.isFieldMatchRoleId()) {
+					oldPlayerRole.setSpielerId(0, this);
 				}
 			}
 		}
-
-		//final MatchRoleID position = getPositionById(positionID);
 		position.setSpielerId(playerID, this);
-
 	}
 
 	/**
