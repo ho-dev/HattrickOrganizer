@@ -1051,7 +1051,7 @@ public class Lineup{
 					}
 				}
 			} else {
-				// position is on bench (or backup), remove him from field position
+				// position is on bench (or backup), remove him from field position, but not from other bench positions
 				if (oldPlayerRole.isFieldMatchRoleId()) {
 					oldPlayerRole.setSpielerId(0, this);
 				}
