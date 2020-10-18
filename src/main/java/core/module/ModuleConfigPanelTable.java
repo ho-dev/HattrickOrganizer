@@ -58,10 +58,6 @@ class ModuleConfigPanelTable extends JTable implements ActionListener{
 
 	}
 
-//	private JLabel getLabel( String txt) {
-//		JLabel tmp = new JLabel(txt);
-//		return tmp;
-//	}
 
 	private JComboBox getComboBox(IModule module){
 		JComboBox cBox = new JComboBox(stateDescriptions);
@@ -70,18 +66,7 @@ class ModuleConfigPanelTable extends JTable implements ActionListener{
 		cBox.addActionListener(this);
 		return cBox;
 	}
-	
-//	private JCheckBox getCheckbox(IModule module, boolean value, String name) {
-//	    JCheckBox tmp = new JCheckBox();
-//	    tmp.setName(name);
-//	    tmp.putClientProperty("MODULE", module);
-//	    tmp.setOpaque(false);
-//	    tmp.setSelected(value);
-//	    tmp.addActionListener(this);
-//	    tmp.setHorizontalAlignment(SwingConstants.CENTER);
-//    return tmp;
-//	}
-	
+
 	private JButton getButton(IModule module) {
 		JButton tmp = new JButton(ThemeManager.getIcon(HOIconName.INFO));
 		tmp.putClientProperty("MODULE", module);
