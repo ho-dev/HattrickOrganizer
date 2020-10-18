@@ -83,7 +83,7 @@ The following companies are kindly supporting HO open source project:
 <a href="https://anvil.works/"> <img src="https://user-images.githubusercontent.com/1136496/74674400-8d4e4680-51b1-11ea-80ea-d04d554a30ba.png" width="34" height="34" alt="Anvil"> </a> [**Anvil**](https://anvil.works/): Full stack web apps
 with nothing but Python
 
-<a href="https://www.ej-technologies.com/products/install4j/overview.html/"> <img src="https://user-images.githubusercontent.com/1136496/83647200-f026ea80-a5b4-11ea-80de-5f6cb9583783.png" alt="Intall4j" width="92" height="26"> </a> [**Install4j**](https://https://www.ej-technologies.com/products/install4j/overview.html/): powerful multi-platform Java installer builder that generates native installers and application launchers for Java applications
+<a href="https://www.ej-technologies.com/products/install4j/overview.html/"> <img src="https://user-images.githubusercontent.com/1136496/83647200-f026ea80-a5b4-11ea-80de-5f6cb9583783.png" alt="Intall4j" width="92" height="26"> </a> [**Install4j**](https://www.ej-technologies.com/products/install4j/overview.html/): powerful multi-platform Java installer builder that generates native installers and application launchers for Java applications
 
 ## Dependencies
 
