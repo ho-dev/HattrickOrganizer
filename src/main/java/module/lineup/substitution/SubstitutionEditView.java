@@ -360,21 +360,23 @@ public class SubstitutionEditView extends JPanel {
 			add(this.playerInComboBox, gbc);
 		}
 
-		if (this.orderType != MatchOrderType.POSITION_SWAP && this.orderType != MatchOrderType.MAN_MARKING) {
+		if( this.orderType != MatchOrderType.MAN_MARKING) {
 			this.behaviourComboBox = new JComboBox();
-			JLabel behaviourLabel = new JLabel(HOVerwaltung.instance()
-					.getLanguageString("subs.Behavior"));
-			gbc.gridx = 0;
-			gbc.gridy++;
-			gbc.anchor = GridBagConstraints.WEST;
-			gbc.insets = new Insets(4, 10, 4, 2);
-			add(behaviourLabel, gbc);
+			if (this.orderType != MatchOrderType.POSITION_SWAP ) {
+				JLabel behaviourLabel = new JLabel(HOVerwaltung.instance()
+						.getLanguageString("subs.Behavior"));
+				gbc.gridx = 0;
+				gbc.gridy++;
+				gbc.anchor = GridBagConstraints.WEST;
+				gbc.insets = new Insets(4, 10, 4, 2);
+				add(behaviourLabel, gbc);
 
-			this.behaviourComboBox.setMinimumSize(comboBoxSize);
-			this.behaviourComboBox.setPreferredSize(comboBoxSize);
-			gbc.gridx = 1;
-			gbc.insets = new Insets(4, 2, 4, 10);
-			add(this.behaviourComboBox, gbc);
+				this.behaviourComboBox.setMinimumSize(comboBoxSize);
+				this.behaviourComboBox.setPreferredSize(comboBoxSize);
+				gbc.gridx = 1;
+				gbc.insets = new Insets(4, 2, 4, 10);
+				add(this.behaviourComboBox, gbc);
+			}
 		}
 
 		if ( this.orderType != MatchOrderType.MAN_MARKING) {
