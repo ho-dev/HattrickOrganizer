@@ -118,26 +118,30 @@ public class TeamPanel extends JPanel {
 
             setMyTeam();
 
-            // Display man marking order
-            Lineup ownLineup = getOwnLineup();
-            var manMarkingOrder = ownLineup.getManMarkingOrder();
-            if ( manMarkingOrder != null ){
-                var manMarker = manMarkingOrder.getSubjectPlayerID();
-                var manMarkerPos = ownLineup.getPositionBySpielerId(manMarker).getId();
-                var manMarkedPos = teamLineup.getPositionByPlayerId(manMarkingOrder.getObjectPlayerID());
-                if ( manMarkedPos > 0 ){
+            if ( this.lineupPanel.displayBothTeams() ) {
+
+                // Display man marking order
+                Lineup ownLineup = getOwnLineup();
+                var manMarkingOrder = ownLineup.getManMarkingOrder();
+                if (manMarkingOrder != null) {
+                    var manMarker = manMarkingOrder.getSubjectPlayerID();
+                    var manMarkerPos = ownLineup.getPositionBySpielerId(manMarker).getId();
+                    var manMarkedPos = teamLineup.getPositionByPlayerId(manMarkingOrder.getObjectPlayerID());
                     var from = lineupPanel.getMyTeam().getPanel(manMarkerPos);
-                    var to = lineupPanel.getOpponentTeam().getPanel(manMarkedPos);
-                    if ( manMarkingOrderDisplay == null){
+                    if (manMarkingOrderDisplay == null) {
                         manMarkingOrderDisplay = new ManMarkingOrderDisplay(grassPanel);
                     }
-                    manMarkingOrderDisplay.set(from, to);
-                }
-                else {
-                    // TODO: Display warning about failed man marking order
+                    if (manMarkedPos > 0) {
+                        var to = lineupPanel.getOpponentTeam().getPanel(manMarkedPos);
+                        manMarkingOrderDisplay.set(from, to);
+                    } else {
+                        // TODO: Display warning about failed man marking order
+                        manMarkingOrderDisplay.set(from, from);
+                    }
+                } else if (manMarkingOrderDisplay != null) {
+                    manMarkingOrderDisplay = null;
                 }
             }
-
 
         } else {
             lineupPanel.getOpponentTeam().setTeamName(HOVerwaltung.instance().getLanguageString("TeamPanel.TeamMessage")); //$NON-NLS-1$
@@ -187,7 +191,7 @@ public class TeamPanel extends JPanel {
     }
 
     private void setMyTeam() {
-    	HashMap<Integer, UserTeamPlayerPanel> list = new HashMap<Integer, UserTeamPlayerPanel>();
+    	HashMap<Integer, UserTeamPlayerPanel> list = new HashMap<>();
         Lineup lineup = getOwnLineup();
 
         for (int spot : IMatchRoleID.aFieldMatchRoleID) {
@@ -246,7 +250,7 @@ public class TeamPanel extends JPanel {
     }
 
     private String getPlayerName(String name) {
-        return " " + name.substring(0, 1) + "." +name.substring(name.indexOf(" ")+1);
+        return " " + name.charAt(0) + "." +name.substring(name.indexOf(" ")+1);
     }
     
     private int convertRating(double rating) {
@@ -263,7 +267,7 @@ public class TeamPanel extends JPanel {
         	// But leave a box the size of a player panel...
         	Box box = new Box(BoxLayout.X_AXIS);
         	box.setPreferredSize(playerPanel.getDefaultSize());
-        	panel.add(new javax.swing.Box(BoxLayout.X_AXIS));
+        	panel.add(box);
         }
     }
 
@@ -284,14 +288,14 @@ public class TeamPanel extends JPanel {
         JComponent parent;
         public ManMarkingOrderDisplay(JPanel grassPanel) {
             parent = grassPanel;
-            parent.add(this);
+            parent.add(this,0);
         }
 
         public void set(JPanel from, JPanel to) {
-            xfrom = x(from) + from.getWidth() / 2;
-            yfrom = y(from);
-            xto = x(to)  + to.getWidth() / 2;
-            yto = y(to)  + to.getHeight();
+            xfrom = x(from) + (int) (from.getWidth() * 0.15);
+            yfrom = y(from) + (int) (from.getHeight() * 0.25);
+            xto = x(to) + (int) (to.getWidth() * 0.85);
+            yto = y(to) + (int) (to.getHeight() * 0.75);
         }
 
         private int y(Container component) {
@@ -308,6 +312,7 @@ public class TeamPanel extends JPanel {
 
         @Override
         protected void paintComponent(Graphics gIn) {
+            //super.paintComponent(gIn);
             // adapted from aioobe, https://stackoverflow.com/questions/4112701/drawing-a-line-with-arrow-in-java
             double dx = xto - xfrom, dy = yto - yfrom;
             double angle = Math.atan2(dy, dx);
@@ -321,8 +326,8 @@ public class TeamPanel extends JPanel {
             g.setPaint(Color.RED);
             g.setStroke(new BasicStroke(5));
             // Draw horizontal arrow starting in (0, 0)
-            g.drawLine(0, 0, len, 0);
-            g.fillPolygon(new int[] {len+2, len-ARR_SIZE+2, len-ARR_SIZE+2, len+2},
+            g.drawLine(0, 0, len-ARR_SIZE, 0);
+            g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
                     new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
         }
 
