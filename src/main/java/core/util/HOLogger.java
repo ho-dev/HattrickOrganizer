@@ -40,20 +40,14 @@ public class HOLogger {
 		logsFolder = new File(logsFolderName);
 		
 		if (!logsFolder.exists()) {
-			logFolderExist = false;
-			File parentFolder = new File(UserManager.instance().getDbParentFolder());
-
-			if (parentFolder.canWrite()) {
-				logFolderExist = logsFolder.mkdirs();
-			}
+			logFolderExist = logsFolder.getParentFile().mkdirs();
 			if (!logFolderExist) {
-				errorMsg = "Could not initialize the log folder.\n";
-				errorMsg += "Check you have writing rights to the following directory\n" + parentFolder.getAbsolutePath() + "\n";
+				errorMsg = "Could not initialize the log folder: " + logsFolderName + "\n";
 				System.err.println(errorMsg);
 			}
 		}
 
-		if (logFolderExist){
+		if(logFolderExist){
 		try {
 			deleteOldLogs(logsFolder);
 			File logFile = new File(logsFolder, fileName);
