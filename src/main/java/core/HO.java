@@ -82,6 +82,7 @@ public class HO {
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 
 		if (args != null) {
+			args = Arrays.stream(args).map(String::toUpperCase).toArray(String[]::new);
 			if(Arrays.asList(args).contains("INSTALLED")) {portable_version = false;};
 			String arg;
 			for (String _arg : args) {

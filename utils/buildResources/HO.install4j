@@ -74,7 +74,7 @@ Categories=Game</desktopFile>
       </iconImageFiles>
     </launcher>
     <launcher name="HO - Win" id="497" unixMode="777" menuName="HO">
-      <executable name="HO" iconSet="true" stderrFile="${installer:sys.appdataDir}/HO/logs/error.log" redirectStdout="true" stdoutFile="${i${installer:sys.appdataDir}/HO/logs/output.log" executableMode="gui" />
+      <executable name="HO" iconSet="true" stderrFile="${installer:sys.appdataDir}/HO/logs/error.log" redirectStdout="true" stdoutFile="${installer:sys.appdataDir}/HO/logs/output.log" executableMode="gui" />
       <java mainClass="core.HOLauncher" arguments="installed">
         <classPath>
           <scanDirectory location="." failOnError="false" />
