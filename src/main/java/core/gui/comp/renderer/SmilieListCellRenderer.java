@@ -2,12 +2,9 @@
 package core.gui.comp.renderer;
 
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.theme.GroupTeamFactory;
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
-
-import javax.swing.SwingConstants;
-
+import core.gui.theme.*;
+import javax.swing.*;
+import java.util.Arrays;
 
 
 /**
@@ -29,8 +26,18 @@ public final class SmilieListCellRenderer implements javax.swing.ListCellRendere
                                                                  boolean isSelected,
                                                                  boolean cellHasFocus) {
         if (obj instanceof String && !"".equals(obj)) {
-            m_clEntry.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(obj.toString()));
-            return m_clEntry.getComponent(isSelected);
+
+            if (Arrays.stream(HOIconName.SMILEYS).anyMatch(obj::equals)) {
+                // smiley icon
+                int size = 22;
+                if (obj.equals("smiley-happy") || obj.equals("smiley-sad") || obj.equals("smiley-neutral")) size = 18;
+                m_clEntry.setIcon(ImageUtilities.getSvgIcon(obj.toString(), size, size));
+                return m_clEntry.getComponent(isSelected);
+            } else if (Arrays.stream(GroupTeamFactory.TEAMSMILIES).anyMatch(obj::equals)) {
+                // jersey icon
+                m_clEntry.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(obj.toString()));
+                return m_clEntry.getComponent(isSelected);
+            }
         }
 
         m_jlLeer.setOpaque(true);
