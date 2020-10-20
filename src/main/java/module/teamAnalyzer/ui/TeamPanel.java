@@ -41,8 +41,6 @@ public class TeamPanel extends JPanel {
 
     ManMarkingOrderDisplay manMarkingOrderDisplay;
 
-    private Lineup ownLineup;
-
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -272,14 +270,7 @@ public class TeamPanel extends JPanel {
     }
 
     public Lineup getOwnLineup() {
-        if ( ownLineup == null) {
-            ownLineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-        }
-        return ownLineup;
-    }
-
-    public void setOwnLineup(Lineup ownLineup) {
-        this.ownLineup = ownLineup;
+        return HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
     }
 
     private class ManMarkingOrderDisplay extends JPanel {
