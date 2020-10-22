@@ -57,21 +57,20 @@ public class DatabaseOptionsDialog extends JDialog {
 			DatabaseUserEditDialog dlg = new DatabaseUserEditDialog(DatabaseOptionsDialog.this, newUser, true);
 			dlg.setVisible(true);
 			if (! dlg.isCanceled()) {
-				UserManager.instance().addUser(newUser);
+				UserManager.instance().addUser(dlg.getUser());
 				saveAndReload();
 			}
 		    });
 
-		this.editButton.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				DatabaseUserEditDialog dlg = new DatabaseUserEditDialog(DatabaseOptionsDialog.this,
-						getSelectedUser());
-				dlg.setVisible(true);
-				if (!dlg.isCanceled()) {
-					saveAndReload();
-				}
+		this.editButton.addActionListener(e -> {
+			User thisUser = getSelectedUser();
+			DatabaseUserEditDialog dlg = new DatabaseUserEditDialog(DatabaseOptionsDialog.this, getSelectedUser());
+			dlg.setVisible(true);
+			if (!dlg.isCanceled()) {
+				UserManager.instance().getAllUser().remove(thisUser);
+				UserManager.instance().addUser(dlg.getUser());
+				saveAndReload();
 			}
 		});
 

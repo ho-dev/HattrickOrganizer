@@ -17,6 +17,7 @@ import core.util.OSUtils;
 import java.io.File;
 import javax.swing.*;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Locale;
 
 
@@ -81,6 +82,8 @@ public class HO {
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 
 		if (args != null) {
+			args = Arrays.stream(args).map(String::toUpperCase).toArray(String[]::new);
+			if(Arrays.asList(args).contains("INSTALLED")) {portable_version = false;};
 			String arg;
 			for (String _arg : args) {
 				arg = _arg.trim().toUpperCase();
@@ -89,7 +92,6 @@ public class HO {
 					case "DEBUG" -> HOLogger.instance().setLogLevel(HOLogger.DEBUG);
 					case "WARNING" -> HOLogger.instance().setLogLevel(HOLogger.WARNING);
 					case "ERROR" -> HOLogger.instance().setLogLevel(HOLogger.ERROR);
-					case "INSTALLED" -> portable_version = false;
 				}
 			}
 		}

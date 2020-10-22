@@ -5,6 +5,7 @@ import core.gui.comp.NumericDocument;
 import core.model.HOVerwaltung;
 import core.util.GUIUtils;
 import core.util.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -28,6 +29,11 @@ public class DatabaseUserEditDialog extends JDialog {
 	private JTextField nameTextField;
 	private JTextField databaseNameTextField;
 	private JTextField numberOfBackupsTextField;
+
+	public User getUser() {
+		return user;
+	}
+
 	private User user;
 	private boolean canceled = true;
 	private final boolean isNew;
@@ -48,7 +54,7 @@ public class DatabaseUserEditDialog extends JDialog {
 		checkCanSave();
 	}
 
-	public DatabaseUserEditDialog(Window parent, User user) {
+	public DatabaseUserEditDialog(Window parent, @Nullable User user) {
 		this(parent, user, false);
 	}
 
@@ -206,11 +212,6 @@ public class DatabaseUserEditDialog extends JDialog {
 		});
 
 		this.saveButton.addActionListener(e -> {
-//				user.setName(nameTextField.getText());
-//				user.setDbName(databaseNameTextField.getText());
-//				user.setNtTeam(ntTeamYes.isSelected());
-//				user.setBackupLevel(Integer.parseInt(numberOfBackupsTextField.getText()));
-//				user.fillUserInfos();
 				user = new User(nameTextField.getText(), databaseNameTextField.getText(), Integer.parseInt(numberOfBackupsTextField.getText()),
 						ntTeamYes.isSelected());
 				canceled = false;
@@ -235,31 +236,13 @@ public class DatabaseUserEditDialog extends JDialog {
 			}
 		};
 
-		ActionListener actionListener = new ActionListener() {
-			public void actionPerformed(ActionEvent actionEvent) {
-				checkCanSave();
-			}
-		};
+		ActionListener actionListener = actionEvent -> checkCanSave();
 
 		this.nameTextField.getDocument().addDocumentListener(documentListener);
 		this.databaseNameTextField.getDocument().addDocumentListener(documentListener);
 		this.numberOfBackupsTextField.getDocument().addDocumentListener(documentListener);
 		this.ntTeamNo.addActionListener(actionListener);
 		this.ntTeamYes.addActionListener(actionListener);
-	}
-
-	private void openFileChooser() {
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setSelectedFile(new File(System.getProperty("user.dir")));
-		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-		int state = fileChooser.showOpenDialog(this);
-		if (state == JFileChooser.APPROVE_OPTION) {
-			File file = fileChooser.getSelectedFile();
-			if (file != null) {
-				this.databaseNameTextField.setText(file.getAbsolutePath());
-			}
-		}
 	}
 
 	private void checkCanSave() {
@@ -280,58 +263,9 @@ public class DatabaseUserEditDialog extends JDialog {
 				!(this.user.isNtTeam() == ntTeamYes.isSelected()));
 	}
 
-	private boolean checkDirectory() {
-		String path = this.databaseNameTextField.getText();
-		File file = new File(path);
-
-		if (file.isFile()) {
-			JOptionPane.showMessageDialog(this,
-					getLangStr("db.options.dlg.error.locationIsNotDir"), getLangStr("Fehler"),
-					JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
-
-		if (!file.exists()) {
-			String msg = getLangStr("db.options.dlg.msg.dirDoesNotExist", file.getAbsolutePath())
-					+ "\n" + getLangStr("db.options.dlg.question.createDir");
-			int res = JOptionPane.showConfirmDialog(this, msg, HOVerwaltung.instance().getLanguageString("confirmation.title"), JOptionPane.YES_NO_OPTION);
-			if (res == JOptionPane.YES_OPTION) {
-				if (!file.mkdirs()) {
-					JOptionPane
-							.showMessageDialog(
-									this,
-									getLangStr("db.options.dlg.error.dirNotCreated",
-											file.getAbsolutePath()), getLangStr("Fehler"),
-									JOptionPane.ERROR_MESSAGE);
-					return false;
-				}
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		if (file.exists() && !file.canRead()) {
-			JOptionPane.showMessageDialog(this,
-					getLangStr("db.options.dlg.error.dirNotReadable", file.getAbsolutePath()),
-					getLangStr("Fehler"), JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
-
-		if (file.exists() && !file.canWrite()) {
-			JOptionPane.showMessageDialog(this,
-					getLangStr("db.options.dlg.error.dirNotWriteable", file.getAbsolutePath()),
-					getLangStr("Fehler"), JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
-		return true;
-	}
 
 	private String getLangStr(String key) {
 		return HOVerwaltung.instance().getLanguageString(key);
 	}
 
-	private String getLangStr(String key, Object... values) {
-		return HOVerwaltung.instance().getLanguageString(key, values);
-	}
 }

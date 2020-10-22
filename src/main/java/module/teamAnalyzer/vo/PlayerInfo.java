@@ -48,8 +48,8 @@ public class PlayerInfo {
         this.specialEvent = Integer.parseInt(i.get("Specialty"));
         this.stamina = Integer.parseInt(i.get("StaminaSkill"));
 
-        int cards = Integer.parseInt(i.get("Cards"));
-        int injury = Integer.parseInt(i.get("InjuryLevel"));
+        int cards = parseIntWithDefault(i.get("Cards"), 0);
+        int injury = parseIntWithDefault(i.get("InjuryLevel"), 0);
         this.status = PlayerDataManager.AVAILABLE;
 
         if (cards == 3) {
@@ -74,6 +74,14 @@ public class PlayerInfo {
         this.lastMatchPosition = Integer.parseInt(i.get("LastMatch_PositionCode"));
         this.lastMatchPlayedMinutes = Integer.parseInt(i.get("LastMatch_PlayedMinutes"));
         this.lastMatchRatingEndOfGame = Float.parseFloat(i.get("LastMatch_RatingEndOfGame"));
+    }
+
+    private int parseIntWithDefault(String s, int i) {
+        try {
+            return Integer.parseInt(s);
+        }
+        catch (NumberFormatException e){}
+        return i;
     }
 
     public PlayerInfo() {

@@ -43,15 +43,11 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(MATCHICONS[12], "gui/bilder/match_types/matchtype-matchCupC.png");  //consolante
 		put(MATCHICONS[13], "gui/bilder/match_types/matchtype-battle.png");
 
-		put(MANUELLSMILIES[1], "gui/bilder/smilies/1bigsmile.gif");
-		put(MANUELLSMILIES[2], "gui/bilder/smilies/2smile.gif");
-		put(MANUELLSMILIES[3], "gui/bilder/smilies/3normal.gif");
-		put(MANUELLSMILIES[4], "gui/bilder/smilies/4sad.gif");
-		put(MANUELLSMILIES[5], "gui/bilder/smilies/5verysad.gif");
-		put(MANUELLSMILIES[6], "gui/bilder/smilies/6clown.gif");
-		put(MANUELLSMILIES[7], "gui/bilder/smilies/7trainer.gif");
-		put(MANUELLSMILIES[8], "gui/bilder/smilies/8dollar.gif");
-		put(MANUELLSMILIES[9], "gui/bilder/smilies/9coach.gif");
+		put(SMILEYS[1], "gui/bilder/smilies/smiley-coach.svg");
+		put(SMILEYS[2], "gui/bilder/smilies/smiley-sale.svg");
+		put(SMILEYS[3], "gui/bilder/smilies/smiley-happy.svg");
+		put(SMILEYS[4], "gui/bilder/smilies/smiley-sad.svg");
+		put(SMILEYS[5], "gui/bilder/smilies/smiley-neutral.svg");
 
 		put(GROUP_TEAM, "gui/bilder/smilies/Group-Team.svg");
 		put(GROUP_TEAM_CLEAN, "gui/bilder/smilies/Group-Team-clean.svg");
