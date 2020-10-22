@@ -390,14 +390,9 @@ task resetDB {
             println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")
             copy {
                 from resetDir
-                into "${projectDir}/db"
-            }
-            copy {
-                from "${resetDir}/../"
                 into "${projectDir}/"
-                include "users.json"
+                exclude "**/logs/**"
             }
-
 
             println("Resetting DB: done !")
         }

@@ -4,7 +4,6 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.SpielerLabelEntry;
 import core.gui.comp.renderer.BooleanTableCellRenderer;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.TableSorter;
@@ -20,10 +19,8 @@ import core.model.player.Player;
 import core.net.HattrickLink;
 import core.util.Helper;
 import module.playerOverview.PlayerTable;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.JTable;
 import javax.swing.table.TableColumnModel;
 
@@ -44,7 +41,6 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 		super();
 
 		initModel();
-		addListeners();
 		setDefaultRenderer(Boolean.class, new BooleanTableCellRenderer());
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
@@ -55,19 +51,37 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 			public void mouseReleased(MouseEvent e) {
 				int rowindex = getSelectedRow();
 				if (rowindex >= 0){
+					int colAUTO_LINEUP_ID = tableModel.getPositionInArray(UserColumnFactory.AUTO_LINEUP);
+
 					// Last match column
-					String columnName = tableSorter.getColumnName(columnAtPoint(e.getPoint()));
+					int viewColumn = columnAtPoint(e.getPoint());
+					int column = columnModel.getColumn(viewColumn).getModelIndex();
+					String columnName = tableSorter.getColumnName(viewColumn);
 					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
 
-					Player player = tableSorter.getSpieler(rowindex);
-					if(player!=null){
+					Player selectedPlayer = tableSorter.getSpieler(rowindex);
+					if(selectedPlayer != null){
 						if(columnName.equalsIgnoreCase(lastMatchRating)){
 							if(e.isShiftDown()){
-								int matchId = player.getLastMatchId();
+								int matchId = selectedPlayer.getLastMatchId();
 								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
 								HattrickLink.showMatch(matchId + "", info.getMatchTyp().isOfficial());
 							}else if(e.getClickCount()==2) {
-								HOMainFrame.instance().showMatch(player.getLastMatchId());
+								HOMainFrame.instance().showMatch(selectedPlayer.getLastMatchId());
+							}
+						}
+						else if (column == colAUTO_LINEUP_ID){
+							var result = tableSorter.getValueAt(rowindex, colAUTO_LINEUP_ID);
+							if (result != null) {
+								boolean bSelected = (boolean) result;
+								selectedPlayer.setCanBeSelectedByAssistant(bSelected);
+								if (bSelected) {
+									// this player has been made selectable from the Lineup tab, for consistency we set its position to undefined
+									selectedPlayer.setUserPosFlag(IMatchRoleID.UNKNOWN);
+								} else {
+									selectedPlayer.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
+								}
+								HOMainFrame.instance().getSpielerUebersichtPanel().update();
 							}
 						}
 					}
@@ -117,23 +131,13 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 	 *Returns the column for sorting
 	 */
 	protected int getSortSpalte() {
-		switch (core.model.UserParameter.instance().standardsortierung) {
-		case UserParameter.SORT_NAME:
-			return tableModel.getPositionInArray(UserColumnFactory.NAME);
-
-		case UserParameter.SORT_AUFGESTELLT:
-			return tableModel.getPositionInArray(UserColumnFactory.LINUP);
-
-		case UserParameter.SORT_GRUPPE:
-			return tableModel.getPositionInArray(UserColumnFactory.GROUP);
-
-		case UserParameter.SORT_BEWERTUNG:
-			return tableModel.getPositionInArray(UserColumnFactory.RATING);
-
-		default:
-			return tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
-
-		}
+		return switch (UserParameter.instance().standardsortierung) {
+			case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
+			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINUP);
+			case UserParameter.SORT_GRUPPE -> tableModel.getPositionInArray(UserColumnFactory.GROUP);
+			case UserParameter.SORT_BEWERTUNG -> tableModel.getPositionInArray(UserColumnFactory.RATING);
+			default -> tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
+		};
 	}
 
 	protected TableSorter getSorter() {
@@ -202,28 +206,5 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 		tableSorter.initsort();
 	}
 
-	private void addListeners() {
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(java.awt.event.MouseEvent mouseEvent) {
-				int selectedRow = getSelectedRow();
-				boolean bSelected;
-				if (selectedRow > -1) {
-					Player selectedPlayer = ((SpielerLabelEntry) tableSorter.getValueAt(selectedRow,tableModel.getColumnIndexOfDisplayedColumn(UserColumnFactory.NAME))).getSpieler();
-					bSelected = (boolean)tableSorter.getValueAt(selectedRow, tableModel.getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP));
-					selectedPlayer.setCanBeSelectedByAssistant(bSelected);
-					if(bSelected)
-					{
-						// this player has been made selectable from the Lineup tab, for consistency we set its position to undefined
-						selectedPlayer.setUserPosFlag(IMatchRoleID.UNKNOWN);
-					}
-					else {
-						selectedPlayer.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
-					}
-					HOMainFrame.instance().getSpielerUebersichtPanel().update();
-				}
-			}
-		});
-	}
 
 }

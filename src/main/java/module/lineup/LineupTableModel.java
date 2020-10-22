@@ -6,6 +6,7 @@ import core.gui.comp.table.UserColumn;
 import core.gui.model.PlayerColumn;
 import core.gui.model.UserColumnFactory;
 import core.model.player.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -70,33 +71,22 @@ public class LineupTableModel extends HOTableModel {
 		return super.getColumnIndexOfDisplayedColumn(searchId);
 	}
 
-	public final Player getSpieler(int id) {
+	public final @Nullable Player getSpieler(int id) {
 		if (id > 0) {
-			for (int i = 0; i < m_vPlayers.size(); i++) {
-				if (((Player) m_vPlayers.get(i)).getSpielerID() == id) {
-					return (Player) m_vPlayers.get(i);
-				}
+			for(Player m_vPlayer : m_vPlayers) {
+				if (m_vPlayer.getSpielerID() == id) return m_vPlayer;
 			}
 		}
 
 		return null;
 	}
 
-	/**
-	 * Player neu setzen
-	 */
+
 	public final void setValues(List<Player> player) {
 		m_vPlayers = player;
 		initData();
 	}
 
-	/**
-	 * Fügt der Tabelle einen Player hinzu
-	 */
-	public final void addSpieler(Player player, int index) {
-		m_vPlayers.add(index, player);
-		initData();
-	}
 
 	/**
 	 * create a data[][] from player-Vector
