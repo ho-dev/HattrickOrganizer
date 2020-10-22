@@ -68,6 +68,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - [FIX] Layout issue in multiple screen setup. [#618]
   - [FEAT] Remove all printing functionality.
   - [FEAT] Remove player state colour, and display icons instead in Lineup.
+  - [FEAT] Refactor progress bar display [#722]
 
 ### League
 

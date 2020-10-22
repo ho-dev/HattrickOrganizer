@@ -113,8 +113,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	// Components
 	private HOTabbedPane m_jtpTabbedPane;
 
-	private Vector<String> m_vOptionPanelNames = new Vector<String>();
-	private Vector<JPanel> m_vOptionPanels = new Vector<JPanel>();
+	private Vector<String> m_vOptionPanelNames = new Vector<>();
+	private Vector<JPanel> m_vOptionPanels = new Vector<>();
 
 	private boolean isAppTerminated = false; // set when HO should be terminated
 	private final List<ApplicationClosingListener> applicationClosingListener = new ArrayList<>();
@@ -266,10 +266,20 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 	}
 
-	public InfoPanel getInfoPanel() {
-		if (m_jpInfoPanel == null)
+	private InfoPanel getInfoPanel(){
+		if (m_jpInfoPanel == null) {
 			m_jpInfoPanel = new InfoPanel();
+		}
 		return m_jpInfoPanel;
+	}
+	public void setWaitInformation( int progress){setInformation(HOVerwaltung.instance().getLanguageString("BitteWarten"), progress);}
+	public void resetInformation(){setInformation("",0);}
+	public void setInformation( String information) { setInformation(information,0);}
+	public void setInformation( String information, int progress){
+		getInfoPanel().setInformation(information, progress);
+	}
+	public void setInformation( String information, Color color){
+		getInfoPanel().setInformation(information, color);
 	}
 
 	public PlayerAnalysisModulePanel getSpielerAnalyseMainPanel() {
@@ -533,11 +543,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		// Modules
 		IModule[] activeModules = ModuleManager.instance().getModules(true);
-		for (int i = 0; i < activeModules.length; i++) {
-			if (activeModules[i].hasMainTab()) {
-				JMenuItem showTabMenuItem = new JMenuItem(activeModules[i].getDescription());
-				showTabMenuItem.setAccelerator(activeModules[i].getKeyStroke());
-				showTabMenuItem.putClientProperty("MODULE", activeModules[i]);
+		for (IModule activeModule : activeModules) {
+			if (activeModule.hasMainTab()) {
+				JMenuItem showTabMenuItem = new JMenuItem(activeModule.getDescription());
+				showTabMenuItem.setAccelerator(activeModule.getKeyStroke());
+				showTabMenuItem.putClientProperty("MODULE", activeModule);
 				showTabMenuItem.addActionListener(e -> {
 					JMenuItem item = (JMenuItem) e.getSource();
 					IModule module = (IModule) item.getClientProperty("MODULE");
@@ -546,8 +556,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 				m_jmFunctions.add(showTabMenuItem);
 			}
-			if (activeModules[i].hasMenu()) {
-				m_jmModules.add(activeModules[i].getMenu());
+			if (activeModule.hasMenu()) {
+				m_jmModules.add(activeModule.getMenu());
 			}
 		}
 
@@ -718,8 +728,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		// TransferScoutPanel
 		if (getTabbedPane().isModuleTabVisible(IModule.TRANSFERS)) {
-			final int tsp = getTransferScoutPanel().getScoutPanel().getDividerLocation();
-			parameter.transferScoutPanel_horizontalSplitPane = tsp;
+			parameter.transferScoutPanel_horizontalSplitPane = getTransferScoutPanel().getScoutPanel().getDividerLocation();
 		}
 
 		DBManager.instance().saveUserParameter();

@@ -6,7 +6,6 @@ import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
-import core.net.login.LoginWaitDialog;
 import core.util.HOLogger;
 
 import java.io.*;
@@ -75,10 +74,9 @@ public class CsvPlayerExport {
 				return;
             }
 
-			waitDialog = new LoginWaitDialog(HOMainFrame.instance());
-			waitDialog.setVisible(true);
+			HOMainFrame.instance().setWaitInformation(0);
 			doExport (file);
-			waitDialog.setVisible(false);
+			HOMainFrame.instance().resetInformation();
 		}
 	}
 

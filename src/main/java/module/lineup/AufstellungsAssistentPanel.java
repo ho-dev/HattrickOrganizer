@@ -239,10 +239,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 			hoModel.getLineupWithoutRatingRecalc().resetAufgestellteSpieler();
 			hoModel.getLineupWithoutRatingRecalc().setKicker(0);
 			hoModel.getLineupWithoutRatingRecalc().setKapitaen(0);
-			HOMainFrame
-					.instance()
-					.getInfoPanel()
-					.setLangInfoText(
+			HOMainFrame.instance().setInformation(
 							HOVerwaltung.instance().getLanguageString("Aufstellung_geloescht"));
 			mainFrame.getAufstellungsPanel().update();
 
@@ -250,10 +247,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 		} else if (actionEvent.getSource().equals(m_jbClearPostionOrders)) {
 			// event listener for clear positonal orders button
 			hoModel.getLineupWithoutRatingRecalc().resetPositionOrders();
-			HOMainFrame
-					.instance()
-					.getInfoPanel()
-					.setLangInfoText(
+			HOMainFrame.instance().setInformation(
 							HOVerwaltung.instance().getLanguageString("Positional_orders_cleared"));
 			mainFrame.getAufstellungsPanel().update();
 
@@ -380,7 +374,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 				m_jchForm.isSelected(), m_jchIdealPosition.isSelected(),
 				m_jchVerletzte.isSelected(), m_jchGesperrte.isSelected(),
 				core.model.UserParameter.instance().WetterEffektBonus, getWeather());
-		mainFrame.getInfoPanel().setLangInfoText(
+		mainFrame.setInformation(
 				HOVerwaltung.instance().getLanguageString("Autoaufstellung_fertig"));
 		mainFrame.getAufstellungsPanel().update();
 

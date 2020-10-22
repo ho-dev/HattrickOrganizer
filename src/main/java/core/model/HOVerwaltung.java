@@ -4,7 +4,6 @@ import core.datatype.CBItem;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
-import core.net.login.LoginWaitDialog;
 import core.training.TrainingManager;
 import core.util.HOLogger;
 import core.util.UTF8Control;
@@ -121,25 +120,17 @@ public class HOVerwaltung {
 			hrfDate = new Timestamp(0);
 		}
 
-		LoginWaitDialog waitDialog = null;
-
-		if (showWait) {
-			waitDialog = new LoginWaitDialog(HOMainFrame.instance(), false);
-			waitDialog.setVisible(true);
-		}
-
 		// Make sure the training week list is up to date.
 		TrainingManager.instance().refreshTrainingWeeks();
-		
-		final Vector<CBItem> hrfListe = new Vector<CBItem>();
-		hrfListe.addAll(DBManager.instance().getCBItemHRFListe(hrfDate));
+
+		final Vector<CBItem> hrfListe = new Vector<>(DBManager.instance().getCBItemHRFListe(hrfDate));
 		Collections.reverse(hrfListe);
 		long s1, s2, lSum = 0, mSum = 0;
 		HOLogger.instance().log(getClass(), "Subskill calculation prepared. " + new Date());
 		for (int i = 0; i < hrfListe.size(); i++) {
 			try {
-				if (showWait && waitDialog != null) {
-					waitDialog.setValue((int) ((i * 100d) / hrfListe.size()));
+				if (showWait ) {
+					HOMainFrame.instance().setWaitInformation((int) ((i * 100d) / hrfListe.size()));
 				}
 				s1 = System.currentTimeMillis();
 				//final HOModel model = this.loadModel((hrfListe.get(i)).getId());
@@ -155,8 +146,8 @@ public class HOVerwaltung {
 			}
 		}
 
-		if (showWait && waitDialog != null) {
-			waitDialog.setVisible(false);
+		if (showWait ) {
+			HOMainFrame.instance().resetInformation();
 		}
 
 		// Erneut laden, da sich die Subskills geändert haben
@@ -252,7 +243,7 @@ public class HOVerwaltung {
 
 	public static String[] getLanguageFileNames() {
 		String[] files = null;
-		final Vector<String> sprachdateien = new Vector<String>();
+		final Vector<String> sprachdateien = new Vector<>();
 
 		try {
 			// java.net.URL resource = new
@@ -265,7 +256,7 @@ public class HOVerwaltung {
 
             java.io.InputStream is = HOVerwaltung.class.getClassLoader().getResourceAsStream("sprache/ListLanguages.txt");
             java.util.Scanner s = new java.util.Scanner(is);
-            java.util.ArrayList<String> llist = new java.util.ArrayList<String>();
+            java.util.ArrayList<String> llist = new java.util.ArrayList<>();
             while (s.hasNext()){
                 llist.add(s.next());
             }

@@ -174,10 +174,7 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 		}
 		DBManager.instance().deleteAufstellung(Lineup.NO_HRF_VERBINDUNG,
 				((AufstellungCBItem) m_jlAufstellungen.getSelectedValue()).getText());
-		HOMainFrame
-				.instance()
-				.getInfoPanel()
-				.setLangInfoText(
+		HOMainFrame.instance().setInformation(
 						HOVerwaltung.instance().getLanguageString("Aufstellung")
 								+ " "
 								+ ((core.gui.model.AufstellungCBItem) m_jlAufstellungen

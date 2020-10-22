@@ -34,81 +34,80 @@ public class HRFImport {
 		File[] files = getHRFFiles(frame);
 		if (files != null) {
 			Timestamp olderHrf = new Timestamp(System.currentTimeMillis());
-			HOModel homodel = null;
+			HOModel homodel;
 
 			UserChoice choice = null;
 			for (int i = 0; i < files.length; i++) {
-				if (files[i].getPath() != null) {
-					// Endung nicht hrf?
-					if (!files[i].getPath().endsWith(".hrf")) {
-						files[i] = new File(files[i].getAbsolutePath() + ".hrf");
-					}
+				files[i].getPath();
+				// Endung nicht hrf?
+				if (!files[i].getPath().endsWith(".hrf")) {
+					files[i] = new File(files[i].getAbsolutePath() + ".hrf");
+				}
 
-					// Datei schon vorhanden?
-					if (!files[i].exists()) {
-						// Info
-						frame.getInfoPanel().setLangInfoText(getLangStr("DateiNichtGefunden"),
-								InfoPanel.FEHLERFARBE);
-
-						// Fehler
-						Helper.showMessage(frame, getLangStr("DateiNichtGefunden"),
-								getLangStr("Fehler"), JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-
-					// Pfad speichern
-					UserParameter.instance().hrfImport_HRFPath = files[i].getParentFile()
-							.getAbsolutePath();
-
+				// Datei schon vorhanden?
+				if (!files[i].exists()) {
 					// Info
-					frame.getInfoPanel().setLangInfoText(getLangStr("StartParse"));
+					frame.setInformation(getLangStr("DateiNichtGefunden"),
+							InfoPanel.FEHLERFARBE);
 
-					// HRFParser
-					homodel = HRFFileParser.parse(files[i]);
+					// Fehler
+					Helper.showMessage(frame, getLangStr("DateiNichtGefunden"),
+							getLangStr("Fehler"), JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 
-					if (homodel == null) {
+				// Pfad speichern
+				UserParameter.instance().hrfImport_HRFPath = files[i].getParentFile()
+						.getAbsolutePath();
+
+				// Info
+				frame.setInformation(getLangStr("StartParse"));
+
+				// HRFParser
+				homodel = HRFFileParser.parse(files[i]);
+
+				if (homodel == null) {
+					// Info
+					frame.setInformation(
+							getLangStr("Importfehler") + " : " + files[i].getName(),
+							InfoPanel.FEHLERFARBE);
+
+					// Fehler
+					Helper.showMessage(frame, getLangStr("Importfehler"), getLangStr("Fehler"),
+							JOptionPane.ERROR_MESSAGE);
+				} else {
+					// Info
+					frame.setInformation(getLangStr("HRFSave"));
+
+					// file already imported?
+					java.sql.Timestamp HRFts = homodel.getBasics().getDatum();
+					String oldHRFName = DBManager.instance().getHRFName4Date(HRFts);
+
+					if (choice == null || !choice.applyToAll ) {
+						choice = bStoreHRF(frame, HRFts, oldHRFName);
+						if (choice.cancel) {
+							// chaneled -> bail out here
+							break;
+						}
+					}
+
+					// Speichern
+					if (choice.importHRF) {
+						// Saven
+						homodel.saveHRF();
+
+						if (homodel.getBasics().getDatum().before(olderHrf)) {
+							olderHrf = new Timestamp(homodel.getBasics().getDatum().getTime());
+						}
+
 						// Info
-						frame.getInfoPanel().setLangInfoText(
-								getLangStr("Importfehler") + " : " + files[i].getName(),
+						frame.setInformation(getLangStr("HRFErfolg"));
+					}
+					// Abbruch
+					else {
+						// Info
+						frame.setInformation(getLangStr("HRFAbbruch"),
 								InfoPanel.FEHLERFARBE);
-
-						// Fehler
-						Helper.showMessage(frame, getLangStr("Importfehler"), getLangStr("Fehler"),
-								JOptionPane.ERROR_MESSAGE);
-					} else {
-						// Info
-						frame.getInfoPanel().setLangInfoText(getLangStr("HRFSave"));
-
-						// file already imported?
-						java.sql.Timestamp HRFts = homodel.getBasics().getDatum();
-						String oldHRFName = DBManager.instance().getHRFName4Date(HRFts);
-
-						if (choice == null || !choice.applyToAll ) {
-							choice = bStoreHRF(frame, HRFts, oldHRFName);
-							if (choice.cancel) {
-								// chaneled -> bail out here
-								break;
-							}
-						}
-						
-						// Speichern
-						if (choice.importHRF) {
-							// Saven
-							homodel.saveHRF();
-
-							if (homodel.getBasics().getDatum().before(olderHrf)) {
-								olderHrf = new Timestamp(homodel.getBasics().getDatum().getTime());
-							}
-
-							// Info
-							frame.getInfoPanel().setLangInfoText(getLangStr("HRFErfolg"));
-						}
-						// Abbruch
-						else {
-							// Info
-							frame.getInfoPanel().setLangInfoText(getLangStr("HRFAbbruch"),
-									InfoPanel.FEHLERFARBE);
-						}
 					}
 				}
 			}

@@ -96,11 +96,7 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 	 */
 	public final void calculateNMatches(int numberOfMatches) {
 		int match = (1 + numberOfMatches) * 1000;
-
-		final core.net.login.LoginWaitDialog waitDialog = new core.net.login.LoginWaitDialog(
-				HOMainFrame.instance(), false);
-		waitDialog.setVisible(true);
-
+		HOMainFrame.instance().setWaitInformation(0);
 		MatchResult result = new MatchResult();
 
 		for (int i = 0; i < match; i++) {
@@ -108,11 +104,9 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 			final TeamData team2 = guestTeamPanel.getTeamData();
 			result.addMatchResult(MatchPredictionManager.instance()
 					.calculateMatchResult(team1, team2));
-			waitDialog.setValue((int) ((i * 100d) / match));
+			HOMainFrame.instance().setWaitInformation((int) ((i * 100d) / match));
 		}
-
-		waitDialog.setVisible(false);
-
+		HOMainFrame.instance().resetInformation();
 		refresh(result);
 	}
 

@@ -15,7 +15,6 @@ import core.model.match.*;
 import core.model.misc.Regiondetails;
 import core.model.misc.TrainingEvent;
 import core.model.player.Player;
-import core.net.login.LoginWaitDialog;
 import core.training.TrainingManager;
 import core.util.HOLogger;
 import core.util.Helper;
@@ -52,7 +51,7 @@ import javax.swing.JOptionPane;
 public class OnlineWorker {
 
 	private final static SimpleDateFormat HT_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-	private static LoginWaitDialog waitDialog;
+	//private static LoginWaitDialog waitDialog;
 
 	/**
 	 * Utility class - private constructor enforces noninstantiability.
@@ -68,23 +67,21 @@ public class OnlineWorker {
 		// Show wait dialog
 		
 		boolean ok = true;
-		
-		LoginWaitDialog waitDlg = new LoginWaitDialog(parent, false);
-		waitDlg.setVisible(true);
+
 		try {
 			HOMainFrame homf = HOMainFrame.instance();
 			HOVerwaltung hov = HOVerwaltung.instance();
+
 			UserParameter up = core.model.UserParameter.instance();
 
 			String hrf = null;
 			try {
-				hrf = ConvertXml2Hrf.createHrf(waitDlg);
+				hrf = ConvertXml2Hrf.createHrf();
 				if (hrf == null) {
 					return false;
 				}
 				
 			} catch (IOException e) {
-				waitDlg.setVisible(false);
 				// Info
 				String msg = getLangString("Downloadfehler")
 						+ " : Error converting xml 2 HRF. Corrupt/Missing Data : ";
@@ -95,12 +92,12 @@ public class OnlineWorker {
 			}
 
 			if (hrf != null) {
-				if (hrf.indexOf("playingMatch=true") > -1) {
-					waitDlg.setVisible(false);
+				if (hrf.contains("playingMatch=true")) {
+					HOMainFrame.instance().resetInformation();
 					JOptionPane.showMessageDialog(parent, getLangString("NO_HRF_Spiel"),
 							getLangString("NO_HRF_ERROR"), 1);
-				} else if (hrf.indexOf("NOT AVAILABLE") > -1) {
-					waitDlg.setVisible(false);
+				} else if (hrf.contains("NOT AVAILABLE")) {
+					HOMainFrame.instance().resetInformation();
 					JOptionPane.showMessageDialog(parent, getLangString("NO_HRF_ERROR"),
 							getLangString("NO_HRF_ERROR"), 1);
 				} else {
@@ -145,7 +142,7 @@ public class OnlineWorker {
 				}
 			}
 		} finally {
-			waitDlg.setVisible(false);
+			HOMainFrame.instance().resetInformation();
 		}
 		return ok;
 	}
@@ -178,17 +175,17 @@ public class OnlineWorker {
 		}
 
 		// Show wait Dialog
-		showWaitDialog(1);
+		showWaitInformation(1);
 
 		try {
 			String matchesString = "";
 
 			while (tempBeginn.before(endDate)) {
 				try {
-					showWaitDialog(10);
+					showWaitInformation(10);
 					matchesString = MyConnector.instance().getMatchesArchive(teamId, tempBeginn.getTime(),
 							tempEnd.getTime());
-					showWaitDialog(20);
+					showWaitInformation(20);
 				} catch (Exception e) {
 					// Info
 					String msg = getLangString("Downloadfehler")
@@ -196,11 +193,11 @@ public class OnlineWorker {
 					setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 					Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 							JOptionPane.ERROR_MESSAGE);
-					showWaitDialog(0);
+					showWaitInformation(0);
 					return null;
 				}
 
-				showWaitDialog(40);
+				showWaitInformation(40);
 				List<MatchKurzInfo> matches = XMLMatchArchivParser
 						.parseMatchesFromString(matchesString);
 
@@ -219,7 +216,7 @@ public class OnlineWorker {
 			// Store in the db if store is true
 			if (store && (allMatches.size() > 0)) {
 
-				showWaitDialog(80);
+				showWaitInformation(80);
 				DBManager.instance().storeMatchKurzInfos(allMatches.toArray(new MatchKurzInfo[0]));
 
 				// Store full info for all matches
@@ -232,7 +229,7 @@ public class OnlineWorker {
 				}
 			}
 		} finally {
-			showWaitDialog(0);
+			showWaitInformation(0);
 		}
 		return allMatches;
 	}
@@ -272,7 +269,7 @@ public class OnlineWorker {
 		}
 
 		//waitDialog = getWaitDialog();
-		showWaitDialog(1);
+		showWaitInformation(1);
 		// Only download if not present in the database, or if refresh is true
 		if (refresh || !DBManager.instance().isMatchVorhanden(matchid)
 				|| DBManager.instance().hasUnsureWeatherForecast(matchid)
@@ -289,7 +286,7 @@ public class OnlineWorker {
 				Boolean bWeatherKnown = ((weatherDetails != null) && weatherDetails.isSure());
 				if ( newInfo || !bWeatherKnown) {
 
-					showWaitDialog(10);
+					showWaitInformation(10);
 					details = fetchDetails(matchid, info.getMatchTyp(), null);
 					if ( details != null) {
 						info.setHeimID(details.getHeimId());
@@ -367,7 +364,7 @@ public class OnlineWorker {
 					}
 					
 					// Get details with highlights.
-					showWaitDialog(10);
+					showWaitInformation(10);
 					details = fetchDetails(matchid, info.getMatchTyp(), lineup);
 
 					if (details == null) {
@@ -391,17 +388,17 @@ public class OnlineWorker {
 					success = true;
 				}
 				if (!success) {
-					showWaitDialog(0);
+					showWaitInformation(0);
 					return false;
 				}
 			} catch (Exception ex) {
 				HOLogger.instance().error(OnlineWorker.class,
 						"downloadMatchData:  Error in downloading match: " + ex);
-				showWaitDialog(0);
+				showWaitInformation(0);
 				return false;
 			}
 		}
-		showWaitDialog(0);
+		showWaitInformation(0);
 		return true;
 	}
 
@@ -520,15 +517,15 @@ public class OnlineWorker {
 		String matchesString = "";
 		List<MatchKurzInfo> matches = new ArrayList<>();
 		boolean bOK = false;
-		showWaitDialog(10);
+		showWaitInformation(10);
 
 		try {
 			matchesString = MyConnector.instance().getMatches(teamId, forceRefresh, upcoming);
 			bOK = (matchesString != null && matchesString.length() > 0);
 			if (bOK)
-				showWaitDialog(50);
+				showWaitInformation(50);
 			else
-				showWaitDialog(0);
+				showWaitInformation(0);
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching matches: "
 					+ e.getMessage();
@@ -537,7 +534,7 @@ public class OnlineWorker {
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
 			HOLogger.instance().log(OnlineWorker.class, e);
-			showWaitDialog(0);
+			showWaitInformation(0);
 			return null;
 		}
 		if (bOK) {
@@ -545,13 +542,13 @@ public class OnlineWorker {
 
 			// Store in DB if store is true
 			if (store) {
-				showWaitDialog(80);
+				showWaitInformation(80);
 
 				matches = FilterUserSelection(matches);
 				DBManager.instance().storeMatchKurzInfos(
 						matches.toArray(new MatchKurzInfo[matches.size()]));
 
-				showWaitDialog(100);
+				showWaitInformation(100);
 
 				// Automatically download additional match infos (lineup + arena)
 				for (MatchKurzInfo match : matches) {
@@ -570,7 +567,7 @@ public class OnlineWorker {
 				}
 			}
 		}
-		showWaitDialog(0);
+		showWaitInformation(0);
 		return matches;
 	}
 
@@ -650,12 +647,12 @@ public class OnlineWorker {
 		MatchLineup lineUp2 = null;
 
 		// Wait Dialog zeigen
-		showWaitDialog(10);
+		showWaitInformation(10);
 
 		// Lineups holen
 		lineUp1 = fetchLineup(matchId, teamId1, matchType);
 		if (lineUp1 != null) {
-			showWaitDialog(50);
+			showWaitInformation(50);
 			if (teamId2 > 0)
 				lineUp2 = fetchLineup(matchId, teamId2, matchType);
 
@@ -678,7 +675,7 @@ public class OnlineWorker {
 				}
 			}
 		}
-		showWaitDialog(0);
+		showWaitInformation(0);
 		return lineUp1;
 	}
 
@@ -697,10 +694,10 @@ public class OnlineWorker {
 		String leagueFixtures = "";
 		HOVerwaltung hov = HOVerwaltung.instance();
 		try {
-			showWaitDialog(10);
+			showWaitInformation(10);
 			leagueFixtures = MyConnector.instance().getLeagueFixtures(season, leagueID);
 			bOK = (leagueFixtures != null && leagueFixtures.length() > 0);
-			showWaitDialog(50);
+			showWaitInformation(50);
 		} catch (Exception e) {
 			HOLogger.instance().log(OnlineWorker.class, e);
 			String msg = getLangString("Downloadfehler") + " : Error fetching leagueFixture: "
@@ -708,29 +705,30 @@ public class OnlineWorker {
 			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
-			showWaitDialog(0);
+			showWaitInformation(0);
 			return false;
 		}
 		if (bOK) {
 			HOModel hom = hov.getModel();
 			hom.setFixtures(XMLSpielplanParser.parseSpielplanFromString(leagueFixtures));
-			showWaitDialog(70);
+			showWaitInformation(70);
 			// Save to DB
 			hom.saveFixtures();
-			showWaitDialog(90);
+			showWaitInformation(90);
 		}
-		showWaitDialog(0);
+		showWaitInformation(0);
 		return bOK;
 	}
 
-	protected static void showWaitDialog(int i) {
+	protected static void showWaitInformation(int i) {
 		if (HOMainFrame.launching.get()) return;
-
-		if (waitDialog == null) {
-			waitDialog = new LoginWaitDialog(HOMainFrame.instance(), false);
+		String info;
+		if ( i <=0 ){
+			HOMainFrame.instance().resetInformation();
 		}
-		waitDialog.setValue(i);
-		waitDialog.setVisible(i > 0);
+		else{
+			HOMainFrame.instance().setWaitInformation(i);
+		}
 	}
 
 	/**
@@ -782,16 +780,16 @@ public class OnlineWorker {
 						"Unable to fetch details for match " + matchID);
 				return null;
 			}
-			showWaitDialog(20);
+			showWaitInformation(20);
 			details = XMLMatchdetailsParser.parseMachtdetailsFromString(matchDetails, lineup);
-			showWaitDialog(40);
+			showWaitInformation(40);
 			if (details == null) {
 				HOLogger.instance().warning(OnlineWorker.class,
 						"Unable to fetch details for match " + matchID);
 				return null;
 			}
 			String arenaString = MyConnector.instance().getArena(details.getArenaID());
-			showWaitDialog(50);
+			showWaitInformation(50);
 			String regionIdAsString = XMLArenaParser.parseArenaFromString(arenaString).get(
 					"RegionID");
 			details.setRegionId(Integer.parseInt(regionIdAsString));
@@ -801,10 +799,10 @@ public class OnlineWorker {
 			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
-			showWaitDialog(0);
+			showWaitInformation(0);
 			return null;
 		}
-		showWaitDialog(0);
+		showWaitInformation(0);
 		return details;
 	}
 
@@ -1113,7 +1111,7 @@ public class OnlineWorker {
 	 *            the message to show
 	 */
 	private static void setInfoMsg(String msg) {
-		HOMainFrame.instance().getInfoPanel().setLangInfoText(msg);
+		HOMainFrame.instance().setInformation(msg);
 	}
 
 	/**
@@ -1126,7 +1124,7 @@ public class OnlineWorker {
 	 *            the color
 	 */
 	private static void setInfoMsg(String msg, Color color) {
-		HOMainFrame.instance().getInfoPanel().setLangInfoText(msg, color);
+		HOMainFrame.instance().setInformation(msg, color);
 	}
 
 	/**

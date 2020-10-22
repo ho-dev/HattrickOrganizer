@@ -5,7 +5,6 @@ import core.HO;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.net.MyConnector;
-import core.net.login.LoginWaitDialog;
 import core.util.HOLogger;
 import core.util.Updater;
 
@@ -144,14 +143,13 @@ public final class UpdateController {
         if (HO.isPortableVersion()) {
             // HO! manage the (partial) update
             File tmp = new File("update.piz");
-            LoginWaitDialog wait = new LoginWaitDialog(HOMainFrame.instance());
-            wait.setVisible(true);
+            HOMainFrame.instance().setWaitInformation(0);
             if (!UpdateHelper.download(urlString, tmp)) {
-                wait.setVisible(false);
+                HOMainFrame.instance().resetInformation();
                 HOLogger.instance().error(UpdateController.class, "Could not download: " + urlString);
                 return;
             }
-            wait.setVisible(false);
+            HOMainFrame.instance().resetInformation();
 
             JOptionPane.showMessageDialog(null,
                     HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
