@@ -77,7 +77,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
     // Top Row, column 2
     private final JComboBox m_jcbSquad = new JComboBox(GroupTeamFactory.TEAMSMILIES);
-    private final JComboBox m_jcbInformation = new JComboBox(HOIconName.MANUELLSMILIES);
+    private final JComboBox m_jcbInformation = new JComboBox(SMILEYS);
     private SpielerStatusLabelEntry m_jpStatus = new SpielerStatusLabelEntry();
     private final DoppelLabelEntry m_jpSalary = new DoppelLabelEntry(new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT), new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
