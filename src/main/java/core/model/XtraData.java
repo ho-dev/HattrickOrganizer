@@ -14,6 +14,12 @@ public class XtraData  {
     private java.sql.Timestamp m_clTrainingDate;
     private boolean m_bHasPromoted;
     private double m_dCurrencyRate = -1.0d;
+
+    /**
+     * The ID number of the LeagueLevelUnit.
+     *
+     * In week 16 of a season this ID switches to the value of the next season (could be a different one)
+     */
     private int m_iLeagueLevelUnitID = -1;
 
     //~ Constructors -------------------------------------------------------------------------------
