@@ -39,6 +39,8 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
     private JLabel[] skillLabel;
     private final TrainingModel model;
 
+    private int playerId;
+
     /**
      * Creates the panel and its components
      */
@@ -56,17 +58,15 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
 
     @Override
     protected void update() {
+        if ( m_jtaNotes.isFocusOwner() ){
+            // Notes could be changed
+            saveNotes();
+        }
         loadFromModel();
     }
 
     private void addListeners() {
-        this.model.addModelChangeListener(new ModelChangeListener() {
-
-            @Override
-            public void modelChanged(ModelChange change) {
-                setNeedsRefresh(true);
-            }
-        });
+        this.model.addModelChangeListener(change -> setNeedsRefresh(true));
     }
 
     /**
@@ -74,6 +74,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
      */
     private void loadFromModel() {
         if (this.model.getActivePlayer() == null) {
+            this.playerId = -1;
             playerLabel.setText(HOVerwaltung.instance().getLanguageString("PlayerSelect"));
             m_jtaNotes.setEditable(false);
             m_jtaNotes.setText("");
@@ -85,6 +86,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
             return;
         }
 
+        this.playerId = this.model.getActivePlayer().getSpielerID();
         // sets player number
         String value = MatchRoleID.getNameForPosition(this.model.getActivePlayer().getIdealPosition()) + " ("
                 + this.model.getActivePlayer().getIdealPosStaerke(true, false, 2) + ")";
@@ -107,8 +109,8 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
             float skillValueInt = (int) skillValue;
             float skillValueDecimal = skillValue - skillValueInt;
 
-            levelBar[i].setSkillLevel((float) skillValueInt / getSkillMaxValue(i), skillValueInt);
-            levelBar[i].setSkillDecimalLevel((float) skillValueDecimal / getSkillMaxValue(i));
+            levelBar[i].setSkillLevel(skillValueInt / getSkillMaxValue(i), skillValueInt);
+            levelBar[i].setSkillDecimalLevel(skillValueDecimal / getSkillMaxValue(i));
             levelBar[i].setFutureSkillLevel((float) (finalValue - skillValue) / getSkillMaxValue(i));
         }
     }
@@ -131,36 +133,18 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
     }
 
     private double getSkillValue(FuturePlayer spieler, int skillIndex) {
-        switch (skillIndex) {
-            case PlayerSkill.KEEPER:
-                return spieler.getGoalkeeping();
-
-            case PlayerSkill.SCORING:
-                return spieler.getAttack();
-
-            case PlayerSkill.DEFENDING:
-                return spieler.getDefense();
-
-            case PlayerSkill.PASSING:
-                return spieler.getPassing();
-
-            case PlayerSkill.PLAYMAKING:
-                return spieler.getPlaymaking();
-
-            case PlayerSkill.SET_PIECES:
-                return spieler.getSetpieces();
-
-            case PlayerSkill.STAMINA:
-                return spieler.getStamina();
-
-            case PlayerSkill.FORM:
-                return spieler.getForm();
-
-            case PlayerSkill.WINGER:
-                return spieler.getCross();
-            default:
-                return 0;
-        }
+        return switch (skillIndex) {
+            case PlayerSkill.KEEPER -> spieler.getGoalkeeping();
+            case PlayerSkill.SCORING -> spieler.getAttack();
+            case PlayerSkill.DEFENDING -> spieler.getDefense();
+            case PlayerSkill.PASSING -> spieler.getPassing();
+            case PlayerSkill.PLAYMAKING -> spieler.getPlaymaking();
+            case PlayerSkill.SET_PIECES -> spieler.getSetpieces();
+            case PlayerSkill.STAMINA -> spieler.getStamina();
+            case PlayerSkill.FORM -> spieler.getForm();
+            case PlayerSkill.WINGER -> spieler.getCross();
+            default -> 0;
+        };
     }
 
     /**
@@ -252,8 +236,14 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
 
     @Override
     public void focusLost(FocusEvent e) {
-        if (this.model.getActivePlayer() != null) {
-            DBManager.instance().saveSpielerNotiz(this.model.getActivePlayer().getSpielerID(), m_jtaNotes.getText());
+        saveNotes();
+    }
+
+    private void saveNotes() {
+        if( this.playerId>0){
+            DBManager.instance().saveSpielerNotiz(this.playerId, m_jtaNotes.getText());
         }
     }
+
+
 }

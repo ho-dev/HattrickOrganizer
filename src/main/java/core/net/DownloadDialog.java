@@ -297,8 +297,10 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			}
 
 			if (bOK && m_jchFixtures.isSelected()) {
-				// Always get actual season and league
-				OnlineWorker.getSpielplan(-1, model.getXtraDaten().getLeagueLevelUnitID());
+				// in the last week of a season the LeagueLevelUnitID switches to the next season's value (no fixtures are available then)
+				if ( model.getBasics().getSpieltag()<16) {
+					OnlineWorker.getSpielplan(-1, model.getXtraDaten().getLeagueLevelUnitID());
+				}
 			}
 
 			if (bOK && m_jchOldFixtures.isSelected()) {
