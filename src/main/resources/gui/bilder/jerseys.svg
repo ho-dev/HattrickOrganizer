@@ -2,12 +2,15 @@
     <defs id="colors">
         <linearGradient id="jerseyColor">
             <stop offset="0" stop-color="#FF0000"/>
+            <stop offset="1" stop-color="#FF0000"/>
         </linearGradient>
         <linearGradient id="collarColor">
             <stop offset="0" stop-color="#00FF00"/>
+            <stop offset="1" stop-color="#00FF00"/>
         </linearGradient>
         <linearGradient id="outlineColor">
             <stop offset="0" stop-color="#0000FF"/>
+            <stop offset="1" stop-color="#0000FF"/>
         </linearGradient>
     </defs>
     <g transform="translate(-51.569848,-44.820658)">
