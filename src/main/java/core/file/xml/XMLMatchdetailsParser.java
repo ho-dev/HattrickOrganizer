@@ -40,17 +40,14 @@ public class XMLMatchdetailsParser {
                 readHomeTeam(doc, md);
 				readInjuries(doc, md);
 
-				// Match lineup needs to be available, if not -> ignore match highlights/report
-				if (matchLineup == null) {
-					// reduced log level as this happens each and every match download.
-					HOLogger.instance().debug(XMLMatchdetailsParser.class,
-							"XMLMatchdetailsParser["+md.getMatchID()+"]: Cannot parse matchreport from matchdetails, lineup MUST be available!");
-				} else {
+				if (matchLineup != null) {
+					// Match lineup needs to be available, if not -> ignore match highlights/report
 					readHighlights(doc, md, matchLineup);
 					parseMatchReport(md);
 				}
 
                 md.setStatisics();
+
 			} catch (Exception e) {
 	            HOLogger.instance().log(XMLMatchdetailsParser.class, e);
 	            return null;
@@ -207,7 +204,7 @@ public class XMLMatchdetailsParser {
             		}
             	}
 
-            	//add single player
+            	//ignored events
             	if (iMinute > 0) {
             		switch (iMatchEventID) {
             		case 40:
@@ -228,6 +225,10 @@ public class XMLMatchdetailsParser {
             		case 332:
             		case 333:
             		case 334:
+					case 335:
+					case 336:
+					case 464:
+					case 471:
             		case 599:
             			break;
 

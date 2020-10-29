@@ -881,9 +881,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                 if ( m_vHighlights.size() == 0 || m_vHighlights.get(0).getMatchPartId() == null) {
                     HOLogger.instance().info(Matchdetails.class,
                             "Reload Matchdetails id: "+ this.getMatchID()
-                                    +" type:" + this.m_MatchTyp.getName()
-                                    +" events:" +  m_vHighlights.size()
-                    );
+                                    +" type:" + this.m_MatchTyp.getName());
                     try {
                         if ( OnlineWorker.downloadMatchData(this.getMatchID(), this.m_MatchTyp, true) ) {
                             m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchID());
