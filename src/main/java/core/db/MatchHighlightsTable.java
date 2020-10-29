@@ -58,7 +58,6 @@ final class MatchHighlightsTable extends AbstractTable {
 
 			try {
 				final ArrayList<MatchEvent> vHighlights = details.getHighlights();
-				HOLogger.instance().debug(getClass(), "count of highlights: " + vHighlights.size());
 				for (final MatchEvent highlight : vHighlights) {
 					StringBuilder sql = new StringBuilder(100);
 

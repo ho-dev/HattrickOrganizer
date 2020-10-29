@@ -819,7 +819,6 @@ public class MyConnector {
 			String encoding = response.getHeader("Content-Encoding");
 			if ((encoding != null) && encoding.equalsIgnoreCase("gzip")) {
 				resultingInputStream = new GZIPInputStream(response.getStream());
-				HOLogger.instance().log(getClass(), " Read GZIP.");
 			} else if ((encoding != null) && encoding.equalsIgnoreCase("deflate")) {
 				resultingInputStream = new InflaterInputStream(response.getStream(), new Inflater(
 						true));
