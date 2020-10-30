@@ -410,13 +410,15 @@ public class OnlineWorker {
 
 	private static int getRegionId(Map<String, String> team) {
 		String  str = team.get("RegionID");
-		return Integer.parseInt(str);
+		if ( str != null ) return Integer.parseInt(str);
+		return 0;
 	}
 
 	private  static int getArenaId(Map<String, String> team)
 	{
 		String str = team.get("ArenaID");
-		return Integer.parseInt(str);
+		if ( str != null ) return Integer.parseInt(str);
+		return 0;
 	}
 
 
