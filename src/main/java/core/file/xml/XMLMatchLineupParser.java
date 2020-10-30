@@ -128,12 +128,11 @@ public class XMLMatchLineupParser {
 
 		// nur wenn Player existiert
 		if (spielerID > 0) {
-			tmp = (Element) ele.getElementsByTagName("FirstName").item(0);
-			name = tmp.getFirstChild().getNodeValue();
-			tmp = (Element) ele.getElementsByTagName("LastName").item(0);
-			if (tmp.getFirstChild() != null) { // there are players without a lastname
-				name = name + " " + tmp.getFirstChild().getNodeValue();
-			}
+			// First- and LastName can be empty
+			name = getStringValue((Element)ele.getElementsByTagName("FirstName").item(0));
+			var lastName = getStringValue((Element)ele.getElementsByTagName("LastName").item(0));
+			if ( name.length()>0 && lastName.length()>0) name = name + " ";
+			name = name + lastName;
 
 			// tactic is only set for those in the lineup (and not for the keeper).
 			if (roleID == IMatchRoleID.keeper || IMatchRoleID.oldKeeper.contains(roleID)) {
@@ -180,12 +179,13 @@ public class XMLMatchLineupParser {
 					&& (roleID < IMatchRoleID.startReserves)
 					|| ((roleID >= IMatchRoleID.FirstPlayerReplaced) && (roleID <= IMatchRoleID.ThirdPlayerReplaced))) {
 				tmp = (Element) ele.getElementsByTagName("RatingStars").item(0);
-				rating = Double
-						.parseDouble(tmp.getFirstChild().getNodeValue().replaceAll(",", "."));
-				tmp = (Element) ele.getElementsByTagName("RatingStarsEndOfMatch").item(0);
-				ratingStarsEndOfMatch = Double.parseDouble(tmp.getFirstChild().getNodeValue()
-						.replaceAll(",", "."));
-
+				if ( tmp != null) {
+					rating = Double
+							.parseDouble(tmp.getFirstChild().getNodeValue().replaceAll(",", "."));
+					tmp = (Element) ele.getElementsByTagName("RatingStarsEndOfMatch").item(0);
+					ratingStarsEndOfMatch = Double.parseDouble(tmp.getFirstChild().getNodeValue()
+							.replaceAll(",", "."));
+				}
 			}
 		}
 
@@ -198,6 +198,15 @@ public class XMLMatchLineupParser {
 		return player;
 	}
 
+	/**
+	 * Get string content of ELement. If content is empty an empty string is returned.
+	 * @param tmp
+	 * @return String content of Element
+	 */
+	private static String getStringValue(Element tmp) {
+		if ( tmp.getFirstChild()!=null) return tmp.getFirstChild().getNodeValue();
+		return "";
+	}
 
 	private static MatchLineupTeam createTeam(int matchID, Element ele) {
 		Element tmp = (Element) ele.getElementsByTagName("TeamID").item(0);
@@ -244,7 +253,7 @@ public class XMLMatchLineupParser {
 		list = starting.getElementsByTagName("Player");
 
 		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-			MatchLineupPlayer startPlayer = createStartPlayer((Element) list.item(i));
+			MatchLineupPlayer startPlayer = createPlayer((Element) list.item(i));
 
 			// Merge with the existing player, but ignore captain and set piece
 			// position
@@ -339,7 +348,7 @@ public class XMLMatchLineupParser {
 				matchMinuteCriteria, pos, behaviour, RedCardCriteria.getById(card),
 				GoalDiffCriteria.getById(standing));
 	}
-
+/*
 	private static MatchLineupPlayer createStartPlayer(Element ele) {
 		MatchLineupPlayer player = null;
 		int roleID = -1;
@@ -355,12 +364,10 @@ public class XMLMatchLineupParser {
 
 		// nur wenn Player existiert
 		if (spielerID > 0) {
-			tmp = (Element) ele.getElementsByTagName("FirstName").item(0);
-			name = tmp.getFirstChild().getNodeValue();
-			tmp = (Element) ele.getElementsByTagName("LastName").item(0);
-			if (tmp.getFirstChild() != null) { // there are players without a lastname
-				name = name + " " + tmp.getFirstChild().getNodeValue();
-			}
+			name = getStringValue( (Element) ele.getElementsByTagName("FirstName").item(0));
+			var lastName = getStringValue( (Element) ele.getElementsByTagName("LastName").item(0));
+ 			if ( name.length()>0 && lastName.length()>0) name = name + " ";
+ 			name = name + lastName;
 
 			// tactic is only set for those in the lineup (and not for the
 			// keeper).
@@ -404,5 +411,5 @@ public class XMLMatchLineupParser {
 		player.setStartBehavior(behavior);
 		player.setStartPosition(roleID);
 		return player;
-	}
+	}*/
 }
