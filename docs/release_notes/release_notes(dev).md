@@ -6,9 +6,9 @@ layout: page
 Changelist HO! 4.0
 
 ## Some numbers:
-  - 203 commits
-  - 737 files changed (19 084 additions and 19 238 deletions)
-  - 85 issues closed
+  - 254 commits
+  - 765 files changed (20'477 additions and 21'045 deletions)
+  - 111 issues closed
   - 9 contributors
 
 
@@ -69,6 +69,7 @@ Changelist HO! 4.0
   - [FIX] Layout issue in multiple screen setup. [#618]
   - [FEAT] Remove all printing functionality.
   - [FEAT] Remove player state colour, and display icons instead in Lineup.
+  - [FEAT] Refactor progress bar display [#722]
 
 ### League
 

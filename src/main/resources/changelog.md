@@ -4,9 +4,9 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 # Changelist HO! 4.0
 
 ## Some numbers:
-  - 203 commits
-  - 737 files changed (19 084 additions and 19 238 deletions)
-  - 85 issues closed
+  - 254 commits
+  - 765 files changed (20'477 additions and 21'045 deletions)
+  - 111 issues closed
   - 9 contributors
 
 
