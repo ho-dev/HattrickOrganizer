@@ -209,7 +209,9 @@ public class TrainingPreviewPlayers implements Refreshable {
                         //Get the MatchLineup by id
                         //MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(matchInfo.getMatchID(), MatchKurzInfo.user_team_id);
                         var mlt = matchInfo.getMatchdetails().getTeamLineup();
-                        lMatchStats.add(new MatchStatistics(matchInfo, mlt));
+                        if ( mlt != null ) {
+                            lMatchStats.add(new MatchStatistics(matchInfo, mlt));
+                        }
                     } else if (matchInfo.getMatchStatus() == MatchKurzInfo.UPCOMING) {
                         LineupPosition lineuppos = DBManager.instance().getMatchOrder(matchInfo.getMatchID(), matchInfo.getMatchTyp());
                         if (lineuppos != null)
