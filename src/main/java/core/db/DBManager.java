@@ -51,7 +51,7 @@ import java.util.*;
 public class DBManager {
 
 	/** database version */
-	private static final int DBVersion = 400; // HO 4.0 version
+	private static final int DBVersion = 500; // HO 5.0 version
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);

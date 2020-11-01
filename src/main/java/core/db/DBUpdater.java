@@ -105,6 +105,8 @@ final class DBUpdater {
 					case 399:
 						updateDBv400(DBVersion, version);
 					case 400:
+					case 499:
+						updateDBv500(DBVersion, version);
 				}
 
 				HOLogger.instance().log(getClass(), "done.");
@@ -114,6 +116,14 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
+	}
+
+	private void updateDBv500(int dbVersion, int version) throws SQLException {
+		if ( !columnExistsInTable("YouthTeamName", BasicsTable.TABLENAME)){
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamName VARCHAR (127)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamID INTEGER");
+		}
+		updateDBVersion(dbVersion, version);
 	}
 
 	private void updateDBv400(int dbVersion, int version) throws SQLException {

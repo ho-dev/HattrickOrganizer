@@ -156,7 +156,7 @@ public class ConvertXml2Hrf {
 		int arenaId = 0;
 		try {
 			arenaId = Integer.parseInt(teamdetailsDataMap.get("ArenaID"));
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 			
 		}
 		Map<String, String> arenaDataMap = XMLArenaParser
@@ -317,26 +317,18 @@ public class ConvertXml2Hrf {
 		buffer.append("date=").append(teamdetailsDataMap.get("FetchedDate")).append('\n');
 		buffer.append("season=").append(worldDataMap.get("Season")).append('\n');
 		buffer.append("seasonOffset=").append(worldDataMap.get("SeasonOffset")).append('\n');
-		buffer.append("matchround=").append(worldDataMap.get("MatchRound"))
-				.append('\n');
-		buffer.append("teamID=").append(teamdetailsDataMap.get("TeamID"))
-				.append('\n');
-		buffer.append("teamName=").append(teamdetailsDataMap.get("TeamName"))
-				.append('\n');
-		buffer.append("activationDate=").append(teamdetailsDataMap.get("ActivationDate"))
-				.append('\n');
-		buffer.append("owner=").append(teamdetailsDataMap.get("Loginname"))
-				.append('\n');
-		buffer.append("ownerHomepage=")
-				.append(teamdetailsDataMap.get("HomePage")).append('\n');
-		buffer.append("countryID=").append(worldDataMap.get("CountryID"))
-				.append('\n');
-		buffer.append("leagueID=").append(teamdetailsDataMap.get("LeagueID"))
-				.append('\n');
-		buffer.append("regionID=").append(teamdetailsDataMap.get("RegionID"))
-				.append('\n');
-		buffer.append("hasSupporter=")
-				.append(teamdetailsDataMap.get("HasSupporter")).append('\n');
+		buffer.append("matchround=").append(worldDataMap.get("MatchRound")).append('\n');
+		buffer.append("teamID=").append(teamdetailsDataMap.get("TeamID")).append('\n');
+		buffer.append("teamName=").append(teamdetailsDataMap.get("TeamName")).append('\n');
+		buffer.append("youthTeamID=").append(teamdetailsDataMap.get("YouthTeamID")).append('\n');
+		buffer.append("youthTeamName=").append(teamdetailsDataMap.get("YouthTeamName")).append('\n');
+		buffer.append("activationDate=").append(teamdetailsDataMap.get("ActivationDate")).append('\n');
+		buffer.append("owner=").append(teamdetailsDataMap.get("Loginname")).append('\n');
+		buffer.append("ownerHomepage=").append(teamdetailsDataMap.get("HomePage")).append('\n');
+		buffer.append("countryID=").append(worldDataMap.get("CountryID")).append('\n');
+		buffer.append("leagueID=").append(teamdetailsDataMap.get("LeagueID")).append('\n');
+		buffer.append("regionID=").append(teamdetailsDataMap.get("RegionID")).append('\n');
+		buffer.append("hasSupporter=").append(teamdetailsDataMap.get("HasSupporter")).append('\n');
 	}
 
 	/**

@@ -8,12 +8,21 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Properties;
 
+import static java.lang.reflect.Array.getInt;
+
 
 /**
  * Benutzerdaten
  */
 public final class Basics  {
-    //~ Instance fields ----------------------------------------------------------------------------
+    /**
+     * youth team id (0 if non existing or no access in case of foreign teams)
+     */
+    private int m_iYouthTeamId;
+    /**
+     * youth team name (empty if non existing or no access in case of foreign teams)
+     */
+    private String m_sYouthTeamName;
 
     /** Manager */
     private String m_sManager = "";
@@ -56,71 +65,41 @@ public final class Basics  {
      * Creates a new Basics object.
      */
     public Basics(Properties properties) {
-        try {
-            m_clDatum = setDatumByString(properties.getProperty("date"));
-        } catch (Exception e) {
-            //Egal wenn nicht funzt...
-        }
-
-        try {
-            m_iTeamId = Integer.parseInt(properties.getProperty("teamid", "0"));
-        } catch (Exception e) {
-            m_iTeamId = 0;
-        }
-
+        m_clDatum = getTimestamp(properties, "date");
+        m_iTeamId = getInt(properties, "teamid", 0);
+        m_sYouthTeamName = properties.getProperty("youthteamname", "");
+        m_iYouthTeamId = getInt(properties, "youthteamid", 0);
         m_sTeamName = properties.getProperty("teamname", "");
         m_sManager = properties.getProperty("owner", "");
+        m_tActivationDate = getTimestamp(properties, "activationdate");
+        m_iLand = getInt(properties, "countryid", 0);
+        m_iLiga = getInt(properties, "leagueid", 0);
+        m_iSeason = getInt(properties, "season", 0);
+        m_iSeasonOffset = getInt(properties, "seasonoffset", 0);
+        m_iSpieltag = getInt(properties, "matchround", 0);
+        m_iRegionId = getInt(properties, "regionid", 0);
+        m_bHasSupporter = getBoolean(properties, "hassupporter", false);
+    }
 
+    private boolean getBoolean(Properties properties, String key, boolean def) {
         try {
-        	if (properties.containsKey("activationdate") && (!properties.getProperty("activationdate").equals("0"))) {
-        		m_tActivationDate = setDatumByString(properties.getProperty("activationdate"));
-        	} else {
-        		m_tActivationDate = null;
-        	}
-        } catch (Exception e) {
-            m_tActivationDate = new Timestamp(0);
-        }
+            return Boolean.parseBoolean(properties.getProperty(key));
+        } catch (Exception ignored) {}
+        return def;
+    }
 
+    private int getInt(Properties properties, String key, int def) {
         try {
-            m_iLand = Integer.parseInt(properties.getProperty("countryid", "0"));
-        } catch (Exception e) {
-            m_iLand = 0;
-        }
+            return Integer.parseInt(properties.getProperty(key));
+        } catch (Exception ignored) {}
+        return def;
+    }
 
+    private Timestamp getTimestamp(Properties properties, String key) {
         try {
-            m_iLiga = Integer.parseInt(properties.getProperty("leagueid", "0"));
-        } catch (Exception e) {
-            m_iLiga = 0;
-        }
-
-        try {
-            m_iSeason = Integer.parseInt(properties.getProperty("season", "0"));
-        } catch (Exception e) {
-            m_iSeason = 0;
-        }
-
-        try {
-            m_iSeasonOffset = Integer.parseInt(properties.getProperty("seasonOffset", "0"));
-        } catch (Exception e) {
-            m_iSeasonOffset = 0;
-        }
-
-        try {
-            m_iSpieltag = Integer.parseInt(properties.getProperty("matchround", "0"));
-        } catch (Exception e) {
-            m_iSpieltag = 0;
-        }
-        try {
-            m_iRegionId = Integer.parseInt(properties.getProperty("regionid", "0"));
-        } catch (Exception e) {
-            m_iRegionId = 0;
-        }
-        
-        try {
-        	m_bHasSupporter = Boolean.parseBoolean(properties.getProperty("hassupporter", "false"));
-        } catch (Exception e) {
-        	m_bHasSupporter = false;
-        }
+            return setDatumByString(properties.getProperty(key));
+        } catch (Exception ignored) {}
+        return null;
     }
 
     /**
@@ -140,8 +119,10 @@ public final class Basics  {
             m_iRegionId = rs.getInt("Region");
             m_bHasSupporter = rs.getBoolean("HasSupporter");
             m_tActivationDate = rs.getTimestamp("ActivationDate");
+            m_sYouthTeamName = rs.getString("YouthTeamName");
+            m_iYouthTeamId = rs.getInt("YouthTeamID");
         } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"Konstruktor Basics: " + e.toString());
+            HOLogger.instance().log(getClass(),"Constructor Basics: " + e.toString());
         }
     }
 
@@ -382,5 +363,21 @@ public final class Basics  {
 
     public void setSeasonOffset(int seasonOffset) {
         this.m_iSeasonOffset = seasonOffset;
+    }
+
+    public int getYouthTeamId() {
+        return m_iYouthTeamId;
+    }
+
+    public void setYouthTeamId(int m_iYouthTeamId) {
+        this.m_iYouthTeamId = m_iYouthTeamId;
+    }
+
+    public String getYouthTeamName() {
+        return m_sYouthTeamName;
+    }
+
+    public void setYouthTeamName(String m_sYouthTeamName) {
+        this.m_sYouthTeamName = m_sYouthTeamName;
     }
 }
