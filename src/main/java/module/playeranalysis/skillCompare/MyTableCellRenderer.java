@@ -77,7 +77,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 			}
 			catch(Exception e){}
 
-			Icon ic = ThemeManager.getIcon(HOIconName.SPECIALTIES_SMALL[spezWert]);
+			Icon ic = ImageUtilities.getSvgIcon(HOIconName.SPECIALTIES[spezWert], 15, 15);
 			label.setLayout(new BorderLayout());
 			label.setText(name[0]);
 			JLabel l2 = new JLabel(ic,SwingConstants.LEFT);

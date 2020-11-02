@@ -2,6 +2,7 @@ package module.specialEvents;
 
 import core.datatype.CBItem;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
@@ -523,8 +524,8 @@ public class FilterPanel extends JPanel {
 			if (component instanceof JLabel) {
 				if (item != null && item.getId() >= 0) {
 					if (item.getSpeciality() > 0) {
-						((JLabel) component).setIcon(ThemeManager.getIcon(HOIconName.SPECIALTIES_SMALL[item
-								.getSpeciality()]));
+						((JLabel) component).setIcon(ImageUtilities.getSvgIcon(HOIconName.SPECIALTIES[item.getSpeciality()], 15, 15));
+
 					} else {
 						((JLabel) component).setIcon(ThemeManager.getIcon(HOIconName.EMPTY));
 					}

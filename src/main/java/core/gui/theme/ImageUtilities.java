@@ -581,6 +581,19 @@ public class ImageUtilities {
 		return null;
 	}
 
+	public static Icon getSmallPlayerSpecialtyIcon(String playerSpecialtyName) {
+		return getPlayerSpecialtyIcon(playerSpecialtyName, 15);
+	}
+
+	public static Icon getPlayerSpecialtyIcon(String playerSpecialtyName, int size) {
+		if (Arrays.stream(HOIconName.SPECIALTIES).skip(1).anyMatch(playerSpecialtyName::equals)) {
+			String iconURI = String.format("gui/bilder/player overview/%s.svg", playerSpecialtyName);
+			Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
+			return IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
+		}
+		return null;
+	}
+
 
 	private static Color getJerseyColorByPosition(int posid) {
 		Color trickotfarbe;

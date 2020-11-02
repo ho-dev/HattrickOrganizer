@@ -362,7 +362,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             }
         }
 
-        m_jlSpezialitaet.setIcon(ThemeManager.getIcon(HOIconName.SPECIALTIES_SMALL[player.getPlayerSpecialty()]));
+        m_jlSpezialitaet.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[player.getPlayerSpecialty()]));
 
         // positionValue
         if (m_bShowTrikot && (m_fPositionsbewertung != 0f) && !m_bAlternativePosition) {
