@@ -8,6 +8,7 @@ import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.Font;
@@ -581,11 +582,15 @@ public class ImageUtilities {
 		return null;
 	}
 
-	public static Icon getSmallPlayerSpecialtyIcon(String playerSpecialtyName) {
+	public static @Nullable Icon getSmallPlayerSpecialtyIcon(String playerSpecialtyName) {
 		return getPlayerSpecialtyIcon(playerSpecialtyName, 15);
 	}
 
-	public static Icon getPlayerSpecialtyIcon(String playerSpecialtyName, int size) {
+	public static @Nullable Icon getLargePlayerSpecialtyIcon(String playerSpecialtyName) {
+		return getPlayerSpecialtyIcon(playerSpecialtyName, 18);
+	}
+
+	public static @Nullable Icon getPlayerSpecialtyIcon(String playerSpecialtyName, int size) {
 		if (Arrays.stream(HOIconName.SPECIALTIES).skip(1).anyMatch(playerSpecialtyName::equals)) {
 			String iconURI = String.format("gui/bilder/player overview/%s.svg", playerSpecialtyName);
 			Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
