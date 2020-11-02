@@ -293,53 +293,39 @@ public class xmlPlayersParser {
                 //        <ScoutComments>
                 var ScoutComments = (Element)scoutCall.getElementsByTagName("ScoutComments").item(0);
                 //          <ScoutComment>
-                //            <CommentText>Wir haben einen aussichtsreichen Kandidaten zu beurteilen. Er trägt den Namen Claudio Dattenfeld und ist 16 Jahre alt.</CommentText>
-                //            <CommentType>1</CommentType>
-                //            <CommentVariation>1</CommentVariation>
-                //            <CommentSkillType>264643130</CommentSkillType>
-                //            <CommentSkillLevel>16</CommentSkillLevel>
-                //          </ScoutComment>
-                //          <ScoutComment>
-                //            <CommentText>Ohne weiteres Training wird dieser Spieler in Sachen Spielaufbau nicht über durchschnittlich hinauskommen.&amp;nbsp;</CommentText>
-                //            <CommentType>4</CommentType>
-                //            <CommentVariation>2</CommentVariation>
-                //            <CommentSkillType>4</CommentSkillType>
-                //            <CommentSkillLevel>5</CommentSkillLevel>
-                //          </ScoutComment>
-                //          <ScoutComment>
-                //            <CommentText>Ich würde sagen, seine Fähigkeiten als Allrounder sind als durchschnittlich einzustufen.&amp;nbsp;</CommentText>
-                //            <CommentType>6</CommentType>
-                //            <CommentVariation>2</CommentVariation>
-                //            <CommentSkillType>5</CommentSkillType>
-                //            <CommentSkillLevel>0</CommentSkillLevel>
-                //          </ScoutComment>
-                //          <ScoutComment>
-                //            <CommentText>Wenn er die Chance erhält, seine Fähigkeiten in Verteidigung zu verbessern, könnte dieser Spieler darin durchschnittlich werden.&amp;nbsp;</CommentText>
-                //            <CommentType>5</CommentType>
-                //            <CommentVariation>1</CommentVariation>
-                //            <CommentSkillType>3</CommentSkillType>
-                //            <CommentSkillLevel>5</CommentSkillLevel>
-                //          </ScoutComment>
-                //          <ScoutComment>
-                //            <CommentText>Was meinst du, sollen wir ihm eine Chance geben?</CommentText>
-                //            <CommentType>7</CommentType>
-                //            <CommentVariation>0</CommentVariation>
-                //            <CommentSkillType>0</CommentSkillType>
-                //            <CommentSkillLevel>0</CommentSkillLevel>
-                //          </ScoutComment>
+                var ScoutCommentsList = ScoutComments.getElementsByTagName("ScoutComment");
+                for (int c = 0; (ScoutCommentsList != null) && (c < ScoutCommentsList.getLength()); c++) {
+                    var ScoutComment = (Element) ScoutCommentsList.item(c);
+                    var prefix = "ScoutComment"+c;
+                    //            <CommentText>Wir haben einen aussichtsreichen Kandidaten zu beurteilen. Er trägt den Namen Claudio Dattenfeld und ist 16 Jahre alt.</CommentText>
+                    xmlValue2Hash(hash, ScoutComment, "CommentText", prefix+"Text");
+                    //            <CommentType>1</CommentType>
+                    xmlValue2Hash(hash, ScoutComment, "CommentType", prefix+"Type");
+                    //            <CommentVariation>1</CommentVariation>
+                    xmlValue2Hash(hash, ScoutComment, "CommentVariation", prefix+"Variation");
+                    //            <CommentSkillType>264643130</CommentSkillType>
+                    xmlValue2Hash(hash, ScoutComment, "CommentSkillType", prefix+"SkillType");
+                    //            <CommentSkillLevel>16</CommentSkillLevel>
+                    xmlValue2Hash(hash, ScoutComment, "CommentSkillLevel", prefix+"SkillLevel");
+                    //          </ScoutComment>
+                }
                 //        </ScoutComments>
                 //      </ScoutCall>
+                var LastMatch = (Element) root.getElementsByTagName("LastMatch").item(0);
                 //      <LastMatch>
                 //        <YouthMatchID>116841872</YouthMatchID>
+                xmlValue2Hash(hash, LastMatch, "YouthMatchID");
                 //        <Date>2020-10-29 04:10:00</Date>
+                xmlValue2Hash(hash, LastMatch, "Date", "YouthMatchDate");
                 //        <PositionCode>105</PositionCode>
+                xmlValue2Hash(hash, LastMatch, "PositionCode");
                 //        <PlayedMinutes>90</PlayedMinutes>
+                xmlValue2Hash(hash, LastMatch, "PlayedMinutes");
                 //        <Rating>5</Rating>
+                xmlValue2Hash(hash, LastMatch, "Rating");
                 //      </LastMatch>
                 //    </YouthPlayer>
-
-
-                        ret.add(hash);
+                ret.add(hash);
             }
         } catch (Exception e) {
         }
