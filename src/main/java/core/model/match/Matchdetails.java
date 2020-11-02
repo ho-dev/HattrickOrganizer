@@ -882,14 +882,22 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                     HOLogger.instance().info(Matchdetails.class,
                             "Reload Matchdetails id: "+ this.getMatchID()
                                     +" type:" + this.m_MatchTyp.getName());
+                    boolean silenDownloadMode = OnlineWorker.isSilentDownload();
                     try {
+                        OnlineWorker.setSilentDownload(true);
                         if ( OnlineWorker.downloadMatchData(this.getMatchID(), this.m_MatchTyp, true) ) {
                             m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchID());
                             maxMatchdetailsReloadsPerSession--;
                         }
+                        else {
+                            maxMatchdetailsReloadsPerSession=0;
+                        }
                     }
                     catch (Exception ex){
                         HOLogger.instance().error(Matchdetails.class, ex.getMessage());
+                    }
+                    finally {
+                        OnlineWorker.setSilentDownload(silenDownloadMode);
                     }
                 }
             }

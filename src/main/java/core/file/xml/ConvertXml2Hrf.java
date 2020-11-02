@@ -92,8 +92,9 @@ public class ConvertXml2Hrf {
 			}
 		}
 		
-		Map<String, String> teamdetailsDataMap = XMLTeamDetailsParser
-				.parseTeamdetailsFromString(teamDetails, teamId);
+		Map<String, String> teamdetailsDataMap = XMLTeamDetailsParser.parseTeamdetailsFromString(teamDetails, teamId);
+		if ( teamdetailsDataMap == null || teamdetailsDataMap.size()==0) return null;
+
 		HOMainFrame.instance().setWaitInformation(10);
 		Map<String, String> clubDataMap = XMLClubParser.parseClubFromString(mc.getVerein(teamId));
 		HOMainFrame.instance().setWaitInformation(15);
