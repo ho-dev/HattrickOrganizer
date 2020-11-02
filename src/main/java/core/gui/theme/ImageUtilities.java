@@ -16,10 +16,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageProducer;
 import java.awt.image.PixelGrabber;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import javax.swing.*;
 
@@ -572,6 +569,18 @@ public class ImageUtilities {
 
         return komplettIcon;
     }
+
+	public static Icon getSmileyIcon(String smileyName) {
+		if (Arrays.stream(HOIconName.SMILEYS).anyMatch(smileyName::equals)) {
+			int size = 16;
+			if (smileyName.equals("smiley-coach") || smileyName.equals("smiley-sale")) size = 18;
+			String iconURI = String.format("gui/bilder/smilies/%s.svg", smileyName);
+			Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.SMILEYS_COLOR));
+			return IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
+		}
+		return null;
+	}
+
 
 	private static Color getJerseyColorByPosition(int posid) {
 		Color trickotfarbe;

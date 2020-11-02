@@ -393,6 +393,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(SHIRT_SUBFORWARD, new Color(255, 200, 200));
 		put(SHIRT, "ho_gray1");
 
+		// Smileys
+		put(SMILEYS_COLOR, "black");
+
 		put(STAT_LEADERSHIP, Color.GRAY);
 		put(STAT_EXPERIENCE, Color.DARK_GRAY);
 		put(STAT_FORM, Color.PINK);
