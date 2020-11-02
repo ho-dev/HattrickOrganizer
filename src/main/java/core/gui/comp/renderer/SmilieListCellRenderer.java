@@ -1,10 +1,13 @@
-// %1885149141:de.hattrickorganizer.gui.model%
 package core.gui.comp.renderer;
 
+import com.github.weisj.darklaf.icons.IconLoader;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.*;
 import javax.swing.*;
 import java.util.Arrays;
+import java.util.Map;
+
+import static core.gui.theme.HOIconName.SMILEYS;
 
 
 /**
@@ -27,11 +30,9 @@ public final class SmilieListCellRenderer implements javax.swing.ListCellRendere
                                                                  boolean cellHasFocus) {
         if (obj instanceof String && !"".equals(obj)) {
 
-            if (Arrays.stream(HOIconName.SMILEYS).anyMatch(obj::equals)) {
+            if (Arrays.stream(SMILEYS).anyMatch(obj::equals)) {
                 // smiley icon
-                int size = 22;
-                if (obj.equals("smiley-happy") || obj.equals("smiley-sad") || obj.equals("smiley-neutral")) size = 18;
-                m_clEntry.setIcon(ImageUtilities.getSvgIcon(obj.toString(), size, size));
+                m_clEntry.setIcon(ImageUtilities.getSmileyIcon(obj.toString()));
                 return m_clEntry.getComponent(isSelected);
             } else if (Arrays.stream(GroupTeamFactory.TEAMSMILIES).anyMatch(obj::equals)) {
                 // jersey icon

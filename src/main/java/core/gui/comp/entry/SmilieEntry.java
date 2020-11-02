@@ -1,12 +1,15 @@
 // %3364174802:de.hattrickorganizer.gui.model%
 package core.gui.comp.entry;
 
+import com.github.weisj.darklaf.icons.IconLoader;
 import core.gui.theme.GroupTeamFactory;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ImageUtilities;
+import core.gui.theme.ThemeManager;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-
 import javax.swing.SwingConstants;
-
+import java.util.Map;
 
 
 /**
@@ -112,7 +115,7 @@ public class SmilieEntry extends DoppelLabelEntry {
             }
 
             if ((player.getManuellerSmilie() != null) && !player.getManuellerSmilie().equals("")) {
-                manuell.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(player.getManuellerSmilie()));
+                manuell.setIcon(ImageUtilities.getSmileyIcon(player.getManuellerSmilie()));
             } else {
                 manuell.clear();
             }
