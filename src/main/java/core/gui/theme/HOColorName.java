@@ -80,6 +80,8 @@ public interface HOColorName {
 	public static final String SHIRT_SUBFORWARD 		= "shirt.subFor";
 	public static final String SHIRT 					= "shirt";
 
+	String SMILEYS_COLOR = "smileys_color";
+
 	// Statistics
 	public static final String STAT_LEADERSHIP 			= "stat.leadership";
 	public static final String STAT_EXPERIENCE 			= "stat.experience";;
