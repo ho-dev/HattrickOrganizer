@@ -5,6 +5,7 @@ import core.util.HOLogger;
 import java.io.File;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -56,6 +57,22 @@ public class XMLManager  {
 
         return "";
     }
+
+    public static void xmlValue2Hash(Map<String, String> hash, Element element, String xmlKey, String hashKey) {
+        var ele = (Element) element.getElementsByTagName(xmlKey).item(0);
+        hash.put(hashKey, (XMLManager.getFirstChildNodeValue(ele)));
+    }
+
+    public static void xmlValue2Hash(Map<String, String> hash, Element element, String key) {
+        var ele = (Element) element.getElementsByTagName(key).item(0);
+        hash.put(key, (XMLManager.getFirstChildNodeValue(ele)));
+    }
+
+    public static void xmlAttribute2Hash(Map<String, String> hash, Element root, String xmlElementname, String xmlAttributename) {
+        var ele = (Element) root.getElementsByTagName(xmlElementname).item(0);
+        hash.put(xmlElementname+xmlAttributename, ele.getAttribute(xmlAttributename));
+    }
+
 
     /**
      * Parse XM from file name.

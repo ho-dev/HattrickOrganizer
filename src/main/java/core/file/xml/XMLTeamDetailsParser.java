@@ -16,6 +16,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import static core.file.xml.XMLManager.xmlValue2Hash;
+
 /**
  * 
  * @author thomas.werth
@@ -168,17 +170,6 @@ public class XMLTeamDetailsParser {
 
 		return hash;
 	}
-
-	private static void xmlValue2Hash(Map<String, String> hash, Element element, String xmlKey, String hashKey) {
-		var ele = (Element) element.getElementsByTagName(xmlKey).item(0);
-		hash.put(hashKey, (XMLManager.getFirstChildNodeValue(ele)));
-	}
-
-	private static void xmlValue2Hash(Map<String, String> hash, Element element, String key) {
-		var ele = (Element) element.getElementsByTagName(key).item(0);
-		hash.put(key, (XMLManager.getFirstChildNodeValue(ele)));
-	}
-
 
 	public static List<TeamInfo> getTeamInfoFromString(String input) {
 		Document doc = XMLManager.parseString(input);

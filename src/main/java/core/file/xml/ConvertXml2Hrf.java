@@ -140,8 +140,11 @@ public class ConvertXml2Hrf {
 		MatchLineup matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(mc.getMatchLineup(-1, teamId,
 						MatchType.LEAGUE).toString());
 		HOMainFrame.instance().setWaitInformation(30);
-		List<MyHashtable> playersData = new xmlPlayersParser()
-				.parsePlayersFromString(mc.getPlayers(teamId));
+		List<MyHashtable> playersData = new xmlPlayersParser().parsePlayersFromString(mc.getPlayers(teamId));
+		int youthteamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
+		if ( youthteamId > 0 ){
+			List<MyHashtable> youthplayers = new xmlPlayersParser().parseYouthPlayersFromString(mc.getYouthPlayers(youthteamId));
+		}
 		HOMainFrame.instance().setWaitInformation(35);
 		Map<String, String> economyDataMap = XMLEconomyParser
 				.parseEconomyFromString(mc.getEconomy(teamId));

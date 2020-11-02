@@ -65,6 +65,7 @@ public class MyConnector {
 	private final static String VERSION_MATCHLINEUP = "2.0";
 	private final static String VERSION_MATCHDETAILS = "3.0";
 	private final static String VERSION_PLAYERS = "2.4";
+	private final static String VERSION_YOUTHPLAYERLIST = "1.1";
 	private final static String VERSION_WORLDDETAILS = "1.8";
 	private final static String VERSION_TOURNAMENTDETAILS = "1.0";
 	private final static String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";
@@ -449,6 +450,11 @@ public class MyConnector {
 	 */
 	public String getPlayers(int teamId) throws IOException {
 		String url = htUrl + "?file=players&version=" + VERSION_PLAYERS+"&includeMatchInfo=true&teamID=" + teamId;
+		return getCHPPWebFile(url);
+	}
+
+	public String getYouthPlayers(int youthteamId) throws IOException {
+		String url = htUrl + "?file=youthplayerlist&version=" + VERSION_YOUTHPLAYERLIST +"&actionType=details&showScoutCall=true&showLastMatch=true&youthTeamID=" + youthteamId;
 		return getCHPPWebFile(url);
 	}
 

@@ -1,10 +1,14 @@
 package core.file.xml;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import static core.file.xml.XMLManager.xmlAttribute2Hash;
+import static core.file.xml.XMLManager.xmlValue2Hash;
 
 
 public class xmlPlayersParser {
@@ -179,4 +183,180 @@ public class xmlPlayersParser {
 
         return liste;
     }
+
+    public List<MyHashtable> parseYouthPlayersFromString(String inputStream) {
+        Document doc = XMLManager.parseString(inputStream);
+        return createYouthPlayerList(doc);
+    }
+
+    private List<MyHashtable> createYouthPlayerList(Document doc) {
+        final Vector<MyHashtable> ret = new Vector<>();
+        MyHashtable hash = null;
+        Element ele = null;
+        Element root = null;
+        NodeList list = null;
+
+        try {
+
+            root = doc.getDocumentElement();
+            root = (Element) root.getElementsByTagName("PlayerList").item(0);
+
+            // <YouthPlayer>
+            list = root.getElementsByTagName("YouthPlayer");
+            for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+                hash = new core.file.xml.MyHashtable();
+
+                root = (Element) list.item(i);
+
+                //<YouthPlayerID>264643130</YouthPlayerID>
+                xmlValue2Hash(hash, root, "YouthPlayerID");
+                //<FirstName>Claudio</FirstName>
+                xmlValue2Hash(hash, root, "FirstName");
+                //      <NickName />
+                xmlValue2Hash(hash, root, "NickName");
+                //      <LastName>Dattenfeld</LastName>
+                xmlValue2Hash(hash, root, "LastName");
+                //      <Age>18</Age>
+                xmlValue2Hash(hash, root, "Age");
+                //      <AgeDays>50</AgeDays>
+                xmlValue2Hash(hash, root, "AgeDays");
+                //      <ArrivalDate>2020-04-18 09:11:00</ArrivalDate>
+                xmlValue2Hash(hash, root, "ArrivalDate");
+                //      <CanBePromotedIn>-85</CanBePromotedIn>
+                xmlValue2Hash(hash, root, "CanBePromotedIn");
+                //      <PlayerNumber>100</PlayerNumber>
+                xmlValue2Hash(hash, root, "PlayerNumber");
+                //      <Statement />
+                xmlValue2Hash(hash, root, "Statement");
+                //      <OwnerNotes />
+                xmlValue2Hash(hash, root, "OwnerNotes");
+                //      <PlayerCategoryID>0</PlayerCategoryID>
+                xmlValue2Hash(hash, root, "PlayerCategoryID");
+                //      <Cards>0</Cards>
+                xmlValue2Hash(hash, root, "Cards");
+                //      <InjuryLevel>-1</InjuryLevel>
+                xmlValue2Hash(hash, root, "InjuryLevel");
+                //      <Specialty>3</Specialty>
+                xmlValue2Hash(hash, root, "Specialty");
+                //      <CareerGoals>3</CareerGoals>
+                xmlValue2Hash(hash, root, "CareerGoals");
+                //      <CareerHattricks>0</CareerHattricks>
+                xmlValue2Hash(hash, root, "CareerHattricks");
+                //      <LeagueGoals>0</LeagueGoals>
+                xmlValue2Hash(hash, root, "LeagueGoals");
+                //      <FriendlyGoals>1</FriendlyGoals>
+                xmlValue2Hash(hash, root, "FriendlyGoals");
+                //      <OwningYouthTeam>
+                //        <YouthTeamID>2325763</YouthTeamID>
+                //        <YouthTeamName>Brenk Street Boys 2</YouthTeamName>
+                //        <YouthTeamLeagueID>685791</YouthTeamLeagueID>
+                //        <SeniorTeam>
+                //          <SeniorTeamID>1242154</SeniorTeamID>
+                //          <SeniorTeamName>Juventus Brenk 2</SeniorTeamName>
+                //        </SeniorTeam>
+                //      </OwningYouthTeam>
+                //      <PlayerSkills>
+                var playerSkills = (Element) root.getElementsByTagName("PlayerSkills").item(0);
+                //        <KeeperSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+                //        <KeeperSkillMax IsAvailable="True">2</KeeperSkillMax>
+                youthplayerSkills2Hash(hash, playerSkills,"KeeperSkill");
+                //        <DefenderSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+                //        <DefenderSkillMax IsAvailable="True">5</DefenderSkillMax>
+                youthplayerSkills2Hash(hash, playerSkills,"DefenderSkill");
+                //        <PlaymakerSkill IsAvailable="True" IsMaxReached="False">5</PlaymakerSkill>
+                //        <PlaymakerSkillMax IsAvailable="True">6</PlaymakerSkillMax>
+                youthplayerSkills2Hash(hash, playerSkills,"PlaymakerSkill");
+                //        <WingerSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+                //        <WingerSkillMax IsAvailable="True">6</WingerSkillMax>
+                youthplayerSkills2Hash(hash, playerSkills,"WingerSkill");
+                //        <PassingSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+                //        <PassingSkillMax IsAvailable="True">4</PassingSkillMax>
+                youthplayerSkills2Hash(hash, playerSkills,"PassingSkill");
+                //        <ScorerSkill IsAvailable="True" IsMaxReached="True">3</ScorerSkill>
+                //        <ScorerSkillMax IsAvailable="True">3</ScorerSkillMax>
+                youthplayerSkills2Hash(hash, playerSkills,"ScorerSkill");
+                //        <SetPiecesSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+                //        <SetPiecesSkillMax IsAvailable="False" MayUnlock="False" />
+                youthplayerSkills2Hash(hash, playerSkills,"SetPiecesSkill");
+                //      </PlayerSkills>
+                //      <ScoutCall>
+                var scoutCall = (Element) root.getElementsByTagName("ScoutCall").item(0);
+                //        <Scout>
+                var scout = (Element)scoutCall.getElementsByTagName("Sout").item(0);
+                //          <ScoutId>382876</ScoutId>
+                xmlValue2Hash(hash, scout, "ScoutId");
+                //          <ScoutName>Joerg Hopfen</ScoutName>
+                xmlValue2Hash(hash, scout, "ScoutName");
+                //        </Scout>
+                //        <ScoutingRegionID>229</ScoutingRegionID>
+                xmlValue2Hash(hash, scoutCall, "ScoutingRegionID");
+                //        <ScoutComments>
+                var ScoutComments = (Element)scoutCall.getElementsByTagName("ScoutComments").item(0);
+                //          <ScoutComment>
+                //            <CommentText>Wir haben einen aussichtsreichen Kandidaten zu beurteilen. Er trägt den Namen Claudio Dattenfeld und ist 16 Jahre alt.</CommentText>
+                //            <CommentType>1</CommentType>
+                //            <CommentVariation>1</CommentVariation>
+                //            <CommentSkillType>264643130</CommentSkillType>
+                //            <CommentSkillLevel>16</CommentSkillLevel>
+                //          </ScoutComment>
+                //          <ScoutComment>
+                //            <CommentText>Ohne weiteres Training wird dieser Spieler in Sachen Spielaufbau nicht über durchschnittlich hinauskommen.&amp;nbsp;</CommentText>
+                //            <CommentType>4</CommentType>
+                //            <CommentVariation>2</CommentVariation>
+                //            <CommentSkillType>4</CommentSkillType>
+                //            <CommentSkillLevel>5</CommentSkillLevel>
+                //          </ScoutComment>
+                //          <ScoutComment>
+                //            <CommentText>Ich würde sagen, seine Fähigkeiten als Allrounder sind als durchschnittlich einzustufen.&amp;nbsp;</CommentText>
+                //            <CommentType>6</CommentType>
+                //            <CommentVariation>2</CommentVariation>
+                //            <CommentSkillType>5</CommentSkillType>
+                //            <CommentSkillLevel>0</CommentSkillLevel>
+                //          </ScoutComment>
+                //          <ScoutComment>
+                //            <CommentText>Wenn er die Chance erhält, seine Fähigkeiten in Verteidigung zu verbessern, könnte dieser Spieler darin durchschnittlich werden.&amp;nbsp;</CommentText>
+                //            <CommentType>5</CommentType>
+                //            <CommentVariation>1</CommentVariation>
+                //            <CommentSkillType>3</CommentSkillType>
+                //            <CommentSkillLevel>5</CommentSkillLevel>
+                //          </ScoutComment>
+                //          <ScoutComment>
+                //            <CommentText>Was meinst du, sollen wir ihm eine Chance geben?</CommentText>
+                //            <CommentType>7</CommentType>
+                //            <CommentVariation>0</CommentVariation>
+                //            <CommentSkillType>0</CommentSkillType>
+                //            <CommentSkillLevel>0</CommentSkillLevel>
+                //          </ScoutComment>
+                //        </ScoutComments>
+                //      </ScoutCall>
+                //      <LastMatch>
+                //        <YouthMatchID>116841872</YouthMatchID>
+                //        <Date>2020-10-29 04:10:00</Date>
+                //        <PositionCode>105</PositionCode>
+                //        <PlayedMinutes>90</PlayedMinutes>
+                //        <Rating>5</Rating>
+                //      </LastMatch>
+                //    </YouthPlayer>
+
+
+                        ret.add(hash);
+            }
+        } catch (Exception e) {
+        }
+
+        return ret;
+    }
+
+    private void youthplayerSkills2Hash(MyHashtable hash, Element playerSkills, String skill) {
+        //        <KeeperSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+        xmlValue2Hash(hash, playerSkills, skill);
+        xmlAttribute2Hash(hash, playerSkills, skill, "IsAvailable");
+        xmlAttribute2Hash(hash, playerSkills, skill, "IsMaxReached");
+        xmlAttribute2Hash(hash, playerSkills, skill, "MayUnlock");
+        //        <KeeperSkillMax IsAvailable="True">2</KeeperSkillMax>
+        xmlValue2Hash(hash, playerSkills, skill+"Max");
+        xmlAttribute2Hash(hash, playerSkills, skill+"Max", "IsAvailable");
+    }
+
+
 }
