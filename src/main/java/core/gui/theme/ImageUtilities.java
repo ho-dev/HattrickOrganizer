@@ -573,11 +573,17 @@ public class ImageUtilities {
 
 	public static Icon getSmileyIcon(String smileyName) {
 		if (Arrays.stream(HOIconName.SMILEYS).anyMatch(smileyName::equals)) {
-			int size = 16;
-			if (smileyName.equals("smiley-coach") || smileyName.equals("smiley-sale")) size = 18;
-			String iconURI = String.format("gui/bilder/smilies/%s.svg", smileyName);
-			Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.SMILEYS_COLOR));
-			return IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
+			String key = smileyName + "_cached";
+			Icon smileyIcon = ThemeManager.instance().getIcon(key);
+			if (smileyIcon == null) {
+				int size = 15;
+				if (smileyName.equals("smiley-coach") || smileyName.equals("smiley-sale")) size = 17;
+				String iconURI = String.format("gui/bilder/smilies/%s.svg", smileyName);
+				Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.SMILEYS_COLOR));
+				smileyIcon = IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
+				ThemeManager.instance().put(key, smileyIcon);
+			}
+			return smileyIcon;
 		}
 		return null;
 	}
@@ -592,9 +598,15 @@ public class ImageUtilities {
 
 	public static @Nullable Icon getPlayerSpecialtyIcon(String playerSpecialtyName, int size) {
 		if (Arrays.stream(HOIconName.SPECIALTIES).skip(1).anyMatch(playerSpecialtyName::equals)) {
+			String key = playerSpecialtyName + "_" + size;
+			Icon specialtyIcon = ThemeManager.instance().getIcon(key);
+			if (specialtyIcon == null) {
 			String iconURI = String.format("gui/bilder/player overview/%s.svg", playerSpecialtyName);
 			Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
-			return IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
+			specialtyIcon = IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
+			ThemeManager.instance().put(key, specialtyIcon);
+			}
+			return specialtyIcon;
 		}
 		return null;
 	}
