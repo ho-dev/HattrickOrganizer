@@ -282,7 +282,7 @@ public class xmlPlayersParser {
                 //      <ScoutCall>
                 var scoutCall = (Element) root.getElementsByTagName("ScoutCall").item(0);
                 //        <Scout>
-                var scout = (Element)scoutCall.getElementsByTagName("Sout").item(0);
+                var scout = (Element)scoutCall.getElementsByTagName("Scout").item(0);
                 //          <ScoutId>382876</ScoutId>
                 xmlValue2Hash(hash, scout, "ScoutId");
                 //          <ScoutName>Joerg Hopfen</ScoutName>
