@@ -38,7 +38,7 @@ public class UserTeamPlayerPanel extends PlayerPanel {
                     (byte) lineup.getTacticCode(),
                     0
             ));
-            specialEventImage.setIcon(ThemeManager.getIcon(HOIconName.SPECIALTIES[lineup.getSpecialEvent()]));
+            specialEventImage.setIcon(ImageUtilities.getLargePlayerSpecialtyIcon(HOIconName.SPECIALTIES[lineup.getSpecialEvent()]));
             positionField.setText(MatchRoleID.getNameForPosition((byte) lineup.getPosition()));
             updateRatingPanel(lineup.getRating());
             tacticPanel.reload(new ArrayList<>());
