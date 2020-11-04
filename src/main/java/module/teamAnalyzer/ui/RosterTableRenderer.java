@@ -54,7 +54,7 @@ public class RosterTableRenderer extends DefaultTableCellRenderer {
 
             if (column == 9) {
                 int v = Integer.parseInt((String) value);
-                Icon icon = ThemeManager.getIcon(HOIconName.SPECIALTIES[v]);
+                Icon icon = ImageUtilities.getLargePlayerSpecialtyIcon(HOIconName.SPECIALTIES[v]);
                 setIcon(icon);
                 setText("");
                 return this;

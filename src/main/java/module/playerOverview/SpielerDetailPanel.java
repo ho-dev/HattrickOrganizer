@@ -537,7 +537,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jpGoalsTotal.setText(m_clPlayer.getToreGesamt() + "");
         m_jpHattricks.setText(m_clPlayer.getHattrick() + "");
         m_jpSpeciality.setText(PlayerSpeciality.toString(m_clPlayer.getPlayerSpecialty()));
-        m_jpSpeciality.setIcon(ThemeManager.getIcon(HOIconName.SPECIALTIES_SMALL[m_clPlayer.getPlayerSpecialty()]));
+        m_jpSpeciality.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[m_clPlayer.getPlayerSpecialty()]));
         m_jpAggressivity.setText(PlayerAggressiveness.toString(m_clPlayer.getAgressivitaet()));
         m_jpHonesty.setText(PlayerAgreeability.toString(m_clPlayer.getCharakter()));
         m_jpAgreeability.setText(PlayerHonesty.toString(m_clPlayer.getAnsehen()));
