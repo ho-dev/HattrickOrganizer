@@ -28,6 +28,7 @@ import core.util.HOLogger;
 import core.util.IOUtils;
 import module.lineup.substitution.model.Substitution;
 import core.HO;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -55,7 +56,7 @@ public class ConvertXml2Hrf {
 	 * 
 	 * @throws IOException
 	 */
-	public static String createHrf()
+	public static @Nullable String createHrf()
 			throws IOException {
 		// init
 		StringBuilder buffer = new StringBuilder();
@@ -92,8 +93,9 @@ public class ConvertXml2Hrf {
 			}
 		}
 		
-		Map<String, String> teamdetailsDataMap = XMLTeamDetailsParser
-				.parseTeamdetailsFromString(teamDetails, teamId);
+		Map<String, String> teamdetailsDataMap = XMLTeamDetailsParser.parseTeamdetailsFromString(teamDetails, teamId);
+		if (teamdetailsDataMap.size() == 0) return null;
+
 		HOMainFrame.instance().setWaitInformation(10);
 		Map<String, String> clubDataMap = XMLClubParser.parseClubFromString(mc.getVerein(teamId));
 		HOMainFrame.instance().setWaitInformation(15);

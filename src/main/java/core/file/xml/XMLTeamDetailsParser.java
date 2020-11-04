@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -63,7 +64,7 @@ public class XMLTeamDetailsParser {
 		return parseDetails(XMLManager.parseString(inputStream), teamId);
 	}
 
-	private static Map<String, String> parseDetails(Document doc, int teamId) {
+	private static Map<String, String> parseDetails(@Nullable Document doc, int teamId) {
 		Element ele, root;
 		Map<String, String> hash = new core.file.xml.MyHashtable();
 
