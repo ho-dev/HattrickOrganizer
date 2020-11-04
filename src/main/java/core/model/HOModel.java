@@ -5,6 +5,7 @@ import core.model.misc.Basics;
 import core.model.misc.Finanzen;
 import core.model.misc.Verein;
 import core.model.player.Player;
+import core.model.player.YouthPlayer;
 import core.model.series.Liga;
 import core.net.OnlineWorker;
 import core.training.TrainingPerWeek;
@@ -41,6 +42,7 @@ public class HOModel {
     private Team m_clTeam;
     private static List<Player> m_vOldPlayer;
     private List<Player> m_vPlayer;
+    private List<YouthPlayer> youthPlayers;
     private Verein m_clVerein;
     private XtraData m_clXtraDaten;
     private int m_iID = -1;
@@ -433,9 +435,16 @@ public class HOModel {
      */
     public final void addPlayer(Player player) {
     	if (m_vPlayer == null) {
-    		m_vPlayer = new Vector<>();
+    		m_vPlayer = new ArrayList<>();
 		}
         m_vPlayer.add(player);
+    }
+
+    public final  void addYouthPlayer(YouthPlayer player){
+        if ( youthPlayers == null){
+            youthPlayers = new ArrayList<>();
+        }
+        youthPlayers.add(player);
     }
 
     /**

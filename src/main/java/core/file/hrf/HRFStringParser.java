@@ -10,6 +10,7 @@ import core.model.misc.Finanzen;
 import core.model.misc.Verein;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.model.player.YouthPlayer;
 import core.model.series.Liga;
 import core.util.HOLogger;
 import core.util.IOUtils;
@@ -37,6 +38,7 @@ public class HRFStringParser {
 	private static final String ECONOMY = "[economy]";
 	private static final String ARENA = "[arena]";
 	private static final String PLAYER = "[player]";
+	private static final String YOUTHPLAYER = "[youthplayer]";
 	private static final String XTRA = "[xtra]";
 	private static final String LASTLINEUP = "[lastlineup]";
 	private static final String STAFF = "[staff]";
@@ -93,9 +95,13 @@ public class HRFStringParser {
 					// Player?
 					if (lineString.startsWith("[player")) {
 						properties.setProperty(ENTITY, PLAYER);
-						properties.setProperty("id",
-								lineString.substring(7, lineString.lastIndexOf(']')));
-					} else {
+						properties.setProperty("id", lineString.substring(7, lineString.lastIndexOf(']')));
+					}
+					else if (lineString.startsWith("[youthplayer")){
+						properties.setProperty(ENTITY, YOUTHPLAYER);
+						properties.setProperty("id",lineString.substring(12, lineString.lastIndexOf(']')));
+					}
+					else {
 						properties.setProperty(ENTITY, lineString);
 					}
 				}
@@ -194,6 +200,9 @@ public class HRFStringParser {
 				// player
 				else if (entity.toString().equalsIgnoreCase(PLAYER)) {
 					hoModel.addPlayer(new Player(properties, hrfdate));
+				}
+				else if (entity.toString().equalsIgnoreCase(YOUTHPLAYER)) {
+					hoModel.addYouthPlayer(new YouthPlayer(properties, hrfdate));
 				}
 				// Xtra
 				else if (entity.toString().equalsIgnoreCase(XTRA)) {

@@ -937,7 +937,10 @@ public class ConvertXml2Hrf {
 		for (var player: playersData ) {
 
 			buffer.append("[youthplayer").append(player.get("YouthPlayerID")).append(']').append('\n');
-			buffer.append("Name=").append(createPlayername(player)).append('\n');
+
+			createHRFLine(buffer, player, "FirstName");
+			createHRFLine(buffer, player, "NickName");
+			createHRFLine(buffer, player, "LastName");
 			createHRFLine(buffer, player, "Age");
 			createHRFLine(buffer, player, "AgeDays");
 			createHRFLine(buffer, player, "ArrivalDate");
@@ -954,7 +957,7 @@ public class ConvertXml2Hrf {
 			createHRFLine(buffer, player, "CareerHattricks");
 			createHRFLine(buffer, player, "LeagueGoals");
 			createHRFLine(buffer, player, "FriendlyGoals");
-			createHRFLine(buffer, player, "PlayerCategoryID");
+
 			createHRFSkillLines(buffer, player, "KeeperSkill");
 			createHRFSkillLines(buffer, player, "DefenderSkill");
 			createHRFSkillLines(buffer, player, "PlaymakerSkill");
@@ -1003,22 +1006,6 @@ public class ConvertXml2Hrf {
 
 	private static void createHRFLine(StringBuilder buffer, MyHashtable player, String key) {
 		buffer.append(key).append("=").append(player.get(key)).append('\n');
-	}
-
-	private static String createPlayername( MyHashtable player) {
-		String name = player.get("FirstName");
-		StringBuilder builder = new StringBuilder(name);
-		String nickname = player.get("NickName");
-		if (nickname.length() > 0) {
-			if (name.length() > 0) builder.append(" ");
-			builder.append("'" + nickname + "'");
-		}
-		String lastname = player.get("LastName");
-		if (lastname.length() > 0) {
-			if (name.length() > 0 || nickname.length()>0) builder.append(" ");
-			builder.append(lastname);
-		}
-		return builder.toString();
 	}
 
 	/**
