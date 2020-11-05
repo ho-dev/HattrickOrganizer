@@ -25,6 +25,7 @@ import core.model.misc.Verein;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.model.player.YouthPlayer;
 import core.model.series.Liga;
 import core.model.series.Paarung;
 import core.training.FuturePlayerTraining;
@@ -363,6 +364,14 @@ public class DBManager {
 	}
 
 	/**
+	 * load youth players of HRF file
+	 */
+	public List<YouthPlayer> getYouthPlayers(int hrfID) {
+		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
+				.getYouthPlayer(hrfID);
+	}
+
+	/**
 	 * get a player from a specific HRF
 	 * 
 	 * @param hrfID
@@ -419,7 +428,14 @@ public class DBManager {
 	 */
 	public void saveSpieler(int hrfId, List<Player> player, Timestamp date) {
 		((SpielerTable) getTable(SpielerTable.TABLENAME)).saveSpieler(hrfId,
-                player, date);
+				player, date);
+	}
+
+	/**
+	 * save youth player
+	 */
+	public void saveYouthPlayers(int hrfId, List<YouthPlayer> player, Timestamp date) {
+		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).saveYouthPlayers(hrfId,player, date);
 	}
 
 	/**

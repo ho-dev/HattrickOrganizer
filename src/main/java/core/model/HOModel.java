@@ -108,10 +108,20 @@ public class HOModel {
      * Returns all current players
      */
     public final List<Player> getCurrentPlayers() {
-    	if ( m_vPlayer == null){
-			m_vPlayer = DBManager.instance().getSpieler(this.m_iID);
-		}
+        if ( m_vPlayer == null){
+            m_vPlayer = DBManager.instance().getSpieler(this.m_iID);
+        }
         return m_vPlayer;
+    }
+
+    /**
+     * Returns all current youth players
+     */
+    public final List<YouthPlayer> getCurrentYouthPlayers() {
+        if ( this.youthPlayers == null){
+            this.youthPlayers = DBManager.instance().getYouthPlayers(this.m_iID);
+        }
+        return this.youthPlayers;
     }
 
     /**
@@ -555,6 +565,8 @@ public class HOModel {
         DBManager.instance().saveXtraDaten(m_iID, getXtraDaten());
         //Player
         DBManager.instance().saveSpieler(m_iID, getCurrentPlayers(), getBasics().getDatum());
+        //Player
+        DBManager.instance().saveYouthPlayers(m_iID, getCurrentYouthPlayers(), getBasics().getDatum());
         //Staff
         DBManager.instance().saveStaff(m_iID, getStaff());
     }

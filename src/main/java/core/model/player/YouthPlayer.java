@@ -9,36 +9,269 @@ import java.util.*;
 import static core.util.Helper.parseDate;
 
 public class YouthPlayer {
-    private final int id;
-    private final String firstName;
-    private final String nickName;
-    private final String lastName;
-    private final int ageYears;
-    private final int ageDays;
-    private final Timestamp arrivalDate;
-    private final int canBePromotedIn;
-    private final String playerNumber;
-    private final String statement;
-    private final String ownerNotes;
-    private final int playerCategoryID;
-    private final int cards;
-    private final int injuryLevel;
-    private final int specialty;
-    private final int careerGoals;
-    private final int careerHattricks;
-    private final int leagueGoals;
-    private final int friendlyGoals;
-    private final int scoutId;
-    private final int scoutingRegionID;
-    private final String scoutName;
-    private final int youthMatchID;
-    private final int positionCode;
-    private final int playedMinutes;
-    private final int rating;
-    private final Timestamp youthMatchDate;
+    private int id;
+    private String nickName;
+    private String firstName;
+    private String lastName;
+    private int ageYears;
+    private int ageDays;
+    private Timestamp arrivalDate;
+    private int canBePromotedIn;
+    private String playerNumber;
+    private String statement;
+    private String ownerNotes;
+    private int playerCategoryID;
+    private int cards;
+    private int injuryLevel;
+    private int specialty;
+    private int careerGoals;
+    private int careerHattricks;
+    private int leagueGoals;
+    private int friendlyGoals;
+    private int scoutId;
+    private int scoutingRegionID;
+    private String scoutName;
+    private int youthMatchID;
+    private int positionCode;
+    private int playedMinutes;
+    private int rating;
+    private Timestamp youthMatchDate;
+    private Timestamp hrfDate;
 
     private Map<Integer, SkillInfo> skillInfoMap = new HashMap<>();
     private List<ScoutComment> scoutComments = new ArrayList<>();
+
+    public YouthPlayer() {
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public int getAgeYears() {
+        return ageYears;
+    }
+
+    public void setAgeYears(int ageYears) {
+        this.ageYears = ageYears;
+    }
+
+    public int getAgeDays() {
+        return ageDays;
+    }
+
+    public void setAgeDays(int ageDays) {
+        this.ageDays = ageDays;
+    }
+
+    public Timestamp getArrivalDate() {
+        return arrivalDate;
+    }
+
+    public void setArrivalDate(Timestamp arrivalDate) {
+        this.arrivalDate = arrivalDate;
+    }
+
+    public int getCanBePromotedIn() {
+        return canBePromotedIn;
+    }
+
+    public void setCanBePromotedIn(int canBePromotedIn) {
+        this.canBePromotedIn = canBePromotedIn;
+    }
+
+    public String getPlayerNumber() {
+        return playerNumber;
+    }
+
+    public void setPlayerNumber(String playerNumber) {
+        this.playerNumber = playerNumber;
+    }
+
+    public String getStatement() {
+        return statement;
+    }
+
+    public void setStatement(String statement) {
+        this.statement = statement;
+    }
+
+    public String getOwnerNotes() {
+        return ownerNotes;
+    }
+
+    public void setOwnerNotes(String ownerNotes) {
+        this.ownerNotes = ownerNotes;
+    }
+
+    public int getPlayerCategoryID() {
+        return playerCategoryID;
+    }
+
+    public void setPlayerCategoryID(int playerCategoryID) {
+        this.playerCategoryID = playerCategoryID;
+    }
+
+    public int getCards() {
+        return cards;
+    }
+
+    public void setCards(int cards) {
+        this.cards = cards;
+    }
+
+    public int getInjuryLevel() {
+        return injuryLevel;
+    }
+
+    public void setInjuryLevel(int injuryLevel) {
+        this.injuryLevel = injuryLevel;
+    }
+
+    public int getSpecialty() {
+        return specialty;
+    }
+
+    public void setSpecialty(int specialty) {
+        this.specialty = specialty;
+    }
+
+    public int getCareerGoals() {
+        return careerGoals;
+    }
+
+    public void setCareerGoals(int careerGoals) {
+        this.careerGoals = careerGoals;
+    }
+
+    public int getCareerHattricks() {
+        return careerHattricks;
+    }
+
+    public void setCareerHattricks(int careerHattricks) {
+        this.careerHattricks = careerHattricks;
+    }
+
+    public int getLeagueGoals() {
+        return leagueGoals;
+    }
+
+    public void setLeagueGoals(int leagueGoals) {
+        this.leagueGoals = leagueGoals;
+    }
+
+    public int getFriendlyGoals() {
+        return friendlyGoals;
+    }
+
+    public void setFriendlyGoals(int friendlyGoals) {
+        this.friendlyGoals = friendlyGoals;
+    }
+
+    public int getScoutId() {
+        return scoutId;
+    }
+
+    public void setScoutId(int scoutId) {
+        this.scoutId = scoutId;
+    }
+
+    public int getScoutingRegionID() {
+        return scoutingRegionID;
+    }
+
+    public void setScoutingRegionID(int scoutingRegionID) {
+        this.scoutingRegionID = scoutingRegionID;
+    }
+
+    public String getScoutName() {
+        return scoutName;
+    }
+
+    public void setScoutName(String scoutName) {
+        this.scoutName = scoutName;
+    }
+
+    public int getYouthMatchID() {
+        return youthMatchID;
+    }
+
+    public void setYouthMatchID(int youthMatchID) {
+        this.youthMatchID = youthMatchID;
+    }
+
+    public int getPositionCode() {
+        return positionCode;
+    }
+
+    public void setPositionCode(int positionCode) {
+        this.positionCode = positionCode;
+    }
+
+    public int getPlayedMinutes() {
+        return playedMinutes;
+    }
+
+    public void setPlayedMinutes(int playedMinutes) {
+        this.playedMinutes = playedMinutes;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public Timestamp getYouthMatchDate() {
+        return youthMatchDate;
+    }
+
+    public void setYouthMatchDate(Timestamp youthMatchDate) {
+        this.youthMatchDate = youthMatchDate;
+    }
+
+    public Timestamp getHrfDate() {
+        return hrfDate;
+    }
+
+    public void setHrfDate(Timestamp hrfDate) {
+        this.hrfDate = hrfDate;
+    }
+
+    public SkillInfo getSkillInfo(Skills.HTSkillID skillID) {
+        return this.skillInfoMap.get(skillID);
+    }
 
     public class SkillInfo {
         public int level;
@@ -58,6 +291,9 @@ public class YouthPlayer {
     }
 
     public YouthPlayer(Properties properties, Timestamp hrfdate) {
+
+        this.hrfDate = hrfdate;
+
 
         id = Integer.parseInt(properties.getProperty("id", "0"));
         firstName = properties.getProperty("FirstName", "");
@@ -125,4 +361,5 @@ public class YouthPlayer {
 
         this.skillInfoMap.put(skillID.getValue(), skillInfo);
     }
+
 }
