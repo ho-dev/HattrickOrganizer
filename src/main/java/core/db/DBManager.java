@@ -218,6 +218,8 @@ public class DBManager {
 		tables.put(VereinTable.TABLENAME, new VereinTable(adapter));
 		tables.put(LigaTable.TABLENAME, new LigaTable(adapter));
 		tables.put(SpielerTable.TABLENAME, new SpielerTable(adapter));
+		tables.put(YouthPlayerTable.TABLENAME, new YouthPlayerTable(adapter));
+		tables.put(YouthScoutCommentTable.TABLENAME, new YouthScoutCommentTable(adapter));
 		tables.put(FinanzenTable.TABLENAME, new FinanzenTable(adapter));
 		tables.put(ScoutTable.TABLENAME, new ScoutTable(adapter));
 		tables.put(UserColumnsTable.TABLENAME, new UserColumnsTable(adapter));

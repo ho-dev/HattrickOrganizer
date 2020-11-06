@@ -208,6 +208,17 @@ public class YouthPlayerTable  extends AbstractTable {
                     .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isMaxReached)
                     .append(")");
             adapter.executeUpdate(sql.toString());
+
+            var scoutComments = player.getScoutComments();
+            if ( scoutComments.size()>0){
+                var youthScoutCommentTable = (YouthScoutCommentTable)DBManager.instance().getTable(YouthScoutCommentTable.TABLENAME);
+                if ( youthScoutCommentTable.countScoutComments(player.getId())==0){
+                    int i=0;
+                    for ( var c : scoutComments){
+                        youthScoutCommentTable.saveYouthScoutComment(i++,player.getId(),c);
+                    }
+                }
+            }
         }
     }
 

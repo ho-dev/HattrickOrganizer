@@ -45,6 +45,14 @@ public class YouthPlayer {
 
     }
 
+    public List<ScoutComment> getScoutComments(){
+        return this.scoutComments;
+    }
+
+    public void setScoutComments(List<ScoutComment> scoutComments) {
+        this.scoutComments = scoutComments;
+    }
+
     public int getId() {
         return id;
     }
