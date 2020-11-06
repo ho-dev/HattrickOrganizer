@@ -107,6 +107,7 @@ final class DBUpdater {
 					case 400:
 					case 499:
 						updateDBv500(DBVersion, version);
+					case 500:
 				}
 
 				HOLogger.instance().log(getClass(), "done.");
