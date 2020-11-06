@@ -91,6 +91,9 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.HRF_DARKBLUE_BG, new Color(25, 25, 68));
             ThemeManager.instance().put(HOColorName.HRF_RED_BG, new Color(68, 40, 40));
 
+            // Smileys
+            ThemeManager.instance().put(HOColorName.SMILEYS_COLOR, defaults.getColor("Label.foreground"));
+
             return super.enableTheme();
         } catch (Exception e) {
             HOLogger.instance().warning(getClass(),
