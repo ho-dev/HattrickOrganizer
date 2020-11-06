@@ -8,9 +8,10 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.Helper;
+import org.jetbrains.annotations.Nullable;
 
 
-import javax.swing.JList;
+import javax.swing.*;
 import java.awt.*;
 
 public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
@@ -35,7 +36,7 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
         m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true);
     }
 
-    public SpielerCBItem(String text, float poswert, Player player, boolean useCustomText, boolean multiLine) {
+    public SpielerCBItem(String text, float poswert, @Nullable Player player, boolean useCustomText, boolean multiLine) {
         m_sText = text;
         m_clPlayer = player;
         m_fPositionsBewertung = poswert;
@@ -51,16 +52,14 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
     public final Component getListCellRendererComponent(JList jList, int index, boolean isSelected) {
         final Player player = getSpieler();
 
-        // Kann für Tempspieler < 0 sein && player.getSpielerID () > 0 )
         if (player != null) {
             m_clEntry.updateComponent(player, HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
                             .getPositionBySpielerId(player.getSpielerID()), getPositionsBewertung(), m_bAlternativePosition,
                     m_sText);
 
-            if (m_bMultiLine) {
-                m_clEntry.getComponent(isSelected).setPreferredSize(new Dimension(m_clEntry.getComponent(isSelected).getPreferredSize().width, PLAYER_COMBO_HEIGHT));
-            }
-            return m_clEntry.getComponent(isSelected);
+            JComponent comp = m_clEntry.getComponent(isSelected, index==-1);
+            if (m_bMultiLine) comp.setPreferredSize(new Dimension(comp.getPreferredSize().width, PLAYER_COMBO_HEIGHT));
+            return comp;
         } else {
             m_jlLeer.setOpaque(true);
             m_jlLeer.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG

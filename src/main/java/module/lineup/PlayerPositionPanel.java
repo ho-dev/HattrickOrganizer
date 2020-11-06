@@ -4,10 +4,9 @@ import core.constants.player.PlayerSkill;
 import core.datatype.CBItem;
 import core.gui.HOMainFrame;
 import core.gui.Updateable;
-import core.gui.comp.entry.SpielerLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.model.SpielerCBItem;
-import core.gui.model.SpielerCBItemRenderer;
+import core.gui.model.PlayerCBItemRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
@@ -18,7 +17,7 @@ import core.model.player.Player;
 import core.rating.RatingPredictionManager;
 import core.training.TrainingPreviewPlayers;
 import core.util.Helper;
-
+import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -26,7 +25,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.*;
 import java.util.List;
-
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -35,94 +33,70 @@ import javax.swing.border.*;
  * Panel in which the player position is displayed and can be changed
  */
 class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListener {
-    //~ Static fields/initializers -----------------------------------------------------------------
-    private static final long serialVersionUID = 3121389904504282953L;
+
 
     protected static int PLAYER_POSITION_PANEL_WIDTH = Helper.calcCellWidth(160);
+
+    // height for position with tactics box
     protected static int PLAYER_POSITION_PANEL_HEIGHT_FULL = Helper.calcCellWidth(95);
     // Used for positions with no tactics box
     protected static int PLAYER_POSITION_PANEL_HEIGHT_REDUCED = Helper.calcCellWidth(70);
 
-    protected static int MINI_PLAYER_POSITION_PANEL_WIDTH = Helper.calcCellWidth(120);
-    protected static int MINI_PLAYER_POSITION_PANEL_HEIGHT = Helper.calcCellWidth(32);
-
-    private static SpielerCBItem m_clNullSpieler = new SpielerCBItem("", 0f, null, false, true);
+    private static final SpielerCBItem oNullPlayer = new SpielerCBItem("", 0f, null, false, true);
 
     //~ Instance fields ----------------------------------------------------------------------------
-    private final JComboBox m_jcbPlayer = new JComboBox();
-    private final JComboBox m_jcbTactic = new JComboBox();
+    private final JComboBox<SpielerCBItem> m_jcbPlayer = new JComboBox<>();
+    private final JComboBox<CBItem> m_jcbTactic = new JComboBox<>();
     private final JLabel m_jlPosition = new JLabel();
-    //Für Minimized
     private final JLabel m_jlPlayer = new JLabel();
     private final SpielerCBItem m_clSelectedPlayer = new SpielerCBItem("", 0f, null, false, true);
-    private Updateable m_clUpdater;
+    private final Updateable m_clUpdater;
     private SpielerCBItem[] m_clCBItems = new SpielerCBItem[0];
-    private boolean m_bMinimize;
-    private int m_iPositionID;
+    private final int m_iPositionID;
 
     private int playerId = -1;
     private int tacticOrder = -1;
 
     private final GridBagLayout layout = new GridBagLayout();
     private final JLayeredPane jlp = new JLayeredPane();
-    private int layerIndex = 0;
+    private final int layerIndex = 0;
 
-    //~ Constructors -------------------------------------------------------------------------------
-
-    /**
-     * Creates a new SpielerPositionsPanel object.
-     */
+    //constructor
     protected PlayerPositionPanel(Updateable updater, int positionsID) {
-        this(updater, positionsID, false, false);
-    }
-
-    /**
-     * Creates a new SpielerPositionsPanel object.
-     */
-    private PlayerPositionPanel(Updateable updater, int positionsID, boolean print, boolean minimize) {
-        super(print || minimize);
+        super(false);
 
         m_clUpdater = updater;
         m_iPositionID = positionsID;
-        m_bMinimize = minimize;
 
         setOpaque(true);
 
         initTaktik(null);
         initLabel();
-        initComponents(true);
+        initComponents();
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
-
-    //--------------------------------------------------------
-
-    /**
-     * Gibt die PositionsID zurück
-     */
     protected int getPositionsID() {
         return m_iPositionID;
     }
 
+    private byte getTactic() {
+        CBItem cbTactic = (CBItem) m_jcbTactic.getSelectedItem();
+        return (cbTactic != null) ? (byte)cbTactic.getId() : IMatchRoleID.NORMAL;
+    }
+
     /**
-     * Gibt den aktuellen Player auf dieser Position zurück, oder null, wenn keiner gewählt wurde
+     * Returns the current player at this position (could be null)
      */
-    public Player getSelectedPlayer() {
+    public @Nullable Player getSelectedPlayer() {
         final Object obj = m_jcbPlayer.getSelectedItem();
 
-        if ((obj != null) && obj instanceof SpielerCBItem) {
+        if (obj instanceof SpielerCBItem) {
             return ((SpielerCBItem) obj).getSpieler();
         }
 
         return null;
     }
 
-    /**
-     * Gibt die Taktik an
-     */
-    private byte getTactic() {
-        return (byte) ((CBItem) m_jcbTactic.getSelectedItem()).getId();
-    }
 
     @Override
     public void focusGained(FocusEvent event) {
@@ -132,93 +106,64 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     }
 
     @Override
-    public void focusLost(FocusEvent event) {
-        //nix
-    }
+    public void focusLost(FocusEvent event) { }
 
     /**
-     * Erzeugt die Komponenten, Die CB für die Player und den Listener nicht vergessen!
+     * Create the components, don't forget the CB for the players and the listener!
      */
-    private void initComponents(boolean aenderbar) {
+    private void initComponents() {
         final GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weightx = 1.0;
         constraints.weighty = 0;
         constraints.insets = new Insets(1, 2, 1, 2);
 
-        //Minimiert
-        if (m_bMinimize) {
-            // This is the realm of the miniposframe, no jlp...
-            setLayout(layout);
-            setBorder(javax.swing.BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.LINEUP_POS_MIN_BORDER)));//Color.lightGray));
-            setBackground(ThemeManager.getColor(HOColorName.LINEUP_POS_MIN_BG));//Color.WHITE);
+        jlp.setLayout(layout);
+        // No gaps around the layeredpane.
+        FlowLayout fl = new FlowLayout();
+        fl.setHgap(0);
+        fl.setVgap(0);
+        fl.setAlignment(FlowLayout.CENTER);
+        setLayout(fl);
 
+        setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 1;
+        jlp.add(m_jlPosition, constraints, layerIndex);
+
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.gridwidth = 2;
+        m_jcbPlayer.addFocusListener(this);
+        m_jcbPlayer.setMaximumRowCount(10);
+        m_jcbPlayer.setRenderer(new PlayerCBItemRenderer());
+        jlp.add(m_jcbPlayer, constraints, layerIndex);
+
+        m_jcbPlayer.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));// Color.white
+
+        //Show only if more than one tactic is possible
+        if (m_jcbTactic.getItemCount() > 1) {
             constraints.gridx = 0;
-            constraints.gridy = 0;
-            add(m_jlPosition, constraints);
-
-            constraints.gridx = 0;
-            constraints.gridy = 1;
-            add(m_jlPlayer, constraints);
-
-            setPreferredSize(new Dimension(MINI_PLAYER_POSITION_PANEL_WIDTH, MINI_PLAYER_POSITION_PANEL_HEIGHT));
-        }
-        //Normal
-        else {
-            jlp.setLayout(layout);
-            // No gaps around the layeredpane.
-            FlowLayout fl = new FlowLayout();
-            fl.setHgap(0);
-            fl.setVgap(0);
-            fl.setAlignment(FlowLayout.CENTER);
-            setLayout(fl);
-
-            setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-
-            constraints.gridx = 0;
-            constraints.gridy = 0;
-            constraints.gridwidth = 1;
-            jlp.add(m_jlPosition, constraints, layerIndex);
-
-            constraints.gridx = 0;
-            constraints.gridy = 1;
+            constraints.gridy = 2;
             constraints.gridwidth = 2;
-            m_jcbPlayer.addFocusListener(this);
-            m_jcbPlayer.setMaximumRowCount(10);
-            m_jcbPlayer.setRenderer(new SpielerCBItemRenderer());
-            jlp.add(m_jcbPlayer, constraints, layerIndex);
 
-            if (!aenderbar) {
-                m_jcbPlayer.setEnabled(false);
-            }
-
-            m_jcbPlayer.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));// Color.white
-
-            //Nur anzeigen, wenn mehr als eine Taktik möglich ist
-            if (m_jcbTactic.getItemCount() > 1) {
-                constraints.gridx = 0;
-                constraints.gridy = 2;
-                constraints.gridwidth = 2;
-                if (!aenderbar) {
-                    m_jcbTactic.setEnabled(false);
-                }
-
-                m_jcbTactic.setBackground(m_jcbPlayer.getBackground());
-                jlp.add(m_jcbTactic, constraints, layerIndex);
-                setPreferredSize(new Dimension(PLAYER_POSITION_PANEL_WIDTH, PLAYER_POSITION_PANEL_HEIGHT_FULL));
-            } else {
-                setPreferredSize(new Dimension(PLAYER_POSITION_PANEL_WIDTH, PLAYER_POSITION_PANEL_HEIGHT_REDUCED));
-            }
-            jlp.setPreferredSize(getPreferredSize());
-            add(jlp);
+            m_jcbTactic.setBackground(m_jcbPlayer.getBackground());
+            jlp.add(m_jcbTactic, constraints, layerIndex);
+            setPreferredSize(new Dimension(PLAYER_POSITION_PANEL_WIDTH, PLAYER_POSITION_PANEL_HEIGHT_FULL));
+        } else {
+            setPreferredSize(new Dimension(PLAYER_POSITION_PANEL_WIDTH, PLAYER_POSITION_PANEL_HEIGHT_REDUCED));
         }
+        jlp.setPreferredSize(getPreferredSize());
+        add(jlp);
     }
 
     //-------------Listener------------------------------------------------
     @Override
     public void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
         if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-            final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+            final Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
             final Player player = getSelectedPlayer();
             setPlayerTooltip(player);
@@ -228,37 +173,36 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                 //set pieces
                 if (m_iPositionID == IMatchRoleID.setPieces) {
                     if (player != null) {
-                        aufstellung.setKicker(player.getSpielerID());
+                        lineup.setKicker(player.getSpielerID());
                     } else {
-                        aufstellung.setKicker(0);
+                        lineup.setKicker(0);
                     }
                 }
                 //captain
                 else if (m_iPositionID == IMatchRoleID.captain) {
                     if (player != null) {
-                        aufstellung.setKapitaen(player.getSpielerID());
+                        lineup.setKapitaen(player.getSpielerID());
                     } else {
-                        aufstellung.setKapitaen(0);
+                        lineup.setKapitaen(0);
                     }
                 }
                 //Others
                 else {
                     if (player != null) {
-                        aufstellung.setSpielerAtPosition(m_iPositionID, player.getSpielerID());
+                        lineup.setSpielerAtPosition(m_iPositionID, player.getSpielerID());
                     } else {
-                        aufstellung.setSpielerAtPosition(m_iPositionID, 0);
+                        lineup.setSpielerAtPosition(m_iPositionID, 0);
                     }
                     // adjust backup players
-                    aufstellung.adjustBackupPlayers();
+                    lineup.adjustBackupPlayers();
                 }
 
-                //Taktikwerte anpassen
+                //Adjust tactic values
                 setTaktik(getTactic(), player);
             } else if (itemEvent.getSource().equals(m_jcbTactic)) {
-                aufstellung.getPositionById(m_iPositionID).setTaktik(getTactic());
+                lineup.getPositionById(m_iPositionID).setTaktik(getTactic());
             }
 
-            //Adjust tactic values
             if (player != null) {
                 HOMainFrame.instance().setActualSpieler(player);
             }
@@ -268,7 +212,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         }
     }
 
-    private void setPlayerTooltip(Player player) {
+    private void setPlayerTooltip(@Nullable Player player) {
                 if (player != null) {
                         String playerName = player.getFullName();
                         setToolTipText(playerName);
@@ -282,15 +226,15 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
      * Update the list of player in the ComboBox except for backup
      */
     public void refresh(List<Player> player, List<Player> selectPlayer, List<Player> assitPlayer) {
-        Player aktuellerPlayer = null;
+        Player selectedPlayer = null;
         playerId = -1;
         if (m_iPositionID == IMatchRoleID.setPieces) {
-            aktuellerPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(HOVerwaltung.instance()
+            selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(HOVerwaltung.instance()
                     .getModel()
                     .getLineupWithoutRatingRecalc()
                     .getKicker());
-            if (aktuellerPlayer != null) {
-                playerId = aktuellerPlayer.getSpielerID();
+            if (selectedPlayer != null) {
+                playerId = selectedPlayer.getSpielerID();
             }
             tacticOrder = -1;
 
@@ -310,12 +254,12 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                 player = tmpPlayer;
             }
         } else if (m_iPositionID == IMatchRoleID.captain) {
-            aktuellerPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(HOVerwaltung.instance()
+            selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(HOVerwaltung.instance()
                     .getModel()
                     .getLineupWithoutRatingRecalc()
                     .getKapitaen());
-            if (aktuellerPlayer != null) {
-                playerId = aktuellerPlayer.getSpielerID();
+            if (selectedPlayer != null) {
+                playerId = selectedPlayer.getSpielerID();
             }
             tacticOrder = -1;
         } else {
@@ -324,12 +268,12 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                     .getPositionById(m_iPositionID);
 
             if (position != null) {
-                aktuellerPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position
+                selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position
                         .getSpielerId());
 
-                if (aktuellerPlayer != null) {
+                if (selectedPlayer != null) {
                     m_jcbPlayer.setEnabled(true); // To be sure
-                    playerId = aktuellerPlayer.getSpielerID();
+                    playerId = selectedPlayer.getSpielerID();
                 } else {
                     // We want to disable the player selection box if there is already 11 players on the field and this is an on field position.
                     if ((!HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().hasFreePosition()) &&
@@ -341,41 +285,39 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                     }
                 }
                 tacticOrder = position.getTaktik();
-                setTaktik(position.getTaktik(), aktuellerPlayer);
+                setTaktik(position.getTaktik(), selectedPlayer);
             }
         }
 
-        setSpielerListe(player, aktuellerPlayer);
+        setSpielerListe(player, selectedPlayer);
 
         for (int i = 0; i < m_jcbPlayer.getModel().getSize(); i++) {
-            Object obj = m_jcbPlayer.getItemAt(i);
-            if (obj instanceof SpielerCBItem) {
-                SpielerCBItem cbitem = (SpielerCBItem) obj;
-                if (cbitem.getSpieler() != null) {
-                    cbitem.getEntry().setIsSelect(false);
-                    cbitem.getEntry().setIsAssit(false);
+            SpielerCBItem obj = m_jcbPlayer.getItemAt(i);
+            if (obj != null) {
+                if (obj.getSpieler() != null) {
+                    obj.getEntry().setIsSelect(false);
+                    obj.getEntry().setIsAssit(false);
                 }
             }
         }
 
         if (selectPlayer != null && assitPlayer != null) {
             for (int i = 0; i < m_jcbPlayer.getModel().getSize(); i++) {
-                Object obj = m_jcbPlayer.getItemAt(i);
+                SpielerCBItem obj = m_jcbPlayer.getItemAt(i);
                 boolean isInLineup = false;
-                if (obj instanceof SpielerCBItem) {
-                    SpielerCBItem cbitem = (SpielerCBItem) obj;
-                    if (cbitem.getSpieler() != null) {
-                        for (int j = 0; j < selectPlayer.size(); j++) {
-                            if (cbitem.getSpieler().getSpielerID() == selectPlayer.get(j).getSpielerID()) {
-                                cbitem.getEntry().setIsSelect(true);
+                if (obj != null) {
+                    if (obj.getSpieler() != null) {
+                        for (Player value : selectPlayer) {
+                            if (obj.getSpieler().getSpielerID() == value.getSpielerID()) {
+                                obj.getEntry().setIsSelect(true);
                                 isInLineup = true;
                                 break;
                             }
                         }
                         if (!isInLineup) {
-                            for (int j = 0; j < assitPlayer.size(); j++) {
-                                if (cbitem.getSpieler().getSpielerID() == assitPlayer.get(j).getSpielerID()) {
-                                    cbitem.getEntry().setIsAssit(true);
+                            for (Player value : assitPlayer) {
+                                if (obj.getSpieler().getSpielerID() == value.getSpielerID()) {
+                                    obj.getEntry().setIsAssit(true);
                                     break;
                                 }
                             }
@@ -414,7 +356,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     /**
      * Sets the list of possible players for this position and the currently selected player
      */
-    protected void setSpielerListe(List<Player> playerListe, Player aktuellerPlayer) {
+    protected void setSpielerListe(List<Player> playerListe, @Nullable Player aktuellerPlayer) {
         //Listener entfernen
         m_jcbPlayer.removeItemListener(this);
 
@@ -453,7 +395,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         cbmodel.addElement(createSpielerCBItem(m_clSelectedPlayer, aktuellerPlayer));
 
         //No Player
-        cbmodel.addElement(m_clNullSpieler);
+        cbmodel.addElement(oNullPlayer);
 
         //Sort Player List
         SpielerCBItem[] cbItems = new SpielerCBItem[playerListe.size()];
@@ -491,7 +433,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     /**
      * Sets the list of possible players for backup players
      */
-    protected void setSpielerListe2(List<Player> allPlayers, Player selectedPlayer, int playerIDcorrespondingSub) {
+    protected void setSpielerListe2(List<Player> allPlayers, @Nullable Player selectedPlayer, int playerIDcorrespondingSub) {
 
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
@@ -542,7 +484,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         }
 
         //No Player
-        cbmodel.addElement(m_clNullSpieler);
+        cbmodel.addElement(oNullPlayer);
 
         //Sort Player List
         SpielerCBItem[] cbItems = new SpielerCBItem[lSubs.size()];
@@ -583,7 +525,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     /**
      * Set the current tactic
      */
-    private void setTaktik(byte taktik, Player aktuellerPlayer) {
+    private void setTaktik(byte taktik, @Nullable Player aktuellerPlayer) {
         //remove listener
         m_jcbTactic.removeItemListener(this);
 
@@ -658,7 +600,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     /**
      * Setzt die Taktik je nach MatchRoleID
      */
-    private void initTaktik(Player aktuellerPlayer) {
+    private void initTaktik(@Nullable Player aktuellerPlayer) {
         m_jcbTactic.removeAllItems();
 
         switch (m_iPositionID) {
@@ -805,12 +747,12 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                     return item;
                 }
 
-                return m_clNullSpieler;
+                return oNullPlayer;
 
             }
         }
         //Kein Player
-        return m_clNullSpieler;
+        return oNullPlayer;
 
     }
 

@@ -7,7 +7,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.SpielerCBItem;
-import core.gui.model.SpielerCBItemRenderer;
+import core.gui.model.PlayerCBItemRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -22,8 +22,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -154,7 +152,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		final ImagePanel panel = new ImagePanel(null);
 
 		playerComboBox = new JComboBox();
-		playerComboBox.setRenderer(new SpielerCBItemRenderer());
+		playerComboBox.setRenderer(new PlayerCBItemRenderer());
 		playerComboBox.setMaximumRowCount(25);
 		playerComboBox.setMaximumSize(new Dimension(200, 25));
 		playerComboBox.setSize(200, 25);
