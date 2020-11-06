@@ -278,7 +278,7 @@ public class YouthPlayer {
     }
 
     public SkillInfo getSkillInfo(Skills.HTSkillID skillID) {
-        return this.skillInfoMap.get(skillID);
+        return this.skillInfoMap.get(skillID.getValue());
     }
 
     public class SkillInfo {
@@ -303,55 +303,55 @@ public class YouthPlayer {
         this.hrfDate = hrfdate;
 
 
-        id = Integer.parseInt(properties.getProperty("id", "0"));
-        firstName = properties.getProperty("FirstName", "");
-        nickName = properties.getProperty("NickName", "");
-        lastName = properties.getProperty("LastName", "");
-        ageYears = Integer.parseInt(properties.getProperty("Age", "0"));
-        ageDays = Integer.parseInt(properties.getProperty("AgeDays", "0"));
-        arrivalDate = parseDate(properties.getProperty("ArrivalDate", ""));
-        canBePromotedIn = Integer.parseInt(properties.getProperty("CanBePromotedIn", "0"));
-        playerNumber = properties.getProperty("PlayerNumber", "");
-        statement = properties.getProperty("Statement", "");
-        ownerNotes = properties.getProperty("OwnerNotes", "");
-        playerCategoryID = Integer.parseInt(properties.getProperty("PlayerCategoryID", "0"));
-        cards = Integer.parseInt(properties.getProperty("Cards", "0"));
-        injuryLevel = Integer.parseInt(properties.getProperty("InjuryLevel", "0"));
-        specialty = Integer.parseInt(properties.getProperty("Specialty", "0"));
-        careerGoals = Integer.parseInt(properties.getProperty("CareerGoals", "0"));
-        careerHattricks = Integer.parseInt(properties.getProperty("CareerHattricks", "0"));
-        leagueGoals = Integer.parseInt(properties.getProperty("LeagueGoals", "0"));
-        friendlyGoals = Integer.parseInt(properties.getProperty("FriendlyGoals", "0"));
-        scoutId = Integer.parseInt(properties.getProperty("ScoutId", "0"));
-        scoutingRegionID = Integer.parseInt(properties.getProperty("ScoutingRegionID", "0"));
-        scoutName = properties.getProperty("ScoutName", "");
+        id = getInt(properties,"id", 0);
+        firstName = properties.getProperty("firstname", "");
+        nickName = properties.getProperty("nickname", "");
+        lastName = properties.getProperty("lastname", "");
+        ageYears = getInt(properties,"age", 0);
+        ageDays = getInt(properties,"agedays", 0);
+        arrivalDate = parseDate(properties.getProperty("arrivaldate", ""));
+        canBePromotedIn = getInt(properties,"canbepromotedin", 0);
+        playerNumber = properties.getProperty("playernumber", "");
+        statement = properties.getProperty("statement", "");
+        ownerNotes = properties.getProperty("ownernotes", "");
+        playerCategoryID = getInt(properties,"playercategoryid", 0);
+        cards = getInt(properties,"cards", 0);
+        injuryLevel = getInt(properties,"injurylevel", 0);
+        specialty = getInt(properties,"specialty", 0);
+        careerGoals = getInt(properties,"careergoals", 0);
+        careerHattricks = getInt(properties,"careerhattricks", 0);
+        leagueGoals = getInt(properties,"leaguegoals", 0);
+        friendlyGoals = getInt(properties,"friendlygoals", 0);
+        scoutId = getInt(properties,"scoutid", 0);
+        scoutingRegionID = getInt(properties,"scoutingregionid", 0);
+        scoutName = properties.getProperty("scoutname", "");
 
-        youthMatchID = Integer.parseInt(properties.getProperty("YouthMatchID", "0"));
-        positionCode = Integer.parseInt(properties.getProperty("PositionCode", "0"));
-        playedMinutes = Integer.parseInt(properties.getProperty("PlayedMinutes", "0"));
-        rating = Integer.parseInt(properties.getProperty("Rating", "0"));
-        youthMatchDate = parseDate(properties.getProperty("YouthMatchDate", ""));
+        youthMatchID = getInt(properties,"youthmatchid", 0);
+        positionCode = getInt(properties,"positioncode", 0);
+        playedMinutes = getInt(properties,"playedminutes", 0);
+        rating = getInt(properties,"rating", 0);
+        youthMatchDate = parseDate(properties.getProperty("youthmatchdate", ""));
 
-        parseSkillInfo(properties, Skills.HTSkillID.GOALKEEPER,  "KeeperSkill");
-        parseSkillInfo(properties, Skills.HTSkillID.DEFENDING,  "DefenderSkill");
-        parseSkillInfo(properties, Skills.HTSkillID.PLAYMAKING,  "PlaymakerSkill");
-        parseSkillInfo(properties, Skills.HTSkillID.WINGER,  "WingerSkill");
-        parseSkillInfo(properties, Skills.HTSkillID.PASSING,  "PassingSkill");
-        parseSkillInfo(properties, Skills.HTSkillID.SET_PIECES,  "SetPiecesSkill");
+        parseSkillInfo(properties, Skills.HTSkillID.GOALKEEPER,  "keeperskill");
+        parseSkillInfo(properties, Skills.HTSkillID.DEFENDING,  "defenderskill");
+        parseSkillInfo(properties, Skills.HTSkillID.PLAYMAKING,  "playmakerskill");
+        parseSkillInfo(properties, Skills.HTSkillID.WINGER,  "wingerskill");
+        parseSkillInfo(properties, Skills.HTSkillID.PASSING,  "passingskill");
+        parseSkillInfo(properties, Skills.HTSkillID.SET_PIECES,  "setpiecesskill");
 
         for ( int i=0; parseScoutComment(properties, i); i++);
     }
 
     private boolean parseScoutComment(Properties properties, int i) {
-        var prefix = "ScoutComment"+i;
+        var prefix = "scoutcomment"+i;
         var text = properties.getProperty(prefix+"Text");
         if ( text != null){
             var scoutComment = new ScoutComment();
-            scoutComment.text = properties.getProperty(prefix+"Text", "");
-            scoutComment.type = Integer.parseInt(properties.getProperty(prefix+"Type", "-1"));
-            scoutComment.variation = Integer.parseInt(properties.getProperty(prefix+"Variation", "-1"));
-            scoutComment.skillType = Integer.parseInt(properties.getProperty(prefix+"SkillType", "-1"));
-            scoutComment.skillLevel = Integer.parseInt(properties.getProperty(prefix+"SkillLevel", "-1"));
+            scoutComment.text = properties.getProperty(prefix+"text", "");
+            scoutComment.type = getInt(properties,prefix+"type", -1);
+            scoutComment.variation = getInt(properties,prefix+"variation", -1);
+            scoutComment.skillType = getInt(properties,prefix+"skilltype", -1);
+            scoutComment.skillLevel = getInt(properties,prefix+"skilllevel", -1);
             this.scoutComments.add(scoutComment);
             return true;
         }
@@ -360,14 +360,26 @@ public class YouthPlayer {
 
     private void parseSkillInfo(Properties properties, Skills.HTSkillID skillID, String skill) {
         var skillInfo = new SkillInfo();
-        skillInfo.level = Integer.parseInt(properties.getProperty(skill, "-1"));
-        skillInfo.max = Integer.parseInt(properties.getProperty(skill+"Max", "-1"));
-        skillInfo.isAvailable = Boolean.parseBoolean(properties.getProperty(skill + "IsAvailable", "false"));
-        skillInfo.isMaxReached = Boolean.parseBoolean(properties.getProperty(skill + "IsMaxReached", "false"));
-        skillInfo.mayUnlock = Boolean.parseBoolean(properties.getProperty(skill + "MayUnlock", "false"));
-        skillInfo.isMaxAvailable = Boolean.parseBoolean(properties.getProperty(skill + "MaxIsAvailable", "false"));
+        skillInfo.level = getInt(properties, skill, -1);
+        skillInfo.max = getInt(properties,skill+"max", -1);
+        skillInfo.isAvailable = getBoolean(properties,skill + "isavailable", false);
+        skillInfo.isMaxReached = getBoolean(properties,skill + "ismaxreached", false);
+        skillInfo.mayUnlock = getBoolean(properties,skill + "mayunlock", false);
+        skillInfo.isMaxAvailable = getBoolean(properties,skill + "maxisavailable", false);
 
         this.skillInfoMap.put(skillID.getValue(), skillInfo);
+    }
+
+    private boolean getBoolean(Properties p, String key, boolean defautValue) {
+        var s  = p.getProperty(key);
+        if ( s != null && s.length()>0) return Boolean.parseBoolean(s);
+        return defautValue;
+    }
+
+    private int getInt(Properties p, String key, int defaultValue) {
+        var s  = p.getProperty(key);
+        if ( s != null && s.length()>0) return Integer.parseInt(s);
+        return defaultValue;
     }
 
 }
