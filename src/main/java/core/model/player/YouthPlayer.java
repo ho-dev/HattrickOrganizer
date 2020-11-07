@@ -1,5 +1,6 @@
 package core.model.player;
 
+import core.db.DBManager;
 import core.util.HOLogger;
 import module.opponentspy.CalcVariables;
 import module.training.Skills;
@@ -10,6 +11,7 @@ import java.util.*;
 import static core.util.Helper.parseDate;
 
 public class YouthPlayer {
+    private int hrfid;
     private int id;
     private String nickName;
     private String firstName;
@@ -40,13 +42,16 @@ public class YouthPlayer {
     private Timestamp hrfDate;
 
     private Map<Integer, SkillInfo> skillInfoMap = new HashMap<>();
-    private List<ScoutComment> scoutComments = new ArrayList<>();
+    private List<ScoutComment> scoutComments;
 
     public YouthPlayer() {
 
     }
 
     public List<ScoutComment> getScoutComments(){
+        if ( scoutComments==null){
+            scoutComments = DBManager.instance().getYouthScoutComments(this.getId());
+        }
         return this.scoutComments;
     }
 
@@ -282,6 +287,14 @@ public class YouthPlayer {
         return this.skillInfoMap.get(skillID.getValue());
     }
 
+    public int getHrfid() {
+        return hrfid;
+    }
+
+    public void setHrfid(int hrfid) {
+        this.hrfid = hrfid;
+    }
+
     public class SkillInfo {
         public int level;
         public boolean isAvailable;
@@ -291,18 +304,77 @@ public class YouthPlayer {
         public int max;
     }
 
-    public class ScoutComment {
-        public String text;
-        public int type;
-        public int variation;
-        public int skillType;
-        public int skillLevel;
+    public static class ScoutComment {
+        private int youthPlayerId;
+        private int index;
+        private String text;
+        private int type;
+        private int variation;
+        private int skillType;
+        private int skillLevel;
+
+        public ScoutComment(){}
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
+        }
+
+        public int getVariation() {
+            return variation;
+        }
+
+        public void setVariation(int variation) {
+            this.variation = variation;
+        }
+
+        public int getSkillType() {
+            return skillType;
+        }
+
+        public void setSkillType(int skillType) {
+            this.skillType = skillType;
+        }
+
+        public int getSkillLevel() {
+            return skillLevel;
+        }
+
+        public void setSkillLevel(int skillLevel) {
+            this.skillLevel = skillLevel;
+        }
+
+        public int getYouthPlayerId() {
+            return youthPlayerId;
+        }
+
+        public void setYouthPlayerId(int youthPlayerId) {
+            this.youthPlayerId = youthPlayerId;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
     }
 
     public YouthPlayer(Properties properties, Timestamp hrfdate) {
 
         this.hrfDate = hrfdate;
-
 
         id = getInt(properties,"id", 0);
         firstName = properties.getProperty("firstname", "");
@@ -419,6 +491,4 @@ public class YouthPlayer {
         }
         return defaultValue;
     }
-
-
 }

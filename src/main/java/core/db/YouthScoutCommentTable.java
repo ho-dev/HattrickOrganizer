@@ -1,13 +1,20 @@
 package core.db;
 
+import core.constants.player.PlayerSkill;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.player.YouthPlayer;
+import core.model.player.YouthPlayer.ScoutComment;
+import core.util.HOLogger;
 import core.util.Helper;
 import tool.hrfExplorer.HrfExplorer;
 
+import javax.swing.plaf.synth.SynthCheckBoxMenuItemUI;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 public class YouthScoutCommentTable extends AbstractTable {
 
@@ -50,19 +57,53 @@ public class YouthScoutCommentTable extends AbstractTable {
         return delete(where, values);
     }
 
-    public void saveYouthScoutComment(int i, int youthPlayerId,  YouthPlayer.ScoutComment c) {
+    public void saveYouthScoutComment(int i, int youthPlayerId,  ScoutComment c) {
         //insert vorbereiten
-        var sql = new StringBuilder("INSERT INTO ");
-        sql.append(getTableName())
-                .append(" (YOUTHPLAYER_ID,INDEX,Text,Type,Variation,SkillType,SkillLevel) VALUES(")
-                .append(youthPlayerId).append(",")
-                .append(i).append(",'")
-                .append(c.text).append("',")
-                .append(c.type).append(",")
-                .append(c.variation).append(",")
-                .append(c.skillType).append(",")
-                .append(c.skillLevel)
-                .append(")");
-        adapter.executeUpdate(sql.toString());
+        String sql = "INSERT INTO " + getTableName() +
+                " (YOUTHPLAYER_ID,INDEX,Text,Type,Variation,SkillType,SkillLevel) VALUES(" +
+                youthPlayerId + "," +
+                i + ",'" +
+                DBManager.insertEscapeSequences(c.getText()) + "'," +
+                c.getType() + "," +
+                c.getVariation() + "," +
+                c.getSkillType() + "," +
+                c.getSkillLevel() +
+                ")";
+        adapter.executeUpdate(sql);
+    }
+
+    public List<ScoutComment> getYouthScoutComments(int youthplayer_id) {
+        final ArrayList<ScoutComment> ret = new ArrayList<>();
+        if ( youthplayer_id > -1) {
+            var sql = "SELECT * from " + getTableName() + " WHERE YOUTHPLAYER_ID = " + youthplayer_id;
+            var rs = adapter.executeQuery(sql);
+            try {
+                if (rs != null) {
+                    rs.beforeFirst();
+                    while (rs.next()) {
+                        var comment = createObject(rs);
+                        ret.add(comment);
+                    }
+                }
+            } catch (Exception e) {
+                HOLogger.instance().log(getClass(), "DatenbankZugriff.getYouthScoutComments: " + e);
+            }
+        }
+        return ret;
+    }
+
+    private ScoutComment createObject(ResultSet rs) {
+        ScoutComment ret = new ScoutComment();
+        try {
+            ret.setYouthPlayerId(rs.getInt("YouthPlayer_Id"));
+            ret.setIndex(rs.getInt("Index"));
+            ret.setText(DBManager.deleteEscapeSequences(rs.getString("Text")));
+            ret.setSkillLevel(rs.getInt("SkillLevel"));
+            ret.setSkillType(rs.getInt("SkillType"));
+            ret.setVariation(rs.getInt("Variation"));
+        } catch (Exception e) {
+            HOLogger.instance().log(getClass(),e);
+        }
+        return ret;
     }
 }

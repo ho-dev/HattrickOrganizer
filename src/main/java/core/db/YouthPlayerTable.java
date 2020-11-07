@@ -121,132 +121,122 @@ public class YouthPlayerTable  extends AbstractTable {
 
         final String[] awhereS = { "HRF_ID", "ID" };
         final String[] awhereV = { "" + hrfId, "" + player.getId()};
-        if (player != null) {
-            // Delete old values
-            delete(awhereS, awhereV);
+        // Delete old values
+        delete(awhereS, awhereV);
 
-            //insert vorbereiten
-            String statement =
-                    " (HRF_ID,ID,FirstName,NickName,LastName,Age,AgeDays,ArrivalDate,CanBePromotedIn,PlayerNumber," +
-                    "Statement,OwnerNotes,PlayerCategoryID,Cards,InjuryLevel,Specialty,CareerGoals,CareerHattricks," +
-                    "LeagueGoals,FriendlyGoals,ScoutId,ScoutingRegionID,ScoutName,YouthMatchID,PositionCode," +
-                    "PlayedMinutes,Rating,YouthMatchDate," +
-                    "Keeper,KeeperMax,KeeperIsAvailable,KeeperIsMaxAvailable,KeeperMayUnlock,KeeperIsMaxReached," +
-                    "Defender,DefenderMax,DefenderIsAvailable,DefenderIsMaxAvailable,DefenderMayUnlock,DefenderIsMaxReached," +
-                    "Playmaker,PlaymakerMax,PlaymakerIsAvailable,PlaymakerIsMaxAvailable,PlaymakerMayUnlock,PlaymakerIsMaxReached," +
-                    "Winger,WingerMax,WingerIsAvailable,WingerIsMaxAvailable,WingerMayUnlock,WingerIsMaxReached," +
-                    "Passing,PassingMax,PassingIsAvailable,PassingIsMaxAvailable,PassingMayUnlock,PassingIsMaxReached," +
-                    "SetPieces,SetPiecesMax,SetPiecesIsAvailable,SetPiecesIsMaxAvailable,SetPiecesMayUnlock,SetPiecesIsMaxReached" +
-                    ") VALUES(";
+        //insert vorbereiten
+        String statement =
+                " (HRF_ID,ID,FirstName,NickName,LastName,Age,AgeDays,ArrivalDate,CanBePromotedIn,PlayerNumber," +
+                "Statement,OwnerNotes,PlayerCategoryID,Cards,InjuryLevel,Specialty,CareerGoals,CareerHattricks," +
+                "LeagueGoals,FriendlyGoals,ScoutId,ScoutingRegionID,ScoutName,YouthMatchID,PositionCode," +
+                "PlayedMinutes,Rating,YouthMatchDate," +
+                "Keeper,KeeperMax,KeeperIsAvailable,KeeperIsMaxAvailable,KeeperMayUnlock,KeeperIsMaxReached," +
+                "Defender,DefenderMax,DefenderIsAvailable,DefenderIsMaxAvailable,DefenderMayUnlock,DefenderIsMaxReached," +
+                "Playmaker,PlaymakerMax,PlaymakerIsAvailable,PlaymakerIsMaxAvailable,PlaymakerMayUnlock,PlaymakerIsMaxReached," +
+                "Winger,WingerMax,WingerIsAvailable,WingerIsMaxAvailable,WingerMayUnlock,WingerIsMaxReached," +
+                "Passing,PassingMax,PassingIsAvailable,PassingIsMaxAvailable,PassingMayUnlock,PassingIsMaxReached," +
+                "SetPieces,SetPiecesMax,SetPiecesIsAvailable,SetPiecesIsMaxAvailable,SetPiecesMayUnlock,SetPiecesIsMaxReached" +
+                ") VALUES(";
 
-            var sql = new StringBuilder("INSERT INTO ");
-            sql.append(getTableName())
-                    .append(statement)
-                    .append(hrfId).append(",")
-                    .append(player.getId()).append(",'")
-                    .append(DBManager.insertEscapeSequences(player.getFirstName())).append("','")
-                    .append(DBManager.insertEscapeSequences(player.getNickName())).append("','")
-                    .append(DBManager.insertEscapeSequences(player.getLastName())).append("',")
-                    .append(player.getAgeYears()).append(",")
-                    .append(player.getAgeDays()).append(",")
-                    .append(DBManager.nullOrDateString(player.getArrivalDate())).append(",")
-                    .append(player.getCanBePromotedIn()).append(",'")
-                    .append(player.getPlayerNumber()).append("','")
-                    .append(player.getStatement()).append("','")
-                    .append(player.getOwnerNotes()).append("',")
-                    .append(player.getPlayerCategoryID()).append(",")
-                    .append(player.getCards()).append(",")
-                    .append(player.getInjuryLevel()).append(",")
-                    .append(player.getSpecialty()).append(",")
-                    .append(player.getCareerGoals()).append(",")
-                    .append(player.getCareerHattricks()).append(",")
-                    .append(player.getLeagueGoals()).append(",")
-                    .append(player.getFriendlyGoals()).append(",")
-                    .append(player.getScoutId()).append(",")
-                    .append(player.getScoutingRegionID()).append(",'")
-                    .append(player.getScoutName()).append("',")
-                    .append(player.getYouthMatchID()).append(",")
-                    .append(player.getPositionCode()).append(",")
-                    .append(player.getPlayedMinutes()).append(",")
-                    .append(player.getRating()).append(",")
-                    .append(DBManager.nullOrDateString(player.getYouthMatchDate())).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).level).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).max).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).isAvailable).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).isMaxAvailable).append(",")
-                    .append(String.valueOf(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).mayUnlock)).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).isMaxReached).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).level).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).max).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).isAvailable).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).isMaxAvailable).append(",")
-                    .append(String.valueOf(player.getSkillInfo(Skills.HTSkillID.DEFENDING).mayUnlock)).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).isMaxReached).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).level).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).max).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).isAvailable).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).isMaxAvailable).append(",")
-                    .append(String.valueOf(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).mayUnlock)).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).isMaxReached).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.WINGER).level).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.WINGER).max).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.WINGER).isAvailable).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.WINGER).isMaxAvailable).append(",")
-                    .append(String.valueOf(player.getSkillInfo(Skills.HTSkillID.WINGER).mayUnlock)).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.WINGER).isMaxReached).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.PASSING).level).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.PASSING).max).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.PASSING).isAvailable).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.PASSING).isMaxAvailable).append(",")
-                    .append(String.valueOf(player.getSkillInfo(Skills.HTSkillID.PASSING).mayUnlock)).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.PASSING).isMaxReached).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).level).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).max).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isAvailable).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isMaxAvailable).append(",")
-                    .append(String.valueOf(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).mayUnlock)).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isMaxReached)
-                    .append(")");
-            try {
-                adapter.executeUpdate(sql.toString());
-            }
-            catch ( Exception e){
-                HOLogger.instance().log(getClass(),"saveYouthPlayer: " + sql.toString() + " : " + e);
-            }
-            var scoutComments = player.getScoutComments();
-            if ( scoutComments.size()>0){
-                var youthScoutCommentTable = (YouthScoutCommentTable)DBManager.instance().getTable(YouthScoutCommentTable.TABLENAME);
-                if ( youthScoutCommentTable.countScoutComments(player.getId())==0){
-                    int i=0;
-                    for ( var c : scoutComments){
-                        youthScoutCommentTable.saveYouthScoutComment(i++,player.getId(),c);
-                    }
+        var sql = new StringBuilder("INSERT INTO ");
+        sql.append(getTableName())
+                .append(statement)
+                .append(hrfId).append(",")
+                .append(player.getId()).append(",'")
+                .append(DBManager.insertEscapeSequences(player.getFirstName())).append("','")
+                .append(DBManager.insertEscapeSequences(player.getNickName())).append("','")
+                .append(DBManager.insertEscapeSequences(player.getLastName())).append("',")
+                .append(player.getAgeYears()).append(",")
+                .append(player.getAgeDays()).append(",")
+                .append(DBManager.nullOrDateString(player.getArrivalDate())).append(",")
+                .append(player.getCanBePromotedIn()).append(",'")
+                .append(player.getPlayerNumber()).append("','")
+                .append(DBManager.insertEscapeSequences(player.getStatement())).append("','")
+                .append(DBManager.insertEscapeSequences(player.getOwnerNotes())).append("',")
+                .append(player.getPlayerCategoryID()).append(",")
+                .append(player.getCards()).append(",")
+                .append(player.getInjuryLevel()).append(",")
+                .append(player.getSpecialty()).append(",")
+                .append(player.getCareerGoals()).append(",")
+                .append(player.getCareerHattricks()).append(",")
+                .append(player.getLeagueGoals()).append(",")
+                .append(player.getFriendlyGoals()).append(",")
+                .append(player.getScoutId()).append(",")
+                .append(player.getScoutingRegionID()).append(",'")
+                .append(DBManager.insertEscapeSequences(player.getScoutName())).append("',")
+                .append(player.getYouthMatchID()).append(",")
+                .append(player.getPositionCode()).append(",")
+                .append(player.getPlayedMinutes()).append(",")
+                .append(player.getRating()).append(",")
+                .append(DBManager.nullOrDateString(player.getYouthMatchDate())).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).level).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).max).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).isAvailable).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).isMaxAvailable).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).mayUnlock).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).isMaxReached).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).level).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).max).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).isAvailable).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).isMaxAvailable).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).mayUnlock).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).isMaxReached).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).level).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).max).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).isAvailable).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).isMaxAvailable).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).mayUnlock).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).isMaxReached).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.WINGER).level).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.WINGER).max).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.WINGER).isAvailable).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.WINGER).isMaxAvailable).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.WINGER).mayUnlock).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.WINGER).isMaxReached).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.PASSING).level).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.PASSING).max).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.PASSING).isAvailable).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.PASSING).isMaxAvailable).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.PASSING).mayUnlock).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.PASSING).isMaxReached).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).level).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).max).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isAvailable).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isMaxAvailable).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).mayUnlock).append(",")
+                .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isMaxReached)
+                .append(")");
+        try {
+            adapter.executeUpdate(sql.toString());
+        }
+        catch ( Exception e){
+            HOLogger.instance().log(getClass(),"saveYouthPlayer: " + sql.toString() + " : " + e);
+        }
+        var scoutComments = player.getScoutComments();
+        if ( scoutComments.size()>0){
+            var youthScoutCommentTable = (YouthScoutCommentTable)DBManager.instance().getTable(YouthScoutCommentTable.TABLENAME);
+            if ( youthScoutCommentTable.countScoutComments(player.getId())==0){
+                int i=0;
+                for ( var c : scoutComments){
+                    youthScoutCommentTable.saveYouthScoutComment(i++,player.getId(),c);
                 }
             }
         }
     }
 
     /**
-     * load youth player of HRF file
+     * load youth player of HRF file id
      */
     List<YouthPlayer> getYouthPlayer(int hrfID) {
-        ResultSet rs = null;
-        YouthPlayer player = null;
-        String sql = null;
         final ArrayList<YouthPlayer> ret = new ArrayList<>();
         if ( hrfID > -1) {
-
-            sql = "SELECT * from " + getTableName() + " WHERE HRF_ID = " + hrfID;
-            rs = adapter.executeQuery(sql);
-
+            var sql = "SELECT * from " + getTableName() + " WHERE HRF_ID = " + hrfID;
+            var rs = adapter.executeQuery(sql);
             try {
                 if (rs != null) {
                     rs.beforeFirst();
-
                     while (rs.next()) {
-                        player = createObject(rs);
-
-                        //HOLogger.instance().log(getClass(), player.getSpielerID () );
+                        var player = createObject(rs);
                         ret.add(player);
                     }
                 }
@@ -258,9 +248,41 @@ public class YouthPlayerTable  extends AbstractTable {
     }
 
     private YouthPlayer createObject(ResultSet rs) {
-        YouthPlayer player = new YouthPlayer();
-
-        return player;
+        YouthPlayer ret = new YouthPlayer();
+        try {
+            ret.setHrfid(rs.getInt("HRF_ID"));
+            ret.setId(rs.getInt("ID"));
+            ret.setAgeDays(rs.getInt("AgeDays"));
+            ret.setAgeYears(rs.getInt("Age"));
+            ret.setArrivalDate(rs.getTimestamp("ArrivalDate"));
+            ret.setCanBePromotedIn(rs.getInt("CanBePromotedIn"));
+            ret.setCards(rs.getInt("Cards"));
+            ret.setCareerGoals(rs.getInt("CareerGoals"));
+            ret.setCareerHattricks(rs.getInt("CareerHattricks"));
+            ret.setFirstName(DBManager.deleteEscapeSequences(rs.getString("FirstName")));
+            ret.setNickName(DBManager.deleteEscapeSequences(rs.getString("NickName")));
+            ret.setLastName(DBManager.deleteEscapeSequences(rs.getString("LastName")));
+            ret.setFriendlyGoals(rs.getInt("FriendlyGoals"));
+            ret.setHrfDate(rs.getTimestamp("HRFDate"));
+            ret.setInjuryLevel(rs.getInt("InjuryLevel"));
+            ret.setLeagueGoals(rs.getInt("LeagueGoals"));
+            ret.setOwnerNotes(DBManager.deleteEscapeSequences(rs.getString("OwnerNotes")));
+            ret.setPlayedMinutes(rs.getInt("PlayedMinutes"));
+            ret.setPlayerCategoryID(rs.getInt("PlayerCategoryID"));
+            ret.setPlayerNumber(rs.getString("PlayerNumber"));
+            ret.setPositionCode(rs.getInt("PositionCode"));
+            ret.setRating(rs.getDouble("Rating"));
+            ret.setScoutId(rs.getInt("ScoutId"));
+            ret.setScoutingRegionID(rs.getInt("ScoutingRegionID"));
+            ret.setScoutName(DBManager.deleteEscapeSequences(rs.getString("ScoutName")));
+            ret.setSpecialty(rs.getInt("Specialty"));
+            ret.setStatement(DBManager.deleteEscapeSequences(rs.getString("Statement")));
+            ret.setYouthMatchDate(rs.getTimestamp("YouthMatchDate"));
+            ret.setYouthMatchID(rs.getInt("YouthMatchID"));
+        } catch (Exception e) {
+            HOLogger.instance().log(getClass(),e);
+        }
+        return ret;
     }
 
 }

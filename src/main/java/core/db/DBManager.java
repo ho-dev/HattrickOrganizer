@@ -380,6 +380,10 @@ public class DBManager {
 		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
 				.getYouthPlayer(hrfID);
 	}
+	public List<YouthPlayer.ScoutComment> getYouthScoutComments(int id) {
+		return ((YouthScoutCommentTable) getTable(YouthScoutCommentTable.TABLENAME))
+				.getYouthScoutComments(id);
+	}
 
 	/**
 	 * get a player from a specific HRF
