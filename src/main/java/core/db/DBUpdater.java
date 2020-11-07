@@ -124,6 +124,11 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamName VARCHAR (127)");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamID INTEGER");
 		}
+		if (!tableExists(YouthPlayerTable.TABLENAME)) {
+			dbManager.getTable(YouthPlayerTable.TABLENAME).createTable();
+			dbManager.getTable(YouthScoutCommentTable.TABLENAME).createTable();
+		}
+
 		updateDBVersion(dbVersion, version);
 	}
 

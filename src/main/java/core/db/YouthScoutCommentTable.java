@@ -35,7 +35,7 @@ public class YouthScoutCommentTable extends AbstractTable {
         var sql = "SELECT count(*) FROM "+getTableName()+" WHERE YOUTHPLAYER_ID=" + youthplayerid;
         var rs = adapter.executeQuery(sql);
         try {
-            if (rs.next()) {
+            if (rs != null && rs.next()) {
                 return rs.getInt(1);
             }
         } catch (SQLException sexc) {
@@ -56,8 +56,8 @@ public class YouthScoutCommentTable extends AbstractTable {
         sql.append(getTableName())
                 .append(" (YOUTHPLAYER_ID,INDEX,Text,Type,Variation,SkillType,SkillLevel) VALUES(")
                 .append(youthPlayerId).append(",")
-                .append(i).append(",")
-                .append(c.text).append(",")
+                .append(i).append(",'")
+                .append(c.text).append("',")
                 .append(c.type).append(",")
                 .append(c.variation).append(",")
                 .append(c.skillType).append(",")

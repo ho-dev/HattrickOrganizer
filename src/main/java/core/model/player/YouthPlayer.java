@@ -1,5 +1,6 @@
 package core.model.player;
 
+import core.util.HOLogger;
 import module.opponentspy.CalcVariables;
 import module.training.Skills;
 
@@ -34,7 +35,7 @@ public class YouthPlayer {
     private int youthMatchID;
     private int positionCode;
     private int playedMinutes;
-    private int rating;
+    private double rating;
     private Timestamp youthMatchDate;
     private Timestamp hrfDate;
 
@@ -253,11 +254,11 @@ public class YouthPlayer {
         this.playedMinutes = playedMinutes;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -285,7 +286,7 @@ public class YouthPlayer {
         public int level;
         public boolean isAvailable;
         public boolean isMaxReached;
-        public boolean mayUnlock;
+        public Boolean mayUnlock;       // value is nullable
         public boolean isMaxAvailable;
         public int max;
     }
@@ -326,11 +327,11 @@ public class YouthPlayer {
         scoutingRegionID = getInt(properties,"scoutingregionid", 0);
         scoutName = properties.getProperty("scoutname", "");
 
-        youthMatchID = getInt(properties,"youthmatchid", 0);
-        positionCode = getInt(properties,"positioncode", 0);
+        youthMatchID = getInt(properties,"youthmatchid", -1);
+        positionCode = getInt(properties,"positioncode", -1);
         playedMinutes = getInt(properties,"playedminutes", 0);
-        rating = getInt(properties,"rating", 0);
-        youthMatchDate = parseDate(properties.getProperty("youthmatchdate", ""));
+        rating = getDouble(properties,"rating", -1);
+        youthMatchDate = parseNullableDate(properties.getProperty("youthmatchdate"));
 
         parseSkillInfo(properties, Skills.HTSkillID.GOALKEEPER,  "keeperskill");
         parseSkillInfo(properties, Skills.HTSkillID.DEFENDING,  "defenderskill");
@@ -342,9 +343,15 @@ public class YouthPlayer {
         for ( int i=0; parseScoutComment(properties, i); i++);
     }
 
+    // don't want to see warnings in HO log file on empty date strings
+    private Timestamp parseNullableDate(String date) {
+        if ( date != null && date.length()>0) return parseDate(date);
+        return null;
+    }
+
     private boolean parseScoutComment(Properties properties, int i) {
         var prefix = "scoutcomment"+i;
-        var text = properties.getProperty(prefix+"Text");
+        var text = properties.getProperty(prefix+"text");
         if ( text != null){
             var scoutComment = new ScoutComment();
             scoutComment.text = properties.getProperty(prefix+"text", "");
@@ -364,22 +371,54 @@ public class YouthPlayer {
         skillInfo.max = getInt(properties,skill+"max", -1);
         skillInfo.isAvailable = getBoolean(properties,skill + "isavailable", false);
         skillInfo.isMaxReached = getBoolean(properties,skill + "ismaxreached", false);
-        skillInfo.mayUnlock = getBoolean(properties,skill + "mayunlock", false);
+        skillInfo.mayUnlock = getBoolean(properties,skill + "mayunlock");
         skillInfo.isMaxAvailable = getBoolean(properties,skill + "maxisavailable", false);
 
         this.skillInfoMap.put(skillID.getValue(), skillInfo);
     }
 
+    private Boolean getBoolean(Properties p, String key) {
+        try {
+            var s = p.getProperty(key);
+            if (s != null && s.length() > 0) return Boolean.parseBoolean(s);
+        }
+        catch(Exception e){
+        }
+        return null;
+    }
+
     private boolean getBoolean(Properties p, String key, boolean defautValue) {
-        var s  = p.getProperty(key);
-        if ( s != null && s.length()>0) return Boolean.parseBoolean(s);
+        try {
+            var s = p.getProperty(key);
+            if (s != null && s.length() > 0) return Boolean.parseBoolean(s);
+        }
+        catch(Exception e){
+            HOLogger.instance().warning(getClass(), "getBoolean: " + e.toString());
+        }
         return defautValue;
     }
 
     private int getInt(Properties p, String key, int defaultValue) {
-        var s  = p.getProperty(key);
-        if ( s != null && s.length()>0) return Integer.parseInt(s);
+        try {
+            var s = p.getProperty(key);
+            if (s != null && s.length() > 0) return Integer.parseInt(s);
+        }
+        catch(Exception e){
+            HOLogger.instance().warning(getClass(), "getInt: " + e.toString());
+        }
         return defaultValue;
     }
+
+    private double getDouble(Properties p, String key, double defaultValue) {
+        try {
+            var s = p.getProperty(key);
+            if (s != null && s.length() > 0) return Double.parseDouble(s);
+        }
+        catch(Exception e){
+            HOLogger.instance().warning(getClass(), "getDouble: " + e.toString());
+        }
+        return defaultValue;
+    }
+
 
 }

@@ -207,6 +207,14 @@ public class DBManager {
 		return m_clInstance;
 	}
 
+	public static String nullOrDateString(Timestamp date) {
+		var ret = String.valueOf(date);
+		if ( ret != "null"){
+			return "'" + ret + "'";
+		}
+		return ret;
+	}
+
 	private void initAllTables(JDBCAdapter adapter) {
 		tables.put(BasicsTable.TABLENAME, new BasicsTable(adapter));
 		tables.put(TeamTable.TABLENAME, new TeamTable(adapter));

@@ -59,42 +59,42 @@ public class YouthPlayerTable  extends AbstractTable {
                 new ColumnDescriptor("KeeperMax", Types.INTEGER, true),
                 new ColumnDescriptor("KeeperIsAvailable", Types.BOOLEAN, false),
                 new ColumnDescriptor("KeeperIsMaxAvailable", Types.BOOLEAN, false),
-                new ColumnDescriptor("KeeperMayUnlock", Types.BOOLEAN, false),
+                new ColumnDescriptor("KeeperMayUnlock", Types.BOOLEAN, true),
                 new ColumnDescriptor("KeeperIsMaxReached", Types.BOOLEAN, false),
 
                 new ColumnDescriptor("Defender", Types.INTEGER, true),
                 new ColumnDescriptor("DefenderMax", Types.INTEGER, true),
                 new ColumnDescriptor("DefenderIsAvailable", Types.BOOLEAN, false),
                 new ColumnDescriptor("DefenderIsMaxAvailable", Types.BOOLEAN, false),
-                new ColumnDescriptor("DefenderMayUnlock", Types.BOOLEAN, false),
+                new ColumnDescriptor("DefenderMayUnlock", Types.BOOLEAN, true),
                 new ColumnDescriptor("DefenderIsMaxReached", Types.BOOLEAN, false),
 
                 new ColumnDescriptor("Playmaker", Types.INTEGER, true),
                 new ColumnDescriptor("PlaymakerMax", Types.INTEGER, true),
                 new ColumnDescriptor("PlaymakerIsAvailable", Types.BOOLEAN, false),
                 new ColumnDescriptor("PlaymakerIsMaxAvailable", Types.BOOLEAN, false),
-                new ColumnDescriptor("PlaymakerMayUnlock", Types.BOOLEAN, false),
+                new ColumnDescriptor("PlaymakerMayUnlock", Types.BOOLEAN, true),
                 new ColumnDescriptor("PlaymakerIsMaxReached", Types.BOOLEAN, false),
 
                 new ColumnDescriptor("Winger", Types.INTEGER, true),
                 new ColumnDescriptor("WingerMax", Types.INTEGER, true),
                 new ColumnDescriptor("WingerIsAvailable", Types.BOOLEAN, false),
                 new ColumnDescriptor("WingerIsMaxAvailable", Types.BOOLEAN, false),
-                new ColumnDescriptor("WingerMayUnlock", Types.BOOLEAN, false),
+                new ColumnDescriptor("WingerMayUnlock", Types.BOOLEAN, true),
                 new ColumnDescriptor("WingerIsMaxReached", Types.BOOLEAN, false),
 
                 new ColumnDescriptor("Passing", Types.INTEGER, true),
                 new ColumnDescriptor("PassingMax", Types.INTEGER, true),
                 new ColumnDescriptor("PassingIsAvailable", Types.BOOLEAN, false),
                 new ColumnDescriptor("PassingIsMaxAvailable", Types.BOOLEAN, false),
-                new ColumnDescriptor("PassingMayUnlock", Types.BOOLEAN, false),
+                new ColumnDescriptor("PassingMayUnlock", Types.BOOLEAN, true),
                 new ColumnDescriptor("PassingIsMaxReached", Types.BOOLEAN, false),
 
                 new ColumnDescriptor("SetPieces", Types.INTEGER, true),
                 new ColumnDescriptor("SetPiecesMax", Types.INTEGER, true),
                 new ColumnDescriptor("SetPiecesIsAvailable", Types.BOOLEAN, false),
                 new ColumnDescriptor("SetPiecesIsMaxAvailable", Types.BOOLEAN, false),
-                new ColumnDescriptor("SetPiecesMayUnlock", Types.BOOLEAN, false),
+                new ColumnDescriptor("SetPiecesMayUnlock", Types.BOOLEAN, true),
                 new ColumnDescriptor("SetPiecesIsMaxReached", Types.BOOLEAN, false)
         };
     }
@@ -143,17 +143,17 @@ public class YouthPlayerTable  extends AbstractTable {
             sql.append(getTableName())
                     .append(statement)
                     .append(hrfId).append(",")
-                    .append(player.getId()).append(",")
-                    .append(player.getFirstName()).append(",")
-                    .append(player.getNickName()).append(",")
-                    .append(player.getLastName()).append(",")
+                    .append(player.getId()).append(",'")
+                    .append(DBManager.insertEscapeSequences(player.getFirstName())).append("','")
+                    .append(DBManager.insertEscapeSequences(player.getNickName())).append("','")
+                    .append(DBManager.insertEscapeSequences(player.getLastName())).append("',")
                     .append(player.getAgeYears()).append(",")
                     .append(player.getAgeDays()).append(",")
-                    .append(player.getArrivalDate()).append(",")
-                    .append(player.getCanBePromotedIn()).append(",")
-                    .append(player.getPlayerNumber()).append(",")
-                    .append(player.getStatement()).append(",")
-                    .append(player.getOwnerNotes()).append(",")
+                    .append(DBManager.nullOrDateString(player.getArrivalDate())).append(",")
+                    .append(player.getCanBePromotedIn()).append(",'")
+                    .append(player.getPlayerNumber()).append("','")
+                    .append(player.getStatement()).append("','")
+                    .append(player.getOwnerNotes()).append("',")
                     .append(player.getPlayerCategoryID()).append(",")
                     .append(player.getCards()).append(",")
                     .append(player.getInjuryLevel()).append(",")
@@ -163,52 +163,56 @@ public class YouthPlayerTable  extends AbstractTable {
                     .append(player.getLeagueGoals()).append(",")
                     .append(player.getFriendlyGoals()).append(",")
                     .append(player.getScoutId()).append(",")
-                    .append(player.getScoutingRegionID()).append(",")
-                    .append(player.getScoutName()).append(",")
+                    .append(player.getScoutingRegionID()).append(",'")
+                    .append(player.getScoutName()).append("',")
                     .append(player.getYouthMatchID()).append(",")
                     .append(player.getPositionCode()).append(",")
                     .append(player.getPlayedMinutes()).append(",")
                     .append(player.getRating()).append(",")
-                    .append(player.getYouthMatchDate()).append(",")
+                    .append(DBManager.nullOrDateString(player.getYouthMatchDate())).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).level).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).max).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).isAvailable).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).isMaxAvailable).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).mayUnlock).append(",")
+                    .append(String.valueOf(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).mayUnlock)).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).isMaxReached).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).level).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).max).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).isAvailable).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).isMaxAvailable).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).mayUnlock).append(",")
+                    .append(String.valueOf(player.getSkillInfo(Skills.HTSkillID.DEFENDING).mayUnlock)).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).isMaxReached).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).level).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).max).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).isAvailable).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).isMaxAvailable).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).mayUnlock).append(",")
+                    .append(String.valueOf(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).mayUnlock)).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).isMaxReached).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.WINGER).level).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.WINGER).max).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.WINGER).isAvailable).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.WINGER).isMaxAvailable).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.WINGER).mayUnlock).append(",")
+                    .append(String.valueOf(player.getSkillInfo(Skills.HTSkillID.WINGER).mayUnlock)).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.WINGER).isMaxReached).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.PASSING).level).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.PASSING).max).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.PASSING).isAvailable).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.PASSING).isMaxAvailable).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.PASSING).mayUnlock).append(",")
+                    .append(String.valueOf(player.getSkillInfo(Skills.HTSkillID.PASSING).mayUnlock)).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.PASSING).isMaxReached).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).level).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).max).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isAvailable).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isMaxAvailable).append(",")
-                    .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).mayUnlock).append(",")
+                    .append(String.valueOf(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).mayUnlock)).append(",")
                     .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isMaxReached)
                     .append(")");
-            adapter.executeUpdate(sql.toString());
-
+            try {
+                adapter.executeUpdate(sql.toString());
+            }
+            catch ( Exception e){
+                HOLogger.instance().log(getClass(),"saveYouthPlayer: " + sql.toString() + " : " + e);
+            }
             var scoutComments = player.getScoutComments();
             if ( scoutComments.size()>0){
                 var youthScoutCommentTable = (YouthScoutCommentTable)DBManager.instance().getTable(YouthScoutCommentTable.TABLENAME);
