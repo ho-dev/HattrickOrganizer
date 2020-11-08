@@ -34,14 +34,6 @@ import javax.swing.border.*;
  */
 class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListener {
 
-
-    protected static int PLAYER_POSITION_PANEL_WIDTH = Helper.calcCellWidth(160);
-
-    // height for position with tactics box
-    protected static int PLAYER_POSITION_PANEL_HEIGHT_FULL = Helper.calcCellWidth(95);
-    // Used for positions with no tactics box
-    protected static int PLAYER_POSITION_PANEL_HEIGHT_REDUCED = Helper.calcCellWidth(70);
-
     private static final SpielerCBItem oNullPlayer = new SpielerCBItem("", 0f, null, false, true);
 
     //~ Instance fields ----------------------------------------------------------------------------
@@ -91,7 +83,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         final Object obj = m_jcbPlayer.getSelectedItem();
 
         if (obj instanceof SpielerCBItem) {
-            return ((SpielerCBItem) obj).getSpieler();
+            return ((SpielerCBItem) obj).getPlayer();
         }
 
         return null;
@@ -151,11 +143,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
 
             m_jcbTactic.setBackground(m_jcbPlayer.getBackground());
             jlp.add(m_jcbTactic, constraints, layerIndex);
-            setPreferredSize(new Dimension(PLAYER_POSITION_PANEL_WIDTH, PLAYER_POSITION_PANEL_HEIGHT_FULL));
-        } else {
-            setPreferredSize(new Dimension(PLAYER_POSITION_PANEL_WIDTH, PLAYER_POSITION_PANEL_HEIGHT_REDUCED));
         }
-        jlp.setPreferredSize(getPreferredSize());
         add(jlp);
     }
 
@@ -294,7 +282,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         for (int i = 0; i < m_jcbPlayer.getModel().getSize(); i++) {
             SpielerCBItem obj = m_jcbPlayer.getItemAt(i);
             if (obj != null) {
-                if (obj.getSpieler() != null) {
+                if (obj.getPlayer() != null) {
                     obj.getEntry().setIsSelect(false);
                     obj.getEntry().setIsAssit(false);
                 }
@@ -306,9 +294,9 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                 SpielerCBItem obj = m_jcbPlayer.getItemAt(i);
                 boolean isInLineup = false;
                 if (obj != null) {
-                    if (obj.getSpieler() != null) {
+                    if (obj.getPlayer() != null) {
                         for (Player value : selectPlayer) {
-                            if (obj.getSpieler().getSpielerID() == value.getSpielerID()) {
+                            if (obj.getPlayer().getSpielerID() == value.getSpielerID()) {
                                 obj.getEntry().setIsSelect(true);
                                 isInLineup = true;
                                 break;
@@ -316,7 +304,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                         }
                         if (!isInLineup) {
                             for (Player value : assitPlayer) {
-                                if (obj.getSpieler().getSpielerID() == value.getSpielerID()) {
+                                if (obj.getPlayer().getSpielerID() == value.getSpielerID()) {
                                     obj.getEntry().setIsAssit(true);
                                     break;
                                 }
@@ -415,10 +403,10 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         m_jcbPlayer.addItemListener(this);
 
         //Minimized
-        if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getSpieler() != null)) {
-            m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getShortName());
-            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
-                    m_clSelectedPlayer.getSpieler().getTrikotnummer()));
+        if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getPlayer() != null)) {
+            m_jlPlayer.setText(m_clSelectedPlayer.getPlayer().getShortName());
+            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getPlayer().getSpielerID()),
+                    m_clSelectedPlayer.getPlayer().getTrikotnummer()));
         } else {
             m_jlPlayer.setText("");
             m_jlPlayer.setIcon(null);
@@ -426,7 +414,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
 
         setTaktik(getTactic(), aktuellerPlayer);
 
-        setPlayerTooltip(m_clSelectedPlayer.getSpieler());
+        setPlayerTooltip(m_clSelectedPlayer.getPlayer());
     }
 
 
@@ -510,10 +498,10 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         m_jcbPlayer.addItemListener(this);
 
         //Minimized
-        if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getSpieler() != null)) {
-            m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getShortName());
-            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
-                    m_clSelectedPlayer.getSpieler().getTrikotnummer()));
+        if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getPlayer() != null)) {
+            m_jlPlayer.setText(m_clSelectedPlayer.getPlayer().getShortName());
+            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getPlayer().getSpielerID()),
+                    m_clSelectedPlayer.getPlayer().getTrikotnummer()));
         } else {
             m_jlPlayer.setText("");
             m_jlPlayer.setIcon(null);
@@ -586,10 +574,10 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         }
 
         //Minimized
-        if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getSpieler() != null)) {
-            m_jlPlayer.setText(m_clSelectedPlayer.getSpieler().getShortName());
-            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(lineup.getPositionBySpielerId(m_clSelectedPlayer.getSpieler().getSpielerID()),
-                    m_clSelectedPlayer.getSpieler()
+        if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getPlayer() != null)) {
+            m_jlPlayer.setText(m_clSelectedPlayer.getPlayer().getShortName());
+            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(lineup.getPositionBySpielerId(m_clSelectedPlayer.getPlayer().getSpielerID()),
+                    m_clSelectedPlayer.getPlayer()
                             .getTrikotnummer()));
         } else {
             m_jlPlayer.setText("");

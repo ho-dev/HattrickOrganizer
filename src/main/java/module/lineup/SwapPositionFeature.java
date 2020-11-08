@@ -24,7 +24,7 @@ public class SwapPositionFeature {
 				JComboBox source = (JComboBox) event.getSource();
 				SpielerCBItem selectedItem = (SpielerCBItem) source.getSelectedItem();
 				if ((selectedItem != null)
-						&& (selectedItem.getSpieler() == null)) {
+						&& (selectedItem.getPlayer() == null)) {
 					unpressButton();
 					swapPositionsManager.unmarkSwapCandidate();
 				}

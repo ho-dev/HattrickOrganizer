@@ -511,7 +511,7 @@ class SpielerStatistikPanel extends LazyImagePanel {
 
 			if (m_jcbSpieler.getSelectedItem() != null) {
 				final double[][] statistikWerte = DBManager.instance().getSpielerDaten4Statistik(
-						((SpielerCBItem) m_jcbSpieler.getSelectedItem()).getSpieler()
+						((SpielerCBItem) m_jcbSpieler.getSelectedItem()).getPlayer()
 								.getSpielerID(), anzahlHRF);
 				final StatistikModel[] models = new StatistikModel[statistikWerte.length];
 

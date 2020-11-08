@@ -136,7 +136,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 
 		int spielerid = -1;
 		if (playerComboBox.getSelectedItem() != null) {
-			spielerid = ((SpielerCBItem) playerComboBox.getSelectedItem()).getSpieler()
+			spielerid = ((SpielerCBItem) playerComboBox.getSelectedItem()).getPlayer()
 					.getSpielerID();
 		}
 
@@ -189,9 +189,9 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		if (playerComboBox.getSelectedIndex() > -1) {
 			// Tabelle updaten
 			m_jtSpielerMatchesTable.refresh(((SpielerCBItem) playerComboBox.getSelectedItem())
-					.getSpieler().getSpielerID());
+					.getPlayer().getSpielerID());
 			m_jtSpielerPositionTable.refresh(((SpielerCBItem) playerComboBox.getSelectedItem())
-					.getSpieler().getSpielerID());
+					.getPlayer().getSpielerID());
 		} else {
 			// Tabelle leeren
 			m_jtSpielerMatchesTable.refresh(-1);
