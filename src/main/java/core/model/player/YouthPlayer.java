@@ -34,10 +34,10 @@ public class YouthPlayer {
     private int scoutId;
     private int scoutingRegionID;
     private String scoutName;
-    private int youthMatchID;
-    private int positionCode;
+    private Integer youthMatchID;
+    private Integer positionCode;
     private int playedMinutes;
-    private double rating;
+    private Double rating;
     private Timestamp youthMatchDate;
     private Timestamp hrfDate;
 
@@ -235,19 +235,19 @@ public class YouthPlayer {
         this.scoutName = scoutName;
     }
 
-    public int getYouthMatchID() {
+    public Integer getYouthMatchID() {
         return youthMatchID;
     }
 
-    public void setYouthMatchID(int youthMatchID) {
+    public void setYouthMatchID(Integer youthMatchID) {
         this.youthMatchID = youthMatchID;
     }
 
-    public int getPositionCode() {
+    public Integer getPositionCode() {
         return positionCode;
     }
 
-    public void setPositionCode(int positionCode) {
+    public void setPositionCode(Integer positionCode) {
         this.positionCode = positionCode;
     }
 
@@ -259,11 +259,11 @@ public class YouthPlayer {
         this.playedMinutes = playedMinutes;
     }
 
-    public double getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
@@ -346,10 +346,10 @@ public class YouthPlayer {
         private int youthPlayerId;
         private int index;
         private String text;
-        private int type;
-        private int variation;
-        private int skillType;
-        private int skillLevel;
+        private Integer type;
+        private Integer variation;
+        private Integer skillType;
+        private Integer skillLevel;
 
         public ScoutComment(){}
 
@@ -361,33 +361,33 @@ public class YouthPlayer {
             this.text = text;
         }
 
-        public int getType() {
+        public Integer getType() {
             return type;
         }
 
-        public void setType(int type) { this.type = type; }
+        public void setType(Integer type) { this.type = type; }
 
-        public int getVariation() {
+        public Integer getVariation() {
             return variation;
         }
 
-        public void setVariation(int variation) {
+        public void setVariation(Integer variation) {
             this.variation = variation;
         }
 
-        public int getSkillType() {
+        public Integer getSkillType() {
             return skillType;
         }
 
-        public void setSkillType(int skillType) {
+        public void setSkillType(Integer skillType) {
             this.skillType = skillType;
         }
 
-        public int getSkillLevel() {
+        public Integer getSkillLevel() {
             return skillLevel;
         }
 
-        public void setSkillLevel(int skillLevel) {
+        public void setSkillLevel(Integer skillLevel) {
             this.skillLevel = skillLevel;
         }
 
@@ -435,10 +435,10 @@ public class YouthPlayer {
         scoutingRegionID = getInt(properties,"scoutingregionid", 0);
         scoutName = properties.getProperty("scoutname", "");
 
-        youthMatchID = getInt(properties,"youthmatchid", -1);
-        positionCode = getInt(properties,"positioncode", -1);
+        youthMatchID = getInteger(properties,"youthmatchid");
+        positionCode = getInteger(properties,"positioncode");
         playedMinutes = getInt(properties,"playedminutes", 0);
-        rating = getDouble(properties,"rating", -1);
+        rating = getDouble(properties,"rating");
         youthMatchDate = parseNullableDate(properties.getProperty("youthmatchdate"));
 
         parseSkillInfo(properties, Skills.HTSkillID.GOALKEEPER,  "keeperskill");
@@ -463,10 +463,10 @@ public class YouthPlayer {
         if ( text != null){
             var scoutComment = new ScoutComment();
             scoutComment.text = properties.getProperty(prefix+"text", "");
-            scoutComment.type = getInt(properties,prefix+"type", -1);
-            scoutComment.variation = getInt(properties,prefix+"variation", -1);
-            scoutComment.skillType = getInt(properties,prefix+"skilltype", -1);
-            scoutComment.skillLevel = getInt(properties,prefix+"skilllevel", -1);
+            scoutComment.type = getInteger(properties,prefix+"type");
+            scoutComment.variation = getInteger(properties,prefix+"variation");
+            scoutComment.skillType = getInteger(properties,prefix+"skilltype");
+            scoutComment.skillLevel = getInteger(properties,prefix+"skilllevel");
             this.scoutComments.add(scoutComment);
             return true;
         }
@@ -475,8 +475,8 @@ public class YouthPlayer {
 
     private void parseSkillInfo(Properties properties, Skills.HTSkillID skillID, String skill) {
         var skillInfo = new SkillInfo();
-        skillInfo.level = getInt(properties, skill, -1);
-        skillInfo.max = getInt(properties,skill+"max", -1);
+        skillInfo.level = getInteger(properties, skill);
+        skillInfo.max = getInteger(properties,skill+"max");
         skillInfo.isMaxReached = getBoolean(properties,skill + "ismaxreached", false);
         skillInfo.mayUnlock = getBoolean(properties,skill + "mayunlock");
 
@@ -487,6 +487,16 @@ public class YouthPlayer {
         try {
             var s = p.getProperty(key);
             if (s != null && s.length() > 0) return Boolean.parseBoolean(s);
+        }
+        catch(Exception e){
+        }
+        return null;
+    }
+
+    private Integer getInteger(Properties p, String key) {
+        try {
+            var s = p.getProperty(key);
+            if (s != null && s.length() > 0) return Integer.parseInt(s);
         }
         catch(Exception e){
         }
@@ -515,14 +525,13 @@ public class YouthPlayer {
         return defaultValue;
     }
 
-    private double getDouble(Properties p, String key, double defaultValue) {
+    private Double getDouble(Properties p, String key) {
         try {
             var s = p.getProperty(key);
             if (s != null && s.length() > 0) return Double.parseDouble(s);
         }
         catch(Exception e){
-            HOLogger.instance().warning(getClass(), "getDouble: " + e.toString());
         }
-        return defaultValue;
+        return null;
     }
 }

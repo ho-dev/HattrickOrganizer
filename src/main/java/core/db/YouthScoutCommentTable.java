@@ -31,10 +31,10 @@ public class YouthScoutCommentTable extends AbstractTable {
                 new ColumnDescriptor("YOUTHPLAYER_ID", Types.INTEGER, false),
                 new ColumnDescriptor("INDEX", Types.INTEGER, false),
                 new ColumnDescriptor("Text", Types.VARCHAR, true, 255),
-                new ColumnDescriptor("Type", Types.INTEGER, false),
-                new ColumnDescriptor("Variation", Types.INTEGER, false),
-                new ColumnDescriptor("SkillType", Types.INTEGER, false),
-                new ColumnDescriptor("SkillLevel", Types.INTEGER, false)
+                new ColumnDescriptor("Type", Types.INTEGER, true),
+                new ColumnDescriptor("Variation", Types.INTEGER, true),
+                new ColumnDescriptor("SkillType", Types.INTEGER, true),
+                new ColumnDescriptor("SkillLevel", Types.INTEGER, true)
         };
     }
 
