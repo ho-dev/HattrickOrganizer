@@ -34,6 +34,9 @@ public class SolarizedLightTheme extends BaseTheme {
             // Smileys
             ThemeManager.instance().put(HOColorName.SMILEYS_COLOR, defaults.getColor("Label.foreground"));
 
+            // Player Specialties
+            ThemeManager.instance().put(HOColorName.PLAYER_SPECIALTY_COLOR, defaults.getColor("Label.foreground"));
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();

@@ -353,13 +353,14 @@ public class OnlineWorker {
 					lineup = getMatchlineup(matchid, info.getMatchTyp(), info.getHeimID(), info.getGastID());
 
 					if (lineup == null) {
-						String msg = getLangString("Downloadfehler")
-								+ " : Error fetching Matchlineup :";
-						// Info
-						setInfoMsg(msg, InfoPanel.FEHLERFARBE);
-						Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
-								JOptionPane.ERROR_MESSAGE);
-
+						if ( !isSilentDownload()) {
+							String msg = getLangString("Downloadfehler")
+									+ " : Error fetching Matchlineup :";
+							// Info
+							setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+							Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
+									JOptionPane.ERROR_MESSAGE);
+						}
 						return false;
 					}
 					
@@ -1163,5 +1164,13 @@ public class OnlineWorker {
 		out.newLine();
 		out.close();
 		return outFile;
+	}
+
+	public static boolean isSilentDownload() {
+		return MyConnector.instance().isSilentDownload();
+	}
+
+	public static void setSilentDownload(boolean silentDownload) {
+		MyConnector.instance().setSilentDownload(silentDownload);
 	}
 }

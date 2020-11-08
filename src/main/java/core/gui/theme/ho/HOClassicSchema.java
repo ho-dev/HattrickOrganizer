@@ -64,20 +64,13 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(WEATHER_SUN_POS, "gui/bilder/Fugue/weather-sun-pos-se.png");
 		put(WEATHER_SUN_NEG, "gui/bilder/Fugue/weather-sun-neg-se.png");
 
-		put(SPECIALTIES[1], "gui/bilder/match_events/speciality-1.png");
-		put(SPECIALTIES[2], "gui/bilder/match_events/speciality-2.png");
-		put(SPECIALTIES[3], "gui/bilder/match_events/speciality-3.png");
-		put(SPECIALTIES[4], "gui/bilder/match_events/speciality-4.png");
-		put(SPECIALTIES[5], "gui/bilder/match_events/speciality-5.png");
-		put(SPECIALTIES[6], "gui/bilder/match_events/speciality-6.png");
-		put(SPECIALTIES[8], "gui/bilder/match_events/speciality-8.png");
-		put(SPECIALTIES_SMALL[1], "gui/bilder/player overview/speciality-1-small.png");
-		put(SPECIALTIES_SMALL[2], "gui/bilder/player overview/speciality-2-small.png");
-		put(SPECIALTIES_SMALL[3], "gui/bilder/player overview/speciality-3-small.png");
-		put(SPECIALTIES_SMALL[4], "gui/bilder/player overview/speciality-4-small.png");
-		put(SPECIALTIES_SMALL[5], "gui/bilder/player overview/speciality-5-small.png");
-		put(SPECIALTIES_SMALL[6], "gui/bilder/player overview/speciality-6-small.png");
-		put(SPECIALTIES_SMALL[8], "gui/bilder/player overview/speciality-8-small.png");
+		put(SPECIALTIES[1], "gui/bilder/player overview/speciality-1.svg");
+		put(SPECIALTIES[2], "gui/bilder/player overview/speciality-2.svg");
+		put(SPECIALTIES[3], "gui/bilder/player overview/speciality-3.svg");
+		put(SPECIALTIES[4], "gui/bilder/player overview/speciality-4.svg");
+		put(SPECIALTIES[5], "gui/bilder/player overview/speciality-5.svg");
+		put(SPECIALTIES[6], "gui/bilder/player overview/speciality-6.svg");
+		put(SPECIALTIES[8], "gui/bilder/player overview/speciality-8.svg");
 
 		put(TOOTHEDWHEEL, "gui/bilder/automatic.png");
 		put(HAND, "gui/bilder/manual.png");
@@ -395,6 +388,10 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		// Smileys
 		put(SMILEYS_COLOR, "black");
+
+		// Players specialty Colors
+		put(PLAYER_SPECIALTY_COLOR, "black");
+		put(PLAYER_SPECIALTY_NEGATIVE_COLOR, "red");
 
 		put(STAT_LEADERSHIP, Color.GRAY);
 		put(STAT_EXPERIENCE, Color.DARK_GRAY);

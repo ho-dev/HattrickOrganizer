@@ -1,4 +1,3 @@
-// %1287661405:de.hattrickorganizer.gui.model%
 package core.gui.model;
 
 import core.datatype.ComboItem;
@@ -7,64 +6,54 @@ import core.gui.comp.entry.SpielerLabelEntry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
-import core.util.Helper;
-
-
-import javax.swing.JList;
+import org.jetbrains.annotations.Nullable;
+import javax.swing.*;
 import java.awt.*;
 
 public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 
-    protected static int PLAYER_COMBO_HEIGHT = Helper.calcCellWidth(35);
     public static javax.swing.JLabel m_jlLeer = new javax.swing.JLabel(" ");
     public SpielerLabelEntry m_clEntry;
-    private Player m_clPlayer;
+    private @Nullable Player m_clPlayer;
     private String m_sText;
     private float m_fPositionsBewertung;
     private boolean m_bAlternativePosition;
     private boolean m_bMultiLine = false;
 
-    /**
-     * Creates a new SpielerCBItem object.
-     */
-    public SpielerCBItem(String text, float poswert, Player player) {
+
+    public SpielerCBItem(String text, float positionRating, @Nullable Player player) {
         m_sText = text;
         m_clPlayer = player;
-        m_fPositionsBewertung = poswert;
+        m_fPositionsBewertung = positionRating;
         m_bAlternativePosition = false;
         m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true);
     }
 
-    public SpielerCBItem(String text, float poswert, Player player, boolean useCustomText, boolean multiLine) {
+    public SpielerCBItem(String text, float positionRating, @Nullable Player player, boolean useCustomText, boolean multiLine) {
         m_sText = text;
         m_clPlayer = player;
-        m_fPositionsBewertung = poswert;
+        m_fPositionsBewertung = positionRating;
         m_bAlternativePosition = false;
         m_bMultiLine = multiLine;
-        if (useCustomText == true) {
+        if (useCustomText) {
             m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true, true, text, m_bMultiLine);
         } else {
             m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true, false, "", m_bMultiLine);
         }
     }
 
-    public final Component getListCellRendererComponent(JList jList, int index, boolean isSelected) {
-        final Player player = getSpieler();
+    public final Component getListCellRendererComponent(JList<? extends SpielerCBItem>  jList, int index, boolean isSelected) {
+        final Player player = getPlayer();
 
-        // Kann für Tempspieler < 0 sein && player.getSpielerID () > 0 )
         if (player != null) {
             m_clEntry.updateComponent(player, HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
-                            .getPositionBySpielerId(player.getSpielerID()), getPositionsBewertung(), m_bAlternativePosition,
+                            .getPositionBySpielerId(player.getSpielerID()), getPositionsEvaluation(), m_bAlternativePosition,
                     m_sText);
 
-            if (m_bMultiLine) {
-                m_clEntry.getComponent(isSelected).setPreferredSize(new Dimension(m_clEntry.getComponent(isSelected).getPreferredSize().width, PLAYER_COMBO_HEIGHT));
-            }
-            return m_clEntry.getComponent(isSelected);
+            return m_clEntry.getComponent(isSelected, index==-1);
         } else {
             m_jlLeer.setOpaque(true);
-            m_jlLeer.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG
-                    : ColorLabelEntry.BG_STANDARD);
+            m_jlLeer.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG : ColorLabelEntry.BG_STANDARD);
             return m_jlLeer;
         }
     }
@@ -73,15 +62,15 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
         return m_clEntry;
     }
 
-    public final float getPositionsBewertung() {
+    public final float getPositionsEvaluation() {
         return m_fPositionsBewertung;
     }
 
-    public final void setSpieler(Player player) {
+    public final void setPlayer(Player player) {
         m_clPlayer = player;
     }
 
-    public final Player getSpieler() {
+    public final @Nullable Player getPlayer() {
         return m_clPlayer;
     }
 
@@ -94,27 +83,25 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
         return m_sText;
     }
 
-    public final void setValues(String text, float poswert, Player player, boolean alternativePosition) {
+    public final void setValues(String text, float positionRating, Player player, boolean alternativePosition) {
         m_sText = text;
         m_clPlayer = player;
-        m_fPositionsBewertung = poswert;
+        m_fPositionsBewertung = positionRating;
         m_bAlternativePosition = alternativePosition;
     }
 
     @Override
     public final int compareTo(SpielerCBItem obj) {
 
-        final SpielerCBItem cbitem = obj;
-
-        if ((cbitem.getSpieler() != null) && (getSpieler() != null)) {
-            if (getPositionsBewertung() > cbitem.getPositionsBewertung()) {
+        if ((obj.getPlayer() != null) && (getPlayer() != null)) {
+            if (getPositionsEvaluation() > obj.getPositionsEvaluation()) {
                 return -1;
-            } else if (getPositionsBewertung() < cbitem.getPositionsBewertung()) {
+            } else if (getPositionsEvaluation() < obj.getPositionsEvaluation()) {
                 return 1;
             } else {
-                return getSpieler().getLastName().compareTo(cbitem.getSpieler().getLastName());
+                return getPlayer().getLastName().compareTo(obj.getPlayer().getLastName());
             }
-        } else if (cbitem.getSpieler() == null) {
+        } else if (obj.getPlayer() == null) {
             return -1;
         } else {
             return 1;
@@ -127,13 +114,9 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
         if (obj instanceof SpielerCBItem) {
             final SpielerCBItem temp = (SpielerCBItem) obj;
 
-            if ((this.getSpieler() != null) && (temp.getSpieler() != null)) {
-                if (this.getSpieler().getSpielerID() == temp.getSpieler().getSpielerID()) {
-                    return true;
-                }
-            } else if ((this.getSpieler() == null) && (temp.getSpieler() == null)) {
-                return true;
-            }
+            if ((this.getPlayer() != null) && (temp.getPlayer() != null)) {
+                return this.getPlayer().getSpielerID() == temp.getPlayer().getSpielerID();
+            } else return (this.getPlayer() == null) && (temp.getPlayer() == null);
         }
 
         return false;

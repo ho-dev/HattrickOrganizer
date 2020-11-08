@@ -75,6 +75,8 @@ public class MyConnector {
 	private Token m_OAAccessToken;
 	private static boolean DEBUGSAVE = false;
 
+	private boolean silentDownload = false;
+
 	/**
 	 * Creates a new instance of MyConnector.
 	 */
@@ -118,6 +120,7 @@ public class MyConnector {
 	public static String getPluginSite() {
 		return getHOSite() + "onlinefiles";
 	}
+
 
 	/**
 	 * Fetch a specific arena
@@ -672,31 +675,36 @@ public class MyConnector {
 					tryAgain = false;
 					break;
 				case 401:
-					if (authDialog == null) {
+					if ( !silentDownload) {
+						if (authDialog == null) {
 
-						HOMainFrame mainFrame = null;
+							HOMainFrame mainFrame = null;
 
-						// If the main frame is not in the process of loading, use it,
-						// otherwise use null frame.
+							// If the main frame is not in the process of loading, use it,
+							// otherwise use null frame.
 
-						if (!HOMainFrame.launching.get()) {
-							mainFrame = HOMainFrame.instance();
+							if (!HOMainFrame.launching.get()) {
+								mainFrame = HOMainFrame.instance();
+							}
+
+							// disable WaitCursor to unblock GUI
+							if (mainFrame != null) {
+								CursorToolkit.stopWaitCursor(mainFrame.getRootPane());
+							}
+							authDialog = new OAuthDialog(mainFrame, m_OAService, "");
 						}
-
-						// disable WaitCursor to unblock GUI
-						if (mainFrame != null) {
-							CursorToolkit.stopWaitCursor(mainFrame.getRootPane());
+						authDialog.setVisible(true);
+						// A way out for a user unable to authorize for some reason
+						if (authDialog.getUserCancel() == true) {
+							return null;
 						}
-						authDialog = new OAuthDialog(mainFrame, m_OAService, "");
+						m_OAAccessToken = authDialog.getAccessToken();
+						if (m_OAAccessToken == null) {
+							m_OAAccessToken = createOAAccessToken();
+						}
 					}
-					authDialog.setVisible(true);
-					// A way out for a user unable to authorize for some reason
-					if (authDialog.getUserCancel() == true) {
-						return null;
-					}
-					m_OAAccessToken = authDialog.getAccessToken();
-					if (m_OAAccessToken == null) {
-						m_OAAccessToken = createOAAccessToken();
+					else {
+						throw new RuntimeException("HTTP Response Code 401: CHPP Connection failed.");
 					}
 					break;
 				case 407:
@@ -708,10 +716,12 @@ public class MyConnector {
 			}
 		} catch (Exception sox) {
 			HOLogger.instance().error(getClass(), sox);
-			JOptionPane.showMessageDialog(null,
-				sox.getMessage() + "\n\n" + "URL:" + surl + "\n",
-				HOVerwaltung.instance().getLanguageString("Fehler"),
-				JOptionPane.ERROR_MESSAGE);
+			if ( !silentDownload) {
+				JOptionPane.showMessageDialog(null,
+						sox.getMessage() + "\n\n" + "URL:" + surl + "\n",
+						HOVerwaltung.instance().getLanguageString("Fehler"),
+						JOptionPane.ERROR_MESSAGE);
+			}
 			returnString = "";
 		}
 		return returnString;
@@ -925,5 +935,13 @@ public class MyConnector {
 	private Token createOAAccessToken() {
 		return new Token(Helper.decryptString(UserParameter.instance().AccessToken),
 				Helper.decryptString(UserParameter.instance().TokenSecret));
+	}
+
+	public boolean isSilentDownload() {
+		return silentDownload;
+	}
+
+	public void setSilentDownload(boolean silentDownload) {
+		this.silentDownload = silentDownload;
 	}
 }

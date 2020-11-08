@@ -8,6 +8,7 @@ import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.Font;
@@ -523,7 +524,7 @@ public class ImageUtilities {
         return cm.hasAlpha();  
     }
 
-	public static Icon getJerseyIcon(MatchRoleID position, int trickotnummer) {
+	public static Icon getJerseyIcon(@Nullable MatchRoleID position, int trickotnummer) {
 		if (position == null) {
 			return ImageUtilities.getJerseyIcon(0, (byte) 0, trickotnummer);
 		}
@@ -572,11 +573,40 @@ public class ImageUtilities {
 
 	public static Icon getSmileyIcon(String smileyName) {
 		if (Arrays.stream(HOIconName.SMILEYS).anyMatch(smileyName::equals)) {
-			int size = 16;
-			if (smileyName.equals("smiley-coach") || smileyName.equals("smiley-sale")) size = 18;
-			String iconURI = String.format("gui/bilder/smilies/%s.svg", smileyName);
-			Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.SMILEYS_COLOR));
-			return IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
+			String key = smileyName + "_cached";
+			Icon smileyIcon = ThemeManager.instance().getIcon(key);
+			if (smileyIcon == null) {
+				int size = 15;
+				if (smileyName.equals("smiley-coach") || smileyName.equals("smiley-sale")) size = 17;
+				String iconURI = String.format("gui/bilder/smilies/%s.svg", smileyName);
+				Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.SMILEYS_COLOR));
+				smileyIcon = IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
+				ThemeManager.instance().put(key, smileyIcon);
+			}
+			return smileyIcon;
+		}
+		return null;
+	}
+
+	public static @Nullable Icon getSmallPlayerSpecialtyIcon(String playerSpecialtyName) {
+		return getPlayerSpecialtyIcon(playerSpecialtyName, 15);
+	}
+
+	public static @Nullable Icon getLargePlayerSpecialtyIcon(String playerSpecialtyName) {
+		return getPlayerSpecialtyIcon(playerSpecialtyName, 18);
+	}
+
+	public static @Nullable Icon getPlayerSpecialtyIcon(String playerSpecialtyName, int size) {
+		if (Arrays.stream(HOIconName.SPECIALTIES).skip(1).anyMatch(playerSpecialtyName::equals)) {
+			String key = playerSpecialtyName + "_" + size;
+			Icon specialtyIcon = ThemeManager.instance().getIcon(key);
+			if (specialtyIcon == null) {
+			String iconURI = String.format("gui/bilder/player overview/%s.svg", playerSpecialtyName);
+			Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
+			specialtyIcon = IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
+			ThemeManager.instance().put(key, specialtyIcon);
+			}
+			return specialtyIcon;
 		}
 		return null;
 	}

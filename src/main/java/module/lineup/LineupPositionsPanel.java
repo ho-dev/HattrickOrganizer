@@ -1,4 +1,3 @@
-// %2976388207:de.hattrickorganizer.gui.lineup%
 package module.lineup;
 
 import core.gui.HOMainFrame;
@@ -10,47 +9,35 @@ import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 
 /**
- * Enthält die einzelnen Positionen
+ * Create the main panel of Lineup module
  */
 public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel implements
 		core.gui.Refreshable, core.gui.Updateable, ActionListener {
 
-	private static final long serialVersionUID = -9098199182886069003L;
-	private LineupPanel m_clLineupPanel;
-	private JButton m_jbFlipSide = new JButton(ThemeManager.getIcon(HOIconName.RELOAD));
+	private final LineupPanel m_clLineupPanel;
+	private final JButton m_jbFlipSide = new JButton(ThemeManager.getIcon(HOIconName.RELOAD));
 	private PlayerPositionPanel m_clKeeper;
-
 	private PlayerPositionPanel m_clLeftBack;
 	private PlayerPositionPanel m_clLeftCentralDefender;
 	private PlayerPositionPanel m_clMiddleCentralDefender;
 	private PlayerPositionPanel m_clRightCentralDefender;
 	private PlayerPositionPanel m_clRightBack;
-
 	private PlayerPositionPanel m_clLeftWinger;
 	private PlayerPositionPanel m_clLeftInnerMidfielder;
 	private PlayerPositionPanel m_clCentralInnerMidfielder;
 	private PlayerPositionPanel m_clRightInnerMidfielder;
 	private PlayerPositionPanel m_clRightWinger;
-
-
 	private PlayerPositionPanel m_clLeftForward;
 	private PlayerPositionPanel m_clCentralForward;
 	private PlayerPositionPanel m_clRightForward;
-
 	private PlayerPositionPanel m_clSubstKeeper1;
 	private PlayerPositionPanel m_clSubstKeeper2;
 	private PlayerPositionPanel m_clSubstCD1;
@@ -180,8 +167,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// Check
 		lineup.checkAufgestellteSpieler();
 	}
-
-
 
 
 	@Override
@@ -382,10 +367,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		final JPanel panel = new JPanel();
 		panel.setOpaque(false);
-		m_jbFlipSide.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString(
-				"tt_AufstellungsPosition_FlipSide"));
+		m_jbFlipSide.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString("tt_AufstellungsPosition_FlipSide"));
 		m_jbFlipSide.addActionListener(this);
-		m_jbFlipSide.setPreferredSize(new Dimension(25, 25));
+		m_jbFlipSide.setMargin(new Insets(0, 0, 0, 0));
 		panel.add(m_jbFlipSide);
 		buttonPanel.add(panel, BorderLayout.NORTH);
 
@@ -397,7 +381,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		centerPanel.add(panel);
 
 		// A spacer between captain and reserves.
-
 		constraints.gridx = 0;
 		constraints.gridy = 6;
 		constraints.gridwidth = 7;
@@ -405,7 +388,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		box2.add(Box.createVerticalStrut(35));
 		layout.setConstraints(box2, constraints);
 		centerPanel.add(box2);
-
 
 		constraints.gridx = 0;
 		constraints.gridy = 7;
@@ -422,7 +404,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		centerPanel.add(label1);
 
 		// The reserves
-
 		constraints.gridx = 0;
 		constraints.gridy = 8;
 		constraints.gridwidth = 1;

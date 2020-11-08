@@ -81,6 +81,8 @@ public interface HOColorName {
 	public static final String SHIRT 					= "shirt";
 
 	String SMILEYS_COLOR = "smileys_color";
+	String PLAYER_SPECIALTY_COLOR = "player_specialty_color";
+	String PLAYER_SPECIALTY_NEGATIVE_COLOR = "player_specialty_negative_color";
 
 	// Statistics
 	public static final String STAT_LEADERSHIP 			= "stat.leadership";
