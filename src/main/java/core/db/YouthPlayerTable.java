@@ -57,43 +57,31 @@ public class YouthPlayerTable  extends AbstractTable {
 
                 new ColumnDescriptor("Keeper", Types.INTEGER, true),
                 new ColumnDescriptor("KeeperMax", Types.INTEGER, true),
-                new ColumnDescriptor("KeeperIsAvailable", Types.BOOLEAN, false),
-                new ColumnDescriptor("KeeperIsMaxAvailable", Types.BOOLEAN, false),
                 new ColumnDescriptor("KeeperMayUnlock", Types.BOOLEAN, true),
                 new ColumnDescriptor("KeeperIsMaxReached", Types.BOOLEAN, false),
 
                 new ColumnDescriptor("Defender", Types.INTEGER, true),
                 new ColumnDescriptor("DefenderMax", Types.INTEGER, true),
-                new ColumnDescriptor("DefenderIsAvailable", Types.BOOLEAN, false),
-                new ColumnDescriptor("DefenderIsMaxAvailable", Types.BOOLEAN, false),
                 new ColumnDescriptor("DefenderMayUnlock", Types.BOOLEAN, true),
                 new ColumnDescriptor("DefenderIsMaxReached", Types.BOOLEAN, false),
 
                 new ColumnDescriptor("Playmaker", Types.INTEGER, true),
                 new ColumnDescriptor("PlaymakerMax", Types.INTEGER, true),
-                new ColumnDescriptor("PlaymakerIsAvailable", Types.BOOLEAN, false),
-                new ColumnDescriptor("PlaymakerIsMaxAvailable", Types.BOOLEAN, false),
                 new ColumnDescriptor("PlaymakerMayUnlock", Types.BOOLEAN, true),
                 new ColumnDescriptor("PlaymakerIsMaxReached", Types.BOOLEAN, false),
 
                 new ColumnDescriptor("Winger", Types.INTEGER, true),
                 new ColumnDescriptor("WingerMax", Types.INTEGER, true),
-                new ColumnDescriptor("WingerIsAvailable", Types.BOOLEAN, false),
-                new ColumnDescriptor("WingerIsMaxAvailable", Types.BOOLEAN, false),
                 new ColumnDescriptor("WingerMayUnlock", Types.BOOLEAN, true),
                 new ColumnDescriptor("WingerIsMaxReached", Types.BOOLEAN, false),
 
                 new ColumnDescriptor("Passing", Types.INTEGER, true),
                 new ColumnDescriptor("PassingMax", Types.INTEGER, true),
-                new ColumnDescriptor("PassingIsAvailable", Types.BOOLEAN, false),
-                new ColumnDescriptor("PassingIsMaxAvailable", Types.BOOLEAN, false),
                 new ColumnDescriptor("PassingMayUnlock", Types.BOOLEAN, true),
                 new ColumnDescriptor("PassingIsMaxReached", Types.BOOLEAN, false),
 
                 new ColumnDescriptor("SetPieces", Types.INTEGER, true),
                 new ColumnDescriptor("SetPiecesMax", Types.INTEGER, true),
-                new ColumnDescriptor("SetPiecesIsAvailable", Types.BOOLEAN, false),
-                new ColumnDescriptor("SetPiecesIsMaxAvailable", Types.BOOLEAN, false),
                 new ColumnDescriptor("SetPiecesMayUnlock", Types.BOOLEAN, true),
                 new ColumnDescriptor("SetPiecesIsMaxReached", Types.BOOLEAN, false)
         };
@@ -130,12 +118,12 @@ public class YouthPlayerTable  extends AbstractTable {
                 "Statement,OwnerNotes,PlayerCategoryID,Cards,InjuryLevel,Specialty,CareerGoals,CareerHattricks," +
                 "LeagueGoals,FriendlyGoals,ScoutId,ScoutingRegionID,ScoutName,YouthMatchID,PositionCode," +
                 "PlayedMinutes,Rating,YouthMatchDate," +
-                "Keeper,KeeperMax,KeeperIsAvailable,KeeperIsMaxAvailable,KeeperMayUnlock,KeeperIsMaxReached," +
-                "Defender,DefenderMax,DefenderIsAvailable,DefenderIsMaxAvailable,DefenderMayUnlock,DefenderIsMaxReached," +
-                "Playmaker,PlaymakerMax,PlaymakerIsAvailable,PlaymakerIsMaxAvailable,PlaymakerMayUnlock,PlaymakerIsMaxReached," +
-                "Winger,WingerMax,WingerIsAvailable,WingerIsMaxAvailable,WingerMayUnlock,WingerIsMaxReached," +
-                "Passing,PassingMax,PassingIsAvailable,PassingIsMaxAvailable,PassingMayUnlock,PassingIsMaxReached," +
-                "SetPieces,SetPiecesMax,SetPiecesIsAvailable,SetPiecesIsMaxAvailable,SetPiecesMayUnlock,SetPiecesIsMaxReached" +
+                "Keeper,KeeperMax,KeeperMayUnlock,KeeperIsMaxReached," +
+                "Defender,DefenderMax,DefenderMayUnlock,DefenderIsMaxReached," +
+                "Playmaker,PlaymakerMax,PlaymakerMayUnlock,PlaymakerIsMaxReached," +
+                "Winger,WingerMax,WingerMayUnlock,WingerIsMaxReached," +
+                "Passing,PassingMax,PassingMayUnlock,PassingIsMaxReached," +
+                "SetPieces,SetPiecesMax,SetPiecesMayUnlock,SetPiecesIsMaxReached" +
                 ") VALUES(";
 
         var sql = new StringBuilder("INSERT INTO ");
@@ -171,38 +159,26 @@ public class YouthPlayerTable  extends AbstractTable {
                 .append(DBManager.nullOrDateString(player.getYouthMatchDate())).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).level).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).max).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).isAvailable).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).isMaxAvailable).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).mayUnlock).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).isMaxReached).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).level).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).max).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).isAvailable).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).isMaxAvailable).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).mayUnlock).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).isMaxReached).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).level).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).max).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).isAvailable).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).isMaxAvailable).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).mayUnlock).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).isMaxReached).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.WINGER).level).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.WINGER).max).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.WINGER).isAvailable).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.WINGER).isMaxAvailable).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.WINGER).mayUnlock).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.WINGER).isMaxReached).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.PASSING).level).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.PASSING).max).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.PASSING).isAvailable).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.PASSING).isMaxAvailable).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.PASSING).mayUnlock).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.PASSING).isMaxReached).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).level).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).max).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isAvailable).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isMaxAvailable).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).mayUnlock).append(",")
                 .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isMaxReached)
                 .append(")");
