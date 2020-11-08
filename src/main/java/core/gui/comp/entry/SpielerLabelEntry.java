@@ -8,15 +8,18 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
 import core.util.Helper;
+import org.jetbrains.annotations.Nullable;
+
 import java.awt.*;
 import javax.swing.*;
 import java.util.List;
+import java.util.Objects;
 
 import static core.gui.theme.HOIconName.*;
 
 public final class SpielerLabelEntry implements IHOTableEntry {
 
-    private Player m_clPlayer;
+    private @Nullable Player m_clPlayer;
     private JComponent m_clComponent;
     private final JLabel m_jlGroup = new JLabel();
     private final JLabel m_jlName = new JLabel();
@@ -25,9 +28,9 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private final JLabel m_jlWeatherEffect = new JLabel();
     private final JLabel m_jlTrainUp = new JLabel();
 
-    private MatchRoleID m_clCurrentPlayerPosition;
+    private @Nullable MatchRoleID m_clCurrentPlayerPosition;
     private final boolean m_bShowTrikot;
-    private boolean m_bShowWeatherEffect = true;
+    private final boolean m_bShowWeatherEffect;
     private boolean m_bCustomName = false;
     private String m_sCustomNameString = "";
     private float m_fPositionsbewertung;
@@ -44,7 +47,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private JLabel oneYellowCardLabel;
 
     // Label for the player name (depending on status)
-    public SpielerLabelEntry(Player player, MatchRoleID positionAktuell,
+    public SpielerLabelEntry(@Nullable Player player, @Nullable MatchRoleID positionAktuell,
                              float positionsbewertung, boolean showTrikot, boolean showWetterwarnung) {
         m_clPlayer = player;
         m_clCurrentPlayerPosition = positionAktuell;
@@ -56,7 +59,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     }
 
     // Label for the player name (depending on status)
-    public SpielerLabelEntry(Player player, MatchRoleID positionAktuell,
+    public SpielerLabelEntry(@Nullable Player player, @Nullable MatchRoleID positionAktuell,
                              float positionsbewertung, boolean showTrikot, boolean showWetterwarnung, boolean customName, String customNameText, boolean multiLine) {
         m_clPlayer = player;
         m_clCurrentPlayerPosition = positionAktuell;
@@ -71,11 +74,14 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-
     public final JComponent getComponent(boolean isSelected) {
-        if (m_bSelect) {
+        return getComponent(isSelected, false);
+    }
+
+    public final JComponent getComponent(boolean isSelected, boolean forceDefaultBackground) {
+        if (m_bSelect && !forceDefaultBackground) {
             m_clComponent.setBackground(ThemeManager.getColor(HOColorName.LINEUP_PLAYER_SELECTED));
-        } else if (m_bAssit) {
+        } else if (m_bAssit && !forceDefaultBackground) {
             m_clComponent.setBackground(ThemeManager.getColor(HOColorName.LINEUP_PLAYER_SUB));
         } else {
             m_clComponent.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG : ColorLabelEntry.BG_STANDARD);
@@ -100,7 +106,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     }
 
 
-    public final Player getSpieler() {
+    public final @Nullable Player getSpieler() {
         return m_clPlayer;
     }
 
@@ -117,7 +123,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         if (obj instanceof SpielerLabelEntry) {
             final SpielerLabelEntry entry = (SpielerLabelEntry) obj;
 
-            return m_clPlayer.getFullName().compareTo(entry.getSpieler().getFullName());
+            return Objects.requireNonNull(m_clPlayer).getFullName().compareTo(Objects.requireNonNull(entry.getSpieler()).getFullName());
         }
 
         return 0;
@@ -134,16 +140,13 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             } else if (num1 > num2) {
                 return 1;
             } else {
-                return entry.getSpieler().getLastName().compareTo(m_clPlayer.getLastName());
+                return Objects.requireNonNull(entry.getSpieler()).getLastName().compareTo(Objects.requireNonNull(m_clPlayer).getLastName());
             }
         }
         return 0;
     }
-    //-------------------------------------------------------------
 
-    /**
-     * Erstellt eine passende Komponente
-     */
+
     public final void createComponent() {
         m_clComponent = new JPanel();
 
@@ -251,7 +254,6 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             updateDisplay(m_clPlayer);
         }
 
-        m_clComponent.setPreferredSize(new Dimension(Helper.calcCellWidth(150), Helper.calcCellWidth(18)));
     }
 
     private void addPlayerStatusIcons(JPanel infoPanel) {
@@ -318,7 +320,6 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             m_jlGroup.setIcon(null);
         }
 
-        m_clComponent.setPreferredSize(new Dimension(Helper.calcCellWidth(130), Helper.calcCellWidth(18)));  // Was 150,18 - setting lower solved lineup problem
     }
 
     private void showJersey() {
@@ -326,7 +327,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         if (m_bShowTrikot) {
             m_jlName.setIcon(ImageUtilities.getJerseyIcon(
                     m_clCurrentPlayerPosition,
-                    m_clPlayer.getTrikotnummer()
+                    Objects.requireNonNull(m_clPlayer).getTrikotnummer()
             ));
             showGroupIcon();
         }
@@ -334,7 +335,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
 
 
     private void showGroupIcon() {
-        String teamInfoSmilie = m_clPlayer.getTeamInfoSmilie();
+        String teamInfoSmilie = Objects.requireNonNull(m_clPlayer).getTeamInfoSmilie();
 
         if (teamInfoSmilie.trim().equals(""))
             m_jlGroup.setIcon(ImageUtilities.MINILEER);
@@ -367,7 +368,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         // positionValue
         if (m_bShowTrikot && (m_fPositionsbewertung != 0f) && !m_bAlternativePosition) {
             m_jlSkill.setText("(" + m_fPositionsbewertung + ")");
-        } else if (m_bShowTrikot && (m_fPositionsbewertung != 0f) && m_bAlternativePosition) {
+        } else if (m_bShowTrikot && m_fPositionsbewertung != 0f) {
             m_jlSkill.setText("(" + m_fPositionsbewertung + ") *");
         } else {
             m_jlSkill.setText("");

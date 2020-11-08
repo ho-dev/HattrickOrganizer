@@ -524,7 +524,7 @@ public class ImageUtilities {
         return cm.hasAlpha();  
     }
 
-	public static Icon getJerseyIcon(MatchRoleID position, int trickotnummer) {
+	public static Icon getJerseyIcon(@Nullable MatchRoleID position, int trickotnummer) {
 		if (position == null) {
 			return ImageUtilities.getJerseyIcon(0, (byte) 0, trickotnummer);
 		}
