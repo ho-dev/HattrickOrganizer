@@ -25,6 +25,7 @@ import static core.util.StringUtils.getResultString;
 
 public class Matchdetails implements core.model.match.IMatchDetails {
 
+    private SourceSystem sourceSystem;
     private String m_sArenaName = "";
     private String m_sGastName = "";
     private String m_sHeimName = "";
@@ -304,6 +305,14 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     public void setGuestGoalsInPart(Integer[] guestGoalsInPart) {
         this.guestGoalsInParts = guestGoalsInPart;
+    }
+
+    public SourceSystem getSourceSystem() {
+        return sourceSystem;
+    }
+
+    public void setSourceSystem(SourceSystem sourceSystem) {
+        this.sourceSystem = sourceSystem;
     }
 
     public enum eInjuryType {
@@ -1254,7 +1263,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      */
     public MatchLineupTeam getTeamLineup() {
         if ( teamLineup == null){
-            teamLineup = DBManager.instance().getMatchLineupTeam(this.getMatchID(), MatchKurzInfo.user_team_id);
+            teamLineup = DBManager.instance().getMatchLineupTeam(this.getSourceSystem().getId(), this.getMatchID(), MatchKurzInfo.user_team_id);
         }
         return teamLineup;
     }

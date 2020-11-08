@@ -5,6 +5,7 @@ import core.db.DBManager;
 import core.file.xml.XMLManager;
 import core.file.xml.xmlPlayersParser;
 import core.model.match.MatchKurzInfo;
+import core.model.match.SourceSystem;
 import core.net.MyConnector;
 import core.net.OnlineWorker;
 import module.teamAnalyzer.manager.PlayerDataManager;
@@ -49,14 +50,14 @@ public class HattrickManager {
    		
    		GregorianCalendar start = new GregorianCalendar();
 	    start.add(Calendar.MONTH, -8);
-	    List<MatchKurzInfo> matches = OnlineWorker.getMatchArchive(teamId, start.getTime(), false);
+	    List<MatchKurzInfo> matches = OnlineWorker.getMatchArchive( teamId, start.getTime(), false);
 	    Collections.reverse(matches); // Newest first
 	    for (MatchKurzInfo match : matches) {
 	    	if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
 	    		continue;
 	    	}
 
-	    	boolean refresh = !DBManager.instance().isMatchLineupInDB(match.getMatchID())
+	    	boolean refresh = !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), match.getMatchID())
                     || !DBManager.instance().isMatchIFKRatingInDB(match.getMatchID());
 	    	if (!filter.isAutomatic() 
 	    		||	(filter.isAcceptedMatch(new Match(match)) && refresh)) {
@@ -84,7 +85,7 @@ public class HattrickManager {
 		    	}
 	   			if (filter.isAcceptedMatch(new Match(match)) 
 	   					&& match.getMatchTyp().isTournament()
-	   					&& !DBManager.instance().isMatchLineupInDB(match.getMatchID())) {
+	   					&& !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), match.getMatchID())) {
 	   				
 	   				OnlineWorker.downloadMatchData(match.getMatchID(), match.getMatchTyp(), false);
 	   			}

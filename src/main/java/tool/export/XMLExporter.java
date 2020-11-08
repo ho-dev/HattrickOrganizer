@@ -14,6 +14,7 @@ import core.model.Team;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
+import core.model.match.SourceSystem;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.net.MyConnector;
@@ -251,9 +252,9 @@ public class XMLExporter  {
 				MatchLineupTeam lineupTeam = null;
 				Matchdetails details = matchData.getDetails();
 				if (details.getHeimId() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
-					lineupTeam = DBManager.instance().getMatchLineup(details.getMatchID()).getHeim();
+					lineupTeam = DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getId(), details.getMatchID()).getHeim();
 				} else {
-					lineupTeam = DBManager.instance().getMatchLineup(details.getMatchID()).getGast();
+					lineupTeam = DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getId(), details.getMatchID()).getGast();
 				}
 
 				Team team = DBManager.instance().getTeam(hrfID);

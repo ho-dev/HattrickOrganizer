@@ -2,6 +2,8 @@ package core.model.match;
 
 import core.util.HOLogger;
 
+import javax.xml.transform.Source;
+
 public class MatchLineup {
     //~ Instance fields ----------------------------------------------------------------------------
     protected int m_iHeimId = -1;
@@ -299,4 +301,9 @@ public class MatchLineup {
     public final String getStringSpielDate() {
         return m_sSpielDatum;
     }
+
+    public SourceSystem getSourceSystem() {
+        return this.getMatchTyp().getSourceSystem();
+    }
+
 }

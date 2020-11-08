@@ -1,6 +1,7 @@
 package core.model;
 
 import core.db.DBManager;
+import core.model.match.SourceSystem;
 import core.model.misc.Basics;
 import core.model.misc.Finanzen;
 import core.model.misc.Verein;
@@ -558,9 +559,9 @@ public class HOModel {
         //Liga
         DBManager.instance().saveLiga(m_iID, getLeague());
         //Aufstellung + aktu Sys als Standard saven
-        DBManager.instance().saveAufstellung(m_iID, getCurrentLineup(), Lineup.DEFAULT_NAME);
+        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getId(), m_iID, getCurrentLineup(), Lineup.DEFAULT_NAME);
         //Aufstellung + aktu Sys als Standard saven
-        DBManager.instance().saveAufstellung(m_iID, getPreviousLineup(), Lineup.DEFAULT_NAMELAST);
+        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getId(), m_iID, getPreviousLineup(), Lineup.DEFAULT_NAMELAST);
         //Xtra Daten
         DBManager.instance().saveXtraDaten(m_iID, getXtraDaten());
         //Player

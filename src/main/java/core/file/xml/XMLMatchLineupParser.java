@@ -6,10 +6,7 @@
  */
 package core.file.xml;
 
-import core.model.match.MatchLineup;
-import core.model.match.MatchLineupPlayer;
-import core.model.match.MatchLineupTeam;
-import core.model.match.MatchType;
+import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;
@@ -49,7 +46,7 @@ public class XMLMatchLineupParser {
 
 		try {
 			Element root = doc.getDocumentElement();
-			Element  ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
+			Element ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
 			ml.setFetchDatum(ele.getFirstChild().getNodeValue());
 			ele = (Element) root.getElementsByTagName("MatchID").item(0);
 			ml.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
@@ -83,7 +80,7 @@ public class XMLMatchLineupParser {
 			ml.setSpielDatum(ele.getFirstChild().getNodeValue());
 
 			// team adden
-			MatchLineupTeam team = createTeam(ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
+			MatchLineupTeam team = createTeam(ml.getSourceSystem().getId(), ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
 
 			if (team.getTeamID() == ml.getHeimId()) {
 				ml.setHeim(team);
@@ -208,7 +205,7 @@ public class XMLMatchLineupParser {
 		return "";
 	}
 
-	private static MatchLineupTeam createTeam(int matchID, Element ele) {
+	private static MatchLineupTeam createTeam(int sourceSystem, int matchID, Element ele) {
 		Element tmp = (Element) ele.getElementsByTagName("TeamID").item(0);
 		int teamId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("ExperienceLevel").item(0);
@@ -217,7 +214,7 @@ public class XMLMatchLineupParser {
 		int styleOfPlay = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("TeamName").item(0);
 		String teamName = tmp.getFirstChild().getNodeValue();
-		MatchLineupTeam team = new MatchLineupTeam(matchID, teamName, teamId, erfahrung, styleOfPlay);
+		MatchLineupTeam team = new MatchLineupTeam(SourceSystem.getById(sourceSystem), matchID, teamName, teamId, erfahrung, styleOfPlay);
 
 		Element starting = (Element) ele.getElementsByTagName("StartingLineup").item(0);
 		Element subs = (Element) ele.getElementsByTagName("Substitutions").item(0);

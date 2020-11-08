@@ -273,7 +273,7 @@ public class OnlineWorker {
 		// Only download if not present in the database, or if refresh is true
 		if (refresh || !DBManager.instance().isMatchVorhanden(matchid)
 				|| DBManager.instance().hasUnsureWeatherForecast(matchid)
-				|| !DBManager.instance().isMatchLineupInDB(matchid)
+				|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), matchid)
 		) {
 			try {
 				Matchdetails details = null;
@@ -557,7 +557,7 @@ public class OnlineWorker {
 					int curMatchId = match.getMatchID();
 					boolean refresh = !DBManager.instance().isMatchVorhanden(curMatchId)
 							|| DBManager.instance().hasUnsureWeatherForecast(curMatchId)
-							|| !DBManager.instance().isMatchLineupInDB(curMatchId);
+							|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), curMatchId);
 
 					if (refresh) {
 						// No lineup or arenaId in DB
@@ -842,7 +842,7 @@ public class OnlineWorker {
 		boolean bOK = false;
 		for (MatchKurzInfo info : infos) {
 			int curMatchId = info.getMatchID();
-			if (!DBManager.instance().isMatchLineupInDB(curMatchId)) {
+			if (!DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), curMatchId)) {
 				// Check if the lineup is available
 				if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					HOLogger.instance().debug(OnlineWorker.class, "Get Lineup : " + curMatchId);

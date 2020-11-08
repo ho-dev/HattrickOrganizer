@@ -7,6 +7,7 @@ import core.model.UserParameter;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
+import core.model.match.SourceSystem;
 import core.model.player.IMatchRoleID;
 
 import java.awt.BorderLayout;
@@ -104,7 +105,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 	 * Get match lineup and refresh this SpielerSternePanels.
 	 */
 	public final void refresh(int matchid, int teamid) {
-		final MatchLineup lineup = DBManager.instance().getMatchLineup(matchid);
+		final MatchLineup lineup = DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getId(), matchid);
 		MatchLineupTeam lineupteam = null;
 
 		if (lineup.getHeimId() == teamid) {

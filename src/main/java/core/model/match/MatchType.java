@@ -285,4 +285,9 @@ public enum MatchType {
 		}
 	}
 
+    public SourceSystem getSourceSystem() {
+		if (isOfficial()) return SourceSystem.HATTRICK;
+		if (isYouth()) return SourceSystem.YOUTH;
+		return SourceSystem.HTOINTEGRATED;
+	}
 }

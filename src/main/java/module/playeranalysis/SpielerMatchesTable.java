@@ -74,7 +74,7 @@ final class SpielerMatchesTable extends JTable {
 			final TableColumnModel columModel = getColumnModel();
 
 			for (int i = 0; i < m_clTableModel.getColumnCount(); i++) {
-				columModel.getColumn(i).setIdentifier(new Integer(i));
+				columModel.getColumn(i).setIdentifier(i);
 			}
 
 			int[][] targetColumn = m_clTableModel.getColumnOrder();

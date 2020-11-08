@@ -625,10 +625,10 @@ public class DBManager {
 	/**
 	 * speichert die Aufstellung und die aktuelle Aufstellung als STANDARD
 	 */
-	public void saveAufstellung(int hrfId, Lineup aufstellung, String name) {
+	public void saveAufstellung(int sourceSystem, int hrfId, Lineup aufstellung, String name) {
 		try {
 			((AufstellungTable) getTable(AufstellungTable.TABLENAME))
-					.saveAufstellung(hrfId, aufstellung, name);
+					.saveAufstellung(sourceSystem, hrfId, aufstellung, name);
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -855,17 +855,17 @@ public class DBManager {
 	// ------------------------------- MatchLineupTable
 	// -------------------------------------------------
 
-	public MatchLineup getMatchLineup(int matchID) {
+	public MatchLineup getMatchLineup(int sourceSystem, int matchID) {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.getMatchLineup(matchID);
+				.getMatchLineup(sourceSystem, matchID);
 	}
 
 	/**
 	 * Is the match already in the database?
 	 */
-	public boolean isMatchLineupInDB(int matchid) {
+	public boolean isMatchLineupInDB(int sourceSystem, int matchid) {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.isMatchLineupVorhanden(matchid);
+				.isMatchLineupVorhanden(sourceSystem, matchid);
 	}
 
 	public boolean isMatchIFKRatingInDB(int matchid) {
@@ -1055,10 +1055,10 @@ public class DBManager {
 	 *            The matchId for the match in question
 	 * 
 	 */
-	public List<Substitution> getMatchSubstitutionsByMatchTeam(int teamId,
+	public List<Substitution> getMatchSubstitutionsByMatchTeam(int sourceSystem, int teamId,
 			int matchId) {
 		return ((MatchSubstitutionTable) getTable(MatchSubstitutionTable.TABLENAME))
-				.getMatchSubstitutionsByMatchTeam(teamId, matchId);
+				.getMatchSubstitutionsByMatchTeam(sourceSystem, teamId, matchId);
 	}
 
 	/**
@@ -1223,9 +1223,9 @@ public class DBManager {
 
 	// ------------------------------- MatchLineupTeamTable
 	// -------------------------------------------------
-	public MatchLineupTeam getMatchLineupTeam(int matchID, int teamID) {
+	public MatchLineupTeam getMatchLineupTeam(int sourceSystem, int matchID, int teamID) {
 		return ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME))
-				.getMatchLineupTeam(matchID, teamID);
+				.getMatchLineupTeam(sourceSystem, matchID, teamID);
 	}
 
 	// ------------------------------- UserParameterTable

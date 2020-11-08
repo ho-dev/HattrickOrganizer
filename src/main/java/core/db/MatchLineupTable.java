@@ -2,6 +2,7 @@ package core.db;
 
 import core.model.match.MatchLineup;
 import core.model.match.MatchType;
+import core.model.match.SourceSystem;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -19,33 +20,34 @@ public final class MatchLineupTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[10];
-		columns[0]= new ColumnDescriptor("MatchID",Types.INTEGER,false,true);
-		columns[1]= new ColumnDescriptor("MatchTyp",Types.INTEGER,false);
-		columns[2]= new ColumnDescriptor("HeimName",Types.VARCHAR,false,256);
-		columns[3]= new ColumnDescriptor("HeimID",Types.INTEGER,false);
-		columns[4]= new ColumnDescriptor("GastName",Types.VARCHAR,false,256);
-		columns[5]= new ColumnDescriptor("GastID",Types.INTEGER,false);
-		columns[6]= new ColumnDescriptor("FetchDate",Types.VARCHAR,false,256);
-		columns[7]= new ColumnDescriptor("MatchDate",Types.VARCHAR,false,256);
-		columns[8]= new ColumnDescriptor("ArenaID",Types.INTEGER,false);
-		columns[9]= new ColumnDescriptor("ArenaName",Types.VARCHAR,false,256);
-
+		columns = new ColumnDescriptor[]{
+				new ColumnDescriptor("SourceSystem", Types.INTEGER, false),
+				new ColumnDescriptor("MatchID", Types.INTEGER, false, true),
+				new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
+				new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256),
+				new ColumnDescriptor("HeimID", Types.INTEGER, false),
+				new ColumnDescriptor("GastName", Types.VARCHAR, false, 256),
+				new ColumnDescriptor("GastID", Types.INTEGER, false),
+				new ColumnDescriptor("FetchDate", Types.VARCHAR, false, 256),
+				new ColumnDescriptor("MatchDate", Types.VARCHAR, false, 256),
+				new ColumnDescriptor("ArenaID", Types.INTEGER, false),
+				new ColumnDescriptor("ArenaName", Types.VARCHAR, false, 256)
+		};
 	}
-	
+
 	@Override
 	protected String[] getCreateIndizeStatements() {
 		return new String[] {
 			"CREATE INDEX IMATCHLINEUP_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")"};
 	}	
 
-	MatchLineup getMatchLineup(int matchID) {
+	MatchLineup getMatchLineup(int sourceSystem, int matchID) {
 		MatchLineup lineup = null;
 		String sql = null;
 		ResultSet rs = null;
 
 		try {
-			sql = "SELECT * FROM "+getTableName()+" WHERE MatchID = " + matchID;
+			sql = "SELECT * FROM "+getTableName()+" WHERE SourceSystem=" + sourceSystem + " AND MatchID = " + matchID;
 
 			rs = adapter.executeQuery(sql);
 
@@ -64,8 +66,8 @@ public final class MatchLineupTable extends AbstractTable {
 			lineup.setMatchTyp(MatchType.getById(rs.getInt("MatchTyp")));
 			lineup.setSpielDatum(rs.getString("MatchDate"));
 
-			lineup.setHeim(DBManager.instance().getMatchLineupTeam(matchID, lineup.getHeimId()));
-			lineup.setGast(DBManager.instance().getMatchLineupTeam(matchID, lineup.getGastId()));
+			lineup.setHeim(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getHeimId()));
+			lineup.setGast(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getGastId()));
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineup Error" + e);
 
@@ -79,11 +81,11 @@ public final class MatchLineupTable extends AbstractTable {
 	/**
 	 * Ist das Match schon in der Datenbank vorhanden?
 	 */
-	boolean isMatchLineupVorhanden(int matchid) {
+	boolean isMatchLineupVorhanden(int sourceSystem, int matchid) {
 		boolean vorhanden = false;
 
 		try {
-			final String sql = "SELECT MatchId FROM "+getTableName()+" WHERE MatchId=" + matchid;
+			final String sql = "SELECT MatchId FROM "+getTableName()+" WHERE SourceSystem=" + sourceSystem + " AND MatchId=" + matchid;
 			final ResultSet rs = adapter.executeQuery(sql);
 
 			rs.beforeFirst();
@@ -104,17 +106,19 @@ public final class MatchLineupTable extends AbstractTable {
 	void storeMatchLineup(MatchLineup lineup) {
 		if (lineup != null) {
 			//There should never be anything to delete, but...
-			final String[] where = { "MatchID" };
-			final String[] werte = { "" + lineup.getMatchID()};			
+			final String[] where = { "SourceSystem", "MatchID" };
+			final String[] werte = { "" + lineup.getSourceSystem().getId(), "" + lineup.getMatchID()};
 			delete(where, werte);
 
 			String sql = null;
 			//saven
 			try {
 				//insert vorbereiten
-				sql = "INSERT INTO "+getTableName()+" ( MatchID, MatchTyp, HeimName, HeimID, GastName, GastID, FetchDate, MatchDate, ArenaID, ArenaName ) VALUES(";
+				sql = "INSERT INTO "+getTableName()+" ( SourceSystem, MatchID, MatchTyp, HeimName, HeimID, GastName, GastID, FetchDate, MatchDate, ArenaID, ArenaName ) VALUES(";
 				sql
-					+= (lineup.getMatchID()
+					+= (lineup.getSourceSystem().getId()
+						+ ","
+						+ lineup.getMatchID()
 						+ ","
 						+ lineup.getMatchTyp().getId()
 						+ ", '"

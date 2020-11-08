@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Vector;
 
 public class MatchLineupTeam {
-	// ~ Instance fields
-	// ----------------------------------------------------------------------------
+
+	private SourceSystem sourceSystem;
 	private String m_sTeamName;
 	private Vector<MatchLineupPlayer> m_vAufstellung = new Vector<MatchLineupPlayer>();
 	private List<Substitution> m_vSubstitutions = new ArrayList<Substitution>();
@@ -33,7 +33,8 @@ public class MatchLineupTeam {
 	/**
 	 * Creates a new instance of MatchLineupTeam
 	 */
-	public MatchLineupTeam(int matchId, String teamName, int teamID, int erfahrung, int styleOfPlay) {
+	public MatchLineupTeam(SourceSystem sourceSystem, int matchId, String teamName, int teamID, int erfahrung, int styleOfPlay) {
+		this.sourceSystem = sourceSystem;
 		m_sTeamName = teamName;
 		m_iErfahrung = erfahrung;
 		m_iTeamID = teamID;
@@ -66,7 +67,7 @@ public class MatchLineupTeam {
 	/**
 	 * Setter for property m_vSubstitutions.
 	 * 
-	 * @param m_vSubstitution
+	 * @param substitutions
 	 *            New value of property m_vSubstitutions.
 	 */
 	public final void setSubstitutions(List<Substitution> substitutions) {
@@ -372,5 +373,13 @@ public class MatchLineupTeam {
 			}
 		}
 		return matchType;
+	}
+
+	public SourceSystem getSourceSystem() {
+		return sourceSystem;
+	}
+
+	public void setSourceSystem(SourceSystem sourceSystem) {
+		this.sourceSystem = sourceSystem;
 	}
 }
