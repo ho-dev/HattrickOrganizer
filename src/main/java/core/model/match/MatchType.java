@@ -1,6 +1,5 @@
 package core.model.match;
 
-
 public enum MatchType {
 
 	NONE((int) 0),
@@ -21,6 +20,11 @@ public enum MatchType {
 	SINGLE((int) 61), // Single match
 	LADDER((int) 62), // Ladder match
 	PREPARATION((int) 80), // Preparation match
+	YOUTHLEAGUE((int)100), //	Youth league match
+	YOUTHFRIENDLY((int)101), //	Youth friendly match
+	YOUTHFRIENDLYCUPRULES((int)103), //	Youth friendly match (cup rules)
+	YOUTHINTERNATIONALFRIENDLY((int)105), // Youth international friendly match
+	YOUTHINTERNATIONALFRIENDLYCUPRULES((int)106), // Youth international friendly match (Cup rules)
 	EMERALDCUP(1001), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
 	RUBYCUP(1002), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
 	SAPPHIRECUP(1003), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
@@ -87,7 +91,20 @@ public enum MatchType {
 
 	public String getSourceString() {
 		if (isOfficial()) return "hattrick";
+		if (isYouth()) return "youth";
 		return "htointegrated";
+	}
+
+	private boolean isYouth() {
+		switch (this){
+			case YOUTHFRIENDLY:
+			case YOUTHFRIENDLYCUPRULES:
+			case YOUTHINTERNATIONALFRIENDLY:
+			case YOUTHINTERNATIONALFRIENDLYCUPRULES:
+			case YOUTHLEAGUE:
+				return true;
+		}
+		return false;
 	}
 
 	public boolean isCupRules() {

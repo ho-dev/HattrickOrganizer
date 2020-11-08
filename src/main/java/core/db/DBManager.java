@@ -207,8 +207,8 @@ public class DBManager {
 		return m_clInstance;
 	}
 
-	public static String nullOrDateString(Timestamp date) {
-		var ret = String.valueOf(date);
+	public static String nullOrValue(Timestamp value) {
+		var ret = String.valueOf(value);
 		if ( ret != "null"){
 			return "'" + ret + "'";
 		}

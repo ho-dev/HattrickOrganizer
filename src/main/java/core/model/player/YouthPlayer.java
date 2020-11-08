@@ -296,12 +296,50 @@ public class YouthPlayer {
     }
 
     public class SkillInfo {
-        public int level;
-        public boolean isAvailable;
-        public boolean isMaxReached;
-        public Boolean mayUnlock;       // value is nullable
-        public boolean isMaxAvailable;
-        public int max;
+        private Integer level;
+        private Integer max;
+        private boolean isMaxReached;
+        private Boolean mayUnlock;       // value is nullable
+
+        public boolean isLevelAvailable() {
+            return level != null;
+        }
+
+        public boolean isMaxAvailable(){
+            return max != null;
+        }
+
+        public Integer getLevel() {
+            return level;
+        }
+
+        public void setLevel(Integer level) {
+            this.level = level;
+        }
+
+        public Integer getMax() {
+            return max;
+        }
+
+        public void setMax(Integer max) {
+            this.max = max;
+        }
+
+        public boolean isMaxReached() {
+            return isMaxReached;
+        }
+
+        public void setMaxReached(boolean maxReached) {
+            isMaxReached = maxReached;
+        }
+
+        public Boolean getMayUnlock() {
+            return mayUnlock;
+        }
+
+        public void setMayUnlock(Boolean mayUnlock) {
+            this.mayUnlock = mayUnlock;
+        }
     }
 
     public static class ScoutComment {
@@ -327,9 +365,7 @@ public class YouthPlayer {
             return type;
         }
 
-        public void setType(int type) {
-            this.type = type;
-        }
+        public void setType(int type) { this.type = type; }
 
         public int getVariation() {
             return variation;
@@ -441,10 +477,8 @@ public class YouthPlayer {
         var skillInfo = new SkillInfo();
         skillInfo.level = getInt(properties, skill, -1);
         skillInfo.max = getInt(properties,skill+"max", -1);
-        skillInfo.isAvailable = getBoolean(properties,skill + "isavailable", false);
         skillInfo.isMaxReached = getBoolean(properties,skill + "ismaxreached", false);
         skillInfo.mayUnlock = getBoolean(properties,skill + "mayunlock");
-        skillInfo.isMaxAvailable = getBoolean(properties,skill + "maxisavailable", false);
 
         this.skillInfoMap.put(skillID.getValue(), skillInfo);
     }
