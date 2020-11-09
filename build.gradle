@@ -37,7 +37,6 @@ def major = '4'
 def minor = '0'
 def development_stage = '0'
 def releaseArtefacts = true
-def min_version_auto_update = '4.0' // project minimum version for project auto-update, can be used to force fresh install in case of compatibility break
 
 // region configuration ==============================================================================================
 println "Configuration start"
@@ -55,7 +54,7 @@ buildNumber =  buildNumber.toString()
 versionProps['buildNumber'] = buildNumber
 versionProps.store(versionPropsFile.newWriter(), null)
 
-project.version = major + '.' + minor + '.' + development_stage + '.' + buildNumber
+project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage
 
 println "Project:  $project.name $project.version ....................."
 
@@ -313,7 +312,6 @@ task updatebuildreferences(dependsOn: CreateDistribution){
             // always update latest.html
             new File("$projectDir/docs/latest.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
-min_version_for_auto_update=$min_version_auto_update
 """
             println("latest.html has been updated")
 
@@ -328,7 +326,6 @@ min_version_for_auto_update=$min_version_auto_update
             if (development_stage != '0') {
                 new File("$projectDir/docs/latestbeta.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
-min_version_for_auto_update=$min_version_auto_update
 """
                 println("latestbeta.html has been updated")
                 copy {
@@ -344,7 +341,6 @@ min_version_for_auto_update=$min_version_auto_update
             if (development_stage == '2') {
                 new File("$projectDir/docs/lateststable.html").text = """version=$version
 released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
-min_version_for_auto_update=$min_version_auto_update
 """
                 println("lateststable.html has been updated")
                 copy {

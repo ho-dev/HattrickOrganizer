@@ -7,9 +7,7 @@ import core.gui.theme.*;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
-import core.util.Helper;
 import org.jetbrains.annotations.Nullable;
-
 import java.awt.*;
 import javax.swing.*;
 import java.util.List;
@@ -45,6 +43,9 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private JLabel suspendedLabel;
     private JLabel twoYellowCardsLabel;
     private JLabel oneYellowCardLabel;
+
+    private static final int PLAYER_LABEL_ENTRY_HEIGHT = 18;
+    private static final int PLAYER_LABEL_ENTRY_WIDTH = 130;
 
     // Label for the player name (depending on status)
     public SpielerLabelEntry(@Nullable Player player, @Nullable MatchRoleID positionAktuell,
@@ -254,6 +255,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             updateDisplay(m_clPlayer);
         }
 
+        m_clComponent.setPreferredSize(new Dimension(PLAYER_LABEL_ENTRY_WIDTH, PLAYER_LABEL_ENTRY_HEIGHT));
     }
 
     private void addPlayerStatusIcons(JPanel infoPanel) {
@@ -320,6 +322,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             m_jlGroup.setIcon(null);
         }
 
+        m_clComponent.setPreferredSize(new Dimension(PLAYER_LABEL_ENTRY_WIDTH, PLAYER_LABEL_ENTRY_HEIGHT));
     }
 
     private void showJersey() {

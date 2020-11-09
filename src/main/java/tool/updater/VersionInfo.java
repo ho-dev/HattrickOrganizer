@@ -51,9 +51,9 @@ public class VersionInfo {
 		return version;
 	}
 
-	public String getfullVersion() { return fullVersion;}
+	public String getFullVersion() { return fullVersion;}
 
-	public String getversionType() {
+	public String getVersionType() {
 		return versionType;
 	}
 
@@ -62,8 +62,8 @@ public class VersionInfo {
 		String[] aVersion = sVERSION.split("\\.");
 
 		this.version = Double.parseDouble(aVersion[0] + "." + aVersion[1]);
-		this.build = Integer.parseInt(aVersion[3]);
-		switch (aVersion[2]) {
+		this.build = Integer.parseInt(aVersion[2]);
+		switch (aVersion[3]) {
 			case "0":
 				this.versionType = "DEV";
 				break;
@@ -93,8 +93,8 @@ public class VersionInfo {
 
 
 	// generic setter, example:
-	// version=1.436.0.43
-	// released=31.05.2018
+	// version=4.0.1356.1
+	// released=31.05.2020
 	public void setValue(final String key, final String val) {
 		try {
 			if ("version".equals(key)) {

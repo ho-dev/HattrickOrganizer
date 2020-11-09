@@ -34,6 +34,12 @@ import javax.swing.border.*;
  */
 class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListener {
 
+    protected static int PLAYER_POSITION_PANEL_WIDTH = Helper.calcCellWidth(160);
+    // height for position with tactics box
+    protected static int PLAYER_POSITION_PANEL_HEIGHT_FULL = Helper.calcCellWidth(95);
+    // Used for positions with no tactics box
+    protected static int PLAYER_POSITION_PANEL_HEIGHT_REDUCED = Helper.calcCellWidth(70);
+
     private static final SpielerCBItem oNullPlayer = new SpielerCBItem("", 0f, null, false, true);
 
     //~ Instance fields ----------------------------------------------------------------------------
@@ -143,7 +149,12 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
 
             m_jcbTactic.setBackground(m_jcbPlayer.getBackground());
             jlp.add(m_jcbTactic, constraints, layerIndex);
+            setPreferredSize(new Dimension(PLAYER_POSITION_PANEL_WIDTH, PLAYER_POSITION_PANEL_HEIGHT_FULL));
         }
+        else {
+            setPreferredSize(new Dimension(PLAYER_POSITION_PANEL_WIDTH, PLAYER_POSITION_PANEL_HEIGHT_REDUCED));
+        }
+        jlp.setPreferredSize(getPreferredSize());
         add(jlp);
     }
 
