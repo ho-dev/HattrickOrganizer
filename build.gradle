@@ -311,7 +311,7 @@ task updatebuildreferences(dependsOn: CreateDistribution){
 
             // always update latest.html
             new File("$projectDir/docs/latest.html").text = """version=$version
- released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
+released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 """
             println("latest.html has been updated")
 
