@@ -23,7 +23,7 @@ public class VersionTest {
 
 		assertEquals(1, version.getMajor());
 		assertEquals(432, version.getMinor());
-		assertEquals(0, version.getMinimus());
+		assertEquals(0, version.getBuildNumber());
 	}
 
 	/**
@@ -35,7 +35,7 @@ public class VersionTest {
 
 		assertEquals(1, version.getMajor());
 		assertEquals(5, version.getMinor());
-		assertEquals(1, version.getMinimus());
+		assertEquals(1, version.getBuildNumber());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
