@@ -56,7 +56,7 @@ public final class UpdateController {
 
         // a version has been found and auto update is allowed
         if (updVersion != null) {
-            String versionType = updVersion.getversionType();
+            String versionType = updVersion.getVersionType();
             String updateAvailable;
             String releaseNoteUrl;
             switch (versionType){
@@ -97,7 +97,7 @@ public final class UpdateController {
             }
 
                 if (update == JOptionPane.YES_OPTION) {
-                    updateHO(updVersion.getfullVersion(), updVersion.getVersion(), versionType);
+                    updateHO(updVersion.getFullVersion(), updVersion.getVersion(), versionType);
                 }
 
         }

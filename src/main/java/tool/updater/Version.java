@@ -10,7 +10,7 @@ public class Version implements Comparable<Version> {
 
 	private int major;
 	private int minor;
-	private int minimus;
+	private int buildNumber;
 
 	public Version(String version) {
 		init(version);
@@ -24,8 +24,8 @@ public class Version implements Comparable<Version> {
 		return minor;
 	}
 
-	public int getMinimus() {
-		return minimus;
+	public int getBuildNumber() {
+		return buildNumber;
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class Version implements Comparable<Version> {
 		Version otherVersion = (Version) other;
 
 		return this.major == otherVersion.major && this.minor == otherVersion.minor
-				&& this.minimus == otherVersion.minimus;
+				&& this.buildNumber == otherVersion.buildNumber;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class Version implements Comparable<Version> {
 		int result = 17;
 		result = 31 * result + major;
 		result = 31 * result + minor;
-		result = 31 * result + minimus;
+		result = 31 * result + buildNumber;
 		return result;
 	}
 
@@ -73,12 +73,8 @@ public class Version implements Comparable<Version> {
 			return result;
 		}
 
-		result = this.minimus - other.minimus;
-		if (result != 0) {
-			return result;
-		}
-
-		return 0;
+		result = this.buildNumber - other.buildNumber;
+		return result;
 	}
 
 	/**
@@ -102,7 +98,7 @@ public class Version implements Comparable<Version> {
 	 */
 	@Override
 	public String toString() {
-		return this.major + "." + this.minor + "." + this.minimus;
+		return this.major + "." + this.minor + "." + this.buildNumber;
 	}
 
 	private void init(String version) {
@@ -116,13 +112,13 @@ public class Version implements Comparable<Version> {
 			this.major = Integer.parseInt(splitted[0]);
 			this.minor = Integer.parseInt(splitted[1]);
 			if (splitted.length > 2) {
-				this.minimus = Integer.parseInt(splitted[2]);
+				this.buildNumber = Integer.parseInt(splitted[2]);
 			}
 		} catch (NumberFormatException ex) {
 			throw new IllegalArgumentException("Wrong version number: " + version, ex);
 		}
 
-		if (this.major < 0 || this.minor < 0 || this.minimus < 0) {
+		if (this.major < 0 || this.minor < 0 || this.buildNumber < 0) {
 			throw new IllegalArgumentException("Wrong version number: " + version);
 		}
 	}
