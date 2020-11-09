@@ -12,6 +12,7 @@ import java.awt.*;
 
 public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 
+    protected static int PLAYER_COMBO_HEIGHT = 35;
     public static javax.swing.JLabel m_jlLeer = new javax.swing.JLabel(" ");
     public SpielerLabelEntry m_clEntry;
     private @Nullable Player m_clPlayer;
@@ -50,7 +51,10 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
                             .getPositionBySpielerId(player.getSpielerID()), getPositionsEvaluation(), m_bAlternativePosition,
                     m_sText);
 
-            return m_clEntry.getComponent(isSelected, index==-1);
+            JComponent comp = m_clEntry.getComponent(isSelected, index==-1);
+            if (m_bMultiLine) comp.setPreferredSize(new Dimension(comp.getPreferredSize().width, PLAYER_COMBO_HEIGHT));
+            return comp;
+
         } else {
             m_jlLeer.setOpaque(true);
             m_jlLeer.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG : ColorLabelEntry.BG_STANDARD);
