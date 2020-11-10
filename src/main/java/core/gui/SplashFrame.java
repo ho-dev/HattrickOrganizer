@@ -28,7 +28,7 @@ public final class SplashFrame extends JFrame {
 	private static final long serialVersionUID = -4948885175460734368L;
 	private Image background;
 	private String m_sInfotext = "";
-	private String m_sVersionText = HOMainFrame.getVersionString();
+	private String m_sVersionText = HO.getVersionString();
 	private int step;
 	private int maxStep = 9;
 	private FontUIResource fontText = new FontUIResource("SansSerif", Font.PLAIN, 12);

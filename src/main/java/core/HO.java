@@ -51,7 +51,7 @@ public class HO {
 
 	public static String getVersionString() {
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
-		nf.setMinimumFractionDigits(3);
+		nf.setMinimumFractionDigits(1);
 		String txt = nf.format(VERSION);
 
 		if (isBeta()) {
@@ -64,7 +64,7 @@ public class HO {
 		return txt;
 	}
 
-	public static boolean isWindows(){ return platform == OSUtils.OS.WINDOWS;}
+//	public static boolean isWindows(){ return platform == OSUtils.OS.WINDOWS;}
 
 	/**
 	 *  HO entry point
