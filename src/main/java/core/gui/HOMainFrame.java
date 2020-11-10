@@ -175,12 +175,10 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private void setFrameTitle() {
 		String teamName = DBManager.instance().getBasics(DBManager.instance().getLatestHrfId()).getTeamName();
 
-		String frameTitle = "HO! - Hattrick Organizer " + HO.getVersionString();
-		if (!StringUtils.isEmpty(teamName)) {
-			frameTitle += " - " + teamName;
-		}
+		String frameTitle = StringUtils.isEmpty(teamName) ? "" : teamName;
+		
 		if (!HO.isRelease()) {
-			frameTitle += " - " + System.getProperty("java.version");
+			frameTitle += " - Java version: " + System.getProperty("java.version");
 		}
 
 		setTitle(frameTitle);
