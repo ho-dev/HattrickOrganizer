@@ -123,8 +123,6 @@ final class DBUpdater {
 		if ( !columnExistsInTable("YouthTeamName", BasicsTable.TABLENAME)){
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamName VARCHAR (127)");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamID INTEGER");
-		}
-		if ( !columnExistsInTable("SourceSystem", AufstellungTable.TABLENAME)){
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE AUFSTELLUNG ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUPPLAYER ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
