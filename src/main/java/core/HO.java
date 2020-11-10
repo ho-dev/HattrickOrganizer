@@ -51,7 +51,7 @@ public class HO {
 
 	public static String getVersionString() {
 		NumberFormat nf = NumberFormat.getInstance(Locale.US);
-		nf.setMinimumFractionDigits(3);
+		nf.setMinimumFractionDigits(1);
 		String txt = nf.format(VERSION);
 
 		if (isBeta()) {
@@ -64,7 +64,7 @@ public class HO {
 		return txt;
 	}
 
-	public static boolean isWindows(){ return platform == OSUtils.OS.WINDOWS;}
+//	public static boolean isWindows(){ return platform == OSUtils.OS.WINDOWS;}
 
 	/**
 	 *  HO entry point
@@ -102,18 +102,13 @@ public class HO {
 			String[] aVersion = sVERSION.split("\\.");
 
 			VERSION = Double.parseDouble(aVersion[0] + "." + aVersion[1]);
-			RevisionNumber = Integer.parseInt(aVersion[3]);
-			switch (aVersion[2]) {
-				case "0":
-					versionType = "DEV";
-					break;
-				case "1":
-					versionType = "BETA";
-					break;
-				default:
-					versionType = "RELEASE";
-					break;
+			RevisionNumber = Integer.parseInt(aVersion[2]);
+			switch (aVersion[3]) {
+				case "0" -> versionType = "DEV";
+				case "1" -> versionType = "BETA";
+				default -> versionType = "RELEASE";
 			}
+			HOLogger.instance().info(HO.class, "VERSION: " + VERSION + "   versionType:  " + versionType + "   RevisionNumber: " + RevisionNumber );
         } else {
         	HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
         	VERSION = 0d;
@@ -124,7 +119,7 @@ public class HO {
 		try {
 			if (!UserManager.instance().isSingleUser()) {
 
-				JComboBox comboBox = new JComboBox(UserManager.instance().getAllUser().stream().map(User::getTeamName).toArray());
+				JComboBox<String> comboBox = new JComboBox<>((String[]) UserManager.instance().getAllUser().stream().map(User::getTeamName).toArray());
 				int choice = JOptionPane.showConfirmDialog(null, comboBox, "Login",
 						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 

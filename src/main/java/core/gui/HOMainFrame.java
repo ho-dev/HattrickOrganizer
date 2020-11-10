@@ -139,7 +139,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		// Log HO! version
 		HOLogger.instance().info(getClass(),
-				"This is HO! version " + getVersionString() + ", have fun!");
+				"This is HO! version " + HO.getVersionString() + ", have fun!");
 
 		// Log Operating System
 		HOLogger.instance().info(
@@ -175,12 +175,10 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private void setFrameTitle() {
 		String teamName = DBManager.instance().getBasics(DBManager.instance().getLatestHrfId()).getTeamName();
 
-		String frameTitle = "HO! - Hattrick Organizer " + getVersionString();
-		if (!StringUtils.isEmpty(teamName)) {
-			frameTitle += " - " + teamName;
-		}
+		String frameTitle = StringUtils.isEmpty(teamName) ? "" : teamName;
+		
 		if (!HO.isRelease()) {
-			frameTitle += " - " + System.getProperty("java.version");
+			frameTitle += " - Java version: " + System.getProperty("java.version");
 		}
 
 		setTitle(frameTitle);
@@ -226,20 +224,20 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 	}
 
-	public static String getVersionString() {
-		NumberFormat nf = NumberFormat.getInstance(Locale.US);
-		nf.setMinimumFractionDigits(1);
-		String txt = nf.format(HO.VERSION);
-
-		if (!HO.isRelease()) {
-			final int r = HO.getRevisionNumber();
-			if (r >= 1) {
-				txt += " r" + HO.getRevisionNumber();
-			}
-		}
-
-		return txt;
-	}
+//	public static String getVersionString() {
+//		NumberFormat nf = NumberFormat.getInstance(Locale.US);
+//		nf.setMinimumFractionDigits(1);
+//		String txt = nf.format(HO.VERSION);
+//
+//		if (!HO.isRelease()) {
+//			final int r = HO.getRevisionNumber();
+//			if (r >= 1) {
+//				txt += " r" + HO.getRevisionNumber();
+//			}
+//		}
+//
+//		return txt;
+//	}
 
 	/**
 	 * Getter for the singleton HOMainFrame instance.

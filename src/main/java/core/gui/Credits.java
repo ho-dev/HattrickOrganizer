@@ -123,7 +123,7 @@ public class Credits {
 		int result = JOptionPane.showOptionDialog(parent, components, HOVerwaltung.instance().getLanguageString("window.about.title"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null,options1, null);
 		if (result == JOptionPane.YES_OPTION) {
 			try {
-				BrowserLauncher.openURL("https://github.com/akasolace/HO/blob/master/LICENSE");
+				BrowserLauncher.openURL("https://raw.githubusercontent.com/akasolace/HO/master/LICENSE");
 			} catch (Exception ex) {
 				HOLogger.instance().log(HOMainFrame.class, ex);
 			}
