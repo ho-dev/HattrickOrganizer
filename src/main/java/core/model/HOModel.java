@@ -566,7 +566,7 @@ public class HOModel {
         DBManager.instance().saveXtraDaten(m_iID, getXtraDaten());
         //Player
         DBManager.instance().saveSpieler(m_iID, getCurrentPlayers(), getBasics().getDatum());
-        //Player
+        // Youth Player
         DBManager.instance().saveYouthPlayers(m_iID, getCurrentYouthPlayers(), getBasics().getDatum());
         //Staff
         DBManager.instance().saveStaff(m_iID, getStaff());

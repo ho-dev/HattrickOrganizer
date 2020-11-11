@@ -279,6 +279,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 		HOModel model = hov.getModel();
 		int teamId = model.getBasics().getTeamId();
+		int youthteamId = model.getBasics().getYouthTeamId();
 
 		if (teamId > 0) {
 			if (this.downloadFilter.isChecked(filterRoot.getCurrentMatches())) {
@@ -287,6 +288,10 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				if (bOK) {
 					OnlineWorker.getAllLineups();
 				}
+/* TODO
+				OnlineWorker.getYouthMatches(youthteamId);
+				OnlineWorker.getAllYouthTeamLineups(youthteamId);
+*/
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {
 				List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, m_clSpinnerModel.getDate(), false);
