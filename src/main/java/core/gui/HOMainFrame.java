@@ -178,7 +178,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		String frameTitle = StringUtils.isEmpty(teamName) ? "" : teamName;
 		
 		if (!HO.isRelease()) {
-			frameTitle += " - Java version: " + System.getProperty("java.version");
+			frameTitle += " (" + HOVerwaltung.instance().getLanguageString("ls.java.version") + ": " + System.getProperty("java.version") + ")";
 		}
 
 		setTitle(frameTitle);
