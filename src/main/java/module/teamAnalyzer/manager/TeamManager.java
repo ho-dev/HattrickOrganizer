@@ -7,7 +7,10 @@ import core.model.match.MatchType;
 import core.model.series.Paarung;
 import module.series.Spielplan;
 import module.teamAnalyzer.vo.Team;
-
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 public class TeamManager {
@@ -22,7 +25,8 @@ public class TeamManager {
 
 	public static Vector<Team> getLeagueMatches() {
 		Spielplan league = getDivisionMatches();
-		Vector<Team> lteams = new Vector<Team>();
+		Vector<Team> lteams = new Vector<>();
+		int ownTeamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 		if (league != null) {
 			List<?> matches = league.getEintraege();
@@ -33,8 +37,7 @@ public class TeamManager {
 				if (element.getSpieltag() < HOVerwaltung.instance().getModel().getBasics().getSpieltag())
 					continue;
 
-				if (element.getHeimId() == HOVerwaltung.instance().getModel().getBasics()
-						.getTeamId()) {
+				if (element.getHeimId() == ownTeamID) {
 					Team t = new Team();
 
 					t.setName(element.getGastName());
@@ -45,8 +48,7 @@ public class TeamManager {
 					lteams.add(t);
 				}
 
-				if (element.getGastId() == HOVerwaltung.instance().getModel().getBasics()
-						.getTeamId()) {
+				if (element.getGastId() == ownTeamID) {
 					Team t = new Team();
 
 					t.setName(element.getHeimName());
@@ -58,6 +60,16 @@ public class TeamManager {
 				}
 			}
 		}
+		// add own team before returning list
+		Team t = new Team();
+
+		t.setName(HOVerwaltung.instance().getModel().getBasics().getTeamName());
+		t.setTeamId(ownTeamID);
+		t.setTime(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse("1900-01-01"), LocalTime.MIDNIGHT))); // to ensure own team appear first
+		t.setMatchType(-1);
+
+		lteams.add(t);
+
 		return lteams;
 	}
 
@@ -103,19 +115,20 @@ public class TeamManager {
 
 	private static LinkedHashMap<Integer, Team> getTeamsMap() {
 		if (teams == null) {
-			teams = new LinkedHashMap<Integer, Team>();
+			teams = new LinkedHashMap<>();
 
 			Vector<Team> vLMatch = getUpComingMatchs(getLeagueMatches());
 			Collections.sort(vLMatch);
 
 			Iterator it = vLMatch.iterator();
 
-			HOVerwaltung.instance().getModel().getBasics().getSpieltag();
+			Timestamp refTS = HOVerwaltung.instance().getModel().getBasics().getDatum();
+			int ownTeamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 			while(it.hasNext()){
 				Team team = (Team)it.next();
 
-				if (team.getTime().compareTo(HOVerwaltung.instance().getModel().getBasics().getDatum()) >= 0) {
+				if ((team.getTime().compareTo(refTS) >= 0) || (team.getTeamId() == ownTeamID)) {
 					if (teams.get(team.getTeamId()) == null) {
 						teams.put(team.getTeamId(), team);
 					}

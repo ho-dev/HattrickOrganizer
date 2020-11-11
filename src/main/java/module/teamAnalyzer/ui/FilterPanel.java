@@ -33,8 +33,7 @@ public class FilterPanel extends JPanel implements ActionListener {
 	private static final String CARD_MANUAL = "MANUAL CARD";
 	private static boolean teamComboUpdating = false;
 	private AutoFilterPanel autoPanel;
-	private JButton downloadButton = new JButton(HOVerwaltung.instance().getLanguageString(
-			"ls.button.update"));
+	private JButton downloadButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.update"));
 	private JComboBox teamCombo = new JComboBox();
 	private JPanel cards = new JPanel(new CardLayout());
 	private JRadioButton radioAutomatic;
@@ -137,29 +136,23 @@ public class FilterPanel extends JPanel implements ActionListener {
 		fillTeamCombo();
 		teamCombo.setRenderer(new ComboBoxRenderer());
 		teamCombo.setOpaque(false);
-		teamCombo.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if (!teamComboUpdating) {
-					SystemManager.setActiveTeam((Team) teamCombo.getSelectedItem());
-					SystemManager.refresh();
-				}
+		teamCombo.addItemListener(e -> {
+			if (!teamComboUpdating) {
+				SystemManager.setActiveTeam((Team) teamCombo.getSelectedItem());
+				SystemManager.refresh();
 			}
 		});
 
 		JButton analyzeButton = new JButton(HOVerwaltung.instance().getLanguageString(
 				"AutoFilterPanel.Analyze"));
 
-		analyzeButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (radioManual.isSelected()) {
-					manualPanel.setFilter();
-				} else {
-					autoPanel.setFilter();
-				}
-				SystemManager.updateReport();
+		analyzeButton.addActionListener(e -> {
+			if (radioManual.isSelected()) {
+				manualPanel.setFilter();
+			} else {
+				autoPanel.setFilter();
 			}
+			SystemManager.updateReport();
 		});
 
 		downloadButton.addActionListener(new ActionListener() {
