@@ -1,6 +1,5 @@
 package core.model.misc;
 
-import core.db.user.User;
 import core.db.user.UserManager;
 import core.training.HattrickDate;
 import core.util.HOLogger;
