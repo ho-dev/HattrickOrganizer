@@ -14,7 +14,7 @@ import javax.swing.SwingUtilities;
  */
 public class StatistikMainPanel extends LazyImagePanel {
 
-	private static final long serialVersionUID = -4248329201381491432L;
+    private ClubStatisticsPanel clubStatisticsPanel;
 	private AlleSpielerStatistikPanel alleSpielerStatistikPanel;
 	private ArenaStatistikPanel arenaStatistikPanel;
 	private FinanzStatistikPanel finanzStatistikPanel;
@@ -36,6 +36,11 @@ public class StatistikMainPanel extends LazyImagePanel {
 	private void initComponents() {
 		setLayout(new BorderLayout());
 		tabbedPane = new JTabbedPane();
+
+		// clubStatisticsPanel
+		clubStatisticsPanel = new ClubStatisticsPanel();
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Club"),
+				clubStatisticsPanel);
 
 		// Spielerstatistik
 		spielerStatistikPanel = new SpielerStatistikPanel();

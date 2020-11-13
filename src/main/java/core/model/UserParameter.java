@@ -126,6 +126,8 @@ public final class UserParameter extends Configuration {
     public boolean statistikFans;
     public boolean statistikFinanzenBeschriftung = true;
     public boolean statistikFinanzenHilfslinien = true;
+    public boolean statisticsClubDataLabels = true;
+    public boolean statisticsClubHelpLines = true;
     public boolean statistikFluegel;
     public boolean statistikForm = true;
     public boolean statistikFuehrung = true;
@@ -302,6 +304,8 @@ public final class UserParameter extends Configuration {
     public int statistikAnzahlHRF = 50;
     //Finanzstatistik
     public int statistikFinanzenAnzahlHRF = 50;
+    //Club Tab in Statisctics Panel
+    public int statisticsClubNbWeeks = 50;
     //Alle eigenen
     public int statistikSpieleFilter = 11;
     //SpielerFinanzenStatistikPanel
