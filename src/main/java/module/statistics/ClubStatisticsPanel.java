@@ -166,7 +166,7 @@ public class ClubStatisticsPanel extends LazyImagePanel {
         constraints2.gridx = 0;
         constraints2.gridy = 7;
         jcbAssistantTrainerLevels = new ImageCheckbox(getLangStr("AssistantTrainerLevels"),
-                ThemeManager.getColor(HOColorName.STAT_CASH),
+                ThemeManager.getColor(HOColorName.PALETTE15[0]),
                 UserParameter.instance().statistikKontostand);
         jcbAssistantTrainerLevels.setOpaque(false);
         layout2.setConstraints(jcbAssistantTrainerLevels, constraints2);
@@ -176,7 +176,7 @@ public class ClubStatisticsPanel extends LazyImagePanel {
         constraints2.gridx = 0;
         constraints2.gridy = 8;
         jcbFinancialDirectorLevels = new ImageCheckbox(getLangStr("FinancialDirectorLevels"),
-                ThemeManager.getColor(HOColorName.STAT_WINLOST),
+                ThemeManager.getColor(HOColorName.PALETTE15[1]),
                 UserParameter.instance().statistikGewinnVerlust);
         jcbFinancialDirectorLevels.setOpaque(false);
         layout2.setConstraints(jcbFinancialDirectorLevels, constraints2);
@@ -186,7 +186,7 @@ public class ClubStatisticsPanel extends LazyImagePanel {
         constraints2.gridx = 0;
         constraints2.gridy = 9;
         jcbFormCoachLevels = new ImageCheckbox(getLangStr("FormCoachLevels"),
-                ThemeManager.getColor(HOColorName.STAT_INCOMESUM),
+                ThemeManager.getColor(HOColorName.PALETTE15[2]),
                 UserParameter.instance().statistikGesamtEinnahmen);
         jcbFormCoachLevels.setOpaque(false);
         layout2.setConstraints(jcbFormCoachLevels, constraints2);
@@ -359,14 +359,14 @@ public class ClubStatisticsPanel extends LazyImagePanel {
 
             if (statistikWerte.length > 0) {
                 models[0] = new StatistikModel(statistikWerte[0], "AssistantTrainerLevels",
-                        jcbAssistantTrainerLevels.isSelected(), ThemeManager.getColor(HOColorName.STAT_CASH),
+                        jcbAssistantTrainerLevels.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[0]),
                         format);
                 models[1] = new StatistikModel(statistikWerte[1], "FinancialDirectorLevels",
                         jcbFinancialDirectorLevels.isSelected(),
-                        ThemeManager.getColor(HOColorName.STAT_WINLOST), format);
+                        ThemeManager.getColor(HOColorName.PALETTE15[1]), format);
                 models[2] = new StatistikModel(statistikWerte[2], "FormCoachLevels",
                         jcbFormCoachLevels.isSelected(),
-                        ThemeManager.getColor(HOColorName.STAT_INCOMESUM), format);
+                        ThemeManager.getColor(HOColorName.PALETTE15[2]), format);
 //                models[3] = new StatistikModel(statistikWerte[3], "Gesamtausgaben",
 //                        m_jchGesamtausgaben.isSelected(),
 //                        ThemeManager.getColor(HOColorName.STAT_COSTSUM), format);
