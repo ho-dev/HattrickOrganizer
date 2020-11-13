@@ -269,6 +269,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridwidth = 1;
 		constraints2.gridx = 0;
 		constraints2.gridy = 7;
+		constraints2.insets = new Insets(20,0,0,0);  //top padding
 		jcbRating = new ImageCheckbox(getLangStr("Rating"),
 				ThemeManager.getColor(HOColorName.PALETTE15[0]),
 				UserParameter.instance().statistikBewertung);
@@ -279,6 +280,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridwidth = 1;
 		constraints2.gridx = 0;
 		constraints2.gridy = 8;
+		constraints2.insets = new Insets(0,0,0,0);
 		jcbLeadership = new ImageCheckbox(getLangStr("ls.player.leadership"),
 				ThemeManager.getColor(HOColorName.PALETTE15[1]),
 				UserParameter.instance().statistikFuehrung);
@@ -317,8 +319,9 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		panel2.add(jcbSalary);
 
 		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 5;
+		constraints2.gridx = 0;
+		constraints2.gridy = 12;
+		constraints2.insets = new Insets(20,0,0,0);  //top padding
 		jcbForm = new ImageCheckbox(getLangStr("ls.player.form"),
 				ThemeManager.getColor(HOColorName.PALETTE15[5]),
 				UserParameter.instance().statistikForm);
@@ -327,8 +330,9 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		panel2.add(jcbForm);
 
 		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 6;
+		constraints2.gridx = 0;
+		constraints2.gridy = 13;
+		constraints2.insets = new Insets(0,0,0,0);
 		jcbStamina = new ImageCheckbox(getLangStr("ls.player.skill.stamina"),
 				ThemeManager.getColor(HOColorName.PALETTE15[6]),
 				UserParameter.instance().statistikKondition);
@@ -337,8 +341,8 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		panel2.add(jcbStamina);
 
 		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 7;
+		constraints2.gridx = 0;
+		constraints2.gridy = 14;
 		jcbLoyalty = new ImageCheckbox(getLangStr("ls.player.loyalty"),
 				ThemeManager.getColor(HOColorName.PALETTE15[7]),
 				UserParameter.instance().statistikLoyalty);
@@ -347,8 +351,8 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		panel2.add(jcbLoyalty);
 
 		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 8;
+		constraints2.gridx = 0;
+		constraints2.gridy = 15;
 		jcbKeeper = new ImageCheckbox(getLangStr("ls.player.skill.keeper"),
 				ThemeManager.getColor(HOColorName.PALETTE15[8]),
 				UserParameter.instance().statistikTorwart);
@@ -357,8 +361,8 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		panel2.add(jcbKeeper);
 
 		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 9;
+		constraints2.gridx = 0;
+		constraints2.gridy = 16;
 		jcbDefending = new ImageCheckbox(getLangStr("ls.player.skill.defending"),
 				ThemeManager.getColor(HOColorName.PALETTE15[9]),
 				UserParameter.instance().statistikVerteidigung);
@@ -367,8 +371,8 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		panel2.add(jcbDefending);
 
 		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 10;
+		constraints2.gridx = 0;
+		constraints2.gridy = 17;
 		jcbPlaymaking = new ImageCheckbox(getLangStr("ls.player.skill.playmaking"),
 				ThemeManager.getColor(HOColorName.PALETTE15[10]),
 				UserParameter.instance().statistikSpielaufbau);
@@ -377,8 +381,8 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		panel2.add(jcbPlaymaking);
 
 		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 11;
+		constraints2.gridx = 0;
+		constraints2.gridy = 18;
 		jcbPass = new ImageCheckbox(getLangStr("ls.player.skill.passing"),
 				ThemeManager.getColor(HOColorName.PALETTE15[11]),
 				UserParameter.instance().statistikPasspiel);
@@ -387,8 +391,8 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		panel2.add(jcbPass);
 
 		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 12;
+		constraints2.gridx = 0;
+		constraints2.gridy = 19;
 		jcbWing = new ImageCheckbox(getLangStr("ls.player.skill.winger"),
 				ThemeManager.getColor(HOColorName.PALETTE15[12]),
 				UserParameter.instance().statistikFluegel);
@@ -397,8 +401,8 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		panel2.add(jcbWing);
 
 		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 13;
+		constraints2.gridx = 0;
+		constraints2.gridy = 20;
 		jcbScoring = new ImageCheckbox(getLangStr("ls.player.skill.scoring"),
 				ThemeManager.getColor(HOColorName.PALETTE15[13]),
 				UserParameter.instance().statistikTorschuss);
@@ -407,8 +411,8 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		panel2.add(jcbScoring);
 
 		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 14;
+		constraints2.gridx = 0;
+		constraints2.gridy = 21;
 		jcbSetPieces = new ImageCheckbox(getLangStr("ls.player.skill.setpieces"),
 				ThemeManager.getColor(HOColorName.PALETTE15[14]),
 				UserParameter.instance().statistikStandards);
