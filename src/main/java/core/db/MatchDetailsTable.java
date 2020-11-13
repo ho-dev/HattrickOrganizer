@@ -7,6 +7,7 @@ import core.util.HOLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -354,4 +355,19 @@ final class MatchDetailsTable extends AbstractTable {
 		}
 		return false;
 	}
+
+    public Timestamp getLastYouthMatchDate() {
+		var sql = "select max(SpielDatum) from " + getTableName() + " where SourceSystem=" + SourceSystem.YOUTH.getId();
+		try {
+			var rs = adapter.executeQuery(sql);
+			rs.beforeFirst();
+			if ( rs.next()){
+				return rs.getTimestamp(1);
+			}
+		}
+		catch (Exception ignored){
+
+		}
+		return null;
+    }
 }

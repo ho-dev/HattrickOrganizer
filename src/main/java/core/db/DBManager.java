@@ -1853,4 +1853,9 @@ public class DBManager {
 
 	}
 
+	public Timestamp getLastYouthMatchDate() {
+		return ((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME))
+				.getLastYouthMatchDate();
+	}
+
 }

@@ -10,6 +10,7 @@ import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.MatchType;
+import core.model.match.SourceSystem;
 import core.net.login.OAuthDialog;
 import core.net.login.ProxyDialog;
 import core.net.login.ProxySettings;
@@ -30,6 +31,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -247,7 +249,7 @@ public class MyConnector {
 	 */
 	public String getMatchesArchive(int teamId, Date firstDate, Date lastDate) throws IOException {
 		StringBuilder url = new StringBuilder();
-		url.append(htUrl).append("?file=matchesarchive");
+		url.append(htUrl).append("?file=matchesarchive&version=1.4");
 
 		if (teamId > 0) {
 			url.append("&teamID=").append(teamId);
@@ -260,8 +262,27 @@ public class MyConnector {
 		if (lastDate != null) {
 			url.append("&LastMatchDate=").append(HT_FORMAT.format(lastDate));
 		}
+		url.append("&includeHTO=true");
+		return getCHPPWebFile(url.toString());
+	}
 
-		url.append("&includeHTO=true&version=1.4");
+	public String getMatchesArchive(SourceSystem sourceSystem, int teamId, Date firstDate, Date lastDate) throws IOException {
+		StringBuilder url = new StringBuilder();
+		url.append(htUrl).append("?file=matchesarchive&version=1.4");
+
+		if (teamId > 0) {
+			url.append("&teamID=").append(teamId);
+		}
+
+		if (firstDate != null) {
+			url.append("&FirstMatchDate=").append(HT_FORMAT.format(firstDate));
+		}
+
+		if (lastDate != null) {
+			url.append("&LastMatchDate=").append(HT_FORMAT.format(lastDate));
+		}
+		if ( sourceSystem == SourceSystem.HTOINTEGRATED) url.append("&includeHTO=true");
+		else if ( sourceSystem == SourceSystem.YOUTH) url.append("&isYouth=true");
 
 		return getCHPPWebFile(url.toString());
 	}
@@ -944,4 +965,15 @@ public class MyConnector {
 	public void setSilentDownload(boolean silentDownload) {
 		this.silentDownload = silentDownload;
 	}
+
+    public String getYouthMatchesSince(Timestamp dateOfLastMatchInDb) {
+
+		try {
+			return getMatchesArchive(SourceSystem.YOUTH, HOVerwaltung.instance().getModel().getBasics().getYouthTeamId(), dateOfLastMatchInDb, null);
+		}
+		catch ( Exception e){
+
+		}
+		return null;
+    }
 }

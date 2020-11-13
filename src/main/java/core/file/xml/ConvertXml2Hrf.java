@@ -151,13 +151,6 @@ public class ConvertXml2Hrf {
 		List<MyHashtable> youthplayers=null;
 		if ( youthteamId > 0 ){
 			youthplayers = new xmlPlayersParser().parseYouthPlayersFromString(mc.getYouthPlayers(youthteamId));
-/* TODO
-			for ( var youthplayer: youthplayers){
-
-				youthplayer.setMatchLineups(XMLMatchLineupParser.parseMatchLineupFromString(mc.getMatchLineup(-1, youthteamId, MatchType.LEAGUE)));
-			}
- */
-
 		}
 		HOMainFrame.instance().setWaitInformation(35);
 		Map<String, String> economyDataMap = XMLEconomyParser

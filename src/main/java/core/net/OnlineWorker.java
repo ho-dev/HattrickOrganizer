@@ -1173,4 +1173,19 @@ public class OnlineWorker {
 	public static void setSilentDownload(boolean silentDownload) {
 		MyConnector.instance().setSilentDownload(silentDownload);
 	}
+
+	public static void getMissingYouthMatchLineups(int youthteamid) {
+		var dateOfLastMatchInDb = DBManager.instance().getLastYouthMatchDate();
+		dateOfLastMatchInDb.setTime(dateOfLastMatchInDb.getTime()+3600*1000);	// add one hour
+		// TODO if null examine firstFetchDate from oldest youth player (to get all his training dates)
+		// TODO if longer than 3 month ago (or null), loop over 4 month intervals
+		var mc = MyConnector.instance();
+		try {
+			var xml = mc.getMatchesArchive(SourceSystem.YOUTH, youthteamid, dateOfLastMatchInDb, null);
+			var youthMatches = XMLMatchArchivParser.parseMatchesFromString(xml);
+			//TODO for all matches get lineup info (and details)
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

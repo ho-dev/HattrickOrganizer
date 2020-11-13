@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Properties;
 
-import static java.lang.reflect.Array.getInt;
-
 
 /**
  * Benutzerdaten
@@ -17,7 +15,7 @@ public final class Basics  {
     /**
      * youth team id (0 if non existing or no access in case of foreign teams)
      */
-    private int m_iYouthTeamId;
+    private Integer youthTeamId;
     /**
      * youth team name (empty if non existing or no access in case of foreign teams)
      */
@@ -67,7 +65,7 @@ public final class Basics  {
         m_clDatum = getTimestamp(properties, "date");
         m_iTeamId = getInt(properties, "teamid", 0);
         m_sYouthTeamName = properties.getProperty("youthteamname", "");
-        m_iYouthTeamId = getInt(properties, "youthteamid", 0);
+        youthTeamId = getInt(properties, "youthteamid", 0);
         m_sTeamName = properties.getProperty("teamname", "");
         m_sManager = properties.getProperty("owner", "");
         m_tActivationDate = getTimestamp(properties, "activationdate");
@@ -119,7 +117,7 @@ public final class Basics  {
             m_bHasSupporter = rs.getBoolean("HasSupporter");
             m_tActivationDate = rs.getTimestamp("ActivationDate");
             m_sYouthTeamName = rs.getString("YouthTeamName");
-            m_iYouthTeamId = rs.getInt("YouthTeamID");
+            youthTeamId = rs.getInt("YouthTeamID");
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),"Constructor Basics: " + e.toString());
         }
@@ -364,12 +362,16 @@ public final class Basics  {
         this.m_iSeasonOffset = seasonOffset;
     }
 
-    public int getYouthTeamId() {
-        return m_iYouthTeamId;
+    public Integer getYouthTeamId() {
+        return youthTeamId;
     }
 
-    public void setYouthTeamId(int m_iYouthTeamId) {
-        this.m_iYouthTeamId = m_iYouthTeamId;
+    public boolean hasYouthTeam(){
+        return youthTeamId != null;
+    }
+
+    public void setYouthTeamId(Integer m_iYouthTeamId) {
+        this.youthTeamId = m_iYouthTeamId;
     }
 
     public String getYouthTeamName() {
