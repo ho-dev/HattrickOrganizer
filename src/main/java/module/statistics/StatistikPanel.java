@@ -158,6 +158,7 @@ public class StatistikPanel extends JPanel {
 
 			final Color panelBackground = ThemeManager.getColor(HOColorName.STAT_PANEL_BG);
 			final Color panelForeground = ThemeManager.getColor(HOColorName.STAT_PANEL_FG);
+			final Color panelForegroundHelpingLines = ThemeManager.getColor(HOColorName.STAT_PANEL_FG_HELPING_LINES);
 
 			// Initialization of the window
 			final Rectangle r = getBounds();
@@ -256,7 +257,7 @@ public class StatistikPanel extends JPanel {
 					// Draw lines y: Height - distance from the bottom edge -
 					// multiple of the line spacing
 					if (hilfslinien) {
-						g.setColor(Color.lightGray);
+						g.setColor(panelForegroundHelpingLines);
 						g.drawLine(SL + 5, (int) (h - SU - (yAbstand * i)), b - SR,
 								(int) (h - SU - (yAbstand * i)));
 					}
@@ -377,7 +378,6 @@ public class StatistikPanel extends JPanel {
 			}
 
 			y2 = this.getHeight() - SU + 25;
-			x2 = (int) ((((double) (b - SL - SR)) / (m_clYAchseBeschriftung.length) * (m_clYAchseBeschriftung.length - 1)) + SL);
 
 			final Color foregroundColor = ThemeManager.getColor(HOColorName.STAT_PANEL_FG);
 
@@ -388,12 +388,13 @@ public class StatistikPanel extends JPanel {
 
 				g.setColor(foregroundColor);
 				if ((i % abstandBeschriftung) == 0) {
-					if (hilfslinien) {
-						g.setColor(Color.lightGray);
-						g.drawLine(x2, this.getHeight() - SU, x2, SO);
-					}
+//					if (hilfslinien) {
+//						g.setColor(Color.lightGray);
+//						g.drawLine(x2, this.getHeight() - SU, x2, SO);
+//					}
 
 					g.setColor(foregroundColor);
+
 
 					final int xpos = x2
 							- (g.getFontMetrics().stringWidth(m_clYAchseBeschriftung[i]) / 2);

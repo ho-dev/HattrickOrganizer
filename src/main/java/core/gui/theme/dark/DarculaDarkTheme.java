@@ -82,6 +82,7 @@ public class DarculaDarkTheme extends DarkTheme {
             // Statistics
             ThemeManager.instance().put(HOColorName.STAT_PANEL_BG, defaults.getColor("background").brighter());
             ThemeManager.instance().put(HOColorName.STAT_PANEL_FG, defaults.getColor("Label.foreground"));
+            ThemeManager.instance().put(HOColorName.STAT_PANEL_FG_HELPING_LINES, defaults.getColor("Label.foreground").darker());
 
             // TS Forecast
             ThemeManager.instance().put(HOColorName.TSFORECAST_ALT_COLOR, new Color(160, 160, 210));
@@ -120,14 +121,14 @@ public class DarculaDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.PALETTE15[1], Color.decode("#82269b"));
             ThemeManager.instance().put(HOColorName.PALETTE15[2], Color.decode("#7cee4d"));
             ThemeManager.instance().put(HOColorName.PALETTE15[3], Color.decode("#df72ef"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[4], Color.decode("#387836"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[4], Color.decode("#ccad34"));
             ThemeManager.instance().put(HOColorName.PALETTE15[5], Color.decode("#f23387"));
             ThemeManager.instance().put(HOColorName.PALETTE15[6], Color.decode("#56ebd3"));
             ThemeManager.instance().put(HOColorName.PALETTE15[7], Color.decode("#18519b"));
             ThemeManager.instance().put(HOColorName.PALETTE15[8], Color.decode("#a1def0"));
             ThemeManager.instance().put(HOColorName.PALETTE15[9], Color.decode("#bb190a"));
             ThemeManager.instance().put(HOColorName.PALETTE15[10], Color.decode("#199bce"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[11], Color.decode("#82400f"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[11], Color.decode("#f2f27a"));
             ThemeManager.instance().put(HOColorName.PALETTE15[12], Color.decode("#ffd9e3"));
             ThemeManager.instance().put(HOColorName.PALETTE15[13], Color.decode("#495552"));
             ThemeManager.instance().put(HOColorName.PALETTE15[14], Color.decode("#fc8f3b"));

@@ -390,20 +390,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		// Players specialty Colors
 		put(PLAYER_SPECIALTY_COLOR, "black");
 		put(PLAYER_SPECIALTY_NEGATIVE_COLOR, "red");
-
-		put(STAT_LEADERSHIP, Color.GRAY);
-		put(STAT_EXPERIENCE, Color.DARK_GRAY);
-		put(STAT_FORM, Color.PINK);
-		put(STAT_STAMINA, Color.MAGENTA);
-		put(STAT_LOYALTY, new Color(180, 180, 0));
-		put(STAT_KEEPER, "black");
-		put(STAT_DEFENDING, Color.BLUE);
-		put(STAT_PLAYMAKING, "yellow");
-		put(STAT_PASSING, Color.GREEN);
-		put(STAT_WINGER, Color.ORANGE);
-		put(STAT_SCORING, Color.RED);
-		put(STAT_SET_PIECES, Color.CYAN);
-
+		
 		put(STAT_CASH, "black");
 		put(STAT_WINLOST, Color.GRAY);
 		put(STAT_INCOMESUM, Color.GREEN);
@@ -420,7 +407,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(STAT_COSTSYOUTH, new Color(180, 180, 0));
 		put(STAT_FANS, Color.CYAN);
 		put(STAT_MARKETVALUE, Color.BLUE);
-		put(STAT_RATING, new Color(100, 200, 0));
 		put(STAT_WAGE, new Color(150, 20, 20));
 		put(STAT_RATING2, "black");
 		put(STAT_TOTAL, Color.GRAY);

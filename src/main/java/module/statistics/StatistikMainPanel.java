@@ -15,11 +15,11 @@ import javax.swing.SwingUtilities;
 public class StatistikMainPanel extends LazyImagePanel {
 
     private ClubStatisticsPanel clubStatisticsPanel;
-	private AlleSpielerStatistikPanel alleSpielerStatistikPanel;
+//	private AlleSpielerStatistikPanel alleSpielerStatistikPanel;
 	private ArenaStatistikPanel arenaStatistikPanel;
 	private FinanzStatistikPanel finanzStatistikPanel;
 	private JTabbedPane tabbedPane;
-	private SpieleStatistikPanel spieleStatistikPanel;
+	private MatchesStatisticsPanel matchesStatisticsPanel;
 	private PlayerStatisticsPanel playerStatisticsPanel;
 	private boolean initialized = false;
 
@@ -47,13 +47,13 @@ public class StatistikMainPanel extends LazyImagePanel {
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Spieler"),
 				playerStatisticsPanel);
 		// SpieleStatistik
-		spieleStatistikPanel = new SpieleStatistikPanel();
+		matchesStatisticsPanel = new MatchesStatisticsPanel();
 		tabbedPane
-				.addTab(HOVerwaltung.instance().getLanguageString("Spiele"), spieleStatistikPanel);
+				.addTab(HOVerwaltung.instance().getLanguageString("Spiele"), matchesStatisticsPanel);
 		// DurchschnittlicheSpielerstatistik
-		alleSpielerStatistikPanel = new AlleSpielerStatistikPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verein"),
-				alleSpielerStatistikPanel);
+//		alleSpielerStatistikPanel = new AlleSpielerStatistikPanel();
+//		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verein"),
+//				alleSpielerStatistikPanel);
 		// Finanzstatistik
 		finanzStatistikPanel = new FinanzStatistikPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Finanzen"),

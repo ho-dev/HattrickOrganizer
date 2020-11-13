@@ -85,19 +85,6 @@ public interface HOColorName {
 	String PLAYER_SPECIALTY_NEGATIVE_COLOR = "player_specialty_negative_color";
 
 	// Statistics
-	public static final String STAT_LEADERSHIP 			= "stat.leadership";
-	public static final String STAT_EXPERIENCE 			= "stat.experience";;
-	public static final String STAT_FORM 				= "stat.form";;
-	public static final String STAT_LOYALTY				= "stat.loyalty";;
-	public static final String STAT_STAMINA 			= "stat.stamina";
-	public static final String STAT_KEEPER 				= "stat.keeper";
-	public static final String STAT_DEFENDING 			= "stat.defending";
-	public static final String STAT_PLAYMAKING 			= "stat.playmaking";
-	public static final String STAT_PASSING 			= "stat.passing";
-	public static final String STAT_WINGER 				= "stat.winger";
-	public static final String STAT_SCORING 			= "stat.scoring";
-	public static final String STAT_SET_PIECES 			= "stat.setPieces";
-
 	public static final String STAT_CASH 				= "stat.cash";
 	public static final String STAT_WINLOST 			= "stat.winLost";
 	public static final String STAT_INCOMESUM 			= "stat.incomeSum";
@@ -114,7 +101,6 @@ public interface HOColorName {
 	public static final String STAT_COSTSYOUTH			= "stat.costsYouth";
 	public static final String STAT_FANS				= "stat.fans";
 	public static final String STAT_MARKETVALUE			= "stat.marketValue";
-	public static final String STAT_RATING				= "stat.rating";
 	public static final String STAT_WAGE				= "stat.wage";
 	public static final String STAT_RATING2				= "stat.rating2";
 	public static final String STAT_TOTAL				= "stat.total";
@@ -124,6 +110,7 @@ public interface HOColorName {
 	public static final String STAT_LODDAR				= "stat.loddar";
 	public static final String STAT_PANEL_BG = "stat.panel.bg";
 	public static final String STAT_PANEL_FG = "stat.panel.fg";
+	String STAT_PANEL_FG_HELPING_LINES = "stat.panel.fg.helping.lines";
 
 	public static final String MATCHHIGHLIGHT_FAILED_FG	= "matchHighlight.failed.fg";
 
