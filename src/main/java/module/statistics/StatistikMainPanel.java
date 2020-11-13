@@ -20,7 +20,7 @@ public class StatistikMainPanel extends LazyImagePanel {
 	private FinanzStatistikPanel finanzStatistikPanel;
 	private JTabbedPane tabbedPane;
 	private SpieleStatistikPanel spieleStatistikPanel;
-	private SpielerStatistikPanel spielerStatistikPanel;
+	private PlayerStatisticsPanel playerStatisticsPanel;
 	private boolean initialized = false;
 
 	@Override
@@ -43,9 +43,9 @@ public class StatistikMainPanel extends LazyImagePanel {
 				clubStatisticsPanel);
 
 		// Spielerstatistik
-		spielerStatistikPanel = new SpielerStatistikPanel();
+		playerStatisticsPanel = new PlayerStatisticsPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Spieler"),
-				spielerStatistikPanel);
+				playerStatisticsPanel);
 		// SpieleStatistik
 		spieleStatistikPanel = new SpieleStatistikPanel();
 		tabbedPane
@@ -71,7 +71,7 @@ public class StatistikMainPanel extends LazyImagePanel {
 
 			@Override
 			public void run() {
-				spielerStatistikPanel.setAktuelleSpieler(spielerid);
+				playerStatisticsPanel.setPlayer(spielerid);
 			}
 		});
 	}

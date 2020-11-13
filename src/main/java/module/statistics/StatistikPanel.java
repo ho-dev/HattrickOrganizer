@@ -3,7 +3,6 @@ package module.statistics;
 import core.gui.model.StatistikModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -15,13 +14,13 @@ import java.text.NumberFormat;
 import javax.swing.JPanel;
 
 /**
- * Zeigt Statistiken in Form eins Liniendiagrames an
+ * Displays statistics in the form of a line chart
  */
 public class StatistikPanel extends JPanel {
 
 	private static final long serialVersionUID = -821935126572236002L;
 	private boolean print;
-	// Abstand zwischen den Hilfslinien
+	// Distance between the auxiliary lines
 	private int SA = 50;
 	private int SO = 25;
 	private int SR = 25;
@@ -35,8 +34,8 @@ public class StatistikPanel extends JPanel {
 	private boolean hilfslinien = true;
 	private boolean m_bMaxMinBerechnen;
 	private boolean dataBasedBoundaries = false;
-	// Seitenabstände bis zum Koordinatenkreuzanfang
-	// Dynamisch berechnen
+	// Page distances to the start of the coordinate cross
+	// Dynamic calculation
 	private int SL = 60;
 
 	public StatistikPanel(boolean maxminBerechnen) {
@@ -87,13 +86,6 @@ public class StatistikPanel extends JPanel {
 	}
 
 	/**
-	 * Liefert den Zustand der Beschriftung (an/aus)
-	 */
-	public final boolean getBeschriftung() {
-		return beschriftung;
-	}
-
-	/**
 	 * Ein- und Ausschalten der Hilfslinien
 	 * 
 	 * @param hilfslinien
@@ -102,13 +94,6 @@ public class StatistikPanel extends JPanel {
 	public final void setHilfslinien(boolean hilfslinien) {
 		this.hilfslinien = hilfslinien;
 		repaint();
-	}
-
-	/**
-	 * Liefert den Zustand der Hilfslinien (an/aus)
-	 */
-	public final boolean getHilfslinien() {
-		return hilfslinien;
 	}
 
 	public final void setModel(StatistikModel[] models) {
@@ -169,13 +154,12 @@ public class StatistikPanel extends JPanel {
 	@Override
 	public final void update(Graphics g) {
 		if (g != null) {
-			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
+			((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 			final Color panelBackground = ThemeManager.getColor(HOColorName.STAT_PANEL_BG);
 			final Color panelForeground = ThemeManager.getColor(HOColorName.STAT_PANEL_FG);
 
-			// Initialsierung des Fensters
+			// Initialization of the window
 			final Rectangle r = getBounds();
 			final int b = r.width - 1;
 			final int h = r.height - 1;
@@ -194,13 +178,13 @@ public class StatistikPanel extends JPanel {
 			g.drawString(yBezeichner, 8, 18);
 			g.drawString(xBezeichner, b - 150, h - 8);
 
-			// Höchster Wert in der Menge
+			// Highest value
 			double max = 20;
 			double min = 0;
-			double maxohneFaktor = 20;
-			double minohneFaktor = 0;
+			double maxohneFaktor;
+			double minohneFaktor;
 
-			// MaxMin berechnen
+			// Calculate MaxMin
 			if (m_bMaxMinBerechnen) {
 				max = maxFinder(true);
 				min = minFinder(true);
@@ -232,14 +216,14 @@ public class StatistikPanel extends JPanel {
 			maxohneFaktor = maxFinder(false);
 			minohneFaktor = minFinder(false);
 
-			// Höhe der x-Achse bestimmen
+			// Determine height of the x-axis
 			final int xHoehe = (int) (((h - SU - SO) / 2) + SO + ((max + min) * (((h - SU - SO) / 2) / (max - min))));
 
-			// ### SL abhängig von max ###
+			// ### SL dependent on max ###
 			if ((m_clStatistikModel != null) && (m_clStatistikModel.length > 0)
 					&& (m_clStatistikModel[0] != null)) {
-				// Massangaben einzeichnen
-				// Menge der y-Striche bestimmen
+				// Draw in dimensions
+				// Determine the amount of y-lines
 				int f = 1;
 
 				if (print) {
@@ -252,7 +236,7 @@ public class StatistikPanel extends JPanel {
 					yStriche = 1;
 				}
 
-				// Abstand der einzelnen Striche voneinander
+				// Distance between the individual strokes
 				double yAbstand = (((double) (h - SU - SO)) / yStriche);
 				int smallschriftgroesse = core.model.UserParameter.instance().schriftGroesse;
 
@@ -262,15 +246,15 @@ public class StatistikPanel extends JPanel {
 
 				g.setFont(new Font("SansSerif", Font.BOLD, smallschriftgroesse));
 
-				// Seitenabstand berechnen
+				// Calculate side distance
 				SL = smallschriftgroesse
 						+ Math.max(
 								((g.getFontMetrics().stringWidth(m_clYAchseFormat.format(max)) + 10)),
 								((g.getFontMetrics().stringWidth(m_clYAchseFormat.format(min)) + 10)));
 
 				for (int i = yStriche; i >= 0; i--) {
-					// Striche y zeichnen: Höhe - Abstand vom unteren Rand -
-					// Vielfaches des Strichabstandes
+					// Draw lines y: Height - distance from the bottom edge -
+					// multiple of the line spacing
 					if (hilfslinien) {
 						g.setColor(Color.lightGray);
 						g.drawLine(SL + 5, (int) (h - SU - (yAbstand * i)), b - SR,
@@ -281,7 +265,7 @@ public class StatistikPanel extends JPanel {
 					g.drawLine(SL - 5, (int) (h - SU - (yAbstand * i)), SL + 5,
 							(int) (h - SU - (yAbstand * i)));
 
-					// Wert pro Strich
+					// Value per line
 					final int ypos = (int) ((h - SU + (smallschriftgroesse / 2)) - (yAbstand * i));
 					g.drawString(m_clYAchseFormat.format((((max - min) / (yStriche) * i) + min)),
 							smallschriftgroesse, ypos);
@@ -318,27 +302,6 @@ public class StatistikPanel extends JPanel {
 
 			// Ende Keine Werte
 		}
-	}
-
-	private StatistikPanel clonePanel(boolean print) {
-		final StatistikPanel panel = new StatistikPanel(m_bMaxMinBerechnen);
-		panel.beschriftung = beschriftung;
-
-		// panel.SL = SL; Dynamisch berechnen
-		panel.SO = SO;
-		panel.SR = SR;
-		panel.SU = SU;
-		panel.SA = SA;
-		panel.m_clStatistikModel = m_clStatistikModel;
-		panel.xBezeichner = xBezeichner;
-		panel.yBezeichner = yBezeichner;
-		panel.m_clYAchseBeschriftung = m_clYAchseBeschriftung;
-		panel.m_clYAchseFormat = m_clYAchseFormat;
-		panel.setHilfslinien(getHilfslinien());
-		panel.setBeschriftung(getBeschriftung());
-		panel.print = print;
-
-		return panel;
 	}
 
 	// Findet den Maximalwert in einem double-Array

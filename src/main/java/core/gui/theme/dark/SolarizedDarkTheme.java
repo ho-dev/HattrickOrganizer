@@ -97,6 +97,40 @@ public class SolarizedDarkTheme extends DarkTheme {
             // Player Specialties
             ThemeManager.instance().put(HOColorName.PLAYER_SPECIALTY_COLOR, defaults.getColor("Label.foreground"));
 
+            // palettes
+            ThemeManager.instance().put(HOColorName.PALETTE5[0], Color.decode("#69ef7b"));
+            ThemeManager.instance().put(HOColorName.PALETTE5[1], Color.decode("#a52e78"));
+            ThemeManager.instance().put(HOColorName.PALETTE5[2], Color.decode("#8ae1f9"));
+            ThemeManager.instance().put(HOColorName.PALETTE5[3], Color.decode("#056e12"));
+            ThemeManager.instance().put(HOColorName.PALETTE5[4], Color.decode("#eb70d5"));
+
+            ThemeManager.instance().put(HOColorName.PALETTE10[0], Color.decode("#b4ddd4"));
+            ThemeManager.instance().put(HOColorName.PALETTE10[1], Color.decode("#3441c5"));
+            ThemeManager.instance().put(HOColorName.PALETTE10[2], Color.decode("#9bc732"));
+            ThemeManager.instance().put(HOColorName.PALETTE10[3], Color.decode("#a90aa1"));
+            ThemeManager.instance().put(HOColorName.PALETTE10[4], Color.decode("#2cf52b"));
+            ThemeManager.instance().put(HOColorName.PALETTE10[5], Color.decode("#a1173d"));
+            ThemeManager.instance().put(HOColorName.PALETTE10[6], Color.decode("#11e38c"));
+            ThemeManager.instance().put(HOColorName.PALETTE10[7], Color.decode("#fc5468"));
+            ThemeManager.instance().put(HOColorName.PALETTE10[8], Color.decode("#097b35"));
+            ThemeManager.instance().put(HOColorName.PALETTE10[9], Color.decode("#f996f1"));
+
+            ThemeManager.instance().put(HOColorName.PALETTE15[0], Color.decode("#b4ddd4"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[1], Color.decode("#80412c"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[2], Color.decode("#4fd256"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[3], Color.decode("#ba0951"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[4], Color.decode("#9cc662"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[5], Color.decode("#cd49dc"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[6], Color.decode("#285d28"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[7], Color.decode("#f2b0f6"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[8], Color.decode("#5b468b"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[9], Color.decode("#36edd3"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[10], Color.decode("#f24219"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[11], Color.decode("#32a190"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[12], Color.decode("#fc8f3b"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[13], Color.decode("#317cb2"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[14], Color.decode("#ffce54"));
+
             return super.enableTheme();
         } catch (Exception e) {
             HOLogger.instance().warning(getClass(),
