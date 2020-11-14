@@ -46,7 +46,6 @@ import javax.swing.SwingConstants;
  */
 public class MatchesStatisticsPanel extends LazyImagePanel {
 
-	private static final long serialVersionUID = 3954095099686666846L;
 	private ImageCheckbox m_jchAbwehrzentrum;
 	private ImageCheckbox m_jchAngriffszentrum;
 	private ImageCheckbox m_jchBewertung;

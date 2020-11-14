@@ -1355,9 +1355,9 @@ public class DBManager {
 		return StatisticQuery.getArenaStatistikModel(matchtyp);
 	}
 
-	public double[][] getDurchschnittlicheSpielerDaten4Statistik(int anzahlHRF,
+	public double[][] getDataForTeamStatisticsPanel(int anzahlHRF,
 			String group) {
-		return StatisticQuery.getDurchschnittlicheSpielerDaten4Statistik(
+		return StatisticQuery.getDataForTeamStatisticsPanel(
 				anzahlHRF, group);
 	}
 

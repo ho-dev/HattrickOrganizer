@@ -15,7 +15,7 @@ import javax.swing.SwingUtilities;
 public class StatistikMainPanel extends LazyImagePanel {
 
     private ClubStatisticsPanel clubStatisticsPanel;
-//	private AlleSpielerStatistikPanel alleSpielerStatistikPanel;
+	private TeamStatisticsPanel teamStatisticsPanel;
 	private ArenaStatistikPanel arenaStatistikPanel;
 	private FinanzStatistikPanel finanzStatistikPanel;
 	private JTabbedPane tabbedPane;
@@ -50,10 +50,10 @@ public class StatistikMainPanel extends LazyImagePanel {
 		matchesStatisticsPanel = new MatchesStatisticsPanel();
 		tabbedPane
 				.addTab(HOVerwaltung.instance().getLanguageString("Spiele"), matchesStatisticsPanel);
-		// DurchschnittlicheSpielerstatistik
-//		alleSpielerStatistikPanel = new AlleSpielerStatistikPanel();
-//		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verein"),
-//				alleSpielerStatistikPanel);
+		// Team Panel
+		teamStatisticsPanel = new TeamStatisticsPanel();
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verein"),
+				teamStatisticsPanel);
 		// Finanzstatistik
 		finanzStatistikPanel = new FinanzStatistikPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Finanzen"),

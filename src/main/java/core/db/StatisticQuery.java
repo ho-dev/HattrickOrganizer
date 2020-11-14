@@ -12,9 +12,7 @@ import module.matches.SpielePanel;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 
 public class StatisticQuery {
@@ -273,115 +271,112 @@ public class StatisticQuery {
 		return tablemodel;
 	}
 
-	public static double[][] getDurchschnittlicheSpielerDaten4Statistik(int anzahlHRF, String gruppe) {
+	public static double[][] getDataForTeamStatisticsPanel(int nbHRF, String group) {
 		List<TrainingPerWeek> trainings = TrainingManager.instance().getTrainingWeekList();
-		final int anzahlSpalten = 15;
-		final float faktor = core.model.UserParameter.instance().faktorGeld;
-		double[][] returnWerte = new double[0][0];
-		final Vector<double[]> vWerte = new Vector<double[]>();
+		final float factor = core.model.UserParameter.instance().faktorGeld;
+		double[][] returnValues = new double[0][0];
+		final Vector<double[]> values = new Vector<>();
+		final int nbColumns = 29;
+		final int nbColumnsHRF = (nbColumns-1)/2;
 
 		String statement = "SELECT * FROM SPIELER";
 
-		//Eine Gruppe gewählt
-		if (!gruppe.equals("")) {
-			statement += (" , SPIELERNOTIZ WHERE SPIELERNOTIZ.TeamInfoSmilie='" + gruppe + "' AND SPIELERNOTIZ.SpielerID=SPIELER.SpielerID AND");
+		//One group selected
+		if (!group.equals("")) {
+			statement += (" , SPIELERNOTIZ WHERE SPIELERNOTIZ.TeamInfoSmilie='" + group + "' AND SPIELERNOTIZ.SpielerID=SPIELER.SpielerID AND");
 		} else {
 			statement += " WHERE ";
 		}
 
-		statement += (" Trainer=0 AND SPIELER.HRF_ID IN (" + getInClause(anzahlHRF, trainings) + ") ORDER BY Datum DESC");
+		statement += (" Trainer=0 AND SPIELER.HRF_ID IN (" + getInClause(nbHRF, trainings) + ") ORDER BY Datum DESC");
 
-		final ResultSet rs = DBManager.instance().getAdapter().executeQuery(statement);
+		final ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery(statement);
 
 		if (rs != null) {
 			try {
 				rs.beforeFirst();
 
-				int letzteHRFID = -1;
-				int spielerProHRFID = 0;
-				double[] summewerte = new double[anzahlSpalten];
+				int lastHRFID = -1;
+				int nbPlayersInHRF = 0;
+				double[] allValues = new double[nbColumns];
 
 				while (rs.next()) {
-					final double[] tempwerte = new double[anzahlSpalten - 1];
-					tempwerte[0] = rs.getDouble("Fuehrung");
-					tempwerte[1] = rs.getDouble("Erfahrung");
-					tempwerte[2] = rs.getDouble("Form");
-					tempwerte[3] = rs.getDouble("Kondition");
-					tempwerte[4] = rs.getDouble("Torwart") + rs.getDouble("SubTorwart");
-					tempwerte[5] = rs.getDouble("Verteidigung") + rs.getDouble("SubVerteidigung");
-					tempwerte[6] = rs.getDouble("Spielaufbau") + rs.getDouble("SubSpielaufbau");
-					tempwerte[7] = rs.getDouble("Passpiel") + rs.getDouble("SubPasspiel");
-					tempwerte[8] = rs.getDouble("Fluegel") + rs.getDouble("SubFluegel");
-					tempwerte[9] = rs.getDouble("Torschuss") + rs.getDouble("SubTorschuss");
-					tempwerte[10] = rs.getDouble("Standards") + rs.getDouble("SubStandards");
-					tempwerte[11] = rs.getDouble("Loyalty");
-					tempwerte[12] = rs.getDouble("Marktwert");
+					final double[] thisHRFvalues = new double[nbColumnsHRF];
+					thisHRFvalues[0] = rs.getDouble("Fuehrung");  //Leadership
+					thisHRFvalues[1] = rs.getDouble("Erfahrung"); //Experience
+					thisHRFvalues[2] = rs.getDouble("Form");
+					thisHRFvalues[3] = rs.getDouble("Kondition"); //Stamina
+					thisHRFvalues[4] = rs.getDouble("Torwart") + rs.getDouble("SubTorwart");  //Goalkeeper
+					thisHRFvalues[5] = rs.getDouble("Verteidigung") + rs.getDouble("SubVerteidigung"); //Defence
+					thisHRFvalues[6] = rs.getDouble("Spielaufbau") + rs.getDouble("SubSpielaufbau"); //Playmaking
+					thisHRFvalues[7] = rs.getDouble("Passpiel") + rs.getDouble("SubPasspiel"); // Passing
+					thisHRFvalues[8] = rs.getDouble("Fluegel") + rs.getDouble("SubFluegel"); // Winger
+					thisHRFvalues[9] = rs.getDouble("Torschuss") + rs.getDouble("SubTorschuss"); //Scoring
+					thisHRFvalues[10] = rs.getDouble("Standards") + rs.getDouble("SubStandards"); //SetPieces
+					thisHRFvalues[11] = rs.getDouble("Loyalty");
+					thisHRFvalues[12] = rs.getDouble("Marktwert"); //TSI
 					if (rs.getTimestamp("Datum").before(DBManager.TSIDATE)) {
-						tempwerte[12] /= 1000d;
+						thisHRFvalues[12] /= 1000d;
 					}
-					tempwerte[13] = rs.getDouble("Gehalt") / faktor;
-					//Initialisierung
-					if (letzteHRFID == -1) {
-						//HRFID neu setzen, notwendig, wenn letzteid -1 war
-						letzteHRFID = rs.getInt("HRF_ID");
+					thisHRFvalues[13] = rs.getDouble("Gehalt") / factor; // Wage
+					//Initialisation
+					if (lastHRFID == -1) {
+						//Reset HRFID, necessary, if last record was -1
+						lastHRFID = rs.getInt("HRF_ID");
 
-						//summenwerte initialisieren
-						for (int i = 0; i < summewerte.length; i++) {
-							summewerte[i] = 0.0d;
-						}
+						//initialze sum values
+						Arrays.fill(allValues, 0.0d);
 					}
 
-					//Neues HRF beginnt
-					if (letzteHRFID != rs.getInt("HRF_ID")) {
-						//summenwerte durch anzahl Player pro HRF teilen
-						for (int i = 0; i < (summewerte.length - 1); i++) {
-							summewerte[i] = summewerte[i] / spielerProHRFID;
+					//New HRF begins
+					if (lastHRFID != rs.getInt("HRF_ID")) {
+						//sum values divided by number of players per HRF
+						for (int i = nbColumnsHRF; i < (nbColumns - 1); i++) {
+							allValues[i] = allValues[i-nbColumnsHRF] / nbPlayersInHRF;
 						}
 
-						//summenwerte speichern
-						vWerte.add(summewerte);
+						//save sum values
+						values.add(allValues);
 
-						//---Für neue HRF vorbereiten----
-						letzteHRFID = rs.getInt("HRF_ID");
+						//---Prepared for new HRF----
+						lastHRFID = rs.getInt("HRF_ID");
 
-						summewerte = new double[anzahlSpalten];
+						allValues = new double[nbColumns];
 
-						//summenwerte initialisieren
-						for (int i = 0; i < summewerte.length; i++) {
-							summewerte[i] = 0.0d;
-						}
+						//initialze sum values
+						Arrays.fill(allValues, 0.0d);
 
-						spielerProHRFID = 0;
+						nbPlayersInHRF = 0;
 					}
 
-					//Alle tempwerte zu den summenwerten addieren
-					for (int i = 0; i < (summewerte.length - 1); i++) {
-						summewerte[i] += tempwerte[i];
+					//Add all temp values to the total values
+					for (int i = 0; i < nbColumnsHRF; i++) {
+						allValues[i] += thisHRFvalues[i];
 					}
 
 					//Datum
-					summewerte[14] = rs.getTimestamp("Datum").getTime();
+					allValues[nbColumns-1] = rs.getTimestamp("Datum").getTime();
 
-					//Spieleranzahl pro HRF erhöhen
-					spielerProHRFID++;
+					// Increase number of players per HRF
+					nbPlayersInHRF++;
 				}
 
-				//Die letzen werte noch übernehmen
-				//summenwerte durch anzahl Player pro HRF teilen
-				for (int i = 0; i < (summewerte.length - 1); i++) {
-					summewerte[i] = summewerte[i] / spielerProHRFID;
+				//take over the last values
+				//sum values divided by number of players per HRF
+				for (int i = 0; i < (allValues.length - 1); i++) {
+					allValues[i] = allValues[i] / nbPlayersInHRF;
 				}
 
 				//summenwerte speichern
-				vWerte.add(summewerte);
+				values.add(allValues);
 
-				returnWerte = new double[anzahlSpalten][vWerte.size()];
+				returnValues = new double[nbColumns][values.size()];
 
-				for (int i = 0; i < vWerte.size(); i++) {
-					final double[] werte = (double[]) vWerte.get(i);
+				for (int i = 0; i < values.size(); i++) {
+					final double[] werte = values.get(i);
 
 					for (int j = 0; j < werte.length; j++) {
-						returnWerte[j][i] = werte[j];
+						returnValues[j][i] = werte[j];
 					}
 				}
 			} catch (Exception e) {
@@ -389,7 +384,7 @@ public class StatisticQuery {
 			}
 		}
 
-		return returnWerte;
+		return returnValues;
 	}
 
 	public static double[][] getFinanzen4Statistik(int anzahlHRF) {
