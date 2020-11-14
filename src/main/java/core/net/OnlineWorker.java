@@ -19,6 +19,8 @@ import core.training.TrainingManager;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
+import jdk.jfr.Unsigned;
+import kotlin.ULong;
 import module.lineup.AufstellungsVergleichHistoryPanel;
 import module.lineup.Lineup;
 import module.teamAnalyzer.vo.MatchRating;
@@ -32,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1174,18 +1177,38 @@ public class OnlineWorker {
 		MyConnector.instance().setSilentDownload(silentDownload);
 	}
 
-	public static void getMissingYouthMatchLineups(int youthteamid) {
-		var dateOfLastMatchInDb = DBManager.instance().getLastYouthMatchDate();
-		dateOfLastMatchInDb.setTime(dateOfLastMatchInDb.getTime()+3600*1000);	// add one hour
-		// TODO if null examine firstFetchDate from oldest youth player (to get all his training dates)
-		// TODO if longer than 3 month ago (or null), loop over 4 month intervals
-		var mc = MyConnector.instance();
-		try {
-			var xml = mc.getMatchesArchive(SourceSystem.YOUTH, youthteamid, dateOfLastMatchInDb, null);
-			var youthMatches = XMLMatchArchivParser.parseMatchesFromString(xml);
-			//TODO for all matches get lineup info (and details)
-		} catch (IOException e) {
-			e.printStackTrace();
+	final static long oneHour = 60L*60L*1000L;
+	final static long threeMonths = 3L*30L*24L*oneHour;
+
+	public static void downloadMissingYouthMatchLineups(int youthteamid) {
+		var dateSince = DBManager.instance().getLastYouthMatchDate();
+		if ( dateSince == null){
+			// if there are no youth matches in database, take the limit from arrival date of 'oldest' youth players
+			dateSince = DBManager.instance().getMinScoutingDate();
+			dateSince.setTime(dateSince.getTime()-oneHour);	// minus one hour (resetted in for loop)
+		}
+
+		for ( Timestamp dateUntil = null; dateSince != null; dateSince = dateUntil) {
+			dateSince.setTime(dateSince.getTime()+oneHour);	// add one hour (do not load last match again)
+			if (dateSince.before(new Timestamp(System.currentTimeMillis()- threeMonths))){
+				dateUntil = new Timestamp(dateSince.getTime() + threeMonths);
+			}
+			var mc = MyConnector.instance();
+			try {
+				var xml = mc.getMatchesArchive(SourceSystem.YOUTH, youthteamid, dateSince, dateUntil);
+				var youthMatches = XMLMatchArchivParser.parseMatchesFromString(xml);
+				for ( var match: youthMatches){
+
+					var lineup = getMatchlineup(match.getMatchID(), match.getMatchTyp(), match.getHeimID(), match.getGastID());
+					DBManager.instance().storeMatchLineup(lineup);
+
+					//TODO check if details are required
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 }

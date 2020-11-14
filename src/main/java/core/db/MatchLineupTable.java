@@ -101,7 +101,7 @@ public final class MatchLineupTable extends AbstractTable {
 	}
 
 	/**
-	 * speichert ein Matchlineup
+	 * store match lineup including team and player information
 	 */
 	void storeMatchLineup(MatchLineup lineup) {
 		if (lineup != null) {
@@ -114,9 +114,10 @@ public final class MatchLineupTable extends AbstractTable {
 			//saven
 			try {
 				//insert vorbereiten
-				sql = "INSERT INTO "+getTableName()+" ( SourceSystem, MatchID, MatchTyp, HeimName, HeimID, GastName, GastID, FetchDate, MatchDate, ArenaID, ArenaName ) VALUES(";
-				sql
-					+= (lineup.getSourceSystem().getId()
+				sql = "INSERT INTO "+getTableName()+" ( SourceSystem, MatchID, MatchTyp, HeimName, HeimID, GastName," +
+						" GastID, FetchDate, MatchDate, ArenaID, ArenaName ) VALUES("+
+
+						(lineup.getSourceSystem().getId()
 						+ ","
 						+ lineup.getMatchID()
 						+ ","

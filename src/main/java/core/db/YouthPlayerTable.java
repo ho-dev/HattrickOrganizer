@@ -1,6 +1,7 @@
 package core.db;
 
 import core.constants.player.PlayerSkill;
+import core.model.match.SourceSystem;
 import core.model.player.Player;
 import core.model.player.YouthPlayer;
 import core.util.HOLogger;
@@ -34,6 +35,7 @@ public class YouthPlayerTable  extends AbstractTable {
                 new ColumnDescriptor("Age", Types.INTEGER, false),
                 new ColumnDescriptor("AgeDays", Types.INTEGER, false),
                 new ColumnDescriptor("ArrivalDate", Types.TIMESTAMP, true),
+                new ColumnDescriptor("PromotionDate", Types.TIMESTAMP, true),
                 new ColumnDescriptor("CanBePromotedIn", Types.INTEGER, false),
                 new ColumnDescriptor("PlayerNumber", Types.VARCHAR, true, 10),
                 new ColumnDescriptor("Statement", Types.VARCHAR, true, 255),
@@ -114,7 +116,8 @@ public class YouthPlayerTable  extends AbstractTable {
 
         //insert vorbereiten
         String statement =
-                " (HRF_ID,ID,FirstName,NickName,LastName,Age,AgeDays,ArrivalDate,CanBePromotedIn,PlayerNumber," +
+                " (HRF_ID,ID,FirstName,NickName,LastName,Age,AgeDays,ArrivalDate,PromotionDate," +
+                "CanBePromotedIn,PlayerNumber," +
                 "Statement,OwnerNotes,PlayerCategoryID,Cards,InjuryLevel,Specialty,CareerGoals,CareerHattricks," +
                 "LeagueGoals,FriendlyGoals,ScoutId,ScoutingRegionID,ScoutName,YouthMatchID,PositionCode," +
                 "PlayedMinutes,Rating,YouthMatchDate," +
@@ -137,6 +140,7 @@ public class YouthPlayerTable  extends AbstractTable {
                 .append(player.getAgeYears()).append(",")
                 .append(player.getAgeDays()).append(",")
                 .append(DBManager.nullOrValue(player.getArrivalDate())).append(",")
+                .append(DBManager.nullOrValue(player.getPromotionDate())).append(",")
                 .append(player.getCanBePromotedIn()).append(",'")
                 .append(player.getPlayerNumber()).append("','")
                 .append(DBManager.insertEscapeSequences(player.getStatement())).append("','")
@@ -261,4 +265,18 @@ public class YouthPlayerTable  extends AbstractTable {
         return ret;
     }
 
+    public Timestamp getMinScoutingDate() {
+        var sql = "select min(ArrivalDate) from " + getTableName() + " where PromotionDate is NULL";
+        try {
+            var rs = adapter.executeQuery(sql);
+            rs.beforeFirst();
+            if ( rs.next()){
+                return rs.getTimestamp(1);
+            }
+        }
+        catch (Exception e){
+            HOLogger.instance().log(getClass(),e);
+        }
+        return null;
+    }
 }

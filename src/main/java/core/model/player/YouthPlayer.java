@@ -19,6 +19,7 @@ public class YouthPlayer {
     private int ageYears;
     private int ageDays;
     private Timestamp arrivalDate;
+    private Timestamp promotionDate;
     private int canBePromotedIn;
     private String playerNumber;
     private String statement;
@@ -295,6 +296,14 @@ public class YouthPlayer {
         this.hrfid = hrfid;
     }
 
+    public Timestamp getPromotionDate() {
+        return promotionDate;
+    }
+
+    public void setPromotionDate(Timestamp promotionDate) {
+        this.promotionDate = promotionDate;
+    }
+
     public class SkillInfo {
         private Integer level;
         private Integer max;
@@ -448,6 +457,7 @@ public class YouthPlayer {
         parseSkillInfo(properties, Skills.HTSkillID.PASSING,  "passingskill");
         parseSkillInfo(properties, Skills.HTSkillID.SET_PIECES,  "setpiecesskill");
 
+        this.scoutComments = new ArrayList<>();
         for ( int i=0; parseScoutComment(properties, i); i++);
     }
 

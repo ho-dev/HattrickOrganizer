@@ -1858,4 +1858,13 @@ public class DBManager {
 				.getLastYouthMatchDate();
 	}
 
+	public Timestamp getMinScoutingDate(){
+		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
+				.getMinScoutingDate();
+	}
+
+	public void storeMatchLineup(MatchLineup lineup) {
+		((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
+				.storeMatchLineup(lineup);
+	}
 }

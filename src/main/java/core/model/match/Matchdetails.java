@@ -211,6 +211,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     public static Matchdetails getMatchdetails(int matchId, MatchType type){
         var ret = DBManager.instance().getMatchDetails(matchId);
         ret.setMatchType(type);
+        ret.setSourceSystem(type.getSourceSystem());
         return ret;
     }
 

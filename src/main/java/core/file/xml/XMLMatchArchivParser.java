@@ -66,6 +66,7 @@ public class XMLMatchArchivParser {
 				match.setMatchID(Integer.parseInt(tmp.getFirstChild()
 						.getNodeValue()));
 				tmp = (Element) ele.getElementsByTagName("MatchType").item(0);
+				// TODO: workaround for isyouth=true (MatchType is missing if isYouth==true)
 				iMatchType = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 				if (iMatchType != 3) {match.setMatchType(MatchType.getById(iMatchType));}
 				else{
