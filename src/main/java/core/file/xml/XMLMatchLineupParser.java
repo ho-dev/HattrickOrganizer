@@ -180,8 +180,10 @@ public class XMLMatchLineupParser {
 					rating = Double
 							.parseDouble(tmp.getFirstChild().getNodeValue().replaceAll(",", "."));
 					tmp = (Element) ele.getElementsByTagName("RatingStarsEndOfMatch").item(0);
-					ratingStarsEndOfMatch = Double.parseDouble(tmp.getFirstChild().getNodeValue()
-							.replaceAll(",", "."));
+					if ( tmp != null){ // info is not available for youth players
+						ratingStarsEndOfMatch = Double.parseDouble(tmp.getFirstChild().getNodeValue()
+								.replaceAll(",", "."));
+					}
 				}
 			}
 		}

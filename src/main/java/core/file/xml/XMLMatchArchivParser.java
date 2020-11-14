@@ -53,6 +53,8 @@ public class XMLMatchArchivParser {
 		int iCupLevel;
 		int iCupLevelIndex;
 		try {
+
+			var isYouth = Boolean.parseBoolean(root.getElementsByTagName("IsYouth").item(0).getFirstChild().getNodeValue());
 			NodeList  nodeList = root.getElementsByTagName("Match");
 
 			for (int i = 0; (nodeList != null) && (i < nodeList.getLength()); i++) {
@@ -66,8 +68,16 @@ public class XMLMatchArchivParser {
 				match.setMatchID(Integer.parseInt(tmp.getFirstChild()
 						.getNodeValue()));
 				tmp = (Element) ele.getElementsByTagName("MatchType").item(0);
-				// TODO: workaround for isyouth=true (MatchType is missing if isYouth==true)
-				iMatchType = Integer.parseInt(tmp.getFirstChild().getNodeValue());
+				if( tmp!=null || !isYouth)
+				{
+					iMatchType = Integer.parseInt(tmp.getFirstChild().getNodeValue());
+				}
+				else
+				{
+					// workaround for isyouth=true (MatchType is missing if isYouth==true)
+					iMatchType = MatchType.YOUTHLEAGUE.getId();
+				}
+
 				if (iMatchType != 3) {match.setMatchType(MatchType.getById(iMatchType));}
 				else{
 					tmp = (Element) ele.getElementsByTagName("CupLevel").item(0);
