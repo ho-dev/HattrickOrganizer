@@ -65,7 +65,7 @@ public class TeamManager {
 
 		t.setName(HOVerwaltung.instance().getModel().getBasics().getTeamName());
 		t.setTeamId(ownTeamID);
-		t.setTime(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse("1900-01-01"), LocalTime.MIDNIGHT))); // to ensure own team appear first
+		t.setTime(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse("2200-01-01"), LocalTime.MIDNIGHT))); // to ensure own team appear last
 		t.setMatchType(-1);
 
 		lteams.add(t);
@@ -128,7 +128,7 @@ public class TeamManager {
 			while(it.hasNext()){
 				Team team = (Team)it.next();
 
-				if ((team.getTime().compareTo(refTS) >= 0) || (team.getTeamId() == ownTeamID)) {
+				if (team.getTime().compareTo(refTS) >= 0) {
 					if (teams.get(team.getTeamId()) == null) {
 						teams.put(team.getTeamId(), team);
 					}
