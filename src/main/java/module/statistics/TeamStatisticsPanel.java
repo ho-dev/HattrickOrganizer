@@ -53,7 +53,13 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 	private JTextField m_jtfNumberOfHRF;
 	private StatistikPanel m_clStatistikPanel;
 	private JPanel panel2;
-	boolean bSum = true; //TODO:
+	private boolean bSum = true;
+
+	private final String sSum = "\u03A3 ";
+	private final String sAvg = "\u00D8 ";
+
+	private final String sumLeadership = sSum + HOVerwaltung.instance().getLanguageString("ls.player.leadership");
+	private final String avgLeadership = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.leadership");
 
 	@Override
 	protected void initialize() {
@@ -82,6 +88,30 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 			}
 		});
 
+		jcbAggType.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				UserParameter gup = UserParameter.instance();
+				HOVerwaltung hov = HOVerwaltung.instance();
+				int selectedIndex = jcbAggType.getSelectedIndex();
+				gup.statisticsTeamSumOrAverage = selectedIndex;
+				if (selectedIndex == 0)
+				{
+					//sum
+					m_jchLeadership.setText(sumLeadership);
+					m_clStatistikPanel.setShow(sumLeadership, m_jchLeadership.isSelected());
+					m_clStatistikPanel.setShow(avgLeadership, false);
+				}
+				else
+				{
+					// average
+					m_jchLeadership.setText(avgLeadership);
+					m_clStatistikPanel.setShow(avgLeadership, m_jchLeadership.isSelected());
+					m_clStatistikPanel.setShow(sumLeadership, false);
+				}
+			}
+		});
+
+
 		ActionListener actionListener = e -> {
 			UserParameter gup = UserParameter.instance();
 			HOVerwaltung hov = HOVerwaltung.instance();
@@ -94,8 +124,14 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 				m_clStatistikPanel.setBeschriftung(m_jchInscription.isSelected());
 				gup.statistikAlleBeschriftung = m_jchInscription.isSelected();
 			} else if (e.getSource() == m_jchLeadership.getCheckbox()) {
-				m_clStatistikPanel
-						.setShow("ls.player.leadership", m_jchLeadership.isSelected());
+				if (bSum) {
+					m_clStatistikPanel.setShow(sumLeadership, m_jchLeadership.isSelected());
+					m_clStatistikPanel.setShow(avgLeadership, false);
+				}
+				else {
+					m_clStatistikPanel.setShow(avgLeadership, m_jchLeadership.isSelected());
+					m_clStatistikPanel.setShow(sumLeadership, false);
+				}
 				gup.statistikAlleFuehrung = m_jchLeadership.isSelected();
 			} else if (e.getSource() == m_jchTSI.getCheckbox()) {
 				m_clStatistikPanel.setShow("Marktwert", m_jchTSI.isSelected());
@@ -240,6 +276,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		panel2.add(labelAggType, constraints2);
 		String[] sAggType = { hov.getLanguageString("Gesamt"), hov.getLanguageString("Durchschnitt")};
 		jcbAggType = new JComboBox<>(sAggType);
+		jcbAggType.setSelectedIndex(gup.statisticsTeamSumOrAverage);
 		layout2.setConstraints(jcbAggType, constraints2);
 		jcbAggType.setToolTipText(hov.getLanguageString("choose_sum_or_average"));
 		constraints2.gridx = 1;
@@ -362,17 +399,21 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 			UserParameter.instance().statistikAnzahlHRF = anzahlHRF;
 			NumberFormat format = Helper.DEFAULTDEZIMALFORMAT;
 			NumberFormat format2 = NumberFormat.getCurrencyInstance();
-			double[][] statistikWerte = DBManager.instance()
-					.getDataForTeamStatisticsPanel(anzahlHRF,
+
+			double[][] statistikWerte = DBManager.instance().getDataForTeamStatisticsPanel(anzahlHRF,
 							m_jcbGruppe.getSelectedItem().toString());
 			StatistikModel[] models = new StatistikModel[statistikWerte.length];
 			double[] data;
 			// There are 28 values - the first 14 are the sum and the next 14 are the averaged values
 			if (statistikWerte.length > 0) {
-				data = bSum ? statistikWerte[0] : statistikWerte[14];
-				models[0] = new StatistikModel(data, "ls.player.leadership",
+				models[0] = new StatistikModel(statistikWerte[0], sumLeadership,
+						m_jchLeadership.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[0]),
+						format, 5 / Helper.getMaxValue(statistikWerte[0]));
+
+				models[14] = new StatistikModel(statistikWerte[14], avgLeadership,
 						m_jchLeadership.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[0]),
 						format);
+
 
 				data = bSum ? statistikWerte[1] : statistikWerte[15];
 				models[1] = new StatistikModel(data, "DurchschnittErfahrung",
@@ -433,7 +474,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 						m_jchTSI.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[3]), format2, faktor);
 			}
 
-			String[] yBezeichnungen = Helper.convertTimeMillisToFormatString(statistikWerte[14]);
+			String[] yBezeichnungen = Helper.convertTimeMillisToFormatString(statistikWerte[28]);
 
 			m_clStatistikPanel.setAllValues(models, yBezeichnungen, format, HOVerwaltung.instance()
 					.getLanguageString("Wochen"), "", m_jchInscription.isSelected(), m_jchHelpLines

@@ -109,6 +109,7 @@ public final class UserParameter extends Configuration {
     public boolean statistikAlleFuehrung = true;
     public boolean statistikAlleHilfslinien = true;
     public boolean statistikAlleKondition = true;
+    public int statisticsTeamSumOrAverage = 0;
     public boolean statistikAllLoyalty;
     public boolean statistikAllTSI;
     public boolean statistikAllWages;
@@ -459,6 +460,7 @@ public final class UserParameter extends Configuration {
         map.put("statistikAlleForm", String.valueOf(statistikAlleForm));
         map.put("statistikAlleFuehrung", String.valueOf(statistikAlleFuehrung));
         map.put("statistikAlleHilfslinien", String.valueOf(statistikAlleHilfslinien));
+        map.put("statisticsTeamSumOrAverage", String.valueOf(statisticsTeamSumOrAverage));
         map.put("statistikAlleKondition", String.valueOf(statistikAlleKondition));
         map.put("statistikAllLoyalty", String.valueOf(statistikAllLoyalty));
         map.put("statistikAllePasspiel", String.valueOf(statistikAllePasspiel));
@@ -676,6 +678,7 @@ public final class UserParameter extends Configuration {
         statistikAlleForm = getBooleanValue(values, "statistikAlleForm");
         statistikAlleFuehrung = getBooleanValue(values, "statistikAlleFuehrung");
         statistikAlleHilfslinien = getBooleanValue(values, "statistikAlleHilfslinien");
+        statisticsTeamSumOrAverage = getIntValue(values, "statisticsTeamSumOrAverage");
         statistikAlleKondition = getBooleanValue(values, "statistikAlleKondition");
         statistikAllLoyalty = getBooleanValue(values, "statistikAllLoyalty");
         statistikAllePasspiel = getBooleanValue(values, "statistikAllePasspiel");
