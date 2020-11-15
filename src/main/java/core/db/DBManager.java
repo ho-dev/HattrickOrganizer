@@ -67,7 +67,7 @@ public class DBManager {
 	private @Nullable JDBCAdapter m_clJDBCAdapter; // new JDBCAdapter();
 
 	/** all Tables */
-	private final Hashtable<String, AbstractTable> tables = new Hashtable<String, AbstractTable>();
+	private final Hashtable<String, AbstractTable> tables = new Hashtable<>();
 
 	/** Erster Start */
 	private boolean m_bFirstStart;
@@ -209,7 +209,7 @@ public class DBManager {
 
 	public static String nullOrValue(Timestamp value) {
 		var ret = String.valueOf(value);
-		if ( ret != "null"){
+		if (!ret.equals("null")){
 			return "'" + ret + "'";
 		}
 		return ret;
@@ -430,7 +430,7 @@ public class DBManager {
 	 * 
 	 * @param hrfID
 	 *            HRF for which to load TrainerType
-	 * @return
+	 * @return int
 	 */
 	public int getTrainerType(int hrfID) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
@@ -1829,10 +1829,9 @@ public class DBManager {
 		final char[] chars = text.toCharArray();
 
 		for (char aChar : chars) {
-			int code = (int) aChar;
 			if ((aChar == '"') || (aChar == '\'') || (aChar == '´')) {
 				buffer.append("#");
-			} else if (code == 92) {
+			} else if (aChar == 92) {
 				buffer.append("§");
 			} else {
 				buffer.append(aChar);
@@ -1854,7 +1853,7 @@ public class DBManager {
 	}
 
 	public Timestamp getLastYouthMatchDate() {
-		return ((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME))
+		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
 				.getLastYouthMatchDate();
 	}
 
@@ -1863,8 +1862,8 @@ public class DBManager {
 				.getMinScoutingDate();
 	}
 
-	public void storeMatchLineup(MatchLineup lineup) {
+	public void storeMatchLineup(MatchLineup lineup, Integer teamId) {
 		((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.storeMatchLineup(lineup);
+				.storeMatchLineup(lineup, teamId);
 	}
 }

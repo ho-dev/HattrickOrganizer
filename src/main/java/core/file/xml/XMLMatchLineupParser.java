@@ -148,21 +148,22 @@ public class XMLMatchLineupParser {
 				// behavior);
 
 				switch (behavior) {
-				case IMatchRoleID.OLD_EXTRA_DEFENDER:
-					roleID = IMatchRoleID.middleCentralDefender;
-					behavior = IMatchRoleID.NORMAL;
-					break;
-				case IMatchRoleID.OLD_EXTRA_MIDFIELD:
-					roleID = IMatchRoleID.centralInnerMidfield;
-					behavior = IMatchRoleID.NORMAL;
-					break;
-				case IMatchRoleID.OLD_EXTRA_FORWARD:
-					roleID = IMatchRoleID.centralForward;
-					behavior = IMatchRoleID.NORMAL;
-					break;
-				case IMatchRoleID.OLD_EXTRA_DEFENSIVE_FORWARD:
-					roleID = IMatchRoleID.centralForward;
-					behavior = IMatchRoleID.DEFENSIVE;
+					case IMatchRoleID.OLD_EXTRA_DEFENDER -> {
+						roleID = IMatchRoleID.middleCentralDefender;
+						behavior = IMatchRoleID.NORMAL;
+					}
+					case IMatchRoleID.OLD_EXTRA_MIDFIELD -> {
+						roleID = IMatchRoleID.centralInnerMidfield;
+						behavior = IMatchRoleID.NORMAL;
+					}
+					case IMatchRoleID.OLD_EXTRA_FORWARD -> {
+						roleID = IMatchRoleID.centralForward;
+						behavior = IMatchRoleID.NORMAL;
+					}
+					case IMatchRoleID.OLD_EXTRA_DEFENSIVE_FORWARD -> {
+						roleID = IMatchRoleID.centralForward;
+						behavior = IMatchRoleID.DEFENSIVE;
+					}
 				}
 
 				// Wash the remaining old positions
@@ -236,6 +237,7 @@ public class XMLMatchLineupParser {
 			// players are always last in the API, there are at least signs of a
 			// fixed order.
 			MatchLineupPlayer player = createPlayer((Element) list.item(i));
+			player.setSourceSystem(SourceSystem.getById(sourceSystem));
 			if (team.getPlayerByID(player.getSpielerId()) != null) {
 				if ((player.getId() >= IMatchRoleID.FirstPlayerReplaced)
 						&& (player.getId() <= IMatchRoleID.ThirdPlayerReplaced)) {
@@ -257,8 +259,7 @@ public class XMLMatchLineupParser {
 			// Merge with the existing player, but ignore captain and set piece
 			// position
 			if (startPlayer.getStartPosition() >= IMatchRoleID.startLineup) {
-				MatchLineupPlayer lineupPlayer = (MatchLineupPlayer) team.getPlayerByID(startPlayer
-						.getSpielerId());
+				MatchLineupPlayer lineupPlayer = team.getPlayerByID(startPlayer.getSpielerId());
 				if (lineupPlayer != null) {
 					lineupPlayer.setStartPosition(startPlayer.getStartPosition());
 					lineupPlayer.setStartBehavior(startPlayer.getStartBehavior());
@@ -297,9 +298,8 @@ public class XMLMatchLineupParser {
 		return team;
 	}
 
-	private static Substitution createSubstitution(Element ele, int num) {
+	private static Substitution createSubstitution(Element ele, int playerOrderID) {
 
-		int playerOrderID = num; // We use our own
 		int playerIn = -1;
 		int playerOut = -1;
 		byte orderTypeId = -1;

@@ -201,7 +201,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		final String[] werte = { "" + matchID};			
 		delete(where, werte);			
 	}
-	
+
 
 	@SuppressWarnings("deprecation")
 	void storeMatchLineupPlayer(MatchLineupPlayer player, int matchID, int teamID) {
@@ -217,41 +217,26 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			//saven
 			try {
 				//insert vorbereiten
-				var sql = "INSERT INTO "+getTableName()+" ( MatchID, TeamID, SourceSystem, SpielerID, RoleID, Taktik, PositionCode, VName, NickName, Name, Rating, HoPosCode, STATUS, FIELDPOS, RatingStarsEndOfMatch, StartPosition, StartBehaviour ) VALUES(";
-				sql
-					+= (matchID
-						+ ","
-						+ teamID
-						+ ","
-						+ player.getSourceSystem().getId()
-						+ ","
-						+ player.getSpielerId()
-						+ ","
-						+ player.getId()
-						+ ", "
-						+ player.getTaktik()
-						+ ", "
-						+ player.getPositionCode()
-						+ ", '"
-						+ DBManager.insertEscapeSequences(player.getSpielerVName())
-						+ "', '"
-						+ DBManager.insertEscapeSequences(player.getNickName())
-						+ "', '"
-						+ DBManager.insertEscapeSequences(player.getSpielerName())
-						+ "',"
-						+ player.getRating()
-						+ ", "
-						+ player.getPosition()
-						+ ", 0" // Status
-						+ ","
-						+ player.getPositionCode()
-						+ ","
-						+ player.getRatingStarsEndOfMatch()
-						+ ","
-						+ player.getStartPosition()
-						+ ","
-						+ player.getStartBehavior()
-						+ " )");
+				var sql = "INSERT INTO "+getTableName()+" (MatchID,TeamID,SourceSystem,SpielerID,RoleID,Taktik," +
+						"PositionCode,VName,NickName,Name,Rating,HoPosCode,STATUS,FIELDPOS,RatingStarsEndOfMatch," +
+						"StartPosition,StartBehaviour) VALUES(" +
+						matchID + "," +
+						teamID	+ "," +
+						player.getSourceSystem().getId() + "," +
+						player.getSpielerId() + ","	+
+						player.getId() + "," +
+						player.getTaktik()	+ ","	+
+						player.getPositionCode() + ",'" +
+						DBManager.insertEscapeSequences(player.getSpielerVName()) + "', '" +
+						DBManager.insertEscapeSequences(player.getNickName()) + "', '" +
+						DBManager.insertEscapeSequences(player.getSpielerName())+ "'," +
+						player.getRating() + "," +
+						player.getPosition() + "," +
+						"0," + // Status
+						player.getPositionCode() + "," +
+						player.getRatingStarsEndOfMatch() + "," +
+						player.getStartPosition() + "," +
+						player.getStartBehavior() + " )";
 				adapter.executeUpdate(sql);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeMatchLineupPlayer Error" + e);

@@ -240,7 +240,7 @@ public class MatchLineup {
     /**
      * Setter for property m_iMatchTyp.
      *
-     * @param m_iMatchTyp New value of property m_iMatchTyp.
+     * @param matchTyp New value of property m_iMatchTyp.
      */
     public final void setMatchTyp(MatchType matchTyp) {
         this.m_MatchTyp = matchTyp;

@@ -181,7 +181,7 @@ public class OnlineWorker {
 		showWaitInformation(1);
 
 		try {
-			String matchesString = "";
+			String matchesString;
 
 			while (tempBeginn.before(endDate)) {
 				try {
@@ -279,14 +279,14 @@ public class OnlineWorker {
 				|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), matchid)
 		) {
 			try {
-				Matchdetails details = null;
+				Matchdetails details;
 
 				// If ids not found, download matchdetails to obtain them.
 				// Highlights will be missing.
 				// ArenaId==0 in division battles
 				boolean newInfo = info.getHeimID()<=0 || info.getGastID()<=0;
 				Weather.Forecast weatherDetails = info.getWeatherForecast();
-				Boolean bWeatherKnown = ((weatherDetails != null) && weatherDetails.isSure());
+				boolean bWeatherKnown = ((weatherDetails != null) && weatherDetails.isSure());
 				if ( newInfo || !bWeatherKnown) {
 
 					showWaitInformation(10);
@@ -350,7 +350,7 @@ public class OnlineWorker {
 					}
 				}
 
-				MatchLineup lineup = null;
+				MatchLineup lineup;
 				boolean success;
 				if ( info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					lineup = getMatchlineup(matchid, info.getMatchTyp(), info.getHeimID(), info.getGastID());
@@ -520,7 +520,7 @@ public class OnlineWorker {
 	 */
 	public static List<MatchKurzInfo> getMatches(int teamId, boolean forceRefresh, boolean store,
 			boolean upcoming) {
-		String matchesString = "";
+		String matchesString;
 		List<MatchKurzInfo> matches = new ArrayList<>();
 		boolean bOK = false;
 		showWaitInformation(10);
@@ -551,8 +551,7 @@ public class OnlineWorker {
 				showWaitInformation(80);
 
 				matches = FilterUserSelection(matches);
-				DBManager.instance().storeMatchKurzInfos(
-						matches.toArray(new MatchKurzInfo[matches.size()]));
+				DBManager.instance().storeMatchKurzInfos(matches.toArray(new MatchKurzInfo[0]));
 
 				showWaitInformation(100);
 
@@ -697,7 +696,7 @@ public class OnlineWorker {
 	 */
 	public static boolean getSpielplan(int season, int leagueID) {
 		boolean bOK = false;
-		String leagueFixtures = "";
+		String leagueFixtures;
 		HOVerwaltung hov = HOVerwaltung.instance();
 		try {
 			showWaitInformation(10);
@@ -776,8 +775,8 @@ public class OnlineWorker {
 	}
 
 	private static Matchdetails fetchDetails(int matchID, MatchType matchType, MatchLineup lineup) {
-		String matchDetails = "";
-		Matchdetails details = null;
+		String matchDetails;
+		Matchdetails details;
 
 		try {
 			matchDetails = MyConnector.instance().getMatchdetails(matchID, matchType);
@@ -813,8 +812,8 @@ public class OnlineWorker {
 	}
 
 	public static MatchLineup fetchLineup(int matchID, int teamID, MatchType matchType) {
-		String matchLineup = "";
-		MatchLineup lineUp = null;
+		String matchLineup;
+		MatchLineup lineUp=null;
 		boolean bOK = false;
 		try {
 			matchLineup = MyConnector.instance().getMatchLineup(matchID, teamID, matchType);
@@ -1177,19 +1176,19 @@ public class OnlineWorker {
 		MyConnector.instance().setSilentDownload(silentDownload);
 	}
 
-	final static long oneHour = 60L*60L*1000L;
-	final static long threeMonths = 3L*30L*24L*oneHour;
+	final static long oneDay = 24L*60L*60L*1000L;
+	final static long threeMonths = 3L*30L*oneDay;
 
 	public static void downloadMissingYouthMatchLineups(int youthteamid) {
 		var dateSince = DBManager.instance().getLastYouthMatchDate();
 		if ( dateSince == null){
 			// if there are no youth matches in database, take the limit from arrival date of 'oldest' youth players
 			dateSince = DBManager.instance().getMinScoutingDate();
-			dateSince.setTime(dateSince.getTime()-oneHour);	// minus one hour (resetted in for loop)
+			dateSince.setTime(dateSince.getTime()-oneDay);	// minus one hour (resetted in for loop)
 		}
 
 		for ( Timestamp dateUntil = null; dateSince != null; dateSince = dateUntil) {
-			dateSince.setTime(dateSince.getTime()+oneHour);	// add one hour (do not load last match again)
+			dateSince.setTime(dateSince.getTime()+ oneDay);	// add one day (do not load last match again)
 			if (dateSince.before(new Timestamp(System.currentTimeMillis()- threeMonths))){
 				dateUntil = new Timestamp(dateSince.getTime() + threeMonths);
 			}
@@ -1204,7 +1203,7 @@ public class OnlineWorker {
 
 					var lineup = getMatchlineup(match.getMatchID(), match.getMatchTyp(), match.getHeimID(), match.getGastID());
 					lineup.setMatchTyp(match.getMatchTyp()); // bug in chpp (no matchTyp in matchesarchive.xml if isYouth==True)
-					DBManager.instance().storeMatchLineup(lineup);
+					DBManager.instance().storeMatchLineup(lineup, youthteamid);
 
 					//TODO check if details are required
 
