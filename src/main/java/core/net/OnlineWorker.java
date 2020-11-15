@@ -1202,7 +1202,6 @@ public class OnlineWorker {
 				for ( var match: youthMatches){
 
 					var lineup = getMatchlineup(match.getMatchID(), match.getMatchTyp(), match.getHeimID(), match.getGastID());
-					lineup.setMatchTyp(match.getMatchTyp()); // bug in chpp (no matchTyp in matchesarchive.xml if isYouth==True)
 					DBManager.instance().storeMatchLineup(lineup, youthteamid);
 
 					//TODO check if details are required
