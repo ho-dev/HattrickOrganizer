@@ -63,6 +63,9 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 	private final String avgTSI = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.tsi");
 	private final String sumWage = sSum + HOVerwaltung.instance().getLanguageString("ls.player.wage");
 	private final String avgWage = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.wage");
+	private final String avgForm = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.form");
+	private final String avgStamina = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
+	private final String avgLoyalty = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.loyalty");
 
 	@Override
 	protected void initialize() {
@@ -206,16 +209,21 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 			}
 			// Form ================================================================
 			else if (e.getSource() == jcbForm.getCheckbox()) {
-				m_clStatistikPanel.setShow("DurchschnittForm", jcbForm.isSelected());
+				m_clStatistikPanel.setShow(avgForm, jcbForm.isSelected());
 				gup.statistikAlleForm = jcbForm.isSelected();
-			} else if (e.getSource() == jcbStamina.getCheckbox()) {
+			}
+			// Stamina ================================================================
+			else if (e.getSource() == jcbStamina.getCheckbox()) {
 				m_clStatistikPanel
-						.setShow("ls.player.skill.stamina", jcbStamina.isSelected());
+						.setShow(avgStamina, jcbStamina.isSelected());
 				gup.statistikAlleKondition = jcbStamina.isSelected();
-			} else if (e.getSource() == jcbLoyalty.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.player.loyalty", jcbLoyalty.isSelected());
+			}
+			// Loyalty ================================================================
+			else if (e.getSource() == jcbLoyalty.getCheckbox()) {
+				m_clStatistikPanel.setShow(avgLoyalty, jcbLoyalty.isSelected());
 				gup.statistikAllLoyalty = jcbLoyalty.isSelected();
-			} else if (e.getSource() == jcbKeeper.getCheckbox()) {
+			}
+			else if (e.getSource() == jcbKeeper.getCheckbox()) {
 				m_clStatistikPanel.setShow("ls.player.skill.keeper", jcbKeeper.isSelected());
 				gup.statistikAlleTorwart = jcbKeeper.isSelected();
 			} else if (e.getSource() == jcbDefending.getCheckbox()) {
@@ -382,19 +390,18 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		add(jcbWage, 10, layout2, constraints2);
 
 		// FORM ============================================================================================
-
-		jcbForm = new ImageCheckbox(hov.getLanguageString("ls.player.form"),
-				ThemeManager.getColor(HOColorName.PALETTE15[4]), gup.statistikAlleForm);
+		jcbForm = new ImageCheckbox(avgForm, getColor(4), gup.statistikAlleForm);
 		add(jcbForm, 11, layout2, constraints2);
 
-		jcbStamina = new ImageCheckbox(hov.getLanguageString("ls.player.skill.stamina"),
-				ThemeManager.getColor(HOColorName.PALETTE15[5]), gup.statistikAlleKondition);
+		// STAMINA ============================================================================================
+		jcbStamina = new ImageCheckbox(avgStamina, getColor(5), gup.statistikAlleKondition);
 		add(jcbStamina, 12, layout2, constraints2);
 
-		jcbLoyalty = new ImageCheckbox(hov.getLanguageString("ls.player.loyalty"),
-				ThemeManager.getColor(HOColorName.PALETTE15[6]), gup.statistikAllLoyalty);
+		// LOYALTY ============================================================================================
+		jcbLoyalty = new ImageCheckbox(avgLoyalty, getColor(6), gup.statistikAllLoyalty);
 		add(jcbLoyalty, 13, layout2, constraints2);
 
+		// KEEPER ============================================================================================
 		constraints2.insets = new Insets(20,0,0,0);  //top padding
 		jcbKeeper = new ImageCheckbox(hov.getLanguageString("ls.player.skill.keeper"),
 				ThemeManager.getColor(HOColorName.PALETTE15[7]), gup.statistikAlleTorwart);
@@ -509,14 +516,19 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 						     getColor(3), format2, 15 / Helper.getMaxValue(statistikWerte[27]));
 
 
-				data = bSum ? statistikWerte[2] : statistikWerte[16];
-				models[2] = new StatistikModel(data, "DurchschnittForm",
-						jcbForm.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[4]), format);
+				// FORM (only avg statistics because sum statistics is meaningless in that case) =======================
+				models[16] = new StatistikModel(statistikWerte[16], avgForm, jcbForm.isSelected(),
+						          getColor(4), format);
 
-				data = bSum ? statistikWerte[3] : statistikWerte[17];
-				models[3] = new StatistikModel(data, "ls.player.skill.stamina",
-						jcbStamina.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[5]), format);
+				// STAMINA (only avg statistics because sum statistics is meaningless in that case) ====================
+				models[17] = new StatistikModel(statistikWerte[17], avgStamina, jcbStamina.isSelected(),
+										getColor(5), format);
 
+				// LOYALTY (only avg statistics because sum statistics is meaningless in that case) ====================
+				models[25] = new StatistikModel(statistikWerte[25], avgLoyalty, jcbLoyalty.isSelected(),
+						getColor(6), format);
+
+				// KEEPER ========================================================================
 				data = bSum ? statistikWerte[4] : statistikWerte[18];
 				models[4] = new StatistikModel(data, "ls.player.skill.keeper",
 						jcbKeeper.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[7]), format);
@@ -547,9 +559,6 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 				models[10] = new StatistikModel(data, "ls.player.skill.setpieces",
 						jcbSetPieces.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[13]), format);
 
-				data = bSum ? statistikWerte[11] : statistikWerte[25];
-				models[11] = new StatistikModel(data, "ls.player.loyalty",
-						jcbLoyalty.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[6]), format);
 
 			}
 

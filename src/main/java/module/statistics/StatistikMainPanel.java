@@ -39,7 +39,7 @@ public class StatistikMainPanel extends LazyImagePanel {
 
 		// clubStatisticsPanel
 		clubStatisticsPanel = new ClubStatisticsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Club"),
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("ls.module.statistics.club"),
 				clubStatisticsPanel);
 
 		// Spielerstatistik
