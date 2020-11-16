@@ -131,13 +131,14 @@ public class StatistikPanel extends JPanel {
 	 * Einen bestimmten Graf sichtbar/unsichtbar machen
 	 */
 	public final void setShow(String name, boolean show) {
-		for (int i = 0; (m_clStatistikModel != null) && (m_clStatistikModel.length > i); i++) {
-			if (m_clStatistikModel[i].getName().equals(name)) {
-				m_clStatistikModel[i].setShow(show);
-				break;
+		if (m_clStatistikModel != null){
+			for (int i = 0; i <= m_clStatistikModel.length; i++) {
+				if ((m_clStatistikModel[i] != null) && (m_clStatistikModel[i].getName().equals(name))) {
+					m_clStatistikModel[i].setShow(show);
+					break;
+				}
 			}
 		}
-
 		repaint();
 	}
 

@@ -14,11 +14,8 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.HOLogger;
 import core.util.Helper;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -31,21 +28,21 @@ import javax.swing.*;
  */
 public class TeamStatisticsPanel extends LazyImagePanel {
 	private static final long serialVersionUID = -6588840565958987842L;
-	private ImageCheckbox m_jchExperience;
-	private ImageCheckbox m_jchWinger;
-	private ImageCheckbox m_jchForm;
-	private ImageCheckbox m_jchLeadership;
-	private ImageCheckbox m_jchLoyalty;
-	private ImageCheckbox m_jchStamina;
-	private ImageCheckbox m_jchPassing;
-	private ImageCheckbox m_jchPlaymaking;
-	private ImageCheckbox m_jchSetPieces;
-	private ImageCheckbox m_jchScoring;
-	private ImageCheckbox m_jchKeeper;
-	private ImageCheckbox m_jchVerteidigung;
-	private ImageCheckbox m_jchTSI;
-	private ImageCheckbox m_jchWages;
-	private JButton m_jbUbernehmen;
+	private ImageCheckbox jcbXP;
+	private ImageCheckbox jcbWinger;
+	private ImageCheckbox jcbForm;
+	private ImageCheckbox jcbLeadership;
+	private ImageCheckbox jcbLoyalty;
+	private ImageCheckbox jcbStamina;
+	private ImageCheckbox jcbPassing;
+	private ImageCheckbox jcbPlaymaking;
+	private ImageCheckbox jcbSetPieces;
+	private ImageCheckbox jcbScoring;
+	private ImageCheckbox jcbKeeper;
+	private ImageCheckbox jcbDefending;
+	private ImageCheckbox jcbTSI;
+	private ImageCheckbox jcbWage;
+	private JButton jbApply;
 	private JCheckBox m_jchInscription;
 	private JCheckBox m_jchHelpLines;
 	private JComboBox jcbAggType;
@@ -60,6 +57,12 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 	private final String sumLeadership = sSum + HOVerwaltung.instance().getLanguageString("ls.player.leadership");
 	private final String avgLeadership = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.leadership");
+	private final String sumXP = sSum + HOVerwaltung.instance().getLanguageString("ls.player.experience");
+	private final String avgXP = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.experience");
+	private final String sumTSI = sSum + HOVerwaltung.instance().getLanguageString("ls.player.tsi");
+	private final String avgTSI = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.tsi");
+	private final String sumWage = sSum + HOVerwaltung.instance().getLanguageString("ls.player.wage");
+	private final String avgWage = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.wage");
 
 	@Override
 	protected void initialize() {
@@ -97,16 +100,45 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 				if (selectedIndex == 0)
 				{
 					//sum
-					m_jchLeadership.setText(sumLeadership);
-					m_clStatistikPanel.setShow(sumLeadership, m_jchLeadership.isSelected());
+					bSum = true;
+
+					jcbLeadership.setText(sumLeadership);
+					m_clStatistikPanel.setShow(sumLeadership, jcbLeadership.isSelected());
 					m_clStatistikPanel.setShow(avgLeadership, false);
+
+					jcbXP.setText(sumXP);
+					m_clStatistikPanel.setShow(sumXP, jcbXP.isSelected());
+					m_clStatistikPanel.setShow(avgXP, false);
+
+					jcbTSI.setText(sumTSI);
+					m_clStatistikPanel.setShow(sumTSI, jcbTSI.isSelected());
+					m_clStatistikPanel.setShow(avgTSI, false);
+
+					jcbWage.setText(sumWage);
+					m_clStatistikPanel.setShow(sumWage, jcbWage.isSelected());
+					m_clStatistikPanel.setShow(avgWage, false);
+
 				}
 				else
 				{
 					// average
-					m_jchLeadership.setText(avgLeadership);
-					m_clStatistikPanel.setShow(avgLeadership, m_jchLeadership.isSelected());
+					bSum = false;
+
+					jcbLeadership.setText(avgLeadership);
+					m_clStatistikPanel.setShow(avgLeadership, jcbLeadership.isSelected());
 					m_clStatistikPanel.setShow(sumLeadership, false);
+
+					jcbXP.setText(avgXP);
+					m_clStatistikPanel.setShow(avgXP, jcbXP.isSelected());
+					m_clStatistikPanel.setShow(sumXP, false);
+
+					jcbTSI.setText(avgTSI);
+					m_clStatistikPanel.setShow(avgTSI, jcbTSI.isSelected());
+					m_clStatistikPanel.setShow(sumTSI, false);
+
+					jcbWage.setText(avgWage);
+					m_clStatistikPanel.setShow(avgWage, jcbWage.isSelected());
+					m_clStatistikPanel.setShow(sumWage, false);
 				}
 			}
 		});
@@ -115,7 +147,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		ActionListener actionListener = e -> {
 			UserParameter gup = UserParameter.instance();
 			HOVerwaltung hov = HOVerwaltung.instance();
-			if (e.getSource() == m_jbUbernehmen) {
+			if (e.getSource() == jbApply) {
 				initStatistik();
 			} else if (e.getSource() == m_jchHelpLines) {
 				m_clStatistikPanel.setHilfslinien(m_jchHelpLines.isSelected());
@@ -123,88 +155,119 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 			} else if (e.getSource() == m_jchInscription) {
 				m_clStatistikPanel.setBeschriftung(m_jchInscription.isSelected());
 				gup.statistikAlleBeschriftung = m_jchInscription.isSelected();
-			} else if (e.getSource() == m_jchLeadership.getCheckbox()) {
+			}
+			// Leadership =========================================================
+			else if (e.getSource() == jcbLeadership.getCheckbox()) {
 				if (bSum) {
-					m_clStatistikPanel.setShow(sumLeadership, m_jchLeadership.isSelected());
+					m_clStatistikPanel.setShow(sumLeadership, jcbLeadership.isSelected());
 					m_clStatistikPanel.setShow(avgLeadership, false);
 				}
 				else {
-					m_clStatistikPanel.setShow(avgLeadership, m_jchLeadership.isSelected());
+					m_clStatistikPanel.setShow(avgLeadership, jcbLeadership.isSelected());
 					m_clStatistikPanel.setShow(sumLeadership, false);
 				}
-				gup.statistikAlleFuehrung = m_jchLeadership.isSelected();
-			} else if (e.getSource() == m_jchTSI.getCheckbox()) {
-				m_clStatistikPanel.setShow("Marktwert", m_jchTSI.isSelected());
-				gup.statistikAllTSI = m_jchTSI.isSelected();
-			} else if (e.getSource() == m_jchWages.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.player.wage", m_jchWages.isSelected());
-				gup.statistikAllWages = m_jchWages.isSelected();
-			} else if (e.getSource() == m_jchExperience.getCheckbox()) {
-				m_clStatistikPanel.setShow("DurchschnittErfahrung",
-						m_jchExperience.isSelected());
-				gup.statistikAlleErfahrung = m_jchExperience.isSelected();
-			} else if (e.getSource() == m_jchForm.getCheckbox()) {
-				m_clStatistikPanel.setShow("DurchschnittForm", m_jchForm.isSelected());
-				gup.statistikAlleForm = m_jchForm.isSelected();
-			} else if (e.getSource() == m_jchStamina.getCheckbox()) {
+				gup.statistikAlleFuehrung = jcbLeadership.isSelected();
+			}
+			// TSI ==================================================================
+			else if (e.getSource() == jcbTSI.getCheckbox()) {
+				if (bSum) {
+					m_clStatistikPanel.setShow(sumTSI, jcbTSI.isSelected());
+					m_clStatistikPanel.setShow(avgTSI, false);
+				}
+				else{
+					m_clStatistikPanel.setShow(avgTSI, jcbTSI.isSelected());
+					m_clStatistikPanel.setShow(sumTSI, false);
+				}
+				gup.statistikAllTSI = jcbTSI.isSelected();
+			}
+			// WAGE ================================================================
+			else if (e.getSource() == jcbWage.getCheckbox()) {
+				if (bSum) {
+					m_clStatistikPanel.setShow(sumWage, jcbWage.isSelected());
+					m_clStatistikPanel.setShow(avgWage, false);
+				}
+				else{
+					m_clStatistikPanel.setShow(avgWage, jcbWage.isSelected());
+					m_clStatistikPanel.setShow(sumWage, false);
+				}
+				gup.statistikAllWages = jcbWage.isSelected();
+			}
+			// Experience =========================================================
+			else if (e.getSource() == jcbXP.getCheckbox()) {
+				if (bSum) {
+					m_clStatistikPanel.setShow(sumXP, jcbXP.isSelected());
+					m_clStatistikPanel.setShow(avgXP, false);
+				}
+				else{
+					m_clStatistikPanel.setShow(avgXP, jcbXP.isSelected());
+					m_clStatistikPanel.setShow(sumXP, false);
+				}
+				gup.statistikAlleErfahrung = jcbXP.isSelected();
+			}
+			// Form ================================================================
+			else if (e.getSource() == jcbForm.getCheckbox()) {
+				m_clStatistikPanel.setShow("DurchschnittForm", jcbForm.isSelected());
+				gup.statistikAlleForm = jcbForm.isSelected();
+			} else if (e.getSource() == jcbStamina.getCheckbox()) {
 				m_clStatistikPanel
-						.setShow("ls.player.skill.stamina", m_jchStamina.isSelected());
-				gup.statistikAlleKondition = m_jchStamina.isSelected();
-			} else if (e.getSource() == m_jchLoyalty.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.player.loyalty", m_jchLoyalty.isSelected());
-				gup.statistikAllLoyalty = m_jchLoyalty.isSelected();
-			} else if (e.getSource() == m_jchKeeper.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.player.skill.keeper", m_jchKeeper.isSelected());
-				gup.statistikAlleTorwart = m_jchKeeper.isSelected();
-			} else if (e.getSource() == m_jchVerteidigung.getCheckbox()) {
+						.setShow("ls.player.skill.stamina", jcbStamina.isSelected());
+				gup.statistikAlleKondition = jcbStamina.isSelected();
+			} else if (e.getSource() == jcbLoyalty.getCheckbox()) {
+				m_clStatistikPanel.setShow("ls.player.loyalty", jcbLoyalty.isSelected());
+				gup.statistikAllLoyalty = jcbLoyalty.isSelected();
+			} else if (e.getSource() == jcbKeeper.getCheckbox()) {
+				m_clStatistikPanel.setShow("ls.player.skill.keeper", jcbKeeper.isSelected());
+				gup.statistikAlleTorwart = jcbKeeper.isSelected();
+			} else if (e.getSource() == jcbDefending.getCheckbox()) {
 				m_clStatistikPanel.setShow("ls.player.skill.defending",
-						m_jchVerteidigung.isSelected());
-				gup.statistikAlleVerteidigung = m_jchVerteidigung.isSelected();
-			} else if (e.getSource() == m_jchPlaymaking.getCheckbox()) {
+						jcbDefending.isSelected());
+				gup.statistikAlleVerteidigung = jcbDefending.isSelected();
+			} else if (e.getSource() == jcbPlaymaking.getCheckbox()) {
 				m_clStatistikPanel.setShow("ls.player.skill.playmaking",
-						m_jchPlaymaking.isSelected());
-				gup.statistikAlleSpielaufbau = m_jchPlaymaking.isSelected();
-			} else if (e.getSource() == m_jchPassing.getCheckbox()) {
+						jcbPlaymaking.isSelected());
+				gup.statistikAlleSpielaufbau = jcbPlaymaking.isSelected();
+			} else if (e.getSource() == jcbPassing.getCheckbox()) {
 				m_clStatistikPanel
-						.setShow("ls.player.skill.passing", m_jchPassing.isSelected());
-				gup.statistikAllePasspiel = m_jchPassing.isSelected();
-			} else if (e.getSource() == m_jchWinger.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.player.skill.winger", m_jchWinger.isSelected());
-				gup.statistikAlleFluegel = m_jchWinger.isSelected();
-			} else if (e.getSource() == m_jchScoring.getCheckbox()) {
+						.setShow("ls.player.skill.passing", jcbPassing.isSelected());
+				gup.statistikAllePasspiel = jcbPassing.isSelected();
+			} else if (e.getSource() == jcbWinger.getCheckbox()) {
+				m_clStatistikPanel.setShow("ls.player.skill.winger", jcbWinger.isSelected());
+				gup.statistikAlleFluegel = jcbWinger.isSelected();
+			} else if (e.getSource() == jcbScoring.getCheckbox()) {
 				m_clStatistikPanel
-						.setShow("ls.player.skill.scoring", m_jchScoring.isSelected());
-				gup.statistikAlleTorschuss = m_jchScoring.isSelected();
-			} else if (e.getSource() == m_jchSetPieces.getCheckbox()) {
+						.setShow("ls.player.skill.scoring", jcbScoring.isSelected());
+				gup.statistikAlleTorschuss = jcbScoring.isSelected();
+			} else if (e.getSource() == jcbSetPieces.getCheckbox()) {
 				m_clStatistikPanel.setShow("ls.player.skill.setpieces",
-						m_jchSetPieces.isSelected());
-				gup.statistikAlleStandards = m_jchSetPieces.isSelected();
+						jcbSetPieces.isSelected());
+				gup.statistikAlleStandards = jcbSetPieces.isSelected();
 			}
 		};
 
-		m_jbUbernehmen.addActionListener(actionListener);
+		jbApply.addActionListener(actionListener);
 		m_jchHelpLines.addActionListener(actionListener);
 		m_jchInscription.addActionListener(actionListener);
-		m_jchLeadership.addActionListener(actionListener);
-		m_jchExperience.addActionListener(actionListener);
-		m_jchTSI.addActionListener(actionListener);
-		m_jchWages.addActionListener(actionListener);
-		m_jchForm.addActionListener(actionListener);
-		m_jchStamina.addActionListener(actionListener);
-		m_jchLoyalty.addActionListener(actionListener);
-		m_jchVerteidigung.addActionListener(actionListener);
-		m_jchKeeper.addActionListener(actionListener);
-		m_jchPlaymaking.addActionListener(actionListener);
-		m_jchPassing.addActionListener(actionListener);
-		m_jchWinger.addActionListener(actionListener);
-		m_jchScoring.addActionListener(actionListener);
-		m_jchSetPieces.addActionListener(actionListener);
+		jcbLeadership.addActionListener(actionListener);
+		jcbXP.addActionListener(actionListener);
+		jcbTSI.addActionListener(actionListener);
+		jcbWage.addActionListener(actionListener);
+		jcbForm.addActionListener(actionListener);
+		jcbStamina.addActionListener(actionListener);
+		jcbLoyalty.addActionListener(actionListener);
+		jcbDefending.addActionListener(actionListener);
+		jcbKeeper.addActionListener(actionListener);
+		jcbPlaymaking.addActionListener(actionListener);
+		jcbPassing.addActionListener(actionListener);
+		jcbWinger.addActionListener(actionListener);
+		jcbScoring.addActionListener(actionListener);
+		jcbSetPieces.addActionListener(actionListener);
 	}
 
 	private void initComponents() {
 		UserParameter gup = UserParameter.instance();
 		HOVerwaltung hov = HOVerwaltung.instance();
 		JLabel labelSquad, labelAggType;
+		String textLabel;
 
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -247,10 +310,10 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 0;
 		constraints2.gridy = 2;
 		constraints2.gridwidth = 2;
-		m_jbUbernehmen = new JButton(hov.getLanguageString("ls.button.apply"));
-		layout2.setConstraints(m_jbUbernehmen, constraints2);
-		m_jbUbernehmen.setToolTipText(hov.getLanguageString("tt_Statistik_HRFAnzahluebernehmen"));
-		panel2.add(m_jbUbernehmen);
+		jbApply = new JButton(hov.getLanguageString("ls.button.apply"));
+		layout2.setConstraints(jbApply, constraints2);
+		jbApply.setToolTipText(hov.getLanguageString("tt_Statistik_HRFAnzahluebernehmen"));
+		panel2.add(jbApply);
 
 
 		labelSquad = new JLabel(hov.getLanguageString("Gruppe"));
@@ -277,6 +340,8 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		String[] sAggType = { hov.getLanguageString("Gesamt"), hov.getLanguageString("Durchschnitt")};
 		jcbAggType = new JComboBox<>(sAggType);
 		jcbAggType.setSelectedIndex(gup.statisticsTeamSumOrAverage);
+		bSum = (gup.statisticsTeamSumOrAverage == 0);
+
 		layout2.setConstraints(jcbAggType, constraints2);
 		jcbAggType.setToolTipText(hov.getLanguageString("choose_sum_or_average"));
 		constraints2.gridx = 1;
@@ -294,64 +359,71 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 		constraints2.insets = new Insets(20,0,0,0);  //top padding
 		constraints2.weightx = 0.0;
-		m_jchLeadership = new ImageCheckbox(hov.getLanguageString("ls.player.leadership"),
-				ThemeManager.getColor(HOColorName.PALETTE15[0]), gup.statistikAlleFuehrung);
-		add(m_jchLeadership, 7, layout2, constraints2);
 
+		// LEADERSIP =============================================================================================
+		textLabel = bSum ? sumLeadership : avgLeadership;
+		jcbLeadership = new ImageCheckbox(textLabel, getColor(0), gup.statistikAlleFuehrung);
+		add(jcbLeadership, 7, layout2, constraints2);
+
+		// EXPERIENCE =============================================================================================
 		constraints2.insets = new Insets(0,0,0,0);
-		m_jchExperience = new ImageCheckbox(hov.getLanguageString("ls.player.experience"),
-				ThemeManager.getColor(HOColorName.PALETTE15[1]), gup.statistikAlleErfahrung);
-		add(m_jchExperience, 8, layout2, constraints2);
+		textLabel = bSum ? sumXP : avgXP;
+		jcbXP = new ImageCheckbox(textLabel, getColor(1), gup.statistikAlleErfahrung);
+		add(jcbXP, 8, layout2, constraints2);
 
-		m_jchTSI = new ImageCheckbox(hov.getLanguageString("ls.player.tsi"),
-				ThemeManager.getColor(HOColorName.PALETTE15[2]), gup.statistikAllTSI);
-		add(m_jchTSI, 9, layout2, constraints2);
+		// TSI =============================================================================================
+		textLabel = bSum ? sumTSI : avgTSI;
+		jcbTSI = new ImageCheckbox(textLabel, getColor(2), gup.statistikAllTSI);
+		add(jcbTSI, 9, layout2, constraints2);
 
-		m_jchWages = new ImageCheckbox(hov.getLanguageString("ls.player.wage"),
-				ThemeManager.getColor(HOColorName.PALETTE15[3]), gup.statistikAllWages);
-		add(m_jchWages, 10, layout2, constraints2);
+		// WAGE ============================================================================================
+		textLabel = bSum ? sumWage : avgWage;
+		jcbWage = new ImageCheckbox(textLabel, getColor(3), gup.statistikAllWages);
+		add(jcbWage, 10, layout2, constraints2);
 
-		m_jchForm = new ImageCheckbox(hov.getLanguageString("ls.player.form"),
+		// FORM ============================================================================================
+
+		jcbForm = new ImageCheckbox(hov.getLanguageString("ls.player.form"),
 				ThemeManager.getColor(HOColorName.PALETTE15[4]), gup.statistikAlleForm);
-		add(m_jchForm, 11, layout2, constraints2);
+		add(jcbForm, 11, layout2, constraints2);
 
-		m_jchStamina = new ImageCheckbox(hov.getLanguageString("ls.player.skill.stamina"),
+		jcbStamina = new ImageCheckbox(hov.getLanguageString("ls.player.skill.stamina"),
 				ThemeManager.getColor(HOColorName.PALETTE15[5]), gup.statistikAlleKondition);
-		add(m_jchStamina, 12, layout2, constraints2);
+		add(jcbStamina, 12, layout2, constraints2);
 
-		m_jchLoyalty = new ImageCheckbox(hov.getLanguageString("ls.player.loyalty"),
+		jcbLoyalty = new ImageCheckbox(hov.getLanguageString("ls.player.loyalty"),
 				ThemeManager.getColor(HOColorName.PALETTE15[6]), gup.statistikAllLoyalty);
-		add(m_jchLoyalty, 13, layout2, constraints2);
+		add(jcbLoyalty, 13, layout2, constraints2);
 
 		constraints2.insets = new Insets(20,0,0,0);  //top padding
-		m_jchKeeper = new ImageCheckbox(hov.getLanguageString("ls.player.skill.keeper"),
+		jcbKeeper = new ImageCheckbox(hov.getLanguageString("ls.player.skill.keeper"),
 				ThemeManager.getColor(HOColorName.PALETTE15[7]), gup.statistikAlleTorwart);
-		add(m_jchKeeper, 14, layout2, constraints2);
+		add(jcbKeeper, 14, layout2, constraints2);
 
 		constraints2.insets = new Insets(0,0,0,0);
-		m_jchVerteidigung = new ImageCheckbox(hov.getLanguageString("ls.player.skill.defending"),
+		jcbDefending = new ImageCheckbox(hov.getLanguageString("ls.player.skill.defending"),
 				ThemeManager.getColor(HOColorName.PALETTE15[8]), gup.statistikAlleVerteidigung);
-		add(m_jchVerteidigung, 15, layout2, constraints2);
+		add(jcbDefending, 15, layout2, constraints2);
 
-		m_jchPlaymaking = new ImageCheckbox(hov.getLanguageString("ls.player.skill.playmaking"),
+		jcbPlaymaking = new ImageCheckbox(hov.getLanguageString("ls.player.skill.playmaking"),
 				ThemeManager.getColor(HOColorName.PALETTE15[9]), gup.statistikAlleSpielaufbau);
-		add(m_jchPlaymaking, 16, layout2, constraints2);
+		add(jcbPlaymaking, 16, layout2, constraints2);
 
-		m_jchPassing = new ImageCheckbox(hov.getLanguageString("ls.player.skill.passing"),
+		jcbPassing = new ImageCheckbox(hov.getLanguageString("ls.player.skill.passing"),
 				ThemeManager.getColor(HOColorName.PALETTE15[10]), gup.statistikAllePasspiel);
-		add(m_jchPassing, 17, layout2, constraints2);
+		add(jcbPassing, 17, layout2, constraints2);
 
-		m_jchWinger = new ImageCheckbox(hov.getLanguageString("ls.player.skill.winger"),
+		jcbWinger = new ImageCheckbox(hov.getLanguageString("ls.player.skill.winger"),
 				ThemeManager.getColor(HOColorName.PALETTE15[11]), gup.statistikAlleFluegel);
-		add(m_jchWinger, 18, layout2, constraints2);
+		add(jcbWinger, 18, layout2, constraints2);
 
-		m_jchScoring = new ImageCheckbox(hov.getLanguageString("ls.player.skill.scoring"),
+		jcbScoring = new ImageCheckbox(hov.getLanguageString("ls.player.skill.scoring"),
 				ThemeManager.getColor(HOColorName.PALETTE15[12]), gup.statistikAlleTorschuss);
-		add(m_jchScoring, 19, layout2, constraints2);
+		add(jcbScoring, 19, layout2, constraints2);
 
-		m_jchSetPieces = new ImageCheckbox(hov.getLanguageString("ls.player.skill.setpieces"),
+		jcbSetPieces = new ImageCheckbox(hov.getLanguageString("ls.player.skill.setpieces"),
 				ThemeManager.getColor(HOColorName.PALETTE15[13]), gup.statistikAlleStandards);
-		add(m_jchSetPieces, 20, layout2, constraints2);
+		add(jcbSetPieces, 20, layout2, constraints2);
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
@@ -406,72 +478,79 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 			double[] data;
 			// There are 28 values - the first 14 are the sum and the next 14 are the averaged values
 			if (statistikWerte.length > 0) {
-				models[0] = new StatistikModel(statistikWerte[0], sumLeadership,
-						m_jchLeadership.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[0]),
-						format, 5 / Helper.getMaxValue(statistikWerte[0]));
 
-				models[14] = new StatistikModel(statistikWerte[14], avgLeadership,
-						m_jchLeadership.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[0]),
-						format);
+				// LEADERSHIP ========================================================================
+				models[0] = new StatistikModel(statistikWerte[0], sumLeadership, jcbLeadership.isSelected() && bSum,
+						  getColor(0), format, 5 / Helper.getMaxValue(statistikWerte[0]));
+
+				models[14] = new StatistikModel(statistikWerte[14], avgLeadership, jcbLeadership.isSelected(),
+						       getColor(0), format);
 
 
-				data = bSum ? statistikWerte[1] : statistikWerte[15];
-				models[1] = new StatistikModel(data, "DurchschnittErfahrung",
-						m_jchExperience.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[1]),
-						format);
+				// XP ========================================================================
+				models[1] = new StatistikModel(statistikWerte[1], sumXP, jcbXP.isSelected() && bSum, getColor(1),
+						        format, 7 / Helper.getMaxValue(statistikWerte[1]));
+
+				models[15] = new StatistikModel(statistikWerte[15], avgXP, jcbXP.isSelected() && !bSum,
+						        getColor(1), format);
+
+				// TSI ========================================================================
+				models[12] = new StatistikModel(statistikWerte[12], sumTSI, jcbTSI.isSelected() && bSum,
+						getColor(2), format,	19 / Helper.getMaxValue(statistikWerte[12]));
+
+				models[26] = new StatistikModel(statistikWerte[26], avgTSI, jcbTSI.isSelected() && !bSum,
+						        getColor(2), format, 19 / Helper.getMaxValue(statistikWerte[26]));
+
+				// WAGE ========================================================================
+				models[13] = new StatistikModel(statistikWerte[13], sumWage,jcbWage.isSelected() && bSum,
+						getColor(3), format2, 15 / Helper.getMaxValue(statistikWerte[13]));
+
+				models[27] = new StatistikModel(statistikWerte[27], avgWage, jcbWage.isSelected() && !bSum,
+						     getColor(3), format2, 15 / Helper.getMaxValue(statistikWerte[27]));
+
 
 				data = bSum ? statistikWerte[2] : statistikWerte[16];
 				models[2] = new StatistikModel(data, "DurchschnittForm",
-						m_jchForm.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[4]), format);
+						jcbForm.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[4]), format);
 
 				data = bSum ? statistikWerte[3] : statistikWerte[17];
 				models[3] = new StatistikModel(data, "ls.player.skill.stamina",
-						m_jchStamina.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[5]), format);
+						jcbStamina.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[5]), format);
 
 				data = bSum ? statistikWerte[4] : statistikWerte[18];
 				models[4] = new StatistikModel(data, "ls.player.skill.keeper",
-						m_jchKeeper.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[7]), format);
+						jcbKeeper.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[7]), format);
 
 				data = bSum ? statistikWerte[5] : statistikWerte[19];
 				models[5] = new StatistikModel(data, "ls.player.skill.defending",
-						m_jchVerteidigung.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[8]),
+						jcbDefending.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[8]),
 						format);
 
 				data = bSum ? statistikWerte[6] : statistikWerte[20];
 				models[6] = new StatistikModel(data, "ls.player.skill.playmaking",
-						m_jchPlaymaking.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[9]),
+						jcbPlaymaking.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[9]),
 						format);
 
 				data = bSum ? statistikWerte[7] : statistikWerte[21];
 				models[7] = new StatistikModel(data, "ls.player.skill.passing",
-						m_jchPassing.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[10]), format);
+						jcbPassing.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[10]), format);
 
 				data = bSum ? statistikWerte[8] : statistikWerte[22];
 				models[8] = new StatistikModel(data, "ls.player.skill.winger",
-						m_jchWinger.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[11]), format);
+						jcbWinger.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[11]), format);
 
 				data = bSum ? statistikWerte[9] : statistikWerte[23];
 				models[9] = new StatistikModel(data, "ls.player.skill.scoring",
-						m_jchScoring.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[12]), format);
+						jcbScoring.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[12]), format);
 
 				data = bSum ? statistikWerte[10] : statistikWerte[24];
 				models[10] = new StatistikModel(data, "ls.player.skill.setpieces",
-						m_jchSetPieces.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[13]), format);
+						jcbSetPieces.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[13]), format);
 
 				data = bSum ? statistikWerte[11] : statistikWerte[25];
 				models[11] = new StatistikModel(data, "ls.player.loyalty",
-						m_jchLoyalty.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[6]), format);
+						jcbLoyalty.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[6]), format);
 
-				double faktor = 20 / Helper.getMaxValue(statistikWerte[12]);
-				data = bSum ? statistikWerte[12] : statistikWerte[26];
-				models[12] = new StatistikModel(data, "Marktwert",
-						m_jchTSI.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[2]), format,
-						faktor);
-
-				faktor = 20 / Helper.getMaxValue(statistikWerte[13]);
-				data = bSum ? statistikWerte[13] : statistikWerte[27];
-				models[13] = new StatistikModel(data, "ls.player.wage",
-						m_jchTSI.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[3]), format2, faktor);
 			}
 
 			String[] yBezeichnungen = Helper.convertTimeMillisToFormatString(statistikWerte[28]);
@@ -483,4 +562,10 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 			HOLogger.instance().log(getClass(), e);
 		}
 	}
+
+
+	private Color getColor(int i) {
+		return ThemeManager.getColor(HOColorName.PALETTE15[i]);
+	}
+
 }
