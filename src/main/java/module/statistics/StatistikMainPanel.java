@@ -37,27 +37,31 @@ public class StatistikMainPanel extends LazyImagePanel {
 		setLayout(new BorderLayout());
 		tabbedPane = new JTabbedPane();
 
+		// Spielerstatistik
+		playerStatisticsPanel = new PlayerStatisticsPanel();
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Spieler"),
+				playerStatisticsPanel);
+
+		// Team Panel
+		teamStatisticsPanel = new TeamStatisticsPanel();
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verein"),
+				teamStatisticsPanel);
+
+		// SpieleStatistik
+		matchesStatisticsPanel = new MatchesStatisticsPanel();
+		tabbedPane
+				.addTab(HOVerwaltung.instance().getLanguageString("Spiele"), matchesStatisticsPanel);
+
 		// clubStatisticsPanel
 		clubStatisticsPanel = new ClubStatisticsPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("ls.module.statistics.club"),
 				clubStatisticsPanel);
 
-		// Spielerstatistik
-		playerStatisticsPanel = new PlayerStatisticsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Spieler"),
-				playerStatisticsPanel);
-		// SpieleStatistik
-		matchesStatisticsPanel = new MatchesStatisticsPanel();
-		tabbedPane
-				.addTab(HOVerwaltung.instance().getLanguageString("Spiele"), matchesStatisticsPanel);
-		// Team Panel
-		teamStatisticsPanel = new TeamStatisticsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verein"),
-				teamStatisticsPanel);
 		// Finanzstatistik
 		finanzStatistikPanel = new FinanzStatistikPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Finanzen"),
 				finanzStatistikPanel);
+		
 		// Arenastatistik
 		arenaStatistikPanel = new ArenaStatistikPanel();
 		tabbedPane
