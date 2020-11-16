@@ -7,6 +7,7 @@ import core.model.player.YouthPlayer;
 import core.model.player.YouthPlayer.ScoutComment;
 import core.util.HOLogger;
 import core.util.Helper;
+import module.training.Skills;
 import tool.hrfExplorer.HrfExplorer;
 
 import javax.swing.plaf.synth.SynthCheckBoxMenuItemUI;
@@ -99,7 +100,7 @@ public class YouthScoutCommentTable extends AbstractTable {
             ret.setIndex(rs.getInt("Index"));
             ret.setText(DBManager.deleteEscapeSequences(rs.getString("Text")));
             ret.setSkillLevel(rs.getInt("SkillLevel"));
-            ret.setSkillType(rs.getInt("SkillType"));
+            ret.setSkillType(Skills.ScoutCommentSkillTypeID.valueOf(rs.getInt("SkillType")));
             ret.setVariation(rs.getInt("Variation"));
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),e);

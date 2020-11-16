@@ -30,6 +30,7 @@ public class Skills {
         11	Experience
      */
 
+
     public enum HTSkillID {
         GOALKEEPER(1),
         STAMINA(2),
@@ -59,6 +60,55 @@ public class Skills {
 
         public static HTSkillID valueOf(int skill) {
             return (HTSkillID) map.get(skill);
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+    };
+
+    /*
+        ScoutCommentSkillTypeID
+    Value	Description
+    1	Keeper
+    2	(not in use)
+    3	Defending
+    4	Playmaker
+    5	Winger
+    6	Scorer
+    7	Set Pieces
+    8	Passing
+     */
+    public enum ScoutCommentSkillTypeID {
+        KEEPER(1),
+        NOT_USED(2),
+        DEFENDING(3),
+        PLAYMAKER(4),
+        WINGER(5),
+        SCORER(6),
+        SET_PIECES(7),
+        PASSING(8);
+
+        private int value;
+        private static Map map = new HashMap<>();
+
+        private ScoutCommentSkillTypeID(int value) {
+            this.value = value;
+        }
+
+        // Init mapping
+        static {
+            for (ScoutCommentSkillTypeID skill : ScoutCommentSkillTypeID.values()) {
+                map.put(skill.value, skill);
+            }
+        }
+
+        public static ScoutCommentSkillTypeID valueOf(Integer skill) {
+            if ( skill != null) {
+                return (ScoutCommentSkillTypeID) map.get(skill);
+            }
+            return null;
         }
 
         public int getValue() {

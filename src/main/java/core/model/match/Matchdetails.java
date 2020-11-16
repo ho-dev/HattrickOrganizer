@@ -884,7 +884,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      * @return Value of property m_vHighlights.
      */
     public final ArrayList<MatchEvent> getHighlights() {
-        if ( m_vHighlights == null || m_vHighlights.size() == 0){
+        if ( this.getMatchID()> -1 && ( m_vHighlights == null || m_vHighlights.size() == 0)){
             m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchID());
 
             if ( maxMatchdetailsReloadsPerSession>0 && this.m_MatchTyp.isOfficial()) {

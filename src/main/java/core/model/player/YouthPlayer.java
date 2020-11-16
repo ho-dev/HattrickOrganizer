@@ -2,8 +2,8 @@ package core.model.player;
 
 import core.db.DBManager;
 import core.util.HOLogger;
-import module.opponentspy.CalcVariables;
 import module.training.Skills;
+import module.training.Skills.ScoutCommentSkillTypeID;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -355,9 +355,9 @@ public class YouthPlayer {
         private int youthPlayerId;
         private int index;
         private String text;
-        private Integer type;
+        private CommentType type;
         private Integer variation;
-        private Integer skillType;
+        private ScoutCommentSkillTypeID skillType;
         private Integer skillLevel;
 
         public ScoutComment(){}
@@ -370,11 +370,11 @@ public class YouthPlayer {
             this.text = text;
         }
 
-        public Integer getType() {
+        public CommentType getType() {
             return type;
         }
 
-        public void setType(Integer type) { this.type = type; }
+        public void setType(CommentType type) { this.type = type; }
 
         public Integer getVariation() {
             return variation;
@@ -384,11 +384,11 @@ public class YouthPlayer {
             this.variation = variation;
         }
 
-        public Integer getSkillType() {
+        public ScoutCommentSkillTypeID getSkillType() {
             return skillType;
         }
 
-        public void setSkillType(Integer skillType) {
+        public void setSkillType(ScoutCommentSkillTypeID skillType) {
             this.skillType = skillType;
         }
 
@@ -473,9 +473,9 @@ public class YouthPlayer {
         if ( text != null){
             var scoutComment = new ScoutComment();
             scoutComment.text = properties.getProperty(prefix+"text", "");
-            scoutComment.type = getInteger(properties,prefix+"type");
+            scoutComment.type = CommentType.valueOf(getInteger(properties,prefix+"type"));
             scoutComment.variation = getInteger(properties,prefix+"variation");
-            scoutComment.skillType = getInteger(properties,prefix+"skilltype");
+            scoutComment.skillType = ScoutCommentSkillTypeID.valueOf(getInteger(properties,prefix+"skilltype"));
             scoutComment.skillLevel = getInteger(properties,prefix+"skilllevel");
             this.scoutComments.add(scoutComment);
             return true;
