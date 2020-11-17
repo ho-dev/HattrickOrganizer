@@ -8,8 +8,11 @@ import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.Styler;
+
+import java.awt.*;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.List;
 import java.util.stream.IntStream;
 
 public class LinesChart implements ILinesChart{
@@ -21,23 +24,35 @@ public class LinesChart implements ILinesChart{
     Boolean m_hasLabels;
     Boolean m_hasHelpLines;
 
-    public LinesChart(boolean second_axis, String y1_axisName, String y2_axisName){
+    public LinesChart(boolean second_axis, String y1_axisName, String y2_axisName, String y1_axisFormat, String y2_axisFormat){
         m_chart = new XYChart(10, 10);
 
         m_chart.getStyler().setLegendVisible(false);
         m_chart.getStyler().setPlotBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
         m_chart.getStyler().setPlotGridLinesColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
         m_chart.getStyler().setChartBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
+        m_chart.getStyler().setXAxisTickMarksColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+        m_chart.getStyler().setXAxisTickLabelsColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+        m_chart.getStyler().setYAxisGroupTickLabelsColorMap(0, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+
+        if (y1_axisFormat != null){
+            m_chart.getStyler().putYAxisGroupDecimalPatternMap(0, y1_axisFormat);
+        }
 
         if(second_axis){
-            m_chart.getStyler().setYAxisGroupPosition(2, Styler.YAxisPosition.Right);
+            m_chart.getStyler().setYAxisGroupPosition(1, Styler.YAxisPosition.Right);
             if(y1_axisName != null){
-                m_chart.setYAxisGroupTitle(1, y1_axisName);
+                m_chart.setYAxisGroupTitle(0, y1_axisName);
             }
             if(y2_axisName != null){
-                m_chart.setYAxisGroupTitle(2, y2_axisName);
+                m_chart.setYAxisGroupTitle(1, y2_axisName);
             }
-            m_chart.getStyler().putYAxisGroupDecimalPatternMap(2, "#,##0");
+
+            if (y2_axisFormat != null){
+                m_chart.getStyler().putYAxisGroupDecimalPatternMap(1, y2_axisFormat);
+            }
+
+            m_chart.getStyler().setYAxisGroupTickLabelsColorMap(1, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
 
         }
         m_panel = new XChartPanel(m_chart);
@@ -58,37 +73,7 @@ public class LinesChart implements ILinesChart{
         }
     }
 
-//    public LinesChart(GraphDataModel[] models, boolean hasLabels, boolean hasHelpLines) {
-//        m_chart = new XYChart(10, 10);
-//        m_chart.getStyler().setHasAnnotations(hasLabels);
-//        m_chart.getStyler().setPlotGridLinesVisible(hasHelpLines);
-//        m_models = models;
-//        reverseTS();
-//        m_panel = new XChartPanel(m_chart);
-//    }
 
-//    public LinesChart(GraphDataModel[] models, boolean hasLabels, boolean hasHelpLines, boolean second_axis, String y1_axisName, String y2_axisName) {
-//        m_chart = new XYChart(10, 10);
-//        m_chart.getStyler().setHasAnnotations(hasLabels);
-//        m_chart.getStyler().setPlotGridLinesVisible(hasHelpLines);
-//        m_chart.getStyler().setYAxisGroupPosition(2, Styler.YAxisPosition.Right);
-//        m_models = models;
-//        reverseTS();
-//
-//        if(second_axis){
-//            m_chart.getStyler().setYAxisGroupPosition(2, Styler.YAxisPosition.Right);
-//            if(y1_axisName != null){
-//                m_chart.setYAxisGroupTitle(1, y1_axisName);
-//            }
-//            if(y2_axisName != null){
-//                m_chart.setYAxisGroupTitle(2, y2_axisName);
-//            }
-//            m_chart.getStyler().putYAxisGroupDecimalPatternMap(2, "#0.000");
-//
-//        }
-//
-//        m_panel = new XChartPanel(m_chart);
-//    }
 
     public JPanel getPanel() {
         return m_panel;
@@ -121,9 +106,7 @@ public class LinesChart implements ILinesChart{
                serie.setLineColor(model.getColor());
                serie.setMarker(model.getMarkerStyle());
                serie.setMarkerColor(model.getColor());
-               if (yGroup != 1) {
-                   serie.setYAxisGroup(yGroup);
-               }
+               serie.setYAxisGroup(yGroup);
            }
            else if ( (!model.isShow()) && series.containsKey(serieName) )
            {

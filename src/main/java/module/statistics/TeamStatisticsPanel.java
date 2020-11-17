@@ -46,12 +46,11 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 	private ImageCheckbox jcbTSI;
 	private ImageCheckbox jcbWage;
 	private JButton jbApply;
-	private JCheckBox m_jchInscription;
-	private JCheckBox m_jchHelpLines;
+	private JCheckBox jcbHelpLines;
 	private JComboBox jcbAggType;
-	private JComboBox m_jcbGruppe;
-	private JTextField m_jtfNumberOfHRF;
-	private LinesChart m_clStatistikPanel;
+	private JComboBox jcbTeam;
+	private JTextField jtfNumberOfHRF;
+	private LinesChart mChart;
 	private JPanel panel2;
 	private boolean bSum = true;
 
@@ -67,8 +66,11 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 	private final String sumWage = sSum + HOVerwaltung.instance().getLanguageString("ls.player.wage");
 	private final String avgWage = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.wage");
 	private final String avgForm = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.form");
+	private final String sumForm = sSum + HOVerwaltung.instance().getLanguageString("ls.player.form");
 	private final String avgStamina = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
+	private final String sumStamina = sSum + HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
 	private final String avgLoyalty = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.loyalty");
+	private final String sumLoyalty = sSum + HOVerwaltung.instance().getLanguageString("ls.player.loyalty");
 	private final String sumGK = sSum + HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper");
 	private final String avgGK = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper");
 	private final String sumDE = sSum + HOVerwaltung.instance().getLanguageString("ls.player.skill.defending");
@@ -98,14 +100,14 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 	}
 
 	private void addListeners() {
-		m_jtfNumberOfHRF.addFocusListener(new FocusAdapter() {
+		jtfNumberOfHRF.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent focusEvent) {
-				Helper.parseInt(HOMainFrame.instance(), m_jtfNumberOfHRF, false);
+				Helper.parseInt(HOMainFrame.instance(), jtfNumberOfHRF, false);
 			}
 		});
 
-		m_jcbGruppe.addItemListener(e -> {
+		jcbTeam.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				initStatistik();
 			}
@@ -123,48 +125,60 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 					bSum = true;
 
 					jcbLeadership.setText(sumLeadership);
-					m_clStatistikPanel.setShow(sumLeadership, jcbLeadership.isSelected());
-					m_clStatistikPanel.setShow(avgLeadership, false);
+					mChart.setShow(sumLeadership, jcbLeadership.isSelected());
+					mChart.setShow(avgLeadership, false);
 
 					jcbXP.setText(sumXP);
-					m_clStatistikPanel.setShow(sumXP, jcbXP.isSelected());
-					m_clStatistikPanel.setShow(avgXP, false);
+					mChart.setShow(sumXP, jcbXP.isSelected());
+					mChart.setShow(avgXP, false);
+
+					jcbForm.setText(sumForm);
+					mChart.setShow(sumForm, jcbForm.isSelected());
+					mChart.setShow(avgForm, false);
+
+					jcbStamina.setText(sumStamina);
+					mChart.setShow(sumStamina, jcbStamina.isSelected());
+					mChart.setShow(avgStamina, false);
+
+					jcbLoyalty.setText(sumLoyalty);
+					mChart.setShow(sumLoyalty, jcbLoyalty.isSelected());
+					mChart.setShow(avgLoyalty, false);
 
 					jcbTSI.setText(sumTSI);
-					m_clStatistikPanel.setShow(sumTSI, jcbTSI.isSelected());
-					m_clStatistikPanel.setShow(avgTSI, false);
+					mChart.setShow(sumTSI, jcbTSI.isSelected());
+					mChart.setShow(avgTSI, false);
 
 					jcbWage.setText(sumWage);
-					m_clStatistikPanel.setShow(sumWage, jcbWage.isSelected());
-					m_clStatistikPanel.setShow(avgWage, false);
+					mChart.setShow(sumWage, jcbWage.isSelected());
+					mChart.setShow(avgWage, false);
 
 					jcbKeeper.setText(sumGK);
-					m_clStatistikPanel.setShow(sumGK, jcbKeeper.isSelected());
-					m_clStatistikPanel.setShow(avgGK, false);
+					mChart.setShow(sumGK, jcbKeeper.isSelected());
+					mChart.setShow(avgGK, false);
 
 					jcbDefending.setText(sumDE);
-					m_clStatistikPanel.setShow(sumDE, jcbDefending.isSelected());
-					m_clStatistikPanel.setShow(avgDE, false);
+					mChart.setShow(sumDE, jcbDefending.isSelected());
+					mChart.setShow(avgDE, false);
 
 					jcbPlaymaking.setText(sumPM);
-					m_clStatistikPanel.setShow(sumPM, jcbPlaymaking.isSelected());
-					m_clStatistikPanel.setShow(avgPM, false);
+					mChart.setShow(sumPM, jcbPlaymaking.isSelected());
+					mChart.setShow(avgPM, false);
 
 					jcbPassing.setText(sumPS);
-					m_clStatistikPanel.setShow(sumPS, jcbPassing.isSelected());
-					m_clStatistikPanel.setShow(avgPS, false);
+					mChart.setShow(sumPS, jcbPassing.isSelected());
+					mChart.setShow(avgPS, false);
 
 					jcbWinger.setText(sumWI);
-					m_clStatistikPanel.setShow(sumWI, jcbWinger.isSelected());
-					m_clStatistikPanel.setShow(avgWI, false);
+					mChart.setShow(sumWI, jcbWinger.isSelected());
+					mChart.setShow(avgWI, false);
 
 					jcbScoring.setText(sumSC);
-					m_clStatistikPanel.setShow(sumSC, jcbScoring.isSelected());
-					m_clStatistikPanel.setShow(avgSC, false);
+					mChart.setShow(sumSC, jcbScoring.isSelected());
+					mChart.setShow(avgSC, false);
 
 					jcbSetPieces.setText(sumSP);
-					m_clStatistikPanel.setShow(sumSP, jcbSetPieces.isSelected());
-					m_clStatistikPanel.setShow(avgSP, false);
+					mChart.setShow(sumSP, jcbSetPieces.isSelected());
+					mChart.setShow(avgSP, false);
 
 				}
 				else
@@ -173,48 +187,60 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 					bSum = false;
 
 					jcbLeadership.setText(avgLeadership);
-					m_clStatistikPanel.setShow(avgLeadership, jcbLeadership.isSelected());
-					m_clStatistikPanel.setShow(sumLeadership, false);
+					mChart.setShow(avgLeadership, jcbLeadership.isSelected());
+					mChart.setShow(sumLeadership, false);
 
 					jcbXP.setText(avgXP);
-					m_clStatistikPanel.setShow(avgXP, jcbXP.isSelected());
-					m_clStatistikPanel.setShow(sumXP, false);
+					mChart.setShow(avgXP, jcbXP.isSelected());
+					mChart.setShow(sumXP, false);
+
+					jcbForm.setText(avgForm);
+					mChart.setShow(avgForm, jcbForm.isSelected());
+					mChart.setShow(sumForm, false);
+
+					jcbStamina.setText(avgStamina);
+					mChart.setShow(avgStamina, jcbStamina.isSelected());
+					mChart.setShow(sumStamina, false);
+
+					jcbLoyalty.setText(avgLoyalty);
+					mChart.setShow(avgLoyalty, jcbLoyalty.isSelected());
+					mChart.setShow(sumLoyalty, false);
 
 					jcbTSI.setText(avgTSI);
-					m_clStatistikPanel.setShow(avgTSI, jcbTSI.isSelected());
-					m_clStatistikPanel.setShow(sumTSI, false);
+					mChart.setShow(avgTSI, jcbTSI.isSelected());
+					mChart.setShow(sumTSI, false);
 
 					jcbWage.setText(avgWage);
-					m_clStatistikPanel.setShow(avgWage, jcbWage.isSelected());
-					m_clStatistikPanel.setShow(sumWage, false);
+					mChart.setShow(avgWage, jcbWage.isSelected());
+					mChart.setShow(sumWage, false);
 
 					jcbKeeper.setText(avgGK);
-					m_clStatistikPanel.setShow(avgGK, jcbKeeper.isSelected());
-					m_clStatistikPanel.setShow(sumGK, false);
+					mChart.setShow(avgGK, jcbKeeper.isSelected());
+					mChart.setShow(sumGK, false);
 
 					jcbDefending.setText(avgDE);
-					m_clStatistikPanel.setShow(avgDE, jcbDefending.isSelected());
-					m_clStatistikPanel.setShow(sumDE, false);
+					mChart.setShow(avgDE, jcbDefending.isSelected());
+					mChart.setShow(sumDE, false);
 
 					jcbPlaymaking.setText(avgPM);
-					m_clStatistikPanel.setShow(avgPM, jcbPlaymaking.isSelected());
-					m_clStatistikPanel.setShow(sumPM, false);
+					mChart.setShow(avgPM, jcbPlaymaking.isSelected());
+					mChart.setShow(sumPM, false);
 
 					jcbPassing.setText(avgPS);
-					m_clStatistikPanel.setShow(avgPS, jcbPassing.isSelected());
-					m_clStatistikPanel.setShow(sumPS, false);
+					mChart.setShow(avgPS, jcbPassing.isSelected());
+					mChart.setShow(sumPS, false);
 
 					jcbWinger.setText(avgWI);
-					m_clStatistikPanel.setShow(avgWI, jcbWinger.isSelected());
-					m_clStatistikPanel.setShow(sumWI, false);
+					mChart.setShow(avgWI, jcbWinger.isSelected());
+					mChart.setShow(sumWI, false);
 
 					jcbScoring.setText(avgSC);
-					m_clStatistikPanel.setShow(avgSC, jcbScoring.isSelected());
-					m_clStatistikPanel.setShow(sumSC, false);
+					mChart.setShow(avgSC, jcbScoring.isSelected());
+					mChart.setShow(sumSC, false);
 
 					jcbSetPieces.setText(avgSP);
-					m_clStatistikPanel.setShow(avgSP, jcbSetPieces.isSelected());
-					m_clStatistikPanel.setShow(sumSP, false);
+					mChart.setShow(avgSP, jcbSetPieces.isSelected());
+					mChart.setShow(sumSP, false);
 				}
 			}
 		});
@@ -225,166 +251,182 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 			HOVerwaltung hov = HOVerwaltung.instance();
 			if (e.getSource() == jbApply) {
 				initStatistik();
-			} else if (e.getSource() == m_jchHelpLines) {
-				m_clStatistikPanel.setHelpLines(m_jchHelpLines.isSelected());
-				gup.statistikAlleHilfslinien = m_jchHelpLines.isSelected();
-			} else if (e.getSource() == m_jchInscription) {
-				m_clStatistikPanel.setLabelling(m_jchInscription.isSelected());
-				gup.statistikAlleBeschriftung = m_jchInscription.isSelected();
+			} else if (e.getSource() == jcbHelpLines) {
+				mChart.setHelpLines(jcbHelpLines.isSelected());
+				gup.statistikAlleHilfslinien = jcbHelpLines.isSelected();
 			}
 			// Leadership =========================================================
 			else if (e.getSource() == jcbLeadership.getCheckbox()) {
 				if (bSum) {
-					m_clStatistikPanel.setShow(sumLeadership, jcbLeadership.isSelected());
-					m_clStatistikPanel.setShow(avgLeadership, false);
+					mChart.setShow(sumLeadership, jcbLeadership.isSelected());
+					mChart.setShow(avgLeadership, false);
 				}
 				else {
-					m_clStatistikPanel.setShow(avgLeadership, jcbLeadership.isSelected());
-					m_clStatistikPanel.setShow(sumLeadership, false);
+					mChart.setShow(avgLeadership, jcbLeadership.isSelected());
+					mChart.setShow(sumLeadership, false);
 				}
 				gup.statistikAlleFuehrung = jcbLeadership.isSelected();
 			}
 			// TSI ==================================================================
 			else if (e.getSource() == jcbTSI.getCheckbox()) {
 				if (bSum) {
-					m_clStatistikPanel.setShow(sumTSI, jcbTSI.isSelected());
-					m_clStatistikPanel.setShow(avgTSI, false);
+					mChart.setShow(sumTSI, jcbTSI.isSelected());
+					mChart.setShow(avgTSI, false);
 				}
 				else{
-					m_clStatistikPanel.setShow(avgTSI, jcbTSI.isSelected());
-					m_clStatistikPanel.setShow(sumTSI, false);
+					mChart.setShow(avgTSI, jcbTSI.isSelected());
+					mChart.setShow(sumTSI, false);
 				}
 				gup.statistikAllTSI = jcbTSI.isSelected();
 			}
 			// WAGE ================================================================
 			else if (e.getSource() == jcbWage.getCheckbox()) {
 				if (bSum) {
-					m_clStatistikPanel.setShow(sumWage, jcbWage.isSelected());
-					m_clStatistikPanel.setShow(avgWage, false);
+					mChart.setShow(sumWage, jcbWage.isSelected());
+					mChart.setShow(avgWage, false);
 				}
 				else{
-					m_clStatistikPanel.setShow(avgWage, jcbWage.isSelected());
-					m_clStatistikPanel.setShow(sumWage, false);
+					mChart.setShow(avgWage, jcbWage.isSelected());
+					mChart.setShow(sumWage, false);
 				}
 				gup.statistikAllWages = jcbWage.isSelected();
 			}
 			// Experience =========================================================
 			else if (e.getSource() == jcbXP.getCheckbox()) {
 				if (bSum) {
-					m_clStatistikPanel.setShow(sumXP, jcbXP.isSelected());
-					m_clStatistikPanel.setShow(avgXP, false);
+					mChart.setShow(sumXP, jcbXP.isSelected());
+					mChart.setShow(avgXP, false);
 				}
 				else{
-					m_clStatistikPanel.setShow(avgXP, jcbXP.isSelected());
-					m_clStatistikPanel.setShow(sumXP, false);
+					mChart.setShow(avgXP, jcbXP.isSelected());
+					mChart.setShow(sumXP, false);
 				}
 				gup.statistikAlleErfahrung = jcbXP.isSelected();
 			}
 			// Form ================================================================
 			else if (e.getSource() == jcbForm.getCheckbox()) {
-				m_clStatistikPanel.setShow(avgForm, jcbForm.isSelected());
+				if (bSum) {
+					mChart.setShow(sumForm, jcbForm.isSelected());
+					mChart.setShow(avgForm, false);
+				}
+				else{
+					mChart.setShow(avgForm, jcbForm.isSelected());
+					mChart.setShow(sumForm, false);
+				}
 				gup.statistikAlleForm = jcbForm.isSelected();
 			}
 			// Stamina ================================================================
 			else if (e.getSource() == jcbStamina.getCheckbox()) {
-				m_clStatistikPanel
-						.setShow(avgStamina, jcbStamina.isSelected());
+				if (bSum) {
+					mChart.setShow(sumStamina, jcbStamina.isSelected());
+					mChart.setShow(avgStamina, false);
+				}
+				else{
+					mChart.setShow(avgStamina, jcbStamina.isSelected());
+					mChart.setShow(sumStamina, false);
+				}
 				gup.statistikAlleKondition = jcbStamina.isSelected();
 			}
 			// Loyalty ================================================================
 			else if (e.getSource() == jcbLoyalty.getCheckbox()) {
-				m_clStatistikPanel.setShow(avgLoyalty, jcbLoyalty.isSelected());
+				if (bSum) {
+					mChart.setShow(sumLoyalty, jcbLoyalty.isSelected());
+					mChart.setShow(avgLoyalty, false);
+				}
+				else{
+					mChart.setShow(avgLoyalty, jcbLoyalty.isSelected());
+					mChart.setShow(sumLoyalty, false);
+				}
 				gup.statistikAllLoyalty = jcbLoyalty.isSelected();
 			}
 			// Keeper ============================================================================
 			else if (e.getSource() == jcbKeeper.getCheckbox()) {
 				if (bSum) {
-					m_clStatistikPanel.setShow(sumGK, jcbKeeper.isSelected());
-					m_clStatistikPanel.setShow(avgGK, false);
+					mChart.setShow(sumGK, jcbKeeper.isSelected());
+					mChart.setShow(avgGK, false);
 				}
 				else{
-					m_clStatistikPanel.setShow(avgGK, jcbKeeper.isSelected());
-					m_clStatistikPanel.setShow(sumGK, false);
+					mChart.setShow(avgGK, jcbKeeper.isSelected());
+					mChart.setShow(sumGK, false);
 				}
 				gup.statistikAlleTorwart = jcbKeeper.isSelected();
 			}
 			// Defending ============================================================================
 			else if (e.getSource() == jcbDefending.getCheckbox()) {
 				if (bSum) {
-					m_clStatistikPanel.setShow(sumDE, jcbDefending.isSelected());
-					m_clStatistikPanel.setShow(avgDE, false);
+					mChart.setShow(sumDE, jcbDefending.isSelected());
+					mChart.setShow(avgDE, false);
 				}
 				else{
-					m_clStatistikPanel.setShow(avgDE, jcbDefending.isSelected());
-					m_clStatistikPanel.setShow(sumDE, false);
+					mChart.setShow(avgDE, jcbDefending.isSelected());
+					mChart.setShow(sumDE, false);
 				}
 				gup.statistikAlleVerteidigung = jcbDefending.isSelected();
 			}
 			// Playmaking ============================================================================
 			else if (e.getSource() == jcbPlaymaking.getCheckbox()) {
 				if (bSum) {
-					m_clStatistikPanel.setShow(sumPM, jcbPlaymaking.isSelected());
-					m_clStatistikPanel.setShow(avgPM, false);
+					mChart.setShow(sumPM, jcbPlaymaking.isSelected());
+					mChart.setShow(avgPM, false);
 				}
 				else{
-					m_clStatistikPanel.setShow(avgPM, jcbPlaymaking.isSelected());
-					m_clStatistikPanel.setShow(sumPM, false);
+					mChart.setShow(avgPM, jcbPlaymaking.isSelected());
+					mChart.setShow(sumPM, false);
 				}
 				gup.statistikAlleSpielaufbau = jcbPlaymaking.isSelected();
 			}
 			// Passing ============================================================================
 			else if (e.getSource() == jcbPassing.getCheckbox()) {
 				if (bSum) {
-					m_clStatistikPanel.setShow(sumPS, jcbPassing.isSelected());
-					m_clStatistikPanel.setShow(avgPS, false);
+					mChart.setShow(sumPS, jcbPassing.isSelected());
+					mChart.setShow(avgPS, false);
 				}
 				else{
-					m_clStatistikPanel.setShow(avgPS, jcbPassing.isSelected());
-					m_clStatistikPanel.setShow(sumPS, false);
+					mChart.setShow(avgPS, jcbPassing.isSelected());
+					mChart.setShow(sumPS, false);
 				}
 				gup.statistikAllePasspiel = jcbPassing.isSelected();
 			}
 			// Winger ============================================================================
 			else if (e.getSource() == jcbWinger.getCheckbox()) {
 				if (bSum) {
-					m_clStatistikPanel.setShow(sumWI, jcbWinger.isSelected());
-					m_clStatistikPanel.setShow(avgWI, false);
+					mChart.setShow(sumWI, jcbWinger.isSelected());
+					mChart.setShow(avgWI, false);
 				}
 				else{
-					m_clStatistikPanel.setShow(avgWI, jcbWinger.isSelected());
-					m_clStatistikPanel.setShow(sumWI, false);
+					mChart.setShow(avgWI, jcbWinger.isSelected());
+					mChart.setShow(sumWI, false);
 				}
 				gup.statistikAlleFluegel = jcbWinger.isSelected();
 			}
 			// Scoring ============================================================================
 			else if (e.getSource() == jcbScoring.getCheckbox()) {
 				if (bSum) {
-					m_clStatistikPanel.setShow(sumSC, jcbScoring.isSelected());
-					m_clStatistikPanel.setShow(avgSC, false);
+					mChart.setShow(sumSC, jcbScoring.isSelected());
+					mChart.setShow(avgSC, false);
 				}
 				else{
-					m_clStatistikPanel.setShow(avgSC, jcbScoring.isSelected());
-					m_clStatistikPanel.setShow(sumSC, false);
+					mChart.setShow(avgSC, jcbScoring.isSelected());
+					mChart.setShow(sumSC, false);
 				}
 				gup.statistikAlleTorschuss = jcbScoring.isSelected();
 			}
 			// SetPieces ============================================================================
 			else if (e.getSource() == jcbSetPieces.getCheckbox()) {
 				if (bSum) {
-					m_clStatistikPanel.setShow(sumSP, jcbSetPieces.isSelected());
-					m_clStatistikPanel.setShow(avgSP, false);
+					mChart.setShow(sumSP, jcbSetPieces.isSelected());
+					mChart.setShow(avgSP, false);
 				}
 				else{
-					m_clStatistikPanel.setShow(avgSP, jcbSetPieces.isSelected());
-					m_clStatistikPanel.setShow(sumSP, false);
+					mChart.setShow(avgSP, jcbSetPieces.isSelected());
+					mChart.setShow(sumSP, false);
 				}
 				gup.statistikAlleStandards= jcbSetPieces.isSelected();
 			}
 		};
 
 		jbApply.addActionListener(actionListener);
-		m_jchHelpLines.addActionListener(actionListener);
-		m_jchInscription.addActionListener(actionListener);
+		jcbHelpLines.addActionListener(actionListener);
 		jcbLeadership.addActionListener(actionListener);
 		jcbXP.addActionListener(actionListener);
 		jcbTSI.addActionListener(actionListener);
@@ -434,16 +476,12 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(labelSquad, constraints2);
 		panel2.add(labelSquad);
 
-		m_jtfNumberOfHRF = new JTextField(String.valueOf(gup.statistikAnzahlHRF));
-		m_jtfNumberOfHRF.setHorizontalAlignment(SwingConstants.RIGHT);
-		Dimension size = new Dimension(40, (int) m_jtfNumberOfHRF.getPreferredSize().getHeight());
-		m_jtfNumberOfHRF.setPreferredSize(size);
-		m_jtfNumberOfHRF.setMinimumSize(size);
+		jtfNumberOfHRF = new JTextField(String.valueOf(gup.statistikAnzahlHRF));
+		jtfNumberOfHRF.setHorizontalAlignment(SwingConstants.RIGHT);
 		constraints2.gridx = 1;
 		constraints2.gridy = 1;
-		constraints2.fill = GridBagConstraints.NONE;
-		layout2.setConstraints(m_jtfNumberOfHRF, constraints2);
-		panel2.add(m_jtfNumberOfHRF);
+		layout2.setConstraints(jtfNumberOfHRF, constraints2);
+		panel2.add(jtfNumberOfHRF);
 
 		constraints2.gridx = 0;
 		constraints2.gridy = 2;
@@ -462,13 +500,13 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		panel2.add(labelSquad);
 		constraints2.gridx = 1;
 		constraints2.gridy = 3;
-		m_jcbGruppe = new JComboBox(GroupTeamFactory.TEAMSMILIES);
-		m_jcbGruppe.setRenderer(new core.gui.comp.renderer.SmilieListCellRenderer());
-		m_jcbGruppe.setBackground(ThemeManager.getColor(TABLEENTRY_BG));
-		m_jcbGruppe.setMaximumRowCount(25);
-		m_jcbGruppe.setMaximumSize(new Dimension(200, 25));
-		layout2.setConstraints(m_jcbGruppe, constraints2);
-		panel2.add(m_jcbGruppe);
+		jcbTeam = new JComboBox(GroupTeamFactory.TEAMSMILIES);
+		jcbTeam.setRenderer(new core.gui.comp.renderer.SmilieListCellRenderer());
+		jcbTeam.setBackground(ThemeManager.getColor(TABLEENTRY_BG));
+		jcbTeam.setMaximumRowCount(25);
+		jcbTeam.setMaximumSize(new Dimension(200, 25));
+		layout2.setConstraints(jcbTeam, constraints2);
+		panel2.add(jcbTeam);
 
 		labelAggType = new JLabel(hov.getLanguageString("ls.agg"));
 		constraints2.gridx = 0;
@@ -486,87 +524,90 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		constraints2.gridy = 4;
 		panel2.add(jcbAggType, constraints2);
 
-		m_jchHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"),
+		constraints2.insets = new Insets(15,0,0,0);
+
+		jcbHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"),
 				gup.statistikAlleHilfslinien);
-		add(m_jchHelpLines, 5, layout2, constraints2);
+		add(jcbHelpLines, 5, layout2, constraints2);
 
-		m_jchInscription = new JCheckBox(hov.getLanguageString("Beschriftung"),
-				gup.statistikAlleBeschriftung);
-		m_jchInscription.setOpaque(false);
-		add(m_jchInscription, 6, layout2, constraints2);
-
-		constraints2.insets = new Insets(20,0,0,0);  //top padding
-		constraints2.weightx = 0.0;
 
 		// LEADERSIP =============================================================================================
+		constraints2.insets = new Insets(25,0,0,0);
 		textLabel = bSum ? sumLeadership : avgLeadership;
 		jcbLeadership = new ImageCheckbox(textLabel, getColor(0), gup.statistikAlleFuehrung);
-		add(jcbLeadership, 7, layout2, constraints2);
+		add(jcbLeadership, 6, layout2, constraints2);
 
 		// EXPERIENCE =============================================================================================
 		constraints2.insets = new Insets(0,0,0,0);
 		textLabel = bSum ? sumXP : avgXP;
 		jcbXP = new ImageCheckbox(textLabel, getColor(1), gup.statistikAlleErfahrung);
-		add(jcbXP, 8, layout2, constraints2);
-
-		// TSI =============================================================================================
-		textLabel = bSum ? sumTSI : avgTSI;
-		jcbTSI = new ImageCheckbox(textLabel, getColor(2), gup.statistikAllTSI);
-		add(jcbTSI, 9, layout2, constraints2);
-
-		// WAGE ============================================================================================
-		textLabel = bSum ? sumWage : avgWage;
-		jcbWage = new ImageCheckbox(textLabel, getColor(3), gup.statistikAllWages);
-		add(jcbWage, 10, layout2, constraints2);
+		add(jcbXP, 7, layout2, constraints2);
 
 		// FORM ============================================================================================
-		jcbForm = new ImageCheckbox(avgForm, getColor(4), gup.statistikAlleForm);
-		add(jcbForm, 11, layout2, constraints2);
+		textLabel = bSum ? sumForm : avgForm;
+		jcbForm = new ImageCheckbox(textLabel, getColor(4), gup.statistikAlleForm);
+		add(jcbForm, 8, layout2, constraints2);
 
 		// STAMINA ============================================================================================
-		jcbStamina = new ImageCheckbox(avgStamina, getColor(5), gup.statistikAlleKondition);
-		add(jcbStamina, 12, layout2, constraints2);
+		textLabel = bSum ? sumStamina : avgStamina;
+		jcbStamina = new ImageCheckbox(textLabel, getColor(5), gup.statistikAlleKondition);
+		add(jcbStamina, 9, layout2, constraints2);
 
 		// LOYALTY ============================================================================================
-		jcbLoyalty = new ImageCheckbox(avgLoyalty, getColor(6), gup.statistikAllLoyalty);
-		add(jcbLoyalty, 13, layout2, constraints2);
+		textLabel = bSum ? sumLoyalty : avgLoyalty;
+		jcbLoyalty = new ImageCheckbox(textLabel, getColor(6), gup.statistikAllLoyalty);
+		add(jcbLoyalty, 10, layout2, constraints2);
 
 		// KEEPER ============================================================================================
-		constraints2.insets = new Insets(20,0,0,0);  //top padding
 		textLabel = bSum ? sumGK : avgGK;
 		jcbKeeper = new ImageCheckbox(textLabel, getColor(7), gup.statistikAlleTorwart);
-		add(jcbKeeper, 14, layout2, constraints2);
+		add(jcbKeeper, 11, layout2, constraints2);
 
 		// DEFENDING ============================================================================================
 		constraints2.insets = new Insets(0,0,0,0);
 		textLabel = bSum ? sumDE : avgDE;
 		jcbDefending = new ImageCheckbox(textLabel, getColor(8), gup.statistikAlleVerteidigung);
-		add(jcbDefending, 15, layout2, constraints2);
+		add(jcbDefending, 12, layout2, constraints2);
 
 		// PLAYMAKING ============================================================================================
 		textLabel = bSum ? sumPM : avgPM;
 		jcbPlaymaking = new ImageCheckbox(textLabel, getColor(9), gup.statistikAlleSpielaufbau);
-		add(jcbPlaymaking, 16, layout2, constraints2);
+		add(jcbPlaymaking, 13, layout2, constraints2);
 
 		// PASSING ============================================================================================
 		textLabel = bSum ? sumPS : avgPS;
 		jcbPassing = new ImageCheckbox(textLabel, getColor(10), gup.statistikAllePasspiel);
-		add(jcbPassing, 17, layout2, constraints2);
+		add(jcbPassing, 14, layout2, constraints2);
 
 		// WINGER ============================================================================================
 		textLabel = bSum ? sumWI : avgWI;
 		jcbWinger = new ImageCheckbox(textLabel, getColor(11), gup.statistikAlleFluegel);
-		add(jcbWinger, 18, layout2, constraints2);
+		add(jcbWinger, 15, layout2, constraints2);
 
 		// SCORING ============================================================================================
 		textLabel = bSum ? sumSC : avgSC;
 		jcbScoring = new ImageCheckbox(textLabel, getColor(12), gup.statistikAlleTorschuss);
-		add(jcbScoring, 19, layout2, constraints2);
+		add(jcbScoring, 16, layout2, constraints2);
 
 		// SETPIECES ============================================================================================
 		textLabel = bSum ? sumSP : avgSP;
 		jcbSetPieces = new ImageCheckbox(textLabel, getColor(13), gup.statistikAlleStandards);
-		add(jcbSetPieces, 20, layout2, constraints2);
+		add(jcbSetPieces, 17, layout2, constraints2);
+
+
+		// TSI =============================================================================================
+		textLabel = bSum ? sumTSI : avgTSI;
+		textLabel += " (" + hov.getLanguageString("ls.chart.second_axis") + ")";
+		constraints2.insets = new Insets(20,0,0,0);
+		jcbTSI = new ImageCheckbox(textLabel, getColor(2), gup.statistikAllTSI);
+		add(jcbTSI, 18, layout2, constraints2);
+
+		// WAGE ============================================================================================
+		constraints2.insets = new Insets(0,0,0,0);
+		textLabel = bSum ? sumWage : avgWage;
+		textLabel += " (" + hov.getLanguageString("ls.chart.second_axis") + ")";
+		jcbWage = new ImageCheckbox(textLabel, getColor(3), gup.statistikAllWages);
+		add(jcbWage, 19, layout2, constraints2);
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
@@ -582,8 +623,8 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		final JPanel panel = new ImagePanel();
 		panel.setLayout(new BorderLayout());
 
-		m_clStatistikPanel = new LinesChart(true, "y1", "y2");
-		panel.add(m_clStatistikPanel.getPanel());
+		mChart = new LinesChart(true, null, null, null, "#,##0");
+		panel.add(mChart.getPanel());
 
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.gridx = 1;
@@ -607,7 +648,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 	private void initStatistik() {
 		try {
-			int anzahlHRF = Integer.parseInt(m_jtfNumberOfHRF.getText());
+			int anzahlHRF = Integer.parseInt(jtfNumberOfHRF.getText());
 			if (anzahlHRF <= 0) {
 				anzahlHRF = 1;
 			}
@@ -618,7 +659,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 
 			double[][] statistikWerte = DBManager.instance().getDataForTeamStatisticsPanel(anzahlHRF,
-							m_jcbGruppe.getSelectedItem().toString());
+							jcbTeam.getSelectedItem().toString());
 			GraphDataModel[] models = new GraphDataModel[statistikWerte.length];
 
 			// There are 28 values - the first 14 are the sum and the next 14 are the averaged values
@@ -641,28 +682,37 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 				// TSI ========================================================================
 				models[12] = new GraphDataModel(statistikWerte[12], sumTSI, jcbTSI.isSelected() && bSum,
-						getColor(2), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt3,	19 / Helper.getMaxValue(statistikWerte[12]), 2);
+						getColor(2), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt3,	19 / Helper.getMaxValue(statistikWerte[12]), true);
 
 				models[26] = new GraphDataModel(statistikWerte[26], avgTSI, jcbTSI.isSelected() && !bSum,
-						        getColor(2), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format, 19 / Helper.getMaxValue(statistikWerte[26]), 2);
+						        getColor(2), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format, 19 / Helper.getMaxValue(statistikWerte[26]), true);
 
 				// WAGE ========================================================================
 				models[13] = new GraphDataModel(statistikWerte[13], sumWage,jcbWage.isSelected() && bSum,
-						getColor(3), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt3, 15 / Helper.getMaxValue(statistikWerte[13]), 2);
+						getColor(3), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt3, 15 / Helper.getMaxValue(statistikWerte[13]), true);
 
 				models[27] = new GraphDataModel(statistikWerte[27], avgWage, jcbWage.isSelected() && !bSum,
-						     getColor(3), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt2, 15 / Helper.getMaxValue(statistikWerte[27]), 2);
+						     getColor(3), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt2, 15 / Helper.getMaxValue(statistikWerte[27]), true);
 
 
-				// FORM (only avg statistics because sum statistics is meaningless in that case) =======================
+				// FORM  =============================================================================================
+				models[2] = new GraphDataModel(statistikWerte[2], sumForm, jcbForm.isSelected(),
+						getColor(4), format);
+
 				models[16] = new GraphDataModel(statistikWerte[16], avgForm, jcbForm.isSelected(),
 						          getColor(4), format);
 
-				// STAMINA (only avg statistics because sum statistics is meaningless in that case) ====================
+				// STAMINA =============================================================================================
+				models[3] = new GraphDataModel(statistikWerte[3], sumStamina, jcbStamina.isSelected(),
+						getColor(5), format);
+
 				models[17] = new GraphDataModel(statistikWerte[17], avgStamina, jcbStamina.isSelected(),
 										getColor(5), format);
 
-				// LOYALTY (only avg statistics because sum statistics is meaningless in that case) ====================
+				// LOYALTY =============================================================================================
+				models[11] = new GraphDataModel(statistikWerte[11], sumLoyalty, jcbLoyalty.isSelected(),
+						getColor(6), format);
+
 				models[25] = new GraphDataModel(statistikWerte[25], avgLoyalty, jcbLoyalty.isSelected(),
 						getColor(6), format);
 
@@ -720,9 +770,8 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 			}
 
-			m_clStatistikPanel.setAllValues(models, statistikWerte[28], format, HOVerwaltung.instance()
-					.getLanguageString("Wochen"), "", m_jchInscription.isSelected(), m_jchHelpLines
-					.isSelected());
+			mChart.setAllValues(models, statistikWerte[28], format, HOVerwaltung.instance()
+					.getLanguageString("Wochen"), "", false, jcbHelpLines.isSelected());
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);
 		}

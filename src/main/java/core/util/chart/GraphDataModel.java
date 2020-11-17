@@ -4,9 +4,7 @@ package core.util.chart;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.Marker;
 import org.knowm.xchart.style.markers.SeriesMarkers;
-
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,7 +51,7 @@ public class GraphDataModel {
 
     public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
                           java.text.NumberFormat format, int yAxisGroup) {
-        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, 1, yAxisGroup);
+        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, 1, false);
     }
 
     public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
@@ -63,16 +61,16 @@ public class GraphDataModel {
 
     public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
                           java.text.NumberFormat format, double factor) {
-        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, 1);
+        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, false);
     }
 
     public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
                           java.text.NumberFormat format, double factor,  int yAxisGroup) {
-        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, yAxisGroup);
+        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, false);
     }
 
     public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color, BasicStroke lineStyle,
-                          Marker markerStyle, java.text.NumberFormat format, double factor, int yAxisGroup) {
+                          Marker markerStyle, java.text.NumberFormat format, double factor, boolean second_Y_axis) {
         m_values = values;
         lValues = Arrays.stream(values).boxed().collect(Collectors.toList());
         m_sName = name;
@@ -82,7 +80,8 @@ public class GraphDataModel {
         m_dFactor = factor;
         m_LineStyle = lineStyle;
         m_MarkerStyle = markerStyle;
-        y_axisGroup = yAxisGroup;
+        if (second_Y_axis) y_axisGroup = 1;
+        else y_axisGroup = 0;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
