@@ -163,28 +163,24 @@ public class StatistikPanel extends JPanel {
 
 			// Initialization of the window
 			final Rectangle r = getBounds();
-			final int b = r.width - 1;
-			final int h = r.height - 1;
+			final int graph_width = r.width - 1;
+			final int graph_height = r.height - 1;
 
 			g.setColor(panelBackground);
-			g.fillRect(1, 1, b - 1, h - 1);
+			g.fillRect(1, 1, graph_width - 1, graph_height - 1);
 			g.setColor(panelForeground);
 
-			int schriftgroesse = core.model.UserParameter.instance().schriftGroesse + 2;
+			int fontSize = core.model.UserParameter.instance().schriftGroesse + 2;
 
-			if (print) {
-				schriftgroesse /= 2;
-			}
-
-			g.setFont(new Font("SansSerif", Font.BOLD, schriftgroesse));
+			g.setFont(new Font("SansSerif", Font.BOLD, fontSize));
 			g.drawString(yBezeichner, 8, 18);
-			g.drawString(xBezeichner, b - 150, h - 8);
+			g.drawString(xBezeichner, graph_width - 150, graph_height - 8);
 
 			// Highest value
 			double max = 20;
 			double min = 0;
-			double maxohneFaktor;
-			double minohneFaktor;
+			double max_without_factor;
+			double min_without_factor;
 
 			// Calculate MaxMin
 			if (m_bMaxMinBerechnen) {
@@ -215,11 +211,11 @@ public class StatistikPanel extends JPanel {
 				}
 			}
 
-			maxohneFaktor = maxFinder(false);
-			minohneFaktor = minFinder(false);
+			max_without_factor = maxFinder(false);
+			min_without_factor = minFinder(false);
 
 			// Determine height of the x-axis
-			final int xHoehe = (int) (((h - SU - SO) / 2) + SO + ((max + min) * (((h - SU - SO) / 2) / (max - min))));
+			final int xHoehe = (int) (((graph_height - SU - SO) / 2) + SO + ((max + min) * (((graph_height - SU - SO) / 2) / (max - min))));
 
 			// ### SL dependent on max ###
 			if ((m_clStatistikModel != null) && (m_clStatistikModel.length > 0)
@@ -228,28 +224,20 @@ public class StatistikPanel extends JPanel {
 				// Determine the amount of y-lines
 				int f = 1;
 
-				if (print) {
-					f = 2;
-				}
-
-				int yStriche = ((h - SU - SO) / (SA / f));
+				int yStriche = ((graph_height - SU - SO) / (SA / f));
 
 				if (yStriche == 0) {
 					yStriche = 1;
 				}
 
 				// Distance between the individual strokes
-				double yAbstand = (((double) (h - SU - SO)) / yStriche);
-				int smallschriftgroesse = core.model.UserParameter.instance().schriftGroesse;
+				double yAbstand = (((double) (graph_height - SU - SO)) / yStriche);
+				int smallFontSize = core.model.UserParameter.instance().schriftGroesse;
 
-				if (print) {
-					smallschriftgroesse /= 2;
-				}
-
-				g.setFont(new Font("SansSerif", Font.BOLD, smallschriftgroesse));
+				g.setFont(new Font("SansSerif", Font.BOLD, smallFontSize));
 
 				// Calculate side distance
-				SL = smallschriftgroesse
+				SL = smallFontSize
 						+ Math.max(
 								((g.getFontMetrics().stringWidth(m_clYAchseFormat.format(max)) + 10)),
 								((g.getFontMetrics().stringWidth(m_clYAchseFormat.format(min)) + 10)));
@@ -259,45 +247,40 @@ public class StatistikPanel extends JPanel {
 					// multiple of the line spacing
 					if (hilfslinien) {
 						g.setColor(panelForegroundHelpingLines);
-						g.drawLine(SL + 5, (int) (h - SU - (yAbstand * i)), b - SR,
-								(int) (h - SU - (yAbstand * i)));
+						g.drawLine(SL + 5, (int) (graph_height - SU - (yAbstand * i)), graph_width - SR,
+								(int) (graph_height - SU - (yAbstand * i)));
 					}
 
 					g.setColor(panelForeground);
-					g.drawLine(SL - 5, (int) (h - SU - (yAbstand * i)), SL + 5,
-							(int) (h - SU - (yAbstand * i)));
+					g.drawLine(SL - 5, (int) (graph_height - SU - (yAbstand * i)), SL + 5,
+							(int) (graph_height - SU - (yAbstand * i)));
 
 					// Value per line
-					final int ypos = (int) ((h - SU + (smallschriftgroesse / 2)) - (yAbstand * i));
+					final int ypos = (int) ((graph_height - SU + (smallFontSize / 2)) - (yAbstand * i));
 					g.drawString(m_clYAchseFormat.format((((max - min) / (yStriche) * i) + min)),
-							smallschriftgroesse, ypos);
+							smallFontSize, ypos);
 				}
 
-				g.drawLine(SL, SO, SL, h - SU);
-				g.drawLine(SL, xHoehe, b - SR, xHoehe);
+				g.drawLine(SL, SO, SL, graph_height - SU);
+				g.drawLine(SL, xHoehe, graph_width - SR, xHoehe);
 
-				int schriftbreite = 0;
+				int fontWidth = 0;
 
 				if (m_clStatistikModel[0].getWerte().length > 0) {
-					schriftbreite = Math
-							.max(((g.getFontMetrics().stringWidth(
-									m_clStatistikModel[0].getFormat().format(maxohneFaktor)) + 10)),
-									((g.getFontMetrics()
-											.stringWidth(
-													m_clStatistikModel[0].getFormat().format(
-															minohneFaktor)) + 10)));
+					fontWidth = Math.max((g.getFontMetrics().stringWidth(m_clStatistikModel[0].getFormat().format(max_without_factor)) + 10),
+									((g.getFontMetrics().stringWidth(m_clStatistikModel[0].getFormat().format(min_without_factor)) + 10)));
 				}
 
 				// Beschriftung XAchse
-				showXAchseBeschriftung((Graphics2D) g, b, h);
+				showXAchseBeschriftung((Graphics2D) g, graph_width, graph_height);
 
-				// Wertelinie eintragen
+				// Write label
 				for (int i = 0; (m_clStatistikModel != null) && (i < m_clStatistikModel.length); i++) {
 					if ((m_clStatistikModel[i] != null) && m_clStatistikModel[i].isShow()) {
-						wertLinien((Graphics2D) g, b, h, m_clStatistikModel[i].getWerte(),
+						drawLine((Graphics2D) g, graph_width, graph_height, m_clStatistikModel[i].getWerte(),
 								m_clStatistikModel[i].getFaktor(), max, min, beschriftung,
 								m_clStatistikModel[i].getColor(),
-								m_clStatistikModel[i].getFormat(), schriftbreite);
+								m_clStatistikModel[i].getFormat(), fontWidth);
 					}
 				}
 			}
@@ -356,7 +339,7 @@ public class StatistikPanel extends JPanel {
 		return (min);
 	}
 
-	// Zeichnen eines Liniendiagrammes
+	// Drawing a line chart
 	private void showXAchseBeschriftung(Graphics2D g, int b, int h) {
 		if (m_clYAchseBeschriftung.length > 0) {
 			final int schriftbreite = (int) ((g.getFontMetrics().stringWidth(
@@ -407,46 +390,46 @@ public class StatistikPanel extends JPanel {
 		}
 	}
 
-	// Zeichnen eines Liniendiagrammes
-	private void wertLinien(Graphics2D g, int b, int h, double[] werte, double faktor, double max,
-			double min, boolean beschriftung, Color farbe, java.text.NumberFormat format,
-			int schriftbreite) {
-		if (werte.length > 0) {
+	// Drawing a line chart
+	private void drawLine(Graphics2D g, int b, int h, double[] values, double faktor, double max,
+						  double min, boolean isLabeled, Color color, java.text.NumberFormat format,
+						  int fontWidth) {
+		if (values.length > 0) {
 			int x1;
 			int x2;
 			int y1;
 			int y2;
-			int mengeBeschriftung = ((b - SL - SR) / schriftbreite) - 1;
+			int lengthLabel = ((b - SL - SR) / fontWidth) - 1;
 
-			if (mengeBeschriftung == 0) {
-				mengeBeschriftung = 1;
+			if (lengthLabel == 0) {
+				lengthLabel = 1;
 			}
 
-			int abstandBeschriftung = (werte.length / mengeBeschriftung);
+			int abstandBeschriftung = (values.length / lengthLabel);
 
 			if (abstandBeschriftung == 0) {
 				abstandBeschriftung = 1;
 			}
 
-			y2 = (int) ((h - SU - ((h - SU - SO) / (max - min) * ((werte[werte.length - 1] * faktor) - min))));
+			y2 = (int) ((h - SU - ((h - SU - SO) / (max - min) * ((values[values.length - 1] * faktor) - min))));
 			x2 = SL;
 
-			for (int i = 1; i < werte.length; i++) {
+			for (int i = 1; i < values.length; i++) {
 				x1 = x2;
 				y1 = y2;
-				y2 = (int) ((h - SU - ((h - SU - SO) / (max - min) * ((werte[werte.length - i - 1] * faktor) - min))));
-				x2 = (int) ((((double) (b - SL - SR)) / (werte.length) * (i)) + SL);
-				g.setColor(farbe);
+				y2 = (int) ((h - SU - ((h - SU - SO) / (max - min) * ((values[values.length - i - 1] * faktor) - min))));
+				x2 = (int) ((((double) (b - SL - SR)) / (values.length) * (i)) + SL);
+				g.setColor(color);
 				g.drawLine(x1, y1, x2, y2);
 				g.drawLine(x1, y1 + 1, x2, y2 + 1);
-				if (beschriftung && ((i % abstandBeschriftung) == 0)) {
+				if (isLabeled && ((i % abstandBeschriftung) == 0)) {
 					g.setColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
 
 					final int xpos = x2
 							- (g.getFontMetrics().stringWidth(
-									format.format(werte[werte.length - i - 1])) / 2);
+									format.format(values[values.length - i - 1])) / 2);
 					final int ypos = y2 - (g.getFont().getSize() / 2);
-					g.drawString(format.format(werte[werte.length - i - 1]), xpos, ypos);
+					g.drawString(format.format(values[values.length - i - 1]), xpos, ypos);
 				}
 			}
 		}

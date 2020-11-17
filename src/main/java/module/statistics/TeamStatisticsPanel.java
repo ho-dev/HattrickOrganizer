@@ -610,18 +610,20 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 			}
 			UserParameter.instance().statistikAnzahlHRF = anzahlHRF;
 			NumberFormat format = Helper.DEFAULTDEZIMALFORMAT;
-			NumberFormat format2 = NumberFormat.getCurrencyInstance();
+			NumberFormat fmt2 = Helper.getNumberFormat(true, 0);
+			NumberFormat fmt3 = Helper.getNumberFormat(false, 0);
+
 
 			double[][] statistikWerte = DBManager.instance().getDataForTeamStatisticsPanel(anzahlHRF,
 							m_jcbGruppe.getSelectedItem().toString());
 			StatistikModel[] models = new StatistikModel[statistikWerte.length];
-			double[] data;
+
 			// There are 28 values - the first 14 are the sum and the next 14 are the averaged values
 			if (statistikWerte.length > 0) {
 
 				// LEADERSHIP ========================================================================
 				models[0] = new StatistikModel(statistikWerte[0], sumLeadership, jcbLeadership.isSelected() && bSum,
-						  getColor(0), format, 5 / Helper.getMaxValue(statistikWerte[0]));
+						  getColor(0), fmt3, 5 / Helper.getMaxValue(statistikWerte[0]));
 
 				models[14] = new StatistikModel(statistikWerte[14], avgLeadership, jcbLeadership.isSelected(),
 						       getColor(0), format);
@@ -629,24 +631,24 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 				// XP ========================================================================
 				models[1] = new StatistikModel(statistikWerte[1], sumXP, jcbXP.isSelected() && bSum, getColor(1),
-						        format, 7 / Helper.getMaxValue(statistikWerte[1]));
+						fmt3, 7 / Helper.getMaxValue(statistikWerte[1]));
 
 				models[15] = new StatistikModel(statistikWerte[15], avgXP, jcbXP.isSelected() && !bSum,
 						        getColor(1), format);
 
 				// TSI ========================================================================
 				models[12] = new StatistikModel(statistikWerte[12], sumTSI, jcbTSI.isSelected() && bSum,
-						getColor(2), format,	19 / Helper.getMaxValue(statistikWerte[12]));
+						getColor(2), fmt3,	19 / Helper.getMaxValue(statistikWerte[12]));
 
 				models[26] = new StatistikModel(statistikWerte[26], avgTSI, jcbTSI.isSelected() && !bSum,
 						        getColor(2), format, 19 / Helper.getMaxValue(statistikWerte[26]));
 
 				// WAGE ========================================================================
 				models[13] = new StatistikModel(statistikWerte[13], sumWage,jcbWage.isSelected() && bSum,
-						getColor(3), format2, 15 / Helper.getMaxValue(statistikWerte[13]));
+						getColor(3), fmt3, 15 / Helper.getMaxValue(statistikWerte[13]));
 
 				models[27] = new StatistikModel(statistikWerte[27], avgWage, jcbWage.isSelected() && !bSum,
-						     getColor(3), format2, 15 / Helper.getMaxValue(statistikWerte[27]));
+						     getColor(3), fmt2, 15 / Helper.getMaxValue(statistikWerte[27]));
 
 
 				// FORM (only avg statistics because sum statistics is meaningless in that case) =======================
@@ -672,44 +674,44 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 				double factor = 19.0/maxSKill;
 
 				models[4] = new StatistikModel(statistikWerte[4], sumGK, jcbKeeper.isSelected() && bSum,
-						getColor(7), format, factor);
+						getColor(7), fmt3, factor);
 
 				models[18] = new StatistikModel(statistikWerte[18], avgGK, jcbKeeper.isSelected() && !bSum,
 						getColor(7), format);
 
 				// DEFENDING ========================================================================
 				models[5] = new StatistikModel(statistikWerte[5], sumDE, jcbDefending.isSelected() && bSum,
-						getColor(8), format, factor);
+						getColor(8), fmt3, factor);
 				models[19] = new StatistikModel(statistikWerte[19], avgDE, jcbDefending.isSelected() && !bSum,
 						getColor(8), format);
 
 				// PLAYMAKING ========================================================================
 				models[6] = new StatistikModel(statistikWerte[6], sumPM, jcbPlaymaking.isSelected() && bSum,
-						getColor(9), format, factor);
+						getColor(9), fmt3, factor);
 				models[20] = new StatistikModel(statistikWerte[20], avgPM, jcbPlaymaking.isSelected() && !bSum,
 						getColor(9), format);
 
 				// PASSING ========================================================================
 				models[7] = new StatistikModel(statistikWerte[7], sumPS, jcbPassing.isSelected() && bSum,
-						getColor(10), format, factor);
+						getColor(10), fmt3, factor);
 				models[21] = new StatistikModel(statistikWerte[21], avgPS, jcbPassing.isSelected() && !bSum,
 						getColor(10), format);
 
 				// WINGER ========================================================================
 				models[8] = new StatistikModel(statistikWerte[8], sumWI, jcbWinger.isSelected() && bSum,
-						getColor(11), format, factor);
+						getColor(11), fmt3, factor);
 				models[22] = new StatistikModel(statistikWerte[22], avgWI, jcbWinger.isSelected() && !bSum,
 						getColor(11), format);
 
 				// SCORING ========================================================================
 				models[9] = new StatistikModel(statistikWerte[9], sumSC, jcbScoring.isSelected() && bSum,
-						getColor(12), format, factor);
+						getColor(12), fmt3, factor);
 				models[23] = new StatistikModel(statistikWerte[23], avgSC, jcbScoring.isSelected() && !bSum,
 						getColor(12), format);
 
 				// SETPIECES ========================================================================
 				models[10] = new StatistikModel(statistikWerte[10], sumSP, jcbSetPieces.isSelected() && bSum,
-						getColor(13), format, factor);
+						getColor(13), fmt3, factor);
 				models[24] = new StatistikModel(statistikWerte[24], avgSP, jcbSetPieces.isSelected() && !bSum,
 						getColor(13), format);
 

@@ -61,7 +61,7 @@ public class StatistikMainPanel extends LazyImagePanel {
 		finanzStatistikPanel = new FinanzStatistikPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Finanzen"),
 				finanzStatistikPanel);
-		
+
 		// Arenastatistik
 		arenaStatistikPanel = new ArenaStatistikPanel();
 		tabbedPane

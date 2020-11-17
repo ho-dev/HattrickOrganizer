@@ -124,13 +124,13 @@ public class DarculaDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.PALETTE15[4], Color.decode("#ccad34"));
             ThemeManager.instance().put(HOColorName.PALETTE15[5], Color.decode("#f23387"));
             ThemeManager.instance().put(HOColorName.PALETTE15[6], Color.decode("#56ebd3"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[7], Color.decode("#18519b"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[7], Color.decode("#ffffff"));
             ThemeManager.instance().put(HOColorName.PALETTE15[8], Color.decode("#a1def0"));
             ThemeManager.instance().put(HOColorName.PALETTE15[9], Color.decode("#bb190a"));
             ThemeManager.instance().put(HOColorName.PALETTE15[10], Color.decode("#199bce"));
             ThemeManager.instance().put(HOColorName.PALETTE15[11], Color.decode("#f2f27a"));
             ThemeManager.instance().put(HOColorName.PALETTE15[12], Color.decode("#ffd9e3"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[13], Color.decode("#495552"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[13], Color.decode("#eb9e34"));
             ThemeManager.instance().put(HOColorName.PALETTE15[14], Color.decode("#fc8f3b"));
 
             return super.enableTheme();
