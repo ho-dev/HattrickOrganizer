@@ -7,7 +7,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.SpielerCBItem;
 import core.gui.model.PlayerCBItemRenderer;
-import core.gui.model.StatistikModel;
+import core.util.chart.GraphDataModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -104,10 +104,10 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 
 		ActionListener cbActionListener = e -> {
 			if (e.getSource() == jcbHelpLines) {
-				oStatisticsPanel.setHilfslinien(jcbHelpLines.isSelected());
+				oStatisticsPanel.setHelpLines(jcbHelpLines.isSelected());
 				UserParameter.instance().statistikHilfslinien = jcbHelpLines.isSelected();
 			} else if (e.getSource() == jcbDataLabels) {
-				oStatisticsPanel.setBeschriftung(jcbDataLabels.isSelected());
+				oStatisticsPanel.setLabelling(jcbDataLabels.isSelected());
 				UserParameter.instance().statistikBeschriftung = jcbDataLabels.isSelected();
 			} else if (e.getSource() == jcbLeadership.getCheckbox()) {
 				oStatisticsPanel.setShow("ls.player.leadership", jcbLeadership.isSelected());
@@ -500,56 +500,56 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 				final double[][] statistikWerte = DBManager.instance().getSpielerDaten4Statistik(
 						((SpielerCBItem) jcbPlayer.getSelectedItem()).getPlayer()
 								.getSpielerID(), anzahlHRF);
-				final StatistikModel[] models = new StatistikModel[statistikWerte.length];
+				final GraphDataModel[] models = new GraphDataModel[statistikWerte.length];
 
 				if (statistikWerte.length > 0) {
 					double maxTSI = Helper.getMaxValue(statistikWerte[0]);
 					double maxWage = Helper.getMaxValue(statistikWerte[1]);
 
-					models[0] = new StatistikModel(statistikWerte[0], "Marktwert",
+					models[0] = new GraphDataModel(statistikWerte[0], "Marktwert",
 							jcbTSI.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[3]), format3, 19/maxTSI);
 
-					models[1] = new StatistikModel(statistikWerte[1], "ls.player.wage",
+					models[1] = new GraphDataModel(statistikWerte[1], "ls.player.wage",
 							jcbSalary.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[4]),
 							format2, 16/maxWage);
 
-					models[2] = new StatistikModel(statistikWerte[2], "ls.player.leadership",
+					models[2] = new GraphDataModel(statistikWerte[2], "ls.player.leadership",
 							jcbLeadership.isSelected(),
 							ThemeManager.getColor(HOColorName.PALETTE15[1]), format);
-					models[3] = new StatistikModel(statistikWerte[3], "ls.player.experience",
+					models[3] = new GraphDataModel(statistikWerte[3], "ls.player.experience",
 							jcbExperience.isSelected(),
 							ThemeManager.getColor(HOColorName.PALETTE15[1]), format);
-					models[4] = new StatistikModel(statistikWerte[4], "ls.player.form",
+					models[4] = new GraphDataModel(statistikWerte[4], "ls.player.form",
 							jcbForm.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[5]),
 							format);
-					models[5] = new StatistikModel(statistikWerte[5], "ls.player.skill.stamina",
+					models[5] = new GraphDataModel(statistikWerte[5], "ls.player.skill.stamina",
 							jcbStamina.isSelected(),
 							ThemeManager.getColor(HOColorName.PALETTE15[6]), format);
-					models[6] = new StatistikModel(statistikWerte[6], "ls.player.skill.keeper",
+					models[6] = new GraphDataModel(statistikWerte[6], "ls.player.skill.keeper",
 							jcbKeeper.isSelected(),
 							ThemeManager.getColor(HOColorName.PALETTE15[8]), format);
-					models[7] = new StatistikModel(statistikWerte[7], "ls.player.skill.defending",
+					models[7] = new GraphDataModel(statistikWerte[7], "ls.player.skill.defending",
 							jcbDefending.isSelected(),
 							ThemeManager.getColor(HOColorName.PALETTE15[9]), format);
-					models[8] = new StatistikModel(statistikWerte[8], "ls.player.skill.playmaking",
+					models[8] = new GraphDataModel(statistikWerte[8], "ls.player.skill.playmaking",
 							jcbPlaymaking.isSelected(),
 							ThemeManager.getColor(HOColorName.PALETTE15[10]), format);
-					models[9] = new StatistikModel(statistikWerte[9], "ls.player.skill.passing",
+					models[9] = new GraphDataModel(statistikWerte[9], "ls.player.skill.passing",
 							jcbPass.isSelected(),
 							ThemeManager.getColor(HOColorName.PALETTE15[11]), format);
-					models[10] = new StatistikModel(statistikWerte[10], "ls.player.skill.winger",
+					models[10] = new GraphDataModel(statistikWerte[10], "ls.player.skill.winger",
 							jcbWing.isSelected(),
 							ThemeManager.getColor(HOColorName.PALETTE15[12]), format);
-					models[11] = new StatistikModel(statistikWerte[11], "ls.player.skill.scoring",
+					models[11] = new GraphDataModel(statistikWerte[11], "ls.player.skill.scoring",
 							jcbScoring.isSelected(),
 							ThemeManager.getColor(HOColorName.PALETTE15[13]), format);
-					models[12] = new StatistikModel(statistikWerte[12],
+					models[12] = new GraphDataModel(statistikWerte[12],
 							"ls.player.skill.setpieces", jcbSetPieces.isSelected(),
 							ThemeManager.getColor(HOColorName.PALETTE15[14]), format);
-					models[13] = new StatistikModel(statistikWerte[13], "Rating",
+					models[13] = new GraphDataModel(statistikWerte[13], "Rating",
 							jcbRating.isSelected(),
 							ThemeManager.getColor(HOColorName.PALETTE15[0]), format);
-					models[14] = new StatistikModel(statistikWerte[14], "ls.player.loyalty",
+					models[14] = new GraphDataModel(statistikWerte[14], "ls.player.loyalty",
 							jcbLoyalty.isSelected(),
 							ThemeManager.getColor(HOColorName.PALETTE15[7]), format);
 				}

@@ -206,7 +206,7 @@ public final class UserParameter extends Configuration {
     public float WetterEffektBonus = 0.2f;
 
     //Sonstiges
-    //Faktor, durch den Geld geteilt werden muß für die Währung (Gleiche Währungsfaktoren zusammenfassen)
+    //currency factor
     public float faktorGeld = 1f;
     //Faktor für Zeilenbreite in den Tabellen, Wird nicht gespeichert, sondern berechnet
     public float zellenbreitenFaktor = 1.0f;

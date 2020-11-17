@@ -6,7 +6,7 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.gui.model.StatistikModel;
+import core.util.chart.GraphDataModel;
 import core.gui.theme.GroupTeamFactory;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
@@ -14,6 +14,9 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.HOLogger;
 import core.util.Helper;
+import core.util.chart.LinesChart;
+import org.knowm.xchart.style.lines.SeriesLines;
+import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -48,7 +51,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 	private JComboBox jcbAggType;
 	private JComboBox m_jcbGruppe;
 	private JTextField m_jtfNumberOfHRF;
-	private StatistikPanel m_clStatistikPanel;
+	private LinesChart m_clStatistikPanel;
 	private JPanel panel2;
 	private boolean bSum = true;
 
@@ -223,10 +226,10 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 			if (e.getSource() == jbApply) {
 				initStatistik();
 			} else if (e.getSource() == m_jchHelpLines) {
-				m_clStatistikPanel.setHilfslinien(m_jchHelpLines.isSelected());
+				m_clStatistikPanel.setHelpLines(m_jchHelpLines.isSelected());
 				gup.statistikAlleHilfslinien = m_jchHelpLines.isSelected();
 			} else if (e.getSource() == m_jchInscription) {
-				m_clStatistikPanel.setBeschriftung(m_jchInscription.isSelected());
+				m_clStatistikPanel.setLabelling(m_jchInscription.isSelected());
 				gup.statistikAlleBeschriftung = m_jchInscription.isSelected();
 			}
 			// Leadership =========================================================
@@ -579,8 +582,8 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		final JPanel panel = new ImagePanel();
 		panel.setLayout(new BorderLayout());
 
-		m_clStatistikPanel = new StatistikPanel(false);
-		panel.add(m_clStatistikPanel);
+		m_clStatistikPanel = new LinesChart(true, "y1", "y2");
+		panel.add(m_clStatistikPanel.getPanel());
 
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.gridx = 1;
@@ -616,51 +619,51 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 			double[][] statistikWerte = DBManager.instance().getDataForTeamStatisticsPanel(anzahlHRF,
 							m_jcbGruppe.getSelectedItem().toString());
-			StatistikModel[] models = new StatistikModel[statistikWerte.length];
+			GraphDataModel[] models = new GraphDataModel[statistikWerte.length];
 
 			// There are 28 values - the first 14 are the sum and the next 14 are the averaged values
 			if (statistikWerte.length > 0) {
 
 				// LEADERSHIP ========================================================================
-				models[0] = new StatistikModel(statistikWerte[0], sumLeadership, jcbLeadership.isSelected() && bSum,
+				models[0] = new GraphDataModel(statistikWerte[0], sumLeadership, jcbLeadership.isSelected() && bSum,
 						  getColor(0), fmt3, 5 / Helper.getMaxValue(statistikWerte[0]));
 
-				models[14] = new StatistikModel(statistikWerte[14], avgLeadership, jcbLeadership.isSelected(),
+				models[14] = new GraphDataModel(statistikWerte[14], avgLeadership, jcbLeadership.isSelected(),
 						       getColor(0), format);
 
 
 				// XP ========================================================================
-				models[1] = new StatistikModel(statistikWerte[1], sumXP, jcbXP.isSelected() && bSum, getColor(1),
+				models[1] = new GraphDataModel(statistikWerte[1], sumXP, jcbXP.isSelected() && bSum, getColor(1),
 						fmt3, 7 / Helper.getMaxValue(statistikWerte[1]));
 
-				models[15] = new StatistikModel(statistikWerte[15], avgXP, jcbXP.isSelected() && !bSum,
+				models[15] = new GraphDataModel(statistikWerte[15], avgXP, jcbXP.isSelected() && !bSum,
 						        getColor(1), format);
 
 				// TSI ========================================================================
-				models[12] = new StatistikModel(statistikWerte[12], sumTSI, jcbTSI.isSelected() && bSum,
-						getColor(2), fmt3,	19 / Helper.getMaxValue(statistikWerte[12]));
+				models[12] = new GraphDataModel(statistikWerte[12], sumTSI, jcbTSI.isSelected() && bSum,
+						getColor(2), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt3,	19 / Helper.getMaxValue(statistikWerte[12]), 2);
 
-				models[26] = new StatistikModel(statistikWerte[26], avgTSI, jcbTSI.isSelected() && !bSum,
-						        getColor(2), format, 19 / Helper.getMaxValue(statistikWerte[26]));
+				models[26] = new GraphDataModel(statistikWerte[26], avgTSI, jcbTSI.isSelected() && !bSum,
+						        getColor(2), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format, 19 / Helper.getMaxValue(statistikWerte[26]), 2);
 
 				// WAGE ========================================================================
-				models[13] = new StatistikModel(statistikWerte[13], sumWage,jcbWage.isSelected() && bSum,
-						getColor(3), fmt3, 15 / Helper.getMaxValue(statistikWerte[13]));
+				models[13] = new GraphDataModel(statistikWerte[13], sumWage,jcbWage.isSelected() && bSum,
+						getColor(3), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt3, 15 / Helper.getMaxValue(statistikWerte[13]), 2);
 
-				models[27] = new StatistikModel(statistikWerte[27], avgWage, jcbWage.isSelected() && !bSum,
-						     getColor(3), fmt2, 15 / Helper.getMaxValue(statistikWerte[27]));
+				models[27] = new GraphDataModel(statistikWerte[27], avgWage, jcbWage.isSelected() && !bSum,
+						     getColor(3), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt2, 15 / Helper.getMaxValue(statistikWerte[27]), 2);
 
 
 				// FORM (only avg statistics because sum statistics is meaningless in that case) =======================
-				models[16] = new StatistikModel(statistikWerte[16], avgForm, jcbForm.isSelected(),
+				models[16] = new GraphDataModel(statistikWerte[16], avgForm, jcbForm.isSelected(),
 						          getColor(4), format);
 
 				// STAMINA (only avg statistics because sum statistics is meaningless in that case) ====================
-				models[17] = new StatistikModel(statistikWerte[17], avgStamina, jcbStamina.isSelected(),
+				models[17] = new GraphDataModel(statistikWerte[17], avgStamina, jcbStamina.isSelected(),
 										getColor(5), format);
 
 				// LOYALTY (only avg statistics because sum statistics is meaningless in that case) ====================
-				models[25] = new StatistikModel(statistikWerte[25], avgLoyalty, jcbLoyalty.isSelected(),
+				models[25] = new GraphDataModel(statistikWerte[25], avgLoyalty, jcbLoyalty.isSelected(),
 						getColor(6), format);
 
 				// KEEPER ========================================================================
@@ -673,53 +676,51 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 				maxSKill = Math.max(maxSKill, Helper.getMaxValue(statistikWerte[10]));
 				double factor = 19.0/maxSKill;
 
-				models[4] = new StatistikModel(statistikWerte[4], sumGK, jcbKeeper.isSelected() && bSum,
+				models[4] = new GraphDataModel(statistikWerte[4], sumGK, jcbKeeper.isSelected() && bSum,
 						getColor(7), fmt3, factor);
 
-				models[18] = new StatistikModel(statistikWerte[18], avgGK, jcbKeeper.isSelected() && !bSum,
+				models[18] = new GraphDataModel(statistikWerte[18], avgGK, jcbKeeper.isSelected() && !bSum,
 						getColor(7), format);
 
 				// DEFENDING ========================================================================
-				models[5] = new StatistikModel(statistikWerte[5], sumDE, jcbDefending.isSelected() && bSum,
+				models[5] = new GraphDataModel(statistikWerte[5], sumDE, jcbDefending.isSelected() && bSum,
 						getColor(8), fmt3, factor);
-				models[19] = new StatistikModel(statistikWerte[19], avgDE, jcbDefending.isSelected() && !bSum,
+				models[19] = new GraphDataModel(statistikWerte[19], avgDE, jcbDefending.isSelected() && !bSum,
 						getColor(8), format);
 
 				// PLAYMAKING ========================================================================
-				models[6] = new StatistikModel(statistikWerte[6], sumPM, jcbPlaymaking.isSelected() && bSum,
+				models[6] = new GraphDataModel(statistikWerte[6], sumPM, jcbPlaymaking.isSelected() && bSum,
 						getColor(9), fmt3, factor);
-				models[20] = new StatistikModel(statistikWerte[20], avgPM, jcbPlaymaking.isSelected() && !bSum,
+				models[20] = new GraphDataModel(statistikWerte[20], avgPM, jcbPlaymaking.isSelected() && !bSum,
 						getColor(9), format);
 
 				// PASSING ========================================================================
-				models[7] = new StatistikModel(statistikWerte[7], sumPS, jcbPassing.isSelected() && bSum,
+				models[7] = new GraphDataModel(statistikWerte[7], sumPS, jcbPassing.isSelected() && bSum,
 						getColor(10), fmt3, factor);
-				models[21] = new StatistikModel(statistikWerte[21], avgPS, jcbPassing.isSelected() && !bSum,
+				models[21] = new GraphDataModel(statistikWerte[21], avgPS, jcbPassing.isSelected() && !bSum,
 						getColor(10), format);
 
 				// WINGER ========================================================================
-				models[8] = new StatistikModel(statistikWerte[8], sumWI, jcbWinger.isSelected() && bSum,
+				models[8] = new GraphDataModel(statistikWerte[8], sumWI, jcbWinger.isSelected() && bSum,
 						getColor(11), fmt3, factor);
-				models[22] = new StatistikModel(statistikWerte[22], avgWI, jcbWinger.isSelected() && !bSum,
+				models[22] = new GraphDataModel(statistikWerte[22], avgWI, jcbWinger.isSelected() && !bSum,
 						getColor(11), format);
 
 				// SCORING ========================================================================
-				models[9] = new StatistikModel(statistikWerte[9], sumSC, jcbScoring.isSelected() && bSum,
+				models[9] = new GraphDataModel(statistikWerte[9], sumSC, jcbScoring.isSelected() && bSum,
 						getColor(12), fmt3, factor);
-				models[23] = new StatistikModel(statistikWerte[23], avgSC, jcbScoring.isSelected() && !bSum,
+				models[23] = new GraphDataModel(statistikWerte[23], avgSC, jcbScoring.isSelected() && !bSum,
 						getColor(12), format);
 
 				// SETPIECES ========================================================================
-				models[10] = new StatistikModel(statistikWerte[10], sumSP, jcbSetPieces.isSelected() && bSum,
+				models[10] = new GraphDataModel(statistikWerte[10], sumSP, jcbSetPieces.isSelected() && bSum,
 						getColor(13), fmt3, factor);
-				models[24] = new StatistikModel(statistikWerte[24], avgSP, jcbSetPieces.isSelected() && !bSum,
+				models[24] = new GraphDataModel(statistikWerte[24], avgSP, jcbSetPieces.isSelected() && !bSum,
 						getColor(13), format);
 
 			}
 
-			String[] yBezeichnungen = Helper.convertTimeMillisToFormatString(statistikWerte[28]);
-
-			m_clStatistikPanel.setAllValues(models, yBezeichnungen, format, HOVerwaltung.instance()
+			m_clStatistikPanel.setAllValues(models, statistikWerte[28], format, HOVerwaltung.instance()
 					.getLanguageString("Wochen"), "", m_jchInscription.isSelected(), m_jchHelpLines
 					.isSelected());
 		} catch (Exception e) {

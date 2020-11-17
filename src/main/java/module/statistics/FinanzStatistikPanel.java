@@ -5,10 +5,8 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.gui.model.StatistikModel;
+import core.util.chart.GraphDataModel;
 import core.gui.theme.HOColorName;
-import core.gui.theme.HOIconName;
-import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -16,7 +14,6 @@ import core.util.HOLogger;
 import core.util.Helper;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -80,11 +77,11 @@ public class FinanzStatistikPanel extends LazyImagePanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == m_jchHilflinien) {
-					m_clStatistikPanel.setHilfslinien(m_jchHilflinien.isSelected());
+					m_clStatistikPanel.setHelpLines(m_jchHilflinien.isSelected());
 					UserParameter.instance().statistikFinanzenHilfslinien = m_jchHilflinien
 							.isSelected();
 				} else if (e.getSource() == m_jchBeschriftung) {
-					m_clStatistikPanel.setBeschriftung(m_jchBeschriftung.isSelected());
+					m_clStatistikPanel.setLabelling(m_jchBeschriftung.isSelected());
 					UserParameter.instance().statistikFinanzenBeschriftung = m_jchBeschriftung
 							.isSelected();
 				} else if (e.getSource() == m_jchKontostand.getCheckbox()) {
@@ -436,52 +433,52 @@ public class FinanzStatistikPanel extends LazyImagePanel {
 			NumberFormat format2 = NumberFormat.getInstance();
 
 			double[][] statistikWerte = DBManager.instance().getFinanzen4Statistik(anzahlHRF);
-			StatistikModel[] models = null;
-			models = new StatistikModel[15];
+			GraphDataModel[] models = null;
+			models = new GraphDataModel[15];
 
 			if (statistikWerte.length > 0) {
-				models[0] = new StatistikModel(statistikWerte[0], "Kontostand",
+				models[0] = new GraphDataModel(statistikWerte[0], "Kontostand",
 						m_jchKontostand.isSelected(), ThemeManager.getColor(HOColorName.STAT_CASH),
 						format);
-				models[1] = new StatistikModel(statistikWerte[1], "GewinnVerlust",
+				models[1] = new GraphDataModel(statistikWerte[1], "GewinnVerlust",
 						m_jchGewinnVerlust.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_WINLOST), format);
-				models[2] = new StatistikModel(statistikWerte[2], "Gesamteinnahmen",
+				models[2] = new GraphDataModel(statistikWerte[2], "Gesamteinnahmen",
 						m_jchGesamteinnahmen.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_INCOMESUM), format);
-				models[3] = new StatistikModel(statistikWerte[3], "Gesamtausgaben",
+				models[3] = new GraphDataModel(statistikWerte[3], "Gesamtausgaben",
 						m_jchGesamtausgaben.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_COSTSUM), format);
-				models[4] = new StatistikModel(statistikWerte[4], "Zuschauer",
+				models[4] = new GraphDataModel(statistikWerte[4], "Zuschauer",
 						m_jchZuschauer.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_INCOMESPECTATORS), format);
-				models[5] = new StatistikModel(statistikWerte[5], "Sponsoren",
+				models[5] = new GraphDataModel(statistikWerte[5], "Sponsoren",
 						m_jchSponsoren.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_INCOMESPONSORS), format);
-				models[6] = new StatistikModel(statistikWerte[7], "SonstigeEinnahmen",
+				models[6] = new GraphDataModel(statistikWerte[7], "SonstigeEinnahmen",
 						m_jchSonstigeEinnahmen.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_INCOMETEMPORARY), format);
-				models[7] = new StatistikModel(statistikWerte[8], "Stadion",
+				models[7] = new GraphDataModel(statistikWerte[8], "Stadion",
 						m_jchStadion.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_COSTARENA), format);
-				models[8] = new StatistikModel(statistikWerte[9], "Spielergehaelter",
+				models[8] = new GraphDataModel(statistikWerte[9], "Spielergehaelter",
 						m_jchSpielergehaelter.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_COSTSPLAYERS), format);
-				models[9] = new StatistikModel(statistikWerte[11], "SonstigeAusgaben",
+				models[9] = new GraphDataModel(statistikWerte[11], "SonstigeAusgaben",
 						m_jchSonstigeAusgaben.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_COSTTEMPORARY), format);
-				models[10] = new StatistikModel(statistikWerte[12], "Trainerstab",
+				models[10] = new GraphDataModel(statistikWerte[12], "Trainerstab",
 						m_jchTrainerstab.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_COSTSTAFF), format);
-				models[11] = new StatistikModel(statistikWerte[13], "Jugend",
+				models[11] = new GraphDataModel(statistikWerte[13], "Jugend",
 						m_jchJugend.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_COSTSYOUTH), format);
-				models[12] = new StatistikModel(statistikWerte[14], "Fans", m_jchFans.isSelected(),
+				models[12] = new GraphDataModel(statistikWerte[14], "Fans", m_jchFans.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_FANS), format2, 100);
-				models[13] = new StatistikModel(statistikWerte[15], "Marktwert",
+				models[13] = new GraphDataModel(statistikWerte[15], "Marktwert",
 						m_jchMarktwert.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_MARKETVALUE), format2, 10);
-				models[14] = new StatistikModel(statistikWerte[10], "Zinsaufwendungen",
+				models[14] = new GraphDataModel(statistikWerte[10], "Zinsaufwendungen",
 						m_jchZinsaufwendungen.isSelected(),
 						ThemeManager.getColor(HOColorName.STAT_COSTFINANCIAL), format);
 			}

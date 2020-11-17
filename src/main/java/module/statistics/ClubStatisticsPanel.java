@@ -4,7 +4,7 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.gui.model.StatistikModel;
+import core.util.chart.GraphDataModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -68,10 +68,10 @@ public class ClubStatisticsPanel extends LazyImagePanel {
     private void addListeners() {
         ActionListener checkBoxActionListener = e -> {
             if (e.getSource() == jcbHelpLines) {
-                oStatisticsPanel.setHilfslinien(jcbHelpLines.isSelected());
+                oStatisticsPanel.setHelpLines(jcbHelpLines.isSelected());
                 UserParameter.instance().statistikFinanzenHilfslinien = jcbHelpLines.isSelected();
             } else if (e.getSource() == jcbDataLabels) {
-                oStatisticsPanel.setBeschriftung(jcbDataLabels.isSelected());
+                oStatisticsPanel.setLabelling(jcbDataLabels.isSelected());
                 UserParameter.instance().statistikFinanzenBeschriftung = jcbDataLabels.isSelected();
             } else if (e.getSource() == jcbAssistantTrainerLevels.getCheckbox()) {
                 oStatisticsPanel.setShow("AssistantTrainerLevels", jcbAssistantTrainerLevels.isSelected());
@@ -354,17 +354,17 @@ public class ClubStatisticsPanel extends LazyImagePanel {
             NumberFormat format = NumberFormat.getInstance();
 
             double[][] statistikWerte = DBManager.instance().getFinanzen4Statistik(anzahlHRF); //TODO: create getClub4Statistik()
-            StatistikModel[] models;
-            models = new StatistikModel[3];
+            GraphDataModel[] models;
+            models = new GraphDataModel[3];
 
             if (statistikWerte.length > 0) {
-                models[0] = new StatistikModel(statistikWerte[0], "AssistantTrainerLevels",
+                models[0] = new GraphDataModel(statistikWerte[0], "AssistantTrainerLevels",
                         jcbAssistantTrainerLevels.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[0]),
                         format);
-                models[1] = new StatistikModel(statistikWerte[1], "FinancialDirectorLevels",
+                models[1] = new GraphDataModel(statistikWerte[1], "FinancialDirectorLevels",
                         jcbFinancialDirectorLevels.isSelected(),
                         ThemeManager.getColor(HOColorName.PALETTE15[1]), format);
-                models[2] = new StatistikModel(statistikWerte[2], "FormCoachLevels",
+                models[2] = new GraphDataModel(statistikWerte[2], "FormCoachLevels",
                         jcbFormCoachLevels.isSelected(),
                         ThemeManager.getColor(HOColorName.PALETTE15[2]), format);
 //                models[3] = new StatistikModel(statistikWerte[3], "Gesamtausgaben",

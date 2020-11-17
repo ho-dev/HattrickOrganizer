@@ -1,6 +1,6 @@
 package module.statistics;
 
-import core.gui.model.StatistikModel;
+import core.util.chart.GraphDataModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import java.awt.Color;
@@ -28,7 +28,7 @@ public class StatistikPanel extends JPanel {
 	private NumberFormat m_clYAchseFormat;
 	private String xBezeichner = "";
 	private String yBezeichner = "";
-	private StatistikModel[] m_clStatistikModel;
+	private GraphDataModel[] m_clGraphDataModel;
 	private String[] m_clYAchseBeschriftung;
 	private boolean beschriftung;
 	private boolean hilfslinien = true;
@@ -61,10 +61,10 @@ public class StatistikPanel extends JPanel {
 	 * @param hilfslinien
 	 *            Farbe des Graphen
 	 */
-	public final void setAllValues(StatistikModel[] models, String[] yAchseBeschriftung,
-			NumberFormat yAchseFormat, String xBezeichner, String yBezeichner,
-			boolean beschriftung, boolean hilfslinien) {
-		this.m_clStatistikModel = models;
+	public final void setAllValues(GraphDataModel[] models, String[] yAchseBeschriftung,
+								   NumberFormat yAchseFormat, String xBezeichner, String yBezeichner,
+								   boolean beschriftung, boolean hilfslinien) {
+		this.m_clGraphDataModel = models;
 		this.m_clYAchseBeschriftung = yAchseBeschriftung;
 		this.xBezeichner = xBezeichner;
 		this.yBezeichner = yBezeichner;
@@ -75,34 +75,28 @@ public class StatistikPanel extends JPanel {
 	}
 
 	/**
-	 * Ein- oder Ausschalten der Beschriftung des Graphen
-	 * 
-	 * @param beschriftung
-	 *            true: an / false: aus
+	 * Switching the graph labelling on or off
 	 */
-	public final void setBeschriftung(boolean beschriftung) {
+	public final void setLabelling(boolean beschriftung) {
 		this.beschriftung = beschriftung;
 		repaint();
 	}
 
 	/**
-	 * Ein- und Ausschalten der Hilfslinien
-	 * 
-	 * @param hilfslinien
-	 *            true: an / false: aus
+	 * Switching the guide lines on and off
 	 */
-	public final void setHilfslinien(boolean hilfslinien) {
+	public final void setHelpLines(boolean hilfslinien) {
 		this.hilfslinien = hilfslinien;
 		repaint();
 	}
 
-	public final void setModel(StatistikModel[] models) {
-		m_clStatistikModel = models;
+	public final void setModel(GraphDataModel[] models) {
+		m_clGraphDataModel = models;
 		repaint();
 	}
 
-	public final StatistikModel[] getModel() {
-		return m_clStatistikModel;
+	public final GraphDataModel[] getModel() {
+		return m_clGraphDataModel;
 	}
 
     /**
@@ -117,10 +111,10 @@ public class StatistikPanel extends JPanel {
 	/**
 	 * Ein bestimmtes Model holen
 	 */
-	public final StatistikModel getModel(String name) {
-		for (int i = 0; (m_clStatistikModel != null) && (m_clStatistikModel.length > i); i++) {
-			if (m_clStatistikModel[i].getName().equals(name)) {
-				return m_clStatistikModel[i];
+	public final GraphDataModel getModel(String name) {
+		for (int i = 0; (m_clGraphDataModel != null) && (m_clGraphDataModel.length > i); i++) {
+			if (m_clGraphDataModel[i].getName().equals(name)) {
+				return m_clGraphDataModel[i];
 			}
 		}
 
@@ -131,10 +125,10 @@ public class StatistikPanel extends JPanel {
 	 * Einen bestimmten Graf sichtbar/unsichtbar machen
 	 */
 	public final void setShow(String name, boolean show) {
-		if (m_clStatistikModel != null){
-			for (int i = 0; i <= m_clStatistikModel.length; i++) {
-				if ((m_clStatistikModel[i] != null) && (m_clStatistikModel[i].getName().equals(name))) {
-					m_clStatistikModel[i].setShow(show);
+		if (m_clGraphDataModel != null){
+			for (int i = 0; i <= m_clGraphDataModel.length; i++) {
+				if ((m_clGraphDataModel[i] != null) && (m_clGraphDataModel[i].getName().equals(name))) {
+					m_clGraphDataModel[i].setShow(show);
 					break;
 				}
 			}
@@ -218,8 +212,8 @@ public class StatistikPanel extends JPanel {
 			final int xHoehe = (int) (((graph_height - SU - SO) / 2) + SO + ((max + min) * (((graph_height - SU - SO) / 2) / (max - min))));
 
 			// ### SL dependent on max ###
-			if ((m_clStatistikModel != null) && (m_clStatistikModel.length > 0)
-					&& (m_clStatistikModel[0] != null)) {
+			if ((m_clGraphDataModel != null) && (m_clGraphDataModel.length > 0)
+					&& (m_clGraphDataModel[0] != null)) {
 				// Draw in dimensions
 				// Determine the amount of y-lines
 				int f = 1;
@@ -266,21 +260,21 @@ public class StatistikPanel extends JPanel {
 
 				int fontWidth = 0;
 
-				if (m_clStatistikModel[0].getWerte().length > 0) {
-					fontWidth = Math.max((g.getFontMetrics().stringWidth(m_clStatistikModel[0].getFormat().format(max_without_factor)) + 10),
-									((g.getFontMetrics().stringWidth(m_clStatistikModel[0].getFormat().format(min_without_factor)) + 10)));
+				if (m_clGraphDataModel[0].getWerte().length > 0) {
+					fontWidth = Math.max((g.getFontMetrics().stringWidth(m_clGraphDataModel[0].getFormat().format(max_without_factor)) + 10),
+									((g.getFontMetrics().stringWidth(m_clGraphDataModel[0].getFormat().format(min_without_factor)) + 10)));
 				}
 
 				// Beschriftung XAchse
 				showXAchseBeschriftung((Graphics2D) g, graph_width, graph_height);
 
 				// Write label
-				for (int i = 0; (m_clStatistikModel != null) && (i < m_clStatistikModel.length); i++) {
-					if ((m_clStatistikModel[i] != null) && m_clStatistikModel[i].isShow()) {
-						drawLine((Graphics2D) g, graph_width, graph_height, m_clStatistikModel[i].getWerte(),
-								m_clStatistikModel[i].getFaktor(), max, min, beschriftung,
-								m_clStatistikModel[i].getColor(),
-								m_clStatistikModel[i].getFormat(), fontWidth);
+				for (int i = 0; (m_clGraphDataModel != null) && (i < m_clGraphDataModel.length); i++) {
+					if ((m_clGraphDataModel[i] != null) && m_clGraphDataModel[i].isShow()) {
+						drawLine((Graphics2D) g, graph_width, graph_height, m_clGraphDataModel[i].getWerte(),
+								m_clGraphDataModel[i].getFaktor(), max, min, beschriftung,
+								m_clGraphDataModel[i].getColor(),
+								m_clGraphDataModel[i].getFormat(), fontWidth);
 					}
 				}
 			}
@@ -295,17 +289,17 @@ public class StatistikPanel extends JPanel {
 		if(dataBasedBoundaries) max = Integer.MIN_VALUE;
 		else max = 1;
 
-		for (int i = 0; (m_clStatistikModel != null) && (m_clStatistikModel.length > i)
-				&& (m_clStatistikModel[i] != null) && (i < m_clStatistikModel.length); i++) {
-			if (m_clStatistikModel[i].isShow()) {
+		for (int i = 0; (m_clGraphDataModel != null) && (m_clGraphDataModel.length > i)
+				&& (m_clGraphDataModel[i] != null) && (i < m_clGraphDataModel.length); i++) {
+			if (m_clGraphDataModel[i].isShow()) {
 				if (usefaktor) {
-					if ((m_clStatistikModel[i].getMaxValue() * m_clStatistikModel[i].getFaktor()) > max) {
-						max = m_clStatistikModel[i].getMaxValue()
-								* m_clStatistikModel[i].getFaktor();
+					if ((m_clGraphDataModel[i].getMaxValue() * m_clGraphDataModel[i].getFaktor()) > max) {
+						max = m_clGraphDataModel[i].getMaxValue()
+								* m_clGraphDataModel[i].getFaktor();
 					}
 				} else {
-					if (m_clStatistikModel[i].getMaxValue() > max) {
-						max = m_clStatistikModel[i].getMaxValue();
+					if (m_clGraphDataModel[i].getMaxValue() > max) {
+						max = m_clGraphDataModel[i].getMaxValue();
 					}
 				}
 			}
@@ -320,17 +314,17 @@ public class StatistikPanel extends JPanel {
 		if(dataBasedBoundaries) min = Integer.MAX_VALUE;
 		else min = 0;
 
-		for (int i = 0; (m_clStatistikModel != null) && (m_clStatistikModel.length > i)
-				&& (m_clStatistikModel[i] != null) && (i < m_clStatistikModel.length); i++) {
-			if (m_clStatistikModel[i].isShow()) {
+		for (int i = 0; (m_clGraphDataModel != null) && (m_clGraphDataModel.length > i)
+				&& (m_clGraphDataModel[i] != null) && (i < m_clGraphDataModel.length); i++) {
+			if (m_clGraphDataModel[i].isShow()) {
 				if (usefaktor) {
-					if ((m_clStatistikModel[i].getMinValue() * m_clStatistikModel[i].getFaktor()) < min) {
-						min = m_clStatistikModel[i].getMinValue()
-								* m_clStatistikModel[i].getFaktor();
+					if ((m_clGraphDataModel[i].getMinValue() * m_clGraphDataModel[i].getFaktor()) < min) {
+						min = m_clGraphDataModel[i].getMinValue()
+								* m_clGraphDataModel[i].getFaktor();
 					}
 				} else {
-					if (m_clStatistikModel[i].getMinValue() < min) {
-						min = m_clStatistikModel[i].getMinValue();
+					if (m_clGraphDataModel[i].getMinValue() < min) {
+						min = m_clGraphDataModel[i].getMinValue();
 					}
 				}
 			}

@@ -1,41 +1,88 @@
-// %856946727:de.hattrickorganizer.gui.model%
-package core.gui.model;
+package core.util.chart;
 
-/**
- * Model für das StatistikPanel
- */
-public class StatistikModel {
-    //~ Instance fields ----------------------------------------------------------------------------
 
-    private java.awt.Color m_clColor = java.awt.Color.blue;
+import org.knowm.xchart.style.lines.SeriesLines;
+import org.knowm.xchart.style.markers.Marker;
+import org.knowm.xchart.style.markers.SeriesMarkers;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class GraphDataModel {
+
     private java.text.NumberFormat m_clFormat;
-    private String m_sName = "";
-    private double[] m_clWerte;
-    private boolean m_bShow = true;
+    private String m_sName;
+    private double[] m_values;
+    private List<Double> lValues;
+    private boolean m_bShow;
     private boolean dataBasedBoundaries = false;
-    private double m_dFaktor = 1;
+    private double m_dFactor;
+    private BasicStroke m_LineStyle;
+    private Marker m_MarkerStyle;
+    private java.awt.Color m_LineColor;
+    private int y_axisGroup;
 
-    //~ Constructors -------------------------------------------------------------------------------
-
-    /**
-     * Creates a new StatistikModel object.
-     */
-    public StatistikModel(double[] werte, String name, boolean show, java.awt.Color farbe,
-                          java.text.NumberFormat format) {
-        this(werte, name, show, farbe, format, 1);
+    public int getY_axisGroup() {
+        return y_axisGroup;
     }
 
-    /**
-     * Creates a new StatistikModel object.
-     */
-    public StatistikModel(double[] werte, String name, boolean show, java.awt.Color farbe,
-                          java.text.NumberFormat format, double faktor) {
-        m_clWerte = werte;
+    public Marker getMarkerStyle() {
+        return m_MarkerStyle;
+    }
+
+    public void setM_MarkerStyle(Marker m_MarkerStyle) {
+        this.m_MarkerStyle = m_MarkerStyle;
+    }
+
+
+
+    public List<Double> getlValues() {
+        return lValues;
+    }
+
+    public BasicStroke getLineStyle() {
+        return m_LineStyle;
+    }
+
+    public void setM_LineStyle(BasicStroke m_LineStyle) {
+        this.m_LineStyle = m_LineStyle;
+    }
+
+    public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
+                          java.text.NumberFormat format, int yAxisGroup) {
+        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, 1, yAxisGroup);
+    }
+
+    public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
+                          java.text.NumberFormat format) {
+        this(values, name, show, color, format, 1);
+    }
+
+    public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
+                          java.text.NumberFormat format, double factor) {
+        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, 1);
+    }
+
+    public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
+                          java.text.NumberFormat format, double factor,  int yAxisGroup) {
+        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, yAxisGroup);
+    }
+
+    public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color, BasicStroke lineStyle,
+                          Marker markerStyle, java.text.NumberFormat format, double factor, int yAxisGroup) {
+        m_values = values;
+        lValues = Arrays.stream(values).boxed().collect(Collectors.toList());
         m_sName = name;
         m_bShow = show;
-        m_clColor = farbe;
+        m_LineColor = color;
         m_clFormat = format;
-        m_dFaktor = faktor;
+        m_dFactor = factor;
+        m_LineStyle = lineStyle;
+        m_MarkerStyle = markerStyle;
+        y_axisGroup = yAxisGroup;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -46,7 +93,7 @@ public class StatistikModel {
      * @param m_clColor New value of property m_clColor.
      */
     public final void setColor(java.awt.Color m_clColor) {
-        this.m_clColor = m_clColor;
+        this.m_LineColor = m_clColor;
     }
 
     /**
@@ -55,7 +102,7 @@ public class StatistikModel {
      * @return Value of property m_clColor.
      */
     public final java.awt.Color getColor() {
-        return m_clColor;
+        return m_LineColor;
     }
 
     /**
@@ -64,7 +111,7 @@ public class StatistikModel {
      * @param m_dFaktor New value of property m_iFaktor.
      */
     public final void setFaktor(double m_dFaktor) {
-        this.m_dFaktor = m_dFaktor;
+        this.m_dFactor = m_dFaktor;
     }
 
     /**
@@ -73,7 +120,7 @@ public class StatistikModel {
      * @return Value of property m_iFaktor.
      */
     public final double getFaktor() {
-        return m_dFaktor;
+        return m_dFactor;
     }
 
     /**
@@ -100,9 +147,9 @@ public class StatistikModel {
         if(dataBasedBoundaries) max = Integer.MIN_VALUE;
         else max = 0;
 
-        for (int i = 0; (m_clWerte != null) && (i < m_clWerte.length); i++) {
-            if (m_clWerte[i] > max) {
-                max = m_clWerte[i];
+        for (int i = 0; (m_values != null) && (i < m_values.length); i++) {
+            if (m_values[i] > max) {
+                max = m_values[i];
             }
         }
 
@@ -114,9 +161,9 @@ public class StatistikModel {
         if(dataBasedBoundaries) min = Integer.MAX_VALUE;
         else min = 0;
 
-        for (int i = 0; (m_clWerte != null) && (i < m_clWerte.length); i++) {
-            if (m_clWerte[i] < min) {
-                min = m_clWerte[i];
+        for (int i = 0; (m_values != null) && (i < m_values.length); i++) {
+            if (m_values[i] < min) {
+                min = m_values[i];
             }
         }
         return (min);
@@ -164,7 +211,7 @@ public class StatistikModel {
      * @param m_clWerte New value of property m_clWerte.
      */
     public final void setWerte(double[] m_clWerte) {
-        this.m_clWerte = m_clWerte;
+        this.m_values = m_clWerte;
     }
 
     /**
@@ -173,7 +220,7 @@ public class StatistikModel {
      * @return Value of property m_clWerte.
      */
     public final double[] getWerte() {
-        return this.m_clWerte;
+        return this.m_values;
     }
 
     /**

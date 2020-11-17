@@ -370,9 +370,9 @@ public class StatisticQuery {
 				//summenwerte speichern
 				values.add(allValues);
 
-				returnValues = new double[nbColumns][values.size()];
+				returnValues = new double[nbColumns][values.size()-1];
 
-				for (int i = 0; i < values.size(); i++) {
+				for (int i = 0; i < values.size()-1; i++) {
 					final double[] werte = values.get(i);
 
 					for (int j = 0; j < werte.length; j++) {

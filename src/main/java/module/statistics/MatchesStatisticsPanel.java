@@ -6,7 +6,7 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.gui.model.StatistikModel;
+import core.util.chart.GraphDataModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -25,12 +25,10 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -84,11 +82,11 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 		ActionListener checkBoxActionListener = e -> {
 			if (e.getSource() == m_jchHilflinien) {
-				m_clStatistikPanel.setHilfslinien(m_jchHilflinien.isSelected());
+				m_clStatistikPanel.setHelpLines(m_jchHilflinien.isSelected());
 				UserParameter.instance().statistikSpielerFinanzenHilfslinien = m_jchHilflinien
 						.isSelected();
 			} else if (e.getSource() == m_jchBeschriftung) {
-				m_clStatistikPanel.setBeschriftung(m_jchBeschriftung.isSelected());
+				m_clStatistikPanel.setLabelling(m_jchBeschriftung.isSelected());
 				UserParameter.instance().statistikSpielerFinanzenBeschriftung = m_jchBeschriftung
 						.isSelected();
 			} else if (e.getSource() == m_jchBewertung.getCheckbox()) {
@@ -578,60 +576,60 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 				statistikWerte[0][i] = sterne;
 			}
 
-			StatistikModel[] models = new StatistikModel[statistikWerte.length];
+			GraphDataModel[] models = new GraphDataModel[statistikWerte.length];
 
 			if (statistikWerte.length > 0) {
 				double maxRating = Helper.getMaxValue(statistikWerte[0]);
-				models[0] = new StatistikModel(statistikWerte[0], "Bewertung",
+				models[0] = new GraphDataModel(statistikWerte[0], "Bewertung",
 						m_jchBewertung.isSelected(),
 						ThemeManager.getColor(HOColorName.PALETTE15[0]),
 						Helper.DEFAULTDEZIMALFORMAT, 17/maxRating);
-				models[1] = new StatistikModel(statistikWerte[1], "ls.match.ratingsector.midfield",
+				models[1] = new GraphDataModel(statistikWerte[1], "ls.match.ratingsector.midfield",
 						m_jchMittelfeld.isSelected(),
 						ThemeManager.getColor(HOColorName.PALETTE15[4]),
 						Helper.DEFAULTDEZIMALFORMAT);
-				models[2] = new StatistikModel(statistikWerte[2],
+				models[2] = new GraphDataModel(statistikWerte[2],
 						"ls.match.ratingsector.rightdefence", m_jchRechteAbwehr.isSelected(),
 						ThemeManager.getColor(HOColorName.PALETTE15[5]),
 						Helper.DEFAULTDEZIMALFORMAT);
-				models[3] = new StatistikModel(statistikWerte[3],
+				models[3] = new GraphDataModel(statistikWerte[3],
 						"ls.match.ratingsector.centraldefence", m_jchAbwehrzentrum.isSelected(),
 						ThemeManager.getColor(HOColorName.PALETTE15[6]),
 						Helper.DEFAULTDEZIMALFORMAT);
-				models[4] = new StatistikModel(statistikWerte[4],
+				models[4] = new GraphDataModel(statistikWerte[4],
 						"ls.match.ratingsector.leftdefence", m_jchRechteAbwehr.isSelected(),
 						ThemeManager.getColor(HOColorName.PALETTE15[7]),
 						Helper.DEFAULTDEZIMALFORMAT);
-				models[5] = new StatistikModel(statistikWerte[5],
+				models[5] = new GraphDataModel(statistikWerte[5],
 						"ls.match.ratingsector.rightattack", m_jchRechterAngriff.isSelected(),
 						ThemeManager.getColor(HOColorName.PALETTE15[8]),
 						Helper.DEFAULTDEZIMALFORMAT);
-				models[6] = new StatistikModel(statistikWerte[6],
+				models[6] = new GraphDataModel(statistikWerte[6],
 						"ls.match.ratingsector.centralattack", m_jchAngriffszentrum.isSelected(),
 						ThemeManager.getColor(HOColorName.PALETTE15[9]),
 						Helper.DEFAULTDEZIMALFORMAT);
-				models[7] = new StatistikModel(statistikWerte[7],
+				models[7] = new GraphDataModel(statistikWerte[7],
 						"ls.match.ratingsector.leftattack", m_jchLinkerAngriff.isSelected(),
 						ThemeManager.getColor(HOColorName.PALETTE15[10]),
 						Helper.DEFAULTDEZIMALFORMAT);
-				models[8] = new StatistikModel(statistikWerte[8], "Gesamtstaerke",
+				models[8] = new GraphDataModel(statistikWerte[8], "Gesamtstaerke",
 						m_jchGesamt.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[3]),
 						Helper.DEZIMALFORMAT_2STELLEN);
-				models[9] = new StatistikModel(statistikWerte[9], "ls.team.teamspirit",
+				models[9] = new GraphDataModel(statistikWerte[9], "ls.team.teamspirit",
 						m_jchStimmung.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[11]),
 						Helper.INTEGERFORMAT);
-				models[10] = new StatistikModel(statistikWerte[10], "ls.team.confidence",
+				models[10] = new GraphDataModel(statistikWerte[10], "ls.team.confidence",
 						m_jchSelbstvertrauen.isSelected(),
 						ThemeManager.getColor(HOColorName.PALETTE15[12]), Helper.INTEGERFORMAT);
 
 				double maxHatStats = Helper.getMaxValue(statistikWerte[11]);
-				models[11] = new StatistikModel(statistikWerte[11], "ls.match.ratingtype.hatstats",
+				models[11] = new GraphDataModel(statistikWerte[11], "ls.match.ratingtype.hatstats",
 						m_jchHatStats.isSelected(),
 						ThemeManager.getColor(HOColorName.PALETTE15[1]), Helper.INTEGERFORMAT,
 						19/maxHatStats);
 
 				double maxLoddar = Helper.getMaxValue(statistikWerte[12]);
-				models[12] = new StatistikModel(statistikWerte[12],
+				models[12] = new GraphDataModel(statistikWerte[12],
 						"ls.match.ratingtype.loddarstats", m_jchLoddarStats.isSelected(),
 						ThemeManager.getColor(HOColorName.PALETTE15[2]),
 						Helper.DEZIMALFORMAT_2STELLEN, 15/maxLoddar);
