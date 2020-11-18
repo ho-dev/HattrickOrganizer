@@ -8,9 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.style.AxesChartStyler;
 import org.knowm.xchart.style.Styler;
-
-import java.awt.*;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.List;
@@ -18,15 +17,38 @@ import java.util.stream.IntStream;
 
 public class LinesChart implements ILinesChart{
 
-    GraphDataModel[] m_models;
+    GraphDataModel @Nullable [] m_models;
     List<Date> m_xData;
     XYChart m_chart;
+    AxesChartStyler m_axeStyler;
     JPanel m_panel;
     Boolean m_hasLabels;
     Boolean m_hasHelpLines;
 
-    public LinesChart(boolean second_axis, String y1_axisName, String y2_axisName, String y1_axisFormat, String y2_axisFormat){
+    public LinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat, Double y1_axisMin, Double y1_axisMax)
+    {
+        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, y1_axisMin, y1_axisMax, null, null);
+    }
+
+
+    public LinesChart(boolean second_axis, String y1_axisName, String y2_axisName, String y1_axisFormat, String y2_axisFormat)
+    {
+        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, null, null, null, null);
+    }
+
+    public void setYAxisMin(int yAxisGroup, @Nullable Double value){
+        m_axeStyler.setYAxisMin(yAxisGroup-1, value);
+    }
+
+    public void setYAxisMax(int yAxisGroup, @Nullable Double value){
+        m_axeStyler.setYAxisMax(yAxisGroup-1, value);
+    }
+
+    public LinesChart(boolean second_axis, String y1_axisName, String y2_axisName, String y1_axisFormat, String y2_axisFormat,
+                      @Nullable Double y1_axisMin, @Nullable Double y1_axisMax, @Nullable Double y2_axisMin, @Nullable Double y2_axisMax){
+
         m_chart = new XYChart(10, 10);
+        m_axeStyler = m_chart.getStyler();
 
         m_chart.getStyler().setLegendVisible(false);
         m_chart.getStyler().setPlotBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
@@ -34,7 +56,9 @@ public class LinesChart implements ILinesChart{
         m_chart.getStyler().setChartBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
         m_chart.getStyler().setXAxisTickMarksColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
         m_chart.getStyler().setXAxisTickLabelsColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
-        m_chart.getStyler().setYAxisGroupTickLabelsColorMap(0, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+
+        if (y1_axisMin != null) m_axeStyler.setYAxisMin(0, y1_axisMin);
+        if (y1_axisMax != null) m_axeStyler.setYAxisMax(0, y1_axisMax);
 
         if (y1_axisFormat != null){
             m_chart.getStyler().putYAxisGroupDecimalPatternMap(0, y1_axisFormat);
@@ -54,6 +78,9 @@ public class LinesChart implements ILinesChart{
             }
 
             m_chart.getStyler().setYAxisGroupTickLabelsColorMap(1, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+
+            if (y2_axisMin != null) m_axeStyler.setYAxisMin(1, y2_axisMin);
+            if (y2_axisMax != null) m_axeStyler.setYAxisMax(1, y2_axisMax);
 
         }
         m_panel = new XChartPanel(m_chart);
@@ -164,15 +191,10 @@ public class LinesChart implements ILinesChart{
             lxData.add(new Date((long)ts));
         }
 
-
         this.m_xData = lxData;
-
-
-//        this.xBezeichner = x_axisTitle;
-//        this.yBezeichner = y_axisTitle;
         this.m_hasLabels = hasLabels;
         this.m_hasHelpLines = hasHelpLines;
-//        this.m_clYAchseFormat = y_axisFormat;
+
         updateGraph();
 
     }

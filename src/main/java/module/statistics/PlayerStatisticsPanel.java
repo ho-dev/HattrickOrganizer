@@ -433,7 +433,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		final JPanel panel = new ImagePanel();
 		panel.setLayout(new BorderLayout());
 
-		oChartPanel = new LinesChart(true, null, null, null, "#,##0");
+		oChartPanel = new LinesChart(true, null, null, null, "#,##0", 0d, 20d);
 		panel.add(oChartPanel.getPanel());
 
 		constraints.fill = GridBagConstraints.BOTH;

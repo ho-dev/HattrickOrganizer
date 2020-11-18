@@ -124,6 +124,10 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 					//sum
 					bSum = true;
 
+					// if sum, no binding on left axis
+					mChart.setYAxisMin(1, null);
+					mChart.setYAxisMax(1, null);
+
 					jcbLeadership.setText(sumLeadership);
 					mChart.setShow(sumLeadership, jcbLeadership.isSelected());
 					mChart.setShow(avgLeadership, false);
@@ -185,6 +189,10 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 				{
 					// average
 					bSum = false;
+
+					// if average left axis binded between 0 and 20
+					mChart.setYAxisMin(1, 0d);
+					mChart.setYAxisMax(1, 20d);
 
 					jcbLeadership.setText(avgLeadership);
 					mChart.setShow(avgLeadership, jcbLeadership.isSelected());
