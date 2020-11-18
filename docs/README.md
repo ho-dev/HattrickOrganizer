@@ -8,8 +8,8 @@
 <tr>
   <td>Latest Release</td>
   <td>
-    <a href="https://github.com/akasolace/HO/releases/tag/3.0">
-    <img src="https://img.shields.io/badge/HO-3.0-brightgreen.svg" alt="latest release" />
+    <a href="https://github.com/akasolace/HO/releases/tag/4.0">
+    <img src="https://img.shields.io/badge/HO-4.0-brightgreen.svg" alt="latest release" />
     </a>
   </td>
 </tr>
