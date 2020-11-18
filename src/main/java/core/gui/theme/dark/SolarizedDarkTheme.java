@@ -128,7 +128,7 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.PALETTE15[10], Color.decode("#f24219"));
             ThemeManager.instance().put(HOColorName.PALETTE15[11], Color.decode("#32a190"));
             ThemeManager.instance().put(HOColorName.PALETTE15[12], Color.decode("#fc8f3b"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[13], Color.decode("#317cb2"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[13], Color.decode("#000000"));
             ThemeManager.instance().put(HOColorName.PALETTE15[14], Color.decode("#ffce54"));
 
             return super.enableTheme();

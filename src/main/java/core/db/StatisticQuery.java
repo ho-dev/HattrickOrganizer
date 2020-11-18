@@ -283,10 +283,11 @@ public class StatisticQuery {
 
 		//One group selected
 		if (!group.equals("")) {
-			statement += (" , SPIELERNOTIZ WHERE SPIELERNOTIZ.TeamInfoSmilie='" + group + "' AND SPIELERNOTIZ.SpielerID=SPIELER.SpielerID AND");
+			statement += (", SPIELERNOTIZ WHERE (SPIELERID IN (SELECT SPIELERID FROM SPIELER WHERE (HRF_ID = (SELECT MAX(HRF_ID) FROM HRF)))) AND (SPIELERNOTIZ.TeamInfoSmilie='" + group + "') AND (SPIELERNOTIZ.SpielerID=SPIELER.SpielerID) AND");
 		} else {
 			statement += " WHERE ";
 		}
+
 
 		statement += (" Trainer=0 AND SPIELER.HRF_ID IN (" + getInClause(nbHRF, trainings) + ") ORDER BY Datum DESC");
 

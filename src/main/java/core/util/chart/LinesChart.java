@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import org.jetbrains.annotations.Nullable;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYSeries;
@@ -60,6 +61,8 @@ public class LinesChart implements ILinesChart{
 
 
     private void reverseTS(){
+        if (m_models == null) return;
+
         for (var model : m_models) {
             if (model == null) continue;
             var values = model.getWerte();
@@ -97,9 +100,17 @@ public class LinesChart implements ILinesChart{
        for(var model : m_models){
            if (model == null) continue;
            int yGroup = model.getY_axisGroup();
-           serieName = model.getName() + " (y" + yGroup + ")";;
+           serieName = model.getName();
            serieData = model.getlValues();
-           if ( model.isShow() && (!series.containsKey(serieName)))
+
+           // Serie is removed
+           if (series.containsKey(serieName))
+           {
+               m_chart.removeSeries(serieName);
+           }
+
+           // Serie is added if should be shown and if contains data
+           if (model.isShow() && (serieData.size() != 0))
            {
                serie =  m_chart.addSeries(serieName, this.m_xData, serieData);
                serie.setLineStyle(model.getLineStyle());
@@ -108,11 +119,6 @@ public class LinesChart implements ILinesChart{
                serie.setMarkerColor(model.getColor());
                serie.setYAxisGroup(yGroup);
            }
-           else if ( (!model.isShow()) && series.containsKey(serieName) )
-           {
-               m_chart.removeSeries(serieName);
-           }
-
         }
 
         m_panel.repaint();
@@ -127,8 +133,8 @@ public class LinesChart implements ILinesChart{
                     break;
                 }
             }
+            updateGraph();
         }
-        updateGraph();
     }
 
     /**
@@ -147,7 +153,7 @@ public class LinesChart implements ILinesChart{
         updateGraph();
     }
 
-    public final void setAllValues(GraphDataModel[] models, double[] inp_xData,
+    public final void setAllValues(GraphDataModel @Nullable [] models, double[] inp_xData,
                                    NumberFormat y_axisFormat, String x_axisTitle, String y_axisTitle,
                                    boolean hasLabels, boolean hasHelpLines){
         this.m_models = models;
@@ -171,6 +177,7 @@ public class LinesChart implements ILinesChart{
 
     }
 
+    @Deprecated
     public final void setAllValues(GraphDataModel[] models, String[] xData,
                                    NumberFormat y_axisFormat, String x_axisTitle, String y_axisTitle,
                                    boolean hasLabels, boolean hasHelpLines){

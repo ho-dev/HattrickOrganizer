@@ -433,7 +433,7 @@ public class FinanzStatistikPanel extends LazyImagePanel {
 			NumberFormat format2 = NumberFormat.getInstance();
 
 			double[][] statistikWerte = DBManager.instance().getFinanzen4Statistik(anzahlHRF);
-			GraphDataModel[] models = null;
+			GraphDataModel[] models;
 			models = new GraphDataModel[15];
 
 			if (statistikWerte.length > 0) {
