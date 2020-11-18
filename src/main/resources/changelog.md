@@ -4,9 +4,9 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 # Changelist HO! 4.0
 
 ## Some numbers:
-  - 254 commits
-  - 765 files changed (20'477 additions and 21'045 deletions)
-  - 111 issues closed
+  - 277 commits
+  - 794 files changed (20'997 additions and 21'491 deletions)
+  - 108 issues closed
   - 9 contributors
 
 
@@ -16,7 +16,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
     - **HO! now requires Java 14 but artefacts including JRE are made available**
     - **in-app upgrade is now supported**
     - directory structure has changed (db location, log files, ...)
-   - [FEAT] Improved HO themes, and implemented dark mode. #85
+   - [FEAT] Improved GUI, new themes, and implemented dark mode. #85
    - [FEAT] Complete rewrite of Special Events module
 
 
@@ -79,8 +79,40 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - Translators contribution since the previous release (number of translated terms):
 
 
-| username       | nb translated terms |
-|----------------|:-------------------:|
+
+| Contributor       | Translations | Percentage |
+|-------------------|--------------|------------|
+| Kimmo             | 843          | 48.03      |
+| Andreas           | 745          | 42.45      |
+| \_KOHb\_            | 436          | 24.84      |
+| Moorhuhninho      | 409          | 23.3       |
+| TeamBMW           | 349          | 19.89      |
+| Csaba             | 230          | 13.11      |
+| André             | 207          | 11.79      |
+| h3t3r0            | 139          | 7.92       |
+| asteins           | 79           | 4.5        |
+| Hakkarainen       | 62           | 3.53       |
+| DavidatorusF      | 61           | 3.48       |
+| Manny             | 60           | 3.42       |
+| Baler0            | 54           | 3.08       |
+| Stef              | 46           | 2.62       |
+| dzsoo             | 44           | 2.51       |
+| Bartosz           | 41           | 2.34       |
+| murko             | 39           | 2.22       |
+| Volker            | 38           | 2.17       |
+| sich              | 38           | 2.17       |
+| Sebas90           | 32           | 1.82       |
+| akasolace         | 31           | 1.77       |
+| Lidegand          | 29           | 1.65       |
+| Saleh             | 14           | 0.8        |
+| LeSchmuh          | 11           | 0.63       |
+| Ricardo           | 6            | 0.34       |
+| Motavali          | 5            | 0.28       |
+| karelant.         | 4            | 0.23       |
+| Philipp           | 2            | 0.11       |
+| Sumame.           | 2            | 0.11       |
+| RaV               | 1            | 0.06       |
+| Total translated: | 4057         | 6.42       |
 
 
 

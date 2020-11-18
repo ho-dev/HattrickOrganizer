@@ -3,103 +3,114 @@ title: HO release notes
 layout: page
 ---
 
-Changelist HO! 3.0
+Changelist HO! 4.0
 
-## Some numbers: 
-  - 90 commits
-  - 293 files changed (11,027 additions and 6,341 deletions)
-  - 42 issues closed
-  - 4 contributors
+## Some numbers:
+  - 277 commits
+  - 794 files changed (20'997 additions and 21'491 deletions)
+  - 108 issues closed
+  - 9 contributors
 
 
 ## Highlights
 
-
-  - in case of promotion/demotion information about the new league will be available as soon as last game of the season has been played
-
-  - impact of special events on score for both you and your opponent based on latest lineup information
-
-  - new match report mocking HT full report
-  
-  - full control on which game to download (e.g. exclude HTO integrated games)
+  - New build process:
+    - **HO! now requires Java 14 but artefacts including JRE are made available**
+    - **in-app upgrade is now supported**
+    - directory structure has changed (db location, log files, ...)
+   - [FEAT] Improved GUI, new themes, and implemented dark mode. #85
+   - [FEAT] Complete rewrite of Special Events module
 
 
 ## Detailed Changelog
 
-### Download
-
-- [NEW] Full control on which game to download (e.g. exclude HTO integrated games)  #290
-
 
 ### Squad
 
-  - [FIX] ordering of best position is now saved on closing #397
-  - [NEW] manual adjustment of experience level (similar to other skills) #463
-  - [FIX] Fix team summary comparison after new download from HT #475
-
+  - [FIX] Remove lag in sync between tables in Squad #465
+  - [FIX] Provide better default for initial position of player comparison divider.
 
 ### Team Analyser
 
- - [NEW] impact of special events on score for both you and your opponent based on latest lineup information #299
- - [FIX] fix calculation of HatStats and Loddar in TeamAnalyzer #464
+ - [FEAT] Save adjusted lineup ratings of MatchPredictionPanel in an extra row #66
 
 ### Rating
 
- - [NEW] impact of match orders on rating is now directly visible from the subsitution tab, helping finding the best time for subsitution change  #294
- - [FIX] all match orders are now consider in minute-bases prediction rating (behaviour change, position wap ...). Until now only substitution were considered #385
- - [FIX] counterattackrating calculation beyond divine has been fixed #398
-
+  - [FIX] Fixes Long Shots tactic level calculation
 
 ### Matches
 
-- [NEW] new match report mocking HT full report #421
-- [FIX] Matches Overview NPE #396
-- [FIX] NPE when trying to simulate upcoming games #472
-- [FIX] Improved performance when first displaying the tab when the database contains lots of matches #471
-- [FIX] Improved performance when exiting HO when the database is big #471
-- [NEW] removed Match Analyzer module #477
-
+  - [FIX] Some icons fixes in match report
+  - [FEAT] Information about extra time or penalty shoot out in match result #561
 
 ### Lineup
 
-- [FIX] to improve visibility, only last name is displayed in combo box, but the full player name is available via infobull on mouse hovering  #394
-- [FIX] player name column is now resizable  #382
+  - [FEAT] Provide better defaults for initial position of dividers.
+  - [FEAT] Edit man marking match order [#660]
+  - [FIX] Fix bug in download of man marking match orders [#632]
+  - [FIX] Fix bug in upload of position change match orders [#633]
 
+### IFA
 
+  - [FIX] add supports for 9 new leagues: Belize, Madagascar, Botswana, Saint Vincent and the Grenadines, Myanmar, Zambia, San Marino, Puerto Rico and Haiti [#539]
+  
+  
 ### Training
 
-- [NEW] Training tab now shows information about skill devaluation (this can be disable in preference) #286
-- [FIX] Training history table skill values of players with more than one skill devaluations fixed #444
-- [FIX] fix an issue when new player had a skill increase on first training and before it was ever imported into HO! #188
-
+  - [FIX] Fix bug of season correction calculation. Training effect table shows wrong seasons in week 16 [#539]
+  - [FIX] Subskill recalc takes into account training that took place before the first hrf download [#512]
+  - [FIX] Fix bug of training effect of Walkover matches [#623]
+  - [FEAT] Individual training plans for each player in training preview [#587]
 
 ### Misc
 
-   - [FIX] player age calculation is now correct #422
-   - [FIX] Index Out Of Bounds Exception at startup on new DBs #448
-   - [FIX] fix multiple display issues about player names (composed name, nicknames)  #451
-   - [FIX] removed deprecated training block feature  #486
-   
+  - [FEAT] Remove jcalendar dependency.
+  - [FIX] ExperienceViewer removed [#503]
+  - [FIX] Avoid potential infinite loop at startup. [#584]
+  - [FIX] Layout issue in multiple screen setup. [#618]
+  - [FEAT] Remove all printing functionality.
+  - [FEAT] Remove player state colour, and display icons instead in Lineup.
+  - [FEAT] Refactor progress bar display [#722]
 
 ### League
 
-   - [NEW] in case of promotion/demotion information about the new league will be available as soon as last game of the season has been played #247
-   - [FIX] HO! will now automatically recognize league change at the begining of the season #391
-   - [FIX] Fix position arrows colour in series table #499
-
+  - [FEAT] Make Promotion status more visible. [#521]
 
 ## Translations
-  - HO! is currently available in 36 languages thanks to the work of 56 translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
+  - HO! is currently available in 35 languages thanks to the work of 78 translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
   - Translators contribution since the previous release (number of translated terms):
 
 
-| username       | nb translated terms |
-|----------------|:-------------------:|
-| Lidegand       | 378                 |
-| Saleh          | 65                  |
-| Mauro Aranda   | 62                  |
-| sich           | 58                  |
-| mondstern      | 40                  |
-| h3t3r0         | 9                   |
-| murko          | 6                   |
-
+| Contributor       | Translations | Percentage |
+|-------------------|--------------|------------|
+| Kimmo             | 843          | 48.03      |
+| Andreas           | 745          | 42.45      |
+| \_KOHb\_            | 436          | 24.84      |
+| Moorhuhninho      | 409          | 23.3       |
+| TeamBMW           | 349          | 19.89      |
+| Csaba             | 230          | 13.11      |
+| André             | 207          | 11.79      |
+| h3t3r0            | 139          | 7.92       |
+| asteins           | 79           | 4.5        |
+| Hakkarainen       | 62           | 3.53       |
+| DavidatorusF      | 61           | 3.48       |
+| Manny             | 60           | 3.42       |
+| Baler0            | 54           | 3.08       |
+| Stef              | 46           | 2.62       |
+| dzsoo             | 44           | 2.51       |
+| Bartosz           | 41           | 2.34       |
+| murko             | 39           | 2.22       |
+| Volker            | 38           | 2.17       |
+| sich              | 38           | 2.17       |
+| Sebas90           | 32           | 1.82       |
+| akasolace         | 31           | 1.77       |
+| Lidegand          | 29           | 1.65       |
+| Saleh             | 14           | 0.8        |
+| LeSchmuh          | 11           | 0.63       |
+| Ricardo           | 6            | 0.34       |
+| Motavali          | 5            | 0.28       |
+| karelant.         | 4            | 0.23       |
+| Philipp           | 2            | 0.11       |
+| Sumame.           | 2            | 0.11       |
+| RaV               | 1            | 0.06       |
+| Total translated: | 4057         | 6.42       |
