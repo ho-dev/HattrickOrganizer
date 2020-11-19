@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 /**
  * Enthält alle Informationen zu den Finanzen
  */
-public class Finanzen  {
+public class Economy {
     //~ Static fields/initializers -----------------------------------------------------------------
 	/*
 	 * level constants for the fan mood (SupportersPopularity)
@@ -61,13 +61,13 @@ public class Finanzen  {
     protected int m_iEinnahmenSonstige;
 
     /** Einnahmen Sponsoren */
-    protected int m_iEinnahmenSponsoren;
+    protected int m_iIncomeSponsors;
 
     /** Einnahmen Zinserträge */
-    protected int m_iEinnahmenZinsen;
+    protected int m_iIncomeFinancial;
 
     /** Einnahmen Zuschauer */
-    protected int m_iEinnahmenZuschauer;
+    protected int m_iIncomeSpectators;
 
     /** Aktuelle Finanzen */
     protected int m_iFinanzen;
@@ -150,45 +150,43 @@ public class Finanzen  {
     ////////////////////////////////////////////////////////////////////////////////
     //Konstruktor
     ////////////////////////////////////////////////////////////////////////////////    
-    public Finanzen(java.util.Properties properties) {
-        m_iSupporter = Integer.parseInt(properties.getProperty("supporters", "0"));
-        m_iSponsoren = Integer.parseInt(properties.getProperty("sponsors", "0"));
-        m_iFinanzen = Integer.parseInt(properties.getProperty("cash", "0"));
-
-        m_iEinnahmenSponsoren = Integer.parseInt(properties.getProperty("incomesponsorer", "0"));
-        m_iEinnahmenZuschauer = Integer.parseInt(properties.getProperty("incomepublik", "0"));
-        m_iEinnahmenZinsen = Integer.parseInt(properties.getProperty("incomefinansiella", "0"));
-        m_iEinnahmenSonstige = Integer.parseInt(properties.getProperty("incometillfalliga", "0"));
-        m_iEinnahmenGesamt = Integer.parseInt(properties.getProperty("incomesumma", "0"));
-        m_iKostenSpieler = Integer.parseInt(properties.getProperty("costsspelare", "0"));
-        m_iKostenTrainerstab = Integer.parseInt(properties.getProperty("costspersonal", "0"));
-        m_iKostenStadion = Integer.parseInt(properties.getProperty("costsarena", "0"));
-        m_iKostenJugend = Integer.parseInt(properties.getProperty("costsjuniorverksamhet", "0"));
-        m_iKostenZinsen = Integer.parseInt(properties.getProperty("costsrantor", "0"));
-        m_iKostenSonstige = Integer.parseInt(properties.getProperty("coststillfalliga", "0"));
-        m_iKostenGesamt = Integer.parseInt(properties.getProperty("costssumma", "0"));
-        m_iGewinnVerlust = Integer.parseInt(properties.getProperty("total", "0"));
-
-        m_iLetzteEinnahmenSponsoren = Integer.parseInt(properties.getProperty("lastincomesponsorer",
-                                                                              "0"));
-        m_iLetzteEinnahmenZuschauer = Integer.parseInt(properties.getProperty("lastincomepublik",
-                                                                              "0"));
-        m_iLetzteEinnahmenZinsen = Integer.parseInt(properties.getProperty("lastincomefinansiella",
-                                                                           "0"));
-        m_iLetzteEinnahmenSonstige = Integer.parseInt(properties.getProperty("lastincometillfalliga",
-                                                                             "0"));
-        m_iLetzteEinnahmenGesamt = Integer.parseInt(properties.getProperty("lastincomesumma", "0"));
-        m_iLetzteKostenSpieler = Integer.parseInt(properties.getProperty("lastcostsspelare", "0"));
-        m_iLetzteKostenTrainerstab = Integer.parseInt(properties.getProperty("lastcostspersonal",
-                                                                             "0"));
-        m_iLetzteKostenStadion = Integer.parseInt(properties.getProperty("lastcostsarena", "0"));
-        m_iLetzteKostenJugend = Integer.parseInt(properties.getProperty("lastcostsjuniorverksamhet",
-                                                                        "0"));
-        m_iLetzteKostenZinsen = Integer.parseInt(properties.getProperty("lastcostsrantor", "0"));
-        m_iLetzteKostenSonstige = Integer.parseInt(properties.getProperty("lastcoststillfalliga",
-                                                                          "0"));
-        m_iLetzteKostenGesamt = Integer.parseInt(properties.getProperty("lastcostssumma", "0"));
-        m_iLetzteGewinnVerlust = Integer.parseInt(properties.getProperty("lasttotal", "0"));
+    public Economy(java.util.Properties properties) {
+        m_iFinanzen = Integer.parseInt(properties.getProperty("Cash", "0"));
+        aa = Integer.parseInt(properties.getProperty("ExpectedCash", "0"));
+        m_iSponsoren = Integer.parseInt(properties.getProperty("SponsorsPopularity", "0"));
+        m_iSupporter = Integer.parseInt(properties.getProperty("SupportersPopularity", "0"));
+        m_iIncomeSpectators = Integer.parseInt(properties.getProperty("IncomeSpectators", "0"));
+        m_iIncomeSponsors = Integer.parseInt(properties.getProperty("IncomeSponsors", "0"));
+        m_iIncomeFinancial = Integer.parseInt(properties.getProperty("IncomeFinancial", "0"));
+        aa = Integer.parseInt(properties.getProperty("IncomeSoldPlayers", "0"));
+        bb = Integer.parseInt(properties.getProperty("IncomeSoldPlayersCommission", "0"));
+        m_iEinnahmenSonstige = Integer.parseInt(properties.getProperty("IncomeTemporary", "0"));
+        m_iEinnahmenGesamt = Integer.parseInt(properties.getProperty("IncomeSum", "0"));
+        m_iKostenStadion = Integer.parseInt(properties.getProperty("CostsArena", "0"));
+        m_iKostenSpieler = Integer.parseInt(properties.getProperty("CostsPlayers", "0"));
+        m_iKostenZinsen = Integer.parseInt(properties.getProperty("CostsFinancial", "0"));
+        m_iKostenTrainerstab = Integer.parseInt(properties.getProperty("CostsStaff", "0"));
+        cc = Integer.parseInt(properties.getProperty("CostsBoughtPlayers", "0"));
+        cc = Integer.parseInt(properties.getProperty("CostsArenaBuilding", "0"));
+        m_iKostenSonstige = Integer.parseInt(properties.getProperty("CostsTemporary", "0"));
+        m_iKostenJugend = Integer.parseInt(properties.getProperty("CostsYouth", "0"));
+        m_iKostenGesamt = Integer.parseInt(properties.getProperty("CostsSum", "0"));
+        m_iGewinnVerlust = Integer.parseInt(properties.getProperty("ExpectedWeeksTotal", "0"));
+        m_iLetzteEinnahmenZuschauer = Integer.parseInt(properties.getProperty("LastIncomeSpectators", "0"));
+        m_iLetzteEinnahmenSponsoren = Integer.parseInt(properties.getProperty("LastIncomeSponsors", "0"));
+        m_iLetzteEinnahmenZinsen = Integer.parseInt(properties.getProperty("LastIncomeFinancial", "0"));
+        aa = Integer.parseInt(properties.getProperty("LastIncomeSoldPlayers", "0"));
+        aa = Integer.parseInt(properties.getProperty("LastIncomeSoldPlayersCommission", "0"));
+        m_iLetzteEinnahmenSonstige = Integer.parseInt(properties.getProperty("LastIncomeTemporary",   "0"));
+        m_iLetzteEinnahmenGesamt = Integer.parseInt(properties.getProperty("LastIncomeSum", "0"));
+        m_iLetzteKostenStadion = Integer.parseInt(properties.getProperty("LastCostsArena", "0"));
+        m_iLetzteKostenSpieler = Integer.parseInt(properties.getProperty("LastCostsPlayers", "0"));
+        m_iLetzteKostenZinsen = Integer.parseInt(properties.getProperty("LastCostsFinancial", "0"));
+        m_iLetzteKostenTrainerstab = Integer.parseInt(properties.getProperty("LastCostsStaff", "0"));
+        m_iLetzteKostenSonstige = Integer.parseInt(properties.getProperty("LastCostsTemporary",  "0"));
+        m_iLetzteKostenJugend = Integer.parseInt(properties.getProperty("LastCostsYouth",  "0"));
+        m_iLetzteKostenGesamt = Integer.parseInt(properties.getProperty("LastCostsSum", "0"));
+        m_iLetzteGewinnVerlust = Integer.parseInt(properties.getProperty("LastWeeksTotal", "0"));
     }
 
     /**
@@ -196,15 +194,17 @@ public class Finanzen  {
      *
      * @param rs ResultSet with the data from the DB query
      */
-    public Finanzen(java.sql.ResultSet rs) {
+    public Economy(java.sql.ResultSet rs) {
         try {
             m_iSupporter = rs.getInt("Supporter");
             m_iSponsoren = rs.getInt("Sponsoren");
             m_iFinanzen = rs.getInt("Finanzen");
 
-            m_iEinnahmenSponsoren = rs.getInt("EinSponsoren");
-            m_iEinnahmenZuschauer = rs.getInt("EinZuschauer");
-            m_iEinnahmenZinsen = rs.getInt("EinZinsen");
+            m_iIncomeSponsors = rs.getInt("IncomeSponsors");
+
+            m_iIncomeSpectators = rs.getInt("IncomeSpectators");
+            m_iIncomeFinancial = rs.getInt("IncomeFinancial");
+
             m_iEinnahmenSonstige = rs.getInt("EinSonstiges");
             m_iEinnahmenGesamt = rs.getInt("EinGesamt");
             m_iKostenSpieler = rs.getInt("KostSpieler");
@@ -230,7 +230,7 @@ public class Finanzen  {
             m_iLetzteKostenGesamt = rs.getInt("LetzteKostGesamt");
             m_iLetzteGewinnVerlust = rs.getInt("LetzteGewinnVerlust");
         } catch (Exception e) {
-        	HOLogger.instance().debug(Finanzen.class, e);
+        	HOLogger.instance().debug(Economy.class, e);
         }
     }
 
@@ -400,7 +400,7 @@ public class Finanzen  {
      * @param m_iEinnahmenSponsoren New value of property m_iEinnahmenSponsoren.
      */
     public final void setEinnahmenSponsoren(int m_iEinnahmenSponsoren) {
-        this.m_iEinnahmenSponsoren = m_iEinnahmenSponsoren;
+        this.m_iIncomeSponsors = m_iEinnahmenSponsoren;
     }
 
     /**
@@ -409,7 +409,7 @@ public class Finanzen  {
      * @return Value of property m_iEinnahmenSponsoren.
      */
     public final int getEinnahmenSponsoren() {
-        return m_iEinnahmenSponsoren;
+        return m_iIncomeSponsors;
     }
 
     /**
@@ -418,7 +418,7 @@ public class Finanzen  {
      * @param m_iEinnahmenZinsen New value of property m_iEinnahmenZinsen.
      */
     public final void setEinnahmenZinsen(int m_iEinnahmenZinsen) {
-        this.m_iEinnahmenZinsen = m_iEinnahmenZinsen;
+        this.m_iIncomeFinancial = m_iEinnahmenZinsen;
     }
 
     /**
@@ -427,7 +427,7 @@ public class Finanzen  {
      * @return Value of property m_iEinnahmenZinsen.
      */
     public final int getEinnahmenZinsen() {
-        return m_iEinnahmenZinsen;
+        return m_iIncomeFinancial;
     }
 
     /**
@@ -436,7 +436,7 @@ public class Finanzen  {
      * @param m_iEinnahmenZuschauer New value of property m_iEinnahmenZuschauer.
      */
     public final void setEinnahmenZuschauer(int m_iEinnahmenZuschauer) {
-        this.m_iEinnahmenZuschauer = m_iEinnahmenZuschauer;
+        this.m_iIncomeSpectators = m_iEinnahmenZuschauer;
     }
 
     /**
@@ -445,7 +445,7 @@ public class Finanzen  {
      * @return Value of property m_iEinnahmenZuschauer.
      */
     public final int getEinnahmenZuschauer() {
-        return m_iEinnahmenZuschauer;
+        return m_iIncomeSpectators;
     }
 
     /**

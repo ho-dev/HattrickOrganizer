@@ -6,7 +6,7 @@ import core.model.StaffType;
 import core.model.Team;
 import core.model.XtraData;
 import core.model.misc.Basics;
-import core.model.misc.Finanzen;
+import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -185,7 +185,7 @@ public class HRFStringParser {
 				}
 				// economy
 				else if (entity.toString().equalsIgnoreCase(ECONOMY)) {
-					hoModel.setFinance(new Finanzen(properties));
+					hoModel.setFinance(new Economy(properties));
 				}
 				// arena
 				else if (entity.toString().equalsIgnoreCase(ARENA)) {

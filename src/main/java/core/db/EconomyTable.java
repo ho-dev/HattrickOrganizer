@@ -1,6 +1,6 @@
 package core.db;
 
-import core.model.misc.Finanzen;
+import core.model.misc.Economy;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -8,12 +8,12 @@ import java.sql.Timestamp;
 import java.sql.Types;
 
 
-public final class FinanzenTable extends AbstractTable {
+public final class EconomyTable extends AbstractTable {
 
 	/** tablename **/
-	public final static String TABLENAME = "FINANZEN";
+	public final static String TABLENAME = "ECONOMY";
 	
-	protected FinanzenTable(JDBCAdapter  adapter){
+	protected EconomyTable(JDBCAdapter  adapter){
 		super(TABLENAME,adapter);
 	}
 
@@ -58,19 +58,19 @@ public final class FinanzenTable extends AbstractTable {
 	@Override
 	protected String[] getCreateIndizeStatements() {
 		return new String[] {
-			"CREATE INDEX IFINANZEN_1 ON " + getTableName() + "(" + columns[0].getColumnName() + "," + columns[1].getColumnName() + ")",
-			"CREATE INDEX IFINANZEN_2 ON " + getTableName() + "(" + columns[0].getColumnName() + ")" };
+			"CREATE INDEX ECONOMY_1 ON " + getTableName() + "(" + columns[0].getColumnName() + "," + columns[1].getColumnName() + ")",
+			"CREATE INDEX ECONOMY_2 ON " + getTableName() + "(" + columns[0].getColumnName() + ")" };
 	}
 	
 	/**
-	 * speichert die Finanzen
+	 * store the economy info in the database
 	 */
-	void saveFinanzen(int hrfId, Finanzen finanzen, Timestamp date) {
+	void saveEconomyInDB(int hrfId, Economy economy, Timestamp date) {
 		String statement = null;
 		final String[] awhereS = { columns[0].getColumnName() };
 		final String[] awhereV = { "" + hrfId };
 
-		if (finanzen != null) {
+		if (economy != null) {
 			//erst Vorhandene Aufstellung löschen
 			delete( awhereS, awhereV );
 			//insert vorbereiten
@@ -80,63 +80,63 @@ public final class FinanzenTable extends AbstractTable {
 				+= (""
 					+ hrfId
 					+ ","
-					+ finanzen.getSupporter()
+					+ economy.getSupporter()
 					+ ","
-					+ finanzen.getSponsoren()
+					+ economy.getSponsoren()
 					+ ","
-					+ finanzen.getFinanzen()
+					+ economy.getFinanzen()
 					+ ","
-					+ finanzen.getEinnahmenSponsoren()
+					+ economy.getEinnahmenSponsoren()
 					+ ","
-					+ finanzen.getEinnahmenZuschauer()
+					+ economy.getEinnahmenZuschauer()
 					+ ","
-					+ finanzen.getEinnahmenZinsen()
+					+ economy.getEinnahmenZinsen()
 					+ ","
-					+ finanzen.getEinnahmenSonstige()
+					+ economy.getEinnahmenSonstige()
 					+ ","
-					+ finanzen.getEinnahmenGesamt()
+					+ economy.getEinnahmenGesamt()
 					+ ","
-					+ finanzen.getKostenSpieler()
+					+ economy.getKostenSpieler()
 					+ ","
-					+ finanzen.getKostenTrainerstab()
+					+ economy.getKostenTrainerstab()
 					+ ","
-					+ finanzen.getKostenStadion()
+					+ economy.getKostenStadion()
 					+ ","
-					+ finanzen.getKostenJugend()
+					+ economy.getKostenJugend()
 					+ ","
-					+ finanzen.getKostenZinsen()
+					+ economy.getKostenZinsen()
 					+ ","
-					+ finanzen.getKostenSonstige()
+					+ economy.getKostenSonstige()
 					+ ","
-					+ finanzen.getKostenGesamt()
+					+ economy.getKostenGesamt()
 					+ ","
-					+ finanzen.getGewinnVerlust()
+					+ economy.getGewinnVerlust()
 					+ ","
-					+ finanzen.getLetzteEinnahmenSponsoren()
+					+ economy.getLetzteEinnahmenSponsoren()
 					+ ","
-					+ finanzen.getLetzteEinnahmenZuschauer()
+					+ economy.getLetzteEinnahmenZuschauer()
 					+ ","
-					+ finanzen.getLetzteEinnahmenZinsen()
+					+ economy.getLetzteEinnahmenZinsen()
 					+ ","
-					+ finanzen.getLetzteEinnahmenSonstige()
+					+ economy.getLetzteEinnahmenSonstige()
 					+ ","
-					+ finanzen.getLetzteEinnahmenGesamt()
+					+ economy.getLetzteEinnahmenGesamt()
 					+ ","
-					+ finanzen.getLetzteKostenSpieler()
+					+ economy.getLetzteKostenSpieler()
 					+ ","
-					+ finanzen.getLetzteKostenTrainerstab()
+					+ economy.getLetzteKostenTrainerstab()
 					+ ","
-					+ finanzen.getLetzteKostenStadion()
+					+ economy.getLetzteKostenStadion()
 					+ ","
-					+ finanzen.getLetzteKostenJugend()
+					+ economy.getLetzteKostenJugend()
 					+ ","
-					+ finanzen.getLetzteKostenZinsen()
+					+ economy.getLetzteKostenZinsen()
 					+ ","
-					+ finanzen.getLetzteKostenSonstige()
+					+ economy.getLetzteKostenSonstige()
 					+ ","
-					+ finanzen.getLetzteKostenGesamt()
+					+ economy.getLetzteKostenGesamt()
 					+ ","
-					+ finanzen.getLetzteGewinnVerlust()
+					+ economy.getLetzteGewinnVerlust()
 					+ ",'"
 					+ date.toString()
 					+ "' )");
@@ -147,23 +147,23 @@ public final class FinanzenTable extends AbstractTable {
 	/**
 	 * lädt die Finanzen zum angegeben HRF file ein
 	 */
-	Finanzen getFinanzen(int hrfID) {
+	Economy getEconomy(int hrfID) {
 		ResultSet rs = null;
-		Finanzen finanzen = null;
+		Economy economy = null;
 
 		rs = getSelectByHrfID(hrfID);
 
 		try {
 			if (rs != null) {
 				rs.first();
-				finanzen = new Finanzen(rs);
+				economy = new Economy(rs);
 				rs.close();
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DatenbankZugriff.getFinanzen: " + e);
 		}
 
-		return finanzen;
+		return economy;
 	}
 	
 }

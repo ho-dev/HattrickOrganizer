@@ -5,7 +5,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.misc.Finanzen;
+import core.model.misc.Economy;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -57,7 +57,7 @@ final class FinancePanel extends JPanel {
     }
 
     void setLabels() {
-        final Finanzen finances = HOVerwaltung.instance().getModel().getFinance();
+        final Economy finances = HOVerwaltung.instance().getModel().getEconomy();
         final float factor = core.model.UserParameter.instance().faktorGeld;
 
         if (currentFinance) {

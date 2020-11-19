@@ -105,6 +105,8 @@ final class DBUpdater {
 					case 399:
 						updateDBv400(DBVersion, version);
 					case 400:
+						updateDBv500(DBVersion, version);
+					case 500:
 				}
 
 				HOLogger.instance().log(getClass(), "done.");
@@ -115,6 +117,19 @@ final class DBUpdater {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
 	}
+
+	private void updateDBv500(int dbVersion, int version) throws SQLException {
+		// Upgrade legacy FINANZEN table to ECONOMY
+		if (!tableExists(EconomyTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN RENAME TO ECONOMY");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinSponsoren RENAME TO IncomeSponsors");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinZinsen RENAME TO IncomeFinancial");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinZuschauer RENAME TO IncomeSpectators");
+		}
+
+		updateDBVersion(dbVersion, version);
+	}
+
 
 	private void updateDBv400(int dbVersion, int version) throws SQLException {
 		// Delete existing values to provide sane defaults.

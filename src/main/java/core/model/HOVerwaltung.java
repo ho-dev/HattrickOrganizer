@@ -173,7 +173,7 @@ public class HOVerwaltung {
 		model.setLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
 		model.setPreviousLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
 		model.setBasics(DBManager.instance().getBasics(id));
-		model.setFinance(DBManager.instance().getFinanzen(id));
+		model.setFinance(DBManager.instance().getEconomy(id));
 		model.setLeague(DBManager.instance().getLiga(id));
 		model.setStadium(DBManager.instance().getStadion(id));
 		model.setTeam(DBManager.instance().getTeam(id));

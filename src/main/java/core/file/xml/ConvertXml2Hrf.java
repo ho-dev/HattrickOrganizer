@@ -144,9 +144,10 @@ public class ConvertXml2Hrf {
 		HOMainFrame.instance().setWaitInformation(30);
 		List<MyHashtable> playersData = new xmlPlayersParser()
 				.parsePlayersFromString(mc.getPlayers(teamId));
+
 		HOMainFrame.instance().setWaitInformation(35);
-		Map<String, String> economyDataMap = XMLEconomyParser
-				.parseEconomyFromString(mc.getEconomy(teamId));
+		Map<String, String> economyDataMap = XMLEconomyParser.parseEconomyFromString(mc.getEconomy(teamId));
+
 		HOMainFrame.instance().setWaitInformation(40);
 		Map<String, String> trainingDataMap = XMLTrainingParser
 				.parseTrainingFromString(mc.getTraining(teamId));
@@ -240,7 +241,7 @@ public class ConvertXml2Hrf {
 		HOMainFrame.instance().setWaitInformation(85);
 
 		// economy
-		createEconemy(economyDataMap, buffer);
+		createEconomy(economyDataMap, buffer);
 		HOMainFrame.instance().setWaitInformation(90);
 
 		// Arena
@@ -344,9 +345,8 @@ public class ConvertXml2Hrf {
 	/**
 	 * Create the club data.
 	 */
-	private static void createClub(Map<String, String> clubDataMap,
-			Map<String, String> economyDataMap, Map<String, String> teamdetailsDataMap,
-			StringBuilder buffer) {
+	private static void createClub(Map<String, String> clubDataMap, Map<String, String> economyDataMap,
+								   Map<String, String> teamdetailsDataMap, StringBuilder buffer) {
 		buffer.append("[club]\n");
 		buffer.append("hjTranare=").append(clubDataMap.get("AssistantTrainers")).append('\n');
 		buffer.append("psykolog=").append(clubDataMap.get("Psychologists")).append('\n');
@@ -366,79 +366,58 @@ public class ConvertXml2Hrf {
 	}
 
 	/**
-	 * Create the economy data.
+	 * Add the economy data to the HRF buffer
 	 */
-	private static void createEconemy(Map<String, String> economyDataMap,
-			StringBuilder buffer) {
+	private static void createEconomy(Map<String, String> economyDataMap,  StringBuilder buffer) {
 		// wahrscheinlich in Training.asp fehlt noch
 		buffer.append("[economy]").append('\n');
 
+		buffer.append("Cash=").append(economyDataMap.get("Cash")).append('\n');
+		buffer.append("ExpectedCash=").append(economyDataMap.get("ExpectedCash")).append('\n');
+
 		if (economyDataMap.get("SponsorsPopularity") != null) {
-			buffer.append("supporters=")
-					.append(economyDataMap.get("SupportersPopularity"))
-					.append('\n');
-			buffer.append("sponsors=")
-					.append(economyDataMap.get("SponsorsPopularity"))
-					.append('\n');
-			// es wird grad gespielt flag setzen
-		} else {
-			buffer.append("playingMatch=true");
+			buffer.append("SupportersPopularity=").append(economyDataMap.get("SupportersPopularity")).append('\n');
+			buffer.append("SponsorsPopularity=").append(economyDataMap.get("SponsorsPopularity")).append('\n');
+			buffer.append("PlayingMatch=false");
+		}
+		else {
+			buffer.append("PlayingMatch=true");
 		}
 
-		buffer.append("cash=").append(economyDataMap.get("Cash")).append('\n');
-		buffer.append("IncomeSponsorer=")
-				.append(economyDataMap.get("IncomeSponsors")).append('\n');
-		buffer.append("incomePublik=")
-				.append(economyDataMap.get("IncomeSpectators")).append('\n');
-		buffer.append("incomeFinansiella=")
-				.append(economyDataMap.get("IncomeFinancial")).append('\n');
-		buffer.append("incomeTillfalliga=")
-				.append(economyDataMap.get("IncomeTemporary")).append('\n');
-		buffer.append("incomeSumma=").append(economyDataMap.get("IncomeSum"))
-				.append('\n');
-		buffer.append("costsSpelare=")
-				.append(economyDataMap.get("CostsPlayers")).append('\n');
-		buffer.append("costsPersonal=")
-				.append(economyDataMap.get("CostsStaff")).append('\n');
-		buffer.append("costsArena=").append(economyDataMap.get("CostsArena"))
-				.append('\n');
-		buffer.append("costsJuniorverksamhet=")
-				.append(economyDataMap.get("CostsYouth")).append('\n');
-		buffer.append("costsRantor=")
-				.append(economyDataMap.get("CostsFinancial")).append('\n');
-		buffer.append("costsTillfalliga=")
-				.append(economyDataMap.get("CostsTemporary")).append('\n');
-		buffer.append("costsSumma=").append(economyDataMap.get("CostsSum"))
-				.append('\n');
-		buffer.append("total=")
-				.append(economyDataMap.get("ExpectedWeeksTotal")).append('\n');
-		buffer.append("lastIncomeSponsorer=")
-				.append(economyDataMap.get("LastIncomeSponsors")).append('\n');
-		buffer.append("lastIncomePublik=")
-				.append(economyDataMap.get("LastIncomeSpectators"))
-				.append('\n');
-		buffer.append("lastIncomeFinansiella=")
-				.append(economyDataMap.get("LastIncomeFinancial")).append('\n');
-		buffer.append("lastIncomeTillfalliga=")
-				.append(economyDataMap.get("LastIncomeTemporary")).append('\n');
-		buffer.append("lastIncomeSumma=")
-				.append(economyDataMap.get("LastIncomeSum")).append('\n');
-		buffer.append("lastCostsSpelare=")
-				.append(economyDataMap.get("LastCostsPlayers")).append('\n');
-		buffer.append("lastCostsPersonal=")
-				.append(economyDataMap.get("LastCostsStaff")).append('\n');
-		buffer.append("lastCostsArena=")
-				.append(economyDataMap.get("LastCostsArena")).append('\n');
-		buffer.append("lastCostsJuniorverksamhet=")
-				.append(economyDataMap.get("LastCostsYouth")).append('\n');
-		buffer.append("lastCostsRantor=")
-				.append(economyDataMap.get("LastCostsFinancial")).append('\n');
-		buffer.append("lastCostsTillfalliga=")
-				.append(economyDataMap.get("LastCostsTemporary")).append('\n');
-		buffer.append("lastCostsSumma=")
-				.append(economyDataMap.get("LastCostsSum")).append('\n');
-		buffer.append("lastTotal=")
-				.append(economyDataMap.get("LastWeeksTotal")).append('\n');
+		buffer.append("IncomeSpectators=").append(economyDataMap.get("IncomeSpectators")).append('\n');
+		buffer.append("IncomeSponsors=").append(economyDataMap.get("IncomeSponsors")).append('\n');
+		buffer.append("IncomeFinancial=").append(economyDataMap.get("IncomeFinancial")).append('\n');
+		buffer.append("IncomeSoldPlayers=").append(economyDataMap.get("IncomeSoldPlayers")).append('\n');
+		buffer.append("IncomeSoldPlayersCommission=").append(economyDataMap.get("IncomeSoldPlayersCommission")).append('\n');
+		buffer.append("IncomeTemporary=").append(economyDataMap.get("IncomeTemporary")).append('\n');
+		buffer.append("IncomeSum=").append(economyDataMap.get("IncomeSum")).append('\n');
+		buffer.append("CostsArena=").append(economyDataMap.get("CostsArena")).append('\n');
+		buffer.append("CostsPlayers=").append(economyDataMap.get("CostsPlayers")).append('\n');
+		buffer.append("CostsFinancial=").append(economyDataMap.get("CostsFinancial")).append('\n');
+		buffer.append("CostsStaff=").append(economyDataMap.get("CostsStaff")).append('\n');
+		buffer.append("CostsBoughtPlayers=").append(economyDataMap.get("CostsBoughtPlayers")).append('\n');
+		buffer.append("CostsArenaBuilding=").append(economyDataMap.get("CostsArenaBuilding")).append('\n');
+		buffer.append("CostsTemporary=").append(economyDataMap.get("CostsTemporary")).append('\n');
+		buffer.append("CostsYouth=").append(economyDataMap.get("CostsYouth")).append('\n');
+		buffer.append("CostsSum=").append(economyDataMap.get("CostsSum")).append('\n');
+		buffer.append("ExpectedWeeksTotal=").append(economyDataMap.get("ExpectedWeeksTotal")).append('\n');
+		buffer.append("LastIncomeSpectators=").append(economyDataMap.get("LastIncomeSpectators")).append('\n');
+		buffer.append("LastIncomeSponsors=").append(economyDataMap.get("LastIncomeSponsors")).append('\n');
+		buffer.append("LastIncomeFinancial=").append(economyDataMap.get("LastIncomeFinancial")).append('\n');
+		buffer.append("LastIncomeSoldPlayers=").append(economyDataMap.get("LastIncomeSoldPlayers")).append('\n');
+		buffer.append("LastIncomeSoldPlayersCommission=").append(economyDataMap.get("LastIncomeSoldPlayersCommission")).append('\n');
+		buffer.append("LastIncomeTemporary=").append(economyDataMap.get("LastIncomeTemporary")).append('\n');
+		buffer.append("LastIncomeSum=").append(economyDataMap.get("LastIncomeSum")).append('\n');
+		buffer.append("lastCostsArena=").append(economyDataMap.get("LastCostsArena")).append('\n');
+		buffer.append("LastCostsPlayers=").append(economyDataMap.get("LastCostsPlayers")).append('\n');
+		buffer.append("LastCostsFinancial=").append(economyDataMap.get("LastCostsFinancial")).append('\n');
+		buffer.append("lastCostsPersonal=").append(economyDataMap.get("LastCostsStaff")).append('\n');
+		buffer.append("LastCostsBoughtPlayers=").append(economyDataMap.get("LastCostsBoughtPlayers")).append('\n');
+		buffer.append("LastCostsArenaBuilding=").append(economyDataMap.get("LastCostsArenaBuilding")).append('\n');
+		buffer.append("LastCostsTemporary=").append(economyDataMap.get("LastCostsTemporary")).append('\n');
+		buffer.append("LastCostsYouth=").append(economyDataMap.get("LastCostsYouth")).append('\n');
+		buffer.append("LastCostsSum=").append(economyDataMap.get("LastCostsSum")).append('\n');
+		buffer.append("lastTotal=").append(economyDataMap.get("LastWeeksTotal")).append('\n');
 	}
 
 	/**
