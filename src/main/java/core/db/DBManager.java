@@ -1348,7 +1348,7 @@ public class DBManager {
 	}
 
 	public double[][] getFinanzen4Statistik(int anzahlHRF) {
-		return StatisticQuery.getFinanzen4Statistik(anzahlHRF);
+		return StatisticQuery.getDataForFinanceStatisticsPanel(anzahlHRF);
 	}
 
 	public ArenaStatistikTableModel getArenaStatistikModel(int matchtyp) {

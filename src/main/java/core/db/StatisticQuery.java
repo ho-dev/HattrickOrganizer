@@ -388,116 +388,65 @@ public class StatisticQuery {
 		return returnValues;
 	}
 
-	public static double[][] getFinanzen4Statistik(int anzahlHRF) {
-		List<TrainingPerWeek> trainings =TrainingManager.instance().getTrainingWeekList();
-		final int anzahlSpalten = 17;
+	// The data returned by this function are displayed in the Finance tab of the statistics module
+	public static double[][] getDataForFinanceStatisticsPanel(int iNumberHRF) {
+		List<TrainingPerWeek> trainings = TrainingManager.instance().getTrainingWeekList();
+		final int iNumberColumns = 15;
 
-		final double[][] marktwerte = getMarktwert4Statistik(anzahlHRF);
-		final float faktor = core.model.UserParameter.instance().faktorGeld;
+		final float fxRate = core.model.UserParameter.instance().faktorGeld;
 
-		double[][] returnWerte = new double[0][0];
-		Vector<double[]> vWerte = new Vector<double[]>();
+		double[][] returnValues;
+		Vector<double[]> values = new Vector<>();
 
 		try {
-			//aktuelle Werte hinzufügen
-			ResultSet rs =
-				DBManager.instance().getAdapter().executeQuery(
-					"SELECT FINANZEN.*, VEREIN.Fans FROM FINANZEN, VEREIN where FINANZEN.HRF_ID="
-						+ HOVerwaltung.instance().getModel().getID()
-						+ " AND VEREIN.HRF_ID="
-						+ HOVerwaltung.instance().getModel().getID());
+			//add current values
+			ResultSet rs = DBManager.instance().getAdapter().executeQuery(
+					"SELECT FINANZEN.* FROM FINANZEN WHERE FINANZEN.HRF_ID IN (" + getInClause(iNumberHRF, trainings) + ") ORDER BY Datum DESC");
 
-			if (rs.first()) {
-				final double[] tempwerte = new double[anzahlSpalten];
-				tempwerte[0] = (rs.getDouble("Finanzen") / faktor) + (rs.getDouble("GewinnVerlust") / faktor);
-				tempwerte[1] = rs.getDouble("GewinnVerlust") / faktor;
-				tempwerte[2] = rs.getDouble("EinGesamt") / faktor;
-				tempwerte[3] = rs.getDouble("KostGesamt") / faktor;
-				tempwerte[4] = rs.getDouble("EinZuschauer") / faktor;
-				tempwerte[5] = rs.getDouble("EinSponsoren") / faktor;
-				tempwerte[6] = rs.getDouble("EinZinsen") / faktor;
-				tempwerte[7] = rs.getDouble("EinSonstiges") / faktor;
-				tempwerte[8] = rs.getDouble("KostStadion") / faktor;
-				tempwerte[9] = rs.getDouble("KostSpieler") / faktor;
-				tempwerte[10] = rs.getDouble("KostZinsen") / faktor;
-				tempwerte[11] = rs.getDouble("KostSonstiges") / faktor;
-				tempwerte[12] = rs.getDouble("KostTrainer") / faktor;
-				tempwerte[13] = rs.getDouble("KostJugend") / faktor;
-				tempwerte[14] = rs.getDouble("Fans");
-				tempwerte[16] = rs.getTimestamp("Datum").getTime();
-
-				vWerte.add(tempwerte);
-			}
-
-			rs =
-				DBManager.instance().getAdapter().executeQuery(
-					"SELECT FINANZEN.*, VEREIN.Fans FROM FINANZEN, VEREIN WHERE FINANZEN.HRF_ID=VEREIN.HRF_ID AND VEREIN.HRF_ID IN (" + getInClause(anzahlHRF, trainings) + ") ORDER BY Datum DESC");
+			if (rs == null) return new double[0][0];
 
 			rs.beforeFirst();
 
-			double[] tempwerte = null;
+			double[] tempValues;
 
 			while (rs.next()) {
-				tempwerte = new double[anzahlSpalten];
-				tempwerte[0] = rs.getDouble("Finanzen") / faktor;
-				tempwerte[1] = rs.getDouble("LetzteGewinnVerlust") / faktor;
-				tempwerte[2] = rs.getDouble("LetzteEinGesamt") / faktor;
-				tempwerte[3] = rs.getDouble("LetzteKostGesamt") / faktor;
-				tempwerte[4] = rs.getDouble("LetzteEinZuschauer") / faktor;
-				tempwerte[5] = rs.getDouble("LetzteEinSponsoren") / faktor;
-				tempwerte[6] = rs.getDouble("LetzteEinZinsen") / faktor;
-				tempwerte[7] = rs.getDouble("LetzteEinSonstiges") / faktor;
-				tempwerte[8] = rs.getDouble("LetzteKostStadion") / faktor;
-				tempwerte[9] = rs.getDouble("LetzteKostSpieler") / faktor;
-				tempwerte[10] = rs.getDouble("LetzteKostZinsen") / faktor;
-				tempwerte[11] = rs.getDouble("LetzteKostSonstiges") / faktor;
-				tempwerte[12] = rs.getDouble("LetzteKostTrainer") / faktor;
-				tempwerte[13] = rs.getDouble("LetzteKostJugend") / faktor;
-				tempwerte[14] = rs.getDouble("Fans");
-				tempwerte[16] = rs.getTimestamp("Datum").getTime();
+				tempValues = new double[iNumberColumns];
+				tempValues[0] = rs.getDouble("Finanzen") / fxRate;
+				tempValues[1] = rs.getDouble("GewinnVerlust") / fxRate;
+				tempValues[2] = rs.getDouble("EinGesamt") / fxRate;
+				tempValues[3] = rs.getDouble("KostGesamt") / fxRate;
+				tempValues[4] = rs.getDouble("EinZuschauer") / fxRate;
+				tempValues[5] = rs.getDouble("EinSponsoren") / fxRate;
+				tempValues[6] = rs.getDouble("EinZinsen") / fxRate;
+				tempValues[7] = rs.getDouble("EinSonstiges") / fxRate;
+				tempValues[8] = rs.getDouble("KostStadion") / fxRate;
+				tempValues[9] = rs.getDouble("KostSpieler") / fxRate;
+				tempValues[10] = rs.getDouble("KostZinsen") / fxRate;
+				tempValues[11] = rs.getDouble("KostSonstiges") / fxRate;
+				tempValues[12] = rs.getDouble("KostTrainer") / fxRate;
+				tempValues[13] = rs.getDouble("KostJugend") / fxRate;
+				tempValues[14] = rs.getTimestamp("Datum").getTime();
 
-				//summenwerte speichern
-				vWerte.add(tempwerte);
+				//save values
+				values.add(tempValues);
 			}
 
-			Vector<double[]> temp = new Vector<double[]>();
-
-			for (int i = 0; i < vWerte.size(); i++) {
-				final double[] werte = (double[]) vWerte.get(i);
-
-				try {
-					if (i == 0) {
-						//Letzten Marktwert reinkopieren
-						werte[15] = marktwerte[0][0];
-					} else {
-						//Marktwert reinkopieren
-						werte[15] = marktwerte[0][i - 1];
-					}
-
-					temp.add(werte);
-				} catch (Exception ex) {
-					//Warum ist unklar
-					HOLogger.instance().log(StatisticQuery.class, "DBZugriff.getFinanzen4Statistik : " + ex);
-				}
-			}
-
-			//Zurückreferenzieren
-			vWerte = temp;
-
-			returnWerte = new double[anzahlSpalten][vWerte.size()];
-
-			for (int i = 0; i < vWerte.size(); i++) {
-				final double[] werte = (double[]) vWerte.get(i);
+			// copy values into returnValues
+			returnValues = new double[iNumberColumns][values.size()];
+			for (int i = 0; i < values.size(); i++) {
+				final double[] werte = values.get(i);
 
 				for (int j = 0; j < werte.length; j++) {
-					returnWerte[j][i] = werte[j];
+					returnValues[j][i] = werte[j];
 				}
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			HOLogger.instance().log(StatisticQuery.class, e);
+			return new double[0][0];
 		}
 
-		return returnWerte;
+		return returnValues;
 	}
 
 	public static double[][] getSpielerFinanzDaten4Statistik(int spielerId, int anzahlHRF) {
@@ -548,54 +497,6 @@ public class StatisticQuery {
 		return returnWerte;
 	}
 
-	private static double[][] getMarktwert4Statistik(int anzahlHRF) {
-
-		List<TrainingPerWeek> trainings = TrainingManager.instance().getTrainingWeekList();
-		final int anzahlSpalten = 2;
-
-		double[][] returnWerte = new double[0][0];
-		final Vector<double[]> vWerte = new Vector<double[]>();
-
-		final ResultSet rs =
-			DBManager.instance().getAdapter().executeQuery(
-				"SELECT SUM(Marktwert) as TSI, Max(Datum) as Datum FROM SPIELER WHERE Trainer=0 AND HRF_ID IN (" + getInClause(anzahlHRF, trainings) + ") group by HRF_ID ORDER BY Datum DESC");
-
-		if (rs != null) {
-			try {
-				rs.beforeFirst();
-
-				//double[] summewerte = new double[anzahlSpalten];
-
-				while (rs.next()) {
-					final double[] tempwerte = new double[anzahlSpalten];
-
-					// / gui.UserParameter.instance ().faktorGeld;
-					tempwerte[0] = rs.getDouble("TSI");
-					tempwerte[1] = rs.getTimestamp("Datum").getTime();
-
-					//TSI, alles vorher durch 1000 teilen
-					if (rs.getTimestamp("Datum").before(DBManager.TSIDATE)) {
-						tempwerte[0] /= 1000d;
-					}
-					vWerte.add(tempwerte);
-				}
-
-				returnWerte = new double[anzahlSpalten][vWerte.size()];
-
-				for (int i = 0; i < vWerte.size(); i++) {
-					final double[] werte = (double[]) vWerte.get(i);
-
-					for (int j = 0; j < werte.length; j++) {
-						returnWerte[j][i] = werte[j];
-					}
-				}
-			} catch (Exception e) {
-				HOLogger.instance().log(StatisticQuery.class, e);
-			}
-		}
-
-		return returnWerte;
-	}
 
 	private static String getInClause(int anzahlHRF, List<TrainingPerWeek> trainings) {
 		StringBuffer inClause = new StringBuffer();
@@ -605,7 +506,7 @@ public class StatisticQuery {
 		}
 		inClause.append(DBManager.instance().getLatestHrfId());
 		for (int index = start; index < trainings.size(); index++) {
-			TrainingPerWeek tpw = (TrainingPerWeek) trainings.get(index);
+			TrainingPerWeek tpw = trainings.get(index);
 			inClause.append(" , ");
 			inClause.append("" + tpw.getPreviousHrfId());
 		}

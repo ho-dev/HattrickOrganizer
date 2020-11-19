@@ -17,7 +17,7 @@ public class StatistikMainPanel extends LazyImagePanel {
     private ClubStatisticsPanel clubStatisticsPanel;
 	private TeamStatisticsPanel teamStatisticsPanel;
 	private ArenaStatistikPanel arenaStatistikPanel;
-	private FinanzStatistikPanel finanzStatistikPanel;
+	private FinancesStatisticsPanel financesStatisticsPanel;
 	private JTabbedPane tabbedPane;
 	private MatchesStatisticsPanel matchesStatisticsPanel;
 	private PlayerStatisticsPanel playerStatisticsPanel;
@@ -58,9 +58,9 @@ public class StatistikMainPanel extends LazyImagePanel {
 				clubStatisticsPanel);
 
 		// Finanzstatistik
-		finanzStatistikPanel = new FinanzStatistikPanel();
+		financesStatisticsPanel = new FinancesStatisticsPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Finanzen"),
-				finanzStatistikPanel);
+				financesStatisticsPanel);
 
 		// Arenastatistik
 		arenaStatistikPanel = new ArenaStatistikPanel();
