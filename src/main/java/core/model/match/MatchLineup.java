@@ -306,4 +306,13 @@ public class MatchLineup {
         return this.getMatchTyp().getSourceSystem();
     }
 
+    public MatchLineupTeam getTeam(Integer teamId) {
+        if ( teamId == this.getHeimId()){
+            return this.getHeim();
+        }
+        else if ( teamId == this.getGastId()){
+            return this.getGast();
+        }
+        return null;
+    }
 }
