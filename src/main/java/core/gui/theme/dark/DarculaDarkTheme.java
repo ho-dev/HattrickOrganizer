@@ -118,20 +118,20 @@ public class DarculaDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.PALETTE10[9], Color.decode("#338821"));
 
             ThemeManager.instance().put(HOColorName.PALETTE15[0], Color.decode("#b8e27d"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[1], Color.decode("#82269b"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[1], new Color(167, 103, 185));
             ThemeManager.instance().put(HOColorName.PALETTE15[2], Color.decode("#7cee4d"));
             ThemeManager.instance().put(HOColorName.PALETTE15[3], Color.decode("#df72ef"));
             ThemeManager.instance().put(HOColorName.PALETTE15[4], Color.decode("#ccad34"));
             ThemeManager.instance().put(HOColorName.PALETTE15[5], Color.decode("#f23387"));
             ThemeManager.instance().put(HOColorName.PALETTE15[6], Color.decode("#56ebd3"));
             ThemeManager.instance().put(HOColorName.PALETTE15[7], Color.decode("#ffffff"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[8], Color.decode("#a1def0"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[8], new Color(255, 110, 30));
             ThemeManager.instance().put(HOColorName.PALETTE15[9], Color.decode("#bb190a"));
             ThemeManager.instance().put(HOColorName.PALETTE15[10], Color.decode("#199bce"));
             ThemeManager.instance().put(HOColorName.PALETTE15[11], Color.decode("#f2f27a"));
             ThemeManager.instance().put(HOColorName.PALETTE15[12], Color.decode("#ffd9e3"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[13], Color.decode("#eb9e34"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[14], Color.decode("#fc8f3b"));
+            ThemeManager.instance().put(HOColorName.PALETTE15[13], new Color(215, 160, 50));
+            ThemeManager.instance().put(HOColorName.PALETTE15[14], new Color(161, 222, 240));
 
             return super.enableTheme();
         } catch (Exception e) {

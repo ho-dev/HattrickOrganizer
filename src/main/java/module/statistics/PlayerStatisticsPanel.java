@@ -70,7 +70,6 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 	private LinesChart oChartPanel;
 
 
-
 	public final void setPlayer(int playerID) {
 		Helper.markierenComboBox(jcbPlayer, playerID);
 	}
@@ -154,7 +153,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 						jcbSetPieces.isSelected());
 				UserParameter.instance().statistikStandards = jcbSetPieces.isSelected();
 			} else if (e.getSource() == jcbRating.getCheckbox()) {
-				oChartPanel.setShow("Rating", jcbRating.isSelected());
+				oChartPanel.setShow("RecapPanel.Stars", jcbRating.isSelected());
 				UserParameter.instance().statistikBewertung = jcbRating.isSelected();
 			} else if (e.getSource() == jcbTSI.getCheckbox()) {
 				oChartPanel.setShow("Marktwert", jcbTSI.isSelected());
@@ -264,7 +263,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 0;
 		constraints2.gridy = 6;
 		constraints2.insets = new Insets(20,0,0,0);  //top padding
-		jcbForm = new ImageCheckbox(getLangStr("ls.player.form"), getColor(Colors.COLOR_FORM),
+		jcbForm = new ImageCheckbox(getLangStr("ls.player.form"), getColor(Colors.COLOR_PLAYER_FORM),
 				UserParameter.instance().statistikForm);
 		jcbForm.setOpaque(false);
 		layout2.setConstraints(jcbForm, constraints2);
@@ -275,7 +274,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridy = 7;
 		constraints2.insets = new Insets(0,0,0,0);
 		jcbStamina = new ImageCheckbox(getLangStr("ls.player.skill.stamina"),
-				getColor(Colors.COLOR_STAMINA),
+				getColor(Colors.COLOR_PLAYER_STAMINA),
 				UserParameter.instance().statistikKondition);
 		jcbStamina.setOpaque(false);
 		layout2.setConstraints(jcbStamina, constraints2);
@@ -285,7 +284,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 0;
 		constraints2.gridy = 8;
 		jcbLoyalty = new ImageCheckbox(getLangStr("ls.player.loyalty"),
-				getColor(Colors.COLOR_LOYALTY),
+				getColor(Colors.COLOR_PLAYER_LOYALTY),
 				UserParameter.instance().statistikLoyalty);
 		jcbLoyalty.setOpaque(false);
 		layout2.setConstraints(jcbLoyalty, constraints2);
@@ -295,7 +294,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 0;
 		constraints2.gridy = 9;
 		jcbKeeper = new ImageCheckbox(getLangStr("ls.player.skill.keeper"),
-				getColor(Colors.COLOR_GK),
+				getColor(Colors.COLOR_PLAYER_GK),
 				UserParameter.instance().statistikTorwart);
 		jcbKeeper.setOpaque(false);
 		layout2.setConstraints(jcbKeeper, constraints2);
@@ -305,7 +304,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 0;
 		constraints2.gridy = 10;
 		jcbDefending = new ImageCheckbox(getLangStr("ls.player.skill.defending"),
-				getColor(Colors.COLOR_DE),
+				getColor(Colors.COLOR_PLAYER_DE),
 				UserParameter.instance().statistikVerteidigung);
 		jcbDefending.setOpaque(false);
 		layout2.setConstraints(jcbDefending, constraints2);
@@ -315,7 +314,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 0;
 		constraints2.gridy = 11;
 		jcbPlaymaking = new ImageCheckbox(getLangStr("ls.player.skill.playmaking"),
-				getColor(Colors.COLOR_PM),
+				getColor(Colors.COLOR_PLAYER_PM),
 				UserParameter.instance().statistikSpielaufbau);
 		jcbPlaymaking.setOpaque(false);
 		layout2.setConstraints(jcbPlaymaking, constraints2);
@@ -325,7 +324,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 0;
 		constraints2.gridy = 12;
 		jcbPass = new ImageCheckbox(getLangStr("ls.player.skill.passing"),
-				getColor(Colors.COLOR_PS),
+				getColor(Colors.COLOR_PLAYER_PS),
 				UserParameter.instance().statistikPasspiel);
 		jcbPass.setOpaque(false);
 		layout2.setConstraints(jcbPass, constraints2);
@@ -335,7 +334,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 0;
 		constraints2.gridy = 13;
 		jcbWing = new ImageCheckbox(getLangStr("ls.player.skill.winger"),
-				getColor(Colors.COLOR_WI),
+				getColor(Colors.COLOR_PLAYER_WI),
 				UserParameter.instance().statistikFluegel);
 		jcbWing.setOpaque(false);
 		layout2.setConstraints(jcbWing, constraints2);
@@ -345,7 +344,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 0;
 		constraints2.gridy = 14;
 		jcbScoring = new ImageCheckbox(getLangStr("ls.player.skill.scoring"),
-				getColor(Colors.COLOR_SC),
+				getColor(Colors.COLOR_PLAYER_SC),
 				UserParameter.instance().statistikTorschuss);
 		jcbScoring.setOpaque(false);
 		layout2.setConstraints(jcbScoring, constraints2);
@@ -355,7 +354,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 0;
 		constraints2.gridy = 15;
 		jcbSetPieces = new ImageCheckbox(getLangStr("ls.player.skill.setpieces"),
-				getColor(Colors.COLOR_SP),
+				getColor(Colors.COLOR_PLAYER_SP),
 				UserParameter.instance().statistikStandards);
 		jcbSetPieces.setOpaque(false);
 		layout2.setConstraints(jcbSetPieces, constraints2);
@@ -366,7 +365,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridy = 16;
 		constraints2.insets = new Insets(0,0,0,0);
 		jcbLeadership = new ImageCheckbox(getLangStr("ls.player.leadership"),
-				getColor(Colors.COLOR_LEADERSHIP),
+				getColor(Colors.COLOR_PLAYER_LEADERSHIP),
 				UserParameter.instance().statistikFuehrung);
 		jcbLeadership.setOpaque(false);
 		layout2.setConstraints(jcbLeadership, constraints2);
@@ -377,7 +376,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 0;
 		constraints2.gridy = 17;
 		jcbExperience = new ImageCheckbox(getLangStr("ls.player.experience"),
-				getColor(Colors.COLOR_XP),
+				getColor(Colors.COLOR_PLAYER_XP),
 				UserParameter.instance().statistikErfahrung);
 		jcbExperience.setOpaque(false);
 		layout2.setConstraints(jcbExperience, constraints2);
@@ -387,8 +386,8 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridwidth = 1;
 		constraints2.gridx = 0;
 		constraints2.gridy = 18;
-		jcbRating = new ImageCheckbox(getLangStr("Rating"),
-				getColor(Colors.COLOR_RATING),
+		jcbRating = new ImageCheckbox(getLangStr("RecapPanel.Stars"),
+				getColor(Colors.COLOR_PLAYER_RATING),
 				UserParameter.instance().statistikBewertung);
 		jcbRating.setOpaque(false);
 		layout2.setConstraints(jcbRating, constraints2);
@@ -400,9 +399,8 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridwidth = 1;
 		constraints2.gridx = 0;
 		constraints2.gridy = 19;
-		jcbTSI = new ImageCheckbox(getLangStr("ls.player.tsi"),
-				getColor(Colors.COLOR_TSI),
-				UserParameter.instance().statistikSpielerFinanzenMarktwert);
+		String textLabel = getLangStr("ls.player.tsi") + " (" + getLangStr("ls.chart.second_axis") + ")";
+		jcbTSI = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_TSI), UserParameter.instance().statistikSpielerFinanzenMarktwert);
 		jcbTSI.setOpaque(false);
 		layout2.setConstraints(jcbTSI, constraints2);
 		panel2.add(jcbTSI);
@@ -411,9 +409,8 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 0;
 		constraints2.gridy = 20;
 		constraints2.insets = new Insets(0,0,0,0);  //top padding
-		jcbSalary = new ImageCheckbox(getLangStr("ls.player.wage"),
-				getColor(Colors.COLOR_WAGE),
-				UserParameter.instance().statistikSpielerFinanzenGehalt);
+		textLabel = getLangStr("ls.player.wage") + " (" + getLangStr("ls.chart.second_axis") + ")";
+		jcbSalary = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_WAGE), UserParameter.instance().statistikSpielerFinanzenGehalt);
 		jcbSalary.setOpaque(false);
 		layout2.setConstraints(jcbSalary, constraints2);
 		panel2.add(jcbSalary);
@@ -503,51 +500,51 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 					double maxWage = Helper.getMaxValue(statistikWerte[1]);
 
 					//   TSI =========================================================================
-					models[0] = new GraphDataModel(statistikWerte[0], "Marktwert", jcbTSI.isSelected(), getColor(Colors.COLOR_TSI),
+					models[0] = new GraphDataModel(statistikWerte[0], "Marktwert", jcbTSI.isSelected(), getColor(Colors.COLOR_PLAYER_TSI),
 							SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format3, 19/maxTSI, true);
 
-					models[1] = new GraphDataModel(statistikWerte[1], "ls.player.wage", jcbSalary.isSelected(), getColor(Colors.COLOR_WAGE),
+					models[1] = new GraphDataModel(statistikWerte[1], "ls.player.wage", jcbSalary.isSelected(), getColor(Colors.COLOR_PLAYER_WAGE),
 							SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format2, 16/maxWage, true);
 
 					models[2] = new GraphDataModel(statistikWerte[2], "ls.player.leadership",
 							jcbLeadership.isSelected(),
-							getColor(Colors.COLOR_LEADERSHIP), format);
+							getColor(Colors.COLOR_PLAYER_LEADERSHIP), format);
 					models[3] = new GraphDataModel(statistikWerte[3], "ls.player.experience",
 							jcbExperience.isSelected(),
-							getColor(Colors.COLOR_XP), format);
+							getColor(Colors.COLOR_PLAYER_XP), format);
 					models[4] = new GraphDataModel(statistikWerte[4], "ls.player.form",
-							jcbForm.isSelected(), getColor(Colors.COLOR_FORM),
+							jcbForm.isSelected(), getColor(Colors.COLOR_PLAYER_FORM),
 							format);
 					models[5] = new GraphDataModel(statistikWerte[5], "ls.player.skill.stamina",
 							jcbStamina.isSelected(),
-							getColor(Colors.COLOR_STAMINA), format);
+							getColor(Colors.COLOR_PLAYER_STAMINA), format);
 					models[6] = new GraphDataModel(statistikWerte[6], "ls.player.skill.keeper",
 							jcbKeeper.isSelected(),
-							getColor(Colors.COLOR_GK), format);
+							getColor(Colors.COLOR_PLAYER_GK), format);
 					models[7] = new GraphDataModel(statistikWerte[7], "ls.player.skill.defending",
 							jcbDefending.isSelected(),
-							getColor(Colors.COLOR_DE), format);
+							getColor(Colors.COLOR_PLAYER_DE), format);
 					models[8] = new GraphDataModel(statistikWerte[8], "ls.player.skill.playmaking",
 							jcbPlaymaking.isSelected(),
-							getColor(Colors.COLOR_PM), format);
+							getColor(Colors.COLOR_PLAYER_PM), format);
 					models[9] = new GraphDataModel(statistikWerte[9], "ls.player.skill.passing",
 							jcbPass.isSelected(),
-							getColor(Colors.COLOR_PS), format);
+							getColor(Colors.COLOR_PLAYER_PS), format);
 					models[10] = new GraphDataModel(statistikWerte[10], "ls.player.skill.winger",
 							jcbWing.isSelected(),
-							getColor(Colors.COLOR_WI), format);
+							getColor(Colors.COLOR_PLAYER_WI), format);
 					models[11] = new GraphDataModel(statistikWerte[11], "ls.player.skill.scoring",
 							jcbScoring.isSelected(),
-							getColor(Colors.COLOR_SC), format);
+							getColor(Colors.COLOR_PLAYER_SC), format);
 					models[12] = new GraphDataModel(statistikWerte[12],
 							"ls.player.skill.setpieces", jcbSetPieces.isSelected(),
-							getColor(Colors.COLOR_SP), format);
-					models[13] = new GraphDataModel(statistikWerte[13], "Rating",
+							getColor(Colors.COLOR_PLAYER_SP), format);
+					models[13] = new GraphDataModel(statistikWerte[13], "RecapPanel.Stars",
 							jcbRating.isSelected(),
-							getColor(Colors.COLOR_RATING), format);
+							getColor(Colors.COLOR_PLAYER_RATING), format);
 					models[14] = new GraphDataModel(statistikWerte[14], "ls.player.loyalty",
 							jcbLoyalty.isSelected(),
-							getColor(Colors.COLOR_LOYALTY), format);
+							getColor(Colors.COLOR_PLAYER_LOYALTY), format);
 				}
 
 				oChartPanel.setAllValues(models, statistikWerte[15], format, HOVerwaltung

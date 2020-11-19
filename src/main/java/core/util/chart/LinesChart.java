@@ -10,6 +10,9 @@ import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.AxesChartStyler;
 import org.knowm.xchart.style.Styler;
+import org.knowm.xchart.style.lines.SeriesLines;
+
+import java.awt.*;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.List;
@@ -54,8 +57,15 @@ public class LinesChart implements ILinesChart{
         m_chart.getStyler().setPlotBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
         m_chart.getStyler().setPlotGridLinesColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
         m_chart.getStyler().setChartBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
+
         m_chart.getStyler().setXAxisTickMarksColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
         m_chart.getStyler().setXAxisTickLabelsColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+
+        m_chart.getStyler().setPlotGridLinesStroke(new BasicStroke(0.25f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
+        m_chart.getStyler().setMarkerSize(5);
+
+        m_chart.getStyler().setYAxisGroupTickLabelsColorMap(0, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+        m_chart.getStyler().setYAxisGroupTickMarksColorMap(0, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
 
         if (y1_axisMin != null) m_axeStyler.setYAxisMin(0, y1_axisMin);
         if (y1_axisMax != null) m_axeStyler.setYAxisMax(0, y1_axisMax);
@@ -78,6 +88,7 @@ public class LinesChart implements ILinesChart{
             }
 
             m_chart.getStyler().setYAxisGroupTickLabelsColorMap(1, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+            m_chart.getStyler().setYAxisGroupTickMarksColorMap(1, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
 
             if (y2_axisMin != null) m_axeStyler.setYAxisMin(1, y2_axisMin);
             if (y2_axisMax != null) m_axeStyler.setYAxisMax(1, y2_axisMax);
@@ -116,7 +127,6 @@ public class LinesChart implements ILinesChart{
 
         m_chart.getStyler().setHasAnnotations(m_hasLabels);
         m_chart.getStyler().setPlotGridLinesVisible(m_hasHelpLines);
-        m_chart.getStyler().setMarkerSize(5);
 
         var series = m_chart.getSeriesMap();
         String serieName;

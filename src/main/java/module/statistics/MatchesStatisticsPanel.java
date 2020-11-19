@@ -17,7 +17,10 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
 import core.util.Helper;
+import core.util.chart.LinesChart;
 import module.matches.SpielePanel;
+import org.knowm.xchart.style.lines.SeriesLines;
+import org.knowm.xchart.style.markers.SeriesMarkers;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -44,25 +47,30 @@ import javax.swing.SwingConstants;
  */
 public class MatchesStatisticsPanel extends LazyImagePanel {
 
-	private ImageCheckbox m_jchAbwehrzentrum;
-	private ImageCheckbox m_jchAngriffszentrum;
-	private ImageCheckbox m_jchBewertung;
-	private ImageCheckbox m_jchGesamt;
-	private ImageCheckbox m_jchLinkeAbwehr;
-	private ImageCheckbox m_jchLinkerAngriff;
-	private ImageCheckbox m_jchMittelfeld;
-	private ImageCheckbox m_jchRechteAbwehr;
-	private ImageCheckbox m_jchRechterAngriff;
-	private ImageCheckbox m_jchSelbstvertrauen;
-	private ImageCheckbox m_jchStimmung;
-	private ImageCheckbox m_jchHatStats;
-	private ImageCheckbox m_jchLoddarStats;
-	private JButton m_jbUbernehmen;
-	private JCheckBox m_jchBeschriftung;
-	private JCheckBox m_jchHilflinien;
-	private JComboBox m_jcbSpieleFilter;
-	private JTextField m_jtfAnzahlHRF;
-	private StatistikPanel m_clStatistikPanel;
+	private ImageCheckbox c_jcbCentralDefence;
+	private ImageCheckbox c_jcbCentralAttack;
+	private ImageCheckbox c_jcbRating;
+	private ImageCheckbox c_jcbTotalStrength;
+	private ImageCheckbox c_jcbLeftDefence;
+	private ImageCheckbox c_jcbLeftAttack;
+	private ImageCheckbox c_jcbMidfield;
+	private ImageCheckbox c_jcbRightDefence;
+	private ImageCheckbox c_jcbRightAttack;
+	private ImageCheckbox c_jcbConfidence;
+	private ImageCheckbox c_jcbTeamSpirit;
+	private ImageCheckbox c_jcbHatStats;
+	private ImageCheckbox c_jcbLoddarStats;
+	private JButton c_jbApply;
+	private JCheckBox c_jcbHelpLines;
+	private JComboBox c_jcbMatchesFilter;
+	private JTextField c_jtfNumberHRF;
+	private LinesChart c_jpChart;
+
+	private final String sSum = "\u03A3 ";
+	private final String sAvg = "\u00D8 ";
+
+	private final String avgRating = sAvg + HOVerwaltung.instance().getLanguageString("Rating");
+	private final String sumStars = sSum + HOVerwaltung.instance().getLanguageString("RecapPanel.Stars");
 
 	@Override
 	protected void initialize() {
@@ -81,101 +89,96 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 	private void addListeners() {
 
 		ActionListener checkBoxActionListener = e -> {
-			if (e.getSource() == m_jchHilflinien) {
-				m_clStatistikPanel.setHelpLines(m_jchHilflinien.isSelected());
-				UserParameter.instance().statistikSpielerFinanzenHilfslinien = m_jchHilflinien
+			if (e.getSource() == c_jcbHelpLines) {
+				c_jpChart.setHelpLines(c_jcbHelpLines.isSelected());
+				UserParameter.instance().statistikSpielerFinanzenHilfslinien = c_jcbHelpLines
 						.isSelected();
-			} else if (e.getSource() == m_jchBeschriftung) {
-				m_clStatistikPanel.setLabelling(m_jchBeschriftung.isSelected());
-				UserParameter.instance().statistikSpielerFinanzenBeschriftung = m_jchBeschriftung
+			}else if (e.getSource() == c_jcbRating.getCheckbox()) {
+				c_jpChart.setShow(sumStars, c_jcbRating.isSelected());
+				UserParameter.instance().statistikSpieleBewertung = c_jcbRating.isSelected();
+			} else if (e.getSource() == c_jcbTotalStrength.getCheckbox()) {
+				c_jpChart.setShow("Gesamtstaerke", c_jcbTotalStrength.isSelected());
+				UserParameter.instance().statistikSpieleGesamt = c_jcbTotalStrength.isSelected();
+			} else if (e.getSource() == c_jcbMidfield.getCheckbox()) {
+				c_jpChart.setShow("ls.match.ratingsector.midfield",
+						c_jcbMidfield.isSelected());
+				UserParameter.instance().statistikSpieleMittelfeld = c_jcbMidfield
 						.isSelected();
-			} else if (e.getSource() == m_jchBewertung.getCheckbox()) {
-				m_clStatistikPanel.setShow("Bewertung", m_jchBewertung.isSelected());
-				UserParameter.instance().statistikSpieleBewertung = m_jchBewertung.isSelected();
-			} else if (e.getSource() == m_jchGesamt.getCheckbox()) {
-				m_clStatistikPanel.setShow("Gesamtstaerke", m_jchGesamt.isSelected());
-				UserParameter.instance().statistikSpieleGesamt = m_jchGesamt.isSelected();
-			} else if (e.getSource() == m_jchMittelfeld.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.match.ratingsector.midfield",
-						m_jchMittelfeld.isSelected());
-				UserParameter.instance().statistikSpieleMittelfeld = m_jchMittelfeld
+			} else if (e.getSource() == c_jcbRightDefence.getCheckbox()) {
+				c_jpChart.setShow("ls.match.ratingsector.rightdefence",
+						c_jcbRightDefence.isSelected());
+				UserParameter.instance().statistikSpieleRechteAbwehr = c_jcbRightDefence
 						.isSelected();
-			} else if (e.getSource() == m_jchRechteAbwehr.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.match.ratingsector.rightdefence",
-						m_jchRechteAbwehr.isSelected());
-				UserParameter.instance().statistikSpieleRechteAbwehr = m_jchRechteAbwehr
+			} else if (e.getSource() == c_jcbCentralDefence.getCheckbox()) {
+				c_jpChart.setShow("ls.match.ratingsector.centraldefence",
+						c_jcbCentralDefence.isSelected());
+				UserParameter.instance().statistikSpieleAbwehrzentrum = c_jcbCentralDefence
 						.isSelected();
-			} else if (e.getSource() == m_jchAbwehrzentrum.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.match.ratingsector.centraldefence",
-						m_jchAbwehrzentrum.isSelected());
-				UserParameter.instance().statistikSpieleAbwehrzentrum = m_jchAbwehrzentrum
+			} else if (e.getSource() == c_jcbLeftDefence.getCheckbox()) {
+				c_jpChart.setShow("ls.match.ratingsector.leftdefence",
+						c_jcbLeftDefence.isSelected());
+				UserParameter.instance().statistikSpieleLinkeAbwehr = c_jcbLeftDefence
 						.isSelected();
-			} else if (e.getSource() == m_jchLinkeAbwehr.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.match.ratingsector.leftdefence",
-						m_jchLinkeAbwehr.isSelected());
-				UserParameter.instance().statistikSpieleLinkeAbwehr = m_jchLinkeAbwehr
+			} else if (e.getSource() == c_jcbRightAttack.getCheckbox()) {
+				c_jpChart.setShow("ls.match.ratingsector.rightattack",
+						c_jcbRightAttack.isSelected());
+				UserParameter.instance().statistikSpieleRechterAngriff = c_jcbRightAttack
 						.isSelected();
-			} else if (e.getSource() == m_jchRechterAngriff.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.match.ratingsector.rightattack",
-						m_jchRechterAngriff.isSelected());
-				UserParameter.instance().statistikSpieleRechterAngriff = m_jchRechterAngriff
+			} else if (e.getSource() == c_jcbCentralAttack.getCheckbox()) {
+				c_jpChart.setShow("ls.match.ratingsector.centralattack",
+						c_jcbCentralAttack.isSelected());
+				UserParameter.instance().statistikSpieleAngriffszentrum = c_jcbCentralAttack
 						.isSelected();
-			} else if (e.getSource() == m_jchAngriffszentrum.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.match.ratingsector.centralattack",
-						m_jchAngriffszentrum.isSelected());
-				UserParameter.instance().statistikSpieleAngriffszentrum = m_jchAngriffszentrum
+			} else if (e.getSource() == c_jcbLeftAttack.getCheckbox()) {
+				c_jpChart.setShow("ls.match.ratingsector.leftattack",
+						c_jcbLeftAttack.isSelected());
+				UserParameter.instance().statistikSpieleLinkerAngriff = c_jcbLeftAttack
 						.isSelected();
-			} else if (e.getSource() == m_jchLinkerAngriff.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.match.ratingsector.leftattack",
-						m_jchLinkerAngriff.isSelected());
-				UserParameter.instance().statistikSpieleLinkerAngriff = m_jchLinkerAngriff
+			} else if (e.getSource() == c_jcbTeamSpirit.getCheckbox()) {
+				c_jpChart.setShow("ls.team.teamspirit", c_jcbTeamSpirit.isSelected());
+				UserParameter.instance().statistikSpieleStimmung = c_jcbTeamSpirit.isSelected();
+			} else if (e.getSource() == c_jcbHatStats.getCheckbox()) {
+				c_jpChart.setShow("ls.match.ratingtype.hatstats",
+						c_jcbHatStats.isSelected());
+				UserParameter.instance().statistikSpieleHatStats = c_jcbHatStats.isSelected();
+			} else if (e.getSource() == c_jcbLoddarStats.getCheckbox()) {
+				c_jpChart.setShow("ls.match.ratingtype.loddarstats",
+						c_jcbLoddarStats.isSelected());
+				UserParameter.instance().statistikSpieleLoddarStats = c_jcbLoddarStats
 						.isSelected();
-			} else if (e.getSource() == m_jchStimmung.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.team.teamspirit", m_jchStimmung.isSelected());
-				UserParameter.instance().statistikSpieleStimmung = m_jchStimmung.isSelected();
-			} else if (e.getSource() == m_jchHatStats.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.match.ratingtype.hatstats",
-						m_jchHatStats.isSelected());
-				UserParameter.instance().statistikSpieleHatStats = m_jchHatStats.isSelected();
-			} else if (e.getSource() == m_jchLoddarStats.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.match.ratingtype.loddarstats",
-						m_jchLoddarStats.isSelected());
-				UserParameter.instance().statistikSpieleLoddarStats = m_jchLoddarStats
-						.isSelected();
-			} else if (e.getSource() == m_jchSelbstvertrauen.getCheckbox()) {
-				m_clStatistikPanel.setShow("ls.team.confidence",
-						m_jchSelbstvertrauen.isSelected());
-				UserParameter.instance().statistikSpieleSelbstvertrauen = m_jchSelbstvertrauen
+			} else if (e.getSource() == c_jcbConfidence.getCheckbox()) {
+				c_jpChart.setShow("ls.team.confidence",
+						c_jcbConfidence.isSelected());
+				UserParameter.instance().statistikSpieleSelbstvertrauen = c_jcbConfidence
 						.isSelected();
 			}
 		};
-		m_jchHilflinien.addActionListener(checkBoxActionListener);
-		m_jchBeschriftung.addActionListener(checkBoxActionListener);
-		m_jchBewertung.addActionListener(checkBoxActionListener);
-		m_jchHatStats.addActionListener(checkBoxActionListener);
-		m_jchLoddarStats.addActionListener(checkBoxActionListener);
-		m_jchGesamt.addActionListener(checkBoxActionListener);
-		m_jchMittelfeld.addActionListener(checkBoxActionListener);
-		m_jchRechteAbwehr.addActionListener(checkBoxActionListener);
-		m_jchAbwehrzentrum.addActionListener(checkBoxActionListener);
-		m_jchLinkeAbwehr.addActionListener(checkBoxActionListener);
-		m_jchRechterAngriff.addActionListener(checkBoxActionListener);
-		m_jchAngriffszentrum.addActionListener(checkBoxActionListener);
-		m_jchLinkerAngriff.addActionListener(checkBoxActionListener);
-		m_jchStimmung.addActionListener(checkBoxActionListener);
-		m_jchSelbstvertrauen.addActionListener(checkBoxActionListener);
+		c_jcbHelpLines.addActionListener(checkBoxActionListener);
+		c_jcbRating.addActionListener(checkBoxActionListener);
+		c_jcbHatStats.addActionListener(checkBoxActionListener);
+		c_jcbLoddarStats.addActionListener(checkBoxActionListener);
+		c_jcbTotalStrength.addActionListener(checkBoxActionListener);
+		c_jcbMidfield.addActionListener(checkBoxActionListener);
+		c_jcbRightDefence.addActionListener(checkBoxActionListener);
+		c_jcbCentralDefence.addActionListener(checkBoxActionListener);
+		c_jcbLeftDefence.addActionListener(checkBoxActionListener);
+		c_jcbRightAttack.addActionListener(checkBoxActionListener);
+		c_jcbCentralAttack.addActionListener(checkBoxActionListener);
+		c_jcbLeftAttack.addActionListener(checkBoxActionListener);
+		c_jcbTeamSpirit.addActionListener(checkBoxActionListener);
+		c_jcbConfidence.addActionListener(checkBoxActionListener);
 
-		m_jbUbernehmen.addActionListener(e -> initStatistik());
+		c_jbApply.addActionListener(e -> initStatistik());
 
-		m_jtfAnzahlHRF.addFocusListener(new FocusAdapter() {
+		c_jtfNumberHRF.addFocusListener(new FocusAdapter() {
 
 			@Override
 			public final void focusLost(FocusEvent focusEvent) {
-				Helper.parseInt(HOMainFrame.instance(), m_jtfAnzahlHRF, false);
+				Helper.parseInt(HOMainFrame.instance(), c_jtfNumberHRF, false);
 			}
 		});
 
-		m_jcbSpieleFilter.addItemListener(e -> {
+		c_jcbMatchesFilter.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				initStatistik();
 			}
@@ -212,185 +215,174 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		constraints2.gridwidth = 1;
 		layout2.setConstraints(label, constraints2);
 		panel2.add(label);
-		m_jtfAnzahlHRF = new JTextField(
+		c_jtfNumberHRF = new JTextField(
 				String.valueOf(UserParameter.instance().statistikSpielerFinanzenAnzahlHRF), 5);
-		m_jtfAnzahlHRF.setHorizontalAlignment(SwingConstants.RIGHT);
+		c_jtfNumberHRF.setHorizontalAlignment(SwingConstants.RIGHT);
 		constraints2.gridx = 1;
 		constraints2.gridy = 1;
-		layout2.setConstraints(m_jtfAnzahlHRF, constraints2);
-		panel2.add(m_jtfAnzahlHRF);
+		layout2.setConstraints(c_jtfNumberHRF, constraints2);
+		panel2.add(c_jtfNumberHRF);
 
 		constraints2.gridx = 0;
 		constraints2.gridy = 2;
 		constraints2.gridwidth = 2;
-		m_jbUbernehmen = new JButton(getLangStr("ls.button.apply"));
-		layout2.setConstraints(m_jbUbernehmen, constraints2);
-		m_jbUbernehmen.setToolTipText(getLangStr("tt_Statistik_HRFAnzahluebernehmen"));
-		panel2.add(m_jbUbernehmen);
+		c_jbApply = new JButton(getLangStr("ls.button.apply"));
+		layout2.setConstraints(c_jbApply, constraints2);
+		c_jbApply.setToolTipText(getLangStr("tt_Statistik_HRFAnzahluebernehmen"));
+		panel2.add(c_jbApply);
 
 		constraints2.gridx = 0;
 		constraints2.gridy = 3;
 		constraints2.gridwidth = 2;
-		m_jcbSpieleFilter = new JComboBox(getMatchFilterItems());
-		m_jcbSpieleFilter.setPreferredSize(new Dimension(150, 25));
-		Helper.markierenComboBox(m_jcbSpieleFilter, UserParameter.instance().statistikSpieleFilter);
-		m_jcbSpieleFilter.setFont(m_jcbSpieleFilter.getFont().deriveFont(Font.BOLD));
-		layout2.setConstraints(m_jcbSpieleFilter, constraints2);
-		panel2.add(m_jcbSpieleFilter);
+		c_jcbMatchesFilter = new JComboBox(getMatchFilterItems());
+		c_jcbMatchesFilter.setPreferredSize(new Dimension(150, 25));
+		Helper.markierenComboBox(c_jcbMatchesFilter, UserParameter.instance().statistikSpieleFilter);
+		c_jcbMatchesFilter.setFont(c_jcbMatchesFilter.getFont().deriveFont(Font.BOLD));
+		layout2.setConstraints(c_jcbMatchesFilter, constraints2);
+		panel2.add(c_jcbMatchesFilter);
+
+		constraints2.gridwidth = 2;
+		constraints2.gridx = 0;
+		constraints2.gridy = 4;
+		constraints2.insets = new Insets(15,0,0,0);
+		c_jcbHelpLines = new JCheckBox(getLangStr("Hilflinien"),
+				UserParameter.instance().statistikSpielerFinanzenHilfslinien);
+		c_jcbHelpLines.setOpaque(false);
+		c_jcbHelpLines.setBackground(Color.white);
+		layout2.setConstraints(c_jcbHelpLines, constraints2);
+		panel2.add(c_jcbHelpLines);
 
 		constraints2.gridwidth = 2;
 		constraints2.gridx = 0;
 		constraints2.gridy = 5;
-		m_jchHilflinien = new JCheckBox(getLangStr("Hilflinien"),
-				UserParameter.instance().statistikSpielerFinanzenHilfslinien);
-		m_jchHilflinien.setOpaque(false);
-		m_jchHilflinien.setBackground(Color.white);
-		layout2.setConstraints(m_jchHilflinien, constraints2);
-		panel2.add(m_jchHilflinien);
+		constraints2.insets = new Insets(15,0,0,0);  //top padding
+		c_jcbTotalStrength = new ImageCheckbox(avgRating, getColor(Colors.COLOR_TEAM_TOTAL_STRENGTH),
+				UserParameter.instance().statistikSpieleGesamt);
+		c_jcbTotalStrength.setOpaque(false);
+		layout2.setConstraints(c_jcbTotalStrength, constraints2);
+		panel2.add(c_jcbTotalStrength);
 
 		constraints2.gridwidth = 2;
 		constraints2.gridx = 0;
 		constraints2.gridy = 6;
-		m_jchBeschriftung = new JCheckBox(getLangStr("Beschriftung"),
-				UserParameter.instance().statistikSpielerFinanzenBeschriftung);
-		m_jchBeschriftung.setOpaque(false);
-		m_jchBeschriftung.setBackground(Color.white);
-		layout2.setConstraints(m_jchBeschriftung, constraints2);
-		panel2.add(m_jchBeschriftung);
+		constraints2.insets = new Insets(0,0,0,0);  //top padding
+		c_jcbMidfield = new ImageCheckbox(getLangStr("ls.match.ratingsector.midfield"),
+				getColor(Colors.COLOR_TEAM_MID),
+				UserParameter.instance().statistikSpieleMittelfeld);
+		c_jcbMidfield.setOpaque(false);
+		layout2.setConstraints(c_jcbMidfield, constraints2);
+		panel2.add(c_jcbMidfield);
 
 		constraints2.gridwidth = 2;
 		constraints2.gridx = 0;
 		constraints2.gridy = 7;
-		constraints2.insets = new Insets(20,0,0,0);  //top padding
-		m_jchBewertung = new ImageCheckbox(getLangStr("Rating"),
-				ThemeManager.getColor(HOColorName.PALETTE15[0]),
-				UserParameter.instance().statistikSpieleBewertung);
-		m_jchBewertung.setOpaque(false);
-		layout2.setConstraints(m_jchBewertung, constraints2);
-		panel2.add(m_jchBewertung);
+		c_jcbRightDefence = new ImageCheckbox(getLangStr("ls.match.ratingsector.rightdefence"),
+				getColor(Colors.COLOR_TEAM_RD),
+				UserParameter.instance().statistikSpieleRechteAbwehr);
+		c_jcbRightDefence.setOpaque(false);
+		layout2.setConstraints(c_jcbRightDefence, constraints2);
+		panel2.add(c_jcbRightDefence);
 
 		constraints2.gridwidth = 2;
 		constraints2.gridx = 0;
 		constraints2.gridy = 8;
-		constraints2.insets = new Insets(0,0,0,0);  //top padding
-		m_jchHatStats = new ImageCheckbox(getLangStr("ls.match.ratingtype.hatstats"),
-				ThemeManager.getColor(HOColorName.PALETTE15[1]),
-				UserParameter.instance().statistikSpieleHatStats);
-		m_jchHatStats.setOpaque(false);
-		layout2.setConstraints(m_jchHatStats, constraints2);
-		panel2.add(m_jchHatStats);
+		c_jcbCentralDefence = new ImageCheckbox(getLangStr("ls.match.ratingsector.centraldefence"),
+				getColor(Colors.COLOR_TEAM_CD),
+				UserParameter.instance().statistikSpieleAbwehrzentrum);
+		c_jcbCentralDefence.setOpaque(false);
+		layout2.setConstraints(c_jcbCentralDefence, constraints2);
+		panel2.add(c_jcbCentralDefence);
 
 		constraints2.gridwidth = 2;
 		constraints2.gridx = 0;
 		constraints2.gridy = 9;
-		m_jchLoddarStats = new ImageCheckbox(getLangStr("ls.match.ratingtype.loddarstats"),
-				ThemeManager.getColor(HOColorName.PALETTE15[2]),
-				UserParameter.instance().statistikSpieleLoddarStats);
-		m_jchLoddarStats.setOpaque(false);
-		layout2.setConstraints(m_jchLoddarStats, constraints2);
-		panel2.add(m_jchLoddarStats);
+		c_jcbLeftDefence = new ImageCheckbox(getLangStr("ls.match.ratingsector.leftdefence"),
+				getColor(Colors.COLOR_TEAM_LD),
+				UserParameter.instance().statistikSpieleLinkeAbwehr);
+		c_jcbLeftDefence.setOpaque(false);
+		layout2.setConstraints(c_jcbLeftDefence, constraints2);
+		panel2.add(c_jcbLeftDefence);
 
 		constraints2.gridwidth = 2;
 		constraints2.gridx = 0;
 		constraints2.gridy = 10;
-		m_jchGesamt = new ImageCheckbox(getLangStr("Gesamtstaerke"),
-				ThemeManager.getColor(HOColorName.PALETTE15[3]),
-				UserParameter.instance().statistikSpieleGesamt);
-		m_jchGesamt.setOpaque(false);
-		layout2.setConstraints(m_jchGesamt, constraints2);
-		panel2.add(m_jchGesamt);
+		c_jcbRightAttack = new ImageCheckbox(getLangStr("ls.match.ratingsector.rightattack"),
+				getColor(Colors.COLOR_TEAM_RA),
+				UserParameter.instance().statistikSpieleRechterAngriff);
+		c_jcbRightAttack.setOpaque(false);
+		layout2.setConstraints(c_jcbRightAttack, constraints2);
+		panel2.add(c_jcbRightAttack);
 
 		constraints2.gridwidth = 2;
 		constraints2.gridx = 0;
 		constraints2.gridy = 11;
-		constraints2.insets = new Insets(20,0,0,0);  //top padding
-		m_jchMittelfeld = new ImageCheckbox(getLangStr("ls.match.ratingsector.midfield"),
-				ThemeManager.getColor(HOColorName.PALETTE15[4]),
-				UserParameter.instance().statistikSpieleMittelfeld);
-		m_jchMittelfeld.setOpaque(false);
-		layout2.setConstraints(m_jchMittelfeld, constraints2);
-		panel2.add(m_jchMittelfeld);
+		c_jcbCentralAttack = new ImageCheckbox(getLangStr("ls.match.ratingsector.centralattack"),
+				getColor(Colors.COLOR_TEAM_CA),
+				UserParameter.instance().statistikSpieleAngriffszentrum);
+		c_jcbCentralAttack.setOpaque(false);
+		layout2.setConstraints(c_jcbCentralAttack, constraints2);
+		panel2.add(c_jcbCentralAttack);
 
 		constraints2.gridwidth = 2;
 		constraints2.gridx = 0;
 		constraints2.gridy = 12;
-		constraints2.insets = new Insets(0,0,0,0);  //top padding
-		m_jchRechteAbwehr = new ImageCheckbox(getLangStr("ls.match.ratingsector.rightdefence"),
-				ThemeManager.getColor(HOColorName.PALETTE15[5]),
-				UserParameter.instance().statistikSpieleRechteAbwehr);
-		m_jchRechteAbwehr.setOpaque(false);
-		layout2.setConstraints(m_jchRechteAbwehr, constraints2);
-		panel2.add(m_jchRechteAbwehr);
+		c_jcbLeftAttack = new ImageCheckbox(getLangStr("ls.match.ratingsector.leftattack"),
+				getColor(Colors.COLOR_TEAM_LA),
+				UserParameter.instance().statistikSpieleLinkerAngriff);
+		c_jcbLeftAttack.setOpaque(false);
+		layout2.setConstraints(c_jcbLeftAttack, constraints2);
+		panel2.add(c_jcbLeftAttack);
 
 		constraints2.gridwidth = 2;
 		constraints2.gridx = 0;
 		constraints2.gridy = 13;
-		m_jchAbwehrzentrum = new ImageCheckbox(getLangStr("ls.match.ratingsector.centraldefence"),
-				ThemeManager.getColor(HOColorName.PALETTE15[6]),
-				UserParameter.instance().statistikSpieleAbwehrzentrum);
-		m_jchAbwehrzentrum.setOpaque(false);
-		layout2.setConstraints(m_jchAbwehrzentrum, constraints2);
-		panel2.add(m_jchAbwehrzentrum);
+		c_jcbTeamSpirit = new ImageCheckbox(getLangStr("ls.team.teamspirit"),
+				getColor(Colors.COLOR_TEAM_TS),
+				UserParameter.instance().statistikSpieleStimmung);
+		c_jcbTeamSpirit.setOpaque(false);
+		layout2.setConstraints(c_jcbTeamSpirit, constraints2);
+		panel2.add(c_jcbTeamSpirit);
 
 		constraints2.gridwidth = 2;
 		constraints2.gridx = 0;
 		constraints2.gridy = 14;
-		m_jchLinkeAbwehr = new ImageCheckbox(getLangStr("ls.match.ratingsector.leftdefence"),
-				ThemeManager.getColor(HOColorName.PALETTE15[7]),
-				UserParameter.instance().statistikSpieleLinkeAbwehr);
-		m_jchLinkeAbwehr.setOpaque(false);
-		layout2.setConstraints(m_jchLinkeAbwehr, constraints2);
-		panel2.add(m_jchLinkeAbwehr);
+		c_jcbConfidence = new ImageCheckbox(getLangStr("ls.team.confidence"),
+				getColor(Colors.COLOR_TEAM_CONFIDENCE),
+				UserParameter.instance().statistikSpieleSelbstvertrauen);
+		c_jcbConfidence.setOpaque(false);
+		layout2.setConstraints(c_jcbConfidence, constraints2);
+		panel2.add(c_jcbConfidence);
+
 
 		constraints2.gridwidth = 2;
 		constraints2.gridx = 0;
 		constraints2.gridy = 15;
-		m_jchRechterAngriff = new ImageCheckbox(getLangStr("ls.match.ratingsector.rightattack"),
-				ThemeManager.getColor(HOColorName.PALETTE15[8]),
-				UserParameter.instance().statistikSpieleRechterAngriff);
-		m_jchRechterAngriff.setOpaque(false);
-		layout2.setConstraints(m_jchRechterAngriff, constraints2);
-		panel2.add(m_jchRechterAngriff);
+		constraints2.insets = new Insets(25,0,0,0);  //top padding
+		String textLabel = sumStars + " (" + getLangStr("ls.chart.second_axis") + ")";
+		c_jcbRating = new ImageCheckbox(textLabel, getColor(Colors.COLOR_TEAM_RATING),
+				UserParameter.instance().statistikSpieleBewertung);
+		c_jcbRating.setOpaque(false);
+		layout2.setConstraints(c_jcbRating, constraints2);
+		panel2.add(c_jcbRating);
 
 		constraints2.gridwidth = 2;
 		constraints2.gridx = 0;
 		constraints2.gridy = 16;
-		m_jchAngriffszentrum = new ImageCheckbox(getLangStr("ls.match.ratingsector.centralattack"),
-				ThemeManager.getColor(HOColorName.PALETTE15[9]),
-				UserParameter.instance().statistikSpieleAngriffszentrum);
-		m_jchAngriffszentrum.setOpaque(false);
-		layout2.setConstraints(m_jchAngriffszentrum, constraints2);
-		panel2.add(m_jchAngriffszentrum);
+		constraints2.insets = new Insets(0,0,0,0);  //top padding
+		textLabel = getLangStr("ls.match.ratingtype.hatstats") + " (" + getLangStr("ls.chart.second_axis") + ")";
+		c_jcbHatStats = new ImageCheckbox(textLabel, getColor(Colors.COLOR_TEAM_HATSTATS), UserParameter.instance().statistikSpieleHatStats);
+		c_jcbHatStats.setOpaque(false);
+		layout2.setConstraints(c_jcbHatStats, constraints2);
+		panel2.add(c_jcbHatStats);
 
 		constraints2.gridwidth = 2;
 		constraints2.gridx = 0;
 		constraints2.gridy = 17;
-		m_jchLinkerAngriff = new ImageCheckbox(getLangStr("ls.match.ratingsector.leftattack"),
-				ThemeManager.getColor(HOColorName.PALETTE15[10]),
-				UserParameter.instance().statistikSpieleLinkerAngriff);
-		m_jchLinkerAngriff.setOpaque(false);
-		layout2.setConstraints(m_jchLinkerAngriff, constraints2);
-		panel2.add(m_jchLinkerAngriff);
-
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 18;
-		m_jchStimmung = new ImageCheckbox(getLangStr("ls.team.teamspirit"),
-				ThemeManager.getColor(HOColorName.PALETTE15[11]),
-				UserParameter.instance().statistikSpieleStimmung);
-		m_jchStimmung.setOpaque(false);
-		layout2.setConstraints(m_jchStimmung, constraints2);
-		panel2.add(m_jchStimmung);
-
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 19;
-		m_jchSelbstvertrauen = new ImageCheckbox(getLangStr("ls.team.confidence"),
-				ThemeManager.getColor(HOColorName.PALETTE15[12]),
-				UserParameter.instance().statistikSpieleSelbstvertrauen);
-		m_jchSelbstvertrauen.setOpaque(false);
-		layout2.setConstraints(m_jchSelbstvertrauen, constraints2);
-		panel2.add(m_jchSelbstvertrauen);
+		textLabel = getLangStr("ls.match.ratingtype.loddarstats") + " (" + getLangStr("ls.chart.second_axis") + ")";
+		c_jcbLoddarStats = new ImageCheckbox(textLabel,	getColor(Colors.COLOR_TEAM_LODDAR),	UserParameter.instance().statistikSpieleLoddarStats);
+		c_jcbLoddarStats.setOpaque(false);
+		layout2.setConstraints(c_jcbLoddarStats, constraints2);
+		panel2.add(c_jcbLoddarStats);
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
@@ -406,8 +398,8 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		JPanel panel = new ImagePanel();
 		panel.setLayout(new BorderLayout());
 
-		m_clStatistikPanel = new StatistikPanel(false);
-		panel.add(m_clStatistikPanel);
+		c_jpChart = new LinesChart(true, null, null, null, "#,##0", 0d, 20d);
+		panel.add(c_jpChart.getPanel());
 
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.gridx = 1;
@@ -424,19 +416,19 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 	private void initStatistik() {
 		try {
-			int anzahlHRF = Integer.parseInt(m_jtfAnzahlHRF.getText());
+			int anzahlHRF = Integer.parseInt(c_jtfNumberHRF.getText());
 
 			if (anzahlHRF <= 0) {
 				anzahlHRF = 1;
 			}
 
 			UserParameter.instance().statistikSpielerFinanzenAnzahlHRF = anzahlHRF;
-			UserParameter.instance().statistikSpieleFilter = ((CBItem) m_jcbSpieleFilter
+			UserParameter.instance().statistikSpieleFilter = ((CBItem) c_jcbMatchesFilter
 					.getSelectedItem()).getId();
 
 			MatchKurzInfo[] matchkurzinfos = DBManager.instance().getMatchesKurzInfo(
 					HOVerwaltung.instance().getModel().getBasics().getTeamId(),
-					((CBItem) m_jcbSpieleFilter.getSelectedItem()).getId(), true);
+					((CBItem) c_jcbMatchesFilter.getSelectedItem()).getId(), true);
 
 			int anzahl = Math.min(matchkurzinfos.length, anzahlHRF);
 			int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
@@ -579,69 +571,38 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 			GraphDataModel[] models = new GraphDataModel[statistikWerte.length];
 
 			if (statistikWerte.length > 0) {
-				double maxRating = Helper.getMaxValue(statistikWerte[0]);
-				models[0] = new GraphDataModel(statistikWerte[0], "Bewertung",
-						m_jchBewertung.isSelected(),
-						ThemeManager.getColor(HOColorName.PALETTE15[0]),
-						Helper.DEFAULTDEZIMALFORMAT, 17/maxRating);
-				models[1] = new GraphDataModel(statistikWerte[1], "ls.match.ratingsector.midfield",
-						m_jchMittelfeld.isSelected(),
-						ThemeManager.getColor(HOColorName.PALETTE15[4]),
-						Helper.DEFAULTDEZIMALFORMAT);
-				models[2] = new GraphDataModel(statistikWerte[2],
-						"ls.match.ratingsector.rightdefence", m_jchRechteAbwehr.isSelected(),
-						ThemeManager.getColor(HOColorName.PALETTE15[5]),
-						Helper.DEFAULTDEZIMALFORMAT);
-				models[3] = new GraphDataModel(statistikWerte[3],
-						"ls.match.ratingsector.centraldefence", m_jchAbwehrzentrum.isSelected(),
-						ThemeManager.getColor(HOColorName.PALETTE15[6]),
-						Helper.DEFAULTDEZIMALFORMAT);
-				models[4] = new GraphDataModel(statistikWerte[4],
-						"ls.match.ratingsector.leftdefence", m_jchRechteAbwehr.isSelected(),
-						ThemeManager.getColor(HOColorName.PALETTE15[7]),
-						Helper.DEFAULTDEZIMALFORMAT);
-				models[5] = new GraphDataModel(statistikWerte[5],
-						"ls.match.ratingsector.rightattack", m_jchRechterAngriff.isSelected(),
-						ThemeManager.getColor(HOColorName.PALETTE15[8]),
-						Helper.DEFAULTDEZIMALFORMAT);
-				models[6] = new GraphDataModel(statistikWerte[6],
-						"ls.match.ratingsector.centralattack", m_jchAngriffszentrum.isSelected(),
-						ThemeManager.getColor(HOColorName.PALETTE15[9]),
-						Helper.DEFAULTDEZIMALFORMAT);
-				models[7] = new GraphDataModel(statistikWerte[7],
-						"ls.match.ratingsector.leftattack", m_jchLinkerAngriff.isSelected(),
-						ThemeManager.getColor(HOColorName.PALETTE15[10]),
-						Helper.DEFAULTDEZIMALFORMAT);
-				models[8] = new GraphDataModel(statistikWerte[8], "Gesamtstaerke",
-						m_jchGesamt.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[3]),
-						Helper.DEZIMALFORMAT_2STELLEN);
-				models[9] = new GraphDataModel(statistikWerte[9], "ls.team.teamspirit",
-						m_jchStimmung.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[11]),
-						Helper.INTEGERFORMAT);
-				models[10] = new GraphDataModel(statistikWerte[10], "ls.team.confidence",
-						m_jchSelbstvertrauen.isSelected(),
-						ThemeManager.getColor(HOColorName.PALETTE15[12]), Helper.INTEGERFORMAT);
-
-				double maxHatStats = Helper.getMaxValue(statistikWerte[11]);
+				models[0] = new GraphDataModel(statistikWerte[0], sumStars, c_jcbRating.isSelected(),
+						getColor(Colors.COLOR_TEAM_RATING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, Helper.DEFAULTDEZIMALFORMAT, 0d, true);
+				models[1] = new GraphDataModel(statistikWerte[1], "ls.match.ratingsector.midfield", c_jcbMidfield.isSelected(),
+						getColor(Colors.COLOR_TEAM_MID), Helper.DEFAULTDEZIMALFORMAT);
+				models[2] = new GraphDataModel(statistikWerte[2],"ls.match.ratingsector.rightdefence", c_jcbRightDefence.isSelected(),
+						getColor(Colors.COLOR_TEAM_RD),	Helper.DEFAULTDEZIMALFORMAT);
+				models[3] = new GraphDataModel(statistikWerte[3], 	"ls.match.ratingsector.centraldefence", c_jcbCentralDefence.isSelected(),
+						getColor(Colors.COLOR_TEAM_CD),	Helper.DEFAULTDEZIMALFORMAT);
+				models[4] = new GraphDataModel(statistikWerte[4],"ls.match.ratingsector.leftdefence", c_jcbRightDefence.isSelected(),
+						getColor(Colors.COLOR_TEAM_LD),	Helper.DEFAULTDEZIMALFORMAT);
+				models[5] = new GraphDataModel(statistikWerte[5],"ls.match.ratingsector.rightattack", c_jcbRightAttack.isSelected(),
+						getColor(Colors.COLOR_TEAM_RA),	Helper.DEFAULTDEZIMALFORMAT);
+				models[6] = new GraphDataModel(statistikWerte[6],"ls.match.ratingsector.centralattack", c_jcbCentralAttack.isSelected(),
+						getColor(Colors.COLOR_TEAM_CA),	Helper.DEFAULTDEZIMALFORMAT);
+				models[7] = new GraphDataModel(statistikWerte[7],"ls.match.ratingsector.leftattack", c_jcbLeftAttack.isSelected(),
+						getColor(Colors.COLOR_TEAM_LA), Helper.DEFAULTDEZIMALFORMAT);
+				models[8] = new GraphDataModel(statistikWerte[8], "Gesamtstaerke", c_jcbTotalStrength.isSelected(),
+						getColor(Colors.COLOR_TEAM_TOTAL_STRENGTH),	Helper.DEZIMALFORMAT_2STELLEN);
+				models[9] = new GraphDataModel(statistikWerte[9], "ls.team.teamspirit", c_jcbTeamSpirit.isSelected(),
+						getColor(Colors.COLOR_TEAM_TS),	Helper.INTEGERFORMAT);
+				models[10] = new GraphDataModel(statistikWerte[10], "ls.team.confidence",	c_jcbConfidence.isSelected(),
+						getColor(Colors.COLOR_TEAM_CONFIDENCE), Helper.INTEGERFORMAT);
 				models[11] = new GraphDataModel(statistikWerte[11], "ls.match.ratingtype.hatstats",
-						m_jchHatStats.isSelected(),
-						ThemeManager.getColor(HOColorName.PALETTE15[1]), Helper.INTEGERFORMAT,
-						19/maxHatStats);
-
-				double maxLoddar = Helper.getMaxValue(statistikWerte[12]);
-				models[12] = new GraphDataModel(statistikWerte[12],
-						"ls.match.ratingtype.loddarstats", m_jchLoddarStats.isSelected(),
-						ThemeManager.getColor(HOColorName.PALETTE15[2]),
-						Helper.DEZIMALFORMAT_2STELLEN, 15/maxLoddar);
+						c_jcbHatStats.isSelected(),	getColor(Colors.COLOR_TEAM_HATSTATS), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, Helper.DEFAULTDEZIMALFORMAT, 0d, true);
+				models[12] = new GraphDataModel(statistikWerte[12],	"ls.match.ratingtype.loddarstats", c_jcbLoddarStats.isSelected(),
+						getColor(Colors.COLOR_TEAM_LODDAR),	SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, Helper.DEFAULTDEZIMALFORMAT, 0d, true);
 			}
 
-			String[] yBezeichnungen = Helper.convertTimeMillisToFormatString(statistikWerte[13]);
 
-			m_clStatistikPanel.setAllValues(models, yBezeichnungen, Helper.DEFAULTDEZIMALFORMAT,
-					HOVerwaltung.instance().getLanguageString("Spiele"), "",
-					m_jchBeschriftung.isSelected(), m_jchHilflinien.isSelected());
+			c_jpChart.setAllValues(models, statistikWerte[13], Helper.DEFAULTDEZIMALFORMAT,
+					getLangStr("Spiele"), null, false, c_jcbHelpLines.isSelected());
 
-			boolean needsRefresh = false;
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);
 		}
@@ -672,5 +633,8 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 	private String getLangStr(String key) {
 		return HOVerwaltung.instance().getLanguageString(key);
+	}
+	private Color getColor(int i) {
+		return ThemeManager.getColor(HOColorName.PALETTE15[i]);
 	}
 }
