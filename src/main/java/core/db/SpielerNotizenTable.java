@@ -296,7 +296,7 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 	
 	@Override
-	protected String[] getCreateIndizeStatements() {
+	protected String[] getCreateIndexStatement() {
 		return new String[] {
 			"CREATE INDEX ISPIELERNOTIZ_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")"};
 	}

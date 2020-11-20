@@ -185,7 +185,7 @@ public class HRFStringParser {
 				}
 				// economy
 				else if (entity.toString().equalsIgnoreCase(ECONOMY)) {
-					hoModel.setFinance(new Economy(properties));
+					hoModel.setEconomy(new Economy(properties));
 				}
 				// arena
 				else if (entity.toString().equalsIgnoreCase(ARENA)) {

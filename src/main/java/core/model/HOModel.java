@@ -168,16 +168,16 @@ public class HOModel {
     }
 
     /**
-     * Set finance information
+     * Set economy information
      */
-    public final void setFinance(Economy economy) {
+    public final void setEconomy(Economy economy) {
         m_clEconomy = economy;
     }
 
     //------- finance ---------------------------------------
 
     /**
-     * Returns finance information
+     * Returns economy information
      */
     public final Economy getEconomy() {
 		if ( m_clEconomy == null){

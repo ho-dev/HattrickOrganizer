@@ -683,7 +683,7 @@ public class DBManager {
 	 *  store the economy info in the database
 	 */
 	public void saveEconomyInDB(int hrfId, Economy economy, Timestamp date) {
-		((EconomyTable) getTable(EconomyTable.TABLENAME)).saveEconomyInDB(hrfId, economy, date);
+		((EconomyTable) getTable(EconomyTable.TABLENAME)).storeEconomyInfoIntoDB(hrfId, economy, date);
 	}
 
 	// ------------------------------- HRFTable
@@ -1598,7 +1598,7 @@ public class DBManager {
 		for (Object allTable : allTables) {
 			AbstractTable table = (AbstractTable) allTable;
 			table.createTable();
-			String[] statements = table.getCreateIndizeStatements();
+			String[] statements = table.getCreateIndexStatement();
 			for (String statement : statements) {
 				m_clJDBCAdapter.executeUpdate(statement);
 			}

@@ -65,8 +65,8 @@ final class MiscPanel extends JPanel {
 
         m_jpJugend.setText(PlayerAbility.getNameForSkill(verein.getJugend()));
         m_jpFansAnzahl.setText(verein.getFans() + "");
-        m_jpFans.setText(Economy.getNameForLevelFans(economy.getSupporter()));
-        m_jpSponsoren.setText(Economy.getNameForLevelSponsors(economy.getSponsoren()));
+        m_jpFans.setText(Economy.getNameForLevelFans(economy.getSupportersPopularity()));
+        m_jpSponsoren.setText(Economy.getNameForLevelSponsors(economy.getSponsorsPopularity()));
         m_jpUngeschlagen.setText(verein.getUngeschlagen() + "");
         m_jpSiegeInFolge.setText(verein.getSiege() + "");
         m_jpAnzahlSpieler.setText(HOVerwaltung.instance().getModel().getCurrentPlayers().size() + "");

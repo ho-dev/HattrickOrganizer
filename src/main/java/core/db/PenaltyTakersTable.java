@@ -26,7 +26,7 @@ public class PenaltyTakersTable extends AbstractTable {
 	}
 
 	@Override
-	protected String[] getCreateIndizeStatements() {
+	protected String[] getCreateIndexStatement() {
 		return new String[] { "CREATE INDEX PENALTYTAKERS_3 ON " + TABLENAME + "("
 				+ columns[2].getColumnName() + ")" };
 	}

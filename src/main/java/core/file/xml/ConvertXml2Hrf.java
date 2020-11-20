@@ -369,7 +369,7 @@ public class ConvertXml2Hrf {
 	 * Add the economy data to the HRF buffer
 	 */
 	private static void createEconomy(Map<String, String> economyDataMap,  StringBuilder buffer) {
-		// wahrscheinlich in Training.asp fehlt noch
+
 		buffer.append("[economy]").append('\n');
 
 		buffer.append("Cash=").append(economyDataMap.get("Cash")).append('\n');
@@ -384,12 +384,18 @@ public class ConvertXml2Hrf {
 			buffer.append("PlayingMatch=true");
 		}
 
+		// recreate defect IncomeTemporary field for compatibility reasons
+		int iIncomeTemporary =  Integer.parseInt(economyDataMap.get("IncomeSoldPlayers")) + Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission"));
+		int iCostsTemporary =  Integer.parseInt(economyDataMap.get("CostsBoughtPlayers")) + Integer.parseInt(economyDataMap.get("CostsArenaBuilding"));
+		int iLastIncomeTemporary =  Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayers")) + Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission"));
+		int iLastCostsTemporary =  Integer.parseInt(economyDataMap.get("LastCostsBoughtPlayers")) + Integer.parseInt(economyDataMap.get("LastCostsArenaBuilding"));
+
 		buffer.append("IncomeSpectators=").append(economyDataMap.get("IncomeSpectators")).append('\n');
 		buffer.append("IncomeSponsors=").append(economyDataMap.get("IncomeSponsors")).append('\n');
 		buffer.append("IncomeFinancial=").append(economyDataMap.get("IncomeFinancial")).append('\n');
 		buffer.append("IncomeSoldPlayers=").append(economyDataMap.get("IncomeSoldPlayers")).append('\n');
 		buffer.append("IncomeSoldPlayersCommission=").append(economyDataMap.get("IncomeSoldPlayersCommission")).append('\n');
-		buffer.append("IncomeTemporary=").append(economyDataMap.get("IncomeTemporary")).append('\n');
+		buffer.append("IncomeTemporary=").append(iIncomeTemporary).append('\n');  // recreate defect IncomeTemporary field for compatibility reasons
 		buffer.append("IncomeSum=").append(economyDataMap.get("IncomeSum")).append('\n');
 		buffer.append("CostsArena=").append(economyDataMap.get("CostsArena")).append('\n');
 		buffer.append("CostsPlayers=").append(economyDataMap.get("CostsPlayers")).append('\n');
@@ -397,7 +403,7 @@ public class ConvertXml2Hrf {
 		buffer.append("CostsStaff=").append(economyDataMap.get("CostsStaff")).append('\n');
 		buffer.append("CostsBoughtPlayers=").append(economyDataMap.get("CostsBoughtPlayers")).append('\n');
 		buffer.append("CostsArenaBuilding=").append(economyDataMap.get("CostsArenaBuilding")).append('\n');
-		buffer.append("CostsTemporary=").append(economyDataMap.get("CostsTemporary")).append('\n');
+		buffer.append("CostsTemporary=").append(iCostsTemporary).append('\n'); // recreate defect CostsTemporary field for compatibility reasons
 		buffer.append("CostsYouth=").append(economyDataMap.get("CostsYouth")).append('\n');
 		buffer.append("CostsSum=").append(economyDataMap.get("CostsSum")).append('\n');
 		buffer.append("ExpectedWeeksTotal=").append(economyDataMap.get("ExpectedWeeksTotal")).append('\n');
@@ -406,7 +412,7 @@ public class ConvertXml2Hrf {
 		buffer.append("LastIncomeFinancial=").append(economyDataMap.get("LastIncomeFinancial")).append('\n');
 		buffer.append("LastIncomeSoldPlayers=").append(economyDataMap.get("LastIncomeSoldPlayers")).append('\n');
 		buffer.append("LastIncomeSoldPlayersCommission=").append(economyDataMap.get("LastIncomeSoldPlayersCommission")).append('\n');
-		buffer.append("LastIncomeTemporary=").append(economyDataMap.get("LastIncomeTemporary")).append('\n');
+		buffer.append("LastIncomeTemporary=").append(iLastIncomeTemporary).append('\n');  // recreate defect LastIncomeTemporary field for compatibility reasons
 		buffer.append("LastIncomeSum=").append(economyDataMap.get("LastIncomeSum")).append('\n');
 		buffer.append("lastCostsArena=").append(economyDataMap.get("LastCostsArena")).append('\n');
 		buffer.append("LastCostsPlayers=").append(economyDataMap.get("LastCostsPlayers")).append('\n');
@@ -414,7 +420,7 @@ public class ConvertXml2Hrf {
 		buffer.append("lastCostsPersonal=").append(economyDataMap.get("LastCostsStaff")).append('\n');
 		buffer.append("LastCostsBoughtPlayers=").append(economyDataMap.get("LastCostsBoughtPlayers")).append('\n');
 		buffer.append("LastCostsArenaBuilding=").append(economyDataMap.get("LastCostsArenaBuilding")).append('\n');
-		buffer.append("LastCostsTemporary=").append(economyDataMap.get("LastCostsTemporary")).append('\n');
+		buffer.append("LastCostsTemporary=").append(iLastCostsTemporary).append('\n'); // recreate defect LastCostsTemporary field for compatibility reasons
 		buffer.append("LastCostsYouth=").append(economyDataMap.get("LastCostsYouth")).append('\n');
 		buffer.append("LastCostsSum=").append(economyDataMap.get("LastCostsSum")).append('\n');
 		buffer.append("lastTotal=").append(economyDataMap.get("LastWeeksTotal")).append('\n');

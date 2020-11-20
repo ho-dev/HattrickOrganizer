@@ -86,9 +86,6 @@ public class XMLEconomyParser {
 			ele = (Element) root.getElementsByTagName("IncomeSoldPlayersCommission").item(0);
 			map.put("IncomeSoldPlayersCommission",(XMLManager.getFirstChildNodeValue(ele)));
 
-			ele = (Element) root.getElementsByTagName("IncomeTemporary").item(0);
-			map.put("IncomeTemporary",	(XMLManager.getFirstChildNodeValue(ele)));
-
 			ele = (Element) root.getElementsByTagName("IncomeSum").item(0);
 			map.put("IncomeSum", (XMLManager.getFirstChildNodeValue(ele)));
 
@@ -109,9 +106,6 @@ public class XMLEconomyParser {
 
 			ele = (Element) root.getElementsByTagName("CostsArenaBuilding").item(0);
 			map.put("CostsArenaBuilding", (XMLManager.getFirstChildNodeValue(ele)));
-
-			ele = (Element) root.getElementsByTagName("CostsTemporary").item(0);
-			map.put("CostsTemporary", (XMLManager.getFirstChildNodeValue(ele)));
 
 			ele = (Element) root.getElementsByTagName("CostsYouth").item(0);
 			map.put("CostsYouth", (XMLManager.getFirstChildNodeValue(ele)));
@@ -137,9 +131,6 @@ public class XMLEconomyParser {
 			ele = (Element) root.getElementsByTagName("LastIncomeSoldPlayersCommission").item(0);
 			map.put("LastIncomeSoldPlayersCommission",(XMLManager.getFirstChildNodeValue(ele)));
 
-			ele = (Element) root.getElementsByTagName("LastIncomeTemporary").item(0);
-			map.put("LastIncomeTemporary",(XMLManager.getFirstChildNodeValue(ele)));
-
 			ele = (Element) root.getElementsByTagName("LastIncomeSum").item(0);
 			map.put("LastIncomeSum", (XMLManager.getFirstChildNodeValue(ele)));
 
@@ -160,9 +151,6 @@ public class XMLEconomyParser {
 
 			ele = (Element) root.getElementsByTagName("LastCostsArenaBuilding").item(0);
 			map.put("LastCostsArenaBuilding",(XMLManager.getFirstChildNodeValue(ele)));
-
-			ele = (Element) root.getElementsByTagName("LastCostsTemporary").item(0);
-			map.put("LastCostsTemporary",(XMLManager.getFirstChildNodeValue(ele)));
 
 			ele = (Element) root.getElementsByTagName("LastCostsYouth").item(0);
 			map.put("LastCostsYouth", (XMLManager.getFirstChildNodeValue(ele)));
