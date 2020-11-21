@@ -5,7 +5,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.misc.Finanzen;
+import core.model.misc.Economy;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -57,38 +57,38 @@ final class FinancePanel extends JPanel {
     }
 
     void setLabels() {
-        final Finanzen finances = HOVerwaltung.instance().getModel().getFinance();
+        final Economy finances = HOVerwaltung.instance().getModel().getEconomy();
         final float factor = core.model.UserParameter.instance().faktorGeld;
 
         if (currentFinance) {
-            balanceLabel.setSpecialNumber((finances.getFinanzen() / factor)
-                                            + (finances.getGewinnVerlust() / factor), true);
-            attendanceLabel.setSpecialNumber(finances.getEinnahmenZuschauer() / factor, true);
-            stadiumLabel.setSpecialNumber(-finances.getKostenStadion() / factor, true);
-            sponsorsLabel.setSpecialNumber(finances.getEinnahmenSponsoren() / factor, true);
-            salariesLabel.setSpecialNumber(-finances.getKostenSpieler() / factor, true);
-            otherIncomeLabel.setSpecialNumber(finances.getEinnahmenSonstige() / factor, true);
-            otherCostsLabel.setSpecialNumber(-finances.getKostenSonstige() / factor, true);
-            staffLabel.setSpecialNumber(-finances.getKostenTrainerstab() / factor, true);
-            youthLabel.setSpecialNumber(-finances.getKostenJugend() / factor, true);
-            interestExpensesLabel.setSpecialNumber(-finances.getKostenZinsen() / factor, true);
-            revenueTotalLabel.setSpecialNumber(finances.getEinnahmenGesamt() / factor, true);
-            totalCostLabel.setSpecialNumber(-finances.getKostenGesamt() / factor, true);
-            profitLossLabel.setSpecialNumber(finances.getGewinnVerlust() / factor, true);
+            balanceLabel.setSpecialNumber((finances.getCash() / factor)
+                                            + (finances.getExpectedWeeksTotal() / factor), true);
+            attendanceLabel.setSpecialNumber(finances.getIncomeSpectators() / factor, true);
+            stadiumLabel.setSpecialNumber(-finances.getCostsArena() / factor, true);
+            sponsorsLabel.setSpecialNumber(finances.getIncomeSponsors() / factor, true);
+            salariesLabel.setSpecialNumber(-finances.getCostsPlayers() / factor, true);
+            otherIncomeLabel.setSpecialNumber(finances.getIncomeTemporary() / factor, true);
+            otherCostsLabel.setSpecialNumber(-finances.getCostsTemporary() / factor, true);
+            staffLabel.setSpecialNumber(-finances.getCostsStaff() / factor, true);
+            youthLabel.setSpecialNumber(-finances.getCostsYouth() / factor, true);
+            interestExpensesLabel.setSpecialNumber(-finances.getCostsFinancial() / factor, true);
+            revenueTotalLabel.setSpecialNumber(finances.getIncomeSum() / factor, true);
+            totalCostLabel.setSpecialNumber(-finances.getCostsSum() / factor, true);
+            profitLossLabel.setSpecialNumber(finances.getExpectedWeeksTotal() / factor, true);
         } else {
-            balanceLabel.setSpecialNumber(finances.getFinanzen() / factor, true);
-            attendanceLabel.setSpecialNumber(finances.getLetzteEinnahmenZuschauer() / factor, true);
-            stadiumLabel.setSpecialNumber(-finances.getLetzteKostenStadion() / factor, true);
-            sponsorsLabel.setSpecialNumber(finances.getLetzteEinnahmenSponsoren() / factor, true);
-            salariesLabel.setSpecialNumber(-finances.getLetzteKostenSpieler() / factor, true);
-            otherIncomeLabel.setSpecialNumber(finances.getLetzteEinnahmenSonstige() / factor, true);
-            otherCostsLabel.setSpecialNumber(-finances.getLetzteKostenSonstige() / factor, true);
-            staffLabel.setSpecialNumber(-finances.getLetzteKostenTrainerstab() / factor, true);
-            youthLabel.setSpecialNumber(-finances.getLetzteKostenJugend() / factor, true);
-            interestExpensesLabel.setSpecialNumber(-finances.getLetzteKostenZinsen() / factor, true);
-            revenueTotalLabel.setSpecialNumber(finances.getLetzteEinnahmenGesamt() / factor, true);
-            totalCostLabel.setSpecialNumber(-finances.getLetzteKostenGesamt() / factor, true);
-            profitLossLabel.setSpecialNumber(finances.getLetzteGewinnVerlust() / factor, true);
+            balanceLabel.setSpecialNumber(finances.getCash() / factor, true);
+            attendanceLabel.setSpecialNumber(finances.getLastIncomeSpectators() / factor, true);
+            stadiumLabel.setSpecialNumber(-finances.getLastCostsArena() / factor, true);
+            sponsorsLabel.setSpecialNumber(finances.getLastIncomeSponsors() / factor, true);
+            salariesLabel.setSpecialNumber(-finances.getLastCostsPlayers() / factor, true);
+            otherIncomeLabel.setSpecialNumber(finances.getLastIncomeTemporary() / factor, true);
+            otherCostsLabel.setSpecialNumber(-finances.getLastCostsTemporary() / factor, true);
+            staffLabel.setSpecialNumber(-finances.getLastCostsStaff() / factor, true);
+            youthLabel.setSpecialNumber(-finances.getLastCostsYouth() / factor, true);
+            interestExpensesLabel.setSpecialNumber(-finances.getLastCostsFinancial() / factor, true);
+            revenueTotalLabel.setSpecialNumber(finances.getLastIncomeSum() / factor, true);
+            totalCostLabel.setSpecialNumber(-finances.getLastCostsSum() / factor, true);
+            profitLossLabel.setSpecialNumber(finances.getLastWeeksTotal() / factor, true);
         }
     }
 

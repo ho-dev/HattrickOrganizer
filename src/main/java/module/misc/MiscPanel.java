@@ -5,7 +5,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.misc.Finanzen;
+import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.util.Helper;
@@ -59,14 +59,14 @@ final class MiscPanel extends JPanel {
 
     void setLabels() {
         final Verein verein = HOVerwaltung.instance().getModel().getClub();
-        final Finanzen finanzen = HOVerwaltung.instance().getModel().getFinance();
+        final Economy economy = HOVerwaltung.instance().getModel().getEconomy();
 
         DecimalFormat df = new DecimalFormat("###,###,###,##0");
 
         m_jpJugend.setText(PlayerAbility.getNameForSkill(verein.getJugend()));
         m_jpFansAnzahl.setText(verein.getFans() + "");
-        m_jpFans.setText(Finanzen.getNameForLevelFans(finanzen.getSupporter()));
-        m_jpSponsoren.setText(Finanzen.getNameForLevelSponsors(finanzen.getSponsoren()));
+        m_jpFans.setText(Economy.getNameForLevelFans(economy.getSupportersPopularity()));
+        m_jpSponsoren.setText(Economy.getNameForLevelSponsors(economy.getSponsorsPopularity()));
         m_jpUngeschlagen.setText(verein.getUngeschlagen() + "");
         m_jpSiegeInFolge.setText(verein.getSiege() + "");
         m_jpAnzahlSpieler.setText(HOVerwaltung.instance().getModel().getCurrentPlayers().size() + "");

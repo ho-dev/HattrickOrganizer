@@ -29,7 +29,7 @@ public final class HRFTable extends AbstractTable {
 	}
 
 	@Override
-	protected String[] getCreateIndizeStatements() {
+	protected String[] getCreateIndexStatement() {
 		return new String[] { "CREATE INDEX iHRF_1 ON " + getTableName() + "("
 				+ columns[2].getColumnName() + ")" };
 	}

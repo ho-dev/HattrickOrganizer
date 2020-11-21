@@ -7,7 +7,7 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
-import core.model.misc.Finanzen;
+import core.model.misc.Economy;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
@@ -404,7 +404,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				colIndex++;
 
 			    // Fanstimmung
-			    m_clData[i][colIndex] = new ColorLabelEntry(Finanzen.getNameForLevelFans(match.getFanZufriedenheit(), match.getMatchDateAsTimestamp()),
+			    m_clData[i][colIndex] = new ColorLabelEntry(Economy.getNameForLevelFans(match.getFanZufriedenheit(), match.getMatchDateAsTimestamp()),
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.LEFT);
 				colIndex++;
