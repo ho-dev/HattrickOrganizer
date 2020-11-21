@@ -55,7 +55,7 @@ public class PlayerNameTableCellRenderer extends DefaultTableCellRenderer {
 			Player oPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer((int) oValue.getValue1());
 			if (oPlayer != null) {
 				int iPlayerSpecialty = oPlayer.getPlayerSpecialty();
-				oPlayerSpecialty = ImageUtilities.getSvgIcon(HOIconName.SPECIALTIES[iPlayerSpecialty], 15, 15);
+				oPlayerSpecialty = ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[iPlayerSpecialty]);
 			}
 		}
 		label.setIcon(oPlayerSpecialty);
