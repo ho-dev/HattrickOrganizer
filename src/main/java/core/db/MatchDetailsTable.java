@@ -12,8 +12,6 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import static core.db.DbUtil.getNullableInt;
-
 final class MatchDetailsTable extends AbstractTable {
 
 	public final static String TABLENAME = "MATCHDETAILS";
@@ -145,18 +143,18 @@ final class MatchDetailsTable extends AbstractTable {
 				details.setRatingIndirectSetPiecesAtt(rs.getInt("RatingIndirectSetPiecesAtt"));
 				details.setRatingIndirectSetPiecesDef(rs.getInt("RatingIndirectSetPiecesDef"));
 				var homeGoalsInPart = new Integer[]{
-						getNullableInt(rs, "HomeGoal0"),
-						getNullableInt(rs, "HomeGoal1"),
-						getNullableInt(rs, "HomeGoal2"),
-						getNullableInt(rs, "HomeGoal3"),
-						getNullableInt(rs, "HomeGoal4")
+						DBManager.getInteger(rs, "HomeGoal0"),
+						DBManager.getInteger(rs, "HomeGoal1"),
+						DBManager.getInteger(rs, "HomeGoal2"),
+						DBManager.getInteger(rs, "HomeGoal3"),
+						DBManager.getInteger(rs, "HomeGoal4")
 				};
 				var guestGoalsInPart = new Integer[]{
-						getNullableInt(rs, "GuestGoal0"),
-						getNullableInt(rs, "GuestGoal1"),
-						getNullableInt(rs, "GuestGoal2"),
-						getNullableInt(rs, "GuestGoal3"),
-						getNullableInt(rs, "GuestGoal4")
+						DBManager.getInteger(rs, "GuestGoal0"),
+						DBManager.getInteger(rs, "GuestGoal1"),
+						DBManager.getInteger(rs, "GuestGoal2"),
+						DBManager.getInteger(rs, "GuestGoal3"),
+						DBManager.getInteger(rs, "GuestGoal4")
 				};
 				if ( hasValues(homeGoalsInPart)){
 					details.setHomeGoalsInPart(homeGoalsInPart);

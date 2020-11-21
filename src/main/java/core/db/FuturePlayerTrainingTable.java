@@ -60,8 +60,8 @@ public class FuturePlayerTrainingTable extends AbstractTable {
         var fromWeek = rs.getInt("fromWeek");
         var from = new HattrickDate(fromSeason, fromWeek);
         HattrickDate to = null;
-        var toSeason = DbUtil.getNullableInt(rs, "toSeason");
-        var toWeek = DbUtil.getNullableInt(rs, "toWeek");
+        var toSeason = DBManager.getInteger(rs, "toSeason");
+        var toWeek = DBManager.getInteger(rs, "toWeek");
         if (toSeason != null && toWeek != null) {
             to = new HattrickDate(toSeason, toWeek);
         }

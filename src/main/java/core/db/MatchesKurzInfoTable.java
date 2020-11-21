@@ -14,8 +14,6 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import static core.db.DbUtil.getNullableBoolean;
-import static core.db.DbUtil.getNullableInt;
 
 /**
  * Class used to store in DB, [Matches] Table fetched via CHPP
@@ -291,11 +289,11 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		match.setOrdersGiven(rs.getBoolean("Aufstellung"));
 		match.setArenaId(rs.getInt("ArenaId"));
 		match.setRegionId(rs.getInt("RegionId"));
-		match.setIsDerby(getNullableBoolean(rs, "isDerby"));
-		match.setIsNeutral(getNullableBoolean(rs, "isNeutral"));
-		match.setWeather(Weather.getById(getNullableInt(rs,"Weather")));
-		match.setWeatherForecast(Weather.Forecast.getById(getNullableInt(rs,"WeatherForecast")));
-		match.setDuration(getNullableInt(rs, "Duration"));
+		match.setIsDerby(DBManager.getBoolean(rs, "isDerby"));
+		match.setIsNeutral(DBManager.getBoolean(rs, "isNeutral"));
+		match.setWeather(Weather.getById(DBManager.getInteger(rs,"Weather")));
+		match.setWeatherForecast(Weather.Forecast.getById(DBManager.getInteger(rs,"WeatherForecast")));
+		match.setDuration(DBManager.getInteger(rs, "Duration"));
 		return match;
 	}
 

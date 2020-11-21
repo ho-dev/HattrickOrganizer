@@ -30,6 +30,7 @@ import core.model.series.Liga;
 import core.model.series.Paarung;
 import core.training.FuturePlayerTraining;
 import core.training.TrainingPerWeek;
+import core.training.YouthTrainerComment;
 import core.util.HOLogger;
 import core.util.ExceptionUtils;
 import module.ifa.IfaMatch;
@@ -1794,6 +1795,24 @@ public class DBManager {
 				.removeMatchOrder();
 	}
 
+	public static Integer getInteger(ResultSet rs, String columnLabel) {
+		try {
+			return rs.getInt(columnLabel);
+		}
+		catch(Exception ignored)
+		{}
+		return null;
+	}
+
+	public static Boolean getBoolean(ResultSet rs, String columnLabel) {
+		try {
+			return rs.getBoolean(columnLabel);
+		}
+		catch(Exception ignored)
+		{}
+		return null;
+	}
+
 	/**
 	 * Alle \ entfernen
 	 */
@@ -1865,5 +1884,9 @@ public class DBManager {
 	public void storeMatchLineup(MatchLineup lineup, Integer teamId) {
 		((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
 				.storeMatchLineup(lineup, teamId);
+	}
+
+	public List<YouthTrainerComment> loadYouthTrainerComments(int id) {
+		return ((YouthTrainerCommentTable) getTable(YouthTrainerCommentTable.TABLENAME)).loadYouthTrainerComments(id);
 	}
 }

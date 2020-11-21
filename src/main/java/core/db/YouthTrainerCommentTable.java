@@ -1,9 +1,20 @@
 package core.db;
 
-import java.sql.Types;
+import core.model.player.CommentType;
+import core.model.player.YouthPlayer;
+import core.training.YouthTrainerComment;
+import core.util.HOLogger;
+import module.training.Skills;
 
-public class YouthTrainerCommentTable extends AbstractTable{
-    /** tablename **/
+import java.sql.ResultSet;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
+
+public class YouthTrainerCommentTable extends AbstractTable {
+    /**
+     * tablename
+     **/
     final static String TABLENAME = "YOUTHTRAINERCOMMENT";
 
     YouthTrainerCommentTable(JDBCAdapter adapter) {
@@ -23,4 +34,40 @@ public class YouthTrainerCommentTable extends AbstractTable{
                 new ColumnDescriptor("SkillLevel", Types.INTEGER, true)
         };
     }
+
+    public List<YouthTrainerComment> loadYouthTrainerComments(int id) {
+        final ArrayList<YouthTrainerComment> ret = new ArrayList<>();
+        var sql = "SELECT * from " + getTableName() + " WHERE YOUTHPLAYER_ID = " + id;
+        var rs = adapter.executeQuery(sql);
+        try {
+            if (rs != null) {
+                rs.beforeFirst();
+                while (rs.next()) {
+                    var comment = createObject(rs);
+                    ret.add(comment);
+                }
+            }
+        } catch (Exception e) {
+            HOLogger.instance().log(getClass(), "DatenbankZugriff.loadYouthTrainerComments: " + e);
+        }
+        return ret;
+    }
+
+    private YouthTrainerComment createObject(ResultSet rs) {
+        var ret = new YouthTrainerComment();
+        try {
+            ret.setYouthPlayerId(rs.getInt("YOUTHPLAYER_ID"));
+            ret.setMatchId(rs.getInt("MATCH_ID"));
+            ret.setIndex(rs.getInt("INDEX"));
+            ret.setText(DBManager.deleteEscapeSequences(rs.getString("TEXT")));
+            ret.setType(CommentType.valueOf(DBManager.getInteger(rs, "TYPE")));
+            ret.setVariation(DBManager.getInteger(rs, "VARIATION"));
+            ret.setSkillType(Skills.ScoutCommentSkillTypeID.valueOf(DBManager.getInteger(rs, "SKILLTYPE")));
+            ret.setSkillLevel(DBManager.getInteger(rs, "SKILLLEVEL"));
+        } catch (Exception e) {
+            HOLogger.instance().log(getClass(),e);
+        }
+        return ret;
+    }
+
 }

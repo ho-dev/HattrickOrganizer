@@ -580,4 +580,8 @@ public class HOModel {
             DBManager.instance().storeSpielplan(m_clSpielplan);
     }
 
+    public YouthPlayer getCurrentYouthPlayer(int youthplayerID) {
+        return this.getCurrentYouthPlayers().stream().filter(player -> player.getId()==youthplayerID).findAny()
+                .orElse(null);
+    }
 }

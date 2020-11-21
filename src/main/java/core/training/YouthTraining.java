@@ -44,6 +44,9 @@ public class YouthTraining {
         commentList.add(comment);
         var youthplayerID = comment.getYouthPlayerId();
         var team = matchLineup.getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
-        // TODO get youthplayer and add comment to player
+
+        var player = HOVerwaltung.instance().getModel().getCurrentYouthPlayer(youthplayerID);
+        player.addComment(comment);
     }
+
 }

@@ -1,6 +1,8 @@
 package core.model.player;
 
 import core.db.DBManager;
+import core.model.match.TeamLineup;
+import core.training.YouthTrainerComment;
 import core.util.HOLogger;
 import module.training.Skills;
 import module.training.Skills.ScoutCommentSkillTypeID;
@@ -44,6 +46,7 @@ public class YouthPlayer {
 
     private Map<Integer, SkillInfo> skillInfoMap = new HashMap<>();
     private List<ScoutComment> scoutComments;
+    private List<YouthTrainerComment> trainerComments;
 
     public YouthPlayer() {
 
@@ -302,6 +305,22 @@ public class YouthPlayer {
 
     public void setPromotionDate(Timestamp promotionDate) {
         this.promotionDate = promotionDate;
+    }
+
+    public void addComment(YouthTrainerComment comment) {
+        var count = this.getTrainerComments().stream()
+                .filter(c -> c.getYouthPlayerId() == this.id &&
+                        c.getYouthMatchId() == comment.getYouthMatchId() &&
+                        c.getIndex() == comment.getIndex())
+                .count();
+        if ( count == 0) this.trainerComments.add(comment);
+    }
+
+    private List<YouthTrainerComment> getTrainerComments() {
+        if ( this.trainerComments == null){
+            this.trainerComments = DBManager.instance().loadYouthTrainerComments(this.id);
+        }
+        return this.trainerComments;
     }
 
     public class SkillInfo {
