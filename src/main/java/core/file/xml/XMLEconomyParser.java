@@ -65,7 +65,7 @@ public class XMLEconomyParser {
 
 			ele = (Element) root.getElementsByTagName("SupportersPopularity").item(0);
 			if (XMLManager.getAttributeValue(ele, "Available").trim().equalsIgnoreCase("true")) {
-				map.put("SponsorsPopularity",(XMLManager.getFirstChildNodeValue(ele)));
+				map.put("SupportersPopularity",(XMLManager.getFirstChildNodeValue(ele)));
 			}
 
 			ele = (Element) root.getElementsByTagName("FanClubSize").item(0);
