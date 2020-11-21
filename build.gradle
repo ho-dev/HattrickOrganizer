@@ -34,7 +34,7 @@ dependencies {
 //  Version ============================================================
 // Development_stage (DEV:0  BETA:1  STABLE:2)
 def major = '4'
-def minor = '0'
+def minor = '1'
 def development_stage = '2'
 def releaseArtefacts = true
 
