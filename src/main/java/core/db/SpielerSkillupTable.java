@@ -33,7 +33,7 @@ final class SpielerSkillupTable extends AbstractTable {
 	}
 
 	@Override
-	protected String[] getCreateIndizeStatements() {
+	protected String[] getCreateIndexStatement() {
 		return new String[] {
 			"CREATE INDEX iSkillup_1 ON " + getTableName() + "(" + columns[2].getColumnName() + ")",
 			"CREATE INDEX iSkillup_2 ON " + getTableName() + "(" + columns[2].getColumnName() + "," + columns[3].getColumnName() + ")"};

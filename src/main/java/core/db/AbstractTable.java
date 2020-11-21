@@ -45,7 +45,7 @@ public abstract class AbstractTable {
 		return columns;
 	}
 	
-	protected String[] getCreateIndizeStatements(){
+	protected String[] getCreateIndexStatement(){
 		return new String[0];
 	}
 	

@@ -34,7 +34,7 @@ public final class MatchLineupTable extends AbstractTable {
 	}
 	
 	@Override
-	protected String[] getCreateIndizeStatements() {
+	protected String[] getCreateIndexStatement() {
 		return new String[] {
 			"CREATE INDEX IMATCHLINEUP_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")"};
 	}	

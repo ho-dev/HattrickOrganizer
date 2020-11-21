@@ -79,7 +79,7 @@ final class MatchDetailsTable extends AbstractTable {
 	}
 	
 	@Override
-	protected String[] getCreateIndizeStatements() {
+	protected String[] getCreateIndexStatement() {
 		return new String[] {
 				"CREATE INDEX IMATCHDETAILS_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")",
 				"CREATE INDEX matchdetails_heimid_idx ON " + getTableName() + " (" + columns[19].getColumnName() + ")",

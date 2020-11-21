@@ -249,7 +249,7 @@ public class StatisticQuery {
 				rs.close();
 
 				//Fanzufriedenheit
-				sql = "SELECT Supporter FROM " + FinanzenTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
+				sql = "SELECT Supporter FROM " + EconomyTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
 				rs = DBManager.instance().getAdapter().executeQuery(sql);
 				if (rs.first()) {
 					arenamodels[i].setFanZufriedenheit(rs.getInt("Supporter"));

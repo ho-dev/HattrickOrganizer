@@ -1,6 +1,73 @@
 *Please visit the HO! forum in the CHPP section of Hattrick if you have any questions!
 If you find a bug, please open an issue on [GitHub](https://github.com/akasolace/HO/issues)*
 
+# Changelist HO! 5.0
+
+## Some numbers:
+  - xxx commits
+  - xxx files changed (xxx additions and xxx deletions)
+  - xxx issues closed
+  - xx contributors
+
+
+## Highlights
+
+
+
+
+## Detailed Changelog
+
+
+### Finance
+  - all information relative to Finance are now stored in the database (#793)
+
+
+### Squad
+
+
+### Team Analyser
+
+ 
+
+### Rating
+
+
+
+### Matches
+
+
+### Lineup
+
+
+
+### IFA
+
+
+### Training
+
+
+
+### Misc
+
+
+
+### League
+
+
+
+## Translations
+  - HO! is currently available in xxx languages thanks to the work of xxx translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
+  - Translators contribution since the previous release (number of translated terms):
+
+
+
+
+# Changelist HO! 4.1
+
+  - fixes NPE events in module Player Analysis and SpecialEvents (#797)
+  
+  
+
 # Changelist HO! 4.0
 
 ## Some numbers:
@@ -79,7 +146,6 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - Translators contribution since the previous release (number of translated terms):
 
 
-
 | Contributor       | Translations | Percentage |
 |-------------------|--------------|------------|
 | Kimmo             | 843          | 48.03      |
@@ -113,7 +179,6 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 | Sumame.           | 2            | 0.11       |
 | RaV               | 1            | 0.06       |
 | Total translated: | 4057         | 6.42       |
-
 
 
 

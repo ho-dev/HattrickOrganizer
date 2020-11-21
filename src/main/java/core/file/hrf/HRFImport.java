@@ -114,9 +114,6 @@ public class HRFImport {
 
 			DBManager.instance().reimportSkillup();
 			HOVerwaltung.instance().loadLatestHoModel();
-			TrainingManager.instance().refreshTrainingWeeks();
-			HOVerwaltung.instance().recalcSubskills(true, olderHrf);
-			HOVerwaltung.instance().loadLatestHoModel();
 
 			HOModel hom = HOVerwaltung.instance().getModel();
 
