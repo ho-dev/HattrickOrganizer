@@ -61,6 +61,13 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 
 
+
+# Changelist HO! 4.1
+
+  - fixes NPE events in module Player Analysis and SpecialEvents (#797)
+  
+  
+
 # Changelist HO! 4.0
 
 ## Some numbers:
