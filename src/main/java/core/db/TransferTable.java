@@ -41,7 +41,7 @@ public class TransferTable extends AbstractTable {
 	}
 
 	@Override
-	protected String[] getCreateIndizeStatements() {
+	protected String[] getCreateIndexStatement() {
 		return new String[] {
 			"CREATE INDEX pl_id ON " + getTableName() + "(" + columns[4].getColumnName() + ")",
 			"CREATE INDEX buy_id ON " + getTableName() + "(" + columns[6].getColumnName() + ")",

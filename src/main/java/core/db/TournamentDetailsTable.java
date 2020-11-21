@@ -36,7 +36,7 @@ public final class TournamentDetailsTable extends AbstractTable {
 	}
 
 	@Override
-	protected String[] getCreateIndizeStatements() {
+	protected String[] getCreateIndexStatement() {
 		return new String[] {
 			"CREATE INDEX ITOURNAMENTDETAILS_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")"};
 	}
