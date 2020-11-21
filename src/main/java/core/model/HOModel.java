@@ -3,12 +3,11 @@ package core.model;
 import core.db.DBManager;
 import core.model.match.SourceSystem;
 import core.model.misc.Basics;
-import core.model.misc.Finanzen;
+import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.player.YouthPlayer;
 import core.model.series.Liga;
-import core.net.OnlineWorker;
 import core.training.TrainingPerWeek;
 import core.training.TrainingManager;
 import core.util.HOLogger;
@@ -36,7 +35,7 @@ public class HOModel {
     private Lineup m_clAufstellung;
     private Lineup m_clLastAufstellung;
     private Basics m_clBasics;
-    private Finanzen m_clFinanzen;
+    private Economy m_clEconomy;
     private Liga m_clLiga;
     private Spielplan m_clSpielplan;
     private Stadium m_clStadium;
@@ -182,22 +181,22 @@ public class HOModel {
     }
 
     /**
-     * Set finance information
+     * Set economy information
      */
-    public final void setFinance(Finanzen finanzen) {
-        m_clFinanzen = finanzen;
+    public final void setEconomy(Economy economy) {
+        m_clEconomy = economy;
     }
 
     //------- finance ---------------------------------------
 
     /**
-     * Returns finance information
+     * Returns economy information
      */
-    public final Finanzen getFinance() {
-		if ( m_clFinanzen == null){
-			m_clFinanzen = DBManager.instance().getFinanzen(this.m_iID);
+    public final Economy getEconomy() {
+		if ( m_clEconomy == null){
+			m_clEconomy = DBManager.instance().getEconomy(this.m_iID);
 		}
-        return m_clFinanzen;
+        return m_clEconomy;
     }
 
     /**
@@ -553,7 +552,7 @@ public class HOModel {
         //Team
         DBManager.instance().saveTeam(m_iID, getTeam());
         //Finanzen
-        DBManager.instance().saveFinanzen(m_iID, getFinance(), getBasics().getDatum());
+        DBManager.instance().saveEconomyInDB(m_iID, getEconomy(), getBasics().getDatum());
         //Stadion
         DBManager.instance().saveStadion(m_iID, getStadium());
         //Liga

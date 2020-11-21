@@ -50,7 +50,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	}
 
 	@Override
-	protected String[] getCreateIndizeStatements(){
+	protected String[] getCreateIndexStatement(){
 		return new String[]{
 			"CREATE INDEX iMATCHLINEUPPLAYER_1 ON "+getTableName()+"("+columns[2].getColumnName()+")",
 			"CREATE INDEX iMATCHLINEUPPLAYER_2 ON "+getTableName()+"("+columns[0].getColumnName()+","+columns[1].getColumnName()+")"

@@ -20,7 +20,7 @@ import core.model.match.Matchdetails;
 import core.model.match.MatchesHighlightsStat;
 import core.model.match.MatchesOverviewRow;
 import core.model.misc.Basics;
-import core.model.misc.Finanzen;
+import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -227,9 +227,9 @@ public class DBManager {
 		tables.put(VereinTable.TABLENAME, new VereinTable(adapter));
 		tables.put(LigaTable.TABLENAME, new LigaTable(adapter));
 		tables.put(SpielerTable.TABLENAME, new SpielerTable(adapter));
+		tables.put(EconomyTable.TABLENAME, new EconomyTable(adapter));
 		tables.put(YouthPlayerTable.TABLENAME, new YouthPlayerTable(adapter));
 		tables.put(YouthScoutCommentTable.TABLENAME, new YouthScoutCommentTable(adapter));
-		tables.put(FinanzenTable.TABLENAME, new FinanzenTable(adapter));
 		tables.put(ScoutTable.TABLENAME, new ScoutTable(adapter));
 		tables.put(UserColumnsTable.TABLENAME, new UserColumnsTable(adapter));
 		tables.put(SpielerNotizenTable.TABLENAME, new SpielerNotizenTable(adapter));
@@ -704,19 +704,17 @@ public class DBManager {
 	// -------------------------------------------------
 
 	/**
-	 * lädt die Finanzen zum angegeben HRF file ein
+	 * fetch the Economy table from the DB for the specified HRF ID
 	 */
-	public Finanzen getFinanzen(int hrfID) {
-		return ((FinanzenTable) getTable(FinanzenTable.TABLENAME))
-				.getFinanzen(hrfID);
+	public Economy getEconomy(int hrfID) {
+		return ((EconomyTable) getTable(EconomyTable.TABLENAME)).getEconomy(hrfID);
 	}
 
 	/**
-	 * speichert die Finanzen
+	 *  store the economy info in the database
 	 */
-	public void saveFinanzen(int hrfId, Finanzen finanzen, Timestamp date) {
-		((FinanzenTable) getTable(FinanzenTable.TABLENAME)).saveFinanzen(hrfId,
-				finanzen, date);
+	public void saveEconomyInDB(int hrfId, Economy economy, Timestamp date) {
+		((EconomyTable) getTable(EconomyTable.TABLENAME)).storeEconomyInfoIntoDB(hrfId, economy, date);
 	}
 
 	// ------------------------------- HRFTable
@@ -1519,7 +1517,7 @@ public class DBManager {
 
 		getTable(PositionenTable.TABLENAME).delete(where, value);
 		getTable(TeamTable.TABLENAME).delete(where, value);
-		getTable(FinanzenTable.TABLENAME).delete(where, value);
+		getTable(EconomyTable.TABLENAME).delete(where, value);
 		getTable(BasicsTable.TABLENAME).delete(where, value);
 		getTable(SpielerTable.TABLENAME).delete(where, value);
 		getTable(SpielerSkillupTable.TABLENAME).delete(where, value);
@@ -1631,7 +1629,7 @@ public class DBManager {
 		for (Object allTable : allTables) {
 			AbstractTable table = (AbstractTable) allTable;
 			table.createTable();
-			String[] statements = table.getCreateIndizeStatements();
+			String[] statements = table.getCreateIndexStatement();
 			for (String statement : statements) {
 				m_clJDBCAdapter.executeUpdate(statement);
 			}

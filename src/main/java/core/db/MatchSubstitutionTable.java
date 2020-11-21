@@ -44,7 +44,7 @@ public class MatchSubstitutionTable extends AbstractTable {
 	}
 
 	@Override
-	protected String[] getCreateIndizeStatements() {
+	protected String[] getCreateIndexStatement() {
 		return new String[] {
 				"CREATE INDEX IMATCHSUBSTITUTION_1 ON " + getTableName() + "("
 						+ columns[3].getColumnName() + ")",

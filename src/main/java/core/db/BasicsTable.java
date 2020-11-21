@@ -39,7 +39,7 @@ final class BasicsTable extends AbstractTable {
 	}
 
 	@Override
-	protected String[] getCreateIndizeStatements() {
+	protected String[] getCreateIndexStatement() {
 		return new String[] {
 			"CREATE INDEX IBASICS_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")",
 			"CREATE INDEX IBASICS_2 ON " + getTableName() + "(" + columns[8].getColumnName() + ")" };

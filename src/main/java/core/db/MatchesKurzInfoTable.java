@@ -54,7 +54,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	}
 
     @Override
-    protected String[] getCreateIndizeStatements() {
+    protected String[] getCreateIndexStatement() {
         return new String[]{
                 "CREATE INDEX IMATCHKURZINFO_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")",
                 "CREATE INDEX matchkurzinfo_heimid_idx ON "+ getTableName() + "(" + columns[3].getColumnName() + ")",
