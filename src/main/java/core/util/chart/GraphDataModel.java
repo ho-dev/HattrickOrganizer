@@ -66,8 +66,8 @@ public class GraphDataModel {
     }
 
     public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
-                          java.text.NumberFormat format, double factor,  int yAxisGroup) {
-        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, false);
+                          java.text.NumberFormat format, double factor,  boolean second_Y_axis) {
+        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, second_Y_axis);
     }
 
     public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color, BasicStroke lineStyle,

@@ -412,12 +412,14 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		layout.setConstraints(panel2, constraints);
 		add(panel2);
 
-		// initialize Development Chart
-		c_jpDevelopmentChart = new LinesChart(true, null, null, null, "#,##0");
-		c_jpBalanceChart = new LinesChart(true, null, null, null, "#,##0");
-		c_jpRevenueAndExpensesChart = new LinesChart(true, null, null, null, "#,##0");
+		var toto = Helper.getNumberFormat(true, 0).getCurrency().getSymbol();
 
-		//Create the panel that contains the "cards" each card being a diferent chart
+		// initialize Development Chart
+		c_jpDevelopmentChart = new LinesChart(true, null, null, "#,##0 " + toto, "#,##0 " + toto, true);
+		c_jpBalanceChart = new LinesChart(true, null, null, null, "#,##0", true);
+		c_jpRevenueAndExpensesChart = new LinesChart(true, null, null, null, "#,##0", true);
+
+		//Create the panel that contains the "cards" each card being a different chart
 		c_jpCharts = new JPanel(new CardLayout());
 		c_jpCharts.add(c_jpDevelopmentChart.getPanel(), DEVELOPMENT_CHART_PANEL);
 		c_jpCharts.add(c_jpBalanceChart.getPanel(), BALANCE_CHART_PANEL);
@@ -466,10 +468,11 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 			modelsDevelopmentChart = new GraphDataModel[3];
 
 			if (data.length > 0) {
-				modelsDevelopmentChart[0] = new GraphDataModel(data[0], "cash", true, getColor(Colors.COLOR_FINANCE_CASH), null);
-				modelsDevelopmentChart[1] = new GraphDataModel(data[1], "income_sponsor",	true, getColor(Colors.COLOR_FINANCE_INCOME_SPONSORS), null);
-				modelsDevelopmentChart[2] = new GraphDataModel(data[2], "cost_players",	true, getColor(Colors.COLOR_FINANCE_COST_PLAYERS), null);
+				modelsDevelopmentChart[0] = new GraphDataModel(data[1], getLangStr("ls.finance.revenue.sponsors"),	true, getColor5(Colors.COLOR_FINANCE_INCOME_SPONSORS), null, 1E-3, false);
+				modelsDevelopmentChart[1] = new GraphDataModel(data[2], getLangStr("ls.finance.expenses.wages"),	true, getColor5(Colors.COLOR_FINANCE_COST_PLAYERS), null, 1E-3, false);
+				modelsDevelopmentChart[2] = new GraphDataModel(data[0], getLangStr("ls.finance.cash") + " (" + getLangStr("ls.chart.second_axis") + ")", true, getColor5(Colors.COLOR_FINANCE_CASH), null, 1E-6, true);
 			}
+
 
 			c_jpDevelopmentChart.setAllValues(modelsDevelopmentChart, data[14], format, getLangStr("Wochen"), "",false,
 					jcbHelpLines.isSelected());
@@ -487,7 +490,7 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 
 	private String getLangStr(String key) {return HOVerwaltung.instance().getLanguageString(key);}
 
-	private Color getColor(int i) {return ThemeManager.getColor(HOColorName.PALETTE15[i]);}
+	private Color getColor5(int i) {return ThemeManager.getColor(HOColorName.PALETTE5[i]);}
 
 	private String getChartCode(int i) {
 

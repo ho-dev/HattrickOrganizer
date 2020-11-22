@@ -2,8 +2,10 @@ package core.util.chart;
 
 import javax.swing.*;
 
+import core.gui.theme.FontUtil;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import core.model.UserParameter;
 import org.jetbrains.annotations.Nullable;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
@@ -30,13 +32,22 @@ public class LinesChart implements ILinesChart{
 
     public LinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat, Double y1_axisMin, Double y1_axisMax)
     {
-        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, y1_axisMin, y1_axisMax, null, null);
+        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, y1_axisMin, y1_axisMax, null, null, false);
     }
 
+    public LinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat, Double y1_axisMin, Double y1_axisMax, boolean bLegendVisible)
+    {
+        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, y1_axisMin, y1_axisMax, null, null, bLegendVisible);
+    }
 
     public LinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat)
     {
-        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, null, null, null, null);
+        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, null, null, null, null, false);
+    }
+
+    public LinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat, boolean bLegendVisible)
+    {
+        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, null, null, null, null, bLegendVisible);
     }
 
     public void setYAxisMin(int yAxisGroup, @Nullable Double value){
@@ -48,12 +59,18 @@ public class LinesChart implements ILinesChart{
     }
 
     public LinesChart(boolean second_axis, String y1_axisName, String y2_axisName, String y1_axisFormat, String y2_axisFormat,
-                      @Nullable Double y1_axisMin, @Nullable Double y1_axisMax, @Nullable Double y2_axisMin, @Nullable Double y2_axisMax){
+                      @Nullable Double y1_axisMin, @Nullable Double y1_axisMax, @Nullable Double y2_axisMin, @Nullable Double y2_axisMax, boolean bLegendVisible){
 
         m_chart = new XYChart(10, 10);
         m_axeStyler = m_chart.getStyler();
 
-        m_chart.getStyler().setLegendVisible(false);
+        m_chart.getStyler().setLegendVisible(bLegendVisible);
+        if (bLegendVisible){
+            m_chart.getStyler().setLegendBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
+        }
+
+        m_chart.getStyler().setChartFontColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+
         m_chart.getStyler().setPlotBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
         m_chart.getStyler().setPlotGridLinesColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
         m_chart.getStyler().setChartBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
