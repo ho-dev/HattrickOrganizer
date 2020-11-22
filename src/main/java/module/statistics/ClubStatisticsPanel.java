@@ -72,7 +72,6 @@ public class ClubStatisticsPanel extends LazyImagePanel {
                 UserParameter.instance().statistikFinanzenHilfslinien = jcbHelpLines.isSelected();
             } else if (e.getSource() == jcbDataLabels) {
                 oStatisticsPanel.setLabelling(jcbDataLabels.isSelected());
-                UserParameter.instance().statistikFinanzenBeschriftung = jcbDataLabels.isSelected();
             } else if (e.getSource() == jcbAssistantTrainerLevels.getCheckbox()) {
                 oStatisticsPanel.setShow("AssistantTrainerLevels", jcbAssistantTrainerLevels.isSelected());
                 UserParameter.instance().statistikKontostand = jcbAssistantTrainerLevels.isSelected();
@@ -353,7 +352,7 @@ public class ClubStatisticsPanel extends LazyImagePanel {
 
             NumberFormat format = NumberFormat.getInstance();
 
-            double[][] statistikWerte = DBManager.instance().getFinanzen4Statistik(anzahlHRF); //TODO: create getClub4Statistik()
+            double[][] statistikWerte = DBManager.instance().getDataForFinancesStatisticsPanel(anzahlHRF); //TODO: create getClub4Statistik()
             GraphDataModel[] models;
             models = new GraphDataModel[3];
 

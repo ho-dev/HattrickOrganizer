@@ -34,7 +34,7 @@ public class LinesChart implements ILinesChart{
     }
 
 
-    public LinesChart(boolean second_axis, String y1_axisName, String y2_axisName, String y1_axisFormat, String y2_axisFormat)
+    public LinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat)
     {
         this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, null, null, null, null);
     }

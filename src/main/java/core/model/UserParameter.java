@@ -110,6 +110,7 @@ public final class UserParameter extends Configuration {
     public boolean statistikAlleHilfslinien = true;
     public boolean statistikAlleKondition = true;
     public int statisticsTeamSumOrAverage = 0;
+    public int statisticsFinanceChartType = 0;
     public boolean statistikAllLoyalty;
     public boolean statistikAllTSI;
     public boolean statistikAllWages;
@@ -125,7 +126,6 @@ public final class UserParameter extends Configuration {
     public boolean statistikErfahrung = true;
     public boolean statistikFananzahl;
     public boolean statistikFans;
-    public boolean statistikFinanzenBeschriftung = true;
     public boolean statistikFinanzenHilfslinien = true;
     public boolean statisticsClubDataLabels = true;
     public boolean statisticsClubHelpLines = true;
@@ -461,6 +461,7 @@ public final class UserParameter extends Configuration {
         map.put("statistikAlleFuehrung", String.valueOf(statistikAlleFuehrung));
         map.put("statistikAlleHilfslinien", String.valueOf(statistikAlleHilfslinien));
         map.put("statisticsTeamSumOrAverage", String.valueOf(statisticsTeamSumOrAverage));
+        map.put("statisticsFinanceChartType", String.valueOf(statisticsFinanceChartType));
         map.put("statistikAlleKondition", String.valueOf(statistikAlleKondition));
         map.put("statistikAllLoyalty", String.valueOf(statistikAllLoyalty));
         map.put("statistikAllePasspiel", String.valueOf(statistikAllePasspiel));
@@ -476,7 +477,6 @@ public final class UserParameter extends Configuration {
         map.put("statistikErfahrung", String.valueOf(statistikErfahrung));
         map.put("statistikFananzahl", String.valueOf(statistikFananzahl));
         map.put("statistikFans", String.valueOf(statistikFans));
-        map.put("statistikFinanzenBeschriftung", String.valueOf(statistikFinanzenBeschriftung));
         map.put("statistikFinanzenHilfslinien", String.valueOf(statistikFinanzenHilfslinien));
         map.put("statistikFluegel", String.valueOf(statistikFluegel));
         map.put("statistikForm", String.valueOf(statistikForm));
@@ -679,6 +679,7 @@ public final class UserParameter extends Configuration {
         statistikAlleFuehrung = getBooleanValue(values, "statistikAlleFuehrung");
         statistikAlleHilfslinien = getBooleanValue(values, "statistikAlleHilfslinien");
         statisticsTeamSumOrAverage = getIntValue(values, "statisticsTeamSumOrAverage");
+        statisticsFinanceChartType = getIntValue(values, "statisticsFinanceChartType");
         statistikAlleKondition = getBooleanValue(values, "statistikAlleKondition");
         statistikAllLoyalty = getBooleanValue(values, "statistikAllLoyalty");
         statistikAllePasspiel = getBooleanValue(values, "statistikAllePasspiel");
@@ -694,7 +695,6 @@ public final class UserParameter extends Configuration {
         statistikErfahrung = getBooleanValue(values, "statistikErfahrung");
         statistikFananzahl = getBooleanValue(values, "statistikFananzahl");
         statistikFans = getBooleanValue(values, "statistikFans");
-        statistikFinanzenBeschriftung = getBooleanValue(values, "statistikFinanzenBeschriftung");
         statistikFinanzenHilfslinien = getBooleanValue(values, "statistikFinanzenHilfslinien");
         statistikFluegel = getBooleanValue(values, "statistikFluegel");
         statistikForm = getBooleanValue(values, "statistikForm");

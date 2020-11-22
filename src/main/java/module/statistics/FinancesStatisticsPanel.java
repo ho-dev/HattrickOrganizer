@@ -13,47 +13,44 @@ import core.util.HOLogger;
 import core.util.Helper;
 import core.util.chart.LinesChart;
 
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
+import java.awt.event.ItemEvent;
 import java.text.NumberFormat;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 /**
  * Panel Finances in Module Statistics
  */
 public class FinancesStatisticsPanel extends LazyImagePanel {
 
-	private ImageCheckbox c_jcbMatchTakings;
-	private ImageCheckbox c_jcbSponsors;
+//	private ImageCheckbox c_jcbMatchTakings;
+//	private ImageCheckbox c_jcbSponsors;
+//	private ImageCheckbox c_jcbPlayerSales;
+//	private ImageCheckbox c_jcbCommission;
+//	private ImageCheckbox c_jcbOther;
+//	private ImageCheckbox c_jcbStadiumMaintenance;
+//	private ImageCheckbox c_jcbNewSigning;
+//	private ImageCheckbox c_jcbWages;
+//	private ImageCheckbox c_jcbStaff;
+//	private ImageCheckbox c_jcbOther;
+	private JComboBox<String> c_jcomboChartType;
+	private int iChartType;
+	private JTextField c_jtfNumberOfHRF;
+	private JButton c_jbFetch;
+	private JCheckBox jcbHelpLines;
+	private JPanel chartPanel;
+	private JPanel c_jpCharts;
+	final static String BALANCE_CHART_PANEL = "Balance Chart";
+	final static String DEVELOPMENT_CHART_PANEL = "Development Chart";
+	final static String REVENUE_AND_EXPENSES_CHART_PANEL = "P&L Chart";
+	private LinesChart c_jpBalanceChart;
+	private LinesChart c_jpDevelopmentChart;
+	private LinesChart c_jpRevenueAndExpensesChart; //TODO make a new kind of graph (camembert)
 
-	private ImageCheckbox m_jchGesamtausgaben;
-	private ImageCheckbox m_jchGesamteinnahmen;
-	private ImageCheckbox m_jchGewinnVerlust;
-	private ImageCheckbox m_jchJugend;
-	private ImageCheckbox m_jchZinsaufwendungen;
-	private ImageCheckbox m_jchKontostand;
-	private ImageCheckbox m_jchSonstigeAusgaben;
-	private ImageCheckbox m_jchSonstigeEinnahmen;
-	private ImageCheckbox m_jchSpielergehaelter;
-
-	private ImageCheckbox m_jchStadion;
-	private ImageCheckbox m_jchTrainerstab;
-
-	private JButton m_jbUbernehmen;
-	private JCheckBox m_jchHilflinien;
-	private JTextField m_jtfAnzahlHRF;
-	private LinesChart c_jpChart;
+	// TODO: start with Development GRAPH which is the closer of what I got now
 
 	@Override
 	protected void initialize() {
@@ -70,102 +67,111 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 
 
 	private void addListeners() {
-		ActionListener checkBoxActionListener = e -> {
-			if (e.getSource() == m_jchHilflinien) {
-				c_jpChart.setHelpLines(m_jchHilflinien.isSelected());
-				UserParameter.instance().statistikFinanzenHilfslinien = m_jchHilflinien
-						.isSelected();
-			} else if (e.getSource() == m_jchBeschriftung) {
-				c_jpChart.setLabelling(m_jchBeschriftung.isSelected());
-				UserParameter.instance().statistikFinanzenBeschriftung = m_jchBeschriftung
-						.isSelected();
-			} else if (e.getSource() == m_jchKontostand.getCheckbox()) {
-				c_jpChart.setShow("Kontostand", m_jchKontostand.isSelected());
-				UserParameter.instance().statistikKontostand = m_jchKontostand.isSelected();
-			} else if (e.getSource() == m_jchGewinnVerlust.getCheckbox()) {
-				c_jpChart.setShow("GewinnVerlust", m_jchGewinnVerlust.isSelected());
-				UserParameter.instance().statistikGewinnVerlust = m_jchGewinnVerlust
-						.isSelected();
-			} else if (e.getSource() == m_jchGesamteinnahmen.getCheckbox()) {
-				c_jpChart
-						.setShow("Gesamteinnahmen", m_jchGesamteinnahmen.isSelected());
-				UserParameter.instance().statistikGesamtEinnahmen = m_jchGesamteinnahmen
-						.isSelected();
-			} else if (e.getSource() == m_jchGesamtausgaben.getCheckbox()) {
-				c_jpChart.setShow("Gesamtausgaben", m_jchGesamtausgaben.isSelected());
-				UserParameter.instance().statistikGesamtAusgaben = m_jchGesamtausgaben
-						.isSelected();
-			} else if (e.getSource() == c_jcbMatchTakings.getCheckbox()) {
-				c_jpChart.setShow("MatchTakings", c_jcbMatchTakings.isSelected());
-				UserParameter.instance().statistikMatchTakings = c_jcbMatchTakings.isSelected();
-			} else if (e.getSource() == c_jcbSponsors.getCheckbox()) {
-				c_jpChart.setShow("Sponsoren", c_jcbSponsors.isSelected());
-				UserParameter.instance().statistikSponsoren = c_jcbSponsors.isSelected();
-			} else if (e.getSource() == m_jchSonstigeEinnahmen.getCheckbox()) {
-				c_jpChart.setShow("SonstigeEinnahmen",
-						m_jchSonstigeEinnahmen.isSelected());
-				UserParameter.instance().statistikSonstigeEinnahmen = m_jchSonstigeEinnahmen
-						.isSelected();
-			} else if (e.getSource() == m_jchStadion.getCheckbox()) {
-				c_jpChart.setShow("Stadion", m_jchStadion.isSelected());
-				UserParameter.instance().statistikStadion = m_jchStadion.isSelected();
-			} else if (e.getSource() == m_jchSpielergehaelter.getCheckbox()) {
-				c_jpChart.setShow("Spielergehaelter",
-						m_jchSpielergehaelter.isSelected());
-				UserParameter.instance().statistikSpielergehaelter = m_jchSpielergehaelter
-						.isSelected();
-			} else if (e.getSource() == m_jchSonstigeAusgaben.getCheckbox()) {
-				c_jpChart.setShow("SonstigeAusgaben",
-						m_jchSonstigeAusgaben.isSelected());
-				UserParameter.instance().statistikSonstigeAusgaben = m_jchSonstigeAusgaben
-						.isSelected();
-			} else if (e.getSource() == m_jchTrainerstab.getCheckbox()) {
-				c_jpChart.setShow("Trainerstab", m_jchTrainerstab.isSelected());
-				UserParameter.instance().statistikTrainerstab = m_jchTrainerstab.isSelected();
-			} else if (e.getSource() == m_jchJugend.getCheckbox()) {
-				c_jpChart.setShow("Jugend", m_jchJugend.isSelected());
-				UserParameter.instance().statistikJugend = m_jchJugend.isSelected();
-			} else if (e.getSource() == m_jchZinsaufwendungen.getCheckbox()) {
-				c_jpChart.setShow("Zinsaufwendungen", m_jchZinsaufwendungen.isSelected());
-				UserParameter.instance().statistikZinsaufwendungen = m_jchZinsaufwendungen.isSelected();
-			} else if (e.getSource() == m_jchMarktwert.getCheckbox()) {
-				c_jpChart.setShow("Marktwert", m_jchMarktwert.isSelected());
-				UserParameter.instance().statistikMarktwert = m_jchMarktwert.isSelected();
-			} else if (e.getSource() == m_jchFans.getCheckbox()) {
-				c_jpChart.setShow("Fans", m_jchFans.isSelected());
-				UserParameter.instance().statistikFananzahl = m_jchFans.isSelected();
+
+		UserParameter userParameter = UserParameter.instance();
+
+		c_jcomboChartType.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				iChartType = c_jcomboChartType.getSelectedIndex();
+				userParameter.statisticsFinanceChartType = iChartType;
+				CardLayout cl = (CardLayout)(c_jpCharts.getLayout());
+				cl.show(c_jpCharts, getChartCode(iChartType));
+				iChartType = c_jcomboChartType.getSelectedIndex();
 			}
+		});
+
+		ActionListener checkBoxActionListener = e -> {
+			if (e.getSource() == jcbHelpLines) {
+				c_jpBalanceChart.setHelpLines(jcbHelpLines.isSelected());
+				c_jpDevelopmentChart.setHelpLines(jcbHelpLines.isSelected());
+				userParameter.statistikFinanzenHilfslinien = jcbHelpLines.isSelected();
+			}
+//			else if (e.getSource() == c_jcbOther.getCheckbox()) {
+//				c_jpBalanceChart.setShow("GewinnVerlust", c_jcbOther.isSelected());
+//				UserParameter.instance().statistikGewinnVerlust = c_jcbOther
+//						.isSelected();
+//			} else if (e.getSource() == c_jcbCommission.getCheckbox()) {
+//				c_jpBalanceChart
+//						.setShow("Gesamteinnahmen", c_jcbCommission.isSelected());
+//				UserParameter.instance().statistikGesamtEinnahmen = c_jcbCommission
+//						.isSelected();
+//			} else if (e.getSource() == c_jcbPlayerSales.getCheckbox()) {
+//				c_jpBalanceChart.setShow("Gesamtausgaben", c_jcbPlayerSales.isSelected());
+//				UserParameter.instance().statistikGesamtAusgaben = c_jcbPlayerSales
+//						.isSelected();
+//			} else if (e.getSource() == c_jcbMatchTakings.getCheckbox()) {
+//				c_jpBalanceChart.setShow("MatchTakings", c_jcbMatchTakings.isSelected());
+//				UserParameter.instance().statistikMatchTakings = c_jcbMatchTakings.isSelected();
+//			} else if (e.getSource() == c_jcbSponsors.getCheckbox()) {
+//				c_jpBalanceChart.setShow("Sponsoren", c_jcbSponsors.isSelected());
+//				UserParameter.instance().statistikSponsoren = c_jcbSponsors.isSelected();
+//			} else if (e.getSource() == c_jcbOther.getCheckbox()) {
+//				c_jpBalanceChart.setShow("SonstigeEinnahmen",
+//						c_jcbOther.isSelected());
+//				UserParameter.instance().statistikSonstigeEinnahmen = c_jcbOther
+//						.isSelected();
+//			} else if (e.getSource() == m_jchStadion.getCheckbox()) {
+//				c_jpBalanceChart.setShow("Stadion", m_jchStadion.isSelected());
+//				UserParameter.instance().statistikStadion = m_jchStadion.isSelected();
+//			} else if (e.getSource() == m_jchSpielergehaelter.getCheckbox()) {
+//				c_jpBalanceChart.setShow("Spielergehaelter",
+//						m_jchSpielergehaelter.isSelected());
+//				UserParameter.instance().statistikSpielergehaelter = m_jchSpielergehaelter
+//						.isSelected();
+//			} else if (e.getSource() == c_jcbStaff.getCheckbox()) {
+//				c_jpBalanceChart.setShow("SonstigeAusgaben",
+//						c_jcbStaff.isSelected());
+//				UserParameter.instance().statistikSonstigeAusgaben = c_jcbStaff
+//						.isSelected();
+//			} else if (e.getSource() == m_jchTrainerstab.getCheckbox()) {
+//				c_jpBalanceChart.setShow("Trainerstab", m_jchTrainerstab.isSelected());
+//				UserParameter.instance().statistikTrainerstab = m_jchTrainerstab.isSelected();
+//			} else if (e.getSource() == c_jcbStadiumMaintenance.getCheckbox()) {
+//				c_jpBalanceChart.setShow("Jugend", c_jcbStadiumMaintenance.isSelected());
+//				UserParameter.instance().statistikJugend = c_jcbStadiumMaintenance.isSelected();
+//			} else if (e.getSource() == c_jcbNewSigning.getCheckbox()) {
+//				c_jpBalanceChart.setShow("Zinsaufwendungen", c_jcbNewSigning.isSelected());
+//				UserParameter.instance().statistikZinsaufwendungen = c_jcbNewSigning.isSelected();
+//			} else if (e.getSource() == m_jchMarktwert.getCheckbox()) {
+//				c_jpBalanceChart.setShow("Marktwert", m_jchMarktwert.isSelected());
+//				UserParameter.instance().statistikMarktwert = m_jchMarktwert.isSelected();
+//			} else if (e.getSource() == m_jchFans.getCheckbox()) {
+//				c_jpBalanceChart.setShow("Fans", m_jchFans.isSelected());
+//				UserParameter.instance().statistikFananzahl = m_jchFans.isSelected();
+//			}
 		};
-		m_jchHilflinien.addActionListener(checkBoxActionListener);
-		m_jchBeschriftung.addActionListener(checkBoxActionListener);
-		m_jchKontostand.addActionListener(checkBoxActionListener);
-		m_jchGewinnVerlust.addActionListener(checkBoxActionListener);
-		m_jchGesamteinnahmen.addActionListener(checkBoxActionListener);
-		m_jchGesamtausgaben.addActionListener(checkBoxActionListener);
-		c_jcbMatchTakings.addActionListener(checkBoxActionListener);
-		c_jcbSponsors.addActionListener(checkBoxActionListener);
-		m_jchSonstigeEinnahmen.addActionListener(checkBoxActionListener);
-		m_jchStadion.addActionListener(checkBoxActionListener);
-		m_jchSpielergehaelter.addActionListener(checkBoxActionListener);
-		m_jchSonstigeAusgaben.addActionListener(checkBoxActionListener);
-		m_jchTrainerstab.addActionListener(checkBoxActionListener);
-		m_jchJugend.addActionListener(checkBoxActionListener);
-		m_jchZinsaufwendungen.addActionListener(checkBoxActionListener);
-		m_jchMarktwert.addActionListener(checkBoxActionListener);
-		m_jchFans.addActionListener(checkBoxActionListener);
+		jcbHelpLines.addActionListener(checkBoxActionListener);
+//		m_jchBeschriftung.addActionListener(checkBoxActionListener);
+//		c_jcbWages.addActionListener(checkBoxActionListener);
+//		c_jcbOther.addActionListener(checkBoxActionListener);
+//		c_jcbCommission.addActionListener(checkBoxActionListener);
+//		c_jcbPlayerSales.addActionListener(checkBoxActionListener);
+//		c_jcbMatchTakings.addActionListener(checkBoxActionListener);
+//		c_jcbSponsors.addActionListener(checkBoxActionListener);
+//		c_jcbOther.addActionListener(checkBoxActionListener);
+//		m_jchStadion.addActionListener(checkBoxActionListener);
+//		m_jchSpielergehaelter.addActionListener(checkBoxActionListener);
+//		c_jcbStaff.addActionListener(checkBoxActionListener);
+//		m_jchTrainerstab.addActionListener(checkBoxActionListener);
+//		c_jcbStadiumMaintenance.addActionListener(checkBoxActionListener);
+//		c_jcbNewSigning.addActionListener(checkBoxActionListener);
+//		m_jchMarktwert.addActionListener(checkBoxActionListener);
+//		m_jchFans.addActionListener(checkBoxActionListener);
 
-		m_jbUbernehmen.addActionListener(e -> initStatistik());
+		c_jbFetch.addActionListener(e -> initStatistik());
 
-		m_jtfAnzahlHRF.addFocusListener(new FocusAdapter() {
+		c_jtfNumberOfHRF.addFocusListener(new FocusAdapter() {
 			@Override
 			public final void focusLost(java.awt.event.FocusEvent focusEvent) {
-				Helper.parseInt(HOMainFrame.instance(), m_jtfAnzahlHRF, false);
+				Helper.parseInt(HOMainFrame.instance(), c_jtfNumberOfHRF, false);
 			}
 		});
 	}
 
 	private void initComponents() {
-		JLabel label;
+		UserParameter gup = UserParameter.instance();
+
+		JLabel labelWeeks, labelChartType;
 
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -186,197 +192,215 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 
 		panel2.setLayout(layout2);
 
-		label = new JLabel(getLangStr("Wochen"));
+		labelWeeks = new JLabel(getLangStr("Wochen"));
 		constraints2.fill = GridBagConstraints.HORIZONTAL;
 		constraints2.anchor = GridBagConstraints.WEST;
 		constraints2.gridx = 0;
 		constraints2.gridy = 1;
 		constraints2.gridwidth = 1;
-		layout2.setConstraints(label, constraints2);
-		panel2.add(label);
-		m_jtfAnzahlHRF = new JTextField(
-				String.valueOf(UserParameter.instance().statistikFinanzenAnzahlHRF));
-		m_jtfAnzahlHRF.setHorizontalAlignment(SwingConstants.RIGHT);
+		layout2.setConstraints(labelWeeks, constraints2);
+		panel2.add(labelWeeks);
+
+		c_jtfNumberOfHRF = new JTextField(String.valueOf(UserParameter.instance().statistikFinanzenAnzahlHRF));
+		c_jtfNumberOfHRF.setHorizontalAlignment(SwingConstants.RIGHT);
 		constraints2.gridx = 1;
 		constraints2.gridy = 1;
-		layout2.setConstraints(m_jtfAnzahlHRF, constraints2);
-		panel2.add(m_jtfAnzahlHRF);
+		layout2.setConstraints(c_jtfNumberOfHRF, constraints2);
+		panel2.add(c_jtfNumberOfHRF);
 
 		constraints2.gridx = 0;
 		constraints2.gridy = 4;
 		constraints2.gridwidth = 2;
-		m_jbUbernehmen = new JButton(getLangStr("ls.button.apply"));
-		m_jbUbernehmen.setToolTipText(getLangStr("tt_Statistik_HRFAnzahluebernehmen"));
-		layout2.setConstraints(m_jbUbernehmen, constraints2);
-		panel2.add(m_jbUbernehmen);
+		c_jbFetch = new JButton(getLangStr("ls.button.apply"));
+		c_jbFetch.setToolTipText(getLangStr("tt_Statistik_HRFAnzahluebernehmen"));
+		layout2.setConstraints(c_jbFetch, constraints2);
+		panel2.add(c_jbFetch);
 
 		constraints2.gridwidth = 1;
 		constraints2.gridx = 0;
 		constraints2.gridy = 5;
-		m_jchHilflinien = new JCheckBox(getLangStr("Hilflinien"),
+		jcbHelpLines = new JCheckBox(getLangStr("Hilflinien"),
 				UserParameter.instance().statistikFinanzenHilfslinien);
-		m_jchHilflinien.setOpaque(false);
-		layout2.setConstraints(m_jchHilflinien, constraints2);
-		panel2.add(m_jchHilflinien);
+		jcbHelpLines.setOpaque(false);
+		layout2.setConstraints(jcbHelpLines, constraints2);
+		panel2.add(jcbHelpLines);
 
-		constraints2.gridwidth = 1;
+		// Label Chart Type
+		labelChartType = new JLabel(getLangStr("ls.module.statistic.finance.chart_type"));
+		constraints2.fill = GridBagConstraints.HORIZONTAL;
+		constraints2.anchor = GridBagConstraints.WEST;
 		constraints2.gridx = 0;
 		constraints2.gridy = 6;
-		m_jchBeschriftung = new JCheckBox(getLangStr("Beschriftung"),
-				UserParameter.instance().statistikFinanzenBeschriftung);
-		m_jchBeschriftung.setOpaque(false);
-		layout2.setConstraints(m_jchBeschriftung, constraints2);
-		panel2.add(m_jchBeschriftung);
+		layout2.setConstraints(labelChartType, constraints2);
+		panel2.add(labelChartType);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 5;
-		m_jchKontostand = new ImageCheckbox(getLangStr("Kontostand"),
-				ThemeManager.getColor(HOColorName.STAT_CASH),
-				UserParameter.instance().statistikKontostand);
-		m_jchKontostand.setOpaque(false);
-		layout2.setConstraints(m_jchKontostand, constraints2);
-		panel2.add(m_jchKontostand);
+		// ComboBox Chart Type
+		String[] sChartType = { getLangStr("ls.module.statistics.finance.chart_type.development"),
+				getLangStr("ls.module.statistics.finance.chart_type.balance"),
+				getLangStr("ls.module.statistics.finance.chart_type.p&l")};
 
-		constraints2.gridwidth = 1;
+		iChartType = gup.statisticsFinanceChartType;
+		c_jcomboChartType = new JComboBox<>(sChartType);
+		c_jcomboChartType.setSelectedIndex(iChartType);
+		layout2.setConstraints(c_jcomboChartType, constraints2);
+		c_jcomboChartType.setToolTipText(getLangStr("ls.module.statistic.finance.choose_chart_type"));
 		constraints2.gridx = 1;
 		constraints2.gridy = 6;
-		m_jchGewinnVerlust = new ImageCheckbox(getLangStr("GewinnVerlust"),
-				ThemeManager.getColor(HOColorName.STAT_WINLOST),
-				UserParameter.instance().statistikGewinnVerlust);
-		m_jchGewinnVerlust.setOpaque(false);
-		layout2.setConstraints(m_jchGewinnVerlust, constraints2);
-		panel2.add(m_jchGewinnVerlust);
+		panel2.add(c_jcomboChartType, constraints2);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 7;
-		m_jchGesamteinnahmen = new ImageCheckbox(getLangStr("Gesamteinnahmen"),
-				ThemeManager.getColor(HOColorName.STAT_INCOMESUM),
-				UserParameter.instance().statistikGesamtEinnahmen);
-		m_jchGesamteinnahmen.setOpaque(false);
-		layout2.setConstraints(m_jchGesamteinnahmen, constraints2);
-		panel2.add(m_jchGesamteinnahmen);
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 1;
+//		constraints2.gridy = 5;
+//		c_jcbWages = new ImageCheckbox(getLangStr("Kontostand"),
+//				ThemeManager.getColor(HOColorName.STAT_CASH),
+//				UserParameter.instance().statistikKontostand);
+//		c_jcbWages.setOpaque(false);
+//		layout2.setConstraints(c_jcbWages, constraints2);
+//		panel2.add(c_jcbWages);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 1;
+//		constraints2.gridy = 6;
+//		c_jcbOther = new ImageCheckbox(getLangStr("GewinnVerlust"),
+//				ThemeManager.getColor(HOColorName.STAT_WINLOST),
+//				UserParameter.instance().statistikGewinnVerlust);
+//		c_jcbOther.setOpaque(false);
+//		layout2.setConstraints(c_jcbOther, constraints2);
+//		panel2.add(c_jcbOther);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 0;
+//		constraints2.gridy = 7;
+//		c_jcbCommission = new ImageCheckbox(getLangStr("Gesamteinnahmen"),
+//				ThemeManager.getColor(HOColorName.STAT_INCOMESUM),
+//				UserParameter.instance().statistikGesamtEinnahmen);
+//		c_jcbCommission.setOpaque(false);
+//		layout2.setConstraints(c_jcbCommission, constraints2);
+//		panel2.add(c_jcbCommission);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 1;
+//		constraints2.gridy = 7;
+//		c_jcbPlayerSales = new ImageCheckbox(getLangStr("Gesamtausgaben"),
+//				ThemeManager.getColor(HOColorName.STAT_COSTSUM),
+//				UserParameter.instance().statistikGesamtAusgaben);
+//		c_jcbPlayerSales.setOpaque(false);
+//		layout2.setConstraints(c_jcbPlayerSales, constraints2);
+//		panel2.add(c_jcbPlayerSales);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 0;
+//		constraints2.gridy = 8;
+//		c_jcbMatchTakings = new ImageCheckbox(getLangStr("ls.module.statistics.finance.match.income"),
+//				ThemeManager.getColor(HOColorName.STAT_INCOMESPECTATORS),
+//				UserParameter.instance().statistikZuschauer);
+//		c_jcbMatchTakings.setOpaque(false);
+//		layout2.setConstraints(c_jcbMatchTakings, constraints2);
+//		panel2.add(c_jcbMatchTakings);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 0;
+//		constraints2.gridy = 9;
+//		c_jcbSponsors = new ImageCheckbox(getLangStr("Sponsoren"),
+//				ThemeManager.getColor(HOColorName.STAT_INCOMESPONSORS),
+//				UserParameter.instance().statistikSponsoren);
+//		m_jchStadion = new ImageCheckbox(getLangStr("Stadion"),
+//				ThemeManager.getColor(HOColorName.STAT_COSTARENA),
+//				UserParameter.instance().statistikStadion);
+//		c_jcbSponsors.setOpaque(false);
+//		layout2.setConstraints(c_jcbSponsors, constraints2);
+//		panel2.add(c_jcbSponsors);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 0;
+//		constraints2.gridy = 10;
+//		c_jcbOther = new ImageCheckbox(getLangStr("Sonstiges"),
+//				ThemeManager.getColor(HOColorName.STAT_INCOMETEMPORARY),
+//				UserParameter.instance().statistikSonstigeEinnahmen);
+//		c_jcbOther.setOpaque(false);
+//		layout2.setConstraints(c_jcbOther, constraints2);
+//		panel2.add(c_jcbOther);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 1;
+//		constraints2.gridy = 8;
+//		m_jchStadion.setOpaque(false);
+//		layout2.setConstraints(m_jchStadion, constraints2);
+//		panel2.add(m_jchStadion);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 1;
+//		constraints2.gridy = 9;
+//		m_jchSpielergehaelter = new ImageCheckbox(getLangStr("Spielergehaelter"),
+//				ThemeManager.getColor(HOColorName.STAT_COSTSPLAYERS),
+//				UserParameter.instance().statistikSpielergehaelter);
+//		m_jchSpielergehaelter.setOpaque(false);
+//		layout2.setConstraints(m_jchSpielergehaelter, constraints2);
+//		panel2.add(m_jchSpielergehaelter);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 1;
+//		constraints2.gridy = 10;
+//		c_jcbStaff = new ImageCheckbox(getLangStr("Sonstiges"),
+//				ThemeManager.getColor(HOColorName.STAT_COSTTEMPORARY),
+//				UserParameter.instance().statistikSonstigeAusgaben);
+//		c_jcbStaff.setOpaque(false);
+//		layout2.setConstraints(c_jcbStaff, constraints2);
+//		panel2.add(c_jcbStaff);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 1;
+//		constraints2.gridy = 12;
+//		m_jchTrainerstab = new ImageCheckbox(getLangStr("Trainerstab"),
+//				ThemeManager.getColor(HOColorName.STAT_COSTSTAFF),
+//				UserParameter.instance().statistikTrainerstab);
+//		m_jchTrainerstab.setOpaque(false);
+//		layout2.setConstraints(m_jchTrainerstab, constraints2);
+//		panel2.add(m_jchTrainerstab);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 1;
+//		constraints2.gridy = 13;
+//		c_jcbStadiumMaintenance = new ImageCheckbox(getLangStr("Jugend"),
+//				ThemeManager.getColor(HOColorName.STAT_COSTSYOUTH),
+//				UserParameter.instance().statistikJugend);
+//		c_jcbStadiumMaintenance.setOpaque(false);
+//		layout2.setConstraints(c_jcbStadiumMaintenance, constraints2);
+//		panel2.add(c_jcbStadiumMaintenance);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 1;
+//		constraints2.gridy = 14;
+//		c_jcbNewSigning = new ImageCheckbox(getLangStr("Zinsaufwendungen"),
+//				ThemeManager.getColor(HOColorName.STAT_COSTFINANCIAL),
+//				UserParameter.instance().statistikZinsaufwendungen);
+//		c_jcbNewSigning.setOpaque(false);
+//		layout2.setConstraints(c_jcbNewSigning, constraints2);
+//		panel2.add(c_jcbNewSigning);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 0;
+//		constraints2.gridy = 12;
+//		m_jchMarktwert = new ImageCheckbox(getLangStr("TotalTSI"),
+//				ThemeManager.getColor(HOColorName.STAT_MARKETVALUE),
+//				UserParameter.instance().statistikMarktwert);
+//		m_jchMarktwert.setOpaque(false);
+//		layout2.setConstraints(m_jchMarktwert, constraints2);
+//		panel2.add(m_jchMarktwert);
+//
+//		constraints2.gridwidth = 1;
+//		constraints2.gridx = 0;
+//		constraints2.gridy = 13;
+//		m_jchFans = new ImageCheckbox(getLangStr("Fans"),
+//				ThemeManager.getColor(HOColorName.STAT_FANS),
+//				UserParameter.instance().statistikFananzahl);
+//		m_jchFans.setOpaque(false);
+//		layout2.setConstraints(m_jchFans, constraints2);
+//		panel2.add(m_jchFans);
+//
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 7;
-		m_jchGesamtausgaben = new ImageCheckbox(getLangStr("Gesamtausgaben"),
-				ThemeManager.getColor(HOColorName.STAT_COSTSUM),
-				UserParameter.instance().statistikGesamtAusgaben);
-		m_jchGesamtausgaben.setOpaque(false);
-		layout2.setConstraints(m_jchGesamtausgaben, constraints2);
-		panel2.add(m_jchGesamtausgaben);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 8;
-		c_jcbMatchTakings = new ImageCheckbox(getLangStr("ls.module.statistics.finance.match.income"),
-				ThemeManager.getColor(HOColorName.STAT_INCOMESPECTATORS),
-				UserParameter.instance().statistikZuschauer);
-		c_jcbMatchTakings.setOpaque(false);
-		layout2.setConstraints(c_jcbMatchTakings, constraints2);
-		panel2.add(c_jcbMatchTakings);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 9;
-		c_jcbSponsors = new ImageCheckbox(getLangStr("Sponsoren"),
-				ThemeManager.getColor(HOColorName.STAT_INCOMESPONSORS),
-				UserParameter.instance().statistikSponsoren);
-		m_jchStadion = new ImageCheckbox(getLangStr("Stadion"),
-				ThemeManager.getColor(HOColorName.STAT_COSTARENA),
-				UserParameter.instance().statistikStadion);
-		c_jcbSponsors.setOpaque(false);
-		layout2.setConstraints(c_jcbSponsors, constraints2);
-		panel2.add(c_jcbSponsors);
-
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 10;
-		m_jchSonstigeEinnahmen = new ImageCheckbox(getLangStr("Sonstiges"),
-				ThemeManager.getColor(HOColorName.STAT_INCOMETEMPORARY),
-				UserParameter.instance().statistikSonstigeEinnahmen);
-		m_jchSonstigeEinnahmen.setOpaque(false);
-		layout2.setConstraints(m_jchSonstigeEinnahmen, constraints2);
-		panel2.add(m_jchSonstigeEinnahmen);
-
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 8;
-		m_jchStadion.setOpaque(false);
-		layout2.setConstraints(m_jchStadion, constraints2);
-		panel2.add(m_jchStadion);
-
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 9;
-		m_jchSpielergehaelter = new ImageCheckbox(getLangStr("Spielergehaelter"),
-				ThemeManager.getColor(HOColorName.STAT_COSTSPLAYERS),
-				UserParameter.instance().statistikSpielergehaelter);
-		m_jchSpielergehaelter.setOpaque(false);
-		layout2.setConstraints(m_jchSpielergehaelter, constraints2);
-		panel2.add(m_jchSpielergehaelter);
-
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 10;
-		m_jchSonstigeAusgaben = new ImageCheckbox(getLangStr("Sonstiges"),
-				ThemeManager.getColor(HOColorName.STAT_COSTTEMPORARY),
-				UserParameter.instance().statistikSonstigeAusgaben);
-		m_jchSonstigeAusgaben.setOpaque(false);
-		layout2.setConstraints(m_jchSonstigeAusgaben, constraints2);
-		panel2.add(m_jchSonstigeAusgaben);
-
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 12;
-		m_jchTrainerstab = new ImageCheckbox(getLangStr("Trainerstab"),
-				ThemeManager.getColor(HOColorName.STAT_COSTSTAFF),
-				UserParameter.instance().statistikTrainerstab);
-		m_jchTrainerstab.setOpaque(false);
-		layout2.setConstraints(m_jchTrainerstab, constraints2);
-		panel2.add(m_jchTrainerstab);
-
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 13;
-		m_jchJugend = new ImageCheckbox(getLangStr("Jugend"),
-				ThemeManager.getColor(HOColorName.STAT_COSTSYOUTH),
-				UserParameter.instance().statistikJugend);
-		m_jchJugend.setOpaque(false);
-		layout2.setConstraints(m_jchJugend, constraints2);
-		panel2.add(m_jchJugend);
-
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 1;
-		constraints2.gridy = 14;
-		m_jchZinsaufwendungen = new ImageCheckbox(getLangStr("Zinsaufwendungen"),
-				ThemeManager.getColor(HOColorName.STAT_COSTFINANCIAL),
-				UserParameter.instance().statistikZinsaufwendungen);
-		m_jchZinsaufwendungen.setOpaque(false);
-		layout2.setConstraints(m_jchZinsaufwendungen, constraints2);
-		panel2.add(m_jchZinsaufwendungen);
-
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 12;
-		m_jchMarktwert = new ImageCheckbox(getLangStr("TotalTSI"),
-				ThemeManager.getColor(HOColorName.STAT_MARKETVALUE),
-				UserParameter.instance().statistikMarktwert);
-		m_jchMarktwert.setOpaque(false);
-		layout2.setConstraints(m_jchMarktwert, constraints2);
-		panel2.add(m_jchMarktwert);
-
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 13;
-		m_jchFans = new ImageCheckbox(getLangStr("Fans"),
-				ThemeManager.getColor(HOColorName.STAT_FANS),
-				UserParameter.instance().statistikFananzahl);
-		m_jchFans.setOpaque(false);
-		layout2.setConstraints(m_jchFans, constraints2);
-		panel2.add(m_jchFans);
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
@@ -388,12 +412,16 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		layout.setConstraints(panel2, constraints);
 		add(panel2);
 
-		// Table
-		JPanel panel = new ImagePanel();
-		panel.setLayout(new BorderLayout());
+		// initialize Development Chart
+		c_jpDevelopmentChart = new LinesChart(true, null, null, null, "#,##0");
+		c_jpBalanceChart = new LinesChart(true, null, null, null, "#,##0");
+		c_jpRevenueAndExpensesChart = new LinesChart(true, null, null, null, "#,##0");
 
-		c_jpChart = new StatistikPanel(true);
-		panel.add(c_jpChart);
+		//Create the panel that contains the "cards" each card being a diferent chart
+		c_jpCharts = new JPanel(new CardLayout());
+		c_jpCharts.add(c_jpDevelopmentChart.getPanel(), DEVELOPMENT_CHART_PANEL);
+		c_jpCharts.add(c_jpBalanceChart.getPanel(), BALANCE_CHART_PANEL);
+		c_jpCharts.add(c_jpRevenueAndExpensesChart.getPanel(), REVENUE_AND_EXPENSES_CHART_PANEL);
 
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.gridx = 1;
@@ -402,82 +430,72 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		constraints.weighty = 1.0;
 		constraints.weightx = 1.0;
 		constraints.anchor = GridBagConstraints.NORTH;
-		panel.setBorder(BorderFactory.createLineBorder(ThemeManager
-				.getColor(HOColorName.PANEL_BORDER)));
-		layout.setConstraints(panel, constraints);
-		add(panel);
+//		panel.setBorder(BorderFactory.createLineBorder(ThemeManager
+//				.getColor(HOColorName.PANEL_BORDER)));
+		layout.setConstraints(c_jpCharts, constraints);
+		add(c_jpCharts);
 	}
+
+//	private void setChartPanel(){
+//		chartPanel =  switch (this.iChartType) {
+//			case 0 -> c_jpDevelopmentChart.getPanel();
+//			case 1 -> c_jpBalanceChart.getPanel();
+//			default -> c_jpRevenueAndExpensesChart.getPanel();
+//		};
+//		chartPanel.repaint();
+//	}
+
 
 	private void initStatistik() {
 		try {
-			int anzahlHRF = Integer.parseInt(m_jtfAnzahlHRF.getText());
-			if (anzahlHRF <= 0) {
-				anzahlHRF = 1;
+			int iNbHRF = Integer.parseInt(c_jtfNumberOfHRF.getText());
+			if (iNbHRF <= 0) {
+				iNbHRF = 1;
 			}
 
-			UserParameter.instance().statistikFinanzenAnzahlHRF = anzahlHRF;
+			UserParameter.instance().statistikFinanzenAnzahlHRF = iNbHRF;
 
 			NumberFormat format = NumberFormat.getCurrencyInstance();
 			NumberFormat format2 = NumberFormat.getInstance();
 
-			double[][] data = DBManager.instance().getFinanzen4Statistik(anzahlHRF);
-			GraphDataModel[] models;
-			models = new GraphDataModel[15];
+			double[][] data = DBManager.instance().getDataForFinancesStatisticsPanel(iNbHRF);
+			GraphDataModel[] modelsDevelopmentChart, modelsBalanceChart, modelsRevenueAndExpensesChart;
+
+			modelsBalanceChart = new GraphDataModel[3];
+			modelsRevenueAndExpensesChart = new GraphDataModel[3];
+			modelsDevelopmentChart = new GraphDataModel[3];
 
 			if (data.length > 0) {
-				models[0] = new GraphDataModel(data[0], "Kontostand",
-						m_jchKontostand.isSelected(), ThemeManager.getColor(HOColorName.STAT_CASH),
-						format);
-				models[1] = new GraphDataModel(data[1], "GewinnVerlust",
-						m_jchGewinnVerlust.isSelected(),
-						ThemeManager.getColor(HOColorName.STAT_WINLOST), format);
-				models[2] = new GraphDataModel(data[2], "Gesamteinnahmen",
-						m_jchGesamteinnahmen.isSelected(),
-						ThemeManager.getColor(HOColorName.STAT_INCOMESUM), format);
-				models[3] = new GraphDataModel(data[3], "Gesamtausgaben",
-						m_jchGesamtausgaben.isSelected(),
-						ThemeManager.getColor(HOColorName.STAT_COSTSUM), format);
-				models[4] = new GraphDataModel(data[4], "MatchTakings",
-						c_jcbMatchTakings.isSelected(),
-						ThemeManager.getColor(HOColorName.STAT_INCOMESPECTATORS), format);
-				models[5] = new GraphDataModel(data[5], "Sponsoren",
-						c_jcbSponsors.isSelected(),
-						ThemeManager.getColor(HOColorName.STAT_INCOMESPONSORS), format);
-				models[6] = new GraphDataModel(data[7], "SonstigeEinnahmen",
-						m_jchSonstigeEinnahmen.isSelected(),
-						ThemeManager.getColor(HOColorName.STAT_INCOMETEMPORARY), format);
-				models[7] = new GraphDataModel(data[8], "Stadion",
-						m_jchStadion.isSelected(),
-						ThemeManager.getColor(HOColorName.STAT_COSTARENA), format);
-				models[8] = new GraphDataModel(data[9], "Spielergehaelter",
-						m_jchSpielergehaelter.isSelected(),
-						ThemeManager.getColor(HOColorName.STAT_COSTSPLAYERS), format);
-				models[9] = new GraphDataModel(data[11], "SonstigeAusgaben",
-						m_jchSonstigeAusgaben.isSelected(),
-						ThemeManager.getColor(HOColorName.STAT_COSTTEMPORARY), format);
-				models[10] = new GraphDataModel(data[12], "Trainerstab",
-						m_jchTrainerstab.isSelected(),
-						ThemeManager.getColor(HOColorName.STAT_COSTSTAFF), format);
-				models[11] = new GraphDataModel(data[13], "Jugend",
-						m_jchJugend.isSelected(),
-						ThemeManager.getColor(HOColorName.STAT_COSTSYOUTH), format);
-				models[12] = new GraphDataModel(data[10], "Zinsaufwendungen",
-						m_jchZinsaufwendungen.isSelected(),
-						ThemeManager.getColor(HOColorName.STAT_COSTFINANCIAL), format);
+				modelsDevelopmentChart[0] = new GraphDataModel(data[0], "cash", true, getColor(Colors.COLOR_FINANCE_CASH), null);
+				modelsDevelopmentChart[1] = new GraphDataModel(data[1], "income_sponsor",	true, getColor(Colors.COLOR_FINANCE_INCOME_SPONSORS), null);
+				modelsDevelopmentChart[2] = new GraphDataModel(data[2], "cost_players",	true, getColor(Colors.COLOR_FINANCE_COST_PLAYERS), null);
 			}
 
-			String[] yBezeichnungen = core.util.Helper
-					.convertTimeMillisToFormatString(data[16]);
+			c_jpDevelopmentChart.setAllValues(modelsDevelopmentChart, data[14], format, getLangStr("Wochen"), "",false,
+					jcbHelpLines.isSelected());
 
-			c_jpChart.setAllValues(models, yBezeichnungen, format, HOVerwaltung.instance()
-					.getLanguageString("Wochen"), "",false,
-					m_jchHilflinien.isSelected());
+			c_jpBalanceChart.setAllValues(modelsBalanceChart, data[14], format, getLangStr("Wochen"), "",false,
+					jcbHelpLines.isSelected());
+
+			c_jpRevenueAndExpensesChart.setAllValues(modelsRevenueAndExpensesChart, data[14], format, getLangStr("Wochen"), "",false,
+					jcbHelpLines.isSelected());
+
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);
 		}
 	}
 
-	private String getLangStr(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
+	private String getLangStr(String key) {return HOVerwaltung.instance().getLanguageString(key);}
+
+	private Color getColor(int i) {return ThemeManager.getColor(HOColorName.PALETTE15[i]);}
+
+	private String getChartCode(int i) {
+
+		return switch (i) {
+			case 0 -> DEVELOPMENT_CHART_PANEL;
+			case 1 -> BALANCE_CHART_PANEL;
+			default -> REVENUE_AND_EXPENSES_CHART_PANEL;
+		};
 	}
+
 }

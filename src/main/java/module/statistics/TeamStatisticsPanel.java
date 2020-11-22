@@ -526,7 +526,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		bSum = (gup.statisticsTeamSumOrAverage == 0);
 
 		layout2.setConstraints(jcbAggType, constraints2);
-		jcbAggType.setToolTipText(hov.getLanguageString("choose_sum_or_average"));
+		jcbAggType.setToolTipText(hov.getLanguageString("ls.module.statistic.team.choose_sum_or_average"));
 		constraints2.gridx = 1;
 		constraints2.gridy = 4;
 		panel2.add(jcbAggType, constraints2);

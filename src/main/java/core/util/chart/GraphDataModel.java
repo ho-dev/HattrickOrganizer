@@ -1,6 +1,7 @@
 package core.util.chart;
 
 
+import org.jetbrains.annotations.Nullable;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.Marker;
 import org.knowm.xchart.style.markers.SeriesMarkers;
@@ -55,7 +56,7 @@ public class GraphDataModel {
     }
 
     public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
-                          java.text.NumberFormat format) {
+                          java.text.@Nullable NumberFormat format) {
         this(values, name, show, color, format, 1);
     }
 

@@ -37,4 +37,8 @@ public final class Colors {
     public static final int COLOR_TEAM_LA = 10;
     public static final int COLOR_TEAM_TS = 11;
     public static final int COLOR_TEAM_CONFIDENCE = 12;
+
+    public static final int COLOR_FINANCE_CASH = 0;
+    public static final int COLOR_FINANCE_INCOME_SPONSORS =1;
+    public static final int COLOR_FINANCE_COST_PLAYERS = 2;
 }
