@@ -191,8 +191,8 @@ final class MatchDetailsTable extends AbstractTable {
 	void storeMatchDetails(Matchdetails details) {
 		if (details != null) {
 
-			final String[] where = { "MatchID" };
-			final String[] werte = { "" + details.getMatchID()};
+			final String[] where = { "SourceSystem", "MatchID" };
+			final String[] werte = { "" + details.getSourceSystem().getId(), "" + details.getMatchID()};
 
 			//Remove existing entries
 			delete(where, werte);
@@ -201,123 +201,73 @@ final class MatchDetailsTable extends AbstractTable {
 
 			try {
 				sql =
-					"INSERT INTO "+getTableName()+" ( MatchID, SourceSystem, ArenaId, ArenaName, Fetchdatum, GastId, GastName, GastEinstellung, GastTore, "
-						+ "GastLeftAtt, GastLeftDef, GastMidAtt, GastMidDef, GastMidfield, GastRightAtt, GastRightDef, GASTHATSTATS, GastTacticSkill, GastTacticType, "
-						+ "HeimId, HeimName, HeimEinstellung, HeimTore, HeimLeftAtt, HeimLeftDef, HeimMidAtt, HeimMidDef, HeimMidfield, HeimRightAtt, HeimRightDef, HEIMHATSTATS, "
-						+ "HeimTacticSkill, HeimTacticType, SpielDatum, WetterId, Zuschauer, "
-						+ "Matchreport, RegionID, soldTerraces, soldBasic, soldRoof, soldVIP, "
-						+ "RatingIndirectSetPiecesAtt, RatingIndirectSetPiecesDef, "
-						+ "HomeGoal0, HomeGoal1, HomeGoal2, HomeGoal3, HomeGoal4, "
-						+ "GuestGoal0, GuestGoal1, GuestGoal2, GuestGoal3, GuestGoal4 "
-						+ ") VALUES ("
-						+ details.getMatchID()
-						+ ","
-						+ details.getSourceSystem().getId()
-						+ ","
-						+ details.getArenaID()
-						+ ",'"
-						+ DBManager.insertEscapeSequences(details.getArenaName())
-						+ "','"
-						+ details.getFetchDatum().toString()
-						+ "',"
-						+ details.getGastId()
-						+ ",'"
-						+ DBManager.insertEscapeSequences(details.getGastName())
-						+ "',"
-						+ details.getGuestEinstellung()
-						+ ","
-						+ details.getGuestGoals()
-						+ ","
-						+ details.getGuestLeftAtt()
-						+ ","
-						+ details.getGuestLeftDef()
-						+ ","
-						+ details.getGuestMidAtt()
-						+ ","
-						+ details.getGuestMidDef()
-						+ ","
-						+ details.getGuestMidfield()
-						+ ","
-						+ details.getGuestRightAtt()
-						+ ","
-						+ details.getGuestRightDef()
-						+ ","
-						+ details.getGuestHatStats()
-						+ ","
-						+ details.getGuestTacticSkill()
-						+ ","
-						+ details.getGuestTacticType()
-						+ ","
-						+ details.getHeimId()
-						+ ",'"
-						+ DBManager.insertEscapeSequences(details.getHeimName())
-						+ "',"
-						+ details.getHomeEinstellung()
-						+ ","
-						+ details.getHomeGoals()
-						+ ","
-						+ details.getHomeLeftAtt()
-						+ ","
-						+ details.getHomeLeftDef()
-						+ ","
-						+ details.getHomeMidAtt()
-						+ ","
-						+ details.getHomeMidDef()
-						+ ","
-						+ details.getHomeMidfield()
-						+ ","
-						+ details.getHomeRightAtt()
-						+ ","
-						+ details.getHomeRightDef()
-						+ ","
-						+ details.getHomeHatStats()
-						+ ","
-						+ details.getHomeTacticSkill()
-						+ ","
-						+ details.getHomeTacticType()
-						+ ",'"
-						+ details.getSpielDatum().toString()
-						+ "',"
-						+ details.getWetterId()
-						+ ","
-						+ details.getZuschauer()
-						+ ",'"
-						+ DBManager.insertEscapeSequences(details.getMatchreport())
-						+ "',"
-						+ details.getRegionId()
-						+ ","
-						+ details.getSoldTerraces()
-						+ ","
-						+ details.getSoldBasic()
-						+ ","
-						+ details.getSoldRoof()
-						+ ","
-						+ details.getSoldVIP()
-						+ ","
-						+ details.getRatingIndirectSetPiecesAtt()
-						+ ","
-						+ details.getRatingIndirectSetPiecesDef()
-						+ ","
-						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED)
-						+ ","
-						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.FIRST_HALF)
-						+ ","
-						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.SECOND_HALF)
-						+ ","
-						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.OVERTIME)
-						+ ","
-						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.PENALTY_CONTEST)
-						+ ","
-						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED)
-						+ ","
-						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.FIRST_HALF)
-						+ ","
-						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.SECOND_HALF)
-						+ ","
-						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.OVERTIME)
-						+ ","
-						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.PENALTY_CONTEST)
-						+ ")";
+					"INSERT INTO " +getTableName() +
+							" ( MatchID, SourceSystem, ArenaId, ArenaName, Fetchdatum, GastId, " +
+							"GastName, GastEinstellung, GastTore, "	+
+							"GastLeftAtt, GastLeftDef, GastMidAtt, GastMidDef, GastMidfield, GastRightAtt, GastRightDef, " +
+							"GASTHATSTATS, GastTacticSkill, GastTacticType, " +
+							"HeimId, HeimName, HeimEinstellung, HeimTore, HeimLeftAtt, HeimLeftDef, HeimMidAtt, " +
+							"HeimMidDef, HeimMidfield, HeimRightAtt, HeimRightDef, HEIMHATSTATS, "+
+							"HeimTacticSkill, HeimTacticType, SpielDatum, WetterId, Zuschauer, " +
+							"Matchreport, RegionID, soldTerraces, soldBasic, soldRoof, soldVIP, " +
+							"RatingIndirectSetPiecesAtt, RatingIndirectSetPiecesDef, " +
+							"HomeGoal0, HomeGoal1, HomeGoal2, HomeGoal3, HomeGoal4, " +
+							"GuestGoal0, GuestGoal1, GuestGoal2, GuestGoal3, GuestGoal4 " +
+							") VALUES ("
+						+ details.getMatchID() + ","
+						+ details.getSourceSystem().getId() + ","
+						+ details.getArenaID() + ",'"
+						+ DBManager.insertEscapeSequences(details.getArenaName()) + "','"
+						+ details.getFetchDatum().toString() + "',"
+						+ details.getGastId() + ",'"
+						+ DBManager.insertEscapeSequences(details.getGastName()) + "',"
+						+ details.getGuestEinstellung()	+ ","
+						+ details.getGuestGoals() + ","
+						+ details.getGuestLeftAtt()	+ ","
+						+ details.getGuestLeftDef()	+ ","
+						+ details.getGuestMidAtt() + ","
+						+ details.getGuestMidDef() + ","
+						+ details.getGuestMidfield() + ","
+						+ details.getGuestRightAtt() + ","
+						+ details.getGuestRightDef() + ","
+						+ details.getGuestHatStats() + ","
+						+ details.getGuestTacticSkill() + ","
+						+ details.getGuestTacticType() + ","
+						+ details.getHeimId() + ",'"
+						+ DBManager.insertEscapeSequences(details.getHeimName()) + "',"
+						+ details.getHomeEinstellung() + ","
+						+ details.getHomeGoals() + ","
+						+ details.getHomeLeftAtt() + ","
+						+ details.getHomeLeftDef() + ","
+						+ details.getHomeMidAtt() + ","
+						+ details.getHomeMidDef() + ","
+						+ details.getHomeMidfield()	+ ","
+						+ details.getHomeRightAtt() + ","
+						+ details.getHomeRightDef() + ","
+						+ details.getHomeHatStats() + ","
+						+ details.getHomeTacticSkill() + ","
+						+ details.getHomeTacticType() + ",'"
+						+ details.getSpielDatum().toString() + "',"
+						+ details.getWetterId()	+ ","
+						+ details.getZuschauer() + ",'"
+						+ DBManager.insertEscapeSequences(details.getMatchreport()) + "',"
+						+ details.getRegionId() + ","
+						+ details.getSoldTerraces()	+ ","
+						+ details.getSoldBasic() + ","
+						+ details.getSoldRoof()	+ ","
+						+ details.getSoldVIP() + ","
+						+ details.getRatingIndirectSetPiecesAtt() + ","
+						+ details.getRatingIndirectSetPiecesDef() + ","
+						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED) + ","
+						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.FIRST_HALF)	+ ","
+						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.SECOND_HALF) + ","
+						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.OVERTIME) + ","
+						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.PENALTY_CONTEST) + ","
+						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED)	+ ","
+						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.FIRST_HALF) + ","
+						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.SECOND_HALF) + ","
+						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.OVERTIME)	+ ","
+						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.PENALTY_CONTEST) + ")";
 
 				adapter.executeUpdate(sql);
 

@@ -559,7 +559,9 @@ public class XMLMatchdetailsParser {
             root = (Element) root.getElementsByTagName("Match").item(0);
 			ele = (Element) root.getElementsByTagName("MatchType").item(0);
 			iMatchType = Integer.parseInt(ele.getFirstChild().getNodeValue());
-			if (iMatchType != 3) {md.setMatchType(MatchType.getById(iMatchType));}
+			var matchType = MatchType.getById(iMatchType);
+			md.setSourceSystem(matchType.getSourceSystem());
+			if (iMatchType != 3) {md.setMatchType(matchType);}
 			else{
 				ele = (Element) root.getElementsByTagName("CupLevel").item(0);
 				iCupLevel = Integer.parseInt(ele.getFirstChild().getNodeValue());

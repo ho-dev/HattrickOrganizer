@@ -133,7 +133,7 @@ public class MyConnector {
 	 * 
 	 * @throws IOException
 	 */
-	public String getArena(int arenaId) {
+	public String downloadArena(int arenaId) {
 		String url = htUrl + "?file=arenadetails";
 		if (arenaId > 0) {
 			url += "&arenaID=" + arenaId;
@@ -403,7 +403,7 @@ public class MyConnector {
 	/**
 	 * lädt die Aufstellungsbewertung zu einem Spiel
 	 */
-	public String getMatchdetails(int matchId, MatchType matchType) throws IOException {
+	public String downloadMatchdetails(int matchId, MatchType matchType) throws IOException {
 		String url = htUrl + "?file=matchdetails&version=" + VERSION_MATCHDETAILS;
 		if (matchId > 0) {
 			url += ("&matchID=" + matchId);

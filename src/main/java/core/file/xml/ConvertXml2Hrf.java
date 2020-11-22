@@ -38,7 +38,6 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
 
-import static core.file.xml.XMLManager.xmlAttribute2Hash;
 import static core.file.xml.XMLManager.xmlValue2Hash;
 
 /**
@@ -169,7 +168,7 @@ public class ConvertXml2Hrf {
 			
 		}
 		Map<String, String> arenaDataMap = XMLArenaParser
-				.parseArenaFromString(mc.getArena(arenaId));
+				.parseArenaFromString(mc.downloadArena(arenaId));
 
 		// MatchOrder
 		HOMainFrame.instance().setWaitInformation(55);
@@ -202,7 +201,7 @@ public class ConvertXml2Hrf {
 		if (matchLineup != null) {
 			Matchdetails md = XMLMatchdetailsParser
 					.parseMachtdetailsFromString(
-							mc.getMatchdetails(matchLineup.getMatchID(),
+							mc.downloadMatchdetails(matchLineup.getMatchID(),
 									matchLineup.getMatchTyp()), null);
 
 			if (matchLineup.getHeimId() == Integer.parseInt(teamdetailsDataMap

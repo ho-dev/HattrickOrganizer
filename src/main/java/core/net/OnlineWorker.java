@@ -19,8 +19,6 @@ import core.training.TrainingManager;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
-import jdk.jfr.Unsigned;
-import kotlin.ULong;
 import module.lineup.AufstellungsVergleichHistoryPanel;
 import module.lineup.Lineup;
 import module.teamAnalyzer.vo.MatchRating;
@@ -290,7 +288,7 @@ public class OnlineWorker {
 				if ( newInfo || !bWeatherKnown) {
 
 					showWaitInformation(10);
-					details = fetchDetails(matchid, info.getMatchTyp(), null);
+					details = downloadMatchDetails(matchid, info.getMatchTyp(), null);
 					if ( details != null) {
 						info.setHeimID(details.getHeimId());
 						info.setGastID(details.getGastId());
@@ -369,7 +367,7 @@ public class OnlineWorker {
 					
 					// Get details with highlights.
 					showWaitInformation(10);
-					details = fetchDetails(matchid, info.getMatchTyp(), lineup);
+					details = downloadMatchDetails(matchid, info.getMatchTyp(), lineup);
 
 					if (details == null) {
 						HOLogger.instance().error(OnlineWorker.class,
@@ -774,36 +772,32 @@ public class OnlineWorker {
 		return "{\"id\":" + id + ",\"behaviour\":" + behaviour + "}";
 	}
 
-	private static Matchdetails fetchDetails(int matchID, MatchType matchType, MatchLineup lineup) {
+	private static Matchdetails downloadMatchDetails(int matchID, MatchType matchType, MatchLineup lineup) {
 		String matchDetails;
 		Matchdetails details;
 
 		try {
-			matchDetails = MyConnector.instance().getMatchdetails(matchID, matchType);
+			matchDetails = MyConnector.instance().downloadMatchdetails(matchID, matchType);
 			if (matchDetails.length() == 0) {
-				HOLogger.instance().warning(OnlineWorker.class,
-						"Unable to fetch details for match " + matchID);
+				HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchID);
 				return null;
 			}
 			showWaitInformation(20);
 			details = XMLMatchdetailsParser.parseMachtdetailsFromString(matchDetails, lineup);
 			showWaitInformation(40);
 			if (details == null) {
-				HOLogger.instance().warning(OnlineWorker.class,
-						"Unable to fetch details for match " + matchID);
+				HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchID);
 				return null;
 			}
-			String arenaString = MyConnector.instance().getArena(details.getArenaID());
+			String arenaString = MyConnector.instance().downloadArena(details.getArenaID());
 			showWaitInformation(50);
-			String regionIdAsString = XMLArenaParser.parseArenaFromString(arenaString).get(
-					"RegionID");
+			String regionIdAsString = XMLArenaParser.parseArenaFromString(arenaString).get("RegionID");
 			details.setRegionId(Integer.parseInt(regionIdAsString));
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + ": Error fetching Matchdetails XML.: ";
 			// Info
 			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
-			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
-					JOptionPane.ERROR_MESSAGE);
+			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"), JOptionPane.ERROR_MESSAGE);
 			showWaitInformation(0);
 			return null;
 		}
