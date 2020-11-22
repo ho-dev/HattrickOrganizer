@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
 import module.lineup.LineupTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
+import module.youth.YouthPlayerOverviewColumnModel;
 
 import java.util.Vector;
 
@@ -15,6 +16,20 @@ import java.util.Vector;
  *
  */
 public final class UserColumnController {
+
+	public enum ColumnModelId {
+		YOUTHPLAYEROVERVIEW(0),
+		MATCHES(1),
+		PLAYEROVERVIEW(2),
+		LINEUP(3),
+		PLAYERANALYSIS1(4),
+		PLAYERANALYSIS2(5),
+		MATCHESOVERVIEW(6);
+
+		private  int value;
+		private  ColumnModelId(int value){this.value=value;}
+		public int getValue() {return value;}
+	};
 
 	/** singleton **/
 	private static UserColumnController columnController = new UserColumnController();
@@ -36,7 +51,8 @@ public final class UserColumnController {
 	
 	/** model for player analysis **/
 	private PlayerAnalysisModel playerAnalysis2Model 		= null;
-	
+	private YouthPlayerOverviewColumnModel youthPlayerOverviewColumnModel;
+
 	/**
 	 * constructor
 	 *
@@ -73,7 +89,7 @@ public final class UserColumnController {
 	 */
 	public final PlayerAnalysisModel getAnalysis1Model(){
 		if(playerAnalysis1Model == null)
-			playerAnalysis1Model = new PlayerAnalysisModel(4,1);
+			playerAnalysis1Model = new PlayerAnalysisModel(ColumnModelId.PLAYERANALYSIS1.getValue(), 1);
 		
 		return playerAnalysis1Model;
 	}
@@ -84,7 +100,7 @@ public final class UserColumnController {
 	 */
 	public final PlayerAnalysisModel getAnalysis2Model(){
 		if(playerAnalysis2Model == null)
-			playerAnalysis2Model = new PlayerAnalysisModel(5,2);
+			playerAnalysis2Model = new PlayerAnalysisModel(ColumnModelId.PLAYERANALYSIS2.getValue(), 2);
 		
 		return playerAnalysis2Model;
 	}
@@ -101,7 +117,7 @@ public final class UserColumnController {
 	
 	public final MatchesOverviewColumnModel getMatchesOverview1ColumnModel(){
 		if(matchesOverview1ColumnModel == null)
-			matchesOverview1ColumnModel = new MatchesOverviewColumnModel(6);
+			matchesOverview1ColumnModel = new MatchesOverviewColumnModel(ColumnModelId.MATCHESOVERVIEW.getValue());
 		return matchesOverview1ColumnModel;	
 	}
 	
@@ -111,7 +127,7 @@ public final class UserColumnController {
 	 */
 	public final PlayerOverviewModel getPlayerOverviewModel(){
 		if(playerOverviewColumnModel == null){
-			playerOverviewColumnModel = new PlayerOverviewModel(2);
+			playerOverviewColumnModel = new PlayerOverviewModel(ColumnModelId.PLAYEROVERVIEW.getValue());
 		}
 		return playerOverviewColumnModel;
 	}
@@ -122,8 +138,7 @@ public final class UserColumnController {
 	 */
 	public final LineupTableModel getLineupModel(){
 		if(lineupColumnModel == null){
-			lineupColumnModel = new LineupTableModel(3);
-			
+			lineupColumnModel = new LineupTableModel(ColumnModelId.LINEUP.getValue());
 		}
 		return lineupColumnModel;
 	}
@@ -143,12 +158,11 @@ public final class UserColumnController {
 		// MatchesOverView1Model should not add in this vector, because columns should not be edit
 		return v;
 	}
-	
 
-	
-
-	
-
-	
-
+	public YouthPlayerOverviewColumnModel getYouthPlayerOverviewColumnModel() {
+		if(youthPlayerOverviewColumnModel == null){
+			youthPlayerOverviewColumnModel = new YouthPlayerOverviewColumnModel(ColumnModelId.YOUTHPLAYEROVERVIEW.getValue());
+		}
+		return youthPlayerOverviewColumnModel;
+	}
 }
