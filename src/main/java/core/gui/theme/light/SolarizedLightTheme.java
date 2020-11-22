@@ -37,6 +37,9 @@ public class SolarizedLightTheme extends BaseTheme {
             // Player Specialties
             ThemeManager.instance().put(HOColorName.PLAYER_SPECIALTY_COLOR, defaults.getColor("Label.foreground"));
 
+            // Statistics
+            ThemeManager.instance().put(HOColorName.STAT_PANEL_BG, defaults.getColor("background").brighter());
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
