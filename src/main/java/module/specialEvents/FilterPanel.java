@@ -524,7 +524,7 @@ public class FilterPanel extends JPanel {
 			if (component instanceof JLabel) {
 				if (item != null && item.getId() >= 0) {
 					if (item.getSpeciality() > 0) {
-						((JLabel) component).setIcon(ImageUtilities.getSvgIcon(HOIconName.SPECIALTIES[item.getSpeciality()], 15, 15));
+						((JLabel) component).setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[item.getSpeciality()]));
 
 					} else {
 						((JLabel) component).setIcon(ThemeManager.getIcon(HOIconName.EMPTY));

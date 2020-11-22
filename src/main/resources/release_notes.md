@@ -3,62 +3,7 @@ title: HO release notes
 layout: page
 ---
 
-Changelist HO! 5.0
 
-## Some numbers:
-  - xxx commits
-  - xxx files changed (xxx additions and xxx deletions)
-  - xxx issues closed
-  - xx contributors
+Changelist HO! 4.1
 
-
-## Highlights
-
-
-
-
-## Detailed Changelog
-
-
-### Finance
-  - all information relative to Finance are now stored in the database (#793)
-
-
-### Squad
-
-
-### Team Analyser
-
- 
-
-### Rating
-
-
-
-### Matches
-
-
-### Lineup
-
-
-
-### IFA
-
-
-### Training
-
-
-
-### Misc
-
-
-
-### League
-
-
-
-## Translations
-  - HO! is currently available in xxx languages thanks to the work of xxx translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
-  - Translators contribution since the previous release (number of translated terms):
-
-
+  - fixes NPE events in module Player Analysis and SpecialEvents (#797)

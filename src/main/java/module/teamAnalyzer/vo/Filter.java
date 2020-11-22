@@ -219,21 +219,14 @@ public class Filter {
     	if (match.getMatchType().isTournament()) {
     		return tournament;
     	}
-    	
-    	switch (match.getMatchType()) {
-    	case LEAGUE : 
-    		return league;
-    	case CUP :
-    		return cup;
-    	case MASTERS :
-    		return masters;
-    	case QUALIFICATION :
-    		return qualifier;
-   	
-    	}
-    	
-    	
-    	return false;
+
+        return switch (match.getMatchType()) {
+            case LEAGUE -> league;
+            case CUP, EMERALDCUP, RUBYCUP, SAPPHIRECUP, CONSOLANTECUP -> cup;
+            case MASTERS -> masters;
+            case QUALIFICATION -> qualifier;
+            default -> false;
+        };
     }
     
     public void loadFilters() {
@@ -262,18 +255,18 @@ public class Filter {
     		return;
     	}
     	
-    	automatic = (filters.charAt(0) == '1') ? true : false;
-    	awayGames = (filters.charAt(1) == '1') ? true : false;
-    	homeGames = (filters.charAt(2) == '1') ? true : false;
-    	win = (filters.charAt(3) == '1') ? true : false;
-    	defeat = (filters.charAt(4) == '1') ? true : false;
-    	draw = (filters.charAt(5) == '1') ? true : false;
-    	league = (filters.charAt(6) == '1') ? true : false;
-    	cup = (filters.charAt(7) == '1') ? true : false;
-    	friendly = (filters.charAt(8) == '1') ? true : false;
-    	qualifier = (filters.charAt(9) == '1') ? true : false;
-    	tournament = (filters.charAt(10) == '1') ? true : false;
-    	masters = (filters.charAt(11) == '1') ? true : false;
+    	automatic = filters.charAt(0) == '1';
+    	awayGames = filters.charAt(1) == '1';
+    	homeGames = filters.charAt(2) == '1';
+    	win = filters.charAt(3) == '1';
+    	defeat = filters.charAt(4) == '1';
+    	draw = filters.charAt(5) == '1';
+    	league = filters.charAt(6) == '1';
+    	cup = filters.charAt(7) == '1';
+    	friendly = filters.charAt(8) == '1';
+    	qualifier = filters.charAt(9) == '1';
+    	tournament = filters.charAt(10) == '1';
+    	masters = filters.charAt(11) == '1';
     	number = Integer.parseInt(filters.substring(12, 14));
     }
     
@@ -307,21 +300,17 @@ public class Filter {
      */
     @Override
 	public String toString() {
-        StringBuffer buffer = new StringBuffer();
-
-        buffer.append("Filter[");
-        buffer.append("number = " + number);
-        buffer.append(", awayGames = " + awayGames);
-        buffer.append(", homeGames = " + homeGames);
-        buffer.append(", win = " + win);
-        buffer.append(", draw = " + draw);
-        buffer.append(", defeat = " + defeat);
-        buffer.append(", automatic = " + automatic);
-        buffer.append(", matches = " + matches);
-        buffer.append(", tournament = " + tournament);
-        buffer.append(", master = " + masters);
-        buffer.append("]");
-
-        return buffer.toString();
+        return "Filter[" +
+                "number = " + number +
+                ", awayGames = " + awayGames +
+                ", homeGames = " + homeGames +
+                ", win = " + win +
+                ", draw = " + draw +
+                ", defeat = " + defeat +
+                ", automatic = " + automatic +
+                ", matches = " + matches +
+                ", tournament = " + tournament +
+                ", master = " + masters +
+                "]";
     }
 }
