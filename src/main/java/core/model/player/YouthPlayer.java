@@ -323,6 +323,17 @@ public class YouthPlayer {
         return this.trainerComments;
     }
 
+    public String getFullName() {
+        var ret = this.getFirstName();
+        if ( ret.length() > 0 && this.getNickName().length() > 0){
+            ret += " '" + this.getNickName() + "'";
+        }
+        if ( ret.length() > 0 && this.getLastName().length() > 0){
+            ret += " " + this.getLastName();
+        }
+        return ret;
+    }
+
     public class SkillInfo {
         private Integer level;
         private Integer max;
