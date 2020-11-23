@@ -5,7 +5,7 @@ import core.model.UserParameter;
 import core.util.Helper;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.gui.model.StatistikModel;
+import core.util.chart.GraphDataModel;
 import module.statistics.StatistikPanel;
 
 import java.text.NumberFormat;
@@ -25,7 +25,7 @@ public final class CombinedRatingChartPanel extends JPanel {
 	private final class Datum {
 		private JCheckBox checkbox;
 		private Color bg;
-		private StatistikModel model;
+		private GraphDataModel model;
 		private String paramName;
 
 		public Datum(String text, Color background, String userParamName) {
@@ -80,8 +80,8 @@ public final class CombinedRatingChartPanel extends JPanel {
 			return (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
 		}
 
-		StatistikModel getChartModel(double[] values, NumberFormat format) {
-			model = new StatistikModel(values, null, checkbox.isSelected(), bg, format);
+		GraphDataModel getChartModel(double[] values, NumberFormat format) {
+			model = new GraphDataModel(values, null, checkbox.isSelected(), bg, format);
 			model.setDataBasedBoundaries(true);
 			return model;
 		}
@@ -119,7 +119,7 @@ public final class CombinedRatingChartPanel extends JPanel {
 	}
 
 	void prepareChart() {
-		StatistikModel[] data = new StatistikModel[9];
+		GraphDataModel[] data = new GraphDataModel[9];
 		data[0] = leftDefense.getChartModel(chartData.getLeftDefense(), Helper.DEFAULTDEZIMALFORMAT);
 		data[1] = centralDefense.getChartModel(chartData.getCentralDefense(), Helper.DEFAULTDEZIMALFORMAT);
 		data[2] = rightDefense.getChartModel(chartData.getRightDefense(), Helper.DEFAULTDEZIMALFORMAT);
@@ -147,7 +147,7 @@ public final class CombinedRatingChartPanel extends JPanel {
 				if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
 				else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
 				else return;
-				getChart().setHilfslinien(selected);
+				getChart().setHelpLines(selected);
 				userParameter.CombinedRatingChartPanel_HelpLines = selected;
 			}
 		});
@@ -161,7 +161,7 @@ public final class CombinedRatingChartPanel extends JPanel {
 				if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
 				else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
 				else return;
-				getChart().setBeschriftung(selected);
+				getChart().setLabelling(selected);
 				userParameter.CombinedRatingChartPanel_Values = selected;
 			}
 		});

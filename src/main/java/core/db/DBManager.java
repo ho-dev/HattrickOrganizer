@@ -1376,17 +1376,17 @@ public class DBManager {
 		return StatisticQuery.getSpielerDaten4Statistik(spielerId, anzahlHRF);
 	}
 
-	public double[][] getFinanzen4Statistik(int anzahlHRF) {
-		return StatisticQuery.getFinanzen4Statistik(anzahlHRF);
+	public double[][] getDataForFinancesStatisticsPanel(int nbHRF) {
+		return StatisticQuery.getDataForFinancesStatisticsPanel(nbHRF);
 	}
 
 	public ArenaStatistikTableModel getArenaStatistikModel(int matchtyp) {
 		return StatisticQuery.getArenaStatistikModel(matchtyp);
 	}
 
-	public double[][] getDurchschnittlicheSpielerDaten4Statistik(int anzahlHRF,
+	public double[][] getDataForTeamStatisticsPanel(int anzahlHRF,
 			String group) {
-		return StatisticQuery.getDurchschnittlicheSpielerDaten4Statistik(
+		return StatisticQuery.getDataForTeamStatisticsPanel(
 				anzahlHRF, group);
 	}
 

@@ -5,7 +5,6 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.Schema;
 import core.util.HOLogger;
-
 import java.awt.Color;
 import java.io.File;
 import java.net.MalformedURLException;
@@ -357,7 +356,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LEAGUEHISTORY_GRID_FG, "light_gray");
 
 		// lineup
-
 		put(SEL_OVERLAY_SELECTION_BG, new Color(10, 255, 10, 40));
 		put(SEL_OVERLAY_BG, new Color(255, 10, 10, 40));
 		put(LINEUP_POS_MIN_BG, PANEL_BG);
@@ -392,20 +390,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		// Players specialty Colors
 		put(PLAYER_SPECIALTY_COLOR, "black");
 		put(PLAYER_SPECIALTY_NEGATIVE_COLOR, "red");
-
-		put(STAT_LEADERSHIP, Color.GRAY);
-		put(STAT_EXPERIENCE, Color.DARK_GRAY);
-		put(STAT_FORM, Color.PINK);
-		put(STAT_STAMINA, Color.MAGENTA);
-		put(STAT_LOYALTY, new Color(180, 180, 0));
-		put(STAT_KEEPER, "black");
-		put(STAT_DEFENDING, Color.BLUE);
-		put(STAT_PLAYMAKING, "yellow");
-		put(STAT_PASSING, Color.GREEN);
-		put(STAT_WINGER, Color.ORANGE);
-		put(STAT_SCORING, Color.RED);
-		put(STAT_SET_PIECES, Color.CYAN);
-
+		
 		put(STAT_CASH, "black");
 		put(STAT_WINLOST, Color.GRAY);
 		put(STAT_INCOMESUM, Color.GREEN);
@@ -422,7 +407,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(STAT_COSTSYOUTH, new Color(180, 180, 0));
 		put(STAT_FANS, Color.CYAN);
 		put(STAT_MARKETVALUE, Color.BLUE);
-		put(STAT_RATING, new Color(100, 200, 0));
 		put(STAT_WAGE, new Color(150, 20, 20));
 		put(STAT_RATING2, "black");
 		put(STAT_TOTAL, Color.GRAY);
@@ -494,6 +478,40 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		// Promotion
 		put(HOColorName.FG_PROMOTION_INFO, new Color(238, 39, 39, 255));
+
+		// palettes
+		put(PALETTE5[0], Color.decode("#78b4c6"));
+		put(PALETTE5[1], Color.decode("#1b2349"));
+		put(PALETTE5[2], Color.decode("#75be31"));
+		put(PALETTE5[3], Color.decode("#4f28af"));
+		put(PALETTE5[4], Color.decode("#1ce0b2"));
+
+		put(PALETTE10[0], Color.decode("#3588d1"));
+		put(PALETTE10[1], Color.decode("#85dc4d"));
+		put(PALETTE10[2], Color.decode("#440583"));
+		put(PALETTE10[3], Color.decode("#4ad9e1"));
+		put(PALETTE10[4], Color.decode("#0c1118"));
+		put(PALETTE10[5], Color.decode("#f6adff"));
+		put(PALETTE10[6], Color.decode("#4c0634"));
+		put(PALETTE10[7], Color.decode("#b5d08d"));
+		put(PALETTE10[8], Color.decode("#b00bd9"));
+		put(PALETTE10[9], Color.decode("#5e9222"));
+
+		put(PALETTE15[0], Color.decode("#827db8"));
+		put(PALETTE15[1], Color.decode("#a7d64e"));
+		put(PALETTE15[2], Color.decode("#0f0a32"));
+		put(PALETTE15[3], Color.decode("#36e515"));
+		put(PALETTE15[4], Color.decode("#9b3ec8"));
+		put(PALETTE15[5], Color.decode("#458612"));
+		put(PALETTE15[6], Color.decode("#3b098b"));
+		put(PALETTE15[7], Color.decode("#f2b0f6"));
+		put(PALETTE15[8], Color.decode("#012d03"));
+		put(PALETTE15[9], Color.decode("#fe74fe"));
+		put(PALETTE15[10], Color.decode("#34466d"));
+		put(PALETTE15[11], Color.decode("#4fdbce"));
+		put(PALETTE15[12], Color.decode("#761604"));
+		put(PALETTE15[13], Color.decode("#f8ba7c"));
+		put(PALETTE15[14], Color.decode("#462a09"));
 	}
 
 	public Color getDefaultColor(String key) {

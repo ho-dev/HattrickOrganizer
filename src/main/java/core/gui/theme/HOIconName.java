@@ -224,4 +224,5 @@ public interface HOIconName {
 	String UNKOWN = "unknown";
 
 	String EMPTY_SVG = "empty_svg";
+
 }

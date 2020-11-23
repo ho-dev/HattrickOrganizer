@@ -14,13 +14,13 @@ import javax.swing.SwingUtilities;
  */
 public class StatistikMainPanel extends LazyImagePanel {
 
-	private static final long serialVersionUID = -4248329201381491432L;
-	private AlleSpielerStatistikPanel alleSpielerStatistikPanel;
+    private ClubStatisticsPanel clubStatisticsPanel;
+	private TeamStatisticsPanel teamStatisticsPanel;
 	private ArenaStatistikPanel arenaStatistikPanel;
-	private FinanzStatistikPanel finanzStatistikPanel;
+	private FinancesStatisticsPanel financesStatisticsPanel;
 	private JTabbedPane tabbedPane;
-	private SpieleStatistikPanel spieleStatistikPanel;
-	private SpielerStatistikPanel spielerStatistikPanel;
+	private MatchesStatisticsPanel matchesStatisticsPanel;
+	private PlayerStatisticsPanel playerStatisticsPanel;
 	private boolean initialized = false;
 
 	@Override
@@ -38,21 +38,30 @@ public class StatistikMainPanel extends LazyImagePanel {
 		tabbedPane = new JTabbedPane();
 
 		// Spielerstatistik
-		spielerStatistikPanel = new SpielerStatistikPanel();
+		playerStatisticsPanel = new PlayerStatisticsPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Spieler"),
-				spielerStatistikPanel);
-		// SpieleStatistik
-		spieleStatistikPanel = new SpieleStatistikPanel();
-		tabbedPane
-				.addTab(HOVerwaltung.instance().getLanguageString("Spiele"), spieleStatistikPanel);
-		// DurchschnittlicheSpielerstatistik
-		alleSpielerStatistikPanel = new AlleSpielerStatistikPanel();
+				playerStatisticsPanel);
+
+		// Team Panel
+		teamStatisticsPanel = new TeamStatisticsPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verein"),
-				alleSpielerStatistikPanel);
+				teamStatisticsPanel);
+
+		// SpieleStatistik
+		matchesStatisticsPanel = new MatchesStatisticsPanel();
+		tabbedPane
+				.addTab(HOVerwaltung.instance().getLanguageString("Spiele"), matchesStatisticsPanel);
+
+		// clubStatisticsPanel
+		clubStatisticsPanel = new ClubStatisticsPanel();
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("ls.module.statistics.club"),
+				clubStatisticsPanel);
+
 		// Finanzstatistik
-		finanzStatistikPanel = new FinanzStatistikPanel();
+		financesStatisticsPanel = new FinancesStatisticsPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Finanzen"),
-				finanzStatistikPanel);
+				financesStatisticsPanel);
+
 		// Arenastatistik
 		arenaStatistikPanel = new ArenaStatistikPanel();
 		tabbedPane
@@ -66,7 +75,7 @@ public class StatistikMainPanel extends LazyImagePanel {
 
 			@Override
 			public void run() {
-				spielerStatistikPanel.setAktuelleSpieler(spielerid);
+				playerStatisticsPanel.setPlayer(spielerid);
 			}
 		});
 	}
