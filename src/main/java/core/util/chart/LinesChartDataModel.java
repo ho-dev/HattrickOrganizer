@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GraphDataModel {
+public class LinesChartDataModel {
 
     private java.text.NumberFormat m_clFormat;
     private String m_sName;
@@ -50,28 +50,28 @@ public class GraphDataModel {
         this.m_LineStyle = m_LineStyle;
     }
 
-    public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
-                          java.text.NumberFormat format, int yAxisGroup) {
+    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color,
+                               java.text.NumberFormat format, int yAxisGroup) {
         this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, 1, false);
     }
 
-    public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
-                          java.text.@Nullable NumberFormat format) {
+    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color,
+                               java.text.@Nullable NumberFormat format) {
         this(values, name, show, color, format, 1);
     }
 
-    public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
-                          java.text.NumberFormat format, double factor) {
+    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color,
+                               java.text.NumberFormat format, double factor) {
         this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, false);
     }
 
-    public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color,
-                          java.text.NumberFormat format, double factor,  boolean second_Y_axis) {
+    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color,
+                               java.text.NumberFormat format, double factor, boolean second_Y_axis) {
         this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, second_Y_axis);
     }
 
-    public GraphDataModel(double[] values, String name, boolean show, java.awt.Color color, BasicStroke lineStyle,
-                          Marker markerStyle, java.text.NumberFormat format, double factor, boolean second_Y_axis) {
+    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color, BasicStroke lineStyle,
+                               Marker markerStyle, java.text.NumberFormat format, double factor, boolean second_Y_axis) {
         m_values = values;
         lValues = Arrays.stream(values).boxed().collect(Collectors.toList());
         m_sName = name;

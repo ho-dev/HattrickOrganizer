@@ -4,32 +4,29 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.util.chart.GraphDataModel;
+import core.util.chart.LinesChartDataModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.HOLogger;
 import core.util.Helper;
-import core.util.chart.LinesChart;
+import core.util.chart.HOLinesChart;
+import core.util.chart.HODoublePieChart;
+import core.util.chart.PieChartDataModel;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.ItemEvent;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import javax.swing.*;
 
 /**
  * Panel Finances in Module Statistics
  */
 public class FinancesStatisticsPanel extends LazyImagePanel {
-
-	//TODO: add chart name
-	//TODO: ensure the graph and the chart combox are in sync when panel is launched
-	//TODO: when line is hidden it should not appear in Legend either (Finance - Balance Graph)
-	//TODO: for camemebert chart: have this week, last week and 2 weeks graph ?
-	//TODO: add format y-axis (€ symbol)
-	//TODO: add translation string
 
 	private JComboBox<String> c_jcomboChartType;
 	private int iChartType;
@@ -41,11 +38,12 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 	final static String BALANCE_CHART_PANEL = "Balance Chart";
 	final static String DEVELOPMENT_CHART_PANEL = "Development Chart";
 	final static String REVENUE_AND_EXPENSES_CHART_PANEL = "P&L Chart";
-	private LinesChart c_jpBalanceChart;
-	private LinesChart c_jpDevelopmentChart;
-	private LinesChart c_jpRevenueAndExpensesChart; //TODO make a new kind of graph (camembert)
+	private HOLinesChart c_jpBalanceChart;
+	private HOLinesChart c_jpDevelopmentChart;
+	private HODoublePieChart c_jpRevenueAndExpensesChart;
 	private String[] balanceChartPlotsNames = new String[6];
 	private boolean[] balanceChartPlotsVisible = new boolean[6];
+	private boolean bIncludeTransfer;
 
 
 	@Override
@@ -62,6 +60,14 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 	}
 
 
+	private void updateCB(boolean bHelpLines){
+		switch (iChartType){
+			case 0 -> {jcbHelpLines.setSelected(bHelpLines); jcbHelpLines.setEnabled(true); c_jcbInclTransferts.setVisible(false);}
+			case 1 -> {jcbHelpLines.setSelected(bHelpLines); jcbHelpLines.setEnabled(true); c_jcbInclTransferts.setVisible(true);}
+			case 2 -> {jcbHelpLines.setSelected(false); jcbHelpLines.setEnabled(false); c_jcbInclTransferts.setVisible(false);}
+		}
+	}
+
 	private void addListeners() {
 
 		UserParameter gup = UserParameter.instance();
@@ -69,20 +75,13 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		c_jcomboChartType.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 
-
 				iChartType = c_jcomboChartType.getSelectedIndex();
 
-				if(iChartType == 1){
-					c_jcbInclTransferts.setVisible(true);
-				}
-				else{
-					c_jcbInclTransferts.setVisible(false);
-				}
+				updateCB(gup.statistikFinanzenHilfslinien);
 
 				gup.statisticsFinanceChartType = iChartType;
 				CardLayout cl = (CardLayout)(c_jpCharts.getLayout());
 				cl.show(c_jpCharts, getChartCode(iChartType));
-				iChartType = c_jcomboChartType.getSelectedIndex();
 			}
 		});
 
@@ -96,12 +95,14 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 				if(c_jcbInclTransferts.isSelected()) {
 					balanceChartPlotsVisible = new boolean[] {false, false, false, true, true, true};
 					c_jpBalanceChart.setMultipleShow(balanceChartPlotsNames, balanceChartPlotsVisible);
-					gup.statistikFinanzenIncludeTransfers = true;
+					gup.statisticsFinanceIncludeTransfers = true;
+					bIncludeTransfer = true;
 				}
 				else{
 					balanceChartPlotsVisible = new boolean[] {true, true, true, false, false, false};
 					c_jpBalanceChart.setMultipleShow(balanceChartPlotsNames, balanceChartPlotsVisible);
-					gup.statistikFinanzenIncludeTransfers = false;
+					gup.statisticsFinanceIncludeTransfers = false;
+					bIncludeTransfer = false;
 				}
 			}
 
@@ -125,6 +126,7 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		UserParameter gup = UserParameter.instance();
 
 		iChartType = gup.statisticsFinanceChartType;
+		bIncludeTransfer = gup.statisticsFinanceIncludeTransfers;
 
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -198,22 +200,15 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 1;
 		constraints2.gridy = 6;
 		panel2.add(c_jcomboChartType, constraints2);
-
-
-
-		c_jcbInclTransferts = new JCheckBox(getLangStr("ls.module.statistic.finance.l.include_transfer"), gup.statistikFinanzenIncludeTransfers);
+		
+		c_jcbInclTransferts = new JCheckBox(getLangStr("ls.module.statistic.finance.l.include_transfer"), bIncludeTransfer);
 		c_jcbInclTransferts.setToolTipText(getLangStr("ls.module.statistic.finance.tt.include_transfer"));
-		if (iChartType == 1){
-			c_jcbInclTransferts.setVisible(true);
-		}
-		else{
-			c_jcbInclTransferts.setVisible(false);
-		}
-
 		constraints2.insets = new Insets(5, 0, 0, 0);
 		constraints2.gridx = 0;
 		constraints2.gridy = 7;
 		panel2.add(c_jcbInclTransferts, constraints2);
+
+		updateCB(gup.statistikFinanzenHilfslinien);
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
@@ -228,15 +223,18 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 
 		// initialize Development Chart
 		String currencySymbol = Helper.getNumberFormat(true, 0).getCurrency().getSymbol();
-		c_jpDevelopmentChart = new LinesChart(true, null, null, "#,##0 " + currencySymbol, "#,##0 " + currencySymbol, true);
-		c_jpBalanceChart = new LinesChart(true, null, null, null, "#,##0", true);
-		c_jpRevenueAndExpensesChart = new LinesChart(true, null, null, null, "#,##0", true);
+		c_jpDevelopmentChart = new HOLinesChart(true, null, null, "#,##0 " + currencySymbol, "#,##0 " + currencySymbol, true);
+		c_jpBalanceChart = new HOLinesChart(true, null, null, "#,##0 " + currencySymbol, "#,##0 " + currencySymbol, true);
+		c_jpRevenueAndExpensesChart = new HODoublePieChart(true);
 
 		//Create the panel that contains the "cards" each card being a different chart
 		c_jpCharts = new JPanel(new CardLayout());
 		c_jpCharts.add(c_jpDevelopmentChart.getPanel(), DEVELOPMENT_CHART_PANEL);
 		c_jpCharts.add(c_jpBalanceChart.getPanel(), BALANCE_CHART_PANEL);
 		c_jpCharts.add(c_jpRevenueAndExpensesChart.getPanel(), REVENUE_AND_EXPENSES_CHART_PANEL);
+
+		CardLayout cl = (CardLayout)(c_jpCharts.getLayout());
+		cl.show(c_jpCharts, getChartCode(iChartType));
 
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.gridx = 1;
@@ -249,12 +247,12 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		add(c_jpCharts);
 
 
-		balanceChartPlotsNames[0] = getLangStr("IncomeSum") + " (" + getLangStr("ls.chart.second_axis") + ")";
-		balanceChartPlotsNames[1] = getLangStr("CostsSum") + " (" + getLangStr("ls.chart.second_axis") + ")";
-		balanceChartPlotsNames[2] = getLangStr("Balance");
-		balanceChartPlotsNames[3] = getLangStr("IncomeSumWithoutTransfert") + " (" + getLangStr("ls.chart.second_axis") + ")";
-		balanceChartPlotsNames[4] = getLangStr("CostsSumWithoutTransfert") + " (" + getLangStr("ls.chart.second_axis") + ")";
-		balanceChartPlotsNames[5] = getLangStr("BalanceWithoutTransfert");
+		balanceChartPlotsNames[0] = getLangStr("ls.module.statistic.finance.income") + " (" + getLangStr("ls.chart.second_axis") + ")";
+		balanceChartPlotsNames[1] = getLangStr("ls.module.statistic.finance.costs") + " (" + getLangStr("ls.chart.second_axis") + ")";
+		balanceChartPlotsNames[2] = getLangStr("ls.module.statistic.finance.balance");
+		balanceChartPlotsNames[3] = getLangStr("ls.module.statistic.finance.income_wo_transfers") + " (" + getLangStr("ls.chart.second_axis") + ")";
+		balanceChartPlotsNames[4] = getLangStr("ls.module.statistic.finance.costs_wo_transfers") + " (" + getLangStr("ls.chart.second_axis") + ")";
+		balanceChartPlotsNames[5] = getLangStr("ls.module.statistic.finance.balance_wo_transfers");
 
 	}
 
@@ -269,39 +267,50 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 			UserParameter.instance().statistikFinanzenAnzahlHRF = iNbHRF;
 
 			NumberFormat format = NumberFormat.getCurrencyInstance();
-			NumberFormat format2 = NumberFormat.getInstance();
 
 			double[][] data = DBManager.instance().getDataForFinancesStatisticsPanel(iNbHRF);
-			GraphDataModel[] modelsDevelopmentChart, modelsBalanceChart, modelsRevenueAndExpensesChart;
+			LinesChartDataModel[] modelsDevelopmentChart, modelsBalanceChart;
+			PieChartDataModel[] modelsRevExpChart_Revenue, modelsRevExpChart_Expenses;
 
-			modelsBalanceChart = new GraphDataModel[6];
-			modelsRevenueAndExpensesChart = new GraphDataModel[3];
-			modelsDevelopmentChart = new GraphDataModel[3];
+			modelsBalanceChart = new LinesChartDataModel[6];
+			modelsDevelopmentChart = new LinesChartDataModel[3];
+			modelsRevExpChart_Revenue = new PieChartDataModel[5];
+			modelsRevExpChart_Expenses = new PieChartDataModel[5];
 
 			if (data.length > 0) {
-				modelsDevelopmentChart[0] = new GraphDataModel(data[1], getLangStr("ls.finance.revenue.sponsors"),	true, getColor5(Colors.COLOR_FINANCE_INCOME_SPONSORS), null, 1E-3, false);
-				modelsDevelopmentChart[1] = new GraphDataModel(data[2], getLangStr("ls.finance.expenses.wages"),	true, getColor5(Colors.COLOR_FINANCE_COST_PLAYERS), null, 1E-3, false);
-				modelsDevelopmentChart[2] = new GraphDataModel(data[0], getLangStr("ls.finance.cash") + " (" + getLangStr("ls.chart.second_axis") + ")", true, getColor5(Colors.COLOR_FINANCE_CASH), null, 1E-6, true);
+				modelsDevelopmentChart[0] = new LinesChartDataModel(data[1], getLangStr("ls.finance.revenue.sponsors"),	true, getColor5(Colors.COLOR_FINANCE_INCOME_SPONSORS), null, 0d, false);
+				modelsDevelopmentChart[1] = new LinesChartDataModel(data[2], getLangStr("ls.finance.expenses.wages"),	true, getColor5(Colors.COLOR_FINANCE_COST_PLAYERS), null, 0d, false);
+				modelsDevelopmentChart[2] = new LinesChartDataModel(data[0], getLangStr("ls.finance.cash") + " (" + getLangStr("ls.chart.second_axis") + ")", true, getColor5(Colors.COLOR_FINANCE_CASH), null, 0d, true);
 
-				// TODO set show depending of gup.statistikFinanzenIncludeTransfers
-				// TODO put correct color color5 for both
-				modelsBalanceChart[0] = new GraphDataModel(data[3], balanceChartPlotsNames[0], true, getColor5(0), null, 1E-6, true);
-				modelsBalanceChart[1] = new GraphDataModel(data[4], balanceChartPlotsNames[1], true, getColor5(1), null, 1E-6, true);
-				modelsBalanceChart[2] = new GraphDataModel(data[5], balanceChartPlotsNames[2], true, getColor5(2), null, 1E-6, true);
-				modelsBalanceChart[3] = new GraphDataModel(data[6], balanceChartPlotsNames[3], true, getColor5(0), null, 1E-6, true);
-				modelsBalanceChart[4] = new GraphDataModel(data[7], balanceChartPlotsNames[4], true, getColor5(1), null, 1E-6, true);
-				modelsBalanceChart[5] = new GraphDataModel(data[8], balanceChartPlotsNames[5], true, getColor5(2), null, 1E-6, true);
+				modelsBalanceChart[0] = new LinesChartDataModel(data[3], balanceChartPlotsNames[0], !bIncludeTransfer, getColor5(0), null, 0d, true);
+				modelsBalanceChart[1] = new LinesChartDataModel(data[4], balanceChartPlotsNames[1], !bIncludeTransfer, getColor5(1), null, 0d, true);
+				modelsBalanceChart[2] = new LinesChartDataModel(data[5], balanceChartPlotsNames[2], !bIncludeTransfer, getColor5(2), null, 0d, true);
+				modelsBalanceChart[3] = new LinesChartDataModel(data[6], balanceChartPlotsNames[3], bIncludeTransfer, getColor5(0), null, 0d, true);
+				modelsBalanceChart[4] = new LinesChartDataModel(data[7], balanceChartPlotsNames[4], bIncludeTransfer, getColor5(1), null, 0d, true);
+				modelsBalanceChart[5] = new LinesChartDataModel(data[8], balanceChartPlotsNames[5], bIncludeTransfer, getColor5(2), null, 0d, true);
+
+				modelsRevExpChart_Revenue[0] = new PieChartDataModel(getLangStr("ls.finance.revenue.player_sales"), Arrays.stream(data[10]).sum(), true, getColor5(0));
+				modelsRevExpChart_Revenue[1] = new PieChartDataModel(getLangStr("ls.finance.revenue.commission"), Arrays.stream(data[11]).sum(), true, getColor5(1));
+				modelsRevExpChart_Revenue[2] = new PieChartDataModel(getLangStr("ls.finance.revenue.match_takings"), Arrays.stream(data[9]).sum(), true, getColor5(2));
+				modelsRevExpChart_Revenue[3] = new PieChartDataModel(getLangStr("ls.finance.revenue.sponsors"), Arrays.stream(data[1]).sum(), true, getColor5(3));
+				modelsRevExpChart_Revenue[4] = new PieChartDataModel(getLangStr("ls.finance.other"), Arrays.stream(data[12]).sum(), true, getColor5(4));
+
+				modelsRevExpChart_Expenses[0] = new PieChartDataModel(getLangStr("ls.finance.expenses.stadium_maintenance"), Arrays.stream(data[13]).sum(), true, getColor5(0));
+				modelsRevExpChart_Expenses[1] = new PieChartDataModel(getLangStr("ls.finance.expenses.new_signings"), Arrays.stream(data[14]).sum(), true, getColor5(1));
+				modelsRevExpChart_Expenses[2] = new PieChartDataModel(getLangStr("ls.finance.expenses.wages"), Arrays.stream(data[2]).sum(), true, getColor5(2));
+				modelsRevExpChart_Expenses[3] = new PieChartDataModel(getLangStr("ls.finance.expenses.staff"), Arrays.stream(data[15]).sum(), true, getColor5(3));
+				modelsRevExpChart_Expenses[4] = new PieChartDataModel(getLangStr("ls.finance.other"), Arrays.stream(data[16]).sum(), true, getColor5(4));
+
 			}
 
 
-			c_jpDevelopmentChart.setAllValues(modelsDevelopmentChart, data[14], format, getLangStr("Wochen"), "",false,
+			c_jpDevelopmentChart.setAllValues(modelsDevelopmentChart, data[17], format, getLangStr("Wochen"), "",false,
 					jcbHelpLines.isSelected());
 
-			c_jpBalanceChart.setAllValues(modelsBalanceChart, data[14], format, getLangStr("Wochen"), "",false,
+			c_jpBalanceChart.setAllValues(modelsBalanceChart, data[17], format, getLangStr("Wochen"), "",false,
 					jcbHelpLines.isSelected());
 
-			c_jpRevenueAndExpensesChart.setAllValues(modelsRevenueAndExpensesChart, data[14], format, getLangStr("Wochen"), "",false,
-					jcbHelpLines.isSelected());
+			c_jpRevenueAndExpensesChart.setAllValues(modelsRevExpChart_Revenue, modelsRevExpChart_Expenses);
 
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);

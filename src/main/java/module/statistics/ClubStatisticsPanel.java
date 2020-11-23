@@ -4,7 +4,7 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.util.chart.GraphDataModel;
+import core.util.chart.LinesChartDataModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -353,17 +353,17 @@ public class ClubStatisticsPanel extends LazyImagePanel {
             NumberFormat format = NumberFormat.getInstance();
 
             double[][] statistikWerte = DBManager.instance().getDataForFinancesStatisticsPanel(anzahlHRF); //TODO: create getClub4Statistik()
-            GraphDataModel[] models;
-            models = new GraphDataModel[3];
+            LinesChartDataModel[] models;
+            models = new LinesChartDataModel[3];
 
             if (statistikWerte.length > 0) {
-                models[0] = new GraphDataModel(statistikWerte[0], "AssistantTrainerLevels",
+                models[0] = new LinesChartDataModel(statistikWerte[0], "AssistantTrainerLevels",
                         jcbAssistantTrainerLevels.isSelected(), ThemeManager.getColor(HOColorName.PALETTE15[0]),
                         format);
-                models[1] = new GraphDataModel(statistikWerte[1], "FinancialDirectorLevels",
+                models[1] = new LinesChartDataModel(statistikWerte[1], "FinancialDirectorLevels",
                         jcbFinancialDirectorLevels.isSelected(),
                         ThemeManager.getColor(HOColorName.PALETTE15[1]), format);
-                models[2] = new GraphDataModel(statistikWerte[2], "FormCoachLevels",
+                models[2] = new LinesChartDataModel(statistikWerte[2], "FormCoachLevels",
                         jcbFormCoachLevels.isSelected(),
                         ThemeManager.getColor(HOColorName.PALETTE15[2]), format);
 //                models[3] = new StatistikModel(statistikWerte[3], "Gesamtausgaben",

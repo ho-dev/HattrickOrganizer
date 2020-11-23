@@ -5,7 +5,7 @@ import core.model.UserParameter;
 import core.util.Helper;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.util.chart.GraphDataModel;
+import core.util.chart.LinesChartDataModel;
 import module.statistics.StatistikPanel;
 
 import java.text.NumberFormat;
@@ -25,7 +25,7 @@ public final class CombinedRatingChartPanel extends JPanel {
 	private final class Datum {
 		private JCheckBox checkbox;
 		private Color bg;
-		private GraphDataModel model;
+		private LinesChartDataModel model;
 		private String paramName;
 
 		public Datum(String text, Color background, String userParamName) {
@@ -80,8 +80,8 @@ public final class CombinedRatingChartPanel extends JPanel {
 			return (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
 		}
 
-		GraphDataModel getChartModel(double[] values, NumberFormat format) {
-			model = new GraphDataModel(values, null, checkbox.isSelected(), bg, format);
+		LinesChartDataModel getChartModel(double[] values, NumberFormat format) {
+			model = new LinesChartDataModel(values, null, checkbox.isSelected(), bg, format);
 			model.setDataBasedBoundaries(true);
 			return model;
 		}
@@ -119,7 +119,7 @@ public final class CombinedRatingChartPanel extends JPanel {
 	}
 
 	void prepareChart() {
-		GraphDataModel[] data = new GraphDataModel[9];
+		LinesChartDataModel[] data = new LinesChartDataModel[9];
 		data[0] = leftDefense.getChartModel(chartData.getLeftDefense(), Helper.DEFAULTDEZIMALFORMAT);
 		data[1] = centralDefense.getChartModel(chartData.getCentralDefense(), Helper.DEFAULTDEZIMALFORMAT);
 		data[2] = rightDefense.getChartModel(chartData.getRightDefense(), Helper.DEFAULTDEZIMALFORMAT);

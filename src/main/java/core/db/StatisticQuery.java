@@ -247,11 +247,11 @@ public class StatisticQuery {
 				}
 				rs.close();
 
-				//Fanzufriedenheit
-				sql = "SELECT Supporter FROM " + EconomyTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
+				//Fan satisfaction
+				sql = "SELECT SupportersPopularity FROM " + EconomyTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
 				rs = DBManager.instance().getAdapter().executeQuery(sql);
 				if (rs.first()) {
-					arenamodels[i].setFanZufriedenheit(rs.getInt("Supporter"));
+					arenamodels[i].setFanZufriedenheit(rs.getInt("SupportersPopularity"));
 				}
 				rs.close();
 
@@ -392,13 +392,14 @@ public class StatisticQuery {
 	// The data returned by this function are displayed in the Finance tab of the statistics module
 	public static double[][] getDataForFinancesStatisticsPanel(int iNumberHRF) {
 
-		final int iNumberColumns = 15;
+		final int iNumberColumns = 18;
 		final float fxRate = core.model.UserParameter.instance().faktorGeld;
 		double[][] returnValues;
 		Vector<double[]> values = new Vector<>();
 
 		try {
-			//add current values
+			//TODO: filter one 1 HRF per HTweek only
+			//TODO: change filter iNumberHRF to HTSeason
 			ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery(
 					"SELECT * FROM ECONOMY ORDER BY FetchedDate DESC LIMIT " + iNumberHRF);
 
@@ -419,12 +420,15 @@ public class StatisticQuery {
 				tempValues[6] = tempValues[3] - ((rs.getDouble("IncomeSoldPlayers")+rs.getDouble("IncomeSoldPlayersCommission")) / fxRate);
 				tempValues[7] = tempValues[4] - (rs.getDouble("CostsBoughtPlayers") / fxRate);
 				tempValues[8] = tempValues[7] - tempValues[6];
-//				tempValues[9] = rs.getDouble("KostSpieler") / fxRate;
-//				tempValues[10] = rs.getDouble("KostZinsen") / fxRate;
-//				tempValues[11] = rs.getDouble("KostSonstiges") / fxRate;
-//				tempValues[12] = rs.getDouble("KostTrainer") / fxRate;
-//				tempValues[13] = rs.getDouble("KostJugend") / fxRate;
-				tempValues[14] = rs.getTimestamp("FetchedDate").getTime(); // TODO: convert to String: HT Season - HTWeek
+				tempValues[9] = rs.getDouble("IncomeSpectators") / fxRate;
+				tempValues[10] = rs.getDouble("IncomeSoldPlayers") / fxRate;
+				tempValues[11] = rs.getDouble("IncomeSoldPlayersCommission") / fxRate;
+				tempValues[12] = rs.getDouble("IncomeSum") / fxRate - (tempValues[10] + tempValues[11] + tempValues[1] + tempValues[9]); // Income Other
+				tempValues[13] = rs.getDouble("CostsArena") / fxRate;
+				tempValues[14] = rs.getDouble("CostsBoughtPlayers") / fxRate;
+				tempValues[15] = rs.getDouble("CostsStaff") / fxRate;
+				tempValues[16] = rs.getDouble("CostsSum") / fxRate - (tempValues[2] + tempValues[13] + tempValues[14] + tempValues[15]); // Costs Other
+				tempValues[17] = rs.getTimestamp("FetchedDate").getTime(); // TODO: convert to String: HT Season - HTWeek
 
 				//save values
 				values.add(tempValues);
