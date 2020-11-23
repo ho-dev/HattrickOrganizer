@@ -191,6 +191,27 @@ public class LinesChart implements ILinesChart{
         }
     }
 
+    private final void setShowWithoutUpdate(String name, boolean show) {
+        if (m_models != null){
+            for (int i = 0; i < m_models.length; i++) {
+                if ((m_models[i] != null) && (m_models[i].getName().equals(name))) {
+                    m_models[i].setShow(show);
+                    break;
+                }
+            }
+        }
+    }
+
+    public final void setMultipleShow(String[] names, boolean[] shows) {
+        if (m_models != null) {
+            for (int i = 0; i < names.length; i++) {
+                    setShowWithoutUpdate(names[i], shows[i]);
+            }
+            updateGraph();
+        }
+
+    }
+
     /**
      * Switching the graph labelling on or off
      */

@@ -12,6 +12,7 @@ import module.matches.SpielePanel;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.*;
 
 
@@ -412,12 +413,12 @@ public class StatisticQuery {
 				tempValues[0] = rs.getDouble("Cash") / fxRate;
 				tempValues[1] = rs.getDouble("IncomeSponsors") / fxRate;
 				tempValues[2] = rs.getDouble("CostsPlayers") / fxRate;
-//				tempValues[3] = rs.getDouble("KostGesamt") / fxRate;
-//				tempValues[4] = rs.getDouble("EinZuschauer") / fxRate;
-//				tempValues[5] = rs.getDouble("EinSponsoren") / fxRate;
-//				tempValues[6] = rs.getDouble("EinZinsen") / fxRate;
-//				tempValues[7] = rs.getDouble("EinSonstiges") / fxRate;
-//				tempValues[8] = rs.getDouble("KostStadion") / fxRate;
+				tempValues[3] = rs.getDouble("IncomeSum") / fxRate;
+				tempValues[4] = rs.getDouble("CostsSum") / fxRate;
+				tempValues[5] = tempValues[4] - tempValues[3];
+				tempValues[6] = tempValues[3] - ((rs.getDouble("IncomeSoldPlayers")+rs.getDouble("IncomeSoldPlayersCommission")) / fxRate);
+				tempValues[7] = tempValues[4] - (rs.getDouble("CostsBoughtPlayers") / fxRate);
+				tempValues[8] = tempValues[7] - tempValues[6];
 //				tempValues[9] = rs.getDouble("KostSpieler") / fxRate;
 //				tempValues[10] = rs.getDouble("KostZinsen") / fxRate;
 //				tempValues[11] = rs.getDouble("KostSonstiges") / fxRate;
