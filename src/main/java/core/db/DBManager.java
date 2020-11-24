@@ -1345,6 +1345,10 @@ public class DBManager {
 		return StatisticQuery.getSpielerDaten4Statistik(spielerId, anzahlHRF);
 	}
 
+	public double[][] getDataForClubStatisticsPanel(int nbHRFs) {
+		return StatisticQuery.getDataForClubStatisticsPanel(nbHRFs);
+	}
+
 	public double[][] getDataForFinancesStatisticsPanel(int nbHRF) {
 		return StatisticQuery.getDataForFinancesStatisticsPanel(nbHRF);
 	}
