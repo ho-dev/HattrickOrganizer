@@ -3,7 +3,7 @@ package module.lineup;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.Helper;
-import core.util.chart.GraphDataModel;
+import core.util.chart.LinesChartDataModel;
 import module.statistics.StatistikPanel;
 
 import java.text.NumberFormat;
@@ -22,7 +22,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	private final class SingleChart {
 
 		private StatistikPanel chart = new StatistikPanel(true);
-		private GraphDataModel[] data = new GraphDataModel[1];
+		private LinesChartDataModel[] data = new LinesChartDataModel[1];
 		private double[] values;
 		private NumberFormat format;
 		private String yAxisCaption;
@@ -35,7 +35,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		}
 
 		private void initComponents() {
-			data[0] = new GraphDataModel(values, null, true, java.awt.Color.black, format);
+			data[0] = new LinesChartDataModel(values, null, true, java.awt.Color.black, format);
 			data[0].setDataBasedBoundaries(true);
 			chart.setDataBasedBoundaries(true);
 			chart.setAllValues(data, xAxisDataCaptions, format, "", yAxisCaption, showValues.isSelected(), showHelpLines.isSelected());

@@ -12,6 +12,7 @@ import module.matches.SpielePanel;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.*;
 
 
@@ -246,11 +247,11 @@ public class StatisticQuery {
 				}
 				rs.close();
 
-				//Fanzufriedenheit
-				sql = "SELECT Supporter FROM " + EconomyTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
+				//Fan satisfaction
+				sql = "SELECT SupportersPopularity FROM " + EconomyTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
 				rs = DBManager.instance().getAdapter().executeQuery(sql);
 				if (rs.first()) {
-					arenamodels[i].setFanZufriedenheit(rs.getInt("Supporter"));
+					arenamodels[i].setFanZufriedenheit(rs.getInt("SupportersPopularity"));
 				}
 				rs.close();
 
@@ -388,16 +389,78 @@ public class StatisticQuery {
 		return returnValues;
 	}
 
+
+	// The data returned by this function are displayed in the Club tab of the statistics module
+	public static double[][] getDataForClubStatisticsPanel(int iNumberHRF) {
+		final int iNumberColumns = 12;
+		double[][] returnValues;
+		Vector<double[]> values = new Vector<>();
+
+		List<TrainingPerWeek> trainings = TrainingManager.instance().getTrainingWeekList();
+
+		try {
+			//TODO: filter one 1 HRF per HTweek only and change filter iNumberHRF to HTSeason
+			ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery(
+					"SELECT * FROM VEREIN INNER JOIN HRF on VEREIN.HRF_ID = HRF.HRF_ID WHERE HRF.HRF_ID IN (" +
+							getInClause(iNumberHRF, trainings) +
+							") ORDER BY HRF.DATUM ASC");
+
+			if (rs == null) return new double[0][0];
+
+			rs.beforeFirst();
+
+			double[] tempValues;
+
+			while (rs.next()) {
+				tempValues = new double[iNumberColumns];
+				tempValues[0] = rs.getDouble("COTrainer");  // AssistantTrainerLevels
+				tempValues[1] = rs.getDouble("Finanzberater"); // FinancialDirectorLevels
+				tempValues[2] = rs.getDouble("FormAssist"); // FormCoachLevels
+				tempValues[3] = rs.getDouble("Aerzte");  // DoctorLevel
+				tempValues[4] = rs.getDouble("PRManager"); // SpokespersonLevel
+				tempValues[5] = rs.getDouble("Pschyologen"); // SportPsychologistLevel
+				tempValues[6] = rs.getDouble("TacticAssist");  // TacticalAssistantLevel
+				tempValues[7] = rs.getDouble("Fans");  // FanClubSize
+				tempValues[8] = rs.getDouble("globalranking"); // GlobalRanking
+				tempValues[9] = rs.getDouble("leagueranking"); // LeagueRanking
+				tempValues[10] = rs.getDouble("powerrating"); // PowerRating
+				tempValues[11] = rs.getTimestamp("DATUM").getTime();
+
+				//save values
+				values.add(tempValues);
+			}
+
+			// copy values into returnValues
+			returnValues = new double[iNumberColumns][values.size()];
+			for (int i = 0; i < values.size(); i++) {
+				final double[] werte = values.get(i);
+
+				for (int j = 0; j < werte.length; j++) {
+					returnValues[j][i] = werte[j];
+				}
+			}
+		}
+		catch (Exception e) {
+			HOLogger.instance().log(StatisticQuery.class, e);
+			return new double[0][0];
+		}
+
+		return returnValues;
+	}
+
+
+
 	// The data returned by this function are displayed in the Finance tab of the statistics module
 	public static double[][] getDataForFinancesStatisticsPanel(int iNumberHRF) {
 
-		final int iNumberColumns = 15;
+		final int iNumberColumns = 18;
 		final float fxRate = core.model.UserParameter.instance().faktorGeld;
 		double[][] returnValues;
 		Vector<double[]> values = new Vector<>();
 
 		try {
-			//add current values
+			//TODO: filter one 1 HRF per HTweek only
+			//TODO: change filter iNumberHRF to HTSeason
 			ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery(
 					"SELECT * FROM ECONOMY ORDER BY FetchedDate DESC LIMIT " + iNumberHRF);
 
@@ -412,18 +475,21 @@ public class StatisticQuery {
 				tempValues[0] = rs.getDouble("Cash") / fxRate;
 				tempValues[1] = rs.getDouble("IncomeSponsors") / fxRate;
 				tempValues[2] = rs.getDouble("CostsPlayers") / fxRate;
-//				tempValues[3] = rs.getDouble("KostGesamt") / fxRate;
-//				tempValues[4] = rs.getDouble("EinZuschauer") / fxRate;
-//				tempValues[5] = rs.getDouble("EinSponsoren") / fxRate;
-//				tempValues[6] = rs.getDouble("EinZinsen") / fxRate;
-//				tempValues[7] = rs.getDouble("EinSonstiges") / fxRate;
-//				tempValues[8] = rs.getDouble("KostStadion") / fxRate;
-//				tempValues[9] = rs.getDouble("KostSpieler") / fxRate;
-//				tempValues[10] = rs.getDouble("KostZinsen") / fxRate;
-//				tempValues[11] = rs.getDouble("KostSonstiges") / fxRate;
-//				tempValues[12] = rs.getDouble("KostTrainer") / fxRate;
-//				tempValues[13] = rs.getDouble("KostJugend") / fxRate;
-				tempValues[14] = rs.getTimestamp("FetchedDate").getTime(); // TODO: convert to String: HT Season - HTWeek
+				tempValues[3] = rs.getDouble("IncomeSum") / fxRate;
+				tempValues[4] = rs.getDouble("CostsSum") / fxRate;
+				tempValues[5] = tempValues[4] - tempValues[3];
+				tempValues[6] = tempValues[3] - ((rs.getDouble("IncomeSoldPlayers")+rs.getDouble("IncomeSoldPlayersCommission")) / fxRate);
+				tempValues[7] = tempValues[4] - (rs.getDouble("CostsBoughtPlayers") / fxRate);
+				tempValues[8] = tempValues[7] - tempValues[6];
+				tempValues[9] = rs.getDouble("IncomeSpectators") / fxRate;
+				tempValues[10] = rs.getDouble("IncomeSoldPlayers") / fxRate;
+				tempValues[11] = rs.getDouble("IncomeSoldPlayersCommission") / fxRate;
+				tempValues[12] = rs.getDouble("IncomeSum") / fxRate - (tempValues[10] + tempValues[11] + tempValues[1] + tempValues[9]); // Income Other
+				tempValues[13] = rs.getDouble("CostsArena") / fxRate;
+				tempValues[14] = rs.getDouble("CostsBoughtPlayers") / fxRate;
+				tempValues[15] = rs.getDouble("CostsStaff") / fxRate;
+				tempValues[16] = rs.getDouble("CostsSum") / fxRate - (tempValues[2] + tempValues[13] + tempValues[14] + tempValues[15]); // Costs Other
+				tempValues[17] = rs.getTimestamp("FetchedDate").getTime(); // TODO: convert to String: HT Season - HTWeek
 
 				//save values
 				values.add(tempValues);

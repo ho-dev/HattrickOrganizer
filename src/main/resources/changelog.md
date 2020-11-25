@@ -11,7 +11,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 
 ## Highlights
-
+  - complete makeover of the statistics module (#788)
 
 
 
@@ -21,6 +21,9 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ### Finance
   - all information relative to Finance are now stored in the database (#793)
 
+
+### Statistics
+  - complete makeover of the statistics module: more data, more visible .... (#788)
 
 ### Squad
 

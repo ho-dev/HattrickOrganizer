@@ -3,7 +3,6 @@ package core.model;
 import core.HO;
 import core.db.DBManager;
 import core.util.GUIUtils;
-import core.util.StringUtils;
 import module.lineup.LineupAssistant;
 import java.util.HashMap;
 import java.util.Map;
@@ -127,8 +126,22 @@ public final class UserParameter extends Configuration {
     public boolean statistikFananzahl;
     public boolean statistikFans;
     public boolean statistikFinanzenHilfslinien = true;
-    public boolean statisticsClubDataLabels = true;
+    public boolean statisticsFinanceIncludeTransfers = true;
     public boolean statisticsClubHelpLines = true;
+    public boolean statisticsClubAssistantTrainersLevel = true;
+    public boolean statisticsClubFinancialDirectorsLevel = true;
+    public boolean statisticsClubFormCoachsLevel = true;
+    public boolean statisticsClubDoctorsLevel = true;
+    public boolean statisticsClubSpokePersonsLevel = true;
+    public boolean statisticsClubSportPsychologistLevels = true;
+    public boolean statisticsClubTacticalAssistantLevels = true;
+    public boolean statisticsClubYouthSquadLevel = true;
+    public boolean statisticsClubYouthSquadInvestment = true;
+    public boolean statisticsClubFanClubSize = true;
+    public boolean statisticsClubGlobalRanking = true;
+    public boolean statisticsClubLeagueRanking = true;
+    public boolean statisticsClubRegionRanking = true;
+    public boolean statisticsClubPowerRating = true;
     public boolean statistikFluegel;
     public boolean statistikForm = true;
     public boolean statistikFuehrung = true;
@@ -478,6 +491,26 @@ public final class UserParameter extends Configuration {
         map.put("statistikFananzahl", String.valueOf(statistikFananzahl));
         map.put("statistikFans", String.valueOf(statistikFans));
         map.put("statistikFinanzenHilfslinien", String.valueOf(statistikFinanzenHilfslinien));
+        map.put("statistikFinanzenIncludeTransfers", String.valueOf(statisticsFinanceIncludeTransfers));
+
+        // Module Statistics -> Tab Club  ======================================================================
+        map.put("statisticsClubHelpLines", String.valueOf(statisticsClubHelpLines));
+        map.put("statisticsClubAssistantTrainersLevel", String.valueOf(statisticsClubAssistantTrainersLevel));
+        map.put("statisticsClubFinancialDirectorsLevel", String.valueOf(statisticsClubFinancialDirectorsLevel));
+        map.put("statisticsClubFormCoachsLevel", String.valueOf(statisticsClubFormCoachsLevel));
+        map.put("statisticsClubDoctorsLevel", String.valueOf(statisticsClubDoctorsLevel));
+        map.put("statisticsClubSpokePersonsLevel", String.valueOf(statisticsClubSpokePersonsLevel));
+        map.put("statisticsClubSportPsychologistLevels", String.valueOf(statisticsClubSportPsychologistLevels));
+        map.put("statisticsClubTacticalAssistantLevels", String.valueOf(statisticsClubTacticalAssistantLevels));
+        map.put("statisticsClubYouthSquadLevel", String.valueOf(statisticsClubYouthSquadLevel));
+        map.put("statisticsClubYouthSquadInvestment", String.valueOf(statisticsClubYouthSquadInvestment));
+        map.put("statisticsClubFanClubSize", String.valueOf(statisticsClubFanClubSize));
+        map.put("statisticsClubGlobalRanking", String.valueOf(statisticsClubGlobalRanking));
+        map.put("statisticsClubLeagueRanking", String.valueOf(statisticsClubLeagueRanking));
+        map.put("statisticsClubRegionRanking", String.valueOf(statisticsClubRegionRanking));
+        map.put("statisticsClubPowerRating", String.valueOf(statisticsClubPowerRating));
+
+        // =============================================================================================================
         map.put("statistikFluegel", String.valueOf(statistikFluegel));
         map.put("statistikForm", String.valueOf(statistikForm));
         map.put("statistikFuehrung", String.valueOf(statistikFuehrung));
@@ -696,6 +729,26 @@ public final class UserParameter extends Configuration {
         statistikFananzahl = getBooleanValue(values, "statistikFananzahl");
         statistikFans = getBooleanValue(values, "statistikFans");
         statistikFinanzenHilfslinien = getBooleanValue(values, "statistikFinanzenHilfslinien");
+        statisticsFinanceIncludeTransfers = getBooleanValue(values, "statistikFinanzenIncludeTransfers");
+
+        // Module Statistics -> Tab Club  ======================================================================
+        statisticsClubHelpLines = getBooleanValue(values, "statisticsClubHelpLines");
+        statisticsClubAssistantTrainersLevel = getBooleanValue(values, "statisticsClubAssistantTrainersLevel");
+        statisticsClubFinancialDirectorsLevel = getBooleanValue(values, "statisticsClubFinancialDirectorsLevel");
+        statisticsClubFormCoachsLevel = getBooleanValue(values, "statisticsClubFormCoachsLevel");
+        statisticsClubDoctorsLevel = getBooleanValue(values, "statisticsClubDoctorsLevel");
+        statisticsClubSpokePersonsLevel = getBooleanValue(values, "statisticsClubSpokePersonsLevel");
+        statisticsClubSportPsychologistLevels = getBooleanValue(values, "statisticsClubSportPsychologistLevels");
+        statisticsClubTacticalAssistantLevels = getBooleanValue(values, "statisticsClubTacticalAssistantLevels");
+        statisticsClubYouthSquadLevel = getBooleanValue(values, "statisticsClubYouthSquadLevel");
+        statisticsClubYouthSquadInvestment = getBooleanValue(values, "statisticsClubYouthSquadInvestment");
+        statisticsClubFanClubSize = getBooleanValue(values, "statisticsClubFanClubSize");
+        statisticsClubGlobalRanking = getBooleanValue(values, "statisticsClubGlobalRanking");
+        statisticsClubLeagueRanking = getBooleanValue(values, "statisticsClubLeagueRanking");
+        statisticsClubRegionRanking = getBooleanValue(values, "statisticsClubRegionRanking");
+        statisticsClubPowerRating = getBooleanValue(values, "statisticsClubPowerRating");
+        // ============================================================================================================
+
         statistikFluegel = getBooleanValue(values, "statistikFluegel");
         statistikForm = getBooleanValue(values, "statistikForm");
         statistikFuehrung = getBooleanValue(values, "statistikFuehrung");
