@@ -392,7 +392,7 @@ public class StatisticQuery {
 
 	// The data returned by this function are displayed in the Club tab of the statistics module
 	public static double[][] getDataForClubStatisticsPanel(int iNumberHRF) {
-		final int iNumberColumns = 15;
+		final int iNumberColumns = 12;
 		double[][] returnValues;
 		Vector<double[]> values = new Vector<>();
 
@@ -420,14 +420,11 @@ public class StatisticQuery {
 				tempValues[4] = rs.getDouble("PRManager"); // SpokespersonLevel
 				tempValues[5] = rs.getDouble("Pschyologen"); // SportPsychologistLevel
 				tempValues[6] = rs.getDouble("TacticAssist");  // TacticalAssistantLevel
-				tempValues[7] = -1; // YouthSquadLevel //TODO: check where to get that
-				tempValues[8] = -1; // YouthSquadInvestment //TODO: check if we want that on this tab
-				tempValues[9] = rs.getDouble("Fans");  // FanClubSize
-				tempValues[10] = rs.getDouble("globalranking"); // GlobalRanking
-				tempValues[11] = rs.getDouble("leagueranking"); // LeagueRanking
-				tempValues[12] = rs.getDouble("regionranking");  // RegionRanking
-				tempValues[13] = rs.getDouble("powerrating"); // PowerRating
-				tempValues[14] = rs.getTimestamp("DATUM").getTime();
+				tempValues[7] = rs.getDouble("Fans");  // FanClubSize
+				tempValues[8] = rs.getDouble("globalranking"); // GlobalRanking
+				tempValues[9] = rs.getDouble("leagueranking"); // LeagueRanking
+				tempValues[10] = rs.getDouble("powerrating"); // PowerRating
+				tempValues[11] = rs.getTimestamp("DATUM").getTime();
 
 				//save values
 				values.add(tempValues);

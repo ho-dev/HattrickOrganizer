@@ -12,6 +12,8 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.HOLogger;
 import core.util.Helper;
+import org.knowm.xchart.style.lines.SeriesLines;
+import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -37,12 +39,9 @@ public class ClubStatisticsPanel extends LazyImagePanel {
     private ImageCheckbox jcbSpokePersonLevels;
     private ImageCheckbox jcbSportPsychologistLevels;
     private ImageCheckbox jcbTacticalAssistantLevels;
-    private ImageCheckbox jcbYouthSquadLevel;
-    private ImageCheckbox jcbYouthSquadInvestment;
     private ImageCheckbox jcbFanClubSize;
     private ImageCheckbox jcbGlobalRanking;
     private ImageCheckbox jcbLeagueRanking;
-    private ImageCheckbox jcbRegionRanking;
     private ImageCheckbox jcbPowerRating;
     private JButton jbApply;
     private JButton jbUncheckAll;
@@ -99,14 +98,6 @@ public class ClubStatisticsPanel extends LazyImagePanel {
                 oChartPanel.setShow("TacticalAssistantLevel", jcbTacticalAssistantLevels.isSelected());
                 gup.statisticsClubTacticalAssistantLevels = jcbTacticalAssistantLevels.isSelected();
             }
-            else if (e.getSource() == jcbYouthSquadLevel.getCheckbox()) {
-                oChartPanel.setShow("YouthSquadLevel", jcbYouthSquadLevel.isSelected());
-                gup.statisticsClubYouthSquadLevel = jcbYouthSquadLevel.isSelected();
-            }
-            else if (e.getSource() == jcbYouthSquadInvestment.getCheckbox()) {
-                oChartPanel.setShow("YouthSquadInvestment", jcbYouthSquadInvestment.isSelected());
-                gup.statisticsClubYouthSquadInvestment = jcbYouthSquadInvestment.isSelected();
-            }
             else if (e.getSource() == jcbFanClubSize.getCheckbox()) {
                 oChartPanel.setShow("FanClubSize", jcbFanClubSize.isSelected());
                 gup.statisticsClubFanClubSize = jcbFanClubSize.isSelected();
@@ -118,10 +109,6 @@ public class ClubStatisticsPanel extends LazyImagePanel {
             else if (e.getSource() == jcbLeagueRanking.getCheckbox()) {
                 oChartPanel.setShow("LeagueRanking", jcbLeagueRanking.isSelected());
                 gup.statisticsClubLeagueRanking = jcbLeagueRanking.isSelected();
-            }
-            else if (e.getSource() == jcbRegionRanking.getCheckbox()) {
-                oChartPanel.setShow("RegionRanking", jcbRegionRanking.isSelected());
-                gup.statisticsClubRegionRanking = jcbRegionRanking.isSelected();
             }
             else if (e.getSource() == jcbPowerRating.getCheckbox()) {
                 oChartPanel.setShow("PowerRating", jcbPowerRating.isSelected());
@@ -137,12 +124,9 @@ public class ClubStatisticsPanel extends LazyImagePanel {
         jcbSpokePersonLevels.addActionListener(checkBoxActionListener);
         jcbSportPsychologistLevels.addActionListener(checkBoxActionListener);
         jcbTacticalAssistantLevels.addActionListener(checkBoxActionListener);
-        jcbYouthSquadLevel.addActionListener(checkBoxActionListener);
-        jcbYouthSquadInvestment.addActionListener(checkBoxActionListener);
         jcbFanClubSize.addActionListener(checkBoxActionListener);
         jcbGlobalRanking.addActionListener(checkBoxActionListener);
         jcbLeagueRanking.addActionListener(checkBoxActionListener);
-        jcbRegionRanking.addActionListener(checkBoxActionListener);
         jcbPowerRating.addActionListener(checkBoxActionListener);
 
         jbApply.addActionListener(e -> getData());
@@ -204,22 +188,26 @@ public class ClubStatisticsPanel extends LazyImagePanel {
 
         constraints2.gridwidth = 1;
         constraints2.gridy = 5;
+        constraints2.insets = new Insets(20,0,0,0);  //top padding
         jcbHelpLines = new JCheckBox(getLangStr("Hilflinien"), gup.statisticsClubHelpLines);
         layout2.setConstraints(jcbHelpLines, constraints2);
         panel2.add(jcbHelpLines);
 
         constraints2.gridy = 6;
+        constraints2.insets = new Insets(20,0,0,0);  //top padding
         jbUncheckAll = new JButton(getLangStr("ls.button.unselect_all"));
-        jbUncheckAll.setToolTipText(getLangStr("ls.button.tt.unselect_all"));
+        jbUncheckAll.setToolTipText(getLangStr("ls.button.tt.uncheck_all"));
         layout2.setConstraints(jbUncheckAll, constraints2);
         panel2.add(jbUncheckAll);
 
         constraints2.gridy = 7;
+        constraints2.insets = new Insets(20,0,0,0);  //top padding
         jcbAssistantTrainerLevels = new ImageCheckbox(getLangStr("ls.module.statistics.club.assistant_trainers_level"),
                 getColor(Colors.COLOR_CLUB_ASSISTANT_TRAINERS_LEVEL), gup.statisticsClubAssistantTrainersLevel);
         panel2.add(jcbAssistantTrainerLevels, constraints2);
 
         constraints2.gridy = 8;
+        constraints2.insets = new Insets(0,0,0,0);  //top padding
         jcbFormCoachLevels = new ImageCheckbox(getLangStr("ls.module.statistics.club.form_coachs_level"),
                 getColor(Colors.COLOR_CLUB_FORM_COACHS_LEVEL), gup.statisticsClubFormCoachsLevel);
         panel2.add(jcbFormCoachLevels, constraints2);
@@ -250,39 +238,28 @@ public class ClubStatisticsPanel extends LazyImagePanel {
         panel2.add(jcbTacticalAssistantLevels, constraints2);
 
         constraints2.gridy = 14;
-        jcbYouthSquadLevel = new ImageCheckbox(getLangStr("ls.module.statistics.club.youth_squad_level"),
-                getColor(Colors.COLOR_CLUB_YOUTH_SQUAD_LEVEL), gup.statisticsClubYouthSquadLevel);
-        panel2.add(jcbYouthSquadLevel, constraints2);
-
-        constraints2.gridy = 15;
-        jcbYouthSquadInvestment = new ImageCheckbox(getLangStr("ls.module.statistics.club.youth_squad_investment"),
-                getColor(Colors.COLOR_CLUB_YOUTH_SQUAD_INVESTMENT), gup.statisticsClubYouthSquadInvestment);
-        panel2.add(jcbYouthSquadInvestment, constraints2);
-
-        constraints2.gridy = 16;
-        jcbFanClubSize = new ImageCheckbox(getLangStr("ls.module.statistics.club.fan_club_size"),
-                getColor(Colors.COLOR_CLUB_FAN_CLUB_SIZE), gup.statisticsClubFanClubSize);
+        constraints2.insets = new Insets(20,0,0,0);  //top padding
+        String textLabel = getLangStr("ls.module.statistics.club.fan_club_size") + " (" + getLangStr("ls.chart.second_axis") + ")";
+        jcbFanClubSize = new ImageCheckbox(textLabel, getColor(Colors.COLOR_CLUB_FAN_CLUB_SIZE), gup.statisticsClubFanClubSize);
         panel2.add(jcbFanClubSize, constraints2);
 
-        constraints2.gridy = 17;
-        jcbGlobalRanking = new ImageCheckbox(getLangStr("ls.module.statistics.club.global_ranking"),
-                getColor(Colors.COLOR_CLUB_GLOBAL_RANKING), gup.statisticsClubGlobalRanking);
+        constraints2.gridy = 15;
+        constraints2.insets = new Insets(20,0,0,0);  //top padding
+        textLabel = getLangStr("ls.module.statistics.club.power_rating") + " (" + getLangStr("ls.chart.second_axis") + ")";
+        jcbPowerRating = new ImageCheckbox(textLabel, getColor(Colors.COLOR_CLUB_POWER_RATING), gup.statisticsClubPowerRating);
+        panel2.add(jcbPowerRating, constraints2);
+
+        constraints2.gridy = 16;
+        constraints2.insets = new Insets(20,0,0,0);  //top padding
+        textLabel = getLangStr("ls.module.statistics.club.global_ranking") + " (" + getLangStr("ls.chart.third_axis") + ")";
+        jcbGlobalRanking = new ImageCheckbox(textLabel, getColor(Colors.COLOR_CLUB_GLOBAL_RANKING), gup.statisticsClubGlobalRanking);
         panel2.add(jcbGlobalRanking, constraints2);
 
-        constraints2.gridy = 18;
-        jcbLeagueRanking = new ImageCheckbox(getLangStr("ls.module.statistics.club.league_ranking"),
-                getColor(Colors.COLOR_CLUB_LEAGUE_RANKING), gup.statisticsClubLeagueRanking);
+        constraints2.gridy = 17;
+        constraints2.insets = new Insets(0,0,0,0);  //top padding
+        textLabel = getLangStr("ls.module.statistics.club.league_ranking") + " (" + getLangStr("ls.chart.third_axis") + ")";
+        jcbLeagueRanking = new ImageCheckbox(textLabel, getColor(Colors.COLOR_CLUB_LEAGUE_RANKING), gup.statisticsClubLeagueRanking);
         panel2.add(jcbLeagueRanking, constraints2);
-
-        constraints2.gridy = 19;
-        jcbRegionRanking = new ImageCheckbox(getLangStr("ls.module.statistics.club.region_ranking"),
-                getColor(Colors.COLOR_CLUB_REGION_RANKING), gup.statisticsClubRegionRanking);
-        panel2.add(jcbRegionRanking, constraints2);
-
-        constraints2.gridy = 20;
-        jcbPowerRating = new ImageCheckbox(getLangStr("ls.module.statistics.club.power_rating"),
-                getColor(Colors.COLOR_CLUB_POWER_RATING), gup.statisticsClubPowerRating);
-        panel2.add(jcbPowerRating, constraints2);
 
 
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -299,7 +276,8 @@ public class ClubStatisticsPanel extends LazyImagePanel {
         JPanel panel = new ImagePanel();
         panel.setLayout(new BorderLayout());
 
-        oChartPanel = new HOLinesChart(true, null, null, null, "#,##0", 0d, 20d);
+        oChartPanel = new HOLinesChart(true, true, null, null, null, null, "#,##0","#,##0", 0d, 20d, null, null,null,null,false);
+
         panel.add(oChartPanel.getPanel());
 
         constraints.fill = GridBagConstraints.BOTH;
@@ -324,15 +302,12 @@ public class ClubStatisticsPanel extends LazyImagePanel {
         jcbSpokePersonLevels.setSelected(false);
         jcbSportPsychologistLevels.setSelected(false);
         jcbTacticalAssistantLevels.setSelected(false);
-        jcbYouthSquadLevel.setSelected(false);
-        jcbYouthSquadInvestment.setSelected(false);
         jcbFanClubSize.setSelected(false);
         jcbGlobalRanking.setSelected(false);
         jcbLeagueRanking.setSelected(false);
-        jcbRegionRanking.setSelected(false);
         jcbPowerRating.setSelected(false);
 
-        oChartPanel.clear(); //TODO: make a function like setshow but that remove all series
+        oChartPanel.clearAllPlots();
 
         gup.statisticsClubAssistantTrainersLevel = false;
         gup.statisticsClubFinancialDirectorsLevel = false;
@@ -341,12 +316,9 @@ public class ClubStatisticsPanel extends LazyImagePanel {
         gup.statisticsClubSpokePersonsLevel = false;
         gup.statisticsClubSportPsychologistLevels = false;
         gup.statisticsClubTacticalAssistantLevels = false;
-        gup.statisticsClubYouthSquadLevel = false;
-        gup.statisticsClubYouthSquadInvestment = false;
         gup.statisticsClubFanClubSize = false;
         gup.statisticsClubGlobalRanking = false;
         gup.statisticsClubLeagueRanking = false;
-        gup.statisticsClubRegionRanking = false;
         gup.statisticsClubPowerRating = false;
 
     }
@@ -362,13 +334,12 @@ public class ClubStatisticsPanel extends LazyImagePanel {
 
             NumberFormat format = NumberFormat.getInstance();
 
-            double[][] data = DBManager.instance().getDataForClubStatisticsPanel(nbHRFs); //TODO: finalize this one
+            double[][] data = DBManager.instance().getDataForClubStatisticsPanel(nbHRFs);
 
             LinesChartDataModel[] models;
-            models = new LinesChartDataModel[15];
+            models = new LinesChartDataModel[14];
 
             if (data.length > 0) {
-                //TODO create all data models using the same name as the one using above for the bindings of the cb
                 models[0] = new LinesChartDataModel(data[0], "AssistantTrainerLevel", jcbAssistantTrainerLevels.isSelected(),
                         getColor(Colors.COLOR_CLUB_ASSISTANT_TRAINERS_LEVEL), format);
                 models[1] = new LinesChartDataModel(data[1], "FinancialDirectorLevel", jcbFinancialDirectorLevels.isSelected(),
@@ -383,23 +354,17 @@ public class ClubStatisticsPanel extends LazyImagePanel {
                         getColor(Colors.COLOR_CLUB_SPORT_PSYCHOLOGIST_LEVELS), format);
                 models[6] = new LinesChartDataModel(data[6], "TacticalAssistantLevel", jcbTacticalAssistantLevels.isSelected(),
                         getColor(Colors.COLOR_CLUB_TACTICAL_ASSISTANT_LEVELS), format);
-                models[7] = new LinesChartDataModel(data[7], "YouthSquadLevel", jcbYouthSquadLevel.isSelected(),
-                        getColor(Colors.COLOR_CLUB_YOUTH_SQUAD_LEVEL), format);
-                models[8] = new LinesChartDataModel(data[8], "YouthSquadInvestment", jcbYouthSquadInvestment.isSelected(),
-                        getColor(Colors.COLOR_CLUB_YOUTH_SQUAD_INVESTMENT), format);
-                models[9] = new LinesChartDataModel(data[9], "FanClubSize", jcbFanClubSize.isSelected(),
+                models[7] = new LinesChartDataModel(data[7], "FanClubSize", jcbFanClubSize.isSelected(),
                         getColor(Colors.COLOR_CLUB_FAN_CLUB_SIZE), format, 0d, true);
-                models[10] = new LinesChartDataModel(data[10], "GlobalRanking", jcbGlobalRanking.isSelected(),
-                        getColor(Colors.COLOR_CLUB_GLOBAL_RANKING), format);
-                models[11] = new LinesChartDataModel(data[11], "LeagueRanking", jcbLeagueRanking.isSelected(),
-                        getColor(Colors.COLOR_CLUB_LEAGUE_RANKING), format);
-                models[12] = new LinesChartDataModel(data[12], "RegionRanking", jcbRegionRanking.isSelected(),
-                        getColor(Colors.COLOR_CLUB_REGION_RANKING), format);
-                models[13] = new LinesChartDataModel(data[13], "PowerRating", jcbPowerRating.isSelected(),
-                        getColor(Colors.COLOR_CLUB_POWER_RATING), format);
+                models[8] = new LinesChartDataModel(data[8], "GlobalRanking", jcbGlobalRanking.isSelected(),
+                        getColor(Colors.COLOR_CLUB_GLOBAL_RANKING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format, 0d, "Y3");
+                models[9] = new LinesChartDataModel(data[9], "LeagueRanking", jcbLeagueRanking.isSelected(),
+                        getColor(Colors.COLOR_CLUB_LEAGUE_RANKING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format, 0d, "Y3");
+                models[10] = new LinesChartDataModel(data[10], "PowerRating", jcbPowerRating.isSelected(),
+                        getColor(Colors.COLOR_CLUB_POWER_RATING), format, 0d, true);
             }
 
-            oChartPanel.setAllValues(models, data[14], format, getLangStr("Wochen"), "",
+            oChartPanel.setAllValues(models, data[11], format, getLangStr("Wochen"), "",
                     false, jcbHelpLines.isSelected());
 
         } catch (Exception e) {
@@ -411,5 +376,5 @@ public class ClubStatisticsPanel extends LazyImagePanel {
         return HOVerwaltung.instance().getLanguageString(key);
     }
 
-    private Color getColor(int i) {return ThemeManager.getColor(HOColorName.PALETTE15[i]);}
+    private Color getColor(int i) {return ThemeManager.getColor(HOColorName.PALETTE13[i]);}
 }

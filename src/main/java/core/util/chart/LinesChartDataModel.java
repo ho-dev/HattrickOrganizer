@@ -70,6 +70,29 @@ public class LinesChartDataModel {
         this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, second_Y_axis);
     }
 
+    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color,
+                               java.text.NumberFormat format, double factor, String Y_axis) {
+        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, Y_axis);
+    }
+
+    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color, BasicStroke lineStyle,
+                               Marker markerStyle, java.text.NumberFormat format, double factor, String Y_axis) {
+        m_values = values;
+        lValues = Arrays.stream(values).boxed().collect(Collectors.toList());
+        m_sName = name;
+        m_bShow = show;
+        m_LineColor = color;
+        m_clFormat = format;
+        m_dFactor = factor;
+        m_LineStyle = lineStyle;
+        m_MarkerStyle = markerStyle;
+        switch (Y_axis) {
+            case "Y2" ->  y_axisGroup = 1;
+            case "Y3" ->  y_axisGroup = 2;
+            default ->  y_axisGroup = 0;
+        }
+    }
+
     public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color, BasicStroke lineStyle,
                                Marker markerStyle, java.text.NumberFormat format, double factor, boolean second_Y_axis) {
         m_values = values;

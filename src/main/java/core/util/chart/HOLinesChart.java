@@ -32,10 +32,6 @@ public class HOLinesChart implements IChart {
         this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, y1_axisMin, y1_axisMax, null, null, false);
     }
 
-    public HOLinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat, Double y1_axisMin, Double y1_axisMax, boolean bLegendVisible)
-    {
-        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, y1_axisMin, y1_axisMax, null, null, bLegendVisible);
-    }
 
     public HOLinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat)
     {
@@ -55,8 +51,16 @@ public class HOLinesChart implements IChart {
         m_axeStyler.setYAxisMax(yAxisGroup-1, value);
     }
 
+
     public HOLinesChart(boolean second_axis, String y1_axisName, String y2_axisName, String y1_axisFormat, String y2_axisFormat,
-                        @Nullable Double y1_axisMin, @Nullable Double y1_axisMax, @Nullable Double y2_axisMin, @Nullable Double y2_axisMax, boolean bLegendVisible){
+                        @Nullable Double y1_axisMin, @Nullable Double y1_axisMax, @Nullable Double y2_axisMin, @Nullable Double y2_axisMax, boolean bLegendVisible) {
+
+        this(false, second_axis, y1_axisName, y2_axisName, null, y1_axisFormat, y2_axisFormat, null, y1_axisMin, y1_axisMax, y2_axisMin, y2_axisMax,
+                null, null, bLegendVisible);
+    }
+
+    public HOLinesChart(boolean third_axis, boolean second_axis, String y1_axisName, String y2_axisName, String y3_axisName, String y1_axisFormat, String y2_axisFormat, String y3_axisFormat,
+                        @Nullable Double y1_axisMin, @Nullable Double y1_axisMax, @Nullable Double y2_axisMin, @Nullable Double y2_axisMax, @Nullable Double y3_axisMin, @Nullable Double y3_axisMax,boolean bLegendVisible){
 
         m_chart = new XYChart(10, 10);
         m_axeStyler = m_chart.getStyler();
@@ -88,6 +92,25 @@ public class HOLinesChart implements IChart {
             m_chart.getStyler().putYAxisGroupDecimalPatternMap(0, y1_axisFormat);
         }
 
+        if(third_axis){
+            second_axis = true;
+
+            m_chart.getStyler().setYAxisGroupPosition(2, Styler.YAxisPosition.Right);
+            if(y3_axisName != null){
+                m_chart.setYAxisGroupTitle(2, y3_axisName);
+            }
+
+            if (y3_axisFormat != null){
+                m_chart.getStyler().putYAxisGroupDecimalPatternMap(2, y3_axisFormat);
+            }
+
+            m_chart.getStyler().setYAxisGroupTickLabelsColorMap(2, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+            m_chart.getStyler().setYAxisGroupTickMarksColorMap(2, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+
+            if (y3_axisMin != null) m_axeStyler.setYAxisMin(2, y3_axisMin);
+            if (y3_axisMax != null) m_axeStyler.setYAxisMax(2, y3_axisMax);
+        }
+
         if(second_axis){
             m_chart.getStyler().setYAxisGroupPosition(1, Styler.YAxisPosition.Right);
             if(y1_axisName != null){
@@ -108,6 +131,7 @@ public class HOLinesChart implements IChart {
             if (y2_axisMax != null) m_axeStyler.setYAxisMax(1, y2_axisMax);
 
         }
+
         m_panel = new XChartPanel(m_chart);
     }
 
@@ -127,7 +151,6 @@ public class HOLinesChart implements IChart {
 
         }
     }
-
 
 
     public JPanel getPanel() {
@@ -178,9 +201,20 @@ public class HOLinesChart implements IChart {
     }
 
 
+    public final void clearAllPlots(){
+        if (m_models != null){
+            for (int i = 0; i < m_models.length; i++) {
+                if (m_models[i] != null) {
+                    m_models[i].setShow(false);
+                }
+            }
+            updateGraph();
+        }
+    }
+
     public final void setShow(String name, boolean show) {
         if (m_models != null){
-            for (int i = 0; i <= m_models.length; i++) {
+            for (int i = 0; i < m_models.length; i++) {
                 if ((m_models[i] != null) && (m_models[i].getName().equals(name))) {
                     m_models[i].setShow(show);
                     break;
@@ -211,17 +245,14 @@ public class HOLinesChart implements IChart {
 
     }
 
-    /**
-     * Switching the graph labelling on or off
-     */
+    // Switching the graph labelling on or off
     public final void setLabelling(boolean hasLabels) {
         this.m_hasLabels = hasLabels;
         updateGraph();
     }
 
-    /**
-     * Switching the guide lines on and off
-     */
+
+     //Switching the guide lines on and off
     public final void setHelpLines(boolean hasHelpLines) {
         this.m_hasHelpLines = hasHelpLines;
         updateGraph();
