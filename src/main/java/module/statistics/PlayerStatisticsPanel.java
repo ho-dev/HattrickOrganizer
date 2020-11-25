@@ -502,10 +502,12 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 							SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format3, 19/maxTSI, true);
 
 					models[1] = new LinesChartDataModel(statistikWerte[1], "ls.player.wage", jcbSalary.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_WAGE),
+
 							SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format2, 16/maxWage, true);
 
 					models[2] = new LinesChartDataModel(statistikWerte[2], "ls.player.leadership",
 							jcbLeadership.isSelected(),
+
 							Colors.getColor(Colors.COLOR_PLAYER_LEADERSHIP), format);
 					models[3] = new LinesChartDataModel(statistikWerte[3], "ls.player.experience",
 							jcbExperience.isSelected(),
@@ -540,6 +542,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 					models[13] = new LinesChartDataModel(statistikWerte[13], "RecapPanel.Stars",
 							jcbRating.isSelected(),
 							Colors.getColor(Colors.COLOR_PLAYER_RATING), format);
+
 					models[14] = new LinesChartDataModel(statistikWerte[14], "ls.player.loyalty",
 							jcbLoyalty.isSelected(),
 							Colors.getColor(Colors.COLOR_PLAYER_LOYALTY), format);

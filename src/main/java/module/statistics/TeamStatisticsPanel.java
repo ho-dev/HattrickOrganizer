@@ -702,6 +702,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 						     Colors.getColor(Colors.COLOR_PLAYER_WAGE), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt2, 15 / Helper.getMaxValue(statistikWerte[27]), true);
 
 
+
 				// FORM  =============================================================================================
 				models[2] = new LinesChartDataModel(statistikWerte[2], sumForm, jcbForm.isSelected() && bSum,
 						Colors.getColor(Colors.COLOR_PLAYER_FORM), format);
@@ -722,6 +723,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 				models[25] = new LinesChartDataModel(statistikWerte[25], avgLoyalty, jcbLoyalty.isSelected() && !bSum,
 						Colors.getColor(Colors.COLOR_PLAYER_LOYALTY), format);
+
 
 				// KEEPER ========================================================================
 				double maxSKill = Helper.getMaxValue(statistikWerte[4]);
@@ -774,7 +776,6 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 						Colors.getColor(Colors.COLOR_PLAYER_SP), fmt3, factor);
 				models[24] = new LinesChartDataModel(statistikWerte[24], avgSP, jcbSetPieces.isSelected() && !bSum,
 						Colors.getColor(Colors.COLOR_PLAYER_SP), format);
-
 			}
 
 			mChart.setAllValues(models, statistikWerte[28], format, HOVerwaltung.instance()

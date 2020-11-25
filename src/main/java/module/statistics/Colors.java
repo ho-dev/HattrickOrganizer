@@ -55,4 +55,5 @@ public final class Colors {
     public static final int COLOR_CLUB_POWER_RATING = 10;
 
     public static Color getColor(int i) {return ThemeManager.getColor(HOColorName.PALETTE13[i]);}
+
 }

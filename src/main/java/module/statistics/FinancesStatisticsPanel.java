@@ -278,6 +278,7 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 			modelsRevExpChart_Expenses = new PieChartDataModel[5];
 
 			if (data.length > 0) {
+
 				modelsDevelopmentChart[0] = new LinesChartDataModel(data[1], getLangStr("ls.finance.revenue.sponsors"),	true, Colors.getColor(Colors.COLOR_FINANCE_INCOME_SPONSORS), null, 0d, false);
 				modelsDevelopmentChart[1] = new LinesChartDataModel(data[2], getLangStr("ls.finance.expenses.wages"),	true, Colors.getColor(Colors.COLOR_FINANCE_COST_PLAYERS), null, 0d, false);
 				modelsDevelopmentChart[2] = new LinesChartDataModel(data[0], getLangStr("ls.finance.cash") + " (" + getLangStr("ls.chart.second_axis") + ")", true, Colors.getColor(Colors.COLOR_FINANCE_CASH), null, 0d, true);
@@ -301,6 +302,7 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 				modelsRevExpChart_Expenses[3] = new PieChartDataModel(getLangStr("ls.finance.expenses.staff"), Arrays.stream(data[15]).sum(), true, Colors.getColor(3));
 				modelsRevExpChart_Expenses[4] = new PieChartDataModel(getLangStr("ls.finance.other"), Arrays.stream(data[16]).sum(), true, Colors.getColor(4));
 
+
 			}
 
 
@@ -319,7 +321,6 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 
 	private String getLangStr(String key) {return HOVerwaltung.instance().getLanguageString(key);}
 
-	
 	private String getChartCode(int i) {
 
 		return switch (i) {

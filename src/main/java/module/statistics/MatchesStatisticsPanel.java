@@ -571,6 +571,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 			if (statistikWerte.length > 0) {
 				models[0] = new LinesChartDataModel(statistikWerte[0], sumStars, c_jcbRating.isSelected(),
+
 						Colors.getColor(Colors.COLOR_TEAM_RATING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, Helper.DEFAULTDEZIMALFORMAT, 0d, true);
 				models[1] = new LinesChartDataModel(statistikWerte[1], "ls.match.ratingsector.midfield", c_jcbMidfield.isSelected(),
 						Colors.getColor(Colors.COLOR_TEAM_MID), Helper.DEFAULTDEZIMALFORMAT);
