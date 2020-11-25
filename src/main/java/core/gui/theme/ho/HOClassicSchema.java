@@ -480,38 +480,19 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(HOColorName.FG_PROMOTION_INFO, new Color(238, 39, 39, 255));
 
 		// palettes
-		put(PALETTE5[0], Color.decode("#78b4c6"));
-		put(PALETTE5[1], Color.decode("#1b2349"));
-		put(PALETTE5[2], Color.decode("#75be31"));
-		put(PALETTE5[3], Color.decode("#4f28af"));
-		put(PALETTE5[4], Color.decode("#1ce0b2"));
-
-		put(PALETTE10[0], Color.decode("#3588d1"));
-		put(PALETTE10[1], Color.decode("#85dc4d"));
-		put(PALETTE10[2], Color.decode("#440583"));
-		put(PALETTE10[3], Color.decode("#4ad9e1"));
-		put(PALETTE10[4], Color.decode("#0c1118"));
-		put(PALETTE10[5], Color.decode("#f6adff"));
-		put(PALETTE10[6], Color.decode("#4c0634"));
-		put(PALETTE10[7], Color.decode("#b5d08d"));
-		put(PALETTE10[8], Color.decode("#b00bd9"));
-		put(PALETTE10[9], Color.decode("#5e9222"));
-
-		put(PALETTE15[0], Color.decode("#827db8"));
-		put(PALETTE15[1], Color.decode("#a7d64e"));
-		put(PALETTE15[2], Color.decode("#0f0a32"));
-		put(PALETTE15[3], Color.decode("#36e515"));
-		put(PALETTE15[4], Color.decode("#9b3ec8"));
-		put(PALETTE15[5], Color.decode("#458612"));
-		put(PALETTE15[6], Color.decode("#3b098b"));
-		put(PALETTE15[7], Color.decode("#f2b0f6"));
-		put(PALETTE15[8], Color.decode("#012d03"));
-		put(PALETTE15[9], Color.decode("#fe74fe"));
-		put(PALETTE15[10], Color.decode("#34466d"));
-		put(PALETTE15[11], Color.decode("#4fdbce"));
-		put(PALETTE15[12], Color.decode("#761604"));
-		put(PALETTE15[13], Color.decode("#f8ba7c"));
-		put(PALETTE15[14], Color.decode("#462a09"));
+		put(PALETTE13[0], Color.decode("#827db8"));
+		put(PALETTE13[1], Color.decode("#a7d64e"));
+		put(PALETTE13[2], Color.decode("#0f0a32"));
+		put(PALETTE13[3], Color.decode("#36e515"));
+		put(PALETTE13[4], Color.decode("#9b3ec8"));
+		put(PALETTE13[5], Color.decode("#458612"));
+		put(PALETTE13[6], Color.decode("#3b098b"));
+		put(PALETTE13[7], Color.decode("#f2b0f6"));
+		put(PALETTE13[8], Color.decode("#012d03"));
+		put(PALETTE13[9], Color.decode("#fe74fe"));
+		put(PALETTE13[10], Color.decode("#34466d"));
+		put(PALETTE13[11], Color.decode("#4fdbce"));
+		put(PALETTE13[12], Color.decode("#761604"));
 	}
 
 	public Color getDefaultColor(String key) {

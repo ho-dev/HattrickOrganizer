@@ -100,38 +100,19 @@ public class DarculaDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.PLAYER_SPECIALTY_COLOR, defaults.getColor("Label.foreground"));
 
             // palettes
-            ThemeManager.instance().put(HOColorName.PALETTE5[0], Color.decode("#35618f"));
-            ThemeManager.instance().put(HOColorName.PALETTE5[1], Color.decode("#85dc4d"));
-            ThemeManager.instance().put(HOColorName.PALETTE5[2], Color.decode("#9e21a9"));
-            ThemeManager.instance().put(HOColorName.PALETTE5[3], Color.decode("#e3faac"));
-            ThemeManager.instance().put(HOColorName.PALETTE5[4], Color.decode("#7220f6"));
-
-            ThemeManager.instance().put(HOColorName.PALETTE10[0], Color.decode("#8de4d3"));
-            ThemeManager.instance().put(HOColorName.PALETTE10[1], Color.decode("#a6003e"));
-            ThemeManager.instance().put(HOColorName.PALETTE10[2], Color.decode("#a1d832"));
-            ThemeManager.instance().put(HOColorName.PALETTE10[3], Color.decode("#b825af"));
-            ThemeManager.instance().put(HOColorName.PALETTE10[4], Color.decode("#37d51a"));
-            ThemeManager.instance().put(HOColorName.PALETTE10[5], Color.decode("#fd4e8b"));
-            ThemeManager.instance().put(HOColorName.PALETTE10[6], Color.decode("#1be19f"));
-            ThemeManager.instance().put(HOColorName.PALETTE10[7], Color.decode("#375282"));
-            ThemeManager.instance().put(HOColorName.PALETTE10[8], Color.decode("#e9b4f5"));
-            ThemeManager.instance().put(HOColorName.PALETTE10[9], Color.decode("#338821"));
-
-            ThemeManager.instance().put(HOColorName.PALETTE15[0], Color.decode("#b8e27d"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[1], new Color(167, 103, 185));
-            ThemeManager.instance().put(HOColorName.PALETTE15[2], Color.decode("#7cee4d"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[3], Color.decode("#df72ef"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[4], Color.decode("#ccad34"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[5], Color.decode("#f23387"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[6], Color.decode("#56ebd3"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[7], Color.decode("#ffffff"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[8], new Color(255, 110, 30));
-            ThemeManager.instance().put(HOColorName.PALETTE15[9], Color.decode("#bb190a"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[10], Color.decode("#199bce"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[11], Color.decode("#f2f27a"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[12], Color.decode("#ffd9e3"));
-            ThemeManager.instance().put(HOColorName.PALETTE15[13], new Color(215, 160, 50));
-            ThemeManager.instance().put(HOColorName.PALETTE15[14], new Color(161, 222, 240));
+            ThemeManager.instance().put(HOColorName.PALETTE13[0], Color.decode("#b8e27d"));
+            ThemeManager.instance().put(HOColorName.PALETTE13[1], new Color(167, 103, 185));
+            ThemeManager.instance().put(HOColorName.PALETTE13[2], Color.decode("#7cee4d"));
+            ThemeManager.instance().put(HOColorName.PALETTE13[3], Color.decode("#df72ef"));
+            ThemeManager.instance().put(HOColorName.PALETTE13[4], Color.decode("#ccad34"));
+            ThemeManager.instance().put(HOColorName.PALETTE13[5], Color.decode("#f23387"));
+            ThemeManager.instance().put(HOColorName.PALETTE13[6], Color.decode("#56ebd3"));
+            ThemeManager.instance().put(HOColorName.PALETTE13[7], Color.decode("#ffffff"));
+            ThemeManager.instance().put(HOColorName.PALETTE13[8], new Color(255, 110, 30));
+            ThemeManager.instance().put(HOColorName.PALETTE13[9], Color.decode("#bb190a"));
+            ThemeManager.instance().put(HOColorName.PALETTE13[10], Color.decode("#199bce"));
+            ThemeManager.instance().put(HOColorName.PALETTE13[11], Color.decode("#f2f27a"));
+            ThemeManager.instance().put(HOColorName.PALETTE13[12], Color.decode("#ffd9e3"));
 
             return super.enableTheme();
         } catch (Exception e) {

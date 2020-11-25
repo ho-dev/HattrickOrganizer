@@ -541,64 +541,64 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		// LEADERSIP =============================================================================================
 		constraints2.insets = new Insets(25,0,0,0);
 		textLabel = bSum ? sumLeadership : avgLeadership;
-		jcbLeadership = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_LEADERSHIP), gup.statistikAlleFuehrung);
+		jcbLeadership = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_LEADERSHIP), gup.statistikAlleFuehrung);
 		add(jcbLeadership, 6, layout2, constraints2);
 
 		// EXPERIENCE =============================================================================================
 		constraints2.insets = new Insets(0,0,0,0);
 		textLabel = bSum ? sumXP : avgXP;
-		jcbXP = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_XP), gup.statistikAlleErfahrung);
+		jcbXP = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_XP), gup.statistikAlleErfahrung);
 		add(jcbXP, 7, layout2, constraints2);
 
 		// FORM ============================================================================================
 		textLabel = bSum ? sumForm : avgForm;
-		jcbForm = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_FORM), gup.statistikAlleForm);
+		jcbForm = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_FORM), gup.statistikAlleForm);
 		add(jcbForm, 8, layout2, constraints2);
 
 		// STAMINA ============================================================================================
 		textLabel = bSum ? sumStamina : avgStamina;
-		jcbStamina = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_STAMINA), gup.statistikAlleKondition);
+		jcbStamina = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_STAMINA), gup.statistikAlleKondition);
 		add(jcbStamina, 9, layout2, constraints2);
 
 		// LOYALTY ============================================================================================
 		textLabel = bSum ? sumLoyalty : avgLoyalty;
-		jcbLoyalty = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_LOYALTY), gup.statistikAllLoyalty);
+		jcbLoyalty = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_LOYALTY), gup.statistikAllLoyalty);
 		add(jcbLoyalty, 10, layout2, constraints2);
 
 		// KEEPER ============================================================================================
 		textLabel = bSum ? sumGK : avgGK;
-		jcbKeeper = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_GK), gup.statistikAlleTorwart);
+		jcbKeeper = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_GK), gup.statistikAlleTorwart);
 		add(jcbKeeper, 11, layout2, constraints2);
 
 		// DEFENDING ============================================================================================
 		constraints2.insets = new Insets(0,0,0,0);
 		textLabel = bSum ? sumDE : avgDE;
-		jcbDefending = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_DE), gup.statistikAlleVerteidigung);
+		jcbDefending = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_DE), gup.statistikAlleVerteidigung);
 		add(jcbDefending, 12, layout2, constraints2);
 
 		// PLAYMAKING ============================================================================================
 		textLabel = bSum ? sumPM : avgPM;
-		jcbPlaymaking = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_PM), gup.statistikAlleSpielaufbau);
+		jcbPlaymaking = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_PM), gup.statistikAlleSpielaufbau);
 		add(jcbPlaymaking, 13, layout2, constraints2);
 
 		// PASSING ============================================================================================
 		textLabel = bSum ? sumPS : avgPS;
-		jcbPassing = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_PS), gup.statistikAllePasspiel);
+		jcbPassing = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_PS), gup.statistikAllePasspiel);
 		add(jcbPassing, 14, layout2, constraints2);
 
 		// WINGER ============================================================================================
 		textLabel = bSum ? sumWI : avgWI;
-		jcbWinger = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_WI), gup.statistikAlleFluegel);
+		jcbWinger = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_WI), gup.statistikAlleFluegel);
 		add(jcbWinger, 15, layout2, constraints2);
 
 		// SCORING ============================================================================================
 		textLabel = bSum ? sumSC : avgSC;
-		jcbScoring = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_SC), gup.statistikAlleTorschuss);
+		jcbScoring = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_SC), gup.statistikAlleTorschuss);
 		add(jcbScoring, 16, layout2, constraints2);
 
 		// SETPIECES ============================================================================================
 		textLabel = bSum ? sumSP : avgSP;
-		jcbSetPieces = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_SP), gup.statistikAlleStandards);
+		jcbSetPieces = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_SP), gup.statistikAlleStandards);
 		add(jcbSetPieces, 17, layout2, constraints2);
 
 
@@ -606,14 +606,14 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		textLabel = bSum ? sumTSI : avgTSI;
 		textLabel += " (" + hov.getLanguageString("ls.chart.second_axis") + ")";
 		constraints2.insets = new Insets(20,0,0,0);
-		jcbTSI = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_TSI), gup.statistikAllTSI);
+		jcbTSI = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_TSI), gup.statistikAllTSI);
 		add(jcbTSI, 18, layout2, constraints2);
 
 		// WAGE ============================================================================================
 		constraints2.insets = new Insets(0,0,0,0);
 		textLabel = bSum ? sumWage : avgWage;
 		textLabel += " (" + hov.getLanguageString("ls.chart.second_axis") + ")";
-		jcbWage = new ImageCheckbox(textLabel, getColor(Colors.COLOR_PLAYER_WAGE), gup.statistikAllWages);
+		jcbWage = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_WAGE), gup.statistikAllWages);
 		add(jcbWage, 19, layout2, constraints2);
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -674,54 +674,54 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 				// LEADERSHIP ========================================================================
 				models[0] = new LinesChartDataModel(statistikWerte[0], sumLeadership, jcbLeadership.isSelected() && bSum,
-						  getColor(Colors.COLOR_PLAYER_LEADERSHIP), fmt3, 5 / Helper.getMaxValue(statistikWerte[0]));
+						  Colors.getColor(Colors.COLOR_PLAYER_LEADERSHIP), fmt3, 5 / Helper.getMaxValue(statistikWerte[0]));
 
 				models[14] = new LinesChartDataModel(statistikWerte[14], avgLeadership, jcbLeadership.isSelected(),
-						       getColor(Colors.COLOR_PLAYER_LEADERSHIP), format);
+						       Colors.getColor(Colors.COLOR_PLAYER_LEADERSHIP), format);
 
 
 				// XP ========================================================================
-				models[1] = new LinesChartDataModel(statistikWerte[1], sumXP, jcbXP.isSelected() && bSum, getColor(Colors.COLOR_PLAYER_XP),
+				models[1] = new LinesChartDataModel(statistikWerte[1], sumXP, jcbXP.isSelected() && bSum, Colors.getColor(Colors.COLOR_PLAYER_XP),
 						fmt3, 7 / Helper.getMaxValue(statistikWerte[1]));
 
 				models[15] = new LinesChartDataModel(statistikWerte[15], avgXP, jcbXP.isSelected() && !bSum,
-						        getColor(Colors.COLOR_PLAYER_XP), format);
+						        Colors.getColor(Colors.COLOR_PLAYER_XP), format);
 
 				// TSI ========================================================================
 				models[12] = new LinesChartDataModel(statistikWerte[12], sumTSI, jcbTSI.isSelected() && bSum,
-						getColor(Colors.COLOR_PLAYER_TSI), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt3,19 / Helper.getMaxValue(statistikWerte[12]), true);
+						Colors.getColor(Colors.COLOR_PLAYER_TSI), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt3,19 / Helper.getMaxValue(statistikWerte[12]), true);
 
 				models[26] = new LinesChartDataModel(statistikWerte[26], avgTSI, jcbTSI.isSelected() && !bSum,
-						        getColor(Colors.COLOR_PLAYER_TSI), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format, 19 / Helper.getMaxValue(statistikWerte[26]), true);
+						        Colors.getColor(Colors.COLOR_PLAYER_TSI), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format, 19 / Helper.getMaxValue(statistikWerte[26]), true);
 
 				// WAGE ========================================================================
 				models[13] = new LinesChartDataModel(statistikWerte[13], sumWage,jcbWage.isSelected() && bSum,
-						getColor(Colors.COLOR_PLAYER_WAGE), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt3, 15 / Helper.getMaxValue(statistikWerte[13]), true);
+						Colors.getColor(Colors.COLOR_PLAYER_WAGE), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt3, 15 / Helper.getMaxValue(statistikWerte[13]), true);
 
 				models[27] = new LinesChartDataModel(statistikWerte[27], avgWage, jcbWage.isSelected() && !bSum,
-						     getColor(Colors.COLOR_PLAYER_WAGE), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt2, 15 / Helper.getMaxValue(statistikWerte[27]), true);
+						     Colors.getColor(Colors.COLOR_PLAYER_WAGE), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, fmt2, 15 / Helper.getMaxValue(statistikWerte[27]), true);
 
 
 				// FORM  =============================================================================================
 				models[2] = new LinesChartDataModel(statistikWerte[2], sumForm, jcbForm.isSelected() && bSum,
-						getColor(Colors.COLOR_PLAYER_FORM), format);
+						Colors.getColor(Colors.COLOR_PLAYER_FORM), format);
 
 				models[16] = new LinesChartDataModel(statistikWerte[16], avgForm, jcbForm.isSelected() && !bSum,
-						          getColor(Colors.COLOR_PLAYER_FORM), format);
+						          Colors.getColor(Colors.COLOR_PLAYER_FORM), format);
 
 				// STAMINA =============================================================================================
 				models[3] = new LinesChartDataModel(statistikWerte[3], sumStamina, jcbStamina.isSelected() && bSum,
-						getColor(Colors.COLOR_PLAYER_STAMINA), format);
+						Colors.getColor(Colors.COLOR_PLAYER_STAMINA), format);
 
 				models[17] = new LinesChartDataModel(statistikWerte[17], avgStamina, jcbStamina.isSelected() && !bSum,
-										getColor(Colors.COLOR_PLAYER_STAMINA), format);
+										Colors.getColor(Colors.COLOR_PLAYER_STAMINA), format);
 
 				// LOYALTY =============================================================================================
 				models[11] = new LinesChartDataModel(statistikWerte[11], sumLoyalty, jcbLoyalty.isSelected() && bSum,
-						getColor(Colors.COLOR_PLAYER_LOYALTY), format);
+						Colors.getColor(Colors.COLOR_PLAYER_LOYALTY), format);
 
 				models[25] = new LinesChartDataModel(statistikWerte[25], avgLoyalty, jcbLoyalty.isSelected() && !bSum,
-						getColor(Colors.COLOR_PLAYER_LOYALTY), format);
+						Colors.getColor(Colors.COLOR_PLAYER_LOYALTY), format);
 
 				// KEEPER ========================================================================
 				double maxSKill = Helper.getMaxValue(statistikWerte[4]);
@@ -734,46 +734,46 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 				double factor = 19.0/maxSKill;
 
 				models[4] = new LinesChartDataModel(statistikWerte[4], sumGK, jcbKeeper.isSelected() && bSum,
-						getColor(Colors.COLOR_PLAYER_GK), fmt3, factor);
+						Colors.getColor(Colors.COLOR_PLAYER_GK), fmt3, factor);
 
 				models[18] = new LinesChartDataModel(statistikWerte[18], avgGK, jcbKeeper.isSelected() && !bSum,
-						getColor(Colors.COLOR_PLAYER_GK), format);
+						Colors.getColor(Colors.COLOR_PLAYER_GK), format);
 
 				// DEFENDING ========================================================================
 				models[5] = new LinesChartDataModel(statistikWerte[5], sumDE, jcbDefending.isSelected() && bSum,
-						getColor(Colors.COLOR_PLAYER_DE), fmt3, factor);
+						Colors.getColor(Colors.COLOR_PLAYER_DE), fmt3, factor);
 				models[19] = new LinesChartDataModel(statistikWerte[19], avgDE, jcbDefending.isSelected() && !bSum,
-						getColor(Colors.COLOR_PLAYER_DE), format);
+						Colors.getColor(Colors.COLOR_PLAYER_DE), format);
 
 				// PLAYMAKING ========================================================================
 				models[6] = new LinesChartDataModel(statistikWerte[6], sumPM, jcbPlaymaking.isSelected() && bSum,
-						getColor(Colors.COLOR_PLAYER_PM), fmt3, factor);
+						Colors.getColor(Colors.COLOR_PLAYER_PM), fmt3, factor);
 				models[20] = new LinesChartDataModel(statistikWerte[20], avgPM, jcbPlaymaking.isSelected() && !bSum,
-						getColor(Colors.COLOR_PLAYER_PM), format);
+						Colors.getColor(Colors.COLOR_PLAYER_PM), format);
 
 				// PASSING ========================================================================
 				models[7] = new LinesChartDataModel(statistikWerte[7], sumPS, jcbPassing.isSelected() && bSum,
-						getColor(Colors.COLOR_PLAYER_PS), fmt3, factor);
+						Colors.getColor(Colors.COLOR_PLAYER_PS), fmt3, factor);
 				models[21] = new LinesChartDataModel(statistikWerte[21], avgPS, jcbPassing.isSelected() && !bSum,
-						getColor(Colors.COLOR_PLAYER_PS), format);
+						Colors.getColor(Colors.COLOR_PLAYER_PS), format);
 
 				// WINGER ========================================================================
 				models[8] = new LinesChartDataModel(statistikWerte[8], sumWI, jcbWinger.isSelected() && bSum,
-						getColor(Colors.COLOR_PLAYER_WI), fmt3, factor);
+						Colors.getColor(Colors.COLOR_PLAYER_WI), fmt3, factor);
 				models[22] = new LinesChartDataModel(statistikWerte[22], avgWI, jcbWinger.isSelected() && !bSum,
-						getColor(Colors.COLOR_PLAYER_WI), format);
+						Colors.getColor(Colors.COLOR_PLAYER_WI), format);
 
 				// SCORING ========================================================================
 				models[9] = new LinesChartDataModel(statistikWerte[9], sumSC, jcbScoring.isSelected() && bSum,
-						getColor(Colors.COLOR_PLAYER_SC), fmt3, factor);
+						Colors.getColor(Colors.COLOR_PLAYER_SC), fmt3, factor);
 				models[23] = new LinesChartDataModel(statistikWerte[23], avgSC, jcbScoring.isSelected() && !bSum,
-						getColor(Colors.COLOR_PLAYER_SC), format);
+						Colors.getColor(Colors.COLOR_PLAYER_SC), format);
 
 				// SETPIECES ========================================================================
 				models[10] = new LinesChartDataModel(statistikWerte[10], sumSP, jcbSetPieces.isSelected() && bSum,
-						getColor(Colors.COLOR_PLAYER_SP), fmt3, factor);
+						Colors.getColor(Colors.COLOR_PLAYER_SP), fmt3, factor);
 				models[24] = new LinesChartDataModel(statistikWerte[24], avgSP, jcbSetPieces.isSelected() && !bSum,
-						getColor(Colors.COLOR_PLAYER_SP), format);
+						Colors.getColor(Colors.COLOR_PLAYER_SP), format);
 
 			}
 
@@ -784,9 +784,6 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		}
 	}
 
-
-	private Color getColor(int i) {
-		return ThemeManager.getColor(HOColorName.PALETTE15[i]);
-	}
+	
 
 }
