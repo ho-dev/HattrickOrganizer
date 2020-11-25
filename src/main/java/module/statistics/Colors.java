@@ -21,8 +21,8 @@ public final class Colors {
     public static final int COLOR_PLAYER_LEADERSHIP = 10;
     public static final int COLOR_PLAYER_XP = 11;
     public static final int COLOR_PLAYER_RATING = 12;
-    public static final int COLOR_PLAYER_TSI = 13;
-    public static final int COLOR_PLAYER_WAGE = 14;
+    public static final int COLOR_PLAYER_TSI = 0;
+    public static final int COLOR_PLAYER_WAGE = 1;
 
     public static final int COLOR_TEAM_RATING = 0;
     public static final int COLOR_TEAM_HATSTATS = 1;
@@ -53,4 +53,7 @@ public final class Colors {
     public static final int COLOR_CLUB_GLOBAL_RANKING = 8;
     public static final int COLOR_CLUB_LEAGUE_RANKING = 9;
     public static final int COLOR_CLUB_POWER_RATING = 10;
+
+    public static Color getColor(int i) {return ThemeManager.getColor(HOColorName.PALETTE13[i]);}
+
 }
