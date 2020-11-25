@@ -1,6 +1,6 @@
 package module.statistics;
 
-import core.util.chart.GraphDataModel;
+import core.util.chart.LinesChartDataModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import java.awt.Color;
@@ -28,7 +28,7 @@ public class StatistikPanel extends JPanel {
 	private NumberFormat m_clYAchseFormat;
 	private String xBezeichner = "";
 	private String yBezeichner = "";
-	private GraphDataModel[] m_clGraphDataModel;
+	private LinesChartDataModel[] m_clGraphDataModel;
 	private String[] m_clYAchseBeschriftung;
 	private boolean beschriftung;
 	private boolean hilfslinien = true;
@@ -61,7 +61,7 @@ public class StatistikPanel extends JPanel {
 	 * @param hilfslinien
 	 *            Farbe des Graphen
 	 */
-	public final void setAllValues(GraphDataModel[] models, String[] yAchseBeschriftung,
+	public final void setAllValues(LinesChartDataModel[] models, String[] yAchseBeschriftung,
 								   NumberFormat yAchseFormat, String xBezeichner, String yBezeichner,
 								   boolean beschriftung, boolean hilfslinien) {
 		this.m_clGraphDataModel = models;
@@ -90,12 +90,12 @@ public class StatistikPanel extends JPanel {
 		repaint();
 	}
 
-	public final void setModel(GraphDataModel[] models) {
+	public final void setModel(LinesChartDataModel[] models) {
 		m_clGraphDataModel = models;
 		repaint();
 	}
 
-	public final GraphDataModel[] getModel() {
+	public final LinesChartDataModel[] getModel() {
 		return m_clGraphDataModel;
 	}
 
@@ -111,7 +111,7 @@ public class StatistikPanel extends JPanel {
 	/**
 	 * Ein bestimmtes Model holen
 	 */
-	public final GraphDataModel getModel(String name) {
+	public final LinesChartDataModel getModel(String name) {
 		for (int i = 0; (m_clGraphDataModel != null) && (m_clGraphDataModel.length > i); i++) {
 			if (m_clGraphDataModel[i].getName().equals(name)) {
 				return m_clGraphDataModel[i];

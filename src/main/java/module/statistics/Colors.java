@@ -41,4 +41,16 @@ public final class Colors {
     public static final int COLOR_FINANCE_CASH = 0;
     public static final int COLOR_FINANCE_INCOME_SPONSORS =1;
     public static final int COLOR_FINANCE_COST_PLAYERS = 2;
+
+    public static final int COLOR_CLUB_ASSISTANT_TRAINERS_LEVEL = 0;
+    public static final int COLOR_CLUB_FINANCIAL_DIRECTORS_LEVEL = 1;
+    public static final int COLOR_CLUB_FORM_COACHS_LEVEL= 2;
+    public static final int COLOR_CLUB_DOCTORS_LEVEL = 3;
+    public static final int COLOR_CLUB_SPOKE_PERSONS_LEVEL = 4;
+    public static final int COLOR_CLUB_SPORT_PSYCHOLOGIST_LEVELS = 5;
+    public static final int COLOR_CLUB_TACTICAL_ASSISTANT_LEVELS = 6;
+    public static final int COLOR_CLUB_FAN_CLUB_SIZE = 7;
+    public static final int COLOR_CLUB_GLOBAL_RANKING = 8;
+    public static final int COLOR_CLUB_LEAGUE_RANKING = 9;
+    public static final int COLOR_CLUB_POWER_RATING = 10;
 }

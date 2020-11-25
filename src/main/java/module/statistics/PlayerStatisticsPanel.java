@@ -7,7 +7,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.SpielerCBItem;
 import core.gui.model.PlayerCBItemRenderer;
-import core.util.chart.GraphDataModel;
+import core.util.chart.LinesChartDataModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -15,7 +15,7 @@ import core.model.UserParameter;
 import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
-import core.util.chart.LinesChart;
+import core.util.chart.HOLinesChart;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 import java.awt.BorderLayout;
@@ -41,7 +41,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import module.statistics.Colors;
 
 /**
  * Panel Player in Module Statistics
@@ -67,7 +66,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 	private JCheckBox jcbHelpLines;
 	private JComboBox<SpielerCBItem> jcbPlayer;
 	private JTextField jtfNbWeeks;
-	private LinesChart oChartPanel;
+	private HOLinesChart oChartPanel;
 
 
 	public final void setPlayer(int playerID) {
@@ -430,7 +429,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		final JPanel panel = new ImagePanel();
 		panel.setLayout(new BorderLayout());
 
-		oChartPanel = new LinesChart(true, null, null, null, "#,##0", 0d, 20d);
+		oChartPanel = new HOLinesChart(true, null, null, null, "#,##0", 0d, 20d);
 		panel.add(oChartPanel.getPanel());
 
 		constraints.fill = GridBagConstraints.BOTH;
@@ -493,56 +492,56 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 				final double[][] statistikWerte = DBManager.instance().getSpielerDaten4Statistik(
 						((SpielerCBItem) jcbPlayer.getSelectedItem()).getPlayer()
 								.getSpielerID(), anzahlHRF);
-				final GraphDataModel[] models = new GraphDataModel[statistikWerte.length];
+				final LinesChartDataModel[] models = new LinesChartDataModel[statistikWerte.length];
 
 				if (statistikWerte.length > 0) {
 					double maxTSI = Helper.getMaxValue(statistikWerte[0]);
 					double maxWage = Helper.getMaxValue(statistikWerte[1]);
 
 					//   TSI =========================================================================
-					models[0] = new GraphDataModel(statistikWerte[0], "Marktwert", jcbTSI.isSelected(), getColor(Colors.COLOR_PLAYER_TSI),
+					models[0] = new LinesChartDataModel(statistikWerte[0], "Marktwert", jcbTSI.isSelected(), getColor(Colors.COLOR_PLAYER_TSI),
 							SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format3, 19/maxTSI, true);
 
-					models[1] = new GraphDataModel(statistikWerte[1], "ls.player.wage", jcbSalary.isSelected(), getColor(Colors.COLOR_PLAYER_WAGE),
+					models[1] = new LinesChartDataModel(statistikWerte[1], "ls.player.wage", jcbSalary.isSelected(), getColor(Colors.COLOR_PLAYER_WAGE),
 							SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format2, 16/maxWage, true);
 
-					models[2] = new GraphDataModel(statistikWerte[2], "ls.player.leadership",
+					models[2] = new LinesChartDataModel(statistikWerte[2], "ls.player.leadership",
 							jcbLeadership.isSelected(),
 							getColor(Colors.COLOR_PLAYER_LEADERSHIP), format);
-					models[3] = new GraphDataModel(statistikWerte[3], "ls.player.experience",
+					models[3] = new LinesChartDataModel(statistikWerte[3], "ls.player.experience",
 							jcbExperience.isSelected(),
 							getColor(Colors.COLOR_PLAYER_XP), format);
-					models[4] = new GraphDataModel(statistikWerte[4], "ls.player.form",
+					models[4] = new LinesChartDataModel(statistikWerte[4], "ls.player.form",
 							jcbForm.isSelected(), getColor(Colors.COLOR_PLAYER_FORM),
 							format);
-					models[5] = new GraphDataModel(statistikWerte[5], "ls.player.skill.stamina",
+					models[5] = new LinesChartDataModel(statistikWerte[5], "ls.player.skill.stamina",
 							jcbStamina.isSelected(),
 							getColor(Colors.COLOR_PLAYER_STAMINA), format);
-					models[6] = new GraphDataModel(statistikWerte[6], "ls.player.skill.keeper",
+					models[6] = new LinesChartDataModel(statistikWerte[6], "ls.player.skill.keeper",
 							jcbKeeper.isSelected(),
 							getColor(Colors.COLOR_PLAYER_GK), format);
-					models[7] = new GraphDataModel(statistikWerte[7], "ls.player.skill.defending",
+					models[7] = new LinesChartDataModel(statistikWerte[7], "ls.player.skill.defending",
 							jcbDefending.isSelected(),
 							getColor(Colors.COLOR_PLAYER_DE), format);
-					models[8] = new GraphDataModel(statistikWerte[8], "ls.player.skill.playmaking",
+					models[8] = new LinesChartDataModel(statistikWerte[8], "ls.player.skill.playmaking",
 							jcbPlaymaking.isSelected(),
 							getColor(Colors.COLOR_PLAYER_PM), format);
-					models[9] = new GraphDataModel(statistikWerte[9], "ls.player.skill.passing",
+					models[9] = new LinesChartDataModel(statistikWerte[9], "ls.player.skill.passing",
 							jcbPass.isSelected(),
 							getColor(Colors.COLOR_PLAYER_PS), format);
-					models[10] = new GraphDataModel(statistikWerte[10], "ls.player.skill.winger",
+					models[10] = new LinesChartDataModel(statistikWerte[10], "ls.player.skill.winger",
 							jcbWing.isSelected(),
 							getColor(Colors.COLOR_PLAYER_WI), format);
-					models[11] = new GraphDataModel(statistikWerte[11], "ls.player.skill.scoring",
+					models[11] = new LinesChartDataModel(statistikWerte[11], "ls.player.skill.scoring",
 							jcbScoring.isSelected(),
 							getColor(Colors.COLOR_PLAYER_SC), format);
-					models[12] = new GraphDataModel(statistikWerte[12],
+					models[12] = new LinesChartDataModel(statistikWerte[12],
 							"ls.player.skill.setpieces", jcbSetPieces.isSelected(),
 							getColor(Colors.COLOR_PLAYER_SP), format);
-					models[13] = new GraphDataModel(statistikWerte[13], "RecapPanel.Stars",
+					models[13] = new LinesChartDataModel(statistikWerte[13], "RecapPanel.Stars",
 							jcbRating.isSelected(),
 							getColor(Colors.COLOR_PLAYER_RATING), format);
-					models[14] = new GraphDataModel(statistikWerte[14], "ls.player.loyalty",
+					models[14] = new LinesChartDataModel(statistikWerte[14], "ls.player.loyalty",
 							jcbLoyalty.isSelected(),
 							getColor(Colors.COLOR_PLAYER_LOYALTY), format);
 				}

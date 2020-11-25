@@ -10,7 +10,6 @@ import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.AxesChartStyler;
 import org.knowm.xchart.style.Styler;
-import org.knowm.xchart.style.lines.SeriesLines;
 
 import java.awt.*;
 import java.text.NumberFormat;
@@ -18,9 +17,9 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class LinesChart implements ILinesChart{
+public class HOLinesChart implements IChart {
 
-    GraphDataModel @Nullable [] m_models;
+    LinesChartDataModel @Nullable [] m_models;
     List<Date> m_xData;
     XYChart m_chart;
     AxesChartStyler m_axeStyler;
@@ -28,15 +27,20 @@ public class LinesChart implements ILinesChart{
     Boolean m_hasLabels;
     Boolean m_hasHelpLines;
 
-    public LinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat, Double y1_axisMin, Double y1_axisMax)
+    public HOLinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat, Double y1_axisMin, Double y1_axisMax)
     {
-        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, y1_axisMin, y1_axisMax, null, null);
+        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, y1_axisMin, y1_axisMax, null, null, false);
     }
 
 
-    public LinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat)
+    public HOLinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat)
     {
-        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, null, null, null, null);
+        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, null, null, null, null, false);
+    }
+
+    public HOLinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat, boolean bLegendVisible)
+    {
+        this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, null, null, null, null, bLegendVisible);
     }
 
     public void setYAxisMin(int yAxisGroup, @Nullable Double value){
@@ -47,13 +51,27 @@ public class LinesChart implements ILinesChart{
         m_axeStyler.setYAxisMax(yAxisGroup-1, value);
     }
 
-    public LinesChart(boolean second_axis, String y1_axisName, String y2_axisName, String y1_axisFormat, String y2_axisFormat,
-                      @Nullable Double y1_axisMin, @Nullable Double y1_axisMax, @Nullable Double y2_axisMin, @Nullable Double y2_axisMax){
+
+    public HOLinesChart(boolean second_axis, String y1_axisName, String y2_axisName, String y1_axisFormat, String y2_axisFormat,
+                        @Nullable Double y1_axisMin, @Nullable Double y1_axisMax, @Nullable Double y2_axisMin, @Nullable Double y2_axisMax, boolean bLegendVisible) {
+
+        this(false, second_axis, y1_axisName, y2_axisName, null, y1_axisFormat, y2_axisFormat, null, y1_axisMin, y1_axisMax, y2_axisMin, y2_axisMax,
+                null, null, bLegendVisible);
+    }
+
+    public HOLinesChart(boolean third_axis, boolean second_axis, String y1_axisName, String y2_axisName, String y3_axisName, String y1_axisFormat, String y2_axisFormat, String y3_axisFormat,
+                        @Nullable Double y1_axisMin, @Nullable Double y1_axisMax, @Nullable Double y2_axisMin, @Nullable Double y2_axisMax, @Nullable Double y3_axisMin, @Nullable Double y3_axisMax,boolean bLegendVisible){
 
         m_chart = new XYChart(10, 10);
         m_axeStyler = m_chart.getStyler();
 
-        m_chart.getStyler().setLegendVisible(false);
+        m_chart.getStyler().setLegendVisible(bLegendVisible);
+        if (bLegendVisible){
+            m_chart.getStyler().setLegendBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
+        }
+
+        m_chart.getStyler().setChartFontColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+
         m_chart.getStyler().setPlotBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
         m_chart.getStyler().setPlotGridLinesColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
         m_chart.getStyler().setChartBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
@@ -72,6 +90,25 @@ public class LinesChart implements ILinesChart{
 
         if (y1_axisFormat != null){
             m_chart.getStyler().putYAxisGroupDecimalPatternMap(0, y1_axisFormat);
+        }
+
+        if(third_axis){
+            second_axis = true;
+
+            m_chart.getStyler().setYAxisGroupPosition(2, Styler.YAxisPosition.Right);
+            if(y3_axisName != null){
+                m_chart.setYAxisGroupTitle(2, y3_axisName);
+            }
+
+            if (y3_axisFormat != null){
+                m_chart.getStyler().putYAxisGroupDecimalPatternMap(2, y3_axisFormat);
+            }
+
+            m_chart.getStyler().setYAxisGroupTickLabelsColorMap(2, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+            m_chart.getStyler().setYAxisGroupTickMarksColorMap(2, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+
+            if (y3_axisMin != null) m_axeStyler.setYAxisMin(2, y3_axisMin);
+            if (y3_axisMax != null) m_axeStyler.setYAxisMax(2, y3_axisMax);
         }
 
         if(second_axis){
@@ -94,6 +131,7 @@ public class LinesChart implements ILinesChart{
             if (y2_axisMax != null) m_axeStyler.setYAxisMax(1, y2_axisMax);
 
         }
+
         m_panel = new XChartPanel(m_chart);
     }
 
@@ -113,7 +151,6 @@ public class LinesChart implements ILinesChart{
 
         }
     }
-
 
 
     public JPanel getPanel() {
@@ -143,7 +180,8 @@ public class LinesChart implements ILinesChart{
            // Serie is removed
            if (series.containsKey(serieName))
            {
-               m_chart.removeSeries(serieName);
+               serie =  m_chart.removeSeries(serieName);
+               serie.setShowInLegend(false);
            }
 
            // Serie is added if should be shown and if contains data
@@ -155,6 +193,7 @@ public class LinesChart implements ILinesChart{
                serie.setMarker(model.getMarkerStyle());
                serie.setMarkerColor(model.getColor());
                serie.setYAxisGroup(yGroup);
+               serie.setShowInLegend(true);
            }
         }
 
@@ -162,9 +201,20 @@ public class LinesChart implements ILinesChart{
     }
 
 
+    public final void clearAllPlots(){
+        if (m_models != null){
+            for (int i = 0; i < m_models.length; i++) {
+                if (m_models[i] != null) {
+                    m_models[i].setShow(false);
+                }
+            }
+            updateGraph();
+        }
+    }
+
     public final void setShow(String name, boolean show) {
         if (m_models != null){
-            for (int i = 0; i <= m_models.length; i++) {
+            for (int i = 0; i < m_models.length; i++) {
                 if ((m_models[i] != null) && (m_models[i].getName().equals(name))) {
                     m_models[i].setShow(show);
                     break;
@@ -174,23 +224,41 @@ public class LinesChart implements ILinesChart{
         }
     }
 
-    /**
-     * Switching the graph labelling on or off
-     */
+    private final void setShowWithoutUpdate(String name, boolean show) {
+        if (m_models != null){
+            for (int i = 0; i < m_models.length; i++) {
+                if ((m_models[i] != null) && (m_models[i].getName().equals(name))) {
+                    m_models[i].setShow(show);
+                    break;
+                }
+            }
+        }
+    }
+
+    public final void setMultipleShow(String[] names, boolean[] shows) {
+        if (m_models != null) {
+            for (int i = 0; i < names.length; i++) {
+                    setShowWithoutUpdate(names[i], shows[i]);
+            }
+            updateGraph();
+        }
+
+    }
+
+    // Switching the graph labelling on or off
     public final void setLabelling(boolean hasLabels) {
         this.m_hasLabels = hasLabels;
         updateGraph();
     }
 
-    /**
-     * Switching the guide lines on and off
-     */
+
+     //Switching the guide lines on and off
     public final void setHelpLines(boolean hasHelpLines) {
         this.m_hasHelpLines = hasHelpLines;
         updateGraph();
     }
 
-    public final void setAllValues(GraphDataModel @Nullable [] models, double[] inp_xData,
+    public final void setAllValues(LinesChartDataModel @Nullable [] models, double[] inp_xData,
                                    NumberFormat y_axisFormat, String x_axisTitle, String y_axisTitle,
                                    boolean hasLabels, boolean hasHelpLines){
         this.m_models = models;
@@ -210,7 +278,7 @@ public class LinesChart implements ILinesChart{
     }
 
     @Deprecated
-    public final void setAllValues(GraphDataModel[] models, String[] xData,
+    public final void setAllValues(LinesChartDataModel[] models, String[] xData,
                                    NumberFormat y_axisFormat, String x_axisTitle, String y_axisTitle,
                                    boolean hasLabels, boolean hasHelpLines){
 

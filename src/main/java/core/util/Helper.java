@@ -341,15 +341,15 @@ public class Helper {
     /**
 	 * Returns a NumberFormat based on the parameters
 	 */
-	public static NumberFormat getNumberFormat(boolean currencyformat, int nachkommastellen) {
+	public static NumberFormat getNumberFormat(boolean currencyformat, int nbDecimals) {
 		NumberFormat numFormat;
 		if (currencyformat) {
 			numFormat = Helper.CURRENCYFORMAT;
 		} else {
 			numFormat = NumberFormat.getNumberInstance();
 		}
-		numFormat.setMinimumFractionDigits(nachkommastellen);
-		numFormat.setMaximumFractionDigits(nachkommastellen);
+		numFormat.setMinimumFractionDigits(nbDecimals);
+		numFormat.setMaximumFractionDigits(nbDecimals);
 		return numFormat;
 	}
 
