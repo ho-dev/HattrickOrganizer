@@ -100,19 +100,19 @@ public class DarculaDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.PLAYER_SPECIALTY_COLOR, defaults.getColor("Label.foreground"));
 
             // palettes
-            ThemeManager.instance().put(HOColorName.PALETTE13[0], Color.decode("#b8e27d"));
-            ThemeManager.instance().put(HOColorName.PALETTE13[1], new Color(167, 103, 185));
-            ThemeManager.instance().put(HOColorName.PALETTE13[2], Color.decode("#7cee4d"));
-            ThemeManager.instance().put(HOColorName.PALETTE13[3], Color.decode("#df72ef"));
-            ThemeManager.instance().put(HOColorName.PALETTE13[4], Color.decode("#ccad34"));
-            ThemeManager.instance().put(HOColorName.PALETTE13[5], Color.decode("#f23387"));
-            ThemeManager.instance().put(HOColorName.PALETTE13[6], Color.decode("#56ebd3"));
-            ThemeManager.instance().put(HOColorName.PALETTE13[7], Color.decode("#ffffff"));
-            ThemeManager.instance().put(HOColorName.PALETTE13[8], new Color(255, 110, 30));
-            ThemeManager.instance().put(HOColorName.PALETTE13[9], Color.decode("#bb190a"));
-            ThemeManager.instance().put(HOColorName.PALETTE13[10], Color.decode("#199bce"));
-            ThemeManager.instance().put(HOColorName.PALETTE13[11], Color.decode("#f2f27a"));
-            ThemeManager.instance().put(HOColorName.PALETTE13[12], Color.decode("#ffd9e3"));
+            ThemeManager.instance().put(HOColorName.PALETTE13[0], new Color(0, 255, 0));
+            ThemeManager.instance().put(HOColorName.PALETTE13[1], new Color(255, 255, 0));
+            ThemeManager.instance().put(HOColorName.PALETTE13[2], new Color(240, 32, 219));
+            ThemeManager.instance().put(HOColorName.PALETTE13[3], new Color(255, 255, 255));
+            ThemeManager.instance().put(HOColorName.PALETTE13[4], new Color(0, 255, 255));
+            ThemeManager.instance().put(HOColorName.PALETTE13[5], new Color(200, 247, 197));
+            ThemeManager.instance().put(HOColorName.PALETTE13[6], new Color(249, 140, 122));
+            ThemeManager.instance().put(HOColorName.PALETTE13[7], new Color(0, 0, 0));
+            ThemeManager.instance().put(HOColorName.PALETTE13[8], new Color(156, 193, 12));
+            ThemeManager.instance().put(HOColorName.PALETTE13[9], new Color(255, 0, 0));
+            ThemeManager.instance().put(HOColorName.PALETTE13[10], new Color(42, 161, 92));
+            ThemeManager.instance().put(HOColorName.PALETTE13[11], new Color(49, 142, 255));
+            ThemeManager.instance().put(HOColorName.PALETTE13[12], new Color(169, 169, 169));
 
             return super.enableTheme();
         } catch (Exception e) {

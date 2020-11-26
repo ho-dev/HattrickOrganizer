@@ -5,8 +5,6 @@ import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.util.chart.LinesChartDataModel;
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.HOLogger;
@@ -14,7 +12,6 @@ import core.util.Helper;
 import core.util.chart.HOLinesChart;
 import core.util.chart.HODoublePieChart;
 import core.util.chart.PieChartDataModel;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -151,29 +148,30 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		constraints2.fill = GridBagConstraints.HORIZONTAL;
 		constraints2.anchor = GridBagConstraints.WEST;
 		constraints2.gridx = 0;
-		constraints2.gridy = 1;
+		constraints2.gridy = 0;
 		constraints2.gridwidth = 1;
+		constraints2.insets = new Insets(10,0,0,0);  //top padding
 		layout2.setConstraints(labelWeeks, constraints2);
 		panel2.add(labelWeeks);
 
-		c_jtfNumberOfHRF = new JTextField(String.valueOf(gup.statistikFinanzenAnzahlHRF));
+		c_jtfNumberOfHRF = new JTextField(String.valueOf(gup.statistikFinanzenAnzahlHRF), 3);
 		c_jtfNumberOfHRF.setHorizontalAlignment(SwingConstants.RIGHT);
 		constraints2.gridx = 1;
-		constraints2.gridy = 1;
+		constraints2.insets = new Insets(10,5,0,0);  //top padding
 		layout2.setConstraints(c_jtfNumberOfHRF, constraints2);
 		panel2.add(c_jtfNumberOfHRF);
 
-		constraints2.gridx = 0;
-		constraints2.gridy = 4;
-		constraints2.gridwidth = 2;
+		constraints2.gridx = 2;
+		constraints2.insets = new Insets(10,20,0,0);  //top padding
 		c_jbFetch = new JButton(getLangStr("ls.button.apply"));
 		c_jbFetch.setToolTipText(getLangStr("tt_Statistik_HRFAnzahluebernehmen"));
 		layout2.setConstraints(c_jbFetch, constraints2);
 		panel2.add(c_jbFetch);
 
-		constraints2.gridwidth = 1;
+		constraints2.gridwidth = 3;
 		constraints2.gridx = 0;
-		constraints2.gridy = 5;
+		constraints2.gridy = 1;
+		constraints2.insets = new Insets(20,0,0,0);  //top padding
 		jcbHelpLines = new JCheckBox(getLangStr("Hilflinien"), gup.statistikFinanzenHilfslinien);
 		jcbHelpLines.setOpaque(false);
 		layout2.setConstraints(jcbHelpLines, constraints2);
@@ -183,8 +181,8 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		labelChartType = new JLabel(getLangStr("ls.module.statistic.finance.chart_type"));
 		constraints2.fill = GridBagConstraints.HORIZONTAL;
 		constraints2.anchor = GridBagConstraints.WEST;
-		constraints2.gridx = 0;
-		constraints2.gridy = 6;
+		constraints2.gridwidth = 1;
+		constraints2.gridy = 2;
 		layout2.setConstraints(labelChartType, constraints2);
 		panel2.add(labelChartType);
 
@@ -198,14 +196,17 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcomboChartType, constraints2);
 		c_jcomboChartType.setToolTipText(getLangStr("ls.module.statistic.finance.choose_chart_type"));
 		constraints2.gridx = 1;
-		constraints2.gridy = 6;
+		constraints2.gridy = 2;
+		constraints2.gridwidth = 2;
+		constraints2.insets = new Insets(20,5,0,0);  //top padding
 		panel2.add(c_jcomboChartType, constraints2);
 		
 		c_jcbInclTransferts = new JCheckBox(getLangStr("ls.module.statistic.finance.l.include_transfer"), bIncludeTransfer);
 		c_jcbInclTransferts.setToolTipText(getLangStr("ls.module.statistic.finance.tt.include_transfer"));
 		constraints2.insets = new Insets(5, 0, 0, 0);
 		constraints2.gridx = 0;
-		constraints2.gridy = 7;
+		constraints2.gridy = 3;
+		constraints2.gridwidth = 3;
 		panel2.add(c_jcbInclTransferts, constraints2);
 
 		updateCB(gup.statistikFinanzenHilfslinien);

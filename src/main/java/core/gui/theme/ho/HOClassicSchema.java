@@ -480,19 +480,19 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(HOColorName.FG_PROMOTION_INFO, new Color(238, 39, 39, 255));
 
 		// palettes
-		put(PALETTE13[0], Color.decode("#827db8"));
-		put(PALETTE13[1], Color.decode("#a7d64e"));
-		put(PALETTE13[2], Color.decode("#0f0a32"));
-		put(PALETTE13[3], Color.decode("#36e515"));
-		put(PALETTE13[4], Color.decode("#9b3ec8"));
-		put(PALETTE13[5], Color.decode("#458612"));
-		put(PALETTE13[6], Color.decode("#3b098b"));
-		put(PALETTE13[7], Color.decode("#f2b0f6"));
-		put(PALETTE13[8], Color.decode("#012d03"));
-		put(PALETTE13[9], Color.decode("#fe74fe"));
-		put(PALETTE13[10], Color.decode("#34466d"));
-		put(PALETTE13[11], Color.decode("#4fdbce"));
-		put(PALETTE13[12], Color.decode("#761604"));
+		put(PALETTE13[0],  new Color(255, 204, 0));
+		put(PALETTE13[1],  new Color(23, 111, 36));
+		put(PALETTE13[2],  new Color(255, 59, 48));
+		put(PALETTE13[3],  new Color(49, 220, 209));
+		put(PALETTE13[4],  new Color(162, 132, 94));
+		put(PALETTE13[5],  new Color(147, 250, 45));
+		put(PALETTE13[6],  new Color(0, 122, 255));
+		put(PALETTE13[7],  new Color(255, 149, 0));
+		put(PALETTE13[8],  new Color(88, 86, 214));
+		put(PALETTE13[9],  new Color(142, 142, 147));
+		put(PALETTE13[10],  new Color(175, 82, 222));
+		put(PALETTE13[11],  new Color(40, 205, 65));
+		put(PALETTE13[12],  new Color(90, 200, 250));
 	}
 
 	public Color getDefaultColor(String key) {

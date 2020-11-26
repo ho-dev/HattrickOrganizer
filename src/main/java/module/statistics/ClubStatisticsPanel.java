@@ -167,46 +167,50 @@ public class ClubStatisticsPanel extends LazyImagePanel {
         constraints2.fill = GridBagConstraints.HORIZONTAL;
         constraints2.anchor = GridBagConstraints.WEST;
         constraints2.gridx = 0;
-        constraints2.gridy = 1;
+        constraints2.gridy = 0;
         constraints2.gridwidth = 1;
+        constraints2.insets = new Insets(10,0,0,0);  //top padding
         layout2.setConstraints(label, constraints2);
         panel2.add(label);
-        jtfNbHRFs = new JTextField(String.valueOf(gup.statisticsClubNbWeeks));
+
+        jtfNbHRFs = new JTextField(String.valueOf(gup.statisticsClubNbWeeks), 3);
         jtfNbHRFs.setHorizontalAlignment(SwingConstants.RIGHT);
         constraints2.gridx = 1;
-        constraints2.gridy = 1;
+        constraints2.insets = new Insets(10,5,0,0);  //top padding
         layout2.setConstraints(jtfNbHRFs, constraints2);
         panel2.add(jtfNbHRFs);
 
-        constraints2.gridx = 0;
-        constraints2.gridy = 4;
-        constraints2.gridwidth = 2;
+        constraints2.gridx = 2;
+        constraints2.insets = new Insets(10,20,0,0);  //top padding
         jbApply = new JButton(getLangStr("ls.button.apply"));
         jbApply.setToolTipText(getLangStr("tt_Statistik_HRFAnzahluebernehmen"));
         layout2.setConstraints(jbApply, constraints2);
         panel2.add(jbApply);
 
-        constraints2.gridwidth = 1;
-        constraints2.gridy = 5;
+        constraints2.gridx = 0;
+        constraints2.gridy = 1;
+        constraints2.gridwidth = 3;
         constraints2.insets = new Insets(20,0,0,0);  //top padding
         jcbHelpLines = new JCheckBox(getLangStr("Hilflinien"), gup.statisticsClubHelpLines);
         layout2.setConstraints(jcbHelpLines, constraints2);
         panel2.add(jcbHelpLines);
 
-        constraints2.gridy = 6;
-        constraints2.insets = new Insets(20,0,0,0);  //top padding
+        constraints2.gridy = 2;
+        constraints2.gridwidth = 2;
+        constraints2.insets = new Insets(20,10,0,0);  //top padding
         jbUncheckAll = new JButton(getLangStr("ls.button.unselect_all"));
         jbUncheckAll.setToolTipText(getLangStr("ls.button.tt.uncheck_all"));
         layout2.setConstraints(jbUncheckAll, constraints2);
         panel2.add(jbUncheckAll);
 
-        constraints2.gridy = 7;
+        constraints2.gridy = 3;
+        constraints2.gridwidth = 3;
         constraints2.insets = new Insets(20,0,0,0);  //top padding
         jcbAssistantTrainerLevels = new ImageCheckbox(getLangStr("ls.module.statistics.club.assistant_trainers_level"),
         Colors.getColor(Colors.COLOR_CLUB_ASSISTANT_TRAINERS_LEVEL), gup.statisticsClubAssistantTrainersLevel);
         panel2.add(jcbAssistantTrainerLevels, constraints2);
 
-        constraints2.gridy = 8;
+        constraints2.gridy = 4;
         constraints2.insets = new Insets(0,0,0,0);  //top padding
         jcbFormCoachLevels = new ImageCheckbox(getLangStr("ls.module.statistics.club.form_coachs_level"),
 
@@ -214,57 +218,57 @@ public class ClubStatisticsPanel extends LazyImagePanel {
 
         panel2.add(jcbFormCoachLevels, constraints2);
 
-        constraints2.gridy = 9;
+        constraints2.gridy = 5;
         jcbDoctorLevels = new ImageCheckbox(getLangStr("ls.module.statistics.club.doctors_level"),
         Colors.getColor(Colors.COLOR_CLUB_DOCTORS_LEVEL), gup.statisticsClubDoctorsLevel);
         panel2.add(jcbDoctorLevels, constraints2);
 
-        constraints2.gridy = 10;
+        constraints2.gridy = 6;
         jcbFinancialDirectorLevels = new ImageCheckbox(getLangStr("ls.module.statistics.club.financial_directors_level"),
         Colors.getColor(Colors.COLOR_CLUB_FINANCIAL_DIRECTORS_LEVEL), gup.statisticsClubFinancialDirectorsLevel);
 
         panel2.add(jcbFinancialDirectorLevels, constraints2);
 
-        constraints2.gridy = 11;
+        constraints2.gridy = 7;
         jcbSpokePersonLevels = new ImageCheckbox(getLangStr("ls.module.statistics.club.spokesperson"),
         Colors.getColor(Colors.COLOR_CLUB_SPOKE_PERSONS_LEVEL), gup.statisticsClubSpokePersonsLevel);
 
         panel2.add(jcbSpokePersonLevels, constraints2);
 
-        constraints2.gridy = 12;
+        constraints2.gridy = 8;
         jcbSportPsychologistLevels = new ImageCheckbox(getLangStr("ls.module.statistics.club.sport_psychologist_levels"),
         Colors.getColor(Colors.COLOR_CLUB_SPORT_PSYCHOLOGIST_LEVELS), gup.statisticsClubSportPsychologistLevels);
 
         panel2.add(jcbSportPsychologistLevels, constraints2);
 
-        constraints2.gridy = 13;
+        constraints2.gridy = 9;
         jcbTacticalAssistantLevels = new ImageCheckbox(getLangStr("ls.module.statistics.club.tactical_assistant_levels"),
         Colors.getColor(Colors.COLOR_CLUB_TACTICAL_ASSISTANT_LEVELS), gup.statisticsClubTacticalAssistantLevels);
 
         panel2.add(jcbTacticalAssistantLevels, constraints2);
 
-        constraints2.gridy = 14;
+        constraints2.gridy = 10;
         constraints2.insets = new Insets(20,0,0,0);  //top padding
         String textLabel = getLangStr("ls.module.statistics.club.fan_club_size") + " (" + getLangStr("ls.chart.second_axis") + ")";
         jcbFanClubSize = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_CLUB_FAN_CLUB_SIZE), gup.statisticsClubFanClubSize);
 
         panel2.add(jcbFanClubSize, constraints2);
 
-        constraints2.gridy = 15;
-        constraints2.insets = new Insets(20,0,0,0);  //top padding
+        constraints2.gridy = 11;
+        constraints2.insets = new Insets(0,0,0,0);  //top padding
         textLabel = getLangStr("ls.module.statistics.club.power_rating") + " (" + getLangStr("ls.chart.second_axis") + ")";
         jcbPowerRating = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_CLUB_POWER_RATING), gup.statisticsClubPowerRating);
 
         panel2.add(jcbPowerRating, constraints2);
 
-        constraints2.gridy = 16;
+        constraints2.gridy = 12;
         constraints2.insets = new Insets(20,0,0,0);  //top padding
         textLabel = getLangStr("ls.module.statistics.club.global_ranking") + " (" + getLangStr("ls.chart.third_axis") + ")";
         jcbGlobalRanking = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_CLUB_GLOBAL_RANKING), gup.statisticsClubGlobalRanking);
 
         panel2.add(jcbGlobalRanking, constraints2);
 
-        constraints2.gridy = 17;
+        constraints2.gridy = 13;
         constraints2.insets = new Insets(0,0,0,0);  //top padding
         textLabel = getLangStr("ls.module.statistics.club.league_ranking") + " (" + getLangStr("ls.chart.third_axis") + ")";
         jcbLeagueRanking = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_CLUB_LEAGUE_RANKING), gup.statisticsClubLeagueRanking);
