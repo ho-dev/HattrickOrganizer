@@ -20,7 +20,6 @@ import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -204,63 +203,65 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 
 		panel2.setLayout(layout2);
 
+		constraints2.insets = new Insets(10,0,0,0);  //top padding
 		label = new JLabel(getLangStr("Wochen"));
 		constraints2.gridwidth = 1;
 		constraints2.anchor = GridBagConstraints.WEST;
 		constraints2.gridx = 0;
-		constraints2.gridy = 1;
+		constraints2.gridy = 0;
 		layout2.setConstraints(label, constraints2);
 		panel2.add(label);
 
-		jtfNbWeeks = new JTextField(String.valueOf(UserParameter.instance().statistikAnzahlHRF));
+		constraints2.insets = new Insets(10,5,0,0);  //top padding
+		jtfNbWeeks = new JTextField(String.valueOf(UserParameter.instance().statistikAnzahlHRF),3);
 		jtfNbWeeks.setHorizontalAlignment(SwingConstants.RIGHT);
 		constraints2.gridx = 1;
-		constraints2.gridy = 1;
+		constraints2.gridy = 0;
 		layout2.setConstraints(jtfNbWeeks, constraints2);
 		panel2.add(jtfNbWeeks);
 
-		constraints2.gridx = 0;
-		constraints2.gridy = 2;
-		constraints2.gridwidth = 2;
+		constraints2.gridx = 2;
+		constraints2.gridy = 0;
+		constraints2.anchor = GridBagConstraints.EAST;
+		constraints2.insets = new Insets(10,20,0,0);  //top padding
 		jbApply = new JButton(getLangStr("ls.button.apply"));
 		jbApply.setToolTipText(getLangStr("tt_Statistik_HRFAnzahluebernehmen"));
 		layout2.setConstraints(jbApply, constraints2);
 		panel2.add(jbApply);
 
-		label = new JLabel(getLangStr("Spieler"));
-		label.setToolTipText(getLangStr("tt_Statistik_Spieler"));
+		constraints2.gridwidth = 3;
 		constraints2.gridx = 0;
-		constraints2.gridy = 3;
-		constraints2.gridwidth = 2;
-		layout2.setConstraints(label, constraints2);
-		panel2.add(label);
-		constraints2.gridx = 0;
-		constraints2.gridy = 4;
-		jcbPlayer = new JComboBox();
-		jcbPlayer.setToolTipText(getLangStr("tt_Statistik_Spieler"));
-		jcbPlayer.setRenderer(new PlayerCBItemRenderer());
-		jcbPlayer.setBackground(ColorLabelEntry.BG_STANDARD);
-		jcbPlayer.setMaximumRowCount(25);
-		jcbPlayer.setMaximumSize(new Dimension(200, 25));
-		layout2.setConstraints(jcbPlayer, constraints2);
-		panel2.add(jcbPlayer);
-
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 5;
+		constraints2.gridy = 1;
 		constraints2.insets = new Insets(20,0,0,0);  //top padding
-		jcbHelpLines = new JCheckBox(getLangStr("Hilflinien"),
-				UserParameter.instance().statistikHilfslinien);
+		jcbHelpLines = new JCheckBox(getLangStr("Hilflinien"), UserParameter.instance().statistikHilfslinien);
 		jcbHelpLines.setOpaque(false);
 		jcbHelpLines.setBackground(Color.white);
 		layout2.setConstraints(jcbHelpLines, constraints2);
 		panel2.add(jcbHelpLines);
 
-		constraints2.insets = new Insets(20,0,0,0);  //top padding
-
-		constraints2.gridwidth = 1;
+		label = new JLabel(getLangStr("Spieler"));
+		label.setToolTipText(getLangStr("tt_Statistik_Spieler"));
 		constraints2.gridx = 0;
-		constraints2.gridy = 6;
+		constraints2.gridy = 2;
+		constraints2.gridwidth = 1;
+		constraints2.insets = new Insets(20,0,0,0);  //top padding
+		layout2.setConstraints(label, constraints2);
+		panel2.add(label);
+
+		constraints2.gridx = 1;
+		constraints2.gridy = 2;
+		constraints2.gridwidth = 2;
+		jcbPlayer = new JComboBox();
+		constraints2.insets = new Insets(20,5,0,0);  //top padding
+		jcbPlayer.setToolTipText(getLangStr("tt_Statistik_Spieler"));
+		jcbPlayer.setRenderer(new PlayerCBItemRenderer());
+		jcbPlayer.setBackground(ColorLabelEntry.BG_STANDARD);
+		layout2.setConstraints(jcbPlayer, constraints2);
+		panel2.add(jcbPlayer);
+
+		constraints2.gridx = 0;
+		constraints2.gridy = 3;
+		constraints2.gridwidth = 3;
 		constraints2.insets = new Insets(20,0,0,0);  //top padding
 		jcbForm = new ImageCheckbox(getLangStr("ls.player.form"), Colors.getColor(Colors.COLOR_PLAYER_FORM),
 				UserParameter.instance().statistikForm);
@@ -268,9 +269,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbForm, constraints2);
 		panel2.add(jcbForm);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 7;
+		constraints2.gridy = 4;
 		constraints2.insets = new Insets(0,0,0,0);
 		jcbStamina = new ImageCheckbox(getLangStr("ls.player.skill.stamina"),
 				Colors.getColor(Colors.COLOR_PLAYER_STAMINA),
@@ -279,9 +278,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbStamina, constraints2);
 		panel2.add(jcbStamina);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 8;
+		constraints2.gridy = 5;
 		jcbLoyalty = new ImageCheckbox(getLangStr("ls.player.loyalty"),
 				Colors.getColor(Colors.COLOR_PLAYER_LOYALTY),
 				UserParameter.instance().statistikLoyalty);
@@ -289,9 +286,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbLoyalty, constraints2);
 		panel2.add(jcbLoyalty);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 9;
+		constraints2.gridy = 6;
 		jcbKeeper = new ImageCheckbox(getLangStr("ls.player.skill.keeper"),
 				Colors.getColor(Colors.COLOR_PLAYER_GK),
 				UserParameter.instance().statistikTorwart);
@@ -299,9 +294,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbKeeper, constraints2);
 		panel2.add(jcbKeeper);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 10;
+		constraints2.gridy = 7;
 		jcbDefending = new ImageCheckbox(getLangStr("ls.player.skill.defending"),
 				Colors.getColor(Colors.COLOR_PLAYER_DE),
 				UserParameter.instance().statistikVerteidigung);
@@ -309,9 +302,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbDefending, constraints2);
 		panel2.add(jcbDefending);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 11;
+		constraints2.gridy = 8;
 		jcbPlaymaking = new ImageCheckbox(getLangStr("ls.player.skill.playmaking"),
 				Colors.getColor(Colors.COLOR_PLAYER_PM),
 				UserParameter.instance().statistikSpielaufbau);
@@ -319,9 +310,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbPlaymaking, constraints2);
 		panel2.add(jcbPlaymaking);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 12;
+		constraints2.gridy = 9;
 		jcbPass = new ImageCheckbox(getLangStr("ls.player.skill.passing"),
 				Colors.getColor(Colors.COLOR_PLAYER_PS),
 				UserParameter.instance().statistikPasspiel);
@@ -329,9 +318,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbPass, constraints2);
 		panel2.add(jcbPass);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 13;
+		constraints2.gridy = 10;
 		jcbWing = new ImageCheckbox(getLangStr("ls.player.skill.winger"),
 				Colors.getColor(Colors.COLOR_PLAYER_WI),
 				UserParameter.instance().statistikFluegel);
@@ -339,9 +326,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbWing, constraints2);
 		panel2.add(jcbWing);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 14;
+		constraints2.gridy = 11;
 		jcbScoring = new ImageCheckbox(getLangStr("ls.player.skill.scoring"),
 				Colors.getColor(Colors.COLOR_PLAYER_SC),
 				UserParameter.instance().statistikTorschuss);
@@ -349,9 +334,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbScoring, constraints2);
 		panel2.add(jcbScoring);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 15;
+		constraints2.gridy = 12;
 		jcbSetPieces = new ImageCheckbox(getLangStr("ls.player.skill.setpieces"),
 				Colors.getColor(Colors.COLOR_PLAYER_SP),
 				UserParameter.instance().statistikStandards);
@@ -359,9 +342,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbSetPieces, constraints2);
 		panel2.add(jcbSetPieces);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 16;
+		constraints2.gridy = 13;
 		constraints2.insets = new Insets(0,0,0,0);
 		jcbLeadership = new ImageCheckbox(getLangStr("ls.player.leadership"),
 				Colors.getColor(Colors.COLOR_PLAYER_LEADERSHIP),
@@ -370,10 +351,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbLeadership, constraints2);
 		panel2.add(jcbLeadership);
 
-
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 17;
+		constraints2.gridy = 14;
 		jcbExperience = new ImageCheckbox(getLangStr("ls.player.experience"),
 				Colors.getColor(Colors.COLOR_PLAYER_XP),
 				UserParameter.instance().statistikErfahrung);
@@ -381,10 +359,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbExperience, constraints2);
 		panel2.add(jcbExperience);
 
-
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 18;
+		constraints2.gridy = 15;
 		jcbRating = new ImageCheckbox(getLangStr("RecapPanel.Stars"),
 				Colors.getColor(Colors.COLOR_PLAYER_RATING),
 				UserParameter.instance().statistikBewertung);
@@ -394,26 +369,20 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 
 
 		constraints2.insets = new Insets(20,0,0,0);  //top padding
-
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 19;
+		constraints2.gridy = 16;
 		String textLabel = getLangStr("ls.player.tsi") + " (" + getLangStr("ls.chart.second_axis") + ")";
 		jcbTSI = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_TSI), UserParameter.instance().statistikSpielerFinanzenMarktwert);
 		jcbTSI.setOpaque(false);
 		layout2.setConstraints(jcbTSI, constraints2);
 		panel2.add(jcbTSI);
 
-		constraints2.gridwidth = 1;
-		constraints2.gridx = 0;
-		constraints2.gridy = 20;
+		constraints2.gridy = 17;
 		constraints2.insets = new Insets(0,0,0,0);  //top padding
 		textLabel = getLangStr("ls.player.wage") + " (" + getLangStr("ls.chart.second_axis") + ")";
 		jcbSalary = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_WAGE), UserParameter.instance().statistikSpielerFinanzenGehalt);
 		jcbSalary.setOpaque(false);
 		layout2.setConstraints(jcbSalary, constraints2);
 		panel2.add(jcbSalary);
-
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;

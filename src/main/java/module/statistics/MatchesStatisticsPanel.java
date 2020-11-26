@@ -210,30 +210,32 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		label = new JLabel(getLangStr("Wochen"));
 		constraints2.fill = GridBagConstraints.HORIZONTAL;
 		constraints2.anchor = GridBagConstraints.WEST;
+		constraints2.insets = new Insets(10,0,0,0);  //top padding
 		constraints2.gridx = 0;
-		constraints2.gridy = 1;
+		constraints2.gridy = 0;
 		constraints2.gridwidth = 1;
 		layout2.setConstraints(label, constraints2);
 		panel2.add(label);
+
 		c_jtfNumberHRF = new JTextField(
-				String.valueOf(UserParameter.instance().statistikSpielerFinanzenAnzahlHRF), 5);
+				String.valueOf(UserParameter.instance().statistikSpielerFinanzenAnzahlHRF), 3);
 		c_jtfNumberHRF.setHorizontalAlignment(SwingConstants.RIGHT);
 		constraints2.gridx = 1;
-		constraints2.gridy = 1;
+		constraints2.insets = new Insets(10,5,0,0);  //top padding
 		layout2.setConstraints(c_jtfNumberHRF, constraints2);
 		panel2.add(c_jtfNumberHRF);
 
-		constraints2.gridx = 0;
-		constraints2.gridy = 2;
-		constraints2.gridwidth = 2;
+		constraints2.gridx = 2;
+		constraints2.insets = new Insets(10,20,0,0);  //top padding
 		c_jbApply = new JButton(getLangStr("ls.button.apply"));
 		layout2.setConstraints(c_jbApply, constraints2);
 		c_jbApply.setToolTipText(getLangStr("tt_Statistik_HRFAnzahluebernehmen"));
 		panel2.add(c_jbApply);
 
 		constraints2.gridx = 0;
-		constraints2.gridy = 3;
-		constraints2.gridwidth = 2;
+		constraints2.gridy = 1;
+		constraints2.gridwidth = 3;
+		constraints2.insets = new Insets(20,0,0,0);  //top padding
 		c_jcbMatchesFilter = new JComboBox(getMatchFilterItems());
 		c_jcbMatchesFilter.setPreferredSize(new Dimension(150, 25));
 		Helper.markierenComboBox(c_jcbMatchesFilter, UserParameter.instance().statistikSpieleFilter);
@@ -241,10 +243,8 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcbMatchesFilter, constraints2);
 		panel2.add(c_jcbMatchesFilter);
 
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 4;
-		constraints2.insets = new Insets(15,0,0,0);
+
+		constraints2.gridy = 2;
 		c_jcbHelpLines = new JCheckBox(getLangStr("Hilflinien"),
 				UserParameter.instance().statistikSpielerFinanzenHilfslinien);
 		c_jcbHelpLines.setOpaque(false);
@@ -252,19 +252,14 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcbHelpLines, constraints2);
 		panel2.add(c_jcbHelpLines);
 
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 5;
-		constraints2.insets = new Insets(15,0,0,0);  //top padding
+		constraints2.gridy = 3;
 		c_jcbTotalStrength = new ImageCheckbox(avgRating, Colors.getColor(Colors.COLOR_TEAM_TOTAL_STRENGTH),
 				UserParameter.instance().statistikSpieleGesamt);
 		c_jcbTotalStrength.setOpaque(false);
 		layout2.setConstraints(c_jcbTotalStrength, constraints2);
 		panel2.add(c_jcbTotalStrength);
 
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 6;
+		constraints2.gridy = 4;
 		constraints2.insets = new Insets(0,0,0,0);  //top padding
 		c_jcbMidfield = new ImageCheckbox(getLangStr("ls.match.ratingsector.midfield"),
 				Colors.getColor(Colors.COLOR_TEAM_MID),
@@ -273,9 +268,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcbMidfield, constraints2);
 		panel2.add(c_jcbMidfield);
 
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 7;
+		constraints2.gridy = 5;
 		c_jcbRightDefence = new ImageCheckbox(getLangStr("ls.match.ratingsector.rightdefence"),
 				Colors.getColor(Colors.COLOR_TEAM_RD),
 				UserParameter.instance().statistikSpieleRechteAbwehr);
@@ -283,9 +276,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcbRightDefence, constraints2);
 		panel2.add(c_jcbRightDefence);
 
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 8;
+		constraints2.gridy = 6;
 		c_jcbCentralDefence = new ImageCheckbox(getLangStr("ls.match.ratingsector.centraldefence"),
 				Colors.getColor(Colors.COLOR_TEAM_CD),
 				UserParameter.instance().statistikSpieleAbwehrzentrum);
@@ -293,9 +284,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcbCentralDefence, constraints2);
 		panel2.add(c_jcbCentralDefence);
 
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 9;
+		constraints2.gridy = 7;
 		c_jcbLeftDefence = new ImageCheckbox(getLangStr("ls.match.ratingsector.leftdefence"),
 				Colors.getColor(Colors.COLOR_TEAM_LD),
 				UserParameter.instance().statistikSpieleLinkeAbwehr);
@@ -303,9 +292,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcbLeftDefence, constraints2);
 		panel2.add(c_jcbLeftDefence);
 
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 10;
+		constraints2.gridy = 8;
 		c_jcbRightAttack = new ImageCheckbox(getLangStr("ls.match.ratingsector.rightattack"),
 				Colors.getColor(Colors.COLOR_TEAM_RA),
 				UserParameter.instance().statistikSpieleRechterAngriff);
@@ -313,9 +300,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcbRightAttack, constraints2);
 		panel2.add(c_jcbRightAttack);
 
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 11;
+		constraints2.gridy = 9;
 		c_jcbCentralAttack = new ImageCheckbox(getLangStr("ls.match.ratingsector.centralattack"),
 				Colors.getColor(Colors.COLOR_TEAM_CA),
 				UserParameter.instance().statistikSpieleAngriffszentrum);
@@ -323,9 +308,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcbCentralAttack, constraints2);
 		panel2.add(c_jcbCentralAttack);
 
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 12;
+		constraints2.gridy = 10;
 		c_jcbLeftAttack = new ImageCheckbox(getLangStr("ls.match.ratingsector.leftattack"),
 				Colors.getColor(Colors.COLOR_TEAM_LA),
 				UserParameter.instance().statistikSpieleLinkerAngriff);
@@ -333,9 +316,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcbLeftAttack, constraints2);
 		panel2.add(c_jcbLeftAttack);
 
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 13;
+		constraints2.gridy = 11;
 		c_jcbTeamSpirit = new ImageCheckbox(getLangStr("ls.team.teamspirit"),
 				Colors.getColor(Colors.COLOR_TEAM_TS),
 				UserParameter.instance().statistikSpieleStimmung);
@@ -343,9 +324,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcbTeamSpirit, constraints2);
 		panel2.add(c_jcbTeamSpirit);
 
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 14;
+		constraints2.gridy = 12;
 		c_jcbConfidence = new ImageCheckbox(getLangStr("ls.team.confidence"),
 				Colors.getColor(Colors.COLOR_TEAM_CONFIDENCE),
 				UserParameter.instance().statistikSpieleSelbstvertrauen);
@@ -353,10 +332,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcbConfidence, constraints2);
 		panel2.add(c_jcbConfidence);
 
-
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 15;
+		constraints2.gridy = 13;
 		constraints2.insets = new Insets(25,0,0,0);  //top padding
 		String textLabel = sumStars + " (" + getLangStr("ls.chart.second_axis") + ")";
 		c_jcbRating = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_TEAM_RATING),
@@ -365,9 +341,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcbRating, constraints2);
 		panel2.add(c_jcbRating);
 
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 16;
+		constraints2.gridy = 14;
 		constraints2.insets = new Insets(0,0,0,0);  //top padding
 		textLabel = getLangStr("ls.match.ratingtype.hatstats") + " (" + getLangStr("ls.chart.second_axis") + ")";
 		c_jcbHatStats = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_TEAM_HATSTATS), UserParameter.instance().statistikSpieleHatStats);
@@ -375,9 +349,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcbHatStats, constraints2);
 		panel2.add(c_jcbHatStats);
 
-		constraints2.gridwidth = 2;
-		constraints2.gridx = 0;
-		constraints2.gridy = 17;
+		constraints2.gridy = 15;
 		textLabel = getLangStr("ls.match.ratingtype.loddarstats") + " (" + getLangStr("ls.chart.second_axis") + ")";
 		c_jcbLoddarStats = new ImageCheckbox(textLabel,	Colors.getColor(Colors.COLOR_TEAM_LODDAR),	UserParameter.instance().statistikSpieleLoddarStats);
 		c_jcbLoddarStats.setOpaque(false);
