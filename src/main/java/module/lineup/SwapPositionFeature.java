@@ -107,17 +107,15 @@ public class SwapPositionFeature {
 	}
 
 	private void addButtonToPanel(PlayerPositionPanel spielerPositionsPanel) {
-		GridBagLayout layout = (GridBagLayout) spielerPositionsPanel
-				.getSwapLayout();
+		GridBagLayout layout = (GridBagLayout) spielerPositionsPanel.getSwapLayout();
 		layout.setConstraints(getSwapButton(), createSwapButtonConstraints());
 		spielerPositionsPanel.addSwapItem(getSwapButton());
-		spielerPositionsPanel.getPlayerComboBox().addActionListener(
-				new SpielerPositionSwapActionListener());
+		spielerPositionsPanel.getPlayerComboBox().addActionListener(new SpielerPositionSwapActionListener());
 	}
 
 	private GridBagConstraints createSwapButtonConstraints() {
 		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.insets = new java.awt.Insets(0, 0, 0, 4);
+		constraints.insets = new java.awt.Insets(5, 0, 0, 8);
 		constraints.gridx = 1;
 		constraints.gridy = 0;
 		constraints.fill = GridBagConstraints.NONE;

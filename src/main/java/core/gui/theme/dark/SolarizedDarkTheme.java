@@ -98,7 +98,7 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.PLAYER_SPECIALTY_COLOR, defaults.getColor("Label.foreground"));
 
             // palette
-            ThemeManager.instance().put(HOColorName.PALETTE13[0],  new Color(0, 255, 0));
+            ThemeManager.instance().put(HOColorName.PALETTE13[0], new Color(0, 255, 0));
             ThemeManager.instance().put(HOColorName.PALETTE13[1], new Color(255, 215, 0));
             ThemeManager.instance().put(HOColorName.PALETTE13[2], new Color(240, 32, 219));
             ThemeManager.instance().put(HOColorName.PALETTE13[3], new Color(255, 255, 255));
@@ -116,6 +116,11 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.FULL_TRAINING_DONE, defaults.getColor("palette.brown"));
             ThemeManager.instance().put(HOColorName.PARTIAL_TRAINING_DONE, defaults.getColor("palette.lime"));
             ThemeManager.instance().put(HOColorName.FULL_STAMINA_DONE, defaults.getColor("palette.blue"));
+
+            // borders training position in lineup
+            ThemeManager.instance().put(HOColorName.PLAYER_POSITION_PANEL_BORDER, HOColorName.TABLEENTRY_BG);
+            ThemeManager.instance().put(HOColorName.LINEUP_FULL_TRAINING, new Color(240, 32, 219));
+            ThemeManager.instance().put(HOColorName.LINEUP_PARTIAL_TRAINING, new Color(249, 140, 122));
 
 
             return super.enableTheme();

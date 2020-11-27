@@ -187,13 +187,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
-		constraints.insets = new Insets(1, 1, 1, 1);
+
 
 		centerPanel.setLayout(layout);
 
 		constraints.gridx = 3;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
+		constraints.insets = new Insets(6, 3, 3, 3);
 		m_clKeeper = new PlayerPositionPanel(this, IMatchRoleID.keeper);
 		layout.setConstraints(m_clKeeper, constraints);
 		centerPanel.add(m_clKeeper);
@@ -202,6 +203,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridx = 1;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
+		constraints.insets = new Insets(3, 3, 3, 3);
 		m_clRightBack = new PlayerPositionPanel(this, IMatchRoleID.rightBack);
 		layout.setConstraints(m_clRightBack, constraints);
 		centerPanel.add(m_clRightBack);

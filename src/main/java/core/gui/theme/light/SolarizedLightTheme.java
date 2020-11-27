@@ -46,8 +46,8 @@ public class SolarizedLightTheme extends BaseTheme {
             ThemeManager.instance().put(HOColorName.PARTIAL_TRAINING_DONE, defaults.getColor("palette.lime"));
             ThemeManager.instance().put(HOColorName.FULL_STAMINA_DONE, defaults.getColor("palette.blue"));
 
-
             return true;
+
         } catch (Exception e) {
             e.printStackTrace();
             return false;
