@@ -34,13 +34,8 @@ import javax.swing.border.*;
  */
 class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListener {
 
-    protected static int PLAYER_POSITION_PANEL_WIDTH = Helper.calcCellWidth(160);
-    // height for position with tactics box
-    protected static int PLAYER_POSITION_PANEL_HEIGHT_FULL = Helper.calcCellWidth(95);
-    // Used for positions with no tactics box
-    protected static int PLAYER_POSITION_PANEL_HEIGHT_REDUCED = Helper.calcCellWidth(70);
-
     private static final SpielerCBItem oNullPlayer = new SpielerCBItem("", 0f, null, false, true);
+    private static final Color defaultBorderColor = ThemeManager.getColor(HOColorName.PLAYER_POSITION_PANEL_BORDER);
 
     //~ Instance fields ----------------------------------------------------------------------------
     private final JComboBox<SpielerCBItem> m_jcbPlayer = new JComboBox<>();
@@ -112,11 +107,11 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     private void initComponents() {
         final GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.weightx = 1.0;
-        constraints.weighty = 0;
-        constraints.insets = new Insets(1, 2, 1, 2);
+
+        setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, defaultBorderColor));
 
         jlp.setLayout(layout);
+
         // No gaps around the layeredpane.
         FlowLayout fl = new FlowLayout();
         fl.setHgap(0);
@@ -124,37 +119,39 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         fl.setAlignment(FlowLayout.CENTER);
         setLayout(fl);
 
-        setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        constraints.weightx = 1.0;
 
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = 1;
+        constraints.insets = new Insets(5, 8, 0, 0);
         jlp.add(m_jlPosition, constraints, layerIndex);
 
-        constraints.gridx = 0;
+
         constraints.gridy = 1;
         constraints.gridwidth = 2;
         m_jcbPlayer.addFocusListener(this);
         m_jcbPlayer.setMaximumRowCount(10);
         m_jcbPlayer.setRenderer(new PlayerCBItemRenderer());
-        jlp.add(m_jcbPlayer, constraints, layerIndex);
-
-        m_jcbPlayer.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));// Color.white
+        m_jcbPlayer.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
 
         //Show only if more than one tactic is possible
         if (m_jcbTactic.getItemCount() > 1) {
-            constraints.gridx = 0;
-            constraints.gridy = 2;
-            constraints.gridwidth = 2;
 
+            constraints.insets = new Insets(2, 4, 0, 4);
+            jlp.add(m_jcbPlayer, constraints, layerIndex);
+
+            constraints.gridy = 2;
+            constraints.insets = new Insets(2, 4, 5, 4);
             m_jcbTactic.setBackground(m_jcbPlayer.getBackground());
             jlp.add(m_jcbTactic, constraints, layerIndex);
-            setPreferredSize(new Dimension(PLAYER_POSITION_PANEL_WIDTH, PLAYER_POSITION_PANEL_HEIGHT_FULL));
         }
         else {
-            setPreferredSize(new Dimension(PLAYER_POSITION_PANEL_WIDTH, PLAYER_POSITION_PANEL_HEIGHT_REDUCED));
+
+            constraints.insets = new Insets(2, 4, 5, 4);
+            jlp.add(m_jcbPlayer, constraints, layerIndex);
         }
-        jlp.setPreferredSize(getPreferredSize());
+
         add(jlp);
     }
 
@@ -560,17 +557,13 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                     m_jlPosition.setText(nameForPosition);
 
                     if (MatchRoleID.isFullTrainPosition(position.getPosition(), nextWeekTrain)) {
-                        this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED,
-                                    ThemeManager.getColor(HOColorName.LINEUP_FULL_TRAINING),
-                                    ThemeManager.getColor(HOColorName.LINEUP_FULL_TRAINING).darker()
-                        ));
-                    } else if (MatchRoleID.isPartialTrainPosition(position.getPosition(), nextWeekTrain)) {
-                        this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED,
-                                ThemeManager.getColor(HOColorName.LINEUP_PARTIAL_TRAINING),
-                                ThemeManager.getColor(HOColorName.LINEUP_PARTIAL_TRAINING).darker()
-                        ));
-                    } else {
-                        this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+                        this.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3,ThemeManager.getColor(HOColorName.LINEUP_FULL_TRAINING)));
+                    }
+                    else if (MatchRoleID.isPartialTrainPosition(position.getPosition(), nextWeekTrain)) {
+                        this.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3,ThemeManager.getColor(HOColorName.LINEUP_PARTIAL_TRAINING)));
+                    }
+                    else{
+                        this.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, defaultBorderColor));
                     }
                 }
                 // Subs
@@ -582,6 +575,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                     m_jlPosition.setText(nameForPosition + " (#2)");
                 }
             }
+            m_jlPosition.setFont(getFont().deriveFont(Font.BOLD));
         }
 
         //Minimized
