@@ -1,5 +1,6 @@
 package module.youth;
 
+import core.gui.RefreshManager;
 import core.gui.comp.table.TableSorter;
 import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
@@ -12,6 +13,12 @@ public class YouthPlayerOverviewTable extends JTable implements core.gui.Refresh
 
     private YouthPlayerOverviewColumnModel tableModel;
     private TableSorter tableSorter;
+
+    public YouthPlayerOverviewTable() {
+        super();
+        initModel();
+        RefreshManager.instance().registerRefreshable(this);
+    }
 
     @Override
     public void reInit() {
