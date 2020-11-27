@@ -127,9 +127,7 @@ public class DarculaDarkTheme extends DarkTheme {
             return super.enableTheme();
         } catch (Exception e) {
             HOLogger.instance().warning(getClass(),
-                    String.format("Error loading %s: %s",
-                            THEME_NAME,
-                            e.getMessage()
+                    String.format("Error loading %s: %s", THEME_NAME, e
                     ));
             return false;
         }
