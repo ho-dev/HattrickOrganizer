@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 6 16" width="6" height="16">
+ <defs id="colors">
+     <linearGradient id="b1FillColor">
+		 <stop offset="0" stop-color="#000000"/>
+		 <stop offset="1" stop-color="#000000"/>
+     </linearGradient>
+          <linearGradient id="b2FillColor">
+		 <stop offset="0" stop-color="#000000"/>
+		 <stop offset="1" stop-color="#000000"/>
+     </linearGradient>
+          <linearGradient id="b3FillColor">
+		 <stop offset="0" stop-color="#000000"/>
+		 <stop offset="1" stop-color="#000000"/>
+     </linearGradient>
+          <linearGradient id="b4FillColor">
+		 <stop offset="0" stop-color="#000000"/>
+		 <stop offset="1" stop-color="#000000"/>
+     </linearGradient>
+ </defs>
+<defs>
+	<path d="M0,0 L6,0 L6,4 L0,4 Z" id="b1"></path>
+	<path d="M0,4 L6,4 L6,8 L0,8 Z" id="b2"></path>
+	<path d="M0,8 L6,8 L6,12 L0,12 Z" id="b3"></path>
+	<path d="M0,12 L6,12 L6,16 L0,16 Z" id="b4"></path>
+</defs>
+  <g><use xlink:href="#b1" fill="url(#b1FillColor)" fill-opacity="1"></use></g>
+  <g><use xlink:href="#b2" fill="url(#b2FillColor)" fill-opacity="1"></use></g>
+  <g><use xlink:href="#b3" fill="url(#b3FillColor)" fill-opacity="1"></use></g>
+  <g><use xlink:href="#b4" fill="url(#b4FillColor)" fill-opacity="1"></use></g>
+</svg>

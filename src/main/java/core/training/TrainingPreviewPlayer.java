@@ -2,6 +2,7 @@ package core.training;
 
 
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 
@@ -97,48 +98,48 @@ public class TrainingPreviewPlayer {
 	public Icon getIcon() {
 
 		if (iFullTrain >= FULL_TRAIN_MIN) {
-			return ThemeManager.getIcon(HOIconName.TRAINBAR_FT);
+			return ImageUtilities.getTrainingBarIcon("TRAINBAR_FT");
 		}
 		else if (iFullTrain > 0 && bFullEstimedTrain) {
-			return ThemeManager.getIcon(HOIconName.TRAINBAR_FT_FFT);
+			return ImageUtilities.getTrainingBarIcon("TRAINBAR_FT_FFT");
 		}
 		else if (bFullEstimedTrain) {
-			return ThemeManager.getIcon(HOIconName.TRAINBAR_FFT);
+			return ImageUtilities.getTrainingBarIcon("TRAINBAR_FFT");
 		}
 		else if (iFullTrain > 0 && ((iPartialTrain + iFullTrain) >= FULL_TRAIN_MIN)) {
-			return ThemeManager.getIcon(HOIconName.TRAINBAR_FT_PT);
+			return ImageUtilities.getTrainingBarIcon("TRAINBAR_FT_PT");
 		}
     	else if (iFullTrain > 0 && bPartialEstimedTrain) {
-			return ThemeManager.getIcon(HOIconName.TRAINBAR_FT_FPT);
+			return ImageUtilities.getTrainingBarIcon("TRAINBAR_FT_FPT");
 		}
     	else if (iFullTrain > 0 && iPartialTrain > 0) {
-			return ThemeManager.getIcon(HOIconName.TRAINBAR_FT_PT_E);
+			return ImageUtilities.getTrainingBarIcon("TRAINBAR_FT_PT_E");
 		}
     	else if (iFullTrain > 0) {
-			return ThemeManager.getIcon(HOIconName.TRAINBAR_FT_E);
+			return ImageUtilities.getTrainingBarIcon("TRAINBAR_FT_E");
 		}
     	else if (iPartialTrain >= FULL_TRAIN_MIN) {
-			return ThemeManager.getIcon(HOIconName.TRAINBAR_PT);
+			return ImageUtilities.getTrainingBarIcon("TRAINBAR_PT");
 		}
     	else if (iPartialTrain > 0 && bPartialEstimedTrain) {
-			return ThemeManager.getIcon(HOIconName.TRAINBAR_PT_FPT);
+			return ImageUtilities.getTrainingBarIcon("TRAINBAR_PT_FPT");
 		}
     	else if (bPartialEstimedTrain) {
-			return ThemeManager.getIcon(HOIconName.TRAINBAR_FPT);
+			return ImageUtilities.getTrainingBarIcon("TRAINBAR_FPT");
 		}
     	else if (iPartialTrain > 0) {
-			return ThemeManager.getIcon(HOIconName.TRAINBAR_PT_E);
+			return ImageUtilities.getTrainingBarIcon("TRAINBAR_PT_E");
 		}
 		else if (iStamina >= FULL_STAMINA_MIN) {
-			return ThemeManager.getIcon(HOIconName.STAMINABAR_FT);
+			return ImageUtilities.getTrainingBarIcon("STAMINABAR_FT");
 		}
 		else if (bEstimedStamina) {
-			return ThemeManager.getIcon(HOIconName.STAMINABAR_FFT);
+			return ImageUtilities.getTrainingBarIcon("STAMINABAR_FFT");
 		}
 		else if (iStamina > 0) {
-			return ThemeManager.getIcon(HOIconName.STAMINABAR_FT_E);
+			return ImageUtilities.getTrainingBarIcon("STAMINABAR_FT_E");
 		}
-		return ThemeManager.getIcon(HOIconName.TRAINBAR_EMPTY);
+		return ImageUtilities.getTrainingBarIcon("TRAINBAR_EMPTY");
 	}
 
 	/**

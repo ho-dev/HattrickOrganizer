@@ -112,20 +112,10 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.PALETTE13[11], new Color(255, 239, 153));
             ThemeManager.instance().put(HOColorName.PALETTE13[12], new Color(169, 169, 169));
 
-
-            ThemeManager.instance().put(HOColorName.PALETTE13[0],  new Color(181, 137, 0));
-            ThemeManager.instance().put(HOColorName.PALETTE13[1], new Color(203, 75, 22));
-            ThemeManager.instance().put(HOColorName.PALETTE13[2], new Color(220,50,47));
-            ThemeManager.instance().put(HOColorName.PALETTE13[3], new Color(211,54,130));
-            ThemeManager.instance().put(HOColorName.PALETTE13[4], new Color(171,82,204));
-            ThemeManager.instance().put(HOColorName.PALETTE13[5], new Color(108,113,196));
-            ThemeManager.instance().put(HOColorName.PALETTE13[6], new Color(38,139,210));
-            ThemeManager.instance().put(HOColorName.PALETTE13[7], new Color(46,177,191));
-            ThemeManager.instance().put(HOColorName.PALETTE13[8], new Color(42,161,152));
-            ThemeManager.instance().put(HOColorName.PALETTE13[9], new Color(42,130,42));
-            ThemeManager.instance().put(HOColorName.PALETTE13[10], new Color(154,205,50));
-            ThemeManager.instance().put(HOColorName.PALETTE13[11], new Color(133,153,0));
-            ThemeManager.instance().put(HOColorName.PALETTE13[12], new Color(88,78,49));
+            //training bars
+            ThemeManager.instance().put(HOColorName.FULL_TRAINING_DONE, defaults.getColor("palette.brown"));
+            ThemeManager.instance().put(HOColorName.PARTIAL_TRAINING_DONE, defaults.getColor("palette.lime"));
+            ThemeManager.instance().put(HOColorName.FULL_STAMINA_DONE, defaults.getColor("palette.blue"));
 
 
             return super.enableTheme();

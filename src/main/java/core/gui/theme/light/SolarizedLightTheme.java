@@ -9,6 +9,7 @@ import core.gui.theme.ThemeManager;
 import core.model.UserParameter;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class SolarizedLightTheme extends BaseTheme {
     public final static String THEME_NAME = "Solarized Light";
@@ -39,6 +40,12 @@ public class SolarizedLightTheme extends BaseTheme {
 
             // Statistics
             ThemeManager.instance().put(HOColorName.STAT_PANEL_BG, defaults.getColor("background").brighter());
+
+            //training bar
+            ThemeManager.instance().put(HOColorName.FULL_TRAINING_DONE, defaults.getColor("palette.forest"));
+            ThemeManager.instance().put(HOColorName.PARTIAL_TRAINING_DONE, defaults.getColor("palette.lime"));
+            ThemeManager.instance().put(HOColorName.FULL_STAMINA_DONE, defaults.getColor("palette.blue"));
+
 
             return true;
         } catch (Exception e) {
