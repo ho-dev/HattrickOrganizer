@@ -51,7 +51,6 @@ public interface HOIconName {
 	 String OFFSET 			= "offset";
 	 String GOTOSTATISTIK 	= "gotoStatistik";
 
-	 String MAXLINEUP		 = "maxLineup";
 	 String RELOAD 			= "reload";
 	 String SIMULATEMATCH 	= "simulateMatch";
 	 String GETLINEUP 		= "getLineup";
@@ -196,21 +195,7 @@ public interface HOIconName {
 	String HOME = "home";
 	String AWAY = "away";
 
-	String TRAINBAR_FT = "trainpre_ft";
-	String TRAINBAR_PT = "trainpre_pt";
-	String TRAINBAR_FFT = "trainpre_fft";
-	String TRAINBAR_FPT = "trainpre_fpt";
-	String TRAINBAR_FT_FFT = "trainpre_ft_fft";
-	String TRAINBAR_FT_FPT = "trainpre_ft_fpt";
-	String TRAINBAR_PT_FPT = "trainpre_pt_fpt";
-	String TRAINBAR_FT_PT = "trainpre_ft_pt";
-	String TRAINBAR_FT_PT_E = "trainpre_ft_pt_e.png";
-	String TRAINBAR_FT_E = "trainpre_ft_e";
-	String TRAINBAR_PT_E = "trainpre_pt_e";
-	String TRAINBAR_EMPTY = "trainpre_empty";
-	String STAMINABAR_FT = "stamina_ft";
-	String STAMINABAR_FFT = "stamina_fft";
-	String STAMINABAR_FT_E = "stamina_ft_e";
+	String TRAINING_BAR = "training_bar";
 
 	String GREEN_WHITE_CLOCK = "green-white-clock";
 	String WHITE_GREEN_CLOCK = "white-green-clock";

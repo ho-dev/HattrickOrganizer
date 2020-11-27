@@ -114,6 +114,11 @@ public class DarculaDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.PALETTE13[11], new Color(49, 142, 255));
             ThemeManager.instance().put(HOColorName.PALETTE13[12], new Color(169, 169, 169));
 
+            //training bars
+            ThemeManager.instance().put(HOColorName.FULL_TRAINING_DONE, defaults.getColor("palette.forest"));
+            ThemeManager.instance().put(HOColorName.PARTIAL_TRAINING_DONE, defaults.getColor("palette.lime"));
+            ThemeManager.instance().put(HOColorName.FULL_STAMINA_DONE, defaults.getColor("palette.blue"));
+
             return super.enableTheme();
         } catch (Exception e) {
             HOLogger.instance().warning(getClass(),

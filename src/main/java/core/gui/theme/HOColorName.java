@@ -130,8 +130,8 @@ public interface HOColorName {
 	public static final String LINEUP_POS_MIN_BORDER	= "lineup.pos.min.border";
 	public static final String SUBST_CHANGED_VALUE_BG   = "substitution.changed.value.bg";
 
-	public static final String LINEUP_PARTIAL_TRAINING  = "lineup.partial.training.bg";
-	public static final String LINEUP_FULL_TRAINING     = "lineup.full.training.bg";
+	String LINEUP_PARTIAL_TRAINING  = "lineup.partial.training.bg";
+	String LINEUP_FULL_TRAINING     = "lineup.full.training.bg";
 
 	public static final String LINEUP_RATING_BORDER = "lineup.rating.border";
 
@@ -169,10 +169,10 @@ public interface HOColorName {
 	public static final String MATCHESANALYZER_TEAM_MYTEAM = "matchesanalyzer.cbox.myteam";
 
 	// Training
-	public static final String TRAINING_BIRTHDAY_BG = "training.birthday.bg";
-	public static final String TRAINING_FULL_BG = "training.full.bg";
-	public static final String TRAINING_PARTIAL_BG = "training.partial.bg";
-	public static final String TRAINING_OSMOSIS_BG = "training.osmosis.bg";
+	String TRAINING_BIRTHDAY_BG = "training.birthday.bg";
+	String TRAINING_FULL_BG = "training.full.bg";
+	String TRAINING_PARTIAL_BG = "training.partial.bg";
+	String TRAINING_OSMOSIS_BG = "training.osmosis.bg";
 
 	// TS Forecast
 	public static final String TSFORECAST_ALT_COLOR = "tsforecast.alt.color";
@@ -195,6 +195,15 @@ public interface HOColorName {
 	String BG_PROMOTION_INFO = "promotion.info.bg";
 	String FG_PROMOTION_INFO = "promotion.info.fg";
 
-	// colors palettes
+	// colors palettes used for graphics
 	String[] PALETTE13	= {"PALETTE13_0", "PALETTE13_1", "PALETTE13_2", "PALETTE13_3", "PALETTE13_4", "PALETTE13_5", "PALETTE13_6", "PALETTE13_7", "PALETTE13_8", "PALETTE13_9", "PALETTE13_10", "PALETTE13_11", "PALETTE13_12"};
+
+	// colors for training preview
+	String FULL_TRAINING_DONE = "full_training_done";
+	String PARTIAL_TRAINING_DONE = "partial_training_done";
+	String FULL_TRAINING_PLANNED = "full_training_planned";
+	String FULL_STAMINA_DONE = "full_stamina_done";
+	String STAMINA_PLANNED = "stamina_planned";
+	String PARTIAL_TRAINING_PLANNED = "partial_training_planned";
+
 }

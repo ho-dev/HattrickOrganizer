@@ -88,7 +88,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(OFFSET, "gui/bilder/offset.svg");
 		put(GOTOSTATISTIK, "gui/bilder/gotoStatistik.svg");
 
-		put(MAXLINEUP, "gui/bilder/MaxAufstellung.png");
 		put(RELOAD, "gui/bilder/Reload.png");
 		put(SIMULATEMATCH, "gui/bilder/simulate_match.png");
 		put(GETLINEUP, "gui/bilder/AufstellungUebernehmen.png");
@@ -250,21 +249,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(AWAY, "gui/bilder/away.png");
 
 		// Train bar
-		put(TRAINBAR_FT, "gui/bilder/trainpreview/trainpre_ft.png");
-		put(TRAINBAR_PT, "gui/bilder/trainpreview/trainpre_pt.png");
-		put(TRAINBAR_FFT, "gui/bilder/trainpreview/trainpre_fft.png");
-		put(TRAINBAR_FPT, "gui/bilder/trainpreview/trainpre_fpt.png");
-		put(TRAINBAR_FT_FFT, "gui/bilder/trainpreview/trainpre_ft_fft.png");
-		put(TRAINBAR_FT_FPT, "gui/bilder/trainpreview/trainpre_ft_fpt.png");
-		put(TRAINBAR_PT_FPT, "gui/bilder/trainpreview/trainpre_pt_fpt.png");
-		put(TRAINBAR_FT_PT, "gui/bilder/trainpreview/trainpre_ft_pt.png");
-		put(TRAINBAR_FT_PT_E, "gui/bilder/trainpreview/trainpre_ft_pt_e.png");
-		put(TRAINBAR_FT_E, "gui/bilder/trainpreview/trainpre_ft_e.png");
-		put(TRAINBAR_PT_E, "gui/bilder/trainpreview/trainpre_pt_e.png");
-		put(STAMINABAR_FT, "gui/bilder/trainpreview/stamina_ft.png");
-		put(STAMINABAR_FFT, "gui/bilder/trainpreview/stamina_fft.png");
-		put(STAMINABAR_FT_E, "gui/bilder/trainpreview/stamina_ft_e.png");
-		put(TRAINBAR_EMPTY, "gui/bilder/trainpreview/trainpre_empty.png");
+		put(TRAINING_BAR, "gui/bilder/trainpreview/training_bar.svg");
+
 
 		put(GREEN_WHITE_CLOCK, "gui/bilder/green-white-clock.png");
 		put(WHITE_GREEN_CLOCK, "gui/bilder/white-green-clock.png");
@@ -458,6 +444,14 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TRAINING_FULL_BG,"lightGreen");
 		put(TRAINING_PARTIAL_BG,"lightYellow");
 		put(TRAINING_OSMOSIS_BG, Color.LIGHT_GRAY);
+
+		// Training bars
+		put(FULL_TRAINING_DONE, new Color(37, 110, 9));
+		put(PARTIAL_TRAINING_DONE, new Color(73, 208, 21));
+		put(FULL_STAMINA_DONE, new Color(69, 127, 217));
+		put(FULL_TRAINING_PLANNED, new Color(56, 56, 56));
+		put(PARTIAL_TRAINING_PLANNED, new Color(184, 184, 184, 184));
+		put(STAMINA_PLANNED, new Color(104, 242, 255));
 
 		// TS Forecast
 		put(TSFORECAST_ALT_COLOR, Color.BLUE);

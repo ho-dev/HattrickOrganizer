@@ -19,8 +19,6 @@ import java.util.List;
 /**
  *
  * Training preview of players for the week
- *
- * @author yaute
  */
 
 
