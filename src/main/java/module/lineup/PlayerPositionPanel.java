@@ -823,4 +823,37 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         repaint();
     }
 
+
+    public void addCaptainIcon(){
+
+        JLabel jlCaptain = new JLabel();
+        jlCaptain.setIcon(ImageUtilities.getSmileyIcon("smiley-coach"));
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new java.awt.Insets(5, 0, 0, 8);
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.weightx = 0.0;
+
+        jlp.add(jlCaptain, constraints, layerIndex);
+
+    }
+
+    public void addSetPiecesIcon(){
+
+        JLabel jlSetPieces = new JLabel();
+        jlSetPieces.setIcon(ImageUtilities.getSetPiecesIcon(21, 21));
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new java.awt.Insets(2, 0, 0, 8);
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.weightx = 0.0;
+
+        jlp.add(jlSetPieces, constraints, layerIndex);
+
+    }
+
 }
