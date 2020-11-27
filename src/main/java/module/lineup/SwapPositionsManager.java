@@ -91,12 +91,7 @@ public class SwapPositionsManager {
 		swapCandidate = null;
 	}
 
-	/**
-	 * Initializes the swap feature for this player position.
-	 * 
-	 * @param swapPositionsManager
-	 *            the {@link SwapPositionsManager} to register this position to.
-	 */
+
 	public void addSwapCapabilityTo(PlayerPositionPanel spielerPositionsPanel) {
 		SwapPositionFeature swapPositionFeature = new SwapPositionFeature(
 				spielerPositionsPanel, this);

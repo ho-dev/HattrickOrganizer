@@ -82,12 +82,15 @@ public class GroupTeamFactory {
             }
 
             final OverlayIcon overlayIcon;
+            Pair<String, String> props = groupIconProperties.getOrDefault(groupName, new Pair("#FFFFFF", "#FFFFFF"));
+            double brightness = ImageUtilities.getBrightness(ImageUtilities.getColorFromHex(props.getValue0()));
+            Color textColor = brightness < 130 ? Color.WHITE : Color.BLACK;
             if (active) {
                 overlayIcon = new OverlayIcon(GroupTeamFactory.getGroupIcon(groupName, size, size, "1.0"),
-                        new TextIcon(groupLetter, Color.WHITE, new Font("Sans", Font.BOLD, fontSize), size, size, baseline));
+                        new TextIcon(groupLetter, textColor, new Font("Sans", Font.BOLD, fontSize), size, size, baseline));
             } else {
                 overlayIcon = new OverlayIcon(new OverlayIcon(GroupTeamFactory.getGroupIcon(groupName, size, size, "1.0"), GREYED_ICON),
-                        new TextIcon(groupLetter, Color.WHITE, new Font("SansSerif", Font.BOLD, fontSize), size, size, baseline));
+                        new TextIcon(groupLetter, textColor, new Font("SansSerif", Font.BOLD, fontSize), size, size, baseline));
             }
             GROUP_ICON.put(groupName + suffix + "_" + size, overlayIcon);
             return overlayIcon;
@@ -96,9 +99,6 @@ public class GroupTeamFactory {
         }
     }
 
-    private Icon getGroupIcon(String key, int width, int height) {
-        return getGroupIcon(key, width, height, null);
-    }
 
     private static Icon getGroupIcon(String key, int width, int height, String opacity) {
 
@@ -112,7 +112,7 @@ public class GroupTeamFactory {
 
             Map<Object, Object> colorMap = new HashMap<>();
             colorMap.put("fillColor", ImageUtilities.getColorFromHex(props.getValue0()));
-            colorMap.put("strokeColor", ImageUtilities.getColorFromHex(props.getValue1()));
+            colorMap.put("strokeColor", ImageUtilities.getColorFromHex(props.getValue0()));
             if (opacity != null) {
                 colorMap.put("opacityVal", (int)(Float.parseFloat(opacity)*100));
             } else {
