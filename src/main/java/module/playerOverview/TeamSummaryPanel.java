@@ -4,6 +4,8 @@ import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.comp.panel.DoubleLabelPanel;
 import core.gui.comp.panel.ImagePanel;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.Player;
@@ -27,10 +29,6 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
     private final DoubleLabelPanel averageTsiLabel = new DoubleLabelPanel();
     private final DoubleLabelPanel averageStaminaLabel = new DoubleLabelPanel();
     private final DoubleLabelPanel averageFormLabel = new DoubleLabelPanel();
-
-    // Darker shared of green for better visibility of greyish bg.
-    private final static Color DARK_GREEN = new Color(0, 102, 0);
-
     private TeamSummaryModel model;
 
     public TeamSummaryPanel(TeamSummaryModel model) {
@@ -77,9 +75,9 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
             }
             if (val.floatValue() > 0.0) {
                 value = "+" + value;
-                rightLabel.setForeground(DARK_GREEN);
+                rightLabel.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_IMPROVEMENT_FG));
             } else {
-                rightLabel.setForeground(Color.RED);
+                rightLabel.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_DECLINE_FG));
             }
             rightLabel.setText(value);
 

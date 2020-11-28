@@ -122,6 +122,9 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.LINEUP_FULL_TRAINING, new Color(240, 32, 219));
             ThemeManager.instance().put(HOColorName.LINEUP_PARTIAL_TRAINING, new Color(249, 140, 122));
 
+            //players
+            ThemeManager.instance().put(HOColorName.TABLEENTRY_DECLINE_FG, new Color(231, 144, 60));
+
 
             return super.enableTheme();
         } catch (Exception e) {

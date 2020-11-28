@@ -126,7 +126,7 @@ final public class UserColumnFactory {
         playerCBItemArray[3] = new PlayerCBItem(RATING, "Rating") {
             @Override
             public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem) {
-                return new RatingTableEntry(spielerCBItem.getRating(), false);
+                return new RatingTableEntry(spielerCBItem.getRating());
             }
         };
 
@@ -432,7 +432,7 @@ final public class UserColumnFactory {
                 else if (match.getHeimTore() < match.getGastTore())
                     entry.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
                 else
-                    entry.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY, Color.WHITE));
+                    entry.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
 
                 return entry;
             }

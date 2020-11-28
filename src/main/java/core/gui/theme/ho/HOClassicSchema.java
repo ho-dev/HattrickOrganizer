@@ -200,9 +200,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(ME_SWAP, "gui/bilder/match_events/swap.png");
 		put(ME_MAN_MARKING, "gui/bilder/match_events/manmark.png");
 
-		put(STAR, "gui/bilder/star.gif");
-		put(STAR_GRAY, "gui/bilder/star_grey.png");
-
 		put(HOMEGROWN, "gui/bilder/motherclub.png");
 		put(IMAGEPANEL_BACKGROUND, "gui/bilder/Background.jpg");
 		put(GRASSPANEL_BACKGROUND, "gui/bilder/Rasen_mit_Streifen.jpg");
@@ -377,6 +374,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		// Players specialty Colors
 		put(PLAYER_SPECIALTY_COLOR, "black");
 		put(PLAYER_SPECIALTY_NEGATIVE_COLOR, "red");
+
+
+		put(PLAYER_STAR_COLOR, new Color(255,215,0));
 		
 		put(STAT_CASH, "black");
 		put(STAT_WINLOST, Color.GRAY);

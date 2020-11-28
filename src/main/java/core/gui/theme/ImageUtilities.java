@@ -831,7 +831,7 @@ public class ImageUtilities {
 
 	public static Icon getSetPiecesIcon(int width, int height) {
 
-		String key = "captain_" + "_" + width + "x" + height;
+		String key = "captain_" + width + "x" + height;
 
 		Icon captainIcon = ThemeManager.instance().getIcon(key);
 
@@ -847,6 +847,30 @@ public class ImageUtilities {
 		}
 
 		return captainIcon;
+	}
+
+	public static Icon getStarIcon() {
+		return getStarIcon(16, 16);
+	}
+
+	public static Icon getStarIcon(int width, int height) {
+
+		String key = "star_" + width + "x" + height;
+
+		Icon starIcon = ThemeManager.getIcon(key);
+
+		if (starIcon == null) {
+
+			Color fillColor = getColor(HOColorName.PLAYER_STAR_COLOR);
+
+			Map<Object, Object> colorMap = Map.of("fillColor", fillColor);
+
+			starIcon = IconLoader.get().loadSVGIcon("gui/bilder/star.svg", width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, starIcon);
+		}
+
+		return starIcon;
 	}
 
 

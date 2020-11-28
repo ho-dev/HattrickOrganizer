@@ -156,30 +156,14 @@ public class SpielerPositionTableModel extends AbstractTableModel {
             ((ColorLabelEntry) m_clData[i][0]).setText(MatchRoleID.getNameForPosition((byte) rating[3]));
 
             //Maximal
-            m_clData[i][1] = new RatingTableEntry(rating[0] * 2, true);
+            m_clData[i][1] = new RatingTableEntry(rating[0] * 2);
 
             //Minial
-            m_clData[i][2] = new RatingTableEntry(rating[1] * 2, true);
+            m_clData[i][2] = new RatingTableEntry(rating[1] * 2);
 
             //Durchschnitt
-            m_clData[i][3] = new RatingTableEntry(Math.round(rating[2] * 2), true);
+            m_clData[i][3] = new RatingTableEntry(Math.round(rating[2] * 2));
         }
     }
 
-    /*
-       public Player getPlayer( int id )
-       {
-           if ( id > 0 )
-           {
-               for ( int i = 0; i < m_vSpieler.size(); i++ )
-               {
-                   if ( ( (Player)m_vSpieler.get( i ) ).getSpielerID() == id )
-                   {
-                       return (Player)m_vSpieler.get( i );
-                   }
-               }
-           }
-    
-           return null;
-       }*/
 }

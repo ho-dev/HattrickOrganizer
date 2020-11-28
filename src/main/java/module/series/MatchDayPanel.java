@@ -228,8 +228,8 @@ final class MatchDayPanel extends JPanel implements ActionListener {
             }
             // drawn
             else {
-                homeTeam.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY, Color.WHITE));
-                visitorTeam.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY,
+                homeTeam.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
+                visitorTeam.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
                         Color.WHITE));
             }
         } else {

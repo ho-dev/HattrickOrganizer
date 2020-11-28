@@ -84,6 +84,7 @@ public interface HOColorName {
 	String SMILEYS_COLOR = "smileys_color";
 	String PLAYER_SPECIALTY_COLOR = "player_specialty_color";
 	String PLAYER_SPECIALTY_NEGATIVE_COLOR = "player_specialty_negative_color";
+	String PLAYER_STAR_COLOR = "player_star_color";
 
 	// Statistics
 	String STAT_CASH 				= "stat.cash";

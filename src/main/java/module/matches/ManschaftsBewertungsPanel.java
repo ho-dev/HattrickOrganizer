@@ -381,9 +381,9 @@ class ManschaftsBewertungsPanel extends LazyImagePanel {
 				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
 						Color.WHITE));
 			} else {
-				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY,
+				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,   //TODO: check this
 						Color.WHITE));
-				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY,
+				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,  //TODO: check this
 						Color.WHITE));
 			}
 

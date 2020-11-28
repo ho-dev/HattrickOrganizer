@@ -157,9 +157,9 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
 						Color.WHITE));
 			} else {
-				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY,
+				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
 						Color.WHITE));
-				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY,
+				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
 						Color.WHITE));
 			}
 
@@ -462,7 +462,6 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		constraints.gridx = 1;
 		constraints.gridy = 5;
 		heimTeamRatingTableEntry = new RatingTableEntry();
-		heimTeamRatingTableEntry.setOpaque(false);
 		layout.setConstraints(heimTeamRatingTableEntry.getComponent(false), constraints);
 		panel.add(heimTeamRatingTableEntry.getComponent(false));
 
@@ -482,7 +481,6 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		constraints.gridx = 4;
 		constraints.gridy = 5;
 		gastTeamRatingTableEntry = new RatingTableEntry();
-		gastTeamRatingTableEntry.setOpaque(false);
 		layout.setConstraints(gastTeamRatingTableEntry.getComponent(false), constraints);
 		panel.add(gastTeamRatingTableEntry.getComponent(false));
 

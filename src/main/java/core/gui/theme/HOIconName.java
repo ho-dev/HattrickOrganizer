@@ -156,7 +156,6 @@ public interface HOIconName {
 	String TACTIC_LONG_SHOTS = "tactic_long_shots";
 
 	String STAR = "star";
-	String STAR_GRAY = "star_gray";
 
 	String HOMEGROWN = "homegrown";
 	String REMOVE	= "remove";
