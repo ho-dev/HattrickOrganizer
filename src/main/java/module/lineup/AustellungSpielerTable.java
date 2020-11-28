@@ -50,30 +50,6 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 		setBackground(ColorLabelEntry.BG_STANDARD);
 		RefreshManager.instance().registerRefreshable(this);
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				int rowindex = getSelectedRow();
-				if (rowindex >= 0){
-					// Last match column
-					String columnName = tableSorter.getColumnName(columnAtPoint(e.getPoint()));
-					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
-
-					Player player = tableSorter.getSpieler(rowindex);
-					if(player!=null){
-						if(columnName.equalsIgnoreCase(lastMatchRating)){
-							if(e.isShiftDown()){
-								int matchId = player.getLastMatchId();
-								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
-								HattrickLink.showMatch(matchId + "", info.getMatchTyp().isOfficial());
-							}else if(e.getClickCount()==2) {
-								HOMainFrame.instance().showMatch(player.getLastMatchId());
-							}
-						}
-					}
-				}
-			}
-		});
 	}
 
 	@Override
@@ -181,10 +157,8 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 			targetColumn = Helper.sortintArray(targetColumn, 1);
 
 			if (targetColumn != null) {
-				for (int i = 0; i < targetColumn.length; i++) {
-					this.moveColumn(
-							getColumnModel().getColumnIndex(Integer.valueOf(targetColumn[i][0])),
-							targetColumn[i][1]);
+				for (int[] ints : targetColumn) {
+					this.moveColumn(getColumnModel().getColumnIndex(ints[0]), ints[1]);
 				}
 			}
 
@@ -209,21 +183,43 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 				int selectedRow = getSelectedRow();
 				boolean bSelected;
 				if (selectedRow > -1) {
-					Player selectedPlayer = ((SpielerLabelEntry) tableSorter.getValueAt(selectedRow,tableModel.getColumnIndexOfDisplayedColumn(UserColumnFactory.NAME))).getSpieler();
-					bSelected = (boolean)tableSorter.getValueAt(selectedRow, tableModel.getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP));
+					Player selectedPlayer = ((SpielerLabelEntry) tableSorter.getValueAt(selectedRow, tableModel.getColumnIndexOfDisplayedColumn(UserColumnFactory.NAME))).getSpieler();
+					bSelected = (boolean) tableSorter.getValueAt(selectedRow, tableModel.getColumnIndexOfDisplayedColumn(UserColumnFactory.AUTO_LINEUP));
 					selectedPlayer.setCanBeSelectedByAssistant(bSelected);
-					if(bSelected)
-					{
+					if (bSelected) {
 						// this player has been made selectable from the Lineup tab, for consistency we set its position to undefined
 						selectedPlayer.setUserPosFlag(IMatchRoleID.UNKNOWN);
-					}
-					else {
+					} else {
 						selectedPlayer.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
 					}
 					HOMainFrame.instance().getSpielerUebersichtPanel().update();
 				}
 			}
 		});
-	}
 
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				int rowindex = getSelectedRow();
+				if (rowindex >= 0) {
+					// Last match column
+					String columnName = tableSorter.getColumnName(columnAtPoint(e.getPoint()));
+					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
+
+					Player player = tableSorter.getSpieler(rowindex);
+					if (player != null) {
+						if (columnName.equalsIgnoreCase(lastMatchRating)) {
+							if (e.isShiftDown()) {
+								int matchId = player.getLastMatchId();
+								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
+								HattrickLink.showMatch(matchId + "", info.getMatchTyp().isOfficial());
+							} else if (e.getClickCount() == 2) {
+								HOMainFrame.instance().showMatch(player.getLastMatchId());
+							}
+						}
+					}
+				}
+			}
+		});
+	}
 }
