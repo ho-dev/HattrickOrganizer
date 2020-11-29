@@ -49,6 +49,16 @@ public class SolarizedLightTheme extends BaseTheme {
             // borders training position in lineup
             ThemeManager.instance().put(HOColorName.PLAYER_POSITION_PANEL_BORDER, ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
 
+            // League Details
+            ThemeManager.instance().put(HOColorName.SHOW_MATCH, defaults.getColor("palette.forest"));
+            ThemeManager.instance().put(HOColorName.DOWNLOAD_MATCH, defaults.getColor("palette.red"));
+            ThemeManager.instance().put(HOColorName.LEAGUEHISTORY_GRID_FG, defaults.getColor("background").darker());
+            ThemeManager.instance().put(HOColorName.LEAGUEHISTORY_CROSS_FG, defaults.getColor("background").darker());
+            ThemeManager.instance().put(HOColorName.HOME_TEAM_FG, new Color(179,60,180));
+            ThemeManager.instance().put(HOColorName.SELECTED_TEAM_FG, new Color(36,175,235));
+            ThemeManager.instance().put(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
+
+
             return true;
 
         } catch (Exception e) {

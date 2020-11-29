@@ -18,7 +18,6 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.util.Helper;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -111,13 +110,13 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 
 		int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		if (info.getHeimID() == teamid) {
-			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.TEAM_FG));
+			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 		} else {
 			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
 		}
 
 		if (info.getGastID() == teamid) {
-			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.TEAM_FG));
+			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 		} else {
 			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
 		}

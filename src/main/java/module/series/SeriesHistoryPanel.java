@@ -17,17 +17,15 @@ import java.awt.*;
  */
 final class SeriesHistoryPanel extends JPanel {
 
-	private static final long serialVersionUID = -8411572558790555924L;
-
 	private final Color[] COLOR4LINES = {
-			ThemeManager.getColor(HOColorName.LEAGUEHISTORY_LINE1_FG), // Color.green
-			ThemeManager.getColor(HOColorName.LEAGUEHISTORY_LINE2_FG), // Color.cyan
-			ThemeManager.getColor(HOColorName.LEAGUEHISTORY_LINE3_FG), // Color.gray
-			ThemeManager.getColor(HOColorName.LEAGUEHISTORY_LINE4_FG), // Color.black
-			ThemeManager.getColor(HOColorName.LEAGUEHISTORY_LINE5_FG), // Color.orange
-			ThemeManager.getColor(HOColorName.LEAGUEHISTORY_LINE6_FG), // Color.PINK
-			ThemeManager.getColor(HOColorName.LEAGUEHISTORY_LINE7_FG), // Color.red
-			ThemeManager.getColor(HOColorName.LEAGUEHISTORY_LINE8_FG) // Color.MAGENTA
+			ThemeManager.getColor(HOColorName.PALETTE13[0]),
+			ThemeManager.getColor(HOColorName.PALETTE13[1]),
+			ThemeManager.getColor(HOColorName.PALETTE13[2]),
+			ThemeManager.getColor(HOColorName.PALETTE13[8]),
+			ThemeManager.getColor(HOColorName.PALETTE13[4]),
+			ThemeManager.getColor(HOColorName.PALETTE13[5]),
+			ThemeManager.getColor(HOColorName.PALETTE13[6]),
+			ThemeManager.getColor(HOColorName.PALETTE13[9])
 	};
 
 	private Color STANDARD_FOREGROUND = ThemeManager.getColor(HOColorName.LEAGUE_FG);
@@ -84,7 +82,7 @@ final class SeriesHistoryPanel extends JPanel {
 					(getHeight() / anzahlPlaetze) + 1);
 
 			// Hilfslinien
-			g2d.setColor(ThemeManager.getColor(HOColorName.LEAGUEHISTORY_GRID_FG));
+			g2d.setColor(ThemeManager.getColor(HOColorName.LEAGUEHISTORY_CROSS_FG));
 
 			// Horizontal
 			for (int i = 1; i < anzahlPlaetze; i++) {
@@ -101,7 +99,7 @@ final class SeriesHistoryPanel extends JPanel {
 			for (int i = 0; i < m_clVerlaufeintraege.length; i++) {
 				// Platzierung
 				if (m_clVerlaufeintraege[i].getTeamId() == aktuelleTeamId) {
-					g2d.setColor(ThemeManager.getColor(HOColorName.TEAM_FG));
+					g2d.setColor(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 				} else if (i < COLOR4LINES.length) {
 					g2d.setColor(COLOR4LINES[i]);
 				} else {
@@ -115,7 +113,7 @@ final class SeriesHistoryPanel extends JPanel {
 
 				// Eigenes Team blau machen
 				if (m_clVerlaufeintraege[i].getTeamId() == aktuelleTeamId) {
-					g2d.setColor(ThemeManager.getColor(HOColorName.TEAM_FG));
+					g2d.setColor(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 				} else {
 					g2d.setColor(STANDARD_FOREGROUND);
 				}
@@ -143,7 +141,7 @@ final class SeriesHistoryPanel extends JPanel {
 
 				g2d.setStroke(thinkStroke);
 				if (m_clVerlaufeintraege[i].getTeamId() == aktuelleTeamId) {
-					g2d.setColor(ThemeManager.getColor(HOColorName.TEAM_FG));
+					g2d.setColor(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 					g2d.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
 				} else if (i < COLOR4LINES.length) {
 					g2d.setColor(COLOR4LINES[i]);

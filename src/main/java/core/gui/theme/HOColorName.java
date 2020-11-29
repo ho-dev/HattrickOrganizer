@@ -34,7 +34,8 @@ public interface HOColorName {
 	String PLAYER_OLD_FG 				= "player.old.fg";
 	String PLAYER_SKILL_BG 				= "player.skill.bg";
 	String PLAYER_SKILL_SPECIAL_BG 		= "player.skill.special.bg";
-	String TEAM_FG 						= "team.fg";
+	String HOME_TEAM_FG 				= "team.fg";
+	String SELECTED_TEAM_FG 			= "selected_team_fg";
 
 	String MATCHTYPE_BG 				= "matchtype.bg";
 	String MATCHTYPE_LEAGUE_BG 			= "matchtype.league.bg";
@@ -110,9 +111,10 @@ public interface HOColorName {
 	String STAT_CONFIDENCE			= "stat.confidence";
 	String STAT_HATSTATS			= "stat.hatstats";
 	String STAT_LODDAR				= "stat.loddar";
-	String STAT_PANEL_BG = "stat.panel.bg";
-	String STAT_PANEL_FG = "stat.panel.fg";
+	String STAT_PANEL_BG 			= "stat.panel.bg";
+	String STAT_PANEL_FG			 = "stat.panel.fg";
 	String STAT_PANEL_FG_HELPING_LINES = "stat.panel.fg.helping.lines";
+	String LEAGUE_PANEL_BG 				= "league_panel_bg";
 
 	String MATCHHIGHLIGHT_FAILED_FG	= "matchHighlight.failed.fg";
 
@@ -207,5 +209,9 @@ public interface HOColorName {
 	String FULL_STAMINA_DONE = "full_stamina_done";
 	String STAMINA_PLANNED = "stamina_planned";
 	String PARTIAL_TRAINING_PLANNED = "partial_training_planned";
+
+	// colors for league details
+	String SHOW_MATCH = "show_match";
+	String DOWNLOAD_MATCH = "download_match";
 
 }

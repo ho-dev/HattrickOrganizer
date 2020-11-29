@@ -1,4 +1,3 @@
-// %3862884693:de.hattrickorganizer.gui.league%
 package module.series;
 
 import core.gui.comp.entry.ColorLabelEntry;
@@ -14,7 +13,6 @@ import core.model.series.LigaTabellenEintrag;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
-
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
@@ -28,7 +26,6 @@ import java.util.Vector;
  */
 class SeriesTablePanel extends ImagePanel {
 
-	private static final long serialVersionUID = -7087165908899999232L;
 	public static final EmptyBorder EMPTY_BORDER = new EmptyBorder(5, 5, 5, 5);
 	private Color TITLE_BACKGROUND = ThemeManager.getColor(HOColorName.LEAGUE_TITLE_BG);
 	private Color TABLE_FOREGROUND = ThemeManager.getColor(HOColorName.LEAGUE_FG);
@@ -255,7 +252,7 @@ class SeriesTablePanel extends ImagePanel {
 						((ColorLabelEntry) tableValues[j][1]).setFontStyle(Font.BOLD);
 
 						if (eintrag.getTeamId() == teamid) {
-							((ColorLabelEntry) tableValues[j][1]).setFGColor(ThemeManager.getColor(HOColorName.TEAM_FG));
+							((ColorLabelEntry) tableValues[j][1]).setFGColor(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 						} else {
 							((ColorLabelEntry) tableValues[j][1]).setFGColor(TABLE_FOREGROUND);// );Color.black
 						}

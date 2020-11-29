@@ -5,6 +5,7 @@ import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -17,6 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static core.gui.theme.ThemeManager.getColor;
 
 /**
  * Panel displaying the main details about Promotion / Demotion status.
@@ -68,7 +71,7 @@ public class PromotionInfoPanel extends ImagePanel {
 
     private void initComponents() {
         final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
-        final JButton downloadLeagueButton = new JButton(ThemeManager.getIcon(HOIconName.DOWNLOAD_MATCH));
+        final JButton downloadLeagueButton = new JButton(ImageUtilities.getDownloadIcon(getColor(HOColorName.DOWNLOAD_MATCH), 14, 14));
         this.add(downloadLeagueButton);
         final JLabel downloadLabel = new JLabel(verwaltung.getLanguageString("pd_status.download.unavailable.data"));
         downloadLabel.setFont(defaultFont);

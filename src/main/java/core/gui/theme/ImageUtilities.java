@@ -874,8 +874,76 @@ public class ImageUtilities {
 	}
 
 
+	public static Icon getRightArrowIcon(Color color) {
+		return getRightArrowIcon(color, 16, 16);
+	}
+
+	public static Icon getRightArrowIcon(Color fillColor, int width, int height) {
+
+		String key = "rightArrow_" + fillColor.toString() + "_" + width + "x" + height;
+
+		Icon _icon = ThemeManager.getIcon(key);
+
+		if (_icon == null) {
+
+			Map<Object, Object> colorMap = Map.of("foregroundColor", fillColor);
+
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/right-arrow.svg", width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, _icon);
+		}
+
+		return _icon;
+	}
+
+	public static Icon getDownloadIcon(Color color) {
+		return getDownloadIcon(color, 16, 16);
+	}
+
+	public static Icon getDownloadIcon(Color fillColor, int width, int height) {
+
+		String key = "downloadIcon_" + fillColor.toString() + "_" + width + "x" + height;
+
+		Icon _icon = ThemeManager.getIcon(key);
+
+		if (_icon == null) {
+
+			Map<Object, Object> colorMap = Map.of("foregroundColor", fillColor);
+
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/download.svg", width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, _icon);
+		}
+
+		return _icon;
+	}
+
+
+	public static Icon getUnavailableIcon(Color color) {
+		return getUnavailableIcon(color, 16, 16);
+	}
+
+	public static Icon getUnavailableIcon(Color fillColor, int width, int height) {
+
+		String key = "unavailableIcon_" + fillColor.toString() + "_" + width + "x" + height;
+
+		Icon _icon = ThemeManager.getIcon(key);
+
+		if (_icon == null) {
+
+			Map<Object, Object> colorMap = Map.of("foregroundColor", fillColor);
+
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/unavailable.svg", width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, _icon);
+		}
+
+		return _icon;
+	}
 
 	private static Color getColor (String name){
 		return ThemeManager.getColor(name);
 	}
+
+
 }

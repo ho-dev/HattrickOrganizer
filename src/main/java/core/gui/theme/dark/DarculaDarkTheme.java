@@ -52,7 +52,6 @@ public class DarculaDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.TABLE_LEAGUE_ODD, defaults.getColor("Table.backgroundAlternative"));
             ThemeManager.instance().put(HOColorName.LEAGUE_FG, defaults.getColor("Table.foreground"));
             ThemeManager.instance().put(HOColorName.LEAGUE_BG, defaults.getColor("Table.background"));
-            ThemeManager.instance().put(HOColorName.TEAM_FG, new Color(100, 131, 226));
 
             // Lineup
             ThemeManager.instance().put(HOColorName.LINEUP_POS_MIN_BG, neutralGrey);
@@ -127,11 +126,19 @@ public class DarculaDarkTheme extends DarkTheme {
             //players
             ThemeManager.instance().put(HOColorName.TABLEENTRY_DECLINE_FG, new Color(231, 144, 60));
 
+            // League Details
+            ThemeManager.instance().put(HOColorName.SHOW_MATCH, defaults.getColor("palette.lime"));
+            ThemeManager.instance().put(HOColorName.DOWNLOAD_MATCH, defaults.getColor("palette.red"));
+            ThemeManager.instance().put(HOColorName.LEAGUEHISTORY_GRID_FG, defaults.getColor("background").brighter());
+            ThemeManager.instance().put(HOColorName.LEAGUEHISTORY_CROSS_FG, defaults.getColor("background").brighter());
+            ThemeManager.instance().put(HOColorName.HOME_TEAM_FG, new Color(100, 131, 226));
+            ThemeManager.instance().put(HOColorName.SELECTED_TEAM_FG, new Color(177, 193, 240));
+            ThemeManager.instance().put(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
+
             return super.enableTheme();
         } catch (Exception e) {
             HOLogger.instance().warning(getClass(),
-                    String.format("Error loading %s: %s", THEME_NAME, e
-                    ));
+                    String.format("Error loading %s: %s", THEME_NAME, e));
             return false;
         }
     }

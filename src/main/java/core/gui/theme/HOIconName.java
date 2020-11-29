@@ -19,9 +19,6 @@ public interface HOIconName {
 	 String HAND 			= "hand";
 
 	 String NO_MATCH 		= "noMatch";
-	 String SHOW_MATCH 		= "showMatch";
-	 String DOWNLOAD_MATCH 	= "downloadMatch";
-
 	 String WEATHER_RAIN_POS = "weather.rain.pos";
 	 String WEATHER_RAIN_NEG = "weather.rain.neg";
 	 String WEATHER_SUN_POS 	= "weather.sun.pos";
