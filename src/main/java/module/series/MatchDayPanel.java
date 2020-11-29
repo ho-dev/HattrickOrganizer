@@ -218,19 +218,18 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
             // HomeVictory
             if (paarung.getToreHeim() > paarung.getToreGast()) {
-                homeTeam.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
+                homeTeam.setIcon(ImageUtilities.getStarIcon());
                 visitorTeam.setIcon(ImageUtilities.NOIMAGEICON);
             }
             // VisitorVictory
             else if (paarung.getToreHeim() < paarung.getToreGast()) {
                 homeTeam.setIcon(ImageUtilities.NOIMAGEICON);
-                visitorTeam.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
+                visitorTeam.setIcon(ImageUtilities.getStarIcon());
             }
             // drawn
             else {
-                homeTeam.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
-                visitorTeam.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
-                        Color.WHITE));
+                homeTeam.setIcon(ImageUtilities.getStarIcon());
+                visitorTeam.setIcon(ImageUtilities.getStarIcon());
             }
         } else {
             result.setText(StringUtils.getResultString(-1, -1, ""));

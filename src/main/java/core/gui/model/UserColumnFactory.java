@@ -17,6 +17,7 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.Helper;
 import module.playerOverview.SpielerStatusLabelEntry;
+import module.teamAnalyzer.ui.renderer.RatingTableCellRenderer;
 
 import java.awt.Color;
 import java.sql.Timestamp;
@@ -390,11 +391,11 @@ final public class UserColumnFactory {
                 if (match.getMatchStatus() != MatchKurzInfo.FINISHED)
                     entry.setIcon(ImageUtilities.NOIMAGEICON);
                 else if (match.getHeimTore() > match.getGastTore())
-                    entry.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
+                    entry.setIcon(ImageUtilities.getStarIcon());
                 else if (match.getHeimTore() < match.getGastTore())
                     entry.setIcon(ImageUtilities.NOIMAGEICON);
                 else
-                    entry.setIcon(ThemeManager.getTransparentIcon("star_gray", Color.WHITE));
+                    entry.setIcon(ImageUtilities.getStarIcon());
                 return entry;
             }
 
@@ -430,9 +431,9 @@ final public class UserColumnFactory {
                 else if (match.getHeimTore() > match.getGastTore())
                     entry.setIcon(ImageUtilities.NOIMAGEICON);
                 else if (match.getHeimTore() < match.getGastTore())
-                    entry.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
+                    entry.setIcon(ImageUtilities.getStarIcon());
                 else
-                    entry.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
+                    entry.setIcon(ImageUtilities.getStarIcon());
 
                 return entry;
             }
@@ -764,12 +765,12 @@ final public class UserColumnFactory {
                 if (player.getLastMatchRating() > 0) {
                     MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId());
                     if (info == null) {
-                        return new LastMatchLabelEntry((float) player.getLastMatchRating());
+                        return new RatingTableEntry((float) player.getLastMatchRating(), true);
                     } else {
-                        return new LastMatchLabelEntry((float) player.getLastMatchRating(), player.getLastMatchDate(), info.getMatchTyp());
+                        return new RatingTableEntry((float) player.getLastMatchRating(), player.getLastMatchDate(), info.getMatchTyp(), true);
                     }
                 }
-                return new LastMatchLabelEntry();
+                return new RatingTableEntry();
             }
         };
 

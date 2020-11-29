@@ -7,6 +7,7 @@ import core.gui.comp.entry.RatingTableEntry;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
@@ -149,18 +150,14 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			
 			// Sterne für Sieger!
 			if (info.getHeimTore() > info.getGastTore()) {
-				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
-						Color.WHITE));
+				heimTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 				gastTeamNameLabel.setIcon(null);
 			} else if (info.getHeimTore() < info.getGastTore()) {
 				heimTeamNameLabel.setIcon(null);
-				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
-						Color.WHITE));
+				gastTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 			} else {
-				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
-						Color.WHITE));
-				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
-						Color.WHITE));
+				heimTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
+				gastTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 			}
 
 			// Sterneanzahl

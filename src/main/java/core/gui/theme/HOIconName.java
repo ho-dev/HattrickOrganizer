@@ -154,17 +154,12 @@ public interface HOIconName {
 	String TACTIC_AOW = "tactic_aow";
 	String TACTIC_PLAY_CREATIVELY = "tactic_play_creatively";
 	String TACTIC_LONG_SHOTS = "tactic_long_shots";
-
-	String STAR = "star";
-
 	String HOMEGROWN = "homegrown";
 	String REMOVE	= "remove";
 	String BALL = "ball";
-
 	String TRANSFER_IN = "transfer.in";
 	String TRANSFER_OUT = "transfer.out";
 	String TABBEDPANE_CLOSE = "tabbedPane.close";
-
 	String ARROW_LEFT1 = "arrow_left1";
 	String ARROW_LEFT2 = "arrow_left2";
 	String ARROW_RIGHT1 = "arrow_right1";

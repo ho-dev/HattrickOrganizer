@@ -355,7 +355,6 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             if (info != null) {
                 m_jpLastMatchRating.setRating((float)m_clPlayer.getLastMatchRating());
                 m_jpLastMatchRating.setMatchInfo(m_clPlayer.getLastMatchDate(), info.getMatchTyp());
-                m_jpLastMatchRating.getLabelMatch();
             }
         }
         m_jpNationality.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalitaet()));

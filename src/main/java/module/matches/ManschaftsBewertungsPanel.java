@@ -373,18 +373,14 @@ class ManschaftsBewertungsPanel extends LazyImagePanel {
 				heimTeamNameLabel.setIcon(null);
 				gastTeamNameLabel.setIcon(null);
 			} else if (info.getHeimTore() > info.getGastTore()) {
-				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
-						Color.WHITE));
+				heimTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 				gastTeamNameLabel.setIcon(null);
 			} else if (info.getHeimTore() < info.getGastTore()) {
 				heimTeamNameLabel.setIcon(null);
-				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
-						Color.WHITE));
+				gastTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 			} else {
-				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,   //TODO: check this
-						Color.WHITE));
-				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,  //TODO: check this
-						Color.WHITE));
+				heimTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
+				gastTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 			}
 
 			String temp;

@@ -27,17 +27,40 @@ public class RatingTableEntry extends AbstractHOTableEntry {
     private final JLabel matchLink = new JLabel("");
     private String m_sTooltip = "";
     private float m_fRating;
+    private final boolean starsAligned;
 
 
     public RatingTableEntry() {
-        m_fRating = 0.0F;
+        this(false);
+    }
+
+    public RatingTableEntry(Boolean _starsAligned) {
+        starsAligned = _starsAligned;
+        m_fRating = 0.0f;
         createComponent();
     }
 
     public RatingTableEntry(float f) {
-        m_fRating = f;
+        this(f, false);
+    }
+
+    public RatingTableEntry(float f, Boolean _starsAligned) {
+        starsAligned = _starsAligned;
+        m_fRating = f/2.0f;
         createComponent();
     }
+
+    public RatingTableEntry(float f, String lastMatchDate, MatchType matchType) {
+        this(f, lastMatchDate, matchType, false);
+    }
+
+    public RatingTableEntry(float f, String lastMatchDate, MatchType matchType, Boolean _starsAligned) {
+        m_fRating = f/2.0f;
+        starsAligned = _starsAligned;
+        createComponent();
+        this.setMatchInfo(lastMatchDate, matchType);
+    }
+
 
 	public final javax.swing.JComponent getComponent(boolean isSelected) {
         m_clComponent.setBackground((isSelected)?HODefaultTableCellRenderer.SELECTION_BG:bgColor);
@@ -54,7 +77,7 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         }
 
         if (forceUpdate || (f != m_fRating)) {
-            m_fRating = f;
+            m_fRating = f/2.0f;
             updateComponent();
         }
 
@@ -62,7 +85,7 @@ public class RatingTableEntry extends AbstractHOTableEntry {
     }
 
     public final float getRating() {
-        return m_fRating;
+        return m_fRating*2.0f;
     }
 
     public final void setToolTipText(String text) {
@@ -126,7 +149,6 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         m_clComponent.add(jlabel);
     }
 
-
 	public final int compareTo(IHOTableEntry obj) {
         if (obj instanceof RatingTableEntry) {
             final RatingTableEntry entry = (RatingTableEntry) obj;
@@ -159,7 +181,7 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.anchor = GridBagConstraints.WEST;
-        JLabel starLabel = getStarsLabel(m_fRating/2.0f);
+        JLabel starLabel = getStarsLabel(m_fRating);
         layout.setConstraints(starLabel, constraints);
         renderer.add(starLabel);
 
@@ -180,7 +202,7 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.anchor = GridBagConstraints.WEST;
-        JLabel starLabel = getStarsLabel(m_fRating/2.0f);
+        JLabel starLabel = getStarsLabel(m_fRating);
         layout.setConstraints(starLabel, constraints);
         m_clComponent.add(starLabel);
         m_clComponent.setToolTipText(m_sTooltip);
@@ -189,17 +211,21 @@ public class RatingTableEntry extends AbstractHOTableEntry {
     
     private JLabel getStarsLabel(float _rating) {
         final JLabel jlabel;
-        _rating = _rating/2.0f;
 		if (_rating == 0) {
 			jlabel = new JLabel(ImageUtilities.NOIMAGEICON);
         }
 		else{
             if (_rating == (int)_rating)
             {
-                jlabel = new JLabel("" + INTEGERFORMAT.format(_rating));
+                if(starsAligned) {
+                    jlabel = new JLabel("   " + INTEGERFORMAT.format(_rating));
+                }
+                else{
+                    jlabel = new JLabel(INTEGERFORMAT.format(_rating));
+                }
             }
             else{
-                jlabel = new JLabel("" + DEFAULTDEZIMALFORMAT.format(_rating));
+                jlabel = new JLabel(DEFAULTDEZIMALFORMAT.format(_rating));
             }
             jlabel.setIcon(iconStar);
         }
