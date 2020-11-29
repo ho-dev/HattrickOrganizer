@@ -1,7 +1,6 @@
 package core.model.player;
 
 import core.db.DBManager;
-import core.model.match.TeamLineup;
 import core.training.YouthTrainerComment;
 import core.util.HOLogger;
 import module.training.Skills;
@@ -54,7 +53,7 @@ public class YouthPlayer {
 
     public List<ScoutComment> getScoutComments(){
         if ( scoutComments==null){
-            scoutComments = DBManager.instance().getYouthScoutComments(this.getId());
+            scoutComments = DBManager.instance().loadYouthScoutComments(this.getId());
         }
         return this.scoutComments;
     }
@@ -488,7 +487,9 @@ public class YouthPlayer {
         parseSkillInfo(properties, Skills.HTSkillID.SET_PIECES,  "setpiecesskill");
 
         this.scoutComments = new ArrayList<>();
-        for ( int i=0; parseScoutComment(properties, i); i++);
+        for ( int i=0; parseScoutComment(properties, i); i++) {
+            ;
+        }
     }
 
     // don't want to see warnings in HO log file on empty date strings
@@ -528,7 +529,7 @@ public class YouthPlayer {
             var s = p.getProperty(key);
             if (s != null && s.length() > 0) return Boolean.parseBoolean(s);
         }
-        catch(Exception e){
+        catch(Exception ignored){
         }
         return null;
     }
@@ -538,7 +539,7 @@ public class YouthPlayer {
             var s = p.getProperty(key);
             if (s != null && s.length() > 0) return Integer.parseInt(s);
         }
-        catch(Exception e){
+        catch(Exception ignored){
         }
         return null;
     }
@@ -570,7 +571,7 @@ public class YouthPlayer {
             var s = p.getProperty(key);
             if (s != null && s.length() > 0) return Double.parseDouble(s);
         }
-        catch(Exception e){
+        catch(Exception ignored){
         }
         return null;
     }

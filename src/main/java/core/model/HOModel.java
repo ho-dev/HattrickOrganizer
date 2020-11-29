@@ -53,7 +53,7 @@ public class HOModel {
         //erst einbauen wenn db angebunden ist
         try {
             m_iID = DBManager.instance().getMaxHrfId() + 1;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -119,7 +119,7 @@ public class HOModel {
      */
     public final List<YouthPlayer> getCurrentYouthPlayers() {
         if ( this.youthPlayers == null){
-            this.youthPlayers = DBManager.instance().getYouthPlayers(this.m_iID);
+            this.youthPlayers = DBManager.instance().loadYouthPlayers(this.m_iID);
         }
         return this.youthPlayers;
     }
@@ -450,7 +450,7 @@ public class HOModel {
         m_vPlayer.add(player);
     }
 
-    public final  void addYouthPlayer(YouthPlayer player){
+    public final void addYouthPlayer(YouthPlayer player){
         if ( youthPlayers == null){
             youthPlayers = new ArrayList<>();
         }
@@ -498,7 +498,7 @@ public class HOModel {
     			if (tpw.getNextTrainingDate().after(trainingDateOfPreviousHRF)) {
     			    if(TrainingManager.TRAININGDEBUG) {
                         HTCalendar htcP;
-                        String htcPs = "";
+                        String htcPs;
                         htcP = HTCalendarFactory.createTrainingCalendar(new Date(trainingDateOfPreviousHRF.getTime()));
                         htcPs = " (" + htcP.getHTSeason() + "." + htcP.getHTWeek() + ")";
                         HTCalendar htcA = HTCalendarFactory.createTrainingCalendar(new Date((trainingDateOfCurrentHRF.getTime())));
@@ -566,7 +566,7 @@ public class HOModel {
         //Player
         DBManager.instance().saveSpieler(m_iID, getCurrentPlayers(), getBasics().getDatum());
         // Youth Player
-        DBManager.instance().saveYouthPlayers(m_iID, getCurrentYouthPlayers(), getBasics().getDatum());
+        DBManager.instance().storeYouthPlayers(m_iID, getCurrentYouthPlayers(), getBasics().getDatum());
         //Staff
         DBManager.instance().saveStaff(m_iID, getStaff());
     }

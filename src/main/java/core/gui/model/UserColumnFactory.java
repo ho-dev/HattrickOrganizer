@@ -817,7 +817,7 @@ final public class UserColumnFactory {
         return playerAdditionalArray;
     }
 
-    public static UserColumn[] createYouthPlayerArray() {
+    public static UserColumn[] createYouthPlayerColumns() {
 
         return new UserColumn[]{
                 new YouthPlayerColumn(NAME, "ls.player.name", 0) {

@@ -375,15 +375,18 @@ public class DBManager {
 	}
 
 	/**
-	 * load youth players of HRF file
+	 * store youth players
 	 */
-	public List<YouthPlayer> getYouthPlayers(int hrfID) {
-		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
-				.getYouthPlayer(hrfID);
+	public void storeYouthPlayers(int hrfId, List<YouthPlayer> player, Timestamp date) {
+		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).storeYouthPlayers(hrfId,player, date);
 	}
-	public List<YouthPlayer.ScoutComment> getYouthScoutComments(int id) {
+	public List<YouthPlayer> loadYouthPlayers(int hrfID) {
+		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
+				.loadYouthPlayer(hrfID);
+	}
+	public List<YouthPlayer.ScoutComment> loadYouthScoutComments(int id) {
 		return ((YouthScoutCommentTable) getTable(YouthScoutCommentTable.TABLENAME))
-				.getYouthScoutComments(id);
+				.loadYouthScoutComments(id);
 	}
 
 	/**
@@ -444,13 +447,6 @@ public class DBManager {
 	public void saveSpieler(int hrfId, List<Player> player, Timestamp date) {
 		((SpielerTable) getTable(SpielerTable.TABLENAME)).saveSpieler(hrfId,
 				player, date);
-	}
-
-	/**
-	 * save youth player
-	 */
-	public void saveYouthPlayers(int hrfId, List<YouthPlayer> player, Timestamp date) {
-		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).saveYouthPlayers(hrfId,player, date);
 	}
 
 	/**
@@ -1464,7 +1460,7 @@ public class DBManager {
 			for (final SpielerMatchCBItem item : tempSpielerMatchCBItems) {
 				try {
 					datum = simpleFormat.parse(item.getMatchdate());
-				} catch (Exception e1) {
+				} catch (Exception ignored) {
 				}
 
 				if (datum == null) {
@@ -1880,7 +1876,7 @@ public class DBManager {
 
 	public Timestamp getMinScoutingDate(){
 		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
-				.getMinScoutingDate();
+				.loadMinScoutingDate();
 	}
 
 	public void storeMatchLineup(MatchLineup lineup, Integer teamId) {

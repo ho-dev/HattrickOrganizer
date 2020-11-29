@@ -1,8 +1,5 @@
 package core.db;
 
-import core.constants.player.PlayerSkill;
-import core.model.match.SourceSystem;
-import core.model.player.Player;
 import core.model.player.YouthPlayer;
 import core.util.HOLogger;
 import module.training.Skills;
@@ -92,7 +89,7 @@ public class YouthPlayerTable  extends AbstractTable {
     /**
      * save youth players
      */
-    void saveYouthPlayers(int hrfId, List<YouthPlayer> players, Timestamp date) {
+    void storeYouthPlayers(int hrfId, List<YouthPlayer> players, Timestamp date) {
 
         final String[] awhereS = { "HRF_ID" };
         final String[] awhereV = { "" + hrfId };
@@ -102,12 +99,12 @@ public class YouthPlayerTable  extends AbstractTable {
             delete(awhereS, awhereV);
 
             for ( YouthPlayer p: players){
-                saveYouthPlayer(hrfId, p, date);
+                storeYouthPlayer(hrfId, p, date);
             }
         }
     }
 
-    private void saveYouthPlayer(int hrfId, YouthPlayer player, Timestamp date) {
+    private void storeYouthPlayer(int hrfId, YouthPlayer player, Timestamp date) {
 
         final String[] awhereS = { "HRF_ID", "ID" };
         final String[] awhereV = { "" + hrfId, "" + player.getId()};
@@ -207,7 +204,7 @@ public class YouthPlayerTable  extends AbstractTable {
     /**
      * load youth player of HRF file id
      */
-    List<YouthPlayer> getYouthPlayer(int hrfID) {
+    List<YouthPlayer> loadYouthPlayer(int hrfID) {
         final ArrayList<YouthPlayer> ret = new ArrayList<>();
         if ( hrfID > -1) {
             var sql = "SELECT * from " + getTableName() + " WHERE HRF_ID = " + hrfID;
@@ -265,13 +262,15 @@ public class YouthPlayerTable  extends AbstractTable {
         return ret;
     }
 
-    public Timestamp getMinScoutingDate() {
+    public Timestamp loadMinScoutingDate() {
         var sql = "select min(ArrivalDate) from " + getTableName() + " where PromotionDate is NULL";
         try {
             var rs = adapter.executeQuery(sql);
-            rs.beforeFirst();
-            if ( rs.next()){
-                return rs.getTimestamp(1);
+            if (rs != null) {
+                rs.beforeFirst();
+                if (rs.next()) {
+                    return rs.getTimestamp(1);
+                }
             }
         }
         catch (Exception e){

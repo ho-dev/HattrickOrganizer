@@ -73,7 +73,7 @@ public class YouthScoutCommentTable extends AbstractTable {
         adapter.executeUpdate(sql);
     }
 
-    public List<ScoutComment> getYouthScoutComments(int youthplayer_id) {
+    public List<ScoutComment> loadYouthScoutComments(int youthplayer_id) {
         final ArrayList<ScoutComment> ret = new ArrayList<>();
         if ( youthplayer_id > -1) {
             var sql = "SELECT * from " + getTableName() + " WHERE YOUTHPLAYER_ID = " + youthplayer_id;
