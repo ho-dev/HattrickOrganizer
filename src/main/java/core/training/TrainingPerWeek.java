@@ -203,8 +203,7 @@ public class TrainingPerWeek  {
         old.add(Calendar.WEEK_OF_YEAR, -1);
 
         final Timestamp ots = new Timestamp(old.getTimeInMillis());
-        final String sdbquery = "SELECT * FROM MATCHESKURZINFO WHERE "
-                + "( HEIMID=" + teamId
+        final String where = "WHERE ( HEIMID=" + teamId
                 + " OR GASTID=" + teamId + " )"
                 + " AND MatchDate BETWEEN '" + ots.toString() + "' AND '" + this.trainingDate.toString() + "' "
                 + " AND MatchTyp>" + MatchType.NONE.getId()
@@ -212,7 +211,7 @@ public class TrainingPerWeek  {
                 + " AND STATUS=" + MatchKurzInfo.FINISHED
                 + " ORDER BY MatchDate DESC";
 
-        return DBManager.instance().getMatchesKurzInfo(sdbquery);
+        return DBManager.instance().getMatchesKurzInfo(where);
     }
 
     public HattrickDate getHattrickDate() {
