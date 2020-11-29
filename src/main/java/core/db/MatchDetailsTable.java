@@ -5,10 +5,7 @@ import core.model.match.Matchdetails;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Vector;
 
 import static core.db.DbUtil.getNullableInt;
 
@@ -22,7 +19,7 @@ final class MatchDetailsTable extends AbstractTable {
 	
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[53];
+		columns = new ColumnDescriptor[55];
 		columns[0]= new ColumnDescriptor("MatchID",Types.INTEGER,false,true);
 		columns[1]= new ColumnDescriptor("ArenaId",Types.INTEGER,false);
 		columns[2]= new ColumnDescriptor("ArenaName",Types.VARCHAR,false,256);
@@ -76,8 +73,10 @@ final class MatchDetailsTable extends AbstractTable {
 		columns[50]= new ColumnDescriptor("GuestGoal2",Types.INTEGER,true);
 		columns[51]= new ColumnDescriptor("GuestGoal3",Types.INTEGER,true);
 		columns[52]= new ColumnDescriptor("GuestGoal4",Types.INTEGER,true);
+		columns[53]= new ColumnDescriptor("HomeFormation", Types.VARCHAR, true, 5);
+		columns[54]= new ColumnDescriptor("AwayFormation", Types.VARCHAR, true, 5);
 	}
-	
+
 	@Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] {
@@ -153,18 +152,19 @@ final class MatchDetailsTable extends AbstractTable {
 						getNullableInt(rs, "GuestGoal3"),
 						getNullableInt(rs, "GuestGoal4")
 				};
-				if ( hasValues(homeGoalsInPart)){
+				if (hasValues(homeGoalsInPart)) {
 					details.setHomeGoalsInPart(homeGoalsInPart);
-				}
-				else {
+				} else {
 					details.setHomeGoalsInPart(null);
 				}
-				if ( hasValues(guestGoalsInPart)){
+				if (hasValues(guestGoalsInPart)){
 					details.setGuestGoalsInPart(guestGoalsInPart);
-				}
-				else {
+				} else {
 					details.setGuestGoalsInPart(null);
 				}
+
+				details.setHomeFormation(rs.getString("HomeFormation"));
+				details.setAwayFormation(rs.getString("AwayFormation"));
 				details.setStatisics();
 			}
 		} catch (Exception e) {
@@ -206,6 +206,7 @@ final class MatchDetailsTable extends AbstractTable {
 						+ "RatingIndirectSetPiecesAtt, RatingIndirectSetPiecesDef, "
 						+ "HomeGoal0, HomeGoal1, HomeGoal2, HomeGoal3, HomeGoal4, "
 						+ "GuestGoal0, GuestGoal1, GuestGoal2, GuestGoal3, GuestGoal4 "
+							+ ", HomeFormation, AwayFormation"
 						+ ") VALUES ("
 						+ details.getMatchID()
 						+ ", "
@@ -312,7 +313,11 @@ final class MatchDetailsTable extends AbstractTable {
 						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.OVERTIME)
 						+ ", "
 						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.PENALTY_CONTEST)
-						+ ")";
+							+ ", '"
+							+ details.getFormation(true)
+							+ "', '"
+							+ details.getFormation(false)
+						+ "')";
 
 				adapter.executeUpdate(sql);
 

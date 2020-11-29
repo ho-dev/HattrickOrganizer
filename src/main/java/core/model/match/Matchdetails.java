@@ -10,13 +10,11 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.net.OnlineWorker;
 import core.util.HOLogger;
-import module.teamAnalyzer.vo.Match;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -114,6 +112,9 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      */
     private Integer[] homeGoalsInParts;
     private Integer[] guestGoalsInParts;
+
+    private String homeFormation;
+    private String awayFormation;
 
     public String getResultInPart(MatchEvent.MatchPartId part){
         if ( homeGoalsInParts != null){
@@ -281,21 +282,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                 homeGoalsInParts[0] = 5;
             }
         }
-        /*/ check
-        int sumHomeGoals=0;
-        for ( var i : homeGoalsInParts){
-            sumHomeGoals += i;
-        }
-        if ( sumHomeGoals != this.m_iHomeGoals)
-            throw new Exception("error in InitGoalsInParts");
-        int sumGuestGoals=0;
-        for ( var i : guestGoalsInParts){
-            sumGuestGoals += i;
-        }
-        if ( sumGuestGoals != this.m_iGuestGoals)
-            throw new Exception("error in InitGoalsInParts");
-
-         */
     }
 
     public void setHomeGoalsInPart(Integer[] homeGoalsInPart) {
@@ -533,13 +519,15 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      * @return The formation type 4-4-2 or 5-3-2 etc
      */
     public final String getFormation(boolean home) {
-        try {
-            final Pattern p = Pattern.compile(".-.-.");
-            final Matcher m = p.matcher(m_sMatchreport);
-            return m.group();
-        } catch (RuntimeException e) {
-            return "";
-        }
+        return home ? homeFormation : awayFormation;
+    }
+
+    public void setHomeFormation(String homeFormation) {
+        this.homeFormation = homeFormation;
+    }
+
+    public void setAwayFormation(String awayFormation) {
+        this.awayFormation = awayFormation;
     }
 
     /**

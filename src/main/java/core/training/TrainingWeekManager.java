@@ -340,8 +340,9 @@ public class TrainingWeekManager {
         int actualWeek = bas.getSpieltag();
         int trainNumber = input.size();
         try {
-            // We are between the training and the match date, and should increase the week by 1. 
-            if (hom.getXtraDaten().getTrainingDate().after(hom.getXtraDaten().getSeriesMatchDate())) {
+            // We are between the training and the match date, and should increase the week by 1.
+            if (hom.getXtraDaten().getTrainingDate() != null &&
+					hom.getXtraDaten().getTrainingDate().after(hom.getXtraDaten().getSeriesMatchDate())) {
                 actualWeek++;
                 if (actualWeek == 17) {
                     actualWeek = 1;

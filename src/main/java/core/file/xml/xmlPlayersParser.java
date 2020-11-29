@@ -142,14 +142,14 @@ public class xmlPlayersParser {
                 ele = (Element) root.getElementsByTagName("SetPiecesSkill").item(0);
                 hash.put("SetPiecesSkill", (XMLManager.getFirstChildNodeValue(ele)));
 
-                //Trainer
-                try {
-                    Element tmp_Trainer = (Element) root.getElementsByTagName("TrainerData").item(0);
+                // Coach
+                NodeList trainerData = root.getElementsByTagName("TrainerData");
+                if (trainerData.getLength() > 0) {
+                    Element tmp_Trainer = (Element) trainerData.item(0);
                     ele = (Element) tmp_Trainer.getElementsByTagName("TrainerType").item(0);
                     hash.put("TrainerType", (XMLManager.getFirstChildNodeValue(ele)));
                     ele = (Element) tmp_Trainer.getElementsByTagName("TrainerSkill").item(0);
                     hash.put("TrainerSkill", (XMLManager.getFirstChildNodeValue(ele)));
-                } catch (Exception ep) {
                 }
 
                 //LastMatch #461

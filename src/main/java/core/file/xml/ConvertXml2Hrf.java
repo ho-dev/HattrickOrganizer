@@ -195,19 +195,19 @@ public class ConvertXml2Hrf {
 		// Team ermitteln, für Ratings der Player wichtig
 		if (matchLineup != null) {
 			Matchdetails md = XMLMatchdetailsParser
-					.parseMachtdetailsFromString(
+					.parseMatchdetailsFromString(
 							mc.getMatchdetails(matchLineup.getMatchID(),
 									matchLineup.getMatchTyp()), null);
 
 			if (matchLineup.getHeimId() == Integer.parseInt(teamdetailsDataMap
 					.get("TeamID").toString())) {
-				matchLineupTeam = (MatchLineupTeam) matchLineup.getHeim();
+				matchLineupTeam = matchLineup.getHeim();
 				if (md != null) {
 					lastAttitude = md.getHomeEinstellung();
 					lastTactic = md.getHomeTacticType();
 				}
 			} else {
-				matchLineupTeam = (MatchLineupTeam) matchLineup.getGast();
+				matchLineupTeam = matchLineup.getGast();
 				if (md != null) {
 					lastAttitude = md.getGuestEinstellung();
 					lastTactic = md.getGuestTacticType();
