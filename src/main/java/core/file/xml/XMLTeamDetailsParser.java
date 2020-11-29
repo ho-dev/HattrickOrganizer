@@ -86,8 +86,6 @@ public class XMLTeamDetailsParser {
 			xmlValue2Hash(hash, root, "Loginname");
 			xmlValue2Hash(hash, root, "LastLoginDate");
 
-			ele = (Element) root.getElementsByTagName("SupporterTier").item(0);
-			String supportValue = XMLManager.getFirstChildNodeValue(ele);
 			String supportStatus = "False";
 			NodeList supporterTier = root.getElementsByTagName("SupporterTier");
 			if (supporterTier.getLength() > 0) {
