@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<svg id="star" height="18" width="19"  xmlns="http://www.w3.org/2000/svg">
+	<defs id="colors">
+		<linearGradient id="fillColor">
+			<stop offset="0" stop-color="#ffd700"/>
+			<stop offset="1" stop-color="#ffd700"/>
+		</linearGradient>
+	</defs>
+	<g>
+		<path fill="url(#fillColor)" d="M9.5 14.25l-5.584 2.936 1.066-6.218L.465 6.564l6.243-.907L9.5 0l2.792 5.657 6.243.907-4.517 4.404 1.066 6.218" />
+	</g>
+</svg>

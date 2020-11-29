@@ -1,4 +1,3 @@
-// %3815329211:de.hattrickorganizer.gui.league%
 package module.series;
 
 import core.db.DBManager;
@@ -16,13 +15,15 @@ import core.net.OnlineWorker;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
-
+import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+
+import static core.gui.theme.ThemeManager.getColor;
 
 
 /**
@@ -38,40 +39,37 @@ final class MatchDayPanel extends JPanel implements ActionListener {
     private final JLabel[] homeTeams = new JLabel[4];
     private final JLabel[] visitorTeams = new JLabel[4];
     private final JLabel[] results = new JLabel[4];
-    private int matchround = -1;
-    private static final Color foreground = ThemeManager.getColor(HOColorName.LABEL_FG);
+    private int iMatchRound;
+    private static final Color foreground = getColor(HOColorName.LABEL_FG);
     private final Model model;
 
-    protected MatchDayPanel(Model model, int spieltag) {
+    protected MatchDayPanel(Model model, int _iMatchRound) {
         this.model = model;
-        // Kann codiert sein!
-        matchround = spieltag;
-
+        iMatchRound = _iMatchRound;
         initComponents();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Das Match anzeigen
-        int[] matchdata = new int[0];
+        // Show the match
+        int[] matchDatas;
 
         try {
-            // Matchid, Heimid, Gastid, Heimtore, Gasttore
-            matchdata = Helper.generateIntArray(e.getActionCommand());
-        } catch (Exception ex) {
-            HOLogger.instance().log(
-                    getClass(),
-                    "SpieltagPanel.actionPerformed: Matchid konnte nicht geparsed werden: "
+            // Match ID, HomeTeam ID, GuestTeam ID, Home Goals, Guest Goals
+            matchDatas = Helper.generateIntArray(e.getActionCommand());
+         }
+        catch (Exception ex) {
+            HOLogger.instance().log(getClass(),  "MatchdayPanel: Action event could not be parsed:: "
                             + e.getActionCommand() + " / " + ex);
             return;
         }
 
         // --Match zeigen ggf runterladen--
-        if (matchdata[0] > 0) {
+        if (matchDatas[0] > 0) {
             // Spiel nicht vorhanden, dann erst runterladen!
-            if (!DBManager.instance().isMatchVorhanden(matchdata[0])) {
+            if (!DBManager.instance().isMatchVorhanden(matchDatas[0])) {
 
-                OnlineWorker.downloadMatchData(matchdata[0], MatchType.LEAGUE, // not
+                OnlineWorker.downloadMatchData(matchDatas[0], MatchType.LEAGUE, // not
                         // tournament
                         false);
                 fillLabels();
@@ -79,12 +77,12 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
             } else {
                 // Match zeigen
-                HOMainFrame.instance().showMatch(matchdata[0]);
+                HOMainFrame.instance().showMatch(matchDatas[0]);
             }
         }
     }
 
-    protected void changeSaison() {
+    protected void changeSeason() {
         fillLabels();
     }
 
@@ -97,10 +95,8 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         constraints.gridwidth = gridWithValue;
     }
 
-    private void setMatchButton(JButton button, Paarung paarung) {
-        button.setPreferredSize(new Dimension(27, 18));
-
-        long gameFinishTime = 0;
+    private void setMatchButton(JButton button, @Nullable Paarung paarung) {
+        long gameFinishTime;
         long nowTime = (new Date()).getTime();
 
         boolean gameFinished; // Hat das Spiel schon stattgefunden
@@ -117,19 +113,16 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         if ( gameFinished ) {
             //Match already in the database
             if (DBManager.instance().isMatchVorhanden(paarung.getMatchId())) {
-                button.setToolTipText(HOVerwaltung.instance().getLanguageString(
-                        "tt_Ligatabelle_SpielAnzeigen"));
+                button.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Ligatabelle_SpielAnzeigen"));
                 button.setEnabled(true);
-                button.setIcon(ThemeManager.getIcon(HOIconName.SHOW_MATCH));
-                button.setDisabledIcon(ThemeManager.getIcon(HOIconName.SHOW_MATCH));
+                button.setIcon(ImageUtilities.getRightArrowIcon(getColor(HOColorName.SHOW_MATCH), 14, 14));
             }
             // Match not yet in the database
             else {
                 button.setToolTipText(HOVerwaltung.instance().getLanguageString(
                         "tt_Ligatabelle_SpielDownloaden"));
                 button.setEnabled(true);
-                button.setIcon(ThemeManager.getIcon(HOIconName.DOWNLOAD_MATCH));
-                button.setDisabledIcon(ThemeManager.getIcon(HOIconName.DOWNLOAD_MATCH));
+                button.setIcon(ImageUtilities.getDownloadIcon(getColor(HOColorName.DOWNLOAD_MATCH), 14, 14));
             }
         }
         // Match has not taken place yet
@@ -137,19 +130,19 @@ final class MatchDayPanel extends JPanel implements ActionListener {
             button.setToolTipText(HOVerwaltung.instance().getLanguageString(
                     "tt_Ligatabelle_SpielNochnichtgespielt"));
             button.setEnabled(false);
-            button.setIcon(ThemeManager.getIcon(HOIconName.NO_MATCH));
-            button.setDisabledIcon(ThemeManager.getIcon(HOIconName.NO_MATCH));
+            button.setIcon(ImageUtilities.getUnavailableIcon(getColor(HOColorName.DOWNLOAD_MATCH), 14, 14));
         }
+        button.setBackground(getColor(HOColorName.LEAGUE_PANEL_BG));
     }
 
     private void fillLabels() {
-        int spieltag = matchround;
-        final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+        int spieltag = iMatchRound;
+        final int myTeamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+        final String myTeamName = HOVerwaltung.instance().getModel().getBasics().getTeamName();
+
 
         if (this.model.getCurrentSeries() == null) {
-            for (int i = 0; i < buttons.length; i++)
-                setMatchButton(buttons[i], null);
-
+            for (JButton button : buttons) setMatchButton(button, null);
             return;
         }
 
@@ -187,68 +180,80 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
         setBorder(BorderFactory.createTitledBorder(bordertext));
 
-        // Panel aktualisieren, wenn Paarungen gefunden
+        // Update panel when pairings are found
         if ((paarungen != null) && (paarungen.size() == 4)) {
-            resetMarkierung();
+            resetAllLabelsFormat();
 
             // Erste Paarung------------------------------------------
 
             for (int i = 0; i < buttons.length; i++) {
-                Paarung paarung = (Paarung) paarungen.get(i);
+                Paarung paarung = paarungen.get(i);
                 buttons[i].setActionCommand(paarung.getMatchId() + "," + paarung.getHeimId() + ","
                         + paarung.getGastId() + "," + paarung.getToreHeim() + ","
                         + paarung.getToreGast());
                 setMatchButton(buttons[i], paarung);
-                fillRow(homeTeams[i], visitorTeams[i], results[i], paarung, teamid);
+                fillRow(homeTeams[i], visitorTeams[i], results[i], paarung, myTeamID, myTeamName);
             }
         }
         // Keine Paarungen
         else {
-            for (int i = 0; i < buttons.length; i++)
-                setMatchButton(buttons[i], null);
+            for (JButton button : buttons) setMatchButton(button, null);
         }
     }
 
     private void fillRow(JLabel homeTeam, JLabel visitorTeam, JLabel result, Paarung paarung,
-                         int teamid) {
+                         int myTeamID, String myTeamName) {
         homeTeam.setText(paarung.getHeimName());
         visitorTeam.setText(paarung.getGastName());
+        homeTeam.setBackground(getColor(HOColorName.LEAGUE_PANEL_BG));
+        visitorTeam.setBackground(getColor(HOColorName.LEAGUE_PANEL_BG));
+        result.setBackground(getColor(HOColorName.LEAGUE_PANEL_BG));
         if ((paarung.getToreHeim() > -1) && (paarung.getToreGast() > -1)) {
             result.setText(StringUtils.getResultString(paarung.getToreHeim(), paarung.getToreGast(), ""));
 
             // HomeVictory
             if (paarung.getToreHeim() > paarung.getToreGast()) {
-                homeTeam.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
-                visitorTeam.setIcon(ImageUtilities.NOIMAGEICON);
+                homeTeam.setFont(homeTeam.getFont().deriveFont(Font.BOLD));
+                homeTeam.setForeground(HODefaultTableCellRenderer.SELECTION_FG);
+                if (paarung.getHeimId() == myTeamID){
+                    result.setForeground(getColor(HOColorName.TABLEENTRY_IMPROVEMENT_FG));
+                    result.setFont(homeTeam.getFont().deriveFont(Font.BOLD));
+                }
+                else if (paarung.getGastId() == myTeamID){
+                    result.setForeground(getColor(HOColorName.TABLEENTRY_DECLINE_FG));
+                    result.setFont(homeTeam.getFont().deriveFont(Font.BOLD));
+                }
+
+
             }
-            // VisitorVictory
+            // Visitor Victory
             else if (paarung.getToreHeim() < paarung.getToreGast()) {
-                homeTeam.setIcon(ImageUtilities.NOIMAGEICON);
-                visitorTeam.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
-            }
-            // drawn
-            else {
-                homeTeam.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY, Color.WHITE));
-                visitorTeam.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY,
-                        Color.WHITE));
+                visitorTeam.setFont(homeTeam.getFont().deriveFont(Font.BOLD));
+                visitorTeam.setForeground(HODefaultTableCellRenderer.SELECTION_FG);
+                if (paarung.getHeimId() == myTeamID){
+                    result.setForeground(getColor(HOColorName.TABLEENTRY_DECLINE_FG));
+                    result.setFont(homeTeam.getFont().deriveFont(Font.BOLD));
+                }
+                else if (paarung.getGastId() == myTeamID){
+                    result.setForeground(getColor(HOColorName.TABLEENTRY_IMPROVEMENT_FG));
+                    result.setFont(homeTeam.getFont().deriveFont(Font.BOLD));
+                }
             }
         } else {
             result.setText(StringUtils.getResultString(-1, -1, ""));
-            homeTeam.setIcon(ImageUtilities.NOIMAGEICON);
-            visitorTeam.setIcon(ImageUtilities.NOIMAGEICON);
         }
 
-        markMyTeam(homeTeam, paarung.getHeimId(), teamid);
-        markMyTeam(visitorTeam, paarung.getGastId(), teamid);
-        markSelectedTeam(homeTeam, paarung.getHeimName());
-        markSelectedTeam(visitorTeam, paarung.getGastName());
+        markMyTeam(homeTeam, paarung.getHeimId(), myTeamID);
+        markMyTeam(visitorTeam, paarung.getGastId(), myTeamID);
+        markSelectedTeam(homeTeam, paarung.getHeimName(), myTeamName);
+        markSelectedTeam(visitorTeam, paarung.getGastName(), myTeamName);
     }
 
     private void initButton(JButton button, GridBagConstraints constraints, GridBagLayout layout,
                             int row) {
         setConstraintsValues(constraints, GridBagConstraints.NONE, 0.0, 6, row, 1);
 
-        button.setBackground(this.getBackground());
+        button.setBackground(getColor(HOColorName.LEAGUE_PANEL_BG));
         button.addActionListener(this);
         layout.setConstraints(button, constraints);
         add(button);
@@ -275,7 +280,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         constraints.weighty = 0.0;
         constraints.insets = new Insets(2, 2, 2, 2);
 
-        this.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
+        this.setBackground(getColor(HOColorName.LEAGUE_PANEL_BG));
 
         JLabel label;
 
@@ -327,8 +332,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         fillLabels();
     }
 
-    private void initResultLabel(JLabel label, GridBagConstraints constraints,
-                                 GridBagLayout layout, int row) {
+    private void initResultLabel(JLabel label, GridBagConstraints constraints, GridBagLayout layout, int row) {
         setConstraintsValues(constraints, GridBagConstraints.NONE, 0.5, 3, row, 3);
         label.setHorizontalAlignment(SwingConstants.RIGHT);
         layout.setConstraints(label, constraints);
@@ -337,36 +341,42 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
     private void initTeam(JLabel label, GridBagConstraints constraints, GridBagLayout layout,
                           int row, int column) {
+        label.setHorizontalAlignment(SwingConstants.CENTER);
         setConstraintsValues(constraints, GridBagConstraints.HORIZONTAL, 1.0, column, row, 1);
         layout.setConstraints(label, constraints);
         add(label);
     }
 
-    private void markMyTeam(JLabel team, int matchTeamId, int myTeamId) {
-        if (matchTeamId == myTeamId) {
+    private void markMyTeam(JLabel team, int teamID, int myTeamId) {
+        if (teamID == myTeamId) {
             team.setFont(team.getFont().deriveFont(Font.BOLD));
-            team.setForeground(ThemeManager.getColor(HOColorName.TEAM_FG));
+            team.setForeground(getColor(HOColorName.HOME_TEAM_FG));
         }
     }
 
-    private void markSelectedTeam(JLabel team, String teamName) {
+    private void markSelectedTeam(JLabel team, String teamName, String myTeamName) {
         if (teamName.equals(this.model.getCurrentTeam())) {
-            team.setOpaque(true);
-            team.setBackground(HODefaultTableCellRenderer.SELECTION_BG);
-            team.setForeground(HODefaultTableCellRenderer.SELECTION_FG);
+            team.setFont(team.getFont().deriveFont(Font.BOLD));
+            if (teamName.equals(myTeamName)){
+                team.setForeground(getColor(HOColorName.HOME_TEAM_FG));
+            }
+            else {
+                team.setForeground(getColor(HOColorName.SELECTED_TEAM_FG));
+            }
         }
     }
 
-    private void resetMarkierung() {
+    private void resetAllLabelsFormat() {
         for (int i = 0; i < buttons.length; i++) {
-            resetMarkup(homeTeams[i]);
-            resetMarkup(visitorTeams[i]);
+            resetLabelFormat(homeTeams[i]);
+            resetLabelFormat(visitorTeams[i]);
+            resetLabelFormat(results[i]);
         }
     }
 
-    private void resetMarkup(JLabel label) {
+    private void resetLabelFormat(JLabel label) {
         label.setFont(label.getFont().deriveFont(Font.PLAIN));
         label.setForeground(foreground);
-        label.setOpaque(false);
+        label.setOpaque(true);
     }
 }

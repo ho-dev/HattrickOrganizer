@@ -164,6 +164,11 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN RENAME TO ECONOMY");
 		}
 
+		if (!columnExistsInTable("HomeFormation", MatchDetailsTable.TABLENAME)) {
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeFormation VARCHAR(5) ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN AwayFormation VARCHAR(5) ");
+		}
+
 		if ( !columnExistsInTable("YouthTeamName", BasicsTable.TABLENAME)){
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamName VARCHAR (127)");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamID INTEGER");

@@ -9,8 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Vector;
 
 final class MatchDetailsTable extends AbstractTable {
 
@@ -76,7 +74,9 @@ final class MatchDetailsTable extends AbstractTable {
 				new ColumnDescriptor("GuestGoal1", Types.INTEGER, true),
 				new ColumnDescriptor("GuestGoal2", Types.INTEGER, true),
 				new ColumnDescriptor("GuestGoal3", Types.INTEGER, true),
-				new ColumnDescriptor("GuestGoal4", Types.INTEGER, true)
+				new ColumnDescriptor("GuestGoal4", Types.INTEGER, true),
+				new ColumnDescriptor("HomeFormation", Types.VARCHAR, true, 5),
+				new ColumnDescriptor("AwayFormation", Types.VARCHAR, true, 5)
 		};
 	}
 	
@@ -156,18 +156,19 @@ final class MatchDetailsTable extends AbstractTable {
 						DBManager.getInteger(rs, "GuestGoal3"),
 						DBManager.getInteger(rs, "GuestGoal4")
 				};
-				if ( hasValues(homeGoalsInPart)){
+				if (hasValues(homeGoalsInPart)) {
 					details.setHomeGoalsInPart(homeGoalsInPart);
-				}
-				else {
+				} else {
 					details.setHomeGoalsInPart(null);
 				}
-				if ( hasValues(guestGoalsInPart)){
+				if (hasValues(guestGoalsInPart)){
 					details.setGuestGoalsInPart(guestGoalsInPart);
-				}
-				else {
+				} else {
 					details.setGuestGoalsInPart(null);
 				}
+
+				details.setHomeFormation(rs.getString("HomeFormation"));
+				details.setAwayFormation(rs.getString("AwayFormation"));
 				details.setStatisics();
 			}
 		} catch (Exception e) {
@@ -212,7 +213,8 @@ final class MatchDetailsTable extends AbstractTable {
 							"Matchreport, RegionID, soldTerraces, soldBasic, soldRoof, soldVIP, " +
 							"RatingIndirectSetPiecesAtt, RatingIndirectSetPiecesDef, " +
 							"HomeGoal0, HomeGoal1, HomeGoal2, HomeGoal3, HomeGoal4, " +
-							"GuestGoal0, GuestGoal1, GuestGoal2, GuestGoal3, GuestGoal4 " +
+							"GuestGoal0, GuestGoal1, GuestGoal2, GuestGoal3, GuestGoal4, " +
+							"HomeFormation, AwayFormation" +
 							") VALUES ("
 						+ details.getMatchID() + ","
 						+ details.getSourceSystem().getId() + ","
@@ -267,7 +269,9 @@ final class MatchDetailsTable extends AbstractTable {
 						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.FIRST_HALF) + ","
 						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.SECOND_HALF) + ","
 						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.OVERTIME)	+ ","
-						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.PENALTY_CONTEST) + ")";
+						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.PENALTY_CONTEST) + ",'"
+						+ details.getFormation(true) + "', '"
+						+ details.getFormation(false) +"')";
 
 				adapter.executeUpdate(sql);
 
@@ -303,6 +307,4 @@ final class MatchDetailsTable extends AbstractTable {
 		}
 		return false;
 	}
-
-
 }

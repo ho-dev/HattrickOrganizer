@@ -12,11 +12,13 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ## Highlights
   - complete makeover of the statistics module (#788)
-
+  - improving consistency of dark themes
 
 
 ## Detailed Changelog
 
+### GUI
+  - theming of training bar indicators
 
 ### Finance
   - all information relative to Finance are now stored in the database (#793)

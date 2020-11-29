@@ -1,76 +1,69 @@
-// %3659932329:de.hattrickorganizer.gui.templates%
 package core.gui.comp.entry;
 
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.match.MatchType;
-
+import core.util.HOLogger;
 import java.awt.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.swing.*;
 
+import static core.util.Helper.DEFAULTDEZIMALFORMAT;
+import static core.util.Helper.INTEGERFORMAT;
+
 public class RatingTableEntry extends AbstractHOTableEntry {
-    //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static Icon FULL10STARIMAGEICON;
-    private static Icon FULLGREY10STARIMAGEICON;
-    private static Icon FULL5STARIMAGEICON;
-    private static Icon FULLGREY5STARIMAGEICON;
-    private static Icon FULL50STARIMAGEICON;
-    private static Icon FULLGREY50STARIMAGEICON;
-    private static Icon FULLSTARIMAGEICON;
-    private static Icon HALFSTARIMAGEICON;
-    private static Icon FULLGREYSTARIMAGEICON;
-    private static Icon HALFGREYSTARIMAGEICON;
-    private static Icon BALLIMAGEICON;
 
-    //~ Instance fields ----------------------------------------------------------------------------
-
+    private final Color bgColor = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
+    private final static Icon iconStar = ImageUtilities.getStarIcon();
+    private static Icon matchIcon;
     private JComponent m_clComponent = new JPanel();
-    private JLabel matchLink = new JLabel("");
+    private final JLabel matchLink = new JLabel("");
     private String m_sTooltip = "";
-    private boolean m_bYellowStar;
     private float m_fRating;
-    private boolean isOpaque = true;
-    private Color bgColor = ColorLabelEntry.BG_STANDARD;
+    private final boolean starsAligned;
 
-    //~ Constructors -------------------------------------------------------------------------------
 
-    /**
-     * Creates a new RatingTableEntry object.
-     */
     public RatingTableEntry() {
-        initStarsIcons();
+        this(false);
+    }
 
-        m_fRating = 0.0F;
-        m_bYellowStar = true;
+    public RatingTableEntry(Boolean _starsAligned) {
+        starsAligned = _starsAligned;
+        m_fRating = 0.0f;
         createComponent();
     }
 
-    /**
-     * Creates a new RatingTableEntry object.
-     */
-    public RatingTableEntry(float f, boolean yellowstar) {
-        initStarsIcons();
+    public RatingTableEntry(float f) {
+        this(f, false);
+    }
 
-        m_bYellowStar = yellowstar;
-        setRating(f);
-
+    public RatingTableEntry(float f, Boolean _starsAligned) {
+        starsAligned = _starsAligned;
+        m_fRating = f/2.0f;
         createComponent();
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    public RatingTableEntry(float f, String lastMatchDate, MatchType matchType) {
+        this(f, lastMatchDate, matchType, false);
+    }
+
+    public RatingTableEntry(float f, String lastMatchDate, MatchType matchType, Boolean _starsAligned) {
+        m_fRating = f/2.0f;
+        starsAligned = _starsAligned;
+        createComponent();
+        this.setMatchInfo(lastMatchDate, matchType);
+    }
+
 
 	public final javax.swing.JComponent getComponent(boolean isSelected) {
         m_clComponent.setBackground((isSelected)?HODefaultTableCellRenderer.SELECTION_BG:bgColor);
-        m_clComponent.setOpaque(isOpaque);
-        
         return m_clComponent;
     }
 
@@ -84,7 +77,7 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         }
 
         if (forceUpdate || (f != m_fRating)) {
-            m_fRating = f;
+            m_fRating = f/2.0f;
             updateComponent();
         }
 
@@ -92,7 +85,7 @@ public class RatingTableEntry extends AbstractHOTableEntry {
     }
 
     public final float getRating() {
-        return m_fRating;
+        return m_fRating*2.0f;
     }
 
     public final void setToolTipText(String text) {
@@ -100,49 +93,59 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         updateComponent();
     }
 
-    /**
-     * Create match link
-     * steffano
-     * @param t
-     * @param matchType
-     */
     public final void setMatchInfo(String t, MatchType matchType) {
 
         try {
-            //2020-05-06 09:30:00
             Date date=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(t);
             DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-            matchLink.setText("  ("+dateFormat.format(date)+")");
-            BALLIMAGEICON = ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]);
-            matchLink.setIcon(BALLIMAGEICON);
+            matchLink.setText("("+dateFormat.format(date)+")");
+            matchIcon = ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]);
+            matchLink.setIcon(matchIcon);
+            matchLink.setHorizontalAlignment(SwingConstants.RIGHT);
         } catch (ParseException e) {
+            HOLogger.instance().log(this.getClass(), e.getMessage());
         }
         updateComponent();
 
-        m_clComponent.add(new JLabel("  "));
-        m_clComponent.add(matchLink);
+        GridBagLayout layout = new GridBagLayout();
+        GridBagConstraints constraints = new GridBagConstraints();
+        m_clComponent.setLayout(layout);
+
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1.0;
+        constraints.weighty = 0.0;
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.anchor = GridBagConstraints.EAST;
         matchLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        layout.setConstraints(matchLink, constraints);
+        m_clComponent.add(matchLink);
+
         m_clComponent.repaint();
+
     }
 
-    public final void setYellowStar(boolean value) {
-        if (m_bYellowStar != value) {
-            m_bYellowStar = value;
-            updateComponent();
-        }
-    }
-
-    public final boolean isYellowStar() {
-        return m_bYellowStar;
-    }
 
 	public final void clear() {
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        GridBagLayout layout = new GridBagLayout();
+
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1.0;
+        constraints.weighty = 0.0;
+        constraints.gridy = 0;
+
         m_clComponent.removeAll();
 
-        //Platzhalter
+        m_clComponent.setLayout(layout);
+
+
         JLabel jlabel;
         jlabel = new JLabel(ImageUtilities.NOIMAGEICON);
         jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        constraints.gridx = 0;
+        layout.setConstraints(jlabel, constraints);
         m_clComponent.add(jlabel);
     }
 
@@ -163,132 +166,77 @@ public class RatingTableEntry extends AbstractHOTableEntry {
     }
 
 	public final void createComponent() {
-        float f = m_fRating / 2;
+
         JPanel renderer = new JPanel();
-        renderer.setLayout(new BoxLayout(renderer, 0));
+
+        GridBagLayout layout = new GridBagLayout();
+        GridBagConstraints constraints = new GridBagConstraints();
         renderer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-        //Platzhalter
- 
-        setStars(renderer,f);
+        renderer.setLayout(layout);
 
-        //renderer.setPreferredSize ( new java.awt.Dimension( 100, 14 ) );
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1.0;
+        constraints.weighty = 0.0;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.anchor = GridBagConstraints.WEST;
+        JLabel starLabel = getStarsLabel(m_fRating);
+        layout.setConstraints(starLabel, constraints);
+        renderer.add(starLabel);
+
         renderer.setToolTipText(m_sTooltip);
-
         m_clComponent = renderer;
     }
 
-    /**
-     * 
-     * @param panel
-     * @param yellowImage
-     * @param grayImage
-     */
-    private void addLabel(JComponent panel, Icon yellowImage, Icon grayImage) {
-    	final JLabel jlabel = new JLabel((m_bYellowStar)?yellowImage:grayImage);
-        jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        panel.add(jlabel);
-    }
     
 	public final void updateComponent() {
-        float f = m_fRating / 2;
-        
         m_clComponent.removeAll();
+        GridBagLayout layout = new GridBagLayout();
+        GridBagConstraints constraints = new GridBagConstraints();
+        m_clComponent.setLayout(layout);
 
-       setStars(m_clComponent,f);
-
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1.0;
+        constraints.weighty = 0.0;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.anchor = GridBagConstraints.WEST;
+        JLabel starLabel = getStarsLabel(m_fRating);
+        layout.setConstraints(starLabel, constraints);
+        m_clComponent.add(starLabel);
         m_clComponent.setToolTipText(m_sTooltip);
-
         m_clComponent.repaint();
     }
     
-    private void setStars(JComponent panel, float f) {
-		if (f == 0) {
-			JLabel jlabel;
+    private JLabel getStarsLabel(float _rating) {
+        final JLabel jlabel;
+		if (_rating == 0) {
 			jlabel = new JLabel(ImageUtilities.NOIMAGEICON);
-			jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-			panel.add(jlabel);
-		}
-
-		while (f >= 50) {
-			addLabel(panel, FULL50STARIMAGEICON, FULLGREY50STARIMAGEICON);
-			f -= 50;
-		}
-
-		while (f >= 10) {
-			addLabel(panel, FULL10STARIMAGEICON, FULLGREY10STARIMAGEICON);
-			f -= 10;
-		}
-
-		while (f >= 5) {
-			addLabel(panel, FULL5STARIMAGEICON, FULLGREY5STARIMAGEICON);
-			f -= 5;
-		}
-
-		while (f >= 1) {
-			addLabel(panel, FULLSTARIMAGEICON, FULLGREYSTARIMAGEICON);
-			f -= 1;
-		}
-
-		if (f == 0.5) {
-			addLabel(panel, HALFSTARIMAGEICON, HALFGREYSTARIMAGEICON);
-		}
-	}
-    
-    private void initStarsIcons(){
-    	if ((FULLSTARIMAGEICON == null) || (HALFSTARIMAGEICON == null)) {
-            FULL10STARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_10.png"),
-                                                                                  210, 210, 185,
-                                                                                  255, 255, 255));
-            FULLGREY10STARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_10_grey.png"),
-                                                                                      215, 215,
-                                                                                      215, 255,
-                                                                                      255, 255));
-            FULL5STARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_5.png"),
-                                                                                 210, 210, 185,
-                                                                                 255, 255, 255));
-            FULLGREY5STARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_5_grey.png"),
-                                                                                     215, 215, 215,
-                                                                                     255, 255, 255));
-            FULL50STARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_50.png"),
-                                                                                  210, 210, 185,
-                                                                                  255, 255, 255));
-            FULLGREY50STARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_50_grey.png"),
-                                                                                      215, 215,
-                                                                                      215, 255,
-                                                                                      255, 255));
-            FULLSTARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star.gif"),
-                                                                                210, 210, 185, 255,
-                                                                                255, 255));
-            HALFSTARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_half.gif"),
-                                                                                210, 210, 185, 255,
-                                                                                255, 255));
-            FULLGREYSTARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_grey.png"),
-                                                                                    215, 215, 215,
-                                                                                    255, 255, 255));
-            HALFGREYSTARIMAGEICON = new ImageIcon(ImageUtilities.makeColorTransparent(ThemeManager.loadImage("gui/bilder/star_grey_half.png"),
-                                                                                    215, 215, 215,
-                                                                                    255, 255, 255));
-        }	
+        }
+		else{
+            if (_rating == (int)_rating)
+            {
+                if(starsAligned) {
+                    jlabel = new JLabel("   " + INTEGERFORMAT.format(_rating));
+                }
+                else{
+                    jlabel = new JLabel(INTEGERFORMAT.format(_rating));
+                }
+            }
+            else{
+                jlabel = new JLabel(DEFAULTDEZIMALFORMAT.format(_rating));
+            }
+            jlabel.setIcon(iconStar);
+        }
+        jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        jlabel.setHorizontalTextPosition(SwingConstants.LEADING);
+        jlabel.setHorizontalAlignment(SwingConstants.LEFT);
+        return jlabel;
     }
-
-	public boolean isOpaque() {
-		return isOpaque;
-	}
-
-	public void setOpaque(boolean isOpaque) {
-		this.isOpaque = isOpaque;
-		updateComponent();
-	}
 
 	public JLabel getLabelMatch() {
 		return matchLink;
 	}
 
-	public void setBgColor(Color bgColor) {
-		this.bgColor = bgColor;
-		updateComponent();
-	}
-    
-    
 }

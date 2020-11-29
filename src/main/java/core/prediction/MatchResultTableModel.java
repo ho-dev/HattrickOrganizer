@@ -60,11 +60,11 @@ public class MatchResultTableModel extends AbstractMatchTableModel {
 				m_clData[(home * 5) + away][2] = new ColorLabelEntry(1, "", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 
 				if (home > away) {
-					((ColorLabelEntry) m_clData[(home * 5) + away][2]).setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
+					((ColorLabelEntry) m_clData[(home * 5) + away][2]).setIcon(ImageUtilities.getStarIcon());
 				} else if (home < away) {
 					((ColorLabelEntry) m_clData[(home * 5) + away][2]).setIcon(ImageUtilities.NOIMAGEICON);
 				} else {
-					((ColorLabelEntry) m_clData[(home * 5) + away][2]).setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY, Color.WHITE));
+					((ColorLabelEntry) m_clData[(home * 5) + away][2]).setIcon(ImageUtilities.getStarIcon());
 				}
 			}
 		}

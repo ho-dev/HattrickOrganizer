@@ -89,8 +89,13 @@ public class XMLTeamDetailsParser {
 			ele = (Element) root.getElementsByTagName("SupporterTier").item(0);
 			String supportValue = XMLManager.getFirstChildNodeValue(ele);
 			String supportStatus = "False";
-			if (supportValue.trim().length() > 0) {
-				supportStatus = "True";
+			NodeList supporterTier = root.getElementsByTagName("SupporterTier");
+			if (supporterTier.getLength() > 0) {
+				ele = (Element) supporterTier.item(0);
+				String supportValue = XMLManager.getFirstChildNodeValue(ele);
+				if (supportValue.trim().length() > 0) {
+					supportStatus = "True";
+				}
 			}
 			hash.put("HasSupporter", supportStatus);
 

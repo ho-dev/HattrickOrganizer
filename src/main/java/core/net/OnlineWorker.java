@@ -127,7 +127,7 @@ public class OnlineWorker {
 							// Recalculate Training
 							// Training->Subskill calculation
 							TrainingManager.instance().refreshTrainingWeeks();
-							homodel.calcSubskills();
+							//homodel.calcSubskills(); // moved behind the download of matches
 							AufstellungsVergleichHistoryPanel.setHRFAufstellung(
 									homodel.getLineup(), homodel.getPreviousLineup());
 							AufstellungsVergleichHistoryPanel
@@ -783,7 +783,7 @@ public class OnlineWorker {
 				return null;
 			}
 			showWaitInformation(20);
-			details = XMLMatchdetailsParser.parseMachtdetailsFromString(matchDetails, lineup);
+			details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, lineup);
 			showWaitInformation(40);
 			if (details == null) {
 				HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchID);

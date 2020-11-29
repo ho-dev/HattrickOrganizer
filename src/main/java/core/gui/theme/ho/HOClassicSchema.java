@@ -1,9 +1,6 @@
 package core.gui.theme.ho;
 
-import core.gui.theme.HOBooleanName;
-import core.gui.theme.HOColorName;
-import core.gui.theme.HOIconName;
-import core.gui.theme.Schema;
+import core.gui.theme.*;
 import core.util.HOLogger;
 import java.awt.Color;
 import java.io.File;
@@ -75,8 +72,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(HAND, "gui/bilder/manual.png");
 
 		put(NO_MATCH, "gui/bilder/NoMatch.gif");
-		put(SHOW_MATCH, "gui/bilder/ShowMatch.gif");
-		put(DOWNLOAD_MATCH, "gui/bilder/DownloadMatch.gif");
 
 		put(DISK, "gui/bilder/disk.png");
 		put(LOCKED, "gui/bilder/Locked.gif");
@@ -88,7 +83,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(OFFSET, "gui/bilder/offset.svg");
 		put(GOTOSTATISTIK, "gui/bilder/gotoStatistik.svg");
 
-		put(MAXLINEUP, "gui/bilder/MaxAufstellung.png");
 		put(RELOAD, "gui/bilder/Reload.png");
 		put(SIMULATEMATCH, "gui/bilder/simulate_match.png");
 		put(GETLINEUP, "gui/bilder/AufstellungUebernehmen.png");
@@ -201,9 +195,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(ME_SWAP, "gui/bilder/match_events/swap.png");
 		put(ME_MAN_MARKING, "gui/bilder/match_events/manmark.png");
 
-		put(STAR, "gui/bilder/star.gif");
-		put(STAR_GRAY, "gui/bilder/star_grey.png");
-
 		put(HOMEGROWN, "gui/bilder/motherclub.png");
 		put(IMAGEPANEL_BACKGROUND, "gui/bilder/Background.jpg");
 		put(GRASSPANEL_BACKGROUND, "gui/bilder/Rasen_mit_Streifen.jpg");
@@ -250,21 +241,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(AWAY, "gui/bilder/away.png");
 
 		// Train bar
-		put(TRAINBAR_FT, "gui/bilder/trainpreview/trainpre_ft.png");
-		put(TRAINBAR_PT, "gui/bilder/trainpreview/trainpre_pt.png");
-		put(TRAINBAR_FFT, "gui/bilder/trainpreview/trainpre_fft.png");
-		put(TRAINBAR_FPT, "gui/bilder/trainpreview/trainpre_fpt.png");
-		put(TRAINBAR_FT_FFT, "gui/bilder/trainpreview/trainpre_ft_fft.png");
-		put(TRAINBAR_FT_FPT, "gui/bilder/trainpreview/trainpre_ft_fpt.png");
-		put(TRAINBAR_PT_FPT, "gui/bilder/trainpreview/trainpre_pt_fpt.png");
-		put(TRAINBAR_FT_PT, "gui/bilder/trainpreview/trainpre_ft_pt.png");
-		put(TRAINBAR_FT_PT_E, "gui/bilder/trainpreview/trainpre_ft_pt_e.png");
-		put(TRAINBAR_FT_E, "gui/bilder/trainpreview/trainpre_ft_e.png");
-		put(TRAINBAR_PT_E, "gui/bilder/trainpreview/trainpre_pt_e.png");
-		put(STAMINABAR_FT, "gui/bilder/trainpreview/stamina_ft.png");
-		put(STAMINABAR_FFT, "gui/bilder/trainpreview/stamina_fft.png");
-		put(STAMINABAR_FT_E, "gui/bilder/trainpreview/stamina_ft_e.png");
-		put(TRAINBAR_EMPTY, "gui/bilder/trainpreview/trainpre_empty.png");
+		put(TRAINING_BAR, "gui/bilder/trainpreview/training_bar.svg");
+
 
 		put(GREEN_WHITE_CLOCK, "gui/bilder/green-white-clock.png");
 		put(WHITE_GREEN_CLOCK, "gui/bilder/white-green-clock.png");
@@ -307,6 +285,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 	private void initColors() {
 		put(PANEL_BG, "white");
 		put(PANEL_BORDER, "dark_gray");
+		put(PLAYER_POSITION_PANEL_BORDER, "light_gray");
 		put(BUTTON_BG, "white");
 		put(BUTTON_ASSIST_CANCEL_BG,  new Color(226, 31, 31));
 		put(BUTTON_ASSIST_OK_BG,  new Color(34, 225, 36));
@@ -330,12 +309,13 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(PLAYER_POS_BG, new Color(220, 220, 255));
 		put(PLAYER_SUBPOS_BG, new Color(235, 235, 255));
 		put(PLAYER_OLD_FG, "gray");
-		put(TABLEENTRY_IMPROVEMENT_FG, new Color(0, 200, 0));
-		put(TABLEENTRY_DECLINE_FG, new Color(200, 0, 0));
+		put(TABLEENTRY_IMPROVEMENT_FG, new Color(34, 139, 34));
+		put(TABLEENTRY_DECLINE_FG, new Color(235, 0, 0));
 		put(SKILLENTRY2_BG, "gray");
 
 		// league Table
-		put(TEAM_FG, new Color(50, 50, 150));
+		put(HOME_TEAM_FG, new Color(179,60,180));
+		put(HOColorName.SELECTED_TEAM_FG, new Color(36,90,235));
 		put(LEAGUE_TITLE_BG, "ho_gray1");
 		put(LEAGUE_PROMOTED_BG, "lightGreen");
 		put(LEAGUE_RELEGATION_BG, "lightYellow");
@@ -352,7 +332,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LEAGUEHISTORY_LINE6_FG, Color.PINK);
 		put(LEAGUEHISTORY_LINE7_FG, Color.RED);
 		put(LEAGUEHISTORY_LINE8_FG, Color.MAGENTA);
-		put(LEAGUEHISTORY_CROSS_FG, Color.DARK_GRAY);
+		put(LEAGUEHISTORY_CROSS_FG, "light_gray");
 		put(LEAGUEHISTORY_GRID_FG, "light_gray");
 
 		// lineup
@@ -390,6 +370,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		// Players specialty Colors
 		put(PLAYER_SPECIALTY_COLOR, "black");
 		put(PLAYER_SPECIALTY_NEGATIVE_COLOR, "red");
+
+
+		put(PLAYER_STAR_COLOR, new Color(255,215,0));
 		
 		put(STAT_CASH, "black");
 		put(STAT_WINLOST, Color.GRAY);
@@ -459,6 +442,14 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TRAINING_PARTIAL_BG,"lightYellow");
 		put(TRAINING_OSMOSIS_BG, Color.LIGHT_GRAY);
 
+		// Training bars
+		put(FULL_TRAINING_DONE, new Color(37, 110, 9));
+		put(PARTIAL_TRAINING_DONE, new Color(73, 208, 21));
+		put(FULL_STAMINA_DONE, new Color(69, 127, 217));
+		put(FULL_TRAINING_PLANNED, new Color(56, 56, 56));
+		put(PARTIAL_TRAINING_PLANNED, new Color(184, 184, 184, 184));
+		put(STAMINA_PLANNED, new Color(104, 242, 255));
+
 		// TS Forecast
 		put(TSFORECAST_ALT_COLOR, Color.BLUE);
 
@@ -493,6 +484,11 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(PALETTE13[10],  new Color(175, 82, 222));
 		put(PALETTE13[11],  new Color(40, 205, 65));
 		put(PALETTE13[12],  new Color(90, 200, 250));
+
+		// League Details
+		put(HOColorName.SHOW_MATCH, new Color(23, 111, 36));
+		put(HOColorName.DOWNLOAD_MATCH, new Color(238, 39, 39, 255));
+
 	}
 
 	public Color getDefaultColor(String key) {

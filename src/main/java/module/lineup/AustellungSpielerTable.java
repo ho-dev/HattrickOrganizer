@@ -46,48 +46,7 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 		setBackground(ColorLabelEntry.BG_STANDARD);
 		RefreshManager.instance().registerRefreshable(this);
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				int rowindex = getSelectedRow();
-				if (rowindex >= 0){
-					int colAUTO_LINEUP_ID = tableModel.getPositionInArray(UserColumnFactory.AUTO_LINEUP);
-
-					// Last match column
-					int viewColumn = columnAtPoint(e.getPoint());
-					int column = columnModel.getColumn(viewColumn).getModelIndex();
-					String columnName = tableSorter.getColumnName(viewColumn);
-					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
-
-					Player selectedPlayer = tableSorter.getSpieler(rowindex);
-					if(selectedPlayer != null){
-						if(columnName.equalsIgnoreCase(lastMatchRating)){
-							if(e.isShiftDown()){
-								int matchId = selectedPlayer.getLastMatchId();
-								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
-								HattrickLink.showMatch(matchId + "", info.getMatchTyp().isOfficial());
-							}else if(e.getClickCount()==2) {
-								HOMainFrame.instance().showMatch(selectedPlayer.getLastMatchId());
-							}
-						}
-						else if (column == colAUTO_LINEUP_ID){
-							var result = tableSorter.getValueAt(rowindex, colAUTO_LINEUP_ID);
-							if (result != null) {
-								boolean bSelected = (boolean) result;
-								selectedPlayer.setCanBeSelectedByAssistant(bSelected);
-								if (bSelected) {
-									// this player has been made selectable from the Lineup tab, for consistency we set its position to undefined
-									selectedPlayer.setUserPosFlag(IMatchRoleID.UNKNOWN);
-								} else {
-									selectedPlayer.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
-								}
-								HOMainFrame.instance().getSpielerUebersichtPanel().update();
-							}
-						}
-					}
-				}
-			}
-		});
+		initListeners();
 	}
 
 	@Override
@@ -206,5 +165,48 @@ public final class AustellungSpielerTable extends JTable implements core.gui.Ref
 		tableSorter.initsort();
 	}
 
+	private void initListeners() {
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				int rowindex = getSelectedRow();
+				if (rowindex >= 0){
+					int colAUTO_LINEUP_ID = tableModel.getPositionInArray(UserColumnFactory.AUTO_LINEUP);
 
+					// Last match column
+					int viewColumn = columnAtPoint(e.getPoint());
+					int column = columnModel.getColumn(viewColumn).getModelIndex();
+					String columnName = tableSorter.getColumnName(viewColumn);
+					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
+
+					Player selectedPlayer = tableSorter.getSpieler(rowindex);
+					if(selectedPlayer != null){
+						if(columnName.equalsIgnoreCase(lastMatchRating)){
+							if(e.isShiftDown()){
+								int matchId = selectedPlayer.getLastMatchId();
+								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
+								HattrickLink.showMatch(matchId + "", info.getMatchTyp().isOfficial());
+							}else if(e.getClickCount()==2) {
+								HOMainFrame.instance().showMatch(selectedPlayer.getLastMatchId());
+							}
+						}
+						else if (column == colAUTO_LINEUP_ID){
+							var result = tableSorter.getValueAt(rowindex, colAUTO_LINEUP_ID);
+							if (result != null) {
+								boolean bSelected = (boolean) result;
+								selectedPlayer.setCanBeSelectedByAssistant(bSelected);
+								if (bSelected) {
+									// this player has been made selectable from the Lineup tab, for consistency we set its position to undefined
+									selectedPlayer.setUserPosFlag(IMatchRoleID.UNKNOWN);
+								} else {
+									selectedPlayer.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
+								}
+								HOMainFrame.instance().getSpielerUebersichtPanel().update();
+							}
+						}
+					}
+				}
+			}
+		});
+	}
 }

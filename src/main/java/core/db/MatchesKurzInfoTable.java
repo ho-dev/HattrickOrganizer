@@ -391,15 +391,12 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	}
 
 	MatchKurzInfo[] getMatchesKurzInfo(final String where) {
-		MatchKurzInfo[] matches = new MatchKurzInfo[0];
-		String sql = null;
-		ResultSet rs = null;
-		final Vector<MatchKurzInfo> liste = new Vector<MatchKurzInfo>();
+		var liste = new Vector<MatchKurzInfo>();
 
 		try {
-			sql = "SELECT * FROM " + getTableName() + " " + where;
-			rs = adapter.executeQuery(sql);
-
+			var sql = "SELECT * FROM " + getTableName() + " " + where;
+			var rs = adapter.executeQuery(sql);
+			rs.beforeFirst();
 			while (rs.next()) {
 				liste.add(createMatchKurzInfo(rs));
 			}
@@ -408,7 +405,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 					"DB.getMatchesKurzInfo Error" + e);
 		}
 
-		matches = new MatchKurzInfo[liste.size()];
+		var matches = new MatchKurzInfo[liste.size()];
 		matches = liste.toArray(matches);
 		return matches;
 	}

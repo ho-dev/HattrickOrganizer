@@ -441,6 +441,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 				dispose();
 			} catch (Exception e) {
 			}
+		} catch (Exception ee) {
+			HOLogger.instance().error(getClass(), ee);
 		} finally {
 			CursorToolkit.stopWaitCursor(getRootPane());
 		}
@@ -746,6 +748,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			 */
 			@Override
 			public void windowClosed(WindowEvent windowEvent) {
+				HOLogger.instance().info(getClass(), "exiting...");
 				if (isAppTerminated) {
 					System.exit(0);
 				}
@@ -756,6 +759,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			 */
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
+				HOLogger.instance().info(getClass(), "shutting down HO...");
 				shutdown();
 			}
 

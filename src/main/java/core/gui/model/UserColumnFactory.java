@@ -128,7 +128,7 @@ final public class UserColumnFactory {
         playerCBItemArray[3] = new PlayerCBItem(RATING, "Rating") {
             @Override
             public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem) {
-                return new RatingTableEntry(spielerCBItem.getRating(), false);
+                return new RatingTableEntry(spielerCBItem.getRating());
             }
         };
 
@@ -387,16 +387,16 @@ final public class UserColumnFactory {
                 ColorLabelEntry entry = new ColorLabelEntry(match.getHeimName(), ColorLabelEntry.FG_STANDARD,
                         background, SwingConstants.LEFT);
                 entry.setFGColor((match.getHeimID() == HOVerwaltung.instance().getModel().getBasics()
-                        .getTeamId()) ? ThemeManager.getColor(HOColorName.TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
+                        .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
 
                 if (match.getMatchStatus() != MatchKurzInfo.FINISHED)
                     entry.setIcon(ImageUtilities.NOIMAGEICON);
                 else if (match.getHeimTore() > match.getGastTore())
-                    entry.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
+                    entry.setIcon(ImageUtilities.getStarIcon());
                 else if (match.getHeimTore() < match.getGastTore())
                     entry.setIcon(ImageUtilities.NOIMAGEICON);
                 else
-                    entry.setIcon(ThemeManager.getTransparentIcon("star_gray", Color.WHITE));
+                    entry.setIcon(ImageUtilities.getStarIcon());
                 return entry;
             }
 
@@ -407,7 +407,7 @@ final public class UserColumnFactory {
                         ColorLabelEntry.FG_STANDARD, background,
                         SwingConstants.LEFT);
                 entry.setFGColor((spielerCBItem.getHeimID() == HOVerwaltung.instance().getModel().getBasics()
-                        .getTeamId()) ? ThemeManager.getColor(HOColorName.TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
+                        .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
                 return entry;
             }
 
@@ -425,16 +425,16 @@ final public class UserColumnFactory {
                 ColorLabelEntry entry = new ColorLabelEntry(match.getGastName(), ColorLabelEntry.FG_STANDARD,
                         background, SwingConstants.LEFT);
                 entry.setFGColor((match.getGastID() == HOVerwaltung.instance().getModel().getBasics()
-                        .getTeamId()) ? ThemeManager.getColor(HOColorName.TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
+                        .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
 
                 if (match.getMatchStatus() != MatchKurzInfo.FINISHED)
                     entry.setIcon(ImageUtilities.NOIMAGEICON);
                 else if (match.getHeimTore() > match.getGastTore())
                     entry.setIcon(ImageUtilities.NOIMAGEICON);
                 else if (match.getHeimTore() < match.getGastTore())
-                    entry.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
+                    entry.setIcon(ImageUtilities.getStarIcon());
                 else
-                    entry.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY, Color.WHITE));
+                    entry.setIcon(ImageUtilities.getStarIcon());
 
                 return entry;
             }
@@ -446,7 +446,7 @@ final public class UserColumnFactory {
                         ColorLabelEntry.FG_STANDARD, background,
                         SwingConstants.LEFT);
                 entry.setFGColor((spielerCBItem.getGastID() == HOVerwaltung.instance().getModel().getBasics()
-                        .getTeamId()) ? ThemeManager.getColor(HOColorName.TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
+                        .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
                 return entry;
             }
 
@@ -766,12 +766,12 @@ final public class UserColumnFactory {
                 if (player.getLastMatchRating() > 0) {
                     MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId());
                     if (info == null) {
-                        return new LastMatchLabelEntry((float) player.getLastMatchRating());
+                        return new RatingTableEntry((float) player.getLastMatchRating(), true);
                     } else {
-                        return new LastMatchLabelEntry((float) player.getLastMatchRating(), player.getLastMatchDate(), info.getMatchTyp());
+                        return new RatingTableEntry((float) player.getLastMatchRating(), player.getLastMatchDate(), info.getMatchTyp(), true);
                     }
                 }
-                return new LastMatchLabelEntry();
+                return new RatingTableEntry();
             }
         };
 

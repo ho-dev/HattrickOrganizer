@@ -7,6 +7,7 @@ import core.gui.comp.entry.RatingTableEntry;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
@@ -17,7 +18,6 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.util.Helper;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -110,13 +110,13 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 
 		int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		if (info.getHeimID() == teamid) {
-			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.TEAM_FG));
+			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 		} else {
 			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
 		}
 
 		if (info.getGastID() == teamid) {
-			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.TEAM_FG));
+			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 		} else {
 			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
 		}
@@ -149,18 +149,14 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			
 			// Sterne für Sieger!
 			if (info.getHeimTore() > info.getGastTore()) {
-				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
-						Color.WHITE));
+				heimTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 				gastTeamNameLabel.setIcon(null);
 			} else if (info.getHeimTore() < info.getGastTore()) {
 				heimTeamNameLabel.setIcon(null);
-				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
-						Color.WHITE));
+				gastTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 			} else {
-				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY,
-						Color.WHITE));
-				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY,
-						Color.WHITE));
+				heimTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
+				gastTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 			}
 
 			// Sterneanzahl
@@ -462,7 +458,6 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		constraints.gridx = 1;
 		constraints.gridy = 5;
 		heimTeamRatingTableEntry = new RatingTableEntry();
-		heimTeamRatingTableEntry.setOpaque(false);
 		layout.setConstraints(heimTeamRatingTableEntry.getComponent(false), constraints);
 		panel.add(heimTeamRatingTableEntry.getComponent(false));
 
@@ -482,7 +477,6 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		constraints.gridx = 4;
 		constraints.gridy = 5;
 		gastTeamRatingTableEntry = new RatingTableEntry();
-		gastTeamRatingTableEntry.setOpaque(false);
 		layout.setConstraints(gastTeamRatingTableEntry.getComponent(false), constraints);
 		panel.add(gastTeamRatingTableEntry.getComponent(false));
 

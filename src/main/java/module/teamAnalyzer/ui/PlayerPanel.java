@@ -180,7 +180,7 @@ public class PlayerPanel extends JPanel {
 		ratingPanel.removeAll();
 		ratingPanel.setLayout(new BorderLayout());
 
-		JPanel starPanel = (JPanel) new RatingTableEntry((int) Math.round(rating * 2), true)
+		JPanel starPanel = (JPanel) new RatingTableEntry((int) Math.round(rating * 2))
 				.getComponent(false);
 		ratingPanel.add(starPanel, BorderLayout.WEST);
 		ratingPanel.setOpaque(true);

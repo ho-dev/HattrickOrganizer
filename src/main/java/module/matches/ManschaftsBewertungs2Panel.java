@@ -3,13 +3,12 @@ package module.matches;
 
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
-import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -76,13 +75,13 @@ class ManschaftsBewertungs2Panel extends LazyImagePanel {
 
 		int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		if (info.getHeimID() == teamid) {
-			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.TEAM_FG));
+			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 		} else {
 			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
 		}
 
 		if (info.getGastID() == teamid) {
-			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.TEAM_FG));
+			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 		} else {
 			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
 		}
@@ -93,18 +92,14 @@ class ManschaftsBewertungs2Panel extends LazyImagePanel {
 				heimTeamNameLabel.setIcon(null);
 				gastTeamNameLabel.setIcon(null);
 			} else if (info.getHeimTore() > info.getGastTore()) {
-				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
-						Color.WHITE));
+				heimTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 				gastTeamNameLabel.setIcon(null);
 			} else if (info.getHeimTore() < info.getGastTore()) {
 				heimTeamNameLabel.setIcon(null);
-				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR,
-						Color.WHITE));
+				gastTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 			} else {
-				heimTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY,
-						Color.WHITE));
-				gastTeamNameLabel.setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY,
-						Color.WHITE));
+				heimTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
+				gastTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 			}
 
 			Matchdetails details = this.matchesModel.getDetails();

@@ -7,7 +7,6 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
-import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import module.series.promotion.*;
@@ -21,8 +20,6 @@ import java.awt.event.*;
  * Panel displaying the league table, as well as the series history graph.
  */
 public class SeriesPanel extends LazyImagePanel {
-
-	private static final long serialVersionUID = -5179683183917344230L;
 
 	private JButton deleteButton;
 	private JComboBox<Spielplan> seasonComboBox;
@@ -297,7 +294,7 @@ public class SeriesPanel extends LazyImagePanel {
 
 	private void markierungInfo() {
 		for (MatchDayPanel matchDayPanel : matchDayPanels) {
-			matchDayPanel.changeSaison();
+			matchDayPanel.changeSeason();
 		}
 	}
 }

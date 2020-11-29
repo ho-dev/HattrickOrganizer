@@ -325,5 +325,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				}
 			}
 		}
+
+		model.calcSubskills();
 	}
 }

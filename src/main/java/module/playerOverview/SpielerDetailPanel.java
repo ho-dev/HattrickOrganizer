@@ -351,12 +351,10 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jpAge.setText(m_clPlayer.getAgeStringFull());
         m_jpLastMatchRating.clear();
         if (m_clPlayer.getLastMatchRating() > 0) {
-            m_jpLastMatchRating.setYellowStar(true);
             MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(m_clPlayer.getLastMatchId());
             if (info != null) {
                 m_jpLastMatchRating.setRating((float)m_clPlayer.getLastMatchRating());
                 m_jpLastMatchRating.setMatchInfo(m_clPlayer.getLastMatchDate(), info.getMatchTyp());
-                m_jpLastMatchRating.getLabelMatch();
             }
         }
         m_jpNationality.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalitaet()));
@@ -377,10 +375,8 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         }
         //Rating
         if (m_clPlayer.getBewertung() > 0) {
-            m_jpRating.setYellowStar(true);
             m_jpRating.setRating(m_clPlayer.getBewertung());
         } else {
-            m_jpRating.setYellowStar(false);
             m_jpRating.setRating(m_clPlayer.getLetzteBewertung());
         }
         m_jcbSquad.removeItemListener(this);

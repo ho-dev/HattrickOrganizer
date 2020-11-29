@@ -151,7 +151,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		spielerdetails.add(spielername, BorderLayout.NORTH);
 		spielerdetails.add(teamname, BorderLayout.SOUTH);
 		JPanel sternzahl = (JPanel) new core.gui.comp.entry.RatingTableEntry(
-				toInt(mlp.getRating()), true).getComponent(false);
+				toInt(mlp.getRating())).getComponent(false);
 		sternzahl.setOpaque(false);
 		sternzahl.setBorder(BorderFactory.createEtchedBorder());
 

@@ -19,9 +19,6 @@ public interface HOIconName {
 	 String HAND 			= "hand";
 
 	 String NO_MATCH 		= "noMatch";
-	 String SHOW_MATCH 		= "showMatch";
-	 String DOWNLOAD_MATCH 	= "downloadMatch";
-
 	 String WEATHER_RAIN_POS = "weather.rain.pos";
 	 String WEATHER_RAIN_NEG = "weather.rain.neg";
 	 String WEATHER_SUN_POS 	= "weather.sun.pos";
@@ -51,12 +48,11 @@ public interface HOIconName {
 	 String OFFSET 			= "offset";
 	 String GOTOSTATISTIK 	= "gotoStatistik";
 
-	 String MAXLINEUP		 = "maxLineup";
 	 String RELOAD 			= "reload";
 	 String SIMULATEMATCH 	= "simulateMatch";
 	 String GETLINEUP 		= "getLineup";
 	 String SWAP 			= "swap";
-	 String SWAPPRESSED 		= "swapPressed";
+	 String SWAPPRESSED 	= "swapPressed";
 	 String TURN 			= "turn";
 
 	 String CLEARASSIST 		= "clearAssist";
@@ -155,18 +151,12 @@ public interface HOIconName {
 	String TACTIC_AOW = "tactic_aow";
 	String TACTIC_PLAY_CREATIVELY = "tactic_play_creatively";
 	String TACTIC_LONG_SHOTS = "tactic_long_shots";
-
-	String STAR = "star";
-	String STAR_GRAY = "star_gray";
-
 	String HOMEGROWN = "homegrown";
 	String REMOVE	= "remove";
 	String BALL = "ball";
-
 	String TRANSFER_IN = "transfer.in";
 	String TRANSFER_OUT = "transfer.out";
 	String TABBEDPANE_CLOSE = "tabbedPane.close";
-
 	String ARROW_LEFT1 = "arrow_left1";
 	String ARROW_LEFT2 = "arrow_left2";
 	String ARROW_RIGHT1 = "arrow_right1";
@@ -196,21 +186,7 @@ public interface HOIconName {
 	String HOME = "home";
 	String AWAY = "away";
 
-	String TRAINBAR_FT = "trainpre_ft";
-	String TRAINBAR_PT = "trainpre_pt";
-	String TRAINBAR_FFT = "trainpre_fft";
-	String TRAINBAR_FPT = "trainpre_fpt";
-	String TRAINBAR_FT_FFT = "trainpre_ft_fft";
-	String TRAINBAR_FT_FPT = "trainpre_ft_fpt";
-	String TRAINBAR_PT_FPT = "trainpre_pt_fpt";
-	String TRAINBAR_FT_PT = "trainpre_ft_pt";
-	String TRAINBAR_FT_PT_E = "trainpre_ft_pt_e.png";
-	String TRAINBAR_FT_E = "trainpre_ft_e";
-	String TRAINBAR_PT_E = "trainpre_pt_e";
-	String TRAINBAR_EMPTY = "trainpre_empty";
-	String STAMINABAR_FT = "stamina_ft";
-	String STAMINABAR_FFT = "stamina_fft";
-	String STAMINABAR_FT_E = "stamina_ft_e";
+	String TRAINING_BAR = "training_bar";
 
 	String GREEN_WHITE_CLOCK = "green-white-clock";
 	String WHITE_GREEN_CLOCK = "white-green-clock";

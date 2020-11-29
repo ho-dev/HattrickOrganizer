@@ -23,7 +23,7 @@ public class XMLMatchdetailsParser {
     private XMLMatchdetailsParser() {
     }
 
-    public static Matchdetails parseMachtdetailsFromString(String input, MatchLineup matchLineup) {
+    public static Matchdetails parseMatchdetailsFromString(String input, MatchLineup matchLineup) {
         return createMatchdetails(XMLManager.parseString(input), matchLineup);
     }
 
@@ -515,7 +515,9 @@ public class XMLMatchdetailsParser {
             	ele = (Element) root.getElementsByTagName("ArenaID").item(0);
             	md.setArenaID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             	ele = (Element) root.getElementsByTagName("ArenaName").item(0);
-            	md.setArenaName(ele.getFirstChild().getNodeValue());
+            	if (ele.getFirstChild() != null) {
+					md.setArenaName(ele.getFirstChild().getNodeValue());
+				}
             } catch (Exception e){
             	// This fails at tournament matches - ignore
             }
@@ -601,7 +603,11 @@ public class XMLMatchdetailsParser {
             root = (Element) root.getElementsByTagName("Match").item(0);
             root = (Element) root.getElementsByTagName("AwayTeam").item(0);
 
-            //Data
+            NodeList formation = root.getElementsByTagName("Formation");
+            if (formation.getLength() > 0) {
+            	md.setAwayFormation(formation.item(0).getTextContent());
+			}
+
             ele = (Element) root.getElementsByTagName("AwayTeamID").item(0);
 			if ( ele != null ) md.setGastId(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("AwayTeamName").item(0);
@@ -632,13 +638,13 @@ public class XMLMatchdetailsParser {
 			ele = (Element) root.getElementsByTagName("RatingIndirectSetPiecesDef").item(0);
 			if ( ele != null ) md.setRatingIndirectSetPiecesDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
 
-			try {
-                ele = (Element) root.getElementsByTagName("TeamAttitude").item(0);
-                md.setGuestEinstellung(Integer.parseInt(ele.getFirstChild().getNodeValue()));
-            } catch (Exception e) {
-                //nicht tragisch da Attrib nur bei eigenem Team vorhanden wäre
-                md.setGuestEinstellung(Matchdetails.EINSTELLUNG_UNBEKANNT);
-            }
+			NodeList teamAttitude = root.getElementsByTagName("TeamAttitude");
+			if (teamAttitude.getLength() > 0) {
+				ele = (Element) teamAttitude.item(0);
+				md.setHomeEinstellung(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			} else {
+				md.setHomeEinstellung(Matchdetails.EINSTELLUNG_UNBEKANNT);
+			}
         } catch (Exception e) {
             HOLogger.instance().log(XMLMatchdetailsParser.class, e);
             md = null;
@@ -656,6 +662,11 @@ public class XMLMatchdetailsParser {
             root = (Element) root.getElementsByTagName("HomeTeam").item(0);
 
             //Data
+			NodeList formation = root.getElementsByTagName("Formation");
+			if (formation.getLength() > 0) {
+				md.setHomeFormation(formation.item(0).getTextContent());
+			}
+
             ele = (Element) root.getElementsByTagName("HomeTeamID").item(0);
 			if ( ele != null ) md.setHeimId(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("HomeTeamName").item(0);
@@ -686,13 +697,14 @@ public class XMLMatchdetailsParser {
 			ele = (Element) root.getElementsByTagName("RatingIndirectSetPiecesDef").item(0);
 			if ( ele != null ) md.setRatingIndirectSetPiecesDef(Integer.parseInt(ele.getFirstChild().getNodeValue()));
 
-			try {
-                ele = (Element) root.getElementsByTagName("TeamAttitude").item(0);
-                md.setHomeEinstellung(Integer.parseInt(ele.getFirstChild().getNodeValue()));
-            } catch (Exception e) {
-                //nicht tragisch da Attrib nur bei eigenem Team vorhanden wäre, als Unbekannt markieren
-                md.setHomeEinstellung(Matchdetails.EINSTELLUNG_UNBEKANNT);
-            }
+			NodeList teamAttitude = root.getElementsByTagName("TeamAttitude");
+			if (teamAttitude.getLength() > 0) {
+				ele = (Element) teamAttitude.item(0);
+				md.setHomeEinstellung(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+			} else {
+				md.setHomeEinstellung(Matchdetails.EINSTELLUNG_UNBEKANNT);
+			}
+
         } catch (Exception e) {
             HOLogger.instance().log(XMLMatchdetailsParser.class, e);
         }

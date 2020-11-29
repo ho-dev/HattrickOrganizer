@@ -280,11 +280,11 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			    if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
 			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ImageUtilities.NOIMAGEICON);
 			    } else if (match.getHeimTore() > match.getGastTore()) {
-			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR, Color.WHITE));
+			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ImageUtilities.getStarIcon());
 			    } else if (match.getHeimTore() < match.getGastTore()) {
 			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ImageUtilities.NOIMAGEICON);
 			    } else {
-			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ThemeManager.getTransparentIcon(HOIconName.STAR_GRAY, Color.WHITE));
+			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ImageUtilities.getStarIcon());
 			    }
 				colIndex++;
 

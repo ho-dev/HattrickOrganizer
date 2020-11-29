@@ -4,7 +4,9 @@ import core.constants.TeamConfidence;
 import core.constants.TeamSpirit;
 import core.constants.TrainingType;
 import core.db.DBManager;
+import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.util.Helper;
 import core.util.HelperWrapper;
@@ -18,6 +20,8 @@ import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import javax.swing.*;
+
+import static core.gui.theme.ThemeManager.getColor;
 
 
 class HrfDetails {
@@ -113,7 +117,7 @@ class HrfDetails {
 				if (m_rs.getInt(1) == 0) {
 					setBild(ThemeManager.getIcon(HOIconName.REMOVE));
 				} else {
-					setBild(ThemeManager.getIcon(HOIconName.SHOW_MATCH));
+					setBild(ImageUtilities.getRightArrowIcon(getColor(HOColorName.SHOW_MATCH)));
 				}
 			}
 		} catch (SQLException sexc) {

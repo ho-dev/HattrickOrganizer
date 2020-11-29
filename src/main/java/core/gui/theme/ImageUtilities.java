@@ -8,6 +8,7 @@ import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
+import core.util.HOLogger;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -209,13 +210,7 @@ public class ImageUtilities {
 	
 	            //Icon erstellen und in den Cache packen
 	            icon = new ImageIcon(image);
-	//            String desc = "(";
-	//            if (wert>0) {
-	//            	desc = desc + "+";
-	//            }
-	//            desc = desc + wert + ")";
-	//            icon.setIconDescription(desc);
-	
+
 	            if (aktuell) {
 	                m_clPfeilCache.put(keywert, icon);
 	            } else {
@@ -394,8 +389,7 @@ public class ImageUtilities {
 			// Large Icon
 			largeImage = (BufferedImage) merge(largeImage, iconToImage(komplettIcon));
 			komplettIcon = new ImageIcon(largeImage);
-	
-		// return new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB );
+
 		// Trickotnummer
 			if ((trickotnummer > 0) && (trickotnummer < 100)) {
 				BufferedImage image = new BufferedImage(28, 14, BufferedImage.TYPE_INT_ARGB);
@@ -752,4 +746,204 @@ public class ImageUtilities {
 			return new DerivableImageIcon(iconToImage(icon), width, height, Image.SCALE_SMOOTH);
 		}
 	}
+
+
+	public static Icon getTrainingBarIcon(String id) {
+		return getTrainingBarIcon(id, 6, 16);
+	}
+
+	public static Icon getTrainingBarIcon(String id, int width, int height) {
+
+		id = id.toLowerCase();
+
+		String key = "trainingbar_" + id + "_" + width + "x" + height;
+
+		Icon trainingBarIcon = ThemeManager.instance().getIcon(key);
+
+		if (trainingBarIcon == null) {
+
+			Color bg = getColor(HOColorName.TABLEENTRY_BG);
+
+			Color b1=bg, b2=bg, b3=bg, b4=bg;
+
+			switch(id) {
+				case "trainbar_empty" -> {break;}
+				case "trainbar_ft" ->{
+					b1=getColor(HOColorName.FULL_TRAINING_DONE); b2=getColor(HOColorName.FULL_TRAINING_DONE);
+					b3=getColor(HOColorName.FULL_TRAINING_DONE); b4=getColor(HOColorName.FULL_TRAINING_DONE);}
+				case "trainbar_pt" -> {
+					b1=getColor(HOColorName.PARTIAL_TRAINING_DONE); b2=getColor(HOColorName.PARTIAL_TRAINING_DONE);
+					b3=getColor(HOColorName.PARTIAL_TRAINING_DONE); b4=getColor(HOColorName.PARTIAL_TRAINING_DONE);
+				}
+				case "staminabar_ft" -> {
+					b1=getColor(HOColorName.FULL_STAMINA_DONE); b2=getColor(HOColorName.FULL_STAMINA_DONE);
+					b3=getColor(HOColorName.FULL_STAMINA_DONE); b4=getColor(HOColorName.FULL_STAMINA_DONE);
+				}
+				case "staminabar_ft_e" ->{
+					b1=getColor(HOColorName.FULL_STAMINA_DONE); b2=getColor(HOColorName.FULL_STAMINA_DONE);}
+				case "staminabar_fft" ->{
+					b1=getColor(HOColorName.STAMINA_PLANNED); b2=getColor(HOColorName.STAMINA_PLANNED);
+					b3=getColor(HOColorName.STAMINA_PLANNED); b4=getColor(HOColorName.STAMINA_PLANNED);}
+				case "trainbar_ft_e" ->{
+					b1=getColor(HOColorName.FULL_TRAINING_DONE); b2=getColor(HOColorName.FULL_TRAINING_DONE);}
+				case "trainbar_fft" ->{
+					b1=getColor(HOColorName.FULL_TRAINING_PLANNED); b2=getColor(HOColorName.FULL_TRAINING_PLANNED);
+					b3=getColor(HOColorName.FULL_TRAINING_PLANNED); b4=getColor(HOColorName.FULL_TRAINING_PLANNED);}
+				case "trainbar_fpt" ->{
+					b1=getColor(HOColorName.PARTIAL_TRAINING_PLANNED); b2=getColor(HOColorName.PARTIAL_TRAINING_PLANNED);
+					b3=getColor(HOColorName.PARTIAL_TRAINING_PLANNED); b4=getColor(HOColorName.PARTIAL_TRAINING_PLANNED);}
+				case "trainbar_ft_fft" ->{
+					b1=getColor(HOColorName.FULL_TRAINING_DONE); b2=getColor(HOColorName.FULL_TRAINING_DONE);
+					b3=getColor(HOColorName.FULL_TRAINING_PLANNED); b4=getColor(HOColorName.FULL_TRAINING_PLANNED);}
+				case "trainbar_ft_fpt" ->{
+					b1=getColor(HOColorName.FULL_TRAINING_DONE); b2=getColor(HOColorName.FULL_TRAINING_DONE);
+					b3=getColor(HOColorName.PARTIAL_TRAINING_PLANNED); b4=getColor(HOColorName.PARTIAL_TRAINING_PLANNED);}
+				case "trainbar_ft_pt" ->{
+					b1=getColor(HOColorName.FULL_TRAINING_DONE); b2=getColor(HOColorName.FULL_TRAINING_DONE);
+					b3=getColor(HOColorName.PARTIAL_TRAINING_DONE); b4=getColor(HOColorName.PARTIAL_TRAINING_DONE);}
+				case "trainbar_ft_pt_e" ->{
+					b1=getColor(HOColorName.FULL_TRAINING_DONE); b2=getColor(HOColorName.PARTIAL_TRAINING_DONE);}
+				case "trainbar_pt_e" ->{
+					b1=getColor(HOColorName.PARTIAL_TRAINING_DONE); b2=getColor(HOColorName.PARTIAL_TRAINING_DONE);}
+				case "trainbar_pt_fpt" ->{
+					b1=getColor(HOColorName.PARTIAL_TRAINING_DONE); b2=getColor(HOColorName.PARTIAL_TRAINING_DONE);
+					b3=getColor(HOColorName.PARTIAL_TRAINING_PLANNED); b4=getColor(HOColorName.PARTIAL_TRAINING_PLANNED);}
+				default -> {
+					HOLogger.instance().error(ImageUtilities.class, "requested training preview color has not been recognized: "+id);}
+			}
+
+			Map<Object, Object> colorMap = Map.of("b1FillColor", b1, "b2FillColor", b2,
+					"b3FillColor", b3,"b4FillColor",b4);
+
+			trainingBarIcon = IconLoader.get().loadSVGIcon("gui/bilder/training_bar.svg", 	width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, trainingBarIcon);
+		}
+
+		return trainingBarIcon;
+	}
+
+
+
+	public static Icon getSetPiecesIcon() {
+		return getSetPiecesIcon(16, 16);
+	}
+
+	public static Icon getSetPiecesIcon(int width, int height) {
+
+		String key = "captain_" + width + "x" + height;
+
+		Icon captainIcon = ThemeManager.instance().getIcon(key);
+
+		if (captainIcon == null) {
+
+			Color foregroundColor = getColor(HOColorName.PLAYER_SPECIALTY_COLOR);
+
+			Map<Object, Object> colorMap = Map.of("foregroundColor", foregroundColor);
+
+			captainIcon = IconLoader.get().loadSVGIcon("gui/bilder/set_pieces.svg", width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, captainIcon);
+		}
+
+		return captainIcon;
+	}
+
+	public static Icon getStarIcon() {
+		return getStarIcon(16, 16);
+	}
+
+	public static Icon getStarIcon(int width, int height) {
+
+		String key = "star_" + width + "x" + height;
+
+		Icon starIcon = ThemeManager.getIcon(key);
+
+		if (starIcon == null) {
+
+			Color fillColor = getColor(HOColorName.PLAYER_STAR_COLOR);
+
+			Map<Object, Object> colorMap = Map.of("fillColor", fillColor);
+
+			starIcon = IconLoader.get().loadSVGIcon("gui/bilder/star.svg", width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, starIcon);
+		}
+
+		return starIcon;
+	}
+
+
+	public static Icon getRightArrowIcon(Color color) {
+		return getRightArrowIcon(color, 16, 16);
+	}
+
+	public static Icon getRightArrowIcon(Color fillColor, int width, int height) {
+
+		String key = "rightArrow_" + fillColor.toString() + "_" + width + "x" + height;
+
+		Icon _icon = ThemeManager.getIcon(key);
+
+		if (_icon == null) {
+
+			Map<Object, Object> colorMap = Map.of("foregroundColor", fillColor);
+
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/right-arrow.svg", width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, _icon);
+		}
+
+		return _icon;
+	}
+
+	public static Icon getDownloadIcon(Color color) {
+		return getDownloadIcon(color, 16, 16);
+	}
+
+	public static Icon getDownloadIcon(Color fillColor, int width, int height) {
+
+		String key = "downloadIcon_" + fillColor.toString() + "_" + width + "x" + height;
+
+		Icon _icon = ThemeManager.getIcon(key);
+
+		if (_icon == null) {
+
+			Map<Object, Object> colorMap = Map.of("foregroundColor", fillColor);
+
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/download.svg", width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, _icon);
+		}
+
+		return _icon;
+	}
+
+
+	public static Icon getUnavailableIcon(Color color) {
+		return getUnavailableIcon(color, 16, 16);
+	}
+
+	public static Icon getUnavailableIcon(Color fillColor, int width, int height) {
+
+		String key = "unavailableIcon_" + fillColor.toString() + "_" + width + "x" + height;
+
+		Icon _icon = ThemeManager.getIcon(key);
+
+		if (_icon == null) {
+
+			Map<Object, Object> colorMap = Map.of("foregroundColor", fillColor);
+
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/unavailable.svg", width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, _icon);
+		}
+
+		return _icon;
+	}
+
+	private static Color getColor (String name){
+		return ThemeManager.getColor(name);
+	}
+
+
 }

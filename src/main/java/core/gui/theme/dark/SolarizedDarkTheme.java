@@ -51,7 +51,6 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.TABLE_LEAGUE_ODD, defaults.getColor("Table.backgroundAlternative"));
             ThemeManager.instance().put(HOColorName.LEAGUE_FG, defaults.getColor("Table.foreground"));
             ThemeManager.instance().put(HOColorName.LEAGUE_BG, defaults.getColor("Table.background"));
-            ThemeManager.instance().put(HOColorName.TEAM_FG, Color.WHITE);
 
             // Lineup
             ThemeManager.instance().put(HOColorName.LINEUP_POS_MIN_BG, blueishColour);
@@ -98,7 +97,7 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.PLAYER_SPECIALTY_COLOR, defaults.getColor("Label.foreground"));
 
             // palette
-            ThemeManager.instance().put(HOColorName.PALETTE13[0],  new Color(0, 255, 0));
+            ThemeManager.instance().put(HOColorName.PALETTE13[0], new Color(0, 255, 0));
             ThemeManager.instance().put(HOColorName.PALETTE13[1], new Color(255, 215, 0));
             ThemeManager.instance().put(HOColorName.PALETTE13[2], new Color(240, 32, 219));
             ThemeManager.instance().put(HOColorName.PALETTE13[3], new Color(255, 255, 255));
@@ -112,21 +111,27 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.PALETTE13[11], new Color(255, 239, 153));
             ThemeManager.instance().put(HOColorName.PALETTE13[12], new Color(169, 169, 169));
 
+            //training bars
+            ThemeManager.instance().put(HOColorName.FULL_TRAINING_DONE, defaults.getColor("palette.brown"));
+            ThemeManager.instance().put(HOColorName.PARTIAL_TRAINING_DONE, defaults.getColor("palette.lime"));
+            ThemeManager.instance().put(HOColorName.FULL_STAMINA_DONE, defaults.getColor("palette.blue"));
 
-            ThemeManager.instance().put(HOColorName.PALETTE13[0],  new Color(181, 137, 0));
-            ThemeManager.instance().put(HOColorName.PALETTE13[1], new Color(203, 75, 22));
-            ThemeManager.instance().put(HOColorName.PALETTE13[2], new Color(220,50,47));
-            ThemeManager.instance().put(HOColorName.PALETTE13[3], new Color(211,54,130));
-            ThemeManager.instance().put(HOColorName.PALETTE13[4], new Color(171,82,204));
-            ThemeManager.instance().put(HOColorName.PALETTE13[5], new Color(108,113,196));
-            ThemeManager.instance().put(HOColorName.PALETTE13[6], new Color(38,139,210));
-            ThemeManager.instance().put(HOColorName.PALETTE13[7], new Color(46,177,191));
-            ThemeManager.instance().put(HOColorName.PALETTE13[8], new Color(42,161,152));
-            ThemeManager.instance().put(HOColorName.PALETTE13[9], new Color(42,130,42));
-            ThemeManager.instance().put(HOColorName.PALETTE13[10], new Color(154,205,50));
-            ThemeManager.instance().put(HOColorName.PALETTE13[11], new Color(133,153,0));
-            ThemeManager.instance().put(HOColorName.PALETTE13[12], new Color(88,78,49));
+            // borders training position in lineup
+            ThemeManager.instance().put(HOColorName.PLAYER_POSITION_PANEL_BORDER, ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
+            ThemeManager.instance().put(HOColorName.LINEUP_FULL_TRAINING, new Color(240, 32, 219));
+            ThemeManager.instance().put(HOColorName.LINEUP_PARTIAL_TRAINING, new Color(249, 140, 122));
 
+            //players
+            ThemeManager.instance().put(HOColorName.TABLEENTRY_DECLINE_FG, new Color(231, 144, 60));
+
+            // League Details
+            ThemeManager.instance().put(HOColorName.SHOW_MATCH, defaults.getColor("palette.lime"));
+            ThemeManager.instance().put(HOColorName.DOWNLOAD_MATCH, defaults.getColor("palette.red"));
+            ThemeManager.instance().put(HOColorName.LEAGUEHISTORY_GRID_FG, defaults.getColor("background").brighter());
+            ThemeManager.instance().put(HOColorName.LEAGUEHISTORY_CROSS_FG, defaults.getColor("background").brighter());
+            ThemeManager.instance().put(HOColorName.HOME_TEAM_FG, new Color(252, 99, 153));
+            ThemeManager.instance().put(HOColorName.SELECTED_TEAM_FG, new Color(82, 179, 217));
+            ThemeManager.instance().put(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
 
             return super.enableTheme();
         } catch (Exception e) {
