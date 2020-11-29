@@ -240,7 +240,6 @@ public class YouthPlayerTable  extends AbstractTable {
             ret.setNickName(DBManager.deleteEscapeSequences(rs.getString("NickName")));
             ret.setLastName(DBManager.deleteEscapeSequences(rs.getString("LastName")));
             ret.setFriendlyGoals(rs.getInt("FriendlyGoals"));
-            ret.setHrfDate(rs.getTimestamp("HRFDate"));
             ret.setInjuryLevel(rs.getInt("InjuryLevel"));
             ret.setLeagueGoals(rs.getInt("LeagueGoals"));
             ret.setOwnerNotes(DBManager.deleteEscapeSequences(rs.getString("OwnerNotes")));

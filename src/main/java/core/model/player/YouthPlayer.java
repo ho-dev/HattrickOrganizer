@@ -41,7 +41,6 @@ public class YouthPlayer {
     private int playedMinutes;
     private Double rating;
     private Timestamp youthMatchDate;
-    private Timestamp hrfDate;
 
     private Map<Integer, SkillInfo> skillInfoMap = new HashMap<>();
     private List<ScoutComment> scoutComments;
@@ -278,14 +277,6 @@ public class YouthPlayer {
         this.youthMatchDate = youthMatchDate;
     }
 
-    public Timestamp getHrfDate() {
-        return hrfDate;
-    }
-
-    public void setHrfDate(Timestamp hrfDate) {
-        this.hrfDate = hrfDate;
-    }
-
     public SkillInfo getSkillInfo(Skills.HTSkillID skillID) {
         return this.skillInfoMap.get(skillID.getValue());
     }
@@ -446,9 +437,7 @@ public class YouthPlayer {
         }
     }
 
-    public YouthPlayer(Properties properties, Timestamp hrfdate) {
-
-        this.hrfDate = hrfdate;
+    public YouthPlayer(Properties properties) {
 
         id = getInt(properties,"id", 0);
         firstName = properties.getProperty("firstname", "");

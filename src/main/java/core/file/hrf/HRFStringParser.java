@@ -202,7 +202,7 @@ public class HRFStringParser {
 					hoModel.addPlayer(new Player(properties, hrfdate));
 				}
 				else if (entity.toString().equalsIgnoreCase(YOUTHPLAYER)) {
-					hoModel.addYouthPlayer(new YouthPlayer(properties, hrfdate));
+					hoModel.addYouthPlayer(new YouthPlayer(properties));
 				}
 				// Xtra
 				else if (entity.toString().equalsIgnoreCase(XTRA)) {
