@@ -10,14 +10,16 @@ public class YouthPlayerColumn extends UserColumn {
 
     protected YouthPlayerColumn(int id, String name) {
         super(id, name);
+        this.setDisplay(true);
     }
     public YouthPlayerColumn(int id,String name,int minWidth){
         this(id,name,name,minWidth);
     }
-    public YouthPlayerColumn(int id,String name, String tooltip,int minWidth){
+    public YouthPlayerColumn(int id,String name, String tooltip, int minWidth){
         super(id,name,tooltip);
         this.minWidth = minWidth;
         preferredWidth = minWidth;
+        this.setDisplay(true);
     }
 
     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {

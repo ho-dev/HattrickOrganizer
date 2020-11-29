@@ -3,15 +3,13 @@ package module.youth;
 import core.gui.RefreshManager;
 import core.gui.comp.table.TableSorter;
 import core.gui.model.UserColumnController;
-import core.gui.model.UserColumnFactory;
-import core.model.HOVerwaltung;
 import core.model.UserParameter;
 
 import javax.swing.*;
 
 public class YouthPlayerOverviewTable extends JTable implements core.gui.Refreshable {
 
-    private YouthPlayerOverviewColumnModel tableModel;
+    private YouthPlayerOverviewTableModel tableModel;
     private TableSorter tableSorter;
 
     public YouthPlayerOverviewTable() {
@@ -27,31 +25,33 @@ public class YouthPlayerOverviewTable extends JTable implements core.gui.Refresh
     }
 
     private void initModel() {
+        setOpaque(false);
         if (tableModel == null) {
             tableModel = UserColumnController.instance().getYouthPlayerOverviewColumnModel();
-            tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentYouthPlayers());
+            tableModel.initData();
             tableSorter = new TableSorter(tableModel,
-                    tableModel.getPositionInArray(UserColumnFactory.ID),
-                    getOrderByColumn(),
-                    tableModel.getPositionInArray(UserColumnFactory.NAME));
+                    tableModel.getPositionInArray(99),
+                    getOrderByColumn());
+            setModel(tableSorter);
         }
+
+        setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        setRowSelectionAllowed(true);
+        tableSorter.initsort();
     }
 
     private int getOrderByColumn() {
         return switch (UserParameter.instance().standardsortierung) {
-            case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
-            default -> tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
+            case UserParameter.SORT_NAME -> tableModel.getPositionInArray(0);
+            default -> tableModel.getPositionInArray(0);
         };
     }
 
     @Override
     public void refresh() {
-        reInitModel();
+        ((YouthPlayerOverviewTableModel) this.getSorter().getModel()).initData();
         repaint();
-    }
-
-    private void reInitModel() {
-        ((YouthPlayerOverviewColumnModel) this.getSorter().getModel()).reInitData();
     }
 
     private TableSorter getSorter() {

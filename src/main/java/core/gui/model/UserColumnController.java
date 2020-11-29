@@ -4,7 +4,7 @@ import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
 import module.lineup.LineupTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
-import module.youth.YouthPlayerOverviewColumnModel;
+import module.youth.YouthPlayerOverviewTableModel;
 
 import java.util.Vector;
 
@@ -51,7 +51,7 @@ public final class UserColumnController {
 	
 	/** model for player analysis **/
 	private PlayerAnalysisModel playerAnalysis2Model 		= null;
-	private YouthPlayerOverviewColumnModel youthPlayerOverviewColumnModel;
+	private YouthPlayerOverviewTableModel youthPlayerOverviewColumnModel;
 
 	/**
 	 * constructor
@@ -159,9 +159,9 @@ public final class UserColumnController {
 		return v;
 	}
 
-	public YouthPlayerOverviewColumnModel getYouthPlayerOverviewColumnModel() {
+	public YouthPlayerOverviewTableModel getYouthPlayerOverviewColumnModel() {
 		if(youthPlayerOverviewColumnModel == null){
-			youthPlayerOverviewColumnModel = new YouthPlayerOverviewColumnModel(ColumnModelId.YOUTHPLAYEROVERVIEW.getValue());
+			youthPlayerOverviewColumnModel = new YouthPlayerOverviewTableModel(ColumnModelId.YOUTHPLAYEROVERVIEW.getValue());
 		}
 		return youthPlayerOverviewColumnModel;
 	}

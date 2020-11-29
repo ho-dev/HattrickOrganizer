@@ -19,12 +19,12 @@ public class YouthPlayerOverviewModule extends DefaultModule {
 
     @Override
     public String getDescription() {
-        return HOVerwaltung.instance().getLanguageString("YouthPlayerOverview");
+        return HOVerwaltung.instance().getLanguageString("Youth");
     }
 
     @Override
     public JPanel createTabPanel() {
-        return new YouthPlayerOverviewPanel();
+        return new YouthPanel();
     }
 
     public KeyStroke getKeyStroke() {

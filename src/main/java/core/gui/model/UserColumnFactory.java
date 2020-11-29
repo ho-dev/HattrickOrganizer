@@ -816,29 +816,4 @@ final public class UserColumnFactory {
 
         return playerAdditionalArray;
     }
-
-    public static UserColumn[] createYouthPlayerColumns() {
-
-        return new UserColumn[]{
-                new YouthPlayerColumn(NAME, "ls.player.name", 0) {
-                    @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new ColorLabelEntry(player.getFullName());
-                    }
-                },
-                new YouthPlayerColumn(1000, "ls.player.age") {
-                    @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new ColorLabelEntry("" + player.getAgeYears() + "." + player.getAgeDays());
-                    }
-                },
-                new YouthPlayerColumn(ID, "ls.player.id", 0) {
-                    @Override
-                    public boolean isDisplay() {
-                        return false;
-                    }
-                }
-
-        };
-    }
 }
