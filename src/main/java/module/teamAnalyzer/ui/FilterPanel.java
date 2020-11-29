@@ -13,8 +13,6 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.Iterator;
 
 import javax.swing.ButtonGroup;
@@ -66,12 +64,10 @@ public class FilterPanel extends JPanel implements ActionListener {
 			TeamAnalyzerPanel.filter.setAutomatic(true);
 			autoPanel.reload();
 			cLayout.show(cards, CARD_AUTOMATIC);
-			return;
 		} else if (radioManual.equals(compo)) {
 			cLayout.show(cards, CARD_MANUAL);
 			TeamAnalyzerPanel.filter.setAutomatic(false);
 			manualPanel.reload();
-			return;
 		}
 	}
 

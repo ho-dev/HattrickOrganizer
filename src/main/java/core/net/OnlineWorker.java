@@ -784,7 +784,7 @@ public class OnlineWorker {
 				return null;
 			}
 			showWaitInformation(20);
-			details = XMLMatchdetailsParser.parseMachtdetailsFromString(matchDetails, lineup);
+			details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, lineup);
 			showWaitInformation(40);
 			if (details == null) {
 				HOLogger.instance().warning(OnlineWorker.class,

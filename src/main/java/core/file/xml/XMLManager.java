@@ -48,7 +48,7 @@ public class XMLManager  {
      */
     public static String getFirstChildNodeValue(Element ele) {
         try {
-            if (ele.getFirstChild() != null) {
+            if (ele != null && ele.getFirstChild() != null) {
                 return ele.getFirstChild().getNodeValue();
             }
         } catch (Exception e) {
