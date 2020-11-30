@@ -3,11 +3,7 @@ package core.file.xml;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.match.MatchHelper;
-import core.model.match.MatchEvent;
-import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupPlayer;
-import core.model.match.Matchdetails;
+import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
@@ -63,7 +59,7 @@ public class MatchExporter {
 		//Alle matches prï¿½fen        
 		for (int i = 0;(matches != null) && (i < matches.length); i++) {
 			//details holen
-			Matchdetails details = DBManager.instance().getMatchDetails(matches[i].getMatchID());
+			Matchdetails details = DBManager.instance().loadMatchDetails(SourceSystem.HATTRICK.getId(), matches[i].getMatchID());
 			boolean isFriendly = matches[i].getMatchTyp().isFriendly();
 			if (isValidMatch(matches[i], details, startingDateForFriendlies, strict, skipPullBack) && isFriendly
 					|| isValidMatch(matches[i], details, startingDate, strict, skipPullBack) && !isFriendly ) {				

@@ -10,15 +10,7 @@ import core.gui.model.ArenaStatistikTableModel;
 import core.gui.model.SpielerMatchCBItem;
 import core.model.*;
 import core.model.Tournament.TournamentDetails;
-import core.model.match.MatchEvent;
-import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineup;
-import core.model.match.MatchLineupPlayer;
-import core.model.match.MatchLineupTeam;
-import core.model.match.MatchType;
-import core.model.match.Matchdetails;
-import core.model.match.MatchesHighlightsStat;
-import core.model.match.MatchesOverviewRow;
+import core.model.match.*;
 import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
@@ -1275,9 +1267,9 @@ public class DBManager {
 	/**
 	 * Gibt die MatchDetails zu einem Match zurück
 	 */
-	public Matchdetails getMatchDetails(int matchId) {
+	public Matchdetails loadMatchDetails(int sourcesystem, int matchId) {
 		return ((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME))
-				.getMatchDetails(matchId);
+				.loadMatchDetails(sourcesystem, matchId);
 	}
 
 	/**
@@ -1476,7 +1468,7 @@ public class DBManager {
 						spielerid, filter);
 
 				// Matchdetails
-				final Matchdetails details = getMatchDetails(item
+				final Matchdetails details = loadMatchDetails(SourceSystem.HATTRICK.getId(), item
 						.getMatchID());
 
 				// Stimmung und Selbstvertrauen
@@ -1795,10 +1787,11 @@ public class DBManager {
 
 	public static Integer getInteger(ResultSet rs, String columnLabel) {
 		try {
-			return rs.getInt(columnLabel);
+			var ret = rs.getInt(columnLabel);
+			if (rs.wasNull()) return null;
+			return ret;
+		} catch (Exception ignored) {
 		}
-		catch(Exception ignored)
-		{}
 		return null;
 	}
 

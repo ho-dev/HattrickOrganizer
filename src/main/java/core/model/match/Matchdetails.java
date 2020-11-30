@@ -210,7 +210,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     }
 
     public static Matchdetails getMatchdetails(int matchId, MatchType type){
-        var ret = DBManager.instance().getMatchDetails(matchId);
+        var ret = DBManager.instance().loadMatchDetails(type.getSourceSystem().getId(), matchId);
         ret.setMatchType(type);
         ret.setSourceSystem(type.getSourceSystem());
         return ret;
@@ -233,8 +233,9 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     }
 
     public int getLastMinute() {
-        if ( getHighlights().size()>0){
-            return getHighlights().get(getHighlights().size()-1).getMinute();
+        var highlights = getHighlights();
+        if ( highlights != null && highlights.size()>0){
+            return highlights.get(highlights.size()-1).getMinute();
         }
         return -1;
     }
