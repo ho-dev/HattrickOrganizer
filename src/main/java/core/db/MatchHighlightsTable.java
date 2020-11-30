@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 
-import static core.db.DbUtil.getNullableInt;
-
 final class MatchHighlightsTable extends AbstractTable {
 	final static String TABLENAME = "MATCHHIGHLIGHTS";
 
@@ -126,8 +124,8 @@ final class MatchHighlightsTable extends AbstractTable {
 		highlight.setGehilfeHeim(rs.getBoolean("GehilfeHeim"));
 		highlight.setEventText(DBManager.deleteEscapeSequences(rs.getString("EventText")));
 		highlight.setM_eInjuryType(rs.getInt("INJURY_TYPE"));
-		highlight.setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId(getNullableInt(rs,"MatchPart")));
-		highlight.setEventVariation(getNullableInt(rs, "EventVariation"));
+		highlight.setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId(DBManager.getInteger(rs,"MatchPart")));
+		highlight.setEventVariation(DBManager.getInteger(rs, "EventVariation"));
 		return highlight;
 	}
 

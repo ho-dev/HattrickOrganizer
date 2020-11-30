@@ -1647,15 +1647,15 @@ public class Lineup{
 	/**
 	 * Save a lineup using the given name.
 	 */
-	public final void save(final String name) {
-		DBManager.instance().saveAufstellung(NO_HRF_VERBINDUNG, this, name);
+	public final void save(int sourceSystem, final String name) {
+		DBManager.instance().saveAufstellung(sourceSystem, NO_HRF_VERBINDUNG, this, name);
 	}
 
 	/**
 	 * Save a lineup.
 	 */
-	public final void save4HRF() {
-		DBManager.instance().saveAufstellung(HOVerwaltung.instance().getModel().getID(), this,
+	public final void save4HRF(int sourceSystem) {
+		DBManager.instance().saveAufstellung(sourceSystem, HOVerwaltung.instance().getModel().getID(), this,
 				"HRF");
 	}
 

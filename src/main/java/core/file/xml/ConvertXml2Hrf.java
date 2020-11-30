@@ -38,6 +38,8 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
 
+import static core.file.xml.XMLManager.xmlValue2Hash;
+
 /**
  * Convert the necessary xml data into a HRF file.
  * 
@@ -142,9 +144,12 @@ public class ConvertXml2Hrf {
 		MatchLineup matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(mc.getMatchLineup(-1, teamId,
 						MatchType.LEAGUE).toString());
 		HOMainFrame.instance().setWaitInformation(30);
-		List<MyHashtable> playersData = new xmlPlayersParser()
-				.parsePlayersFromString(mc.getPlayers(teamId));
-
+		List<MyHashtable> playersData = new xmlPlayersParser().parsePlayersFromString(mc.getPlayers(teamId));
+		int youthteamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
+		List<MyHashtable> youthplayers=null;
+		if ( youthteamId > 0 ){
+			youthplayers = new xmlPlayersParser().parseYouthPlayersFromString(mc.getYouthPlayers(youthteamId));
+		}
 		HOMainFrame.instance().setWaitInformation(35);
 		Map<String, String> economyDataMap = XMLEconomyParser.parseEconomyFromString(mc.getEconomy(teamId));
 
@@ -159,11 +164,11 @@ public class ConvertXml2Hrf {
 		int arenaId = 0;
 		try {
 			arenaId = Integer.parseInt(teamdetailsDataMap.get("ArenaID"));
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 			
 		}
 		Map<String, String> arenaDataMap = XMLArenaParser
-				.parseArenaFromString(mc.getArena(arenaId));
+				.parseArenaFromString(mc.downloadArena(arenaId));
 
 		// MatchOrder
 		HOMainFrame.instance().setWaitInformation(55);
@@ -196,7 +201,7 @@ public class ConvertXml2Hrf {
 		if (matchLineup != null) {
 			Matchdetails md = XMLMatchdetailsParser
 					.parseMatchdetailsFromString(
-							mc.getMatchdetails(matchLineup.getMatchID(),
+							mc.downloadMatchdetails(matchLineup.getMatchID(),
 									matchLineup.getMatchTyp()), null);
 
 			if (matchLineup.getHeimId() == Integer.parseInt(teamdetailsDataMap
@@ -251,6 +256,12 @@ public class ConvertXml2Hrf {
 		// players
 		createPlayers(matchLineupTeam, playersData, buffer);
 		HOMainFrame.instance().setWaitInformation(96);
+
+		// youth players
+		if ( youthplayers != null){
+			createYouthPlayers(youthplayers, buffer);
+			HOMainFrame.instance().setWaitInformation(97);
+		}
 
 		// xtra Data
 		createWorld(clubDataMap, teamdetailsDataMap, trainingDataMap,
@@ -320,26 +331,18 @@ public class ConvertXml2Hrf {
 		buffer.append("date=").append(teamdetailsDataMap.get("FetchedDate")).append('\n');
 		buffer.append("season=").append(worldDataMap.get("Season")).append('\n');
 		buffer.append("seasonOffset=").append(worldDataMap.get("SeasonOffset")).append('\n');
-		buffer.append("matchround=").append(worldDataMap.get("MatchRound"))
-				.append('\n');
-		buffer.append("teamID=").append(teamdetailsDataMap.get("TeamID"))
-				.append('\n');
-		buffer.append("teamName=").append(teamdetailsDataMap.get("TeamName"))
-				.append('\n');
-		buffer.append("activationDate=").append(teamdetailsDataMap.get("ActivationDate"))
-				.append('\n');
-		buffer.append("owner=").append(teamdetailsDataMap.get("Loginname"))
-				.append('\n');
-		buffer.append("ownerHomepage=")
-				.append(teamdetailsDataMap.get("HomePage")).append('\n');
-		buffer.append("countryID=").append(worldDataMap.get("CountryID"))
-				.append('\n');
-		buffer.append("leagueID=").append(teamdetailsDataMap.get("LeagueID"))
-				.append('\n');
-		buffer.append("regionID=").append(teamdetailsDataMap.get("RegionID"))
-				.append('\n');
-		buffer.append("hasSupporter=")
-				.append(teamdetailsDataMap.get("HasSupporter")).append('\n');
+		buffer.append("matchround=").append(worldDataMap.get("MatchRound")).append('\n');
+		buffer.append("teamID=").append(teamdetailsDataMap.get("TeamID")).append('\n');
+		buffer.append("teamName=").append(teamdetailsDataMap.get("TeamName")).append('\n');
+		buffer.append("youthTeamID=").append(teamdetailsDataMap.get("YouthTeamID")).append('\n');
+		buffer.append("youthTeamName=").append(teamdetailsDataMap.get("YouthTeamName")).append('\n');
+		buffer.append("activationDate=").append(teamdetailsDataMap.get("ActivationDate")).append('\n');
+		buffer.append("owner=").append(teamdetailsDataMap.get("Loginname")).append('\n');
+		buffer.append("ownerHomepage=").append(teamdetailsDataMap.get("HomePage")).append('\n');
+		buffer.append("countryID=").append(worldDataMap.get("CountryID")).append('\n');
+		buffer.append("leagueID=").append(teamdetailsDataMap.get("LeagueID")).append('\n');
+		buffer.append("regionID=").append(teamdetailsDataMap.get("RegionID")).append('\n');
+		buffer.append("hasSupporter=").append(teamdetailsDataMap.get("HasSupporter")).append('\n');
 	}
 
 	/**
@@ -761,7 +764,7 @@ public class ConvertXml2Hrf {
 	 * Create the player data.
 	 */
 	private static void createPlayers(MatchLineupTeam matchLineupTeam,
-			List<MyHashtable> playersData, StringBuilder buffer) {
+									  List<MyHashtable> playersData, StringBuilder buffer) {
 		Map<?, ?> ht = null;
 
 		for (int i = 0; (playersData != null) && (i < playersData.size()); i++) {
@@ -880,10 +883,10 @@ public class ConvertXml2Hrf {
 
 			if ((matchLineupTeam != null)
 					&& (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get(
-							"PlayerID").toString())) != null)
+					"PlayerID").toString())) != null)
 					&& (matchLineupTeam.getPlayerByID(
-							Integer.parseInt(ht.get("PlayerID").toString()))
-							.getRating() >= 0)) {
+					Integer.parseInt(ht.get("PlayerID").toString()))
+					.getRating() >= 0)) {
 				buffer.append("rating=")
 						.append((int) (matchLineupTeam
 								.getPlayerByID(
@@ -908,6 +911,85 @@ public class ConvertXml2Hrf {
 			buffer.append("Caps=").append(ht.get("Caps")).append('\n');
 			buffer.append("CapsU20=").append(ht.get("CapsU20")).append('\n');
 		}
+	}
+
+	/**
+	 * Create youth player data.
+	 */
+	private static void createYouthPlayers(List<MyHashtable> playersData, StringBuilder buffer) {
+
+		for (var player: playersData ) {
+
+			buffer.append("[youthplayer").append(player.get("YouthPlayerID")).append(']').append('\n');
+
+			createHRFLine(buffer, player, "FirstName");
+			createHRFLine(buffer, player, "NickName");
+			createHRFLine(buffer, player, "LastName");
+			createHRFLine(buffer, player, "Age");
+			createHRFLine(buffer, player, "AgeDays");
+			createHRFLine(buffer, player, "ArrivalDate");
+			createHRFLine(buffer, player, "CanBePromotedIn");
+			createHRFLine(buffer, player, "PlayerNumber");
+			createHRFLine(buffer, player, "Statement");
+			createHRFLine(buffer, player, "OwnerNotes");
+			createHRFLine(buffer, player, "PlayerCategoryID");
+
+			createHRFLine(buffer, player, "Cards");
+			createHRFLine(buffer, player, "InjuryLevel");
+			createHRFLine(buffer, player, "Specialty");
+			createHRFLine(buffer, player, "CareerGoals");
+			createHRFLine(buffer, player, "CareerHattricks");
+			createHRFLine(buffer, player, "LeagueGoals");
+			createHRFLine(buffer, player, "FriendlyGoals");
+
+			createHRFSkillLines(buffer, player, "KeeperSkill");
+			createHRFSkillLines(buffer, player, "DefenderSkill");
+			createHRFSkillLines(buffer, player, "PlaymakerSkill");
+			createHRFSkillLines(buffer, player, "WingerSkill");
+			createHRFSkillLines(buffer, player, "PassingSkill");
+			createHRFSkillLines(buffer, player, "ScorerSkill");
+			createHRFSkillLines(buffer, player, "SetPiecesSkill");
+
+			createHRFLine(buffer, player, "ScoutId");
+			createHRFLine(buffer, player, "ScoutName");
+			createHRFLine(buffer, player, "ScoutingRegionID");
+
+			for ( int i=0; createScoutComment(buffer, player, i); i++);
+
+			createHRFLine(buffer, player, "YouthMatchID");
+			createHRFLine(buffer, player, "YouthMatchDate");
+			createHRFLine(buffer, player, "PositionCode");
+			createHRFLine(buffer, player, "PlayedMinutes");
+			createHRFLine(buffer, player, "Rating");
+		}
+	}
+
+	private static boolean createScoutComment(StringBuilder buffer, MyHashtable player, int i) {
+		var prefix = "ScoutComment"+i;
+
+		var text = player.get(prefix+"Text");
+		if ( text != null){
+			createHRFLine(buffer, player, prefix+"Text");
+			createHRFLine(buffer, player, prefix+"Type");
+			createHRFLine(buffer, player, prefix+"Variation");
+			createHRFLine(buffer, player, prefix+"SkillType");
+			createHRFLine(buffer, player, prefix+"SkillLevel");
+			return true;
+		}
+		return false;
+	}
+
+	private static void createHRFSkillLines(StringBuilder buffer, MyHashtable player, String skill) {
+		createHRFLine(buffer, player, skill);
+		createHRFLine(buffer, player, skill+"IsAvailable");
+		createHRFLine(buffer, player, skill+"IsMaxReached");
+		createHRFLine(buffer, player, skill+"MayUnlock");
+		createHRFLine(buffer, player, skill+"Max");
+		createHRFLine(buffer, player, skill+"MaxIsAvailable");
+	}
+
+	private static void createHRFLine(StringBuilder buffer, MyHashtable player, String key) {
+		buffer.append(key).append("=").append(player.get(key)).append('\n');
 	}
 
 	/**

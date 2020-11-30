@@ -4,6 +4,7 @@ import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.comp.entry.*;
+import core.gui.comp.table.UserColumn;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
@@ -15,6 +16,7 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.model.player.YouthPlayer;
 import core.util.Helper;
 import module.playerOverview.SpielerStatusLabelEntry;
 

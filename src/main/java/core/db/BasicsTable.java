@@ -19,20 +19,23 @@ final class BasicsTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-        columns = new ColumnDescriptor[13];
-		columns[0]= new ColumnDescriptor("HRF_ID",Types.INTEGER,false,true);
-		columns[1]= new ColumnDescriptor("Manager",Types.VARCHAR,false,127);
-		columns[2]= new ColumnDescriptor("TeamID",Types.INTEGER,false);
-		columns[3]= new ColumnDescriptor("TeamName",Types.VARCHAR,false,127);
-		columns[4]= new ColumnDescriptor("Land",Types.INTEGER,false);
-		columns[5]= new ColumnDescriptor("Liga",Types.INTEGER,false);
-		columns[6]= new ColumnDescriptor("Saison",Types.INTEGER,false);
-		columns[7]= new ColumnDescriptor("Spieltag",Types.INTEGER,false);
-		columns[8]= new ColumnDescriptor("Datum",Types.TIMESTAMP,false);
-		columns[9]= new ColumnDescriptor("Region",Types.INTEGER,false);
-		columns[10] = new ColumnDescriptor("HasSupporter", Types.BOOLEAN,false);
-		columns[11] = new ColumnDescriptor("ActivationDate", Types.TIMESTAMP,true);
-		columns[12]= new ColumnDescriptor("SeasonOffset",Types.INTEGER,true);
+		columns = new ColumnDescriptor[]{
+				new ColumnDescriptor("HRF_ID", Types.INTEGER, false, true),
+				new ColumnDescriptor("Manager", Types.VARCHAR, false, 127),
+				new ColumnDescriptor("TeamID", Types.INTEGER, false),
+				new ColumnDescriptor("TeamName", Types.VARCHAR, false, 127),
+				new ColumnDescriptor("Land", Types.INTEGER, false),
+				new ColumnDescriptor("Liga", Types.INTEGER, false),
+				new ColumnDescriptor("Saison", Types.INTEGER, false),
+				new ColumnDescriptor("Spieltag", Types.INTEGER, false),
+				new ColumnDescriptor("Datum", Types.TIMESTAMP, false),
+				new ColumnDescriptor("Region", Types.INTEGER, false),
+				new ColumnDescriptor("HasSupporter", Types.BOOLEAN, false),
+				new ColumnDescriptor("ActivationDate", Types.TIMESTAMP, true),
+				new ColumnDescriptor("SeasonOffset", Types.INTEGER, true),
+				new ColumnDescriptor("YouthTeamName", Types.VARCHAR, true, 127),
+				new ColumnDescriptor("YouthTeamID", Types.INTEGER, true)
+		};
 	}
 
 	@Override
@@ -56,7 +59,7 @@ final class BasicsTable extends AbstractTable {
 			delete( awhereS, awhereV );
 
 			//insert vorbereiten
-			statement = "INSERT INTO "+getTableName()+" ( TeamID , Manager , TeamName , Land , Liga , Saison, SeasonOffset , Spieltag , HRF_ID, Datum, Region, HasSupporter, ActivationDate ) VALUES(";
+			statement = "INSERT INTO "+getTableName()+" ( TeamID , Manager , TeamName , Land , Liga , Saison, SeasonOffset , Spieltag , HRF_ID, Datum, Region, HasSupporter, YouthTeamName , YouthTeamID, ActivationDate) VALUES(";
 			statement
 				+= (""
 					+ basics.getTeamId()
@@ -82,7 +85,11 @@ final class BasicsTable extends AbstractTable {
 					+ basics.getRegionId()
 					+ ",'"
 					+ basics.isHasSupporter()
+					+ "','"
+					+ basics.getYouthTeamName()
 					+ "',"
+					+ basics.getYouthTeamId()
+					+ ","
 					+ (basics.getActivationDate() == null ? "NULL" : "'" + basics.getActivationDate() + "'")
 					+ " )");
 			adapter.executeUpdate(statement);
@@ -121,7 +128,7 @@ final class BasicsTable extends AbstractTable {
 	Vector<CBItem> getCBItemHRFListe(Timestamp datum) {
 		ResultSet rs = null;
 		final String statement = "SELECT * FROM "+getTableName()+" WHERE Datum >='" + datum.toString() + "' ORDER BY Datum DESC";
-		final Vector<CBItem> hrfs = new Vector<CBItem>();
+		final Vector<CBItem> hrfs = new Vector<>();
 
 		try {
 			rs = adapter.executeQuery(statement);

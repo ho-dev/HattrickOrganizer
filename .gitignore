@@ -39,6 +39,7 @@
 .gradle
 /build/
 /gradle.properties
+version.properties
 
 
 # Gradle and Maven with auto-import, hence we should exclude module files

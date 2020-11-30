@@ -154,7 +154,7 @@ public class HelperWrapper {
     @Deprecated
     public boolean isUserMatch(String matchID, MatchType matchType) {
     	try {
-          String input = MyConnector.instance().getMatchdetails(Integer.parseInt(matchID), matchType);
+          String input = MyConnector.instance().downloadMatchdetails(Integer.parseInt(matchID), matchType);
           Matchdetails mdetails = XMLMatchdetailsParser.parseMatchdetailsFromString(input, null);
           int teamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
           return ((mdetails.getHeimId() == teamID) || (mdetails.getGastId() == teamID));

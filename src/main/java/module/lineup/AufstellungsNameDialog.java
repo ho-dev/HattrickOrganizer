@@ -5,6 +5,7 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.model.AufstellungCBItem;
 import core.model.HOVerwaltung;
+import core.model.match.SourceSystem;
 import core.util.GUIUtils;
 
 import java.awt.BorderLayout;
@@ -109,7 +110,7 @@ final class AufstellungsNameDialog extends JDialog implements ActionListener {
 										+ HOVerwaltung.instance().getLanguageString("gespeichert"));
 				AufstellungsVergleichHistoryPanel.setAngezeigteAufstellung(new AufstellungCBItem(
 						nameTextField.getText(), lineup.duplicate()));
-				saveLineup(lineup, nameTextField.getText());
+				saveLineup(SourceSystem.HATTRICK, lineup, nameTextField.getText());
 				setVisible(false);
 
 			} else {
@@ -129,7 +130,7 @@ final class AufstellungsNameDialog extends JDialog implements ActionListener {
 					AufstellungsVergleichHistoryPanel
 							.setAngezeigteAufstellung(new AufstellungCBItem(
 									nameTextField.getText(), lineup.duplicate()));
-					saveLineup(lineup, nameTextField.getText());
+					saveLineup(SourceSystem.HATTRICK, lineup, nameTextField.getText());
 
 					// Should prepare it for the new lineup
 					HOMainFrame.instance().getAufstellungsPanel().update();
@@ -165,8 +166,8 @@ final class AufstellungsNameDialog extends JDialog implements ActionListener {
 		return (!(aufstellungsNamen.contains(name)));
 	}
 
-	private void saveLineup(Lineup lineup, String name) {
-		lineup.save(nameTextField.getText());
+	private void saveLineup(SourceSystem sourceSystem, Lineup lineup, String name) {
+		lineup.save(sourceSystem.getId(), nameTextField.getText());
 		this.canceled = false;
 	}
 }

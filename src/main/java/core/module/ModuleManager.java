@@ -16,6 +16,7 @@ import module.teamOfTheWeek.TeamOfTheWeekModule;
 import module.training.TrainingModule;
 import module.transfer.TransfersModule;
 import module.tsforecast.TSForecastModule;
+import module.youth.YouthPlayerOverviewModule;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,6 +57,7 @@ public final class ModuleManager {
 		map.put(Integer.valueOf(IModule.SPECIALEVENTS), new SpecialEventsModule());
 		map.put(Integer.valueOf(IModule.TEAM_OF_THE_WEEK), new TeamOfTheWeekModule());
 		map.put(Integer.valueOf(IModule.IFA), new IfaModule());
+		map.put(Integer.valueOf(IModule.YOUTHPLAYEROVERVIEW), new YouthPlayerOverviewModule());
 	}
 
 	private void initialize() {

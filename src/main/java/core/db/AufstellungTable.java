@@ -129,32 +129,37 @@ final class AufstellungTable extends AbstractTable {
 	 * 
 	 * @throws SQLException 
 	 */
-	void saveAufstellung(int hrfId, Lineup aufstellung, String name) throws SQLException {
+	void saveAufstellung(int sourceSystem, int hrfId, Lineup lineup, String name) throws SQLException {
 		String statement = null;
 
-		if (aufstellung != null) {
+		if (lineup != null) {
 
 			DBManager.instance().deleteAufstellung(hrfId, name);
 
 			// insert vorbereiten
 			statement = "INSERT INTO " + getTableName()
-					+ " ( HRF_ID, Kicker, Kapitaen, Attitude, Tactic, StyleOfPlay, Aufstellungsname ) VALUES(";
-			statement += ("" + hrfId + "," + aufstellung.getKicker() + ","
-					+ aufstellung.getKapitaen() + "," + aufstellung.getAttitude() + ","
-					+ aufstellung.getTacticType() + "," + aufstellung.getStyleOfPlay() + ",'" + name + "' )");
+					+ " ( SourceSystem, HRF_ID, Kicker, Kapitaen, Attitude, Tactic, StyleOfPlay, Aufstellungsname ) VALUES("
+					+ sourceSystem + ","
+					+ hrfId + ","
+					+ lineup.getKicker() + ","
+					+ lineup.getKapitaen() + ","
+					+ lineup.getAttitude() + ","
+					+ lineup.getTacticType() + ","
+					+ lineup.getStyleOfPlay() + ",'"
+					+ name + "' )";
 
 			adapter.executeUpdate(statement);
 
 			// Standard sys saven
-			DBManager.instance().saveSystemPositionen(hrfId, aufstellung.getPositionen(), name);
+			DBManager.instance().saveSystemPositionen(hrfId, lineup.getPositionen(), name);
 
 			// Save Substitutions
 			((MatchSubstitutionTable)(DBManager.instance().getTable(MatchSubstitutionTable.TABLENAME)))
-					.storeMatchSubstitutionsByHrf(hrfId,aufstellung.getSubstitutionList(), name);
+					.storeMatchSubstitutionsByHrf(sourceSystem, hrfId,lineup.getSubstitutionList(), name);
 			
 			// save penalty takers
 			((PenaltyTakersTable)(DBManager.instance().getTable(PenaltyTakersTable.TABLENAME)))
-				.storePenaltyTakers(name, aufstellung.getPenaltyTakers());
+				.storePenaltyTakers(name, lineup.getPenaltyTakers());
 		}
 	}
 }

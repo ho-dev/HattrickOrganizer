@@ -105,6 +105,7 @@ final class DBUpdater {
 					case 399:
 						updateDBv400(DBVersion, version);
 					case 400:
+					case 499:
 						updateDBv500(DBVersion, version);
 					case 500:
 				}
@@ -168,9 +169,23 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN AwayFormation VARCHAR(5) ");
 		}
 
+		if ( !columnExistsInTable("YouthTeamName", BasicsTable.TABLENAME)){
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamName VARCHAR (127)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamID INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE AUFSTELLUNG ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUPPLAYER ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUP ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUPTEAM ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHSUBSTITUTION ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
+		}
+		if (!tableExists(YouthPlayerTable.TABLENAME)) {
+			dbManager.getTable(YouthPlayerTable.TABLENAME).createTable();
+			dbManager.getTable(YouthScoutCommentTable.TABLENAME).createTable();
+		}
+
 		updateDBVersion(dbVersion, version);
 	}
-
 
 	private void updateDBv400(int dbVersion, int version) throws SQLException {
 		// Delete existing values to provide sane defaults.

@@ -42,12 +42,12 @@ public class MatchesModel {
 	
 	public MatchLineupTeam getHomeTeamInfo() {
 		if (home == null && match != null) {
-			home = DBManager.instance().getMatchLineupTeam(match.getMatchID(), match.getHeimID());
+			home = DBManager.instance().getMatchLineupTeam(details.getSourceSystem().getId(), match.getMatchID(), match.getHeimID());
 
 			if ( home == null){
 				// Lineup team was not stored (Verlegenheitstruppe)
 				var ok = OnlineWorker.downloadMatchData(match, true);
-				home = DBManager.instance().getMatchLineupTeam(match.getMatchID(), match.getHeimID());
+				home = DBManager.instance().getMatchLineupTeam(details.getSourceSystem().getId(), match.getMatchID(), match.getHeimID());
 			}
 		}
 		return home;
@@ -55,7 +55,7 @@ public class MatchesModel {
 	
 	public MatchLineupTeam getAwayTeamInfo() {
 		if (away == null && match != null) {
-			away = DBManager.instance().getMatchLineupTeam(match.getMatchID(), match.getGastID());
+			away = DBManager.instance().getMatchLineupTeam(details.getSourceSystem().getId(), match.getMatchID(), match.getGastID());
 		}
 		return away;
 	}

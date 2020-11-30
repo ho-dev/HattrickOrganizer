@@ -27,7 +27,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	/** count of displayed column **/
 	private int displayedColumnsCount;
 
-	/** all columns from this modell **/
+	/** all columns from this model **/
 	protected UserColumn[] columns;
 
 	/** only displayed columns **/

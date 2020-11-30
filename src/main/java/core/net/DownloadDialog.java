@@ -287,6 +287,10 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				if (bOK) {
 					OnlineWorker.getAllLineups();
 				}
+
+				if ( model.getBasics().hasYouthTeam()){
+					OnlineWorker.downloadMissingYouthMatchLineups(model.getBasics().getYouthTeamId());
+				}
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {
 				List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, m_clSpinnerModel.getDate(), false);

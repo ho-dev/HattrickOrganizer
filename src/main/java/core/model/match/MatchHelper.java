@@ -45,8 +45,8 @@ public class MatchHelper {
 	 * 
 	 * @param matchId	match Id
 	 */
-	public short getLocation(int matchId) {
-		MatchLineup ml = DBManager.instance().getMatchLineup(matchId);
+	public short getLocation(SourceSystem sourceSystem, int matchId) {
+		MatchLineup ml = DBManager.instance().getMatchLineup(sourceSystem.getId(), matchId);
 		return getLocation(ml.getHeimId(), ml.getGastId(), matchId, ml.getMatchTyp());
 	}
 

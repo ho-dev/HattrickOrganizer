@@ -6,10 +6,7 @@
  */
 package core.file.xml;
 
-import core.model.match.MatchLineup;
-import core.model.match.MatchLineupPlayer;
-import core.model.match.MatchLineupTeam;
-import core.model.match.MatchType;
+import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;
@@ -49,7 +46,7 @@ public class XMLMatchLineupParser {
 
 		try {
 			Element root = doc.getDocumentElement();
-			Element  ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
+			Element ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
 			ml.setFetchDatum(ele.getFirstChild().getNodeValue());
 			ele = (Element) root.getElementsByTagName("MatchID").item(0);
 			ml.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
@@ -83,7 +80,7 @@ public class XMLMatchLineupParser {
 			ml.setSpielDatum(ele.getFirstChild().getNodeValue());
 
 			// team adden
-			MatchLineupTeam team = createTeam(ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
+			MatchLineupTeam team = createTeam(ml.getSourceSystem().getId(), ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
 
 			if (team.getTeamID() == ml.getHeimId()) {
 				ml.setHeim(team);
@@ -151,21 +148,22 @@ public class XMLMatchLineupParser {
 				// behavior);
 
 				switch (behavior) {
-				case IMatchRoleID.OLD_EXTRA_DEFENDER:
-					roleID = IMatchRoleID.middleCentralDefender;
-					behavior = IMatchRoleID.NORMAL;
-					break;
-				case IMatchRoleID.OLD_EXTRA_MIDFIELD:
-					roleID = IMatchRoleID.centralInnerMidfield;
-					behavior = IMatchRoleID.NORMAL;
-					break;
-				case IMatchRoleID.OLD_EXTRA_FORWARD:
-					roleID = IMatchRoleID.centralForward;
-					behavior = IMatchRoleID.NORMAL;
-					break;
-				case IMatchRoleID.OLD_EXTRA_DEFENSIVE_FORWARD:
-					roleID = IMatchRoleID.centralForward;
-					behavior = IMatchRoleID.DEFENSIVE;
+					case IMatchRoleID.OLD_EXTRA_DEFENDER -> {
+						roleID = IMatchRoleID.middleCentralDefender;
+						behavior = IMatchRoleID.NORMAL;
+					}
+					case IMatchRoleID.OLD_EXTRA_MIDFIELD -> {
+						roleID = IMatchRoleID.centralInnerMidfield;
+						behavior = IMatchRoleID.NORMAL;
+					}
+					case IMatchRoleID.OLD_EXTRA_FORWARD -> {
+						roleID = IMatchRoleID.centralForward;
+						behavior = IMatchRoleID.NORMAL;
+					}
+					case IMatchRoleID.OLD_EXTRA_DEFENSIVE_FORWARD -> {
+						roleID = IMatchRoleID.centralForward;
+						behavior = IMatchRoleID.DEFENSIVE;
+					}
 				}
 
 				// Wash the remaining old positions
@@ -183,8 +181,10 @@ public class XMLMatchLineupParser {
 					rating = Double
 							.parseDouble(tmp.getFirstChild().getNodeValue().replaceAll(",", "."));
 					tmp = (Element) ele.getElementsByTagName("RatingStarsEndOfMatch").item(0);
-					ratingStarsEndOfMatch = Double.parseDouble(tmp.getFirstChild().getNodeValue()
-							.replaceAll(",", "."));
+					if ( tmp != null){ // info is not available for youth players
+						ratingStarsEndOfMatch = Double.parseDouble(tmp.getFirstChild().getNodeValue()
+								.replaceAll(",", "."));
+					}
 				}
 			}
 		}
@@ -208,7 +208,7 @@ public class XMLMatchLineupParser {
 		return "";
 	}
 
-	private static MatchLineupTeam createTeam(int matchID, Element ele) {
+	private static MatchLineupTeam createTeam(int sourceSystem, int matchID, Element ele) {
 		Element tmp = (Element) ele.getElementsByTagName("TeamID").item(0);
 		int teamId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("ExperienceLevel").item(0);
@@ -217,7 +217,7 @@ public class XMLMatchLineupParser {
 		int styleOfPlay = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("TeamName").item(0);
 		String teamName = tmp.getFirstChild().getNodeValue();
-		MatchLineupTeam team = new MatchLineupTeam(matchID, teamName, teamId, erfahrung, styleOfPlay);
+		MatchLineupTeam team = new MatchLineupTeam(SourceSystem.getById(sourceSystem), matchID, teamName, teamId, erfahrung, styleOfPlay);
 
 		Element starting = (Element) ele.getElementsByTagName("StartingLineup").item(0);
 		Element subs = (Element) ele.getElementsByTagName("Substitutions").item(0);
@@ -237,6 +237,7 @@ public class XMLMatchLineupParser {
 			// players are always last in the API, there are at least signs of a
 			// fixed order.
 			MatchLineupPlayer player = createPlayer((Element) list.item(i));
+			player.setSourceSystem(SourceSystem.getById(sourceSystem));
 			if (team.getPlayerByID(player.getSpielerId()) != null) {
 				if ((player.getId() >= IMatchRoleID.FirstPlayerReplaced)
 						&& (player.getId() <= IMatchRoleID.ThirdPlayerReplaced)) {
@@ -258,8 +259,7 @@ public class XMLMatchLineupParser {
 			// Merge with the existing player, but ignore captain and set piece
 			// position
 			if (startPlayer.getStartPosition() >= IMatchRoleID.startLineup) {
-				MatchLineupPlayer lineupPlayer = (MatchLineupPlayer) team.getPlayerByID(startPlayer
-						.getSpielerId());
+				MatchLineupPlayer lineupPlayer = team.getPlayerByID(startPlayer.getSpielerId());
 				if (lineupPlayer != null) {
 					lineupPlayer.setStartPosition(startPlayer.getStartPosition());
 					lineupPlayer.setStartBehavior(startPlayer.getStartBehavior());
@@ -298,9 +298,8 @@ public class XMLMatchLineupParser {
 		return team;
 	}
 
-	private static Substitution createSubstitution(Element ele, int num) {
+	private static Substitution createSubstitution(Element ele, int playerOrderID) {
 
-		int playerOrderID = num; // We use our own
 		int playerIn = -1;
 		int playerOut = -1;
 		byte orderTypeId = -1;

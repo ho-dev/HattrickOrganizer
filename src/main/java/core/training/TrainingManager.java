@@ -115,7 +115,7 @@ public class TrainingManager {
 	            int minutes=0;
 	        	for (var match : matches) {
 	                //Get the MatchLineup by id
-	                MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(match.getMatchID(), myID);
+	                MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getId(), match.getMatchID(), myID);
 	                MatchStatistics ms = new MatchStatistics(match, mlt);
 					MatchType type = mlt.getMatchType();
 					if ( type != MatchType.MASTERS) { // MASTERS counts only for experience
@@ -139,7 +139,7 @@ public class TrainingManager {
 					// TODO check if national matches are stored in database
 					var nationalMatches = train.getMatches(inputPlayer.getNationalTeamID());
 					for (var match : nationalMatches){
-						MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(match.getMatchID(), inputPlayer.getNationalTeamID());
+						MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getId(), match.getMatchID(), inputPlayer.getNationalTeamID());
 						MatchStatistics ms = new MatchStatistics(match, mlt);
 						minutes = ms.getStaminaMinutesPlayedInPositions(playerID);
 						if ( minutes > 0 ) {

@@ -1,6 +1,7 @@
 package core.db;
 
 import core.model.match.MatchLineupPlayer;
+import core.model.match.SourceSystem;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;
@@ -27,23 +28,25 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[16];
-		columns[0]= new ColumnDescriptor("MatchID",Types.INTEGER,false);
-		columns[1]= new ColumnDescriptor("TeamID",Types.INTEGER,false);
-		columns[2]= new ColumnDescriptor("SpielerID",Types.INTEGER,false);
-		columns[3]= new ColumnDescriptor("RoleID",Types.INTEGER,false);
-		columns[4]= new ColumnDescriptor("Taktik",Types.INTEGER,false);
-		columns[5]= new ColumnDescriptor("PositionCode",Types.INTEGER,false);
-		columns[6]= new ColumnDescriptor("VName",Types.VARCHAR,false,255);
-		columns[7]= new ColumnDescriptor("NickName",Types.VARCHAR,false,255);
-		columns[8]= new ColumnDescriptor("Name",Types.VARCHAR,false,255);
-		columns[9]= new ColumnDescriptor("Rating",Types.REAL,false);
-		columns[10]= new ColumnDescriptor("HoPosCode",Types.INTEGER,false);
-		columns[11]= new ColumnDescriptor("STATUS",Types.INTEGER,false);
-		columns[12]= new ColumnDescriptor("FIELDPOS",Types.INTEGER,false);
-		columns[13]= new ColumnDescriptor("RatingStarsEndOfMatch", Types.REAL, false);
-		columns[14]= new ColumnDescriptor("StartPosition", Types.INTEGER, false);
-		columns[15]= new ColumnDescriptor("StartBehaviour", Types.INTEGER, false);
+		columns = new ColumnDescriptor[]{
+				new ColumnDescriptor("MatchID",Types.INTEGER,false),
+				new ColumnDescriptor("SourceSystem", Types.INTEGER, false),
+				new ColumnDescriptor("TeamID",Types.INTEGER,false),
+				new ColumnDescriptor("SpielerID",Types.INTEGER,false),
+				new ColumnDescriptor("RoleID",Types.INTEGER,false),
+				new ColumnDescriptor("Taktik",Types.INTEGER,false),
+				new ColumnDescriptor("PositionCode",Types.INTEGER,false),
+				new ColumnDescriptor("VName",Types.VARCHAR,false,255),
+				new ColumnDescriptor("NickName",Types.VARCHAR,false,255),
+				new ColumnDescriptor("Name",Types.VARCHAR,false,255),
+				new ColumnDescriptor("Rating",Types.REAL,false),
+				new ColumnDescriptor("HoPosCode",Types.INTEGER,false),
+				new ColumnDescriptor("STATUS",Types.INTEGER,false),
+				new ColumnDescriptor("FIELDPOS",Types.INTEGER,false),
+				new ColumnDescriptor("RatingStarsEndOfMatch", Types.REAL, false),
+				new ColumnDescriptor("StartPosition", Types.INTEGER, false),
+				new ColumnDescriptor("StartBehaviour", Types.INTEGER, false)
+		};
 	}
 
 	@Override
@@ -198,7 +201,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		final String[] werte = { "" + matchID};			
 		delete(where, werte);			
 	}
-	
+
 
 	@SuppressWarnings("deprecation")
 	void storeMatchLineupPlayer(MatchLineupPlayer player, int matchID, int teamID) {
@@ -214,39 +217,26 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			//saven
 			try {
 				//insert vorbereiten
-				var sql = "INSERT INTO "+getTableName()+" ( MatchID, TeamID, SpielerID, RoleID, Taktik, PositionCode, VName, NickName, Name, Rating, HoPosCode, STATUS, FIELDPOS, RatingStarsEndOfMatch, StartPosition, StartBehaviour ) VALUES(";
-				sql
-					+= (matchID
-						+ ","
-						+ teamID
-						+ ","
-						+ player.getSpielerId()
-						+ ","
-						+ player.getId()
-						+ ", "
-						+ player.getTaktik()
-						+ ", "
-						+ player.getPositionCode()
-						+ ", '"
-						+ DBManager.insertEscapeSequences(player.getSpielerVName())
-						+ "', '"
-						+ DBManager.insertEscapeSequences(player.getNickName())
-						+ "', '"
-						+ DBManager.insertEscapeSequences(player.getSpielerName())
-						+ "',"
-						+ player.getRating()
-						+ ", "
-						+ player.getPosition()
-						+ ", 0" // Status
-						+ ","
-						+ player.getPositionCode()
-						+ ","
-						+ player.getRatingStarsEndOfMatch()
-						+ ","
-						+ player.getStartPosition()
-						+ ","
-						+ player.getStartBehavior()
-						+ " )");
+				var sql = "INSERT INTO "+getTableName()+" (MatchID,TeamID,SourceSystem,SpielerID,RoleID,Taktik," +
+						"PositionCode,VName,NickName,Name,Rating,HoPosCode,STATUS,FIELDPOS,RatingStarsEndOfMatch," +
+						"StartPosition,StartBehaviour) VALUES(" +
+						matchID + "," +
+						teamID	+ "," +
+						player.getSourceSystem().getId() + "," +
+						player.getSpielerId() + ","	+
+						player.getId() + "," +
+						player.getTaktik()	+ ","	+
+						player.getPositionCode() + ",'" +
+						DBManager.insertEscapeSequences(player.getSpielerVName()) + "', '" +
+						DBManager.insertEscapeSequences(player.getNickName()) + "', '" +
+						DBManager.insertEscapeSequences(player.getSpielerName())+ "'," +
+						player.getRating() + "," +
+						player.getPosition() + "," +
+						"0," + // Status
+						player.getPositionCode() + "," +
+						player.getRatingStarsEndOfMatch() + "," +
+						player.getStartPosition() + "," +
+						player.getStartBehavior() + " )";
 				adapter.executeUpdate(sql);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeMatchLineupPlayer Error" + e);
@@ -294,6 +284,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			var startPos = rs.getInt("StartPosition");
 			var startBeh = rs.getInt("StartBehaviour");
 			var status = rs.getInt("STATUS");
+			var sourceSystem = SourceSystem.getById(rs.getInt("SourceSystem"));
 
 			switch (behavior) {
 				case IMatchRoleID.OLD_EXTRA_DEFENDER -> {
@@ -313,7 +304,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			roleID = MatchRoleID.convertOldRoleToNew(roleID);
 
 			// Position code and field position was removed from constructor below.
-			var player = new MatchLineupPlayer(roleID, behavior, spielerID, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh);
+			var player = new MatchLineupPlayer(sourceSystem, roleID, behavior, spielerID, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh);
 			vec.add(player);
 		}
 

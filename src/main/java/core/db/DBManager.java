@@ -25,10 +25,12 @@ import core.model.misc.Verein;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.model.player.YouthPlayer;
 import core.model.series.Liga;
 import core.model.series.Paarung;
 import core.training.FuturePlayerTraining;
 import core.training.TrainingPerWeek;
+import core.training.YouthTrainerComment;
 import core.util.HOLogger;
 import core.util.ExceptionUtils;
 import module.ifa.IfaMatch;
@@ -66,7 +68,7 @@ public class DBManager {
 	private @Nullable JDBCAdapter m_clJDBCAdapter; // new JDBCAdapter();
 
 	/** all Tables */
-	private final Hashtable<String, AbstractTable> tables = new Hashtable<String, AbstractTable>();
+	private final Hashtable<String, AbstractTable> tables = new Hashtable<>();
 
 	/** Erster Start */
 	private boolean m_bFirstStart;
@@ -206,6 +208,14 @@ public class DBManager {
 		return m_clInstance;
 	}
 
+	public static String nullOrValue(Timestamp value) {
+		var ret = String.valueOf(value);
+		if (!ret.equals("null")){
+			return "'" + ret + "'";
+		}
+		return ret;
+	}
+
 	private void initAllTables(JDBCAdapter adapter) {
 		tables.put(BasicsTable.TABLENAME, new BasicsTable(adapter));
 		tables.put(TeamTable.TABLENAME, new TeamTable(adapter));
@@ -218,6 +228,8 @@ public class DBManager {
 		tables.put(LigaTable.TABLENAME, new LigaTable(adapter));
 		tables.put(SpielerTable.TABLENAME, new SpielerTable(adapter));
 		tables.put(EconomyTable.TABLENAME, new EconomyTable(adapter));
+		tables.put(YouthPlayerTable.TABLENAME, new YouthPlayerTable(adapter));
+		tables.put(YouthScoutCommentTable.TABLENAME, new YouthScoutCommentTable(adapter));
 		tables.put(ScoutTable.TABLENAME, new ScoutTable(adapter));
 		tables.put(UserColumnsTable.TABLENAME, new UserColumnsTable(adapter));
 		tables.put(SpielerNotizenTable.TABLENAME, new SpielerNotizenTable(adapter));
@@ -363,6 +375,21 @@ public class DBManager {
 	}
 
 	/**
+	 * store youth players
+	 */
+	public void storeYouthPlayers(int hrfId, List<YouthPlayer> player, Timestamp date) {
+		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).storeYouthPlayers(hrfId,player, date);
+	}
+	public List<YouthPlayer> loadYouthPlayers(int hrfID) {
+		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
+				.loadYouthPlayer(hrfID);
+	}
+	public List<YouthPlayer.ScoutComment> loadYouthScoutComments(int id) {
+		return ((YouthScoutCommentTable) getTable(YouthScoutCommentTable.TABLENAME))
+				.loadYouthScoutComments(id);
+	}
+
+	/**
 	 * get a player from a specific HRF
 	 * 
 	 * @param hrfID
@@ -407,7 +434,7 @@ public class DBManager {
 	 * 
 	 * @param hrfID
 	 *            HRF for which to load TrainerType
-	 * @return
+	 * @return int
 	 */
 	public int getTrainerType(int hrfID) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
@@ -419,7 +446,7 @@ public class DBManager {
 	 */
 	public void saveSpieler(int hrfId, List<Player> player, Timestamp date) {
 		((SpielerTable) getTable(SpielerTable.TABLENAME)).saveSpieler(hrfId,
-                player, date);
+				player, date);
 	}
 
 	/**
@@ -595,10 +622,10 @@ public class DBManager {
 	/**
 	 * speichert die Aufstellung und die aktuelle Aufstellung als STANDARD
 	 */
-	public void saveAufstellung(int hrfId, Lineup aufstellung, String name) {
+	public void saveAufstellung(int sourceSystem, int hrfId, Lineup aufstellung, String name) {
 		try {
 			((AufstellungTable) getTable(AufstellungTable.TABLENAME))
-					.saveAufstellung(hrfId, aufstellung, name);
+					.saveAufstellung(sourceSystem, hrfId, aufstellung, name);
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -823,17 +850,17 @@ public class DBManager {
 	// ------------------------------- MatchLineupTable
 	// -------------------------------------------------
 
-	public MatchLineup getMatchLineup(int matchID) {
+	public MatchLineup getMatchLineup(int sourceSystem, int matchID) {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.getMatchLineup(matchID);
+				.getMatchLineup(sourceSystem, matchID);
 	}
 
 	/**
 	 * Is the match already in the database?
 	 */
-	public boolean isMatchLineupInDB(int matchid) {
+	public boolean isMatchLineupInDB(int sourceSystem, int matchid) {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.isMatchLineupVorhanden(matchid);
+				.isMatchLineupVorhanden(sourceSystem, matchid);
 	}
 
 	public boolean isMatchIFKRatingInDB(int matchid) {
@@ -1023,10 +1050,10 @@ public class DBManager {
 	 *            The matchId for the match in question
 	 * 
 	 */
-	public List<Substitution> getMatchSubstitutionsByMatchTeam(int teamId,
+	public List<Substitution> getMatchSubstitutionsByMatchTeam(int sourceSystem, int teamId,
 			int matchId) {
 		return ((MatchSubstitutionTable) getTable(MatchSubstitutionTable.TABLENAME))
-				.getMatchSubstitutionsByMatchTeam(teamId, matchId);
+				.getMatchSubstitutionsByMatchTeam(sourceSystem, teamId, matchId);
 	}
 
 	/**
@@ -1191,9 +1218,9 @@ public class DBManager {
 
 	// ------------------------------- MatchLineupTeamTable
 	// -------------------------------------------------
-	public MatchLineupTeam getMatchLineupTeam(int matchID, int teamID) {
+	public MatchLineupTeam getMatchLineupTeam(int sourceSystem, int matchID, int teamID) {
 		return ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME))
-				.getMatchLineupTeam(matchID, teamID);
+				.getMatchLineupTeam(sourceSystem, matchID, teamID);
 	}
 
 	// ------------------------------- UserParameterTable
@@ -1433,7 +1460,7 @@ public class DBManager {
 			for (final SpielerMatchCBItem item : tempSpielerMatchCBItems) {
 				try {
 					datum = simpleFormat.parse(item.getMatchdate());
-				} catch (Exception e1) {
+				} catch (Exception ignored) {
 				}
 
 				if (datum == null) {
@@ -1766,6 +1793,24 @@ public class DBManager {
 				.removeMatchOrder();
 	}
 
+	public static Integer getInteger(ResultSet rs, String columnLabel) {
+		try {
+			return rs.getInt(columnLabel);
+		}
+		catch(Exception ignored)
+		{}
+		return null;
+	}
+
+	public static Boolean getBoolean(ResultSet rs, String columnLabel) {
+		try {
+			return rs.getBoolean(columnLabel);
+		}
+		catch(Exception ignored)
+		{}
+		return null;
+	}
+
 	/**
 	 * Alle \ entfernen
 	 */
@@ -1801,10 +1846,9 @@ public class DBManager {
 		final char[] chars = text.toCharArray();
 
 		for (char aChar : chars) {
-			int code = (int) aChar;
 			if ((aChar == '"') || (aChar == '\'') || (aChar == '´')) {
 				buffer.append("#");
-			} else if (code == 92) {
+			} else if (aChar == 92) {
 				buffer.append("§");
 			} else {
 				buffer.append(aChar);
@@ -1825,4 +1869,22 @@ public class DBManager {
 
 	}
 
+	public Timestamp getLastYouthMatchDate() {
+		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
+				.getLastYouthMatchDate();
+	}
+
+	public Timestamp getMinScoutingDate(){
+		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
+				.loadMinScoutingDate();
+	}
+
+	public void storeMatchLineup(MatchLineup lineup, Integer teamId) {
+		((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
+				.storeMatchLineup(lineup, teamId);
+	}
+
+	public List<YouthTrainerComment> loadYouthTrainerComments(int id) {
+		return ((YouthTrainerCommentTable) getTable(YouthTrainerCommentTable.TABLENAME)).loadYouthTrainerComments(id);
+	}
 }

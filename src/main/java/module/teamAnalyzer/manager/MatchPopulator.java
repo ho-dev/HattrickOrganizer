@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
+import core.model.match.SourceSystem;
 import core.model.player.IMatchRoleID;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.vo.Match;
@@ -109,9 +110,9 @@ public class MatchPopulator {
         MatchLineupTeam tmpLineupTeam = null;
 
         if (isHome(tmpMatch)) {
-            tmpLineupTeam =  DBManager.instance().getMatchLineup(aMatch.getMatchId()).getHeim();
+            tmpLineupTeam =  DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getId(), aMatch.getMatchId()).getHeim();
         } else {
-            tmpLineupTeam =  DBManager.instance().getMatchLineup(aMatch.getMatchId()).getGast();
+            tmpLineupTeam =  DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getId(), aMatch.getMatchId()).getGast();
         }
 
         double totStars = 0;

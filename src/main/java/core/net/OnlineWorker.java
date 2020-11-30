@@ -32,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -178,7 +179,7 @@ public class OnlineWorker {
 		showWaitInformation(1);
 
 		try {
-			String matchesString = "";
+			String matchesString;
 
 			while (tempBeginn.before(endDate)) {
 				try {
@@ -273,21 +274,21 @@ public class OnlineWorker {
 		// Only download if not present in the database, or if refresh is true
 		if (refresh || !DBManager.instance().isMatchVorhanden(matchid)
 				|| DBManager.instance().hasUnsureWeatherForecast(matchid)
-				|| !DBManager.instance().isMatchLineupInDB(matchid)
+				|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), matchid)
 		) {
 			try {
-				Matchdetails details = null;
+				Matchdetails details;
 
 				// If ids not found, download matchdetails to obtain them.
 				// Highlights will be missing.
 				// ArenaId==0 in division battles
 				boolean newInfo = info.getHeimID()<=0 || info.getGastID()<=0;
 				Weather.Forecast weatherDetails = info.getWeatherForecast();
-				Boolean bWeatherKnown = ((weatherDetails != null) && weatherDetails.isSure());
+				boolean bWeatherKnown = ((weatherDetails != null) && weatherDetails.isSure());
 				if ( newInfo || !bWeatherKnown) {
 
 					showWaitInformation(10);
-					details = fetchDetails(matchid, info.getMatchTyp(), null);
+					details = downloadMatchDetails(matchid, info.getMatchTyp(), null);
 					if ( details != null) {
 						info.setHeimID(details.getHeimId());
 						info.setGastID(details.getGastId());
@@ -347,7 +348,7 @@ public class OnlineWorker {
 					}
 				}
 
-				MatchLineup lineup = null;
+				MatchLineup lineup;
 				boolean success;
 				if ( info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					lineup = getMatchlineup(matchid, info.getMatchTyp(), info.getHeimID(), info.getGastID());
@@ -366,7 +367,7 @@ public class OnlineWorker {
 					
 					// Get details with highlights.
 					showWaitInformation(10);
-					details = fetchDetails(matchid, info.getMatchTyp(), lineup);
+					details = downloadMatchDetails(matchid, info.getMatchTyp(), lineup);
 
 					if (details == null) {
 						HOLogger.instance().error(OnlineWorker.class,
@@ -517,7 +518,7 @@ public class OnlineWorker {
 	 */
 	public static List<MatchKurzInfo> getMatches(int teamId, boolean forceRefresh, boolean store,
 			boolean upcoming) {
-		String matchesString = "";
+		String matchesString;
 		List<MatchKurzInfo> matches = new ArrayList<>();
 		boolean bOK = false;
 		showWaitInformation(10);
@@ -548,8 +549,7 @@ public class OnlineWorker {
 				showWaitInformation(80);
 
 				matches = FilterUserSelection(matches);
-				DBManager.instance().storeMatchKurzInfos(
-						matches.toArray(new MatchKurzInfo[matches.size()]));
+				DBManager.instance().storeMatchKurzInfos(matches.toArray(new MatchKurzInfo[0]));
 
 				showWaitInformation(100);
 
@@ -558,7 +558,7 @@ public class OnlineWorker {
 					int curMatchId = match.getMatchID();
 					boolean refresh = !DBManager.instance().isMatchVorhanden(curMatchId)
 							|| DBManager.instance().hasUnsureWeatherForecast(curMatchId)
-							|| !DBManager.instance().isMatchLineupInDB(curMatchId);
+							|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), curMatchId);
 
 					if (refresh) {
 						// No lineup or arenaId in DB
@@ -694,7 +694,7 @@ public class OnlineWorker {
 	 */
 	public static boolean getSpielplan(int season, int leagueID) {
 		boolean bOK = false;
-		String leagueFixtures = "";
+		String leagueFixtures;
 		HOVerwaltung hov = HOVerwaltung.instance();
 		try {
 			showWaitInformation(10);
@@ -772,36 +772,32 @@ public class OnlineWorker {
 		return "{\"id\":" + id + ",\"behaviour\":" + behaviour + "}";
 	}
 
-	private static Matchdetails fetchDetails(int matchID, MatchType matchType, MatchLineup lineup) {
-		String matchDetails = "";
-		Matchdetails details = null;
+	private static Matchdetails downloadMatchDetails(int matchID, MatchType matchType, MatchLineup lineup) {
+		String matchDetails;
+		Matchdetails details;
 
 		try {
-			matchDetails = MyConnector.instance().getMatchdetails(matchID, matchType);
+			matchDetails = MyConnector.instance().downloadMatchdetails(matchID, matchType);
 			if (matchDetails.length() == 0) {
-				HOLogger.instance().warning(OnlineWorker.class,
-						"Unable to fetch details for match " + matchID);
+				HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchID);
 				return null;
 			}
 			showWaitInformation(20);
 			details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, lineup);
 			showWaitInformation(40);
 			if (details == null) {
-				HOLogger.instance().warning(OnlineWorker.class,
-						"Unable to fetch details for match " + matchID);
+				HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchID);
 				return null;
 			}
-			String arenaString = MyConnector.instance().getArena(details.getArenaID());
+			String arenaString = MyConnector.instance().downloadArena(details.getArenaID());
 			showWaitInformation(50);
-			String regionIdAsString = XMLArenaParser.parseArenaFromString(arenaString).get(
-					"RegionID");
+			String regionIdAsString = XMLArenaParser.parseArenaFromString(arenaString).get("RegionID");
 			details.setRegionId(Integer.parseInt(regionIdAsString));
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + ": Error fetching Matchdetails XML.: ";
 			// Info
 			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
-			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
-					JOptionPane.ERROR_MESSAGE);
+			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"), JOptionPane.ERROR_MESSAGE);
 			showWaitInformation(0);
 			return null;
 		}
@@ -810,8 +806,8 @@ public class OnlineWorker {
 	}
 
 	public static MatchLineup fetchLineup(int matchID, int teamID, MatchType matchType) {
-		String matchLineup = "";
-		MatchLineup lineUp = null;
+		String matchLineup;
+		MatchLineup lineUp=null;
 		boolean bOK = false;
 		try {
 			matchLineup = MyConnector.instance().getMatchLineup(matchID, teamID, matchType);
@@ -843,7 +839,7 @@ public class OnlineWorker {
 		boolean bOK = false;
 		for (MatchKurzInfo info : infos) {
 			int curMatchId = info.getMatchID();
-			if (!DBManager.instance().isMatchLineupInDB(curMatchId)) {
+			if (!DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), curMatchId)) {
 				// Check if the lineup is available
 				if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					HOLogger.instance().debug(OnlineWorker.class, "Get Lineup : " + curMatchId);
@@ -1172,5 +1168,43 @@ public class OnlineWorker {
 
 	public static void setSilentDownload(boolean silentDownload) {
 		MyConnector.instance().setSilentDownload(silentDownload);
+	}
+
+	final static long oneDay = 24L*60L*60L*1000L;
+	final static long threeMonths = 3L*30L*oneDay;
+
+	public static void downloadMissingYouthMatchLineups(int youthteamid) {
+		var dateSince = DBManager.instance().getLastYouthMatchDate();
+		if ( dateSince == null){
+			// if there are no youth matches in database, take the limit from arrival date of 'oldest' youth players
+			dateSince = DBManager.instance().getMinScoutingDate();
+			dateSince.setTime(dateSince.getTime()-oneDay);	// minus one hour (resetted in for loop)
+		}
+
+		for ( Timestamp dateUntil = null; dateSince != null; dateSince = dateUntil) {
+			dateSince.setTime(dateSince.getTime()+ oneDay);	// add one day (do not load last match again)
+			if (dateSince.before(new Timestamp(System.currentTimeMillis()- threeMonths))){
+				dateUntil = new Timestamp(dateSince.getTime() + threeMonths);
+			}
+			else {
+				dateUntil = null;	// until now
+			}
+			var mc = MyConnector.instance();
+			try {
+				var xml = mc.getMatchesArchive(SourceSystem.YOUTH, youthteamid, dateSince, dateUntil);
+				var youthMatches = XMLMatchArchivParser.parseMatchesFromString(xml);
+				for ( var match: youthMatches){
+
+					var lineup = getMatchlineup(match.getMatchID(), match.getMatchTyp(), match.getHeimID(), match.getGastID());
+					DBManager.instance().storeMatchLineup(lineup, youthteamid);
+
+					//TODO check if details are required
+
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
 	}
 }

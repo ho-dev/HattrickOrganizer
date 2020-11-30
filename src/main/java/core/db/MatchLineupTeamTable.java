@@ -2,6 +2,7 @@ package core.db;
 
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
+import core.model.match.SourceSystem;
 import core.util.HOLogger;
 import module.lineup.substitution.model.Substitution;
 
@@ -21,31 +22,33 @@ public final class MatchLineupTeamTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[5];
-		columns[0]= new ColumnDescriptor("MatchID",Types.INTEGER,false);
-		columns[1]= new ColumnDescriptor("Erfahrung",Types.INTEGER,false);
-		columns[2]= new ColumnDescriptor("TeamName",Types.VARCHAR,false,256);
-		columns[3]= new ColumnDescriptor("TeamID",Types.INTEGER,false);
-		columns[4]= new ColumnDescriptor("StyleOfPlay",Types.INTEGER,false);
+		columns = new ColumnDescriptor[]{
+				new ColumnDescriptor("SourceSystem",Types.INTEGER,false),
+				new ColumnDescriptor("MatchID",Types.INTEGER,false),
+				new ColumnDescriptor("Erfahrung",Types.INTEGER,false),
+				new ColumnDescriptor("TeamName",Types.VARCHAR,false,256),
+				new ColumnDescriptor("TeamID",Types.INTEGER,false),
+				new ColumnDescriptor("StyleOfPlay",Types.INTEGER,false)
+		};
 	}
 
-	MatchLineupTeam getMatchLineupTeam(int matchID, int teamID) {
+	MatchLineupTeam getMatchLineupTeam(int sourceSystem, int matchID, int teamID) {
 		MatchLineupTeam team = null;
 		String sql = null;
 		ResultSet rs = null;
 		
 		try {
-			sql = "SELECT * FROM "+getTableName()+" WHERE MatchID = " + matchID + " AND TeamID = " + teamID;
+			sql = "SELECT * FROM " + getTableName() + " WHERE SourceSystem = " + sourceSystem + " AND MatchID = " + matchID + " AND TeamID = " + teamID;
 
 			rs = adapter.executeQuery(sql);
 
 			rs.first();
 
-			team = new MatchLineupTeam(matchID, DBManager.deleteEscapeSequences(rs.getString("TeamName")),
+			team = new MatchLineupTeam(SourceSystem.getById(sourceSystem), matchID, DBManager.deleteEscapeSequences(rs.getString("TeamName")),
 										teamID, rs.getInt("Erfahrung"), rs.getInt("StyleOfPlay"));
 			team.setAufstellung(DBManager.instance().getMatchLineupPlayers(matchID, teamID));
 			
-			team.setSubstitutions(new ArrayList<Substitution>(DBManager.instance().getMatchSubstitutionsByMatchTeam(teamID, matchID)));
+			team.setSubstitutions(new ArrayList<Substitution>(DBManager.instance().getMatchSubstitutionsByMatchTeam(sourceSystem, teamID, matchID)));
 			
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineupTeam Error" + e);
@@ -57,17 +60,21 @@ public final class MatchLineupTeamTable extends AbstractTable {
 
 	void storeMatchLineupTeam(MatchLineupTeam team, int matchID) {
 		if (team != null) {
-			final String[] where = { "MatchID" , "TeamID"};
-			final String[] werte = { "" + matchID, "" +team.getTeamID()};			
+			final String[] where = { "SourceSystem", "MatchID" , "TeamID"};
+			final String[] werte = { "" + team.getSourceSystem().getId(), "" + matchID, "" +team.getTeamID()};
 			delete(where, werte);
 
 			String sql = null;
 			//saven
 			try {
 				//insert vorbereiten
-				sql = "INSERT INTO "+getTableName()+" ( MatchID, Erfahrung, TeamName, TeamID, StyleOfPlay ) VALUES(";
-				sql += (matchID + "," + team.getErfahrung() + ", '" + DBManager.insertEscapeSequences(team.getTeamName()) + 
-								"'," + team.getTeamID() + "," + team.getStyleOfPlay() + " )");
+				sql = "INSERT INTO "+getTableName()+" ( SourceSystem, MatchID, Erfahrung, TeamName, TeamID, StyleOfPlay ) VALUES(";
+				sql += (team.getSourceSystem().getId() + "," +
+						matchID + "," +
+						team.getErfahrung() + ", '" +
+						DBManager.insertEscapeSequences(team.getTeamName()) + "'," +
+						team.getTeamID() + "," +
+						team.getStyleOfPlay() + " )");
 				adapter.executeUpdate(sql);
 
 				//Store players
@@ -82,8 +89,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 				// Store Substitutions
 				
 				((MatchSubstitutionTable) DBManager.instance().getTable(MatchSubstitutionTable.TABLENAME))
-						.storeMatchSubstitutionsByMatchTeam(matchID, team.getTeamID(), team.getSubstitutions());
-				
+						.storeMatchSubstitutionsByMatchTeam(team.getSourceSystem().getId(), matchID, team.getTeamID(), team.getSubstitutions());
 				
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeMatchLineupTeam Error" + e);

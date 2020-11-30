@@ -3,10 +3,13 @@ package core.model.match;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
+import javax.xml.transform.Source;
+
 public class MatchLineupPlayer extends MatchRoleID {
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private static final long serialVersionUID = -5986419471284091148L;
+	private SourceSystem sourceSystem;
     private String m_sNickName = "";
     private String m_sSpielerName = "";
     private String m_sSpielerVName = "";
@@ -39,10 +42,21 @@ public class MatchLineupPlayer extends MatchRoleID {
     /**
      * Creates a new instance of MatchLineupPlayer
      */
-    public MatchLineupPlayer(int roleID, int behaivior, int spielerID, double rating, String vname,
-                             String nickName, String name, int status, double ratingStarsEndOfMatch, int startPos, int startBeh) {
+    public MatchLineupPlayer(SourceSystem sourceSystem,
+                             int roleID,
+                             int behaivior,
+                             int spielerID,
+                             double rating,
+                             String vname,
+                             String nickName,
+                             String name,
+                             int status,
+                             double ratingStarsEndOfMatch,
+                             int startPos,
+                             int startBeh) {
         super(roleID, spielerID, (byte) behaivior);
 
+        this.sourceSystem = sourceSystem;
         m_sSpielerName = name;
         m_sNickName = nickName;
         m_sSpielerVName = vname;
@@ -64,6 +78,7 @@ public class MatchLineupPlayer extends MatchRoleID {
         m_iStatus = p.getStatus();
         m_dRatingStarsEndOfMatch = p.getRatingStarsEndOfMatch();
     }
+
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
@@ -275,5 +290,13 @@ public class MatchLineupPlayer extends MatchRoleID {
             m_sSpielerVName = name.substring(0, index);
             m_sSpielerName = name.substring(index + 2);
         }
+    }
+
+    public SourceSystem getSourceSystem() {
+        return sourceSystem;
+    }
+
+    public void setSourceSystem(SourceSystem sourceSystem) {
+        this.sourceSystem = sourceSystem;
     }
 }

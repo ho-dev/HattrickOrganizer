@@ -98,9 +98,9 @@ public class RatingOptimizer {
 		MatchLineupTeam lineupTeam = null;
 		Matchdetails details = matchData.getDetails();
 		if (details.getHeimId() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
-			lineupTeam = DBManager.instance().getMatchLineup(details.getMatchID()).getHeim();
+			lineupTeam = DBManager.instance().getMatchLineup(details.getSourceSystem().getId(), details.getMatchID()).getHeim();
 		} else {
-			lineupTeam = DBManager.instance().getMatchLineup(details.getMatchID()).getGast();
+			lineupTeam = DBManager.instance().getMatchLineup(details.getSourceSystem().getId(), details.getMatchID()).getGast();
 		}
 		
 		// Both teams have WO values, no diff if home/away match

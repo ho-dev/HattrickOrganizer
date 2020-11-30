@@ -1,10 +1,12 @@
 package core.model;
 
 import core.db.DBManager;
+import core.model.match.SourceSystem;
 import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
+import core.model.player.YouthPlayer;
 import core.model.series.Liga;
 import core.training.TrainingPerWeek;
 import core.training.TrainingManager;
@@ -40,6 +42,7 @@ public class HOModel {
     private Team m_clTeam;
     private static List<Player> m_vOldPlayer;
     private List<Player> m_vPlayer;
+    private List<YouthPlayer> youthPlayers;
     private Verein m_clVerein;
     private XtraData m_clXtraDaten;
     private int m_iID = -1;
@@ -50,7 +53,7 @@ public class HOModel {
         //erst einbauen wenn db angebunden ist
         try {
             m_iID = DBManager.instance().getMaxHrfId() + 1;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -105,10 +108,20 @@ public class HOModel {
      * Returns all current players
      */
     public final List<Player> getCurrentPlayers() {
-    	if ( m_vPlayer == null){
-			m_vPlayer = DBManager.instance().getSpieler(this.m_iID);
-		}
+        if ( m_vPlayer == null){
+            m_vPlayer = DBManager.instance().getSpieler(this.m_iID);
+        }
         return m_vPlayer;
+    }
+
+    /**
+     * Returns all current youth players
+     */
+    public final List<YouthPlayer> getCurrentYouthPlayers() {
+        if ( this.youthPlayers == null){
+            this.youthPlayers = DBManager.instance().loadYouthPlayers(this.m_iID);
+        }
+        return this.youthPlayers;
     }
 
     /**
@@ -432,9 +445,16 @@ public class HOModel {
      */
     public final void addPlayer(Player player) {
     	if (m_vPlayer == null) {
-    		m_vPlayer = new Vector<>();
+    		m_vPlayer = new ArrayList<>();
 		}
         m_vPlayer.add(player);
+    }
+
+    public final void addYouthPlayer(YouthPlayer player){
+        if ( youthPlayers == null){
+            youthPlayers = new ArrayList<>();
+        }
+        youthPlayers.add(player);
     }
 
     /**
@@ -478,7 +498,7 @@ public class HOModel {
     			if (tpw.getNextTrainingDate().after(trainingDateOfPreviousHRF)) {
     			    if(TrainingManager.TRAININGDEBUG) {
                         HTCalendar htcP;
-                        String htcPs = "";
+                        String htcPs;
                         htcP = HTCalendarFactory.createTrainingCalendar(new Date(trainingDateOfPreviousHRF.getTime()));
                         htcPs = " (" + htcP.getHTSeason() + "." + htcP.getHTWeek() + ")";
                         HTCalendar htcA = HTCalendarFactory.createTrainingCalendar(new Date((trainingDateOfCurrentHRF.getTime())));
@@ -538,13 +558,15 @@ public class HOModel {
         //Liga
         DBManager.instance().saveLiga(m_iID, getLeague());
         //Aufstellung + aktu Sys als Standard saven
-        DBManager.instance().saveAufstellung(m_iID, getCurrentLineup(), Lineup.DEFAULT_NAME);
+        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getId(), m_iID, getCurrentLineup(), Lineup.DEFAULT_NAME);
         //Aufstellung + aktu Sys als Standard saven
-        DBManager.instance().saveAufstellung(m_iID, getPreviousLineup(), Lineup.DEFAULT_NAMELAST);
+        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getId(), m_iID, getPreviousLineup(), Lineup.DEFAULT_NAMELAST);
         //Xtra Daten
         DBManager.instance().saveXtraDaten(m_iID, getXtraDaten());
         //Player
         DBManager.instance().saveSpieler(m_iID, getCurrentPlayers(), getBasics().getDatum());
+        // Youth Player
+        DBManager.instance().storeYouthPlayers(m_iID, getCurrentYouthPlayers(), getBasics().getDatum());
         //Staff
         DBManager.instance().saveStaff(m_iID, getStaff());
     }
@@ -557,4 +579,8 @@ public class HOModel {
             DBManager.instance().storeSpielplan(m_clSpielplan);
     }
 
+    public YouthPlayer getCurrentYouthPlayer(int youthplayerID) {
+        return this.getCurrentYouthPlayers().stream().filter(player -> player.getId()==youthplayerID).findAny()
+                .orElse(null);
+    }
 }

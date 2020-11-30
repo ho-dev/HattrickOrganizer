@@ -2,6 +2,8 @@ package core.model.match;
 
 import core.util.HOLogger;
 
+import javax.xml.transform.Source;
+
 public class MatchLineup {
     //~ Instance fields ----------------------------------------------------------------------------
     protected int m_iHeimId = -1;
@@ -238,7 +240,7 @@ public class MatchLineup {
     /**
      * Setter for property m_iMatchTyp.
      *
-     * @param m_iMatchTyp New value of property m_iMatchTyp.
+     * @param matchTyp New value of property m_iMatchTyp.
      */
     public final void setMatchTyp(MatchType matchTyp) {
         this.m_MatchTyp = matchTyp;
@@ -298,5 +300,19 @@ public class MatchLineup {
 
     public final String getStringSpielDate() {
         return m_sSpielDatum;
+    }
+
+    public SourceSystem getSourceSystem() {
+        return this.getMatchTyp().getSourceSystem();
+    }
+
+    public MatchLineupTeam getTeam(Integer teamId) {
+        if ( teamId == this.getHeimId()){
+            return this.getHeim();
+        }
+        else if ( teamId == this.getGastId()){
+            return this.getGast();
+        }
+        return null;
     }
 }

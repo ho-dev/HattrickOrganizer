@@ -25,20 +25,22 @@ public class MatchSubstitutionTable extends AbstractTable {
 	@Override
 	protected void initColumns() {
 
-		columns = new ColumnDescriptor[13];
-		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false);
-		columns[1] = new ColumnDescriptor("TeamID", Types.INTEGER, false);
-		columns[2] = new ColumnDescriptor("HrfID", Types.INTEGER, false);
-		columns[3] = new ColumnDescriptor("PlayerOrderID", Types.INTEGER, false);
-		columns[4] = new ColumnDescriptor("PlayerIn", Types.INTEGER, false);
-		columns[5] = new ColumnDescriptor("PlayerOut", Types.INTEGER, false);
-		columns[6] = new ColumnDescriptor("OrderType", Types.INTEGER, false);
-		columns[7] = new ColumnDescriptor("MatchMinuteCriteria", Types.INTEGER, false);
-		columns[8] = new ColumnDescriptor("Pos", Types.INTEGER, false);
-		columns[9] = new ColumnDescriptor("Behaviour", Types.INTEGER, false);
-		columns[10] = new ColumnDescriptor("Card", Types.INTEGER, false);
-		columns[11] = new ColumnDescriptor("Standing", Types.INTEGER, false);
-		columns[12] = new ColumnDescriptor("LineupName", Types.VARCHAR, false, 256);
+		columns = new ColumnDescriptor[]{
+				new ColumnDescriptor("SourceSystem", Types.INTEGER, false),
+				new ColumnDescriptor("MatchID", Types.INTEGER, false),
+				new ColumnDescriptor("TeamID", Types.INTEGER, false),
+				new ColumnDescriptor("HrfID", Types.INTEGER, false),
+				new ColumnDescriptor("PlayerOrderID", Types.INTEGER, false),
+				new ColumnDescriptor("PlayerIn", Types.INTEGER, false),
+				new ColumnDescriptor("PlayerOut", Types.INTEGER, false),
+				new ColumnDescriptor("OrderType", Types.INTEGER, false),
+				new ColumnDescriptor("MatchMinuteCriteria", Types.INTEGER, false),
+				new ColumnDescriptor("Pos", Types.INTEGER, false),
+				new ColumnDescriptor("Behaviour", Types.INTEGER, false),
+				new ColumnDescriptor("Card", Types.INTEGER, false),
+				new ColumnDescriptor("Standing", Types.INTEGER, false),
+				new ColumnDescriptor("LineupName", Types.VARCHAR, false, 256)
+		};
 	}
 
 	@Override
@@ -61,10 +63,11 @@ public class MatchSubstitutionTable extends AbstractTable {
 	 *            The matchId for the match in question
 	 * 
 	 */
-	java.util.List<Substitution> getMatchSubstitutionsByMatchTeam(int teamId, int matchId) {
-		return getSubBySql("SELECT * FROM " + getTableName() + " WHERE MatchID = " + matchId
+	java.util.List<Substitution> getMatchSubstitutionsByMatchTeam(int sourceSystem, int teamId, int matchId) {
+		return getSubBySql("SELECT * FROM " + getTableName()
+				+ " WHERE SourceSystem = " + sourceSystem
+				+ " AND MatchID = " + matchId
 				+ " AND TeamID = " + teamId);
-
 	}
 
 	/**
@@ -84,14 +87,14 @@ public class MatchSubstitutionTable extends AbstractTable {
 	 * must be unique for the match. All previous substitutions for the
 	 * team/match combination will be deleted.
 	 */
-	void storeMatchSubstitutionsByMatchTeam(int matchId, int teamId,
+	void storeMatchSubstitutionsByMatchTeam(int sourceSystem, int matchId, int teamId,
 			java.util.List<Substitution> subs) {
 		if ((matchId == DUMMY) || (teamId == DUMMY)) {
 			// Rather not...
 			return;
 		}
 		// D is string dummy
-		storeSub(matchId, teamId, DUMMY, subs, "D");
+		storeSub(sourceSystem, matchId, teamId, DUMMY, subs, "D");
 	}
 
 	/**
@@ -99,21 +102,21 @@ public class MatchSubstitutionTable extends AbstractTable {
 	 * must be unique for the match. All previous substitutions for the hrf will
 	 * be deleted.
 	 */
-	void storeMatchSubstitutionsByHrf(int hrfId, java.util.List<Substitution> subs,
+	void storeMatchSubstitutionsByHrf(int sourceSystem, int hrfId, java.util.List<Substitution> subs,
 			String lineupName) {
 		if (hrfId == DUMMY) {
 			// Rather not...
 			return;
 		}
-		storeSub(DUMMY, DUMMY, hrfId, subs, lineupName);
+		storeSub(sourceSystem, DUMMY, DUMMY, hrfId, subs, lineupName);
 	}
 
-	private void storeSub(int matchId, int teamId, int hrfId, java.util.List<Substitution> subs,
+	private void storeSub(int sourceSystem, int matchId, int teamId, int hrfId, java.util.List<Substitution> subs,
 			String lineupName) {
 		String sql = null;
 
-		final String[] where = { "MatchID", "TeamID", "HrfID", "LineupName" };
-		final String[] values = { "" + matchId, "" + teamId, "" + hrfId, "'" + lineupName + "'" };
+		final String[] where = { "SourceSystem", "MatchID", "TeamID", "HrfID", "LineupName" };
+		final String[] values = { ""+ sourceSystem, "" + matchId, "" + teamId, "" + hrfId, "'" + lineupName + "'" };
 
 		// Get rid of any old subs for the inputs.
 		delete(where, values);
@@ -127,9 +130,9 @@ public class MatchSubstitutionTable extends AbstractTable {
 			try {
 				sql = "INSERT INTO "
 						+ getTableName()
-						+ " (  MatchID, TeamID, HrfID, PlayerOrderID, PlayerIn, PlayerOut, OrderType,";
+						+ " (  SourceSystem, MatchID, TeamID, HrfID, PlayerOrderID, PlayerIn, PlayerOut, OrderType,";
 				sql += " MatchMinuteCriteria, Pos, Behaviour, Card, Standing, LineupName ) VALUES(";
-				sql += matchId + "," + teamId + "," + hrfId + "," + sub.getPlayerOrderId() + ","
+				sql += sourceSystem + "," + matchId + "," + teamId + "," + hrfId + "," + sub.getPlayerOrderId() + ","
 						+ sub.getObjectPlayerID() + "," + sub.getSubjectPlayerID() + ","
 						+ sub.getOrderType().getId() + "," + sub.getMatchMinuteCriteria() + ","
 						+ sub.getRoleId() + "," + sub.getBehaviour() + "," + sub.getRedCardCriteria().getId() + ","

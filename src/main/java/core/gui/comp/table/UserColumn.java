@@ -87,7 +87,7 @@ public abstract class UserColumn {
 	 * Should a column be shown
 	 * @return boolean
 	 */
-	public final boolean isDisplay() {
+	public boolean isDisplay() {
 		return display;
 	}
 

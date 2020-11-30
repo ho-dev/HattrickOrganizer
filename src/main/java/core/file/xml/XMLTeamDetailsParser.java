@@ -17,6 +17,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import static core.file.xml.XMLManager.xmlValue2Hash;
+
 /**
  * 
  * @author thomas.werth
@@ -77,15 +79,12 @@ public class XMLTeamDetailsParser {
 		try {
 
 			// FetchedDate
-			ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
-			hash.put("FetchedDate", (XMLManager.getFirstChildNodeValue(ele)));
+			xmlValue2Hash(hash, root, "FetchedDate");
 
 			// User
 			root = (Element) root.getElementsByTagName("User").item(0);
-			ele = (Element) root.getElementsByTagName("Loginname").item(0);
-			hash.put("Loginname", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("LastLoginDate").item(0);
-			hash.put("LastLoginDate", (XMLManager.getFirstChildNodeValue(ele)));
+			xmlValue2Hash(hash, root, "Loginname");
+			xmlValue2Hash(hash, root, "LastLoginDate");
 
 			String supportStatus = "False";
 			NodeList supporterTier = root.getElementsByTagName("SupporterTier");
@@ -121,65 +120,49 @@ public class XMLTeamDetailsParser {
 			if (team == null) { 
 				return hash;
 			}
-			
-			ele = (Element) team.getElementsByTagName("TeamID").item(0);
-			hash.put("TeamID", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) team.getElementsByTagName("TeamName").item(0);
-			hash.put("TeamName", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) team.getElementsByTagName("FoundedDate").item(0);
-			hash.put("ActivationDate", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) team.getElementsByTagName("HomePage").item(0);
-			hash.put("HomePage", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) team.getElementsByTagName("LogoURL").item(0);
-			hash.put("LogoURL", (XMLManager.getFirstChildNodeValue(ele)));
+
+			xmlValue2Hash(hash, team, "TeamID");
+			xmlValue2Hash(hash, team, "TeamName");
+			xmlValue2Hash(hash, team, "FoundedDate", "ActivationDate");
+			xmlValue2Hash(hash, team, "HomePage");
+			xmlValue2Hash(hash, team, "LogoURL");
+			// youth team info
+			xmlValue2Hash(hash, team, "YouthTeamID");
+			xmlValue2Hash(hash, team, "YouthTeamName");
 
 			root = (Element) team.getElementsByTagName("League").item(0);
-			ele = (Element) root.getElementsByTagName("LeagueID").item(0);
-			hash.put("LeagueID", (XMLManager.getFirstChildNodeValue(ele)));
+			xmlValue2Hash(hash, root, "LeagueID");
 
 			try {
-				ele = (Element) team.getElementsByTagName("LeagueLevel").item(0);
-				hash.put("LeagueLevel", (XMLManager.getFirstChildNodeValue(ele)));
-				ele = (Element) team.getElementsByTagName("LeagueLevelUnitName").item(0);
-				hash.put("LeagueLevelUnitName", (XMLManager.getFirstChildNodeValue(ele)));
-				ele = (Element) team.getElementsByTagName("LeagueLevelUnitID").item(0);
-				hash.put("LeagueLevelUnitID", (XMLManager.getFirstChildNodeValue(ele)));
+				xmlValue2Hash(hash, team, "LeagueLevel");
+				xmlValue2Hash(hash, team, "LeagueLevelUnitName");
+				xmlValue2Hash(hash, team, "LeagueLevelUnitID");
 			} catch (Exception ex) {
 				HOLogger.instance().log(XMLTeamDetailsParser.class, ex);
 			}
 
 			try {
-				ele = (Element) team.getElementsByTagName("NumberOfVictories").item(0);
-				hash.put("NumberOfVictories", (XMLManager.getFirstChildNodeValue(ele)));
-				ele = (Element) team.getElementsByTagName("NumberOfUndefeated").item(0);
-				hash.put("NumberOfUndefeated", (XMLManager.getFirstChildNodeValue(ele)));
+				xmlValue2Hash(hash, team, "NumberOfVictories");
+				xmlValue2Hash(hash, team, "NumberOfUndefeated");
 			} catch (Exception exp) {
 				HOLogger.instance().log(XMLTeamDetailsParser.class, exp);
 			}
 
 			root = (Element) team.getElementsByTagName("Trainer").item(0);
-			ele = (Element) root.getElementsByTagName("PlayerID").item(0);
-			hash.put("TrainerID", (XMLManager.getFirstChildNodeValue(ele)));
+			xmlValue2Hash(hash, root, "PlayerID", "TrainerID");
 
 			root = (Element) team.getElementsByTagName("Arena").item(0);
-			ele = (Element) root.getElementsByTagName("ArenaName").item(0);
-			hash.put("ArenaName", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("ArenaID").item(0);
-			hash.put("ArenaID", (XMLManager.getFirstChildNodeValue(ele)));
+			xmlValue2Hash(hash, root, "ArenaName");
+			xmlValue2Hash(hash, root, "ArenaID");
 			root = (Element) team.getElementsByTagName("Region").item(0);
-			ele = (Element) root.getElementsByTagName("RegionID").item(0);
-			hash.put("RegionID", (XMLManager.getFirstChildNodeValue(ele)));
+			xmlValue2Hash(hash, root, "RegionID");
 
 			// Power Rating
 			Element PowerRating = (Element)doc.getDocumentElement().getElementsByTagName("PowerRating").item(0);
-			ele = (Element) PowerRating.getElementsByTagName("GlobalRanking").item(0);
-			hash.put("GlobalRanking", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) PowerRating.getElementsByTagName("LeagueRanking").item(0);
-			hash.put("LeagueRanking", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) PowerRating.getElementsByTagName("RegionRanking").item(0);
-			hash.put("RegionRanking", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) PowerRating.getElementsByTagName("PowerRating").item(0);
-			hash.put("PowerRating", (XMLManager.getFirstChildNodeValue(ele)));
+			xmlValue2Hash(hash, PowerRating, "GlobalRanking");
+			xmlValue2Hash(hash, PowerRating, "LeagueRanking");
+			xmlValue2Hash(hash, PowerRating, "RegionRanking");
+			xmlValue2Hash(hash, PowerRating, "PowerRating");
 
 			if (team.getElementsByTagName("TeamRank").getLength() > 0) {
 				hash.put("TeamRank", team.getElementsByTagName("TeamRank").item(0).getTextContent());
@@ -191,8 +174,7 @@ public class XMLTeamDetailsParser {
 
 		return hash;
 	}
-	
-	
+
 	public static List<TeamInfo> getTeamInfoFromString(String input) {
 		Document doc = XMLManager.parseString(input);
 		List<TeamInfo> ret = new ArrayList<>();
