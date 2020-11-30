@@ -101,15 +101,10 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TRICKOT, "gui/bilder/jerseys.svg");
 
 		// Player Overview
-		put(INJURED_SMALL, "gui/bilder/player overview/injured.png");
-		put(BRUISED_SMALL, "gui/bilder/player overview/plaster-small.png");
 		put(YELLOWCARD_SMALL, "gui/bilder/player overview/yellow-card(yellow)-small.png");
 		put(TWOYELLOWCARDS_SMALL, "gui/bilder/player overview/yellow-card-x2(yellow)-small.png");
 		put(REDCARD_SMALL, "gui/bilder/player overview/red-card(red)-small.png");
-
-		put(INJURED_TINY, "img/icons/made/injury(red).svg");
-		put(BRUISED_TINY, "img/icons/official/icomoon/SVG/injury.svg");
-		put(TRANSFERLISTED_TINY, "img/icons/official/icomoon/SVG/transferlisted.svg");
+		put(TRANSFERLISTED_TINY, "gui/bilder/player overview/transferlisted.svg");
 		put(SUSPENDED_TINY, "img/icons/made/red-card(red).svg");
 		put(TWOYELLOW_TINY, "img/icons/made/yellow-card-x2(yellow).svg");
 		put(ONEYELLOW_TINY, "img/icons/made/yellow-card(yellow).svg");
@@ -118,15 +113,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		put(YELLOWCARD, "gui/bilder/match_events/yellow-card(yellow).png");
 		put(REDCARD, "gui/bilder/match_events/red-card(red).png");
-
 		put(FORMATION, "gui/bilder/match_events/mo-select(green).png");
-
-
-		put(BRUISED, "gui/bilder/match_events/plaster.png");
-		put(INJURED, "gui/bilder/match_events/injury(red).png");
 		put(REPLACEMENT, "gui/bilder/match_events/in-out.png");
 		put(ROTATE, "gui/bilder/match_events/rotate.png");
-
 		put(GOAL, "gui/bilder/match_events/goal.png");
 		put(MISS, "gui/bilder/match_events/miss.png");
 		put(GOAL_MID, "gui/bilder/match_events/goal_C.png");
@@ -137,7 +126,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(NO_GOAL_MID, "gui/bilder/match_events/miss_C.png");
 		put(NO_GOAL_LEFT, "gui/bilder/match_events/miss_L.png");
 		put(NO_GOAL_RIGHT, "gui/bilder/match_events/miss_R.png");
-
 		put(TACTIC_PRESSING, "gui/bilder/match_events/tactic_pressing(green).png");
 		put(TACTIC_COUNTER_ATTACKING, "gui/bilder/match_events/tactic_counter_attack.png");
 		put(TACTIC_AIM, "gui/bilder/match_events/tactic_aim.png");
@@ -466,6 +454,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(HOColorName.FG_INJURED, new Color(200, 0, 0));
 		put(HOColorName.FG_TWO_YELLOW_CARDS, new Color(100, 100, 0));
 		put(HOColorName.FG_RED_CARD, new Color(200, 20, 20));
+		put(HOColorName.INJURY, new Color(255, 0, 0));
+		put(HOColorName.PLASTER, new Color(247, 195, 176));
 
 		// Promotion
 		put(HOColorName.FG_PROMOTION_INFO, new Color(238, 39, 39, 255));

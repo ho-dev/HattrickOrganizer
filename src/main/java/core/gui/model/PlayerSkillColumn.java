@@ -2,7 +2,7 @@ package core.gui.model;
 
 import core.constants.player.PlayerSkill;
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.DoppelLabelEntry;
+import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.entry.SkillEntry;
 import core.model.player.Player;
@@ -49,7 +49,7 @@ class PlayerSkillColumn extends PlayerColumn {
 	 */
 	@Override
 	public IHOTableEntry getTableEntry(Player player, Player comparePlayer){
-		return new DoppelLabelEntry(getSkillValue(player),getCompareValue(player,comparePlayer));
+		return new DoubleLabelEntries(getSkillValue(player),getCompareValue(player,comparePlayer));
 	}
 	
 	public  IHOTableEntry getSkillValue(Player player){

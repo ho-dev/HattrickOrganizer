@@ -194,6 +194,8 @@ public interface HOColorName {
 	String FG_BRUISED = "player.state.bruised";
 	String FG_TWO_YELLOW_CARDS = "player.state.two-yellow-cards";
 	String FG_RED_CARD = "player.state.red-card";
+	String INJURY = "injury_indicator";
+	String PLASTER = "plaster";
 
 	// Promotion
 	String BG_PROMOTION_INFO = "promotion.info.bg";

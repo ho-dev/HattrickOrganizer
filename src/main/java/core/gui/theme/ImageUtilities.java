@@ -696,6 +696,21 @@ public class ImageUtilities {
 		return icon;
     }
 
+	public static Icon getSvgIcon(String key, Map<Object, Object> colorMap, int width, int height) {
+		final String index = key + "_" + colorMap.toString() + "_" + width + "_" + height;
+		Icon icon = ThemeManager.getIcon(index);
+
+		if (icon == null) {
+			Object imagePath = ThemeManager.getIconPath(key);
+
+			icon = IconLoader.get().loadSVGIcon(Objects.requireNonNull(imagePath).toString(), width, height, true, colorMap);
+
+			ThemeManager.instance().put(index, icon);
+		}
+
+		return icon;
+	}
+
 	/**
 	 * Transforms an icon into an image.
 	 * Cf. 	https://stackoverflow.com/a/5831357
@@ -941,9 +956,55 @@ public class ImageUtilities {
 		return _icon;
 	}
 
+
+
+	public static Icon getSmallPlasterIcon() {
+		return getPlasterIcon(16, 16);
+	}
+
+	public static Icon getPlasterIcon(int width, int height) {
+
+		String key = "bruisedIcon_" + width + "x" + height;
+
+		Icon _icon = ThemeManager.getIcon(key);
+
+		if (_icon == null) {
+
+			Map<Object, Object> colorMap = Map.of("foregroundColor", ThemeManager.getColor(HOColorName.PLASTER));
+
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/player overview/plaster.svg", width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, _icon);
+		}
+
+		return _icon;
+	}
+
+
+	public static Icon getSmallInjuryIcon() {
+		return getInjuryIcon(14, 14);
+	}
+
+	public static Icon getInjuryIcon(int width, int height) {
+
+		String key = "injuryIcon_" + width + "x" + height;
+
+		Icon _icon = ThemeManager.getIcon(key);
+
+		if (_icon == null) {
+
+			Map<Object, Object> colorMap = Map.of("foregroundColor", ThemeManager.getColor(HOColorName.INJURY));
+
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/player overview/injured.svg", width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, _icon);
+		}
+
+		return _icon;
+	}
+
 	private static Color getColor (String name){
 		return ThemeManager.getColor(name);
 	}
-
 
 }

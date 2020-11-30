@@ -699,7 +699,7 @@ final public class UserColumnFactory {
                 final int gehalt = (int) (player.getGehalt() / core.model.UserParameter.instance().faktorGeld);
                 final String gehalttext = Helper.getNumberFormat(true, 0).format(gehalt);
                 if (playerCompare == null) {
-                    return new DoppelLabelEntry(new ColorLabelEntry(gehalt,
+                    return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
                             gehalttext + bonus,
                             ColorLabelEntry.FG_STANDARD,
                             ColorLabelEntry.BG_STANDARD,
@@ -712,7 +712,7 @@ final public class UserColumnFactory {
 
                 final int gehalt2 = (int) (playerCompare.getGehalt() / core.model.UserParameter
                         .instance().faktorGeld);
-                return new DoppelLabelEntry(new ColorLabelEntry(gehalt,
+                return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
                         gehalttext + bonus,
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD,
@@ -727,7 +727,7 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final String text = Helper.getNumberFormat(false, 0).format(player.getTSI());
                 if (playerCompare == null) {
-                    return new DoppelLabelEntry(new ColorLabelEntry(player
+                    return new DoubleLabelEntries(new ColorLabelEntry(player
                             .getTSI(),
                             text,
                             ColorLabelEntry.FG_STANDARD,
@@ -740,7 +740,7 @@ final public class UserColumnFactory {
                 }
 
 
-                return new DoppelLabelEntry(new ColorLabelEntry(player
+                return new DoubleLabelEntries(new ColorLabelEntry(player
                         .getTSI(),
                         text,
                         ColorLabelEntry.FG_STANDARD,
@@ -778,7 +778,7 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 if (playerCompare == null) {
 
-                    return new DoppelLabelEntry(new ColorLabelEntry(0,
+                    return new DoubleLabelEntries(new ColorLabelEntry(0,
                             "",
                             ColorLabelEntry.FG_STANDARD,
                             ColorLabelEntry.BG_STANDARD,
@@ -790,7 +790,7 @@ final public class UserColumnFactory {
 
                 }
 
-                return new DoppelLabelEntry(new ColorLabelEntry(0,
+                return new DoubleLabelEntries(new ColorLabelEntry(0,
                         "",
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD,

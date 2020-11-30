@@ -2,7 +2,7 @@ package tool.arenasizer;
 
 import core.db.DBManager;
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.DoppelLabelEntry;
+import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.ArenaStatistikModel;
@@ -82,8 +82,8 @@ class DistributionStatisticsPanel extends JPanel {
         return model;
     }
 
-	private DoppelLabelEntry createDoppelLabelEntry(int leftValue, String rightValue){
-    	return new DoppelLabelEntry(new ColorLabelEntry(leftValue+"",
+	private DoubleLabelEntries createDoppelLabelEntry(int leftValue, String rightValue){
+    	return new DoubleLabelEntries(new ColorLabelEntry(leftValue+"",
                 						ColorLabelEntry.FG_STANDARD,
                 						ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT),
                 	               new ColorLabelEntry(rightValue+" %",
@@ -91,8 +91,8 @@ class DistributionStatisticsPanel extends JPanel {
                 	            		   ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT));
     }
 
-	private DoppelLabelEntry createFansDoppelLabelEntry(int leftValue, String rightValue){
-    	return new DoppelLabelEntry(new ColorLabelEntry(leftValue+"",
+	private DoubleLabelEntries createFansDoppelLabelEntry(int leftValue, String rightValue){
+    	return new DoubleLabelEntries(new ColorLabelEntry(leftValue+"",
                 						ColorLabelEntry.FG_STANDARD,
                 						ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT),
                 	               new ColorLabelEntry(rightValue+"",

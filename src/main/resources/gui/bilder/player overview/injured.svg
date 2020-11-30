@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg id="injury" version="1.1" xmlns="http://www.w3.org/2000/svg" width="64px" height="64px">
+    <defs id="colors">
+		<linearGradient id="foregroundColor">
+			<stop offset="0" stop-color="#ff0000"/>
+			<stop offset="1" stop-color="#ff0000"/>
+		</linearGradient>
+	</defs>
+	<path fill="url(#foregroundColor)" d="M64 21.938h-22.103v-21.773h-20.124v21.773h-21.773v20.124h21.773v21.773h20.124v-21.773h22.103z"></path>
+</svg>
