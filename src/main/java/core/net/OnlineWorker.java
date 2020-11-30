@@ -126,7 +126,7 @@ public class OnlineWorker {
 							// Recalculate Training
 							// Training->Subskill calculation
 							TrainingManager.instance().refreshTrainingWeeks();
-							homodel.calcSubskills();
+							//homodel.calcSubskills(); // moved behind the download of matches
 							AufstellungsVergleichHistoryPanel.setHRFAufstellung(
 									homodel.getLineup(), homodel.getPreviousLineup());
 							AufstellungsVergleichHistoryPanel
