@@ -8,6 +8,7 @@ import core.model.match.MatchType;
 import core.model.match.Matchdetails;
 import core.model.match.Weather;
 import core.model.player.Player;
+import core.util.HOLogger;
 import module.specialEvents.filter.Filter;
 import org.jetbrains.annotations.Nullable;
 
@@ -153,15 +154,18 @@ public class SpecialEventsDM {
 	}
 
 	private List<MatchEvent> getMatchHighlights(Matchdetails details, Filter filter) {
-		List<MatchEvent> allHighlights = details.getHighlights();
 		List<MatchEvent> filteredHighlights = new ArrayList<MatchEvent>();
-
-		for (MatchEvent highlight : allHighlights) {
-			if (checkForSE(highlight, filter)) {
-				filteredHighlights.add(highlight);
+		List<MatchEvent> allHighlights = details.getHighlights();
+		if ( allHighlights != null) {
+			for (MatchEvent highlight : allHighlights) {
+				if (checkForSE(highlight, filter)) {
+					filteredHighlights.add(highlight);
+				}
 			}
 		}
-
+		else {
+			HOLogger.instance().debug(this.getClass(), "keine Match-Highlights");
+		}
 		return filteredHighlights;
 	}
 

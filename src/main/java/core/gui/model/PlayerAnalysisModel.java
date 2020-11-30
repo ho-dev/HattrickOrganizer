@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.model.match.Matchdetails;
+import core.model.match.SourceSystem;
 import core.model.player.Player;
 import core.net.OnlineWorker;
 
@@ -155,7 +156,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 		if (matchdetails.getMatchID() == -1) {
 			boolean success = OnlineWorker.downloadMatchData(spielerCBItem.getMatchID(), spielerCBItem.getMatchTyp(), true);
 			if (success) {
-				matchdetails = DBManager.instance().getMatchDetails(spielerCBItem.getMatchID());
+				matchdetails = DBManager.instance().loadMatchDetails(SourceSystem.HATTRICK.getId(), spielerCBItem.getMatchID());
 			}
 		}
 		return matchdetails;
