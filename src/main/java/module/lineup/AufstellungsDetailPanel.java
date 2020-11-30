@@ -345,7 +345,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			m_jpErfahrungAktuellesSystem.setText(PlayerAbility.toString(exp) + " (" + exp + ")");
 			m_jpErfahrungAktuellesSystem.setToolTipText(formationExperienceTooltip);
 
-			// FIXME This works for light theme, but not for dark themes.
+			// TODO: This works for light theme, but not for dark themes.
 			// m_jpErfahrungAktuellesSystem.setFGColor(new Color(Math.min(
 			//		Math.max(((8 - exp) * 32) - 1, 0), 255), 0, 0));
 		}
