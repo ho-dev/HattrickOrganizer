@@ -1,11 +1,13 @@
 package core.gui.comp.panel;
 
+import core.gui.comp.entry.DoubleLabelEntries;
+
 import javax.swing.*;
 import java.awt.*;
 
 /**
  * Panel displaying two labels that are semantically related, such as main value and comparison value.
- * This is similar to {@link core.gui.comp.entry.DoppelLabelEntry}, except this may live outside
+ * This is similar to {@link DoubleLabelEntries}, except this may live outside
  * a table.
  */
 public class DoubleLabelPanel extends JPanel {

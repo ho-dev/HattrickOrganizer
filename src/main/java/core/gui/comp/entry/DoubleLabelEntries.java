@@ -13,7 +13,7 @@ import javax.swing.SwingConstants;
 /**
  * A panel with two labels to display two values in the same column, e.g. (value, diff).
  */
-public class DoppelLabelEntry extends AbstractHOTableEntry {
+public class DoubleLabelEntries extends AbstractHOTableEntry {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private DoppelLabel m_clComponent = new DoppelLabel();
@@ -27,14 +27,14 @@ public class DoppelLabelEntry extends AbstractHOTableEntry {
     /**
      * Creates a new DoppelLabelEntry object.
      */
-    public DoppelLabelEntry() {
+    public DoubleLabelEntries() {
     }
 
     /**
      * Creates a new DoppelLabelEntry object.
      *
      */
-    public DoppelLabelEntry(Color color) {
+    public DoubleLabelEntries(Color color) {
         super();
         m_clLinks = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, color,
                                         SwingConstants.RIGHT);
@@ -47,7 +47,7 @@ public class DoppelLabelEntry extends AbstractHOTableEntry {
      * Creates a new DoppelLabelEntry object.
      *
      */
-    public DoppelLabelEntry(IHOTableEntry links, IHOTableEntry rechts) {
+    public DoubleLabelEntries(IHOTableEntry links, IHOTableEntry rechts) {
         m_clLinks = links;
         m_clRechts = rechts;
         createComponent();
@@ -98,8 +98,8 @@ public class DoppelLabelEntry extends AbstractHOTableEntry {
     }
 
 	public int compareTo(IHOTableEntry obj) {
-        if (obj instanceof DoppelLabelEntry) {
-            final DoppelLabelEntry entry = (DoppelLabelEntry) obj;
+        if (obj instanceof DoubleLabelEntries) {
+            final DoubleLabelEntries entry = (DoubleLabelEntries) obj;
             return getTableEntryLinks().compareTo(entry.getTableEntryLinks());
         }
 

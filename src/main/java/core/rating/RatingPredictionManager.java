@@ -15,6 +15,7 @@ import module.lineup.Lineup;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -865,7 +866,7 @@ public class RatingPredictionManager {
         return retArray;
     }
 
-    public static float calcPlayerStrength(double t, Player player, int skillType, boolean useForm, boolean isPressing, Weather weather, boolean useWeatherImpact) {
+    public static float calcPlayerStrength(double t, Player player, int skillType, boolean useForm, boolean isPressing, @Nullable Weather weather, boolean useWeatherImpact) {
         double retVal = 0.0F;
         try
         {
@@ -880,7 +881,7 @@ public class RatingPredictionManager {
              * the user has set an offset manually -> use this sub/offset
              */
             if (subskillFromDB > 0 || 
-            		(lastLvlUp = player.getLastLevelUp(skillType)) != null && (Timestamp)lastLvlUp[0] != null && ((Boolean)lastLvlUp[1]).booleanValue())
+            		(lastLvlUp = player.getLastLevelUp(skillType)) != null && (Timestamp)lastLvlUp[0] != null && (Boolean) lastLvlUp[1])
                 subSkill = player.getSub4Skill(skillType);
             else
             	/**
@@ -1238,25 +1239,22 @@ public class RatingPredictionManager {
         }
         retVal *= params.getParam("counter", "postMulti", 1.0);
         retVal += params.getParam("counter", "postDelta", 0);
-//    	retVal = applyCommonProps (retVal, params, "counter");
     	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);
     	return (float)retVal;
     }
 
-    /**
-     * get the tactic level for pressing
-     *
-     * @return tactic level
-     */
+
+
     public final float getTacticLevelPressing() {
     	RatingPredictionParameter params = config.getTacticsParameters();
+		final Weather weather = HOMainFrame.getWetter();
     	double retVal = 0;
-        for(int pos = IMatchRoleID.startLineup + 1; pos < IMatchRoleID.startReserves; pos++)
+		double defense;
+		for(int pos : IMatchRoleID.aOutfieldMatchRoleID)
         {
-            float defense = 0.0F;
             Player player = startingLineup.getPlayerByPositionID(pos);
             if(player != null) {
-            	defense = calcPlayerStrength(-1, player, DEFENDING, true, false, null, false);
+            	defense = calcPlayerStrength(-2, player, DEFENDING, true, true, weather, true);
                 if (player.getPlayerSpecialty() == PlayerSpeciality.POWERFUL) {
                 	defense *= 2;
                 }
@@ -1264,7 +1262,7 @@ public class RatingPredictionManager {
             }
         }
 
-        retVal *= params.getParam("pressing", "postMulti", 1.0);
+        retVal *= params.getParam("pressing", "multiDe", 1.0);
         retVal += params.getParam("pressing", "postDelta", 0);
     	retVal = applyCommonProps (retVal, params, "pressing");
     	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);

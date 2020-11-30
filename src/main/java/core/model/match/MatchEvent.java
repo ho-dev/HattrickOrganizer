@@ -1,6 +1,7 @@
 package core.model.match;
 
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
@@ -304,15 +305,14 @@ public class MatchEvent {
 
         put(MatchEventID.NEW_CAPTAIN, HOIconName.CAPTAIN); //#80
         put(MatchEventID.NEW_SET_PIECES_TAKER, HOIconName.PIECES); //#81
-
-        put(MatchEventID.INJURED_BUT_KEEPS_PLAYING, HOIconName.BRUISED); //#90
-        put(MatchEventID.MODERATELY_INJURED_LEAVES_FIELD, HOIconName.INJURED); //#91
-        put(MatchEventID.BADLY_INJURED_LEAVES_FIELD, HOIconName.INJURED); //#92
-        put(MatchEventID.INJURED_AND_NO_REPLACEMENT_EXISTED, HOIconName.INJURED); //#93
-        put(MatchEventID.INJURED_AFTER_FOUL_BUT_CONTINUES, HOIconName.BRUISED); //#94
-        put(MatchEventID.INJURED_AFTER_FOUL_AND_EXITS, HOIconName.INJURED); //#95
-        put(MatchEventID.INJURED_AFTER_FOUL_AND_NO_REPLACEMENT_EXISTED, HOIconName.INJURED); //#96
-        put(MatchEventID.KEEPER_INJURED_FIELD_PLAYER_HAS_TO_TAKE_HIS_PLACE, HOIconName.INJURED); //#97
+        put(MatchEventID.INJURED_BUT_KEEPS_PLAYING, null); //#90
+        put(MatchEventID.MODERATELY_INJURED_LEAVES_FIELD, null); //#91
+        put(MatchEventID.BADLY_INJURED_LEAVES_FIELD, null); //#92
+        put(MatchEventID.INJURED_AND_NO_REPLACEMENT_EXISTED, null); //#93
+        put(MatchEventID.INJURED_AFTER_FOUL_BUT_CONTINUES, null); //#94
+        put(MatchEventID.INJURED_AFTER_FOUL_AND_EXITS, null); //#95
+        put(MatchEventID.INJURED_AFTER_FOUL_AND_NO_REPLACEMENT_EXISTED, null); //#96
+        put(MatchEventID.KEEPER_INJURED_FIELD_PLAYER_HAS_TO_TAKE_HIS_PLACE, null); //#97
 
         put(MatchEventID.REDUCING_GOAL_HOME_TEAM_FREE_KICK, HOIconName.ME_GOAL_AND_WHISTLE); //#100
         put(MatchEventID.REDUCING_GOAL_HOME_TEAM_MIDDLE, HOIconName.GOAL_MID); //#101
@@ -1121,9 +1121,9 @@ public class MatchEvent {
         Icon icon;
 
         if (isBruised()) {
-            icon = ThemeManager.getIcon(HOIconName.BRUISED);
+            icon = ImageUtilities.getSmallPlasterIcon();
         } else if (isInjured()) {
-            icon = ThemeManager.getIcon(HOIconName.INJURED);
+            icon = ImageUtilities.getSmallInjuryIcon();
         } else {
             String sIcon = MatchEvent.mapMatchEventIcons.getOrDefault(me, HOIconName.UNKOWN);
             if (sIcon == null) {

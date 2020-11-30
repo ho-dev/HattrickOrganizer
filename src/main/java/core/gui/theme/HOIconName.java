@@ -26,13 +26,6 @@ public interface HOIconName {
 	 String WEATHER_EFFECT_GOOD 	= "weather.effect.1";
 	 String WEATHER_EFFECT_BAD 	= "weather.effect.-1";
 
-	 String BRUISED         = "patch";
-	 String INJURED 		= "injured";
-	 String BRUISED_SMALL   = "patch.small";
-	 String INJURED_SMALL   = "injured.small";
-
-	 String BRUISED_TINY = "bruised.tiny";
-	 String INJURED_TINY = "injured.tiny";
 	 String SUSPENDED_TINY = "suspended.tiny";
 	 String TWOYELLOW_TINY = "twoyellow.tiny";
 	 String ONEYELLOW_TINY = "oneyellow.tiny";

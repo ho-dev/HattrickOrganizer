@@ -9,9 +9,8 @@ import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.db.DBManager;
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.DoppelLabelEntry;
+import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.entry.RatingTableEntry;
-import core.gui.comp.entry.SpielerLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
@@ -138,53 +137,53 @@ final class SpielerDetailDialog extends JDialog {
 	private final ColorLabelEntry m_jpVerteidigung2 = new ColorLabelEntry("",
 			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_SINGLEPLAYERVALUES,
 			SwingConstants.CENTER);
-	private final DoppelLabelEntry m_jpGehalt = new DoppelLabelEntry(ColorLabelEntry.BG_STANDARD);
-	private final DoppelLabelEntry m_jpGruppeSmilie = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpGehalt = new DoubleLabelEntries(ColorLabelEntry.BG_STANDARD);
+	private final DoubleLabelEntries m_jpGruppeSmilie = new DoubleLabelEntries(
 			ColorLabelEntry.BG_STANDARD);
-	private final DoppelLabelEntry m_jpMartwert = new DoppelLabelEntry(ColorLabelEntry.BG_STANDARD);
-	private final DoppelLabelEntry m_jpWertAussenVert = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpMartwert = new DoubleLabelEntries(ColorLabelEntry.BG_STANDARD);
+	private final DoubleLabelEntries m_jpWertAussenVert = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertAussenVertDef = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertAussenVertDef = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertAussenVertIn = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertAussenVertIn = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertAussenVertOff = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertAussenVertOff = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertFluegel = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertFluegel = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertFluegelDef = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertFluegelDef = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertFluegelIn = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertFluegelIn = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertFluegelOff = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertFluegelOff = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertInnenVert = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertInnenVert = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertInnenVertAus = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertInnenVertAus = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertInnenVertOff = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertInnenVertOff = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertMittelfeld = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertMittelfeld = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertMittelfeldAus = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertMittelfeldAus = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertMittelfeldDef = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertMittelfeldDef = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertMittelfeldOff = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertMittelfeldOff = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertSturmAus = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertSturmAus = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertSturm = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertSturm = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertSturmDef = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertSturmDef = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-	private final DoppelLabelEntry m_jpWertTor = new DoppelLabelEntry(
+	private final DoubleLabelEntries m_jpWertTor = new DoubleLabelEntries(
 			ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
 	private final RatingTableEntry m_jpAktuellRating = new RatingTableEntry();
 	private final RatingTableEntry m_jpRating = new RatingTableEntry();
 	private final SpielerStatusLabelEntry m_jpStatus = new SpielerStatusLabelEntry();
 
-	private final DoppelLabelEntry[] playerPositionValues = new DoppelLabelEntry[] { m_jpWertTor,
+	private final DoubleLabelEntries[] playerPositionValues = new DoubleLabelEntries[] { m_jpWertTor,
 			m_jpWertInnenVert, m_jpWertInnenVertAus, m_jpWertInnenVertOff, m_jpWertAussenVert,
 			m_jpWertAussenVertIn, m_jpWertAussenVertOff, m_jpWertAussenVertDef, m_jpWertMittelfeld,
 			m_jpWertMittelfeldAus, m_jpWertMittelfeldOff, m_jpWertMittelfeldDef, m_jpWertFluegel,
@@ -1332,15 +1331,15 @@ final class SpielerDetailDialog extends JDialog {
 		c.gridy = y;
 	}
 
-	private void showNormal(DoppelLabelEntry labelEntry, byte playerPosition, Player m_clPlayer) {
+	private void showNormal(DoubleLabelEntries labelEntry, byte playerPosition, Player m_clPlayer) {
 		labelEntry.getLinks().setText(
 				Helper.round(m_clPlayer.calcPosValue(playerPosition, true),
 						core.model.UserParameter.instance().nbDecimals) + "");
 		labelEntry.getRechts().clear();
 	}
 
-	private void showWithCompare(DoppelLabelEntry labelEntry, byte playerPosition,
-								 Player m_clPlayer, Player m_clVergleichsPlayer) {
+	private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition,
+                                 Player m_clPlayer, Player m_clVergleichsPlayer) {
 		labelEntry.getLinks().setText(
 				Helper.round(m_clPlayer.calcPosValue(playerPosition, true),
 						core.model.UserParameter.instance().nbDecimals) + "");

@@ -1,7 +1,7 @@
 package module.series;
 
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.DoppelLabelEntry;
+import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.icon.DrawIcon;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
@@ -188,7 +188,7 @@ class SeriesTablePanel extends ImagePanel {
 			final ColorLabelEntry right = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
 					SwingConstants.RIGHT);
 			right.setBorder(EMPTY_BORDER);
-			tableValues[i][0] = new DoppelLabelEntry(left, right);
+			tableValues[i][0] = new DoubleLabelEntries(left, right);
 
 			final ColorLabelEntry teamNameEntry = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
 					SwingConstants.LEFT);
@@ -237,16 +237,16 @@ class SeriesTablePanel extends ImagePanel {
 					if (eintrag.getPunkte() > -1) {
 						j = i + 1;
 
-						((DoppelLabelEntry) tableValues[j][0]).getLinks().setText("");
-						((DoppelLabelEntry) tableValues[j][0]).getLinks().setFontStyle(Font.BOLD);
+						((DoubleLabelEntries) tableValues[j][0]).getLinks().setText("");
+						((DoubleLabelEntries) tableValues[j][0]).getLinks().setFontStyle(Font.BOLD);
 						if (eintrag.getPosition() < eintrag.getAltePosition()) {
-							((DoppelLabelEntry) tableValues[j][0]).getLinks().setIcon(new DrawIcon(DrawIcon.UPWARD_DIRECTION));
+							((DoubleLabelEntries) tableValues[j][0]).getLinks().setIcon(new DrawIcon(DrawIcon.UPWARD_DIRECTION));
 						} else if (eintrag.getPosition() > eintrag.getAltePosition()) {
-							((DoppelLabelEntry) tableValues[j][0]).getLinks().setIcon(new DrawIcon(DrawIcon.DOWNWARD_DIRECTION));
+							((DoubleLabelEntries) tableValues[j][0]).getLinks().setIcon(new DrawIcon(DrawIcon.DOWNWARD_DIRECTION));
 						}
 
-						((DoppelLabelEntry) tableValues[j][0]).getRechts().setText(eintrag.getPosition() + "");
-						((DoppelLabelEntry) tableValues[j][0]).getRechts().setFontStyle(Font.BOLD);
+						((DoubleLabelEntries) tableValues[j][0]).getRechts().setText(eintrag.getPosition() + "");
+						((DoubleLabelEntries) tableValues[j][0]).getRechts().setFontStyle(Font.BOLD);
 
 						((ColorLabelEntry) tableValues[j][1]).setText(eintrag.getTeamName());
 						((ColorLabelEntry) tableValues[j][1]).setFontStyle(Font.BOLD);

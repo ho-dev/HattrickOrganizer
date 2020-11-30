@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg id="plaster" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="300px" height="300px"  viewBox="35 35 230 230" xml:space="preserve">
+    <defs id="colors">
+		<linearGradient id="foregroundColor">
+			<stop offset="0" stop-color="#F7C3B0"/>
+			<stop offset="1" stop-color="#F7C3B0"/>
+		</linearGradient>
+	</defs>
+	<path fill="url(#foregroundColor)" d="M248.26,71.549l-19.8-19.801c-7.566-7.565-17.626-11.731-28.326-11.731s-20.76,4.166-28.323,11.732 L51.76,171.8c-7.567,7.566-11.734,17.626-11.734,28.326s4.168,20.759,11.733,28.323l19.801,19.804 c7.565,7.564,17.625,11.73,28.325,11.73c10.699,0,20.759-4.166,28.325-11.731l120.05-120.053 C263.879,112.583,263.879,87.169,248.26,71.549z"/>
+</svg>

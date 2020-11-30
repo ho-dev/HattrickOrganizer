@@ -12,7 +12,7 @@ import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.DoppelLabelEntry;
+import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.entry.RatingTableEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.renderer.SmilieListCellRenderer;
@@ -79,10 +79,10 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private final JComboBox m_jcbSquad = new JComboBox(GroupTeamFactory.TEAMSMILIES);
     private final JComboBox m_jcbInformation = new JComboBox(SMILEYS);
     private SpielerStatusLabelEntry m_jpStatus = new SpielerStatusLabelEntry();
-    private final DoppelLabelEntry m_jpSalary = new DoppelLabelEntry(new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
+    private final DoubleLabelEntries m_jpSalary = new DoubleLabelEntries(new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT), new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT));
-    private final DoppelLabelEntry m_jpTSI = new DoppelLabelEntry(new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
+    private final DoubleLabelEntries m_jpTSI = new DoubleLabelEntries(new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT), new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT));
     private JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
@@ -173,31 +173,31 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private final JButton m_jbOffsets = new JButton(getSvgIcon(HOIconName.OFFSET));
 
     // Ratings Column
-    private final DoppelLabelEntry m_jpRatingKeeper = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingCentralDefender = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingCentralDefenderTowardsWing = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingCentralDefenderOffensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingWingback = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingWingbackDefensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingWingbackTowardsMiddle = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingWingbackOffensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingeMidfielder = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingeMidfielderTowardsWing = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingeMidfielderDefensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingeMidfielderOffensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingWinger = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingWingerDefensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingWingerTowardsMiddle = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingWingerOffensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingForward = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingForwardTowardsWing = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoppelLabelEntry m_jpRatingForwardDefensive = new DoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingKeeper = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingCentralDefender = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingCentralDefenderTowardsWing = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingCentralDefenderOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingWingback = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingWingbackDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingWingbackTowardsMiddle = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingWingbackOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingeMidfielder = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingeMidfielderTowardsWing = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingeMidfielderDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingeMidfielderOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingWinger = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingWingerDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingWingerTowardsMiddle = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingWingerOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingForward = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingForwardTowardsWing = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries m_jpRatingForwardDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
 
     // Players
     private Player m_clPlayer;
     private Player m_clComparisonPlayer;
 
-    private final DoppelLabelEntry[] playerPositionValues = new DoppelLabelEntry[]{
+    private final DoubleLabelEntries[] playerPositionValues = new DoubleLabelEntries[]{
             m_jpRatingKeeper,
             m_jpRatingCentralDefender,
             m_jpRatingCentralDefenderTowardsWing,
@@ -556,7 +556,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jbOffsets.setEnabled(true);
     }
 
-    private void showNormal(DoppelLabelEntry labelEntry, byte playerPosition) {
+    private void showNormal(DoubleLabelEntries labelEntry, byte playerPosition) {
         labelEntry.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
                 .nbDecimals).format(m_clPlayer.calcPosValue(playerPosition, true)));
 
@@ -573,7 +573,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         labelEntry.getRechts().clear();
     }
 
-    private void showWithCompare(DoppelLabelEntry labelEntry, byte playerPosition) {
+    private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition) {
         labelEntry.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
                 .nbDecimals).format(m_clPlayer.calcPosValue(playerPosition, true)));
 

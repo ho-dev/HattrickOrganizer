@@ -1,21 +1,17 @@
 // %3364174802:de.hattrickorganizer.gui.model%
 package core.gui.comp.entry;
 
-import com.github.weisj.darklaf.icons.IconLoader;
 import core.gui.theme.GroupTeamFactory;
-import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import javax.swing.SwingConstants;
-import java.util.Map;
 
 
 /**
  * Zeigt die Warnings und Verletzungen an
  */
-public class SmilieEntry extends DoppelLabelEntry {
+public class SmilieEntry extends DoubleLabelEntries {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private ColorLabelEntry manuell = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,

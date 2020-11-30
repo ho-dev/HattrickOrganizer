@@ -262,10 +262,10 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         transferlistedLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, 12, 12));
         infoPanel.add(transferlistedLabel);
 
-        injuredLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(INJURED_TINY, 12, 12));
+        injuredLabel = createPlayerStatusLabel(ImageUtilities.getInjuryIcon(12,12));
         infoPanel.add(injuredLabel);
 
-        bruisedLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(BRUISED_TINY, 12, 12));
+        bruisedLabel = createPlayerStatusLabel(ImageUtilities.getPlasterIcon(12,12));
         infoPanel.add(bruisedLabel);
 
         suspendedLabel = createPlayerStatusLabel(ImageUtilities.getSvgIcon(SUSPENDED_TINY, 12, 12));
@@ -389,9 +389,9 @@ public final class SpielerLabelEntry implements IHOTableEntry {
                     .forEach(label -> label.setIcon(null));
 
             if (player.getVerletzt() > 0) {
-                injuredLabel.setIcon(ImageUtilities.getSvgIcon(INJURED_TINY, 12, 12));
+                injuredLabel.setIcon(ImageUtilities.getInjuryIcon(12,12));
             } else if (player.getVerletzt() == 0) {
-                bruisedLabel.setIcon(ImageUtilities.getSvgIcon(BRUISED_TINY, 12, 12));
+                bruisedLabel.setIcon(ImageUtilities.getPlasterIcon(12,12));
             }
             if (player.getTransferlisted() > 0) {
                 transferlistedLabel.setIcon(ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, 12, 12));
