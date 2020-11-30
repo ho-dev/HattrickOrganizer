@@ -1,11 +1,14 @@
 package core.db;
 
+import core.module.IModule;
+import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
 import core.util.HOLogger;
 import module.playeranalysis.PlayerAnalysisModule;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -183,6 +186,8 @@ final class DBUpdater {
 			dbManager.getTable(YouthPlayerTable.TABLENAME).createTable();
 			dbManager.getTable(YouthScoutCommentTable.TABLENAME).createTable();
 		}
+
+		forceModuleStatus(IModule.YOUTHPLAYEROVERVIEW);
 
 		updateDBVersion(dbVersion, version);
 	}
@@ -1332,5 +1337,29 @@ final class DBUpdater {
 		if (columnExistsInTable(column, table)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE " + table + " DROP " + column);
 		}
+	}
+
+	// force the visibilty of a module (fo example make new module discoverable)
+	private void forceModuleStatus(int iModuleID) {
+		int[] allModules = ModuleConfig.instance().getIntArray("MM_Modules");
+		ArrayList<Integer> newModules = new ArrayList<>();
+
+		int this_id;
+		for (var moduleIdStatus : allModules) {
+			this_id = 0;
+			if (moduleIdStatus > IModule.STATUS_STARTUP * ModuleManager.getFactor()) {
+				this_id = moduleIdStatus - (IModule.STATUS_STARTUP * ModuleManager.getFactor());
+			} else if (moduleIdStatus > IModule.STATUS_ACTIVATED * ModuleManager.getFactor()
+					&& moduleIdStatus < IModule.STATUS_STARTUP * ModuleManager.getFactor()) {
+				this_id = moduleIdStatus - (IModule.STATUS_ACTIVATED * ModuleManager.getFactor());
+			} else if (moduleIdStatus < IModule.STATUS_ACTIVATED * ModuleManager.getFactor()) {
+				this_id = moduleIdStatus;
+			}
+			if (this_id != iModuleID) {
+				newModules.add(moduleIdStatus);
+			}
+		}
+		newModules.add(IModule.STATUS_STARTUP * ModuleManager.getFactor() + iModuleID);
+		ModuleConfig.instance().setIntArray("MM_Modules", newModules.stream().mapToInt(i -> i).toArray());
 	}
 }

@@ -26,6 +26,10 @@ import java.util.Map;
 
 public final class ModuleManager {
 
+	public static int getFactor() {
+		return factor;
+	}
+
 	private static final int factor = 10000;
 	private Map<Integer, IModule> all_modules = new HashMap<Integer, IModule>();
 	private Map<Integer, IModule> tmpModules;
@@ -119,20 +123,20 @@ public final class ModuleManager {
 			firstStart();
 			return;
 		}
-		for (int i = 0; i < activModuleIds.length; i++) {
+		for (int activModuleId : activModuleIds) {
 			int id = 0;
 			int status = IModule.STATUS_DEACTIVATED;
-			if (activModuleIds[i] > IModule.STATUS_STARTUP * factor) {
-				id = activModuleIds[i] - (IModule.STATUS_STARTUP * factor);
+			if (activModuleId > IModule.STATUS_STARTUP * factor) {
+				id = activModuleId - (IModule.STATUS_STARTUP * factor);
 				status = IModule.STATUS_STARTUP;
-			} else if (activModuleIds[i] > IModule.STATUS_ACTIVATED * factor
-					&& activModuleIds[i] < IModule.STATUS_STARTUP * factor) {
-				id = activModuleIds[i] - (IModule.STATUS_ACTIVATED * factor);
+			} else if (activModuleId > IModule.STATUS_ACTIVATED * factor
+					&& activModuleId < IModule.STATUS_STARTUP * factor) {
+				id = activModuleId - (IModule.STATUS_ACTIVATED * factor);
 				status = IModule.STATUS_ACTIVATED;
-			} else if (activModuleIds[i] < IModule.STATUS_ACTIVATED * factor) {
-				id = activModuleIds[i];
+			} else if (activModuleId < IModule.STATUS_ACTIVATED * factor) {
+				id = activModuleId;
 			}
-			IModule module = all_modules.get(Integer.valueOf(id));
+			IModule module = all_modules.get(id);
 			if (module != null) {
 				module.setStatus(status);
 			}
