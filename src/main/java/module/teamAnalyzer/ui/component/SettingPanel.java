@@ -59,7 +59,7 @@ public class SettingPanel extends JPanel {
         myLineup.setOpaque(false);
         tacticDetail.setSelected(config.getBoolean(SystemManager.ISTACTICDETAIL));
         tacticDetail.setOpaque(false);
-        unavailable.setSelected(config.getBoolean(SystemManager.ISSHOWUNAVAILABLE));
+        unavailable.setSelected(config.getBoolean(SystemManager.ISSHOWUNAVAILABLE, true));
         unavailable.setOpaque(false);
         playerInfo.setSelected(config.getBoolean(SystemManager.ISSHOWPLAYERINFO));
         playerInfo.setOpaque(false);
@@ -241,7 +241,7 @@ public class SettingPanel extends JPanel {
         mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.NumericRatings"), numberRating));
         mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.DescriptionRatings"), descRating));
 
-        //mainPanel.add(createPanel(PluginProperty.getString("SettingPanel.ShowUnavailable"), unavailable));
+        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.ShowUnavailable"), unavailable));
 
         mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("RecapPanel.Stars"), stars));
         mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"), totalStrength));

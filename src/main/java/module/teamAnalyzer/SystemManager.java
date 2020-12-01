@@ -28,7 +28,7 @@ public class SystemManager {
 	public final static String ISLINEUP = "TA_lineupCompare";
 	public final static String ISTACTICDETAIL = "TA_tacticDetail";
 	public final static String ISDESCRIPTIONRATING = "TA_descriptionRating";
-	public final static String ISSHOWUNAVAILABLE = "TA_isShowPlayerInfo";
+	public final static String ISSHOWUNAVAILABLE = "TA_isShowUnavailable";
 	public final static String ISMIXEDLINEUP = "TA_mixedLineup";
 	public final static String ISSTARS = "TA_isStars";
 	public final static String ISTOTALSTRENGTH = "TA_isTotalStrength";
