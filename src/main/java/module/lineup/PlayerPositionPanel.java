@@ -127,7 +127,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         constraints.insets = new Insets(5, 8, 0, 0);
         jlp.add(m_jlPosition, constraints, layerIndex);
 
-
         constraints.gridy = 1;
         constraints.gridwidth = 2;
         m_jcbPlayer.addFocusListener(this);
@@ -550,7 +549,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             final MatchRoleID position = lineup.getPositionById(m_iPositionID);
 
             if (position != null) {
-                final String nameForPosition = MatchRoleID.getShortNameForPosition(position.getPosition());
+                final String nameForPosition = MatchRoleID.getNameForPosition(position.getPosition());
 
                 // Players on the lineup
                 if (IMatchRoleID.aFieldMatchRoleID.contains(position.getId())) {

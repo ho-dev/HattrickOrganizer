@@ -6,10 +6,7 @@ import core.gui.HOMainFrame;
 import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.model.AufstellungCBItem;
-import core.gui.theme.GroupTeamFactory;
-import core.gui.theme.HOColorName;
-import core.gui.theme.HOIconName;
-import core.gui.theme.ThemeManager;
+import core.gui.theme.*;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -19,12 +16,7 @@ import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -438,10 +430,12 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 		constraints.gridx = 6;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
+
 		if (overlayOk == null) {
 			overlayOk = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.ok"));
 			overlayOk.setFont(new Font("serif", Font.BOLD, 16));
 			overlayOk.setBackground(ThemeManager.getColor(HOColorName.BUTTON_ASSIST_OK_BG));
+			overlayOk.setForeground(ImageUtilities.getColorForContrast(HOColorName.BUTTON_ASSIST_OK_BG));
 			overlayOk.addActionListener(this);
 		}
 		posPanel.add(overlayOk, constraints, 2);
@@ -454,6 +448,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 			overlayCancel.addActionListener(this);
 			overlayCancel.setFont(new Font("serif", Font.BOLD, 16));
 			overlayCancel.setBackground(ThemeManager.getColor(HOColorName.BUTTON_ASSIST_CANCEL_BG));
+			overlayCancel.setForeground(ImageUtilities.getColorForContrast(HOColorName.BUTTON_ASSIST_CANCEL_BG));
 		}
 		posPanel.add(overlayCancel, constraints, 2);
 

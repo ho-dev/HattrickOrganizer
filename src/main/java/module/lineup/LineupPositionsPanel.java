@@ -13,8 +13,11 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.swing.*;
 import javax.swing.border.Border;
+
+import static core.model.player.IMatchRoleID.aOutfieldMatchRoleID;
 
 /**
  * Create the main panel of Lineup module
@@ -150,36 +153,21 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_clSubstKeeper1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
 		m_clSubstKeeper2.refresh2(filteredPlayers, m_clSubstKeeper1.getPlayerId());
 		m_clSubstCD1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-
-		Dimension dCB = m_clLeftForward.getPlayerComboBox().getPreferredSize();
-
 	    m_clSubstCD2.refresh2(filteredPlayers, m_clSubstCD1.getPlayerId());
-		m_clSubstCD2.getPlayerComboBox().setPreferredSize(dCB);
-
 		m_clSubstWB1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
 		m_clSubstWB2.refresh2(filteredPlayers, m_clSubstWB1.getPlayerId());
-		m_clSubstWB2.getPlayerComboBox().setPreferredSize(dCB);
-
 		m_clSubstIM1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
 		m_clSubstIM2.refresh2(filteredPlayers, m_clSubstIM1.getPlayerId());
-		m_clSubstIM2.getPlayerComboBox().setPreferredSize(dCB);
-
 		m_clSubstFwd1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
 		m_clSubstFwd2.refresh2(filteredPlayers, m_clSubstFwd1.getPlayerId());
-		m_clSubstFwd2.getPlayerComboBox().setPreferredSize(dCB);
-
 		m_clSubstWI1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
 		m_clSubstWI2.refresh2(filteredPlayers, m_clSubstWI1.getPlayerId());
-		m_clSubstWI2.getPlayerComboBox().setPreferredSize(dCB);
-
 		m_clSubstXtr1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
 		m_clSubstXtr2.refresh2(filteredPlayers, m_clSubstXtr1.getPlayerId());
-		m_clSubstXtr2.getPlayerComboBox().setPreferredSize(dCB);
-
 		m_clSetPieceTaker.refresh(selectedPlayers, null, null);
-		m_clSetPieceTaker.getPlayerComboBox().setPreferredSize(dCB);
 	 	m_clCaptain.refresh(selectedPlayers, null, null);
-		m_clCaptain.getPlayerComboBox().setPreferredSize(dCB);
+	 	
+		setCompDimensions();
 
 		// Check
 		lineup.checkAufgestellteSpieler();
@@ -526,4 +514,59 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		pos.add(m_clKeeper);
 		return pos;
 	}
+
+	// just for improved visuals
+	private void setCompDimensions(){
+		Dimension dCB, dPP1L, dPP2L;
+		int widthCB = 0, heightCB = 0, widthPP1L = 0, heightPP1L = 0, widthPP2L = 0, heightPP2L = 0, positionID;
+
+		for (Component comp : centerPanel.getComponents()){
+			if(comp instanceof module.lineup.PlayerPositionPanel){
+
+				// All checkBoxes will have the same size
+				dCB = ((module.lineup.PlayerPositionPanel)comp).getPlayerComboBox().getPreferredSize();
+				widthCB = Math.max(widthCB, dCB.width);
+				heightCB = Math.max(heightCB, dCB.height);
+
+
+				positionID = ((PlayerPositionPanel) comp).getPositionsID();
+				if (aOutfieldMatchRoleID.contains(positionID)){
+
+					// Player panel with tactic boxes
+					dPP2L = comp.getPreferredSize();
+					widthPP2L = Math.max(widthPP2L, dPP2L.width);
+					heightPP2L = Math.max(heightPP2L, dPP2L.height);
+				}
+				else{
+					// Player panel without tactic boxes
+					dPP1L = comp.getPreferredSize();
+					widthPP1L = Math.max(widthPP1L, dPP1L.width);
+					heightPP1L = Math.max(heightPP1L, dPP1L.height);
+				}
+
+			}
+		}
+
+		dCB = new Dimension(widthCB, heightCB);
+		dPP1L = new Dimension(widthPP1L, heightPP1L);
+		dPP2L = new Dimension(widthPP2L, heightPP2L);
+
+		for (Component comp : centerPanel.getComponents()){
+			if(comp instanceof module.lineup.PlayerPositionPanel){
+				((module.lineup.PlayerPositionPanel)comp).getPlayerComboBox().setPreferredSize(dCB);
+
+				positionID = ((PlayerPositionPanel) comp).getPositionsID();
+				if (aOutfieldMatchRoleID.contains(positionID)){
+					// Player panel with tactic boxes
+					comp.setPreferredSize(dPP2L);
+				}
+				else{
+					// Player panel without tactic boxes
+					comp.setPreferredSize(dPP1L);
+				}
+
+			}
+		}
+	}
+
 }

@@ -742,6 +742,16 @@ public class ImageUtilities {
 				+ 0.068 * colour.getBlue()*colour.getBlue());
 	}
 
+	public static Color getColorForContrast(Color backgroundColor) {
+		double brightness = getBrightness(backgroundColor);
+		return brightness < 130 ? Color.WHITE : Color.BLACK;
+	}
+
+	public static Color getColorForContrast(String backgroundColor) {
+		return getColorForContrast(ThemeManager.getColor(backgroundColor));
+	}
+
+
 	private static String getHexColor(Color colour) {
 		return "#" + String.format("%1$02X", colour.getRed()) +
 				String.format("%1$02X", colour.getGreen()) +
