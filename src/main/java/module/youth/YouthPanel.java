@@ -24,7 +24,7 @@ public class YouthPanel extends JPanel {
         setLayout(new BorderLayout());
         youthPlayerOverviewTable = new YouthPlayerOverviewTable();
         this.tabbedPane = new JTabbedPane();
-        this.tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Player"), this.youthPlayerOverviewTable);
+        this.tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Player"), new JScrollPane(this.youthPlayerOverviewTable));
         add(this.tabbedPane, BorderLayout.CENTER);
     }
 }

@@ -1,10 +1,10 @@
 package module.youth;
 
 import core.gui.RefreshManager;
+import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.TableSorter;
 import core.gui.model.UserColumnController;
 import core.model.UserParameter;
-
 import javax.swing.*;
 
 public class YouthPlayerOverviewTable extends JTable implements core.gui.Refreshable {
@@ -16,6 +16,7 @@ public class YouthPlayerOverviewTable extends JTable implements core.gui.Refresh
         super();
         initModel();
         RefreshManager.instance().registerRefreshable(this);
+        setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
     }
 
     @Override
@@ -29,9 +30,7 @@ public class YouthPlayerOverviewTable extends JTable implements core.gui.Refresh
         if (tableModel == null) {
             tableModel = UserColumnController.instance().getYouthPlayerOverviewColumnModel();
             tableModel.initData();
-            tableSorter = new TableSorter(tableModel,
-                    tableModel.getPositionInArray(99),
-                    getOrderByColumn());
+            tableSorter = new TableSorter(tableModel, tableModel.getPositionInArray(99), getOrderByColumn());
             setModel(tableSorter);
         }
 

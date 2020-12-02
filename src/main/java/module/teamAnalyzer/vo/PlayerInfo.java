@@ -1,17 +1,12 @@
 package module.teamAnalyzer.vo;
 
-import com.install4j.runtime.util.MinimumSizeTextArea;
 import core.file.xml.MyHashtable;
-import core.file.xml.XMLManager;
-import core.model.player.MatchRoleID;
 import module.teamAnalyzer.manager.PlayerDataManager;
-import org.w3c.dom.Element;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static core.model.player.MatchRoleID.getKurzNameForPosition;
 import static module.lineup.substitution.LanguageStringLookup.getPosition;
 
 public class PlayerInfo {

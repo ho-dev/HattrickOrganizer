@@ -127,7 +127,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         constraints.insets = new Insets(5, 8, 0, 0);
         jlp.add(m_jlPosition, constraints, layerIndex);
 
-
         constraints.gridy = 1;
         constraints.gridwidth = 2;
         m_jcbPlayer.addFocusListener(this);

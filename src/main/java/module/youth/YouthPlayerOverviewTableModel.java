@@ -26,8 +26,8 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
         columns =  initColumns();
     }
 
-    private UserColumn[] initColumns() {
-        return new UserColumn[]{
+    private YouthPlayerColumn[] initColumns() {
+        return new YouthPlayerColumn[]{
                 new YouthPlayerColumn(0, "ls.player.name", 0) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {

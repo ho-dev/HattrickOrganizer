@@ -19,7 +19,6 @@ public class StatusIcon implements Icon {
     public final static int ICON_SIZE = 12;
     public final static int ICON_SPACE = 2;
     private static final Map<Object, Object> TRANSFERLISTED_ICON_COLOR_MAP = Map.of("foregroundColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
-
     private static final Icon TRANSFERLISTED_ICON = ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, TRANSFERLISTED_ICON_COLOR_MAP, 14, 14);
     private static final Icon SUSPENDED_ICON = ImageUtilities.getSvgIcon(SUSPENDED_TINY, ICON_SIZE, ICON_SIZE);
     private static final Icon TWO_YELLOW_ICON = ImageUtilities.getSvgIcon(TWOYELLOW_TINY, ICON_SIZE, ICON_SIZE);

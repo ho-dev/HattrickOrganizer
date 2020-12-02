@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<svg id="group_team_clean" version="1.1" xmlns="http://www.w3.org/2000/svg" width="60px" height="60px">
+    <defs id="colors">
+		<linearGradient id="fillColor">
+			<stop offset="0" stop-color="#FF0000"/>
+			<stop offset="1" stop-color="#FF0000"/>
+		</linearGradient>
+	</defs>
+  <path fill="url(#fillColor)"
+     d="m12.983 11.652c-0.458-0.019-0.801 0.106-1.032 0.341-1.626 1.664 3.485 9.397 11.523 18.021-8.038 8.625-13.149 16.358-11.523 18.021 1.632 1.669 9.369-3.458 18.032-11.524 8.663 8.066 16.436 13.193 18.067 11.524 1.627-1.663-3.52-9.396-11.559-18.021 8.039-8.624 13.186-16.357 11.559-18.021-1.631-1.668-9.404 3.459-18.067 11.524-7.44-6.927-14.214-11.755-17-11.865z"
+	/>
+</svg>
