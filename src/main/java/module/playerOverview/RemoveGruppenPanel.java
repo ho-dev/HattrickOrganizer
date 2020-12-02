@@ -12,8 +12,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.*;
+
+import static core.gui.theme.HOIconName.TRANSFERLISTED_TINY;
 
 
 /**
@@ -25,7 +28,7 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
 
 	//~ Instance fields ----------------------------------------------------------------------------
     private final JButton doButton = new JButton(ImageUtilities.getSvgIcon(HOIconName.TURN));
-    private final JButton m_jbClean = new JButton(ImageUtilities.getSvgIcon(HOIconName.GROUP_TEAM_CLEAN));
+    private final JButton m_jbClean = new JButton(ImageUtilities.getSvgIcon(HOIconName.GROUP_TEAM_CLEAN, Map.of("fillColor", HOColorName.TABLEENTRY_DECLINE_FG)));
 
     private final JToggleButton aGruppe = new JToggleButton(
             GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[1])

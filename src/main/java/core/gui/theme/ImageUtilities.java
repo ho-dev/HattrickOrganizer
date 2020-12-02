@@ -696,14 +696,34 @@ public class ImageUtilities {
 		return icon;
     }
 
+
+	public static Icon getSvgIcon(String key, Map<Object, Object> colorMap) {
+		return getSvgIcon(key, colorMap, 24, 24);
+	}
+
+
 	public static Icon getSvgIcon(String key, Map<Object, Object> colorMap, int width, int height) {
 		final String index = key + "_" + colorMap.toString() + "_" + width + "_" + height;
 		Icon icon = ThemeManager.getIcon(index);
 
 		if (icon == null) {
 			Object imagePath = ThemeManager.getIconPath(key);
+			Map<Object, Object> newColorMap= new HashMap(colorMap);
+			for(Map.Entry<Object, Object> entry : colorMap.entrySet()) {
+				if(entry.getValue() instanceof Color){
+					newColorMap.put(entry.getKey(), entry.getValue());
+				}
+				else if(entry.getValue() instanceof String){
+					newColorMap.put(entry.getKey(), ThemeManager.getColor((String) entry.getValue()));
+				}
+				else{
+					newColorMap.put(entry.getKey(), new Color(0, 0, 0));
+					HOLogger.instance().error(ImageUtilities.class, "Color map has not been recognized ! " + entry.getValue().toString());
+				}
 
-			icon = IconLoader.get().loadSVGIcon(Objects.requireNonNull(imagePath).toString(), width, height, true, colorMap);
+		}
+
+			icon = IconLoader.get().loadSVGIcon(Objects.requireNonNull(imagePath).toString(), width, height, true, newColorMap);
 
 			ThemeManager.instance().put(index, icon);
 		}

@@ -12,7 +12,7 @@ public interface HOIconName {
 	 String[] SMILEYS = { "", "smiley-coach","smiley-sale", "smiley-happy", "smiley-sad", "smiley-neutral"};
 
 	 String GROUP_TEAM = "Group-Team.svg";
-	 String GROUP_TEAM_CLEAN = "Group-Team-clean.svg";
+	 String GROUP_TEAM_CLEAN = "group-team-clean";
 	 String GREYED_OUT = "Group-Team-Greyed.svg";
 
 	 String TOOTHEDWHEEL 	= "toothedWheel";
