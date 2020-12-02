@@ -550,7 +550,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             final MatchRoleID position = lineup.getPositionById(m_iPositionID);
 
             if (position != null) {
-                final String nameForPosition = MatchRoleID.getNameForPosition(position.getPosition());
+                final String nameForPosition = MatchRoleID.getShortNameForPosition(position.getPosition());
 
                 // Players on the lineup
                 if (IMatchRoleID.aFieldMatchRoleID.contains(position.getId())) {

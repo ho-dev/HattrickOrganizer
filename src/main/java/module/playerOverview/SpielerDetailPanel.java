@@ -930,7 +930,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
 
         constraints.gridheight = 1;
         for (int i = 0; i < playerPositionValues.length; i++) {
-            label = new JLabel(MatchRoleID.getKurzNameForPosition(playerPosition[i]));
+            label = new JLabel(MatchRoleID.getShortNameForPosition(playerPosition[i]));
             label.setToolTipText(MatchRoleID.getNameForPosition(playerPosition[i]));
             initBlueLabel(i, constraints, layout, panel, label);
             initBlueField(i, constraints, layout, panel, playerPositionValues[i].getComponent(false));

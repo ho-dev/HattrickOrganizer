@@ -194,7 +194,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	/**
 	 * Gibt das Kürzel für den Namen zurück
 	 */
-	public static String getKurzNameForPosition(byte posId) {
+	public static String getShortNameForPosition(byte posId) {
 
 		switch (posId) {
 		case KEEPER:

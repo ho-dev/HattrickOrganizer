@@ -436,7 +436,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 		posPanel.add(infoLabel, constraints, 2);
 
 		constraints.gridx = 6;
-		constraints.gridy = 6;
+		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		if (overlayOk == null) {
 			overlayOk = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.ok"));
@@ -447,7 +447,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 		posPanel.add(overlayOk, constraints, 2);
 
 		constraints.gridx = 5;
-		constraints.gridy = 6;
+		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		if (overlayCancel == null) {
 			overlayCancel = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
