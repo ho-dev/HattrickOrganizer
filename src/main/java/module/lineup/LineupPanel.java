@@ -10,14 +10,12 @@ import core.model.match.Weather;
 import core.model.player.Player;
 import module.playerOverview.PlayerTable;
 import module.playerOverview.SpielerUebersichtNamenTable;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -33,7 +31,6 @@ import javax.swing.event.ListSelectionListener;
  */
 public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
-	private static final long serialVersionUID = -8522462525789028842L;
 	private IAufstellungsAssistentPanel aufstellungsAssistentPanel;
 	private AufstellungsDetailPanel aufstellungsDetailPanel;
 	private LineupPositionsPanel aufstellungsPositionsPanel;

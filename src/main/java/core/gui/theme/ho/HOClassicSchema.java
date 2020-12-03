@@ -86,8 +86,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(RELOAD, "gui/bilder/Reload.png");
 		put(SIMULATEMATCH, "gui/bilder/simulate_match.png");
 		put(GETLINEUP, "gui/bilder/AufstellungUebernehmen.png");
-		put(SWAP, "gui/bilder/swap.png");
-		put(SWAPPRESSED, "gui/bilder/swap-pressed.png");
+		put(SWAP, "gui/bilder/swap.svg");
 		put(TURN, "gui/bilder/rotate.svg");
 
 		put(CLEARASSIST, "gui/bilder/Assist_leeren.png");
@@ -264,6 +263,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put("lightGreen", new Color(220, 255, 220));
 		put("lightYellow", new Color(255, 255, 200));
 		put("ho_gray1", new Color(230, 230, 230));
+		put("forest_green", new Color(34,139,34));
 	}
 
 	/**
@@ -329,7 +329,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LINEUP_POS_MIN_BG, PANEL_BG);
 		put(LINEUP_POS_MIN_BORDER, "light_gray");
 		put(SUBST_CHANGED_VALUE_BG, "lightGreen");
-
+		put(SWAP_COLOR, "forest_green");
+		put(SWAP_COLOR_PRESSED, Color.RED);
 		put(LINEUP_RATING_BORDER, Color.BLACK);
 
 		put(LINEUP_PARTIAL_TRAINING, new Color(34, 255, 255));

@@ -3,7 +3,9 @@ package module.lineup;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.model.AufstellungCBItem;
+import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
@@ -166,8 +168,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_clSubstXtr2.refresh2(filteredPlayers, m_clSubstXtr1.getPlayerId());
 		m_clSetPieceTaker.refresh(selectedPlayers, null, null);
 	 	m_clCaptain.refresh(selectedPlayers, null, null);
-	 	
-		setCompDimensions();
 
 		// Check
 		lineup.checkAufgestellteSpieler();
@@ -189,8 +189,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		final GridBagLayout layout = new GridBagLayout();
 		final GridBagConstraints constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.CENTER;
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.weightx = 0.0;
+		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
 
 
@@ -199,12 +198,13 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridx = 3;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.insets = new Insets(6, 3, 3, 3);
 		m_clKeeper = new PlayerPositionPanel(this, IMatchRoleID.keeper);
+		swapPositionsManager.addSwapCapabilityTo(m_clKeeper);
 		layout.setConstraints(m_clKeeper, constraints);
 		centerPanel.add(m_clKeeper);
-		swapPositionsManager.addSwapCapabilityTo(m_clKeeper);
-		
+
 		constraints.gridx = 1;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
@@ -359,37 +359,30 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridx = 5;
 		constraints.gridy = 3;
 		constraints.gridwidth = 2;
+		constraints.fill = GridBagConstraints.NONE;
 		constraints.anchor = GridBagConstraints.CENTER;
 		centerPanel.add(new AllTeamsPanel(), constraints);
 
 
-		// A spacer between forwards and captain
-		constraints.gridx = 0;
-		constraints.gridy = 4;
-		constraints.gridwidth = 7;
-		Box box = new Box(BoxLayout.Y_AXIS);
-		box.add(Box.createVerticalStrut(10));
-		layout.setConstraints(box, constraints);
-		centerPanel.add(box);
-
 		// Reserves Separation
 		constraints.gridx = 0;
-		constraints.gridy = 5;
+		constraints.gridy = 4;
 		constraints.gridwidth = 7;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		JLabel label1 = new JLabel(HOVerwaltung.instance().getLanguageString("moduleLineup.LineupPanel.SubstitutesLabel"), JLabel.CENTER);
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
 		label1.setBorder(border);
 		Font labelFont = label1.getFont();
+		label1.setBackground(Color.GRAY);
+		label1.setForeground(ImageUtilities.getColorForContrast(Color.GRAY));
 		label1.setFont(new Font(labelFont.getName(), Font.BOLD, 15));
 		label1.setOpaque(true);
-		label1.setBackground(Color.GRAY);
 		layout.setConstraints(label1, constraints);
 		centerPanel.add(label1);
 
 		// The reserves
 		constraints.gridx = 0;
-		constraints.gridy = 6;
+		constraints.gridy = 5;
 		constraints.gridwidth = 1;
 		m_clSubstKeeper1 = new PlayerPositionPanel(this, IMatchRoleID.substGK1);
 		layout.setConstraints(m_clSubstKeeper1, constraints);
@@ -397,14 +390,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstKeeper1);
 
 		constraints.gridx = 0;
-		constraints.gridy = 7;
+		constraints.gridy = 6;
 		constraints.gridwidth = 1;
 		m_clSubstKeeper2 = new PlayerPositionPanel(this, IMatchRoleID.substGK2);
 		layout.setConstraints(m_clSubstKeeper2, constraints);
 		centerPanel.add(m_clSubstKeeper2);
 
 		constraints.gridx = 1;
-		constraints.gridy = 6;
+		constraints.gridy = 5;
 		constraints.gridwidth = 1;
 		m_clSubstCD1 = new PlayerPositionPanel(this, IMatchRoleID.substCD1);
 		layout.setConstraints(m_clSubstCD1, constraints);
@@ -412,14 +405,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstCD1);
 
 		constraints.gridx = 1;
-		constraints.gridy = 7;
+		constraints.gridy = 6;
 		constraints.gridwidth = 1;
 		m_clSubstCD2 = new PlayerPositionPanel(this, IMatchRoleID.substCD2);
 		layout.setConstraints(m_clSubstCD2, constraints);
 		centerPanel.add(m_clSubstCD2);
 
 		constraints.gridx = 2;
-		constraints.gridy = 6;
+		constraints.gridy = 5;
 		constraints.gridwidth = 1;
 		m_clSubstWB1 = new PlayerPositionPanel(this, IMatchRoleID.substWB1);
 		layout.setConstraints(m_clSubstWB1, constraints);
@@ -427,14 +420,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstWB1);
 
 		constraints.gridx = 2;
-		constraints.gridy = 7;
+		constraints.gridy = 6;
 		constraints.gridwidth = 1;
 		m_clSubstWB2 = new PlayerPositionPanel(this, IMatchRoleID.substWB2);
 		layout.setConstraints(m_clSubstWB2, constraints);
 		centerPanel.add(m_clSubstWB2);
 
 		constraints.gridx = 3;
-		constraints.gridy = 6;
+		constraints.gridy = 5;
 		constraints.gridwidth = 1;
 		m_clSubstIM1 = new PlayerPositionPanel(this, IMatchRoleID.substIM1);
 		layout.setConstraints(m_clSubstIM1, constraints);
@@ -442,14 +435,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstIM1);
 
 		constraints.gridx = 3;
-		constraints.gridy = 7;
+		constraints.gridy = 6;
 		constraints.gridwidth = 1;
 		m_clSubstIM2 = new PlayerPositionPanel(this, IMatchRoleID.substIM2);
 		layout.setConstraints(m_clSubstIM2, constraints);
 		centerPanel.add(m_clSubstIM2);
 
 		constraints.gridx = 4;
-		constraints.gridy = 6;
+		constraints.gridy = 5;
 		constraints.gridwidth = 1;
 		m_clSubstFwd1= new PlayerPositionPanel(this, IMatchRoleID.substFW1);
 		layout.setConstraints(m_clSubstFwd1, constraints);
@@ -457,14 +450,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstFwd1);
 
 		constraints.gridx = 4;
-		constraints.gridy = 7;
+		constraints.gridy = 6;
 		constraints.gridwidth = 1;
 		m_clSubstFwd2= new PlayerPositionPanel(this, IMatchRoleID.substFW2);
 		layout.setConstraints(m_clSubstFwd2, constraints);
 		centerPanel.add(m_clSubstFwd2);
 
 		constraints.gridx = 5;
-		constraints.gridy = 6;
+		constraints.gridy = 5;
 		constraints.gridwidth = 1;
 		m_clSubstWI1 = new PlayerPositionPanel(this, IMatchRoleID.substWI1);
 		layout.setConstraints(m_clSubstWI1, constraints);
@@ -472,14 +465,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstWI1);
 
 		constraints.gridx = 5;
-		constraints.gridy = 7;
+		constraints.gridy = 6;
 		constraints.gridwidth = 1;
 		m_clSubstWI2 = new PlayerPositionPanel(this, IMatchRoleID.substWI2);
 		layout.setConstraints(m_clSubstWI2, constraints);
 		centerPanel.add(m_clSubstWI2);
 
 		constraints.gridx = 6;
-		constraints.gridy = 6;
+		constraints.gridy = 5;
 		constraints.gridwidth = 1;
 		m_clSubstXtr1 = new PlayerPositionPanel(this, IMatchRoleID.substXT1);
 		layout.setConstraints(m_clSubstXtr1, constraints);
@@ -487,7 +480,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstXtr1);
 
 		constraints.gridx = 6;
-		constraints.gridy = 7;
+		constraints.gridy = 6;
 		constraints.gridwidth = 1;
 		m_clSubstXtr2 = new PlayerPositionPanel(this, IMatchRoleID.substXT2);
 		layout.setConstraints(m_clSubstXtr2, constraints);
@@ -515,58 +508,5 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		return pos;
 	}
 
-	// just for improved visuals
-	private void setCompDimensions(){
-		Dimension dCB, dPP1L, dPP2L;
-		int widthCB = 0, heightCB = 0, widthPP1L = 0, heightPP1L = 0, widthPP2L = 0, heightPP2L = 0, positionID;
-
-		for (Component comp : centerPanel.getComponents()){
-			if(comp instanceof module.lineup.PlayerPositionPanel){
-
-				// All checkBoxes will have the same size
-				dCB = ((module.lineup.PlayerPositionPanel)comp).getPlayerComboBox().getPreferredSize();
-				widthCB = Math.max(widthCB, dCB.width);
-				heightCB = Math.max(heightCB, dCB.height);
-
-
-				positionID = ((PlayerPositionPanel) comp).getPositionsID();
-				if (aOutfieldMatchRoleID.contains(positionID)){
-
-					// Player panel with tactic boxes
-					dPP2L = comp.getPreferredSize();
-					widthPP2L = Math.max(widthPP2L, dPP2L.width);
-					heightPP2L = Math.max(heightPP2L, dPP2L.height);
-				}
-				else{
-					// Player panel without tactic boxes
-					dPP1L = comp.getPreferredSize();
-					widthPP1L = Math.max(widthPP1L, dPP1L.width);
-					heightPP1L = Math.max(heightPP1L, dPP1L.height);
-				}
-
-			}
-		}
-
-		dCB = new Dimension(widthCB, heightCB);
-		dPP1L = new Dimension(widthPP1L, heightPP1L);
-		dPP2L = new Dimension(widthPP2L, heightPP2L);
-
-		for (Component comp : centerPanel.getComponents()){
-			if(comp instanceof module.lineup.PlayerPositionPanel){
-				((module.lineup.PlayerPositionPanel)comp).getPlayerComboBox().setPreferredSize(dCB);
-
-				positionID = ((PlayerPositionPanel) comp).getPositionsID();
-				if (aOutfieldMatchRoleID.contains(positionID)){
-					// Player panel with tactic boxes
-					comp.setPreferredSize(dPP2L);
-				}
-				else{
-					// Player panel without tactic boxes
-					comp.setPreferredSize(dPP1L);
-				}
-
-			}
-		}
-	}
 
 }

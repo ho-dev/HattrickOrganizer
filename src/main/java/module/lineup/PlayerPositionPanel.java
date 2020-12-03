@@ -107,19 +107,17 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     private void initComponents() {
         final GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1.0;
+        constraints.weighty = 0.0;
 
         setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, defaultBorderColor));
 
         jlp.setLayout(layout);
 
-        // No gaps around the layeredpane.
-        FlowLayout fl = new FlowLayout();
-        fl.setHgap(0);
-        fl.setVgap(0);
-        fl.setAlignment(FlowLayout.CENTER);
-        setLayout(fl);
-
-        constraints.weightx = 1.0;
+        BorderLayout bl = new BorderLayout();
+        bl.setHgap(0);
+        bl.setVgap(0);
+        setLayout(bl);
 
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -151,7 +149,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             jlp.add(m_jcbPlayer, constraints, layerIndex);
         }
 
-        add(jlp);
+        add(jlp, BorderLayout.CENTER);
     }
 
     //-------------Listener------------------------------------------------
@@ -549,7 +547,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             final MatchRoleID position = lineup.getPositionById(m_iPositionID);
 
             if (position != null) {
-                final String nameForPosition = MatchRoleID.getNameForPosition(position.getPosition());
+                final String nameForPosition = MatchRoleID.getNameForPosition(position.getPosition()) + "  ";
 
                 // Players on the lineup
                 if (IMatchRoleID.aFieldMatchRoleID.contains(position.getId())) {
@@ -793,6 +791,10 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
      */
     protected JComboBox getPlayerComboBox() {
         return m_jcbPlayer;
+    }
+
+    protected JComboBox getTacticComboBox() {
+        return m_jcbTactic;
     }
 
     public LayoutManager getSwapLayout() {
