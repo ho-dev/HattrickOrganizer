@@ -579,10 +579,12 @@ public class Player {
 
     private String getAgeWithDaysAsString(long now)
     {
-        long hrftime = getHrfDate().getTime();
+        return getAgeWithDaysAsString(getAlter(), getAgeDays(), now);
+    }
+
+    public static String getAgeWithDaysAsString(int years, int days, long now){
+        long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
         long diff = (now - hrftime) / (1000 * 60 * 60 * 24);
-        int years = getAlter();
-        int days = getAgeDays();
         days += diff;
         while (days > 111) {
             days -= 112;
