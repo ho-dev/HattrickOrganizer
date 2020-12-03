@@ -133,7 +133,8 @@ public interface HOColorName {
 	String LINEUP_POS_MIN_BG 		= "lineup.pos.min.bg";
 	String LINEUP_POS_MIN_BORDER	= "lineup.pos.min.border";
 	String SUBST_CHANGED_VALUE_BG   = "substitution.changed.value.bg";
-
+	String SWAP_COLOR 				= "swap.color";
+	String SWAP_COLOR_PRESSED 		= "swap.color.pressed";
 	String LINEUP_PARTIAL_TRAINING  = "lineup.partial.training.bg";
 	String LINEUP_FULL_TRAINING     = "lineup.full.training.bg";
 

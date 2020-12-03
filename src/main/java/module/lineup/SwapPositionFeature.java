@@ -1,15 +1,16 @@
 package module.lineup;
 
 import core.gui.model.SpielerCBItem;
+import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
 
 import javax.swing.JComboBox;
 import javax.swing.JToggleButton;
@@ -96,14 +97,16 @@ public class SwapPositionFeature {
 
 	private void customizeSwapButton() {
 		swapButton.setToolTipText(HOVerwaltung.instance().getLanguageString("Lineup.Swap.ToolTip"));
-		swapButton.setIcon(ThemeManager.getIcon(HOIconName.SWAP));
-		swapButton.setSelectedIcon(ThemeManager.getIcon(HOIconName.SWAPPRESSED));
+		swapButton.setIcon(ImageUtilities.getSvgIcon(HOIconName.SWAP, Map.of("fillColor", HOColorName.SWAP_COLOR), 18, 18));
+		swapButton.setSelectedIcon(ImageUtilities.getSvgIcon(HOIconName.SWAP, Map.of("fillColor", HOColorName.SWAP_COLOR_PRESSED), 18, 18));
 		swapButton.setPreferredSize(new Dimension(18, 18));
 		swapButton.setMaximumSize(new Dimension(18, 18));
 		swapButton.setMinimumSize(new Dimension(18, 18));
-
-		swapButton.addActionListener(new SwapPositionFeatureItemListener(
-				this.swapPositionsManager));
+		swapButton.setBorderPainted(false);
+		swapButton.setBorder(null);
+		swapButton.setMargin(new Insets(0, 0, 0, 0));
+		swapButton.setContentAreaFilled(false);
+		swapButton.addActionListener(new SwapPositionFeatureItemListener(this.swapPositionsManager));
 	}
 
 	private void addButtonToPanel(PlayerPositionPanel spielerPositionsPanel) {
