@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 import static core.util.Helper.parseDate;
+import static java.lang.Math.max;
 
 public class YouthPlayer {
     private int hrfid;
@@ -49,10 +50,6 @@ public class YouthPlayer {
 
     public YouthPlayer() {
 
-    }
-
-    private Timestamp getFetchDate(){
-        return HOVerwaltung.instance().getModel().getBasics().getDatum();
     }
 
     public List<ScoutComment> getScoutComments(){
@@ -124,6 +121,12 @@ public class YouthPlayer {
 
     public int getCanBePromotedIn() {
         return canBePromotedIn;
+    }
+
+    public int getCanBePromotedInAtDate(long date){
+        long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
+        long diff = (date - hrftime) / (1000 * 60 * 60 * 24);
+        return max(0,canBePromotedIn-(int)diff);
     }
 
     public void setCanBePromotedIn(int canBePromotedIn) {
