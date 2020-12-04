@@ -11,6 +11,9 @@ import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.model.player.YouthPlayer;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class YouthPlayerOverviewTableModel extends HOTableModel {
@@ -37,7 +40,13 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 new YouthPlayerColumn(1, "ls.player.age") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new ColorLabelEntry("" + player.getAgeYears() + "." + player.getAgeDays());
+                        return new ColorLabelEntry(Player.getAgeWithDaysAsString(player.getAgeYears(), player.getAgeDays(), new Date().getTime()));
+                    }
+                },
+                new YouthPlayerColumn(2, "ls.player.arrival") {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
+                        return new ColorLabelEntry(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(player.getArrivalDate()));
                     }
                 },
                 new YouthPlayerColumn(99, "ls.player.id", 0) {

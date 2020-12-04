@@ -56,7 +56,7 @@ public class TeamReport {
      */
     public TeamReport(List<MatchDetail> matchDetails) {
         for (MatchDetail m:matchDetails ) {
-            addMatch(m, ModuleConfig.instance().getBoolean(SystemManager.ISSHOWUNAVAILABLE));
+            addMatch(m, ModuleConfig.instance().getBoolean(SystemManager.ISSHOWUNAVAILABLE, true));
         }
         this.averageRatingslineup = new TeamLineupBuilder(this)
                 .setName(HOVerwaltung.instance().getLanguageString("Durchschnitt")).build();
@@ -68,7 +68,7 @@ public class TeamReport {
      * @param matchDetail The match of the report is stored in averageRatingslineup
      */
     private TeamReport(MatchDetail matchDetail) {
-        addMatch(matchDetail,ModuleConfig.instance().getBoolean(SystemManager.ISSHOWUNAVAILABLE));
+        addMatch(matchDetail,ModuleConfig.instance().getBoolean(SystemManager.ISSHOWUNAVAILABLE, true));
         this.averageRatingslineup = new TeamLineupBuilder(this).setMatchDetail(matchDetail).build();
     }
 

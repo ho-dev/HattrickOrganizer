@@ -1,6 +1,7 @@
 package core.model.player;
 
 import core.db.DBManager;
+import core.model.HOVerwaltung;
 import core.training.YouthTrainerComment;
 import core.util.HOLogger;
 import module.training.Skills;
@@ -48,6 +49,10 @@ public class YouthPlayer {
 
     public YouthPlayer() {
 
+    }
+
+    private Timestamp getFetchDate(){
+        return HOVerwaltung.instance().getModel().getBasics().getDatum();
     }
 
     public List<ScoutComment> getScoutComments(){
@@ -311,6 +316,7 @@ public class YouthPlayer {
             this.trainerComments = DBManager.instance().loadYouthTrainerComments(this.id);
         }
         return this.trainerComments;
+
     }
 
     public String getFullName() {

@@ -92,11 +92,11 @@ final class MatchDetailsTable extends AbstractTable {
 	/**
 	 * Gibt die MatchDetails zu einem Match zurück
 	 */
-	Matchdetails getMatchDetails(int matchId) {
+	Matchdetails loadMatchDetails(int sourcesystem, int matchId) {
 		final Matchdetails details = new Matchdetails();
 
 		try {
-			String sql = "SELECT * FROM "+getTableName()+" WHERE MatchID=" + matchId;
+			String sql = "SELECT * FROM "+getTableName()+" WHERE SourceSystem=" + sourcesystem + " AND MatchID=" + matchId;
 			ResultSet rs = adapter.executeQuery(sql);
 
 			if (rs.first()) {
