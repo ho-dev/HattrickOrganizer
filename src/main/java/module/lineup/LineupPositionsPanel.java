@@ -11,6 +11,7 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
+import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
@@ -63,6 +64,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private final SwapPositionsManager swapPositionsManager = new SwapPositionsManager(this);
 	private final IAufstellungsAssistentPanel assistantPanel;
 	private ComboBoxTitled m_jpTeamAttitude;
+	private ComboBoxTitled m_jpTactic;
 	
 
 	public LineupPositionsPanel(LineupPanel panel) {
@@ -206,6 +208,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		layout.setConstraints(m_clKeeper, constraints);
 		centerPanel.add(m_clKeeper);
 
+		// TEAM ATTITUDE ================================================================
 		JComboBox<CBItem> m_jcbTeamAttitude = new JComboBox<>(new CBItem[]{
 				new CBItem(
 						HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool"),
@@ -220,6 +223,29 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridx = 4;
 		layout.setConstraints(m_jpTeamAttitude, constraints);
 		centerPanel.add(m_jpTeamAttitude);
+
+		// TACTIC ================================================================
+		JComboBox<CBItem> m_jcbTactic = new JComboBox<>(new CBItem[]{
+				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_NORMAL),
+						IMatchDetails.TAKTIK_NORMAL),
+				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_PRESSING),
+						IMatchDetails.TAKTIK_PRESSING),
+				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_KONTER),
+						IMatchDetails.TAKTIK_KONTER),
+				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_MIDDLE),
+						IMatchDetails.TAKTIK_MIDDLE),
+				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_WINGS),
+						IMatchDetails.TAKTIK_WINGS),
+				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_CREATIVE),
+						IMatchDetails.TAKTIK_CREATIVE),
+				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_LONGSHOTS),
+						IMatchDetails.TAKTIK_LONGSHOTS) });
+
+		m_jpTactic = new ComboBoxTitled(getLangStr("ls.team.tactic"), m_jcbTactic, true);
+
+		constraints.gridx = 5;
+		layout.setConstraints(m_jpTactic, constraints);
+		centerPanel.add(m_jpTactic);
 
 
 		constraints.gridx = 1;
