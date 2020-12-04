@@ -29,6 +29,10 @@ public class SolarizedLightTheme extends BaseTheme {
             UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
 
+            // DEFAULT COLOR
+            ThemeManager.instance().put(HOColorName.RED, defaults.getColor("palette.red"));
+
+
             setFont(UserParameter.instance().schriftGroesse);
             ThemeManager.instance().put(HOBooleanName.IMAGEPANEL_BG_PAINTED, false);
 

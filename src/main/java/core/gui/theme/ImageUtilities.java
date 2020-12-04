@@ -772,11 +772,16 @@ public class ImageUtilities {
 	}
 
 
-	private static String getHexColor(Color colour) {
+	public static String getHexColor(Color colour) {
 		return "#" + String.format("%1$02X", colour.getRed()) +
 				String.format("%1$02X", colour.getGreen()) +
 				String.format("%1$02X", colour.getBlue());
 	}
+
+	public static String getHexColor(String colour) {
+		return getHexColor(ThemeManager.getColor(colour));
+	}
+
 
 	public static Color getColorFromHex(String hexColour) {
 		return new Color(Integer.valueOf(hexColour.substring(1, 3), 16),

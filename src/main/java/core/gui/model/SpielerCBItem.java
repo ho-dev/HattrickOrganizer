@@ -27,7 +27,7 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
         m_clPlayer = player;
         m_fPositionsBewertung = positionRating;
         m_bAlternativePosition = false;
-        m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true);
+        m_clEntry = new SpielerLabelEntry(null, null, 0f, false, true);
     }
 
     public SpielerCBItem(String text, float positionRating, @Nullable Player player, boolean useCustomText, boolean multiLine) {
@@ -37,9 +37,9 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
         m_bAlternativePosition = false;
         m_bMultiLine = multiLine;
         if (useCustomText) {
-            m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true, true, text, m_bMultiLine);
+            m_clEntry = new SpielerLabelEntry(null, null, 0f, false, true, true, text, m_bMultiLine);
         } else {
-            m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true, false, "", m_bMultiLine);
+            m_clEntry = new SpielerLabelEntry(null, null, 0f, false, true, false, "", m_bMultiLine);
         }
     }
 

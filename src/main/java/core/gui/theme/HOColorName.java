@@ -1,11 +1,16 @@
 package core.gui.theme;
 
 
+import javax.print.DocFlavor;
+
 /**
  * Constants for Colors used in HO.
  * Modules can use them too.
  */
 public interface HOColorName {
+
+	// DEFAULT COLOR
+    String RED 							= "default.red";
 
 	String PANEL_BG 					= "panel.bg";
 	String PANEL_BORDER					= "panel.border";

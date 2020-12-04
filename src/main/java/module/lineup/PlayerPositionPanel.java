@@ -41,14 +41,12 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
     private final JComboBox<SpielerCBItem> m_jcbPlayer = new JComboBox<>();
     private final JComboBox<CBItem> m_jcbTactic = new JComboBox<>();
     private final JLabel m_jlPosition = new JLabel();
-    private final JLabel m_jlPlayer = new JLabel();
     private final SpielerCBItem m_clSelectedPlayer = new SpielerCBItem("", 0f, null, false, true);
     private final Updateable m_clUpdater;
     private SpielerCBItem[] m_clCBItems = new SpielerCBItem[0];
     private final int m_iPositionID;
 
     private int playerId = -1;
-    private int tacticOrder = -1;
 
     private final GridBagLayout layout = new GridBagLayout();
     private final JLayeredPane jlp = new JLayeredPane();
@@ -193,7 +191,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                 //Adjust tactic values
                 setTaktik(getTactic(), player);
             } else if (itemEvent.getSource().equals(m_jcbTactic)) {
-                lineup.getPositionById(m_iPositionID).setTaktik(getTactic());
+                Objects.requireNonNull(lineup.getPositionById(m_iPositionID)).setTaktik(getTactic());
             }
 
             if (player != null) {
@@ -209,7 +207,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
                 if (player != null) {
                         String playerName = player.getFullName();
                         setToolTipText(playerName);
-                        m_jlPlayer.setToolTipText(playerName);
                         m_jlPosition.setToolTipText(playerName);
                         m_jcbPlayer.setToolTipText(playerName);
                     }
@@ -229,7 +226,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             if (selectedPlayer != null) {
                 playerId = selectedPlayer.getSpielerID();
             }
-            tacticOrder = -1;
 
             // Filter keeper from the player vector (can't be sp taker)
             // Make sure the incoming player list is not modified, it
@@ -254,30 +250,25 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             if (selectedPlayer != null) {
                 playerId = selectedPlayer.getSpielerID();
             }
-            tacticOrder = -1;
+
         } else {
             //Get currently setup player
             final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
                     .getPositionById(m_iPositionID);
 
             if (position != null) {
-                selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position
-                        .getSpielerId());
+                selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position.getSpielerId());
 
                 if (selectedPlayer != null) {
                     m_jcbPlayer.setEnabled(true); // To be sure
                     playerId = selectedPlayer.getSpielerID();
                 } else {
                     // We want to disable the player selection box if there is already 11 players on the field and this is an on field position.
-                    if ((!HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().hasFreePosition()) &&
-                            (m_iPositionID >= IMatchRoleID.keeper) && (m_iPositionID < IMatchRoleID.startReserves)) {
-                        m_jcbPlayer.setEnabled(false);
-                    } else {
-                        // And enable empty positions if there is room in the lineup
-                        m_jcbPlayer.setEnabled(true);
-                    }
+                    // And enable empty positions if there is room in the lineup
+                    m_jcbPlayer.setEnabled((HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().hasFreePosition()) ||
+                            (m_iPositionID < IMatchRoleID.keeper) || (m_iPositionID >= IMatchRoleID.startReserves));
                 }
-                tacticOrder = position.getTaktik();
+
                 setTaktik(position.getTaktik(), selectedPlayer);
             }
         }
@@ -407,18 +398,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         //Listener wieder hinzu
         m_jcbPlayer.addItemListener(this);
 
-        //Minimized
-        if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getPlayer() != null)) {
-            m_jlPlayer.setText(m_clSelectedPlayer.getPlayer().getShortName());
-            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getPlayer().getSpielerID()),
-                    m_clSelectedPlayer.getPlayer().getTrikotnummer()));
-        } else {
-            m_jlPlayer.setText("");
-            m_jlPlayer.setIcon(null);
-        }
-
         setTaktik(getTactic(), aktuellerPlayer);
-
         setPlayerTooltip(m_clSelectedPlayer.getPlayer());
     }
 
@@ -502,16 +482,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         //Listener wieder hinzu
         m_jcbPlayer.addItemListener(this);
 
-        //Minimized
-        if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getPlayer() != null)) {
-            m_jlPlayer.setText(m_clSelectedPlayer.getPlayer().getShortName());
-            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionBySpielerId(m_clSelectedPlayer.getPlayer().getSpielerID()),
-                    m_clSelectedPlayer.getPlayer().getTrikotnummer()));
-        } else {
-            m_jlPlayer.setText("");
-            m_jlPlayer.setIcon(null);
-        }
-
         setTaktik(getTactic(), selectedPlayer);
     }
 
@@ -547,7 +517,19 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             final MatchRoleID position = lineup.getPositionById(m_iPositionID);
 
             if (position != null) {
-                final String nameForPosition = MatchRoleID.getNameForPosition(position.getPosition()) + "  ";
+
+                Font defaultFont = m_jlPosition.getFont();
+                int fontSize = defaultFont.getSize();
+                String fontFamilly = defaultFont.getFamily();
+                String hexColor = ImageUtilities.getHexColor(HOColorName.RED);
+
+                final String  nameForPosition1 = "<html> <font family=" + fontFamilly +  "size=" + fontSize + "pt>";
+                final String  nameForPosition2 = "</font> <font family=" + fontFamilly + "size=" + fontSize + "pt color=" + hexColor + ">&nbsp&nbsp";
+                final String  nameForPosition3 = "</font></html>";
+
+//                final String nameForPosition = MatchRoleID.getNameForPositionWithoutTactic(position.getPosition()) + " " + getTacticSymbol();
+
+                final String nameForPosition = nameForPosition1 + MatchRoleID.getNameForPositionWithoutTactic(position.getPosition()) + nameForPosition2 + getTacticSymbol() + nameForPosition3;
 
                 // Players on the lineup
                 if (IMatchRoleID.aFieldMatchRoleID.contains(position.getId())) {
@@ -575,16 +557,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
             m_jlPosition.setFont(getFont().deriveFont(Font.BOLD));
         }
 
-        //Minimized
-        if ((m_clSelectedPlayer != null) && (m_clSelectedPlayer.getPlayer() != null)) {
-            m_jlPlayer.setText(m_clSelectedPlayer.getPlayer().getShortName());
-            m_jlPlayer.setIcon(ImageUtilities.getJerseyIcon(lineup.getPositionBySpielerId(m_clSelectedPlayer.getPlayer().getSpielerID()),
-                    m_clSelectedPlayer.getPlayer()
-                            .getTrikotnummer()));
-        } else {
-            m_jlPlayer.setText("");
-            m_jlPlayer.setIcon(null);
-        }
     }
 
     /**
@@ -594,98 +566,61 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         m_jcbTactic.removeAllItems();
 
         switch (m_iPositionID) {
-            case IMatchRoleID.keeper: {
-                m_jcbTactic.addItem(new CBItem(HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal"),
-                        IMatchRoleID.NORMAL));
-                break;
+            case IMatchRoleID.keeper -> {
+                m_jcbTactic.addItem(new CBItem(HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal"), IMatchRoleID.NORMAL));
             }
-
-            case IMatchRoleID.rightBack:
-            case IMatchRoleID.leftBack: {
+            case IMatchRoleID.rightBack, IMatchRoleID.leftBack -> {
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.offensive"), IMatchRoleID.OFFENSIVE);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.defensive"), IMatchRoleID.DEFENSIVE);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.towardsmiddle"), IMatchRoleID.TOWARDS_MIDDLE);
-                break;
             }
-
-            case IMatchRoleID.rightCentralDefender:
-            case IMatchRoleID.leftCentralDefender: {
+            case IMatchRoleID.rightCentralDefender, IMatchRoleID.leftCentralDefender -> {
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.offensive"), IMatchRoleID.OFFENSIVE);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.towardswing"), IMatchRoleID.TOWARDS_WING);
-                break;
             }
-
-            case IMatchRoleID.middleCentralDefender: {
+            case IMatchRoleID.middleCentralDefender -> {
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.offensive"), IMatchRoleID.OFFENSIVE);
-                break;
             }
-
-            case IMatchRoleID.rightInnerMidfield:
-            case IMatchRoleID.leftInnerMidfield: {
+            case IMatchRoleID.rightInnerMidfield, IMatchRoleID.leftInnerMidfield -> {
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.offensive"), IMatchRoleID.OFFENSIVE);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.defensive"), IMatchRoleID.DEFENSIVE);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.towardswing"), IMatchRoleID.TOWARDS_WING);
-                break;
             }
-
-            case IMatchRoleID.centralInnerMidfield: {
+            case IMatchRoleID.centralInnerMidfield -> {
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.offensive"), IMatchRoleID.OFFENSIVE);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.defensive"), IMatchRoleID.DEFENSIVE);
-                break;
             }
-
-            case IMatchRoleID.leftWinger:
-            case IMatchRoleID.rightWinger: {
+            case IMatchRoleID.leftWinger, IMatchRoleID.rightWinger -> {
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.offensive"), IMatchRoleID.OFFENSIVE);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.defensive"), IMatchRoleID.DEFENSIVE);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.towardsmiddle"), IMatchRoleID.TOWARDS_MIDDLE);
-                break;
             }
-
-            case IMatchRoleID.rightForward:
-            case IMatchRoleID.leftForward: {
+            case IMatchRoleID.rightForward, IMatchRoleID.leftForward -> {
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.defensive"), IMatchRoleID.DEFENSIVE);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.towardswing"), IMatchRoleID.TOWARDS_WING);
-                break;
             }
-
-            case IMatchRoleID.centralForward: {
+            case IMatchRoleID.centralForward -> {
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
                 addTactic(aktuellerPlayer, HOVerwaltung.instance().getLanguageString("ls.player.behaviour.defensive"), IMatchRoleID.DEFENSIVE);
-                break;
             }
-
-
-            case IMatchRoleID.substCD1:
-            case IMatchRoleID.substCD2:
-            case IMatchRoleID.substFW1:
-            case IMatchRoleID.substFW2:
-            case IMatchRoleID.substIM1:
-            case IMatchRoleID.substIM2:
-            case IMatchRoleID.substGK1:
-            case IMatchRoleID.substGK2:
-            case IMatchRoleID.substWI1:
-            case IMatchRoleID.substWI2: {
+            case IMatchRoleID.substCD1, IMatchRoleID.substCD2, IMatchRoleID.substFW1, IMatchRoleID.substFW2, IMatchRoleID.substIM1, IMatchRoleID.substIM2, IMatchRoleID.substGK1, IMatchRoleID.substGK2, IMatchRoleID.substWI1, IMatchRoleID.substWI2 -> {
                 m_jcbTactic.addItem(new CBItem(HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal"),
                         IMatchRoleID.NORMAL));
-                break;
             }
-
-            default:
-                m_jcbTactic.addItem(new CBItem(HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal"),
-                        IMatchRoleID.NORMAL));
+            default -> m_jcbTactic.addItem(new CBItem(HOVerwaltung.instance().getLanguageString("ls.player.behaviour.normal"),
+                    IMatchRoleID.NORMAL));
         }
     }
 
 
-    private void addTactic(Player currentPlayer, String text, byte playerPosition) {
+    private void addTactic(@Nullable Player currentPlayer, String text, byte playerPosition) {
         if (currentPlayer != null) {
             text += " ("
                     + currentPlayer.calcPosValue(MatchRoleID.getPosition(m_iPositionID,
@@ -750,9 +685,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         return playerId;
     }
 
-    public int getTacticOrder() {
-        return tacticOrder;
-    }
 
     // return a tactic symbol if a player is offensive, defensive, towards wings etc.
     // used for lineup export
@@ -791,10 +723,6 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
      */
     protected JComboBox getPlayerComboBox() {
         return m_jcbPlayer;
-    }
-
-    protected JComboBox getTacticComboBox() {
-        return m_jcbTactic;
     }
 
     public LayoutManager getSwapLayout() {

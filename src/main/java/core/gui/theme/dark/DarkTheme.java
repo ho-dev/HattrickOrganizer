@@ -11,6 +11,7 @@ public abstract class DarkTheme extends BaseTheme {
     public boolean enableTheme() {
         setFont(UserParameter.instance().schriftGroesse);
         ThemeManager.instance().put(HOBooleanName.IMAGEPANEL_BG_PAINTED, false);
+
         return true;
     }
 

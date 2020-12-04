@@ -199,7 +199,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = new Insets(6, 3, 3, 3);
+		constraints.insets = new Insets(3, 3, 3, 3);
 		m_clKeeper = new PlayerPositionPanel(this, IMatchRoleID.keeper);
 		swapPositionsManager.addSwapCapabilityTo(m_clKeeper);
 		layout.setConstraints(m_clKeeper, constraints);

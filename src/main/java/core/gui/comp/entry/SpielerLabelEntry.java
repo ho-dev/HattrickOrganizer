@@ -176,6 +176,9 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         spezPanel.setOpaque(false);
 
         if (!m_bMultiLine) {
+
+            // Used in lineup panel ==================
+
             // Weather effect
             m_jlWeatherEffect.setBackground(ColorLabelEntry.BG_STANDARD);
             m_jlWeatherEffect.setOpaque(false);
@@ -204,7 +207,10 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             constraints.anchor = GridBagConstraints.EAST;
             constraints.weightx = 0.0;
             constraints.gridx = 3;
-        } else {
+        }
+        else {
+
+            // Used in player overview ==================
             //Training
             m_jlTrainUp.setBackground(ColorLabelEntry.BG_STANDARD);
             m_jlTrainUp.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -311,7 +317,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             if (m_bCustomName) {
                 m_jlName.setText(m_sCustomNameString);
             } else {
-                m_jlName.setText(m_clPlayer.getShortName());
+                m_jlName.setText(m_clPlayer.getLastName());
             }
 
             showJersey();
@@ -322,7 +328,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
             m_jlGroup.setIcon(null);
         }
 
-        m_clComponent.setPreferredSize(new Dimension(PLAYER_LABEL_ENTRY_WIDTH, PLAYER_LABEL_ENTRY_HEIGHT));
+//        m_clComponent.setPreferredSize(new Dimension(PLAYER_LABEL_ENTRY_WIDTH, PLAYER_LABEL_ENTRY_HEIGHT));
     }
 
     private void showJersey() {

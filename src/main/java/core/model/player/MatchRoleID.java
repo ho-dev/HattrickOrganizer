@@ -345,95 +345,55 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		return "";
 	}
 
-	/**
-	 * Returns the display name for this position.
-	 * @return the name of the position
-	 */
-	public String getPositionName() {
-		return getNameForPosition(getPosition());
-	}
+
 
 	/**
-	 * Gibt zu einer Positionsid den Namen zurück
+	 * Returns the name of a positionsid
 	 */
 	public static String getNameForPosition(byte posId) {
 
-		switch (posId) {
-		case KEEPER:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.keeper");
+		return switch (posId) {
+			case KEEPER -> getLangStr("ls.player.position.keeper");
+			case CENTRAL_DEFENDER -> getLangStr("ls.player.position.centraldefender");
+			case CENTRAL_DEFENDER_TOWING -> getLangStr("ls.player.position.centraldefendertowardswing");
+			case CENTRAL_DEFENDER_OFF -> getLangStr("ls.player.position.centraldefenderoffensive");
+			case BACK -> getLangStr("ls.player.position.wingback");
+			case BACK_TOMID -> getLangStr("ls.player.position.wingbacktowardsmiddle");
+			case BACK_OFF -> getLangStr("ls.player.position.wingbackoffensive");
+			case BACK_DEF -> getLangStr("ls.player.position.wingbackdefensive");
+			case MIDFIELDER -> getLangStr("ls.player.position.innermidfielder");
+			case MIDFIELDER_OFF -> getLangStr("ls.player.position.innermidfielderoffensive");
+			case MIDFIELDER_DEF -> getLangStr("ls.player.position.innermidfielderdefensive");
+			case MIDFIELDER_TOWING -> getLangStr("ls.player.position.innermidfieldertowardswing");
+			case WINGER -> getLangStr("ls.player.position.winger");
+			case WINGER_TOMID -> getLangStr("ls.player.position.wingertowardsmiddle");
+			case WINGER_OFF -> getLangStr("ls.player.position.wingeroffensive");
+			case WINGER_DEF -> getLangStr("ls.player.position.wingerdefensive");
+			case FORWARD -> getLangStr("ls.player.position.forward");
+			case FORWARD_DEF -> getLangStr("ls.player.position.forwarddefensive");
+			case FORWARD_DEF_TECH -> getLangStr("ls.player.position.forwarddefensivetechnical");
+			case FORWARD_TOWING -> getLangStr("ls.player.position.forwardtowardswing");
+			case EXTRA -> getLangStr("ls.player.position.extra_substitute");
+			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> getLangStr("Ausgewechselt");
+			case UNSELECTABLE -> getLangStr("Unselectable");
+			default -> getLangStr("Unbestimmt");
+		};
+	}
 
-		case CENTRAL_DEFENDER:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.centraldefender");
+	public static String getNameForPositionWithoutTactic(byte posId) {
 
-		case CENTRAL_DEFENDER_TOWING:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.centraldefendertowardswing");
-
-		case CENTRAL_DEFENDER_OFF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.centraldefenderoffensive");
-
-		case BACK:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.wingback");
-
-		case BACK_TOMID:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.wingbacktowardsmiddle");
-
-		case BACK_OFF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.wingbackoffensive");
-
-		case BACK_DEF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.wingbackdefensive");
-
-		case MIDFIELDER:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.innermidfielder");
-
-		case MIDFIELDER_OFF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.innermidfielderoffensive");
-
-		case MIDFIELDER_DEF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.innermidfielderdefensive");
-
-		case MIDFIELDER_TOWING:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.innermidfieldertowardswing");
-
-		case WINGER:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.winger");
-
-		case WINGER_TOMID:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.wingertowardsmiddle");
-
-		case WINGER_OFF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.wingeroffensive");
-
-		case WINGER_DEF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.wingerdefensive");
-
-		case FORWARD:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.forward");
-
-		case FORWARD_DEF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.forwarddefensive");
-
-		case FORWARD_DEF_TECH:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.forwarddefensivetechnical");
-
-		case FORWARD_TOWING:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.forwardtowardswing");
-
-		case EXTRA:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position.extra_substitute");
-
-		case SUBSTITUTED1:
-		case SUBSTITUTED2:
-		case SUBSTITUTED3:
-			return HOVerwaltung.instance().getLanguageString("Ausgewechselt");
-
-		case UNSELECTABLE:
-			return HOVerwaltung.instance().getLanguageString("Unselectable");
-
-
-		default:
-			return HOVerwaltung.instance().getLanguageString("Unbestimmt");
-		}
+		return switch (posId) {
+			case KEEPER -> getLangStr("ls.player.position.keeper");
+			case CENTRAL_DEFENDER, CENTRAL_DEFENDER_TOWING, CENTRAL_DEFENDER_OFF -> getLangStr("ls.player.position.centraldefender");
+			case BACK, BACK_TOMID, BACK_OFF, BACK_DEF -> getLangStr("ls.player.position.wingback");
+			case MIDFIELDER, MIDFIELDER_OFF, MIDFIELDER_DEF, MIDFIELDER_TOWING -> getLangStr("ls.player.position.innermidfielder");
+			case WINGER, WINGER_TOMID, WINGER_OFF, WINGER_DEF -> getLangStr("ls.player.position.winger");
+			case FORWARD, FORWARD_DEF, FORWARD_DEF_TECH, FORWARD_TOWING -> getLangStr("ls.player.position.forward");
+			case EXTRA -> getLangStr("ls.player.position.extra_substitute");
+			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> getLangStr("Ausgewechselt");
+			case UNSELECTABLE -> getLangStr("Unselectable");
+			default -> getLangStr("Unbestimmt");
+		};
 	}
 
 
@@ -893,4 +853,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		return result;
 
 	}
+
+	private static String getLangStr(String key) {return HOVerwaltung.instance().getLanguageString(key);}
+	
 }

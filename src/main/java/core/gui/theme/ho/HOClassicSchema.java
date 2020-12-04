@@ -1,5 +1,6 @@
 package core.gui.theme.ho;
 
+import com.github.weisj.darklaf.icons.IconLoader;
 import core.gui.theme.*;
 import core.util.HOLogger;
 import java.awt.Color;
@@ -271,6 +272,10 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 	 *
 	 */
 	private void initColors() {
+		// basic color;
+		put(RED, new Color(255, 0, 0));
+
+
 		put(PANEL_BG, "white");
 		put(PANEL_BORDER, "dark_gray");
 		put(PLAYER_POSITION_PANEL_BORDER, "light_gray");

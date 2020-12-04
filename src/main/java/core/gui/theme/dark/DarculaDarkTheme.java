@@ -31,6 +31,9 @@ public class DarculaDarkTheme extends DarkTheme {
 
             final Color neutralGrey = new Color(80, 80, 80);
 
+            // DEFAULT COLOR
+            ThemeManager.instance().put(HOColorName.RED, defaults.getColor("palette.red"));
+
             // Use defaults from LAF
             ThemeManager.instance().put(HOColorName.TABLEENTRY_FG, defaults.getColor("Label.foreground"));
             ThemeManager.instance().put(HOColorName.LABEL_FG, defaults.getColor("Label.foreground"));
