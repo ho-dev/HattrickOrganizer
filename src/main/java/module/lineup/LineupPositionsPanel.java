@@ -1,6 +1,7 @@
 package module.lineup;
 
 import core.datatype.CBItem;
+import core.db.user.UserManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.panel.ComboBoxTitled;
@@ -15,18 +16,24 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
+import core.util.Helper;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javax.swing.*;
 import javax.swing.border.Border;
 
 /**
  * Create the main panel of Lineup module
  */
-public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel implements
-		core.gui.Refreshable, core.gui.Updateable, ActionListener {
+public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel implements ItemListener, core.gui.Refreshable, core.gui.Updateable, ActionListener {
 
 	private final LineupPanel m_clLineupPanel;
 	private final JButton m_jbFlipSide = new JButton(ThemeManager.getIcon(HOIconName.RELOAD));
@@ -63,8 +70,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private javax.swing.JLayeredPane centerPanel;
 	private final SwapPositionsManager swapPositionsManager = new SwapPositionsManager(this);
 	private final IAufstellungsAssistentPanel assistantPanel;
+	private int m_iStyleOfPlay;
 	private ComboBoxTitled m_jpTeamAttitude;
 	private ComboBoxTitled m_jpTactic;
+	private ComboBoxTitled m_jpStyleOfPlay;
+	JComboBox<CBItem> m_jcbStyleOfPlay;
+	final String offensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.offensive");
+	final String defensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.defensive");
+	final String neutral_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.neutral");
 	
 
 	public LineupPositionsPanel(LineupPanel panel) {
@@ -248,6 +261,19 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		centerPanel.add(m_jpTactic);
 
 
+		// Style of Play ================================================================
+		m_jcbStyleOfPlay = new JComboBox<>();
+		m_iStyleOfPlay = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay();
+		updateStyleOfPlayComboBox(m_iStyleOfPlay);
+
+		m_jpStyleOfPlay = new ComboBoxTitled(getLangStr("ls.team.styleofPlay"), m_jcbStyleOfPlay, true);
+
+		constraints.gridx = 6;
+		layout.setConstraints(m_jpStyleOfPlay, constraints);
+		centerPanel.add(m_jpStyleOfPlay);
+
+
+		// WBr ==========================================================================
 		constraints.gridx = 1;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
@@ -531,7 +557,45 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		centerPanel.add(m_clSubstXtr2);
 
 		add(centerPanel, BorderLayout.CENTER);
+
+		addItemListeners();
 	}
+
+
+	@Override
+	public void itemStateChanged(ItemEvent event) {
+
+		// The item affected by the event.
+		Object item = event.getItem();
+		if (event.getStateChange() == ItemEvent.SELECTED) {
+			System.out.println(item.toString() + " selected.");
+		}
+
+		if (event.getStateChange() == ItemEvent.DESELECTED) {
+			System.out.println(item.toString() + " deselected.");
+		}
+
+		if (event.getStateChange() == ItemEvent.SELECTED) {
+			if (event.getSource().equals(m_jcbStyleOfPlay)) {
+				// StyleOfPlay changed (directly or indirectly)
+				m_iStyleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "m_jcbStyleOfPlay should be not null")).getId();
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(m_iStyleOfPlay);
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(((CBItem) m_jcbStyleOfPlay.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
+			}
+		}
+
+		HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setRatings();
+
+	}
+
+	/**
+	 * Add all item listeners to the combo boxes
+	 */
+	private void addItemListeners() {
+		m_jcbStyleOfPlay.addItemListener(this);
+	}
+
 	// get all positions
 	public ArrayList<PlayerPositionPanel> getAllPositions() {
 		ArrayList<PlayerPositionPanel> pos = new ArrayList<PlayerPositionPanel>(14);
@@ -554,5 +618,88 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 	private String getLangStr(String key) {return HOVerwaltung.instance().getLanguageString(key);}
 
+	private List<Integer> getValidStyleOfPlayValues()
+	{
+		int trainer;
+		int tacticalAssistants;
+		try {
+			trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
+			tacticalAssistants = HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
+
+		} catch (Exception e) {
+			trainer = 2;
+			tacticalAssistants = 0;
+			HOLogger.instance().error(getClass(), "Model not ready, put default value " + trainer + " for trainer and "  + tacticalAssistants + " for tactical Assistants.");
+		}
+
+		int min=-10, max=10;
+
+		switch (trainer) {
+			case 0 -> max = -10 + 2 * tacticalAssistants;  // Defensive
+			case 1 -> min = 10 - 2 * tacticalAssistants;   // Offensive
+			case 2 -> {     			                   // Neutral
+				min = - tacticalAssistants;
+				max = tacticalAssistants;
+			}
+			default -> HOLogger.instance().error(getClass(), "Illegal trainer type found: " + trainer);
+		}
+
+		return IntStream.rangeClosed(min, max).boxed().collect(Collectors.toList());
+	}
+
+	// each time updateStyleOfPlayBox gets called we need to add all elements back so that we can load stored lineups
+	// so we need addAllStyleOfPlayItems() after every updateStyleOfPlayBox()
+	public void updateStyleOfPlayComboBox(int oldValue)
+	{
+		// NT Team can select whatever Style of Play they like
+		if (!UserManager.instance().getCurrentUser().isNtTeam()) {
+			// remove all combo box items and add new ones.
+			List<Integer> legalValues = getValidStyleOfPlayValues();
+
+			m_jcbStyleOfPlay.removeAllItems();
+
+			for (int value : legalValues) {
+				CBItem cbItem;
+
+				if (value == 0) {
+					cbItem = new CBItem(neutral_sop, value);
+				} else if (value > 0) {
+					cbItem = new CBItem((value * 10) + "% " + offensive_sop, value);
+				} else {
+					cbItem = new CBItem((Math.abs(value) * 10) + "% " + defensive_sop, value);
+				}
+				m_jcbStyleOfPlay.addItem(cbItem);
+
+			}
+			// Set trainer default value
+			setStyleOfPlay(getDefaultTrainerStyleOfPlay());
+			// Attempt to set the old value. If it is not possible it will do nothing.
+			setStyleOfPlay(oldValue);
+		}
+	}
+
+	public void setStyleOfPlay(int style){
+		Helper.setComboBoxFromID(m_jcbStyleOfPlay, style);
+	}
+
+	private int getDefaultTrainerStyleOfPlay() {
+		int result, trainer;
+
+		try {
+			trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
+		}
+		catch (Exception e) {
+			return 0;  // Happens for instance with empty db
+		}
+
+		switch (trainer) {
+			case 0 -> result = -10; // Defensive
+			case 1 -> result = 10; // Offensive
+			case 2 -> result = 0;  // Neutral
+			default -> {HOLogger.instance().error(getClass(), "Illegal trainer type found: " + trainer); result = 0;}
+			}
+
+			return result;
+	}
 
 }

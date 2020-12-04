@@ -238,7 +238,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		constraints2.insets = new Insets(20,0,0,0);  //top padding
 		c_jcbMatchesFilter = new JComboBox(getMatchFilterItems());
 		c_jcbMatchesFilter.setPreferredSize(new Dimension(150, 25));
-		Helper.markierenComboBox(c_jcbMatchesFilter, UserParameter.instance().statistikSpieleFilter);
+		Helper.setComboBoxFromID(c_jcbMatchesFilter, UserParameter.instance().statistikSpieleFilter);
 		c_jcbMatchesFilter.setFont(c_jcbMatchesFilter.getFont().deriveFont(Font.BOLD));
 		layout2.setConstraints(c_jcbMatchesFilter, constraints2);
 		panel2.add(c_jcbMatchesFilter);

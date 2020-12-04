@@ -13,7 +13,6 @@ import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.MatchesColumnModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
-import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -549,7 +548,7 @@ public final class SpielePanel extends LazyImagePanel {
 						SpielePanel.OTHER_TEAM_MATCHS) };
 
 		m_jcbSpieleFilter = new JComboBox(matchesFilter);
-		Helper.markierenComboBox(m_jcbSpieleFilter, UserParameter.instance().spieleFilter);
+		Helper.setComboBoxFromID(m_jcbSpieleFilter, UserParameter.instance().spieleFilter);
 		m_jcbSpieleFilter.setFont(m_jcbSpieleFilter.getFont().deriveFont(Font.BOLD));
 		panel.add(m_jcbSpieleFilter, BorderLayout.NORTH);
 

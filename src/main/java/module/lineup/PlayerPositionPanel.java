@@ -26,7 +26,6 @@ import java.awt.event.ItemListener;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
-import javax.swing.border.*;
 
 
 /**
@@ -496,7 +495,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         initTaktik(aktuellerPlayer);
 
         //Suche nach der Taktik
-        Helper.markierenComboBox(m_jcbTactic, taktik);
+        Helper.setComboBoxFromID(m_jcbTactic, taktik);
 
         //Listener hinzu
         m_jcbTactic.addItemListener(this);

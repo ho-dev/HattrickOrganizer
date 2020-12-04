@@ -391,7 +391,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         for (CBItem item : getPositions()) {
             m_jcbUserBestPosition.addItem(item);
         }
-        Helper.markierenComboBox(m_jcbUserBestPosition, m_clPlayer.getUserPosFlag());
+        Helper.setComboBoxFromID(m_jcbUserBestPosition, m_clPlayer.getUserPosFlag());
         m_jcbUserBestPosition.addItemListener(this);
         final int salary = (int) (m_clPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
         final String salarytext = Helper.getNumberFormat(true, 0).format(salary);

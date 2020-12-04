@@ -39,7 +39,7 @@ class ComboBoxPanel extends ImagePanel {
 
     //~ Methods ------------------------------------------------------------------------------------
     public final void setSelectedId(int id) {
-        core.util.Helper.markierenComboBox(m_jcbComboBox, id);
+        core.util.Helper.setComboBoxFromID(m_jcbComboBox, id);
     }
 
     public final void setSelectedItem(Object obj) {

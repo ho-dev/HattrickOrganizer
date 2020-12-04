@@ -45,7 +45,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 	}
 
 	public final void setAktuelleSpieler(int spielerid) {
-		Helper.markierenComboBox(playerComboBox, spielerid);
+		Helper.setComboBoxFromID(playerComboBox, spielerid);
 	}
 
 	public void saveColumnOrder() {

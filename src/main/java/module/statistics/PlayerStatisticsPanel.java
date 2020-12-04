@@ -69,7 +69,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 
 
 	public final void setPlayer(int playerID) {
-		Helper.markierenComboBox(jcbPlayer, playerID);
+		Helper.setComboBoxFromID(jcbPlayer, playerID);
 	}
 
 	@Override

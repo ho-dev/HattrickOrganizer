@@ -159,9 +159,9 @@ public class SubstitutionEditView extends JPanel {
 		}
 
 		if (this.orderType != MatchOrderType.MAN_MARKING) {
-			Helper.markierenComboBox(this.behaviourComboBox, sub.getBehaviour());
-			Helper.markierenComboBox(this.redCardsComboBox, sub.getRedCardCriteria().getId());
-			Helper.markierenComboBox(this.standingComboBox, sub.getStanding().getId());
+			Helper.setComboBoxFromID(this.behaviourComboBox, sub.getBehaviour());
+			Helper.setComboBoxFromID(this.redCardsComboBox, sub.getRedCardCriteria().getId());
+			Helper.setComboBoxFromID(this.standingComboBox, sub.getStanding().getId());
 			this.whenTextField.setValue((int) sub.getMatchMinuteCriteria());
 		}
 

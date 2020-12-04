@@ -576,7 +576,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 
 		m_jcbReihenfolge.setToolTipText(hoVerwaltung
 				.getLanguageString("tt_AufstellungsAssistent_Reihenfolge"));
-		core.util.Helper.markierenComboBox(m_jcbReihenfolge,
+		core.util.Helper.setComboBoxFromID(m_jcbReihenfolge,
 				core.model.UserParameter.instance().aufstellungsAssistentPanel_reihenfolge);
 		panel.add(m_jcbReihenfolge);
 		m_jchIdealPosition.setToolTipText(hoVerwaltung

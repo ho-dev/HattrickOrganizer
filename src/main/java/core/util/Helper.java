@@ -5,6 +5,7 @@ package core.util;
 import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
 import core.datatype.ComboItem;
+import core.gui.model.SpielerCBItem;
 import core.model.HOVerwaltung;
 import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
@@ -19,9 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Vector;
 
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-
+import javax.swing.*;
 
 
 /**
@@ -207,21 +206,16 @@ public class Helper {
     }
 
 
-
-    /**
-     * Markiert das Element mit der angegeben Id
-     *
-     */
-    public static void markierenComboBox(javax.swing.JComboBox combobox, int id) {
-        final javax.swing.ComboBoxModel model = combobox.getModel();
-
+    public static void setComboBoxFromID(JComboBox<? extends ComboItem> combobox, int id) {
+        final javax.swing.ComboBoxModel< ? extends ComboItem> model = combobox.getModel();
         for (int i = 0; i < model.getSize(); i++) {
-            if (((ComboItem) (model.getElementAt(i))).getId() == id) {
+            if (model.getElementAt(i).getId() == id) {
                 combobox.setSelectedItem(model.getElementAt(i));
                 break;
             }
         }
     }
+
 
 
     /**

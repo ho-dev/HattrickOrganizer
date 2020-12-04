@@ -201,47 +201,47 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                 jtaNotes.setText(player.getInfo());
 
                 jcbSpeciality.removeItemListener(this);
-                Helper.markierenComboBox(jcbSpeciality, player.getSpeciality());
+                Helper.setComboBoxFromID(jcbSpeciality, player.getSpeciality());
                 jcbSpeciality.addItemListener(this);
                 jcbExperience.removeItemListener(this);
-                Helper.markierenComboBox(jcbExperience, player.getExperience());
+                Helper.setComboBoxFromID(jcbExperience, player.getExperience());
                 jcbExperience.addItemListener(this);
                 jcbLeadership.removeItemListener(this);
-                Helper.markierenComboBox(jcbLeadership, player.getLeadership());
+                Helper.setComboBoxFromID(jcbLeadership, player.getLeadership());
                 jcbLeadership.addItemListener(this);
                 jcbForm.removeItemListener(this);
-                Helper.markierenComboBox(jcbForm, player.getForm());
+                Helper.setComboBoxFromID(jcbForm, player.getForm());
                 jcbForm.addItemListener(this);
                 jcbStamina.removeItemListener(this);
-                Helper.markierenComboBox(jcbStamina, player.getStamina());
+                Helper.setComboBoxFromID(jcbStamina, player.getStamina());
                 jcbStamina.addItemListener(this);
                 jcbDefense.removeItemListener(this);
-                Helper.markierenComboBox(jcbDefense, player.getDefense());
+                Helper.setComboBoxFromID(jcbDefense, player.getDefense());
                 jcbDefense.addItemListener(this);
                 jcbAttacking.removeItemListener(this);
-                Helper.markierenComboBox(jcbAttacking, player.getAttack());
+                Helper.setComboBoxFromID(jcbAttacking, player.getAttack());
                 jcbAttacking.addItemListener(this);
                 jcbKeeper.removeItemListener(this);
-                Helper.markierenComboBox(jcbKeeper, player.getGoalKeeping());
+                Helper.setComboBoxFromID(jcbKeeper, player.getGoalKeeping());
                 jcbKeeper.addItemListener(this);
                 jcbWinger.removeItemListener(this);
-                Helper.markierenComboBox(jcbWinger, player.getWing());
+                Helper.setComboBoxFromID(jcbWinger, player.getWing());
                 jcbWinger.addItemListener(this);
                 jcbPassing.removeItemListener(this);
-                Helper.markierenComboBox(jcbPassing, player.getPassing());
+                Helper.setComboBoxFromID(jcbPassing, player.getPassing());
                 jcbPassing.addItemListener(this);
                 jcbStandards.removeItemListener(this);
-                Helper.markierenComboBox(jcbStandards, player.getSetPieces());
+                Helper.setComboBoxFromID(jcbStandards, player.getSetPieces());
                 jcbStandards.addItemListener(this);
                 jcbLoyalty.removeItemListener(this);
-                Helper.markierenComboBox(jcbLoyalty, player.getLoyalty());
+                Helper.setComboBoxFromID(jcbLoyalty, player.getLoyalty());
                 jcbLoyalty.addItemListener(this);
                 jchHomegrown.removeItemListener(this);
                 jchHomegrown.setSelected(player.isHomwGrown());
                 jchHomegrown.addItemListener(this);
 
                 // Listener stays here for recalculation of rating
-                Helper.markierenComboBox(jcbPlaymaking, player.getPlayMaking());
+                Helper.setComboBoxFromID(jcbPlaymaking, player.getPlayMaking());
 
                 // Normally not working. Thus last positioned
                 jsSpinner.setValue(pc.getDeadline());

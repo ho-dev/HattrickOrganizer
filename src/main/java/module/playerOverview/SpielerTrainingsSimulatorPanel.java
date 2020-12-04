@@ -244,18 +244,18 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     private void setCBs() {
         m_jlName.setText(m_clPlayer.getFullName());
         jtfAge.setText(m_clPlayer.getAlter() + "." + m_clPlayer.getAgeDays());
-        Helper.markierenComboBox(m_jcbForm, m_clPlayer.getForm());
-        Helper.markierenComboBox(m_jcbErfahrung, m_clPlayer.getErfahrung());
-        Helper.markierenComboBox(m_jcbKondition, m_clPlayer.getKondition());
-        Helper.markierenComboBox(m_jcbSpielaufbau, m_clPlayer.getPMskill());
-        Helper.markierenComboBox(m_jcbFluegel, m_clPlayer.getWIskill());
-        Helper.markierenComboBox(m_jcbTorschuss, m_clPlayer.getSCskill());
-        Helper.markierenComboBox(m_jcbTorwart, m_clPlayer.getGKskill());
-        Helper.markierenComboBox(m_jcbPasspiel, m_clPlayer.getPSskill());
-        Helper.markierenComboBox(m_jcbVerteidigung, m_clPlayer.getDEFskill());
-        Helper.markierenComboBox(m_jcbSpeciality, m_clPlayer.getPlayerSpecialty());
-        Helper.markierenComboBox(m_jcbStandard, m_clPlayer.getSPskill());
-        Helper.markierenComboBox(m_jcbLoyalty, m_clPlayer.getLoyalty());
+        Helper.setComboBoxFromID(m_jcbForm, m_clPlayer.getForm());
+        Helper.setComboBoxFromID(m_jcbErfahrung, m_clPlayer.getErfahrung());
+        Helper.setComboBoxFromID(m_jcbKondition, m_clPlayer.getKondition());
+        Helper.setComboBoxFromID(m_jcbSpielaufbau, m_clPlayer.getPMskill());
+        Helper.setComboBoxFromID(m_jcbFluegel, m_clPlayer.getWIskill());
+        Helper.setComboBoxFromID(m_jcbTorschuss, m_clPlayer.getSCskill());
+        Helper.setComboBoxFromID(m_jcbTorwart, m_clPlayer.getGKskill());
+        Helper.setComboBoxFromID(m_jcbPasspiel, m_clPlayer.getPSskill());
+        Helper.setComboBoxFromID(m_jcbVerteidigung, m_clPlayer.getDEFskill());
+        Helper.setComboBoxFromID(m_jcbSpeciality, m_clPlayer.getPlayerSpecialty());
+        Helper.setComboBoxFromID(m_jcbStandard, m_clPlayer.getSPskill());
+        Helper.setComboBoxFromID(m_jcbLoyalty, m_clPlayer.getLoyalty());
         m_jchHomegrown.setSelected(m_clPlayer.isHomeGrown());
 
         m_jlForm.setIcon(ImageUtilities.getImageIcon4Veraenderung(0, true));
@@ -735,7 +735,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     }
 
     private void resetCB(JComboBox cb) {
-        Helper.markierenComboBox(cb, PlayerAbility.DISASTROUS);
+        Helper.setComboBoxFromID(cb, PlayerAbility.DISASTROUS);
         cb.setEnabled(false);
     }
 

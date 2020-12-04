@@ -5,8 +5,8 @@ import core.constants.TeamConfidence;
 import core.constants.TeamSpirit;
 import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
-import core.db.user.User;
 import core.db.user.UserManager;
+import core.gui.HOMainFrame;
 import core.gui.Refreshable;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
@@ -207,7 +207,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	 *            the constant for Pic/Mots/Normal
 	 */
 	public void setEinstellung(int einstellung) {
-		Helper.markierenComboBox(m_jcbEinstellung, einstellung);
+		Helper.setComboBoxFromID(m_jcbEinstellung, einstellung);
 	}
 
 	/**
@@ -227,7 +227,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	 */
 	private void setLocation(int location) {
 		// Set the location
-		Helper.markierenComboBox(m_jcbLocation, location);
+		Helper.setComboBoxFromID(m_jcbLocation, location);
 
 		if (location == IMatchDetails.LOCATION_TOURNAMENT) {
 			setStimmung(6, 2); // Set Team Spirit to content (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
@@ -241,6 +241,113 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			m_jcbMainStimmung.setEnabled(true);
 			m_jcbSubStimmung.setEnabled(true);
 			m_jcbSelbstvertrauen.setEnabled(true);
+		}
+	}
+
+	public void setRatings() {
+		if (HOVerwaltung.instance().getModel().getTeam() != null) {
+			final HOModel homodel = HOVerwaltung.instance().getModel();
+//			final Vector<Player> allPlayer = homodel.getAllSpieler();
+			final Lineup aufstellung = homodel.getLineup();
+
+			m_jpMinuteToggler.load();
+
+			// HRF comparison required
+			if (AufstellungsVergleichHistoryPanel.isVergleichgefordert()) {
+				// First set the values ​​to those of the loaded setup
+				final AufstellungCBItem vergleichsaufstellungcbitem = AufstellungsVergleichHistoryPanel
+						.getVergleichsAufstellung();
+
+				if (vergleichsaufstellungcbitem != null) {
+					final Lineup vergleichsaufstellung = vergleichsaufstellungcbitem
+							.getAufstellung();
+
+					if (vergleichsaufstellung != null) {
+						// Wegen der Berechnung zuerst die Aufstellung kurz in
+						// Model packen, da immer die aktuelle Aufstellung
+						// genommen wird
+						// vergleichsaufstellung.updateRatingPredictionConfig();
+						homodel.setLineup(vergleichsaufstellung);
+						m_jpRating.setTopRight(vergleichsaufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setTopCenter(vergleichsaufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setTopLeft(vergleichsaufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setMiddle(vergleichsaufstellung.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setBottomRight(vergleichsaufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setBottomCenter(vergleichsaufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setBottomLeft(vergleichsaufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
+
+						// Put back the right Lineup
+						homodel.setLineup(aufstellung);
+					}
+				}
+			}
+
+			// no comparison required
+			m_jpRating.clear();
+			m_jpRating.setTopRightText(PlayerAbility.getNameForSkill(
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()))), false, true));
+			m_jpRating.setTopCenterText(PlayerAbility.getNameForSkill(
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()))), false,	true));
+			m_jpRating.setTopLeftText(PlayerAbility.getNameForSkill(
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()))), false,	true));
+			m_jpRating.setMiddleText(PlayerAbility.getNameForSkill(
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()))), false, true));
+			m_jpRating.setBottomRightText(PlayerAbility.getNameForSkill(
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()))),false, true));
+			m_jpRating.setBottomCenterText(PlayerAbility.getNameForSkill(
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()))), false,true));
+			m_jpRating.setBottomLeftText(PlayerAbility.getNameForSkill(
+					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()))), false,true));
+			m_jpRating.setTopRight(aufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setTopCenter(aufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setTopLeft(aufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setMiddle(aufstellung.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setBottomRight(aufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setBottomCenter(aufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setBottomLeft(aufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setLoddar(Helper.round(aufstellung.getRatings().getLoddarStat().get(m_jpMinuteToggler.getCurrentKey()), 2));
+			m_jpRating.setHatstat(aufstellung.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
+
+			// Recalculate Borders
+			m_jpRating.calcColorBorders();
+
+			// get Total Strength
+//			final double gesamtstaerke = aufstellung.getGesamtStaerke(allPlayer, true);
+
+			// *2 wegen halben Sternen
+//			m_jpGesamtStaerke.setRating((int) (gesamtstaerke * 2));
+//			m_jpGesamtStaerkeText.setText(Helper.DEFAULTDEZIMALFORMAT.format(gesamtstaerke));
+
+//			setStimmung(homodel.getTeam().getStimmungAsInt(), homodel.getTeam().getSubStimmung());
+//			setSelbstvertrauen(homodel.getTeam().getSelbstvertrauenAsInt());
+//			setTrainerType(homodel.getTrainer().getTrainerTyp());
+//			setPredictionType(RatingPredictionConfig.getInstancePredictionType());
+//			setTaktik(aufstellung.getTacticType());
+//			m_jpTaktikStaerke.setText(getTaktikString());
+//
+//			setTacticalAssistants(homodel.getClub().getTacticalAssistantLevels());
+//			setStyleOfPlay(aufstellung.getStyleOfPlay());
+//			setEinstellung(aufstellung.getAttitude());
+//			setLocation(aufstellung.getLocation());
+//			setPullBackMinute(aufstellung.getPullBackMinute());
+//			m_jcbPullBackMinute.setEnabled(!aufstellung.isPullBackOverride());
+//			setPullBackOverride(aufstellung.isPullBackOverride());
+//
+//			float avXp = homodel.getLineupWithoutRatingRecalc().getAverageExperience();
+//			m_jpDurchschnittErfahrung.setText(PlayerAbility.getNameForSkill(avXp));
+//			m_jpDurchschnittErfahrung.setToolTipText((avXp < 0 ? (HOVerwaltung.instance()
+//					.getLanguageString("lineup.upload.check.captainNotSet")) : ""));
+//
+//			String formationExperienceTooltip = getFormationExperienceTooltip();
+//			m_jpAktuellesSystem.setText(Lineup.getNameForSystem(aufstellung.ermittelSystem()));
+//			m_jpAktuellesSystem.setToolTipText(formationExperienceTooltip);
+//			int exp = homodel.getLineupWithoutRatingRecalc().getTeamErfahrung4AktuellesSystem();
+//			m_jpErfahrungAktuellesSystem.setText(PlayerAbility.toString(exp) + " (" + exp + ")");
+//			m_jpErfahrungAktuellesSystem.setToolTipText(formationExperienceTooltip);
+//
+//			// TODO: This works for light theme, but not for dark themes.
+//			// m_jpErfahrungAktuellesSystem.setFGColor(new Color(Math.min(
+//			//		Math.max(((8 - exp) * 32) - 1, 0), 255), 0, 0));
 		}
 	}
 
@@ -397,7 +504,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	 *            the confidence value
 	 */
 	public void setSelbstvertrauen(int selbstvertrauen) {
-		Helper.markierenComboBox(m_jcbSelbstvertrauen, selbstvertrauen);
+		Helper.setComboBoxFromID(m_jcbSelbstvertrauen, selbstvertrauen);
 	}
 
 	/**
@@ -409,22 +516,22 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	 *            subskill of the team spirit
 	 */
 	public void setStimmung(int stimmung, int subStimmung) {
-		Helper.markierenComboBox(m_jcbMainStimmung, stimmung);
-		Helper.markierenComboBox(m_jcbSubStimmung, subStimmung);
+		Helper.setComboBoxFromID(m_jcbMainStimmung, stimmung);
+		Helper.setComboBoxFromID(m_jcbSubStimmung, subStimmung);
 	}
 
 	/**
 	 * Set the trainer type.
 	 */
 	public void setTrainerType(int newTrainerType) {
-		Helper.markierenComboBox(m_jcbTrainerType, newTrainerType);
+		Helper.setComboBoxFromID(m_jcbTrainerType, newTrainerType);
 	}
 
 	/**
 	 * Set the prediction type.
 	 */
 	public void setPredictionType(int newPredictionType) {
-		core.util.Helper.markierenComboBox(m_jcbPredictionType, newPredictionType);
+		core.util.Helper.setComboBoxFromID(m_jcbPredictionType, newPredictionType);
 	}
 
 	/**
@@ -434,7 +541,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	 *            the tactic constant
 	 */
 	public void setTaktik(int taktik) {
-		Helper.markierenComboBox(m_jcbTaktik, taktik);
+		Helper.setComboBoxFromID(m_jcbTaktik, taktik);
 	}
 
 	/**
@@ -447,7 +554,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	}
 
 	public void setStyleOfPlay(int style){
-		Helper.markierenComboBox(m_jcbStyleOfPlay, style);
+		Helper.setComboBoxFromID(m_jcbStyleOfPlay, style);
 	}
 	
 	public int getStyleOfPlay() {
@@ -455,7 +562,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	}
 	
 	public void setTacticalAssistants(int assistants){
-		Helper.markierenComboBox(m_jcbTacticalAssistants, assistants);
+		Helper.setComboBoxFromID(m_jcbTacticalAssistants, assistants);
 	}
 	
 	public int getTacticalAssistants() {
@@ -468,7 +575,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	 * @param minute
 	 */
 	public void setPullBackMinute(int minute) {
-		Helper.markierenComboBox(m_jcbPullBackMinute, minute);
+		Helper.setComboBoxFromID(m_jcbPullBackMinute, minute);
 	}
 
 	/**
@@ -558,10 +665,14 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			} else if (event.getSource().equals(m_jcbTacticalAssistants)) {
 				HOVerwaltung.instance().getModel().getClub().setTacticalAssistantLevels(((CBItem) m_jcbTacticalAssistants.getSelectedItem()).getId());
 				// Number of tactical assistants changed
+					// TODO : the following 4 llnes should be deleted once moving to lineup panel is complete
 					doSilentRefresh = true; // To save the item change display
 					updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay()); // Attempt to set the old value, otherwise trainer default.
 					addAllStyleofPlayItems();
 					doSilentRefresh = false;
+					int iStyleOfPlay = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay();
+					HOMainFrame.instance().getAufstellungsPanel().getAufstellungsPositionsPanel().updateStyleOfPlayComboBox(iStyleOfPlay);
+
 			}
 			refresh();
 		}
