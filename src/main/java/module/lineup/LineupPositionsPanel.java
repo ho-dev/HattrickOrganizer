@@ -1,13 +1,16 @@
 package module.lineup;
 
+import core.datatype.CBItem;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
+import core.gui.comp.panel.ComboBoxTitled;
 import core.gui.model.AufstellungCBItem;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.match.IMatchDetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
@@ -15,11 +18,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import javax.swing.*;
 import javax.swing.border.Border;
-
-import static core.model.player.IMatchRoleID.aOutfieldMatchRoleID;
 
 /**
  * Create the main panel of Lineup module
@@ -62,6 +62,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private javax.swing.JLayeredPane centerPanel;
 	private final SwapPositionsManager swapPositionsManager = new SwapPositionsManager(this);
 	private final IAufstellungsAssistentPanel assistantPanel;
+	private ComboBoxTitled m_jpTeamAttitude;
 	
 
 	public LineupPositionsPanel(LineupPanel panel) {
@@ -205,9 +206,26 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		layout.setConstraints(m_clKeeper, constraints);
 		centerPanel.add(m_clKeeper);
 
+		JComboBox<CBItem> m_jcbTeamAttitude = new JComboBox<>(new CBItem[]{
+				new CBItem(
+						HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool"),
+						IMatchDetails.EINSTELLUNG_PIC),
+				new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.normal"),
+						IMatchDetails.EINSTELLUNG_NORMAL),
+				new CBItem(HOVerwaltung.instance().getLanguageString(
+						"ls.team.teamattitude.matchoftheseason"), IMatchDetails.EINSTELLUNG_MOTS) });
+
+		m_jpTeamAttitude = new ComboBoxTitled(getLangStr("ls.team.teamattitude"), m_jcbTeamAttitude, true);
+
+		constraints.gridx = 4;
+		layout.setConstraints(m_jpTeamAttitude, constraints);
+		centerPanel.add(m_jpTeamAttitude);
+
+
 		constraints.gridx = 1;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.insets = new Insets(3, 3, 3, 3);
 		m_clRightBack = new PlayerPositionPanel(this, IMatchRoleID.rightBack);
 		layout.setConstraints(m_clRightBack, constraints);
@@ -507,6 +525,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		pos.add(m_clKeeper);
 		return pos;
 	}
+
+	private String getLangStr(String key) {return HOVerwaltung.instance().getLanguageString(key);}
 
 
 }
