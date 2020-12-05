@@ -59,8 +59,8 @@ Changelist HO! 4.0
 ### IFA
 
   - [FIX] add supports for 9 new leagues: Belize, Madagascar, Botswana, Saint Vincent and the Grenadines, Myanmar, Zambia, San Marino, Puerto Rico and Haiti [#539]
-  
-  
+
+
 ### Training
 
   - [FIX] Fix bug of season correction calculation. Training effect table shows wrong seasons in week 16 [#539]
@@ -77,6 +77,8 @@ Changelist HO! 4.0
   - [FEAT] Remove all printing functionality.
   - [FEAT] Remove player state colour, and display icons instead in Lineup.
   - [FEAT] Refactor progress bar display [#722]
+  - [BUG] Fix issue with user preferences (incl. OAuth access token) not being saved upon exiting HO. [#811]
+
 
 ### League
 
