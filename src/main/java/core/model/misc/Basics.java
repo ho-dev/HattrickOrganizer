@@ -1,5 +1,6 @@
 package core.model.misc;
 
+import core.db.DBManager;
 import core.db.user.UserManager;
 import core.training.HattrickDate;
 import core.util.HOLogger;
@@ -13,7 +14,7 @@ import java.util.Properties;
  */
 public final class Basics  {
     /**
-     * youth team id (0 if non existing or no access in case of foreign teams)
+     * youth team id (null if non existing or no access in case of foreign teams)
      */
     private Integer youthTeamId;
     /**
@@ -65,7 +66,8 @@ public final class Basics  {
         m_clDatum = getTimestamp(properties, "date");
         m_iTeamId = getInt(properties, "teamid", 0);
         m_sYouthTeamName = properties.getProperty("youthteamname", "");
-        youthTeamId = getInt(properties, "youthteamid", 0);
+        youthTeamId = getInteger(properties, "youthteamid");
+        if ( youthTeamId != null && youthTeamId <= 0) youthTeamId = null;
         m_sTeamName = properties.getProperty("teamname", "");
         m_sManager = properties.getProperty("owner", "");
         m_tActivationDate = getTimestamp(properties, "activationdate");
@@ -76,6 +78,13 @@ public final class Basics  {
         m_iSpieltag = getInt(properties, "matchround", 0);
         m_iRegionId = getInt(properties, "regionid", 0);
         m_bHasSupporter = getBoolean(properties, "hassupporter", false);
+    }
+
+    private Integer getInteger(Properties properties, String key) {
+        try {
+            return Integer.parseInt(properties.getProperty(key));
+        } catch (Exception ignored) {}
+        return null;
     }
 
     private boolean getBoolean(Properties properties, String key, boolean def) {
@@ -117,7 +126,7 @@ public final class Basics  {
             m_bHasSupporter = rs.getBoolean("HasSupporter");
             m_tActivationDate = rs.getTimestamp("ActivationDate");
             m_sYouthTeamName = rs.getString("YouthTeamName");
-            youthTeamId = rs.getInt("YouthTeamID");
+            youthTeamId = DBManager.getInteger(rs,"YouthTeamID");
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),"Constructor Basics: " + e.toString());
         }
