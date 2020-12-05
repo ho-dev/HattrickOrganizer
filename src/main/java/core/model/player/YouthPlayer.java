@@ -371,9 +371,31 @@ public class YouthPlayer {
         }
 
         public double getStartValue(){return this.startValue;}
-        public void setStartValue(double value){ this.startValue=value;}
+        public void setStartValue(double value){
+            this.startValue=value;
+            if ( startLevel != null){
+                // check for conflicts
+                if ( startValue < startLevel){
+                    this.startValue = startLevel;
+                }
+                else if ( startValue > startLevel +1 ){
+                    this.startValue = startLevel+0.99;
+                }
+            }
+        }
         public double getCurrentValue(){return currentValue;}
-        public void setCurrentValue(double value){this.currentValue=value;}
+        public void setCurrentValue(double value){
+            this.currentValue=value;
+            if ( currentLevel != null){
+                // check for conflicts
+                if ( currentValue < currentLevel){
+                    this.currentValue = currentLevel;
+                }
+                else if ( currentValue > currentLevel +1){
+                    this.currentValue = currentLevel+0.99;
+                }
+            }
+        }
 
         public Integer getCurrentLevel() {
             return currentLevel;
