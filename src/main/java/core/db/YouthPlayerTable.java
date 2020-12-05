@@ -5,6 +5,7 @@ import core.util.HOLogger;
 import module.training.Skills;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.*;
@@ -56,33 +57,45 @@ public class YouthPlayerTable  extends AbstractTable {
 
                 new ColumnDescriptor("Keeper", Types.INTEGER, true),
                 new ColumnDescriptor("KeeperMax", Types.INTEGER, true),
-                new ColumnDescriptor("KeeperMayUnlock", Types.BOOLEAN, true),
+                new ColumnDescriptor("KeeperStart", Types.INTEGER, true),
                 new ColumnDescriptor("KeeperIsMaxReached", Types.BOOLEAN, false),
+                new ColumnDescriptor("KeeperValue", Types.DOUBLE, false),
+                new ColumnDescriptor("KeeperStartValue", Types.DOUBLE, false),
 
                 new ColumnDescriptor("Defender", Types.INTEGER, true),
                 new ColumnDescriptor("DefenderMax", Types.INTEGER, true),
-                new ColumnDescriptor("DefenderMayUnlock", Types.BOOLEAN, true),
+                new ColumnDescriptor("DefenderStart", Types.INTEGER, true),
                 new ColumnDescriptor("DefenderIsMaxReached", Types.BOOLEAN, false),
+                new ColumnDescriptor("DefenderValue", Types.DOUBLE, false),
+                new ColumnDescriptor("DefenderStartValue", Types.DOUBLE, false),
 
                 new ColumnDescriptor("Playmaker", Types.INTEGER, true),
                 new ColumnDescriptor("PlaymakerMax", Types.INTEGER, true),
-                new ColumnDescriptor("PlaymakerMayUnlock", Types.BOOLEAN, true),
+                new ColumnDescriptor("PlaymakerStart", Types.INTEGER, true),
                 new ColumnDescriptor("PlaymakerIsMaxReached", Types.BOOLEAN, false),
+                new ColumnDescriptor("PlaymakerValue", Types.DOUBLE, false),
+                new ColumnDescriptor("PlaymakerStartValue", Types.DOUBLE, false),
 
                 new ColumnDescriptor("Winger", Types.INTEGER, true),
                 new ColumnDescriptor("WingerMax", Types.INTEGER, true),
-                new ColumnDescriptor("WingerMayUnlock", Types.BOOLEAN, true),
+                new ColumnDescriptor("WingerStart", Types.INTEGER, true),
                 new ColumnDescriptor("WingerIsMaxReached", Types.BOOLEAN, false),
+                new ColumnDescriptor("WingerValue", Types.DOUBLE, false),
+                new ColumnDescriptor("WingerStartValue", Types.DOUBLE, false),
 
                 new ColumnDescriptor("Passing", Types.INTEGER, true),
                 new ColumnDescriptor("PassingMax", Types.INTEGER, true),
-                new ColumnDescriptor("PassingMayUnlock", Types.BOOLEAN, true),
+                new ColumnDescriptor("PassingStart", Types.INTEGER, true),
                 new ColumnDescriptor("PassingIsMaxReached", Types.BOOLEAN, false),
+                new ColumnDescriptor("PassingValue", Types.DOUBLE, false),
+                new ColumnDescriptor("PassingStartValue", Types.DOUBLE, false),
 
                 new ColumnDescriptor("SetPieces", Types.INTEGER, true),
                 new ColumnDescriptor("SetPiecesMax", Types.INTEGER, true),
-                new ColumnDescriptor("SetPiecesMayUnlock", Types.BOOLEAN, true),
-                new ColumnDescriptor("SetPiecesIsMaxReached", Types.BOOLEAN, false)
+                new ColumnDescriptor("SetPiecesStart", Types.INTEGER, true),
+                new ColumnDescriptor("SetPiecesIsMaxReached", Types.BOOLEAN, false),
+                new ColumnDescriptor("SetPiecesValue", Types.DOUBLE, false),
+                new ColumnDescriptor("SetPiecesStartValue", Types.DOUBLE, false)
         };
     }
 
@@ -106,25 +119,25 @@ public class YouthPlayerTable  extends AbstractTable {
 
     private void storeYouthPlayer(int hrfId, YouthPlayer player, Timestamp date) {
 
-        final String[] awhereS = { "HRF_ID", "ID" };
-        final String[] awhereV = { "" + hrfId, "" + player.getId()};
+        final String[] awhereS = {"HRF_ID", "ID"};
+        final String[] awhereV = {"" + hrfId, "" + player.getId()};
         // Delete old values
         delete(awhereS, awhereV);
 
         //insert vorbereiten
         String statement =
                 " (HRF_ID,ID,FirstName,NickName,LastName,Age,AgeDays,ArrivalDate,PromotionDate," +
-                "CanBePromotedIn,PlayerNumber," +
-                "Statement,OwnerNotes,PlayerCategoryID,Cards,InjuryLevel,Specialty,CareerGoals,CareerHattricks," +
-                "LeagueGoals,FriendlyGoals,ScoutId,ScoutingRegionID,ScoutName,YouthMatchID,PositionCode," +
-                "PlayedMinutes,Rating,YouthMatchDate," +
-                "Keeper,KeeperMax,KeeperMayUnlock,KeeperIsMaxReached," +
-                "Defender,DefenderMax,DefenderMayUnlock,DefenderIsMaxReached," +
-                "Playmaker,PlaymakerMax,PlaymakerMayUnlock,PlaymakerIsMaxReached," +
-                "Winger,WingerMax,WingerMayUnlock,WingerIsMaxReached," +
-                "Passing,PassingMax,PassingMayUnlock,PassingIsMaxReached," +
-                "SetPieces,SetPiecesMax,SetPiecesMayUnlock,SetPiecesIsMaxReached" +
-                ") VALUES(";
+                        "CanBePromotedIn,PlayerNumber," +
+                        "Statement,OwnerNotes,PlayerCategoryID,Cards,InjuryLevel,Specialty,CareerGoals,CareerHattricks," +
+                        "LeagueGoals,FriendlyGoals,ScoutId,ScoutingRegionID,ScoutName,YouthMatchID,PositionCode," +
+                        "PlayedMinutes,Rating,YouthMatchDate," +
+                        getSkillColumnNames("Keeper")+ "," +
+                        getSkillColumnNames("Defender")+ "," +
+                        getSkillColumnNames("Playmaker")+ "," +
+                        getSkillColumnNames("Winger")+ "," +
+                        getSkillColumnNames("Passing")+ "," +
+                        getSkillColumnNames("SetPieces")+
+                        ") VALUES(";
 
         var sql = new StringBuilder("INSERT INTO ");
         sql.append(getTableName())
@@ -157,48 +170,49 @@ public class YouthPlayerTable  extends AbstractTable {
                 .append(player.getPositionCode()).append(",")
                 .append(player.getPlayedMinutes()).append(",")
                 .append(player.getRating()).append(",")
-                .append(DBManager.nullOrValue(player.getYouthMatchDate())).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).getLevel()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).getMax()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).getMayUnlock()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.GOALKEEPER).isMaxReached()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).getLevel()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).getMax()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).getMayUnlock()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.DEFENDING).isMaxReached()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).getLevel()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).getMax()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).getMayUnlock()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.PLAYMAKING).isMaxReached()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.WINGER).getLevel()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.WINGER).getMax()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.WINGER).getMayUnlock()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.WINGER).isMaxReached()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.PASSING).getLevel()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.PASSING).getMax()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.PASSING).getMayUnlock()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.PASSING).isMaxReached()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).getLevel()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).getMax()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).getMayUnlock()).append(",")
-                .append(player.getSkillInfo(Skills.HTSkillID.SET_PIECES).isMaxReached())
-                .append(")");
+                .append(DBManager.nullOrValue(player.getYouthMatchDate())).append(",");
+
+        AppendSkillInfo(sql, player, Skills.HTSkillID.GOALKEEPER);
+        AppendSkillInfo(sql, player, Skills.HTSkillID.DEFENDING);
+        AppendSkillInfo(sql, player, Skills.HTSkillID.PLAYMAKING);
+        AppendSkillInfo(sql, player, Skills.HTSkillID.WINGER);
+        AppendSkillInfo(sql, player, Skills.HTSkillID.PASSING);
+        AppendSkillInfo(sql, player, Skills.HTSkillID.SET_PIECES);
+
+        sql.append(")");
         try {
             adapter.executeUpdate(sql.toString());
-        }
-        catch ( Exception e){
-            HOLogger.instance().log(getClass(),"saveYouthPlayer: " + sql.toString() + " : " + e);
+        } catch (Exception e) {
+            HOLogger.instance().log(getClass(), "saveYouthPlayer: " + sql.toString() + " : " + e);
         }
         var scoutComments = player.getScoutComments();
-        if ( scoutComments.size()>0){
-            var youthScoutCommentTable = (YouthScoutCommentTable)DBManager.instance().getTable(YouthScoutCommentTable.TABLENAME);
-            if ( youthScoutCommentTable.countScoutComments(player.getId())==0){
-                int i=0;
-                for ( var c : scoutComments){
-                    youthScoutCommentTable.saveYouthScoutComment(i++,player.getId(),c);
+        if (scoutComments.size() > 0) {
+            var youthScoutCommentTable = (YouthScoutCommentTable) DBManager.instance().getTable(YouthScoutCommentTable.TABLENAME);
+            if (youthScoutCommentTable.countScoutComments(player.getId()) == 0) {
+                int i = 0;
+                for (var c : scoutComments) {
+                    youthScoutCommentTable.saveYouthScoutComment(i++, player.getId(), c);
                 }
             }
         }
+    }
+
+    private String getSkillColumnNames(String prefix) {
+        return prefix +","
+                + prefix + "Max,"
+                + prefix + "Start,"
+                + prefix + "IsMaxReached,"
+                + prefix + "Value,"
+                + prefix + "StartValue";
+    }
+
+    private void AppendSkillInfo(StringBuilder sql, YouthPlayer player, Skills.HTSkillID skillID) {
+        sql.append(player.getSkillInfo(skillID).getCurrentLevel()).append(",")
+                .append(player.getSkillInfo(skillID).getMax()).append(",")
+                .append(player.getSkillInfo(skillID).getStartLevel()).append(",")
+                .append(player.getSkillInfo(skillID).isMaxReached()).append(",")
+                .append(player.getSkillInfo(skillID).getCurrentValue()).append(",")
+                .append(player.getSkillInfo(skillID).getStartValue()).append(",");
     }
 
     /**
@@ -255,10 +269,28 @@ public class YouthPlayerTable  extends AbstractTable {
             ret.setStatement(DBManager.deleteEscapeSequences(rs.getString("Statement")));
             ret.setYouthMatchDate(rs.getTimestamp("YouthMatchDate"));
             ret.setYouthMatchID(rs.getInt("YouthMatchID"));
+
+            SetSkillInfo(ret, rs, Skills.HTSkillID.GOALKEEPER, "Keeper");
+            SetSkillInfo(ret, rs, Skills.HTSkillID.DEFENDING, "Defender");
+            SetSkillInfo(ret, rs, Skills.HTSkillID.PLAYMAKING, "Playmaker");
+            SetSkillInfo(ret, rs, Skills.HTSkillID.WINGER, "Winger");
+            SetSkillInfo(ret, rs, Skills.HTSkillID.PASSING, "Passing");
+            SetSkillInfo(ret, rs, Skills.HTSkillID.SET_PIECES, "SetPieces");
+
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),e);
         }
         return ret;
+    }
+
+    private void SetSkillInfo(YouthPlayer youthPlayer, ResultSet rs, Skills.HTSkillID skillID, String columnPrefix) throws SQLException {
+        var skillinfo = youthPlayer.getSkillInfo(skillID);
+        skillinfo.setCurrentLevel(DBManager.getInteger(rs, columnPrefix));
+        skillinfo.setStartLevel(DBManager.getInteger(rs,columnPrefix+"Start"));
+        skillinfo.setMax(DBManager.getInteger(rs,columnPrefix+"Max"));
+        skillinfo.setMaxReached(DBManager.getBoolean(rs, columnPrefix+"IsMaxReached"));
+        skillinfo.setCurrentValue(rs.getDouble(columnPrefix+"Value"));
+        skillinfo.setStartValue(rs.getDouble(columnPrefix+"StartValue"));
     }
 
     public Timestamp loadMinScoutingDate() {

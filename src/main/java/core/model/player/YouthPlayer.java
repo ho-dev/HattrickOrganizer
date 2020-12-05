@@ -334,25 +334,61 @@ public class YouthPlayer {
     }
 
     public class SkillInfo {
-        private Integer level;
+        /**
+         * Value at scouting date, edited by the user (user's estimation)
+         */
+        private double startValue;
+        /**
+         * Calculated value based on trainings and edited start value
+         */
+        private double currentValue;
+        /**
+         * Skill level at the current download
+         */
+        private Integer currentLevel;
+        /**
+         * Skill level at the scouting date
+         */
+        private Integer startLevel;
+        /**
+         * Maximum reachable skill level (potential)
+         */
         private Integer max;
+        /**
+         *  Indicates if the skill cant be trained anymore (false if current or max is not available).
+         */
         private boolean isMaxReached;
-        private Boolean mayUnlock;       // value is nullable
 
-        public boolean isLevelAvailable() {
-            return level != null;
+        public boolean isCurrentLevelAvailable() {
+            return currentLevel != null;
+        }
+        public boolean isStartLevelAvailable() {
+            return startLevel != null;
         }
 
         public boolean isMaxAvailable(){
             return max != null;
         }
 
-        public Integer getLevel() {
-            return level;
+        public double getStartValue(){return this.startValue;}
+        public void setStartValue(double value){ this.startValue=value;}
+        public double getCurrentValue(){return currentValue;}
+        public void setCurrentValue(double value){this.currentValue=value;}
+
+        public Integer getCurrentLevel() {
+            return currentLevel;
         }
 
-        public void setLevel(Integer level) {
-            this.level = level;
+        public void setCurrentLevel(Integer currentLevel) {
+            this.currentLevel = currentLevel;
+            if ( currentLevel != null){
+                if ( this.currentValue < currentLevel){
+                    currentValue = currentLevel;
+                }
+                else if ( currentValue > currentLevel+1){
+                    currentValue = currentLevel+0.99;
+                }
+            }
         }
 
         public Integer getMax() {
@@ -371,12 +407,20 @@ public class YouthPlayer {
             isMaxReached = maxReached;
         }
 
-        public Boolean getMayUnlock() {
-            return mayUnlock;
+        public Integer getStartLevel() {
+            return startLevel;
         }
 
-        public void setMayUnlock(Boolean mayUnlock) {
-            this.mayUnlock = mayUnlock;
+        public void setStartLevel(Integer startLevel) {
+            this.startLevel = startLevel;
+            if ( startLevel != null){
+                if ( startValue < startLevel){
+                    startValue = startLevel;
+                }
+                else if ( startValue> startLevel+1){
+                    startValue = startLevel+0.95;
+                }
+            }
         }
     }
 
@@ -514,10 +558,9 @@ public class YouthPlayer {
 
     private void parseSkillInfo(Properties properties, Skills.HTSkillID skillID, String skill) {
         var skillInfo = new SkillInfo();
-        skillInfo.level = getInteger(properties, skill);
+        skillInfo.currentLevel = getInteger(properties, skill);
         skillInfo.max = getInteger(properties,skill+"max");
         skillInfo.isMaxReached = getBoolean(properties,skill + "ismaxreached", false);
-        skillInfo.mayUnlock = getBoolean(properties,skill + "mayunlock");
 
         this.skillInfoMap.put(skillID.getValue(), skillInfo);
     }
