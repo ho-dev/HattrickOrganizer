@@ -139,16 +139,15 @@ public class ConvertXml2Hrf {
 			}
 		}
 
-
 		HOMainFrame.instance().setWaitInformation(25);
 		MatchLineup matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(mc.getMatchLineup(-1, teamId,
 						MatchType.LEAGUE).toString());
 		HOMainFrame.instance().setWaitInformation(30);
 		List<MyHashtable> playersData = new xmlPlayersParser().parsePlayersFromString(mc.getPlayers(teamId));
-		int youthteamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
+		Integer youthteamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
 		List<MyHashtable> youthplayers=null;
-		if ( youthteamId > 0 ){
-			youthplayers = new xmlPlayersParser().parseYouthPlayersFromString(mc.getYouthPlayers(youthteamId));
+		if ( youthteamId != null ){
+			youthplayers = new xmlPlayersParser().parseYouthPlayersFromString(mc.downloadYouthPlayers(youthteamId));
 		}
 		HOMainFrame.instance().setWaitInformation(35);
 		Map<String, String> economyDataMap = XMLEconomyParser.parseEconomyFromString(mc.getEconomy(teamId));
