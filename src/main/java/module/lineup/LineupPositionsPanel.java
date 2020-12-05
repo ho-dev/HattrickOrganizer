@@ -19,6 +19,7 @@ import core.util.HOLogger;
 import core.util.Helper;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -33,7 +34,7 @@ import javax.swing.border.Border;
 /**
  * Create the main panel of Lineup module
  */
-public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel implements ItemListener, core.gui.Refreshable, core.gui.Updateable, ActionListener {
+public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel implements core.gui.Refreshable, core.gui.Updateable, ActionListener {
 
 	private final LineupPanel m_clLineupPanel;
 	private final JButton m_jbFlipSide = new JButton(ThemeManager.getIcon(HOIconName.RELOAD));
@@ -80,7 +81,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	final String offensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.offensive");
 	final String defensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.defensive");
 	final String neutral_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.neutral");
-	
+	private static ActionListener cbActionListener;
 
 	public LineupPositionsPanel(LineupPanel panel) {
 		m_clLineupPanel = panel;
@@ -108,8 +109,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 	@Override
 	public final void refresh() {
-		boolean gruppenfilter = m_clLineupPanel.getAufstellungsAssistentPanel()
-				.isGroupFilter();
+		boolean gruppenfilter = m_clLineupPanel.getAufstellungsAssistentPanel().isGroupFilter();
 		String gruppe = m_clLineupPanel.getAufstellungsAssistentPanel().getGroup();
 		boolean gruppenegieren = m_clLineupPanel.getAufstellungsAssistentPanel().isNotGroup();
 
@@ -560,46 +560,48 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		add(centerPanel, BorderLayout.CENTER);
 
-		addItemListeners();
-	}
-
-
-	@Override
-	public void itemStateChanged(ItemEvent event) {
-
-
-		if (event.getStateChange() == ItemEvent.SELECTED) {
-			if (event.getSource().equals(m_jcbStyleOfPlay)) {
-				// StyleOfPlay changed (directly or indirectly)
-				m_iStyleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "ERROR: Style Of Play is null")).getId();
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(m_iStyleOfPlay);
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(((CBItem) m_jcbStyleOfPlay.getSelectedItem()).getId());
-			}
-			else if (event.getSource().equals(m_jcbTeamAttitude)) {
-				// Attitude changed
-				m_iAttitude = ((CBItem) Objects.requireNonNull(m_jcbTeamAttitude.getSelectedItem(), "ERROR: Attitude is null")).getId();
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setAttitude(m_iAttitude);
-			}
-			else if (event.getSource().equals(m_jcbTactic)) {
-				// Tactic changed
-				m_iTactic = ((CBItem) Objects.requireNonNull(m_jcbTactic.getSelectedItem(), "ERROR: Tactic type is null")).getId();
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setTacticType(m_iTactic);
-			}
-			HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
+		cbActionListener = e -> {
+		if (e.getSource().equals(m_jcbStyleOfPlay)) {
+			// StyleOfPlay changed (directly or indirectly)
+			m_iStyleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "ERROR: Style Of Play is null")).getId();
+			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(m_iStyleOfPlay);
+			HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setRatings();
 		}
+		else if (e.getSource().equals(m_jcbTeamAttitude)) {
+			// Attitude changed
+			m_iAttitude = ((CBItem) Objects.requireNonNull(m_jcbTeamAttitude.getSelectedItem(), "ERROR: Attitude is null")).getId();
+			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setAttitude(m_iAttitude);
+			HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setRatings();
+		}
+		else if (e.getSource().equals(m_jcbTactic)) {
+			// Tactic changed
+			m_iTactic = ((CBItem) Objects.requireNonNull(m_jcbTactic.getSelectedItem(), "ERROR: Tactic type is null")).getId();
+			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setTacticType(m_iTactic);
+			HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setRatings();
+		}
+	};
 
-		HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setRatings();
-
+		addListeners();
 	}
 
-	/**
-	 * Add all item listeners to the combo boxes
-	 */
-	private void addItemListeners() {
-		m_jcbStyleOfPlay.addItemListener(this);
-		m_jcbTeamAttitude.addItemListener(this);
-		m_jcbTactic.addItemListener(this);
+	private void addListeners() {
+		m_jcbStyleOfPlay.addActionListener(cbActionListener);
+		m_jcbTeamAttitude.addActionListener(cbActionListener);
+		m_jcbTactic.addActionListener(cbActionListener);
 	}
+
+	private void removeListeners() {
+		m_jcbStyleOfPlay.removeActionListener(cbActionListener);
+		m_jcbTeamAttitude.removeActionListener(cbActionListener);
+		m_jcbTactic.removeActionListener(cbActionListener);
+	}
+
+
+//	private void refreshRatingsPanel() {
+//		removeItemListeners();
+//		HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setRatings();
+//		addItemListeners();
+//	}
 
 	// get all positions
 	public ArrayList<PlayerPositionPanel> getAllPositions() {
@@ -658,6 +660,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	{
 		// NT Team can select whatever Style of Play they like
 		if (!UserManager.instance().getCurrentUser().isNtTeam()) {
+
+			removeListeners();
+
 			// remove all combo box items and add new ones.
 			List<Integer> legalValues = getValidStyleOfPlayValues();
 
@@ -676,11 +681,17 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 				m_jcbStyleOfPlay.addItem(cbItem);
 
 			}
+
+			addListeners();
+
 			// Set trainer default value
 			setStyleOfPlay(getDefaultTrainerStyleOfPlay());
 			// Attempt to set the old value. If it is not possible it will do nothing.
 			setStyleOfPlay(oldValue);
+
 		}
+
+
 	}
 
 	public void setStyleOfPlay(int style){

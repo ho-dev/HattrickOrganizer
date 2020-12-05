@@ -43,7 +43,7 @@ import javax.swing.event.PopupMenuListener;
 /**
  * Create the lineup detail panel.
  */
-public final class AufstellungsDetailPanel extends ImagePanel implements Refreshable, ItemListener, PopupMenuListener {
+public final class AufstellungsDetailPanel extends ImagePanel implements Refreshable, ItemListener {
 	// ~ Instance fields
 	// ----------------------------------------------------------------------------
 
@@ -71,16 +71,6 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
 			SwingConstants.CENTER);
 
-	private CBItem[] EINSTELLUNG = {
-			new CBItem(
-					HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool"),
-					IMatchDetails.EINSTELLUNG_PIC),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.normal"),
-					IMatchDetails.EINSTELLUNG_NORMAL),
-			new CBItem(HOVerwaltung.instance().getLanguageString(
-					"ls.team.teamattitude.matchoftheseason"), IMatchDetails.EINSTELLUNG_MOTS) };
-	private JComboBox m_jcbEinstellung = new JComboBox(EINSTELLUNG);
-
 	private JComboBox m_jcbSelbstvertrauen = new JComboBox(TeamConfidence.ITEMS);
 
 	private CBItem[] TRAINERTYPE = {
@@ -101,22 +91,6 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			new CBItem(HOVerwaltung.instance().getLanguageString("high"), 3),
 			new CBItem(HOVerwaltung.instance().getLanguageString("veryhigh"), 4) };
 	private JComboBox m_jcbSubStimmung = new JComboBox(SUBSTIMM);
-	private CBItem[] TAKTIK = {
-			new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_NORMAL),
-					IMatchDetails.TAKTIK_NORMAL),
-			new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_PRESSING),
-					IMatchDetails.TAKTIK_PRESSING),
-			new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_KONTER),
-					IMatchDetails.TAKTIK_KONTER),
-			new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_MIDDLE),
-					IMatchDetails.TAKTIK_MIDDLE),
-			new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_WINGS),
-					IMatchDetails.TAKTIK_WINGS),
-			new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_CREATIVE),
-					IMatchDetails.TAKTIK_CREATIVE),
-			new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_LONGSHOTS),
-					IMatchDetails.TAKTIK_LONGSHOTS) };
-	private JComboBox m_jcbTaktik = new JComboBox(TAKTIK);
 
 	// home / away / away-derby
 	private CBItem[] LOCATION = {
@@ -146,28 +120,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	private JCheckBox m_jchPullBackOverride = new JCheckBox(HOVerwaltung.instance()
 			.getLanguageString("PullBack.Override"), false);
 	
-	private CBItem[] STYLE_OF_PLAY = {
-			new CBItem("100% " + defensive_sop, -10),
-			new CBItem("80% " + defensive_sop, -8),
-			new CBItem("60% " + defensive_sop, -6),
-			new CBItem("50% " + defensive_sop, -5),
-			new CBItem("40% " + defensive_sop, -4),
-			new CBItem("30% " + defensive_sop, -3),
-			new CBItem("20% " + defensive_sop, -2),
-			new CBItem("10% " + defensive_sop, -1),
-			new CBItem(neutral_sop, 0),
-			new CBItem("10% " + offensive_sop, 1),
-			new CBItem("20% " + offensive_sop, 2),
-			new CBItem("30% " + offensive_sop, 3),
-			new CBItem("40% " + offensive_sop, 4),
-			new CBItem("50% " + offensive_sop, 5),
-			new CBItem("60% " + offensive_sop, 6),
-			new CBItem("80% " + offensive_sop, 8),
-			new CBItem("100% " + offensive_sop, 10)
-	};
-	
-	private JComboBox  m_jcbStyleOfPlay = new JComboBox(STYLE_OF_PLAY);
-	
+
 	private CBItem[] TACTICAL_ASSISTANTS = {
 			new CBItem("0", 0),
 			new CBItem("1", 1),
@@ -200,24 +153,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	// ~ Methods
 	// ------------------------------------------------------------------------------------
 
-	/**
-	 * Set the constant for Pic/Mots/Normal.
-	 *
-	 * @param einstellung
-	 *            the constant for Pic/Mots/Normal
-	 */
-	public void setEinstellung(int einstellung) {
-		Helper.setComboBoxFromID(m_jcbEinstellung, einstellung);
-	}
 
-	/**
-	 * Get the constant for Pic/Mots/Normal.
-	 *
-	 * @return the constant for Pic/Mots/Normal
-	 */
-	public int getEinstellung() {
-		return ((CBItem) m_jcbEinstellung.getSelectedItem()).getId();
-	}
 
 	/**
 	 * Set the match location (home/away/awayderby/tournament).
@@ -429,12 +365,9 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			setSelbstvertrauen(homodel.getTeam().getSelbstvertrauenAsInt());
 			setTrainerType(homodel.getTrainer().getTrainerTyp());
 			setPredictionType(RatingPredictionConfig.getInstancePredictionType());
-			setTaktik(aufstellung.getTacticType());
 			m_jpTaktikStaerke.setText(getTaktikString());
 
 			setTacticalAssistants(homodel.getClub().getTacticalAssistantLevels());
-			setStyleOfPlay(aufstellung.getStyleOfPlay());
-			setEinstellung(aufstellung.getAttitude());
 			setLocation(aufstellung.getLocation());
 			setPullBackMinute(aufstellung.getPullBackMinute());
 			m_jcbPullBackMinute.setEnabled(!aufstellung.isPullBackOverride());
@@ -534,33 +467,6 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		core.util.Helper.setComboBoxFromID(m_jcbPredictionType, newPredictionType);
 	}
 
-	/**
-	 * Set the tactic using its constant.
-	 *
-	 * @param taktik
-	 *            the tactic constant
-	 */
-	public void setTaktik(int taktik) {
-		Helper.setComboBoxFromID(m_jcbTaktik, taktik);
-	}
-
-	/**
-	 * Get the tactic constant.
-	 *
-	 * @return get the tactic constant
-	 */
-	public int getTaktik() {
-		return ((CBItem) m_jcbTaktik.getSelectedItem()).getId();
-	}
-
-	public void setStyleOfPlay(int style){
-		Helper.setComboBoxFromID(m_jcbStyleOfPlay, style);
-	}
-	
-	public int getStyleOfPlay() {
-		return ((CBItem) m_jcbStyleOfPlay.getSelectedItem()).getId();
-	}
-	
 	public void setTacticalAssistants(int assistants){
 		Helper.setComboBoxFromID(m_jcbTacticalAssistants, assistants);
 	}
@@ -621,14 +527,6 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 				// Pull Back minute changed
 				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setPullBackMinute(((CBItem) m_jcbPullBackMinute.getSelectedItem()).getId());
 				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
-			} else if (event.getSource().equals(m_jcbTaktik)) {
-				// Tactic changed
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setTacticType(((CBItem) m_jcbTaktik.getSelectedItem()).getId());
-				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
-			} else if (event.getSource().equals(m_jcbEinstellung)) {
-				// Attitude changed
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setAttitude(((CBItem) m_jcbEinstellung.getSelectedItem()).getId());
-				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbMainStimmung)) {
 				// team spirit changed
 				HOVerwaltung.instance().getModel().getTeam().setStimmungAsInt(((CBItem) m_jcbMainStimmung.getSelectedItem()).getId());
@@ -644,12 +542,8 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			} else if (event.getSource().equals(m_jcbTrainerType)) {
 				// trainer type changed
 				HOVerwaltung.instance().getModel().getTrainer().setTrainerTyp(((CBItem) m_jcbTrainerType.getSelectedItem()).getId());
-				doSilentRefresh = true; // To save the rating change display.
-				// will set current styleOfPlay value if valid otherwise set to trainer default
-				updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay());
-				addAllStyleofPlayItems();
-				doSilentRefresh = false;
-				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
+				int iStyleOfPlay = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay();
+				HOMainFrame.instance().getAufstellungsPanel().getAufstellungsPositionsPanel().updateStyleOfPlayComboBox(iStyleOfPlay);
 			} else if (event.getSource().equals(m_jcbPredictionType)) {
 				// prediction type changed
 				RatingPredictionConfig.setInstancePredictionType(((CBItem) m_jcbPredictionType.getSelectedItem()).getId());
@@ -658,21 +552,11 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 				// location changed
 				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setLocation((short) ((CBItem) m_jcbLocation.getSelectedItem()).getId());
 				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
-			} else if (event.getSource().equals(m_jcbStyleOfPlay)) {
-				// CoachModifier/StyleOfPlay changed
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(((CBItem) m_jcbStyleOfPlay.getSelectedItem()).getId());
-				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbTacticalAssistants)) {
 				HOVerwaltung.instance().getModel().getClub().setTacticalAssistantLevels(((CBItem) m_jcbTacticalAssistants.getSelectedItem()).getId());
 				// Number of tactical assistants changed
-					// TODO : the following 4 llnes should be deleted once moving to lineup panel is complete
-					doSilentRefresh = true; // To save the item change display
-					updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay()); // Attempt to set the old value, otherwise trainer default.
-					addAllStyleofPlayItems();
-					doSilentRefresh = false;
-					int iStyleOfPlay = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay();
-					HOMainFrame.instance().getAufstellungsPanel().getAufstellungsPositionsPanel().updateStyleOfPlayComboBox(iStyleOfPlay);
-
+				int iStyleOfPlay = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay();
+				HOMainFrame.instance().getAufstellungsPanel().getAufstellungsPositionsPanel().updateStyleOfPlayComboBox(iStyleOfPlay);
 			}
 			refresh();
 		}
@@ -722,8 +606,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		case IMatchDetails.TAKTIK_MIDDLE:
 		case IMatchDetails.TAKTIK_WINGS:
 		case IMatchDetails.TAKTIK_LONGSHOTS:
-			return PlayerAbility.getNameForSkill(aufstellung.getTacticLevel(getTaktik()));
-
+			return PlayerAbility.getNameForSkill(aufstellung.getTacticLevel(aufstellung.getTacticType()));
 		default:
 			return HOVerwaltung.instance().getLanguageString("Unbestimmt");
 		}
@@ -771,47 +654,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		layout.setConstraints(panel, constraints);
 		add(panel);
 
-		yPos++;
-		constraints.gridx = 1;
-		constraints.gridy = yPos;
-		constraints.gridwidth = 1;
-		initLabel(constraints, layout,
-				new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.teamattitude")), yPos);
-		constraints.gridx = 2;
-		constraints.gridy = yPos;
-		m_jcbSelbstvertrauen.setPreferredSize(new Dimension(50, Helper.calcCellWidth(20)));
-		m_jcbSelbstvertrauen.setMaximumRowCount(3);
-		m_jcbEinstellung.setToolTipText(HOVerwaltung.instance().getLanguageString(
-				"tt_AufstellungsDetails_Einstellung"));
-		layout.setConstraints(m_jcbEinstellung, constraints);
-		add(m_jcbEinstellung);
 
-		yPos++;
-		constraints.gridx = 1;
-		constraints.gridy = yPos;
-		constraints.gridwidth = 1;
-		initLabel(constraints, layout,
-				new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.tactic")), yPos);
-		constraints.gridx = 2;
-		constraints.gridy = yPos;
-		m_jcbSelbstvertrauen.setPreferredSize(new Dimension(50, Helper.calcCellWidth(20)));
-		m_jcbSelbstvertrauen.setMaximumRowCount(7);
-		m_jcbTaktik.setToolTipText(HOVerwaltung.instance().getLanguageString(
-				"tt_AufstellungsDetails_Taktik"));
-		layout.setConstraints(m_jcbTaktik, constraints);
-		add(m_jcbTaktik);
-
-		yPos++;
-		constraints.gridx = 1;
-		constraints.gridy = yPos;
-		constraints.gridwidth = 1;
-		initLabel(constraints, layout,
-				new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.styleofPlay")), yPos);
-		constraints.gridx = 2;
-		constraints.gridy = yPos;
-		layout.setConstraints(m_jcbStyleOfPlay, constraints);
-		add(m_jcbStyleOfPlay);
-		
 		yPos++;
 		constraints.gridx = 1;
 		constraints.gridy = yPos;
@@ -961,8 +804,6 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	 * Add all item listeners to the combo boxes
 	 */
 	private void addItemListeners() {
-		m_jcbEinstellung.addItemListener(this);
-		m_jcbTaktik.addItemListener(this);
 		m_jcbLocation.addItemListener(this);
 		m_jcbMainStimmung.addItemListener(this);
 		m_jcbSubStimmung.addItemListener(this);
@@ -972,16 +813,12 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		m_jcbPullBackMinute.addItemListener(this);
 		m_jchPullBackOverride.addItemListener(this);
 		m_jcbTacticalAssistants.addItemListener(this);
-		m_jcbStyleOfPlay.addItemListener(this);
-		m_jcbStyleOfPlay.addPopupMenuListener(this);
 	}
 
 	/**
 	 * Remove all item listeners from the combo boxes
 	 */
 	private void removeItemListeners() {
-		m_jcbEinstellung.removeItemListener(this);
-		m_jcbTaktik.removeItemListener(this);
 		m_jcbLocation.removeItemListener(this);
 		m_jcbMainStimmung.removeItemListener(this);
 		m_jcbSubStimmung.removeItemListener(this);
@@ -991,8 +828,6 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		m_jcbPullBackMinute.removeItemListener(this);
 		m_jchPullBackOverride.removeItemListener(this);
 		m_jcbTacticalAssistants.removeItemListener(this);
-		m_jcbStyleOfPlay.removeItemListener(this);
-		m_jcbStyleOfPlay.removePopupMenuListener(this);
 	}
 
 	private CBItem[] getPredictionItems() {
@@ -1016,137 +851,5 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		add(label);
 	}
 	
-	// each time updateStyleOfPlayBox gets called we need to add all elements back so that we can load stored lineups
-	// so we need addAllStyleOfPlayItems() after every updateStyleOfPlayBox()
-	private void updateStyleOfPlayBox(int oldValue)
-	{
-		if (!UserManager.instance().getCurrentUser().isNtTeam()) {
-			// remove all combo box items and add new ones.
-			List<Integer> legalValues = getValidStyleOfPlayValues();
 
-			m_jcbStyleOfPlay.removeAllItems();
-
-			for (int value : legalValues) {
-				CBItem cbItem;
-
-				if (value == 0) {
-					cbItem = new CBItem(neutral_sop, value);
-				} else if (value > 0) {
-					cbItem = new CBItem((value * 10) + "% " + offensive_sop, value);
-				} else {
-					cbItem = new CBItem((Math.abs(value) * 10) + "% " + defensive_sop, value);
-				}
-				m_jcbStyleOfPlay.addItem(cbItem);
-
-			}
-			// Set trainer default value
-			setStyleOfPlay(getDefaultTrainerStyleOfPlay());
-			// Attempt to set the old value. If it is not possible it will do nothing.
-			setStyleOfPlay(oldValue);
-		}
-	}
-	// this is needed so that you can load every style of play value from stored lineups
-	public void addAllStyleofPlayItems() {
-		for (CBItem c : STYLE_OF_PLAY) {
-			m_jcbStyleOfPlay.addItem(c);
-		}
-	}
-	
-	public List<Integer> getValidStyleOfPlayValues()
-	{
-		int trainer;
-		int tacticalAssistants;
-		try {
-			trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
-			tacticalAssistants = HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
-			
-		} catch (Exception e) {
-			trainer = 2;
-			tacticalAssistants = 0;
-			HOLogger.instance().error(getClass(), "Model not ready, put default value " + trainer + " for trainer and "  + tacticalAssistants + " for tactical Assistants.");
-		}
-		
-		int min = -10 ;
-		int max = 10;
-		int step = 1; // For all types
-		
-		switch (trainer) {
-			case  0 : // Defensive
-				min = -10;
-				max = -10 + 2 * tacticalAssistants;
-				break;
-				
-			case 1: // Offensive
-				min = 10 - 2 * tacticalAssistants;
-				max = 10;
-				break;
-				
-			case 2: // Neutral
-				min = 0 - tacticalAssistants;
-				max = tacticalAssistants;
-				break;
-				
-			default:
-				HOLogger.instance().error(getClass(), "Illegal trainer type found: " + trainer);
-				break;
-		}
-		
-		List<Integer> result = new ArrayList<Integer>();
-		int value = min;
-		do {
-		
-			result.add(value);
-			value = value + step;
-
-		} while (value <= max); 
-		
-		return result;
-	}
-	
-	public int getDefaultTrainerStyleOfPlay() {
-		int result = 0;
-		try {
-			int trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
-			
-			switch (trainer) {
-				case  0 : // Defensive
-					result = -10;
-					break;
-					
-				case 1: // Offensive
-					result = 10;
-					break;
-					
-				case 2: // Neutral
-					result = 0;
-					break;
-					
-				default:
-					HOLogger.instance().error(getClass(), "Illegal trainer type found: " + trainer);
-					break;
-			}
-			
-			return result;
-			
-		} catch (Exception e) {
-			// Happens at empty db, for instance.
-			return result;
-		} 
-	}
-
-	@Override
-	public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-		// no silent refresh here
-		updateStyleOfPlayBox(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay());
-	}
-
-	@Override
-	public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-		addAllStyleofPlayItems();	
-	}
-
-	@Override
-	public void popupMenuCanceled(PopupMenuEvent e) {
-		
-	}
 }
