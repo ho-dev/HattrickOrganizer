@@ -70,11 +70,13 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private javax.swing.JLayeredPane centerPanel;
 	private final SwapPositionsManager swapPositionsManager = new SwapPositionsManager(this);
 	private final IAufstellungsAssistentPanel assistantPanel;
-	private int m_iStyleOfPlay;
+	private int m_iStyleOfPlay, m_iTactic, m_iAttitude;
 	private ComboBoxTitled m_jpTeamAttitude;
+	private JComboBox<CBItem> m_jcbTeamAttitude;
 	private ComboBoxTitled m_jpTactic;
+	private JComboBox<CBItem> m_jcbTactic;
 	private ComboBoxTitled m_jpStyleOfPlay;
-	JComboBox<CBItem> m_jcbStyleOfPlay;
+	private JComboBox<CBItem> m_jcbStyleOfPlay;
 	final String offensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.offensive");
 	final String defensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.defensive");
 	final String neutral_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.neutral");
@@ -222,7 +224,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		centerPanel.add(m_clKeeper);
 
 		// TEAM ATTITUDE ================================================================
-		JComboBox<CBItem> m_jcbTeamAttitude = new JComboBox<>(new CBItem[]{
+		m_jcbTeamAttitude = new JComboBox<>(new CBItem[]{
 				new CBItem(
 						HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool"),
 						IMatchDetails.EINSTELLUNG_PIC),
@@ -238,7 +240,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		centerPanel.add(m_jpTeamAttitude);
 
 		// TACTIC ================================================================
-		JComboBox<CBItem> m_jcbTactic = new JComboBox<>(new CBItem[]{
+		m_jcbTactic = new JComboBox<>(new CBItem[]{
 				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_NORMAL),
 						IMatchDetails.TAKTIK_NORMAL),
 				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_PRESSING),
@@ -565,24 +567,25 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	@Override
 	public void itemStateChanged(ItemEvent event) {
 
-		// The item affected by the event.
-		Object item = event.getItem();
-		if (event.getStateChange() == ItemEvent.SELECTED) {
-			System.out.println(item.toString() + " selected.");
-		}
-
-		if (event.getStateChange() == ItemEvent.DESELECTED) {
-			System.out.println(item.toString() + " deselected.");
-		}
 
 		if (event.getStateChange() == ItemEvent.SELECTED) {
 			if (event.getSource().equals(m_jcbStyleOfPlay)) {
 				// StyleOfPlay changed (directly or indirectly)
-				m_iStyleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "m_jcbStyleOfPlay should be not null")).getId();
+				m_iStyleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "ERROR: Style Of Play is null")).getId();
 				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(m_iStyleOfPlay);
 				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(((CBItem) m_jcbStyleOfPlay.getSelectedItem()).getId());
-				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			}
+			else if (event.getSource().equals(m_jcbTeamAttitude)) {
+				// Attitude changed
+				m_iAttitude = ((CBItem) Objects.requireNonNull(m_jcbTeamAttitude.getSelectedItem(), "ERROR: Attitude is null")).getId();
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setAttitude(m_iAttitude);
+			}
+			else if (event.getSource().equals(m_jcbTactic)) {
+				// Tactic changed
+				m_iTactic = ((CBItem) Objects.requireNonNull(m_jcbTactic.getSelectedItem(), "ERROR: Tactic type is null")).getId();
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setTacticType(m_iTactic);
+			}
+			HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 		}
 
 		HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setRatings();
@@ -594,6 +597,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	 */
 	private void addItemListeners() {
 		m_jcbStyleOfPlay.addItemListener(this);
+		m_jcbTeamAttitude.addItemListener(this);
+		m_jcbTactic.addItemListener(this);
 	}
 
 	// get all positions
