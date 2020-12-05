@@ -74,6 +74,8 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - [FEAT] Remove all printing functionality.
   - [FEAT] Remove player state colour, and display icons instead in Lineup.
   - [FEAT] Refactor progress bar display [#722]
+  - [BUG] Fix issue with user preferences (incl. OAuth access token) not being saved upon exiting HO. [#811]
+
 
 ### League
 
