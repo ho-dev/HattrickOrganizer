@@ -1228,11 +1228,9 @@ public class DBManager {
 	}
 
 	/**
-	 * Speichert die UserParameter in der Datenbank
-	 * 
+	 * Saves the user parameters in the database.
 	 */
 	public void saveUserParameter() {
-
 		UserConfigurationTable table = (UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME);
 		table.store(UserParameter.instance());
 		table.store(HOParameter.instance());

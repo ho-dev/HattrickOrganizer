@@ -54,6 +54,8 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ### Misc
 
+    - Fix issue with user preferences (incl. OAuth access token) not
+    being saved upon exiting HO. (#811)
 
 
 ### League

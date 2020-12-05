@@ -116,7 +116,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private Vector<String> m_vOptionPanelNames = new Vector<>();
 	private Vector<JPanel> m_vOptionPanels = new Vector<>();
 
-	private boolean isAppTerminated = false; // set when HO should be terminated
+	private final AtomicBoolean isAppTerminated = new AtomicBoolean(false); // set when HO should be terminated
 	private final List<ApplicationClosingListener> applicationClosingListener = new ArrayList<>();
 
 	// Menu color depending of version
@@ -432,9 +432,9 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			// Disconnect
 			DBManager.instance().disconnect();
 			HOLogger.instance().debug(getClass(), "Disconnected");
-			HOLogger.instance().debug(getClass(), "Shutdown complete!");
 
-			isAppTerminated = true; // enable System.exit in windowClosed()
+			isAppTerminated.set(true); // enable System.exit in windowClosed()
+			HOLogger.instance().info(getClass(), "Shutdown complete! isAppTerminated: " + isAppTerminated.get());
 
 			// Dispose makes frame windowClosed as soon as all modules windowClosing all complete.
 			try {
@@ -748,9 +748,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			 */
 			@Override
 			public void windowClosed(WindowEvent windowEvent) {
-				HOLogger.instance().info(getClass(), "exiting...");
-				if (isAppTerminated) {
+				HOLogger.instance().info(getClass(), "exiting..." );
+				if (isAppTerminated.get()) {
 					System.exit(0);
+				} else {
+					HOLogger.instance().warning(getClass(), "The app is not fully terminated yet." );
 				}
 			}
 
@@ -759,7 +761,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			 */
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
-				HOLogger.instance().info(getClass(), "shutting down HO...");
+				HOLogger.instance().info(getClass(), "shutting down HO... ");
 				shutdown();
 			}
 
