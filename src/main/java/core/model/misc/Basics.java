@@ -66,8 +66,7 @@ public final class Basics  {
         m_clDatum = getTimestamp(properties, "date");
         m_iTeamId = getInt(properties, "teamid", 0);
         m_sYouthTeamName = properties.getProperty("youthteamname", "");
-        youthTeamId = getInteger(properties, "youthteamid");
-        if ( youthTeamId != null && youthTeamId <= 0) youthTeamId = null;
+        setYouthTeamId(getInteger(properties, "youthteamid"));
         m_sTeamName = properties.getProperty("teamname", "");
         m_sManager = properties.getProperty("owner", "");
         m_tActivationDate = getTimestamp(properties, "activationdate");
@@ -126,7 +125,7 @@ public final class Basics  {
             m_bHasSupporter = rs.getBoolean("HasSupporter");
             m_tActivationDate = rs.getTimestamp("ActivationDate");
             m_sYouthTeamName = rs.getString("YouthTeamName");
-            youthTeamId = DBManager.getInteger(rs,"YouthTeamID");
+            setYouthTeamId(DBManager.getInteger(rs,"YouthTeamID"));
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),"Constructor Basics: " + e.toString());
         }
@@ -379,8 +378,18 @@ public final class Basics  {
         return youthTeamId != null;
     }
 
+    /**
+     * Set the youth team id
+     * @param m_iYouthTeamId
+     *          0 and negative values sets youth team id to null.
+     *          otherwise the param value is used
+     */
     public void setYouthTeamId(Integer m_iYouthTeamId) {
-        this.youthTeamId = m_iYouthTeamId;
+        if (m_iYouthTeamId != null && m_iYouthTeamId > 0) {
+            this.youthTeamId = m_iYouthTeamId;
+        } else {
+            this.youthTeamId = null;
+        }
     }
 
     public String getYouthTeamName() {
