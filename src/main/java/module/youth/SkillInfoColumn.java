@@ -6,7 +6,11 @@ import javax.swing.*;
 
 public class SkillInfoColumn extends JSlider {
 
-    public SkillInfoColumn(YouthPlayer.SkillInfo info){
+    YouthPlayer.SkillInfo skillInfo;
 
+    public SkillInfoColumn(YouthPlayer.SkillInfo info){
+        this.skillInfo = info;
+
+        this.setToolTipText(info.toString());
     }
 }
