@@ -59,7 +59,7 @@ public class YouthPlayerTable  extends AbstractTable {
             tmp.addAll(createColumnDescriptors(skillId));
         }
 
-        columns = (ColumnDescriptor[]) tmp.toArray();
+        columns = (ColumnDescriptor[]) tmp.toArray(new ColumnDescriptor[0]);
     }
 
     private Collection<ColumnDescriptor> createColumnDescriptors(Skills.HTSkillID skillId) {
@@ -245,7 +245,7 @@ public class YouthPlayerTable  extends AbstractTable {
     }
 
     private void SetSkillInfo(YouthPlayer youthPlayer, ResultSet rs, Skills.HTSkillID skillID) throws SQLException {
-        var skillinfo = youthPlayer.getSkillInfo(skillID);
+        var skillinfo = new YouthPlayer.SkillInfo(skillID);
         var columnPrefix = skillID.toString();
         skillinfo.setCurrentLevel(DBManager.getInteger(rs, columnPrefix));
         skillinfo.setStartLevel(DBManager.getInteger(rs,columnPrefix+"Start"));
@@ -253,6 +253,7 @@ public class YouthPlayerTable  extends AbstractTable {
         skillinfo.setMaxReached(DBManager.getBoolean(rs, columnPrefix+"IsMaxReached"));
         skillinfo.setCurrentValue(rs.getDouble(columnPrefix+"Value"));
         skillinfo.setStartValue(rs.getDouble(columnPrefix+"StartValue"));
+        youthPlayer.setSkillInfo(skillinfo);
     }
 
     public Timestamp loadMinScoutingDate() {

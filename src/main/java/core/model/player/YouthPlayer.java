@@ -336,7 +336,11 @@ public class YouthPlayer {
 
     public static Skills.HTSkillID skillIds[] = {Keeper, Defender, Playmaker, Winger, Passing, Scorer, SetPieces};
 
-    public class SkillInfo {
+    public void setSkillInfo(SkillInfo skillinfo) {
+        this.skillInfoMap.put(skillinfo.skillID.getValue(), skillinfo);
+    }
+
+    public static class SkillInfo {
 
         /**
          * Skill Id

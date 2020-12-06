@@ -10,6 +10,7 @@ import core.gui.model.YouthPlayerColumn;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.model.player.YouthPlayer;
+import module.training.Skills;
 
 import javax.swing.*;
 import java.sql.Timestamp;
@@ -56,6 +57,13 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                         return new ColorLabelEntry("" + player.getCanBePromotedInAtDate(new Date().getTime()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }
                 },
+                new YouthPlayerColumn(3, "ls.player.Keeper") {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
+                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Keeper));
+                    }
+                },
+
                 new YouthPlayerColumn(99, "ls.player.id", 0) {
                     @Override
                     public boolean isDisplay() {
