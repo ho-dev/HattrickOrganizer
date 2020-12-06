@@ -32,7 +32,7 @@ import javax.swing.event.ListSelectionListener;
 public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
 	private IAufstellungsAssistentPanel aufstellungsAssistentPanel;
-	private AufstellungsDetailPanel aufstellungsDetailPanel;
+	private LineupSettingSimulationPanel lineupSettingSimulationPanel;
 	private LineupPositionsPanel aufstellungsPositionsPanel;
 	private AustellungSpielerTable aufstellungSpielerTable;
 	private JSplitPane horizontalLeftSplitPane;
@@ -80,8 +80,8 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	 * Gibt das AufstellungsDetailPanel zurück
 	 * 
 	 */
-	public final AufstellungsDetailPanel getAufstellungsDetailPanel() {
-		return aufstellungsDetailPanel;
+	public final LineupSettingSimulationPanel getLineupSettingSimulationPanel() {
+		return lineupSettingSimulationPanel;
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	 */
 	public final void update() {
 		aufstellungsPositionsPanel.refresh();
-		aufstellungsDetailPanel.refresh();
+		lineupSettingSimulationPanel.refresh();
 		aufstellungSpielerTable.refresh();
 		aufstellungSpielerTableName.refresh();
 
@@ -171,9 +171,9 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		horizontalLeftSplitPane.setLeftComponent(new JScrollPane(aufstellungsPositionsPanel));
 		horizontalLeftSplitPane.setRightComponent(initSpielerTabelle());
 
-		aufstellungsDetailPanel = new AufstellungsDetailPanel();
+		lineupSettingSimulationPanel = new LineupSettingSimulationPanel();
 		horizontalRightSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
-		horizontalRightSplitPane.setLeftComponent(new JScrollPane(aufstellungsDetailPanel));
+		horizontalRightSplitPane.setLeftComponent(new JScrollPane(lineupSettingSimulationPanel));
 		horizontalRightSplitPane.setRightComponent(tabbedPane);
 
 		verticalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);

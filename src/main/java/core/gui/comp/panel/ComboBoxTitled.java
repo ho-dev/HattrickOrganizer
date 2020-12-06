@@ -2,7 +2,6 @@ package core.gui.comp.panel;
 
 import core.datatype.CBItem;
 import core.gui.theme.HOColorName;
-import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 
 import javax.swing.*;

@@ -27,7 +27,7 @@ import static core.model.player.IMatchRoleID.*;
  */
 public class CopyListener implements ActionListener {
 
-	private AufstellungsRatingPanel lineup;
+	private LineupRatingPanel lineup;
 	private static final String LF = System.getProperty("line.separator", "\n");
 	private static final String EMPTY = "";
 	private static final String SPACE = " ";
@@ -43,7 +43,7 @@ public class CopyListener implements ActionListener {
 	/**
 	 * Create the CopyListener and initialize the gui components.
 	 */
-	public CopyListener(AufstellungsRatingPanel lineup) {
+	public CopyListener(LineupRatingPanel lineup) {
 		this.lineup = lineup;
 		miPlaintext.addActionListener(this);
 		miHattickMLDef.addActionListener(this);

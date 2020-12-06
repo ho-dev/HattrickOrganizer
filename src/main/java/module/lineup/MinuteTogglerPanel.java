@@ -31,10 +31,10 @@ public final class MinuteTogglerPanel extends JPanel {
 	private List<JLabel> toggleKeys = new ArrayList();
 	private List<JLabel> toggleKeysET = new ArrayList();
 	private List<Double> toggleLabels = null;
-	private AufstellungsDetailPanel parent;
+	private LineupSettingSimulationPanel parent;
 	private int current = -1; //default to regular time average
 	
-	public MinuteTogglerPanel(AufstellungsDetailPanel parent) {
+	public MinuteTogglerPanel(LineupSettingSimulationPanel parent) {
 		this.parent = parent;
 	}
 

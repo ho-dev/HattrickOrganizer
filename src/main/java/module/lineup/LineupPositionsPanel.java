@@ -6,7 +6,6 @@ import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.panel.ComboBoxTitled;
 import core.gui.model.AufstellungCBItem;
-import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
@@ -19,10 +18,7 @@ import core.util.HOLogger;
 import core.util.Helper;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -238,6 +234,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridx = 4;
 		layout.setConstraints(m_jpTeamAttitude, constraints);
 		centerPanel.add(m_jpTeamAttitude);
+		// Initialize attitude CB
+		m_iAttitude = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getAttitude();
+		Helper.setComboBoxFromID(m_jcbTeamAttitude, m_iAttitude);
 
 		// TACTIC ================================================================
 		m_jcbTactic = new JComboBox<>(new CBItem[]{
@@ -262,6 +261,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		layout.setConstraints(m_jpTactic, constraints);
 		centerPanel.add(m_jpTactic);
 
+		// Initialize tactic CB
+		m_iTactic = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getTacticType();
+		Helper.setComboBoxFromID(m_jcbTactic, m_iTactic);
 
 		// Style of Play ================================================================
 		m_jcbStyleOfPlay = new JComboBox<>();
@@ -273,6 +275,10 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridx = 6;
 		layout.setConstraints(m_jpStyleOfPlay, constraints);
 		centerPanel.add(m_jpStyleOfPlay);
+
+		// Initialize Style of play CB
+		m_iStyleOfPlay = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay();
+		Helper.setComboBoxFromID(m_jcbStyleOfPlay, m_iStyleOfPlay);
 
 
 		// WBr ==========================================================================
@@ -565,19 +571,19 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 			// StyleOfPlay changed (directly or indirectly)
 			m_iStyleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "ERROR: Style Of Play is null")).getId();
 			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(m_iStyleOfPlay);
-			HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setRatings();
+			HOMainFrame.instance().getAufstellungsPanel().getLineupSettingSimulationPanel().setRatings();
 		}
 		else if (e.getSource().equals(m_jcbTeamAttitude)) {
 			// Attitude changed
 			m_iAttitude = ((CBItem) Objects.requireNonNull(m_jcbTeamAttitude.getSelectedItem(), "ERROR: Attitude is null")).getId();
 			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setAttitude(m_iAttitude);
-			HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setRatings();
+			HOMainFrame.instance().getAufstellungsPanel().getLineupSettingSimulationPanel().setRatings();
 		}
 		else if (e.getSource().equals(m_jcbTactic)) {
 			// Tactic changed
 			m_iTactic = ((CBItem) Objects.requireNonNull(m_jcbTactic.getSelectedItem(), "ERROR: Tactic type is null")).getId();
 			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setTacticType(m_iTactic);
-			HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setRatings();
+			HOMainFrame.instance().getAufstellungsPanel().getLineupSettingSimulationPanel().setRatings();
 		}
 	};
 

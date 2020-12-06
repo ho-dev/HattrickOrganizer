@@ -297,7 +297,7 @@ public class SubstitutionOverview extends JPanel {
 			updateOrderIDs();
 			refresh();
 			selectSubstitution(newSub);
-			HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().setLabels();
+			HOMainFrame.instance().getAufstellungsPanel().getLineupSettingSimulationPanel().setLabels();
 		}
 		else {
 			restoreLineupSubstitutions();

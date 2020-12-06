@@ -1,11 +1,9 @@
-// %3280892954:de.hattrickorganizer.gui.lineup%
 package module.lineup;
 
 import core.constants.TeamConfidence;
 import core.constants.TeamSpirit;
 import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
-import core.db.user.UserManager;
 import core.gui.HOMainFrame;
 import core.gui.Refreshable;
 import core.gui.comp.entry.ColorLabelEntry;
@@ -15,47 +13,31 @@ import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.Team;
 import core.model.match.IMatchDetails;
-import core.model.match.Matchdetails;
 import core.rating.RatingPredictionConfig;
-import core.util.HOLogger;
 import core.util.Helper;
-import module.teamAnalyzer.ui.RatingUtil;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
-
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 
 /**
- * Create the lineup detail panel.
+ * Create the panel containing the rating panel and the simulation settings
  */
-public final class AufstellungsDetailPanel extends ImagePanel implements Refreshable, ItemListener {
+public final class LineupSettingSimulationPanel extends ImagePanel implements Refreshable, ItemListener {
 	// ~ Instance fields
 	// ----------------------------------------------------------------------------
 
-	private static final long serialVersionUID = -2077901764599789950L;
-
-	private AufstellungsRatingPanel m_jpRating = new AufstellungsRatingPanel();
+	private LineupRatingPanel m_jpRating = new LineupRatingPanel();
 	
 	private MinuteTogglerPanel m_jpMinuteToggler = new MinuteTogglerPanel(this);
-	
-	final String offensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.offensive");
-	final String defensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.defensive");
-	final String neutral_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.neutral");
 
 	private ColorLabelEntry m_jpAktuellesSystem = new ColorLabelEntry("",
 			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
@@ -64,10 +46,6 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
 			SwingConstants.CENTER);
 	private ColorLabelEntry m_jpErfahrungAktuellesSystem = new ColorLabelEntry("",
-			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-			SwingConstants.CENTER);
-
-	private ColorLabelEntry m_jpTaktikStaerke = new ColorLabelEntry("",
 			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
 			SwingConstants.CENTER);
 
@@ -140,7 +118,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 	/**
 	 * Creates a new AufstellungsDetailPanel object.
 	 */
-	public AufstellungsDetailPanel() {
+	public LineupSettingSimulationPanel() {
 		
 		// Init the local tactical assistant count; ReInit is not called on creation. Do this before initComponents to have
 		// this happen before UpdateStyleOfPlayBox() is called.
@@ -204,13 +182,13 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 						// genommen wird
 						// vergleichsaufstellung.updateRatingPredictionConfig();
 						homodel.setLineup(vergleichsaufstellung);
-						m_jpRating.setTopRight(vergleichsaufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
-						m_jpRating.setTopCenter(vergleichsaufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
-						m_jpRating.setTopLeft(vergleichsaufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
-						m_jpRating.setMiddle(vergleichsaufstellung.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
-						m_jpRating.setBottomRight(vergleichsaufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
-						m_jpRating.setBottomCenter(vergleichsaufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
-						m_jpRating.setBottomLeft(vergleichsaufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setRightDefense(vergleichsaufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setCentralDefense(vergleichsaufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setLeftDefense(vergleichsaufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setMidfield(vergleichsaufstellung.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setLeftAttack(vergleichsaufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setCentralAttack(vergleichsaufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setRightAttack(vergleichsaufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
 
 						// Put back the right Lineup
 						homodel.setLineup(aufstellung);
@@ -220,29 +198,17 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 
 			// no comparison required
 			m_jpRating.clear();
-			m_jpRating.setTopRightText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()))), false, true));
-			m_jpRating.setTopCenterText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()))), false,	true));
-			m_jpRating.setTopLeftText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()))), false,	true));
-			m_jpRating.setMiddleText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()))), false, true));
-			m_jpRating.setBottomRightText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()))),false, true));
-			m_jpRating.setBottomCenterText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()))), false,true));
-			m_jpRating.setBottomLeftText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()))), false,true));
-			m_jpRating.setTopRight(aufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
-			m_jpRating.setTopCenter(aufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
-			m_jpRating.setTopLeft(aufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
-			m_jpRating.setMiddle(aufstellung.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
-			m_jpRating.setBottomRight(aufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
-			m_jpRating.setBottomCenter(aufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
-			m_jpRating.setBottomLeft(aufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setRightDefense(aufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setCentralDefense(aufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setLeftDefense(aufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setMidfield(aufstellung.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setLeftAttack(aufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setCentralAttack(aufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setRightAttack(aufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
 			m_jpRating.setLoddar(Helper.round(aufstellung.getRatings().getLoddarStat().get(m_jpMinuteToggler.getCurrentKey()), 2));
 			m_jpRating.setHatstat(aufstellung.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
+			int iTacticType = aufstellung.getTacticType();
+			m_jpRating.setTactic(iTacticType, aufstellung.getTacticLevel(iTacticType));
 
 			// Recalculate Borders
 			m_jpRating.calcColorBorders();
@@ -270,7 +236,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 //			setPullBackOverride(aufstellung.isPullBackOverride());
 //
 //			float avXp = homodel.getLineupWithoutRatingRecalc().getAverageExperience();
-//			m_jpDurchschnittErfahrung.setText(PlayerAbility.getNameForSkill(avXp));
+//			m_jpDurchschnittErfahrung.setText(PlayesetTopRightTextrAbility.getNameForSkill(avXp));
 //			m_jpDurchschnittErfahrung.setToolTipText((avXp < 0 ? (HOVerwaltung.instance()
 //					.getLanguageString("lineup.upload.check.captainNotSet")) : ""));
 //
@@ -311,13 +277,13 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 						// genommen wird
 						// vergleichsaufstellung.updateRatingPredictionConfig();
 						homodel.setLineup(vergleichsaufstellung);
-						m_jpRating.setTopRight(vergleichsaufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
-						m_jpRating.setTopCenter(vergleichsaufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
-						m_jpRating.setTopLeft(vergleichsaufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
-						m_jpRating.setMiddle(vergleichsaufstellung.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
-						m_jpRating.setBottomRight(vergleichsaufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
-						m_jpRating.setBottomCenter(vergleichsaufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
-						m_jpRating.setBottomLeft(vergleichsaufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setRightDefense(vergleichsaufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setCentralDefense(vergleichsaufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setLeftDefense(vergleichsaufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setMidfield(vergleichsaufstellung.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setLeftAttack(vergleichsaufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setCentralAttack(vergleichsaufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
+						m_jpRating.setRightAttack(vergleichsaufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
 
 						// Put back the right Lineup
 						homodel.setLineup(aufstellung);
@@ -327,29 +293,17 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 
 			// no comparison required
 			m_jpRating.clear();
-			m_jpRating.setTopRightText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()))), false, true));
-			m_jpRating.setTopCenterText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()))), false,	true));
-			m_jpRating.setTopLeftText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()))), false,	true));
-			m_jpRating.setMiddleText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()))), false, true));
-			m_jpRating.setBottomRightText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()))),false, true));
-			m_jpRating.setBottomCenterText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()))), false,true));
-			m_jpRating.setBottomLeftText(PlayerAbility.getNameForSkill(
-					(RatingUtil.getIntValue4Rating(aufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()))), false,true));
-			m_jpRating.setTopRight(aufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
-			m_jpRating.setTopCenter(aufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
-			m_jpRating.setTopLeft(aufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
-			m_jpRating.setMiddle(aufstellung.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
-			m_jpRating.setBottomRight(aufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
-			m_jpRating.setBottomCenter(aufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
-			m_jpRating.setBottomLeft(aufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setRightDefense(aufstellung.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setCentralDefense(aufstellung.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setLeftDefense(aufstellung.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setMidfield(aufstellung.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setLeftAttack(aufstellung.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setCentralAttack(aufstellung.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
+			m_jpRating.setRightAttack(aufstellung.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
 			m_jpRating.setLoddar(Helper.round(aufstellung.getRatings().getLoddarStat().get(m_jpMinuteToggler.getCurrentKey()), 2));
 			m_jpRating.setHatstat(aufstellung.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
+			int iTacticType = aufstellung.getTacticType();
+			m_jpRating.setTactic(iTacticType, aufstellung.getTacticLevel(iTacticType));
 
 			// Recalculate Borders
 			m_jpRating.calcColorBorders();
@@ -365,7 +319,6 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 			setSelbstvertrauen(homodel.getTeam().getSelbstvertrauenAsInt());
 			setTrainerType(homodel.getTrainer().getTrainerTyp());
 			setPredictionType(RatingPredictionConfig.getInstancePredictionType());
-			m_jpTaktikStaerke.setText(getTaktikString());
 
 			setTacticalAssistants(homodel.getClub().getTacticalAssistantLevels());
 			setLocation(aufstellung.getLocation());
@@ -471,10 +424,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		Helper.setComboBoxFromID(m_jcbTacticalAssistants, assistants);
 	}
 	
-	public int getTacticalAssistants() {
-		return ((CBItem) m_jcbTacticalAssistants.getSelectedItem()).getId();
-	}
-	
+
 	/**
 	 * Set the pullback minute
 	 *
@@ -484,14 +434,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		Helper.setComboBoxFromID(m_jcbPullBackMinute, minute);
 	}
 
-	/**
-	 * Get the pullback minute
-	 *
-	 * @return get the pullback minute
-	 */
-	public int getPullBackMinute() {
-		return ((CBItem) m_jcbPullBackMinute.getSelectedItem()).getId();
-	}
+
 
 	/**
 	 * Sets the pullback override flag.
@@ -584,32 +527,19 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		addItemListeners();
 	}
 
-	/**
-	 * Get the i18n'ed name of the tactic together with it's strength.
-	 *
-	 * @return the name of the tactic incl. strength
-	 */
+
 	private String getTaktikString() {
 		final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
 		// getTaktik liefert Taktik aus ComboBox, wir wollen Taktik aus
 		// aufstellung!
 		// switch (getTaktik()) {
-		switch (aufstellung.getTacticType()) {
-		case IMatchDetails.TAKTIK_NORMAL:
-			// Play creatively has no tactic level
-		case IMatchDetails.TAKTIK_CREATIVE:
-			return (" ");
-
-		case IMatchDetails.TAKTIK_PRESSING:
-		case IMatchDetails.TAKTIK_KONTER:
-		case IMatchDetails.TAKTIK_MIDDLE:
-		case IMatchDetails.TAKTIK_WINGS:
-		case IMatchDetails.TAKTIK_LONGSHOTS:
-			return PlayerAbility.getNameForSkill(aufstellung.getTacticLevel(aufstellung.getTacticType()));
-		default:
-			return HOVerwaltung.instance().getLanguageString("Unbestimmt");
-		}
+		// Play creatively has no tactic level
+		return switch (aufstellung.getTacticType()) {
+			case IMatchDetails.TAKTIK_NORMAL, IMatchDetails.TAKTIK_CREATIVE -> (" ");
+			case IMatchDetails.TAKTIK_PRESSING, IMatchDetails.TAKTIK_KONTER, IMatchDetails.TAKTIK_MIDDLE, IMatchDetails.TAKTIK_WINGS, IMatchDetails.TAKTIK_LONGSHOTS -> PlayerAbility.getNameForSkill(aufstellung.getTacticLevel(aufstellung.getTacticType()));
+			default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
+		};
 	}
 
 	/**
@@ -670,20 +600,7 @@ public final class AufstellungsDetailPanel extends ImagePanel implements Refresh
 		m_jcbLocation.setOpaque(false);
 		layout.setConstraints(m_jcbLocation, constraints);
 		add(m_jcbLocation);
-
-		yPos++;
-		constraints.gridx = 1;
-		constraints.gridy = yPos;
-		constraints.gridwidth = 1;
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.tacticalskill"));
-		layout.setConstraints(label, constraints);
-		add(label);
-		constraints.gridx = 2;
-		constraints.gridy = yPos;
-		constraints.weightx = 1.0;
-		layout.setConstraints(m_jpTaktikStaerke.getComponent(false), constraints);
-		add(m_jpTaktikStaerke.getComponent(false));
-
+		
 		yPos++;
 		initLabel(constraints, layout,
 				new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit")), yPos);

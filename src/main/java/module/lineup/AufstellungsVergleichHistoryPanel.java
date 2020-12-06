@@ -292,7 +292,7 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 				m_clVergleichsAufstellung = null;
 			}
 			// gui.RefreshManager.instance ().doRefresh();
-			HOMainFrame.instance().getAufstellungsPanel().getAufstellungsDetailPanel().refresh();
+			HOMainFrame.instance().getAufstellungsPanel().getLineupSettingSimulationPanel().refresh();
 		}
 	}
 

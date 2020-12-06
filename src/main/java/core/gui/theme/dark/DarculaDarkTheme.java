@@ -62,6 +62,10 @@ public class DarculaDarkTheme extends DarkTheme {
 
             ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SELECTED, new Color(60, 63, 65));
             ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SUB, new Color(48, 54, 56));
+            ThemeManager.instance().put(HOColorName.TABLEENTRY_IMPROVEMENT_FG, defaults.getColor("palette.lime"));
+
+            ThemeManager.instance().put(HOColorName.RATING_BORDER_BELOW_LIMIT, new Color(255, 0, 0));
+            ThemeManager.instance().put(HOColorName.RATING_BORDER_ABOVE_LIMIT, new Color(65, 105, 225));
 
             // Matches
             ThemeManager.instance().put(HOColorName.MATCHTYPE_LEAGUE_BG, new Color(95, 86, 38));
