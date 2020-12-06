@@ -12,6 +12,7 @@ import java.util.*;
 
 import static core.util.Helper.parseDate;
 import static java.lang.Math.max;
+import static module.training.Skills.HTSkillID.*;
 
 public class YouthPlayer {
     private int hrfid;
@@ -333,7 +334,14 @@ public class YouthPlayer {
         return ret;
     }
 
+    public static Skills.HTSkillID skillIds[] = {Keeper, Defender, Playmaker, Winger, Passing, Scorer, SetPieces};
+
     public class SkillInfo {
+
+        /**
+         * Skill Id
+         */
+        private Skills.HTSkillID skillID;
         /**
          * Value at scouting date, edited by the user (user's estimation)
          */
@@ -358,6 +366,10 @@ public class YouthPlayer {
          *  Indicates if the skill cant be trained anymore (false if current or max is not available).
          */
         private boolean isMaxReached;
+
+        public SkillInfo(Skills.HTSkillID id){
+            this.skillID = id;
+        }
 
         public boolean isCurrentLevelAvailable() {
             return currentLevel != null;
@@ -543,12 +555,9 @@ public class YouthPlayer {
         rating = getDouble(properties,"rating");
         youthMatchDate = parseNullableDate(properties.getProperty("youthmatchdate"));
 
-        parseSkillInfo(properties, Skills.HTSkillID.GOALKEEPER,  "keeperskill");
-        parseSkillInfo(properties, Skills.HTSkillID.DEFENDING,  "defenderskill");
-        parseSkillInfo(properties, Skills.HTSkillID.PLAYMAKING,  "playmakerskill");
-        parseSkillInfo(properties, Skills.HTSkillID.WINGER,  "wingerskill");
-        parseSkillInfo(properties, Skills.HTSkillID.PASSING,  "passingskill");
-        parseSkillInfo(properties, Skills.HTSkillID.SET_PIECES,  "setpiecesskill");
+        for ( var skillId : YouthPlayer.skillIds){
+            parseSkillInfo(properties, skillId);
+        }
 
         this.scoutComments = new ArrayList<>();
         for ( int i=0; parseScoutComment(properties, i); i++) {
@@ -578,11 +587,12 @@ public class YouthPlayer {
         return false;
     }
 
-    private void parseSkillInfo(Properties properties, Skills.HTSkillID skillID, String skill) {
-        var skillInfo = new SkillInfo();
+    private void parseSkillInfo(Properties properties, Skills.HTSkillID skillID) {
+        var skill = skillID.toString();
+        var skillInfo = new SkillInfo(skillID);
         skillInfo.currentLevel = getInteger(properties, skill);
-        skillInfo.max = getInteger(properties,skill+"max");
-        skillInfo.isMaxReached = getBoolean(properties,skill + "ismaxreached", false);
+        skillInfo.max = getInteger(properties,skill+"Max");
+        skillInfo.isMaxReached = getBoolean(properties,skill + "IsMaxReached", false);
 
         this.skillInfoMap.put(skillID.getValue(), skillInfo);
     }

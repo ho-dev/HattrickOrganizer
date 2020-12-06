@@ -32,17 +32,17 @@ public class Skills {
 
 
     public enum HTSkillID {
-        GOALKEEPER(1),
-        STAMINA(2),
-        SET_PIECES(3),
-        DEFENDING(4),
-        SCORING(5),
-        WINGER(6),
-        PASSING(7),
-        PLAYMAKING(8),
-        TRAINER(9),
-        LEADERSHIP(10),
-        EXPERIENCE(11);
+        Keeper(1),
+        Stamina(2),
+        SetPieces(3),
+        Defender(4),
+        Scorer(5),
+        Winger(6),
+        Passing(7),
+        Playmaker(8),
+        Trainer(9),
+        Leadership(10),
+        Experience(11);
 
         private int value;
         private static Map map = new HashMap<>();

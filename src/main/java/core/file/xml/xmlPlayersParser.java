@@ -3,6 +3,8 @@ package core.file.xml;
 import java.util.List;
 import java.util.Vector;
 
+import core.model.player.YouthPlayer;
+import module.training.Skills;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -259,25 +261,11 @@ public class xmlPlayersParser {
                 var playerSkills = (Element) root.getElementsByTagName("PlayerSkills").item(0);
                 //        <KeeperSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
                 //        <KeeperSkillMax IsAvailable="True">2</KeeperSkillMax>
-                youthplayerSkills2Hash(hash, playerSkills,"KeeperSkill");
-                //        <DefenderSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
-                //        <DefenderSkillMax IsAvailable="True">5</DefenderSkillMax>
-                youthplayerSkills2Hash(hash, playerSkills,"DefenderSkill");
-                //        <PlaymakerSkill IsAvailable="True" IsMaxReached="False">5</PlaymakerSkill>
-                //        <PlaymakerSkillMax IsAvailable="True">6</PlaymakerSkillMax>
-                youthplayerSkills2Hash(hash, playerSkills,"PlaymakerSkill");
-                //        <WingerSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
-                //        <WingerSkillMax IsAvailable="True">6</WingerSkillMax>
-                youthplayerSkills2Hash(hash, playerSkills,"WingerSkill");
-                //        <PassingSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
-                //        <PassingSkillMax IsAvailable="True">4</PassingSkillMax>
-                youthplayerSkills2Hash(hash, playerSkills,"PassingSkill");
-                //        <ScorerSkill IsAvailable="True" IsMaxReached="True">3</ScorerSkill>
-                //        <ScorerSkillMax IsAvailable="True">3</ScorerSkillMax>
-                youthplayerSkills2Hash(hash, playerSkills,"ScorerSkill");
-                //        <SetPiecesSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
-                //        <SetPiecesSkillMax IsAvailable="False" MayUnlock="False" />
-                youthplayerSkills2Hash(hash, playerSkills,"SetPiecesSkill");
+
+                for ( var skillId : YouthPlayer.skillIds){
+                    youthplayerSkills2Hash(hash,playerSkills,skillId);
+                }
+
                 //      </PlayerSkills>
                 //      <ScoutCall>
                 var scoutCall = (Element) root.getElementsByTagName("ScoutCall").item(0);
@@ -333,8 +321,9 @@ public class xmlPlayersParser {
         return ret;
     }
 
-    private void youthplayerSkills2Hash(MyHashtable hash, Element playerSkills, String skill) {
+    private void youthplayerSkills2Hash(MyHashtable hash, Element playerSkills, Skills.HTSkillID skillId) {
         //        <KeeperSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+        var skill = skillId.toString();
         xmlValue2Hash(hash, playerSkills, skill);
         xmlAttribute2Hash(hash, playerSkills, skill, "IsAvailable");
         xmlAttribute2Hash(hash, playerSkills, skill, "IsMaxReached");

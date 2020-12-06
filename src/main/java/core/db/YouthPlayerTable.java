@@ -23,8 +23,7 @@ public class YouthPlayerTable  extends AbstractTable {
 
     @Override
     protected void initColumns() {
-        columns = new ColumnDescriptor[]{
-
+        var tmp = new ArrayList<ColumnDescriptor>(List.of(
                 new ColumnDescriptor("HRF_ID", Types.INTEGER, false),
                 new ColumnDescriptor("ID", Types.INTEGER, false),
                 new ColumnDescriptor("FirstName", Types.VARCHAR, true, 100),
@@ -53,50 +52,25 @@ public class YouthPlayerTable  extends AbstractTable {
                 new ColumnDescriptor("positionCode", Types.INTEGER, true),
                 new ColumnDescriptor("playedMinutes", Types.INTEGER, true),
                 new ColumnDescriptor("rating", Types.INTEGER, true),
-                new ColumnDescriptor("YouthMatchDate", Types.TIMESTAMP, true),
+                new ColumnDescriptor("YouthMatchDate", Types.TIMESTAMP, true)
+        ));
 
-                new ColumnDescriptor("Keeper", Types.INTEGER, true),
-                new ColumnDescriptor("KeeperMax", Types.INTEGER, true),
-                new ColumnDescriptor("KeeperStart", Types.INTEGER, true),
-                new ColumnDescriptor("KeeperIsMaxReached", Types.BOOLEAN, false),
-                new ColumnDescriptor("KeeperValue", Types.DOUBLE, false),
-                new ColumnDescriptor("KeeperStartValue", Types.DOUBLE, false),
+        for ( var skillId : YouthPlayer.skillIds) {
+            tmp.addAll(createColumnDescriptors(skillId));
+        }
 
-                new ColumnDescriptor("Defender", Types.INTEGER, true),
-                new ColumnDescriptor("DefenderMax", Types.INTEGER, true),
-                new ColumnDescriptor("DefenderStart", Types.INTEGER, true),
-                new ColumnDescriptor("DefenderIsMaxReached", Types.BOOLEAN, false),
-                new ColumnDescriptor("DefenderValue", Types.DOUBLE, false),
-                new ColumnDescriptor("DefenderStartValue", Types.DOUBLE, false),
+        columns = (ColumnDescriptor[]) tmp.toArray();
+    }
 
-                new ColumnDescriptor("Playmaker", Types.INTEGER, true),
-                new ColumnDescriptor("PlaymakerMax", Types.INTEGER, true),
-                new ColumnDescriptor("PlaymakerStart", Types.INTEGER, true),
-                new ColumnDescriptor("PlaymakerIsMaxReached", Types.BOOLEAN, false),
-                new ColumnDescriptor("PlaymakerValue", Types.DOUBLE, false),
-                new ColumnDescriptor("PlaymakerStartValue", Types.DOUBLE, false),
-
-                new ColumnDescriptor("Winger", Types.INTEGER, true),
-                new ColumnDescriptor("WingerMax", Types.INTEGER, true),
-                new ColumnDescriptor("WingerStart", Types.INTEGER, true),
-                new ColumnDescriptor("WingerIsMaxReached", Types.BOOLEAN, false),
-                new ColumnDescriptor("WingerValue", Types.DOUBLE, false),
-                new ColumnDescriptor("WingerStartValue", Types.DOUBLE, false),
-
-                new ColumnDescriptor("Passing", Types.INTEGER, true),
-                new ColumnDescriptor("PassingMax", Types.INTEGER, true),
-                new ColumnDescriptor("PassingStart", Types.INTEGER, true),
-                new ColumnDescriptor("PassingIsMaxReached", Types.BOOLEAN, false),
-                new ColumnDescriptor("PassingValue", Types.DOUBLE, false),
-                new ColumnDescriptor("PassingStartValue", Types.DOUBLE, false),
-
-                new ColumnDescriptor("SetPieces", Types.INTEGER, true),
-                new ColumnDescriptor("SetPiecesMax", Types.INTEGER, true),
-                new ColumnDescriptor("SetPiecesStart", Types.INTEGER, true),
-                new ColumnDescriptor("SetPiecesIsMaxReached", Types.BOOLEAN, false),
-                new ColumnDescriptor("SetPiecesValue", Types.DOUBLE, false),
-                new ColumnDescriptor("SetPiecesStartValue", Types.DOUBLE, false)
-        };
+    private Collection<ColumnDescriptor> createColumnDescriptors(Skills.HTSkillID skillId) {
+        var prefix = skillId.toString();
+        return new ArrayList<ColumnDescriptor>(List.of(
+                new ColumnDescriptor(prefix, Types.INTEGER, true),
+                new ColumnDescriptor(prefix + "Max", Types.INTEGER, true),
+                new ColumnDescriptor(prefix + "Start", Types.INTEGER, true),
+                new ColumnDescriptor(prefix + "IsMaxReached", Types.BOOLEAN, false),
+                new ColumnDescriptor(prefix + "Value", Types.DOUBLE, false),
+                new ColumnDescriptor(prefix + "StartValue", Types.DOUBLE, false)));
     }
 
     /**
@@ -125,23 +99,18 @@ public class YouthPlayerTable  extends AbstractTable {
         delete(awhereS, awhereV);
 
         //insert vorbereiten
-        String statement =
-                " (HRF_ID,ID,FirstName,NickName,LastName,Age,AgeDays,ArrivalDate,PromotionDate," +
+        var sql = new StringBuilder("INSERT INTO ")
+                .append(getTableName())
+                .append(" (HRF_ID,ID,FirstName,NickName,LastName,Age,AgeDays,ArrivalDate,PromotionDate," +
                         "CanBePromotedIn,PlayerNumber," +
                         "Statement,OwnerNotes,PlayerCategoryID,Cards,InjuryLevel,Specialty,CareerGoals,CareerHattricks," +
                         "LeagueGoals,FriendlyGoals,ScoutId,ScoutingRegionID,ScoutName,YouthMatchID,PositionCode," +
-                        "PlayedMinutes,Rating,YouthMatchDate," +
-                        getSkillColumnNames("Keeper")+ "," +
-                        getSkillColumnNames("Defender")+ "," +
-                        getSkillColumnNames("Playmaker")+ "," +
-                        getSkillColumnNames("Winger")+ "," +
-                        getSkillColumnNames("Passing")+ "," +
-                        getSkillColumnNames("SetPieces")+
-                        ") VALUES(";
+                        "PlayedMinutes,Rating,YouthMatchDate");
 
-        var sql = new StringBuilder("INSERT INTO ");
-        sql.append(getTableName())
-                .append(statement)
+        for ( var skillId : YouthPlayer.skillIds){
+            sql.append(",").append(getSkillColumnNames(skillId));
+        }
+        sql.append(") VALUES(")
                 .append(hrfId).append(",")
                 .append(player.getId()).append(",'")
                 .append(DBManager.insertEscapeSequences(player.getFirstName())).append("','")
@@ -172,13 +141,9 @@ public class YouthPlayerTable  extends AbstractTable {
                 .append(player.getRating()).append(",")
                 .append(DBManager.nullOrValue(player.getYouthMatchDate())).append(",");
 
-        AppendSkillInfo(sql, player, Skills.HTSkillID.GOALKEEPER);
-        AppendSkillInfo(sql, player, Skills.HTSkillID.DEFENDING);
-        AppendSkillInfo(sql, player, Skills.HTSkillID.PLAYMAKING);
-        AppendSkillInfo(sql, player, Skills.HTSkillID.WINGER);
-        AppendSkillInfo(sql, player, Skills.HTSkillID.PASSING);
-        AppendSkillInfo(sql, player, Skills.HTSkillID.SET_PIECES);
-
+        for ( var skillId: YouthPlayer.skillIds){
+            AppendSkillInfo(sql, player, skillId);
+        }
         sql.append(")");
         try {
             adapter.executeUpdate(sql.toString());
@@ -197,7 +162,7 @@ public class YouthPlayerTable  extends AbstractTable {
         }
     }
 
-    private String getSkillColumnNames(String prefix) {
+    private String getSkillColumnNames(Skills.HTSkillID prefix) {
         return prefix +","
                 + prefix + "Max,"
                 + prefix + "Start,"
@@ -269,13 +234,9 @@ public class YouthPlayerTable  extends AbstractTable {
             ret.setStatement(DBManager.deleteEscapeSequences(rs.getString("Statement")));
             ret.setYouthMatchDate(rs.getTimestamp("YouthMatchDate"));
             ret.setYouthMatchID(rs.getInt("YouthMatchID"));
-
-            SetSkillInfo(ret, rs, Skills.HTSkillID.GOALKEEPER, "Keeper");
-            SetSkillInfo(ret, rs, Skills.HTSkillID.DEFENDING, "Defender");
-            SetSkillInfo(ret, rs, Skills.HTSkillID.PLAYMAKING, "Playmaker");
-            SetSkillInfo(ret, rs, Skills.HTSkillID.WINGER, "Winger");
-            SetSkillInfo(ret, rs, Skills.HTSkillID.PASSING, "Passing");
-            SetSkillInfo(ret, rs, Skills.HTSkillID.SET_PIECES, "SetPieces");
+            for ( var skillId: YouthPlayer.skillIds){
+                SetSkillInfo(ret, rs, skillId);
+            }
 
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),e);
@@ -283,8 +244,9 @@ public class YouthPlayerTable  extends AbstractTable {
         return ret;
     }
 
-    private void SetSkillInfo(YouthPlayer youthPlayer, ResultSet rs, Skills.HTSkillID skillID, String columnPrefix) throws SQLException {
+    private void SetSkillInfo(YouthPlayer youthPlayer, ResultSet rs, Skills.HTSkillID skillID) throws SQLException {
         var skillinfo = youthPlayer.getSkillInfo(skillID);
+        var columnPrefix = skillID.toString();
         skillinfo.setCurrentLevel(DBManager.getInteger(rs, columnPrefix));
         skillinfo.setStartLevel(DBManager.getInteger(rs,columnPrefix+"Start"));
         skillinfo.setMax(DBManager.getInteger(rs,columnPrefix+"Max"));
