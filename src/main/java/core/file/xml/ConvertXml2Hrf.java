@@ -68,28 +68,43 @@ public class ConvertXml2Hrf {
 		HOMainFrame.instance().setWaitInformation(5);
 
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		Integer youthTeamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
+
 		String teamDetails = mc.getTeamdetails(-1);
 		
 		if (teamDetails == null) {
 			return null;
 		}
-		
+
 		List<TeamInfo> teamInfoList = null;
-		if (teamId <= 0) {
-			// We have no team selected
+		if (teamId <= 0 || youthTeamId == null) {
+			// We have no team selected or the youth team information is never downloaded before
 			teamInfoList = XMLTeamDetailsParser.getTeamInfoFromString(teamDetails);
 			if (teamInfoList.size() == 1) {
+				// user has only one single team
 				teamId = teamInfoList.get(0).getTeamId();
+				youthTeamId = teamInfoList.get(0).getYouthTeamId();
 			} else if (teamInfoList.size() >= 2){
-				CursorToolkit.stopWaitCursor(HOMainFrame.instance().getRootPane());
-				TeamSelectionDialog selection = new TeamSelectionDialog(HOMainFrame.instance(), teamInfoList);
-				selection.setVisible(true);
-				
-				if (selection.getCancel() == true) {
-					return null;
+				// user has more than one team
+				if ( teamId <=0) {
+					// Select one of user's teams, if not done before
+					CursorToolkit.stopWaitCursor(HOMainFrame.instance().getRootPane());
+					TeamSelectionDialog selection = new TeamSelectionDialog(HOMainFrame.instance(), teamInfoList);
+					selection.setVisible(true);
+					if (selection.getCancel() == true) {
+						return null;
+					}
+					teamId = selection.getSelectedTeam().getTeamId();
+					youthTeamId = selection.getSelectedTeam().getYouthTeamId();
 				}
-				
-				teamId = selection.getSelectedTeam().getTeamId();
+				else {
+					// team id is in DB and this is the first time we download youth team information
+					int finalTeamId = teamId;
+					var teaminfo = teamInfoList.stream().filter(x->x.getTeamId()== finalTeamId).findAny().orElse(null);
+					if ( teaminfo != null){
+						youthTeamId = teaminfo.getYouthTeamId();
+					}
+				}
 			} else {
 				return null;
 			}
@@ -145,8 +160,8 @@ public class ConvertXml2Hrf {
 		HOMainFrame.instance().setWaitInformation(30);
 		List<MyHashtable> playersData = new xmlPlayersParser().parsePlayersFromString(mc.getPlayers(teamId));
 		List<MyHashtable> youthplayers=null;
-		if ( HOVerwaltung.instance().getModel().getBasics().hasYouthTeam() ){
-			youthplayers = new xmlPlayersParser().parseYouthPlayersFromString(mc.downloadYouthPlayers(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId()));
+		if ( youthTeamId != null && youthTeamId > 0 ){
+			youthplayers = new xmlPlayersParser().parseYouthPlayersFromString(mc.downloadYouthPlayers(youthTeamId));
 		}
 		HOMainFrame.instance().setWaitInformation(35);
 		Map<String, String> economyDataMap = XMLEconomyParser.parseEconomyFromString(mc.getEconomy(teamId));

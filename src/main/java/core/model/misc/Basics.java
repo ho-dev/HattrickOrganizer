@@ -14,7 +14,10 @@ import java.util.Properties;
  */
 public final class Basics  {
     /**
-     * youth team id (null if non existing or no access in case of foreign teams)
+     * youth team id (0 if non existing or no access in case of foreign teams)
+     *          null: unknown (the time before youth team information were downloaded)
+     *          0: team hast no youth team
+     *          otherwise: the youth team id
      */
     private Integer youthTeamId;
     /**
@@ -375,17 +378,15 @@ public final class Basics  {
     }
 
     public boolean hasYouthTeam(){
-        return youthTeamId != null;
+        return youthTeamId != null && youthTeamId > 0;
     }
 
     /**
      * Set the youth team id
      * @param m_iYouthTeamId
-     *          0 and negative values sets youth team id to null.
-     *          otherwise the param value is used
      */
     public void setYouthTeamId(Integer m_iYouthTeamId) {
-        if (m_iYouthTeamId != null && m_iYouthTeamId > 0) {
+        if (m_iYouthTeamId != null && m_iYouthTeamId >= 0) {
             this.youthTeamId = m_iYouthTeamId;
         } else {
             this.youthTeamId = null;

@@ -3,6 +3,7 @@ package core.file.xml;
 public class TeamInfo {
 
 	private int teamId;
+	private Integer youthTeamId;
 	private String name;
 	private String country;
 	private String league;
@@ -66,5 +67,12 @@ public class TeamInfo {
 		this.primaryTeam = primaryTeam;
 	}
 
-	
+
+	public Integer getYouthTeamId() {
+		return youthTeamId;
+	}
+
+	public void setYouthTeamId(Integer youthTeamId) {
+		this.youthTeamId = youthTeamId;
+	}
 }
