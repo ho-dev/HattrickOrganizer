@@ -32,6 +32,7 @@ public class SolarizedDarkTheme extends DarkTheme {
 
             // DEFAULT COLOR
             ThemeManager.instance().put(HOColorName.RED, defaults.getColor("palette.red"));
+            ThemeManager.instance().put(HOColorName.BLUE, defaults.getColor("palette.blue"));
 
             // Use defaults from LAF
             ThemeManager.instance().put(HOColorName.TABLEENTRY_FG, defaults.getColor("Label.foreground"));

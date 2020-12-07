@@ -26,6 +26,7 @@ import java.util.*;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import org.jetbrains.annotations.Nullable;
 
 
 public class Lineup{
@@ -1255,10 +1256,10 @@ public class Lineup{
 	/**
 	 * Get the formation xp for the current formation.
 	 */
-	public final int getTeamErfahrung4AktuellesSystem() {
+	public final int getExperienceForCurrentTeamFormation() {
 		int erfahrung = -1;
 
-		switch (ermittelSystem()) {
+		switch (getCurrentTeamFormationCode()) {
 		case SYS_MURKS:
 			erfahrung = -1;
 			break;
@@ -1337,7 +1338,7 @@ public class Lineup{
 	/**
 	 * Clone this lineup, creates and returns a new Lineup object.
 	 */
-	public final Lineup duplicate() {
+	public final @Nullable Lineup duplicate() {
 		final Properties properties = new Properties();
 		Lineup clone = null;
 
@@ -1480,13 +1481,18 @@ public class Lineup{
 		return clone;
 	}
 
-	/**
-	 * Determinates the current formation.
-	 */
-	public final byte ermittelSystem() {
-		final int defenders = getAnzAbwehr();
-		final int midfielders = getAnzMittelfeld();
-		final int forwards = getAnzSturm();
+
+	public final String getCurrentTeamFormationString() {
+		final int iNbDefs = getNbDefenders();
+		final int iNbMids = getNbMidfields();
+		final int iNbFwds = getNbForwards();
+		return iNbDefs + "-" + iNbMids + "-" + iNbFwds;
+	}
+
+	public final byte getCurrentTeamFormationCode() {
+		final int defenders = getNbDefenders();
+		final int midfielders = getNbMidfields();
+		final int forwards = getNbForwards();
 		if (defenders == 2) {
 			// 253
 			if (midfielders == 5 && forwards == 3) {
@@ -1669,7 +1675,7 @@ public class Lineup{
 	/**
 	 * Calculate the amount af defenders.
 	 */
-	private int getAnzAbwehr() {
+	private int getNbDefenders() {
 		int anzahl = 0;
 		anzahl += getAnzPosImSystem(IMatchRoleID.BACK);
 		anzahl += getAnzPosImSystem(IMatchRoleID.BACK_TOMID);
@@ -1692,7 +1698,7 @@ public class Lineup{
 	/**
 	 * Get the total amount of midfielders in the lineup.
 	 */
-	private int getAnzMittelfeld() {
+	private int getNbMidfields() {
 		int anzahl = 0;
 		anzahl += getAnzPosImSystem(IMatchRoleID.WINGER);
 		anzahl += getAnzPosImSystem(IMatchRoleID.WINGER_TOMID);
@@ -1716,7 +1722,7 @@ public class Lineup{
 	/**
 	 * Get the amount of strikers in the lineup.
 	 */
-	private int getAnzSturm() {
+	private int getNbForwards() {
 		int anzahl = 0;
 		anzahl += getAnzPosImSystem(IMatchRoleID.FORWARD);
 		anzahl += getAnzPosImSystem(IMatchRoleID.FORWARD_DEF);

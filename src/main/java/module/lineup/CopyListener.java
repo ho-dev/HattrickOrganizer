@@ -168,7 +168,7 @@ public class CopyListener implements ActionListener {
 		}
 		HOVerwaltung hov = HOVerwaltung.instance();
 		Lineup lineupData = hov.getModel().getLineup();
-		byte system = lineupData.ermittelSystem();
+		byte system = lineupData.getCurrentTeamFormationCode();
 		String systemName = lineupData.getSystemName(system);
 		int tacticType = lineupData.getTacticType();
 		String tacticName = Matchdetails.getShortTacticName(tacticType);
@@ -222,7 +222,7 @@ public class CopyListener implements ActionListener {
 		}
 		HOVerwaltung hov = HOVerwaltung.instance();
 		Lineup lineupData = hov.getModel().getLineup();
-		byte system = lineupData.ermittelSystem();
+		byte system = lineupData.getCurrentTeamFormationCode();
 		String systemName = lineupData.getSystemName(system);
 		int tacticType = lineupData.getTacticType();
 		String tacticName = Matchdetails.getShortTacticName(tacticType);

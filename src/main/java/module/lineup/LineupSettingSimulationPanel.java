@@ -39,15 +39,6 @@ public final class LineupSettingSimulationPanel extends ImagePanel implements Re
 	
 	private MinuteTogglerPanel m_jpMinuteToggler = new MinuteTogglerPanel(this);
 
-	private ColorLabelEntry m_jpAktuellesSystem = new ColorLabelEntry("",
-			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-			SwingConstants.CENTER);
-	private ColorLabelEntry m_jpDurchschnittErfahrung = new ColorLabelEntry("",
-			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-			SwingConstants.CENTER);
-	private ColorLabelEntry m_jpErfahrungAktuellesSystem = new ColorLabelEntry("",
-			ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-			SwingConstants.CENTER);
 
 	private JComboBox m_jcbSelbstvertrauen = new JComboBox(TeamConfidence.ITEMS);
 
@@ -209,6 +200,7 @@ public final class LineupSettingSimulationPanel extends ImagePanel implements Re
 			m_jpRating.setHatstat(aufstellung.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
 			int iTacticType = aufstellung.getTacticType();
 			m_jpRating.setTactic(iTacticType, aufstellung.getTacticLevel(iTacticType));
+			m_jpRating.setFormationExperience(aufstellung.getCurrentTeamFormationString(), aufstellung.getExperienceForCurrentTeamFormation());
 
 			// Recalculate Borders
 			m_jpRating.calcColorBorders();
@@ -256,13 +248,12 @@ public final class LineupSettingSimulationPanel extends ImagePanel implements Re
 	public void setLabels() {
 		if (HOVerwaltung.instance().getModel().getTeam() != null) {
 			final HOModel homodel = HOVerwaltung.instance().getModel();
-//			final Vector<Player> allPlayer = homodel.getAllSpieler();
 			final Lineup aufstellung = homodel.getLineup();
 
 			m_jpMinuteToggler.load();
 
 			// HRF comparison required
-			if (AufstellungsVergleichHistoryPanel.isVergleichgefordert()) {
+			if (AufstellungsVergleichHistoryPanel.isVergleichgefordert()) {   //TODO: check what this do and if it still required
 				// First set the values ​​to those of the loaded setup
 				final AufstellungCBItem vergleichsaufstellungcbitem = AufstellungsVergleichHistoryPanel
  						.getVergleichsAufstellung();
@@ -304,17 +295,12 @@ public final class LineupSettingSimulationPanel extends ImagePanel implements Re
 			m_jpRating.setHatstat(aufstellung.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
 			int iTacticType = aufstellung.getTacticType();
 			m_jpRating.setTactic(iTacticType, aufstellung.getTacticLevel(iTacticType));
+			m_jpRating.setFormationExperience(aufstellung.getCurrentTeamFormationString(), aufstellung.getExperienceForCurrentTeamFormation());
 
 			// Recalculate Borders
 			m_jpRating.calcColorBorders();
 
-			// get Total Strength
-//			final double gesamtstaerke = aufstellung.getGesamtStaerke(allPlayer, true);
-
-			// *2 wegen halben Sternen
-//			m_jpGesamtStaerke.setRating((int) (gesamtstaerke * 2));
-//			m_jpGesamtStaerkeText.setText(Helper.DEFAULTDEZIMALFORMAT.format(gesamtstaerke));
-
+			
 			setStimmung(homodel.getTeam().getStimmungAsInt(), homodel.getTeam().getSubStimmung());
 			setSelbstvertrauen(homodel.getTeam().getSelbstvertrauenAsInt());
 			setTrainerType(homodel.getTrainer().getTrainerTyp());
@@ -326,62 +312,11 @@ public final class LineupSettingSimulationPanel extends ImagePanel implements Re
 			m_jcbPullBackMinute.setEnabled(!aufstellung.isPullBackOverride());
 			setPullBackOverride(aufstellung.isPullBackOverride());
 
-			float avXp = homodel.getLineupWithoutRatingRecalc().getAverageExperience();
-			m_jpDurchschnittErfahrung.setText(PlayerAbility.getNameForSkill(avXp));
-			m_jpDurchschnittErfahrung.setToolTipText((avXp < 0 ? (HOVerwaltung.instance()
-					.getLanguageString("lineup.upload.check.captainNotSet")) : ""));
 
-			String formationExperienceTooltip = getFormationExperienceTooltip();
-			m_jpAktuellesSystem.setText(Lineup.getNameForSystem(aufstellung.ermittelSystem()));
-			m_jpAktuellesSystem.setToolTipText(formationExperienceTooltip);
-			int exp = homodel.getLineupWithoutRatingRecalc().getTeamErfahrung4AktuellesSystem();
-			m_jpErfahrungAktuellesSystem.setText(PlayerAbility.toString(exp) + " (" + exp + ")");
-			m_jpErfahrungAktuellesSystem.setToolTipText(formationExperienceTooltip);
-
-			// TODO: This works for light theme, but not for dark themes.
-			// m_jpErfahrungAktuellesSystem.setFGColor(new Color(Math.min(
-			//		Math.max(((8 - exp) * 32) - 1, 0), 255), 0, 0));
 		}
 	}
 
-	private String getFormationExperienceTooltip() {
-		Team team = HOVerwaltung.instance().getModel().getTeam();
-		StringBuilder builder = new StringBuilder();
-		int exp = team.getFormationExperience550();
-		builder.append("<html>");
-		builder.append("<b>").append(HOVerwaltung.instance().getLanguageString("ls.team.formationexperience")).append("</b><br><br>");
-		builder.append("5-5-0&#160&#160&#160");
-		builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
-		exp = team.getFormationExperience541();
-		builder.append("5-4-1&#160&#160&#160");
-		builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
-		exp = team.getFormationExperience532();
-		builder.append("5-3-2&#160&#160&#160");
-		builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
-		exp = team.getFormationExperience523();
-		builder.append("5-2-3&#160&#160&#160");
-		builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
-		exp = team.getFormationExperience451();
-		builder.append("4-5-1&#160&#160&#160");
-		builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
-		exp = team.getFormationExperience442();
-		builder.append("4-4-2&#160&#160&#160");
-		builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
-		exp = team.getFormationExperience433();
-		builder.append("4-3-3&#160&#160&#160");
-		builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
-		exp = team.getFormationExperience352();
-		builder.append("3-5-2&#160&#160&#160");
-		builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
-		exp = team.getFormationExperience343();
-		builder.append("3-4-3&#160&#160&#160");
-		builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
-		exp = team.getFormationExperience253();
-		builder.append("2-5-3&#160&#160&#160");
-		builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
-		builder.append("</html>");
-		return builder.toString();
-	}
+
 
 	/**
 	 * Set the team confidence.
@@ -684,34 +619,6 @@ public final class LineupSettingSimulationPanel extends ImagePanel implements Re
 		// m_jcbPredictionType.setMaximumRowCount(3);
 		layout.setConstraints(m_jcbPredictionType, constraints);
 		add(m_jcbPredictionType);
-
-		yPos++;
-		initLabel(constraints, layout,
-				new JLabel(HOVerwaltung.instance().getLanguageString("DurchschnittErfahrung")),
-				yPos);
-		constraints.gridx = 2;
-		constraints.gridy = yPos;
-		layout.setConstraints(m_jpDurchschnittErfahrung.getComponent(false), constraints);
-		add(m_jpDurchschnittErfahrung.getComponent(false));
-
-		yPos++;
-		initLabel(constraints, layout,
-				new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.formation")), yPos);
-		constraints.gridx = 2;
-		constraints.gridy = yPos;
-		layout.setConstraints(m_jpAktuellesSystem.getComponent(false), constraints);
-		add(m_jpAktuellesSystem.getComponent(false));
-
-		yPos++;
-		initLabel(
-				constraints,
-				layout,
-				new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.formationexperience")),
-				yPos);
-		constraints.gridx = 2;
-		constraints.gridy = yPos;
-		layout.setConstraints(m_jpErfahrungAktuellesSystem.getComponent(false), constraints);
-		add(m_jpErfahrungAktuellesSystem.getComponent(false));
 
 		// Add all item listeners
 		addItemListeners();

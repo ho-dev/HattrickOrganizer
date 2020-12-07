@@ -31,6 +31,7 @@ public class SolarizedLightTheme extends BaseTheme {
 
             // DEFAULT COLOR
             ThemeManager.instance().put(HOColorName.RED, defaults.getColor("palette.red"));
+            ThemeManager.instance().put(HOColorName.BLUE, defaults.getColor("palette.blue"));
 
 
             setFont(UserParameter.instance().schriftGroesse);

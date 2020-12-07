@@ -7,6 +7,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.Team;
 import core.model.match.IMatchDetails;
 import core.util.Helper;
 import module.pluginFeedback.FeedbackPanel;
@@ -31,6 +32,8 @@ final class LineupRatingPanel extends RasenPanel {
 
     private final static Color LABEL_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
     private final static Color LABEL_FG = ThemeManager.getColor(HOColorName.LEAGUE_FG);
+    private final static Color BAD_LABEL_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_DECLINE_FG);
+    private final static Color TITLE_FG =ThemeManager.getColor(HOColorName.BLUE);
     private final Border BORDER_RATING_DEFAULT = BorderFactory.createMatteBorder(2, 2, 2, 2, ThemeManager.getColor(HOColorName.PANEL_BG));
     private final Border BORDER_RATING_BELOW_LIMIT = BorderFactory.createMatteBorder(2, 2, 2, 2, ThemeManager.getColor(HOColorName.RATING_BORDER_BELOW_LIMIT));
     private final Border BORDER_RATING_ABOVE_LIMIT = BorderFactory.createMatteBorder(2, 2, 2, 2, ThemeManager.getColor(HOColorName.RATING_BORDER_ABOVE_LIMIT));
@@ -82,6 +85,8 @@ final class LineupRatingPanel extends RasenPanel {
             LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private ColorLabelEntry m_jlTacticRating = new ColorLabelEntry("",
             LABEL_FG, LABEL_BG, SwingConstants.CENTER);
+    private ColorLabelEntry m_jlFormationExperience = new ColorLabelEntry("",
+            LABEL_FG, LABEL_BG, SwingConstants.LEFT);
     private JLabel m_jlCentralAttackRatingText = new JLabel("", SwingConstants.CENTER);
     private JLabel m_jlRightAttackRatingText = new JLabel("", SwingConstants.CENTER);
     private JLabel m_jlLeftAttackRatingText = new JLabel("", SwingConstants.CENTER);
@@ -143,6 +148,7 @@ final class LineupRatingPanel extends RasenPanel {
         m_jlLoddarMain.clear();
         m_jlLoddarCompare.clear();
         m_jlTacticRating.clear();
+        m_jlFormationExperience.clear();
     }
 
     protected void setCentralAttack(double rating) {
@@ -206,6 +212,21 @@ final class LineupRatingPanel extends RasenPanel {
 
     protected void setTactic(int iTacticType, float iTacticSkill){
         m_jlTacticRating.setText((iTacticType == IMatchDetails.TAKTIK_NORMAL) ? "-" : PlayerAbility.getNameForSkill(iTacticSkill, false, false));
+    }
+
+    protected void setFormationExperience(String sFormationDescription, int iFormationExp){
+
+        String formationExperienceTooltip = getFormationExperienceTooltip();
+        m_jlFormationExperience.setToolTipText(formationExperienceTooltip);
+
+        if (iFormationExp == -1){
+            m_jlFormationExperience.setText(sFormationDescription);
+            m_jlFormationExperience.setForeground(BAD_LABEL_FG);
+        }
+        else{
+            m_jlFormationExperience.setText(sFormationDescription + " (" + PlayerAbility.toString(iFormationExp) + ")");
+            m_jlFormationExperience.setForeground(LABEL_FG);
+        }
     }
 
     protected void setLoddar(double value) {
@@ -487,15 +508,19 @@ final class LineupRatingPanel extends RasenPanel {
 
         //HATSTATS  ========================
         JLabel lblHatStat = new JLabel(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"));
+        lblHatStat.setForeground(TITLE_FG);
+        lblHatStat.setFont(getFont().deriveFont(Font.BOLD));
         lblHatStat.setHorizontalAlignment(SwingConstants.LEFT);
 
         gbcGlobalRatingsLayout.gridx = 0;
         gbcGlobalRatingsLayout.gridy = 0;
+        gbcGlobalRatingsLayout.anchor = GridBagConstraints.WEST;
         globalRatingsLayout.setConstraints(lblHatStat, gbcGlobalRatingsLayout);
         m_jpGlobalRating.add(lblHatStat);
 
         m_jlHatstatMain.setFontStyle(Font.BOLD);
         gbcGlobalRatingsLayout.gridx = 1;
+        gbcGlobalRatingsLayout.anchor = GridBagConstraints.CENTER;
         globalRatingsLayout.setConstraints(m_jlHatstatMain, gbcGlobalRatingsLayout);
         m_jpGlobalRating.add(m_jlHatstatMain);
 
@@ -505,15 +530,20 @@ final class LineupRatingPanel extends RasenPanel {
 
         // LODDAR ========================================
         JLabel lblLoddar = new JLabel(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"));
+        lblLoddar.setForeground(TITLE_FG);
+        lblLoddar.setFont(getFont().deriveFont(Font.BOLD));
         lblHatStat.setHorizontalAlignment(SwingConstants.LEFT);
+
 
         gbcGlobalRatingsLayout.gridx = 0;
         gbcGlobalRatingsLayout.gridy = 1;
+        gbcGlobalRatingsLayout.anchor = GridBagConstraints.WEST;
         globalRatingsLayout.setConstraints(lblLoddar, gbcGlobalRatingsLayout);
         m_jpGlobalRating.add(lblLoddar);
 
         m_jlLoddarMain.setFontStyle(Font.BOLD);
         gbcGlobalRatingsLayout.gridx = 1;
+        gbcGlobalRatingsLayout.anchor = GridBagConstraints.CENTER;
         globalRatingsLayout.setConstraints(m_jlLoddarMain, gbcGlobalRatingsLayout);
         m_jpGlobalRating.add(m_jlLoddarMain);
 
@@ -524,18 +554,42 @@ final class LineupRatingPanel extends RasenPanel {
 
         // Tactic ========================================
         JLabel lbTactic = new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.tactic"));
+        lbTactic.setForeground(TITLE_FG);
+        lbTactic.setFont(getFont().deriveFont(Font.BOLD));
         lbTactic.setHorizontalAlignment(SwingConstants.LEFT);
 
         gbcGlobalRatingsLayout.gridx = 0;
         gbcGlobalRatingsLayout.gridy = 2;
+        gbcGlobalRatingsLayout.anchor = GridBagConstraints.WEST;
         globalRatingsLayout.setConstraints(lbTactic, gbcGlobalRatingsLayout);
         m_jpGlobalRating.add(lbTactic);
 
         gbcGlobalRatingsLayout.gridx = 1;
-        gbcGlobalRatingsLayout.gridy = 2;
+        gbcGlobalRatingsLayout.anchor = GridBagConstraints.CENTER;
         globalRatingsLayout.setConstraints(m_jlTacticRating, gbcGlobalRatingsLayout);
         m_jpGlobalRating.add(m_jlTacticRating);
 
+
+
+        // Formation experience ========================================
+        JLabel lbFormation = new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.formation"));
+        lbFormation.setForeground(TITLE_FG);
+        lbFormation.setFont(getFont().deriveFont(Font.BOLD));
+        lbFormation.setHorizontalAlignment(SwingConstants.LEFT);
+
+        gbcGlobalRatingsLayout.gridx = 0;
+        gbcGlobalRatingsLayout.gridy = 3;
+        gbcGlobalRatingsLayout.anchor = GridBagConstraints.WEST;
+        gbcGlobalRatingsLayout.anchor = GridBagConstraints.CENTER;
+        globalRatingsLayout.setConstraints(lbFormation, gbcGlobalRatingsLayout);
+        m_jpGlobalRating.add(lbFormation);
+
+        gbcGlobalRatingsLayout.gridx = 1;
+        gbcGlobalRatingsLayout.gridwidth = 2;
+        globalRatingsLayout.setConstraints(m_jlFormationExperience, gbcGlobalRatingsLayout);
+        m_jpGlobalRating.add(m_jlFormationExperience);
+
+        // Add the box
         m_jpGlobalRating.setBackground(LABEL_BG);
         m_jpGlobalRating.setBorder(BORDER_RATING_DEFAULT);
         gbcMainLayout.gridx = 0;
@@ -691,6 +745,45 @@ final class LineupRatingPanel extends RasenPanel {
         } else {
             return m_clFormat.format(m_dRightDefenseRating);
         }
+    }
+
+    private String getFormationExperienceTooltip() {
+        Team team = HOVerwaltung.instance().getModel().getTeam();
+        StringBuilder builder = new StringBuilder();
+        int exp = team.getFormationExperience550();
+        builder.append("<html>");
+        builder.append("<b>").append(HOVerwaltung.instance().getLanguageString("ls.team.formationexperience")).append("</b><br><br>");
+        builder.append("5-5-0&#160&#160&#160");
+        builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
+        exp = team.getFormationExperience541();
+        builder.append("5-4-1&#160&#160&#160");
+        builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
+        exp = team.getFormationExperience532();
+        builder.append("5-3-2&#160&#160&#160");
+        builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
+        exp = team.getFormationExperience523();
+        builder.append("5-2-3&#160&#160&#160");
+        builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
+        exp = team.getFormationExperience451();
+        builder.append("4-5-1&#160&#160&#160");
+        builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
+        exp = team.getFormationExperience442();
+        builder.append("4-4-2&#160&#160&#160");
+        builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
+        exp = team.getFormationExperience433();
+        builder.append("4-3-3&#160&#160&#160");
+        builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
+        exp = team.getFormationExperience352();
+        builder.append("3-5-2&#160&#160&#160");
+        builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
+        exp = team.getFormationExperience343();
+        builder.append("3-4-3&#160&#160&#160");
+        builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
+        exp = team.getFormationExperience253();
+        builder.append("2-5-3&#160&#160&#160");
+        builder.append(PlayerAbility.toString(exp)).append(" (").append(exp).append(")<br>");
+        builder.append("</html>");
+        return builder.toString();
     }
 
 }
