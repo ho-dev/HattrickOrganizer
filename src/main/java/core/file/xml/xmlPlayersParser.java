@@ -323,14 +323,16 @@ public class xmlPlayersParser {
 
     private void youthplayerSkills2Hash(MyHashtable hash, Element playerSkills, Skills.HTSkillID skillId) {
         //        <KeeperSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
-        var skill = skillId.toString();
-        xmlValue2Hash(hash, playerSkills, skill);
-        xmlAttribute2Hash(hash, playerSkills, skill, "IsAvailable");
-        xmlAttribute2Hash(hash, playerSkills, skill, "IsMaxReached");
-        xmlAttribute2Hash(hash, playerSkills, skill, "MayUnlock");
+        var attr = skillId.toString() + "Skill";
+        xmlValue2Hash(hash, playerSkills, attr);
+        xmlAttribute2Hash(hash, playerSkills, attr, "IsAvailable");
+        xmlAttribute2Hash(hash, playerSkills, attr, "MayUnlock");
         //        <KeeperSkillMax IsAvailable="True">2</KeeperSkillMax>
-        xmlValue2Hash(hash, playerSkills, skill+"Max");
-        xmlAttribute2Hash(hash, playerSkills, skill+"Max", "IsAvailable");
+        attr += "Max";
+        xmlValue2Hash(hash, playerSkills, attr);
+        xmlAttribute2Hash(hash, playerSkills, attr, "IsAvailable");
+        xmlAttribute2Hash(hash, playerSkills, attr, "IsMaxReached");
+        xmlAttribute2Hash(hash, playerSkills, attr, "MayUnlock");
     }
 
 
