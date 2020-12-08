@@ -974,19 +974,17 @@ public class Player {
             positions.add(currPositionContribute);
         }
 
-        positions.sort((Comparator) (o1, o2) -> {
-            float f1 = ((PositionContribute) o1).getContribute();
-            float f2 = ((PositionContribute) o2).getContribute();
-            return Float.compare(f2, f1);
-        });
+        positions.sort((PositionContribute player1, PositionContribute player2) -> Float.compare(player2.getRating(), player1.getRating()));
 
         byte[] alternativePositions = new byte[positions.size()];
         float tolerance = 1f - core.model.UserParameter.instance().alternativePositionsTolerance;
 
         int i;
+        final float threshold = positions.get(0).getRating() * tolerance;
+
         for (i = 0; i < positions.size(); i++) {
-            if (positions.get(i).getContribute() >= positions.get(0).getContribute() * tolerance) {
-                alternativePositions[i] = positions.get(i).getPosition();
+            if (positions.get(i).getRating() >= threshold) {
+                alternativePositions[i] = positions.get(i).getClPostionID();
             } else {
                 break;
             }
@@ -2292,22 +2290,25 @@ public class Player {
         return getBestPositionInfo();
 
     }
+
+
+static class PositionContribute {
+    private final float m_rating;
+    private final byte clPositionID;
+
+    public PositionContribute(float rating, byte clPostionID) {
+        m_rating = rating;
+        clPositionID = clPostionID;
+    }
+
+    public float getRating() {
+        return m_rating;
+    }
+
+    public byte getClPostionID() {
+        return clPositionID;
+    }
+
 }
 
-class PositionContribute {
-    private float contribute;
-    private byte position;
-
-    public PositionContribute(float contribute, byte position) {
-        this.contribute = contribute;
-        this.position = position;
-    }
-
-    public float getContribute() {
-        return contribute;
-    }
-
-    public byte getPosition() {
-        return position;
-    }
 }

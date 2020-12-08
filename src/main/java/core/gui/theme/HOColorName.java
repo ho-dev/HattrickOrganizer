@@ -150,6 +150,7 @@ public interface HOColorName {
 	String LINEUP_PLAYER_SELECTED = "lineup.player.selected";
 	String LINEUP_PLAYER_SUB = "lineup.player.sub";
 	String LINEUP_BG_BUTTONS = "lineup_bg_buttons";
+	String WARNING_ICON_CB_COLOR = "warning_icon_cb_color";
 
 	//1.431
 	String MATCHDETAILS_PROGRESSBAR_GREEN = "matchdetails.progressbar.green";

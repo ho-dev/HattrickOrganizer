@@ -176,6 +176,7 @@ public interface HOIconName {
 
 	String HOME = "home";
 	String AWAY = "away";
+	String WARNING_ICON = "warning.icon";
 
 	String TRAINING_BAR = "training_bar";
 

@@ -18,15 +18,18 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
     private @Nullable Player m_clPlayer;
     private String m_sText;
     private float m_fPositionsBewertung;
-    private boolean m_bAlternativePosition;
+    private boolean m_bSetInBestPosition;
     private boolean m_bMultiLine = false;
 
+    public boolean isSetInBestPosition() {
+        return m_bSetInBestPosition;
+    }
 
     public SpielerCBItem(String text, float positionRating, @Nullable Player player) {
         m_sText = text;
         m_clPlayer = player;
         m_fPositionsBewertung = positionRating;
-        m_bAlternativePosition = false;
+        m_bSetInBestPosition = false;
         m_clEntry = new SpielerLabelEntry(null, null, 0f, false, true);
     }
 
@@ -34,12 +37,12 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
         m_sText = text;
         m_clPlayer = player;
         m_fPositionsBewertung = positionRating;
-        m_bAlternativePosition = false;
+        m_bSetInBestPosition = false;
         m_bMultiLine = multiLine;
         if (useCustomText) {
-            m_clEntry = new SpielerLabelEntry(null, null, 0f, false, true, true, text, m_bMultiLine);
+            m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true, true, text, m_bMultiLine);
         } else {
-            m_clEntry = new SpielerLabelEntry(null, null, 0f, false, true, false, "", m_bMultiLine);
+            m_clEntry = new SpielerLabelEntry(null, null, 0f, true, true, false, "", m_bMultiLine);
         }
     }
 
@@ -48,7 +51,7 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
 
         if (player != null) {
             m_clEntry.updateComponent(player, HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
-                            .getPositionBySpielerId(player.getSpielerID()), getPositionsEvaluation(), m_bAlternativePosition,
+                            .getPositionBySpielerId(player.getSpielerID()), getPositionsEvaluation(), m_bSetInBestPosition,
                     m_sText);
 
             JComponent comp = m_clEntry.getComponent(isSelected, index==-1);
@@ -87,11 +90,11 @@ public class SpielerCBItem implements Comparable<SpielerCBItem>, ComboItem {
         return m_sText;
     }
 
-    public final void setValues(String text, float positionRating, Player player, boolean alternativePosition) {
+    public final void setValues(String text, float positionRating, Player player, boolean bestPosition) {
         m_sText = text;
         m_clPlayer = player;
         m_fPositionsBewertung = positionRating;
-        m_bAlternativePosition = alternativePosition;
+        m_bSetInBestPosition = bestPosition;
     }
 
     @Override
