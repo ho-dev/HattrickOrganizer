@@ -1,36 +1,36 @@
-# based on information from HT forum (the unread manual)
+# analysis performed by akasolace
 
 [general]
-delta                = 0.75 # fixed
-tacticCounter        = 0.930000 # fixed
-home                 = 1.199529 # err=0.004183
-awayDerby            = 1.113699 # err=0.007379
-pic                  = 0.839949 # err=0.003179
-mots                 = 1.109650 # err=0.004748
-teamSpiritPreMulti   = 0.147832 # err=0.003676
-teamSpiritPower      = 0.417779 # err=0.005549
-extraMulti           = 1.000 # fixed
-squareMod            = 0.015 # fixed
-cubeMod              = 0 # fixed
-tacticLongshots      = 0.950323 # err=0.008919
-
+delta                = 0.75
+power                = 1.165
+squareMod            = 0
+cubeMod              = 0
+home                 = 1.199529
+awayDerby            = 1.113699
+pic                  = 0.839949
+mots                 = 1.109650
+teamSpiritPreMulti   = 0.147832
+teamSpiritPower      = 0.417779
+extraMulti           = 1.000
+tacticCounter        = 0.930000
+tacticLongshots      = 0.950323
 
 [playmaking_allsides]
-CD_norm    = 0.03470781015
-CD_off     = 0.05553249624
-CD_tw      = 0.02082468609
-WB_norm    = 0.02082468609
-WB_off     = 0.02776624812
-WB_def     = 0.01388312406
-WB_tm      = 0.02776624812
-IM_norm    = 0.1388312406
-IM_off     = 0.13188967857
-IM_def     = 0.13188967857
-IM_tw      = 0.12494811654
-WI_norm    = 0.06247405827
-WI_off     = 0.04164937218
-WI_def     = 0.04164937218
-WI_tm      = 0.07635718233
-FW_norm    = 0.03470781015
-FW_def     = 0.04859093421
-FW_tw      = 0.02082468609
+CD_norm    = 0.02775
+CD_off     = 0.0444
+CD_tw      = 0.016649999999999998
+WB_norm    = 0.016649999999999998
+WB_off     = 0.0222
+WB_def     = 0.0111
+WB_tm      = 0.0222
+IM_norm    = 0.111
+IM_off     = 0.10545
+IM_def     = 0.10545
+IM_tw      = 0.0999
+WI_norm    = 0.04995
+WI_off     = 0.033299999999999996
+WI_def     = 0.033299999999999996
+WI_tm      = 0.06105000000000001
+FW_norm    = 0.02775
+FW_def     = 0.038849999999999996
+FW_tw      = 0.016649999999999998

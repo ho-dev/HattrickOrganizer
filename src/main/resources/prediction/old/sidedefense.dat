@@ -1,0 +1,44 @@
+# based on information from HT forum (the unread manual)
+
+[general]
+delta                = 0.75 # fixed
+trainerOff           = 0.9 # fixed
+trainerDef           = 1.15 # fixed
+trainerNeutral       = 1.02 # fixed
+tacticCreative       = 0.930663 # err=0.004241
+tacticAIM            = 0.853911 # err=0.003586
+extraMulti           = 1.000 # fixed
+squareMod            = 0.015 # fixed
+cubeMod              = 0 # fixed
+defleadPercentDef    = 0.000000 # fixed
+pullback             = 0.125
+
+[defending_allsides]
+keeper     = 0.069125
+
+[goalkeeping_allsides]
+keeper     = 0.149904761904762
+
+[defending_thisside]
+CD_norm    = 0.147778142772
+CD_off     = 0.11367549444
+CD_tw      = 0.230192876241
+WB_norm    = 0.261453637212
+WB_off     = 0.210299664714
+WB_def     = 0.2841887361
+WB_tm      = 0.213141552075
+IM_norm    = 0.053995859859
+IM_off     = 0.025576986249
+IM_def     = 0.076730958747
+IM_tw      = 0.068205296664
+WI_norm    = 0.099466057635
+WI_off     = 0.062521521942
+WI_def     = 0.173355129021
+WI_tm      = 0.082414733469
+
+[defending_middle]
+CD_norm    = 0.073889071386
+CD_off     = 0.05683774722
+IM_norm    = 0.025576986249
+IM_def     = 0.039786423054
+IM_off     = 0.011367549444

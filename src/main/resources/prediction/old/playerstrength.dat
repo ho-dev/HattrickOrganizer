@@ -27,11 +27,15 @@
 
 
 # =================  Parameters ===============================
-formMin=1
-formMax=8
-formDelta=0
-formMultiplier=0.125
-formPower=0.6666666666666666
+homegrownbonus=0.5
+loyaltyMax=1
+loyaltySkillMax=20 
+
+formMin=0
+formMax=7
+formDelta=-0.5
+formMultiplier=0.142857142857143	# 1/7
+formPower=0.45
 resultMultiForm=1
 
 multiXpLog10=1.33333333333333333333333333333333333333333333333333333333333		# 4/3
@@ -42,11 +46,11 @@ skillMin=0
 
 # 9 multipliers for crowding penalties. 1-2-3 central defenders/midfielders/forwards
 1CdMulti=1
-2CdMulti=0.95
-3CdMulti=0.90
+2CdMulti=0.96
+3CdMulti=0.91
 1MfMulti=1
-2MfMulti=0.9
-3MfMulti=0.8
+2MfMulti=0.92
+3MfMulti=0.82
 1FwMulti=1
 2FwMulti=0.94
 3FwMulti=0.865

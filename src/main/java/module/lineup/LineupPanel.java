@@ -31,66 +31,33 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	private SpielerUebersichtNamenTable aufstellungSpielerTableName;
 	private List<Updatable> updatables = new ArrayList<>();
 
-	/**
-	 * Creates a new AufstellungsPanel object.
-	 */
 	public LineupPanel() {
 		initComponents();
 		addListeners();
 	}
 
-	/**
-	 * Selects the player with the given id.
-	 * 
-	 * @param idPlayer
-	 *            the id of the player to select.
-	 */
 	public void setPlayer(int idPlayer) {
 		aufstellungSpielerTableName.setSpieler(idPlayer);
 		lineupPlayersTable.setSpieler(idPlayer);
 	}
 
-	/**
-	 * Refreshes the view.
-	 */
 	public void refresh() {
 		lineupPlayersTable.refresh();
 	}
 
-	/**
-	 * Gibt das AufstellungsAssistentPanel zurück
-	 * 
-	 */
 	public final ILineupAssistantPanel getAufstellungsAssistentPanel() {return lineupRatingAssistantPanel.getLineupAssistantPanel(); }
 
 	public final LineupSettingsPanel getLineupSettingsPanel() {return lineupRatingAssistantPanel.getLineupSettingsPanel();}
 
 	public final LineupRatingPanel getLineupRatingPanel(){ return lineupRatingAssistantPanel.getLineupRatingPanel();}
 
-//	public final LineupRatingAssistantPanel getLineupRatingAssistantPanel(){ return lineupRatingAssistantPanel};
-
-	/**
-	 * Gibt das AufstellungsPositionsPanel zurück
-	 * 
-	 */
 	public final LineupPositionsPanel getLineupPositionsPanel() {
 		return lineupPositionsPanel;
 	}
 
-	/**
-	 * Breite der BestPosSpalte zurückgeben
-	 * 
-	 */
-	public final int getBestPosWidth() {
-		return lineupPlayersTable.getBestPosWidth();
-	}
-
-	// --------------------------------------------------------
 
 	/**
-	 * Gibt die aktuellen DividerLocations zurück, damit sie gespeichert werden
-	 * können
-	 * 
+	 * Get the divider location to restore user previous view organization
 	 */
 	public final int[] getDividerLocations() {
 		final int[] locations = new int[4];
@@ -144,18 +111,6 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		verticalSplitPane.setTopComponent(horizontalSplitPane);
 		verticalSplitPane.setBottomComponent(initSpielerTabelle());
 
-//		lineupPositionsPanel = new LineupPositionsPanel(this);
-//		horizontalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
-//		horizontalSplitPane.setTopComponent(new JScrollPane(lineupPositionsPanel));
-//		horizontalSplitPane.setBottomComponent(initSpielerTabelle());
-
-//		horizontalRightSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
-//		horizontalRightSplitPane.setLeftComponent(new JScrollPane(lineupRatingAssistantPanel));
-//		horizontalRightSplitPane.setRightComponent(new JPanel()); //TODO remove this block
-
-//		verticalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
-//		verticalSplitPane.setLeftComponent(horizontalSplitPane);
-//		verticalSplitPane.setRightComponent(horizontalRightSplitPane);
 
 		UserParameter param = UserParameter.instance();
 		verticalSplitPane.setDividerLocation(param.lineupPanel_verticalSplitLocation);

@@ -1,72 +1,67 @@
-# based on information from HT forum (the unread manual)
+# analysis performed by akasolace
 
 [general]
-delta                = 0.75 # fixed
-trainerOff           = 1.1 # fixed
-trainerDef           = 0.9 # fixed
-trainerNeutral       = 1.02 # fixed
-confidence           = 0.0525 # fixed
-extraMulti           = 1.000 # fixed
-squareMod            = 0.015 # fixed
-cubeMod              = 0 # fixed
-defleadPercentOff    = 0.000000 # fixed
-tacticLongshots      = 0.972980 # err=0.006620
+delta                = 0.75
+power                = 1.165
+trainerOff           = 1.1
+trainerDef           = 0.9
+trainerNeutral       = 1.0
+confidence           = 0.0525
+tacticLongshots       = 0.972980
 pullback             = -0.25
 
 [passing_middle]
-IM_norm    = 0.02886
-IM_off     = 0.03996
-IM_def     = 0.01554
+IM_norm               = 0.02483
+IM_off                = 0.03438
+IM_def                = 0.013370000000000002
 
 [passing_allsides]
-FW_norm    = 0.03108
-FW_def     = 0.06882
-FW_def.technical = 0.09102
+FW_norm               = 0.026740000000000003
+FW_def                = 0.05921
+FW_def.technical      = 0.07830999999999999
 
 [passing_thisside]
-IM_norm    = 0.05772
-IM_off     = 0.07992
-IM_def     = 0.03108
-IM_tw      = 0.06882
-WI_norm    = 0.05772
-WI_off     = 0.06438
-WI_def     = 0.04662
-WI_tm      = 0.0333
-FW_tw      = 0.04662
+IM_norm               = 0.04966
+IM_off                = 0.06876
+IM_def                = 0.026740000000000003
+IM_tw                 = 0.05921
+WI_norm               = 0.04966
+WI_off                = 0.055389999999999995
+WI_def                = 0.04011
+WI_tm                 = 0.02865
+FW_tw                 = 0.04011
 
 [passing_otherside]
-FW_tw      = 0.01332
+FW_tw                 = 0.01146
 
 [winger_thisside]
-CD_tw      = 0.05772
-WB_norm    = 0.13098
-WB_off     = 0.15318
-WB_def     = 0.0999
-WB_tm      = 0.0777
-IM_tw      = 0.13098
-WI_norm    = 0.19092
-WI_off     = 0.222
-WI_def     = 0.15318
-WI_tm      = 0.16428
-FW_norm          = 0.05328
-FW_def           = 0.02886
-FW_def.technical = 0.02886
-FW_tw            = 0.14208
+CD_tw                  = 0.04966
+WB_norm                = 0.11269
+WB_off                 = 0.13179
+WB_tm                  = 0.06684999999999999
+WB_def                 = 0.08595
+IM_tw                 = 0.11269
+WI_norm               = 0.16426
+WI_off                = 0.191
+WI_def                = 0.13179
+WI_tm                 = 0.14134
+FW_tw                 = 0.12224
+
+[winger_allsides]
+FW_norm               = 0.04584
+FW_def                = 0.02483
+FW_def.technical      = 0.02483
 
 [winger_otherside]
-FW_norm          = 0.04662
-FW_def           = 0.02886
-FW_def.technical = 0.02886
-FW_tw            = 0.04662
+FW_tw                 = 0.04011
 
 [scoring_allsides]
-FW_norm    = 0.05994
-FW_def     = 0.02886
-FW_def.technical = 0.02886
+FW_norm               = 0.051570000000000005
+FW_def                = 0.02483
+FW_def.technical      = 0.02483
 
 [scoring_otherside]
-FW_tw      = 0.04218
+FW_tw                 = 0.03629
 
 [scoring_thisside]
-FW_tw      = 0.11322
-
+FW_tw                 = 0.09741

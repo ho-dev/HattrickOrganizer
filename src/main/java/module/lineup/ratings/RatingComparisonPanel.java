@@ -68,7 +68,7 @@ public class RatingComparisonPanel extends JPanel {
 		DecimalFormat formater = new DecimalFormat();
 		formater.setMaximumFractionDigits(2);
 		formater.setRoundingMode(java.math.RoundingMode.HALF_UP);
-		Double value;
+		double value;
 
 		value = data.getLeftDefense();
 		DL.setText(formater.format(value));

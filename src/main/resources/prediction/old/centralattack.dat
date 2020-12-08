@@ -1,0 +1,37 @@
+# based on information from HT forum (the unread manual)
+
+[general]
+delta                = 0.75 # fixed
+trainerOff           = 1.1 # fixed
+trainerDef           = 0.9 # fixed
+trainerNeutral       = 1.02 # fixed
+confidence           = 0.0525 # fixed
+squareMod            = 0.015 # fixed
+cubeMod              = 0 # fixed
+defleadPercentOff    = 0.000000 # fixed
+tacticLongshots      = 0.970577 # err=0.008211
+pullback             = -0.25
+
+[passing_allsides]
+IM_norm    = 0.0586384002765
+IM_off     = 0.0870691398045
+IM_def     = 0.031984581969
+IM_tw      = 0.0408691880715
+WI_norm    = 0.0195461334255
+WI_off     = 0.0230999758665
+WI_def     = 0.0088846061025
+WI_tm      = 0.028430739528
+FW_norm    = 0.0586384002765
+FW_def     = 0.0941768246865
+FW_def.technical = 0.0941768246865
+FW_tw      = 0.0408691880715
+
+[scoring_allsides]
+IM_norm    = 0.039092266851
+IM_off     = 0.0550845578355
+IM_def     = 0.0230999758665
+IM_tw      = 0
+FW_norm    = 0.17769212205
+FW_def     = 0.099507588348
+FW_def.technical = 0.099507588348
+FW_tw      = 0.117276800553

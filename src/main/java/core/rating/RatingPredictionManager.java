@@ -1205,7 +1205,7 @@ public class RatingPredictionManager {
             	passing =  calcPlayerStrength(-1, ispieler, PASSING, true, false, null, false);
             	// Zus. MF/IV/ST
                 if(taktik == 7 || taktik == 6 || taktik == 5)
-                    passing *= params.getParam("extraMulti", 1.0);
+                    passing *= params.getParam("extraMulti");
                 retVal += passing;
             }
         }

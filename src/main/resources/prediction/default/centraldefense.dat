@@ -1,36 +1,36 @@
-# based on information from HT forum (the unread manual)
+# analysis performed by akasolace
 
 [general]
-delta                = 0.75 # fixed
-trainerOff           = 0.9 # fixed
-trainerDef           = 1.15 # fixed
-trainerNeutral       = 1.02 # fixed
-tacticAOW            = 0.858029 # err=0.004653
-tacticCreative       = 0.930999 # err=0.005163
-extraMulti           = 1.000 # fixed
-squareMod            = 0.015 # fixed
-cubeMod              = 0 # fixed
-defleadPercentDef    = 0.000000 # fixed
+delta                = 0.75
+power                = 1.165
+squareMod            = 0
+cubeMod              = 0
+extraMulti           = 1.000
+trainerOff           = 0.9
+trainerDef           = 1.15
+trainerNeutral       = 1.0
+tacticAOW            = 0.858029
+tacticCreative       = 0.930999
+defleadPercentDef    = 0.0
 pullback             = 0.125
 
-
 [goalkeeping_allsides]
-keeper     = 0.135452380952381
+keeper    = 0.135333285
 
 [defending_allsides]
-keeper     = 0.066225
-CD_norm    = 0.186
-CD_off     = 0.13578
-CD_tw      = 0.12462
-WB_norm    = 0.07068
-WB_off     = 0.0651
-WB_def     = 0.07998
-WB_tm      = 0.1302
-IM_norm    = 0.0744
-IM_off     = 0.02976
-IM_def     = 0.10788
-IM_tw      = 0.06138
-WI_norm    = 0.0372
-WI_off     = 0.02418
-WI_def     = 0.0465
-WI_tm      = 0.0465
+keeper      = 0.054444425000000005
+CD_norm     = 0.1555555
+CD_off      = 0.11355551500000001
+CD_tw       = 0.10422218500000001
+WB_norm     = 0.059111090000000005
+WB_off      = 0.054444425000000005
+WB_tm       = 0.10888885000000001
+WB_def      = 0.066888865
+IM_norm     = 0.062222200000000005
+IM_off      = 0.024888880000000002
+IM_def      = 0.09022219000000001
+IM_tw       = 0.051333315000000004
+WI_norm     = 0.031111100000000003
+WI_off      = 0.020222215
+WI_def      = 0.038888875
+WI_tm       = 0.038888875

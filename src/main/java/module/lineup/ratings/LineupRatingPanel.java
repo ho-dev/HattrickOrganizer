@@ -2,6 +2,7 @@ package module.lineup.ratings;
 
 import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
+import core.gui.HOMainFrame;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ComboBoxTitled;
 import core.gui.comp.panel.RasenPanel;
@@ -26,6 +27,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.Map;
 import java.util.Objects;
@@ -34,7 +36,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 
-public final class LineupRatingPanel extends RasenPanel {
+public final class LineupRatingPanel extends RasenPanel implements core.gui.Refreshable{
 
     private final MinuteTogglerPanel m_jpMinuteToggler = new MinuteTogglerPanel(this);
     private final static Color LABEL_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
@@ -88,6 +90,7 @@ public final class LineupRatingPanel extends RasenPanel {
     private final JButton m_jbFeedbackButton = new JButton();
     private Dimension SIZE = new Dimension(Helper.calcCellWidth(160), Helper.calcCellWidth(40));
     private final Double COLOR_BORDERS_LIMIT_RATIO = 0.85;
+    private static ActionListener cbActionListener;
 
 
     public LineupRatingPanel() {
@@ -595,11 +598,6 @@ public final class LineupRatingPanel extends RasenPanel {
         ratingPanelLayout.setConstraints(m_jpPredictionModel, gbcRatingPanelLayout);
         jpRatingModelAndSharing.add(m_jpPredictionModel);
 
-        m_jcbPredictionModel.addActionListener(e -> {
-            RatingPredictionConfig.setInstancePredictionType(((CBItem) Objects.requireNonNull(m_jcbPredictionModel.getSelectedItem())).getId());
-            HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
-            });
-
         m_jbFeedbackButton.setIcon(ImageUtilities.getSvgIcon(HOIconName.UPLOAD, Map.of("strokeColor", HOColorName.BLUE), 24, 24));
         m_jbFeedbackButton.addActionListener(e -> new FeedbackPanel());
         m_jbFeedbackButton.setPreferredSize(new Dimension(24, 24));
@@ -650,6 +648,15 @@ public final class LineupRatingPanel extends RasenPanel {
         m_jlLeftAttackRatingCompare.setSpecialNumber(0f, false);
         m_jlHatstatCompare.setSpecialNumber(0, false);
         m_jlLoddarCompare.setSpecialNumber(0f, false);
+
+        cbActionListener = e -> {
+            if (e.getSource().equals(m_jcbPredictionModel)) {
+                RatingPredictionConfig.setInstancePredictionType(((CBItem) Objects.requireNonNull(m_jcbPredictionModel.getSelectedItem())).getId());
+                setRatings();
+            }
+        };
+
+        addListeners();
     }
 
 
@@ -767,12 +774,29 @@ public final class LineupRatingPanel extends RasenPanel {
         }
     }
 
-    /**
-     * Reinit the GUI:
-     */
-//    @Override
-//    public void reInit() {
-//        setLabels();
-//    }
+    private void addListeners() {
+        m_jcbPredictionModel.addActionListener(cbActionListener);
+    }
+
+    private void removeListeners() {
+        m_jcbPredictionModel.removeActionListener(cbActionListener);
+    }
+
+    @Override
+    public void refresh() {
+        removeListeners();
+        setPredictionModel(RatingPredictionConfig.getInstancePredictionType());
+        setRatings();
+        addListeners();
+    }
+
+    @Override
+    public void reInit() {
+        refresh();
+    }
+
+    private void setPredictionModel(int newPredictionType) {
+        core.util.Helper.setComboBoxFromID(m_jcbPredictionModel, newPredictionType);
+    }
 
 }

@@ -35,7 +35,7 @@ public class RatingPredictionParameter  {
 				lastParse = currentLastModified;
 				filename = newFilename;
 				allProps.clear();
-				HOLogger.instance().debug(this.getClass(), "(Re-)initializing prediction parameters: "+newFilename);
+//				HOLogger.instance().debug(this.getClass(), "(Re-)initializing prediction parameters: "+newFilename);
 				
 				InputStream predictionIS = FileLoader.instance().getFileInputStream(newFilename);
 				if (predictionIS==null) {
@@ -43,9 +43,9 @@ public class RatingPredictionParameter  {
 				} else {
 					BufferedReader br = new BufferedReader(new InputStreamReader(predictionIS));
 				
-					String line = null;
+					String line;
 					Properties curProperties = null;
-					while(br != null && (line = br.readLine()) != null) {
+					while((line = br.readLine()) != null) {
 						line = line.toLowerCase(java.util.Locale.ENGLISH);
 						// # begins a Comment
 						line = line.replaceFirst ("#.*", "");
@@ -61,7 +61,7 @@ public class RatingPredictionParameter  {
 								allProps.put(sectionName, curProperties);
 							}
 						}
-						String temp[] = line.split("=");
+						String[] temp = line.split("=");
 						if (temp.length == 2 && curProperties != null) {
 							String key = temp[0].trim();
 							String value = temp[1].trim();
@@ -94,11 +94,7 @@ public class RatingPredictionParameter  {
     	return sections;
     }
 
-    public double getParam (String key) {
-    	return (getParam (GENERAL, key));
-    }
-
-    public double getParam (String key, double defVal) {
+    public double getParam(String key) {
     	return (getParam (GENERAL, key, 0));
     }
 
@@ -119,11 +115,7 @@ public class RatingPredictionParameter  {
 //		System.out.println ("Warning: Key "+key+" not found in section "+section);
    		return 0;
     }
-    
-    /**
-     * Get the date of the last file parse
-     * @return
-     */
+
     public long getLastParse () {
     	return lastParse;
     }

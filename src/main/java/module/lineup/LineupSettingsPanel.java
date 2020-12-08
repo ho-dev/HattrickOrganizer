@@ -12,9 +12,6 @@ import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
 import core.rating.RatingPredictionConfig;
 import core.util.Helper;
-import module.lineup.ratings.LineupRatingPanel;
-
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -29,29 +26,23 @@ import javax.swing.JPanel;
 
 public final class LineupSettingsPanel extends ImagePanel implements Refreshable, ItemListener {
 
-	private JComboBox m_jcbSelbstvertrauen = new JComboBox(TeamConfidence.ITEMS);
+	private final JComboBox<CBItem> m_jcbTeamConfidence = new JComboBox<>(TeamConfidence.ITEMS);
 
-	private CBItem[] TRAINERTYPE = {
+	private final CBItem[] TRAINER_TYPES = {
 			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.coachtype.defensive"), 0),
 			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.coachtype.neutral"), 2),
 			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.coachtype.offensive"), 1), };
 
-	private JComboBox m_jcbTrainerType = new JComboBox(TRAINERTYPE);
-
-	private CBItem[] PREDICTIONTYPE = getPredictionItems();
-	private JComboBox m_jcbPredictionType = new JComboBox(PREDICTIONTYPE);
-
-	private JComboBox m_jcbMainStimmung = new JComboBox(TeamSpirit.ITEMS);
-	private CBItem[] SUBSTIMM = {
+	private final JComboBox<CBItem> m_jcbTrainerType = new JComboBox<>(TRAINER_TYPES);
+	private final JComboBox<CBItem> m_jcbMainTeamSpirit = new JComboBox<>(TeamSpirit.ITEMS);
+	private final CBItem[] SUB_TEAM_SPIRIT = {
 			new CBItem(HOVerwaltung.instance().getLanguageString("verylow"), 0),
 			new CBItem(HOVerwaltung.instance().getLanguageString("low"), 1),
 			new CBItem(HOVerwaltung.instance().getLanguageString("Durchschnitt"), 2),
 			new CBItem(HOVerwaltung.instance().getLanguageString("high"), 3),
 			new CBItem(HOVerwaltung.instance().getLanguageString("veryhigh"), 4) };
-	private JComboBox m_jcbSubStimmung = new JComboBox(SUBSTIMM);
-
-	// home / away / away-derby
-	private CBItem[] LOCATION = {
+	private final JComboBox<CBItem> m_jcbSubTeamSpirit = new JComboBox<>(SUB_TEAM_SPIRIT);
+	private final CBItem[] LOCATION = {
 			new CBItem(HOVerwaltung.instance().getLanguageString("Heimspiel"),
 					IMatchDetails.LOCATION_HOME), //
 			new CBItem(HOVerwaltung.instance().getLanguageString("matchlocation.away"),
@@ -61,10 +52,9 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			new CBItem(HOVerwaltung.instance().getLanguageString("matchlocation.tournament"),
 					IMatchDetails.LOCATION_TOURNAMENT) //
 	};
-	private JComboBox m_jcbLocation = new JComboBox(LOCATION);
+	private final JComboBox<CBItem> m_jcbLocation = new JComboBox<>(LOCATION);
 
-	// Pull back minute
-	private CBItem[] PULLBACK_MINUTE = {
+	private final CBItem[] PULLBACK_MINUTE = {
 			new CBItem(HOVerwaltung.instance().getLanguageString("PullBack.None"), 90),
 			new CBItem("85", 85), new CBItem("80", 80), new CBItem("75", 75), new CBItem("70", 70),
 			new CBItem("65", 65), new CBItem("60", 60), new CBItem("55", 55), new CBItem("50", 50),
@@ -73,13 +63,12 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			new CBItem("5", 5),
 			new CBItem(HOVerwaltung.instance().getLanguageString("PullBack.WholeGame"), 0) };
 
-	private JComboBox m_jcbPullBackMinute = new JComboBox(PULLBACK_MINUTE);
+	private final JComboBox<CBItem> m_jcbPullBackMinute = new JComboBox<>(PULLBACK_MINUTE);
 
-	private JCheckBox m_jchPullBackOverride = new JCheckBox(HOVerwaltung.instance()
+	private final JCheckBox m_jchPullBackOverride = new JCheckBox(HOVerwaltung.instance()
 			.getLanguageString("PullBack.Override"), false);
-	
 
-	private CBItem[] TACTICAL_ASSISTANTS = {
+	private final CBItem[] TACTICAL_ASSISTANTS = {
 			new CBItem("0", 0),
 			new CBItem("1", 1),
 			new CBItem("2", 2),
@@ -88,53 +77,30 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			new CBItem("5", 5)
 	};
 	
-	private JComboBox  m_jcbTacticalAssistants = new JComboBox(TACTICAL_ASSISTANTS);
-	
-	private boolean doSilentRefresh = false;
-	
-	// ~ Constructors
-	// -------------------------------------------------------------------------------
+	private final JComboBox<CBItem>   m_jcbTacticalAssistants = new JComboBox<>(TACTICAL_ASSISTANTS);
 
-	/**
-	 * Creates a new AufstellungsDetailPanel object.
-	 */
+
 	public LineupSettingsPanel() {
-		
-		// Init the local tactical assistant count; ReInit is not called on creation. Do this before initComponents to have
-		// this happen before UpdateStyleOfPlayBox() is called.
-		
 		initComponents();
-		
 		core.gui.RefreshManager.instance().registerRefreshable(this);
 	}
 
-	// ~ Methods
-	// ------------------------------------------------------------------------------------
-
-
-
-	/**
-	 * Set the match location (home/away/awayderby/tournament).
-	 * And in case it is a tournament match, it will also set TS and confidence to default values
-	 * @param location
-	 *            the constant for the location
-	 */
 	private void setLocation(int location) {
 		// Set the location
 		Helper.setComboBoxFromID(m_jcbLocation, location);
 
 		if (location == IMatchDetails.LOCATION_TOURNAMENT) {
-			setStimmung(6, 2); // Set Team Spirit to content (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
-			m_jcbMainStimmung.setEnabled(false);
-			m_jcbSubStimmung.setEnabled(false);
-			setSelbstvertrauen(6); // Set Team Spirit to wonderful (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
-			m_jcbSelbstvertrauen.setEnabled(false);
+			setTeamSpirit(6, 2); // Set Team Spirit to content (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
+			m_jcbMainTeamSpirit.setEnabled(false);
+			m_jcbSubTeamSpirit.setEnabled(false);
+			setConfidence(6); // Set Team Spirit to wonderful (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
+			m_jcbTeamConfidence.setEnabled(false);
 		}
 		else
 		{
-			m_jcbMainStimmung.setEnabled(true);
-			m_jcbSubStimmung.setEnabled(true);
-			m_jcbSelbstvertrauen.setEnabled(true);
+			m_jcbMainTeamSpirit.setEnabled(true);
+			m_jcbSubTeamSpirit.setEnabled(true);
+			m_jcbTeamConfidence.setEnabled(true);
 		}
 	}
 
@@ -143,89 +109,42 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		final HOModel homodel = HOVerwaltung.instance().getModel();
 		final Lineup currentLineup = homodel.getLineup();
 
-		setStimmung(homodel.getTeam().getStimmungAsInt(), homodel.getTeam().getSubStimmung());
-		setSelbstvertrauen(homodel.getTeam().getSelbstvertrauenAsInt());
+		setTeamSpirit(homodel.getTeam().getStimmungAsInt(), homodel.getTeam().getSubStimmung());
+		setConfidence(homodel.getTeam().getSelbstvertrauenAsInt());
 		setTrainerType(homodel.getTrainer().getTrainerTyp());
-		setPredictionType(RatingPredictionConfig.getInstancePredictionType());
-
 		setTacticalAssistants(homodel.getClub().getTacticalAssistantLevels());
 		setLocation(currentLineup.getLocation());
 		setPullBackMinute(currentLineup.getPullBackMinute());
 		m_jcbPullBackMinute.setEnabled(!currentLineup.isPullBackOverride());
 		setPullBackOverride(currentLineup.isPullBackOverride());
-
 	}
 
-
-
-	/**
-	 * Set the team confidence.
-	 *
-	 * @param selbstvertrauen
-	 *            the confidence value
-	 */
-	public void setSelbstvertrauen(int selbstvertrauen) {
-		Helper.setComboBoxFromID(m_jcbSelbstvertrauen, selbstvertrauen);
+	public void setConfidence(int iTeamConfidence) {
+		Helper.setComboBoxFromID(m_jcbTeamConfidence, iTeamConfidence);
 	}
 
-	/**
-	 * Set the team spirit values.
-	 *
-	 * @param stimmung
-	 *            team spirit
-	 * @param subStimmung
-	 *            subskill of the team spirit
-	 */
-	public void setStimmung(int stimmung, int subStimmung) {
-		Helper.setComboBoxFromID(m_jcbMainStimmung, stimmung);
-		Helper.setComboBoxFromID(m_jcbSubStimmung, subStimmung);
+	public void setTeamSpirit(int iTeamSpirit, int iSubTeamSpirit) {
+		Helper.setComboBoxFromID(m_jcbMainTeamSpirit, iTeamSpirit);
+		Helper.setComboBoxFromID(m_jcbSubTeamSpirit, iSubTeamSpirit);
 	}
 
-	/**
-	 * Set the trainer type.
-	 */
 	public void setTrainerType(int newTrainerType) {
 		Helper.setComboBoxFromID(m_jcbTrainerType, newTrainerType);
-	}
-
-	/**
-	 * Set the prediction type.
-	 */
-	public void setPredictionType(int newPredictionType) {
-		core.util.Helper.setComboBoxFromID(m_jcbPredictionType, newPredictionType);
 	}
 
 	public void setTacticalAssistants(int assistants){
 		Helper.setComboBoxFromID(m_jcbTacticalAssistants, assistants);
 	}
-	
 
-	/**
-	 * Set the pullback minute
-	 *
-	 * @param minute
-	 */
 	public void setPullBackMinute(int minute) {
 		Helper.setComboBoxFromID(m_jcbPullBackMinute, minute);
 	}
 
-
-
-	/**
-	 * Sets the pullback override flag.
-	 *
-	 * @param pullBackOverride
-	 */
+	// TODO: find out what this is doing
 	private void setPullBackOverride(boolean pullBackOverride) {
 		m_jchPullBackOverride.setSelected(pullBackOverride);
 	}
 
-	/**
-	 * React on state changed events
-	 *
-	 * @param event
-	 *            the event
-	 */
 	@Override
 	public void itemStateChanged(ItemEvent event) {
 
@@ -245,27 +164,23 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				// Pull Back minute changed
 				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setPullBackMinute(((CBItem) m_jcbPullBackMinute.getSelectedItem()).getId());
 				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
-			} else if (event.getSource().equals(m_jcbMainStimmung)) {
+			} else if (event.getSource().equals(m_jcbMainTeamSpirit)) {
 				// team spirit changed
-				HOVerwaltung.instance().getModel().getTeam().setStimmungAsInt(((CBItem) m_jcbMainStimmung.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getTeam().setStimmungAsInt(((CBItem) m_jcbMainTeamSpirit.getSelectedItem()).getId());
 				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
-			} else if (event.getSource().equals(m_jcbSubStimmung)) {
+			} else if (event.getSource().equals(m_jcbSubTeamSpirit)) {
 				// team spirit (sub) changed
-				HOVerwaltung.instance().getModel().getTeam().setSubStimmung(((CBItem) m_jcbSubStimmung.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getTeam().setSubStimmung(((CBItem) m_jcbSubTeamSpirit.getSelectedItem()).getId());
 				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
-			} else if (event.getSource().equals(m_jcbSelbstvertrauen)) {
+			} else if (event.getSource().equals(m_jcbTeamConfidence)) {
 				// team confidence changed
-				HOVerwaltung.instance().getModel().getTeam().setSelbstvertrauenAsInt(((CBItem) m_jcbSelbstvertrauen.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getTeam().setSelbstvertrauenAsInt(((CBItem) m_jcbTeamConfidence.getSelectedItem()).getId());
 				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbTrainerType)) {
 				// trainer type changed
 				HOVerwaltung.instance().getModel().getTrainer().setTrainerTyp(((CBItem) m_jcbTrainerType.getSelectedItem()).getId());
 				int iStyleOfPlay = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay();
 				HOMainFrame.instance().getLineupPanel().getLineupPositionsPanel().updateStyleOfPlayComboBox(iStyleOfPlay);
-			} else if (event.getSource().equals(m_jcbPredictionType)) {
-				// prediction type changed
-				RatingPredictionConfig.setInstancePredictionType(((CBItem) m_jcbPredictionType.getSelectedItem()).getId());
-				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbLocation)) {
 				// location changed
 				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setLocation((short) ((CBItem) m_jcbLocation.getSelectedItem()).getId());
@@ -280,75 +195,42 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		}
 	}
 
-	/**
-	 * Reinit the GUI:
-	 */
 	@Override
 	public void reInit() {
-		setLabels();
+		refresh();
 	}
 
-	/**
-	 * Refresh the GUI.
-	 */
 	@Override
 	public void refresh() {
 		removeItemListeners();
-		
-		if (!doSilentRefresh) {
-			setLabels();
-		}
-		
+		setLabels();
 		addItemListeners();
 	}
 
-
-	private String getTaktikString() {
-		final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-
-		// getTaktik liefert Taktik aus ComboBox, wir wollen Taktik aus
-		// aufstellung!
-		// switch (getTaktik()) {
-		// Play creatively has no tactic level
-		return switch (aufstellung.getTacticType()) {
-			case IMatchDetails.TAKTIK_NORMAL, IMatchDetails.TAKTIK_CREATIVE -> (" ");
-			case IMatchDetails.TAKTIK_PRESSING, IMatchDetails.TAKTIK_KONTER, IMatchDetails.TAKTIK_MIDDLE, IMatchDetails.TAKTIK_WINGS, IMatchDetails.TAKTIK_LONGSHOTS -> PlayerAbility.getNameForSkill(aufstellung.getTacticLevel(aufstellung.getTacticType()));
-			default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
-		};
-	}
-
-	/**
-	 * Initialize the GUI and layout components.
-	 */
 	private void initComponents() {
 		final GridBagLayout layout = new GridBagLayout();
 		final GridBagConstraints constraints = new GridBagConstraints();
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.weightx = 1.0;
-		constraints.weighty = 1.0;
+		constraints.weighty = 0.0;
 
 		setLayout(layout);
 
-		JLabel label;
-		JPanel panel;
-
-		int yPos = 1;
+		int yPos = 0;
 
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 
 		constraints.gridx = 1;
 		constraints.gridy = yPos;
-		constraints.weighty = 0.0;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridwidth = 1;
 		initLabel(constraints, layout, new JLabel(HOVerwaltung.instance()
 				.getLanguageString("Venue")), yPos);
 
-		yPos++;
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
-		m_jcbSelbstvertrauen.setPreferredSize(new Dimension(50, Helper.calcCellWidth(20)));
-		m_jcbSelbstvertrauen.setMaximumRowCount(4);
+		m_jcbTeamConfidence.setPreferredSize(new Dimension(50, Helper.calcCellWidth(20)));
+		m_jcbTeamConfidence.setMaximumRowCount(4);
 		m_jcbLocation.setToolTipText(HOVerwaltung.instance().getLanguageString(
 				"tt_AufstellungsDetails_Spielort"));
 		m_jcbLocation.setOpaque(false);
@@ -360,30 +242,30 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit")), yPos);
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
-		m_jcbMainStimmung.setPreferredSize(new Dimension(50, Helper.calcCellWidth(20)));
-		m_jcbMainStimmung.setMaximumRowCount(13);
-		layout.setConstraints(m_jcbMainStimmung, constraints);
-		add(m_jcbMainStimmung);
+		m_jcbMainTeamSpirit.setPreferredSize(new Dimension(50, Helper.calcCellWidth(20)));
+		m_jcbMainTeamSpirit.setMaximumRowCount(13);
+		layout.setConstraints(m_jcbMainTeamSpirit, constraints);
+		add(m_jcbMainTeamSpirit);
 
 		yPos++;
 		initLabel(constraints, layout,
 				new JLabel(HOVerwaltung.instance().getLanguageString("lineup.teamspiritsub")), yPos);
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
-		m_jcbSubStimmung.setPreferredSize(new Dimension(50, Helper.calcCellWidth(20)));
-		m_jcbSubStimmung.setMaximumRowCount(5);
-		layout.setConstraints(m_jcbSubStimmung, constraints);
-		add(m_jcbSubStimmung);
+		m_jcbSubTeamSpirit.setPreferredSize(new Dimension(50, Helper.calcCellWidth(20)));
+		m_jcbSubTeamSpirit.setMaximumRowCount(5);
+		layout.setConstraints(m_jcbSubTeamSpirit, constraints);
+		add(m_jcbSubTeamSpirit);
 
 		yPos++;
 		initLabel(constraints, layout,
 				new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.confidence")), yPos);
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
-		m_jcbSelbstvertrauen.setPreferredSize(new Dimension(50, Helper.calcCellWidth(20)));
-		m_jcbSelbstvertrauen.setMaximumRowCount(10);
-		layout.setConstraints(m_jcbSelbstvertrauen, constraints);
-		add(m_jcbSelbstvertrauen);
+		m_jcbTeamConfidence.setPreferredSize(new Dimension(50, Helper.calcCellWidth(20)));
+		m_jcbTeamConfidence.setMaximumRowCount(10);
+		layout.setConstraints(m_jcbTeamConfidence, constraints);
+		add(m_jcbTeamConfidence);
 
 		yPos++;
 		initLabel(constraints, layout,
@@ -428,17 +310,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		layout.setConstraints(m_jchPullBackOverride, constraints);
 		add(m_jchPullBackOverride);
 
-		yPos++;
-		initLabel(constraints, layout,
-				new JLabel(HOVerwaltung.instance().getLanguageString("PredictionType")), yPos);
-		constraints.gridx = 2;
-		constraints.gridy = yPos;
-		m_jcbPredictionType.setPreferredSize(new Dimension(50, core.util.Helper
-				.calcCellWidth(20)));
-		// m_jcbPredictionType.setMaximumRowCount(3);
-		layout.setConstraints(m_jcbPredictionType, constraints);
-		add(m_jcbPredictionType);
-
 		// Add all item listeners
 		addItemListeners();
 	}
@@ -448,11 +319,10 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	 */
 	private void addItemListeners() {
 		m_jcbLocation.addItemListener(this);
-		m_jcbMainStimmung.addItemListener(this);
-		m_jcbSubStimmung.addItemListener(this);
-		m_jcbSelbstvertrauen.addItemListener(this);
+		m_jcbMainTeamSpirit.addItemListener(this);
+		m_jcbSubTeamSpirit.addItemListener(this);
+		m_jcbTeamConfidence.addItemListener(this);
 		m_jcbTrainerType.addItemListener(this);
-		m_jcbPredictionType.addItemListener(this);
 		m_jcbPullBackMinute.addItemListener(this);
 		m_jchPullBackOverride.addItemListener(this);
 		m_jcbTacticalAssistants.addItemListener(this);
@@ -463,29 +333,15 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	 */
 	private void removeItemListeners() {
 		m_jcbLocation.removeItemListener(this);
-		m_jcbMainStimmung.removeItemListener(this);
-		m_jcbSubStimmung.removeItemListener(this);
-		m_jcbSelbstvertrauen.removeItemListener(this);
+		m_jcbMainTeamSpirit.removeItemListener(this);
+		m_jcbSubTeamSpirit.removeItemListener(this);
+		m_jcbTeamConfidence.removeItemListener(this);
 		m_jcbTrainerType.removeItemListener(this);
-		m_jcbPredictionType.removeItemListener(this);
 		m_jcbPullBackMinute.removeItemListener(this);
 		m_jchPullBackOverride.removeItemListener(this);
 		m_jcbTacticalAssistants.removeItemListener(this);
 	}
 
-	private CBItem[] getPredictionItems() {
-		final ResourceBundle bundle = HOVerwaltung.instance().getResource();
-		String[] allPredictionNames = RatingPredictionConfig.getAllPredictionNames();
-		CBItem[] allItems = new CBItem[allPredictionNames.length];
-		for (int i = 0; i < allItems.length; i++) {
-			String predictionName = allPredictionNames[i];
-			if (bundle.containsKey("prediction." + predictionName))
-				predictionName = HOVerwaltung.instance().getLanguageString(
-						"prediction." + predictionName);
-			allItems[i] = new CBItem(predictionName, i);
-		}
-		return allItems;
-	}
 
 	private void initLabel(GridBagConstraints constraints, GridBagLayout layout, JLabel label, int y) {
 		constraints.gridx = 1;
