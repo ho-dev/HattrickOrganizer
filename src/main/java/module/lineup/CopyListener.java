@@ -6,17 +6,15 @@ import core.model.player.Player;
 import core.util.HOLogger;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
-
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-
+import module.lineup.ratings.LineupRatingPanel;
 import static core.model.player.IMatchRoleID.*;
 
 
@@ -27,7 +25,7 @@ import static core.model.player.IMatchRoleID.*;
  */
 public class CopyListener implements ActionListener {
 
-	private LineupRatingPanel lineup;
+	private final LineupRatingPanel lineupRatingPanel;
 	private static final String LF = System.getProperty("line.separator", "\n");
 	private static final String EMPTY = "";
 	private static final String SPACE = " ";
@@ -43,8 +41,8 @@ public class CopyListener implements ActionListener {
 	/**
 	 * Create the CopyListener and initialize the gui components.
 	 */
-	public CopyListener(LineupRatingPanel lineup) {
-		this.lineup = lineup;
+	public CopyListener(LineupRatingPanel lineupRatingPanel) {
+		this.lineupRatingPanel = lineupRatingPanel;
 		miPlaintext.addActionListener(this);
 		miHattickMLDef.addActionListener(this);
 		miLineup.addActionListener(this);
@@ -68,7 +66,7 @@ public class CopyListener implements ActionListener {
 			copyToClipboard(getRatingsAsHattrickML_DefTop());
 			menu.setVisible(false);
 		} else if (e != null && e.getSource().equals(miLineup)) {
-			copyToClipboard(getLineup());
+			copyToClipboard(getLineupRatingPanel());
 			menu.setVisible(false);
 		} else if (e != null && e.getSource().equals(miLineupAndRatings)) {
 			copyToClipboard(getLineupAndRatings());
@@ -94,14 +92,14 @@ public class CopyListener implements ActionListener {
 	 */
 	private String getRatingsAsText() {
 		StringBuilder sb = new StringBuilder("");
-		if (lineup != null) {
-			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.midfield") + ": " + lineup.getMidfieldRating() + LF);
-			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence") + ": " + lineup.getRightDefenseRating() + LF);
-			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centraldefence") + ": " + lineup.getCentralDefenseRating() + LF);
-			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftdefence") + ": " + lineup.getLeftDefenseRating() + LF);
-			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightattack") + ": " + lineup.getRightAttackRating() + LF);
-			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centralattack") + ": " + lineup.getCentralAttackRating() + LF);
-			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftattack") + ": " + lineup.getLeftAttackRating() + LF);
+		if (lineupRatingPanel != null) {
+			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.midfield") + ": " + lineupRatingPanel.getMidfieldRating() + LF);
+			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence") + ": " + lineupRatingPanel.getRightDefenseRating() + LF);
+			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centraldefence") + ": " + lineupRatingPanel.getCentralDefenseRating() + LF);
+			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftdefence") + ": " + lineupRatingPanel.getLeftDefenseRating() + LF);
+			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightattack") + ": " + lineupRatingPanel.getRightAttackRating() + LF);
+			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centralattack") + ": " + lineupRatingPanel.getCentralAttackRating() + LF);
+			sb.append(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftattack") + ": " + lineupRatingPanel.getLeftAttackRating() + LF);
 		}
 		return sb.toString();
 	}
@@ -111,23 +109,23 @@ public class CopyListener implements ActionListener {
 	 */
 	private String getRatingsAsHattrickML_DefTop() {
 		StringBuilder sb = new StringBuilder("");
-		if (lineup != null) {
+		if (lineupRatingPanel != null) {
 			sb.append("[table]");
 			sb.append("[tr][th][/th][th]"+HOVerwaltung.instance().getLanguageString("Rechts"));
 			sb.append("[/th][th]"+HOVerwaltung.instance().getLanguageString("Mitte"));
 			sb.append("[/th][th]"+HOVerwaltung.instance().getLanguageString("Links")+"[/th][/tr]" + LF);
 			sb.append("[tr][th]"+HOVerwaltung.instance().getLanguageString("match.sector.defence"));
-			sb.append("[/th][td align=center]"+lineup.getRightDefenseRating());
-			sb.append("[/td][td align=center]"+lineup.getCentralDefenseRating());
-			sb.append("[/td][td align=center]"+lineup.getLeftDefenseRating());
+			sb.append("[/th][td align=center]"+ lineupRatingPanel.getRightDefenseRating());
+			sb.append("[/td][td align=center]"+ lineupRatingPanel.getCentralDefenseRating());
+			sb.append("[/td][td align=center]"+ lineupRatingPanel.getLeftDefenseRating());
 			sb.append("[/td][/tr]" + LF);
 			sb.append("[tr][th]"+HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.midfield"));
 			sb.append("[/th][td colspan=3 align=center]");
-			sb.append(lineup.getMidfieldRating()+"[/td][/tr]" + LF);
+			sb.append(lineupRatingPanel.getMidfieldRating()+"[/td][/tr]" + LF);
 			sb.append("[tr][th]"+HOVerwaltung.instance().getLanguageString("Attack"));
-			sb.append("[/th][td align=center]"+lineup.getRightAttackRating());
-			sb.append("[/td][td align=center]"+lineup.getCentralAttackRating());
-			sb.append("[/td][td align=center]"+lineup.getLeftAttackRating());
+			sb.append("[/th][td align=center]"+ lineupRatingPanel.getRightAttackRating());
+			sb.append("[/td][td align=center]"+ lineupRatingPanel.getCentralAttackRating());
+			sb.append("[/td][td align=center]"+ lineupRatingPanel.getLeftAttackRating());
 			sb.append("[/td][/tr]" + LF);
 			sb.append("[/table]");
 			sb.append(LF);
@@ -135,9 +133,9 @@ public class CopyListener implements ActionListener {
 		return sb.toString();
 	}
 	
-	private String getLineup() {
-		if (lineup == null) return EMPTY;
-	  	LineupPositionsPanel lPanel = HOMainFrame.instance().getAufstellungsPanel().getAufstellungsPositionsPanel();
+	private String getLineupRatingPanel() {
+		if (lineupRatingPanel == null) return EMPTY;
+	  	LineupPositionsPanel lPanel = HOMainFrame.instance().getLineupPanel().getLineupPositionsPanel();
 		ArrayList<PlayerPositionPanel> pos = lPanel.getAllPositions();
 		String result, goalie, rightWB, rightCD, middleCD, leftCD, leftWB, rightW, rightIM, middleIM, leftIM, leftW, rightFW, middleFW, leftFW;
 		result = goalie = rightWB = rightCD = middleCD = leftCD = leftWB = rightW = rightIM = middleIM = leftIM = leftW = rightFW = middleFW = leftFW = EMPTY;
@@ -190,8 +188,8 @@ public class CopyListener implements ActionListener {
 	}
 	
 	private String getLineupAndRatings() {
-		if (lineup == null) return EMPTY;
-		LineupPositionsPanel lPanel = HOMainFrame.instance().getAufstellungsPanel().getAufstellungsPositionsPanel();
+		if (lineupRatingPanel == null) return EMPTY;
+		LineupPositionsPanel lPanel = HOMainFrame.instance().getLineupPanel().getLineupPositionsPanel();
 		ArrayList<PlayerPositionPanel> pos = lPanel.getAllPositions();
 		String result, goalie, rightWB, rightCD, middleCD, leftCD, leftWB, rightW, rightIM, middleIM, leftIM, leftW, rightFW, middleFW, leftFW;
 		result = goalie = rightWB = rightCD = middleCD = leftCD = leftWB = rightW = rightIM = middleIM = leftIM = leftW = rightFW = middleFW = leftFW = EMPTY;
@@ -241,14 +239,14 @@ public class CopyListener implements ActionListener {
 				"[/th][th align=center]"+HOVerwaltung.instance().getLanguageString("Mitte") +
 				"[/th][th align=center]"+HOVerwaltung.instance().getLanguageString("Links")+"[/th][/tr]" + LF;
 		String defence = "[tr][td align=center]" + rightWB + "[/td]" + "[td align=center]" + rightCD + "[/td]" + "[td align=center]" + middleCD + "[/td]" +
-				"[td align=center]" + leftCD + "[/td]" + "[td align=center]" + leftWB + "[/td]" + "[td align=center]"+lineup.getRightDefenseRating() +
-				"[/td][td align=center]"+lineup.getCentralDefenseRating() + "[/td][td align=center]"+lineup.getLeftDefenseRating() + "[/td][/tr]" + LF;
+				"[td align=center]" + leftCD + "[/td]" + "[td align=center]" + leftWB + "[/td]" + "[td align=center]"+ lineupRatingPanel.getRightDefenseRating() +
+				"[/td][td align=center]"+ lineupRatingPanel.getCentralDefenseRating() + "[/td][td align=center]"+ lineupRatingPanel.getLeftDefenseRating() + "[/td][/tr]" + LF;
 		String middle = "[tr][td align=center]" + rightW + "[/td]" + "[td align=center]" + rightIM + "[/td]" + "[td align=center]" + middleIM + "[/td]" +
 				"[td align=center]" + leftIM + "[/td]" + "[td align=center]" + leftW + "[/td]" + "[td][/td]" + "[td align=center]" +
-				lineup.getMidfieldRating()+ "[/td][td]" + "[/td][/tr]" + LF;
+				lineupRatingPanel.getMidfieldRating()+ "[/td][td]" + "[/td][/tr]" + LF;
 		String attack = "[tr][td][/td][td align=center]" + rightFW + "[/td]" + "[td align=center]" + middleFW + "[/td]" + "[td align=center]" + leftFW + "[/td]" +
-				"[td][/td]" + "[td align=center]"+lineup.getRightAttackRating() + "[/td][td align=center]"+lineup.getCentralAttackRating() +
-				"[/td][td align=center]"+lineup.getLeftAttackRating() + "[/td][/tr]" + LF + "[/table]";
+				"[td][/td]" + "[td align=center]"+ lineupRatingPanel.getRightAttackRating() + "[/td][td align=center]"+ lineupRatingPanel.getCentralAttackRating() +
+				"[/td][td align=center]"+ lineupRatingPanel.getLeftAttackRating() + "[/td][/tr]" + LF + "[/table]";
 		result = header + keeper + defence + middle + attack;
 		return result;
 	}

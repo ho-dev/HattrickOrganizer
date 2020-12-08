@@ -1,4 +1,4 @@
-package module.lineup;
+package module.lineup.ratings;
 
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;

@@ -1,4 +1,4 @@
-package module.lineup;
+package module.lineup.assistant;
 
 import core.datatype.CBItem;
 import core.gui.CursorToolkit;
@@ -10,6 +10,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.Weather;
+import module.lineup.PlayerPositionPanel;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -35,8 +36,8 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
-public class AufstellungsAssistentPanelNew extends ImagePanel implements
-		IAufstellungsAssistentPanel {
+public class LineupAssistantPanelNew extends ImagePanel implements
+		ILineupAssistantPanel {
 
 	private static final long serialVersionUID = -6853036429678216392L;
 	private WeatherChooser weatherChooser;
@@ -50,7 +51,7 @@ public class AufstellungsAssistentPanelNew extends ImagePanel implements
 	private JCheckBox excludeLastLinupCheckBox;
 	private JCheckBox allPlayersCheckBox;
 
-	public AufstellungsAssistentPanelNew() {
+	public LineupAssistantPanelNew() {
 		initComponents();
 		initData();
 		addListeners();
@@ -267,11 +268,11 @@ public class AufstellungsAssistentPanelNew extends ImagePanel implements
 
 					@Override
 					public void run() {
-						CursorToolkit.startWaitCursor(AufstellungsAssistentPanelNew.this);
+						CursorToolkit.startWaitCursor(LineupAssistantPanelNew.this);
 						try {
-							HOMainFrame.instance().getAufstellungsPanel().update();
+							HOMainFrame.instance().getLineupPanel().update();
 						} finally {
-							CursorToolkit.stopWaitCursor(AufstellungsAssistentPanelNew.this);
+							CursorToolkit.stopWaitCursor(LineupAssistantPanelNew.this);
 						}
 					}
 				});

@@ -6,13 +6,12 @@ import core.file.ExampleFileFilter;
 import core.gui.HOMainFrame;
 import core.gui.InfoPanel;
 import core.gui.RefreshManager;
-import core.gui.model.AufstellungCBItem;
+import core.gui.model.LineupCBItem;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.training.TrainingManager;
 import core.util.Helper;
-import module.lineup.AufstellungsVergleichHistoryPanel;
+import module.lineup.LineupsComparisonHistoryPanel;
 
 import java.awt.Component;
 import java.awt.Frame;
@@ -119,9 +118,9 @@ public class HRFImport {
 
 			// Aufstellung in liste als Aktuelle Aufstellungsetzen und als
 			// Angezeigte Aufstellung
-			AufstellungsVergleichHistoryPanel.setHRFAufstellung(hom.getLineup(),
+			LineupsComparisonHistoryPanel.setHRFAufstellung(hom.getLineup(),
 					hom.getPreviousLineup());
-			AufstellungsVergleichHistoryPanel.setAngezeigteAufstellung(new AufstellungCBItem(
+			LineupsComparisonHistoryPanel.setAngezeigteAufstellung(new LineupCBItem(
 					getLangStr("AktuelleAufstellung"), hom.getLineup()));
 
 			// Refreshen aller Fenster

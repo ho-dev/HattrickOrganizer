@@ -26,8 +26,8 @@ import core.util.BrowserLauncher;
 import core.util.HOLogger;
 import core.util.OSUtils;
 import core.util.StringUtils;
-import module.lineup.AufstellungsAssistentPanelNew;
-import module.lineup.IAufstellungsAssistentPanel;
+import module.lineup.assistant.LineupAssistantPanelNew;
+import module.lineup.assistant.ILineupAssistantPanel;
 import module.lineup.LineupMasterView;
 import module.lineup.LineupPanel;
 import module.matches.SpielePanel;
@@ -48,7 +48,6 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.URI;
 import java.sql.Timestamp;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -251,11 +250,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	}
 
 	public void setActualSpieler(Player player) {
-		getAufstellungsPanel().setPlayer(player.getSpielerID());
+		getLineupPanel().setPlayer(player.getSpielerID());
 		getSpielerUebersichtPanel().setPlayer(player);
 	}
 
-	public LineupPanel getAufstellungsPanel() {
+	public LineupPanel getLineupPanel() {
 		Container c = getTabbedPane().getModulePanel(IModule.LINEUP);
 		if (c instanceof LineupPanel) {
 			return (LineupPanel) c;
@@ -299,7 +298,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		if (m_clHOMainFrame == null) {
 			return Weather.PARTIALLY_CLOUDY;
 		}
-		return instance().getAufstellungsPanel().getAufstellungsAssistentPanel().getWeather();
+		return instance().getLineupPanel().getAufstellungsAssistentPanel().getWeather();
 	}
 
 	/**
@@ -695,9 +694,9 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		parameter.hoMainFrame_height = Math.min(getSize().height,
 				getToolkit().getScreenSize().height-parameter.hoMainFrame_PositionY+currentDevice.getDefaultConfiguration().getBounds().y);
 
-		final IAufstellungsAssistentPanel aap = getAufstellungsPanel().getAufstellungsAssistentPanel();
+		final ILineupAssistantPanel aap = getLineupPanel().getAufstellungsAssistentPanel();
 
-		parameter.aufstellungsAssistentPanel_gruppe = AufstellungsAssistentPanelNew.asString(aap.getGroups());
+		parameter.aufstellungsAssistentPanel_gruppe = LineupAssistantPanelNew.asString(aap.getGroups());
 		parameter.aufstellungsAssistentPanel_reihenfolge = aap.getOrder();
 		parameter.aufstellungsAssistentPanel_not = aap.isNotGroup();
 		parameter.aufstellungsAssistentPanel_cbfilter = aap.isGroupFilter();
@@ -718,12 +717,10 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		// Lineup Panel
 		if (getTabbedPane().isModuleTabVisible(IModule.LINEUP)) {
-			final int[] ap = getAufstellungsPanel().getDividerLocations();
-			parameter.aufstellungsPanel_verticalSplitPaneLow = ap[0];
-			parameter.aufstellungsPanel_horizontalLeftSplitPane = ap[1];
-			parameter.aufstellungsPanel_horizontalRightSplitPane = ap[2];
-			parameter.aufstellungsPanel_verticalSplitPane = ap[3];
-			getAufstellungsPanel().saveColumnOrder();
+			final int[] ap = getLineupPanel().getDividerLocations();
+			parameter.lineupPanel_verticalSplitLocation = ap[0];
+			parameter.lineupPanel_horizontalSplitLocation = ap[1];
+			getLineupPanel().saveColumnOrder();
 		}
 
 		// TransferScoutPanel

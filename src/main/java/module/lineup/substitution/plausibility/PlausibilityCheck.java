@@ -3,7 +3,7 @@ package module.lineup.substitution.plausibility;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import module.lineup.Lineup;
-import module.lineup.LineupAssistant;
+import module.lineup.assistant.LineupAssistant;
 import module.lineup.substitution.LanguageStringLookup;
 import module.lineup.substitution.model.Substitution;
 

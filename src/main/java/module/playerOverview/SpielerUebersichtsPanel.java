@@ -96,7 +96,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 */
 	public final void update() {
 		refresh();
-		HOMainFrame.instance().getAufstellungsPanel().refresh();
+		HOMainFrame.instance().getLineupPanel().refresh();
 	}
 
 	// ----------init-----------------------------------------------

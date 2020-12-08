@@ -78,7 +78,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LOCKED, "gui/bilder/Locked.gif");
 		put(EMPTY, "gui/bilder/empty.gif");
 		put(INFO, "gui/bilder/info.gif");
-		put(FEEDBACK, "gui/bilder/feedback.gif");
+		put(UPLOAD, "gui/bilder/upload.svg");
 		put(GOTOANALYSETOP, "gui/bilder/gotoAnalyseTop.svg");
 		put(GOTOANALYSEBOTTOM, "gui/bilder/gotoAnalyseBottom.svg");
 		put(OFFSET, "gui/bilder/offset.svg");
@@ -338,12 +338,11 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(SWAP_COLOR, "forest_green");
 		put(SWAP_COLOR_PRESSED, Color.RED);
 		put(LINEUP_RATING_BORDER, Color.BLACK);
-
 		put(LINEUP_PARTIAL_TRAINING, new Color(34, 255, 255));
 		put(LINEUP_FULL_TRAINING, new Color(0, 0, 255));
-
 		put(LINEUP_PLAYER_SELECTED, Color.LIGHT_GRAY);
 		put(LINEUP_PLAYER_SUB, new Color(220, 220, 220));
+		put(LINEUP_BG_BUTTONS, new Color(144, 238, 144));
 
 		// shirts
 		put(SHIRT_KEEPER, "black");

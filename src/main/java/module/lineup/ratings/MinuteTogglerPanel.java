@@ -1,15 +1,13 @@
-package module.lineup;
+package module.lineup.ratings;
 
 import core.model.HOVerwaltung;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.rating.RatingPredictionManager;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ListIterator;
-
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -28,19 +26,19 @@ public final class MinuteTogglerPanel extends JPanel {
 	private JLabel ratingsGraph = new JLabel(ratingsGraphIcon);
 	private JLabel avg90Clock = new JLabel(whiteGreenClock);
 	private JLabel avg120Clock = new JLabel(redWhiteClock);
-	private List<JLabel> toggleKeys = new ArrayList();
-	private List<JLabel> toggleKeysET = new ArrayList();
+	private final List<JLabel> toggleKeys = new ArrayList<>();
+	private final List<JLabel> toggleKeysET = new ArrayList<>();
 	private List<Double> toggleLabels = null;
-	private LineupSettingSimulationPanel parent;
+	private final LineupRatingPanel parent;
 	private int current = -1; //default to regular time average
 	
-	public MinuteTogglerPanel(LineupSettingSimulationPanel parent) {
+	public MinuteTogglerPanel(LineupRatingPanel parent) {
 		this.parent = parent;
 	}
 
 	public void load() {
 		if(toggleLabels != null) return;
-		toggleLabels = new ArrayList(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
+		toggleLabels = new ArrayList<>(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
 		initComponents();
 	}
 
@@ -64,7 +62,7 @@ public final class MinuteTogglerPanel extends JPanel {
 				current = -1;
 				avg90Clock.setIcon(whiteGreenClock);
 				revalidate();
-				parent.reInit();
+				parent.setRatings();
 			}
 		});
 
@@ -77,7 +75,7 @@ public final class MinuteTogglerPanel extends JPanel {
 				current = -2;
 				avg120Clock.setIcon(whiteRedClock);
 				revalidate();
-				parent.reInit();
+				parent.setRatings();
 			}
 		});
 
@@ -108,7 +106,7 @@ public final class MinuteTogglerPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {
 				shiftBackward(1);
 				revalidate();
-				parent.reInit();
+				parent.setRatings();
 			}
 		});
 		add(prevButton, constraints);
@@ -118,7 +116,7 @@ public final class MinuteTogglerPanel extends JPanel {
 		for(final int[] i={0};i[0]<toggleLabels.size();i[0]++) {
 			JLabel toggleLabel = new JLabel(String.valueOf(toggleLabels.get(i[0]).longValue()), SwingConstants.CENTER);
 			toggleLabel.addMouseListener(new MouseAdapter() {
-				int labelIndex = i[0];
+				final int labelIndex = i[0];
 
 				@Override
 				public void mousePressed(MouseEvent e) {
@@ -128,7 +126,7 @@ public final class MinuteTogglerPanel extends JPanel {
 					current = labelIndex;
 					reverseColor(toggleKeys.get(labelIndex));
 					revalidate();
-					parent.reInit();
+					parent.setRatings();
 				}
 			});
 			toggleLabel.setForeground(Color.BLACK);
@@ -156,7 +154,7 @@ public final class MinuteTogglerPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {
 				shiftForward(1);
 				revalidate();
-				parent.reInit();
+				parent.setRatings();
 			}
 		});
 		add(nextButton, constraints);
@@ -174,10 +172,11 @@ public final class MinuteTogglerPanel extends JPanel {
 						remove(ETKey);
 					}
 					if(current >= toggleKeys.size()) {
+						assert key != null;
 						reverseColor(key);
 						current = toggleKeys.size() - 1;
 						reverseColor(toggleKeys.get(current));
-						parent.reInit();
+						parent.setRatings();
 					}
 				} else {
 					for(JLabel ETKey: toggleKeysET) {

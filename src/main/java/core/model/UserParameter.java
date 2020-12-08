@@ -3,7 +3,7 @@ package core.model;
 import core.HO;
 import core.db.DBManager;
 import core.util.GUIUtils;
-import module.lineup.LineupAssistant;
+import module.lineup.assistant.LineupAssistant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -247,13 +247,8 @@ public final class UserParameter extends Configuration {
     //Number of decimals
     public int nbDecimals = 2;
     public int aufstellungsAssistentPanel_reihenfolge = LineupAssistant.AW_MF_ST;
-    public int aufstellungsPanel_horizontalLeftSplitPane = 600;
-    public int aufstellungsPanel_horizontalRightSplitPane = 600;
-    public int aufstellungsPanel_verticalSplitPane = GUIUtils.getLocationFromRight(400, 800);
-
-    //AufstellungsPanel
-    public int aufstellungsPanel_verticalSplitPaneLow = 250;
-
+    public int lineupPanel_horizontalSplitLocation = 600;
+    public int lineupPanel_verticalSplitLocation = GUIUtils.getLocationFromRight(400, 800);
 
     public int transferHistoryPane_splitPane = 200;
     public int transferTypePane_splitPane = 200;
@@ -586,10 +581,8 @@ public final class UserParameter extends Configuration {
         map.put("TimeZoneDifference", String.valueOf(TimeZoneDifference));
         map.put("nbDecimals", String.valueOf(nbDecimals));
         map.put("aufstellungsAssistentPanel_reihenfolge", String.valueOf(aufstellungsAssistentPanel_reihenfolge));
-        map.put("aufstellungsPanel_horizontalLeftSplitPane", String.valueOf(aufstellungsPanel_horizontalLeftSplitPane));
-        map.put("aufstellungsPanel_horizontalRightSplitPane", String.valueOf(aufstellungsPanel_horizontalRightSplitPane));
-        map.put("aufstellungsPanel_verticalSplitPane", String.valueOf(aufstellungsPanel_verticalSplitPane));
-        map.put("aufstellungsPanel_verticalSplitPaneLow", String.valueOf(aufstellungsPanel_verticalSplitPaneLow));
+        map.put("lineupPanel_horizontalSplitLocation", String.valueOf(lineupPanel_horizontalSplitLocation));
+        map.put("lineupPanel_verticalSplitLocation", String.valueOf(lineupPanel_verticalSplitLocation));
         map.put("deadlineFrist", String.valueOf(deadlineFrist));
         map.put("hoMainFrame_PositionX", String.valueOf(hoMainFrame_PositionX));
         map.put("hoMainFrame_PositionY", String.valueOf(hoMainFrame_PositionY));
@@ -826,10 +819,8 @@ public final class UserParameter extends Configuration {
         TimeZoneDifference = getIntValue(values, "TimeZoneDifference");
         nbDecimals = getIntValue(values, "nbDecimals");
         aufstellungsAssistentPanel_reihenfolge = getIntValue(values, "aufstellungsAssistentPanel_reihenfolge");
-        aufstellungsPanel_horizontalLeftSplitPane = getIntValue(values, "aufstellungsPanel_horizontalLeftSplitPane");
-        aufstellungsPanel_horizontalRightSplitPane = getIntValue(values, "aufstellungsPanel_horizontalRightSplitPane");
-        aufstellungsPanel_verticalSplitPane = getIntValue(values, "aufstellungsPanel_verticalSplitPane");
-        aufstellungsPanel_verticalSplitPaneLow = getIntValue(values, "aufstellungsPanel_verticalSplitPaneLow");
+        lineupPanel_horizontalSplitLocation = getIntValue(values, "lineupPanel_horizontalSplitLocation");
+        lineupPanel_verticalSplitLocation = getIntValue(values, "lineupPanel_verticalSplitLocation");
         deadlineFrist = getIntValue(values, "deadlineFrist");
         hoMainFrame_PositionX = getIntValue(values, "hoMainFrame_PositionX");
         hoMainFrame_PositionY = getIntValue(values, "hoMainFrame_PositionY");

@@ -31,7 +31,7 @@ public class LineupListRenderer extends JLabel implements ListCellRenderer {
 			final boolean hasFocus) {
 		setOpaque(true);
 		setText(value.toString());
-		if (value instanceof AufstellungCBItem && ((AufstellungCBItem) value).isAngezeigt()) {
+		if (value instanceof LineupCBItem && ((LineupCBItem) value).isAngezeigt()) {
 			setForeground(fgColor);
 		} else {
 			setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());

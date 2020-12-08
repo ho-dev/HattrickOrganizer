@@ -17,6 +17,7 @@ import core.rating.RatingPredictionManager;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
+import module.lineup.assistant.LineupAssistant;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;

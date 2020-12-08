@@ -2,7 +2,6 @@ package module.pluginFeedback;
 
 import com.google.gson.Gson;
 import core.db.DBManager;
-import core.file.hrf.HRF;
 import core.model.HOVerwaltung;
 import core.model.Ratings;
 import core.model.player.IMatchRoleID;
@@ -10,7 +9,7 @@ import core.model.player.MatchRoleID;
 import core.util.HOLogger;
 import core.util.UTF8Control;
 import module.lineup.Lineup;
-import module.lineup.RatingComparisonPanel;
+import module.lineup.ratings.RatingComparisonPanel;
 import module.teamAnalyzer.vo.MatchRating;
 
 import javax.swing.*;

@@ -1,11 +1,11 @@
 // %3860481451:de.hattrickorganizer.gui.lineup%
-package module.lineup;
+package module.lineup.assistant;
 
 import core.datatype.CBItem;
 import core.gui.HOMainFrame;
 import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.model.AufstellungCBItem;
+import core.gui.model.LineupCBItem;
 import core.gui.theme.*;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
@@ -15,6 +15,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
+import module.lineup.*;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -38,8 +39,8 @@ import javax.swing.border.MatteBorder;
 /**
  * Die automatische Aufstellung wird hier konfiguriert und gestartet
  */
-public class AufstellungsAssistentPanel extends ImagePanel implements Refreshable, ActionListener, ItemListener,
-		IAufstellungsAssistentPanel {
+public class LineupAssistantPanel extends ImagePanel implements Refreshable, ActionListener, ItemListener,
+		ILineupAssistantPanel {
 
 	private static final long serialVersionUID = 5271343329674809429L;
 	private final JButton m_jbLoeschen = new JButton(ThemeManager.getIcon(HOIconName.CLEARASSIST));
@@ -104,7 +105,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 	/**
 	 * Creates a new AufstellungsAssistentPanel object.
 	 */
-	public AufstellungsAssistentPanel(Weather weather) {
+	public LineupAssistantPanel(Weather weather) {
 		initComponents(weather);
 	}
 
@@ -114,7 +115,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see module.lineup.IAufstellungsAssistentPanel#isExcludeLastMatch()
+	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#isExcludeLastMatch()
 	 */
 	@Override
 	public final boolean isExcludeLastMatch() {
@@ -125,7 +126,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * module.lineup.IAufstellungsAssistentPanel#isFormBeruecksichtigen()
+	 * module.lineup.assistant.IAufstellungsAssistentPanel#isFormBeruecksichtigen()
 	 */
 	@Override
 	public final boolean isConsiderForm() {
@@ -135,7 +136,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see module.lineup.IAufstellungsAssistentPanel#isGesperrtIgnorieren()
+	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#isGesperrtIgnorieren()
 	 */
 	@Override
 	public final boolean isIgnoreSuspended() {
@@ -159,7 +160,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see module.lineup.IAufstellungsAssistentPanel#isGruppenFilter()
+	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#isGruppenFilter()
 	 */
 	@Override
 	public final boolean isGroupFilter() {
@@ -169,7 +170,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see module.lineup.IAufstellungsAssistentPanel#isIdealPositionZuerst()
+	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#isIdealPositionZuerst()
 	 */
 	@Override
 	public final boolean isIdealPositionZuerst() {
@@ -179,7 +180,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see module.lineup.IAufstellungsAssistentPanel#isNotGruppe()
+	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#isNotGruppe()
 	 */
 	@Override
 	public final boolean isNotGroup() {
@@ -189,7 +190,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see module.lineup.IAufstellungsAssistentPanel#getReihenfolge()
+	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#getReihenfolge()
 	 */
 	@Override
 	public final int getOrder() {
@@ -199,7 +200,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see module.lineup.IAufstellungsAssistentPanel#isVerletztIgnorieren()
+	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#isVerletztIgnorieren()
 	 */
 	@Override
 	public final boolean isIgnoreInjured() {
@@ -233,7 +234,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 			hoModel.getLineupWithoutRatingRecalc().setKapitaen(0);
 			HOMainFrame.instance().setInformation(
 							HOVerwaltung.instance().getLanguageString("Aufstellung_geloescht"));
-			mainFrame.getAufstellungsPanel().update();
+			mainFrame.getLineupPanel().update();
 
 			// gui.RefreshManager.instance ().doRefresh ();
 		} else if (actionEvent.getSource().equals(m_jbClearPostionOrders)) {
@@ -241,23 +242,23 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 			hoModel.getLineupWithoutRatingRecalc().resetPositionOrders();
 			HOMainFrame.instance().setInformation(
 							HOVerwaltung.instance().getLanguageString("Positional_orders_cleared"));
-			mainFrame.getAufstellungsPanel().update();
+			mainFrame.getLineupPanel().update();
 
 		} else if (actionEvent.getSource().equals(m_jbReserveLoeschen)) {
 			hoModel.getLineupWithoutRatingRecalc().resetReserveBank();
-			mainFrame.getAufstellungsPanel().update();
+			mainFrame.getLineupPanel().update();
 
 			// gui.RefreshManager.instance ().doRefresh ();
 		} else if (actionEvent.getSource().equals(m_jbOK)) {
 			displayGUI();
 		} else if (actionEvent.getSource().equals(m_jchListBoxGruppenFilter)
 				|| actionEvent.getSource().equals(m_jchLast)) {
-			mainFrame.getAufstellungsPanel().getAufstellungsPositionsPanel().refresh();
+			mainFrame.getLineupPanel().getLineupPositionsPanel().refresh();
 		} else if (actionEvent.getSource().equals(m_jcbGruppe)
 				|| actionEvent.getSource().equals(m_jchNot)) {
 			// Nur wenn Filter aktiv
 			if (m_jchListBoxGruppenFilter.isSelected()) {
-				mainFrame.getAufstellungsPanel().getAufstellungsPositionsPanel().refresh();
+				mainFrame.getLineupPanel().getLineupPositionsPanel().refresh();
 			}
 		} else if (actionEvent.getSource().equals(overlayOk)) {
 
@@ -274,7 +275,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 				// We have more positions left than is allowed in the lineup.
 				// Return.
 				javax.swing.JOptionPane.showMessageDialog(HOMainFrame.instance()
-						.getAufstellungsPanel(),
+						.getLineupPanel(),
 						HOVerwaltung.instance().getLanguageString("lineupassist.Error"),
 						HOVerwaltung.instance().getLanguageString("lineupassist.ErrorHeader"),
 						javax.swing.JOptionPane.INFORMATION_MESSAGE);
@@ -300,7 +301,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 	public final void itemStateChanged(ItemEvent e) {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			// Wetter -> Refresh
-			core.gui.HOMainFrame.instance().getAufstellungsPanel().update();
+			core.gui.HOMainFrame.instance().getLineupPanel().update();
 
 			// gui.RefreshManager.instance ().doRefresh ();
 		}
@@ -310,7 +311,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * module.lineup.IAufstellungsAssistentPanel#addToAssistant(ho.module
+	 * module.lineup.assistant.IAufstellungsAssistentPanel#addToAssistant(ho.module
 	 * .lineup.PlayerPositionPanel)
 	 */
 	@Override
@@ -344,7 +345,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 							this.getGroup())) && !m_jchNot.isSelected()) || (!player
 							.getTeamInfoSmilie().equals(this.getGroup()) && m_jchNot.isSelected()))) {
 				boolean include = true;
-				final AufstellungCBItem lastLineup = AufstellungsVergleichHistoryPanel
+				final LineupCBItem lastLineup = LineupsComparisonHistoryPanel
 						.getLastLineup();
 
 				if (m_jchLast.isSelected()
@@ -368,7 +369,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 				core.model.UserParameter.instance().WetterEffektBonus, getWeather());
 		mainFrame.setInformation(
 				HOVerwaltung.instance().getLanguageString("Autoaufstellung_fertig"));
-		mainFrame.getAufstellungsPanel().update();
+		mainFrame.getLineupPanel().update();
 
 		// gui.RefreshManager.instance ().doRefresh ();
 	}
@@ -405,8 +406,8 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 
 		// Add two buttons and a label
 
-		JLayeredPane posPanel = HOMainFrame.instance().getAufstellungsPanel()
-				.getAufstellungsPositionsPanel().getCenterPanel();
+		JLayeredPane posPanel = HOMainFrame.instance().getLineupPanel()
+				.getLineupPositionsPanel().getCenterPanel();
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.BOTH;
@@ -466,21 +467,21 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 		}
 
 		// Remove buttons and labels
-		JLayeredPane pane = HOMainFrame.instance().getAufstellungsPanel()
-				.getAufstellungsPositionsPanel().getCenterPanel();
+		JLayeredPane pane = HOMainFrame.instance().getLineupPanel()
+				.getLineupPositionsPanel().getCenterPanel();
 
 		pane.remove(infoLabel);
 		pane.remove(overlayCancel);
 		pane.remove(overlayOk);
 
-		HOMainFrame.instance().getAufstellungsPanel().repaint();
+		HOMainFrame.instance().getLineupPanel().repaint();
 
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see module.lineup.IAufstellungsAssistentPanel#getPositionStatuses()
+	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#getPositionStatuses()
 	 */
 	@Override
 	public Map<Integer, Boolean> getPositionStatuses() {
@@ -558,7 +559,7 @@ public class AufstellungsAssistentPanel extends ImagePanel implements Refreshabl
 		panel2.add(m_jchNot, BorderLayout.WEST);
 		m_jcbGruppe.setToolTipText(hoVerwaltung
 				.getLanguageString("tt_AufstellungsAssistent_Gruppe"));
-		List<String> groups = AufstellungsAssistentPanelNew.asList(UserParameter.instance().aufstellungsAssistentPanel_gruppe);
+		List<String> groups = LineupAssistantPanelNew.asList(UserParameter.instance().aufstellungsAssistentPanel_gruppe);
 		String group = (!groups.isEmpty()) ? groups.get(0) : "";
 		m_jcbGruppe
 				.setSelectedItem(group);

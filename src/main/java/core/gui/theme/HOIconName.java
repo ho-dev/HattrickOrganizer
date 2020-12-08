@@ -17,6 +17,7 @@ public interface HOIconName {
 
 	 String TOOTHEDWHEEL 	= "toothedWheel";
 	 String HAND 			= "hand";
+	 String UPLOAD = "upload";
 
 	 String NO_MATCH 		= "noMatch";
 	 String WEATHER_RAIN_POS = "weather.rain.pos";
@@ -35,12 +36,10 @@ public interface HOIconName {
 	 String LOCKED 			= "locked";
 	 String EMPTY 			= "empty";
 	 String INFO 			= "info";
-	 String FEEDBACK 		= "feedback";
 	 String GOTOANALYSETOP 	= "gotoAnalyseTop";
 	 String GOTOANALYSEBOTTOM = "gotoAnalyseBottom";
 	 String OFFSET 			= "offset";
 	 String GOTOSTATISTIK 	= "gotoStatistik";
-
 	 String RELOAD 			= "reload";
 	 String SIMULATEMATCH 	= "simulateMatch";
 	 String GETLINEUP 		= "getLineup";

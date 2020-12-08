@@ -223,7 +223,7 @@ public final class SpielePanel extends LazyImagePanel {
 				}
 			}
 			// Alles Updaten
-			HOMainFrame.instance().getAufstellungsPanel().update();
+			HOMainFrame.instance().getLineupPanel().update();
 			// Aufstellung zeigen
 			HOMainFrame.instance().showTab(IModule.LINEUP);
 		}

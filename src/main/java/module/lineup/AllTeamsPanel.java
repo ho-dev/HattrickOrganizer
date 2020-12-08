@@ -71,7 +71,7 @@ final class AllTeamsPanel extends JPanel implements ActionListener {
             }
         }
 
-        core.gui.HOMainFrame.instance().getAufstellungsPanel().update();
+        core.gui.HOMainFrame.instance().getLineupPanel().update();
     }
 
     private void initComponents() {

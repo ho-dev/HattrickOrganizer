@@ -708,7 +708,7 @@ public class ImageUtilities {
 
 		if (icon == null) {
 			Object imagePath = ThemeManager.getIconPath(key);
-			Map<Object, Object> newColorMap= new HashMap(colorMap);
+			Map<Object, Object> newColorMap= new HashMap<>(colorMap);
 			for(Map.Entry<Object, Object> entry : colorMap.entrySet()) {
 				if(entry.getValue() instanceof Color){
 					newColorMap.put(entry.getKey(), entry.getValue());
@@ -1041,5 +1041,30 @@ public class ImageUtilities {
 	private static Color getColor (String name){
 		return ThemeManager.getColor(name);
 	}
+
+
+	public static Icon getCopyIcon(int width, Color strokeColor) {
+
+		int height = Math.round(width * 507.89999f/410.70117f);
+
+		String key = "copyIcon_" + strokeColor + "_"  + width + "x" + height;
+
+		Icon _icon = ThemeManager.getIcon(key);
+
+		if (_icon == null) {
+
+			Map<Object, Object> colorMap = Map.of("strokeColor", strokeColor);
+
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/copy.svg", width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, _icon);
+		}
+
+		return _icon;
+	}
+
+
+
+
 
 }

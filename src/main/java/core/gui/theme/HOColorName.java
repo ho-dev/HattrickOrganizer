@@ -146,11 +146,10 @@ public interface HOColorName {
 	String SWAP_COLOR_PRESSED 		= "swap.color.pressed";
 	String LINEUP_PARTIAL_TRAINING  = "lineup.partial.training.bg";
 	String LINEUP_FULL_TRAINING     = "lineup.full.training.bg";
-
 	String LINEUP_RATING_BORDER = "lineup.rating.border";
-
 	String LINEUP_PLAYER_SELECTED = "lineup.player.selected";
 	String LINEUP_PLAYER_SUB = "lineup.player.sub";
+	String LINEUP_BG_BUTTONS = "lineup_bg_buttons";
 
 	//1.431
 	String MATCHDETAILS_PROGRESSBAR_GREEN = "matchdetails.progressbar.green";
@@ -165,22 +164,22 @@ public interface HOColorName {
 
 	//1.434
 	// Matches Analyzer
-	String MATCHESANALYZER_DEFAULT_FONT = "matchesanalyzer.font.default";
-	String MATCHESANALYZER_DEFAULT_BG = "matchesanalyzer.bg.default";
-	String MATCHESANALYZER_MATCH_BG = "matchesanalyzer.bg.match";
-	String MATCHESANALYZER_LINEUP_BG = "matchesanalyzer.bg.lineup";
-	String MATCHESANALYZER_STATS_BG = "matchesanalyzer.bg.stats";
-	String MATCHESANALYZER_POSITIVE_BAR_BG = "matchesanalyzer.bg.positivebar";
-	String MATCHESANALYZER_NEGATIVE_BAR_BG = "matchesanalyzer.bg.negativebar";
-	String MATCHESANALYZER_OVERALL_BG = "matchesanalyzer.bg.overall";
-	String MATCHESANALYZER_PANELS_BORDER = "matchesanalyzer.border";
-	String MATCHESANALYZER_FIELD_LINES = "matchesanalyzer.field.line";
-	String MATCHESANALYZER_FILED_GRASS = "matchesanalyzer.field.grass";
-	String MATCHESANALYZER_TEAM_LEAGUE_NEXT = "matchesanalyzer.cbox.league";
-	String MATCHESANALYZER_TEAM_CUP_NEXT = "matchesanalyzer.cbox.cup";
-	String MATCHESANALYZER_TEAM_TOURNAMENT_NEXT = "matchesanalyzer.cbox.tournamentnext";
-	String MATCHESANALYZER_TEAM_TOURNAMENT = "matchesanalyzer.cbox.tournament";
-	String MATCHESANALYZER_TEAM_MYTEAM = "matchesanalyzer.cbox.myteam";
+//	String MATCHESANALYZER_DEFAULT_FONT = "matchesanalyzer.font.default";
+//	String MATCHESANALYZER_DEFAULT_BG = "matchesanalyzer.bg.default";
+//	String MATCHESANALYZER_MATCH_BG = "matchesanalyzer.bg.match";
+//	String MATCHESANALYZER_LINEUP_BG = "matchesanalyzer.bg.lineup";
+//	String MATCHESANALYZER_STATS_BG = "matchesanalyzer.bg.stats";
+//	String MATCHESANALYZER_POSITIVE_BAR_BG = "matchesanalyzer.bg.positivebar";
+//	String MATCHESANALYZER_NEGATIVE_BAR_BG = "matchesanalyzer.bg.negativebar";
+//	String MATCHESANALYZER_OVERALL_BG = "matchesanalyzer.bg.overall";
+//	String MATCHESANALYZER_PANELS_BORDER = "matchesanalyzer.border";
+//	String MATCHESANALYZER_FIELD_LINES = "matchesanalyzer.field.line";
+//	String MATCHESANALYZER_FILED_GRASS = "matchesanalyzer.field.grass";
+//	String MATCHESANALYZER_TEAM_LEAGUE_NEXT = "matchesanalyzer.cbox.league";
+//	String MATCHESANALYZER_TEAM_CUP_NEXT = "matchesanalyzer.cbox.cup";
+//	String MATCHESANALYZER_TEAM_TOURNAMENT_NEXT = "matchesanalyzer.cbox.tournamentnext";
+//	String MATCHESANALYZER_TEAM_TOURNAMENT = "matchesanalyzer.cbox.tournament";
+//	String MATCHESANALYZER_TEAM_MYTEAM = "matchesanalyzer.cbox.myteam";
 
 	// Training
 	String TRAINING_BIRTHDAY_BG = "training.birthday.bg";

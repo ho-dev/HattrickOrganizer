@@ -31,7 +31,7 @@ import javax.swing.*;
 /**
  * Panel in which the player position is displayed and can be changed
  */
-class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListener {
+public class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListener {
 
     private static final SpielerCBItem oNullPlayer = new SpielerCBItem("", 0f, null, false, true);
     private static final Color defaultBorderColor = ThemeManager.getColor(HOColorName.PLAYER_POSITION_PANEL_BORDER);
@@ -65,7 +65,7 @@ class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListe
         initComponents();
     }
 
-    protected int getPositionsID() {
+    public int getPositionsID() {
         return m_iPositionID;
     }
 

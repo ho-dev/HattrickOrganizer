@@ -1,4 +1,4 @@
-package module.lineup;
+package module.lineup.ratings;
 
 import core.model.HOVerwaltung;
 import core.model.UserParameter;

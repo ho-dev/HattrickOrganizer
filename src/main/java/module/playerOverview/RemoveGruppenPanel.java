@@ -16,8 +16,6 @@ import java.util.Map;
 
 import javax.swing.*;
 
-import static core.gui.theme.HOIconName.TRANSFERLISTED_TINY;
-
 
 /**
  * Panel handling group selection for the players.
@@ -168,7 +166,7 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
         }
 
         if (update) {
-            HOMainFrame.instance().getAufstellungsPanel().update();
+            HOMainFrame.instance().getLineupPanel().update();
         }
 
     }
@@ -187,7 +185,7 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
                 }
             }
 
-            core.gui.HOMainFrame.instance().getAufstellungsPanel().update();
+            core.gui.HOMainFrame.instance().getLineupPanel().update();
         }
     }
 

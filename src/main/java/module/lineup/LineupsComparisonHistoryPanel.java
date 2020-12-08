@@ -1,18 +1,16 @@
-// %651501138:de.hattrickorganizer.gui.lineup%
 package module.lineup;
 
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.model.AufstellungCBItem;
+import core.gui.model.LineupCBItem;
 import core.gui.model.AufstellungsListRenderer;
 import core.gui.model.LineupListRenderer;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.GUIUtils;
 import core.util.HOLogger;
-
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -23,7 +21,6 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -33,41 +30,33 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-/**
- * Aufstellungen können hier gespeichert werden oder mit anderen verglichen
- * werden
- */
-public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
+
+// Panel to store Lineups or to compare them with others
+public class LineupsComparisonHistoryPanel extends ImagePanel implements
 		core.gui.Refreshable, ListSelectionListener, ActionListener, MouseListener {
 
-	private static final long serialVersionUID = 7313614630687892362L;
-	private static AufstellungCBItem m_clAngezeigteAufstellung;
-	private static AufstellungCBItem m_clVergleichsAufstellung;
-	private static AufstellungCBItem m_clHRFNextAufstellung;
-	private static AufstellungCBItem m_clHRFLastAufstellung;
-	private static boolean m_bVergleichAngestossen;
-	private JButton m_jbAufstellungAnzeigen = new JButton(HOVerwaltung.instance()
-			.getLanguageString("AufstellungAnzeigen"));
-	private JButton m_jbAufstellungLoeschen = new JButton(HOVerwaltung.instance()
-			.getLanguageString("AufstellungLoeschen"));
-	private JButton m_jbAufstellungSpeichern = new JButton(HOVerwaltung.instance()
-			.getLanguageString("AufstellungSpeichern"));
-	private JList m_jlAufstellungen = new JList();
+	private static LineupCBItem m_clCurrentLineup;
+	private static LineupCBItem m_clComparativeLineup;
+	private static LineupCBItem m_clHRFNextLineup;
+	private static LineupCBItem m_clHRFLastLineup;
+	private static boolean m_bIsCompared;
+	private final JButton m_jbShowLineup = new JButton(getTranslation("AufstellungAnzeigen"));
+	private final JButton m_jbDeleteLineup = new JButton(getTranslation("AufstellungLoeschen"));
+	private final JButton m_jbSaveLineup = new JButton(getTranslation("AufstellungSpeichern"));
+	private final JList<LineupCBItem> m_jlLineups = new JList<>();
 
-	/**
-	 * Creates a new AufstellungsVergleichHistoryPanel object.
-	 */
-	public AufstellungsVergleichHistoryPanel() {
+
+	 // constructor
+	public LineupsComparisonHistoryPanel() {
 		initComponents();
 
 		RefreshManager.instance().registerRefreshable(this);
 
-		// There was an NPE once...
+		// to avoid NPE
 		try {
-			m_clHRFNextAufstellung = new AufstellungCBItem(HOVerwaltung.instance()
-					.getLanguageString("AktuelleAufstellung"), HOVerwaltung.instance().getModel()
+			m_clHRFNextLineup = new LineupCBItem(getTranslation("AktuelleAufstellung"), HOVerwaltung.instance().getModel()
 					.getLineupWithoutRatingRecalc().duplicate());
-			m_clHRFLastAufstellung = new AufstellungCBItem(HOVerwaltung.instance()
+			m_clHRFLastLineup = new LineupCBItem(HOVerwaltung.instance()
 					.getLanguageString("LetzteAufstellung"), HOVerwaltung.instance().getModel()
 					.getPreviousLineup().duplicate());
 		} catch (Exception e) {
@@ -79,9 +68,9 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 	/**
 	 * Ist die Übergebene Aufstellung angezeigt?
 	 */
-	public static boolean isAngezeigt(AufstellungCBItem aufstellung) {
+	public static boolean isAngezeigt(LineupCBItem aufstellung) {
 		if (aufstellung != null) {
-			return aufstellung.equals(m_clAngezeigteAufstellung);
+			return aufstellung.equals(m_clCurrentLineup);
 		} else {
 			return false;
 		}
@@ -90,8 +79,8 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 	/**
 	 * Setzt die angezeige Aufstellung
 	 */
-	public static void setAngezeigteAufstellung(AufstellungCBItem aufstellung) {
-		m_clAngezeigteAufstellung = aufstellung.duplicate();
+	public static void setAngezeigteAufstellung(LineupCBItem aufstellung) {
+		m_clCurrentLineup = aufstellung.duplicate();
 	}
 
 	/**
@@ -99,12 +88,12 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 	 */
 	public static void setHRFAufstellung(Lineup nextAufstellung, Lineup lastAufstellung) {
 		if (nextAufstellung != null) {
-			m_clHRFNextAufstellung = new AufstellungCBItem(HOVerwaltung.instance()
+			m_clHRFNextLineup = new LineupCBItem(HOVerwaltung.instance()
 					.getLanguageString("AktuelleAufstellung"), nextAufstellung.duplicate());
 		}
 
 		if (lastAufstellung != null) {
-			m_clHRFLastAufstellung = new AufstellungCBItem(HOVerwaltung.instance()
+			m_clHRFLastLineup = new LineupCBItem(HOVerwaltung.instance()
 					.getLanguageString("LetzteAufstellung"), lastAufstellung.duplicate());
 		}
 	}
@@ -112,8 +101,8 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 	/**
 	 * Returns Last Lineup
 	 */
-	public static AufstellungCBItem getLastLineup() {
-		return m_clHRFLastAufstellung;
+	public static LineupCBItem getLastLineup() {
+		return m_clHRFLastLineup;
 	}
 
 	/**
@@ -121,16 +110,16 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 	 * Vergleichsaufstellung anzuzeigen. Wird danach wieder auf false gesetzt
 	 */
 	public static boolean isVergleichgefordert() {
-		final boolean vergleichgefordert = m_bVergleichAngestossen;
-		m_bVergleichAngestossen = false;
+		final boolean vergleichgefordert = m_bIsCompared;
+		m_bIsCompared = false;
 		return vergleichgefordert;
 	}
 
 	/**
 	 * Gibt die VergleichsAufstellung zurück
 	 */
-	public static AufstellungCBItem getVergleichsAufstellung() {
-		return m_clVergleichsAufstellung;
+	public static LineupCBItem getVergleichsAufstellung() {
+		return m_clComparativeLineup;
 	}
 
 	/**
@@ -138,12 +127,12 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 	 */
 	@Override
 	public final void actionPerformed(ActionEvent actionEvent) {
-		if (actionEvent.getSource().equals(m_jbAufstellungAnzeigen)) {
+		if (actionEvent.getSource().equals(m_jbShowLineup)) {
 			// use selected lineup
 			loadSelectedStoredLineup();
-		} else if (actionEvent.getSource().equals(m_jbAufstellungSpeichern)) {
+		} else if (actionEvent.getSource().equals(m_jbSaveLineup)) {
 			saveLineup();
-		} else if (actionEvent.getSource().equals(m_jbAufstellungLoeschen)) {
+		} else if (actionEvent.getSource().equals(m_jbDeleteLineup)) {
 			deleteLineup();
 		}
 		repaint();
@@ -151,8 +140,8 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 
 	private void saveLineup() {
 		String aufstellungsname = "";
-		if (m_jlAufstellungen.getSelectedIndex() > 1) {
-			aufstellungsname = ((AufstellungCBItem) m_jlAufstellungen.getSelectedValue()).getText();
+		if (m_jlLineups.getSelectedIndex() > 1) {
+			aufstellungsname = ((LineupCBItem) m_jlLineups.getSelectedValue()).getText();
 		}
 		final int x = HOMainFrame.instance().getLocation().x
 				+ HOMainFrame.instance().getSize().width;
@@ -169,35 +158,35 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 
 	private void deleteLineup() {
 		String aufstellungsname = "";
-		if (m_jlAufstellungen.getSelectedIndex() > 0) {
-			aufstellungsname = ((AufstellungCBItem) m_jlAufstellungen.getSelectedValue()).getText();
+		if (m_jlLineups.getSelectedIndex() > 0) {
+			aufstellungsname = ((LineupCBItem) m_jlLineups.getSelectedValue()).getText();
 		}
 		DBManager.instance().deleteAufstellung(Lineup.NO_HRF_VERBINDUNG,
-				((AufstellungCBItem) m_jlAufstellungen.getSelectedValue()).getText());
+				((LineupCBItem) m_jlLineups.getSelectedValue()).getText());
 		HOMainFrame.instance().setInformation(
 						HOVerwaltung.instance().getLanguageString("Aufstellung")
 								+ " "
-								+ ((core.gui.model.AufstellungCBItem) m_jlAufstellungen
+								+ ((LineupCBItem) m_jlLineups
 										.getSelectedValue()).getText() + " "
 								+ HOVerwaltung.instance().getLanguageString("geloescht"));
 		File f = new File("Lineups/" + HOVerwaltung.instance().getModel().getBasics().getManager()
 				+ "/" + aufstellungsname + ".dat");
 		f.delete();
-		((DefaultListModel) m_jlAufstellungen.getModel()).removeElement(m_jlAufstellungen
+		((DefaultListModel) m_jlLineups.getModel()).removeElement(m_jlLineups
 				.getSelectedValue());
 	}
 
 	private void loadSelectedStoredLineup() {
 		final Lineup old = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-		m_clAngezeigteAufstellung = ((AufstellungCBItem) m_jlAufstellungen.getSelectedValue())
+		m_clCurrentLineup = ((LineupCBItem) m_jlLineups.getSelectedValue())
 				.duplicate();
-		final Lineup new1 = m_clAngezeigteAufstellung.getAufstellung().duplicate();
+		final Lineup new1 = m_clCurrentLineup.getAufstellung().duplicate();
 		if (old != null) { // else we lose the location (home / away / derby)
 							// here
 			new1.setLocation(old.getLocation());
 		}
 		HOVerwaltung.instance().getModel().setLineup(new1);
-		HOMainFrame.instance().getAufstellungsPanel().update();
+		HOMainFrame.instance().getLineupPanel().update();
 	}
 
 	/**
@@ -257,42 +246,41 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 	@Override
 	public final void valueChanged(ListSelectionEvent listSelectionEvent) {
 		if (!listSelectionEvent.getValueIsAdjusting()) {
-			// Aufstellung markiert
-			if ((m_jlAufstellungen.getSelectedValue() != null)
-					&& m_jlAufstellungen.getSelectedValue() instanceof AufstellungCBItem) {
-				final AufstellungCBItem aufstellungCB = (AufstellungCBItem) m_jlAufstellungen
+			// Lineup marked
+			if ((m_jlLineups.getSelectedValue() != null)
+					&& m_jlLineups.getSelectedValue() instanceof LineupCBItem) {
+				final LineupCBItem aufstellungCB = (LineupCBItem) m_jlLineups
 						.getSelectedValue();
-				// "Aktuelle Aufstellung" nicht zu löschen!
+				// Do not delete "Current setup"!
 				if (aufstellungCB.getText().equals(
 						HOVerwaltung.instance().getLanguageString("AktuelleAufstellung"))
 						|| aufstellungCB.getText().equals(
 								HOVerwaltung.instance().getLanguageString("LetzteAufstellung"))) {
-					m_jbAufstellungAnzeigen.setEnabled(true);
-					m_jbAufstellungLoeschen.setEnabled(false);
-					m_jbAufstellungSpeichern.setEnabled(true);
+					m_jbShowLineup.setEnabled(true);
+					m_jbDeleteLineup.setEnabled(false);
+					m_jbSaveLineup.setEnabled(true);
 				}
-				// Geladen
+				// Load
 				else {
-					m_jbAufstellungAnzeigen.setEnabled(true);
-					m_jbAufstellungSpeichern.setEnabled(true);
-					m_jbAufstellungLoeschen.setEnabled(true);
+					m_jbShowLineup.setEnabled(true);
+					m_jbSaveLineup.setEnabled(true);
+					m_jbDeleteLineup.setEnabled(true);
 				}
-				m_bVergleichAngestossen = true;
-				m_clVergleichsAufstellung = aufstellungCB.duplicate();
+				m_bIsCompared = true;
+				m_clComparativeLineup = aufstellungCB.duplicate();
 				final Lineup old = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-				if (old != null) { // keep the same location (home / away /
-									// derby)
-					m_clVergleichsAufstellung.getAufstellung().setLocation(old.getLocation());
+				if (old != null) { // keep the same location (home / away / derby)
+					m_clComparativeLineup.getAufstellung().setLocation(old.getLocation());
 				}
-			} else { // Keine Vergleich!
-				m_jbAufstellungAnzeigen.setEnabled(false);
-				m_jbAufstellungSpeichern.setEnabled(true);
-				m_jbAufstellungLoeschen.setEnabled(false);
+			} else {  //No comparison!
+				m_jbShowLineup.setEnabled(false);
+				m_jbSaveLineup.setEnabled(true);
+				m_jbDeleteLineup.setEnabled(false);
 
-				m_clVergleichsAufstellung = null;
+				m_clComparativeLineup = null;
 			}
 			// gui.RefreshManager.instance ().doRefresh();
-			HOMainFrame.instance().getAufstellungsPanel().getLineupSettingSimulationPanel().refresh();
+			HOMainFrame.instance().getLineupPanel().getLineupSettingsPanel().refresh();
 		}
 	}
 
@@ -300,32 +288,32 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 	 * Create list with lineups.
 	 */
 	private void createAufstellungsListe() {
-		List<AufstellungCBItem> aufstellungsListe = loadAufstellungsListe();
+		List<LineupCBItem> aufstellungsListe = loadAufstellungsListe();
 
-		m_jlAufstellungen.removeListSelectionListener(this);
+		m_jlLineups.removeListSelectionListener(this);
 
-		final Object letzteMarkierung = m_jlAufstellungen.getSelectedValue();
+		final Object letzteMarkierung = m_jlLineups.getSelectedValue();
 
 		if (letzteMarkierung == null) {
-			m_clAngezeigteAufstellung = m_clHRFNextAufstellung;
+			m_clCurrentLineup = m_clHRFNextLineup;
 		}
 
 		DefaultListModel listmodel;
 
-		if (m_jlAufstellungen.getModel() instanceof DefaultListModel) {
-			listmodel = (DefaultListModel) m_jlAufstellungen.getModel();
+		if (m_jlLineups.getModel() instanceof DefaultListModel) {
+			listmodel = (DefaultListModel) m_jlLineups.getModel();
 			listmodel.removeAllElements();
 		} else {
 			listmodel = new DefaultListModel();
 		}
 
 		// HRF Aufstellung
-		if ((m_clHRFNextAufstellung != null) && (m_clHRFNextAufstellung.getAufstellung() != null)) {
-			listmodel.addElement(m_clHRFNextAufstellung);
+		if ((m_clHRFNextLineup != null) && (m_clHRFNextLineup.getAufstellung() != null)) {
+			listmodel.addElement(m_clHRFNextLineup);
 		}
 
-		if ((m_clHRFLastAufstellung != null) && (m_clHRFLastAufstellung.getAufstellung() != null)) {
-			listmodel.addElement(m_clHRFLastAufstellung);
+		if ((m_clHRFLastLineup != null) && (m_clHRFLastLineup.getAufstellung() != null)) {
+			listmodel.addElement(m_clHRFLastLineup);
 		}
 
 		// Temporäre geladene Aufstellungen
@@ -333,13 +321,13 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 			listmodel.addElement(aufstellungsListe.get(i));
 		}
 
-		m_jlAufstellungen.setModel(listmodel);
+		m_jlLineups.setModel(listmodel);
 
 		if (letzteMarkierung != null) {
-			m_jlAufstellungen.setSelectedValue(letzteMarkierung, true);
+			m_jlLineups.setSelectedValue(letzteMarkierung, true);
 		}
 
-		m_jlAufstellungen.addListSelectionListener(this);
+		m_jlLineups.addListSelectionListener(this);
 	}
 
 	/**
@@ -350,44 +338,44 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 
 		// add( new JLabel( model.HOVerwaltung.instance().getLanguageString(
 		// "VergleichsHRF" ) ), BorderLayout.NORTH );
-		m_jlAufstellungen.setOpaque(false);
+		m_jlLineups.setOpaque(false);
 
 		if ("Classic".equals(UserParameter.instance().skin)) {
-			m_jlAufstellungen.setCellRenderer(new AufstellungsListRenderer());
+			m_jlLineups.setCellRenderer(new AufstellungsListRenderer());
 		} else {
-			m_jlAufstellungen.setCellRenderer(new LineupListRenderer(m_jlAufstellungen));
+			m_jlLineups.setCellRenderer(new LineupListRenderer(m_jlLineups));
 		}
-		m_jlAufstellungen.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		m_jlAufstellungen.addListSelectionListener(this);
-		m_jlAufstellungen.addMouseListener(this);
-		add(new JScrollPane(m_jlAufstellungen), BorderLayout.CENTER);
+		m_jlLineups.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		m_jlLineups.addListSelectionListener(this);
+		m_jlLineups.addMouseListener(this);
+		add(new JScrollPane(m_jlLineups), BorderLayout.CENTER);
 
 		JPanel buttonPanel = new ImagePanel();
 		buttonPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
-		m_jbAufstellungAnzeigen.setToolTipText(HOVerwaltung.instance().getLanguageString(
+		m_jbShowLineup.setToolTipText(HOVerwaltung.instance().getLanguageString(
 				"AufstellungAnzeigen"));
-		m_jbAufstellungAnzeigen.addActionListener(this);
-		m_jbAufstellungAnzeigen.setEnabled(false);
+		m_jbShowLineup.addActionListener(this);
+		m_jbShowLineup.setEnabled(false);
 		gbc.gridy = 0;
-		buttonPanel.add(m_jbAufstellungAnzeigen, gbc);
-		m_jbAufstellungSpeichern.setToolTipText(HOVerwaltung.instance().getLanguageString(
+		buttonPanel.add(m_jbShowLineup, gbc);
+		m_jbSaveLineup.setToolTipText(HOVerwaltung.instance().getLanguageString(
 				"AufstellungSpeichern"));
-		m_jbAufstellungSpeichern.addActionListener(this);
-		m_jbAufstellungSpeichern.setEnabled(true);
+		m_jbSaveLineup.addActionListener(this);
+		m_jbSaveLineup.setEnabled(true);
 		gbc.gridy = 1;
-		buttonPanel.add(m_jbAufstellungSpeichern, gbc);
-		m_jbAufstellungLoeschen.setToolTipText(HOVerwaltung.instance().getLanguageString(
+		buttonPanel.add(m_jbSaveLineup, gbc);
+		m_jbDeleteLineup.setToolTipText(HOVerwaltung.instance().getLanguageString(
 				"AufstellungLoeschen"));
-		m_jbAufstellungLoeschen.addActionListener(this);
-		m_jbAufstellungLoeschen.setEnabled(false);
+		m_jbDeleteLineup.addActionListener(this);
+		m_jbDeleteLineup.setEnabled(false);
 		gbc.gridy = 2;
 		gbc.weighty = 1.0;
-		buttonPanel.add(m_jbAufstellungLoeschen, gbc);
+		buttonPanel.add(m_jbDeleteLineup, gbc);
 
-		GUIUtils.equalizeComponentSizes(this.m_jbAufstellungAnzeigen, this.m_jbAufstellungLoeschen,
-				this.m_jbAufstellungSpeichern);
+		GUIUtils.equalizeComponentSizes(this.m_jbShowLineup, this.m_jbDeleteLineup,
+				this.m_jbSaveLineup);
 
 		add(buttonPanel, BorderLayout.SOUTH);
 	}
@@ -395,16 +383,20 @@ public class AufstellungsVergleichHistoryPanel extends ImagePanel implements
 	/**
 	 * Load the linup list.
 	 */
-	private List<AufstellungCBItem> loadAufstellungsListe() {
+	private List<LineupCBItem> loadAufstellungsListe() {
 		List<String> aufstellungsnamen = DBManager.instance().getUserAufstellungsListe();
-		List<AufstellungCBItem> aufstellungsCBItems = new ArrayList<AufstellungCBItem>();
+		List<LineupCBItem> aufstellungsCBItems = new ArrayList<LineupCBItem>();
 
 		for (int i = 0; i < aufstellungsnamen.size(); i++) {
-			aufstellungsCBItems.add(new AufstellungCBItem(aufstellungsnamen.get(i).toString(),
+			aufstellungsCBItems.add(new LineupCBItem(aufstellungsnamen.get(i).toString(),
 					DBManager.instance().getAufstellung(Lineup.NO_HRF_VERBINDUNG,
 							aufstellungsnamen.get(i).toString())));
 		}
 
 		return aufstellungsCBItems;
+	}
+
+	private String getTranslation(String inputText){
+		return HOVerwaltung.instance().getLanguageString(inputText);
 	}
 }

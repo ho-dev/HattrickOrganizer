@@ -30,14 +30,14 @@ import javax.swing.table.TableColumnModel;
  * <p>The name of the players is displayed in {@link module.playerOverview.SpielerUebersichtNamenTable},
  * which is the same table class used in the Squad tab.</p>
  */
-public final class AustellungSpielerTable extends JTable implements core.gui.Refreshable, PlayerTable {
+public final class LineupPlayersTable extends JTable implements core.gui.Refreshable, PlayerTable {
 
 	private static final long serialVersionUID = -8295456454328467793L;
 
 	private LineupTableModel tableModel;
 	private TableSorter tableSorter;
 
-	protected AustellungSpielerTable() {
+	protected LineupPlayersTable() {
 		super();
 
 		initModel();

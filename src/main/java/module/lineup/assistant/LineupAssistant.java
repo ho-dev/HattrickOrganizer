@@ -1,4 +1,4 @@
-package module.lineup;
+package module.lineup.assistant;
 
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
@@ -656,7 +656,7 @@ public class LineupAssistant {
 		// AssistantPanel.
 		Vector<IMatchRoleID> returnVec = new Vector<IMatchRoleID>();
 		Map<Integer, Boolean> statusMap = HOMainFrame.instance()
-				.getAufstellungsPanel().getAufstellungsAssistentPanel().getPositionStatuses();
+				.getLineupPanel().getAufstellungsAssistentPanel().getPositionStatuses();
 		for (int i = 0; i < positions.size(); i++) {
 			MatchRoleID pos = (MatchRoleID) positions.get(i);
 			if ((!statusMap.containsKey(pos.getId())) || (statusMap.get(pos.getId()))) {

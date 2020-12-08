@@ -18,7 +18,7 @@ import core.util.GUIUtils;
 import core.util.HOLogger;
 import core.util.XMLUtils;
 import module.lineup.Lineup;
-import module.lineup.RatingComparisonDialog;
+import module.lineup.ratings.RatingComparisonDialog;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -220,7 +220,7 @@ public class UploadDownloadPanel extends LazyPanel {
 
 		// restore previous Lineup
 		HOVerwaltung.instance().getModel().setLineup(currLineup);
-		instance().getAufstellungsPanel().update();
+		instance().getLineupPanel().update();
 
 		new RatingComparisonDialog(HOmatchRating, HTmatchRating);
 
@@ -331,7 +331,7 @@ public class UploadDownloadPanel extends LazyPanel {
 			    }
 
 			// weather
-			if (weather == Weather.NULL) instance().getAufstellungsPanel().getAufstellungsAssistentPanel().setWeather(Weather.PARTIALLY_CLOUDY);
+			if (weather == Weather.NULL) instance().getLineupPanel().getAufstellungsAssistentPanel().setWeather(Weather.PARTIALLY_CLOUDY);
 
 			RefreshManager.instance().doRefresh();
 
@@ -339,7 +339,7 @@ public class UploadDownloadPanel extends LazyPanel {
 			JOptionPane.showMessageDialog(instance(),  HOVerwaltung.instance().getLanguageString("lineup.download.success"), HOVerwaltung.instance()
 					.getLanguageString("lineup.download.title"), messageType);}
 			HOVerwaltung.instance().getModel().setLineup(lineup);
-			instance().getAufstellungsPanel().update();
+			instance().getLineupPanel().update();
 		}
 	}
 

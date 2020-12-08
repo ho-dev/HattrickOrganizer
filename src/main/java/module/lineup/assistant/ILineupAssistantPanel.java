@@ -1,11 +1,12 @@
-package module.lineup;
+package module.lineup.assistant;
 
 import core.model.match.Weather;
+import module.lineup.PlayerPositionPanel;
 
 import java.util.List;
 import java.util.Map;
 
-public interface IAufstellungsAssistentPanel {
+public interface ILineupAssistantPanel {
 
 	boolean isExcludeLastMatch();
 

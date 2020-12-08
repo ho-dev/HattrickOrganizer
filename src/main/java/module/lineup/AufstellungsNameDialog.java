@@ -3,7 +3,7 @@ package module.lineup;
 
 import core.db.DBManager;
 import core.gui.HOMainFrame;
-import core.gui.model.AufstellungCBItem;
+import core.gui.model.LineupCBItem;
 import core.model.HOVerwaltung;
 import core.model.match.SourceSystem;
 import core.util.GUIUtils;
@@ -108,7 +108,7 @@ final class AufstellungsNameDialog extends JDialog implements ActionListener {
 								HOVerwaltung.instance().getLanguageString("Aufstellung") + " "
 										+ nameTextField.getText() + " "
 										+ HOVerwaltung.instance().getLanguageString("gespeichert"));
-				AufstellungsVergleichHistoryPanel.setAngezeigteAufstellung(new AufstellungCBItem(
+				LineupsComparisonHistoryPanel.setAngezeigteAufstellung(new LineupCBItem(
 						nameTextField.getText(), lineup.duplicate()));
 				saveLineup(SourceSystem.HATTRICK, lineup, nameTextField.getText());
 				setVisible(false);
@@ -127,13 +127,13 @@ final class AufstellungsNameDialog extends JDialog implements ActionListener {
 											+ " "
 											+ HOVerwaltung.instance().getLanguageString(
 													"gespeichert"));
-					AufstellungsVergleichHistoryPanel
-							.setAngezeigteAufstellung(new AufstellungCBItem(
+					LineupsComparisonHistoryPanel
+							.setAngezeigteAufstellung(new LineupCBItem(
 									nameTextField.getText(), lineup.duplicate()));
 					saveLineup(SourceSystem.HATTRICK, lineup, nameTextField.getText());
 
 					// Should prepare it for the new lineup
-					HOMainFrame.instance().getAufstellungsPanel().update();
+					HOMainFrame.instance().getLineupPanel().update();
 					setVisible(false);
 				}
 			}
