@@ -1,5 +1,7 @@
 package module.lineup;
 
+import core.gui.RefreshManager;
+import core.gui.Updatable;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -7,25 +9,27 @@ import core.model.match.Weather;
 import module.lineup.assistant.ILineupAssistantPanel;
 import module.lineup.assistant.LineupAssistantPanel;
 import module.lineup.ratings.LineupRatingPanel;
-
 import javax.swing.*;
 import java.awt.*;
+
 
 /**
  * Create the panel displaying ratings, settings and assistant
  */
-public class LineupRatingAssistantPanel extends JPanel {
+public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refreshable, Updatable {
+
+    private final LineupPanel m_clLineupPanel;
     private LineupRatingPanel lineupRatingPanel;
     private LineupSettingsPanel lineupSettingsPanel;
     private LineupAssistantPanel lineupAssistantPanel;
-
     public final LineupRatingPanel getLineupRatingPanel(){ return lineupRatingPanel;}
     public final LineupSettingsPanel getLineupSettingsPanel(){ return lineupSettingsPanel;}
     public final ILineupAssistantPanel getLineupAssistantPanel(){return lineupAssistantPanel;}
 
-    public LineupRatingAssistantPanel() {
-
+    public LineupRatingAssistantPanel(LineupPanel parent) {
+        m_clLineupPanel = parent;
         initComponents();
+        RefreshManager.instance().registerRefreshable(this);
     }
 
 
@@ -72,5 +76,15 @@ public class LineupRatingAssistantPanel extends JPanel {
     public void refresh(){
         lineupRatingPanel.setRatings();
         lineupSettingsPanel.refresh();
+    }
+
+    @Override
+    public final void reInit() {
+        refresh();
+    }
+
+    @Override
+    public final void update() {
+        m_clLineupPanel.update();
     }
 }

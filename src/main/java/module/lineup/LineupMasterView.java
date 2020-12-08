@@ -2,7 +2,7 @@ package module.lineup;
 
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
-import core.gui.Updateable;
+import core.gui.Updatable;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -68,7 +68,7 @@ public class LineupMasterView extends JPanel {
 	}
 
 	private void addListeners() {
-		this.lineupPanel.addUpdateable(new Updateable() {
+		this.lineupPanel.addUpdateable(new Updatable() {
 
 			@Override
 			public void update() {

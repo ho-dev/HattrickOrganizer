@@ -4,6 +4,7 @@ import core.datatype.CBItem;
 import core.db.user.UserManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
+import core.gui.Updatable;
 import core.gui.comp.panel.ComboBoxTitled;
 import core.gui.model.LineupCBItem;
 import core.gui.theme.HOIconName;
@@ -31,7 +32,7 @@ import javax.swing.border.Border;
 /**
  * Create the panel allowing lineup creation
  */
-public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel implements core.gui.Refreshable, core.gui.Updateable, ActionListener {
+public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel implements core.gui.Refreshable, Updatable, ActionListener {
 
 	private final LineupPanel m_clLineupPanel;
 	private final JButton m_jbFlipSide = new JButton(ThemeManager.getIcon(HOIconName.RELOAD));

@@ -1,7 +1,7 @@
 package module.lineup;
 
 import core.gui.HOMainFrame;
-import core.gui.Updateable;
+import core.gui.Updatable;
 import core.model.UserParameter;
 import core.model.player.Player;
 import module.lineup.assistant.ILineupAssistantPanel;
@@ -27,11 +27,9 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	private LineupPlayersTable lineupPlayersTable;
 	private LineupRatingAssistantPanel lineupRatingAssistantPanel;
 	private JSplitPane horizontalSplitPane;
-	private JSplitPane horizontalRightSplitPane;
 	private JSplitPane verticalSplitPane;
-	private JSplitPane verticalSplit;
 	private SpielerUebersichtNamenTable aufstellungSpielerTableName;
-	private List<Updateable> updateables = new ArrayList<>();
+	private List<Updatable> updatables = new ArrayList<>();
 
 	/**
 	 * Creates a new AufstellungsPanel object.
@@ -121,21 +119,21 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		fireUpdate();
 	}
 
-	public void addUpdateable(Updateable updateable) {
-		this.updateables.add(updateable);
+	public void addUpdateable(Updatable updatable) {
+		this.updatables.add(updatable);
 	}
 
 
 	private void fireUpdate() {
-		for (int i = this.updateables.size() - 1; i >= 0; i--) {
-			this.updateables.get(i).update();
+		for (int i = this.updatables.size() - 1; i >= 0; i--) {
+			this.updatables.get(i).update();
 		}
 	}
 
 	private void initComponents() {
 		setLayout(new BorderLayout());
 
-		lineupRatingAssistantPanel = new LineupRatingAssistantPanel();
+		lineupRatingAssistantPanel = new LineupRatingAssistantPanel(this);
 		lineupPositionsPanel = new LineupPositionsPanel(this);
 
 		horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);

@@ -3,7 +3,7 @@ package module.lineup;
 import core.constants.player.PlayerSkill;
 import core.datatype.CBItem;
 import core.gui.HOMainFrame;
-import core.gui.Updateable;
+import core.gui.Updatable;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.model.SpielerCBItem;
 import core.gui.model.PlayerCBItemRenderer;
@@ -41,7 +41,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     private final JComboBox<CBItem> m_jcbTactic = new JComboBox<>();
     private final JLabel m_jlPosition = new JLabel();
     private final SpielerCBItem m_clSelectedPlayer = new SpielerCBItem("", 0f, null, false, true);
-    private final Updateable m_clUpdater;
+    private final Updatable m_clUpdater;
     private SpielerCBItem[] m_clCBItems = new SpielerCBItem[0];
     private final int m_iPositionID;
 
@@ -52,7 +52,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     private final int layerIndex = 0;
 
     //constructor
-    protected PlayerPositionPanel(Updateable updater, int positionsID) {
+    protected PlayerPositionPanel(Updatable updater, int positionsID) {
         super(false);
 
         m_clUpdater = updater;

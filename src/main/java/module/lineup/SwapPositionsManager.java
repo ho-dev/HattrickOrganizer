@@ -1,16 +1,16 @@
 package module.lineup;
 
-import core.gui.Updateable;
+import core.gui.Updatable;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 
 public class SwapPositionsManager {
 
-	private final Updateable parentPanel;
+	private final Updatable parentPanel;
 	private SwapPositionFeature swapCandidate = null;
 
-	public SwapPositionsManager(Updateable parentPanel) {
+	public SwapPositionsManager(Updatable parentPanel) {
 		this.parentPanel = parentPanel;
 	}
 

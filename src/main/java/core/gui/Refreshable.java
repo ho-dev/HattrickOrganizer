@@ -1,10 +1,6 @@
 package core.gui;
 
-/**
- * Die Implementation kann sich beim MainFrame anmelden und wird dann bei Datenänderungen
- * aufgefordert sich neu zu zeichnen
- */
+// panel will be notified when data changes and will redraw themselves
 public interface Refreshable extends IRefreshable {
-    //~ Methods ------------------------------------------------------------------------------------
-    public void reInit();
+    void reInit();
 }
