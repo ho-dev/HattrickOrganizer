@@ -22,12 +22,14 @@ import core.model.match.MatchLineupTeam;
 import core.model.match.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
+import core.model.player.YouthPlayer;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
 import core.util.HOLogger;
 import core.util.IOUtils;
 import module.lineup.substitution.model.Substitution;
 import core.HO;
+import module.training.Skills;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedWriter;
@@ -955,13 +957,9 @@ public class ConvertXml2Hrf {
 			createHRFLine(buffer, player, "LeagueGoals");
 			createHRFLine(buffer, player, "FriendlyGoals");
 
-			createHRFSkillLines(buffer, player, "KeeperSkill");
-			createHRFSkillLines(buffer, player, "DefenderSkill");
-			createHRFSkillLines(buffer, player, "PlaymakerSkill");
-			createHRFSkillLines(buffer, player, "WingerSkill");
-			createHRFSkillLines(buffer, player, "PassingSkill");
-			createHRFSkillLines(buffer, player, "ScorerSkill");
-			createHRFSkillLines(buffer, player, "SetPiecesSkill");
+			for ( var skillId: YouthPlayer.skillIds){
+				createHRFSkillLines(buffer, player, skillId);
+			}
 
 			createHRFLine(buffer, player, "ScoutId");
 			createHRFLine(buffer, player, "ScoutName");
@@ -992,13 +990,16 @@ public class ConvertXml2Hrf {
 		return false;
 	}
 
-	private static void createHRFSkillLines(StringBuilder buffer, MyHashtable player, String skill) {
+	private static void createHRFSkillLines(StringBuilder buffer, MyHashtable player, Skills.HTSkillID skillId) {
+		var skill = skillId.toString() + "Skill";
 		createHRFLine(buffer, player, skill);
 		createHRFLine(buffer, player, skill+"IsAvailable");
 		createHRFLine(buffer, player, skill+"IsMaxReached");
 		createHRFLine(buffer, player, skill+"MayUnlock");
-		createHRFLine(buffer, player, skill+"Max");
-		createHRFLine(buffer, player, skill+"MaxIsAvailable");
+		skill += "Max";
+		createHRFLine(buffer, player, skill);
+		createHRFLine(buffer, player, skill+"IsAvailable");
+		createHRFLine(buffer, player, skill+"MayUnlock");
 	}
 
 	private static void createHRFLine(StringBuilder buffer, MyHashtable player, String key) {

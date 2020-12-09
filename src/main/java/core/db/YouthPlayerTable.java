@@ -139,7 +139,7 @@ public class YouthPlayerTable  extends AbstractTable {
                 .append(player.getPositionCode()).append(",")
                 .append(player.getPlayedMinutes()).append(",")
                 .append(player.getRating()).append(",")
-                .append(DBManager.nullOrValue(player.getYouthMatchDate())).append(",");
+                .append(DBManager.nullOrValue(player.getYouthMatchDate()));
 
         for ( var skillId: YouthPlayer.skillIds){
             AppendSkillInfo(sql, player, skillId);
@@ -172,14 +172,13 @@ public class YouthPlayerTable  extends AbstractTable {
     }
 
     private void AppendSkillInfo(StringBuilder sql, YouthPlayer player, Skills.HTSkillID skillID) {
-        sql.append(player.getSkillInfo(skillID).getCurrentLevel()).append(",")
-                .append(player.getSkillInfo(skillID).getMax()).append(",")
-                .append(player.getSkillInfo(skillID).getStartLevel()).append(",")
-                .append(player.getSkillInfo(skillID).isMaxReached()).append(",")
-                .append(player.getSkillInfo(skillID).getCurrentValue()).append(",")
-                .append(player.getSkillInfo(skillID).getStartValue()).append(",");
+        sql.append(",").append(player.getSkillInfo(skillID).getCurrentLevel())
+                .append(",").append(player.getSkillInfo(skillID).getMax())
+                .append(",").append(player.getSkillInfo(skillID).getStartLevel())
+                .append(",").append(player.getSkillInfo(skillID).isMaxReached())
+                .append(",").append(player.getSkillInfo(skillID).getCurrentValue())
+                .append(",").append(player.getSkillInfo(skillID).getStartValue());
     }
-
     /**
      * load youth player of HRF file id
      */
