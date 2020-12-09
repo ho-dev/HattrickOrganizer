@@ -16,7 +16,7 @@ import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class SpielerUebersichtNamenTable extends JTable implements Refreshable, PlayerTable {
+public class LineupPlayersTableNameColumn extends JTable implements Refreshable, PlayerTable {
 
 	private static final long serialVersionUID = -7686660400379157142L;
 	private TableSorter tableSorter;
@@ -25,7 +25,7 @@ public class SpielerUebersichtNamenTable extends JTable implements Refreshable, 
 	 * Nur Namensspalte anzeigen
 	 * 
 	 */
-	public SpielerUebersichtNamenTable(TableSorter model) {
+	public LineupPlayersTableNameColumn(TableSorter model) {
 		super();
 		tableSorter = model;
 		model.addMouseListenerToHeaderInTable(this);

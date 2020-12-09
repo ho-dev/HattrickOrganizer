@@ -21,7 +21,8 @@ import module.lineup.AllTeamsPanel;
 import module.lineup.Lineup;
 import module.lineup.LineupPanel;
 import module.lineup.LineupsComparisonHistoryPanel;
-import module.lineup.assistant.ILineupAssistantPanel;
+import module.lineup.assistant.LineupAssistantPanel;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private PlayerPositionPanel m_clSetPieceTaker;
 	private javax.swing.JLayeredPane centerPanel;
 	private final SwapPositionsManager swapPositionsManager = new SwapPositionsManager(this);
-	private final ILineupAssistantPanel assistantPanel;
+	private final LineupAssistantPanel assistantPanel;
 	private int m_iStyleOfPlay, m_iTactic, m_iAttitude;
 	private ComboBoxTitled m_jpTeamAttitude;
 	private JComboBox<CBItem> m_jcbTeamAttitude;
@@ -87,7 +88,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 	public LineupPositionsPanel(LineupPanel parent) {
 		m_clLineupPanel = parent;
-		assistantPanel = m_clLineupPanel.getAufstellungsAssistentPanel();
+		assistantPanel = m_clLineupPanel.getLineupAssistantPanel();
 		initComponents();
 		RefreshManager.instance().registerRefreshable(this);
 	}
@@ -111,11 +112,11 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 	@Override
 	public final void refresh() {
-		boolean gruppenfilter = m_clLineupPanel.getAufstellungsAssistentPanel().isGroupFilter();
-		String gruppe = m_clLineupPanel.getAufstellungsAssistentPanel().getGroup();
-		boolean gruppenegieren = m_clLineupPanel.getAufstellungsAssistentPanel().isNotGroup();
+		boolean gruppenfilter = m_clLineupPanel.getLineupAssistantPanel().isGroupFilter();
+		String gruppe = m_clLineupPanel.getLineupAssistantPanel().getGroup();
+		boolean gruppenegieren = m_clLineupPanel.getLineupAssistantPanel().isNotGroup();
 
-		boolean exludeLast = m_clLineupPanel.getAufstellungsAssistentPanel()
+		boolean exludeLast = m_clLineupPanel.getLineupAssistantPanel()
 				.isExcludeLastMatch();
 
 		// All Player Positions Inform First 11

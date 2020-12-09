@@ -401,7 +401,7 @@ public class Lineup{
 	/**
 	 * Auto-select the set best captain.
 	 */
-	public final void setAutoKapitaen(List<Player> players) {
+	public final void setAutoKapitaen(@Nullable List<Player> players) {
 		float maxValue = -1;
 
 		if (players == null) {
@@ -426,7 +426,7 @@ public class Lineup{
 	/**
 	 * Auto-select the set best pieces taker.
 	 */
-	public final void setAutoKicker(List<Player> players) {
+	public final void setAutoKicker(@Nullable List<Player> players) {
 		double maxStandard = -1;
 		int form = -1;
 
@@ -1327,11 +1327,11 @@ public class Lineup{
 	/**
 	 * Assitant to create automatically the lineup
 	 */
-	public final void doAufstellung(List<Player> player, byte reihenfolge, boolean mitForm,
-									boolean idealPosFirst, boolean ignoreVerletzung, boolean ignoreSperren,
-									float wetterBonus, Weather weather) {
+	public final void optimizeLineup(List<Player> player, byte reihenfolge, boolean mitForm,
+									 boolean idealPosFirst, boolean ignoreVerletzung, boolean ignoreSperren,
+									 float wetterBonus) {
 		m_clAssi.doAufstellung(getPositionen(), player, reihenfolge, mitForm, idealPosFirst,
-				ignoreVerletzung, ignoreSperren, wetterBonus, weather);
+				ignoreVerletzung, ignoreSperren, wetterBonus, getWeather());
 		setAutoKicker(null);
 		setAutoKapitaen(null);
 	}

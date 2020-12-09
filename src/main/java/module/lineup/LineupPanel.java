@@ -4,11 +4,11 @@ import core.gui.HOMainFrame;
 import core.gui.Updatable;
 import core.model.UserParameter;
 import core.model.player.Player;
-import module.lineup.assistant.ILineupAssistantPanel;
+import module.lineup.assistant.LineupAssistantPanel;
 import module.lineup.lineup.LineupPositionsPanel;
 import module.lineup.ratings.LineupRatingPanel;
 import module.playerOverview.PlayerTable;
-import module.playerOverview.SpielerUebersichtNamenTable;
+import module.playerOverview.LineupPlayersTableNameColumn;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -29,7 +29,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	private LineupRatingAssistantPanel lineupRatingAssistantPanel;
 	private JSplitPane horizontalSplitPane;
 	private JSplitPane verticalSplitPane;
-	private SpielerUebersichtNamenTable aufstellungSpielerTableName;
+	private LineupPlayersTableNameColumn lineupPlayersTableNameColumn;
 	private List<Updatable> updatables = new ArrayList<>();
 
 	public LineupPanel() {
@@ -38,7 +38,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	}
 
 	public void setPlayer(int idPlayer) {
-		aufstellungSpielerTableName.setSpieler(idPlayer);
+		lineupPlayersTableNameColumn.setSpieler(idPlayer);
 		lineupPlayersTable.setSpieler(idPlayer);
 	}
 
@@ -46,7 +46,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		lineupPlayersTable.refresh();
 	}
 
-	public final ILineupAssistantPanel getAufstellungsAssistentPanel() {return lineupRatingAssistantPanel.getLineupAssistantPanel(); }
+	public final LineupAssistantPanel getLineupAssistantPanel() {return lineupRatingAssistantPanel.getLineupAssistantPanel(); }
 
 	public final LineupSettingsPanel getLineupSettingsPanel() {return lineupRatingAssistantPanel.getLineupSettingsPanel();}
 
@@ -79,7 +79,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		lineupPositionsPanel.refresh();
 		lineupRatingAssistantPanel.refresh();
 		lineupPlayersTable.refresh();
-		aufstellungSpielerTableName.refresh();
+		lineupPlayersTableNameColumn.refresh();
 
 		// Refresh the table and details of the player overview
 		core.gui.HOMainFrame.instance().getSpielerUebersichtPanel().refresh();
@@ -123,11 +123,11 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
 	private Component initSpielerTabelle() {
 		lineupPlayersTable = new LineupPlayersTable();
-		aufstellungSpielerTableName = new SpielerUebersichtNamenTable(lineupPlayersTable.getSorter());
+		lineupPlayersTableNameColumn = new LineupPlayersTableNameColumn(lineupPlayersTable.getSorter());
 
 		final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
-		JScrollPane scrollpane = new JScrollPane(aufstellungSpielerTableName);
+		JScrollPane scrollpane = new JScrollPane(lineupPlayersTableNameColumn);
 		scrollpane.setPreferredSize(new Dimension(170, 100));
 		scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
@@ -168,15 +168,15 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getSource() == lineupPlayersTable.getSelectionModel()) {
 					synchronizeSelection(lineupPlayersTable);
-				} else if (e.getSource() == aufstellungSpielerTableName.getSelectionModel()) {
-					synchronizeSelection(aufstellungSpielerTableName);
+				} else if (e.getSource() == lineupPlayersTableNameColumn.getSelectionModel()) {
+					synchronizeSelection(lineupPlayersTableNameColumn);
 				}
 			}
 
 			private void synchronizeSelection(JTable sourceTable) {
 				JTable targetTable;
 				if (sourceTable == lineupPlayersTable) {
-					targetTable = aufstellungSpielerTableName;
+					targetTable = lineupPlayersTableNameColumn;
 				} else {
 					targetTable = lineupPlayersTable;
 				}
@@ -197,6 +197,6 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		};
 
 		this.lineupPlayersTable.getSelectionModel().addListSelectionListener(lsl);
-		this.aufstellungSpielerTableName.getSelectionModel().addListSelectionListener(lsl);
+		this.lineupPlayersTableNameColumn.getSelectionModel().addListSelectionListener(lsl);
 	}
 }

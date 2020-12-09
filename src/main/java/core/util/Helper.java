@@ -87,14 +87,7 @@ public class Helper {
 			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.FORWARD_DEF_TECH), IMatchRoleID.FORWARD_DEF_TECH),
 			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.FORWARD_TOWING), IMatchRoleID.FORWARD_TOWING) };
 
-    /** weather combo boxes */
-	public static final CBItem[] WETTER =
-			{
-					new CBItem("", Weather.RAINY.getId()),
-					new CBItem("", Weather.OVERCAST.getId()),
-					new CBItem("", Weather.PARTIALLY_CLOUDY.getId()),
-					new CBItem("", Weather.SUNNY.getId())
-			};
+
 
 	public static NumberFormat CURRENCYFORMAT = CurrencyUtils.getLeagueCurrencyFormater(HOVerwaltung.instance().getModel().getBasics().getLiga());
 
@@ -477,5 +470,9 @@ public class Helper {
 			}
 		}
 		return (max);
+	}
+
+	public static String getTranslation(String key){
+		return 	core.model.HOVerwaltung.instance().getLanguageString(key);
 	}
 }

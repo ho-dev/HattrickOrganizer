@@ -18,6 +18,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.net.HattrickLink;
 import core.util.Helper;
+import module.playerOverview.LineupPlayersTableNameColumn;
 import module.playerOverview.PlayerTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -27,7 +28,7 @@ import javax.swing.table.TableColumnModel;
 /**
  * Table displaying the players' details in Lineup tab.
  *
- * <p>The name of the players is displayed in {@link module.playerOverview.SpielerUebersichtNamenTable},
+ * <p>The name of the players is displayed in {@link LineupPlayersTableNameColumn},
  * which is the same table class used in the Squad tab.</p>
  */
 public final class LineupPlayersTable extends JTable implements core.gui.Refreshable, PlayerTable {

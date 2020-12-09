@@ -2,11 +2,8 @@ package module.lineup;
 
 import core.gui.RefreshManager;
 import core.gui.Updatable;
-import core.gui.theme.HOIconName;
-import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.Weather;
-import module.lineup.assistant.ILineupAssistantPanel;
 import module.lineup.assistant.LineupAssistantPanel;
 import module.lineup.ratings.LineupRatingPanel;
 import javax.swing.*;
@@ -24,7 +21,7 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
     private LineupAssistantPanel lineupAssistantPanel;
     public final LineupRatingPanel getLineupRatingPanel(){ return lineupRatingPanel;}
     public final LineupSettingsPanel getLineupSettingsPanel(){ return lineupSettingsPanel;}
-    public final ILineupAssistantPanel getLineupAssistantPanel(){return lineupAssistantPanel;}
+    public final LineupAssistantPanel getLineupAssistantPanel(){return lineupAssistantPanel;}
 
     public LineupRatingAssistantPanel(LineupPanel parent) {
         m_clLineupPanel = parent;
@@ -35,17 +32,8 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
 
     private void initComponents() {
         lineupRatingPanel = new LineupRatingPanel();
-        lineupSettingsPanel = new LineupSettingsPanel();
-        final LineupsComparisonHistoryPanel lineupsComparisonHistoryPanel = new LineupsComparisonHistoryPanel();
-        final Lineup aufstellung = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-        final Weather weather = aufstellung.getWeather();
-
-        lineupAssistantPanel = new LineupAssistantPanel(weather);
-        JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("", ThemeManager.getScaledIcon(HOIconName.BALL, 13, 13),
-                new JScrollPane((Component)lineupAssistantPanel));
-        tabbedPane.addTab("", ThemeManager.getIcon(HOIconName.DISK),
-                lineupsComparisonHistoryPanel);
+        lineupSettingsPanel = new LineupSettingsPanel(lineupRatingPanel);
+        lineupAssistantPanel = new LineupAssistantPanel();
 
 
         final GridBagLayout layout = new GridBagLayout();
@@ -64,13 +52,15 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
 
         gbc.gridy = 1;
         gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(5, 5, 5, 10);
         layout.setConstraints(lineupSettingsPanel, gbc);
         add(lineupSettingsPanel, gbc);
 
         gbc.gridx = 1;
-        layout.setConstraints(tabbedPane, gbc);
-        add(tabbedPane, gbc);
-
+        gbc.insets = new Insets(5, 0, 5, 5);
+        layout.setConstraints(lineupAssistantPanel, gbc);
+        add(lineupAssistantPanel, gbc);
     }
 
     public void refresh(){

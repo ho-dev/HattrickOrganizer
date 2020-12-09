@@ -360,7 +360,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
         // weatherEffect
         m_jlWeatherEffect.setIcon(null);
         if (m_bShowWeatherEffect) {
-            int effect = PlayerSpeciality.getWeatherEffect(HOMainFrame.getWetter(), player.getPlayerSpecialty());
+            int effect = PlayerSpeciality.getWeatherEffect(HOMainFrame.getWeather(), player.getPlayerSpecialty());
             if (effect != 0) {
                 final Icon wettericon = ThemeManager.getIcon("weather.effect." + effect);
                 m_jlWeatherEffect.setIcon(wettericon);

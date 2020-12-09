@@ -26,10 +26,9 @@ import core.util.BrowserLauncher;
 import core.util.HOLogger;
 import core.util.OSUtils;
 import core.util.StringUtils;
-import module.lineup.assistant.LineupAssistantPanelNew;
-import module.lineup.assistant.ILineupAssistantPanel;
 import module.lineup.LineupMasterView;
 import module.lineup.LineupPanel;
+import module.lineup.assistant.LineupAssistantPanel;
 import module.matches.SpielePanel;
 import module.nthrf.MainPanel;
 import module.playerOverview.SpielerUebersichtsPanel;
@@ -294,11 +293,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	/**
 	 * Get the current weather.
 	 */
-	public static Weather getWetter() {
+	public static Weather getWeather() {
 		if (m_clHOMainFrame == null) {
 			return Weather.PARTIALLY_CLOUDY;
 		}
-		return instance().getLineupPanel().getAufstellungsAssistentPanel().getWeather();
+		return instance().getLineupPanel().getLineupSettingsPanel().getWeather();
 	}
 
 	/**
@@ -694,17 +693,17 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		parameter.hoMainFrame_height = Math.min(getSize().height,
 				getToolkit().getScreenSize().height-parameter.hoMainFrame_PositionY+currentDevice.getDefaultConfiguration().getBounds().y);
 
-		final ILineupAssistantPanel aap = getLineupPanel().getAufstellungsAssistentPanel();
+		final LineupAssistantPanel lineupAssistantPanel = getLineupPanel().getLineupAssistantPanel();
 
-		parameter.aufstellungsAssistentPanel_gruppe = LineupAssistantPanelNew.asString(aap.getGroups());
-		parameter.aufstellungsAssistentPanel_reihenfolge = aap.getOrder();
-		parameter.aufstellungsAssistentPanel_not = aap.isNotGroup();
-		parameter.aufstellungsAssistentPanel_cbfilter = aap.isGroupFilter();
-		parameter.aufstellungsAssistentPanel_idealPosition = aap.isIdealPositionZuerst();
-		parameter.aufstellungsAssistentPanel_form = aap.isConsiderForm();
-		parameter.aufstellungsAssistentPanel_verletzt = aap.isIgnoreInjured();
-		parameter.aufstellungsAssistentPanel_gesperrt = aap.isIgnoreSuspended();
-		parameter.aufstellungsAssistentPanel_notLast = aap.isExcludeLastMatch();
+		parameter.aufstellungsAssistentPanel_gruppe = lineupAssistantPanel.getGroup();
+		parameter.aufstellungsAssistentPanel_reihenfolge = lineupAssistantPanel.getOrder();
+		parameter.aufstellungsAssistentPanel_not = lineupAssistantPanel.isNotGroup();
+		parameter.aufstellungsAssistentPanel_cbfilter = lineupAssistantPanel.isGroupFilter();
+		parameter.aufstellungsAssistentPanel_idealPosition = lineupAssistantPanel.isIdealPositionZuerst();
+		parameter.aufstellungsAssistentPanel_form = lineupAssistantPanel.isConsiderForm();
+		parameter.aufstellungsAssistentPanel_verletzt = lineupAssistantPanel.isIgnoreInjured();
+		parameter.aufstellungsAssistentPanel_gesperrt = lineupAssistantPanel.isIgnoreSuspended();
+		parameter.aufstellungsAssistentPanel_notLast = lineupAssistantPanel.isExcludeLastMatch();
 
 		// SpielerÜbersichtsPanel
 		if (getTabbedPane().isModuleTabVisible(IModule.PLAYEROVERVIEW)) {

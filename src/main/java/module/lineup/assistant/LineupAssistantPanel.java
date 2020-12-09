@@ -1,4 +1,3 @@
-// %3860481451:de.hattrickorganizer.gui.lineup%
 package module.lineup.assistant;
 
 import core.datatype.CBItem;
@@ -10,40 +9,32 @@ import core.gui.theme.*;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
-import core.util.Helper;
 import module.lineup.*;
 import module.lineup.lineup.PlayerPositionPanel;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import javax.swing.*;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-import javax.swing.border.MatteBorder;
+import static core.util.Helper.getTranslation;
 
-/**
- * Die automatische Aufstellung wird hier konfiguriert und gestartet
- */
-public class LineupAssistantPanel extends ImagePanel implements Refreshable, ActionListener, ItemListener,
-		ILineupAssistantPanel {
 
-	private static final long serialVersionUID = 5271343329674809429L;
+//TODO check if it needs to implement Refreshable
+public class LineupAssistantPanel extends ImagePanel implements Refreshable, ActionListener, ItemListener {
+
+	UserParameter userParameter = core.model.UserParameter.instance();
+
+	private final static Color TITLE_FG = ThemeManager.getColor(HOColorName.BLUE);
+
+	private final JCheckBox m_jcbxNot = new JCheckBox(getTranslation("Not"), userParameter.aufstellungsAssistentPanel_not);
+	private final JComboBox<String> m_jcbGroups = new JComboBox<>(GroupTeamFactory.TEAMSMILIES);
+
 	private final JButton m_jbLoeschen = new JButton(ThemeManager.getIcon(HOIconName.CLEARASSIST));
 	private final JButton m_jbOK = new JButton(ThemeManager.getIcon(HOIconName.STARTASSIST));
 	private final JButton m_jbReserveLoeschen = new JButton(
@@ -65,14 +56,11 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	private final JCheckBox m_jchListBoxGruppenFilter = new JCheckBox(HOVerwaltung.instance()
 			.getLanguageString("ListBoxGruppenFilter"),
 			core.model.UserParameter.instance().aufstellungsAssistentPanel_cbfilter);
-	private final JCheckBox m_jchNot = new JCheckBox(HOVerwaltung.instance().getLanguageString(
-			"Not"), core.model.UserParameter.instance().aufstellungsAssistentPanel_not);
 	private final JCheckBox m_jchVerletzte = new JCheckBox(HOVerwaltung.instance()
 			.getLanguageString("Verletze_aufstellen"),
 			core.model.UserParameter.instance().aufstellungsAssistentPanel_verletzt);
-	private final JComboBox m_jcbGruppe = new JComboBox(GroupTeamFactory.TEAMSMILIES);
 
-	private final JComboBox m_jcbWetter = new JComboBox(Helper.WETTER);
+
 	private final CBItem[] REIHENFOLGE = {
 			new CBItem(HOVerwaltung.instance().getLanguageString("AW-MF-ST"),
 					LineupAssistant.AW_MF_ST),
@@ -100,130 +88,47 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	JButton overlayOk = null;
 	JButton overlayCancel = null;
 
-	// ~ Constructors
-	// -------------------------------------------------------------------------------
 
-	/**
-	 * Creates a new AufstellungsAssistentPanel object.
-	 */
-	public LineupAssistantPanel(Weather weather) {
-		initComponents(weather);
+	public LineupAssistantPanel() {
+		initComponents();
 	}
 
-	// ~ Methods
-	// ------------------------------------------------------------------------------------
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#isExcludeLastMatch()
-	 */
-	@Override
 	public final boolean isExcludeLastMatch() {
 		return m_jchLast.isSelected();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * module.lineup.assistant.IAufstellungsAssistentPanel#isFormBeruecksichtigen()
-	 */
-	@Override
 	public final boolean isConsiderForm() {
 		return m_jchForm.isSelected();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#isGesperrtIgnorieren()
-	 */
-	@Override
 	public final boolean isIgnoreSuspended() {
 		return m_jchGesperrte.isSelected();
 	}
 
-	@Override
 	public final String getGroup() {
-		return m_jcbGruppe.getSelectedItem().toString();
+		return Objects.requireNonNull(m_jcbGroups.getSelectedItem()).toString();
 	}
 
-	@Override
-	public List<String> getGroups() {
-		List<String> list = new ArrayList<String>();
-		if (m_jcbGruppe.getSelectedItem() != null) {
-			list.add(m_jcbGruppe.getSelectedItem().toString());
-		}
-		return list;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#isGruppenFilter()
-	 */
-	@Override
 	public final boolean isGroupFilter() {
 		return m_jchListBoxGruppenFilter.isSelected();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#isIdealPositionZuerst()
-	 */
-	@Override
 	public final boolean isIdealPositionZuerst() {
 		return m_jchIdealPosition.isSelected();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#isNotGruppe()
-	 */
-	@Override
 	public final boolean isNotGroup() {
-		return m_jchNot.isSelected();
+		return m_jcbxNot.isSelected();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#getReihenfolge()
-	 */
-	@Override
 	public final int getOrder() {
 		return ((CBItem) m_jcbReihenfolge.getSelectedItem()).getId();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#isVerletztIgnorieren()
-	 */
-	@Override
 	public final boolean isIgnoreInjured() {
 		return m_jchVerletzte.isSelected();
 	}
 
-
-	@Override
-	public final Weather getWeather() {
-		int id = ((CBItem) m_jcbWetter.getSelectedItem()).getId();
-		return Weather.getById(id);
-	}
-
-	@Override
-	public void setWeather(Weather weather) {
-		if (weather==Weather.NULL) weather=Weather.PARTIALLY_CLOUDY;
-		if (m_jcbWetter.getSelectedIndex() != weather.getId()){
-			m_jcbWetter.setSelectedIndex(weather.getId());
-		}
-	}
-
-	@Override
 	public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
 		final HOModel hoModel = HOVerwaltung.instance().getModel();
 		final HOMainFrame mainFrame = core.gui.HOMainFrame.instance();
@@ -255,8 +160,8 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		} else if (actionEvent.getSource().equals(m_jchListBoxGruppenFilter)
 				|| actionEvent.getSource().equals(m_jchLast)) {
 			mainFrame.getLineupPanel().getLineupPositionsPanel().refresh();
-		} else if (actionEvent.getSource().equals(m_jcbGruppe)
-				|| actionEvent.getSource().equals(m_jchNot)) {
+		} else if (actionEvent.getSource().equals(m_jcbGroups)
+				|| actionEvent.getSource().equals(m_jcbxNot)) {
 			// Nur wenn Filter aktiv
 			if (m_jchListBoxGruppenFilter.isSelected()) {
 				mainFrame.getLineupPanel().getLineupPositionsPanel().refresh();
@@ -292,10 +197,6 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			removeGUI();
 		}
 
-		else if (actionEvent.getSource().equals(m_jcbWetter))
-		{
-			HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
-		}
 	}
 
 	@Override
@@ -308,14 +209,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * module.lineup.assistant.IAufstellungsAssistentPanel#addToAssistant(ho.module
-	 * .lineup.PlayerPositionPanel)
-	 */
-	@Override
+
 	public void addToAssistant(PlayerPositionPanel positionPanel) {
 		positions.put(positionPanel, null);
 	}
@@ -325,10 +219,8 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		// First, clear all positions that are not selected. We need to clear
 		// the way.
 
-		Iterator<Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay>> it = positions
-				.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry = it.next();
+		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions
+				.entrySet()) {
 			if (!entry.getValue().isSelected()) {
 				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
 						.setSpielerAtPosition(entry.getKey().getPositionsID(), 0);
@@ -343,8 +235,8 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			//If the player is eligible to play and either all groups are selected or the one to which the player belongs
 			if (player.getCanBeSelectedByAssistant()
 					&& (((this.getGroup().trim().equals("") || player.getTeamInfoSmilie().equals(
-							this.getGroup())) && !m_jchNot.isSelected()) || (!player
-							.getTeamInfoSmilie().equals(this.getGroup()) && m_jchNot.isSelected()))) {
+							this.getGroup())) && !m_jcbxNot.isSelected()) || (!player
+							.getTeamInfoSmilie().equals(this.getGroup()) && m_jcbxNot.isSelected()))) {
 				boolean include = true;
 				final LineupCBItem lastLineup = LineupsComparisonHistoryPanel
 						.getLastLineup();
@@ -363,11 +255,11 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			}
 		}
 
-		hoModel.getLineup().doAufstellung(vPlayer,
-				(byte) ((CBItem) m_jcbReihenfolge.getSelectedItem()).getId(),
+		hoModel.getLineup().optimizeLineup(vPlayer,
+				(byte) ((CBItem) Objects.requireNonNull(m_jcbReihenfolge.getSelectedItem())).getId(),
 				m_jchForm.isSelected(), m_jchIdealPosition.isSelected(),
 				m_jchVerletzte.isSelected(), m_jchGesperrte.isSelected(),
-				core.model.UserParameter.instance().WetterEffektBonus, getWeather());
+				core.model.UserParameter.instance().WetterEffektBonus);
 		mainFrame.setInformation(
 				HOVerwaltung.instance().getLanguageString("Autoaufstellung_fertig"));
 		mainFrame.getLineupPanel().update();
@@ -475,12 +367,6 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see module.lineup.assistant.IAufstellungsAssistentPanel#getPositionStatuses()
-	 */
-	@Override
 	public Map<Integer, Boolean> getPositionStatuses() {
 		HashMap<Integer, Boolean> returnMap = new HashMap<Integer, Boolean>();
 		Iterator<Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay>> it = positions
@@ -526,110 +412,114 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		return false;
 	}
 
-	private void initComponents(Weather weather) {
-		setLayout(new BorderLayout());
+	private void initComponents() {
+		final GridBagLayout layout = new GridBagLayout();
+		final GridBagConstraints constraints = new GridBagConstraints();
+//		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;;
 
-		JPanel panel = new ImagePanel();
-		panel.setLayout(new GridLayout(9, 1));
 
-		panel.setOpaque(false);
+		setLayout(layout);
 
-		final HOVerwaltung hoVerwaltung = core.model.HOVerwaltung.instance();
+		// Line 1
+		constraints.gridx = 0;
+		int yPos = 0;
+		addLabel(constraints, layout, new JLabel(getTranslation("ls.lineup.asssitant.goup")), yPos);
 
-		m_jcbWetter.setToolTipText(hoVerwaltung
-				.getLanguageString("tt_AufstellungsAssistent_Wetter"));
+		constraints.gridx = 1;
+		m_jcbxNot.setToolTipText(getTranslation("tt_AufstellungsAssistent_Not"));
+//		m_jchNot.setOpaque(false);
+		m_jcbxNot.addActionListener(this);
+		layout.setConstraints(m_jcbxNot, constraints);
+		add(m_jcbxNot);
 
-		if ( weather == Weather.NULL) weather = Weather.PARTIALLY_CLOUDY;
-		m_jcbWetter.setSelectedIndex(weather.getId());
-		m_jcbWetter.setPreferredSize(new Dimension(50, 20));
-		m_jcbWetter.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
-		m_jcbWetter.setRenderer(new core.gui.comp.renderer.WeatherListCellRenderer());
-		m_jcbWetter.addItemListener(this);
-		m_jcbWetter.addActionListener(this);
-		panel.add(m_jcbWetter);
+		constraints.gridx = 2;
+		constraints.fill = GridBagConstraints.HORIZONTAL;;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		m_jcbGroups.setToolTipText(getTranslation("tt_AufstellungsAssistent_Gruppe"));
+		m_jcbGroups.setSelectedItem(userParameter.aufstellungsAssistentPanel_gruppe);
+		m_jcbGroups.setRenderer(new core.gui.comp.renderer.SmilieListCellRenderer());
+		m_jcbGroups.addActionListener(this);
+		layout.setConstraints(m_jcbGroups, constraints);
+		add(m_jcbGroups);
+//
+//		m_jchListBoxGruppenFilter.setToolTipText(hoVerwaltung
+//				.getLanguageString("tt_AufstellungsAssistent_GruppeFilter"));
+//		m_jchListBoxGruppenFilter.setOpaque(false);
+//		m_jchListBoxGruppenFilter.addActionListener(this);
+//		panel.add(m_jchListBoxGruppenFilter);
+//
+//		m_jcbReihenfolge.setToolTipText(hoVerwaltung
+//				.getLanguageString("tt_AufstellungsAssistent_Reihenfolge"));
+//		core.util.Helper.setComboBoxFromID(m_jcbReihenfolge,
+//				core.model.UserParameter.instance().aufstellungsAssistentPanel_reihenfolge);
+//		panel.add(m_jcbReihenfolge);
+//		m_jchIdealPosition.setToolTipText(hoVerwaltung
+//				.getLanguageString("tt_AufstellungsAssistent_Idealposition"));
+//		m_jchIdealPosition.setOpaque(false);
+//		panel.add(m_jchIdealPosition);
+//		m_jchForm.setToolTipText(hoVerwaltung.getLanguageString("tt_AufstellungsAssistent_Form"));
+//		m_jchForm.setOpaque(false);
+//		panel.add(m_jchForm);
+//		m_jchVerletzte.setToolTipText(hoVerwaltung
+//				.getLanguageString("tt_AufstellungsAssistent_Verletzte"));
+//		m_jchVerletzte.setOpaque(false);
+//		panel.add(m_jchVerletzte);
+//		m_jchGesperrte.setToolTipText(hoVerwaltung
+//				.getLanguageString("tt_AufstellungsAssistent_Gesperrte"));
+//		m_jchGesperrte.setOpaque(false);
+//		panel.add(m_jchGesperrte);
+//		m_jchLast
+//				.setToolTipText(hoVerwaltung.getLanguageString("tt_AufstellungsAssistent_NotLast"));
+//		m_jchLast.setOpaque(false);
+//		m_jchLast.addActionListener(this);
+//		panel.add(m_jchLast);
+//
+//		add(panel, BorderLayout.CENTER);
+//
+//		panel = new JPanel();
+//		panel.setOpaque(false);
+//		m_jbLoeschen.setPreferredSize(new Dimension(28, 28));
+//		m_jbLoeschen.setToolTipText(hoVerwaltung.getLanguageString("Aufstellung_leeren"));
+//		m_jbLoeschen.addActionListener(this);
+//		panel.add(m_jbLoeschen);
+//		m_jbClearPostionOrders.setPreferredSize(new Dimension(28, 28));
+//		m_jbClearPostionOrders.setToolTipText(hoVerwaltung
+//				.getLanguageString("Clear_positional_orders"));
+//		m_jbClearPostionOrders.addActionListener(this);
+//		panel.add(m_jbClearPostionOrders);
+//		m_jbReserveLoeschen.setPreferredSize(new Dimension(28, 28));
+//		m_jbReserveLoeschen.setToolTipText(hoVerwaltung.getLanguageString("Reservebank_leeren"));
+//		m_jbReserveLoeschen.addActionListener(this);
+//		panel.add(m_jbReserveLoeschen);
+//		m_jbOK.setPreferredSize(new Dimension(28, 28));
+//		m_jbOK.setToolTipText(hoVerwaltung.getLanguageString("Assistent_starten"));
+//		m_jbOK.addActionListener(this);
+//		panel.add(m_jbOK);
+//		add(panel, BorderLayout.SOUTH);
+//
+//		core.gui.RefreshManager.instance().registerRefreshable(this);
+	}
 
-		final JPanel panel2 = new JPanel(new BorderLayout());
-		panel2.setOpaque(false);
-		m_jchNot.setToolTipText(hoVerwaltung.getLanguageString("tt_AufstellungsAssistent_Not"));
-		m_jchNot.setOpaque(false);
-		m_jchNot.addActionListener(this);
-		panel2.add(m_jchNot, BorderLayout.WEST);
-		m_jcbGruppe.setToolTipText(hoVerwaltung
-				.getLanguageString("tt_AufstellungsAssistent_Gruppe"));
-		List<String> groups = LineupAssistantPanelNew.asList(UserParameter.instance().aufstellungsAssistentPanel_gruppe);
-		String group = (!groups.isEmpty()) ? groups.get(0) : "";
-		m_jcbGruppe
-				.setSelectedItem(group);
-		m_jcbGruppe.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
-		m_jcbGruppe.setRenderer(new core.gui.comp.renderer.SmilieListCellRenderer());
-		m_jcbGruppe.addActionListener(this);
-		panel2.add(m_jcbGruppe, BorderLayout.CENTER);
-		panel.add(panel2);
+//	public static List<String> asList(String str) {
+//		String[] pieces = str.split(";");
+//		return Arrays.asList(pieces);
+//	}
 
-		m_jchListBoxGruppenFilter.setToolTipText(hoVerwaltung
-				.getLanguageString("tt_AufstellungsAssistent_GruppeFilter"));
-		m_jchListBoxGruppenFilter.setOpaque(false);
-		m_jchListBoxGruppenFilter.addActionListener(this);
-		panel.add(m_jchListBoxGruppenFilter);
 
-		m_jcbReihenfolge.setToolTipText(hoVerwaltung
-				.getLanguageString("tt_AufstellungsAssistent_Reihenfolge"));
-		core.util.Helper.setComboBoxFromID(m_jcbReihenfolge,
-				core.model.UserParameter.instance().aufstellungsAssistentPanel_reihenfolge);
-		panel.add(m_jcbReihenfolge);
-		m_jchIdealPosition.setToolTipText(hoVerwaltung
-				.getLanguageString("tt_AufstellungsAssistent_Idealposition"));
-		m_jchIdealPosition.setOpaque(false);
-		panel.add(m_jchIdealPosition);
-		m_jchForm.setToolTipText(hoVerwaltung.getLanguageString("tt_AufstellungsAssistent_Form"));
-		m_jchForm.setOpaque(false);
-		panel.add(m_jchForm);
-		m_jchVerletzte.setToolTipText(hoVerwaltung
-				.getLanguageString("tt_AufstellungsAssistent_Verletzte"));
-		m_jchVerletzte.setOpaque(false);
-		panel.add(m_jchVerletzte);
-		m_jchGesperrte.setToolTipText(hoVerwaltung
-				.getLanguageString("tt_AufstellungsAssistent_Gesperrte"));
-		m_jchGesperrte.setOpaque(false);
-		panel.add(m_jchGesperrte);
-		m_jchLast
-				.setToolTipText(hoVerwaltung.getLanguageString("tt_AufstellungsAssistent_NotLast"));
-		m_jchLast.setOpaque(false);
-		m_jchLast.addActionListener(this);
-		panel.add(m_jchLast);
-
-		add(panel, BorderLayout.CENTER);
-
-		panel = new JPanel();
-		panel.setOpaque(false);
-		m_jbLoeschen.setPreferredSize(new Dimension(28, 28));
-		m_jbLoeschen.setToolTipText(hoVerwaltung.getLanguageString("Aufstellung_leeren"));
-		m_jbLoeschen.addActionListener(this);
-		panel.add(m_jbLoeschen);
-		m_jbClearPostionOrders.setPreferredSize(new Dimension(28, 28));
-		m_jbClearPostionOrders.setToolTipText(hoVerwaltung
-				.getLanguageString("Clear_positional_orders"));
-		m_jbClearPostionOrders.addActionListener(this);
-		panel.add(m_jbClearPostionOrders);
-		m_jbReserveLoeschen.setPreferredSize(new Dimension(28, 28));
-		m_jbReserveLoeschen.setToolTipText(hoVerwaltung.getLanguageString("Reservebank_leeren"));
-		m_jbReserveLoeschen.addActionListener(this);
-		panel.add(m_jbReserveLoeschen);
-		m_jbOK.setPreferredSize(new Dimension(28, 28));
-		m_jbOK.setToolTipText(hoVerwaltung.getLanguageString("Assistent_starten"));
-		m_jbOK.addActionListener(this);
-		panel.add(m_jbOK);
-		add(panel, BorderLayout.SOUTH);
-
-		core.gui.RefreshManager.instance().registerRefreshable(this);
+	private void addLabel(GridBagConstraints constraints, GridBagLayout layout, JLabel label, int y) {
+		label.setForeground(TITLE_FG);
+		label.setFont(getFont().deriveFont(Font.BOLD));
+		label.setHorizontalAlignment(SwingConstants.LEFT);
+		constraints.gridx = 0;
+		constraints.gridy = y;
+		layout.setConstraints(label, constraints);
+		add(label);
 	}
 
 	@Override
 	public void reInit() {
-		final HOModel homodel = HOVerwaltung.instance().getModel();
-		final Lineup lineup = homodel.getLineupWithoutRatingRecalc();
-		final Weather weather = lineup.getWeather();
-		setWeather(weather);
 	}
 
 	@Override

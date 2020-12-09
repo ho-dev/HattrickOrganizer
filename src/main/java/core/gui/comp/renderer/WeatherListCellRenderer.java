@@ -1,4 +1,3 @@
-// %1968012293:de.hattrickorganizer.gui.model%
 package core.gui.comp.renderer;
 
 import core.datatype.CBItem;
@@ -6,16 +5,13 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-
-import javax.swing.ListCellRenderer;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 
 /**
- * Renderer für eine Combobox mit SpielerCBItems
+ * Renderer for Weather CB items
  */
-public class WeatherListCellRenderer implements ListCellRenderer {
-    //~ Instance fields ----------------------------------------------------------------------------
+public class WeatherListCellRenderer implements ListCellRenderer<Object> {
 
     public ColorLabelEntry m_clEntry = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
     												ThemeManager.getColor(HOColorName.TABLEENTRY_BG),
@@ -24,11 +20,8 @@ public class WeatherListCellRenderer implements ListCellRenderer {
     public javax.swing.JLabel m_jlLeer = new javax.swing.JLabel(" ");
 
     @Override
-	public final java.awt.Component getListCellRendererComponent(javax.swing.JList jList,
-                                                                 Object obj, int index,
-                                                                 boolean isSelected,
-                                                                 boolean cellHasFocus) {
-        if (obj instanceof CBItem && (obj != null)) {
+	public final java.awt.Component getListCellRendererComponent(JList jList, Object obj, int index, boolean isSelected, boolean cellHasFocus) {
+        if (obj instanceof CBItem) {
         	int id = ((CBItem) obj).getId();
             m_clEntry.setIcon(ThemeManager.getIcon(HOIconName.WEATHER[id]));
             return m_clEntry.getComponent(isSelected);
@@ -42,4 +35,5 @@ public class WeatherListCellRenderer implements ListCellRenderer {
        }
        return m_jlLeer;
     }
+
 }

@@ -13,7 +13,7 @@ import static core.gui.theme.HOIconName.SMILEYS;
 /**
  * Renderer für eine Combobox mit SpielerCBItems
  */
-public final class SmilieListCellRenderer implements javax.swing.ListCellRenderer {
+public final class SmilieListCellRenderer implements javax.swing.ListCellRenderer<Object> {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private ColorLabelEntry m_clEntry = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,

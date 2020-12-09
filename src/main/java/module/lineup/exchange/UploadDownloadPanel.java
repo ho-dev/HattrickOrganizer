@@ -331,7 +331,7 @@ public class UploadDownloadPanel extends LazyPanel {
 			    }
 
 			// weather
-			if (weather == Weather.NULL) instance().getLineupPanel().getAufstellungsAssistentPanel().setWeather(Weather.PARTIALLY_CLOUDY);
+			if (weather == Weather.NULL) instance().getLineupPanel().getLineupSettingsPanel().setWeather(Weather.PARTIALLY_CLOUDY);
 
 			RefreshManager.instance().doRefresh();
 

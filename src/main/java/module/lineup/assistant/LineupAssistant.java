@@ -656,7 +656,7 @@ public class LineupAssistant {
 		// AssistantPanel.
 		Vector<IMatchRoleID> returnVec = new Vector<IMatchRoleID>();
 		Map<Integer, Boolean> statusMap = HOMainFrame.instance()
-				.getLineupPanel().getAufstellungsAssistentPanel().getPositionStatuses();
+				.getLineupPanel().getLineupAssistantPanel().getPositionStatuses();
 		for (int i = 0; i < positions.size(); i++) {
 			MatchRoleID pos = (MatchRoleID) positions.get(i);
 			if ((!statusMap.containsKey(pos.getId())) || (statusMap.get(pos.getId()))) {

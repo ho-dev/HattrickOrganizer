@@ -23,7 +23,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	private SpielerDetailPanel spielerDetailPanel;
 	private SpielerTrainingsSimulatorPanel spielerTrainingsSimulatorPanel;
 	private SpielerTrainingsVergleichsPanel spielerTrainingsVergleichsPanel;
-	private SpielerUebersichtNamenTable spielerUebersichtTableName;
+	private LineupPlayersTableNameColumn spielerUebersichtTableName;
 	private PlayerOverviewTable playerOverviewTable;
 	private TeamSummaryPanel teamSummaryPanel;
 
@@ -174,7 +174,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 		playerOverviewTable = new PlayerOverviewTable();
 
 		// table with the player's name
-		spielerUebersichtTableName = new SpielerUebersichtNamenTable(playerOverviewTable.getSorter());
+		spielerUebersichtTableName = new LineupPlayersTableNameColumn(playerOverviewTable.getSorter());
 
 		JScrollPane scrollpane = new JScrollPane(spielerUebersichtTableName);
 		scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);

@@ -535,7 +535,7 @@ public class RatingPredictionManager {
 
 	public Hashtable<Double, Double> getCentralDefenseRatings(boolean useForm, boolean useWeatherImpact)
 	{
-		Weather weather = HOMainFrame.getWetter();
+		Weather weather = HOMainFrame.getWeather();
 		double userRatingOffset = 0;
 		Hashtable<Double, Double> CentralDefenseRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
@@ -546,7 +546,7 @@ public class RatingPredictionManager {
 
 	public Hashtable<Double, Double> getCentralAttackRatings(boolean useForm, boolean useWeatherImpact)
 	{
-		Weather weather = HOMainFrame.getWetter();
+		Weather weather = HOMainFrame.getWeather();
 		double userRatingOffset = 0;
 		Hashtable<Double, Double> CentralAttackRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
@@ -558,7 +558,7 @@ public class RatingPredictionManager {
 
 	public Hashtable<Double, Double> getRightDefenseRatings(boolean useForm, boolean useWeatherImpact)
 	{
-		Weather weather = HOMainFrame.getWetter();
+		Weather weather = HOMainFrame.getWeather();
 		double userRatingOffset = 0;//UserParameter.instance().rightDefenceOffset;
 		Hashtable<Double, Double> RightDefenseRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
@@ -570,7 +570,7 @@ public class RatingPredictionManager {
 
 	public Hashtable<Double, Double> getLeftDefenseRatings(boolean useForm, boolean useWeatherImpact)
 	{
-		Weather weather = HOMainFrame.getWetter();
+		Weather weather = HOMainFrame.getWeather();
 		double userRatingOffset = 0;
 		Hashtable<Double, Double> LeftDefenseRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
@@ -581,7 +581,7 @@ public class RatingPredictionManager {
 
 	public Hashtable<Double, Double> getLeftAttackRatings(boolean useForm, boolean useWeatherImpact)
 	{
-		Weather weather = HOMainFrame.getWetter();
+		Weather weather = HOMainFrame.getWeather();
 		double userRatingOffset = 0;
 		Hashtable<Double, Double> LeftAttackRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
@@ -592,7 +592,7 @@ public class RatingPredictionManager {
 
 	public Hashtable<Double, Double> getRightAttackRatings(boolean useForm, boolean useWeatherImpact)
 	{
-		Weather weather = HOMainFrame.getWetter();
+		Weather weather = HOMainFrame.getWeather();
 		double userRatingOffset = 0;
 		Hashtable<Double, Double> RightAttackRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
@@ -604,7 +604,7 @@ public class RatingPredictionManager {
 
 	public Hashtable<Double, Double> getMFRatings(boolean useForm, boolean useWeatherImpact)
 	{
-		Weather weather = HOMainFrame.getWetter();
+		Weather weather = HOMainFrame.getWeather();
 		double userRatingOffset = 0;
 		Hashtable<Double, Double> MidfieldRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
@@ -1224,7 +1224,7 @@ public class RatingPredictionManager {
      */
     public float getTacticLevelCounter()
     {
-		Weather weather = HOMainFrame.getWetter();
+		Weather weather = HOMainFrame.getWeather();
 		double retVal = 0;
     	RatingPredictionParameter params = config.getTacticsParameters();
 		List<Integer> allDefenders = Arrays.asList(IMatchRoleID.rightBack, IMatchRoleID.rightCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack);
@@ -1247,7 +1247,7 @@ public class RatingPredictionManager {
 
     public final float getTacticLevelPressing() {
     	RatingPredictionParameter params = config.getTacticsParameters();
-		final Weather weather = HOMainFrame.getWetter();
+		final Weather weather = HOMainFrame.getWeather();
     	double retVal = 0;
 		double defense;
 		for(int pos : IMatchRoleID.aOutfieldMatchRoleID)
@@ -1273,7 +1273,7 @@ public class RatingPredictionManager {
      * @return the tactic level for long shots
      */
     public final float getTacticLevelLongShots() {
-		Weather weather = HOMainFrame.getWetter();
+		Weather weather = HOMainFrame.getWeather();
        	RatingPredictionParameter params = config.getTacticsParameters();
     	double retVal = 0;
 
