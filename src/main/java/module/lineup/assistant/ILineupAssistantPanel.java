@@ -1,7 +1,7 @@
 package module.lineup.assistant;
 
 import core.model.match.Weather;
-import module.lineup.PlayerPositionPanel;
+import module.lineup.lineup.PlayerPositionPanel;
 
 import java.util.List;
 import java.util.Map;

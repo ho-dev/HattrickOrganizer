@@ -10,7 +10,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.Weather;
-import module.lineup.PlayerPositionPanel;
+import module.lineup.lineup.PlayerPositionPanel;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;

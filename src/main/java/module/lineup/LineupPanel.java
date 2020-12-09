@@ -5,6 +5,7 @@ import core.gui.Updatable;
 import core.model.UserParameter;
 import core.model.player.Player;
 import module.lineup.assistant.ILineupAssistantPanel;
+import module.lineup.lineup.LineupPositionsPanel;
 import module.lineup.ratings.LineupRatingPanel;
 import module.playerOverview.PlayerTable;
 import module.playerOverview.SpielerUebersichtNamenTable;

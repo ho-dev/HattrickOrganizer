@@ -16,6 +16,7 @@ import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
 import module.lineup.*;
+import module.lineup.lineup.PlayerPositionPanel;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -378,16 +379,14 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 		// Add overlays to player panels
 
-		Iterator<Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay>> it = positions
-				.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry = it.next();
+		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions
+				.entrySet()) {
 			if (entry.getValue() == null) {
 				boolean selected = true;
 				LineupAssistantSelectorOverlay laso = new LineupAssistantSelectorOverlay();
 				Map<String, String> upValues = UserParameter.instance().getValues();
 				if (UserParameter.instance().assistantSaved) {
-					selected = core.model.UserParameter.instance().getBooleanValue(upValues,
+					selected = UserParameter.instance().getBooleanValue(upValues,
 							"assistant" + entry.getKey().getPositionsID());
 				} else {
 					int posId = entry.getKey().getPositionsID();
@@ -415,22 +414,22 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		constraints.weighty = 0.0;
 		constraints.insets = new Insets(2, 2, 2, 2);
 
-		constraints.gridx = 0;
-		constraints.gridy = 0;
+		constraints.gridx = 5;
+		constraints.gridy = 3;
 		constraints.gridwidth = 2;
 		if (infoLabel == null) {
 			infoLabel = new JLabel();
 			infoLabel.setText(HOVerwaltung.instance().getLanguageString("lineupassist.Info"));
-			// #194 - Hard to read suggestions in "LineUp"
 			infoLabel.setOpaque(true);
-			infoLabel.setBackground(ThemeManager.getColor(HOColorName.LINEUP_POS_MIN_BG));
-			infoLabel.setBorder(new MatteBorder(1,2,1,2, ThemeManager.getColor(HOColorName.LINEUP_POS_MIN_BORDER)));
+			infoLabel.setHorizontalAlignment(JLabel.CENTER);
+			infoLabel.setFont(getFont().deriveFont(Font.BOLD));
 		}
 		posPanel.add(infoLabel, constraints, 2);
 
 		constraints.gridx = 6;
-		constraints.gridy = 0;
+		constraints.gridy = 2;
 		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
 
 		if (overlayOk == null) {
 			overlayOk = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.ok"));
@@ -441,9 +440,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		}
 		posPanel.add(overlayOk, constraints, 2);
 
-		constraints.gridx = 5;
-		constraints.gridy = 0;
-		constraints.gridwidth = 1;
+		constraints.gridy = 1;
 		if (overlayCancel == null) {
 			overlayCancel = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
 			overlayCancel.addActionListener(this);

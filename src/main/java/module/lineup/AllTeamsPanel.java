@@ -14,7 +14,7 @@ import javax.swing.border.Border;
 /**
  * Assign players to a given group in a single click.
  */
-final class AllTeamsPanel extends JPanel implements ActionListener {
+public final class AllTeamsPanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 955755336335567688L;
 

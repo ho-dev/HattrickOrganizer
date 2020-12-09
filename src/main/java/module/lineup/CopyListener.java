@@ -14,6 +14,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+
+import module.lineup.lineup.LineupPositionsPanel;
+import module.lineup.lineup.PlayerPositionPanel;
 import module.lineup.ratings.LineupRatingPanel;
 import static core.model.player.IMatchRoleID.*;
 

@@ -1,11 +1,11 @@
-package module.lineup;
+package module.lineup.lineup;
 
 import core.gui.model.SpielerCBItem;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import module.lineup.Lineup;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

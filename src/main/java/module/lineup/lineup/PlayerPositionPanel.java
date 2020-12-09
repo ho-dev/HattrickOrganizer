@@ -1,4 +1,4 @@
-package module.lineup;
+package module.lineup.lineup;
 
 import core.constants.player.PlayerSkill;
 import core.datatype.CBItem;
@@ -17,6 +17,8 @@ import core.model.player.Player;
 import core.rating.RatingPredictionManager;
 import core.training.TrainingPreviewPlayers;
 import core.util.Helper;
+import module.lineup.Lineup;
+import module.lineup.LineupAssistantSelectorOverlay;
 import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import java.awt.event.FocusEvent;

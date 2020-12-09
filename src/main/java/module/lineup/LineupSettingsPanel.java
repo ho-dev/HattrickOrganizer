@@ -17,6 +17,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -162,31 +163,31 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbPullBackMinute)) {
 				// Pull Back minute changed
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setPullBackMinute(((CBItem) m_jcbPullBackMinute.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setPullBackMinute(((CBItem) Objects.requireNonNull(m_jcbPullBackMinute.getSelectedItem())).getId());
 				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbMainTeamSpirit)) {
 				// team spirit changed
-				HOVerwaltung.instance().getModel().getTeam().setStimmungAsInt(((CBItem) m_jcbMainTeamSpirit.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getTeam().setStimmungAsInt(((CBItem) Objects.requireNonNull(m_jcbMainTeamSpirit.getSelectedItem())).getId());
 				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbSubTeamSpirit)) {
 				// team spirit (sub) changed
-				HOVerwaltung.instance().getModel().getTeam().setSubStimmung(((CBItem) m_jcbSubTeamSpirit.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getTeam().setSubStimmung(((CBItem) Objects.requireNonNull(m_jcbSubTeamSpirit.getSelectedItem())).getId());
 				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbTeamConfidence)) {
 				// team confidence changed
-				HOVerwaltung.instance().getModel().getTeam().setSelbstvertrauenAsInt(((CBItem) m_jcbTeamConfidence.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getTeam().setSelbstvertrauenAsInt(((CBItem) Objects.requireNonNull(m_jcbTeamConfidence.getSelectedItem())).getId());
 				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbTrainerType)) {
 				// trainer type changed
-				HOVerwaltung.instance().getModel().getTrainer().setTrainerTyp(((CBItem) m_jcbTrainerType.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getTrainer().setTrainerTyp(((CBItem) Objects.requireNonNull(m_jcbTrainerType.getSelectedItem())).getId());
 				int iStyleOfPlay = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay();
 				HOMainFrame.instance().getLineupPanel().getLineupPositionsPanel().updateStyleOfPlayComboBox(iStyleOfPlay);
 			} else if (event.getSource().equals(m_jcbLocation)) {
 				// location changed
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setLocation((short) ((CBItem) m_jcbLocation.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setLocation((short) ((CBItem) Objects.requireNonNull(m_jcbLocation.getSelectedItem())).getId());
 				HOVerwaltung.instance().getModel().getLineup(); // => Force rating calculation
 			} else if (event.getSource().equals(m_jcbTacticalAssistants)) {
-				HOVerwaltung.instance().getModel().getClub().setTacticalAssistantLevels(((CBItem) m_jcbTacticalAssistants.getSelectedItem()).getId());
+				HOVerwaltung.instance().getModel().getClub().setTacticalAssistantLevels(((CBItem) Objects.requireNonNull(m_jcbTacticalAssistants.getSelectedItem())).getId());
 				// Number of tactical assistants changed
 				int iStyleOfPlay = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay();
 				HOMainFrame.instance().getLineupPanel().getLineupPositionsPanel().updateStyleOfPlayComboBox(iStyleOfPlay);

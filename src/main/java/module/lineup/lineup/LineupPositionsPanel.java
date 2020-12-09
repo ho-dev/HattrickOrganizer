@@ -1,4 +1,4 @@
-package module.lineup;
+package module.lineup.lineup;
 
 import core.datatype.CBItem;
 import core.db.user.UserManager;
@@ -17,8 +17,11 @@ import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
+import module.lineup.AllTeamsPanel;
+import module.lineup.Lineup;
+import module.lineup.LineupPanel;
+import module.lineup.LineupsComparisonHistoryPanel;
 import module.lineup.assistant.ILineupAssistantPanel;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ import javax.swing.border.Border;
 public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel implements core.gui.Refreshable, Updatable, ActionListener {
 
 	private final LineupPanel m_clLineupPanel;
+	private MatchAndLineupSelectionPanel m_jpMatchAndLineupSelectionPanel;
 	private final JButton m_jbFlipSide = new JButton(ThemeManager.getIcon(HOIconName.RELOAD));
 	private PlayerPositionPanel m_clKeeper;
 	private PlayerPositionPanel m_clLeftBack;
@@ -206,14 +210,26 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		final GridBagConstraints constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.weightx = 1.0;
-		constraints.weighty = 0.0;
+		constraints.weighty = 1.0;
 
 
 		centerPanel.setLayout(layout);
 
+		// m_jpMatchAndLineupSelectionPanel
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 3;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = new Insets(3, 3, 3, 3);
+		m_jpMatchAndLineupSelectionPanel = new MatchAndLineupSelectionPanel();
+		layout.setConstraints(m_jpMatchAndLineupSelectionPanel, constraints);
+		centerPanel.add(m_jpMatchAndLineupSelectionPanel);
+
+		// Keeper
 		constraints.gridx = 3;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
+		constraints.weighty = 0.0;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.insets = new Insets(3, 3, 3, 3);
 		m_clKeeper = new PlayerPositionPanel(this, IMatchRoleID.keeper);
@@ -417,17 +433,16 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// Captain and setpieces
 
 		constraints.gridx = 0;
-		constraints.gridy = 3;
+		constraints.gridy = 1;
 		constraints.gridwidth = 1;
+		constraints.anchor = GridBagConstraints.SOUTH;
 		m_clCaptain = new PlayerPositionPanel(this, IMatchRoleID.captain);
 		m_clCaptain.addCaptainIcon();
 		layout.setConstraints(m_clCaptain, constraints);
 		centerPanel.add(m_clCaptain);
-		m_clLeftForward.getPlayerComboBox();
 
-		constraints.gridx = 1;
-		constraints.gridy = 3;
-		constraints.gridwidth = 1;
+		constraints.gridy = 2;
+		constraints.anchor = GridBagConstraints.NORTH;
 		m_clSetPieceTaker = new PlayerPositionPanel(this, IMatchRoleID.setPieces);
 		m_clSetPieceTaker.addSetPiecesIcon();
 		layout.setConstraints(m_clSetPieceTaker, constraints);
@@ -436,7 +451,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// Buttons to allocate team number to players currently on the line up
 
-		constraints.gridx = 5;
+		constraints.gridx = 0;
 		constraints.gridy = 3;
 		constraints.gridwidth = 2;
 		constraints.fill = GridBagConstraints.NONE;

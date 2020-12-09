@@ -1,9 +1,10 @@
-package module.lineup;
+package module.lineup.lineup;
 
 import core.gui.Updatable;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
+import module.lineup.Lineup;
 
 public class SwapPositionsManager {
 
@@ -60,12 +61,11 @@ public class SwapPositionsManager {
 		// than 11 players on the field.
 		if ((playerA==null && positionB >= IMatchRoleID.startReserves) ||
 				(playerB==null && positionA >= IMatchRoleID.startReserves))   {
-			if (lineup.hasFreePosition() != true) {
+			if (!lineup.hasFreePosition()) {
 				// HOLogger.instance().debug(getClass(), "Stopped swap due to sub-check!");
 				return;
-			} else {
-				// HOLogger.instance().debug(getClass(), "Allowed swap due to sub-check!");
 			}
+
 		}
 			
 		int playerA_id = 0;

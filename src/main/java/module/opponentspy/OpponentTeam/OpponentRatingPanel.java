@@ -5,7 +5,7 @@
 //import module.lineup.AufstellungsAssistentPanel;
 //import module.lineup.AufstellungsDetailPanel;
 //import module.lineup.Lineup;
-//import module.lineup.LineupPositionsPanel;
+//import module.lineup.lineup.LineupPositionsPanel;
 //
 //import java.awt.BorderLayout;
 //
