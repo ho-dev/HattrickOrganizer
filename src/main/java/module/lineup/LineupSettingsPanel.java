@@ -24,7 +24,7 @@ import static core.util.Helper.getTranslation;
 
 public final class LineupSettingsPanel extends ImagePanel implements Refreshable, ItemListener {
 
-	private final static Color TITLE_FG = ThemeManager.getColor(HOColorName.BLUE);
+	private final static Color TITLE_FG = ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG);
 	private final LineupRatingPanel ratingPanel;
 
 	private final JComboBox<CBItem> m_jcbTeamConfidence = new JComboBox<>(TeamConfidence.ITEMS);
@@ -231,9 +231,11 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	private void initComponents() {
 		final GridBagLayout layout = new GridBagLayout();
 		final GridBagConstraints constraints = new GridBagConstraints();
-		constraints.fill = GridBagConstraints.BOTH;
-		constraints.weightx = 1.0;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.insets = new Insets(0,0,0 ,5);
 
 		setLayout(layout);
 
@@ -242,21 +244,24 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		// Venue ===============================
 		constraints.gridx = 1;
 		constraints.gridy = yPos;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridwidth = 1;
 		initLabel(constraints, layout, new JLabel(getTranslation("Venue")), yPos);
 
 		constraints.gridx = 2;
-		constraints.gridy = yPos;
-		m_jcbTeamConfidence.setMaximumRowCount(4);
+		m_jcbLocation.setMaximumRowCount(4);
 		m_jcbLocation.setToolTipText(getTranslation("tt_AufstellungsDetails_Spielort"));
 		m_jcbLocation.setOpaque(false);
 		layout.setConstraints(m_jcbLocation, constraints);
 		add(m_jcbLocation);
 
+		constraints.gridx = 3;
+		constraints.weightx = 1.0;
+		add(new JLabel(""));
+
 		yPos++;
 
 		// Weather ===============================
+		constraints.weightx = 0.0;
 		initLabel(constraints, layout, new JLabel(getTranslation("ls.match.weather")), yPos);
 		m_jcbWeather.setToolTipText(getTranslation("tt_AufstellungsAssistent_Wetter"));
 		m_jcbWeather.setRenderer(new core.gui.comp.renderer.WeatherListCellRenderer());

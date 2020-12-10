@@ -29,13 +29,19 @@ public class SolarizedLightTheme extends BaseTheme {
             UIManager.setLookAndFeel(DarkLaf.class.getCanonicalName());
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
 
+            setFont(UserParameter.instance().schriftGroesse);
+            ThemeManager.instance().put(HOBooleanName.IMAGEPANEL_BG_PAINTED, false);
+
             // DEFAULT COLOR
             ThemeManager.instance().put(HOColorName.RED, defaults.getColor("palette.red"));
             ThemeManager.instance().put(HOColorName.BLUE, defaults.getColor("palette.blue"));
 
+            // Use defaults from LAF
+            ThemeManager.instance().put(HOColorName.TABLEENTRY_FG, defaults.getColor("Label.foreground"));
+            ThemeManager.instance().put(HOColorName.LABEL_FG, defaults.getColor("Label.foreground"));
+            ThemeManager.instance().put(HOColorName.PANEL_BG, defaults.getColor("background"));
+            ThemeManager.instance().put(HOColorName.TABLEENTRY_BG, defaults.getColor("Label.background").brighter());
 
-            setFont(UserParameter.instance().schriftGroesse);
-            ThemeManager.instance().put(HOBooleanName.IMAGEPANEL_BG_PAINTED, false);
 
             // Smileys
             ThemeManager.instance().put(HOColorName.SMILEYS_COLOR, defaults.getColor("Label.foreground"));
@@ -63,6 +69,20 @@ public class SolarizedLightTheme extends BaseTheme {
             ThemeManager.instance().put(HOColorName.SELECTED_TEAM_FG, new Color(36,175,235));
             ThemeManager.instance().put(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
 
+            // Lineup
+//            ThemeManager.instance().put(HOColorName.LINEUP_POS_MIN_BG, neutralGrey);
+            ThemeManager.instance().put(HOColorName.LINEUP_RATING_BORDER, Color.BLACK);
+//
+//            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SELECTED, new Color(60, 63, 65));
+//            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SUB, new Color(48, 54, 56));
+//            ThemeManager.instance().put(HOColorName.TABLEENTRY_IMPROVEMENT_FG, defaults.getColor("palette.lime"));
+//
+            ThemeManager.instance().put(HOColorName.RATING_BORDER_BELOW_LIMIT, new Color(255, 0, 0));
+            ThemeManager.instance().put(HOColorName.RATING_BORDER_ABOVE_LIMIT, new Color(0, 0, 225));
+            ThemeManager.instance().put(HOColorName.START_ASSISTANT, defaults.getColor("palette.forest"));
+            ThemeManager.instance().put(HOColorName.CLEAR_LINEUP, defaults.getColor("palette.red"));
+            ThemeManager.instance().put(HOColorName.LINEUP_COLOR, defaults.getColor("palette.brown"));
+            ThemeManager.instance().put(HOColorName.LINEUP_HIGHLIGHT_FG, defaults.getColor("palette.blue"));
 
             return true;
 

@@ -163,24 +163,6 @@ public interface HOColorName {
 	String TA_TEAM_TOURNAMENT_NEXT = "teamanalyzer.teamlist.nexttournament";
 	String TA_TEAM_TOURNAMENT = "teamanalyzer.teamlist.tournament";
 
-	//1.434
-	// Matches Analyzer
-//	String MATCHESANALYZER_DEFAULT_FONT = "matchesanalyzer.font.default";
-//	String MATCHESANALYZER_DEFAULT_BG = "matchesanalyzer.bg.default";
-//	String MATCHESANALYZER_MATCH_BG = "matchesanalyzer.bg.match";
-//	String MATCHESANALYZER_LINEUP_BG = "matchesanalyzer.bg.lineup";
-//	String MATCHESANALYZER_STATS_BG = "matchesanalyzer.bg.stats";
-//	String MATCHESANALYZER_POSITIVE_BAR_BG = "matchesanalyzer.bg.positivebar";
-//	String MATCHESANALYZER_NEGATIVE_BAR_BG = "matchesanalyzer.bg.negativebar";
-//	String MATCHESANALYZER_OVERALL_BG = "matchesanalyzer.bg.overall";
-//	String MATCHESANALYZER_PANELS_BORDER = "matchesanalyzer.border";
-//	String MATCHESANALYZER_FIELD_LINES = "matchesanalyzer.field.line";
-//	String MATCHESANALYZER_FILED_GRASS = "matchesanalyzer.field.grass";
-//	String MATCHESANALYZER_TEAM_LEAGUE_NEXT = "matchesanalyzer.cbox.league";
-//	String MATCHESANALYZER_TEAM_CUP_NEXT = "matchesanalyzer.cbox.cup";
-//	String MATCHESANALYZER_TEAM_TOURNAMENT_NEXT = "matchesanalyzer.cbox.tournamentnext";
-//	String MATCHESANALYZER_TEAM_TOURNAMENT = "matchesanalyzer.cbox.tournament";
-//	String MATCHESANALYZER_TEAM_MYTEAM = "matchesanalyzer.cbox.myteam";
 
 	// Training
 	String TRAINING_BIRTHDAY_BG = "training.birthday.bg";
@@ -226,7 +208,9 @@ public interface HOColorName {
 	String SHOW_MATCH = "show_match";
 	String DOWNLOAD_MATCH = "download_match";
 
+	// Lineup modul
     String START_ASSISTANT = "start_assistant";
     String CLEAR_LINEUP = "clear_lineup";
     String LINEUP_COLOR = "lineup_color";
+    String LINEUP_HIGHLIGHT_FG = "lineup_highlight_fg";
 }

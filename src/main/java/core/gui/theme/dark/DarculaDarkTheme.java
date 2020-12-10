@@ -70,6 +70,7 @@ public class DarculaDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.START_ASSISTANT, defaults.getColor("palette.lime"));
             ThemeManager.instance().put(HOColorName.CLEAR_LINEUP, defaults.getColor("palette.red"));
             ThemeManager.instance().put(HOColorName.LINEUP_COLOR, defaults.getColor("palette.gray"));
+            ThemeManager.instance().put(HOColorName.LINEUP_HIGHLIGHT_FG, defaults.getColor("palette.blue"));
 
             // Matches
             ThemeManager.instance().put(HOColorName.MATCHTYPE_LEAGUE_BG, new Color(95, 86, 38));

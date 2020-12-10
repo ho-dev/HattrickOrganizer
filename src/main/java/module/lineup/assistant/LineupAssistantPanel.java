@@ -397,7 +397,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		final GridBagLayout layout = new GridBagLayout();
 		final GridBagConstraints constraints = new GridBagConstraints();
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.weightx = 1.0;
+		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
 
 		setLayout(layout);
@@ -415,9 +415,14 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		layout.setConstraints(m_jcbxNotLast, constraints);
 		add(m_jcbxNotLast);
 
+		constraints.gridx = 1;
+		constraints.weightx = 1.0;
+		add(new JLabel(""));
+
 //		Line 2 =======================================================
 		constraints.gridx = 0;
 		constraints.gridy = 1;
+		constraints.weightx = 0.0;
 		addLabel(constraints, layout, new JLabel(getTranslation("ls.module.lineup.assistant.group")));
 
 		constraints.gridx = 1;

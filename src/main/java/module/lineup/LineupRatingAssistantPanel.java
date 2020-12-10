@@ -39,8 +39,8 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
         final GridBagLayout layout = new GridBagLayout();
         final GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
+        gbc.weightx = 0.0;
+        gbc.weighty = 0.0;
 
         setLayout(layout);
 
@@ -52,12 +52,14 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
 
         gbc.gridy = 1;
         gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.NORTH;
-        gbc.insets = new Insets(5, 5, 5, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 5, 5, 20);
         layout.setConstraints(lineupSettingsPanel, gbc);
         add(lineupSettingsPanel, gbc);
 
         gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weightx = 1.0;
         gbc.insets = new Insets(5, 0, 5, 5);
         layout.setConstraints(lineupAssistantPanel, gbc);
         add(lineupAssistantPanel, gbc);
