@@ -696,6 +696,23 @@ public class ImageUtilities {
 		return icon;
     }
 
+    private static Map<Object, Object> normalizeColorMap(Map<Object, Object> inputColorMap){
+		Map<Object, Object> newColorMap= new HashMap<>(inputColorMap);
+		for(Map.Entry<Object, Object> entry : inputColorMap.entrySet()) {
+			if(entry.getValue() instanceof Color){
+				newColorMap.put(entry.getKey(), entry.getValue());
+			}
+			else if(entry.getValue() instanceof String){
+				newColorMap.put(entry.getKey(), ThemeManager.getColor((String) entry.getValue()));
+			}
+			else{
+				newColorMap.put(entry.getKey(), new Color(0, 0, 0));
+				HOLogger.instance().error(ImageUtilities.class, "Color map has not been recognized ! " + entry.getValue().toString());
+			}
+
+		}
+		return newColorMap;
+	}
 
 	public static Icon getSvgIcon(String key, Map<Object, Object> colorMap) {
 		return getSvgIcon(key, colorMap, 24, 24);
@@ -708,22 +725,8 @@ public class ImageUtilities {
 
 		if (icon == null) {
 			Object imagePath = ThemeManager.getIconPath(key);
-			Map<Object, Object> newColorMap= new HashMap<>(colorMap);
-			for(Map.Entry<Object, Object> entry : colorMap.entrySet()) {
-				if(entry.getValue() instanceof Color){
-					newColorMap.put(entry.getKey(), entry.getValue());
-				}
-				else if(entry.getValue() instanceof String){
-					newColorMap.put(entry.getKey(), ThemeManager.getColor((String) entry.getValue()));
-				}
-				else{
-					newColorMap.put(entry.getKey(), new Color(0, 0, 0));
-					HOLogger.instance().error(ImageUtilities.class, "Color map has not been recognized ! " + entry.getValue().toString());
-				}
 
-		}
-
-			icon = IconLoader.get().loadSVGIcon(Objects.requireNonNull(imagePath).toString(), width, height, true, newColorMap);
+			icon = IconLoader.get().loadSVGIcon(Objects.requireNonNull(imagePath).toString(), width, height, true, normalizeColorMap(colorMap));
 
 			ThemeManager.instance().put(index, icon);
 		}
@@ -1056,6 +1059,58 @@ public class ImageUtilities {
 			Map<Object, Object> colorMap = Map.of("strokeColor", strokeColor);
 
 			_icon = IconLoader.get().loadSVGIcon("gui/bilder/copy.svg", width, height, true, colorMap);
+
+			ThemeManager.instance().put(key, _icon);
+		}
+
+		return _icon;
+	}
+
+	public static Icon getClearLineupIcon(int height, String cLineup, String cSymbol) {
+
+		return getClearLineupIcon(height, ThemeManager.getColor(cLineup), ThemeManager.getColor(cSymbol));
+	}
+
+
+	public static Icon getClearLineupIcon(int height, Color cLineup, Color cSymbol) {
+
+		int width = Math.round(height * 173.02873f/59.49342f);
+
+		String key = "clearLineupIcon" + cLineup + "_"  + cSymbol + "_"+ width + "x" + height;
+
+		Icon _icon = ThemeManager.getIcon(key);
+
+		if (_icon == null) {
+
+			Map<Object, Object> colorMap = Map.of("colorIcon", cSymbol, "colorLineup", cLineup);
+
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/clear_lineup.svg", width, height, true, normalizeColorMap(colorMap));
+
+			ThemeManager.instance().put(key, _icon);
+		}
+
+		return _icon;
+	}
+
+	public static Icon getStartAssistantIcon(int height, String cLineup, String cSymbol) {
+
+		return getStartAssistantIcon(height, ThemeManager.getColor(cLineup), ThemeManager.getColor(cSymbol));
+	}
+
+
+	public static Icon getStartAssistantIcon(int height, Color cLineup, Color cSymbol) {
+
+		int width = Math.round(height * 173.02873f/59.49342f);
+
+		String key = "clearLineupIcon" + cLineup + "_"  + cSymbol + "_"+ width + "x" + height;
+
+		Icon _icon = ThemeManager.getIcon(key);
+
+		if (_icon == null) {
+
+			Map<Object, Object> colorMap = Map.of("colorIcon", cSymbol, "colorLineup", cLineup);
+
+			_icon = IconLoader.get().loadSVGIcon("gui/bilder/start_assistant.svg", width, height, true, normalizeColorMap(colorMap));
 
 			ThemeManager.instance().put(key, _icon);
 		}

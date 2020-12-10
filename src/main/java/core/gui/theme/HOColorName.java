@@ -226,4 +226,7 @@ public interface HOColorName {
 	String SHOW_MATCH = "show_match";
 	String DOWNLOAD_MATCH = "download_match";
 
+    String START_ASSISTANT = "start_assistant";
+    String CLEAR_LINEUP = "clear_lineup";
+    String LINEUP_COLOR = "lineup_color";
 }

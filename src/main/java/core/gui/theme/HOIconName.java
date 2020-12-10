@@ -46,11 +46,6 @@ public interface HOIconName {
 	 String SWAP 			= "swap";
 	 String TURN 			= "turn";
 
-	 String CLEARASSIST 		= "clearAssist";
-	 String STARTASSIST 		= "startAssist";
-	 String CLEARRESERVE 	= "clearReserve";
-	 String CLEARPOSORDERS	= "clearPositionOrders";
-
 	 String LOGO16 = "logo16";
 	 String LOGO16_STABLE	= "logo16_stable";
 	 String LOGO16_BETA		= "logo16_beta";

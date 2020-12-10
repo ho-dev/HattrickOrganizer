@@ -67,6 +67,9 @@ public class DarculaDarkTheme extends DarkTheme {
 
             ThemeManager.instance().put(HOColorName.RATING_BORDER_BELOW_LIMIT, new Color(255, 0, 0));
             ThemeManager.instance().put(HOColorName.RATING_BORDER_ABOVE_LIMIT, new Color(65, 105, 225));
+            ThemeManager.instance().put(HOColorName.START_ASSISTANT, defaults.getColor("palette.lime"));
+            ThemeManager.instance().put(HOColorName.CLEAR_LINEUP, defaults.getColor("palette.red"));
+            ThemeManager.instance().put(HOColorName.LINEUP_COLOR, defaults.getColor("palette.gray"));
 
             // Matches
             ThemeManager.instance().put(HOColorName.MATCHTYPE_LEAGUE_BG, new Color(95, 86, 38));
@@ -142,6 +145,7 @@ public class DarculaDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.HOME_TEAM_FG, new Color(100, 131, 226));
             ThemeManager.instance().put(HOColorName.SELECTED_TEAM_FG, new Color(177, 193, 240));
             ThemeManager.instance().put(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
+
 
             return super.enableTheme();
         } catch (Exception e) {

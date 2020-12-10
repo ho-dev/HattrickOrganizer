@@ -14,7 +14,6 @@ import core.model.match.IMatchDetails;
 import core.model.match.Weather;
 import core.util.Helper;
 import module.lineup.ratings.LineupRatingPanel;
-
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;

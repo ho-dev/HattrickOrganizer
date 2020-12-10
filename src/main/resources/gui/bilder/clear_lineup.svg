@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg id="clearLineup" version="1.1" xmlns="http://www.w3.org/2000/svg" width="173.02873mm" height="59.49342mm"  viewBox="0 0 173.02873 59.49342">
+
+	<defs id="colors">
+		<linearGradient id="colorIcon">
+			<stop offset="0" stop-color="#FF0000"/>
+			<stop offset="1" stop-color="#FF0000"/>
+		</linearGradient>
+		<linearGradient id="colorLineup">
+			<stop offset="0" stop-color="#0000FF"/>
+			<stop offset="1" stop-color="#0000FF"/>
+		</linearGradient>
+	</defs>
+
+	<g id="layer1" transform="translate(-19.872216,-133.58428)">		
+		<g id="lineup" fill="url(#colorLineup)">
+			<path d="m 156.39805,168.6433 h 36.21038 v 9.82738 h -36.21038 z" />
+			<path d="m 125.55491,168.6433 h 26.08061 v 9.82738 h -26.08061 z" />
+			<path d="m 59.786765,168.6433 h 26.080476 v 9.82738 H 59.786765 Z" />
+			<path d="m 19.872216,168.6433 h 36.21038 v 9.82738 h -36.21038 z" />
+			<path d="m 59.786765,150.3492 H 85.86724 v 9.82738 H 59.786765 Z" />
+			<path d="m 19.872216,150.3492 h 36.21038 v 9.82738 h -36.21038 z" />
+			<path d="m 156.69057,150.39215 h 36.21038 v 9.82738 h -36.21038 z" />
+			<path d="m 126.3766,150.39215 h 26.08061 v 9.82738 H 126.3766 Z" />
+			<path d="m 62.4326,183.23321 h 36.210381 v 9.82738 H 62.4326 Z" />
+			<path d="m 111.76639,183.25032 h 36.21038 v 9.82738 h -36.21038 z" />
+			<path d="m 87.953874,133.58428 h 36.210386 v 9.82738 H 87.953874 Z" />
+		</g>
+	</g>
+	<g id="clearIcon" fill="url(#colorIcon)">
+        <rect width="5" height="45" x="80" y="30" transform="rotate(45, 80, 30) translate(2, -27)"/>
+        <rect width="5" height="45" x="80" y="30" transform="rotate(-45, 80, 30) translate(2, -18)"/>
+	</g>
+</svg>

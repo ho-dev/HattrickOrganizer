@@ -70,20 +70,8 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	private final JComboBox<CBItem> m_jcbPriority = new JComboBox<>(PRIORITIES);
 
 
-	private final JButton m_jbClearLineup = new JButton(ThemeManager.getIcon(HOIconName.CLEARASSIST));
-	private final JButton m_jbStartAssistant = new JButton(ThemeManager.getIcon(HOIconName.STARTASSIST));
-	private final JButton m_jbClearSubsitutesBench = new JButton(
-			ThemeManager.getIcon(HOIconName.CLEARRESERVE));
-	private final JButton m_jbClearPostionOrders = new JButton(
-			ThemeManager.getIcon(HOIconName.CLEARPOSORDERS));
-
-
-
-
-
-
-
-
+	private final JButton m_jbClearLineup = new JButton();
+	private final JButton m_jbStartAssistant = new JButton();
 
 
 	private HashMap<PlayerPositionPanel, LineupAssistantSelectorOverlay> positions = new HashMap<PlayerPositionPanel, LineupAssistantSelectorOverlay>();
@@ -142,25 +130,12 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		if (actionEvent.getSource().equals(m_jbClearLineup)) {
 			// Alle Positionen leeren
 			hoModel.getLineupWithoutRatingRecalc().resetAufgestellteSpieler();
+			hoModel.getLineupWithoutRatingRecalc().resetPositionOrders();
+			hoModel.getLineupWithoutRatingRecalc().resetReserveBank();
 			hoModel.getLineupWithoutRatingRecalc().setKicker(0);
 			hoModel.getLineupWithoutRatingRecalc().setKapitaen(0);
-			HOMainFrame.instance().setInformation(
-							HOVerwaltung.instance().getLanguageString("Aufstellung_geloescht"));
+			HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("Aufstellung_geloescht"));
 			mainFrame.getLineupPanel().update();
-
-			// gui.RefreshManager.instance ().doRefresh ();
-		} else if (actionEvent.getSource().equals(m_jbClearPostionOrders)) {
-			// event listener for clear positonal orders button
-			hoModel.getLineupWithoutRatingRecalc().resetPositionOrders();
-			HOMainFrame.instance().setInformation(
-							HOVerwaltung.instance().getLanguageString("Positional_orders_cleared"));
-			mainFrame.getLineupPanel().update();
-
-		} else if (actionEvent.getSource().equals(m_jbClearSubsitutesBench)) {
-			hoModel.getLineupWithoutRatingRecalc().resetReserveBank();
-			mainFrame.getLineupPanel().update();
-
-			// gui.RefreshManager.instance ().doRefresh ();
 		} else if (actionEvent.getSource().equals(m_jbStartAssistant)) {
 			displayGUI();
 		} else if (actionEvent.getSource().equals(m_jcbxFilterPlayerPositionCB)
@@ -536,6 +511,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		constraints.gridx = 1;
 		constraints.gridwidth = 2;
 		constraints.fill = GridBagConstraints.NONE;
+		constraints.anchor = GridBagConstraints.WEST;
 		m_jcbPriority.setToolTipText(getTranslation("tt_AufstellungsAssistent_Reihenfolge"));
 		core.util.Helper.setComboBoxFromID(m_jcbPriority, userParameter.aufstellungsAssistentPanel_reihenfolge);
 		layout.setConstraints(m_jcbPriority, constraints);
@@ -545,25 +521,28 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		constraints.gridx = 0;
 		constraints.gridy = 8;
 		constraints.gridwidth = 4;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER;
 		JPanel jpButtons = new JPanel(new FlowLayout());
 
-		JButton[] buttons = new JButton[]{m_jbClearLineup, m_jbClearPostionOrders, m_jbClearSubsitutesBench, m_jbStartAssistant};
-		String[] tooltips = new String[]{("Aufstellung_leeren"), "Clear_positional_orders", "Reservebank_leeren", "Assistent_starten"};
+		m_jbStartAssistant.setIcon(ImageUtilities.getStartAssistantIcon(30, HOColorName.LINEUP_COLOR, HOColorName.START_ASSISTANT));
+		m_jbClearLineup.setIcon(ImageUtilities.getClearLineupIcon(30, HOColorName.LINEUP_COLOR, HOColorName.CLEAR_LINEUP));
+
+		JButton[] buttons = new JButton[]{m_jbClearLineup, m_jbStartAssistant};
+		String[] tooltips = new String[]{"Aufstellung_leeren", "Assistent_starten"};
 
 		for(int i = 0; i < buttons.length; i++){
 			buttons[i].setToolTipText(getTranslation(tooltips[i]));
 			buttons[i].addActionListener(this);
 			buttons[i].setBorderPainted(false);
 			buttons[i].setBorder(null);
-			buttons[i].setMargin(new Insets(6, 2, 0, 2));
+			buttons[i].setMargin(new Insets(6, 6, 0, 6));
 			buttons[i].setContentAreaFilled(false);
 			jpButtons.add(buttons[i]);
 		}
 
 		layout.setConstraints(jpButtons, constraints);
 		add(jpButtons);
-
-
 
 		core.gui.RefreshManager.instance().registerRefreshable(this);
 	}
@@ -578,8 +557,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	}
 
 	@Override
-	public void reInit() {
-	}
+	public void reInit() {}
 
 	@Override
 	public void refresh() {
