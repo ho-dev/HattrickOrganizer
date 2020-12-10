@@ -31,9 +31,9 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	private final JComboBox<CBItem> m_jcbTeamConfidence = new JComboBox<>(TeamConfidence.ITEMS);
 
 	private final CBItem[] TRAINER_TYPES = {
-			new CBItem(getTranslation("ls.team.coachtype.defensive"), 0),
-			new CBItem(getTranslation("ls.team.coachtype.neutral"), 2),
-			new CBItem(getTranslation("ls.team.coachtype.offensive"), 1), };
+			new CBItem(getTranslation("ls.module.lineup.coachtype.defensive"), 0),
+			new CBItem(getTranslation("ls.module.lineup.coachtype.neutral"), 2),
+			new CBItem(getTranslation("ls.module.lineup.coachtype.offensive"), 1), };
 
 	private final JComboBox<CBItem> m_jcbTrainerType = new JComboBox<>(TRAINER_TYPES);
 	private final JComboBox<CBItem> m_jcbMainTeamSpirit = new JComboBox<>(TeamSpirit.ITEMS);
@@ -56,10 +56,10 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	private final JComboBox<CBItem> m_jcbWeather = new JComboBox<>(WEATHER);
 
 	private final CBItem[] LOCATION = {
-			new CBItem(getTranslation("Heimspiel"),IMatchDetails.LOCATION_HOME),
-			new CBItem(getTranslation("matchlocation.away"), IMatchDetails.LOCATION_AWAY),
-			new CBItem(getTranslation("matchlocation.awayderby"),IMatchDetails.LOCATION_AWAYDERBY),
-			new CBItem(getTranslation("matchlocation.tournament"),IMatchDetails.LOCATION_TOURNAMENT)
+			new CBItem(getTranslation("ls.module.lineup.matchlocation.home"),IMatchDetails.LOCATION_HOME),
+			new CBItem(getTranslation("ls.module.lineup.matchlocation.away"), IMatchDetails.LOCATION_AWAY),
+			new CBItem(getTranslation("ls.module.lineup.matchlocation.awayderby"),IMatchDetails.LOCATION_AWAYDERBY),
+			new CBItem(getTranslation("ls.module.lineup.matchlocation.tournament"),IMatchDetails.LOCATION_TOURNAMENT)
 	};
 	private final JComboBox<CBItem> m_jcbLocation = new JComboBox<>(LOCATION);
 

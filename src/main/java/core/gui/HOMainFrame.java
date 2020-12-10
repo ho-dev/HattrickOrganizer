@@ -697,7 +697,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		parameter.aufstellungsAssistentPanel_gruppe = lineupAssistantPanel.getGroup();
 		parameter.aufstellungsAssistentPanel_reihenfolge = lineupAssistantPanel.getOrder();
-		parameter.aufstellungsAssistentPanel_not = lineupAssistantPanel.isNotGroup();
+		parameter.lineupAssistentPanel_include_group = !lineupAssistantPanel.isSelectedGroupExcluded();
 		parameter.aufstellungsAssistentPanel_cbfilter = lineupAssistantPanel.isGroupFilter();
 		parameter.aufstellungsAssistentPanel_idealPosition = lineupAssistantPanel.isIdealPositionZuerst();
 		parameter.aufstellungsAssistentPanel_form = lineupAssistantPanel.isConsiderForm();

@@ -114,7 +114,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	public final void refresh() {
 		boolean gruppenfilter = m_clLineupPanel.getLineupAssistantPanel().isGroupFilter();
 		String gruppe = m_clLineupPanel.getLineupAssistantPanel().getGroup();
-		boolean gruppenegieren = m_clLineupPanel.getLineupAssistantPanel().isNotGroup();
+		boolean gruppenegieren = m_clLineupPanel.getLineupAssistantPanel().isSelectedGroupExcluded();
 
 		boolean exludeLast = m_clLineupPanel.getLineupAssistantPanel()
 				.isExcludeLastMatch();

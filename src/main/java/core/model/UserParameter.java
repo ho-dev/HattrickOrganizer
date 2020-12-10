@@ -66,9 +66,9 @@ public final class UserParameter extends Configuration {
     public boolean aufstellungsAssistentPanel_form = true;
     public boolean aufstellungsAssistentPanel_gesperrt;
     public boolean aufstellungsAssistentPanel_idealPosition;
-    public boolean aufstellungsAssistentPanel_not;
     public boolean aufstellungsAssistentPanel_notLast;
     public boolean aufstellungsAssistentPanel_verletzt;
+    public boolean lineupAssistentPanel_include_group = true;
 
     //Dialog, wo mit welchem Namen das HRF gespeichert werden soll
 
@@ -437,7 +437,7 @@ public final class UserParameter extends Configuration {
         map.put("aufstellungsAssistentPanel_form", String.valueOf(aufstellungsAssistentPanel_form));
         map.put("aufstellungsAssistentPanel_gesperrt", String.valueOf(aufstellungsAssistentPanel_gesperrt));
         map.put("aufstellungsAssistentPanel_idealPosition", String.valueOf(aufstellungsAssistentPanel_idealPosition));
-        map.put("aufstellungsAssistentPanel_not", String.valueOf(aufstellungsAssistentPanel_not));
+        map.put("lineupAssistentPanel_include_group", String.valueOf(lineupAssistentPanel_include_group));
         map.put("aufstellungsAssistentPanel_notLast", String.valueOf(aufstellungsAssistentPanel_notLast));
         map.put("aufstellungsAssistentPanel_verletzt", String.valueOf(aufstellungsAssistentPanel_verletzt));
         map.put("xmlDownload", String.valueOf(xmlDownload));
@@ -684,7 +684,7 @@ public final class UserParameter extends Configuration {
         aufstellungsAssistentPanel_form = getBooleanValue(values, "aufstellungsAssistentPanel_form");
         aufstellungsAssistentPanel_gesperrt = getBooleanValue(values, "aufstellungsAssistentPanel_gesperrt");
         aufstellungsAssistentPanel_idealPosition = getBooleanValue(values, "aufstellungsAssistentPanel_idealPosition");
-        aufstellungsAssistentPanel_not = getBooleanValue(values, "aufstellungsAssistentPanel_not");
+        lineupAssistentPanel_include_group = getBooleanValue(values, "lineupAssistentPanel_include_group");
         aufstellungsAssistentPanel_notLast = getBooleanValue(values, "aufstellungsAssistentPanel_notLast");
         aufstellungsAssistentPanel_verletzt = getBooleanValue(values, "aufstellungsAssistentPanel_verletzt");
         xmlDownload = getBooleanValue(values, "xmlDownload");

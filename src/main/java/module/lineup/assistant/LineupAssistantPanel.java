@@ -12,6 +12,7 @@ import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
+import core.util.Helper;
 import module.lineup.*;
 import module.lineup.lineup.PlayerPositionPanel;
 import java.awt.*;
@@ -32,36 +33,23 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 	private final static Color TITLE_FG = ThemeManager.getColor(HOColorName.BLUE);
 
-	private final JCheckBox m_jcbxNot = new JCheckBox(getTranslation("Not"), userParameter.aufstellungsAssistentPanel_not);
+	private final JCheckBox m_jcbxNotLast = new JCheckBox("",	userParameter.aufstellungsAssistentPanel_notLast);
+
+	private final CBItem[] INCLUDE_EXCLUDE = {
+			new CBItem(getTranslation("ls.module.lineup.exclude"), 0),
+			new CBItem(getTranslation("ls.module.lineup.include"), 1),
+ };
+
+	private final JComboBox<CBItem> m_jcbIncludeExclude = new JComboBox<>(INCLUDE_EXCLUDE);
+
 	private final JComboBox<String> m_jcbGroups = new JComboBox<>(GroupTeamFactory.TEAMSMILIES);
+	private final JCheckBox m_jcbxFilterPlayerPositionCB = new JCheckBox("", userParameter.aufstellungsAssistentPanel_cbfilter);
+	private final JCheckBox m_jcbxConsiderForm = new JCheckBox("", userParameter.aufstellungsAssistentPanel_form);
+	private final JCheckBox m_jcbxConsiderInjuredPlayers = new JCheckBox("", userParameter.aufstellungsAssistentPanel_verletzt);
+	private final JCheckBox m_jcbxConsiderSuspendedPlayers = new JCheckBox("", userParameter.aufstellungsAssistentPanel_gesperrt);
+	private final JCheckBox m_jcbxIdealPositionFirst = new JCheckBox("", userParameter.aufstellungsAssistentPanel_idealPosition);
 
-	private final JButton m_jbLoeschen = new JButton(ThemeManager.getIcon(HOIconName.CLEARASSIST));
-	private final JButton m_jbOK = new JButton(ThemeManager.getIcon(HOIconName.STARTASSIST));
-	private final JButton m_jbReserveLoeschen = new JButton(
-			ThemeManager.getIcon(HOIconName.CLEARRESERVE));
-	private final JButton m_jbClearPostionOrders = new JButton(
-			ThemeManager.getIcon(HOIconName.CLEARPOSORDERS));
-	private final JCheckBox m_jchForm = new JCheckBox(HOVerwaltung.instance().getLanguageString(
-			"Form_beruecksichtigen"),
-			core.model.UserParameter.instance().aufstellungsAssistentPanel_form);
-	private final JCheckBox m_jchGesperrte = new JCheckBox(HOVerwaltung.instance()
-			.getLanguageString("Gesperrte_aufstellen"),
-			core.model.UserParameter.instance().aufstellungsAssistentPanel_gesperrt);
-	private final JCheckBox m_jchIdealPosition = new JCheckBox(HOVerwaltung.instance()
-			.getLanguageString("Idealposition_zuerst"),
-			core.model.UserParameter.instance().aufstellungsAssistentPanel_idealPosition);
-	private final JCheckBox m_jchLast = new JCheckBox(HOVerwaltung.instance().getLanguageString(
-			"NotLast_aufstellen"),
-			core.model.UserParameter.instance().aufstellungsAssistentPanel_notLast);
-	private final JCheckBox m_jchListBoxGruppenFilter = new JCheckBox(HOVerwaltung.instance()
-			.getLanguageString("ListBoxGruppenFilter"),
-			core.model.UserParameter.instance().aufstellungsAssistentPanel_cbfilter);
-	private final JCheckBox m_jchVerletzte = new JCheckBox(HOVerwaltung.instance()
-			.getLanguageString("Verletze_aufstellen"),
-			core.model.UserParameter.instance().aufstellungsAssistentPanel_verletzt);
-
-
-	private final CBItem[] REIHENFOLGE = {
+	private final CBItem[] PRIORITIES = {
 			new CBItem(HOVerwaltung.instance().getLanguageString("AW-MF-ST"),
 					LineupAssistant.AW_MF_ST),
 
@@ -79,7 +67,25 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 			new CBItem(HOVerwaltung.instance().getLanguageString("ST-MF-AW"),
 					LineupAssistant.ST_MF_AW) };
-	private JComboBox m_jcbReihenfolge = new JComboBox(REIHENFOLGE);
+	private final JComboBox<CBItem> m_jcbPriority = new JComboBox<>(PRIORITIES);
+
+
+	private final JButton m_jbClearLineup = new JButton(ThemeManager.getIcon(HOIconName.CLEARASSIST));
+	private final JButton m_jbStartAssistant = new JButton(ThemeManager.getIcon(HOIconName.STARTASSIST));
+	private final JButton m_jbClearSubsitutesBench = new JButton(
+			ThemeManager.getIcon(HOIconName.CLEARRESERVE));
+	private final JButton m_jbClearPostionOrders = new JButton(
+			ThemeManager.getIcon(HOIconName.CLEARPOSORDERS));
+
+
+
+
+
+
+
+
+
+
 	private HashMap<PlayerPositionPanel, LineupAssistantSelectorOverlay> positions = new HashMap<PlayerPositionPanel, LineupAssistantSelectorOverlay>();
 
 	// UI items for additions to the LineupPositionsPanel
@@ -94,15 +100,15 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	}
 
 	public final boolean isExcludeLastMatch() {
-		return m_jchLast.isSelected();
+		return m_jcbxNotLast.isSelected();
 	}
 
 	public final boolean isConsiderForm() {
-		return m_jchForm.isSelected();
+		return m_jcbxConsiderForm.isSelected();
 	}
 
 	public final boolean isIgnoreSuspended() {
-		return m_jchGesperrte.isSelected();
+		return m_jcbxConsiderSuspendedPlayers.isSelected();
 	}
 
 	public final String getGroup() {
@@ -110,30 +116,30 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	}
 
 	public final boolean isGroupFilter() {
-		return m_jchListBoxGruppenFilter.isSelected();
+		return m_jcbxFilterPlayerPositionCB.isSelected();
 	}
 
 	public final boolean isIdealPositionZuerst() {
-		return m_jchIdealPosition.isSelected();
+		return m_jcbxIdealPositionFirst.isSelected();
 	}
 
-	public final boolean isNotGroup() {
-		return m_jcbxNot.isSelected();
+	public final boolean isSelectedGroupExcluded() {
+		return m_jcbIncludeExclude.getSelectedIndex() == 0;
 	}
 
 	public final int getOrder() {
-		return ((CBItem) m_jcbReihenfolge.getSelectedItem()).getId();
+		return ((CBItem) Objects.requireNonNull(m_jcbPriority.getSelectedItem())).getId();
 	}
 
 	public final boolean isIgnoreInjured() {
-		return m_jchVerletzte.isSelected();
+		return m_jcbxConsiderInjuredPlayers.isSelected();
 	}
 
 	public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
 		final HOModel hoModel = HOVerwaltung.instance().getModel();
 		final HOMainFrame mainFrame = core.gui.HOMainFrame.instance();
 
-		if (actionEvent.getSource().equals(m_jbLoeschen)) {
+		if (actionEvent.getSource().equals(m_jbClearLineup)) {
 			// Alle Positionen leeren
 			hoModel.getLineupWithoutRatingRecalc().resetAufgestellteSpieler();
 			hoModel.getLineupWithoutRatingRecalc().setKicker(0);
@@ -150,20 +156,20 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 							HOVerwaltung.instance().getLanguageString("Positional_orders_cleared"));
 			mainFrame.getLineupPanel().update();
 
-		} else if (actionEvent.getSource().equals(m_jbReserveLoeschen)) {
+		} else if (actionEvent.getSource().equals(m_jbClearSubsitutesBench)) {
 			hoModel.getLineupWithoutRatingRecalc().resetReserveBank();
 			mainFrame.getLineupPanel().update();
 
 			// gui.RefreshManager.instance ().doRefresh ();
-		} else if (actionEvent.getSource().equals(m_jbOK)) {
+		} else if (actionEvent.getSource().equals(m_jbStartAssistant)) {
 			displayGUI();
-		} else if (actionEvent.getSource().equals(m_jchListBoxGruppenFilter)
-				|| actionEvent.getSource().equals(m_jchLast)) {
+		} else if (actionEvent.getSource().equals(m_jcbxFilterPlayerPositionCB)
+				|| actionEvent.getSource().equals(m_jcbxNotLast)) {
 			mainFrame.getLineupPanel().getLineupPositionsPanel().refresh();
 		} else if (actionEvent.getSource().equals(m_jcbGroups)
-				|| actionEvent.getSource().equals(m_jcbxNot)) {
-			// Nur wenn Filter aktiv
-			if (m_jchListBoxGruppenFilter.isSelected()) {
+				|| actionEvent.getSource().equals(m_jcbIncludeExclude)) {
+			// Only if filter active
+			if (m_jcbxFilterPlayerPositionCB.isSelected()) {
 				mainFrame.getLineupPanel().getLineupPositionsPanel().refresh();
 			}
 		} else if (actionEvent.getSource().equals(overlayOk)) {
@@ -235,13 +241,13 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			//If the player is eligible to play and either all groups are selected or the one to which the player belongs
 			if (player.getCanBeSelectedByAssistant()
 					&& (((this.getGroup().trim().equals("") || player.getTeamInfoSmilie().equals(
-							this.getGroup())) && !m_jcbxNot.isSelected()) || (!player
-							.getTeamInfoSmilie().equals(this.getGroup()) && m_jcbxNot.isSelected()))) {
+							this.getGroup())) && !isSelectedGroupExcluded()) || (!player
+							.getTeamInfoSmilie().equals(this.getGroup()) && isSelectedGroupExcluded()))) {
 				boolean include = true;
 				final LineupCBItem lastLineup = LineupsComparisonHistoryPanel
 						.getLastLineup();
 
-				if (m_jchLast.isSelected()
+				if (m_jcbxNotLast.isSelected()
 						&& (lastLineup != null)
 						&& lastLineup.getAufstellung()
 								.isPlayerInStartingEleven(player.getSpielerID())) {
@@ -256,9 +262,9 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		}
 
 		hoModel.getLineup().optimizeLineup(vPlayer,
-				(byte) ((CBItem) Objects.requireNonNull(m_jcbReihenfolge.getSelectedItem())).getId(),
-				m_jchForm.isSelected(), m_jchIdealPosition.isSelected(),
-				m_jchVerletzte.isSelected(), m_jchGesperrte.isSelected(),
+				(byte) ((CBItem) Objects.requireNonNull(m_jcbPriority.getSelectedItem())).getId(),
+				m_jcbxConsiderForm.isSelected(), m_jcbxIdealPositionFirst.isSelected(),
+				m_jcbxConsiderInjuredPlayers.isSelected(), m_jcbxConsiderSuspendedPlayers.isSelected(),
 				core.model.UserParameter.instance().WetterEffektBonus);
 		mainFrame.setInformation(
 				HOVerwaltung.instance().getLanguageString("Autoaufstellung_fertig"));
@@ -415,105 +421,158 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	private void initComponents() {
 		final GridBagLayout layout = new GridBagLayout();
 		final GridBagConstraints constraints = new GridBagConstraints();
-//		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.NONE;;
-
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
 
 		setLayout(layout);
 
-		// Line 1
+		// Line 1 ===================================================
 		constraints.gridx = 0;
-		int yPos = 0;
-		addLabel(constraints, layout, new JLabel(getTranslation("ls.lineup.asssitant.goup")), yPos);
+		constraints.gridy = 0;
+		JLabel label = new JLabel(getTranslation("NotLast_aufstellen"));
+		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_NotLast"));
+		addLabel(constraints, layout, label);
 
 		constraints.gridx = 1;
-		m_jcbxNot.setToolTipText(getTranslation("tt_AufstellungsAssistent_Not"));
-//		m_jchNot.setOpaque(false);
-		m_jcbxNot.addActionListener(this);
-		layout.setConstraints(m_jcbxNot, constraints);
-		add(m_jcbxNot);
+		m_jcbxNotLast.setToolTipText(getTranslation("tt_AufstellungsAssistent_NotLast"));
+		m_jcbxNotLast.addActionListener(this);
+		layout.setConstraints(m_jcbxNotLast, constraints);
+		add(m_jcbxNotLast);
 
-		constraints.gridx = 2;
-		constraints.fill = GridBagConstraints.HORIZONTAL;;
-		constraints.weightx = 1.0;
-		constraints.weighty = 0.0;
-		m_jcbGroups.setToolTipText(getTranslation("tt_AufstellungsAssistent_Gruppe"));
+//		Line 2 =======================================================
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		addLabel(constraints, layout, new JLabel(getTranslation("ls.module.lineup.assistant.group")));
+
+		constraints.gridx = 1;
+		constraints.gridwidth = 3;
+		constraints.anchor = GridBagConstraints.WEST;
+		JPanel jpGroupSelection = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		Helper.setComboBoxFromID(m_jcbIncludeExclude, userParameter.lineupAssistentPanel_include_group ? 1 : 0);
+		m_jcbIncludeExclude.addActionListener(this);
+		jpGroupSelection.add(m_jcbIncludeExclude);
 		m_jcbGroups.setSelectedItem(userParameter.aufstellungsAssistentPanel_gruppe);
 		m_jcbGroups.setRenderer(new core.gui.comp.renderer.SmilieListCellRenderer());
 		m_jcbGroups.addActionListener(this);
-		layout.setConstraints(m_jcbGroups, constraints);
-		add(m_jcbGroups);
-//
-//		m_jchListBoxGruppenFilter.setToolTipText(hoVerwaltung
-//				.getLanguageString("tt_AufstellungsAssistent_GruppeFilter"));
-//		m_jchListBoxGruppenFilter.setOpaque(false);
-//		m_jchListBoxGruppenFilter.addActionListener(this);
-//		panel.add(m_jchListBoxGruppenFilter);
-//
-//		m_jcbReihenfolge.setToolTipText(hoVerwaltung
-//				.getLanguageString("tt_AufstellungsAssistent_Reihenfolge"));
-//		core.util.Helper.setComboBoxFromID(m_jcbReihenfolge,
-//				core.model.UserParameter.instance().aufstellungsAssistentPanel_reihenfolge);
-//		panel.add(m_jcbReihenfolge);
-//		m_jchIdealPosition.setToolTipText(hoVerwaltung
-//				.getLanguageString("tt_AufstellungsAssistent_Idealposition"));
-//		m_jchIdealPosition.setOpaque(false);
-//		panel.add(m_jchIdealPosition);
-//		m_jchForm.setToolTipText(hoVerwaltung.getLanguageString("tt_AufstellungsAssistent_Form"));
-//		m_jchForm.setOpaque(false);
-//		panel.add(m_jchForm);
-//		m_jchVerletzte.setToolTipText(hoVerwaltung
-//				.getLanguageString("tt_AufstellungsAssistent_Verletzte"));
-//		m_jchVerletzte.setOpaque(false);
-//		panel.add(m_jchVerletzte);
-//		m_jchGesperrte.setToolTipText(hoVerwaltung
-//				.getLanguageString("tt_AufstellungsAssistent_Gesperrte"));
-//		m_jchGesperrte.setOpaque(false);
-//		panel.add(m_jchGesperrte);
-//		m_jchLast
-//				.setToolTipText(hoVerwaltung.getLanguageString("tt_AufstellungsAssistent_NotLast"));
-//		m_jchLast.setOpaque(false);
-//		m_jchLast.addActionListener(this);
-//		panel.add(m_jchLast);
-//
-//		add(panel, BorderLayout.CENTER);
-//
-//		panel = new JPanel();
-//		panel.setOpaque(false);
-//		m_jbLoeschen.setPreferredSize(new Dimension(28, 28));
-//		m_jbLoeschen.setToolTipText(hoVerwaltung.getLanguageString("Aufstellung_leeren"));
-//		m_jbLoeschen.addActionListener(this);
-//		panel.add(m_jbLoeschen);
-//		m_jbClearPostionOrders.setPreferredSize(new Dimension(28, 28));
-//		m_jbClearPostionOrders.setToolTipText(hoVerwaltung
-//				.getLanguageString("Clear_positional_orders"));
-//		m_jbClearPostionOrders.addActionListener(this);
-//		panel.add(m_jbClearPostionOrders);
-//		m_jbReserveLoeschen.setPreferredSize(new Dimension(28, 28));
-//		m_jbReserveLoeschen.setToolTipText(hoVerwaltung.getLanguageString("Reservebank_leeren"));
-//		m_jbReserveLoeschen.addActionListener(this);
-//		panel.add(m_jbReserveLoeschen);
-//		m_jbOK.setPreferredSize(new Dimension(28, 28));
-//		m_jbOK.setToolTipText(hoVerwaltung.getLanguageString("Assistent_starten"));
-//		m_jbOK.addActionListener(this);
-//		panel.add(m_jbOK);
-//		add(panel, BorderLayout.SOUTH);
-//
-//		core.gui.RefreshManager.instance().registerRefreshable(this);
+		jpGroupSelection.add(m_jcbGroups);
+		layout.setConstraints(jpGroupSelection, constraints);
+		add(jpGroupSelection);
+
+		// Line 3 ===============================================
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.anchor = GridBagConstraints.CENTER;
+		label = new JLabel(getTranslation("ls.module.lineup.sync_lineup_panel"));
+		label.setToolTipText(getTranslation("ls.module.lineup.sync_lineup_panel.tooltip"));
+		addLabel(constraints, layout, label);
+
+		constraints.gridx = 1;
+		m_jcbxFilterPlayerPositionCB.setToolTipText(getTranslation("ls.module.lineup.sync_lineup_panel.tooltip"));
+		m_jcbxFilterPlayerPositionCB.addActionListener(this);
+		layout.setConstraints(m_jcbxFilterPlayerPositionCB, constraints);
+		add(m_jcbxFilterPlayerPositionCB);
+
+		// Line 4 (break line)
+		constraints.gridx = 0;
+		constraints.gridy = 3;
+		addLabel(constraints, layout, new JLabel(" "));
+
+		// Line 5 ===============================================
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		label = new JLabel(getTranslation("Form_beruecksichtigen"));
+		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_Form"));
+		addLabel(constraints, layout, label);
+
+		constraints.gridx = 1;
+		m_jcbxConsiderForm.setToolTipText(getTranslation("tt_AufstellungsAssistent_Form"));
+		layout.setConstraints(m_jcbxConsiderForm, constraints);
+		add(m_jcbxConsiderForm);
+
+		constraints.gridx = 2;
+		label = new JLabel(getTranslation("Verletze_aufstellen"));
+		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_Verletzte"));
+		addLabel(constraints, layout, label);
+
+		constraints.gridx = 3;
+		m_jcbxConsiderInjuredPlayers.setToolTipText(getTranslation("tt_AufstellungsAssistent_Verletzte"));
+		layout.setConstraints(m_jcbxConsiderInjuredPlayers, constraints);
+		add(m_jcbxConsiderInjuredPlayers);
+
+		// Line 6 ===============================================
+		constraints.gridx = 0;
+		constraints.gridy = 5;
+		label = new JLabel(getTranslation("Gesperrte_aufstellen"));
+		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_Gesperrte"));
+		addLabel(constraints, layout, label);
+
+		constraints.gridx = 1;
+		m_jcbxConsiderSuspendedPlayers.setToolTipText(getTranslation("tt_AufstellungsAssistent_Gesperrte"));
+		layout.setConstraints(m_jcbxConsiderSuspendedPlayers, constraints);
+		add(m_jcbxConsiderSuspendedPlayers);
+
+		constraints.gridx = 2;
+		label = new JLabel(getTranslation("Idealposition_zuerst"));
+		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_Idealposition"));
+		addLabel(constraints, layout, label);
+
+		constraints.gridx = 3;
+		m_jcbxIdealPositionFirst.setToolTipText(getTranslation("tt_AufstellungsAssistent_Idealposition"));
+		layout.setConstraints(m_jcbxIdealPositionFirst, constraints);
+		add(m_jcbxIdealPositionFirst);
+
+		// Line 7 (break line)  =============================================================================
+		constraints.gridx = 0;
+		constraints.gridy = 6;
+		addLabel(constraints, layout, new JLabel(" "));
+
+		// Line 8 =============================================================================
+		constraints.gridx = 0;
+		constraints.gridy = 7;
+		addLabel(constraints, layout, new JLabel(getTranslation("ls.module.lineup.assistant.priority")));
+
+		constraints.gridx = 1;
+		constraints.gridwidth = 2;
+		constraints.fill = GridBagConstraints.NONE;
+		m_jcbPriority.setToolTipText(getTranslation("tt_AufstellungsAssistent_Reihenfolge"));
+		core.util.Helper.setComboBoxFromID(m_jcbPriority, userParameter.aufstellungsAssistentPanel_reihenfolge);
+		layout.setConstraints(m_jcbPriority, constraints);
+		add(m_jcbPriority);
+
+		// Line 9 =============================================================================
+		constraints.gridx = 0;
+		constraints.gridy = 8;
+		constraints.gridwidth = 4;
+		JPanel jpButtons = new JPanel(new FlowLayout());
+
+		JButton[] buttons = new JButton[]{m_jbClearLineup, m_jbClearPostionOrders, m_jbClearSubsitutesBench, m_jbStartAssistant};
+		String[] tooltips = new String[]{("Aufstellung_leeren"), "Clear_positional_orders", "Reservebank_leeren", "Assistent_starten"};
+
+		for(int i = 0; i < buttons.length; i++){
+			buttons[i].setToolTipText(getTranslation(tooltips[i]));
+			buttons[i].addActionListener(this);
+			buttons[i].setBorderPainted(false);
+			buttons[i].setBorder(null);
+			buttons[i].setMargin(new Insets(6, 2, 0, 2));
+			buttons[i].setContentAreaFilled(false);
+			jpButtons.add(buttons[i]);
+		}
+
+		layout.setConstraints(jpButtons, constraints);
+		add(jpButtons);
+
+
+
+		core.gui.RefreshManager.instance().registerRefreshable(this);
 	}
 
-//	public static List<String> asList(String str) {
-//		String[] pieces = str.split(";");
-//		return Arrays.asList(pieces);
-//	}
 
-
-	private void addLabel(GridBagConstraints constraints, GridBagLayout layout, JLabel label, int y) {
+	private void addLabel(GridBagConstraints constraints, GridBagLayout layout, JLabel label) {
 		label.setForeground(TITLE_FG);
 		label.setFont(getFont().deriveFont(Font.BOLD));
 		label.setHorizontalAlignment(SwingConstants.LEFT);
-		constraints.gridx = 0;
-		constraints.gridy = y;
 		layout.setConstraints(label, constraints);
 		add(label);
 	}
