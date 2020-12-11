@@ -31,6 +31,7 @@ public interface HOColorName {
 
 	String TABLEENTRY_BG 				= "tableEntry.bg";
 	String TABLEENTRY_FG 				= "tableEntry.fg";
+	String BACKGROUND_CONTAINER 		= "background_container";
 	String TABLEENTRY_IMPROVEMENT_FG 	= "tableEntry.improvement.fg";
 	String TABLEENTRY_DECLINE_FG 		= "tableEntry.decline.fg";
 	String RATING_BORDER_BELOW_LIMIT    = "rating_border_below_limit";

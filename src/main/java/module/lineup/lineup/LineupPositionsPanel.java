@@ -432,7 +432,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		assistantPanel.addToAssistant(m_clLeftForward);
 
 		// Captain and setpieces
-
 		constraints.gridx = 0;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;

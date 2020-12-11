@@ -6,8 +6,6 @@ import core.datatype.CBItem;
 import core.gui.HOMainFrame;
 import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
@@ -19,12 +17,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Objects;
 import javax.swing.*;
-
 import static core.util.Helper.getTranslation;
+import static module.lineup.LineupPanel.TITLE_FG;
 
 public final class LineupSettingsPanel extends ImagePanel implements Refreshable, ItemListener {
 
-	private final static Color TITLE_FG = ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG);
 	private final LineupRatingPanel ratingPanel;
 
 	private final JComboBox<CBItem> m_jcbTeamConfidence = new JComboBox<>(TeamConfidence.ITEMS);

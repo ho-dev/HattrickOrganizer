@@ -41,7 +41,7 @@ public class SolarizedLightTheme extends BaseTheme {
             ThemeManager.instance().put(HOColorName.LABEL_FG, defaults.getColor("Label.foreground"));
             ThemeManager.instance().put(HOColorName.PANEL_BG, defaults.getColor("background"));
             ThemeManager.instance().put(HOColorName.TABLEENTRY_BG, defaults.getColor("Label.background").brighter());
-
+            ThemeManager.instance().put(HOColorName.BACKGROUND_CONTAINER, defaults.getColor("backgroundContainer"));
 
             // Smileys
             ThemeManager.instance().put(HOColorName.SMILEYS_COLOR, defaults.getColor("Label.foreground"));
@@ -82,7 +82,7 @@ public class SolarizedLightTheme extends BaseTheme {
             ThemeManager.instance().put(HOColorName.START_ASSISTANT, defaults.getColor("palette.forest"));
             ThemeManager.instance().put(HOColorName.CLEAR_LINEUP, defaults.getColor("palette.red"));
             ThemeManager.instance().put(HOColorName.LINEUP_COLOR, defaults.getColor("palette.brown"));
-            ThemeManager.instance().put(HOColorName.LINEUP_HIGHLIGHT_FG, defaults.getColor("palette.blue"));
+            ThemeManager.instance().put(HOColorName.LINEUP_HIGHLIGHT_FG, defaults.getColor("palette.brown"));
 
             return true;
 

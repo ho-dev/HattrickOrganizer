@@ -2,7 +2,6 @@ package module.lineup.ratings;
 
 import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
-import core.gui.HOMainFrame;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ComboBoxTitled;
 import core.gui.comp.panel.RasenPanel;
@@ -34,18 +33,18 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import javax.swing.*;
 import javax.swing.border.Border;
+import static module.lineup.LineupPanel.TITLE_FG;
 
 
 public final class LineupRatingPanel extends RasenPanel implements core.gui.Refreshable{
 
     private final MinuteTogglerPanel m_jpMinuteToggler = new MinuteTogglerPanel(this);
-    private final static Color LABEL_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
+    private final static Color LABEL_BG = ThemeManager.getColor(HOColorName.PANEL_BG);
     private final static Color LABEL_FG = ThemeManager.getColor(HOColorName.LEAGUE_FG);
     private final static Color BAD_LABEL_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_DECLINE_FG);
-    private final static Color TITLE_FG = ThemeManager.getColor(HOColorName.BLUE);
-    private final Border BORDER_RATING_DEFAULT = BorderFactory.createMatteBorder(2, 2, 2, 2, ThemeManager.getColor(HOColorName.PANEL_BG));
-    private final Border BORDER_RATING_BELOW_LIMIT = BorderFactory.createMatteBorder(2, 2, 2, 2, ThemeManager.getColor(HOColorName.RATING_BORDER_BELOW_LIMIT));
-    private final Border BORDER_RATING_ABOVE_LIMIT = BorderFactory.createMatteBorder(2, 2, 2, 2, ThemeManager.getColor(HOColorName.RATING_BORDER_ABOVE_LIMIT));
+    private Border BORDER_RATING_DEFAULT = BorderFactory.createMatteBorder(3, 3, 3, 3, ThemeManager.getColor(HOColorName.PLAYER_POSITION_PANEL_BORDER));
+    private final Border BORDER_RATING_BELOW_LIMIT = BorderFactory.createMatteBorder(3, 3, 3, 3, ThemeManager.getColor(HOColorName.RATING_BORDER_BELOW_LIMIT));
+    private final Border BORDER_RATING_ABOVE_LIMIT = BorderFactory.createMatteBorder(3, 3, 3, 3, ThemeManager.getColor(HOColorName.RATING_BORDER_ABOVE_LIMIT));
     int hatstat;
     double m_dCentralAttackRating, m_dRightAttackRating, m_dLeftAttackRating, m_dMidfieldRating;
     double m_dCentralDefenseRating, m_dLeftDefenseRating, m_dRightDefenseRating, loddar;
@@ -585,7 +584,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         gbcRatingPanelLayout.anchor = GridBagConstraints.CENTER;
         gbcRatingPanelLayout.insets = new Insets(0, 0, 0, 0);
         JPanel jpRatingModelAndSharing = new JPanel(ratingPanelLayout);
-        jpRatingModelAndSharing.setBackground(LABEL_BG);
+        jpRatingModelAndSharing.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
         jpRatingModelAndSharing.setBorder(BORDER_RATING_DEFAULT);
 
 
@@ -598,7 +597,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         ratingPanelLayout.setConstraints(m_jpPredictionModel, gbcRatingPanelLayout);
         jpRatingModelAndSharing.add(m_jpPredictionModel);
 
-        m_jbFeedbackButton.setIcon(ImageUtilities.getSvgIcon(HOIconName.UPLOAD, Map.of("strokeColor", HOColorName.BLUE), 24, 24));
+        m_jbFeedbackButton.setIcon(ImageUtilities.getSvgIcon(HOIconName.UPLOAD, Map.of("strokeColor", TITLE_FG), 24, 24));
         m_jbFeedbackButton.addActionListener(e -> new FeedbackPanel());
         m_jbFeedbackButton.setPreferredSize(new Dimension(24, 24));
         m_jbFeedbackButton.setMinimumSize(new Dimension(24, 24));
@@ -612,7 +611,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         ratingPanelLayout.setConstraints(m_jbFeedbackButton, gbcRatingPanelLayout);
         jpRatingModelAndSharing.add(m_jbFeedbackButton);
 
-        m_jbCopyRatingButton.setIcon(ImageUtilities.getCopyIcon(22, ThemeManager.getColor(HOColorName.BLUE)));
+        m_jbCopyRatingButton.setIcon(ImageUtilities.getCopyIcon(22, TITLE_FG));
         m_jbCopyRatingButton.addActionListener(new CopyListener(this));
         m_jbCopyRatingButton.setBorderPainted(false);
         m_jbCopyRatingButton.setContentAreaFilled(false);

@@ -33,9 +33,9 @@ public class ComboBoxTitled extends JPanel {
      */
     private void initComponents() {
 
-        Color bgColor = m_bInverseColor ? ThemeManager.getColor(HOColorName.TABLEENTRY_BG) : ThemeManager.getColor(HOColorName.PANEL_BG);
-        Color bgCBColor = m_bInverseColor ? ThemeManager.getColor(HOColorName.PANEL_BG) : ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
-        Color borderColor = m_bInverseColor ? ThemeManager.getColor(HOColorName.PANEL_BG) : ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
+        Color bgColor = m_bInverseColor ? ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER) : ThemeManager.getColor(HOColorName.PANEL_BG);
+        Color bgCBColor = m_bInverseColor ? ThemeManager.getColor(HOColorName.PANEL_BG) : ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER);
+        Color borderColor = m_bInverseColor ? ThemeManager.getColor(HOColorName.PANEL_BG) : ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER);
 
         setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, borderColor));
 

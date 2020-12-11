@@ -22,7 +22,7 @@ import java.awt.event.ItemListener;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
-
+import static module.lineup.LineupPanel.TITLE_FG;
 import static core.util.Helper.getTranslation;
 
 
@@ -30,8 +30,6 @@ import static core.util.Helper.getTranslation;
 public class LineupAssistantPanel extends ImagePanel implements Refreshable, ActionListener, ItemListener {
 
 	UserParameter userParameter = core.model.UserParameter.instance();
-
-	private final static Color TITLE_FG = ThemeManager.getColor(HOColorName.BLUE);
 
 	private final JCheckBox m_jcbxNotLast = new JCheckBox("",	userParameter.aufstellungsAssistentPanel_notLast);
 
@@ -350,10 +348,8 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 	public Map<Integer, Boolean> getPositionStatuses() {
 		HashMap<Integer, Boolean> returnMap = new HashMap<Integer, Boolean>();
-		Iterator<Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay>> it = positions
-				.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry = it.next();
+		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions
+				.entrySet()) {
 			returnMap.put(entry.getKey().getPositionsID(), entry.getValue().isSelected());
 		}
 
@@ -539,10 +535,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		for(int i = 0; i < buttons.length; i++){
 			buttons[i].setToolTipText(getTranslation(tooltips[i]));
 			buttons[i].addActionListener(this);
-			buttons[i].setBorderPainted(false);
-			buttons[i].setBorder(null);
-			buttons[i].setMargin(new Insets(6, 6, 0, 6));
-			buttons[i].setContentAreaFilled(false);
+			buttons[i].setMargin(new Insets(6, 6, 6, 6));
 			jpButtons.add(buttons[i]);
 		}
 

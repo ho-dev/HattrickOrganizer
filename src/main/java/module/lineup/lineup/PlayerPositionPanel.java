@@ -129,7 +129,6 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         m_jcbPlayer.addFocusListener(this);
         m_jcbPlayer.setMaximumRowCount(10);
         m_jcbPlayer.setRenderer(new PlayerCBItemRenderer());
-        m_jcbPlayer.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
 
         //Show only if more than one tactic is possible
         if (m_jcbTactic.getItemCount() > 1) {
@@ -139,11 +138,9 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
             constraints.gridy = 2;
             constraints.insets = new Insets(2, 4, 5, 4);
-            m_jcbTactic.setBackground(m_jcbPlayer.getBackground());
             jlp.add(m_jcbTactic, constraints, layerIndex);
         }
         else {
-
             constraints.insets = new Insets(2, 4, 5, 4);
             jlp.add(m_jcbPlayer, constraints, layerIndex);
         }

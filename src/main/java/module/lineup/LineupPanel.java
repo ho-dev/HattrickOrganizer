@@ -2,6 +2,8 @@ package module.lineup;
 
 import core.gui.HOMainFrame;
 import core.gui.Updatable;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 import core.model.UserParameter;
 import core.model.player.Player;
 import module.lineup.assistant.LineupAssistantPanel;
@@ -9,9 +11,7 @@ import module.lineup.lineup.LineupPositionsPanel;
 import module.lineup.ratings.LineupRatingPanel;
 import module.playerOverview.PlayerTable;
 import module.playerOverview.LineupPlayersTableNameColumn;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,7 @@ import javax.swing.event.ListSelectionListener;
  */
 public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
+	public final static Color TITLE_FG = ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG);
 	private LineupPositionsPanel lineupPositionsPanel;
 	private LineupPlayersTable lineupPlayersTable;
 	private LineupRatingAssistantPanel lineupRatingAssistantPanel;
