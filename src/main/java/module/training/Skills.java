@@ -81,6 +81,7 @@ public class Skills {
     8	Passing
      */
     public enum ScoutCommentSkillTypeID {
+        AVERAGE(0),
         KEEPER(1),
         NOT_USED(2),
         DEFENDING(3),

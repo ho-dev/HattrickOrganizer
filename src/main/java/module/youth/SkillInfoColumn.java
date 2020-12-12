@@ -17,9 +17,9 @@ public class SkillInfoColumn extends JSlider implements IHOTableEntry {
         this.skillInfo = info;
         this.setExtent((int) (10*info.getCurrentValue()) - getValue());
         this.setToolTipText(info.toString());
-        this.setLabelTable(new Hashtable<Integer,String>(){{
-            put(getValue(), String.format("%,.2f", info.getStartValue()));
-            put(getValue()+getExtent(), String.format("%.2f", info.getCurrentLevel()));
+        this.setLabelTable(new Hashtable<Integer,JLabel>(){{
+            put(getValue(), new JLabel(String.format("%,.2f", info.getStartValue())));
+            put(getValue()+getExtent(), new JLabel(String.format("%.2f", info.getCurrentLevel())));
         }});
     }
 

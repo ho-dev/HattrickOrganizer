@@ -583,8 +583,15 @@ public class YouthPlayer {
             scoutComment.text = properties.getProperty(prefix+"text", "");
             scoutComment.type = CommentType.valueOf(getInteger(properties,prefix+"type"));
             scoutComment.variation = getInteger(properties,prefix+"variation");
-            scoutComment.skillType = ScoutCommentSkillTypeID.valueOf(getInteger(properties,prefix+"skilltype"));
-            scoutComment.skillLevel = getInteger(properties,prefix+"skilllevel");
+            if ( scoutComment.type == CommentType.AVERAGE_SKILL_LEVEL){
+                // Average comment stores skill level in skillType
+                scoutComment.skillType = ScoutCommentSkillTypeID.AVERAGE;
+                scoutComment.skillLevel = getInteger(properties,prefix+"skilltype");
+            }
+            else {
+                scoutComment.skillType = ScoutCommentSkillTypeID.valueOf(getInteger(properties,prefix+"skilltype"));
+                scoutComment.skillLevel = getInteger(properties,prefix+"skilllevel");
+            }
             this.scoutComments.add(scoutComment);
             return true;
         }

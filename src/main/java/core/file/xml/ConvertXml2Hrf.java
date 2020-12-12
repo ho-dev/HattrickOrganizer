@@ -274,7 +274,7 @@ public class ConvertXml2Hrf {
 
 		// youth players
 		if ( youthplayers != null){
-			createYouthPlayers(youthplayers, buffer);
+			appendYouthPlayers(youthplayers, buffer);
 			HOMainFrame.instance().setWaitInformation(97);
 		}
 
@@ -929,80 +929,80 @@ public class ConvertXml2Hrf {
 	}
 
 	/**
-	 * Create youth player data.
+	 * Append youth player data to buffer
 	 */
-	private static void createYouthPlayers(List<MyHashtable> playersData, StringBuilder buffer) {
+	private static void appendYouthPlayers(List<MyHashtable> playersData, StringBuilder buffer) {
 
 		for (var player: playersData ) {
 
 			buffer.append("[youthplayer").append(player.get("YouthPlayerID")).append(']').append('\n');
 
-			createHRFLine(buffer, player, "FirstName");
-			createHRFLine(buffer, player, "NickName");
-			createHRFLine(buffer, player, "LastName");
-			createHRFLine(buffer, player, "Age");
-			createHRFLine(buffer, player, "AgeDays");
-			createHRFLine(buffer, player, "ArrivalDate");
-			createHRFLine(buffer, player, "CanBePromotedIn");
-			createHRFLine(buffer, player, "PlayerNumber");
-			createHRFLine(buffer, player, "Statement");
-			createHRFLine(buffer, player, "OwnerNotes");
-			createHRFLine(buffer, player, "PlayerCategoryID");
+			appendHRFLine(buffer, player, "FirstName");
+			appendHRFLine(buffer, player, "NickName");
+			appendHRFLine(buffer, player, "LastName");
+			appendHRFLine(buffer, player, "Age");
+			appendHRFLine(buffer, player, "AgeDays");
+			appendHRFLine(buffer, player, "ArrivalDate");
+			appendHRFLine(buffer, player, "CanBePromotedIn");
+			appendHRFLine(buffer, player, "PlayerNumber");
+			appendHRFLine(buffer, player, "Statement");
+			appendHRFLine(buffer, player, "OwnerNotes");
+			appendHRFLine(buffer, player, "PlayerCategoryID");
 
-			createHRFLine(buffer, player, "Cards");
-			createHRFLine(buffer, player, "InjuryLevel");
-			createHRFLine(buffer, player, "Specialty");
-			createHRFLine(buffer, player, "CareerGoals");
-			createHRFLine(buffer, player, "CareerHattricks");
-			createHRFLine(buffer, player, "LeagueGoals");
-			createHRFLine(buffer, player, "FriendlyGoals");
+			appendHRFLine(buffer, player, "Cards");
+			appendHRFLine(buffer, player, "InjuryLevel");
+			appendHRFLine(buffer, player, "Specialty");
+			appendHRFLine(buffer, player, "CareerGoals");
+			appendHRFLine(buffer, player, "CareerHattricks");
+			appendHRFLine(buffer, player, "LeagueGoals");
+			appendHRFLine(buffer, player, "FriendlyGoals");
 
 			for ( var skillId: YouthPlayer.skillIds){
-				createHRFSkillLines(buffer, player, skillId);
+				appendHRFSkillLines(buffer, player, skillId);
 			}
 
-			createHRFLine(buffer, player, "ScoutId");
-			createHRFLine(buffer, player, "ScoutName");
-			createHRFLine(buffer, player, "ScoutingRegionID");
+			appendHRFLine(buffer, player, "ScoutId");
+			appendHRFLine(buffer, player, "ScoutName");
+			appendHRFLine(buffer, player, "ScoutingRegionID");
 
-			for ( int i=0; createScoutComment(buffer, player, i); i++);
+			for (int i = 0; appendScoutComment(buffer, player, i); i++);
 
-			createHRFLine(buffer, player, "YouthMatchID");
-			createHRFLine(buffer, player, "YouthMatchDate");
-			createHRFLine(buffer, player, "PositionCode");
-			createHRFLine(buffer, player, "PlayedMinutes");
-			createHRFLine(buffer, player, "Rating");
+			appendHRFLine(buffer, player, "YouthMatchID");
+			appendHRFLine(buffer, player, "YouthMatchDate");
+			appendHRFLine(buffer, player, "PositionCode");
+			appendHRFLine(buffer, player, "PlayedMinutes");
+			appendHRFLine(buffer, player, "Rating");
 		}
 	}
 
-	private static boolean createScoutComment(StringBuilder buffer, MyHashtable player, int i) {
+	private static boolean appendScoutComment(StringBuilder buffer, MyHashtable player, int i) {
 		var prefix = "ScoutComment"+i;
 
 		var text = player.get(prefix+"Text");
 		if ( text != null){
-			createHRFLine(buffer, player, prefix+"Text");
-			createHRFLine(buffer, player, prefix+"Type");
-			createHRFLine(buffer, player, prefix+"Variation");
-			createHRFLine(buffer, player, prefix+"SkillType");
-			createHRFLine(buffer, player, prefix+"SkillLevel");
+			appendHRFLine(buffer, player, prefix+"Text");
+			appendHRFLine(buffer, player, prefix+"Type");
+			appendHRFLine(buffer, player, prefix+"Variation");
+			appendHRFLine(buffer, player, prefix+"SkillType");
+			appendHRFLine(buffer, player, prefix+"SkillLevel");
 			return true;
 		}
 		return false;
 	}
 
-	private static void createHRFSkillLines(StringBuilder buffer, MyHashtable player, Skills.HTSkillID skillId) {
+	private static void appendHRFSkillLines(StringBuilder buffer, MyHashtable player, Skills.HTSkillID skillId) {
 		var skill = skillId.toString() + "Skill";
-		createHRFLine(buffer, player, skill);
-		createHRFLine(buffer, player, skill+"IsAvailable");
-		createHRFLine(buffer, player, skill+"IsMaxReached");
-		createHRFLine(buffer, player, skill+"MayUnlock");
+		appendHRFLine(buffer, player, skill);
+		appendHRFLine(buffer, player, skill+"IsAvailable");
+		appendHRFLine(buffer, player, skill+"IsMaxReached");
+		appendHRFLine(buffer, player, skill+"MayUnlock");
 		skill += "Max";
-		createHRFLine(buffer, player, skill);
-		createHRFLine(buffer, player, skill+"IsAvailable");
-		createHRFLine(buffer, player, skill+"MayUnlock");
+		appendHRFLine(buffer, player, skill);
+		appendHRFLine(buffer, player, skill+"IsAvailable");
+		appendHRFLine(buffer, player, skill+"MayUnlock");
 	}
 
-	private static void createHRFLine(StringBuilder buffer, MyHashtable player, String key) {
+	private static void appendHRFLine(StringBuilder buffer, MyHashtable player, String key) {
 		buffer.append(key).append("=").append(player.get(key)).append('\n');
 	}
 
