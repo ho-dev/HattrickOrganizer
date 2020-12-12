@@ -244,7 +244,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 	}
 
 	private void initBooleans() {
-		put(IMAGEPANEL_BG_PAINTED, Boolean.TRUE);
+		put(IMAGEPANEL_BG_PAINTED, Boolean.FALSE);
 
 	}
 
@@ -339,6 +339,13 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LINEUP_PLAYER_SUB, new Color(220, 220, 220));
 		put(LINEUP_BG_BUTTONS, new Color(144, 238, 144));
 		put(WARNING_ICON_CB_COLOR, Color.RED);
+		put(HOColorName.RATING_BORDER_BELOW_LIMIT, new Color(255, 0, 0));
+		put(HOColorName.RATING_BORDER_ABOVE_LIMIT, new Color(0, 0, 225));
+
+		put(HOColorName.START_ASSISTANT, new Color(34, 139, 34));
+		put(HOColorName.CLEAR_LINEUP, new Color(255, 0, 0));
+		put(HOColorName.LINEUP_COLOR, new Color(0, 0, 139));
+		put(HOColorName.LINEUP_HIGHLIGHT_FG, new Color(0, 0, 139));
 
 		// shirts
 		put(SHIRT_KEEPER, "black");

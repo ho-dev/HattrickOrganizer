@@ -1,8 +1,7 @@
 package core.gui.comp.renderer;
 
-import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.IHOTableEntry;
-
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -11,8 +10,9 @@ import javax.swing.table.TableCellRenderer;
 public class BooleanTableCellRenderer extends JCheckBox implements TableCellRenderer {
 
 	public BooleanTableCellRenderer() {
-		this.setOpaque(true);
-		this.setBackground(Color.RED);
+		setOpaque(true);
+		setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
+		setHorizontalAlignment(SwingConstants.CENTER);
 	}
 
 	public Component getTableCellRendererComponent(JTable table, Object value,
@@ -21,11 +21,6 @@ public class BooleanTableCellRenderer extends JCheckBox implements TableCellRend
 		boolean boolValue = (Boolean) value;
 		setSelected(boolValue);
 
-		System.out.println(row + " , " + column + ":  " +  value.getClass().toString() + " " + value + "" + this.getBackground());
-		System.out.println("-----------------------------------");
-
-		setBackground(Color.RED);
-		setHorizontalAlignment(SwingConstants.CENTER);
 		return this;
 	}
 

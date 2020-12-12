@@ -705,7 +705,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		parameter.aufstellungsAssistentPanel_gesperrt = lineupAssistantPanel.isIgnoreSuspended();
 		parameter.aufstellungsAssistentPanel_notLast = lineupAssistantPanel.isExcludeLastMatch();
 
-		// SpielerÜbersichtsPanel
+		// PlayerOverviewPanel
 		if (getTabbedPane().isModuleTabVisible(IModule.PLAYEROVERVIEW)) {
 			final int[] sup = getSpielerUebersichtPanel().getDividerLocations();
 			parameter.spielerUebersichtsPanel_horizontalLeftSplitPane = sup[0];

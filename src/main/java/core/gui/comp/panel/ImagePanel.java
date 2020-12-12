@@ -1,70 +1,47 @@
-// %556564099:de.hattrickorganizer.gui.templates%
 package core.gui.comp.panel;
 
 import core.gui.theme.HOBooleanName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-
 import java.awt.TexturePaint;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-
 import javax.swing.JPanel;
 
 
-/**
- * JPanel mit HintergrundGrafik für Fenster
- *
- * @author Volker Fischer
- * @version 0.2.1a 28.02.02
- */
-public class ImagePanel extends JPanel {
-    //~ Static fields/initializers -----------------------------------------------------------------
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 8960221838823071903L;
+public class ImagePanel extends JPanel {
+
 
     public static BufferedImage background;
 
-    //~ Instance fields ----------------------------------------------------------------------------
 
     private boolean m_bPrint;
 
-    //~ Constructors -------------------------------------------------------------------------------
-
-    /**
-     * Creates a new ImagePanel object.
-     */
     public ImagePanel() {
         super();
         init(false);
     }
 
-    /**
-     * Creates a new ImagePanel object.
-     */
+
     public ImagePanel(java.awt.LayoutManager layout) {
         super(layout);
         init(false);
     }
 
-    /**
-     * Creates a new ImagePanel object.
-     */
-    public ImagePanel(boolean forprint) {
+
+    public ImagePanel(boolean bPrint) {
         super();
-        init(forprint);
+        init(bPrint);
     }
 
     /**
      * Creates a new ImagePanel object.
      */
-    public ImagePanel(java.awt.LayoutManager layout, boolean forprint) {
+    public ImagePanel(java.awt.LayoutManager layout, boolean bPrint) {
         super(layout);
-        init(forprint);
+        init(bPrint);
     }
 
     //~ Methods ------------------------------------------------------------------------------------
