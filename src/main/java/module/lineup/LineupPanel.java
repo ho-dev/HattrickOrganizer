@@ -39,8 +39,8 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	}
 
 	public void setPlayer(int idPlayer) {
-		lineupPlayersTableNameColumn.setSpieler(idPlayer);
-		lineupPlayersTable.setSpieler(idPlayer);
+		lineupPlayersTableNameColumn.setPlayer(idPlayer);
+		lineupPlayersTable.setPlayer(idPlayer);
 	}
 
 	public void refresh() {
@@ -189,7 +189,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 					if (targetTable.getSelectedRow() != row) {
 						targetTable.setRowSelectionInterval(row, row);
 					}
-					Player player = ((PlayerTable) sourceTable).getSpieler(row);
+					Player player = ((PlayerTable) sourceTable).getPlayer(row);
 					if (player != null) {
 						HOMainFrame.instance().setActualSpieler(player);
 					}

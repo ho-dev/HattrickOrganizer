@@ -5,6 +5,8 @@ import core.gui.theme.GroupTeamFactory;
 import core.gui.theme.ImageUtilities;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.SwingConstants;
 
 
@@ -42,7 +44,7 @@ public class SmilieEntry extends DoubleLabelEntries {
     }
 
     @Override
-	public final int compareTo(IHOTableEntry obj) {
+	public final int compareTo(@NotNull IHOTableEntry obj) {
         if (obj instanceof SmilieEntry) {
             final SmilieEntry entry = (SmilieEntry) obj;
 
@@ -54,7 +56,6 @@ public class SmilieEntry extends DoubleLabelEntries {
                         || entry.getPlayer().getTeamInfoSmilie().equals(""))
                         && ((getPlayer().getTeamInfoSmilie() == null)
                         || getPlayer().getTeamInfoSmilie().equals(""))) {
-                    ergebnis = 0;
                 } else if ((entry.getPlayer().getTeamInfoSmilie() == null)
                         || entry.getPlayer().getTeamInfoSmilie().equals("")) {
                     ergebnis = 1;

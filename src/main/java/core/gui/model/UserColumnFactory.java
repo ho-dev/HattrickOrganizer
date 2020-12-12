@@ -4,7 +4,6 @@ import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.comp.entry.*;
-import core.gui.comp.table.UserColumn;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
@@ -16,74 +15,27 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.model.player.YouthPlayer;
 import core.util.Helper;
 import module.playerOverview.SpielerStatusLabelEntry;
-
 import java.awt.Color;
 import java.sql.Timestamp;
-
 import javax.swing.SwingConstants;
 import javax.swing.table.TableColumn;
 
 
-/**
- * Create the userColumns
- *
- * @author Thorsten Dietz
- */
 final public class UserColumnFactory {
 
-    //~ Static fields/initializers -----------------------------------------------------------------
-    /**
-     * id from the column NAME
-     **/
     public static final int NAME = 1;
-
-    /**
-     * id from the column BEST_POSITION
-     **/
     public static final int BEST_POSITION = 40;
-
-    /**
-     * id from the column LINUP
-     **/
     public static final int LINUP = 50;
-
-    /**
-     * id from the column GROUP
-     **/
     public static final int GROUP = 60;
-
-    /**
-     * id from the column ID
-     **/
     public static final int ID = 440;
-
-    /**
-     * id from the column DATUM
-     **/
     public static final int DATUM = 450;
-
-    /**
-     * id from the column RATING
-     **/
     public static final int RATING = 435;
-
-    /**
-     * id from the column DATUM
-     **/
     public static final int AUTO_LINEUP = 510;
-
-
-    /**
-     * id from the column BEST_POSITION
-     **/
     public static final int LAST_MATCH = 461;
 
-    /**
-     * @return PlayerCBItem[]
-     */
+
     public static PlayerCBItem[] createPlayerCBItemArray() {
         final PlayerCBItem[] playerCBItemArray = new PlayerCBItem[5];
         playerCBItemArray[0] = new PlayerCBItem(590, "ls.team.teamspirit") {

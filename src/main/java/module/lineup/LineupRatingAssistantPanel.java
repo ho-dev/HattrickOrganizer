@@ -66,8 +66,8 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
     }
 
     public void refresh(){
+        lineupSettingsPanel.refresh(false);
         lineupRatingPanel.refresh();
-        lineupSettingsPanel.refresh();
     }
 
     @Override

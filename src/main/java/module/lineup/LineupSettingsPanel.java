@@ -225,6 +225,18 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		addItemListeners();
 	}
 
+	public void refresh(Boolean bIncludeRatingPanel) {
+		if(bIncludeRatingPanel) {
+			refresh();
+		}
+		else{
+			removeItemListeners();
+			setLabels();
+			addItemListeners();
+		}
+	}
+
+
 	private void initComponents() {
 		final GridBagLayout layout = new GridBagLayout();
 		final GridBagConstraints constraints = new GridBagConstraints();

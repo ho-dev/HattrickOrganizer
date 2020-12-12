@@ -13,9 +13,7 @@ import javax.swing.*;
  */
 public class WeatherListCellRenderer implements ListCellRenderer<Object> {
 
-    public ColorLabelEntry m_clEntry = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    												ThemeManager.getColor(HOColorName.TABLEENTRY_BG),
-                                                           SwingConstants.LEFT);
+    public ColorLabelEntry m_clEntry = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,	ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER), SwingConstants.LEFT);
 
     public javax.swing.JLabel m_jlLeer = new javax.swing.JLabel(" ");
 

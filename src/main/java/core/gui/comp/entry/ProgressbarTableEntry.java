@@ -2,6 +2,7 @@
 package core.gui.comp.entry;
 
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
 import java.text.NumberFormat;
@@ -228,7 +229,7 @@ public class ProgressbarTableEntry extends AbstractHOTableEntry {
     /**
      * Implement compareTo() for sorting.
      */
-	public final int compareTo(IHOTableEntry o) {
+	public final int compareTo(@NotNull IHOTableEntry o) {
         if (o instanceof ProgressbarTableEntry) {
             final ProgressbarTableEntry entry = (ProgressbarTableEntry) o;
 

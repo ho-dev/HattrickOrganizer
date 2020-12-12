@@ -588,19 +588,19 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 			// StyleOfPlay changed (directly or indirectly)
 			m_iStyleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "ERROR: Style Of Play is null")).getId();
 			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(m_iStyleOfPlay);
-			HOMainFrame.instance().getLineupPanel().getLineupRatingPanel().setRatings();
+			m_clLineupPanel.getLineupRatingPanel().refresh();
 		}
 		else if (e.getSource().equals(m_jcbTeamAttitude)) {
 			// Attitude changed
 			m_iAttitude = ((CBItem) Objects.requireNonNull(m_jcbTeamAttitude.getSelectedItem(), "ERROR: Attitude is null")).getId();
 			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setAttitude(m_iAttitude);
-			HOMainFrame.instance().getLineupPanel().getLineupRatingPanel().setRatings();
+			m_clLineupPanel.getLineupRatingPanel().refresh();
 		}
 		else if (e.getSource().equals(m_jcbTactic)) {
 			// Tactic changed
 			m_iTactic = ((CBItem) Objects.requireNonNull(m_jcbTactic.getSelectedItem(), "ERROR: Tactic type is null")).getId();
 			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setTacticType(m_iTactic);
-			HOMainFrame.instance().getLineupPanel().getLineupRatingPanel().setRatings();
+			m_clLineupPanel.getLineupRatingPanel().refresh();
 		}
 	};
 

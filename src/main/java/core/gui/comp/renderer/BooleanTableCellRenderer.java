@@ -1,25 +1,30 @@
 package core.gui.comp.renderer;
 
 import core.gui.comp.entry.ColorLabelEntry;
+import core.gui.comp.entry.IHOTableEntry;
 
-import java.awt.Component;
-
-import javax.swing.JCheckBox;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import java.awt.*;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 
 
 public class BooleanTableCellRenderer extends JCheckBox implements TableCellRenderer {
 
-	private static final long serialVersionUID = 1232313L;
+	public BooleanTableCellRenderer() {
+		this.setOpaque(true);
+		this.setBackground(Color.RED);
+	}
 
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
-		boolean b = ((Boolean)value).booleanValue();
-		setSelected(b);
-		setOpaque(true);
-		setBackground(isSelected?HODefaultTableCellRenderer.SELECTION_BG:ColorLabelEntry.BG_STANDARD);
+
+		boolean boolValue = (Boolean) value;
+		setSelected(boolValue);
+
+		System.out.println(row + " , " + column + ":  " +  value.getClass().toString() + " " + value + "" + this.getBackground());
+		System.out.println("-----------------------------------");
+
+		setBackground(Color.RED);
 		setHorizontalAlignment(SwingConstants.CENTER);
 		return this;
 	}

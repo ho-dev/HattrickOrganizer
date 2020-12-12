@@ -40,8 +40,12 @@ public class SolarizedLightTheme extends BaseTheme {
             ThemeManager.instance().put(HOColorName.TABLEENTRY_FG, defaults.getColor("Label.foreground"));
             ThemeManager.instance().put(HOColorName.LABEL_FG, defaults.getColor("Label.foreground"));
             ThemeManager.instance().put(HOColorName.PANEL_BG, defaults.getColor("background"));
-            ThemeManager.instance().put(HOColorName.TABLEENTRY_BG, defaults.getColor("Label.background").brighter());
-            ThemeManager.instance().put(HOColorName.BACKGROUND_CONTAINER, defaults.getColor("backgroundContainer"));
+            ThemeManager.instance().put(HOColorName.TABLEENTRY_BG, Color.WHITE);
+            ThemeManager.instance().put(HOColorName.BACKGROUND_CONTAINER, Color.WHITE);
+//            ThemeManager.instance().put(HOColorName.PLAYER_SKILL_SPECIAL_BG, new Color(56, 76, 53));
+//            ThemeManager.instance().put(HOColorName.PLAYER_SKILL_BG, new Color(95, 86, 38));
+            ThemeManager.instance().put(HOColorName.TABLE_SELECTION_FG, defaults.getColor("Label.foreground"));
+            ThemeManager.instance().put(HOColorName.TABLE_SELECTION_BG, Color.WHITE);
 
             // Smileys
             ThemeManager.instance().put(HOColorName.SMILEYS_COLOR, defaults.getColor("Label.foreground"));

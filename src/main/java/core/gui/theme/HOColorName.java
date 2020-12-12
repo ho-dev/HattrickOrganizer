@@ -140,7 +140,6 @@ public interface HOColorName {
 
 	String SEL_OVERLAY_SELECTION_BG	= "selectorOverlay.selected.bg";
 	String SEL_OVERLAY_BG 			= "selectorOverlay.bg";
-	String LINEUP_POS_MIN_BG 		= "lineup.pos.min.bg";
 	String LINEUP_POS_MIN_BORDER	= "lineup.pos.min.border";
 	String SUBST_CHANGED_VALUE_BG   = "substitution.changed.value.bg";
 	String SWAP_COLOR 				= "swap.color";

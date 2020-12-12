@@ -44,7 +44,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     private final JLabel m_jlPosition = new JLabel();
     private final SpielerCBItem m_clSelectedPlayer = new SpielerCBItem("", 0f, null, false, true);
     private final Updatable m_clUpdater;
-    private SpielerCBItem[] m_clCBItems = new SpielerCBItem[0];
+    private SpielerCBItem @Nullable [] m_clCBItems = new SpielerCBItem[0];
     private final int m_iPositionID;
 
     private int playerId = -1;
@@ -138,6 +138,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
             constraints.gridy = 2;
             constraints.insets = new Insets(2, 4, 5, 4);
+            m_jcbTactic.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
             jlp.add(m_jcbTactic, constraints, layerIndex);
         }
         else {
@@ -187,7 +188,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 }
 
                 //Adjust tactic values
-                setTaktik(getTactic(), player);
+                setTactic(getTactic(), player);
             } else if (itemEvent.getSource().equals(m_jcbTactic)) {
                 Objects.requireNonNull(lineup.getPositionById(m_iPositionID)).setTaktik(getTactic());
             }
@@ -275,7 +276,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                             (m_iPositionID < IMatchRoleID.keeper) || (m_iPositionID >= IMatchRoleID.startReserves));
                 }
 
-                setTaktik(position.getTaktik(), selectedPlayer);
+                setTactic(position.getTaktik(), selectedPlayer);
             }
         }
 
@@ -335,7 +336,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionById(m_iPositionID);
         if (position != null) {
             selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position.getSpielerId());
-            setTaktik(position.getTaktik(), selectedPlayer);
+            setTactic(position.getTaktik(), selectedPlayer);
         }
 
         setSpielerListe2(lPlayers, selectedPlayer, playerIDcorrespondingSub);
@@ -404,7 +405,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         //Listener wieder hinzu
         m_jcbPlayer.addItemListener(this);
 
-        setTaktik(getTactic(), aktuellerPlayer);
+        setTactic(getTactic(), aktuellerPlayer);
         setPlayerTooltip(m_clSelectedPlayer.getPlayer());
     }
 
@@ -428,12 +429,13 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         //Listener entfernen
         m_jcbPlayer.removeItemListener(this);
 
-        final DefaultComboBoxModel cbmodel = ((DefaultComboBoxModel) m_jcbPlayer.getModel());
+        final DefaultComboBoxModel<SpielerCBItem> cbModel = ((DefaultComboBoxModel<SpielerCBItem>) m_jcbPlayer.getModel());
 
         //Remove all items
-        cbmodel.removeAllElements();
+        cbModel.removeAllElements();
 
         //Ensure the number of m_clCBItems objects match what is needed
+        assert m_clCBItems != null;
         if (m_clCBItems.length != lSubs.size()) {
             SpielerCBItem[] tempCB = new SpielerCBItem[lSubs.size()];
 
@@ -458,12 +460,12 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         if (selectedPlayer != null) {
             for (Player p : lSubs) {
                 if (p.getSpielerID() == selectedPlayer.getSpielerID())
-                    cbmodel.addElement(createSpielerCBItem(m_clSelectedPlayer, selectedPlayer));
+                    cbModel.addElement(createSpielerCBItem(m_clSelectedPlayer, selectedPlayer));
             }
         }
 
         //No Player
-        cbmodel.addElement(oNullPlayer);
+        cbModel.addElement(oNullPlayer);
 
         //Sort Player List
         SpielerCBItem[] cbItems = new SpielerCBItem[lSubs.size()];
@@ -482,27 +484,27 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
         for (int i = 0; i < cbItems.length; i++) {
             //All Other players
-            cbmodel.addElement(cbItems[i]);
+            cbModel.addElement(cbItems[i]);
         }
 
         //Listener wieder hinzu
         m_jcbPlayer.addItemListener(this);
 
-        setTaktik(getTactic(), selectedPlayer);
+        setTactic(getTactic(), selectedPlayer);
     }
 
     /**
      * Set the current tactic
      */
-    private void setTaktik(byte taktik, @Nullable Player aktuellerPlayer) {
+    private void setTactic(byte tactic, @Nullable Player currentPlayer) {
         //remove listener
         m_jcbTactic.removeItemListener(this);
 
         //Update Tactic!
-        initTaktik(aktuellerPlayer);
+        initTaktik(currentPlayer);
 
         //Suche nach der Taktik
-        Helper.setComboBoxFromID(m_jcbTactic, taktik);
+        Helper.setComboBoxFromID(m_jcbTactic, tactic);
 
         //Listener hinzu
         m_jcbTactic.addItemListener(this);
@@ -532,9 +534,6 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 final String  nameForPosition1 = "<html> <font family=" + fontFamilly +  "size=" + fontSize + "pt>";
                 final String  nameForPosition2 = "</font> <font family=" + fontFamilly + "size=" + fontSize + "pt color=" + hexColor + ">&nbsp&nbsp";
                 final String  nameForPosition3 = "</font></html>";
-
-//                final String nameForPosition = MatchRoleID.getNameForPositionWithoutTactic(position.getPosition()) + " " + getTacticSymbol();
-
                 final String nameForPosition = nameForPosition1 + MatchRoleID.getNameForPositionWithoutTactic(position.getPosition()) + nameForPosition2 + getTacticSymbol() + nameForPosition3;
 
                 // Players on the lineup

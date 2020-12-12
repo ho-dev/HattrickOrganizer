@@ -10,6 +10,7 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.util.Helper;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -114,7 +115,7 @@ public class SkillEntry extends AbstractHOTableEntry {
     /**
      * Vergleich zum Sortieren
      */
-	public final int compareTo(IHOTableEntry obj) {
+	public final int compareTo(@NotNull IHOTableEntry obj) {
         if (obj instanceof SkillEntry) {
             final SkillEntry entry = (SkillEntry) obj;
 

@@ -7,6 +7,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.util.Helper;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -22,9 +23,9 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     public static final Color FG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
     public static final Color BG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
     public static final Color BG_PLAYERSPECIALVALUES = ThemeManager.getColor(HOColorName.PLAYER_SKILL_SPECIAL_BG);
-    public static final Color BG_SINGLEPLAYERVALUES = ThemeManager.getColor(HOColorName.PLAYER_SKILL_BG);//new Colour(255, 255, 200);
-    public static final Color BG_PLAYERSPOSITIONVALUES = ThemeManager.getColor(HOColorName.PLAYER_POS_BG);//new Colour(220, 220, 255);
-    public static final Color BG_PLAYERSSUBPOSITIONVALUES = ThemeManager.getColor(HOColorName.PLAYER_SUBPOS_BG);//new Colour(235, 235, 255);
+    public static final Color BG_SINGLEPLAYERVALUES = ThemeManager.getColor(HOColorName.PLAYER_SKILL_BG);
+    public static final Color BG_PLAYERSPOSITIONVALUES = ThemeManager.getColor(HOColorName.PLAYER_POS_BG);
+    public static final Color BG_PLAYERSSUBPOSITIONVALUES = ThemeManager.getColor(HOColorName.PLAYER_SUBPOS_BG);
 
     //~ Instance fields ----------------------------------------------------------------------------
     private Color m_clBGColor = ColorLabelEntry.BG_STANDARD;
@@ -285,7 +286,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      * Compare two ColorLabelEntry objects based on non negative number or text.
      */
     @Override
-    public final int compareTo(IHOTableEntry obj) {
+    public final int compareTo(@NotNull IHOTableEntry obj) {
         if (obj instanceof ColorLabelEntry) {
             final ColorLabelEntry entry = (ColorLabelEntry) obj;
 

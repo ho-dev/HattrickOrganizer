@@ -4,6 +4,7 @@ import core.gui.comp.entry.IHOTableEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.series.LigaTabellenEintrag;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +45,7 @@ public class FormLabel extends JLabel implements IHOTableEntry {
     }
 
     @Override
-    public int compareTo(IHOTableEntry obj) {
+    public int compareTo(@NotNull IHOTableEntry obj) {
         return 0;
     }
 

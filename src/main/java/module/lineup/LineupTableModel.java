@@ -7,13 +7,10 @@ import core.gui.model.PlayerColumn;
 import core.gui.model.UserColumnFactory;
 import core.model.player.Player;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 
 
 public class LineupTableModel extends HOTableModel {
-
-	private static final long serialVersionUID = 6706783648812506363L;
 
 	private List<Player> m_vPlayers;
 
@@ -29,22 +26,16 @@ public class LineupTableModel extends HOTableModel {
 		columns[48] = basic[1];
 
 		UserColumn[] skills = UserColumnFactory.createPlayerSkillArray();
-		int skillIndex = 9; // - 20
-		for (int i = 0; i < skills.length; i++) {
-			columns[skillIndex+i] = skills[i];
-		}
+		int skillIndex = 9;
+		System.arraycopy(skills, 0, columns, skillIndex, skills.length);
 
 		UserColumn[] positions = UserColumnFactory.createPlayerPositionArray();
-		int positionIndex = 23;//- 41
-		for (int i = 0; i < positions.length; i++) {
-			columns[positionIndex+i] = positions[i];
-		}
+		int positionIndex = 23;
+		System.arraycopy(positions, 0, columns, positionIndex, positions.length);
 
 		UserColumn[] goals = UserColumnFactory.createGoalsColumnsArray();
-		int goalsIndex = 42;//-45
-		for (int i = 0; i < goals.length; i++) {
-			columns[goalsIndex+i] = goals[i];
-		}
+		int goalsIndex = 42;
+		System.arraycopy(goals, 0, columns, goalsIndex, goals.length);
 
 		UserColumn[] add = UserColumnFactory.createPlayerAdditionalArray();
 		columns[1] = add[0];
@@ -58,7 +49,7 @@ public class LineupTableModel extends HOTableModel {
 		columns[21] = add[3];
 		columns[46] = add[7];
 		columns[47] = add[8];
-		columns[22] = add[9]; // lastmatch
+		columns[22] = add[9];
 	}
 
 	@Override
@@ -71,7 +62,7 @@ public class LineupTableModel extends HOTableModel {
 		return super.getColumnIndexOfDisplayedColumn(searchId);
 	}
 
-	public final @Nullable Player getSpieler(int id) {
+	public final @Nullable Player getPlayer(int id) {
 		if (id > 0) {
 			for(Player m_vPlayer : m_vPlayers) {
 				if (m_vPlayer.getSpielerID() == id) return m_vPlayer;
@@ -97,35 +88,33 @@ public class LineupTableModel extends HOTableModel {
 		m_clData = new Object[m_vPlayers.size()][tmpDisplayedColumns.length];
 
 		for (int i = 0; i < m_vPlayers.size(); i++) {
-			final Player aktuellerPlayer = (Player) m_vPlayers.get(i);
+			final Player aktuellerPlayer = m_vPlayers.get(i);
 
 			for (int j = 0; j < tmpDisplayedColumns.length; j++) {
 				if (tmpDisplayedColumns[j] instanceof PlayerColumn)
-					m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(
-							aktuellerPlayer, null);
+					m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(aktuellerPlayer, null);
 				if (tmpDisplayedColumns[j] instanceof BooleanColumn)
-					m_clData[i][j] = ((BooleanColumn) tmpDisplayedColumns[j])
-							.getValue(aktuellerPlayer);
+					m_clData[i][j] = ((BooleanColumn) tmpDisplayedColumns[j]).getValue(aktuellerPlayer);
 			}
 		}
 	}
 
 	/**
-	 * Passt nur die Aufstellung an
+	 * Triggered by changes in lineup
 	 */
 	public final void reInitData() {
 		UserColumn[] tmpDisplayedColumns = getDisplayedColumns();
 		for (int i = 0; i < m_vPlayers.size(); i++) {
-			final Player aktuellerPlayer = m_vPlayers.get(i);
+			final Player currentPlayer = m_vPlayers.get(i);
 
 			for (int j = 0; j < tmpDisplayedColumns.length; j++) {
 				if (tmpDisplayedColumns[j].getId() == UserColumnFactory.NAME
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.LINUP
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.BEST_POSITION
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.GROUP) {
-					m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(aktuellerPlayer, null);
+					m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(currentPlayer, null);
 				} else if (tmpDisplayedColumns[j].getId() == UserColumnFactory.AUTO_LINEUP) {
-					m_clData[i][j] = aktuellerPlayer.getCanBeSelectedByAssistant();
+					m_clData[i][j] = ((BooleanColumn) tmpDisplayedColumns[j]).getValue(currentPlayer);
 				}
 			}
 		}

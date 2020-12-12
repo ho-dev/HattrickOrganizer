@@ -328,7 +328,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		// lineup
 		put(SEL_OVERLAY_SELECTION_BG, new Color(10, 255, 10, 40));
 		put(SEL_OVERLAY_BG, new Color(255, 10, 10, 40));
-		put(LINEUP_POS_MIN_BG, PANEL_BG);
 		put(LINEUP_POS_MIN_BORDER, "light_gray");
 		put(SUBST_CHANGED_VALUE_BG, "lightGreen");
 		put(SWAP_COLOR, "forest_green");

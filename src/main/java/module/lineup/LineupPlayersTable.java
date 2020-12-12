@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.entry.ColorLabelEntry;
+import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.renderer.BooleanTableCellRenderer;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.TableSorter;
@@ -20,6 +21,9 @@ import core.net.HattrickLink;
 import core.util.Helper;
 import module.playerOverview.LineupPlayersTableNameColumn;
 import module.playerOverview.PlayerTable;
+import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTable;
@@ -27,39 +31,34 @@ import javax.swing.table.TableColumnModel;
 
 /**
  * Table displaying the players' details in Lineup tab.
- *
- * <p>The name of the players is displayed in {@link LineupPlayersTableNameColumn},
- * which is the same table class used in the Squad tab.</p>
+ * The name of the players is displayed in {@link LineupPlayersTableNameColumn},
+ * which is the same table class used in the Squad tab
  */
 public final class LineupPlayersTable extends JTable implements core.gui.Refreshable, PlayerTable {
-
-	private static final long serialVersionUID = -8295456454328467793L;
 
 	private LineupTableModel tableModel;
 	private TableSorter tableSorter;
 
 	protected LineupPlayersTable() {
 		super();
-
 		initModel();
-		setDefaultRenderer(Boolean.class, new BooleanTableCellRenderer());
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
+		setDefaultRenderer(Boolean.class, new BooleanTableCellRenderer());
 		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
-		setBackground(ColorLabelEntry.BG_STANDARD);
 		RefreshManager.instance().registerRefreshable(this);
 		initListeners();
 	}
 
 	@Override
-	public void setSpieler(int spielerid) {
-		int index = tableSorter.getRow4Spieler(spielerid);
+	public void setPlayer(int iPlayerID) {
+		int index = tableSorter.getRow4Spieler(iPlayerID);
 		if (index >= 0) {
 			this.setRowSelectionInterval(index, index);
 		}
 	}
 
 	@Override
-	public Player getSpieler(int row) {
+	public @Nullable Player getPlayer(int row) {
 		return this.tableSorter.getSpieler(row);
 	}
 
@@ -77,14 +76,6 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 	public void refresh() {
 		reInitModel();
 		repaint();
-	}
-
-	/**
-	 * Return width of BestPos column
-	 */
-	protected int getBestPosWidth() {
-		return getColumnModel().getColumn(getColumnModel().getColumnIndex(3))
-				.getWidth();
 	}
 
 	/**
@@ -145,10 +136,10 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 			targetColumn = Helper.sortintArray(targetColumn, 1);
 
 			if (targetColumn != null) {
-				for (int i = 0; i < targetColumn.length; i++) {
+				for (int[] ints : targetColumn) {
 					this.moveColumn(
-							getColumnModel().getColumnIndex(Integer.valueOf(targetColumn[i][0])),
-							targetColumn[i][1]);
+							getColumnModel().getColumnIndex(ints[0]),
+							ints[1]);
 				}
 			}
 

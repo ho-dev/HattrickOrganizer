@@ -73,7 +73,6 @@ public class SolarizedDarkTheme extends DarkTheme {
 //            ThemeManager.instance().put(HOColorName.LINEUP_HIGHLIGHT_FG, defaults.getColor("palette.blue"));
 
             // Lineup
-            ThemeManager.instance().put(HOColorName.LINEUP_POS_MIN_BG, blueishColour);
             ThemeManager.instance().put(HOColorName.LINEUP_RATING_BORDER, Color.GRAY);
 
             ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SELECTED, new Color(60, 63, 65));
@@ -87,7 +86,6 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.MATCHTYPE_INT_BG, new Color(50, 67, 67));
             ThemeManager.instance().put(HOColorName.MATCHTYPE_CUP_BG, new Color(56, 76, 53));
             ThemeManager.instance().put(HOColorName.MATCHTYPE_QUALIFIKATION_BG, new Color(83, 45, 45));
-
             ThemeManager.instance().put(HOColorName.MATCHTYPE_MASTERS_BG, new Color(80, 70, 43));
             ThemeManager.instance().put(HOColorName.MATCHTYPE_NATIONAL_BG, new Color(57, 54, 62));
             ThemeManager.instance().put(HOColorName.MATCHTYPE_TOURNAMENT_GROUP_BG, new Color(48, 54, 56));

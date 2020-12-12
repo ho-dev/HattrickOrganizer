@@ -7,6 +7,7 @@ import core.gui.theme.*;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import javax.swing.*;
@@ -120,7 +121,7 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     }
 
 
-    public final int compareTo(IHOTableEntry obj) {
+    public final int compareTo(@NotNull IHOTableEntry obj) {
         if (obj instanceof SpielerLabelEntry) {
             final SpielerLabelEntry entry = (SpielerLabelEntry) obj;
 

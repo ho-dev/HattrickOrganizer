@@ -7,6 +7,8 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.match.MatchType;
 import core.util.HOLogger;
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -149,7 +151,7 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         m_clComponent.add(jlabel);
     }
 
-	public final int compareTo(IHOTableEntry obj) {
+	public final int compareTo(@NotNull IHOTableEntry obj) {
         if (obj instanceof RatingTableEntry) {
             final RatingTableEntry entry = (RatingTableEntry) obj;
 

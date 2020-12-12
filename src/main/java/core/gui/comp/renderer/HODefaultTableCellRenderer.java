@@ -42,14 +42,11 @@ public class HODefaultTableCellRenderer implements javax.swing.table.TableCellRe
             component.setBackground(isSelected?SELECTION_BG:ColorLabelEntry.BG_STANDARD);
             component.setForeground(isSelected?SELECTION_FG:ColorLabelEntry.FG_STANDARD);
             return component;
-        }  else {
+        }
+        else {
             JComponent component;
-            
-            if (value != null) {
-                component = new JLabel(value.toString());
-            } else {
-                component = new JLabel("null");
-            }
+
+            component = new JLabel(value.toString());
 
             component.setOpaque(true);
             component.setBackground(isSelected?SELECTION_BG:ColorLabelEntry.BG_STANDARD);

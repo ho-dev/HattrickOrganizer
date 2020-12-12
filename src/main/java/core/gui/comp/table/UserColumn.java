@@ -1,17 +1,9 @@
 package core.gui.comp.table;
 
 import core.model.HOVerwaltung;
-
 import javax.swing.table.TableColumn;
 
 
-/**
- * Basic Class for all table columns.
- * 
- * @author Thorsten Dietz
- * @since 1.36
- *
- */
 public abstract class UserColumn {
 
 
@@ -37,24 +29,13 @@ public abstract class UserColumn {
 	
 	/** if a column is shown in the jtable. Only displayed columns are saved in db**/
 	protected boolean display = false;
-	
-	/**
-	 * constructor
-	 * @param id
-	 * @param name
-	 * @param tooltip
-	 */
+
 	protected UserColumn(int id,String name, String tooltip){
 		this.id = id;
 		columnName = name;
 		this.tooltip = tooltip;
 	}
-	
-	/**
-	 * constructor
-	 * @param id
-	 * @param name
-	 */
+
 	protected UserColumn(int id,String name){
 		this(id,name,name);
 	}

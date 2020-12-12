@@ -1,29 +1,23 @@
 package module.playerOverview;
 
-import core.db.DBManager;
-import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.TableSorter;
 import core.gui.model.ReduzedTableModel;
-import core.model.HOVerwaltung;
-import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.HattrickLink;
-
+import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class LineupPlayersTableNameColumn extends JTable implements Refreshable, PlayerTable {
 
-	private static final long serialVersionUID = -7686660400379157142L;
-	private TableSorter tableSorter;
+	private final TableSorter tableSorter;
 
 	/**
-	 * Nur Namensspalte anzeigen
-	 * 
+	 * Only the name column
 	 */
 	public LineupPlayersTableNameColumn(TableSorter model) {
 		super();
@@ -48,16 +42,14 @@ public class LineupPlayersTableNameColumn extends JTable implements Refreshable,
 		});
 	}
 
-	// ~ Methods
-	// ------------------------------------------------------------------------------------
 
 	@Override
-	public Player getSpieler(int row) {
+	public @Nullable Player getPlayer(int row) {
 		return this.tableSorter.getSpieler(row);
 	}
 
 	@Override
-	public final void setSpieler(int spielerid) {
+	public final void setPlayer(int spielerid) {
 		final int index = tableSorter.getRow4Spieler(spielerid);
 
 		if (index >= 0) {

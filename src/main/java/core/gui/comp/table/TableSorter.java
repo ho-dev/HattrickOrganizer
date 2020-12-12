@@ -155,7 +155,7 @@ public class TableSorter extends TableMap {
                 if (getModel() instanceof PlayerOverviewModel) {
                     return ((PlayerOverviewModel) getModel()).getSpieler(id);
                 } else if (getModel() instanceof LineupTableModel) {
-                    return ((LineupTableModel) getModel()).getSpieler(id);
+                    return ((LineupTableModel) getModel()).getPlayer(id);
                 } else {
                     throw new Exception("Tablemodel unbekannt!");
                 }
