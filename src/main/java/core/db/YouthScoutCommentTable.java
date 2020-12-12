@@ -58,7 +58,7 @@ public class YouthScoutCommentTable extends AbstractTable {
         return delete(where, values);
     }
 
-    public void saveYouthScoutComment(int i, int youthPlayerId,  ScoutComment c) {
+    public void storeYouthScoutComment(int i, int youthPlayerId, ScoutComment c) {
         //insert vorbereiten
         String sql = "INSERT INTO " + getTableName() +
                 " (YOUTHPLAYER_ID,INDEX,Text,Type,Variation,SkillType,SkillLevel) VALUES(" +
@@ -67,7 +67,7 @@ public class YouthScoutCommentTable extends AbstractTable {
                 DBManager.insertEscapeSequences(c.getText()) + "'," +
                 c.getType() + "," +
                 c.getVariation() + "," +
-                c.getSkillType() + "," +
+                c.getSkillType().getValue() + "," +
                 c.getSkillLevel() +
                 ")";
         adapter.executeUpdate(sql);

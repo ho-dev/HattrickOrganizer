@@ -156,7 +156,7 @@ public class YouthPlayerTable  extends AbstractTable {
             if (youthScoutCommentTable.countScoutComments(player.getId()) == 0) {
                 int i = 0;
                 for (var c : scoutComments) {
-                    youthScoutCommentTable.saveYouthScoutComment(i++, player.getId(), c);
+                    youthScoutCommentTable.storeYouthScoutComment(i++, player.getId(), c);
                 }
             }
         }
