@@ -334,7 +334,7 @@ public class YouthPlayer {
         return ret;
     }
 
-    public static Skills.HTSkillID skillIds[] = {Keeper, Defender, Playmaker, Winger, Passing, Scorer, SetPieces};
+    public static Skills.HTSkillID[] skillIds = {Keeper, Defender, Playmaker, Winger, Passing, Scorer, SetPieces};
 
     public void setSkillInfo(SkillInfo skillinfo) {
         this.skillInfoMap.put(skillinfo.skillID.getValue(), skillinfo);
@@ -460,6 +460,10 @@ public class YouthPlayer {
                 }
             }
         }
+
+        public Skills.HTSkillID getSkillID(){
+            return skillID;
+        }
     }
 
     public static class ScoutComment {
@@ -530,42 +534,42 @@ public class YouthPlayer {
 
     public YouthPlayer(Properties properties) {
 
-        id = getInt(properties,"id", 0);
+        id = getInt(properties, "id", 0);
         firstName = properties.getProperty("firstname", "");
         nickName = properties.getProperty("nickname", "");
         lastName = properties.getProperty("lastname", "");
-        ageYears = getInt(properties,"age", 0);
-        ageDays = getInt(properties,"agedays", 0);
+        ageYears = getInt(properties, "age", 0);
+        ageDays = getInt(properties, "agedays", 0);
         arrivalDate = parseDate(properties.getProperty("arrivaldate", ""));
-        canBePromotedIn = getInt(properties,"canbepromotedin", 0);
+        canBePromotedIn = getInt(properties, "canbepromotedin", 0);
         playerNumber = properties.getProperty("playernumber", "");
         statement = properties.getProperty("statement", "");
         ownerNotes = properties.getProperty("ownernotes", "");
-        playerCategoryID = getInt(properties,"playercategoryid", 0);
-        cards = getInt(properties,"cards", 0);
-        injuryLevel = getInt(properties,"injurylevel", 0);
-        specialty = getInt(properties,"specialty", 0);
-        careerGoals = getInt(properties,"careergoals", 0);
-        careerHattricks = getInt(properties,"careerhattricks", 0);
-        leagueGoals = getInt(properties,"leaguegoals", 0);
-        friendlyGoals = getInt(properties,"friendlygoals", 0);
-        scoutId = getInt(properties,"scoutid", 0);
-        scoutingRegionID = getInt(properties,"scoutingregionid", 0);
+        playerCategoryID = getInt(properties, "playercategoryid", 0);
+        cards = getInt(properties, "cards", 0);
+        injuryLevel = getInt(properties, "injurylevel", 0);
+        specialty = getInt(properties, "specialty", 0);
+        careerGoals = getInt(properties, "careergoals", 0);
+        careerHattricks = getInt(properties, "careerhattricks", 0);
+        leagueGoals = getInt(properties, "leaguegoals", 0);
+        friendlyGoals = getInt(properties, "friendlygoals", 0);
+        scoutId = getInt(properties, "scoutid", 0);
+        scoutingRegionID = getInt(properties, "scoutingregionid", 0);
         scoutName = properties.getProperty("scoutname", "");
 
-        youthMatchID = getInteger(properties,"youthmatchid");
-        positionCode = getInteger(properties,"positioncode");
-        playedMinutes = getInt(properties,"playedminutes", 0);
-        rating = getDouble(properties,"rating");
+        youthMatchID = getInteger(properties, "youthmatchid");
+        positionCode = getInteger(properties, "positioncode");
+        playedMinutes = getInt(properties, "playedminutes", 0);
+        rating = getDouble(properties, "rating");
         youthMatchDate = parseNullableDate(properties.getProperty("youthmatchdate"));
 
-        for ( var skillId : YouthPlayer.skillIds){
+        for (var skillId : YouthPlayer.skillIds) {
             parseSkillInfo(properties, skillId);
         }
 
         this.scoutComments = new ArrayList<>();
-        for ( int i=0; parseScoutComment(properties, i); i++) {
-            ;
+        for (int i = 0; true; i++) {
+            if (!parseScoutComment(properties, i)) break;
         }
     }
 

@@ -57,10 +57,46 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                         return new ColorLabelEntry("" + player.getCanBePromotedInAtDate(new Date().getTime()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }
                 },
-                new YouthPlayerColumn(3, "ls.player.Keeper") {
+                new YouthPlayerColumn(4, "ls.player.Keeper") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
                         return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Keeper));
+                    }
+                },
+                new YouthPlayerColumn(5, "ls.player.Defender") {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
+                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Defender));
+                    }
+                },
+                new YouthPlayerColumn(5, "ls.player.Playmaker") {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
+                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Playmaker));
+                    }
+                },
+                new YouthPlayerColumn(5, "ls.player.Winger") {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
+                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Winger));
+                    }
+                },
+                new YouthPlayerColumn(5, "ls.player.Passing") {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
+                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Passing));
+                    }
+                },
+                new YouthPlayerColumn(5, "ls.player.Scorer") {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
+                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Scorer));
+                    }
+                },
+                new YouthPlayerColumn(5, "ls.player.SetPieces") {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
+                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.SetPieces));
                     }
                 },
 
