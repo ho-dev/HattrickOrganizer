@@ -7,17 +7,21 @@ import core.model.player.YouthPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.ArrayList;
+import java.awt.*;
 import java.util.Hashtable;
 
 public class SkillInfoColumn extends JSlider implements IHOTableEntry {
 
     YouthPlayer.SkillInfo skillInfo;
 
+    private static final Color Color_MaxReached = Color.red;
+    private static final Color Color_Standard = Color.green;
+
     public SkillInfoColumn(YouthPlayer.SkillInfo info){
         super(HORIZONTAL, 0, 85, (int)info.getStartValue()*10);
         this.skillInfo = info;
         this.setExtent((int) (10*info.getCurrentValue()) - getValue());
+        this.setForeground(skillInfo.isMaxReached()?Color_MaxReached: Color_Standard);
         this.setToolTipText(createToolTipText(info));
         this.setLabelTable(new Hashtable<Integer,JLabel>(){{
             put(getValue(), new JLabel(String.format("%,.2f", info.getStartValue())));
@@ -26,12 +30,14 @@ public class SkillInfoColumn extends JSlider implements IHOTableEntry {
     }
 
     private String createToolTipText(YouthPlayer.SkillInfo info) {
-        return info.getSkillID().toString() + "\n" +
-                HOVerwaltung.instance().getLanguageString("ls.player.start") + ": " + info.getStartValue() + "\n" +
-                HOVerwaltung.instance().getLanguageString("ls.player.current") + ": " + info.getCurrentValue() + "\n" +
-                HOVerwaltung.instance().getLanguageString("ls.player.max") + ": " + info.getMax() + "\n" +
-                HOVerwaltung.instance().getLanguageString("ls.player.startlevel") + ": " + info.getStartLevel() + "\n" +
-                HOVerwaltung.instance().getLanguageString("ls.player.currentlevel") + ": " + info.getCurrentLevel() ;
+        var hov = HOVerwaltung.instance();
+        return "<html>" + info.getSkillID().toString() + "<br>" +
+                hov.getLanguageString("ls.player.start") + ": " + info.getStartValue() + "<br>" +
+                hov.getLanguageString("ls.player.current") + ": " + info.getCurrentValue() + "<br>" +
+                hov.getLanguageString("ls.player.max") + ": " + info.getMax() + "<br>" +
+                hov.getLanguageString("ls.player.maxreached") + ": " + hov.getLanguageString(String.valueOf(info.isMaxReached())) + "<br>" +
+                hov.getLanguageString("ls.player.startlevel") + ": " + info.getStartLevel() + "<br>" +
+                hov.getLanguageString("ls.player.currentlevel") + ": " + info.getCurrentLevel() + "</html>";
     }
 
     @Override

@@ -64,6 +64,22 @@ public class YouthPlayer {
         this.scoutComments = scoutComments;
     }
 
+    private void evaluateScoutComments(){
+        if ( scoutComments != null){
+            for(var c : scoutComments){
+                if ( c.type == CommentType.CURRENT_SKILL_LEVEL){
+                    this.getSkillInfo(c.skillType.toHTSkillId()).setStartLevel(c.skillLevel);
+                }
+                else if (c.type == CommentType.POTENTIAL_SKILL_LEVEL){
+                    this.getSkillInfo(c.skillType.toHTSkillId()).setMax(c.skillLevel);
+                }
+                else if ( c.type == CommentType.PLAYER_HAS_SPECIALTY){
+                    this.specialty = c.skillLevel; // guessed (not documented which attribute stores the specialty number)
+                }
+            }
+        }
+    }
+
     public int getId() {
         return id;
     }
@@ -389,28 +405,44 @@ public class YouthPlayer {
         public double getStartValue(){return this.startValue;}
         public void setStartValue(double value){
             this.startValue=value;
-            if ( startLevel != null){
-                // check for conflicts
-                if ( startValue < startLevel){
-                    this.startValue = startLevel;
-                }
-                else if ( startValue > startLevel +1 ){
-                    this.startValue = startLevel+0.99;
+            adjustValues();
+        }
+
+        private void adjustValues()
+        {
+            if ( max != null) {
+                if (currentValue > max + 1) {
+                    currentValue = max + 0.99;
                 }
             }
+            if ( currentLevel != null) {
+                if (currentValue < currentLevel) {
+                    this.currentValue = currentLevel;
+                } else if (currentValue > currentLevel + 1) {
+                    this.currentValue = currentLevel + 0.99;
+                }
+            }
+
+            if ( startLevel != null) {
+                if (startValue < startLevel) {
+                    this.startValue = startLevel;
+                } else if (startValue > startLevel + 1) {
+                    this.startValue = startLevel + 0.99;
+                }
+
+                if (currentValue < startValue) {
+                    currentValue = startValue;
+                }
+            }
+            else if ( currentValue < startValue){
+                startValue = currentValue;
+            }
         }
+
         public double getCurrentValue(){return currentValue;}
         public void setCurrentValue(double value){
             this.currentValue=value;
-            if ( currentLevel != null){
-                // check for conflicts
-                if ( currentValue < currentLevel){
-                    this.currentValue = currentLevel;
-                }
-                else if ( currentValue > currentLevel +1){
-                    this.currentValue = currentLevel+0.99;
-                }
-            }
+            adjustValues();
         }
 
         public Integer getCurrentLevel() {
@@ -419,14 +451,7 @@ public class YouthPlayer {
 
         public void setCurrentLevel(Integer currentLevel) {
             this.currentLevel = currentLevel;
-            if ( currentLevel != null){
-                if ( this.currentValue < currentLevel){
-                    currentValue = currentLevel;
-                }
-                else if ( currentValue > currentLevel+1){
-                    currentValue = currentLevel+0.99;
-                }
-            }
+            adjustValues();
         }
 
         public Integer getMax() {
@@ -435,6 +460,7 @@ public class YouthPlayer {
 
         public void setMax(Integer max) {
             this.max = max;
+            adjustValues();
         }
 
         public boolean isMaxReached() {
@@ -451,14 +477,7 @@ public class YouthPlayer {
 
         public void setStartLevel(Integer startLevel) {
             this.startLevel = startLevel;
-            if ( startLevel != null){
-                if ( startValue < startLevel){
-                    startValue = startLevel;
-                }
-                else if ( startValue> startLevel+1){
-                    startValue = startLevel+0.95;
-                }
-            }
+            adjustValues();
         }
 
         public Skills.HTSkillID getSkillID(){
@@ -571,6 +590,7 @@ public class YouthPlayer {
         for (int i = 0; true; i++) {
             if (!parseScoutComment(properties, i)) break;
         }
+        evaluateScoutComments();
     }
 
     // don't want to see warnings in HO log file on empty date strings
