@@ -23,7 +23,7 @@ public class YouthPlayerTable  extends AbstractTable {
 
     @Override
     protected void initColumns() {
-        var tmp = new ArrayList<ColumnDescriptor>(List.of(
+        var tmp = new ArrayList<>(List.of(
                 new ColumnDescriptor("HRF_ID", Types.INTEGER, false),
                 new ColumnDescriptor("ID", Types.INTEGER, false),
                 new ColumnDescriptor("FirstName", Types.VARCHAR, true, 100),
@@ -59,12 +59,12 @@ public class YouthPlayerTable  extends AbstractTable {
             tmp.addAll(createColumnDescriptors(skillId));
         }
 
-        columns = (ColumnDescriptor[]) tmp.toArray(new ColumnDescriptor[0]);
+        columns = tmp.toArray(new ColumnDescriptor[0]);
     }
 
     private Collection<ColumnDescriptor> createColumnDescriptors(Skills.HTSkillID skillId) {
         var prefix = skillId.toString();
-        return new ArrayList<ColumnDescriptor>(List.of(
+        return new ArrayList<>(List.of(
                 new ColumnDescriptor(prefix, Types.INTEGER, true),
                 new ColumnDescriptor(prefix + "Max", Types.INTEGER, true),
                 new ColumnDescriptor(prefix + "Start", Types.INTEGER, true),
@@ -172,12 +172,13 @@ public class YouthPlayerTable  extends AbstractTable {
     }
 
     private void AppendSkillInfo(StringBuilder sql, YouthPlayer player, Skills.HTSkillID skillID) {
-        sql.append(",").append(player.getSkillInfo(skillID).getCurrentLevel())
-                .append(",").append(player.getSkillInfo(skillID).getMax())
-                .append(",").append(player.getSkillInfo(skillID).getStartLevel())
-                .append(",").append(player.getSkillInfo(skillID).isMaxReached())
-                .append(",").append(player.getSkillInfo(skillID).getCurrentValue())
-                .append(",").append(player.getSkillInfo(skillID).getStartValue());
+        var skillInfo = player.getSkillInfo(skillID);
+        sql.append(",").append(skillInfo.getCurrentLevel())
+                .append(",").append(skillInfo.getMax())
+                .append(",").append(skillInfo.getStartLevel())
+                .append(",").append(skillInfo.isMaxReached())
+                .append(",").append(skillInfo.getCurrentValue())
+                .append(",").append(skillInfo.getStartValue());
     }
     /**
      * load youth player of HRF file id
@@ -247,11 +248,11 @@ public class YouthPlayerTable  extends AbstractTable {
         var skillinfo = new YouthPlayer.SkillInfo(skillID);
         var columnPrefix = skillID.toString();
         skillinfo.setCurrentLevel(DBManager.getInteger(rs, columnPrefix));
-        skillinfo.setStartLevel(DBManager.getInteger(rs,columnPrefix+"Start"));
-        skillinfo.setMax(DBManager.getInteger(rs,columnPrefix+"Max"));
-        skillinfo.setMaxReached(DBManager.getBoolean(rs, columnPrefix+"IsMaxReached"));
-        skillinfo.setCurrentValue(rs.getDouble(columnPrefix+"Value"));
-        skillinfo.setStartValue(rs.getDouble(columnPrefix+"StartValue"));
+        skillinfo.setStartLevel(DBManager.getInteger(rs, columnPrefix + "Start"));
+        skillinfo.setMax(DBManager.getInteger(rs, columnPrefix + "Max"));
+        skillinfo.setMaxReached(rs.getBoolean(columnPrefix + "IsMaxReached"));
+        skillinfo.setCurrentValue(rs.getDouble(columnPrefix + "Value"));
+        skillinfo.setStartValue(rs.getDouble(columnPrefix + "StartValue"));
         youthPlayer.setSkillInfo(skillinfo);
     }
 

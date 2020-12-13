@@ -43,23 +43,19 @@ public class xmlPlayersParser {
     //throws Exception
     protected final Vector<MyHashtable> createListe(Document doc) {
         final Vector<MyHashtable> liste = new Vector<>();
-        MyHashtable hash = null;
-        Element ele = null;
-        Element root = null;
-        NodeList list = null;
 
         try {
-            root = doc.getDocumentElement();
+            var root = doc.getDocumentElement();
             root = (Element) root.getElementsByTagName("Team").item(0);
-            ele = (Element) root.getElementsByTagName("TeamID").item(0);
+            var ele = (Element) root.getElementsByTagName("TeamID").item(0);
             var teamID = XMLManager.getFirstChildNodeValue(ele);
             root = (Element) root.getElementsByTagName("PlayerList").item(0);
 
             //Einträge adden
-            list = root.getElementsByTagName("Player");
+            var list = root.getElementsByTagName("Player");
 
             for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-                hash = new core.file.xml.MyHashtable();
+                var hash = new core.file.xml.MyHashtable();
 
                 //Root setzen
                 root = (Element) list.item(i);
@@ -175,12 +171,12 @@ public class xmlPlayersParser {
                     ele = (Element) tmp_lm.getElementsByTagName("RatingEndOfGame").item(0);
                     hash.put("LastMatch_RatingEndOfGame", (XMLManager.getFirstChildNodeValue(ele)));
 
-                } catch (Exception ep) {
+                } catch (Exception ignored) {
                 }
 
                 liste.add(hash);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         return liste;
@@ -193,20 +189,15 @@ public class xmlPlayersParser {
 
     private List<MyHashtable> createYouthPlayerList(Document doc) {
         final Vector<MyHashtable> ret = new Vector<>();
-        MyHashtable hash = null;
-        Element ele = null;
-        Element root = null;
-        NodeList list = null;
 
         try {
-
-            root = doc.getDocumentElement();
+            var root = doc.getDocumentElement();
             root = (Element) root.getElementsByTagName("PlayerList").item(0);
 
             // <YouthPlayer>
-            list = root.getElementsByTagName("YouthPlayer");
+            var list = root.getElementsByTagName("YouthPlayer");
             for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-                hash = new core.file.xml.MyHashtable();
+                var hash = new core.file.xml.MyHashtable();
 
                 root = (Element) list.item(i);
 
@@ -315,7 +306,7 @@ public class xmlPlayersParser {
                 //    </YouthPlayer>
                 ret.add(hash);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         return ret;
@@ -326,12 +317,12 @@ public class xmlPlayersParser {
         var attr = skillId.toString() + "Skill";
         xmlValue2Hash(hash, playerSkills, attr);
         xmlAttribute2Hash(hash, playerSkills, attr, "IsAvailable");
+        xmlAttribute2Hash(hash, playerSkills, attr, "IsMaxReached");
         xmlAttribute2Hash(hash, playerSkills, attr, "MayUnlock");
         //        <KeeperSkillMax IsAvailable="True">2</KeeperSkillMax>
         attr += "Max";
         xmlValue2Hash(hash, playerSkills, attr);
         xmlAttribute2Hash(hash, playerSkills, attr, "IsAvailable");
-        xmlAttribute2Hash(hash, playerSkills, attr, "IsMaxReached");
         xmlAttribute2Hash(hash, playerSkills, attr, "MayUnlock");
     }
 

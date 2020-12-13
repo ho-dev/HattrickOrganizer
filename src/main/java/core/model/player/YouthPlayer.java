@@ -623,12 +623,11 @@ public class YouthPlayer {
     }
 
     private void parseSkillInfo(Properties properties, Skills.HTSkillID skillID) {
-        var skill = skillID.toString().toLowerCase(java.util.Locale.ENGLISH)+"skill";
+        var skill = skillID.toString().toLowerCase(java.util.Locale.ENGLISH) + "skill";
         var skillInfo = new SkillInfo(skillID);
-        skillInfo.currentLevel = getInteger(properties, skill);
-        skillInfo.max = getInteger(properties,skill+"max");
-        skillInfo.isMaxReached = getBoolean(properties,skill + "ismaxreached", false);
-
+        skillInfo.setCurrentLevel(getInteger(properties, skill));
+        skillInfo.setMax(getInteger(properties, skill + "max"));
+        skillInfo.setMaxReached(getBoolean(properties, skill + "ismaxreached", false));
         this.skillInfoMap.put(skillID.getValue(), skillInfo);
     }
 
