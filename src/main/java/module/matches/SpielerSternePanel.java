@@ -6,7 +6,6 @@ import core.gui.comp.entry.RatingTableEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupPlayer;
@@ -225,10 +224,10 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 			}
 
 			m_jbSpieler.setIcon(ImageUtilities.getImage4Position(player.getId(),
-					player.getTaktik(), trickotnummer));
+					player.getTactic(), trickotnummer));
 			m_jbSpieler.setEnabled(player.getSpielerId() > 0);
 			m_jpSterne.setRating((float) player.getRating() * 2f, true);
-			initLabel(player.getId(), player.getTaktik());
+			initLabel(player.getId(), player.getTactic());
 
 		} else {
 			clear();

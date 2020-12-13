@@ -79,7 +79,7 @@ public class TrainingManager {
     public TrainingPerPlayer calculateWeeklyTrainingForPlayer(Player inputPlayer,
                                                               TrainingPerWeek train, Timestamp timestamp) {
         //playerID HIER SETZEN
-		final int playerID = inputPlayer.getSpielerID();
+		final int playerID = inputPlayer.getPlayerID();
 
         TrainingPerPlayer output = new TrainingPerPlayer(inputPlayer);
         if (timestamp != null)
@@ -187,7 +187,7 @@ public class TrainingManager {
 		// Generate a map of players from the previous hrf.
 		final Map<Integer, Player> players = new HashMap<>();
 		for (Player p : previousPlayers) {
-			players.put(p.getSpielerID(), p);
+			players.put(p.getPlayerID(), p);
 		}
 
 		// Train each player
@@ -195,19 +195,19 @@ public class TrainingManager {
 			try {
 
 				// The version of the player from last hrf
-				Player old = players.get(player.getSpielerID());
+				Player old = players.get(player.getPlayerID());
 				if (old == null) {
 					if (TrainingManager.TRAININGDEBUG) {
-						HOLogger.instance().debug(HOModel.class, "Old player for id " + player.getSpielerID() + " = null");
+						HOLogger.instance().debug(HOModel.class, "Old player for id " + player.getPlayerID() + " = null");
 					}
 					// Player appears the first time
 					// - was bought new
 					// - promoted from youth
 					// - it is the first hrf ever loaded
 					old = new Player();
-					old.setSpielerID(player.getSpielerID());
+					old.setSpielerID(player.getPlayerID());
 					old.copySkills(player);
-					if (HOVerwaltung.instance().getModel().getCurrentPlayer(player.getSpielerID()) != null) {
+					if (HOVerwaltung.instance().getModel().getCurrentPlayer(player.getPlayerID()) != null) {
 						// PLayer is in current team (not an historical player)
 						List<TrainingEvent> events = player.downloadTrainingEvents();
 						if (events != null) {
@@ -244,7 +244,7 @@ public class TrainingManager {
 					Player tmpOld = new Player();
 					tmpOld.copySkills(old);
 					tmpOld.copySubSkills(old);
-					tmpOld.setSpielerID(old.getSpielerID());
+					tmpOld.setSpielerID(old.getPlayerID());
 					tmpOld.setAlter(old.getAlter());
 
 					Player calculationPlayer = null;
@@ -277,7 +277,7 @@ public class TrainingManager {
 							calculationPlayer = new Player();
 							calculationPlayer.copySkills(tmpOld);
 							calculationPlayer.copySubSkills(tmpOld);
-							calculationPlayer.setSpielerID(tmpOld.getSpielerID());
+							calculationPlayer.setSpielerID(tmpOld.getPlayerID());
 							calculationPlayer.setAlter(tmpOld.getAlter());
 						}
 
@@ -293,7 +293,7 @@ public class TrainingManager {
 							tmpOld = new Player();
 							tmpOld.copySkills(calculationPlayer);
 							tmpOld.copySubSkills(calculationPlayer);
-							tmpOld.setSpielerID(calculationPlayer.getSpielerID());
+							tmpOld.setSpielerID(calculationPlayer.getPlayerID());
 							tmpOld.setAlter(calculationPlayer.getAlter());
 						}
 					}
@@ -327,7 +327,7 @@ public class TrainingManager {
 			return;
 		}
 
-		int playerID = after.getSpielerID();
+		int playerID = after.getPlayerID();
 		String playerName = after.getFullName();
 
 		int age = after.getAlter();

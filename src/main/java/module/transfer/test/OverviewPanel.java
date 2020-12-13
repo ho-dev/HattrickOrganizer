@@ -110,7 +110,7 @@ public class OverviewPanel extends JPanel {
 		}
 
 		Date buyingDate = row.getBuyingDate();
-		Date birthDay17 = Calc.get17thBirthday(player.getSpielerID());
+		Date birthDay17 = Calc.get17thBirthday(player.getPlayerID());
 		int wagesSum = 0;
 
 		// if (player.isHomeGrown()) {
@@ -124,7 +124,7 @@ public class OverviewPanel extends JPanel {
 		row.setWeeksInTeam(updates.size());
 
 		Map<Integer, Wage> ageWageMap = new HashMap<Integer, Wage>();
-		List<Wage> wagesByAge = Wage.getWagesByAge(player.getSpielerID());
+		List<Wage> wagesByAge = Wage.getWagesByAge(player.getPlayerID());
 		if (!wagesByAge.isEmpty()) {
 			// order by age
 			Collections.sort(wagesByAge, new Comparator<Wage>() {
@@ -194,7 +194,7 @@ public class OverviewPanel extends JPanel {
 		List<Player> all = HOVerwaltung.instance().getModel().getFormerPlayers();
 		for (Player player : all) {
 			if (playerId != 0) {
-				if (player.getSpielerID() == playerId) {
+				if (player.getPlayerID() == playerId) {
 					return player;
 				}
 			} else {

@@ -88,7 +88,7 @@ public class ChangesTableModel extends AbstractTableModel {
 		case 5:
 			return Boolean.valueOf(change.getPlayer().isOld());
 		case COL_PLAYER_ID:
-			return Integer.toString(change.getPlayer().getSpielerID());
+			return Integer.toString(change.getPlayer().getPlayerID());
 		default:
 			return "";
 		}

@@ -43,7 +43,7 @@ public final class PlayerRetriever {
             for (final Iterator<Player> iter = oldPlayers.iterator(); iter.hasNext();) {
                 final Player oldPlayer = iter.next();
 
-                if (oldPlayer.getSpielerID() == id) {
+                if (oldPlayer.getPlayerID() == id) {
                     return oldPlayer;
                 }
             }
@@ -85,7 +85,7 @@ public final class PlayerRetriever {
         for (final Iterator<Player> iter = matches.iterator(); iter.hasNext();) {
             final Player match = iter.next();
 
-            player = DBManager.instance().getSpielerAtDate(match.getSpielerID(), transfer.getDate());
+            player = DBManager.instance().getSpielerAtDate(match.getPlayerID(), transfer.getDate());
 
             if(player == null) {
                 iter.remove();

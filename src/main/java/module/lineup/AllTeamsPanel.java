@@ -61,7 +61,7 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
         //Alle Player auf der Gruppe entfernen und die neuen reinsetzen
         for (Player player : allePlayer) {
             //ein erste 11
-            if (aufstellung.isPlayerInStartingEleven(player.getSpielerID())) {
+            if (aufstellung.isPlayerInStartingEleven(player.getPlayerID())) {
                 player.setTeamInfoSmilie(gruppenName);
             }
             //nicht erste 11 und trotzdem in der gleichen Gruppe

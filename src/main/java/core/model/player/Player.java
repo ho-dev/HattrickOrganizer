@@ -1370,7 +1370,7 @@ public class Player {
      *
      * @return Value of property m_iSpielerID.
      */
-    public int getSpielerID() {
+    public int getPlayerID() {
         return m_iSpielerID;
     }
 
@@ -2116,7 +2116,7 @@ public class Player {
         boolean equals = false;
 
         if (obj instanceof Player) {
-            equals = ((Player) obj).getSpielerID() == m_iSpielerID;
+            equals = ((Player) obj).getPlayerID() == m_iSpielerID;
         }
 
         return equals;
@@ -2126,7 +2126,7 @@ public class Player {
      * prüft ob Skillup vorliegt
      */
     protected boolean check4SkillUp(int skill, Player oldPlayer) {
-        if ((oldPlayer != null) && (oldPlayer.getSpielerID() > 0))
+        if ((oldPlayer != null) && (oldPlayer.getPlayerID() > 0))
             return oldPlayer.getValue4Skill(skill) < getValue4Skill(skill);
         return false;
     }
@@ -2136,7 +2136,7 @@ public class Player {
      */
     public boolean check4SkillDown(int skill, Player oldPlayer) {
         if (skill < PlayerSkill.EXPERIENCE)
-            if ((oldPlayer != null) && (oldPlayer.getSpielerID() > 0))
+            if ((oldPlayer != null) && (oldPlayer.getPlayerID() > 0))
                 return oldPlayer.getValue4Skill(skill) > getValue4Skill(skill);
         return false;
     }
@@ -2182,7 +2182,7 @@ public class Player {
 
     public List<FuturePlayerTraining> getFuturePlayerTrainings(){
         if ( futurePlayerTrainings == null){
-            futurePlayerTrainings = DBManager.instance().getFuturePlayerTrainings(this.getSpielerID());
+            futurePlayerTrainings = DBManager.instance().getFuturePlayerTrainings(this.getPlayerID());
             if (futurePlayerTrainings.size()>0) {
                 var start = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
                 var remove = new ArrayList<FuturePlayerTraining>();
@@ -2255,9 +2255,9 @@ public class Player {
         }
         futurePlayerTrainings.removeAll(removeIntervals);
         if ( prio != null){
-            futurePlayerTrainings.add(new FuturePlayerTraining(this.getSpielerID(), prio, fromWeek, toWeek));
+            futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerID(), prio, fromWeek, toWeek));
         }
-        DBManager.instance().storeFuturePlayerTrainings(this.getSpielerID(), futurePlayerTrainings);
+        DBManager.instance().storeFuturePlayerTrainings(this.getPlayerID(), futurePlayerTrainings);
     }
 
     public String getBestPositionInfo() {

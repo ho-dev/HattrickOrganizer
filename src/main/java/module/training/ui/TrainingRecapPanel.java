@@ -10,7 +10,6 @@ import core.model.player.ISkillChange;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
-import core.training.HattrickDate;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.TrainingModel;
 
@@ -229,7 +228,7 @@ public class TrainingRecapPanel extends LazyImagePanel  {
                     +  player.getIdealPosStaerke(true, true, 1)
                     + "%)");
             row.add(Integer.toString(ftm.getTrainingSpeed()));
-            row.add(Integer.toString(player.getSpielerID()));
+            row.add(Integer.toString(player.getPlayerID()));
 
             for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
                 ISkillChange s = maps.get(columns.get(i + fixedColumns));
@@ -241,7 +240,7 @@ public class TrainingRecapPanel extends LazyImagePanel  {
                 }
             }
 
-            row.add(Integer.toString(player.getSpielerID()));
+            row.add(Integer.toString(player.getPlayerID()));
             players.add(row);
         }
 

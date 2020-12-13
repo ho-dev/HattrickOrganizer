@@ -102,14 +102,14 @@ public class TestDialog extends JDialog {
 
 			// List<Wage> wages = Wage.getWagesByAge(player.getSpielerID());
 
-			Transfer t = Transfer.getTransfer(player.getSpielerID());
+			Transfer t = Transfer.getTransfer(player.getPlayerID());
 			Date buyingDate = null;
 			if (!player.isHomeGrown()) {
 				buyingDate = t.purchaseDate;
 
 			} else {
 				buyingDate = new Date(DBManager.instance()
-						.getSpielerFirstHRF(player.getSpielerID()).getHrfDate().getTime());
+						.getSpielerFirstHRF(player.getPlayerID()).getHrfDate().getTime());
 			}
 
 			StringBuilder sb = new StringBuilder();
@@ -118,7 +118,7 @@ public class TestDialog extends JDialog {
 			sb.append("Gekauft für ").append(purchasePrice).append("\n");
 			sb.append("Verkauft für ").append(sellingPrice).append("\n");
 
-			int wages = Calc.getWagesSum(player.getSpielerID(), buyingDate, t.sellingDate);
+			int wages = Calc.getWagesSum(player.getPlayerID(), buyingDate, t.sellingDate);
 
 			sb.append("wages payed: ").append(wages).append("\n");
 			int daysInTeam = Calc.getDaysBetween(t.sellingDate, buyingDate);

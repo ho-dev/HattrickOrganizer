@@ -1,6 +1,6 @@
 package module.lineup.lineup;
 
-import core.gui.model.SpielerCBItem;
+import core.gui.model.PlayerCBItem;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
@@ -23,7 +23,7 @@ public class SwapPositionFeature {
 		public void actionPerformed(ActionEvent event) {
 			if (swapButton.isSelected()) {
 				JComboBox source = (JComboBox) event.getSource();
-				SpielerCBItem selectedItem = (SpielerCBItem) source.getSelectedItem();
+				PlayerCBItem selectedItem = (PlayerCBItem) source.getSelectedItem();
 				if ((selectedItem != null)
 						&& (selectedItem.getPlayer() == null)) {
 					unpressButton();

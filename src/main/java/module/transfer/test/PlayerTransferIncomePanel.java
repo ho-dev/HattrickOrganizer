@@ -31,19 +31,19 @@ public class PlayerTransferIncomePanel extends JPanel {
 		if (player != null) {
 			NumberFormat nf = NumberFormat.getInstance();
 
-			Transfer t = Transfer.getTransfer(player.getSpielerID());
+			Transfer t = Transfer.getTransfer(player.getPlayerID());
 			Date buyingDate = null;
 			if (!player.isHomeGrown()) {
 				buyingDate = t.purchaseDate;
 
 			} else {
 				buyingDate = new Date(DBManager.instance()
-						.getSpielerFirstHRF(player.getSpielerID()).getHrfDate().getTime());
+						.getSpielerFirstHRF(player.getPlayerID()).getHrfDate().getTime());
 			}
 
 			int purchasePrice = (t.purchasePrice > 0) ? t.purchasePrice / 10 : 0;
 			int sellingPrice = (t.sellingPrice > 0) ? t.sellingPrice / 10 : 0;
-			int wages = Calc.getWagesSum(player.getSpielerID(), buyingDate, t.sellingDate);
+			int wages = Calc.getWagesSum(player.getPlayerID(), buyingDate, t.sellingDate);
 			int daysInTeam = Calc.getDaysBetween(t.sellingDate, buyingDate);
 			double fee = sellingPrice * (TransferFee.getFee(daysInTeam) / 100);
 			double feePreviousClub = sellingPrice * (TransferFee.feePreviousClub(2) / 100);

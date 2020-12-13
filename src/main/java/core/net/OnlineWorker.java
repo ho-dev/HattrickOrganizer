@@ -765,7 +765,7 @@ public class OnlineWorker {
 
 		Player player = lineup.getPlayerByPositionID(roleId);
 		if (player != null) {
-			id = player.getSpielerID();
+			id = player.getPlayerID();
 			behaviour = lineup.getTactic4PositionID(roleId);
 		}
 
@@ -879,7 +879,7 @@ public class OnlineWorker {
 				try
 				{
 					trainerID = String.valueOf(HOVerwaltung.instance().getModel().getTrainer()
-						.getSpielerID());
+						.getPlayerID());
 					
 				}
 				catch (Exception e)

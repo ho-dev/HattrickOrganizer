@@ -134,7 +134,7 @@ public class TransferTable extends AbstractTable {
                 if (player != null) {
                     if (!players.contains(player)) players.add(player);
                     if (transfer.getPlayerId() == 0) {
-                        int playerIdFound = player.getSpielerID();
+                        int playerIdFound = player.getPlayerID();
                         transfer.setPlayerId(playerIdFound);
                         DBManager.instance().saveIsSpielerFired(playerIdFound, true);
                     }
@@ -156,7 +156,7 @@ public class TransferTable extends AbstractTable {
             }
 
             for (Iterator<Player> iter = players.iterator(); iter.hasNext();) {
-                int playerID = iter.next().getSpielerID();
+                int playerID = iter.next().getPlayerID();
                 if (!DBManager.instance().getIsSpielerFired(playerID)) {
                     updatePlayerTransfers(playerID);
                 }

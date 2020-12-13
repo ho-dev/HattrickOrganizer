@@ -14,8 +14,6 @@ import core.model.player.MatchRoleID;
 import core.training.FutureTrainingManager;
 import module.training.Skills;
 import module.training.ui.comp.HTColorBar;
-import module.training.ui.model.ModelChange;
-import module.training.ui.model.ModelChangeListener;
 import module.training.ui.model.TrainingModel;
 
 import java.awt.*;
@@ -86,14 +84,14 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
             return;
         }
 
-        this.playerId = this.model.getActivePlayer().getSpielerID();
+        this.playerId = this.model.getActivePlayer().getPlayerID();
         // sets player number
         String value = MatchRoleID.getNameForPosition(this.model.getActivePlayer().getIdealPosition()) + " ("
                 + this.model.getActivePlayer().getIdealPosStaerke(true, false, 2) + ")";
         playerLabel.setText("<html><b>" + this.model.getActivePlayer().getFullName() + "</b> - " + value + "</html>");
 
         m_jtaNotes.setEditable(true);
-        m_jtaNotes.setText(DBManager.instance().getSpielerNotiz(this.model.getActivePlayer().getSpielerID()));
+        m_jtaNotes.setText(DBManager.instance().getSpielerNotiz(this.model.getActivePlayer().getPlayerID()));
 
         // instantiate a future train manager to calculate the previsions */
         FutureTrainingManager ftm = this.model.getFutureTrainingManager();

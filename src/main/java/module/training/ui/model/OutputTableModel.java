@@ -146,7 +146,7 @@ public class OutputTableModel extends AbstractTableModel {
             case 8 -> createIcon(player, PlayerSkill.SCORING);
             case 9 -> createIcon(player, PlayerSkill.SET_PIECES);
             case 10 -> createIcon(player, PlayerSkill.STAMINA);
-            case COL_PLAYER_ID -> Integer.toString(player.getSpielerID());
+            case COL_PLAYER_ID -> Integer.toString(player.getPlayerID());
             case 12 -> ftm.getTrainingSpeed();
             default -> "";
         };

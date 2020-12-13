@@ -267,7 +267,7 @@ public class HOModel {
      */
     public final Player getCurrentPlayer(int id) {
     	for ( Player p : getCurrentPlayers()){
-    		if ( p.getSpielerID()==id)
+    		if ( p.getPlayerID()==id)
     			return p;
 		}
         return null;

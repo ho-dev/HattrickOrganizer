@@ -218,7 +218,7 @@ public class SpecialEventsPredictionManager {
             if (!this.playerInLineup.containsKey(mid.getSpielerId())) {
                 Player player = model.getCurrentPlayer(mid.getSpielerId());
                 if (player != null) {
-                    this.playerInLineup.put(player.getSpielerID(), player);
+                    this.playerInLineup.put(player.getPlayerID(), player);
                 }
             }
         }
@@ -291,7 +291,7 @@ public class SpecialEventsPredictionManager {
                 // PLayer SOLD, SUSPENDED or INJURED
                 OpponentPlayer player = (OpponentPlayer) opponentPlayerInLineup.get(playerPerformance.getSpielerId());
                 if (player != null) {
-                    opponentPlayerInLineup.remove(player.getSpielerID());
+                    opponentPlayerInLineup.remove(player.getPlayerID());
                 }
             }
         }

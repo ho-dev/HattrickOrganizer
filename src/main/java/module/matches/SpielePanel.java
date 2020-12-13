@@ -215,10 +215,10 @@ public final class SpielePanel extends LazyImagePanel {
 					if (player.getId() == IMatchRoleID.setPieces) {
 						aufstellung.setKicker(player.getSpielerId());
 					} else if (player.getId() == IMatchRoleID.captain) {
-						aufstellung.setKapitaen(player.getSpielerId());
+						aufstellung.setCaptain(player.getSpielerId());
 					} else {
 						aufstellung.setSpielerAtPosition(player.getId(), player.getSpielerId(),
-								player.getTaktik());
+								player.getTactic());
 					}
 				}
 			}

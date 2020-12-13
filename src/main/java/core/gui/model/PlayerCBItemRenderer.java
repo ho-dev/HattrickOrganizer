@@ -6,10 +6,10 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class PlayerCBItemRenderer implements javax.swing.ListCellRenderer<SpielerCBItem> {
+public class PlayerCBItemRenderer implements javax.swing.ListCellRenderer<PlayerCBItem> {
 
     @Override
-    public Component getListCellRendererComponent(JList<? extends SpielerCBItem> list, SpielerCBItem value, int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList<? extends PlayerCBItem> list, PlayerCBItem value, int index, boolean isSelected, boolean cellHasFocus) {
         if (value != null) {
             return value.getListCellRendererComponent(list, index, isSelected);
         } else {

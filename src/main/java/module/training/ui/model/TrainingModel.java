@@ -34,8 +34,8 @@ public class TrainingModel {
 	public void setActivePlayer(Player player) {
 		if ((this.activePlayer == null && player != null)
 				|| (this.activePlayer != null && player == null)
-				|| (this.activePlayer != null && player != null && this.activePlayer.getSpielerID() != player
-						.getSpielerID())) {
+				|| (this.activePlayer != null && player != null && this.activePlayer.getPlayerID() != player
+						.getPlayerID())) {
 			this.activePlayer = player;
 			this.skillupManager = null;
 			resetFutureTrainings_();

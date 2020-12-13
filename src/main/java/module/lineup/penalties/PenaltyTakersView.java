@@ -16,9 +16,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -41,8 +38,6 @@ import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -108,7 +103,7 @@ public class PenaltyTakersView extends JPanel {
 
 	private PenaltyTaker getPenaltyTaker(int playerId) {
 		for (PenaltyTaker taker : this.players) {
-			if (taker.getPlayer().getSpielerID() == playerId) {
+			if (taker.getPlayer().getPlayerID() == playerId) {
 				return taker;
 			}
 		}
@@ -497,7 +492,7 @@ public class PenaltyTakersView extends JPanel {
 
 	private Integer getInLineupVal(Player player) {
 		if (lineup != null) {
-			int playerId = player.getSpielerID();
+			int playerId = player.getPlayerID();
 			if (lineup.isPlayerInStartingEleven(playerId)) {
 				return Integer.valueOf(1);
 			} else if (lineup.isSpielerInReserve(playerId)) {

@@ -38,20 +38,20 @@ public class WagesOverviewPanel extends JPanel {
 
 	private void refreshData() {
 		if (this.player != null) {
-			Date buyingDate = Calc.getBuyingDate(player.getSpielerID());
+			Date buyingDate = Calc.getBuyingDate(player.getPlayerID());
 			if (buyingDate == null) {
 				buyingDate = new Date(DBManager.instance()
-						.getSpielerFirstHRF(player.getSpielerID()).getHrfDate().getTime());
+						.getSpielerFirstHRF(player.getPlayerID()).getHrfDate().getTime());
 			}
 			List<Date> updates = Calc.getUpdates(Calc.getEconomyDate(), buyingDate, new Date());
-			List<Wage> wagesByAge = Wage.getWagesByAge(player.getSpielerID());
+			List<Wage> wagesByAge = Wage.getWagesByAge(player.getPlayerID());
 
 			Map<Integer, Wage> ageWageMap = new HashMap<Integer, Wage>();
 			for (Wage wage : wagesByAge) {
 				ageWageMap.put(Integer.valueOf(wage.getAge()), wage);
 			}
 
-			Date birthDay17 = Calc.get17thBirthday(player.getSpielerID());
+			Date birthDay17 = Calc.get17thBirthday(player.getPlayerID());
 			List<Entry> entries = new ArrayList<Entry>();
 			for (Date date : updates) {
 				int ageAt = Calc.getAgeAt(birthDay17, date);

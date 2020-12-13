@@ -249,7 +249,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	}
 
 	public void setActualSpieler(Player player) {
-		getLineupPanel().setPlayer(player.getSpielerID());
+		getLineupPanel().setPlayer(player.getPlayerID());
 		getSpielerUebersichtPanel().setPlayer(player);
 	}
 

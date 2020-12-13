@@ -112,43 +112,37 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 	@Override
 	public final void refresh() {
-		boolean gruppenfilter = m_clLineupPanel.getLineupAssistantPanel().isGroupFilter();
-		String gruppe = m_clLineupPanel.getLineupAssistantPanel().getGroup();
-		boolean gruppenegieren = m_clLineupPanel.getLineupAssistantPanel().isSelectedGroupExcluded();
-
-		boolean exludeLast = m_clLineupPanel.getLineupAssistantPanel()
-				.isExcludeLastMatch();
+		boolean bGroupFiltered = m_clLineupPanel.getLineupAssistantPanel().isGroupFilter();
+		String sGroup = m_clLineupPanel.getLineupAssistantPanel().getGroup();
+		boolean bSelectedGroupExcluded = m_clLineupPanel.getLineupAssistantPanel().isSelectedGroupExcluded();
+		boolean bExcludeLast = m_clLineupPanel.getLineupAssistantPanel().isExcludeLastMatch();
 
 		// All Player Positions Inform First 11
 		List<Player> selectedPlayers = new ArrayList<>();
-		List<Player> assitPlayers = new ArrayList<>();
+		List<Player> substitutes = new ArrayList<>();
 		List<Player> allPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		List<Player> filteredPlayers = new ArrayList<>();
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
 		for (Player player: allPlayers) {
 			// the first 11
-			if (lineup.isPlayerInStartingEleven(player.getSpielerID())) {
+			if (lineup.isPlayerInStartingEleven(player.getPlayerID())) {
 				selectedPlayers.add(player);
 			}
-			else if (lineup.isSpielerInReserve(player.getSpielerID())) {
-				assitPlayers.add(player);
+			else if (lineup.isSpielerInReserve(player.getPlayerID())) {
+				substitutes.add(player);
 			}
 		}
 
 		// Apply the Group Filter
 		for (Player player: allPlayers) {
 			// No Filter
-			if (!gruppenfilter || (gruppe.equals(player.getTeamInfoSmilie()) && !gruppenegieren)
-					|| (!gruppe.equals(player.getTeamInfoSmilie()) && gruppenegieren)) {
+			if (!bGroupFiltered || (sGroup.equals(player.getTeamInfoSmilie()) && !bSelectedGroupExcluded)
+					|| (!sGroup.equals(player.getTeamInfoSmilie()) && bSelectedGroupExcluded)) {
 				boolean include = true;
-				final LineupCBItem lastLineup = LineupsComparisonHistoryPanel
-						.getLastLineup();
+				final LineupCBItem lastLineup = LineupsComparisonHistoryPanel.getLastLineup();
 
-				if (exludeLast
-						&& (lastLineup != null)
-						&& lastLineup.getAufstellung()
-								.isPlayerInStartingEleven(player.getSpielerID())) {
+				if (bExcludeLast && (lastLineup != null) && lastLineup.getAufstellung().isPlayerInStartingEleven(player.getPlayerID())) {
 					include = false;
 					HOLogger.instance().log(getClass(), "Exclude: " + player.getFullName());
 				}
@@ -159,34 +153,34 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 			}
 		}
 
-		m_clKeeper.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clLeftBack.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clLeftCentralDefender.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clMiddleCentralDefender.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clRightCentralDefender.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clRightBack.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clLeftWinger.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clLeftInnerMidfielder.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clCentralInnerMidfielder.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clRightInnerMidfielder.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clRightWinger.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clLeftForward.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clCentralForward.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clRightForward.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clSubstKeeper1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clSubstKeeper2.refresh2(filteredPlayers, m_clSubstKeeper1.getPlayerId());
-		m_clSubstCD1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-	    m_clSubstCD2.refresh2(filteredPlayers, m_clSubstCD1.getPlayerId());
-		m_clSubstWB1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clSubstWB2.refresh2(filteredPlayers, m_clSubstWB1.getPlayerId());
-		m_clSubstIM1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clSubstIM2.refresh2(filteredPlayers, m_clSubstIM1.getPlayerId());
-		m_clSubstFwd1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clSubstFwd2.refresh2(filteredPlayers, m_clSubstFwd1.getPlayerId());
-		m_clSubstWI1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clSubstWI2.refresh2(filteredPlayers, m_clSubstWI1.getPlayerId());
-		m_clSubstXtr1.refresh(filteredPlayers, selectedPlayers, assitPlayers);
-		m_clSubstXtr2.refresh2(filteredPlayers, m_clSubstXtr1.getPlayerId());
+		m_clKeeper.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clLeftBack.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clLeftCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clMiddleCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clRightCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clRightBack.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clLeftWinger.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clLeftInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clCentralInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clRightInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clRightWinger.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clLeftForward.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clCentralForward.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clRightForward.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clSubstKeeper1.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clSubstKeeper2.refresh2(filteredPlayers, m_clSubstKeeper1.getiSelectedPlayerId());
+		m_clSubstCD1.refresh(filteredPlayers, selectedPlayers, substitutes);
+	    m_clSubstCD2.refresh2(filteredPlayers, m_clSubstCD1.getiSelectedPlayerId());
+		m_clSubstWB1.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clSubstWB2.refresh2(filteredPlayers, m_clSubstWB1.getiSelectedPlayerId());
+		m_clSubstIM1.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clSubstIM2.refresh2(filteredPlayers, m_clSubstIM1.getiSelectedPlayerId());
+		m_clSubstFwd1.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clSubstFwd2.refresh2(filteredPlayers, m_clSubstFwd1.getiSelectedPlayerId());
+		m_clSubstWI1.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clSubstWI2.refresh2(filteredPlayers, m_clSubstWI1.getiSelectedPlayerId());
+		m_clSubstXtr1.refresh(filteredPlayers, selectedPlayers, substitutes);
+		m_clSubstXtr2.refresh2(filteredPlayers, m_clSubstXtr1.getiSelectedPlayerId());
 		m_clSetPieceTaker.refresh(selectedPlayers, null, null);
 	 	m_clCaptain.refresh(selectedPlayers, null, null);
 

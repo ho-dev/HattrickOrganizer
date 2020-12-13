@@ -17,7 +17,7 @@ import java.util.Objects;
 
 import static core.gui.theme.HOIconName.*;
 
-public final class SpielerLabelEntry implements IHOTableEntry {
+public final class PlayerLabelEntry implements IHOTableEntry {
 
     private @Nullable Player m_clPlayer;
     private JComponent m_clComponent;
@@ -33,7 +33,6 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private final boolean m_bShowWeatherEffect;
     private boolean m_bCustomName = false;
     private String m_sCustomNameString = "";
-    private float m_fPositionRating;
     private boolean m_IsOneOfBestPositions;
     private boolean m_bMultiLine = false;
     private boolean m_bSelect = false;
@@ -50,11 +49,10 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     private static final int PLAYER_LABEL_ENTRY_WIDTH = 130;
 
     // Label for the player name (depending on status)
-    public SpielerLabelEntry(@Nullable Player player, @Nullable MatchRoleID playerMatchRoleID,
-                             float rating, boolean showJersey, boolean showWeatherEffect) {
+    public PlayerLabelEntry(@Nullable Player player, @Nullable MatchRoleID playerMatchRoleID,
+                            float rating, boolean showJersey, boolean showWeatherEffect) {
         m_clPlayer = player;
         m_clPlayerMatchRoleID = playerMatchRoleID;
-        m_fPositionRating = rating;
         m_IsOneOfBestPositions = false;
         m_bshowJersey = showJersey;
         m_bShowWeatherEffect = showWeatherEffect;
@@ -62,11 +60,10 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     }
 
     // Label for the player name (depending on status)
-    public SpielerLabelEntry(@Nullable Player player, @Nullable MatchRoleID playerMatchRoleID,
-                             float rating, boolean showJersey, boolean showWeatherEffect, boolean customName, String customNameText, boolean multiLine) {
+    public PlayerLabelEntry(@Nullable Player player, @Nullable MatchRoleID playerMatchRoleID,
+                            float rating, boolean showJersey, boolean showWeatherEffect, boolean customName, String customNameText, boolean multiLine) {
         m_clPlayer = player;
         m_clPlayerMatchRoleID = playerMatchRoleID;
-        m_fPositionRating = rating;
         m_IsOneOfBestPositions = false;
         m_bshowJersey = showJersey;
         m_bShowWeatherEffect = showWeatherEffect;
@@ -115,15 +112,14 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     public final void clear() {
         m_clPlayer = null;
         m_clPlayerMatchRoleID = null;
-        m_fPositionRating = 0f;
         m_IsOneOfBestPositions = false;
         updateComponent();
     }
 
 
     public final int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof SpielerLabelEntry) {
-            final SpielerLabelEntry entry = (SpielerLabelEntry) obj;
+        if (obj instanceof PlayerLabelEntry) {
+            final PlayerLabelEntry entry = (PlayerLabelEntry) obj;
 
             return Objects.requireNonNull(m_clPlayer).getFullName().compareTo(Objects.requireNonNull(entry.getSpieler()).getFullName());
         }
@@ -132,8 +128,8 @@ public final class SpielerLabelEntry implements IHOTableEntry {
     }
 
     public final int compareToThird(IHOTableEntry obj) {
-        if (obj instanceof SpielerLabelEntry) {
-            final SpielerLabelEntry entry = (SpielerLabelEntry) obj;
+        if (obj instanceof PlayerLabelEntry) {
+            final PlayerLabelEntry entry = (PlayerLabelEntry) obj;
             int num1 = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getSortIndex();
             int num2 = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.m_clPlayer).getSortIndex();
 
@@ -305,7 +301,6 @@ public final class SpielerLabelEntry implements IHOTableEntry {
                                       float positionsbewertung, boolean alternativePosition, String nameText) {
         m_clPlayer = player;
         m_clPlayerMatchRoleID = positionAktuell;
-        m_fPositionRating = positionsbewertung;
         m_IsOneOfBestPositions = alternativePosition;
         m_sCustomNameString = nameText;
 

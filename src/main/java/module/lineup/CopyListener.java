@@ -144,7 +144,7 @@ public class CopyListener implements ActionListener {
 		result = goalie = rightWB = rightCD = middleCD = leftCD = leftWB = rightW = rightIM = middleIM = leftIM = leftW = rightFW = middleFW = leftFW = EMPTY;
 		for (PlayerPositionPanel p : pos) {
 			int positionID = p.getPositionsID();
-			int playerID = p.getPlayerId();
+			int playerID = p.getiSelectedPlayerId();
 			if (playerID != -1) {
 				Player player = p.getSelectedPlayer();
 				switch (positionID) {
@@ -198,7 +198,7 @@ public class CopyListener implements ActionListener {
 		result = goalie = rightWB = rightCD = middleCD = leftCD = leftWB = rightW = rightIM = middleIM = leftIM = leftW = rightFW = middleFW = leftFW = EMPTY;
 		for (PlayerPositionPanel p : pos) {
 			int positionID = p.getPositionsID();
-			int playerID = p.getPlayerId();
+			int playerID = p.getiSelectedPlayerId();
 			if (playerID != -1) {
 				Player player = p.getSelectedPlayer();
 				switch (positionID) {

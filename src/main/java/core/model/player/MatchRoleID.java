@@ -7,25 +7,21 @@ import core.datatype.CBItem;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
 import module.lineup.Lineup;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
+
 
 public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleID>,
 		IMatchRoleID {
 
-	private static final long serialVersionUID = -4822360078242315135L;
 
-	// ~ Static fields/initializers
-	// -----------------------------------------------------------------
 
 	/**
-	 * Array mit den Konstanten (CBItems) für die Positionen, Ohne Ausgewechselt
+	 * Array with the constants (CBItems) for the positions, Without Exchanged
 	 */
 	public static final CBItem[] POSITIONEN = {
 			new CBItem(MatchRoleID.getNameForPosition(UNKNOWN), UNKNOWN),
@@ -105,7 +101,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		// m_bPosition = position;
 		m_iId = sp.getId();
 		m_iSpielerId = sp.getSpielerId();
-		m_bTaktik = sp.getTaktik();
+		m_bTaktik = sp.getTactic();
 
 		if ((m_iId < IMatchRoleID.setPieces) && (m_iId != -1)) {
 			HOLogger.instance().debug(getClass(), "Old RoleID found in lineup: " + m_iId);
@@ -711,7 +707,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	 *
 	 * @return Value of property m_bTaktik.
 	 */
-	public final byte getTaktik() {
+	public final byte getTactic() {
 		return m_bTaktik;
 	}
 

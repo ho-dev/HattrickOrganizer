@@ -83,7 +83,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		for (Iterator<Player> iter = allOutdated.iterator(); iter.hasNext();) {
 			final Player player = iter.next();
 
-			if (player.getSpielerID() < 0) {
+			if (player.getPlayerID() < 0) {
 				outdated.remove(player);
 			}
 		}
@@ -100,7 +100,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		if (success) {
 			for (Iterator<Player> iter = outdated.iterator(); iter.hasNext();) {
 				final Player player = iter.next();
-				DBManager.instance().updatePlayerTransfers(player.getSpielerID());
+				DBManager.instance().updatePlayerTransfers(player.getPlayerID());
 			}
 		}
 

@@ -126,26 +126,28 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		final HOMainFrame mainFrame = core.gui.HOMainFrame.instance();
 
 		if (actionEvent.getSource().equals(m_jbClearLineup)) {
-			// Alle Positionen leeren
-			hoModel.getLineupWithoutRatingRecalc().resetAufgestellteSpieler();
+			// Empty all positions
+			hoModel.getLineupWithoutRatingRecalc().resetStartingLineup();
 			hoModel.getLineupWithoutRatingRecalc().resetPositionOrders();
-			hoModel.getLineupWithoutRatingRecalc().resetReserveBank();
+			hoModel.getLineupWithoutRatingRecalc().resetSubstituteBench();
 			hoModel.getLineupWithoutRatingRecalc().setKicker(0);
-			hoModel.getLineupWithoutRatingRecalc().setKapitaen(0);
+			hoModel.getLineupWithoutRatingRecalc().setCaptain(0);
 			HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("Aufstellung_geloescht"));
 			mainFrame.getLineupPanel().update();
-		} else if (actionEvent.getSource().equals(m_jbStartAssistant)) {
+		}
+		else if (actionEvent.getSource().equals(m_jbStartAssistant)) {
 			displayGUI();
-		} else if (actionEvent.getSource().equals(m_jcbxFilterPlayerPositionCB)
-				|| actionEvent.getSource().equals(m_jcbxNotLast)) {
+		}
+		else if (actionEvent.getSource().equals(m_jcbxFilterPlayerPositionCB) || actionEvent.getSource().equals(m_jcbxNotLast)) {
 			mainFrame.getLineupPanel().getLineupPositionsPanel().refresh();
-		} else if (actionEvent.getSource().equals(m_jcbGroups)
-				|| actionEvent.getSource().equals(m_jcbIncludeExclude)) {
+		}
+		else if (actionEvent.getSource().equals(m_jcbGroups) || actionEvent.getSource().equals(m_jcbIncludeExclude)) {
 			// Only if filter active
 			if (m_jcbxFilterPlayerPositionCB.isSelected()) {
 				mainFrame.getLineupPanel().getLineupPositionsPanel().refresh();
 			}
-		} else if (actionEvent.getSource().equals(overlayOk)) {
+		}
+		else if (actionEvent.getSource().equals(overlayOk)) {
 
 			// Check that max 11 positions are sent
 			Iterator<Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay>> it = positions
@@ -223,7 +225,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 				if (m_jcbxNotLast.isSelected()
 						&& (lastLineup != null)
 						&& lastLineup.getAufstellung()
-								.isPlayerInStartingEleven(player.getSpielerID())) {
+								.isPlayerInStartingEleven(player.getPlayerID())) {
 					include = false;
 					HOLogger.instance().log(getClass(), "Exclude: " + player.getFullName());
 				}

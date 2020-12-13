@@ -9,11 +9,9 @@ import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import static core.model.player.IMatchRoleID.aFieldMSubsAndBackupMatchRoleID;
 import static core.model.player.IMatchRoleID.aPositionBehaviours;
 
 
@@ -225,7 +223,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 						player.getSourceSystem().getId() + "," +
 						player.getSpielerId() + ","	+
 						player.getId() + "," +
-						player.getTaktik()	+ ","	+
+						player.getTactic()	+ ","	+
 						player.getPositionCode() + ",'" +
 						DBManager.insertEscapeSequences(player.getSpielerVName()) + "', '" +
 						DBManager.insertEscapeSequences(player.getNickName()) + "', '" +

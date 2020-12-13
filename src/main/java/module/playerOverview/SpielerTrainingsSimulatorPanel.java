@@ -175,7 +175,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             setCBs();
 
             //Remove for Temp player
-            if (player.getSpielerID() < 0) {
+            if (player.getPlayerID() < 0) {
                 m_jbRemoveTempSpieler.setEnabled(true);
             } else {
                 m_jbRemoveTempSpieler.setEnabled(false);
@@ -197,7 +197,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             tempPlayer.setNationalitaet(HOVerwaltung.instance().getModel().getBasics().getLand());
             tempPlayer.setSpielerID(module.transfer.scout.TransferEingabePanel
                     .getNextTempSpielerID());
-            tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getSpielerID()));
+            tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerID()));
             tempPlayer.setAlter(getAge());
             tempPlayer.setAgeDays(getAgeDays());
             tempPlayer.setErfahrung(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());

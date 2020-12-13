@@ -2,7 +2,7 @@ package module.transfer.scout;
 
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.HomegrownEntry;
-import core.gui.comp.entry.SpielerLabelEntry;
+import core.gui.comp.entry.PlayerLabelEntry;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -383,7 +383,7 @@ public class TransferTableModel extends AbstractTableModel {
                                                  ColorLabelEntry.FG_STANDARD,
                                                  ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             //Name
-            m_clData[i][1] = new SpielerLabelEntry(aktuellerPlayer, null, 0f, false, false);
+            m_clData[i][1] = new PlayerLabelEntry(aktuellerPlayer, null, 0f, false, false);
             //Price
             m_clData[i][2] = new ColorLabelEntry(aktuellerScoutEintrag.getPrice()+"",
                                                  ColorLabelEntry.FG_STANDARD,

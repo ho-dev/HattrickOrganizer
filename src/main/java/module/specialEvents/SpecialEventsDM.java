@@ -226,7 +226,7 @@ public class SpecialEventsDM {
 
 			boolean playerFound = false;
 			for (Player player : players) {
-				if (isInvolved(player.getSpielerID(), highlight)) {
+				if (isInvolved(player.getPlayerID(), highlight)) {
 					// player found in list of current players
 					playerFound = true;
 					break;

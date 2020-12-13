@@ -105,7 +105,7 @@ final class SpielerTable extends AbstractTable {
 	void saveSpieler(int hrfId, Player player, Timestamp date) {
 		StringBuilder statement = new StringBuilder(500);
 		final String[] awhereS = { "HRF_ID", "SpielerId" };
-		final String[] awhereV = { "" + hrfId, "" + player.getSpielerID()};
+		final String[] awhereV = { "" + hrfId, "" + player.getPlayerID()};
 		if (player != null) {
 			// Delete old values
 			delete(awhereS, awhereV);
@@ -127,7 +127,7 @@ final class SpielerTable extends AbstractTable {
 			statement.append(") VALUES(");
 			statement.append(player.getGelbeKarten()).append(",");
 						
-			statement.append(player.getSpielerID()).append(",");
+			statement.append(player.getPlayerID()).append(",");
 			statement.append("'").append(DBManager.insertEscapeSequences(player.getFirstName())).append("',");
 			statement.append("'").append(DBManager.insertEscapeSequences(player.getNickName())).append("',");
 			statement.append("'").append(DBManager.insertEscapeSequences(player.getLastName())).append("',");

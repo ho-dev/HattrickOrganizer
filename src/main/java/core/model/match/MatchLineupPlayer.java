@@ -3,8 +3,6 @@ package core.model.match;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
-import javax.xml.transform.Source;
-
 public class MatchLineupPlayer extends MatchRoleID {
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -69,7 +67,7 @@ public class MatchLineupPlayer extends MatchRoleID {
     }
 
     public MatchLineupPlayer(MatchLineupPlayer p) {
-    	super (p.getFieldPos(), p.getSpielerId(), p.getTaktik());
+    	super (p.getFieldPos(), p.getSpielerId(), p.getTactic());
     	
     	m_sSpielerName = p.getSpielerName();
         m_sNickName = p.getNickName();

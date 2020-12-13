@@ -42,7 +42,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 		final UserColumn[] add =  UserColumnFactory.createPlayerAdditionalArray();
 		final MatchKurzInfoColumn [] matches = UserColumnFactory.createMatchesArray();
 		final MatchDetailsColumn [] matchdetails = UserColumnFactory.createMatchDetailsColumnsArray();
-		final PlayerCBItem [] cbItems = UserColumnFactory.createPlayerCBItemArray();
+		final PlayerColumn2[] cbItems = UserColumnFactory.createPlayerCBItemArray();
 		final PlayerSkillColumn[] skills =  UserColumnFactory.createPlayerSkillArray();
 		final UserColumn[] goals =  UserColumnFactory.createGoalsColumnsArray();
 		final PlayerPositionColumn[] positions =  UserColumnFactory.createPlayerPositionArray();
@@ -145,8 +145,8 @@ public class PlayerAnalysisModel extends HOTableModel {
     				m_clData[i][j] = ((MatchDetailsColumn)tmpDisplayedColumns[j]).getTableEntry(matchdetails);
     			if(tmpDisplayedColumns[j] instanceof MatchKurzInfoColumn)
     				m_clData[i][j] = ((MatchKurzInfoColumn)tmpDisplayedColumns[j]).getTableEntry(spielerCBItem);
-    			if(tmpDisplayedColumns[j] instanceof PlayerCBItem)
-    				m_clData[i][j] = ((PlayerCBItem)tmpDisplayedColumns[j]).getTableEntry(spielerCBItem);
+    			if(tmpDisplayedColumns[j] instanceof PlayerColumn2)
+    				m_clData[i][j] = ((PlayerColumn2)tmpDisplayedColumns[j]).getTableEntry(spielerCBItem);
 
     		}
     	}

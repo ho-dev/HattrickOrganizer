@@ -354,7 +354,7 @@ public class ImageUtilities {
 	        return ImageUtilities.getImage4Position(0, (byte) 0, trickotnummer);
 	    }
 	
-	    return ImageUtilities.getImage4Position(position.getId(), position.getTaktik(), trickotnummer);
+	    return ImageUtilities.getImage4Position(position.getId(), position.getTactic(), trickotnummer);
 	}
 
 	/**
@@ -523,7 +523,7 @@ public class ImageUtilities {
 			return ImageUtilities.getJerseyIcon(0, (byte) 0, trickotnummer);
 		}
 
-		return ImageUtilities.getJerseyIcon(position.getId(), position.getTaktik(), trickotnummer);
+		return ImageUtilities.getJerseyIcon(position.getId(), position.getTactic(), trickotnummer);
 	}
 
     public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer) {

@@ -169,7 +169,7 @@ final class SpielerSkillupTable extends AbstractTable {
 	void importNewSkillup(HOModel homodel) {
 		List<Player> players = homodel.getCurrentPlayers();
 		for ( Player nPlayer : players){
-			Player oPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(nPlayer.getSpielerID());
+			Player oPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(nPlayer.getPlayerID());
 			if (oPlayer!=null) {
 				checkNewSkillup(nPlayer, nPlayer.getGKskill(), oPlayer.getGKskill(), PlayerSkill.KEEPER, homodel.getID());
 				checkNewSkillup(nPlayer, nPlayer.getPMskill(), oPlayer.getPMskill(), PlayerSkill.PLAYMAKING, homodel.getID());
@@ -186,7 +186,7 @@ final class SpielerSkillupTable extends AbstractTable {
 		
 	private void checkNewSkillup(Player nPlayer, int newValue, int oldValue, int skill, int hrf) {
 		if (newValue>oldValue) {
-			storeSkillup(hrf,nPlayer.getSpielerID(),nPlayer.getHrfDate(),newValue,skill,true);
+			storeSkillup(hrf,nPlayer.getPlayerID(),nPlayer.getHrfDate(),newValue,skill,true);
 		}
 		
 	}

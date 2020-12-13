@@ -219,7 +219,7 @@ final class SpielerDetailDialog extends JDialog {
 
 		HOLogger.instance().log(getClass(), "Show Player: " + player.getFullName());
 
-		setTitle(player.getFullName() + " (" + player.getSpielerID() + ")");
+		setTitle(player.getFullName() + " (" + player.getPlayerID() + ")");
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public final void windowClosing(WindowEvent e) {
@@ -232,7 +232,7 @@ final class SpielerDetailDialog extends JDialog {
 
 		m_jpRating.setRating((float) matchplayer.getRating() * 2, true);
 		m_jpAktuellRating.setRating(DBManager.instance().getLetzteBewertung4Spieler(
-				player.getSpielerID()));
+				player.getPlayerID()));
 		setLabels(player);
 
 		pack();
@@ -244,22 +244,22 @@ final class SpielerDetailDialog extends JDialog {
 
 	private void setLabels(Player m_clPlayer) {
 		Player m_clVergleichsPlayer = HOVerwaltung.instance().getModel()
-				.getCurrentPlayer(m_clPlayer.getSpielerID());
+				.getCurrentPlayer(m_clPlayer.getPlayerID());
 
 		m_jpName.setText(m_clPlayer.getFullName());
 		m_jpAlter.setText(m_clPlayer.getAlter() + "");
 		m_jpNationalitaet.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalitaet()));
 
 		if (HOVerwaltung.instance().getModel().getLineup()
-				.isPlayerInLineup(m_clPlayer.getSpielerID())
+				.isPlayerInLineup(m_clPlayer.getPlayerID())
 				&& (HOVerwaltung.instance().getModel().getLineup()
-						.getPositionBySpielerId(m_clPlayer.getSpielerID()) != null)) {
+						.getPositionBySpielerId(m_clPlayer.getPlayerID()) != null)) {
 			m_jpAufgestellt.setIcon(ImageUtilities.getImage4Position(
 					HOVerwaltung.instance().getModel().getLineup()
-							.getPositionBySpielerId(m_clPlayer.getSpielerID()),
+							.getPositionBySpielerId(m_clPlayer.getPlayerID()),
 					m_clPlayer.getTrikotnummer()));
 			m_jpAufgestellt.setText(MatchRoleID.getNameForPosition(HOVerwaltung.instance()
-					.getModel().getLineup().getPositionBySpielerId(m_clPlayer.getSpielerID())
+					.getModel().getLineup().getPositionBySpielerId(m_clPlayer.getPlayerID())
 					.getPosition()));
 		} else {
 			m_jpAufgestellt.setIcon(ImageUtilities.getImage4Position(null,
@@ -1079,9 +1079,9 @@ final class SpielerDetailDialog extends JDialog {
 
 		// //////////////////////////////////////////////////////////////////////
 		final float[] rating = core.db.DBManager.instance().getBewertungen4Player(
-				player.getSpielerID());
+				player.getPlayerID());
 		final float[] ratingPos = core.db.DBManager.instance().getBewertungen4PlayerUndPosition(
-				player.getSpielerID(), matchplayer.getPosition());
+				player.getPlayerID(), matchplayer.getPosition());
 
 		// Rating insgesamt
 		GridBagLayout sublayout = new GridBagLayout();
@@ -1194,7 +1194,7 @@ final class SpielerDetailDialog extends JDialog {
 				.getLanguageString("Rating")
 				+ " "
 				+ MatchRoleID.getNameForPosition(MatchRoleID
-						.getPosition(matchplayer.getId(), matchplayer.getTaktik()))));
+						.getPosition(matchplayer.getId(), matchplayer.getTactic()))));
 
 		subconstraints.gridx = 0;
 		subconstraints.gridy = 0;

@@ -14,7 +14,6 @@ import core.util.Helper;
 import core.util.HelperWrapper;
 import core.util.StringUtils;
 import module.training.ui.model.ModelChange;
-import module.training.ui.model.ModelChangeListener;
 import module.training.ui.model.OutputTableModel;
 import module.training.ui.model.TrainingModel;
 import module.training.ui.renderer.OutputTableRenderer;
@@ -25,12 +24,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.*;
@@ -156,7 +152,7 @@ public class OutputPanel extends LazyImagePanel {
             for (int i = 0; i < tblModel.getRowCount(); i++) {
                 String val = (String) tblModel.getValueAt(i, OutputTableModel.COL_PLAYER_ID);
                 int id = Integer.parseInt(val);
-                if (player.getSpielerID() == id) {
+                if (player.getPlayerID() == id) {
                     int viewIndex = this.outputTable.convertRowIndexToView(i);
                     this.outputTable.setRowSelectionInterval(viewIndex, viewIndex);
                     break;

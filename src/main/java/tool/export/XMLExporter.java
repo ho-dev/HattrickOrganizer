@@ -382,7 +382,7 @@ public class XMLExporter  {
 					ele.appendChild(doc.createTextNode("" + playerMatch.getId()));
 					ele = doc.createElement("Tactic");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerMatch.getTaktik()));
+					ele.appendChild(doc.createTextNode("" + playerMatch.getTactic()));
 					ele = doc.createElement("HOPosition");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerMatch.getPosition()));

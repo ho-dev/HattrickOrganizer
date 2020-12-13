@@ -119,9 +119,9 @@ public class RatingOptimizer {
 			if (playerMatch.getId() == IMatchRoleID.setPieces) {
 				lineup.setKicker(playerMatch.getSpielerId());
 			} else if (playerMatch.getId() == IMatchRoleID.captain) {
-				lineup.setKapitaen(playerMatch.getSpielerId());
+				lineup.setCaptain(playerMatch.getSpielerId());
 			} else {
-				lineup.setSpielerAtPosition(playerMatch.getId(), playerMatch.getSpielerId(), playerMatch.getTaktik());
+				lineup.setSpielerAtPosition(playerMatch.getId(), playerMatch.getSpielerId(), playerMatch.getTactic());
 			}
 		}
 		

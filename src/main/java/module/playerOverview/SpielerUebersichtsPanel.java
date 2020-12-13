@@ -42,8 +42,8 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 *            the id of the player to select.
 	 */
 	public void setPlayer(Player player) {
-		spielerUebersichtTableName.setPlayer(player.getSpielerID());
-		playerOverviewTable.setSpieler(player.getSpielerID());
+		spielerUebersichtTableName.setPlayer(player.getPlayerID());
+		playerOverviewTable.setSpieler(player.getPlayerID());
 		spielerDetailPanel.setSpieler(player);
 		spielerTrainingsSimulatorPanel.setSpieler(player);
 	}

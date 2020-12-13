@@ -45,11 +45,11 @@ public class WagesSumPanel extends JPanel {
 
 	private void refreshData() {
 		if (this.player != null) {
-			Transfer t = Transfer.getTransfer(player.getSpielerID());
+			Transfer t = Transfer.getTransfer(player.getPlayerID());
 			Date buyingDate;
 			if (player.isHomeGrown()) {
 				buyingDate = new Date(DBManager.instance()
-						.getSpielerFirstHRF(player.getSpielerID()).getHrfDate().getTime());
+						.getSpielerFirstHRF(player.getPlayerID()).getHrfDate().getTime());
 			} else {
 				buyingDate = t.purchaseDate;
 			}
@@ -57,14 +57,14 @@ public class WagesSumPanel extends JPanel {
 			Date sellingDate = (t.sellingDate != null) ? t.sellingDate : new Date(); 
 			List<Date> updates = Calc.getUpdates(Calc.getEconomyDate(), buyingDate, sellingDate);
 			
-			List<Wage> wagesByAge = Wage.getWagesByAge(player.getSpielerID());
+			List<Wage> wagesByAge = Wage.getWagesByAge(player.getPlayerID());
 
 			Map<Integer, Wage> ageWageMap = new HashMap<Integer, Wage>();
 			for (Wage wage : wagesByAge) {
 				ageWageMap.put(Integer.valueOf(wage.getAge()), wage);
 			}
 
-			Date birthDay17 = Calc.get17thBirthday(player.getSpielerID());
+			Date birthDay17 = Calc.get17thBirthday(player.getPlayerID());
 			Map<Integer, Entry> ageWageSumMap = new HashMap<Integer, Entry>();
 			for (Date date : updates) {
 				int ageAt = Calc.getAgeAt(birthDay17, date);

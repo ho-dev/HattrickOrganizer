@@ -36,9 +36,9 @@ final public class UserColumnFactory {
     public static final int LAST_MATCH = 461;
 
 
-    public static PlayerCBItem[] createPlayerCBItemArray() {
-        final PlayerCBItem[] playerCBItemArray = new PlayerCBItem[5];
-        playerCBItemArray[0] = new PlayerCBItem(590, "ls.team.teamspirit") {
+    public static PlayerColumn2[] createPlayerCBItemArray() {
+        final PlayerColumn2[] playerColumn2Array = new PlayerColumn2[5];
+        playerColumn2Array[0] = new PlayerColumn2(590, "ls.team.teamspirit") {
             @Override
             public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem) {
                 return new ColorLabelEntry(spielerCBItem.getStimmung(),
@@ -47,7 +47,7 @@ final public class UserColumnFactory {
             }
         };
 
-        playerCBItemArray[1] = new PlayerCBItem(600, "ls.team.confidence") {
+        playerColumn2Array[1] = new PlayerColumn2(600, "ls.team.confidence") {
             @Override
             public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem) {
                 return new ColorLabelEntry(spielerCBItem.getSelbstvertrauen(),
@@ -56,7 +56,7 @@ final public class UserColumnFactory {
             }
         };
 
-        playerCBItemArray[2] = new PlayerCBItem(601, "Position") {
+        playerColumn2Array[2] = new PlayerColumn2(601, "Position") {
             @Override
             public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem) {
                 ColorLabelEntry colorLabelEntry = new ColorLabelEntry(ImageUtilities
@@ -77,14 +77,14 @@ final public class UserColumnFactory {
             }
         };
 
-        playerCBItemArray[3] = new PlayerCBItem(RATING, "Rating") {
+        playerColumn2Array[3] = new PlayerColumn2(RATING, "Rating") {
             @Override
             public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem) {
                 return new RatingTableEntry(spielerCBItem.getRating());
             }
         };
 
-        playerCBItemArray[4] = new PlayerCBItem(602, "ls.player.age") {
+        playerColumn2Array[4] = new PlayerColumn2(602, "ls.player.age") {
             @Override
             public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem) {
                 Player player = spielerCBItem.getSpieler();
@@ -107,7 +107,7 @@ final public class UserColumnFactory {
             }
         };
 
-        return playerCBItemArray;
+        return playerColumn2Array;
     }
 
     /**
@@ -222,10 +222,10 @@ final public class UserColumnFactory {
         playerBasicArray[0] = new PlayerColumn(NAME, "ls.player.name", 0) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                return new SpielerLabelEntry(player,
+                return new PlayerLabelEntry(player,
                         HOVerwaltung.instance().getModel()
                                 .getLineupWithoutRatingRecalc()
-                                .getPositionBySpielerId(player.getSpielerID()),
+                                .getPositionBySpielerId(player.getPlayerID()),
                         0f, false, false);
             }
 
@@ -239,8 +239,8 @@ final public class UserColumnFactory {
         playerBasicArray[1] = new PlayerColumn(ID, "ls.player.id", 0) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                return new ColorLabelEntry(player.getSpielerID(),
-                        player.getSpielerID() + "",
+                return new ColorLabelEntry(player.getPlayerID(),
+                        player.getPlayerID() + "",
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
@@ -600,8 +600,8 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final HOModel model = HOVerwaltung.instance().getModel();
                 final MatchRoleID positionBySpielerId = model.getLineupWithoutRatingRecalc()
-                        .getPositionBySpielerId(player.getSpielerID());
-                if (model.getLineupWithoutRatingRecalc().isPlayerInLineup(player.getSpielerID())
+                        .getPositionBySpielerId(player.getPlayerID());
+                if (model.getLineupWithoutRatingRecalc().isPlayerInLineup(player.getPlayerID())
                         && (positionBySpielerId != null)) {
                     final ColorLabelEntry colorLabelEntry = new ColorLabelEntry(
                             ImageUtilities.getJerseyIcon(

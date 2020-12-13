@@ -244,7 +244,7 @@ public class FeedbackPanel extends JFrame {
         // return false if HOLineup not fully included in required Lineup
         for (IMatchRoleID obj : HOLineup.getPositionen()) {
             positionHO = ((MatchRoleID) obj).getId();
-            orderHO = ((MatchRoleID) obj).getTaktik();
+            orderHO = ((MatchRoleID) obj).getTactic();
             isAligned = (((MatchRoleID) obj).getSpielerId() != 0) && IMatchRoleID.aFieldMatchRoleID.contains(positionHO);
 
 
@@ -259,7 +259,7 @@ public class FeedbackPanel extends JFrame {
         // return false if required Lineup not fully included in HO Lineup
         for (Map.Entry<Integer, Byte> entry : requirements.lineup.entrySet()) {
             MatchRoleID HOposition = HOLineup.getPositionById(entry.getKey());
-            orderHO = HOposition.getTaktik();
+            orderHO = HOposition.getTactic();
             isAligned = (HOposition.getSpielerId() != 0) && IMatchRoleID.aFieldMatchRoleID.contains(HOposition.getId());
             if ((!isAligned) || (orderHO!=entry.getValue())) {return false;}
         }

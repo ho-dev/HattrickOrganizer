@@ -91,7 +91,7 @@ public class PlayerPerformance {
         }
     }
     public byte getTaktik() {
-        return mlp.getTaktik();
+        return mlp.getTactic();
     }
 
     public MatchRoleID getMatchRoleID() { return this.mlp;}

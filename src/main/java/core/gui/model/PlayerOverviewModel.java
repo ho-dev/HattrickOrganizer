@@ -75,7 +75,7 @@ public final  class PlayerOverviewModel extends HOTableModel {
         //Kann < 0 sein für TempSpieler if ( id > 0 )
         if (id != 0) {
             for (int i = 0; i < m_vPlayers.size(); i++) {
-                if (((Player) m_vPlayers.get(i)).getSpielerID() == id) {
+                if (((Player) m_vPlayers.get(i)).getPlayerID() == id) {
                     return (Player) m_vPlayers.get(i);
                 }
             }
@@ -119,14 +119,14 @@ public final  class PlayerOverviewModel extends HOTableModel {
      * Gibt den Player mit der gleichen ID, wie die übergebene, zurück, oder null
      */
     private Player getVergleichsSpieler(Player vorlage) {
-        final int id = vorlage.getSpielerID();
+        final int id = vorlage.getPlayerID();
 
         for (int i = 0;
              (SpielerTrainingsVergleichsPanel.getVergleichsPlayer() != null)
              && (i < SpielerTrainingsVergleichsPanel.getVergleichsPlayer().size()); i++) {
             final Player vergleichsPlayer = SpielerTrainingsVergleichsPanel.getVergleichsPlayer().get(i);
 
-            if (vergleichsPlayer.getSpielerID() == id) {
+            if (vergleichsPlayer.getPlayerID() == id) {
                 //Treffer
                 return vergleichsPlayer;
             }
@@ -143,7 +143,7 @@ public final  class PlayerOverviewModel extends HOTableModel {
      * Gibt den Player aus dem ersten HRF, wo der Player aufgetauch ist, zurück
      */
     private Player getVergleichsSpielerFirstHRF(Player vorlage) {
-        return core.db.DBManager.instance().getSpielerFirstHRF(vorlage.getSpielerID());
+        return core.db.DBManager.instance().getSpielerFirstHRF(vorlage.getPlayerID());
     }
     
 //  -----initialisierung-----------------------------------------

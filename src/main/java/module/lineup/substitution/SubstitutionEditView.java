@@ -123,7 +123,7 @@ public class SubstitutionEditView extends JPanel {
 			ComboBoxModel model = this.playerComboBox.getModel();
 			for (int i = 0; i < model.getSize(); i++) {
 				if (((PlayerPositionItem) model.getElementAt(i)).getSpieler()
-						.getSpielerID() == sub.getSubjectPlayerID()) {
+						.getPlayerID() == sub.getSubjectPlayerID()) {
 					playerComboBox.setSelectedItem(model.getElementAt(i));
 					break;
 				}
@@ -134,7 +134,7 @@ public class SubstitutionEditView extends JPanel {
 			ComboBoxModel model = this.playerInComboBox.getModel();
 			for (int i = 0; i < model.getSize(); i++) {
 				if (this.orderType != MatchOrderType.MAN_MARKING) {
-					if (((PlayerPositionItem) model.getElementAt(i)).getSpieler().getSpielerID() == sub.getObjectPlayerID()) {
+					if (((PlayerPositionItem) model.getElementAt(i)).getSpieler().getPlayerID() == sub.getObjectPlayerID()) {
 						playerInComboBox.setSelectedItem(model.getElementAt(i));
 						break;
 					}
@@ -184,14 +184,14 @@ public class SubstitutionEditView extends JPanel {
 		this.substitution.setPlayerOrderId(nextOrderID);
 		var item = (PlayerPositionItem) this.playerComboBox.getSelectedItem();
 		if (item != null) {
-			this.substitution.setSubjectPlayerID(item.getSpieler().getSpielerID());
+			this.substitution.setSubjectPlayerID(item.getSpieler().getPlayerID());
 		}
 
 		if ( this.orderType != MatchOrderType.MAN_MARKING) {
 			if (this.orderType == MatchOrderType.POSITION_SWAP || this.orderType == MatchOrderType.SUBSTITUTION) {
 				item = (PlayerPositionItem) this.playerInComboBox.getSelectedItem();
 				if (item != null) {
-					this.substitution.setObjectPlayerID(item.getSpieler().getSpielerID());
+					this.substitution.setObjectPlayerID(item.getSpieler().getPlayerID());
 				}
 			} else if (this.orderType == MatchOrderType.NEW_BEHAVIOUR) {
 				// the player should be both object and subject, per API.

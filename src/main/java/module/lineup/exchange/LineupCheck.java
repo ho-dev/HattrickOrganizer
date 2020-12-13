@@ -26,7 +26,7 @@ public class LineupCheck {
 		if (hasFreeReserves(lineup)) {
 			problems.add(getWarningLabel("lineup.upload.check.reservesIncomplete"));
 		}
-		if (lineup.getKapitaen() <= 0) {
+		if (lineup.getCaptain() <= 0) {
 			problems.add(getWarningLabel("lineup.upload.check.captainNotSet"));
 		}
 		if (lineup.getKicker() <= 0) {

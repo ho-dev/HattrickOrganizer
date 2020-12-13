@@ -1,6 +1,5 @@
 package core.db;
 
-import core.model.match.MatchLineupPlayer;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;
@@ -103,7 +102,7 @@ public final class PositionenTable extends AbstractTable {
 		for (int i = 0; (positionen != null) && (sysName != null) && (i < positionen.size()); i++) {
 			pos = (MatchRoleID) positionen.elementAt(i);
 			statement = "INSERT INTO " + getTableName() + " ( HRF_ID, ID, Aufstellungsname, SpielerID, Taktik ) VALUES(";
-			statement += ("" + hrfId + "," + pos.getId() + ",'" + sysName + "'," + pos.getSpielerId() + "," + pos.getTaktik() + " )");
+			statement += ("" + hrfId + "," + pos.getId() + ",'" + sysName + "'," + pos.getSpielerId() + "," + pos.getTactic() + " )");
 			adapter.executeUpdate(statement);
 		}
 	}

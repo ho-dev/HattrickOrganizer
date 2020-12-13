@@ -5,7 +5,7 @@ import core.gui.HOMainFrame;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.gui.model.SpielerCBItem;
+import core.gui.model.PlayerCBItem;
 import core.gui.model.PlayerCBItemRenderer;
 import core.util.chart.LinesChartDataModel;
 import core.gui.theme.HOColorName;
@@ -63,7 +63,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 	private ImageCheckbox jcbSetPieces;
 	private JButton jbApply;
 	private JCheckBox jcbHelpLines;
-	private JComboBox<SpielerCBItem> jcbPlayer;
+	private JComboBox<PlayerCBItem> jcbPlayer;
 	private JTextField jtfNbWeeks;
 	private HOLinesChart oChartPanel;
 
@@ -415,24 +415,24 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 
 	private void initSpielerCB() {
 		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
-		List<SpielerCBItem> spielerCBItems = new ArrayList<SpielerCBItem>(players.size());
+		List<PlayerCBItem> playerCBItems = new ArrayList<PlayerCBItem>(players.size());
 		for (Player player : players) {
-			spielerCBItems.add(new SpielerCBItem(player.getFullName(), 0f, player));
+			playerCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));
 		}
-		Collections.sort(spielerCBItems);
+		Collections.sort(playerCBItems);
 
 		// Alte Player
 		List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
-		List<SpielerCBItem> spielerOldCBItems = new ArrayList<SpielerCBItem>(players.size());
+		List<PlayerCBItem> spielerOldCBItems = new ArrayList<PlayerCBItem>(players.size());
 		for (Player player : oldPlayers) {
-			spielerOldCBItems.add(new SpielerCBItem(player.getFullName(), 0f, player));
+			spielerOldCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));
 		}
 		Collections.sort(spielerOldCBItems);
 
 		// Zusammenfügen
-		List<SpielerCBItem> cbItems = new ArrayList<SpielerCBItem>(spielerCBItems.size()
+		List<PlayerCBItem> cbItems = new ArrayList<PlayerCBItem>(playerCBItems.size()
 				+ spielerOldCBItems.size() + 1);
-		cbItems.addAll(spielerCBItems);
+		cbItems.addAll(playerCBItems);
 		// Fur die Leerzeile;
 		cbItems.add(null);
 		cbItems.addAll(spielerOldCBItems);
@@ -458,8 +458,8 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 
 			if (jcbPlayer.getSelectedItem() != null) {
 				final double[][] statistikWerte = DBManager.instance().getSpielerDaten4Statistik(
-						((SpielerCBItem) jcbPlayer.getSelectedItem()).getPlayer()
-								.getSpielerID(), anzahlHRF);
+						((PlayerCBItem) jcbPlayer.getSelectedItem()).getPlayer()
+								.getPlayerID(), anzahlHRF);
 				final LinesChartDataModel[] models = new LinesChartDataModel[statistikWerte.length];
 
 				if (statistikWerte.length > 0) {

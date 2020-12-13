@@ -406,7 +406,7 @@ public class LineupAssistant {
 	public static boolean isPlayerInTeam(int playerID) {
 		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		for (Player player : players) {
-			if (player.getSpielerID() == playerID) {
+			if (player.getPlayerID() == playerID) {
 				return true;
 			}
 		}
@@ -432,7 +432,7 @@ public class LineupAssistant {
 			aktuStk = player.calcPosValue(position, mitForm);
 			aktuStk += m_weatherBonus * player.getWeatherEffect(this.weather) * aktuStk;
 
-			if ((!isPlayerInLineup(player.getSpielerID(), positionen))
+			if ((!isPlayerInLineup(player.getPlayerID(), positionen))
 					&& ((bestPlayer == null) || (bestStk < aktuStk))
 					&& ((ignoreSperre) || (!player.isGesperrt()))
 					&& ((ignoreVerletzung) || (player.getVerletzt() < 1))
@@ -466,7 +466,7 @@ public class LineupAssistant {
 			aktuStk += m_weatherBonus * player.getWeatherEffect(this.weather) * aktuStk;
 
 			// Idealpos STK muss > mindestwert sein
-			if ((!isPlayerInLineup(player.getSpielerID(), positionen))
+			if ((!isPlayerInLineup(player.getPlayerID(), positionen))
 					&& (player.getIdealPosition() == position)
 					&& ((bestPlayer == null) || (bestStk < aktuStk))
 					&& ((ignoreSperre) || (!player.isGesperrt()))
@@ -505,7 +505,7 @@ public class LineupAssistant {
 
 				// position besetzen
 				if (player != null) {
-					pos.setSpielerId(player.getSpielerID());
+					pos.setSpielerId(player.getPlayerID());
 				}
 			}
 		}
@@ -536,7 +536,7 @@ public class LineupAssistant {
 
 				// position besetzen
 				if (player != null) {
-					pos.setSpielerId(player.getSpielerID());
+					pos.setSpielerId(player.getPlayerID());
 				}
 			}
 		}
@@ -573,7 +573,7 @@ public class LineupAssistant {
 
 				// fill the position
 				if (player != null) {
-					pos.setSpielerId(player.getSpielerID());
+					pos.setSpielerId(player.getPlayerID());
 				}
 			}
 		}
@@ -605,7 +605,7 @@ public class LineupAssistant {
 
 				// position besetzen
 				if (player != null) {
-					pos.setSpielerId(player.getSpielerID());
+					pos.setSpielerId(player.getPlayerID());
 				}
 			}
 		}
@@ -627,7 +627,7 @@ public class LineupAssistant {
 
 				// position besetzen
 				if (player != null) {
-					pos.setSpielerId(player.getSpielerID());
+					pos.setSpielerId(player.getPlayerID());
 				}
 			}
 		}

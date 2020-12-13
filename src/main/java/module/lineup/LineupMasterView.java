@@ -108,7 +108,7 @@ public class LineupMasterView extends JPanel {
 		List<MatchRoleID>  list = new ArrayList<MatchRoleID>(takers.size());
 
 		for (int i = 0; i < takers.size(); i++) {
-			list.add(new MatchRoleID(IMatchRoleID.penaltyTaker1 + i, takers.get(i).getPlayer().getSpielerID(), IMatchRoleID.NORMAL));
+			list.add(new MatchRoleID(IMatchRoleID.penaltyTaker1 + i, takers.get(i).getPlayer().getPlayerID(), IMatchRoleID.NORMAL));
 		}
 		HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setPenaltyTakers(list);
 	}

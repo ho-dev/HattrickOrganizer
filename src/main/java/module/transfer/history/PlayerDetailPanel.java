@@ -180,7 +180,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         this.player = PlayerRetriever.getPlayer(playerid);
 
         if (this.player != null) {
-            this.playerId = player.getSpielerID();
+            this.playerId = player.getPlayerID();
             this.playerName = player.getFullName();
         } else {
             this.playerId = playerid;

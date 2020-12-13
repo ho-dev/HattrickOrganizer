@@ -395,7 +395,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 			for (int i = 0; i < tblModel.getRowCount(); i++) {
 				String val = (String) tblModel.getValueAt(i, ChangesTableModel.COL_PLAYER_ID);
 				int id = Integer.parseInt(val);
-				if (player.getSpielerID() == id) {
+				if (player.getPlayerID() == id) {
 					int viewIndex = this.changesTable.convertRowIndexToView(i);
 					this.changesTable.getSelectionModel()
 							.addSelectionInterval(viewIndex, viewIndex);

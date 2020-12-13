@@ -166,7 +166,7 @@ public class FutureTrainingManager {
 		fp.setStamina(getFinalValue(PlayerSkill.STAMINA));
 		fp.setForm(getFinalValue(PlayerSkill.FORM));
 		fp.setAge(player.getAlter()+(int)(Math.floor((player.getAgeDays()+7*weeksPassed)/112d)));
-		fp.setPlayerId(player.getSpielerID());
+		fp.setPlayerId(player.getPlayerID());
 		return fp;
 	}
 

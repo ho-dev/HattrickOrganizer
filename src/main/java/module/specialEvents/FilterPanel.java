@@ -459,7 +459,7 @@ public class FilterPanel extends JPanel {
 				.getCurrentPlayers());
 		Collections.sort(players, comparator);
 		for (Player player : players) {
-			playerItems.add(new PlayerCBItem(player.getFullName(), player.getSpielerID(), player
+			playerItems.add(new PlayerCBItem(player.getFullName(), player.getPlayerID(), player
 					.getPlayerSpecialty()));
 		}
 
@@ -470,7 +470,7 @@ public class FilterPanel extends JPanel {
 				playerItems.add(null);
 			}
 			for (Player player : players) {
-				playerItems.add(new PlayerCBItem(player.getFullName(), player.getSpielerID(), player
+				playerItems.add(new PlayerCBItem(player.getFullName(), player.getPlayerID(), player
 						.getPlayerSpecialty()));
 			}
 		}

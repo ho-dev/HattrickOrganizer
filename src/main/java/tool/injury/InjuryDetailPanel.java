@@ -153,7 +153,7 @@ class InjuryDetailPanel extends JPanel {
                     try {
                         ResultSet rs = DBManager.instance().getAdapter().executeQuery("select marktwert, hrf_id from SPIELER where spielerid="
                                                                                         + player
-                                                                                          .getSpielerID()
+                                                                                          .getPlayerID()
                                                                                         + " and verletzt=-1 order by hrf_id desc");
 
                         if (rs.next()) {
@@ -167,7 +167,7 @@ class InjuryDetailPanel extends JPanel {
                     try {
                         ResultSet rs = DBManager.instance().getAdapter().executeQuery("select marktwert from SPIELER where spielerid="
                                                                                         + player
-                                                                                          .getSpielerID()
+                                                                                          .getPlayerID()
                                                                                         + " and verletzt>-1 order by hrf_id desc");
 
                         if (rs.next()) {

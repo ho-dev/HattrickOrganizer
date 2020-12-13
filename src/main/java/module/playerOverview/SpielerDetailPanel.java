@@ -274,13 +274,13 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     public final void actionPerformed(java.awt.event.ActionEvent actionevent) {
         if (actionevent.getSource().equals(m_jbStatistics)) {
             HOMainFrame.instance().showTab(IModule.STATISTICS);
-            ((StatistikMainPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.STATISTICS)).setShowSpieler(m_clPlayer.getSpielerID());
+            ((StatistikMainPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.STATISTICS)).setShowSpieler(m_clPlayer.getPlayerID());
         } else if (actionevent.getSource().equals(m_jbAnalysisTop)) {
             HOMainFrame.instance().showTab(IModule.PLAYERANALYSIS);
-            HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Top(m_clPlayer.getSpielerID());
+            HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Top(m_clPlayer.getPlayerID());
         } else if (actionevent.getSource().equals(m_jbAnalysisBottom)) {
             HOMainFrame.instance().showTab(IModule.PLAYERANALYSIS);
-            HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Bottom(m_clPlayer.getSpielerID());
+            HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Bottom(m_clPlayer.getPlayerID());
         } else if (actionevent.getSource().equals(m_jbOffsets)) {
             new PlayerSubskillOffsetDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
         }
@@ -303,7 +303,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     @Override
     public final void focusLost(java.awt.event.FocusEvent event) {
         if (m_clPlayer != null) {
-            DBManager.instance().saveSpielerNotiz(m_clPlayer.getSpielerID(), m_jtaNotes.getText());
+            DBManager.instance().saveSpielerNotiz(m_clPlayer.getPlayerID(), m_jtaNotes.getText());
         }
     }
 
@@ -363,11 +363,11 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         else
             m_jpMotherClub.clear();
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-        if (lineup.isPlayerInLineup(m_clPlayer.getSpielerID())
-                && (lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()) != null)) {
-            m_jpPositioned.setIcon(ImageUtilities.getJerseyIcon(lineup.getPositionBySpielerId(m_clPlayer.getSpielerID()),
+        if (lineup.isPlayerInLineup(m_clPlayer.getPlayerID())
+                && (lineup.getPositionBySpielerId(m_clPlayer.getPlayerID()) != null)) {
+            m_jpPositioned.setIcon(ImageUtilities.getJerseyIcon(lineup.getPositionBySpielerId(m_clPlayer.getPlayerID()),
                     m_clPlayer.getTrikotnummer()));
-            m_jpPositioned.setText(MatchRoleID.getNameForPosition(lineup.getPositionBySpielerId(m_clPlayer.getSpielerID())
+            m_jpPositioned.setText(MatchRoleID.getNameForPosition(lineup.getPositionBySpielerId(m_clPlayer.getPlayerID())
                     .getPosition()));
         } else {
             m_jpPositioned.setIcon(ImageUtilities.getJerseyIcon(null, m_clPlayer.getTrikotnummer()));
@@ -549,7 +549,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         }
         m_jpInTeamSince.setText(temp);
         m_jtaNotes.setEditable(true);
-        m_jtaNotes.setText(DBManager.instance().getSpielerNotiz(m_clPlayer.getSpielerID()));
+        m_jtaNotes.setText(DBManager.instance().getSpielerNotiz(m_clPlayer.getPlayerID()));
         m_jbStatistics.setEnabled(true);
         m_jbAnalysisTop.setEnabled(true);
         m_jbAnalysisBottom.setEnabled(true);
@@ -599,20 +599,20 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
      */
     private Player getComparisonPlayerFirstHRF(Player player) {
         return core.db.DBManager.instance()
-                .getSpielerFirstHRF(player.getSpielerID());
+                .getSpielerFirstHRF(player.getPlayerID());
     }
 
     /**
      * search player to compare
      */
     private void findComparisonPlayer() {
-        final int id = m_clPlayer.getSpielerID();
+        final int id = m_clPlayer.getPlayerID();
         for (int i = 0;
              (SpielerTrainingsVergleichsPanel.getVergleichsPlayer() != null)
                      && (i < SpielerTrainingsVergleichsPanel.getVergleichsPlayer().size()); i++) {
             Player comparisonPlayer = (Player) SpielerTrainingsVergleichsPanel
                     .getVergleichsPlayer().get(i);
-            if (comparisonPlayer.getSpielerID() == id) {
+            if (comparisonPlayer.getPlayerID() == id) {
                 // Found it
                 m_clComparisonPlayer = comparisonPlayer;
                 return;

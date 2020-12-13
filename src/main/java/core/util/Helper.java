@@ -5,9 +5,7 @@ package core.util;
 import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
 import core.datatype.ComboItem;
-import core.gui.model.SpielerCBItem;
 import core.model.HOVerwaltung;
-import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 

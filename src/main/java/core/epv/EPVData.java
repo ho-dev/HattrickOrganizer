@@ -80,7 +80,7 @@ public class EPVData implements Cloneable {
         setPopularity(s.getAnsehen());
         setSpeciality(s.getPlayerSpecialty());
         
-        setPlayerId(s.getSpielerID());
+        setPlayerId(s.getPlayerID());
         
         normalizeSkill();
     }

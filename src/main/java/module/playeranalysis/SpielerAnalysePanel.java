@@ -6,7 +6,7 @@ import core.gui.HOMainFrame;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.gui.model.SpielerCBItem;
+import core.gui.model.PlayerCBItem;
 import core.gui.model.PlayerCBItemRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
@@ -99,27 +99,27 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 
 	private void fillSpielerCB() {
 		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
-		List<SpielerCBItem> spielerCBItems = new ArrayList<SpielerCBItem>(players.size());
+		List<PlayerCBItem> playerCBItems = new ArrayList<PlayerCBItem>(players.size());
 
 		for (Player player : players) {
-			spielerCBItems.add(new SpielerCBItem(player.getFullName(), 0f, player));
+			playerCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));
 		}
-		Collections.sort(spielerCBItems);
+		Collections.sort(playerCBItems);
 
 		// Alte Player
 		List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
-		List<SpielerCBItem> spielerOldCBItems = new ArrayList<SpielerCBItem>(oldPlayers.size());
+		List<PlayerCBItem> spielerOldCBItems = new ArrayList<PlayerCBItem>(oldPlayers.size());
 
 		for (Player player : oldPlayers) {
-			spielerOldCBItems.add(new SpielerCBItem(player.getFullName(), 0f, player));
+			spielerOldCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));
 		}
 		Collections.sort(spielerOldCBItems);
 
 		// Zusammenfügen
-		List<SpielerCBItem> cbItems = new ArrayList<SpielerCBItem>(spielerCBItems.size()
+		List<PlayerCBItem> cbItems = new ArrayList<PlayerCBItem>(playerCBItems.size()
 				+ spielerOldCBItems.size() + 1);
 
-		cbItems.addAll(spielerCBItems);
+		cbItems.addAll(playerCBItems);
 		// Fur die Leerzeile;
 		cbItems.add(null);
 		cbItems.addAll(spielerOldCBItems);
@@ -136,8 +136,8 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 
 		int spielerid = -1;
 		if (playerComboBox.getSelectedItem() != null) {
-			spielerid = ((SpielerCBItem) playerComboBox.getSelectedItem()).getPlayer()
-					.getSpielerID();
+			spielerid = ((PlayerCBItem) playerComboBox.getSelectedItem()).getPlayer()
+					.getPlayerID();
 		}
 
 		horizontalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false,
@@ -188,10 +188,10 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 	private void showSelectedPlayer() {
 		if (playerComboBox.getSelectedIndex() > -1) {
 			// Tabelle updaten
-			m_jtSpielerMatchesTable.refresh(((SpielerCBItem) playerComboBox.getSelectedItem())
-					.getPlayer().getSpielerID());
-			m_jtSpielerPositionTable.refresh(((SpielerCBItem) playerComboBox.getSelectedItem())
-					.getPlayer().getSpielerID());
+			m_jtSpielerMatchesTable.refresh(((PlayerCBItem) playerComboBox.getSelectedItem())
+					.getPlayer().getPlayerID());
+			m_jtSpielerPositionTable.refresh(((PlayerCBItem) playerComboBox.getSelectedItem())
+					.getPlayer().getPlayerID());
 		} else {
 			// Tabelle leeren
 			m_jtSpielerMatchesTable.refresh(-1);

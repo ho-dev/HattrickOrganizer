@@ -449,7 +449,7 @@ public class Player
 	
 	public void setPlayerValues()
 	{
-		setID(m_Player.getSpielerID());
+		setID(m_Player.getPlayerID());
 		setFirstName(m_Player.getFirstName());
 		setNickName(m_Player.getNickName());
 		setLastName(m_Player.getLastName());

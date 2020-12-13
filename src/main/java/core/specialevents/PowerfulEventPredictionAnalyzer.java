@@ -4,10 +4,6 @@ import core.constants.player.Speciality;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import module.lineup.substitution.model.MatchOrderType;
-
-import java.util.List;
-import java.util.Vector;
 
 public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPredictionAnalyzer {
     private SpecialEventsPredictionManager.Analyse analyse;
@@ -44,7 +40,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
                 case IMatchRoleID.centralForward:
                 case IMatchRoleID.rightForward:
 
-                    if (position.getTaktik() == IMatchRoleID.NORMAL) {
+                    if (position.getTactic() == IMatchRoleID.NORMAL) {
                         getPowerfulNormalForward(position);
                     }
                     break;
@@ -52,7 +48,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
                 case IMatchRoleID.rightInnerMidfield:
                 case IMatchRoleID.centralInnerMidfield:
                 case IMatchRoleID.leftInnerMidfield:
-                    if (position.getTaktik() == IMatchRoleID.DEFENSIVE) {
+                    if (position.getTactic() == IMatchRoleID.DEFENSIVE) {
                         getSittingMidfielder(position);
                     }
                     break;
@@ -98,7 +94,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
         for (int i = right; i <= left; i++) {
             if (i != position.getId()) {
                 MatchRoleID mid = this.analyse.getPosition(i);
-                if (mid.getSpielerId() != 0 && mid.getTaktik() == taktik) {
+                if (mid.getSpielerId() != 0 && mid.getTactic() == taktik) {
                     Player p = analyse.getPlayer(mid.getSpielerId());
                     if (p.hasSpeciality(Speciality.POWERFUL)) {
                         overcrowding++;

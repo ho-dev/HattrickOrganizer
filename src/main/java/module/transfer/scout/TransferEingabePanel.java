@@ -182,7 +182,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             tempPlayer.setNationalitaet(HOVerwaltung.instance().getModel().getBasics().getLand());
             tempPlayer.setSpielerID(getNextTempSpielerID());
             if (jtfName.getText().trim().equals("")) {
-                tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getSpielerID()));
+                tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerID()));
             } else {
                 tempPlayer.setLastName(jtfName.getText());
             }

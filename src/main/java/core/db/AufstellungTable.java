@@ -1,15 +1,12 @@
 package core.db;
 
-import core.model.player.MatchRoleID;
 import core.util.HOLogger;
 import module.lineup.Lineup;
-import module.lineup.substitution.model.Substitution;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 final class AufstellungTable extends AbstractTable {
@@ -48,7 +45,7 @@ final class AufstellungTable extends AbstractTable {
 				rs.first();
 
 				auf = new module.lineup.Lineup();
-				auf.setKapitaen(rs.getInt("Kapitaen"));
+				auf.setCaptain(rs.getInt("Kapitaen"));
 				auf.setKicker(rs.getInt("Kicker"));
 				auf.setTacticType(rs.getInt("Tactic"));
 				auf.setAttitude(rs.getInt("Attitude"));
@@ -142,7 +139,7 @@ final class AufstellungTable extends AbstractTable {
 					+ sourceSystem + ","
 					+ hrfId + ","
 					+ lineup.getKicker() + ","
-					+ lineup.getKapitaen() + ","
+					+ lineup.getCaptain() + ","
 					+ lineup.getAttitude() + ","
 					+ lineup.getTacticType() + ","
 					+ lineup.getStyleOfPlay() + ",'"
