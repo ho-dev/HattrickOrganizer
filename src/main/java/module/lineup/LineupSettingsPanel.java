@@ -206,6 +206,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			}
 			else if (event.getSource().equals(m_jcbWeather))
 			{
+				HOMainFrame.instance().getLineupPanel().getLineupPositionsPanel().refresh();
 				model.getLineupWithoutRatingRecalc().setWeather(getWeather());
 			}
 		}
@@ -348,6 +349,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	 */
 	private void addItemListeners() {
 		m_jcbLocation.addItemListener(this);
+		m_jcbWeather.addItemListener(this);
 		m_jcbMainTeamSpirit.addItemListener(this);
 		m_jcbSubTeamSpirit.addItemListener(this);
 		m_jcbTeamConfidence.addItemListener(this);
@@ -362,6 +364,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	 */
 	private void removeItemListeners() {
 		m_jcbLocation.removeItemListener(this);
+		m_jcbWeather.removeItemListener(this);
 		m_jcbMainTeamSpirit.removeItemListener(this);
 		m_jcbSubTeamSpirit.removeItemListener(this);
 		m_jcbTeamConfidence.removeItemListener(this);
