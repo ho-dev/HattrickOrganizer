@@ -1,5 +1,6 @@
 package core.db;
 
+import core.model.player.Specialty;
 import core.model.player.YouthPlayer;
 import core.util.HOLogger;
 import module.training.Skills;
@@ -230,7 +231,7 @@ public class YouthPlayerTable  extends AbstractTable {
             ret.setScoutId(rs.getInt("ScoutId"));
             ret.setScoutingRegionID(rs.getInt("ScoutingRegionID"));
             ret.setScoutName(DBManager.deleteEscapeSequences(rs.getString("ScoutName")));
-            ret.setSpecialty(rs.getInt("Specialty"));
+            ret.setSpecialty(Specialty.valueOf(rs.getInt("Specialty")));
             ret.setStatement(DBManager.deleteEscapeSequences(rs.getString("Statement")));
             ret.setYouthMatchDate(rs.getTimestamp("YouthMatchDate"));
             ret.setYouthMatchID(rs.getInt("YouthMatchID"));

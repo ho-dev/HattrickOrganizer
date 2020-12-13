@@ -31,7 +31,7 @@ public class YouthPlayer {
     private int playerCategoryID;
     private int cards;
     private int injuryLevel;
-    private int specialty;
+    private Specialty specialty;
     private int careerGoals;
     private int careerHattricks;
     private int leagueGoals;
@@ -74,7 +74,7 @@ public class YouthPlayer {
                     this.getSkillInfo(c.skillType.toHTSkillId()).setMax(c.skillLevel);
                 }
                 else if ( c.type == CommentType.PLAYER_HAS_SPECIALTY){
-                    this.specialty = c.skillLevel; // guessed (not documented which attribute stores the specialty number)
+                    this.specialty = Specialty.valueOf(c.skillType.getValue());
                 }
             }
         }
@@ -198,11 +198,11 @@ public class YouthPlayer {
         this.injuryLevel = injuryLevel;
     }
 
-    public int getSpecialty() {
+    public Specialty getSpecialty() {
         return specialty;
     }
 
-    public void setSpecialty(int specialty) {
+    public void setSpecialty(Specialty specialty) {
         this.specialty = specialty;
     }
 
@@ -567,7 +567,7 @@ public class YouthPlayer {
         playerCategoryID = getInt(properties, "playercategoryid", 0);
         cards = getInt(properties, "cards", 0);
         injuryLevel = getInt(properties, "injurylevel", 0);
-        specialty = getInt(properties, "specialty", 0);
+        specialty = Specialty.valueOf(getInt(properties, "specialty", 0));
         careerGoals = getInt(properties, "careergoals", 0);
         careerHattricks = getInt(properties, "careerhattricks", 0);
         leagueGoals = getInt(properties, "leaguegoals", 0);

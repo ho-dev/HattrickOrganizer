@@ -33,6 +33,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
 
     private YouthPlayerColumn[] initColumns() {
         return new YouthPlayerColumn[]{
+                // TODO: Name column should include the specialty icon
                 new YouthPlayerColumn(0, "ls.player.name", 0) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
@@ -69,31 +70,31 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                         return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Defender));
                     }
                 },
-                new YouthPlayerColumn(5, "ls.player.Playmaker") {
+                new YouthPlayerColumn(6, "ls.player.Playmaker") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
                         return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Playmaker));
                     }
                 },
-                new YouthPlayerColumn(5, "ls.player.Winger") {
+                new YouthPlayerColumn(7, "ls.player.Winger") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
                         return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Winger));
                     }
                 },
-                new YouthPlayerColumn(5, "ls.player.Passing") {
+                new YouthPlayerColumn(8, "ls.player.Passing") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
                         return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Passing));
                     }
                 },
-                new YouthPlayerColumn(5, "ls.player.Scorer") {
+                new YouthPlayerColumn(9, "ls.player.Scorer") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
                         return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Scorer));
                     }
                 },
-                new YouthPlayerColumn(5, "ls.player.SetPieces") {
+                new YouthPlayerColumn(10, "ls.player.SetPieces") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
                         return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.SetPieces));
