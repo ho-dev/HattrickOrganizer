@@ -1,7 +1,5 @@
 package core.model.player;
 
-import core.model.match.SourceSystem;
-
 public enum CommentType {
     /*
     ScoutCommentTypeID
@@ -29,20 +27,20 @@ public enum CommentType {
     NOT_USED2((int) 8),
     PLAYER_HAS_SPECIALTY((int) 9);
 
-    private final int id;
+    private final int value;
 
     CommentType(int id) {
-        this.id = id;
+        this.value = id;
     }
 
-    public int getId() {
-        return id;
+    public int getValue() {
+        return value;
     }
 
     public static CommentType valueOf(Integer id) {
         if ( id != null) {
             for (CommentType type : CommentType.values()) {
-                if (type.getId() == id) {
+                if (type.getValue() == id) {
                     return type;
                 }
             }

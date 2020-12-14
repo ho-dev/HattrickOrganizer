@@ -189,10 +189,13 @@ public class XMLTeamDetailsParser {
 			Element ele;
 			
 			TeamInfo info = new TeamInfo();
-			
+
 			ele = (Element) team.getElementsByTagName("TeamID").item(0);
 			info.setTeamId(Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)));
-			
+
+			ele = (Element) team.getElementsByTagName("YouthTeamID").item(0);
+			info.setYouthTeamId(Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)));
+
 			ele = (Element) team.getElementsByTagName("TeamName").item(0);
 			info.setName(XMLManager.getFirstChildNodeValue(ele));
 

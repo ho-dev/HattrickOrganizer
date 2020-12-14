@@ -5,6 +5,7 @@ import core.constants.player.PlayerSkill;
 import core.model.player.Player;
 
 import java.awt.Color;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,22 +33,22 @@ public class Skills {
 
 
     public enum HTSkillID {
-        GOALKEEPER(1),
-        STAMINA(2),
-        SET_PIECES(3),
-        DEFENDING(4),
-        SCORING(5),
-        WINGER(6),
-        PASSING(7),
-        PLAYMAKING(8),
-        TRAINER(9),
-        LEADERSHIP(10),
-        EXPERIENCE(11);
+        Keeper(1),
+        Stamina(2),
+        SetPieces(3),
+        Defender(4),
+        Scorer(5),
+        Winger(6),
+        Passing(7),
+        Playmaker(8),
+        Trainer(9),
+        Leadership(10),
+        Experience(11);
 
         private int value;
-        private static Map map = new HashMap<>();
+        private static HashMap<Integer, HTSkillID> map = new HashMap<>();
 
-        private HTSkillID(int value) {
+        HTSkillID(int value) {
             this.value = value;
         }
 
@@ -59,14 +60,14 @@ public class Skills {
         }
 
         public static HTSkillID valueOf(int skill) {
-            return (HTSkillID) map.get(skill);
+            return map.get(skill);
         }
 
         public int getValue() {
             return value;
         }
 
-    };
+    }
 
     /*
         ScoutCommentSkillTypeID
@@ -81,6 +82,7 @@ public class Skills {
     8	Passing
      */
     public enum ScoutCommentSkillTypeID {
+        AVERAGE(0),
         KEEPER(1),
         NOT_USED(2),
         DEFENDING(3),
@@ -91,9 +93,9 @@ public class Skills {
         PASSING(8);
 
         private int value;
-        private static Map map = new HashMap<>();
+        private static HashMap<Integer, ScoutCommentSkillTypeID> map = new HashMap<>();
 
-        private ScoutCommentSkillTypeID(int value) {
+        ScoutCommentSkillTypeID(int value) {
             this.value = value;
         }
 
@@ -106,7 +108,7 @@ public class Skills {
 
         public static ScoutCommentSkillTypeID valueOf(Integer skill) {
             if ( skill != null) {
-                return (ScoutCommentSkillTypeID) map.get(skill);
+                return map.get(skill);
             }
             return null;
         }
@@ -115,43 +117,37 @@ public class Skills {
             return value;
         }
 
-    };
+        final static private EnumMap<ScoutCommentSkillTypeID, HTSkillID> hTskillIdmap = new EnumMap<>(ScoutCommentSkillTypeID.class) {{
+            put(KEEPER, HTSkillID.Keeper);
+            put(DEFENDING, HTSkillID.Defender);
+            put(PLAYMAKER, HTSkillID.Playmaker);
+            put(WINGER, HTSkillID.Winger);
+            put(PASSING, HTSkillID.Passing);
+            put(SCORER, HTSkillID.Scorer);
+            put(SET_PIECES, HTSkillID.SetPieces);
+        }};
+
+        public HTSkillID toHTSkillId() {
+            return hTskillIdmap.get(this);
+        }
+    }
 
     //~ Methods ------------------------------------------------------------------------------------
     public static int getSkillAtPosition(int position) {
-        switch (position) {
-            case 0:
-                return PlayerSkill.FORM;
+        return switch (position) {
+            case 0 -> PlayerSkill.FORM;
+            case 1 -> PlayerSkill.STAMINA;
+            case 2 -> PlayerSkill.KEEPER;
+            case 3 -> PlayerSkill.DEFENDING;
+            case 4 -> PlayerSkill.PLAYMAKING;
+            case 5 -> PlayerSkill.WINGER;
+            case 6 -> PlayerSkill.PASSING;
+            case 7 -> PlayerSkill.SCORING;
+            case 8 -> PlayerSkill.SET_PIECES;
+            case 9 -> PlayerSkill.EXPERIENCE;
+            default -> 0;
+        };
 
-            case 1:
-                return PlayerSkill.STAMINA;
-
-            case 2:
-                return PlayerSkill.KEEPER;
-
-            case 3:
-                return PlayerSkill.DEFENDING;
-
-            case 4:
-                return PlayerSkill.PLAYMAKING;
-
-            case 5:
-                return PlayerSkill.WINGER;
-
-            case 6:
-                return PlayerSkill.PASSING;
-
-            case 7:
-                return PlayerSkill.SCORING;
-
-            case 8:
-                return PlayerSkill.SET_PIECES;
-
-            case 9:
-                return PlayerSkill.EXPERIENCE;
-        }
-
-        return 0;
     }
 
     /**
@@ -161,76 +157,41 @@ public class Skills {
      * @return base training type for that skill
      */
     public static Color getSkillColor(int skillIndex) {
-        switch (skillIndex) {
-            case PlayerSkill.KEEPER:
-                return Color.BLACK;
+        return switch (skillIndex) {
+            case PlayerSkill.KEEPER -> Color.BLACK;
+            case PlayerSkill.PLAYMAKING -> Color.ORANGE.darker();
+            case PlayerSkill.PASSING -> Color.GREEN.darker();
+            case PlayerSkill.WINGER -> Color.MAGENTA;
+            case PlayerSkill.DEFENDING -> Color.BLUE;
+            case PlayerSkill.SCORING -> Color.RED;
+            case PlayerSkill.SET_PIECES -> Color.CYAN.darker();
+            case PlayerSkill.STAMINA -> new Color(85, 26, 139);
+            default -> Color.BLACK;
+        };
 
-            case PlayerSkill.PLAYMAKING:
-                return Color.ORANGE.darker();
-
-            case PlayerSkill.PASSING:
-                return Color.GREEN.darker();
-
-            case PlayerSkill.WINGER:
-                return Color.MAGENTA;
-
-            case PlayerSkill.DEFENDING:
-                return Color.BLUE;
-
-            case PlayerSkill.SCORING:
-                return Color.RED;
-
-            case PlayerSkill.SET_PIECES:
-                return Color.CYAN.darker();
-
-            case PlayerSkill.STAMINA:
-                return new Color(85, 26, 139);
-        }
-
-        return Color.BLACK;
     }
 
     /**
      * Returns the Skill value for the player
      *
-     * @param player
+     * @param player player which should be inspected
      * @param skillIndex constant index value of the skill we want to see
      * @return The Skill value or 0 if the index is incorrect
      */
     public static float getSkillValue(Player player, int skillIndex) {
-        switch (skillIndex) {
-            case PlayerSkill.KEEPER:
-                return player.getGKskill() + player.getSub4Skill(skillIndex);
-
-            case PlayerSkill.PLAYMAKING:
-                return player.getPMskill() + player.getSub4Skill(skillIndex);
-
-            case PlayerSkill.PASSING:
-                return player.getPSskill() + player.getSub4Skill(skillIndex);
-
-            case PlayerSkill.WINGER:
-                return player.getWIskill() + player.getSub4Skill(skillIndex);
-
-            case PlayerSkill.DEFENDING:
-                return player.getDEFskill() + player.getSub4Skill(skillIndex);
-
-            case PlayerSkill.SCORING:
-                return player.getSCskill() + player.getSub4Skill(skillIndex);
-
-            case PlayerSkill.SET_PIECES:
-                return player.getSPskill() + player.getSub4Skill(skillIndex);
-
-            case PlayerSkill.STAMINA:
-                return player.getKondition() + player.getSub4Skill(skillIndex);
-
-            case PlayerSkill.FORM:
-                return player.getForm() + player.getSub4Skill(skillIndex);
-
-            case PlayerSkill.EXPERIENCE:
-                return player.getErfahrung() + player.getSub4Skill(skillIndex);
-        }
-
-        return 0;
+        return switch (skillIndex) {
+            case PlayerSkill.KEEPER -> player.getGKskill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.PLAYMAKING -> player.getPMskill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.PASSING -> player.getPSskill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.WINGER -> player.getWIskill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.DEFENDING -> player.getDEFskill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.SCORING -> player.getSCskill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.SET_PIECES -> player.getSPskill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.STAMINA -> player.getKondition() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.FORM -> player.getForm() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.EXPERIENCE -> player.getErfahrung() + player.getSub4Skill(skillIndex);
+            default -> 0;
+        };
     }
 
     /**
@@ -240,30 +201,16 @@ public class Skills {
      * @return base training type for that skill
      */
     public static int getTrainedSkillCode(int skillIndex) {
-        switch (skillIndex) {
-            case PlayerSkill.KEEPER:
-                return TrainingType.GOALKEEPING;
+        return switch (skillIndex) {
+            case PlayerSkill.KEEPER -> TrainingType.GOALKEEPING;
+            case PlayerSkill.PLAYMAKING -> TrainingType.PLAYMAKING;
+            case PlayerSkill.PASSING -> TrainingType.SHORT_PASSES;
+            case PlayerSkill.WINGER -> TrainingType.CROSSING_WINGER;
+            case PlayerSkill.DEFENDING -> TrainingType.DEFENDING;
+            case PlayerSkill.SCORING -> TrainingType.SCORING;
+            case PlayerSkill.SET_PIECES -> TrainingType.SET_PIECES;
+            default -> 0;
+        };
 
-            case PlayerSkill.PLAYMAKING:
-                return TrainingType.PLAYMAKING;
-
-            case PlayerSkill.PASSING:
-                return TrainingType.SHORT_PASSES;
-
-            case PlayerSkill.WINGER:
-                return TrainingType.CROSSING_WINGER;
-
-            case PlayerSkill.DEFENDING:
-                return TrainingType.DEFENDING;
-
-            case PlayerSkill.SCORING:
-                return TrainingType.SCORING;
-
-            case PlayerSkill.SET_PIECES:
-                return TrainingType.SET_PIECES;
-
-        }
-
-        return 0;
     }
 }

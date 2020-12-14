@@ -11,6 +11,8 @@ import java.sql.Timestamp;
 import java.util.*;
 
 import static core.util.Helper.parseDate;
+import static java.lang.Math.max;
+import static module.training.Skills.HTSkillID.*;
 
 public class YouthPlayer {
     private int hrfid;
@@ -29,7 +31,7 @@ public class YouthPlayer {
     private int playerCategoryID;
     private int cards;
     private int injuryLevel;
-    private int specialty;
+    private Specialty specialty;
     private int careerGoals;
     private int careerHattricks;
     private int leagueGoals;
@@ -51,10 +53,6 @@ public class YouthPlayer {
 
     }
 
-    private Timestamp getFetchDate(){
-        return HOVerwaltung.instance().getModel().getBasics().getDatum();
-    }
-
     public List<ScoutComment> getScoutComments(){
         if ( scoutComments==null){
             scoutComments = DBManager.instance().loadYouthScoutComments(this.getId());
@@ -64,6 +62,22 @@ public class YouthPlayer {
 
     public void setScoutComments(List<ScoutComment> scoutComments) {
         this.scoutComments = scoutComments;
+    }
+
+    private void evaluateScoutComments(){
+        if ( scoutComments != null){
+            for(var c : scoutComments){
+                if ( c.type == CommentType.CURRENT_SKILL_LEVEL){
+                    this.getSkillInfo(c.skillType.toHTSkillId()).setStartLevel(c.skillLevel);
+                }
+                else if (c.type == CommentType.POTENTIAL_SKILL_LEVEL){
+                    this.getSkillInfo(c.skillType.toHTSkillId()).setMax(c.skillLevel);
+                }
+                else if ( c.type == CommentType.PLAYER_HAS_SPECIALTY){
+                    this.specialty = Specialty.valueOf(c.skillType.getValue());
+                }
+            }
+        }
     }
 
     public int getId() {
@@ -126,6 +140,12 @@ public class YouthPlayer {
         return canBePromotedIn;
     }
 
+    public int getCanBePromotedInAtDate(long date){
+        long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
+        long diff = (date - hrftime) / (1000 * 60 * 60 * 24);
+        return max(0,canBePromotedIn-(int)diff);
+    }
+
     public void setCanBePromotedIn(int canBePromotedIn) {
         this.canBePromotedIn = canBePromotedIn;
     }
@@ -178,11 +198,11 @@ public class YouthPlayer {
         this.injuryLevel = injuryLevel;
     }
 
-    public int getSpecialty() {
+    public Specialty getSpecialty() {
         return specialty;
     }
 
-    public void setSpecialty(int specialty) {
+    public void setSpecialty(Specialty specialty) {
         this.specialty = specialty;
     }
 
@@ -330,26 +350,108 @@ public class YouthPlayer {
         return ret;
     }
 
-    public class SkillInfo {
-        private Integer level;
-        private Integer max;
-        private boolean isMaxReached;
-        private Boolean mayUnlock;       // value is nullable
+    public static Skills.HTSkillID[] skillIds = {Keeper, Defender, Playmaker, Winger, Passing, Scorer, SetPieces};
 
-        public boolean isLevelAvailable() {
-            return level != null;
+    public void setSkillInfo(SkillInfo skillinfo) {
+        this.skillInfoMap.put(skillinfo.skillID.getValue(), skillinfo);
+    }
+
+    public static class SkillInfo {
+
+        /**
+         * Skill Id
+         */
+        private Skills.HTSkillID skillID;
+        /**
+         * Value at scouting date, edited by the user (user's estimation)
+         */
+        private double startValue;
+        /**
+         * Calculated value based on trainings and edited start value
+         */
+        private double currentValue;
+        /**
+         * Skill level at the current download
+         */
+        private Integer currentLevel;
+        /**
+         * Skill level at the scouting date
+         */
+        private Integer startLevel;
+        /**
+         * Maximum reachable skill level (potential)
+         */
+        private Integer max;
+        /**
+         *  Indicates if the skill cant be trained anymore (false if current or max is not available).
+         */
+        private boolean isMaxReached;
+
+        public SkillInfo(Skills.HTSkillID id){
+            this.skillID = id;
+        }
+
+        public boolean isCurrentLevelAvailable() {
+            return currentLevel != null;
+        }
+        public boolean isStartLevelAvailable() {
+            return startLevel != null;
         }
 
         public boolean isMaxAvailable(){
             return max != null;
         }
 
-        public Integer getLevel() {
-            return level;
+        public double getStartValue(){return this.startValue;}
+        public void setStartValue(double value){
+            this.startValue=value;
+            adjustValues();
         }
 
-        public void setLevel(Integer level) {
-            this.level = level;
+        private void adjustValues()
+        {
+            if ( max != null) {
+                if (currentValue > max + 1) {
+                    currentValue = max + 0.99;
+                }
+            }
+            if ( currentLevel != null) {
+                if (currentValue < currentLevel) {
+                    this.currentValue = currentLevel;
+                } else if (currentValue > currentLevel + 1) {
+                    this.currentValue = currentLevel + 0.99;
+                }
+            }
+
+            if ( startLevel != null) {
+                if (startValue < startLevel) {
+                    this.startValue = startLevel;
+                } else if (startValue > startLevel + 1) {
+                    this.startValue = startLevel + 0.99;
+                }
+
+                if (currentValue < startValue) {
+                    currentValue = startValue;
+                }
+            }
+            else if ( currentValue < startValue){
+                startValue = currentValue;
+            }
+        }
+
+        public double getCurrentValue(){return currentValue;}
+        public void setCurrentValue(double value){
+            this.currentValue=value;
+            adjustValues();
+        }
+
+        public Integer getCurrentLevel() {
+            return currentLevel;
+        }
+
+        public void setCurrentLevel(Integer currentLevel) {
+            this.currentLevel = currentLevel;
+            adjustValues();
         }
 
         public Integer getMax() {
@@ -358,6 +460,7 @@ public class YouthPlayer {
 
         public void setMax(Integer max) {
             this.max = max;
+            adjustValues();
         }
 
         public boolean isMaxReached() {
@@ -368,12 +471,17 @@ public class YouthPlayer {
             isMaxReached = maxReached;
         }
 
-        public Boolean getMayUnlock() {
-            return mayUnlock;
+        public Integer getStartLevel() {
+            return startLevel;
         }
 
-        public void setMayUnlock(Boolean mayUnlock) {
-            this.mayUnlock = mayUnlock;
+        public void setStartLevel(Integer startLevel) {
+            this.startLevel = startLevel;
+            adjustValues();
+        }
+
+        public Skills.HTSkillID getSkillID(){
+            return skillID;
         }
     }
 
@@ -445,46 +553,44 @@ public class YouthPlayer {
 
     public YouthPlayer(Properties properties) {
 
-        id = getInt(properties,"id", 0);
+        id = getInt(properties, "id", 0);
         firstName = properties.getProperty("firstname", "");
         nickName = properties.getProperty("nickname", "");
         lastName = properties.getProperty("lastname", "");
-        ageYears = getInt(properties,"age", 0);
-        ageDays = getInt(properties,"agedays", 0);
+        ageYears = getInt(properties, "age", 0);
+        ageDays = getInt(properties, "agedays", 0);
         arrivalDate = parseDate(properties.getProperty("arrivaldate", ""));
-        canBePromotedIn = getInt(properties,"canbepromotedin", 0);
+        canBePromotedIn = getInt(properties, "canbepromotedin", 0);
         playerNumber = properties.getProperty("playernumber", "");
         statement = properties.getProperty("statement", "");
         ownerNotes = properties.getProperty("ownernotes", "");
-        playerCategoryID = getInt(properties,"playercategoryid", 0);
-        cards = getInt(properties,"cards", 0);
-        injuryLevel = getInt(properties,"injurylevel", 0);
-        specialty = getInt(properties,"specialty", 0);
-        careerGoals = getInt(properties,"careergoals", 0);
-        careerHattricks = getInt(properties,"careerhattricks", 0);
-        leagueGoals = getInt(properties,"leaguegoals", 0);
-        friendlyGoals = getInt(properties,"friendlygoals", 0);
-        scoutId = getInt(properties,"scoutid", 0);
-        scoutingRegionID = getInt(properties,"scoutingregionid", 0);
+        playerCategoryID = getInt(properties, "playercategoryid", 0);
+        cards = getInt(properties, "cards", 0);
+        injuryLevel = getInt(properties, "injurylevel", 0);
+        specialty = Specialty.valueOf(getInt(properties, "specialty", 0));
+        careerGoals = getInt(properties, "careergoals", 0);
+        careerHattricks = getInt(properties, "careerhattricks", 0);
+        leagueGoals = getInt(properties, "leaguegoals", 0);
+        friendlyGoals = getInt(properties, "friendlygoals", 0);
+        scoutId = getInt(properties, "scoutid", 0);
+        scoutingRegionID = getInt(properties, "scoutingregionid", 0);
         scoutName = properties.getProperty("scoutname", "");
 
-        youthMatchID = getInteger(properties,"youthmatchid");
-        positionCode = getInteger(properties,"positioncode");
-        playedMinutes = getInt(properties,"playedminutes", 0);
-        rating = getDouble(properties,"rating");
+        youthMatchID = getInteger(properties, "youthmatchid");
+        positionCode = getInteger(properties, "positioncode");
+        playedMinutes = getInt(properties, "playedminutes", 0);
+        rating = getDouble(properties, "rating");
         youthMatchDate = parseNullableDate(properties.getProperty("youthmatchdate"));
 
-        parseSkillInfo(properties, Skills.HTSkillID.GOALKEEPER,  "keeperskill");
-        parseSkillInfo(properties, Skills.HTSkillID.DEFENDING,  "defenderskill");
-        parseSkillInfo(properties, Skills.HTSkillID.PLAYMAKING,  "playmakerskill");
-        parseSkillInfo(properties, Skills.HTSkillID.WINGER,  "wingerskill");
-        parseSkillInfo(properties, Skills.HTSkillID.PASSING,  "passingskill");
-        parseSkillInfo(properties, Skills.HTSkillID.SET_PIECES,  "setpiecesskill");
+        for (var skillId : YouthPlayer.skillIds) {
+            parseSkillInfo(properties, skillId);
+        }
 
         this.scoutComments = new ArrayList<>();
-        for ( int i=0; parseScoutComment(properties, i); i++) {
-            ;
+        for (int i = 0; true; i++) {
+            if (!parseScoutComment(properties, i)) break;
         }
+        evaluateScoutComments();
     }
 
     // don't want to see warnings in HO log file on empty date strings
@@ -501,21 +607,27 @@ public class YouthPlayer {
             scoutComment.text = properties.getProperty(prefix+"text", "");
             scoutComment.type = CommentType.valueOf(getInteger(properties,prefix+"type"));
             scoutComment.variation = getInteger(properties,prefix+"variation");
-            scoutComment.skillType = ScoutCommentSkillTypeID.valueOf(getInteger(properties,prefix+"skilltype"));
-            scoutComment.skillLevel = getInteger(properties,prefix+"skilllevel");
+            if ( scoutComment.type == CommentType.AVERAGE_SKILL_LEVEL){
+                // Average comment stores skill level in skillType
+                scoutComment.skillType = ScoutCommentSkillTypeID.AVERAGE;
+                scoutComment.skillLevel = getInteger(properties,prefix+"skilltype");
+            }
+            else {
+                scoutComment.skillType = ScoutCommentSkillTypeID.valueOf(getInteger(properties,prefix+"skilltype"));
+                scoutComment.skillLevel = getInteger(properties,prefix+"skilllevel");
+            }
             this.scoutComments.add(scoutComment);
             return true;
         }
         return false;
     }
 
-    private void parseSkillInfo(Properties properties, Skills.HTSkillID skillID, String skill) {
-        var skillInfo = new SkillInfo();
-        skillInfo.level = getInteger(properties, skill);
-        skillInfo.max = getInteger(properties,skill+"max");
-        skillInfo.isMaxReached = getBoolean(properties,skill + "ismaxreached", false);
-        skillInfo.mayUnlock = getBoolean(properties,skill + "mayunlock");
-
+    private void parseSkillInfo(Properties properties, Skills.HTSkillID skillID) {
+        var skill = skillID.toString().toLowerCase(java.util.Locale.ENGLISH) + "skill";
+        var skillInfo = new SkillInfo(skillID);
+        skillInfo.setCurrentLevel(getInteger(properties, skill));
+        skillInfo.setMax(getInteger(properties, skill + "max"));
+        skillInfo.setMaxReached(getBoolean(properties, skill + "ismaxreached", false));
         this.skillInfoMap.put(skillID.getValue(), skillInfo);
     }
 

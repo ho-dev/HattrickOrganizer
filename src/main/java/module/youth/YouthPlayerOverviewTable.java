@@ -29,14 +29,13 @@ public class YouthPlayerOverviewTable extends JTable implements core.gui.Refresh
         setOpaque(false);
         if (tableModel == null) {
             tableModel = UserColumnController.instance().getYouthPlayerOverviewColumnModel();
-            tableModel.initData();
-            tableSorter = new TableSorter(tableModel, tableModel.getPositionInArray(99), getOrderByColumn());
-            setModel(tableSorter);
+            setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            setRowSelectionAllowed(true);
         }
-
-        setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        setRowSelectionAllowed(true);
+        tableModel.initData();
+        tableSorter = new TableSorter(tableModel, tableModel.getPositionInArray(99), getOrderByColumn());
+        setModel(tableSorter);
         tableSorter.initsort();
     }
 

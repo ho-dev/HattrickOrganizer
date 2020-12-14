@@ -1802,6 +1802,15 @@ public class DBManager {
 		return null;
 	}
 
+	public static Double getDouble(ResultSet rs, String columnLabel) {
+		try {
+			return rs.getDouble(columnLabel);
+		}
+		catch(Exception ignored)
+		{}
+		return null;
+	}
+
 	/**
 	 * Alle \ entfernen
 	 */

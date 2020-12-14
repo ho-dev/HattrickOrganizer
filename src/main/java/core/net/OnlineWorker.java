@@ -1178,7 +1178,9 @@ public class OnlineWorker {
 		if ( dateSince == null){
 			// if there are no youth matches in database, take the limit from arrival date of 'oldest' youth players
 			dateSince = DBManager.instance().getMinScoutingDate();
-			dateSince.setTime(dateSince.getTime()-oneDay);	// minus one hour (resetted in for loop)
+			if ( dateSince != null){
+				dateSince.setTime(dateSince.getTime()-oneDay);	// minus one hour (resetted in for loop)
+			}
 		}
 
 		for ( Timestamp dateUntil = null; dateSince != null; dateSince = dateUntil) {

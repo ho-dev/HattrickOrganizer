@@ -1,5 +1,6 @@
 package core.model.misc;
 
+import core.db.DBManager;
 import core.db.user.UserManager;
 import core.training.HattrickDate;
 import core.util.HOLogger;
@@ -14,6 +15,9 @@ import java.util.Properties;
 public final class Basics  {
     /**
      * youth team id (0 if non existing or no access in case of foreign teams)
+     *          null: unknown (the time before youth team information were downloaded)
+     *          0: team hast no youth team
+     *          otherwise: the youth team id
      */
     private Integer youthTeamId;
     /**
@@ -65,7 +69,7 @@ public final class Basics  {
         m_clDatum = getTimestamp(properties, "date");
         m_iTeamId = getInt(properties, "teamid", 0);
         m_sYouthTeamName = properties.getProperty("youthteamname", "");
-        youthTeamId = getInt(properties, "youthteamid", 0);
+        setYouthTeamId(getInteger(properties, "youthteamid"));
         m_sTeamName = properties.getProperty("teamname", "");
         m_sManager = properties.getProperty("owner", "");
         m_tActivationDate = getTimestamp(properties, "activationdate");
@@ -76,6 +80,13 @@ public final class Basics  {
         m_iSpieltag = getInt(properties, "matchround", 0);
         m_iRegionId = getInt(properties, "regionid", 0);
         m_bHasSupporter = getBoolean(properties, "hassupporter", false);
+    }
+
+    private Integer getInteger(Properties properties, String key) {
+        try {
+            return Integer.parseInt(properties.getProperty(key));
+        } catch (Exception ignored) {}
+        return null;
     }
 
     private boolean getBoolean(Properties properties, String key, boolean def) {
@@ -117,7 +128,7 @@ public final class Basics  {
             m_bHasSupporter = rs.getBoolean("HasSupporter");
             m_tActivationDate = rs.getTimestamp("ActivationDate");
             m_sYouthTeamName = rs.getString("YouthTeamName");
-            youthTeamId = rs.getInt("YouthTeamID");
+            setYouthTeamId(DBManager.getInteger(rs,"YouthTeamID"));
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),"Constructor Basics: " + e.toString());
         }
@@ -367,11 +378,19 @@ public final class Basics  {
     }
 
     public boolean hasYouthTeam(){
-        return youthTeamId != null;
+        return youthTeamId != null && youthTeamId > 0;
     }
 
+    /**
+     * Set the youth team id
+     * @param m_iYouthTeamId
+     */
     public void setYouthTeamId(Integer m_iYouthTeamId) {
-        this.youthTeamId = m_iYouthTeamId;
+        if (m_iYouthTeamId != null && m_iYouthTeamId >= 0) {
+            this.youthTeamId = m_iYouthTeamId;
+        } else {
+            this.youthTeamId = null;
+        }
     }
 
     public String getYouthTeamName() {

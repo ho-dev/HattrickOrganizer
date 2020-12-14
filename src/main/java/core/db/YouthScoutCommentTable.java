@@ -3,6 +3,7 @@ package core.db;
 import core.constants.player.PlayerSkill;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
+import core.model.player.CommentType;
 import core.model.player.YouthPlayer;
 import core.model.player.YouthPlayer.ScoutComment;
 import core.util.HOLogger;
@@ -58,19 +59,29 @@ public class YouthScoutCommentTable extends AbstractTable {
         return delete(where, values);
     }
 
-    public void saveYouthScoutComment(int i, int youthPlayerId,  ScoutComment c) {
+    public void storeYouthScoutComment(int i, int youthPlayerId, ScoutComment c) {
         //insert vorbereiten
         String sql = "INSERT INTO " + getTableName() +
                 " (YOUTHPLAYER_ID,INDEX,Text,Type,Variation,SkillType,SkillLevel) VALUES(" +
                 youthPlayerId + "," +
                 i + ",'" +
                 DBManager.insertEscapeSequences(c.getText()) + "'," +
-                c.getType() + "," +
+                ValueOf(c.getType()) + "," +
                 c.getVariation() + "," +
-                c.getSkillType() + "," +
+                ValueOf(c.getSkillType()) + "," +
                 c.getSkillLevel() +
                 ")";
         adapter.executeUpdate(sql);
+    }
+
+    private String ValueOf(CommentType type) {
+        if (type != null) return "" + type.getValue();
+        return null;
+    }
+
+    private String ValueOf(Skills.ScoutCommentSkillTypeID skillType) {
+        if (skillType != null) return "" + skillType.getValue();
+        return "null";
     }
 
     public List<ScoutComment> loadYouthScoutComments(int youthplayer_id) {
