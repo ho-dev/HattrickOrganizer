@@ -273,7 +273,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(BLUE, new Color(0, 0, 255));
 
 
-		put(PANEL_BG, "white");
+		put(PANEL_BG, new Color(214,217,223));
 		put(PANEL_BORDER, "dark_gray");
 		put(PLAYER_POSITION_PANEL_BORDER, "light_gray");
 		put(BUTTON_BG, "white");

@@ -429,6 +429,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		JPanel jpGroupSelection = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		Helper.setComboBoxFromID(m_jcbIncludeExclude, userParameter.lineupAssistentPanel_include_group ? 1 : 0);
 		m_jcbIncludeExclude.addActionListener(this);
+		m_jcbIncludeExclude.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		jpGroupSelection.add(m_jcbIncludeExclude);
 		m_jcbGroups.setSelectedItem(userParameter.aufstellungsAssistentPanel_gruppe);
 		m_jcbGroups.setRenderer(new core.gui.comp.renderer.SmilieListCellRenderer());
@@ -518,6 +519,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		m_jcbPriority.setToolTipText(getTranslation("tt_AufstellungsAssistent_Reihenfolge"));
 		core.util.Helper.setComboBoxFromID(m_jcbPriority, userParameter.aufstellungsAssistentPanel_reihenfolge);
 		layout.setConstraints(m_jcbPriority, constraints);
+		m_jcbPriority.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		add(m_jcbPriority);
 
 		// Line 9 =============================================================================
@@ -538,6 +540,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			buttons[i].setToolTipText(getTranslation(tooltips[i]));
 			buttons[i].addActionListener(this);
 			buttons[i].setMargin(new Insets(6, 6, 6, 6));
+			buttons[i].setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 			jpButtons.add(buttons[i]);
 		}
 

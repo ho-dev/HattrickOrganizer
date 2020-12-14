@@ -64,13 +64,10 @@ public class SolarizedDarkTheme extends DarkTheme {
 //            ThemeManager.instance().put(HOColorName.TABLEENTRY_IMPROVEMENT_FG, defaulRATING_BORDER_ABOVE_LIMITts.getColor("palette.lime"));
 //
 
-
-
-
             // Lineup
             ThemeManager.instance().put(HOColorName.LINEUP_RATING_BORDER, Color.GRAY);
-            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SELECTED, new Color(52, 28, 2));
-            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SUB, new Color(60, 63, 65));
+            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SELECTED, new Color(0, 0, 0));
+            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SUB, new Color(10, 9, 79));
             ThemeManager.instance().put(HOColorName.RATING_BORDER_BELOW_LIMIT, defaults.getColor("palette.red"));
             ThemeManager.instance().put(HOColorName.RATING_BORDER_ABOVE_LIMIT, defaults.getColor("palette.blue"));
             ThemeManager.instance().put(HOColorName.LINEUP_HIGHLIGHT_FG, new Color(224, 255, 255));
