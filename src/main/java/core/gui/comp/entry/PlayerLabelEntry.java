@@ -79,11 +79,17 @@ public final class PlayerLabelEntry implements IHOTableEntry {
     }
 
     public final JComponent getComponent(boolean isSelected, boolean forceDefaultBackground) {
-        if (m_bSelect && !forceDefaultBackground) {
+        m_clComponent.setOpaque(true);
+        if (forceDefaultBackground) {
+            m_clComponent.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
+        }
+        else if (m_bSelect) {
             m_clComponent.setBackground(ThemeManager.getColor(HOColorName.LINEUP_PLAYER_SELECTED));
-        } else if (m_bAssit && !forceDefaultBackground) {
+        }
+        else if (m_bAssit) {
             m_clComponent.setBackground(ThemeManager.getColor(HOColorName.LINEUP_PLAYER_SUB));
-        } else {
+        }
+        else {
             m_clComponent.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG : ColorLabelEntry.BG_STANDARD);
         }
 

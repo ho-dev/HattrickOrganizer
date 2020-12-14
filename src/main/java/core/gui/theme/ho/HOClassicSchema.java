@@ -295,6 +295,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(PLAYER_SKILL_SPECIAL_BG, "lightGreen");
 		put(PLAYER_SKILL_BG, "lightYellow");
 		put(TABLEENTRY_BG, "white");
+		put(BACKGROUND_CONTAINER, Color.WHITE);
 		put(TABLEENTRY_FG, "black");
 		put(PLAYER_POS_BG, new Color(220, 220, 255));
 		put(PLAYER_SUBPOS_BG, new Color(235, 235, 255));
