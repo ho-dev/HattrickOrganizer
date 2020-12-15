@@ -130,7 +130,7 @@ public class FilterPanel extends JPanel implements ActionListener {
 		setOpaque(false);
 
 		fillTeamCombo();
-		teamCombo.setRenderer(new ComboBoxRenderer());
+		teamCombo.setRenderer(new MatchComboBoxRenderer());
 		teamCombo.setOpaque(false);
 		teamCombo.addItemListener(e -> {
 			if (!teamComboUpdating) {

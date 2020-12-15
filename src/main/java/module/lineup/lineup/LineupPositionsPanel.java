@@ -205,7 +205,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		final GridBagConstraints constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.weightx = 1.0;
-		constraints.weighty = 1.0;
+		constraints.weighty = 0.0;
 
 
 		centerPanel.setLayout(layout);
@@ -214,7 +214,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 		constraints.gridwidth = 3;
-		constraints.fill = GridBagConstraints.BOTH;
 		constraints.insets = new Insets(3, 3, 3, 3);
 		m_jpMatchAndLineupSelectionPanel = new MatchAndLineupSelectionPanel();
 		layout.setConstraints(m_jpMatchAndLineupSelectionPanel, constraints);
@@ -224,9 +223,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridx = 3;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
-		constraints.weighty = 0.0;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = new Insets(3, 3, 3, 3);
+		constraints.anchor = GridBagConstraints.SOUTH;
 		m_clKeeper = new PlayerPositionPanel(this, IMatchRoleID.keeper);
 		swapPositionsManager.addSwapCapabilityTo(m_clKeeper);
 		layout.setConstraints(m_clKeeper, constraints);
@@ -300,6 +298,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridwidth = 1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.insets = new Insets(3, 3, 3, 3);
+		constraints.anchor = GridBagConstraints.CENTER;
 		m_clRightBack = new PlayerPositionPanel(this, IMatchRoleID.rightBack);
 		layout.setConstraints(m_clRightBack, constraints);
 		centerPanel.add(m_clRightBack);
