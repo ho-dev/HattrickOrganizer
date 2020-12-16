@@ -4,6 +4,8 @@ import core.datatype.ComboItem;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.PlayerLabelEntry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +48,7 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
         }
     }
 
-    public final Component getListCellRendererComponent(JList<? extends PlayerCBItem>  jList, int index, boolean isSelected) {
+    public final Component getListCellRendererComponent(int index, boolean isSelected) {
         final Player player = getPlayer();
 
         if (player != null) {
@@ -60,7 +62,7 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
 
         } else {
             m_jlLeer.setOpaque(true);
-            m_jlLeer.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG : ColorLabelEntry.BG_STANDARD);
+            m_jlLeer.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG : ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
             return m_jlLeer;
         }
     }

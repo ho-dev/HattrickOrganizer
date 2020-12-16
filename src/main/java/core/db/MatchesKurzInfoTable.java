@@ -1,5 +1,6 @@
 package core.db;
 
+import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 //import core.model.match.MatchKurzInfo2;
 import core.model.match.MatchType;
@@ -7,6 +8,7 @@ import core.model.match.Weather;
 import core.util.HOLogger;
 import module.matches.SpielePanel;
 import module.matches.statistics.MatchesOverviewCommonPanel;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -108,13 +110,57 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return match;
 	}
 
+
 	/**
-	 * Wichtig: Wenn die Teamid = -1 ist muss der Matchtyp ALLE_SPIELE sein!
+	 * Return the list of all played matches (own team)
+	 */
+	ArrayList<MatchKurzInfo> getPlayedMatchInfo() {
+		return getPlayedMatchInfo(null);
+	}
+
+
+	/**
+	 * Return the list of n latest played matches (own team)
+	 */
+	ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames) {
+		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		final ArrayList<MatchKurzInfo> playedMatches = new ArrayList<>();
+
+		StringBuilder sql = new StringBuilder(100);
+		ResultSet rs;
+
+		sql.append("SELECT * FROM " + getTableName());
+		sql.append(" WHERE ( GastID = " + teamId + "OR HeimID = " + teamId + ")");
+		sql.append(" AND Status=" + MatchKurzInfo.FINISHED  + " ORDER BY MatchDate DESC");
+
+
+		if(iNbGames != null) {
+			sql.append(" LIMIT " + iNbGames);
+		}
+
+		try{
+			rs = adapter.executeQuery(sql.toString());
+
+			assert rs != null;
+			rs.beforeFirst();
+
+			while (rs.next()) {
+				playedMatches.add(createMatchKurzInfo(rs));
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), "DB.getMatchesKurzInfo Error" + e);
+		}
+
+		return playedMatches;
+	}
+
+	/**
+	 * Important: If the teamid = -1 the match type must be ALL_GAMES!
 	 * 
 	 * @param teamId
-	 *            Die Teamid oder -1 für alle
+	 *            The Teamid or -1 for all
 	 * @param matchtyp
-	 *            Welche Matches? Konstanten im SpielePanel!
+	 *            Which matches? Constants in the GamesPanel!
 	 * 
 	 */
 	MatchKurzInfo[] getMatchesKurzInfo(int teamId, int matchtyp, boolean asc) {

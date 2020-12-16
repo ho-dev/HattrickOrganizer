@@ -23,7 +23,7 @@ public class TeamManager {
 		return entry.getValue();
 	}
 
-	public static Vector<Team> getLeagueMatches() {
+	public static Vector<Team> getLeagueMatches(Boolean includeOwn) {
 		Spielplan league = getDivisionMatches();
 		Vector<Team> lteams = new Vector<>();
 		int ownTeamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
@@ -60,15 +60,18 @@ public class TeamManager {
 				}
 			}
 		}
-		// add own team before returning list
-		Team t = new Team();
 
-		t.setName(HOVerwaltung.instance().getModel().getBasics().getTeamName());
-		t.setTeamId(ownTeamID);
-		t.setTime(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse("2200-01-01"), LocalTime.MIDNIGHT))); // to ensure own team appear last
-		t.setMatchType(-1);
+		if(includeOwn) {
+			// add own team before returning list
+			Team t = new Team();
 
-		lteams.add(t);
+			t.setName(HOVerwaltung.instance().getModel().getBasics().getTeamName());
+			t.setTeamId(ownTeamID);
+			t.setTime(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse("2200-01-01"), LocalTime.MIDNIGHT))); // to ensure own team appear last
+			t.setMatchType(-1);
+
+			lteams.add(t);
+		}
 
 		return lteams;
 	}
@@ -84,8 +87,12 @@ public class TeamManager {
 		return false;
 	}
 
+	public static Collection<Team> getTeams(Boolean includeOwn) {
+		return getTeamsMap(includeOwn).values();
+	}
+
 	public static Collection<Team> getTeams() {
-		return getTeamsMap().values();
+		return getTeams(true);
 	}
 
 	public static boolean isUpdated() {
@@ -114,16 +121,20 @@ public class TeamManager {
 	}
 
 	private static LinkedHashMap<Integer, Team> getTeamsMap() {
+	 return getTeamsMap(true);
+	}
+
+
+	private static LinkedHashMap<Integer, Team> getTeamsMap(Boolean includeOwn) {
 		if (teams == null) {
 			teams = new LinkedHashMap<>();
 
-			Vector<Team> vLMatch = getUpComingMatchs(getLeagueMatches());
+			Vector<Team> vLMatch = getUpComingMatchs(getLeagueMatches(includeOwn));
 			Collections.sort(vLMatch);
 
 			Iterator it = vLMatch.iterator();
 
 			Timestamp refTS = HOVerwaltung.instance().getModel().getBasics().getDatum();
-			int ownTeamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 			while(it.hasNext()){
 				Team team = (Team)it.next();

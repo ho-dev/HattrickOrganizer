@@ -811,7 +811,7 @@ public class ImageUtilities {
 
 		String key = "trainingbar_" + id + "_" + width + "x" + height;
 
-		Icon trainingBarIcon = ThemeManager.instance().getIcon(key);
+		Icon trainingBarIcon = ThemeManager.getIcon(key);
 
 		if (trainingBarIcon == null) {
 
@@ -820,7 +820,8 @@ public class ImageUtilities {
 			Color b1=bg, b2=bg, b3=bg, b4=bg;
 
 			switch(id) {
-				case "trainbar_empty" -> {break;}
+				case "trainbar_empty" -> {
+				}
 				case "trainbar_ft" ->{
 					b1=getColor(HOColorName.FULL_TRAINING_DONE); b2=getColor(HOColorName.FULL_TRAINING_DONE);
 					b3=getColor(HOColorName.FULL_TRAINING_DONE); b4=getColor(HOColorName.FULL_TRAINING_DONE);}
@@ -886,7 +887,7 @@ public class ImageUtilities {
 
 		String key = "captain_" + width + "x" + height;
 
-		Icon captainIcon = ThemeManager.instance().getIcon(key);
+		Icon captainIcon = ThemeManager.getIcon(key);
 
 		if (captainIcon == null) {
 

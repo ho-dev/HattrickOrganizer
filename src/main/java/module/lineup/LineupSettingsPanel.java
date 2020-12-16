@@ -6,6 +6,8 @@ import core.datatype.CBItem;
 import core.gui.HOMainFrame;
 import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
@@ -261,6 +263,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		m_jcbLocation.setMaximumRowCount(4);
 		m_jcbLocation.setToolTipText(getTranslation("tt_AufstellungsDetails_Spielort"));
 		m_jcbLocation.setOpaque(false);
+		m_jcbLocation.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		layout.setConstraints(m_jcbLocation, constraints);
 		add(m_jcbLocation);
 
@@ -275,6 +278,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		initLabel(constraints, layout, new JLabel(getTranslation("ls.match.weather")), yPos);
 		m_jcbWeather.setToolTipText(getTranslation("tt_AufstellungsAssistent_Wetter"));
 		m_jcbWeather.setRenderer(new core.gui.comp.renderer.WeatherListCellRenderer());
+		m_jcbWeather.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		layout.setConstraints(m_jcbWeather, constraints);
@@ -286,6 +290,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		m_jcbMainTeamSpirit.setMaximumRowCount(13);
+		m_jcbMainTeamSpirit.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		layout.setConstraints(m_jcbMainTeamSpirit, constraints);
 		add(m_jcbMainTeamSpirit);
 
@@ -294,6 +299,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		m_jcbSubTeamSpirit.setMaximumRowCount(5);
+		m_jcbSubTeamSpirit.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		layout.setConstraints(m_jcbSubTeamSpirit, constraints);
 		add(m_jcbSubTeamSpirit);
 
@@ -302,6 +308,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		m_jcbTeamConfidence.setMaximumRowCount(10);
+		m_jcbTeamConfidence.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		layout.setConstraints(m_jcbTeamConfidence, constraints);
 		add(m_jcbTeamConfidence);
 
@@ -310,6 +317,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		m_jcbTrainerType.setMaximumRowCount(3);
+		m_jcbTrainerType.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		layout.setConstraints(m_jcbTrainerType, constraints);
 		add(m_jcbTrainerType);
 
@@ -317,6 +325,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		initLabel(constraints, layout, new JLabel(getTranslation("ls.club.staff.tacticalassistant")), yPos);
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
+		m_jcbTacticalAssistants.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		layout.setConstraints(m_jcbTacticalAssistants, constraints);
 		add(m_jcbTacticalAssistants);
 		
@@ -327,7 +336,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		constraints.gridwidth = 1;
 		m_jcbPullBackMinute.setToolTipText(HOVerwaltung.instance().getLanguageString(
 				"PullBack.PullBackStartMinute.ToolTip"));
-		m_jcbPullBackMinute.setOpaque(false);
+		m_jcbPullBackMinute.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		layout.setConstraints(m_jcbPullBackMinute, constraints);
 		add(m_jcbPullBackMinute);
 
@@ -336,7 +345,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		m_jchPullBackOverride.setToolTipText(getTranslation("PullBack.Override.ToolTip"));
-		m_jchPullBackOverride.setOpaque(false);
+		m_jchPullBackOverride.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		layout.setConstraints(m_jchPullBackOverride, constraints);
 		add(m_jchPullBackOverride);
 

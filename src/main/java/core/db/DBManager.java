@@ -930,6 +930,14 @@ public class DBManager {
 				.getMatchesKurzInfo(teamId, matchStatus);
 	}
 
+
+
+	public ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames){
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames);
+	}
+
+
+
 	/**
 	 * Wichtig: Wenn die Teamid = -1 ist muss der Matchtyp ALLE_SPIELE sein!
 	 * 

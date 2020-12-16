@@ -41,6 +41,7 @@ public class DarculaDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.PANEL_BG, defaults.getColor("background"));
             ThemeManager.instance().put(HOColorName.BACKGROUND_CONTAINER, defaults.getColor("backgroundContainer"));
             ThemeManager.instance().put(HOColorName.TABLEENTRY_BG, neutralGrey);
+            ThemeManager.instance().put(HOColorName.BACKGROUND_CONTAINER, neutralGrey);
 
             ThemeManager.instance().put(HOColorName.TABLE_SELECTION_FG, Color.WHITE);
             ThemeManager.instance().put(HOColorName.TABLE_SELECTION_BG, new Color(65, 65, 65));

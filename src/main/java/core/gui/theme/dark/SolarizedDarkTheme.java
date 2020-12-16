@@ -38,7 +38,7 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.TABLEENTRY_FG, defaults.getColor("Label.foreground"));
             ThemeManager.instance().put(HOColorName.LABEL_FG, defaults.getColor("Label.foreground"));
             ThemeManager.instance().put(HOColorName.PANEL_BG, defaults.getColor("background"));
-            ThemeManager.instance().put(HOColorName.BACKGROUND_CONTAINER, defaults.getColor("backgroundContainer"));
+            ThemeManager.instance().put(HOColorName.BACKGROUND_CONTAINER, blueishColour);
             ThemeManager.instance().put(HOColorName.TABLEENTRY_BG, blueishColour);
 
             ThemeManager.instance().put(HOColorName.TABLE_SELECTION_FG, Color.WHITE);
@@ -61,22 +61,19 @@ public class SolarizedDarkTheme extends DarkTheme {
 //            ThemeManager.instance().put(HOColorName.LINEUP_POS_MIN_BG, neutralGrey);
 //            ThemeManager.instance().put(HOColorName.LINEUP_RATING_BORDER, Color.GRAY);
 //
-//            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SELECTED, new Color(60, 63, 65));
-//            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SUB, new Color(48, 54, 56));
-//            ThemeManager.instance().put(HOColorName.TABLEENTRY_IMPROVEMENT_FG, defaults.getColor("palette.lime"));
+//            ThemeManager.instance().put(HOColorName.TABLEENTRY_IMPROVEMENT_FG, defaulRATING_BORDER_ABOVE_LIMITts.getColor("palette.lime"));
 //
-//            ThemeManager.instance().put(HOColorName.RATING_BORDER_BELOW_LIMIT, new Color(255, 0, 0));
-//            ThemeManager.instance().put(HOColorName.RATING_BORDER_ABOVE_LIMIT, new Color(65, 105, 225));
-//            ThemeManager.instance().put(HOColorName.START_ASSISTANT, defaults.getColor("palette.lime"));
-//            ThemeManager.instance().put(HOColorName.CLEAR_LINEUP, defaults.getColor("palette.red"));
-//            ThemeManager.instance().put(HOColorName.LINEUP_COLOR, defaults.getColor("palette.gray"));
-//            ThemeManager.instance().put(HOColorName.LINEUP_HIGHLIGHT_FG, defaults.getColor("palette.blue"));
 
             // Lineup
             ThemeManager.instance().put(HOColorName.LINEUP_RATING_BORDER, Color.GRAY);
-
-            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SELECTED, new Color(60, 63, 65));
-            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SUB, new Color(48, 54, 56));
+            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SELECTED, new Color(0, 0, 0));
+            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SUB, new Color(10, 9, 79));
+            ThemeManager.instance().put(HOColorName.RATING_BORDER_BELOW_LIMIT, defaults.getColor("palette.red"));
+            ThemeManager.instance().put(HOColorName.RATING_BORDER_ABOVE_LIMIT, defaults.getColor("palette.blue"));
+            ThemeManager.instance().put(HOColorName.LINEUP_HIGHLIGHT_FG, new Color(224, 255, 255));
+            ThemeManager.instance().put(HOColorName.START_ASSISTANT, defaults.getColor("palette.forest"));
+            ThemeManager.instance().put(HOColorName.CLEAR_LINEUP, defaults.getColor("palette.red"));
+            ThemeManager.instance().put(HOColorName.LINEUP_COLOR, defaults.getColor("palette.gray"));
 
             // Matches
             ThemeManager.instance().put(HOColorName.MATCHTYPE_LEAGUE_BG, new Color(95, 86, 38));
@@ -130,9 +127,9 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.PALETTE13[12], new Color(169, 169, 169));
 
             //training bars
-            ThemeManager.instance().put(HOColorName.FULL_TRAINING_DONE, defaults.getColor("palette.brown"));
-            ThemeManager.instance().put(HOColorName.PARTIAL_TRAINING_DONE, defaults.getColor("palette.lime"));
-            ThemeManager.instance().put(HOColorName.FULL_STAMINA_DONE, defaults.getColor("palette.blue"));
+            ThemeManager.instance().put(HOColorName.FULL_TRAINING_DONE, new Color(186, 247, 60));
+            ThemeManager.instance().put(HOColorName.PARTIAL_TRAINING_DONE, new Color(245, 171, 53));
+            ThemeManager.instance().put(HOColorName.FULL_STAMINA_DONE, new Color(173, 216, 230));
 
             // borders training position in lineup
             ThemeManager.instance().put(HOColorName.PLAYER_POSITION_PANEL_BORDER, ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
