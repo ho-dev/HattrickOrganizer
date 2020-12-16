@@ -16,8 +16,7 @@ public final class Basics  {
     /**
      * youth team id (0 if non existing or no access in case of foreign teams)
      *          null: unknown (the time before youth team information were downloaded)
-     *          0: team hast no youth team
-     *          otherwise: the youth team id
+     *          0: team has no youth team
      */
     private Integer youthTeamId;
     /**
