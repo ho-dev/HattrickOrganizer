@@ -7,10 +7,10 @@ import core.gui.theme.ThemeManager;
 import javax.swing.*;
 import java.awt.*;
 
-public class MatchOrdersRenderer implements javax.swing.ListCellRenderer<MatchOrdersCBItems>{
+public class MatchOrdersRenderer implements javax.swing.ListCellRenderer<MatchOrdersCBItem>{
 
     @Override
-    public Component getListCellRendererComponent(JList<? extends MatchOrdersCBItems> list, MatchOrdersCBItems value, int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList<? extends MatchOrdersCBItem> list, MatchOrdersCBItem value, int index, boolean isSelected, boolean cellHasFocus) {
         if (value != null) {
             Component comp = value.getListCellRendererComponent(isSelected);
             if (isSelected) {

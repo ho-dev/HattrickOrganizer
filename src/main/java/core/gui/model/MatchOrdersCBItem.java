@@ -6,7 +6,9 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
+import core.model.match.IMatchDetails;
 import core.model.match.MatchType;
+import core.model.match.Weather;
 import core.util.Helper;
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +19,7 @@ import java.util.Map;
 import static core.util.HTCalendarFactory.getHTSeason;
 import static core.util.HTCalendarFactory.getHTWeek;
 
-public class MatchOrdersCBItems implements ComboItem {
+public class MatchOrdersCBItem implements ComboItem {
 
     private boolean m_bOrdersSetInHT;
     private int m_iMatchID = -1;
@@ -25,10 +27,23 @@ public class MatchOrdersCBItems implements ComboItem {
     private MatchType m_clMatchType;
     private java.sql.Timestamp m_tsMatchTime;
     private JComponent m_jpComponent;
-    protected static int COMPONENT_WIDTH = 120;
+    private short m_clLocation;
+    private Weather m_clWeather;
+    private Weather.Forecast m_clWeatherForecast;
 
+    public Weather getWeather() {return m_clWeather;}
 
-    public boolean isM_bOrdersSetInHT() {
+    public void setWeather(Weather Weather) {this.m_clWeather = Weather;}
+
+    public Weather.Forecast getWeatherForecast() {return m_clWeatherForecast;}
+
+    public void setWeatherForecast(Weather.Forecast WeatherForecast) {this.m_clWeatherForecast = WeatherForecast;}
+
+    public short getLocation() {return m_clLocation;}
+
+    public void setLocation(short location) {this.m_clLocation = location; }
+
+    public boolean areOrdersSetInHT() {
         return m_bOrdersSetInHT;
     }
 
@@ -36,7 +51,7 @@ public class MatchOrdersCBItems implements ComboItem {
         this.m_bOrdersSetInHT = m_bOrdersSetInHT;
     }
 
-    public int getM_iMatchID() {
+    public int getMatchID() {
         return m_iMatchID;
     }
 
@@ -52,7 +67,7 @@ public class MatchOrdersCBItems implements ComboItem {
         this.m_sOpponentName = m_sTeamName;
     }
 
-    public MatchType getM_clMatchType() {
+    public MatchType getMatchType() {
         return m_clMatchType;
     }
 
@@ -69,7 +84,7 @@ public class MatchOrdersCBItems implements ComboItem {
     }
 
 
-    public MatchOrdersCBItems() {
+    public MatchOrdersCBItem() {
     }
 
     public final JComponent getComponent(){

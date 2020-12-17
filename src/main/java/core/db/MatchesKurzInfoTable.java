@@ -421,7 +421,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		boolean firstCondition = true;
 
 		if (teamId > -1) {
-			sql += (firstCondition ? " WHERE" : " AND")
+			sql += " WHERE"
 				+ "(GastID=" + teamId + " OR HeimID=" + teamId + ")";
 			firstCondition = false;
 		}
@@ -429,7 +429,6 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		if (matchStatus > -1) {
 			sql += (firstCondition ? " WHERE" : " AND")
 				+ " Status=" + matchStatus;
-			firstCondition = false;
 		}
 
 		sql += " ORDER BY MatchDate DESC";

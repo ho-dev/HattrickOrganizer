@@ -37,6 +37,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 	private final LineupPanel m_clLineupPanel;
 	private MatchAndLineupSelectionPanel m_jpMatchAndLineupSelectionPanel;
+	private MatchBanner m_jpMatchBanner;
 	private final JButton m_jbFlipSide = new JButton(ThemeManager.getIcon(HOIconName.RELOAD));
 	private PlayerPositionPanel m_clKeeper;
 	private PlayerPositionPanel m_clLeftBack;
@@ -82,6 +83,10 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	final String defensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.defensive");
 	final String neutral_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.neutral");
 	private static ActionListener cbActionListener;
+
+	public LineupPanel getLineupPanel() {
+		return m_clLineupPanel;
+	}
 
 	public LineupPositionsPanel(LineupPanel parent) {
 		m_clLineupPanel = parent;
@@ -228,10 +233,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.insets = new Insets(3, 3, 3, 3);
-		JLabel jlM = new JLabel("PlaceHolder match banner");
-		jlM.setOpaque(true);
-		layout.setConstraints(jlM, constraints);
-		centerPanel.add(jlM);
+		m_jpMatchBanner = new MatchBanner(this);
+		layout.setConstraints(m_jpMatchBanner, constraints);
+		centerPanel.add(m_jpMatchBanner);
 
 
 		// Keeper

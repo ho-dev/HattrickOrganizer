@@ -1,18 +1,23 @@
 package module.lineup.lineup;
 
 import core.db.DBManager;
+import core.gui.CursorToolkit;
 import core.gui.Refreshable;
-import core.gui.model.MatchOrdersCBItems;
+import core.gui.model.MatchOrdersCBItem;
 import core.gui.model.MatchOrdersRenderer;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupPlayer;
+import core.model.match.*;
 import core.model.player.IMatchRoleID;
+import core.net.OnlineWorker;
 import core.util.GUIUtils;
 import core.util.Helper;
 import module.lineup.Lineup;
 import module.teamAnalyzer.ui.MatchComboBoxRenderer;
 import module.teamAnalyzer.vo.Team;
+import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Timestamp;
@@ -30,13 +35,14 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private final int MAX_PREVIOUS_LINEUP = 10;
     LineupPositionsPanel jpParent;
     private JComboBox<Team> m_jcbLoadLineup;
-    private JComboBox<MatchOrdersCBItems> m_jcbUpcomingGames;
+    private JComboBox<MatchOrdersCBItem> m_jcbUpcomingGames;
     private JCheckBox m_jcbxLineupSimulation;
     private JCheckBox m_jcbxOfficialOnly;
     private JButton m_jbUploadLineup;
     private JButton m_jbDownloadLineup;
     private JButton m_jbRefreshMatches;
     private JButton m_jbGetRatingsPrediction;
+    private @Nullable MatchOrdersCBItem m_clSelectedMatch;
 
     public MatchAndLineupSelectionPanel(LineupPositionsPanel parent) {
         jpParent = parent;
@@ -51,7 +57,8 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         setLayout(layout);
 
         gbc.insets = new Insets(3,3 ,3 ,3 );
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.LINE_START;
         gbc.weightx = 1.0;
         gbc.weighty = 0.0;
 
@@ -60,19 +67,20 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.select_match"));
 
         gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         m_jcbUpcomingGames = new JComboBox<>();
         update_jcbUpcomingGames();
         m_jcbUpcomingGames.setRenderer(new MatchOrdersRenderer());
         layout.setConstraints(m_jcbUpcomingGames, gbc);
         add(m_jcbUpcomingGames);
 
-
         gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.NONE;
         addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.lineup_simulator"));
 
         gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.LINE_START;
+        gbc.fill = GridBagConstraints.NONE;
         m_jcbxLineupSimulation = new JCheckBox();
         m_jcbxLineupSimulation.setSelected(false);
         layout.setConstraints(m_jcbxLineupSimulation, gbc);
@@ -82,9 +90,8 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         // Panel with the 4 buttons
         gbc.gridx = 0;
         gbc.gridy = 2;
-        gbc.gridwidth = 4;
+        gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.anchor = GridBagConstraints.CENTER;
         JPanel jpButtons = new JPanel(new FlowLayout());
 
         m_jbUploadLineup = new JButton(Helper.getTranslation("lineup.upload.btn.upload"));
@@ -93,7 +100,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         m_jbDownloadLineup = new JButton(Helper.getTranslation("lineup.upload.btn.download"));
         m_jbDownloadLineup.setToolTipText(Helper.getTranslation("lineup.upload.btn.download.tooltip"));
-        m_jbDownloadLineup.setEnabled(false);
+        m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
 
         m_jbRefreshMatches = new JButton(Helper.getTranslation("lineup.upload.btn.refresh"));
         m_jbRefreshMatches.setToolTipText(Helper.getTranslation("lineup.upload.btn.refresh.tooltip"));
@@ -102,7 +109,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         m_jbGetRatingsPrediction.setToolTipText(Helper.getTranslation("lineup.getRatingsPrediction.btn.tooltip"));
         m_jbGetRatingsPrediction.setEnabled(false);
 
-        GUIUtils.equalizeComponentSizes(m_jbUploadLineup, m_jbDownloadLineup, m_jbRefreshMatches, m_jbGetRatingsPrediction);
+        GUIUtils.equalizeComponentSizes(m_jbRefreshMatches, m_jbUploadLineup, m_jbDownloadLineup, m_jbGetRatingsPrediction);
 
         jpButtons.add(m_jbUploadLineup);
         jpButtons.add(m_jbDownloadLineup);
@@ -116,27 +123,29 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         gbc.gridx = 0;
         gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.NONE;
         addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.load_lineup"));
 
         gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         m_jcbLoadLineup = new JComboBox<>();
         update_jcbLoadLineup();
         m_jcbLoadLineup.setRenderer(new MatchComboBoxRenderer(MatchComboBoxRenderer.RenderType.TYPE_2));
         layout.setConstraints(m_jcbLoadLineup, gbc);
         add(m_jcbLoadLineup);
 
-
         gbc.gridx = 0;
         gbc.gridy = 4;
+        gbc.fill = GridBagConstraints.NONE;
         addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.official_game_only"));
         gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.LINE_START;
+        gbc.fill = GridBagConstraints.NONE;
         m_jcbxOfficialOnly = new JCheckBox();
         m_jcbxOfficialOnly.setSelected(false);
         layout.setConstraints(m_jcbxOfficialOnly, gbc);
         add(m_jcbxOfficialOnly);
 
-
+        setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, ThemeManager.getColor(HOColorName.PLAYER_POSITION_PANEL_BORDER)));
 
         addListeners();
     }
@@ -144,18 +153,16 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private void setComponents() {}
 
     private void addListeners() {
-//        ActionListener checkBoxActionListener = e -> {
-//            if (e.getSource() == jcbHelpLines) {
-//                oChartPanel.setHelpLines(jcbHelpLines.isSelected());
-//                gup.statisticsClubHelpLines = jcbHelpLines.isSelected();
-//            }
-//        }
-//
-//        jcbHelpLines.addActionListener(checkBoxActionListener);
-
-//        m_jbSelectStartingLineup.addActionListener(e -> popup.setVisible(true));
 
         m_jcbLoadLineup.addActionListener(e -> adoptLineup());
+
+        m_jbDownloadLineup.addActionListener(e -> downloadLineupFromHT());
+
+        m_jcbUpcomingGames.addActionListener(e -> {
+            adjustLineupSettings();
+            m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
+        });
+
 
     }
 
@@ -232,34 +239,53 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         // use if orce refresh
         //List<MatchKurzInfo> aa =  OnlineWorker.getMatches(OWN_TEAM_ID, true,false, true);
 
-        MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(OWN_TEAM_ID);
+        MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(OWN_TEAM_ID, MatchKurzInfo.UPCOMING);
         Arrays.sort(matches, Collections.reverseOrder());
 //        matches.sort();
 
         Timestamp now = new Timestamp(System.currentTimeMillis());
 
-        List<MatchOrdersCBItems> upcomingMatches = new ArrayList<>();
+        List<MatchOrdersCBItem> upcomingMatches = new ArrayList<>();
 
-        MatchOrdersCBItems clMatchOrdersTemp;
+        MatchOrdersCBItem clMatchOrdersTemp;
 
         for (MatchKurzInfo match : matches) {
             if (match.getMatchDateAsTimestamp().after(now)) {
-                clMatchOrdersTemp = new MatchOrdersCBItems();
+                clMatchOrdersTemp = new MatchOrdersCBItem();
                 clMatchOrdersTemp.setMatchID(match.getMatchID());
                 clMatchOrdersTemp.setMatchType(match.getMatchTyp());
                 clMatchOrdersTemp.setMatchTime(match.getMatchDateAsTimestamp());
                 clMatchOrdersTemp.setOpponentName(match.getOpponentName());
                 clMatchOrdersTemp.setOrdersSetInHT(match.isOrdersGiven());
+                if (match.getMatchTyp().isTournament()){
+                    clMatchOrdersTemp.setLocation(IMatchDetails.LOCATION_TOURNAMENT);
+                }
+                else{
+                    if (match.isHomeMatch()){
+                        clMatchOrdersTemp.setLocation(IMatchDetails.LOCATION_HOME);
+                    }
+                    else if(match.isDerby()){
+                        clMatchOrdersTemp.setLocation(IMatchDetails.LOCATION_AWAYDERBY);
+                    }
+                    else {
+                        clMatchOrdersTemp.setLocation(IMatchDetails.LOCATION_AWAY);
+                    }
+                }
+
+                clMatchOrdersTemp.setWeather(match.getWeather());
+                clMatchOrdersTemp.setWeatherForecast(match.getWeatherForecast());
                 upcomingMatches.add(clMatchOrdersTemp);
             }
         }
 
         int i = 0;
-        for (MatchOrdersCBItems element : upcomingMatches) {
+        for (MatchOrdersCBItem element : upcomingMatches) {
             m_jcbUpcomingGames.addItem(element);
             i++;
         }
         m_jcbUpcomingGames.setMaximumRowCount(i);
+
+        m_clSelectedMatch = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
     }
 
     private void adoptLineup() {
@@ -267,23 +293,21 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
         lineup.clearLineup();
 
-        int iMatchID = ((Team)(Objects.requireNonNull(m_jcbLoadLineup.getSelectedItem()))).getMatchID();
-
-
-        Vector<MatchLineupPlayer> lineupPlayers = DBManager.instance().getMatchLineupPlayers(iMatchID, OWN_TEAM_ID);
-
-
-
-        if (lineupPlayers != null) {
-            for (MatchLineupPlayer lineupPlayer : lineupPlayers) {
-                if (lineupPlayer.getId() == IMatchRoleID.setPieces) {
-                    lineup.setKicker(lineupPlayer.getSpielerId());
-                }
-                else if (lineupPlayer.getId() == IMatchRoleID.captain) {
-                    lineup.setCaptain(lineupPlayer.getSpielerId());
-                }
-                else {
-                    lineup.setSpielerAtPosition(lineupPlayer.getId(), lineupPlayer.getSpielerId(), lineupPlayer.getTactic());
+        if (m_jcbLoadLineup.getSelectedItem() != null){
+            jpParent.getLineupPanel().getLineupAssistantPanel().setGroupFilter(false);
+            int iMatchID = ((Team)(m_jcbLoadLineup.getSelectedItem())).getMatchID();
+            Vector<MatchLineupPlayer> lineupPlayers = DBManager.instance().getMatchLineupPlayers(iMatchID, OWN_TEAM_ID);
+            if (lineupPlayers != null) {
+                for (MatchLineupPlayer lineupPlayer : lineupPlayers) {
+                    if (lineupPlayer.getId() == IMatchRoleID.setPieces) {
+                        lineup.setKicker(lineupPlayer.getSpielerId());
+                    }
+                    else if (lineupPlayer.getId() == IMatchRoleID.captain) {
+                        lineup.setCaptain(lineupPlayer.getSpielerId());
+                    }
+                    else {
+                        lineup.setSpielerAtPosition(lineupPlayer.getId(), lineupPlayer.getSpielerId(), lineupPlayer.getTactic());
+                    }
                 }
             }
         }
@@ -291,5 +315,44 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         jpParent.update();
 
         }
+
+
+    private void downloadLineupFromHT() {
+
+        MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
+
+        assert matchOrder != null;
+
+        Lineup lineup;
+
+        try {
+            CursorToolkit.startWaitCursor(this);
+            lineup = OnlineWorker.getLineupbyMatchId(matchOrder.getMatchID(), matchOrder.getMatchType());
+        }
+        finally {
+            CursorToolkit.stopWaitCursor(this);
+        }
+
+        if (lineup != null) {
+            lineup.setLocation(matchOrder.getLocation());
+            lineup.setWeather(matchOrder.getWeather());
+            lineup.setWeatherForecast(matchOrder.getWeatherForecast());
+        }
+
+        HOVerwaltung.instance().getModel().setLineup(lineup);
+        jpParent.update();
+    }
+
+
+    private void adjustLineupSettings(){
+        MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
+        assert matchOrder != null;
+
+        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        lineup.setLocation(matchOrder.getLocation());
+        lineup.setWeather(matchOrder.getWeather());
+        lineup.setWeatherForecast(matchOrder.getWeatherForecast());
+        jpParent.update();
+    }
 
 }

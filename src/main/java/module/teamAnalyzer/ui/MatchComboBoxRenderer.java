@@ -41,21 +41,25 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
         if (value == null) {
             JLabel m_jlBlank = new JLabel(" ");
             m_jlBlank.setOpaque(true);
-            if (isSelected) {
-                m_jlBlank.setBackground(list.getSelectionBackground());
-            } else {
-                m_jlBlank.setBackground(list.getBackground());
+            if (renderType == RenderType.TYPE_1) {
+                if (isSelected) {
+                    m_jlBlank.setBackground(list.getSelectionBackground());
+                } else {
+                    m_jlBlank.setBackground(list.getBackground());
+                }
             }
+            else if (renderType == RenderType.TYPE_2) {
+                if (isSelected) {
+                    m_jlBlank.setBackground(HODefaultTableCellRenderer.SELECTION_BG);
+                } else {
+                    m_jlBlank.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
+                }
+            }
+
             return m_jlBlank;
         }
 
-        if (isSelected) {
-            setBackground(list.getSelectionBackground());
-            setForeground(list.getSelectionForeground());
-        } else {
-            setBackground(list.getBackground());
-            setForeground(list.getForeground());
-        }
+
 
         if (value.getMatchType() != -1) {
            setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[value.getMatchType()]));
@@ -71,19 +75,35 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
             sDate += "(" + iHTWeek + "/" + iHTSeason + ")";
 
             setText(value.getName() + "  " + sDate);
+            if (isSelected) {
+                setBackground(list.getSelectionBackground());
+                setForeground(list.getSelectionForeground());
+            } else {
+                setBackground(list.getBackground());
+                setForeground(list.getForeground());
+            }
         }
         else if (renderType == RenderType.TYPE_2) {
             String sMatch;
-           if (value.isHomeMatch()) {
-               sMatch = OWN_TEAM_NAME + " - " + value.getName();
-           }
-           else{
-               sMatch = value.getName() + " - " + OWN_TEAM_NAME;
-           }
+            if (value.isHomeMatch()) {
+                sMatch = OWN_TEAM_NAME + " - " + value.getName();
+            } else {
+                sMatch = value.getName() + " - " + OWN_TEAM_NAME;
+            }
             setText(sMatch);
+            if (isSelected) {
+                setBackground(HODefaultTableCellRenderer.SELECTION_BG);
+            } else {
+                setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
+            }
         }
         else{
             setText("");
+            if (isSelected) {
+                setBackground(HODefaultTableCellRenderer.SELECTION_BG);
+            } else {
+                setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
+            }
         }
 
 

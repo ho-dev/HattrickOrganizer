@@ -18,6 +18,7 @@ import module.series.Spielplan;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
+import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 
 import java.sql.Timestamp;
@@ -127,7 +128,7 @@ public class HOModel {
     /**
      * Set a new lineup
      */
-    public final void setLineup(Lineup lineup) {
+    public final void setLineup(@Nullable Lineup lineup) {
         m_clAufstellung = lineup;
     }
 
