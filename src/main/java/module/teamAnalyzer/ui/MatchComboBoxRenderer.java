@@ -1,7 +1,10 @@
 package module.teamAnalyzer.ui;
 
+import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
+import core.model.HOVerwaltung;
 import module.teamAnalyzer.vo.Team;
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -12,17 +15,40 @@ import static core.util.HTCalendarFactory.getHTWeek;
 
 public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Team> {
 
+    private final String OWN_TEAM_NAME = HOVerwaltung.instance().getModel().getBasics().getTeamName();
+
+    public enum RenderType {TYPE_1, TYPE_2}
+
+    RenderType renderType;
+
     public MatchComboBoxRenderer()
+    {
+        this(RenderType.TYPE_1);
+    }
+
+    public MatchComboBoxRenderer(RenderType _renderType)
     {
         setOpaque(true);
         setHorizontalAlignment(LEFT);
         setVerticalAlignment(CENTER);
+        renderType = _renderType;
     }
 
     @Override
     public Component getListCellRendererComponent(JList<? extends Team> list, Team value,
                                                   int index,boolean isSelected,boolean cellHasFocus)
     {
+        if (value == null) {
+            JLabel m_jlBlank = new JLabel(" ");
+            m_jlBlank.setOpaque(true);
+            if (isSelected) {
+                m_jlBlank.setBackground(list.getSelectionBackground());
+            } else {
+                m_jlBlank.setBackground(list.getBackground());
+            }
+            return m_jlBlank;
+        }
+
         if (isSelected) {
             setBackground(list.getSelectionBackground());
             setForeground(list.getSelectionForeground());
@@ -38,12 +64,28 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
             setIcon(ThemeManager.getIcon(HOIconName.EMPTY));
         }
 
-        String sDate = new SimpleDateFormat("dd-MM-yyyy HH:mm ").format(value.getTime());
-        int iHTSeason = getHTSeason(value.getTime(), true);
-        int iHTWeek = getHTWeek(value.getTime(), true);
-        sDate += "("+ iHTWeek + "/" +  iHTSeason +")";
+        if (renderType == RenderType.TYPE_1) {
+            String sDate = new SimpleDateFormat("dd-MM-yyyy HH:mm ").format(value.getTime());
+            int iHTSeason = getHTSeason(value.getTime(), true);
+            int iHTWeek = getHTWeek(value.getTime(), true);
+            sDate += "(" + iHTWeek + "/" + iHTSeason + ")";
 
-        setText(value.getName() + "  " + sDate);
+            setText(value.getName() + "  " + sDate);
+        }
+        else if (renderType == RenderType.TYPE_2) {
+            String sMatch;
+           if (value.isHomeMatch()) {
+               sMatch = OWN_TEAM_NAME + " - " + value.getName();
+           }
+           else{
+               sMatch = value.getName() + " - " + OWN_TEAM_NAME;
+           }
+            setText(sMatch);
+        }
+        else{
+            setText("");
+        }
+
 
         return this;
     }

@@ -153,7 +153,6 @@ public interface HOIconName {
 	String EXCLAMATION = "exclamation";
 	String CONTROL_DOUBLE_090 = "control-double-090";
 	String CONTROL_DOUBLE_270 = "control-double-270";
-	String ORDER_SET = "order_set";
 	String PLAYS_AT_BEGINNING  = "plays_at_beginning";
 	String IS_RESERVE = "is_reserve";
 	String NOT_IN_LINEUP = "not_in_lineup";
@@ -188,4 +187,6 @@ public interface HOIconName {
 
 	String EMPTY_SVG = "empty_svg";
 
+	String ORDERS_SENT = "orders.sents";
+	String ORDERS_MISSING = "orders.missing";
 }

@@ -4,14 +4,12 @@ import core.datatype.CBItem;
 import core.gui.HOMainFrame;
 import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.model.LineupCBItem;
 import core.gui.theme.*;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
-import core.util.HOLogger;
 import core.util.Helper;
 import module.lineup.*;
 import module.lineup.lineup.PlayerPositionPanel;
@@ -219,16 +217,15 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 							this.getGroup())) && !isSelectedGroupExcluded()) || (!player
 							.getTeamInfoSmilie().equals(this.getGroup()) && isSelectedGroupExcluded()))) {
 				boolean include = true;
-				final LineupCBItem lastLineup = LineupsComparisonHistoryPanel
-						.getLastLineup();
 
-				if (m_jcbxNotLast.isSelected()
-						&& (lastLineup != null)
-						&& lastLineup.getAufstellung()
-								.isPlayerInStartingEleven(player.getPlayerID())) {
-					include = false;
-					HOLogger.instance().log(getClass(), "Exclude: " + player.getFullName());
-				}
+
+//				if (m_jcbxNotLast.isSelected()
+//						&& (lastLineup != null)
+//						&& lastLineup.getAufstellung()
+//								.isPlayerInStartingEleven(player.getPlayerID())) {
+//					include = false;
+//					HOLogger.instance().log(getClass(), "Exclude: " + player.getFullName());
+//				}
 
 				if (include) {
 					vPlayer.add(player);
@@ -283,12 +280,12 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.BOTH;
-		constraints.weightx = 0.0;
+		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
 		constraints.insets = new Insets(2, 2, 2, 2);
 
 		constraints.gridx = 5;
-		constraints.gridy = 3;
+		constraints.gridy = 4;
 		constraints.gridwidth = 2;
 		if (infoLabel == null) {
 			infoLabel = new JLabel();
@@ -300,7 +297,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		posPanel.add(infoLabel, constraints, 2);
 
 		constraints.gridx = 6;
-		constraints.gridy = 2;
+		constraints.gridy = 3;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 
@@ -313,7 +310,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		}
 		posPanel.add(overlayOk, constraints, 2);
 
-		constraints.gridy = 1;
+		constraints.gridy = 2;
 		if (overlayCancel == null) {
 			overlayCancel = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
 			overlayCancel.addActionListener(this);

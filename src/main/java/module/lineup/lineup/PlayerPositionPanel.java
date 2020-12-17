@@ -371,6 +371,14 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
         }
 
+        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        if (iSelectedPlayerId == -1) {
+            switch (m_iPositionID){
+                case IMatchRoleID.setPieces -> lineup.setKicker(0);
+                case IMatchRoleID.captain -> lineup.setCaptain(0);
+                default -> lineup.setSpielerAtPosition(m_iPositionID, 0);
+            }
+        }
 
         //No Player
         cbModel.addElement(oNullPlayer);
@@ -382,7 +390,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             cbItems[i] = createSpielerCBItem(m_clCBItems[i], oCandidates.get(i));
         }
 
-        java.util.Arrays.sort(cbItems);
+        Arrays.sort(cbItems);
 
         for (PlayerCBItem cbItem : cbItems) {
             //All Other players

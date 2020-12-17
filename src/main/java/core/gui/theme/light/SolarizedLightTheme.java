@@ -45,7 +45,7 @@ public class SolarizedLightTheme extends BaseTheme {
 //            ThemeManager.instance().put(HOColorName.PLAYER_SKILL_SPECIAL_BG, new Color(56, 76, 53));
 //            ThemeManager.instance().put(HOColorName.PLAYER_SKILL_BG, new Color(95, 86, 38));
             ThemeManager.instance().put(HOColorName.TABLE_SELECTION_FG, defaults.getColor("Label.foreground"));
-            ThemeManager.instance().put(HOColorName.TABLE_SELECTION_BG, Color.WHITE);
+            ThemeManager.instance().put(HOColorName.TABLE_SELECTION_BG, new Color(200, 200, 200));
 
             // Smileys
             ThemeManager.instance().put(HOColorName.SMILEYS_COLOR, defaults.getColor("Label.foreground"));

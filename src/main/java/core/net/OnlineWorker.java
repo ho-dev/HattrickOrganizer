@@ -6,7 +6,6 @@ import core.file.hrf.HRFStringParser;
 import core.file.xml.*;
 import core.gui.HOMainFrame;
 import core.gui.InfoPanel;
-import core.gui.model.LineupCBItem;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.Tournament.TournamentDetails;
@@ -19,10 +18,8 @@ import core.training.TrainingManager;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
-import module.lineup.LineupsComparisonHistoryPanel;
 import module.lineup.Lineup;
 import module.teamAnalyzer.vo.MatchRating;
-
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -128,12 +125,12 @@ public class OnlineWorker {
 							// Training->Subskill calculation
 							TrainingManager.instance().refreshTrainingWeeks();
 							//homodel.calcSubskills(); // moved behind the download of matches
-							LineupsComparisonHistoryPanel.setHRFAufstellung(
-									homodel.getLineup(), homodel.getPreviousLineup());
-							LineupsComparisonHistoryPanel
-									.setAngezeigteAufstellung(new LineupCBItem(
-											getLangString("AktuelleAufstellung"), homodel
-													.getLineup()));
+//							LineupsComparisonHistoryPanel.setHRFAufstellung(
+//									homodel.getLineup(), homodel.getPreviousLineup());
+//							LineupsComparisonHistoryPanel
+//									.setAngezeigteAufstellung(new LineupCBItem(
+//											getLangString("AktuelleAufstellung"), homodel
+//													.getLineup()));
 						}
 						// Info
 						setInfoMsg(getLangString("HRFErfolg"));
