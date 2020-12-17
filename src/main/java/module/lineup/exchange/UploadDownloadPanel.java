@@ -519,7 +519,7 @@ public class UploadDownloadPanel extends LazyPanel {
 			JLabel component = (JLabel) super.getTableCellRendererComponent(table, "", isSelected,
 					hasFocus, row, column);
 			if ((Boolean) value) {
-				component.setIcon(ThemeManager.getIcon(HOIconName.ORDER_SET));
+				component.setIcon(null);
 			} else {
 				component.setIcon(null);
 			}

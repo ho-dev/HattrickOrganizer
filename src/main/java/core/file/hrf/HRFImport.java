@@ -6,19 +6,15 @@ import core.file.ExampleFileFilter;
 import core.gui.HOMainFrame;
 import core.gui.InfoPanel;
 import core.gui.RefreshManager;
-import core.gui.model.LineupCBItem;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.Helper;
-import module.lineup.LineupsComparisonHistoryPanel;
-
 import java.awt.Component;
 import java.awt.Frame;
 import java.io.File;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -116,12 +112,12 @@ public class HRFImport {
 
 			HOModel hom = HOVerwaltung.instance().getModel();
 
-			// Aufstellung in liste als Aktuelle Aufstellungsetzen und als
-			// Angezeigte Aufstellung
-			LineupsComparisonHistoryPanel.setHRFAufstellung(hom.getLineup(),
-					hom.getPreviousLineup());
-			LineupsComparisonHistoryPanel.setAngezeigteAufstellung(new LineupCBItem(
-					getLangStr("AktuelleAufstellung"), hom.getLineup()));
+//			// Aufstellung in liste als Aktuelle Aufstellungsetzen und als
+//			// Angezeigte Aufstellung
+//			LineupsComparisonHistoryPanel.setHRFAufstellung(hom.getLineup(),
+//					hom.getPreviousLineup());
+//			LineupsComparisonHistoryPanel.setAngezeigteAufstellung(new LineupCBItem(
+//					getLangStr("AktuelleAufstellung"), hom.getLineup()));
 
 			// Refreshen aller Fenster
 			RefreshManager.instance().doReInit();

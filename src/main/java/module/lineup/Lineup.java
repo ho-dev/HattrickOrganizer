@@ -477,7 +477,7 @@ public class Lineup{
 	 * Get the average experience of all players in lineup using a specific
 	 * captain
 	 * 
-	 * @param captainsId
+	 * @param +sId
 	 *            use this player as captain (<= 0 for current captain)
 	 */
 	public final float getAverageExperience(int captainsId) {
@@ -1601,27 +1601,8 @@ public class Lineup{
 		m_iKapitaen = temp.getCaptain();
 	}
 
-	/**
-	 * Load a lineup from HRF.
-	 */
-	public final void load4HRF() {
-		final Lineup temp = DBManager.instance().getAufstellung(
-				HOVerwaltung.instance().getModel().getID(), "HRF");
-		m_vFieldPositions = null;
-		m_vBenchPositions = null;
-		m_vFieldPositions = temp.getFieldPositions();
-		m_vBenchPositions = temp.getBenchPositions();
-		m_iKicker = temp.getKicker();
-		m_iKapitaen = temp.getCaptain();
-	}
 
-	/**
-	 * Load a system from the DB.
-	 */
-	public final void loadAufstellungsSystem(String name) {
-		setPositionen(DBManager.instance().getSystemPositionen(NO_HRF_VERBINDUNG, name));
-		checkAufgestellteSpieler();
-	}
+
 
 	/**
 	 * Remove all players from all positions.

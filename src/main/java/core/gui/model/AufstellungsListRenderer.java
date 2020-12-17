@@ -34,11 +34,11 @@ public class AufstellungsListRenderer extends JLabel implements ListCellRenderer
 			setBackground(jList.getBackground());
 		}
 		
-		if (value instanceof LineupCBItem) {
-			if (((LineupCBItem) value).isAngezeigt()) {
-				setForeground(angezeigtColor);
-			} 
-		} 
+//		if (value instanceof LineupCBItem) {
+//			if (((LineupCBItem) value).isAngezeigt()) {
+//				setForeground(angezeigtColor);
+//			}
+//		}
 
 		return this;
 	}

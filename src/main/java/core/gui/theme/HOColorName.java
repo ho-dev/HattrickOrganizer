@@ -208,9 +208,12 @@ public interface HOColorName {
 	String SHOW_MATCH = "show_match";
 	String DOWNLOAD_MATCH = "download_match";
 
-	// Lineup modul
+	// Lineup module
     String START_ASSISTANT = "start_assistant";
     String CLEAR_LINEUP = "clear_lineup";
     String LINEUP_COLOR = "lineup_color";
     String LINEUP_HIGHLIGHT_FG = "lineup_highlight_fg";
+	String ORDERS_LINEUP = "orders.lineup.bg";
+	String ORDERS_TICK = "orders.tick.bg";
+	String ORDERS_PEN = "orders.pen.bg";
 }

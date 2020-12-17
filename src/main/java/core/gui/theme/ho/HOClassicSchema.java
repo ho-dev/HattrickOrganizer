@@ -200,11 +200,13 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(ARROW_UP, "gui/bilder/arrows/ArrowUp.gif");
 		put(ARROW_DOWN, "gui/bilder/arrows/ArrowDown.gif");
 
+		put(ORDERS_SENT, "gui/bilder/orders_sent.svg");
+		put(ORDERS_MISSING, "gui/bilder/orders_missing.svg");
+
 		put(EXCLAMATION, "gui/bilder/Fugue/exclamation.png");
 		put(EXCLAMATION_RED, "gui/bilder/Fugue/exclamation-red.png");
 		put(CONTROL_DOUBLE_090, "gui/bilder/Fugue/control-double-090.png");
 		put(CONTROL_DOUBLE_270, "gui/bilder/Fugue/control-double-270.png");
-		put(ORDER_SET, "gui/bilder/Fugue/tick.png");
 		put(PLAYS_AT_BEGINNING, "gui/bilder/Fugue/status.png");
 		put(IS_RESERVE, "gui/bilder/Fugue/status-away.png");
 		put(NOT_IN_LINEUP, "gui/bilder/Fugue/status-offline.png");
@@ -342,11 +344,13 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(WARNING_ICON_CB_COLOR, Color.RED);
 		put(HOColorName.RATING_BORDER_BELOW_LIMIT, new Color(255, 0, 0));
 		put(HOColorName.RATING_BORDER_ABOVE_LIMIT, new Color(0, 0, 225));
-
 		put(HOColorName.START_ASSISTANT, new Color(34, 139, 34));
 		put(HOColorName.CLEAR_LINEUP, new Color(255, 0, 0));
 		put(HOColorName.LINEUP_COLOR, new Color(0, 0, 139));
 		put(HOColorName.LINEUP_HIGHLIGHT_FG, new Color(0, 0, 139));
+		put(HOColorName.ORDERS_LINEUP, new Color(190, 190, 190));
+		put(HOColorName.ORDERS_TICK, new Color(45, 75, 45));
+		put(HOColorName.ORDERS_PEN, new Color(139, 0, 0));
 
 		// shirts
 		put(SHIRT_KEEPER, "black");

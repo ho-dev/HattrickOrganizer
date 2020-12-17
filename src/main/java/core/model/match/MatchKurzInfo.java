@@ -167,6 +167,16 @@ public class MatchKurzInfo implements Comparable<Object> {
 		return m_sGastName;
 	}
 
+
+	public final String getOpponentName() {
+		if (isHomeMatch()) {
+			return getGastName();
+		}
+		else {
+			return getHeimName();
+		}
+	}
+
 	/**
 	 * Setter for property m_iGastTore.
 	 * 
