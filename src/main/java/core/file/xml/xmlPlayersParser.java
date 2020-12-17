@@ -3,7 +3,7 @@ package core.file.xml;
 import java.util.List;
 import java.util.Vector;
 
-import core.model.player.YouthPlayer;
+import module.youth.YouthPlayer;
 import module.training.Skills;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

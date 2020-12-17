@@ -1,7 +1,7 @@
 package core.db;
 
 import core.model.player.Specialty;
-import core.model.player.YouthPlayer;
+import module.youth.YouthPlayer;
 import core.util.HOLogger;
 import module.training.Skills;
 

@@ -44,7 +44,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 
 			rs.first();
 
-			team = new MatchLineupTeam(SourceSystem.getById(sourceSystem), matchID, DBManager.deleteEscapeSequences(rs.getString("TeamName")),
+			team = new MatchLineupTeam(SourceSystem.valueOf(sourceSystem), matchID, DBManager.deleteEscapeSequences(rs.getString("TeamName")),
 										teamID, rs.getInt("Erfahrung"), rs.getInt("StyleOfPlay"));
 			team.setAufstellung(DBManager.instance().getMatchLineupPlayers(matchID, teamID));
 			
@@ -61,7 +61,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 	void storeMatchLineupTeam(MatchLineupTeam team, int matchID) {
 		if (team != null) {
 			final String[] where = { "SourceSystem", "MatchID" , "TeamID"};
-			final String[] werte = { "" + team.getSourceSystem().getId(), "" + matchID, "" +team.getTeamID()};
+			final String[] werte = { "" + team.getSourceSystem().getValue(), "" + matchID, "" +team.getTeamID()};
 			delete(where, werte);
 
 			String sql = null;
@@ -69,7 +69,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 			try {
 				//insert vorbereiten
 				sql = "INSERT INTO "+getTableName()+" ( SourceSystem, MatchID, Erfahrung, TeamName, TeamID, StyleOfPlay ) VALUES(";
-				sql += (team.getSourceSystem().getId() + "," +
+				sql += (team.getSourceSystem().getValue() + "," +
 						matchID + "," +
 						team.getErfahrung() + ", '" +
 						DBManager.insertEscapeSequences(team.getTeamName()) + "'," +
@@ -89,7 +89,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 				// Store Substitutions
 				
 				((MatchSubstitutionTable) DBManager.instance().getTable(MatchSubstitutionTable.TABLENAME))
-						.storeMatchSubstitutionsByMatchTeam(team.getSourceSystem().getId(), matchID, team.getTeamID(), team.getSubstitutions());
+						.storeMatchSubstitutionsByMatchTeam(team.getSourceSystem().getValue(), matchID, team.getTeamID(), team.getSubstitutions());
 				
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeMatchLineupTeam Error" + e);

@@ -156,7 +156,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 		if (matchdetails.getMatchID() == -1) {
 			boolean success = OnlineWorker.downloadMatchData(spielerCBItem.getMatchID(), spielerCBItem.getMatchTyp(), true);
 			if (success) {
-				matchdetails = DBManager.instance().loadMatchDetails(SourceSystem.HATTRICK.getId(), spielerCBItem.getMatchID());
+				matchdetails = DBManager.instance().loadMatchDetails(SourceSystem.HATTRICK.getValue(), spielerCBItem.getMatchID());
 			}
 		}
 		return matchdetails;

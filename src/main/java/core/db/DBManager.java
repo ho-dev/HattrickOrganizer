@@ -17,7 +17,7 @@ import core.model.misc.Verein;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.model.player.YouthPlayer;
+import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.model.series.Paarung;
 import core.training.FuturePlayerTraining;
@@ -1474,7 +1474,7 @@ public class DBManager {
 						spielerid, filter);
 
 				// Matchdetails
-				final Matchdetails details = loadMatchDetails(SourceSystem.HATTRICK.getId(), item
+				final Matchdetails details = loadMatchDetails(SourceSystem.HATTRICK.getValue(), item
 						.getMatchID());
 
 				// Stimmung und Selbstvertrauen
@@ -1894,5 +1894,9 @@ public class DBManager {
 
 	public List<YouthTrainerComment> loadYouthTrainerComments(int id) {
 		return ((YouthTrainerCommentTable) getTable(YouthTrainerCommentTable.TABLENAME)).loadYouthTrainerComments(id);
+	}
+
+	public List<MatchLineup> loadMatchLineups(int sourcesystem) {
+		return ((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).loadMatchLineups(sourcesystem);
 	}
 }

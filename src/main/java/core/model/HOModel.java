@@ -1,12 +1,13 @@
 package core.model;
 
 import core.db.DBManager;
+import core.model.match.MatchLineup;
 import core.model.match.SourceSystem;
 import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
-import core.model.player.YouthPlayer;
+import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.training.TrainingPerWeek;
 import core.training.TrainingManager;
@@ -47,6 +48,7 @@ public class HOModel {
     private XtraData m_clXtraDaten;
     private int m_iID = -1;
     private List<StaffMember> m_clStaff;
+    private List<MatchLineup> youthMatchLineups;
 
     //~ Constructors -------------------------------------------------------------------------------
 	public HOModel() {
@@ -558,9 +560,9 @@ public class HOModel {
         //Liga
         DBManager.instance().saveLiga(m_iID, getLeague());
         //Aufstellung + aktu Sys als Standard saven
-        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getId(), m_iID, getCurrentLineup(), Lineup.DEFAULT_NAME);
+        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getValue(), m_iID, getCurrentLineup(), Lineup.DEFAULT_NAME);
         //Aufstellung + aktu Sys als Standard saven
-        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getId(), m_iID, getPreviousLineup(), Lineup.DEFAULT_NAMELAST);
+        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getValue(), m_iID, getPreviousLineup(), Lineup.DEFAULT_NAMELAST);
         //Xtra Daten
         DBManager.instance().saveXtraDaten(m_iID, getXtraDaten());
         //Player
@@ -582,5 +584,19 @@ public class HOModel {
     public YouthPlayer getCurrentYouthPlayer(int youthplayerID) {
         return this.getCurrentYouthPlayers().stream().filter(player -> player.getId()==youthplayerID).findAny()
                 .orElse(null);
+    }
+
+    public void addYouthMatchLineup(MatchLineup lineup) {
+        if ( this.youthMatchLineups == null){
+            this.youthMatchLineups = new ArrayList<>();
+        }
+        this.youthMatchLineups.add(lineup);
+    }
+
+    public List<MatchLineup> getYouthMatchLineups(){
+        if ( this.youthMatchLineups == null){
+            youthMatchLineups = DBManager.instance().loadMatchLineups(SourceSystem.YOUTH.getValue());
+        }
+        return youthMatchLineups;
     }
 }

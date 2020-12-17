@@ -110,9 +110,9 @@ public class MatchPopulator {
         MatchLineupTeam tmpLineupTeam = null;
 
         if (isHome(tmpMatch)) {
-            tmpLineupTeam =  DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getId(), aMatch.getMatchId()).getHeim();
+            tmpLineupTeam =  DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getValue(), aMatch.getMatchId()).getHomeTeam();
         } else {
-            tmpLineupTeam =  DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getId(), aMatch.getMatchId()).getGast();
+            tmpLineupTeam =  DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getValue(), aMatch.getMatchId()).getGuestTeam();
         }
 
         double totStars = 0;

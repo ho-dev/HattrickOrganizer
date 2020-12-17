@@ -1,17 +1,11 @@
 package core.db;
 
-import core.constants.player.PlayerSkill;
-import core.gui.theme.HOIconName;
-import core.gui.theme.ThemeManager;
 import core.model.player.CommentType;
-import core.model.player.YouthPlayer;
-import core.model.player.YouthPlayer.ScoutComment;
+import module.youth.YouthPlayer.ScoutComment;
 import core.util.HOLogger;
-import core.util.Helper;
 import module.training.Skills;
 import tool.hrfExplorer.HrfExplorer;
 
-import javax.swing.plaf.synth.SynthCheckBoxMenuItemUI;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;

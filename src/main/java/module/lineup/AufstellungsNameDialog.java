@@ -167,7 +167,7 @@ final class AufstellungsNameDialog extends JDialog implements ActionListener {
 	}
 
 	private void saveLineup(SourceSystem sourceSystem, Lineup lineup, String name) {
-		lineup.save(sourceSystem.getId(), nameTextField.getText());
+		lineup.save(sourceSystem.getValue(), nameTextField.getText());
 		this.canceled = false;
 	}
 }

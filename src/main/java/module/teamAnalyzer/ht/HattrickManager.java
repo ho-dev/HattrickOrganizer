@@ -57,7 +57,7 @@ public class HattrickManager {
 	    		continue;
 	    	}
 
-	    	boolean refresh = !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), match.getMatchID())
+	    	boolean refresh = !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), match.getMatchID())
                     || !DBManager.instance().isMatchIFKRatingInDB(match.getMatchID());
 	    	if (!filter.isAutomatic() 
 	    		||	(filter.isAcceptedMatch(new Match(match)) && refresh)) {
@@ -85,7 +85,7 @@ public class HattrickManager {
 		    	}
 	   			if (filter.isAcceptedMatch(new Match(match)) 
 	   					&& match.getMatchTyp().isTournament()
-	   					&& !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), match.getMatchID())) {
+	   					&& !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), match.getMatchID())) {
 	   				
 	   				OnlineWorker.downloadMatchData(match.getMatchID(), match.getMatchTyp(), false);
 	   			}

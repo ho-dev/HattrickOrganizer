@@ -22,7 +22,7 @@ import core.model.match.MatchLineupTeam;
 import core.model.match.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
-import core.model.player.YouthPlayer;
+import module.youth.YouthPlayer;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
 import core.util.HOLogger;
@@ -157,7 +157,7 @@ public class ConvertXml2Hrf {
 		}
 
 		HOMainFrame.instance().setWaitInformation(25);
-		MatchLineup matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(mc.getMatchLineup(-1, teamId,
+		MatchLineup matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(mc.downloadMatchLineup(-1, teamId,
 						MatchType.LEAGUE).toString());
 		HOMainFrame.instance().setWaitInformation(30);
 		List<MyHashtable> playersData = new xmlPlayersParser().parsePlayersFromString(mc.getPlayers(teamId));
@@ -219,15 +219,15 @@ public class ConvertXml2Hrf {
 							mc.downloadMatchdetails(matchLineup.getMatchID(),
 									matchLineup.getMatchTyp()), null);
 
-			if (matchLineup.getHeimId() == Integer.parseInt(teamdetailsDataMap
+			if (matchLineup.getHomeTeamId() == Integer.parseInt(teamdetailsDataMap
 					.get("TeamID").toString())) {
-				matchLineupTeam = matchLineup.getHeim();
+				matchLineupTeam = matchLineup.getHomeTeam();
 				if (md != null) {
 					lastAttitude = md.getHomeEinstellung();
 					lastTactic = md.getHomeTacticType();
 				}
 			} else {
-				matchLineupTeam = matchLineup.getGast();
+				matchLineupTeam = matchLineup.getGuestTeam();
 				if (md != null) {
 					lastAttitude = md.getGuestEinstellung();
 					lastTactic = md.getGuestTacticType();

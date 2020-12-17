@@ -1,8 +1,9 @@
-package core.training;
+package module.youth;
 
 import core.constants.TrainingType;
 import core.model.HOVerwaltung;
 import core.model.match.MatchLineup;
+import core.training.YouthTrainerComment;
 
 import java.util.ArrayList;
 import java.util.List;

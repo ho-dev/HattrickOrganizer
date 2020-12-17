@@ -302,7 +302,7 @@ public class MyConnector {
 	/**
 	 * lädt die Aufstellungsbewertung zu einem Spiel
 	 */
-	public String getMatchLineup(int matchId, int teamId, MatchType matchType) {
+	public String downloadMatchLineup(int matchId, int teamId, MatchType matchType) {
 		String url = htUrl + "?file=matchlineup&version=" + VERSION_MATCHLINEUP;
 
 		if (matchId > 0) {

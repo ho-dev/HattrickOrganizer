@@ -252,9 +252,9 @@ public class XMLExporter  {
 				MatchLineupTeam lineupTeam = null;
 				Matchdetails details = matchData.getDetails();
 				if (details.getHeimId() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
-					lineupTeam = DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getId(), details.getMatchID()).getHeim();
+					lineupTeam = DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getValue(), details.getMatchID()).getHomeTeam();
 				} else {
-					lineupTeam = DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getId(), details.getMatchID()).getGast();
+					lineupTeam = DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getValue(), details.getMatchID()).getGuestTeam();
 				}
 
 				Team team = DBManager.instance().getTeam(hrfID);

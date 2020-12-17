@@ -1,24 +1,23 @@
 package core.model.match;
 
+import core.db.DBManager;
 import core.util.HOLogger;
-
-import javax.xml.transform.Source;
 
 public class MatchLineup {
     //~ Instance fields ----------------------------------------------------------------------------
-    protected int m_iHeimId = -1;
-    protected int m_iMatchID = -1;
+    protected int homeTeamId = -1;
+    protected int matchId = -1;
     protected MatchType m_MatchTyp = MatchType.NONE;
-    MatchLineupTeam m_clGast;
-    MatchLineupTeam m_clHeim;
-    private String m_sArenaName = "";
-    private String m_sFetchDatum = "";
-    private String m_sGastName = "";
-    private String m_sHeimName = "";
-    private String m_sSpielDatum = "";
-    private int m_iArenaID = -1;
-    private int m_iGastId = -1;
-   
+    MatchLineupTeam guestTeam;
+    MatchLineupTeam homeTeam;
+    private String arenaName = "";
+    private String downloadDate = "";
+    private String guestTeamName = "";
+    private String homeTeamName = "";
+    private String matchDate = "";
+    private int arenaId = -1;
+    private int guestTeamId = -1;
+
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -35,7 +34,7 @@ public class MatchLineup {
      * @param m_iArenaID New value of property m_iArenaID.
      */
     public final void setArenaID(int m_iArenaID) {
-        this.m_iArenaID = m_iArenaID;
+        this.arenaId = m_iArenaID;
     }
 
     /**
@@ -44,7 +43,7 @@ public class MatchLineup {
      * @return Value of property m_iArenaID.
      */
     public final int getArenaID() {
-        return m_iArenaID;
+        return arenaId;
     }
 
     /**
@@ -53,7 +52,7 @@ public class MatchLineup {
      * @param m_sArenaName New value of property m_sArenaName.
      */
     public final void setArenaName(java.lang.String m_sArenaName) {
-        this.m_sArenaName = m_sArenaName;
+        this.arenaName = m_sArenaName;
     }
 
     /**
@@ -62,7 +61,7 @@ public class MatchLineup {
      * @return Value of property m_sArenaName.
      */
     public final java.lang.String getArenaName() {
-        return m_sArenaName;
+        return arenaName;
     }
 
     /**
@@ -70,9 +69,9 @@ public class MatchLineup {
      *
      * @param date New value of property m_lDatum.
      */
-    public final void setFetchDatum(String date) {
+    public final void setDownloadDate(String date) {
         if (date != null) {
-            m_sFetchDatum = date;
+            downloadDate = date;
         }
     }
 
@@ -85,20 +84,20 @@ public class MatchLineup {
      *
      * @return Value of property m_lDatum.
      */
-    public final java.sql.Timestamp getFetchDatum() {
+    public final java.sql.Timestamp getDownloadDate() {
         try {
             //Hattrick
             final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
                                                                                            java.util.Locale.GERMANY);
 
-            return new java.sql.Timestamp(simpleFormat.parse(m_sFetchDatum).getTime());
+            return new java.sql.Timestamp(simpleFormat.parse(downloadDate).getTime());
         } catch (Exception e) {
             try {
                 //Hattrick
                 final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
                                                                                                java.util.Locale.GERMANY);
 
-                return new java.sql.Timestamp(simpleFormat.parse(m_sFetchDatum).getTime());
+                return new java.sql.Timestamp(simpleFormat.parse(downloadDate).getTime());
             } catch (Exception ex) {
                 HOLogger.instance().log(getClass(),ex);
             }
@@ -112,17 +111,21 @@ public class MatchLineup {
      *
      * @param m_clGast New value of property m_clGast.
      */
-    public final void setGast(core.model.match.MatchLineupTeam m_clGast) {
-        this.m_clGast = m_clGast;
+    public final void setGuestTeam(MatchLineupTeam m_clGast) {
+        this.guestTeam = m_clGast;
     }
 
     /**
-     * Getter for property m_clGast.
+     * Getter for property guestTeamId.
+     * Team is loaded, if not done already
      *
-     * @return Value of property m_clGast.
+     * @return Value of property guestTeamId.
      */
-    public final MatchLineupTeam getGast() {
-        return m_clGast;
+    public MatchLineupTeam getGuestTeam() {
+        if ( guestTeam == null){
+            guestTeam = DBManager.instance().getMatchLineupTeam(this.getSourceSystem().getValue(), this.matchId, this.guestTeamId);
+        }
+        return guestTeam;
     }
 
     /**
@@ -130,8 +133,8 @@ public class MatchLineup {
      *
      * @param m_iGastId New value of property m_iGastId.
      */
-    public final void setGastId(int m_iGastId) {
-        this.m_iGastId = m_iGastId;
+    public final void setGuestTeam(int m_iGastId) {
+        this.guestTeamId = m_iGastId;
     }
 
     /**
@@ -139,8 +142,8 @@ public class MatchLineup {
      *
      * @return Value of property m_iGastId.
      */
-    public final int getGastId() {
-        return m_iGastId;
+    public final int getGuestTeamId() {
+        return guestTeamId;
     }
 
     /**
@@ -148,8 +151,8 @@ public class MatchLineup {
      *
      * @param m_sGastName New value of property m_sGastName.
      */
-    public final void setGastName(java.lang.String m_sGastName) {
-        this.m_sGastName = m_sGastName;
+    public final void setGuestTeamName(String m_sGastName) {
+        this.guestTeamName = m_sGastName;
     }
 
     /**
@@ -157,8 +160,8 @@ public class MatchLineup {
      *
      * @return Value of property m_sGastName.
      */
-    public final java.lang.String getGastName() {
-        return m_sGastName;
+    public final String getGuestTeamName() {
+        return guestTeamName;
     }
 
     /**
@@ -166,8 +169,8 @@ public class MatchLineup {
      *
      * @param m_clHeim New value of property m_clHeim.
      */
-    public final void setHeim(core.model.match.MatchLineupTeam m_clHeim) {
-        this.m_clHeim = m_clHeim;
+    public final void setHomeTeam(MatchLineupTeam m_clHeim) {
+        this.homeTeam = m_clHeim;
     }
 
     /**
@@ -175,8 +178,11 @@ public class MatchLineup {
      *
      * @return Value of property m_clHeim.
      */
-    public final MatchLineupTeam getHeim() {
-        return m_clHeim;
+    public final MatchLineupTeam getHomeTeam() {
+        if ( homeTeam == null){
+            homeTeam = DBManager.instance().getMatchLineupTeam(this.getSourceSystem().getValue(), this.matchId, this.getHomeTeamId());
+        }
+        return homeTeam;
     }
 
     /**
@@ -184,8 +190,8 @@ public class MatchLineup {
      *
      * @param m_iHeimId New value of property m_iHeimId.
      */
-    public final void setHeimId(int m_iHeimId) {
-        this.m_iHeimId = m_iHeimId;
+    public final void setHomeTeamId(int m_iHeimId) {
+        this.homeTeamId = m_iHeimId;
     }
 
     /**
@@ -193,8 +199,8 @@ public class MatchLineup {
      *
      * @return Value of property m_iHeimId.
      */
-    public final int getHeimId() {
-        return m_iHeimId;
+    public final int getHomeTeamId() {
+        return homeTeamId;
     }
 
     /**
@@ -202,8 +208,8 @@ public class MatchLineup {
      *
      * @param m_sHeimName New value of property m_sHeimName.
      */
-    public final void setHeimName(java.lang.String m_sHeimName) {
-        this.m_sHeimName = m_sHeimName;
+    public final void setHomeTeamName(String m_sHeimName) {
+        this.homeTeamName = m_sHeimName;
     }
 
     /**
@@ -211,8 +217,8 @@ public class MatchLineup {
      *
      * @return Value of property m_sHeimName.
      */
-    public final java.lang.String getHeimName() {
-        return m_sHeimName;
+    public final String getHomeTeamName() {
+        return homeTeamName;
     }
 
     /**
@@ -221,7 +227,7 @@ public class MatchLineup {
      * @param m_iMatchID New value of property m_iMatchID.
      */
     public final void setMatchID(int m_iMatchID) {
-        this.m_iMatchID = m_iMatchID;
+        this.matchId = m_iMatchID;
     }
 
     /**
@@ -230,7 +236,7 @@ public class MatchLineup {
      * @return Value of property m_iMatchID.
      */
     public final int getMatchID() {
-        return m_iMatchID;
+        return matchId;
     }
 
     public final MatchType getMatchType() {
@@ -261,9 +267,9 @@ public class MatchLineup {
      *
      * @param date New value of property m_lDatum.
      */
-    public final void setSpielDatum(String date) {
+    public final void setMatchDate(String date) {
         if (date != null) {
-            m_sSpielDatum = date;
+            matchDate = date;
         }
     }
 
@@ -272,20 +278,20 @@ public class MatchLineup {
      *
      * @return Value of property m_lDatum.
      */
-    public final java.sql.Timestamp getSpielDatum() {
+    public final java.sql.Timestamp getMatchDate() {
         try {
             //Hattrick
             final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
                                                                                            java.util.Locale.GERMANY);
 
-            return new java.sql.Timestamp(simpleFormat.parse(m_sSpielDatum).getTime());
+            return new java.sql.Timestamp(simpleFormat.parse(matchDate).getTime());
         } catch (Exception e) {
             try {
                 //Hattrick
                 final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
                                                                                                java.util.Locale.GERMANY);
 
-                return new java.sql.Timestamp(simpleFormat.parse(m_sSpielDatum).getTime());
+                return new java.sql.Timestamp(simpleFormat.parse(matchDate).getTime());
             } catch (Exception ex) {
                 HOLogger.instance().log(getClass(),ex);
             }
@@ -294,12 +300,12 @@ public class MatchLineup {
         return null;
     }
 
-    public final String getStringFetchDate() {
-        return m_sFetchDatum;
+    public final String getStringDownloadDate() {
+        return downloadDate;
     }
 
-    public final String getStringSpielDate() {
-        return m_sSpielDatum;
+    public final String getStringMatchDate() {
+        return matchDate;
     }
 
     public SourceSystem getSourceSystem() {
@@ -307,11 +313,11 @@ public class MatchLineup {
     }
 
     public MatchLineupTeam getTeam(Integer teamId) {
-        if ( teamId == this.getHeimId()){
-            return this.getHeim();
+        if ( teamId == this.homeTeamId){
+            return this.getHomeTeam();
         }
-        else if ( teamId == this.getGastId()){
-            return this.getGast();
+        else if ( teamId == this.guestTeamId){
+            return this.getGuestTeam();
         }
         return null;
     }

@@ -3,8 +3,7 @@ package core.gui.model;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.UserColumn;
-import core.model.player.Player;
-import core.model.player.YouthPlayer;
+import module.youth.YouthPlayer;
 
 public class YouthPlayerColumn extends UserColumn {
 

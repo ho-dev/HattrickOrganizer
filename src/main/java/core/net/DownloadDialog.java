@@ -289,7 +289,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				}
 
 				if ( model.getBasics().hasYouthTeam()){
-					OnlineWorker.downloadMissingYouthMatchLineups(model.getBasics().getYouthTeamId());
+					OnlineWorker.downloadMissingYouthMatchLineups(model);
 				}
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {

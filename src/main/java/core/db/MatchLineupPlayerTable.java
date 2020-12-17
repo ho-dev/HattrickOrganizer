@@ -220,7 +220,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 						"StartPosition,StartBehaviour) VALUES(" +
 						matchID + "," +
 						teamID	+ "," +
-						player.getSourceSystem().getId() + "," +
+						player.getSourceSystem().getValue() + "," +
 						player.getSpielerId() + ","	+
 						player.getId() + "," +
 						player.getTactic()	+ ","	+
@@ -282,7 +282,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			var startPos = rs.getInt("StartPosition");
 			var startBeh = rs.getInt("StartBehaviour");
 			var status = rs.getInt("STATUS");
-			var sourceSystem = SourceSystem.getById(rs.getInt("SourceSystem"));
+			var sourceSystem = SourceSystem.valueOf(rs.getInt("SourceSystem"));
 
 			switch (behavior) {
 				case IMatchRoleID.OLD_EXTRA_DEFENDER -> {

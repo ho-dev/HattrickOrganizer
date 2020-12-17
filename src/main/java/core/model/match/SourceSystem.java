@@ -6,19 +6,19 @@ public enum SourceSystem {
     YOUTH((int) 1),  // youth match
     HTOINTEGRATED((int) 2); //integrated match
 
-    private final int id;
+    private final int value;
 
-    SourceSystem(int id) {
-        this.id = id;
+    SourceSystem(int value) {
+        this.value = value;
     }
 
-    public int getId() {
-        return id;
+    public int getValue() {
+        return value;
     }
 
-    public static SourceSystem getById(int id) {
+    public static SourceSystem valueOf(int id) {
         for (SourceSystem source : SourceSystem.values()) {
-            if (source.getId() == id) {
+            if (source.getValue() == id) {
                 return source;
             }
         }
@@ -26,7 +26,7 @@ public enum SourceSystem {
     }
 
     public String to_string() {
-        return switch (this.id) {
+        return switch (this.value) {
             case 0 -> "hattrick";
             case 1 -> "youth";
             case 2 -> "htointegrated";

@@ -6,8 +6,11 @@ import core.model.match.SourceSystem;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public final class MatchLineupTable extends AbstractTable {
@@ -46,30 +49,13 @@ public final class MatchLineupTable extends AbstractTable {
 		MatchLineup lineup;
 		try {
 			var sql = "SELECT * FROM "+getTableName()+" WHERE SourceSystem=" + sourceSystem + " AND MatchID = " + matchID;
-
 			var rs = adapter.executeQuery(sql);
-
 			rs.first();
-
-			// Plan auslesen
-			lineup = new MatchLineup();
-			lineup.setArenaID(rs.getInt("ArenaID"));
-			lineup.setArenaName(DBManager.deleteEscapeSequences(rs.getString("ArenaName")));
-			lineup.setFetchDatum(rs.getString("FetchDate"));
-			lineup.setGastId(rs.getInt("GastID"));
-			lineup.setGastName(DBManager.deleteEscapeSequences(rs.getString("GastName")));
-			lineup.setHeimId(rs.getInt("HeimID"));
-			lineup.setHeimName(DBManager.deleteEscapeSequences(rs.getString("HeimName")));
-			lineup.setMatchID(matchID);
-			lineup.setMatchTyp(MatchType.getById(rs.getInt("MatchTyp")));
-			lineup.setSpielDatum(rs.getString("MatchDate"));
-
-			lineup.setHeim(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getHeimId()));
-			lineup.setGast(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getGastId()));
+			lineup = createMatchLineup(rs);
+			lineup.setHomeTeam(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getHomeTeamId()));
+			lineup.setGuestTeam(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getGuestTeamId()));
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineup Error" + e);
-
-			//HOLogger.instance().log(getClass(),e);
 			lineup = null;
 		}
 
@@ -109,7 +95,7 @@ public final class MatchLineupTable extends AbstractTable {
 		if (lineup != null) {
 			//There should never be anything to delete, but...
 			final String[] where = { "SourceSystem", "MatchID" };
-			final String[] werte = { "" + lineup.getSourceSystem().getId(), "" + lineup.getMatchID()};
+			final String[] werte = { "" + lineup.getSourceSystem().getValue(), "" + lineup.getMatchID()};
 			delete(where, werte);
 
 			//saven
@@ -117,27 +103,27 @@ public final class MatchLineupTable extends AbstractTable {
 				//insert vorbereiten
 				var sql = "INSERT INTO "+getTableName()+" (SourceSystem,MatchID,MatchTyp,HeimName,HeimID,GastName," +
 						"GastID,FetchDate,MatchDate,ArenaID,ArenaName) VALUES("+
-						lineup.getSourceSystem().getId() + "," +
+						lineup.getSourceSystem().getValue() + "," +
 						lineup.getMatchID() + "," +
 						lineup.getMatchTyp().getId() + ", '" +
-						DBManager.insertEscapeSequences(lineup.getHeimName()) + "'," +
-						lineup.getHeimId() + ",'" +
-						DBManager.insertEscapeSequences(lineup.getGastName()) + "', " +
-						lineup.getGastId() + ", '" +
-						lineup.getStringFetchDate()	+ "', '"+
-						lineup.getStringSpielDate() + "', " +
+						DBManager.insertEscapeSequences(lineup.getHomeTeamName()) + "'," +
+						lineup.getHomeTeamId() + ",'" +
+						DBManager.insertEscapeSequences(lineup.getGuestTeamName()) + "', " +
+						lineup.getGuestTeam() + ", '" +
+						lineup.getStringDownloadDate()	+ "', '"+
+						lineup.getStringMatchDate() + "', " +
 						lineup.getArenaID() + ", '" +
 						DBManager.insertEscapeSequences(lineup.getArenaName()) + "' )";
 				adapter.executeUpdate(sql);
 
 
-				if ( teamId == null || teamId == lineup.getHeimId()){
+				if ( teamId == null || teamId == lineup.getHomeTeamId()){
 					((MatchLineupTeamTable) DBManager.instance().getTable(MatchLineupTeamTable.TABLENAME))
-							.storeMatchLineupTeam(lineup.getHeim(),	lineup.getMatchID());
+							.storeMatchLineupTeam(lineup.getHomeTeam(),	lineup.getMatchID());
 				}
-				if ( teamId == null || teamId == lineup.getGastId()) {
+				if ( teamId == null || teamId == lineup.getGuestTeamId()) {
 					((MatchLineupTeamTable) DBManager.instance().getTable(MatchLineupTeamTable.TABLENAME))
-							.storeMatchLineupTeam(lineup.getGast(),	lineup.getMatchID());
+							.storeMatchLineupTeam(lineup.getGuestTeam(),	lineup.getMatchID());
 				}
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeMatchLineup Error" + e);
@@ -147,7 +133,7 @@ public final class MatchLineupTable extends AbstractTable {
 	}
 
 	public Timestamp getLastYouthMatchDate() {
-		var sql = "select max(MatchDate) from " + getTableName() + " where SourceSystem=" + SourceSystem.YOUTH.getId();
+		var sql = "select max(MatchDate) from " + getTableName() + " where SourceSystem=" + SourceSystem.YOUTH.getValue();
 		try {
 			var rs = adapter.executeQuery(sql);
 			rs.beforeFirst();
@@ -159,5 +145,37 @@ public final class MatchLineupTable extends AbstractTable {
 
 		}
 		return null;
+	}
+
+	public List<MatchLineup> loadMatchLineups(int sourceSystem) {
+		var lineups = new ArrayList<MatchLineup>();
+		try {
+			var sql = "SELECT * FROM "+getTableName()+" WHERE SourceSystem=" + sourceSystem;
+
+			var rs = adapter.executeQuery(sql);
+			rs.beforeFirst();
+			if ( rs.next()){
+				var lineup = createMatchLineup(rs);
+				lineups.add(lineup);
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),"DB.loadMatchLineups Error" + e);
+		}
+		return lineups;
+	}
+
+	private MatchLineup createMatchLineup(ResultSet rs) throws SQLException {
+		var lineup = new MatchLineup();
+		lineup.setArenaID(rs.getInt("ArenaID"));
+		lineup.setArenaName(DBManager.deleteEscapeSequences(rs.getString("ArenaName")));
+		lineup.setDownloadDate(rs.getString("FetchDate"));
+		lineup.setGuestTeam(rs.getInt("GastID"));
+		lineup.setGuestTeamName(DBManager.deleteEscapeSequences(rs.getString("GastName")));
+		lineup.setHomeTeamId(rs.getInt("HeimID"));
+		lineup.setHomeTeamName(DBManager.deleteEscapeSequences(rs.getString("HeimName")));
+		lineup.setMatchID(rs.getInt("MatchID"));
+		lineup.setMatchTyp(MatchType.getById(rs.getInt("MatchTyp")));
+		lineup.setMatchDate(rs.getString("MatchDate"));
+		return lineup;
 	}
 }

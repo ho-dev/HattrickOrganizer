@@ -3,20 +3,14 @@ package module.youth;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
-import core.gui.comp.table.UserColumn;
-import core.gui.model.PlayerColumn;
-import core.gui.model.UserColumnFactory;
 import core.gui.model.YouthPlayerColumn;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
-import core.model.player.YouthPlayer;
 import module.training.Skills;
 
 import javax.swing.*;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class YouthPlayerOverviewTableModel extends HOTableModel {
     /**

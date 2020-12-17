@@ -1,7 +1,9 @@
-package core.model.player;
+package module.youth;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.model.player.CommentType;
+import core.model.player.Specialty;
 import core.training.YouthTrainerComment;
 import core.util.HOLogger;
 import module.training.Skills;

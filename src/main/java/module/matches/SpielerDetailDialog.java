@@ -206,7 +206,7 @@ final class SpielerDetailDialog extends JDialog {
 		super(owner);
 		HOLogger.instance().log(getClass(), "SpielerDetailDialog");
 		Player player = DBManager.instance().getSpielerAtDate(matchplayer.getSpielerId(),
-				matchlineup.getSpielDatum());
+				matchlineup.getMatchDate());
 
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		// Nicht gefunden

@@ -210,7 +210,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     }
 
     public static Matchdetails getMatchdetails(int matchId, MatchType type){
-        var ret = DBManager.instance().loadMatchDetails(type.getSourceSystem().getId(), matchId);
+        var ret = DBManager.instance().loadMatchDetails(type.getSourceSystem().getValue(), matchId);
         ret.setMatchType(type);
         ret.setSourceSystem(type.getSourceSystem());
         return ret;
@@ -1261,7 +1261,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      */
     public MatchLineupTeam getTeamLineup() {
         if ( teamLineup == null){
-            teamLineup = DBManager.instance().getMatchLineupTeam(this.getSourceSystem().getId(), this.getMatchID(), MatchKurzInfo.user_team_id);
+            teamLineup = DBManager.instance().getMatchLineupTeam(this.getSourceSystem().getValue(), this.getMatchID(), MatchKurzInfo.user_team_id);
         }
         return teamLineup;
     }

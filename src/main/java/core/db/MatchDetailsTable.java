@@ -6,8 +6,6 @@ import core.model.match.SourceSystem;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.sql.Types;
 
 final class MatchDetailsTable extends AbstractTable {
@@ -100,7 +98,7 @@ final class MatchDetailsTable extends AbstractTable {
 			ResultSet rs = adapter.executeQuery(sql);
 
 			if (rs.first()) {
-				details.setSourceSystem(SourceSystem.getById(rs.getInt("SourceSystem")));
+				details.setSourceSystem(SourceSystem.valueOf(rs.getInt("SourceSystem")));
 				details.setArenaID(rs.getInt("ArenaId"));
 				details.setArenaName(core.db.DBManager.deleteEscapeSequences(rs.getString("ArenaName")));
 				details.setRegionId(rs.getInt("RegionID"));
@@ -193,7 +191,7 @@ final class MatchDetailsTable extends AbstractTable {
 		if (details != null) {
 
 			final String[] where = { "SourceSystem", "MatchID" };
-			final String[] werte = { "" + details.getSourceSystem().getId(), "" + details.getMatchID()};
+			final String[] werte = { "" + details.getSourceSystem().getValue(), "" + details.getMatchID()};
 
 			//Remove existing entries
 			delete(where, werte);
@@ -217,7 +215,7 @@ final class MatchDetailsTable extends AbstractTable {
 							"HomeFormation, AwayFormation" +
 							") VALUES ("
 						+ details.getMatchID() + ","
-						+ details.getSourceSystem().getId() + ","
+						+ details.getSourceSystem().getValue() + ","
 						+ details.getArenaID() + ",'"
 						+ DBManager.insertEscapeSequences(details.getArenaName()) + "','"
 						+ details.getFetchDatum().toString() + "',"
