@@ -2,6 +2,7 @@ package module.youth;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.model.match.MatchLineup;
 import core.model.player.CommentType;
 import core.model.player.Specialty;
 import core.training.YouthTrainerComment;
@@ -50,6 +51,8 @@ public class YouthPlayer {
     private Map<Integer, SkillInfo> skillInfoMap = new HashMap<>();
     private List<ScoutComment> scoutComments;
     private List<YouthTrainerComment> trainerComments;
+
+    private List<MatchLineup> trainingMatches;
 
     public YouthPlayer() {
 
@@ -356,6 +359,21 @@ public class YouthPlayer {
 
     public void setSkillInfo(SkillInfo skillinfo) {
         this.skillInfoMap.put(skillinfo.skillID.getValue(), skillinfo);
+    }
+
+    public List<MatchLineup> getTrainingMatches() {
+        if (trainingMatches == null) {
+            // init from models match list
+            trainingMatches = new ArrayList<>();
+            var model = HOVerwaltung.instance().getModel();
+            for (var match : model.getYouthMatchLineups()) {
+                var team = match.getTeam(model.getBasics().getYouthTeamId());
+                if (team.getPlayerByID(this.id) != null) {
+                    trainingMatches.add(match);
+                }
+            }
+        }
+        return trainingMatches;
     }
 
     public static class SkillInfo {

@@ -56,7 +56,7 @@ public class XMLMatchLineupParser {
 			ml.setHomeTeamName(ele.getElementsByTagName("HomeTeamName").item(0).getFirstChild()
 					.getNodeValue());
 			ele = (Element) root.getElementsByTagName("AwayTeam").item(0);
-			ml.setGuestTeam(Integer.parseInt(ele.getElementsByTagName("AwayTeamID").item(0)
+			ml.setGuestTeamId(Integer.parseInt(ele.getElementsByTagName("AwayTeamID").item(0)
 					.getFirstChild().getNodeValue()));
 			ml.setGuestTeamName(ele.getElementsByTagName("AwayTeamName").item(0).getFirstChild()
 					.getNodeValue());
@@ -85,7 +85,7 @@ public class XMLMatchLineupParser {
 			if (team.getTeamID() == ml.getHomeTeamId()) {
 				ml.setHomeTeam(team);
 			} else {
-				ml.setGuestTeam(team);
+				ml.setGuestTeamId(team);
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(XMLMatchLineupParser.class, e);
@@ -273,7 +273,7 @@ public class XMLMatchLineupParser {
 		// Substitutions
 
 		list = subs.getElementsByTagName("Substitution");
-		List<Substitution> substitutions = new ArrayList<Substitution>();
+		List<Substitution> substitutions = new ArrayList<>();
 
 		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
 

@@ -1899,4 +1899,8 @@ public class DBManager {
 	public List<MatchLineup> loadMatchLineups(int sourcesystem) {
 		return ((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).loadMatchLineups(sourcesystem);
 	}
+
+	public void deleteMatchLineups(int sourcesystem, Timestamp before){
+		((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).deleteMatchLineupsBefore(sourcesystem, before);
+	}
 }

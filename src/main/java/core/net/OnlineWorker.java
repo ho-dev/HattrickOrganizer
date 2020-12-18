@@ -665,7 +665,7 @@ public class OnlineWorker {
 				if (lineUp1.getHomeTeam() == null)
 					lineUp1.setHomeTeam(lineUp2.getHomeTeam());
 				else if (lineUp1.getGuestTeam() == null)
-					lineUp1.setGuestTeam(lineUp2.getGuestTeam());
+					lineUp1.setGuestTeamId(lineUp2.getGuestTeam());
 			} else {
 				// Get the 2nd lineup
 				if (lineUp1.getHomeTeam() == null) {
@@ -675,7 +675,7 @@ public class OnlineWorker {
 				} else {
 					lineUp2 = downloadMatchLineup(matchId, lineUp1.getGuestTeamId(), matchType);
 					if (lineUp2 != null)
-						lineUp1.setGuestTeam(lineUp2.getGuestTeam());
+						lineUp1.setGuestTeamId(lineUp2.getGuestTeam());
 				}
 			}
 		}
@@ -1174,15 +1174,16 @@ public class OnlineWorker {
 	final static long oneDay = 24L*60L*60L*1000L;
 	final static long threeMonths = 3L*30L*oneDay;
 
-	public static void downloadMissingYouthMatchLineups(HOModel model) {
+	public static void downloadMissingYouthMatchLineups(HOModel model, Timestamp dateSince) {
 		var youthteamid = model.getBasics().getYouthTeamId();
-		var dateSince = DBManager.instance().getLastYouthMatchDate();
-		if ( dateSince == null){
+		var lastStoredYouthMatchDate = DBManager.instance().getLastYouthMatchDate();
+
+		if ( dateSince == null || lastStoredYouthMatchDate != null && lastStoredYouthMatchDate.after(dateSince) ){
 			// if there are no youth matches in database, take the limit from arrival date of 'oldest' youth players
-			dateSince = DBManager.instance().getMinScoutingDate();
-			if ( dateSince != null){
-				dateSince.setTime(dateSince.getTime()-oneDay);	// minus one hour (resetted in for loop)
-			}
+			dateSince = lastStoredYouthMatchDate;
+		}
+		if ( dateSince != null){
+			dateSince.setTime(dateSince.getTime()-oneDay);	// minus one hour (resetted in for loop)
 		}
 
 		for ( Timestamp dateUntil = null; dateSince != null; dateSince = dateUntil) {

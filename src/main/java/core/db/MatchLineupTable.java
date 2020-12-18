@@ -53,7 +53,7 @@ public final class MatchLineupTable extends AbstractTable {
 			rs.first();
 			lineup = createMatchLineup(rs);
 			lineup.setHomeTeam(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getHomeTeamId()));
-			lineup.setGuestTeam(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getGuestTeamId()));
+			lineup.setGuestTeamId(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getGuestTeamId()));
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineup Error" + e);
 			lineup = null;
@@ -164,12 +164,17 @@ public final class MatchLineupTable extends AbstractTable {
 		return lineups;
 	}
 
+	public void deleteMatchLineupsBefore(int sourceSystem, Timestamp before) {
+		delete(new String[]{"SourceSystem", "MatchDate"},
+				new String[]{"" + sourceSystem, "'" + before.toString() + "'"});
+	}
+
 	private MatchLineup createMatchLineup(ResultSet rs) throws SQLException {
 		var lineup = new MatchLineup();
 		lineup.setArenaID(rs.getInt("ArenaID"));
 		lineup.setArenaName(DBManager.deleteEscapeSequences(rs.getString("ArenaName")));
 		lineup.setDownloadDate(rs.getString("FetchDate"));
-		lineup.setGuestTeam(rs.getInt("GastID"));
+		lineup.setGuestTeamId(rs.getInt("GastID"));
 		lineup.setGuestTeamName(DBManager.deleteEscapeSequences(rs.getString("GastName")));
 		lineup.setHomeTeamId(rs.getInt("HeimID"));
 		lineup.setHomeTeamName(DBManager.deleteEscapeSequences(rs.getString("HeimName")));

@@ -4,7 +4,7 @@ import core.db.DBManager;
 import core.util.HOLogger;
 
 public class MatchLineup {
-    //~ Instance fields ----------------------------------------------------------------------------
+
     protected int homeTeamId = -1;
     protected int matchId = -1;
     protected MatchType m_MatchTyp = MatchType.NONE;
@@ -111,15 +111,15 @@ public class MatchLineup {
      *
      * @param m_clGast New value of property m_clGast.
      */
-    public final void setGuestTeam(MatchLineupTeam m_clGast) {
+    public final void setGuestTeamId(MatchLineupTeam m_clGast) {
         this.guestTeam = m_clGast;
     }
 
     /**
-     * Getter for property guestTeamId.
+     * Getter for property guest Team.
      * Team is loaded, if not done already
      *
-     * @return Value of property guestTeamId.
+     * @return guest team match lineup.
      */
     public MatchLineupTeam getGuestTeam() {
         if ( guestTeam == null){
@@ -133,7 +133,7 @@ public class MatchLineup {
      *
      * @param m_iGastId New value of property m_iGastId.
      */
-    public final void setGuestTeam(int m_iGastId) {
+    public final void setGuestTeamId(int m_iGastId) {
         this.guestTeamId = m_iGastId;
     }
 
@@ -174,9 +174,10 @@ public class MatchLineup {
     }
 
     /**
-     * Getter for property m_clHeim.
+     * Get home team
+     * team is loaded if not done already
      *
-     * @return Value of property m_clHeim.
+     * @return home team match lineup
      */
     public final MatchLineupTeam getHomeTeam() {
         if ( homeTeam == null){

@@ -2,6 +2,7 @@
 package core.net;
 
 import core.datatype.CBItem;
+import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.CheckBoxTree.CheckBoxTree;
@@ -10,6 +11,7 @@ import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
+import core.model.match.SourceSystem;
 import core.model.player.Player;
 import core.net.login.ProxyDialog;
 import core.util.HOLogger;
@@ -289,7 +291,10 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				}
 
 				if ( model.getBasics().hasYouthTeam()){
-					OnlineWorker.downloadMissingYouthMatchLineups(model);
+					var dateSince = DBManager.instance().getMinScoutingDate();
+					OnlineWorker.downloadMissingYouthMatchLineups(model, dateSince);
+					// delete old youth match lineups, no longer needed (no youth player did trained then)
+					DBManager.instance().deleteMatchLineups(SourceSystem.YOUTH.getValue(), dateSince);
 				}
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {
