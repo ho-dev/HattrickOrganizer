@@ -4,6 +4,7 @@ import core.datatype.CBItem;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import javax.swing.*;
 
@@ -21,7 +22,14 @@ public class WeatherListCellRenderer implements ListCellRenderer<Object> {
 	public final java.awt.Component getListCellRendererComponent(JList jList, Object obj, int index, boolean isSelected, boolean cellHasFocus) {
         if (obj instanceof CBItem) {
         	int id = ((CBItem) obj).getId();
-            m_clEntry.setIcon(ThemeManager.getIcon(HOIconName.WEATHER[id]));
+            Icon icon;
+        	if (id==4){
+                icon = ImageUtilities.getSvgIcon(HOIconName.WEATHER[id], 30, 18);
+            }
+            else{
+                icon = ThemeManager.getIcon(HOIconName.WEATHER[id]);
+            }
+            m_clEntry.setIcon(icon);
             return m_clEntry.getComponent(isSelected);
         } 
         m_jlLeer.setOpaque(true);

@@ -65,6 +65,13 @@ public class DBManager {
 	/** Erster Start */
 	private boolean m_bFirstStart;
 
+
+	private int m_iLatestHRFid = -1;
+
+	private long m_lLatestUpdateTime = -1;
+
+//	private DateTime
+
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
 
@@ -732,13 +739,44 @@ public class DBManager {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getMaxHrf().getHrfId();
 	}
 
+	public void updateLatestData(){
+		m_iLatestHRFid = ((HRFTable) getTable(HRFTable.TABLENAME)).getLatestHrf().getHrfId();
+		m_lLatestUpdateTime = DBManager.instance().getBasics(m_iLatestHRFid).getDatum().getTime();
+	}
+
 	/**
-	 * liefert die Maximal Vergebene Id eines HRF-Files
+	 * get ID of latest HRF file
 	 */
 	public int getLatestHrfId() {
-		return ((HRFTable) getTable(HRFTable.TABLENAME)).getLatestHrf()
-				.getHrfId();
+		if (m_iLatestHRFid == -1){
+			m_iLatestHRFid = ((HRFTable) getTable(HRFTable.TABLENAME)).getLatestHrf().getHrfId();}
+		return m_iLatestHRFid;
 	}
+
+	/**
+	 * get latest update time based on latest HRF file
+	 */
+	public long getLatestUpdateTime() {
+		if (m_lLatestUpdateTime == -1){
+			int iLatestHRFID = getLatestHrfId();
+			m_lLatestUpdateTime = DBManager.instance().getBasics(iLatestHRFID).getDatum().getTime();
+		}
+		return m_lLatestUpdateTime;
+	}
+
+	/**
+	 * check if latest update is older than @periodInMS
+	 */
+	public boolean areDataTooOld(long periodInMS) {
+		long dateNow = new Date().getTime();
+		return m_lLatestUpdateTime + periodInMS <= dateNow;
+	}
+
+	// default to 1 hour
+	public boolean areDataTooOld() {
+		return areDataTooOld(1000 * 60 * 60);
+	}
+
 
 	/**
 	 * Sucht das letzte HRF zwischen dem angegebenen Datum und 6 Tagen davor
@@ -920,7 +958,7 @@ public class DBManager {
 	/**
 	 * Get all matches with a certain status for the given team from the
 	 * database.
-	 * 
+	 *
 	 * @param teamId
 	 *            the teamid or -1 for all matches
 	 */

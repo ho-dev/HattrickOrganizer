@@ -49,7 +49,8 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 					new CBItem("", Weather.RAINY.getId()),
 					new CBItem("", Weather.OVERCAST.getId()),
 					new CBItem("", Weather.PARTIALLY_CLOUDY.getId()),
-					new CBItem("", Weather.SUNNY.getId())
+					new CBItem("", Weather.SUNNY.getId()),
+					new CBItem("", Weather.UNKNOWN.getId())
 			};
 	private final JComboBox<CBItem> m_jcbWeather = new JComboBox<>(WEATHER);
 
@@ -97,8 +98,8 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		return Weather.getById(id);
 	}
 
-	public void setWeather(Weather weather) {
-		if (weather==Weather.NULL) weather=Weather.PARTIALLY_CLOUDY;
+	public void setWeather(Weather weather, Weather.Forecast weatherForecast) {
+		if ((weather==Weather.NULL) || (weatherForecast== Weather.Forecast.UNSURE) || (weatherForecast== Weather.Forecast.NULL)) weather=Weather.UNKNOWN;
 		if (m_jcbWeather.getSelectedIndex() != weather.getId()){
 			m_jcbWeather.setSelectedIndex(weather.getId());
 		}
@@ -133,7 +134,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		setTrainerType(homodel.getTrainer().getTrainerTyp());
 		setTacticalAssistants(homodel.getClub().getTacticalAssistantLevels());
 		setLocation(currentLineup.getLocation());
-		setWeather(currentLineup.getWeather());
+		setWeather(currentLineup.getWeather(), currentLineup.getWeatherForecast());
 		setPullBackMinute(currentLineup.getPullBackMinute());
 		m_jcbPullBackMinute.setEnabled(!currentLineup.isPullBackOverride());
 		setPullBackOverride(currentLineup.isPullBackOverride());
@@ -208,8 +209,11 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			}
 			else if (event.getSource().equals(m_jcbWeather))
 			{
+				Lineup lineup = model.getLineupWithoutRatingRecalc();
+				lineup.setWeatherForecast(Weather.Forecast.TODAY); // weather forecast is overriden
+				lineup.setWeather(getWeather());
 				HOMainFrame.instance().getLineupPanel().getLineupPositionsPanel().refresh();
-				model.getLineupWithoutRatingRecalc().setWeather(getWeather());
+
 			}
 		}
 		refresh();

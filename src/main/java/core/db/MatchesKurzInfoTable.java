@@ -2,14 +2,12 @@ package core.db;
 
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
-//import core.model.match.MatchKurzInfo2;
 import core.model.match.MatchType;
 import core.model.match.Weather;
 import core.util.HOLogger;
 import module.matches.SpielePanel;
 import module.matches.statistics.MatchesOverviewCommonPanel;
 import org.jetbrains.annotations.Nullable;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;

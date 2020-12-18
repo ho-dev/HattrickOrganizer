@@ -4,6 +4,7 @@ import core.gui.RefreshManager;
 import core.gui.Updatable;
 import core.model.HOVerwaltung;
 import core.model.match.Weather;
+import core.util.HOLogger;
 import module.lineup.assistant.LineupAssistantPanel;
 import module.lineup.ratings.LineupRatingPanel;
 import javax.swing.*;
@@ -66,6 +67,7 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
     }
 
     public void refresh(){
+        HOLogger.instance().log(getClass(), "Lineup rating assitant panel:  refresh() has been called");
         lineupSettingsPanel.refresh(false);
         lineupRatingPanel.refresh();
     }

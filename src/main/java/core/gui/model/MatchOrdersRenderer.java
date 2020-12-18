@@ -18,6 +18,9 @@ public class MatchOrdersRenderer implements javax.swing.ListCellRenderer<MatchOr
             } else {
                 comp.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
             }
+//            comp.setPreferredSize(new Dimension(325, 25));
+//            comp.setMinimumSize(new Dimension(325, 25));
+//            comp.setMaximumSize(new Dimension(325, 25));
             return comp;
         } else {
             JLabel m_jlBlank = new JLabel(" ");
@@ -27,6 +30,9 @@ public class MatchOrdersRenderer implements javax.swing.ListCellRenderer<MatchOr
             } else {
                 m_jlBlank.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
             }
+//            m_jlBlank.setPreferredSize(new Dimension(325, 25));
+//            m_jlBlank.setMinimumSize(new Dimension(325, 25));
+//            m_jlBlank.setMaximumSize(new Dimension(325, 25));
             return m_jlBlank;
         }
     }

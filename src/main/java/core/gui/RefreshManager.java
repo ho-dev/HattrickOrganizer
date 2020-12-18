@@ -38,22 +38,22 @@ public class RefreshManager {
     }
 
     /**
-     * Informiert alle registrierten Objekte
+     * Informs all registered objects
      */
     public void doReInit() {
-        for (int i = 0; i < m_clRefreshable.size(); i++) {
+        for (IRefreshable iRefreshable : m_clRefreshable) {
             try {
                 //no plugin
-                if (m_clRefreshable.get(i) instanceof Refreshable) {
-                    ((Refreshable) m_clRefreshable.get(i)).reInit();
+                if (iRefreshable instanceof Refreshable) {
+                    ((Refreshable) iRefreshable).reInit();
                 }
                 //plugin
                 else {
-                    (m_clRefreshable.get(i)).refresh();
+                    iRefreshable.refresh();
                 }
             } catch (Exception e) {
-                HOLogger.instance().log(getClass(),"Gefangener Fehler beim doReInit:");
-                HOLogger.instance().log(getClass(),e);
+                HOLogger.instance().log(getClass(), "Refresh Manager: doReInit() throws error");
+                HOLogger.instance().log(getClass(), e);
             }
         }
         System.gc();
@@ -61,15 +61,15 @@ public class RefreshManager {
     }
 
     /**
-     * Informiert alle registrierten Objekte
+     * Informs all registered objects
      */
     public void doRefresh() {
-        for (int i = 0; i < m_clRefreshable.size(); i++) {
+        for (IRefreshable iRefreshable : m_clRefreshable) {
             try {
-                ((IRefreshable) m_clRefreshable.get(i)).refresh();
+                iRefreshable.refresh();
             } catch (Exception e) {
-                HOLogger.instance().log(getClass(),"Gefangener Fehler beim doRefresh:");
-                HOLogger.instance().log(getClass(),e);
+                HOLogger.instance().log(getClass(), "Refresh Manager: doRefresh() throws error");
+                HOLogger.instance().log(getClass(), e);
             }
         }
 

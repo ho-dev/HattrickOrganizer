@@ -1,9 +1,4 @@
-// %2077366746:plugins%
-/*
- * IMatchDetails.java
- *
- * Created on 18. Oktober 2004, 07:18
- */
+
 package core.model.match;
 
 public interface IMatchDetails {

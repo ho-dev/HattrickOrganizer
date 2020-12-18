@@ -10,8 +10,8 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
+import core.model.match.IMatchDetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
@@ -114,10 +114,13 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 	@Override
 	public final void refresh() {
+
+		HOLogger.instance().log(getClass(), "refresh() has been called");
+
 		boolean bGroupFiltered = m_clLineupPanel.getLineupAssistantPanel().isGroupFilter();
 		String sGroup = m_clLineupPanel.getLineupAssistantPanel().getGroup();
 		boolean bSelectedGroupExcluded = m_clLineupPanel.getLineupAssistantPanel().isSelectedGroupExcluded();
-		boolean bExcludeLast = m_clLineupPanel.getLineupAssistantPanel().isExcludeLastMatch();
+//		boolean bExcludeLast = m_clLineupPanel.getLineupAssistantPanel().isExcludeLastMatch();
 
 		// All Player Positions Inform First 11
 		List<Player> selectedPlayers = new ArrayList<>();

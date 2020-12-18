@@ -2,6 +2,7 @@
 package core.net;
 
 import core.datatype.CBItem;
+import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.CheckBoxTree.CheckBoxTree;
@@ -326,6 +327,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			}
 		}
 
+		DBManager.instance().updateLatestData();
 		model.calcSubskills();
 	}
 }

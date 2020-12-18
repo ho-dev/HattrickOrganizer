@@ -7,7 +7,7 @@ public interface HOIconName {
 	 String RATINGCOMPARISON_BACKGROUND = "ratingComparison.background";
 
 	 String[] MATCHICONS	= {"LEAGUE", "QUALIFICATION", "FRIENDLY", "NATIONAL_CUP", "EMERALD_CUP", "RUBY_CUP", "SAPPHIRE_CUP", "LADDER", "TOURNAMENT", "SINGLE", "MASTERS", "DEFAULT", "CONSOLANTE_CUP", "DIVISION_BATTLE"};
-	 String[] WEATHER 		= { "weather0", "weather1", "weather2", "weather3"};
+	 String[] WEATHER 		= { "weather0", "weather1", "weather2", "weather3", "weather4"};
 	 String[] SPECIALTIES = { "player_specialty_unknown", "player_specialty_1", "player_specialty_2", "player_specialty_3", "player_specialty_4", "player_specialty_5", "player_specialty_6", "player_specialty_7", "player_specialty_8"};
 	 String[] SMILEYS = { "", "smiley-coach","smiley-sale", "smiley-happy", "smiley-sad", "smiley-neutral"};
 

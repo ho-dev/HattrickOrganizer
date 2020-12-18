@@ -6,10 +6,8 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.match.IMatchDetails;
 import core.model.match.MatchType;
 import core.model.match.Weather;
-import core.util.Helper;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Timestamp;
@@ -125,24 +123,15 @@ public class MatchOrdersCBItem implements ComboItem {
         if(m_bOrdersSetInHT){
             mapColor = Map.of("lineupColor", HOColorName.ORDERS_LINEUP, "tickColor", HOColorName.ORDERS_TICK);
             icon = ImageUtilities.getSvgIcon(HOIconName.ORDERS_SENT, mapColor, iWidth, iHeight);
-//            jlOrderSet.setToolTipText(Helper.getTranslation("ls.module.lineup.orders_sent.tt"));
-//            jlNextGame.setToolTipText(Helper.getTranslation("ls.module.lineup.orders_sent.tt"));
-//            jlOrderSet.setToolTipText("sdffffff");
-//            jlNextGame.setToolTipText("yyyyyyyyyyyyyyyyyyyyyy");
         }
         else{
             mapColor = Map.of("lineupColor", HOColorName.ORDERS_LINEUP, "penColor", HOColorName.ORDERS_PEN);
             icon = ImageUtilities.getSvgIcon(HOIconName.ORDERS_MISSING, mapColor, iWidth, iHeight);
-//            jlOrderSet.setToolTipText(Helper.getTranslation("ls.module.lineup.orders_missing.tt"));
-//            jlNextGame.setToolTipText(Helper.getTranslation("ls.module.lineup.orders_missing.tt"));
         }
         jlOrderSet.setPreferredSize(new Dimension(iWidth, iHeight));
         jlOrderSet.setIcon(icon);
         layout.setConstraints(jlOrderSet, constraints);
         m_jpComponent.add(jlOrderSet);
-
-
-//        m_jpComponent.setPreferredSize(new Dimension(COMPONENT_WIDTH, m_jpComponent.getPreferredSize().height));
 
     }
 
@@ -156,6 +145,9 @@ public class MatchOrdersCBItem implements ComboItem {
             comp = new javax.swing.JLabel(" ");
             comp.setOpaque(true);
             comp.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG : ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
+            int iHeight = 16;
+            int iWidth = Math.round(iHeight * 66f / 47f);
+            comp.setPreferredSize(new Dimension(iWidth, iHeight));
         }
         return comp;
     }

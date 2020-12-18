@@ -1,9 +1,3 @@
-// %3075081895:de.hattrickorganizer.model.matches%
-/*
- * Matchdetails.java
- *
- * Created on 8. Januar 2004, 14:12
- */
 package core.model.match;
 
 import core.db.DBManager;
