@@ -1,16 +1,13 @@
 package core.model.match;
 
-import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.util.HOLogger;
 import core.util.StringUtils;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-
 import static core.util.StringUtils.getResultString;
 
 public class MatchKurzInfo implements Comparable<Object> {

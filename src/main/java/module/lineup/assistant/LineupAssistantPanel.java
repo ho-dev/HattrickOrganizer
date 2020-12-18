@@ -103,6 +103,8 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		return m_jcbxFilterPlayerPositionCB.isSelected();
 	}
 
+	public final void setGroupFilter(boolean isSelected) {m_jcbxFilterPlayerPositionCB.setSelected(isSelected);}
+
 	public final boolean isIdealPositionZuerst() {
 		return m_jcbxIdealPositionFirst.isSelected();
 	}

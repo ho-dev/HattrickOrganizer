@@ -54,6 +54,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(WEATHER[1], "gui/bilder/match_events/weather1.png");
 		put(WEATHER[2], "gui/bilder/match_events/weather2.png");
 		put(WEATHER[3], "gui/bilder/match_events/weather3.png");
+		put(WEATHER[4], "gui/bilder/weather-too-early.svg");
 		put(WEATHER_EFFECT_GOOD, "gui/bilder/Fugue/tick-small.png");
 		put(WEATHER_EFFECT_BAD, "gui/bilder/Fugue/cross-small.png");
 		put(WEATHER_RAIN_POS, "gui/bilder/Fugue/weather-rain-pos-se.png");

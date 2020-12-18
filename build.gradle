@@ -67,9 +67,9 @@ application {
 //  configure java plugin --------------------------------
 java {
     compileJava.options.encoding = 'UTF-8'
-    sourceCompatibility = JavaVersion.VERSION_14
-    targetCompatibility = JavaVersion.VERSION_14
-    modularity.inferModulePath.set(true)
+    sourceCompatibility = JavaVersion.VERSION_15
+    targetCompatibility = JavaVersion.VERSION_15
+//    modularity.inferModulePath.set(true)
 }
 
 sourceSets {

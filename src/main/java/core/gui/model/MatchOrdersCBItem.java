@@ -7,7 +7,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.match.MatchType;
-import core.util.Helper;
+import core.model.match.Weather;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Timestamp;
@@ -17,7 +17,7 @@ import java.util.Map;
 import static core.util.HTCalendarFactory.getHTSeason;
 import static core.util.HTCalendarFactory.getHTWeek;
 
-public class MatchOrdersCBItems implements ComboItem {
+public class MatchOrdersCBItem implements ComboItem {
 
     private boolean m_bOrdersSetInHT;
     private int m_iMatchID = -1;
@@ -25,10 +25,23 @@ public class MatchOrdersCBItems implements ComboItem {
     private MatchType m_clMatchType;
     private java.sql.Timestamp m_tsMatchTime;
     private JComponent m_jpComponent;
-    protected static int COMPONENT_WIDTH = 120;
+    private short m_clLocation;
+    private Weather m_clWeather;
+    private Weather.Forecast m_clWeatherForecast;
 
+    public Weather getWeather() {return m_clWeather;}
 
-    public boolean isM_bOrdersSetInHT() {
+    public void setWeather(Weather Weather) {this.m_clWeather = Weather;}
+
+    public Weather.Forecast getWeatherForecast() {return m_clWeatherForecast;}
+
+    public void setWeatherForecast(Weather.Forecast WeatherForecast) {this.m_clWeatherForecast = WeatherForecast;}
+
+    public short getLocation() {return m_clLocation;}
+
+    public void setLocation(short location) {this.m_clLocation = location; }
+
+    public boolean areOrdersSetInHT() {
         return m_bOrdersSetInHT;
     }
 
@@ -36,7 +49,7 @@ public class MatchOrdersCBItems implements ComboItem {
         this.m_bOrdersSetInHT = m_bOrdersSetInHT;
     }
 
-    public int getM_iMatchID() {
+    public int getMatchID() {
         return m_iMatchID;
     }
 
@@ -52,7 +65,7 @@ public class MatchOrdersCBItems implements ComboItem {
         this.m_sOpponentName = m_sTeamName;
     }
 
-    public MatchType getM_clMatchType() {
+    public MatchType getMatchType() {
         return m_clMatchType;
     }
 
@@ -69,7 +82,7 @@ public class MatchOrdersCBItems implements ComboItem {
     }
 
 
-    public MatchOrdersCBItems() {
+    public MatchOrdersCBItem() {
     }
 
     public final JComponent getComponent(){
@@ -110,24 +123,15 @@ public class MatchOrdersCBItems implements ComboItem {
         if(m_bOrdersSetInHT){
             mapColor = Map.of("lineupColor", HOColorName.ORDERS_LINEUP, "tickColor", HOColorName.ORDERS_TICK);
             icon = ImageUtilities.getSvgIcon(HOIconName.ORDERS_SENT, mapColor, iWidth, iHeight);
-//            jlOrderSet.setToolTipText(Helper.getTranslation("ls.module.lineup.orders_sent.tt"));
-//            jlNextGame.setToolTipText(Helper.getTranslation("ls.module.lineup.orders_sent.tt"));
-//            jlOrderSet.setToolTipText("sdffffff");
-//            jlNextGame.setToolTipText("yyyyyyyyyyyyyyyyyyyyyy");
         }
         else{
             mapColor = Map.of("lineupColor", HOColorName.ORDERS_LINEUP, "penColor", HOColorName.ORDERS_PEN);
             icon = ImageUtilities.getSvgIcon(HOIconName.ORDERS_MISSING, mapColor, iWidth, iHeight);
-//            jlOrderSet.setToolTipText(Helper.getTranslation("ls.module.lineup.orders_missing.tt"));
-//            jlNextGame.setToolTipText(Helper.getTranslation("ls.module.lineup.orders_missing.tt"));
         }
         jlOrderSet.setPreferredSize(new Dimension(iWidth, iHeight));
         jlOrderSet.setIcon(icon);
         layout.setConstraints(jlOrderSet, constraints);
         m_jpComponent.add(jlOrderSet);
-
-
-//        m_jpComponent.setPreferredSize(new Dimension(COMPONENT_WIDTH, m_jpComponent.getPreferredSize().height));
 
     }
 
@@ -141,6 +145,9 @@ public class MatchOrdersCBItems implements ComboItem {
             comp = new javax.swing.JLabel(" ");
             comp.setOpaque(true);
             comp.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG : ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
+            int iHeight = 16;
+            int iWidth = Math.round(iHeight * 66f / 47f);
+            comp.setPreferredSize(new Dimension(iWidth, iHeight));
         }
         return comp;
     }

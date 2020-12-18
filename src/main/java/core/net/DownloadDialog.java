@@ -331,6 +331,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			}
 		}
 
+		DBManager.instance().updateLatestData();
 		model.calcSubskills();
 	}
 }
