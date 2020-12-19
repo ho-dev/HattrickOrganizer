@@ -73,8 +73,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 
 	private final JComboBox<CBItem> m_jcbPullBackMinute = new JComboBox<>(PULLBACK_MINUTE);
 
-	private final JCheckBox m_jchPullBackOverride = new JCheckBox(getTranslation("PullBack.Override"), false);
-
 	private final CBItem[] TACTICAL_ASSISTANTS = {
 			new CBItem("0", 0),
 			new CBItem("1", 1),
@@ -136,8 +134,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		setLocation(currentLineup.getLocation());
 		setWeather(currentLineup.getWeather(), currentLineup.getWeatherForecast());
 		setPullBackMinute(currentLineup.getPullBackMinute());
-		m_jcbPullBackMinute.setEnabled(!currentLineup.isPullBackOverride());
-		setPullBackOverride(currentLineup.isPullBackOverride());
 	}
 
 	public void setConfidence(int iTeamConfidence) {
@@ -161,28 +157,14 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		Helper.setComboBoxFromID(m_jcbPullBackMinute, minute);
 	}
 
-	// TODO: find out what this is doing
-	private void setPullBackOverride(boolean pullBackOverride) {
-		m_jchPullBackOverride.setSelected(pullBackOverride);
-	}
 
 	@Override
 	public void itemStateChanged(ItemEvent event) {
 
 		HOModel model = HOVerwaltung.instance().getModel();
 
-		if (event.getStateChange() == ItemEvent.DESELECTED) {
-			if (event.getSource().equals(m_jchPullBackOverride)) {
-				model.getLineupWithoutRatingRecalc().setPullBackOverride(false);
-				m_jcbPullBackMinute.setEnabled(true);
-			}
-		}
-		else if (event.getStateChange() == ItemEvent.SELECTED) {
-			if (event.getSource().equals(m_jchPullBackOverride)) {
-				model.getLineupWithoutRatingRecalc().setPullBackOverride(true);
-				m_jcbPullBackMinute.setEnabled(false);
-			}
-			else if (event.getSource().equals(m_jcbPullBackMinute)) {
+	 if (event.getStateChange() == ItemEvent.SELECTED) {
+			if (event.getSource().equals(m_jcbPullBackMinute)) {
 				model.getLineupWithoutRatingRecalc().setPullBackMinute(((CBItem) Objects.requireNonNull(m_jcbPullBackMinute.getSelectedItem())).getId());
 			}
 			else if (event.getSource().equals(m_jcbMainTeamSpirit)) {
@@ -344,15 +326,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		layout.setConstraints(m_jcbPullBackMinute, constraints);
 		add(m_jcbPullBackMinute);
 
-		yPos++;
-		initLabel(constraints, layout, new JLabel(""), yPos);
-		constraints.gridx = 2;
-		constraints.gridy = yPos;
-		m_jchPullBackOverride.setToolTipText(getTranslation("PullBack.Override.ToolTip"));
-		m_jchPullBackOverride.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
-		layout.setConstraints(m_jchPullBackOverride, constraints);
-		add(m_jchPullBackOverride);
-
 		// Add all item listeners
 		addItemListeners();
 	}
@@ -368,7 +341,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		m_jcbTeamConfidence.addItemListener(this);
 		m_jcbTrainerType.addItemListener(this);
 		m_jcbPullBackMinute.addItemListener(this);
-		m_jchPullBackOverride.addItemListener(this);
 		m_jcbTacticalAssistants.addItemListener(this);
 	}
 
@@ -383,7 +355,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		m_jcbTeamConfidence.removeItemListener(this);
 		m_jcbTrainerType.removeItemListener(this);
 		m_jcbPullBackMinute.removeItemListener(this);
-		m_jchPullBackOverride.removeItemListener(this);
 		m_jcbTacticalAssistants.removeItemListener(this);
 	}
 
