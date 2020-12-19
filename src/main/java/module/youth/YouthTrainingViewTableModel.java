@@ -9,6 +9,7 @@ import core.model.match.MatchLineup;
 
 import javax.swing.*;
 import java.text.SimpleDateFormat;
+import java.util.stream.Collectors;
 
 
 public class YouthTrainingViewTableModel extends HOTableModel {
@@ -51,7 +52,10 @@ public class YouthTrainingViewTableModel extends HOTableModel {
 
     @Override
     protected void initData() {
-        var youthMatchLineups = HOVerwaltung.instance().getModel().getYouthMatchLineups();
+        var youthMatchLineups = HOVerwaltung.instance().getModel().getYouthMatchLineups()
+                .stream()
+                .sorted( (i1, i2) -> i2.getMatchDate().compareTo(i1.getMatchDate()))
+                .collect(Collectors.toList());
         m_clData = new Object[youthMatchLineups.size()][columns.length];
         int rownum=0;
         for ( var lineup: youthMatchLineups ) {

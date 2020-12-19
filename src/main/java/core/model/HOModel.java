@@ -589,7 +589,7 @@ public class HOModel {
 
     public void addYouthMatchLineup(MatchLineup lineup) {
         if ( this.youthMatchLineups == null){
-            this.youthMatchLineups = new ArrayList<>();
+            getYouthMatchLineups();
         }
         this.youthMatchLineups.add(lineup);
     }

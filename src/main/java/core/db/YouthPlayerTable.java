@@ -128,7 +128,7 @@ public class YouthPlayerTable  extends AbstractTable {
                 .append(player.getPlayerCategoryID()).append(",")
                 .append(player.getCards()).append(",")
                 .append(player.getInjuryLevel()).append(",")
-                .append(player.getSpecialty()).append(",")
+                .append(player.getSpecialty().getValue()).append(",")
                 .append(player.getCareerGoals()).append(",")
                 .append(player.getCareerHattricks()).append(",")
                 .append(player.getLeagueGoals()).append(",")

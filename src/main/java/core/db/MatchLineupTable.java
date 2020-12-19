@@ -109,7 +109,7 @@ public final class MatchLineupTable extends AbstractTable {
 						DBManager.insertEscapeSequences(lineup.getHomeTeamName()) + "'," +
 						lineup.getHomeTeamId() + ",'" +
 						DBManager.insertEscapeSequences(lineup.getGuestTeamName()) + "', " +
-						lineup.getGuestTeam() + ", '" +
+						lineup.getGuestTeamId() + ", '" +
 						lineup.getStringDownloadDate()	+ "', '"+
 						lineup.getStringMatchDate() + "', " +
 						lineup.getArenaID() + ", '" +
@@ -150,16 +150,16 @@ public final class MatchLineupTable extends AbstractTable {
 	public List<MatchLineup> loadMatchLineups(int sourceSystem) {
 		var lineups = new ArrayList<MatchLineup>();
 		try {
-			var sql = "SELECT * FROM "+getTableName()+" WHERE SourceSystem=" + sourceSystem;
+			var sql = "SELECT * FROM " + getTableName() + " WHERE SourceSystem=" + sourceSystem;
 
 			var rs = adapter.executeQuery(sql);
 			rs.beforeFirst();
-			if ( rs.next()){
+			while (rs.next()) {
 				var lineup = createMatchLineup(rs);
 				lineups.add(lineup);
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DB.loadMatchLineups Error" + e);
+			HOLogger.instance().log(getClass(), "DB.loadMatchLineups Error" + e);
 		}
 		return lineups;
 	}
@@ -169,7 +169,7 @@ public final class MatchLineupTable extends AbstractTable {
 				getTableName() +
 				" WHERE SOURCESYSTEM=" +
 				sourceSystem +
-				" AND MATCHEDATE<'" +
+				" AND MATCHDATE<'" +
 				before.toString() + "'";
 		try {
 			adapter.executeUpdate(sql);
