@@ -293,7 +293,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				if ( model.getBasics().hasYouthTeam()){
 					var dateSince = DBManager.instance().getMinScoutingDate();
 					OnlineWorker.downloadMissingYouthMatchLineups(model, dateSince);
-					// delete old youth match lineups, no longer needed (no youth player did trained then)
+					// delete old youth match lineups, no longer needed (no current youth player has trained then)
 					DBManager.instance().deleteMatchLineups(SourceSystem.YOUTH.getValue(), dateSince);
 				}
 			}

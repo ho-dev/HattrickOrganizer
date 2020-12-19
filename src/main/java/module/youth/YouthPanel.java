@@ -14,6 +14,7 @@ import java.awt.*;
 public class YouthPanel extends JPanel {
 
     private YouthPlayerOverviewTable youthPlayerOverviewTable;
+    private YouthTrainingView youthTrainingView;
     private JTabbedPane tabbedPane;
 
     public YouthPanel(){
@@ -25,6 +26,8 @@ public class YouthPanel extends JPanel {
         youthPlayerOverviewTable = new YouthPlayerOverviewTable();
         this.tabbedPane = new JTabbedPane();
         this.tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Player"), new JScrollPane(this.youthPlayerOverviewTable));
+        youthTrainingView = new YouthTrainingView();
+        this.tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Training"), new JScrollPane((this.youthTrainingView)));
         add(this.tabbedPane, BorderLayout.CENTER);
     }
 }

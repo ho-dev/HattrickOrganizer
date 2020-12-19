@@ -13,13 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class YouthPlayerOverviewTableModel extends HOTableModel {
-    /**
-     * constructor
-     *
-     * @param id
-     *          column model id
-     *          used to store column information
-     */
+
     public YouthPlayerOverviewTableModel(int id) {
         super(id,"YouthPlayerOverview");
         columns =  initColumns();

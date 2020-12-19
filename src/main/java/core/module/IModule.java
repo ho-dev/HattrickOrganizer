@@ -29,7 +29,7 @@ public interface IModule {
 	public static final int FLAGSCOLLECTOR	= 17;
 	//public static final int MATCHESANALYZER	= 18;
 	//int OPPONENTSPY = 19;
-	public static final int YOUTHPLAYEROVERVIEW 	= 20;
+	public static final int YOUTH = 20;
 
 	public int getModuleId();
 	public String getDescription();

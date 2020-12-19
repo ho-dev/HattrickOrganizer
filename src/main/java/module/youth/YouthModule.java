@@ -6,15 +6,15 @@ import core.module.DefaultModule;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 
-public class YouthPlayerOverviewModule extends DefaultModule {
+public class YouthModule extends DefaultModule {
 
-    public YouthPlayerOverviewModule() {
+    public YouthModule() {
         super(true);
     }
 
     @Override
     public int getModuleId() {
-        return YOUTHPLAYEROVERVIEW;
+        return YOUTH;
     }
 
     @Override

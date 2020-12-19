@@ -187,7 +187,7 @@ final class DBUpdater {
 			dbManager.getTable(YouthScoutCommentTable.TABLENAME).createTable();
 		}
 
-		forceModuleStatus(IModule.YOUTHPLAYEROVERVIEW);
+		forceModuleStatus(IModule.YOUTH);
 
 		updateDBVersion(dbVersion, version);
 	}

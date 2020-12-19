@@ -165,8 +165,17 @@ public final class MatchLineupTable extends AbstractTable {
 	}
 
 	public void deleteMatchLineupsBefore(int sourceSystem, Timestamp before) {
-		delete(new String[]{"SourceSystem", "MatchDate"},
-				new String[]{"" + sourceSystem, "'" + before.toString() + "'"});
+		var sql = "DELETE FROM " +
+				getTableName() +
+				" WHERE SOURCESYSTEM=" +
+				sourceSystem +
+				" AND MATCHEDATE<'" +
+				before.toString() + "'";
+		try {
+			adapter.executeUpdate(sql);
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
+		}
 	}
 
 	private MatchLineup createMatchLineup(ResultSet rs) throws SQLException {
