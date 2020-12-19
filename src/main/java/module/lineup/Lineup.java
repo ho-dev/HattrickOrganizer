@@ -92,10 +92,6 @@ public class Lineup{
 		@Expose
 		private int m_iStyleOfPlay;
 
-		@SerializedName("newLineup")
-		@Expose
-		private String newLineup = new String(""); //newLineup should always be empty.
-
 	};
 
 	@SerializedName("settings")

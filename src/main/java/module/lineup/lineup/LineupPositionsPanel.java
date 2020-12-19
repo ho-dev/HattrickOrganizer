@@ -88,6 +88,10 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		return m_clLineupPanel;
 	}
 
+	public MatchAndLineupSelectionPanel getMatchAndLineupSelectionPanel() {
+		return m_jpMatchAndLineupSelectionPanel;
+	}
+
 	public LineupPositionsPanel(LineupPanel parent) {
 		m_clLineupPanel = parent;
 		assistantPanel = m_clLineupPanel.getLineupAssistantPanel();

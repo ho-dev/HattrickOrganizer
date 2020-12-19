@@ -13,6 +13,8 @@ import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
 import core.model.match.Weather;
 import core.util.Helper;
+import module.lineup.lineup.LineupPositionsPanel;
+import module.lineup.lineup.MatchAndLineupSelectionPanel;
 import module.lineup.ratings.LineupRatingPanel;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -24,7 +26,9 @@ import static module.lineup.LineupPanel.TITLE_FG;
 
 public final class LineupSettingsPanel extends ImagePanel implements Refreshable, ItemListener {
 
-	private final LineupRatingPanel ratingPanel;
+	private LineupRatingPanel ratingPanel;
+	private MatchAndLineupSelectionPanel matchAndLineupPanel;
+	private final LineupPanel lineupPanel;
 
 	private final JComboBox<CBItem> m_jcbTeamConfidence = new JComboBox<>(TeamConfidence.ITEMS);
 
@@ -85,10 +89,31 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	private final JComboBox<CBItem>   m_jcbTacticalAssistants = new JComboBox<>(TACTICAL_ASSISTANTS);
 
 
-	public LineupSettingsPanel(LineupRatingPanel ratingPanel) {
-		this.ratingPanel = ratingPanel;
+	public LineupSettingsPanel(LineupPanel parent) {
+		lineupPanel = parent;
 		initComponents();
 		core.gui.RefreshManager.instance().registerRefreshable(this);
+	}
+
+	private void refreshRatingPanel(){
+		if (ratingPanel == null){
+			ratingPanel = lineupPanel.getLineupRatingPanel();
+		}
+		if (ratingPanel != null) {
+			ratingPanel.refresh();
+		}
+	}
+
+	private boolean isLineupSimulator(){
+		if (matchAndLineupPanel == null){
+			matchAndLineupPanel = lineupPanel.getLineupPositionsPanel().getMatchAndLineupSelectionPanel();
+		}
+		if (matchAndLineupPanel != null) {
+			return matchAndLineupPanel.isLineupSimulator();
+		}
+		else{
+			return false;
+		}
 	}
 
 	public final Weather getWeather() {
@@ -134,6 +159,17 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		setLocation(currentLineup.getLocation());
 		setWeather(currentLineup.getWeather(), currentLineup.getWeatherForecast());
 		setPullBackMinute(currentLineup.getPullBackMinute());
+
+		// Lineup settings are editable only if in Lineup Simulator mode
+		boolean bLineupSimulation = isLineupSimulator();
+		m_jcbLocation.setEnabled(bLineupSimulation);
+		m_jcbWeather.setEnabled(bLineupSimulation);
+		m_jcbMainTeamSpirit.setEnabled(bLineupSimulation);
+		m_jcbSubTeamSpirit.setEnabled(bLineupSimulation);
+		m_jcbTeamConfidence.setEnabled(bLineupSimulation);
+		m_jcbTrainerType.setEnabled(bLineupSimulation);
+		m_jcbTacticalAssistants.setEnabled(bLineupSimulation);
+		m_jcbPullBackMinute.setEnabled(bLineupSimulation);
 	}
 
 	public void setConfidence(int iTeamConfidence) {
@@ -210,7 +246,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	public void refresh() {
 		removeItemListeners();
 		setLabels();
-		ratingPanel.refresh();
+		refreshRatingPanel();
 		addItemListeners();
 	}
 
