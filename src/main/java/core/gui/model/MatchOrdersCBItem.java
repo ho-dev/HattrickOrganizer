@@ -6,6 +6,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
+import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
 import core.model.match.Weather;
 import javax.swing.*;
@@ -17,7 +18,7 @@ import java.util.Map;
 import static core.util.HTCalendarFactory.getHTSeason;
 import static core.util.HTCalendarFactory.getHTWeek;
 
-public class MatchOrdersCBItem implements ComboItem {
+public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
 
     private boolean m_bOrdersSetInHT;
     private int m_iMatchID = -1;
@@ -29,12 +30,16 @@ public class MatchOrdersCBItem implements ComboItem {
     private Weather m_clWeather;
     private Weather.Forecast m_clWeatherForecast;
 
+    @Override
     public Weather getWeather() {return m_clWeather;}
 
+    @Override
     public void setWeather(Weather Weather) {this.m_clWeather = Weather;}
 
+    @Override
     public Weather.Forecast getWeatherForecast() {return m_clWeatherForecast;}
 
+    @Override
     public void setWeatherForecast(Weather.Forecast WeatherForecast) {this.m_clWeatherForecast = WeatherForecast;}
 
     public short getLocation() {return m_clLocation;}
@@ -49,10 +54,12 @@ public class MatchOrdersCBItem implements ComboItem {
         this.m_bOrdersSetInHT = m_bOrdersSetInHT;
     }
 
+    @Override
     public int getMatchID() {
         return m_iMatchID;
     }
 
+    @Override
     public void setMatchID(int m_iMatchID) {
         this.m_iMatchID = m_iMatchID;
     }
@@ -69,6 +76,7 @@ public class MatchOrdersCBItem implements ComboItem {
         return m_clMatchType;
     }
 
+    @Override
     public void setMatchType(MatchType m_clMatchType) {
         this.m_clMatchType = m_clMatchType;
     }

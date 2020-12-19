@@ -89,10 +89,10 @@ public class MatchKurzInfo implements Comparable<Object> {
 	public final void setIsNeutral(Boolean is) {this.m_iIsNeutral=is;}
 	public final Boolean getIsNeutral(){return this.m_iIsNeutral;}
 	public final boolean isNeutral(){return this.m_iIsNeutral != null && this.m_iIsNeutral.equals(Boolean.TRUE);}
-	public final void setWeather( Weather w){this.m_iWeather=w;}
-	public final Weather getWeather(){return m_iWeather;}
-	public final void setWeatherForecast( Weather.Forecast wf){this.m_iWeatherForecast=wf;}
-	public final Weather.Forecast getWeatherForecast(){return this.m_iWeatherForecast;}
+	public void setWeather(Weather w){this.m_iWeather=w;}
+	public Weather getWeather(){return m_iWeather;}
+	public void setWeatherForecast(Weather.Forecast wf){this.m_iWeatherForecast=wf;}
+	public Weather.Forecast getWeatherForecast(){return this.m_iWeatherForecast;}
 
 	/** Typ des Spiels */
 	private MatchType m_mtMatchTyp = MatchType.NONE;
@@ -306,7 +306,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @param m_iMatchID
 	 *            New value of property m_iMatchID.
 	 */
-	public final void setMatchID(int m_iMatchID) {
+	public void setMatchID(int m_iMatchID) {
 		this.m_iMatchID = m_iMatchID;
 	}
 
@@ -319,7 +319,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * 
 	 * @return Value of property m_iMatchID.
 	 */
-	public final int getMatchID() {
+	public int getMatchID() {
 		return m_iMatchID;
 	}
 
@@ -348,7 +348,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @param matchTyp
 	 *            New value of property m_iMatchTyp.
 	 */
-	public final void setMatchType(MatchType matchTyp) {
+	public void setMatchType(MatchType matchTyp) {
 		this.m_mtMatchTyp = matchTyp;
 	}
 

@@ -20,6 +20,8 @@ import core.util.Helper;
 import core.util.StringUtils;
 import module.lineup.Lineup;
 import module.teamAnalyzer.vo.MatchRating;
+import org.jetbrains.annotations.Nullable;
+
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -432,7 +434,7 @@ public class OnlineWorker {
 	 * @return a new MatchKurzInfo object with the current data from HT or null
 	 *         if match could not be downloaded.
 	 */
-	public static MatchKurzInfo updateMatch(int teamId, MatchKurzInfo match) {
+	public static @Nullable MatchKurzInfo updateMatch(int teamId, MatchKurzInfo match) {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(match.getMatchDateAsTimestamp());
 		cal.add(Calendar.MINUTE, 1);

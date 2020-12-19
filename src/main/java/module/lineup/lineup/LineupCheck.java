@@ -1,6 +1,7 @@
-package module.lineup.exchange;
+package module.lineup.lineup;
 
 import core.gui.HOMainFrame;
+import core.gui.model.MatchOrdersCBItem;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -8,6 +9,7 @@ import core.model.match.MatchKurzInfo;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import module.lineup.Lineup;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ import javax.swing.JOptionPane;
 
 public class LineupCheck {
 
-	public static boolean doUpload(MatchKurzInfo match, Lineup lineup) {
+	public static boolean doUpload(@Nullable MatchOrdersCBItem match, Lineup lineup) {
 		List<JLabel> problems = new ArrayList<JLabel>();
 		if (hasFreePosition(lineup)) {
 			problems.add(getErrorLabel("lineup.upload.check.lineupIncomplete"));

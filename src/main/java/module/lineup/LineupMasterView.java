@@ -6,7 +6,6 @@ import core.gui.Updatable;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
-import module.lineup.exchange.UploadDownloadPanel;
 import module.lineup.penalties.PenaltyTaker;
 import module.lineup.penalties.PenaltyTakersView;
 import module.lineup.substitution.SubstitutionOverview;
@@ -58,10 +57,7 @@ public class LineupMasterView extends JPanel {
 		this.penaltyTakersView = new PenaltyTakersView();
 		this.penaltyTakersView.setPlayers(hov.getModel().getCurrentPlayers());
 		this.penaltyTakersView.setLineup(hov.getModel().getLineupWithoutRatingRecalc());
-		this.tabbedPane.addTab(hov.getLanguageString("lineup.penaltytakers.tab.title"),
-				this.penaltyTakersView);
-		this.tabbedPane.addTab(hov.getLanguageString("lineup.upload.tab.title"),
-				new UploadDownloadPanel());
+		this.tabbedPane.addTab(hov.getLanguageString("lineup.penaltytakers.tab.title"), this.penaltyTakersView);
 
 		setLayout(new BorderLayout());
 		add(this.tabbedPane, BorderLayout.CENTER);
