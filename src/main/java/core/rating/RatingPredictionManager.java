@@ -212,11 +212,6 @@ public class RatingPredictionManager {
 		_LineupEvolution.put(45+EPSILON, _LineupEvolution.get(45d).duplicate());
 		_LineupEvolution.put(90+EPSILON, _LineupEvolution.get(90d).duplicate());
 
-		// we correct for pull back event
-		if (startingLineup.isPullBackOverride() && (startingLineup.getPullBackMinute()<120)) {
-			//FIXME: implement Pullback in prediction rating
-			HOLogger.instance().warning(this.getClass(), "PullBack not yet implemented in Prediction rating !!!");
-		}
 
 		return _LineupEvolution;
 
@@ -1059,10 +1054,8 @@ public class RatingPredictionManager {
             this.substimmung = (short)team.getSubStimmung();
             this.selbstvertrauen = (short)team.getSelbstvertrauenAsInt();
             this.pullBackMinute = startingLineup.getPullBackMinute();
-            this.pullBackOverride = startingLineup.isPullBackOverride();
             this.styleOfPlay = styleOfPlay;
-            return;
-        }
+		}
         catch(Exception e)
         {
         	e.printStackTrace();

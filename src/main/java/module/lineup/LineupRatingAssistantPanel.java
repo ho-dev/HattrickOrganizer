@@ -33,7 +33,7 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
 
     private void initComponents() {
         lineupRatingPanel = new LineupRatingPanel();
-        lineupSettingsPanel = new LineupSettingsPanel(lineupRatingPanel);
+        lineupSettingsPanel = new LineupSettingsPanel(m_clLineupPanel);
         lineupAssistantPanel = new LineupAssistantPanel();
 
 

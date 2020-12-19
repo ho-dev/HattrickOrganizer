@@ -92,10 +92,6 @@ public class Lineup{
 		@Expose
 		private int m_iStyleOfPlay;
 
-		@SerializedName("newLineup")
-		@Expose
-		private String newLineup = new String(""); //newLineup should always be empty.
-
 	};
 
 	@SerializedName("settings")
@@ -113,21 +109,6 @@ public class Lineup{
 	private Weather m_cWeather = Weather.NULL;
 	private Weather.Forecast m_cWeatherForecast = Weather.Forecast.NULL;
 
-	private boolean pullBackOverride;
-
-
-	/** indicate if pullback alreday occured
-	 * This parameter is only used by RatingPredictionManager
-	 * */
-	private boolean PullbackOccurred = false;
-
-	public boolean HasPullbackOccured() {
-		return PullbackOccurred;
-	}
-
-	public void setPullbackOccurred(boolean _PullbackOccurred) {
-		this.PullbackOccurred = _PullbackOccurred;
-	}
 
 	private Ratings oRatings;
 
@@ -1470,7 +1451,6 @@ public class Lineup{
 			clone.setPenaltyTakers(getPenaltyTakers());
 			clone.setLocation(getLocation());
 			clone.setPullBackMinute(getPullBackMinute());
-			clone.setPullBackOverride(isPullBackOverride());
 			clone.setWeather(getWeather());
 			clone.setWeatherForecast(getWeatherForecast());
 			clone.setArenaId(getArenaId());
@@ -1897,20 +1877,6 @@ public class Lineup{
 		this.pullBackMinute = pullBackMinute;
 	}
 
-	/**
-	 * @return if the pull back should be overridden.
-	 */
-	public boolean isPullBackOverride() {
-		return pullBackOverride;
-	}
-
-	/**
-	 * @param pullBackOverride
-	 *            the override flag to set.
-	 */
-	public void setPullBackOverride(boolean pullBackOverride) {
-		this.pullBackOverride = pullBackOverride;
-	}
 
 
 	/**

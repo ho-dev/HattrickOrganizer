@@ -13,6 +13,8 @@ import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
 import core.model.match.Weather;
 import core.util.Helper;
+import module.lineup.lineup.LineupPositionsPanel;
+import module.lineup.lineup.MatchAndLineupSelectionPanel;
 import module.lineup.ratings.LineupRatingPanel;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -24,7 +26,9 @@ import static module.lineup.LineupPanel.TITLE_FG;
 
 public final class LineupSettingsPanel extends ImagePanel implements Refreshable, ItemListener {
 
-	private final LineupRatingPanel ratingPanel;
+	private LineupRatingPanel ratingPanel;
+	private MatchAndLineupSelectionPanel matchAndLineupPanel;
+	private final LineupPanel lineupPanel;
 
 	private final JComboBox<CBItem> m_jcbTeamConfidence = new JComboBox<>(TeamConfidence.ITEMS);
 
@@ -73,8 +77,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 
 	private final JComboBox<CBItem> m_jcbPullBackMinute = new JComboBox<>(PULLBACK_MINUTE);
 
-	private final JCheckBox m_jchPullBackOverride = new JCheckBox(getTranslation("PullBack.Override"), false);
-
 	private final CBItem[] TACTICAL_ASSISTANTS = {
 			new CBItem("0", 0),
 			new CBItem("1", 1),
@@ -87,10 +89,31 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	private final JComboBox<CBItem>   m_jcbTacticalAssistants = new JComboBox<>(TACTICAL_ASSISTANTS);
 
 
-	public LineupSettingsPanel(LineupRatingPanel ratingPanel) {
-		this.ratingPanel = ratingPanel;
+	public LineupSettingsPanel(LineupPanel parent) {
+		lineupPanel = parent;
 		initComponents();
 		core.gui.RefreshManager.instance().registerRefreshable(this);
+	}
+
+	private void refreshRatingPanel(){
+		if (ratingPanel == null){
+			ratingPanel = lineupPanel.getLineupRatingPanel();
+		}
+		if (ratingPanel != null) {
+			ratingPanel.refresh();
+		}
+	}
+
+	private boolean isLineupSimulator(){
+		if (matchAndLineupPanel == null){
+			matchAndLineupPanel = lineupPanel.getLineupPositionsPanel().getMatchAndLineupSelectionPanel();
+		}
+		if (matchAndLineupPanel != null) {
+			return matchAndLineupPanel.isLineupSimulator();
+		}
+		else{
+			return false;
+		}
 	}
 
 	public final Weather getWeather() {
@@ -136,8 +159,17 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		setLocation(currentLineup.getLocation());
 		setWeather(currentLineup.getWeather(), currentLineup.getWeatherForecast());
 		setPullBackMinute(currentLineup.getPullBackMinute());
-		m_jcbPullBackMinute.setEnabled(!currentLineup.isPullBackOverride());
-		setPullBackOverride(currentLineup.isPullBackOverride());
+
+		// Lineup settings are editable only if in Lineup Simulator mode
+		boolean bLineupSimulation = isLineupSimulator();
+		m_jcbLocation.setEnabled(bLineupSimulation);
+		m_jcbWeather.setEnabled(bLineupSimulation);
+		m_jcbMainTeamSpirit.setEnabled(bLineupSimulation);
+		m_jcbSubTeamSpirit.setEnabled(bLineupSimulation);
+		m_jcbTeamConfidence.setEnabled(bLineupSimulation);
+		m_jcbTrainerType.setEnabled(bLineupSimulation);
+		m_jcbTacticalAssistants.setEnabled(bLineupSimulation);
+		m_jcbPullBackMinute.setEnabled(bLineupSimulation);
 	}
 
 	public void setConfidence(int iTeamConfidence) {
@@ -161,28 +193,14 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		Helper.setComboBoxFromID(m_jcbPullBackMinute, minute);
 	}
 
-	// TODO: find out what this is doing
-	private void setPullBackOverride(boolean pullBackOverride) {
-		m_jchPullBackOverride.setSelected(pullBackOverride);
-	}
 
 	@Override
 	public void itemStateChanged(ItemEvent event) {
 
 		HOModel model = HOVerwaltung.instance().getModel();
 
-		if (event.getStateChange() == ItemEvent.DESELECTED) {
-			if (event.getSource().equals(m_jchPullBackOverride)) {
-				model.getLineupWithoutRatingRecalc().setPullBackOverride(false);
-				m_jcbPullBackMinute.setEnabled(true);
-			}
-		}
-		else if (event.getStateChange() == ItemEvent.SELECTED) {
-			if (event.getSource().equals(m_jchPullBackOverride)) {
-				model.getLineupWithoutRatingRecalc().setPullBackOverride(true);
-				m_jcbPullBackMinute.setEnabled(false);
-			}
-			else if (event.getSource().equals(m_jcbPullBackMinute)) {
+	 if (event.getStateChange() == ItemEvent.SELECTED) {
+			if (event.getSource().equals(m_jcbPullBackMinute)) {
 				model.getLineupWithoutRatingRecalc().setPullBackMinute(((CBItem) Objects.requireNonNull(m_jcbPullBackMinute.getSelectedItem())).getId());
 			}
 			else if (event.getSource().equals(m_jcbMainTeamSpirit)) {
@@ -228,7 +246,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	public void refresh() {
 		removeItemListeners();
 		setLabels();
-		ratingPanel.refresh();
+		refreshRatingPanel();
 		addItemListeners();
 	}
 
@@ -344,15 +362,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		layout.setConstraints(m_jcbPullBackMinute, constraints);
 		add(m_jcbPullBackMinute);
 
-		yPos++;
-		initLabel(constraints, layout, new JLabel(""), yPos);
-		constraints.gridx = 2;
-		constraints.gridy = yPos;
-		m_jchPullBackOverride.setToolTipText(getTranslation("PullBack.Override.ToolTip"));
-		m_jchPullBackOverride.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
-		layout.setConstraints(m_jchPullBackOverride, constraints);
-		add(m_jchPullBackOverride);
-
 		// Add all item listeners
 		addItemListeners();
 	}
@@ -368,7 +377,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		m_jcbTeamConfidence.addItemListener(this);
 		m_jcbTrainerType.addItemListener(this);
 		m_jcbPullBackMinute.addItemListener(this);
-		m_jchPullBackOverride.addItemListener(this);
 		m_jcbTacticalAssistants.addItemListener(this);
 	}
 
@@ -383,7 +391,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		m_jcbTeamConfidence.removeItemListener(this);
 		m_jcbTrainerType.removeItemListener(this);
 		m_jcbPullBackMinute.removeItemListener(this);
-		m_jchPullBackOverride.removeItemListener(this);
 		m_jcbTacticalAssistants.removeItemListener(this);
 	}
 

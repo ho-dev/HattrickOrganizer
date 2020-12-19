@@ -368,39 +368,42 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private void downloadLineupFromHT() {
 
         MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
-
-        assert matchOrder != null;
-
         Lineup lineup;
 
         try {
-            CursorToolkit.startWaitCursor(this);
-            lineup = OnlineWorker.getLineupbyMatchId(matchOrder.getMatchID(), matchOrder.getMatchType());
+            if(matchOrder != null) {
+                CursorToolkit.startWaitCursor(this);
+                lineup = OnlineWorker.getLineupbyMatchId(matchOrder.getMatchID(), matchOrder.getMatchType());
+                if (lineup != null) {
+                    lineup.setLocation(matchOrder.getLocation());
+                    lineup.setWeather(matchOrder.getWeather());
+                    lineup.setWeatherForecast(matchOrder.getWeatherForecast());
+                    HOVerwaltung.instance().getModel().setLineup(lineup);
+                }
+            }
         }
         finally {
             CursorToolkit.stopWaitCursor(this);
         }
-
-        if (lineup != null) if (matchOrder != null) {
-            lineup.setLocation(matchOrder.getLocation());
-            lineup.setWeather(matchOrder.getWeather());
-            lineup.setWeatherForecast(matchOrder.getWeatherForecast());
-        }
-
-        HOVerwaltung.instance().getModel().setLineup(lineup);
+        
         jpParent.update();
     }
 
 
     private void adjustLineupSettings(){
         MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
-        assert matchOrder != null : "matchOrder is null";
 
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-        lineup.setLocation(matchOrder.getLocation());
-        lineup.setWeather(matchOrder.getWeather());
-        lineup.setWeatherForecast(matchOrder.getWeatherForecast());
+        if (matchOrder != null) {
+            lineup.setLocation(matchOrder.getLocation());
+            lineup.setWeather(matchOrder.getWeather());
+            lineup.setWeatherForecast(matchOrder.getWeatherForecast());
+        }
         jpParent.update();
+    }
+
+    public boolean isLineupSimulator(){
+        return m_jcbxLineupSimulation.isSelected();
     }
 
 
