@@ -14,16 +14,20 @@ import core.net.OnlineWorker;
 import core.util.GUIUtils;
 import core.util.HOLogger;
 import core.util.Helper;
+import core.util.XMLUtils;
 import module.lineup.Lineup;
 import module.teamAnalyzer.ui.MatchComboBoxRenderer;
 import module.teamAnalyzer.vo.Team;
 import org.jetbrains.annotations.Nullable;
+import org.w3c.dom.Document;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.List;
+
+import static core.gui.HOMainFrame.instance;
 import static module.lineup.LineupPanel.TITLE_FG;
 
 
@@ -74,19 +78,15 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         m_jcbUpcomingGames = new JComboBox<>();
         m_jcbUpcomingGames.setRenderer(new MatchOrdersRenderer());
         m_jcbUpcomingGames.setPreferredSize(new Dimension(325, 25));
-//        m_jcbUpcomingGames.setMinimumSize(new Dimension(325, 25));
-//        m_jcbUpcomingGames.setMaximumSize(new Dimension(325, 25));
         layout.setConstraints(m_jcbUpcomingGames, gbc);
 
         add(m_jcbUpcomingGames);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-//        gbc.fill = GridBagConstraints.NONE;
         addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.lineup_simulator"));
 
         gbc.gridx = 1;
-//        gbc.fill = GridBagConstraints.HORIZONTAL;
         m_jcbxLineupSimulation = new JCheckBox();
         m_jcbxLineupSimulation.setSelected(false);
         layout.setConstraints(m_jcbxLineupSimulation, gbc);
@@ -102,7 +102,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         m_jbUploadLineup = new JButton(Helper.getTranslation("lineup.upload.btn.upload"));
         m_jbUploadLineup.setToolTipText(Helper.getTranslation("lineup.upload.btn.upload.tooltip"));
-        m_jbUploadLineup.setEnabled(false);
+        m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
 
         m_jbDownloadLineup = new JButton(Helper.getTranslation("lineup.upload.btn.download"));
         m_jbDownloadLineup.setToolTipText(Helper.getTranslation("lineup.upload.btn.download.tooltip"));
@@ -125,11 +125,9 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-//        gbc.fill = GridBagConstraints.NONE;
         addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.load_lineup"));
 
         gbc.gridx = 1;
-//        gbc.fill = GridBagConstraints.HORIZONTAL;
         m_jcbLoadLineup = new JComboBox<>();
         m_jcbLoadLineup.setRenderer(new MatchComboBoxRenderer(MatchComboBoxRenderer.RenderType.TYPE_2));
         layout.setConstraints(m_jcbLoadLineup, gbc);
@@ -137,10 +135,8 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         gbc.gridx = 0;
         gbc.gridy = 4;
-//        gbc.fill = GridBagConstraints.NONE;
         addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.official_game_only"));
         gbc.gridx = 1;
-//        gbc.fill = GridBagConstraints.HORIZONTAL;
         m_jcbxOfficialOnly = new JCheckBox();
         m_jcbxOfficialOnly.setSelected(false);
         layout.setConstraints(m_jcbxOfficialOnly, gbc);
@@ -191,12 +187,15 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         m_jbDownloadLineup.addActionListener(e -> downloadLineupFromHT());
 
+        m_jbUploadLineup.addActionListener(e -> uploadLineupToHT());
+
         m_jcbxLineupSimulation.addActionListener( e -> {update_jcbUpcomingGames();});
 
         m_jcbUpcomingGames.addActionListener(e -> {
             m_clSelectedMatch = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
             adjustLineupSettings();
             m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
+            m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
         });
 
     }
@@ -210,6 +209,14 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         for( ActionListener al : m_jbDownloadLineup.getActionListeners() ) {
             m_jbDownloadLineup.removeActionListener(al);
+        }
+
+        for( ActionListener al : m_jbUploadLineup.getActionListeners() ) {
+            m_jbUploadLineup.removeActionListener(al);
+        }
+
+        for( ActionListener al : m_jcbxLineupSimulation.getActionListeners() ) {
+            m_jcbxLineupSimulation.removeActionListener(al);
         }
 
         for( ActionListener al : m_jcbUpcomingGames.getActionListeners() ) {
@@ -335,6 +342,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         }
 
         m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
+        m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
     }
 
     private void adoptLineup() {
@@ -385,10 +393,9 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         finally {
             CursorToolkit.stopWaitCursor(this);
         }
-        
+
         jpParent.update();
     }
-
 
     private void adjustLineupSettings(){
         MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
@@ -407,6 +414,104 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     }
 
 
+    private void uploadLineupToHT() {
+
+        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        if (!LineupCheck.doUpload(m_clSelectedMatch, lineup)) {
+            return;
+        }
+
+        String result;
+
+        try {
+            CursorToolkit.startWaitCursor(this);
+            assert m_clSelectedMatch != null : "Cann't push a lineup if selected game is null !";
+            result = OnlineWorker.uploadMatchOrder(m_clSelectedMatch.getMatchID(), m_clSelectedMatch.getMatchType(), lineup);
+        }
+        finally {
+            CursorToolkit.stopWaitCursor(this);
+        }
+
+        int messageType;
+        boolean success = false;
+        String message;
+        try {
+            Document doc = XMLUtils.createDocument(result);
+            String successStr = XMLUtils.getAttributeValueFromNode(doc, "MatchData", "OrdersSet");
+            if (successStr != null) {
+                success = Boolean.parseBoolean(successStr);
+                if (success) {
+                    messageType = JOptionPane.PLAIN_MESSAGE;
+                    message = Helper.getTranslation("lineup.upload.success");
+                }
+                else {
+                    messageType = JOptionPane.ERROR_MESSAGE;
+                    message = Helper.getTranslation("lineup.upload.fail")
+                            + "\n" + XMLUtils.getTagData(doc, "Reason");
+                }
+            }
+            else {
+                messageType = JOptionPane.ERROR_MESSAGE;
+                message = Helper.getTranslation("lineup.upload.result.parseerror");
+                HOLogger.instance().log(getClass(), message + "\n" + result);
+            }
+        } catch (Exception e) {
+            messageType = JOptionPane.ERROR_MESSAGE;
+            message = Helper.getTranslation("lineup.upload.result.parseerror");
+            HOLogger.instance().log(getClass(), message + "\n" + result);
+            HOLogger.instance().log(getClass(), e);
+        }
+
+        if (success) {
+            m_clSelectedMatch.setOrdersSetInHT(true);
+            try {
+                CursorToolkit.startWaitCursor(this);
+                MatchKurzInfo refreshed = OnlineWorker.updateMatch(OWN_TEAM_ID, m_clSelectedMatch);
+                if (refreshed != null) {
+                    m_clSelectedMatch.merge(refreshed);
+                }
+                update_jcbUpcomingGamesAfterSendingMatchOrders(m_clSelectedMatch);
+            }
+            finally {
+                CursorToolkit.stopWaitCursor(this);
+            }
+        }
+
+        JOptionPane.showMessageDialog(instance(), message, Helper.getTranslation("lineup.upload.title"), messageType);
+    }
+
+
+    /*
+            update items in UpcomingGames ComboBox except if data are too old or if Lineup simulator is checked
+         */
+    private void update_jcbUpcomingGamesAfterSendingMatchOrders(MatchOrdersCBItem selectedMatch) {
+
+        int selectedMatchID = selectedMatch.getMatchID();
+        // remove all elements
+        m_jcbUpcomingGames.removeAllItems();
+
+        int i = 0;
+        for (MatchOrdersCBItem element : upcomingMatchesInDB) {
+            if(element.getMatchID() == selectedMatchID) {
+                upcomingMatchesInDB.remove(element);
+                upcomingMatchesInDB.add(selectedMatch);
+                m_jcbUpcomingGames.addItem(selectedMatch);
+            }
+            else {
+                m_jcbUpcomingGames.addItem(element);
+            }
+            i++;
+        }
+
+        m_jcbUpcomingGames.setMaximumRowCount(i);
+        m_clSelectedMatch = selectedMatch;
+
+        m_jbDownloadLineup.setEnabled(true);
+        m_jbUploadLineup.setEnabled(true);
+
+        m_jcbUpcomingGames.setSelectedItem(selectedMatch);
+    }
+
     @Override
     public void reInit() {
         refresh();
@@ -414,11 +519,8 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
     @Override
     public void refresh() {
-        HOLogger.instance().log(getClass(), "MatchAndLineupSelection panel:  refresh() has been called");
         removeItemListeners();
-        HOLogger.instance().log(getClass(), "MatchAndLineupSelection panel:  items listenters have been removed");
         updateComponents();
-        HOLogger.instance().log(getClass(), "MatchAndLineupSelection panel:  updateComponents() has been called");
         addListeners();
     }
 
