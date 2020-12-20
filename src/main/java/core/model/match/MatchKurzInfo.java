@@ -276,7 +276,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * 
 	 * @return Value of property m_lDatum.
 	 */
-	public final java.sql.Timestamp getMatchDateAsTimestamp() {
+	public java.sql.Timestamp getMatchDateAsTimestamp() {
 		if (this.matchDateTimestamp == null) {
 			if (!StringUtils.isEmpty(this.m_sMatchDate)) {
 				try {

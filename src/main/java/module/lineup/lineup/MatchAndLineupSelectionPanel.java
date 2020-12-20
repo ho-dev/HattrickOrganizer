@@ -470,7 +470,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 if (refreshed != null) {
                     m_clSelectedMatch.merge(refreshed);
                 }
-                update_jcbUpcomingGames();
+                update_jcbUpcomingGamesAfterSendingMatchOrders(m_clSelectedMatch);
             }
             finally {
                 CursorToolkit.stopWaitCursor(this);
@@ -480,6 +480,37 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         JOptionPane.showMessageDialog(instance(), message, Helper.getTranslation("lineup.upload.title"), messageType);
     }
 
+
+    /*
+            update items in UpcomingGames ComboBox except if data are too old or if Lineup simulator is checked
+         */
+    private void update_jcbUpcomingGamesAfterSendingMatchOrders(MatchOrdersCBItem selectedMatch) {
+
+        int selectedMatchID = selectedMatch.getMatchID();
+        // remove all elements
+        m_jcbUpcomingGames.removeAllItems();
+
+        int i = 0;
+        for (MatchOrdersCBItem element : upcomingMatchesInDB) {
+            if(element.getMatchID() == selectedMatchID) {
+                upcomingMatchesInDB.remove(element);
+                upcomingMatchesInDB.add(selectedMatch);
+                m_jcbUpcomingGames.addItem(selectedMatch);
+            }
+            else {
+                m_jcbUpcomingGames.addItem(element);
+            }
+            i++;
+        }
+
+        m_jcbUpcomingGames.setMaximumRowCount(i);
+        m_clSelectedMatch = selectedMatch;
+
+        m_jbDownloadLineup.setEnabled(true);
+        m_jbUploadLineup.setEnabled(true);
+
+        m_jcbUpcomingGames.setSelectedItem(selectedMatch);
+    }
 
     @Override
     public void reInit() {

@@ -92,6 +92,11 @@ public class Lineup{
 		@Expose
 		private int m_iStyleOfPlay;
 
+		//NOTE: newLineup is required by HT - do not delete even if it seems unused !
+		@SerializedName("newLineup")
+		@Expose
+		private String newLineup = new String("");
+
 	};
 
 	@SerializedName("settings")

@@ -81,7 +81,8 @@ public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
         this.m_clMatchType = m_clMatchType;
     }
 
-    public Timestamp getM_tsMatchTime() {
+    @Override
+    public Timestamp getMatchDateAsTimestamp() {
         return m_tsMatchTime;
     }
 
