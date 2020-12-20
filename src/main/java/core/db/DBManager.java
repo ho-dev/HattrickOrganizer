@@ -33,6 +33,7 @@ import module.series.Spielplan;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.transfer.PlayerTransfer;
 import module.transfer.scout.ScoutEintrag;
+import module.youth.YouthTraining;
 import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 import org.hsqldb.error.ErrorCode;
@@ -1940,5 +1941,9 @@ public class DBManager {
 
 	public void deleteMatchLineups(int sourcesystem, Timestamp before){
 		((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).deleteMatchLineupsBefore(sourcesystem, before);
+	}
+
+	public List<YouthTraining> loadYouthTrainings() {
+		return ((YouthTrainingTable)getTable(YouthTrainingTable.TABLENAME)).loadYouthTrainings();
 	}
 }

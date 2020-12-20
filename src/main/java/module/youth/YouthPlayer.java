@@ -52,7 +52,7 @@ public class YouthPlayer {
     private List<ScoutComment> scoutComments;
     private List<YouthTrainerComment> trainerComments;
 
-    private List<MatchLineup> trainingMatches;
+    private List<YouthTraining> trainings;
 
     public YouthPlayer() {
 
@@ -361,19 +361,19 @@ public class YouthPlayer {
         this.skillInfoMap.put(skillinfo.skillID.getValue(), skillinfo);
     }
 
-    public List<MatchLineup> getTrainingMatches() {
-        if (trainingMatches == null) {
+    public List<YouthTraining> getTrainings() {
+        if (trainings == null) {
             // init from models match list
-            trainingMatches = new ArrayList<>();
+            trainings = new ArrayList<>();
             var model = HOVerwaltung.instance().getModel();
-            for (var match : model.getYouthMatchLineups()) {
-                var team = match.getTeam(model.getBasics().getYouthTeamId());
+            for (var training : model.getYouthTrainings()) {
+                var team = training.getTeam(model.getBasics().getYouthTeamId());
                 if (team.getPlayerByID(this.id) != null) {
-                    trainingMatches.add(match);
+                    trainings.add(training);
                 }
             }
         }
-        return trainingMatches;
+        return trainings;
     }
 
     public static class SkillInfo {

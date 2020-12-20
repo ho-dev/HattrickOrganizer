@@ -65,7 +65,7 @@ public class FuturePlayerTrainingTable extends AbstractTable {
         if (toSeason != null && toWeek != null) {
             to = new HattrickDate(toSeason, toWeek);
         }
-        var prio = FuturePlayerTraining.Priority.valueOf(rs.getInt("prio"));
+        var prio = FuturePlayerTraining.Priority.valueOf(DBManager.getInteger(rs,"prio"));
         return new FuturePlayerTraining(playerid, prio, from, to);
     }
 

@@ -231,7 +231,7 @@ public class YouthPlayerTable  extends AbstractTable {
             ret.setScoutId(rs.getInt("ScoutId"));
             ret.setScoutingRegionID(rs.getInt("ScoutingRegionID"));
             ret.setScoutName(DBManager.deleteEscapeSequences(rs.getString("ScoutName")));
-            ret.setSpecialty(Specialty.valueOf(rs.getInt("Specialty")));
+            ret.setSpecialty(Specialty.valueOf(DBManager.getInteger(rs,"Specialty")));
             ret.setStatement(DBManager.deleteEscapeSequences(rs.getString("Statement")));
             ret.setYouthMatchDate(rs.getTimestamp("YouthMatchDate"));
             ret.setYouthMatchID(rs.getInt("YouthMatchID"));

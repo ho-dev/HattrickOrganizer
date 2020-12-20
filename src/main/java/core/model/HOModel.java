@@ -19,6 +19,7 @@ import module.series.Spielplan;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
+import module.youth.YouthTraining;
 import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 
@@ -44,12 +45,13 @@ public class HOModel {
     private Team m_clTeam;
     private static List<Player> m_vOldPlayer;
     private List<Player> m_vPlayer;
-    private List<YouthPlayer> youthPlayers;
     private Verein m_clVerein;
     private XtraData m_clXtraDaten;
     private int m_iID = -1;
     private List<StaffMember> m_clStaff;
+    private List<YouthPlayer> youthPlayers;
     private List<MatchLineup> youthMatchLineups;
+    private List<YouthTraining> youthTrainings;
 
     //~ Constructors -------------------------------------------------------------------------------
 	public HOModel() {
@@ -599,5 +601,33 @@ public class HOModel {
             youthMatchLineups = DBManager.instance().loadMatchLineups(SourceSystem.YOUTH.getValue());
         }
         return youthMatchLineups;
+    }
+
+    public List<YouthTraining> getYouthTrainings() {
+        if ( this.youthTrainings == null){
+            initYouthTrainings();
+        }
+        return youthTrainings;
+    }
+
+    private void initYouthTrainings() {
+        this.youthTrainings = DBManager.instance().loadYouthTrainings();
+        for ( var lineup : this.getYouthMatchLineups()){
+            // create a youth trainings object for each lineup, if it does not exist already
+            var youthTraining = youthTrainings.stream()
+                    .filter(t->t.getMatchId()==lineup.getMatchID())
+                    .findFirst()
+                    .orElse(null);
+            if ( youthTraining==null ){
+                this.youthTrainings.add(new YouthTraining(lineup));
+            }
+            else {
+                this.youthTrainings.add(youthTraining);
+            }
+        }
+    }
+
+    public void setYouthTrainings(List<YouthTraining> youthTrainings) {
+        this.youthTrainings = youthTrainings;
     }
 }
