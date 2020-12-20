@@ -183,9 +183,9 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHSUBSTITUTION ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
 		}
 		if (!tableExists(YouthTrainingTable.TABLENAME)) {
+			dbManager.getTable(YouthTrainingTable.TABLENAME).createTable();
 			dbManager.getTable(YouthPlayerTable.TABLENAME).createTable();
 			dbManager.getTable(YouthScoutCommentTable.TABLENAME).createTable();
-			dbManager.getTable(YouthTrainingTable.TABLENAME).createTable();
 		}
 
 		forceModuleStatus(IModule.YOUTH);

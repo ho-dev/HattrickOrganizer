@@ -230,6 +230,7 @@ public class DBManager {
 		tables.put(EconomyTable.TABLENAME, new EconomyTable(adapter));
 		tables.put(YouthPlayerTable.TABLENAME, new YouthPlayerTable(adapter));
 		tables.put(YouthScoutCommentTable.TABLENAME, new YouthScoutCommentTable(adapter));
+		tables.put(YouthTrainingTable.TABLENAME, new YouthTrainingTable(adapter));
 		tables.put(ScoutTable.TABLENAME, new ScoutTable(adapter));
 		tables.put(UserColumnsTable.TABLENAME, new UserColumnsTable(adapter));
 		tables.put(SpielerNotizenTable.TABLENAME, new SpielerNotizenTable(adapter));
