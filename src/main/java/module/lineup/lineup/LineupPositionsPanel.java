@@ -99,6 +99,10 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		RefreshManager.instance().registerRefreshable(this);
 	}
 
+	public void setEnabledTeamAttitudeCB(boolean enabled) {
+		m_jcbTeamAttitude.setEnabled(enabled);
+	}
+
 	public javax.swing.JLayeredPane getCenterPanel() {
 		return centerPanel;
 	}
@@ -275,6 +279,10 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// Initialize attitude CB
 		m_iAttitude = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getAttitude();
 		Helper.setComboBoxFromID(m_jcbTeamAttitude, m_iAttitude);
+
+		//After initialization this is set via listener on MatchAndLineupSelectionPanel.m_jcbUpcomingGames
+		setEnabledTeamAttitudeCB((m_jpMatchAndLineupSelectionPanel.getSelectedMatch() != null) &&
+				(m_jpMatchAndLineupSelectionPanel.getSelectedMatch().getMatchType().isCompetitive()) );
 
 		// TACTIC ================================================================
 		m_jcbTactic = new JComboBox<>(new CBItem[]{

@@ -162,7 +162,7 @@ public class DBCleanupTool {
 		for (MatchKurzInfo curKurzInfo : kurzInfos) {
 			Timestamp curMatchDate = curKurzInfo.getMatchDateAsTimestamp();
 			int curMatchId = curKurzInfo.getMatchID();
-			MatchType curMatchType = curKurzInfo.getMatchTyp();
+			MatchType curMatchType = curKurzInfo.getMatchType();
 			boolean isMyMatch = (curKurzInfo.getHeimID() == myTeamId || curKurzInfo.getGastID() == myTeamId);
 			boolean removeMatch = false;
 			if (isMyMatch) {

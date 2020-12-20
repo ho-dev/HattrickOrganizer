@@ -131,7 +131,7 @@ public class SpecialEventsDM {
 			match.setVisitingTeamId(kurzInfos.getGastID());
 			match.setVisitingTeamTactic(details.getGuestTacticType());
 			match.setWeather(Weather.getById(details.getWetterId()));
-			match.setMatchType(kurzInfos.getMatchTyp());
+			match.setMatchType(kurzInfos.getMatchType());
 
 			boolean isFirst = true;
 			MatchRow matchRow = new MatchRow();

@@ -754,7 +754,7 @@ public class Lineup{
 			}
 
 			MatchKurzInfo match = sMatches.get(0);
-			if (match.getMatchTyp().isOfficial()) {
+			if (match.getMatchType().isOfficial()) {
 				if (match.isNeutral()) {
 					m_sLocation = IMatchDetails.LOCATION_NEUTRAL;    // could be overwritten if it is also a derby
 				}

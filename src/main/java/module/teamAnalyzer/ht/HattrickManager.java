@@ -84,10 +84,10 @@ public class HattrickManager {
 		    		continue;
 		    	}
 	   			if (filter.isAcceptedMatch(new Match(match)) 
-	   					&& match.getMatchTyp().isTournament()
+	   					&& match.getMatchType().isTournament()
 	   					&& !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), match.getMatchID())) {
 	   				
-	   				OnlineWorker.downloadMatchData(match.getMatchID(), match.getMatchTyp(), false);
+	   				OnlineWorker.downloadMatchData(match.getMatchID(), match.getMatchType(), false);
 	   			}
 	   		}
 	    }

@@ -60,7 +60,7 @@ public class MatchExporter {
 		for (int i = 0;(matches != null) && (i < matches.length); i++) {
 			//details holen
 			Matchdetails details = DBManager.instance().loadMatchDetails(SourceSystem.HATTRICK.getId(), matches[i].getMatchID());
-			boolean isFriendly = matches[i].getMatchTyp().isFriendly();
+			boolean isFriendly = matches[i].getMatchType().isFriendly();
 			if (isValidMatch(matches[i], details, startingDateForFriendlies, strict, skipPullBack) && isFriendly
 					|| isValidMatch(matches[i], details, startingDate, strict, skipPullBack) && !isFriendly ) {				
 

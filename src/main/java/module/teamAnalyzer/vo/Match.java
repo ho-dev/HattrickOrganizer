@@ -68,7 +68,7 @@ public class Match {
         awayTeam = matchInfo.getGastName();
         homeGoals = matchInfo.getHeimTore();
         awayGoals = matchInfo.getGastTore();
-        matchType = matchInfo.getMatchTyp();
+        matchType = matchInfo.getMatchType();
         matchDate = matchInfo.getMatchDateAsTimestamp();
 
         Date matchDate = HTCalendar.resetDay(matchInfo.getMatchDateAsTimestamp());        

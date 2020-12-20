@@ -202,7 +202,7 @@ public class ConvertXml2Hrf {
 				// the trick as the type.
 				nextLineupDataMap = XMLMatchOrderParser
 						.parseMatchOrderFromString(mc.getMatchOrder(
-								match.getMatchID(), match.getMatchTyp(), teamId));
+								match.getMatchID(), match.getMatchType(), teamId));
 				break;
 			}
 		}

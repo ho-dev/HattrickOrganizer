@@ -354,7 +354,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(m_clPlayer.getLastMatchId());
             if (info != null) {
                 m_jpLastMatchRating.setRating((float)m_clPlayer.getLastMatchRating());
-                m_jpLastMatchRating.setMatchInfo(m_clPlayer.getLastMatchDate(), info.getMatchTyp());
+                m_jpLastMatchRating.setMatchInfo(m_clPlayer.getLastMatchDate(), info.getMatchType());
             }
         }
         m_jpNationality.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalitaet()));
@@ -681,7 +681,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
                     if(e.isShiftDown()){
                         int matchId = m_clPlayer.getLastMatchId();
                         MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
-                        HattrickLink.showMatch(matchId+"",info.getMatchTyp().isOfficial());
+                        HattrickLink.showMatch(matchId+"",info.getMatchType().isOfficial());
                     }else
                     HOMainFrame.instance().showMatch(m_clPlayer.getLastMatchId());
                 }

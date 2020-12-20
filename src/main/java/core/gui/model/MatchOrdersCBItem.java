@@ -72,6 +72,7 @@ public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
         this.m_sOpponentName = m_sTeamName;
     }
 
+    @Override
     public MatchType getMatchType() {
         return m_clMatchType;
     }

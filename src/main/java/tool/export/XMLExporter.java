@@ -220,7 +220,7 @@ public class XMLExporter  {
 
 				ele = doc.createElement("MatchType");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + matchData.getInfo().getMatchTyp()));
+				ele.appendChild(doc.createTextNode("" + matchData.getInfo().getMatchType()));
 				ele = doc.createElement("Heimspiel");
 				tmpEle.appendChild(ele);
 
