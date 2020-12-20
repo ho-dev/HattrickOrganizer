@@ -179,8 +179,23 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         }
 
         update_jcbUpcomingGames();
+        m_clSelectedMatch = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
+        if (jpParent.is_jcbTeamAttitudeInitialized()) {
+            jpParent.setEnabledTeamAttitudeCB((m_clSelectedMatch != null) && m_clSelectedMatch.getMatchType().isCompetitive());
 
+            MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
 
+            Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+            if (matchOrder != null) {
+                lineup.setLocation(matchOrder.getLocation());
+                lineup.setWeather(matchOrder.getWeather());
+                lineup.setWeatherForecast(matchOrder.getWeatherForecast());
+            }
+            jpParent.getLineupPanel().getLineupSettingsPanel().refresh();
+            jpParent.getLineupPanel().getLineupRatingPanel().refresh();
+        }
+        m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
+        m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
 
     }
 
@@ -523,6 +538,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
     @Override
     public void refresh() {
+        HOLogger.instance().log(getClass(), " refresh() has been called");
         removeItemListeners();
         updateComponents();
         addListeners();

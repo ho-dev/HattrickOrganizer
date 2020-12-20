@@ -710,4 +710,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 			return result;
 	}
 
+	public boolean is_jcbTeamAttitudeInitialized() {
+		return m_jcbTeamAttitude != null;
+	}
 }

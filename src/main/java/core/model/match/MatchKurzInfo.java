@@ -65,7 +65,6 @@ public class MatchKurzInfo implements Comparable<Object> {
 	/** HO user team ID */
 	public static int user_team_id = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
-	// TODO comments
 	private int m_iArenaId = -1;
 	private int m_iRegionId = -1;
 	private Boolean m_iIsDerby = null;
