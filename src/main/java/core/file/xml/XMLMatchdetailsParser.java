@@ -7,6 +7,8 @@ import core.util.HOLogger;
 
 import java.util.ArrayList;
 import java.util.Vector;
+
+import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -23,7 +25,7 @@ public class XMLMatchdetailsParser {
     private XMLMatchdetailsParser() {
     }
 
-    public static Matchdetails parseMatchdetailsFromString(String input, MatchLineup matchLineup) {
+    public static Matchdetails parseMatchdetailsFromString(String input, @Nullable MatchLineup matchLineup) {
         return createMatchdetails(XMLManager.parseString(input), matchLineup);
     }
 

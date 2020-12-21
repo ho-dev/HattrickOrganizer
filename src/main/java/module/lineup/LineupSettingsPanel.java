@@ -12,6 +12,7 @@ import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
 import core.model.match.Weather;
+import core.util.HOLogger;
 import core.util.Helper;
 import module.lineup.lineup.LineupPositionsPanel;
 import module.lineup.lineup.MatchAndLineupSelectionPanel;
@@ -244,6 +245,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 
 	@Override
 	public void refresh() {
+		HOLogger.instance().log(getClass(), " refresh() has been called");
 		removeItemListeners();
 		setLabels();
 		refreshRatingPanel();
@@ -251,6 +253,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	}
 
 	public void refresh(Boolean bIncludeRatingPanel) {
+		HOLogger.instance().log(getClass(), " refresh() has been called");
 		if(bIncludeRatingPanel) {
 			refresh();
 		}

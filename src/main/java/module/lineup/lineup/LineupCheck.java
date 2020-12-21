@@ -64,7 +64,7 @@ public class LineupCheck {
 	}
 
 	private static boolean penaltyTakersOK(MatchKurzInfo match, Lineup lineup) {
-		if (!match.getMatchTyp().isCupRules()) {
+		if (!match.getMatchType().isCupRules()) {
 			return true;
 		}
 		return lineup.getPenaltyTakers().size() >= 11;

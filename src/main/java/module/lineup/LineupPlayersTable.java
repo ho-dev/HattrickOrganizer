@@ -3,8 +3,6 @@ package module.lineup;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
-import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.renderer.BooleanTableCellRenderer;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.TableSorter;
@@ -23,7 +21,6 @@ import module.playerOverview.LineupPlayersTableNameColumn;
 import module.playerOverview.PlayerTable;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTable;
@@ -177,7 +174,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 							if(e.isShiftDown()){
 								int matchId = selectedPlayer.getLastMatchId();
 								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
-								HattrickLink.showMatch(matchId + "", info.getMatchTyp().isOfficial());
+								HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
 							}else if(e.getClickCount()==2) {
 								HOMainFrame.instance().showMatch(selectedPlayer.getLastMatchId());
 							}

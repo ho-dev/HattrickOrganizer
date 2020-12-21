@@ -1,7 +1,6 @@
 package core.model.match;
 
 import core.db.DBManager;
-import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import module.lineup.Lineup;
@@ -369,7 +368,7 @@ public class MatchLineupTeam {
 		if (matchType == MatchType.NONE) {
 			MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId);
 			if ( info != null){
-				matchType = info.getMatchTyp();
+				matchType = info.getMatchType();
 			}
 		}
 		return matchType;

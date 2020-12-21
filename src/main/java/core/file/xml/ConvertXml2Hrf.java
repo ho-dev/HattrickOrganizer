@@ -93,7 +93,7 @@ public class ConvertXml2Hrf {
 					CursorToolkit.stopWaitCursor(HOMainFrame.instance().getRootPane());
 					TeamSelectionDialog selection = new TeamSelectionDialog(HOMainFrame.instance(), teamInfoList);
 					selection.setVisible(true);
-					if (selection.getCancel() == true) {
+					if (selection.getCancel()) {
 						return null;
 					}
 					teamId = selection.getSelectedTeam().getTeamId();
@@ -127,7 +127,6 @@ public class ConvertXml2Hrf {
 				teamdetailsDataMap.get("LeagueID").toString());
 
 		// Currency fix
-		
 		if (ModuleConfig.instance().containsKey("CurrencyRate")) {
 			worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("CurrencyRate"));
 		} else {
@@ -202,7 +201,7 @@ public class ConvertXml2Hrf {
 				// the trick as the type.
 				nextLineupDataMap = XMLMatchOrderParser
 						.parseMatchOrderFromString(mc.getMatchOrder(
-								match.getMatchID(), match.getMatchTyp(), teamId));
+								match.getMatchID(), match.getMatchType(), teamId));
 				break;
 			}
 		}
@@ -212,15 +211,14 @@ public class ConvertXml2Hrf {
 		MatchLineupTeam matchLineupTeam = null;
 		int lastAttitude = 0;
 		int lastTactic = 0;
-		// Team ermitteln, für Ratings der Player wichtig
+		// Identify team, important for player ratings
 		if (matchLineup != null) {
 			Matchdetails md = XMLMatchdetailsParser
 					.parseMatchdetailsFromString(
 							mc.downloadMatchdetails(matchLineup.getMatchID(),
 									matchLineup.getMatchTyp()), null);
 
-			if (matchLineup.getHomeTeamId() == Integer.parseInt(teamdetailsDataMap
-					.get("TeamID").toString())) {
+			if (matchLineup.getHomeTeamId() == Integer.parseInt(teamdetailsDataMap.get("TeamID"))) {
 				matchLineupTeam = matchLineup.getHomeTeam();
 				if (md != null) {
 					lastAttitude = md.getHomeEinstellung();

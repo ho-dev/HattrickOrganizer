@@ -65,7 +65,6 @@ public class MatchKurzInfo implements Comparable<Object> {
 	/** HO user team ID */
 	public static int user_team_id = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
-	// TODO comments
 	private int m_iArenaId = -1;
 	private int m_iRegionId = -1;
 	private Boolean m_iIsDerby = null;
@@ -357,7 +356,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * 
 	 * @return Value of property m_iMatchTyp.
 	 */
-	public final MatchType getMatchTyp() {
+	public MatchType getMatchType() {
 		return m_mtMatchTyp;
 	}
 
@@ -420,7 +419,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 		setMatchDate(match.getMatchDate());
 		setMatchStatus(match.getMatchStatus());
 		setOrdersGiven(match.isOrdersGiven());
-		setMatchType(match.getMatchTyp());
+		setMatchType(match.getMatchType());
 	}
 	
 	public final boolean isHomeMatch()
@@ -452,7 +451,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 
 	public Matchdetails getMatchdetails() {
 		if (matchdetails==null){
-			matchdetails = Matchdetails.getMatchdetails(getMatchID(), getMatchTyp());
+			matchdetails = Matchdetails.getMatchdetails(getMatchID(), getMatchType());
 		}
 		return matchdetails;
 	}

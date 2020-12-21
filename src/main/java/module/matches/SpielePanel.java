@@ -131,7 +131,7 @@ public final class SpielePanel extends LazyImagePanel {
 			public void actionPerformed(ActionEvent e) {
 				int matchid = matchesModel.getMatch().getMatchID();
 				OnlineWorker.downloadMatchData(matchesModel.getMatch().getMatchID(), matchesModel
-						.getMatch().getMatchTyp(), true);
+						.getMatch().getMatchType(), true);
 				RefreshManager.instance().doReInit();
 				showMatch(matchid);
 			}

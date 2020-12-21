@@ -297,7 +297,7 @@ final public class UserColumnFactory {
         matchesArray[0] = new MatchKurzInfoColumn(450, "Datum", 70) {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
+                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
                 return new ColorLabelEntry(match.getMatchDateAsTimestamp().getTime(),
                         java.text.DateFormat.getDateTimeInstance().format(match
                                 .getMatchDateAsTimestamp()),
@@ -316,9 +316,9 @@ final public class UserColumnFactory {
         matchesArray[1] = new MatchKurzInfoColumn(460, "Spielart", 20) {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
-                return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[match.getMatchTyp().getIconArrayIndex()]),
-                        match.getMatchTyp().getId(), ColorLabelEntry.FG_STANDARD,
+                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
+                return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[match.getMatchType().getIconArrayIndex()]),
+                        match.getMatchType().getId(), ColorLabelEntry.FG_STANDARD,
                         background, SwingConstants.CENTER);
             }
 
@@ -335,7 +335,7 @@ final public class UserColumnFactory {
         matchesArray[2] = new MatchKurzInfoColumn(470, "Heim", 60) {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
+                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
                 ColorLabelEntry entry = new ColorLabelEntry(match.getHeimName(), ColorLabelEntry.FG_STANDARD,
                         background, SwingConstants.LEFT);
                 entry.setFGColor((match.getHeimID() == HOVerwaltung.instance().getModel().getBasics()
@@ -373,7 +373,7 @@ final public class UserColumnFactory {
         matchesArray[3] = new MatchKurzInfoColumn(480, "Gast", 60) {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
+                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
                 ColorLabelEntry entry = new ColorLabelEntry(match.getGastName(), ColorLabelEntry.FG_STANDARD,
                         background, SwingConstants.LEFT);
                 entry.setFGColor((match.getGastID() == HOVerwaltung.instance().getModel().getBasics()
@@ -412,7 +412,7 @@ final public class UserColumnFactory {
         matchesArray[4] = new MatchKurzInfoColumn(490, "ls.match.result", 45) {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
+                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
                 return new ColorLabelEntry(match.getResultLong(),
                         ColorLabelEntry.FG_STANDARD, background,
                         SwingConstants.LEFT);
@@ -431,7 +431,7 @@ final public class UserColumnFactory {
         matchesArray[5] = new MatchKurzInfoColumn(494, "ls.match.hatstats.me", 80) {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
+                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
                 return new ColorLabelEntry(String.valueOf(match.isHomeMatch() ? matchDetails.getHomeHatStats() : matchDetails.getAwayHatStats()),
                         ColorLabelEntry.FG_STANDARD, background,
                         SwingConstants.CENTER);
@@ -450,7 +450,7 @@ final public class UserColumnFactory {
         matchesArray[6] = new MatchKurzInfoColumn(498, "ls.match.hatstats.opp", 80) {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
+                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
                 return new ColorLabelEntry(String.valueOf(match.isHomeMatch() ? matchDetails.getAwayHatStats() : matchDetails.getHomeHatStats()),
                         ColorLabelEntry.FG_STANDARD, background,
                         SwingConstants.CENTER);
@@ -471,7 +471,7 @@ final public class UserColumnFactory {
 
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchTyp());
+                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
                 return new ColorLabelEntry(match.getMatchID(), match.getMatchID() + "",
                         ColorLabelEntry.FG_STANDARD, background,
                         SwingConstants.RIGHT);
@@ -720,7 +720,7 @@ final public class UserColumnFactory {
                     if (info == null) {
                         return new RatingTableEntry((float) player.getLastMatchRating(), true);
                     } else {
-                        return new RatingTableEntry((float) player.getLastMatchRating(), player.getLastMatchDate(), info.getMatchTyp(), true);
+                        return new RatingTableEntry((float) player.getLastMatchRating(), player.getLastMatchDate(), info.getMatchType(), true);
                     }
                 }
                 return new RatingTableEntry();

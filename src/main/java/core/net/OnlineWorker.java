@@ -224,7 +224,7 @@ public class OnlineWorker {
 					// if match is available and match is finished
 					if ((DBManager.instance().isMatchVorhanden(match.getMatchID()))
 							&& (match.getMatchStatus() == MatchKurzInfo.FINISHED)) {
-						downloadMatchData(match.getMatchID(), match.getMatchTyp(), true);
+						downloadMatchData(match.getMatchID(), match.getMatchType(), true);
 					}
 				}
 			}
@@ -287,7 +287,7 @@ public class OnlineWorker {
 				if ( newInfo || !bWeatherKnown) {
 
 					showWaitInformation(10);
-					details = downloadMatchDetails(matchid, info.getMatchTyp(), null);
+					details = downloadMatchDetails(matchid, info.getMatchType(), null);
 					if ( details != null) {
 						info.setHeimID(details.getHeimId());
 						info.setGastID(details.getGastId());
@@ -350,7 +350,7 @@ public class OnlineWorker {
 				MatchLineup lineup;
 				boolean success;
 				if ( info.getMatchStatus() == MatchKurzInfo.FINISHED) {
-					lineup = downloadMatchlineup(matchid, info.getMatchTyp(), info.getHeimID(), info.getGastID());
+					lineup = downloadMatchlineup(matchid, info.getMatchType(), info.getHeimID(), info.getGastID());
 
 					if (lineup == null) {
 						if ( !isSilentDownload()) {
@@ -366,7 +366,7 @@ public class OnlineWorker {
 					
 					// Get details with highlights.
 					showWaitInformation(10);
-					details = downloadMatchDetails(matchid, info.getMatchTyp(), lineup);
+					details = downloadMatchDetails(matchid, info.getMatchType(), lineup);
 
 					if (details == null) {
 						HOLogger.instance().error(OnlineWorker.class,
@@ -561,7 +561,7 @@ public class OnlineWorker {
 
 					if (refresh) {
 						// No lineup or arenaId in DB
-						boolean result = downloadMatchData(curMatchId, match.getMatchTyp(), refresh);
+						boolean result = downloadMatchData(curMatchId, match.getMatchType(), refresh);
 						if (!result) {
 							break;
 						}
@@ -577,7 +577,7 @@ public class OnlineWorker {
 
 		ArrayList<MatchKurzInfo> ret = new ArrayList<>();
 		for (MatchKurzInfo m: matches) {
-			switch (m.getMatchTyp()) {
+			switch (m.getMatchType()) {
 				case INTSPIEL:
 				case NATIONALCOMPNORMAL:
 				case NATIONALCOMPCUPRULES:
@@ -625,7 +625,7 @@ public class OnlineWorker {
 					}
 					break;
 				default:
-					HOLogger.instance().warning(OnlineWorker.class, "Unknown Matchtyp:" + m.getMatchTyp() + ". Is not downloaded!");
+					HOLogger.instance().warning(OnlineWorker.class, "Unknown Matchtyp:" + m.getMatchType() + ". Is not downloaded!");
 					break;
 			}
 		}
@@ -846,7 +846,7 @@ public class OnlineWorker {
 				// Check if the lineup is available
 				if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					HOLogger.instance().debug(OnlineWorker.class, "Get Lineup : " + curMatchId);
-					bOK = downloadMatchData(curMatchId, info.getMatchTyp(), false);
+					bOK = downloadMatchData(curMatchId, info.getMatchType(), false);
 					if (!bOK) {
 						break;
 					}
@@ -1202,7 +1202,7 @@ public class OnlineWorker {
 				var youthMatches = XMLMatchArchivParser.parseMatchesFromString(xml);
 				for ( var match: youthMatches){
 
-					var lineup = downloadMatchlineup(match.getMatchID(), match.getMatchTyp(), match.getHeimID(), match.getGastID());
+					var lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHeimID(), match.getGastID());
 					DBManager.instance().storeMatchLineup(lineup, youthteamid);
 
 					model.addYouthMatchLineup(lineup);

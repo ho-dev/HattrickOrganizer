@@ -100,9 +100,9 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		Matchdetails details = this.matchesModel.getDetails();
 
 
-		matchtypLabel.setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[info.getMatchTyp()
+		matchtypLabel.setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[info.getMatchType()
 				.getIconArrayIndex()]));
-		matchtypLabel.setText(info.getMatchTyp().getName());
+		matchtypLabel.setText(info.getMatchType().getName());
 
 		// Teams
 		heimTeamNameLabel.setText(info.getHeimName());
@@ -133,8 +133,8 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 				gastTeamToreLabel.setText(String.valueOf(info.getGastTore()));
 			}
 
-			String name4matchtyp = info.getMatchTyp().getName();
-			if ((details.getZuschauer() <= 0) && (info.getMatchTyp().getSourceString() == "hattrick")) {
+			String name4matchtyp = info.getMatchType().getName();
+			if ((details.getZuschauer() <= 0) && (info.getMatchType().getSourceString() == "hattrick")) {
 				name4matchtyp += (" ( " + HOVerwaltung.instance().getLanguageString("Reload_Match") + " )");
 			}
 			matchtypLabel.setText(name4matchtyp);

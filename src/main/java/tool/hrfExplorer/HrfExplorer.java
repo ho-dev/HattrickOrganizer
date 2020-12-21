@@ -215,7 +215,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 		m_kurzInfo = DBManager.instance().getMatchesKurzInfo(m_TeamID);
 		for(int ii = 0; ii < m_kurzInfo.length; ii++)
 		{
-			m_HashTable_MatchTyp.put(new Integer(m_kurzInfo[ii].getMatchID()),new Integer(m_kurzInfo[ii].getMatchTyp().getId()));
+			m_HashTable_MatchTyp.put(new Integer(m_kurzInfo[ii].getMatchID()),new Integer(m_kurzInfo[ii].getMatchType().getId()));
 		}
 
         // Namen der Tage in m_Ar_days schreiben

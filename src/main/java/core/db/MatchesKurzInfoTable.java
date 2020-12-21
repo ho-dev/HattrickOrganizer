@@ -514,7 +514,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 						+ ","
 						+ match.getTournamentTypeID()
 						+ ","
-						+ match.getMatchTyp().getId()
+						+ match.getMatchType().getId()
 						+ ","
 						+ match.getCupLevel().getId()
 						+ ","
@@ -572,7 +572,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 				.append(", WeatherForecast=").append(match.getWeatherForecast().getId())
 				.append(", Duration=").append(match.getDuration())
 				.append(" WHERE MatchID=").append(match.getMatchID())
-				.append(" AND MatchTyp=").append(match.getMatchTyp().getId());
+				.append(" AND MatchTyp=").append(match.getMatchType().getId());
 		adapter.executeUpdate(sql.toString());
 	}
 

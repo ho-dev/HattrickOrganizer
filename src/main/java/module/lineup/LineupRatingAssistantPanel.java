@@ -67,7 +67,7 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
     }
 
     public void refresh(){
-        HOLogger.instance().log(getClass(), "Lineup rating assitant panel:  refresh() has been called");
+        HOLogger.instance().log(getClass(), " refresh() has been called");
         lineupSettingsPanel.refresh(false);
         lineupRatingPanel.refresh();
     }
