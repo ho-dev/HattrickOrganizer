@@ -31,7 +31,7 @@ public final class UserColumnController {
 		private  int value;
 		private  ColumnModelId(int value){this.value=value;}
 		public int getValue() {return value;}
-	};
+	}
 
 	/** singleton **/
 	private static UserColumnController columnController = new UserColumnController();
@@ -76,15 +76,18 @@ public final class UserColumnController {
 	 * load all models from db
 	 *
 	 */
-	public final void load(){
+	public final void load() {
 		final DBManager dbZugriff = DBManager.instance();
-		
-		dbZugriff.loadHOColumModel( getMatchesModel() );
-		dbZugriff.loadHOColumModel( getPlayerOverviewModel() );
-		dbZugriff.loadHOColumModel( getLineupModel() );
-		dbZugriff.loadHOColumModel( getAnalysis1Model() );
-		dbZugriff.loadHOColumModel( getAnalysis2Model() );
-		dbZugriff.loadHOColumModel( getMatchesOverview1ColumnModel() );
+
+		dbZugriff.loadHOColumModel(getMatchesModel());
+		dbZugriff.loadHOColumModel(getPlayerOverviewModel());
+		dbZugriff.loadHOColumModel(getLineupModel());
+		dbZugriff.loadHOColumModel(getAnalysis1Model());
+		dbZugriff.loadHOColumModel(getAnalysis2Model());
+		dbZugriff.loadHOColumModel(getMatchesOverview1ColumnModel());
+
+		dbZugriff.loadHOColumModel(getYouthTrainingViewColumnModel());
+		dbZugriff.loadHOColumModel(getYouthTrainingViewColumnModel());
 	}
 	
 	/**
@@ -153,7 +156,7 @@ public final class UserColumnController {
 	 * @return
 	 */
 	public Vector<HOTableModel> getAllModels(){
-		Vector<HOTableModel> v = new Vector<HOTableModel>();
+		Vector<HOTableModel> v = new Vector<>();
 		
 		v.add( getPlayerOverviewModel() );
 		v.add( getLineupModel() );

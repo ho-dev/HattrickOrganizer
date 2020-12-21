@@ -46,9 +46,9 @@ public enum YouthTrainingType {
 
     public static YouthTrainingType valueOf(Integer id) {
         if ( id != null) {
-            for (YouthTrainingType source : YouthTrainingType.values()) {
-                if (source.getValue() == id) {
-                    return source;
+            for (YouthTrainingType youthTrainingType : YouthTrainingType.values()) {
+                if (youthTrainingType.getValue() == id) {
+                    return youthTrainingType;
                 }
             }
         }

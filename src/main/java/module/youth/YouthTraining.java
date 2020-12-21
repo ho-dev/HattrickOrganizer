@@ -8,44 +8,48 @@ import core.model.match.MatchLineupTeam;
 import core.model.match.SourceSystem;
 import core.training.YouthTrainerComment;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class YouthTraining {
+    public enum TrainingPrio {
+        Primary,
+        Secondary
+    }
     private MatchLineup matchLineup;
     private int youthMatchId;
-    private YouthTrainingType training1;
-    private YouthTrainingType training2;
+    private YouthTrainingType[] training = new YouthTrainingType[2];
     private List<YouthTrainerComment> commentList=new ArrayList<>();
 
     public YouthTraining(int youthMatchId){
         this.youthMatchId=youthMatchId;
     }
 
-    public YouthTraining(MatchLineup youthMatch, YouthTrainingType t1, YouthTrainingType t2){
+    public YouthTraining(MatchLineup youthMatch, YouthTrainingType t1, YouthTrainingType t2) {
         this.matchLineup = youthMatch;
-        this.training1=t1;
-        this.training2=t2;
+        this.training[TrainingPrio.Primary.ordinal()] = t1;
+        this.training[TrainingPrio.Secondary.ordinal()] = t2;
     }
 
     public YouthTraining(MatchLineup lineup){
         this.matchLineup = lineup;
     }
 
-    public YouthTrainingType getTraining1() {
-        return training1;
+    public YouthTrainingType getTraining(TrainingPrio p) {
+        return training[p.ordinal()];
     }
 
-    public void setTraining1(YouthTrainingType training1) {
-        this.training1 = training1;
+    public void setTraining(TrainingPrio p, YouthTrainingType trainingType) {
+        if ( this.training[p.ordinal()] != trainingType){
+            this.training[p.ordinal()] = trainingType;
+            store();
+        }
     }
 
-    public YouthTrainingType getTraining2() {
-        return training2;
-    }
-
-    public void setTraining2(YouthTrainingType training2) {
-        this.training2 = training2;
+    private void store() {
+        DBManager.instance().storeYouthTraining(this);
     }
 
     public List<YouthTrainerComment> getCommentList() {
@@ -74,5 +78,17 @@ public class YouthTraining {
             this.matchLineup = DBManager.instance().getMatchLineup(SourceSystem.YOUTH.getValue(), this.youthMatchId);
         }
         return this.matchLineup;
+    }
+
+    public Timestamp getMatchDate() {
+        return this.getMatchLineup().getMatchDate();
+    }
+
+    public String getHomeTeamName() {
+        return this.getMatchLineup().getHomeTeamName();
+    }
+
+    public String getGuestTeamName() {
+        return this.getMatchLineup().getGuestTeamName();
     }
 }

@@ -1947,4 +1947,8 @@ public class DBManager {
 	public List<YouthTraining> loadYouthTrainings() {
 		return ((YouthTrainingTable)getTable(YouthTrainingTable.TABLENAME)).loadYouthTrainings();
 	}
+
+    public void storeYouthTraining(YouthTraining youthTraining) {
+		((YouthTrainingTable)getTable(YouthTrainingTable.TABLENAME)).storeYouthTraining(youthTraining);
+    }
 }
