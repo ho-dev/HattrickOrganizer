@@ -3,7 +3,6 @@ package module.youth;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.UserColumn;
-import core.model.match.MatchLineup;
 
 public class YouthTrainingColumn extends UserColumn {
     protected YouthTrainingColumn(int id, String name) {

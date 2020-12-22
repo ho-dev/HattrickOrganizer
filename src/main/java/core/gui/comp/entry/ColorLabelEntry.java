@@ -16,9 +16,7 @@ import javax.swing.*;
 
 
 public class ColorLabelEntry extends JLabel implements IHOTableEntry {
-    /**
-     *
-     */
+
     private static final long serialVersionUID = 2300786156899745002L;
     public static final Color FG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
     public static final Color BG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
@@ -234,7 +232,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     /**
      * @param number
      */
-    private final void setGraphicalChangeValue(double number) {
+    private void setGraphicalChangeValue(double number) {
         setValueAsText(number, null, false, false,
                 core.model.UserParameter.instance().nbDecimals,
                 true);

@@ -6,6 +6,7 @@ import core.gui.comp.table.TableSorter;
 import core.gui.model.UserColumnController;
 
 import javax.swing.*;
+import javax.swing.table.TableColumnModel;
 
 public class YouthTrainingView extends JTable implements core.gui.Refreshable {
 
@@ -25,10 +26,24 @@ public class YouthTrainingView extends JTable implements core.gui.Refreshable {
             setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             setRowSelectionAllowed(true);
+
+            setModel(tableModel);
+            TableColumnModel tableColumnModel = getColumnModel();
+            for (int i = 0; i < tableModel.getColumnCount(); i++) {
+                tableColumnModel.getColumn(i).setIdentifier(i);
+            }
+
+            for ( var c : tableModel.getColumns()){
+                if ( c.isEditable()){
+                    var tablecol = this.getColumn(c.getIndex());
+                    if ( tablecol != null ){
+                        tablecol.setCellEditor(new DefaultCellEditor(YouthTrainingComboBoxItem.getComboBox()));
+                    }
+                }
+            }
         }
         tableModel.initData();
         //tableSorter = new TableSorter(tableModel, tableModel.getPositionInArray(99), getOrderByColumn());
-        setModel(tableModel);
         //tableSorter.initsort();
     }
 
