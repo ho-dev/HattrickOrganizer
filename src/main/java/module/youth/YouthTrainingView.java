@@ -2,7 +2,6 @@ package module.youth;
 
 import core.gui.RefreshManager;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
-import core.gui.comp.table.TableSorter;
 import core.gui.model.UserColumnController;
 
 import javax.swing.*;
@@ -37,7 +36,7 @@ public class YouthTrainingView extends JTable implements core.gui.Refreshable {
                 if ( c.isEditable()){
                     var tablecol = this.getColumn(c.getIndex());
                     if ( tablecol != null ){
-                        tablecol.setCellEditor(new DefaultCellEditor(YouthTrainingComboBoxItem.getComboBox()));
+                        tablecol.setCellEditor(new DefaultCellEditor(new JComboBox<>(new YouthTrainingTableEntry.ComboBoxModel())));
                     }
                 }
             }

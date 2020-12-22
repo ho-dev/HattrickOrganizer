@@ -40,7 +40,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                 new YouthTrainingColumn(3, "ls.training.primary"){
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining){
-                        return new YouthTrainingComboBoxItem(youthTraining.getTraining(YouthTraining.TrainingPrio.Primary));
+                        return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.TrainingPrio.Primary));
                     }
                     @Override
                     public boolean isEditable(){return true;}
@@ -48,7 +48,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                 new YouthTrainingColumn(4, "ls.training.secondary"){
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining){
-                        return new YouthTrainingComboBoxItem(youthTraining.getTraining(YouthTraining.TrainingPrio.Secondary));
+                        return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.TrainingPrio.Secondary));
                     }
                     @Override
                     public boolean isEditable(){return true;}
