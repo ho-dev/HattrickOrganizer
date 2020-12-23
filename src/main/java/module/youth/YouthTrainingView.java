@@ -5,7 +5,11 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.UserColumnController;
 
 import javax.swing.*;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableColumnModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentListener;
 
 public class YouthTrainingView extends JTable implements core.gui.Refreshable {
 
@@ -36,7 +40,10 @@ public class YouthTrainingView extends JTable implements core.gui.Refreshable {
                 if ( c.isEditable()){
                     var tablecol = this.getColumn(c.getIndex());
                     if ( tablecol != null ){
-                        tablecol.setCellEditor(new DefaultCellEditor(new JComboBox<>(new YouthTrainingTableEntry.ComboBoxModel())));
+                        var cb = new JComboBox<>(new YouthTrainingTableEntry.ComboBoxModel());
+                        var editor = new DefaultCellEditor(cb);
+                        editor.addCellEditorListener(this);
+                        tablecol.setCellEditor(editor);
                     }
                 }
             }
@@ -57,4 +64,15 @@ public class YouthTrainingView extends JTable implements core.gui.Refreshable {
         initModel();
         repaint();
     }
+
+/*
+    @Override
+    public void editingStopped(ChangeEvent changeEvent){
+        var r = getEditingRow();
+        var c = getEditingColumn();
+        var v = getValueAt(r,c);
+
+        var t = this.tableModel.getYouthTraining(r);
+    }
+*/
 }

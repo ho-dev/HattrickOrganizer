@@ -1,15 +1,13 @@
 package module.youth;
 
-import core.datatype.CBItem;
 import core.gui.comp.entry.IHOTableEntry;
 import core.model.HOVerwaltung;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ListDataListener;
-import java.awt.event.ActionEvent;
 
-public class YouthTrainingTableEntry extends JLabel implements IHOTableEntry {
+public class YouthTrainingTableEntry implements IHOTableEntry {
 
     public static class ComboBoxModel implements javax.swing.ComboBoxModel<YouthTrainingType> {
 
@@ -20,7 +18,7 @@ public class YouthTrainingTableEntry extends JLabel implements IHOTableEntry {
             value = (YouthTrainingType) anItem;
         }
 
-        public static String getLabel(YouthTrainingType value){
+        public static String getLabelText(YouthTrainingType value){
             var hov = HOVerwaltung.instance();
             if ( value == null) return hov.getLanguageString("undefined");
             return hov.getLanguageString(value.toString());
@@ -28,7 +26,7 @@ public class YouthTrainingTableEntry extends JLabel implements IHOTableEntry {
 
         @Override
         public Object getSelectedItem() {
-            return getLabel(value);
+            return new YouthTrainingTableEntry(value);
         }
 
         @Override
@@ -52,20 +50,22 @@ public class YouthTrainingTableEntry extends JLabel implements IHOTableEntry {
         }
     }
 
-    private YouthTrainingType youthTraining;
+    private JLabel label;
+    private YouthTrainingType trainingType;
 
-    public YouthTrainingTableEntry(YouthTrainingType training) {
-        super(ComboBoxModel.getLabel(training));
-        this.youthTraining = training;
+    public YouthTrainingTableEntry(YouthTrainingType trainingType) {
+        this.trainingType = trainingType;
+        createComponent();
+    }
+
+    public YouthTrainingType getTrainingType() {
+        return trainingType;
     }
 
     @Override
     public JComponent getComponent(boolean isSelected) {
-
-        return this;
-
+        return label;
     }
-
 
     @Override
     public void clear() {
@@ -83,11 +83,11 @@ public class YouthTrainingTableEntry extends JLabel implements IHOTableEntry {
 
     @Override
     public void createComponent() {
-
+        label = new JLabel(ComboBoxModel.getLabelText(trainingType));
     }
 
     @Override
     public void updateComponent() {
-
+        label.setText(ComboBoxModel.getLabelText(trainingType));
     }
 }

@@ -5,11 +5,15 @@ import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
 import core.model.HOVerwaltung;
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
 public class YouthTrainingViewTableModel extends HOTableModel {
+
+    private List<YouthTraining> youthTrainings;
 
     public YouthTrainingViewTableModel(int id) {
         super(id,"YouthTrainingView");
@@ -40,7 +44,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                 new YouthTrainingColumn(3, "ls.training.primary"){
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining){
-                        return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.TrainingPrio.Primary));
+                        return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.Priority.Primary));
                     }
                     @Override
                     public boolean isEditable(){return true;}
@@ -48,13 +52,17 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                 new YouthTrainingColumn(4, "ls.training.secondary"){
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining){
-                        return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.TrainingPrio.Secondary));
+                        return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.Priority.Secondary));
                     }
                     @Override
                     public boolean isEditable(){return true;}
                 },
 
                 new YouthTrainingColumn(99, "ls.training.id", 0) {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
+                        return new ColorLabelEntry(youthTraining.getMatchId()+"", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
                     @Override
                     public boolean isDisplay() {
                         return false;
@@ -70,7 +78,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
 
     @Override
     protected void initData() {
-        var youthTrainings = HOVerwaltung.instance().getModel().getYouthTrainings()
+        youthTrainings = HOVerwaltung.instance().getModel().getYouthTrainings()
                 .stream()
                 .sorted( (i1, i2) -> i2.getMatchDate().compareTo(i1.getMatchDate()))
                 .collect(Collectors.toList());
@@ -86,4 +94,18 @@ public class YouthTrainingViewTableModel extends HOTableModel {
         }
     }
 
+    public YouthTraining getYouthTraining(int row){
+        return this.youthTrainings.get(row);
+    }
+
+    @Override
+    public void setValueAt(Object value, int row, int column) {
+        super.setValueAt(value, row, column);
+        var t = this.getYouthTraining(row);
+        var trainingType = ((YouthTrainingTableEntry)value).getTrainingType();
+        switch (column) {
+            case 3 -> t.setTraining(YouthTraining.Priority.Primary, trainingType);
+            case 4 -> t.setTraining(YouthTraining.Priority.Secondary, trainingType);
+        }
+    }
 }

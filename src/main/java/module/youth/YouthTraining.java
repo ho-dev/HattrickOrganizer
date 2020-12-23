@@ -1,6 +1,5 @@
 package module.youth;
 
-import core.constants.TrainingType;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchLineup;
@@ -10,14 +9,15 @@ import core.training.YouthTrainerComment;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class YouthTraining {
-    public enum TrainingPrio {
+
+    public enum Priority {
         Primary,
         Secondary
     }
+
     private MatchLineup matchLineup;
     private int youthMatchId;
     private YouthTrainingType[] training = new YouthTrainingType[2];
@@ -28,27 +28,33 @@ public class YouthTraining {
     }
 
     public YouthTraining(MatchLineup youthMatch, YouthTrainingType t1, YouthTrainingType t2) {
+        setMatchLineup(youthMatch);
         this.matchLineup = youthMatch;
-        this.training[TrainingPrio.Primary.ordinal()] = t1;
-        this.training[TrainingPrio.Secondary.ordinal()] = t2;
+        this.training[Priority.Primary.ordinal()] = t1;
+        this.training[Priority.Secondary.ordinal()] = t2;
     }
 
-    public YouthTraining(MatchLineup lineup){
-        this.matchLineup = lineup;
+    private void setMatchLineup(MatchLineup youthMatch) {
+        this.youthMatchId = youthMatch.getMatchID();
+        this.matchLineup = youthMatch;
     }
 
-    public YouthTrainingType getTraining(TrainingPrio p) {
+    public YouthTraining(MatchLineup lineup) {
+        setMatchLineup(lineup);
+    }
+
+    public YouthTrainingType getTraining(Priority p) {
         return training[p.ordinal()];
     }
 
-    public void setTraining(TrainingPrio p, YouthTrainingType trainingType) {
+    public void setTraining(Priority p, YouthTrainingType trainingType) {
         if ( this.training[p.ordinal()] != trainingType){
             this.training[p.ordinal()] = trainingType;
             store();
         }
     }
 
-    private void store() {
+    void store() {
         DBManager.instance().storeYouthTraining(this);
     }
 
