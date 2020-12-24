@@ -124,8 +124,8 @@ public class XMLMatchdetailsParser {
             //get both teams
             ele = (Element) root.getElementsByTagName("HomeTeam").item(0);
             final String homeTeamID = XMLManager.getFirstChildNodeValue((Element) ele.getElementsByTagName("HomeTeamID").item(0));
-            final Vector<Vector<String>> homeTeamPlayers = parseLineup (lineup.getHomeTeam().getAufstellung());
-            final Vector<Vector<String>> awayTeamPlayers = parseLineup (lineup.getGuestTeam().getAufstellung());
+            final Vector<Vector<String>> homeTeamPlayers = parseLineup (lineup.getHomeTeam().getStartingLineup());
+            final Vector<Vector<String>> awayTeamPlayers = parseLineup (lineup.getGuestTeam().getStartingLineup());
 			ele = (Element) root.getElementsByTagName("EventList").item(0);
 
 			eventList = ele.getElementsByTagName("Event");

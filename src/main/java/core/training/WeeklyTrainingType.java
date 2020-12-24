@@ -280,8 +280,8 @@ public abstract class WeeklyTrainingType {
 		}
 		return dSecondaryTraining;
 	}
-	 public static double calcTraining(double baseLength, int age, int assistants, int trainerLevel, int intensity,
-			 							int stamina, int curSkill, List<StaffMember> staff) 
+	 public static double calcTraining(double baseLength, int age, int trainerLevel, int intensity,
+			 							int stamina, int curSkill, List<StaffMember> staff)
 	 {
 		double ageFactor = Math.pow(1.0404, age - 17) * (UserParameter.instance().TRAINING_OFFSET_AGE + BASE_AGE_FACTOR);
 		double skillFactor = - 1.4595 * Math.pow((curSkill+1d)/20, 2) + 3.7535 * (curSkill + 1d) / 20 - 0.1349d;
@@ -301,7 +301,7 @@ public abstract class WeeklyTrainingType {
 		
 		
 		double trainerFactor = (1 + (7 - Math.min(trainerLevel, 7.5)) * 0.091) * (UserParameter.instance().TrainerFaktor + BASE_COACH_FACTOR);
-		double coFactor = getAssistantFactor(assistants, staff);
+		double coFactor = getAssistantFactor(staff);
 		double tiFactor = Double.MAX_VALUE;
 		if (intensity > 0) {
 			tiFactor = (1 / (intensity / 100d)) * (UserParameter.instance().TRAINING_OFFSET_INTENSITY + BASE_INTENSITY_FACTOR);
@@ -327,7 +327,7 @@ public abstract class WeeklyTrainingType {
 		return trainLength;
 	 }
 	 
-	 public static double getAssistantFactor(int assistants, List<StaffMember> staff) {
+	 public static double getAssistantFactor(List<StaffMember> staff) {
 		 
 		 double factor = 1;
 
@@ -359,6 +359,6 @@ public abstract class WeeklyTrainingType {
 	 }
 	 
 	 
-	 public abstract double getTrainingLength(Player player, int assistants, int trainerLevel, int intensity, int stamina, List<StaffMember> staff);
-	 public abstract double getSecondaryTrainingLength(Player player, int assistants, int trainerLevel, int intensity, int stamina, List<StaffMember> staff);
+	 public abstract double getTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff);
+	 public abstract double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff);
 }

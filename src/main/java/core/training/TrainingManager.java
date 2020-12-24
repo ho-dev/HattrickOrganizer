@@ -281,7 +281,7 @@ public class TrainingManager {
 							calculationPlayer.setAlter(tmpOld.getAlter());
 						}
 
-						calculationPlayer.calcIncrementalSubskills(tmpOld, tpw.getAssistants(),
+						calculationPlayer.calcIncrementalSubskills(tmpOld,
 								trainerSkill,
 								tpw.getTrainingIntensity(),
 								tpw.getStaminaPart(),

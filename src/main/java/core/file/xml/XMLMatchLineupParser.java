@@ -247,7 +247,7 @@ public class XMLMatchLineupParser {
 				}
 			}
 
-			team.add2Aufstellung(player);
+			team.add2StartingLineup(player);
 		}
 
 		// The starting lineup
@@ -265,7 +265,7 @@ public class XMLMatchLineupParser {
 					lineupPlayer.setStartBehavior(startPlayer.getStartBehavior());
 				} else {
 					// He was not already in the lineup, so add him
-					team.add2Aufstellung(startPlayer);
+					team.add2StartingLineup(startPlayer);
 				}
 			}
 		}
@@ -284,12 +284,12 @@ public class XMLMatchLineupParser {
 			if ((s.getObjectPlayerID() > 0) &&
 					(team.getPlayerByID(s.getObjectPlayerID()) == null) &&
 					s.getOrderType() != MatchOrderType.MAN_MARKING) { // in case of MAN_MARKING the Object Player is an opponent player
-				team.add2Aufstellung(new MatchLineupPlayer(-1, -1, s.getObjectPlayerID(), -1d, "",
+				team.add2StartingLineup(new MatchLineupPlayer(-1, -1, s.getObjectPlayerID(), -1d, "",
 						-1));
 			}
 			if ((s.getSubjectPlayerID() > 0)
 					&& (team.getPlayerByID(s.getSubjectPlayerID()) == null)) {
-				team.add2Aufstellung(new MatchLineupPlayer(-1, -1, s.getSubjectPlayerID(), -1d, "",
+				team.add2StartingLineup(new MatchLineupPlayer(-1, -1, s.getSubjectPlayerID(), -1d, "",
 						-1));
 			}
 		}

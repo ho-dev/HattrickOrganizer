@@ -5,6 +5,7 @@ import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.Substitution;
+import module.youth.YouthPlayer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,12 +16,12 @@ import java.util.Vector;
 public class MatchLineupTeam {
 
 	private SourceSystem sourceSystem;
-	private String m_sTeamName;
-	private Vector<MatchLineupPlayer> m_vAufstellung = new Vector<MatchLineupPlayer>();
-	private List<Substitution> m_vSubstitutions = new ArrayList<Substitution>();
-	private int m_iErfahrung;
-	private int m_iTeamID;
-	private int m_iStyleOfPlay;
+	private String teamName;
+	private Vector<MatchLineupPlayer> startingLineup = new Vector<>();
+	private ArrayList<Substitution> substitutions = new ArrayList<>();
+	private int experience;
+	private int teamId;
+	private int styleOfPlay;
 	// null player to fill empty spots
 	private final static MatchLineupPlayer NULLPLAYER = new MatchLineupPlayer(-1, 0, -1, -1d, "", 0);
 	private MatchType matchType = MatchType.NONE;
@@ -34,10 +35,10 @@ public class MatchLineupTeam {
 	 */
 	public MatchLineupTeam(SourceSystem sourceSystem, int matchId, String teamName, int teamID, int erfahrung, int styleOfPlay) {
 		this.sourceSystem = sourceSystem;
-		m_sTeamName = teamName;
-		m_iErfahrung = erfahrung;
-		m_iTeamID = teamID;
-		m_iStyleOfPlay = styleOfPlay;
+		this.teamName = teamName;
+		experience = erfahrung;
+		teamId = teamID;
+		this.styleOfPlay = styleOfPlay;
 		this.matchId = matchId;
 	}
 
@@ -50,8 +51,8 @@ public class MatchLineupTeam {
 	 * @param m_vAufstellung
 	 *            New value of property m_vAufstellung.
 	 */
-	public final void setAufstellung(Vector<MatchLineupPlayer> m_vAufstellung) {
-		this.m_vAufstellung = m_vAufstellung;
+	public final void setStartingLineup(Vector<MatchLineupPlayer> m_vAufstellung) {
+		this.startingLineup = m_vAufstellung;
 	}
 
 	/**
@@ -59,8 +60,8 @@ public class MatchLineupTeam {
 	 * 
 	 * @return Value of property m_vAufstellung.
 	 */
-	public final Vector<MatchLineupPlayer> getAufstellung() {
-		return m_vAufstellung;
+	public final Vector<MatchLineupPlayer> getStartingLineup() {
+		return startingLineup;
 	}
 
 	/**
@@ -72,10 +73,10 @@ public class MatchLineupTeam {
 	public final void setSubstitutions(List<Substitution> substitutions) {
 
 		// defensive copy
-		this.m_vSubstitutions = new ArrayList<Substitution>(substitutions);
+		this.substitutions = new ArrayList<Substitution>(substitutions);
 
 		// Make sure substitutions are sorted first on minute, then by ID.
-		Collections.sort(this.m_vSubstitutions, new Comparator<Substitution>() {
+		Collections.sort(this.substitutions, new Comparator<Substitution>() {
 			@Override
 			public int compare(Substitution o1, Substitution o2) {
 
@@ -117,7 +118,7 @@ public class MatchLineupTeam {
 	 * @return Value of property m_vSubstitutions.
 	 */
 	public final List<Substitution> getSubstitutions() {
-		return m_vSubstitutions;
+		return substitutions;
 	}
 
 	/**
@@ -126,8 +127,8 @@ public class MatchLineupTeam {
 	 * @param m_iErfahrung
 	 *            New value of property m_iErfahrung.
 	 */
-	public final void setErfahrung(int m_iErfahrung) {
-		this.m_iErfahrung = m_iErfahrung;
+	public final void setExperience(int m_iErfahrung) {
+		this.experience = m_iErfahrung;
 	}
 
 	/**
@@ -135,8 +136,8 @@ public class MatchLineupTeam {
 	 * 
 	 * @return Value of property m_iErfahrung.
 	 */
-	public final int getErfahrung() {
-		return m_iErfahrung;
+	public final int getExperience() {
+		return experience;
 	}
 
 	/**
@@ -150,7 +151,7 @@ public class MatchLineupTeam {
 	 */
 	public final MatchLineupPlayer getPlayerByID(int id) {
 
-		for (MatchLineupPlayer player : m_vAufstellung) {
+		for (MatchLineupPlayer player : startingLineup) {
 			if (player.getSpielerId() == id) {
 				if ((player.getId() == IMatchRoleID.captain)
 						|| (player.getId() == IMatchRoleID.setPieces)) {
@@ -170,8 +171,8 @@ public class MatchLineupTeam {
 	public final MatchLineupPlayer getPlayerByPosition(int id) {
 		MatchLineupPlayer player = null;
 
-		for (int i = 0; (m_vAufstellung != null) && (i < m_vAufstellung.size()); i++) {
-			player = (MatchLineupPlayer) m_vAufstellung.elementAt(i);
+		for (int i = 0; (startingLineup != null) && (i < startingLineup.size()); i++) {
+			player = (MatchLineupPlayer) startingLineup.elementAt(i);
 
 			if (player.getId() == id) {
 				return player;
@@ -187,7 +188,7 @@ public class MatchLineupTeam {
 	 *            New value of property m_iStyleOfPlay.
 	 */
 	public final void setStyleOfPlay(int m_iStyleOfPlay) {
-		this.m_iStyleOfPlay = m_iStyleOfPlay;
+		this.styleOfPlay = m_iStyleOfPlay;
 	}
 
 	/**
@@ -196,7 +197,7 @@ public class MatchLineupTeam {
 	 * @return Value of property m_iStyleOfPlay.
 	 */
 	public final int getStyleOfPlay() {
-		return m_iStyleOfPlay;
+		return styleOfPlay;
 	}
 	
 	// returns offensive, defensive or neutral depending on styleOfPlay
@@ -221,7 +222,7 @@ public class MatchLineupTeam {
 	 *            New value of property m_iTeamID.
 	 */
 	public final void setTeamID(int m_iTeamID) {
-		this.m_iTeamID = m_iTeamID;
+		this.teamId = m_iTeamID;
 	}
 
 	/**
@@ -230,7 +231,7 @@ public class MatchLineupTeam {
 	 * @return Value of property m_iTeamID.
 	 */
 	public final int getTeamID() {
-		return m_iTeamID;
+		return teamId;
 	}
 
 	/**
@@ -240,7 +241,7 @@ public class MatchLineupTeam {
 	 *            New value of property m_sTeamName.
 	 */
 	public final void setTeamName(java.lang.String m_sTeamName) {
-		this.m_sTeamName = m_sTeamName;
+		this.teamName = m_sTeamName;
 	}
 
 	/**
@@ -249,25 +250,25 @@ public class MatchLineupTeam {
 	 * @return Value of property m_sTeamName.
 	 */
 	public final java.lang.String getTeamName() {
-		return m_sTeamName;
+		return teamName;
 	}
 
-	public final void add2Aufstellung(MatchLineupPlayer player) {
-		m_vAufstellung.add(player);
+	public final void add2StartingLineup(MatchLineupPlayer player) {
+		startingLineup.add(player);
 	}
 
 	/**
-	 * Determinates the played formation.
+	 * Determines the played formation.
 	 */
-	public final byte determinateSystem() {
+	public final byte determineSystem() {
 		short abw = 0;
 		short mf = 0;
 		short st = 0;
 
 		MatchLineupPlayer player = null;
 
-		for (int i = 0; i < m_vAufstellung.size(); i++) {
-			player = (MatchLineupPlayer) m_vAufstellung.get(i);
+		for (int i = 0; i < startingLineup.size(); i++) {
+			player = (MatchLineupPlayer) startingLineup.get(i);
 
 			if (player != null) {
 				switch (player.getPosition()) {
@@ -381,4 +382,9 @@ public class MatchLineupTeam {
 	public void setSourceSystem(SourceSystem sourceSystem) {
 		this.sourceSystem = sourceSystem;
 	}
+
+    public int getMinutesInPositions(int playerId, int[] positions) {
+		/// TODO
+		return 0;
+    }
 }

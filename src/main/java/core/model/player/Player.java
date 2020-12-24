@@ -1827,13 +1827,13 @@ public class Player {
         return PlayerSpeciality.getImpactWeatherEffect(weather, iPlayerSpecialty);
     }
 
-    private void incrementSubskills(Player originalPlayer, int assistants, int trainerlevel, int intensity,
+    private void incrementSubskills(Player originalPlayer, int trainerlevel, int intensity,
                                     int stamina, int skill, double points, WeeklyTrainingType wt, List<StaffMember> staff) {
         if (skill < PlayerSkill.KEEPER || points <= 0)
             return;
 
         float gain = (float) Helper.round(points / wt.getTrainingLength(
-                this, assistants, trainerlevel, intensity, stamina, staff), 3);
+                this, trainerlevel, intensity, stamina, staff), 3);
 
         if (gain <= 0)
             return;
@@ -1860,7 +1860,7 @@ public class Player {
      * @param trainingWeek
      * @param staff
      */
-    public void calcIncrementalSubskills(Player originalPlayer, int assistants, int trainerlevel, int intensity,
+    public void calcIncrementalSubskills(Player originalPlayer, int trainerlevel, int intensity,
                                          int stamina, TrainingPerWeek trainingWeek, List<StaffMember> staff) {
 
         if (this.hasTrainingBlock()) {
@@ -1887,10 +1887,10 @@ public class Player {
 
         WeeklyTrainingType wt = WeeklyTrainingType.instance(trainingWeek.getTrainingType());
 
-        incrementSubskills(originalPlayer, assistants, trainerlevel, intensity, stamina,
+        incrementSubskills(originalPlayer, trainerlevel, intensity, stamina,
                 wt.getPrimaryTrainingSkill(), tp.getPrimary(), wt, staff);
 
-        incrementSubskills(originalPlayer, assistants, trainerlevel, intensity, stamina,
+        incrementSubskills(originalPlayer, trainerlevel, intensity, stamina,
                 wt.getSecondaryTrainingSkill(), tp.getSecondary(), wt, staff);
 
         addExperienceSub(trForPlayer.getExperienceSub());

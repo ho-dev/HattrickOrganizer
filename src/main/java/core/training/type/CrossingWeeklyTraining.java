@@ -39,13 +39,13 @@ public class CrossingWeeklyTraining extends WeeklyTrainingType {
         return m_ciInstance;
     }
 	@Override
-	public double getTrainingLength(Player player, int assistants, int trainerLevel, int intensity,
+	public double getTrainingLength(Player player, int trainerLevel, int intensity,
                                     int stamina, List<StaffMember> staff) {
-        return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), assistants, trainerLevel, 
+        return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), trainerLevel,
         		intensity, stamina, player.getWIskill(), staff);
 	}
 	@Override
-	public double getSecondaryTrainingLength(Player player, int assistants, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
+	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
 	{
 		return (double) -1;
 	}

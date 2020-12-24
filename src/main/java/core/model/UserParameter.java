@@ -371,6 +371,10 @@ public final class UserParameter extends Configuration {
     //Alternative Positions
     public float alternativePositionsTolerance = .03f;
 
+    // Youth training
+    public double youthtrainingFactorPrimary = 1.0;
+    public double youthtrainingFactorSecondary = 0.6;
+
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -659,6 +663,9 @@ public final class UserParameter extends Configuration {
 
         map.put("promotionManagerTest", String.valueOf(promotionManagerTest));
 
+        map.put("youthtrainingFactorPrimary", String.valueOf(this.youthtrainingFactorPrimary));
+        map.put("youthtrainingFactorSecondary", String.valueOf(this.youthtrainingFactorSecondary));
+
         return map;
     }
 
@@ -899,6 +906,9 @@ public final class UserParameter extends Configuration {
         alternativePositionsTolerance = getFloatValue(values, "alternativePositionsTolerance");
 
         promotionManagerTest = getBooleanValue(values, "promotionManagerTest");
+
+        youthtrainingFactorPrimary = getDoubleValue(values, "youthtrainingFactorPrimary", youthtrainingFactorPrimary);
+        youthtrainingFactorSecondary= getDoubleValue(values, "youthtrainingFactorSecondary", youthtrainingFactorSecondary);
     }
 
 }

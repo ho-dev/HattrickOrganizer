@@ -265,10 +265,10 @@ public class XMLExporter  {
 				ele.appendChild(doc.createTextNode("" + HOVerwaltung.instance().getModel().getBasics().getTeamId()));
 				ele = doc.createElement("System");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + lineupTeam.determinateSystem()));
+				ele.appendChild(doc.createTextNode("" + lineupTeam.determineSystem()));
 				ele = doc.createElement("Eingespieltheit");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + getTeamErfahrung(team, lineupTeam.determinateSystem())));
+				ele.appendChild(doc.createTextNode("" + getTeamErfahrung(team, lineupTeam.determineSystem())));
 				ele = doc.createElement("TrainerType");
 				tmpEle.appendChild(ele);
 				ele.appendChild(doc.createTextNode("" + DBManager.instance().getTrainerType(hrfID)));
@@ -346,7 +346,7 @@ public class XMLExporter  {
 				ele.appendChild(doc.createTextNode("" + getTeamSelbstvertrauen(team)));
 				ele = doc.createElement("Erfahrung");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + lineupTeam.getErfahrung()));
+				ele.appendChild(doc.createTextNode("" + lineupTeam.getExperience()));
 
 				//lineup
 				Element lineupEle = doc.createElement("Lineup");
@@ -356,8 +356,8 @@ public class XMLExporter  {
 				tmpEle = lineupEle;
 
 				//Player schreiben
-				for (int k = 0;(lineupTeam.getAufstellung() != null) && (k < lineupTeam.getAufstellung().size()); k++) {					
-					MatchLineupPlayer playerMatch = lineupTeam.getAufstellung().get(k);
+				for (int k = 0; (lineupTeam.getStartingLineup() != null) && (k < lineupTeam.getStartingLineup().size()); k++) {
+					MatchLineupPlayer playerMatch = lineupTeam.getStartingLineup().get(k);
 					Player playerData = matchData.getPlayers().get(Integer.valueOf(playerMatch.getSpielerId()));
 
 					//Bank + verletzte überspringen

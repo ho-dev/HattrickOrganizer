@@ -112,8 +112,8 @@ public class RatingOptimizer {
 		
 		// Switched from use of AufstellungOld to the use of Lineup. Bye, bye, hack. (blaghaid)
 		final Lineup lineup = new Lineup();
-		for (int k = 0;(lineupTeam.getAufstellung() != null) && (k < lineupTeam.getAufstellung().size()); k++) {					
-			MatchLineupPlayer playerMatch = (MatchLineupPlayer) lineupTeam.getAufstellung().get(k);
+		for (int k = 0; (lineupTeam.getStartingLineup() != null) && (k < lineupTeam.getStartingLineup().size()); k++) {
+			MatchLineupPlayer playerMatch = (MatchLineupPlayer) lineupTeam.getStartingLineup().get(k);
 			Player playerData = (Player) matchData.getPlayers().get(Integer.valueOf(playerMatch.getSpielerId()));
 			
 			if (playerMatch.getId() == IMatchRoleID.setPieces) {

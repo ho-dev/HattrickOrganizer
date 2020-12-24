@@ -1,13 +1,10 @@
 package core.model.match;
 
-import core.db.DBManager;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -25,7 +22,7 @@ public class MatchStatistics {
 		if (isOldie()) {
 			// Old match with no start lineup. Set start position like end
 			// position for all players.
-			Vector<MatchLineupPlayer> mlps = teamLineup.getAufstellung();
+			Vector<MatchLineupPlayer> mlps = teamLineup.getStartingLineup();
 			for (MatchLineupPlayer mlp : mlps) {
 				mlp.setStartPosition(mlp.getFieldPos());
 			}
@@ -288,7 +285,7 @@ public class MatchStatistics {
 	}
 
 	private boolean isOldie() {
-		Vector<MatchLineupPlayer> mlps = teamLineup.getAufstellung();
+		Vector<MatchLineupPlayer> mlps = teamLineup.getStartingLineup();
 		for (MatchLineupPlayer mlp : mlps) {
 			if (mlp.getStartPosition() > 0) {
 				return false;

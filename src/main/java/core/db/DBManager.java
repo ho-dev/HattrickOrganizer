@@ -383,11 +383,16 @@ public class DBManager {
 	}
 	public List<YouthPlayer> loadYouthPlayers(int hrfID) {
 		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
-				.loadYouthPlayer(hrfID);
+				.loadYouthPlayers(hrfID);
 	}
 	public List<YouthPlayer.ScoutComment> loadYouthScoutComments(int id) {
 		return ((YouthScoutCommentTable) getTable(YouthScoutCommentTable.TABLENAME))
 				.loadYouthScoutComments(id);
+	}
+
+	public YouthPlayer loadYouthPlayer(int id, Timestamp date) {
+		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
+				.loadYouthPlayer(id, date);
 	}
 
 	/**
@@ -1951,4 +1956,5 @@ public class DBManager {
     public void storeYouthTraining(YouthTraining youthTraining) {
 		((YouthTrainingTable)getTable(YouthTrainingTable.TABLENAME)).storeYouthTraining(youthTraining);
     }
+
 }
