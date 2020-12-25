@@ -3,10 +3,6 @@ package core.specialevents;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import module.lineup.Lineup;
-
-import java.util.List;
-import java.util.Vector;
 
 import static java.lang.Math.abs;
 
@@ -40,7 +36,7 @@ public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictio
         this.analyse = analyse;
 
         //double experienceAverage = getExperienceAverage();
-        int id = position.getSpielerId();
+        int id = position.getPlayerId();
         Player p = analyse.getPlayer(id);
         SpecialEventsPrediction se=null;
         switch (position.getId()){
@@ -73,8 +69,8 @@ public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictio
 
     private void getExperienceEvents(MatchRoleID position, int i) {
         Player oppDefender = analyse.getOpponentPlayerByPosition(i);
-        if ( oppDefender!=null && position.getSpielerId() != 0){
-            Player p = analyse.getPlayer(position.getSpielerId());
+        if ( oppDefender!=null && position.getPlayerId() != 0){
+            Player p = analyse.getPlayer(position.getPlayerId());
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(
                     position,
                     SpecialEventType.EXPERIENCE,

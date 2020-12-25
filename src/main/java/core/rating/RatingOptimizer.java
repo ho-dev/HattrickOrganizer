@@ -114,14 +114,14 @@ public class RatingOptimizer {
 		final Lineup lineup = new Lineup();
 		for (int k = 0; (lineupTeam.getStartingLineup() != null) && (k < lineupTeam.getStartingLineup().size()); k++) {
 			MatchLineupPlayer playerMatch = (MatchLineupPlayer) lineupTeam.getStartingLineup().get(k);
-			Player playerData = (Player) matchData.getPlayers().get(Integer.valueOf(playerMatch.getSpielerId()));
+			Player playerData = (Player) matchData.getPlayers().get(Integer.valueOf(playerMatch.getPlayerId()));
 			
 			if (playerMatch.getId() == IMatchRoleID.setPieces) {
-				lineup.setKicker(playerMatch.getSpielerId());
+				lineup.setKicker(playerMatch.getPlayerId());
 			} else if (playerMatch.getId() == IMatchRoleID.captain) {
-				lineup.setCaptain(playerMatch.getSpielerId());
+				lineup.setCaptain(playerMatch.getPlayerId());
 			} else {
-				lineup.setSpielerAtPosition(playerMatch.getId(), playerMatch.getSpielerId(), playerMatch.getTactic());
+				lineup.setSpielerAtPosition(playerMatch.getId(), playerMatch.getPlayerId(), playerMatch.getTactic());
 			}
 		}
 		

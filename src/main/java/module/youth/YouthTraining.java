@@ -36,7 +36,7 @@ public class YouthTraining {
         for ( var priority : Priority.values()){
             var train = training[priority.ordinal()];
             int minutes=0;
-            int posPrio = 0;
+            int posPrio = 0;    // Primary, Secondary, Osmosis
             for ( var prioPositions : train.getTrainedPositions()){
                 int minutesInPrioPositions = lineupTeam.getMinutesInPositions(player.getId(), prioPositions);
                 if ( minutesInPrioPositions + minutes > 90){
@@ -105,7 +105,7 @@ public class YouthTraining {
         var team = this.getMatchLineup().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
 
         for ( var player : team.getStartingLineup()){
-            recalcSkills(player.getSpielerId());
+            recalcSkills(player.getPlayerId());
         }
         for ( var subs : team.getSubstitutions()){
             if ( subs.getOrderType().equals(MatchOrderType.SUBSTITUTION) ) {

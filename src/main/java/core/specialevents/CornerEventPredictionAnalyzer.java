@@ -43,9 +43,6 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 
-import java.util.List;
-import java.util.Vector;
-
 public class CornerEventPredictionAnalyzer  implements ISpecialEventPredictionAnalyzer {
     private SpecialEventsPredictionManager.Analyse analyse;
 
@@ -53,7 +50,7 @@ public class CornerEventPredictionAnalyzer  implements ISpecialEventPredictionAn
     public void analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
 
         int kicker = analyse.getLineup().getKicker();
-        int pid = position.getSpielerId();
+        int pid = position.getPlayerId();
         if ( pid == kicker) {
             this.analyse = analyse;
 
@@ -63,8 +60,8 @@ public class CornerEventPredictionAnalyzer  implements ISpecialEventPredictionAn
             for ( int i = IMatchRoleID.rightBack; i<= IMatchRoleID.leftForward; ++i){
                 // for each pass receiver
                 MatchRoleID passReceiver = analyse.getPosition(i);
-                int id = passReceiver.getSpielerId();
-                if ( id != 0 &&  id != position.getSpielerId()){
+                int id = passReceiver.getPlayerId();
+                if ( id != 0 &&  id != position.getPlayerId()){
                     getCornerEvents( position, passReceiver, offIFK, oppDefIFK);
                 }
             }
@@ -72,8 +69,8 @@ public class CornerEventPredictionAnalyzer  implements ISpecialEventPredictionAn
     }
 
     private void getCornerEvents(MatchRoleID setPiecesTaker, MatchRoleID passReceiver, double offIFK, double oppDefIFK) {
-        Player p = analyse.getPlayer(setPiecesTaker.getSpielerId());
-        Player scorer = analyse.getPlayer(passReceiver.getSpielerId());
+        Player p = analyse.getPlayer(setPiecesTaker.getPlayerId());
+        Player scorer = analyse.getPlayer(passReceiver.getPlayerId());
         if ( scorer.hasSpeciality(Speciality.HEAD)) {
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(setPiecesTaker, SpecialEventType.CORNER_HEAD,
                     .3, 10, -10,

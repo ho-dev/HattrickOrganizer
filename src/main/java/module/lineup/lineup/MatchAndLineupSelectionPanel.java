@@ -376,13 +376,13 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             if (lineupPlayers != null) {
                 for (MatchLineupPlayer lineupPlayer : lineupPlayers) {
                     if (lineupPlayer.getId() == IMatchRoleID.setPieces) {
-                        lineup.setKicker(lineupPlayer.getSpielerId());
+                        lineup.setKicker(lineupPlayer.getPlayerId());
                     }
                     else if (lineupPlayer.getId() == IMatchRoleID.captain) {
-                        lineup.setCaptain(lineupPlayer.getSpielerId());
+                        lineup.setCaptain(lineupPlayer.getPlayerId());
                     }
                     else {
-                        lineup.setSpielerAtPosition(lineupPlayer.getId(), lineupPlayer.getSpielerId(), lineupPlayer.getTactic());
+                        lineup.setSpielerAtPosition(lineupPlayer.getId(), lineupPlayer.getPlayerId(), lineupPlayer.getTactic());
                     }
                 }
             }

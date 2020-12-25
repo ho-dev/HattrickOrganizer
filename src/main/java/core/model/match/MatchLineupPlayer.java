@@ -67,7 +67,7 @@ public class MatchLineupPlayer extends MatchRoleID {
     }
 
     public MatchLineupPlayer(MatchLineupPlayer p) {
-    	super (p.getFieldPos(), p.getSpielerId(), p.getTactic());
+    	super (p.getFieldPos(), p.getPlayerId(), p.getTactic());
     	
     	m_sSpielerName = p.getSpielerName();
         m_sNickName = p.getNickName();

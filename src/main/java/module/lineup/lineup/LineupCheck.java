@@ -72,7 +72,7 @@ public class LineupCheck {
 	
 	private static boolean isFree(Lineup lineup, int positionId) {
 		MatchRoleID pos = lineup.getPositionById(positionId);
-		return pos == null || pos.getSpielerId() == 0;
+		return pos == null || pos.getPlayerId() == 0;
 	}
 
 	private static JLabel getWarningLabel(String key) {

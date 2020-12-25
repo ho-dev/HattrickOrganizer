@@ -50,7 +50,7 @@ public class SpecialEventsPredictionManager {
             for (ISpecialEventPredictionAnalyzer analyzer : analyzers) {
                 for (IMatchRoleID position : lineup.getFieldPositions()) {
                     MatchRoleID mid = (MatchRoleID) position;
-                    if (mid.getSpielerId() == 0) continue;
+                    if (mid.getPlayerId() == 0) continue;
                     analyzer.analyzePosition(this, mid);
                 }
             }
@@ -75,7 +75,7 @@ public class SpecialEventsPredictionManager {
         public Player getPlayerByPosition(int pos) {
             MatchRoleID mid = this.lineup.getPositionById(pos);
             if ( mid == null )return  null;
-            return getPlayer(mid.getSpielerId());
+            return getPlayer(mid.getPlayerId());
         }
 
         public MatchRoleID getPosition(int pos) {
@@ -93,7 +93,7 @@ public class SpecialEventsPredictionManager {
         public Player getOpponentPlayerByPosition(int pos) {
             MatchRoleID mid = this.opponentLineup.getPositionById(pos);
             if ( mid == null) return null;
-            return getOpponentPlayer(mid.getSpielerId());
+            return getOpponentPlayer(mid.getPlayerId());
         }
 
         public MatchRoleID getOpponentPosition(int pos) {
@@ -119,7 +119,7 @@ public class SpecialEventsPredictionManager {
         ){
             // Calc goalProbability - compare score skill with opponent goalkeeper skill
             MatchRoleID mid = (MatchRoleID) position;
-            Player scorer = getPlayer(mid.getSpielerId());
+            Player scorer = getPlayer(mid.getPlayerId());
             int opponentGoalkeeperSkill = 0;
             Player keeper = getOpponentPlayerByPosition(IMatchRoleID.keeper);
             if (keeper != null) opponentGoalkeeperSkill = keeper.getGKskill();
@@ -147,7 +147,7 @@ public class SpecialEventsPredictionManager {
         ){
             // Calc goalProbability - compare score skill with opponent goalkeeper skill
             MatchRoleID mid = (MatchRoleID) position;
-            Player scorer = getOpponentPlayer(mid.getSpielerId());
+            Player scorer = getOpponentPlayer(mid.getPlayerId());
             int goalkeeperSkill = 0;
             Player keeper = getPlayerByPosition(IMatchRoleID.keeper);
             if (keeper != null) goalkeeperSkill = keeper.getGKskill();
@@ -214,9 +214,9 @@ public class SpecialEventsPredictionManager {
         HOModel model = HOVerwaltung.instance().getModel();
         for (IMatchRoleID matchRoleID : this.lineup.getFieldPositions()) {
             MatchRoleID mid = (MatchRoleID) matchRoleID;
-            if (mid.getSpielerId() == 0) continue;
-            if (!this.playerInLineup.containsKey(mid.getSpielerId())) {
-                Player player = model.getCurrentPlayer(mid.getSpielerId());
+            if (mid.getPlayerId() == 0) continue;
+            if (!this.playerInLineup.containsKey(mid.getPlayerId())) {
+                Player player = model.getCurrentPlayer(mid.getPlayerId());
                 if (player != null) {
                     this.playerInLineup.put(player.getPlayerID(), player);
                 }
@@ -299,7 +299,7 @@ public class SpecialEventsPredictionManager {
 
     public Player getPlayer(IMatchRoleID id) {
         MatchRoleID mid = (MatchRoleID) id;
-        return getPlayer(mid.getSpielerId());
+        return getPlayer(mid.getPlayerId());
     }
 
     public Player getPlayer(int id) {
@@ -308,7 +308,7 @@ public class SpecialEventsPredictionManager {
 
     public Player getOpponentPlayer(IMatchRoleID id) {
         MatchRoleID mid = (MatchRoleID) id;
-        return getOpponentPlayer(mid.getSpielerId());
+        return getOpponentPlayer(mid.getPlayerId());
     }
 
     public Player getOpponentPlayer(int id) {

@@ -5,9 +5,6 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 
-import java.util.List;
-import java.util.Vector;
-
 // Winger to Anyone
 // If your winger manages to break through the defense on his side of the pitch, he might pass the ball to the other
 // Winger, Forward, or an Inner Midfielder.
@@ -30,7 +27,7 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
     @Override
     public void analyzePosition(SpecialEventsPredictionManager.Analyse analyse,MatchRoleID position) {
         this.analyse = analyse;
-        int id = position.getSpielerId();
+        int id = position.getPlayerId();
         if ( id != 0) {
             switch (position.getId()) {
                 case IMatchRoleID.leftWinger:
@@ -70,7 +67,7 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
 
     private void getWingerEvents( MatchRoleID position, int passReceiver, double defence) {
         MatchRoleID scorerId = analyse.getPosition(passReceiver);
-        Player scorer = analyse.getPlayer(scorerId.getSpielerId());
+        Player scorer = analyse.getPlayer(scorerId.getPlayerId());
         if ( scorer != null) {
             if (scorer.hasSpeciality(Speciality.HEAD)) {
                 getWingerEvent( position, scorerId, defence, SpecialEventType.WINGER_HEAD, 3);
@@ -81,14 +78,14 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
     }
 
     private void getWingerEvent( MatchRoleID position, MatchRoleID scorer, double defence, SpecialEventType type, double bonus) {
-        if (position.getSpielerId() == 0 || scorer.getSpielerId() == 0) return;
-        Player winger = analyse.getPlayer(position.getSpielerId());
+        if (position.getPlayerId() == 0 || scorer.getPlayerId() == 0) return;
+        Player winger = analyse.getPlayer(position.getPlayerId());
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, type,
                 .2, 10, -10,
                 winger.getWIskill() - defence
         );
         if (se != null) {
-            Player involvedPlayer = analyse.getPlayer(scorer.getSpielerId());
+            Player involvedPlayer = analyse.getPlayer(scorer.getPlayerId());
             se.setGoalProbability(se.getChanceCreationProbability() * analyse.getGoalProbability(scorer, bonus));
             se.setInvolvedPosition(scorer);
             analyse.addSpecialEventPrediction(se);

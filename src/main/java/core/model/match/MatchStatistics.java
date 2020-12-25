@@ -49,16 +49,11 @@ public class MatchStatistics {
 	public int getTrainMinutesPlayedInPositions(int spielerId, int[] accepted) {
 		if ( accepted!=null && accepted.length==0) return 0;	// NO positions are accepted
 		boolean inPosition = false;
-		MatchLineupPlayer player = teamLineup.getPlayerByID(spielerId);
-		if (player == null) {
-			return 0;
-		}
 
 		int enterMin = -1;
 		int minPlayed = 0;
-
 		// Those in the starting lineup entered at minute 0
-		if (isInAcceptedFieldPositions(player.getStartPosition(), accepted)) {
+		if (isPlayerInAcceptedPositions(spielerId, accepted)) {
 			if ( match.isWalkoverMatch()) {
 				// Opponent team did not appear
 				if (accepted != null) {
@@ -89,7 +84,7 @@ public class MatchStatistics {
 			if (substitution.getOrderType() == MatchOrderType.SUBSTITUTION) {
 				if ((substitution.getObjectPlayerID() == spielerId) || (substitution.getSubjectPlayerID() == spielerId)) {
 					int newpos = getPlayerFieldPositionAtMinute(spielerId, substitution.getMatchMinuteCriteria());
-					boolean newPosAccepted = isInAcceptedFieldPositions(newpos, accepted);
+					boolean newPosAccepted =  isPositionInAcceptedPositions(newpos, accepted);
 					if (inPosition && !newPosAccepted) {
 						// He left a counting position.
 						minPlayed += substitution.getMatchMinuteCriteria() - enterMin;
@@ -110,20 +105,43 @@ public class MatchStatistics {
 		return minPlayed;
 	}
 
+
 	// All positions are accepted.
 	public int getStaminaMinutesPlayedInPositions(int spielerId) {
 		return getTrainMinutesPlayedInPositions(spielerId, null);
 	}
-	
-	private boolean isInAcceptedFieldPositions(int pos, int[] accepted) {
-		if ( MatchRoleID.isFieldMatchRoleId(pos) ) {
-			if (accepted == null)
-				return true; // all positions are accepted, use an empty array if NO position should be accepted
 
-			for (int value : accepted) {
-				if (value == pos) {
-					return true;
-				}
+	/**
+	 * Check if specified player is in one of the accepted positions
+	 *
+	 * @param playerId Id of the player
+	 * @param accepted list of the accepted positions. List may also include special positions set pieces or captain.
+	 *                 empty list => no position is accepted
+	 *                 null => any position is accepted
+	 * @return
+	 * 	true, if player is in one of the accepted starting positions.
+	 * 	false, if not
+	 */
+	private boolean isPlayerInAcceptedPositions(int playerId, int[] accepted) {
+		if (accepted == null)
+			return teamLineup.getPlayerByID(playerId).isFieldMatchRoleId(); // all positions are accepted, use an empty array if NO position should be accepted
+
+		for (int position : accepted) {
+			var player = teamLineup.getPlayerByPosition(position);
+			if ( player != null && player.getPlayerId() == playerId) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isPositionInAcceptedPositions(int pos, int[] accepted) {
+		if (accepted == null)
+			return MatchRoleID.isFieldMatchRoleId(pos); // all positions are accepted, use an empty array if NO position should be accepted
+
+		for (int value : accepted) {
+			if (value == pos) {
+				return true;
 			}
 		}
 		return false;

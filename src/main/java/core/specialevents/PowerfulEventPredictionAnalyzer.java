@@ -30,7 +30,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
     public void analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
         this.analyse = analyse;
 
-        int id = position.getSpielerId();
+        int id = position.getPlayerId();
         if (id == 0) return;
         Player p = analyse.getPlayer(id);
         if (p.hasSpeciality(Speciality.POWERFUL)) {
@@ -60,9 +60,9 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
     // => chance probability < 0 to display it in opponents column
     // => goal probability > 0  to reduce opponents goals
     private void getSittingMidfielder(MatchRoleID position, MatchRoleID opponentScorer) {
-        if (position.getSpielerId() == 0 || opponentScorer.getSpielerId() == 0) return;
-        Player p = analyse.getPlayer(position.getSpielerId());
-        Player op = analyse.getOpponentPlayer(opponentScorer.getSpielerId());
+        if (position.getPlayerId() == 0 || opponentScorer.getPlayerId() == 0) return;
+        Player p = analyse.getPlayer(position.getPlayerId());
+        Player op = analyse.getOpponentPlayer(opponentScorer.getPlayerId());
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, SpecialEventType.PDIM,
                 -.1, 10, -10,
                 p.getDEFskill() + p.getKondition() - op.getSCskill() - op.getKondition()
@@ -83,7 +83,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
         // Any opponent player, except keeper, could be involved
         for (int i = IMatchRoleID.rightBack; i <= IMatchRoleID.leftForward; i++) {
             MatchRoleID opponentScorer = analyse.getOpponentPosition(i);
-            if (opponentScorer.getSpielerId() != 0) {
+            if (opponentScorer.getPlayerId() != 0) {
                 getSittingMidfielder(position, opponentScorer);
             }
         }
@@ -94,8 +94,8 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
         for (int i = right; i <= left; i++) {
             if (i != position.getId()) {
                 MatchRoleID mid = this.analyse.getPosition(i);
-                if (mid.getSpielerId() != 0 && mid.getTactic() == taktik) {
-                    Player p = analyse.getPlayer(mid.getSpielerId());
+                if (mid.getPlayerId() != 0 && mid.getTactic() == taktik) {
+                    Player p = analyse.getPlayer(mid.getPlayerId());
                     if (p.hasSpeciality(Speciality.POWERFUL)) {
                         overcrowding++;
                     }
@@ -114,7 +114,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
     }
 
     private void getPowerfulNormalForward(MatchRoleID position) {
-        if (position.getSpielerId() == 0) return;
+        if (position.getPlayerId() == 0) return;
         ;
         double overcrowdingFactor = getOvercrowding(position, IMatchRoleID.rightForward, IMatchRoleID.leftForward, IMatchRoleID.NORMAL);
 
@@ -126,7 +126,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
             }
         }
 
-        Player p = analyse.getPlayer(position.getSpielerId());
+        Player p = analyse.getPlayer(position.getPlayerId());
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, SpecialEventType.PNF,
                 0.5, 10, -20,
                 p.getPMskill() - defence);

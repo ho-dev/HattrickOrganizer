@@ -184,7 +184,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	void deleteMatchLineupPlayer(MatchLineupPlayer player, int matchID, int teamID) {
 		if (player != null) {
 			final String[] where = { "MatchID" , "TeamID", "RoleID", "SpielerID"};
-			final String[] werte = { "" + matchID, "" + teamID, "" + player.getId(), "" + player.getSpielerId()};			
+			final String[] werte = { "" + matchID, "" + teamID, "" + player.getId(), "" + player.getPlayerId()};
 			delete(where, werte);			
 		}
 	}
@@ -209,7 +209,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			// Should we delete here, anyways? Isn't that for update?
 			
 			final String[] where = { "MatchID" , "TeamID", "RoleID", "SpielerID"};
-			final String[] werte = { "" + matchID, "" + teamID, "" + player.getId(), "" + player.getSpielerId()};			
+			final String[] werte = { "" + matchID, "" + teamID, "" + player.getId(), "" + player.getPlayerId()};
 			delete(where, werte);
 
 			//saven
@@ -221,7 +221,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 						matchID + "," +
 						teamID	+ "," +
 						player.getSourceSystem().getValue() + "," +
-						player.getSpielerId() + ","	+
+						player.getPlayerId() + ","	+
 						player.getId() + "," +
 						player.getTactic()	+ ","	+
 						player.getPositionCode() + ",'" +

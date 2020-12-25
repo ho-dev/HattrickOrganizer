@@ -358,7 +358,7 @@ public class XMLExporter  {
 				//Player schreiben
 				for (int k = 0; (lineupTeam.getStartingLineup() != null) && (k < lineupTeam.getStartingLineup().size()); k++) {
 					MatchLineupPlayer playerMatch = lineupTeam.getStartingLineup().get(k);
-					Player playerData = matchData.getPlayers().get(Integer.valueOf(playerMatch.getSpielerId()));
+					Player playerData = matchData.getPlayers().get(Integer.valueOf(playerMatch.getPlayerId()));
 
 					//Bank + verletzte überspringen
 					if (playerMatch.getId() >= IMatchRoleID.startReserves) {
@@ -373,7 +373,7 @@ public class XMLExporter  {
 
 					ele = doc.createElement("SpielerID");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerMatch.getSpielerId()));
+					ele.appendChild(doc.createTextNode("" + playerMatch.getPlayerId()));
 					ele = doc.createElement("Spezialitaet");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getPlayerSpecialty()));

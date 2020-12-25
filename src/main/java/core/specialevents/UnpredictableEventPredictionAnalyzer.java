@@ -5,9 +5,6 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 
-import java.util.List;
-import java.util.Vector;
-
 public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredictionAnalyzer {
     private SpecialEventsPredictionManager.Analyse analyse;
 
@@ -55,7 +52,7 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
 
         this.analyse = analyse;
 
-        int id = position.getSpielerId();
+        int id = position.getPlayerId();
         if ( id == 0 ) return;
         Player p = analyse.getPlayer(id);
         if (p.hasSpeciality(Speciality.UNPREDICTABLE)) {
@@ -119,8 +116,8 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
     }
 
     private void getUnpredictableOwnGoal( MatchRoleID position) {
-        if (position.getSpielerId() == 0) return;
-        Player p = this.analyse.getPlayer(position.getSpielerId());
+        if (position.getPlayerId() == 0) return;
+        Player p = this.analyse.getPlayer(position.getPlayerId());
         Player keeper = this.analyse.getPlayerByPosition(IMatchRoleID.keeper);
         double gkSkill = 0;
         if (keeper != null) {
@@ -140,8 +137,8 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
 
     private void getUnpredictableSpecialAction( MatchRoleID position, int leftCentralDefender, int middleCentralDefender, int rightCentralDefender) {
         // Calculate opponent Defence skill
-        if (position.getSpielerId() == 0) return;
-        Player p = this.analyse.getPlayer(position.getSpielerId());
+        if (position.getPlayerId() == 0) return;
+        Player p = this.analyse.getPlayer(position.getPlayerId());
         double opponentDefenceSkill = 0;
         double opponentExperience = 0;
         int n = 0;
@@ -196,7 +193,7 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
     }
 
     private void getUnpredictableMistake( MatchRoleID position, int opponentPos, double wingerScoreBonus) {
-        Player p = this.analyse.getPlayer(position.getSpielerId());
+        Player p = this.analyse.getPlayer(position.getPlayerId());
         Player op = this.analyse.getOpponentPlayerByPosition(opponentPos);
         if ( op != null && p != null){
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position,
@@ -216,8 +213,8 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
     }
     
     private void getUnpredictableLongPass( MatchRoleID position) {
-        if (position.getSpielerId() == 0) return;
-        Player p = this.analyse.getPlayer(position.getSpielerId());
+        if (position.getPlayerId() == 0) return;
+        Player p = this.analyse.getPlayer(position.getPlayerId());
         for (int i = IMatchRoleID.rightInnerMidfield; i <= IMatchRoleID.leftInnerMidfield; i++) {
             Player opp = this.analyse.getOpponentPlayerByPosition(i);
             if (opp != null) {

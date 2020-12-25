@@ -850,7 +850,7 @@ public class Lineup{
 	public Player getPlayerByPositionID(int positionId) {
 		try {
 			return HOVerwaltung.instance().getModel()
-					.getCurrentPlayer(getPositionById(positionId).getSpielerId());
+					.getCurrentPlayer(getPositionById(positionId).getPlayerId());
 		} catch (Exception e) {
 			HOLogger.instance()
 					.error(getClass(), "getPlayerByPositionID(" + positionId + "): " + e);
@@ -862,7 +862,7 @@ public class Lineup{
 		String playerName;
 
 		try {
-			return HOVerwaltung.instance().getModel().getCurrentPlayer(getPositionById(positionId).getSpielerId()).getShortName();
+			return HOVerwaltung.instance().getModel().getCurrentPlayer(getPositionById(positionId).getPlayerId()).getShortName();
 		} catch (Exception e) {
 			return "           ";
 		}
@@ -915,7 +915,7 @@ public class Lineup{
 	private MatchRoleID getPositionByPlayerId(int playerid, Vector<IMatchRoleID> positions) {
 		for (IMatchRoleID position : positions) {
 			MatchRoleID spielerPosition = (MatchRoleID) position;
-			if (spielerPosition.getSpielerId() == playerid) {
+			if (spielerPosition.getPlayerId() == playerid) {
 				return spielerPosition;
 			}
 		}
@@ -1302,7 +1302,7 @@ public class Lineup{
 				MatchRoleID position = (MatchRoleID) pos;
 				// existiert Player noch ?
 				if ((HOVerwaltung.instance().getModel() != null)
-						&& (HOVerwaltung.instance().getModel().getCurrentPlayer(position.getSpielerId()) == null)) {
+						&& (HOVerwaltung.instance().getModel().getCurrentPlayer(position.getPlayerId()) == null)) {
 					// nein dann zuweisung aufheben
 					position.setSpielerId(0, this);
 				}
@@ -1331,68 +1331,68 @@ public class Lineup{
 
 		try {
 			properties.setProperty("keeper",
-					String.valueOf(getPositionById(IMatchRoleID.keeper).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.keeper).getPlayerId()));
 			properties.setProperty("rightback",
-					String.valueOf(getPositionById(IMatchRoleID.rightBack).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.rightBack).getPlayerId()));
 			properties.setProperty("rightcentraldefender", String.valueOf(getPositionById(
-					IMatchRoleID.rightCentralDefender).getSpielerId()));
+					IMatchRoleID.rightCentralDefender).getPlayerId()));
 			properties.setProperty("middlecentraldefender", String.valueOf(getPositionById(
-					IMatchRoleID.middleCentralDefender).getSpielerId()));
+					IMatchRoleID.middleCentralDefender).getPlayerId()));
 			properties.setProperty("leftcentraldefender", String.valueOf(getPositionById(
-					IMatchRoleID.leftCentralDefender).getSpielerId()));
+					IMatchRoleID.leftCentralDefender).getPlayerId()));
 			properties.setProperty("leftback",
-					String.valueOf(getPositionById(IMatchRoleID.leftBack).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.leftBack).getPlayerId()));
 			properties.setProperty("rightwinger",
-					String.valueOf(getPositionById(IMatchRoleID.rightWinger).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.rightWinger).getPlayerId()));
 			properties.setProperty("rightinnermidfield", String.valueOf(getPositionById(
-					IMatchRoleID.rightInnerMidfield).getSpielerId()));
+					IMatchRoleID.rightInnerMidfield).getPlayerId()));
 			properties.setProperty("middleinnermidfield", String.valueOf(getPositionById(
-					IMatchRoleID.centralInnerMidfield).getSpielerId()));
+					IMatchRoleID.centralInnerMidfield).getPlayerId()));
 			properties.setProperty("leftinnermidfield", String.valueOf(getPositionById(
-					IMatchRoleID.leftInnerMidfield).getSpielerId()));
+					IMatchRoleID.leftInnerMidfield).getPlayerId()));
 			properties.setProperty("leftwinger",
-					String.valueOf(getPositionById(IMatchRoleID.leftWinger).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.leftWinger).getPlayerId()));
 			properties.setProperty("rightforward",
-					String.valueOf(getPositionById(IMatchRoleID.rightForward).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.rightForward).getPlayerId()));
 			properties.setProperty("centralforward", String.valueOf(getPositionById(
-					IMatchRoleID.centralForward).getSpielerId()));
+					IMatchRoleID.centralForward).getPlayerId()));
 			properties.setProperty("leftforward",
-					String.valueOf(getPositionById(IMatchRoleID.leftForward).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.leftForward).getPlayerId()));
 
 			properties.setProperty("substgk1",
-					String.valueOf(getPositionById(IMatchRoleID.substGK1).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.substGK1).getPlayerId()));
 			properties.setProperty("substgk2",
-					String.valueOf(getPositionById(IMatchRoleID.substGK2).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.substGK2).getPlayerId()));
 
 			properties.setProperty("substcd1",
-					String.valueOf(getPositionById(IMatchRoleID.substCD1).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.substCD1).getPlayerId()));
 			properties.setProperty("substcd2",
-					String.valueOf(getPositionById(IMatchRoleID.substCD2).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.substCD2).getPlayerId()));
 
 			properties.setProperty("substwb1",
-					String.valueOf(getPositionById(IMatchRoleID.substWB1).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.substWB1).getPlayerId()));
 			properties.setProperty("substwb2",
-					String.valueOf(getPositionById(IMatchRoleID.substWB2).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.substWB2).getPlayerId()));
 
 			properties.setProperty("substim1", String.valueOf(getPositionById(
-					IMatchRoleID.substIM1).getSpielerId()));
+					IMatchRoleID.substIM1).getPlayerId()));
 			properties.setProperty("substim2", String.valueOf(getPositionById(
-					IMatchRoleID.substIM2).getSpielerId()));
+					IMatchRoleID.substIM2).getPlayerId()));
 
 			properties.setProperty("substfw1",
-					String.valueOf(getPositionById(IMatchRoleID.substFW1).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.substFW1).getPlayerId()));
 			properties.setProperty("substfw2",
-					String.valueOf(getPositionById(IMatchRoleID.substFW2).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.substFW2).getPlayerId()));
 
 			properties.setProperty("substwi1",
-					String.valueOf(getPositionById(IMatchRoleID.substWI1).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.substWI1).getPlayerId()));
 			properties.setProperty("substwi2",
-					String.valueOf(getPositionById(IMatchRoleID.substWI2).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.substWI2).getPlayerId()));
 
 			properties.setProperty("substxt1",
-					String.valueOf(getPositionById(IMatchRoleID.substXT1).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.substXT1).getPlayerId()));
 			properties.setProperty("substxt2",
-					String.valueOf(getPositionById(IMatchRoleID.substXT2).getSpielerId()));
+					String.valueOf(getPositionById(IMatchRoleID.substXT2).getPlayerId()));
 
 
 			properties.setProperty("order_rightback",
@@ -1707,7 +1707,7 @@ public class Lineup{
 			MatchRoleID position = (MatchRoleID) pos;
 			if ((positionId == position.getPosition())
 					&& (position.getId() < IMatchRoleID.startReserves)
-					&& (position.getSpielerId() > 0)) {
+					&& (position.getPlayerId() > 0)) {
 				++anzahl;
 			}
 		}
@@ -1724,7 +1724,7 @@ public class Lineup{
 
 		for (IMatchRoleID pos : m_vFieldPositions) {
 			MatchRoleID position = (MatchRoleID) pos;
-			if (position.getSpielerId() != 0) numPlayers++;
+			if (position.getPlayerId() != 0) numPlayers++;
 		    }
 		return numPlayers != 11;
 
@@ -1754,7 +1754,7 @@ public class Lineup{
 			for (IMatchRoleID pos : m_vFieldPositions) {
 				MatchRoleID position = (MatchRoleID) pos;
 				if (position.getPosition() == positionId) {
-					stk += calcPlayerStk(player, position.getSpielerId(), positionId, useForm);
+					stk += calcPlayerStk(player, position.getPlayerId(), positionId, useForm);
 				}
 			}
 		}
@@ -1864,7 +1864,7 @@ public class Lineup{
 	private MatchRoleID swap(Object object, Object object2) {
 		final MatchRoleID sp = (MatchRoleID) object;
 		final MatchRoleID sp2 = (MatchRoleID) object2;
-		return new MatchRoleID(sp.getId(), sp2.getSpielerId(), sp2.getTactic());
+		return new MatchRoleID(sp.getId(), sp2.getPlayerId(), sp2.getTactic());
 	}
 
 	/**
@@ -1919,7 +1919,7 @@ public class Lineup{
 				if (tactic == -1) tactic = matchRoleIDaffectedPlayer.getTactic();
 				newRoleId = sub.getRoleId();
 				if ( newRoleId != -1 ) {
-					if (  getPositionById(newRoleId).getSpielerId() == 0){
+					if (  getPositionById(newRoleId).getPlayerId() == 0){
 						if ( newRoleId != matchRoleIDaffectedPlayer.getId() ) {
 							setSpielerAtPosition(matchRoleIDaffectedPlayer.getId(), 0, MatchRoleID.NORMAL);  // clear old position
 						}
@@ -1932,7 +1932,7 @@ public class Lineup{
 				else {
 					newRoleId = matchRoleIDaffectedPlayer.getId();
 				}
-				setSpielerAtPosition(newRoleId, matchRoleIDPlayer.getSpielerId(), tactic);
+				setSpielerAtPosition(newRoleId, matchRoleIDPlayer.getPlayerId(), tactic);
 				break;
 
 			case POSITION_SWAP:
@@ -1962,7 +1962,7 @@ public class Lineup{
 				}
 				if ( newRoleId == -1 )  newRoleId = matchRoleIDaffectedPlayer.getId();
 				else if ( newRoleId != matchRoleIDaffectedPlayer.getId()
-						&& getPositionById(newRoleId).getSpielerId() > 0 ){
+						&& getPositionById(newRoleId).getPlayerId() > 0 ){
 					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
 					break;
 				}

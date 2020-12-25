@@ -245,7 +245,7 @@ public class FeedbackPanel extends JFrame {
         for (IMatchRoleID obj : HOLineup.getPositionen()) {
             positionHO = ((MatchRoleID) obj).getId();
             orderHO = ((MatchRoleID) obj).getTactic();
-            isAligned = (((MatchRoleID) obj).getSpielerId() != 0) && IMatchRoleID.aFieldMatchRoleID.contains(positionHO);
+            isAligned = (((MatchRoleID) obj).getPlayerId() != 0) && IMatchRoleID.aFieldMatchRoleID.contains(positionHO);
 
 
             if (isAligned) {
@@ -260,7 +260,7 @@ public class FeedbackPanel extends JFrame {
         for (Map.Entry<Integer, Byte> entry : requirements.lineup.entrySet()) {
             MatchRoleID HOposition = HOLineup.getPositionById(entry.getKey());
             orderHO = HOposition.getTactic();
-            isAligned = (HOposition.getSpielerId() != 0) && IMatchRoleID.aFieldMatchRoleID.contains(HOposition.getId());
+            isAligned = (HOposition.getPlayerId() != 0) && IMatchRoleID.aFieldMatchRoleID.contains(HOposition.getId());
             if ((!isAligned) || (orderHO!=entry.getValue())) {return false;}
         }
 

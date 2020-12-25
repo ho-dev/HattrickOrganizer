@@ -37,7 +37,7 @@ public class StaminaEventPredictionAnalyzer implements ISpecialEventPredictionAn
     }
 
     private void getStaminaEvents(MatchRoleID position, int i) {
-        Player p = analyse.getPlayer(position.getSpielerId());
+        Player p = analyse.getPlayer(position.getPlayerId());
         if ( p != null){
             Player op = analyse.getOpponentPlayerByPosition(i);
             if ( op != null){

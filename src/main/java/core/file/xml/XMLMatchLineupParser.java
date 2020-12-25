@@ -238,7 +238,7 @@ public class XMLMatchLineupParser {
 			// fixed order.
 			MatchLineupPlayer player = createPlayer((Element) list.item(i));
 			player.setSourceSystem(SourceSystem.valueOf(sourceSystem));
-			if (team.getPlayerByID(player.getSpielerId()) != null) {
+			if (team.getPlayerByID(player.getPlayerId()) != null) {
 				if ((player.getId() >= IMatchRoleID.FirstPlayerReplaced)
 						&& (player.getId() <= IMatchRoleID.ThirdPlayerReplaced)) {
 
@@ -259,7 +259,7 @@ public class XMLMatchLineupParser {
 			// Merge with the existing player, but ignore captain and set piece
 			// position
 			if (startPlayer.getStartPosition() >= IMatchRoleID.startLineup) {
-				MatchLineupPlayer lineupPlayer = team.getPlayerByID(startPlayer.getSpielerId());
+				MatchLineupPlayer lineupPlayer = team.getPlayerByID(startPlayer.getPlayerId());
 				if (lineupPlayer != null) {
 					lineupPlayer.setStartPosition(startPlayer.getStartPosition());
 					lineupPlayer.setStartBehavior(startPlayer.getStartBehavior());

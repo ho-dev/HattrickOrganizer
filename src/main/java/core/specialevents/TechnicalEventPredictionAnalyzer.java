@@ -1,14 +1,9 @@
 package core.specialevents;
 
-import core.HO;
 import core.constants.player.Speciality;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.util.HOLogger;
-
-import java.util.List;
-import java.util.Vector;
 
 // Technical Goes around a Head Player
 // This is known as a tech vs head special event. Any technical Winger, Inner Midfielder and Forward can take
@@ -28,7 +23,7 @@ public class TechnicalEventPredictionAnalyzer implements ISpecialEventPrediction
     @Override
     public void analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
         this.analyse = analyse;
-        int id = position.getSpielerId();
+        int id = position.getPlayerId();
         if (id == 0) return;
         Player p = analyse.getPlayer(id);
         double scoreBoost = 1;
@@ -58,9 +53,9 @@ public class TechnicalEventPredictionAnalyzer implements ISpecialEventPrediction
 
     private void getTechHeadEvent( MatchRoleID position, int opponentPosition, double scoreBoost) {
         Player opp = analyse.getOpponentPlayerByPosition(opponentPosition);
-        if (opp == null || position.getSpielerId() == 0) return;
+        if (opp == null || position.getPlayerId() == 0) return;
         if (opp.hasSpeciality(Speciality.HEAD)) {
-            Player p = analyse.getPlayer(position.getSpielerId());
+            Player p = analyse.getPlayer(position.getPlayerId());
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position,
                     SpecialEventType.TECHNICAL_HEAD,
                     1., 20, -20,

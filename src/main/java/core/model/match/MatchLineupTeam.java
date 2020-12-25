@@ -5,7 +5,6 @@ import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.Substitution;
-import module.youth.YouthPlayer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -152,7 +151,7 @@ public class MatchLineupTeam {
 	public final MatchLineupPlayer getPlayerByID(int id) {
 
 		for (MatchLineupPlayer player : startingLineup) {
-			if (player.getSpielerId() == id) {
+			if (player.getPlayerId() == id) {
 				if ((player.getId() == IMatchRoleID.captain)
 						|| (player.getId() == IMatchRoleID.setPieces)) {
 					// ignore

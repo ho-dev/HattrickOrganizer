@@ -475,7 +475,7 @@ public class XMLMatchdetailsParser {
         for (int i = 0; (lineup != null) && (i < lineup.size()); i++) {
             player = lineup.elementAt(i);
             final Vector<String> tmpPlayer = new Vector<String>();
-            tmpPlayer.add("" + player.getSpielerId());
+            tmpPlayer.add("" + player.getPlayerId());
             tmpPlayer.add(player.getSpielerName());
             players.add(tmpPlayer);
         }

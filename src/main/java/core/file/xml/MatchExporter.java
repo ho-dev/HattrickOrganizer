@@ -83,7 +83,7 @@ public class MatchExporter {
 					}
 
 					formerPlayerData =
-						DBManager.instance().getSpielerAtDate(player.getSpielerId(),matches[i].getMatchDateAsTimestamp());
+						DBManager.instance().getSpielerAtDate(player.getPlayerId(),matches[i].getMatchDateAsTimestamp());
 
 
 					//Keine Daten verfï¿½gbar ?
@@ -95,7 +95,7 @@ public class MatchExporter {
 					}
 
 					//ISpieler in ht ablegen
-					lineUpISpieler.put(Integer.valueOf(player.getSpielerId()), formerPlayerData);
+					lineUpISpieler.put(Integer.valueOf(player.getPlayerId()), formerPlayerData);
 				} //end for aufstellung
 
 				//Matchdaten ablegen da einwandfrei

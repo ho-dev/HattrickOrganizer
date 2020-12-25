@@ -120,12 +120,12 @@ public class MatchPopulator {
         for (int spot = IMatchRoleID.startLineup; spot < IMatchRoleID.startReserves; spot++) {
             MatchLineupPlayer mlp = tmpLineupTeam.getPlayerByPosition(spot);
 
-            if (mlp != null && mlp.getSpielerId() > 0) {
+            if (mlp != null && mlp.getPlayerId() > 0) {
                 totStars += mlp.getRating();
 
                 PlayerPerformance pp = new PlayerPerformance(mlp);
 
-                pp.setStatus(PlayerDataManager.getLatestPlayerInfo(mlp.getSpielerId()).getStatus());
+                pp.setStatus(PlayerDataManager.getLatestPlayerInfo(mlp.getPlayerId()).getStatus());
 
                 matchDetail.addMatchLineupPlayer(pp);
             }
@@ -133,7 +133,7 @@ public class MatchPopulator {
 
         MatchLineupPlayer setPieces = tmpLineupTeam.getPlayerByPosition(IMatchRoleID.setPieces);
         if ( setPieces != null){
-            matchDetail.setSetPiecesTaker(setPieces.getSpielerId());
+            matchDetail.setSetPiecesTaker(setPieces.getPlayerId());
         }
 
         MatchRating rating = buildMatchRating(tmpMatch);

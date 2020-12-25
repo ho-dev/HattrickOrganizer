@@ -100,7 +100,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	public MatchRoleID(MatchRoleID sp) {
 		// m_bPosition = position;
 		m_iId = sp.getId();
-		m_iSpielerId = sp.getSpielerId();
+		m_iSpielerId = sp.getPlayerId();
 		m_bTaktik = sp.getTactic();
 
 		if ((m_iId < IMatchRoleID.setPieces) && (m_iId != -1)) {
@@ -688,7 +688,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	 *
 	 * @return Value of property m_iSpielerId.
 	 */
-	public final int getSpielerId() {
+	public final int getPlayerId() {
 		return m_iSpielerId;
 	}
 

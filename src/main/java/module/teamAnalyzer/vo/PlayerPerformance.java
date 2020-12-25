@@ -61,7 +61,7 @@ public class PlayerPerformance {
     }
 
     public int getSpielerId() {
-        return mlp.getSpielerId();
+        return mlp.getPlayerId();
     }
 
     public String getSpielerName() {
