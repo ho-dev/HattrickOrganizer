@@ -73,7 +73,8 @@ public abstract class WeeklyTrainingType {
 			//  Random from here and down
 			10,
 			15,
-			21};
+			21
+	};
 
 	public static WeeklyTrainingType instance(int iTrainingType) {
 		WeeklyTrainingType wt = null;

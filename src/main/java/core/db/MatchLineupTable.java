@@ -45,7 +45,7 @@ public final class MatchLineupTable extends AbstractTable {
 			"CREATE INDEX IMATCHLINEUP_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")"};
 	}	
 
-	MatchLineup getMatchLineup(int sourceSystem, int matchID) {
+	MatchLineup loadMatchLineup(int sourceSystem, int matchID) {
 		MatchLineup lineup;
 		try {
 			var sql = "SELECT * FROM "+getTableName()+" WHERE SourceSystem=" + sourceSystem + " AND MatchID = " + matchID;
@@ -94,15 +94,13 @@ public final class MatchLineupTable extends AbstractTable {
 	void storeMatchLineup(MatchLineup lineup, Integer teamId) {
 		if (lineup != null) {
 			//There should never be anything to delete, but...
-			final String[] where = { "SourceSystem", "MatchID" };
-			final String[] werte = { "" + lineup.getSourceSystem().getValue(), "" + lineup.getMatchID()};
+			final String[] where = {"SourceSystem", "MatchID"};
+			final String[] werte = {"" + lineup.getSourceSystem().getValue(), "" + lineup.getMatchID()};
 			delete(where, werte);
-
-			//saven
 			try {
-				//insert vorbereiten
-				var sql = "INSERT INTO "+getTableName()+" (SourceSystem,MatchID,MatchTyp,HeimName,HeimID,GastName," +
-						"GastID,FetchDate,MatchDate,ArenaID,ArenaName) VALUES("+
+				//insert
+				var sql = "INSERT INTO " + getTableName() + " (SourceSystem,MatchID,MatchTyp,HeimName,HeimID,GastName," +
+						"GastID,FetchDate,MatchDate,ArenaID,ArenaName) VALUES(" +
 						lineup.getSourceSystem().getValue() + "," +
 						lineup.getMatchID() + "," +
 						lineup.getMatchTyp().getId() + ", '" +
@@ -110,24 +108,23 @@ public final class MatchLineupTable extends AbstractTable {
 						lineup.getHomeTeamId() + ",'" +
 						DBManager.insertEscapeSequences(lineup.getGuestTeamName()) + "', " +
 						lineup.getGuestTeamId() + ", '" +
-						lineup.getStringDownloadDate()	+ "', '"+
+						lineup.getStringDownloadDate() + "', '" +
 						lineup.getStringMatchDate() + "', " +
 						lineup.getArenaID() + ", '" +
 						DBManager.insertEscapeSequences(lineup.getArenaName()) + "' )";
 				adapter.executeUpdate(sql);
 
-
-				if ( teamId == null || teamId == lineup.getHomeTeamId()){
+				if (teamId == null || teamId == lineup.getHomeTeamId()) {
 					((MatchLineupTeamTable) DBManager.instance().getTable(MatchLineupTeamTable.TABLENAME))
-							.storeMatchLineupTeam(lineup.getHomeTeam(),	lineup.getMatchID());
+							.storeMatchLineupTeam(lineup.getHomeTeam(), lineup.getMatchID());
 				}
-				if ( teamId == null || teamId == lineup.getGuestTeamId()) {
+				if (teamId == null || teamId == lineup.getGuestTeamId()) {
 					((MatchLineupTeamTable) DBManager.instance().getTable(MatchLineupTeamTable.TABLENAME))
-							.storeMatchLineupTeam(lineup.getGuestTeam(),	lineup.getMatchID());
+							.storeMatchLineupTeam(lineup.getGuestTeam(), lineup.getMatchID());
 				}
 			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),"DB.storeMatchLineup Error" + e);
-				HOLogger.instance().log(getClass(),e);
+				HOLogger.instance().log(getClass(), "DB.storeMatchLineup Error" + e);
+				HOLogger.instance().log(getClass(), e);
 			}
 		}
 	}

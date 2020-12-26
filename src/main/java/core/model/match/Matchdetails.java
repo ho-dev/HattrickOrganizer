@@ -868,7 +868,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      */
     public final ArrayList<MatchEvent> getHighlights() {
         if ( this.getMatchID()> -1 && ( m_vHighlights == null || m_vHighlights.size() == 0)){
-            m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchID());
+            m_vHighlights = DBManager.instance().getMatchHighlights(this.getSourceSystem().getValue(), this.getMatchID());
 
             if ( maxMatchdetailsReloadsPerSession>0 && this.m_MatchTyp.isOfficial()) {
                 if ( m_vHighlights.size() == 0 || m_vHighlights.get(0).getMatchPartId() == null) {
@@ -879,7 +879,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                     try {
                         OnlineWorker.setSilentDownload(true);
                         if ( OnlineWorker.downloadMatchData(this.getMatchID(), this.m_MatchTyp, true) ) {
-                            m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchID());
+                            m_vHighlights = DBManager.instance().getMatchHighlights(this.getSourceSystem().getValue(), this.getMatchID());
                             maxMatchdetailsReloadsPerSession--;
                         }
                         else {
@@ -1526,4 +1526,31 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     private double hq(double value) {
         return (2 * value) / (value + 80);
     }
+
+    private Boolean isWalkoverMatchWin;
+    // return true, if the opponent team didn't appear. The match was won by 5-0
+    public boolean isWalkoverMatchWin(int teamId) {
+        if ( isWalkoverMatchWin == null) {
+            isWalkoverMatchWin = false;
+            if (getLastMinute() == 0) {
+                // Duration of walk over matches is 0 minutes
+                for (var e : getHighlights()) {
+                    if ( e.getMatchEventID() == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER ) {
+                        if (this.m_iHeimId == teamId) {
+                            isWalkoverMatchWin = true;
+                        }
+                        break;
+                    }
+                    else if ( e.getMatchEventID() == MatchEvent.MatchEventID.HOME_TEAM_WALKOVER){
+                        if (this.m_iGastId == teamId){
+                            isWalkoverMatchWin = true;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        return isWalkoverMatchWin;
+    }
+
 }

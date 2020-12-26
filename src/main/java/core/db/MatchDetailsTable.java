@@ -6,6 +6,7 @@ import core.model.match.SourceSystem;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.sql.Types;
 
 final class MatchDetailsTable extends AbstractTable {
@@ -277,12 +278,9 @@ final class MatchDetailsTable extends AbstractTable {
 				((MatchHighlightsTable) DBManager.instance().getTable(MatchHighlightsTable.TABLENAME))
 											.storeMatchHighlights(details);
 
-				//Workaround if the game is not set to Finished in MatchKurzInfos
-				if (details.getZuschauer() > 0) {
-					//Game is definitely done!
-					sql = "UPDATE MATCHESKURZINFO SET Status=1, HeimTore=" + details.getHomeGoals() + " , GastTore=" + details.getGuestGoals() + "  WHERE MatchID=" + details.getMatchID();
-					adapter.executeUpdate(sql);
-				}
+				// MatchKurzInfo should be set correctly in OnlineWorker.downloadMatchData now
+				// no workaround is necessary anymore
+
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeMatchDetails Error" + e);
 				HOLogger.instance().log(getClass(),e);
@@ -304,5 +302,20 @@ final class MatchDetailsTable extends AbstractTable {
 					"DatenbankZugriff.isMatchIFKRatingAvailable : " + e);
 		}
 		return false;
+	}
+
+	public void deleteMatchDetailsBefore(int sourceSystem, Timestamp before) {
+		var sql = "DELETE FROM " +
+				getTableName() +
+				" WHERE SOURCESYSTEM=" +
+				sourceSystem +
+				" AND SPIELDATUM<'" +
+				before.toString() + "'";
+		try {
+			adapter.executeUpdate(sql);
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
+		}
+
 	}
 }

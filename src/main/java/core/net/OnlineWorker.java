@@ -1176,7 +1176,7 @@ public class OnlineWorker {
 	final static long oneDay = 24L*60L*60L*1000L;
 	final static long threeMonths = 3L*30L*oneDay;
 
-	public static void downloadMissingYouthMatchLineups(HOModel model, Timestamp dateSince) {
+	public static void downloadMissingYouthMatchData(HOModel model, Timestamp dateSince) {
 		var youthteamid = model.getBasics().getYouthTeamId();
 		var lastStoredYouthMatchDate = DBManager.instance().getLastYouthMatchDate();
 
@@ -1202,12 +1202,13 @@ public class OnlineWorker {
 				var youthMatches = XMLMatchArchivParser.parseMatchesFromString(xml);
 				for ( var match: youthMatches){
 
-					var lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHeimID(), match.getGastID());
+					MatchLineup lineup = new MatchLineup();
+					var details = downloadMatchDetails(match.getMatchID(), match.getMatchType(), lineup);
+					//var lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHeimID(), match.getGastID());
+					DBManager.instance().storeMatchDetails(details);
 					DBManager.instance().storeMatchLineup(lineup, youthteamid);
-
+					lineup.setMatchDetails(details);
 					model.addYouthMatchLineup(lineup);
-					//TODO check if details are required
-
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

@@ -78,17 +78,35 @@ public enum YouthTrainingType {
         return null;
     }
 
-
+    /**
+     * Gets a list of match lineup positions of priority
+     * 0 - bonus training positions
+     * 1 - primary training positions
+     * 2 - secondary training positions
+     * 3 - osmosis training positions
+     * @return list of position arrays
+     */
     public List<int[]> getTrainedPositions() {
         var ret = new ArrayList<int[]>();
         var wt = trainingTypes[value];
+        ret.add(wt.getTrainingSkillBonusPositions());
         ret.add(wt.getTrainingSkillPositions());
         ret.add(wt.getTrainingSkillSecondaryTrainingPositions());
         ret.add(wt.getTrainingSkillOsmosisTrainingPositions());
-        ret.add(wt.getTrainingSkillBonusPositions());
         return ret;
     }
 
+    /**
+     *
+     * @param skillID skill id
+     * @param currentValue current skill value
+     * @param posPrio 0 - bonus training
+     *                1 - primary skill training
+     *                1 - secondary skill training
+     *                2 - osmosis training
+     * @param ageYears age of the player
+     * @return skill increment (training effect)
+     */
     public double calcSkillIncrementPerMinute(Skills.HTSkillID skillID, int currentValue, int posPrio, int ageYears) {
         var wt = trainingTypes[value];
         switch (posPrio){

@@ -322,4 +322,13 @@ public class MatchLineup {
         }
         return null;
     }
+
+    public void setMatchDetails(Matchdetails details) {
+        if ( this.guestTeam != null){
+            this.guestTeam.setMatchDetails(details);
+        }
+        if ( this.homeTeam != null){
+            this.homeTeam.setMatchDetails(details);
+        }
+    }
 }

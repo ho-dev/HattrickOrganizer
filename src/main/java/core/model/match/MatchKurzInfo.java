@@ -456,6 +456,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 		return matchdetails;
 	}
 
+	// TODO: this one is obsolete. Should be replaced by MatchDetails.isWalkoverMatchWin
 	private Boolean isWalkoverMatch;
 	// return true, if the opponent team didn't appear. The match was won by 5-0
 	public boolean isWalkoverMatch() {
