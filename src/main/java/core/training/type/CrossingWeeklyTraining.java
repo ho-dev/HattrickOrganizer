@@ -19,7 +19,7 @@ public class CrossingWeeklyTraining extends WeeklyTrainingType {
 		_PrimaryTrainingSkill = PlayerSkill.WINGER;
 		_PrimaryTrainingSkillPositions = new int[]{ 
 				IMatchRoleID.leftWinger, IMatchRoleID.rightWinger };
-		_PrimaryTrainingSkillSecondaryTrainingPositions = new int[]{
+		_PrimaryTrainingSkillPartlyTrainingPositions = new int[]{
 				IMatchRoleID.leftBack, IMatchRoleID.rightBack};
 		_PrimaryTrainingSkillOsmosisTrainingPositions = new int[]{
 				IMatchRoleID.keeper, IMatchRoleID.leftCentralDefender,
@@ -29,7 +29,7 @@ public class CrossingWeeklyTraining extends WeeklyTrainingType {
 				IMatchRoleID.centralForward, IMatchRoleID.rightForward};
 		_PrimaryTrainingBaseLength = (float)  3.2341; // old was 2.2
 		_PrimaryTrainingSkillBaseLength = _PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_WINGER; // 100%
-		_PrimaryTrainingSkillSecondaryLengthRate = (float) 2; // 50%
+		_PrimaryTrainingSkillPartlyLengthRate = (float) 2; // 50%
 	}
 	public static WeeklyTrainingType instance() {
         if (m_ciInstance == null) {
@@ -47,6 +47,6 @@ public class CrossingWeeklyTraining extends WeeklyTrainingType {
 	@Override
 	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
 	{
-		return (double) -1;
+		return -1;
 	}
 }

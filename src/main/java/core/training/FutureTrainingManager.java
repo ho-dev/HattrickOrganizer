@@ -118,7 +118,7 @@ public class FutureTrainingManager {
 							else {
 								tp.addPrimarySkillSecondaryPositionMinutes(90);
 								tp.addSecondarySkillSecondaryPositionMinutes(90);
-								trainingSpeed = 1.0 / wt.getPrimaryTrainingSkillSecondaryBaseLengthRate();
+								trainingSpeed = 1.0 / wt.getPrimaryTrainingSkillPartlyBaseLengthRate();
 							}
 							break;
 						case OSMOSIS_TRAINING:

@@ -98,7 +98,8 @@ public enum YouthTrainingType {
 
     /**
      *
-     * @param skillID skill id
+     *
+     * @param skillId skill id
      * @param currentValue current skill value
      * @param posPrio 0 - bonus training
      *                1 - primary skill training
@@ -107,12 +108,14 @@ public enum YouthTrainingType {
      * @param ageYears age of the player
      * @return skill increment (training effect)
      */
-    public double calcSkillIncrementPerMinute(Skills.HTSkillID skillID, int currentValue, int posPrio, int ageYears) {
-        var wt = trainingTypes[value];
-        switch (posPrio){
-            case 0:
-        }
-        // TODO
-        return 0;
+    public double calcSkillIncrementPerMinute(int skillId, int currentValue, int posPrio, int ageYears) {
+        var wt = trainingTypes[this.value];
+        return switch (posPrio) {
+            case 0 -> wt.getBonusYouthTrainingPerMinute(skillId,currentValue, ageYears);
+            case 1 -> wt.getFullYouthTrainingPerMinute(skillId,currentValue, ageYears);
+            case 2 -> wt.getPartlyYouthTrainingPerMinute(skillId,currentValue, ageYears);
+            case 3 -> wt.getOsmosisYouthTrainingPerMinute(skillId,currentValue, ageYears);
+            default -> 0;
+        };
     }
 }
