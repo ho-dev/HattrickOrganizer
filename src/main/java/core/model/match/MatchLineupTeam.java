@@ -9,11 +9,7 @@ import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 public class MatchLineupTeam {
 
@@ -76,22 +72,15 @@ public class MatchLineupTeam {
 	public final void setSubstitutions(List<Substitution> substitutions) {
 
 		// defensive copy
-		this.substitutions = new ArrayList<Substitution>(substitutions);
+		this.substitutions = new ArrayList<>(substitutions);
 
 		// Make sure substitutions are sorted first on minute, then by ID.
-		Collections.sort(this.substitutions, new Comparator<Substitution>() {
+		this.substitutions.sort(new Comparator<Substitution>() {
 			@Override
 			public int compare(Substitution o1, Substitution o2) {
 
 				if (o1.getMatchMinuteCriteria() == o2.getMatchMinuteCriteria()) {
-					if (o1.getPlayerOrderId() == o2.getPlayerOrderId()) {
-						return 0;
-					}
-					if (o1.getPlayerOrderId() < o2.getPlayerOrderId()) {
-						return -1;
-					}
-
-					return 1;
+					return Integer.compare(o1.getPlayerOrderId(), o2.getPlayerOrderId());
 
 				}
 
@@ -106,11 +95,7 @@ public class MatchLineupTeam {
 			public boolean equals(Substitution o1, Substitution o2) {
 				// Lazy solution, a proper would compare all fields, but we
 				// don't need that.
-				if (o1 == o2) {
-					return true;
-				} else {
-					return false;
-				}
+				return o1 == o2;
 			}
 		});
 	}
@@ -156,10 +141,7 @@ public class MatchLineupTeam {
 
 		for (MatchLineupPlayer player : startingLineup) {
 			if (player.getPlayerId() == id) {
-				if ((player.getId() == IMatchRoleID.captain)
-						|| (player.getId() == IMatchRoleID.setPieces)) {
-					// ignore
-				} else {
+				if (player.getId() != IMatchRoleID.captain && (player.getId() != IMatchRoleID.setPieces)) {
 					return player;
 				}
 			}
@@ -172,10 +154,10 @@ public class MatchLineupTeam {
 	 * Liefert Einen Player per PositionsID aus der Aufstellung
 	 */
 	public final MatchLineupPlayer getPlayerByPosition(int id) {
-		MatchLineupPlayer player = null;
+		MatchLineupPlayer player;
 
 		for (int i = 0; (startingLineup != null) && (i < startingLineup.size()); i++) {
-			player = (MatchLineupPlayer) startingLineup.elementAt(i);
+			player = startingLineup.elementAt(i);
 
 			if (player.getId() == id) {
 				return player;
@@ -268,42 +250,42 @@ public class MatchLineupTeam {
 		short mf = 0;
 		short st = 0;
 
-		MatchLineupPlayer player = null;
+		MatchLineupPlayer player;
 
-		for (int i = 0; i < startingLineup.size(); i++) {
-			player = (MatchLineupPlayer) startingLineup.get(i);
+		for (MatchLineupPlayer matchLineupPlayer : startingLineup) {
+			player = (MatchLineupPlayer) matchLineupPlayer;
 
 			if (player != null) {
 				switch (player.getPosition()) {
-				case IMatchRoleID.UNKNOWN:
-					break;
+					case IMatchRoleID.UNKNOWN:
+						break;
 
-				case IMatchRoleID.BACK:
-				case IMatchRoleID.BACK_TOMID:
-				case IMatchRoleID.BACK_OFF:
-				case IMatchRoleID.BACK_DEF:
-				case IMatchRoleID.CENTRAL_DEFENDER:
-				case IMatchRoleID.CENTRAL_DEFENDER_TOWING:
-				case IMatchRoleID.CENTRAL_DEFENDER_OFF:
-					abw++;
-					break;
+					case IMatchRoleID.BACK:
+					case IMatchRoleID.BACK_TOMID:
+					case IMatchRoleID.BACK_OFF:
+					case IMatchRoleID.BACK_DEF:
+					case IMatchRoleID.CENTRAL_DEFENDER:
+					case IMatchRoleID.CENTRAL_DEFENDER_TOWING:
+					case IMatchRoleID.CENTRAL_DEFENDER_OFF:
+						abw++;
+						break;
 
-				case IMatchRoleID.MIDFIELDER:
-				case IMatchRoleID.MIDFIELDER_OFF:
-				case IMatchRoleID.MIDFIELDER_DEF:
-				case IMatchRoleID.MIDFIELDER_TOWING:
-				case IMatchRoleID.WINGER:
-				case IMatchRoleID.WINGER_TOMID:
-				case IMatchRoleID.WINGER_OFF:
-				case IMatchRoleID.WINGER_DEF:
-					mf++;
-					break;
+					case IMatchRoleID.MIDFIELDER:
+					case IMatchRoleID.MIDFIELDER_OFF:
+					case IMatchRoleID.MIDFIELDER_DEF:
+					case IMatchRoleID.MIDFIELDER_TOWING:
+					case IMatchRoleID.WINGER:
+					case IMatchRoleID.WINGER_TOMID:
+					case IMatchRoleID.WINGER_OFF:
+					case IMatchRoleID.WINGER_DEF:
+						mf++;
+						break;
 
-				case IMatchRoleID.FORWARD:
-				case IMatchRoleID.FORWARD_TOWING:
-				case IMatchRoleID.FORWARD_DEF:
-					st++;
-					break;
+					case IMatchRoleID.FORWARD:
+					case IMatchRoleID.FORWARD_TOWING:
+					case IMatchRoleID.FORWARD_DEF:
+						st++;
+						break;
 				}
 			}
 		}
@@ -421,7 +403,8 @@ public class MatchLineupTeam {
 				break;
 			}
 
-			if (substitution.getOrderType() == MatchOrderType.SUBSTITUTION) {
+			if (substitution.getOrderType() == MatchOrderType.SUBSTITUTION ||
+					substitution.getOrderType() == MatchOrderType.POSITION_SWAP) {
 				if ((substitution.getObjectPlayerID() == spielerId) || (substitution.getSubjectPlayerID() == spielerId)) {
 					int newpos = getPlayerFieldPositionAtMinute(spielerId, substitution.getMatchMinuteCriteria());
 					boolean newPosAccepted =  isPositionInAcceptedPositions(newpos, accepted);
@@ -446,11 +429,7 @@ public class MatchLineupTeam {
 	}
 
 	public int getPlayerFieldPositionAtMinute(int spielerId, int minute) {
-
-		List<Substitution> substitutions = this.getSubstitutions();
-
 		// Captain and set piece taker don't count...
-
 		if ((minute >= getMatchEndMinute(spielerId)) || (minute < 0)) {
 			// The player is at home (they travel fast)...
 			return -1;
@@ -461,10 +440,38 @@ public class MatchLineupTeam {
 			return -1;
 		}
 
+		int ret = this.getPlayerByID(spielerId).getStartPosition();
+		HashMap<Integer, MatchRoleID> changedPositions = new HashMap<>();	// player id, new Position
+		for ( var subs : this.getSubstitutions()){
+			if ( subs.getMatchMinuteCriteria() > minute) break;
+			if ( subs.getOrderType() == MatchOrderType.POSITION_SWAP || subs.getOrderType() == MatchOrderType.SUBSTITUTION){
+				var subPos = changedPositions.get(subs.getSubjectPlayerID());
+				if ( subPos == null ) {
+					subPos = this.getPlayerByID(subs.getSubjectPlayerID());
+				}
+				var objPos = changedPositions.get(subs.getObjectPlayerID());
+				if ( objPos == null){
+					objPos = this.getPlayerByID(subs.getObjectPlayerID());
+				}
+				changedPositions.put(subs.getSubjectPlayerID(), objPos);
+				changedPositions.put(subs.getObjectPlayerID(), subPos);
+				if ( spielerId == subs.getSubjectPlayerID()){
+					ret = objPos.getId();
+				}
+				else if ( spielerId == subs.getObjectPlayerID()){
+					ret = subPos.getId();
+				}
+			}
+		}
+
+		return ret;
+		/*
+
 		// Look for the last substitution before the given minute
 		// Check if the player is involved. If not keep checking back in time
 		// until match start.
 
+		List<Substitution> substitutions = this.getSubstitutions();
 		Substitution tmpSub;
 		for (int i = substitutions.size() - 1; i >= 0; i--) {
 
@@ -481,7 +488,7 @@ public class MatchLineupTeam {
 
 		// We survived all the subs, lets see if we found him in the starting
 		// lineup.
-		return (this.getPlayerByID(spielerId)).getStartPosition();
+		return (this.getPlayerByID(spielerId)).getStartPosition();*/
 	}
 
 	public int getMatchEndMinute(int spielerId) {
@@ -505,7 +512,7 @@ public class MatchLineupTeam {
 		}
 		return matchdetails;
 	}
-
+/*
 	private int getPlayerFieldPostitionAfterSubstitution(int spielerId, int arrIndex,
 														 List<Substitution> substitutions) {
 		// arrIndex should be the index of the sub in the substitution vector.
@@ -600,7 +607,7 @@ public class MatchLineupTeam {
 						+this.matchId + " " + spielerId + " " + tmpSub.getPlayerOrderId());
 		return -1;
 	}
-
+*/
 
 
 	/**
@@ -615,8 +622,10 @@ public class MatchLineupTeam {
 	 * 	false, if not
 	 */
 	private boolean isPlayerInAcceptedPositions(int playerId, int[] accepted) {
-		if (accepted == null)
-			return this.getPlayerByID(playerId).isFieldMatchRoleId(); // all positions are accepted, use an empty array if NO position should be accepted
+		if (accepted == null) {
+			var role = this.getPlayerByID(playerId);
+			return role != null && role.isFieldMatchRoleId(); // all positions are accepted, use an empty array if NO position should be accepted
+		}
 
 		for (int position : accepted) {
 			var player = this.getPlayerByPosition(position);
