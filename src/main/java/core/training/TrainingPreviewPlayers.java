@@ -142,8 +142,8 @@ public class TrainingPreviewPlayers implements Refreshable {
                 if (fullTrain > 90)
                     fullTrain = 90;
             }
-            if (weekTrainTyp.getTrainingSkillSecondaryTrainingPositions() != null) {
-                partialTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getTrainingSkillSecondaryTrainingPositions());
+            if (weekTrainTyp.getTrainingSkillPartlyTrainingPositions() != null) {
+                partialTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getTrainingSkillPartlyTrainingPositions());
                 if (partialTrain > 90)
                     partialTrain = 90;
             }
@@ -168,9 +168,9 @@ public class TrainingPreviewPlayers implements Refreshable {
                         }
                     }
                 }
-                if (!fullFuturTrain && weekTrainTyp.getTrainingSkillSecondaryTrainingPositions() != null) {
-                    for (int k = 0; k < weekTrainTyp.getTrainingSkillSecondaryTrainingPositions().length; k++) {
-                        if (roleId.getId() == weekTrainTyp.getTrainingSkillSecondaryTrainingPositions()[k]) {
+                if (!fullFuturTrain && weekTrainTyp.getTrainingSkillPartlyTrainingPositions() != null) {
+                    for (int k = 0; k < weekTrainTyp.getTrainingSkillPartlyTrainingPositions().length; k++) {
+                        if (roleId.getId() == weekTrainTyp.getTrainingSkillPartlyTrainingPositions()[k]) {
                             partialFuturTrain = true;
                             break;
                         }

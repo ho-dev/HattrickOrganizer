@@ -1,14 +1,10 @@
 package module.youth;
 
-import core.model.match.SourceSystem;
-import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.training.WeeklyTrainingType;
 import core.training.type.*;
-import module.lineup.LineupPosition;
-import module.training.Skills;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static core.constants.TrainingType.*;
@@ -81,8 +77,8 @@ public enum YouthTrainingType {
     /**
      * Gets a list of match lineup positions of priority
      * 0 - bonus training positions
-     * 1 - primary training positions
-     * 2 - secondary training positions
+     * 1 - full training positions
+     * 2 - partly training positions
      * 3 - osmosis training positions
      * @return list of position arrays
      */
@@ -91,25 +87,26 @@ public enum YouthTrainingType {
         var wt = trainingTypes[value];
         ret.add(wt.getTrainingSkillBonusPositions());
         ret.add(wt.getTrainingSkillPositions());
-        ret.add(wt.getTrainingSkillSecondaryTrainingPositions());
+        ret.add(wt.getTrainingSkillPartlyTrainingPositions());
         ret.add(wt.getTrainingSkillOsmosisTrainingPositions());
         return ret;
     }
 
     /**
-     *
+     * calculate training effect per minute
      *
      * @param skillId skill id
      * @param currentValue current skill value
      * @param posPrio 0 - bonus training
-     *                1 - primary skill training
-     *                1 - secondary skill training
+     *                1 - full skill training
+     *                1 - partly skill training
      *                2 - osmosis training
      * @param ageYears age of the player
      * @return skill increment (training effect)
      */
     public double calcSkillIncrementPerMinute(int skillId, int currentValue, int posPrio, int ageYears) {
         var wt = trainingTypes[this.value];
+        if ( wt.getPrimaryTrainingSkill() != skillId && wt.getSecondaryTrainingSkill() != skillId ) return 0;
         return switch (posPrio) {
             case 0 -> wt.getBonusYouthTrainingPerMinute(skillId,currentValue, ageYears);
             case 1 -> wt.getFullYouthTrainingPerMinute(skillId,currentValue, ageYears);
@@ -117,5 +114,10 @@ public enum YouthTrainingType {
             case 3 -> wt.getOsmosisYouthTrainingPerMinute(skillId,currentValue, ageYears);
             default -> 0;
         };
+    }
+
+    public double calcSkillIncrementPerMinute(int skillId, int currentValue, MatchRoleID.Sector sector, int ageYears) {
+        var wt = trainingTypes[this.value];
+        return ((IndividualWeeklyTraining)wt).calcSkillIncrementPerMinute(skillId,currentValue,sector,ageYears);
     }
 }

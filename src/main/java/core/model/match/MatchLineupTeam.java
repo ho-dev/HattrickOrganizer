@@ -651,4 +651,60 @@ public class MatchLineupTeam {
 	public void setMatchDetails(Matchdetails details) {
 		this.matchdetails = details;
 	}
+
+	public Map<MatchRoleID.Sector, Integer> getTrainMinutesPlayedInSectors(int playerId) {
+		var ret = new HashMap<MatchRoleID.Sector, Integer>();
+
+		var start = this.getPlayerByID(playerId);
+		if ( start != null ){
+			int startminute = 0;
+			int sumMinutes=0;
+			var sector = start.getSector();
+
+			HashMap<Integer, MatchRoleID.Sector> changedPositions = new HashMap<>();	// player id, new Position
+			for ( var subs : this.getSubstitutions()){
+				if ( subs.getOrderType() == MatchOrderType.POSITION_SWAP || subs.getOrderType() == MatchOrderType.SUBSTITUTION){
+					var subSector = changedPositions.get(subs.getSubjectPlayerID());
+					if ( subSector == null ) {
+						subSector = this.getPlayerByID(subs.getSubjectPlayerID()).getSector();
+					}
+					var objSector = changedPositions.get(subs.getObjectPlayerID());
+					if ( objSector == null){
+						objSector = this.getPlayerByID(subs.getObjectPlayerID()).getSector();
+					}
+					if (subSector != objSector){
+						changedPositions.put(subs.getSubjectPlayerID(), objSector);
+						changedPositions.put(subs.getObjectPlayerID(), subSector);
+						if ( playerId == subs.getSubjectPlayerID() || playerId == subs.getObjectPlayerID()) {
+							if (sector != MatchRoleID.Sector.None) {
+								var minutesInSector = subs.getMatchMinuteCriteria() - startminute;
+								sumMinutes += minutesInSector;
+								if (sumMinutes > 90) {
+									minutesInSector -= (sumMinutes - 90);
+								}
+								ret.put(sector, minutesInSector);
+							}
+							if (playerId == subs.getSubjectPlayerID()) {
+								sector = objSector;
+							} else if (playerId == subs.getObjectPlayerID()) {
+								sector = subSector;
+							}
+							startminute = subs.getMatchMinuteCriteria();
+						}
+					}
+					if ( sumMinutes >= 90 )break;
+				}
+			}
+
+			if ( sector != MatchRoleID.Sector.None && sumMinutes < 90){
+				var minutesInSector = this.getMatchEndMinute(playerId) - startminute;
+				sumMinutes += minutesInSector;
+				if ( sumMinutes > 90){
+					minutesInSector -= (sumMinutes-90);
+				}
+				ret.put(sector, minutesInSector);
+			}
+		}
+		return ret;
+	}
 }

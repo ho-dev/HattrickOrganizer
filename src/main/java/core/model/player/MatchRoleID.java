@@ -18,6 +18,15 @@ import java.util.Properties;
 public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleID>,
 		IMatchRoleID {
 
+	public enum Sector {
+		None,
+		Goal,
+		Back,
+		CentralDefence,
+		Wing,
+		InnerMidfield,
+		Forward
+	};
 
 
 	/**
@@ -851,5 +860,17 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	}
 
 	private static String getLangStr(String key) {return HOVerwaltung.instance().getLanguageString(key);}
+
+	public Sector getSector() {
+		return switch (this.m_iId) {
+			case keeper -> Sector.Goal;
+			case leftBack, rightBack -> Sector.Back;
+			case leftCentralDefender, rightCentralDefender, middleCentralDefender -> Sector.CentralDefence;
+			case leftWinger, rightWinger -> Sector.Wing;
+			case leftInnerMidfield, rightInnerMidfield, centralInnerMidfield -> Sector.InnerMidfield;
+			case leftForward, rightForward, centralForward -> Sector.Forward;
+			default -> Sector.None;
+		};
+	}
 	
 }

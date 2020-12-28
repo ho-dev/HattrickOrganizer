@@ -7,7 +7,9 @@ import core.model.match.MatchLineup;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
 import core.model.match.SourceSystem;
+import core.model.player.MatchRoleID;
 import core.training.YouthTrainerComment;
+import core.training.type.IndividualWeeklyTraining;
 import module.lineup.substitution.model.MatchOrderType;
 
 import java.sql.Timestamp;
@@ -166,7 +168,7 @@ public class YouthTraining {
             }
             if ( train != YouthTrainingType.IndividualTraining) {
                 int minutes = 0;
-                int posPrio = 0;    // Bonus, Primary, Secondary, Osmosis
+                int posPrio = 0;    // Bonus, Full, Partly, Osmosis
                 for (var prioPositions : train.getTrainedPositions()) {
                     int minutesInPrioPositions = lineupTeam.getTrainMinutesPlayedInPositions(player.getId(),
                             prioPositions,
@@ -186,6 +188,10 @@ public class YouthTraining {
             }
             else {
                 // Calc Individual training
+                var sectors = lineupTeam.getTrainMinutesPlayedInSectors(player.getId());
+                for (var sector : sectors.entrySet()) {
+                    ret += trainingFactor * sector.getValue() * train.calcSkillIncrementPerMinute(value.getSkillID().getValue(), (int) value.getCurrentValue(), sector.getKey(), player.getAgeYears());
+                }
             }
         }
         return ret;

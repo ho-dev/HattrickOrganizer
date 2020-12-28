@@ -2227,7 +2227,7 @@ public class Player {
                 return FuturePlayerTraining.Priority.FULL_TRAINING;
             }
         }
-        for ( var p: wt.getTrainingSkillSecondaryTrainingPositions()){
+        for ( var p: wt.getTrainingSkillPartlyTrainingPositions()){
             if ( p == position) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
         }
         for ( var p: wt.getTrainingSkillOsmosisTrainingPositions()){

@@ -150,7 +150,7 @@ public abstract class WeeklyTrainingType {
 		return _PrimaryTrainingSkillBonusPositions;
 	}
 
-	public int[] getTrainingSkillSecondaryTrainingPositions() {
+	public int[] getTrainingSkillPartlyTrainingPositions() {
 		return _PrimaryTrainingSkillPartlyTrainingPositions;
 	}
 
@@ -352,8 +352,11 @@ public abstract class WeeklyTrainingType {
 		if ( skillId == _PrimaryTrainingSkill){
 			nweeks *= this.getPrimaryTrainingSkillBaseLength();
 		}
-		else {
+		else if ( skillId == _SecondaryTrainingSkill){
 			nweeks *= this.getSecondaryTrainingSkillBaseLength();
+		}
+		else {
+			return 0; // skill is not trained
 		}
 		return  1. / nweeks /90.;
 	}
@@ -365,4 +368,5 @@ public abstract class WeeklyTrainingType {
 	public double getOsmosisYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
 		return getFullYouthTrainingPerMinute(skillId, currentValue, ageYears) / this.getPrimaryTrainingSkillOsmosisBaseLengthRate();
 	}
+
 }
