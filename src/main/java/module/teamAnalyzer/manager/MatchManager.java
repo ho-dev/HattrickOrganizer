@@ -53,25 +53,20 @@ public class MatchManager {
 
         SortedSet<Match> sortedMatches = loadMatchList();
 
-        for (Iterator<Match> iter = sortedMatches.iterator(); iter.hasNext();) {
-            Match element = iter.next();
-
+        for (Match element : sortedMatches) {
             matches.addMatch(element);
         }
     }
 
     private static List<Match> getTeamMatch() {
-        List<Match> teamMatches = new ArrayList<Match>();
+        List<Match> teamMatches = new ArrayList<>();
         String oldName = SystemManager.getActiveTeamName();
 
-        MatchKurzInfo[] matchKurtzInfo = DBManager.instance().getMatchesKurzInfo(SystemManager
-                                                                                .getActiveTeamId(),
+        MatchKurzInfo[] matchKurtzInfo = DBManager.instance().getMatchesKurzInfo(SystemManager.getActiveTeamId(),
                                                                                 SpielePanel.NUR_EIGENE_SPIELE,
                                                                                 false);
 
-        for (int i = 0; i < matchKurtzInfo.length; i++) {
-            MatchKurzInfo matchInfo = matchKurtzInfo[i];
-
+        for (MatchKurzInfo matchInfo : matchKurtzInfo) {
             if (matchInfo.getMatchStatus() != MatchKurzInfo.FINISHED) {
                 continue;
             }
@@ -98,7 +93,7 @@ public class MatchManager {
                     /* Team name can be changed the name between seasons
                      * without being bot in between. Team name can be changed
                      * after the 14th league game which makes that game the
-                     * last possible match to hold old name. 
+                     * last possible match to hold old name.
                      */
                     if (match.getWeek() > 13) {
                         oldName = temp;
@@ -115,24 +110,21 @@ public class MatchManager {
     }
 
     private static SortedSet<Match> loadMatchList() {
-        Map<String,Match> matchIds = new HashMap<String,Match>();
+        Map<String,Match> matchIds = new HashMap<>();
 
-        for (Iterator<Match> iter = getTeamMatch().iterator(); iter.hasNext();) {
-            Match match = iter.next();
-
+        for (Match match : getTeamMatch()) {
             if (!matchIds.containsKey(match.getMatchId() + "")) {
                 matchIds.put(match.getMatchId() + "", match);
             }
         }
 
         Collection<Match> matchList = matchIds.values();
-        SortedSet<Match> sorted = getSortedSet(matchList, new MatchComparator());
 
-        return sorted;
+        return getSortedSet(matchList, new MatchComparator());
     }
     
     private static<T> SortedSet<T> getSortedSet(Collection<T> beans, Comparator<T> comparator) {
-        final SortedSet<T> set = new TreeSet<T>(comparator);
+        final SortedSet<T> set = new TreeSet<>(comparator);
 
         if ((beans != null) && (beans.size() > 0)) {
             set.addAll(beans);

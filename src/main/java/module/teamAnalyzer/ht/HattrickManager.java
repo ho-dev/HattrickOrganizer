@@ -53,23 +53,22 @@ public class HattrickManager {
 	    List<MatchKurzInfo> matches = OnlineWorker.getMatchArchive( teamId, start.getTime(), false);
 	    Collections.reverse(matches); // Newest first
 	    for (MatchKurzInfo match : matches) {
-	    	if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
-	    		continue;
-	    	}
+            if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
+                continue;
+            }
 
-	    	boolean refresh = !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), match.getMatchID())
+            boolean refresh = !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), match.getMatchID())
                     || !DBManager.instance().isMatchIFKRatingInDB(match.getMatchID());
-	    	if (!filter.isAutomatic() 
-	    		||	(filter.isAcceptedMatch(new Match(match)) && refresh)) {
-	    		
-	    		OnlineWorker.downloadMatchData(match, refresh);
-   			}
-	    	
-	    	limit--;
-	    	if (limit < 1) {
-	    		break;
-	    	}
-   		}
+            var accepted = filter.isAcceptedMatch(new Match(match));
+            if (!filter.isAutomatic() || (accepted && refresh)) {
+                OnlineWorker.downloadMatchData(match, refresh);
+            }
+
+            if ( accepted ) limit--;
+            if (limit < 1) {
+                break;
+            }
+        }
 	    
 	    // Look for tournament matches if they are included in filter.	    
 	    if (!filter.isAutomatic() || filter.isTournament()) {
@@ -106,7 +105,7 @@ public class HattrickManager {
             return null;
         }
 
-        List<PlayerInfo> players = new ArrayList<PlayerInfo>();
+        List<PlayerInfo> players = new ArrayList<>();
         var playerInfos = new xmlPlayersParser().parsePlayersFromString(xml);
         for ( var i : playerInfos ) {
             players.add(new PlayerInfo(i));
@@ -123,9 +122,8 @@ public class HattrickManager {
      *
      * @return Team Name
      *
-     * @throws Exception if error occurs
      */
-    public static String downloadTeam(int teamId) throws Exception {
+    public static String downloadTeam(int teamId) {
 		String xml = MyConnector.instance().getHattrickXMLFile("/common/chppxml.axd?file=team&teamID=" + teamId);
         Document dom = XMLManager.parseString(xml);
         Document teamDocument = dom.getElementsByTagName("Team").item(0).getOwnerDocument();
@@ -142,7 +140,7 @@ public class HattrickManager {
         try {
             String value = getValue(node, i, tag);
             return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
         }
 
         return def;
