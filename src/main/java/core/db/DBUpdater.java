@@ -182,7 +182,7 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUPTEAM ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHSUBSTITUTION ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN MatchDate TIMESPAMP ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN MatchDate TIMESTAMP");
 		}
 
 		if (!tableExists(YouthTrainingTable.TABLENAME)) {

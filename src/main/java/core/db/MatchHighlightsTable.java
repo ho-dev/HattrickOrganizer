@@ -53,7 +53,7 @@ final class MatchHighlightsTable extends AbstractTable {
 		if (details != null) {
 
 			final String[] where = { "SourceSystem", "MatchID" };
-			final String[] werte = { "" + details.getSourceSystem(), "" + details.getMatchID() };
+			final String[] werte = { "" + details.getSourceSystem().getValue(), "" + details.getMatchID() };
 
 			// Remove existing entry
 			delete(where, werte);
@@ -67,7 +67,7 @@ final class MatchHighlightsTable extends AbstractTable {
 					sql.append(" ( MatchId, MatchDate, SourceSystem, Minute, EVENT_INDEX, SpielerId, SpielerName, TeamId, MATCH_EVENT_ID, SpielerHeim, GehilfeID, GehilfeName, GehilfeHeim, INJURY_TYPE, MatchPart, EventVariation, EventText) VALUES (");
 					sql.append(details.getMatchID()).append(",'");
 					sql.append(details.getSpielDatum()).append("', ");
-					sql.append(details.getSourceSystem()).append(", ");
+					sql.append(details.getSourceSystem().getValue()).append(", ");
 					sql.append(highlight.getMinute()).append(", ");
 					sql.append(highlight.getM_iMatchEventIndex()).append(", ");
 					sql.append(highlight.getSpielerID()).append(", '");
