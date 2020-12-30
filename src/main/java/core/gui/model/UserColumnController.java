@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
 import module.lineup.LineupTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
+import module.youth.YouthPlayerDetailsTableModel;
 import module.youth.YouthPlayerOverviewTableModel;
 import module.youth.YouthTrainingViewTableModel;
 
@@ -26,7 +27,8 @@ public final class UserColumnController {
 		PLAYERANALYSIS2(5),
 		MATCHESOVERVIEW(6),
 		YOUTHPLAYEROVERVIEW(7),
-		YOUTHTRAININGVIEW(8);
+		YOUTHPLAYERDETAILS(8),
+		YOUTHTRAININGVIEW(9);
 
 		private  int value;
 		private  ColumnModelId(int value){this.value=value;}
@@ -55,6 +57,7 @@ public final class UserColumnController {
 	private PlayerAnalysisModel playerAnalysis2Model 		= null;
 	private YouthPlayerOverviewTableModel youthPlayerOverviewColumnModel;
 	private YouthTrainingViewTableModel youthTrainingViewColumnModel;
+	private YouthPlayerDetailsTableModel youthPlayerDetailsTableModel;
 
 
 	/**
@@ -179,5 +182,12 @@ public final class UserColumnController {
 		}
 		return youthTrainingViewColumnModel;
 	}
+	public YouthPlayerDetailsTableModel getYouthPlayerDetailsColumnModel() {
+		if(youthPlayerDetailsTableModel == null){
+			youthPlayerDetailsTableModel = new YouthPlayerDetailsTableModel(ColumnModelId.YOUTHPLAYERDETAILS.getValue());
+		}
+		return youthPlayerDetailsTableModel;
+	}
+
 
 }

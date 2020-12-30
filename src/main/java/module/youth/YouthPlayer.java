@@ -2,19 +2,16 @@ package module.youth;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.match.MatchLineupTeam;
 import core.model.player.CommentType;
 import core.model.player.Specialty;
 import core.training.YouthTrainerComment;
 import core.util.HOLogger;
+import module.opponentspy.CalcVariables;
 import module.training.Skills;
 import module.training.Skills.ScoutCommentSkillTypeID;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static core.util.Helper.parseDate;
 import static java.lang.Math.max;
@@ -364,12 +361,23 @@ public class YouthPlayer {
         this.currentSkills.put(skillinfo.skillID.getValue(), skillinfo);
     }
 
-    public TreeMap getTrainings() {
+    public TreeMap<Timestamp, TrainingDevelopmentEntry> getTrainings() {
         if (trainingDevelopment == null) {
             // init from models match list
             trainingDevelopment = new TreeMap<>();
             var model = HOVerwaltung.instance().getModel();
-            var startSkills = getSkillsAt(this.getArrivalDate());
+            // set start skill values (may be edited by the user)
+            Map<Integer, SkillInfo> startSkills = new HashMap<>();
+            for ( var skill : this.currentSkills.values()){
+                var startSkill = new SkillInfo(skill.getSkillID());
+                startSkill.setCurrentValue(skill.getStartValue());
+                startSkill.setStartValue(skill.getStartValue());
+                startSkill.setStartLevel(skill.getStartLevel());
+                startSkill.setCurrentLevel(skill.getStartLevel());
+                startSkill.setMax(skill.getMax());
+
+                startSkills.put(startSkill.skillID.getValue(), startSkill);
+            }
             for (var training : model.getYouthTrainings()) {
                 var team = training.getTeam(model.getBasics().getYouthTeamId());
                 if (team.getPlayerByID(this.id) != null) {
@@ -399,8 +407,8 @@ public class YouthPlayer {
         HashMap<Integer, SkillInfo> skills = null;
         var startSkills = getSkillsAt(since);
         for (var entry : this.trainingDevelopment.tailMap(since, true).values()) {
-            var team = entry.training.getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
-            startSkills = entry.calcSkills(startSkills, getSkillsAt(entry.training.getMatchDate()), team );
+            var team = entry.getTraining().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
+            startSkills = entry.calcSkills(startSkills, getSkillsAt(entry.getMatchDate()), team );
         }
     }
 
@@ -731,34 +739,4 @@ public class YouthPlayer {
         return null;
     }
 
-    private class TrainingDevelopmentEntry {
-        private YouthPlayer player;
-        private YouthTraining training;
-        private HashMap<Integer, SkillInfo> skills;
-
-        public TrainingDevelopmentEntry(YouthPlayer player, YouthTraining training) {
-            this.training=training;
-            this.player = player;
-        }
-
-        public void setSkills(HashMap<Integer, SkillInfo> startSkills) {
-            this.skills = startSkills;
-        }
-
-        public void setSkillConstraints(Map<Integer, SkillInfo> skillConstraints) {
-            for ( var constraint : skillConstraints.entrySet()){
-                var skill = skills.get(constraint.getKey());
-                skill.setCurrentLevel(constraint.getValue().currentLevel);
-                skill.setMax(constraint.getValue().max);
-            }
-        }
-
-        public Map<Integer, SkillInfo> calcSkills(Map<Integer, SkillInfo> startSkills, Map<Integer, SkillInfo> skillConstraints, MatchLineupTeam team) {
-            for ( var skill: startSkills.entrySet()){
-                this.skills.put(skill.getKey(), training.calcSkill(skill.getValue(), player, team));
-            }
-            setSkillConstraints(skillConstraints);
-            return this.skills;
-        }
-    }
 }

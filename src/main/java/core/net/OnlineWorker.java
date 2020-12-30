@@ -1201,14 +1201,15 @@ public class OnlineWorker {
 				var xml = mc.getMatchesArchive(SourceSystem.YOUTH, youthteamid, dateSince, dateUntil);
 				var youthMatches = XMLMatchArchivParser.parseMatchesFromString(xml);
 				for ( var match: youthMatches){
-
-					MatchLineup lineup = new MatchLineup();
-					var details = downloadMatchDetails(match.getMatchID(), match.getMatchType(), lineup);
-					//var lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHeimID(), match.getGastID());
-					DBManager.instance().storeMatchDetails(details);
-					DBManager.instance().storeMatchLineup(lineup, youthteamid);
-					lineup.setMatchDetails(details);
-					model.addYouthMatchLineup(lineup);
+					MatchLineup lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHeimID(), match.getGastID());
+					if (lineup != null) {
+						var details = downloadMatchDetails(match.getMatchID(), match.getMatchType(), lineup);
+						//var lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHeimID(), match.getGastID());
+						DBManager.instance().storeMatchDetails(details);
+						DBManager.instance().storeMatchLineup(lineup, youthteamid);
+						lineup.setMatchDetails(details);
+						model.addYouthMatchLineup(lineup);
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

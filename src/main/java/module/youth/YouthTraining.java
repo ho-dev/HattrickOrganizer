@@ -59,14 +59,10 @@ public class YouthTraining {
     }
 
     public void setTraining(Priority p, YouthTrainingType trainingType) {
-        if ( this.training[p.ordinal()] != trainingType){
-            this.training[p.ordinal()] = trainingType;
-            recalcSkills();
-            store();
-        }
+        this.training[p.ordinal()] = trainingType;
     }
 
-    private void recalcSkills() {
+    public void recalcSkills() {
         var team = this.getMatchLineup().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
 
         for ( var player : team.getStartingLineup()){
@@ -87,7 +83,7 @@ public class YouthTraining {
         }
     }
 
-    void store() {
+    public void store() {
         DBManager.instance().storeYouthTraining(this);
     }
 
@@ -159,38 +155,39 @@ public class YouthTraining {
         YouthTrainingType primaryTraining=null;
         for ( var priority : Priority.values()){
             var train = training[priority.ordinal()];
-            var trainingFactor = UserParameter.instance().youthtrainingFactorPrimary;
-            if ( priority == Priority.Secondary){
-                trainingFactor = UserParameter.instance().youthtrainingFactorSecondary;
-                if ( train == primaryTraining){
-                    trainingFactor /= 2;
-                }
-            }
-            if ( train != YouthTrainingType.IndividualTraining) {
-                int minutes = 0;
-                int posPrio = 0;    // Bonus, Full, Partly, Osmosis
-                for (var prioPositions : train.getTrainedPositions()) {
-                    int minutesInPrioPositions = lineupTeam.getTrainMinutesPlayedInPositions(player.getId(),
-                            prioPositions,
-                            this.getMatchDetails().isWalkoverMatchWin(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId()));
-                    if (minutesInPrioPositions + minutes > 90) {
-                        minutesInPrioPositions = 90 - minutes;
+            if ( train != null) {
+                var trainingFactor = UserParameter.instance().youthtrainingFactorPrimary;
+                if (priority == Priority.Secondary) {
+                    trainingFactor = UserParameter.instance().youthtrainingFactorSecondary;
+                    if (train == primaryTraining) {
+                        trainingFactor /= 2;
                     }
-                    if (minutesInPrioPositions > 0) {
-                        ret += trainingFactor * minutesInPrioPositions * train.calcSkillIncrementPerMinute(value.getSkillID().getValue(), (int) value.getCurrentValue(), posPrio, player.getAgeYears());
-                    }
-                    minutes += minutesInPrioPositions;
-                    if (minutes == 90) break;
-                    posPrio++; // next position priority
                 }
+                if (train != YouthTrainingType.IndividualTraining) {
+                    int minutes = 0;
+                    int posPrio = 0;    // Bonus, Full, Partly, Osmosis
+                    for (var prioPositions : train.getTrainedPositions()) {
+                        int minutesInPrioPositions = lineupTeam.getTrainMinutesPlayedInPositions(player.getId(),
+                                prioPositions,
+                                this.getMatchDetails().isWalkoverMatchWin(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId()));
+                        if (minutesInPrioPositions + minutes > 90) {
+                            minutesInPrioPositions = 90 - minutes;
+                        }
+                        if (minutesInPrioPositions > 0) {
+                            ret += trainingFactor * minutesInPrioPositions * train.calcSkillIncrementPerMinute(value.getSkillID().getValue(), (int) value.getCurrentValue(), posPrio, player.getAgeYears());
+                        }
+                        minutes += minutesInPrioPositions;
+                        if (minutes == 90) break;
+                        posPrio++; // next position priority
+                    }
 
-                if (primaryTraining == null) primaryTraining = train;
-            }
-            else {
-                // Calc Individual training
-                var sectors = lineupTeam.getTrainMinutesPlayedInSectors(player.getId());
-                for (var sector : sectors.entrySet()) {
-                    ret += trainingFactor * sector.getValue() * train.calcSkillIncrementPerMinute(value.getSkillID().getValue(), (int) value.getCurrentValue(), sector.getKey(), player.getAgeYears());
+                    if (primaryTraining == null) primaryTraining = train;
+                } else {
+                    // Calc Individual training
+                    var sectors = lineupTeam.getTrainMinutesPlayedInSectors(player.getId());
+                    for (var sector : sectors.entrySet()) {
+                        ret += trainingFactor * sector.getValue() * train.calcSkillIncrementPerMinute(value.getSkillID().getValue(), (int) value.getCurrentValue(), sector.getKey(), player.getAgeYears());
+                    }
                 }
             }
         }

@@ -1936,7 +1936,8 @@ public class DBManager {
 	}
 
 	public void deleteMatchData(int sourcesystem, Timestamp before){
-		((MatchDetailsTable)getTable(MatchLineupTable.TABLENAME)).deleteMatchDetailsBefore(sourcesystem, before);
+		((MatchHighlightsTable)getTable(MatchHighlightsTable.TABLENAME)).deleteMatchHighlightsBefore(sourcesystem, before);
+		((MatchDetailsTable)getTable(MatchDetailsTable.TABLENAME)).deleteMatchDetailsBefore(sourcesystem, before);
 		((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).deleteMatchLineupsBefore(sourcesystem, before);
 	}
 

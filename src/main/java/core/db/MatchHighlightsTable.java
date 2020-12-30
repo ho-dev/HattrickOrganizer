@@ -6,6 +6,7 @@ import core.util.HOLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 
@@ -20,6 +21,7 @@ final class MatchHighlightsTable extends AbstractTable {
 	protected void initColumns() {
 		columns = new ColumnDescriptor[] {
 				new ColumnDescriptor("MatchID", Types.INTEGER, false),
+				new ColumnDescriptor("MatchDate", Types.TIMESTAMP, true),
 				new ColumnDescriptor("SourceSystem", Types.INTEGER, false),
 				new ColumnDescriptor("Minute", Types.INTEGER, false),
 				new ColumnDescriptor("SpielerId", Types.INTEGER, false),
@@ -62,8 +64,9 @@ final class MatchHighlightsTable extends AbstractTable {
 					StringBuilder sql = new StringBuilder(100);
 
 					sql.append("INSERT INTO ").append(getTableName());
-					sql.append(" ( MatchId, SourceSystem Minute, EVENT_INDEX, SpielerId, SpielerName, TeamId, MATCH_EVENT_ID, SpielerHeim, GehilfeID, GehilfeName, GehilfeHeim, INJURY_TYPE, MatchPart, EventVariation, EventText) VALUES (");
-					sql.append(details.getMatchID()).append(", ");
+					sql.append(" ( MatchId, MatchDate, SourceSystem, Minute, EVENT_INDEX, SpielerId, SpielerName, TeamId, MATCH_EVENT_ID, SpielerHeim, GehilfeID, GehilfeName, GehilfeHeim, INJURY_TYPE, MatchPart, EventVariation, EventText) VALUES (");
+					sql.append(details.getMatchID()).append(",'");
+					sql.append(details.getSpielDatum()).append("', ");
 					sql.append(details.getSourceSystem()).append(", ");
 					sql.append(highlight.getMinute()).append(", ");
 					sql.append(highlight.getM_iMatchEventIndex()).append(", ");
@@ -135,4 +138,17 @@ final class MatchHighlightsTable extends AbstractTable {
 		return highlight;
 	}
 
+	public void deleteMatchHighlightsBefore(int sourceSystem, Timestamp before) {
+		var sql = "DELETE FROM " +
+				getTableName() +
+				" WHERE SOURCESYSTEM=" +
+				sourceSystem +
+				" AND MatchDate IS NOT NULL AND MatchDate<'" +
+				before.toString() + "'";
+		try {
+			adapter.executeUpdate(sql);
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
+		}
+	}
 }

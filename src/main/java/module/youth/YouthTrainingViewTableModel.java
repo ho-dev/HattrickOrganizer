@@ -104,8 +104,16 @@ public class YouthTrainingViewTableModel extends HOTableModel {
         var t = this.getYouthTraining(row);
         var trainingType = ((YouthTrainingTableEntry)value).getTrainingType();
         switch (column) {
-            case 3 -> t.setTraining(YouthTraining.Priority.Primary, trainingType);
-            case 4 -> t.setTraining(YouthTraining.Priority.Secondary, trainingType);
+            case 3 -> setTraining(t, YouthTraining.Priority.Primary, trainingType);
+            case 4 -> setTraining(t, YouthTraining.Priority.Secondary, trainingType);
+        }
+    }
+
+    private void setTraining(YouthTraining t, YouthTraining.Priority prio, YouthTrainingType trainingType) {
+        if ( t.getTraining(prio) != trainingType){
+            t.setTraining(prio, trainingType);
+            t.recalcSkills();
+            t.store();
         }
     }
 }

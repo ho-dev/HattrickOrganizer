@@ -172,7 +172,7 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN AwayFormation VARCHAR(5) ");
 		}
 
-		if ( !columnExistsInTable("SourceSystem", MatchHighlightsTable.TABLENAME)){
+		if ( !columnExistsInTable("MatchDate", MatchHighlightsTable.TABLENAME)){
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamName VARCHAR (127)");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamID INTEGER");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE AUFSTELLUNG ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
@@ -182,6 +182,7 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUPTEAM ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHSUBSTITUTION ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN MatchDate TIMESPAMP ");
 		}
 
 		if (!tableExists(YouthTrainingTable.TABLENAME)) {

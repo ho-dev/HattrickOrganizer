@@ -316,6 +316,5 @@ final class MatchDetailsTable extends AbstractTable {
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
 		}
-
 	}
 }
