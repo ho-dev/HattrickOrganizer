@@ -58,6 +58,8 @@ layout: page
 
 ### Misc
 
+    - Fix issue with user preferences (incl. OAuth access token) not
+    being saved upon exiting HO. (#811)
 
 
 ### League
