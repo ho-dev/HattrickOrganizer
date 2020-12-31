@@ -48,6 +48,8 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private Boolean bDataTooOld;
     private String sWarningDataTooOld;
     private Long lLastUpdateTime;
+    private ArrayList<MatchKurzInfo> previousPlayedMatchesAll = null;
+    private ArrayList<MatchKurzInfo> previousPlayedMatchesOfficialOnly = null;
 
     public MatchOrdersCBItem getSelectedMatch() {
         return m_clSelectedMatch;
@@ -209,6 +211,8 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         m_jcbxLineupSimulation.addActionListener( e -> {update_jcbUpcomingGames();});
 
+        m_jcbxOfficialOnly.addActionListener(e -> update_jcbLoadLineup(false));
+
         m_jcbUpcomingGames.addActionListener(e -> {
             m_clSelectedMatch = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
             jpParent.setEnabledTeamAttitudeCB((m_clSelectedMatch != null) && m_clSelectedMatch.getMatchType().isCompetitive());
@@ -254,13 +258,31 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         add(label);
     }
 
-    private void update_jcbLoadLineup() {
+    private void update_jcbLoadLineup(){
+        update_jcbLoadLineup(true);
+    }
+
+    private void update_jcbLoadLineup(boolean bForceRefresh) {
         m_jcbLoadLineup.removeAllItems();
 
 
         Team oTeam;
 
-        ArrayList<MatchKurzInfo> previousPlayedMatches = DBManager.instance().getPlayedMatchInfo(MAX_PREVIOUS_LINEUP);
+        ArrayList<MatchKurzInfo> previousPlayedMatches;
+
+        if(m_jcbxOfficialOnly.isSelected()){
+            if((previousPlayedMatchesOfficialOnly == null) || bForceRefresh){
+                previousPlayedMatchesOfficialOnly = DBManager.instance().getPlayedMatchInfo(MAX_PREVIOUS_LINEUP, true);
+            }
+            previousPlayedMatches = previousPlayedMatchesOfficialOnly;
+        }
+        else{
+            if((previousPlayedMatchesAll == null) || bForceRefresh){
+                previousPlayedMatchesAll = DBManager.instance().getPlayedMatchInfo(MAX_PREVIOUS_LINEUP);
+            }
+            previousPlayedMatches = previousPlayedMatchesAll;
+        }
+
 
         m_jcbLoadLineup.addItem(null);
         int i = 1;
