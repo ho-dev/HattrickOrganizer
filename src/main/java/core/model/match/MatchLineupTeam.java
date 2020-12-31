@@ -370,12 +370,17 @@ public class MatchLineupTeam {
 
 	public int getTrainMinutesPlayedInPositions(int spielerId, int[] accepted, boolean isWalkoverMatchWin) {
 		if ( accepted!=null && accepted.length==0) return 0;	// NO positions are accepted
+		MatchLineupPlayer player = this.getPlayerByID(spielerId);
+		if (player == null) {
+			return 0;
+		}
+
 		boolean inPosition = false;
 
 		int enterMin = -1;
 		int minPlayed = 0;
 		// Those in the starting lineup entered at minute 0
-		if (isPlayerInAcceptedPositions(spielerId, accepted)) {
+		if (isPositionInAcceptedPositions(player.getStartPosition(), accepted)) {
 			if (isWalkoverMatchWin) {
 				// Opponent team did not appear
 				if (accepted != null) {
