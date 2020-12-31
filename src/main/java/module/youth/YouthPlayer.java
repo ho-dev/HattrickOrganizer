@@ -6,7 +6,6 @@ import core.model.player.CommentType;
 import core.model.player.Specialty;
 import core.training.YouthTrainerComment;
 import core.util.HOLogger;
-import module.opponentspy.CalcVariables;
 import module.training.Skills;
 import module.training.Skills.ScoutCommentSkillTypeID;
 
@@ -380,7 +379,7 @@ public class YouthPlayer {
             }
             for (var training : model.getYouthTrainings()) {
                 var team = training.getTeam(model.getBasics().getYouthTeamId());
-                if (team.getPlayerByID(this.id) != null) {
+                if (team.hasPlayerPlayed(this.id)) {
                     var trainingEntry = new TrainingDevelopmentEntry(this, training);
                     startSkills = trainingEntry.calcSkills(startSkills, getSkillsAt(training.getMatchDate()),team);
                     trainingDevelopment.put(training.getMatchDate(), trainingEntry);

@@ -1,5 +1,6 @@
 package module.youth;
 
+import core.model.HOVerwaltung;
 import core.model.player.MatchRoleID;
 import core.training.WeeklyTrainingType;
 import core.training.type.*;
@@ -57,6 +58,12 @@ public enum YouthTrainingType {
 
     YouthTrainingType(int value) {
         this.value = value;
+    }
+
+    public static String StringValueOf(YouthTrainingType value) {
+        var hov = HOVerwaltung.instance();
+        if ( value == null) return hov.getLanguageString("undefined");
+        return hov.getLanguageString(value.toString());
     }
 
     public int getValue() {

@@ -1,6 +1,9 @@
 package module.youth;
 
+import core.model.HOVerwaltung;
 import core.model.match.MatchLineupTeam;
+import core.model.player.Player;
+import module.training.Skills;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -55,5 +58,23 @@ public class TrainingDevelopmentEntry {
 
     public YouthTraining getTraining() {
         return this.training;
+    }
+
+    public String getPlayerAge() {
+        return Player.getAgeWithDaysAsString(this.player.getAgeYears(),this.player.getAgeDays(),this.getMatchDate().getTime());
+    }
+
+    public String getSkillValue(Skills.HTSkillID skillID) {
+        var val = this.skills.get(skillID.getValue());
+        if ( val != null ) return String.format("%,.2f", val.getCurrentValue());
+        return "";
+    }
+
+    public String getTrainingType(YouthTraining.Priority prio) {
+        return YouthTrainingType.StringValueOf(this.training.getTraining(prio));
+    }
+
+    public String getPlayerPosition() {
+        return this.training.getPlayerTrainedSectors(this.player.getId());
     }
 }

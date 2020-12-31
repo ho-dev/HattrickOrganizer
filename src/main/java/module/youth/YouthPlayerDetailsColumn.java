@@ -4,15 +4,15 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.UserColumn;
 
-public class YouthPlayerDetailColumn extends UserColumn {
-    protected YouthPlayerDetailColumn(int id, String name) {
+public class YouthPlayerDetailsColumn extends UserColumn {
+    protected YouthPlayerDetailsColumn(int id, String name) {
         super(id, name);
         this.setDisplay(true);
     }
-    public YouthPlayerDetailColumn(int id,String name,int minWidth){
+    public YouthPlayerDetailsColumn(int id, String name, int minWidth){
         this(id,name,name,minWidth);
     }
-    public YouthPlayerDetailColumn(int id,String name, String tooltip, int minWidth){
+    public YouthPlayerDetailsColumn(int id, String name, String tooltip, int minWidth){
         super(id,name,tooltip);
         this.minWidth = minWidth;
         preferredWidth = minWidth;

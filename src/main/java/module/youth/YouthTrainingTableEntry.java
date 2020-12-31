@@ -19,9 +19,7 @@ public class YouthTrainingTableEntry implements IHOTableEntry {
         }
 
         public static String getLabelText(YouthTrainingType value){
-            var hov = HOVerwaltung.instance();
-            if ( value == null) return hov.getLanguageString("undefined");
-            return hov.getLanguageString(value.toString());
+            return YouthTrainingType.StringValueOf(value);
         }
 
         @Override

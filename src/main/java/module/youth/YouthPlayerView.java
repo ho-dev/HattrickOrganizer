@@ -36,9 +36,10 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         playerDetailsTable = new JTable();
         playerNameLabel = new JLabel();
         var detailsPanel = new JPanel();
-        detailsPanel.add(playerNameLabel);
-        detailsPanel.add(playerDetailsTable);
-        verticalSplitPane.setRightComponent(new JScrollPane(detailsPanel));
+        detailsPanel.setLayout(new BorderLayout());
+        detailsPanel.add(playerNameLabel, BorderLayout.NORTH);
+        detailsPanel.add(new JScrollPane(playerDetailsTable));
+        verticalSplitPane.setRightComponent(detailsPanel);
 
         initModel();
         RefreshManager.instance().registerRefreshable(this);
@@ -85,8 +86,10 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         var player = getSelectedPlayer();
         if ( player != null) {
             playerNameLabel.setText(player.getFullName());
+            playerDetailsTable.setModel(playerDetailsTableModel);
             playerDetailsTableModel.setYouthPlayer(player);
             playerDetailsTableModel.initData();
+            playerDetailsTable.repaint();
         }
     }
 
@@ -101,6 +104,9 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     public void refresh() {
         ((YouthPlayerOverviewTableModel) this.getSorter().getModel()).initData();
         playerOverviewTable.repaint();
+
+        playerDetailsTableModel.initData();
+        playerDetailsTable.repaint();
     }
 
     private TableSorter getSorter() {

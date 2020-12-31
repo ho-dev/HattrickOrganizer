@@ -46,7 +46,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 
 			team = new MatchLineupTeam(SourceSystem.valueOf(sourceSystem), matchID, DBManager.deleteEscapeSequences(rs.getString("TeamName")),
 										teamID, rs.getInt("Erfahrung"), rs.getInt("StyleOfPlay"));
-			team.setStartingLineup(DBManager.instance().getMatchLineupPlayers(matchID, teamID));
+			team.setLineup(DBManager.instance().getMatchLineupPlayers(matchID, teamID));
 			
 			team.setSubstitutions(new ArrayList<Substitution>(DBManager.instance().getMatchSubstitutionsByMatchTeam(sourceSystem, teamID, matchID)));
 			
@@ -78,11 +78,11 @@ public final class MatchLineupTeamTable extends AbstractTable {
 				adapter.executeUpdate(sql);
 
 				//Store players
-				for (int i = 0; i < team.getStartingLineup().size(); i++) {
+				for (int i = 0; i < team.getLineup().size(); i++) {
 					
 					((MatchLineupPlayerTable) DBManager.instance().getTable(
 							MatchLineupPlayerTable.TABLENAME)).storeMatchLineupPlayer(
-									(MatchLineupPlayer) team.getStartingLineup().elementAt(i),
+									(MatchLineupPlayer) team.getLineup().elementAt(i),
 									matchID, team.getTeamID());
 				}
 				

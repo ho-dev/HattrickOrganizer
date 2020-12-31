@@ -356,8 +356,8 @@ public class XMLExporter  {
 				tmpEle = lineupEle;
 
 				//Player schreiben
-				for (int k = 0; (lineupTeam.getStartingLineup() != null) && (k < lineupTeam.getStartingLineup().size()); k++) {
-					MatchLineupPlayer playerMatch = lineupTeam.getStartingLineup().get(k);
+				for (int k = 0; (lineupTeam.getLineup() != null) && (k < lineupTeam.getLineup().size()); k++) {
+					MatchLineupPlayer playerMatch = lineupTeam.getLineup().get(k);
 					Player playerData = matchData.getPlayers().get(Integer.valueOf(playerMatch.getPlayerId()));
 
 					//Bank + verletzte überspringen

@@ -7,9 +7,7 @@ import core.model.match.MatchLineup;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
 import core.model.match.SourceSystem;
-import core.model.player.MatchRoleID;
 import core.training.YouthTrainerComment;
-import core.training.type.IndividualWeeklyTraining;
 import module.lineup.substitution.model.MatchOrderType;
 
 import java.sql.Timestamp;
@@ -23,7 +21,7 @@ public class YouthTraining {
         Secondary
     }
 
-    private double[] trainingPrioFactor = {
+    private static double[] trainingPrioFactor = {
             UserParameter.instance().youthtrainingFactorPrimary,
             UserParameter.instance().youthtrainingFactorSecondary
     };
@@ -65,7 +63,7 @@ public class YouthTraining {
     public void recalcSkills() {
         var team = this.getMatchLineup().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
 
-        for ( var player : team.getStartingLineup()){
+        for ( var player : team.getLineup()){
             recalcSkills(player.getPlayerId());
         }
         for ( var subs : team.getSubstitutions()){
@@ -193,4 +191,19 @@ public class YouthTraining {
         }
         return ret;
     }
+
+    public String getPlayerTrainedSectors(int playerId) {
+        var hov = HOVerwaltung.instance();
+        var lineupTeam = this.getTeam(hov.getModel().getBasics().getYouthTeamId());
+        var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
+        var ret = new StringBuilder();
+        for ( var s : sectors.entrySet()){
+            ret.append(hov.getLanguageString("training.sector." + s.getKey()))
+                    .append(":")
+                    .append(s.getValue())
+                    .append(" ");
+        }
+        return ret.toString();
+    }
+
 }

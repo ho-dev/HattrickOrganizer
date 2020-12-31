@@ -15,7 +15,7 @@ public class MatchLineupTeam {
 
 	private SourceSystem sourceSystem;
 	private String teamName;
-	private Vector<MatchLineupPlayer> startingLineup = new Vector<>();
+	private Vector<MatchLineupPlayer> lineup = new Vector<>();
 	private ArrayList<Substitution> substitutions = new ArrayList<>();
 	private int experience;
 	private int teamId;
@@ -50,8 +50,8 @@ public class MatchLineupTeam {
 	 * @param m_vAufstellung
 	 *            New value of property m_vAufstellung.
 	 */
-	public final void setStartingLineup(Vector<MatchLineupPlayer> m_vAufstellung) {
-		this.startingLineup = m_vAufstellung;
+	public final void setLineup(Vector<MatchLineupPlayer> m_vAufstellung) {
+		this.lineup = m_vAufstellung;
 	}
 
 	/**
@@ -59,8 +59,8 @@ public class MatchLineupTeam {
 	 * 
 	 * @return Value of property m_vAufstellung.
 	 */
-	public final Vector<MatchLineupPlayer> getStartingLineup() {
-		return startingLineup;
+	public final Vector<MatchLineupPlayer> getLineup() {
+		return lineup;
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class MatchLineupTeam {
 	 */
 	public final MatchLineupPlayer getPlayerByID(int id) {
 
-		for (MatchLineupPlayer player : startingLineup) {
+		for (MatchLineupPlayer player : lineup) {
 			if (player.getPlayerId() == id) {
 				if (player.getId() != IMatchRoleID.captain && (player.getId() != IMatchRoleID.setPieces)) {
 					return player;
@@ -156,8 +156,8 @@ public class MatchLineupTeam {
 	public final MatchLineupPlayer getPlayerByPosition(int id) {
 		MatchLineupPlayer player;
 
-		for (int i = 0; (startingLineup != null) && (i < startingLineup.size()); i++) {
-			player = startingLineup.elementAt(i);
+		for (int i = 0; (lineup != null) && (i < lineup.size()); i++) {
+			player = lineup.elementAt(i);
 
 			if (player.getId() == id) {
 				return player;
@@ -239,7 +239,7 @@ public class MatchLineupTeam {
 	}
 
 	public final void add2StartingLineup(MatchLineupPlayer player) {
-		startingLineup.add(player);
+		lineup.add(player);
 	}
 
 	/**
@@ -252,7 +252,7 @@ public class MatchLineupTeam {
 
 		MatchLineupPlayer player;
 
-		for (MatchLineupPlayer matchLineupPlayer : startingLineup) {
+		for (MatchLineupPlayer matchLineupPlayer : lineup) {
 			player = (MatchLineupPlayer) matchLineupPlayer;
 
 			if (player != null) {
@@ -655,34 +655,36 @@ public class MatchLineupTeam {
 	public Map<MatchRoleID.Sector, Integer> getTrainMinutesPlayedInSectors(int playerId) {
 		var ret = new HashMap<MatchRoleID.Sector, Integer>();
 
-		var start = this.getPlayerByID(playerId);
-		if ( start != null ){
+		var end = this.getPlayerByID(playerId);	// player position at match end
+		if (end != null) {
 			int startminute = 0;
-			int sumMinutes=0;
-			var sector = start.getSector();
+			int sumMinutes = 0;
+			var sector = end.getSector();
 
-			HashMap<Integer, MatchRoleID.Sector> changedPositions = new HashMap<>();	// player id, new Position
-			for ( var subs : this.getSubstitutions()){
-				if ( subs.getOrderType() == MatchOrderType.POSITION_SWAP || subs.getOrderType() == MatchOrderType.SUBSTITUTION){
+			HashMap<Integer, MatchRoleID.Sector> changedPositions = new HashMap<>();    // player id, new Position
+			for (var subs : this.getSubstitutions()) {
+				if (subs.getOrderType() == MatchOrderType.POSITION_SWAP || subs.getOrderType() == MatchOrderType.SUBSTITUTION) {
 					var subSector = changedPositions.get(subs.getSubjectPlayerID());
-					if ( subSector == null ) {
+					if (subSector == null) {
 						subSector = this.getPlayerByID(subs.getSubjectPlayerID()).getSector();
 					}
 					var objSector = changedPositions.get(subs.getObjectPlayerID());
-					if ( objSector == null){
+					if (objSector == null) {
 						objSector = this.getPlayerByID(subs.getObjectPlayerID()).getSector();
 					}
-					if (subSector != objSector){
+					if (subSector != objSector) {
 						changedPositions.put(subs.getSubjectPlayerID(), objSector);
 						changedPositions.put(subs.getObjectPlayerID(), subSector);
-						if ( playerId == subs.getSubjectPlayerID() || playerId == subs.getObjectPlayerID()) {
+						if (playerId == subs.getSubjectPlayerID() || playerId == subs.getObjectPlayerID()) {
 							if (sector != MatchRoleID.Sector.None) {
 								var minutesInSector = subs.getMatchMinuteCriteria() - startminute;
 								sumMinutes += minutesInSector;
 								if (sumMinutes > 90) {
 									minutesInSector -= (sumMinutes - 90);
 								}
-								ret.put(sector, minutesInSector);
+								if (minutesInSector > 0) {
+									ret.put(sector, minutesInSector);
+								}
 							}
 							if (playerId == subs.getSubjectPlayerID()) {
 								sector = objSector;
@@ -692,19 +694,25 @@ public class MatchLineupTeam {
 							startminute = subs.getMatchMinuteCriteria();
 						}
 					}
-					if ( sumMinutes >= 90 )break;
+					if (sumMinutes >= 90) break;
 				}
 			}
 
-			if ( sector != MatchRoleID.Sector.None && sumMinutes < 90){
+			if (sector != MatchRoleID.Sector.None && sumMinutes < 90) {
 				var minutesInSector = this.getMatchEndMinute(playerId) - startminute;
 				sumMinutes += minutesInSector;
-				if ( sumMinutes > 90){
-					minutesInSector -= (sumMinutes-90);
+				if (sumMinutes > 90) {
+					minutesInSector -= (sumMinutes - 90);
 				}
-				ret.put(sector, minutesInSector);
+				if (minutesInSector > 0) {
+					ret.put(sector, minutesInSector);
+				}
 			}
 		}
 		return ret;
+	}
+
+	public boolean hasPlayerPlayed(int playerId) {
+		return this.getTrainMinutesPlayedInSectors(playerId).size() > 0;
 	}
 }

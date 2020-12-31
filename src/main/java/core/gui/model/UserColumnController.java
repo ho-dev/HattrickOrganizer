@@ -55,6 +55,8 @@ public final class UserColumnController {
 	
 	/** model for player analysis **/
 	private PlayerAnalysisModel playerAnalysis2Model 		= null;
+
+	// Youth module
 	private YouthPlayerOverviewTableModel youthPlayerOverviewColumnModel;
 	private YouthTrainingViewTableModel youthTrainingViewColumnModel;
 	private YouthPlayerDetailsTableModel youthPlayerDetailsTableModel;
@@ -90,7 +92,8 @@ public final class UserColumnController {
 		dbZugriff.loadHOColumModel(getMatchesOverview1ColumnModel());
 
 		dbZugriff.loadHOColumModel(getYouthTrainingViewColumnModel());
-		dbZugriff.loadHOColumModel(getYouthTrainingViewColumnModel());
+		dbZugriff.loadHOColumModel(getYouthPlayerOverviewColumnModel());
+		dbZugriff.loadHOColumModel(getYouthPlayerDetailsColumnModel());
 	}
 	
 	/**
