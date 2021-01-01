@@ -65,9 +65,9 @@ final class TeamTable extends AbstractTable {
 					+ "," + team.getStaminaTrainingPart()
 					+ "," + team.getTrainingsArtAsInt()
 					+ ",'" 
-					+ "'," + team.getStimmungAsInt()
+					+ "'," + team.getTeamSpirit()
 					+ ",'" 
-					+ "'," + team.getSelbstvertrauenAsInt()
+					+ "'," + team.getConfidence()
 					+ ",'" 
 					+ "'," + team.getFormationExperience541()
 					+ "," + team.getFormationExperience433()

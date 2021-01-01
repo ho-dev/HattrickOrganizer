@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<svg version="1.1" id="reset" xmlns="http://www.w3.org/2000/svg" width="188.03" height="196.2">
+  	<defs id="colors">
+		<linearGradient id="lineColor">
+			<stop offset="0" stop-color="#FF0000"/>
+			<stop offset="1" stop-color="#FF0000"/>
+		</linearGradient>
+	</defs>
+	<g
+		stroke="url(#lineColor)"
+		transform="translate(-283.03314,-451.4796)">
+		<path
+			style="fill:none;stroke-width:22.65995979;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+			d="M 505.57895,148.28871 A 70.219299,68.463814 0 1 1 479.84348,95.315257"
+			transform="matrix(0.46641847,-0.98449149,1.0097347,0.47837792,24.2561,911.33333)"/>
+		<path
+			style="fill:none;stroke-width:22.65995979;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+			d="m 377.04814,468.98158 0,75.78535"/>
+	</g>
+</svg>

@@ -177,7 +177,7 @@ public class RatingOptimizer {
 		}
 		int attitude = 0;
 		int tactic = 0;
-		int stimmung = team.getStimmungAsInt();
+		int stimmung = team.getTeamSpirit();
 		if (home) {
 			attitude = det.getHomeEinstellung();
 			tactic = det.getHomeTacticType();

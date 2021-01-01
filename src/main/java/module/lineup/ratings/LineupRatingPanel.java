@@ -11,6 +11,7 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.Ratings;
 import core.model.Team;
 import core.model.match.IMatchDetails;
 import core.rating.RatingPredictionConfig;
@@ -783,6 +784,21 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
             calcColorBorders();
         }
     }
+
+    public void setPreviousRatings(Ratings previousRatings) {
+        final double t = m_jpMinuteToggler.getCurrentKey();
+
+        m_dRightDefenseRating = previousRatings.getRightDefense().get(t);
+        m_dCentralDefenseRating = previousRatings.getCentralDefense().get(t);
+        m_dLeftDefenseRating = previousRatings.getLeftDefense().get(t);
+
+        m_dMidfieldRating = previousRatings.getMidfield().get(m_jpMinuteToggler.getCurrentKey());
+
+        m_dRightAttackRating = previousRatings.getRightAttack().get(t);
+        m_dCentralAttackRating = previousRatings.getCentralAttack().get(t);
+        m_dLeftAttackRating = previousRatings.getLeftAttack().get(t);
+        }
+
 
     private void addListeners() {
         m_jcbPredictionModel.addActionListener(cbActionListener);

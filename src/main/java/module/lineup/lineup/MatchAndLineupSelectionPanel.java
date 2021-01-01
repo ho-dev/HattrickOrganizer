@@ -8,6 +8,7 @@ import core.gui.model.MatchOrdersRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.Ratings;
 import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.net.OnlineWorker;
@@ -209,7 +210,20 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         m_jbUploadLineup.addActionListener(e -> uploadLineupToHT());
 
-        m_jcbxLineupSimulation.addActionListener( e -> {update_jcbUpcomingGames();});
+        m_jcbxLineupSimulation.addActionListener( e -> {
+            Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
+            Ratings oRatingsBefore = lineup.getRatings();
+
+            update_jcbUpcomingGames();
+            if(! isLineupSimulator()) {
+                jpParent.getLineupPanel().getLineupSettingsPanel().resetSettings();
+                jpParent.update();
+            }
+
+            jpParent.getLineupPanel().getLineupRatingPanel().setPreviousRatings(oRatingsBefore);
+            jpParent.getLineupPanel().getLineupRatingPanel().setRatings();
+
+        });
 
         m_jcbxOfficialOnly.addActionListener(e -> update_jcbLoadLineup(false));
 
