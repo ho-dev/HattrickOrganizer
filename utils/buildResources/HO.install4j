@@ -35,7 +35,7 @@
       <variable name="versionType" />
       <variable name="mediaID" value="${compiler:sys.mediaId}" />
     </variables>
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk14/jdk-14.0.1+7" />
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk15/jdk-15.0.1+9" />
   </application>
   <files defaultFileMode="666" defaultDirMode="777">
     <mountPoints>
