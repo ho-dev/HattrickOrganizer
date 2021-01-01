@@ -254,6 +254,8 @@ public class XMLMatchLineupParser {
 
 		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
 			MatchLineupPlayer startPlayer = createPlayer((Element) list.item(i));
+			startPlayer.setStartPosition(startPlayer.getId()); // it is the role id
+			startPlayer.setStartBehavior(startPlayer.getTaktik());
 
 			// Merge with the existing player, but ignore captain and set piece
 			// position
