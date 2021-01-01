@@ -42,10 +42,10 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     private final static Color LABEL_BG = ThemeManager.getColor(HOColorName.PANEL_BG);
     private final static Color LABEL_FG = ThemeManager.getColor(HOColorName.LEAGUE_FG);
     private final static Color BAD_LABEL_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_DECLINE_FG);
-    private Border BORDER_RATING_DEFAULT = BorderFactory.createMatteBorder(3, 3, 3, 3, ThemeManager.getColor(HOColorName.PLAYER_POSITION_PANEL_BORDER));
+    private final Border BORDER_RATING_DEFAULT = BorderFactory.createMatteBorder(3, 3, 3, 3, ThemeManager.getColor(HOColorName.PLAYER_POSITION_PANEL_BORDER));
     private final Border BORDER_RATING_BELOW_LIMIT = BorderFactory.createMatteBorder(3, 3, 3, 3, ThemeManager.getColor(HOColorName.RATING_BORDER_BELOW_LIMIT));
     private final Border BORDER_RATING_ABOVE_LIMIT = BorderFactory.createMatteBorder(3, 3, 3, 3, ThemeManager.getColor(HOColorName.RATING_BORDER_ABOVE_LIMIT));
-    int hatstat;
+    int iHatStats;
     double m_dCentralAttackRating, m_dRightAttackRating, m_dLeftAttackRating, m_dMidfieldRating;
     double m_dCentralDefenseRating, m_dLeftDefenseRating, m_dRightDefenseRating, loddar;
     private final ColorLabelEntry m_jlCentralAttackRatingCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
@@ -186,10 +186,10 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     }
 
 
-    protected void setHatstat(int value) {
+    protected void setiHatStats(int value) {
         m_jlHatstatMain.setText(Helper.INTEGERFORMAT.format(value));
-        m_jlHatstatCompare.setSpecialNumber(value - hatstat, false);
-        hatstat = value;
+        m_jlHatstatCompare.setSpecialNumber(value - iHatStats, false);
+        iHatStats = value;
     }
 
     protected void setTactic(int iTacticType, float iTacticSkill){
@@ -333,10 +333,17 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         GridBagLayout mainLayout = new GridBagLayout();
         GridBagConstraints gbcMainLayout = new GridBagConstraints();
         gbcMainLayout.anchor = GridBagConstraints.CENTER;
-        gbcMainLayout.gridwidth = 2;
         gbcMainLayout.insets = new Insets(5, 5, 0, 5);
         mainPanel = new JPanel(mainLayout);
         mainPanel.setOpaque(false);
+
+
+        gbcMainLayout.gridx = 0;
+        gbcMainLayout.gridy = 0;
+        gbcMainLayout.gridwidth = 3;
+        gbcMainLayout.fill = GridBagConstraints.HORIZONTAL;
+        mainLayout.setConstraints(m_jpMinuteToggler, gbcMainLayout);
+        mainPanel.add(m_jpMinuteToggler);
 
 
         //CENTRAL DEFENSE ========================
@@ -354,7 +361,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpCentralDefense.setPreferredSize(SIZE);
 
         gbcMainLayout.gridx = 1;
-        gbcMainLayout.gridy = 0;
+        gbcMainLayout.gridy = 1;
+        gbcMainLayout.gridwidth = 2;
+        gbcMainLayout.fill = GridBagConstraints.NONE;
         mainLayout.setConstraints(m_jpCentralDefense, gbcMainLayout);
         mainPanel.add(m_jpCentralDefense);
 
@@ -374,7 +383,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpRightDefense.setPreferredSize(SIZE);
 
         gbcMainLayout.gridx = 0;
-        gbcMainLayout.gridy = 1;
+        gbcMainLayout.gridy = 2;
         mainLayout.setConstraints(m_jpRightDefense, gbcMainLayout);
         mainPanel.add(m_jpRightDefense);
 
@@ -412,7 +421,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpMidfield.setPreferredSize(SIZE);
 
         gbcMainLayout.gridx = 1;
-        gbcMainLayout.gridy = 2;
+        gbcMainLayout.gridy = 3;
         mainLayout.setConstraints(m_jpMidfield, gbcMainLayout);
         mainPanel.add(m_jpMidfield);
 
@@ -432,7 +441,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpRightAttack.setPreferredSize(SIZE);
 
         gbcMainLayout.gridx = 0;
-        gbcMainLayout.gridy = 3;
+        gbcMainLayout.gridy = 4;
         mainLayout.setConstraints(m_jpRightAttack, gbcMainLayout);
         mainPanel.add(m_jpRightAttack);
 
@@ -472,7 +481,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpCentalAttack.setPreferredSize(SIZE);
 
         gbcMainLayout.gridx = 1;
-        gbcMainLayout.gridy = 4;
+        gbcMainLayout.gridy = 5;
         mainLayout.setConstraints(m_jpCentalAttack, gbcMainLayout);
         mainPanel.add(m_jpCentalAttack);
 
@@ -573,7 +582,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpGlobalRating.setBackground(LABEL_BG);
         m_jpGlobalRating.setBorder(BORDER_RATING_DEFAULT);
         gbcMainLayout.gridx = 0;
-        gbcMainLayout.gridy = 5;
+        gbcMainLayout.gridy = 6;
         mainLayout.setConstraints(m_jpGlobalRating, gbcMainLayout);
         mainPanel.add(m_jpGlobalRating);
 
@@ -626,7 +635,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
 
         gbcMainLayout.gridx = 2;
-        gbcMainLayout.gridy = 5;
+        gbcMainLayout.gridy = 6;
         mainLayout.setConstraints(jpRatingModelAndSharing, gbcMainLayout);
         mainPanel.add(jpRatingModelAndSharing);
 
@@ -754,6 +763,8 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
             final HOModel homodel = HOVerwaltung.instance().getModel();
             final Lineup currentLineup = homodel.getLineup();
 
+            m_jpMinuteToggler.load();
+
             clear();
             setRightDefense(currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
             setCentralDefense(currentLineup.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
@@ -763,7 +774,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
             setCentralAttack(currentLineup.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
             setRightAttack(currentLineup.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
             setLoddar(Helper.round(currentLineup.getRatings().getLoddarStat().get(m_jpMinuteToggler.getCurrentKey()), 2));
-            setHatstat(currentLineup.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
+            setiHatStats(currentLineup.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
             int iTacticType = currentLineup.getTacticType();
             setTactic(iTacticType, currentLineup.getTacticLevel(iTacticType));
             setFormationExperience(currentLineup.getCurrentTeamFormationString(), currentLineup.getExperienceForCurrentTeamFormation());

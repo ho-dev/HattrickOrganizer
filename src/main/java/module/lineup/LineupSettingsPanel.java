@@ -3,7 +3,6 @@ package module.lineup;
 import core.constants.TeamConfidence;
 import core.constants.TeamSpirit;
 import core.datatype.CBItem;
-import core.gui.HOMainFrame;
 import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
@@ -14,7 +13,6 @@ import core.model.match.IMatchDetails;
 import core.model.match.Weather;
 import core.util.HOLogger;
 import core.util.Helper;
-import module.lineup.lineup.LineupPositionsPanel;
 import module.lineup.lineup.MatchAndLineupSelectionPanel;
 import module.lineup.ratings.LineupRatingPanel;
 import java.awt.*;
@@ -134,32 +132,30 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		Helper.setComboBoxFromID(m_jcbLocation, location);
 
 		if (location == IMatchDetails.LOCATION_TOURNAMENT) {
+			final HOModel model = HOVerwaltung.instance().getModel();
+
 			setTeamSpirit(6, 2); // Set Team Spirit to content (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
 			m_jcbMainTeamSpirit.setEnabled(false);
 			m_jcbSubTeamSpirit.setEnabled(false);
 			setConfidence(6); // Set Team Spirit to wonderful (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
 			m_jcbTeamConfidence.setEnabled(false);
+
+			model.getTeam().setStamina(6);
+			model.getTeam().setSubStamina(2);
+			model.getTeam().setConfidence(6);
+
 		}
 		else
 		{
-			m_jcbMainTeamSpirit.setEnabled(true);
-			m_jcbSubTeamSpirit.setEnabled(true);
-			m_jcbTeamConfidence.setEnabled(true);
+			boolean bLineupSimulation = isLineupSimulator();
+			m_jcbMainTeamSpirit.setEnabled(bLineupSimulation);
+			m_jcbSubTeamSpirit.setEnabled(bLineupSimulation);
+			m_jcbTeamConfidence.setEnabled(bLineupSimulation);
 		}
 	}
 
 
 	public void setLabels() {
-		final HOModel homodel = HOVerwaltung.instance().getModel();
-		final Lineup currentLineup = homodel.getLineup();
-
-		setTeamSpirit(homodel.getTeam().getStimmungAsInt(), homodel.getTeam().getSubStimmung());
-		setConfidence(homodel.getTeam().getSelbstvertrauenAsInt());
-		setTrainerType(homodel.getTrainer().getTrainerTyp());
-		setTacticalAssistants(homodel.getClub().getTacticalAssistantLevels());
-		setLocation(currentLineup.getLocation());
-		setWeather(currentLineup.getWeather(), currentLineup.getWeatherForecast());
-		setPullBackMinute(currentLineup.getPullBackMinute());
 
 		// Lineup settings are editable only if in Lineup Simulator mode
 		boolean bLineupSimulation = isLineupSimulator();
@@ -171,6 +167,17 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		m_jcbTrainerType.setEnabled(bLineupSimulation);
 		m_jcbTacticalAssistants.setEnabled(bLineupSimulation);
 		m_jcbPullBackMinute.setEnabled(bLineupSimulation);
+
+		final HOModel homodel = HOVerwaltung.instance().getModel();
+		final Lineup currentLineup = homodel.getLineupWithoutRatingRecalc();
+		setTeamSpirit(homodel.getTeam().getStimmungAsInt(), homodel.getTeam().getSubStimmung());
+		setConfidence(homodel.getTeam().getSelbstvertrauenAsInt());
+		setTrainerType(homodel.getTrainer().getTrainerTyp());
+		setTacticalAssistants(homodel.getClub().getTacticalAssistantLevels());
+		setWeather(currentLineup.getWeather(), currentLineup.getWeatherForecast());
+		setPullBackMinute(currentLineup.getPullBackMinute());
+		setLocation(currentLineup.getLocation());
+
 	}
 
 	public void setConfidence(int iTeamConfidence) {
@@ -198,25 +205,26 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	@Override
 	public void itemStateChanged(ItemEvent event) {
 
-		HOModel model = HOVerwaltung.instance().getModel();
-
 	 if (event.getStateChange() == ItemEvent.SELECTED) {
+
+		 HOModel model = HOVerwaltung.instance().getModel();
+
 			if (event.getSource().equals(m_jcbPullBackMinute)) {
 				model.getLineupWithoutRatingRecalc().setPullBackMinute(((CBItem) Objects.requireNonNull(m_jcbPullBackMinute.getSelectedItem())).getId());
 			}
 			else if (event.getSource().equals(m_jcbMainTeamSpirit)) {
-				model.getTeam().setStimmungAsInt(((CBItem) Objects.requireNonNull(m_jcbMainTeamSpirit.getSelectedItem())).getId());
+				model.getTeam().setStamina(((CBItem) Objects.requireNonNull(m_jcbMainTeamSpirit.getSelectedItem())).getId());
 			}
 			else if (event.getSource().equals(m_jcbSubTeamSpirit)) {
-				model.getTeam().setSubStimmung(((CBItem) Objects.requireNonNull(m_jcbSubTeamSpirit.getSelectedItem())).getId());
+				model.getTeam().setSubStamina(((CBItem) Objects.requireNonNull(m_jcbSubTeamSpirit.getSelectedItem())).getId());
 			}
 			else if (event.getSource().equals(m_jcbTeamConfidence)) {
-				model.getTeam().setSelbstvertrauenAsInt(((CBItem) Objects.requireNonNull(m_jcbTeamConfidence.getSelectedItem())).getId());
+				model.getTeam().setConfidence(((CBItem) Objects.requireNonNull(m_jcbTeamConfidence.getSelectedItem())).getId());
 			}
 			else if (event.getSource().equals(m_jcbTrainerType)) {
 				model.getTrainer().setTrainerTyp(((CBItem) Objects.requireNonNull(m_jcbTrainerType.getSelectedItem())).getId());
 				int iStyleOfPlay = model.getLineupWithoutRatingRecalc().getStyleOfPlay();
-				HOMainFrame.instance().getLineupPanel().getLineupPositionsPanel().updateStyleOfPlayComboBox(iStyleOfPlay);
+				lineupPanel.getLineupPositionsPanel().updateStyleOfPlayComboBox(iStyleOfPlay);
 			}
 			else if (event.getSource().equals(m_jcbLocation)) {
 				model.getLineupWithoutRatingRecalc().setLocation((short) ((CBItem) Objects.requireNonNull(m_jcbLocation.getSelectedItem())).getId());
@@ -224,18 +232,18 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			else if (event.getSource().equals(m_jcbTacticalAssistants)) {
 				model.getClub().setTacticalAssistantLevels(((CBItem) Objects.requireNonNull(m_jcbTacticalAssistants.getSelectedItem())).getId());
 				int iStyleOfPlay = model.getLineupWithoutRatingRecalc().getStyleOfPlay();
-				HOMainFrame.instance().getLineupPanel().getLineupPositionsPanel().updateStyleOfPlayComboBox(iStyleOfPlay);
+				lineupPanel.getLineupPositionsPanel().updateStyleOfPlayComboBox(iStyleOfPlay);
 			}
 			else if (event.getSource().equals(m_jcbWeather))
 			{
 				Lineup lineup = model.getLineupWithoutRatingRecalc();
 				lineup.setWeatherForecast(Weather.Forecast.TODAY); // weather forecast is overriden
 				lineup.setWeather(getWeather());
-				HOMainFrame.instance().getLineupPanel().getLineupPositionsPanel().refresh();
+				lineupPanel.getLineupPositionsPanel().refresh();
 
 			}
+		 refresh();
 		}
-		refresh();
 	}
 
 	@Override

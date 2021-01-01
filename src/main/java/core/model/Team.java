@@ -264,7 +264,7 @@ public final class Team  {
 	 * @param m_iSelbstvertrauen
 	 *            New value of property m_iSelbstvertrauen.
 	 */
-	public void setSelbstvertrauenAsInt(int m_iSelbstvertrauen) {
+	public void setConfidence(int m_iSelbstvertrauen) {
 		this.m_iSelbstvertrauen = m_iSelbstvertrauen;
 	}
 
@@ -283,7 +283,7 @@ public final class Team  {
 	 * @param m_iStimmung
 	 *            New value of property m_iStimmung.
 	 */
-	public void setStimmungAsInt(int m_iStimmung) {
+	public void setStamina(int m_iStimmung) {
 		this.m_iStimmungInt = m_iStimmung;
 	}
 
@@ -358,7 +358,7 @@ public final class Team  {
 	/**
 	 * Set the sublevel of the team spirit.
 	 */
-	public void setSubStimmung(int i) {
+	public void setSubStamina(int i) {
 		subStimmung = i;
 	}
 

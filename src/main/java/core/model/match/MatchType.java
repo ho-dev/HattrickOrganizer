@@ -29,7 +29,8 @@ public enum MatchType {
 	RUBYCUP(1002), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
 	SAPPHIRECUP(1003), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
 	CONSOLANTECUP(1004), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
-	DIVISIONBATTLE(1101); // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
+	DIVISIONBATTLE(1101), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
+	GROUP_OFFICIAL(9990); // Supposed to replace constants declared in SpielePanel
 
 
 

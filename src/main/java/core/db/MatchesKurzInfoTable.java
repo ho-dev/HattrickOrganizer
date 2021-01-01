@@ -109,18 +109,11 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	}
 
 
-	/**
-	 * Return the list of all played matches (own team)
-	 */
-	ArrayList<MatchKurzInfo> getPlayedMatchInfo() {
-		return getPlayedMatchInfo(null);
-	}
-
 
 	/**
 	 * Return the list of n latest played matches (own team)
 	 */
-	ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames) {
+	ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialOnly) {
 		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		final ArrayList<MatchKurzInfo> playedMatches = new ArrayList<>();
 
@@ -128,9 +121,14 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		ResultSet rs;
 
 		sql.append("SELECT * FROM " + getTableName());
-		sql.append(" WHERE ( GastID = " + teamId + "OR HeimID = " + teamId + ")");
-		sql.append(" AND Status=" + MatchKurzInfo.FINISHED  + " ORDER BY MatchDate DESC");
+		sql.append(" WHERE ( GastID = " + teamId + " OR HeimID = " + teamId + ")");
+		sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
 
+		if(bOfficialOnly) {
+			sql.append(getMatchTypWhereClause(MatchType.GROUP_OFFICIAL.getId()));
+		}
+
+		sql.append(" ORDER BY MatchDate DESC");
 
 		if(iNbGames != null) {
 			sql.append(" LIMIT " + iNbGames);
@@ -274,42 +272,44 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	private StringBuilder getMatchTypWhereClause(int matchtype) {
 		StringBuilder sql = new StringBuilder(50);
-		switch (matchtype) {
-		case SpielePanel.NUR_EIGENE_SPIELE:
-
-			// Nix zu tun, da die teamId die einzige Einschränkung ist
-			break;
-		case SpielePanel.NUR_EIGENE_PFLICHTSPIELE:
+		if (matchtype == SpielePanel.NUR_EIGENE_SPIELE) {// Nothing to do, as the teamId is the only restriction
+		} else if (matchtype == SpielePanel.NUR_EIGENE_PFLICHTSPIELE) {
 			sql.append(" AND ( MatchTyp=" + MatchType.QUALIFICATION.getId());
 			sql.append(" OR MatchTyp=" + MatchType.LEAGUE.getId());
 			sql.append(" OR MatchTyp=" + MatchType.CUP.getId() + " )");
-			break;
-		case SpielePanel.NUR_EIGENE_POKALSPIELE:
+		} else if (matchtype == SpielePanel.NUR_EIGENE_POKALSPIELE) {
 			sql.append(" AND MatchTyp=" + MatchType.CUP.getId());
-			break;
-		case SpielePanel.NUR_EIGENE_LIGASPIELE:
+		} else if (matchtype == SpielePanel.NUR_EIGENE_LIGASPIELE) {
 			sql.append(" AND MatchTyp=" + MatchType.LEAGUE.getId());
-			break;
-		case SpielePanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE:
+		} else if (matchtype == SpielePanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE) {
 			sql.append(" AND ( MatchTyp=" + MatchType.FRIENDLYNORMAL.getId());
 			sql.append(" OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId());
 			sql.append(" OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId());
 			sql.append(" OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId() + " )");
-			break;
-		case SpielePanel.NUR_EIGENE_TOURNAMENTSPIELE:
+		} else if (matchtype == SpielePanel.NUR_EIGENE_TOURNAMENTSPIELE) {
 			sql.append(" AND ( MatchTyp=" + MatchType.TOURNAMENTGROUP.getId());
 			sql.append(" OR MatchTyp=" + MatchType.TOURNAMENTPLAYOFF.getId());
 			sql.append(" OR MatchTyp=" + MatchType.DIVISIONBATTLE.getId() + " )");
-			break; 
-		case SpielePanel.ONLY_SECONDARY_CUP:
+		} else if (matchtype == SpielePanel.ONLY_SECONDARY_CUP) {
 			sql.append(" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
 			sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
 			sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
-			sql.append(" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");
-			break;
-		case SpielePanel.ONLY_QUALIF_MATCHES:
+			sql.append(" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId() + " )");
+		} else if (matchtype == SpielePanel.ONLY_QUALIF_MATCHES) {
 			sql.append(" AND MatchTyp=" + MatchType.QUALIFICATION.getId());
-			break;
+		}
+		else if ( matchtype == MatchType.GROUP_OFFICIAL.getId()) {
+			sql.append(" AND ( MatchTyp=" + MatchType.LEAGUE.getId());
+			sql.append(" OR MatchTyp=" + MatchType.QUALIFICATION.getId());
+			sql.append(" OR MatchTyp=" + MatchType.EMERALDCUP.getId());
+			sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
+			sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
+			sql.append(" OR MatchTyp=" + MatchType.CUP.getId());
+			sql.append(" OR MatchTyp=" + MatchType.FRIENDLYNORMAL.getId());
+			sql.append(" OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId());
+			sql.append(" OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId());
+			sql.append(" OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId());
+			sql.append(" OR MatchTyp=" + MatchType.MASTERS.getId() + " )");
 		}
 		return sql;
 	}
