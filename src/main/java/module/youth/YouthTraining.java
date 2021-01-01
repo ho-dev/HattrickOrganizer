@@ -172,7 +172,7 @@ public class YouthTraining {
                             minutesInPrioPositions = 90 - minutes;
                         }
                         if (minutesInPrioPositions > 0) {
-                            ret += trainingFactor * minutesInPrioPositions * train.calcSkillIncrementPerMinute(value.getSkillID().getValue(), (int) value.getCurrentValue(), posPrio, player.getAgeYears());
+                            ret += trainingFactor * minutesInPrioPositions * train.calcSkillIncrementPerMinute(value.getSkillID(), (int) value.getCurrentValue(), posPrio, player.getAgeYears());
                         }
                         minutes += minutesInPrioPositions;
                         if (minutes == 90) break;
@@ -184,7 +184,7 @@ public class YouthTraining {
                     // Calc Individual training
                     var sectors = lineupTeam.getTrainMinutesPlayedInSectors(player.getId());
                     for (var sector : sectors.entrySet()) {
-                        ret += trainingFactor * sector.getValue() * train.calcSkillIncrementPerMinute(value.getSkillID().getValue(), (int) value.getCurrentValue(), sector.getKey(), player.getAgeYears());
+                        ret += trainingFactor * sector.getValue() * train.calcSkillIncrementPerMinute(value.getSkillID(), (int) value.getCurrentValue(), sector.getKey(), player.getAgeYears());
                     }
                 }
             }

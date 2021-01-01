@@ -2,6 +2,7 @@ package module.training;
 
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
+import core.constants.player.PlayerSpeciality;
 import core.model.player.Player;
 
 import java.awt.Color;
@@ -65,6 +66,22 @@ public class Skills {
 
         public int getValue() {
             return value;
+        }
+
+        public int convertToPlayerSkill(){
+            return switch (this) {
+                case Keeper -> PlayerSkill.KEEPER;
+                case Stamina -> PlayerSkill.STAMINA;
+                case SetPieces -> PlayerSkill.SET_PIECES;
+                case Defender -> PlayerSkill.DEFENDING;
+                case Scorer -> PlayerSkill.SCORING;
+                case Winger -> PlayerSkill.WINGER;
+                case Passing -> PlayerSkill.PASSING;
+                case Playmaker -> PlayerSkill.PLAYMAKING;
+                case Leadership -> PlayerSkill.LEADERSHIP;
+                case Experience -> PlayerSkill.EXPERIENCE;
+                case Trainer -> -1;
+            };
         }
 
     }

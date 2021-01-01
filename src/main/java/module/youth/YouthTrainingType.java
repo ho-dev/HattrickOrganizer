@@ -4,7 +4,9 @@ import core.model.HOVerwaltung;
 import core.model.player.MatchRoleID;
 import core.training.WeeklyTrainingType;
 import core.training.type.*;
+import module.training.Skills;
 
+import javax.swing.text.Position;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,20 +113,21 @@ public enum YouthTrainingType {
      * @param ageYears age of the player
      * @return skill increment (training effect)
      */
-    public double calcSkillIncrementPerMinute(int skillId, int currentValue, int posPrio, int ageYears) {
+    public double calcSkillIncrementPerMinute(Skills.HTSkillID skillId, int currentValue, int posPrio, int ageYears) {
+        var playerskill = skillId.convertToPlayerSkill();
         var wt = trainingTypes[this.value];
-        if ( wt.getPrimaryTrainingSkill() != skillId && wt.getSecondaryTrainingSkill() != skillId ) return 0;
+        if ( wt.getPrimaryTrainingSkill() != playerskill && wt.getSecondaryTrainingSkill() != playerskill ) return 0;
         return switch (posPrio) {
-            case 0 -> wt.getBonusYouthTrainingPerMinute(skillId,currentValue, ageYears);
-            case 1 -> wt.getFullYouthTrainingPerMinute(skillId,currentValue, ageYears);
-            case 2 -> wt.getPartlyYouthTrainingPerMinute(skillId,currentValue, ageYears);
-            case 3 -> wt.getOsmosisYouthTrainingPerMinute(skillId,currentValue, ageYears);
+            case 0 -> wt.getBonusYouthTrainingPerMinute(playerskill,currentValue, ageYears);
+            case 1 -> wt.getFullYouthTrainingPerMinute(playerskill,currentValue, ageYears);
+            case 2 -> wt.getPartlyYouthTrainingPerMinute(playerskill,currentValue, ageYears);
+            case 3 -> wt.getOsmosisYouthTrainingPerMinute(playerskill,currentValue, ageYears);
             default -> 0;
         };
     }
 
-    public double calcSkillIncrementPerMinute(int skillId, int currentValue, MatchRoleID.Sector sector, int ageYears) {
+    public double calcSkillIncrementPerMinute(Skills.HTSkillID skillId, int currentValue, MatchRoleID.Sector sector, int ageYears) {
         var wt = trainingTypes[this.value];
-        return ((IndividualWeeklyTraining)wt).calcSkillIncrementPerMinute(skillId,currentValue,sector,ageYears);
+        return ((IndividualWeeklyTraining)wt).calcSkillIncrementPerMinute(skillId.convertToPlayerSkill(),currentValue,sector,ageYears);
     }
 }
