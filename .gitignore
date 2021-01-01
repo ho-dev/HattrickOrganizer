@@ -142,3 +142,6 @@ local.properties
 /updateDB.py
 /.idea/jarRepositories.xml
 .idea/
+/database.data
+/database.properties
+/database.script
