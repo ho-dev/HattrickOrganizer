@@ -135,7 +135,6 @@ public class XMLMatchLineupParser {
 			if (roleID == IMatchRoleID.keeper || IMatchRoleID.oldKeeper.contains(roleID)) {
 				// Diese Werte sind von HT vorgegeben aber nicht garantiert
 				// mitgeliefert in xml, daher selbst setzen!
-				behavior = 0;
 				roleID = IMatchRoleID.keeper; // takes care of the old
 													// keeper ID.
 			} else if ((roleID >= 0)
@@ -247,7 +246,7 @@ public class XMLMatchLineupParser {
 				}
 			}
 
-			team.add2StartingLineup(player);
+			team.add2Lineup(player);
 		}
 
 		// The starting lineup
@@ -255,6 +254,8 @@ public class XMLMatchLineupParser {
 
 		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
 			MatchLineupPlayer startPlayer = createPlayer((Element) list.item(i));
+			startPlayer.setStartPosition(startPlayer.getId()); // it is the role id
+			startPlayer.setStartBehavior(startPlayer.getTactic());
 
 			// Merge with the existing player, but ignore captain and set piece
 			// position
@@ -265,7 +266,7 @@ public class XMLMatchLineupParser {
 					lineupPlayer.setStartBehavior(startPlayer.getStartBehavior());
 				} else {
 					// He was not already in the lineup, so add him
-					team.add2StartingLineup(startPlayer);
+					team.add2Lineup(startPlayer);
 				}
 			}
 		}
@@ -284,12 +285,12 @@ public class XMLMatchLineupParser {
 			if ((s.getObjectPlayerID() > 0) &&
 					(team.getPlayerByID(s.getObjectPlayerID()) == null) &&
 					s.getOrderType() != MatchOrderType.MAN_MARKING) { // in case of MAN_MARKING the Object Player is an opponent player
-				team.add2StartingLineup(new MatchLineupPlayer(-1, -1, s.getObjectPlayerID(), -1d, "",
+				team.add2Lineup(new MatchLineupPlayer(-1, -1, s.getObjectPlayerID(), -1d, "",
 						-1));
 			}
 			if ((s.getSubjectPlayerID() > 0)
 					&& (team.getPlayerByID(s.getSubjectPlayerID()) == null)) {
-				team.add2StartingLineup(new MatchLineupPlayer(-1, -1, s.getSubjectPlayerID(), -1d, "",
+				team.add2Lineup(new MatchLineupPlayer(-1, -1, s.getSubjectPlayerID(), -1d, "",
 						-1));
 			}
 		}
