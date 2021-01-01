@@ -403,11 +403,12 @@ public class YouthPlayer {
     }
 
     public void recalcSkills(Timestamp since) {
-        HashMap<Integer, SkillInfo> skills = null;
-        var startSkills = getSkillsAt(since);
-        for (var entry : this.trainingDevelopment.tailMap(since, true).values()) {
-            var team = entry.getTraining().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
-            startSkills = entry.calcSkills(startSkills, getSkillsAt(entry.getMatchDate()), team );
+        if ( trainingDevelopment != null) {
+            var startSkills = getSkillsAt(since);
+            for (var entry : this.trainingDevelopment.tailMap(since, true).values()) {
+                var team = entry.getTraining().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
+                startSkills = entry.calcSkills(startSkills, getSkillsAt(entry.getMatchDate()), team);
+            }
         }
     }
 
