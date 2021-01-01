@@ -390,9 +390,9 @@ public class DBManager {
 				.loadYouthScoutComments(id);
 	}
 
-	public YouthPlayer loadYouthPlayer(int id, Timestamp date) {
+	public YouthPlayer loadYouthPlayerOfMatchDate(int id, Timestamp date) {
 		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
-				.loadYouthPlayer(id, date);
+				.loadYouthPlayerOfMatchDate(id, date);
 	}
 
 	/**

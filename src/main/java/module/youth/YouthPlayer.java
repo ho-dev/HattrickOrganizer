@@ -366,17 +366,7 @@ public class YouthPlayer {
             trainingDevelopment = new TreeMap<>();
             var model = HOVerwaltung.instance().getModel();
             // set start skill values (may be edited by the user)
-            Map<Integer, SkillInfo> startSkills = new HashMap<>();
-            for ( var skill : this.currentSkills.values()){
-                var startSkill = new SkillInfo(skill.getSkillID());
-                startSkill.setCurrentValue(skill.getStartValue());
-                startSkill.setStartValue(skill.getStartValue());
-                startSkill.setStartLevel(skill.getStartLevel());
-                startSkill.setCurrentLevel(skill.getStartLevel());
-                startSkill.setMax(skill.getMax());
-
-                startSkills.put(startSkill.skillID.getValue(), startSkill);
-            }
+            var startSkills = getStartSkills();
             for (var training : model.getYouthTrainings()) {
                 var team = training.getTeam(model.getBasics().getYouthTeamId());
                 if (team.hasPlayerPlayed(this.id)) {
@@ -389,17 +379,40 @@ public class YouthPlayer {
         return trainingDevelopment;
     }
 
-    private Map<Integer, SkillInfo> getSkillsAt(Timestamp date) {
-        if ( date.equals(this.youthMatchDate)){
-            return this.currentSkills;
+    private Map<Integer, SkillInfo> getStartSkills() {
+        Map<Integer, SkillInfo> startSkills = new HashMap<>();
+        for ( var skill : this.currentSkills.values()){
+            var startSkill = new SkillInfo(skill.getSkillID());
+            startSkill.setCurrentValue(skill.getStartValue());
+            startSkill.setStartValue(skill.getStartValue());
+            startSkill.setStartLevel(skill.getStartLevel());
+            startSkill.setCurrentLevel(skill.getStartLevel());
+            startSkill.setMax(skill.getMax());
+            startSkills.put(startSkill.skillID.getValue(), startSkill);
         }
-        else {
-            var oldPlayerInfo = DBManager.instance().loadYouthPlayer(this.id, date);
-            if ( oldPlayerInfo != null){
+        return startSkills;
+    }
+
+    private Map<Integer, SkillInfo> getSkillsAt(Timestamp date) {
+        if (!date.equals(this.youthMatchDate)) {
+            var oldPlayerInfo = DBManager.instance().loadYouthPlayerOfMatchDate(this.id, date);
+            if (oldPlayerInfo != null) {
                 return oldPlayerInfo.currentSkills;
+            } else if (trainingDevelopment.size() > 0) {
+                var ret = this.currentSkills;
+                for (var entry : this.trainingDevelopment.entrySet()) {
+                    if (entry.getKey() == date) {
+                        return ret;
+                    }
+                    ret = entry.getValue().getSkills();
+                }
+            }
+            else {
+                // skills at arrival date
+                return getStartSkills();
             }
         }
-        return null;
+        return this.currentSkills;
     }
 
     public void recalcSkills(Timestamp since) {

@@ -102,16 +102,18 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
 
     @Override
     protected void initData() {
-        var trainings = this.youthPlayer.getTrainings();
-        m_clData = new Object[trainings.size()][columns.length];
-        int rownum=0;
-        for ( var training: trainings.values() ) {
-            int columnnum=0;
-            for (var col: columns){
-                m_clData[rownum][columnnum] = ((YouthPlayerDetailsColumn)col).getTableEntry((TrainingDevelopmentEntry) training);
-                columnnum++;
+        if (youthPlayer != null) {
+            var trainings = this.youthPlayer.getTrainings();
+            m_clData = new Object[trainings.size()][columns.length];
+            int rownum = 0;
+            for (var training : trainings.values()) {
+                int columnnum = 0;
+                for (var col : columns) {
+                    m_clData[rownum][columnnum] = ((YouthPlayerDetailsColumn) col).getTableEntry((TrainingDevelopmentEntry) training);
+                    columnnum++;
+                }
+                rownum++;
             }
-            rownum++;
         }
     }
 

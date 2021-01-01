@@ -77,4 +77,8 @@ public class TrainingDevelopmentEntry {
     public String getPlayerPosition() {
         return this.training.getPlayerTrainedSectors(this.player.getId());
     }
+
+    public Map<Integer, YouthPlayer.SkillInfo> getSkills() {
+        return this.skills;
+    }
 }

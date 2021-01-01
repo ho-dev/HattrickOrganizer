@@ -204,7 +204,7 @@ public class YouthPlayerTable  extends AbstractTable {
         return ret;
     }
 
-    public YouthPlayer loadYouthPlayer(int id, Timestamp date) {
+    public YouthPlayer loadYouthPlayerOfMatchDate(int id, Timestamp date) {
         var sql = "SELECT * from " + getTableName() + " WHERE ID=" + id + " AND YOUTHMATCHDATE='" + date + "'";
         var rs = adapter.executeQuery(sql);
         try {

@@ -1184,12 +1184,8 @@ public class OnlineWorker {
 			// if there are no youth matches in database, take the limit from arrival date of 'oldest' youth players
 			dateSince = lastStoredYouthMatchDate;
 		}
-		if ( dateSince != null){
-			dateSince.setTime(dateSince.getTime()-oneDay);	// minus one hour (resetted in for loop)
-		}
 
 		for ( Timestamp dateUntil = null; dateSince != null; dateSince = dateUntil) {
-			dateSince.setTime(dateSince.getTime()+ oneDay);	// add one day (do not load last match again)
 			if (dateSince.before(new Timestamp(System.currentTimeMillis()- threeMonths))){
 				dateUntil = new Timestamp(dateSince.getTime() + threeMonths);
 			}
