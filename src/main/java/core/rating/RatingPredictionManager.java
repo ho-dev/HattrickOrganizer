@@ -1050,9 +1050,9 @@ public class RatingPredictionManager {
 			this.attitude = (short)startingLineup.getAttitude();
             this.heimspiel = startingLineup.getLocation();
             this.taktikType = (short)startingLineup.getTacticType();
-            this.stimmung = (short)team.getStimmungAsInt();
-            this.substimmung = (short)team.getSubStimmung();
-            this.selbstvertrauen = (short)team.getSelbstvertrauenAsInt();
+            this.stimmung = (short)team.getTeamSpirit();
+            this.substimmung = (short)team.getSubTeamSpirit();
+            this.selbstvertrauen = (short)team.getConfidence();
             this.pullBackMinute = startingLineup.getPullBackMinute();
             this.styleOfPlay = styleOfPlay;
 		}

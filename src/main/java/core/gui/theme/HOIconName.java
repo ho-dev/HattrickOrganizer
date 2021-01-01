@@ -44,6 +44,7 @@ public interface HOIconName {
 	 String SIMULATEMATCH 	= "simulateMatch";
 	 String GETLINEUP 		= "getLineup";
 	 String SWAP 			= "swap";
+	 String RESET			= "reset";
 	 String TURN 			= "turn";
 
 	 String LOGO16 = "logo16";

@@ -90,6 +90,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(SIMULATEMATCH, "gui/bilder/simulate_match.png");
 		put(GETLINEUP, "gui/bilder/AufstellungUebernehmen.png");
 		put(SWAP, "gui/bilder/swap.svg");
+		put(RESET, "gui/bilder/reset.svg");
 		put(TURN, "gui/bilder/rotate.svg");
 
 		put(LOGO16_STABLE, "gui/bilder/Logo-16px_stable.png");
@@ -335,6 +336,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(LINEUP_POS_MIN_BORDER, "light_gray");
 		put(SUBST_CHANGED_VALUE_BG, "lightGreen");
 		put(SWAP_COLOR, "forest_green");
+		put(RESET_COLOR, Color.RED);
 		put(SWAP_COLOR_PRESSED, Color.RED);
 		put(LINEUP_RATING_BORDER, Color.BLACK);
 		put(LINEUP_PARTIAL_TRAINING, new Color(34, 255, 255));

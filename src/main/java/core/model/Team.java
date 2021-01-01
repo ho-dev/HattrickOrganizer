@@ -273,7 +273,7 @@ public final class Team  {
 	 * 
 	 * @return Value of property m_iSelbstvertrauen.
 	 */
-	public int getSelbstvertrauenAsInt() {
+	public int getConfidence() {
 		return m_iSelbstvertrauen;
 	}
 
@@ -283,7 +283,7 @@ public final class Team  {
 	 * @param m_iStimmung
 	 *            New value of property m_iStimmung.
 	 */
-	public void setStamina(int m_iStimmung) {
+	public void setTeamSpirit(int m_iStimmung) {
 		this.m_iStimmungInt = m_iStimmung;
 	}
 
@@ -292,7 +292,7 @@ public final class Team  {
 	 * 
 	 * @return Value of property m_iStimmung.
 	 */
-	public int getStimmungAsInt() {
+	public int getTeamSpirit() {
 		return m_iStimmungInt;
 	}
 
@@ -351,14 +351,14 @@ public final class Team  {
 	/**
 	 * Get the sublevel of the team spirit.
 	 */
-	public int getSubStimmung() {
+	public int getSubTeamSpirit() {
 		return subStimmung;
 	}
 
 	/**
 	 * Set the sublevel of the team spirit.
 	 */
-	public void setSubStamina(int i) {
+	public void setSubTeamSpirit(int i) {
 		subStimmung = i;
 	}
 

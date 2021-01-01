@@ -583,7 +583,7 @@ public class XMLExporter  {
 		if (team == null) {
 			return -1;
 		}
-		return team.getSelbstvertrauenAsInt();
+		return team.getConfidence();
 
 	}
 
@@ -594,7 +594,7 @@ public class XMLExporter  {
 		if (team == null) {
 			return -1;
 		}
-		return team.getStimmungAsInt();
+		return team.getTeamSpirit();
 	}
 	
 }
