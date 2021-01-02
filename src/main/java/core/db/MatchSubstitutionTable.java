@@ -46,12 +46,10 @@ public class MatchSubstitutionTable extends AbstractTable {
 	@Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] {
-				"CREATE INDEX IMATCHSUBSTITUTION_1 ON " + getTableName() + "("
-						+ columns[3].getColumnName() + ")",
-				"CREATE INDEX IMATCHSUBSTITUTION_2 ON " + getTableName() + "("
-						+ columns[0].getColumnName() + "," + columns[1].getColumnName() + ")",
-				"CREATE INDEX IMATCHSUBSTITUTION_3 ON " + getTableName() + "("
-						+ columns[2].getColumnName() + ")" };
+				"CREATE INDEX IMATCHSUBSTITUTION_1 ON " + getTableName() + "(PlayerOrderID)",
+				"CREATE INDEX IMATCHSUBSTITUTION_2 ON " + getTableName() + "(MatchID,TeamID)",
+				"CREATE INDEX IMATCHSUBSTITUTION_3 ON " + getTableName() + "(HrfID)"
+		};
 	}
 
 	/**

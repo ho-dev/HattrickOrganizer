@@ -82,9 +82,9 @@ final class MatchDetailsTable extends AbstractTable {
 	@Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] {
-				"CREATE INDEX IMATCHDETAILS_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")",
-				"CREATE INDEX matchdetails_heimid_idx ON " + getTableName() + " (" + columns[19].getColumnName() + ")",
-				"CREATE INDEX matchdetails_gastid_idx ON " + getTableName() + " (" + columns[5].getColumnName() + ")"
+				"CREATE INDEX IMATCHDETAILS_1 ON " + getTableName() + "(MatchID)",
+				"CREATE INDEX matchdetails_heimid_idx ON " + getTableName() + " (HeimId)",
+				"CREATE INDEX matchdetails_gastid_idx ON " + getTableName() + " (GastID)"
 		};
 	}
 	
