@@ -191,6 +191,10 @@ final class DBUpdater {
 			dbManager.getTable(YouthScoutCommentTable.TABLENAME).createTable();
 		}
 
+		if (!tableExists(TeamsLogoTable.TABLENAME)) {
+			dbManager.getTable(TeamsLogoTable.TABLENAME).createTable();
+		}
+
 		forceModuleStatus(IModule.YOUTH);
 		updateDBVersion(dbVersion, version);
 	}
