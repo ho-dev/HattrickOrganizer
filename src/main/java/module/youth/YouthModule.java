@@ -19,7 +19,7 @@ public class YouthModule extends DefaultModule {
 
     @Override
     public String getDescription() {
-        return HOVerwaltung.instance().getLanguageString("Youth");
+        return HOVerwaltung.instance().getLanguageString("ls.youth");
     }
 
     @Override

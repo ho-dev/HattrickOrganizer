@@ -194,7 +194,7 @@ public class YouthTraining {
     }
 
     private double getMatchTypeFactor() {
-        if (this.matchdetails.getMatchType() == MatchType.YOUTHLEAGUE) {
+        if (this.getMatchDetails().getMatchType() == MatchType.YOUTHLEAGUE) {
             return 1.;
         }
         return 0.5;
@@ -206,7 +206,7 @@ public class YouthTraining {
         var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
         var ret = new StringBuilder();
         for ( var s : sectors.entrySet()){
-            ret.append(hov.getLanguageString("training.sector." + s.getKey()))
+            ret.append(hov.getLanguageString("ls.youth.training.sector." + s.getKey()))
                     .append(":")
                     .append(s.getValue())
                     .append(" ");
