@@ -111,7 +111,7 @@ public class MatchLineup {
      *
      * @param m_clGast New value of property m_clGast.
      */
-    public final void setGuestTeamId(MatchLineupTeam m_clGast) {
+    public final void setGuestTeam(MatchLineupTeam m_clGast) {
         this.guestTeam = m_clGast;
     }
 

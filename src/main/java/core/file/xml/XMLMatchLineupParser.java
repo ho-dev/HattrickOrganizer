@@ -85,7 +85,7 @@ public class XMLMatchLineupParser {
 			if (team.getTeamID() == ml.getHomeTeamId()) {
 				ml.setHomeTeam(team);
 			} else {
-				ml.setGuestTeamId(team);
+				ml.setGuestTeam(team);
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(XMLMatchLineupParser.class, e);

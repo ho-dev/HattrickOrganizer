@@ -398,18 +398,14 @@ public class YouthPlayer {
             var oldPlayerInfo = DBManager.instance().loadYouthPlayerOfMatchDate(this.id, date);
             if (oldPlayerInfo != null) {
                 return oldPlayerInfo.currentSkills;
-            } else if (trainingDevelopment.size() > 0) {
-                var ret = this.currentSkills;
+            } else  {
+                var ret = getStartSkills();
                 for (var entry : this.trainingDevelopment.entrySet()) {
                     if (entry.getKey() == date) {
                         return ret;
                     }
                     ret = entry.getValue().getSkills();
                 }
-            }
-            else {
-                // skills at arrival date
-                return getStartSkills();
             }
         }
         return this.currentSkills;
@@ -698,16 +694,6 @@ public class YouthPlayer {
         skillInfo.setMax(getInteger(properties, skill + "max"));
         skillInfo.setMaxReached(getBoolean(properties, skill + "ismaxreached", false));
         this.currentSkills.put(skillID.getValue(), skillInfo);
-    }
-
-    private Boolean getBoolean(Properties p, String key) {
-        try {
-            var s = p.getProperty(key);
-            if (s != null && s.length() > 0) return Boolean.parseBoolean(s);
-        }
-        catch(Exception ignored){
-        }
-        return null;
     }
 
     private Integer getInteger(Properties p, String key) {

@@ -3,10 +3,7 @@ package module.youth;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.match.MatchLineup;
-import core.model.match.MatchLineupTeam;
-import core.model.match.Matchdetails;
-import core.model.match.SourceSystem;
+import core.model.match.*;
 import core.training.YouthTrainerComment;
 import module.lineup.substitution.model.MatchOrderType;
 
@@ -150,6 +147,7 @@ public class YouthTraining {
 
     private double calcSkillIncrement(YouthPlayer.SkillInfo value, YouthPlayer player, MatchLineupTeam lineupTeam) {
         double ret = 0;
+        var matchTypeFactor = getMatchTypeFactor();
         YouthTrainingType primaryTraining=null;
         for ( var priority : Priority.values()){
             var train = training[priority.ordinal()];
@@ -172,7 +170,10 @@ public class YouthTraining {
                             minutesInPrioPositions = 90 - minutes;
                         }
                         if (minutesInPrioPositions > 0) {
-                            ret += trainingFactor * minutesInPrioPositions * train.calcSkillIncrementPerMinute(value.getSkillID(), (int) value.getCurrentValue(), posPrio, player.getAgeYears());
+                            ret += matchTypeFactor *
+                                    trainingFactor *
+                                    minutesInPrioPositions *
+                                    train.calcSkillIncrementPerMinute(value.getSkillID(), (int) value.getCurrentValue(), posPrio, player.getAgeYears());
                         }
                         minutes += minutesInPrioPositions;
                         if (minutes == 90) break;
@@ -190,6 +191,13 @@ public class YouthTraining {
             }
         }
         return ret;
+    }
+
+    private double getMatchTypeFactor() {
+        if (this.matchdetails.getMatchType() == MatchType.YOUTHLEAGUE) {
+            return 1.;
+        }
+        return 0.5;
     }
 
     public String getPlayerTrainedSectors(int playerId) {
