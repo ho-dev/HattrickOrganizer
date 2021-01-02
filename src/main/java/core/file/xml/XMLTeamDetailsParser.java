@@ -1,17 +1,9 @@
-// %168276825:de.hattrickorganizer.logik.xml%
-/*
- * xmlTeamDetailsParser.java
- *
- * Created on 12. Januar 2004, 10:26
- */
 package core.file.xml;
 
 import core.util.HOLogger;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,24 +11,17 @@ import org.w3c.dom.NodeList;
 
 import static core.file.xml.XMLManager.xmlValue2Hash;
 
-/**
- * 
- * @author thomas.werth
- */
+
 public class XMLTeamDetailsParser {
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
-	private XMLTeamDetailsParser() {
-	}
+	private XMLTeamDetailsParser() {}
 
 	public static String fetchRegionID(String xmlFile) {
 		return fetchTeamDetail(xmlFile, "Region", "RegionID");
 	}
 
-	public static String fetchArenaID(String xmlFile) {
-		return fetchTeamDetail(xmlFile, "Arena", "ArenaID");
+	public static String fetchLogoURI(String xmlFile) {
+		return fetchTeamDetail(xmlFile, "LogoURL", "");
 	}
 
 	private static String fetchTeamDetail(String xmlFile, String section, String attribute){

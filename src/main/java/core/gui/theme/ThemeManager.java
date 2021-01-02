@@ -1,6 +1,7 @@
 package core.gui.theme;
 
 
+import core.db.user.UserManager;
 import core.gui.HOMainFrame;
 import core.gui.theme.dark.DarculaDarkTheme;
 import core.gui.theme.dark.SolarizedDarkTheme;
@@ -15,6 +16,8 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.*;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import javax.swing.*;
@@ -22,15 +25,19 @@ import javax.swing.text.*;
 
 
 public final class ThemeManager {
-	private final static ThemeManager MANAGER = new ThemeManager();
-	private final File themesDir = new File("themes");
-
-	HOClassicSchema classicSchema = new HOClassicSchema();
-
-	private final Map<String, Theme> themes = new LinkedHashMap<>();
 
 	/** Name of the default theme. */
 	public final static String DEFAULT_THEME_NAME = NimbusTheme.THEME_NAME;
+
+	private final static ThemeManager MANAGER = new ThemeManager();
+	private final Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder() , "img");
+	private final Path teamLogoPath = tempImgPath.resolve("clubLogos");
+	private final File teamLogoDir = new File(String.valueOf(teamLogoPath));
+	private final Map<String, Theme> themes = new LinkedHashMap<>();
+
+	HOClassicSchema classicSchema = new HOClassicSchema();
+
+
 
 	private ThemeManager(){
 		initialize();
@@ -48,8 +55,8 @@ public final class ThemeManager {
 		themes.put(SolarizedDarkTheme.THEME_NAME, new SolarizedDarkTheme());
 		themes.put(SolarizedLightTheme.THEME_NAME, new SolarizedLightTheme());
 
-		if (!themesDir.exists()) {
-			themesDir.mkdir();
+		if (!teamLogoDir.exists()) {
+			teamLogoDir.mkdirs();
 		}
 	}
 
@@ -143,23 +150,11 @@ public final class ThemeManager {
 		return instance().getScaledIconImpl(key, x, y);
 	}
 
-	public static Icon getTransparentIcon(String key,Color color){
-		return instance().getTransparentImageIcon(key, color);
+	public static Icon getClubLogo(int teamID){
+		String key = "tototo" + teamID + ".jpg";
+		return instance().getIcon(key);
 	}
 
-	private Icon getTransparentImageIcon(String key,Color color){
-		Icon tmp = null;
-		tmp = (ImageIcon) classicSchema.get(key + "(T)");
-		if (tmp == null) {
-			tmp = getIconImpl(key);
-
-			if (tmp instanceof ImageIcon) {
-				tmp = new ImageIcon(ImageUtilities.makeColorTransparent(((ImageIcon)tmp).getImage(), color));
-				classicSchema.put(key + "(T)", tmp);
-			}
-		}
-		return tmp;
-	}
 
 	public static Image loadImage(String datei) {
 		return instance().classicSchema.loadImageIcon(datei).getImage();
@@ -198,15 +193,5 @@ public final class ThemeManager {
 		}
 	}
 
-
-	public String[] getAvailableThemeNames(){
-		final String[] fileList = themesDir.list();
-		final String[] schemaNames = new String[fileList.length+1];
-		schemaNames[0] = classicSchema.getName();
-		for (int i = 0; i < fileList.length; i++) {
-			schemaNames[i+1] = fileList[i].split("\\.")[0];
-		}
-		return schemaNames;
-	}
 
 }
