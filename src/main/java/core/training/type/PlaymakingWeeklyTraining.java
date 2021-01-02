@@ -20,7 +20,7 @@ public final class PlaymakingWeeklyTraining extends WeeklyTrainingType {
 		_PrimaryTrainingSkillPositions = new int[]{ 
 				IMatchRoleID.leftInnerMidfield, IMatchRoleID.rightInnerMidfield,
 				IMatchRoleID.centralInnerMidfield};
-		_PrimaryTrainingSkillSecondaryTrainingPositions = new int[]{
+		_PrimaryTrainingSkillPartlyTrainingPositions = new int[]{
 				IMatchRoleID.leftWinger, IMatchRoleID.rightWinger};
 		_PrimaryTrainingSkillOsmosisTrainingPositions = new int[]{
 				IMatchRoleID.keeper, IMatchRoleID.rightBack, IMatchRoleID.leftBack,
@@ -29,7 +29,7 @@ public final class PlaymakingWeeklyTraining extends WeeklyTrainingType {
 				IMatchRoleID.centralForward, IMatchRoleID.rightForward};
 		_PrimaryTrainingBaseLength = (float) 4.6613; // old was 3.1
 		_PrimaryTrainingSkillBaseLength = _PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_PLAYMAKING; // 100%
-		_PrimaryTrainingSkillSecondaryLengthRate = (float) 2; // 50%
+		_PrimaryTrainingSkillPartlyLengthRate = (float) 2; // 50%
 	}
 	public static WeeklyTrainingType instance() {
         if (m_ciInstance == null) {
@@ -38,14 +38,15 @@ public final class PlaymakingWeeklyTraining extends WeeklyTrainingType {
         return m_ciInstance;
     }
 	@Override
-	public double getTrainingLength(Player player, int assistants, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
+	public double getTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
 	{
-		return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), assistants, trainerLevel, 
+		return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), trainerLevel,
 				intensity, stamina, player.getPMskill(), staff);
 	}
 	@Override
-	public double getSecondaryTrainingLength(Player player, int assistants, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
+	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
 	{
-		return (double) -1;
+		return -1;
 	}
+
 }

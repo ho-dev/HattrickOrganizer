@@ -59,7 +59,7 @@ public class MatchExporter {
 		//Alle matches prï¿½fen        
 		for (int i = 0;(matches != null) && (i < matches.length); i++) {
 			//details holen
-			Matchdetails details = DBManager.instance().loadMatchDetails(SourceSystem.HATTRICK.getId(), matches[i].getMatchID());
+			Matchdetails details = DBManager.instance().loadMatchDetails(SourceSystem.HATTRICK.getValue(), matches[i].getMatchID());
 			boolean isFriendly = matches[i].getMatchType().isFriendly();
 			if (isValidMatch(matches[i], details, startingDateForFriendlies, strict, skipPullBack) && isFriendly
 					|| isValidMatch(matches[i], details, startingDate, strict, skipPullBack) && !isFriendly ) {				
@@ -83,7 +83,7 @@ public class MatchExporter {
 					}
 
 					formerPlayerData =
-						DBManager.instance().getSpielerAtDate(player.getSpielerId(),matches[i].getMatchDateAsTimestamp());
+						DBManager.instance().getSpielerAtDate(player.getPlayerId(),matches[i].getMatchDateAsTimestamp());
 
 
 					//Keine Daten verfï¿½gbar ?
@@ -95,7 +95,7 @@ public class MatchExporter {
 					}
 
 					//ISpieler in ht ablegen
-					lineUpISpieler.put(Integer.valueOf(player.getSpielerId()), formerPlayerData);
+					lineUpISpieler.put(Integer.valueOf(player.getPlayerId()), formerPlayerData);
 				} //end for aufstellung
 
 				//Matchdaten ablegen da einwandfrei

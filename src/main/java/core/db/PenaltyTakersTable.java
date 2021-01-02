@@ -45,7 +45,7 @@ public class PenaltyTakersTable extends AbstractTable {
 				MatchRoleID penaltyTaker = penaltyTakers.get(i);
 				if (penaltyTaker != null && penaltyTaker.getId() > 0) {
 					sql = "INSERT INTO " + TABLENAME + " ( LineupName, PlayerID, Pos ) VALUES (";
-					sql += "'" + lineupName + "'," + penaltyTaker.getSpielerId() + "," + penaltyTaker.getId()  + ")";
+					sql += "'" + lineupName + "'," + penaltyTaker.getPlayerId() + "," + penaltyTaker.getId()  + ")";
 					adapter.executeUpdate_(sql);
 				}
 			}

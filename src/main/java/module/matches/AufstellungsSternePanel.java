@@ -105,20 +105,20 @@ public class AufstellungsSternePanel extends RasenPanel {
 	 * Get match lineup and refresh this SpielerSternePanels.
 	 */
 	public final void refresh(int matchid, int teamid) {
-		final MatchLineup lineup = DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getId(), matchid);
+		final MatchLineup lineup = DBManager.instance().loadMatchLineup(SourceSystem.HATTRICK.getValue(), matchid);
 		MatchLineupTeam lineupteam = null;
 
-		if (lineup.getHeimId() == teamid) {
-			lineupteam = (MatchLineupTeam) lineup.getHeim();
+		if (lineup.getHomeTeamId() == teamid) {
+			lineupteam = (MatchLineupTeam) lineup.getHomeTeam();
 		} else {
-			lineupteam = (MatchLineupTeam) lineup.getGast();
+			lineupteam = (MatchLineupTeam) lineup.getGuestTeam();
 		}
 
 		clearAll();
 
 		if (lineupteam != null) {
 			m_jlTeamName.setText(lineupteam.getTeamName() + " (" + lineupteam.getTeamID() + ")");
-			List<MatchLineupPlayer> aufstellung = lineupteam.getAufstellung();
+			List<MatchLineupPlayer> aufstellung = lineupteam.getLineup();
 
 			for (MatchLineupPlayer player : aufstellung) {
 				switch (player.getId()) {

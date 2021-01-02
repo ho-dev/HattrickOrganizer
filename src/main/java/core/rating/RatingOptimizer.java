@@ -98,9 +98,9 @@ public class RatingOptimizer {
 		MatchLineupTeam lineupTeam = null;
 		Matchdetails details = matchData.getDetails();
 		if (details.getHeimId() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
-			lineupTeam = DBManager.instance().getMatchLineup(details.getSourceSystem().getId(), details.getMatchID()).getHeim();
+			lineupTeam = DBManager.instance().loadMatchLineup(details.getSourceSystem().getValue(), details.getMatchID()).getHomeTeam();
 		} else {
-			lineupTeam = DBManager.instance().getMatchLineup(details.getSourceSystem().getId(), details.getMatchID()).getGast();
+			lineupTeam = DBManager.instance().loadMatchLineup(details.getSourceSystem().getValue(), details.getMatchID()).getGuestTeam();
 		}
 		
 		// Both teams have WO values, no diff if home/away match
@@ -112,16 +112,16 @@ public class RatingOptimizer {
 		
 		// Switched from use of AufstellungOld to the use of Lineup. Bye, bye, hack. (blaghaid)
 		final Lineup lineup = new Lineup();
-		for (int k = 0;(lineupTeam.getAufstellung() != null) && (k < lineupTeam.getAufstellung().size()); k++) {					
-			MatchLineupPlayer playerMatch = (MatchLineupPlayer) lineupTeam.getAufstellung().get(k);
-			Player playerData = (Player) matchData.getPlayers().get(Integer.valueOf(playerMatch.getSpielerId()));
+		for (int k = 0; (lineupTeam.getLineup() != null) && (k < lineupTeam.getLineup().size()); k++) {
+			MatchLineupPlayer playerMatch = (MatchLineupPlayer) lineupTeam.getLineup().get(k);
+			Player playerData = (Player) matchData.getPlayers().get(Integer.valueOf(playerMatch.getPlayerId()));
 			
 			if (playerMatch.getId() == IMatchRoleID.setPieces) {
-				lineup.setKicker(playerMatch.getSpielerId());
+				lineup.setKicker(playerMatch.getPlayerId());
 			} else if (playerMatch.getId() == IMatchRoleID.captain) {
-				lineup.setCaptain(playerMatch.getSpielerId());
+				lineup.setCaptain(playerMatch.getPlayerId());
 			} else {
-				lineup.setSpielerAtPosition(playerMatch.getId(), playerMatch.getSpielerId(), playerMatch.getTactic());
+				lineup.setSpielerAtPosition(playerMatch.getId(), playerMatch.getPlayerId(), playerMatch.getTactic());
 			}
 		}
 		

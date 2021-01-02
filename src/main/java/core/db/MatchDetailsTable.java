@@ -6,7 +6,6 @@ import core.model.match.SourceSystem;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 
@@ -83,9 +82,9 @@ final class MatchDetailsTable extends AbstractTable {
 	@Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] {
-				"CREATE INDEX IMATCHDETAILS_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")",
-				"CREATE INDEX matchdetails_heimid_idx ON " + getTableName() + " (" + columns[19].getColumnName() + ")",
-				"CREATE INDEX matchdetails_gastid_idx ON " + getTableName() + " (" + columns[5].getColumnName() + ")"
+				"CREATE INDEX IMATCHDETAILS_1 ON " + getTableName() + "(MatchID)",
+				"CREATE INDEX matchdetails_heimid_idx ON " + getTableName() + " (HeimId)",
+				"CREATE INDEX matchdetails_gastid_idx ON " + getTableName() + " (GastID)"
 		};
 	}
 	
@@ -100,7 +99,7 @@ final class MatchDetailsTable extends AbstractTable {
 			ResultSet rs = adapter.executeQuery(sql);
 
 			if (rs.first()) {
-				details.setSourceSystem(SourceSystem.getById(rs.getInt("SourceSystem")));
+				details.setSourceSystem(SourceSystem.valueOf(rs.getInt("SourceSystem")));
 				details.setArenaID(rs.getInt("ArenaId"));
 				details.setArenaName(core.db.DBManager.deleteEscapeSequences(rs.getString("ArenaName")));
 				details.setRegionId(rs.getInt("RegionID"));
@@ -193,7 +192,7 @@ final class MatchDetailsTable extends AbstractTable {
 		if (details != null) {
 
 			final String[] where = { "SourceSystem", "MatchID" };
-			final String[] werte = { "" + details.getSourceSystem().getId(), "" + details.getMatchID()};
+			final String[] werte = { "" + details.getSourceSystem().getValue(), "" + details.getMatchID()};
 
 			//Remove existing entries
 			delete(where, werte);
@@ -217,7 +216,7 @@ final class MatchDetailsTable extends AbstractTable {
 							"HomeFormation, AwayFormation" +
 							") VALUES ("
 						+ details.getMatchID() + ","
-						+ details.getSourceSystem().getId() + ","
+						+ details.getSourceSystem().getValue() + ","
 						+ details.getArenaID() + ",'"
 						+ DBManager.insertEscapeSequences(details.getArenaName()) + "','"
 						+ details.getFetchDatum().toString() + "',"
@@ -279,12 +278,9 @@ final class MatchDetailsTable extends AbstractTable {
 				((MatchHighlightsTable) DBManager.instance().getTable(MatchHighlightsTable.TABLENAME))
 											.storeMatchHighlights(details);
 
-				//Workaround if the game is not set to Finished in MatchKurzInfos
-				if (details.getZuschauer() > 0) {
-					//Game is definitely done!
-					sql = "UPDATE MATCHESKURZINFO SET Status=1, HeimTore=" + details.getHomeGoals() + " , GastTore=" + details.getGuestGoals() + "  WHERE MatchID=" + details.getMatchID();
-					adapter.executeUpdate(sql);
-				}
+				// MatchKurzInfo should be set correctly in OnlineWorker.downloadMatchData now
+				// no workaround is necessary anymore
+
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeMatchDetails Error" + e);
 				HOLogger.instance().log(getClass(),e);
@@ -306,5 +302,19 @@ final class MatchDetailsTable extends AbstractTable {
 					"DatenbankZugriff.isMatchIFKRatingAvailable : " + e);
 		}
 		return false;
+	}
+
+	public void deleteMatchDetailsBefore(int sourceSystem, Timestamp before) {
+		var sql = "DELETE FROM " +
+				getTableName() +
+				" WHERE SOURCESYSTEM=" +
+				sourceSystem +
+				" AND SPIELDATUM<'" +
+				before.toString() + "'";
+		try {
+			adapter.executeUpdate(sql);
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
+		}
 	}
 }

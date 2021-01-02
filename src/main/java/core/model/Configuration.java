@@ -31,7 +31,16 @@ public abstract class Configuration {
 		}
 		return 0f;
 	}
-	
+
+	public double getDoubleValue(Map<String, String> values,String key, double defaultValue) {
+		String value = String.valueOf(values.get(key));
+		try {
+			return Double.parseDouble(value);
+		} catch (NumberFormatException e) {
+		}
+		return defaultValue;
+	}
+
 	/**
 	 * Values for saving in db.
 	 * 

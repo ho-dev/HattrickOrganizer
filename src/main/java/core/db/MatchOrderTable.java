@@ -130,7 +130,7 @@ public class MatchOrderTable extends AbstractTable {
 		for (int i = 0;(linueup.getPositionen() != null) && (i < linueup.getPositionen().size()); i++) {
 
 			int m_iId = ((MatchRoleID) linueup.getPositionen().elementAt(i)).getId();
-			int m_iSpielerId = ((MatchRoleID) linueup.getPositionen().elementAt(i)).getSpielerId();
+			int m_iSpielerId = ((MatchRoleID) linueup.getPositionen().elementAt(i)).getPlayerId();
 
 			String statement = "INSERT INTO " + getTableName() + " ( MatchID, SpielerID, PositionCode) VALUES(";
 			statement += ("" + matchId + "," + m_iSpielerId + "," + m_iId + ")");

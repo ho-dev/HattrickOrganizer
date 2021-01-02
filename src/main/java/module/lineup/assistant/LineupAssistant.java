@@ -28,7 +28,7 @@ public class LineupAssistant {
 	public final boolean isPlayerInLineup(int spielerId, List<IMatchRoleID> positions) {
 		if (positions != null) {
 			for (IMatchRoleID position : positions) {
-				if (((MatchRoleID) position).getSpielerId() == spielerId) {
+				if (((MatchRoleID) position).getPlayerId() == spielerId) {
 					return true;
 				}
 			}
@@ -40,7 +40,7 @@ public class LineupAssistant {
     public final boolean isPlayerInStartingEleven(int spielerId, Vector<IMatchRoleID> positionen) {
         for (int i = 0; (positionen != null) && (i < positionen.size()); i++) {
             if (IMatchRoleID.aFieldMatchRoleID.contains(((MatchRoleID) positionen.elementAt(i)).getId()) &&
-                    (((MatchRoleID) positionen.elementAt(i)).getSpielerId() == spielerId)) {
+                    (((MatchRoleID) positionen.elementAt(i)).getPlayerId() == spielerId)) {
                 return true;
             }
         }
@@ -51,7 +51,7 @@ public class LineupAssistant {
     public final boolean isPlayerASub(int spielerId, Vector<IMatchRoleID> positionen) {
         for (int i = 0; (positionen != null) && (i < positionen.size()); i++) {
             if (IMatchRoleID.aSubstitutesMatchRoleID.contains(((MatchRoleID) positionen.elementAt(i)).getId()) &&
-                    (((MatchRoleID) positionen.elementAt(i)).getSpielerId() == spielerId)) {
+                    (((MatchRoleID) positionen.elementAt(i)).getPlayerId() == spielerId)) {
                 return true;
             }
         }
@@ -494,7 +494,7 @@ public class LineupAssistant {
 			pos = (MatchRoleID) positionen.get(i);
 
 			// Ignore already assigned positions and non substitute position
-			if ((pos.getSpielerId() > 0) || ! IMatchRoleID.aSubstitutesMatchRoleID.contains(pos.getId())) {
+			if ((pos.getPlayerId() > 0) || ! IMatchRoleID.aSubstitutesMatchRoleID.contains(pos.getId())) {
 				continue;
 			}
 
@@ -525,7 +525,7 @@ public class LineupAssistant {
 
 			// bereits vergebene Positionen ignorieren und ReserveBank leer
 			// lassen
-			if ((pos.getSpielerId() > 0) || (pos.getId() < IMatchRoleID.startReserves)) {
+			if ((pos.getPlayerId() > 0) || (pos.getId() < IMatchRoleID.startReserves)) {
 				continue;
 			}
 
@@ -562,7 +562,7 @@ public class LineupAssistant {
 			pos = (MatchRoleID) positionen.get(i);
 
 			//Ignore already assigned positions and substitutes
-			if ((pos.getSpielerId() > 0) || (pos.getId() >= IMatchRoleID.startReserves)) {
+			if ((pos.getPlayerId() > 0) || (pos.getId() >= IMatchRoleID.startReserves)) {
 				continue;
 			}
 
@@ -594,7 +594,7 @@ public class LineupAssistant {
 
 			// bereits vergebene Positionen ignorieren und ReserveBank leer
 			// lassen
-			if ((pos.getSpielerId() > 0) || (pos.getId() >= IMatchRoleID.startReserves)) {
+			if ((pos.getPlayerId() > 0) || (pos.getId() >= IMatchRoleID.startReserves)) {
 				continue;
 			}
 
@@ -616,7 +616,7 @@ public class LineupAssistant {
 
 			// bereits vergebene Positionen ignorieren und ReserveBank leer
 			// lassen
-			if ((pos.getSpielerId() > 0) || (pos.getId() >= IMatchRoleID.startReserves)) {
+			if ((pos.getPlayerId() > 0) || (pos.getId() >= IMatchRoleID.startReserves)) {
 				continue;
 			}
 

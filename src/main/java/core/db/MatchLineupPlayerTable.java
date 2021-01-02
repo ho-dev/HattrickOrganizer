@@ -50,8 +50,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	@Override
 	protected String[] getCreateIndexStatement(){
 		return new String[]{
-			"CREATE INDEX iMATCHLINEUPPLAYER_1 ON "+getTableName()+"("+columns[2].getColumnName()+")",
-			"CREATE INDEX iMATCHLINEUPPLAYER_2 ON "+getTableName()+"("+columns[0].getColumnName()+","+columns[1].getColumnName()+")"
+			"CREATE INDEX iMATCHLINEUPPLAYER_1 ON "+getTableName()+"(SpielerID)",
+			"CREATE INDEX iMATCHLINEUPPLAYER_2 ON "+getTableName()+"(MatchID,TeamID)"
 		};
 	}
 	
@@ -183,8 +183,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	 */
 	void deleteMatchLineupPlayer(MatchLineupPlayer player, int matchID, int teamID) {
 		if (player != null) {
-			final String[] where = { "MatchID" , "TeamID", "RoleID", "SpielerID"};
-			final String[] werte = { "" + matchID, "" + teamID, "" + player.getId(), "" + player.getSpielerId()};			
+			final String[] where = { "SourceSystem", "MatchID" , "TeamID", "RoleID", "SpielerID"};
+			final String[] werte = { "" + player.getSourceSystem().getValue(), "" + matchID, "" + teamID, "" + player.getId(), "" + player.getPlayerId()};
 			delete(where, werte);			
 		}
 	}
@@ -208,8 +208,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			// Need to check for spieler, there may now be multiple players with -1 role.
 			// Should we delete here, anyways? Isn't that for update?
 			
-			final String[] where = { "MatchID" , "TeamID", "RoleID", "SpielerID"};
-			final String[] werte = { "" + matchID, "" + teamID, "" + player.getId(), "" + player.getSpielerId()};			
+			final String[] where = { "SourceSystem", "MatchID" , "TeamID", "RoleID", "SpielerID"};
+			final String[] werte = { "" + player.getSourceSystem().getValue(), "" + matchID, "" + teamID, "" + player.getId(), "" + player.getPlayerId()};
 			delete(where, werte);
 
 			//saven
@@ -220,8 +220,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 						"StartPosition,StartBehaviour) VALUES(" +
 						matchID + "," +
 						teamID	+ "," +
-						player.getSourceSystem().getId() + "," +
-						player.getSpielerId() + ","	+
+						player.getSourceSystem().getValue() + "," +
+						player.getPlayerId() + ","	+
 						player.getId() + "," +
 						player.getTactic()	+ ","	+
 						player.getPositionCode() + ",'" +
@@ -282,7 +282,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			var startPos = rs.getInt("StartPosition");
 			var startBeh = rs.getInt("StartBehaviour");
 			var status = rs.getInt("STATUS");
-			var sourceSystem = SourceSystem.getById(rs.getInt("SourceSystem"));
+			var sourceSystem = SourceSystem.valueOf(rs.getInt("SourceSystem"));
 
 			switch (behavior) {
 				case IMatchRoleID.OLD_EXTRA_DEFENDER -> {

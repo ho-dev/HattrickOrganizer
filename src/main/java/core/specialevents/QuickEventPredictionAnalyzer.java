@@ -42,7 +42,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
     @Override
     public void analyzePosition(SpecialEventsPredictionManager.Analyse analyse, MatchRoleID position) {
         this.analyse = analyse;
-        int id = position.getSpielerId();
+        int id = position.getPlayerId();
         if (id == 0) return;
         Player p = analyse.getPlayer(id);
         if (p.hasSpeciality(Speciality.QUICK)) {
@@ -140,7 +140,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
         if (passReceiver == position.getId()) return;
         Player scorer = analyse.getPlayerByPosition(passReceiver);
         if (scorer == null) return;
-        Player p = analyse.getPlayer(position.getSpielerId());
+        Player p = analyse.getPlayer(position.getPlayerId());
         if (p == null) return;
 
         // Compare p passing skill with opponent defence skill
@@ -160,7 +160,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
     private void getQuickScoresEvent(MatchRoleID position, int pos, double goalProbabilityFactor, ArrayList<IMatchRoleID> involvedOpponents) {
         Player opp = analyse.getOpponentPlayerByPosition(pos);
         if (opp == null) return;
-        Player p = analyse.getPlayer(position.getSpielerId());
+        Player p = analyse.getPlayer(position.getPlayerId());
         if ( p == null ) return;
 
         // Compare p scoring skill with opponent defence skill

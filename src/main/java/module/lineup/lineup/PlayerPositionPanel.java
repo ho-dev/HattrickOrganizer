@@ -250,7 +250,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             final MatchRoleID position = lineup.getPositionById(m_iPositionID);
 
             if (position != null) {
-                selectedPlayer = model.getCurrentPlayer(position.getSpielerId());
+                selectedPlayer = model.getCurrentPlayer(position.getPlayerId());
 
                 if (selectedPlayer != null) {
                     m_jcbPlayer.setEnabled(true); // To be sure
@@ -315,7 +315,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         //Get currently setup player in that position
         final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionById(m_iPositionID);
         if (position != null) {
-            selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position.getSpielerId());
+            selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position.getPlayerId());
             setTactic(position.getTactic(), selectedPlayer);
         }
 

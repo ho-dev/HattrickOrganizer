@@ -6,6 +6,7 @@ import core.util.HOLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 
@@ -18,38 +19,41 @@ final class MatchHighlightsTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[15];
-		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false);
-		columns[1] = new ColumnDescriptor("Minute", Types.INTEGER, false);
-		columns[2] = new ColumnDescriptor("SpielerId", Types.INTEGER, false);
-		columns[3] = new ColumnDescriptor("SpielerName", Types.VARCHAR, false, 256);
-		columns[4] = new ColumnDescriptor("TeamId", Types.INTEGER, false);
-		columns[5] = new ColumnDescriptor("SpielerHeim", Types.BOOLEAN, false);
-		columns[6] = new ColumnDescriptor("GehilfeID", Types.INTEGER, false);
-		columns[7] = new ColumnDescriptor("GehilfeName", Types.VARCHAR, false, 256);
-		columns[8] = new ColumnDescriptor("GehilfeHeim", Types.BOOLEAN, false);
-		columns[9] = new ColumnDescriptor("EventText", Types.VARCHAR, false, 5000);
-		columns[10] = new ColumnDescriptor("MATCH_EVENT_ID", Types.INTEGER, false);
-		columns[11] = new ColumnDescriptor("EVENT_INDEX", Types.INTEGER, false);
-		columns[12] = new ColumnDescriptor("INJURY_TYPE", Types.TINYINT, false);
-		columns[13] = new ColumnDescriptor("MatchPart", Types.INTEGER, true);
-		columns[14] = new ColumnDescriptor("EventVariation", Types.INTEGER, true);
+		columns = new ColumnDescriptor[] {
+				new ColumnDescriptor("MatchID", Types.INTEGER, false),
+				new ColumnDescriptor("MatchDate", Types.TIMESTAMP, true),
+				new ColumnDescriptor("SourceSystem", Types.INTEGER, false),
+				new ColumnDescriptor("Minute", Types.INTEGER, false),
+				new ColumnDescriptor("SpielerId", Types.INTEGER, false),
+				new ColumnDescriptor("SpielerName", Types.VARCHAR, false, 256),
+				new ColumnDescriptor("TeamId", Types.INTEGER, false),
+				new ColumnDescriptor("SpielerHeim", Types.BOOLEAN, false),
+				new ColumnDescriptor("GehilfeID", Types.INTEGER, false),
+				new ColumnDescriptor("GehilfeName", Types.VARCHAR, false, 256),
+				new ColumnDescriptor("GehilfeHeim", Types.BOOLEAN, false),
+				new ColumnDescriptor("EventText", Types.VARCHAR, false, 5000),
+				new ColumnDescriptor("MATCH_EVENT_ID", Types.INTEGER, false),
+				new ColumnDescriptor("EVENT_INDEX", Types.INTEGER, false),
+				new ColumnDescriptor("INJURY_TYPE", Types.TINYINT, false),
+				new ColumnDescriptor("MatchPart", Types.INTEGER, true),
+				new ColumnDescriptor("EventVariation", Types.INTEGER, true)
+		};
 	}
 
 	@Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] {
-				"CREATE INDEX iMATCHHIGHLIGHTS_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")",
-				"CREATE INDEX matchhighlights_teamid_idx ON " + getTableName() + " (" + columns[4].getColumnName() + ")",
-				"CREATE INDEX matchhighlights_eventid_idx ON " + getTableName() + " (" + columns[10].getColumnName() + ")",
+				"CREATE INDEX iMATCHHIGHLIGHTS_1 ON " + getTableName() + " (MatchID)",
+				"CREATE INDEX matchhighlights_teamid_idx ON " + getTableName() + " (TeamId)",
+				"CREATE INDEX matchhighlights_eventid_idx ON " + getTableName() + " (MATCH_EVENT_ID)",
 		};
 	}
 
 	void storeMatchHighlights(Matchdetails details) {
 		if (details != null) {
 
-			final String[] where = { "MatchID" };
-			final String[] werte = { "" + details.getMatchID() };
+			final String[] where = { "SourceSystem", "MatchID" };
+			final String[] werte = { "" + details.getSourceSystem().getValue(), "" + details.getMatchID() };
 
 			// Remove existing entry
 			delete(where, werte);
@@ -60,8 +64,10 @@ final class MatchHighlightsTable extends AbstractTable {
 					StringBuilder sql = new StringBuilder(100);
 
 					sql.append("INSERT INTO ").append(getTableName());
-					sql.append(" ( MatchId, Minute, EVENT_INDEX, SpielerId, SpielerName, TeamId, MATCH_EVENT_ID, SpielerHeim, GehilfeID, GehilfeName, GehilfeHeim, INJURY_TYPE, MatchPart, EventVariation, EventText) VALUES (");
-					sql.append(details.getMatchID()).append(", ");
+					sql.append(" ( MatchId, MatchDate, SourceSystem, Minute, EVENT_INDEX, SpielerId, SpielerName, TeamId, MATCH_EVENT_ID, SpielerHeim, GehilfeID, GehilfeName, GehilfeHeim, INJURY_TYPE, MatchPart, EventVariation, EventText) VALUES (");
+					sql.append(details.getMatchID()).append(",'");
+					sql.append(details.getSpielDatum()).append("', ");
+					sql.append(details.getSourceSystem().getValue()).append(", ");
 					sql.append(highlight.getMinute()).append(", ");
 					sql.append(highlight.getM_iMatchEventIndex()).append(", ");
 					sql.append(highlight.getSpielerID()).append(", '");
@@ -89,11 +95,14 @@ final class MatchHighlightsTable extends AbstractTable {
 	 * @param matchId the match id
 	 * @return the match highlights
 	 */
-	ArrayList<MatchEvent> getMatchHighlights(int matchId) {
+	ArrayList<MatchEvent> getMatchHighlights(int sourceSystem, int matchId) {
 		try {
 			final ArrayList<MatchEvent> vMatchHighlights = new ArrayList<>();
 
-			String sql = "SELECT * FROM " + getTableName() + " WHERE MatchId=" + matchId + " ORDER BY EVENT_INDEX, Minute";
+			String sql = "SELECT * FROM " + getTableName() +
+					" WHERE SourceSystem=" + sourceSystem +
+					" AND MatchId=" + matchId +
+					" ORDER BY EVENT_INDEX, Minute";
 			ResultSet rs = adapter.executeQuery(sql);
 
 			rs.beforeFirst();
@@ -129,23 +138,17 @@ final class MatchHighlightsTable extends AbstractTable {
 		return highlight;
 	}
 
-	ArrayList<MatchEvent> getMatchHighlightsByTypIdAndPlayerId(int type, int playerId) {
-		ArrayList<MatchEvent> matchHighlights = new ArrayList<>();
-
-		String sql = "SELECT * FROM " + getTableName() + " WHERE TYP=" + type + " AND "
-				+ "SpielerId=" + playerId + " ORDER BY Minute, HeimTore, GastTore";
+	public void deleteMatchHighlightsBefore(int sourceSystem, Timestamp before) {
+		var sql = "DELETE FROM " +
+				getTableName() +
+				" WHERE SOURCESYSTEM=" +
+				sourceSystem +
+				" AND MatchDate IS NOT NULL AND MatchDate<'" +
+				before.toString() + "'";
 		try {
-			ResultSet rs = adapter.executeQuery(sql);
-			if (rs != null) {
-				rs.beforeFirst();
-				while (rs.next()) {
-					matchHighlights.add(createObject(rs));
-				}
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			adapter.executeUpdate(sql);
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
 		}
-		return matchHighlights;
 	}
-
 }

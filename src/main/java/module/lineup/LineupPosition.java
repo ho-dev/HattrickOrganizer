@@ -40,7 +40,7 @@ public class LineupPosition {
 	public final MatchRoleID getPositionBySpielerId(int playerid) {
 		for (IMatchRoleID position : m_vPositionen) {
 			MatchRoleID spielerPosition = (MatchRoleID) position;
-			if (spielerPosition.getSpielerId() == playerid) {
+			if (spielerPosition.getPlayerId() == playerid) {
 				return spielerPosition;
 			}
 		}

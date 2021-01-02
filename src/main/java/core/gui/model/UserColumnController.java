@@ -4,7 +4,9 @@ import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
 import module.lineup.LineupTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
+import module.youth.YouthPlayerDetailsTableModel;
 import module.youth.YouthPlayerOverviewTableModel;
+import module.youth.YouthTrainingViewTableModel;
 
 import java.util.Vector;
 
@@ -18,18 +20,20 @@ import java.util.Vector;
 public final class UserColumnController {
 
 	public enum ColumnModelId {
-		YOUTHPLAYEROVERVIEW(0),
 		MATCHES(1),
 		PLAYEROVERVIEW(2),
 		LINEUP(3),
 		PLAYERANALYSIS1(4),
 		PLAYERANALYSIS2(5),
-		MATCHESOVERVIEW(6);
+		MATCHESOVERVIEW(6),
+		YOUTHPLAYEROVERVIEW(7),
+		YOUTHPLAYERDETAILS(8),
+		YOUTHTRAININGVIEW(9);
 
 		private  int value;
 		private  ColumnModelId(int value){this.value=value;}
 		public int getValue() {return value;}
-	};
+	}
 
 	/** singleton **/
 	private static UserColumnController columnController = new UserColumnController();
@@ -51,7 +55,12 @@ public final class UserColumnController {
 	
 	/** model for player analysis **/
 	private PlayerAnalysisModel playerAnalysis2Model 		= null;
+
+	// Youth module
 	private YouthPlayerOverviewTableModel youthPlayerOverviewColumnModel;
+	private YouthTrainingViewTableModel youthTrainingViewColumnModel;
+	private YouthPlayerDetailsTableModel youthPlayerDetailsTableModel;
+
 
 	/**
 	 * constructor
@@ -72,15 +81,19 @@ public final class UserColumnController {
 	 * load all models from db
 	 *
 	 */
-	public final void load(){
+	public final void load() {
 		final DBManager dbZugriff = DBManager.instance();
-		
-		dbZugriff.loadHOColumModel( getMatchesModel() );
-		dbZugriff.loadHOColumModel( getPlayerOverviewModel() );
-		dbZugriff.loadHOColumModel( getLineupModel() );
-		dbZugriff.loadHOColumModel( getAnalysis1Model() );
-		dbZugriff.loadHOColumModel( getAnalysis2Model() );
-		dbZugriff.loadHOColumModel( getMatchesOverview1ColumnModel() );
+
+		dbZugriff.loadHOColumModel(getMatchesModel());
+		dbZugriff.loadHOColumModel(getPlayerOverviewModel());
+		dbZugriff.loadHOColumModel(getLineupModel());
+		dbZugriff.loadHOColumModel(getAnalysis1Model());
+		dbZugriff.loadHOColumModel(getAnalysis2Model());
+		dbZugriff.loadHOColumModel(getMatchesOverview1ColumnModel());
+
+		dbZugriff.loadHOColumModel(getYouthTrainingViewColumnModel());
+		dbZugriff.loadHOColumModel(getYouthPlayerOverviewColumnModel());
+		dbZugriff.loadHOColumModel(getYouthPlayerDetailsColumnModel());
 	}
 	
 	/**
@@ -149,7 +162,7 @@ public final class UserColumnController {
 	 * @return
 	 */
 	public Vector<HOTableModel> getAllModels(){
-		Vector<HOTableModel> v = new Vector<HOTableModel>();
+		Vector<HOTableModel> v = new Vector<>();
 		
 		v.add( getPlayerOverviewModel() );
 		v.add( getLineupModel() );
@@ -165,4 +178,19 @@ public final class UserColumnController {
 		}
 		return youthPlayerOverviewColumnModel;
 	}
+
+	public YouthTrainingViewTableModel getYouthTrainingViewColumnModel() {
+		if(youthTrainingViewColumnModel == null){
+			youthTrainingViewColumnModel = new YouthTrainingViewTableModel(ColumnModelId.YOUTHTRAININGVIEW.getValue());
+		}
+		return youthTrainingViewColumnModel;
+	}
+	public YouthPlayerDetailsTableModel getYouthPlayerDetailsColumnModel() {
+		if(youthPlayerDetailsTableModel == null){
+			youthPlayerDetailsTableModel = new YouthPlayerDetailsTableModel(ColumnModelId.YOUTHPLAYERDETAILS.getValue());
+		}
+		return youthPlayerDetailsTableModel;
+	}
+
+
 }

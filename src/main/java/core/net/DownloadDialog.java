@@ -11,6 +11,7 @@ import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
+import core.model.match.SourceSystem;
 import core.model.player.Player;
 import core.net.login.ProxyDialog;
 import core.util.HOLogger;
@@ -290,7 +291,10 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				}
 
 				if ( model.getBasics().hasYouthTeam()){
-					OnlineWorker.downloadMissingYouthMatchLineups(model.getBasics().getYouthTeamId());
+					var dateSince = DBManager.instance().getMinScoutingDate();
+					OnlineWorker.downloadMissingYouthMatchData(model, dateSince);
+					// delete old youth match lineups, no longer needed (no current youth player has trained then)
+					DBManager.instance().deleteMatchData(SourceSystem.YOUTH.getValue(), dateSince);
 				}
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {

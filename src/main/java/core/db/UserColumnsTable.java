@@ -122,17 +122,15 @@ class UserColumnsTable extends AbstractTable {
 		try {
 
 			while (rs.next()) {
-
 				modelIndex 	= rs.getInt(columns[1].getColumnName());
-				tableIndex 	= rs.getInt(columns[2].getColumnName());
-				width 		= rs.getInt(columns[3].getColumnName());
-
-				dbcolumns[modelIndex].setIndex(tableIndex);
-				dbcolumns[modelIndex].setDisplay(true);
-				dbcolumns[modelIndex].setPreferredWidth(width);
-
-
-				count++;
+				if ( modelIndex < dbcolumns.length) {
+					tableIndex = rs.getInt(columns[2].getColumnName());
+					width = rs.getInt(columns[3].getColumnName());
+					dbcolumns[modelIndex].setIndex(tableIndex);
+					dbcolumns[modelIndex].setDisplay(true);
+					dbcolumns[modelIndex].setPreferredWidth(width);
+					count++;
+				}
 			}
 
 			if (count == 0){

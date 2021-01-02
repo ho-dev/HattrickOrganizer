@@ -1,12 +1,13 @@
 package core.model;
 
 import core.db.DBManager;
+import core.model.match.MatchLineup;
 import core.model.match.SourceSystem;
 import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
-import core.model.player.YouthPlayer;
+import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.training.TrainingPerWeek;
 import core.training.TrainingManager;
@@ -18,6 +19,7 @@ import module.series.Spielplan;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
+import module.youth.YouthTraining;
 import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 
@@ -43,11 +45,13 @@ public class HOModel {
     private Team m_clTeam;
     private static List<Player> m_vOldPlayer;
     private List<Player> m_vPlayer;
-    private List<YouthPlayer> youthPlayers;
     private Verein m_clVerein;
     private XtraData m_clXtraDaten;
     private int m_iID = -1;
     private List<StaffMember> m_clStaff;
+    private List<YouthPlayer> youthPlayers;
+    private List<MatchLineup> youthMatchLineups;
+    private List<YouthTraining> youthTrainings;
 
     //~ Constructors -------------------------------------------------------------------------------
 	public HOModel() {
@@ -559,9 +563,9 @@ public class HOModel {
         //Liga
         DBManager.instance().saveLiga(m_iID, getLeague());
         //Aufstellung + aktu Sys als Standard saven
-        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getId(), m_iID, getCurrentLineup(), Lineup.DEFAULT_NAME);
+        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getValue(), m_iID, getCurrentLineup(), Lineup.DEFAULT_NAME);
         //Aufstellung + aktu Sys als Standard saven
-        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getId(), m_iID, getPreviousLineup(), Lineup.DEFAULT_NAMELAST);
+        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getValue(), m_iID, getPreviousLineup(), Lineup.DEFAULT_NAMELAST);
         //Xtra Daten
         DBManager.instance().saveXtraDaten(m_iID, getXtraDaten());
         //Player
@@ -583,5 +587,47 @@ public class HOModel {
     public YouthPlayer getCurrentYouthPlayer(int youthplayerID) {
         return this.getCurrentYouthPlayers().stream().filter(player -> player.getId()==youthplayerID).findAny()
                 .orElse(null);
+    }
+
+    public void addYouthMatchLineup(MatchLineup lineup) {
+        if ( this.youthMatchLineups == null){
+            getYouthMatchLineups();
+        }
+        this.youthMatchLineups.add(lineup);
+    }
+
+    public List<MatchLineup> getYouthMatchLineups(){
+        if ( this.youthMatchLineups == null){
+            youthMatchLineups = DBManager.instance().loadMatchLineups(SourceSystem.YOUTH.getValue());
+        }
+        return youthMatchLineups;
+    }
+
+    public List<YouthTraining> getYouthTrainings() {
+        if ( this.youthTrainings == null){
+            initYouthTrainings();
+        }
+        return youthTrainings;
+    }
+
+    private void initYouthTrainings() {
+        this.youthTrainings = DBManager.instance().loadYouthTrainings();
+        for ( var lineup : this.getYouthMatchLineups()){
+            // create a youth trainings object for each lineup, if it does not exist already
+            var youthTraining = youthTrainings.stream()
+                    .filter(t->t.getMatchId()==lineup.getMatchID())
+                    .findFirst()
+                    .orElse(null);
+            if ( youthTraining==null ){
+                this.youthTrainings.add(new YouthTraining(lineup));
+            }
+            else {
+                this.youthTrainings.add(youthTraining);
+            }
+        }
+    }
+
+    public void setYouthTrainings(List<YouthTraining> youthTrainings) {
+        this.youthTrainings = youthTrainings;
     }
 }

@@ -252,9 +252,9 @@ public class XMLExporter  {
 				MatchLineupTeam lineupTeam = null;
 				Matchdetails details = matchData.getDetails();
 				if (details.getHeimId() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
-					lineupTeam = DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getId(), details.getMatchID()).getHeim();
+					lineupTeam = DBManager.instance().loadMatchLineup(SourceSystem.HATTRICK.getValue(), details.getMatchID()).getHomeTeam();
 				} else {
-					lineupTeam = DBManager.instance().getMatchLineup(SourceSystem.HATTRICK.getId(), details.getMatchID()).getGast();
+					lineupTeam = DBManager.instance().loadMatchLineup(SourceSystem.HATTRICK.getValue(), details.getMatchID()).getGuestTeam();
 				}
 
 				Team team = DBManager.instance().getTeam(hrfID);
@@ -265,10 +265,10 @@ public class XMLExporter  {
 				ele.appendChild(doc.createTextNode("" + HOVerwaltung.instance().getModel().getBasics().getTeamId()));
 				ele = doc.createElement("System");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + lineupTeam.determinateSystem()));
+				ele.appendChild(doc.createTextNode("" + lineupTeam.determineSystem()));
 				ele = doc.createElement("Eingespieltheit");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + getTeamErfahrung(team, lineupTeam.determinateSystem())));
+				ele.appendChild(doc.createTextNode("" + getTeamErfahrung(team, lineupTeam.determineSystem())));
 				ele = doc.createElement("TrainerType");
 				tmpEle.appendChild(ele);
 				ele.appendChild(doc.createTextNode("" + DBManager.instance().getTrainerType(hrfID)));
@@ -346,7 +346,7 @@ public class XMLExporter  {
 				ele.appendChild(doc.createTextNode("" + getTeamSelbstvertrauen(team)));
 				ele = doc.createElement("Erfahrung");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + lineupTeam.getErfahrung()));
+				ele.appendChild(doc.createTextNode("" + lineupTeam.getExperience()));
 
 				//lineup
 				Element lineupEle = doc.createElement("Lineup");
@@ -356,9 +356,9 @@ public class XMLExporter  {
 				tmpEle = lineupEle;
 
 				//Player schreiben
-				for (int k = 0;(lineupTeam.getAufstellung() != null) && (k < lineupTeam.getAufstellung().size()); k++) {					
-					MatchLineupPlayer playerMatch = lineupTeam.getAufstellung().get(k);
-					Player playerData = matchData.getPlayers().get(Integer.valueOf(playerMatch.getSpielerId()));
+				for (int k = 0; (lineupTeam.getLineup() != null) && (k < lineupTeam.getLineup().size()); k++) {
+					MatchLineupPlayer playerMatch = lineupTeam.getLineup().get(k);
+					Player playerData = matchData.getPlayers().get(Integer.valueOf(playerMatch.getPlayerId()));
 
 					//Bank + verletzte überspringen
 					if (playerMatch.getId() >= IMatchRoleID.startReserves) {
@@ -373,7 +373,7 @@ public class XMLExporter  {
 
 					ele = doc.createElement("SpielerID");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerMatch.getSpielerId()));
+					ele.appendChild(doc.createTextNode("" + playerMatch.getPlayerId()));
 					ele = doc.createElement("Spezialitaet");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getPlayerSpecialty()));

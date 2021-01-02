@@ -1,9 +1,7 @@
 package module.youth;
 
-import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.model.HOVerwaltung;
-import core.model.player.YouthPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

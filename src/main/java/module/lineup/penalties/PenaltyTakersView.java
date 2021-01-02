@@ -90,8 +90,8 @@ public class PenaltyTakersView extends JPanel {
 		List<MatchRoleID> positions = this.lineup.getPenaltyTakers();
 		List<PenaltyTaker> takers = new ArrayList<PenaltyTaker>();
 		for (MatchRoleID pos : positions) {
-			if (pos.getSpielerId() != 0) {
-				PenaltyTaker taker = getPenaltyTaker(pos.getSpielerId());
+			if (pos.getPlayerId() != 0) {
+				PenaltyTaker taker = getPenaltyTaker(pos.getPlayerId());
 				if (taker != null) {
 					takers.add(taker);
 				}

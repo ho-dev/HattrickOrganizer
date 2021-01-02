@@ -17,7 +17,7 @@ import core.model.misc.Verein;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.model.player.YouthPlayer;
+import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.model.series.Paarung;
 import core.training.FuturePlayerTraining;
@@ -33,6 +33,7 @@ import module.series.Spielplan;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.transfer.PlayerTransfer;
 import module.transfer.scout.ScoutEintrag;
+import module.youth.YouthTraining;
 import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 import org.hsqldb.error.ErrorCode;
@@ -229,6 +230,7 @@ public class DBManager {
 		tables.put(EconomyTable.TABLENAME, new EconomyTable(adapter));
 		tables.put(YouthPlayerTable.TABLENAME, new YouthPlayerTable(adapter));
 		tables.put(YouthScoutCommentTable.TABLENAME, new YouthScoutCommentTable(adapter));
+		tables.put(YouthTrainingTable.TABLENAME, new YouthTrainingTable(adapter));
 		tables.put(ScoutTable.TABLENAME, new ScoutTable(adapter));
 		tables.put(UserColumnsTable.TABLENAME, new UserColumnsTable(adapter));
 		tables.put(SpielerNotizenTable.TABLENAME, new SpielerNotizenTable(adapter));
@@ -381,11 +383,16 @@ public class DBManager {
 	}
 	public List<YouthPlayer> loadYouthPlayers(int hrfID) {
 		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
-				.loadYouthPlayer(hrfID);
+				.loadYouthPlayers(hrfID);
 	}
 	public List<YouthPlayer.ScoutComment> loadYouthScoutComments(int id) {
 		return ((YouthScoutCommentTable) getTable(YouthScoutCommentTable.TABLENAME))
 				.loadYouthScoutComments(id);
+	}
+
+	public YouthPlayer loadYouthPlayerOfMatchDate(int id, Timestamp date) {
+		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
+				.loadYouthPlayerOfMatchDate(id, date);
 	}
 
 	/**
@@ -880,9 +887,9 @@ public class DBManager {
 	// ------------------------------- MatchLineupTable
 	// -------------------------------------------------
 
-	public MatchLineup getMatchLineup(int sourceSystem, int matchID) {
+	public MatchLineup loadMatchLineup(int sourceSystem, int matchID) {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.getMatchLineup(sourceSystem, matchID);
+				.loadMatchLineup(sourceSystem, matchID);
 	}
 
 	/**
@@ -896,10 +903,6 @@ public class DBManager {
 	public boolean isMatchIFKRatingInDB(int matchid) {
 		return ((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME))
 				.isMatchIFKRatingAvailable(matchid);
-	}
-
-	public boolean isDerbyInfoInDb(int matchId){
-		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).hasDerbyInfo(matchId);
 	}
 
 	public boolean hasUnsureWeatherForecast(int matchId){
@@ -1336,20 +1339,14 @@ public class DBManager {
 	/**
 	 * Gibt die MatchHighlights zu einem Match zurück
 	 */
-	public ArrayList<MatchEvent> getMatchHighlights(int matchId) {
+	public ArrayList<MatchEvent> getMatchHighlights(int sourceSystem, int matchId) {
 		return ((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME))
-				.getMatchHighlights(matchId);
+				.getMatchHighlights(sourceSystem, matchId);
 	}
 
 	public MatchesHighlightsStat[] getChancesStat(boolean ownTeam, int matchtype) {
 		return MatchesOverviewQuery.getChancesStat(ownTeam, matchtype);
 
-	}
-
-	public ArrayList<MatchEvent> getMatchHighlightsByTypIdAndPlayerId(
-			int type, int playerId) {
-		return ((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME))
-				.getMatchHighlightsByTypIdAndPlayerId(type, playerId);
 	}
 
 	// Transfer
@@ -1516,7 +1513,7 @@ public class DBManager {
 						spielerid, filter);
 
 				// Matchdetails
-				final Matchdetails details = loadMatchDetails(SourceSystem.HATTRICK.getId(), item
+				final Matchdetails details = loadMatchDetails(SourceSystem.HATTRICK.getValue(), item
 						.getMatchID());
 
 				// Stimmung und Selbstvertrauen
@@ -1936,5 +1933,27 @@ public class DBManager {
 
 	public List<YouthTrainerComment> loadYouthTrainerComments(int id) {
 		return ((YouthTrainerCommentTable) getTable(YouthTrainerCommentTable.TABLENAME)).loadYouthTrainerComments(id);
+	}
+
+	public List<MatchLineup> loadMatchLineups(int sourcesystem) {
+		return ((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).loadMatchLineups(sourcesystem);
+	}
+
+	public void deleteMatchData(int sourcesystem, Timestamp before){
+		((MatchHighlightsTable)getTable(MatchHighlightsTable.TABLENAME)).deleteMatchHighlightsBefore(sourcesystem, before);
+		((MatchDetailsTable)getTable(MatchDetailsTable.TABLENAME)).deleteMatchDetailsBefore(sourcesystem, before);
+		((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).deleteMatchLineupsBefore(sourcesystem, before);
+	}
+
+	public List<YouthTraining> loadYouthTrainings() {
+		return ((YouthTrainingTable)getTable(YouthTrainingTable.TABLENAME)).loadYouthTrainings();
+	}
+
+    public void storeYouthTraining(YouthTraining youthTraining) {
+		((YouthTrainingTable)getTable(YouthTrainingTable.TABLENAME)).storeYouthTraining(youthTraining);
+    }
+
+	public void storeMatchDetails(Matchdetails details) {
+		((MatchDetailsTable)getTable(MatchDetailsTable.TABLENAME)).storeMatchDetails(details);
 	}
 }

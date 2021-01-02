@@ -18,6 +18,15 @@ import java.util.Properties;
 public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleID>,
 		IMatchRoleID {
 
+	public enum Sector {
+		None,
+		Goal,
+		Back,
+		CentralDefence,
+		Wing,
+		InnerMidfield,
+		Forward
+	}
 
 
 	/**
@@ -54,10 +63,6 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	@SerializedName("behaviour")
 	@Expose
 	private byte m_bTaktik = -1;
-
-	/** PositionsAngabe */
-
-	// protected byte m_bPosition = -1;
 
 	/** ID */
 	private int m_iId = -1;
@@ -100,7 +105,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	public MatchRoleID(MatchRoleID sp) {
 		// m_bPosition = position;
 		m_iId = sp.getId();
-		m_iSpielerId = sp.getSpielerId();
+		m_iSpielerId = sp.getPlayerId();
 		m_bTaktik = sp.getTactic();
 
 		if ((m_iId < IMatchRoleID.setPieces) && (m_iId != -1)) {
@@ -192,153 +197,62 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	 */
 	public static String getShortNameForPosition(byte posId) {
 
-		switch (posId) {
-		case KEEPER:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.keeper");
-
-		case CENTRAL_DEFENDER:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefender");
-
-		case CENTRAL_DEFENDER_TOWING:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefendertowardswing");
-
-		case CENTRAL_DEFENDER_OFF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefenderoffensive");
-
-		case BACK:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingback");
-
-		case BACK_TOMID:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbacktowardsmiddle");
-
-		case BACK_OFF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackoffensive");
-
-		case BACK_DEF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackdefensive");
-
-		case MIDFIELDER:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielder");
-
-		case MIDFIELDER_OFF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderoffensive");
-
-		case MIDFIELDER_DEF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderdefensive");
-
-		case MIDFIELDER_TOWING:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfieldertowardswing");
-
-		case WINGER:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.winger");
-
-		case WINGER_TOMID:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingertowardsmiddle");
-
-		case WINGER_OFF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingeroffensive");
-
-		case WINGER_DEF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingerdefensive");
-
-		case FORWARD:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.forward");
-
-		case FORWARD_TOWING:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwardtowardswing");
-
-		case FORWARD_DEF:
-			return HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwarddefensive");
-
-		case SUBSTITUTED1:
-		case SUBSTITUTED2:
-		case SUBSTITUTED3:
-			return HOVerwaltung.instance().getLanguageString("Ausgewechselt");
-
-			// HOLogger.instance().log(getClass(), "Unbestimmte Position: " +
-			// posId );
-		default:
-			return HOVerwaltung.instance().getLanguageString("Unbestimmt");
-		}
+		// HOLogger.instance().log(getClass(), "Unbestimmte Position: " +
+		// posId );
+		return switch (posId) {
+			case KEEPER -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.keeper");
+			case CENTRAL_DEFENDER -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefender");
+			case CENTRAL_DEFENDER_TOWING -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefendertowardswing");
+			case CENTRAL_DEFENDER_OFF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefenderoffensive");
+			case BACK -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingback");
+			case BACK_TOMID -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbacktowardsmiddle");
+			case BACK_OFF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackoffensive");
+			case BACK_DEF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackdefensive");
+			case MIDFIELDER -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielder");
+			case MIDFIELDER_OFF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderoffensive");
+			case MIDFIELDER_DEF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderdefensive");
+			case MIDFIELDER_TOWING -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfieldertowardswing");
+			case WINGER -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.winger");
+			case WINGER_TOMID -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingertowardsmiddle");
+			case WINGER_OFF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingeroffensive");
+			case WINGER_DEF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingerdefensive");
+			case FORWARD -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.forward");
+			case FORWARD_TOWING -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwardtowardswing");
+			case FORWARD_DEF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwarddefensive");
+			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> HOVerwaltung.instance().getLanguageString("Ausgewechselt");
+			default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
+		};
 	}
 
 	/**
 	 * Gibt zu einer Positionsid den Namen zurück
 	 */
 	public static String getNameForID(int id) {
-		switch (id) {
-		case keeper:
-			return "keeper";
+		return switch (id) {
+			case keeper -> "keeper";
+			case rightBack -> "rightBack";
+			case rightCentralDefender -> "rightCentralDefender";
+			case leftCentralDefender -> "leftCentralDefender";
+			case middleCentralDefender -> "middleCentralDefender";
+			case leftBack -> "leftBack";
+			case rightWinger -> "rightWinger";
+			case rightInnerMidfield -> "rightInnerMidfield";
+			case centralInnerMidfield -> "centralInnerMidfield";
+			case leftInnerMidfield -> "leftInnerMidfield";
+			case leftWinger -> "leftWinger";
+			case rightForward -> "rightForward";
+			case centralForward -> "centralForward";
+			case leftForward -> "leftForward";
+			case substCD1, substCD2 -> "substDefender";
+			case substWB1, substWB2 -> "substWingback";
+			case substIM1, substIM2 -> "substInsideMid";
+			case substWI1, substWI2 -> "substWinger";
+			case substGK1, substGK2 -> "substKeeper";
+			case substFW1, substFW2 -> "substForward";
+			case substXT1, substXT2 -> "substExtra";
+			default -> "";
+		};
 
-		case rightBack:
-			return "rightBack";
-
-		case rightCentralDefender:
-			return "rightCentralDefender";
-
-		case leftCentralDefender:
-			return "leftCentralDefender";
-
-		case middleCentralDefender:
-			return "middleCentralDefender";
-
-		case leftBack:
-			return "leftBack";
-
-		case rightWinger:
-			return "rightWinger";
-
-		case rightInnerMidfield:
-			return "rightInnerMidfield";
-
-		case centralInnerMidfield:
-			return "centralInnerMidfield";
-
-		case leftInnerMidfield:
-			return "leftInnerMidfield";
-
-		case leftWinger:
-			return "leftWinger";
-
-		case rightForward:
-			return "rightForward";
-
-		case centralForward:
-			return "centralForward";
-
-		case leftForward:
-			return "leftForward";
-
-		case substCD1:
-		case substCD2:
-			return "substDefender";
-
-		case substWB1:
-		case substWB2:
-			return "substWingback";
-
-		case substIM1:
-		case substIM2:
-			return "substInsideMid";
-
-		case substWI1:
-		case substWI2:
-			return "substWinger";
-
-		case substGK1:
-		case substGK2:
-			return "substKeeper";
-
-		case substFW1:
-		case substFW2:
-			return "substForward";
-
-		case substXT1:
-		case substXT2:
-			return "substExtra";
-		}
-
-		return "";
 	}
 
 
@@ -667,8 +581,8 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	 */
 	public final void setSpielerId(int spielerId, Lineup lineup) {
 
-		boolean containsPlayer = (m_iSpielerId > 0) || (m_iSpielerId < -10) ? true : false;
-		boolean incomingEmpty = (spielerId < 1) && (spielerId > -10) ? true : false;
+		boolean containsPlayer = (m_iSpielerId > 0) || (m_iSpielerId < -10);
+		boolean incomingEmpty = (spielerId < 1) && (spielerId > -10);
 
 		// We don't want another player in the starting lineup if there are
 		// already 11 on the field.
@@ -677,7 +591,6 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 				&& m_iId < IMatchRoleID.startReserves && !lineup.hasFreePosition()) {
 			HOLogger.instance().debug(getClass(),
 					"Blocked from setting player at position: " + m_iSpielerId + " " + m_iId);
-			return;
 		} else {
 			this.m_iSpielerId = spielerId;
 		}
@@ -688,7 +601,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	 *
 	 * @return Value of property m_iSpielerId.
 	 */
-	public final int getSpielerId() {
+	public final int getPlayerId() {
 		return m_iSpielerId;
 	}
 
@@ -851,5 +764,20 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	}
 
 	private static String getLangStr(String key) {return HOVerwaltung.instance().getLanguageString(key);}
+
+	public Sector getSector(){
+		return getSector(this.m_iId);
+	}
+	public static Sector getSector(int roleId) {
+		return switch (roleId) {
+			case keeper -> Sector.Goal;
+			case leftBack, rightBack -> Sector.Back;
+			case leftCentralDefender, rightCentralDefender, middleCentralDefender -> Sector.CentralDefence;
+			case leftWinger, rightWinger -> Sector.Wing;
+			case leftInnerMidfield, rightInnerMidfield, centralInnerMidfield -> Sector.InnerMidfield;
+			case leftForward, rightForward, centralForward -> Sector.Forward;
+			default -> Sector.None;
+		};
+	}
 	
 }

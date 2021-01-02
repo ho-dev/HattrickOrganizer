@@ -1,7 +1,9 @@
-package core.model.player;
+package module.youth;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.model.player.CommentType;
+import core.model.player.Specialty;
 import core.training.YouthTrainerComment;
 import core.util.HOLogger;
 import module.training.Skills;
@@ -45,9 +47,11 @@ public class YouthPlayer {
     private Double rating;
     private Timestamp youthMatchDate;
 
-    private Map<Integer, SkillInfo> skillInfoMap = new HashMap<>();
+    private Map<Integer, SkillInfo> currentSkills = new HashMap<>();
     private List<ScoutComment> scoutComments;
     private List<YouthTrainerComment> trainerComments;
+
+    private TreeMap<Timestamp, TrainingDevelopmentEntry> trainingDevelopment ;
 
     public YouthPlayer() {
 
@@ -303,7 +307,7 @@ public class YouthPlayer {
     }
 
     public SkillInfo getSkillInfo(Skills.HTSkillID skillID) {
-        return this.skillInfoMap.get(skillID.getValue());
+        return this.currentSkills.get(skillID.getValue());
     }
 
     public int getHrfid() {
@@ -353,7 +357,72 @@ public class YouthPlayer {
     public static Skills.HTSkillID[] skillIds = {Keeper, Defender, Playmaker, Winger, Passing, Scorer, SetPieces};
 
     public void setSkillInfo(SkillInfo skillinfo) {
-        this.skillInfoMap.put(skillinfo.skillID.getValue(), skillinfo);
+        this.currentSkills.put(skillinfo.skillID.getValue(), skillinfo);
+    }
+
+    public TreeMap<Timestamp, TrainingDevelopmentEntry> getTrainings() {
+        if (trainingDevelopment == null) {
+            // init from models match list
+            trainingDevelopment = new TreeMap<>();
+            var model = HOVerwaltung.instance().getModel();
+            // set start skill values (may be edited by the user)
+            var startSkills = getStartSkills();
+            for (var training : model.getYouthTrainings()) {
+                var team = training.getTeam(model.getBasics().getYouthTeamId());
+                if (team.hasPlayerPlayed(this.id)) {
+                    var trainingEntry = new TrainingDevelopmentEntry(this, training);
+                    startSkills = trainingEntry.calcSkills(startSkills, getSkillsAt(training.getMatchDate()),team);
+                    trainingDevelopment.put(training.getMatchDate(), trainingEntry);
+                }
+            }
+        }
+        return trainingDevelopment;
+    }
+
+    private Map<Integer, SkillInfo> getStartSkills() {
+        Map<Integer, SkillInfo> startSkills = new HashMap<>();
+        for ( var skill : this.currentSkills.values()){
+            var startSkill = new SkillInfo(skill.getSkillID());
+            startSkill.setCurrentValue(skill.getStartValue());
+            startSkill.setStartValue(skill.getStartValue());
+            startSkill.setStartLevel(skill.getStartLevel());
+            startSkill.setCurrentLevel(skill.getStartLevel());
+            startSkill.setMax(skill.getMax());
+            startSkills.put(startSkill.skillID.getValue(), startSkill);
+        }
+        return startSkills;
+    }
+
+    private Map<Integer, SkillInfo> getSkillsAt(Timestamp date) {
+        if (!date.equals(this.youthMatchDate)) {
+            var oldPlayerInfo = DBManager.instance().loadYouthPlayerOfMatchDate(this.id, date);
+            if (oldPlayerInfo != null) {
+                return oldPlayerInfo.currentSkills;
+            } else if (trainingDevelopment.size() > 0) {
+                var ret = this.currentSkills;
+                for (var entry : this.trainingDevelopment.entrySet()) {
+                    if (entry.getKey() == date) {
+                        return ret;
+                    }
+                    ret = entry.getValue().getSkills();
+                }
+            }
+            else {
+                // skills at arrival date
+                return getStartSkills();
+            }
+        }
+        return this.currentSkills;
+    }
+
+    public void recalcSkills(Timestamp since) {
+        if ( trainingDevelopment != null) {
+            var startSkills = getSkillsAt(since);
+            for (var entry : this.trainingDevelopment.tailMap(since, true).values()) {
+                var team = entry.getTraining().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
+                startSkills = entry.calcSkills(startSkills, getSkillsAt(entry.getMatchDate()), team);
+            }
+        }
     }
 
     public static class SkillInfo {
@@ -628,7 +697,7 @@ public class YouthPlayer {
         skillInfo.setCurrentLevel(getInteger(properties, skill));
         skillInfo.setMax(getInteger(properties, skill + "max"));
         skillInfo.setMaxReached(getBoolean(properties, skill + "ismaxreached", false));
-        this.skillInfoMap.put(skillID.getValue(), skillInfo);
+        this.currentSkills.put(skillID.getValue(), skillInfo);
     }
 
     private Boolean getBoolean(Properties p, String key) {
@@ -682,4 +751,5 @@ public class YouthPlayer {
         }
         return null;
     }
+
 }

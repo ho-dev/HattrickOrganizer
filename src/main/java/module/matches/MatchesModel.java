@@ -1,12 +1,10 @@
 package module.matches;
 
 import core.db.DBManager;
-import core.model.match.MatchEvent;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
 import core.net.OnlineWorker;
-import core.util.HOLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +40,12 @@ public class MatchesModel {
 	
 	public MatchLineupTeam getHomeTeamInfo() {
 		if (home == null && match != null) {
-			home = DBManager.instance().getMatchLineupTeam(details.getSourceSystem().getId(), match.getMatchID(), match.getHeimID());
+			home = DBManager.instance().getMatchLineupTeam(details.getSourceSystem().getValue(), match.getMatchID(), match.getHeimID());
 
 			if ( home == null){
 				// Lineup team was not stored (Verlegenheitstruppe)
 				var ok = OnlineWorker.downloadMatchData(match, true);
-				home = DBManager.instance().getMatchLineupTeam(details.getSourceSystem().getId(), match.getMatchID(), match.getHeimID());
+				home = DBManager.instance().getMatchLineupTeam(details.getSourceSystem().getValue(), match.getMatchID(), match.getHeimID());
 			}
 		}
 		return home;
@@ -55,7 +53,7 @@ public class MatchesModel {
 	
 	public MatchLineupTeam getAwayTeamInfo() {
 		if (away == null && match != null) {
-			away = DBManager.instance().getMatchLineupTeam(details.getSourceSystem().getId(), match.getMatchID(), match.getGastID());
+			away = DBManager.instance().getMatchLineupTeam(details.getSourceSystem().getValue(), match.getMatchID(), match.getGastID());
 		}
 		return away;
 	}

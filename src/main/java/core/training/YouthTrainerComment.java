@@ -1,6 +1,6 @@
 package core.training;
 
-import core.model.player.YouthPlayer;
+import module.youth.YouthPlayer;
 
 public class YouthTrainerComment extends YouthPlayer.ScoutComment {
     private int youthMatchId;

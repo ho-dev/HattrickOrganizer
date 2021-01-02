@@ -273,7 +273,7 @@ public class OnlineWorker {
 		// Only download if not present in the database, or if refresh is true
 		if (refresh || !DBManager.instance().isMatchVorhanden(matchid)
 				|| DBManager.instance().hasUnsureWeatherForecast(matchid)
-				|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), matchid)
+				|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), matchid)
 		) {
 			try {
 				Matchdetails details;
@@ -350,7 +350,7 @@ public class OnlineWorker {
 				MatchLineup lineup;
 				boolean success;
 				if ( info.getMatchStatus() == MatchKurzInfo.FINISHED) {
-					lineup = getMatchlineup(matchid, info.getMatchType(), info.getHeimID(), info.getGastID());
+					lineup = downloadMatchlineup(matchid, info.getMatchType(), info.getHeimID(), info.getGastID());
 
 					if (lineup == null) {
 						if ( !isSilentDownload()) {
@@ -376,10 +376,10 @@ public class OnlineWorker {
 					info.setDuration(details.getLastMinute());
 					info.setGastTore(details.getGuestGoals());
 					info.setHeimTore(details.getHomeGoals());
-					info.setGastID(lineup.getGastId());
-					info.setGastName(lineup.getGastName());
-					info.setHeimID(lineup.getHeimId());
-					info.setHeimName(lineup.getHeimName());
+					info.setGastID(lineup.getGuestTeamId());
+					info.setGastName(lineup.getGuestTeamName());
+					info.setHeimID(lineup.getHomeTeamId());
+					info.setHeimName(lineup.getHomeTeamName());
 					success = DBManager.instance().storeMatch(info, details, lineup);
 				}
 				else{
@@ -557,7 +557,7 @@ public class OnlineWorker {
 					int curMatchId = match.getMatchID();
 					boolean refresh = !DBManager.instance().isMatchVorhanden(curMatchId)
 							|| DBManager.instance().hasUnsureWeatherForecast(curMatchId)
-							|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), curMatchId);
+							|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), curMatchId);
 
 					if (refresh) {
 						// No lineup or arenaId in DB
@@ -633,17 +633,21 @@ public class OnlineWorker {
 	}
 
 	/**
-	 * saugt das Matchlineup
+	 * Downlad match lineup
 	 *
 	 * @param matchId
-	 *            Die ID des Matches
+	 * 			Match Id
+	 * @param matchType
+	 * 			MatchType
 	 * @param teamId1
-	 *            Erste Teamid (pflicht)
+	 * 			Id of first team to include to the returned lineup
 	 * @param teamId2
-	 *            Zweite Teamid (optional auch -1)
+	 * 			Optional id of second team
+	 * @return
+	 * 			MatchLineup containing specified teams
 	 */
-	private static MatchLineup getMatchlineup(int matchId, MatchType matchType, int teamId1,
-			int teamId2) {
+	private static MatchLineup downloadMatchlineup(int matchId, MatchType matchType, int teamId1,
+												   int teamId2) {
 		boolean bOK = false;
 		MatchLineup lineUp1 = null;
 		MatchLineup lineUp2 = null;
@@ -652,28 +656,28 @@ public class OnlineWorker {
 		showWaitInformation(10);
 
 		// Lineups holen
-		lineUp1 = fetchLineup(matchId, teamId1, matchType);
+		lineUp1 = downloadMatchLineup(matchId, teamId1, matchType);
 		if (lineUp1 != null) {
 			showWaitInformation(50);
 			if (teamId2 > 0)
-				lineUp2 = fetchLineup(matchId, teamId2, matchType);
+				lineUp2 = downloadMatchLineup(matchId, teamId2, matchType);
 
 			// Merge the two
 			if ((lineUp2 != null)) {
-				if (lineUp1.getHeim() == null)
-					lineUp1.setHeim(lineUp2.getHeim());
-				else if (lineUp1.getGast() == null)
-					lineUp1.setGast(lineUp2.getGast());
+				if (lineUp1.getHomeTeam() == null)
+					lineUp1.setHomeTeam(lineUp2.getHomeTeam());
+				else if (lineUp1.getGuestTeam() == null)
+					lineUp1.setGuestTeamId(lineUp2.getGuestTeam());
 			} else {
 				// Get the 2nd lineup
-				if (lineUp1.getHeim() == null) {
-					lineUp2 = fetchLineup(matchId, lineUp1.getHeimId(), matchType);
+				if (lineUp1.getHomeTeam() == null) {
+					lineUp2 = downloadMatchLineup(matchId, lineUp1.getHomeTeamId(), matchType);
 					if (lineUp2 != null)
-						lineUp1.setHeim(lineUp2.getHeim());
+						lineUp1.setHomeTeam(lineUp2.getHomeTeam());
 				} else {
-					lineUp2 = fetchLineup(matchId, lineUp1.getGastId(), matchType);
+					lineUp2 = downloadMatchLineup(matchId, lineUp1.getGuestTeamId(), matchType);
 					if (lineUp2 != null)
-						lineUp1.setGast(lineUp2.getGast());
+						lineUp1.setGuestTeamId(lineUp2.getGuestTeam());
 				}
 			}
 		}
@@ -804,12 +808,12 @@ public class OnlineWorker {
 		return details;
 	}
 
-	public static MatchLineup fetchLineup(int matchID, int teamID, MatchType matchType) {
+	public static MatchLineup downloadMatchLineup(int matchID, int teamID, MatchType matchType) {
 		String matchLineup;
 		MatchLineup lineUp=null;
 		boolean bOK = false;
 		try {
-			matchLineup = MyConnector.instance().getMatchLineup(matchID, teamID, matchType);
+			matchLineup = MyConnector.instance().downloadMatchLineup(matchID, teamID, matchType);
 			bOK = (matchLineup != null && matchLineup.length() > 0);
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Matchlineup :";
@@ -838,7 +842,7 @@ public class OnlineWorker {
 		boolean bOK = false;
 		for (MatchKurzInfo info : infos) {
 			int curMatchId = info.getMatchID();
-			if (!DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getId(), curMatchId)) {
+			if (!DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), curMatchId)) {
 				// Check if the lineup is available
 				if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					HOLogger.instance().debug(OnlineWorker.class, "Get Lineup : " + curMatchId);
@@ -1172,18 +1176,16 @@ public class OnlineWorker {
 	final static long oneDay = 24L*60L*60L*1000L;
 	final static long threeMonths = 3L*30L*oneDay;
 
-	public static void downloadMissingYouthMatchLineups(int youthteamid) {
-		var dateSince = DBManager.instance().getLastYouthMatchDate();
-		if ( dateSince == null){
+	public static void downloadMissingYouthMatchData(HOModel model, Timestamp dateSince) {
+		var youthteamid = model.getBasics().getYouthTeamId();
+		var lastStoredYouthMatchDate = DBManager.instance().getLastYouthMatchDate();
+
+		if ( dateSince == null || lastStoredYouthMatchDate != null && lastStoredYouthMatchDate.after(dateSince) ){
 			// if there are no youth matches in database, take the limit from arrival date of 'oldest' youth players
-			dateSince = DBManager.instance().getMinScoutingDate();
-			if ( dateSince != null){
-				dateSince.setTime(dateSince.getTime()-oneDay);	// minus one hour (resetted in for loop)
-			}
+			dateSince = lastStoredYouthMatchDate;
 		}
 
 		for ( Timestamp dateUntil = null; dateSince != null; dateSince = dateUntil) {
-			dateSince.setTime(dateSince.getTime()+ oneDay);	// add one day (do not load last match again)
 			if (dateSince.before(new Timestamp(System.currentTimeMillis()- threeMonths))){
 				dateUntil = new Timestamp(dateSince.getTime() + threeMonths);
 			}
@@ -1195,12 +1197,15 @@ public class OnlineWorker {
 				var xml = mc.getMatchesArchive(SourceSystem.YOUTH, youthteamid, dateSince, dateUntil);
 				var youthMatches = XMLMatchArchivParser.parseMatchesFromString(xml);
 				for ( var match: youthMatches){
-
-					var lineup = getMatchlineup(match.getMatchID(), match.getMatchType(), match.getHeimID(), match.getGastID());
-					DBManager.instance().storeMatchLineup(lineup, youthteamid);
-
-					//TODO check if details are required
-
+					MatchLineup lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHeimID(), match.getGastID());
+					if (lineup != null) {
+						var details = downloadMatchDetails(match.getMatchID(), match.getMatchType(), lineup);
+						//var lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHeimID(), match.getGastID());
+						DBManager.instance().storeMatchDetails(details);
+						DBManager.instance().storeMatchLineup(lineup, youthteamid);
+						lineup.setMatchDetails(details);
+						model.addYouthMatchLineup(lineup);
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

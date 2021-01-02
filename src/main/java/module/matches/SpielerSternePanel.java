@@ -213,7 +213,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 
 			int trickotnummer = 0;
 			final Player spieler = core.model.HOVerwaltung.instance()
-					.getModel().getCurrentPlayer(player.getSpielerId());
+					.getModel().getCurrentPlayer(player.getPlayerId());
 
 			if (spieler != null) {
 				trickotnummer = spieler.getTrikotnummer();
@@ -225,7 +225,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 
 			m_jbSpieler.setIcon(ImageUtilities.getImage4Position(player.getId(),
 					player.getTactic(), trickotnummer));
-			m_jbSpieler.setEnabled(player.getSpielerId() > 0);
+			m_jbSpieler.setEnabled(player.getPlayerId() > 0);
 			m_jpSterne.setRating((float) player.getRating() * 2f, true);
 			initLabel(player.getId(), player.getTactic());
 

@@ -47,18 +47,18 @@ public class XMLMatchLineupParser {
 		try {
 			Element root = doc.getDocumentElement();
 			Element ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
-			ml.setFetchDatum(ele.getFirstChild().getNodeValue());
+			ml.setDownloadDate(ele.getFirstChild().getNodeValue());
 			ele = (Element) root.getElementsByTagName("MatchID").item(0);
 			ml.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
 			ele = (Element) root.getElementsByTagName("HomeTeam").item(0);
-			ml.setHeimId(Integer.parseInt(ele.getElementsByTagName("HomeTeamID").item(0)
+			ml.setHomeTeamId(Integer.parseInt(ele.getElementsByTagName("HomeTeamID").item(0)
 					.getFirstChild().getNodeValue()));
-			ml.setHeimName(ele.getElementsByTagName("HomeTeamName").item(0).getFirstChild()
+			ml.setHomeTeamName(ele.getElementsByTagName("HomeTeamName").item(0).getFirstChild()
 					.getNodeValue());
 			ele = (Element) root.getElementsByTagName("AwayTeam").item(0);
-			ml.setGastId(Integer.parseInt(ele.getElementsByTagName("AwayTeamID").item(0)
+			ml.setGuestTeamId(Integer.parseInt(ele.getElementsByTagName("AwayTeamID").item(0)
 					.getFirstChild().getNodeValue()));
-			ml.setGastName(ele.getElementsByTagName("AwayTeamName").item(0).getFirstChild()
+			ml.setGuestTeamName(ele.getElementsByTagName("AwayTeamName").item(0).getFirstChild()
 					.getNodeValue());
 			ele = (Element) root.getElementsByTagName("MatchType").item(0);
 			ml.setMatchTyp(MatchType.getById(Integer.parseInt(ele.getFirstChild().getNodeValue())));
@@ -77,15 +77,15 @@ public class XMLMatchLineupParser {
 			}
 
 			ele = (Element) root.getElementsByTagName("MatchDate").item(0);
-			ml.setSpielDatum(ele.getFirstChild().getNodeValue());
+			ml.setMatchDate(ele.getFirstChild().getNodeValue());
 
 			// team adden
-			MatchLineupTeam team = createTeam(ml.getSourceSystem().getId(), ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
+			MatchLineupTeam team = createTeam(ml.getSourceSystem().getValue(), ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
 
-			if (team.getTeamID() == ml.getHeimId()) {
-				ml.setHeim(team);
+			if (team.getTeamID() == ml.getHomeTeamId()) {
+				ml.setHomeTeam(team);
 			} else {
-				ml.setGast(team);
+				ml.setGuestTeamId(team);
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(XMLMatchLineupParser.class, e);
@@ -135,7 +135,6 @@ public class XMLMatchLineupParser {
 			if (roleID == IMatchRoleID.keeper || IMatchRoleID.oldKeeper.contains(roleID)) {
 				// Diese Werte sind von HT vorgegeben aber nicht garantiert
 				// mitgeliefert in xml, daher selbst setzen!
-				behavior = 0;
 				roleID = IMatchRoleID.keeper; // takes care of the old
 													// keeper ID.
 			} else if ((roleID >= 0)
@@ -217,7 +216,7 @@ public class XMLMatchLineupParser {
 		int styleOfPlay = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("TeamName").item(0);
 		String teamName = tmp.getFirstChild().getNodeValue();
-		MatchLineupTeam team = new MatchLineupTeam(SourceSystem.getById(sourceSystem), matchID, teamName, teamId, erfahrung, styleOfPlay);
+		MatchLineupTeam team = new MatchLineupTeam(SourceSystem.valueOf(sourceSystem), matchID, teamName, teamId, erfahrung, styleOfPlay);
 
 		Element starting = (Element) ele.getElementsByTagName("StartingLineup").item(0);
 		Element subs = (Element) ele.getElementsByTagName("Substitutions").item(0);
@@ -237,8 +236,8 @@ public class XMLMatchLineupParser {
 			// players are always last in the API, there are at least signs of a
 			// fixed order.
 			MatchLineupPlayer player = createPlayer((Element) list.item(i));
-			player.setSourceSystem(SourceSystem.getById(sourceSystem));
-			if (team.getPlayerByID(player.getSpielerId()) != null) {
+			player.setSourceSystem(SourceSystem.valueOf(sourceSystem));
+			if (team.getPlayerByID(player.getPlayerId()) != null) {
 				if ((player.getId() >= IMatchRoleID.FirstPlayerReplaced)
 						&& (player.getId() <= IMatchRoleID.ThirdPlayerReplaced)) {
 
@@ -247,7 +246,7 @@ public class XMLMatchLineupParser {
 				}
 			}
 
-			team.add2Aufstellung(player);
+			team.add2Lineup(player);
 		}
 
 		// The starting lineup
@@ -255,17 +254,19 @@ public class XMLMatchLineupParser {
 
 		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
 			MatchLineupPlayer startPlayer = createPlayer((Element) list.item(i));
+			startPlayer.setStartPosition(startPlayer.getId()); // it is the role id
+			startPlayer.setStartBehavior(startPlayer.getTactic());
 
 			// Merge with the existing player, but ignore captain and set piece
 			// position
 			if (startPlayer.getStartPosition() >= IMatchRoleID.startLineup) {
-				MatchLineupPlayer lineupPlayer = team.getPlayerByID(startPlayer.getSpielerId());
+				MatchLineupPlayer lineupPlayer = team.getPlayerByID(startPlayer.getPlayerId());
 				if (lineupPlayer != null) {
 					lineupPlayer.setStartPosition(startPlayer.getStartPosition());
 					lineupPlayer.setStartBehavior(startPlayer.getStartBehavior());
 				} else {
 					// He was not already in the lineup, so add him
-					team.add2Aufstellung(startPlayer);
+					team.add2Lineup(startPlayer);
 				}
 			}
 		}
@@ -273,7 +274,7 @@ public class XMLMatchLineupParser {
 		// Substitutions
 
 		list = subs.getElementsByTagName("Substitution");
-		List<Substitution> substitutions = new ArrayList<Substitution>();
+		List<Substitution> substitutions = new ArrayList<>();
 
 		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
 
@@ -284,12 +285,12 @@ public class XMLMatchLineupParser {
 			if ((s.getObjectPlayerID() > 0) &&
 					(team.getPlayerByID(s.getObjectPlayerID()) == null) &&
 					s.getOrderType() != MatchOrderType.MAN_MARKING) { // in case of MAN_MARKING the Object Player is an opponent player
-				team.add2Aufstellung(new MatchLineupPlayer(-1, -1, s.getObjectPlayerID(), -1d, "",
+				team.add2Lineup(new MatchLineupPlayer(-1, -1, s.getObjectPlayerID(), -1d, "",
 						-1));
 			}
 			if ((s.getSubjectPlayerID() > 0)
 					&& (team.getPlayerByID(s.getSubjectPlayerID()) == null)) {
-				team.add2Aufstellung(new MatchLineupPlayer(-1, -1, s.getSubjectPlayerID(), -1d, "",
+				team.add2Lineup(new MatchLineupPlayer(-1, -1, s.getSubjectPlayerID(), -1d, "",
 						-1));
 			}
 		}

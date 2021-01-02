@@ -1,7 +1,7 @@
 package core.db;
 
 import core.model.player.Specialty;
-import core.model.player.YouthPlayer;
+import module.youth.YouthPlayer;
 import core.util.HOLogger;
 import module.training.Skills;
 
@@ -128,7 +128,7 @@ public class YouthPlayerTable  extends AbstractTable {
                 .append(player.getPlayerCategoryID()).append(",")
                 .append(player.getCards()).append(",")
                 .append(player.getInjuryLevel()).append(",")
-                .append(player.getSpecialty()).append(",")
+                .append(player.getSpecialty().getValue()).append(",")
                 .append(player.getCareerGoals()).append(",")
                 .append(player.getCareerHattricks()).append(",")
                 .append(player.getLeagueGoals()).append(",")
@@ -184,7 +184,7 @@ public class YouthPlayerTable  extends AbstractTable {
     /**
      * load youth player of HRF file id
      */
-    List<YouthPlayer> loadYouthPlayer(int hrfID) {
+    List<YouthPlayer> loadYouthPlayers(int hrfID) {
         final ArrayList<YouthPlayer> ret = new ArrayList<>();
         if ( hrfID > -1) {
             var sql = "SELECT * from " + getTableName() + " WHERE HRF_ID = " + hrfID;
@@ -198,10 +198,27 @@ public class YouthPlayerTable  extends AbstractTable {
                     }
                 }
             } catch (Exception e) {
-                HOLogger.instance().log(getClass(), "DatenbankZugriff.getYouthPlayer: " + e);
+                HOLogger.instance().log(getClass(), "DatenbankZugriff.loadYouthPlayers: " + e);
             }
         }
         return ret;
+    }
+
+    public YouthPlayer loadYouthPlayerOfMatchDate(int id, Timestamp date) {
+        var sql = "SELECT * from " + getTableName() + " WHERE ID=" + id + " AND YOUTHMATCHDATE='" + date + "'";
+        var rs = adapter.executeQuery(sql);
+        try {
+            if (rs != null) {
+                rs.beforeFirst();
+                if (rs.next()) {
+                    var player = createObject(rs);
+                    return player;
+                }
+            }
+        } catch (Exception e) {
+            HOLogger.instance().log(getClass(), "DatenbankZugriff.loadYouthPlayer: " + e);
+        }
+        return null;
     }
 
     private YouthPlayer createObject(ResultSet rs) {
@@ -231,7 +248,7 @@ public class YouthPlayerTable  extends AbstractTable {
             ret.setScoutId(rs.getInt("ScoutId"));
             ret.setScoutingRegionID(rs.getInt("ScoutingRegionID"));
             ret.setScoutName(DBManager.deleteEscapeSequences(rs.getString("ScoutName")));
-            ret.setSpecialty(Specialty.valueOf(rs.getInt("Specialty")));
+            ret.setSpecialty(Specialty.valueOf(DBManager.getInteger(rs,"Specialty")));
             ret.setStatement(DBManager.deleteEscapeSequences(rs.getString("Statement")));
             ret.setYouthMatchDate(rs.getTimestamp("YouthMatchDate"));
             ret.setYouthMatchID(rs.getInt("YouthMatchID"));
@@ -273,4 +290,5 @@ public class YouthPlayerTable  extends AbstractTable {
         }
         return null;
     }
+
 }

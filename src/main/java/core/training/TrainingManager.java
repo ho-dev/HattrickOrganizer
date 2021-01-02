@@ -115,17 +115,17 @@ public class TrainingManager {
 	            int minutes=0;
 	        	for (var match : matches) {
 	                //Get the MatchLineup by id
-	                MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getId(), match.getMatchID(), myID);
+	                MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), myID);
 	                MatchStatistics ms = new MatchStatistics(match, mlt);
 					MatchType type = mlt.getMatchType();
 					if ( type != MatchType.MASTERS) { // MASTERS counts only for experience
 						tp.addPrimarySkillPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillPositions()));
 						tp.addPrimarySkillBonusPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillBonusPositions()));
-						tp.addPrimarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillSecondaryTrainingPositions()));
+						tp.addPrimarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillPartlyTrainingPositions()));
 						tp.addPrimarySkillOsmosisPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillOsmosisTrainingPositions()));
 						tp.addSecondarySkillMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillPositions()));
 						tp.addSecondarySkillBonusMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillBonusPositions()));
-						tp.addSecondarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillSecondaryTrainingPositions()));
+						tp.addSecondarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillPartlyTrainingPositions()));
 						tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillOsmosisTrainingPositions()));
 					}
 					tp.addTotalMinutesPlayed(ms.getTrainMinutesPlayedInPositions(playerID, null));
@@ -139,7 +139,7 @@ public class TrainingManager {
 					// TODO check if national matches are stored in database
 					var nationalMatches = train.getMatches(inputPlayer.getNationalTeamID());
 					for (var match : nationalMatches){
-						MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getId(), match.getMatchID(), inputPlayer.getNationalTeamID());
+						MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), inputPlayer.getNationalTeamID());
 						MatchStatistics ms = new MatchStatistics(match, mlt);
 						minutes = ms.getStaminaMinutesPlayedInPositions(playerID);
 						if ( minutes > 0 ) {
@@ -281,7 +281,7 @@ public class TrainingManager {
 							calculationPlayer.setAlter(tmpOld.getAlter());
 						}
 
-						calculationPlayer.calcIncrementalSubskills(tmpOld, tpw.getAssistants(),
+						calculationPlayer.calcIncrementalSubskills(tmpOld,
 								trainerSkill,
 								tpw.getTrainingIntensity(),
 								tpw.getStaminaPart(),

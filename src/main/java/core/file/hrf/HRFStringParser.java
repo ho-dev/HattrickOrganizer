@@ -10,7 +10,7 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.model.player.YouthPlayer;
+import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.util.HOLogger;
 import core.util.IOUtils;

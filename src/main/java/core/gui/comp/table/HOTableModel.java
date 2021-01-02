@@ -213,7 +213,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	@Override
-	public final void setValueAt(Object value, int row, int column) {
+	public void setValueAt(Object value, int row, int column) {
 		m_clData[row][column] = value;
 	}
 

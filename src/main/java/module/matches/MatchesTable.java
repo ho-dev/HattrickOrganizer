@@ -78,7 +78,7 @@ final class MatchesTable extends JTable {
 			final TableColumnModel tableColumnModel = getColumnModel();
 
 			for (int i = 0; i < m_clTableModel.getColumnCount(); i++) {
-				tableColumnModel.getColumn(i).setIdentifier(new Integer(i));
+				tableColumnModel.getColumn(i).setIdentifier(i);
 			}
 
 			int[][] targetColumn = m_clTableModel.getColumnOrder();

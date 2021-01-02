@@ -213,7 +213,7 @@ public class TrainingModel {
 
 	private boolean isPartialTrainingAvailable(TrainingPerWeek t) {
 		var tt = WeeklyTrainingType.instance(t.getTrainingType());
-		return tt.getTrainingSkillSecondaryTrainingPositions().length > 0 ||
+		return tt.getTrainingSkillPartlyTrainingPositions().length > 0 ||
 				tt.getTrainingSkillBonusPositions().length > 0;
 	}
 
