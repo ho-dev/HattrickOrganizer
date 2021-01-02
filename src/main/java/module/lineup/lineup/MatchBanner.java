@@ -2,6 +2,7 @@ package module.lineup.lineup;
 
 import core.gui.Refreshable;
 import core.gui.model.MatchOrdersRenderer;
+import core.gui.theme.ThemeManager;
 import core.util.GUIUtils;
 import core.util.Helper;
 import module.teamAnalyzer.ui.MatchComboBoxRenderer;
@@ -29,9 +30,11 @@ public class MatchBanner extends JPanel implements Refreshable {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        JLabel jlM = new JLabel("PlaceHolder match banner");
-        layout.setConstraints(jlM, gbc);
-        add(jlM);
+        JLabel jlHomeTeam = new JLabel();
+        Icon homeTeamIcon = ThemeManager.instance().getClubLogo(1754082);
+        jlHomeTeam.setIcon(homeTeamIcon);
+        layout.setConstraints(jlHomeTeam, gbc);
+        add(jlHomeTeam);
     }
 
     @Override

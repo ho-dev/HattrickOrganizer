@@ -1957,4 +1957,8 @@ public class DBManager {
 	public void storeMatchDetails(Matchdetails details) {
 		((MatchDetailsTable)getTable(MatchDetailsTable.TABLENAME)).storeMatchDetails(details);
 	}
+	public String getTeamLogoFileName(int teamID) {
+		return ((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).getTeamLogoFileName(teamID);
+	}
+
 }

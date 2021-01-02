@@ -1,6 +1,7 @@
 package core.gui.theme;
 
 
+import core.db.DBManager;
 import core.db.user.UserManager;
 import core.gui.HOMainFrame;
 import core.gui.theme.dark.DarculaDarkTheme;
@@ -15,11 +16,14 @@ import core.util.OSUtils;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.text.*;
 
@@ -30,8 +34,8 @@ public final class ThemeManager {
 	public final static String DEFAULT_THEME_NAME = NimbusTheme.THEME_NAME;
 
 	private final static ThemeManager MANAGER = new ThemeManager();
-	private final Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder() , "img");
-	private final Path teamLogoPath = tempImgPath.resolve("clubLogos");
+	private final static Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder() , "img");
+	private final static Path teamLogoPath = tempImgPath.resolve("clubLogos");
 	private final File teamLogoDir = new File(String.valueOf(teamLogoPath));
 	private final Map<String, Theme> themes = new LinkedHashMap<>();
 
@@ -150,9 +154,38 @@ public final class ThemeManager {
 		return instance().getScaledIconImpl(key, x, y);
 	}
 
-	public static Icon getClubLogo(int teamID){
-		String key = "tototo" + teamID + ".jpg";
-		return instance().getIcon(key);
+	public Icon getSmallClubLogo(int teamID){
+		return getClubLogo(teamID, 18);
+	}
+
+	public Icon getClubLogo(int teamID){
+		return getClubLogo(teamID, 36);
+	}
+
+	public Icon getClubLogo(int teamID, int width){
+		int height = Math.round(width * 260f / 210f);
+		String imageName = DBManager.instance().getTeamLogoFileName(teamID);
+		if (imageName == null) {
+			HOLogger.instance().error(this.getClass(), "error when trying to load logo of team " + teamID);
+			return null;
+		}
+		String imagePath = String.valueOf(teamLogoPath.resolve(imageName));
+		String scaledKey = "team_logo_" + teamID + "_(" + width + "," + height + ")";
+		Icon scaledIcon = get(scaledKey, Icon.class);
+		if (scaledIcon == null) {
+			BufferedImage img;
+			try {
+				img = ImageIO.read(new File(imagePath));
+				ImageIcon iconOriginal = new ImageIcon(img);
+				scaledIcon = ImageUtilities.getScaledIcon(iconOriginal, width, height);
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			if (scaledIcon != null) put(scaledKey, scaledIcon);
+		}
+		return scaledIcon;
 	}
 
 

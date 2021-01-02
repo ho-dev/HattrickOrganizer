@@ -21,7 +21,7 @@ public class XMLTeamDetailsParser {
 	}
 
 	public static String fetchLogoURI(String xmlFile) {
-		return fetchTeamDetail(xmlFile, "LogoURL", "");
+		return fetchTeamDetail(xmlFile, "LogoURL", null);
 	}
 
 	private static String fetchTeamDetail(String xmlFile, String section, String attribute){
@@ -38,8 +38,13 @@ public class XMLTeamDetailsParser {
 			// Root wechseln
 			root = (Element) root.getElementsByTagName("Team").item(0);
 			root = (Element) root.getElementsByTagName(section).item(0);
-			Element ele = (Element) root.getElementsByTagName(attribute).item(0);
-			return XMLManager.getFirstChildNodeValue(ele);
+
+			if(attribute != null) {
+				root = (Element) root.getElementsByTagName(attribute).item(0);
+			}
+
+			return XMLManager.getFirstChildNodeValue(root);
+
 		} catch (Exception ex) {
 			HOLogger.instance().log(XMLTeamDetailsParser.class, ex);
 		}
@@ -54,6 +59,8 @@ public class XMLTeamDetailsParser {
 	private static Map<String, String> parseDetails(@Nullable Document doc, int teamId) {
 		Element ele, root;
 		Map<String, String> hash = new core.file.xml.MyHashtable();
+
+		HOLogger.instance().debug(XMLTeamDetailsParser.class, "parsing teamDetails for teamID: " + teamId);
 
 		if (doc == null) {
 			return hash;
