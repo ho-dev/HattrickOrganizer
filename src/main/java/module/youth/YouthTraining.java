@@ -103,7 +103,7 @@ public class YouthTraining {
         return this.getMatchLineup().getTeam(youthTeamId);
     }
 
-    private MatchLineup getMatchLineup() {
+    MatchLineup getMatchLineup() {
         if ( this.matchLineup == null){
             this.matchLineup = DBManager.instance().loadMatchLineup(SourceSystem.YOUTH.getValue(), this.youthMatchId);
         }
@@ -193,8 +193,8 @@ public class YouthTraining {
         return ret;
     }
 
-    private double getMatchTypeFactor() {
-        if (this.getMatchDetails().getMatchType() == MatchType.YOUTHLEAGUE) {
+    public double getMatchTypeFactor() {
+        if (this.getMatchLineup().getMatchType() == MatchType.YOUTHLEAGUE) {
             return 1.;
         }
         return 0.5;

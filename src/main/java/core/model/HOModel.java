@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 /**
  * This class bundles all models that belong to an HRF file - the data can also come from the database
@@ -621,13 +622,14 @@ public class HOModel {
             if ( youthTraining==null ){
                 this.youthTrainings.add(new YouthTraining(lineup));
             }
-            else {
-                this.youthTrainings.add(youthTraining);
-            }
         }
     }
 
     public void setYouthTrainings(List<YouthTraining> youthTrainings) {
         this.youthTrainings = youthTrainings;
+    }
+
+    public List<YouthTraining> getYouthTrainingsAfter(Timestamp date) {
+        return getYouthTrainings().stream().filter(i->i.getMatchDate().after(date)).collect(Collectors.toList());
     }
 }

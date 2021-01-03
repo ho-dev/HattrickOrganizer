@@ -46,7 +46,7 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
                 new YouthPlayerDetailsColumn(4, "ls.youth.training.secondary") {
                     @Override
                     public IHOTableEntry getTableEntry(TrainingDevelopmentEntry entry) {
-                        return new ColorLabelEntry(entry.getTrainingType(YouthTraining.Priority.Primary), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getTrainingType(YouthTraining.Priority.Secondary), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerDetailsColumn(5, "ls.youth.player.position") {
@@ -109,7 +109,7 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
             for (var training : trainings.values()) {
                 int columnnum = 0;
                 for (var col : columns) {
-                    m_clData[rownum][columnnum] = ((YouthPlayerDetailsColumn) col).getTableEntry((TrainingDevelopmentEntry) training);
+                    m_clData[rownum][columnnum] = ((YouthPlayerDetailsColumn) col).getTableEntry(training);
                     columnnum++;
                 }
                 rownum++;
