@@ -47,10 +47,29 @@ public class YouthPlayer {
     private Double rating;
     private Timestamp youthMatchDate;
 
+    /**
+     * current skills of the player
+     *
+     * mapping skill id to skill info
+     */
     private Map<Integer, SkillInfo> currentSkills = new HashMap<>();
+
+    /**
+     * Comments of the scout at player's arrival (not used yet)
+     */
     private List<ScoutComment> scoutComments;
+
+    /**
+     * Comments of the trainer after training matches (not used yet)
+     */
     private List<YouthTrainerComment> trainerComments;
 
+    /**
+     * player's training development.
+     * One entry for each training match the player has participated
+     *
+     * mapping training match date to development entry
+     */
     private TreeMap<Timestamp, TrainingDevelopmentEntry> trainingDevelopment ;
 
     public YouthPlayer() {
@@ -367,12 +386,19 @@ public class YouthPlayer {
             var model = HOVerwaltung.instance().getModel();
             // set start skill values (may be edited by the user)
             var startSkills = getStartSkills();
-            for (var training : model.getYouthTrainings()) {
+            var trainings = model.getYouthTrainingsAfter(this.getArrivalDate());
+            for (var training : trainings) {
                 var team = training.getTeam(model.getBasics().getYouthTeamId());
                 if (team.hasPlayerPlayed(this.id)) {
                     var trainingEntry = new TrainingDevelopmentEntry(this, training);
+
                     startSkills = trainingEntry.calcSkills(startSkills, getSkillsAt(training.getMatchDate()),team);
                     trainingDevelopment.put(training.getMatchDate(), trainingEntry);
+
+                    HOLogger.instance().info(getClass(), "getTrainings player " + this.getFullName() + " " +
+                            trainingEntry.getTraining().getMatchLineup().getMatchType() + " " +
+                            trainingEntry.getMatchDate() + "  Defending: " + startSkills.get(Defender.getValue()).getCurrentValue());
+
                 }
             }
         }
@@ -398,18 +424,15 @@ public class YouthPlayer {
             var oldPlayerInfo = DBManager.instance().loadYouthPlayerOfMatchDate(this.id, date);
             if (oldPlayerInfo != null) {
                 return oldPlayerInfo.currentSkills;
-            } else if (trainingDevelopment.size() > 0) {
-                var ret = this.currentSkills;
+            } else  {
+                var ret = getStartSkills();
                 for (var entry : this.trainingDevelopment.entrySet()) {
                     if (entry.getKey() == date) {
                         return ret;
                     }
                     ret = entry.getValue().getSkills();
                 }
-            }
-            else {
-                // skills at arrival date
-                return getStartSkills();
+                return ret;
             }
         }
         return this.currentSkills;
@@ -698,16 +721,6 @@ public class YouthPlayer {
         skillInfo.setMax(getInteger(properties, skill + "max"));
         skillInfo.setMaxReached(getBoolean(properties, skill + "ismaxreached", false));
         this.currentSkills.put(skillID.getValue(), skillInfo);
-    }
-
-    private Boolean getBoolean(Properties p, String key) {
-        try {
-            var s = p.getProperty(key);
-            if (s != null && s.length() > 0) return Boolean.parseBoolean(s);
-        }
-        catch(Exception ignored){
-        }
-        return null;
     }
 
     private Integer getInteger(Properties p, String key) {

@@ -21,7 +21,7 @@ public class MatchLineupTeam {
 	private int teamId;
 	private int styleOfPlay;
 	// null player to fill empty spots
-	private final static MatchLineupPlayer NULLPLAYER = new MatchLineupPlayer(-1, 0, -1, -1d, "", 0);
+	private final static MatchLineupPlayer NULLPLAYER = new MatchLineupPlayer(SourceSystem.HATTRICK, -1, 0, -1, -1d, "", 0);
 	private MatchType matchType = MatchType.NONE;
 	private int matchId;
 	private Matchdetails matchdetails;

@@ -667,7 +667,7 @@ public class OnlineWorker {
 				if (lineUp1.getHomeTeam() == null)
 					lineUp1.setHomeTeam(lineUp2.getHomeTeam());
 				else if (lineUp1.getGuestTeam() == null)
-					lineUp1.setGuestTeamId(lineUp2.getGuestTeam());
+					lineUp1.setGuestTeam(lineUp2.getGuestTeam());
 			} else {
 				// Get the 2nd lineup
 				if (lineUp1.getHomeTeam() == null) {
@@ -677,7 +677,7 @@ public class OnlineWorker {
 				} else {
 					lineUp2 = downloadMatchLineup(matchId, lineUp1.getGuestTeamId(), matchType);
 					if (lineUp2 != null)
-						lineUp1.setGuestTeamId(lineUp2.getGuestTeam());
+						lineUp1.setGuestTeam(lineUp2.getGuestTeam());
 				}
 			}
 		}

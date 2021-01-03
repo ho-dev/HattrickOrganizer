@@ -30,12 +30,12 @@ public class SkillInfoColumn extends JSlider implements IHOTableEntry {
     private String createToolTipText(YouthPlayer.SkillInfo info) {
         var hov = HOVerwaltung.instance();
         return "<html>" + info.getSkillID().toString() + "<br>" +
-                hov.getLanguageString("ls.player.start") + ": " + info.getStartValue() + "<br>" +
-                hov.getLanguageString("ls.player.current") + ": " + info.getCurrentValue() + "<br>" +
-                hov.getLanguageString("ls.player.max") + ": " + info.getMax() + "<br>" +
-                hov.getLanguageString("ls.player.maxreached") + ": " + hov.getLanguageString(String.valueOf(info.isMaxReached())) + "<br>" +
-                hov.getLanguageString("ls.player.startlevel") + ": " + info.getStartLevel() + "<br>" +
-                hov.getLanguageString("ls.player.currentlevel") + ": " + info.getCurrentLevel() + "</html>";
+                hov.getLanguageString("ls.youth.skill.start") + ": " + info.getStartValue() + "<br>" +
+                hov.getLanguageString("ls.youth.skill.current") + ": " + info.getCurrentValue() + "<br>" +
+                hov.getLanguageString("ls.youth.skill.max") + ": " + info.getMax() + "<br>" +
+                hov.getLanguageString("ls.youth.skill.maxreached") + ": " + hov.getLanguageString("ls.youth." + String.valueOf(info.isMaxReached())) + "<br>" +
+                hov.getLanguageString("ls.youth.skill.startlevel") + ": " + info.getStartLevel() + "<br>" +
+                hov.getLanguageString("ls.youth.skill.currentlevel") + ": " + info.getCurrentLevel() + "</html>";
     }
 
     @Override

@@ -53,7 +53,7 @@ public final class MatchLineupTable extends AbstractTable {
 			rs.first();
 			lineup = createMatchLineup(rs);
 			lineup.setHomeTeam(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getHomeTeamId()));
-			lineup.setGuestTeamId(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getGuestTeamId()));
+			lineup.setGuestTeam(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getGuestTeamId()));
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineup Error" + e);
 			lineup = null;

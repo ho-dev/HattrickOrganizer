@@ -3,10 +3,7 @@ package module.youth;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.match.MatchLineup;
-import core.model.match.MatchLineupTeam;
-import core.model.match.Matchdetails;
-import core.model.match.SourceSystem;
+import core.model.match.*;
 import core.training.YouthTrainerComment;
 import module.lineup.substitution.model.MatchOrderType;
 
@@ -106,7 +103,7 @@ public class YouthTraining {
         return this.getMatchLineup().getTeam(youthTeamId);
     }
 
-    private MatchLineup getMatchLineup() {
+    MatchLineup getMatchLineup() {
         if ( this.matchLineup == null){
             this.matchLineup = DBManager.instance().loadMatchLineup(SourceSystem.YOUTH.getValue(), this.youthMatchId);
         }
@@ -150,6 +147,7 @@ public class YouthTraining {
 
     private double calcSkillIncrement(YouthPlayer.SkillInfo value, YouthPlayer player, MatchLineupTeam lineupTeam) {
         double ret = 0;
+        var matchTypeFactor = getMatchTypeFactor();
         YouthTrainingType primaryTraining=null;
         for ( var priority : Priority.values()){
             var train = training[priority.ordinal()];
@@ -172,7 +170,10 @@ public class YouthTraining {
                             minutesInPrioPositions = 90 - minutes;
                         }
                         if (minutesInPrioPositions > 0) {
-                            ret += trainingFactor * minutesInPrioPositions * train.calcSkillIncrementPerMinute(value.getSkillID(), (int) value.getCurrentValue(), posPrio, player.getAgeYears());
+                            ret += matchTypeFactor *
+                                    trainingFactor *
+                                    minutesInPrioPositions *
+                                    train.calcSkillIncrementPerMinute(value.getSkillID(), (int) value.getCurrentValue(), posPrio, player.getAgeYears());
                         }
                         minutes += minutesInPrioPositions;
                         if (minutes == 90) break;
@@ -192,13 +193,20 @@ public class YouthTraining {
         return ret;
     }
 
+    public double getMatchTypeFactor() {
+        if (this.getMatchLineup().getMatchType() == MatchType.YOUTHLEAGUE) {
+            return 1.;
+        }
+        return 0.5;
+    }
+
     public String getPlayerTrainedSectors(int playerId) {
         var hov = HOVerwaltung.instance();
         var lineupTeam = this.getTeam(hov.getModel().getBasics().getYouthTeamId());
         var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
         var ret = new StringBuilder();
         for ( var s : sectors.entrySet()){
-            ret.append(hov.getLanguageString("training.sector." + s.getKey()))
+            ret.append(hov.getLanguageString("ls.youth.training.sector." + s.getKey()))
                     .append(":")
                     .append(s.getValue())
                     .append(" ");

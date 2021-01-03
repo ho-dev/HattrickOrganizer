@@ -23,25 +23,25 @@ public class YouthTrainingViewTableModel extends HOTableModel {
     private YouthTrainingColumn[] initColumns() {
         return new YouthTrainingColumn[]{
                 // TODO include match type icon in first column
-                new YouthTrainingColumn(0, "ls.training.date", 0) {
+                new YouthTrainingColumn(0, "ls.youth.training.date", 0) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
                         return new ColorLabelEntry(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(youthTraining.getMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new YouthTrainingColumn(1, "ls.training.hometeam") {
+                new YouthTrainingColumn(1, "ls.youth.training.hometeam") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
                         return new ColorLabelEntry(youthTraining.getHomeTeamName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new YouthTrainingColumn(2, "ls.training.guestteam") {
+                new YouthTrainingColumn(2, "ls.youth.training.guestteam") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
                         return new ColorLabelEntry(youthTraining.getGuestTeamName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new YouthTrainingColumn(3, "ls.training.primary"){
+                new YouthTrainingColumn(3, "ls.youth.training.primary"){
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining){
                         return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.Priority.Primary));
@@ -49,7 +49,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                     @Override
                     public boolean isEditable(){return true;}
                 },
-                new YouthTrainingColumn(4, "ls.training.secondary"){
+                new YouthTrainingColumn(4, "ls.youth.training.secondary"){
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining){
                         return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.Priority.Secondary));
