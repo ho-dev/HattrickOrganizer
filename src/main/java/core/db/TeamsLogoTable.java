@@ -1,12 +1,18 @@
 package core.db;
 
+import core.gui.HOMainFrame;
 import core.net.MyConnector;
 import core.util.HOLogger;
 import module.youth.YouthTraining;
 import module.youth.YouthTrainingType;
+import tool.updater.UpdateController;
+import tool.updater.UpdateHelper;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,60 +29,88 @@ public class TeamsLogoTable extends AbstractTable{
     protected void initColumns() {
         columns = new ColumnDescriptor[]{
                 new ColumnDescriptor("TEAM_ID", Types.INTEGER, false, true),
-                new ColumnDescriptor("LOGO_URI", Types.VARCHAR, true, 256),
-                new ColumnDescriptor("LAST_ACCESS", Types.TIMESTAMP, false)
+                new ColumnDescriptor("LOGO_URL", Types.VARCHAR, true, 256),
+                new ColumnDescriptor("LAST_ACCESS", Types.TIMESTAMP, true)
         };
     }
 
-    public String getTeamLogoFileName(int teamID){
-        var sql = "SELECT LOGO_URI from " + getTableName() ;
-        sql += " WHERE TEAM_ID=";
-        sql += teamID;
-        var rs= adapter.executeQuery(sql);
+    /**
+     * Gets team logo file name BUT it will triggers download of the logo from internet if it is not yet available.
+     * It will also update LAST_ACCESS field
+     *
+     * @param teamID the team id
+     * @param teamLogoFolderPath the team logo root folder path
+     * @return the team logo file name
+     */
+    public String getTeamLogoFileName(Path teamLogoFolderPath, int teamID){
+
+        String logoFullURL, logoFileName;
+
+        // 1. Get logoFileName from the database
+        StringBuilder sql = new StringBuilder("SELECT LOGO_URL from " + getTableName()) ;
+        sql.append(" WHERE TEAM_ID=").append(teamID);
+        var rs= adapter.executeQuery(sql.toString());
+        if (rs == null) {
+            HOLogger.instance().error(this.getClass(), "error with table " + getTableName());
+            return null;
+        }
+
         try {
-            if (rs.next() == false){
-                System.out.println("I need tp download the info from team details and store it in the database");
-                String logoURI = MyConnector.instance().fetchLogoURI(teamID);
-                String filename = "toto.jpg"; //TODO extract the filename from the URI bl/vl/vl/aaa.png  => aaa.png
-                boolean isSuccess = storeTeamLogoInfo(logoURI);
-                if (isSuccess){
-                    return filename;
-                }
-                else {
-                    HOLogger.instance().error(this.getClass(), "error when trying to download logo of team " + teamID);
+            if (rs.next() == false) {
+                HOLogger.instance().error(this.getClass(), "logo information not available in database for team ID=" + teamID);
+                return null;
+            }
+            else {
+                logoFullURL = "http blblblbl" + rs.getString("LOGO_URL"); // ToDo that part
+                logoFileName = teamLogoFolderPath.resolve(String.valueOf(teamID)).toString();
+            }
+        }
+        catch (SQLException throwables) {
+            HOLogger.instance().error(this.getClass(), "error with table " + getTableName());
+            return null;
+        }
+
+        // 2. Check if the logo has already been downloaded
+
+            File logo = new File(logoFileName);
+            if (logo.exists()) {
+                return logoFileName;
+            }
+            else
+            {
+               // we try to download the logo from HT servers
+                boolean bSuccess = UpdateHelper.download(logoFullURL, logo);
+                if (!bSuccess) {
+                    HOLogger.instance().error(this.getClass(), "error when trying to download logo of team ID: " + teamID + "\n" + logoFullURL );
                     return null;
                 }
             }
-            return rs.getString("LOGO_URI");
+
+            //we update LAST_ACCESS value
+            updateLastAccessTime(teamID);
+
+            return logoFileName;
         }
-        catch (SQLException throwables) {
-            HOLogger.instance().error(this.getClass(), "error when trying to load logo of team " + teamID);
-            return null;
-        }
+
+
+
+    public void storeTeamLogoInfo(int teamID, String logoURL, Timestamp lastAccess){
+        StringBuilder sql = new StringBuilder("MERGE INTO " + getTableName() + " AS t USING (VALUES(") ;
+        sql.append(teamID).append(", '").append(logoURL).append("', ").append(lastAccess).append(")) AS vals(a,b,c) ");
+        sql.append("ON t.TEAM_ID=vals.a \n");
+        sql.append("WHEN MATCHED THEN UPDATE SET t.LOGO_URL=vals.b, t.LAST_ACCESS=vals.c \n");
+        sql.append("WHEN NOT MATCHED THEN INSERT VALUES vals.a, vals.b,vals.c");
+
+        adapter.executeUpdate(sql.toString());
+        HOLogger.instance().debug(this.getClass(), "storeTeamLogoInfo: " +  teamID + " " +  logoURL + " " +  lastAccess);
     }
 
 
-    public boolean storeTeamLogoInfo(String logoURI){
-        //TODO: I need to do that part
-        // download the logo from the uri and enter the entry in the database
+
+    public void updateLastAccessTime(int teamID){
+        String sql = "UPDATE CLUBS_LOGO SET LAST_ACCESS = " + new Timestamp(System.currentTimeMillis()) + " WHERE TEAM_ID = " + teamID;
+        adapter.executeUpdate(sql);
+        HOLogger.instance().debug(this.getClass(), "Update access time info of teamID : " +  teamID);
     }
 
-//    public void storeYouthTraining(YouthTraining youthTraining) {
-//        var matchId = youthTraining.getMatchId();
-//        delete( new String[]{"MatchId"}, new String[]{""+matchId});
-//        if ( youthTraining.getTraining(YouthTraining.Priority.Primary) != null ||
-//                youthTraining.getTraining(YouthTraining.Priority.Secondary) != null) {
-//            StringBuilder sql = new StringBuilder("INSERT INTO " + getTableName() + " ( MatchId, Training1, Training2 ) VALUES(" + matchId);
-//            for (var p : YouthTraining.Priority.values()) {
-//                var tt = youthTraining.getTraining(p);
-//                if (tt == null) {
-//                    sql.append(",null");
-//                } else {
-//                    sql.append(",").append(tt.getValue());
-//                }
-//            }
-//            sql.append(")");
-//            adapter.executeUpdate(sql.toString());
-//        }
-//    }
 }

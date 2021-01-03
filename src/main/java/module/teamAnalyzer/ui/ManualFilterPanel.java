@@ -70,7 +70,7 @@ public class ManualFilterPanel extends JPanel {
 
 			rowData = new Vector<Object>();
 
-			boolean isAvailable = DBManager.instance().isMatchVorhanden(element.getMatchId());
+			boolean isAvailable = DBManager.instance().isMatchInDB(element.getMatchId());
 			boolean isSelected = TeamAnalyzerPanel.filter.getMatches().contains("" + element.getMatchId());
 
 			rowData.add(Boolean.valueOf(isSelected));

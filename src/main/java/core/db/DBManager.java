@@ -38,11 +38,15 @@ import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 import org.hsqldb.error.ErrorCode;
 import java.io.File;
+import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 
+/**
+ * The type Db manager.
+ */
 public class DBManager {
 
 	/** database version */
@@ -86,11 +90,21 @@ public class DBManager {
 	// ~ Methods
 	// ------------------------------------------------------------------------------------
 
+	/**
+	 * Gets version.
+	 *
+	 * @return the version
+	 */
 	public static int getVersion() {
 		return DBVersion;
 	}
 
-	// //////////////////////////////////////////////////////////////////////////////
+	/**
+	 * Instance db manager.
+	 *
+	 * @return the db manager
+	 */
+// //////////////////////////////////////////////////////////////////////////////
 	// INSTANCE
 	// //////////////////////////////////////////////////////////////////////////////
 	public static synchronized DBManager instance() {
@@ -208,6 +222,12 @@ public class DBManager {
 		return m_clInstance;
 	}
 
+	/**
+	 * Null or value string.
+	 *
+	 * @param value the value
+	 * @return the string
+	 */
 	public static String nullOrValue(Timestamp value) {
 		var ret = String.valueOf(value);
 		if (!ret.equals("null")){
@@ -263,11 +283,22 @@ public class DBManager {
 		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((adapter)));
 	}
 
+	/**
+	 * Gets table.
+	 *
+	 * @param tableName the table name
+	 * @return the table
+	 */
 	AbstractTable getTable(String tableName) {
 		return tables.get(tableName);
 	}
 
-	// Accessor
+	/**
+	 * Gets adapter.
+	 *
+	 * @return the adapter
+	 */
+// Accessor
 	public JDBCAdapter getAdapter() {
 		return m_clJDBCAdapter;
 	}
@@ -276,6 +307,11 @@ public class DBManager {
 		m_bFirstStart = firststart;
 	}
 
+	/**
+	 * Is first start boolean.
+	 *
+	 * @return the boolean
+	 */
 	public boolean isFirstStart() {
 		return m_bFirstStart;
 	}
@@ -320,8 +356,9 @@ public class DBManager {
 
 	/**
 	 * get the date of the last level increase of given player
-	 * @param skill  integer code for the skill
-	 * @param spielerId  player ID
+	 *
+	 * @param skill     integer code for the skill
+	 * @param spielerId player ID
 	 * @return [0] = Time of change  [1] = Boolean: false=no skill change found
 	 */
 	public Object[] getLastLevelUp(int skill, int spielerId) {
@@ -332,18 +369,29 @@ public class DBManager {
 	/**
 	 * liefert das Datum des letzen LevelAufstiegs für den angeforderten Skill
 	 * Vector filled with Skillup Objects
-	 * 
+	 *
+	 * @param skill        the skill
+	 * @param m_iSpielerID the m i spieler id
+	 * @return the all level up
 	 */
 	public Vector<Object[]> getAllLevelUp(int skill, int m_iSpielerID) {
 		return ((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
 				.getAllLevelUp(skill, m_iSpielerID);
 	}
 
+	/**
+	 * Reimport skillup.
+	 */
 	public void reimportSkillup() {
 		((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
 				.importFromSpieler();
 	}
 
+	/**
+	 * Check skillup.
+	 *
+	 * @param homodel the homodel
+	 */
 	public void checkSkillup(HOModel homodel) {
 		((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
 				.importNewSkillup(homodel);
@@ -354,6 +402,8 @@ public class DBManager {
 
 	/**
 	 * gibt alle Player zurück, auch ehemalige
+	 *
+	 * @return the all spieler
 	 */
 	public Vector<Player> getAllSpieler() {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
@@ -362,6 +412,9 @@ public class DBManager {
 
 	/**
 	 * Gibt die letzte Bewertung für den Player zurück // HRF
+	 *
+	 * @param spielerid the spielerid
+	 * @return the letzte bewertung 4 spieler
 	 */
 	public int getLetzteBewertung4Spieler(int spielerid) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
@@ -370,6 +423,9 @@ public class DBManager {
 
 	/**
 	 * lädt die Player zum angegeben HRF file ein
+	 *
+	 * @param hrfID the hrf id
+	 * @return the spieler
 	 */
 	public List<Player> getSpieler(int hrfID) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
@@ -378,19 +434,44 @@ public class DBManager {
 
 	/**
 	 * store youth players
+	 *
+	 * @param hrfId  the hrf id
+	 * @param player the player
+	 * @param date   the date
 	 */
 	public void storeYouthPlayers(int hrfId, List<YouthPlayer> player, Timestamp date) {
 		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).storeYouthPlayers(hrfId,player, date);
 	}
+
+	/**
+	 * Load youth players list.
+	 *
+	 * @param hrfID the hrf id
+	 * @return the list
+	 */
 	public List<YouthPlayer> loadYouthPlayers(int hrfID) {
 		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
 				.loadYouthPlayers(hrfID);
 	}
+
+	/**
+	 * Load youth scout comments list.
+	 *
+	 * @param id the id
+	 * @return the list
+	 */
 	public List<YouthPlayer.ScoutComment> loadYouthScoutComments(int id) {
 		return ((YouthScoutCommentTable) getTable(YouthScoutCommentTable.TABLENAME))
 				.loadYouthScoutComments(id);
 	}
 
+	/**
+	 * Load youth player of match date youth player.
+	 *
+	 * @param id   the id
+	 * @param date the date
+	 * @return the youth player
+	 */
 	public YouthPlayer loadYouthPlayerOfMatchDate(int id, Timestamp date) {
 		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
 				.loadYouthPlayerOfMatchDate(id, date);
@@ -398,14 +479,10 @@ public class DBManager {
 
 	/**
 	 * get a player from a specific HRF
-	 * 
-	 * @param hrfID
-	 *            hrd id
-	 * @param playerId
-	 *            player id
-	 * 
-	 * 
-	 * @return player
+	 *
+	 * @param hrfID    hrd id
+	 * @param playerId player id
+	 * @return player spieler from hrf
 	 */
 	public Player getSpielerFromHrf(int hrfID, int playerId) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
@@ -414,6 +491,10 @@ public class DBManager {
 
 	/**
 	 * Gibt einen Player zurück mit den Daten kurz vor dem Timestamp
+	 *
+	 * @param spielerid the spielerid
+	 * @param time      the time
+	 * @return the spieler at date
 	 */
 	public Player getSpielerAtDate(int spielerid, Timestamp time) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
@@ -422,6 +503,9 @@ public class DBManager {
 
 	/**
 	 * Gibt einen Player zurück aus dem ersten HRF
+	 *
+	 * @param spielerid the spielerid
+	 * @return the spieler first hrf
 	 */
 	public Player getSpielerFirstHRF(int spielerid) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
@@ -430,6 +514,9 @@ public class DBManager {
 
 	/**
 	 * Gibt das Datum des ersten HRFs zurück, in dem der Player aufgetaucht ist
+	 *
+	 * @param spielerid the spielerid
+	 * @return the timestamp 4 first player hrf
 	 */
 	public Timestamp getTimestamp4FirstPlayerHRF(int spielerid) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
@@ -438,10 +525,9 @@ public class DBManager {
 
 	/**
 	 * Returns the trainer code for the specified hrf. -99 if error
-	 * 
-	 * @param hrfID
-	 *            HRF for which to load TrainerType
-	 * @return int
+	 *
+	 * @param hrfID HRF for which to load TrainerType
+	 * @return int trainer type
 	 */
 	public int getTrainerType(int hrfID) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
@@ -450,6 +536,10 @@ public class DBManager {
 
 	/**
 	 * speichert die Player
+	 *
+	 * @param hrfId  the hrf id
+	 * @param player the player
+	 * @param date   the date
 	 */
 	public void saveSpieler(int hrfId, List<Player> player, Timestamp date) {
 		((SpielerTable) getTable(SpielerTable.TABLENAME)).saveSpieler(hrfId,
@@ -458,13 +548,10 @@ public class DBManager {
 
 	/**
 	 * saves one player to the DB
-	 * 
-	 * @param hrfId
-	 *            hrf id
-	 * @param player
-	 *            the player to be saved
-	 * @param date
-	 *            date to save
+	 *
+	 * @param hrfId  hrf id
+	 * @param player the player to be saved
+	 * @param date   date to save
 	 */
 	public void saveSpieler(int hrfId, Player player, Timestamp date) {
 		((SpielerTable) getTable(SpielerTable.TABLENAME)).saveSpieler(hrfId,
@@ -476,6 +563,8 @@ public class DBManager {
 
 	/**
 	 * Gibt alle bekannten Ligaids zurück
+	 *
+	 * @return the integer [ ]
 	 */
 	public Integer[] getAllLigaIDs() {
 		return ((LigaTable) getTable(LigaTable.TABLENAME)).getAllLigaIDs();
@@ -483,6 +572,9 @@ public class DBManager {
 
 	/**
 	 * lädt die Basics zum angegeben HRF file ein
+	 *
+	 * @param hrfID the hrf id
+	 * @return the liga
 	 */
 	public Liga getLiga(int hrfID) {
 		return ((LigaTable) getTable(LigaTable.TABLENAME)).getLiga(hrfID);
@@ -490,6 +582,9 @@ public class DBManager {
 
 	/**
 	 * speichert die Basdics
+	 *
+	 * @param hrfId the hrf id
+	 * @param liga  the liga
 	 */
 	public void saveLiga(int hrfId, Liga liga) {
 		((LigaTable) getTable(LigaTable.TABLENAME)).saveLiga(hrfId, liga);
@@ -501,6 +596,9 @@ public class DBManager {
 	/**
 	 * Gibt eine Ligaid zu einer Seasonid zurück, oder -1, wenn kein Eintrag in
 	 * der DB gefunden wurde
+	 *
+	 * @param seasonid the seasonid
+	 * @return the liga id 4 saison id
 	 */
 	public int getLigaID4SaisonID(int seasonid) {
 		return ((SpielplanTable) getTable(SpielplanTable.TABLENAME))
@@ -510,11 +608,10 @@ public class DBManager {
 	/**
 	 * holt einen Spielplan aus der DB, -1 bei den params holt den zuletzt
 	 * gesavten Spielplan
-	 * 
-	 * @param ligaId
-	 *            Id der Liga
-	 * @param saison
-	 *            die Saison
+	 *
+	 * @param ligaId Id der Liga
+	 * @param saison die Saison
+	 * @return the spielplan
 	 */
 	public Spielplan getSpielplan(int ligaId, int saison) {
 		return ((SpielplanTable) getTable(SpielplanTable.TABLENAME))
@@ -523,12 +620,20 @@ public class DBManager {
 
 	/**
 	 * speichert einen Spielplan mitsamt Paarungen
+	 *
+	 * @param plan the plan
 	 */
 	public void storeSpielplan(Spielplan plan) {
 		((SpielplanTable) getTable(SpielplanTable.TABLENAME))
 				.storeSpielplan(plan);
 	}
 
+	/**
+	 * Delete spielplan tabelle.
+	 *
+	 * @param whereSpalten the where spalten
+	 * @param whereValues  the where values
+	 */
 	public void deleteSpielplanTabelle(String[] whereSpalten,
 			String[] whereValues) {
 		getTable(SpielplanTable.TABLENAME).delete(whereSpalten, whereValues);
@@ -536,9 +641,9 @@ public class DBManager {
 
 	/**
 	 * lädt alle Spielpläne aus der DB
-	 * 
-	 * @param mitPaarungen
-	 *            inklusive der Paarungen ja/nein
+	 *
+	 * @param mitPaarungen inklusive der Paarungen ja/nein
+	 * @return the spielplan [ ]
 	 */
 	public Spielplan[] getAllSpielplaene(boolean mitPaarungen) {
 		return ((SpielplanTable) getTable(SpielplanTable.TABLENAME))
@@ -550,6 +655,9 @@ public class DBManager {
 
 	/**
 	 * Returns a list of ratings the player has played on [Max, Min, Average, posid]
+	 *
+	 * @param spielerid the spielerid
+	 * @return the alle bewertungen
 	 */
 	public Vector<float[]> getAlleBewertungen(int spielerid) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
@@ -559,6 +667,9 @@ public class DBManager {
 	/**
 	 * Gibt die beste, schlechteste und durchschnittliche Bewertung für den
 	 * Player, sowie die Anzahl der Bewertungen zurück // Match
+	 *
+	 * @param spielerid the spielerid
+	 * @return the float [ ]
 	 */
 	public float[] getBewertungen4Player(int spielerid) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
@@ -569,16 +680,22 @@ public class DBManager {
 	 * Gibt die beste, schlechteste und durchschnittliche Bewertung für den
 	 * Player, sowie die Anzahl der Bewertungen zurück // Match
 	 *
-	 * @param spielerid
-	 *            Spielerid
-	 * @param position
-	 *            Usere positionscodierung mit taktik
+	 * @param spielerid Spielerid
+	 * @param position  Usere positionscodierung mit taktik
+	 * @return the float [ ]
 	 */
 	public float[] getBewertungen4PlayerUndPosition(int spielerid, byte position) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
 				.getPlayerRatingForPosition(spielerid, position);
 	}
 
+	/**
+	 * Gets match lineup players.
+	 *
+	 * @param matchID the match id
+	 * @param teamID  the team id
+	 * @return the match lineup players
+	 */
 	public Vector<MatchLineupPlayer> getMatchLineupPlayers(int matchID,
 			int teamID) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
@@ -587,6 +704,7 @@ public class DBManager {
 
 	/**
 	 * Get match inserts of given Player
+	 *
 	 * @param objectPlayerID id of the player
 	 * @return stored lineup positions of the player
 	 */
@@ -601,33 +719,24 @@ public class DBManager {
 
 	/**
 	 * lädt System Positionen
+	 *
+	 * @param hrfID the hrf id
+	 * @param name  the name
+	 * @return the aufstellung
 	 */
 	public Lineup getAufstellung(int hrfID, String name) {
 		return ((AufstellungTable) getTable(AufstellungTable.TABLENAME))
 				.getAufstellung(hrfID, name);
 	}
 
-	/**
-	 * gibt liste für Aufstellungen
-	 * 
-	 * @param hrfID
-	 *            -1 für default = hrf unabhängig
-	 */
-	public Vector<String> getAufstellungsListe(int hrfID) {
-		return ((AufstellungTable) getTable(AufstellungTable.TABLENAME))
-				.getAufstellungsListe(hrfID);
-	}
-
-	/**
-	 * Gibt eine Liste aller Usergespeicherten Aufstellungsnamen zurück
-	 */
-	public Vector<String> getUserAufstellungsListe() {
-		return ((AufstellungTable) getTable(AufstellungTable.TABLENAME))
-				.getUserAufstellungsListe();
-	}
 
 	/**
 	 * speichert die Aufstellung und die aktuelle Aufstellung als STANDARD
+	 *
+	 * @param sourceSystem the source system
+	 * @param hrfId        the hrf id
+	 * @param aufstellung  the aufstellung
+	 * @param name         the name
 	 */
 	public void saveAufstellung(int sourceSystem, int hrfId, Lineup aufstellung, String name) {
 		try {
@@ -643,6 +752,9 @@ public class DBManager {
 
 	/**
 	 * lädt die Basics zum angegeben HRF file ein
+	 *
+	 * @param hrfID the hrf id
+	 * @return the basics
 	 */
 	public Basics getBasics(int hrfID) {
 		return ((BasicsTable) getTable(BasicsTable.TABLENAME)).getBasics(hrfID);
@@ -650,10 +762,9 @@ public class DBManager {
 
 	/**
 	 * Gibt eine Vector mit HRF-CBItems zurück
-	 * 
-	 * @param datum
-	 *            from which hrf has to be returned, used to load a subset of
-	 *            hrf
+	 *
+	 * @param datum from which hrf has to be returned, used to load a subset of            hrf
+	 * @return the cb item hrf liste
 	 */
 	public Vector<CBItem> getCBItemHRFListe(Timestamp datum) {
 		return ((BasicsTable) getTable(BasicsTable.TABLENAME))
@@ -662,10 +773,9 @@ public class DBManager {
 
 	/**
 	 * Returns an HRF before the matchData and after previous TrainingTime
-	 * 
-	 * @param matchTime
-	 *            matchData
-	 * @return hrfId
+	 *
+	 * @param matchTime matchData
+	 * @return hrfId hrf id same training
 	 */
 	public int getHrfIDSameTraining(Timestamp matchTime) {
 		return ((BasicsTable) getTable(BasicsTable.TABLENAME))
@@ -674,31 +784,53 @@ public class DBManager {
 
 	/**
 	 * speichert die Basdics
+	 *
+	 * @param hrfId  the hrf id
+	 * @param basics the basics
 	 */
 	public void saveBasics(int hrfId, core.model.misc.Basics basics) {
 		((BasicsTable) getTable(BasicsTable.TABLENAME)).saveBasics(hrfId,
 				basics);
 	}
 
-	// ------------------------------- FaktorenTable
+	/**
+	 * Sets faktoren from db.
+	 *
+	 * @param fo the fo
+	 */
+// ------------------------------- FaktorenTable
 	// -------------------------------------------------
 	public void setFaktorenFromDB(FactorObject fo) {
 		((FaktorenTable) getTable(FaktorenTable.TABLENAME))
 				.pushFactorsIntoDB(fo);
 	}
 
+	/**
+	 * Gets faktoren from db.
+	 */
 	public void getFaktorenFromDB() {
 		((FaktorenTable) getTable(FaktorenTable.TABLENAME)).getFaktorenFromDB();
 	}
 
 
-	// Tournament Details
+	/**
+	 * Gets tournament details from db.
+	 *
+	 * @param tournamentId the tournament id
+	 * @return the tournament details from db
+	 */
+// Tournament Details
 	public TournamentDetails getTournamentDetailsFromDB(int tournamentId) {
 		TournamentDetails oTournamentDetails;
 		oTournamentDetails = ((TournamentDetailsTable) getTable(TournamentDetailsTable.TABLENAME)).getTournamentDetails(tournamentId);
 		return oTournamentDetails;
 	}
 
+	/**
+	 * Store tournament details into db.
+	 *
+	 * @param oTournamentDetails the o tournament details
+	 */
 	public void storeTournamentDetailsIntoDB(TournamentDetails oTournamentDetails) {
 		((TournamentDetailsTable) getTable(TournamentDetailsTable.TABLENAME)).storeTournamentDetails(oTournamentDetails);
 	}
@@ -708,13 +840,20 @@ public class DBManager {
 
 	/**
 	 * fetch the Economy table from the DB for the specified HRF ID
+	 *
+	 * @param hrfID the hrf id
+	 * @return the economy
 	 */
 	public Economy getEconomy(int hrfID) {
 		return ((EconomyTable) getTable(EconomyTable.TABLENAME)).getEconomy(hrfID);
 	}
 
 	/**
-	 *  store the economy info in the database
+	 * store the economy info in the database
+	 *
+	 * @param hrfId   the hrf id
+	 * @param economy the economy
+	 * @param date    the date
 	 */
 	public void saveEconomyInDB(int hrfId, Economy economy, Timestamp date) {
 		((EconomyTable) getTable(EconomyTable.TABLENAME)).storeEconomyInfoIntoDB(hrfId, economy, date);
@@ -725,14 +864,10 @@ public class DBManager {
 
 	/**
 	 * Get a list of all HRFs
-	 * 
-	 * @param minId
-	 *            minimum HRF id (<0 for all)
-	 * @param maxId
-	 *            maximum HRF id (<0 for all)
-	 * @param asc
-	 *            order ascending (descending otherwise)
-	 * 
+	 *
+	 * @param minId minimum HRF id (<0 for all)
+	 * @param maxId maximum HRF id (<0 for all)
+	 * @param asc   order ascending (descending otherwise)
 	 * @return all matching HRFs
 	 */
 	public HRF[] getAllHRFs(int minId, int maxId, boolean asc) {
@@ -742,11 +877,16 @@ public class DBManager {
 
 	/**
 	 * liefert die aktuelle Id des neuesten HRF-Files
+	 *
+	 * @return the max hrf id
 	 */
 	public int getMaxHrfId() {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getMaxHrf().getHrfId();
 	}
 
+	/**
+	 * Update latest data.
+	 */
 	public void updateLatestData(){
 		m_iLatestHRFid = ((HRFTable) getTable(HRFTable.TABLENAME)).getLatestHrf().getHrfId();
 		m_lLatestUpdateTime = DBManager.instance().getBasics(m_iLatestHRFid).getDatum().getTime();
@@ -754,6 +894,8 @@ public class DBManager {
 
 	/**
 	 * get ID of latest HRF file
+	 *
+	 * @return the latest hrf id
 	 */
 	public int getLatestHrfId() {
 		if (m_iLatestHRFid == -1){
@@ -763,6 +905,8 @@ public class DBManager {
 
 	/**
 	 * get latest update time based on latest HRF file
+	 *
+	 * @return the latest update time
 	 */
 	public long getLatestUpdateTime() {
 		if (m_lLatestUpdateTime == -1){
@@ -774,13 +918,21 @@ public class DBManager {
 
 	/**
 	 * check if latest update is older than @periodInMS
+	 *
+	 * @param periodInMS the period in ms
+	 * @return the boolean
 	 */
 	public boolean areDataTooOld(long periodInMS) {
 		long dateNow = new Date().getTime();
 		return m_lLatestUpdateTime + periodInMS <= dateNow;
 	}
 
-	// default to 1 hour
+	/**
+	 * Are data too old boolean.
+	 *
+	 * @return the boolean
+	 */
+// default to 1 hour
 	public boolean areDataTooOld() {
 		return areDataTooOld(1000 * 60 * 60);
 	}
@@ -789,6 +941,9 @@ public class DBManager {
 	/**
 	 * Sucht das letzte HRF zwischen dem angegebenen Datum und 6 Tagen davor
 	 * Wird kein HRF gefunden wird -1 zurückgegeben
+	 *
+	 * @param hrfId the hrf id
+	 * @return the previous hrf
 	 */
 	public int getPreviousHRF(int hrfId) {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getPreviousHRF(hrfId);
@@ -797,6 +952,9 @@ public class DBManager {
 	/**
 	 * Sucht das letzte HRF zwischen dem angegebenen Datum und 6 Tagen davor
 	 * Wird kein HRF gefunden wird -1 zurückgegeben
+	 *
+	 * @param hrfId the hrf id
+	 * @return the following hrf
 	 */
 	public int getFollowingHRF(int hrfId) {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getFollowingHRF(hrfId);
@@ -804,17 +962,29 @@ public class DBManager {
 
 	/**
 	 * speichert das Verein
+	 *
+	 * @param hrfId the hrf id
+	 * @param name  the name
+	 * @param datum the datum
 	 */
 	public void saveHRF(int hrfId, String name, Timestamp datum) {
 		((HRFTable) getTable(HRFTable.TABLENAME)).saveHRF(hrfId, name, datum);
 	}
 
+	/**
+	 * Gets hrfid 4 date.
+	 *
+	 * @param time the time
+	 * @return the hrfid 4 date
+	 */
 	public int getHRFID4Date(Timestamp time) {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHrfId4Date(time);
 	}
 
 	/**
-	 is there is an HRFFile in the database with the same date?
+	 * is there is an HRFFile in the database with the same date?
+	 *
+	 * @param date the date
 	 * @return The date of the file to which the file was imported or zero if no suitable file is available
 	 */
 	public String getHRFName4Date(Timestamp date) {
@@ -824,62 +994,134 @@ public class DBManager {
 	// ------------------------------- SpielerNotizenTable
 	// -------------------------------------------------
 
+	/**
+	 * Gets manueller smilie.
+	 *
+	 * @param spielerId the spieler id
+	 * @return the manueller smilie
+	 */
 	public String getManuellerSmilie(int spielerId) {
 		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.getManuellerSmilie(spielerId);
 	}
 
+	/**
+	 * Gets team info smilie.
+	 *
+	 * @param spielerId the spieler id
+	 * @return the team info smilie
+	 */
 	public String getTeamInfoSmilie(int spielerId) {
 		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.getTeamInfoSmilie(spielerId);
 	}
 
+	/**
+	 * Gets spieler notiz.
+	 *
+	 * @param spielerId the spieler id
+	 * @return the spieler notiz
+	 */
 	public String getSpielerNotiz(int spielerId) {
 		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.getSpielerNotiz(spielerId);
 	}
 
+	/**
+	 * Gets spieler spielberechtigt.
+	 *
+	 * @param spielerId the spieler id
+	 * @return the spieler spielberechtigt
+	 */
 	public boolean getSpielerSpielberechtigt(int spielerId) {
 		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.getSpielerSpielberechtigt(spielerId);
 	}
 
+	/**
+	 * Gets spieler user pos flag.
+	 *
+	 * @param spielerId the spieler id
+	 * @return the spieler user pos flag
+	 */
 	public byte getSpielerUserPosFlag(int spielerId) {
 		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.getSpielerUserPosFlag(spielerId);
 	}
 
+	/**
+	 * Gets is spieler fired.
+	 *
+	 * @param spielerId the spieler id
+	 * @return the is spieler fired
+	 */
 	public boolean getIsSpielerFired(int spielerId) {
 		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.getIsSpielerFired(spielerId);
 	}
 
+	/**
+	 * Save manueller smilie.
+	 *
+	 * @param spielerId the spieler id
+	 * @param smilie    the smilie
+	 */
 	public void saveManuellerSmilie(int spielerId, String smilie) {
 		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.saveManuellerSmilie(spielerId, smilie);
 	}
 
+	/**
+	 * Save spieler notiz.
+	 *
+	 * @param spielerId the spieler id
+	 * @param notiz     the notiz
+	 */
 	public void saveSpielerNotiz(int spielerId, String notiz) {
 		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.saveSpielerNotiz(spielerId, notiz);
 	}
 
+	/**
+	 * Save spieler spielberechtigt.
+	 *
+	 * @param spielerId       the spieler id
+	 * @param spielberechtigt the spielberechtigt
+	 */
 	public void saveSpielerSpielberechtigt(int spielerId,
 			boolean spielberechtigt) {
 		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.saveSpielerSpielberechtigt(spielerId, spielberechtigt);
 	}
 
+	/**
+	 * Save spieler user pos flag.
+	 *
+	 * @param spielerId the spieler id
+	 * @param flag      the flag
+	 */
 	public void saveSpielerUserPosFlag(int spielerId, byte flag) {
 		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.saveSpielerUserPosFlag(spielerId, flag);
 	}
 
+	/**
+	 * Save team info smilie.
+	 *
+	 * @param spielerId the spieler id
+	 * @param smilie    the smilie
+	 */
 	public void saveTeamInfoSmilie(int spielerId, String smilie) {
 		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.saveTeamInfoSmilie(spielerId, smilie);
 	}
 
+	/**
+	 * Save is spieler fired.
+	 *
+	 * @param spielerId the spieler id
+	 * @param isFired   the is fired
+	 */
 	public void saveIsSpielerFired(int spielerId, boolean isFired) {
 		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
 				.saveIsSpielerFired(spielerId, isFired);
@@ -888,6 +1130,13 @@ public class DBManager {
 	// ------------------------------- MatchLineupTable
 	// -------------------------------------------------
 
+	/**
+	 * Load match lineup match lineup.
+	 *
+	 * @param sourceSystem the source system
+	 * @param matchID      the match id
+	 * @return the match lineup
+	 */
 	public MatchLineup loadMatchLineup(int sourceSystem, int matchID) {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
 				.loadMatchLineup(sourceSystem, matchID);
@@ -895,17 +1144,33 @@ public class DBManager {
 
 	/**
 	 * Is the match already in the database?
+	 *
+	 * @param sourceSystem the source system
+	 * @param matchid      the matchid
+	 * @return the boolean
 	 */
 	public boolean isMatchLineupInDB(int sourceSystem, int matchid) {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
 				.isMatchLineupVorhanden(sourceSystem, matchid);
 	}
 
+	/**
+	 * Is match ifk rating in db boolean.
+	 *
+	 * @param matchid the matchid
+	 * @return the boolean
+	 */
 	public boolean isMatchIFKRatingInDB(int matchid) {
 		return ((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME))
 				.isMatchIFKRatingAvailable(matchid);
 	}
 
+	/**
+	 * Has unsure weather forecast boolean.
+	 *
+	 * @param matchId the match id
+	 * @return the boolean
+	 */
 	public boolean hasUnsureWeatherForecast(int matchId){
 		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).hasUnsureWeatherForecast(matchId);
 	}
@@ -914,17 +1179,19 @@ public class DBManager {
 
 	/**
 	 * Check if match is available
+	 *
+	 * @param matchid the matchid
+	 * @return the boolean
 	 */
-	public boolean isMatchVorhanden(int matchid) {
+	public boolean isMatchInDB(int matchid) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.isMatchVorhanden(matchid);
 	}
 
 	/**
 	 * Returns the MatchKurzInfo for the match. Returns null if not found.
-	 * 
-	 * @param matchid
-	 *            The ID for the match
+	 *
+	 * @param matchid The ID for the match
 	 * @return The kurz info object or null
 	 */
 	public MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid) {
@@ -934,15 +1201,21 @@ public class DBManager {
 
 	/**
 	 * Get all matches for the given team from the database.
-	 * 
-	 * @param teamId
-	 *            the teamid or -1 for all matches
+	 *
+	 * @param teamId the teamid or -1 for all matches
+	 * @return the match kurz info [ ]
 	 */
 	public MatchKurzInfo[] getMatchesKurzInfo(int teamId) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfo(teamId);
 	}
 
+	/**
+	 * Get last matches kurz info match kurz info.
+	 *
+	 * @param teamId the team id
+	 * @return the match kurz info
+	 */
 	public MatchKurzInfo getLastMatchesKurzInfo(int teamId){
 		return  ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getLastMatchesKurzInfo(teamId);
@@ -950,9 +1223,9 @@ public class DBManager {
 
 	/**
 	 * Get all matches for the given sql where claus.
-	 * 
-	 * @param where
-	 *            The string containing sql where claus
+	 *
+	 * @param where The string containing sql where claus
+	 * @return the match kurz info [ ]
 	 */
 	public MatchKurzInfo[] getMatchesKurzInfo(String where) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
@@ -963,8 +1236,9 @@ public class DBManager {
 	 * Get all matches with a certain status for the given team from the
 	 * database.
 	 *
-	 * @param teamId
-	 *            the teamid or -1 for all matches
+	 * @param teamId      the teamid or -1 for all matches
+	 * @param matchStatus the match status
+	 * @return the match kurz info [ ]
 	 */
 	public MatchKurzInfo[] getMatchesKurzInfo(final int teamId,
 			final int matchStatus) {
@@ -973,25 +1247,35 @@ public class DBManager {
 	}
 
 
-
+	/**
+	 * Get played match info array list.
+	 *
+	 * @param iNbGames the nb games
+	 * @return the array list
+	 */
 	public ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames){
 		return getPlayedMatchInfo(iNbGames, false);
 	}
 
+	/**
+	 * Get played match info array list.
+	 *
+	 * @param iNbGames           the nb games
+	 * @param bOfficialGamesOnly the b official games only
+	 * @return the array list
+	 */
 	public ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly){
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly);
 	}
 
 
-
 	/**
 	 * Wichtig: Wenn die Teamid = -1 ist muss der Matchtyp ALLE_SPIELE sein!
-	 * 
-	 * @param teamId
-	 *            Die Teamid oder -1 für alle
-	 * @param matchtyp
-	 *            Welche Matches? Konstanten im SpielePanel!
-	 * @param asc
+	 *
+	 * @param teamId   Die Teamid oder -1 für alle
+	 * @param matchtyp Welche Matches? Konstanten im SpielePanel!
+	 * @param asc      the asc
+	 * @return the match kurz info [ ]
 	 */
 	public MatchKurzInfo[] getMatchesKurzInfo(int teamId, int matchtyp,
 			boolean asc) {
@@ -999,17 +1283,40 @@ public class DBManager {
 				.getMatchesKurzInfo(teamId, matchtyp, asc);
 	}
 
+	/**
+	 * Get matches kurz info up coming match kurz info [ ].
+	 *
+	 * @param teamId the team id
+	 * @return the match kurz info [ ]
+	 */
 	public MatchKurzInfo[] getMatchesKurzInfoUpComing(int teamId) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfoUpComing(teamId);
 	}
 
+	/**
+	 * Gets matches kurz info.
+	 *
+	 * @param teamId    the team id
+	 * @param matchtyp  the matchtyp
+	 * @param statistic the statistic
+	 * @param home      the home
+	 * @return the matches kurz info
+	 */
 	public MatchKurzInfo getMatchesKurzInfo(int teamId, int matchtyp,
 			int statistic, boolean home) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfo(teamId, matchtyp, statistic, home);
 	}
 
+	/**
+	 * Gets matches kurz info statistics count.
+	 *
+	 * @param teamId    the team id
+	 * @param matchtype the matchtype
+	 * @param statistic the statistic
+	 * @return the matches kurz info statistics count
+	 */
 	public int getMatchesKurzInfoStatisticsCount(int teamId, int matchtype,
 			int statistic) {
 		return MatchesOverviewQuery.getMatchesKurzInfoStatisticsCount(teamId,
@@ -1018,6 +1325,8 @@ public class DBManager {
 
 	/**
 	 * speichert die Matches
+	 *
+	 * @param matches the matches
 	 */
 	public void storeMatchKurzInfos(MatchKurzInfo[] matches) {
 		((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
@@ -1029,6 +1338,8 @@ public class DBManager {
 
 	/**
 	 * Load player list for insertion into TransferScout
+	 *
+	 * @return the scout list
 	 */
 	public Vector<ScoutEintrag> getScoutList() {
 		return ((ScoutTable) getTable(ScoutTable.TABLENAME)).getScoutList();
@@ -1036,6 +1347,8 @@ public class DBManager {
 
 	/**
 	 * Save players from TransferScout
+	 *
+	 * @param list the list
 	 */
 	public void saveScoutList(Vector<ScoutEintrag> list) {
 		((ScoutTable) getTable(ScoutTable.TABLENAME)).saveScoutList(list);
@@ -1046,6 +1359,9 @@ public class DBManager {
 
 	/**
 	 * lädt die Finanzen zum angegeben HRF file ein
+	 *
+	 * @param hrfID the hrf id
+	 * @return the stadion
 	 */
 	public Stadium getStadion(int hrfID) {
 		return ((StadionTable) getTable(StadionTable.TABLENAME))
@@ -1054,6 +1370,9 @@ public class DBManager {
 
 	/**
 	 * speichert die Finanzen
+	 *
+	 * @param hrfId   the hrf id
+	 * @param stadion the stadion
 	 */
 	public void saveStadion(int hrfId, Stadium stadion) {
 		((StadionTable) getTable(StadionTable.TABLENAME)).saveStadion(hrfId,
@@ -1066,18 +1385,19 @@ public class DBManager {
 
 	/**
 	 * Fetch a list of staff store din a hrf
-	 * @param hrfId
+	 *
+	 * @param hrfId the hrf id
 	 * @return A list of StaffMembers belonging to the given hrf
 	 */
 	public List<StaffMember> getStaffByHrfId(int hrfId) {
 		return ((StaffTable) getTable(StaffTable.TABLENAME)).getStaffByHrfId(hrfId);
 	}
-	
+
 	/**
 	 * Stores a list of StaffMembers
-	 * 
+	 *
 	 * @param hrfId The hrfId
-	 * @param list The staff objects
+	 * @param list  The staff objects
 	 */
 	public void saveStaff(int hrfId, List<StaffMember> list) {
 		((StaffTable) getTable(StaffTable.TABLENAME)).storeStaff(hrfId, list);
@@ -1089,12 +1409,11 @@ public class DBManager {
 
 	/**
 	 * Returns an array with substitution belonging to the match-team.
-	 * 
-	 * @param teamId
-	 *            The teamId for the team in question
-	 * @param matchId
-	 *            The matchId for the match in question
-	 * 
+	 *
+	 * @param sourceSystem the source system
+	 * @param teamId       The teamId for the team in question
+	 * @param matchId      The matchId for the match in question
+	 * @return the match substitutions by match team
 	 */
 	public List<Substitution> getMatchSubstitutionsByMatchTeam(int sourceSystem, int teamId,
 			int matchId) {
@@ -1104,12 +1423,10 @@ public class DBManager {
 
 	/**
 	 * Returns an array with substitution belonging to given hrfId and name
-	 * 
-	 * @param hrfId
-	 *            The teamId for the team in question
-	 * @param lineupName
-	 *            The name of the lineup
-	 * 
+	 *
+	 * @param hrfId      The teamId for the team in question
+	 * @param lineupName The name of the lineup
+	 * @return the match substitutions by hrf
 	 */
 	public List<Substitution> getMatchSubstitutionsByHrf(int hrfId,
 			String lineupName) {
@@ -1117,6 +1434,12 @@ public class DBManager {
 				.getMatchSubstitutionsByHrf(hrfId, lineupName);
 	}
 
+	/**
+	 * Gets penalty takers.
+	 *
+	 * @param lineupName the lineup name
+	 * @return the penalty takers
+	 */
 	List<MatchRoleID> getPenaltyTakers(String lineupName) {
 		try {
 			return ((PenaltyTakersTable) getTable(PenaltyTakersTable.TABLENAME))
@@ -1132,6 +1455,9 @@ public class DBManager {
 	/**
 	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] =
 	 * Stimmung [1] = Selbstvertrauen
+	 *
+	 * @param hrfid the hrfid
+	 * @return the string [ ]
 	 */
 	public String[] getStimmmungSelbstvertrauen(int hrfid) {
 		return ((TeamTable) getTable(TeamTable.TABLENAME))
@@ -1141,6 +1467,9 @@ public class DBManager {
 	/**
 	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] =
 	 * Stimmung [1] = Selbstvertrauen
+	 *
+	 * @param hrfid the hrfid
+	 * @return the int [ ]
 	 */
 	public int[] getStimmmungSelbstvertrauenValues(int hrfid) {
 		return ((TeamTable) getTable(TeamTable.TABLENAME))
@@ -1149,6 +1478,9 @@ public class DBManager {
 
 	/**
 	 * lädt die Basics zum angegeben HRF file ein
+	 *
+	 * @param hrfID the hrf id
+	 * @return the team
 	 */
 	public Team getTeam(int hrfID) {
 		return ((TeamTable) getTable(TeamTable.TABLENAME)).getTeam(hrfID);
@@ -1156,6 +1488,9 @@ public class DBManager {
 
 	/**
 	 * speichert das Team
+	 *
+	 * @param hrfId the hrf id
+	 * @param team  the team
 	 */
 	public void saveTeam(int hrfId, Team team) {
 		((TeamTable) getTable(TeamTable.TABLENAME)).saveTeam(hrfId, team);
@@ -1166,6 +1501,10 @@ public class DBManager {
 
 	/**
 	 * lädt System Positionen
+	 *
+	 * @param hrfID   the hrf id
+	 * @param sysName the sys name
+	 * @return the system positionen
 	 */
 	public Vector<IMatchRoleID> getSystemPositionen(int hrfID,
                                                     String sysName) {
@@ -1175,6 +1514,10 @@ public class DBManager {
 
 	/**
 	 * speichert System Positionen
+	 *
+	 * @param hrfId      the hrf id
+	 * @param positionen the positionen
+	 * @param sysName    the sys name
 	 */
 	public void saveSystemPositionen(int hrfId,
                                      Vector<IMatchRoleID> positionen, String sysName) {
@@ -1184,6 +1527,9 @@ public class DBManager {
 
 	/**
 	 * delete das System
+	 *
+	 * @param hrfId   the hrf id
+	 * @param sysName the sys name
 	 */
 	public void deleteSystem(int hrfId, String sysName) {
 		final String[] whereS = { "Aufstellungsname", "HRF_ID" };
@@ -1196,11 +1542,21 @@ public class DBManager {
 	// ------------------------------- TrainingsTable
 	// -------------------------------------------------
 
+	/**
+	 * Gets training overrides.
+	 *
+	 * @return the training overrides
+	 */
 	public List<TrainingPerWeek> getTrainingOverrides() {
 		return ((TrainingsTable) getTable(TrainingsTable.TABLENAME))
 				.getTrainingList();
 	}
 
+	/**
+	 * Save training.
+	 *
+	 * @param training the training
+	 */
 	public void saveTraining(core.training.TrainingPerWeek training) {
 		((TrainingsTable) getTable(TrainingsTable.TABLENAME))
 				.saveTraining(training);
@@ -1209,11 +1565,21 @@ public class DBManager {
 	// ------------------------------- FutureTrainingTable
 	// -------------------------------------------------
 
+	/**
+	 * Gets future trainings vector.
+	 *
+	 * @return the future trainings vector
+	 */
 	public List<TrainingPerWeek> getFutureTrainingsVector() {
 		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME))
 				.getFutureTrainingsVector();
 	}
 
+	/**
+	 * Save future training.
+	 *
+	 * @param training the training
+	 */
 	public void saveFutureTraining(TrainingPerWeek training) {
 		((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME))
 				.saveFutureTraining(training);
@@ -1224,6 +1590,9 @@ public class DBManager {
 
 	/**
 	 * lädt die Basics zum angegeben HRF file ein
+	 *
+	 * @param hrfID the hrf id
+	 * @return the verein
 	 */
 	public Verein getVerein(int hrfID) {
 		return ((VereinTable) getTable(VereinTable.TABLENAME)).getVerein(hrfID);
@@ -1231,13 +1600,23 @@ public class DBManager {
 
 	/**
 	 * speichert das Verein
+	 *
+	 * @param hrfId  the hrf id
+	 * @param verein the verein
 	 */
 	public void saveVerein(int hrfId, Verein verein) {
 		((VereinTable) getTable(VereinTable.TABLENAME)).saveVerein(hrfId,
 				verein);
 	}
 
-	// ------------------------------- FutureTraining
+	/**
+	 * Gets futur training.
+	 *
+	 * @param Saison the saison
+	 * @param Week   the week
+	 * @return the futur training
+	 */
+// ------------------------------- FutureTraining
 	// -------------------------------------------------
 	public int getFuturTraining(int Saison, int Week) {
 		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).getFutureTrainings(Saison, Week);
@@ -1248,6 +1627,9 @@ public class DBManager {
 
 	/**
 	 * lädt die Basics zum angegeben HRF file ein
+	 *
+	 * @param hrfID the hrf id
+	 * @return the xtra daten
 	 */
 	public XtraData getXtraDaten(int hrfID) {
 		return ((XtraDataTable) getTable(XtraDataTable.TABLENAME))
@@ -1256,13 +1638,24 @@ public class DBManager {
 
 	/**
 	 * speichert das Team
+	 *
+	 * @param hrfId the hrf id
+	 * @param xtra  the xtra
 	 */
 	public void saveXtraDaten(int hrfId, XtraData xtra) {
 		((XtraDataTable) getTable(XtraDataTable.TABLENAME)).saveXtraDaten(
 				hrfId, xtra);
 	}
 
-	// ------------------------------- MatchLineupTeamTable
+	/**
+	 * Gets match lineup team.
+	 *
+	 * @param sourceSystem the source system
+	 * @param matchID      the match id
+	 * @param teamID       the team id
+	 * @return the match lineup team
+	 */
+// ------------------------------- MatchLineupTeamTable
 	// -------------------------------------------------
 	public MatchLineupTeam getMatchLineupTeam(int sourceSystem, int matchID, int teamID) {
 		return ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME))
@@ -1304,11 +1697,21 @@ public class DBManager {
 
 	/**
 	 * Saves the fixtures to an existing game schedule ({@link Spielplan}).
+	 *
+	 * @param fixtures the fixtures
+	 * @param ligaId   the liga id
+	 * @param saison   the saison
 	 */
 	protected void storePaarung(List<Paarung> fixtures, int ligaId, int saison) {
 		((PaarungTable) getTable(PaarungTable.TABLENAME)).storePaarung(fixtures, ligaId, saison);
 	}
 
+	/**
+	 * Delete paarung tabelle.
+	 *
+	 * @param whereSpalten the where spalten
+	 * @param whereValues  the where values
+	 */
 	public void deletePaarungTabelle(String[] whereSpalten, String[] whereValues) {
 		getTable(PaarungTable.TABLENAME).delete(whereSpalten, whereValues);
 	}
@@ -1318,6 +1721,10 @@ public class DBManager {
 
 	/**
 	 * Gibt die MatchDetails zu einem Match zurück
+	 *
+	 * @param sourcesystem the sourcesystem
+	 * @param matchId      the match id
+	 * @return the matchdetails
 	 */
 	public Matchdetails loadMatchDetails(int sourcesystem, int matchId) {
 		return ((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME))
@@ -1326,9 +1733,9 @@ public class DBManager {
 
 	/**
 	 * Return match statistics (Count,Win,Draw,Loss,Goals)
-	 * 
-	 * @param matchtype
-	 * @return
+	 *
+	 * @param matchtype the matchtype
+	 * @return matches overview row [ ]
 	 */
 	public MatchesOverviewRow[] getMatchesOverviewValues(int matchtype) {
 		return MatchesOverviewQuery.getMatchesOverviewValues(matchtype);
@@ -1339,60 +1746,124 @@ public class DBManager {
 
 	/**
 	 * Gibt die MatchHighlights zu einem Match zurück
+	 *
+	 * @param sourceSystem the source system
+	 * @param matchId      the match id
+	 * @return the match highlights
 	 */
 	public ArrayList<MatchEvent> getMatchHighlights(int sourceSystem, int matchId) {
 		return ((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME))
 				.getMatchHighlights(sourceSystem, matchId);
 	}
 
+	/**
+	 * Get chances stat matches highlights stat [ ].
+	 *
+	 * @param ownTeam   the own team
+	 * @param matchtype the matchtype
+	 * @return the matches highlights stat [ ]
+	 */
 	public MatchesHighlightsStat[] getChancesStat(boolean ownTeam, int matchtype) {
 		return MatchesOverviewQuery.getChancesStat(ownTeam, matchtype);
 
 	}
 
-	// Transfer
+	/**
+	 * Gets transfers.
+	 *
+	 * @param playerid     the playerid
+	 * @param allTransfers the all transfers
+	 * @return the transfers
+	 */
+// Transfer
 	public List<PlayerTransfer> getTransfers(int playerid, boolean allTransfers) {
 		return ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransfers(playerid, allTransfers);
 	}
 
+	/**
+	 * Gets transfers.
+	 *
+	 * @param season the season
+	 * @param bought the bought
+	 * @param sold   the sold
+	 * @return the transfers
+	 */
 	public List<PlayerTransfer> getTransfers(int season, boolean bought,
 			boolean sold) {
 		return ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransfers(season, bought, sold);
 	}
 
-    public void removeTransfer(int transferId) {
+	/**
+	 * Remove transfer.
+	 *
+	 * @param transferId the transfer id
+	 */
+	public void removeTransfer(int transferId) {
 		((TransferTable) getTable(TransferTable.TABLENAME))
 				.removeTransfer(transferId);
 	}
 
+	/**
+	 * Update player transfers.
+	 *
+	 * @param playerId the player id
+	 */
 	public void updatePlayerTransfers(int playerId) {
 		((TransferTable) getTable(TransferTable.TABLENAME))
 				.updatePlayerTransfers(playerId);
 	}
 
+	/**
+	 * Update team transfers boolean.
+	 *
+	 * @param teamid the teamid
+	 * @return the boolean
+	 */
 	public boolean updateTeamTransfers(int teamid) {
 		return ((TransferTable) getTable(TransferTable.TABLENAME))
 					.updateTeamTransfers(teamid);
 	}
 
+	/**
+	 * Gets transfer type.
+	 *
+	 * @param playerId the player id
+	 * @return the transfer type
+	 */
 	public int getTransferType(int playerId) {
 		return ((TransferTypeTable) getTable(TransferTypeTable.TABLENAME))
 				.getTransferType(playerId);
 	}
 
+	/**
+	 * Sets transfer type.
+	 *
+	 * @param playerId the player id
+	 * @param type     the type
+	 */
 	public void setTransferType(int playerId, int type) {
 		((TransferTypeTable) getTable(TransferTypeTable.TABLENAME))
 				.setTransferType(playerId, type);
 	}
 
-	// WorldDetail
+	/**
+	 * Get all world detail leagues world detail league [ ].
+	 *
+	 * @return the world detail league [ ]
+	 */
+// WorldDetail
 	public WorldDetailLeague[] getAllWorldDetailLeagues() {
 		return ((WorldDetailsTable) getTable(WorldDetailsTable.TABLENAME))
 				.getAllWorldDetailLeagues();
 	}
 
+	/**
+	 * Save world detail leagues.
+	 *
+	 * @param leagues the leagues
+	 */
 	public void saveWorldDetailLeagues(List<WorldDetailLeague> leagues) {
 		WorldDetailsTable table = (WorldDetailsTable) getTable(WorldDetailsTable.TABLENAME);
 		table.truncateTable();
@@ -1406,22 +1877,54 @@ public class DBManager {
 	// --------------------------------
 	// --------------------------------------------------------------------------------
 
+	/**
+	 * Get spieler daten 4 statistik double [ ] [ ].
+	 *
+	 * @param spielerId the spieler id
+	 * @param anzahlHRF the anzahl hrf
+	 * @return the double [ ] [ ]
+	 */
 	public double[][] getSpielerDaten4Statistik(int spielerId, int anzahlHRF) {
 		return StatisticQuery.getSpielerDaten4Statistik(spielerId, anzahlHRF);
 	}
 
+	/**
+	 * Get data for club statistics panel double [ ] [ ].
+	 *
+	 * @param nbHRFs the nb hr fs
+	 * @return the double [ ] [ ]
+	 */
 	public double[][] getDataForClubStatisticsPanel(int nbHRFs) {
 		return StatisticQuery.getDataForClubStatisticsPanel(nbHRFs);
 	}
 
+	/**
+	 * Get data for finances statistics panel double [ ] [ ].
+	 *
+	 * @param nbHRF the nb hrf
+	 * @return the double [ ] [ ]
+	 */
 	public double[][] getDataForFinancesStatisticsPanel(int nbHRF) {
 		return StatisticQuery.getDataForFinancesStatisticsPanel(nbHRF);
 	}
 
+	/**
+	 * Gets arena statistik model.
+	 *
+	 * @param matchtyp the matchtyp
+	 * @return the arena statistik model
+	 */
 	public ArenaStatistikTableModel getArenaStatistikModel(int matchtyp) {
 		return StatisticQuery.getArenaStatistikModel(matchtyp);
 	}
 
+	/**
+	 * Get data for team statistics panel double [ ] [ ].
+	 *
+	 * @param anzahlHRF the anzahl hrf
+	 * @param group     the group
+	 * @return the double [ ] [ ]
+	 */
 	public double[][] getDataForTeamStatisticsPanel(int anzahlHRF,
 			String group) {
 		return StatisticQuery.getDataForTeamStatisticsPanel(
@@ -1429,6 +1932,13 @@ public class DBManager {
 	}
 
 
+	/**
+	 * Gets count of played matches.
+	 *
+	 * @param playerId the player id
+	 * @param official the official
+	 * @return the count of played matches
+	 */
 	public int getCountOfPlayedMatches(int playerId, boolean official) {
 		String sqlStmt = "select count(MATCHESKURZINFO.matchid) as MatchNumber FROM MATCHLINEUPPLAYER INNER JOIN MATCHESKURZINFO ON MATCHESKURZINFO.matchid = MATCHLINEUPPLAYER.matchid ";
 		sqlStmt = sqlStmt + "where spielerId = " + playerId
@@ -1460,6 +1970,9 @@ public class DBManager {
 
 	/**
 	 * Returns a list of PlayerMatchCBItems for given playerID
+	 *
+	 * @param spielerid the spielerid
+	 * @return the spieler 4 matches
 	 */
 	public Vector<SpielerMatchCBItem> getSpieler4Matches(int spielerid) {
 		final Vector<SpielerMatchCBItem> spielerMatchCBItems = new Vector<>();
@@ -1539,7 +2052,12 @@ public class DBManager {
 		return spielerMatchCBItems;
 	}
 
-	// ------------------------------------- Delete
+	/**
+	 * Delete hrf.
+	 *
+	 * @param hrfid the hrfid
+	 */
+// ------------------------------------- Delete
 	// -------------------------------------------------------
 	public void deleteHRF(int hrfid) {
 		final String[] where = { "HRF_ID" };
@@ -1567,9 +2085,8 @@ public class DBManager {
 
 	/**
 	 * Deletes all data for the given match
-	 * 
-	 * @param matchid
-	 *            The matchid. Must be larger than 0.
+	 *
+	 * @param matchid The matchid. Must be larger than 0.
 	 */
 	public void deleteMatch(int matchid) {
 		final String[] whereSpalten = { "MatchID" };
@@ -1592,16 +2109,13 @@ public class DBManager {
 	 * Stores the given match info. If info is missing, or the info are not for
 	 * the same match, nothing is stored and false is returned. If the store is
 	 * successful, true is returned.
-	 * 
+	 * <p>
 	 * If status of the info is not FINISHED, nothing is stored, and false is
 	 * also returned.
-	 * 
-	 * @param info
-	 *            The MatchKurzInfo for the match
-	 * @param details
-	 *            The MatchDetails for the match
-	 * @param lineup
-	 *            The MatchLineup for the match
+	 *
+	 * @param info    The MatchKurzInfo for the match
+	 * @param details The MatchDetails for the match
+	 * @param lineup  The MatchLineup for the match
 	 * @return true if the match is stored. False if not
 	 */
 	public boolean storeMatch(MatchKurzInfo info, Matchdetails details,
@@ -1634,9 +2148,8 @@ public class DBManager {
 
 	/**
 	 * Updates the given match in the database.
-	 * 
-	 * @param match
-	 *            the match to update.
+	 *
+	 * @param match the match to update.
 	 */
 	public void updateMatchKurzInfo(MatchKurzInfo match) {
 		((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
@@ -1645,6 +2158,9 @@ public class DBManager {
 
 	/**
 	 * delete eine Aufstellung + Positionen
+	 *
+	 * @param hrfId the hrf id
+	 * @param name  the name
 	 */
 	public void deleteAufstellung(int hrfId, String name) {
 		String[] whereS = { "HRF_ID", "Aufstellungsname" };
@@ -1674,16 +2190,31 @@ public class DBManager {
 		}
 	}
 
+	/**
+	 * Load module configs map.
+	 *
+	 * @return the map
+	 */
 	public Map<String, Object> loadModuleConfigs() {
 		return ((ModuleConfigTable) getTable(ModuleConfigTable.TABLENAME))
 				.findAll();
 	}
 
+	/**
+	 * Save module configs.
+	 *
+	 * @param values the values
+	 */
 	public void saveModuleConfigs(Map<String, Object> values) {
 		((ModuleConfigTable) getTable(ModuleConfigTable.TABLENAME))
 				.saveConfig(values);
 	}
 
+	/**
+	 * Delete module configs key.
+	 *
+	 * @param key the key
+	 */
 	public void deleteModuleConfigsKey(String key) {
 		((ModuleConfigTable) getTable(ModuleConfigTable.TABLENAME))
 				.deleteConfig(key);
@@ -1691,11 +2222,9 @@ public class DBManager {
 
 	/**
 	 * Set a single UserParameter in the DB
-	 * 
-	 * @param fieldName
-	 *            the name of the parameter to set
-	 * @param value
-	 *            the target value
+	 *
+	 * @param fieldName the name of the parameter to set
+	 * @param value     the target value
 	 */
 	void saveUserParameter(String fieldName, int value) {
 		saveUserParameter(fieldName, "" + value);
@@ -1703,11 +2232,9 @@ public class DBManager {
 
 	/**
 	 * Set a single UserParameter in the DB
-	 * 
-	 * @param fieldName
-	 *            the name of the parameter to set
-	 * @param value
-	 *            the target value
+	 *
+	 * @param fieldName the name of the parameter to set
+	 * @param value     the target value
 	 */
 	void saveUserParameter(String fieldName, double value) {
 		saveUserParameter(fieldName, "" + value);
@@ -1715,11 +2242,9 @@ public class DBManager {
 
 	/**
 	 * Set a single UserParameter in the DB
-	 * 
-	 * @param fieldName
-	 *            the name of the parameter to set
-	 * @param value
-	 *            the target value
+	 *
+	 * @param fieldName the name of the parameter to set
+	 * @param value     the target value
 	 */
 	void saveUserParameter(String fieldName, String value) {
 		((UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME))
@@ -1728,34 +2253,59 @@ public class DBManager {
 
 	/**
 	 * Remove a single UserParameter from the DB
-	 * 
-	 * @param fieldName
-	 *            the name of the parameter to remove
+	 *
+	 * @param fieldName the name of the parameter to remove
 	 */
 	void removeUserParameter(String fieldName) {
 		((UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME))
 				.remove(fieldName);
 	}
 
+	/**
+	 * Save ho column model.
+	 *
+	 * @param model the model
+	 */
 	public void saveHOColumnModel(HOTableModel model) {
 		((UserColumnsTable) getTable(UserColumnsTable.TABLENAME))
 				.saveModel(model);
 	}
 
+	/**
+	 * Load ho colum model.
+	 *
+	 * @param model the model
+	 */
 	public void loadHOColumModel(HOTableModel model) {
 		((UserColumnsTable) getTable(UserColumnsTable.TABLENAME))
 				.loadModel(model);
 	}
 
+	/**
+	 * Remove ta favorite team.
+	 *
+	 * @param teamId the team id
+	 */
 	public void removeTAFavoriteTeam(int teamId) {
 		((TAFavoriteTable) getTable(TAFavoriteTable.TABLENAME))
 				.removeTeam(teamId);
 	}
 
+	/**
+	 * Add ta favorite team.
+	 *
+	 * @param team the team
+	 */
 	public void addTAFavoriteTeam(module.teamAnalyzer.vo.Team team) {
 		((TAFavoriteTable) getTable(TAFavoriteTable.TABLENAME)).addTeam(team);
 	}
 
+	/**
+	 * Is ta favourite boolean.
+	 *
+	 * @param teamId the team id
+	 * @return the boolean
+	 */
 	public boolean isTAFavourite(int teamId) {
 		return ((TAFavoriteTable) getTable(TAFavoriteTable.TABLENAME))
 				.isTAFavourite(teamId);
@@ -1763,7 +2313,7 @@ public class DBManager {
 
 	/**
 	 * Returns all favourite teams
-	 * 
+	 *
 	 * @return List of Teams Object
 	 */
 	public List<module.teamAnalyzer.vo.Team> getTAFavoriteTeams() {
@@ -1771,39 +2321,86 @@ public class DBManager {
 				.getTAFavoriteTeams();
 	}
 
+	/**
+	 * Gets ta player info.
+	 *
+	 * @param playerId the player id
+	 * @param week     the week
+	 * @param season   the season
+	 * @return the ta player info
+	 */
 	public PlayerInfo getTAPlayerInfo(int playerId, int week, int season) {
 		return ((TAPlayerTable) getTable(TAPlayerTable.TABLENAME))
 				.getPlayerInfo(playerId, week, season);
 	}
 
+	/**
+	 * Gets ta latest player info.
+	 *
+	 * @param playerId the player id
+	 * @return the ta latest player info
+	 */
 	public PlayerInfo getTALatestPlayerInfo(int playerId) {
 		return ((TAPlayerTable) getTable(TAPlayerTable.TABLENAME))
 				.getLatestPlayerInfo(playerId);
 	}
 
+	/**
+	 * Add ta player info.
+	 *
+	 * @param info the info
+	 */
 	public void addTAPlayerInfo(PlayerInfo info) {
 		((TAPlayerTable) getTable(TAPlayerTable.TABLENAME)).addPlayer(info);
 	}
 
+	/**
+	 * Update ta player info.
+	 *
+	 * @param info the info
+	 */
 	public void updateTAPlayerInfo(PlayerInfo info) {
 		((TAPlayerTable) getTable(TAPlayerTable.TABLENAME)).updatePlayer(info);
 	}
 
+	/**
+	 * Is ifa matchin db boolean.
+	 *
+	 * @param matchId the match id
+	 * @return the boolean
+	 */
 	public boolean isIFAMatchinDB(int matchId) {
 		return ((IfaMatchTable) getTable(IfaMatchTable.TABLENAME))
 				.isMatchinDB(matchId);
 	}
 
+	/**
+	 * Gets last ifa match date.
+	 *
+	 * @param defaultValue the default value
+	 * @return the last ifa match date
+	 */
 	public String getLastIFAMatchDate(String defaultValue) {
 		return ((IfaMatchTable) getTable(IfaMatchTable.TABLENAME))
 				.getLastMatchDate(defaultValue);
 	}
 
+	/**
+	 * Get ifa matches ifa match [ ].
+	 *
+	 * @param home the home
+	 * @return the ifa match [ ]
+	 */
 	public IfaMatch[] getIFAMatches(boolean home) {
 		return ((IfaMatchTable) getTable(IfaMatchTable.TABLENAME))
 				.getMatches(home);
 	}
 
+	/**
+	 * Insert ifa match.
+	 *
+	 * @param match the match
+	 */
 	public void insertIFAMatch(IfaMatch match) {
 		((IfaMatchTable) getTable(IfaMatchTable.TABLENAME)).insertMatch(match);
 	}
@@ -1816,21 +2413,44 @@ public class DBManager {
 	}
 
 
+	/**
+	 * Gets match order.
+	 *
+	 * @param matchId  the match id
+	 * @param matchTyp the match typ
+	 * @return the match order
+	 */
 	public LineupPosition getMatchOrder(int matchId,
 										MatchType matchTyp) {
 		return ((MatchOrderTable) getTable(MatchOrderTable.TABLENAME))
 				.getMatchOrder(matchId, matchTyp);
 	}
 
+	/**
+	 * Update match order.
+	 *
+	 * @param lineup  the lineup
+	 * @param matchId the match id
+	 */
 	public void updateMatchOrder(Lineup lineup, int matchId) {
 		((MatchOrderTable) getTable(MatchOrderTable.TABLENAME)).updateMatchOrder(lineup, matchId);
 	}
 
+	/**
+	 * Remove match order.
+	 */
 	public void removeMatchOrder() {
 		((MatchOrderTable) getTable(MatchOrderTable.TABLENAME))
 				.removeMatchOrder();
 	}
 
+	/**
+	 * Gets integer.
+	 *
+	 * @param rs          the rs
+	 * @param columnLabel the column label
+	 * @return the integer
+	 */
 	public static Integer getInteger(ResultSet rs, String columnLabel) {
 		try {
 			var ret = rs.getInt(columnLabel);
@@ -1841,6 +2461,13 @@ public class DBManager {
 		return null;
 	}
 
+	/**
+	 * Gets boolean.
+	 *
+	 * @param rs          the rs
+	 * @param columnLabel the column label
+	 * @return the boolean
+	 */
 	public static Boolean getBoolean(ResultSet rs, String columnLabel) {
 		try {
 			return rs.getBoolean(columnLabel);
@@ -1850,6 +2477,13 @@ public class DBManager {
 		return null;
 	}
 
+	/**
+	 * Gets double.
+	 *
+	 * @param rs          the rs
+	 * @param columnLabel the column label
+	 * @return the double
+	 */
 	public static Double getDouble(ResultSet rs, String columnLabel) {
 		try {
 			return rs.getDouble(columnLabel);
@@ -1861,6 +2495,9 @@ public class DBManager {
 
 	/**
 	 * Alle \ entfernen
+	 *
+	 * @param text the text
+	 * @return the string
 	 */
 	public static String deleteEscapeSequences(String text) {
 		if (text == null) {
@@ -1885,6 +2522,9 @@ public class DBManager {
 
 	/**
 	 * ' " und ´ codieren durch \
+	 *
+	 * @param text the text
+	 * @return the string
 	 */
 	public static String insertEscapeSequences(String text) {
 		if (text == null) {
@@ -1906,59 +2546,141 @@ public class DBManager {
 		return buffer.toString();
 	}
 
+	/**
+	 * Gets future player trainings.
+	 *
+	 * @param playerId the player id
+	 * @return the future player trainings
+	 */
 	public List<FuturePlayerTraining> getFuturePlayerTrainings(int playerId) {
 		return ((FuturePlayerTrainingTable) getTable(FuturePlayerTrainingTable.TABLENAME))
 				.getFuturePlayerTrainingPlan(playerId);
 	}
 
+	/**
+	 * Store future player trainings.
+	 *
+	 * @param spielerID             the spieler id
+	 * @param futurePlayerTrainings the future player trainings
+	 */
 	public void storeFuturePlayerTrainings(int spielerID, List<FuturePlayerTraining> futurePlayerTrainings) {
 		((FuturePlayerTrainingTable) getTable(FuturePlayerTrainingTable.TABLENAME))
 				.storeFuturePlayerTrainings(spielerID, futurePlayerTrainings);
 
 	}
 
+	/**
+	 * Gets last youth match date.
+	 *
+	 * @return the last youth match date
+	 */
 	public Timestamp getLastYouthMatchDate() {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
 				.getLastYouthMatchDate();
 	}
 
+	/**
+	 * Get min scouting date timestamp.
+	 *
+	 * @return the timestamp
+	 */
 	public Timestamp getMinScoutingDate(){
 		return ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME))
 				.loadMinScoutingDate();
 	}
 
+	/**
+	 * Store match lineup.
+	 *
+	 * @param lineup the lineup
+	 * @param teamId the team id
+	 */
 	public void storeMatchLineup(MatchLineup lineup, Integer teamId) {
 		((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
 				.storeMatchLineup(lineup, teamId);
 	}
 
+	/**
+	 * Load youth trainer comments list.
+	 *
+	 * @param id the id
+	 * @return the list
+	 */
 	public List<YouthTrainerComment> loadYouthTrainerComments(int id) {
 		return ((YouthTrainerCommentTable) getTable(YouthTrainerCommentTable.TABLENAME)).loadYouthTrainerComments(id);
 	}
 
+	/**
+	 * Load match lineups list.
+	 *
+	 * @param sourcesystem the sourcesystem
+	 * @return the list
+	 */
 	public List<MatchLineup> loadMatchLineups(int sourcesystem) {
 		return ((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).loadMatchLineups(sourcesystem);
 	}
 
+	/**
+	 * Delete match data.
+	 *
+	 * @param sourcesystem the sourcesystem
+	 * @param before       the before
+	 */
 	public void deleteMatchData(int sourcesystem, Timestamp before){
 		((MatchHighlightsTable)getTable(MatchHighlightsTable.TABLENAME)).deleteMatchHighlightsBefore(sourcesystem, before);
 		((MatchDetailsTable)getTable(MatchDetailsTable.TABLENAME)).deleteMatchDetailsBefore(sourcesystem, before);
 		((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).deleteMatchLineupsBefore(sourcesystem, before);
 	}
 
+	/**
+	 * Load youth trainings list.
+	 *
+	 * @return the list
+	 */
 	public List<YouthTraining> loadYouthTrainings() {
 		return ((YouthTrainingTable)getTable(YouthTrainingTable.TABLENAME)).loadYouthTrainings();
 	}
 
-    public void storeYouthTraining(YouthTraining youthTraining) {
+	/**
+	 * Store youth training.
+	 *
+	 * @param youthTraining the youth training
+	 */
+	public void storeYouthTraining(YouthTraining youthTraining) {
 		((YouthTrainingTable)getTable(YouthTrainingTable.TABLENAME)).storeYouthTraining(youthTraining);
     }
 
+	/**
+	 * Store match details.
+	 *
+	 * @param details the details
+	 */
 	public void storeMatchDetails(Matchdetails details) {
 		((MatchDetailsTable)getTable(MatchDetailsTable.TABLENAME)).storeMatchDetails(details);
 	}
-	public String getTeamLogoFileName(int teamID) {
-		return ((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).getTeamLogoFileName(teamID);
+
+
+	/**
+	 * Gets team logo file name BUT it will triggers download of the logo from internet if it is not yet available.
+	 * It will also update LAST_ACCESS field
+	 *
+	 * @param teamID the team id
+	 * @param teamLogoFolderPath the team logo root folder path
+	 * @return the team logo file name
+	 */
+	public String getTeamLogoFileName(Path teamLogoFolderPath, int teamID) {
+		return ((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).getTeamLogoFileName(teamLogoFolderPath, teamID);
+	}
+
+	/**
+	 * Store team logo info.
+	 *
+	 * @param teamID     the team id
+	 * @param logoURL    the logo url
+	 * @param lastAccess the last access
+	 */
+	public void storeTeamLogoInfo(int teamID, String logoURL, Timestamp lastAccess){
+		((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).storeTeamLogoInfo(teamID, logoURL, lastAccess);
 	}
 
 }

@@ -5,9 +5,7 @@ import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
-import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchType;
 import core.model.series.Paarung;
@@ -67,7 +65,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         // --Match zeigen ggf runterladen--
         if (matchDatas[0] > 0) {
             // Spiel nicht vorhanden, dann erst runterladen!
-            if (!DBManager.instance().isMatchVorhanden(matchDatas[0])) {
+            if (!DBManager.instance().isMatchInDB(matchDatas[0])) {
 
                 OnlineWorker.downloadMatchData(matchDatas[0], MatchType.LEAGUE, // not
                         // tournament
@@ -112,7 +110,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
         if ( gameFinished ) {
             //Match already in the database
-            if (DBManager.instance().isMatchVorhanden(paarung.getMatchId())) {
+            if (DBManager.instance().isMatchInDB(paarung.getMatchId())) {
                 button.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Ligatabelle_SpielAnzeigen"));
                 button.setEnabled(true);
                 button.setIcon(ImageUtilities.getRightArrowIcon(getColor(HOColorName.SHOW_MATCH), 14, 14));

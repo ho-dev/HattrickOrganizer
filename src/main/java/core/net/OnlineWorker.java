@@ -222,7 +222,7 @@ public class OnlineWorker {
 				// Store full info for all matches
 				for (MatchKurzInfo match : allMatches) {
 					// if match is available and match is finished
-					if ((DBManager.instance().isMatchVorhanden(match.getMatchID()))
+					if ((DBManager.instance().isMatchInDB(match.getMatchID()))
 							&& (match.getMatchStatus() == MatchKurzInfo.FINISHED)) {
 						downloadMatchData(match.getMatchID(), match.getMatchType(), true);
 					}
@@ -250,7 +250,7 @@ public class OnlineWorker {
 	 */
 	public static boolean downloadMatchData(int matchid, MatchType matchType, boolean refresh) {
 		MatchKurzInfo info;
-		if (DBManager.instance().isMatchVorhanden(matchid)) {
+		if (DBManager.instance().isMatchInDB(matchid)) {
 			info = DBManager.instance().getMatchesKurzInfoByMatchID(matchid);
 		}
 		else {
@@ -261,19 +261,18 @@ public class OnlineWorker {
 		return downloadMatchData(info, refresh);
 	}
 
-	public static boolean downloadMatchData( MatchKurzInfo info, boolean refresh)
+	public static boolean downloadMatchData(MatchKurzInfo info, boolean refresh)
 	{
-		int matchid = info.getMatchID();
-		if (matchid < 0) {
+		int matchID = info.getMatchID();
+		if (matchID < 0) {
 			return false;
 		}
 
-		//waitDialog = getWaitDialog();
 		showWaitInformation(1);
 		// Only download if not present in the database, or if refresh is true
-		if (refresh || !DBManager.instance().isMatchVorhanden(matchid)
-				|| DBManager.instance().hasUnsureWeatherForecast(matchid)
-				|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), matchid)
+		if (refresh || !DBManager.instance().isMatchInDB(matchID)
+				|| DBManager.instance().hasUnsureWeatherForecast(matchID)
+				|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), matchID)
 		) {
 			try {
 				Matchdetails details;
@@ -287,7 +286,7 @@ public class OnlineWorker {
 				if ( newInfo || !bWeatherKnown) {
 
 					showWaitInformation(10);
-					details = downloadMatchDetails(matchid, info.getMatchType(), null);
+					details = downloadMatchDetails(matchID, info.getMatchType(), null);
 					if ( details != null) {
 						info.setHeimID(details.getHeimId());
 						info.setGastID(details.getGastId());
@@ -339,6 +338,8 @@ public class OnlineWorker {
 							info.setIsDerby(getRegionId(otherTeam) == HOVerwaltung.instance().getModel().getBasics().getRegionId());
 							info.setIsNeutral(info.getArenaId() != HOVerwaltung.instance().getModel().getStadium().getArenaId()
 									&& info.getArenaId() != getArenaId(otherTeam));
+							DBManager.instance().storeTeamLogoInfo(otherId, getLogoURL(otherTeam), null);
+
 						} else {
 							// Verlegenheitstruppe 08/15
 							info.setIsDerby(false);
@@ -350,7 +351,7 @@ public class OnlineWorker {
 				MatchLineup lineup;
 				boolean success;
 				if ( info.getMatchStatus() == MatchKurzInfo.FINISHED) {
-					lineup = downloadMatchlineup(matchid, info.getMatchType(), info.getHeimID(), info.getGastID());
+					lineup = downloadMatchlineup(matchID, info.getMatchType(), info.getHeimID(), info.getGastID());
 
 					if (lineup == null) {
 						if ( !isSilentDownload()) {
@@ -366,11 +367,11 @@ public class OnlineWorker {
 					
 					// Get details with highlights.
 					showWaitInformation(10);
-					details = downloadMatchDetails(matchid, info.getMatchType(), lineup);
+					details = downloadMatchDetails(matchID, info.getMatchType(), lineup);
 
 					if (details == null) {
 						HOLogger.instance().error(OnlineWorker.class,
-								"Error downloading match. Details is null: " + matchid);
+								"Error downloading match. Details is null: " + matchID);
 						return false;
 					}
 					info.setDuration(details.getLastMinute());
@@ -422,6 +423,16 @@ public class OnlineWorker {
 		return 0;
 	}
 
+	private static String getLogoURL(Map<String, String> team)
+	{
+		String str = team.get("LogoURL");
+		if ( (str == null) || (str.equals(""))) {
+			return null;
+		}
+		else {
+			return str;
+		}
+	}
 
 	/**
 	 * Loads the data for the given match from HT and updates the data for this
@@ -555,7 +566,7 @@ public class OnlineWorker {
 				// Automatically download additional match infos (lineup + arena)
 				for (MatchKurzInfo match : matches) {
 					int curMatchId = match.getMatchID();
-					boolean refresh = !DBManager.instance().isMatchVorhanden(curMatchId)
+					boolean refresh = !DBManager.instance().isMatchInDB(curMatchId)
 							|| DBManager.instance().hasUnsureWeatherForecast(curMatchId)
 							|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), curMatchId);
 

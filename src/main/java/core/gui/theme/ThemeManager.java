@@ -164,18 +164,18 @@ public final class ThemeManager {
 
 	public Icon getClubLogo(int teamID, int width){
 		int height = Math.round(width * 260f / 210f);
-		String imageName = DBManager.instance().getTeamLogoFileName(teamID);
-		if (imageName == null) {
+		String logoPath = DBManager.instance().getTeamLogoFileName(teamLogoPath, teamID);
+		if (logoPath == null) {
 			HOLogger.instance().error(this.getClass(), "error when trying to load logo of team " + teamID);
 			return null;
 		}
-		String imagePath = String.valueOf(teamLogoPath.resolve(imageName));
+
 		String scaledKey = "team_logo_" + teamID + "_(" + width + "," + height + ")";
 		Icon scaledIcon = get(scaledKey, Icon.class);
 		if (scaledIcon == null) {
 			BufferedImage img;
 			try {
-				img = ImageIO.read(new File(imagePath));
+				img = ImageIO.read(new File(logoPath));
 				ImageIcon iconOriginal = new ImageIcon(img);
 				scaledIcon = ImageUtilities.getScaledIcon(iconOriginal, width, height);
 			}

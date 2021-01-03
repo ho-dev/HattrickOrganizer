@@ -12,8 +12,13 @@ import java.awt.*;
 
 public class MatchBanner extends JPanel implements Refreshable {
 
-    public MatchBanner(LineupPositionsPanel parent) {
+    MatchAndLineupSelectionPanel matchSelectionPanel;
+    JLabel jlHomeTeam, jlAwayTeam;
+
+    public MatchBanner(MatchAndLineupSelectionPanel _matchSelectionPanel) {
+        matchSelectionPanel = _matchSelectionPanel;
         initComponents();
+        refresh();
         core.gui.RefreshManager.instance().registerRefreshable(this);
     }
 
@@ -30,16 +35,32 @@ public class MatchBanner extends JPanel implements Refreshable {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        JLabel jlHomeTeam = new JLabel();
-        Icon homeTeamIcon = ThemeManager.instance().getClubLogo(1754082);
-        jlHomeTeam.setIcon(homeTeamIcon);
+        jlHomeTeam = new JLabel();
         layout.setConstraints(jlHomeTeam, gbc);
         add(jlHomeTeam);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        jlAwayTeam = new JLabel();
+        layout.setConstraints(jlAwayTeam, gbc);
+        add(jlAwayTeam);
+
     }
 
     @Override
     public void refresh() {
+        var selectedMatch = matchSelectionPanel.getSelectedMatch();
 
+        if (selectedMatch != null) {
+            int iHomeTeamID = selectedMatch.getHeimID();
+            int iAwayTeamID = selectedMatch.getGastID();
+
+            Icon homeTeamIcon = ThemeManager.instance().getClubLogo(iHomeTeamID);
+            jlHomeTeam.setIcon(homeTeamIcon);
+
+            Icon AwayTeamIcon = ThemeManager.instance().getClubLogo(iAwayTeamID);
+            jlAwayTeam.setIcon(AwayTeamIcon);
+        }
     }
 
     @Override
