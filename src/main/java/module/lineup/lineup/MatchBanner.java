@@ -1,11 +1,7 @@
 package module.lineup.lineup;
 
 import core.gui.Refreshable;
-import core.gui.model.MatchOrdersRenderer;
 import core.gui.theme.ThemeManager;
-import core.util.GUIUtils;
-import core.util.Helper;
-import module.teamAnalyzer.ui.MatchComboBoxRenderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,8 +48,8 @@ public class MatchBanner extends JPanel implements Refreshable {
         var selectedMatch = matchSelectionPanel.getSelectedMatch();
 
         if (selectedMatch != null) {
-            int iHomeTeamID = selectedMatch.getHeimID();
-            int iAwayTeamID = selectedMatch.getGastID();
+            int iHomeTeamID = selectedMatch.getHomeTeamID();
+            int iAwayTeamID = selectedMatch.getGuestTeamID();
 
             Icon homeTeamIcon = ThemeManager.instance().getClubLogo(iHomeTeamID);
             jlHomeTeam.setIcon(homeTeamIcon);

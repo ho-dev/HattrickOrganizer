@@ -61,13 +61,13 @@ public class Match {
      * @param matchInfo IMatckKurtzInfo from which a match object has to be created
      */
     public Match(MatchKurzInfo matchInfo) {
-        homeId = matchInfo.getHeimID();
-        awayId = matchInfo.getGastID();
+        homeId = matchInfo.getHomeTeamID();
+        awayId = matchInfo.getGuestTeamID();
         matchId = matchInfo.getMatchID();
-        homeTeam = matchInfo.getHeimName();
-        awayTeam = matchInfo.getGastName();
-        homeGoals = matchInfo.getHeimTore();
-        awayGoals = matchInfo.getGastTore();
+        homeTeam = matchInfo.getHomeTeamName();
+        awayTeam = matchInfo.getGuestTeamName();
+        homeGoals = matchInfo.getHomeTeamGoals();
+        awayGoals = matchInfo.getGuestGuestGoals();
         matchType = matchInfo.getMatchType();
         matchDate = matchInfo.getMatchDateAsTimestamp();
 

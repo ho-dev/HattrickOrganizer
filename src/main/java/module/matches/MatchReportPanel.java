@@ -117,7 +117,7 @@ public class MatchReportPanel extends LazyImagePanel {
 						{
 							actionType = ActionTypeCategory.ACTION_TYPE_NEUTRAL;
 						}
-					else if (highlight.getTeamID() == info.getHeimID())
+					else if (highlight.getTeamID() == info.getHomeTeamID())
 					{
 						actionType = ActionTypeCategory.ACTION_TYPE_HOME;
 					}

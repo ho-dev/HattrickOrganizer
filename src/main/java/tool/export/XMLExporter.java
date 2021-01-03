@@ -212,7 +212,7 @@ public class XMLExporter  {
 				ele = doc.createElement("Derby");
 				tmpEle.appendChild(ele);
 
-				if (getRegionID4Team(matchData.getInfo().getGastID()).equals(getRegionID4Team(matchData.getInfo().getHeimID()))) {
+				if (getRegionID4Team(matchData.getInfo().getGuestTeamID()).equals(getRegionID4Team(matchData.getInfo().getHomeTeamID()))) {
 					ele.appendChild(doc.createTextNode("1"));
 				} else {
 					ele.appendChild(doc.createTextNode("0"));
@@ -225,7 +225,7 @@ public class XMLExporter  {
 				tmpEle.appendChild(ele);
 
 				boolean heimspiel = true;
-				if (matchData.getInfo().getHeimID() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
+				if (matchData.getInfo().getHomeTeamID() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
 					ele.appendChild(doc.createTextNode("1"));
 					heimspiel = true;
 				} else {

@@ -3,7 +3,6 @@ package module.matches;
 
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
-import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchEvent;
@@ -99,7 +98,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 				// Displaying the event
 				if (bEventHighlighted) {
 
-					homeAction = (highlight.getTeamID() == info.getHeimID());
+					homeAction = (highlight.getTeamID() == info.getHomeTeamID());
 					icon = highlight.getIcon();
 
 					String spielername = highlight.getSpielerName();
@@ -213,7 +212,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 				}
 			}
 
-			String title = info.getHeimName() + "  " + homeScore + "   -   " + guestScore + "  " + info.getGastName() ;
+			String title = info.getHomeTeamName() + "  " + homeScore + "   -   " + guestScore + "  " + info.getGuestTeamName() ;
 			matchTeamsAndScores.setText(title);
 
 			if (bPenaltyContest) {

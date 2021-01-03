@@ -111,8 +111,8 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
 		MatchKurzInfo away = DBManager.instance().getMatchesKurzInfo(teamId, matchtypes, HighestVictory, false);
 		MatchKurzInfo info = getHighestMatch(home, away);
 		if(info != null){
-			teamNames[HighestVictory].setText(info.getHeimName()+" - "+info.getGastName());
-			resultLabels[HighestVictory].setText(StringUtils.getResultString(info.getHeimTore(),info.getGastTore(), ""));
+			teamNames[HighestVictory].setText(info.getHomeTeamName()+" - "+info.getGuestTeamName());
+			resultLabels[HighestVictory].setText(StringUtils.getResultString(info.getHomeTeamGoals(),info.getGuestGuestGoals(), ""));
 		} else {
 			teamNames[HighestVictory].setText("");
 			resultLabels[HighestVictory].setText(StringUtils.getResultString(-1,-1, ""));
@@ -122,8 +122,8 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
 		info = getHighestMatch(home, away);
 
 		if(info != null){
-			teamNames[HighestDefeat].setText(info.getHeimName()+" - "+info.getGastName());
-			resultLabels[HighestDefeat].setText(StringUtils.getResultString(info.getHeimTore(),info.getGastTore(), ""));
+			teamNames[HighestDefeat].setText(info.getHomeTeamName()+" - "+info.getGuestTeamName());
+			resultLabels[HighestDefeat].setText(StringUtils.getResultString(info.getHomeTeamGoals(),info.getGuestGuestGoals(), ""));
 		}else {
 			teamNames[HighestDefeat].setText("");
 			resultLabels[HighestDefeat].setText(StringUtils.getResultString(-1,-1, ""));
@@ -145,8 +145,8 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
 	private MatchKurzInfo getHighestMatch(MatchKurzInfo home,MatchKurzInfo away){
 		if(home != null ){
 			if(away != null){
-				int homeDif = home.getHeimTore()>home.getGastTore()?home.getHeimTore()-home.getGastTore():home.getGastTore()-home.getHeimTore();
-				int awayDif = away.getHeimTore()>away.getGastTore()?away.getHeimTore()-away.getGastTore():away.getGastTore()-away.getHeimTore();
+				int homeDif = home.getHomeTeamGoals()>home.getGuestGuestGoals()?home.getHomeTeamGoals()-home.getGuestGuestGoals():home.getGuestGuestGoals()-home.getHomeTeamGoals();
+				int awayDif = away.getHomeTeamGoals()>away.getGuestGuestGoals()?away.getHomeTeamGoals()-away.getGuestGuestGoals():away.getGuestGuestGoals()-away.getHomeTeamGoals();
 				if(homeDif >= awayDif)
 					return home;
 				else

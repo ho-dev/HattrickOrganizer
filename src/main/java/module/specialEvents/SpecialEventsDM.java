@@ -121,14 +121,14 @@ public class SpecialEventsDM {
 		if (!highlights.isEmpty() || !filter.isShowMatchesWithSEOnly()) {
 
 			Match match = new Match();
-			match.setHostingTeam(kurzInfos.getHeimName());
-			match.setHostingTeamId(kurzInfos.getHeimID());
+			match.setHostingTeam(kurzInfos.getHomeTeamName());
+			match.setHostingTeamId(kurzInfos.getHomeTeamID());
 			match.setHostingTeamTactic(details.getHomeTacticType());
 			match.setMatchDate(new Date(kurzInfos.getMatchDateAsTimestamp().getTime()));
 			match.setMatchId(kurzInfos.getMatchID());
-			match.setMatchResult(kurzInfos.getHeimTore() + " - " + kurzInfos.getGastTore());
-			match.setVisitingTeam(kurzInfos.getGastName());
-			match.setVisitingTeamId(kurzInfos.getGastID());
+			match.setMatchResult(kurzInfos.getHomeTeamGoals() + " - " + kurzInfos.getGuestGuestGoals());
+			match.setVisitingTeam(kurzInfos.getGuestTeamName());
+			match.setVisitingTeamId(kurzInfos.getGuestTeamID());
 			match.setVisitingTeamTactic(details.getGuestTacticType());
 			match.setWeather(Weather.getById(details.getWetterId()));
 			match.setMatchType(kurzInfos.getMatchType());

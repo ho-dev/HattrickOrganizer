@@ -280,7 +280,7 @@ public class OnlineWorker {
 				// If ids not found, download matchdetails to obtain them.
 				// Highlights will be missing.
 				// ArenaId==0 in division battles
-				boolean newInfo = info.getHeimID()<=0 || info.getGastID()<=0;
+				boolean newInfo = info.getHomeTeamID()<=0 || info.getGuestTeamID()<=0;
 				Weather.Forecast weatherDetails = info.getWeatherForecast();
 				boolean bWeatherKnown = ((weatherDetails != null) && weatherDetails.isSure());
 				if ( newInfo || !bWeatherKnown) {
@@ -288,8 +288,8 @@ public class OnlineWorker {
 					showWaitInformation(10);
 					details = downloadMatchDetails(matchID, info.getMatchType(), null);
 					if ( details != null) {
-						info.setHeimID(details.getHeimId());
-						info.setGastID(details.getGastId());
+						info.setHomeTeamID(details.getHeimId());
+						info.setGuestTeamID(details.getGastId());
 						info.setArenaId(details.getArenaID());
 						info.setMatchDate(details.getSpielDatum().toString());
 						int wetterId = details.getWetterId();
@@ -329,9 +329,9 @@ public class OnlineWorker {
 						// get the other team
 						int otherId;
 						if (info.isHomeMatch()) {
-							otherId = info.getGastID();
+							otherId = info.getGuestTeamID();
 						} else {
-							otherId = info.getHeimID();
+							otherId = info.getHomeTeamID();
 						}
 						if (otherId > 0) {
 							Map<String, String> otherTeam = getTeam(otherId);
@@ -351,7 +351,7 @@ public class OnlineWorker {
 				MatchLineup lineup;
 				boolean success;
 				if ( info.getMatchStatus() == MatchKurzInfo.FINISHED) {
-					lineup = downloadMatchlineup(matchID, info.getMatchType(), info.getHeimID(), info.getGastID());
+					lineup = downloadMatchlineup(matchID, info.getMatchType(), info.getHomeTeamID(), info.getGuestTeamID());
 
 					if (lineup == null) {
 						if ( !isSilentDownload()) {
@@ -375,12 +375,12 @@ public class OnlineWorker {
 						return false;
 					}
 					info.setDuration(details.getLastMinute());
-					info.setGastTore(details.getGuestGoals());
-					info.setHeimTore(details.getHomeGoals());
-					info.setGastID(lineup.getGuestTeamId());
-					info.setGastName(lineup.getGuestTeamName());
-					info.setHeimID(lineup.getHomeTeamId());
-					info.setHeimName(lineup.getHomeTeamName());
+					info.setGuestTeamGoals(details.getGuestGoals());
+					info.setHomeTeamGoals(details.getHomeGoals());
+					info.setGuestTeamID(lineup.getGuestTeamId());
+					info.setGuestTeamName(lineup.getGuestTeamName());
+					info.setHomeTeamID(lineup.getHomeTeamId());
+					info.setHomeTeamName(lineup.getHomeTeamName());
 					success = DBManager.instance().storeMatch(info, details, lineup);
 				}
 				else{
@@ -1208,7 +1208,7 @@ public class OnlineWorker {
 				var xml = mc.getMatchesArchive(SourceSystem.YOUTH, youthteamid, dateSince, dateUntil);
 				var youthMatches = XMLMatchArchivParser.parseMatchesFromString(xml);
 				for ( var match: youthMatches){
-					MatchLineup lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHeimID(), match.getGastID());
+					MatchLineup lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHomeTeamID(), match.getGuestTeamID());
 					if (lineup != null) {
 						var details = downloadMatchDetails(match.getMatchID(), match.getMatchType(), lineup);
 						//var lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHeimID(), match.getGastID());

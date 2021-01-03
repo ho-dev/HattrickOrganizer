@@ -126,7 +126,7 @@ public class RatingOptimizer {
 		}
 		
 		Matchdetails det = matchData.getDetails();
-		if (HOVerwaltung.instance().getModel().getBasics().getTeamId() == matchData.getInfo().getHeimID()) {
+		if (HOVerwaltung.instance().getModel().getBasics().getTeamId() == matchData.getInfo().getHomeTeamID()) {
 			lineup.setAttitude(det.getHomeEinstellung());
 			lineup.setLocation((short) 1);
 			lineup.setTacticType(det.getHomeTacticType());

@@ -11,8 +11,6 @@ import java.text.SimpleDateFormat;
 import static core.util.StringUtils.getResultString;
 
 public class MatchKurzInfo implements Comparable<Object> {
-	// ~ Instance fields
-	// ----------------------------------------------------------------------------
 
 	/** Name des Teams zu dem die Matchinfo gehört */
 	private String m_sGastName = "";
@@ -27,13 +25,13 @@ public class MatchKurzInfo implements Comparable<Object> {
 	private boolean ordersGiven = true;
 
 	/** ID des Teams zu dem die info gehört */
-	private int m_iGastID = -1;
+	private int m_iGuestTeamID = -1;
 
 	/** Gast Tore */
 	private int m_iGastTore = -1;
 
 	/** ID des Teams zu dem die info gehört */
-	private int m_iHeimID = -1;
+	private int m_iHomeTeamID = -1;
 
 	/** Heim Tore */
 	private int m_iHeimTore = -1;
@@ -125,23 +123,12 @@ public class MatchKurzInfo implements Comparable<Object> {
 		return ordersGiven;
 	}
 
-	/**
-	 * Setter for property m_iGastID.
-	 * 
-	 * @param m_iGastID
-	 *            New value of property m_iGastID.
-	 */
-	public final void setGastID(int m_iGastID) {
-		this.m_iGastID = m_iGastID;
+	public final void setGuestTeamID(int iGuestTeamID) {
+		this.m_iGuestTeamID = iGuestTeamID;
 	}
 
-	/**
-	 * Getter for property m_iGastID.
-	 * 
-	 * @return Value of property m_iGastID.
-	 */
-	public final int getGastID() {
-		return m_iGastID;
+	public int getGuestTeamID() {
+		return m_iGuestTeamID;
 	}
 
 	/**
@@ -150,7 +137,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @param m_sGastName
 	 *            New value of property m_sGastName.
 	 */
-	public final void setGastName(java.lang.String m_sGastName) {
+	public final void setGuestTeamName(java.lang.String m_sGastName) {
 		this.m_sGastName = m_sGastName;
 	}
 
@@ -159,19 +146,10 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * 
 	 * @return Value of property m_sGastName.
 	 */
-	public final java.lang.String getGastName() {
+	public final java.lang.String getGuestTeamName() {
 		return m_sGastName;
 	}
 
-
-	public final String getOpponentName() {
-		if (isHomeMatch()) {
-			return getGastName();
-		}
-		else {
-			return getHeimName();
-		}
-	}
 
 	/**
 	 * Setter for property m_iGastTore.
@@ -179,7 +157,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @param m_iGastTore
 	 *            New value of property m_iGastTore.
 	 */
-	public final void setGastTore(int m_iGastTore) {
+	public final void setGuestTeamGoals(int m_iGastTore) {
 		this.m_iGastTore = m_iGastTore;
 	}
 
@@ -188,28 +166,17 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * 
 	 * @return Value of property m_iGastTore.
 	 */
-	public final int getGastTore() {
+	public final int getGuestGuestGoals() {
 		return m_iGastTore;
 	}
 
-	/**
-	 * Setter for property m_iHeimID.
-	 * 
-	 * @param m_iHeimID
-	 *            New value of property m_iHeimID.
-	 */
-	public final void setHeimID(int m_iHeimID) {
-		this.m_iHeimID = m_iHeimID;
+
+	public final void setHomeTeamID(int iHomeTeamID) {
+		this.m_iHomeTeamID = iHomeTeamID;
 	}
 
-	/**
-	 * Getter for property m_iHeimID.
-	 * 
-	 * @return Value of property m_iHeimID.
-	 */
-	public final int getHeimID() {
-		return m_iHeimID;
-	}
+
+	public int getHomeTeamID() {return m_iHomeTeamID;}
 
 	/**
 	 * Setter for property m_sHeimName.
@@ -217,7 +184,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @param m_sHeimName
 	 *            New value of property m_sHeimName.
 	 */
-	public final void setHeimName(java.lang.String m_sHeimName) {
+	public final void setHomeTeamName(java.lang.String m_sHeimName) {
 		this.m_sHeimName = m_sHeimName;
 	}
 
@@ -226,7 +193,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * 
 	 * @return Value of property m_sHeimName.
 	 */
-	public final java.lang.String getHeimName() {
+	public final java.lang.String getHomeTeamName() {
 		return m_sHeimName;
 	}
 
@@ -236,7 +203,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @param m_iHeimTore
 	 *            New value of property m_iHeimTore.
 	 */
-	public final void setHeimTore(int m_iHeimTore) {
+	public final void setHomeTeamGoals(int m_iHeimTore) {
 		this.m_iHeimTore = m_iHeimTore;
 	}
 
@@ -245,7 +212,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * 
 	 * @return Value of property m_iHeimTore.
 	 */
-	public final int getHeimTore() {
+	public final int getHomeTeamGoals() {
 		return m_iHeimTore;
 	}
 
@@ -396,6 +363,14 @@ public class MatchKurzInfo implements Comparable<Object> {
 		return 0;
 	}
 
+
+	public MatchKurzInfo(){}
+
+	public MatchKurzInfo(MatchKurzInfo parent){
+		new MatchKurzInfo();
+		this.copyFrom(parent);
+	}
+
 	/**
 	 * Merges the data from the given <code>MatchKurzInfo</code> into this
 	 * <code>MatchKurzInfo</code>. This method should be used e.g. when a model
@@ -410,21 +385,27 @@ public class MatchKurzInfo implements Comparable<Object> {
 			throw new IllegalArgumentException(
 					"Could not merge matches with different IDs");
 		}
-		setGastID(match.getGastID());
-		setGastName(match.getGastName());
-		setGastTore(match.getGastTore());
-		setHeimID(match.getHeimID());
-		setHeimName(match.getHeimName());
-		setHeimTore(match.getHeimTore());
+		setGuestTeamID(match.getGuestTeamID());
+		setGuestTeamName(match.getGuestTeamName());
+		setGuestTeamGoals(match.getGuestGuestGoals());
+		setHomeTeamID(match.getHomeTeamID());
+		setHomeTeamName(match.getHomeTeamName());
+		setHomeTeamGoals(match.getHomeTeamGoals());
 		setMatchDate(match.getMatchDate());
 		setMatchStatus(match.getMatchStatus());
 		setOrdersGiven(match.isOrdersGiven());
 		setMatchType(match.getMatchType());
 	}
+
+
+	public void copyFrom(MatchKurzInfo match) {
+		setMatchID(match.getMatchID());
+		merge(match);
+	}
 	
 	public final boolean isHomeMatch()
 	{
-		return m_iHeimID == user_team_id;
+		return m_iHomeTeamID == user_team_id;
 	}
 
 	// Return duration of the match in minutes

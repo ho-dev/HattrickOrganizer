@@ -154,7 +154,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 					|| (!sGroup.equals(player.getTeamInfoSmilie()) && bSelectedGroupExcluded)) {
 				boolean include = true;
 
-
+//TODO: do the last lineup exclusion
 //				if (bExcludeLast && (lastLineup != null) && lastLineup.getAufstellung().isPlayerInStartingEleven(player.getPlayerID())) {
 //					include = false;
 //					HOLogger.instance().log(getClass(), "Exclude: " + player.getFullName());
@@ -200,7 +200,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// Check
 		lineup.checkAufgestellteSpieler();
 
+		m_jpMatchBanner.refresh();
 		m_clLineupPanel.getLineupRatingPanel().refresh();
+
 
 	}
 

@@ -7,92 +7,29 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchType;
-import core.model.match.Weather;
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Map;
-
 import static core.util.HTCalendarFactory.getHTSeason;
 import static core.util.HTCalendarFactory.getHTWeek;
 
 public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
 
-    private boolean m_bOrdersSetInHT;
-    private int m_iMatchID = -1;
-    private String m_sOpponentName;
-    private MatchType m_clMatchType;
-    private java.sql.Timestamp m_tsMatchTime;
     private JComponent m_jpComponent;
     private short m_clLocation;
-    private Weather m_clWeather;
-    private Weather.Forecast m_clWeatherForecast;
-
-    @Override
-    public Weather getWeather() {return m_clWeather;}
-
-    @Override
-    public void setWeather(Weather Weather) {this.m_clWeather = Weather;}
-
-    @Override
-    public Weather.Forecast getWeatherForecast() {return m_clWeatherForecast;}
-
-    @Override
-    public void setWeatherForecast(Weather.Forecast WeatherForecast) {this.m_clWeatherForecast = WeatherForecast;}
 
     public short getLocation() {return m_clLocation;}
 
     public void setLocation(short location) {this.m_clLocation = location; }
 
-    public boolean areOrdersSetInHT() {
-        return m_bOrdersSetInHT;
-    }
 
-    public void setOrdersSetInHT(boolean m_bOrdersSetInHT) {
-        this.m_bOrdersSetInHT = m_bOrdersSetInHT;
-    }
-
-    @Override
-    public int getMatchID() {
-        return m_iMatchID;
-    }
-
-    @Override
-    public void setMatchID(int m_iMatchID) {
-        this.m_iMatchID = m_iMatchID;
-    }
-
-    public String getM_sOpponentName() {
-        return m_sOpponentName;
-    }
-
-    public void setOpponentName(String m_sTeamName) {
-        this.m_sOpponentName = m_sTeamName;
-    }
-
-    @Override
-    public MatchType getMatchType() {
-        return m_clMatchType;
-    }
-
-    @Override
-    public void setMatchType(MatchType m_clMatchType) {
-        this.m_clMatchType = m_clMatchType;
-    }
-
-    @Override
-    public Timestamp getMatchDateAsTimestamp() {
-        return m_tsMatchTime;
-    }
-
-    public void setMatchTime(Timestamp m_tsMatchTime) {
-        this.m_tsMatchTime = m_tsMatchTime;
-    }
-
-
-    public MatchOrdersCBItem() {
+    /**
+     * Constructor
+     */
+    public MatchOrdersCBItem(MatchKurzInfo _matchKurzInfo, short sLocation){
+        super(_matchKurzInfo);
+        m_clLocation = sLocation;
     }
 
     public final JComponent getComponent(){
@@ -113,12 +50,12 @@ public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
         constraints.weightx = 1.0;
         constraints.gridx = 0;
 
-        String sDate = new SimpleDateFormat("dd-MM-yyyy HH:mm ").format(m_tsMatchTime);
-        int iHTSeason = getHTSeason(m_tsMatchTime, true);
-        int iHTWeek = getHTWeek(m_tsMatchTime, true);
+        String sDate = new SimpleDateFormat("dd-MM-yyyy HH:mm ").format(this.getMatchDateAsTimestamp());
+        int iHTSeason = getHTSeason(this.getMatchDateAsTimestamp(), true);
+        int iHTWeek = getHTWeek(this.getMatchDateAsTimestamp(), true);
         sDate += "(" + iHTWeek + "/" + iHTSeason + ")";
-        JLabel jlNextGame = new JLabel(m_sOpponentName + "  " + sDate);
-        jlNextGame.setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[m_clMatchType.getIconArrayIndex()]));
+        JLabel jlNextGame = new JLabel(this.getGuestTeamName() + "  " + sDate);
+        jlNextGame.setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[this.getMatchType().getIconArrayIndex()]));
         layout.setConstraints(jlNextGame, constraints);
         m_jpComponent.add(jlNextGame);
 
@@ -130,7 +67,7 @@ public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
         int iWidth = Math.round(iHeight * 66f / 47f);
         Map<Object, Object> mapColor;
         Icon icon;
-        if(m_bOrdersSetInHT){
+        if(this.isOrdersGiven()){
             mapColor = Map.of("lineupColor", HOColorName.ORDERS_LINEUP, "tickColor", HOColorName.ORDERS_TICK);
             icon = ImageUtilities.getSvgIcon(HOIconName.ORDERS_SENT, mapColor, iWidth, iHeight);
         }
@@ -148,7 +85,7 @@ public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
     public final Component getListCellRendererComponent(boolean isSelected) {
         JComponent comp;
 
-        if (m_iMatchID != -1) {
+        if (this.getMatchID() != -1) {
             comp = getComponent();
         }
         else {
@@ -163,9 +100,17 @@ public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
     }
 
 
+    public boolean areOrdersSetInHT() {
+        return this.isOrdersGiven();
+    }
+
+    public void setOrdersSetInHT(boolean b) {
+        this.setOrdersGiven(b);
+    }
+
     @Override
     public int getId() {
-        return m_iMatchID;
+        return this.getMatchID();
     }
 
     @Override
@@ -174,18 +119,5 @@ public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
     }
 
 
-//            if ((obj.getPlayer() != null) && (getPlayer() != null)) {
-//        if (getPositionsEvaluation() > obj.getPositionsEvaluation()) {
-//            return -1;
-//        } else if (getPositionsEvaluation() < obj.getPositionsEvaluation()) {
-//            return 1;
-//        } else {
-//            return getPlayer().getLastName().compareTo(obj.getPlayer().getLastName());
-//        }
-//    } else if (obj.getPlayer() == null) {
-//        return -1;
-//    } else {
-//        return 1;
-//    }
 
 }
