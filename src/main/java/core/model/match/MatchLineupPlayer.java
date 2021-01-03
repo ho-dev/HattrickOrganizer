@@ -26,12 +26,13 @@ public class MatchLineupPlayer extends MatchRoleID {
     /**
      * Creates a new instance of MatchLineupPlayer
      */
-    public MatchLineupPlayer(int roleID, int behavior, int spielerID, double rating, String name,
+    public MatchLineupPlayer(SourceSystem sourceSystem, int roleID, int behavior, int spielerID, double rating, String name,
                              int status) {
         super(roleID, spielerID, (byte) behavior);
 
         //erst mit neuer Version Namen aufsplitten
         //setName( name );
+        this.sourceSystem=sourceSystem;
         m_sSpielerName = name;
         m_dRating = rating;
        m_iStatus = status;
@@ -42,7 +43,7 @@ public class MatchLineupPlayer extends MatchRoleID {
      */
     public MatchLineupPlayer(SourceSystem sourceSystem,
                              int roleID,
-                             int behaivior,
+                             int behavior,
                              int spielerID,
                              double rating,
                              String vname,
@@ -52,7 +53,7 @@ public class MatchLineupPlayer extends MatchRoleID {
                              double ratingStarsEndOfMatch,
                              int startPos,
                              int startBeh) {
-        super(roleID, spielerID, (byte) behaivior);
+        super(roleID, spielerID, (byte) behavior);
 
         this.sourceSystem = sourceSystem;
         m_sSpielerName = name;
@@ -68,7 +69,10 @@ public class MatchLineupPlayer extends MatchRoleID {
 
     public MatchLineupPlayer(MatchLineupPlayer p) {
     	super (p.getFieldPos(), p.getPlayerId(), p.getTactic());
-    	
+
+    	this.sourceSystem=p.sourceSystem;
+    	this.m_iStartPosition = p.m_iStartPosition;
+    	this.m_iStartBehavior = p.m_iStartBehavior;
     	m_sSpielerName = p.getSpielerName();
         m_sNickName = p.getNickName();
         m_sSpielerVName = p.getSpielerVName();
@@ -163,7 +167,7 @@ public class MatchLineupPlayer extends MatchRoleID {
     /**
      * Setter for property m_dRatingStarsEndOfMatch.
      *
-     * @param m_dRating New value of property m_dRatingStarsEndOfMatch.
+     * @param m_dRatingStarsEndOfMatch New value of property m_dRatingStarsEndOfMatch.
      */
     public final void setRatingStarsEndOfMatch(double m_dRatingStarsEndOfMatch) {
         this.m_dRatingStarsEndOfMatch = m_dRatingStarsEndOfMatch;

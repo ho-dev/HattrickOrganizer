@@ -80,7 +80,7 @@ public class XMLMatchLineupParser {
 			ml.setMatchDate(ele.getFirstChild().getNodeValue());
 
 			// team adden
-			MatchLineupTeam team = createTeam(ml.getSourceSystem().getValue(), ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
+			MatchLineupTeam team = createTeam(ml.getSourceSystem(), ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
 
 			if (team.getTeamID() == ml.getHomeTeamId()) {
 				ml.setHomeTeam(team);
@@ -95,7 +95,7 @@ public class XMLMatchLineupParser {
 		return ml;
 	}
 
-	private static MatchLineupPlayer createPlayer(Element ele) {
+	private static MatchLineupPlayer createPlayer(SourceSystem sourceSystem, Element ele) {
 		int roleID = -1;
 		int behavior = 0;
 		double rating = -1.0d;
@@ -192,7 +192,7 @@ public class XMLMatchLineupParser {
 		// HOLogger.instance().debug(getClass(),"Behavior out: " + behavior);
 		// HOLogger.instance().debug(getClass(),"--------------- Debug by XMLMatchLineupParse if you want it gone");
 
-		MatchLineupPlayer player = new MatchLineupPlayer(roleID, behavior, spielerID, rating, name, 0);
+		MatchLineupPlayer player = new MatchLineupPlayer(sourceSystem, roleID, behavior, spielerID, rating, name, 0);
 		player.setRatingStarsEndOfMatch(ratingStarsEndOfMatch);
 		return player;
 	}
@@ -207,7 +207,7 @@ public class XMLMatchLineupParser {
 		return "";
 	}
 
-	private static MatchLineupTeam createTeam(int sourceSystem, int matchID, Element ele) {
+	private static MatchLineupTeam createTeam(SourceSystem sourceSystem, int matchID, Element ele) {
 		Element tmp = (Element) ele.getElementsByTagName("TeamID").item(0);
 		int teamId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("ExperienceLevel").item(0);
@@ -216,7 +216,7 @@ public class XMLMatchLineupParser {
 		int styleOfPlay = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("TeamName").item(0);
 		String teamName = tmp.getFirstChild().getNodeValue();
-		MatchLineupTeam team = new MatchLineupTeam(SourceSystem.valueOf(sourceSystem), matchID, teamName, teamId, erfahrung, styleOfPlay);
+		MatchLineupTeam team = new MatchLineupTeam(sourceSystem, matchID, teamName, teamId, erfahrung, styleOfPlay);
 
 		Element starting = (Element) ele.getElementsByTagName("StartingLineup").item(0);
 		Element subs = (Element) ele.getElementsByTagName("Substitutions").item(0);
@@ -235,8 +235,7 @@ public class XMLMatchLineupParser {
 			// substituted
 			// players are always last in the API, there are at least signs of a
 			// fixed order.
-			MatchLineupPlayer player = createPlayer((Element) list.item(i));
-			player.setSourceSystem(SourceSystem.valueOf(sourceSystem));
+			MatchLineupPlayer player = createPlayer(sourceSystem, (Element) list.item(i));
 			if (team.getPlayerByID(player.getPlayerId()) != null) {
 				if ((player.getId() >= IMatchRoleID.FirstPlayerReplaced)
 						&& (player.getId() <= IMatchRoleID.ThirdPlayerReplaced)) {
@@ -253,7 +252,7 @@ public class XMLMatchLineupParser {
 		list = starting.getElementsByTagName("Player");
 
 		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-			MatchLineupPlayer startPlayer = createPlayer((Element) list.item(i));
+			MatchLineupPlayer startPlayer = createPlayer(sourceSystem, (Element) list.item(i));
 			startPlayer.setStartPosition(startPlayer.getId()); // it is the role id
 			startPlayer.setStartBehavior(startPlayer.getTactic());
 
@@ -285,12 +284,12 @@ public class XMLMatchLineupParser {
 			if ((s.getObjectPlayerID() > 0) &&
 					(team.getPlayerByID(s.getObjectPlayerID()) == null) &&
 					s.getOrderType() != MatchOrderType.MAN_MARKING) { // in case of MAN_MARKING the Object Player is an opponent player
-				team.add2Lineup(new MatchLineupPlayer(-1, -1, s.getObjectPlayerID(), -1d, "",
+				team.add2Lineup(new MatchLineupPlayer(sourceSystem, -1, -1, s.getObjectPlayerID(), -1d, "",
 						-1));
 			}
 			if ((s.getSubjectPlayerID() > 0)
 					&& (team.getPlayerByID(s.getSubjectPlayerID()) == null)) {
-				team.add2Lineup(new MatchLineupPlayer(-1, -1, s.getSubjectPlayerID(), -1d, "",
+				team.add2Lineup(new MatchLineupPlayer(sourceSystem, -1, -1, s.getSubjectPlayerID(), -1d, "",
 						-1));
 			}
 		}
