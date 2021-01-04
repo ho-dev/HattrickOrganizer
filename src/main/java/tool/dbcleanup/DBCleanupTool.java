@@ -163,7 +163,7 @@ public class DBCleanupTool {
 			Timestamp curMatchDate = curKurzInfo.getMatchDateAsTimestamp();
 			int curMatchId = curKurzInfo.getMatchID();
 			MatchType curMatchType = curKurzInfo.getMatchType();
-			boolean isMyMatch = (curKurzInfo.getHeimID() == myTeamId || curKurzInfo.getGastID() == myTeamId);
+			boolean isMyMatch = (curKurzInfo.getHomeTeamID() == myTeamId || curKurzInfo.getGuestTeamID() == myTeamId);
 			boolean removeMatch = false;
 			if (isMyMatch) {
 				if (curMatchType.isFriendly()) {

@@ -207,7 +207,15 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			
 			// Need to check for spieler, there may now be multiple players with -1 role.
 			// Should we delete here, anyways? Isn't that for update?
-			
+
+			try {
+				player.getSourceSystem().getValue();
+			}
+			catch(Exception e)
+			{
+				System.out.println("aaaa");
+			}
+
 			final String[] where = { "SourceSystem", "MatchID" , "TeamID", "RoleID", "SpielerID"};
 			final String[] werte = { "" + player.getSourceSystem().getValue(), "" + matchID, "" + teamID, "" + player.getId(), "" + player.getPlayerId()};
 			delete(where, werte);

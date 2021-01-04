@@ -640,6 +640,17 @@ public class MyConnector {
 		return "-1";
 	}
 
+	/**
+	 * Get the logo URI for a certain team.
+	 */
+	public String fetchLogoURI(int teamId) {
+		String xml = fetchTeamDetails(teamId);
+		if (xml.length()>0){
+			return XMLTeamDetailsParser.fetchLogoURI(xml);
+		}
+		return "-1";
+	}
+
 
 	public String fetchTeamDetails(int teamId)
 	{

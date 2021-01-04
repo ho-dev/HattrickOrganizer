@@ -317,17 +317,17 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	private MatchKurzInfo createMatchKurzInfo(ResultSet rs) throws SQLException {
 		MatchKurzInfo match = new MatchKurzInfo();
 		match.setMatchDate(rs.getString("MatchDate"));
-		match.setGastID(rs.getInt("GastID"));
-		match.setGastName(DBManager.deleteEscapeSequences(rs
+		match.setGuestTeamID(rs.getInt("GastID"));
+		match.setGuestTeamName(DBManager.deleteEscapeSequences(rs
 				.getString("GastName")));
-		match.setHeimID(rs.getInt("HeimID"));
-		match.setHeimName(DBManager.deleteEscapeSequences(rs
+		match.setHomeTeamID(rs.getInt("HeimID"));
+		match.setHomeTeamName(DBManager.deleteEscapeSequences(rs
 				.getString("HeimName")));
 		match.setMatchID(rs.getInt("MatchID"));
 		match.setMatchContextId(rs.getInt("MatchContextId"));
 		match.setTournamentTypeID(rs.getInt("TournamentTypeID"));
-		match.setGastTore(rs.getInt("GastTore"));
-		match.setHeimTore(rs.getInt("HeimTore"));
+		match.setGuestTeamGoals(rs.getInt("GastTore"));
+		match.setHomeTeamGoals(rs.getInt("HeimTore"));
 		match.setMatchType(MatchType.getById(rs.getInt("MatchTyp")));
 		match.setMatchStatus(rs.getInt("Status"));
 		match.setOrdersGiven(rs.getBoolean("Aufstellung"));
@@ -520,15 +520,15 @@ final class MatchesKurzInfoTable extends AbstractTable {
 						+ ","
 						+ match.getCupLevelIndex().getId()
 						+ ", '"
-						+ DBManager.insertEscapeSequences(match.getHeimName())
+						+ DBManager.insertEscapeSequences(match.getHomeTeamName())
 						+ "', "
-						+ match.getHeimID()
+						+ match.getHomeTeamID()
 						+ ", '"
-						+ DBManager.insertEscapeSequences(match.getGastName()) + "', ");
-				sql += (match.getGastID() + ", '"
+						+ DBManager.insertEscapeSequences(match.getGuestTeamName()) + "', ");
+				sql += (match.getGuestTeamID() + ", '"
 						+ match.getMatchDate() + "', "
-						+ match.getHeimTore() + ", "
-						+ match.getGastTore() + ", "
+						+ match.getHomeTeamGoals() + ", "
+						+ match.getGuestGuestGoals() + ", "
 						+ match.isOrdersGiven() + ", "
 						+ match.getMatchStatus() + ", "
 						+ match.getArenaId() + ", "
@@ -551,13 +551,13 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	void update(MatchKurzInfo match) {
 		StringBuilder sql = new StringBuilder()
 				.append("UPDATE ").append(getTableName()).append(" SET ")
-				.append("HeimName='").append(DBManager.insertEscapeSequences(match.getHeimName()))
-				.append("', HeimID=").append(match.getHeimID())
-				.append(", GastName='").append(DBManager.insertEscapeSequences(match.getGastName()))
-				.append("', GastID=").append(match.getGastID())
+				.append("HeimName='").append(DBManager.insertEscapeSequences(match.getHomeTeamName()))
+				.append("', HeimID=").append(match.getHomeTeamID())
+				.append(", GastName='").append(DBManager.insertEscapeSequences(match.getGuestTeamName()))
+				.append("', GastID=").append(match.getGuestTeamID())
 				.append(", MatchDate='").append(match.getMatchDate())
-				.append("', HeimTore=").append(match.getHeimTore())
-				.append(", GastTore=").append(match.getGastTore())
+				.append("', HeimTore=").append(match.getHomeTeamGoals())
+				.append(", GastTore=").append(match.getGuestGuestGoals())
 				.append(", Aufstellung=").append(match.isOrdersGiven())
 				.append(", Status=").append(match.getMatchStatus())
 				.append(", MatchContextId=").append(match.getMatchContextId())

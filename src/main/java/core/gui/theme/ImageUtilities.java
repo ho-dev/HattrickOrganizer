@@ -43,40 +43,7 @@ public class ImageUtilities {
 	    return Toolkit.getDefaultToolkit().createImage(ip);
 	}
 
-	/**
-	 * paint a cross over an image
-	 */
-	public static Image getImageDurchgestrichen(Image image,Color helleFarbe, Color dunkleFarbe) {
-	    try {
-	        final BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
-	        final java.awt.Graphics2D g2d = (java.awt.Graphics2D) bufferedImage.getGraphics();
-
-	        g2d.drawImage(image, 0, 0, null);
-
-	        //Kreuz zeichnen
-	        g2d.setColor(helleFarbe);
-	        g2d.drawLine(0, 0, bufferedImage.getWidth() - 1, bufferedImage.getHeight());
-	        g2d.drawLine(bufferedImage.getWidth() - 1, 0, 0, bufferedImage.getHeight());
-	        g2d.setColor(dunkleFarbe);
-	        g2d.drawLine(1, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
-	        g2d.drawLine(bufferedImage.getWidth(), 0, 1, bufferedImage.getHeight());
-	        return bufferedImage;
-	    } catch (Exception e) {
-	        return image;
-	    }
-	}
-
-	/**
-	 * Makes a colour in the image transparent.
-	 */
-	public static Image makeColorTransparent(Image im, int minred, int mingreen,
-	                                                  int minblue, int maxred, int maxgreen,
-	                                                  int maxblue) {
-	    final ImageProducer ip = new FilteredImageSource(im.getSource(),
-	    		new FuzzyTransparentFilter(minred, mingreen, minblue, maxred, maxgreen, maxblue));
-	    return Toolkit.getDefaultToolkit().createImage(ip);
-	}
 
 	/**
 	 * Makes a colour in the image transparent.
@@ -85,7 +52,7 @@ public class ImageUtilities {
 		Image image = null;
 
 		//Cache durchsuchen
-		image = (Image) m_clTransparentsCache.get(im);
+		image = m_clTransparentsCache.get(im);
 
 		//Nicht im Cache -> laden
 		if (image == null) {

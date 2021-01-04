@@ -304,15 +304,15 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
             oTeam = new Team();
 
-            if (match.getHeimID() == OWN_TEAM_ID) {
-                oTeam.setName(match.getGastName());
-                oTeam.setTeamId(match.getGastID());
+            if (match.getHomeTeamID() == OWN_TEAM_ID) {
+                oTeam.setName(match.getGuestTeamName());
+                oTeam.setTeamId(match.getGuestTeamID());
                 oTeam.setHomeMatch(true);
             }
             else
                 {
-                oTeam.setName(match.getHeimName());
-                oTeam.setTeamId(match.getHeimID());
+                oTeam.setName(match.getHomeTeamName());
+                oTeam.setTeamId(match.getHomeTeamID());
                 oTeam.setHomeMatch(false);
             }
             oTeam.setTime(match.getMatchDateAsTimestamp());
@@ -332,36 +332,27 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private void setUpcomingMatchesFromDB(){
         MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(OWN_TEAM_ID, MatchKurzInfo.UPCOMING);
         Arrays.sort(matches, Collections.reverseOrder());
-        MatchOrdersCBItem clMatchOrdersTemp;
         Timestamp now = new Timestamp(System.currentTimeMillis());
         List<MatchOrdersCBItem> upcomingMatches = new ArrayList<>();
+        short location;
 
         for (MatchKurzInfo match : matches) {
             if (match.getMatchDateAsTimestamp().after(now)) {
-                clMatchOrdersTemp = new MatchOrdersCBItem();
-                clMatchOrdersTemp.setMatchID(match.getMatchID());
-                clMatchOrdersTemp.setMatchType(match.getMatchType());
-                clMatchOrdersTemp.setMatchTime(match.getMatchDateAsTimestamp());
-                clMatchOrdersTemp.setOpponentName(match.getOpponentName());
-                clMatchOrdersTemp.setOrdersSetInHT(match.isOrdersGiven());
                 if (match.getMatchType().isTournament()){
-                    clMatchOrdersTemp.setLocation(IMatchDetails.LOCATION_TOURNAMENT);
+                    location = IMatchDetails.LOCATION_TOURNAMENT;
                 }
                 else{
                     if (match.isHomeMatch()){
-                        clMatchOrdersTemp.setLocation(IMatchDetails.LOCATION_HOME);
+                        location = IMatchDetails.LOCATION_HOME;
                     }
                     else if(match.isDerby()){
-                        clMatchOrdersTemp.setLocation(IMatchDetails.LOCATION_AWAYDERBY);
+                        location = IMatchDetails.LOCATION_AWAYDERBY;
                     }
                     else {
-                        clMatchOrdersTemp.setLocation(IMatchDetails.LOCATION_AWAY);
+                        location = IMatchDetails.LOCATION_AWAY;
                     }
                 }
-
-                clMatchOrdersTemp.setWeather(match.getWeather());
-                clMatchOrdersTemp.setWeatherForecast(match.getWeatherForecast());
-                upcomingMatches.add(clMatchOrdersTemp);
+                upcomingMatches.add(new MatchOrdersCBItem(match, location));
             }
         }
 

@@ -35,7 +35,7 @@ public class MatchHelper {
 	 * @param match		match short info
 	 */
 	public short getLocation(MatchKurzInfo match) {
-		return getLocation(match.getHeimID(), match.getGastID(), match.getMatchID(), match.getMatchType());
+		return getLocation(match.getHomeTeamID(), match.getGuestTeamID(), match.getMatchID(), match.getMatchType());
 	}
 
 	/**

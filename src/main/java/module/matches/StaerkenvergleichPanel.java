@@ -105,17 +105,17 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		matchtypLabel.setText(info.getMatchType().getName());
 
 		// Teams
-		heimTeamNameLabel.setText(info.getHeimName());
-		gastTeamNameLabel.setText(info.getGastName());
+		heimTeamNameLabel.setText(info.getHomeTeamName());
+		gastTeamNameLabel.setText(info.getGuestTeamName());
 
 		int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		if (info.getHeimID() == teamid) {
+		if (info.getHomeTeamID() == teamid) {
 			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 		} else {
 			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
 		}
 
-		if (info.getGastID() == teamid) {
+		if (info.getGuestTeamID() == teamid) {
 			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 		} else {
 			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
@@ -124,13 +124,13 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 
 			if (details.getHomeHalfTimeGoals() >= 0) {
-				heimTeamToreLabel.setText(info.getHeimTore() + " ("
+				heimTeamToreLabel.setText(info.getHomeTeamGoals() + " ("
 						+ details.getHomeHalfTimeGoals() + ") ");
-				gastTeamToreLabel.setText(info.getGastTore() + " ("
+				gastTeamToreLabel.setText(info.getGuestGuestGoals() + " ("
 						+ details.getGuestHalfTimeGoals() + ") ");
 			} else {
-				heimTeamToreLabel.setText(String.valueOf(info.getHeimTore()));
-				gastTeamToreLabel.setText(String.valueOf(info.getGastTore()));
+				heimTeamToreLabel.setText(String.valueOf(info.getHomeTeamGoals()));
+				gastTeamToreLabel.setText(String.valueOf(info.getGuestGuestGoals()));
 			}
 
 			String name4matchtyp = info.getMatchType().getName();
@@ -148,10 +148,10 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			}
 			
 			// Sterne für Sieger!
-			if (info.getHeimTore() > info.getGastTore()) {
+			if (info.getHomeTeamGoals() > info.getGuestGuestGoals()) {
 				heimTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 				gastTeamNameLabel.setIcon(null);
-			} else if (info.getHeimTore() < info.getGastTore()) {
+			} else if (info.getHomeTeamGoals() < info.getGuestGuestGoals()) {
 				heimTeamNameLabel.setIcon(null);
 				gastTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 			} else {
@@ -161,9 +161,9 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 
 			// Sterneanzahl
 			double heimSterne = getStars(DBManager.instance().getMatchLineupPlayers(
-					info.getMatchID(), info.getHeimID()));
+					info.getMatchID(), info.getHomeTeamID()));
 			double gastSterne = getStars(DBManager.instance().getMatchLineupPlayers(
-					info.getMatchID(), info.getGastID()));
+					info.getMatchID(), info.getGuestTeamID()));
 			heimSterneLabel.setText(Helper.round(heimSterne, 1) + " ");
 			gastSterneLabel.setText(Helper.round(gastSterne, 1) + " ");
 
@@ -223,12 +223,12 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			String[] stimmungSelbstvertrauen = DBManager.instance().getStimmmungSelbstvertrauen(
 					hrfid);
 
-			if (info.getHeimID() == teamid) {
+			if (info.getHomeTeamID() == teamid) {
 				heimStimmungLabel.setText(stimmungSelbstvertrauen[0]);
 				gastStimmungLabel.setText("");
 				heimSelbstvertrauenLabel.setText(stimmungSelbstvertrauen[1]);
 				gastSelbstvertrauenLabel.setText("");
-			} else if (info.getGastID() == teamid) {
+			} else if (info.getGuestTeamID() == teamid) {
 				heimStimmungLabel.setText("");
 				gastStimmungLabel.setText(stimmungSelbstvertrauen[0]);
 				heimSelbstvertrauenLabel.setText("");
