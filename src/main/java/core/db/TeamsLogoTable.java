@@ -29,7 +29,8 @@ public class TeamsLogoTable extends AbstractTable{
     protected void initColumns() {
         columns = new ColumnDescriptor[]{
                 new ColumnDescriptor("TEAM_ID", Types.INTEGER, false, true),
-                new ColumnDescriptor("LOGO_URL", Types.VARCHAR, true, 256),
+                new ColumnDescriptor("URL", Types.VARCHAR, true, 256),
+                new ColumnDescriptor("FILENAME", Types.VARCHAR, true, 256),
                 new ColumnDescriptor("LAST_ACCESS", Types.TIMESTAMP, true)
         };
     }
@@ -44,10 +45,10 @@ public class TeamsLogoTable extends AbstractTable{
      */
     public String getTeamLogoFileName(Path teamLogoFolderPath, int teamID){
 
-        String logoFullURL, logoFileName;
+        String logoURL, logoFileName;
 
         // 1. Get logoFileName from the database
-        StringBuilder sql = new StringBuilder("SELECT LOGO_URL from " + getTableName()) ;
+        StringBuilder sql = new StringBuilder("SELECT * from " + getTableName()) ;
         sql.append(" WHERE TEAM_ID=").append(teamID);
         var rs= adapter.executeQuery(sql.toString());
         if (rs == null) {
@@ -61,8 +62,8 @@ public class TeamsLogoTable extends AbstractTable{
                 return null;
             }
             else {
-                logoFullURL = "http blblblbl" + rs.getString("LOGO_URL"); // ToDo that part
-                logoFileName = teamLogoFolderPath.resolve(String.valueOf(teamID)).toString();
+                logoURL = rs.getString("URL");
+                logoFileName = teamLogoFolderPath.resolve(rs.getString("FILENAME")).toString();
             }
         }
         catch (SQLException throwables) {
@@ -79,9 +80,9 @@ public class TeamsLogoTable extends AbstractTable{
             else
             {
                // we try to download the logo from HT servers
-                boolean bSuccess = UpdateHelper.download(logoFullURL, logo);
+                boolean bSuccess = UpdateHelper.download(logoURL, logo);
                 if (!bSuccess) {
-                    HOLogger.instance().error(this.getClass(), "error when trying to download logo of team ID: " + teamID + "\n" + logoFullURL );
+                    HOLogger.instance().error(this.getClass(), "error when trying to download logo of team ID: " + teamID + "\n" + logoURL );
                     return null;
                 }
             }
@@ -94,12 +95,31 @@ public class TeamsLogoTable extends AbstractTable{
 
 
 
-    public void storeTeamLogoInfo(int teamID, String logoURL, Timestamp lastAccess){
+    public void storeTeamLogoInfo(int teamID, String logoURI, Timestamp lastAccess){
+        String logoURL, fileName;
+
+        if(logoURI == null) {
+            // case of bot team ?
+            HOLogger.instance().debug(this.getClass(), "storeTeamLogoInfo: logo URI was null for team " + teamID);
+            fileName = null;
+            logoURL = null;
+        }
+        else{
+            if (logoURI.contains(".")) {
+                fileName = teamID + logoURI.substring(logoURI.lastIndexOf("."));
+                logoURL = "https:" + logoURI;
+            }
+            else{
+                HOLogger.instance().error(this.getClass(), "storeTeamLogoInfo: logo URI not recognized " + logoURI);
+                return;
+            }
+        }
+
         StringBuilder sql = new StringBuilder("MERGE INTO " + getTableName() + " AS t USING (VALUES(") ;
-        sql.append(teamID).append(", '").append(logoURL).append("', ").append(lastAccess).append(")) AS vals(a,b,c) ");
+        sql.append(teamID).append(", '").append(logoURL).append("', '").append(fileName).append("', ").append(lastAccess).append(")) AS vals(a, b, c, d) ");
         sql.append("ON t.TEAM_ID=vals.a \n");
-        sql.append("WHEN MATCHED THEN UPDATE SET t.LOGO_URL=vals.b, t.LAST_ACCESS=vals.c \n");
-        sql.append("WHEN NOT MATCHED THEN INSERT VALUES vals.a, vals.b,vals.c");
+        sql.append("WHEN MATCHED THEN UPDATE SET t.URL=vals.b, t.FILENAME=vals.c, t.LAST_ACCESS=vals.d \n");
+        sql.append("WHEN NOT MATCHED THEN INSERT VALUES vals.a, vals.b, vals.c, vals.d");
 
         adapter.executeUpdate(sql.toString());
         HOLogger.instance().debug(this.getClass(), "storeTeamLogoInfo: " +  teamID + " " +  logoURL + " " +  lastAccess);
@@ -108,7 +128,8 @@ public class TeamsLogoTable extends AbstractTable{
 
 
     public void updateLastAccessTime(int teamID){
-        String sql = "UPDATE CLUBS_LOGO SET LAST_ACCESS = " + new Timestamp(System.currentTimeMillis()) + " WHERE TEAM_ID = " + teamID;
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        String sql = "UPDATE CLUBS_LOGO SET LAST_ACCESS = '" + now.toString() + "' WHERE TEAM_ID = " + teamID;
         adapter.executeUpdate(sql);
         HOLogger.instance().debug(this.getClass(), "Update access time info of teamID : " +  teamID);
     }
