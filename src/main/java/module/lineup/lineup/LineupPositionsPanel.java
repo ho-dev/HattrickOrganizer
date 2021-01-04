@@ -154,7 +154,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 					|| (!sGroup.equals(player.getTeamInfoSmilie()) && bSelectedGroupExcluded)) {
 				boolean include = true;
 
-
+//TODO: do the last lineup exclusion
 //				if (bExcludeLast && (lastLineup != null) && lastLineup.getAufstellung().isPlayerInStartingEleven(player.getPlayerID())) {
 //					include = false;
 //					HOLogger.instance().log(getClass(), "Exclude: " + player.getFullName());
@@ -200,7 +200,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// Check
 		lineup.checkAufgestellteSpieler();
 
+		m_jpMatchBanner.refresh();
 		m_clLineupPanel.getLineupRatingPanel().refresh();
+
 
 	}
 
@@ -244,7 +246,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.insets = new Insets(3, 3, 3, 3);
-		m_jpMatchBanner = new MatchBanner(this);
+		m_jpMatchBanner = new MatchBanner(m_jpMatchAndLineupSelectionPanel);
 		layout.setConstraints(m_jpMatchBanner, constraints);
 		centerPanel.add(m_jpMatchBanner);
 

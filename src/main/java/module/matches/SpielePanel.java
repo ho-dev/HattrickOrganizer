@@ -249,7 +249,7 @@ public final class SpielePanel extends LazyImagePanel {
 		text.append(":");
 
 		for (int i = 0; (i < infos.length) && (i < 11); i++) {
-			text.append("\n" + infos[i].getHeimName() + " - " + infos[i].getGastName());
+			text.append("\n" + infos[i].getHomeTeamName() + " - " + infos[i].getGuestTeamName());
 			if (i == 10) {
 				text.append("\n ... ");
 			}
@@ -272,7 +272,7 @@ public final class SpielePanel extends LazyImagePanel {
 			MatchPredictionManager manager = MatchPredictionManager.instance();
 			int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 			boolean homeMatch = false;
-			if (teamId == matchesModel.getMatch().getHeimID()) {
+			if (teamId == matchesModel.getMatch().getHomeTeamID()) {
 				homeMatch = true;
 			}
 
@@ -289,7 +289,7 @@ public final class SpielePanel extends LazyImagePanel {
 			if (homeMatch && !ratingsAreKnown(homeTeamRatings)) {
 				homeTeamValues = getOwnLineupRatings(manager);
 			} else {
-				homeTeamValues = manager.generateTeamData(matchesModel.getMatch().getHeimName(),
+				homeTeamValues = manager.generateTeamData(matchesModel.getMatch().getHomeTeamName(),
 						homeTeamRatings, details != null ? details.getHomeTacticType()
 								: IMatchDetails.TAKTIK_NORMAL,
 						details != null ? getRatingValue(details.getHomeTacticSkill() - 1) : 1);
@@ -308,14 +308,14 @@ public final class SpielePanel extends LazyImagePanel {
 			if (!homeMatch && !ratingsAreKnown(awayTeamRatings)) {
 				awayTeamValues = getOwnLineupRatings(manager);
 			} else {
-				awayTeamValues = manager.generateTeamData(matchesModel.getMatch().getGastName(),
+				awayTeamValues = manager.generateTeamData(matchesModel.getMatch().getGuestTeamName(),
 						awayTeamRatings, details != null ? details.getGuestTacticType()
 								: IMatchDetails.TAKTIK_NORMAL,
 						details != null ? getRatingValue(details.getGuestTacticSkill() - 1) : 1);
 			}
 
-			String match = matchesModel.getMatch().getHeimName() + " - "
-					+ matchesModel.getMatch().getGastName();
+			String match = matchesModel.getMatch().getHomeTeamName() + " - "
+					+ matchesModel.getMatch().getGuestTeamName();
 			MatchEnginePanel matchPredictionPanel = new MatchEnginePanel(homeTeamValues,
 					awayTeamValues);
 
@@ -600,8 +600,8 @@ public final class SpielePanel extends LazyImagePanel {
 				aufstellungHeimPanel.clearAll();
 				aufstellungGastPanel.clearAll();
 			} else {
-				aufstellungHeimPanel.refresh(info.getMatchID(), info.getHeimID());
-				aufstellungGastPanel.refresh(info.getMatchID(), info.getGastID());
+				aufstellungHeimPanel.refresh(info.getMatchID(), info.getHomeTeamID());
+				aufstellungGastPanel.refresh(info.getMatchID(), info.getGuestTeamID());
 			}
 		} else {
 			this.matchesModel.setMatch(null);
@@ -637,8 +637,8 @@ public final class SpielePanel extends LazyImagePanel {
 
 		if (matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED) {
 			final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-			if ((matchesModel.getMatch().getHeimID() == teamid)
-					|| (matchesModel.getMatch().getGastID() == teamid)) {
+			if ((matchesModel.getMatch().getHomeTeamID() == teamid)
+					|| (matchesModel.getMatch().getGuestTeamID() == teamid)) {
 				adoptLineupButton.setEnabled(true);
 			} else {
 				adoptLineupButton.setEnabled(false);

@@ -70,17 +70,17 @@ class ManschaftsBewertungs2Panel extends LazyImagePanel {
 			clear();
 		}
 
-		heimTeamNameLabel.setText(info.getHeimName());
-		gastTeamNameLabel.setText(info.getGastName());
+		heimTeamNameLabel.setText(info.getHomeTeamName());
+		gastTeamNameLabel.setText(info.getGuestTeamName());
 
 		int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		if (info.getHeimID() == teamid) {
+		if (info.getHomeTeamID() == teamid) {
 			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 		} else {
 			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
 		}
 
-		if (info.getGastID() == teamid) {
+		if (info.getGuestTeamID() == teamid) {
 			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 		} else {
 			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
@@ -91,10 +91,10 @@ class ManschaftsBewertungs2Panel extends LazyImagePanel {
 			if (info.getMatchStatus() != MatchKurzInfo.FINISHED) {
 				heimTeamNameLabel.setIcon(null);
 				gastTeamNameLabel.setIcon(null);
-			} else if (info.getHeimTore() > info.getGastTore()) {
+			} else if (info.getHomeTeamGoals() > info.getGuestGuestGoals()) {
 				heimTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 				gastTeamNameLabel.setIcon(null);
-			} else if (info.getHeimTore() < info.getGastTore()) {
+			} else if (info.getHomeTeamGoals() < info.getGuestGuestGoals()) {
 				heimTeamNameLabel.setIcon(null);
 				gastTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 			} else {
@@ -103,9 +103,9 @@ class ManschaftsBewertungs2Panel extends LazyImagePanel {
 			}
 
 			Matchdetails details = this.matchesModel.getDetails();
-			heimTeamToreLabel.setText(info.getHeimTore() + " (" + details.getHomeHalfTimeGoals()
+			heimTeamToreLabel.setText(info.getHomeTeamGoals() + " (" + details.getHomeHalfTimeGoals()
 					+ ") ");
-			gastTeamToreLabel.setText(info.getGastTore() + " (" + details.getGuestHalfTimeGoals()
+			gastTeamToreLabel.setText(info.getGuestGuestGoals() + " (" + details.getGuestHalfTimeGoals()
 					+ ") ");
 
 			setBarValue(0, details.getHomeGesamtstaerke(false),

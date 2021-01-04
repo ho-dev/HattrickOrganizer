@@ -336,16 +336,16 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
                 final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
-                ColorLabelEntry entry = new ColorLabelEntry(match.getHeimName(), ColorLabelEntry.FG_STANDARD,
+                ColorLabelEntry entry = new ColorLabelEntry(match.getHomeTeamName(), ColorLabelEntry.FG_STANDARD,
                         background, SwingConstants.LEFT);
-                entry.setFGColor((match.getHeimID() == HOVerwaltung.instance().getModel().getBasics()
+                entry.setFGColor((match.getHomeTeamID() == HOVerwaltung.instance().getModel().getBasics()
                         .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
 
                 if (match.getMatchStatus() != MatchKurzInfo.FINISHED)
                     entry.setIcon(ImageUtilities.NOIMAGEICON);
-                else if (match.getHeimTore() > match.getGastTore())
+                else if (match.getHomeTeamGoals() > match.getGuestGuestGoals())
                     entry.setIcon(ImageUtilities.getStarIcon());
-                else if (match.getHeimTore() < match.getGastTore())
+                else if (match.getHomeTeamGoals() < match.getGuestGuestGoals())
                     entry.setIcon(ImageUtilities.NOIMAGEICON);
                 else
                     entry.setIcon(ImageUtilities.getStarIcon());
@@ -374,16 +374,16 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
                 final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
-                ColorLabelEntry entry = new ColorLabelEntry(match.getGastName(), ColorLabelEntry.FG_STANDARD,
+                ColorLabelEntry entry = new ColorLabelEntry(match.getGuestTeamName(), ColorLabelEntry.FG_STANDARD,
                         background, SwingConstants.LEFT);
-                entry.setFGColor((match.getGastID() == HOVerwaltung.instance().getModel().getBasics()
+                entry.setFGColor((match.getGuestTeamID() == HOVerwaltung.instance().getModel().getBasics()
                         .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
 
                 if (match.getMatchStatus() != MatchKurzInfo.FINISHED)
                     entry.setIcon(ImageUtilities.NOIMAGEICON);
-                else if (match.getHeimTore() > match.getGastTore())
+                else if (match.getHomeTeamGoals() > match.getGuestGuestGoals())
                     entry.setIcon(ImageUtilities.NOIMAGEICON);
-                else if (match.getHeimTore() < match.getGastTore())
+                else if (match.getHomeTeamGoals() < match.getGuestGuestGoals())
                     entry.setIcon(ImageUtilities.getStarIcon());
                 else
                     entry.setIcon(ImageUtilities.getStarIcon());

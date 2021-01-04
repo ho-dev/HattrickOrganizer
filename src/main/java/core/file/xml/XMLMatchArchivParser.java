@@ -105,22 +105,22 @@ public class XMLMatchArchivParser {
 				}
 
 				tmp = (Element) ele.getElementsByTagName("HomeTeam").item(0);
-				match.setHeimID(Integer.parseInt(((Element) tmp
+				match.setHomeTeamID(Integer.parseInt(((Element) tmp
 						.getElementsByTagName("HomeTeamID").item(0))
 						.getFirstChild().getNodeValue()));
-				match.setHeimName(((Element) tmp.getElementsByTagName(
+				match.setHomeTeamName(((Element) tmp.getElementsByTagName(
 						"HomeTeamName").item(0)).getFirstChild().getNodeValue());
 				tmp = (Element) ele.getElementsByTagName("AwayTeam").item(0);
-				match.setGastID(Integer.parseInt(((Element) tmp
+				match.setGuestTeamID(Integer.parseInt(((Element) tmp
 						.getElementsByTagName("AwayTeamID").item(0))
 						.getFirstChild().getNodeValue()));
-				match.setGastName(((Element) tmp.getElementsByTagName(
+				match.setGuestTeamName(((Element) tmp.getElementsByTagName(
 						"AwayTeamName").item(0)).getFirstChild().getNodeValue());
 				tmp = (Element) ele.getElementsByTagName("HomeGoals").item(0);
-				match.setHeimTore(Integer.parseInt(tmp.getFirstChild()
+				match.setHomeTeamGoals(Integer.parseInt(tmp.getFirstChild()
 						.getNodeValue()));
 				tmp = (Element) ele.getElementsByTagName("AwayGoals").item(0);
-				match.setGastTore(Integer.parseInt(tmp.getFirstChild()
+				match.setGuestTeamGoals(Integer.parseInt(tmp.getFirstChild()
 						.getNodeValue()));
 				match.setOrdersGiven(true);
 				match.setMatchStatus(MatchKurzInfo.FINISHED);

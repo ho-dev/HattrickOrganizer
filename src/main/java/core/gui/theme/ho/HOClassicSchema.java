@@ -502,10 +502,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		return key.contains("fg") ? Color.BLACK : Color.WHITE;
 	}
 
-	public ImageIcon getThemeIcon(String key) {
-		return (ImageIcon) cache.get(key);
-	}
-
 	@Override
 	public ImageIcon loadImageIcon(String path) {
 		ImageIcon image;

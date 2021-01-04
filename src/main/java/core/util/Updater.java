@@ -31,7 +31,7 @@ public class Updater {
         public final int code;
         public final String xmlURL;
 
-        private ReleaseChannel(String label, int code, String xmlURL) {
+        ReleaseChannel(String label, int code, String xmlURL) {
             this.label = label;
             this.code = code;
             this.xmlURL = xmlURL;

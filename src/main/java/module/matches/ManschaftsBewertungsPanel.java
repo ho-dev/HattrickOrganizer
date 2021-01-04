@@ -345,35 +345,35 @@ class ManschaftsBewertungsPanel extends LazyImagePanel {
 		// Teams
 		int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
-		heimTeamNameLabel.setText(info.getHeimName());
-		gastTeamNameLabel.setText(info.getGastName());
+		heimTeamNameLabel.setText(info.getHomeTeamName());
+		gastTeamNameLabel.setText(info.getGuestTeamName());
 
-		if (info.getHeimID() == teamid) {
+		if (info.getHomeTeamID() == teamid) {
 			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 		} else {
 			heimTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
 		}
 
-		if (info.getGastID() == teamid) {
+		if (info.getGuestTeamID() == teamid) {
 			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 		} else {
 			gastTeamNameLabel.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
 		}
 
 		if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
-			heimTeamToreLabel.setText(info.getHeimTore() + " (" + details.getHomeHalfTimeGoals()
+			heimTeamToreLabel.setText(info.getHomeTeamGoals() + " (" + details.getHomeHalfTimeGoals()
 					+ ") ");
-			gastTeamToreLabel.setText(info.getGastTore() + " (" + details.getGuestHalfTimeGoals()
+			gastTeamToreLabel.setText(info.getGuestGuestGoals() + " (" + details.getGuestHalfTimeGoals()
 					+ ") ");
 
 			// Sterne für Sieger!
 			if (info.getMatchStatus() != MatchKurzInfo.FINISHED) {
 				heimTeamNameLabel.setIcon(null);
 				gastTeamNameLabel.setIcon(null);
-			} else if (info.getHeimTore() > info.getGastTore()) {
+			} else if (info.getHomeTeamGoals() > info.getGuestGuestGoals()) {
 				heimTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 				gastTeamNameLabel.setIcon(null);
-			} else if (info.getHeimTore() < info.getGastTore()) {
+			} else if (info.getHomeTeamGoals() < info.getGuestGuestGoals()) {
 				heimTeamNameLabel.setIcon(null);
 				gastTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 			} else {

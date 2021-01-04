@@ -174,12 +174,12 @@ public class TeamManager {
 			MatchKurzInfo match = (MatchKurzInfo) matches[i];
 			Team team = new Team();
 
-			if (match.getHeimID() == teamId) {
-				team.setName(match.getGastName());
-				team.setTeamId(match.getGastID());
+			if (match.getHomeTeamID() == teamId) {
+				team.setName(match.getGuestTeamName());
+				team.setTeamId(match.getGuestTeamID());
 			} else {
-				team.setName(match.getHeimName());
-				team.setTeamId(match.getHeimID());
+				team.setName(match.getHomeTeamName());
+				team.setTeamId(match.getHomeTeamID());
 			}
 			team.setTime(match.getMatchDateAsTimestamp());
 			team.setMatchType(match.getMatchType().getIconArrayIndex());
