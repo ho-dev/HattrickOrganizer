@@ -1,6 +1,8 @@
 package module.lineup.lineup;
 
 import core.gui.Refreshable;
+import core.gui.model.MatchOrdersCBItem;
+import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 
 import javax.swing.*;
@@ -9,7 +11,7 @@ import java.awt.*;
 public class MatchBanner extends JPanel implements Refreshable {
 
     MatchAndLineupSelectionPanel matchSelectionPanel;
-    JLabel jlHomeTeam, jlAwayTeam;
+    JLabel jlHomeTeam, jlAwayTeam, jlMatchTypeIcon, jlWeather;
 
     public MatchBanner(MatchAndLineupSelectionPanel _matchSelectionPanel) {
         matchSelectionPanel = _matchSelectionPanel;
@@ -25,19 +27,46 @@ public class MatchBanner extends JPanel implements Refreshable {
         setLayout(layout);
 
         gbc.insets = new Insets(3,3 ,3 ,3 );
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0.0;
         gbc.weighty = 0.0;
 
-        gbc.gridx = 0;
+
+        // 1st row ================================================
         gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        jlMatchTypeIcon = new JLabel();
+        layout.setConstraints(jlMatchTypeIcon, gbc);
+        add(jlMatchTypeIcon);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        JLabel jlPH = new JLabel("          ");
+        layout.setConstraints(jlPH, gbc);
+        add(jlPH);
+
+        gbc.gridx = 2;
+        gbc.anchor = GridBagConstraints.LINE_END;
+        jlWeather = new JLabel("");
+        jlWeather.setHorizontalTextPosition(JLabel.LEFT);
+        layout.setConstraints(jlWeather, gbc);
+        add(jlWeather);
+
+        // 2nd row ================================================
+        gbc.gridy = 1;
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
         jlHomeTeam = new JLabel();
+        jlHomeTeam.setHorizontalTextPosition(JLabel.CENTER);
+        jlHomeTeam.setVerticalTextPosition(JLabel.BOTTOM);
         layout.setConstraints(jlHomeTeam, gbc);
         add(jlHomeTeam);
 
-        gbc.gridx = 1;
-        gbc.gridy = 0;
+        gbc.gridx = 2;
         jlAwayTeam = new JLabel();
+        jlAwayTeam.setHorizontalTextPosition(JLabel.CENTER);
+        jlAwayTeam.setVerticalTextPosition(JLabel.BOTTOM);
         layout.setConstraints(jlAwayTeam, gbc);
         add(jlAwayTeam);
 
@@ -45,17 +74,26 @@ public class MatchBanner extends JPanel implements Refreshable {
 
     @Override
     public void refresh() {
-        var selectedMatch = matchSelectionPanel.getSelectedMatch();
+        MatchOrdersCBItem selectedMatch = matchSelectionPanel.getSelectedMatch();
 
         if (selectedMatch != null) {
-            int iHomeTeamID = selectedMatch.getHomeTeamID();
-            int iAwayTeamID = selectedMatch.getGuestTeamID();
 
-            Icon homeTeamIcon = ThemeManager.instance().getClubLogo(iHomeTeamID);
+            ThemeManager tm = ThemeManager.instance();
+
+            Icon weatherIcon = tm.getIcon(HOIconName.WEATHER[selectedMatch.getWeather().getId()]);
+            jlWeather.setIcon(weatherIcon);
+
+            Icon MatchTypeIcon = tm.getScaledIcon(HOIconName.MATCHICONS[selectedMatch.getMatchType().getIconArrayIndex()], 22, 22);
+            jlMatchTypeIcon.setIcon(MatchTypeIcon);
+
+            Icon homeTeamIcon = tm.getClubLogo(selectedMatch.getHomeTeamID());
             jlHomeTeam.setIcon(homeTeamIcon);
+            jlHomeTeam.setText(selectedMatch.getHomeTeamName());
 
-            Icon AwayTeamIcon = ThemeManager.instance().getClubLogo(iAwayTeamID);
+
+            Icon AwayTeamIcon = tm.getClubLogo(selectedMatch.getGuestTeamID());
             jlAwayTeam.setIcon(AwayTeamIcon);
+            jlAwayTeam.setText(selectedMatch.getGuestTeamName());
         }
     }
 
