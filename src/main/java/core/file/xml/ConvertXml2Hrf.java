@@ -13,6 +13,7 @@ import core.constants.player.PlayerAggressiveness;
 import core.constants.player.PlayerAgreeability;
 import core.constants.player.PlayerHonesty;
 import core.constants.player.PlayerSpeciality;
+import core.db.DBManager;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
@@ -22,6 +23,7 @@ import core.model.match.MatchLineupTeam;
 import core.model.match.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
+import core.net.OnlineWorker;
 import module.youth.YouthPlayer;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
@@ -115,16 +117,17 @@ public class ConvertXml2Hrf {
 		Map<String, String> teamdetailsDataMap = XMLTeamDetailsParser.parseTeamdetailsFromString(teamDetails, teamId);
 		if (teamdetailsDataMap.size() == 0) return null;
 
+		DBManager.instance().storeTeamLogoInfo(teamId, OnlineWorker.getLogoURL(teamdetailsDataMap), null);
+
 		HOMainFrame.instance().setWaitInformation(10);
 		Map<String, String> clubDataMap = XMLClubParser.parseClubFromString(mc.getVerein(teamId));
 		HOMainFrame.instance().setWaitInformation(15);
 		Map<String, String> ligaDataMap = XMLLeagueDetailsParser.parseLeagueDetailsFromString(mc.getLeagueDetails(teamdetailsDataMap.get("LeagueLevelUnitID")),
-						teamdetailsDataMap.get("TeamID").toString());
+				String.valueOf(teamId));
 		HOMainFrame.instance().setWaitInformation(20);
 		Map<String, String> worldDataMap = XMLWorldDetailsParser.parseWorldDetailsFromString(
 				mc.getWorldDetails(Integer.parseInt(teamdetailsDataMap
-						.get("LeagueID").toString())),
-				teamdetailsDataMap.get("LeagueID").toString());
+						.get("LeagueID"))), teamdetailsDataMap.get("LeagueID"));
 
 		// Currency fix
 		if (ModuleConfig.instance().containsKey("CurrencyRate")) {
