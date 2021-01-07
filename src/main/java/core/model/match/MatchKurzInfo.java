@@ -404,6 +404,12 @@ public class MatchKurzInfo implements Comparable<Object> {
 		setMatchID(match.getMatchID());
 		merge(match);
 	}
+
+
+	public void copyFrom(MatchKurzInfo match) {
+		setMatchID(match.getMatchID());
+		merge(match);
+	}
 	
 	public final boolean isHomeMatch()
 	{

@@ -86,9 +86,10 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         var player = getSelectedPlayer();
         if ( player != null) {
             playerNameLabel.setText(player.getFullName());
-            playerDetailsTable.setModel(playerDetailsTableModel);
+            playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
             playerDetailsTableModel.setYouthPlayer(player);
             playerDetailsTableModel.initData();
+            playerDetailsTable.setModel(playerDetailsTableModel);
             playerDetailsTable.repaint();
         }
     }

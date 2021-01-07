@@ -10,7 +10,6 @@ import core.net.HattrickLink;
 import core.util.DateTimeUtils;
 import core.util.HTCalendarFactory;
 import core.util.Helper;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -27,6 +26,7 @@ public class MatchBanner extends JPanel implements Refreshable {
 
     public MatchBanner(MatchAndLineupSelectionPanel _matchSelectionPanel) {
         m_jpMatchSelectionPanel = _matchSelectionPanel;
+
         initComponents();
         refresh();
         core.gui.RefreshManager.instance().registerRefreshable(this);

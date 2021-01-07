@@ -115,6 +115,7 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
                 rownum++;
             }
         }
+        fireTableDataChanged();
     }
 
     public void setYouthPlayer(YouthPlayer youthPlayer) {

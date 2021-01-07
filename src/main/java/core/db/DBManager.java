@@ -950,6 +950,7 @@ public class DBManager {
 	}
 
 	/**
+
 	 * speichert das Verein
 	 *
 	 * @param hrfId the hrf id
