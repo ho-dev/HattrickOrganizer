@@ -7,7 +7,11 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import module.teamAnalyzer.vo.Team;
 import java.awt.*;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import javax.swing.*;
 
 import static core.util.HTCalendarFactory.getHTSeason;
@@ -69,10 +73,14 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
         }
 
         if (renderType == RenderType.TYPE_1) {
-            String sDate = new SimpleDateFormat("dd-MM-yyyy HH:mm ").format(value.getTime());
-            int iHTSeason = getHTSeason(value.getTime(), true);
-            int iHTWeek = getHTWeek(value.getTime(), true);
-            sDate += "(" + iHTWeek + "/" + iHTSeason + ")";
+            String sDate = "";
+            LocalDateTime matchSchedule = value.getTime().toLocalDateTime();
+            if(matchSchedule.getYear()>1100) {
+                sDate = new SimpleDateFormat("dd-MM-yyyy HH:mm ").format(value.getTime());
+                int iHTSeason = getHTSeason(value.getTime(), true);
+                int iHTWeek = getHTWeek(value.getTime(), true);
+                sDate += "(" + iHTWeek + "/" + iHTSeason + ")";
+            }
 
             setText(value.getName() + "  " + sDate);
             if (isSelected) {
