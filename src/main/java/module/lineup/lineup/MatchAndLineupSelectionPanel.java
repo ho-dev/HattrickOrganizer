@@ -160,7 +160,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         setUpcomingMatchesFromDB();
 
         lLastUpdateTime = DBManager.instance().getLatestUpdateTime();
-        bDataTooOld = DBManager.instance().areDataTooOld();//java.text.DateFormat.getDateTimeInstance().format(dateHrf));
+        bDataTooOld = DBManager.instance().areDataTooOld();
         sWarningDataTooOld = String.format(Helper.getTranslation("ls.module.lineup.dataTooOld.tt"), java.text.DateFormat.getDateTimeInstance().format(lLastUpdateTime));
 
         update_jcbUpcomingGames();

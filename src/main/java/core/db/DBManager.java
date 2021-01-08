@@ -950,17 +950,7 @@ public class DBManager {
 	}
 
 	/**
-	 * Sucht das letzte HRF zwischen dem angegebenen Datum und 6 Tagen davor
-	 * Wird kein HRF gefunden wird -1 zurückgegeben
-	 *
-	 * @param hrfId the hrf id
-	 * @return the following hrf
-	 */
-	public int getFollowingHRF(int hrfId) {
-		return ((HRFTable) getTable(HRFTable.TABLENAME)).getFollowingHRF(hrfId);
-	}
 
-	/**
 	 * speichert das Verein
 	 *
 	 * @param hrfId the hrf id

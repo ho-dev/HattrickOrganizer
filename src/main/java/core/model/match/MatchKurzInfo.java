@@ -395,6 +395,14 @@ public class MatchKurzInfo implements Comparable<Object> {
 		setMatchStatus(match.getMatchStatus());
 		setOrdersGiven(match.isOrdersGiven());
 		setMatchType(match.getMatchType());
+		setWeather(match.getWeather());
+		setWeatherForecast(match.getWeatherForecast());
+	}
+
+
+	public void copyFrom(MatchKurzInfo match) {
+		setMatchID(match.getMatchID());
+		merge(match);
 	}
 
 
