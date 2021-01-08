@@ -132,15 +132,15 @@ public class MatchLineupTeam {
 	 * Returns a player by ID, players in captain and set piece positions are
 	 * ignored.
 	 * 
-	 * @param id
+	 * @param playerId
 	 *            The spielerId of the player
 	 * 
 	 * @return The object matching the criteria, or null if none found
 	 */
-	public final MatchLineupPlayer getPlayerByID(int id) {
+	public final MatchLineupPlayer getPlayerByID(int playerId) {
 
 		for (MatchLineupPlayer player : lineup) {
-			if (player.getPlayerId() == id) {
+			if (player.getPlayerId() == playerId) {
 				if (player.getId() != IMatchRoleID.captain && (player.getId() != IMatchRoleID.setPieces)) {
 					return player;
 				}
@@ -153,13 +153,13 @@ public class MatchLineupTeam {
 	/**
 	 * Liefert Einen Player per PositionsID aus der Aufstellung
 	 */
-	public final MatchLineupPlayer getPlayerByPosition(int id) {
+	public final MatchLineupPlayer getPlayerByPosition(int roleId) {
 		MatchLineupPlayer player;
 
 		for (int i = 0; (lineup != null) && (i < lineup.size()); i++) {
 			player = lineup.elementAt(i);
 
-			if (player.getId() == id) {
+			if (player.getId() == roleId) {
 				return player;
 			}
 		}
@@ -380,6 +380,13 @@ public class MatchLineupTeam {
 		int enterMin = -1;
 		int minPlayed = 0;
 		// Those in the starting lineup entered at minute 0
+		/*
+		 TODO this is not correct if calculation is called for bonus positions in case of set pieces training
+		 then accepted positions are set pieces taker and goalkeeper. set pieces taker is never returned by
+		 getStartPosition!
+		 We should loop the other way round: test each accepted position, whether is was taken by the specified
+		 player
+		 */
 		if (isPositionInAcceptedPositions(player.getStartPosition(), accepted)) {
 			if (isWalkoverMatchWin) {
 				// Opponent team did not appear

@@ -111,5 +111,6 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
             }
             playernum++;
         }
+        fireTableDataChanged();
     }
 }

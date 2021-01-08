@@ -92,6 +92,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
             }
             rownum++;
         }
+        fireTableDataChanged();
     }
 
     public YouthTraining getYouthTraining(int row){
