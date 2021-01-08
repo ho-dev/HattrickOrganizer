@@ -7,13 +7,12 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.util.chart.LinesChartDataModel;
 import core.util.chart.HOLinesChart;
+import core.gui.comp.ImageCheckbox;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
+
+import java.awt.*;
 import java.text.NumberFormat;
-import java.awt.Color;
-import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.event.ItemEvent;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
@@ -21,19 +20,19 @@ import javax.swing.JCheckBox;
 public final class CombinedRatingChartPanel extends JPanel {
 
 	private final class Datum {
-		private JCheckBox checkbox;
-		private Color bg;
+		private ImageCheckbox checkbox;
+		private Color m_ColorSerie;
 		private LinesChartDataModel model;
 		private String paramName;
 		private String m_SerieName;
 		private Boolean m_bSecondAxis;
 		private double m_Ymax;
 
-		public Datum(String text, Color background, String userParamName, boolean second_axis, double d_max) {
+		public Datum(String text, Color colorSerie, String userParamName, boolean second_axis, double d_max) {
 			paramName = userParamName;
 			m_SerieName = text;
-			checkbox = new JCheckBox(text, getUserParameter());
-			bg = background;
+			checkbox = new ImageCheckbox(text, colorSerie, getUserParameter());
+			m_ColorSerie = colorSerie;
 			m_bSecondAxis = second_axis;
 			m_Ymax = d_max;
 			init();
@@ -61,37 +60,25 @@ public final class CombinedRatingChartPanel extends JPanel {
 		}
 
 		private void init() {
-			checkbox.addItemListener(e -> {
+			checkbox.addActionListener(e -> {
 				oChartPanel.setShow(m_SerieName, checkbox.isSelected());
 				setUserParameter(checkbox.isSelected());
 			});
-			checkbox.setOpaque(true);
-			checkbox.setBackground(bg);
-			if(getRelativeLuminance(bg) < 0.179) checkbox.setForeground(Color.WHITE);
 		}
 
-		double getRelativeLuminance(Color color) {
-			double[] rgb = {color.getRed(), color.getGreen(), color.getBlue()};
-			for(int i = 0; i < 3; i++) {
-				rgb[i] /= 255.0;
-				if(rgb[i] <= 0.03928) rgb[i] /= 12.92;
-				else rgb[i] = Math.pow( (rgb[i] + 0.055) / 1.055, 2.4);
-			}
-			return (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
-		}
 
 		LinesChartDataModel getChartModel(double[] values, NumberFormat format) {
 			if (! m_bSecondAxis) {
-				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), bg, format);
+				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), m_ColorSerie, format);
 			}
 			else{
 				double maxValue = Helper.getMaxValue(values);
-				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), bg, SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format, m_Ymax/maxValue, true);
+				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), m_ColorSerie, SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format, m_Ymax/maxValue, true);
 			}
 			return model;
 		}
 
-		JCheckBox getCheckbox() {
+		ImageCheckbox getCheckbox() {
 			return checkbox;
 		}
 	}
@@ -158,58 +145,65 @@ public final class CombinedRatingChartPanel extends JPanel {
 
 
 		gbc.gridy++;
+		gbc.insets = new Insets(10,0,0,0);  //top padding
 		leftDefense = new Datum(hov.getLanguageString("ls.match.ratingsector.leftdefence"),
-								ThemeManager.getColor(HOColorName.SHIRT_WINGBACK).brighter(),
-								"CombinedRatingChartPanel_LeftDefense");
+				ThemeManager.getColor(HOColorName.PALETTE13[0]), "CombinedRatingChartPanel_LeftDefense");
 		controlsPanel.add(leftDefense.getCheckbox(), gbc);
 
 		gbc.gridy++;
+		gbc.insets = new Insets(0,0,0,0);  //top padding
 		centralDefense = new Datum(hov.getLanguageString("ls.match.ratingsector.centraldefence"),
-									ThemeManager.getColor(HOColorName.SHIRT_CENTRALDEFENCE),
+									ThemeManager.getColor(HOColorName.PALETTE13[1]),
 									"CombinedRatingChartPanel_CentralDefense");
 		controlsPanel.add(centralDefense.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		rightDefense = new Datum(hov.getLanguageString("ls.match.ratingsector.rightdefence"),
-								ThemeManager.getColor(HOColorName.SHIRT_WINGBACK).darker(),
+								ThemeManager.getColor(HOColorName.PALETTE13[2]),
 								"CombinedRatingChartPanel_RightDefense");
 		controlsPanel.add(rightDefense.getCheckbox(), gbc);
 
 		gbc.gridy++;
+		gbc.insets = new Insets(10,0,0,0);  //top padding
 		midfield = new Datum(hov.getLanguageString("ls.match.ratingsector.midfield"),
-							ThemeManager.getColor(HOColorName.SHIRT_MIDFIELD),
+							ThemeManager.getColor(HOColorName.PALETTE13[3]),
 							"CombinedRatingChartPanel_Midfield");
 		controlsPanel.add(midfield.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		leftAttack = new Datum(hov.getLanguageString("ls.match.ratingsector.leftattack"),
-								ThemeManager.getColor(HOColorName.SHIRT_WING).brighter(),
+								ThemeManager.getColor(HOColorName.PALETTE13[4]),
 								"CombinedRatingChartPanel_LeftAttack");
 		controlsPanel.add(leftAttack.getCheckbox(), gbc);
 
 		gbc.gridy++;
+		gbc.insets = new Insets(0,0,0,0);  //top padding
 		centralAttack = new Datum(hov.getLanguageString("ls.match.ratingsector.centralattack"),
-									ThemeManager.getColor(HOColorName.SHIRT_FORWARD),
+									ThemeManager.getColor(HOColorName.PALETTE13[5]),
 									"CombinedRatingChartPanel_CentralAttack");
 		controlsPanel.add(centralAttack.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		rightAttack = new Datum(hov.getLanguageString("ls.match.ratingsector.rightattack"),
-								ThemeManager.getColor(HOColorName.SHIRT_WING).darker(),
+								ThemeManager.getColor(HOColorName.PALETTE13[6]),
 								"CombinedRatingChartPanel_RightAttack");
 		controlsPanel.add(rightAttack.getCheckbox(), gbc);
 
 		gbc.gridy++;
-		hatStats = new Datum(hov.getLanguageString("ls.match.ratingtype.hatstats"),
-							ThemeManager.getColor(HOColorName.STAT_HATSTATS),
+		gbc.insets = new Insets(10,0,0,0);  //top padding
+		loddar = new Datum(hov.getLanguageString("ls.match.ratingtype.loddarstats"),
+				ThemeManager.getColor(HOColorName.PALETTE13[8]),
+				"CombinedRatingChartPanel_Loddar");
+		controlsPanel.add(loddar.getCheckbox(), gbc);
+
+		gbc.gridy++;
+		gbc.insets = new Insets(0,0,0,0);  //top padding
+		String textLabel = hov.getLanguageString("ls.match.ratingtype.hatstats") + " (" + hov.getLanguageString("ls.chart.second_axis") + ")";
+		hatStats = new Datum(textLabel, ThemeManager.getColor(HOColorName.PALETTE13[7]),
 							"CombinedRatingChartPanel_HatStats",  true, 19.0d);
 		controlsPanel.add(hatStats.getCheckbox(), gbc);
 
-		gbc.gridy++;
-		loddar = new Datum(hov.getLanguageString("ls.match.ratingtype.loddarstats"),
-							ThemeManager.getColor(HOColorName.STAT_LODDAR),
-							"CombinedRatingChartPanel_Loddar");
-		controlsPanel.add(loddar.getCheckbox(), gbc);
+
 
 		add(controlsPanel, BorderLayout.WEST);
 

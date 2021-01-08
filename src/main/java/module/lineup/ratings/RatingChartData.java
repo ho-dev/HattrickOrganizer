@@ -3,11 +3,11 @@ package module.lineup.ratings;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.Ratings;
-
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
+
 
 public final class RatingChartData {
 
@@ -21,8 +21,8 @@ public final class RatingChartData {
 	private double[] leftAttack = {};
 	private double[] centralAttack = {};
 	private double[] rightAttack = {};
+	private Integer[] chartCaptions = null;
 	private ArrayList<Double> mapKeys = null;
-	private int[] chartCaptions = null;
 	private boolean ET = UserParameter.instance().RatingChartFrame_ET;
 	private int RTstartIdx = 0;
 	private int RTendIdx = 0;
@@ -43,11 +43,11 @@ public final class RatingChartData {
 			RTendIdx = mapKeys.size();
 		}
 		if(chartCaptions == null) {
-			ArrayList<Double> captionList = new ArrayList();
+			ArrayList<Integer> captionList = new ArrayList();
 			for(Double key : mapKeys) {
-				captionList.add(key);
+				captionList.add(key.intValue());
 			}
-			chartCaptions = mapKeys.stream().mapToInt(d->d.intValue()).toArray();
+			chartCaptions = captionList.stream().toArray(Integer[]::new);
 		}
 	}
 
@@ -150,12 +150,18 @@ public final class RatingChartData {
 		else return Arrays.copyOfRange(rightAttack, RTstartIdx, RTendIdx);
 	}
 
-	int[] getCaptions() {
+	ArrayList<Integer> getCaptions() {
 		if(chartCaptions == null) {
 			parsePrepare();
 		}
-		if(ET) return chartCaptions;
-		else return Arrays.copyOfRange(chartCaptions, RTstartIdx, RTendIdx);
+		ArrayList<Integer> result = new ArrayList<>();
+		if(ET) {
+			Collections.addAll(result, chartCaptions);
+		}
+		else {
+			Collections.addAll(result, Arrays.copyOfRange(chartCaptions, RTstartIdx, RTendIdx));
+		}
+		return result;
 	}
 
 
