@@ -22,7 +22,7 @@ public final class RatingChartData {
 	private double[] centralAttack = {};
 	private double[] rightAttack = {};
 	private ArrayList<Double> mapKeys = null;
-	private String[] chartCaptions = null;
+	private int[] chartCaptions = null;
 	private boolean ET = UserParameter.instance().RatingChartFrame_ET;
 	private int RTstartIdx = 0;
 	private int RTendIdx = 0;
@@ -43,11 +43,11 @@ public final class RatingChartData {
 			RTendIdx = mapKeys.size();
 		}
 		if(chartCaptions == null) {
-			ArrayList<String> captionList = new ArrayList();
+			ArrayList<Double> captionList = new ArrayList();
 			for(Double key : mapKeys) {
-				captionList.add(String.valueOf(key.intValue()));
+				captionList.add(key);
 			}
-			chartCaptions = captionList.stream().toArray(String[]::new);
+			chartCaptions = mapKeys.stream().mapToInt(d->d.intValue()).toArray();
 		}
 	}
 
@@ -150,11 +150,16 @@ public final class RatingChartData {
 		else return Arrays.copyOfRange(rightAttack, RTstartIdx, RTendIdx);
 	}
 
-	String[] getCaptions() {
+	int[] getCaptions() {
 		if(chartCaptions == null) {
 			parsePrepare();
 		}
 		if(ET) return chartCaptions;
 		else return Arrays.copyOfRange(chartCaptions, RTstartIdx, RTendIdx);
+	}
+
+
+	String[] getCaptions(boolean toto) {
+		return new String[]{};
 	}
 }

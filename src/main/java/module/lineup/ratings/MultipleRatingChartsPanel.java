@@ -83,7 +83,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		chartsPanel.revalidate();
 		chartsPanel.repaint();
 
-		xAxisDataCaptions = chartData.getCaptions();
+		xAxisDataCaptions = chartData.getCaptions(true);
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill =  GridBagConstraints.BOTH;

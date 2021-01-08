@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
 public class HOLinesChart implements IChart {
 
     LinesChartDataModel @Nullable [] m_models;
-    List<Date> m_xData;
+    List<?> m_xData;
     XYChart m_chart;
     AxesChartStyler m_axeStyler;
     JPanel m_panel;
@@ -267,6 +267,23 @@ public class HOLinesChart implements IChart {
         List<Date> lxData = new ArrayList<>();
         for(double ts:inp_xData){
             lxData.add(new Date((long)ts));
+        }
+
+        this.m_xData = lxData;
+        this.m_hasLabels = hasLabels;
+        this.m_hasHelpLines = hasHelpLines;
+
+        updateGraph();
+
+    }
+
+    public final void setAllValues(LinesChartDataModel @Nullable [] models, int[] inp_xData, boolean hasLabels, boolean hasHelpLines){
+        this.m_models = models;
+        reverseTS();
+
+        List<Integer> lxData = new ArrayList<>();
+        for(double ts:inp_xData){
+            lxData.add((int) ts);
         }
 
         this.m_xData = lxData;
