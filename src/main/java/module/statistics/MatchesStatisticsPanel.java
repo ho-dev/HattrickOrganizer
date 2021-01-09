@@ -4,6 +4,7 @@ import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
+import core.gui.comp.ImageCheckbox;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.util.chart.LinesChartDataModel;
