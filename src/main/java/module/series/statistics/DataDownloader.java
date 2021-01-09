@@ -1,16 +1,21 @@
 package module.series.statistics;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import core.net.Connector;
-import core.net.MyConnector;
+import com.google.gson.JsonObject;
+import core.module.config.ModuleConfig;
 import core.util.HOLogger;
 import module.series.promotion.HttpDataSubmitter;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import javax.net.ssl.*;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.security.KeyStore;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +39,7 @@ public class DataDownloader {
 
     public List<Integer> fetchLeagueTeamPowerRatings(int iLeagueID, int iHTWeek, int iHTSeason) {
         try {
-            final OkHttpClient client = new OkHttpClient();
+            final OkHttpClient client = initializeHttpsClient();
 
             String url = ALLTID_SERVER_BASEURL + String.format(POWERRATING_ENDPOINT, iLeagueID, iHTWeek, iHTSeason);
 
@@ -53,11 +58,9 @@ public class DataDownloader {
             if (response.isSuccessful()) {
                 String bodyAsString = response.body().string();
                 Gson gson = new Gson();
-                JsonArray array = gson.fromJson(bodyAsString, JsonArray.class);
+                JsonObject output = gson.fromJson(bodyAsString, JsonObject.class);
 
-                for (JsonElement arr : array) {
-                    supportedLeagues.add(arr.getAsJsonArray().get(0).getAsInt());
-                }
+                System.out.println(output);
 
                 response.close();
                 return supportedLeagues;
@@ -74,5 +77,34 @@ public class DataDownloader {
         return Collections.emptyList();
     }
 
+    private OkHttpClient initializeHttpsClient() throws Exception {
+        char[] keystoreCred = new String(Base64.getDecoder().decode("aGVsbG9oYXR0cmljaw==")).toCharArray();
+        final InputStream trustStoreStream = this.getClass().getClassLoader().getResourceAsStream("truststore.jks");
 
+        final KeyStore keystore = KeyStore.getInstance("JKS");
+        keystore.load(trustStoreStream, keystoreCred);
+
+        final KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        keyManagerFactory.init(keystore, keystoreCred);
+        final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        trustManagerFactory.init(keystore);
+
+        final SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+        sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+
+        final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+        final X509TrustManager trustManager = (X509TrustManager) trustManagerFactory.getTrustManagers()[0];
+
+        int proxyPort = 3000;
+        String proxyHost = "localhost";
+
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .sslSocketFactory(sslSocketFactory, trustManager);
+
+        if (ModuleConfig.instance().getBoolean("PromotionStatus_DebugProxy", false)) {
+            builder = builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort)));
+        }
+
+        return builder.build();
+    }
 }
