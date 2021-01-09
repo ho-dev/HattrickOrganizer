@@ -1194,7 +1194,7 @@ final class SpielerDetailDialog extends JDialog {
 				.getLanguageString("Rating")
 				+ " "
 				+ MatchRoleID.getNameForPosition(MatchRoleID
-						.getPosition(matchplayer.getId(), matchplayer.getTactic()))));
+						.getPosition(matchplayer.getRoleId(), matchplayer.getBehaviour()))));
 
 		subconstraints.gridx = 0;
 		subconstraints.gridy = 0;

@@ -3,7 +3,7 @@ package core.model.match;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
-public class MatchLineupPlayer extends MatchRoleID {
+public class MatchLineupPlayer {
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private static final long serialVersionUID = -5986419471284091148L;
@@ -13,9 +13,15 @@ public class MatchLineupPlayer extends MatchRoleID {
     private String m_sSpielerVName = "";
     private double m_dRating;
     private double m_dRatingStarsEndOfMatch;
+
+    private int m_iStatus;
+
+    // starting lineup match role information
     private int m_iStartPosition = -1;
     private int m_iStartBehavior = -1;
-    private int m_iStatus;
+
+    // (final) lineup match role
+    private MatchRoleID matchRoleId;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -28,7 +34,7 @@ public class MatchLineupPlayer extends MatchRoleID {
      */
     public MatchLineupPlayer(SourceSystem sourceSystem, int roleID, int behavior, int spielerID, double rating, String name,
                              int status) {
-        super(roleID, spielerID, (byte) behavior);
+        this.matchRoleId = new MatchRoleID(roleID, spielerID, (byte) behavior);
 
         //erst mit neuer Version Namen aufsplitten
         //setName( name );
@@ -53,7 +59,7 @@ public class MatchLineupPlayer extends MatchRoleID {
                              double ratingStarsEndOfMatch,
                              int startPos,
                              int startBeh) {
-        super(roleID, spielerID, (byte) behavior);
+        this.matchRoleId = new MatchRoleID(roleID, spielerID, (byte) behavior);
 
         this.sourceSystem = sourceSystem;
         m_sSpielerName = name;
@@ -68,8 +74,7 @@ public class MatchLineupPlayer extends MatchRoleID {
     }
 
     public MatchLineupPlayer(MatchLineupPlayer p) {
-    	super (p.getFieldPos(), p.getPlayerId(), p.getTactic());
-
+    	this.matchRoleId=new MatchRoleID (p.getRoleId(), p.getPlayerId(), p.getBehaviour());
     	this.sourceSystem=p.sourceSystem;
     	this.m_iStartPosition = p.m_iStartPosition;
     	this.m_iStartBehavior = p.m_iStartBehavior;
@@ -81,25 +86,23 @@ public class MatchLineupPlayer extends MatchRoleID {
         m_dRatingStarsEndOfMatch = p.getRatingStarsEndOfMatch();
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
-
-    /**
-     * Setter for property m_iFieldPos.
-     *
-     * @param m_iFieldPos New value of property m_iFieldPos.
-     */
-    public final void setFieldPos(int m_iFieldPos) {
-        setId(m_iFieldPos);
+    public final int getRoleId() {
+        return this.matchRoleId.getId();
     }
 
-    /**
-     * Getter for property m_iFieldPos.
-     *
-     * @return Value of property m_iFieldPos.
-     */
-    public final int getFieldPos() {
-        return getId();
+    public  void setRoleId(int roleId) {
+        this.matchRoleId.setId(roleId);
     }
+
+    public final int getPlayerId(){
+        return this.matchRoleId.getPlayerId();
+    }
+
+    public final byte getBehaviour(){
+        return  this.matchRoleId.getTactic();
+    }
+
+    public final int getSortId() { return this.matchRoleId.getSortId();}
 
     /**
      * Setter for property m_sNickName.
@@ -119,40 +122,20 @@ public class MatchLineupPlayer extends MatchRoleID {
         return m_sNickName;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
-    //Overwrite
-    ////////////////////////////////////////////////////////////////////////////////    
-    @Override
+    /**
+     * Position information is a combination of role and behaviour
+     * @return MatchRoleId position info
+     */
 	public final byte getPosition() {
-        byte ret = super.getPosition();
+        byte ret = this.matchRoleId.getPosition();
 
         ///wenn pos nicht bestimmt werden kann dann die roleID zurückwerfen
         if (ret == IMatchRoleID.UNKNOWN) {
             //m_iId;
-            ret = (byte) getId();
+            ret = (byte) getRoleId();
         }
 
         return ret;
-    }
-
-    /**
-     * Setter for property m_iPositionCode.
-     *
-     * @param m_iPositionCode New value of property m_iPositionCode.
-     */
-    @Deprecated
-    public final void setPositionCode(int m_iPositionCode) {
-        setId(m_iPositionCode);
-    }
-
-    /**
-     * Getter for property m_iPositionCode.
-     *
-     * @return Value of property m_iPositionCode.
-     */
-    @Deprecated
-    public final int getPositionCode() {
-        return getId();
     }
 
     /**
@@ -300,5 +283,9 @@ public class MatchLineupPlayer extends MatchRoleID {
 
     public void setSourceSystem(SourceSystem sourceSystem) {
         this.sourceSystem = sourceSystem;
+    }
+
+    public MatchRoleID getMatchRole() {
+        return this.matchRoleId;
     }
 }

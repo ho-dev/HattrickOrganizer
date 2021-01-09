@@ -184,7 +184,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	void deleteMatchLineupPlayer(MatchLineupPlayer player, int matchID, int teamID) {
 		if (player != null) {
 			final String[] where = { "SourceSystem", "MatchID" , "TeamID", "RoleID", "SpielerID"};
-			final String[] werte = { "" + player.getSourceSystem().getValue(), "" + matchID, "" + teamID, "" + player.getId(), "" + player.getPlayerId()};
+			final String[] werte = { "" + player.getSourceSystem().getValue(), "" + matchID, "" + teamID, "" + player.getRoleId(), "" + player.getPlayerId()};
 			delete(where, werte);			
 		}
 	}
@@ -217,7 +217,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			}
 
 			final String[] where = { "SourceSystem", "MatchID" , "TeamID", "RoleID", "SpielerID"};
-			final String[] werte = { "" + player.getSourceSystem().getValue(), "" + matchID, "" + teamID, "" + player.getId(), "" + player.getPlayerId()};
+			final String[] werte = { "" + player.getSourceSystem().getValue(), "" + matchID, "" + teamID, "" + player.getRoleId(), "" + player.getPlayerId()};
 			delete(where, werte);
 
 			//saven
@@ -230,16 +230,16 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 						teamID	+ "," +
 						player.getSourceSystem().getValue() + "," +
 						player.getPlayerId() + ","	+
-						player.getId() + "," +
-						player.getTactic()	+ ","	+
-						player.getPositionCode() + ",'" +
+						player.getRoleId() + "," +
+						player.getBehaviour()	+ ","	+
+						player.getRoleId() + ",'" +
 						DBManager.insertEscapeSequences(player.getSpielerVName()) + "', '" +
 						DBManager.insertEscapeSequences(player.getNickName()) + "', '" +
 						DBManager.insertEscapeSequences(player.getSpielerName())+ "'," +
 						player.getRating() + "," +
 						player.getPosition() + "," +
 						"0," + // Status
-						player.getPositionCode() + "," +
+						player.getRoleId() + "," +
 						player.getRatingStarsEndOfMatch() + "," +
 						player.getStartPosition() + "," +
 						player.getStartBehavior() + " )";

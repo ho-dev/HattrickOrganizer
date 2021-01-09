@@ -526,8 +526,8 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 				for (int j = 0; j < team.size(); j++) {
 					final MatchLineupPlayer player = team.get(j);
 
-					if (player.getId() < IMatchRoleID.startReserves
-							&& player.getId() >= IMatchRoleID.startLineup) {
+					if (player.getRoleId() < IMatchRoleID.startReserves
+							&& player.getRoleId() >= IMatchRoleID.startLineup) {
 						float rating = (float) player.getRating();
 
 						if (rating > 0) {

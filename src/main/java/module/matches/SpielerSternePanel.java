@@ -223,11 +223,11 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 				m_jlSpecial.setIcon(null);
 			}
 
-			m_jbSpieler.setIcon(ImageUtilities.getImage4Position(player.getId(),
-					player.getTactic(), trickotnummer));
+			m_jbSpieler.setIcon(ImageUtilities.getImage4Position(player.getRoleId(),
+					player.getBehaviour(), trickotnummer));
 			m_jbSpieler.setEnabled(player.getPlayerId() > 0);
 			m_jpSterne.setRating((float) player.getRating() * 2f, true);
-			initLabel(player.getId(), player.getTactic());
+			initLabel(player.getRoleId(), player.getBehaviour());
 
 		} else {
 			clear();

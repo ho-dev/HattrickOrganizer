@@ -85,11 +85,11 @@ public class SpotReport extends Report {
      * @param pp
      */
     private void updatePositionDetails(PlayerPerformance pp) {
-        PositionReport report = (PositionReport) positionReports.get("" + pp.getPositionCode());
+        PositionReport report = (PositionReport) positionReports.get("" + pp.getRoleId());
 
         if (report == null) {
             report = new PositionReport(pp);
-            positionReports.put("" + pp.getPositionCode(), report);
+            positionReports.put("" + pp.getRoleId(), report);
         }
 
         report.addPerformance(pp);

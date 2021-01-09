@@ -31,8 +31,8 @@ public class PlayerPerformance {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public int getId() {
-        return mlp.getId();
+    public int getRoleId() {
+        return mlp.getRoleId();
     }
 
     public String getNickName() {
@@ -41,11 +41,6 @@ public class PlayerPerformance {
 
     public byte getPosition() {
         return mlp.getPosition();
-    }
-
-    @SuppressWarnings("deprecation")
-	public int getPositionCode() {
-        return mlp.getPositionCode();
     }
 
     public double getRating() {
@@ -90,9 +85,10 @@ public class PlayerPerformance {
             case PlayerDataManager.SOLD: return "Sold";
         }
     }
-    public byte getTaktik() {
-        return mlp.getTactic();
+
+    public byte getBehaviour() {
+        return mlp.getBehaviour();
     }
 
-    public MatchRoleID getMatchRoleID() { return this.mlp;}
+    public MatchRoleID getMatchRoleID() { return this.mlp.getMatchRole();}
 }

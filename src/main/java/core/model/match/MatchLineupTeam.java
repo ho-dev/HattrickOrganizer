@@ -141,7 +141,7 @@ public class MatchLineupTeam {
 
 		for (MatchLineupPlayer player : lineup) {
 			if (player.getPlayerId() == playerId) {
-				if (player.getId() != IMatchRoleID.captain && (player.getId() != IMatchRoleID.setPieces)) {
+				if (player.getRoleId() != IMatchRoleID.captain && (player.getRoleId() != IMatchRoleID.setPieces)) {
 					return player;
 				}
 			}
@@ -159,7 +159,7 @@ public class MatchLineupTeam {
 		for (int i = 0; (lineup != null) && (i < lineup.size()); i++) {
 			player = lineup.elementAt(i);
 
-			if (player.getId() == roleId) {
+			if (player.getRoleId() == roleId) {
 				return player;
 			}
 		}
@@ -636,8 +636,8 @@ public class MatchLineupTeam {
 	 */
 	private boolean isPlayerInAcceptedPositions(int playerId, int[] accepted) {
 		if (accepted == null) {
-			var role = this.getPlayerByID(playerId);
-			return role != null && role.isFieldMatchRoleId(); // all positions are accepted, use an empty array if NO position should be accepted
+			var player = this.getPlayerByID(playerId);
+			return player != null && player.getMatchRole().isFieldMatchRoleId(); // all positions are accepted, use an empty array if NO position should be accepted
 		}
 
 		for (int position : accepted) {
