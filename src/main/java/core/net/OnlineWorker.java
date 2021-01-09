@@ -423,7 +423,8 @@ public class OnlineWorker {
 		return 0;
 	}
 
-	private static String getLogoURL(Map<String, String> team)
+
+	public static String getLogoURL(Map<String, String> team)
 	{
 		String str = team.get("LogoURL");
 		if ( (str == null) || (str.equals(""))) {

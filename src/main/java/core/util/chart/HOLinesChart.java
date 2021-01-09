@@ -10,7 +10,6 @@ import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.AxesChartStyler;
 import org.knowm.xchart.style.Styler;
-
 import java.awt.*;
 import java.text.NumberFormat;
 import java.util.*;
@@ -20,7 +19,7 @@ import java.util.stream.IntStream;
 public class HOLinesChart implements IChart {
 
     LinesChartDataModel @Nullable [] m_models;
-    List<Date> m_xData;
+    List<?> m_xData;
     XYChart m_chart;
     AxesChartStyler m_axeStyler;
     JPanel m_panel;
@@ -270,6 +269,17 @@ public class HOLinesChart implements IChart {
         }
 
         this.m_xData = lxData;
+        this.m_hasLabels = hasLabels;
+        this.m_hasHelpLines = hasHelpLines;
+
+        updateGraph();
+
+    }
+
+    public final void setAllValues(LinesChartDataModel @Nullable [] models, List<?> xData, boolean hasLabels, boolean hasHelpLines){
+        this.m_models = models;
+        reverseTS();
+        this.m_xData = xData;
         this.m_hasLabels = hasLabels;
         this.m_hasHelpLines = hasHelpLines;
 

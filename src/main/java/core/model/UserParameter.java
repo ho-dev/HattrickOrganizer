@@ -45,8 +45,6 @@ public final class UserParameter extends Configuration {
     public String matchLineupImport_Path = "";
     public String spielPlanImport_Path = "";
 
-    //Sprachdatei
-
     /**
      * Name of language
      */

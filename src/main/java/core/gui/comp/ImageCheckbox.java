@@ -1,5 +1,4 @@
-// %996996046:de.hattrickorganizer.gui.statistic%
-package module.statistics;
+package core.gui.comp;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -18,7 +17,7 @@ import javax.swing.SwingConstants;
 /**
  * Checkbox mit einem Bild
  */
-class ImageCheckbox extends JPanel {
+public class ImageCheckbox extends JPanel {
 	
 	private static final long serialVersionUID = -1973860107178938746L;
 	
@@ -32,7 +31,7 @@ class ImageCheckbox extends JPanel {
      * Creates a new ImageCheckbox object.
      *
      */
-    ImageCheckbox(String text, Color color, boolean selected) {
+    public ImageCheckbox(String text, Color color, boolean selected) {
         this(text, color, selected, SwingConstants.RIGHT);
     }
 
@@ -70,37 +69,27 @@ class ImageCheckbox extends JPanel {
     }
 
 
-    final JCheckBox getCheckbox() {
+    public final JCheckBox getCheckbox() {
         return m_jchCheckbox;
     }
 
 
-    final void setIcon(ImageIcon icon) {
-        m_jlLabel.setIcon(icon);
-    }
-
- 
-    final JLabel getLabel() {
-        return m_jlLabel;
-    }
-
- 
-    final void setSelected(boolean selected) {
+    public final void setSelected(boolean selected) {
         m_jchCheckbox.setSelected(selected);
     }
 
 
-    final boolean isSelected() {
+    public final boolean isSelected() {
         return m_jchCheckbox.isSelected();
     }
 
  
-    final void setText(String text) {
+    public final void setText(String text) {
         m_jlLabel.setText(text);
     }
 
 
-    final void addActionListener(ActionListener listener) {
+    public final void addActionListener(ActionListener listener) {
         m_jchCheckbox.addActionListener(listener);
     }
     

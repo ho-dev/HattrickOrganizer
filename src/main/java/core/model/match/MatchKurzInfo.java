@@ -395,6 +395,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 		setMatchStatus(match.getMatchStatus());
 		setOrdersGiven(match.isOrdersGiven());
 		setMatchType(match.getMatchType());
+		setWeather(match.getWeather());
+		setWeatherForecast(match.getWeatherForecast());
 	}
 
 
@@ -402,7 +404,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 		setMatchID(match.getMatchID());
 		merge(match);
 	}
-	
+
+
 	public final boolean isHomeMatch()
 	{
 		return m_iHomeTeamID == user_team_id;

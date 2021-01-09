@@ -21,6 +21,13 @@ public class HattrickLink {
         showLink(url);
     }
 
+    public static void showTeam(String teamID){
+
+        URI url = URI.create(String.format("http://www.hattrick.org/Club/?TeamID=%s", teamID));
+
+        showLink(url);
+    }
+
     /**
      * Show player at hattrick org
      * @param playerId

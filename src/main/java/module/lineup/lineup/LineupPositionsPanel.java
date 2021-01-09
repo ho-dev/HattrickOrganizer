@@ -244,7 +244,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridx = 3;
 		constraints.gridwidth = 4;
 		constraints.gridheight = 1;
-		constraints.fill = GridBagConstraints.BOTH;
+		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = new Insets(3, 3, 3, 3);
 		m_jpMatchBanner = new MatchBanner(m_jpMatchAndLineupSelectionPanel);
 		layout.setConstraints(m_jpMatchBanner, constraints);
