@@ -10,6 +10,7 @@ import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MatchLineupTeam {
 
@@ -17,6 +18,7 @@ public class MatchLineupTeam {
 	private String teamName;
 	private Vector<MatchLineupPlayer> lineup = new Vector<>();
 	private ArrayList<Substitution> substitutions = new ArrayList<>();
+
 	private int experience;
 	private int teamId;
 	private int styleOfPlay;
@@ -52,6 +54,7 @@ public class MatchLineupTeam {
 	 */
 	public final void setLineup(Vector<MatchLineupPlayer> m_vAufstellung) {
 		this.lineup = m_vAufstellung;
+		initMinutesOfPlayersInSectors();
 	}
 
 	/**
@@ -98,6 +101,8 @@ public class MatchLineupTeam {
 				return o1 == o2;
 			}
 		});
+
+		initMinutesOfPlayersInSectors();
 	}
 
 	/**
@@ -731,8 +736,81 @@ public class MatchLineupTeam {
 		return ret;
 	}
 
-
 	public boolean hasPlayerPlayed(int playerId) {
 		return this.getTrainMinutesPlayedInSectors(playerId).size() > 0;
+	}
+
+	void initMinutesOfPlayersInSectors(){
+		/**
+		 * Mapping of role id to match appearance, consisting of player and minute
+		 * Setting lineup or substitutions will init last match appearances
+		 */
+		HashMap<Integer, MatchAppearance> lastMatchAppearances = new HashMap<>();
+		if ( this.lineup == null || this.substitutions == null) return;
+		// get the starting positions
+		this.lineup.stream().filter(i->i.getStartPosition()>=0).forEach(
+				i-> lastMatchAppearances.put(i.getStartPosition(), new MatchAppearance(i,0))
+		);
+		this.lineup.stream().filter(i->i.getStartSetPiecesTaker()>=0).forEach(
+				i-> lastMatchAppearances.put(i.getStartSetPiecesTaker(), new MatchAppearance(i,0))
+		);
+
+		// examine the substitutions
+		this.getSubstitutions().stream().filter(i->i.getOrderType()!=MatchOrderType.MAN_MARKING).forEach(i->examineSubstitution(lastMatchAppearances, i));
+
+		// examine last minute
+		for ( var app : lastMatchAppearances.entrySet()){
+			var player = app.getValue().player;
+			player.addMinutesInSector(getMatchEndMinute(player.getPlayerId())-app.getValue().minute, app.getKey());
+		}
+	}
+
+	private void examineSubstitution(HashMap<Integer, MatchAppearance> lastMatchAppearances, Substitution substitution) {
+		var roleId = (int)substitution.getRoleId();
+		var leavingplayer = substitution.getSubjectPlayerID();
+		var leavingRole = removeMatchAppearance(lastMatchAppearances, leavingplayer, substitution.getMatchMinuteCriteria());
+
+		switch (substitution.getOrderType()) {
+			case NEW_BEHAVIOUR:
+				lastMatchAppearances.put(roleId, new MatchAppearance(this.getPlayerByID(leavingplayer), substitution.getMatchMinuteCriteria()));
+				break;
+			case SUBSTITUTION:
+				var enteringplayer = this.getPlayerByID(substitution.getObjectPlayerID());
+				lastMatchAppearances.put(roleId, new MatchAppearance(enteringplayer, substitution.getMatchMinuteCriteria()));
+				break;
+			case POSITION_SWAP:
+				var player = this.getPlayerByID(substitution.getObjectPlayerID());
+				var playerRole = removeMatchAppearance(lastMatchAppearances, player.getPlayerId(), substitution.getMatchMinuteCriteria());
+				lastMatchAppearances.put(playerRole, new MatchAppearance( this.getPlayerByID(leavingplayer), substitution.getMatchMinuteCriteria()));
+				lastMatchAppearances.put(leavingRole, new MatchAppearance(player, substitution.getMatchMinuteCriteria()));
+				break;
+		}
+	}
+
+	private int removeMatchAppearance(HashMap<Integer, MatchAppearance> lastMatchAppearances, int leavingplayer, int minute) {
+		int ret = MatchRoleID.UNKNOWN;
+		var entries = lastMatchAppearances.entrySet().stream().filter(i->i.getValue().getPlayerId()==leavingplayer).collect(Collectors.toList());
+		for ( var entry : entries){
+			var appearance = entry.getValue();
+			var role = entry.getKey();
+			if ( role != MatchRoleID.setPieces) ret = (int)role;
+			appearance.player.addMinutesInSector(minute-appearance.minute, role);
+			lastMatchAppearances.remove(entry.getKey());
+		}
+		return ret;
+	}
+
+	private class MatchAppearance {
+		private int minute = 0;
+		private MatchLineupPlayer player;
+
+		public MatchAppearance(MatchLineupPlayer player, int i) {
+			this.minute=i;
+			this.player=player;
+		}
+
+		public int getPlayerId() {
+			return player.getPlayerId();
+		}
 	}
 }

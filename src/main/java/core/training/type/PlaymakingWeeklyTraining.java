@@ -7,6 +7,7 @@ import core.constants.player.PlayerSkill;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
@@ -17,6 +18,13 @@ public final class PlaymakingWeeklyTraining extends WeeklyTrainingType {
 		_Name = "Playmaking";
 		_TrainingType = TrainingType.PLAYMAKING;
 		_PrimaryTrainingSkill = PlayerSkill.PLAYMAKING;
+
+		fullTrainingSectors.add(MatchRoleID.Sector.InnerMidfield);
+		partlyTrainingSectors.add(MatchRoleID.Sector.Wing);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Back);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.CentralDefence);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Forward);
+
 		_PrimaryTrainingSkillPositions = new int[]{ 
 				IMatchRoleID.leftInnerMidfield, IMatchRoleID.rightInnerMidfield,
 				IMatchRoleID.centralInnerMidfield};

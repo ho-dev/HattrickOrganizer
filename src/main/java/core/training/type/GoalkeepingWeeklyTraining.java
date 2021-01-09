@@ -7,6 +7,7 @@ import core.constants.player.PlayerSkill;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
@@ -17,6 +18,9 @@ public final class GoalkeepingWeeklyTraining extends WeeklyTrainingType {
 		_Name = "Goalkeeping";
 		_TrainingType = TrainingType.GOALKEEPING;
 		_PrimaryTrainingSkill = PlayerSkill.KEEPER;
+
+		fullTrainingSectors.add(MatchRoleID.Sector.Goal);
+
 		_PrimaryTrainingSkillPositions = new int[]{ IMatchRoleID.keeper };
 		_PrimaryTrainingBaseLength = (float) 3.0206; // old was 2
 		_PrimaryTrainingSkillBaseLength = _PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_GOALKEEPING; // 100%
@@ -36,6 +40,6 @@ public final class GoalkeepingWeeklyTraining extends WeeklyTrainingType {
 	@Override
 	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
 	{
-		return (double) -1;
+		return -1;
 	}
 }

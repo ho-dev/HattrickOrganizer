@@ -1,11 +1,13 @@
 package core.training;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import core.constants.TrainingType;
 import core.model.StaffMember;
 import core.model.StaffType;
 import core.model.UserParameter;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.type.*;
 
@@ -14,6 +16,12 @@ public abstract class WeeklyTrainingType {
 	protected int _TrainingType = 0;
 	protected int _PrimaryTrainingSkill = -1;
 	protected int _SecondaryTrainingSkill = -1;
+
+	protected List<MatchRoleID.Sector>  bonusTrainingSectors = new ArrayList<>();
+	protected List<MatchRoleID.Sector>  fullTrainingSectors = new ArrayList<>();
+	protected List<MatchRoleID.Sector>  partlyTrainingSectors = new ArrayList<>();
+	protected List<MatchRoleID.Sector>  osmosisTrainingSectors = new ArrayList<>();
+
 	protected int[] _PrimaryTrainingSkillPositions = new int[0];
 	protected int[] _PrimaryTrainingSkillBonusPositions = new int[0];
 	protected int[] _PrimaryTrainingSkillPartlyTrainingPositions = new int[0];
@@ -77,7 +85,7 @@ public abstract class WeeklyTrainingType {
 	};
 
 	public static WeeklyTrainingType instance(int iTrainingType) {
-		WeeklyTrainingType wt = switch (iTrainingType) {
+		return switch (iTrainingType) {
 			case TrainingType.CROSSING_WINGER -> CrossingWeeklyTraining.instance();
 			case TrainingType.DEF_POSITIONS -> DefensivePositionsWeeklyTraining.instance();
 			case TrainingType.DEFENDING -> DefendingWeeklyTraining.instance();
@@ -91,7 +99,6 @@ public abstract class WeeklyTrainingType {
 			case TrainingType.WING_ATTACKS -> WingAttacksWeeklyTraining.instance();
 			default -> null;
 		};
-		return wt;
 	}
 
 	public String getName() {

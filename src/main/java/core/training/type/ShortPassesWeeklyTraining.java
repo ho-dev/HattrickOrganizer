@@ -7,6 +7,7 @@ import core.constants.player.PlayerSkill;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
@@ -17,6 +18,14 @@ public class ShortPassesWeeklyTraining extends WeeklyTrainingType {
 		_Name = "Short Passes";
 		_TrainingType = TrainingType.SHORT_PASSES;
 		_PrimaryTrainingSkill = PlayerSkill.PASSING;
+
+		fullTrainingSectors.add(MatchRoleID.Sector.Wing);
+		fullTrainingSectors.add(MatchRoleID.Sector.InnerMidfield);
+		fullTrainingSectors.add(MatchRoleID.Sector.Forward);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Goal);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Back);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.CentralDefence);
+
 		_PrimaryTrainingSkillPositions = new int[]{ 
 				IMatchRoleID.rightWinger, IMatchRoleID.leftWinger,
 				IMatchRoleID.leftInnerMidfield, IMatchRoleID.centralInnerMidfield,
@@ -44,6 +53,6 @@ public class ShortPassesWeeklyTraining extends WeeklyTrainingType {
 	@Override
 	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
 	{
-		return (double) -1;
+		return -1;
 	}
 }

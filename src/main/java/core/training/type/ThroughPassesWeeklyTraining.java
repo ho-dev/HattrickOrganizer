@@ -7,6 +7,7 @@ import core.constants.player.PlayerSkill;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
@@ -17,6 +18,14 @@ public class ThroughPassesWeeklyTraining extends WeeklyTrainingType {
 		_Name = "Through Passes";
 		_TrainingType = TrainingType.THROUGH_PASSES;
 		_PrimaryTrainingSkill = PlayerSkill.PASSING;
+
+		fullTrainingSectors.add(MatchRoleID.Sector.Back);
+		fullTrainingSectors.add(MatchRoleID.Sector.CentralDefence);
+		fullTrainingSectors.add(MatchRoleID.Sector.Wing);
+		fullTrainingSectors.add(MatchRoleID.Sector.InnerMidfield);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Goal);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Forward);
+
 		_PrimaryTrainingSkillPositions = new int[]{ IMatchRoleID.leftBack,
 				IMatchRoleID.rightBack, IMatchRoleID.leftCentralDefender,
 				IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender,
@@ -25,7 +34,7 @@ public class ThroughPassesWeeklyTraining extends WeeklyTrainingType {
 				IMatchRoleID.rightInnerMidfield };
 		_PrimaryTrainingSkillOsmosisTrainingPositions = new int[] { IMatchRoleID.keeper,
 				IMatchRoleID.leftForward, IMatchRoleID.centralForward, IMatchRoleID.rightForward};
-		_PrimaryTrainingBaseLength = (float) ShortPassesWeeklyTraining.instance().getBaseTrainingLength(); // old was (float) 2.8 / (float) 0.85
+		_PrimaryTrainingBaseLength = ShortPassesWeeklyTraining.instance().getBaseTrainingLength(); // old was (float) 2.8 / (float) 0.85
 		_PrimaryTrainingSkillBaseLength = (_PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_PASSING) / (float) 0.85;
 	}
 	public static WeeklyTrainingType instance() {
@@ -42,6 +51,6 @@ public class ThroughPassesWeeklyTraining extends WeeklyTrainingType {
 	@Override
 	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
 	{
-		return (double) -1;
+		return -1;
 	}
 }

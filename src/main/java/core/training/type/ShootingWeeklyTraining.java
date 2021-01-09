@@ -7,6 +7,7 @@ import core.constants.player.PlayerSkill;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
@@ -18,6 +19,14 @@ public class ShootingWeeklyTraining extends WeeklyTrainingType {
 		_TrainingType = TrainingType.SHOOTING;
 		_PrimaryTrainingSkill = PlayerSkill.SCORING;
 		_SecondaryTrainingSkill = PlayerSkill.SET_PIECES;
+
+		fullTrainingSectors.add(MatchRoleID.Sector.Goal);
+		fullTrainingSectors.add(MatchRoleID.Sector.Back);
+		fullTrainingSectors.add(MatchRoleID.Sector.CentralDefence);
+		fullTrainingSectors.add(MatchRoleID.Sector.Wing);
+		fullTrainingSectors.add(MatchRoleID.Sector.InnerMidfield);
+		fullTrainingSectors.add(MatchRoleID.Sector.Forward);
+
 		_PrimaryTrainingSkillPositions = new int[]{ IMatchRoleID.keeper,
 				IMatchRoleID.leftBack, IMatchRoleID.rightBack, IMatchRoleID.leftCentralDefender,
 				IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender,

@@ -3,6 +3,10 @@ package core.model.match;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class MatchLineupPlayer {
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -19,6 +23,7 @@ public class MatchLineupPlayer {
     // starting lineup match role information
     private int m_iStartPosition = -1;
     private int m_iStartBehavior = -1;
+    private int startSetPiecesTaker = -1;
 
     // (final) lineup match role
     private MatchRoleID matchRoleId;
@@ -71,19 +76,6 @@ public class MatchLineupPlayer {
         m_iStartBehavior = startBeh;
         m_iStartPosition = startPos;
         
-    }
-
-    public MatchLineupPlayer(MatchLineupPlayer p) {
-    	this.matchRoleId=new MatchRoleID (p.getRoleId(), p.getPlayerId(), p.getBehaviour());
-    	this.sourceSystem=p.sourceSystem;
-    	this.m_iStartPosition = p.m_iStartPosition;
-    	this.m_iStartBehavior = p.m_iStartBehavior;
-    	m_sSpielerName = p.getSpielerName();
-        m_sNickName = p.getNickName();
-        m_sSpielerVName = p.getSpielerVName();
-        m_dRating = p.getRating();
-        m_iStatus = p.getStatus();
-        m_dRatingStarsEndOfMatch = p.getRatingStarsEndOfMatch();
     }
 
     public final int getRoleId() {
@@ -287,5 +279,54 @@ public class MatchLineupPlayer {
 
     public MatchRoleID getMatchRole() {
         return this.matchRoleId;
+    }
+
+    public int getStartSetPiecesTaker() {
+        return this.startSetPiecesTaker;
+    }
+
+    private List<SectorAppearance> minutesInSectors;
+    public void addMinutesInSector(int minutes, Integer role) {
+        var last = getMinutesInSectors().get(minutesInSectors.size()-1);
+        var sector = MatchRoleID.getSector(role);
+        if ( last != null && last.sector == sector){
+            // prolong last entry
+            last.minutes+=minutes;
+        }
+        else {
+            // new entry
+            minutesInSectors.add(new SectorAppearance(minutes,sector));
+        }
+    }
+
+    public List<SectorAppearance> getMinutesInSectors() {
+        if ( minutesInSectors ==null){
+            minutesInSectors =new ArrayList<>();
+        }
+        return minutesInSectors;
+    }
+
+    public int getTrainingMinutesInAcceptedSectors(List<MatchRoleID.Sector> accepted){
+        int ret = 0;
+        for ( var app : getMinutesInSectors()){
+            if ( accepted == null || accepted.contains(app.sector)){
+                ret += app.minutes;
+                if ( ret >= 90){
+                    ret = 90;
+                    break;
+                }
+            }
+        }
+        return ret;
+    }
+
+    private class SectorAppearance {
+        MatchRoleID.Sector sector;
+        int minutes;
+
+        public SectorAppearance(int minutes, MatchRoleID.Sector sector) {
+            this.sector=sector;
+            this.minutes=minutes;
+        }
     }
 }
