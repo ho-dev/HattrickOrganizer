@@ -4,7 +4,6 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MatchLineupPlayer {
@@ -13,7 +12,7 @@ public class MatchLineupPlayer {
 	private static final long serialVersionUID = -5986419471284091148L;
 	private SourceSystem sourceSystem;
     private String m_sNickName = "";
-    private String m_sSpielerName = "";
+    private String m_sSpielerName;
     private String m_sSpielerVName = "";
     private double m_dRating;
     private double m_dRatingStarsEndOfMatch;
@@ -23,7 +22,7 @@ public class MatchLineupPlayer {
     // starting lineup match role information
     private int m_iStartPosition = -1;
     private int m_iStartBehavior = -1;
-    private int startSetPiecesTaker = -1;
+    private boolean startSetPiecesTaker = false;
 
     // (final) lineup match role
     private MatchRoleID matchRoleId;
@@ -63,7 +62,8 @@ public class MatchLineupPlayer {
                              int status,
                              double ratingStarsEndOfMatch,
                              int startPos,
-                             int startBeh) {
+                             int startBeh,
+                             boolean startSetPieces) {
         this.matchRoleId = new MatchRoleID(roleID, spielerID, (byte) behavior);
 
         this.sourceSystem = sourceSystem;
@@ -75,7 +75,7 @@ public class MatchLineupPlayer {
         m_dRatingStarsEndOfMatch = ratingStarsEndOfMatch;
         m_iStartBehavior = startBeh;
         m_iStartPosition = startPos;
-        
+        setStartSetPiecesTaker(startSetPieces);
     }
 
     public final int getRoleId() {
@@ -281,22 +281,29 @@ public class MatchLineupPlayer {
         return this.matchRoleId;
     }
 
-    public int getStartSetPiecesTaker() {
+    public boolean isStartSetPiecesTaker(){
         return this.startSetPiecesTaker;
     }
 
+    public void setStartSetPiecesTaker(boolean b) {
+        this.startSetPiecesTaker = b;
+     }
+
     private List<SectorAppearance> minutesInSectors;
     public void addMinutesInSector(int minutes, Integer role) {
-        var last = getMinutesInSectors().get(minutesInSectors.size()-1);
+        var minutesInSectors = getMinutesInSectors();
+        var size = minutesInSectors.size();
         var sector = MatchRoleID.getSector(role);
-        if ( last != null && last.sector == sector){
-            // prolong last entry
-            last.minutes+=minutes;
+
+        if (size > 0) {
+            var last = minutesInSectors.get(minutesInSectors.size() - 1);
+            if (last.sector == sector) {
+                // prolong last entry
+                last.minutes += minutes;
+                return;
+            }
         }
-        else {
-            // new entry
-            minutesInSectors.add(new SectorAppearance(minutes,sector));
-        }
+        minutesInSectors.add(new SectorAppearance(minutes, sector));
     }
 
     public List<SectorAppearance> getMinutesInSectors() {
@@ -319,6 +326,7 @@ public class MatchLineupPlayer {
         }
         return ret;
     }
+
 
     private class SectorAppearance {
         MatchRoleID.Sector sector;

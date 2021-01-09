@@ -16,8 +16,8 @@ public class MatchLineupTeam {
 
 	private SourceSystem sourceSystem;
 	private String teamName;
-	private Vector<MatchLineupPlayer> lineup = new Vector<>();
-	private ArrayList<Substitution> substitutions = new ArrayList<>();
+	private Vector<MatchLineupPlayer> lineup;
+	private ArrayList<Substitution> substitutions;
 
 	private int experience;
 	private int teamId;
@@ -63,6 +63,9 @@ public class MatchLineupTeam {
 	 * @return Value of property m_vAufstellung.
 	 */
 	public final Vector<MatchLineupPlayer> getLineup() {
+		if ( lineup == null){
+			lineup = new Vector<>();
+		}
 		return lineup;
 	}
 
@@ -740,19 +743,20 @@ public class MatchLineupTeam {
 		return this.getTrainMinutesPlayedInSectors(playerId).size() > 0;
 	}
 
-	void initMinutesOfPlayersInSectors(){
-		/**
+	private void initMinutesOfPlayersInSectors(){
+		if ( this.lineup == null || this.substitutions == null) return;	// init in progress
+
+		/*
 		 * Mapping of role id to match appearance, consisting of player and minute
 		 * Setting lineup or substitutions will init last match appearances
 		 */
 		HashMap<Integer, MatchAppearance> lastMatchAppearances = new HashMap<>();
-		if ( this.lineup == null || this.substitutions == null) return;
 		// get the starting positions
 		this.lineup.stream().filter(i->i.getStartPosition()>=0).forEach(
 				i-> lastMatchAppearances.put(i.getStartPosition(), new MatchAppearance(i,0))
 		);
-		this.lineup.stream().filter(i->i.getStartSetPiecesTaker()>=0).forEach(
-				i-> lastMatchAppearances.put(i.getStartSetPiecesTaker(), new MatchAppearance(i,0))
+		this.lineup.stream().filter(i->i.isStartSetPiecesTaker()).forEach(
+				i-> lastMatchAppearances.put(IMatchRoleID.setPieces, new MatchAppearance(i,0))
 		);
 
 		// examine the substitutions

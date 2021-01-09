@@ -43,7 +43,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 				new ColumnDescriptor("FIELDPOS",Types.INTEGER,false),
 				new ColumnDescriptor("RatingStarsEndOfMatch", Types.REAL, false),
 				new ColumnDescriptor("StartPosition", Types.INTEGER, false),
-				new ColumnDescriptor("StartBehaviour", Types.INTEGER, false)
+				new ColumnDescriptor("StartBehaviour", Types.INTEGER, false),
+				new ColumnDescriptor("StartSetPieces", Types.BOOLEAN, true)
 		};
 	}
 
@@ -225,7 +226,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 				//insert vorbereiten
 				var sql = "INSERT INTO "+getTableName()+" (MatchID,TeamID,SourceSystem,SpielerID,RoleID,Taktik," +
 						"PositionCode,VName,NickName,Name,Rating,HoPosCode,STATUS,FIELDPOS,RatingStarsEndOfMatch," +
-						"StartPosition,StartBehaviour) VALUES(" +
+						"StartPosition,StartBehaviour,StartSetPieces) VALUES(" +
 						matchID + "," +
 						teamID	+ "," +
 						player.getSourceSystem().getValue() + "," +
@@ -242,7 +243,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 						player.getRoleId() + "," +
 						player.getRatingStarsEndOfMatch() + "," +
 						player.getStartPosition() + "," +
-						player.getStartBehavior() + " )";
+						player.getStartBehavior() +  "," +
+						player.isStartSetPiecesTaker() + " )";
 				adapter.executeUpdate(sql);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeMatchLineupPlayer Error" + e);
@@ -286,9 +288,9 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			var vname = DBManager.deleteEscapeSequences(rs.getString("VName"));
 			var nickName = DBManager.deleteEscapeSequences(rs.getString("NickName"));
 			var name = DBManager.deleteEscapeSequences(rs.getString("Name"));
-			var positionsCode = rs.getInt("PositionCode");
 			var startPos = rs.getInt("StartPosition");
 			var startBeh = rs.getInt("StartBehaviour");
+			var startSetPieces = DBManager.getBoolean(rs, "StartSetPieces", false);
 			var status = rs.getInt("STATUS");
 			var sourceSystem = SourceSystem.valueOf(rs.getInt("SourceSystem"));
 
@@ -310,7 +312,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			roleID = MatchRoleID.convertOldRoleToNew(roleID);
 
 			// Position code and field position was removed from constructor below.
-			var player = new MatchLineupPlayer(sourceSystem, roleID, behavior, spielerID, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh);
+			var player = new MatchLineupPlayer(sourceSystem, roleID, behavior, spielerID, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh, startSetPieces);
 			vec.add(player);
 		}
 
