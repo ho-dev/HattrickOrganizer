@@ -365,7 +365,8 @@ public abstract class WeeklyTrainingType {
 		else {
 			return 0; // skill is not trained
 		}
-		return  1. / nweeks /90.;
+		if ( nweeks>0 ) return  1. / nweeks /90.;
+		return 0; // should not happen
 	}
 
 	public double getPartlyYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
@@ -376,4 +377,10 @@ public abstract class WeeklyTrainingType {
 		return getFullYouthTrainingPerMinute(skillId, currentValue, ageYears) / this.getPrimaryTrainingSkillOsmosisBaseLengthRate();
 	}
 
+	public List<MatchRoleID.Sector> getBonusTrainingSectors(){
+		return this.bonusTrainingSectors;
+	}
+	public List<MatchRoleID.Sector> getFullTrainingSectors(){return this.fullTrainingSectors;}
+	public List<MatchRoleID.Sector> getPartlyTrainingSectors(){return this.partlyTrainingSectors;}
+	public List<MatchRoleID.Sector> getOsmosisTrainingSectors(){return this.osmosisTrainingSectors;}
 }

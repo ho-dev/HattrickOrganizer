@@ -101,6 +101,16 @@ public enum YouthTrainingType {
         return ret;
     }
 
+    public List<List<MatchRoleID.Sector>> getTrainedSectors(){
+        var ret = new ArrayList<List<MatchRoleID.Sector>>();
+        var wt = trainingTypes[value];
+        ret.add(wt.getBonusTrainingSectors());
+        ret.add(wt.getFullTrainingSectors());
+        ret.add(wt.getPartlyTrainingSectors());
+        ret.add(wt.getOsmosisTrainingSectors());
+        return ret;
+    }
+
     /**
      * calculate training effect per minute
      *

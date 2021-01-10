@@ -196,7 +196,7 @@ final class DBUpdater {
 			dbManager.getTable(TeamsLogoTable.TABLENAME).createTable();
 		}
 
-		forceModuleStatus(IModule.YOUTH);
+		//forceModuleStatus(IModule.YOUTH);
 		updateDBVersion(dbVersion, version);
 	}
 

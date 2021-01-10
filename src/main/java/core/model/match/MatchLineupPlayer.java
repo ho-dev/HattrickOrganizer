@@ -328,13 +328,16 @@ public class MatchLineupPlayer {
     }
 
 
-    private class SectorAppearance {
+    public class SectorAppearance {
         MatchRoleID.Sector sector;
-        int minutes;
+        private int minutes;
 
         public SectorAppearance(int minutes, MatchRoleID.Sector sector) {
             this.sector=sector;
             this.minutes=minutes;
         }
+
+        public int getMinutes(){return minutes;}
+        public MatchRoleID.Sector getSector(){return sector;}
     }
 }

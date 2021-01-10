@@ -18,7 +18,6 @@ public class SetPiecesWeeklyTraining extends WeeklyTrainingType {
 		_Name = "Set Pieces";
 		_TrainingType = TrainingType.SET_PIECES;
 		_PrimaryTrainingSkill = PlayerSkill.SET_PIECES;
-		_SecondaryTrainingSkill = 0;
 
 		bonusTrainingSectors.add(MatchRoleID.Sector.Goal);
 		bonusTrainingSectors.add(MatchRoleID.Sector.SetPiecesTaker);
