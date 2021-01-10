@@ -10,7 +10,6 @@ import core.util.chart.HOLinesChart;
 import core.gui.comp.ImageCheckbox;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
-
 import java.awt.*;
 import java.text.NumberFormat;
 import java.awt.event.ItemEvent;
@@ -127,9 +126,9 @@ public final class CombinedRatingChartPanel extends JPanel {
 	private void initComponents() {
 		controlsPanel.setLayout(new GridBagLayout());
 
-		oChartPanel = new HOLinesChart(true, true, null, null, null, null, "#,##0","#,##0", 0d, 20d, null, null,null,null,false);
+		oChartPanel = new HOLinesChart(true, null, null, null, "#,##0",0d, 20d,null, null, false);
 
-		GridBagConstraints gbc = new GridBagConstraints();
+				GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill =  GridBagConstraints.HORIZONTAL;
 		gbc.gridy = 0;
 
