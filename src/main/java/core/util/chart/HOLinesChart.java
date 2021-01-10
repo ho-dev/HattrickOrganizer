@@ -157,6 +157,11 @@ public class HOLinesChart implements IChart {
     }
 
 
+    public void setTitle(String chartTitle){
+        m_chart.setTitle(chartTitle);
+    }
+
+
     public final void updateGraph(){
 
         XYSeries serie;
@@ -284,13 +289,6 @@ public class HOLinesChart implements IChart {
         this.m_hasHelpLines = hasHelpLines;
 
         updateGraph();
-
-    }
-
-    @Deprecated
-    public final void setAllValues(LinesChartDataModel[] models, String[] xData,
-                                   NumberFormat y_axisFormat, String x_axisTitle, String y_axisTitle,
-                                   boolean hasLabels, boolean hasHelpLines){
 
     }
 

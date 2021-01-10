@@ -164,8 +164,4 @@ public final class RatingChartData {
 		return result;
 	}
 
-
-	String[] getCaptions(boolean toto) {
-		return new String[]{};
-	}
 }
