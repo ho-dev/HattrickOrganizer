@@ -64,10 +64,8 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
             playerOverviewTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             playerOverviewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             playerOverviewTable.setRowSelectionAllowed(true);
-
             var selectionModel = playerOverviewTable.getSelectionModel();
             selectionModel.addListSelectionListener(this);
-
 
             playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
             playerDetailsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -86,7 +84,6 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         var player = getSelectedPlayer();
         if ( player != null) {
             playerNameLabel.setText(player.getFullName());
-            playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
             playerDetailsTableModel.setYouthPlayer(player);
             playerDetailsTableModel.initData();
             playerDetailsTable.setModel(playerDetailsTableModel);

@@ -43,7 +43,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 				new ColumnDescriptor("FIELDPOS",Types.INTEGER,false),
 				new ColumnDescriptor("RatingStarsEndOfMatch", Types.REAL, false),
 				new ColumnDescriptor("StartPosition", Types.INTEGER, false),
-				new ColumnDescriptor("StartBehaviour", Types.INTEGER, false)
+				new ColumnDescriptor("StartBehaviour", Types.INTEGER, false),
+				new ColumnDescriptor("StartSetPieces", Types.BOOLEAN, true)
 		};
 	}
 
@@ -184,7 +185,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	void deleteMatchLineupPlayer(MatchLineupPlayer player, int matchID, int teamID) {
 		if (player != null) {
 			final String[] where = { "SourceSystem", "MatchID" , "TeamID", "RoleID", "SpielerID"};
-			final String[] werte = { "" + player.getSourceSystem().getValue(), "" + matchID, "" + teamID, "" + player.getId(), "" + player.getPlayerId()};
+			final String[] werte = { "" + player.getSourceSystem().getValue(), "" + matchID, "" + teamID, "" + player.getRoleId(), "" + player.getPlayerId()};
 			delete(where, werte);			
 		}
 	}
@@ -217,7 +218,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			}
 
 			final String[] where = { "SourceSystem", "MatchID" , "TeamID", "RoleID", "SpielerID"};
-			final String[] werte = { "" + player.getSourceSystem().getValue(), "" + matchID, "" + teamID, "" + player.getId(), "" + player.getPlayerId()};
+			final String[] werte = { "" + player.getSourceSystem().getValue(), "" + matchID, "" + teamID, "" + player.getRoleId(), "" + player.getPlayerId()};
 			delete(where, werte);
 
 			//saven
@@ -225,24 +226,25 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 				//insert vorbereiten
 				var sql = "INSERT INTO "+getTableName()+" (MatchID,TeamID,SourceSystem,SpielerID,RoleID,Taktik," +
 						"PositionCode,VName,NickName,Name,Rating,HoPosCode,STATUS,FIELDPOS,RatingStarsEndOfMatch," +
-						"StartPosition,StartBehaviour) VALUES(" +
+						"StartPosition,StartBehaviour,StartSetPieces) VALUES(" +
 						matchID + "," +
 						teamID	+ "," +
 						player.getSourceSystem().getValue() + "," +
 						player.getPlayerId() + ","	+
-						player.getId() + "," +
-						player.getTactic()	+ ","	+
-						player.getPositionCode() + ",'" +
+						player.getRoleId() + "," +
+						player.getBehaviour()	+ ","	+
+						player.getRoleId() + ",'" +
 						DBManager.insertEscapeSequences(player.getSpielerVName()) + "', '" +
 						DBManager.insertEscapeSequences(player.getNickName()) + "', '" +
 						DBManager.insertEscapeSequences(player.getSpielerName())+ "'," +
 						player.getRating() + "," +
 						player.getPosition() + "," +
 						"0," + // Status
-						player.getPositionCode() + "," +
+						player.getRoleId() + "," +
 						player.getRatingStarsEndOfMatch() + "," +
 						player.getStartPosition() + "," +
-						player.getStartBehavior() + " )";
+						player.getStartBehavior() +  "," +
+						player.isStartSetPiecesTaker() + " )";
 				adapter.executeUpdate(sql);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeMatchLineupPlayer Error" + e);
@@ -286,9 +288,9 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			var vname = DBManager.deleteEscapeSequences(rs.getString("VName"));
 			var nickName = DBManager.deleteEscapeSequences(rs.getString("NickName"));
 			var name = DBManager.deleteEscapeSequences(rs.getString("Name"));
-			var positionsCode = rs.getInt("PositionCode");
 			var startPos = rs.getInt("StartPosition");
 			var startBeh = rs.getInt("StartBehaviour");
+			var startSetPieces = DBManager.getBoolean(rs, "StartSetPieces", false);
 			var status = rs.getInt("STATUS");
 			var sourceSystem = SourceSystem.valueOf(rs.getInt("SourceSystem"));
 
@@ -310,7 +312,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			roleID = MatchRoleID.convertOldRoleToNew(roleID);
 
 			// Position code and field position was removed from constructor below.
-			var player = new MatchLineupPlayer(sourceSystem, roleID, behavior, spielerID, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh);
+			var player = new MatchLineupPlayer(sourceSystem, roleID, behavior, spielerID, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh, startSetPieces);
 			vec.add(player);
 		}
 

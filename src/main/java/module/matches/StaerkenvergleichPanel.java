@@ -620,8 +620,8 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 	private double getStars(List<MatchLineupPlayer> players) {
 		double stars = 0;
 		for (MatchLineupPlayer player : players) {
-			if ((player.getId() < IMatchRoleID.startReserves)
-					&& (player.getId() >= IMatchRoleID.startLineup)) {
+			if ((player.getRoleId() < IMatchRoleID.startReserves)
+					&& (player.getRoleId() >= IMatchRoleID.startLineup)) {
 				double rating = (double) player.getRating();
 
 				if (rating > 0) {

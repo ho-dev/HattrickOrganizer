@@ -361,7 +361,7 @@ public class XMLExporter  {
 					Player playerData = matchData.getPlayers().get(Integer.valueOf(playerMatch.getPlayerId()));
 
 					//Bank + verletzte überspringen
-					if (playerMatch.getId() >= IMatchRoleID.startReserves) {
+					if (playerMatch.getRoleId() >= IMatchRoleID.startReserves) {
 						continue;
 					}
 
@@ -379,16 +379,16 @@ public class XMLExporter  {
 					ele.appendChild(doc.createTextNode("" + playerData.getPlayerSpecialty()));
 					ele = doc.createElement("RoleID");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerMatch.getId()));
+					ele.appendChild(doc.createTextNode("" + playerMatch.getRoleId()));
 					ele = doc.createElement("Tactic");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerMatch.getTactic()));
+					ele.appendChild(doc.createTextNode("" + playerMatch.getBehaviour()));
 					ele = doc.createElement("HOPosition");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerMatch.getPosition()));
 					ele = doc.createElement("HTPositionCode");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerMatch.getPositionCode()));
+					ele.appendChild(doc.createTextNode("" + playerMatch.getRoleId()));
 					ele = doc.createElement("Bewertung");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerMatch.getRating()));

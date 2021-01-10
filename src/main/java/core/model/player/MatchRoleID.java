@@ -25,7 +25,8 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 		CentralDefence,
 		Wing,
 		InnerMidfield,
-		Forward
+		Forward,
+		SetPiecesTaker
 	}
 
 

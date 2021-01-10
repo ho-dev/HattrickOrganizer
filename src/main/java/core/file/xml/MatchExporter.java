@@ -78,7 +78,7 @@ public class MatchExporter {
 					Player formerPlayerData = null;
 
 					//Bankl + verlketzte ï¿½berspringen
-					if (player.getId() >= IMatchRoleID.startReserves) {
+					if (player.getRoleId() >= IMatchRoleID.startReserves) {
 						continue;
 					}
 

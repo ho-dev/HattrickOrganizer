@@ -7,6 +7,7 @@ import core.constants.player.PlayerSkill;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
@@ -17,6 +18,14 @@ public class ScoringWeeklyTraining extends WeeklyTrainingType {
 		_Name = "Scoring";
 		_TrainingType = TrainingType.SCORING;
 		_PrimaryTrainingSkill = PlayerSkill.SCORING;
+
+		fullTrainingSectors.add(MatchRoleID.Sector.Forward);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Goal);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Back);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.CentralDefence);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Wing);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.InnerMidfield);
+
 		_PrimaryTrainingSkillPositions = new int[]{ 
 				IMatchRoleID.leftForward, IMatchRoleID.rightForward, IMatchRoleID.centralForward };
 		_PrimaryTrainingSkillOsmosisTrainingPositions = new int[]{
@@ -44,6 +53,6 @@ public class ScoringWeeklyTraining extends WeeklyTrainingType {
 	@Override
 	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
 	{
-		return (double) -1;
+		return -1;
 	}
 }

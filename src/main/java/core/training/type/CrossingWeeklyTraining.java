@@ -7,6 +7,7 @@ import core.constants.player.PlayerSkill;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
@@ -17,6 +18,13 @@ public class CrossingWeeklyTraining extends WeeklyTrainingType {
 		_Name = "Crossing";
 		_TrainingType = TrainingType.CROSSING_WINGER;
 		_PrimaryTrainingSkill = PlayerSkill.WINGER;
+
+		fullTrainingSectors.add(MatchRoleID.Sector.Wing);
+		partlyTrainingSectors.add(MatchRoleID.Sector.Back);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.CentralDefence);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.InnerMidfield);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Forward);
+
 		_PrimaryTrainingSkillPositions = new int[]{ 
 				IMatchRoleID.leftWinger, IMatchRoleID.rightWinger };
 		_PrimaryTrainingSkillPartlyTrainingPositions = new int[]{

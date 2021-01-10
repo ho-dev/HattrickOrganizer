@@ -121,7 +121,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			List<MatchLineupPlayer> aufstellung = lineupteam.getLineup();
 
 			for (MatchLineupPlayer player : aufstellung) {
-				switch (player.getId()) {
+				switch (player.getRoleId()) {
 				case IMatchRoleID.keeper: {
 					m_clKeeper.refresh(lineup, player);
 					break;

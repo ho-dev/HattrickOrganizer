@@ -193,11 +193,11 @@ public class TeamReport {
             return;
         }
 
-        SpotReport spotReport = getSpotReport(pp.getId());
+        SpotReport spotReport = getSpotReport(pp.getRoleId());
 
         if (spotReport == null) {
             spotReport = new SpotReport(pp);
-            spotReports.put(pp.getId(), spotReport);
+            spotReports.put(pp.getRoleId(), spotReport);
         }
 
         spotReport.addPerformance(pp);

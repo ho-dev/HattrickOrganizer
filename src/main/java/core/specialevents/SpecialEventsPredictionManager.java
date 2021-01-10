@@ -280,7 +280,7 @@ public class SpecialEventsPredictionManager {
                 }
 
                 int positionId = playerPerformance.getPosition();
-                byte tacticId = playerPerformance.getTaktik();
+                byte tacticId = playerPerformance.getBehaviour();
                 MatchType matchtype = opponentMatch.getMatch().getMatchType();
                 double ratingStart = playerPerformance.getRating();
                 double ratingEnd = playerPerformance.getRatingEnd();

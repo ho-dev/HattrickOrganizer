@@ -34,8 +34,8 @@ public class Report {
      * @param pp PlayerPerformance for which the report has to be built
      */
     public Report(PlayerPerformance pp) {
-        this.spot = pp.getId();
-        this.position = pp.getPositionCode();
+        this.spot = pp.getRoleId();
+        this.position = pp.getRoleId();
         this.playerId = pp.getSpielerId();
     }
 

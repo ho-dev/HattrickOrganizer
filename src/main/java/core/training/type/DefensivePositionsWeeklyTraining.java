@@ -7,6 +7,7 @@ import core.constants.player.PlayerSkill;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
@@ -17,6 +18,15 @@ public class DefensivePositionsWeeklyTraining extends WeeklyTrainingType {
 		_Name = "Defensive Positions";
 		_TrainingType = TrainingType.DEF_POSITIONS;
 		_PrimaryTrainingSkill = PlayerSkill.DEFENDING;
+
+		fullTrainingSectors.add(MatchRoleID.Sector.Goal);
+		fullTrainingSectors.add(MatchRoleID.Sector.Back);
+		fullTrainingSectors.add(MatchRoleID.Sector.CentralDefence);
+		fullTrainingSectors.add(MatchRoleID.Sector.Wing);
+		fullTrainingSectors.add(MatchRoleID.Sector.InnerMidfield);
+
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Forward);
+
 		_PrimaryTrainingSkillPositions = new int[]{ IMatchRoleID.keeper, IMatchRoleID.leftBack,
 				IMatchRoleID.rightBack, IMatchRoleID.leftCentralDefender,
 				IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender,
@@ -25,7 +35,7 @@ public class DefensivePositionsWeeklyTraining extends WeeklyTrainingType {
 				IMatchRoleID.rightInnerMidfield };
 		_PrimaryTrainingSkillOsmosisTrainingPositions = new int[] { IMatchRoleID.leftForward,
 				IMatchRoleID.centralForward, IMatchRoleID.rightForward};
-		_PrimaryTrainingBaseLength = (float) DefendingWeeklyTraining.instance().getBaseTrainingLength(); // old was (float) 7.2
+		_PrimaryTrainingBaseLength = DefendingWeeklyTraining.instance().getBaseTrainingLength(); // old was (float) 7.2
 		_PrimaryTrainingSkillBaseLength = (_PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_DEFENDING) * 2;
 	}
 	public static WeeklyTrainingType instance() {
@@ -43,6 +53,6 @@ public class DefensivePositionsWeeklyTraining extends WeeklyTrainingType {
 	@Override
 	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
 	{
-		return (double) -1;
+		return -1;
 	}
 }

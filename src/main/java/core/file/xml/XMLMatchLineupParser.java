@@ -237,8 +237,8 @@ public class XMLMatchLineupParser {
 			// fixed order.
 			MatchLineupPlayer player = createPlayer(sourceSystem, (Element) list.item(i));
 			if (team.getPlayerByID(player.getPlayerId()) != null) {
-				if ((player.getId() >= IMatchRoleID.FirstPlayerReplaced)
-						&& (player.getId() <= IMatchRoleID.ThirdPlayerReplaced)) {
+				if ((player.getRoleId() >= IMatchRoleID.FirstPlayerReplaced)
+						&& (player.getRoleId() <= IMatchRoleID.ThirdPlayerReplaced)) {
 
 					// MatchLineup API bug, he is still on the pitch, so skip
 					continue;
@@ -253,15 +253,19 @@ public class XMLMatchLineupParser {
 
 		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
 			MatchLineupPlayer startPlayer = createPlayer(sourceSystem, (Element) list.item(i));
-			startPlayer.setStartPosition(startPlayer.getId()); // it is the role id
-			startPlayer.setStartBehavior(startPlayer.getTactic());
+			startPlayer.setStartPosition(startPlayer.getRoleId()); // it is the role id
+			startPlayer.setStartBehavior(startPlayer.getBehaviour());
 
-			// Merge with the existing player, but ignore captain and set piece
-			// position
-			if (startPlayer.getStartPosition() >= IMatchRoleID.startLineup) {
+			// Merge with the existing player, but ignore captain
+			if (startPlayer.getStartPosition() >= IMatchRoleID.startLineup || startPlayer.getStartPosition() == IMatchRoleID.setPieces) {
 				MatchLineupPlayer lineupPlayer = team.getPlayerByID(startPlayer.getPlayerId());
 				if (lineupPlayer != null) {
-					lineupPlayer.setStartPosition(startPlayer.getStartPosition());
+					if ( startPlayer.getStartPosition() == IMatchRoleID.setPieces){
+						lineupPlayer.setStartSetPiecesTaker(true);
+					}
+					else {
+						lineupPlayer.setStartPosition(startPlayer.getStartPosition());
+					}
 					lineupPlayer.setStartBehavior(startPlayer.getStartBehavior());
 				} else {
 					// He was not already in the lineup, so add him

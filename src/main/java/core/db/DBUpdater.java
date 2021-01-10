@@ -172,12 +172,13 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN AwayFormation VARCHAR(5) ");
 		}
 
-		if ( !columnExistsInTable("MatchDate", MatchHighlightsTable.TABLENAME)){
+		if ( !columnExistsInTable("StartSetPieces", MatchLineupPlayerTable.TABLENAME)){
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamName VARCHAR (127)");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamID INTEGER");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE AUFSTELLUNG ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUPPLAYER ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUPPLAYER ADD COLUMN StartSetPieces BOOLEAN");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUP ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUPTEAM ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHSUBSTITUTION ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
@@ -195,7 +196,7 @@ final class DBUpdater {
 			dbManager.getTable(TeamsLogoTable.TABLENAME).createTable();
 		}
 
-		forceModuleStatus(IModule.YOUTH);
+		//forceModuleStatus(IModule.YOUTH);
 		updateDBVersion(dbVersion, version);
 	}
 

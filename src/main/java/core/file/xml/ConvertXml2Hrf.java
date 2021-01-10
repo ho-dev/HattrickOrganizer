@@ -548,55 +548,55 @@ public class ConvertXml2Hrf {
 
 			buffer.append("behrightBack=")
 					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.rightBack).getTactic())
+							IMatchRoleID.rightBack).getBehaviour())
 					.append('\n');
 			buffer.append("behinsideBack1=")
 					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.rightCentralDefender).getTactic())
+							IMatchRoleID.rightCentralDefender).getBehaviour())
 					.append('\n');
 			buffer.append("behinsideBack2=")
 					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.leftCentralDefender).getTactic())
+							IMatchRoleID.leftCentralDefender).getBehaviour())
 					.append('\n');
 			buffer.append("behinsideBack3=")
 					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.middleCentralDefender).getTactic())
+							IMatchRoleID.middleCentralDefender).getBehaviour())
 					.append('\n');
 			buffer.append("behleftBack=")
 					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.leftBack).getTactic())
+							IMatchRoleID.leftBack).getBehaviour())
 					.append('\n');
 			buffer.append("behrightWinger=")
 					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.rightWinger).getTactic())
+							IMatchRoleID.rightWinger).getBehaviour())
 					.append('\n');
 			buffer.append("behinsideMid1=")
 					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.rightInnerMidfield).getTactic())
+							IMatchRoleID.rightInnerMidfield).getBehaviour())
 					.append('\n');
 			buffer.append("behinsideMid2=")
 					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.leftInnerMidfield).getTactic())
+							IMatchRoleID.leftInnerMidfield).getBehaviour())
 					.append('\n');
 			buffer.append("behinsideMid3=")
 					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.centralInnerMidfield).getTactic())
+							IMatchRoleID.centralInnerMidfield).getBehaviour())
 					.append('\n');
 			buffer.append("behleftWinger=")
 					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.leftWinger).getTactic())
+							IMatchRoleID.leftWinger).getBehaviour())
 					.append('\n');
 			buffer.append("behforward1=")
 					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.rightForward).getTactic())
+							IMatchRoleID.rightForward).getBehaviour())
 					.append('\n');
 			buffer.append("behforward2=")
 					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.leftForward).getTactic())
+							IMatchRoleID.leftForward).getBehaviour())
 					.append('\n');
 			buffer.append("behforward3=")
 					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.centralForward).getTactic())
+							IMatchRoleID.centralForward).getBehaviour())
 					.append('\n');
 
 			int i = 0;

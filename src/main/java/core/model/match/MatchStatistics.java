@@ -16,7 +16,7 @@ public class MatchStatistics {
 			// position for all players.
 			Vector<MatchLineupPlayer> mlps = teamLineup.getLineup();
 			for (MatchLineupPlayer mlp : mlps) {
-				mlp.setStartPosition(mlp.getFieldPos());
+				mlp.setStartPosition(mlp.getRoleId());
 			}
 		}
 	}

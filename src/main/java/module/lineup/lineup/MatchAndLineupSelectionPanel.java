@@ -402,14 +402,14 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             Vector<MatchLineupPlayer> lineupPlayers = DBManager.instance().getMatchLineupPlayers(iMatchID, OWN_TEAM_ID);
             if (lineupPlayers != null) {
                 for (MatchLineupPlayer lineupPlayer : lineupPlayers) {
-                    if (lineupPlayer.getId() == IMatchRoleID.setPieces) {
+                    if (lineupPlayer.getRoleId() == IMatchRoleID.setPieces) {
                         lineup.setKicker(lineupPlayer.getPlayerId());
                     }
-                    else if (lineupPlayer.getId() == IMatchRoleID.captain) {
+                    else if (lineupPlayer.getRoleId() == IMatchRoleID.captain) {
                         lineup.setCaptain(lineupPlayer.getPlayerId());
                     }
                     else {
-                        lineup.setSpielerAtPosition(lineupPlayer.getId(), lineupPlayer.getPlayerId(), lineupPlayer.getTactic());
+                        lineup.setSpielerAtPosition(lineupPlayer.getRoleId(), lineupPlayer.getPlayerId(), lineupPlayer.getBehaviour());
                     }
                 }
             }

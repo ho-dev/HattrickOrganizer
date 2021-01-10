@@ -7,6 +7,7 @@ import core.constants.player.PlayerSkill;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
@@ -17,6 +18,14 @@ public class WingAttacksWeeklyTraining extends WeeklyTrainingType {
 		_Name = "Wing Attacks";
 		_TrainingType = TrainingType.WING_ATTACKS;
 		_PrimaryTrainingSkill = PlayerSkill.WINGER;
+
+		fullTrainingSectors.add(MatchRoleID.Sector.Wing);
+		fullTrainingSectors.add(MatchRoleID.Sector.Forward);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Goal);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Back);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.CentralDefence);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.InnerMidfield);
+
 		_PrimaryTrainingSkillPositions = new int[]{ IMatchRoleID.rightWinger, IMatchRoleID.leftWinger,
 				IMatchRoleID.leftForward, IMatchRoleID.centralForward, IMatchRoleID.rightForward };
 		_PrimaryTrainingSkillOsmosisTrainingPositions = new int[] { IMatchRoleID.keeper, IMatchRoleID.leftBack,
@@ -41,6 +50,6 @@ public class WingAttacksWeeklyTraining extends WeeklyTrainingType {
 	@Override
 	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
 	{
-		return (double) -1;
+		return -1;
 	}
 }

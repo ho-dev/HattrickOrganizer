@@ -2467,6 +2467,12 @@ public class DBManager {
 		return null;
 	}
 
+	public static boolean getBoolean(ResultSet rs, String columnLabel, boolean defaultValue) {
+		var ret = getBoolean(rs,columnLabel);
+		if ( ret != null) return ret;
+		return defaultValue;
+	}
+
 	/**
 	 * Gets double.
 	 *

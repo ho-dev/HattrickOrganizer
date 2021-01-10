@@ -24,8 +24,7 @@ public class YouthModule extends DefaultModule {
 
     @Override
     public JPanel createTabPanel() {
-//        return new YouthPanel();
-        return new JPanel();
+        return new YouthPanel();
     }
 
     public KeyStroke getKeyStroke() {

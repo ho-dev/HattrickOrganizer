@@ -405,7 +405,6 @@ public class MatchKurzInfo implements Comparable<Object> {
 		merge(match);
 	}
 
-
 	public final boolean isHomeMatch()
 	{
 		return m_iHomeTeamID == user_team_id;

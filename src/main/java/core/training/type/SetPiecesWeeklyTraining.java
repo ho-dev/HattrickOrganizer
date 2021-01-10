@@ -7,6 +7,7 @@ import core.constants.player.PlayerSkill;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
@@ -17,7 +18,17 @@ public class SetPiecesWeeklyTraining extends WeeklyTrainingType {
 		_Name = "Set Pieces";
 		_TrainingType = TrainingType.SET_PIECES;
 		_PrimaryTrainingSkill = PlayerSkill.SET_PIECES;
-		_SecondaryTrainingSkill = 0;
+
+		bonusTrainingSectors.add(MatchRoleID.Sector.Goal);
+		bonusTrainingSectors.add(MatchRoleID.Sector.SetPiecesTaker);
+
+		fullTrainingSectors.add(MatchRoleID.Sector.Goal);
+		fullTrainingSectors.add(MatchRoleID.Sector.Back);
+		fullTrainingSectors.add(MatchRoleID.Sector.CentralDefence);
+		fullTrainingSectors.add(MatchRoleID.Sector.Wing);
+		fullTrainingSectors.add(MatchRoleID.Sector.InnerMidfield);
+		fullTrainingSectors.add(MatchRoleID.Sector.Forward);
+
 		_PrimaryTrainingSkillPositions = new int[]{ IMatchRoleID.keeper,
 				IMatchRoleID.leftBack, IMatchRoleID.rightBack, IMatchRoleID.leftCentralDefender,
 				IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender,
@@ -46,6 +57,6 @@ public class SetPiecesWeeklyTraining extends WeeklyTrainingType {
 	@Override
 	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
 	{
-		return (double) -1;
+		return -1;
 	}
 }
