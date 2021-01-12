@@ -1,6 +1,5 @@
 package core.model.match;
 
-import com.github.weisj.darklaf.theme.info.PresetIconRule;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
@@ -532,7 +531,7 @@ public class MatchLineupTeam {
 			MatchEvent.MatchEventID me = MatchEvent.MatchEventID.fromMatchEventID(hl.getiMatchEventID());
 			if (me == MatchEvent.MatchEventID.MATCH_FINISHED) {
 				return hl.getMinute();
-			} else if (hl.getSpielerID() == spielerId) {
+			} else if (hl.getPlayerId() == spielerId) {
 				if (hl.isInjured() || hl.isRedCard()) {
 					return hl.getMinute();
 				}
@@ -815,7 +814,7 @@ public class MatchLineupTeam {
 							.filter(i -> i.getMatchEventID() == MatchEvent.MatchEventID.NEW_SET_PIECES_TAKER &&
 									i.getMinute() == substitution.getMatchMinuteCriteria()).collect(Collectors.toList());
 					for (var event : matchEvents) {
-						var newSetPiecesTaker = this.getPlayerByID(event.getSpielerID());
+						var newSetPiecesTaker = this.getPlayerByID(event.getAssistingPlayerId());
 						lastMatchAppearances.put(MatchRoleID.setPieces, new MatchAppearance(newSetPiecesTaker, substitution.getMatchMinuteCriteria()));
 					}
 				}

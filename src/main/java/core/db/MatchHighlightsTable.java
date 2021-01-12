@@ -70,13 +70,13 @@ final class MatchHighlightsTable extends AbstractTable {
 					sql.append(details.getSourceSystem().getValue()).append(", ");
 					sql.append(highlight.getMinute()).append(", ");
 					sql.append(highlight.getM_iMatchEventIndex()).append(", ");
-					sql.append(highlight.getSpielerID()).append(", '");
-					sql.append(DBManager.insertEscapeSequences(highlight.getSpielerName())).append("', ");
+					sql.append(highlight.getPlayerId()).append(", '");
+					sql.append(DBManager.insertEscapeSequences(highlight.getPlayerName())).append("', ");
 					sql.append(highlight.getTeamID()).append(", ");
 					sql.append(highlight.getiMatchEventID()).append(", ");
 					sql.append(highlight.getSpielerHeim()).append(", ");
-					sql.append(highlight.getGehilfeID()).append(", '");
-					sql.append(DBManager.insertEscapeSequences(highlight.getGehilfeName())).append("', ");
+					sql.append(highlight.getAssistingPlayerId()).append(", '");
+					sql.append(DBManager.insertEscapeSequences(highlight.getAssistingPlayerName())).append("', ");
 					sql.append(highlight.getGehilfeHeim()).append(", ");
 					sql.append(highlight.getM_eInjuryType().getValue()).append(", ");
 					sql.append(highlight.getMatchPartId().getValue()).append(", ");
@@ -123,13 +123,13 @@ final class MatchHighlightsTable extends AbstractTable {
 
 		highlight.setMatchId(rs.getInt("MatchId"));
 		highlight.setMinute(rs.getInt("Minute"));
-		highlight.setSpielerID(rs.getInt("SpielerId"));
-		highlight.setSpielerName(DBManager.deleteEscapeSequences(rs.getString("SpielerName")));
+		highlight.setPlayerId(rs.getInt("SpielerId"));
+		highlight.setPlayerName(DBManager.deleteEscapeSequences(rs.getString("SpielerName")));
 		highlight.setTeamID(rs.getInt("TeamId"));
 		highlight.setMatchEventID(rs.getInt("MATCH_EVENT_ID"));
 		highlight.setSpielerHeim(rs.getBoolean("SpielerHeim"));
-		highlight.setGehilfeID(rs.getInt("GehilfeID"));
-		highlight.setGehilfeName(DBManager.deleteEscapeSequences(rs.getString("GehilfeName")));
+		highlight.setAssistingPlayerId(rs.getInt("GehilfeID"));
+		highlight.setAssistingPlayerName(DBManager.deleteEscapeSequences(rs.getString("GehilfeName")));
 		highlight.setGehilfeHeim(rs.getBoolean("GehilfeHeim"));
 		highlight.setEventText(DBManager.deleteEscapeSequences(rs.getString("EventText")));
 		highlight.setM_eInjuryType(rs.getInt("INJURY_TYPE"));

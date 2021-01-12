@@ -101,7 +101,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 					homeAction = (highlight.getTeamID() == info.getHomeTeamID());
 					icon = highlight.getIcon();
 
-					String spielername = highlight.getSpielerName();
+					String spielername = highlight.getPlayerName();
 					if (spielername.length() > 30) {
 						spielername = spielername.substring(0, 29);
 					}
@@ -125,12 +125,12 @@ public class SpielHighlightPanel extends LazyImagePanel {
 
 					else if(highlight.isSubstitution())
 					{
-						spielername = highlight.getSpielerName();
+						spielername = highlight.getPlayerName();
 						if (spielername.length() > 30) {
 							spielername = spielername.substring(0, 29);
 						}
 
-						String playerEntering =  highlight.getGehilfeName();
+						String playerEntering =  highlight.getAssistingPlayerName();
 						if (playerEntering.length() > 30) { playerEntering = playerEntering.substring(0, 29);}
 
 						spielername = "<html>" + spielername + "<br>" + playerEntering + " (" + highlight.getMinute() + "')</html>";

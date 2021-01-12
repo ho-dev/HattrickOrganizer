@@ -641,7 +641,7 @@ public class MatchEvent {
      *
      * @param m_iGehilfeID New value of property m_iGehilfeID.
      */
-    public final void setGehilfeID(int m_iGehilfeID) {
+    public final void setAssistingPlayerId(int m_iGehilfeID) {
         this.m_iGehilfeID = m_iGehilfeID;
     }
 
@@ -650,7 +650,7 @@ public class MatchEvent {
      *
      * @return Value of property m_iGehilfeID.
      */
-    public final int getGehilfeID() {
+    public final int getAssistingPlayerId() {
         return m_iGehilfeID;
     }
 
@@ -659,7 +659,7 @@ public class MatchEvent {
      *
      * @param m_sGehilfeName New value of property m_sGehilfeName.
      */
-    public final void setGehilfeName(String m_sGehilfeName) {
+    public final void setAssistingPlayerName(String m_sGehilfeName) {
         this.m_sGehilfeName = m_sGehilfeName;
     }
 
@@ -668,7 +668,7 @@ public class MatchEvent {
      *
      * @return Value of property m_sGehilfeName.
      */
-    public final String getGehilfeName() {
+    public final String getAssistingPlayerName() {
         return m_sGehilfeName;
     }
 
@@ -745,7 +745,7 @@ public class MatchEvent {
      *
      * @param m_iSpielerID New value of property m_iSpielerID.
      */
-    public final void setSpielerID(int m_iSpielerID) {
+    public final void setPlayerId(int m_iSpielerID) {
         this.m_iSpielerID = m_iSpielerID;
     }
 
@@ -754,7 +754,7 @@ public class MatchEvent {
      *
      * @return Value of property m_iSpielerID.
      */
-    public final int getSpielerID() {
+    public final int getPlayerId() {
         return m_iSpielerID;
     }
 
@@ -763,7 +763,7 @@ public class MatchEvent {
      *
      * @param m_sSpielerName New value of property m_sSpielerName.
      */
-    public final void setSpielerName(String m_sSpielerName) {
+    public final void setPlayerName(String m_sSpielerName) {
         this.m_sSpielerName = m_sSpielerName;
     }
 
@@ -772,7 +772,7 @@ public class MatchEvent {
      *
      * @return Value of property m_sSpielerName.
      */
-    public final String getSpielerName() {
+    public final String getPlayerName() {
         return m_sSpielerName;
     }
 

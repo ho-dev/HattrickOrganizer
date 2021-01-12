@@ -47,7 +47,7 @@ public class SpecialEventsTableModel extends AbstractTableModel {
 			case AWAYTACTICCOLUMN -> matchRow.getMatch().getVisitingTeamTactic();
 			case MINUTECOLUMN -> ((highlight == null) || (highlight.getMinute() == 0)) ? null : highlight.getMinute() + "'";
 			case EVENTCOLUMN -> highlight;
-			case PLAYER_NAME_COLUMN -> (highlight == null) ? null : Pair.with(SpecialEventsDM.getSpielerName(highlight), highlight.getSpielerID());
+			case PLAYER_NAME_COLUMN -> (highlight == null) ? null : Pair.with(SpecialEventsDM.getSpielerName(highlight), highlight.getPlayerId());
 			default -> null; };
 	 }
 

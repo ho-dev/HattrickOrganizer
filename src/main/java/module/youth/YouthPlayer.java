@@ -391,14 +391,8 @@ public class YouthPlayer {
                 var team = training.getTeam(model.getBasics().getYouthTeamId());
                 if (team.hasPlayerPlayed(this.id)) {
                     var trainingEntry = new TrainingDevelopmentEntry(this, training);
-
                     startSkills = trainingEntry.calcSkills(startSkills, getSkillsAt(training.getMatchDate()),team);
                     trainingDevelopment.put(training.getMatchDate(), trainingEntry);
-
-                    HOLogger.instance().info(getClass(), "getTrainings player " + this.getFullName() + " " +
-                            trainingEntry.getTraining().getMatchLineup().getMatchType() + " " +
-                            trainingEntry.getMatchDate() + "  Defending: " + startSkills.get(Defender.getValue()).getCurrentValue());
-
                 }
             }
         }
