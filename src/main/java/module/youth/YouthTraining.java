@@ -211,12 +211,14 @@ public class YouthTraining {
     public String getPlayerTrainedSectors(int playerId) {
         var hov = HOVerwaltung.instance();
         var lineupTeam = this.getTeam(hov.getModel().getBasics().getYouthTeamId());
-        var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
+        //var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
+        var player = lineupTeam.getPlayerByID(playerId);
+        var sectors = player.getMinutesInSectors();
         var ret = new StringBuilder();
-        for ( var s : sectors.entrySet()){
-            ret.append(hov.getLanguageString("ls.youth.training.sector." + s.getKey()))
+        for ( var s : sectors){
+            ret.append(hov.getLanguageString("ls.youth.training.sector." + s.getSector()))
                     .append(":")
-                    .append(s.getValue())
+                    .append(s.getMinutes())
                     .append(" ");
         }
         return ret.toString();
