@@ -18,6 +18,7 @@ public class LinesChartDataModel {
     private List<Double> lValues;
     private boolean m_bShow;
     private boolean dataBasedBoundaries = false;
+    private boolean m_IsVisibleLegend = true;
     private double m_dFactor;
     private BasicStroke m_LineStyle;
     private Marker m_MarkerStyle;
@@ -36,19 +37,22 @@ public class LinesChartDataModel {
         this.m_MarkerStyle = m_MarkerStyle;
     }
 
-
-
     public List<Double> getlValues() {
         return lValues;
+    }
+
+    public Boolean getIsVisibleLegend() {
+        return m_IsVisibleLegend;
+    }
+
+    public void setNotVisibleLegend() {
+            m_IsVisibleLegend = false;
     }
 
     public BasicStroke getLineStyle() {
         return m_LineStyle;
     }
 
-    public void setM_LineStyle(BasicStroke m_LineStyle) {
-        this.m_LineStyle = m_LineStyle;
-    }
 
     public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color,
                                java.text.NumberFormat format, int yAxisGroup) {
