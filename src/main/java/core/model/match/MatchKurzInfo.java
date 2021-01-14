@@ -15,6 +15,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 	/** Name des Teams zu dem die Matchinfo gehört */
 	private String m_sGastName = "";
 
+	private String m_sOpponentTeamName;
+
 	/** Name des Teams zu dem die Matchinfo gehört */
 	private String m_sHeimName = "";
 
@@ -148,6 +150,18 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 */
 	public final java.lang.String getGuestTeamName() {
 		return m_sGastName;
+	}
+
+	public final String getOpponentTeamName(){
+		if (m_sOpponentTeamName == null){
+			if (isHomeMatch()){
+				m_sOpponentTeamName = getGuestTeamName();
+			}
+			else{
+				m_sOpponentTeamName = getHomeTeamName();
+			}
+		}
+		return m_sOpponentTeamName;
 	}
 
 

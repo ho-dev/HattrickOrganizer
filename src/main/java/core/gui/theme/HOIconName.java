@@ -46,6 +46,7 @@ public interface HOIconName {
 	 String SWAP 			= "swap";
 	 String RESET			= "reset";
 	 String TURN 			= "turn";
+	 String NO_CLUB_LOGO    = "no_club_logo";
 
 	 String LOGO16 = "logo16";
 	 String LOGO16_STABLE	= "logo16_stable";

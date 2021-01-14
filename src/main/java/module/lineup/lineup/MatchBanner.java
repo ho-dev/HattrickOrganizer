@@ -6,8 +6,10 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.match.MatchType;
+import core.model.match.Weather;
 import core.net.HattrickLink;
 import core.util.DateTimeUtils;
+import core.util.HOLogger;
 import core.util.HTCalendarFactory;
 import core.util.Helper;
 import javax.swing.*;
@@ -167,6 +169,11 @@ public class MatchBanner extends JPanel implements Refreshable {
             MatchType matchType = m_clSelectedMatch.getMatchType();
 
             ThemeManager tm = ThemeManager.instance();
+
+            if (m_clSelectedMatch.getWeather() == Weather.NULL){
+                m_clSelectedMatch.setWeather(Weather.UNKNOWN);
+                HOLogger.instance().error(this.getClass(), "Weather for the selected game is null !");
+            }
 
             Icon weatherIcon = tm.getIcon(HOIconName.WEATHER[m_clSelectedMatch.getWeather().getId()]);
             jlWeather.setIcon(weatherIcon);
