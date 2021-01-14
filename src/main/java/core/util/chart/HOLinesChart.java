@@ -172,6 +172,7 @@ public class HOLinesChart implements IChart {
         var series = m_chart.getSeriesMap();
         String serieName;
         List<Double> serieData;
+        Boolean isVisibleLegend;
 
         if (m_models == null) return;
 
@@ -180,6 +181,7 @@ public class HOLinesChart implements IChart {
            int yGroup = model.getY_axisGroup();
            serieName = model.getName();
            serieData = model.getlValues();
+           isVisibleLegend = model.getIsVisibleLegend();
 
            // Serie is removed
            if (series.containsKey(serieName))
@@ -197,7 +199,7 @@ public class HOLinesChart implements IChart {
                serie.setMarker(model.getMarkerStyle());
                serie.setMarkerColor(model.getColor());
                serie.setYAxisGroup(yGroup);
-               serie.setShowInLegend(true);
+               serie.setShowInLegend(isVisibleLegend);
            }
         }
 
