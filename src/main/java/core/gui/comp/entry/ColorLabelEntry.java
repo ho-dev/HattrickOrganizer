@@ -1,6 +1,4 @@
-// %12896550:de.hattrickorganizer.gui.templates%
 package core.gui.comp.entry;
-
 
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
@@ -8,16 +6,13 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.util.Helper;
 import org.jetbrains.annotations.NotNull;
-
 import java.awt.Color;
 import java.awt.Font;
-
 import javax.swing.*;
 
 
 public class ColorLabelEntry extends JLabel implements IHOTableEntry {
 
-    private static final long serialVersionUID = 2300786156899745002L;
     public static final Color FG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
     public static final Color BG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
     public static final Color BG_PLAYERSPECIALVALUES = ThemeManager.getColor(HOColorName.PLAYER_SKILL_SPECIAL_BG);
@@ -245,11 +240,6 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
         updateComponent();
     }
 
-    public final void setIconWithSort(Icon icon, double sortindex) {
-        setIcon(icon);
-        number = sortindex;
-        updateComponent();
-    }
 
     public final void setSpecialNumber(int number, boolean currencyformat) {
         setSpecialNumber(number, currencyformat, false);

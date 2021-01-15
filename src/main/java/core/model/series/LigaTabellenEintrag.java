@@ -176,7 +176,7 @@ public class LigaTabellenEintrag  implements Comparable<LigaTabellenEintrag>{
      *
      * @return Value of property m_iAltePosition.
      */
-    public final int getAltePosition() {
+    public final int getPreviousPosition() {
         return m_iAltePosition;
     }
 
@@ -440,7 +440,7 @@ public class LigaTabellenEintrag  implements Comparable<LigaTabellenEintrag>{
      *
      * @return Value of property m_iPunkte.
      */
-    public final int getPunkte() {
+    public final int getPoints() {
         return m_iPunkte;
     }
 
@@ -592,11 +592,11 @@ public class LigaTabellenEintrag  implements Comparable<LigaTabellenEintrag>{
         if (obj instanceof LigaTabellenEintrag) {
             final LigaTabellenEintrag lte = (LigaTabellenEintrag) obj;
 
-            if (m_iPunkte > lte.getPunkte()) {
+            if (m_iPunkte > lte.getPoints()) {
                 return -1;
-            } else if (m_iPunkte < lte.getPunkte()) {
+            } else if (m_iPunkte < lte.getPoints()) {
                 return 1;
-            } else if (m_iPunkte == lte.getPunkte()) {
+            } else if (m_iPunkte == lte.getPoints()) {
                 if (getGesamtTorDiff() > lte.getGesamtTorDiff()) {
                     return -1;
                 } else if (getGesamtTorDiff() < lte.getGesamtTorDiff()) {
@@ -648,7 +648,7 @@ public class LigaTabellenEintrag  implements Comparable<LigaTabellenEintrag>{
 
             if ((lte.getAnzSpiele() == m_iAnzSpiele)
                 && (lte.getPosition() == m_iPosition)
-                && (lte.getPunkte() == m_iPunkte)
+                && (lte.getPoints() == m_iPunkte)
                 && (lte.getTeamName().equals(m_sTeamName))
                 && (lte.getToreFuer() == m_iToreFuer)
                 && (lte.getToreGegen() == m_iToreGegen)) {

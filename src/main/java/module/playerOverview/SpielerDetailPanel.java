@@ -402,10 +402,10 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
                 bonus = " (" + m_clPlayer.getBonus() + "% "
                         + HOVerwaltung.instance().getLanguageString("Bonus") + ")";
             }
-            m_jpSalary.getLinks().setText(salarytext + bonus);
-            m_jpSalary.getRechts().clear();
-            m_jpTSI.getLinks().setText(tsitext);
-            m_jpTSI.getRechts().clear();
+            m_jpSalary.getLeft().setText(salarytext + bonus);
+            m_jpSalary.getRight().clear();
+            m_jpTSI.getLeft().setText(tsitext);
+            m_jpTSI.getRight().clear();
             m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
             m_jpFormChange.clear();
             m_jpStamina.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
@@ -452,10 +452,10 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
                 bonus = " (" + m_clPlayer.getBonus() + "% "
                         + HOVerwaltung.instance().getLanguageString("Bonus") + ")";
             }
-            m_jpSalary.getLinks().setText(salarytext + bonus);
-            m_jpSalary.getRechts().setSpecialNumber(salary - gehalt2, true);
-            m_jpTSI.getLinks().setText(tsitext);
-            m_jpTSI.getRechts().setSpecialNumber(m_clPlayer.getTSI() - m_clComparisonPlayer.getTSI(), false);
+            m_jpSalary.getLeft().setText(salarytext + bonus);
+            m_jpSalary.getRight().setSpecialNumber(salary - gehalt2, true);
+            m_jpTSI.getLeft().setText(tsitext);
+            m_jpTSI.getRight().setSpecialNumber(m_clPlayer.getTSI() - m_clComparisonPlayer.getTSI(), false);
             m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
             m_jpFormChange.setGraphicalChangeValue(m_clPlayer.getForm()
                     - m_clComparisonPlayer.getForm(), !m_clComparisonPlayer.isOld(), true);
@@ -557,37 +557,37 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     }
 
     private void showNormal(DoubleLabelEntries labelEntry, byte playerPosition) {
-        labelEntry.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
+        labelEntry.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
                 .nbDecimals).format(m_clPlayer.calcPosValue(playerPosition, true)));
 
         byte[] alternativePosition = m_clPlayer.getAlternativePositions();
         for (byte altPos : alternativePosition) {
             if (altPos == playerPosition) {
-                labelEntry.getLinks().setBold(true);
+                labelEntry.getLeft().setBold(true);
                 break;
             } else {
-                labelEntry.getLinks().setBold(false);
+                labelEntry.getLeft().setBold(false);
             }
         }
 
-        labelEntry.getRechts().clear();
+        labelEntry.getRight().clear();
     }
 
     private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition) {
-        labelEntry.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
+        labelEntry.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
                 .nbDecimals).format(m_clPlayer.calcPosValue(playerPosition, true)));
 
         byte[] alternativePosition = m_clPlayer.getAlternativePositions();
         for (byte altPos : alternativePosition) {
             if (altPos == playerPosition) {
-                labelEntry.getLinks().setBold(true);
+                labelEntry.getLeft().setBold(true);
                 break;
             } else {
-                labelEntry.getLinks().setBold(false);
+                labelEntry.getLeft().setBold(false);
             }
         }
 
-        labelEntry.getRechts().setSpecialNumber(m_clPlayer.calcPosValue(playerPosition, true)
+        labelEntry.getRight().setSpecialNumber(m_clPlayer.calcPosValue(playerPosition, true)
                 - m_clComparisonPlayer.calcPosValue(playerPosition, true), false);
     }
 
