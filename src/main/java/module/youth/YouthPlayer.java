@@ -379,7 +379,7 @@ public class YouthPlayer {
         this.currentSkills.put(skillinfo.skillID.getValue(), skillinfo);
     }
 
-    public TreeMap<Timestamp, TrainingDevelopmentEntry> getTrainings() {
+    public TreeMap<Timestamp, TrainingDevelopmentEntry> getTrainingDevelopment() {
         if (trainingDevelopment == null) {
             // init from models match list
             trainingDevelopment = new TreeMap<>();

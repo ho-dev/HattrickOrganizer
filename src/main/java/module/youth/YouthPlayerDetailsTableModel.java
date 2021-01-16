@@ -103,7 +103,7 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
     @Override
     protected void initData() {
         if (youthPlayer != null) {
-            var trainings = this.youthPlayer.getTrainings();
+            var trainings = this.youthPlayer.getTrainingDevelopment();
             m_clData = new Object[trainings.size()][columns.length];
             int rownum = 0;
             for (var training : trainings.values()) {

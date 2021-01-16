@@ -126,7 +126,6 @@ public enum YouthTrainingType {
     public double calcSkillIncrementPerMinute(Skills.HTSkillID skillId, int currentValue, int posPrio, int ageYears) {
         var playerskill = skillId.convertToPlayerSkill();
         var wt = trainingTypes[this.value];
-        if ( wt.getPrimaryTrainingSkill() != playerskill && wt.getSecondaryTrainingSkill() != playerskill ) return 0;
         return switch (posPrio) {
             case 0 -> wt.getBonusYouthTrainingPerMinute(playerskill,currentValue, ageYears);
             case 1 -> wt.getFullYouthTrainingPerMinute(playerskill,currentValue, ageYears);

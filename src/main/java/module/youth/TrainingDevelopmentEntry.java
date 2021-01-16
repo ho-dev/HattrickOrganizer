@@ -37,8 +37,8 @@ public class TrainingDevelopmentEntry {
         if ( this.skills == null){
             this.skills = new HashMap<>();
         }
-        for (var skill : startSkills.entrySet()) {
-            this.skills.put(skill.getKey(), training.calcSkill(skill.getValue(), player, team));
+        for (var skill : startSkills.values()) {
+            this.skills.put(skill.getSkillID().getValue(), training.calcSkill(skill, player, team));
         }
         setSkillConstraints(skillConstraints);
         return this.skills;
