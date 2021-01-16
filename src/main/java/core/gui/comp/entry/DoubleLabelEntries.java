@@ -77,7 +77,7 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
      * Nur benutzen, wenn es auch ein ColorLabelEntry ist!
      *
      */
-    public final ColorLabelEntry getLinks() {
+    public final ColorLabelEntry getLeft() {
         return (ColorLabelEntry) m_clLinks;
     }
 
@@ -85,7 +85,7 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
      * Nur benutzen, wenn es auch ein ColorLabelEntry ist!
      *
      */
-    public final ColorLabelEntry getRechts() {
+    public final ColorLabelEntry getRight() {
         return (ColorLabelEntry) m_clRechts;
     }
 

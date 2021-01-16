@@ -56,10 +56,8 @@ class SeriesTablePanel extends ImagePanel {
 		this.model = model;
 		initComponents();
 
-		// Entrys setzen
 		initTable();
 
-		// Stadien berechnen
 		initSeriesTable();
 	}
 
@@ -90,7 +88,7 @@ class SeriesTablePanel extends ImagePanel {
 
 	// -------Refresh---------------------------------
 	public final void changeSaison() {
-		reinitTabelle();
+		populateSerieTable();
 	}
 
 	private Color getColor4Row(int row) {
@@ -100,31 +98,31 @@ class SeriesTablePanel extends ImagePanel {
 	private void setTableColumnWidth() {
 		final TableColumnModel columnModel = seriesTable.getColumnModel();
 
-		// Platz
+		// Place
 		columnModel.getColumn(0).setPreferredWidth(Helper.calcCellWidth(45));
 
-		// Verein
+		// Club
 		columnModel.getColumn(1).setPreferredWidth(Helper.calcCellWidth(200));
 
-		// Punkte
+		// Points
 		columnModel.getColumn(2).setPreferredWidth(Helper.calcCellWidth(30));
 
-		// Spiele
+		// # Played matches
 		columnModel.getColumn(3).setPreferredWidth(Helper.calcCellWidth(25));
 
-		// Gewonnen
+		// # Victories
 		columnModel.getColumn(4).setPreferredWidth(Helper.calcCellWidth(25));
 
-		// Unendschieden
+		// # Draws
 		columnModel.getColumn(5).setPreferredWidth(Helper.calcCellWidth(25));
 
 		// Verloren
 		columnModel.getColumn(6).setPreferredWidth(Helper.calcCellWidth(25));
 
-		// Tore
+		// # Losses
 		columnModel.getColumn(7).setPreferredWidth(Helper.calcCellWidth(50));
 
-		// Differenz
+		// Goals Difference
 		columnModel.getColumn(8).setPreferredWidth(Helper.calcCellWidth(50));
 
 		// Serie
@@ -158,22 +156,22 @@ class SeriesTablePanel extends ImagePanel {
 		add(panel);
 	}
 
-	// Init aus dem HRF-XML
+	//  Init from the HRF-XML
 	private void initSeriesTable() {
-		// Entrys mit Werten füllen
-		// Ein Model vorhanden?
+
 		if ((HOVerwaltung.instance().getModel().getFixtures() != null)
 				&& (HOVerwaltung.instance().getModel().getFixtures().getSaison() > 0)) {
-			// Daten in die Tabelle füllen
-			reinitTabelle();
+
+			// Fill values if a model is available
+			populateSerieTable();
 		}
 	}
 
 	private void initTable() {
-		// Tablewerte setzen
+
 		tableValues = new Object[9][COLUMNNAMES.length];
 
-		// Überschrift
+		// Column Headers
 		for (int i = 0; i < COLUMNNAMES.length; i++) {
 			tableValues[0][i] = new ColorLabelEntry(COLUMNNAMES[i], ColorLabelEntry.FG_STANDARD,
 					TITLE_BACKGROUND, SwingConstants.CENTER);
@@ -182,34 +180,30 @@ class SeriesTablePanel extends ImagePanel {
 		for (int i = 1; i < 9; i++) {
 			final Color bg_Color = getColor4Row(i);
 
-			final ColorLabelEntry left = new ColorLabelEntry("",
+			final ColorLabelEntry clPositionLeft = new ColorLabelEntry("",
 					ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.RIGHT);
-			left.setBorder(EMPTY_BORDER);
-			final ColorLabelEntry right = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
+			clPositionLeft.setBorder(EMPTY_BORDER);
+			final ColorLabelEntry clPositionRight = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
 					SwingConstants.RIGHT);
-			right.setBorder(EMPTY_BORDER);
-			tableValues[i][0] = new DoubleLabelEntries(left, right);
+			clPositionRight.setBorder(EMPTY_BORDER);
+			tableValues[i][0] = new DoubleLabelEntries(clPositionLeft, clPositionRight);
 
-			final ColorLabelEntry teamNameEntry = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
+			tableValues[i][1] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
 					SwingConstants.LEFT);
-			teamNameEntry.setBorder(EMPTY_BORDER);
-
-			tableValues[i][1] = teamNameEntry;
-
 			tableValues[i][2] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.RIGHT);
+					SwingConstants.CENTER);
 			tableValues[i][3] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.RIGHT);
+					SwingConstants.CENTER);
 			tableValues[i][4] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.RIGHT);
+					SwingConstants.CENTER);
 			tableValues[i][5] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.RIGHT);
+					SwingConstants.CENTER);
 			tableValues[i][6] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
 					SwingConstants.CENTER);
 			tableValues[i][7] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.RIGHT);
+					SwingConstants.CENTER);
 			tableValues[i][8] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.RIGHT);
+					SwingConstants.CENTER);
 			tableValues[i][9] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
 					SwingConstants.LEFT);
 
@@ -218,57 +212,62 @@ class SeriesTablePanel extends ImagePanel {
 			}
 		}
 
-		// Model setzen
 		seriesTable.setModel(new VAPTableModel(COLUMNNAMES, tableValues));
 		setTableColumnWidth();
 	}
 
-	private void reinitTabelle() {
+	private void populateSerieTable() {
 		try {
 			if (this.model.getCurrentSeries() != null) {
 				final Vector<LigaTabellenEintrag> tabelleneintraege = this.model.getCurrentSeries()
 						.getTabelle().getEintraege();
 				final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-				int j = -1;
+				int j;
 
 				for (int i = 0; i < tabelleneintraege.size(); i++) {
-					final LigaTabellenEintrag eintrag = tabelleneintraege.get(i);
+					final LigaTabellenEintrag entry = tabelleneintraege.get(i);
 
-					if (eintrag.getPunkte() > -1) {
+					if (entry.getPoints() > -1) {
 						j = i + 1;
 
-						((DoubleLabelEntries) tableValues[j][0]).getLinks().setText("");
-						((DoubleLabelEntries) tableValues[j][0]).getLinks().setFontStyle(Font.BOLD);
-						if (eintrag.getPosition() < eintrag.getAltePosition()) {
-							((DoubleLabelEntries) tableValues[j][0]).getLinks().setIcon(new DrawIcon(DrawIcon.UPWARD_DIRECTION));
-						} else if (eintrag.getPosition() > eintrag.getAltePosition()) {
-							((DoubleLabelEntries) tableValues[j][0]).getLinks().setIcon(new DrawIcon(DrawIcon.DOWNWARD_DIRECTION));
+						// Column position  ========================================
+						((DoubleLabelEntries) tableValues[j][0]).getLeft().setText("");
+						((DoubleLabelEntries) tableValues[j][0]).getLeft().setFontStyle(Font.BOLD);
+						if (entry.getPosition() < entry.getPreviousPosition()) {
+							((DoubleLabelEntries) tableValues[j][0]).getLeft().setIcon(new DrawIcon(DrawIcon.UPWARD_DIRECTION));
+						} else if (entry.getPosition() > entry.getPreviousPosition()) {
+							((DoubleLabelEntries) tableValues[j][0]).getLeft().setIcon(new DrawIcon(DrawIcon.DOWNWARD_DIRECTION));
 						}
 
-						((DoubleLabelEntries) tableValues[j][0]).getRechts().setText(eintrag.getPosition() + "");
-						((DoubleLabelEntries) tableValues[j][0]).getRechts().setFontStyle(Font.BOLD);
+						((DoubleLabelEntries) tableValues[j][0]).getRight().setText(entry.getPosition() + "");
+						((DoubleLabelEntries) tableValues[j][0]).getRight().setFontStyle(Font.BOLD);
 
-						((ColorLabelEntry) tableValues[j][1]).setText(eintrag.getTeamName());
+
+						// Column club ========================================
+						((ColorLabelEntry) tableValues[j][1]).setIcon(ThemeManager.instance().getSmallClubLogo(entry.getTeamId()));
+						((ColorLabelEntry) tableValues[j][1]).setText(entry.getTeamName());
 						((ColorLabelEntry) tableValues[j][1]).setFontStyle(Font.BOLD);
+//						((ColorLabelEntry) tableValues[j][1]).getRight().setAlignment(SwingConstants.LEFT);
 
-						if (eintrag.getTeamId() == teamid) {
+						if (entry.getTeamId() == teamid) {
 							((ColorLabelEntry) tableValues[j][1]).setFGColor(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
 						} else {
-							((ColorLabelEntry) tableValues[j][1]).setFGColor(TABLE_FOREGROUND);// );Color.black
+							((ColorLabelEntry) tableValues[j][1]).setFGColor(TABLE_FOREGROUND);
 						}
 
-						((ColorLabelEntry) tableValues[j][2]).setText(eintrag.getPunkte() + "");
+						// Other columns ========================================
+						((ColorLabelEntry) tableValues[j][2]).setText(entry.getPoints() + "");
 						((ColorLabelEntry) tableValues[j][2]).setFontStyle(Font.BOLD);
-						((ColorLabelEntry) tableValues[j][3]).setText(eintrag.getAnzSpiele() + "");
-						((ColorLabelEntry) tableValues[j][4]).setText(eintrag.getG_Siege() + "");
-						((ColorLabelEntry) tableValues[j][5]).setText(eintrag.getG_Un() + "");
-						((ColorLabelEntry) tableValues[j][6]).setText(eintrag.getG_Nied() + "");
+						((ColorLabelEntry) tableValues[j][3]).setText(entry.getAnzSpiele() + "");
+						((ColorLabelEntry) tableValues[j][4]).setText(entry.getG_Siege() + "");
+						((ColorLabelEntry) tableValues[j][5]).setText(entry.getG_Un() + "");
+						((ColorLabelEntry) tableValues[j][6]).setText(entry.getG_Nied() + "");
 						((ColorLabelEntry) tableValues[j][7]).setText(StringUtils.getResultString(
-								eintrag.getToreFuer(), eintrag.getToreGegen(), ""));
+								entry.getToreFuer(), entry.getToreGegen(), ""));
 						((ColorLabelEntry) tableValues[j][8]).setSpecialNumber(
-								eintrag.getGesamtTorDiff(), false);
+								entry.getGesamtTorDiff(), false);
 
-						FormLabel formLabel = new FormLabel(eintrag.getSerie());
+						FormLabel formLabel = new FormLabel(entry.getSerie());
 						formLabel.setBgColor(getColor4Row(j));
 						tableValues[j][9] = formLabel;
 					}

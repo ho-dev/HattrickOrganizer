@@ -150,7 +150,7 @@ public final class ThemeManager {
 		return instance().get(key);
 	}
 
-	public static Icon getScaledIcon(String key,int x,int y){
+	public static Icon getScaledIcon(String key, int x,int y){
 		return instance().getScaledIconImpl(key, x, y);
 	}
 
@@ -166,8 +166,8 @@ public final class ThemeManager {
 		int height = Math.round(width * 260f / 210f);
 		String logoPath = DBManager.instance().getTeamLogoFileName(teamLogoPath, teamID);
 		if (logoPath == null) {
-			HOLogger.instance().error(this.getClass(), "error when trying to load logo of team " + teamID);
-			return null;
+			HOLogger.instance().error(this.getClass(), "logo not found for team " + teamID);
+			return getScaledIcon(HOIconName.NO_CLUB_LOGO, width, height);
 		}
 
 		String scaledKey = "team_logo_" + teamID + "_(" + width + "," + height + ")";

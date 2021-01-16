@@ -340,21 +340,21 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
     private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition) {
 
-        labelEntry.getLinks().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        labelEntry.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
                 .format(tempPlayer.calcPosValue(playerPosition, true)));
 
 
         byte[] alternativePosition = tempPlayer.getAlternativePositions();
         for (byte altPos : alternativePosition) {
             if (altPos == playerPosition) {
-                labelEntry.getLinks().setBold(true);
+                labelEntry.getLeft().setBold(true);
                 break;
             } else {
-                labelEntry.getLinks().setBold(false);
+                labelEntry.getLeft().setBold(false);
             }
         }
 
-        labelEntry.getRechts().setSpecialNumber(tempPlayer.calcPosValue(playerPosition, true)
+        labelEntry.getRight().setSpecialNumber(tempPlayer.calcPosValue(playerPosition, true)
                 - m_clPlayer.calcPosValue(playerPosition, true), false);
     }
 

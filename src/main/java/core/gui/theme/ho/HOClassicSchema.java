@@ -85,6 +85,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(GOTOANALYSEBOTTOM, "gui/bilder/gotoAnalyseBottom.svg");
 		put(OFFSET, "gui/bilder/offset.svg");
 		put(GOTOSTATISTIK, "gui/bilder/gotoStatistik.svg");
+		put(NO_CLUB_LOGO, "gui/bilder/no-logo.png");
 
 		put(RELOAD, "gui/bilder/Reload.png");
 		put(SIMULATEMATCH, "gui/bilder/simulate_match.png");

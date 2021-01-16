@@ -63,6 +63,11 @@ public class TeamsLogoTable extends AbstractTable{
             }
             else {
                 logoURL = rs.getString("URL");
+                if(logoURL.equals("null")){
+                    HOLogger.instance().error(this.getClass(), "logo information not available in database for team ID=" + teamID);
+                    return null;
+                }
+
                 logoFileName = teamLogoFolderPath.resolve(rs.getString("FILENAME")).toString();
             }
         }

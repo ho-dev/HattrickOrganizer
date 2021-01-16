@@ -69,27 +69,27 @@ public class SpielerStatusLabelEntry extends DoubleLabelEntries {
     @Override
 	public final void updateComponent() {
         if (player != null) {
-            getLinks().clear();
-            getLinks().setIcon(new StatusIcon(player));
+            getLeft().clear();
+            getLeft().setIcon(new StatusIcon(player));
 
             if (player.getVerletzt() == 0) {
-                getRechts().setText("");
-                getRechts().setIcon(ImageUtilities.getPlasterIcon(12, 12));
+                getRight().setText("");
+                getRight().setIcon(ImageUtilities.getPlasterIcon(12, 12));
             } else if (player.getVerletzt() > 0) {
                 if(player.getVerletzt() != 999) {
-                    getRechts().setText(player.getVerletzt() + "  ");
+                    getRight().setText(player.getVerletzt() + "  ");
                 }
                 else {
-                    getRechts().setText("\u221E  ");
+                    getRight().setText("\u221E  ");
                 }
-                getRechts().setIcon(ImageUtilities.getInjuryIcon(12, 12));
-                getRechts().setFont(new Font("Serif", Font.BOLD, 12));
+                getRight().setIcon(ImageUtilities.getInjuryIcon(12, 12));
+                getRight().setFont(new Font("Serif", Font.BOLD, 12));
             } else {
-                getRechts().clear();
+                getRight().clear();
             }
         } else {
-            getLinks().clear();
-            getRechts().clear();
+            getLeft().clear();
+            getRight().clear();
         }
     }
 }

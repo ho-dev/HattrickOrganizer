@@ -267,10 +267,10 @@ final class SpielerDetailDialog extends JDialog {
 			m_jpAufgestellt.setText("");
 		}
 
-		m_jpGruppeSmilie.getLinks().setAlignment(SwingConstants.CENTER);
-		m_jpGruppeSmilie.getRechts().setAlignment(SwingConstants.CENTER);
-		m_jpGruppeSmilie.getLinks().setIcon(ThemeManager.getIcon(m_clPlayer.getTeamInfoSmilie()));
-		m_jpGruppeSmilie.getRechts()
+		m_jpGruppeSmilie.getLeft().setAlignment(SwingConstants.CENTER);
+		m_jpGruppeSmilie.getRight().setAlignment(SwingConstants.CENTER);
+		m_jpGruppeSmilie.getLeft().setIcon(ThemeManager.getIcon(m_clPlayer.getTeamInfoSmilie()));
+		m_jpGruppeSmilie.getRight()
 				.setIcon(ThemeManager.getIcon(m_clPlayer.getManuellerSmilie()));
 
 		m_jpStatus.setPlayer(m_clPlayer);
@@ -285,10 +285,10 @@ final class SpielerDetailDialog extends JDialog {
 						+ HOVerwaltung.instance().getLanguageString("Bonus") + ")";
 			}
 
-			m_jpGehalt.getLinks().setText(gehalttext + "" + bonus);
-			m_jpGehalt.getRechts().clear();
-			m_jpMartwert.getLinks().setText(m_clPlayer.getTSI() + "");
-			m_jpMartwert.getRechts().clear();
+			m_jpGehalt.getLeft().setText(gehalttext + "" + bonus);
+			m_jpGehalt.getRight().clear();
+			m_jpMartwert.getLeft().setText(m_clPlayer.getTSI() + "");
+			m_jpMartwert.getRight().clear();
 			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
 			m_jpForm2.clear();
 			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
@@ -342,10 +342,10 @@ final class SpielerDetailDialog extends JDialog {
 						+ HOVerwaltung.instance().getLanguageString("Bonus") + ")";
 			}
 
-			m_jpGehalt.getLinks().setText(gehalttext + "" + bonus);
-			m_jpGehalt.getRechts().setSpecialNumber((gehalt2 - gehalt), true);
-			m_jpMartwert.getLinks().setText(m_clPlayer.getTSI() + "");
-			m_jpMartwert.getRechts().setSpecialNumber(
+			m_jpGehalt.getLeft().setText(gehalttext + "" + bonus);
+			m_jpGehalt.getRight().setSpecialNumber((gehalt2 - gehalt), true);
+			m_jpMartwert.getLeft().setText(m_clPlayer.getTSI() + "");
+			m_jpMartwert.getRight().setSpecialNumber(
 					(m_clVergleichsPlayer.getTSI() - m_clPlayer.getTSI()), false);
 			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
 			m_jpForm2.setGraphicalChangeValue(
@@ -1332,19 +1332,19 @@ final class SpielerDetailDialog extends JDialog {
 	}
 
 	private void showNormal(DoubleLabelEntries labelEntry, byte playerPosition, Player m_clPlayer) {
-		labelEntry.getLinks().setText(
+		labelEntry.getLeft().setText(
 				Helper.round(m_clPlayer.calcPosValue(playerPosition, true),
 						core.model.UserParameter.instance().nbDecimals) + "");
-		labelEntry.getRechts().clear();
+		labelEntry.getRight().clear();
 	}
 
 	private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition,
                                  Player m_clPlayer, Player m_clVergleichsPlayer) {
-		labelEntry.getLinks().setText(
+		labelEntry.getLeft().setText(
 				Helper.round(m_clPlayer.calcPosValue(playerPosition, true),
 						core.model.UserParameter.instance().nbDecimals) + "");
 
-		labelEntry.getRechts().setSpecialNumber(
+		labelEntry.getRight().setSpecialNumber(
 				m_clPlayer.calcPosValue(playerPosition, true)
 						- m_clVergleichsPlayer.calcPosValue(playerPosition, true), false);
 	}

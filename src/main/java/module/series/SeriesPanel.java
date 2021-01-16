@@ -95,13 +95,9 @@ public class SeriesPanel extends LazyImagePanel {
 			}
 		});
 
-		this.seriesTable.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) {
-					teamSelectionChanged();
-				}
+		this.seriesTable.addListSelectionListener(e -> {
+			if (!e.getValueIsAdjusting()) {
+				teamSelectionChanged();
 			}
 		});
 	}
@@ -215,7 +211,7 @@ public class SeriesPanel extends LazyImagePanel {
 	}
 
 	private Component initSpielPlan() {
-		JLabel label = null;
+		JLabel label;
 		matchDayPanels = new MatchDayPanel[14];
 		for (int i = 0; i < matchDayPanels.length; i++) {
 			matchDayPanels[i] = new MatchDayPanel(this.model, i + 1);

@@ -66,6 +66,7 @@ public class MyConnector {
 	private final static String VERSION_MATCHORDERS_NT = "2.1";
 	private final static String VERSION_MATCHLINEUP = "2.0";
 	private final static String VERSION_MATCHDETAILS = "3.0";
+	private final static String VERSION_TEAM_DETAILS = "3.5";
 	private final static String VERSION_PLAYERS = "2.4";
 	private final static String VERSION_YOUTHPLAYERLIST = "1.1";
 	private final static String VERSION_WORLDDETAILS = "1.8";
@@ -655,7 +656,7 @@ public class MyConnector {
 	public String fetchTeamDetails(int teamId)
 	{
 		try {
-			String xmlFile = htUrl + "?file=teamdetails&teamID=" + teamId;
+			String xmlFile = htUrl + "?file=teamdetails&version=" + VERSION_TEAM_DETAILS + "&teamID=" + teamId;
 			return getCHPPWebFile(xmlFile);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);
