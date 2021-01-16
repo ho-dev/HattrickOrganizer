@@ -351,7 +351,7 @@ public abstract class WeeklyTrainingType {
 
 
 	public double getBonusYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
-		return getFullYouthTrainingPerMinute(skillId, currentValue, ageYears) * this.getPrimaryTrainingSkillBonus();
+		return getFullYouthTrainingPerMinute(skillId, currentValue, ageYears) * (1+this.getPrimaryTrainingSkillBonus());
 	}
 
 	public double getFullYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
