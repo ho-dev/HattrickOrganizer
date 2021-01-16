@@ -198,6 +198,7 @@ public class YouthTraining {
                 }
             }
         }
+        if ( ret > 1 ) ret = 1; // skill increment is limited
         return ret;
     }
 
@@ -209,17 +210,19 @@ public class YouthTraining {
     }
 
     public String getPlayerTrainedSectors(int playerId) {
+        var ret = new StringBuilder();
         var hov = HOVerwaltung.instance();
         var lineupTeam = this.getTeam(hov.getModel().getBasics().getYouthTeamId());
         //var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
         var player = lineupTeam.getPlayerByID(playerId);
-        var sectors = player.getMinutesInSectors();
-        var ret = new StringBuilder();
-        for ( var s : sectors){
-            ret.append(hov.getLanguageString("ls.youth.training.sector." + s.getSector()))
-                    .append(":")
-                    .append(s.getMinutes())
-                    .append(" ");
+        if ( player != null) {
+            var sectors = player.getMinutesInSectors();
+            for (var s : sectors) {
+                ret.append(hov.getLanguageString("ls.youth.training.sector." + s.getSector()))
+                        .append(":")
+                        .append(s.getMinutes())
+                        .append(" ");
+            }
         }
         return ret.toString();
     }
