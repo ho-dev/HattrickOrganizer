@@ -797,7 +797,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_dRightAttackRating = previousRatings.getRightAttack().get(t);
         m_dCentralAttackRating = previousRatings.getCentralAttack().get(t);
         m_dLeftAttackRating = previousRatings.getLeftAttack().get(t);
-        }
+    }
 
 
     private void addListeners() {
