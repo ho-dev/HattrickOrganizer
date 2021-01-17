@@ -1,10 +1,8 @@
-// %3512883119:de.hattrickorganizer.tools%
 package core.file.hrf;
 
 import core.model.HOModel;
 import core.util.HOLogger;
 import core.util.IOUtils;
-
 import java.io.File;
 
 /**
@@ -19,7 +17,6 @@ public class HRFFileParser {
 	 * Datei einlesen und parsen
 	 */
 	public static HOModel parse(File file) {
-		java.sql.Timestamp hrfdate = null;
 
 		if (!file.exists() || !file.canRead()) {
 			HOLogger.instance().log(HRFFileParser.class, "Could not read file " + file.getPath());

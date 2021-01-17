@@ -17,6 +17,7 @@ import core.db.DBManager;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import core.model.enums.RatingsStatistics;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupTeam;
@@ -24,6 +25,7 @@ import core.model.match.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.net.OnlineWorker;
+import module.series.statistics.DataDownloader;
 import module.youth.YouthPlayer;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
@@ -240,6 +242,24 @@ public class ConvertXml2Hrf {
 		HOMainFrame.instance().setWaitInformation(60);
 
 		// basics
+		int iSeason = Integer.parseInt(worldDataMap.get("Season"));
+//		int iMatchRound = Integer.parseInt(worldDataMap.get("MatchRound"));
+		int iMatchRound;
+		int iMatchPlayedThisSeason = Integer.parseInt(ligaDataMap.get("Matches"));
+		int iSerieID = Integer.parseInt(teamdetailsDataMap.get("LeagueLevelUnitID"));
+
+		if (iMatchPlayedThisSeason == 0) {
+			iSeason --;
+			iMatchRound = 14;
+		}
+		else{
+			iMatchRound = iMatchPlayedThisSeason;
+		}
+
+		Map<Integer, Map<RatingsStatistics,Integer>> leagueStatistics = DataDownloader.instance().fetchLeagueStatistics(iSerieID, iMatchRound, iSeason);
+		System.out.print(leagueStatistics);
+
+
 		createBasics(teamdetailsDataMap, worldDataMap, buffer);
 		HOMainFrame.instance().setWaitInformation(65);
 
@@ -359,6 +379,8 @@ public class ConvertXml2Hrf {
 		buffer.append("leagueID=").append(teamdetailsDataMap.get("LeagueID")).append('\n');
 		buffer.append("regionID=").append(teamdetailsDataMap.get("RegionID")).append('\n');
 		buffer.append("hasSupporter=").append(teamdetailsDataMap.get("HasSupporter")).append('\n');
+		buffer.append("LastLeagueStatisticsMatchRound=").append(0).append('\n');  		//TODO: fix this
+		buffer.append("LastLeagueStatisticsSeason=").append(0).append('\n');   		//TODO: fix this
 	}
 
 	/**

@@ -71,28 +71,18 @@ public class SeriesPanel extends LazyImagePanel {
 	}
 
 	private void addListeners() {
-		this.deleteButton.addActionListener(new ActionListener() {
+		this.deleteButton.addActionListener(e -> delete());
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				delete();
+		this.seasonComboBox.addActionListener(e -> {
+			// Determine current match schedule
+			if (seasonComboBox.getSelectedItem() instanceof Spielplan) {
+				model.setCurrentSeries((Spielplan) seasonComboBox.getSelectedItem());
+			} else {
+				model.setCurrentSeries(null);
 			}
-		});
 
-		this.seasonComboBox.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Aktuellen Spielplan bestimmen
-				if (seasonComboBox.getSelectedItem() instanceof Spielplan) {
-					model.setCurrentSeries((Spielplan) seasonComboBox.getSelectedItem());
-				} else {
-					model.setCurrentSeries(null);
-				}
-
-				// Alle Panels informieren
-				informSaisonChange();
-			}
+			// Inform all panels
+			informSaisonChange();
 		});
 
 		this.seriesTable.addListSelectionListener(e -> {
@@ -115,19 +105,19 @@ public class SeriesPanel extends LazyImagePanel {
 	}
 
 	private void fillSaisonCB() {
-		// Die Spielpläne als Objekte mit den Paarungen holen
+		// Get the match schedules as objects with the pairings
 		final Spielplan[] spielplaene = DBManager.instance().getAllSpielplaene(true);
 		final Spielplan markierterPlan = (Spielplan) seasonComboBox.getSelectedItem();
 
-		// Alle alten Saisons entfernen
+		// Remove all old seasons
 		seasonComboBox.removeAllItems();
 
-		// Neue füllen
+		// Fill new
 		for (int i = 0; (spielplaene != null) && (i < spielplaene.length); i++) {
 			seasonComboBox.addItem(spielplaene[i]);
 		}
 
-		// Alte markierung wieder herstellen
+		//  Restore old marking
 		seasonComboBox.setSelectedItem(markierterPlan);
 
 		if ((seasonComboBox.getSelectedIndex() < 0) && (seasonComboBox.getItemCount() > 0)) {

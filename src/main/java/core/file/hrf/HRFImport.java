@@ -1,4 +1,3 @@
-// %2363747329:de.hattrickorganizer.gui.menu%
 package core.file.hrf;
 
 import core.db.DBManager;
