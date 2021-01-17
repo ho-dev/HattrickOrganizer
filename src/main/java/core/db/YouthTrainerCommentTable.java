@@ -1,7 +1,7 @@
 package core.db;
 
 import core.model.player.CommentType;
-import core.training.YouthTrainerComment;
+import module.youth.YouthTrainerComment;
 import core.util.HOLogger;
 import module.training.Skills;
 

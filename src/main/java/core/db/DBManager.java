@@ -22,7 +22,7 @@ import core.model.series.Liga;
 import core.model.series.Paarung;
 import core.training.FuturePlayerTraining;
 import core.training.TrainingPerWeek;
-import core.training.YouthTrainerComment;
+import module.youth.YouthTrainerComment;
 import core.util.HOLogger;
 import core.util.ExceptionUtils;
 import module.ifa.IfaMatch;

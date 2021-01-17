@@ -4,7 +4,6 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.player.CommentType;
 import core.model.player.Specialty;
-import core.training.YouthTrainerComment;
 import core.util.HOLogger;
 import module.training.Skills;
 import module.training.Skills.ScoutCommentSkillTypeID;
@@ -385,16 +384,17 @@ public class YouthPlayer {
             trainingDevelopment = new TreeMap<>();
             var model = HOVerwaltung.instance().getModel();
             // set start skill values (may be edited by the user)
-            var startSkills = getStartSkills();
+            var skills = getStartSkills();
             var trainings = model.getYouthTrainingsAfter(this.getArrivalDate());
             for (var training : trainings) {
                 var team = training.getTeam(model.getBasics().getYouthTeamId());
                 if (team.hasPlayerPlayed(this.id)) {
                     var trainingEntry = new TrainingDevelopmentEntry(this, training);
-                    startSkills = trainingEntry.calcSkills(startSkills, getSkillsAt(training.getMatchDate()),team);
+                    skills = trainingEntry.calcSkills(skills, getSkillsAt(training.getMatchDate()),team);
                     trainingDevelopment.put(training.getMatchDate(), trainingEntry);
                 }
             }
+            this.currentSkills = skills;
         }
         return trainingDevelopment;
     }

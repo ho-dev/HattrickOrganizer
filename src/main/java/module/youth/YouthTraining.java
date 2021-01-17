@@ -4,7 +4,6 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.*;
-import core.training.YouthTrainerComment;
 import module.lineup.substitution.model.MatchOrderType;
 
 import java.sql.Timestamp;
@@ -140,7 +139,14 @@ public class YouthTraining {
             ret.setCurrentValue(value.getCurrentValue());
         }
         else {
-            ret.setCurrentValue(value.getCurrentValue()+calcSkillIncrement(value, player, team));
+            var newVal = value.getCurrentValue() + calcSkillIncrement(value, player, team);
+            ret.setCurrentValue(newVal);
+            if (value.getStartValue()==0){
+                var adjustment = ret.getCurrentValue() - newVal;
+                if ( adjustment > 0) {
+                    value.setStartValue(value.getStartValue() + adjustment);
+                }
+            }
         }
         return ret;
     }

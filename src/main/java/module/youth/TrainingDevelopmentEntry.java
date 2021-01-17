@@ -27,8 +27,15 @@ public class TrainingDevelopmentEntry {
         if (skillConstraints != null) {
             for (var constraint : skillConstraints.entrySet()) {
                 var skill = skills.get(constraint.getKey());
+                var oldVal = skill.getCurrentValue();
                 skill.setCurrentLevel(constraint.getValue().getCurrentLevel());
                 skill.setMax(constraint.getValue().getMax());
+                if ( skill.getStartValue() == 0){
+                    var adjustment = skill.getCurrentValue() - oldVal;
+                    if ( adjustment > 0 ){
+                        skill.setStartValue(adjustment);
+                    }
+                }
             }
         }
     }
