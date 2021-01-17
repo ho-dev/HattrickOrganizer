@@ -49,10 +49,10 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
                         return new ColorLabelEntry(entry.getTrainingType(YouthTraining.Priority.Secondary), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new YouthPlayerDetailsColumn(5, "ls.youth.player.position") {
+                new YouthPlayerDetailsColumn(5, "ls.youth.player.sector") {
                     @Override
                     public IHOTableEntry getTableEntry(TrainingDevelopmentEntry entry) {
-                        return new ColorLabelEntry(entry.getPlayerPosition(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getPlayerSector(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerDetailsColumn(6, "ls.youth.player.Keeper") {

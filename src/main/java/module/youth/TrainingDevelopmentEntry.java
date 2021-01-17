@@ -74,7 +74,7 @@ public class TrainingDevelopmentEntry {
         return YouthTrainingType.StringValueOf(this.training.getTraining(prio));
     }
 
-    public String getPlayerPosition() {
+    public String getPlayerSector() {
         return this.training.getPlayerTrainedSectors(this.player.getId());
     }
 
