@@ -44,6 +44,11 @@ class SeriesTablePanel extends ImagePanel {
 			HOVerwaltung.instance().getLanguageString("Tore"),
 			HOVerwaltung.instance().getLanguageString("Differenz_kurz"),
 			HOVerwaltung.instance().getLanguageString("Serie.Last9"),
+			HOVerwaltung.instance().getLanguageString("Power Rating"),
+			HOVerwaltung.instance().getLanguageString("HatStats Total"),
+			HOVerwaltung.instance().getLanguageString("HatStats Defense"),
+			HOVerwaltung.instance().getLanguageString("HatStats Midfield"),
+			HOVerwaltung.instance().getLanguageString("HatStats Attack")
 	};
 	private JTable seriesTable = new JTable();
 	private Object[][] tableValues;
@@ -127,30 +132,54 @@ class SeriesTablePanel extends ImagePanel {
 
 		// Serie
 		columnModel.getColumn(9).setPreferredWidth(Helper.calcCellWidth(140));
+
+		// Statistics
+		columnModel.getColumn(10).setPreferredWidth(Helper.calcCellWidth(50));
+		columnModel.getColumn(11).setPreferredWidth(Helper.calcCellWidth(50));
+		columnModel.getColumn(12).setPreferredWidth(Helper.calcCellWidth(50));
+		columnModel.getColumn(13).setPreferredWidth(Helper.calcCellWidth(50));
+		columnModel.getColumn(14).setPreferredWidth(Helper.calcCellWidth(50));
 	}
 
 	private void initComponents() {
+
+
+//		constraints.fill = GridBagConstraints.NONE;
+//		constraints.weightx = 1.0;
+//		constraints.weighty = 1.0;
+
+
+//		constraints.gridx = 0;
+//		constraints.gridy = 0;
+
+
+
 		final GridBagLayout layout = new GridBagLayout();
 		final GridBagConstraints constraints = new GridBagConstraints();
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.weightx = 1.0;
-		constraints.weighty = 1.0;
+		final JPanel panel = new JPanel(layout);
+
+		// combobox
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-		constraints.insets = new Insets(4, 4, 4, 4);
+		constraints.insets = new Insets(4, 0, 0, 100);
+		constraints.anchor = GridBagConstraints.LINE_END;
+		JComboBox m_jcbStatsAggType = new JComboBox(new String[]{"Max", "Avg"});
+		layout.setConstraints(m_jcbStatsAggType, constraints);
+		panel.add(m_jcbStatsAggType);
 
+		// serie Table
+		constraints.gridy = 1;
+		constraints.insets = new Insets(0, 4, 4, 4);
 		seriesTable.setDefaultRenderer(java.lang.Object.class, new HODefaultTableCellRenderer());
 		seriesTable.setRowHeight(30);
-
-		final JPanel panel = new ImagePanel(layout);
-		layout.setConstraints(panel, constraints);
+		layout.setConstraints(seriesTable, constraints);
 		panel.add(seriesTable);
 
-		constraints.gridx = 1;
-		constraints.gridy = 0;
-		constraints.weightx = 1.0;
-		constraints.anchor = GridBagConstraints.NORTH;
-		layout.setConstraints(panel, constraints);
+//		constraints.gridx = 1;
+//		constraints.gridy = 0;
+//		constraints.weightx = 1.0;
+//		constraints.anchor = GridBagConstraints.NORTH;
+//		layout.setConstraints(panel, constraints);
 
 		setLayout(new BorderLayout());
 		add(panel);
@@ -173,39 +202,32 @@ class SeriesTablePanel extends ImagePanel {
 
 		// Column Headers
 		for (int i = 0; i < COLUMNNAMES.length; i++) {
-			tableValues[0][i] = new ColorLabelEntry(COLUMNNAMES[i], ColorLabelEntry.FG_STANDARD,
-					TITLE_BACKGROUND, SwingConstants.CENTER);
+			tableValues[0][i] = new ColorLabelEntry(COLUMNNAMES[i], ColorLabelEntry.FG_STANDARD, TITLE_BACKGROUND, SwingConstants.CENTER);
 		}
 
 		for (int i = 1; i < 9; i++) {
 			final Color bg_Color = getColor4Row(i);
 
-			final ColorLabelEntry clPositionLeft = new ColorLabelEntry("",
-					ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.RIGHT);
+			final ColorLabelEntry clPositionLeft = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.RIGHT);
 			clPositionLeft.setBorder(EMPTY_BORDER);
-			final ColorLabelEntry clPositionRight = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.RIGHT);
+			final ColorLabelEntry clPositionRight = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.RIGHT);
 			clPositionRight.setBorder(EMPTY_BORDER);
-			tableValues[i][0] = new DoubleLabelEntries(clPositionLeft, clPositionRight);
 
-			tableValues[i][1] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.LEFT);
-			tableValues[i][2] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.CENTER);
-			tableValues[i][3] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.CENTER);
-			tableValues[i][4] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.CENTER);
-			tableValues[i][5] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.CENTER);
-			tableValues[i][6] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.CENTER);
-			tableValues[i][7] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.CENTER);
-			tableValues[i][8] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.CENTER);
-			tableValues[i][9] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color,
-					SwingConstants.LEFT);
+			tableValues[i][0] = new DoubleLabelEntries(clPositionLeft, clPositionRight);
+			tableValues[i][1] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.LEFT);
+			tableValues[i][2] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.CENTER);
+			tableValues[i][3] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.CENTER);
+			tableValues[i][4] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.CENTER);
+			tableValues[i][5] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.CENTER);
+			tableValues[i][6] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.CENTER);
+			tableValues[i][7] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.CENTER);
+			tableValues[i][8] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.CENTER);
+			tableValues[i][9] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.LEFT);
+			tableValues[i][10] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.LEFT);
+			tableValues[i][11] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.LEFT);
+			tableValues[i][12] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.LEFT);
+			tableValues[i][13] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.LEFT);
+			tableValues[i][14] = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, bg_Color, SwingConstants.LEFT);
 
 			for (int j = 2 ; j < 9 ; j++) {
 				((JLabel)tableValues[i][j]).setBorder(EMPTY_BORDER);
@@ -247,7 +269,6 @@ class SeriesTablePanel extends ImagePanel {
 						((ColorLabelEntry) tableValues[j][1]).setIcon(ThemeManager.instance().getSmallClubLogo(entry.getTeamId()));
 						((ColorLabelEntry) tableValues[j][1]).setText(entry.getTeamName());
 						((ColorLabelEntry) tableValues[j][1]).setFontStyle(Font.BOLD);
-//						((ColorLabelEntry) tableValues[j][1]).getRight().setAlignment(SwingConstants.LEFT);
 
 						if (entry.getTeamId() == teamid) {
 							((ColorLabelEntry) tableValues[j][1]).setFGColor(ThemeManager.getColor(HOColorName.HOME_TEAM_FG));
@@ -270,6 +291,11 @@ class SeriesTablePanel extends ImagePanel {
 						FormLabel formLabel = new FormLabel(entry.getSerie());
 						formLabel.setBgColor(getColor4Row(j));
 						tableValues[j][9] = formLabel;
+						((ColorLabelEntry) tableValues[j][10]).setText("1000");
+						((ColorLabelEntry) tableValues[j][11]).setText("200");
+						((ColorLabelEntry) tableValues[j][12]).setText("300");
+						((ColorLabelEntry) tableValues[j][13]).setText("400");
+						((ColorLabelEntry) tableValues[j][14]).setText("500");
 					}
 				}
 
