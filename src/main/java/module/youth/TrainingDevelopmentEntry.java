@@ -27,8 +27,15 @@ public class TrainingDevelopmentEntry {
         if (skillConstraints != null) {
             for (var constraint : skillConstraints.entrySet()) {
                 var skill = skills.get(constraint.getKey());
+                var oldVal = skill.getCurrentValue();
                 skill.setCurrentLevel(constraint.getValue().getCurrentLevel());
                 skill.setMax(constraint.getValue().getMax());
+                if ( skill.getStartValue() == 0){
+                    var adjustment = skill.getCurrentValue() - oldVal;
+                    if ( adjustment > 0 ){
+                        skill.setStartValue(adjustment);
+                    }
+                }
             }
         }
     }
@@ -37,8 +44,8 @@ public class TrainingDevelopmentEntry {
         if ( this.skills == null){
             this.skills = new HashMap<>();
         }
-        for (var skill : startSkills.entrySet()) {
-            this.skills.put(skill.getKey(), training.calcSkill(skill.getValue(), player, team));
+        for (var skill : startSkills.values()) {
+            this.skills.put(skill.getSkillID().getValue(), training.calcSkill(skill, player, team));
         }
         setSkillConstraints(skillConstraints);
         return this.skills;
@@ -74,7 +81,7 @@ public class TrainingDevelopmentEntry {
         return YouthTrainingType.StringValueOf(this.training.getTraining(prio));
     }
 
-    public String getPlayerPosition() {
+    public String getPlayerSector() {
         return this.training.getPlayerTrainedSectors(this.player.getId());
     }
 

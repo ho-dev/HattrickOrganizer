@@ -777,6 +777,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 			case leftWinger, rightWinger -> Sector.Wing;
 			case leftInnerMidfield, rightInnerMidfield, centralInnerMidfield -> Sector.InnerMidfield;
 			case leftForward, rightForward, centralForward -> Sector.Forward;
+			case setPieces -> Sector.SetPiecesTaker;
 			default -> Sector.None;
 		};
 	}

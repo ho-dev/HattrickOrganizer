@@ -329,12 +329,12 @@ public class XMLMatchdetailsParser {
             	myHighlight.setM_iMatchEventIndex(n+1);
             	myHighlight.setMatchEventID(iMatchEventID);
             	myHighlight.setMinute(iMinute);
-            	myHighlight.setSpielerID(iSubjectPlayerID);
-            	myHighlight.setSpielerName(subjectplayername);
+            	myHighlight.setPlayerId(iSubjectPlayerID);
+            	myHighlight.setPlayerName(subjectplayername);
             	myHighlight.setSpielerHeim(subHome);
             	myHighlight.setTeamID(iSubjectTeamID);
-            	myHighlight.setGehilfeID(iObjectPlayerID);
-            	myHighlight.setGehilfeName(objectplayername);
+            	myHighlight.setAssistingPlayerId(iObjectPlayerID);
+            	myHighlight.setAssistingPlayerName(objectplayername);
             	myHighlight.setGehilfeHeim(objHome);
             	myHighlight.setEventText(eventtext);
             	myHighlight.setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId(iMatchPart));
@@ -379,11 +379,11 @@ public class XMLMatchdetailsParser {
 
             		final Vector<String> tmpPlayer = homeTeamPlayers.get(j);
 
-            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getSpielerID()))) {
+            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getPlayerId()))) {
             			subjectplayername = tmpPlayer.get(1);
             		}
 
-            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getGehilfeID()))) {
+            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getAssistingPlayerId()))) {
             			objectplayername = tmpPlayer.get(1);
             		}
 
@@ -399,12 +399,12 @@ public class XMLMatchdetailsParser {
 
             		final Vector<String> tmpPlayer = awayTeamPlayers.get(j);
 
-            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getSpielerID()))) {
+            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getPlayerId()))) {
             			subjectplayername = tmpPlayer.get(1);
             			subHome = false;
             		}
 
-            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getGehilfeID()))) {
+            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getAssistingPlayerId()))) {
             			objectplayername = tmpPlayer.get(1);
             			objHome = false;
             		}
@@ -432,16 +432,16 @@ public class XMLMatchdetailsParser {
             		eventtext = tmp.getEventText();
             		boolean replaceend = false;
 
-            		if (eventtext.indexOf(String.valueOf(tmp.getSpielerID())) >= 0) {
+            		if (eventtext.indexOf(String.valueOf(tmp.getPlayerId())) >= 0) {
             			eventtext = eventtext.replaceAll("(?i)<A HREF=\"/Club/Players/Player\\.aspx\\?PlayerID="
-            					+ tmp.getSpielerID() + ".*?>",
+            					+ tmp.getPlayerId() + ".*?>",
             					"<FONT COLOR=" + subplayerColor + "#><B>");
             			replaceend = true;
             		}
 
-            		if (eventtext.indexOf(String.valueOf(tmp.getGehilfeID())) >= 0) {
+            		if (eventtext.indexOf(String.valueOf(tmp.getAssistingPlayerId())) >= 0) {
             			eventtext = eventtext.replaceAll("(?i)<A HREF=\"/Club/Players/Player\\.aspx\\?playerId="
-            					+ tmp.getGehilfeID() + ".*?>",
+            					+ tmp.getAssistingPlayerId() + ".*?>",
             					"<FONT COLOR=" + objplayerColor + "#><B>");
             			replaceend = true;
             		}
@@ -450,9 +450,9 @@ public class XMLMatchdetailsParser {
             			eventtext = eventtext.replaceAll("(?i)</A>", "</B></FONT>");
             		}
 
-            		tmp.setSpielerName(subjectplayername);
+            		tmp.setPlayerName(subjectplayername);
             		tmp.setSpielerHeim(subHome);
-            		tmp.setGehilfeName(objectplayername);
+            		tmp.setAssistingPlayerName(objectplayername);
             		tmp.setGehilfeHeim(objHome);
             		tmp.setEventText(eventtext);
             	}

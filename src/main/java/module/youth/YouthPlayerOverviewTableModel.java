@@ -22,7 +22,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
     private YouthPlayerColumn[] initColumns() {
         return new YouthPlayerColumn[]{
                 // TODO: Name column should include the specialty icon
-                new YouthPlayerColumn(0, "ls.player.name", 0) {
+                new YouthPlayerColumn(0, "ls.player.name") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
                         return new ColorLabelEntry(player.getFullName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -46,7 +46,8 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                         return new ColorLabelEntry("" + player.getCanBePromotedInAtDate(new Date().getTime()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }
                 },
-                new YouthPlayerColumn(4, "ls.youth.player.Keeper") {
+                // TODO minWidth does not work
+                new YouthPlayerColumn(4, "ls.youth.player.Keeper", 200) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
                         return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Keeper));

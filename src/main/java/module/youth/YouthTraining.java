@@ -4,7 +4,6 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.*;
-import core.training.YouthTrainerComment;
 import module.lineup.substitution.model.MatchOrderType;
 
 import java.sql.Timestamp;
@@ -140,7 +139,14 @@ public class YouthTraining {
             ret.setCurrentValue(value.getCurrentValue());
         }
         else {
-            ret.setCurrentValue(value.getCurrentValue()+calcSkillIncrement(value, player, team));
+            var newVal = value.getCurrentValue() + calcSkillIncrement(value, player, team);
+            ret.setCurrentValue(newVal);
+            if (value.getStartValue()==0){
+                var adjustment = ret.getCurrentValue() - newVal;
+                if ( adjustment > 0) {
+                    value.setStartValue(value.getStartValue() + adjustment);
+                }
+            }
         }
         return ret;
     }
@@ -198,6 +204,7 @@ public class YouthTraining {
                 }
             }
         }
+        if ( ret > 1 ) ret = 1; // skill increment is limited
         return ret;
     }
 
@@ -209,15 +216,19 @@ public class YouthTraining {
     }
 
     public String getPlayerTrainedSectors(int playerId) {
+        var ret = new StringBuilder();
         var hov = HOVerwaltung.instance();
         var lineupTeam = this.getTeam(hov.getModel().getBasics().getYouthTeamId());
-        var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
-        var ret = new StringBuilder();
-        for ( var s : sectors.entrySet()){
-            ret.append(hov.getLanguageString("ls.youth.training.sector." + s.getKey()))
-                    .append(":")
-                    .append(s.getValue())
-                    .append(" ");
+        //var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
+        var player = lineupTeam.getPlayerByID(playerId);
+        if ( player != null) {
+            var sectors = player.getMinutesInSectors();
+            for (var s : sectors) {
+                ret.append(hov.getLanguageString("ls.youth.training.sector." + s.getSector()))
+                        .append(":")
+                        .append(s.getMinutes())
+                        .append(" ");
+            }
         }
         return ret.toString();
     }

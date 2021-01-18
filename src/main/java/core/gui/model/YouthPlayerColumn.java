@@ -5,6 +5,8 @@ import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.UserColumn;
 import module.youth.YouthPlayer;
 
+import javax.swing.table.TableColumn;
+
 public class YouthPlayerColumn extends UserColumn {
 
     protected YouthPlayerColumn(int id, String name) {
@@ -16,8 +18,11 @@ public class YouthPlayerColumn extends UserColumn {
     }
     public YouthPlayerColumn(int id,String name, String tooltip, int minWidth){
         super(id,name,tooltip);
+
+        // TODO does not work
         this.minWidth = minWidth;
         preferredWidth = minWidth;
+
         this.setDisplay(true);
     }
 
@@ -34,4 +39,10 @@ public class YouthPlayerColumn extends UserColumn {
         return false;
     }
 
+    @Override
+    public void setSize(TableColumn column) {
+        // TODO does not work
+        column.setMinWidth(200);
+        column.setPreferredWidth(200);
+    }
 }

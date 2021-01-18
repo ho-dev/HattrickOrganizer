@@ -247,19 +247,19 @@ public class SpecialEventsDM {
 	}
 
 	private boolean isInvolved(int playerId, MatchEvent highlight) {
-		return (playerId == highlight.getGehilfeID() || playerId == highlight.getSpielerID());
+		return (playerId == highlight.getAssistingPlayerId() || playerId == highlight.getPlayerId());
 	}
 
 	private static String findName(MatchEvent highlight) {
-		if (highlight.isSpecialtyWeatherSE()) {return highlight.getSpielerName();}
+		if (highlight.isSpecialtyWeatherSE()) {return highlight.getPlayerName();}
 		else if (highlight.isGoalEvent() || highlight.isNonGoalEvent()) {
 			return switch (highlight.getMatchEventID()) {
 				case SE_GOAL_UNPREDICTABLE_LONG_PASS, SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION, SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES, SE_GOAL_CORNER_TO_ANYONE,
-						SE_GOAL_CORNER_HEAD_SPECIALIST, SE_WINGER_TO_HEAD_SPEC_SCORES, SE_WINGER_TO_ANYONE_SCORES -> highlight.getGehilfeName() + " - " + highlight.getSpielerName();
-				default -> highlight.getSpielerName();
+						SE_GOAL_CORNER_HEAD_SPECIALIST, SE_WINGER_TO_HEAD_SPEC_SCORES, SE_WINGER_TO_ANYONE_SCORES -> highlight.getAssistingPlayerName() + " - " + highlight.getPlayerName();
+				default -> highlight.getPlayerName();
 			};}
 			else if (highlight.isManMarking()) {
-				return highlight.getSpielerName() + " -> " + highlight.getGehilfeName();
+				return highlight.getPlayerName() + " -> " + highlight.getAssistingPlayerName();
 			}
 		return "?";
 	}

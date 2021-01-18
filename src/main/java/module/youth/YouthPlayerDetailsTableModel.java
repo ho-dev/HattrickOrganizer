@@ -25,6 +25,7 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
                         return new ColorLabelEntry(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(entry.getMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
+                // TODO match column should show match type icon
                 new YouthPlayerDetailsColumn(1, "ls.youth.player.training.match") {
                     @Override
                     public IHOTableEntry getTableEntry(TrainingDevelopmentEntry entry) {
@@ -49,10 +50,10 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
                         return new ColorLabelEntry(entry.getTrainingType(YouthTraining.Priority.Secondary), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new YouthPlayerDetailsColumn(5, "ls.youth.player.position") {
+                new YouthPlayerDetailsColumn(5, "ls.youth.player.sector") {
                     @Override
                     public IHOTableEntry getTableEntry(TrainingDevelopmentEntry entry) {
-                        return new ColorLabelEntry(entry.getPlayerPosition(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getPlayerSector(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerDetailsColumn(6, "ls.youth.player.Keeper") {
@@ -103,7 +104,7 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
     @Override
     protected void initData() {
         if (youthPlayer != null) {
-            var trainings = this.youthPlayer.getTrainings();
+            var trainings = this.youthPlayer.getTrainingDevelopment();
             m_clData = new Object[trainings.size()][columns.length];
             int rownum = 0;
             for (var training : trainings.values()) {

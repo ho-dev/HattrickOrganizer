@@ -24,10 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -630,6 +627,9 @@ public class HOModel {
     }
 
     public List<YouthTraining> getYouthTrainingsAfter(Timestamp date) {
-        return getYouthTrainings().stream().filter(i->i.getMatchDate().after(date)).collect(Collectors.toList());
+        return getYouthTrainings().stream()
+                .filter(i->i.getMatchDate().after(date))
+                .sorted((i1,i2)->i1.getMatchDate().compareTo(i2.getMatchDate()))
+                .collect(Collectors.toList());
     }
 }

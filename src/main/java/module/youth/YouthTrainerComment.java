@@ -1,4 +1,4 @@
-package core.training;
+package module.youth;
 
 import module.youth.YouthPlayer;
 
