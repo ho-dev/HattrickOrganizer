@@ -1,5 +1,6 @@
 package module.lineup.ratings;
 
+import com.github.weisj.darklaf.icons.DerivableImageIcon;
 import core.model.HOVerwaltung;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
@@ -18,14 +19,16 @@ import javax.swing.*;
 
 public final class MinuteTogglerPanel extends JPanel {
 	
-	private Icon whiteGreenClock = ThemeManager.getScaledIcon(HOIconName.WHITE_GREEN_CLOCK, 20, 20);
-	private Icon greenWhiteClock = ThemeManager.getScaledIcon(HOIconName.GREEN_WHITE_CLOCK, 20, 20);
-	private Icon whiteRedClock = ThemeManager.getScaledIcon(HOIconName.WHITE_RED_CLOCK, 20, 20);
-	private Icon redWhiteClock = ThemeManager.getScaledIcon(HOIconName.RED_WHITE_CLOCK, 20, 20);
-	private Icon ratingsGraphIcon = ThemeManager.getScaledIcon(HOIconName.RATING_GRAPH, 20, 20);
-	private JLabel ratingsGraph = new JLabel(ratingsGraphIcon);
-	private JLabel avg90Clock = new JLabel(whiteGreenClock);
-	private JLabel avg120Clock = new JLabel(redWhiteClock);
+	private final Icon whiteGreenClock = ThemeManager.getScaledIcon(HOIconName.WHITE_GREEN_CLOCK, 20, 20);
+	private final Icon greenWhiteClock = ThemeManager.getScaledIcon(HOIconName.GREEN_WHITE_CLOCK, 20, 20);
+	private final Icon whiteRedClock = ThemeManager.getScaledIcon(HOIconName.WHITE_RED_CLOCK, 20, 20);
+	private final Icon redWhiteClock = ThemeManager.getScaledIcon(HOIconName.RED_WHITE_CLOCK, 20, 20);
+	private final Icon ratingsGraphIcon = ThemeManager.getScaledIcon(HOIconName.RATING_GRAPH, 20, 20);
+
+	private final JLabel ratingsGraph = new JLabel(ratingsGraphIcon);
+	private final JLabel avg90Clock = new JLabel(whiteGreenClock);
+	private final JLabel avg120Clock = new JLabel(redWhiteClock);
+
 	private final List<JLabel> toggleKeys = new ArrayList<>();
 	private final List<JLabel> toggleKeysET = new ArrayList<>();
 	private List<Double> toggleLabels = null;
@@ -37,7 +40,7 @@ public final class MinuteTogglerPanel extends JPanel {
 	}
 
 	public void load() {
-		if(toggleLabels != null) return;
+		if (toggleLabels != null) return;
 		toggleLabels = new ArrayList<>(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
 		initComponents();
 	}
@@ -53,6 +56,14 @@ public final class MinuteTogglerPanel extends JPanel {
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 
+		if (whiteGreenClock instanceof DerivableImageIcon) {
+			// If darklaf, retrieve image, and use as icon.
+			avg90Clock.setIcon(new ImageIcon(((DerivableImageIcon)whiteGreenClock).getImage()));
+			avg120Clock.setIcon(new ImageIcon(((DerivableImageIcon)whiteRedClock).getImage()));
+			ratingsGraph.setIcon(new ImageIcon(((DerivableImageIcon)ratingsGraphIcon).getImage()));
+		}
+
+
 		avg90Clock.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -65,6 +76,7 @@ public final class MinuteTogglerPanel extends JPanel {
 				parent.setRatings();
 			}
 		});
+
 
 		avg120Clock.addMouseListener(new MouseAdapter() {
 			@Override
