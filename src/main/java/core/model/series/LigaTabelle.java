@@ -36,7 +36,7 @@ public class LigaTabelle  {
         LigaTabellenEintrag tmp = null;
 
         for (int i = 0; (teamId >= 0) && (i < m_vEintraege.size()); i++) {
-            tmp = (LigaTabellenEintrag) m_vEintraege.elementAt(i);
+            tmp = m_vEintraege.elementAt(i);
 
             if (tmp.getTeamId() == teamId) {
                 return tmp;

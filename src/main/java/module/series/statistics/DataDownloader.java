@@ -20,7 +20,8 @@ import java.util.*;
 public class DataDownloader {
 
     private final static String ALLTID_SERVER_BASEURL = "https://hattid.com/api";
-    private final static String POWERRATING_ENDPOINT = "/leagueUnit/%s/teamPowerRatings?page=0&pageSize=8&sortBy=power_rating&sortDirection=asc&statType=statRound&statRoundNumber=%s&season=%s";
+    private final static String POWERRATING_ENDPOINT  = "/leagueUnit/%s/teamPowerRatings?page=0&pageSize=8&sortBy=power_rating&sortDirection=asc&statType=statRound&statRoundNumber=%s&season=%s";
+    private final static String HATSTATS_ENDPOINT     = "/leagueUnit/%s/teamHatstats?page=0&pageSize=8&sortBy=hatstats&sortDirection=asc&statType=%s&season=%s";
 
     // Singleton.
     private DataDownloader() {
@@ -46,19 +47,83 @@ public class DataDownloader {
         Map<Integer, Map<RatingsStatistics, Integer>> resultsMap = new HashMap<>();
 
         Map<Integer, Integer> powerRatings = fetchLeagueTeamPowerRatings(iLeagueID, iHTWeek, iHTSeason);
+        Map<Integer, Map<RatingsStatistics, Integer>> hatStatsMax = fetchLeagueTeamHatStats(iLeagueID, iHTSeason, "max");
+        Map<Integer, Map<RatingsStatistics, Integer>> hatStatsAvg = fetchLeagueTeamHatStats(iLeagueID, iHTSeason, "avg");
 
-        Map<RatingsStatistics,Integer> teamStats;
         var teamIDs = powerRatings.keySet();
 
         for(var teamID : teamIDs){
-            teamStats = new HashMap<>();
+            Map<RatingsStatistics, Integer> teamStats = new HashMap<>();
             teamStats.put(RatingsStatistics.POWER_RATINGS, powerRatings.get(teamID));
+
+            hatStatsMax.get(teamID).forEach(
+                    (key, value) -> teamStats.merge(key, value, (v1, v2) -> v1));
+
+            hatStatsAvg.get(teamID).forEach(
+                    (key, value) -> teamStats.merge(key, value, (v1, v2) -> v1));
+
             resultsMap.put(teamID, teamStats);
         }
+
 
         return resultsMap;
 }
 
+    public Map<Integer, Map<RatingsStatistics, Integer>> fetchLeagueTeamHatStats(int iLeagueID, int iHTSeason, String dataType) {
+
+        Map<Integer, Map<RatingsStatistics, Integer>> result = new HashMap<>();
+
+        try {
+            final OkHttpClient client = initializeHttpsClient();
+
+            String url = ALLTID_SERVER_BASEURL + String.format(HATSTATS_ENDPOINT, iLeagueID, dataType, iHTSeason);
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("Accept", "application/json")
+                    .build();
+
+            Response response = client.newCall(request).execute();
+
+
+            if (response.isSuccessful()) {
+                String bodyAsString = response.body().string();
+                Gson gson = new Gson();
+                JsonObject output = gson.fromJson(bodyAsString, JsonObject.class);
+
+                response.close();
+
+                for (var entity : output.getAsJsonArray("entities")){
+                    Map<RatingsStatistics, Integer> teamStat = new HashMap<>();
+                    int iTeamID = ((JsonObject) entity).get("teamId").getAsInt();
+
+                    int rating = ((JsonObject) entity).get("hatStats").getAsInt();
+                    teamStat.put(RatingsStatistics.getCode("total", dataType), rating);
+
+                    rating = ((JsonObject) entity).get("midfield").getAsInt();
+                    teamStat.put(RatingsStatistics.getCode("mid", dataType), rating);
+
+                    rating = ((JsonObject) entity).get("defense").getAsInt();
+                    teamStat.put(RatingsStatistics.getCode("def", dataType), rating);
+
+                    rating = ((JsonObject) entity).get("attack").getAsInt();
+                    teamStat.put(RatingsStatistics.getCode("off", dataType), rating);
+
+                    result.put(iTeamID, teamStat);
+                }
+
+            }
+
+        } catch (Exception e) {
+            HOLogger.instance().error(
+                    HttpDataSubmitter.class,
+                    "Error fetching data from Alltid for league team power ratings: " + e.getMessage()
+            );
+        }
+
+
+        return result;
+    }
 
 
     public Map<Integer, Integer> fetchLeagueTeamPowerRatings(int iLeagueID, int iHTWeek, int iHTSeason) {
