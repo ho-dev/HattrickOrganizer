@@ -140,7 +140,7 @@ public class Spielplan  {
     ////////////////////////////////////////////////////////////////////////////////
     //Liga Tabelle
     ////////////////////////////////////////////////////////////////////////////////
-    public final LigaTabelle getTabelle() {
+    public final LigaTabelle getTable() {
         if (m_clTabelle == null) {
             m_clTabelle = berechneTabelle(14);
         }
@@ -196,23 +196,23 @@ public class Spielplan  {
      */
     protected final void berechneAltePositionen(LigaTabelle tabelle) {
         LigaTabelle compare = null;
-        LigaTabellenEintrag tmp = null;
-        LigaTabellenEintrag tmp2 = null;
+        SerieTableEntry tmp = null;
+        SerieTableEntry tmp2 = null;
 
         int spieltag = 1;
 
-        if (tabelle.getEintraege().size() <= 0) {
+        if (tabelle.getEntries().size() <= 0) {
             return;
         }
 
-        spieltag = (tabelle.getEintraege().elementAt(0)).getAnzSpiele() - 1;
+        spieltag = (tabelle.getEntries().elementAt(0)).getAnzSpiele() - 1;
 
         if (spieltag > 0) {
             compare = berechneTabelle(spieltag);
             compare.sort();
 
-            for (int i = 0; i < tabelle.getEintraege().size(); i++) {
-                tmp = tabelle.getEintraege().elementAt(i);
+            for (int i = 0; i < tabelle.getEntries().size(); i++) {
+                tmp = tabelle.getEntries().elementAt(i);
                 tmp2 = compare.getEintragByTeamId(tmp.getTeamId());
 
                 if (tmp2 != null) {
@@ -258,9 +258,9 @@ public class Spielplan  {
      *
      * @param maxSpieltag Day until which the table is being calculated (1–14)
      */
-    protected final LigaTabellenEintrag berechneTabellenEintrag(Paarung[] spiele, int teamId,
-                                                                String name, int maxSpieltag) {
-        final LigaTabellenEintrag eintrag = new LigaTabellenEintrag();
+    protected final SerieTableEntry berechneTabellenEintrag(Paarung[] spiele, int teamId,
+                                                            String name, int maxSpieltag) {
+        final SerieTableEntry eintrag = new SerieTableEntry();
         int gameNumber = 0;
         int homeVictories = 0;
         int homeDraws = 0;
@@ -288,7 +288,7 @@ public class Spielplan  {
                     // Win
                     if (spiele[i].getToreHeim() > spiele[i].getToreGast()) {
                         eintrag.addSerienEintrag(spiele[i].getSpieltag() - 1,
-                                                 LigaTabellenEintrag.H_SIEG);
+                                                 SerieTableEntry.H_SIEG);
                         homePoints += 3;
                         homeVictories += 1;
                         homeGoalsAgainst += spiele[i].getToreGast();
@@ -297,7 +297,7 @@ public class Spielplan  {
                     // Draw
                     else if (spiele[i].getToreHeim() == spiele[i].getToreGast()) {
                         eintrag.addSerienEintrag(spiele[i].getSpieltag() - 1,
-                                                 LigaTabellenEintrag.H_UN);
+                                                 SerieTableEntry.H_UN);
                         homePoints += 1;
                         homeDraws += 1;
                         homeGoalsAgainst += spiele[i].getToreGast();
@@ -306,7 +306,7 @@ public class Spielplan  {
                     // Defeat
                     else if (spiele[i].getToreHeim() < spiele[i].getToreGast()) {
                         eintrag.addSerienEintrag(spiele[i].getSpieltag() - 1,
-                                                 LigaTabellenEintrag.H_NIED);
+                                                 SerieTableEntry.H_NIED);
                         homeDefeats += 1;
                         homeGoalsAgainst += spiele[i].getToreGast();
                         homeGoalsFor += spiele[i].getToreHeim();
@@ -317,7 +317,7 @@ public class Spielplan  {
                     // Defeat
                     if (spiele[i].getToreHeim() > spiele[i].getToreGast()) {
                         eintrag.addSerienEintrag(spiele[i].getSpieltag() - 1,
-                                                 LigaTabellenEintrag.A_NIED);
+                                                 SerieTableEntry.A_NIED);
 
                         awayDefeats += 1;
                         awayGoalsAgainst += spiele[i].getToreHeim();
@@ -326,7 +326,7 @@ public class Spielplan  {
                     // Draw
                     else if (spiele[i].getToreHeim() == spiele[i].getToreGast()) {
                         eintrag.addSerienEintrag(spiele[i].getSpieltag() - 1,
-                                                 LigaTabellenEintrag.A_UN);
+                                                 SerieTableEntry.A_UN);
 
                         awayPoints += 1;
                         awayDraws += 1;
@@ -336,7 +336,7 @@ public class Spielplan  {
                     // Win
                     else if (spiele[i].getToreHeim() < spiele[i].getToreGast()) {
                         eintrag.addSerienEintrag(spiele[i].getSpieltag() - 1,
-                                                 LigaTabellenEintrag.A_SIEG);
+                                                 SerieTableEntry.A_SIEG);
 
                         awayPoints += 3;
                         awayVictories += 1;
@@ -388,7 +388,7 @@ public class Spielplan  {
         TabellenVerlaufEintrag[] eintraege = null;
 
         try {
-        	spieltag = getTabelle().getEintraege().elementAt(0).getAnzSpiele();
+        	spieltag = getTable().getEntries().elementAt(0).getAnzSpiele();
             tabelle = new LigaTabelle[spieltag];
 
             for (int i = spieltag; i > 0; i--) {
@@ -397,16 +397,16 @@ public class Spielplan  {
 
             // Create history entries
             if (tabelle.length > 0) {
-                LigaTabellenEintrag tmp = null;
+                SerieTableEntry tmp = null;
 
-                eintraege = new TabellenVerlaufEintrag[tabelle[spieltag - 1].getEintraege().size()];
+                eintraege = new TabellenVerlaufEintrag[tabelle[spieltag - 1].getEntries().size()];
 
-                for (int j = 0; j < tabelle[spieltag - 1].getEintraege().size(); j++) {
+                for (int j = 0; j < tabelle[spieltag - 1].getEntries().size(); j++) {
                     final int[] positionen = new int[tabelle.length];
 
                     eintraege[j] = new TabellenVerlaufEintrag();
-                    eintraege[j].setTeamId(tabelle[spieltag - 1].getEintraege().elementAt(j).getTeamId());
-                    eintraege[j].setTeamName(tabelle[spieltag - 1].getEintraege().elementAt(j).getTeamName());
+                    eintraege[j].setTeamId(tabelle[spieltag - 1].getEntries().elementAt(j).getTeamId());
+                    eintraege[j].setTeamName(tabelle[spieltag - 1].getEntries().elementAt(j).getTeamName());
 
                     for (int i = 0; i < tabelle.length; i++) {
                         tmp = tabelle[i].getEintragByTeamId(eintraege[j].getTeamId());

@@ -1,7 +1,7 @@
 package core.file.xml;
 
 import core.model.series.LigaTabelle;
-import core.model.series.LigaTabellenEintrag;
+import core.model.series.SerieTableEntry;
 import core.util.HOLogger;
 
 import org.w3c.dom.Document;
@@ -23,9 +23,9 @@ public class XMLTabelleParser {
         return createTabelle(XMLManager.parseFile(dateiname));
     }
 
-    protected final LigaTabellenEintrag createEintrag(Element ele) {
+    protected final SerieTableEntry createEintrag(Element ele) {
         Element tmp = null;
-        final LigaTabellenEintrag lte = new LigaTabellenEintrag();
+        final SerieTableEntry lte = new SerieTableEntry();
 
         try {
             tmp = (Element) ele.getElementsByTagName("TeamID").item(0);

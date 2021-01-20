@@ -10,11 +10,8 @@ import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.enums.RatingsStatistics;
-import core.model.misc.Basics;
-import core.model.series.Liga;
 import module.series.promotion.*;
 import module.series.statistics.DataDownloader;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
@@ -68,7 +65,6 @@ public class SeriesPanel extends LazyImagePanel {
 		}
 
 		leagueStatistics = DataDownloader.instance().fetchLeagueStatistics(iSerieID, iMatchRound, iSeason);
-		System.out.print(leagueStatistics);
 	}
 
 	@Override
@@ -169,6 +165,8 @@ public class SeriesPanel extends LazyImagePanel {
 
 	private void initComponents() {
 		this.model = new Model();
+		model.setLeagueStatistics(leagueStatistics);
+
 		setLayout(new BorderLayout());
 
 		// ComboBox für Saisonauswahl

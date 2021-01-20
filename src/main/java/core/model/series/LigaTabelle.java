@@ -8,7 +8,7 @@ public class LigaTabelle  {
     //~ Instance fields ----------------------------------------------------------------------------
     protected String m_sLigaLandName = "";
     protected String m_sLigaName = "";
-    protected Vector<LigaTabellenEintrag> m_vEintraege = new Vector<LigaTabellenEintrag>();
+    protected Vector<SerieTableEntry> m_vEintraege = new Vector<SerieTableEntry>();
     protected int m_iLigaId = -1;
     protected int m_iLigaLandId = -1;
     /** Maximale ANzahl an Spielklassen */
@@ -25,15 +25,15 @@ public class LigaTabelle  {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public final Vector<LigaTabellenEintrag> getEintraege() {
+    public final Vector<SerieTableEntry> getEntries() {
         return m_vEintraege;
     }
 
     /**
      * liefert den Eintrag zu einem Team
      */
-    public final LigaTabellenEintrag getEintragByTeamId(int teamId) {
-        LigaTabellenEintrag tmp = null;
+    public final SerieTableEntry getEintragByTeamId(int teamId) {
+        SerieTableEntry tmp = null;
 
         for (int i = 0; (teamId >= 0) && (i < m_vEintraege.size()); i++) {
             tmp = m_vEintraege.elementAt(i);
@@ -163,8 +163,8 @@ public class LigaTabelle  {
      * abgerutscht, 0 = gleich, 1 == aufgestiegen
      */
     public final byte getTeamPlatzTendenz(int teamId, LigaTabelle compare) {
-        LigaTabellenEintrag aktu = null;
-        LigaTabellenEintrag vergleich = null;
+        SerieTableEntry aktu = null;
+        SerieTableEntry vergleich = null;
 
         if (compare != null) {
             aktu = getEintragByTeamId(teamId);
@@ -183,7 +183,7 @@ public class LigaTabelle  {
         return (byte) 0;
     }
 
-    public final void addEintrag(LigaTabellenEintrag lte) {
+    public final void addEintrag(SerieTableEntry lte) {
         if ((lte != null) && (!m_vEintraege.contains(lte))) {
             m_vEintraege.add(lte);
         }
@@ -193,7 +193,7 @@ public class LigaTabelle  {
      *Sortiert die Einträge
      */
     public final void sort() {
-        LigaTabellenEintrag[] list = new LigaTabellenEintrag[m_vEintraege.size()];
+        SerieTableEntry[] list = new SerieTableEntry[m_vEintraege.size()];
         Helper.copyVector2Array(m_vEintraege, list);
 
         java.util.Arrays.sort(list);

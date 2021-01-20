@@ -101,7 +101,7 @@ public class DataDownloader {
                     teamStat.put(RatingsStatistics.getCode("total", dataType), rating);
 
                     rating = ((JsonObject) entity).get("midfield").getAsInt();
-                    teamStat.put(RatingsStatistics.getCode("mid", dataType), rating);
+                    teamStat.put(RatingsStatistics.getCode("mid", dataType), rating*3);
 
                     rating = ((JsonObject) entity).get("defense").getAsInt();
                     teamStat.put(RatingsStatistics.getCode("def", dataType), rating);
