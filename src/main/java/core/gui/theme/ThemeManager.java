@@ -19,6 +19,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -60,7 +61,11 @@ public final class ThemeManager {
 		themes.put(SolarizedLightTheme.THEME_NAME, new SolarizedLightTheme());
 
 		if (!teamLogoDir.exists()) {
-			teamLogoDir.mkdirs();
+			try {
+				Files.createDirectories(teamLogoPath);
+			} catch (IOException e) {
+				System.err.println("Failed to create directory for team logos: " + e.getMessage());
+			}
 		}
 	}
 
