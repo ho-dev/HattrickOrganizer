@@ -12,7 +12,6 @@ import core.gui.theme.nimbus.NimbusTheme;
 import core.model.UserParameter;
 import core.util.HOLogger;
 import core.util.OSUtils;
-
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.*;
@@ -34,14 +33,14 @@ public final class ThemeManager {
 	/** Name of the default theme. */
 	public final static String DEFAULT_THEME_NAME = NimbusTheme.THEME_NAME;
 
-	private final static ThemeManager MANAGER = new ThemeManager();
 	private final static Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder() , "img");
 	private final static Path teamLogoPath = tempImgPath.resolve("clubLogos");
-	private final File teamLogoDir = new File(String.valueOf(teamLogoPath));
-	private final Map<String, Theme> themes = new LinkedHashMap<>();
+	private final static File teamLogoDir = new File(String.valueOf(teamLogoPath));
+	private final static Map<String, Theme> themes = new LinkedHashMap<>();
+
+	private final static ThemeManager MANAGER = new ThemeManager();
 
 	HOClassicSchema classicSchema = new HOClassicSchema();
-
 
 
 	private ThemeManager(){
@@ -64,7 +63,7 @@ public final class ThemeManager {
 			try {
 				Files.createDirectories(teamLogoPath);
 			} catch (IOException e) {
-				System.err.println("Failed to create directory for team logos: " + e.getMessage());
+				HOLogger.instance().log(this.getClass(),"Failed to create directory for team logos: " + e.getMessage());
 			}
 		}
 	}
@@ -79,7 +78,7 @@ public final class ThemeManager {
 	}
 
 	public static Color getColor(String key) {
-		Object obj = null;
+		Object obj;
 
 		obj = instance().classicSchema.getThemeColor(key);
 		if(obj!= null && obj instanceof Color)
