@@ -196,7 +196,6 @@ final class DBUpdater {
 			dbManager.getTable(TeamsLogoTable.TABLENAME).createTable();
 		}
 
-		//forceModuleStatus(IModule.YOUTH);
 		updateDBVersion(dbVersion, version);
 	}
 
@@ -457,11 +456,13 @@ final class DBUpdater {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
 				dbManager.saveUserParameter("DBVersion", DBVersion);
-			} else {
-				HOLogger.instance().info(DBUpdater.class, "Development update done, setting db version number from " + version + " to " + (DBVersion - 1));
+			}
+			else {
+				HOLogger.instance().info(DBUpdater.class, "Development update done but this is a development version so DBVersion will remain unchanged");
 				dbManager.saveUserParameter("DBVersion", DBVersion - 1);
 			}
-		} else {
+		}
+		else {
 			HOLogger.instance().info(DBUpdater.class,
 					"Update done, db version number will NOT be increased from " + version
 							+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");

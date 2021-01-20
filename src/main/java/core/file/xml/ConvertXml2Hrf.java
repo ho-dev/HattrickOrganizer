@@ -17,6 +17,7 @@ import core.db.DBManager;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import core.model.enums.RatingsStatistics;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupTeam;
@@ -24,6 +25,7 @@ import core.model.match.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.net.OnlineWorker;
+import module.series.statistics.DataDownloader;
 import module.youth.YouthPlayer;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
@@ -359,6 +361,8 @@ public class ConvertXml2Hrf {
 		buffer.append("leagueID=").append(teamdetailsDataMap.get("LeagueID")).append('\n');
 		buffer.append("regionID=").append(teamdetailsDataMap.get("RegionID")).append('\n');
 		buffer.append("hasSupporter=").append(teamdetailsDataMap.get("HasSupporter")).append('\n');
+		buffer.append("LastLeagueStatisticsMatchRound=").append(0).append('\n');  		//TODO: fix this
+		buffer.append("LastLeagueStatisticsSeason=").append(0).append('\n');   		//TODO: fix this
 	}
 
 	/**
@@ -1120,32 +1124,4 @@ public class ConvertXml2Hrf {
 		}
 	}
 
-    /**
-	 * Save the HRF file.
-	 */
-	private void writeHRF(String dateiname, StringBuilder buffer) {
-		BufferedWriter out = null;
-
-		try {
-			File f = new File(dateiname);
-
-			if (f.exists()) {
-				f.delete();
-			}
-
-			f.createNewFile();
-
-			// write utf 8
-			OutputStreamWriter outWrit = new OutputStreamWriter(
-					new FileOutputStream(f), "UTF-8");
-			out = new BufferedWriter(outWrit);
-
-			// write ansi
-			out.write(buffer.toString());
-		} catch (Exception except) {
-			HOLogger.instance().log(getClass(), except);
-		} finally {
-			IOUtils.closeQuietly(out);
-		}
-	}
 }

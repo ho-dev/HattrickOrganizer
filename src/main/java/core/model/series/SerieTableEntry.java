@@ -1,6 +1,6 @@
 package core.model.series;
 
-public class LigaTabellenEintrag  implements Comparable<LigaTabellenEintrag>{
+public class SerieTableEntry implements Comparable<SerieTableEntry>{
     //~ Instance fields ----------------------------------------------------------------------------
     public static final byte H_SIEG = 1;
     public static final byte A_SIEG = 2;
@@ -42,7 +42,7 @@ public class LigaTabellenEintrag  implements Comparable<LigaTabellenEintrag>{
     /**
      * Creates a new instance of LigaTabellenEintrag
      */
-    public LigaTabellenEintrag() {
+    public SerieTableEntry() {
         for (int i = 0; i < m_aSerie.length; i++) {
             m_aSerie[i] = UNKOWN;
         }
@@ -259,7 +259,7 @@ public class LigaTabellenEintrag  implements Comparable<LigaTabellenEintrag>{
     /////////////////////////////////////////////////////////////////////////////////
     // EXTENDED Funcs    
     ////////////////////////////////////////////////////////////////////////////////7
-    public final int getGesamtTorDiff() {
+    public final int getGoalsDiff() {
         return (m_iToreFuer - m_iToreGegen);
     }
 
@@ -551,7 +551,7 @@ public class LigaTabellenEintrag  implements Comparable<LigaTabellenEintrag>{
      *
      * @return Value of property m_iToreFuer.
      */
-    public final int getToreFuer() {
+    public final int getGoalsFor() {
         return m_iToreFuer;
     }
 
@@ -569,7 +569,7 @@ public class LigaTabellenEintrag  implements Comparable<LigaTabellenEintrag>{
      *
      * @return Value of property m_iToreGegen.
      */
-    public final int getToreGegen() {
+    public final int getGoalsAgainst() {
         return m_iToreGegen;
     }
 
@@ -588,23 +588,23 @@ public class LigaTabellenEintrag  implements Comparable<LigaTabellenEintrag>{
     /**
      * vergleicht die Einträge
      */
-    public final int compareTo(LigaTabellenEintrag obj) {
-        if (obj instanceof LigaTabellenEintrag) {
-            final LigaTabellenEintrag lte = (LigaTabellenEintrag) obj;
+    public final int compareTo(SerieTableEntry obj) {
+        if (obj instanceof SerieTableEntry) {
+            final SerieTableEntry lte = (SerieTableEntry) obj;
 
             if (m_iPunkte > lte.getPoints()) {
                 return -1;
             } else if (m_iPunkte < lte.getPoints()) {
                 return 1;
             } else if (m_iPunkte == lte.getPoints()) {
-                if (getGesamtTorDiff() > lte.getGesamtTorDiff()) {
+                if (getGoalsDiff() > lte.getGoalsDiff()) {
                     return -1;
-                } else if (getGesamtTorDiff() < lte.getGesamtTorDiff()) {
+                } else if (getGoalsDiff() < lte.getGoalsDiff()) {
                     return 1;
-                } else if (getGesamtTorDiff() == lte.getGesamtTorDiff()) {
-                    if (m_iToreFuer > lte.getToreFuer()) {
+                } else if (getGoalsDiff() == lte.getGoalsDiff()) {
+                    if (m_iToreFuer > lte.getGoalsFor()) {
                         return -1;
-                    } else if (m_iToreFuer < lte.getToreFuer()) {
+                    } else if (m_iToreFuer < lte.getGoalsFor()) {
                         return 1;
                     }
                     /*else if ( m_iToreFuer == lte.getToreFuer () )
@@ -641,17 +641,17 @@ public class LigaTabellenEintrag  implements Comparable<LigaTabellenEintrag>{
     ////////////////////////////////////////////////////////////////////////////////7    
     @Override
 	public final boolean equals(Object obj) {
-        LigaTabellenEintrag lte = null;
+        SerieTableEntry lte = null;
 
-        if (obj instanceof LigaTabellenEintrag) {
-            lte = (LigaTabellenEintrag) obj;
+        if (obj instanceof SerieTableEntry) {
+            lte = (SerieTableEntry) obj;
 
             if ((lte.getAnzSpiele() == m_iAnzSpiele)
                 && (lte.getPosition() == m_iPosition)
                 && (lte.getPoints() == m_iPunkte)
                 && (lte.getTeamName().equals(m_sTeamName))
-                && (lte.getToreFuer() == m_iToreFuer)
-                && (lte.getToreGegen() == m_iToreGegen)) {
+                && (lte.getGoalsFor() == m_iToreFuer)
+                && (lte.getGoalsAgainst() == m_iToreGegen)) {
                 return true;
             }
         }

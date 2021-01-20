@@ -2,6 +2,7 @@ package module.series.statistics;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import core.model.enums.RatingsStatistics;
 import core.module.config.ModuleConfig;
 import core.util.HOLogger;
 import module.series.promotion.HttpDataSubmitter;
@@ -14,18 +15,17 @@ import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.security.KeyStore;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class DataDownloader {
 
     private final static String ALLTID_SERVER_BASEURL = "https://hattid.com/api";
-    private final static String POWERRATING_ENDPOINT = "/leagueUnit/%s/teamPowerRatings?page=0&pageSize=8&sortBy=power_rating&sortDirection=asc&statType=statRound&statRoundNumber=%s&season=%s";
+    private final static String POWERRATING_ENDPOINT  = "/leagueUnit/%s/teamPowerRatings?page=0&pageSize=8&sortBy=power_rating&sortDirection=asc&statType=statRound&statRoundNumber=%s&season=%s";
+    private final static String HATSTATS_ENDPOINT     = "/leagueUnit/%s/teamHatstats?page=0&pageSize=8&sortBy=hatstats&sortDirection=asc&statType=%s&season=%s";
 
     // Singleton.
-    private DataDownloader() {}
+    private DataDownloader() {
+    }
 
     private static DataDownloader instance = null;
 
@@ -37,14 +37,46 @@ public class DataDownloader {
         return instance;
     }
 
-    public List<Integer> fetchLeagueTeamPowerRatings(int iLeagueID, int iHTWeek, int iHTSeason) {
+
+    /**
+     * Fetch league statistics (power rating and HatStats) from Alltid website for display in League panel
+     */
+//TODO: add HatStats statisicts
+    public Map<Integer, Map<RatingsStatistics, Integer>> fetchLeagueStatistics(int iLeagueID, int iHTWeek, int iHTSeason){
+
+        Map<Integer, Map<RatingsStatistics, Integer>> resultsMap = new HashMap<>();
+
+        Map<Integer, Integer> powerRatings = fetchLeagueTeamPowerRatings(iLeagueID, iHTWeek, iHTSeason);
+        Map<Integer, Map<RatingsStatistics, Integer>> hatStatsMax = fetchLeagueTeamHatStats(iLeagueID, iHTSeason, "max");
+        Map<Integer, Map<RatingsStatistics, Integer>> hatStatsAvg = fetchLeagueTeamHatStats(iLeagueID, iHTSeason, "avg");
+
+        var teamIDs = powerRatings.keySet();
+
+        for(var teamID : teamIDs){
+            Map<RatingsStatistics, Integer> teamStats = new HashMap<>();
+            teamStats.put(RatingsStatistics.POWER_RATINGS, powerRatings.get(teamID));
+
+            hatStatsMax.get(teamID).forEach(
+                    (key, value) -> teamStats.merge(key, value, (v1, v2) -> v1));
+
+            hatStatsAvg.get(teamID).forEach(
+                    (key, value) -> teamStats.merge(key, value, (v1, v2) -> v1));
+
+            resultsMap.put(teamID, teamStats);
+        }
+
+
+        return resultsMap;
+}
+
+    public Map<Integer, Map<RatingsStatistics, Integer>> fetchLeagueTeamHatStats(int iLeagueID, int iHTSeason, String dataType) {
+
+        Map<Integer, Map<RatingsStatistics, Integer>> result = new HashMap<>();
+
         try {
             final OkHttpClient client = initializeHttpsClient();
 
-            String url = ALLTID_SERVER_BASEURL + String.format(POWERRATING_ENDPOINT, iLeagueID, iHTWeek, iHTSeason);
-
-
-            System.out.println(url);
+            String url = ALLTID_SERVER_BASEURL + String.format(HATSTATS_ENDPOINT, iLeagueID, dataType, iHTSeason);
 
             Request request = new Request.Builder()
                     .url(url)
@@ -53,20 +85,35 @@ public class DataDownloader {
 
             Response response = client.newCall(request).execute();
 
-            List<Integer> supportedLeagues = new ArrayList<>();
 
             if (response.isSuccessful()) {
                 String bodyAsString = response.body().string();
                 Gson gson = new Gson();
                 JsonObject output = gson.fromJson(bodyAsString, JsonObject.class);
 
-                System.out.println(output);
-
                 response.close();
-                return supportedLeagues;
+
+                for (var entity : output.getAsJsonArray("entities")){
+                    Map<RatingsStatistics, Integer> teamStat = new HashMap<>();
+                    int iTeamID = ((JsonObject) entity).get("teamId").getAsInt();
+
+                    int rating = ((JsonObject) entity).get("hatStats").getAsInt();
+                    teamStat.put(RatingsStatistics.getCode("total", dataType), rating);
+
+                    rating = ((JsonObject) entity).get("midfield").getAsInt();
+                    teamStat.put(RatingsStatistics.getCode("mid", dataType), rating*3);
+
+                    rating = ((JsonObject) entity).get("defense").getAsInt();
+                    teamStat.put(RatingsStatistics.getCode("def", dataType), rating);
+
+                    rating = ((JsonObject) entity).get("attack").getAsInt();
+                    teamStat.put(RatingsStatistics.getCode("off", dataType), rating);
+
+                    result.put(iTeamID, teamStat);
+                }
+
             }
 
-            response.close();
         } catch (Exception e) {
             HOLogger.instance().error(
                     HttpDataSubmitter.class,
@@ -74,7 +121,53 @@ public class DataDownloader {
             );
         }
 
-        return Collections.emptyList();
+
+        return result;
+    }
+
+
+    public Map<Integer, Integer> fetchLeagueTeamPowerRatings(int iLeagueID, int iHTWeek, int iHTSeason) {
+
+        Map<Integer, Integer> result = new HashMap<>();
+
+        try {
+            final OkHttpClient client = initializeHttpsClient();
+
+            String url = ALLTID_SERVER_BASEURL + String.format(POWERRATING_ENDPOINT, iLeagueID, iHTWeek, iHTSeason);
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .addHeader("Accept", "application/json")
+                    .build();
+
+            Response response = client.newCall(request).execute();
+
+
+            if (response.isSuccessful()) {
+                String bodyAsString = response.body().string();
+                Gson gson = new Gson();
+                JsonObject output = gson.fromJson(bodyAsString, JsonObject.class);
+
+                response.close();
+
+                for (var entity : output.getAsJsonArray("entities")){
+
+                    int iTeamID = ((JsonObject)((JsonObject) entity).get("teamSortingKey")).get("teamId").getAsInt();
+                    int iPowerRating = ((JsonObject) entity).get("powerRating").getAsInt();
+                    result.put(iTeamID, iPowerRating);
+                }
+
+            }
+
+        } catch (Exception e) {
+            HOLogger.instance().error(
+                    HttpDataSubmitter.class,
+                    "Error fetching data from Alltid for league team power ratings: " + e.getMessage()
+            );
+        }
+
+
+        return result;
     }
 
     private OkHttpClient initializeHttpsClient() throws Exception {

@@ -3,7 +3,7 @@ package module.series;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.series.LigaTabellenEintrag;
+import core.model.series.SerieTableEntry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -109,16 +109,16 @@ public class FormLabel extends JLabel implements IHOTableEntry {
 
     private void selectResultColour(Graphics2D g2, byte cur) {
         switch (cur) {
-            case LigaTabellenEintrag.H_SIEG:
-            case LigaTabellenEintrag.A_SIEG:
+            case SerieTableEntry.H_SIEG:
+            case SerieTableEntry.A_SIEG:
                 g2.setColor(WIN_COLOR);
                 break;
-            case LigaTabellenEintrag.H_UN:
-            case LigaTabellenEintrag.A_UN:
+            case SerieTableEntry.H_UN:
+            case SerieTableEntry.A_UN:
                 g2.setColor(DRAW_COLOR);
                 break;
-            case LigaTabellenEintrag.H_NIED:
-            case LigaTabellenEintrag.A_NIED:
+            case SerieTableEntry.H_NIED:
+            case SerieTableEntry.A_NIED:
                 g2.setColor(DEFEAT_COLOR);
                 break;
             default:

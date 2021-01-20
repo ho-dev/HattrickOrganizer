@@ -1,4 +1,3 @@
-// %155607735:de.hattrickorganizer.gui.league%
 package module.series;
 
 import core.db.DBManager;
@@ -8,13 +7,15 @@ import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
+import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.enums.RatingsStatistics;
 import module.series.promotion.*;
-
+import module.series.statistics.DataDownloader;
 import javax.swing.*;
-import javax.swing.event.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.util.Map;
+
 
 /**
  * Panel displaying the league table, as well as the series history graph.
@@ -27,13 +28,15 @@ public class SeriesPanel extends LazyImagePanel {
 	private MatchDayPanel[] matchDayPanels;
 	private SeriesHistoryPanel seriesHistoryPanel;
 	private Model model;
-
+	private Map<Integer, Map<RatingsStatistics,Integer>> leagueStatistics;
 	private PromotionInfoPanel promotionInfoPanel;
 	private LeaguePromotionHandler promotionHandler;
+	private HOModel homodel;
 
 	@Override
 	protected void initialize() {
 		initPromotionHandler();
+		initLeagueStatsData();
 		initComponents();
 		fillSaisonCB();
 		addListeners();
@@ -43,6 +46,25 @@ public class SeriesPanel extends LazyImagePanel {
 	private void initPromotionHandler() {
 		promotionHandler = new LeaguePromotionHandler();
 		promotionInfoPanel = new PromotionInfoPanel(promotionHandler);
+	}
+
+	private void initLeagueStatsData() {
+		homodel = HOVerwaltung.instance().getModel();
+
+		int iSeason = homodel.getBasics().getSeason();
+		int iMatchPlayedThisSeason = homodel.getLeague().getSpieltag();
+		int iSerieID = HOVerwaltung.instance().getModel().getXtraDaten().getLeagueLevelUnitID();
+		int iMatchRound;
+
+		if (iMatchPlayedThisSeason == 0) {
+			iSeason --;
+			iMatchRound = 14;
+		}
+		else{
+			iMatchRound = iMatchPlayedThisSeason;
+		}
+
+		leagueStatistics = DataDownloader.instance().fetchLeagueStatistics(iSerieID, iMatchRound, iSeason);
 	}
 
 	@Override
@@ -71,28 +93,18 @@ public class SeriesPanel extends LazyImagePanel {
 	}
 
 	private void addListeners() {
-		this.deleteButton.addActionListener(new ActionListener() {
+		this.deleteButton.addActionListener(e -> delete());
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				delete();
+		this.seasonComboBox.addActionListener(e -> {
+			// Determine current match schedule
+			if (seasonComboBox.getSelectedItem() instanceof Spielplan) {
+				model.setCurrentSeries((Spielplan) seasonComboBox.getSelectedItem());
+			} else {
+				model.setCurrentSeries(null);
 			}
-		});
 
-		this.seasonComboBox.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// Aktuellen Spielplan bestimmen
-				if (seasonComboBox.getSelectedItem() instanceof Spielplan) {
-					model.setCurrentSeries((Spielplan) seasonComboBox.getSelectedItem());
-				} else {
-					model.setCurrentSeries(null);
-				}
-
-				// Alle Panels informieren
-				informSaisonChange();
-			}
+			// Inform all panels
+			informSaisonChange();
 		});
 
 		this.seriesTable.addListSelectionListener(e -> {
@@ -115,19 +127,19 @@ public class SeriesPanel extends LazyImagePanel {
 	}
 
 	private void fillSaisonCB() {
-		// Die Spielpläne als Objekte mit den Paarungen holen
+		// Get the match schedules as objects with the pairings
 		final Spielplan[] spielplaene = DBManager.instance().getAllSpielplaene(true);
 		final Spielplan markierterPlan = (Spielplan) seasonComboBox.getSelectedItem();
 
-		// Alle alten Saisons entfernen
+		// Remove all old seasons
 		seasonComboBox.removeAllItems();
 
-		// Neue füllen
+		// Fill new
 		for (int i = 0; (spielplaene != null) && (i < spielplaene.length); i++) {
 			seasonComboBox.addItem(spielplaene[i]);
 		}
 
-		// Alte markierung wieder herstellen
+		//  Restore old marking
 		seasonComboBox.setSelectedItem(markierterPlan);
 
 		if ((seasonComboBox.getSelectedIndex() < 0) && (seasonComboBox.getItemCount() > 0)) {
@@ -153,6 +165,8 @@ public class SeriesPanel extends LazyImagePanel {
 
 	private void initComponents() {
 		this.model = new Model();
+		model.setLeagueStatistics(leagueStatistics);
+
 		setLayout(new BorderLayout());
 
 		// ComboBox für Saisonauswahl

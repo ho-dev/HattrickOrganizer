@@ -71,6 +71,7 @@ public class MyConnector {
 	private final static String VERSION_YOUTHPLAYERLIST = "1.1";
 	private final static String VERSION_WORLDDETAILS = "1.8";
 	private final static String VERSION_TOURNAMENTDETAILS = "1.0";
+	private final static String VERSION_LEAGUE_DETAILS = "1.5";
 	private final static String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";
 	private final static String CONSUMER_SECRET = "2/Td)Cprd/?q`nAbkAL//F+eGD@KnnCc>)dQgtP,p+p";
 	private ProxySettings proxySettings;
@@ -215,7 +216,7 @@ public class MyConnector {
 	 * lädt die Tabelle
 	 */
 	public String getLeagueDetails(String leagueUnitId) {
-		String url = htUrl + "?file=leaguedetails" + "&leagueLevelUnitID=" + leagueUnitId;
+		String url = htUrl + "?file=leaguedetails&version=" + VERSION_LEAGUE_DETAILS + "&leagueLevelUnitID=" + leagueUnitId;
 		return getCHPPWebFile(url);
 	}
 
