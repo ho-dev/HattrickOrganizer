@@ -134,4 +134,23 @@ public abstract class AbstractTable {
 		ResultSet rs = this.adapter.executeQuery(sql);
 		return rs.next();
 	}
+
+	public void tryAddColumn(String columnName, String columnType) throws SQLException {
+		if ( ! columnExistsInTable(columnName)) {
+			String sql = "ALTER TABLE " + getTableName() + " ADD COLUMN " + columnName + " " + columnType;
+			adapter.executeQuery(sql);
+		}
+	}
+
+	private boolean columnExistsInTable(String columnName) throws SQLException {
+		String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = '"
+				+ getTableName().toUpperCase()
+				+ "' AND COLUMN_NAME = '"
+				+ columnName.toUpperCase()
+				+ "'";
+		ResultSet rs = adapter.executeQuery(sql);
+		if ( rs != null ) return rs.next();
+		return false;
+	}
+
 }

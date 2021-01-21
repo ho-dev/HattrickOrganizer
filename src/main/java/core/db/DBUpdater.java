@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
@@ -167,24 +168,38 @@ final class DBUpdater {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN RENAME TO ECONOMY");
 		}
 
-		if (!columnExistsInTable("HomeFormation", MatchDetailsTable.TABLENAME)) {
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeFormation VARCHAR(5) ");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN AwayFormation VARCHAR(5) ");
-		}
 
-		if ( !columnExistsInTable("StartSetPieces", MatchLineupPlayerTable.TABLENAME)){
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamName VARCHAR (127)");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN YouthTeamID INTEGER");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE AUFSTELLUNG ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUPPLAYER ADD COLUMN StartSetPieces BOOLEAN");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUPPLAYER ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUP ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUPTEAM ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHSUBSTITUTION ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN SourceSystem INTEGER DEFAULT 0 Not Null ");
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN MatchDate TIMESTAMP");
-		}
+		AbstractTable matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
+		matchDetailsTable.tryAddColumn("HomeFormation","VARCHAR (5)");
+		matchDetailsTable.tryAddColumn("AwayFormation","VARCHAR (5)");
+		matchDetailsTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
+
+
+		AbstractTable basicsTable = dbManager.getTable(BasicsTable.TABLENAME);
+		basicsTable.tryAddColumn("YouthTeamName","VARCHAR (127)");
+		basicsTable.tryAddColumn("YouthTeamID","INTEGER");
+
+		AbstractTable aufstellungTable = dbManager.getTable(AufstellungTable.TABLENAME);
+		aufstellungTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
+
+		AbstractTable matchLineupPlayerTable = dbManager.getTable(MatchLineupPlayerTable.TABLENAME);
+		matchLineupPlayerTable.tryAddColumn("StartSetPieces", "BOOLEAN");
+		matchLineupPlayerTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
+
+		AbstractTable matchLineupTable = dbManager.getTable(MatchLineupTable.TABLENAME);
+		matchLineupTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
+
+		AbstractTable matchLineupTeamTable = dbManager.getTable(MatchLineupTeamTable.TABLENAME);
+		matchLineupTeamTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
+
+		AbstractTable matchSubstitutionTable = dbManager.getTable(MatchSubstitutionTable.TABLENAME);
+		matchSubstitutionTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
+
+		AbstractTable matchHighlightsTable = dbManager.getTable(MatchHighlightsTable.TABLENAME);
+		matchHighlightsTable.tryAddColumn("MatchDate", "TIMESTAMP");
+		matchHighlightsTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
+
+
 
 		if (!tableExists(YouthTrainingTable.TABLENAME)) {
 			dbManager.getTable(YouthTrainingTable.TABLENAME).createTable();
