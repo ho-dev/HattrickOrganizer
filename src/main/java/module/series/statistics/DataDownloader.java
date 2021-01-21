@@ -53,17 +53,26 @@ public class DataDownloader {
         Map<Integer, Map<RatingsStatistics, Integer>> hatStatsMax = fetchLeagueTeamHatStats(iLeagueID, iHTSeason, "max");
         Map<Integer, Map<RatingsStatistics, Integer>> hatStatsAvg = fetchLeagueTeamHatStats(iLeagueID, iHTSeason, "avg");
 
-        var teamIDs = powerRatings.keySet();
+        Set<Integer> teamIDs = new HashSet(powerRatings.keySet());
+        teamIDs.addAll(hatStatsMax.keySet());
+        teamIDs.addAll(hatStatsAvg.keySet());
 
-        for(var teamID : teamIDs){
+        for(Integer teamID : teamIDs){
             Map<RatingsStatistics, Integer> teamStats = new HashMap<>();
-            teamStats.put(RatingsStatistics.POWER_RATINGS, powerRatings.get(teamID));
 
-            hatStatsMax.get(teamID).forEach(
-                    (key, value) -> teamStats.merge(key, value, (v1, v2) -> v1));
+            if (powerRatings.containsKey(teamID)) {
+                teamStats.put(RatingsStatistics.POWER_RATINGS, powerRatings.get(teamID));
+            }
 
-            hatStatsAvg.get(teamID).forEach(
-                    (key, value) -> teamStats.merge(key, value, (v1, v2) -> v1));
+            if (hatStatsMax.containsKey(teamID)) {
+                hatStatsMax.get(teamID).forEach(
+                        (key, value) -> teamStats.merge(key, value, (v1, v2) -> v1));
+            }
+
+            if (hatStatsAvg.containsKey(teamID)) {
+                hatStatsAvg.get(teamID).forEach(
+                        (key, value) -> teamStats.merge(key, value, (v1, v2) -> v1));
+            }
 
             resultsMap.put(teamID, teamStats);
         }

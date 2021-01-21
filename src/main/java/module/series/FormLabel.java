@@ -22,7 +22,7 @@ public class FormLabel extends JLabel implements IHOTableEntry {
     private static final Color DEFEAT_COLOR = ThemeManager.getColor(HOColorName.FORM_STREAK_DEFEAT);
     private static final Color UNKNOWN_COLOR = ThemeManager.getColor(HOColorName.FORM_STREAK_UNKNOWN);
 
-    private static final int MAX_NUM_FORM_STREAK_ENTRIES = 9;
+    private static final int MAX_NUM_FORM_STREAK_ENTRIES = 5;
 
     private final byte[] form;
     private Color bgColor;
