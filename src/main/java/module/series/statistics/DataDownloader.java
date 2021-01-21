@@ -41,12 +41,15 @@ public class DataDownloader {
     /**
      * Fetch league statistics (power rating and HatStats) from Alltid website for display in League panel
      */
-//TODO: add HatStats statisicts
+
     public Map<Integer, Map<RatingsStatistics, Integer>> fetchLeagueStatistics(int iLeagueID, int iHTWeek, int iHTSeason){
 
         Map<Integer, Map<RatingsStatistics, Integer>> resultsMap = new HashMap<>();
 
         Map<Integer, Integer> powerRatings = fetchLeagueTeamPowerRatings(iLeagueID, iHTWeek, iHTSeason);
+        if (powerRatings == null) {
+            return resultsMap;
+        }
         Map<Integer, Map<RatingsStatistics, Integer>> hatStatsMax = fetchLeagueTeamHatStats(iLeagueID, iHTSeason, "max");
         Map<Integer, Map<RatingsStatistics, Integer>> hatStatsAvg = fetchLeagueTeamHatStats(iLeagueID, iHTSeason, "avg");
 
@@ -117,8 +120,9 @@ public class DataDownloader {
         } catch (Exception e) {
             HOLogger.instance().error(
                     HttpDataSubmitter.class,
-                    "Error fetching data from Alltid for league team power ratings: " + e.getMessage()
+                    "Error fetching data from Alltid for league team hatstats: " + e.getMessage()
             );
+            return null;
         }
 
 
@@ -164,6 +168,7 @@ public class DataDownloader {
                     HttpDataSubmitter.class,
                     "Error fetching data from Alltid for league team power ratings: " + e.getMessage()
             );
+            return null;
         }
 
 

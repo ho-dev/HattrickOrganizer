@@ -297,17 +297,25 @@ class SeriesTablePanel extends ImagePanel {
 
 
 	private void populateSerieTableStatistics(SerieTableEntry entry, int iRow) {
+
 		var leagueStatistics = model.getLeagueStatistics();
 		var leagueStatisticsTeam = leagueStatistics.get(entry.getTeamId());
 
-		String statType = (String) m_jcbStatsAggType.getSelectedItem();
-
-		((ColorLabelEntry) tableValues[iRow][11]).setText(leagueStatisticsTeam.get(RatingsStatistics.POWER_RATINGS).toString());
-		((ColorLabelEntry) tableValues[iRow][12]).setText(leagueStatisticsTeam.get(RatingsStatistics.getCode("total", statType)).toString());
-		((ColorLabelEntry) tableValues[iRow][13]).setText(leagueStatisticsTeam.get(RatingsStatistics.getCode("def", statType)).toString());
-		((ColorLabelEntry) tableValues[iRow][14]).setText(leagueStatisticsTeam.get(RatingsStatistics.getCode("mid", statType)).toString());
-		((ColorLabelEntry) tableValues[iRow][15]).setText(leagueStatisticsTeam.get(RatingsStatistics.getCode("off", statType)).toString());
-
+		if (leagueStatisticsTeam != null) {
+			String statType = (String) m_jcbStatsAggType.getSelectedItem();
+			((ColorLabelEntry) tableValues[iRow][11]).setText(leagueStatisticsTeam.get(RatingsStatistics.POWER_RATINGS).toString());
+			((ColorLabelEntry) tableValues[iRow][12]).setText(leagueStatisticsTeam.get(RatingsStatistics.getCode("total", statType)).toString());
+			((ColorLabelEntry) tableValues[iRow][13]).setText(leagueStatisticsTeam.get(RatingsStatistics.getCode("def", statType)).toString());
+			((ColorLabelEntry) tableValues[iRow][14]).setText(leagueStatisticsTeam.get(RatingsStatistics.getCode("mid", statType)).toString());
+			((ColorLabelEntry) tableValues[iRow][15]).setText(leagueStatisticsTeam.get(RatingsStatistics.getCode("off", statType)).toString());
+		}
+		else{
+			((ColorLabelEntry) tableValues[iRow][11]).setText("");
+			((ColorLabelEntry) tableValues[iRow][12]).setText("");
+			((ColorLabelEntry) tableValues[iRow][13]).setText("");
+			((ColorLabelEntry) tableValues[iRow][14]).setText("");
+			((ColorLabelEntry) tableValues[iRow][15]).setText("");
+		}
 	}
 
 	private void populateSerieTableStatsOnly() {
