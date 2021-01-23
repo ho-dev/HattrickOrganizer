@@ -1,6 +1,5 @@
 package module.lineup.ratings;
 
-import com.github.weisj.darklaf.icons.DerivableImageIcon;
 import core.model.HOVerwaltung;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
@@ -55,14 +54,6 @@ public final class MinuteTogglerPanel extends JPanel {
 		constraints.weighty = 1;
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-
-		if (whiteGreenClock instanceof DerivableImageIcon) {
-			// If darklaf, retrieve image, and use as icon.
-			avg90Clock.setIcon(new ImageIcon(((DerivableImageIcon)whiteGreenClock).getImage()));
-			avg120Clock.setIcon(new ImageIcon(((DerivableImageIcon)whiteRedClock).getImage()));
-			ratingsGraph.setIcon(new ImageIcon(((DerivableImageIcon)ratingsGraphIcon).getImage()));
-		}
-
 
 		avg90Clock.addMouseListener(new MouseAdapter() {
 			@Override
