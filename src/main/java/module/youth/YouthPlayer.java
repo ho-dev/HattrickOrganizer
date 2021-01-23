@@ -442,6 +442,31 @@ public class YouthPlayer {
         }
     }
 
+    /**
+     * Skill start value is incremented by value adjustment. Change is propagated through all existing
+     * training development entries.
+     *
+     * @param skillID skill id
+     * @param adjustment change of the start value
+     */
+    public void adjustSkill(Skills.HTSkillID skillID, double adjustment) {
+        if (trainingDevelopment != null && trainingDevelopment.size() > 0) {
+            var youthteamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
+            // start skills are examined from current skill infos
+            var currentSkill = getSkillInfo(skillID);
+            currentSkill.startValue += adjustment;
+            if ( currentSkill.currentValue < currentSkill.startValue ) {
+                currentSkill.currentValue=currentSkill.startValue;
+            }
+            var skills = getStartSkills();
+            for (var trainingEntry : trainingDevelopment.values()) {
+                var constraints = trainingEntry.getSkills(); // constraints (levels) are not changed
+                // this calculates all skill Ids, not only the requested one (this is a kind of overhead, i accept)
+                skills = trainingEntry.calcSkills(skills, constraints, trainingEntry.getTraining().getTeam(youthteamId));
+            }
+        }
+    }
+
     public static class SkillInfo {
 
         /**

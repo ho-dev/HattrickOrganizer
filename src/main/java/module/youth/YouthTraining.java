@@ -134,20 +134,20 @@ public class YouthTraining {
         ret.setMax(value.getMax());
         ret.setCurrentLevel(value.getCurrentLevel());
         ret.setMaxReached(value.isMaxReached());
-        ret.setStartValue(value.getStartValue());
         if (value.isMaxReached()){
             ret.setCurrentValue(value.getCurrentValue());
         }
         else {
             var newVal = value.getCurrentValue() + calcSkillIncrement(value, player, team);
             ret.setCurrentValue(newVal);
-            if (value.getStartValue()==0){
-                var adjustment = ret.getCurrentValue() - newVal;
-                if ( adjustment > 0) {
-                    value.setStartValue(value.getStartValue() + adjustment);
-                }
+            var adjustment = ret.getCurrentValue() - newVal;
+            if (adjustment > 0) {
+                player.adjustSkill(value.getSkillID(), adjustment);
             }
         }
+        // Current value needs to be set before start value could be changed
+        // (adjustment would reset start value otherwise)
+        ret.setStartValue(value.getStartValue());
         return ret;
     }
 

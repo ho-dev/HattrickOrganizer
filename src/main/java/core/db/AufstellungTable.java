@@ -18,14 +18,16 @@ final class AufstellungTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[7];
-		columns[0] = new ColumnDescriptor("HRF_ID", Types.INTEGER, false);
-		columns[1] = new ColumnDescriptor("Kicker", Types.INTEGER, false);
-		columns[2] = new ColumnDescriptor("Kapitaen", Types.INTEGER, false);
-		columns[3] = new ColumnDescriptor("Attitude", Types.INTEGER, false);
-		columns[4] = new ColumnDescriptor("Tactic", Types.INTEGER, false);
-		columns[5] = new ColumnDescriptor("Aufstellungsname", Types.VARCHAR, false, 256);
-		columns[6] = new ColumnDescriptor("StyleOfPlay", Types.INTEGER, false);
+		columns = new ColumnDescriptor[]{
+				new ColumnDescriptor("HRF_ID", Types.INTEGER, false),
+				new ColumnDescriptor("Kicker", Types.INTEGER, false),
+				new ColumnDescriptor("Kapitaen", Types.INTEGER, false),
+				new ColumnDescriptor("Attitude", Types.INTEGER, false),
+				new ColumnDescriptor("Tactic", Types.INTEGER, false),
+				new ColumnDescriptor("Aufstellungsname", Types.VARCHAR, false, 256),
+				new ColumnDescriptor("StyleOfPlay", Types.INTEGER, false),
+				new ColumnDescriptor("SourceSystem", Types.INTEGER, false)
+		};
 	}
 
 	/**

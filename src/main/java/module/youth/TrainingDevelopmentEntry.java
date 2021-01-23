@@ -23,7 +23,7 @@ public class TrainingDevelopmentEntry {
         this.skills = startSkills;
     }
 
-    public void setSkillConstraints(Map<Integer, YouthPlayer.SkillInfo> skillConstraints) {
+    public void setSkillConstraints(YouthPlayer player, Map<Integer, YouthPlayer.SkillInfo> skillConstraints) {
         if (skillConstraints != null) {
             for (var constraint : skillConstraints.entrySet()) {
                 var skill = skills.get(constraint.getKey());
@@ -33,21 +33,23 @@ public class TrainingDevelopmentEntry {
                 if ( skill.getStartValue() == 0){
                     var adjustment = skill.getCurrentValue() - oldVal;
                     if ( adjustment > 0 ){
-                        skill.setStartValue(adjustment);
+                        player.adjustSkill(skill.getSkillID(), adjustment);
                     }
                 }
             }
         }
     }
 
-    public Map<Integer, YouthPlayer.SkillInfo> calcSkills(Map<Integer, YouthPlayer.SkillInfo> startSkills, Map<Integer, YouthPlayer.SkillInfo> skillConstraints, MatchLineupTeam team) {
+    public Map<Integer, YouthPlayer.SkillInfo> calcSkills(Map<Integer, YouthPlayer.SkillInfo> startSkills,
+                                                          Map<Integer, YouthPlayer.SkillInfo> skillConstraints,
+                                                          MatchLineupTeam team) {
         if ( this.skills == null){
             this.skills = new HashMap<>();
         }
         for (var skill : startSkills.values()) {
             this.skills.put(skill.getSkillID().getValue(), training.calcSkill(skill, player, team));
         }
-        setSkillConstraints(skillConstraints);
+        setSkillConstraints(player, skillConstraints);
         return this.skills;
     }
 
