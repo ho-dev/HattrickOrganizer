@@ -10,6 +10,9 @@ import java.text.SimpleDateFormat;
 
 public class YouthPlayerDetailsTableModel extends HOTableModel {
 
+    // TODO add feature to edit players start skills
+    // TODO examine rating and compare to hattrick's values to help adjust start skills
+
     private YouthPlayer youthPlayer;
 
     public YouthPlayerDetailsTableModel(int id) {

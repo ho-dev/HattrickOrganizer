@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 public class YouthTrainingViewTableModel extends HOTableModel {
 
+    // TODO add training download when chpp api to trainings page is available
+
     private List<YouthTraining> youthTrainings;
 
     public YouthTrainingViewTableModel(int id) {

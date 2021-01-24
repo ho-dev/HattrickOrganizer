@@ -436,11 +436,20 @@ public class DBManager {
 	 * store youth players
 	 *
 	 * @param hrfId  the hrf id
-	 * @param player the player
-	 * @param date   the date
+	 * @param youthPlayers the list of youth players
 	 */
-	public void storeYouthPlayers(int hrfId, List<YouthPlayer> player, Timestamp date) {
-		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).storeYouthPlayers(hrfId,player, date);
+	public void storeYouthPlayers(int hrfId, List<YouthPlayer> youthPlayers) {
+		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).storeYouthPlayers(hrfId,youthPlayers);
+	}
+
+	/**
+	 * store youth players
+	 *
+	 * @param hrfId  the hrf id
+	 * @param youthPlayer the youth player
+	 */
+	public void storeYouthPlayer(int hrfId, YouthPlayer youthPlayer) {
+		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).storeYouthPlayer(hrfId,youthPlayer);
 	}
 
 	/**

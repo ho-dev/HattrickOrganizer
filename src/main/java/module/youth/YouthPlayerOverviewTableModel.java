@@ -46,7 +46,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                         return new ColorLabelEntry("" + player.getCanBePromotedInAtDate(new Date().getTime()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }
                 },
-                // TODO minWidth does not work
+                // TODO column width does not work
                 new YouthPlayerColumn(4, "ls.youth.player.Keeper", 200) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
