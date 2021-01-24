@@ -25,19 +25,18 @@ public class SkillInfoColumn extends JComponent implements IHOTableEntry {
 
     public SkillInfoColumn(YouthPlayer.SkillInfo info) {
         this.skillInfo = info;
-        this.setToolTipText(createToolTipText(info));
-        //paintImmediately(getBounds());
+        this.updateComponent();
     }
 
-    private String createToolTipText(YouthPlayer.SkillInfo info) {
+    private String createToolTipText() {
         var hov = HOVerwaltung.instance();
-        return "<html>" + info.getSkillID().toString() + "<br>" +
-                hov.getLanguageString("ls.youth.skill.start") + ": " + info.getStartValue() + "<br>" +
-                hov.getLanguageString("ls.youth.skill.current") + ": " + info.getCurrentValue() + "<br>" +
-                hov.getLanguageString("ls.youth.skill.max") + ": " + info.getMax() + "<br>" +
-                hov.getLanguageString("ls.youth.skill.maxreached") + ": " + hov.getLanguageString("ls.youth." + info.isMaxReached()) + "<br>" +
-                hov.getLanguageString("ls.youth.skill.startlevel") + ": " + info.getStartLevel() + "<br>" +
-                hov.getLanguageString("ls.youth.skill.currentlevel") + ": " + info.getCurrentLevel() + "</html>";
+        return "<html>" + this.skillInfo.getSkillID().toString() + "<br>" +
+                String.format(hov.getLanguageString("ls.youth.skill.start") + ": %.2f<br>",this.skillInfo.getStartValue() ) +
+                String.format(hov.getLanguageString("ls.youth.skill.current") + ": %.2f<br>", this.skillInfo.getCurrentValue() ) +
+                hov.getLanguageString("ls.youth.skill.max") + ": " + this.skillInfo.getMax() + "<br>" +
+                hov.getLanguageString("ls.youth.skill.maxreached") + ": " + hov.getLanguageString("ls.youth." + this.skillInfo.isMaxReached()) + "<br>" +
+                hov.getLanguageString("ls.youth.skill.startlevel") + ": " + this.skillInfo.getStartLevel() + "<br>" +
+                hov.getLanguageString("ls.youth.skill.currentlevel") + ": " + this.skillInfo.getCurrentLevel() + "</html>";
     }
 
     @Override
@@ -71,9 +70,9 @@ public class SkillInfoColumn extends JComponent implements IHOTableEntry {
 
     @Override
     public void updateComponent() {
-
+        // TODO tool tip is not updated when training is calculated
+        this.setToolTipText(createToolTipText());
     }
-
 
     /* draw a color bar */
     @Override

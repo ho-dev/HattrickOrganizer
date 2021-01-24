@@ -16,6 +16,19 @@ layout: page
 ## Highlights
   - complete makeover of the statistics module (#788)
   - improving consistency of dark themes
+- preview of new module Youth academy (#367)
+    * known restrictions (TODOs)
+        * Youth Player Overview:
+            * player name column should show specialty icon
+            * table columns are not sortable nor can width be adjusted
+            * tool tip does not update when training is calculated
+        * Youth Player's Details:
+            * add feature to edit player's start skills
+            * examine rating and compare to hattrick's values to help adjust start skills
+            * table columns todos as above
+        * Youth Training:
+            * add training download when chpp api to training's page is available
+            * include match type icon in first column
 
 
 

@@ -19,7 +19,9 @@ public class YouthPlayerColumn extends UserColumn {
     public YouthPlayerColumn(int id,String name, String tooltip, int minWidth){
         super(id,name,tooltip);
 
-        // TODO does not work
+        // TODO tables can not be sorted
+
+        // TODO setting column width does not work
         this.minWidth = minWidth;
         preferredWidth = minWidth;
 
