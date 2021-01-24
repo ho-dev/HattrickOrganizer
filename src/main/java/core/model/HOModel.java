@@ -569,7 +569,7 @@ public class HOModel {
         //Player
         DBManager.instance().saveSpieler(m_iID, getCurrentPlayers(), getBasics().getDatum());
         // Youth Player
-        DBManager.instance().storeYouthPlayers(m_iID, getCurrentYouthPlayers(), getBasics().getDatum());
+        DBManager.instance().storeYouthPlayers(m_iID, getCurrentYouthPlayers());
         //Staff
         DBManager.instance().saveStaff(m_iID, getStaff());
     }
@@ -629,7 +629,7 @@ public class HOModel {
     public List<YouthTraining> getYouthTrainingsAfter(Timestamp date) {
         return getYouthTrainings().stream()
                 .filter(i->i.getMatchDate().after(date))
-                .sorted((i1,i2)->i1.getMatchDate().compareTo(i2.getMatchDate()))
+                .sorted(Comparator.comparing(YouthTraining::getMatchDate))
                 .collect(Collectors.toList());
     }
 }

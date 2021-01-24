@@ -25,15 +25,16 @@ public class TrainingDevelopmentEntry {
 
     public void setSkillConstraints(YouthPlayer player, Map<Integer, YouthPlayer.SkillInfo> skillConstraints) {
         if (skillConstraints != null) {
-            for (var constraint : skillConstraints.entrySet()) {
-                var skill = skills.get(constraint.getKey());
+            for (var constraint : skillConstraints.values()) {
+                var skill = skills.get(constraint.getSkillID().getValue());
                 var oldVal = skill.getCurrentValue();
-                skill.setCurrentLevel(constraint.getValue().getCurrentLevel());
-                skill.setMax(constraint.getValue().getMax());
+                skill.setCurrentLevel(constraint.getCurrentLevel());
+                skill.setMax(constraint.getMax());
+                skill.setMaxReached(constraint.isMaxReached());
                 if ( skill.getStartValue() == 0){
                     var adjustment = skill.getCurrentValue() - oldVal;
                     if ( adjustment > 0 ){
-                        player.adjustSkill(skill.getSkillID(), adjustment);
+                        skill.setStartValue(player.adjustSkill(skill.getSkillID(), adjustment));
                     }
                 }
             }

@@ -395,6 +395,7 @@ public class YouthPlayer {
                 }
             }
             this.currentSkills = skills;
+            DBManager.instance().storeYouthPlayer(this.hrfid, this);
         }
         return trainingDevelopment;
     }
@@ -449,7 +450,7 @@ public class YouthPlayer {
      * @param skillID skill id
      * @param adjustment change of the start value
      */
-    public void adjustSkill(Skills.HTSkillID skillID, double adjustment) {
+    public double adjustSkill(Skills.HTSkillID skillID, double adjustment) {
         if (trainingDevelopment != null && trainingDevelopment.size() > 0) {
             var youthteamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
             // start skills are examined from current skill infos
@@ -464,7 +465,9 @@ public class YouthPlayer {
                 // this calculates all skill Ids, not only the requested one (this is a kind of overhead, i accept)
                 skills = trainingEntry.calcSkills(skills, constraints, trainingEntry.getTraining().getTeam(youthteamId));
             }
+            return currentSkill.startValue;
         }
+        return 0;
     }
 
     public static class SkillInfo {
@@ -473,26 +476,33 @@ public class YouthPlayer {
          * Skill Id
          */
         private Skills.HTSkillID skillID;
+
         /**
          * Value at scouting date, edited by the user (user's estimation)
          */
         private double startValue;
+
         /**
          * Calculated value based on trainings and edited start value
          */
         private double currentValue;
+
         /**
          * Skill level at the current download
          */
         private Integer currentLevel;
+
         /**
          * Skill level at the scouting date
          */
         private Integer startLevel;
+
         /**
          * Maximum reachable skill level (potential)
+         * null as long as not known
          */
         private Integer max;
+
         /**
          *  Indicates if the skill cant be trained anymore (false if current or max is not available).
          */
@@ -752,7 +762,7 @@ public class YouthPlayer {
         return null;
     }
 
-    private boolean getBoolean(Properties p, String key, boolean defautValue) {
+    private boolean getBoolean(Properties p, String key, boolean defaultValue) {
         try {
             var s = p.getProperty(key);
             if (s != null && s.length() > 0) return Boolean.parseBoolean(s);
@@ -760,7 +770,7 @@ public class YouthPlayer {
         catch(Exception e){
             HOLogger.instance().warning(getClass(), "getBoolean: " + e.toString());
         }
-        return defautValue;
+        return defaultValue;
     }
 
     private int getInt(Properties p, String key, int defaultValue) {

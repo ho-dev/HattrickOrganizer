@@ -77,7 +77,7 @@ public class YouthPlayerTable  extends AbstractTable {
     /**
      * save youth players
      */
-    void storeYouthPlayers(int hrfId, List<YouthPlayer> players, Timestamp date) {
+    void storeYouthPlayers(int hrfId, List<YouthPlayer> players) {
 
         final String[] awhereS = { "HRF_ID" };
         final String[] awhereV = { "" + hrfId };
@@ -87,12 +87,12 @@ public class YouthPlayerTable  extends AbstractTable {
             delete(awhereS, awhereV);
 
             for ( YouthPlayer p: players){
-                storeYouthPlayer(hrfId, p, date);
+                storeYouthPlayer(hrfId, p);
             }
         }
     }
 
-    private void storeYouthPlayer(int hrfId, YouthPlayer player, Timestamp date) {
+    void storeYouthPlayer(int hrfId, YouthPlayer player) {
 
         final String[] awhereS = {"HRF_ID", "ID"};
         final String[] awhereV = {"" + hrfId, "" + player.getId()};
@@ -211,8 +211,7 @@ public class YouthPlayerTable  extends AbstractTable {
             if (rs != null) {
                 rs.beforeFirst();
                 if (rs.next()) {
-                    var player = createObject(rs);
-                    return player;
+                    return createObject(rs);
                 }
             }
         } catch (Exception e) {
@@ -253,7 +252,7 @@ public class YouthPlayerTable  extends AbstractTable {
             ret.setYouthMatchDate(rs.getTimestamp("YouthMatchDate"));
             ret.setYouthMatchID(rs.getInt("YouthMatchID"));
             for ( var skillId: YouthPlayer.skillIds){
-                SetSkillInfo(ret, rs, skillId);
+                setSkillInfo(ret, rs, skillId);
             }
 
         } catch (Exception e) {
@@ -262,7 +261,7 @@ public class YouthPlayerTable  extends AbstractTable {
         return ret;
     }
 
-    private void SetSkillInfo(YouthPlayer youthPlayer, ResultSet rs, Skills.HTSkillID skillID) throws SQLException {
+    private void setSkillInfo(YouthPlayer youthPlayer, ResultSet rs, Skills.HTSkillID skillID) throws SQLException {
         var skillinfo = new YouthPlayer.SkillInfo(skillID);
         var columnPrefix = skillID.toString();
         skillinfo.setCurrentLevel(DBManager.getInteger(rs, columnPrefix));

@@ -142,7 +142,7 @@ public class YouthTraining {
             ret.setCurrentValue(newVal);
             var adjustment = ret.getCurrentValue() - newVal;
             if (adjustment > 0) {
-                player.adjustSkill(value.getSkillID(), adjustment);
+                value.setStartValue(player.adjustSkill(value.getSkillID(), adjustment));
             }
         }
         // Current value needs to be set before start value could be changed
