@@ -99,7 +99,7 @@ public class SubstitutionOverview extends JPanel {
 
 		// Max order is 5 + the level of the tactical assistant.
 		int maxOrders = 5 + HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
-		int nSubstitutions = 0;	// limit 3
+		int nSubstitutions = 0;	// no limit
 		int nManMarkings = 0;	// limit 1
 		int nOther = 0;			// limit maxOrders - nSubstitutions
 
@@ -111,10 +111,7 @@ public class SubstitutionOverview extends JPanel {
 				default -> nOther++;
 			}
 			row.setProblem(PlausibilityCheck.checkForProblem(this.lineup, row.getSubstitution()));
-			if ( nSubstitutions > 3 ){
-				row.setProblem(Error.TOO_MANY_ORDERS);
-			}
-			else if ( nSubstitutions+nOther>maxOrders){
+			if ( nSubstitutions+nOther>maxOrders){
 				row.setProblem(Error.TOO_MANY_ORDERS);
 			}
 			else if ( nManMarkings > 1){
@@ -124,10 +121,10 @@ public class SubstitutionOverview extends JPanel {
 		detailsView.refresh();
 		((SubstitutionsTableModel) this.substitutionTable.getModel()).sort();
 
-		boolean enableCreateOtherActions = maxOrders-nOther-nSubstitutions>0;
-		this.behaviorAction.setEnabled(enableCreateOtherActions);
-		this.positionSwapAction.setEnabled(enableCreateOtherActions);
-		this.substitutionAction.setEnabled(nSubstitutions<3);
+		boolean enableNewMatchOrders = maxOrders-nOther-nSubstitutions>0;
+		this.behaviorAction.setEnabled(enableNewMatchOrders);
+		this.positionSwapAction.setEnabled(enableNewMatchOrders);
+		this.substitutionAction.setEnabled(enableNewMatchOrders);
 		this.manMarkingAction.setEnabled(nManMarkings<1);
 	}
 
@@ -370,9 +367,7 @@ public class SubstitutionOverview extends JPanel {
 
 	private void updateOrderIDs() {
 		List<Substitution> list = new ArrayList<>(this.lineup.getSubstitutionList());
-		Comparator<Substitution> byOrderIDComparator = (o1, o2) -> o1.getPlayerOrderId() - o2.getPlayerOrderId();
-
-		list.sort(byOrderIDComparator);
+		list.sort(Comparator.comparingInt(Substitution::getPlayerOrderId));
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setPlayerOrderId(i);
 		}
