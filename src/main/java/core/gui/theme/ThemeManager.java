@@ -1,6 +1,7 @@
 package core.gui.theme;
 
 
+import com.github.weisj.darklaf.icons.DerivableImageIcon;
 import core.db.DBManager;
 import core.db.user.UserManager;
 import core.gui.HOMainFrame;
@@ -95,10 +96,8 @@ public final class ThemeManager {
 		return (Color)obj;
 	}
 
-	public boolean isSet(String key){
-		Boolean tmp = null;
-		if(tmp == null)
-			tmp = (Boolean)classicSchema.get(key);
+	public boolean isSet(String key) {
+		Boolean tmp = (Boolean)classicSchema.get(key);
 		if(tmp == null)
 			tmp = Boolean.FALSE;
 		return tmp;
@@ -117,9 +116,7 @@ public final class ThemeManager {
 	}
 
 	public Object get(String key){
-		Object tmp = null;
-		if(tmp == null)
-			tmp = classicSchema.get(key);
+		Object tmp = classicSchema.get(key);
 
 		if(tmp == null)
 			tmp = UIManager.get(key);
@@ -154,8 +151,15 @@ public final class ThemeManager {
 		return instance().get(key);
 	}
 
-	public static Icon getScaledIcon(String key, int x,int y){
-		return instance().getScaledIconImpl(key, x, y);
+	public static Icon getScaledIcon(String key, int x,int y) {
+		final Icon scaledIcon = instance().getScaledIconImpl(key, x, y);
+
+		// If darklaf, retrieve image, and use as icon.
+		if (scaledIcon instanceof DerivableImageIcon) {
+			return new ImageIcon(((DerivableImageIcon)scaledIcon).getImage());
+		}
+
+		return scaledIcon;
 	}
 
 	public Icon getSmallClubLogo(int teamID){
@@ -166,7 +170,7 @@ public final class ThemeManager {
 		return getClubLogo(teamID, 36);
 	}
 
-	public Icon getClubLogo(int teamID, int width){
+	public Icon getClubLogo(int teamID, int width) {
 		int height = Math.round(width * 260f / 210f);
 		String logoPath = DBManager.instance().getTeamLogoFileName(teamLogoPath, teamID);
 		if (logoPath == null) {
@@ -189,6 +193,7 @@ public final class ThemeManager {
 
 			if (scaledIcon != null) put(scaledKey, scaledIcon);
 		}
+
 		return scaledIcon;
 	}
 
@@ -229,6 +234,4 @@ public final class ThemeManager {
 			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
 		}
 	}
-
-
 }

@@ -100,11 +100,20 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		lineupPanel = parent;
 
 		//the following values are stored to allow reverting to real value after playing with the various lineup settings
-		m_iRealTeamSpirit = homodel.getTeam().getTeamSpirit();
-		m_iRealSubTeamSpirit = homodel.getTeam().getSubTeamSpirit();
-		m_iRealConfidence = homodel.getTeam().getConfidence();
-		m_iRealTrainerType = homodel.getTrainer().getTrainerTyp();
-		m_iRealTacticalAssistantsLevel = homodel.getClub().getTacticalAssistantLevels();
+		if ((homodel.getTeam() != null) && (homodel.getClub() != null) && (homodel.getTrainer() != null)) {
+			m_iRealTeamSpirit = homodel.getTeam().getTeamSpirit();
+			m_iRealSubTeamSpirit = homodel.getTeam().getSubTeamSpirit();
+			m_iRealConfidence = homodel.getTeam().getConfidence();
+			m_iRealTrainerType = homodel.getTrainer().getTrainerTyp();
+			m_iRealTacticalAssistantsLevel = homodel.getClub().getTacticalAssistantLevels();
+		}
+		else{
+			m_iRealTeamSpirit = 4;
+			m_iRealSubTeamSpirit = 2;
+			m_iRealConfidence = 4;
+			m_iRealTrainerType = 2;
+			m_iRealTacticalAssistantsLevel = 0;
+		}
 
 		initComponents();
 		core.gui.RefreshManager.instance().registerRefreshable(this);
