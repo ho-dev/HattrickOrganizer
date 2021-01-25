@@ -46,6 +46,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 
 ### Team Analyser
+* tuning of simulation calculation (#865)
 
  
 

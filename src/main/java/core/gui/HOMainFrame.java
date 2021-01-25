@@ -277,6 +277,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	public void setInformation( String information, Color color){
 		getInfoPanel().setInformation(information, color);
 	}
+	public void updateProgress(int progress){getInfoPanel().setProgressbarValue(progress);}
 
 	public PlayerAnalysisModulePanel getSpielerAnalyseMainPanel() {
 		return ((PlayerAnalysisModulePanel) getTabbedPane().getModulePanel(IModule.PLAYERANALYSIS));
