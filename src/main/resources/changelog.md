@@ -57,7 +57,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 
 ### Lineup
-
+* Match orders remove substitution limit (#856)
 
 
 ### IFA
