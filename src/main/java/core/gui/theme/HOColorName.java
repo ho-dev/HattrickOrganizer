@@ -217,4 +217,10 @@ public interface HOColorName {
 	String ORDERS_LINEUP = "orders.lineup.bg";
 	String ORDERS_TICK = "orders.tick.bg";
 	String ORDERS_PEN = "orders.pen.bg";
+
+	//Matches module
+	String HOME_ACTION = "home.action";
+	String GUEST_ACTION = "guest.action";
+	String NEUTRAL_ACTION = "neutral.action";
+	String BORDER_RATING_BAR = "border.rating.bar";
 }
