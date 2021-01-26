@@ -94,7 +94,7 @@ public final class SpielePanel extends LazyImagePanel {
 	private JSplitPane verticalSplitPane;
 	private JTabbedPane matchDetailsTabbedPane;
 	private ManschaftsBewertungsPanel m_jpManschaftsBewertungsPanel;
-	private ManschaftsBewertungs2Panel m_jpManschaftsBewertungs2Panel;
+	private TeamsRatingPanel m_jpTeamsRatingPanel;
 	private MatchReportPanel matchReportPanel;
 	private SpielHighlightPanel matchHighlightPanel;
 	private MatchesTable matchesTable;
@@ -468,9 +468,9 @@ public final class SpielePanel extends LazyImagePanel {
 				new JScrollPane(m_jpManschaftsBewertungsPanel));
 
 		// //Bewertung2
-		m_jpManschaftsBewertungs2Panel = new ManschaftsBewertungs2Panel(this.matchesModel);
+		m_jpTeamsRatingPanel = new TeamsRatingPanel(this.matchesModel);
 		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("matches.tabtitle.percentageratings"),
-				new JScrollPane(m_jpManschaftsBewertungs2Panel));
+				new JScrollPane(m_jpTeamsRatingPanel));
 
 		// Highlights
 		matchHighlightPanel = new SpielHighlightPanel(this.matchesModel);
