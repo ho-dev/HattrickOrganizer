@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.model.Tournament.TournamentDetails;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
+import core.model.misc.Basics;
 import core.util.HOLogger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -32,7 +33,7 @@ public class XMLTournamentDetailsParser {
 
 	private static TournamentDetails createTournamentDetails(Document doc) {
 		TournamentDetails oTournamentDetails = new TournamentDetails();
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if (doc != null) {
 			Element root = doc.getDocumentElement();
 			try {
@@ -72,11 +73,11 @@ public class XMLTournamentDetailsParser {
 				oTournamentDetails.setLastMatchRound((short) Integer.parseInt(tmp.getFirstChild().getNodeValue()));
 
 				tmp = (Element) ele.getElementsByTagName("FirstMatchRoundDate").item(0);
-				tempDate = format.parse(tmp.getFirstChild().getNodeValue());
+				tempDate = Basics.parseHattrickDate(tmp.getFirstChild().getNodeValue());
 				oTournamentDetails.setFirstMatchRoundDate(tempDate);
 
 				tmp = (Element) ele.getElementsByTagName("NextMatchRoundDate").item(0);
-				tempDate = format.parse(tmp.getFirstChild().getNodeValue());
+				tempDate = Basics.parseHattrickDate(tmp.getFirstChild().getNodeValue());
 				oTournamentDetails.setNextMatchRoundDate(tempDate);
 
 				tmp = (Element) ele.getElementsByTagName("IsMatchesOngoing").item(0);

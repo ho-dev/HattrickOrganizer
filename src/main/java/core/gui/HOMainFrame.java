@@ -764,5 +764,4 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		});
 	}
-
 }

@@ -1,6 +1,8 @@
 package core.model.series;
 
+import core.model.misc.Basics;
 import core.util.HOLogger;
+import org.jetbrains.annotations.NotNull;
 
 public class Paarung implements Comparable<Paarung>{
     //~ Instance fields ----------------------------------------------------------------------------
@@ -42,25 +44,7 @@ public class Paarung implements Comparable<Paarung>{
      * @return Value of property m_lDatum.
      */
     public final java.sql.Timestamp getDatum() {
-        try {
-            //Hattrick
-            final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                                                                                           java.util.Locale.GERMANY);
-
-            return new java.sql.Timestamp(simpleFormat.parse(m_sDatum).getTime());
-        } catch (Exception e) {
-            try {
-                //Hattrick
-                final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
-                                                                                               java.util.Locale.GERMANY);
-
-                return new java.sql.Timestamp(simpleFormat.parse(m_sDatum).getTime());
-            } catch (Exception ex) {
-                HOLogger.instance().log(getClass(),ex);
-            }
-        }
-
-        return null;
+        return Basics.parseHattrickDate(m_sDatum);
     }
 
     /**
@@ -250,12 +234,11 @@ public class Paarung implements Comparable<Paarung>{
     /**
      * vergleicht anhand des SPieltages um eine nach Spieltagen sortierte Liste zu bekommen
      */
-    public final int compareTo(Paarung obj) {
-        Paarung tmp = obj;
+    public final int compareTo(@NotNull Paarung obj) {
 
-        if (m_iSpieltag > tmp.getSpieltag()) {
+        if (m_iSpieltag > obj.getSpieltag()) {
             return 1;
-        } else if (m_iSpieltag < tmp.getSpieltag()) {
+        } else if (m_iSpieltag < obj.getSpieltag()) {
             return -1;
         }
         
@@ -268,17 +251,15 @@ public class Paarung implements Comparable<Paarung>{
         if (obj instanceof Paarung) {
             final Paarung spiel = (Paarung) obj;
 
-            if ((spiel.getStringDate().equals(m_sDatum))
-                && (spiel.getGastId() == m_iGastId)
-                && (spiel.getGastName().equals(m_sGastName))
-                && (spiel.getHeimId() == m_iHeimId)
-                && (spiel.getHeimName().equals(m_sHeimName))
-                && (spiel.getMatchId() == m_iMatchId)
-                && (spiel.getSpieltag() == m_iSpieltag)
-                && (spiel.getToreGast() == m_iToreGast)
-                && (spiel.getToreHeim() == m_iToreHeim)) {
-                return true;
-            }
+            return (spiel.getStringDate().equals(m_sDatum))
+                    && (spiel.getGastId() == m_iGastId)
+                    && (spiel.getGastName().equals(m_sGastName))
+                    && (spiel.getHeimId() == m_iHeimId)
+                    && (spiel.getHeimName().equals(m_sHeimName))
+                    && (spiel.getMatchId() == m_iMatchId)
+                    && (spiel.getSpieltag() == m_iSpieltag)
+                    && (spiel.getToreGast() == m_iToreGast)
+                    && (spiel.getToreHeim() == m_iToreHeim);
         }
 
         return false;

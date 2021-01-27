@@ -1,5 +1,6 @@
 package core.file.xml;
 
+import core.model.misc.Basics;
 import core.model.player.Player;
 import core.util.HOLogger;
 
@@ -35,10 +36,8 @@ public class XMLPlayerParser {
     /**
      * erzeugt einen Player aus dem xml
      */
-    protected final Player createPlayer(Element ele, Timestamp fetchdate)
-      throws Exception
-    {
-        Element tmp = null;
+    protected final Player createPlayer(Element ele, Timestamp fetchdate) {
+        Element tmp;
         final Player player = new Player();
 
         //player.setFetchDate ( fetchdate );
@@ -111,9 +110,9 @@ public class XMLPlayerParser {
     //Helper
     //////////////////////////////////////////////////////////////////////////////      
 
-    /**
+    /*
      * parsed nen String ins DateFormat
-     */
+
     protected final Timestamp parseDateFromString(String date) {
         try {
             //Hattrick
@@ -136,6 +135,8 @@ public class XMLPlayerParser {
         return null;
     }
 
+     */
+
     /////////////////////////////////////////////////////////////////////////////////    
     //Parser Helper private
     ////////////////////////////////////////////////////////////////////////////////    
@@ -144,11 +145,11 @@ public class XMLPlayerParser {
      * erstellt das MAtchlineup Objekt
      */
     protected final Vector<Player> parseSpieler(Document doc) {
-        Element ele = null;
-        Element root = null;
-        final Vector<Player> liste = new Vector<Player>();
-        Timestamp fetchDate = null;
-        NodeList list = null;
+        Element ele;
+        Element root;
+        final Vector<Player> liste = new Vector<>();
+        Timestamp fetchDate;
+        NodeList list;
 
         if (doc == null) {
             return liste;
@@ -160,7 +161,7 @@ public class XMLPlayerParser {
         try {
             //Daten füllen
             ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
-            fetchDate = parseDateFromString(ele.getFirstChild().getNodeValue());
+            fetchDate = Basics.parseHattrickDate(ele.getFirstChild().getNodeValue());
 
             //Root wechseln(Team)
             root = (Element) root.getElementsByTagName("Team").item(0);

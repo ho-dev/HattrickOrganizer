@@ -2,6 +2,7 @@
 package core.gui.model;
 
 import core.model.match.MatchType;
+import core.model.misc.Basics;
 import core.util.HOLogger;
 import tool.arenasizer.ArenaSizer;
 
@@ -236,20 +237,7 @@ public class ArenaStatistikModel {
      * @return Value of property m_lDatum.
      */
     public final Timestamp getMatchDateAsTimestamp() {
-        try {
-            //Hattrick
-            final java.text.SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.GERMANY);
-            return new Timestamp(simpleFormat.parse(m_sMatchDate).getTime());
-        } catch (Exception e) {
-            try {
-                //Hattrick
-                final SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd", java.util.Locale.GERMANY);
-                return new Timestamp(simpleFormat.parse(m_sMatchDate).getTime());
-            } catch (Exception ex) {
-                HOLogger.instance().log(getClass(),ex);
-            }
-        }
-        return null;
+        return Basics.parseHattrickDate(m_sMatchDate);
     }
 
     /**
@@ -312,20 +300,7 @@ public class ArenaStatistikModel {
      * @return Value of property m_lDatum.
      */
     public final Timestamp getTimestampMatchDate() {
-        try {
-            //Hattrick
-            final SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.GERMANY);
-            return new Timestamp(simpleFormat.parse(m_sMatchDate).getTime());
-        } catch (Exception e) {
-            try {
-                //Hattrick
-                final SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd", java.util.Locale.GERMANY);
-                return new Timestamp(simpleFormat.parse(m_sMatchDate).getTime());
-            } catch (Exception ex) {
-                HOLogger.instance().log(getClass(),ex);
-            }
-        }
-        return null;
+        return Basics.parseHattrickDate(m_sMatchDate);
     }
 
     /**
@@ -461,35 +436,10 @@ public class ArenaStatistikModel {
     */
     public float getMatchTypeFactor() {
         switch (m_mtMatchTyp) {
-            case LEAGUE:
-                matchTypeFactor = 1;
-                break;
-            case CUP:
-            case EMERALDCUP:
-            case RUBYCUP:
-            case SAPPHIRECUP:
-            case CONSOLANTECUP:
-                matchTypeFactor = (float) 2/3;
-                break;
-            case FRIENDLYCUPRULES:
-            case INTFRIENDLYCUPRULES:
-            case FRIENDLYNORMAL:
-            case INTFRIENDLYNORMAL:
-            case MASTERS:
-            case QUALIFICATION:
-                matchTypeFactor = (float) 1/2;
-                break;
-            case TOURNAMENTGROUP:
-            case TOURNAMENTPLAYOFF:
-            case NATIONALFRIENDLY:
-            case NONE:
-            case NATIONALCOMPCUPRULES:
-            case INTSPIEL:
-            case NATIONALCOMPNORMAL:
-            case DIVISIONBATTLE:
-            default:
-                matchTypeFactor = 0;
-                break;
+            case LEAGUE -> matchTypeFactor = 1;
+            case CUP, EMERALDCUP, RUBYCUP, SAPPHIRECUP, CONSOLANTECUP -> matchTypeFactor = (float) 2 / 3;
+            case FRIENDLYCUPRULES, INTFRIENDLYCUPRULES, FRIENDLYNORMAL, INTFRIENDLYNORMAL, MASTERS, QUALIFICATION -> matchTypeFactor = (float) 1 / 2;
+            default -> matchTypeFactor = 0;
         }
         return matchTypeFactor;
     }

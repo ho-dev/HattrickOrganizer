@@ -56,7 +56,7 @@ public class HRFStringParser {
 		}
 
 		try {
-			final List<Properties> propertiesList = new ArrayList<Properties>();
+			final List<Properties> propertiesList = new ArrayList<>();
 			Properties properties = null;
 
 			// Load hrf string into a stream
@@ -85,7 +85,7 @@ public class HRFStringParser {
 						entity = properties.get(ENTITY);
 						if (entity != null && entity.toString().equalsIgnoreCase(BASICS)) {
 							datestring = properties.getProperty("date");
-							hrfdate = getDateFromString(datestring);
+							hrfdate = Basics.parseHattrickDate(datestring);
 						}
 						propertiesList.add(properties);
 					}
@@ -136,7 +136,7 @@ public class HRFStringParser {
 		}
 		return modelReturn;
 	}
-
+/*
 	private static Timestamp getDateFromString(String date) {
 		SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				java.util.Locale.GERMANY);
@@ -154,6 +154,7 @@ public class HRFStringParser {
 			}
 		}
 	}
+*/
 
 	/**
 	 * Erzeugt aus dem Vector mit Properties ein HOModel
@@ -253,21 +254,18 @@ public class HRFStringParser {
 	private static List<StaffMember> parseStaff(Properties props) {
 		
 		try {
-			ArrayList<StaffMember> list = new ArrayList<StaffMember>();
+			ArrayList<StaffMember> list = new ArrayList<>();
 			
 			int i = 0;
-			while (true) {
-				if (!props.containsKey("staff" + i + "name")) {
-					break;
-				}
-		
+			while (props.containsKey("staff" + i + "name")) {
+
 				StaffMember member = new StaffMember();
 				member.setName(props.getProperty("staff" + i + "name"));
 				member.setId(Integer.parseInt(props.getProperty("staff" + i + "staffid")));
 				member.setStaffType(StaffType.getById(Integer.parseInt(props.getProperty("staff" + i + "stafftype"))));
 				member.setLevel(Integer.parseInt(props.getProperty("staff" + i + "stafflevel")));
 				member.setCost(Integer.parseInt(props.getProperty("staff" + i + "cost")));
-						
+
 				i++;
 				list.add(member);
 			}
@@ -279,7 +277,7 @@ public class HRFStringParser {
 
 		} catch (Exception e) {
 			HOLogger.instance().error(null, "HRFStringParser: Failed to parse staff members");
-			return new ArrayList<StaffMember>();
+			return new ArrayList<>();
 		}
 	}
 }

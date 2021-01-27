@@ -1,13 +1,10 @@
 package core.model.misc;
 
-import core.util.HTCalendar;
-import core.util.HTCalendarFactory;
 import core.util.HelperWrapper;
 import module.training.Skills;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Map;
 
 public class TrainingEvent {

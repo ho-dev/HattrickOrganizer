@@ -31,10 +31,10 @@ public final class Basics  {
     private String m_sTeamName = "";
 
     /** Datum der Erstellung */
-    private java.sql.Timestamp m_clDatum = new java.sql.Timestamp(0);
+    private Timestamp m_clDatum = new Timestamp(0);
 
     /** Date of activation */
-    private java.sql.Timestamp m_tActivationDate = new java.sql.Timestamp(0);
+    private Timestamp m_tActivationDate = new Timestamp(0);
 
     /** Land */
     private int m_iLand;
@@ -104,7 +104,7 @@ public final class Basics  {
 
     private Timestamp getTimestamp(Properties properties, String key) {
         try {
-            return setDatumByString(properties.getProperty(key));
+            return parseHattrickDate(properties.getProperty(key));
         } catch (Exception ignored) {}
         return null;
     }
@@ -140,7 +140,7 @@ public final class Basics  {
      *
      * @param m_clDatum New value of property m_clDatum.
      */
-    public void setDatum(java.sql.Timestamp m_clDatum) {
+    public void setDatum(Timestamp m_clDatum) {
         this.m_clDatum = m_clDatum;
     }
 
@@ -149,32 +149,35 @@ public final class Basics  {
      *
      * @return Value of property m_clDatum.
      */
-    public java.sql.Timestamp getDatum() {
+    public Timestamp getDatum() {
         return m_clDatum;
     }
 
-    public java.sql.Timestamp setDatumByString(String date) {
+    /**
+     * Hattrick date time is presented as CEST (central european summer time)
+     * @param date string fetched from Hattrick files
+     * @return timestamp
+     */
+    public static Timestamp parseHattrickDate(String date) {
         try {
             //Hattrick
             final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                                                                                           java.util.Locale.GERMANY);
+                    java.util.Locale.GERMANY);
 
-            return new java.sql.Timestamp(simpleFormat.parse(date).getTime());
+            return new Timestamp(simpleFormat.parse(date).getTime());
         } catch (Exception e) {
             try {
                 //Hattrick
                 final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
-                                                                                               java.util.Locale.GERMANY);
+                        java.util.Locale.GERMANY);
 
-                return new java.sql.Timestamp(simpleFormat.parse(date).getTime());
+                return new Timestamp(simpleFormat.parse(date).getTime());
             } catch (Exception expc) {
-                HOLogger.instance().log(getClass(),e);
-                return new java.sql.Timestamp(System.currentTimeMillis());
+                HOLogger.instance().log(Basics.class, e);
             }
         }
+        return null;
     }
-    
-    
 
     /**
 	 * @return the m_bHasSupporter
@@ -382,7 +385,7 @@ public final class Basics  {
 
     /**
      * Set the youth team id
-     * @param m_iYouthTeamId
+     * @param m_iYouthTeamId youth team id
      */
     public void setYouthTeamId(Integer m_iYouthTeamId) {
         if (m_iYouthTeamId != null && m_iYouthTeamId >= 0) {

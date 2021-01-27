@@ -187,23 +187,7 @@ public final class Verein {
     }
 
     public void setDateFromString(String date) {
-        try {
-            //Hattrick
-            final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                                                                                           java.util.Locale.GERMANY);
-
-            m_clDate = new java.sql.Timestamp(simpleFormat.parse(date).getTime());
-        } catch (Exception e) {
-            try {
-                //Hattrick
-                final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
-                                                                                               java.util.Locale.GERMANY);
-
-                m_clDate = new java.sql.Timestamp(simpleFormat.parse(date).getTime());
-            } catch (Exception ex) {
-                HOLogger.instance().log(getClass(),ex);
-            }
-        }
+        m_clDate = Basics.parseHattrickDate(date);
     }
 
     /**

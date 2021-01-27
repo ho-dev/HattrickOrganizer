@@ -6,6 +6,7 @@ import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
 import core.datatype.ComboItem;
 import core.model.HOVerwaltung;
+import core.model.misc.Basics;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
@@ -303,15 +304,12 @@ public class Helper {
 
             //Alle Einträge durchlaufen und nach Wert im toSort suchen und den Wert dann in das Ergebnis kopieren
             for (int i = 0; i < toSort.length; i++) {
-                for (int j = 0; j < toSort.length; j++) {
-                    if (sortSpalte[i] == toSort[j][spaltenindex]) {
-                        for (int k = 0; k < toSort[j].length; k++) {
-                            ergebnis[i][k] = toSort[j][k];
-                        }
-
-                        break;
-                    }
-                }
+				for (int[] ints : toSort) {
+					if (sortSpalte[i] == ints[spaltenindex]) {
+						System.arraycopy(ints, 0, ergebnis[i], 0, ints.length);
+						break;
+					}
+				}
             }
 
             //Referenz umbiegen
@@ -343,23 +341,7 @@ public class Helper {
 	 *
 	 */
 	public static Timestamp parseDate(String date) {
-	    try {
-	        //Hattrick
-	        final SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
-	
-	        return new Timestamp(simpleFormat.parse(date).getTime());
-	    } catch (Exception e) {
-	        try {
-	            //Hattrick
-	            final SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.GERMANY);
-	
-	            return new Timestamp(simpleFormat.parse(date).getTime());
-	        } catch (Exception ex) {
-	            HOLogger.instance().log(Helper.class,ex);
-	        }
-	    }
-	
-	    return null;
+		return Basics.parseHattrickDate(date);
 	}
 
 	/**
