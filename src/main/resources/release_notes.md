@@ -48,8 +48,7 @@ layout: page
 
 
 ### Team Analyser
-* tuning of simulation calculation (#865)
-
+* tuning simulation (#865)
  
 
 ### Rating
