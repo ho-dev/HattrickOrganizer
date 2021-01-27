@@ -4,6 +4,7 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
+import core.model.misc.Basics;
 import core.util.HOLogger;
 import core.util.StringUtils;
 import java.sql.Timestamp;
@@ -257,7 +258,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @return Value of property m_lDatum.
 	 */
 	public java.sql.Timestamp getMatchDateAsTimestamp() {
-		if (this.matchDateTimestamp == null) {
+		return Basics.parseHattrickDate(m_sMatchDate);
+		/*if (this.matchDateTimestamp == null) {
 			if (!StringUtils.isEmpty(this.m_sMatchDate)) {
 				try {
 					SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -277,7 +279,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 				}
 			}
 		}
-		return this.matchDateTimestamp;
+		return this.matchDateTimestamp;*/
 	}
 
 	/**

@@ -1,7 +1,10 @@
 package core.model.match;
 
 import core.db.DBManager;
+import core.model.misc.Basics;
 import core.util.HOLogger;
+
+import java.sql.Timestamp;
 
 public class MatchLineup {
 
@@ -84,26 +87,8 @@ public class MatchLineup {
      *
      * @return Value of property m_lDatum.
      */
-    public final java.sql.Timestamp getDownloadDate() {
-        try {
-            //Hattrick
-            final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                                                                                           java.util.Locale.GERMANY);
-
-            return new java.sql.Timestamp(simpleFormat.parse(downloadDate).getTime());
-        } catch (Exception e) {
-            try {
-                //Hattrick
-                final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
-                                                                                               java.util.Locale.GERMANY);
-
-                return new java.sql.Timestamp(simpleFormat.parse(downloadDate).getTime());
-            } catch (Exception ex) {
-                HOLogger.instance().log(getClass(),ex);
-            }
-        }
-
-        return null;
+    public final Timestamp getDownloadDate() {
+        return Basics.parseHattrickDate(downloadDate);
     }
 
     /**
@@ -279,26 +264,8 @@ public class MatchLineup {
      *
      * @return Value of property m_lDatum.
      */
-    public final java.sql.Timestamp getMatchDate() {
-        try {
-            //Hattrick
-            final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                                                                                           java.util.Locale.GERMANY);
-
-            return new java.sql.Timestamp(simpleFormat.parse(matchDate).getTime());
-        } catch (Exception e) {
-            try {
-                //Hattrick
-                final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
-                                                                                               java.util.Locale.GERMANY);
-
-                return new java.sql.Timestamp(simpleFormat.parse(matchDate).getTime());
-            } catch (Exception ex) {
-                HOLogger.instance().log(getClass(),ex);
-            }
-        }
-
-        return null;
+    public final Timestamp getMatchDate() {
+        return Basics.parseHattrickDate(this.matchDate);
     }
 
     public final String getStringDownloadDate() {

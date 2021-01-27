@@ -2,6 +2,7 @@ package core.model.match;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.model.misc.Basics;
 import core.net.OnlineWorker;
 import core.util.HOLogger;
 
@@ -234,13 +235,13 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         return -1;
     }
 
-    public Integer getHomeGoalsInPart(MatchEvent.MatchPartId matchPartId) throws Exception {
+    public Integer getHomeGoalsInPart(MatchEvent.MatchPartId matchPartId) {
         if ( homeGoalsInParts == null){
             InitGoalsInParts();
         }
         return homeGoalsInParts[matchPartId.getValue()];
     }
-    public Integer getGuestGoalsInPart(MatchEvent.MatchPartId matchPartId) throws Exception {
+    public Integer getGuestGoalsInPart(MatchEvent.MatchPartId matchPartId) {
         if ( guestGoalsInParts == null){
             InitGoalsInParts();
         }
@@ -404,7 +405,8 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     // get the used tactic name in short form
     public static String getShortTacticName(int type) {
         HOVerwaltung hov = HOVerwaltung.instance();
-        String tacticName = switch (type) {
+
+        return switch (type) {
             case IMatchDetails.TAKTIK_NORMAL -> hov.getLanguageString("ls.team.tactic_short.normal");
             case IMatchDetails.TAKTIK_PRESSING -> hov.getLanguageString("ls.team.tactic_short.pressing");
             case IMatchDetails.TAKTIK_KONTER -> hov.getLanguageString("ls.team.tactic_short.counter-attacks");
@@ -414,8 +416,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
             case IMatchDetails.TAKTIK_CREATIVE -> hov.getLanguageString("ls.team.tactic_short.playcreatively");
             default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
         };
-
-        return tacticName;
     }
 
     public final int getGuestHalfTimeGoals() {
@@ -494,6 +494,9 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      * Getter for property m_lDatum.
      */
     public final boolean setFetchDatumFromString(String date) {
+        m_clFetchDatum = Basics.parseHattrickDate(date);
+        return m_clFetchDatum != null;
+        /*
         try {
             //Hattrick
             final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
@@ -514,7 +517,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
             }
         }
 
-        return true;
+        return true;*/
     }
 
     /**
@@ -1224,27 +1227,8 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      * @return Value of property m_lDatum.
      */
     public final boolean setSpielDatumFromString(String date) {
-        try {
-            //Hattrick
-            final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                    java.util.Locale.GERMANY);
-
-            m_clSpielDatum = new java.sql.Timestamp(simpleFormat.parse(date).getTime());
-        } catch (Exception e) {
-            try {
-                //Hattrick
-                final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
-                        java.util.Locale.GERMANY);
-
-                m_clSpielDatum = new java.sql.Timestamp(simpleFormat.parse(date).getTime());
-            } catch (Exception ex) {
-                HOLogger.instance().log(getClass(), ex);
-                m_clSpielDatum = null;
-                return false;
-            }
-        }
-
-        return true;
+        m_clSpielDatum = Basics.parseHattrickDate(date);
+        return m_clSpielDatum != null;
     }
 
     private MatchLineupTeam teamLineup;
