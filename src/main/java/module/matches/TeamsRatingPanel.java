@@ -1,5 +1,6 @@
 package module.matches;
 
+import core.constants.player.PlayerAbility;
 import core.gui.comp.CustomProgressBar;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
@@ -17,27 +18,20 @@ import javax.swing.*;
  */
 class TeamsRatingPanel extends LazyImagePanel {
 
-	private final double MIN_WIDTH_BAR = 10d;  // minimum width of the rating bar to ensure proper visibility in case of extreme ratings ratio
+	private final double MIN_WIDTH_BAR = 0.2;  // minimum width of the rating bar to ensure proper visibility in case of extreme ratings ratio
 	private final int RATING_BAR_WIDTH = 200;
 	private final int RATING_BAR_HEIGHT = 75;
 	private final int INSET = 12;
-
+	private final double RATING_MAX = 21d;
 	private final int LARGE_RATING_BAR_HEIGHT = 2*(RATING_BAR_HEIGHT + INSET);
-
-	private JLabel n_jlGuestTeamName;
-	private JLabel n_jlHomeTeamName;
-	private JLabel n_jlGuestTeamScore;
-	private JLabel n_jlHomeTeamScore;
-
-//	private JLabel[] homePercent;
-//	private JLabel[] awayPercent;
-//	private GridBagLayout layout;
-//	private GridBagConstraints constraints;
+	private JLabel m_jlGuestTeamName;
+	private JLabel m_jlHomeTeamName;
 	private final MatchesModel matchesModel;
 	private CustomProgressBar leftDefense, centralDefense, rightDefense, midfield, leftAttack, centralAttack, rightAttack;
 	private JProgressBar[] bars;
 	private JPanel m_jpBottom;
 	private GridBagConstraints m_jgbcBottom;
+	private Font f;
 
 
 	TeamsRatingPanel(MatchesModel matchesModel) {
@@ -74,6 +68,8 @@ class TeamsRatingPanel extends LazyImagePanel {
 			return;
 		}
 
+		m_jlHomeTeamName.setText(details.getHeimName());
+		m_jlGuestTeamName.setText(details.getGastName());
 		setValue(leftDefense, details.getHomeLeftDef(), details.getGuestRightAtt());
 		setValue(centralDefense, details.getHomeMidDef(), details.getGuestMidAtt());
 		setValue(rightDefense, details.getHomeRightDef(), details.getGuestLeftAtt());
@@ -81,7 +77,20 @@ class TeamsRatingPanel extends LazyImagePanel {
 		setValue(leftAttack, details.getHomeLeftAtt(), details.getGuestRightDef());
 		setValue(centralAttack, details.getHomeMidAtt(), details.getGuestMidDef());
 		setValue(rightAttack, details.getHomeRightAtt(), details.getGuestLeftDef());
-
+		setBarValue(0, details.getHomeMidfield());
+		setBarValue(1, details.getHomeRightDef());
+		setBarValue(2, details.getHomeMidDef());
+		setBarValue(3, details.getHomeLeftDef());
+		setBarValue(4, details.getHomeRightAtt());
+		setBarValue(5, details.getHomeMidAtt());
+		setBarValue(6, details.getHomeLeftAtt());
+		setBarValue(7, details.getGuestMidfield());
+		setBarValue(8, details.getGuestRightDef());
+		setBarValue(9, details.getGuestMidDef());
+		setBarValue(10, details.getGuestLeftDef());
+		setBarValue(11, details.getGuestRightAtt());
+		setBarValue(12, details.getGuestMidAtt());
+		setBarValue(13, details.getGuestLeftAtt());
 	}
 
 	private void addListeners() {
@@ -89,14 +98,17 @@ class TeamsRatingPanel extends LazyImagePanel {
 	}
 
 	private void initComponents() {
-//		JPanel panel = new JPanel(layout);
+
+
+		f =  new JLabel("").getFont();
+		f = f.deriveFont(f.getStyle() | Font.BOLD);
+
 		bars = new JProgressBar[14];
-//		homePercent = new JLabel[barCount];
-//		awayPercent = new JLabel[barCount];
 		for (int i = 0; i < 14; i++) {
 			bars[i] = new JProgressBar(0, 100);
+			bars[i].setPreferredSize(new Dimension(200, 20)); //25 if nimbus
+			bars[i].setStringPainted(true);
 		}
-//		setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
 
 		final GridBagLayout layout = new GridBagLayout();
 		final GridBagConstraints gbc = new GridBagConstraints();
@@ -147,19 +159,22 @@ class TeamsRatingPanel extends LazyImagePanel {
 				.getColor(HOColorName.PANEL_BORDER)));
 
 
+		m_jgbcBottom.insets = new Insets(8, 8, 0, 8);
 
 		m_jgbcBottom.gridx = 0;
 		m_jgbcBottom.gridy = 0;
 		m_jpBottom.add(new JLabel(""), m_jgbcBottom);
 
-		n_jlHomeTeamName = new JLabel("BB");
+		m_jlHomeTeamName = new JLabel("");
+		m_jlHomeTeamName.setFont(f);
 		m_jgbcBottom.gridx = 1;
-		m_jpBottom.add(n_jlHomeTeamName, m_jgbcBottom);
+		m_jpBottom.add(m_jlHomeTeamName, m_jgbcBottom);
 
 
-		n_jlGuestTeamName = new JLabel("CC");
+		m_jlGuestTeamName = new JLabel("");
+		m_jlGuestTeamName.setFont(f);
 		m_jgbcBottom.gridx = 2;
-		m_jpBottom.add(n_jlGuestTeamName, m_jgbcBottom);
+		m_jpBottom.add(m_jlGuestTeamName, m_jgbcBottom);
 
 
 		addRow("ls.match.ratingsector.midfield", 1);
@@ -170,6 +185,7 @@ class TeamsRatingPanel extends LazyImagePanel {
 
 		addRow("ls.match.ratingsector.leftattack", 5);
 		addRow("ls.match.ratingsector.centralattack", 6);
+		m_jgbcBottom.insets = new Insets(8, 8, 8, 8);
 		addRow("ls.match.ratingsector.rightattack", 7);
 
 		gbc.gridx = 0;
@@ -187,11 +203,13 @@ class TeamsRatingPanel extends LazyImagePanel {
 	private CustomProgressBar createRatingBar(boolean isLarge) {
 		int iHeight = isLarge ? LARGE_RATING_BAR_HEIGHT : RATING_BAR_HEIGHT;
 		return new CustomProgressBar(ThemeManager.getColor(HOColorName.GUEST_ACTION), ThemeManager.getColor(HOColorName.HOME_ACTION),
-				ThemeManager.getColor(HOColorName.BORDER_RATING_BAR), RATING_BAR_WIDTH, iHeight);
+				ThemeManager.getColor(HOColorName.BORDER_RATING_BAR), RATING_BAR_WIDTH, iHeight, f);
 	}
 
 	private void addRow(String txt, int row) {
-		add(new JLabel(Helper.getTranslation(txt)), 0, row);
+		JLabel label = new JLabel(Helper.getTranslation(txt));
+		label.setFont(f);
+		add(label, 0, row);
 		add(bars[row-1],1, row);
 		add(bars[row+6], 2, row);
 	}
@@ -214,54 +232,31 @@ class TeamsRatingPanel extends LazyImagePanel {
 		resetValue(centralAttack);
 		resetValue(rightAttack);
 
-//		n_jlHomeTeamName.setText(" ");
-//		n_jlGuestTeamName.setText(" ");
-//		n_jlHomeTeamScore.setText(" ");
-//		n_jlGuestTeamScore.setText(" ");
-//		n_jlHomeTeamName.setIcon(null);
-//		n_jlGuestTeamName.setIcon(null);
-//
-//		for (int i = 0; i < bars.length; i++) {
-//			bars[i].setValue(0);
-//			homePercent[i].setText(" ");
-//			awayPercent[i].setText(" ");
-//		}
-	}
-//
-//	private void setBarValue(int index, float home, float away) {
-//		bars[index].setValue((int) getPercent(home, away));
-//		bars[index].setToolTipText(bars[index].getValue() + " %" + " -- "
-//				+ (100 - bars[index].getValue()) + " %");
-//		homePercent[index].setText(bars[index].getValue() + " %");
-//		awayPercent[index].setText((100 - bars[index].getValue()) + " %");
-//		bars[index].setForeground(bars[index].getValue() < 50 ? ThemeManager
-//				.getColor(HOColorName.MATCHDETAILS_PROGRESSBAR_RED) : ThemeManager
-//				.getColor(HOColorName.MATCHDETAILS_PROGRESSBAR_GREEN));
-//		bars[index].setBackground(bars[index].getValue() < 50 ? ThemeManager
-//				.getColor(HOColorName.MATCHDETAILS_PROGRESSBAR_GREEN) : ThemeManager
-//				.getColor(HOColorName.MATCHDETAILS_PROGRESSBAR_RED));
-//	}
-//
+		for (var bar:bars){
+			bar.setValue(0);
+			bar.setString("");
+		}
 
-	private double getPercent(int val1, int val2) {
-		var value = 100d * (double)val1 / (double)(val1 + val2);
-		if (value < MIN_WIDTH_BAR) {
-			return MIN_WIDTH_BAR;
-		}
-		else if (value > 100d - MIN_WIDTH_BAR) {
-			return 100d - MIN_WIDTH_BAR;
-		}
-		return value;
+		m_jlGuestTeamName.setText("");
+		m_jlHomeTeamName.setText("");
+
 	}
+
+	private void setBarValue(int index, int value) {
+		double htValue = 1 + (value-1d)/4;
+		bars[index].setValue((int) (htValue * 100 / RATING_MAX));
+		bars[index].setString(PlayerAbility.getNameForSkill(true,value));
+	}
+
 
 	private void setValue(CustomProgressBar rating, int val1, int val2){
 		rating.setBackground(ThemeManager.getColor(HOColorName.GUEST_ACTION));
-		rating.setValue(getPercent(val1, val2));
+		rating.setValue(val1, val2, MIN_WIDTH_BAR);
 	}
 
 	private void resetValue(CustomProgressBar rating){
 		rating.setBackground(ThemeManager.getColor(HOColorName.NEUTRAL_ACTION));
-		rating.setValue(0d);
+		rating.resetValue();
 	}
 
 }
