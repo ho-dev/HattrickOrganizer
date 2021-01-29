@@ -3,7 +3,7 @@ package module.matches.statistics;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchesHighlightsStat;
-import module.matches.SpielePanel;
+import module.matches.MatchesPanel;
 import tool.updater.TableModel;
 
 import javax.swing.JTable;
@@ -31,7 +31,7 @@ public class MatchesHighlightsTable extends JTable {
     }
     
     private Object[][] getValues(int matchtyp){
-    	if(matchtyp == SpielePanel.ALL_MATCHS || matchtyp == SpielePanel.OTHER_TEAM_MATCHS){
+    	if(matchtyp == MatchesPanel.ALL_MATCHS || matchtyp == MatchesPanel.OTHER_TEAM_MATCHS){
          	return new Object[0][0];
          }
     	MatchesHighlightsStat[] rows = DBManager.instance().getChancesStat(true,matchtyp);

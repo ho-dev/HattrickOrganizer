@@ -6,7 +6,7 @@ import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
 import core.model.match.MatchesOverviewRow;
 import core.util.Helper;
-import module.matches.SpielePanel;
+import module.matches.MatchesPanel;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -33,7 +33,7 @@ public class MatchesOverviewTable extends JTable {
 
         if (tableModel == null) {
         	tableModel = UserColumnController.instance().getMatchesOverview1ColumnModel();
-        	if(matchtyp == SpielePanel.ALL_MATCHS || matchtyp == SpielePanel.OTHER_TEAM_MATCHS){
+        	if(matchtyp == MatchesPanel.ALL_MATCHS || matchtyp == MatchesPanel.OTHER_TEAM_MATCHS){
             	MatchesOverviewRow[] tmp = new MatchesOverviewRow[0];
             	tableModel.setValues(tmp);
             } else {
@@ -103,7 +103,7 @@ public class MatchesOverviewTable extends JTable {
     }
     
     public void refresh(int matchtypen) {
-        if(matchtypen == SpielePanel.ALL_MATCHS || matchtypen == SpielePanel.OTHER_TEAM_MATCHS){
+        if(matchtypen == MatchesPanel.ALL_MATCHS || matchtypen == MatchesPanel.OTHER_TEAM_MATCHS){
         	MatchesOverviewRow[] tmp = new MatchesOverviewRow[0];
         	tableModel.setValues(tmp);
         } else {

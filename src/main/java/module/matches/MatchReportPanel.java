@@ -20,10 +20,11 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 
+import static core.gui.theme.HOColorName.*;
+
 
 public class MatchReportPanel extends LazyImagePanel {
 
-	private static final long serialVersionUID = -9014579382145462648L;
 	private GridBagConstraints constraints;
 	private GridBagLayout layout;
 	private JLabel penaltyContestresults;
@@ -148,16 +149,16 @@ public class MatchReportPanel extends LazyImagePanel {
 					// Match Events Label
 					if (actionType == ActionTypeCategory.ACTION_TYPE_HOME) {
 						eventIcon.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0));
-						timeLabel.setBackground(Color.decode("#6ECDEA"));
+						timeLabel.setBackground(ThemeManager.getColor(HOME_ACTION));
 					}
 					else if (actionType == ActionTypeCategory.ACTION_TYPE_AWAY)
 					{
 						eventIcon.setBorder(BorderFactory.createEmptyBorder(0, 22, 0, 0));
-						timeLabel.setBackground(Color.decode("#d15e5e"));
+						timeLabel.setBackground(ThemeManager.getColor(GUEST_ACTION));
 					}
 					else {
 						eventIcon.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 0));
-						timeLabel.setBackground(Color.decode("#a6a6a6"));
+						timeLabel.setBackground(ThemeManager.getColor(NEUTRAL_ACTION));
 					}
 
 					if (bMatchFinished && (highlight.getiMatchEventID() != MatchEvent.MatchEventID.MATCH_FINISHED.getValue())){timeLabel.setText("i");}

@@ -1,4 +1,3 @@
-// %393632151:de.hattrickorganizer.gui.matches%
 package module.matches;
 
 import core.datatype.CBItem;
@@ -58,7 +57,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public final class SpielePanel extends LazyImagePanel {
+public final class MatchesPanel extends LazyImagePanel {
 
 	/** Only played Matches of suplied team (unsupported for now) */
 	public static final int NUR_GESPIELTEN_SPIELE = 10;
@@ -93,13 +92,11 @@ public final class SpielePanel extends LazyImagePanel {
 	private JSplitPane horizontalLeftSplitPane;
 	private JSplitPane verticalSplitPane;
 	private JTabbedPane matchDetailsTabbedPane;
-	private ManschaftsBewertungsPanel m_jpManschaftsBewertungsPanel;
-	private ManschaftsBewertungs2Panel m_jpManschaftsBewertungs2Panel;
+	private TeamsRatingPanel m_jpTeamsRatingPanel;
 	private MatchReportPanel matchReportPanel;
 	private SpielHighlightPanel matchHighlightPanel;
 	private MatchesTable matchesTable;
 	private MatchesOverviewTable matchesOverviewTable;
-	//	private MatchesOverviewCommonPanel matchesOverviewCommonPanel;
 	private MatchesHighlightsTable matchesHighlightsTable;
 	private StaerkenvergleichPanel teamsComparePanel;
 	private MatchesModel matchesModel;
@@ -119,73 +116,33 @@ public final class SpielePanel extends LazyImagePanel {
 		doReInit();
 	}
 
-	private void saveColumnOrder() {
-		matchesTable.saveColumnOrder();
-		matchesOverviewTable.saveColumnOrder();
-	}
 
 	private void addListeners() {
-		this.reloadMatchButton.addActionListener(new ActionListener() {
+		this.reloadMatchButton.addActionListener(e -> {
+			int matchid = matchesModel.getMatch().getMatchID();
+			OnlineWorker.downloadMatchData(matchesModel.getMatch().getMatchID(), matchesModel
+					.getMatch().getMatchType(), true);
+			RefreshManager.instance().doReInit();
+			showMatch(matchid);
+		});
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int matchid = matchesModel.getMatch().getMatchID();
-				OnlineWorker.downloadMatchData(matchesModel.getMatch().getMatchID(), matchesModel
-						.getMatch().getMatchType(), true);
-				RefreshManager.instance().doReInit();
-				showMatch(matchid);
+		this.deleteButton.addActionListener(e -> deleteSelectedMatches());
+
+		this.adoptLineupButton.addActionListener(e -> adoptLineup());
+
+		this.simulateMatchButton.addActionListener(e -> simulateMatch());
+
+		this.matchesTable.getSelectionModel().addListSelectionListener(e -> {
+			if (!e.getValueIsAdjusting()) {
+				newSelectionInform();
 			}
 		});
 
-		this.deleteButton.addActionListener(new ActionListener() {
+		HOMainFrame.instance().addApplicationClosingListener(() -> saveSettings());
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				deleteSelectedMatches();
-			}
-		});
-
-		this.adoptLineupButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				adoptLineup();
-			}
-		});
-
-		this.simulateMatchButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				simulateMatch();
-			}
-		});
-
-		this.matchesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) {
-					newSelectionInform();
-				}
-			}
-		});
-
-		HOMainFrame.instance().addApplicationClosingListener(new ApplicationClosingListener() {
-
-			@Override
-			public void applicationClosing() {
-				saveSettings();
-			}
-		});
-
-		m_jcbSpieleFilter.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
-					doReInit();
-				}
+		m_jcbSpieleFilter.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				doReInit();
 			}
 		});
 	}
@@ -255,7 +212,7 @@ public final class SpielePanel extends LazyImagePanel {
 			}
 		}
 
-		int value = JOptionPane.showConfirmDialog(SpielePanel.this, text,
+		int value = JOptionPane.showConfirmDialog(MatchesPanel.this, text,
 				HOVerwaltung.instance().getLanguageString("confirmation.title"), JOptionPane.YES_NO_OPTION);
 
 		if (value == JOptionPane.YES_OPTION) {
@@ -392,15 +349,14 @@ public final class SpielePanel extends LazyImagePanel {
 		if (m_jcbSpieleFilter.getSelectedIndex() > -1) {
 			CursorToolkit.startWaitCursor(this);
 			try {
-				// Tabelle updaten
+				// Update tables
 				int id = ((CBItem) m_jcbSpieleFilter.getSelectedItem()).getId();
 				matchesTable.refresh(id);
 				matchesOverviewTable.refresh(id);
-//				matchesOverviewCommonPanel.refresh(id);
 				matchesHighlightsTable.refresh(id);
 				UserParameter.instance().spieleFilter = id;
 
-				// Dann alle anderen Panels
+				// then refresh all other panels
 				newSelectionInform();
 			} finally {
 				CursorToolkit.stopWaitCursor(this);
@@ -409,15 +365,13 @@ public final class SpielePanel extends LazyImagePanel {
 		}
 	}
 
-	/**
-	 * Zeigt das Match mit der ID an.
-	 */
+
 	public void showMatch(int matchid) {
 		matchesTable.markiereMatch(matchid);
 
-		// Wenn kein Match in Tabelle gefunden
+		// If no match found in table
 		if (matchesTable.getSelectedRow() < 0) {
-			// Alle Spiele auswählen, damit die Markierung funktioniert
+			// Select all games for the marker to work
 			m_jcbSpieleFilter.setSelectedIndex(0);
 			UserParameter.instance().spieleFilter = 0;
 			matchesTable.markiereMatch(matchid);
@@ -462,15 +416,11 @@ public final class SpielePanel extends LazyImagePanel {
 		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Allgemein"),
 				new JScrollPane(teamsComparePanel));
 
-		// Bewertung
-		m_jpManschaftsBewertungsPanel = new ManschaftsBewertungsPanel(this.matchesModel);
-		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("matches.tabtitle.ratings"),
-				new JScrollPane(m_jpManschaftsBewertungsPanel));
 
-		// //Bewertung2
-		m_jpManschaftsBewertungs2Panel = new ManschaftsBewertungs2Panel(this.matchesModel);
-		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("matches.tabtitle.percentageratings"),
-				new JScrollPane(m_jpManschaftsBewertungs2Panel));
+		// Rating Panel
+		m_jpTeamsRatingPanel = new TeamsRatingPanel(this.matchesModel);
+		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("matches.tabtitle.ratings"),
+				new JScrollPane(m_jpTeamsRatingPanel));
 
 		// Highlights
 		matchHighlightPanel = new SpielHighlightPanel(this.matchesModel);
@@ -526,26 +476,26 @@ public final class SpielePanel extends LazyImagePanel {
 
 		CBItem[] matchesFilter = {
 				new CBItem(HOVerwaltung.instance().getLanguageString("AlleSpiele"),
-						SpielePanel.ALL_MATCHS),
+						MatchesPanel.ALL_MATCHS),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneSpiele"),
-						SpielePanel.NUR_EIGENE_SPIELE),
+						MatchesPanel.NUR_EIGENE_SPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePflichtspiele"),
-						SpielePanel.NUR_EIGENE_PFLICHTSPIELE),
+						MatchesPanel.NUR_EIGENE_PFLICHTSPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePokalspiele"),
-						SpielePanel.NUR_EIGENE_POKALSPIELE),
+						MatchesPanel.NUR_EIGENE_POKALSPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("OnlySecondaryCup"),
-						SpielePanel.ONLY_SECONDARY_CUP),
+						MatchesPanel.ONLY_SECONDARY_CUP),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneLigaspiele"),
-						SpielePanel.NUR_EIGENE_LIGASPIELE),
+						MatchesPanel.NUR_EIGENE_LIGASPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("OnlyQualificationMatches"),
-						SpielePanel.ONLY_QUALIF_MATCHES),
+						MatchesPanel.ONLY_QUALIF_MATCHES),
 				new CBItem(HOVerwaltung.instance()
 						.getLanguageString("NurEigeneFreundschaftsspiele"),
-						SpielePanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE),
+						MatchesPanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneTournamentsspiele"),
-						SpielePanel.NUR_EIGENE_TOURNAMENTSPIELE),
+						MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurFremdeSpiele"),
-						SpielePanel.OTHER_TEAM_MATCHS) };
+						MatchesPanel.OTHER_TEAM_MATCHS) };
 
 		m_jcbSpieleFilter = new JComboBox(matchesFilter);
 		Helper.setComboBoxFromID(m_jcbSpieleFilter, UserParameter.instance().spieleFilter);
@@ -558,10 +508,6 @@ public final class SpielePanel extends LazyImagePanel {
 
 		matchesOverviewTable = new MatchesOverviewTable(UserParameter.instance().spieleFilter);
 		JScrollPane scrollpane1 = new JScrollPane(matchesOverviewTable);
-
-//		matchesOverviewCommonPanel = new MatchesOverviewCommonPanel(
-//				UserParameter.instance().spieleFilter);
-//		JScrollPane scrollpane2 = new JScrollPane(matchesOverviewCommonPanel);
 
 		matchesHighlightsTable = new MatchesHighlightsTable(UserParameter.instance().spieleFilter);
 		JScrollPane scrollpane3 = new JScrollPane(matchesHighlightsTable);

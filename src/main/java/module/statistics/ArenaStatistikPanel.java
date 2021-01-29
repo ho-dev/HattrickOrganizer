@@ -5,8 +5,7 @@ import core.datatype.CBItem;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
-import core.model.UserParameter;
-import module.matches.SpielePanel;
+import module.matches.MatchesPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -74,20 +73,20 @@ public class ArenaStatistikPanel extends LazyImagePanel {
 	private CBItem[] getMatchFilterItems() {
 		CBItem[] matchFilterItems = {
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneSpiele"),
-						SpielePanel.NUR_EIGENE_SPIELE),
+						MatchesPanel.NUR_EIGENE_SPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePflichtspiele"),
-						SpielePanel.NUR_EIGENE_PFLICHTSPIELE),
+						MatchesPanel.NUR_EIGENE_PFLICHTSPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePokalspiele"),
-						SpielePanel.NUR_EIGENE_POKALSPIELE),
+						MatchesPanel.NUR_EIGENE_POKALSPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("OnlySecondaryCup"),
-						SpielePanel.ONLY_SECONDARY_CUP),
+						MatchesPanel.ONLY_SECONDARY_CUP),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneLigaspiele"),
-						SpielePanel.NUR_EIGENE_LIGASPIELE),
+						MatchesPanel.NUR_EIGENE_LIGASPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("OnlyQualificationMatches"),
-						SpielePanel.ONLY_QUALIF_MATCHES),
+						MatchesPanel.ONLY_QUALIF_MATCHES),
 				new CBItem(HOVerwaltung.instance()
 						.getLanguageString("NurEigeneFreundschaftsspiele"),
-						SpielePanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE) };
+						MatchesPanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE) };
 		return matchFilterItems;
 	}
 }
