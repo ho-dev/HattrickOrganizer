@@ -5,7 +5,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.util.StringUtils;
-import module.matches.SpielePanel;
+import module.matches.MatchesPanel;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -102,7 +102,7 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
 	
 	
 	public void refresh(int matchtypes) {
-		 if(matchtypes == SpielePanel.ALL_MATCHS || matchtypes == SpielePanel.OTHER_TEAM_MATCHS){
+		 if(matchtypes == MatchesPanel.ALL_MATCHS || matchtypes == MatchesPanel.OTHER_TEAM_MATCHS){
 			 clear();
 			 return;
 		 }

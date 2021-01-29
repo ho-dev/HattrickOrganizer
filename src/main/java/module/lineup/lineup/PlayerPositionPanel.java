@@ -506,9 +506,11 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
         if (m_iPositionID == IMatchRoleID.setPieces) {
             m_jlPosition.setText(getLangStr("match.setpiecestaker"));
-        } else if (m_iPositionID == IMatchRoleID.captain) {
+        }
+        else if (m_iPositionID == IMatchRoleID.captain) {
             m_jlPosition.setText(getLangStr("Spielfuehrer"));
-        } else {
+        }
+        else {
             final MatchRoleID position = lineup.getPositionById(m_iPositionID);
 
             if (position != null) {
@@ -546,9 +548,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                     m_jlPosition.setText(nameForPosition + " (#2)");
                 }
             }
-            m_jlPosition.setFont(getFont().deriveFont(Font.BOLD));
         }
-
+        m_jlPosition.setFont(getFont().deriveFont(Font.BOLD));
     }
 
     private void initTaktik(@Nullable Player aktuellerPlayer) {

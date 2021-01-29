@@ -3,7 +3,7 @@ package module.teamAnalyzer.manager;
 import core.db.DBManager;
 import core.model.match.MatchKurzInfo;
 import core.module.config.ModuleConfig;
-import module.matches.SpielePanel;
+import module.matches.MatchesPanel;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ui.TeamAnalyzerPanel;
 import module.teamAnalyzer.vo.Match;
@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -63,7 +62,7 @@ public class MatchManager {
         String oldName = SystemManager.getActiveTeamName();
 
         MatchKurzInfo[] matchKurtzInfo = DBManager.instance().getMatchesKurzInfo(SystemManager.getActiveTeamId(),
-                                                                                SpielePanel.NUR_EIGENE_SPIELE,
+                                                                                MatchesPanel.NUR_EIGENE_SPIELE,
                                                                                 false);
 
         for (MatchKurzInfo matchInfo : matchKurtzInfo) {

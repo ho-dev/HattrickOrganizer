@@ -356,6 +356,13 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(HOColorName.ORDERS_TICK, new Color(45, 75, 45));
 		put(HOColorName.ORDERS_PEN, new Color(139, 0, 0));
 
+		//matches module
+		put(HOColorName.HOME_ACTION, new Color(110, 205, 234));
+		put(HOColorName.GUEST_ACTION, new Color(209, 94, 94));
+		put(HOColorName.NEUTRAL_ACTION, new Color(166, 166, 166));
+		put(HOColorName.BORDER_RATING_BAR, Color.BLACK);
+
+
 		// shirts
 		put(SHIRT_KEEPER, "black");
 		put(SHIRT_CENTRALDEFENCE, new Color(0, 0, 220));

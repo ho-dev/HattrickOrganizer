@@ -39,6 +39,7 @@ import static module.lineup.LineupPanel.TITLE_FG;
 
 public final class LineupRatingPanel extends RasenPanel implements core.gui.Refreshable{
 
+    final static boolean IS_FEEDBACK_PLUGIN_ENABLED = false;
     private final MinuteTogglerPanel m_jpMinuteToggler = new MinuteTogglerPanel(this);
     private final static Color LABEL_BG = ThemeManager.getColor(HOColorName.PANEL_BG);
     private final static Color LABEL_FG = ThemeManager.getColor(HOColorName.LEAGUE_FG);
@@ -609,6 +610,10 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
         m_jbFeedbackButton.setIcon(ImageUtilities.getSvgIcon(HOIconName.UPLOAD, Map.of("strokeColor", TITLE_FG), 24, 24));
         m_jbFeedbackButton.addActionListener(e -> new FeedbackPanel());
+        if(! IS_FEEDBACK_PLUGIN_ENABLED) {
+            m_jbFeedbackButton.setVisible(false);
+        }
+
         m_jbFeedbackButton.setPreferredSize(new Dimension(24, 24));
         m_jbFeedbackButton.setMinimumSize(new Dimension(24, 24));
         m_jbFeedbackButton.setMaximumSize(new Dimension(24, 24));
@@ -691,9 +696,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
             m_jlLeftAttackRatingText.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
             m_jlLeftAttackRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
             m_jlLeftAttackRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
-            m_jbFeedbackButton.setToolTipText(getLangStr("Lineup.Feedback.ToolTip"));
             m_jbCopyRatingButton.setToolTipText(getLangStr("Lineup.CopyRatings.ToolTip"));
             m_jcbPredictionModel.setToolTipText(getLangStr("Lineup.PredictionModel.ToolTip"));
+            m_jbFeedbackButton.setToolTipText(getLangStr("Lineup.Feedback.ToolTip"));
     }
 
     public String getMidfieldRating() {return m_clFormat.format(m_dMidfieldRating);}

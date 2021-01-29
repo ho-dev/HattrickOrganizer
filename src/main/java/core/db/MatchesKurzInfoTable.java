@@ -5,7 +5,7 @@ import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
 import core.model.match.Weather;
 import core.util.HOLogger;
-import module.matches.SpielePanel;
+import module.matches.MatchesPanel;
 import module.matches.statistics.MatchesOverviewCommonPanel;
 import org.jetbrains.annotations.Nullable;
 import java.sql.ResultSet;
@@ -165,20 +165,20 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		final ArrayList<MatchKurzInfo> liste = new ArrayList<MatchKurzInfo>();
 
 		// Ohne Matchid nur AlleSpiele möglich!
-		if ((teamId < 0) && (matchtyp != SpielePanel.ALL_MATCHS)) {
+		if ((teamId < 0) && (matchtyp != MatchesPanel.ALL_MATCHS)) {
 			return new MatchKurzInfo[0];
 		}
 
 		try {
 			sql.append("SELECT * FROM ").append(getTableName());
 
-			if ((teamId > -1) && (matchtyp != SpielePanel.ALL_MATCHS)
-					&& (matchtyp != SpielePanel.OTHER_TEAM_MATCHS)) {
+			if ((teamId > -1) && (matchtyp != MatchesPanel.ALL_MATCHS)
+					&& (matchtyp != MatchesPanel.OTHER_TEAM_MATCHS)) {
 				sql.append(" WHERE ( GastID = " + teamId + " OR HeimID = "
 						+ teamId + " )");
 			}
 
-			if ((teamId > -1) && (matchtyp == SpielePanel.OTHER_TEAM_MATCHS)) {
+			if ((teamId > -1) && (matchtyp == MatchesPanel.OTHER_TEAM_MATCHS)) {
 				sql.append(" WHERE ( GastID != " + teamId + " AND HeimID != "
 						+ teamId + " )");
 			}
@@ -272,30 +272,30 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	private StringBuilder getMatchTypWhereClause(int matchtype) {
 		StringBuilder sql = new StringBuilder(50);
-		if (matchtype == SpielePanel.NUR_EIGENE_SPIELE) {// Nothing to do, as the teamId is the only restriction
-		} else if (matchtype == SpielePanel.NUR_EIGENE_PFLICHTSPIELE) {
+		if (matchtype == MatchesPanel.NUR_EIGENE_SPIELE) {// Nothing to do, as the teamId is the only restriction
+		} else if (matchtype == MatchesPanel.NUR_EIGENE_PFLICHTSPIELE) {
 			sql.append(" AND ( MatchTyp=" + MatchType.QUALIFICATION.getId());
 			sql.append(" OR MatchTyp=" + MatchType.LEAGUE.getId());
 			sql.append(" OR MatchTyp=" + MatchType.CUP.getId() + " )");
-		} else if (matchtype == SpielePanel.NUR_EIGENE_POKALSPIELE) {
+		} else if (matchtype == MatchesPanel.NUR_EIGENE_POKALSPIELE) {
 			sql.append(" AND MatchTyp=" + MatchType.CUP.getId());
-		} else if (matchtype == SpielePanel.NUR_EIGENE_LIGASPIELE) {
+		} else if (matchtype == MatchesPanel.NUR_EIGENE_LIGASPIELE) {
 			sql.append(" AND MatchTyp=" + MatchType.LEAGUE.getId());
-		} else if (matchtype == SpielePanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE) {
+		} else if (matchtype == MatchesPanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE) {
 			sql.append(" AND ( MatchTyp=" + MatchType.FRIENDLYNORMAL.getId());
 			sql.append(" OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId());
 			sql.append(" OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId());
 			sql.append(" OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId() + " )");
-		} else if (matchtype == SpielePanel.NUR_EIGENE_TOURNAMENTSPIELE) {
+		} else if (matchtype == MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE) {
 			sql.append(" AND ( MatchTyp=" + MatchType.TOURNAMENTGROUP.getId());
 			sql.append(" OR MatchTyp=" + MatchType.TOURNAMENTPLAYOFF.getId());
 			sql.append(" OR MatchTyp=" + MatchType.DIVISIONBATTLE.getId() + " )");
-		} else if (matchtype == SpielePanel.ONLY_SECONDARY_CUP) {
+		} else if (matchtype == MatchesPanel.ONLY_SECONDARY_CUP) {
 			sql.append(" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
 			sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
 			sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
 			sql.append(" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId() + " )");
-		} else if (matchtype == SpielePanel.ONLY_QUALIF_MATCHES) {
+		} else if (matchtype == MatchesPanel.ONLY_QUALIF_MATCHES) {
 			sql.append(" AND MatchTyp=" + MatchType.QUALIFICATION.getId());
 		}
 		else if ( matchtype == MatchType.GROUP_OFFICIAL.getId()) {

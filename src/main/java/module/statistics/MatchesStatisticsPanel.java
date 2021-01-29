@@ -19,7 +19,7 @@ import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.chart.HOLinesChart;
-import module.matches.SpielePanel;
+import module.matches.MatchesPanel;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 import java.awt.BorderLayout;
@@ -583,24 +583,24 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 	private CBItem[] getMatchFilterItems() {
 		CBItem[] items = {
-				new CBItem(getLangStr("NurEigeneSpiele"), SpielePanel.NUR_EIGENE_SPIELE
-						+ SpielePanel.NUR_GESPIELTEN_SPIELE),
+				new CBItem(getLangStr("NurEigeneSpiele"), MatchesPanel.NUR_EIGENE_SPIELE
+						+ MatchesPanel.NUR_GESPIELTEN_SPIELE),
 				new CBItem(getLangStr("NurEigenePflichtspiele"),
-						SpielePanel.NUR_EIGENE_PFLICHTSPIELE + SpielePanel.NUR_GESPIELTEN_SPIELE),
-				new CBItem(getLangStr("NurEigenePokalspiele"), SpielePanel.NUR_EIGENE_POKALSPIELE
-						+ SpielePanel.NUR_GESPIELTEN_SPIELE),
+						MatchesPanel.NUR_EIGENE_PFLICHTSPIELE + MatchesPanel.NUR_GESPIELTEN_SPIELE),
+				new CBItem(getLangStr("NurEigenePokalspiele"), MatchesPanel.NUR_EIGENE_POKALSPIELE
+						+ MatchesPanel.NUR_GESPIELTEN_SPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("OnlySecondaryCup"),
-						SpielePanel.ONLY_SECONDARY_CUP),
-				new CBItem(getLangStr("NurEigeneLigaspiele"), SpielePanel.NUR_EIGENE_LIGASPIELE
-						+ SpielePanel.NUR_GESPIELTEN_SPIELE),
+						MatchesPanel.ONLY_SECONDARY_CUP),
+				new CBItem(getLangStr("NurEigeneLigaspiele"), MatchesPanel.NUR_EIGENE_LIGASPIELE
+						+ MatchesPanel.NUR_GESPIELTEN_SPIELE),
 				new CBItem(HOVerwaltung.instance().getLanguageString("OnlyQualificationMatches"),
-						SpielePanel.ONLY_QUALIF_MATCHES),
+						MatchesPanel.ONLY_QUALIF_MATCHES),
 				new CBItem(HOVerwaltung.instance()
 						.getLanguageString("NurEigeneFreundschaftsspiele"),
-						SpielePanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE
-								+ SpielePanel.NUR_GESPIELTEN_SPIELE),
+						MatchesPanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE
+								+ MatchesPanel.NUR_GESPIELTEN_SPIELE),
 				new CBItem(getLangStr("NurEigeneTournamentsspiele"),
-						SpielePanel.NUR_EIGENE_TOURNAMENTSPIELE + SpielePanel.NUR_GESPIELTEN_SPIELE) };
+						MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE + MatchesPanel.NUR_GESPIELTEN_SPIELE) };
 		return items;
 	}
 
