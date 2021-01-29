@@ -27,7 +27,7 @@ public final class MatchesModule extends DefaultModule {
 
 	@Override
 	public JPanel createTabPanel() {
-		return new SpielePanel();
+		return new MatchesPanel();
 	}
 
 	@Override

@@ -29,7 +29,7 @@ import core.util.StringUtils;
 import module.lineup.LineupMasterView;
 import module.lineup.LineupPanel;
 import module.lineup.assistant.LineupAssistantPanel;
-import module.matches.SpielePanel;
+import module.matches.MatchesPanel;
 import module.nthrf.MainPanel;
 import module.playerOverview.SpielerUebersichtsPanel;
 import module.playeranalysis.PlayerAnalysisModulePanel;
@@ -656,7 +656,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	// --------------------------------------------------------------
 	public void showMatch(final int matchid) {
 		m_jtpTabbedPane.showTab(IModule.MATCHES);
-		final SpielePanel matchesPanel = (SpielePanel) getTabbedPane().getModulePanel(IModule.MATCHES);
+		final MatchesPanel matchesPanel = (MatchesPanel) getTabbedPane().getModulePanel(IModule.MATCHES);
 		SwingUtilities.invokeLater(new Runnable() {
 
                 @Override

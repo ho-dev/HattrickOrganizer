@@ -8,7 +8,6 @@ import core.gui.theme.ThemeManager;
 import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
 import core.util.Helper;
-
 import java.awt.*;
 import javax.swing.*;
 
@@ -20,7 +19,7 @@ class TeamsRatingPanel extends LazyImagePanel {
 
 	private final double MIN_WIDTH_BAR = 0.2;  // minimum width of the rating bar to ensure proper visibility in case of extreme ratings ratio
 	private final int RATING_BAR_WIDTH = 200;
-	private final int RATING_BAR_HEIGHT = 75;
+	private final int RATING_BAR_HEIGHT = 50;
 	private final int INSET = 12;
 	private final double RATING_MAX = 21d;
 	private final int LARGE_RATING_BAR_HEIGHT = 2*(RATING_BAR_HEIGHT + INSET);
@@ -252,6 +251,9 @@ class TeamsRatingPanel extends LazyImagePanel {
 	private void setValue(CustomProgressBar rating, int val1, int val2){
 		rating.setBackground(ThemeManager.getColor(HOColorName.GUEST_ACTION));
 		rating.setValue(val1, val2, MIN_WIDTH_BAR);
+		double htValHome = 1 + (val1-1d)/4;
+		double htValGuest = 1 + (val2-1d)/4;
+		rating.setToolTipText(String.format(Helper.getTranslation("ls.module.matches.ratingRatio"), htValHome, htValGuest));
 	}
 
 	private void resetValue(CustomProgressBar rating){

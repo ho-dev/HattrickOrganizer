@@ -8,11 +8,10 @@ import core.model.match.MatchType;
 import core.training.TrainingPerWeek;
 import core.training.TrainingManager;
 import core.util.HOLogger;
-import module.matches.SpielePanel;
+import module.matches.MatchesPanel;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.*;
 
 
@@ -126,43 +125,43 @@ public class StatisticQuery {
 
 			//Matchtypen
 			switch (matchtyp) {
-				case SpielePanel.NUR_EIGENE_SPIELE :
+				case MatchesPanel.NUR_EIGENE_SPIELE :
 
 					//Nix zu tun, da die teamId die einzige Einschränkung ist
 					break;
 
-				case SpielePanel.NUR_EIGENE_PFLICHTSPIELE :
+				case MatchesPanel.NUR_EIGENE_PFLICHTSPIELE :
 					sql += (" AND ( MatchTyp=" + MatchType.QUALIFICATION.getId());
 					sql += (" OR MatchTyp=" + MatchType.LEAGUE.getId());
 					sql += (" OR MatchTyp=" + MatchType.CUP.getId() + " )");
 					break;
 
-				case SpielePanel.NUR_EIGENE_POKALSPIELE :
+				case MatchesPanel.NUR_EIGENE_POKALSPIELE :
 					sql += (" AND MatchTyp=" + MatchType.CUP.getId());
 					break;
 
-				case SpielePanel.NUR_EIGENE_LIGASPIELE :
+				case MatchesPanel.NUR_EIGENE_LIGASPIELE :
 					sql += (" AND MatchTyp=" + MatchType.LEAGUE.getId());
 					break;
 
-				case SpielePanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE :
+				case MatchesPanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE :
 					sql += (" AND ( MatchTyp=" + MatchType.FRIENDLYNORMAL.getId());
 					sql += (" OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId());
 					sql += (" OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId());
 					sql += (" OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId() + " )");
 					break;
-				case SpielePanel.NUR_EIGENE_TOURNAMENTSPIELE :
+				case MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE :
 					sql += (" AND ( MatchTyp=" + MatchType.TOURNAMENTGROUP.getId());
 					sql += (" OR MatchTyp=" + MatchType.TOURNAMENTPLAYOFF.getId());
 					sql += (" OR MatchTyp=" + MatchType.DIVISIONBATTLE.getId() + " )");
 					break;
-				case SpielePanel.ONLY_SECONDARY_CUP:
+				case MatchesPanel.ONLY_SECONDARY_CUP:
 					sql += (" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
 					sql += (" OR MatchTyp=" + MatchType.RUBYCUP.getId());
 					sql += (" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
 					sql += (" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");
 					break;
-				case SpielePanel.ONLY_QUALIF_MATCHES:
+				case MatchesPanel.ONLY_QUALIF_MATCHES:
 					sql += (" AND MatchTyp=" + MatchType.QUALIFICATION.getId());
 					break;
 			}

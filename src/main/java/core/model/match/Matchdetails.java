@@ -192,7 +192,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     - match details do not contain highlights
     - highlights do not contain match part (column is introduced with #561 in HO V4.0)
      */
-    private static int maxMatchdetailsReloadsPerSession = 0;
+    private static int maxMatchdetailsReloadsPerSession = 10;
 
     // Enable explicit download of match details (e. g. invoked by user clicks)
     public static Matchdetails getMatchdetails(int matchId, MatchType type, boolean force)
