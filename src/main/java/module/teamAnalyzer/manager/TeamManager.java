@@ -31,8 +31,8 @@ public class TeamManager {
 		if (league != null) {
 			List<?> matches = league.getEintraege();
 
-			for (Iterator<?> iter = matches.iterator(); iter.hasNext();) {
-				Paarung element = (Paarung) iter.next();
+			for (Object match : matches) {
+				Paarung element = (Paarung) match;
 
 				if (element.getSpieltag() < HOVerwaltung.instance().getModel().getBasics().getSpieltag())
 					continue;
@@ -81,10 +81,7 @@ public class TeamManager {
 	}
 
 	public static boolean isTeamInList(int teamId) {
-		if (getTeamsMap().get(teamId) != null) {
-			return true;
-		}
-		return false;
+		return getTeamsMap().get(teamId) != null;
 	}
 
 	public static Collection<Team> getTeams(Boolean includeOwn) {
@@ -132,12 +129,10 @@ public class TeamManager {
 			Vector<Team> vLMatch = getUpComingMatchs(getLeagueMatches(includeOwn));
 			Collections.sort(vLMatch);
 
-			Iterator it = vLMatch.iterator();
 
 			Timestamp refTS = HOVerwaltung.instance().getModel().getBasics().getDatum();
 
-			while(it.hasNext()){
-				Team team = (Team)it.next();
+			for ( var team : vLMatch){
 
 				if (team.getTime().compareTo(refTS) >= 0) {
 					if (teams.get(team.getTeamId()) == null) {
@@ -150,11 +145,9 @@ public class TeamManager {
 	}
 
 	private static Spielplan getDivisionMatches() {
-		Spielplan league = DBManager.instance().getSpielplan(
+		return DBManager.instance().getSpielplan(
 				HOVerwaltung.instance().getModel().getXtraDaten().getLeagueLevelUnitID(),
 				HOVerwaltung.instance().getModel().getBasics().getSeason());
-
-		return league;
 	}
 
 	/*
@@ -164,14 +157,14 @@ public class TeamManager {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		MatchKurzInfo[] dbMatches = DBManager.instance().getMatchesKurzInfoUpComing(teamId);
 
-		List<MatchKurzInfo> l = new ArrayList<MatchKurzInfo>();
+		List<MatchKurzInfo> l = new ArrayList<>();
 
 		l.addAll(Arrays.asList(dbMatches));
 
 		Object[] matches = l.toArray();
 
-		for (int i = 0; i < matches.length; i++) {
-			MatchKurzInfo match = (MatchKurzInfo) matches[i];
+		for (Object o : matches) {
+			MatchKurzInfo match = (MatchKurzInfo) o;
 			Team team = new Team();
 
 			if (match.getHomeTeamID() == teamId) {
