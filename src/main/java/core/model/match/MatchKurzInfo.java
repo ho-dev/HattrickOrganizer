@@ -98,7 +98,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	private MatchType m_mtMatchTyp = MatchType.NONE;
 	private CupLevel m_mtCupLevel = CupLevel.NONE;
 	private CupLevelIndex m_mtCupLevelIndex = CupLevelIndex.NONE;
-	private Timestamp matchDateTimestamp;
+	//private Timestamp matchDateTimestamp;
 	public static final int ONGOING = 3;
 	public static final int UPCOMING = 2;
 	public static final int FINISHED = 1;
@@ -240,7 +240,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	public final void setMatchDate(java.lang.String m_sMatchDate) {
 		this.m_sMatchDate = m_sMatchDate;
 		// ensures that getMatchDateAsTimestamp() will regenerate the timestamp
-		this.matchDateTimestamp = null;
+		//this.matchDateTimestamp = null;
 	}
 
 	/**

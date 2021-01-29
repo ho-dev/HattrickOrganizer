@@ -74,12 +74,14 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
 
         if (renderType == RenderType.TYPE_1) {
             String sDate = "";
-            LocalDateTime matchSchedule = value.getTime().toLocalDateTime();
-            if(matchSchedule.getYear()>1100) {
-                sDate = new SimpleDateFormat("dd-MM-yyyy HH:mm ").format(value.getTime());
-                int iHTSeason = getHTSeason(value.getTime(), true);
-                int iHTWeek = getHTWeek(value.getTime(), true);
-                sDate += "(" + iHTWeek + "/" + iHTSeason + ")";
+            if ( value.getTime() != null) {
+                LocalDateTime matchSchedule = value.getTime().toLocalDateTime();
+                if (matchSchedule.getYear() > 1100) {
+                    sDate = new SimpleDateFormat("dd-MM-yyyy HH:mm ").format(value.getTime());
+                    int iHTSeason = getHTSeason(value.getTime(), true);
+                    int iHTWeek = getHTWeek(value.getTime(), true);
+                    sDate += "(" + iHTWeek + "/" + iHTSeason + ")";
+                }
             }
 
             setText(value.getName() + "  " + sDate);

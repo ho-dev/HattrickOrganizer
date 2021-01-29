@@ -66,10 +66,9 @@ public class FavouriteMenu extends JMenu {
      */
     private void jbInit() {
         teams = DBManager.instance().getTAFavoriteTeams();
-        items = new ArrayList<JMenuItem>();
+        items = new ArrayList<>();
 
-        for (Iterator<?> iter = teams.iterator(); iter.hasNext();) {
-            Team element = (Team) iter.next();
+        for (Team element : teams) {
             JMenuItem item = new JMenuItem(element.getName());
 
             item.addActionListener(new FavoriteItemListener(element));
@@ -85,28 +84,24 @@ public class FavouriteMenu extends JMenu {
             itemDelete.setVisible(false);
         }
 
-        itemDelete.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent arg0) {
-                    JOptionPane.showMessageDialog(SystemManager.getPlugin(),
-                                                  new DeletePanel(me),
-                                                  HOVerwaltung.instance().getLanguageString("ls.button.delete")
-                                                  + " "
-                                                  + HOVerwaltung.instance().getLanguageString("Verein"),
-                                                  JOptionPane.PLAIN_MESSAGE);
-                    ;
-                }
-            });
+        itemDelete.addActionListener(arg0 -> {
+            JOptionPane.showMessageDialog(SystemManager.getPlugin(),
+                                          new DeletePanel(me),
+                                          HOVerwaltung.instance().getLanguageString("ls.button.delete")
+                                          + " "
+                                          + HOVerwaltung.instance().getLanguageString("Verein"),
+                                          JOptionPane.PLAIN_MESSAGE);
+            ;
+        });
 
-        itemAdd.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent arg0) {
-                    JOptionPane.showMessageDialog(SystemManager.getPlugin(),
-                                                  new AddPanel(me),
-                                                  HOVerwaltung.instance().getLanguageString("ls.button.add")
-                                                  + " "
-                                                  + HOVerwaltung.instance().getLanguageString("Verein"),
-                                                  JOptionPane.PLAIN_MESSAGE);
-                    ;
-                }
-            });
+        itemAdd.addActionListener(arg0 -> {
+            JOptionPane.showMessageDialog(SystemManager.getPlugin(),
+                                          new AddPanel(me),
+                                          HOVerwaltung.instance().getLanguageString("ls.button.add")
+                                          + " "
+                                          + HOVerwaltung.instance().getLanguageString("Verein"),
+                                          JOptionPane.PLAIN_MESSAGE);
+            ;
+        });
     }
 }
