@@ -64,6 +64,14 @@ public final class Basics  {
     /**
      * Creates a new Basics object.
      */
+    public Basics(){
+
+    }
+
+
+    /**
+     * Creates a new Basics object.
+     */
     public Basics(Properties properties) {
         m_clDatum = getTimestamp(properties, "date");
         m_iTeamId = getInt(properties, "teamid", 0);

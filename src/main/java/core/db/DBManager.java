@@ -206,7 +206,8 @@ public class DBManager {
 						.getTable(UserConfigurationTable.TABLENAME);
 				configTable.store(UserParameter.instance());
 				configTable.store(HOParameter.instance());
-			} else {
+			}
+			else {
 				// Check if there are any updates on the database to be done.
 				dbUpdater.updateDB(DBVersion);
 			}
@@ -214,7 +215,7 @@ public class DBManager {
 			// Check if there are any config updates
 			// new since 1.401 - flattermann
 			dbUpdater.updateConfig();
-			dbUpdater = null;
+
 			// tempInstance.updateConfig();
 			m_clInstance = tempInstance;
 		}

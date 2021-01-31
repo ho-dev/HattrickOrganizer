@@ -250,9 +250,9 @@ final class SpielerTable extends AbstractTable {
 	 * lädt die Player zum angegeben HRF file ein
 	 */
 	List<Player> getSpieler(int hrfID) {
-		ResultSet rs = null;
-		Player player = null;
-		String sql = null;
+		ResultSet rs;
+		Player player;
+		String sql;
 		final ArrayList<Player> ret = new ArrayList<>();
 		if ( hrfID > -1) {
 

@@ -88,22 +88,31 @@ public final class LigaTable extends AbstractTable {
 	 * lädt die Basics zum angegeben HRF file ein
 	 */
 	Liga getLiga(int hrfID) {
-		ResultSet rs = null;
-		Liga liga = null;
 
-		rs = getSelectByHrfID(hrfID);
+		Liga serie = new Liga();
 
-		try {
-			if (rs != null) {
-				rs.first();
-				liga = new Liga(rs);
-				rs.close();
+
+		if(hrfID == -1){
+			return serie;
+		}
+		else {
+
+			ResultSet rs;
+
+			rs = getSelectByHrfID(hrfID);
+
+			try {
+				if (rs != null) {
+					rs.first();
+					serie = new Liga(rs);
+					rs.close();
+				}
+			} catch (Exception e) {
+				HOLogger.instance().error(getClass(), "Error while loding Serie model: " + e);
 			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getLiga: " + e);
 		}
 
-		return liga;
+		return serie;
 	}
 	
 }

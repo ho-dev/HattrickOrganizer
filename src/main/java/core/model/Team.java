@@ -86,6 +86,14 @@ public final class Team  {
 		subStimmung = 2;
 	}
 
+
+	/**
+	 * Creates a new Team object.
+	 */
+	public Team() {
+	}
+
+
 	/**
 	 * Creates a new Team object.
 	 */

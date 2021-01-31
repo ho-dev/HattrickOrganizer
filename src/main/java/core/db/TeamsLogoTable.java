@@ -127,7 +127,7 @@ public class TeamsLogoTable extends AbstractTable{
         sql.append("WHEN NOT MATCHED THEN INSERT VALUES vals.a, vals.b, vals.c, vals.d");
 
         adapter.executeUpdate(sql.toString());
-        HOLogger.instance().debug(this.getClass(), "storeTeamLogoInfo: " +  teamID + " " +  logoURL + " " +  lastAccess);
+//        HOLogger.instance().debug(this.getClass(), "storeTeamLogoInfo: " +  teamID + " " +  logoURL + " " +  lastAccess);
     }
 
 
@@ -136,7 +136,7 @@ public class TeamsLogoTable extends AbstractTable{
         Timestamp now = new Timestamp(System.currentTimeMillis());
         String sql = "UPDATE CLUBS_LOGO SET LAST_ACCESS = '" + now.toString() + "' WHERE TEAM_ID = " + teamID;
         adapter.executeUpdate(sql);
-        HOLogger.instance().debug(this.getClass(), "Update access time info of teamID : " +  teamID);
+//        HOLogger.instance().debug(this.getClass(), "Update access time info of teamID : " +  teamID);
     }
 
 }

@@ -1,5 +1,6 @@
 package core.db;
 
+import core.module.IModule;
 import core.util.HOLogger;
 import module.lineup.Lineup;
 
@@ -34,9 +35,15 @@ final class AufstellungTable extends AbstractTable {
 	 * lädt System Positionen
 	 */
 	Lineup getAufstellung(int hrfID, String name) {
-		ResultSet rs = null;
-		module.lineup.Lineup auf = null;
-		String sql = null;
+
+		module.lineup.Lineup lineup = new module.lineup.Lineup();
+
+		if (hrfID == -1){
+			return lineup;
+		}
+
+		ResultSet rs;
+		String sql;
 
 		sql = "SELECT * FROM " + getTableName() + " WHERE HRF_ID = " + hrfID
 				+ " and Aufstellungsname ='" + name + "'";
@@ -45,83 +52,80 @@ final class AufstellungTable extends AbstractTable {
 		try {
 			if (rs != null) {
 				rs.first();
+				lineup.setCaptain(rs.getInt("Kapitaen"));
+				lineup.setKicker(rs.getInt("Kicker"));
+				lineup.setTacticType(rs.getInt("Tactic"));
+				lineup.setAttitude(rs.getInt("Attitude"));
+				lineup.setStyleOfPlay(rs.getInt("StyleOfPlay"));
 
-				auf = new module.lineup.Lineup();
-				auf.setCaptain(rs.getInt("Kapitaen"));
-				auf.setKicker(rs.getInt("Kicker"));
-				auf.setTacticType(rs.getInt("Tactic"));
-				auf.setAttitude(rs.getInt("Attitude"));
-				auf.setStyleOfPlay(rs.getInt("StyleOfPlay"));
+				lineup.setPositionen(DBManager.instance().getSystemPositionen(hrfID, name));
+				lineup.setSubstitionList(new ArrayList<>(DBManager.instance()
+						.getMatchSubstitutionsByHrf(hrfID, name)));
+				lineup.setPenaltyTakers(DBManager.instance().getPenaltyTakers(name));
+				lineup.setRatings();
 			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DatenbankZugriff.getAufstellung: " + e);
+		}
+			catch (Exception e) {
+			HOLogger.instance().log(getClass(), "Error while loading lineup: " + e);
 		}
 
-		if (auf != null) {
-			auf.setPositionen(DBManager.instance().getSystemPositionen(hrfID, name));
-			auf.setSubstitionList(new ArrayList<>(DBManager.instance()
-					.getMatchSubstitutionsByHrf(hrfID, name)));
-			auf.setPenaltyTakers(DBManager.instance().getPenaltyTakers(name));
-			auf.setRatings();
-		}
-
-		return auf;
+		return lineup;
 	}
 
-	/**
-	 * gibt liste für Aufstellungen
-	 * 
-	 * @param hrfID
-	 *            -1 für default = hrf unabhängig
-	 */
-	Vector<String> getAufstellungsListe(int hrfID) {
-		final Vector<String> ret = new Vector<String>();
-		ResultSet rs = null;
-		String sql = null;
-
-		sql = "SELECT Aufstellungsname FROM " + getTableName() + "";
-		rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				rs.beforeFirst();
-
-				while (rs.next()) {
-					ret.add(rs.getString("Aufstellungsname"));
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DatenbankZugriff.getAufstellungsListe: " + e);
-		}
-
-		return ret;
-	}
-
-	/**
-	 * Gibt eine Liste aller Usergespeicherten Aufstellungsnamen zurück
-	 */
-	Vector<String> getUserAufstellungsListe() {
-		ResultSet rs = null;
-		final String statement = "SELECT Aufstellungsname FROM " + getTableName()
-				+ " WHERE HRF_ID=" + Lineup.NO_HRF_VERBINDUNG;
-		final Vector<String> ret = new Vector<String>();
-
-		try {
-			rs = adapter.executeQuery(statement);
-
-			if (rs != null) {
-				rs.beforeFirst();
-
-				while (rs.next()) {
-					ret.add(rs.getString("Aufstellungsname"));
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DatenbankZugriff.getUserAufstellungsListe: " + e);
-		}
-
-		return ret;
-	}
+//	/**
+//	 * gibt liste für Aufstellungen
+//	 *
+//	 * @param hrfID
+//	 *            -1 für default = hrf unabhängig
+//	 */
+//	Vector<String> getAufstellungsListe(int hrfID) {
+//		final Vector<String> ret = new Vector<String>();
+//		ResultSet rs = null;
+//		String sql = null;
+//
+//		sql = "SELECT Aufstellungsname FROM " + getTableName() + "";
+//		rs = adapter.executeQuery(sql);
+//
+//		try {
+//			if (rs != null) {
+//				rs.beforeFirst();
+//
+//				while (rs.next()) {
+//					ret.add(rs.getString("Aufstellungsname"));
+//				}
+//			}
+//		} catch (Exception e) {
+//			HOLogger.instance().log(getClass(), "DatenbankZugriff.getAufstellungsListe: " + e);
+//		}
+//
+//		return ret;
+//	}
+//
+//	/**
+//	 * Gibt eine Liste aller Usergespeicherten Aufstellungsnamen zurück
+//	 */
+//	Vector<String> getUserAufstellungsListe() {
+//		ResultSet rs = null;
+//		final String statement = "SELECT Aufstellungsname FROM " + getTableName()
+//				+ " WHERE HRF_ID=" + Lineup.NO_HRF_VERBINDUNG;
+//		final Vector<String> ret = new Vector<String>();
+//
+//		try {
+//			rs = adapter.executeQuery(statement);
+//
+//			if (rs != null) {
+//				rs.beforeFirst();
+//
+//				while (rs.next()) {
+//					ret.add(rs.getString("Aufstellungsname"));
+//				}
+//			}
+//		} catch (Exception e) {
+//			HOLogger.instance().log(getClass(), "DatenbankZugriff.getUserAufstellungsListe: " + e);
+//		}
+//
+//		return ret;
+//	}
 
 	/**
 	 * speichert die Aufstellung und die aktuelle Aufstellung als STANDARD

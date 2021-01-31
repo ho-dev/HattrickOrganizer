@@ -102,19 +102,21 @@ final class BasicsTable extends AbstractTable {
 	 *
 	 */
 	Basics getBasics(int hrfID) {
-		ResultSet rs = null;
-		Basics basics = null;
+		ResultSet rs;
+		Basics basics = new Basics();
 
-		rs = getSelectByHrfID(hrfID);
+		if (hrfID != -1) {
 
-		try {
-			if (rs != null) {
-				rs.first();
-				basics = new Basics(rs);
-				rs.close();
+			rs = getSelectByHrfID(hrfID);
+			try {
+				if (rs != null) {
+					rs.first();
+					basics = new Basics(rs);
+					rs.close();
+				}
+			} catch (Exception e) {
+				HOLogger.instance().log(getClass(), "DatenbankZugriff.getBasic: " + e);
 			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getBasic: " + e);
 		}
 
 		return basics;

@@ -53,10 +53,18 @@ public class HOModel {
 
     //~ Constructors -------------------------------------------------------------------------------
 	public HOModel() {
-        //erst einbauen wenn db angebunden ist
-        try {
-            m_iID = DBManager.instance().getMaxHrfId() + 1;
-        } catch (Exception ignored) {
+
+	    if (DBManager.instance().isFirstStart()){
+	        m_iID = 0;
+        }
+	    else {
+
+            try {
+                m_iID = DBManager.instance().getMaxHrfId() + 1;
+            }
+            catch (Exception e) {
+                HOLogger.instance().error(this.getClass(), "Error when trying to determine latest HRH_ID");
+            }
         }
     }
 
