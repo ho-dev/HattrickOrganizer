@@ -181,7 +181,7 @@ public abstract class WeeklyTrainingType {
 	public double getPrimaryTraining(TrainingWeekPlayer tp) {
 		double dPrimaryTraining = 0;
 		int iMinutes = 0;
-		int tmp = tp.getPrimarySkillPositionMinutes();
+		int tmp = tp.getFullTrainingMinutes();
 		if (tmp > 0) {
 			if (tmp > 90) {
 				tmp = 90;
@@ -190,14 +190,14 @@ public abstract class WeeklyTrainingType {
 			dPrimaryTraining = (double) tmp / (double) 90;
 		}
 		if (iMinutes > 0 && _PrimaryTrainingSkillBonus > 0) {
-			tmp = tp.getPrimarySkillBonusPositionMinutes();
+			tmp = tp.getBonusTrainingMinutes();
 			if (tmp > 0) {
 				dPrimaryTraining += ((double) tmp / (double) 90) * _PrimaryTrainingSkillBonus;
 			}
 		}
 		if (iMinutes < 90) {
 			if (_PrimaryTrainingSkillPartlyLengthRate > 0) {
-				tmp = tp.getPrimarySkillSecondaryPositionMinutes();
+				tmp = tp.getPartlyTrainingMinutes();
 				if (tmp > 0) {
 					if (iMinutes + tmp > 90) {
 						tmp = 90 - iMinutes;
@@ -208,7 +208,7 @@ public abstract class WeeklyTrainingType {
 			}
 			if (iMinutes < 90) {
 				if (_PrimaryTrainingSkillOsmosisLengthRate > 0) {
-					tmp = tp.getPrimarySkillOsmosisPositionMinutes();
+					tmp = tp.getOsmosisTrainingMinutes();
 					if (tmp > 0) {
 						if (iMinutes + tmp > 90) {
 							tmp = 90 - iMinutes;
@@ -226,7 +226,7 @@ public abstract class WeeklyTrainingType {
 		double dSecondaryTraining = 0;
 		if (_SecondaryTrainingSkill > 0) {
 			int iMinutes = 0;
-			int tmp = tp.getSecondarySkillPrimaryMinutes();
+			int tmp = tp.getFullTrainingMinutes();
 			if (tmp > 0) {
 				if (tmp >= 90) {
 					tmp = 90;
@@ -235,7 +235,7 @@ public abstract class WeeklyTrainingType {
 				dSecondaryTraining = (double) tmp / (double) 90;
 			}
 			if (iMinutes > 0 && _SecondaryTrainingSkillBonus > 0) {
-				tmp = tp.getSecondarySkillBonusMinutes();
+				tmp = tp.getBonusTrainingMinutes();
 				if (tmp > 0) {
 					dSecondaryTraining += ((double) tmp / (double) 90) * _SecondaryTrainingSkillBonus;
 				}

@@ -1,68 +1,67 @@
 package core.training;
 
 import core.model.player.Player;
-import core.util.HelperWrapper;
 
 public class TrainingWeekPlayer {
 	private Player player;
-	private int _PrimarySkillPositionMinutes = 0;
-	private int _PrimarySkillBonusPositionMinutes = 0;
-	private int _PrimarySkillSecondaryPositionMinutes = 0;
-	private int _PrimarySkillOsmosisPositionMinutes = 0;
-	private int _SecondarySkillPositionMinutes = 0;
-	private int _SecondarySkillBonusPositionMinutes = 0;
-	private int _SecondarySkillSecondaryPositionMinutes = 0;
-	private int _SecondarySkillOsmosisPositionMinutes = 0;
-	private int _TotalMinutesPlayed = 0;
+	private int fullTrainingMinutes = 0;
+	private int bonusTrainingMinutes = 0;
+	private int partlyTrainingMinutes = 0;
+	private int osmosisTrainingMinutes = 0;
+	/*	private int _SecondarySkillPositionMinutes = 0;
+		private int _SecondarySkillBonusPositionMinutes = 0;
+		private int _SecondarySkillSecondaryPositionMinutes = 0;
+		private int _SecondarySkillOsmosisPositionMinutes = 0;*/
+	private int playedMinutes = 0;
 
-	public TrainingWeekPlayer(Player player)
-	{
+	public TrainingWeekPlayer(Player player) {
 		this.player = player;
 	}
-	public void addPrimarySkillPositionMinutes(int minutes)
-	{
-		if ((_PrimarySkillPositionMinutes + minutes) > 90)
-			_PrimarySkillPositionMinutes = 90;
+
+	public void addFullTrainingMinutes(int minutes) {
+		if ((fullTrainingMinutes + minutes) > 90)
+			fullTrainingMinutes = 90;
 		else
-			_PrimarySkillPositionMinutes += minutes;
+			fullTrainingMinutes += minutes;
 	}
-	public int getPrimarySkillPositionMinutes()
-	{
-		return _PrimarySkillPositionMinutes;
+
+	public int getFullTrainingMinutes() {
+		return fullTrainingMinutes;
 	}
-	public void addPrimarySkillBonusPositionMinutes(int minutes)
-	{
-		if ((_PrimarySkillBonusPositionMinutes + minutes) > 90)
-			_PrimarySkillBonusPositionMinutes = 90;
+
+	public void addBonusTrainingMinutes(int minutes) {
+		if ((bonusTrainingMinutes + minutes) > 90)
+			bonusTrainingMinutes = 90;
 		else
-			_PrimarySkillBonusPositionMinutes += minutes;
+			bonusTrainingMinutes += minutes;
 	}
-	public int getPrimarySkillBonusPositionMinutes()
-	{
-		return _PrimarySkillBonusPositionMinutes;
+
+	public int getBonusTrainingMinutes() {
+		return bonusTrainingMinutes;
 	}
-	public void addPrimarySkillSecondaryPositionMinutes(int minutes)
-	{
-		if ((_PrimarySkillSecondaryPositionMinutes + minutes) > 90)
-			_PrimarySkillSecondaryPositionMinutes = 90;
+
+	public void addPartlyTrainingMinutes(int minutes) {
+		if ((partlyTrainingMinutes + minutes) > 90)
+			partlyTrainingMinutes = 90;
 		else
-			_PrimarySkillSecondaryPositionMinutes += minutes;
+			partlyTrainingMinutes += minutes;
 	}
-	public int getPrimarySkillSecondaryPositionMinutes()
-	{
-		return _PrimarySkillSecondaryPositionMinutes;
+
+	public int getPartlyTrainingMinutes() {
+		return partlyTrainingMinutes;
 	}
-	public void addPrimarySkillOsmosisPositionMinutes(int minutes)
-	{
-		if ((_PrimarySkillOsmosisPositionMinutes + minutes) > 90)
-			_PrimarySkillOsmosisPositionMinutes = 90;
+
+	public void addOsmosisTrainingMinutes(int minutes) {
+		if ((osmosisTrainingMinutes + minutes) > 90)
+			osmosisTrainingMinutes = 90;
 		else
-			_PrimarySkillOsmosisPositionMinutes += minutes;
+			osmosisTrainingMinutes += minutes;
 	}
-	public int getPrimarySkillOsmosisPositionMinutes()
-	{
-		return _PrimarySkillOsmosisPositionMinutes;
+
+	public int getOsmosisTrainingMinutes() {
+		return osmosisTrainingMinutes;
 	}
+	/*
 	public void addSecondarySkillMinutes(int minutes)
 	{
 		if ((_SecondarySkillPositionMinutes + minutes) > 90)
@@ -106,25 +105,21 @@ public class TrainingWeekPlayer {
 	public int getSecondarySkillOsmosisPositionMinutes()
 	{
 		return _SecondarySkillOsmosisPositionMinutes;
+	}*/
+
+	public void addPlayedMinutes(int minutes) {
+		this.playedMinutes += minutes;
 	}
 
-	public void addTotalMinutesPlayed(int minutes){
-		this._TotalMinutesPlayed += minutes;
+	public int getPlayedMinutes() {
+		return playedMinutes;
 	}
-	public int getTotalMinutesPlayed()
-	{
-		return _TotalMinutesPlayed;
-	}
-	public String Name()
-	{
+
+	public String Name() {
 		return this.player.getFullName();
-	}
-	public boolean PlayerHasPlayed()
-	{
-		return _TotalMinutesPlayed > 0;
 	}
 
 	public FuturePlayerTraining.Priority getFutureTrainingPrio(WeeklyTrainingType wt, HattrickDate hattrickWeek) {
-		return  player.getTrainingPriority(wt, hattrickWeek);
+		return player.getTrainingPriority(wt, hattrickWeek);
 	}
 }
