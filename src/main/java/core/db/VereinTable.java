@@ -96,23 +96,27 @@ final class VereinTable extends AbstractTable {
 	 * lädt die Basics zum angegeben HRF file ein
 	 */
 	Verein getVerein(int hrfID) {
-		ResultSet rs ;
-		Verein verein = null;
-		String sql ;
+		Verein club = new Verein();
 
-		sql = "SELECT * FROM "+getTableName()+" WHERE HRF_ID = " + hrfID;
-		rs = adapter.executeQuery(sql);
+		if (hrfID != -1) {
+			ResultSet rs;
 
-		try {
-			if (rs != null) {
-				rs.first();
-				verein = new Verein(rs);
+			String sql;
+
+			sql = "SELECT * FROM " + getTableName() + " WHERE HRF_ID = " + hrfID;
+			rs = adapter.executeQuery(sql);
+
+			try {
+				if (rs != null) {
+					rs.first();
+					club = new Verein(rs);
+				}
+			} catch (Exception e) {
+				HOLogger.instance().log(getClass(), "DatenbankZugriff.getTeam: " + e);
 			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getTeam: " + e);
 		}
 
-		return verein;
+		return club;
 	}
 
 }

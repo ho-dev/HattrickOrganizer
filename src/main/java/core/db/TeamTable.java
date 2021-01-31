@@ -143,21 +143,23 @@ final class TeamTable extends AbstractTable {
 	 * load the team data for the given HRF id
 	 */
 	Team getTeam(int hrfID) {
-		ResultSet rs = null;
-		Team team = null;
 
-		rs = getSelectByHrfID(hrfID);
+		Team team = new Team();
 
-		try {
-			if (rs != null) {
-				rs.first();
-				team = new Team(rs);
-				rs.close();
+		if(hrfID != -1) {
+
+			ResultSet rs = getSelectByHrfID(hrfID);
+
+			try {
+				if (rs != null) {
+					rs.first();
+					team = new Team(rs);
+					rs.close();
+				}
+			} catch (Exception e) {
+				HOLogger.instance().error(getClass(), "Error while loading Team model: " + e);
 			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getTeam: " + e);
 		}
-
 		return team;
 	}
 }

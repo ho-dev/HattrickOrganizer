@@ -91,7 +91,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	public MatchRoleID(int id, int spielerId, byte taktik) {
 		// m_bPosition = position;
 
-		if ((id < IMatchRoleID.setPieces) && (id != -1)) {
+		if ((id < IMatchRoleID.setPieces) && (id != -1) && (id != 0)) {
 			HOLogger.instance().debug(getClass(), "Old RoleID found in lineup: " + id);
 		}
 

@@ -37,22 +37,23 @@ final class XtraDataTable extends AbstractTable {
 	 * lädt die Basics zum angegeben HRF file ein
 	 */
 	XtraData getXtraDaten(int hrfID) {
-		ResultSet rs = null;
-		XtraData xtra = null;
-		String sql = null;
 
-		sql = "SELECT * FROM "+getTableName()+" WHERE HRF_ID = " + hrfID;
-		rs = adapter.executeQuery(sql);
+		XtraData xtra = new XtraData();
 
-		try {
-			if (rs != null) {
-				rs.first();
-				xtra = new XtraData(rs);
+		if (hrfID != -1) {
+
+			String sql = "SELECT * FROM " + getTableName() + " WHERE HRF_ID = " + hrfID;
+			ResultSet rs = adapter.executeQuery(sql);
+
+			try {
+				if (rs != null) {
+					rs.first();
+					xtra = new XtraData(rs);
+				}
+			} catch (Exception e) {
+				HOLogger.instance().error(getClass(), "Error while loading XtraData model: " + e);
 			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.XtraData: " + e);
 		}
-
 		return xtra;
 	}
 

@@ -74,6 +74,12 @@ public final class Liga {
     /**
      * Creates a new Liga object.
      */
+    public Liga() {
+    }
+
+    /**
+     * Creates a new Liga object.
+     */
     public Liga(java.sql.ResultSet rs) {
         try {
             m_sLiga = rs.getString("LigaName");

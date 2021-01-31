@@ -40,7 +40,7 @@ public class HOLogger {
 		logsFolder = new File(logsFolderName);
 		
 		if (!logsFolder.exists()) {
-			logFolderExist = logsFolder.getParentFile().mkdirs();
+			logFolderExist = logsFolder.mkdirs();
 			if (!logFolderExist) {
 				errorMsg = "Could not initialize the log folder: " + logsFolderName + "\n";
 				System.err.println(errorMsg);
@@ -167,14 +167,4 @@ public class HOLogger {
 		}
 	}
 
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-
-		try {
-			logWriter.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }

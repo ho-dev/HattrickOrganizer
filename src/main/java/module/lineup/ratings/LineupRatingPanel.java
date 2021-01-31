@@ -772,21 +772,24 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
             m_jpMinuteToggler.load();
 
             clear();
-            setRightDefense(currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
-            setCentralDefense(currentLineup.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
-            setLeftDefense(currentLineup.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
-            setMidfield(currentLineup.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
-            setLeftAttack(currentLineup.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
-            setCentralAttack(currentLineup.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
-            setRightAttack(currentLineup.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
-            setLoddar(Helper.round(currentLineup.getRatings().getLoddarStat().get(m_jpMinuteToggler.getCurrentKey()), 2));
-            setiHatStats(currentLineup.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
-            int iTacticType = currentLineup.getTacticType();
-            setTactic(iTacticType, currentLineup.getTacticLevel(iTacticType));
-            setFormationExperience(currentLineup.getCurrentTeamFormationString(), currentLineup.getExperienceForCurrentTeamFormation());
 
-            // Recalculate Borders
-            calcColorBorders();
+            if (currentLineup.getRatings().getLeftDefense().size() !=0) {
+                setRightDefense(currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
+                setCentralDefense(currentLineup.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
+                setLeftDefense(currentLineup.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
+                setMidfield(currentLineup.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
+                setLeftAttack(currentLineup.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
+                setCentralAttack(currentLineup.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
+                setRightAttack(currentLineup.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
+                setLoddar(Helper.round(currentLineup.getRatings().getLoddarStat().get(m_jpMinuteToggler.getCurrentKey()), 2));
+                setiHatStats(currentLineup.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
+                int iTacticType = currentLineup.getTacticType();
+                setTactic(iTacticType, currentLineup.getTacticLevel(iTacticType));
+                setFormationExperience(currentLineup.getCurrentTeamFormationString(), currentLineup.getExperienceForCurrentTeamFormation());
+
+                // Recalculate Borders
+                calcColorBorders();
+            }
         }
     }
 

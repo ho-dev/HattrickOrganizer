@@ -42,6 +42,13 @@ public class XtraData  {
         }
     }
 
+
+    /**
+     * Creates a new XtraData object.
+     */
+    public XtraData(){}
+
+
     /**
      * Creates a new XtraData object.
      */
@@ -54,10 +61,9 @@ public class XtraData  {
             m_clTrainingDate = rs.getTimestamp("TrainingDate");
             m_clEconomyDate = rs.getTimestamp("EconomyDate");
             m_iLeagueLevelUnitID = rs.getInt("LeagueLevelUnitID");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             HOLogger.instance().log(getClass(),"XtraData: " + e.toString());
-
-            //HOLogger.instance().log(getClass(),e);
         }
     }
 
