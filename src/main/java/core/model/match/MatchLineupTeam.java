@@ -529,7 +529,8 @@ public class MatchLineupTeam {
 		var hls = getMatchdetails().getHighlights(); // DBManager.instance().getMatchDetails(matchId).getHighlights();
 		for (MatchEvent hl : hls) {
 			MatchEvent.MatchEventID me = MatchEvent.MatchEventID.fromMatchEventID(hl.getiMatchEventID());
-			if (me == MatchEvent.MatchEventID.MATCH_FINISHED) {
+			if (me == MatchEvent.MatchEventID.MATCH_FINISHED ||
+					me == MatchEvent.MatchEventID.PENALTY_CONTEST_AFTER_EXTENSION) {
 				return hl.getMinute();
 			} else if (hl.getPlayerId() == spielerId) {
 				if (hl.isInjured() || hl.isRedCard()) {
