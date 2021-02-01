@@ -105,25 +105,22 @@ public class FutureTrainingManager {
 				if ( trainingPrio != null ) {
 					switch (trainingPrio) {
 						case FULL_TRAINING:
-							tp.addPrimarySkillPositionMinutes(90);
-							tp.addSecondarySkillBonusMinutes(90);
-							tp.addSecondarySkillMinutes(90);
+							tp.addFullTrainingMinutes(90);
+							tp.addBonusTrainingMinutes(90);
 							trainingSpeed = 1;
 							break;
 						case PARTIAL_TRAINING:
 							if ( wt.getTrainingType() == TrainingType.SET_PIECES){
-								tp.addPrimarySkillPositionMinutes(90);
+								tp.addFullTrainingMinutes(90);
 								trainingSpeed = 1;
 							}
 							else {
-								tp.addPrimarySkillSecondaryPositionMinutes(90);
-								tp.addSecondarySkillSecondaryPositionMinutes(90);
+								tp.addPartlyTrainingMinutes(90);
 								trainingSpeed = 1.0 / wt.getPrimaryTrainingSkillPartlyBaseLengthRate();
 							}
 							break;
 						case OSMOSIS_TRAINING:
-							tp.addPrimarySkillOsmosisPositionMinutes(90);
-							tp.addSecondarySkillOsmosisTrainingMinutes(90);
+							tp.addOsmosisTrainingMinutes(90);
 							trainingSpeed += 1.0 / wt.getPrimaryTrainingSkillOsmosisBaseLengthRate();
 							break;
 						default:

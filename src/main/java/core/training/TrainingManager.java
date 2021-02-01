@@ -72,43 +72,19 @@ public class TrainingManager {
      *
      * @param inputPlayer Player to use
      * @param train preset Trainingweeks
-     * @param timestamp if not null, calculate training for this training date only
      *
      * @return TrainingPerPlayer
      */
-    public TrainingPerPlayer calculateWeeklyTrainingForPlayer(Player inputPlayer,
-                                                              TrainingPerWeek train, Timestamp timestamp) {
-        //playerID HIER SETZEN
-		final int playerID = inputPlayer.getPlayerID();
-
+    public TrainingPerPlayer calculateWeeklyTrainingForPlayer(Player inputPlayer, TrainingPerWeek train) {
+ 		final int playerID = inputPlayer.getPlayerID();
         TrainingPerPlayer output = new TrainingPerPlayer(inputPlayer);
-        if (timestamp != null)
-        	output.setTimestamp(timestamp);
         if (train == null || train.getTrainingType() < 0) {
             return output;
         }
-        if (TRAININGDEBUG) {
-        	HTCalendar htc1 = HTCalendarFactory.createTrainingCalendar();
-        	HTCalendar htc2 = HTCalendarFactory.createTrainingCalendar();
-        	String c1s = "";
-			if (timestamp != null) {
-        		htc1.setTime(timestamp);
-        		c1s = " ("+htc1.getHTSeason()+"."+htc1.getHTWeek()+")";
-        	}
-        	htc2.setTime(train.getTrainingDate());
-			String c2s = " (" + htc2.getHTSeason() + "." + htc2.getHTWeek() + ")";
 
-        	HOLogger.instance().debug(getClass(),
-        			"Start calcWeeklyTraining for "+ inputPlayer.getFullName()+", zeitpunkt="+((timestamp!=null)?timestamp.toString()+c1s:"")
-        			+ ", trainDate="+train.getTrainingDate().toString()+c2s);
-        }
-
-        Calendar trainingDate = Calendar.getInstance(Locale.UK);
-        trainingDate.setTime(train.getTrainingDate());
         WeeklyTrainingType wt = WeeklyTrainingType.instance(train.getTrainingType());
         if (wt != null) {
 	        try {
-	        	//List<Integer> matches = getOwnMatchesForTraining(trainingDate);
 	        	var matches = train.getMatches();
 	        	int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 	        	TrainingWeekPlayer tp = new TrainingWeekPlayer(inputPlayer);
@@ -116,21 +92,18 @@ public class TrainingManager {
 	        	for (var match : matches) {
 	                //Get the MatchLineup by id
 	                MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), myID);
-	                MatchStatistics ms = new MatchStatistics(match, mlt);
+	                //MatchStatistics ms = new MatchStatistics(match, mlt);
 					MatchType type = mlt.getMatchType();
+					boolean walkoverWin = match.getMatchdetails().isWalkoverMatchWin(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
 					if ( type != MatchType.MASTERS) { // MASTERS counts only for experience
-						tp.addPrimarySkillPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillPositions()));
-						tp.addPrimarySkillBonusPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillBonusPositions()));
-						tp.addPrimarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillPartlyTrainingPositions()));
-						tp.addPrimarySkillOsmosisPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillOsmosisTrainingPositions()));
-						tp.addSecondarySkillMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillPositions()));
-						tp.addSecondarySkillBonusMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillBonusPositions()));
-						tp.addSecondarySkillSecondaryPositionMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillPartlyTrainingPositions()));
-						tp.addSecondarySkillOsmosisTrainingMinutes(ms.getTrainMinutesPlayedInPositions(playerID, wt.getTrainingSkillOsmosisTrainingPositions()));
+						tp.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getFullTrainingSectors(), walkoverWin));
+						tp.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getBonusTrainingSectors(), walkoverWin));
+						tp.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getPartlyTrainingSectors(), walkoverWin));
+						tp.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getOsmosisTrainingSectors(), walkoverWin));
 					}
-					tp.addTotalMinutesPlayed(ms.getTrainMinutesPlayedInPositions(playerID, null));
-					output.addExperienceIncrease(min(90,tp.getTotalMinutesPlayed() - minutes), type );
-	                minutes = tp.getTotalMinutesPlayed();
+					tp.addPlayedMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin));
+					output.addExperienceIncrease(min(90,tp.getPlayedMinutes() - minutes), type );
+	                minutes = tp.getPlayedMinutes();
 				}
 	            TrainingPoints trp = new TrainingPoints(wt.getPrimaryTraining(tp), wt.getSecondaryTraining(tp));
 
@@ -140,8 +113,7 @@ public class TrainingManager {
 					var nationalMatches = train.getMatches(inputPlayer.getNationalTeamID());
 					for (var match : nationalMatches){
 						MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), inputPlayer.getNationalTeamID());
-						MatchStatistics ms = new MatchStatistics(match, mlt);
-						minutes = ms.getStaminaMinutesPlayedInPositions(playerID);
+						minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
 						if ( minutes > 0 ) {
 							output.addExperienceIncrease(min(90,minutes), mlt.getMatchType());
 						}
@@ -151,7 +123,7 @@ public class TrainingManager {
 	    		if (TrainingManager.TRAININGDEBUG) {
 					HOLogger.instance().debug(getClass(), "Week " + train.getHattrickDate().getWeek()
 	            		+": Player " + inputPlayer.getFullName() + " (" + playerID + ")"
-	            		+" played total " + tp.getTotalMinutesPlayed() + " mins for training purposes and got "
+	            		+" played total " + tp.getPlayedMinutes() + " mins for training purposes and got "
 	            		+ wt.getPrimaryTraining(tp) + " primary training points and "
 	            		+ wt.getSecondaryTraining(tp) + " secondary training points");
 	    		}
@@ -185,9 +157,9 @@ public class TrainingManager {
 								  List<StaffMember> staff) {
 
 		// Generate a map of players from the previous hrf.
-		final Map<Integer, Player> players = new HashMap<>();
+		final Map<Integer, Player> playerOfPreviousDownload = new HashMap<>();
 		for (Player p : previousPlayers) {
-			players.put(p.getPlayerID(), p);
+			playerOfPreviousDownload.put(p.getPlayerID(), p);
 		}
 
 		// Train each player
@@ -195,7 +167,7 @@ public class TrainingManager {
 			try {
 
 				// The version of the player from last hrf
-				Player old = players.get(player.getPlayerID());
+				Player old = playerOfPreviousDownload.get(player.getPlayerID());
 				if (old == null) {
 					if (TrainingManager.TRAININGDEBUG) {
 						HOLogger.instance().debug(HOModel.class, "Old player for id " + player.getPlayerID() + " = null");

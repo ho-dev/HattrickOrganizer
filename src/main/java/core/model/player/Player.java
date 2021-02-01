@@ -1179,7 +1179,7 @@ public class Player {
         {
             return getLastName();
         }
-        return getFirstName().substring(0, 1) + ". " + getLastName();
+        return getFirstName().charAt(0) + ". " + getLastName();
 
         }
 
@@ -1853,7 +1853,6 @@ public class Player {
      * Used when there is only 1 week of training to be calculated.
      *
      * @param originalPlayer - The player to calculate subskills on
-     * @param assistants     - The number of assistants
      * @param trainerlevel   - The trainer level
      * @param intensity      - Training intensity
      * @param stamina
@@ -1870,7 +1869,7 @@ public class Player {
         if (trainingWeek == null)
             return;
 
-        TrainingPerPlayer trForPlayer = TrainingManager.instance().calculateWeeklyTrainingForPlayer(this, trainingWeek, null);
+        TrainingPerPlayer trForPlayer = TrainingManager.instance().calculateWeeklyTrainingForPlayer(this, trainingWeek);
 
         if (trForPlayer == null)
             return;
