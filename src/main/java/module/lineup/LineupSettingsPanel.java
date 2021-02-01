@@ -176,7 +176,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		}
 	}
 
-
 	public void setLabels() {
 
 		// Lineup settings are editable only if in Lineup Simulator mode
@@ -193,13 +192,18 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 
 		final Lineup currentLineup = homodel.getLineupWithoutRatingRecalc();
 		setLocation(currentLineup.getLocation());
-		setTeamSpirit(homodel.getTeam().getTeamSpirit(), homodel.getTeam().getSubTeamSpirit());
-		setConfidence(homodel.getTeam().getConfidence());
+		var team = homodel.getTeam();
+		if ( team != null){
+			setTeamSpirit(team.getTeamSpirit(), team.getSubTeamSpirit());
+			setConfidence(team.getConfidence());
+		}
 		setTrainerType(homodel.getTrainer().getTrainerTyp());
-		setTacticalAssistants(homodel.getClub().getTacticalAssistantLevels());
+		var club = homodel.getClub();
+		if ( club != null){
+			setTacticalAssistants(club.getTacticalAssistantLevels());
+		}
 		setWeather(currentLineup.getWeather(), currentLineup.getWeatherForecast());
 		setPullBackMinute(currentLineup.getPullBackMinute());
-
 	}
 
 	public void setConfidence(int iTeamConfidence) {
