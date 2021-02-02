@@ -383,11 +383,12 @@ public class YouthPlayer {
             // init from models match list
             trainingDevelopment = new TreeMap<>();
             var model = HOVerwaltung.instance().getModel();
+            var teamId = model.getBasics().getYouthTeamId();
             // set start skill values (may be edited by the user)
             var skills = getStartSkills();
             var trainings = model.getYouthTrainingsAfter(this.getArrivalDate());
             for (var training : trainings) {
-                var team = training.getTeam(model.getBasics().getYouthTeamId());
+                var team = training.getTeam(teamId);
                 if (team.hasPlayerPlayed(this.id)) {
                     var trainingEntry = new TrainingDevelopmentEntry(this, training);
                     skills = trainingEntry.calcSkills(skills, getSkillsAt(training.getMatchDate()),team);
@@ -404,10 +405,14 @@ public class YouthPlayer {
         Map<Integer, SkillInfo> startSkills = new HashMap<>();
         for ( var skill : this.currentSkills.values()){
             var startSkill = new SkillInfo(skill.getSkillID());
-            startSkill.setCurrentValue(skill.getStartValue());
-            startSkill.setStartValue(skill.getStartValue());
+            var startValue = skill.getStartValue();
+            startSkill.setCurrentValue(startValue);
             startSkill.setStartLevel(skill.getStartLevel());
             startSkill.setCurrentLevel(skill.getStartLevel());
+            // check if current value was adjusted
+            var adjustment = startSkill.getCurrentValue() - startValue; // Levels may raise current value
+            startSkill.setStartValue(startValue+adjustment);
+            skill.setStartValue(startSkill.getStartValue());
             startSkill.setMax(skill.getMax());
             startSkills.put(startSkill.skillID.getValue(), startSkill);
         }
@@ -489,11 +494,13 @@ public class YouthPlayer {
 
         /**
          * Skill level at the current download
+         * null as long as not known
          */
         private Integer currentLevel;
 
         /**
          * Skill level at the scouting date
+         * null as long as not known
          */
         private Integer startLevel;
 
