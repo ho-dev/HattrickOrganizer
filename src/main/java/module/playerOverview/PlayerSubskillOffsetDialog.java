@@ -8,6 +8,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.option.SliderPanel;
+import core.util.Helper;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -16,16 +17,12 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
+import java.text.NumberFormat;
+import javax.swing.*;
+import javax.swing.text.NumberFormatter;
 
 
 final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener {
-
-	private static final long serialVersionUID = 1187335231698270294L;
 
 	//~ Instance fields ----------------------------------------------------------------------------
 
@@ -157,13 +154,9 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 	}
 
 	private SliderPanel createSliderPanel(JPanel panel, String languageString, int skill) {
-		SliderPanel ret = new SliderPanel(HOVerwaltung.instance().getLanguageString(languageString),
-				100,
-				0,
-				1,
-				1f,
-				80);
-		ret.setValue((float) m_clPlayer.getSub4Skill(skill) * 100f);
+		SliderPanel ret = new SliderPanel(Helper.getTranslation(languageString),100, 0, 1, 1f,80);
+
+		ret.setValue(m_clPlayer.getSub4Skill(skill) * 100f);
 		panel.add(ret);
 		return ret;
 	}

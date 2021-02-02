@@ -1,37 +1,34 @@
 package core.option;
 
-
 import core.gui.comp.panel.ImagePanel;
 import core.util.HOLogger;
-
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-
-import javax.swing.JLabel;
-import javax.swing.JSlider;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import java.text.NumberFormat;
+import javax.swing.*;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.NumberFormatter;
 
 
 /**
- * Panel mit Slider und Textfield
+ * Panel with slider and formattedJTextField
  */
 public final class SliderPanel extends ImagePanel implements ChangeListener {
-    //~ Static / Instance fields ----------------------------------------------------------------------------
 
 	private static final long serialVersionUID = 1L;
 	private JLabel m_jlLabel;
     private JSlider m_jslSlider;
-    private JTextField m_jtfTextfield;
+    private JFormattedTextField m_jtfTextfield;
     private float m_fFaktor;
     private float m_fTextfeldFaktor = 1;
     private int m_iTextbreite = 80;
     private int decimals = 0;
+    private boolean bDeactivateTxtLister = false;
 
-    //~ Constructors -------------------------------------------------------------------------------
 
     /**
      * @param text Text des Labels
@@ -49,20 +46,6 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
         m_iTextbreite = textbreite;
         initComponents(text, max, min);
     }
-
-	/**
-	 * @param text Text des Labels
-	 * @param max Maximaler Wert
-	 * @param min Minimaler Wert
-	 * @param faktor formula factors are multiplied by this factor before being display and divided by it before being saved
-	 * @param textfeldfaktor Faktor für die Anzeige des Sliderwerts in Textfeld
-	 * @param textbreite Breite, die für das Label vorgesehen ist.
-	 */
-	public SliderPanel(String text, int max, int min, float faktor, float textfeldfaktor,
-					   int textbreite,int decimal) {
-		this(text,max,min,faktor,textfeldfaktor,textbreite);
-		this.decimals = decimal;					   	
-	}
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -92,11 +75,13 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
     }
 
     public final void stateChanged(javax.swing.event.ChangeEvent changeEvent) {
+        bDeactivateTxtLister = true;
         if (decimals != 0){
-        m_jtfTextfield.setText(core.util.Helper.round(m_jslSlider.getValue() * m_fTextfeldFaktor,decimals) + "");}
+            m_jtfTextfield.setText(core.util.Helper.round(m_jslSlider.getValue() * m_fTextfeldFaktor, decimals) + "");}
         else {
-        m_jtfTextfield.setText((int)(m_jslSlider.getValue() * m_fTextfeldFaktor) + "");
+            m_jtfTextfield.setText((int)(m_jslSlider.getValue() * m_fTextfeldFaktor) + "");
         }
+        bDeactivateTxtLister = false;
     }
 
     private void initComponents(String text, int max, int min) {
@@ -135,17 +120,64 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
         layout.setConstraints(m_jslSlider, constraints);
         add(m_jslSlider);
 
-        if (decimals != 0){
-        m_jtfTextfield = new JTextField(core.util.Helper.round(m_jslSlider.getValue() * m_fTextfeldFaktor,decimals)
-                                        + "", 4);}
+
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Integer.class);
+        formatter.setMinimum(0);
+        formatter.setMaximum(100);
+        formatter.setAllowsInvalid(false);
+        formatter.setCommitsOnValidEdit(true);
+
+        m_jtfTextfield = new JFormattedTextField(formatter);
+        m_jtfTextfield.setColumns(4);
+
+        if (decimals != 0) {
+            m_jtfTextfield.setText(core.util.Helper.round(m_jslSlider.getValue() * m_fTextfeldFaktor, decimals) + "");
+        }
         else
         {
-            m_jtfTextfield = new JTextField((int)(m_jslSlider.getValue() * m_fTextfeldFaktor)
-                                                 + "", 4);
+            m_jtfTextfield.setText((int)(m_jslSlider.getValue() * m_fTextfeldFaktor) + "");
         }
 
-        m_jtfTextfield.setEditable(false);
+        m_jtfTextfield.setEditable(true);
         m_jtfTextfield.setHorizontalAlignment(SwingConstants.RIGHT);
+
+
+        m_jtfTextfield.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void removeUpdate(DocumentEvent arg0) {
+                if (!bDeactivateTxtLister) {
+                    if(m_jtfTextfield.getText().equals("")){
+                        updateSliderWithoutEvent(0);
+                    }
+                    else {
+                        updateSliderWithoutEvent(Integer.parseInt(m_jtfTextfield.getText()));
+                    }
+                }
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent arg0) {
+                if (!bDeactivateTxtLister) {
+                    if(m_jtfTextfield.getText().equals("")){
+                        updateSliderWithoutEvent(0);
+                    }
+                    else {
+                        updateSliderWithoutEvent(Integer.parseInt(m_jtfTextfield.getText()));
+                    }
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent arg0) {
+               if (!bDeactivateTxtLister) {
+                   updateSliderWithoutEvent(Integer.parseInt(m_jtfTextfield.getText()));
+               }
+            }
+        });
+
         constraints.anchor = GridBagConstraints.EAST;
         constraints.fill = GridBagConstraints.NONE;
         constraints.weightx = 0.0;
@@ -155,4 +187,12 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
         layout.setConstraints(m_jtfTextfield, constraints);
         add(m_jtfTextfield);
     }
+
+    private void updateSliderWithoutEvent(int value){
+        m_jslSlider.removeChangeListener(this);
+        m_jslSlider.setValue(value);
+        m_jslSlider.addChangeListener(this);
+    }
+
+
 }
