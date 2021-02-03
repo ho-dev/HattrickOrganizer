@@ -14,6 +14,7 @@ import core.model.misc.TrainingEvent;
 import core.net.OnlineWorker;
 import core.rating.RatingPredictionManager;
 import core.training.*;
+import core.util.HOLogger;
 import core.util.Helper;
 import core.util.HelperWrapper;
 
@@ -1832,8 +1833,12 @@ public class Player {
         if (skill < PlayerSkill.KEEPER || points <= 0)
             return;
 
-        float gain = (float) Helper.round(points / wt.getTrainingLength(
-                this, trainerlevel, intensity, stamina, staff), 3);
+        var trainingLength = wt.getTrainingLength(this, trainerlevel, intensity, stamina, staff);
+        var trainingLengthAlternativeFormula = wt.getTrainingLengthAlternativeFormula(this, trainerlevel, intensity, stamina, originalPlayer.getValue4Skill(skill), staff);
+
+        HOLogger.instance().info(this.getClass(), this.getFullName()+ " " + PlayerSkill.toString(skill) + " training=" + points/trainingLength + " " + points/trainingLengthAlternativeFormula);
+
+        float gain = (float) Helper.round(points / trainingLength, 3);
 
         if (gain <= 0)
             return;

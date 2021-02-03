@@ -10,6 +10,7 @@ import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.type.*;
+import core.util.HOLogger;
 
 public abstract class WeeklyTrainingType {
 	protected String _Name = "";
@@ -347,6 +348,169 @@ public abstract class WeeklyTrainingType {
 
 	public abstract double getTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff);
 
+	static double[] coachKoeff = {0.734,0.834,0.92,1,1.04};
+	static double[] assistantKoeff ={1,1.035,1.07,1.105,1.14,1.175,1.21,1.245,1.28,1.315,1.35};
+
+	public double getTrainingLengthAlternativeFormula(Player player, int trainerlevel, int intensity, int stamina, int value4Skill, List<StaffMember> staff) {
+		//return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), trainerlevel, intensity, stamina, value4Skill, staff);
+
+		/*
+		at lvl<8
+		f(lvl) = 16.282 * EXP (-0.14 * lvl)
+
+		at lvl>=8
+		f(lvl) = 52.82 / lvl - 1.29
+		*/
+
+		double factorSkillLevel;
+		if (value4Skill < 8) {
+			factorSkillLevel = 16.282 * Math.exp(-.14 * value4Skill);
+		} else {
+			factorSkillLevel = 52.82 / value4Skill - 1.29;
+		}
+
+		/*
+		further coefficients:
+
+		Coach Koeff
+		8 1.040
+		7 1.000
+		6 0.920
+		5 0.834
+		4 0.734
+		*/
+
+		if (trainerlevel < 4 || trainerlevel > 8) {
+			return trainingCalcError("Trainerlevel out of range [4,8]: " + trainerlevel);    // dummy return
+		}
+		var factorCoach = coachKoeff[trainerlevel - 4];
+
+		/*
+		K(assist)
+
+		Assists Koeff
+		10 1.350
+		9 1.315
+		8 1.280
+		7 1.245
+		6 1.210
+		5 1.175
+		4 1.140
+		3 1.105
+		2 1.070
+		1 1.035
+		0 1.000
+		*/
+		var assistantLevel = staff.stream()
+				.filter(i -> i.getStaffType() == StaffType.ASSISTANTTRAINER)
+				.mapToInt(i -> i.getLevel())
+				.sum();
+		if (assistantLevel < 0 || assistantLevel > 10) {
+			return trainingCalcError("AssistantLevel out of range [0,10]: " + assistantLevel);    // dummy return
+		}
+		var factorAssistants = assistantKoeff[assistantLevel];
+
+		/*
+		K(int)
+		It's kind of simple here. The intensity of training is the multiplier,
+		that is, 100% is 1.0.
+		90% is 0.9
+		*/
+		double factorIntensity = intensity / 100.0;
+
+		/*
+		K(stam)
+		Here we deduct the percentage of the stamen from 1, i.e.
+		at 5 % of the stadium 1.0 - 5% = 0.95
+		at 15% of the stadium 1.0 - 15% = 0.85
+		*/
+		double factorStamina = 1. - (double) stamina / 100.;
+
+		/*
+			K(train)
+			Basic training
+
+			Train Koeff
+			GK 5.10%
+			Df 2.88%
+			PM 3.36%
+			Wg 4.80%
+			Ps 3.60%.
+			Sc 3.24%
+			SP 14.70%.
+
+			Other training sessions
+
+			Train Koeff
+			Shoot - Sc 1.50%
+			Shoot - SP 1.50%
+			First Pass 3.15%.
+			Zone Df 1.38%
+			Wing Att 3.12%
+
+			Background training
+			The ratio of background workout speed to full workout speed is different for different types of workouts:
+			For Def, Sc, Pass, First Pass and Zone Def, it's 1/6,
+			for Wing, PM is 1/8, for Wing Att is 5/39.
+
+			Correspondingly, the background workout speed coefficients will be as follows:
+			Df_phone - 0.48%
+			PM_phone - 0.42%
+			Wg_phone-- 0.60%.
+			Ps_phone-- 0.60%.
+			Sc_phone-- 0.54%.
+			First Ps_phone - 0.525%
+			Zone Df_phone - 0.23%
+			Wing Att_phone - 0.40%
+		*/
+
+		// this part is handled outside by getFullTraining, getPartlyTraining
+
+		/*
+		K(age) = 0.9835^(Age-17)
+
+		Age - Koeff
+		17 - 1.000
+		18 - 0.9835
+		19 - 0.967
+		20 - 0.951
+		21 - 0.936
+		22 - 0.920
+		23 - 0.905
+		24 - 0.890
+		25 - 0.875
+		26 - 0.861
+		27 - 0.847
+		28 - 0.833
+		29 - 0.819
+		30 - 0.806
+		31 - 0.792
+		32 - 0.779
+		33 - 0.766
+		34 - 0.754
+		35 - 0.741
+		*/
+
+		var age = player.getAlter();
+		if ( age < 17 || age > 35 )
+
+		/*
+K(time)
+If a player has played the full slot for 90 minutes, then K(time)=1.0
+If the slot is 90 minutes, then K(time)=0.5
+if, for example, 36 minutes on the full slot and 90 minutes on the half-slot,
+we think, remembering that the total amount of training can not be taken into account more than 90 minutes of flirtation:
+K(time)=(1.0*36+(90-36)*0.5)/90=0.7
+		 */
+	}
+
+
+	protected double trainingCalcError(String s){
+		HOLogger.instance().error(this.getClass(), s);
+		return 1;
+	}
+
+
 	public abstract double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff);
 
 
@@ -383,4 +547,5 @@ public abstract class WeeklyTrainingType {
 	public List<MatchRoleID.Sector> getFullTrainingSectors(){return this.fullTrainingSectors;}
 	public List<MatchRoleID.Sector> getPartlyTrainingSectors(){return this.partlyTrainingSectors;}
 	public List<MatchRoleID.Sector> getOsmosisTrainingSectors(){return this.osmosisTrainingSectors;}
+
 }
