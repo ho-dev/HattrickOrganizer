@@ -1,4 +1,3 @@
-// %3802060737:de.hattrickorganizer.gui.menu.option%
 package core.option;
 
 import core.constants.player.PlayerSkill;
@@ -27,14 +26,10 @@ import javax.swing.event.ChangeListener;
 
 
 
-
 /**
- * Panel zum editieren der Formelwerte der Spielerstärkenberechnung
+ * Panel for editing the formula values of the player strength calculation
  */
 final class FormelPanel extends ImagePanel implements ActionListener, ItemListener, ChangeListener {
-
-	private static final long serialVersionUID = 1L;
-	//~ Instance fields ----------------------------------------------------------------------------
 
     private JButton m_jbExport;
     private JButton m_jbImport;
@@ -145,7 +140,7 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
     //---------------Hilfsmethoden--------------------------------------
     public final void refresh() {
     	final FormulaFactors factors = FormulaFactors.instance();
-        FactorObject factorObject = null;
+        FactorObject factorObject;
 
         factorObject = factors.getPositionFactor((byte) ((CBItem) m_jcbPosition.getSelectedItem()).getId());
 
