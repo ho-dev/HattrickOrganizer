@@ -532,30 +532,42 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
          */
     private void update_jcbUpcomingGamesAfterSendingMatchOrders(MatchOrdersCBItem selectedMatch) {
 
-        int selectedMatchID = selectedMatch.getMatchID();
-        // remove all elements
-        m_jcbUpcomingGames.removeAllItems();
+        removeItemListeners();
 
-        int i = 0;
-        for (MatchOrdersCBItem element : upcomingMatchesInDB) {
+
+        int selectedMatchID = selectedMatch.getMatchID();
+
+        // Update upcomingMatchesInDB with uploaded game
+        List<MatchOrdersCBItem> copyUpcomingMatchesInDB = new ArrayList<>();
+        copyUpcomingMatchesInDB.addAll(upcomingMatchesInDB);
+        upcomingMatchesInDB = new ArrayList<>();
+
+        for (MatchOrdersCBItem element : copyUpcomingMatchesInDB) {
             if(element.getMatchID() == selectedMatchID) {
-                upcomingMatchesInDB.remove(element);
                 upcomingMatchesInDB.add(selectedMatch);
-                m_jcbUpcomingGames.addItem(selectedMatch);
             }
             else {
                 m_jcbUpcomingGames.addItem(element);
             }
-            i++;
         }
 
-        m_jcbUpcomingGames.setMaximumRowCount(i);
+
+        // update all elements in m_jcbUpcomingGames
+        m_jcbUpcomingGames.removeAllItems();
+
+        for (MatchOrdersCBItem element : upcomingMatchesInDB) {
+                m_jcbUpcomingGames.addItem(element);
+        }
+
+        m_jcbUpcomingGames.setMaximumRowCount(upcomingMatchesInDB.size());
         m_clSelectedMatch = selectedMatch;
 
         m_jbDownloadLineup.setEnabled(true);
         m_jbUploadLineup.setEnabled(true);
 
         m_jcbUpcomingGames.setSelectedItem(selectedMatch);
+
+        refresh();
     }
 
     @Override
@@ -565,7 +577,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
     @Override
     public void refresh() {
-        HOLogger.instance().log(getClass(), " refresh() has been called");
+//        HOLogger.instance().log(getClass(), " refresh() has been called");
         removeItemListeners();
         updateComponents();
         addListeners();
