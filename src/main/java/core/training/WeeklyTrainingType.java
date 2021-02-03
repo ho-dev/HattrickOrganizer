@@ -85,6 +85,9 @@ public abstract class WeeklyTrainingType {
 			21
 	};
 
+	protected double factorTrainingTypeKoeff;
+	protected double osmosisKoeff;
+
 	public static WeeklyTrainingType instance(int iTrainingType) {
 		return switch (iTrainingType) {
 			case TrainingType.CROSSING_WINGER -> CrossingWeeklyTraining.instance();
@@ -351,7 +354,7 @@ public abstract class WeeklyTrainingType {
 	static double[] coachKoeff = {0.734,0.834,0.92,1,1.04};
 	static double[] assistantKoeff ={1,1.035,1.07,1.105,1.14,1.175,1.21,1.245,1.28,1.315,1.35};
 
-	public double getTrainingLengthAlternativeFormula(Player player, int trainerlevel, int intensity, int stamina, int value4Skill, List<StaffMember> staff) {
+	public double getTrainingAlternativeFormula(Player player, int trainerlevel, int intensity, int stamina, int value4Skill, List<StaffMember> staff, TrainingPerPlayer trForPlayer, boolean isPrimarySkill) {
 		//return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), trainerlevel, intensity, stamina, value4Skill, staff);
 
 		/*
@@ -401,7 +404,8 @@ public abstract class WeeklyTrainingType {
 		1 1.035
 		0 1.000
 		*/
-		var assistantLevel = staff.stream()
+		int assistantLevel;
+		assistantLevel = staff.stream()
 				.filter(i -> i.getStaffType() == StaffType.ASSISTANTTRAINER)
 				.mapToInt(i -> i.getLevel())
 				.sum();
@@ -425,6 +429,59 @@ public abstract class WeeklyTrainingType {
 		at 15% of the stadium 1.0 - 15% = 0.85
 		*/
 		double factorStamina = 1. - (double) stamina / 100.;
+
+		/*
+		K(age) = 0.9835^(Age-17)
+
+		Age - Koeff
+		17 - 1.000
+		18 - 0.9835
+		19 - 0.967
+		20 - 0.951
+		21 - 0.936
+		22 - 0.920
+		23 - 0.905
+		24 - 0.890
+		25 - 0.875
+		26 - 0.861
+		27 - 0.847
+		28 - 0.833
+		29 - 0.819
+		30 - 0.806
+		31 - 0.792
+		32 - 0.779
+		33 - 0.766
+		34 - 0.754
+		35 - 0.741
+		*/
+
+		var age = player.getAlter();
+		var factorAge = Math.pow(.9835, age-17);
+
+		/*
+		K(time)
+		If a player has played the full slot for 90 minutes, then K(time)=1.0
+		If the slot is 90 minutes, then K(time)=0.5
+		if, for example, 36 minutes on the full slot and 90 minutes on the half-slot,
+		we think, remembering that the total amount of training can not be taken into account more than 90 minutes of flirtation:
+		K(time)=(1.0*36+(90-36)*0.5)/90=0.7
+		 */
+
+		double factorTime=1;
+		var minutes = trForPlayer.getTrainingPair().getTrainingDuration().getFullTrainingMinutes();
+		if ( minutes > 0 && this.getPrimaryTrainingSkillBonus()>0){
+			factorTime = (1+getPrimaryTrainingSkillBonus())* minutes / 90.;
+		}
+		else if ( minutes < 90){
+			var partlyMinutes = trForPlayer.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes();
+			factorTime = minutes/90. + partlyMinutes/90.*.5;
+			minutes += partlyMinutes;
+			if ( minutes < 90){
+				var osmosisMinutes = trForPlayer.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes();
+				factorTime += osmosisMinutes/90. * osmosisKoeff;
+			}
+		}
+
 
 		/*
 			K(train)
@@ -464,44 +521,7 @@ public abstract class WeeklyTrainingType {
 			Wing Att_phone - 0.40%
 		*/
 
-		// this part is handled outside by getFullTraining, getPartlyTraining
-
-		/*
-		K(age) = 0.9835^(Age-17)
-
-		Age - Koeff
-		17 - 1.000
-		18 - 0.9835
-		19 - 0.967
-		20 - 0.951
-		21 - 0.936
-		22 - 0.920
-		23 - 0.905
-		24 - 0.890
-		25 - 0.875
-		26 - 0.861
-		27 - 0.847
-		28 - 0.833
-		29 - 0.819
-		30 - 0.806
-		31 - 0.792
-		32 - 0.779
-		33 - 0.766
-		34 - 0.754
-		35 - 0.741
-		*/
-
-		var age = player.getAlter();
-		if ( age < 17 || age > 35 )
-
-		/*
-K(time)
-If a player has played the full slot for 90 minutes, then K(time)=1.0
-If the slot is 90 minutes, then K(time)=0.5
-if, for example, 36 minutes on the full slot and 90 minutes on the half-slot,
-we think, remembering that the total amount of training can not be taken into account more than 90 minutes of flirtation:
-K(time)=(1.0*36+(90-36)*0.5)/90=0.7
-		 */
+		return factorTrainingTypeKoeff * factorTime * factorAge * factorAssistants * factorCoach * factorStamina * factorIntensity * factorSkillLevel * .01;
 	}
 
 

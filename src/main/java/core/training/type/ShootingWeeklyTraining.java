@@ -20,6 +20,8 @@ public class ShootingWeeklyTraining extends WeeklyTrainingType {
 		_PrimaryTrainingSkill = PlayerSkill.SCORING;
 		_SecondaryTrainingSkill = PlayerSkill.SET_PIECES;
 
+		factorTrainingTypeKoeff = 3.24;
+
 		fullTrainingSectors.add(MatchRoleID.Sector.Goal);
 		fullTrainingSectors.add(MatchRoleID.Sector.Back);
 		fullTrainingSectors.add(MatchRoleID.Sector.CentralDefence);

@@ -19,6 +19,9 @@ public class DefensivePositionsWeeklyTraining extends WeeklyTrainingType {
 		_TrainingType = TrainingType.DEF_POSITIONS;
 		_PrimaryTrainingSkill = PlayerSkill.DEFENDING;
 
+		factorTrainingTypeKoeff = 1.38;
+		osmosisKoeff = 1./6.;
+
 		fullTrainingSectors.add(MatchRoleID.Sector.Goal);
 		fullTrainingSectors.add(MatchRoleID.Sector.Back);
 		fullTrainingSectors.add(MatchRoleID.Sector.CentralDefence);

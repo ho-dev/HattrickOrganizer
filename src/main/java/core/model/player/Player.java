@@ -1829,14 +1829,21 @@ public class Player {
     }
 
     private void incrementSubskills(Player originalPlayer, int trainerlevel, int intensity,
-                                    int stamina, int skill, double points, WeeklyTrainingType wt, List<StaffMember> staff) {
+                                    int stamina, int skill, double points, WeeklyTrainingType wt, List<StaffMember> staff, TrainingPerPlayer trForPlayer) {
         if (skill < PlayerSkill.KEEPER || points <= 0)
             return;
 
         var trainingLength = wt.getTrainingLength(this, trainerlevel, intensity, stamina, staff);
-        var trainingLengthAlternativeFormula = wt.getTrainingLengthAlternativeFormula(this, trainerlevel, intensity, stamina, originalPlayer.getValue4Skill(skill), staff);
+        var trainingAlternativeFormula = wt.getTrainingAlternativeFormula(this, trainerlevel, intensity, stamina, originalPlayer.getValue4Skill(skill), staff, trForPlayer, skill==wt.getPrimaryTrainingSkill());
 
-        HOLogger.instance().info(this.getClass(), this.getFullName()+ " " + PlayerSkill.toString(skill) + " training=" + points/trainingLength + " " + points/trainingLengthAlternativeFormula);
+        HOLogger.instance().info(this.getClass(),
+                this.getLastName()+ "; " + PlayerSkill.toString(skill) +
+                "; Age=" + this.getAlter() +
+                "; Skill=" + this.getValue4Skill(skill) +
+                "; Minutes=" + trForPlayer.getTrainingPair().getTrainingDuration().getFullTrainingMinutes() +
+                        ";" + trForPlayer.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes() +
+                        ";" + trForPlayer.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes() +
+                "; training=" + points/trainingLength + "; " + trainingAlternativeFormula);
 
         float gain = (float) Helper.round(points / trainingLength, 3);
 
@@ -1892,10 +1899,10 @@ public class Player {
         WeeklyTrainingType wt = WeeklyTrainingType.instance(trainingWeek.getTrainingType());
 
         incrementSubskills(originalPlayer, trainerlevel, intensity, stamina,
-                wt.getPrimaryTrainingSkill(), tp.getPrimary(), wt, staff);
+                wt.getPrimaryTrainingSkill(), tp.getPrimary(), wt, staff, trForPlayer);
 
         incrementSubskills(originalPlayer, trainerlevel, intensity, stamina,
-                wt.getSecondaryTrainingSkill(), tp.getSecondary(), wt, staff);
+                wt.getSecondaryTrainingSkill(), tp.getSecondary(), wt, staff, trForPlayer);
 
         addExperienceSub(trForPlayer.getExperienceSub());
 
