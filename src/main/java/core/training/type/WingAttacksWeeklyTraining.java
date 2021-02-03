@@ -19,6 +19,9 @@ public class WingAttacksWeeklyTraining extends WeeklyTrainingType {
 		_TrainingType = TrainingType.WING_ATTACKS;
 		_PrimaryTrainingSkill = PlayerSkill.WINGER;
 
+		factorTrainingTypeKoeff = 3.12;
+		osmosisKoeff = 5./39.;
+
 		fullTrainingSectors.add(MatchRoleID.Sector.Wing);
 		fullTrainingSectors.add(MatchRoleID.Sector.Forward);
 		osmosisTrainingSectors.add(MatchRoleID.Sector.Goal);

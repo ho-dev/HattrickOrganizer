@@ -19,6 +19,8 @@ public final class GoalkeepingWeeklyTraining extends WeeklyTrainingType {
 		_TrainingType = TrainingType.GOALKEEPING;
 		_PrimaryTrainingSkill = PlayerSkill.KEEPER;
 
+		factorTrainingTypeKoeff = 5.1;
+
 		fullTrainingSectors.add(MatchRoleID.Sector.Goal);
 
 		_PrimaryTrainingSkillPositions = new int[]{ IMatchRoleID.keeper };

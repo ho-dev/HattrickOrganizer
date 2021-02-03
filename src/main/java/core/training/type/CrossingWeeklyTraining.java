@@ -16,8 +16,12 @@ public class CrossingWeeklyTraining extends WeeklyTrainingType {
 	private CrossingWeeklyTraining()
 	{
 		_Name = "Crossing";
+
 		_TrainingType = TrainingType.CROSSING_WINGER;
 		_PrimaryTrainingSkill = PlayerSkill.WINGER;
+
+		factorTrainingTypeKoeff = 4.8;
+		osmosisKoeff = 1./8.;
 
 		fullTrainingSectors.add(MatchRoleID.Sector.Wing);
 		partlyTrainingSectors.add(MatchRoleID.Sector.Back);

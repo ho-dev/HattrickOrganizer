@@ -19,6 +19,9 @@ public class ThroughPassesWeeklyTraining extends WeeklyTrainingType {
 		_TrainingType = TrainingType.THROUGH_PASSES;
 		_PrimaryTrainingSkill = PlayerSkill.PASSING;
 
+		factorTrainingTypeKoeff=3.15;
+		osmosisKoeff = 1./6.;
+
 		fullTrainingSectors.add(MatchRoleID.Sector.Back);
 		fullTrainingSectors.add(MatchRoleID.Sector.CentralDefence);
 		fullTrainingSectors.add(MatchRoleID.Sector.Wing);

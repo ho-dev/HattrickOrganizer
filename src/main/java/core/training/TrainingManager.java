@@ -105,7 +105,7 @@ public class TrainingManager {
 					output.addExperienceIncrease(min(90,tp.getPlayedMinutes() - minutes), type );
 	                minutes = tp.getPlayedMinutes();
 				}
-	            TrainingPoints trp = new TrainingPoints(wt.getPrimaryTraining(tp), wt.getSecondaryTraining(tp));
+	            TrainingPoints trp = new TrainingPoints(wt, tp);
 
 	        	// get experience increase of national matches
 				if  ( inputPlayer.getNationalTeamID() != 0 && inputPlayer.getNationalTeamID() != myID){
@@ -179,6 +179,7 @@ public class TrainingManager {
 					old = new Player();
 					old.setSpielerID(player.getPlayerID());
 					old.copySkills(player);
+					old.setLastName(player.getLastName());
 					if (HOVerwaltung.instance().getModel().getCurrentPlayer(player.getPlayerID()) != null) {
 						// PLayer is in current team (not an historical player)
 						List<TrainingEvent> events = player.downloadTrainingEvents();
@@ -218,6 +219,7 @@ public class TrainingManager {
 					tmpOld.copySubSkills(old);
 					tmpOld.setSpielerID(old.getPlayerID());
 					tmpOld.setAlter(old.getAlter());
+					tmpOld.setLastName(old.getLastName());
 
 					Player calculationPlayer = null;
 					TrainingPerWeek tpw;
@@ -251,6 +253,7 @@ public class TrainingManager {
 							calculationPlayer.copySubSkills(tmpOld);
 							calculationPlayer.setSpielerID(tmpOld.getPlayerID());
 							calculationPlayer.setAlter(tmpOld.getAlter());
+							calculationPlayer.setLastName(tmpOld.getLastName());
 						}
 
 						calculationPlayer.calcIncrementalSubskills(tmpOld,

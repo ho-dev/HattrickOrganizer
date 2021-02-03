@@ -19,6 +19,9 @@ public final class PlaymakingWeeklyTraining extends WeeklyTrainingType {
 		_TrainingType = TrainingType.PLAYMAKING;
 		_PrimaryTrainingSkill = PlayerSkill.PLAYMAKING;
 
+		factorTrainingTypeKoeff = 3.36;
+		osmosisKoeff = 1./8.;
+
 		fullTrainingSectors.add(MatchRoleID.Sector.InnerMidfield);
 		partlyTrainingSectors.add(MatchRoleID.Sector.Wing);
 		osmosisTrainingSectors.add(MatchRoleID.Sector.Back);

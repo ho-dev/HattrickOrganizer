@@ -19,6 +19,9 @@ public class ShortPassesWeeklyTraining extends WeeklyTrainingType {
 		_TrainingType = TrainingType.SHORT_PASSES;
 		_PrimaryTrainingSkill = PlayerSkill.PASSING;
 
+		factorTrainingTypeKoeff = 3.6;
+		osmosisKoeff = 1./6.;
+
 		fullTrainingSectors.add(MatchRoleID.Sector.Wing);
 		fullTrainingSectors.add(MatchRoleID.Sector.InnerMidfield);
 		fullTrainingSectors.add(MatchRoleID.Sector.Forward);

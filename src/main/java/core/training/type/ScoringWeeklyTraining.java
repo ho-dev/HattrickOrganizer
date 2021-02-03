@@ -19,6 +19,9 @@ public class ScoringWeeklyTraining extends WeeklyTrainingType {
 		_TrainingType = TrainingType.SCORING;
 		_PrimaryTrainingSkill = PlayerSkill.SCORING;
 
+		factorTrainingTypeKoeff = 3.24;
+		osmosisKoeff = 1./6.;
+
 		fullTrainingSectors.add(MatchRoleID.Sector.Forward);
 		osmosisTrainingSectors.add(MatchRoleID.Sector.Goal);
 		osmosisTrainingSectors.add(MatchRoleID.Sector.Back);

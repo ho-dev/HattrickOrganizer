@@ -19,6 +19,8 @@ public class SetPiecesWeeklyTraining extends WeeklyTrainingType {
 		_TrainingType = TrainingType.SET_PIECES;
 		_PrimaryTrainingSkill = PlayerSkill.SET_PIECES;
 
+		factorTrainingTypeKoeff = 14.7;
+
 		bonusTrainingSectors.add(MatchRoleID.Sector.Goal);
 		bonusTrainingSectors.add(MatchRoleID.Sector.SetPiecesTaker);
 

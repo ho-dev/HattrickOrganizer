@@ -14,6 +14,7 @@ import core.model.misc.TrainingEvent;
 import core.net.OnlineWorker;
 import core.rating.RatingPredictionManager;
 import core.training.*;
+import core.util.HOLogger;
 import core.util.Helper;
 import core.util.HelperWrapper;
 
@@ -1828,12 +1829,23 @@ public class Player {
     }
 
     private void incrementSubskills(Player originalPlayer, int trainerlevel, int intensity,
-                                    int stamina, int skill, double points, WeeklyTrainingType wt, List<StaffMember> staff) {
+                                    int stamina, int skill, double points, WeeklyTrainingType wt, List<StaffMember> staff, TrainingPerPlayer trForPlayer) {
         if (skill < PlayerSkill.KEEPER || points <= 0)
             return;
 
-        float gain = (float) Helper.round(points / wt.getTrainingLength(
-                this, trainerlevel, intensity, stamina, staff), 3);
+        var trainingLength = wt.getTrainingLength(this, trainerlevel, intensity, stamina, staff);
+        var trainingAlternativeFormula = wt.getTrainingAlternativeFormula(this, trainerlevel, intensity, stamina, originalPlayer.getValue4Skill(skill), staff, trForPlayer, skill==wt.getPrimaryTrainingSkill());
+
+        HOLogger.instance().info(this.getClass(),
+                this.getLastName()+ "; " + PlayerSkill.toString(skill) +
+                "; Age=" + this.getAlter() +
+                "; Skill=" + this.getValue4Skill(skill) +
+                "; Minutes=" + trForPlayer.getTrainingPair().getTrainingDuration().getFullTrainingMinutes() +
+                        ";" + trForPlayer.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes() +
+                        ";" + trForPlayer.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes() +
+                "; training=" + points/trainingLength + "; " + trainingAlternativeFormula);
+
+        float gain = (float) Helper.round(points / trainingLength, 3);
 
         if (gain <= 0)
             return;
@@ -1887,10 +1899,10 @@ public class Player {
         WeeklyTrainingType wt = WeeklyTrainingType.instance(trainingWeek.getTrainingType());
 
         incrementSubskills(originalPlayer, trainerlevel, intensity, stamina,
-                wt.getPrimaryTrainingSkill(), tp.getPrimary(), wt, staff);
+                wt.getPrimaryTrainingSkill(), tp.getPrimary(), wt, staff, trForPlayer);
 
         incrementSubskills(originalPlayer, trainerlevel, intensity, stamina,
-                wt.getSecondaryTrainingSkill(), tp.getSecondary(), wt, staff);
+                wt.getSecondaryTrainingSkill(), tp.getSecondary(), wt, staff, trForPlayer);
 
         addExperienceSub(trForPlayer.getExperienceSub());
 
