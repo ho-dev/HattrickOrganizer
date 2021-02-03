@@ -768,8 +768,7 @@ public class OnlineWorker {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
-		HOLogger.instance().debug(OnlineWorker.class, "Upload done:\n" + result);
+		
 		return result;
 	}
 
