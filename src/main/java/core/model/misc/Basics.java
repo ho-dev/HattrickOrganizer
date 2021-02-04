@@ -6,6 +6,11 @@ import core.training.HattrickDate;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 
@@ -163,24 +168,42 @@ public final class Basics  {
 
     /**
      * Hattrick date time is presented as CEST (central european summer time)
-     * @param date string fetched from Hattrick files
+     * @param sDate string fetched from Hattrick files
      * @return timestamp
      */
-    public static Timestamp parseHattrickDate(String date) {
-        try {
-            //Hattrick
-            final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                    java.util.Locale.GERMANY);
+    public static Timestamp parseHattrickDate(String sDate) {
 
-            return new Timestamp(simpleFormat.parse(date).getTime());
-        } catch (Exception e) {
+        if (sDate.length() > 19) {
+            sDate = sDate.substring(0, 19);
+        }
+
+        if (sDate.length() == 19) {
+            LocalDateTime htDateTimeNonLocalized = LocalDateTime.parse(sDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            ZoneId zoneId = ZoneId.of("Europe/Stockholm");
+            ZonedDateTime htLocalDateTime = ZonedDateTime.of(htDateTimeNonLocalized, zoneId);
+
+            //TODO: change HO! preference, let user specify a time zone or select system default then change the line below
+            /*
+               something like
+               if userTimePreference == "systemDefault" :
+                    userLocalDateTime = htLocalDateTime.withZoneSameInstant(ZoneId.systemDefault());
+               else:
+                       userLocalDateTime = htLocalDateTime.withZoneSameInstant(ZoneId.of(userTimePreference););
+             */
+            ZonedDateTime userLocalDateTime = htLocalDateTime.withZoneSameInstant(ZoneId.systemDefault());
+
+            return Timestamp.valueOf(userLocalDateTime.toLocalDateTime());
+        }
+        else
+            {
             try {
                 //Hattrick
                 final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
                         java.util.Locale.GERMANY);
 
-                return new Timestamp(simpleFormat.parse(date).getTime());
-            } catch (Exception expc) {
+                return new Timestamp(simpleFormat.parse(sDate).getTime());
+            }
+            catch (Exception e) {
                 HOLogger.instance().log(Basics.class, e);
             }
         }
