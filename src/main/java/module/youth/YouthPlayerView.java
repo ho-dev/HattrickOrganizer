@@ -52,8 +52,8 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     @Override
     public void reInit() {
         initModel();
-        playerOverviewTable.repaint();
-        playerDetailsTable.repaint();
+        // playerOverviewTable.repaint();
+        // playerDetailsTable.repaint();
     }
 
     private void initModel() {
@@ -62,7 +62,7 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         initPlayerDetails();
     }
 
-    private void initPlayerOverview(){
+    private void initPlayerOverview() {
         playerOverviewTable.setOpaque(false);
         if (playerOverviewTableModel == null) {
             playerOverviewTableModel = UserColumnController.instance().getYouthPlayerOverviewColumnModel();
@@ -72,6 +72,9 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
             var selectionModel = playerOverviewTable.getSelectionModel();
             selectionModel.addListSelectionListener(this);
         }
+    }
+
+    private void refreshPlayerOverview() {
         playerOverviewTableModel.initData();
         playerOverviewTableSorter = new TableSorter(playerOverviewTableModel, playerOverviewTableModel.getPositionInArray(0), getOrderByColumn());
         playerOverviewTable.setModel(playerOverviewTableSorter);
@@ -80,16 +83,17 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     }
 
     private void initPlayerDetails() {
-
-        if ( playerDetailsTableModel == null) {
+        if (playerDetailsTableModel == null) {
             playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
             playerDetailsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             playerDetailsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             playerDetailsTable.setRowSelectionAllowed(true);
         }
+    }
 
+    private void refreshPlayerDetails() {
         var player = getSelectedPlayer();
-        if ( player != null) {
+        if (player != null) {
             playerNameLabel.setText(player.getFullName());
             playerDetailsTableModel.setYouthPlayer(player);
             playerDetailsTableModel.initData();
@@ -109,28 +113,31 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
 
     @Override
     public void refresh() {
-        ((YouthPlayerOverviewTableModel) this.getSorter().getModel()).initData();
-        playerOverviewTable.repaint();
 
-        playerDetailsTableModel.initData();
-        playerDetailsTable.repaint();
+        refreshPlayerOverview();
+        //((YouthPlayerOverviewTableModel) this.getSorter().getModel()).initData();
+        //playerOverviewTable.repaint();
+
+        refreshPlayerDetails();
+        //playerDetailsTableModel.initData();
+        //playerDetailsTable.repaint();
     }
 
     private TableSorter getSorter() {
         return this.playerOverviewTableSorter;
     }
 
-    private YouthPlayer getSelectedPlayer(){
-        var row = max(0,this.playerOverviewTable.getSelectedRow());
-        var currentPlayers =  HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
-        if ( currentPlayers != null && currentPlayers.size()> row){
-            return currentPlayers.get(row);
+    private YouthPlayer getSelectedPlayer() {
+        var index = playerOverviewTableSorter.getIndex(this.playerOverviewTable.getSelectedRow());
+        var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
+        if (currentPlayers != null && currentPlayers.size() > index) {
+            return currentPlayers.get(index);
         }
         return null;
     }
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        initPlayerDetails();
+        refreshPlayerDetails();
     }
 }
