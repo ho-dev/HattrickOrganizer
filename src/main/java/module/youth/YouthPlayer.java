@@ -710,8 +710,14 @@ public class YouthPlayer {
         rating = getDouble(properties, "rating");
         youthMatchDate = parseNullableDate(properties.getProperty("youthmatchdate"));
 
+        var playerStatusPreviousDownload = HOVerwaltung.instance().getModel().getCurrentYouthPlayer(id);
         for (var skillId : YouthPlayer.skillIds) {
-            parseSkillInfo(properties, skillId);
+            var skillinfo = parseSkillInfo(properties, skillId);
+            if ( playerStatusPreviousDownload != null){
+                var prevSkills = playerStatusPreviousDownload.getSkillInfo(skillId);
+                skillinfo.setCurrentValue(prevSkills.getCurrentValue());
+                skillinfo.setStartValue(prevSkills.getStartValue());
+            }
         }
 
         this.scoutComments = new ArrayList<>();
@@ -750,13 +756,14 @@ public class YouthPlayer {
         return false;
     }
 
-    private void parseSkillInfo(Properties properties, Skills.HTSkillID skillID) {
+    private SkillInfo parseSkillInfo(Properties properties, Skills.HTSkillID skillID) {
         var skill = skillID.toString().toLowerCase(java.util.Locale.ENGLISH) + "skill";
         var skillInfo = new SkillInfo(skillID);
         skillInfo.setCurrentLevel(getInteger(properties, skill));
         skillInfo.setMax(getInteger(properties, skill + "max"));
         skillInfo.setMaxReached(getBoolean(properties, skill + "ismaxreached", false));
         this.currentSkills.put(skillID.getValue(), skillInfo);
+        return skillInfo;
     }
 
     private Integer getInteger(Properties p, String key) {

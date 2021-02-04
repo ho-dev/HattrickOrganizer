@@ -24,6 +24,7 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     private JLabel playerNameLabel;
     private JTable playerDetailsTable;
     private YouthPlayerDetailsTableModel playerDetailsTableModel;
+    private TableSorter playerDetailsTableSorter;
 
     public YouthPlayerView() {
         super();
@@ -46,18 +47,22 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         playerOverviewTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
         playerDetailsTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
         this.add(verticalSplitPane);
-
     }
 
     @Override
     public void reInit() {
         initModel();
         playerOverviewTable.repaint();
+        playerDetailsTable.repaint();
     }
 
     private void initModel() {
         setLayout(new BorderLayout());
+        initPlayerOverview();
+        initPlayerDetails();
+    }
 
+    private void initPlayerOverview(){
         playerOverviewTable.setOpaque(false);
         if (playerOverviewTableModel == null) {
             playerOverviewTableModel = UserColumnController.instance().getYouthPlayerOverviewColumnModel();
@@ -66,28 +71,32 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
             playerOverviewTable.setRowSelectionAllowed(true);
             var selectionModel = playerOverviewTable.getSelectionModel();
             selectionModel.addListSelectionListener(this);
+        }
+        playerOverviewTableModel.initData();
+        playerOverviewTableSorter = new TableSorter(playerOverviewTableModel, playerOverviewTableModel.getPositionInArray(0), getOrderByColumn());
+        playerOverviewTable.setModel(playerOverviewTableSorter);
+        playerOverviewTableSorter.addMouseListenerToHeaderInTable(playerOverviewTable);
+        playerOverviewTableSorter.initsort();
+    }
 
+    private void initPlayerDetails() {
+
+        if ( playerDetailsTableModel == null) {
             playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
             playerDetailsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             playerDetailsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             playerDetailsTable.setRowSelectionAllowed(true);
         }
-        playerOverviewTableModel.initData();
-        playerOverviewTableSorter = new TableSorter(playerOverviewTableModel, playerOverviewTableModel.getPositionInArray(99), getOrderByColumn());
-        playerOverviewTable.setModel(playerOverviewTableSorter);
-        playerOverviewTableSorter.initsort();
 
-        initPlayerDetails();
-    }
-
-    private void initPlayerDetails() {
         var player = getSelectedPlayer();
         if ( player != null) {
             playerNameLabel.setText(player.getFullName());
             playerDetailsTableModel.setYouthPlayer(player);
             playerDetailsTableModel.initData();
-            playerDetailsTable.setModel(playerDetailsTableModel);
-            playerDetailsTable.repaint();
+            playerDetailsTableSorter = new TableSorter(playerDetailsTableModel, playerDetailsTableModel.getPositionInArray(0), playerDetailsTableModel.getPositionInArray(0));
+            playerDetailsTable.setModel(playerDetailsTableSorter);
+            playerDetailsTableSorter.addMouseListenerToHeaderInTable(playerDetailsTable);
+            playerDetailsTableSorter.initsort();
         }
     }
 
