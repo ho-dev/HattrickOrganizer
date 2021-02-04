@@ -21,8 +21,8 @@ public enum Specialty {
     Quick(2),
     Powerful(3),
     Unpredictable(4),
-    HeadSpecialist(5),
-    Resilient(6),
+    Head(5),
+    Regainer(6),
     Not_used(7),
     Support(8);
 
