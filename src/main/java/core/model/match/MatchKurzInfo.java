@@ -7,6 +7,8 @@ import core.model.cup.CupLevelIndex;
 import core.model.misc.Basics;
 import core.util.HOLogger;
 import core.util.StringUtils;
+import core.util.TimeInfo;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import static core.util.StringUtils.getResultString;
@@ -24,7 +26,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	/** Datum des spiels */
 	private String m_sMatchDate = "";
 
-	private Timestamp m_tsMatchSchedule;
+	private TimeInfo m_matchSchedule;
 
 	/** orders given for this match? */
 	private boolean ordersGiven = true;
@@ -100,7 +102,6 @@ public class MatchKurzInfo implements Comparable<Object> {
 	private MatchType m_mtMatchTyp = MatchType.NONE;
 	private CupLevel m_mtCupLevel = CupLevel.NONE;
 	private CupLevelIndex m_mtCupLevelIndex = CupLevelIndex.NONE;
-	//private Timestamp matchDateTimestamp;
 	public static final int ONGOING = 3;
 	public static final int UPCOMING = 2;
 	public static final int FINISHED = 1;
@@ -235,14 +236,11 @@ public class MatchKurzInfo implements Comparable<Object> {
 
 	/**
 	 * Setter for property m_sMatchDate.
-	 * 
-	 * @param m_sMatchDate
-	 *            New value of property m_sMatchDate.
+	 * @param sMatchDate New value of property m_sMatchDate.
 	 */
-	public final void setMatchDate(java.lang.String m_sMatchDate) {
-		this.m_sMatchDate = m_sMatchDate;
-		// ensures that getMatchDateAsTimestamp() will regenerate the timestamp
-		//this.matchDateTimestamp = null;
+	public final void setMatchDate(java.lang.String sMatchDate) {
+		m_sMatchDate = sMatchDate;
+		m_matchSchedule = null;
 	}
 
 	/**
@@ -260,10 +258,24 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @return Value of property m_lDatum.
 	 */
 	public java.sql.Timestamp getMatchDateAsTimestamp() {
-		if (m_tsMatchSchedule == null) {
-			m_tsMatchSchedule = Basics.parseHattrickDate(m_sMatchDate);
+			return getMatchDateAsTimestamp(false);
+	}
+
+	/**
+	 * Getter for property m_lDatum.
+	 *
+	 * @return Value of property m_lDatum.
+	 */
+	public java.sql.Timestamp getMatchDateAsTimestamp(boolean localized) {
+		if (m_matchSchedule == null) {
+			m_matchSchedule = new TimeInfo(m_sMatchDate);
 		}
-		return m_tsMatchSchedule;
+		if (localized) {
+			return m_matchSchedule.getUserLocalizedTimeAsTimestamp();
+		}
+		else{
+			return m_matchSchedule.getHattrickTimeAsTimestamp();
+		}
 	}
 
 	/**
