@@ -50,8 +50,9 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     }
 
     @Override
-    public void reInit() {
-        initModel();
+    public final void reInit() {
+        //initModel();
+        refresh();
         // playerOverviewTable.repaint();
         // playerDetailsTable.repaint();
     }
@@ -71,15 +72,16 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
             playerOverviewTable.setRowSelectionAllowed(true);
             var selectionModel = playerOverviewTable.getSelectionModel();
             selectionModel.addListSelectionListener(this);
+
+            playerOverviewTableSorter = new TableSorter(playerOverviewTableModel, playerOverviewTableModel.getPositionInArray(0), getOrderByColumn());
+            playerOverviewTable.setModel(playerOverviewTableSorter);
+            playerOverviewTableSorter.addMouseListenerToHeaderInTable(playerOverviewTable);
+            playerOverviewTableSorter.initsort();
         }
     }
 
     private void refreshPlayerOverview() {
         playerOverviewTableModel.initData();
-        playerOverviewTableSorter = new TableSorter(playerOverviewTableModel, playerOverviewTableModel.getPositionInArray(0), getOrderByColumn());
-        playerOverviewTable.setModel(playerOverviewTableSorter);
-        playerOverviewTableSorter.addMouseListenerToHeaderInTable(playerOverviewTable);
-        playerOverviewTableSorter.initsort();
     }
 
     private void initPlayerDetails() {
@@ -88,19 +90,25 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
             playerDetailsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             playerDetailsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             playerDetailsTable.setRowSelectionAllowed(true);
+
+            playerDetailsTableSorter = new TableSorter(playerDetailsTableModel, playerDetailsTableModel.getPositionInArray(0), playerDetailsTableModel.getPositionInArray(0));
+            playerDetailsTable.setModel(playerDetailsTableSorter);
+            playerDetailsTableSorter.addMouseListenerToHeaderInTable(playerDetailsTable);
+            playerDetailsTableSorter.initsort();
         }
     }
 
     private void refreshPlayerDetails() {
         var player = getSelectedPlayer();
+        if ( player == null){
+            // reset previous selection
+            player = playerDetailsTableModel.getYouthPlayer();
+            if ( player != null) setSelectedPlayer(player);
+        }
         if (player != null) {
             playerNameLabel.setText(player.getFullName());
             playerDetailsTableModel.setYouthPlayer(player);
             playerDetailsTableModel.initData();
-            playerDetailsTableSorter = new TableSorter(playerDetailsTableModel, playerDetailsTableModel.getPositionInArray(0), playerDetailsTableModel.getPositionInArray(0));
-            playerDetailsTable.setModel(playerDetailsTableSorter);
-            playerDetailsTableSorter.addMouseListenerToHeaderInTable(playerDetailsTable);
-            playerDetailsTableSorter.initsort();
         }
     }
 
@@ -112,7 +120,7 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     }
 
     @Override
-    public void refresh() {
+    public final void refresh() {
 
         refreshPlayerOverview();
         //((YouthPlayerOverviewTableModel) this.getSorter().getModel()).initData();
@@ -123,17 +131,28 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         //playerDetailsTable.repaint();
     }
 
-    private TableSorter getSorter() {
-        return this.playerOverviewTableSorter;
-    }
-
     private YouthPlayer getSelectedPlayer() {
-        var index = playerOverviewTableSorter.getIndex(this.playerOverviewTable.getSelectedRow());
-        var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
-        if (currentPlayers != null && currentPlayers.size() > index) {
-            return currentPlayers.get(index);
+        var row = this.playerOverviewTable.getSelectedRow();
+        if ( row > -1) {
+            var index = playerOverviewTableSorter.getIndex(row);
+            var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
+            if (currentPlayers != null && currentPlayers.size() > index) {
+                return currentPlayers.get(index);
+            }
         }
         return null;
+    }
+
+    private void setSelectedPlayer(YouthPlayer selectedPlayer) {
+        var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
+        for (int row=0; row<currentPlayers.size(); row++){
+            var index = playerOverviewTableSorter.getIndex(row);
+            var player = currentPlayers.get(index);
+            if ( player != null && player.getId() == selectedPlayer.getId()){
+                this.playerOverviewTable.setRowSelectionInterval(row,row);
+                break;
+            }
+        }
     }
 
     @Override

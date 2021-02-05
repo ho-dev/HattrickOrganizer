@@ -21,9 +21,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
 
     private YouthPlayerColumn[] initColumns() {
         return new YouthPlayerColumn[]{
-                // TODO: Name column should include the specialty icon
                 // TODO: selected column order is not restored on restart (standard order is used instead)
-                // TODO: sorter are disabled after Download/refresh (F11)
                 new YouthPlayerColumn(0, "ls.player.name") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
@@ -49,6 +47,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                     }
                 },
                 // TODO column width does not work
+                // TODO double clicking cell should invoke SkillEditorDialog to edit start and or current values
                 new YouthPlayerColumn(4, "ls.youth.player.Keeper", 200) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
@@ -91,13 +90,16 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                         return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.SetPieces));
                     }
                 },
+                // TODO: Specialty column should include the specialty icon
                 new YouthPlayerColumn(11, "ls.youth.player.Specialty") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
                         return new ColorLabelEntry(player.getSpecialtyString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-
+                // TODO: column showing players potential values at age of 17,0
+                // TODO: scout information
+                // TODO: number of played matches (trainings)
                 new YouthPlayerColumn(99, "ls.player.id", 0) {
                     @Override
                     public boolean isDisplay() {
