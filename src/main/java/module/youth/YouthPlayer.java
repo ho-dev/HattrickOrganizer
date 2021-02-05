@@ -51,7 +51,7 @@ public class YouthPlayer {
      *
      * mapping skill id to skill info
      */
-    private Map<Integer, SkillInfo> currentSkills = new HashMap<>();
+    private SkillsInfo currentSkills = new SkillsInfo();
 
     /**
      * Comments of the scout at player's arrival (not used yet)
@@ -375,7 +375,7 @@ public class YouthPlayer {
     public static Skills.HTSkillID[] skillIds = {Keeper, Defender, Playmaker, Winger, Passing, Scorer, SetPieces};
 
     public void setSkillInfo(SkillInfo skillinfo) {
-        this.currentSkills.put(skillinfo.skillID.getValue(), skillinfo);
+        this.currentSkills.put(skillinfo.getSkillID().getValue(), skillinfo);
     }
 
     public TreeMap<Timestamp, TrainingDevelopmentEntry> getTrainingDevelopment() {
@@ -401,8 +401,8 @@ public class YouthPlayer {
         return trainingDevelopment;
     }
 
-    private Map<Integer, SkillInfo> getStartSkills() {
-        Map<Integer, SkillInfo> startSkills = new HashMap<>();
+    private SkillsInfo getStartSkills() {
+        SkillsInfo startSkills = new SkillsInfo();
         for ( var skill : this.currentSkills.values()){
             var startSkill = new SkillInfo(skill.getSkillID());
             var startValue = skill.getStartValue();
@@ -414,7 +414,7 @@ public class YouthPlayer {
             startSkill.setStartValue(startValue+adjustment);
             skill.setStartValue(startSkill.getStartValue());
             startSkill.setMax(skill.getMax());
-            startSkills.put(startSkill.skillID.getValue(), startSkill);
+            startSkills.put(startSkill.getSkillID().getValue(), startSkill);
         }
         return startSkills;
     }
@@ -460,9 +460,9 @@ public class YouthPlayer {
             var youthteamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
             // start skills are examined from current skill infos
             var currentSkill = getSkillInfo(skillID);
-            currentSkill.startValue += adjustment;
-            if ( currentSkill.currentValue < currentSkill.startValue ) {
-                currentSkill.currentValue=currentSkill.startValue;
+            currentSkill.addStartValue(adjustment);
+            if ( currentSkill.getCurrentValue()< currentSkill.getStartValue() ) {
+                currentSkill.setCurrentValue(currentSkill.getStartValue());
             }
             var skills = getStartSkills();
             for (var trainingEntry : trainingDevelopment.values()) {
@@ -470,7 +470,7 @@ public class YouthPlayer {
                 // this calculates all skill Ids, not only the requested one (this is a kind of overhead, i accept)
                 skills = trainingEntry.calcSkills(skills, constraints, trainingEntry.getTraining().getTeam(youthteamId));
             }
-            return currentSkill.startValue;
+            return currentSkill.getStartValue();
         }
         return 0;
     }
@@ -480,144 +480,6 @@ public class YouthPlayer {
             return HOVerwaltung.instance().getLanguageString("ls.player.speciality." + this.specialty.toString().toLowerCase());
         }
         return "";
-    }
-
-    public static class SkillInfo {
-
-        /**
-         * Skill Id
-         */
-        private Skills.HTSkillID skillID;
-
-        /**
-         * Value at scouting date, edited by the user (user's estimation)
-         */
-        private double startValue;
-
-        /**
-         * Calculated value based on trainings and edited start value
-         */
-        private double currentValue;
-
-        /**
-         * Skill level at the current download
-         * null as long as not known
-         */
-        private Integer currentLevel;
-
-        /**
-         * Skill level at the scouting date
-         * null as long as not known
-         */
-        private Integer startLevel;
-
-        /**
-         * Maximum reachable skill level (potential)
-         * null as long as not known
-         */
-        private Integer max;
-
-        /**
-         *  Indicates if the skill cant be trained anymore (false if current or max is not available).
-         */
-        private boolean isMaxReached;
-
-        public SkillInfo(Skills.HTSkillID id){
-            this.skillID = id;
-        }
-
-        public boolean isCurrentLevelAvailable() {
-            return currentLevel != null;
-        }
-        public boolean isStartLevelAvailable() {
-            return startLevel != null;
-        }
-
-        public boolean isMaxAvailable(){
-            return max != null;
-        }
-
-        public double getStartValue(){return this.startValue;}
-        public void setStartValue(double value){
-            this.startValue=value;
-            adjustValues();
-        }
-
-        private void adjustValues()
-        {
-            if ( max != null) {
-                if (currentValue > max + 1) {
-                    currentValue = max + 0.99;
-                }
-            }
-            if ( currentLevel != null) {
-                if (currentValue < currentLevel) {
-                    this.currentValue = currentLevel;
-                } else if (currentValue > currentLevel + 1) {
-                    this.currentValue = currentLevel + 0.99;
-                }
-            }
-
-            if ( startLevel != null) {
-                if (startValue < startLevel) {
-                    this.startValue = startLevel;
-                } else if (startValue > startLevel + 1) {
-                    this.startValue = startLevel + 0.99;
-                }
-
-                if (currentValue < startValue) {
-                    currentValue = startValue;
-                }
-            }
-            else if ( currentValue < startValue){
-                startValue = currentValue;
-            }
-        }
-
-        public double getCurrentValue(){return currentValue;}
-        public void setCurrentValue(double value){
-            this.currentValue=value;
-            adjustValues();
-        }
-
-        public Integer getCurrentLevel() {
-            return currentLevel;
-        }
-
-        public void setCurrentLevel(Integer currentLevel) {
-            this.currentLevel = currentLevel;
-            adjustValues();
-        }
-
-        public Integer getMax() {
-            return max;
-        }
-
-        public void setMax(Integer max) {
-            this.max = max;
-            adjustValues();
-        }
-
-        public boolean isMaxReached() {
-            return isMaxReached;
-        }
-
-        public void setMaxReached(boolean maxReached) {
-            isMaxReached = maxReached;
-        }
-
-        public Integer getStartLevel() {
-            return startLevel;
-        }
-
-        public void setStartLevel(Integer startLevel) {
-            this.startLevel = startLevel;
-            adjustValues();
-        }
-
-        public Skills.HTSkillID getSkillID(){
-            return skillID;
-        }
     }
 
     public static class ScoutComment {
@@ -813,6 +675,63 @@ public class YouthPlayer {
         catch(Exception ignored){
         }
         return null;
+    }
+
+    private Integer htms17;
+    public int getHTMS17()
+    {
+        if ( htms17 == null){
+
+            calcMaxSkills17();
+            // TODO calc htms17
+            htms17=0;
+        }
+
+        return htms17;
+    }
+
+    private SkillsInfo calcMaxSkills17()
+    {
+        if ( this.getAgeYears()>=17){
+            if ( this.getTrainingDevelopment().size() > 0 ){
+                for ( var entry : this.getTrainingDevelopment().values()){
+                    if ( entry.getPlayerAgeYears() > 16){
+                        return entry.getSkills();
+                    }
+                }
+            }
+            return this.currentSkills;
+        }
+        else {
+            var ret = new SkillsInfo();
+
+            for ( var skill : this.currentSkills.values()){
+                var maxVal = skill.getCurrentValue();
+                var skillLimit = 8.3;
+                if ( skill.getMax() != null && skill.getMax() < 8) skillLimit = skill.getMax()+.99;
+                if ( !skill.isMaxReached()) {
+                    int age = this.getAgeYears();
+                    int days = this.getAgeDays();
+                    double increment = YouthTraining.getMaxTrainingPerWeek(skill.getSkillID(), (int) maxVal, age);
+                    while (age < 17) {
+                        // for each week
+                        maxVal += increment;
+                        if (maxVal > skillLimit) {
+                            maxVal = skillLimit;
+                            break;
+                        }
+                        days += 7;
+                        if (days > 111) {
+                            days -= 112;
+                            age++;
+                            if ( age < 17) increment = YouthTraining.getMaxTrainingPerWeek(skill.getSkillID(), (int) maxVal, age);
+                        }
+                    }
+                }
+                skill.setPotential17Value(maxVal);
+            }
+            return ret;
+        }
     }
 
 }
