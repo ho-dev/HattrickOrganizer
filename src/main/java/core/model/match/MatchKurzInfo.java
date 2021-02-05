@@ -24,6 +24,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 	/** Datum des spiels */
 	private String m_sMatchDate = "";
 
+	private Timestamp m_tsMatchSchedule;
+
 	/** orders given for this match? */
 	private boolean ordersGiven = true;
 
@@ -258,28 +260,10 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @return Value of property m_lDatum.
 	 */
 	public java.sql.Timestamp getMatchDateAsTimestamp() {
-		return Basics.parseHattrickDate(m_sMatchDate);
-		/*if (this.matchDateTimestamp == null) {
-			if (!StringUtils.isEmpty(this.m_sMatchDate)) {
-				try {
-					SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					final Long duration = UserParameter.instance().TimeZoneDifference * 3600 * 1000L;
-					this.matchDateTimestamp = new Timestamp(simpleFormat.parse(m_sMatchDate).getTime() + duration);
-				  }
-				catch (Exception e) {
-					try {
-						// Hattrick
-						SimpleDateFormat simpleFormat = new SimpleDateFormat(
-								"yyyy-MM-dd");
-						this.matchDateTimestamp = new Timestamp(simpleFormat
-								.parse(m_sMatchDate).getTime());
-					} catch (Exception ex) {
-						HOLogger.instance().log(getClass(), ex);
-					}
-				}
-			}
+		if (m_tsMatchSchedule == null) {
+			m_tsMatchSchedule = Basics.parseHattrickDate(m_sMatchDate);
 		}
-		return this.matchDateTimestamp;*/
+		return m_tsMatchSchedule;
 	}
 
 	/**
