@@ -5,6 +5,7 @@ import core.gui.model.MatchOrdersCBItem;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
+import core.model.HOVerwaltung;
 import core.model.match.MatchType;
 import core.model.match.Weather;
 import core.net.HattrickLink;
@@ -17,6 +18,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -190,21 +193,22 @@ public class MatchBanner extends JPanel implements Refreshable {
             jlAwayTeam.setIcon(AwayTeamIcon);
             jlAwayTeam.setText(m_clSelectedMatch.getGuestTeamName());
 
-            Date matchSchedule = m_clSelectedMatch.getMatchDateAsTimestamp();
-            Long nbDays = ChronoUnit.DAYS.between(new Date().toInstant(), matchSchedule.toInstant());
+            ZonedDateTime matchSchedule = m_clSelectedMatch.getMatchSchedule(true);
+            Long nbDays = ChronoUnit.DAYS.between(ZonedDateTime.now(), matchSchedule);
 
-            String sDate;
+            DateTimeFormatter dtf;
             if (nbDays<7) {
-                sDate = DateTimeUtils.Format(matchSchedule, "EEEEE HH:mm");
+                dtf = DateTimeFormatter.ofPattern("EEEE HH:mm");
             }
             else{
-                sDate = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(matchSchedule);
+                dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
             }
 
+            String sDate = matchSchedule.format(dtf);
             String sLabel = "<html><div style='text-align: center;'>" + sDate + "\n";
             if (matchType == MatchType.LEAGUE) {
                 int iHTWeek = HTCalendarFactory.getHTWeek(m_clSelectedMatch.getMatchDateAsTimestamp(), true);
-                sLabel += String.format(Helper.getTranslation("ls.module.lineup.matchSchedule"), iHTWeek, m_clSelectedMatch.getMatchContextId());
+                sLabel += String.format(Helper.getTranslation("ls.module.lineup.matchSchedule"), iHTWeek, HOVerwaltung.instance().getModel().getLeague().getLiga());
             }
             else if (matchType.isFriendly()) {
                 sLabel += "<br>" + matchType.getName();

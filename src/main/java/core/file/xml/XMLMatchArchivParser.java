@@ -63,7 +63,7 @@ public class XMLMatchArchivParser {
 
 				// Daten füllen
 				tmp = (Element) ele.getElementsByTagName("MatchDate").item(0);
-				match.setMatchDate(tmp.getFirstChild().getNodeValue());
+				match.setMatchSchedule(tmp.getFirstChild().getNodeValue());
 				tmp = (Element) ele.getElementsByTagName("MatchID").item(0);
 				match.setMatchID(Integer.parseInt(tmp.getFirstChild()
 						.getNodeValue()));

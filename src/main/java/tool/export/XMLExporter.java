@@ -208,7 +208,7 @@ public class XMLExporter  {
 				ele.appendChild(doc.createTextNode("" + matchData.getInfo().getMatchID()));
 				ele = doc.createElement("Datum");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode(matchData.getInfo().getMatchDate()));
+				ele.appendChild(doc.createTextNode(matchData.getInfo().getMatchScheduleAsString()));
 				ele = doc.createElement("Derby");
 				tmpEle.appendChild(ele);
 
