@@ -823,7 +823,7 @@ public class Lineup{
 					HOLogger.instance().warning(
 							getClass(),
 							"Old match with status UPCOMING! " + m.getMatchID() + " from "
-									+ m.getMatchDate());
+									+ m.getMatchScheduleAsString());
 					i.remove();
 				} else {
 					checkDate = m.getMatchDateAsTimestamp();

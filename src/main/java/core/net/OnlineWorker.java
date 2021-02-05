@@ -291,7 +291,7 @@ public class OnlineWorker {
 						info.setHomeTeamID(details.getHeimId());
 						info.setGuestTeamID(details.getGastId());
 						info.setArenaId(details.getArenaID());
-						info.setMatchDate(details.getSpielDatum().toString());
+						info.setMatchSchedule(details.getSpielDatum().toString());
 						int wetterId = details.getWetterId();
 						if (wetterId != -1) {
 							info.setMatchStatus(MatchKurzInfo.FINISHED);

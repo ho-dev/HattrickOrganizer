@@ -166,36 +166,37 @@ public final class Basics  {
         return m_clDatum;
     }
 
-    /**
-     * Hattrick date time is presented as CEST (central european summer time)
-     * @param sDate string fetched from Hattrick files
-     * @return timestamp
-     */
-    public static Timestamp parseHattrickDate(String sDate) {
 
+    /**
+     * Hattrick date time is presented as CE(ST)
+     * @param sDate string fetched from Hattrick files
+     * @param localized whether or not the date is localized (normally only for display purposes)
+     * @return timestamp localized in CE(ST) or in user default if localized is set to true
+     */
+    public static Timestamp parseHattrickDate(String sDate, boolean localized) {
         if (sDate.length() > 19) {
             sDate = sDate.substring(0, 19);
         }
 
         if (sDate.length() == 19) {
             LocalDateTime htDateTimeNonLocalized = LocalDateTime.parse(sDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            ZoneId zoneId = ZoneId.of("Europe/Stockholm");
-            ZonedDateTime htLocalDateTime = ZonedDateTime.of(htDateTimeNonLocalized, zoneId);
 
-            //TODO: change HO! preference, let user specify a time zone or select system default then change the line below
-            /*
-               something like
-               if userTimePreference == "systemDefault" :
-                    userLocalDateTime = htLocalDateTime.withZoneSameInstant(ZoneId.systemDefault());
-               else:
-                       userLocalDateTime = htLocalDateTime.withZoneSameInstant(ZoneId.of(userTimePreference););
-             */
-            ZonedDateTime userLocalDateTime = htLocalDateTime.withZoneSameInstant(ZoneId.systemDefault());
+            if (localized) {
+                ZoneId zoneId = ZoneId.of("Europe/Stockholm");
+                ZonedDateTime htLocalDateTime = ZonedDateTime.of(htDateTimeNonLocalized, zoneId);
 
-            return Timestamp.valueOf(userLocalDateTime.toLocalDateTime());
+                //TODO: let user specify a time zone or select system default then change the line below #884
+
+                ZonedDateTime userLocalDateTime = htLocalDateTime.withZoneSameInstant(ZoneId.systemDefault());
+
+                return Timestamp.valueOf(userLocalDateTime.toLocalDateTime());
+            }
+            else{
+                return Timestamp.valueOf(htDateTimeNonLocalized);
+            }
         }
         else
-            {
+        {
             try {
                 //Hattrick
                 final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
@@ -208,6 +209,15 @@ public final class Basics  {
             }
         }
         return null;
+    }
+
+    /**
+     * Hattrick date time is presented as CE(ST)
+     * @param sDate string fetched from Hattrick files
+     * @return timestamp localized in CE(ST)
+     */
+    public static Timestamp parseHattrickDate(String sDate) {
+            return parseHattrickDate(sDate, false);
     }
 
     /**
