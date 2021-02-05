@@ -23,7 +23,6 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
         return new YouthPlayerColumn[]{
                 // TODO: Name column should include the specialty icon
                 // TODO: selected column order is not restored on restart (standard order is used instead)
-                // TODO: sorter are disabled after Download/refresh (F11)
                 new YouthPlayerColumn(0, "ls.player.name") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {

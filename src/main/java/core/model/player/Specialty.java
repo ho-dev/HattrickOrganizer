@@ -21,8 +21,8 @@ public enum Specialty {
     Quick(2),
     Powerful(3),
     Unpredictable(4),
-    Head(5),
-    Regainer(6),
+    Head(5),        // renamed to fit to ls.player.speciality.head string
+    Regainer(6),    // renamed to fit to ls.player.speciality.regainer string
     Not_used(7),
     Support(8);
 
