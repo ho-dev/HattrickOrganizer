@@ -502,7 +502,7 @@ public class HOModel {
     			// We want to add all weeks with nextTraining after the previous date, and stop
     			// when we are after the current date.
     			
-    			if (tpw.getNextTrainingDate().after(trainingDateOfCurrentHRF)) {
+    			if (tpw.getTrainingDate().after(trainingDateOfCurrentHRF)) {
     				break;
     			}
     			

@@ -206,9 +206,11 @@ public class TrainingPerWeek  {
         final String where = "WHERE ( HEIMID=" + teamId
                 + " OR GASTID=" + teamId + " )"
                 + " AND MatchDate BETWEEN '" + ots.toString() + "' AND '" + this.trainingDate.toString() + "' "
-                + " AND MatchTyp>" + MatchType.NONE.getId()
+                + " AND (MatchTyp>" + MatchType.NONE.getId()
                 + " AND MatchTyp<" + MatchType.TOURNAMENTGROUP.getId()
-                + " AND STATUS=" + MatchKurzInfo.FINISHED
+                + " OR MatchTyp>=" + MatchType.EMERALDCUP.getId()
+                + " AND MatchTyp<=" + MatchType.CONSOLANTECUP.getId()
+                + ") AND STATUS=" + MatchKurzInfo.FINISHED
                 + " ORDER BY MatchDate DESC";
 
         return DBManager.instance().getMatchesKurzInfo(where);
