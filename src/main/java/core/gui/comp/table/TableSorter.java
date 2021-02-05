@@ -108,6 +108,13 @@ public class TableSorter extends TableMap {
         return -1;
     }
 
+    public int getIndex(int row){
+        if ( row >= 0 && row < indexes.length){
+            return indexes[row];
+        }
+        return 0;
+    }
+
     /**
      * Maps a player id to the row that contains his entry.
      *

@@ -22,6 +22,8 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
     private YouthPlayerColumn[] initColumns() {
         return new YouthPlayerColumn[]{
                 // TODO: Name column should include the specialty icon
+                // TODO: selected column order is not restored on restart (standard order is used instead)
+                // TODO: sorter are disabled after Download/refresh (F11)
                 new YouthPlayerColumn(0, "ls.player.name") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
@@ -31,7 +33,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 new YouthPlayerColumn(1, "ls.player.age") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new ColorLabelEntry(player.getAgeYears()*112+player.getAgeDays(), Player.getAgeWithDaysAsString(player.getAgeYears(), player.getAgeDays(), new Date().getTime()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(player.getAgeYears() * 112 + player.getAgeDays(), Player.getAgeWithDaysAsString(player.getAgeYears(), player.getAgeDays(), new Date().getTime()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerColumn(2, "ls.youth.player.arrival") {
@@ -87,6 +89,12 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
                         return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.SetPieces));
+                    }
+                },
+                new YouthPlayerColumn(11, "ls.youth.player.Specialty") {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
+                        return new ColorLabelEntry(player.getSpecialtyString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
 

@@ -475,6 +475,13 @@ public class YouthPlayer {
         return 0;
     }
 
+    public String getSpecialtyString() {
+        if ( this.specialty != Specialty.NoSpecialty){
+            return HOVerwaltung.instance().getLanguageString("ls.player.speciality." + this.specialty.toString().toLowerCase());
+        }
+        return "";
+    }
+
     public static class SkillInfo {
 
         /**
