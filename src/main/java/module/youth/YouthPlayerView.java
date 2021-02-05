@@ -100,6 +100,11 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
 
     private void refreshPlayerDetails() {
         var player = getSelectedPlayer();
+        if ( player == null){
+            // reset previous selection
+            player = playerDetailsTableModel.getYouthPlayer();
+            if ( player != null) setSelectedPlayer(player);
+        }
         if (player != null) {
             playerNameLabel.setText(player.getFullName());
             playerDetailsTableModel.setYouthPlayer(player);
@@ -127,12 +132,27 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     }
 
     private YouthPlayer getSelectedPlayer() {
-        var index = playerOverviewTableSorter.getIndex(this.playerOverviewTable.getSelectedRow());
-        var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
-        if (currentPlayers != null && currentPlayers.size() > index) {
-            return currentPlayers.get(index);
+        var row = this.playerOverviewTable.getSelectedRow();
+        if ( row > -1) {
+            var index = playerOverviewTableSorter.getIndex(row);
+            var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
+            if (currentPlayers != null && currentPlayers.size() > index) {
+                return currentPlayers.get(index);
+            }
         }
         return null;
+    }
+
+    private void setSelectedPlayer(YouthPlayer selectedPlayer) {
+        var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
+        for (int row=0; row<currentPlayers.size(); row++){
+            var index = playerOverviewTableSorter.getIndex(row);
+            var player = currentPlayers.get(index);
+            if ( player != null && player.getId() == selectedPlayer.getId()){
+                this.playerOverviewTable.setRowSelectionInterval(row,row);
+                break;
+            }
+        }
     }
 
     @Override
