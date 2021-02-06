@@ -64,7 +64,7 @@ public class XMLMatchesParser {
 					ele = (Element) list.item(i);
 
 					tmp = (Element) ele.getElementsByTagName("MatchDate").item(0);
-					match.setMatchDate(tmp.getFirstChild().getNodeValue());
+					match.setMatchSchedule(tmp.getFirstChild().getNodeValue());
 					tmp = (Element) ele.getElementsByTagName("MatchID").item(0);
 					match.setMatchID(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
 					tmp = (Element) ele.getElementsByTagName("MatchType").item(0);

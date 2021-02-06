@@ -1,14 +1,12 @@
 package core.model.match;
 
 import core.model.HOVerwaltung;
-import core.model.UserParameter;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
-import core.model.misc.Basics;
-import core.util.HOLogger;
-import core.util.StringUtils;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import core.util.DateTimeInfo;
+
+import java.time.ZonedDateTime;
+
 import static core.util.StringUtils.getResultString;
 
 public class MatchKurzInfo implements Comparable<Object> {
@@ -21,10 +19,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 	/** Name des Teams zu dem die Matchinfo gehört */
 	private String m_sHeimName = "";
 
-	/** Datum des spiels */
-	private String m_sMatchDate = "";
 
-	private Timestamp m_tsMatchSchedule;
+	private DateTimeInfo m_matchSchedule;
 
 	/** orders given for this match? */
 	private boolean ordersGiven = true;
@@ -100,7 +96,6 @@ public class MatchKurzInfo implements Comparable<Object> {
 	private MatchType m_mtMatchTyp = MatchType.NONE;
 	private CupLevel m_mtCupLevel = CupLevel.NONE;
 	private CupLevelIndex m_mtCupLevelIndex = CupLevelIndex.NONE;
-	//private Timestamp matchDateTimestamp;
 	public static final int ONGOING = 3;
 	public static final int UPCOMING = 2;
 	public static final int FINISHED = 1;
@@ -235,23 +230,28 @@ public class MatchKurzInfo implements Comparable<Object> {
 
 	/**
 	 * Setter for property m_sMatchDate.
-	 * 
-	 * @param m_sMatchDate
-	 *            New value of property m_sMatchDate.
+	 * @param sMatchDate New value of property m_sMatchDate.
 	 */
-	public final void setMatchDate(java.lang.String m_sMatchDate) {
-		this.m_sMatchDate = m_sMatchDate;
-		// ensures that getMatchDateAsTimestamp() will regenerate the timestamp
-		//this.matchDateTimestamp = null;
+	public final void setMatchSchedule(String sMatchDate) {
+		m_matchSchedule = new DateTimeInfo(sMatchDate);
 	}
 
 	/**
-	 * Getter for property m_sMatchDate.
-	 * 
-	 * @return Value of property m_sMatchDate.
+	 * This function return the match schedule as provided by CHPP in xml files
+	 * This function should be avoided
 	 */
-	public final java.lang.String getMatchDate() {
-		return m_sMatchDate;
+	@Deprecated
+	public final String getMatchScheduleAsString() {
+		return m_matchSchedule.getHattrickTimeAsString();
+	}
+
+	public ZonedDateTime getMatchSchedule(boolean localized) {
+		if (localized) {
+			return m_matchSchedule.getUserLocalizedTime();
+		}
+		else{
+			return m_matchSchedule.getHattrickTime();
+		}
 	}
 
 	/**
@@ -260,10 +260,21 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @return Value of property m_lDatum.
 	 */
 	public java.sql.Timestamp getMatchDateAsTimestamp() {
-		if (m_tsMatchSchedule == null) {
-			m_tsMatchSchedule = Basics.parseHattrickDate(m_sMatchDate);
+			return getMatchDateAsTimestamp(false);
+	}
+
+	/**
+	 * Getter for property m_lDatum.
+	 *
+	 * @return Value of property m_lDatum.
+	 */
+	public java.sql.Timestamp getMatchDateAsTimestamp(boolean localized) {
+		if (localized) {
+			return m_matchSchedule.getUserLocalizedTimeAsTimestamp();
 		}
-		return m_tsMatchSchedule;
+		else{
+			return m_matchSchedule.getHattrickTimeAsTimestamp();
+		}
 	}
 
 	/**
@@ -391,7 +402,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 		setHomeTeamID(match.getHomeTeamID());
 		setHomeTeamName(match.getHomeTeamName());
 		setHomeTeamGoals(match.getHomeTeamGoals());
-		setMatchDate(match.getMatchDate());
+		setMatchSchedule(match.getMatchScheduleAsString());
 		setMatchStatus(match.getMatchStatus());
 		setOrdersGiven(match.isOrdersGiven());
 		setMatchType(match.getMatchType());
