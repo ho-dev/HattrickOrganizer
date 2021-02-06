@@ -21,10 +21,10 @@ public class TrainingDevelopmentEntry {
         this.skills = startSkills;
     }
 
-    public void setSkillConstraints(YouthPlayer player, Map<Integer, SkillInfo> skillConstraints) {
+    public void setSkillConstraints(YouthPlayer player, SkillsInfo skillConstraints) {
         if (skillConstraints != null) {
             for (var constraint : skillConstraints.values()) {
-                var skill = this.skills.get(constraint.getSkillID().getValue());
+                var skill = this.skills.get(constraint.getSkillID());
                 var oldVal = skill.getCurrentValue();
                 skill.setCurrentLevel(constraint.getCurrentLevel());
                 skill.setMax(constraint.getMax());
@@ -40,14 +40,12 @@ public class TrainingDevelopmentEntry {
         }
     }
 
-    public SkillsInfo calcSkills(Map<Integer, SkillInfo> startSkills,
-                                                          Map<Integer, SkillInfo> skillConstraints,
-                                                          MatchLineupTeam team) {
+    public SkillsInfo calcSkills(SkillsInfo startSkills, SkillsInfo skillConstraints, MatchLineupTeam team) {
         if ( this.skills == null){
             this.skills = new SkillsInfo();
         }
         for (var skill : startSkills.values()) {
-            this.skills.put(skill.getSkillID().getValue(), training.calcSkill(skill, player, team));
+            this.skills.put(skill.getSkillID(), training.calcSkill(skill, player, team));
         }
         setSkillConstraints(player, skillConstraints);
         return this.skills;
@@ -74,7 +72,7 @@ public class TrainingDevelopmentEntry {
     }
 
     public String getSkillValue(Skills.HTSkillID skillID) {
-        var val = this.skills.get(skillID.getValue());
+        var val = this.skills.get(skillID);
         if ( val != null ) return String.format("%,.2f", val.getCurrentValue());
         return "";
     }

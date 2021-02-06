@@ -9,7 +9,9 @@ import module.training.Skills;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class YouthTraining {
 
@@ -274,5 +276,14 @@ public class YouthTraining {
         return 0;
     }
 
+    public static Map<Skills.HTSkillID, Double> potentialNormingFactor = Map.of(
+            Skills.HTSkillID.Defender, getMaxTrainingPerWeek(Skills.HTSkillID.Defender, 7, 17),
+            Skills.HTSkillID.Keeper, getMaxTrainingPerWeek(Skills.HTSkillID.Keeper, 7, 17),
+            Skills.HTSkillID.Passing, getMaxTrainingPerWeek(Skills.HTSkillID.Passing, 7, 17),
+            Skills.HTSkillID.SetPieces, getMaxTrainingPerWeek(Skills.HTSkillID.SetPieces, 7, 17),
+            Skills.HTSkillID.Scorer, getMaxTrainingPerWeek(Skills.HTSkillID.Scorer, 7, 17),
+            Skills.HTSkillID.Playmaker, getMaxTrainingPerWeek(Skills.HTSkillID.Playmaker, 7, 17),
+            Skills.HTSkillID.Winger, getMaxTrainingPerWeek(Skills.HTSkillID.Winger, 7, 17)
+    );
 
 }
