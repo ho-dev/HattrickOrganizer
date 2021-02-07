@@ -107,6 +107,7 @@ public class YouthScoutCommentTable extends AbstractTable {
             ret.setSkillLevel(rs.getInt("SkillLevel"));
             ret.setSkillType(Skills.ScoutCommentSkillTypeID.valueOf(rs.getInt("SkillType")));
             ret.setVariation(rs.getInt("Variation"));
+            ret.setType(CommentType.valueOf(rs.getInt("Type")));
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),e);
         }

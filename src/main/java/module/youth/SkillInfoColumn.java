@@ -1,19 +1,15 @@
 package module.youth;
 
-import core.constants.player.PlayerSkill;
 import core.gui.comp.entry.IHOTableEntry;
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Hashtable;
 
 public class SkillInfoColumn extends JComponent implements IHOTableEntry {
 
-    YouthPlayer.SkillInfo skillInfo;
+    SkillInfo skillInfo;
 
     private static final Color Color_MaxReached = Color.red;
     private static final Color Color_PossibleRange = new Color(0, 255, 0, 100);
@@ -23,7 +19,7 @@ public class SkillInfoColumn extends JComponent implements IHOTableEntry {
     private static final int bar_width = 100; // pixels to display skill range from 0 to 9 (8.3)
     private static final int bar_thickness = 12;
 
-    public SkillInfoColumn(YouthPlayer.SkillInfo info) {
+    public SkillInfoColumn(SkillInfo info) {
         this.skillInfo = info;
         this.updateComponent();
     }

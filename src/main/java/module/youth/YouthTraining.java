@@ -5,10 +5,13 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.*;
 import module.lineup.substitution.model.MatchOrderType;
+import module.training.Skills;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class YouthTraining {
 
@@ -128,9 +131,9 @@ public class YouthTraining {
         return this.getMatchLineup().getGuestTeamName();
     }
 
-    public YouthPlayer.SkillInfo calcSkill(YouthPlayer.SkillInfo value, YouthPlayer player, MatchLineupTeam team) {
+    public SkillInfo calcSkill(SkillInfo value, YouthPlayer player, MatchLineupTeam team) {
 
-        var ret = new YouthPlayer.SkillInfo(value.getSkillID());
+        var ret = new SkillInfo(value.getSkillID());
         ret.setMax(value.getMax());
         ret.setCurrentLevel(value.getCurrentLevel());
         ret.setMaxReached(value.isMaxReached());
@@ -151,7 +154,7 @@ public class YouthTraining {
         return ret;
     }
 
-    private double calcSkillIncrement(YouthPlayer.SkillInfo value, YouthPlayer player, MatchLineupTeam lineupTeam) {
+    private double calcSkillIncrement(SkillInfo value, YouthPlayer player, MatchLineupTeam lineupTeam) {
         double ret = 0;
         var matchTypeFactor = getMatchTypeFactor();
         YouthTrainingType primaryTraining=null;
@@ -208,11 +211,12 @@ public class YouthTraining {
         return ret;
     }
 
+    static final double TRAINING_FRIENDLYFACTOR=.5;
     public double getMatchTypeFactor() {
         if (this.getMatchLineup().getMatchType() == MatchType.YOUTHLEAGUE) {
             return 1.;
         }
-        return 0.5;
+        return TRAINING_FRIENDLYFACTOR;
     }
 
     public String getPlayerTrainedSectors(int playerId) {
@@ -232,5 +236,54 @@ public class YouthTraining {
         }
         return ret.toString();
     }
+
+    /**
+     * Calc most effective training for given skill id
+     *
+     * training rate is 6 league matches/training in 44 days
+     * plus             1 friendly match in 21 days
+     * @param skillId
+     * @param skillVal
+     * @param age
+     * @return
+     */
+
+    static final double fullTrainingsPerWeek = (6*21 + 44*TRAINING_FRIENDLYFACTOR)/(21*44)*7;
+    static final double equalTrainings = 1.33;
+    public static double getMaxTrainingPerWeek(Skills.HTSkillID skillId, int skillVal, int age) {
+
+        switch (skillId){
+            case Keeper:
+                return YouthTrainingType.Goalkeeping.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
+            case Playmaker:
+                return YouthTrainingType.Playmaking.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
+            case SetPieces:
+                // TODO check if shooting as secondary training is more effective
+                return YouthTrainingType.SetPieces.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
+            case Defender:
+                // TODO check if defending position as secondary training is more effective
+                return YouthTrainingType.Defending.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
+            case Winger:
+                // TODO check if wing attack as secondary training is more effective
+                return YouthTrainingType.Winger.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
+            case Passing:
+                // TODO check if through passes as secondary training is more effective
+                return YouthTrainingType.Passing.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
+            case Scorer:
+                // TODO check if shooting as secondary training is more effective
+                return YouthTrainingType.Scoring.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
+        }
+        return 0;
+    }
+
+    public static Map<Skills.HTSkillID, Double> potentialNormingFactor = Map.of(
+            Skills.HTSkillID.Defender, getMaxTrainingPerWeek(Skills.HTSkillID.Defender, 7, 17),
+            Skills.HTSkillID.Keeper, getMaxTrainingPerWeek(Skills.HTSkillID.Keeper, 7, 17),
+            Skills.HTSkillID.Passing, getMaxTrainingPerWeek(Skills.HTSkillID.Passing, 7, 17),
+            Skills.HTSkillID.SetPieces, getMaxTrainingPerWeek(Skills.HTSkillID.SetPieces, 7, 17),
+            Skills.HTSkillID.Scorer, getMaxTrainingPerWeek(Skills.HTSkillID.Scorer, 7, 17),
+            Skills.HTSkillID.Playmaker, getMaxTrainingPerWeek(Skills.HTSkillID.Playmaker, 7, 17),
+            Skills.HTSkillID.Winger, getMaxTrainingPerWeek(Skills.HTSkillID.Winger, 7, 17)
+    );
 
 }

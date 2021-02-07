@@ -1,32 +1,30 @@
 package module.youth;
 
-import core.model.HOVerwaltung;
 import core.model.match.MatchLineupTeam;
 import core.model.player.Player;
 import module.training.Skills;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.Map;
 
 public class TrainingDevelopmentEntry {
     private YouthPlayer player;
     private YouthTraining training;
-    private HashMap<Integer, YouthPlayer.SkillInfo> skills;
+    private SkillsInfo skills;
 
     public TrainingDevelopmentEntry(YouthPlayer player, YouthTraining training) {
         this.training = training;
         this.player = player;
     }
 
-    public void setSkills(HashMap<Integer, YouthPlayer.SkillInfo> startSkills) {
+    public void setSkills(SkillsInfo startSkills) {
         this.skills = startSkills;
     }
 
-    public void setSkillConstraints(YouthPlayer player, Map<Integer, YouthPlayer.SkillInfo> skillConstraints) {
+    public void setSkillConstraints(YouthPlayer player, SkillsInfo skillConstraints) {
         if (skillConstraints != null) {
             for (var constraint : skillConstraints.values()) {
-                var skill = this.skills.get(constraint.getSkillID().getValue());
+                var skill = this.skills.get(constraint.getSkillID());
                 var oldVal = skill.getCurrentValue();
                 skill.setCurrentLevel(constraint.getCurrentLevel());
                 skill.setMax(constraint.getMax());
@@ -42,14 +40,12 @@ public class TrainingDevelopmentEntry {
         }
     }
 
-    public Map<Integer, YouthPlayer.SkillInfo> calcSkills(Map<Integer, YouthPlayer.SkillInfo> startSkills,
-                                                          Map<Integer, YouthPlayer.SkillInfo> skillConstraints,
-                                                          MatchLineupTeam team) {
+    public SkillsInfo calcSkills(SkillsInfo startSkills, SkillsInfo skillConstraints, MatchLineupTeam team) {
         if ( this.skills == null){
-            this.skills = new HashMap<>();
+            this.skills = new SkillsInfo();
         }
         for (var skill : startSkills.values()) {
-            this.skills.put(skill.getSkillID().getValue(), training.calcSkill(skill, player, team));
+            this.skills.put(skill.getSkillID(), training.calcSkill(skill, player, team));
         }
         setSkillConstraints(player, skillConstraints);
         return this.skills;
@@ -76,7 +72,7 @@ public class TrainingDevelopmentEntry {
     }
 
     public String getSkillValue(Skills.HTSkillID skillID) {
-        var val = this.skills.get(skillID.getValue());
+        var val = this.skills.get(skillID);
         if ( val != null ) return String.format("%,.2f", val.getCurrentValue());
         return "";
     }
@@ -89,7 +85,11 @@ public class TrainingDevelopmentEntry {
         return this.training.getPlayerTrainedSectors(this.player.getId());
     }
 
-    public Map<Integer, YouthPlayer.SkillInfo> getSkills() {
+    public SkillsInfo getSkills() {
         return this.skills;
+    }
+
+    public int getPlayerAgeYears() {
+        return this.player.getAgeYears();
     }
 }
