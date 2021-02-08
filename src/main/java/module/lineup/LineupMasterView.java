@@ -28,7 +28,6 @@ import javax.swing.event.ChangeListener;
  */
 public class LineupMasterView extends JPanel {
 
-	private static final long serialVersionUID = 6557097920433876610L;
 	private JTabbedPane tabbedPane;
 	private LineupPanel lineupPanel;
 	private SubstitutionOverview substitutionOverview;
