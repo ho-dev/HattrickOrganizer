@@ -292,7 +292,12 @@ public abstract class HOTableModel extends AbstractTableModel {
 		}
 	}
 
-	public void setUserSettings(JTable table) {
+	/**
+	 * stored user settings of table columns order and columns width are set to the table
+	 *
+	 * @param table the table object
+	 */
+	public void restoreUserSettings(JTable table) {
 		for (int i = 0; i < table.getColumnCount(); i++) {
 			table.getColumnModel().getColumn(i).setIdentifier(i);
 		}
@@ -302,13 +307,25 @@ public abstract class HOTableModel extends AbstractTableModel {
 				.forEach(i -> setColumnSettings(i, table));
 	}
 
-	private void setColumnSettings(UserColumn i, JTable table) {
-		var column = table.getColumn(i.getId());
-		column.setPreferredWidth(i.getPreferredWidth());
-		table.moveColumn(column.getModelIndex(), i.getIndex());
+	/**
+	 * Set column order and width
+	 *
+	 * @param userColumn user column holding user's settings
+	 * @param table the table object
+	 */
+	private void setColumnSettings(UserColumn userColumn, JTable table) {
+		var column = table.getColumn(userColumn.getId());
+		column.setPreferredWidth(userColumn.getPreferredWidth());
+		table.moveColumn(column.getModelIndex(), userColumn.getIndex());
 	}
 
-	public void setUserParameter(JTable table) {
+	/**
+	 * Save the user settings of the table. User selected width and column indexes are saved in user column model
+	 * which is stored in database table UserColumnTable
+	 *
+	 * @param table table object
+	 */
+	public void storeUserSettings(JTable table) {
 		// column order and width
 		var tableColumnModel = table.getColumnModel();
 
@@ -322,6 +339,5 @@ public abstract class HOTableModel extends AbstractTableModel {
 		}
 		DBManager.instance().saveHOColumnModel(this);
 	}
-
 
 }

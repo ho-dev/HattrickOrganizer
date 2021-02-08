@@ -25,7 +25,6 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
 
     private YouthPlayerColumn[] initColumns() {
         return new YouthPlayerColumn[]{
-                // TODO: selected column order is not restored on restart (standard order is used instead)
                 new YouthPlayerColumn("ls.player.name") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
@@ -125,7 +124,6 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                     }
                 },
                 // TODO: scout information
-                // TODO: number of played matches (trainings)
                 new YouthPlayerColumn("ls.player.id", 0) {
                     @Override
                     public boolean isDisplay() {

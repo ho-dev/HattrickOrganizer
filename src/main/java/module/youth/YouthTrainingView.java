@@ -44,7 +44,7 @@ public class YouthTrainingView extends JTable implements core.gui.Refreshable {
                 }
             }
 
-            tableModel.setUserSettings(this);
+            tableModel.restoreUserSettings(this);
         }
         tableModel.initData();
         //tableSorter = new TableSorter(tableModel, tableModel.getPositionInArray(99), getOrderByColumn());
@@ -64,7 +64,7 @@ public class YouthTrainingView extends JTable implements core.gui.Refreshable {
     }
 
     public void setUserParameter() {
-        this.tableModel.setUserParameter(this);
+        this.tableModel.storeUserSettings(this);
     }
 
 /*

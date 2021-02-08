@@ -24,7 +24,6 @@ public class YouthTrainingViewTableModel extends HOTableModel {
 
     private YouthTrainingColumn[] initColumns() {
         return new YouthTrainingColumn[]{
-                // TODO include match type icon in first column
                 new YouthTrainingColumn(0, "ls.youth.training.date", 0) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
