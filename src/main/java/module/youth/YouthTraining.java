@@ -9,7 +9,6 @@ import module.training.Skills;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -115,6 +114,7 @@ public class YouthTraining {
     private Matchdetails getMatchDetails() {
         if ( this.matchdetails == null){
             this.matchdetails = DBManager.instance().loadMatchDetails(SourceSystem.YOUTH.getValue(), this.youthMatchId);
+            this.matchdetails.setMatchType(this.getMatchLineup().getMatchTyp());
         }
         return this.matchdetails;
     }
@@ -129,6 +129,10 @@ public class YouthTraining {
 
     public String getGuestTeamName() {
         return this.getMatchLineup().getGuestTeamName();
+    }
+
+    public MatchType getMatchType() {
+        return getMatchLineup().getMatchType();
     }
 
     public SkillInfo calcSkill(SkillInfo value, YouthPlayer player, MatchLineupTeam team) {
@@ -252,28 +256,21 @@ public class YouthTraining {
     static final double equalTrainings = 1.33;
     public static double getMaxTrainingPerWeek(Skills.HTSkillID skillId, int skillVal, int age) {
 
-        switch (skillId){
-            case Keeper:
-                return YouthTrainingType.Goalkeeping.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-            case Playmaker:
-                return YouthTrainingType.Playmaking.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-            case SetPieces:
-                // TODO check if shooting as secondary training is more effective
-                return YouthTrainingType.SetPieces.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-            case Defender:
-                // TODO check if defending position as secondary training is more effective
-                return YouthTrainingType.Defending.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-            case Winger:
-                // TODO check if wing attack as secondary training is more effective
-                return YouthTrainingType.Winger.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-            case Passing:
-                // TODO check if through passes as secondary training is more effective
-                return YouthTrainingType.Passing.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-            case Scorer:
-                // TODO check if shooting as secondary training is more effective
-                return YouthTrainingType.Scoring.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-        }
-        return 0;
+        // TODO check if shooting as secondary training is more effective
+        // TODO check if defending position as secondary training is more effective
+        // TODO check if wing attack as secondary training is more effective
+        // TODO check if through passes as secondary training is more effective
+        // TODO check if shooting as secondary training is more effective
+        return switch (skillId) {
+            case Keeper -> YouthTrainingType.Goalkeeping.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            case Playmaker -> YouthTrainingType.Playmaking.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            case SetPieces -> YouthTrainingType.SetPieces.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            case Defender -> YouthTrainingType.Defending.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            case Winger -> YouthTrainingType.Winger.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            case Passing -> YouthTrainingType.Passing.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            case Scorer -> YouthTrainingType.Scoring.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            default -> 0;
+        };
     }
 
     public static Map<Skills.HTSkillID, Double> potentialNormingFactor = Map.of(

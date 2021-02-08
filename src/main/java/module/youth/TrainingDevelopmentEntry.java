@@ -1,6 +1,7 @@
 package module.youth;
 
 import core.model.match.MatchLineupTeam;
+import core.model.match.MatchType;
 import core.model.player.Player;
 import module.training.Skills;
 
@@ -63,6 +64,10 @@ public class TrainingDevelopmentEntry {
         return this.training.getHomeTeamName() + "-" + this.training.getGuestTeamName();
     }
 
+    public MatchType getMatchType() {
+        return this.training.getMatchType();
+    }
+
     public YouthTraining getTraining() {
         return this.training;
     }
@@ -92,4 +97,5 @@ public class TrainingDevelopmentEntry {
     public int getPlayerAgeYears() {
         return this.player.getAgeYears();
     }
+
 }
