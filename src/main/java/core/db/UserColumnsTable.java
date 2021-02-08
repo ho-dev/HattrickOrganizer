@@ -114,9 +114,9 @@ class UserColumnsTable extends AbstractTable {
 		sql.append(" WHERE ");
 		sql.append(columns[0].getColumnName());
 		sql.append(" BETWEEN ");
-		sql.append((model.getId()*1000));
+		sql.append(model.getId()*1000);
 		sql.append(" AND ");
-		sql.append(((model.getId()+1)*1000));
+		sql.append(model.getId()*1000+999);
 		ResultSet rs = adapter.executeQuery(sql.toString());
 		UserColumn[] dbcolumns = model.getColumns();
 		try {

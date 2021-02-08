@@ -9,17 +9,16 @@ import javax.swing.table.TableColumn;
 
 public class YouthPlayerColumn extends UserColumn {
 
-    protected YouthPlayerColumn(int id, String name) {
-        super(id, name);
+    static int nextId=0;
+    protected YouthPlayerColumn( String name) {
+        super(nextId++, name);
         this.setDisplay(true);
     }
-    public YouthPlayerColumn(int id,String name,int minWidth){
-        this(id,name,name,minWidth);
+    public YouthPlayerColumn(String name,int minWidth){
+        this(name,name,minWidth);
     }
-    public YouthPlayerColumn(int id,String name, String tooltip, int minWidth){
-        super(id,name,tooltip);
-
-        // TODO tables can not be sorted
+    public YouthPlayerColumn(String name, String tooltip, int minWidth){
+        super(nextId++,name,tooltip);
 
         // TODO setting column width does not work
         this.minWidth = minWidth;

@@ -98,4 +98,7 @@ public class TrainingDevelopmentEntry {
         return this.player.getAgeYears();
     }
 
+    public double getRating() {
+        return this.training.getRating(this.player.getId());
+    }
 }

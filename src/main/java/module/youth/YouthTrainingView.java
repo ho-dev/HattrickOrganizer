@@ -5,11 +5,7 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.UserColumnController;
 
 import javax.swing.*;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableColumnModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentListener;
 
 public class YouthTrainingView extends JTable implements core.gui.Refreshable {
 
@@ -47,6 +43,8 @@ public class YouthTrainingView extends JTable implements core.gui.Refreshable {
                     }
                 }
             }
+
+            tableModel.setUserSettings(this);
         }
         tableModel.initData();
         //tableSorter = new TableSorter(tableModel, tableModel.getPositionInArray(99), getOrderByColumn());
@@ -63,6 +61,10 @@ public class YouthTrainingView extends JTable implements core.gui.Refreshable {
     public void reInit() {
         initModel();
         repaint();
+    }
+
+    public void setUserParameter() {
+        this.tableModel.setUserParameter(this);
     }
 
 /*
