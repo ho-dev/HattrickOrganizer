@@ -21,7 +21,7 @@ public class DateTimeInfo {
     private Instant m_instantUserLocalized;
     private ZonedDateTime m_zdtHattrick;
     private ZonedDateTime m_zdtUserLocalized;
-    private String m_sHattrick; // String as provided by aAttrick in xml files
+    private String m_sHattrick; // String as provided by Hattrick in xml files
 
 
     @Deprecated

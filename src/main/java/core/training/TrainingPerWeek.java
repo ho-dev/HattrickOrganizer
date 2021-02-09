@@ -4,112 +4,125 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
-import core.util.HOLogger;
+import core.util.DateTimeInfo;
 import module.transfer.test.HTWeek;
-
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
 /**
- * New Training Class
+ * Class that holds all information required to calculate training effect of a given week
+ * (e.g. training intensity, stamina part, assistant level, played games ...)
  */
 public class TrainingPerWeek  {
-    //~ Instance fields ----------------------------------------------------------------------------
-    private MatchKurzInfo[] matches;
 
+    private int mTrainingIntensity;
+    private int mStaminaShare;
+    private int mTrainingType;
+    private int mTrainingAssistantsLevel;
+    private MatchKurzInfo[] matches;
+    private ZonedDateTime mTrainingDate;
+
+    @Deprecated
     private int _HRFID;
-    private int _Intensity = -1;
-    private int _Stamina = -1;
-    private int _TrainingType = -1;
-    private int _Week = -1;
-    private int _Year = -1;
+
+    @Deprecated
+    private int _Week;
+
+    @Deprecated
+    private int _Year;
+
+    @Deprecated
     private int _PreviousHRFID;
-    private Timestamp nextTrainingDate = null;
-    private Timestamp trainingDate = null;
-    private int assistants = -1;
+
+    @Deprecated
+    private Timestamp nextTrainingDate;
+
+    @Deprecated
+    private Timestamp trainingDate;
+
+    @Deprecated
     private HattrickDate hattrickDate;
 
-    //~ Constructors -------------------------------------------------------------------------------
-    public TrainingPerWeek() {
-    	
+
+    public TrainingPerWeek(ZonedDateTime trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel) {
+        mTrainingDate = trainingDate;
+        mTrainingType = trainingType;
+        mTrainingIntensity = trainingIntensity;
+        mStaminaShare = staminaShare;
+        mTrainingAssistantsLevel = trainingAssistantsLevel;
     }
-    /**
-     * Creates a new Training object.
-     */
+
+    @Deprecated
+    public TrainingPerWeek() {}
+
+    @Deprecated
     public TrainingPerWeek(int week, int year, int trType, int intensity, int stamina) {
         this._Week = week;
         this._Year = year;
-        this._TrainingType = trType;
-        this._Intensity = intensity;
-        this._Stamina = stamina;
+        this.mTrainingType = trType;
+        this.mTrainingIntensity = intensity;
+        this.mStaminaShare = stamina;
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
-
+    @Deprecated
     public final void setHrfId(int i) {
         _HRFID = i;
     }
 
+    @Deprecated
     public final int getHrfId() {
         return _HRFID;
     }
 
+    @Deprecated
     public final void setStaminaPart(int stamina) {
-        this._Stamina = stamina;
+        this.mStaminaShare = stamina;
     }
 
+    @Deprecated
     public final int getStaminaPart() {
-        return this._Stamina;
+        return this.mStaminaShare;
     }
 
+    @Deprecated
     public final void setTrainingIntensity(int intensity) {
-        this._Intensity = intensity;
+        this.mTrainingIntensity = intensity;
     }
 
+    @Deprecated
     public final int getTrainingIntensity() {
-        return this._Intensity;
+        return this.mTrainingIntensity;
     }
 
+    @Deprecated
     public final void setTrainingType(int trType) {
-        this._TrainingType = trType;
+        this.mTrainingType = trType;
     }
 
+    @Deprecated
     public final int getTrainingType() {
-        return this._TrainingType;
+        return this.mTrainingType;
     }
 
+    @Deprecated
     public final int getWeek() {
         return this._Week;
     }
 
+    @Deprecated
     public final int getYear() {
         return this._Year;
     }
 
-    /**
-     * toString method: creates a String representation of the object
-     *
-     * @return the String representation
-     */
-    @Override
-	public final String toString() {
-        return "TrainingPerWeek[" +
-                "intensity = " + _Intensity +
-                ", staminaTrainingPart = " + _Stamina +
-                ", typ = " + _TrainingType +
-                ", week = " + _Week +
-                ", year = " + _Year +
-                ", hattrickWeek = " + this.hattrickDate.getWeek() +
-                ", hattrickSeason = " + this.hattrickDate.getSeason() +
-                ", trainDate = " + trainingDate +
-                ", hrfId = " + _HRFID +
-                "]";
-    }
-	public int getPreviousHrfId() {
+    @Deprecated
+    public int getPreviousHrfId() {
 		return _PreviousHRFID;
 	}
 
+    @Deprecated
 	public void setPreviousHrfId(int i) {
 		_PreviousHRFID = i;
 	}
@@ -119,6 +132,7 @@ public class TrainingPerWeek  {
 	 *
 	 * @return	training date
 	 */
+    @Deprecated
 	public Timestamp getTrainingDate() {
 	    if ( trainingDate == null){
             HTWeek week = new HTWeek();
@@ -131,7 +145,10 @@ public class TrainingPerWeek  {
         return trainingDate;
 	}
 
+
 	private static long trainingOffset=-1;
+
+    @Deprecated
     private static  long getTrainingOffset() {
         if ( trainingOffset == -1) {
             Date trainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate();
@@ -149,6 +166,7 @@ public class TrainingPerWeek  {
 	 *	
 	 * @param date with the training date.
 	 */
+    @Deprecated
 	public void setTrainingDate(Timestamp date) {
 		trainingDate = date;
 	}
@@ -158,6 +176,7 @@ public class TrainingPerWeek  {
 	 
 	 * @return The timestamp with the next training date.
 	 */
+    @Deprecated
 	public Timestamp getNextTrainingDate() {
 		return nextTrainingDate;
 	}
@@ -167,6 +186,7 @@ public class TrainingPerWeek  {
 	 * 
 	 * @param t Timestamp containing the time
 	 */
+    @Deprecated
 	public void setNextTrainingDate(Timestamp t) {
 		nextTrainingDate = t;
 	}
@@ -176,17 +196,19 @@ public class TrainingPerWeek  {
 	 * 
 	 * @return an integer with the number of assistants
 	 */
-	public int getAssistants() {
-		return assistants;
+    @Deprecated
+	public int getmTrainingAssistantsLevel() {
+		return mTrainingAssistantsLevel;
 	}
 	
 	/**
 	 * Sets the number of assisstants
 	 * 
-	 * @param assistants, an integer with the number of assistants
+	 * @param mTrainingAssistantsLevel, an integer with the number of assistants
 	 */
-	public void setAssistants(int assistants) {
-		this.assistants = assistants;
+    @Deprecated
+	public void setmTrainingAssistantsLevel(int mTrainingAssistantsLevel) {
+		this.mTrainingAssistantsLevel = mTrainingAssistantsLevel;
 	}
 
     public MatchKurzInfo[] getMatches() {
@@ -196,6 +218,7 @@ public class TrainingPerWeek  {
         return matches;
     }
 
+    @Deprecated
     public MatchKurzInfo[] getMatches(int teamId) {
 
         final Calendar old = Calendar.getInstance();
@@ -218,11 +241,30 @@ public class TrainingPerWeek  {
         return DBManager.instance().getMatchesKurzInfo(where);
     }
 
+    @Deprecated
     public HattrickDate getHattrickDate() {
         return hattrickDate;
     }
 
+    @Deprecated
     public void setHattrickDate(HattrickDate hattrickDate) {
         this.hattrickDate = hattrickDate;
     }
+
+    @Override
+    public final String toString() {
+        return "TrainingPerWeek[" +
+                "intensity = " + mTrainingIntensity +
+                ", staminaTrainingPart = " + mStaminaShare +
+                ", typ = " + mTrainingType +
+                ", week = " + _Week +
+                ", year = " + _Year +
+                ", hattrickWeek = " + this.hattrickDate.getWeek() +
+                ", hattrickSeason = " + this.hattrickDate.getSeason() +
+                ", trainDate = " + trainingDate +
+                ", hrfId = " + _HRFID +
+                "]";
+    }
+
+
 }
