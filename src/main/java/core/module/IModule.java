@@ -45,5 +45,5 @@ public interface IModule {
 	public int getStatus();
 	public void setStatus(int statusId);
 
-	public void setUserParameter();
+	public void storeUserSettings();
 }

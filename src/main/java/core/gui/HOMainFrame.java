@@ -729,7 +729,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 
 		for ( var module : ModuleManager.instance().getModules(true)){
-			module.setUserParameter();
+			module.storeUserSettings();
 		}
 
 		DBManager.instance().saveUserParameter();

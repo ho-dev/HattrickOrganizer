@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
+import core.util.HOLogger;
 import module.transfer.test.HTWeek;
 
 import java.sql.Timestamp;
@@ -213,6 +214,7 @@ public class TrainingPerWeek  {
                 + ") AND STATUS=" + MatchKurzInfo.FINISHED
                 + " ORDER BY MatchDate DESC";
 
+        HOLogger.instance().info(this.getClass(), where);
         return DBManager.instance().getMatchesKurzInfo(where);
     }
 
