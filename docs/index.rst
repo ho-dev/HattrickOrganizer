@@ -23,4 +23,4 @@ Features
     installing_ho
     functionalities
     contributing
-    faq
+    for_developers
