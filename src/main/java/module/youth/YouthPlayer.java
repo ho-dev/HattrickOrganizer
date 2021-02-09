@@ -389,6 +389,7 @@ public class YouthPlayer {
                 var keeper = skills.areKeeperSkills();
                 if( keeper != null){
                     skills.setPlayerMaxSkills(keeper);
+                    this.currentSkills.setPlayerMaxSkills(keeper);
                 }
                 var team = training.getTeam(teamId);
                 if (team.hasPlayerPlayed(this.id)) {

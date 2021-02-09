@@ -316,7 +316,10 @@ public abstract class HOTableModel extends AbstractTableModel {
 	private void setColumnSettings(UserColumn userColumn, JTable table) {
 		var column = table.getColumn(userColumn.getId());
 		column.setPreferredWidth(userColumn.getPreferredWidth());
-		table.moveColumn(column.getModelIndex(), userColumn.getIndex());
+		var index = table.getColumnModel().getColumnIndex(userColumn.getId());
+		if ( index != userColumn.getIndex()) {
+			table.moveColumn(index, userColumn.getIndex());
+		}
 	}
 
 	/**
@@ -329,15 +332,24 @@ public abstract class HOTableModel extends AbstractTableModel {
 		// column order and width
 		var tableColumnModel = table.getColumnModel();
 
+		boolean changed = false;
 		int i=0;
 		for ( var column : this.getColumns()){
 			if ( column.isDisplay()) {
 				var index = table.convertColumnIndexToView(i++);
-				column.setIndex(index);
-				column.setPreferredWidth(tableColumnModel.getColumn(index).getWidth());
+				if ( column.getIndex() != index) {
+					changed = true;
+					column.setIndex(index);
+				}
+				if ( column.getPreferredWidth() != tableColumnModel.getColumn(index).getWidth()) {
+					changed = true;
+					column.setPreferredWidth(tableColumnModel.getColumn(index).getWidth());
+				}
 			}
 		}
-		DBManager.instance().saveHOColumnModel(this);
+		if ( changed){
+			DBManager.instance().saveHOColumnModel(this);
+		}
 	}
 
 }
