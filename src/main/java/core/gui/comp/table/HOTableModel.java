@@ -1,9 +1,13 @@
 package core.gui.comp.table;
 
+import core.db.DBManager;
 import core.model.HOVerwaltung;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Basic ColumnModel for all UserColumnModels
@@ -112,12 +116,12 @@ public abstract class HOTableModel extends AbstractTableModel {
 			final int columncount = getDisplayedColumnCount();
 			displayedColumns = new UserColumn[columncount];
 			int currentIndex = 0;
-			for (int i = 0; i < columns.length; i++) {
+			for (UserColumn column : columns) {
 
-				if (columns[i].isDisplay()) {
-					displayedColumns[currentIndex] = columns[i];
+				if (column.isDisplay()) {
+					displayedColumns[currentIndex] = column;
 
-					if (columns[i].getIndex() >= columncount)
+					if (column.getIndex() >= columncount)
 						displayedColumns[currentIndex].setIndex(columncount - 1);
 					currentIndex++;
 				} // column is displayed
@@ -134,8 +138,8 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 */
 	private int getDisplayedColumnCount() {
 		if (displayedColumnsCount == 0) {
-			for (int i = 0; i < columns.length; i++) {
-				if (columns[i].isDisplay())
+			for (UserColumn column : columns) {
+				if (column.isDisplay())
 					displayedColumnsCount++;
 			}
 		}
@@ -238,7 +242,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 */
 	public int[][] getColumnOrder() {
 		UserColumn[] tmp = getDisplayedColumns();
-		int order[][] = new int[tmp.length][2];
+		int[][] order = new int[tmp.length][2];
 		for (int i = 0; i < order.length; i++) {
 			order[i][0] = i;
 			order[i][1] = tmp[i].getIndex();
@@ -255,7 +259,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 		final UserColumn[] tmpColumns = getDisplayedColumns();
 		for (int i = 0; i < tmpColumns.length; i++) {
 			tmpColumns[i].setSize(tableColumnModel.getColumn(tableColumnModel
-					.getColumnIndex(Integer.valueOf(i))));
+					.getColumnIndex(i)));
 		}
 	}
 
@@ -277,14 +281,75 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	public void setCurrentValueToColumns(UserColumn[] tmpColumns) {
-		for (int i = 0; i < tmpColumns.length; i++) {
-			for (int j = 0; j < columns.length; j++) {
-				if (columns[j].getId() == tmpColumns[i].getId()) {
-					columns[j].setIndex(tmpColumns[i].getIndex());
-					columns[j].setPreferredWidth(tmpColumns[i].getPreferredWidth());
+		for (UserColumn tmpColumn : tmpColumns) {
+			for (UserColumn column : columns) {
+				if (column.getId() == tmpColumn.getId()) {
+					column.setIndex(tmpColumn.getIndex());
+					column.setPreferredWidth(tmpColumn.getPreferredWidth());
 					break;
 				}
 			}
 		}
 	}
+
+	/**
+	 * stored user settings of table columns order and columns width are set to the table
+	 *
+	 * @param table the table object
+	 */
+	public void restoreUserSettings(JTable table) {
+		for (int i = 0; i < table.getColumnCount(); i++) {
+			table.getColumnModel().getColumn(i).setIdentifier(i);
+		}
+		Arrays.stream(this.columns)
+				.filter(UserColumn::isDisplay)
+				.sorted(Comparator.comparingInt(UserColumn::getIndex))
+				.forEach(i -> setColumnSettings(i, table));
+	}
+
+	/**
+	 * Set column order and width
+	 *
+	 * @param userColumn user column holding user's settings
+	 * @param table the table object
+	 */
+	private void setColumnSettings(UserColumn userColumn, JTable table) {
+		var column = table.getColumn(userColumn.getId());
+		column.setPreferredWidth(userColumn.getPreferredWidth());
+		var index = table.getColumnModel().getColumnIndex(userColumn.getId());
+		if ( index != userColumn.getIndex()) {
+			table.moveColumn(index, userColumn.getIndex());
+		}
+	}
+
+	/**
+	 * Save the user settings of the table. User selected width and column indexes are saved in user column model
+	 * which is stored in database table UserColumnTable
+	 *
+	 * @param table table object
+	 */
+	public void storeUserSettings(JTable table) {
+		// column order and width
+		var tableColumnModel = table.getColumnModel();
+
+		boolean changed = false;
+		int i=0;
+		for ( var column : this.getColumns()){
+			if ( column.isDisplay()) {
+				var index = table.convertColumnIndexToView(i++);
+				if ( column.getIndex() != index) {
+					changed = true;
+					column.setIndex(index);
+				}
+				if ( column.getPreferredWidth() != tableColumnModel.getColumn(index).getWidth()) {
+					changed = true;
+					column.setPreferredWidth(tableColumnModel.getColumn(index).getWidth());
+				}
+			}
+		}
+		if ( changed){
+			DBManager.instance().saveHOColumnModel(this);
+		}
+	}
+
 }

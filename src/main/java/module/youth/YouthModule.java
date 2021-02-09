@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 
 public class YouthModule extends DefaultModule {
 
+    private YouthPanel youthPanel;
     public YouthModule() {
         super(true);
     }
@@ -24,11 +25,18 @@ public class YouthModule extends DefaultModule {
 
     @Override
     public JPanel createTabPanel() {
-        return new YouthPanel();
+        this.youthPanel = new YouthPanel();
+        return this.youthPanel;
     }
 
     public KeyStroke getKeyStroke() {
         return KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0);
+    }
+
+    @Override
+    public void setUserParameter()
+    {
+        youthPanel.storeUserSettings();
     }
 
 }

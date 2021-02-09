@@ -24,4 +24,9 @@ public class YouthPanel extends JPanel {
         this.tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("ls.youth.training"), new JScrollPane((this.youthTrainingView)));
         add(this.tabbedPane, BorderLayout.CENTER);
     }
+
+    public void storeUserSettings() {
+        youthPlayerView.storeUserSettings();
+        youthTrainingView.storeUserSettings();
+    }
 }

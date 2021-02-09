@@ -728,6 +728,10 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			parameter.transferScoutPanel_horizontalSplitPane = getTransferScoutPanel().getScoutPanel().getDividerLocation();
 		}
 
+		for ( var module : ModuleManager.instance().getModules(true)){
+			module.setUserParameter();
+		}
+
 		DBManager.instance().saveUserParameter();
 	}
 

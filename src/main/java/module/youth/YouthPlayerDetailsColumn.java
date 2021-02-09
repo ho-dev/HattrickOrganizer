@@ -5,15 +5,16 @@ import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.UserColumn;
 
 public class YouthPlayerDetailsColumn extends UserColumn {
-    protected YouthPlayerDetailsColumn(int id, String name) {
-        super(id, name);
+    static int nextId=0;
+    protected YouthPlayerDetailsColumn(String name) {
+        super(nextId++, name);
         this.setDisplay(true);
     }
-    public YouthPlayerDetailsColumn(int id, String name, int minWidth){
-        this(id,name,name,minWidth);
+    public YouthPlayerDetailsColumn(String name, int minWidth){
+        this(name,name,minWidth);
     }
-    public YouthPlayerDetailsColumn(int id, String name, String tooltip, int minWidth){
-        super(id,name,tooltip);
+    public YouthPlayerDetailsColumn(String name, String tooltip, int minWidth){
+        super(nextId++,name,tooltip);
         this.minWidth = minWidth;
         preferredWidth = minWidth;
         this.setDisplay(true);

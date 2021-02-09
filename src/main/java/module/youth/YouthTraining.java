@@ -9,7 +9,6 @@ import module.training.Skills;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,10 +28,10 @@ public class YouthTraining {
     private Matchdetails matchdetails;
     private int youthMatchId;
     private YouthTrainingType[] training = new YouthTrainingType[2];
-    private List<YouthTrainerComment> commentList=new ArrayList<>();
+    private List<YouthTrainerComment> commentList = new ArrayList<>();
 
-    public YouthTraining(int youthMatchId){
-        this.youthMatchId=youthMatchId;
+    public YouthTraining(int youthMatchId) {
+        this.youthMatchId = youthMatchId;
     }
 
     public YouthTraining(MatchLineup youthMatch, YouthTrainingType t1, YouthTrainingType t2) {
@@ -62,11 +61,11 @@ public class YouthTraining {
     public void recalcSkills() {
         var team = this.getMatchLineup().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
 
-        for ( var player : team.getLineup()){
+        for (var player : team.getLineup()) {
             recalcSkills(player.getPlayerId());
         }
-        for ( var subs : team.getSubstitutions()){
-            if ( subs.getOrderType().equals(MatchOrderType.SUBSTITUTION) ) {
+        for (var subs : team.getSubstitutions()) {
+            if (subs.getOrderType().equals(MatchOrderType.SUBSTITUTION)) {
                 recalcSkills(subs.getObjectPlayerID());
             }
         }
@@ -75,7 +74,7 @@ public class YouthTraining {
     private void recalcSkills(int playerId) {
         var since = this.matchLineup.getMatchDate();
         var p = HOVerwaltung.instance().getModel().getCurrentYouthPlayer(playerId);
-        if ( p != null){
+        if (p != null) {
             p.recalcSkills(since);
         }
     }
@@ -88,7 +87,7 @@ public class YouthTraining {
         return commentList;
     }
 
-    public void addComment(YouthTrainerComment comment){
+    public void addComment(YouthTrainerComment comment) {
         commentList.add(comment);
         var youthplayerID = comment.getYouthPlayerId();
         var team = matchLineup.getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
@@ -106,15 +105,16 @@ public class YouthTraining {
     }
 
     MatchLineup getMatchLineup() {
-        if ( this.matchLineup == null){
+        if (this.matchLineup == null) {
             this.matchLineup = DBManager.instance().loadMatchLineup(SourceSystem.YOUTH.getValue(), this.youthMatchId);
         }
         return this.matchLineup;
     }
 
     private Matchdetails getMatchDetails() {
-        if ( this.matchdetails == null){
+        if (this.matchdetails == null) {
             this.matchdetails = DBManager.instance().loadMatchDetails(SourceSystem.YOUTH.getValue(), this.youthMatchId);
+            this.matchdetails.setMatchType(this.getMatchLineup().getMatchTyp());
         }
         return this.matchdetails;
     }
@@ -131,16 +131,19 @@ public class YouthTraining {
         return this.getMatchLineup().getGuestTeamName();
     }
 
+    public MatchType getMatchType() {
+        return getMatchLineup().getMatchType();
+    }
+
     public SkillInfo calcSkill(SkillInfo value, YouthPlayer player, MatchLineupTeam team) {
 
         var ret = new SkillInfo(value.getSkillID());
         ret.setMax(value.getMax());
         ret.setCurrentLevel(value.getCurrentLevel());
         ret.setMaxReached(value.isMaxReached());
-        if (value.isMaxReached()){
+        if (value.isMaxReached()) {
             ret.setCurrentValue(value.getCurrentValue());
-        }
-        else {
+        } else {
             var newVal = value.getCurrentValue() + calcSkillIncrement(value, player, team);
             ret.setCurrentValue(newVal);
             var adjustment = ret.getCurrentValue() - newVal;
@@ -157,11 +160,11 @@ public class YouthTraining {
     private double calcSkillIncrement(SkillInfo value, YouthPlayer player, MatchLineupTeam lineupTeam) {
         double ret = 0;
         var matchTypeFactor = getMatchTypeFactor();
-        YouthTrainingType primaryTraining=null;
+        YouthTrainingType primaryTraining = null;
         // for each youth training
-        for ( var priority : Priority.values()){
+        for (var priority : Priority.values()) {
             var train = training[priority.ordinal()];
-            if ( train != null) {
+            if (train != null) {
                 // training type is specified
                 var trainingFactor = UserParameter.instance().youthtrainingFactorPrimary;
                 if (priority == Priority.Secondary) {
@@ -198,7 +201,7 @@ public class YouthTraining {
                 } else {
                     // Calc Individual training
                     var matchLineupPlayer = lineupTeam.getPlayerByID(player.getId());
-                    if ( matchLineupPlayer != null) {
+                    if (matchLineupPlayer != null) {
                         List<MatchLineupPlayer.SectorAppearance> appearances = matchLineupPlayer.getMinutesInSectors();
                         for (var appearance : appearances) {
                             ret += trainingFactor * appearance.getMinutes() * train.calcSkillIncrementPerMinute(value.getSkillID(), (int) value.getCurrentValue(), appearance.getSector(), player.getAgeYears());
@@ -207,11 +210,12 @@ public class YouthTraining {
                 }
             }
         }
-        if ( ret > 1 ) ret = 1; // skill increment is limited
+        if (ret > 1) ret = 1; // skill increment is limited
         return ret;
     }
 
-    static final double TRAINING_FRIENDLYFACTOR=.5;
+    static final double TRAINING_FRIENDLYFACTOR = .5;
+
     public double getMatchTypeFactor() {
         if (this.getMatchLineup().getMatchType() == MatchType.YOUTHLEAGUE) {
             return 1.;
@@ -225,7 +229,7 @@ public class YouthTraining {
         var lineupTeam = this.getTeam(hov.getModel().getBasics().getYouthTeamId());
         //var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
         var player = lineupTeam.getPlayerByID(playerId);
-        if ( player != null) {
+        if (player != null) {
             var sectors = player.getMinutesInSectors();
             for (var s : sectors) {
                 ret.append(hov.getLanguageString("ls.youth.training.sector." + s.getSector()))
@@ -239,41 +243,36 @@ public class YouthTraining {
 
     /**
      * Calc most effective training for given skill id
-     *
+     * <p>
      * training rate is 6 league matches/training in 44 days
      * plus             1 friendly match in 21 days
+     *
      * @param skillId
      * @param skillVal
      * @param age
      * @return
      */
 
-    static final double fullTrainingsPerWeek = (6*21 + 44*TRAINING_FRIENDLYFACTOR)/(21*44)*7;
+    static final double fullTrainingsPerWeek = (6 * 21 + 44 * TRAINING_FRIENDLYFACTOR) / (21 * 44) * 7;
     static final double equalTrainings = 1.33;
+
     public static double getMaxTrainingPerWeek(Skills.HTSkillID skillId, int skillVal, int age) {
 
-        switch (skillId){
-            case Keeper:
-                return YouthTrainingType.Goalkeeping.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-            case Playmaker:
-                return YouthTrainingType.Playmaking.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-            case SetPieces:
-                // TODO check if shooting as secondary training is more effective
-                return YouthTrainingType.SetPieces.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-            case Defender:
-                // TODO check if defending position as secondary training is more effective
-                return YouthTrainingType.Defending.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-            case Winger:
-                // TODO check if wing attack as secondary training is more effective
-                return YouthTrainingType.Winger.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-            case Passing:
-                // TODO check if through passes as secondary training is more effective
-                return YouthTrainingType.Passing.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-            case Scorer:
-                // TODO check if shooting as secondary training is more effective
-                return YouthTrainingType.Scoring.calcSkillIncrementPerMinute(skillId,skillVal,1,age)* equalTrainings*fullTrainingsPerWeek*90.;
-        }
-        return 0;
+        // TODO check if shooting as secondary training is more effective
+        // TODO check if defending position as secondary training is more effective
+        // TODO check if wing attack as secondary training is more effective
+        // TODO check if through passes as secondary training is more effective
+        // TODO check if shooting as secondary training is more effective
+        return switch (skillId) {
+            case Keeper -> YouthTrainingType.Goalkeeping.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            case Playmaker -> YouthTrainingType.Playmaking.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            case SetPieces -> YouthTrainingType.SetPieces.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            case Defender -> YouthTrainingType.Defending.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            case Winger -> YouthTrainingType.Winger.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            case Passing -> YouthTrainingType.Passing.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            case Scorer -> YouthTrainingType.Scoring.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            default -> 0;
+        };
     }
 
     public static Map<Skills.HTSkillID, Double> potentialNormingFactor = Map.of(
@@ -285,5 +284,9 @@ public class YouthTraining {
             Skills.HTSkillID.Playmaker, getMaxTrainingPerWeek(Skills.HTSkillID.Playmaker, 7, 17),
             Skills.HTSkillID.Winger, getMaxTrainingPerWeek(Skills.HTSkillID.Winger, 7, 17)
     );
+
+    public double getRating(int playerId) {
+        return this.getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId()).getPlayerByID(playerId).getRating();
+    }
 
 }

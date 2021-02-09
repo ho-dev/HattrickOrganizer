@@ -76,6 +76,8 @@ public abstract class DefaultModule implements IModule {
 		if(statusId > STATUS_ACTIVATED)
 			setStartup(true);
 	}
-	
+
+	@Override
+	public void setUserParameter(){}
 	
 }
