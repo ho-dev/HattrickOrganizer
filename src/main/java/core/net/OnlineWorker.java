@@ -19,6 +19,7 @@ import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
 import module.lineup.Lineup;
+import module.lineup.LineupSettingsPanel;
 import module.teamAnalyzer.vo.MatchRating;
 import org.jetbrains.annotations.Nullable;
 
@@ -133,6 +134,10 @@ public class OnlineWorker {
 //									.setAngezeigteAufstellung(new LineupCBItem(
 //											getLangString("AktuelleAufstellung"), homodel
 //													.getLineup()));
+
+							// reset value of TS, confidence in Lineup Settings Panel after data download
+							HOMainFrame.instance().getLineupPanel().getLineupSettingsPanel().setRealValues();
+
 						}
 						// Info
 						setInfoMsg(getLangString("HRFErfolg"));

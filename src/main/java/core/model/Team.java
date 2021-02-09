@@ -121,147 +121,44 @@ public final class Team  {
 	}
 
 	// ~ Methods
-	// ------------------------------------------------------------------------------------
-	// //////////////////////////////////////////////////////////////////////////////
-	// Static
-	// //////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setFormationExperience343(int exp) {
-		this.formationXp343 = exp;
-	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public int getFormationExperience343() {
 		return formationXp343;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setFormationExperience352(int exp) {
-		this.formationXp352 = exp;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public int getFormationExperience352() {
 		return formationXp352;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setFormationExperience433(int exp) {
-		this.formationXp433 = exp;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public int getFormationExperience433() {
 		return formationXp433;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setFormationExperience451(int exp) {
-		this.formationXp451 = exp;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public int getFormationExperience451() {
 		return formationXp451;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setFormationExperience532(int exp) {
-		this.formationXp532 = exp;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public int getFormationExperience532() {
 		return formationXp532;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setFormationExperience541(int exp) {
-		this.formationXp541 = exp;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public int getFormationExperience541() {
 		return formationXp541;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setFormationExperience442(int exp) {
-		this.formationXp442 = exp;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public int getFormationExperience442() {
 		return formationXp442;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setFormationExperience523(int exp) {
-		this.formationXp523 = exp;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public int getFormationExperience523() {
 		return formationXp523;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setFormationExperience550(int exp) {
-		this.formationXp550 = exp;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
 	public int getFormationExperience550() {
 		return formationXp550;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setFormationExperience253(int exp) {
-		this.formationXp253 = exp;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
+
 	public int getFormationExperience253() {
 		return formationXp253;
 	}

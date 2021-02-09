@@ -91,14 +91,16 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 
 	private final JButton m_jbReset = new JButton("");
 
-	private final int m_iRealTeamSpirit, m_iRealSubTeamSpirit, m_iRealConfidence, m_iRealTrainerType, m_iRealTacticalAssistantsLevel;
+	private int m_iRealTeamSpirit;
+	private int m_iRealSubTeamSpirit;
+	private int m_iRealConfidence;
+	private int m_iRealTrainerType;
+	private int m_iRealTacticalAssistantsLevel;
 
 	final HOModel homodel = HOVerwaltung.instance().getModel();
 
 
-	public LineupSettingsPanel(LineupPanel parent) {
-		lineupPanel = parent;
-
+	public void setRealValues(){
 		//the following values are stored to allow reverting to real value after playing with the various lineup settings
 		if ((homodel.getTeam() != null) && (homodel.getClub() != null) && (homodel.getTrainer() != null)) {
 			m_iRealTeamSpirit = homodel.getTeam().getTeamSpirit();
@@ -114,7 +116,11 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			m_iRealTrainerType = 2;
 			m_iRealTacticalAssistantsLevel = 0;
 		}
+	}
 
+	public LineupSettingsPanel(LineupPanel parent) {
+		lineupPanel = parent;
+		setRealValues();
 		initComponents();
 		core.gui.RefreshManager.instance().registerRefreshable(this);
 	}
@@ -194,13 +200,32 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		setLocation(currentLineup.getLocation());
 		var team = homodel.getTeam();
 		if ( team != null){
-			setTeamSpirit(team.getTeamSpirit(), team.getSubTeamSpirit());
-			setConfidence(team.getConfidence());
+			if(bLineupSimulation) {
+				setTeamSpirit(team.getTeamSpirit(), team.getSubTeamSpirit());
+				setConfidence(team.getConfidence());
+				setTrainerType(homodel.getTrainer().getTrainerTyp());
+			}
+			else{
+				if (((CBItem)m_jcbLocation.getSelectedItem()).getId() == IMatchDetails.LOCATION_TOURNAMENT){
+					setTeamSpirit(6, 2);
+					setConfidence(6);
+				}
+				else{
+					setTeamSpirit(m_iRealTeamSpirit, m_iRealSubTeamSpirit);
+					setConfidence(m_iRealConfidence);
+				}
+				setTrainerType(m_iRealTrainerType);
+			}
 		}
-		setTrainerType(homodel.getTrainer().getTrainerTyp());
+
 		var club = homodel.getClub();
 		if ( club != null){
-			setTacticalAssistants(club.getTacticalAssistantLevels());
+			if(bLineupSimulation) {
+				setTacticalAssistants(club.getTacticalAssistantLevels());
+			}
+			else{
+				setTacticalAssistants(m_iRealTacticalAssistantsLevel);
+			}
 		}
 		setWeather(currentLineup.getWeather(), currentLineup.getWeatherForecast());
 		setPullBackMinute(currentLineup.getPullBackMinute());
