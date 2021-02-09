@@ -36,7 +36,7 @@ public class YouthModule extends DefaultModule {
     @Override
     public void setUserParameter()
     {
-        youthPanel.setUserParameter();
+        youthPanel.storeUserSettings();
     }
 
 }

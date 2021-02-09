@@ -162,7 +162,7 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         refreshPlayerDetails();
     }
 
-    public void setUserParameter() {
+    public void storeUserSettings() {
         this.playerOverviewTableModel.storeUserSettings(playerOverviewTable);
         this.playerDetailsTableModel.storeUserSettings(playerDetailsTable);
     }

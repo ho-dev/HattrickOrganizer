@@ -25,8 +25,8 @@ public class YouthPanel extends JPanel {
         add(this.tabbedPane, BorderLayout.CENTER);
     }
 
-    public void setUserParameter() {
-        youthPlayerView.setUserParameter();
-        youthTrainingView.setUserParameter();
+    public void storeUserSettings() {
+        youthPlayerView.storeUserSettings();
+        youthTrainingView.storeUserSettings();
     }
 }

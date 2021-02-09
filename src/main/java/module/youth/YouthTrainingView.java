@@ -63,18 +63,7 @@ public class YouthTrainingView extends JTable implements core.gui.Refreshable {
         repaint();
     }
 
-    public void setUserParameter() {
+    public void storeUserSettings() {
         this.tableModel.storeUserSettings(this);
     }
-
-/*
-    @Override
-    public void editingStopped(ChangeEvent changeEvent){
-        var r = getEditingRow();
-        var c = getEditingColumn();
-        var v = getValueAt(r,c);
-
-        var t = this.tableModel.getYouthTraining(r);
-    }
-*/
 }
