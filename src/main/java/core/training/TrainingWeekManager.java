@@ -1,4 +1,3 @@
-// %2201242558:de.hattrickorganizer.logik%
 package core.training;
 
 import core.db.DBManager;
@@ -8,7 +7,6 @@ import core.model.HOVerwaltung;
 import core.model.misc.Basics;
 import core.util.HOLogger;
 import core.util.HelperWrapper;
-
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -81,27 +79,7 @@ public class TrainingWeekManager {
     	return m_vTrainings;
     }
     
-    
-    /**
-     * Returns the TrianingPerWeek for the week with the given nextTrainingDate.
-     * 
-     * @param nextTrainingDate The timestamp of the next training found in a hrf
-     *
-     * @return TrainingPerWeek for the given timestamp, or null if none found.
-     */
-    public TrainingPerWeek getTrainingWeek(Timestamp nextTrainingDate) {
-        
-    	TrainingPerWeek currentCandidate = null;
-    	
-    	for (TrainingPerWeek tpw : m_vTrainings) {
-    		if (nextTrainingDate.after(tpw.getNextTrainingDate())) {
-    			return currentCandidate;
-    		}
-    		currentCandidate = tpw;
-    	}
-    	HOLogger.instance().error(getClass(), "No training week found for date:  " + nextTrainingDate);
-    	return null;
-    }
+
 
     public TrainingPerWeek getLastTrainingWeek(){
     	var list = getTrainingList();
@@ -138,6 +116,7 @@ public class TrainingWeekManager {
      * @param overrides A list of overrides for values in the trainingList.
      * @return the adjusted trainingList.
      */
+	@Deprecated
     private static List<TrainingPerWeek> updateWithOverrides (List<TrainingPerWeek> trainingList
     																, List<TrainingPerWeek> overrides) {
     	// This will break badly if they are not sorted with first date first.
@@ -170,6 +149,7 @@ public class TrainingWeekManager {
      * @param input list to be filtered
      * @return the filtered list
      */
+	@Deprecated
     private static List<TrainingPerWeek> washTrainingList(List<TrainingPerWeek> input) {
     	
     	ArrayList<TrainingPerWeek> output = new ArrayList<TrainingPerWeek>();
@@ -230,7 +210,7 @@ public class TrainingWeekManager {
    					newTpw.setNextTrainingDate(new Timestamp(previousTraining.getTimeInMillis()));
    					newTpw.setHrfId(-1);
    					newTpw.setTrainingDate(old.getNextTrainingDate());
-   					newTpw.setAssistants(old.getAssistants());
+   					newTpw.setmTrainingAssistantsLevel(old.getmTrainingAssistantsLevel());
 
    					var newWeek = old.getHattrickDate();
    					if ( newWeek != null ) {
@@ -259,6 +239,7 @@ public class TrainingWeekManager {
      * 
      * @return A list of TrainingPerWeek
      */
+	@Deprecated
     private static List<TrainingPerWeek> fetchTrainingListFromHrf() {
     	try {
     		HOModel model = HOVerwaltung.instance().getModel();
@@ -311,7 +292,7 @@ public class TrainingWeekManager {
 	                 tpw.setTrainingDate(new Timestamp(calendar.getTimeInMillis()));
 	                 tpw.setNextTrainingDate(nextTraining);
 	                 tpw.setHrfId(hrfId);
-	                 tpw.setAssistants(assistants);
+	                 tpw.setmTrainingAssistantsLevel(assistants);
 	                 output.add(tpw);
 	             }
 	         }
@@ -332,6 +313,7 @@ public class TrainingWeekManager {
      *
      * @return The input list.
      */
+	@Deprecated
     private static List<TrainingPerWeek> updateHattrickDates(List<TrainingPerWeek> input) {
     	
     	HOModel hom = HOVerwaltung.instance().getModel();
@@ -376,6 +358,7 @@ public class TrainingWeekManager {
      *
      * @return Hattrick Date
      */
+	@Deprecated
     private static HattrickDate calculateByDifference(int actualSeason, int actualWeek, int pastWeek) {
 
         // We need to subtract 1 week because we got the first hrf after download. This contains

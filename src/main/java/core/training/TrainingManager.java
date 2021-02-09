@@ -10,13 +10,9 @@ import core.model.match.*;
 import core.model.misc.TrainingEvent;
 import core.model.player.Player;
 import core.util.HOLogger;
-import core.util.HTCalendar;
-import core.util.HTCalendarFactory;
 import core.util.HelperWrapper;
-
 import java.sql.Timestamp;
 import java.util.*;
-
 import javax.swing.JOptionPane;
 
 import static java.lang.Integer.min;
@@ -24,8 +20,6 @@ import static java.lang.Integer.min;
 /**
  * Class that extract data from Database and calculates TrainingWeek and TrainingPoints earned from
  * players
- *
- * @author humorlos, Dragettho, thetom
  */
 public class TrainingManager {
     //~ Static fields/initializers -----------------------------------------------------------------
