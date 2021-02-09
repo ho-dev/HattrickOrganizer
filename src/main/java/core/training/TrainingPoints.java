@@ -5,9 +5,7 @@ public class TrainingPoints {
 	private WeeklyTrainingType trainingtype;
 	private double _Primary = 0;
 	private double _Secondary = 0;
-	public TrainingPoints()
-	{
-	}
+
 	public TrainingPoints(double dPrimary, double dSecondary)
 	{
 		_Primary = dPrimary;

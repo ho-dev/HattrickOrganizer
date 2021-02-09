@@ -5,6 +5,7 @@ import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
 import core.util.DateTimeInfo;
+import core.util.HOLogger;
 import module.transfer.test.HTWeek;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -265,6 +266,5 @@ public class TrainingPerWeek  {
                 ", hrfId = " + _HRFID +
                 "]";
     }
-
 
 }

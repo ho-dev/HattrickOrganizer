@@ -62,7 +62,6 @@ public class TrainingWeekManager {
      */
     public List<TrainingPerWeek> getTrainingList() {
     	if (m_vTrainings == null) {
-    		
     		m_vTrainings = generateTrainingList();
     	}
     	return m_vTrainings;

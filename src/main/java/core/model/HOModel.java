@@ -474,72 +474,58 @@ public class HOModel {
      * or by the recalcSubskills method, which examines the relevant hrfs (models) and calls each of them.
      */
     public final void calcSubskills() {
+        final List<Player> vPlayer = getCurrentPlayers();
+        final int previousHrfId = DBManager.instance().getPreviousHRF(m_iID);
+        var trainingsWeekList = getRecentTrainingWeeksList(previousHrfId);
+        TrainingManager.instance().calculateTraining(
+                getXtraDaten().getTrainingDate(),
+                trainingsWeekList,
+                getCurrentPlayers(),
+                DBManager.instance().getSpieler(previousHrfId),
+                getTrainer().getTrainerSkill(),
+                getStaff());
 
-    	boolean doOnce = false;
-    	
-    	final List<Player> vPlayer = getCurrentPlayers();
-    	final java.sql.Timestamp calcDate = getBasics().getDatum();
-    	
-    	final int previousHrfId = DBManager.instance().getPreviousHRF(m_iID);
-    	
-    	Timestamp trainingDateOfPreviousHRF;
-    	Timestamp trainingDateOfCurrentHRF = getXtraDaten().getTrainingDate();
-    	if (previousHrfId > -1) {
-    		trainingDateOfPreviousHRF = DBManager.instance()
-    									.getXtraDaten(previousHrfId)
-    									.getTrainingDate();
-    	}
-    	else {
-    		// handle the very first hrf download
-			trainingDateOfPreviousHRF = new Timestamp(0); // fetch all trainings before the first hrf was loaded
-		}
-    	
-    	if ((trainingDateOfPreviousHRF != null) && (trainingDateOfCurrentHRF != null)) {
-    		// Training Happened
-
-    		// Find TrainingPerWeeks that should be processed (those since last training).
-    		List<TrainingPerWeek> rawTrainingList = TrainingManager.instance().getTrainingWeekList();
-    		List<TrainingPerWeek> trainingList = new ArrayList<>();
-    		for (TrainingPerWeek tpw : rawTrainingList) {
-    			// We want to add all weeks with nextTraining after the previous date, and stop
-    			// when we are after the current date.
-    			
-    			if (tpw.getNextTrainingDate().after(trainingDateOfCurrentHRF)) {
-    				break;
-    			}
-    			
-    			if (tpw.getNextTrainingDate().after(trainingDateOfPreviousHRF)) {
-    			    if(TrainingManager.TRAININGDEBUG) {
-                        HTCalendar htcP;
-                        String htcPs;
-                        htcP = HTCalendarFactory.createTrainingCalendar(new Date(trainingDateOfPreviousHRF.getTime()));
-                        htcPs = " (" + htcP.getHTSeason() + "." + htcP.getHTWeek() + ")";
-                        HTCalendar htcA = HTCalendarFactory.createTrainingCalendar(new Date((trainingDateOfCurrentHRF.getTime())));
-                        String htcAs = " (" + htcA.getHTSeason() + "." + htcA.getHTWeek() + ")";
-                        HTCalendar htcC = HTCalendarFactory.createTrainingCalendar(new Date((calcDate.getTime())));
-                        String htcCs = " (" + htcC.getHTSeason() + "." + htcC.getHTWeek() + ")";
-
-                        HOLogger.instance().info(HOModel.class,
-                                "trArt=" + tpw.getTrainingType() + ", numPl=" + vPlayer.size() + ", calcDate=" + calcDate.toString() + htcCs + ", act=" + trainingDateOfCurrentHRF.toString() + htcAs + ", prev=" + (trainingDateOfPreviousHRF.toString() + htcPs) + " (" + previousHrfId + ")");
-                    }
-
-                    trainingList.add(tpw);
-    			}
-    		}
-    		
-    		TrainingManager.instance().calculateTraining(
-    		        getXtraDaten().getTrainingDate(),
-    				trainingList,
-					getCurrentPlayers(),
-					DBManager.instance().getSpieler(previousHrfId),
-					getTrainer().getTrainerSkill(),
-                    getStaff());
-
-    		// store new values of current players
-    		DBManager.instance().saveSpieler(m_iID, getCurrentPlayers(), getBasics().getDatum());
-    	}
+        // store new values of current players
+        DBManager.instance().saveSpieler(m_iID, getCurrentPlayers(), getBasics().getDatum());
     }
-    
+
+    /**
+     * Get a list of training weeks since previous download (hrf)
+     *
+     * @param previousHrfId id of previous download (hrf)
+     * @return List of training weeks
+     */
+    private List<TrainingPerWeek> getRecentTrainingWeeksList(int previousHrfId) {
+
+        List<TrainingPerWeek> trainingWeeksList = new ArrayList<>();
+        Timestamp trainingDateOfPreviousHRF;
+        Timestamp trainingDateOfCurrentHRF = getXtraDaten().getTrainingDate();
+        if (previousHrfId > -1) {
+            trainingDateOfPreviousHRF = DBManager.instance().getXtraDaten(previousHrfId).getTrainingDate();
+        } else {
+            // handle the very first hrf download
+            trainingDateOfPreviousHRF = new Timestamp(0); // fetch all trainings before the first hrf was loaded
+        }
+
+        if ((trainingDateOfPreviousHRF != null) && (trainingDateOfCurrentHRF != null)) {
+            // Training Happened
+
+            // Find TrainingPerWeeks that should be processed (those since last training).
+            List<TrainingPerWeek> rawTrainingList = TrainingManager.instance().getTrainingWeekList();
+            for (TrainingPerWeek tpw : rawTrainingList) {
+                // We want to add all weeks with nextTraining after the previous date, and stop
+                // when we are after the current date.
+                if (tpw.getNextTrainingDate().after(trainingDateOfCurrentHRF)) {
+                    break;
+                }
+
+                if (tpw.getNextTrainingDate().after(trainingDateOfPreviousHRF)) {
+                    trainingWeeksList.add(tpw);
+                }
+            }
+        }
+        return trainingWeeksList;
+    }
 
     /**
      * Remove a Player
