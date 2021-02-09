@@ -1,7 +1,7 @@
 .. _faq:
 
 
-FAQ for developers
+FAQ
 ===============================
 
 * **IntelliJ IDEA performs gradle tasks before starting HO**
