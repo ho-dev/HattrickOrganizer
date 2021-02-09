@@ -470,6 +470,8 @@ public class HOModel {
 
     /**
      * Caclulates the subskill of each player, based on training and the previous hrf.
+     * this method is either called from DownloadDialog to calculated the training effect of current homodel (hrf)
+     * or by the recalcSubskills method, which examines the relevant hrfs (models) and calls each of them.
      */
     public final void calcSubskills() {
 
@@ -502,7 +504,7 @@ public class HOModel {
     			// We want to add all weeks with nextTraining after the previous date, and stop
     			// when we are after the current date.
     			
-    			if (tpw.getTrainingDate().after(trainingDateOfCurrentHRF)) {
+    			if (tpw.getNextTrainingDate().after(trainingDateOfCurrentHRF)) {
     				break;
     			}
     			
@@ -517,7 +519,7 @@ public class HOModel {
                         HTCalendar htcC = HTCalendarFactory.createTrainingCalendar(new Date((calcDate.getTime())));
                         String htcCs = " (" + htcC.getHTSeason() + "." + htcC.getHTWeek() + ")";
 
-                        HOLogger.instance().debug(HOModel.class,
+                        HOLogger.instance().info(HOModel.class,
                                 "trArt=" + tpw.getTrainingType() + ", numPl=" + vPlayer.size() + ", calcDate=" + calcDate.toString() + htcCs + ", act=" + trainingDateOfCurrentHRF.toString() + htcAs + ", prev=" + (trainingDateOfPreviousHRF.toString() + htcPs) + " (" + previousHrfId + ")");
                     }
 
