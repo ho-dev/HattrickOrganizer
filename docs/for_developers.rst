@@ -1,7 +1,7 @@
-.. _functionalities:
+.. _for_developers:
 
 
-Functionalities
+For developers
 ========================
 
 
