@@ -1,114 +1,189 @@
 package core.training;
 
+import core.constants.TrainingType;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
 import module.transfer.test.HTWeek;
-
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
- * New Training Class
+ * Class that holds all information required to calculate training effect of a given week
+ * (e.g. training intensity, stamina part, assistant level, played games ...)
  */
 public class TrainingPerWeek  {
-    //~ Instance fields ----------------------------------------------------------------------------
-    private MatchKurzInfo[] matches;
 
+    private static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
+
+    private int o_TrainingIntensity;
+    private int o_StaminaShare;
+    private int o_TrainingType;
+    private int o_TrainingAssistantsLevel;
+    private MatchKurzInfo[] o_Matches;
+    private MatchKurzInfo[] o_NTmatches;
+    private Instant o_TrainingDate;
+    private String firstMatchDate, lastMatchDate;
+    private final static int myClubID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+
+
+    @Deprecated
     private int _HRFID;
-    private int _Intensity = -1;
-    private int _Stamina = -1;
-    private int _TrainingType = -1;
-    private int _Week = -1;
-    private int _Year = -1;
+
+    @Deprecated
+    private int _Week;
+
+    @Deprecated
+    private int _Year;
+
+    @Deprecated
     private int _PreviousHRFID;
-    private Timestamp nextTrainingDate = null;
-    private Timestamp trainingDate = null;
-    private int assistants = -1;
+
+    @Deprecated
+    private Timestamp nextTrainingDate;
+
+    @Deprecated
+    private Timestamp trainingDate;
+
+    @Deprecated
     private HattrickDate hattrickDate;
 
-    //~ Constructors -------------------------------------------------------------------------------
-    public TrainingPerWeek() {
-    	
+
+    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel) {
+        o_TrainingDate = trainingDate;
+        o_TrainingType = trainingType;
+        o_TrainingIntensity = trainingIntensity;
+        o_StaminaShare = staminaShare;
+        o_TrainingAssistantsLevel = trainingAssistantsLevel;
+        var startDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
+        firstMatchDate = cl_Formatter.format(startDate);
+        lastMatchDate = cl_Formatter.format(o_TrainingDate.plus(23, ChronoUnit.HOURS));
+        o_Matches = fetchMatches();
+        o_NTmatches = fetchNTMatches();
     }
+
+
+
     /**
-     * Creates a new Training object.
+     * function that fetch info of NT match played related to the TrainingPerWeek instance
+     * @return MatchKurzInfo[] related to this TrainingPerWeek instance
      */
+    private MatchKurzInfo[] fetchNTMatches() {
+
+        var matchTypes= MatchType.getNTMatchType();
+
+        String sOfficialMatchType = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
+
+        final String where = String.format("WHERE MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS=%s ORDER BY MatchDate DESC",
+                firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED);
+
+        return DBManager.instance().getMatchesKurzInfo(where);
+    }
+
+
+    /**
+     * function that fetch info of match played related to the TrainingPerWeek instance
+     * @return MatchKurzInfo[] related to this TrainingPerWeek instance
+     */
+    private MatchKurzInfo[] fetchMatches() {
+
+
+        var matchTypes= MatchType.getOfficialMatchType();
+
+        String sOfficialMatchType = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
+
+        final String where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS=%s ORDER BY MatchDate DESC",
+                myClubID, myClubID, firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED);
+
+        return DBManager.instance().getMatchesKurzInfo(where);
+    }
+
+    public MatchKurzInfo[] getMatches() {
+        return o_Matches;
+    }
+
+    public MatchKurzInfo[] getNTmatches() {
+        return o_NTmatches;
+    }
+
+
+
+    @Deprecated
+    public TrainingPerWeek() {}
+
+    @Deprecated
     public TrainingPerWeek(int week, int year, int trType, int intensity, int stamina) {
         this._Week = week;
         this._Year = year;
-        this._TrainingType = trType;
-        this._Intensity = intensity;
-        this._Stamina = stamina;
+        this.o_TrainingType = trType;
+        this.o_TrainingIntensity = intensity;
+        this.o_StaminaShare = stamina;
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
-
+    @Deprecated
     public final void setHrfId(int i) {
         _HRFID = i;
     }
 
+    @Deprecated
     public final int getHrfId() {
         return _HRFID;
     }
 
+    @Deprecated
     public final void setStaminaPart(int stamina) {
-        this._Stamina = stamina;
+        this.o_StaminaShare = stamina;
     }
 
+    @Deprecated
     public final int getStaminaPart() {
-        return this._Stamina;
+        return this.o_StaminaShare;
     }
 
+    @Deprecated
     public final void setTrainingIntensity(int intensity) {
-        this._Intensity = intensity;
+        this.o_TrainingIntensity = intensity;
     }
 
+    @Deprecated
     public final int getTrainingIntensity() {
-        return this._Intensity;
+        return this.o_TrainingIntensity;
     }
 
+    @Deprecated
     public final void setTrainingType(int trType) {
-        this._TrainingType = trType;
+        this.o_TrainingType = trType;
     }
 
+    @Deprecated
     public final int getTrainingType() {
-        return this._TrainingType;
+        return this.o_TrainingType;
     }
 
+    @Deprecated
     public final int getWeek() {
         return this._Week;
     }
 
+    @Deprecated
     public final int getYear() {
         return this._Year;
     }
 
-    /**
-     * toString method: creates a String representation of the object
-     *
-     * @return the String representation
-     */
-    @Override
-	public final String toString() {
-        return "TrainingPerWeek[" +
-                "intensity = " + _Intensity +
-                ", staminaTrainingPart = " + _Stamina +
-                ", typ = " + _TrainingType +
-                ", week = " + _Week +
-                ", year = " + _Year +
-                ", hattrickWeek = " + this.hattrickDate.getWeek() +
-                ", hattrickSeason = " + this.hattrickDate.getSeason() +
-                ", trainDate = " + trainingDate +
-                ", hrfId = " + _HRFID +
-                "]";
-    }
-	public int getPreviousHrfId() {
+    @Deprecated
+    public int getPreviousHrfId() {
 		return _PreviousHRFID;
 	}
 
+    @Deprecated
 	public void setPreviousHrfId(int i) {
 		_PreviousHRFID = i;
 	}
@@ -118,6 +193,7 @@ public class TrainingPerWeek  {
 	 *
 	 * @return	training date
 	 */
+    @Deprecated
 	public Timestamp getTrainingDate() {
 	    if ( trainingDate == null){
             HTWeek week = new HTWeek();
@@ -130,7 +206,10 @@ public class TrainingPerWeek  {
         return trainingDate;
 	}
 
+
 	private static long trainingOffset=-1;
+
+    @Deprecated
     private static  long getTrainingOffset() {
         if ( trainingOffset == -1) {
             Date trainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate();
@@ -148,6 +227,7 @@ public class TrainingPerWeek  {
 	 *	
 	 * @param date with the training date.
 	 */
+    @Deprecated
 	public void setTrainingDate(Timestamp date) {
 		trainingDate = date;
 	}
@@ -157,6 +237,7 @@ public class TrainingPerWeek  {
 	 
 	 * @return The timestamp with the next training date.
 	 */
+    @Deprecated
 	public Timestamp getNextTrainingDate() {
 		return nextTrainingDate;
 	}
@@ -166,6 +247,7 @@ public class TrainingPerWeek  {
 	 * 
 	 * @param t Timestamp containing the time
 	 */
+    @Deprecated
 	public void setNextTrainingDate(Timestamp t) {
 		nextTrainingDate = t;
 	}
@@ -175,52 +257,42 @@ public class TrainingPerWeek  {
 	 * 
 	 * @return an integer with the number of assistants
 	 */
-	public int getAssistants() {
-		return assistants;
+    @Deprecated
+	public int getO_TrainingAssistantsLevel() {
+		return o_TrainingAssistantsLevel;
 	}
 	
 	/**
 	 * Sets the number of assisstants
 	 * 
-	 * @param assistants, an integer with the number of assistants
+	 * @param o_TrainingAssistantsLevel, an integer with the number of assistants
 	 */
-	public void setAssistants(int assistants) {
-		this.assistants = assistants;
+    @Deprecated
+	public void setO_TrainingAssistantsLevel(int o_TrainingAssistantsLevel) {
+		this.o_TrainingAssistantsLevel = o_TrainingAssistantsLevel;
 	}
 
-    public MatchKurzInfo[] getMatches() {
-        if (matches == null) {
-            matches = getMatches(MatchKurzInfo.user_team_id);
-        }
-        return matches;
-    }
 
-    public MatchKurzInfo[] getMatches(int teamId) {
 
-        final Calendar old = Calendar.getInstance();
-        old.setTimeInMillis(this.trainingDate.getTime());
-        // set time one week back
-        old.add(Calendar.WEEK_OF_YEAR, -1);
-
-        final Timestamp ots = new Timestamp(old.getTimeInMillis());
-        final String where = "WHERE ( HEIMID=" + teamId
-                + " OR GASTID=" + teamId + " )"
-                + " AND MatchDate BETWEEN '" + ots.toString() + "' AND '" + this.trainingDate.toString() + "' "
-                + " AND (MatchTyp>" + MatchType.NONE.getId()
-                + " AND MatchTyp<" + MatchType.TOURNAMENTGROUP.getId()
-                + " OR MatchTyp>=" + MatchType.EMERALDCUP.getId()
-                + " AND MatchTyp<=" + MatchType.CONSOLANTECUP.getId()
-                + ") AND STATUS=" + MatchKurzInfo.FINISHED
-                + " ORDER BY MatchDate DESC";
-
-        return DBManager.instance().getMatchesKurzInfo(where);
-    }
-
+    @Deprecated
     public HattrickDate getHattrickDate() {
         return hattrickDate;
     }
 
+    @Deprecated
     public void setHattrickDate(HattrickDate hattrickDate) {
         this.hattrickDate = hattrickDate;
     }
+
+    @Override
+    public final String toString() {
+        return "TrainingPerWeek[" +
+                "Training date: " + cl_Formatter.format(o_TrainingDate) +
+                ", Training Type: " + TrainingType.toString(o_TrainingType)  +
+                "%, Intensity: " + o_TrainingIntensity +
+                "%, StaminaPart: " + o_StaminaShare +
+                "]";
+    }
+
+
 }

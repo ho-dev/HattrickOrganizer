@@ -1,5 +1,10 @@
 package core.model.match;
 
+import java.util.List;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
+
 public enum MatchType {
 
 	NONE((int) 0),
@@ -36,6 +41,8 @@ public enum MatchType {
 
 	private final int id;
 
+	private static List<MatchType> cl_officialMatchType, cl_NTMatchType;
+
 	MatchType(int id) {
 		this.id = id;
 	}
@@ -45,6 +52,10 @@ public enum MatchType {
 		return id;
 	}
 
+
+	public static Stream<MatchType> stream() {
+		return Stream.of(MatchType.values());
+	}
 
 	public static MatchType getById(int id) {
 		for (MatchType matchType : MatchType.values()) {
@@ -152,7 +163,7 @@ public enum MatchType {
 			case SAPPHIRECUP :
 			case CONSOLANTECUP :
 			case CUP :
-			case FRIENDLYNORMAL :
+			case FRIENDLYNORMAL:
 			case FRIENDLYCUPRULES :
 			case INTFRIENDLYNORMAL :
 			case INTFRIENDLYCUPRULES :
@@ -162,6 +173,38 @@ public enum MatchType {
 			default:
 				return false;
 		}
+	}
+
+
+	public static List<MatchType> getOfficialMatchType() {
+		if (cl_officialMatchType == null){
+			cl_officialMatchType = MatchType.stream().filter(m -> m.isOfficial()).collect(toList());
+		}
+		return cl_officialMatchType;
+	}
+
+
+	/**
+	 * Returns true for all NT matches.
+	 */
+	public boolean isNationalMatch() {
+		switch (this) {
+			case NATIONALCOMPNORMAL :
+			case NATIONALCOMPCUPRULES :
+			case NATIONALFRIENDLY : {
+				return true;
+			}
+			default:
+				return false;
+		}
+	}
+
+
+	public static List<MatchType> getNTMatchType() {
+		if (cl_NTMatchType == null){
+			cl_NTMatchType = MatchType.stream().filter(m -> m.isNationalMatch()).collect(toList());
+		}
+		return cl_NTMatchType;
 	}
 
 
@@ -184,7 +227,6 @@ public enum MatchType {
 
 
 	public String getName() {
-		//Error?
 		return switch (this) {
 			case LEAGUE -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.league");
 			case CUP -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.cup");

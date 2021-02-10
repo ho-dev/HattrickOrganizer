@@ -10,13 +10,9 @@ import core.model.match.*;
 import core.model.misc.TrainingEvent;
 import core.model.player.Player;
 import core.util.HOLogger;
-import core.util.HTCalendar;
-import core.util.HTCalendarFactory;
 import core.util.HelperWrapper;
-
 import java.sql.Timestamp;
 import java.util.*;
-
 import javax.swing.JOptionPane;
 
 import static java.lang.Integer.min;
@@ -24,8 +20,6 @@ import static java.lang.Integer.min;
 /**
  * Class that extract data from Database and calculates TrainingWeek and TrainingPoints earned from
  * players
- *
- * @author humorlos, Dragettho, thetom
  */
 public class TrainingManager {
     //~ Static fields/initializers -----------------------------------------------------------------
@@ -110,7 +104,7 @@ public class TrainingManager {
 	        	// get experience increase of national matches
 				if  ( inputPlayer.getNationalTeamID() != 0 && inputPlayer.getNationalTeamID() != myID){
 					// TODO check if national matches are stored in database
-					var nationalMatches = train.getMatches(inputPlayer.getNationalTeamID());
+					var nationalMatches = train.getNTmatches();
 					for (var match : nationalMatches){
 						MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), inputPlayer.getNationalTeamID());
 						minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
