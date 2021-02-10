@@ -9,30 +9,129 @@ import core.util.HOLogger;
 import core.util.HelperWrapper;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 
 /**
- * Class that extract data from Database and contains the list of TrainingPerWeek objects, one for
- * each week in the database.
- * 
+ * Class that create a list of TrainingPerWeek objects between 2 dates
  *
- * @author humorlos, Dragettho, thetom, seb04, blaghaid
  */
 public class TrainingWeekManager {
-    //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static TrainingWeekManager m_clInstance;
+    private List<TrainingPerWeek> m_Trainings;
+    // The database is unaware of timezone
+	private Instant m_StartDate;
+	private Instant m_EndDate;
+	private static final Instant m_TrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate().toInstant();
 
-    /** TrainingWeeks */
-    private List<TrainingPerWeek> m_vTrainings;
+	@Deprecated
+	private static TrainingWeekManager m_clInstance;
 
-    //~ Constructors -------------------------------------------------------------------------------
+	/**
+	 * Constructor (both dates are included)
+	 */
+	public TrainingWeekManager(Instant startDate, Instant endDate) {
+		m_StartDate = startDate;
+		m_EndDate = endDate;
+		m_Trainings = computeTrainingList();
+	}
 
+
+	private List<TrainingPerWeek> computeTrainingList(){
+
+		List<TrainingPerWeek>  trainings = new ArrayList<>();
+		HashMap<Instant, TrainingPerWeek>  trainingsInDB = fetchTrainingListFromDB();
+		int trainingsSize;
+
+		if (m_StartDate.isAfter(m_TrainingDate)){
+			HOLogger.instance().error(this.getClass(), "It was assumed that start date will always be before latest training date in database");
+			return trainings;
+		}
+
+		long nbWeeks = ChronoUnit.DAYS.between(m_StartDate, m_TrainingDate) / 7;
+
+		Instant currDate = m_TrainingDate.minus(nbWeeks * 7, ChronoUnit.DAYS);
+
+		while(currDate.isBefore(m_TrainingDate) || currDate.equals(m_EndDate)){
+			if (trainingsInDB.containsKey(currDate)){
+				trainings.add(trainingsInDB.get(currDate));
+			}
+			else{
+				trainingsSize = trainings.size();
+				if(trainingsSize != 0)
+				{
+					var previousTraining = trainings.get(trainingsSize - 1);
+					trainings.add(previousTraining);
+				}
+				else{
+					var tpw = new TrainingPerWeek(currDate, -1, 0, 0, 0);
+					trainings.add(tpw);
+				}
+			}
+
+			currDate = currDate.plus(7, ChronoUnit.DAYS);
+		}
+
+
+		return trainings;
+
+	}
+
+
+	/**
+	 * Fetch all trainings information from database
+	 */
+	private HashMap<Instant, TrainingPerWeek> fetchTrainingListFromDB() {
+
+		HashMap<Instant, TrainingPerWeek> output = new HashMap<>();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
+		String startDate = formatter.format(m_StartDate);
+		String endDate = formatter.format(m_EndDate.plus(1, ChronoUnit.DAYS));
+		String sql = String.format("""
+					SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER
+					FROM XTRADATA
+					INNER JOIN TEAM on XTRADATA.HRF_ID = TEAM.HRF_ID
+					INNER JOIN VEREIN on XTRADATA.HRF_ID = VEREIN.HRF_ID
+					INNER JOIN (
+					     SELECT TRAININGDATE, max(HRF_ID) MAX_HR_ID FROM XTRADATA GROUP BY TRAININGDATE
+					) IJ1 ON XTRADATA.HRF_ID = IJ1.MAX_HR_ID
+					WHERE XTRADATA.TRAININGDATE >= '%s' AND XTRADATA.TRAININGDATE < '%s'""",startDate, endDate);
+
+
+		int trainType, trainIntensity, trainStaminaPart, hrfId, trainingLevel;
+		Instant trainingDate;
+
+
+		try {
+
+			final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
+			final ResultSet rs = ijdbca.executeQuery(sql);
+			rs.beforeFirst();
+
+			while (rs.next()) {
+				trainType = rs.getInt("TRAININGSART");
+				trainIntensity = rs.getInt("TRAININGSINTENSITAET");
+				trainStaminaPart = rs.getInt("STAMINATRAININGPART");
+				trainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
+				trainingLevel = rs.getInt("COTRAINER");
+				TrainingPerWeek tpw = new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingLevel);
+				output.put(trainingDate, tpw);
+			}
+		}
+		catch (Exception e) {
+			HOLogger.instance().error(this.getClass(), "Error while performing fetchTrainingListFromDB():  " + e);
+		}
+
+		return output;
+	}
+
+
+	@Deprecated
     /**
      * Creates a new instance of TrainingsManager
      */
@@ -46,6 +145,7 @@ public class TrainingWeekManager {
      * 
      * @return instance of TrainingWeekManager
      */
+	@Deprecated
     public static TrainingWeekManager instance() {
         if (m_clInstance == null) {
             m_clInstance = new TrainingWeekManager();
@@ -61,11 +161,10 @@ public class TrainingWeekManager {
      * @return Training List, List of TrainingPerWeek
      */
     public List<TrainingPerWeek> getTrainingList() {
-    	if (m_vTrainings == null) {
-    		
-    		m_vTrainings = generateTrainingList();
+    	if (m_Trainings == null) {
+    		m_Trainings = generateTrainingList();
     	}
-    	return m_vTrainings;
+    	return m_Trainings;
     }
     
     
@@ -75,8 +174,8 @@ public class TrainingWeekManager {
      * @return The list of Team Training Weeks. 
      */
     public List<TrainingPerWeek> refreshTrainingList() {
-    	m_vTrainings = generateTrainingList();
-    	return m_vTrainings;
+    	m_Trainings = generateTrainingList();
+    	return m_Trainings;
     }
     
 
@@ -210,7 +309,7 @@ public class TrainingWeekManager {
    					newTpw.setNextTrainingDate(new Timestamp(previousTraining.getTimeInMillis()));
    					newTpw.setHrfId(-1);
    					newTpw.setTrainingDate(old.getNextTrainingDate());
-   					newTpw.setmTrainingAssistantsLevel(old.getmTrainingAssistantsLevel());
+   					newTpw.setO_TrainingAssistantsLevel(old.getO_TrainingAssistantsLevel());
 
    					var newWeek = old.getHattrickDate();
    					if ( newWeek != null ) {
@@ -292,7 +391,7 @@ public class TrainingWeekManager {
 	                 tpw.setTrainingDate(new Timestamp(calendar.getTimeInMillis()));
 	                 tpw.setNextTrainingDate(nextTraining);
 	                 tpw.setHrfId(hrfId);
-	                 tpw.setmTrainingAssistantsLevel(assistants);
+	                 tpw.setO_TrainingAssistantsLevel(assistants);
 	                 output.add(tpw);
 	             }
 	         }

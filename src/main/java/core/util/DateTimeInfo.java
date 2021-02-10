@@ -60,6 +60,14 @@ public class DateTimeInfo {
         m_tsUserLocalized = Timestamp.from(m_instantUserLocalized);
     }
 
+
+    public DateTimeInfo(Timestamp ts) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MM dd");
+        String sDateTime = formatter.format(ts.toInstant());
+        new DateTimeInfo(sDateTime);
+    }
+
+
     private String cleanDateTimeString(String sDateTime) {
 
             int dateInputSize = sDateTime.length();

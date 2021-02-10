@@ -12,8 +12,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 
-import static core.model.match.MatchType.*;
-
 
 /**
  * Holds and calculates how much skill training a player received

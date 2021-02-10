@@ -104,7 +104,7 @@ public class TrainingManager {
 	        	// get experience increase of national matches
 				if  ( inputPlayer.getNationalTeamID() != 0 && inputPlayer.getNationalTeamID() != myID){
 					// TODO check if national matches are stored in database
-					var nationalMatches = train.getMatches(inputPlayer.getNationalTeamID());
+					var nationalMatches = train.getNTmatches();
 					for (var match : nationalMatches){
 						MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), inputPlayer.getNationalTeamID());
 						minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);

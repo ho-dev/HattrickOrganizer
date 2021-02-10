@@ -2,16 +2,12 @@ package core.model;
 
 import core.util.HOLogger;
 
-/**
- * @author thetom
- */
 public class XtraData  {
-    //~ Instance fields ----------------------------------------------------------------------------
 
     private String m_sLogoURL;
     private java.sql.Timestamp m_clEconomyDate;
     private java.sql.Timestamp m_clSeriesMatchDate;
-    private java.sql.Timestamp m_clTrainingDate;
+    private java.sql.Timestamp m_TrainingDate;
     private boolean m_bHasPromoted;
     private double m_dCurrencyRate = -1.0d;
 
@@ -27,14 +23,14 @@ public class XtraData  {
     /**
      * Creates a new instance of XtraData
      */
-    public XtraData(java.util.Properties properties) throws Exception {
+    public XtraData(java.util.Properties properties) {
         m_dCurrencyRate = Double.parseDouble(properties.getProperty("currencyrate", "1"));
         m_bHasPromoted = Boolean.valueOf(properties.getProperty("haspromoted", "FALSE"))
                                 .booleanValue();
         m_sLogoURL = properties.getProperty("logourl", "");
         m_clSeriesMatchDate = core.util.Helper.parseDate(properties.getProperty("seriesmatchdate"));
         m_clEconomyDate = core.util.Helper.parseDate(properties.getProperty("economydate"));
-        m_clTrainingDate = core.util.Helper.parseDate(properties.getProperty("trainingdate"));
+        m_TrainingDate = core.util.Helper.parseDate(properties.getProperty("trainingdate"));
 
         try {
             m_iLeagueLevelUnitID = Integer.parseInt(properties.getProperty("leaguelevelunitid"));
@@ -52,13 +48,13 @@ public class XtraData  {
     /**
      * Creates a new XtraData object.
      */
-    public XtraData(java.sql.ResultSet rs) throws Exception {
+    public XtraData(java.sql.ResultSet rs) {
         try {
             m_dCurrencyRate = rs.getDouble("CurrencyRate");
             m_sLogoURL = core.db.DBManager.deleteEscapeSequences(rs.getString("LogoURL"));
             m_bHasPromoted = rs.getBoolean("HasPromoted");
             m_clSeriesMatchDate = rs.getTimestamp("SeriesMatchDate");
-            m_clTrainingDate = rs.getTimestamp("TrainingDate");
+            m_TrainingDate = rs.getTimestamp("TrainingDate");
             m_clEconomyDate = rs.getTimestamp("EconomyDate");
             m_iLeagueLevelUnitID = rs.getInt("LeagueLevelUnitID");
         }
@@ -142,15 +138,6 @@ public class XtraData  {
     }
 
     /**
-     * Setter for property m_sLogoURL.
-     *
-     * @param m_sLogoURL New value of property m_sLogoURL.
-     */
-    public final void setLogoURL(java.lang.String m_sLogoURL) {
-        this.m_sLogoURL = m_sLogoURL;
-    }
-
-    /**
      * Getter for property m_sLogoURL.
      *
      * @return Value of property m_sLogoURL.
@@ -183,7 +170,7 @@ public class XtraData  {
      * @param m_clTrainingDate New value of property m_clTrainingDate.
      */
     public final void setTrainingDate(java.sql.Timestamp m_clTrainingDate) {
-        this.m_clTrainingDate = m_clTrainingDate;
+        this.m_TrainingDate = m_clTrainingDate;
     }
 
     /**
@@ -193,6 +180,10 @@ public class XtraData  {
      * @return Value of property m_clTrainingDate.
      */
     public final java.sql.Timestamp getTrainingDate() {
-        return m_clTrainingDate;
+        return m_TrainingDate;
     }
+
+
+
+
 }

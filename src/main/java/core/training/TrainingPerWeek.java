@@ -1,14 +1,16 @@
 package core.training;
 
+import core.constants.TrainingType;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
-import core.util.DateTimeInfo;
 import module.transfer.test.HTWeek;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.ZonedDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -18,12 +20,16 @@ import java.util.Date;
  */
 public class TrainingPerWeek  {
 
-    private int mTrainingIntensity;
-    private int mStaminaShare;
-    private int mTrainingType;
-    private int mTrainingAssistantsLevel;
-    private MatchKurzInfo[] matches;
-    private ZonedDateTime mTrainingDate;
+    private static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
+
+    private int o_TrainingIntensity;
+    private int o_StaminaShare;
+    private int o_TrainingType;
+    private int o_TrainingAssistantsLevel;
+    private MatchKurzInfo[] o_Matches;
+    private MatchKurzInfo[] o_NTmatches;
+    private Instant o_TrainingDate;
+
 
     @Deprecated
     private int _HRFID;
@@ -47,13 +53,48 @@ public class TrainingPerWeek  {
     private HattrickDate hattrickDate;
 
 
-    public TrainingPerWeek(ZonedDateTime trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel) {
-        mTrainingDate = trainingDate;
-        mTrainingType = trainingType;
-        mTrainingIntensity = trainingIntensity;
-        mStaminaShare = staminaShare;
-        mTrainingAssistantsLevel = trainingAssistantsLevel;
+    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel) {
+        o_TrainingDate = trainingDate;
+        o_TrainingType = trainingType;
+        o_TrainingIntensity = trainingIntensity;
+        o_StaminaShare = staminaShare;
+        o_TrainingAssistantsLevel = trainingAssistantsLevel;
+        o_Matches = fetchMatches(clubID); //TODO
+        o_NTmatches = fetchMatches(NTID);  //TODO
     }
+
+
+    // TODO: check this function
+    private MatchKurzInfo[] fetchMatches(int teamId) {
+
+        final Calendar old = Calendar.getInstance();
+        old.setTimeInMillis(this.trainingDate.getTime());
+        // set time one week back
+        old.add(Calendar.WEEK_OF_YEAR, -1);
+
+        final Timestamp ots = new Timestamp(old.getTimeInMillis());
+        final String where = "WHERE ( HEIMID=" + teamId
+                + " OR GASTID=" + teamId + " )"
+                + " AND MatchDate BETWEEN '" + ots.toString() + "' AND '" + this.trainingDate.toString() + "' "
+                + " AND (MatchTyp>" + MatchType.NONE.getId()
+                + " AND MatchTyp<" + MatchType.TOURNAMENTGROUP.getId()
+                + " OR MatchTyp>=" + MatchType.EMERALDCUP.getId()
+                + " AND MatchTyp<=" + MatchType.CONSOLANTECUP.getId()
+                + ") AND STATUS=" + MatchKurzInfo.FINISHED
+                + " ORDER BY MatchDate DESC";
+
+        return DBManager.instance().getMatchesKurzInfo(where);
+    }
+
+    public MatchKurzInfo[] getMatches() {
+        return o_Matches;
+    }
+
+    public MatchKurzInfo[] getNTmatches() {
+        return o_NTmatches;
+    }
+
+
 
     @Deprecated
     public TrainingPerWeek() {}
@@ -62,9 +103,9 @@ public class TrainingPerWeek  {
     public TrainingPerWeek(int week, int year, int trType, int intensity, int stamina) {
         this._Week = week;
         this._Year = year;
-        this.mTrainingType = trType;
-        this.mTrainingIntensity = intensity;
-        this.mStaminaShare = stamina;
+        this.o_TrainingType = trType;
+        this.o_TrainingIntensity = intensity;
+        this.o_StaminaShare = stamina;
     }
 
     @Deprecated
@@ -79,32 +120,32 @@ public class TrainingPerWeek  {
 
     @Deprecated
     public final void setStaminaPart(int stamina) {
-        this.mStaminaShare = stamina;
+        this.o_StaminaShare = stamina;
     }
 
     @Deprecated
     public final int getStaminaPart() {
-        return this.mStaminaShare;
+        return this.o_StaminaShare;
     }
 
     @Deprecated
     public final void setTrainingIntensity(int intensity) {
-        this.mTrainingIntensity = intensity;
+        this.o_TrainingIntensity = intensity;
     }
 
     @Deprecated
     public final int getTrainingIntensity() {
-        return this.mTrainingIntensity;
+        return this.o_TrainingIntensity;
     }
 
     @Deprecated
     public final void setTrainingType(int trType) {
-        this.mTrainingType = trType;
+        this.o_TrainingType = trType;
     }
 
     @Deprecated
     public final int getTrainingType() {
-        return this.mTrainingType;
+        return this.o_TrainingType;
     }
 
     @Deprecated
@@ -197,48 +238,21 @@ public class TrainingPerWeek  {
 	 * @return an integer with the number of assistants
 	 */
     @Deprecated
-	public int getmTrainingAssistantsLevel() {
-		return mTrainingAssistantsLevel;
+	public int getO_TrainingAssistantsLevel() {
+		return o_TrainingAssistantsLevel;
 	}
 	
 	/**
 	 * Sets the number of assisstants
 	 * 
-	 * @param mTrainingAssistantsLevel, an integer with the number of assistants
+	 * @param o_TrainingAssistantsLevel, an integer with the number of assistants
 	 */
     @Deprecated
-	public void setmTrainingAssistantsLevel(int mTrainingAssistantsLevel) {
-		this.mTrainingAssistantsLevel = mTrainingAssistantsLevel;
+	public void setO_TrainingAssistantsLevel(int o_TrainingAssistantsLevel) {
+		this.o_TrainingAssistantsLevel = o_TrainingAssistantsLevel;
 	}
 
-    public MatchKurzInfo[] getMatches() {
-        if (matches == null) {
-            matches = getMatches(MatchKurzInfo.user_team_id);
-        }
-        return matches;
-    }
 
-    @Deprecated
-    public MatchKurzInfo[] getMatches(int teamId) {
-
-        final Calendar old = Calendar.getInstance();
-        old.setTimeInMillis(this.trainingDate.getTime());
-        // set time one week back
-        old.add(Calendar.WEEK_OF_YEAR, -1);
-
-        final Timestamp ots = new Timestamp(old.getTimeInMillis());
-        final String where = "WHERE ( HEIMID=" + teamId
-                + " OR GASTID=" + teamId + " )"
-                + " AND MatchDate BETWEEN '" + ots.toString() + "' AND '" + this.trainingDate.toString() + "' "
-                + " AND (MatchTyp>" + MatchType.NONE.getId()
-                + " AND MatchTyp<" + MatchType.TOURNAMENTGROUP.getId()
-                + " OR MatchTyp>=" + MatchType.EMERALDCUP.getId()
-                + " AND MatchTyp<=" + MatchType.CONSOLANTECUP.getId()
-                + ") AND STATUS=" + MatchKurzInfo.FINISHED
-                + " ORDER BY MatchDate DESC";
-
-        return DBManager.instance().getMatchesKurzInfo(where);
-    }
 
     @Deprecated
     public HattrickDate getHattrickDate() {
@@ -253,15 +267,10 @@ public class TrainingPerWeek  {
     @Override
     public final String toString() {
         return "TrainingPerWeek[" +
-                "intensity = " + mTrainingIntensity +
-                ", staminaTrainingPart = " + mStaminaShare +
-                ", typ = " + mTrainingType +
-                ", week = " + _Week +
-                ", year = " + _Year +
-                ", hattrickWeek = " + this.hattrickDate.getWeek() +
-                ", hattrickSeason = " + this.hattrickDate.getSeason() +
-                ", trainDate = " + trainingDate +
-                ", hrfId = " + _HRFID +
+                "Training date: " + cl_Formatter.format(o_TrainingDate) +
+                ", Training Type: " + TrainingType.toString(o_TrainingType)  +
+                "%, Intensity: " + o_TrainingIntensity +
+                "%, StaminaPart: " + o_StaminaShare +
                 "]";
     }
 
