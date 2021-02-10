@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
-public class SkillInfoColumn extends JComponent implements IHOTableEntry {
+public class SkillInfoColumn extends JLabel implements IHOTableEntry {
 
     SkillInfo skillInfo;
 
@@ -66,8 +66,9 @@ public class SkillInfoColumn extends JComponent implements IHOTableEntry {
 
     @Override
     public void updateComponent() {
-        // TODO tool tip is not updated when training is calculated
         this.setToolTipText(createToolTipText());
+        this.setText(String.format("%.2f", this.skillInfo.getCurrentValue()));
+        this.setHorizontalAlignment(RIGHT);
     }
 
     /* draw a color bar */
@@ -94,5 +95,6 @@ public class SkillInfoColumn extends JComponent implements IHOTableEntry {
         xEnd = (int) (this.skillInfo.getCurrentValue() * 10);
         g.fillRect(xStart, 0, xEnd-xStart+1, bar_thickness);
 
+        super.paint(g);
     }
 }

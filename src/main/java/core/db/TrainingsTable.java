@@ -24,7 +24,6 @@ final class TrainingsTable extends AbstractTable {
 		columns[2]= new ColumnDescriptor("Typ",Types.INTEGER,false);
 		columns[3]= new ColumnDescriptor("Intensity",Types.INTEGER,false);
 		columns[4]= new ColumnDescriptor("StaminaTrainingPart",Types.INTEGER,false);
-
 	}
 
 	void saveTraining(core.training.TrainingPerWeek training) {
@@ -42,7 +41,7 @@ final class TrainingsTable extends AbstractTable {
 	}
 	
 	List<TrainingPerWeek> getTrainingList() {
-		final List<TrainingPerWeek> vTrainings = new ArrayList<TrainingPerWeek>();
+		final List<TrainingPerWeek> vTrainings = new ArrayList<>();
 
 		final String statement = "SELECT * FROM "+getTableName()+" ORDER BY year, week ASC";
 
