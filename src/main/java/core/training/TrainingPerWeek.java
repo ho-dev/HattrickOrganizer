@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class TrainingPerWeek  {
 
     private static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
+    private final static int myClubID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
     private int o_TrainingIntensity;
     private int o_StaminaShare;
@@ -32,7 +33,7 @@ public class TrainingPerWeek  {
     private MatchKurzInfo[] o_NTmatches;
     private Instant o_TrainingDate;
     private String firstMatchDate, lastMatchDate;
-    private final static int myClubID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+    private Boolean o_IncludeUpcomingGames;
 
 
     @Deprecated
@@ -57,12 +58,13 @@ public class TrainingPerWeek  {
     private HattrickDate hattrickDate;
 
 
-    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel) {
+    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, boolean includeUpcomingGames) {
         o_TrainingDate = trainingDate;
         o_TrainingType = trainingType;
         o_TrainingIntensity = trainingIntensity;
         o_StaminaShare = staminaShare;
         o_TrainingAssistantsLevel = trainingAssistantsLevel;
+        o_IncludeUpcomingGames = includeUpcomingGames;
         var startDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
         firstMatchDate = cl_Formatter.format(startDate);
         lastMatchDate = cl_Formatter.format(o_TrainingDate.plus(23, ChronoUnit.HOURS));
@@ -70,6 +72,10 @@ public class TrainingPerWeek  {
         o_NTmatches = fetchNTMatches();
     }
 
+
+    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel) {
+        this(trainingDate, trainingType, trainingIntensity, staminaShare, trainingAssistantsLevel, false);
+    }
 
 
     /**
@@ -97,11 +103,19 @@ public class TrainingPerWeek  {
 
 
         var matchTypes= MatchType.getOfficialMatchType();
-
         String sOfficialMatchType = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
 
-        final String where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS=%s ORDER BY MatchDate DESC",
-                myClubID, myClubID, firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED);
+        final String where;
+
+        if (! o_IncludeUpcomingGames){
+            where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS=%s ORDER BY MatchDate DESC",
+                    myClubID, myClubID, firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED);
+        }
+
+        else{
+            where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS in (%s, %s) ORDER BY MatchDate DESC",
+                    myClubID, myClubID, firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED, MatchKurzInfo.UPCOMING);
+        }
 
         return DBManager.instance().getMatchesKurzInfo(where);
     }
@@ -127,6 +141,12 @@ public class TrainingPerWeek  {
         this.o_TrainingIntensity = intensity;
         this.o_StaminaShare = stamina;
     }
+
+
+    public Instant getTrainingDate() {
+        return o_TrainingDate;
+    }
+
 
     @Deprecated
     public final void setHrfId(int i) {
@@ -194,7 +214,7 @@ public class TrainingPerWeek  {
 	 * @return	training date
 	 */
     @Deprecated
-	public Timestamp getTrainingDate() {
+	public Timestamp getTrainingDateAsTS() {
 	    if ( trainingDate == null){
             HTWeek week = new HTWeek();
             week.setSeason(this.hattrickDate.getSeason());
@@ -230,6 +250,7 @@ public class TrainingPerWeek  {
     @Deprecated
 	public void setTrainingDate(Timestamp date) {
 		trainingDate = date;
+		o_TrainingDate = date.toInstant();
 	}
 	
 	/**

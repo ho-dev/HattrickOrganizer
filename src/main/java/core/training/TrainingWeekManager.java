@@ -23,10 +23,13 @@ import java.util.*;
  */
 public class TrainingWeekManager {
 
+	private static final Instant m_NextTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate().toInstant();
+
     private List<TrainingPerWeek> m_Trainings;
 	private Instant m_StartDate;
 	private Instant m_EndDate;
-	private static final Instant m_TrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate().toInstant();
+	private Boolean m_IncludeUpcomingGames;
+
 
 	@Deprecated
 	private static TrainingWeekManager m_clInstance;
@@ -35,8 +38,16 @@ public class TrainingWeekManager {
 	 * Constructor (both dates are included)
 	 */
 	public TrainingWeekManager(Instant startDate, Instant endDate) {
+		this(startDate, endDate, false);
+	}
+
+	/**
+	 * Constructor (both dates are included)
+	 */
+	public TrainingWeekManager(Instant startDate, Instant endDate, boolean includeUpcomingGames) {
 		m_StartDate = startDate;
 		m_EndDate = endDate;
+		m_IncludeUpcomingGames = includeUpcomingGames;
 		m_Trainings = computeTrainingList();
 	}
 
@@ -49,16 +60,16 @@ public class TrainingWeekManager {
 		HashMap<Instant, TrainingPerWeek>  trainingsInDB = fetchTrainingListFromDB();
 		int trainingsSize;
 
-		if (m_StartDate.isAfter(m_TrainingDate)){
-			HOLogger.instance().error(this.getClass(), "It was assumed that start date will always be before latest training date in database");
+		if (m_StartDate.isAfter(m_NextTrainingDate)){
+			HOLogger.instance().error(this.getClass(), "It was assumed that start date will always be before next training date in database");
 			return trainings;
 		}
 
-		long nbWeeks = ChronoUnit.DAYS.between(m_StartDate, m_TrainingDate) / 7;
+		long nbWeeks = ChronoUnit.DAYS.between(m_StartDate, m_NextTrainingDate) / 7;
 
-		Instant currDate = m_TrainingDate.minus(nbWeeks * 7, ChronoUnit.DAYS);
+		Instant currDate = m_NextTrainingDate.minus(nbWeeks * 7, ChronoUnit.DAYS);
 
-		while(currDate.isBefore(m_TrainingDate) || currDate.equals(m_EndDate)){
+		while((currDate.isBefore(m_EndDate) || currDate.equals(m_EndDate))){
 			if (trainingsInDB.containsKey(currDate)){
 				trainings.add(trainingsInDB.get(currDate));
 			}
@@ -167,7 +178,11 @@ public class TrainingWeekManager {
     	}
     	return m_Trainings;
     }
-    
+
+	public static Instant getNextTrainingDate() {
+		return m_NextTrainingDate;
+	}
+
     
     /**
      * Forces a new training list to be generated, and returns the result.

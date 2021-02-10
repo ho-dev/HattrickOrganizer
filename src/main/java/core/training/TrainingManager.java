@@ -12,6 +12,7 @@ import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.HelperWrapper;
 import java.sql.Timestamp;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import javax.swing.JOptionPane;
 
@@ -28,6 +29,7 @@ public class TrainingManager {
 
     //~ Instance fields ----------------------------------------------------------------------------
     private TrainingWeekManager _WeekManager;
+    private TrainingPerWeek nextWeekTraining;
     static final public boolean TRAININGDEBUG = false;
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -321,7 +323,35 @@ public class TrainingManager {
 		}
 	}
 
-	public TrainingPerWeek getLastTrainingWeek() {
-		return this._WeekManager.getLastTrainingWeek();
+	public TrainingPerWeek getNextWeekTraining() {
+    	if (nextWeekTraining == null){
+    		findLastTraining();
+		}
+		return nextWeekTraining;
 	}
+
+	private void findLastTraining(){
+
+    	if (_WeekManager != null){
+
+    		var nextTrainingDate = _WeekManager.getNextTrainingDate();
+
+    		for(var training: _WeekManager.getTrainingList()){
+    			if (training.getTrainingDate().equals(nextTrainingDate)){
+					nextWeekTraining = training;
+				}
+			}
+
+			TrainingWeekManager _trainingWeekManager = new TrainingWeekManager(nextTrainingDate.plus(-1, ChronoUnit.DAYS), nextTrainingDate.plus(1, ChronoUnit.DAYS), true);
+    		if (_trainingWeekManager.getTrainingList().size() == 1){
+				nextWeekTraining = _trainingWeekManager.getTrainingList().get(0);
+			}
+    		else{
+    			HOLogger.instance().error(this.getClass(), "Last training could not be determined");
+			}
+
+		}
+
+	}
+
 }
