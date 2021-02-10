@@ -11,8 +11,10 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * Class that holds all information required to calculate training effect of a given week
@@ -29,6 +31,8 @@ public class TrainingPerWeek  {
     private MatchKurzInfo[] o_Matches;
     private MatchKurzInfo[] o_NTmatches;
     private Instant o_TrainingDate;
+    private String firstMatchDate, lastMatchDate;
+    private final static int myClubID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 
     @Deprecated
@@ -59,29 +63,45 @@ public class TrainingPerWeek  {
         o_TrainingIntensity = trainingIntensity;
         o_StaminaShare = staminaShare;
         o_TrainingAssistantsLevel = trainingAssistantsLevel;
-        o_Matches = fetchMatches(clubID); //TODO
-        o_NTmatches = fetchMatches(NTID);  //TODO
+        var startDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
+        firstMatchDate = cl_Formatter.format(startDate);
+        lastMatchDate = cl_Formatter.format(o_TrainingDate.plus(23, ChronoUnit.HOURS));
+        o_Matches = fetchMatches();
+        o_NTmatches = fetchNTMatches();
     }
 
 
-    // TODO: check this function
-    private MatchKurzInfo[] fetchMatches(int teamId) {
 
-        final Calendar old = Calendar.getInstance();
-        old.setTimeInMillis(this.trainingDate.getTime());
-        // set time one week back
-        old.add(Calendar.WEEK_OF_YEAR, -1);
+    /**
+     * function that fetch info of NT match played related to the TrainingPerWeek instance
+     * @return MatchKurzInfo[] related to this TrainingPerWeek instance
+     */
+    private MatchKurzInfo[] fetchNTMatches() {
 
-        final Timestamp ots = new Timestamp(old.getTimeInMillis());
-        final String where = "WHERE ( HEIMID=" + teamId
-                + " OR GASTID=" + teamId + " )"
-                + " AND MatchDate BETWEEN '" + ots.toString() + "' AND '" + this.trainingDate.toString() + "' "
-                + " AND (MatchTyp>" + MatchType.NONE.getId()
-                + " AND MatchTyp<" + MatchType.TOURNAMENTGROUP.getId()
-                + " OR MatchTyp>=" + MatchType.EMERALDCUP.getId()
-                + " AND MatchTyp<=" + MatchType.CONSOLANTECUP.getId()
-                + ") AND STATUS=" + MatchKurzInfo.FINISHED
-                + " ORDER BY MatchDate DESC";
+        var matchTypes= MatchType.getNTMatchType();
+
+        String sOfficialMatchType = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
+
+        final String where = String.format("WHERE MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS=%s ORDER BY MatchDate DESC",
+                firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED);
+
+        return DBManager.instance().getMatchesKurzInfo(where);
+    }
+
+
+    /**
+     * function that fetch info of match played related to the TrainingPerWeek instance
+     * @return MatchKurzInfo[] related to this TrainingPerWeek instance
+     */
+    private MatchKurzInfo[] fetchMatches() {
+
+
+        var matchTypes= MatchType.getOfficialMatchType();
+
+        String sOfficialMatchType = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
+
+        final String where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS=%s ORDER BY MatchDate DESC",
+                myClubID, myClubID, firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED);
 
         return DBManager.instance().getMatchesKurzInfo(where);
     }

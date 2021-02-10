@@ -24,7 +24,6 @@ import java.util.*;
 public class TrainingWeekManager {
 
     private List<TrainingPerWeek> m_Trainings;
-    // The database is unaware of timezone
 	private Instant m_StartDate;
 	private Instant m_EndDate;
 	private static final Instant m_TrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate().toInstant();
@@ -41,7 +40,9 @@ public class TrainingWeekManager {
 		m_Trainings = computeTrainingList();
 	}
 
-
+	/**
+	 * Create the list of trainings, by getting information from the database and completing the missing values
+	 */
 	private List<TrainingPerWeek> computeTrainingList(){
 
 		List<TrainingPerWeek>  trainings = new ArrayList<>();
@@ -173,13 +174,14 @@ public class TrainingWeekManager {
      * 
      * @return The list of Team Training Weeks. 
      */
+	@Deprecated
     public List<TrainingPerWeek> refreshTrainingList() {
     	m_Trainings = generateTrainingList();
     	return m_Trainings;
     }
-    
 
 
+	@Deprecated
     public TrainingPerWeek getLastTrainingWeek(){
     	var list = getTrainingList();
     	if ( list.size()>0){
@@ -192,6 +194,7 @@ public class TrainingWeekManager {
      * 
      * @return The list of TrainingPerWeek.
      */
+	@Deprecated
     private static List<TrainingPerWeek> generateTrainingList() {
     	
     	List<TrainingPerWeek> output = fetchTrainingListFromHrf();
