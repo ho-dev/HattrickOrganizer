@@ -1,7 +1,7 @@
 package core.db;
 
 import core.model.player.Specialty;
-import module.youth.SkillInfo;
+import module.youth.YouthSkillInfo;
 import module.youth.YouthPlayer;
 import core.util.HOLogger;
 import module.training.Skills;
@@ -263,7 +263,7 @@ public class YouthPlayerTable  extends AbstractTable {
     }
 
     private void setSkillInfo(YouthPlayer youthPlayer, ResultSet rs, Skills.HTSkillID skillID) throws SQLException {
-        var skillinfo = new SkillInfo(skillID);
+        var skillinfo = new YouthSkillInfo(skillID);
         var columnPrefix = skillID.toString();
         skillinfo.setCurrentLevel(DBManager.getInteger(rs, columnPrefix));
         skillinfo.setStartLevel(DBManager.getInteger(rs, columnPrefix + "Start"));

@@ -78,6 +78,6 @@ public abstract class DefaultModule implements IModule {
 	}
 
 	@Override
-	public void setUserParameter(){}
+	public void storeUserSettings(){}
 	
 }

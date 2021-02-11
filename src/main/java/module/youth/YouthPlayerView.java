@@ -51,10 +51,7 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
 
     @Override
     public final void reInit() {
-        //initModel();
         refresh();
-        // playerOverviewTable.repaint();
-        // playerDetailsTable.repaint();
     }
 
     private void initModel() {
@@ -123,14 +120,8 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
 
     @Override
     public final void refresh() {
-
         refreshPlayerOverview();
-        //((YouthPlayerOverviewTableModel) this.getSorter().getModel()).initData();
-        //playerOverviewTable.repaint();
-
         refreshPlayerDetails();
-        //playerDetailsTableModel.initData();
-        //playerDetailsTable.repaint();
     }
 
     private YouthPlayer getSelectedPlayer() {

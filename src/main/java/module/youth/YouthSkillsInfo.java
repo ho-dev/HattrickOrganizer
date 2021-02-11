@@ -4,7 +4,7 @@ import module.training.Skills;
 
 import java.util.HashMap;
 
-public class SkillsInfo extends HashMap<Skills.HTSkillID, SkillInfo> {
+public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
 
     /**
      * Determine if skills are keeper skills

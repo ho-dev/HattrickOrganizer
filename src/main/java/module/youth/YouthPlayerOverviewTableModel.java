@@ -4,7 +4,6 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
-import core.gui.model.PlayerColumn;
 import core.gui.model.YouthPlayerColumn;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
@@ -12,8 +11,6 @@ import module.training.Skills;
 
 import javax.swing.*;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 
 public class YouthPlayerOverviewTableModel extends HOTableModel {
@@ -53,43 +50,43 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 new YouthPlayerColumn("ls.youth.player.Keeper", 200) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Keeper));
+                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Keeper));
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.Defender", 200) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Defender));
+                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Defender));
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.Playmaker", 200) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Playmaker));
+                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Playmaker));
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.Winger", 200) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Winger));
+                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Winger));
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.Passing", 200) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Passing));
+                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Passing));
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.Scorer", 200) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Scorer));
+                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Scorer));
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.SetPieces", 200) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new SkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.SetPieces));
+                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.SetPieces));
                     }
                 },
                 // TODO: Specialty column should include the specialty icon

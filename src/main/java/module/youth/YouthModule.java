@@ -34,9 +34,9 @@ public class YouthModule extends DefaultModule {
     }
 
     @Override
-    public void setUserParameter()
+    public void storeUserSettings()
     {
-        youthPanel.storeUserSettings();
+        if ( youthPanel != null) youthPanel.storeUserSettings();
     }
 
 }
