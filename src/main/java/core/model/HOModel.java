@@ -350,14 +350,14 @@ public class HOModel {
     }
 
     // ---------------- Staff -----------------------------
-    
+
     /**
      * Sets the staff list
      */
     public final void setStaff (List<StaffMember> staff) {
     	m_clStaff = staff;
     }
-    
+
     /**
      * Returns the staff list
      */
@@ -367,7 +367,7 @@ public class HOModel {
 		}
     	return m_clStaff;
     }
-    
+
     /**
      * Sets Team
      */
@@ -407,7 +407,7 @@ public class HOModel {
         	trainer.setTrainerSkill(7);
         	trainer.setTrainerTyp(2); // neutral;
         }
-        
+
         return trainer;
     }
 
@@ -473,71 +473,66 @@ public class HOModel {
      */
     public final void calcSubskills() {
 
-    	boolean doOnce = false;
-    	
-    	final List<Player> vPlayer = getCurrentPlayers();
-    	final java.sql.Timestamp calcDate = getBasics().getDatum();
-    	
-    	final int previousHrfId = DBManager.instance().getPreviousHRF(m_iID);
-    	
-    	Timestamp trainingDateOfPreviousHRF;
-    	Timestamp trainingDateOfCurrentHRF = getXtraDaten().getTrainingDate();
-    	if (previousHrfId > -1) {
-    		trainingDateOfPreviousHRF = DBManager.instance()
-    									.getXtraDaten(previousHrfId)
-    									.getTrainingDate();
-    	}
-    	else {
-    		// handle the very first hrf download
-			trainingDateOfPreviousHRF = new Timestamp(0); // fetch all trainings before the first hrf was loaded
-		}
-    	
-    	if ((trainingDateOfPreviousHRF != null) && (trainingDateOfCurrentHRF != null)) {
-    		// Training Happened
+        final List<Player> vPlayer = getCurrentPlayers();
+        final int previousHrfId = DBManager.instance().getPreviousHRF(m_iID);
+        var trainingWeeks = getTrainingWeeks(previousHrfId);
+        if ( trainingWeeks != null) {
+            TrainingManager.instance().calculateTraining(
+                    getXtraDaten().getTrainingDate(),
+                    trainingWeeks,
+                    getCurrentPlayers(),
+                    DBManager.instance().getSpieler(previousHrfId),
+                    getTrainer().getTrainerSkill());
 
-    		// Find TrainingPerWeeks that should be processed (those since last training).
-    		List<TrainingPerWeek> rawTrainingList = TrainingManager.instance().getTrainingWeekList();
-    		List<TrainingPerWeek> trainingList = new ArrayList<>();
-    		for (TrainingPerWeek tpw : rawTrainingList) {
-    			// We want to add all weeks with nextTraining after the previous date, and stop
-    			// when we are after the current date.
+            // store new values of current players
+            DBManager.instance().saveSpieler(m_iID, getCurrentPlayers(), getBasics().getDatum());
+        }
+    }
+
+    /**
+     * Determine the list of training weeks since given previous Download id
+     *
+     * @param previousHrfId id of the previous download
+     * @return list of training weeks between previous and current download (may be empty)
+     *          null, if no training date could be determined
+     */
+    private List<TrainingPerWeek>  getTrainingWeeks(int previousHrfId) {
+        Timestamp trainingDateOfPreviousHRF;
+        Timestamp trainingDateOfCurrentHRF = getXtraDaten().getTrainingDate();
+        if (previousHrfId > -1) {
+            trainingDateOfPreviousHRF = DBManager.instance()
+                    .getXtraDaten(previousHrfId)
+                    .getTrainingDate();
+        } else {
+            // handle the very first hrf download
+            trainingDateOfPreviousHRF = new Timestamp(0); // fetch all trainings before the first hrf was loaded
+        }
+
+        if ((trainingDateOfPreviousHRF != null) && (trainingDateOfCurrentHRF != null)) {
+            // Training Happened
+
+            // Find TrainingPerWeeks that should be processed (those since last training).
+            List<TrainingPerWeek> rawTrainingList = TrainingManager.instance().getTrainingWeekList();
+            List<TrainingPerWeek> trainingList = new ArrayList<>();
+            for (TrainingPerWeek tpw : rawTrainingList) {
+                // We want to add all weeks with nextTraining after the previous date, and stop
+                // when we are after the current date.
 
                 if (tpw.getTrainingDateAsTS().after(trainingDateOfCurrentHRF)) {
                     break;
                 }
 
                 if (tpw.getNextTrainingDate().after(trainingDateOfPreviousHRF)) {
-    			    if(TrainingManager.TRAININGDEBUG) {
-                        HTCalendar htcP;
-                        String htcPs;
-                        htcP = HTCalendarFactory.createTrainingCalendar(new Date(trainingDateOfPreviousHRF.getTime()));
-                        htcPs = " (" + htcP.getHTSeason() + "." + htcP.getHTWeek() + ")";
-                        HTCalendar htcA = HTCalendarFactory.createTrainingCalendar(new Date((trainingDateOfCurrentHRF.getTime())));
-                        String htcAs = " (" + htcA.getHTSeason() + "." + htcA.getHTWeek() + ")";
-                        HTCalendar htcC = HTCalendarFactory.createTrainingCalendar(new Date((calcDate.getTime())));
-                        String htcCs = " (" + htcC.getHTSeason() + "." + htcC.getHTWeek() + ")";
 
-                        HOLogger.instance().debug(HOModel.class,
-                                "trArt=" + tpw.getTrainingType() + ", numPl=" + vPlayer.size() + ", calcDate=" + calcDate.toString() + htcCs + ", act=" + trainingDateOfCurrentHRF.toString() + htcAs + ", prev=" + (trainingDateOfPreviousHRF.toString() + htcPs) + " (" + previousHrfId + ")");
-                    }
 
                     trainingList.add(tpw);
-    			}
-    		}
-    		
-    		TrainingManager.instance().calculateTraining(
-    		        getXtraDaten().getTrainingDate(),
-    				trainingList,
-					getCurrentPlayers(),
-					DBManager.instance().getSpieler(previousHrfId),
-					getTrainer().getTrainerSkill(),
-                    getStaff());
+                }
+            }
 
-    		// store new values of current players
-    		DBManager.instance().saveSpieler(m_iID, getCurrentPlayers(), getBasics().getDatum());
-    	}
+            return trainingList;
+        }
+        return null;
     }
-    
 
     /**
      * Remove a Player

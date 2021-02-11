@@ -48,13 +48,13 @@ public class ScoringWeeklyTraining extends WeeklyTrainingType {
         return m_ciInstance;
     }
 	@Override
-	public double getTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
+	public double getTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel)
 	{
 		return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), trainerLevel,
-				intensity, stamina, player.getSCskill(), staff);
+				intensity, stamina, player.getSCskill(), assistantLevel);
 	}
 	@Override
-	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
+	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel)
 	{
 		return -1;
 	}

@@ -163,7 +163,10 @@ public class TrainingPerWeek  {
         this.o_StaminaShare = stamina;
     }
 
-    @Deprecated
+    /**
+     * The stamina part of the training in percentage of the training week
+     * @return percentage of total training [10..100]
+     */
     public final int getStaminaPart() {
         return this.o_StaminaShare;
     }
@@ -173,7 +176,10 @@ public class TrainingPerWeek  {
         this.o_TrainingIntensity = intensity;
     }
 
-    @Deprecated
+    /**
+     * The training intensity of the training week
+     * @return intensity [0..100]
+     */
     public final int getTrainingIntensity() {
         return this.o_TrainingIntensity;
     }
@@ -274,12 +280,11 @@ public class TrainingPerWeek  {
 	}
 	
 	/**
-	 * Returns the number of assistants for the week.
+	 * Returns the level sum of training assistants of the training week.
 	 * 
-	 * @return an integer with the number of assistants
+	 * @return an integer with the level sum (2 assistants with level 5 each, gives 10)
 	 */
-    @Deprecated
-	public int getO_TrainingAssistantsLevel() {
+	public int getTrainingAssistantsLevel() {
 		return o_TrainingAssistantsLevel;
 	}
 	

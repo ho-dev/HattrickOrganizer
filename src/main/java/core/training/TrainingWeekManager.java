@@ -327,7 +327,7 @@ public class TrainingWeekManager {
    					newTpw.setNextTrainingDate(new Timestamp(previousTraining.getTimeInMillis()));
    					newTpw.setHrfId(-1);
    					newTpw.setTrainingDate(old.getNextTrainingDate());
-   					newTpw.setO_TrainingAssistantsLevel(old.getO_TrainingAssistantsLevel());
+   					newTpw.setO_TrainingAssistantsLevel(old.getTrainingAssistantsLevel());
 
    					var newWeek = old.getHattrickDate();
    					if ( newWeek != null ) {

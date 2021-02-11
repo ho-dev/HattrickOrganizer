@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static core.model.player.IMatchRoleID.keeper;
-
 public class IndividualWeeklyTraining extends WeeklyTrainingType {
     private static WeeklyTrainingType m_ciInstance;
 
@@ -25,38 +23,38 @@ public class IndividualWeeklyTraining extends WeeklyTrainingType {
     private static Map<MatchRoleID.Sector, Map<Integer, Double>> probabilities;
     static {
         probabilities = new HashMap<>();
-        probabilities.put(MatchRoleID.Sector.Goal, new HashMap<Integer, Double>() {{
+        probabilities.put(MatchRoleID.Sector.Goal, new HashMap<>() {{
             put(Skills.HTSkillID.Keeper.getValue(), 0.4);
             put(Skills.HTSkillID.Defender.getValue(), 0.4);
             put(Skills.HTSkillID.SetPieces.getValue(), 0.2);
         }});
-        probabilities.put(MatchRoleID.Sector.Back, new HashMap<Integer, Double>() {{
+        probabilities.put(MatchRoleID.Sector.Back, new HashMap<>() {{
             put(Skills.HTSkillID.Defender.getValue(), 0.3);
             put(Skills.HTSkillID.Winger.getValue(), 0.22);
             put(Skills.HTSkillID.Playmaker.getValue(), 0.2);
             put(Skills.HTSkillID.Passing.getValue(), 0.15);
             put(Skills.HTSkillID.SetPieces.getValue(), 0.1);
         }});
-        probabilities.put(MatchRoleID.Sector.CentralDefence, new HashMap<Integer, Double>() {{
+        probabilities.put(MatchRoleID.Sector.CentralDefence, new HashMap<>() {{
             put(Skills.HTSkillID.Defender.getValue(), 0.35);
             put(Skills.HTSkillID.Playmaker.getValue(), 0.3);
             put(Skills.HTSkillID.Passing.getValue(), 0.25);
             put(Skills.HTSkillID.SetPieces.getValue(), 0.1);
         }});
-        probabilities.put(MatchRoleID.Sector.Wing, new HashMap<Integer, Double>() {{
+        probabilities.put(MatchRoleID.Sector.Wing, new HashMap<>() {{
             put(Skills.HTSkillID.Defender.getValue(), 0.16);
             put(Skills.HTSkillID.Playmaker.getValue(), 0.22);
             put(Skills.HTSkillID.Passing.getValue(), 0.19);
             put(Skills.HTSkillID.SetPieces.getValue(), 0.11);
             put(Skills.HTSkillID.Winger.getValue(), 0.32);
         }});
-        probabilities.put(MatchRoleID.Sector.InnerMidfield, new HashMap<Integer, Double>() {{
+        probabilities.put(MatchRoleID.Sector.InnerMidfield, new HashMap<>() {{
             put(Skills.HTSkillID.Defender.getValue(), 0.28);
             put(Skills.HTSkillID.Playmaker.getValue(), 0.36);
             put(Skills.HTSkillID.Passing.getValue(), 0.24);
             put(Skills.HTSkillID.SetPieces.getValue(), 0.12);
         }});
-        probabilities.put(MatchRoleID.Sector.Forward, new HashMap<Integer, Double>() {{
+        probabilities.put(MatchRoleID.Sector.Forward, new HashMap<>() {{
             put(Skills.HTSkillID.Scorer.getValue(), 0.38);
             put(Skills.HTSkillID.Winger.getValue(), 0.29);
             put(Skills.HTSkillID.Passing.getValue(), 0.22);
@@ -85,12 +83,12 @@ public class IndividualWeeklyTraining extends WeeklyTrainingType {
     }
 
     @Override
-    public double getTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff) {
+    public double getTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel) {
         return 0;
     }
 
     @Override
-    public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff) {
+    public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel) {
         return 0;
     }
 }

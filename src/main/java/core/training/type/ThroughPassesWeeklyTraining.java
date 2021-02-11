@@ -47,12 +47,12 @@ public class ThroughPassesWeeklyTraining extends WeeklyTrainingType {
         return m_ciInstance;
     }
 	@Override
-	public double getTrainingLength(Player player,int trainerLevel, int intensity, int stamina, List<StaffMember> staff) {
+	public double getTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel) {
 		 return calcTraining(ThroughPassesWeeklyTraining.instance().getPrimaryTrainingSkillBaseLength(), 
-	                		player.getAlter(), trainerLevel, intensity, stamina, player.getPSskill(), staff);
+	                		player.getAlter(), trainerLevel, intensity, stamina, player.getPSskill(), assistantLevel);
 	}
 	@Override
-	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff)
+	public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel)
 	{
 		return -1;
 	}

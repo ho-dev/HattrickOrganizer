@@ -273,26 +273,16 @@ public abstract class WeeklyTrainingType {
 	}
 
 	public static double calcTraining(double baseLength, int age, int trainerLevel, int intensity,
-									  int stamina, int curSkill, List<StaffMember> staff) {
+									  int stamina, int curSkill, int assistantLevel) {
 		double ageFactor = Math.pow(1.0404, age - 17) * (UserParameter.instance().TRAINING_OFFSET_AGE + BASE_AGE_FACTOR);
 		double skillFactor = -1.4595 * Math.pow((curSkill + 1d) / 20, 2) + 3.7535 * (curSkill + 1d) / 20 - 0.1349d;
 		if (skillFactor < 0) {
 			skillFactor = 0;
 		}
 
-		// skill between 1 and 22
-/*		curSkill = Math.max(1, curSkill);
-		curSkill = Math.min(22, curSkill);
-		double skillFactor = skillFactorArray[curSkill - 1];
-*/
-		// age between 17 and 30
-//		age = Math.max(17, age);
-//		age = Math.min(30, age);
-////		double ageFactor = ageFactorArray[age - 17];
-
 
 		double trainerFactor = (1 + (7 - Math.min(trainerLevel, 7.5)) * 0.091) * (UserParameter.instance().TrainerFaktor + BASE_COACH_FACTOR);
-		double coFactor = getAssistantFactor(staff);
+		double coFactor = getAssistantFactor(assistantLevel);
 		double tiFactor = Double.MAX_VALUE;
 		if (intensity > 0) {
 			tiFactor = (1 / (intensity / 100d)) * (UserParameter.instance().TRAINING_OFFSET_INTENSITY + BASE_INTENSITY_FACTOR);
@@ -318,28 +308,7 @@ public abstract class WeeklyTrainingType {
 		return trainLength;
 	}
 
-	public static double getAssistantFactor(List<StaffMember> staff) {
-
-
-
-		 
-		/* if ((staff == null) || (staff.size() == 0)) {
-			
-			 // More than 2?!
-			 factor = (1 + (Math.log(11)/Math.log(10) - Math.log(assistants+1)/Math.log(10)) * 0.2749) * (UserParameter.instance().TRAINING_OFFSET_ASSISTANTS + BASE_ASSISTANT_COACH_FACTOR);
-		 } else {
-		*/
-		// Compared to old 0 assistants: 9% increase for all, 3,2% each level of assistants.
-		int assistantLevels = 0;
-
-
-		for (StaffMember staffer : staff) {
-			if (staffer.getStaffType() == StaffType.ASSISTANTTRAINER) {
-
-				assistantLevels += staffer.getLevel();
-			}
-		}
-
+	public static double getAssistantFactor(int assistantLevels) {
 		//factor = 1/((1/1.2863) * (1.09 + (0.02 * assistantLevels)));
 		double factor = 1 / ((TRAININGSPEEDBASE + assistantLevels * ASSISTANTTRAININGSPEEDFACTOR) / OLDASSISTANTTRAININGSPEEDMAX);
 
@@ -349,12 +318,12 @@ public abstract class WeeklyTrainingType {
 		return factor;
 	}
 
-	public abstract double getTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff);
+	public abstract double getTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel);
 
 	static double[] coachKoeff = {0.734,0.834,0.92,1,1.04};
 	static double[] assistantKoeff ={1,1.035,1.07,1.105,1.14,1.175,1.21,1.245,1.28,1.315,1.35};
 
-	public double getTrainingAlternativeFormula(Player player, int trainerlevel, int intensity, int stamina, int value4Skill, List<StaffMember> staff, TrainingPerPlayer trForPlayer, boolean isPrimarySkill) {
+	public double getTrainingAlternativeFormula(Player player, int trainerlevel, int value4Skill, TrainingPerPlayer trForPlayer, boolean isPrimarySkill) {
 		//return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), trainerlevel, intensity, stamina, value4Skill, staff);
 
 		/*
@@ -404,11 +373,7 @@ public abstract class WeeklyTrainingType {
 		1 1.035
 		0 1.000
 		*/
-		int assistantLevel;
-		assistantLevel = staff.stream()
-				.filter(i -> i.getStaffType() == StaffType.ASSISTANTTRAINER)
-				.mapToInt(i -> i.getLevel())
-				.sum();
+		int assistantLevel = trForPlayer.getTrainingWeek().getTrainingAssistantsLevel();
 		if (assistantLevel < 0 || assistantLevel > 10) {
 			return trainingCalcError("AssistantLevel out of range [0,10]: " + assistantLevel);    // dummy return
 		}
@@ -420,7 +385,7 @@ public abstract class WeeklyTrainingType {
 		that is, 100% is 1.0.
 		90% is 0.9
 		*/
-		double factorIntensity = intensity / 100.0;
+		double factorIntensity = trForPlayer.getTrainingWeek().getTrainingIntensity() / 100.0;
 
 		/*
 		K(stam)
@@ -428,7 +393,7 @@ public abstract class WeeklyTrainingType {
 		at 5 % of the stadium 1.0 - 5% = 0.95
 		at 15% of the stadium 1.0 - 15% = 0.85
 		*/
-		double factorStamina = 1. - (double) stamina / 100.;
+		double factorStamina = 1. - (double) trForPlayer.getTrainingWeek().getStaminaPart() / 100.;
 
 		/*
 		K(age) = 0.9835^(Age-17)
@@ -531,7 +496,7 @@ public abstract class WeeklyTrainingType {
 	}
 
 
-	public abstract double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, List<StaffMember> staff);
+	public abstract double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel);
 
 
 	public double getBonusYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
