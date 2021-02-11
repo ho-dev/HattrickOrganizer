@@ -195,7 +195,7 @@ public class TrainingPreviewPlayers implements Refreshable {
     private void getMatchesForTraining() {
 
         if (!isFuturMatchInit) {
-            var lastTraining = TrainingManager.instance().getLastTrainingWeek();
+            var lastTraining = TrainingManager.instance().getNextWeekTraining();
 
             lMatchStats = new ArrayList<>();
             lLinueupPos = new ArrayList<>();
@@ -205,8 +205,6 @@ public class TrainingPreviewPlayers implements Refreshable {
                 weekTrainTyp = WeeklyTrainingType.instance(lastTraining.getTrainingType());
                 for (var matchInfo : lastTraining.getMatches()) {
                     if (matchInfo.getMatchStatus() == MatchKurzInfo.FINISHED) {
-                        //Get the MatchLineup by id
-                        //MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(matchInfo.getMatchID(), MatchKurzInfo.user_team_id);
                         var mlt = matchInfo.getMatchdetails().getTeamLineup();
                         if ( mlt != null ) {
                             lMatchStats.add(new MatchStatistics(matchInfo, mlt));

@@ -143,7 +143,7 @@ public class FutureTrainingManager {
 							su.setType(skillIndex[i]);
 							su.setValue(finalSkill[i]);
 							su.setTrainType(ISkillChange.SKILLUP_FUTURE);
-							su.setDate(new Date(tw.getTrainingDate().getTime()));
+							su.setDate(new Date(tw.getTrainingDateAsTS().getTime()));
 							su.setAge(player.getAgeWithDaysAsString(su.getDate()));
 							su.setChange(change);
 							futureSkillups.add(su);

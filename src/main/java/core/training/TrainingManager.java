@@ -10,13 +10,10 @@ import core.model.match.*;
 import core.model.misc.TrainingEvent;
 import core.model.player.Player;
 import core.util.HOLogger;
-import core.util.HTCalendar;
-import core.util.HTCalendarFactory;
 import core.util.HelperWrapper;
-
 import java.sql.Timestamp;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
-
 import javax.swing.JOptionPane;
 
 import static java.lang.Integer.min;
@@ -24,8 +21,6 @@ import static java.lang.Integer.min;
 /**
  * Class that extract data from Database and calculates TrainingWeek and TrainingPoints earned from
  * players
- *
- * @author humorlos, Dragettho, thetom
  */
 public class TrainingManager {
     //~ Static fields/initializers -----------------------------------------------------------------
@@ -34,6 +29,7 @@ public class TrainingManager {
 
     //~ Instance fields ----------------------------------------------------------------------------
     private TrainingWeekManager _WeekManager;
+    private TrainingPerWeek nextWeekTraining;
     static final public boolean TRAININGDEBUG = false;
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -110,7 +106,7 @@ public class TrainingManager {
 	        	// get experience increase of national matches
 				if  ( inputPlayer.getNationalTeamID() != 0 && inputPlayer.getNationalTeamID() != myID){
 					// TODO check if national matches are stored in database
-					var nationalMatches = train.getMatches(inputPlayer.getNationalTeamID());
+					var nationalMatches = train.getNTmatches();
 					for (var match : nationalMatches){
 						MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), inputPlayer.getNationalTeamID());
 						minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
@@ -327,7 +323,35 @@ public class TrainingManager {
 		}
 	}
 
-	public TrainingPerWeek getLastTrainingWeek() {
-		return this._WeekManager.getLastTrainingWeek();
+	public TrainingPerWeek getNextWeekTraining() {
+    	if (nextWeekTraining == null){
+    		findLastTraining();
+		}
+		return nextWeekTraining;
 	}
+
+	private void findLastTraining(){
+
+    	if (_WeekManager != null){
+
+    		var nextTrainingDate = _WeekManager.getNextTrainingDate();
+
+    		for(var training: _WeekManager.getTrainingList()){
+    			if (training.getTrainingDate().equals(nextTrainingDate)){
+					nextWeekTraining = training;
+				}
+			}
+
+			TrainingWeekManager _trainingWeekManager = new TrainingWeekManager(nextTrainingDate.plus(-1, ChronoUnit.DAYS), nextTrainingDate.plus(1, ChronoUnit.DAYS), true);
+    		if (_trainingWeekManager.getTrainingList().size() == 1){
+				nextWeekTraining = _trainingWeekManager.getTrainingList().get(0);
+			}
+    		else{
+    			HOLogger.instance().error(this.getClass(), "Last training could not be determined");
+			}
+
+		}
+
+	}
+
 }

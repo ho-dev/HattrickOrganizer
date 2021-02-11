@@ -21,7 +21,7 @@ public class DateTimeInfo {
     private Instant m_instantUserLocalized;
     private ZonedDateTime m_zdtHattrick;
     private ZonedDateTime m_zdtUserLocalized;
-    private String m_sHattrick; // String as provided by aAttrick in xml files
+    private String m_sHattrick; // String as provided by Hattrick in xml files
 
 
     @Deprecated
@@ -59,6 +59,14 @@ public class DateTimeInfo {
         m_tsHattrick = Timestamp.from(m_instantHattrick);
         m_tsUserLocalized = Timestamp.from(m_instantUserLocalized);
     }
+
+
+    public DateTimeInfo(Timestamp ts) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MM dd");
+        String sDateTime = formatter.format(ts.toInstant());
+        new DateTimeInfo(sDateTime);
+    }
+
 
     private String cleanDateTimeString(String sDateTime) {
 
