@@ -39,6 +39,10 @@ public class HOVerwaltung {
 		return id;
 	}
 
+	public int getPreviousID() {
+		return m_clHoModel.getPreviousID();
+	}
+
 	private int id;
 
 	// ~ Constructors
@@ -91,13 +95,6 @@ public class HOVerwaltung {
 
 	public ResourceBundle getResource() {
 		return languageBundle;
-	}
-
-	/**
-	 * ersetzt das aktuelle model durch das aus der DB mit der angegebenen ID
-	 */
-	public void loadHoModel(int id) {
-		m_clHoModel = loadModel(id);
 	}
 
 	/**

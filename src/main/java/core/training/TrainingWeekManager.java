@@ -26,30 +26,52 @@ public class TrainingWeekManager {
 	private static final Instant m_NextTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate().toInstant();
 
     private List<TrainingPerWeek> m_Trainings;
-	private Instant m_StartDate;
-	private Instant m_EndDate;
-	private Boolean m_IncludeUpcomingGames;
+    private Instant m_StartDate;
+	private Boolean m_IncludeMatches;
+	private Boolean m_IncludeUpcomingMatches;
 
 
-	@Deprecated
-	private static TrainingWeekManager m_clInstance;
-
-	/**
-	 * Constructor (both dates are included)
-	 */
-	public TrainingWeekManager(Instant startDate, Instant endDate) {
-		this(startDate, endDate, false);
-	}
-
-	/**
-	 * Constructor (both dates are included)
-	 */
-	public TrainingWeekManager(Instant startDate, Instant endDate, boolean includeUpcomingGames) {
+	public TrainingWeekManager(Instant startDate, boolean includeMatches, boolean includeUpcomingMatches) {
 		m_StartDate = startDate;
-		m_EndDate = endDate;
-		m_IncludeUpcomingGames = includeUpcomingGames;
+		m_IncludeMatches = includeMatches;
+		m_IncludeUpcomingMatches = includeUpcomingMatches;
 		m_Trainings = computeTrainingList();
 	}
+
+
+	public TrainingWeekManager(int nbEntries, boolean includeMatches, boolean includeUpcomingMatches) {
+		m_StartDate = findStartDate(nbEntries);
+		m_IncludeMatches = includeMatches;
+		m_IncludeUpcomingMatches = includeUpcomingMatches;
+		m_Trainings = computeTrainingList();
+	}
+
+	private Instant findStartDate(int nbEntries){
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
+			String startDate = formatter.format(Instant.now().minus(1, ChronoUnit.YEARS));
+			String sql = String.format("""
+					SELECT TRAININGDATE	FROM XTRADATA WHERE XTRADATA.TRAININGDATE >= '%s' 
+					ORDER BY TRAININGDATE DESC LIMIT %s""",startDate, nbEntries);
+
+			Instant trainingDate = null;
+
+			try {
+
+				final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
+				final ResultSet rs = ijdbca.executeQuery(sql);
+				rs.beforeFirst();
+
+				while (rs.next()) {
+					trainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
+				}
+			}
+			catch (Exception e) {
+				HOLogger.instance().error(this.getClass(), "Error while performing findDefaultStartDate():  " + e);
+			}
+
+			return trainingDate;
+	}
+
 
 	/**
 	 * Create the list of trainings, by getting information from the database and completing the missing values
@@ -69,7 +91,7 @@ public class TrainingWeekManager {
 
 		Instant currDate = m_NextTrainingDate.minus(nbWeeks * 7, ChronoUnit.DAYS);
 
-		while((currDate.isBefore(m_EndDate) || currDate.equals(m_EndDate))){
+		while((currDate.isBefore(m_NextTrainingDate) || currDate.equals(m_NextTrainingDate))){
 			if (trainingsInDB.containsKey(currDate)){
 				trainings.add(trainingsInDB.get(currDate));
 			}
@@ -95,15 +117,15 @@ public class TrainingWeekManager {
 	}
 
 
+
 	/**
-	 * Fetch all trainings information from database
+	 * Fetch trainings information from database
 	 */
 	private HashMap<Instant, TrainingPerWeek> fetchTrainingListFromDB() {
 
 		HashMap<Instant, TrainingPerWeek> output = new HashMap<>();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
 		String startDate = formatter.format(m_StartDate);
-		String endDate = formatter.format(m_EndDate.plus(1, ChronoUnit.DAYS));
 		String sql = String.format("""
 					SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER
 					FROM XTRADATA
@@ -112,10 +134,10 @@ public class TrainingWeekManager {
 					INNER JOIN (
 					     SELECT TRAININGDATE, max(HRF_ID) MAX_HR_ID FROM XTRADATA GROUP BY TRAININGDATE
 					) IJ1 ON XTRADATA.HRF_ID = IJ1.MAX_HR_ID
-					WHERE XTRADATA.TRAININGDATE >= '%s' AND XTRADATA.TRAININGDATE < '%s'""",startDate, endDate);
+					WHERE XTRADATA.TRAININGDATE >= '%s'""",startDate);
 
 
-		int trainType, trainIntensity, trainStaminaPart, hrfId, trainingLevel;
+		int trainType, trainIntensity, trainStaminaPart, coachLevel, trainingAssistantLevel;
 		Instant trainingDate;
 
 
@@ -130,8 +152,9 @@ public class TrainingWeekManager {
 				trainIntensity = rs.getInt("TRAININGSINTENSITAET");
 				trainStaminaPart = rs.getInt("STAMINATRAININGPART");
 				trainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
-				trainingLevel = rs.getInt("COTRAINER");
-				TrainingPerWeek tpw = new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingLevel);
+				coachLevel = -1;  //TODO: fix this when #905 is implemented
+				trainingAssistantLevel = rs.getInt("COTRAINER");
+				TrainingPerWeek tpw = new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel, coachLevel, m_IncludeMatches, m_IncludeUpcomingMatches);
 				output.put(trainingDate, tpw);
 			}
 		}
@@ -143,28 +166,8 @@ public class TrainingWeekManager {
 	}
 
 
-	@Deprecated
-    /**
-     * Creates a new instance of TrainingsManager
-     */
-    private TrainingWeekManager() {
-    }
-
     //~ Methods ------------------------------------------------------------------------------------
 
-    /**
-     * Returns the instance of TrainingWeekManager.
-     * 
-     * @return instance of TrainingWeekManager
-     */
-	@Deprecated
-    public static TrainingWeekManager instance() {
-        if (m_clInstance == null) {
-            m_clInstance = new TrainingWeekManager();
-        }
-
-        return m_clInstance;
-    }
 
     
     /**

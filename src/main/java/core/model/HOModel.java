@@ -46,6 +46,7 @@ public class HOModel {
     private Verein m_clVerein;
     private XtraData m_clXtraDaten;
     private int m_iID = -1;
+    private int o_previousID;
     private List<StaffMember> m_clStaff;
     private List<YouthPlayer> youthPlayers;
     private List<MatchLineup> youthMatchLineups;
@@ -56,11 +57,13 @@ public class HOModel {
 
 	    if (DBManager.instance().isFirstStart()){
 	        m_iID = 0;
+            o_previousID = -1;
         }
 	    else {
 
             try {
-                m_iID = DBManager.instance().getMaxHrfId() + 1;
+                    o_previousID = DBManager.instance().getMaxHrfId();
+                    m_iID = o_previousID + 1;
             }
             catch (Exception e) {
                 HOLogger.instance().error(this.getClass(), "Error when trying to determine latest HRH_ID");
@@ -70,6 +73,7 @@ public class HOModel {
 
 	public HOModel(int id) {
 		m_iID = id;
+        o_previousID = DBManager.instance().getPreviousHRF(id);
 	}
 
 	//~ Methods ------------------------------------------------------------------------------------
@@ -228,6 +232,10 @@ public class HOModel {
      */
     public final int getID() {
         return m_iID;
+    }
+
+    public int getPreviousID() {
+        return o_previousID;
     }
 
     /**
@@ -473,15 +481,13 @@ public class HOModel {
      */
     public final void calcSubskills() {
 
-        final List<Player> vPlayer = getCurrentPlayers();
-        final int previousHrfId = DBManager.instance().getPreviousHRF(m_iID);
-        var trainingWeeks = getTrainingWeeks(previousHrfId);
+        var trainingWeeks = getTrainingWeeks(o_previousID);
         if ( trainingWeeks != null) {
             TrainingManager.instance().calculateTraining(
                     getXtraDaten().getTrainingDate(),
                     trainingWeeks,
                     getCurrentPlayers(),
-                    DBManager.instance().getSpieler(previousHrfId),
+                    DBManager.instance().getSpieler(o_previousID),
                     getTrainer().getTrainerSkill());
 
             // store new values of current players

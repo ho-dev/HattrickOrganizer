@@ -12,7 +12,6 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -28,12 +27,14 @@ public class TrainingPerWeek  {
     private int o_TrainingIntensity;
     private int o_StaminaShare;
     private int o_TrainingType;
+    private int o_CoachLevel;
     private int o_TrainingAssistantsLevel;
     private MatchKurzInfo[] o_Matches;
     private MatchKurzInfo[] o_NTmatches;
     private Instant o_TrainingDate;
     private String firstMatchDate, lastMatchDate;
-    private Boolean o_IncludeUpcomingGames;
+    private Boolean o_IncludeMatches;
+    private Boolean o_IncludeUpcomingMatches;
 
 
     @Deprecated
@@ -58,13 +59,15 @@ public class TrainingPerWeek  {
     private HattrickDate hattrickDate;
 
 
-    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, boolean includeUpcomingGames) {
+    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, boolean includeMatches, boolean includeUpcomingMatches) {
         o_TrainingDate = trainingDate;
         o_TrainingType = trainingType;
         o_TrainingIntensity = trainingIntensity;
         o_StaminaShare = staminaShare;
+        o_CoachLevel = coachLevel;
         o_TrainingAssistantsLevel = trainingAssistantsLevel;
-        o_IncludeUpcomingGames = includeUpcomingGames;
+        o_IncludeMatches = includeMatches;
+        o_IncludeUpcomingMatches = includeUpcomingMatches;
         var startDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
         firstMatchDate = cl_Formatter.format(startDate);
         lastMatchDate = cl_Formatter.format(o_TrainingDate.plus(23, ChronoUnit.HOURS));
@@ -72,10 +75,6 @@ public class TrainingPerWeek  {
         o_NTmatches = fetchNTMatches();
     }
 
-
-    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel) {
-        this(trainingDate, trainingType, trainingIntensity, staminaShare, trainingAssistantsLevel, false);
-    }
 
 
     /**
@@ -107,7 +106,7 @@ public class TrainingPerWeek  {
 
         final String where;
 
-        if (! o_IncludeUpcomingGames){
+        if (!o_IncludeUpcomingMatches){
             where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS=%s ORDER BY MatchDate DESC",
                     myClubID, myClubID, firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED);
         }

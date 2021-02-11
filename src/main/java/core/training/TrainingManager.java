@@ -5,8 +5,6 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
-import core.model.StaffMember;
-import core.model.match.*;
 import core.model.misc.TrainingEvent;
 import core.model.player.Player;
 import core.util.HOLogger;
@@ -16,21 +14,23 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import javax.swing.JOptionPane;
 
-import static java.lang.Integer.min;
-
 /**
- * Class that extract data from Database and calculates TrainingWeek and TrainingPoints earned from
- * players
+ * Singleton class that holds training information.
+ * The class is initilized during startup procedure
  */
 public class TrainingManager {
-    //~ Static fields/initializers -----------------------------------------------------------------
 
+	// singleton class
 	private static TrainingManager m_clInstance;
 
-    //~ Instance fields ----------------------------------------------------------------------------
-    private TrainingWeekManager _WeekManager;
-    private TrainingPerWeek nextWeekTraining;
-    static final public boolean TRAININGDEBUG = false;
+	private TrainingPerWeek nextWeekTraining;         // used to determine training bar, include upcoming game   => Created at initilization
+    private TrainingWeekManager recentTrainings;      // trainings information since last HRF used in regular subskill calculation  => Created at initilization
+	private TrainingWeekManager twoSeasonsTrainings;  // used for full subskill recacluation  => Created at request of user (full subskill recalculation action)
+	private TrainingWeekManager shortTrainingsWM;     // used to populate  training history, no match information => Created at initilization
+	private TrainingWeekManager longTrainingsWM;      // used to populate  training history, no match information => Created at request of user (view full history in training history panel) //TODO: implement this option in training history
+
+	public static final boolean TRAININGDEBUG = false;
+
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -38,16 +38,22 @@ public class TrainingManager {
      * Creates a new instance of TrainingsManager
      */
     private TrainingManager() {
-        _WeekManager = TrainingWeekManager.instance();
+
+        recentTrainings = new TrainingWeekManager(2, true, false);
+
+		TrainingWeekManager _trainingWeekManager = new TrainingWeekManager(1, true, true);
+		if (_trainingWeekManager.getTrainingList().size() == 1){
+			nextWeekTraining = _trainingWeekManager.getTrainingList().get(0);
+		}
+		else{
+			HOLogger.instance().error(this.getClass(), "Last training could not be determined");
+		}
+
+		shortTrainingsWM =  new TrainingWeekManager(7, false, false);
+
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
 
-    /**
-     * Returns a singleton TrainingManager object
-     *
-     * @return instance of TrainingManager
-     */
     public static TrainingManager instance() {
         if (m_clInstance == null) {
             m_clInstance = new TrainingManager();
@@ -56,19 +62,16 @@ public class TrainingManager {
     }
 
     public List<TrainingPerWeek> getTrainingWeekList() {
-        return _WeekManager.getTrainingList();
-    }
-
-    public List<TrainingPerWeek> refreshTrainingWeeks() {
-        return _WeekManager.refreshTrainingList();
+        return recentTrainings.getTrainingList();
     }
 
 
-	/*
-     * Recalculates all sub skills for all players
-     *
-     * @param showBar show progress bar
-     */
+	public TrainingPerWeek getNextWeekTraining() {
+		return nextWeekTraining;
+	}
+
+
+    @Deprecated
     public void recalcSubskills(boolean showBar) {
         if (JOptionPane.showConfirmDialog(HOMainFrame.instance(),
         		HOVerwaltung.instance().getLanguageString("SubskillRecalcFull"),
@@ -77,6 +80,8 @@ public class TrainingManager {
         }
     }
 
+
+	@Deprecated
 	public void calculateTraining(Timestamp nextTrainingDate,
 								  List<TrainingPerWeek> trainingList,
 								  List<Player> currentPlayers,
@@ -219,6 +224,7 @@ public class TrainingManager {
 		}
 	}
 
+	@Deprecated
 	private void logPlayerProgress (Player before, Player after) {
 
 		if ((after == null) || (before == null)) {
@@ -251,35 +257,6 @@ public class TrainingManager {
 		}
 	}
 
-	public TrainingPerWeek getNextWeekTraining() {
-    	if (nextWeekTraining == null){
-    		findLastTraining();
-		}
-		return nextWeekTraining;
-	}
 
-	private void findLastTraining(){
-
-    	if (_WeekManager != null){
-
-    		var nextTrainingDate = _WeekManager.getNextTrainingDate();
-
-    		for(var training: _WeekManager.getTrainingList()){
-    			if (training.getTrainingDate().equals(nextTrainingDate)){
-					nextWeekTraining = training;
-				}
-			}
-
-			TrainingWeekManager _trainingWeekManager = new TrainingWeekManager(nextTrainingDate.plus(-1, ChronoUnit.DAYS), nextTrainingDate.plus(1, ChronoUnit.DAYS), true);
-    		if (_trainingWeekManager.getTrainingList().size() == 1){
-				nextWeekTraining = _trainingWeekManager.getTrainingList().get(0);
-			}
-    		else{
-    			HOLogger.instance().error(this.getClass(), "Last training could not be determined");
-			}
-
-		}
-
-	}
 
 }

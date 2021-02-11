@@ -110,36 +110,10 @@ public final class HRFTable extends AbstractTable {
 	}
 
 	/**
-	 * Sucht das letzte HRF zwischen dem angegebenen Datum und 6 Tagen davor
-	 * Wird kein HRF gefunden wird -1 zurückgegeben
-	 */
-	int getFollowingHRF(int hrfId) {
-		String sql;
-		int followingHrfId = -1;
-
-		sql = "select * from " + getTableName() + " where datum > (select DATUM from "
-				+ getTableName() + " where HRF_ID=" + hrfId + ") order by datum asc";
-
-		final ResultSet rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				if (rs.first()) {
-					followingHrfId = rs.getInt("HRF_ID");
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DBZugriff.getFollowingHRF: " + e.toString());
-		}
-
-		return followingHrfId;
-	}
-
-	/**
 	 * speichert das Verein
 	 */
 	void saveHRF(int hrfId, String name, Timestamp datum) {
-		String statement = null;
+		String statement;
 
 		// insert vorbereiten
 		statement = "INSERT INTO " + getTableName() + " ( HRF_ID, Name, Datum ) VALUES(";

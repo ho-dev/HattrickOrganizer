@@ -61,5 +61,6 @@ final class TrainingsTable extends AbstractTable {
 
 		return vTrainings;
 	}
+
 	
 }
