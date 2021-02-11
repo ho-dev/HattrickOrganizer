@@ -20,10 +20,10 @@ public class YouthPlayerDetailsColumn extends UserColumn {
         this.setDisplay(true);
     }
 
-    public IHOTableEntry getTableEntry(TrainingDevelopmentEntry youthTraining) {
+    public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry youthTraining) {
         return new ColorLabelEntry(getValue(youthTraining), ColorLabelEntry.BG_STANDARD, false, 0);
     }
-    public int getValue(TrainingDevelopmentEntry youthTraining){
+    public int getValue(YouthTrainingDevelopmentEntry youthTraining){
         return youthTraining.getMatchId();
     }
 

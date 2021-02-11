@@ -135,9 +135,9 @@ public class YouthTraining {
         return getMatchLineup().getMatchType();
     }
 
-    public SkillInfo calcSkill(SkillInfo value, YouthPlayer player, MatchLineupTeam team) {
+    public YouthSkillInfo calcSkill(YouthSkillInfo value, YouthPlayer player, MatchLineupTeam team) {
 
-        var ret = new SkillInfo(value.getSkillID());
+        var ret = new YouthSkillInfo(value.getSkillID());
         ret.setMax(value.getMax());
         ret.setCurrentLevel(value.getCurrentLevel());
         ret.setMaxReached(value.isMaxReached());
@@ -157,7 +157,7 @@ public class YouthTraining {
         return ret;
     }
 
-    private double calcSkillIncrement(SkillInfo value, YouthPlayer player, MatchLineupTeam lineupTeam) {
+    private double calcSkillIncrement(YouthSkillInfo value, YouthPlayer player, MatchLineupTeam lineupTeam) {
         double ret = 0;
         var matchTypeFactor = getMatchTypeFactor();
         YouthTrainingType primaryTraining = null;

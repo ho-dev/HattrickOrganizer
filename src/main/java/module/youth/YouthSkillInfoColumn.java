@@ -7,9 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
-public class SkillInfoColumn extends JLabel implements IHOTableEntry {
+public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
 
-    SkillInfo skillInfo;
+    YouthSkillInfo skillInfo;
 
     private static final Color Color_MaxReached = Color.red;
     private static final Color Color_PossibleRange = new Color(0, 255, 0, 100);
@@ -19,7 +19,7 @@ public class SkillInfoColumn extends JLabel implements IHOTableEntry {
     private static final int bar_width = 100; // pixels to display skill range from 0 to 9 (8.3)
     private static final int bar_thickness = 12;
 
-    public SkillInfoColumn(SkillInfo info) {
+    public YouthSkillInfoColumn(YouthSkillInfo info) {
         this.skillInfo = info;
         this.updateComponent();
     }
@@ -47,8 +47,8 @@ public class SkillInfoColumn extends JLabel implements IHOTableEntry {
 
     @Override
     public int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof SkillInfoColumn) {
-            final SkillInfoColumn entry = (SkillInfoColumn) obj;
+        if (obj instanceof YouthSkillInfoColumn) {
+            final YouthSkillInfoColumn entry = (YouthSkillInfoColumn) obj;
             return Double.compare(this.skillInfo.getCurrentValue(), entry.skillInfo.getCurrentValue());
         }
         return 0;

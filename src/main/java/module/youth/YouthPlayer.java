@@ -51,7 +51,7 @@ public class YouthPlayer {
      * <p>
      * mapping skill id to skill info
      */
-    private SkillsInfo currentSkills = new SkillsInfo();
+    private YouthSkillsInfo currentSkills = new YouthSkillsInfo();
 
     /**
      * Comments of the scout at player's arrival (not used yet)
@@ -69,7 +69,7 @@ public class YouthPlayer {
      * <p>
      * mapping training match date to development entry
      */
-    private TreeMap<Timestamp, TrainingDevelopmentEntry> trainingDevelopment;
+    private TreeMap<Timestamp, YouthTrainingDevelopmentEntry> trainingDevelopment;
 
     public YouthPlayer() {
 
@@ -322,7 +322,7 @@ public class YouthPlayer {
         this.youthMatchDate = youthMatchDate;
     }
 
-    public SkillInfo getSkillInfo(Skills.HTSkillID skillID) {
+    public YouthSkillInfo getSkillInfo(Skills.HTSkillID skillID) {
         return this.currentSkills.get(skillID);
     }
 
@@ -372,11 +372,11 @@ public class YouthPlayer {
 
     public static Skills.HTSkillID[] skillIds = {Keeper, Defender, Playmaker, Winger, Passing, Scorer, SetPieces};
 
-    public void setSkillInfo(SkillInfo skillinfo) {
+    public void setSkillInfo(YouthSkillInfo skillinfo) {
         this.currentSkills.put(skillinfo.getSkillID(), skillinfo);
     }
 
-    public TreeMap<Timestamp, TrainingDevelopmentEntry> getTrainingDevelopment() {
+    public TreeMap<Timestamp, YouthTrainingDevelopmentEntry> getTrainingDevelopment() {
         if (trainingDevelopment == null) {
             // init from models match list
             trainingDevelopment = new TreeMap<>();
@@ -393,7 +393,7 @@ public class YouthPlayer {
                 }
                 var team = training.getTeam(teamId);
                 if (team.hasPlayerPlayed(this.id)) {
-                    var trainingEntry = new TrainingDevelopmentEntry(this, training);
+                    var trainingEntry = new YouthTrainingDevelopmentEntry(this, training);
                     skills = trainingEntry.calcSkills(skills, getSkillsAt(training.getMatchDate()), team);
                     trainingDevelopment.put(training.getMatchDate(), trainingEntry);
                 }
@@ -404,10 +404,10 @@ public class YouthPlayer {
         return trainingDevelopment;
     }
 
-    private SkillsInfo getStartSkills() {
-        SkillsInfo startSkills = new SkillsInfo();
+    private YouthSkillsInfo getStartSkills() {
+        YouthSkillsInfo startSkills = new YouthSkillsInfo();
         for (var skill : this.currentSkills.values()) {
-            var startSkill = new SkillInfo(skill.getSkillID());
+            var startSkill = new YouthSkillInfo(skill.getSkillID());
             var startValue = skill.getStartValue();
             startSkill.setCurrentValue(startValue);
             startSkill.setStartLevel(skill.getStartLevel());
@@ -422,7 +422,7 @@ public class YouthPlayer {
         return startSkills;
     }
 
-    private SkillsInfo getSkillsAt(Timestamp date) {
+    private YouthSkillsInfo getSkillsAt(Timestamp date) {
         if (!date.equals(this.youthMatchDate)) {
             var oldPlayerInfo = DBManager.instance().loadYouthPlayerOfMatchDate(this.id, date);
             if (oldPlayerInfo != null) {
@@ -638,9 +638,9 @@ public class YouthPlayer {
         return false;
     }
 
-    private SkillInfo parseSkillInfo(Properties properties, Skills.HTSkillID skillID) {
+    private YouthSkillInfo parseSkillInfo(Properties properties, Skills.HTSkillID skillID) {
         var skill = skillID.toString().toLowerCase(java.util.Locale.ENGLISH) + "skill";
-        var skillInfo = new SkillInfo(skillID);
+        var skillInfo = new YouthSkillInfo(skillID);
         skillInfo.setCurrentLevel(getInteger(properties, skill));
         skillInfo.setMax(getInteger(properties, skill + "max"));
         skillInfo.setMaxReached(getBoolean(properties, skill + "ismaxreached", false));
@@ -841,7 +841,7 @@ public class YouthPlayer {
 
     private void calcMaxSkills17() {
         if (this.getAgeYears() >16) {
-            SkillsInfo skill17 = null;
+            YouthSkillsInfo skill17 = null;
             if (this.getTrainingDevelopment().size() > 0) {
                 for (var entry : this.getTrainingDevelopment().values()) {
                     if (entry.getPlayerAgeYears() > 16) {

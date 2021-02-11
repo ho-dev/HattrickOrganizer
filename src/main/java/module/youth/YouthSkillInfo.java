@@ -2,7 +2,7 @@ package module.youth;
 
 import module.training.Skills;
 
-public class SkillInfo {
+public class YouthSkillInfo {
 
     /**
      * Skill Id
@@ -49,7 +49,7 @@ public class SkillInfo {
      */
     private Double potential17Value;
 
-    public SkillInfo(Skills.HTSkillID id) {
+    public YouthSkillInfo(Skills.HTSkillID id) {
         this.skillID = id;
     }
 

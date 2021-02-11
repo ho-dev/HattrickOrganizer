@@ -6,23 +6,22 @@ import core.model.player.Player;
 import module.training.Skills;
 
 import java.sql.Timestamp;
-import java.util.Map;
 
-public class TrainingDevelopmentEntry {
+public class YouthTrainingDevelopmentEntry {
     private YouthPlayer player;
     private YouthTraining training;
-    private SkillsInfo skills;
+    private YouthSkillsInfo skills;
 
-    public TrainingDevelopmentEntry(YouthPlayer player, YouthTraining training) {
+    public YouthTrainingDevelopmentEntry(YouthPlayer player, YouthTraining training) {
         this.training = training;
         this.player = player;
     }
 
-    public void setSkills(SkillsInfo startSkills) {
+    public void setSkills(YouthSkillsInfo startSkills) {
         this.skills = startSkills;
     }
 
-    public void setSkillConstraints(YouthPlayer player, SkillsInfo skillConstraints) {
+    public void setSkillConstraints(YouthPlayer player, YouthSkillsInfo skillConstraints) {
         if (skillConstraints != null) {
             for (var constraint : skillConstraints.values()) {
                 var skill = this.skills.get(constraint.getSkillID());
@@ -41,9 +40,9 @@ public class TrainingDevelopmentEntry {
         }
     }
 
-    public SkillsInfo calcSkills(SkillsInfo startSkills, SkillsInfo skillConstraints, MatchLineupTeam team) {
+    public YouthSkillsInfo calcSkills(YouthSkillsInfo startSkills, YouthSkillsInfo skillConstraints, MatchLineupTeam team) {
         if ( this.skills == null){
-            this.skills = new SkillsInfo();
+            this.skills = new YouthSkillsInfo();
         }
         for (var skill : startSkills.values()) {
             this.skills.put(skill.getSkillID(), training.calcSkill(skill, player, team));
@@ -90,7 +89,7 @@ public class TrainingDevelopmentEntry {
         return this.training.getPlayerTrainedSectors(this.player.getId());
     }
 
-    public SkillsInfo getSkills() {
+    public YouthSkillsInfo getSkills() {
         return this.skills;
     }
 
