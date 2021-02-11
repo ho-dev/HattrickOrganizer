@@ -163,7 +163,6 @@ public class TrainingPerWeek  {
         this.o_StaminaShare = stamina;
     }
 
-    @Deprecated
     public final int getStaminaPart() {
         return this.o_StaminaShare;
     }
@@ -173,7 +172,6 @@ public class TrainingPerWeek  {
         this.o_TrainingIntensity = intensity;
     }
 
-    @Deprecated
     public final int getTrainingIntensity() {
         return this.o_TrainingIntensity;
     }
@@ -278,8 +276,7 @@ public class TrainingPerWeek  {
 	 * 
 	 * @return an integer with the number of assistants
 	 */
-    @Deprecated
-	public int getO_TrainingAssistantsLevel() {
+	public int getTrainingAssistantsLevel() {
 		return o_TrainingAssistantsLevel;
 	}
 	

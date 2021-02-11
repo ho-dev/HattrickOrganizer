@@ -149,8 +149,7 @@ public class TrainingManager {
 								  List<TrainingPerWeek> trainingList,
 								  List<Player> currentPlayers,
 								  List<Player> previousPlayers,
-								  int trainerSkill,
-								  List<StaffMember> staff) {
+								  int trainerSkill) {
 
 		// Generate a map of players from the previous hrf.
 		final Map<Integer, Player> playerOfPreviousDownload = new HashMap<>();
@@ -254,10 +253,7 @@ public class TrainingManager {
 
 						calculationPlayer.calcIncrementalSubskills(tmpOld,
 								trainerSkill,
-								tpw.getTrainingIntensity(),
-								tpw.getStaminaPart(),
-								tpw,
-								staff);
+								tpw);
 
 						if (iter.hasNext()) {
 							// Use calculated skills and subskills as "old" if there is another week in line...

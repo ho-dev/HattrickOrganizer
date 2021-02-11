@@ -172,9 +172,10 @@ public class OutputTableModel extends AbstractTableModel {
         WeeklyTrainingType wt = WeeklyTrainingType.instance(Skills.getTrainedSkillCode(skillIndex));
         if (wt != null) {
             dReturn = wt.getTrainingLength(player,
-                    this.model.getTrainerLevel(), HOVerwaltung.instance().getModel().getTeam()
-                            .getTrainingslevel(), HOVerwaltung.instance().getModel().getTeam()
-                            .getStaminaTrainingPart(), HOVerwaltung.instance().getModel().getStaff());
+                    this.model.getTrainerLevel(),
+                    HOVerwaltung.instance().getModel().getTeam().getTrainingslevel(),
+                    HOVerwaltung.instance().getModel().getTeam().getStaminaTrainingPart(),
+                    HOVerwaltung.instance().getModel().getClub().getCoTrainer());
         }
         return dReturn;
     }

@@ -1828,13 +1828,13 @@ public class Player {
         return PlayerSpeciality.getImpactWeatherEffect(weather, iPlayerSpecialty);
     }
 
-    private void incrementSubskills(Player originalPlayer, int trainerlevel, int intensity,
-                                    int stamina, int skill, double points, WeeklyTrainingType wt, List<StaffMember> staff, TrainingPerPlayer trForPlayer) {
+    private void incrementSubskills(Player originalPlayer, int trainerlevel, int skill, double points, WeeklyTrainingType wt, TrainingPerPlayer trForPlayer) {
         if (skill < PlayerSkill.KEEPER || points <= 0)
             return;
 
-        var trainingLength = wt.getTrainingLength(this, trainerlevel, intensity, stamina, staff);
-        var trainingAlternativeFormula = wt.getTrainingAlternativeFormula(this, trainerlevel, intensity, stamina, originalPlayer.getValue4Skill(skill), staff, trForPlayer, skill==wt.getPrimaryTrainingSkill());
+        var trainingLength = wt.getTrainingLength(this, trainerlevel, trForPlayer.getTrainingWeek().getTrainingIntensity(), trForPlayer.getTrainingWeek().getStaminaPart(), trForPlayer.getTrainingWeek().getTrainingAssistantsLevel());
+
+        var trainingAlternativeFormula = wt.getTrainingAlternativeFormula(this, trainerlevel, originalPlayer.getValue4Skill(skill), trForPlayer, skill==wt.getPrimaryTrainingSkill());
 
         HOLogger.instance().info(this.getClass(),
                 this.getLastName()+ "; " + PlayerSkill.toString(skill) +
@@ -1866,13 +1866,9 @@ public class Player {
      *
      * @param originalPlayer - The player to calculate subskills on
      * @param trainerlevel   - The trainer level
-     * @param intensity      - Training intensity
-     * @param stamina
      * @param trainingWeek
-     * @param staff
      */
-    public void calcIncrementalSubskills(Player originalPlayer, int trainerlevel, int intensity,
-                                         int stamina, TrainingPerWeek trainingWeek, List<StaffMember> staff) {
+    public void calcIncrementalSubskills(Player originalPlayer, int trainerlevel, TrainingPerWeek trainingWeek) {
 
         if (this.hasTrainingBlock()) {
             return;
@@ -1898,11 +1894,9 @@ public class Player {
 
         WeeklyTrainingType wt = WeeklyTrainingType.instance(trainingWeek.getTrainingType());
 
-        incrementSubskills(originalPlayer, trainerlevel, intensity, stamina,
-                wt.getPrimaryTrainingSkill(), tp.getPrimary(), wt, staff, trForPlayer);
+        incrementSubskills(originalPlayer, trainerlevel, wt.getPrimaryTrainingSkill(), tp.getPrimary(), wt, trForPlayer);
 
-        incrementSubskills(originalPlayer, trainerlevel, intensity, stamina,
-                wt.getSecondaryTrainingSkill(), tp.getSecondary(), wt, staff, trForPlayer);
+        incrementSubskills(originalPlayer, trainerlevel, wt.getSecondaryTrainingSkill(), tp.getSecondary(), wt, trForPlayer);
 
         addExperienceSub(trForPlayer.getExperienceSub());
 
