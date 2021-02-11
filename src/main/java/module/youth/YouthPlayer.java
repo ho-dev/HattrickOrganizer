@@ -66,7 +66,7 @@ public class YouthPlayer {
     /**
      * player's training development.
      * One entry for each training match the player has participated
-     * <p>
+     *
      * mapping training match date to development entry
      */
     private TreeMap<Timestamp, YouthTrainingDevelopmentEntry> trainingDevelopment;
