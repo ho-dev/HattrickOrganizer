@@ -8,12 +8,15 @@ import core.gui.comp.table.TableSorter;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.module.config.ModuleConfig;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
 import static java.lang.Math.max;
+import static module.youth.YouthPanel.YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION;
 
 public class YouthPlayerView extends ImagePanel implements Refreshable, ListSelectionListener {
 
@@ -46,6 +49,9 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         RefreshManager.instance().registerRefreshable(this);
         playerOverviewTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
         playerDetailsTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
+
+        var dividerLocation = ModuleConfig.instance().getInteger(YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION);
+        if (dividerLocation != null) verticalSplitPane.setDividerLocation(dividerLocation);
         this.add(verticalSplitPane);
     }
 

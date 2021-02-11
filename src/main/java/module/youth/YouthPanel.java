@@ -1,11 +1,14 @@
 package module.youth;
 
 import core.model.HOVerwaltung;
+import core.module.config.ModuleConfig;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class YouthPanel extends JPanel {
+
+    public static final String YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION = "YouthPlayerView.VerticalSplitPosition";
 
     private YouthPlayerView youthPlayerView;
     private YouthTrainingView youthTrainingView;
@@ -28,5 +31,7 @@ public class YouthPanel extends JPanel {
     public void storeUserSettings() {
         youthPlayerView.storeUserSettings();
         youthTrainingView.storeUserSettings();
+
+        ModuleConfig.instance().setInteger(YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION, ((JSplitPane)youthPlayerView.getComponent(0)).getDividerLocation());
     }
 }
