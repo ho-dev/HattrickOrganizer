@@ -8,7 +8,9 @@ import core.db.DBManager;
 import core.model.FactorObject;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
-import core.model.StaffMember;
+import core.model.match.MatchLineupTeam;
+import core.model.match.MatchType;
+import core.model.match.SourceSystem;
 import core.model.match.Weather;
 import core.model.misc.TrainingEvent;
 import core.net.OnlineWorker;
@@ -20,6 +22,8 @@ import core.util.HelperWrapper;
 
 import java.sql.Timestamp;
 import java.util.*;
+
+import static java.lang.Integer.min;
 
 public class Player {
     //~ Class fields -------------------------------------------------------------------------------
@@ -1877,12 +1881,12 @@ public class Player {
         if (trainingWeek == null)
             return;
 
-        TrainingPerPlayer trForPlayer = TrainingManager.instance().calculateWeeklyTrainingForPlayer(this, trainingWeek);
+        TrainingPerPlayer trainingForPlayer = calculateWeeklyTraining(trainingWeek);
 
-        if (trForPlayer == null)
+        if (trainingForPlayer == null)
             return;
 
-        TrainingPoints tp = trForPlayer.getTrainingPair();
+        TrainingPoints tp = trainingForPlayer.getTrainingPair();
 
         if (tp == null)
             return;
@@ -1894,19 +1898,78 @@ public class Player {
 
         WeeklyTrainingType wt = WeeklyTrainingType.instance(trainingWeek.getTrainingType());
 
-        incrementSubskills(originalPlayer, trainerlevel, wt.getPrimaryTrainingSkill(), tp.getPrimary(), wt, trForPlayer);
+        incrementSubskills(originalPlayer, trainerlevel, wt.getPrimaryTrainingSkill(), tp.getPrimary(), wt, trainingForPlayer);
 
-        incrementSubskills(originalPlayer, trainerlevel, wt.getSecondaryTrainingSkill(), tp.getSecondary(), wt, trForPlayer);
+        incrementSubskills(originalPlayer, trainerlevel, wt.getSecondaryTrainingSkill(), tp.getSecondary(), wt, trainingForPlayer);
 
-        addExperienceSub(trForPlayer.getExperienceSub());
+        addExperienceSub(trainingForPlayer.getExperienceSub());
 
+    }
+
+    /**
+     * Training for given player for each skill
+     *
+     * @param train preset Trainingweeks
+     *
+     * @return TrainingPerPlayer
+     */
+    public TrainingPerPlayer calculateWeeklyTraining(TrainingPerWeek train) {
+        final int playerID = this.getPlayerID();
+        TrainingPerPlayer output = new TrainingPerPlayer(this);
+        if (train == null || train.getTrainingType() < 0) {
+            return output;
+        }
+
+        WeeklyTrainingType wt = WeeklyTrainingType.instance(train.getTrainingType());
+        if (wt != null) {
+            try {
+                var matches = train.getMatches();
+                int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+                TrainingWeekPlayer tp = new TrainingWeekPlayer(this);
+                int minutes=0;
+                for (var match : matches) {
+                    //Get the MatchLineup by id
+                    MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), myID);
+                    //MatchStatistics ms = new MatchStatistics(match, mlt);
+                    MatchType type = mlt.getMatchType();
+                    boolean walkoverWin = match.getMatchdetails().isWalkoverMatchWin(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
+                    if ( type != MatchType.MASTERS) { // MASTERS counts only for experience
+                        tp.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getFullTrainingSectors(), walkoverWin));
+                        tp.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getBonusTrainingSectors(), walkoverWin));
+                        tp.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getPartlyTrainingSectors(), walkoverWin));
+                        tp.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getOsmosisTrainingSectors(), walkoverWin));
+                    }
+                    tp.addPlayedMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin));
+                    output.addExperienceIncrease(min(90,tp.getPlayedMinutes() - minutes), type );
+                    minutes = tp.getPlayedMinutes();
+                }
+                TrainingPoints trp = new TrainingPoints(wt, tp);
+
+                // get experience increase of national matches
+                if  ( this.getNationalTeamID() != 0 && this.getNationalTeamID() != myID){
+                    // TODO check if national matches are stored in database
+                    var nationalMatches = train.getNTmatches();
+                    for (var match : nationalMatches){
+                        MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), this.getNationalTeamID());
+                        minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
+                        if ( minutes > 0 ) {
+                            output.addExperienceIncrease(min(90,minutes), mlt.getMatchType());
+                        }
+                    }
+                }
+                output.setTrainingPair(trp);
+                output.setTrainingWeek(train);
+            } catch (Exception e) {
+                HOLogger.instance().log(getClass(),e);
+            }
+        }
+        return output;
     }
 
     private void addExperienceSub(double experienceSub) {
         this.subExperience += experienceSub;
         if ( this.subExperience > .99) this.subExperience = .99;
     }
-
 
     /**
      * Performs skill drops on the player based on age and skills

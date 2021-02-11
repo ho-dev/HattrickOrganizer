@@ -63,75 +63,7 @@ public class TrainingManager {
         return _WeekManager.refreshTrainingList();
     }
 
-    /**
-     * Training for given player for each skill
-     *
-     * @param inputPlayer Player to use
-     * @param train preset Trainingweeks
-     *
-     * @return TrainingPerPlayer
-     */
-    public TrainingPerPlayer calculateWeeklyTrainingForPlayer(Player inputPlayer, TrainingPerWeek train) {
- 		final int playerID = inputPlayer.getPlayerID();
-        TrainingPerPlayer output = new TrainingPerPlayer(inputPlayer);
-        if (train == null || train.getTrainingType() < 0) {
-            return output;
-        }
 
-        WeeklyTrainingType wt = WeeklyTrainingType.instance(train.getTrainingType());
-        if (wt != null) {
-	        try {
-	        	var matches = train.getMatches();
-	        	int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-	        	TrainingWeekPlayer tp = new TrainingWeekPlayer(inputPlayer);
-	            int minutes=0;
-	        	for (var match : matches) {
-	                //Get the MatchLineup by id
-	                MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), myID);
-	                //MatchStatistics ms = new MatchStatistics(match, mlt);
-					MatchType type = mlt.getMatchType();
-					boolean walkoverWin = match.getMatchdetails().isWalkoverMatchWin(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
-					if ( type != MatchType.MASTERS) { // MASTERS counts only for experience
-						tp.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getFullTrainingSectors(), walkoverWin));
-						tp.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getBonusTrainingSectors(), walkoverWin));
-						tp.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getPartlyTrainingSectors(), walkoverWin));
-						tp.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getOsmosisTrainingSectors(), walkoverWin));
-					}
-					tp.addPlayedMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin));
-					output.addExperienceIncrease(min(90,tp.getPlayedMinutes() - minutes), type );
-	                minutes = tp.getPlayedMinutes();
-				}
-	            TrainingPoints trp = new TrainingPoints(wt, tp);
-
-	        	// get experience increase of national matches
-				if  ( inputPlayer.getNationalTeamID() != 0 && inputPlayer.getNationalTeamID() != myID){
-					// TODO check if national matches are stored in database
-					var nationalMatches = train.getNTmatches();
-					for (var match : nationalMatches){
-						MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), inputPlayer.getNationalTeamID());
-						minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
-						if ( minutes > 0 ) {
-							output.addExperienceIncrease(min(90,minutes), mlt.getMatchType());
-						}
-					}
-				}
-
-	    		if (TrainingManager.TRAININGDEBUG) {
-					HOLogger.instance().debug(getClass(), "Week " + train.getHattrickDate().getWeek()
-	            		+": Player " + inputPlayer.getFullName() + " (" + playerID + ")"
-	            		+" played total " + tp.getPlayedMinutes() + " mins for training purposes and got "
-	            		+ wt.getPrimaryTraining(tp) + " primary training points and "
-	            		+ wt.getSecondaryTraining(tp) + " secondary training points");
-	    		}
-	            output.setTrainingPair(trp);
-	            output.setTrainingWeek(train);
-	        } catch (Exception e) {
-	            HOLogger.instance().log(getClass(),e);
-	        }
-        }
-        return output;
-    }
-    
 	/*
      * Recalculates all sub skills for all players
      *
