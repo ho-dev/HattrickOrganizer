@@ -501,12 +501,12 @@ public class HOModel {
     		for (TrainingPerWeek tpw : rawTrainingList) {
     			// We want to add all weeks with nextTraining after the previous date, and stop
     			// when we are after the current date.
-    			
-    			if (tpw.getNextTrainingDate().after(trainingDateOfCurrentHRF)) {
-    				break;
-    			}
-    			
-    			if (tpw.getNextTrainingDate().after(trainingDateOfPreviousHRF)) {
+
+                if (tpw.getTrainingDateAsTS().after(trainingDateOfCurrentHRF)) {
+                    break;
+                }
+
+                if (tpw.getNextTrainingDate().after(trainingDateOfPreviousHRF)) {
     			    if(TrainingManager.TRAININGDEBUG) {
                         HTCalendar htcP;
                         String htcPs;
