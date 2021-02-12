@@ -3,12 +3,18 @@ package core.util;
 import core.model.UserParameter;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class DateTimeUtils {
+
+	private static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
 
 	/**
 	 * Utility class - private constructor enforces noninstantiability.
@@ -34,6 +40,14 @@ public class DateTimeUtils {
 		String res = "TIMESTAMP '" + sdf.format(date) + "'";
 		return res;
 	}
+
+	/**
+	 converts an Instant into a SQL timestamp
+	 */
+	public static String InstantToSQLtimeStamp(Instant instant) {
+		return cl_Formatter.format(instant);
+	}
+
 
 	/**
 	 * Creates a new <code>Date</code> based on the given date with the time set

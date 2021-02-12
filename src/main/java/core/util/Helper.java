@@ -113,21 +113,7 @@ public class Helper {
         return (int) (((float) width) * core.model.UserParameter.instance().zellenbreitenFaktor);
     }
 
-    /**
-     * Macht aus einem double[] mit Timevalues einen formatierten String[]
-     *
-     */
-    public static String[] convertTimeMillisToFormatString(double[] timewerte) {
-        final String[] returnwerte = new String[timewerte.length];
-
-        for (int i = 0; i < returnwerte.length; i++) {
-            returnwerte[i] = java.text.DateFormat.getDateInstance().format(new java.util.Date((long) timewerte[i]));
-        }
-
-        return returnwerte;
-    }
-
-    ////Debug CacheTest------------------------------------------------
+	////Debug CacheTest------------------------------------------------
 
     /**
      * Überprüft den Inhalt eines Textfields, ob der Wert aus ints mit , getrennt besteht,

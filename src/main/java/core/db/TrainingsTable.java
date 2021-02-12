@@ -2,6 +2,7 @@ package core.db;
 
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
+import core.util.DateTimeUtils;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Types;
@@ -35,20 +36,33 @@ final class TrainingsTable extends AbstractTable {
 		columns[6]= new ColumnDescriptor("SOURCE",Types.INTEGER,false);
 	}
 
-	// TODO: repair this function and delete error message when this is done
+	/**
+	 * save provided training in database
+	 */
 	void saveTraining(TrainingPerWeek training) {
-//		if (training != null) {
-//			final String[] awhereS = { "Week", "Year" };
-//			final String[] awhereV = { "" + training.getWeek(), "" + training.getYear()};
-//
-//			delete( awhereS, awhereV );
-//
-//			String statement = "INSERT INTO "+getTableName()+" ( Week, Year, Typ, Intensity, StaminaTrainingPart ) VALUES ( ";
-//			statement += (training.getWeek() + ", " + training.getYear() + ", " + training.getTrainingType() + ", " + training.getTrainingIntensity() + ", " + training.getStaminaPart() + " )");
-//
-//			adapter.executeUpdate(statement);
-//		}
-		HOLogger.instance().error(this.getClass(), "TrainingsTable.saveTraining() is currently broken");
+
+		if (training != null) {
+			String trainingDate = DateTimeUtils.InstantToSQLtimeStamp(training.getTrainingDate());
+
+			delete(new String[]{"TRAINING_DATE"}, new String[]{trainingDate});
+
+			String statement = "INSERT INTO " + getTableName() + " (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL, SOURCE) VALUES (";
+			statement += trainingDate + ", ";
+			statement += training.getTrainingType() + ", ";
+			statement += training.getTrainingIntensity() + ", ";
+			statement += training.getStaminaPart() + ", ";
+			statement += training.getCoachLevel() + ", ";
+			statement += training.getTrainingAssistantsLevel() + ", ";
+			statement += training.getSource().getValue() + ")";
+
+			try {
+				adapter.executeUpdate(statement);
+			}
+
+			catch (Exception e) {
+			HOLogger.instance().error(this.getClass(), "Error when executing TrainingsTable.saveTraining(): " +e);
+			}
+		}
 	}
 
 

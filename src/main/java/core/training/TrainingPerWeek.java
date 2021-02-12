@@ -6,6 +6,9 @@ import core.model.HOVerwaltung;
 import core.model.enums.DBDataSource;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
+import core.util.DateTimeUtils;
+import core.util.Helper;
+
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -19,7 +22,6 @@ import java.util.stream.Collectors;
  */
 public class TrainingPerWeek  {
 
-    private static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
     private final static int myClubID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
     private int o_TrainingIntensity;
@@ -131,6 +133,8 @@ public class TrainingPerWeek  {
 		return o_TrainingAssistantsLevel;
 	}
 
+	public int getCoachLevel(){return o_CoachLevel};
+
     public DBDataSource getSource() {
         return o_Source;
     }
@@ -142,7 +146,7 @@ public class TrainingPerWeek  {
     @Override
     public final String toString() {
         return "TrainingPerWeek[" +
-                "Training date: " + cl_Formatter.format(o_TrainingDate) +
+                "Training date: " + DateTimeUtils.InstantToSQLtimeStamp(o_TrainingDate) +
                 ", Training Type: " + TrainingType.toString(o_TrainingType)  +
                 "%, Intensity: " + o_TrainingIntensity +
                 "%, StaminaPart: " + o_StaminaShare +
