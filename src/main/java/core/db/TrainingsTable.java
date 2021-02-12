@@ -10,6 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * This table is different than others because it does not hold data from XML/HRFs but is a mixed of computed data and data entered
+ * directly by Users. Hence, there is a method recalculateEntries() that will force refresh of entries.
+ * This method will be called automatically after table creation and during upgrade to v5.0
+ * TODO: decide whehter or not to expose that method to users
+ */
 final class TrainingsTable extends AbstractTable {
 	final static String TABLENAME = "TRAINING";
 	
@@ -59,7 +65,7 @@ final class TrainingsTable extends AbstractTable {
 	 * create TPW vector for all entries (TrainingWeekManager(01/01/1900, false, false)
 	 * extra recover existing information from TrainingTable (@wsbrenk)
 	 */
-	void initializeTable() {
+	void recalculateEntries() {
 	}
 
 
