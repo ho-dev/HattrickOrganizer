@@ -2,7 +2,6 @@ package core.db;
 
 import core.training.TrainingPerWeek;
 import core.util.HOLogger;
-
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -18,32 +17,37 @@ final class TrainingsTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[5];
-		columns[0]= new ColumnDescriptor("Week",Types.INTEGER,false);
-		columns[1]= new ColumnDescriptor("Year",Types.INTEGER,false);
-		columns[2]= new ColumnDescriptor("Typ",Types.INTEGER,false);
-		columns[3]= new ColumnDescriptor("Intensity",Types.INTEGER,false);
-		columns[4]= new ColumnDescriptor("StaminaTrainingPart",Types.INTEGER,false);
+		columns = new ColumnDescriptor[7];
+		columns[0]= new ColumnDescriptor("TRAINING_DATE", Types.TIMESTAMP,false);
+		columns[1]= new ColumnDescriptor("TRAINING_TYPE", Types.INTEGER,false);
+		columns[2]= new ColumnDescriptor("TRAINING_INTENSITY",Types.INTEGER,false);
+		columns[3]= new ColumnDescriptor("STAMINA_SHARE",Types.INTEGER,false);
+		columns[4]= new ColumnDescriptor("COACH_LEVEL",Types.INTEGER,false);
+		columns[5]= new ColumnDescriptor("TRAINING_ASSISTANTS_LEVEL",Types.INTEGER,false);
+		columns[6]= new ColumnDescriptor("SOURCE",Types.INTEGER,false);
 	}
 
-	void saveTraining(core.training.TrainingPerWeek training) {
-		if (training != null) {
-			final String[] awhereS = { "Week", "Year" };
-			final String[] awhereV = { "" + training.getWeek(), "" + training.getYear()};
-
-			delete( awhereS, awhereV );
-			
-			String statement = "INSERT INTO "+getTableName()+" ( Week, Year, Typ, Intensity, StaminaTrainingPart ) VALUES ( ";
-			statement += (training.getWeek() + ", " + training.getYear() + ", " + training.getTrainingType() + ", " + training.getTrainingIntensity() + ", " + training.getStaminaPart() + " )");
-
-			adapter.executeUpdate(statement);
-		}
+	// TODO: repair this function and delete error message when this is done
+	void saveTraining(TrainingPerWeek training) {
+//		if (training != null) {
+//			final String[] awhereS = { "Week", "Year" };
+//			final String[] awhereV = { "" + training.getWeek(), "" + training.getYear()};
+//
+//			delete( awhereS, awhereV );
+//
+//			String statement = "INSERT INTO "+getTableName()+" ( Week, Year, Typ, Intensity, StaminaTrainingPart ) VALUES ( ";
+//			statement += (training.getWeek() + ", " + training.getYear() + ", " + training.getTrainingType() + ", " + training.getTrainingIntensity() + ", " + training.getStaminaPart() + " )");
+//
+//			adapter.executeUpdate(statement);
+//		}
+		HOLogger.instance().error(this.getClass(), "TrainingsTable.saveTraining() is currently broken");
 	}
-	
+
+	// TODO: repair this function to follow new TrainingPerWeek structure
 	List<TrainingPerWeek> getTrainingList() {
 		final List<TrainingPerWeek> vTrainings = new ArrayList<>();
 
-		final String statement = "SELECT * FROM "+getTableName()+" ORDER BY year, week ASC";
+		final String statement = "SELECT * FROM " + getTableName() + " ORDER BY year, week ASC";
 
 		final ResultSet rs = adapter.executeQuery(statement);
 
