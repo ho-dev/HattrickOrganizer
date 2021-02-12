@@ -61,8 +61,6 @@ public class TrainingPerWeek  {
         o_NTmatches = fetchNTMatches(_firstMatchDate, _lastMatchDate);
     }
 
-
-
     /**
      * function that fetch info of NT match played related to the TrainingPerWeek instance
      * @return MatchKurzInfo[] related to this TrainingPerWeek instance
@@ -133,7 +131,7 @@ public class TrainingPerWeek  {
 		return o_TrainingAssistantsLevel;
 	}
 
-	public int getCoachLevel(){return o_CoachLevel};
+	public int getCoachLevel(){return o_CoachLevel;}
 
     public DBDataSource getSource() {
         return o_Source;

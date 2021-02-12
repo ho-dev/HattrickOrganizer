@@ -1,9 +1,11 @@
 package core.db;
 
+import core.model.HOVerwaltung;
 import core.model.enums.DBDataSource;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
+import core.training.TrainingWeekManager;
 import core.util.HOLogger;
 import module.playeranalysis.PlayerAnalysisModule;
 
@@ -295,6 +297,14 @@ final class DBUpdater {
 				trainingTable.tryDeleteColumn("YEAR");
 				trainingTable.tryDeleteColumn("WEEK");
 
+				var sql = "select ACTIVATIONDATE FROM BASICS LIMIT 1";
+				rs = m_clJDBCAdapter.executeQuery(sql);
+				if (rs != null) {
+					rs.next();
+					var activationdate = rs.getTimestamp("ACTIVATIONDATE").toInstant();
+					// Fill training table using information from VEREIN, PLAYER and XTRADATA
+					new TrainingWeekManager(activationdate, false, false);
+				}
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
 			}

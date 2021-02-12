@@ -142,10 +142,11 @@ public class TrainingWeekManager {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
 		String startDate = formatter.format(m_StartDate);
 		String sql = String.format("""
-					SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER
+					SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER
 					FROM XTRADATA
 					INNER JOIN TEAM on XTRADATA.HRF_ID = TEAM.HRF_ID
 					INNER JOIN VEREIN on XTRADATA.HRF_ID = VEREIN.HRF_ID
+					INNER JOIN SPIELER on XTRADATA.HRF_ID = SPIELER.HRF_ID AND SPIELER.TRAINER > 0
 					INNER JOIN (
 					     SELECT TRAININGDATE, max(HRF_ID) MAX_HR_ID FROM XTRADATA GROUP BY TRAININGDATE
 					) IJ1 ON XTRADATA.HRF_ID = IJ1.MAX_HR_ID
@@ -166,7 +167,7 @@ public class TrainingWeekManager {
 				trainIntensity = rs.getInt("TRAININGSINTENSITAET");
 				trainStaminaPart = rs.getInt("STAMINATRAININGPART");
 				trainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
-				coachLevel = -1;  //TODO: fix this when #905 is implemented
+				coachLevel = rs.getInt("TRAINER");
 				trainingAssistantLevel = rs.getInt("COTRAINER");
 				TrainingPerWeek tpw = new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel,
 						coachLevel, m_IncludeMatches, m_IncludeUpcomingMatches, DBDataSource.HRF);
@@ -180,18 +181,7 @@ public class TrainingWeekManager {
 		return output;
 	}
 
-
     public List<TrainingPerWeek> getTrainingList() {
     	return m_Trainings;
     }
-
-
-
-
-
-    
-
-
-
-
 }
