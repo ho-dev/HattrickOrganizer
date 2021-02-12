@@ -95,6 +95,7 @@ public class TrainingWeekManager {
 	private List<TrainingPerWeek> computeTrainingList(){
 
 		List<TrainingPerWeek>  trainings = new ArrayList<>();
+
 		HashMap<Instant, TrainingPerWeek>  trainingsInDB = createTPWfromDBentries();
 		int trainingsSize;
 

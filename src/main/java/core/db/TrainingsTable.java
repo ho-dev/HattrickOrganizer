@@ -1,9 +1,11 @@
 package core.db;
 
+import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,20 +45,35 @@ final class TrainingsTable extends AbstractTable {
 		HOLogger.instance().error(this.getClass(), "TrainingsTable.saveTraining() is currently broken");
 	}
 
-	// TODO: repair this function to follow new TrainingPerWeek structure
+
 	List<TrainingPerWeek> getTrainingList() {
 		final List<TrainingPerWeek> vTrainings = new ArrayList<>();
 
 		final String statement = "SELECT * FROM " + getTableName() + " ORDER BY year, week ASC";
 
-		final ResultSet rs = adapter.executeQuery(statement);
-
 		try {
+			final ResultSet rs = adapter.executeQuery(statement);
+			TrainingPerWeek tpw;
+			Instant trainingDate;
+			Integer training_type, training_intensity, staminaShare, trainingAssistantsLevel, coachLevel;
+			DBDataSource source;
+
 			if (rs != null) {
 				rs.beforeFirst();
 
 				while (rs.next()) {
-					vTrainings.add(new TrainingPerWeek(rs.getInt("week"), rs.getInt("year"), rs.getInt("Typ"), rs.getInt("Intensity"), rs.getInt("StaminaTrainingPart")));
+					trainingDate = rs.getTimestamp("TRAINING_DATE").toInstant();
+					training_type = rs.getInt("TRAINING_TYPE");
+					training_intensity = rs.getInt("TRAINING_INTENSITY");
+					staminaShare = rs.getInt("STAMINA_SHARE");
+					trainingAssistantsLevel = rs.getInt("TRAINING_ASSISTANTS_LEVEL");
+					coachLevel = rs.getInt("COACH_LEVEL");
+					source = DBDataSource.getCode(rs.getInt("SOURCE"));
+
+					tpw = new TrainingPerWeek(trainingDate, training_type, training_intensity, staminaShare, trainingAssistantsLevel,
+							coachLevel, false, false, source);
+
+					vTrainings.add(tpw);
 				}
 			}
 		} catch (Exception e) {

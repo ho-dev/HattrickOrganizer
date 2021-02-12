@@ -17,4 +17,14 @@ public enum DBDataSource {
         return value;
     }
 
+    public static DBDataSource getCode(int value){
+
+            return switch (value){
+                case 1 -> HRF;
+                case 2 -> MANUAL;
+                case 3 -> GUESS;
+                default -> throw new IllegalStateException("Unexpected DBDataSource value: " + value);
+            };
+    }
+
 }

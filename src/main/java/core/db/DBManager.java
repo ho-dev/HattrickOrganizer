@@ -1539,15 +1539,12 @@ public class DBManager {
 		getTable(PositionenTable.TABLENAME).delete(whereS, whereV);
 	}
 
-	// ------------------------------- TrainingsTable
-	// -------------------------------------------------
+
 
 	/**
-	 * Gets training overrides.
-	 *
-	 * @return the training overrides
+	 * Gets the content of TrainingsTable as a vector of TrainingPerWeek objects
 	 */
-	public List<TrainingPerWeek> getTrainingOverrides() {
+	public List<TrainingPerWeek> getTrainingList() {
 		return ((TrainingsTable) getTable(TrainingsTable.TABLENAME))
 				.getTrainingList();
 	}

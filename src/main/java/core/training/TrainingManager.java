@@ -23,11 +23,10 @@ public class TrainingManager {
 	// singleton class
 	private static TrainingManager m_clInstance;
 
-	private TrainingPerWeek nextWeekTraining;         // used to determine training bar, include upcoming game   => Created at initilization
-    private TrainingWeekManager recentTrainings;      // trainings information since last HRF used in regular subskill calculation  => Created at initilization
-	private TrainingWeekManager twoSeasonsTrainings;  // used for full subskill recacluation  => Created at request of user (full subskill recalculation action)
-	private TrainingWeekManager shortTrainingsWM;     // used to populate  training history, no match information => Created at initilization
-	private TrainingWeekManager longTrainingsWM;      // used to populate  training history, no match information => Created at request of user (view full history in training history panel) //TODO: implement this option in training history
+	private TrainingPerWeek nextWeekTraining;            // used to determine training bar, include upcoming game   => Created at initilization
+    private TrainingWeekManager recentTrainings;         // trainings information since last HRF used in regular subskill calculation  => Created at initilization
+	private TrainingWeekManager twoSeasonsTrainings;     // used for full subskill recacluation  => Created at request of user (full subskill recalculation action)
+	private List<TrainingPerWeek> trainings;             // used to populate training history, no match information => Created at initilization
 
 	public static final boolean TRAININGDEBUG = false;
 
@@ -49,8 +48,7 @@ public class TrainingManager {
 			HOLogger.instance().error(this.getClass(), "Last training could not be determined");
 		}
 
-		shortTrainingsWM =  new TrainingWeekManager(7, false, false);
-
+		trainings =  DBManager.instance().getTrainingList();
     }
 
 
