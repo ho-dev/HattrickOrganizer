@@ -1,6 +1,5 @@
 package core.model.enums;
 
-import java.util.Locale;
 
 public enum RatingsStatistics {
     POWER_RATINGS(1),
