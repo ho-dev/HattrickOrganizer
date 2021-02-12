@@ -53,11 +53,11 @@ final class TrainingsTable extends AbstractTable {
 	}
 
 
-	// TODO create this function @wsbrenk
+	// TODO create this function
 	/**
-	 * This function is used for migration HO 4.1 -> HO 5.0
-	 * create TPW vector for all entries
-	 * extra populate extra week from data existing in current TrainingTable
+	 * This function is used for migration HO 4.1 -> HO 5.0 (this function might be located in DBUpdater)
+	 * create TPW vector for all entries (TrainingWeekManager(01/01/1900, false, false)
+	 * extra recover existing information from TrainingTable (@wsbrenk)
 	 */
 	void initializeTable() {
 	}
