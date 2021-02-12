@@ -155,4 +155,30 @@ public abstract class AbstractTable {
 		return false;
 	}
 
+	public boolean tryChangeColumn(String columnName, String type_not_null) throws SQLException {
+		if ( columnExistsInTable(columnName)) {
+			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + columnName + " " + type_not_null;
+			adapter.executeQuery(sql);
+			return true;
+		}
+		return false;
+	}
+
+	public boolean tryRenameColumn(String from, String to) throws SQLException {
+		if ( columnExistsInTable(from)) {
+			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + from + " RENAME TO " + to;
+			adapter.executeQuery(sql);
+			return true;
+		}
+		return false;
+	}
+
+	public boolean tryDeleteColumn(String columnName) throws SQLException {
+		if ( columnExistsInTable(columnName)) {
+			String sql = "ALTER TABLE " + getTableName() + " DROP COLUMN " + columnName;
+			adapter.executeQuery(sql);
+			return true;
+		}
+		return false;
+	}
 }
