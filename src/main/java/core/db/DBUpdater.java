@@ -1,5 +1,6 @@
 package core.db;
 
+import core.model.enums.DBDataSource;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
@@ -8,10 +9,12 @@ import module.playeranalysis.PlayerAnalysisModule;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
@@ -199,8 +202,6 @@ final class DBUpdater {
 		matchHighlightsTable.tryAddColumn("MatchDate", "TIMESTAMP");
 		matchHighlightsTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
 
-
-
 		if (!tableExists(YouthTrainingTable.TABLENAME)) {
 			dbManager.getTable(YouthTrainingTable.TABLENAME).createTable();
 			dbManager.getTable(YouthPlayerTable.TABLENAME).createTable();
@@ -210,6 +211,105 @@ final class DBUpdater {
 		if (!tableExists(TeamsLogoTable.TABLENAME)) {
 			dbManager.getTable(TeamsLogoTable.TABLENAME).createTable();
 		}
+
+		// Migrate TRAINING DATA
+		var trainingTable = dbManager.getTable(TrainingsTable.TABLENAME);
+		if ( trainingTable.tryAddColumn("COACH_LEVEL","INTEGER")){
+			trainingTable.tryAddColumn("TRAINING_ASSISTANTS_LEVEL", "INTEGER");
+			trainingTable.tryAddColumn("SOURCE", "INTEGER");
+			trainingTable.tryAddColumn("TRAINING_DATE", "TIMESTAMP");
+
+			// Load existing training entries
+			var trainings = new ArrayList<int[]>();
+			final String statement = "SELECT * FROM "+TrainingsTable.TABLENAME;
+			ResultSet rs = m_clJDBCAdapter.executeQuery(statement);
+			try {
+				if (rs != null) {
+					rs.beforeFirst();
+					while (rs.next()) {
+						var training = new int[]  {
+								rs.getInt("week"),
+								rs.getInt("year")
+						};
+						trainings.add(training);
+					}
+				}
+
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
+				for ( var training : trainings){
+					// Convert year, week to Date
+					int dayOfWeek = 1;  // 1-7, locale-dependent such as Sunday-Monday in US.
+					WeekFields weekFields = WeekFields.of ( Locale.GERMANY );
+					LocalDate ld = LocalDate.now ( )
+							.withYear ( training[1] )
+							.with ( weekFields.weekOfYear ( ), training[0] )
+							.with ( weekFields.dayOfWeek ( ), dayOfWeek );
+
+					String dateString = formatter.format(ld);
+
+					// find hrf of that training week
+					// COTrainer from VEREIN,HRF_ID
+					// TRAINER from SPIELER,HRF_ID && TRAINER>0
+					// TrainingDate from XTRA,HRF_ID
+					String sql = "select TRAININGDATE,COTRAINER,TRAINER FROM XTRADATA " +
+							"INNER JOIN VEREIN ON VEREIN.HRF_ID=XTRADATA.HRF_ID " +
+							"INNER JOIN SPIELER ON SPIELER.HRF_ID=XTRADATA.HRF_ID AND TRAINER>0 " +
+							"WHERE TRAININGDATE>'" +
+							dateString +
+							"' LIMIT 1";
+
+					rs = m_clJDBCAdapter.executeQuery(statement);
+					if (rs != null) {
+						rs.next();
+						var trainingDate = rs.getTimestamp("TRAININGDATE");
+						var coTrainer = rs.getInt("COTRAINER");
+						var trainer = rs.getInt("TRAINER");
+
+						String update = "update " + TrainingsTable.TABLENAME +
+								" SET" +
+								" TRAINING_DATE='" +
+								trainingDate +
+								"',  TRAINING_ASSISTANTS_LEVEL=" +
+								coTrainer +
+								", COACH_LEVEL=" +
+								trainer +
+								" SOURCE=" +
+								DBDataSource.MANUAL.getValue() +
+								", WHERE YEAR=" +
+								training[1] +
+								" AND WEEK=" +
+								training[0];
+
+						m_clJDBCAdapter.executeUpdate(update);
+					}
+				}
+
+				// set not null, rename colums and delete
+				trainingTable.tryChangeColumn("COACH_LEVEL", "NOT NULL");
+				trainingTable.tryChangeColumn("TRAINING_ASSISTANTS_LEVEL", "NOT NULL");
+				trainingTable.tryChangeColumn("TRAINING_DATE", "NOT NULL");
+				trainingTable.tryChangeColumn("SOURCE", "NOT NULL");
+				trainingTable.tryRenameColumn("TYP", "TRAINING_TYPE");
+				trainingTable.tryRenameColumn("INTENSITY", "TRAINING_INTENSITY");
+				trainingTable.tryRenameColumn("STAMINATRAININGPART", "STAMINA_SHARE");
+				trainingTable.tryDeleteColumn("YEAR");
+				trainingTable.tryDeleteColumn("WEEK");
+
+			} catch (Exception e) {
+				HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
+			}
+
+
+
+			// fill up the holes (step 2 of data migration)
+			// var trainingDate = getFirstHrfTrainingDate()
+			// while ( trainingDate.before(today) {
+			//    if ( !training(trainingDate).exists ) {
+			//       WeeklyTraining.createTrainingEntry(trainingDate); // method will fetch training info from VEREIN, XTRADATA,...
+			//    }
+			// }
+		}
+
 
 		updateDBVersion(dbVersion, version);
 	}
