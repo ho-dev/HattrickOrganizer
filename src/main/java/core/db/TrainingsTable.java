@@ -66,6 +66,21 @@ final class TrainingsTable extends AbstractTable {
 	 * extra recover existing information from TrainingTable (@wsbrenk)
 	 */
 	void recalculateEntries() {
+
+		//		Dummy code
+		//		new_entries = new List<TrainingPerWeek>
+		//		existing_entries = getTrainingList()
+		//		computedEntries = TrainingWeekManager(01/01/1900, false, false).getentries()
+		//		for (entry : computedEntries){
+		//			if entry.getDate() exist in existingentries.getEntry(entry.getDate()) {
+		//				new_entries.add(existingentries.get(entry.getDate())))
+		//           }
+		//			else {
+		//				newentries.add(entry)
+		//				}
+		//   clearTable()
+		//   saveTrainings(new_entries)
+
 	}
 
 
