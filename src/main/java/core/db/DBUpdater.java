@@ -3,15 +3,13 @@ package core.db;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
+import core.training.TrainingPerWeek;
 import core.util.HOLogger;
 import module.playeranalysis.PlayerAnalysisModule;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
@@ -199,8 +197,6 @@ final class DBUpdater {
 		matchHighlightsTable.tryAddColumn("MatchDate", "TIMESTAMP");
 		matchHighlightsTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
 
-
-
 		if (!tableExists(YouthTrainingTable.TABLENAME)) {
 			dbManager.getTable(YouthTrainingTable.TABLENAME).createTable();
 			dbManager.getTable(YouthPlayerTable.TABLENAME).createTable();
@@ -210,6 +206,52 @@ final class DBUpdater {
 		if (!tableExists(TeamsLogoTable.TABLENAME)) {
 			dbManager.getTable(TeamsLogoTable.TABLENAME).createTable();
 		}
+
+		// Migrate TRAINING DATA
+		var trainingTable = dbManager.getTable(TrainingsTable.TABLENAME);
+		if ( trainingTable.tryAddColumn("COACH_LEVEL","INTEGER")){
+			trainingTable.tryAddColumn("TRAINING_ASSISTANTS_LEVEL", "INTEGER");
+			trainingTable.tryAddColumn("TRAINING_DATE", "TIMESTAMP");
+
+			// Load existing training entries
+			var trainings = new ArrayList<int[]>();
+			final String statement = "SELECT * FROM "+TrainingsTable.TABLENAME;
+			final ResultSet rs = m_clJDBCAdapter.executeQuery(statement);
+			try {
+				if (rs != null) {
+					rs.beforeFirst();
+					while (rs.next()) {
+						var training = new int[]  {
+								rs.getInt("week"),
+								rs.getInt("year")
+						};
+						trainings.add(training);
+					}
+				}
+
+				for ( var training : trainings){
+					// Convert year, week to Date
+					Calendar cld = Calendar.getInstance();
+					cld.set(Calendar.YEAR, training[1]);
+					cld.set(Calendar.WEEK_OF_YEAR, training[0]);
+					Date date = cld.getTime();
+					// find hrf of that training week
+					// COTrainer from VEREIN,HRF_ID
+					// TRAINER from SPIELER,HRF_ID && TRAINER>0
+					// TrainingDate from XTRA,HRF_ID
+					String sql = "select TRAININGDATE,COTRAINER,TRAINER FROM XTRADATA " +
+							"INNER JOIN VEREIN ON VEREIN.HRF_ID=XTRADATA.HRF_ID " +
+							"INNER JOIN SPIELER ON SPIELER.HRF_ID=XTRADATA.HRF_ID AND TRAINER>0 " +
+							"WHERE TRAININGDATE>'2013-07-26 00:00:00' LIMIT 1";
+				}
+			} catch (Exception e) {
+				HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
+			}
+
+
+			// set not null, and rename colums
+		}
+
 
 		updateDBVersion(dbVersion, version);
 	}

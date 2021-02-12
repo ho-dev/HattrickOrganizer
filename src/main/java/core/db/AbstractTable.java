@@ -135,11 +135,13 @@ public abstract class AbstractTable {
 		return rs.next();
 	}
 
-	public void tryAddColumn(String columnName, String columnType) throws SQLException {
+	public boolean tryAddColumn(String columnName, String columnType) throws SQLException {
 		if ( ! columnExistsInTable(columnName)) {
 			String sql = "ALTER TABLE " + getTableName() + " ADD COLUMN " + columnName + " " + columnType;
 			adapter.executeQuery(sql);
+			return true;
 		}
+		return false;
 	}
 
 	private boolean columnExistsInTable(String columnName) throws SQLException {
