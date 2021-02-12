@@ -267,6 +267,7 @@ final class DBUpdater {
 						var coTrainer = rs.getInt("COTRAINER");
 						var trainer = rs.getInt("TRAINER");
 
+						// update new columns
 						String update = "update " + TrainingsTable.TABLENAME +
 								" SET" +
 								" TRAINING_DATE='" +
@@ -297,27 +298,18 @@ final class DBUpdater {
 				trainingTable.tryDeleteColumn("YEAR");
 				trainingTable.tryDeleteColumn("WEEK");
 
+				// Fill training table using information from VEREIN, PLAYER and XTRADATA (Step 2)
 				var sql = "select ACTIVATIONDATE FROM BASICS LIMIT 1";
 				rs = m_clJDBCAdapter.executeQuery(sql);
 				if (rs != null) {
 					rs.next();
 					var activationdate = rs.getTimestamp("ACTIVATIONDATE").toInstant();
-					// Fill training table using information from VEREIN, PLAYER and XTRADATA
+					// TODO all happens on construction. I would prefer a static method for such jobs
 					new TrainingWeekManager(activationdate, false, false);
 				}
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
 			}
-
-
-
-			// fill up the holes (step 2 of data migration)
-			// var trainingDate = getFirstHrfTrainingDate()
-			// while ( trainingDate.before(today) {
-			//    if ( !training(trainingDate).exists ) {
-			//       WeeklyTraining.createTrainingEntry(trainingDate); // method will fetch training info from VEREIN, XTRADATA,...
-			//    }
-			// }
 		}
 
 
