@@ -12,8 +12,6 @@ import core.model.series.Liga;
 import core.training.TrainingPerWeek;
 import core.training.TrainingManager;
 import core.util.HOLogger;
-import core.util.HTCalendar;
-import core.util.HTCalendarFactory;
 import module.lineup.Lineup;
 import module.series.Spielplan;
 import module.teamAnalyzer.SystemManager;
@@ -518,7 +516,7 @@ public class HOModel {
             // Training Happened
 
             // Find TrainingPerWeeks that should be processed (those since last training).
-            List<TrainingPerWeek> rawTrainingList = TrainingManager.instance().getTrainingWeekList();
+            List<TrainingPerWeek> rawTrainingList = TrainingManager.instance().getRecentTrainings();
             List<TrainingPerWeek> trainingList = new ArrayList<>();
             for (TrainingPerWeek tpw : rawTrainingList) {
                 // We want to add all weeks with nextTraining after the previous date, and stop

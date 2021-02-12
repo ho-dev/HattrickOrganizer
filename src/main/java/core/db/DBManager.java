@@ -1549,14 +1549,15 @@ public class DBManager {
 				.getTrainingList();
 	}
 
-	/**
-	 * Save training.
-	 *
-	 * @param training the training
-	 */
+
 	public void saveTraining(core.training.TrainingPerWeek training) {
 		((TrainingsTable) getTable(TrainingsTable.TABLENAME))
 				.saveTraining(training);
+	}
+
+	public void saveTrainings(List<TrainingPerWeek> trainings) {
+		((TrainingsTable) getTable(TrainingsTable.TABLENAME))
+				.saveTrainings(trainings);
 	}
 
 	// ------------------------------- FutureTrainingTable

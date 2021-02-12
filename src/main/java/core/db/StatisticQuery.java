@@ -19,7 +19,7 @@ public class StatisticQuery {
 
 	public static double[][] getSpielerDaten4Statistik(int spielerId, int anzahlHRF) {
 
-		List<TrainingPerWeek> trainings = TrainingManager.instance().getTrainingWeekList();
+		List<TrainingPerWeek> trainings = TrainingManager.instance().getRecentTrainings();
 		final int anzahlSpalten = 16;
 		final float faktor = core.model.UserParameter.instance().faktorGeld;
 
@@ -272,7 +272,7 @@ public class StatisticQuery {
 	}
 
 	public static double[][] getDataForTeamStatisticsPanel(int nbHRF, String group) {
-		List<TrainingPerWeek> trainings = TrainingManager.instance().getTrainingWeekList();
+		List<TrainingPerWeek> trainings = TrainingManager.instance().getRecentTrainings();
 		final float factor = core.model.UserParameter.instance().faktorGeld;
 		double[][] returnValues = new double[0][0];
 		final Vector<double[]> values = new Vector<>();
@@ -395,7 +395,7 @@ public class StatisticQuery {
 		double[][] returnValues;
 		Vector<double[]> values = new Vector<>();
 
-		List<TrainingPerWeek> trainings = TrainingManager.instance().getTrainingWeekList();
+		List<TrainingPerWeek> trainings = TrainingManager.instance().getRecentTrainings();
 
 		try {
 			//TODO: filter one 1 HRF per HTweek only and change filter iNumberHRF to HTSeason
@@ -513,7 +513,7 @@ public class StatisticQuery {
 	}
 
 	public static double[][] getSpielerFinanzDaten4Statistik(int spielerId, int anzahlHRF) {
-		List<TrainingPerWeek> trainings = TrainingManager.instance().getTrainingWeekList();
+		List<TrainingPerWeek> trainings = TrainingManager.instance().getRecentTrainings();
 		final int anzahlSpalten = 3;
 		final float faktor = core.model.UserParameter.instance().faktorGeld;
 

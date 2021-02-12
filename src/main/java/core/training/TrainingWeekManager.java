@@ -37,33 +37,33 @@ public class TrainingWeekManager {
 		m_StartDate = startDate;
 		m_IncludeMatches = includeMatches;
 		m_IncludeUpcomingMatches = includeUpcomingMatches;
-		m_Trainings = computeTrainingList();
+		m_Trainings = createTrainingListFromHRF();
 	}
 
 	/**
 	 * Construct a list of TrainingPerWeek of requested size
-	 * @param nbEntries requested vector size
+	 * @param minimumNbEntries requested minimum vector size
 	 * @param includeMatches whether or not the TrainingPerWeek objects will contain match information
 	 * @param includeUpcomingMatches whether or not the TrainingPerWeek objects will contain upcoming match information
 	 */
-	public TrainingWeekManager(int nbEntries, boolean includeMatches, boolean includeUpcomingMatches) {
-		m_StartDate = findStartDate(nbEntries);
+	public TrainingWeekManager(int minimumNbEntries, boolean includeMatches, boolean includeUpcomingMatches) {
+		m_StartDate = findStartDate(minimumNbEntries);
 		m_IncludeMatches = includeMatches;
 		m_IncludeUpcomingMatches = includeUpcomingMatches;
-		m_Trainings = computeTrainingList();
+		m_Trainings = createTrainingListFromHRF();
 	}
 
 	/**
 	 * Determine first training date from requested number of entries
-	 * @param nbEntries requested size
+	 * @param minimumNbEntries requested size
 	 * @return
 	 */
-	private Instant findStartDate(int nbEntries){
+	private Instant findStartDate(int minimumNbEntries){
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
 			String startDate = formatter.format(Instant.now().minus(1, ChronoUnit.YEARS));
 			String sql = String.format("""
 					SELECT TRAININGDATE	FROM XTRADATA WHERE XTRADATA.TRAININGDATE >= '%s' 
-					ORDER BY TRAININGDATE DESC LIMIT %s""",startDate, nbEntries);
+					ORDER BY TRAININGDATE DESC LIMIT %s""",startDate, minimumNbEntries);
 
 			Instant trainingDate = null;
 
@@ -85,14 +85,11 @@ public class TrainingWeekManager {
 	}
 
 
-	// TODO: the logic of this function does not yet respect the specs
 	/**
-	 * Create the list of trainings in 3 steps:
-	 *     1. information from Training table is loaded
-	 *     2. missing weeks are constructed from other database tables
-	 *     3. missing weeks are created from previous entry
+	 * Create the list of trainings from DB but excluding 'Trainings' table
+	 *  missing weeks are created by duplicating previous entry
 	 */
-	private List<TrainingPerWeek> computeTrainingList(){
+	private List<TrainingPerWeek> createTrainingListFromHRF(){
 
 		List<TrainingPerWeek>  trainings = new ArrayList<>();
 

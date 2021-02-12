@@ -10,7 +10,6 @@ import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.HelperWrapper;
 import java.sql.Timestamp;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import javax.swing.JOptionPane;
 
@@ -25,30 +24,32 @@ public class TrainingManager {
 
 	private TrainingPerWeek nextWeekTraining;            // used to determine training bar, include upcoming game   => Created at initilization
     private TrainingWeekManager recentTrainings;         // trainings information since last HRF used in regular subskill calculation  => Created at initilization
-	private TrainingWeekManager twoSeasonsTrainings;     // used for full subskill recacluation  => Created at request of user (full subskill recalculation action)
 	private List<TrainingPerWeek> trainings;             // used to populate training history, no match information => Created at initilization
+
 
 	public static final boolean TRAININGDEBUG = false;
 
 
-    //~ Constructors -------------------------------------------------------------------------------
 
     /**
      * Creates a new instance of TrainingsManager
      */
     private TrainingManager() {
 
+    	// Load data from 'trainings' table
+		trainings =  DBManager.instance().getTrainingList();
+
+		// Create recent training history from other tables in database
         recentTrainings = new TrainingWeekManager(2, true, false);
 
-		TrainingWeekManager _trainingWeekManager = new TrainingWeekManager(1, true, true);
-		if (_trainingWeekManager.getTrainingList().size() == 1){
-			nextWeekTraining = _trainingWeekManager.getTrainingList().get(0);
-		}
-		else{
-			HOLogger.instance().error(this.getClass(), "Last training could not be determined");
-		}
+		// Save recent training history in 'trainings' table
+		DBManager.instance().saveTrainings(recentTrainings.getTrainingList());
 
-		trainings =  DBManager.instance().getTrainingList();
+		//TODO: add entries in trainings from recentTrainings
+
+        nextWeekTraining = new TrainingWeekManager(1, true, true).getTrainingList().get(0);
+
+
     }
 
 
@@ -59,15 +60,17 @@ public class TrainingManager {
         return m_clInstance;
     }
 
-    public List<TrainingPerWeek> getTrainingWeekList() {
+    public List<TrainingPerWeek> getRecentTrainings() {
         return recentTrainings.getTrainingList();
     }
-
 
 	public TrainingPerWeek getNextWeekTraining() {
 		return nextWeekTraining;
 	}
 
+	public List<TrainingPerWeek> getAllTrainings() {
+		return trainings;
+	}
 
     @Deprecated
     public void recalcSubskills(boolean showBar) {
@@ -254,7 +257,6 @@ public class TrainingManager {
 			HOLogger.instance().debug(getClass(), playerID + "|" + playerName + "|" + age + "|" + changes.toString());
 		}
 	}
-
 
 
 }

@@ -46,6 +46,23 @@ final class TrainingsTable extends AbstractTable {
 	}
 
 
+	void saveTrainings(List<TrainingPerWeek> trainings) {
+		for (var training:trainings){
+			saveTraining(training);
+		}
+	}
+
+
+	// TODO create this function @wsbrenk
+	/**
+	 * This function is used for migration HO 4.1 -> HO 5.0
+	 * create TPW vector for all entries
+	 * extra populate extra week from data existing in current TrainingTable
+	 */
+	void initializeTable() {
+	}
+
+
 	List<TrainingPerWeek> getTrainingList() {
 		final List<TrainingPerWeek> vTrainings = new ArrayList<>();
 
