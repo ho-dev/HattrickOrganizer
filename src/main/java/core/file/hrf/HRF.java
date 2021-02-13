@@ -4,6 +4,8 @@ package core.file.hrf;
 import core.util.HOLogger;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 
 
 /**
@@ -37,7 +39,12 @@ public final class HRF {
 		this.hrfId = _hrfId;
 		this.name = _name;
 		this.datum = _datum;
-	}	
+	}
+
+	public HRF(int hrfId){
+		this.hrfId=hrfId;
+		this.name = datum.toString();
+	}
     /**
      * Creates a new Hrf object.
      */

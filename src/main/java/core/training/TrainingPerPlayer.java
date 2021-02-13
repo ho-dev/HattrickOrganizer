@@ -1,9 +1,11 @@
 package core.training;
 
+import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
 import core.model.match.MatchType;
 import core.model.player.Player;
 import core.util.HOLogger;
+import core.util.Helper;
 import core.util.HelperWrapper;
 
 import java.sql.Timestamp;
@@ -208,5 +210,45 @@ public class TrainingPerPlayer  {
 
 	public double getExperienceSub() {
 		return experienceSub;
+	}
+
+    public float calcSubskillIncrement(int skill, int skillValue) {
+		float ret = 0;
+
+		/* Time to perform skill drop */
+		if (SkillDrops.instance().isActive()) {
+			ret -= SkillDrops.instance().getSkillDrop(skillValue, this._Player.getAlter(), skill) / 100;
+		}
+
+		//var trainingLength = wt.getTrainingLength(this, trainerlevel, trForPlayer.getTrainingWeek().getTrainingIntensity(), trForPlayer.getTrainingWeek().getStaminaPart(), trForPlayer.getTrainingWeek().getTrainingAssistantsLevel());
+
+		var wt = WeeklyTrainingType.instance( this._TrainingWeek.getTrainingType());
+		if ( skill == wt.getPrimaryTrainingSkill()) {
+			ret += wt.getTrainingAlternativeFormula(_Player, skillValue, this, true);
+
+			HOLogger.instance().info(this.getClass(),
+					_Player.getLastName()+ "; " + PlayerSkill.toString(skill) +
+							"; Age=" + _Player.getAlter() +
+							"; Skill=" + skillValue +
+							"; Minutes=" + this.getTrainingPair().getTrainingDuration().getFullTrainingMinutes() +
+							";" + this.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes() +
+							";" + this.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes() +
+							"; training=" + ret);
+		}
+		else if ( skill == wt.getSecondaryTrainingSkill()){
+			ret += wt.getTrainingAlternativeFormula(_Player, skillValue, this, false);
+			HOLogger.instance().info(this.getClass(),
+					_Player.getLastName()+ "; " + PlayerSkill.toString(skill) +
+							"; Age=" + _Player.getAlter() +
+							"; Skill=" + skillValue +
+							"; Minutes=" + this.getTrainingPair().getTrainingDuration().getFullTrainingMinutes() +
+							";" + this.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes() +
+							";" + this.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes() +
+							"; training=" + ret);
+		}
+
+		if (ret > 1) ret = 1; // limit 1
+
+		return ret;
 	}
 }

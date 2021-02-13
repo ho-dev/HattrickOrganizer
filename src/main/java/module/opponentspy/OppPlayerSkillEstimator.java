@@ -61,19 +61,19 @@ public class OppPlayerSkillEstimator {
     	player.setPosition(role);
 		
     	player.setTorwart((int)Math.floor(calcPlayer.getGoalkeeping()));	
-    	player.setSubskill4Pos(PlayerSkill.KEEPER, getSubskillFromSkill(calcPlayer.getGoalkeeping()));
+    	player.setSubskill4PlayerSkill(PlayerSkill.KEEPER, getSubskillFromSkill(calcPlayer.getGoalkeeping()));
     	player.setVerteidigung ((int)Math.floor(calcPlayer.getDefending()));
-    	player.setSubskill4Pos(PlayerSkill.DEFENDING, getSubskillFromSkill(calcPlayer.getDefending()));
+    	player.setSubskill4PlayerSkill(PlayerSkill.DEFENDING, getSubskillFromSkill(calcPlayer.getDefending()));
     	player.setSpielaufbau ((int)Math.floor(calcPlayer.getPlaymaking()));
-    	player.setSubskill4Pos(PlayerSkill.PLAYMAKING, getSubskillFromSkill(calcPlayer.getPlaymaking()));
+    	player.setSubskill4PlayerSkill(PlayerSkill.PLAYMAKING, getSubskillFromSkill(calcPlayer.getPlaymaking()));
     	player.setPasspiel ((int)Math.floor(calcPlayer.getPassing()));
-    	player.setSubskill4Pos(PlayerSkill.PASSING, getSubskillFromSkill(calcPlayer.getPassing()));
+    	player.setSubskill4PlayerSkill(PlayerSkill.PASSING, getSubskillFromSkill(calcPlayer.getPassing()));
     	player.setFluegelspiel ((int)Math.floor(calcPlayer.getWing()));
-    	player.setSubskill4Pos(PlayerSkill.WINGER, getSubskillFromSkill(calcPlayer.getWing()));
+    	player.setSubskill4PlayerSkill(PlayerSkill.WINGER, getSubskillFromSkill(calcPlayer.getWing()));
     	player.setTorschuss ((int)Math.floor(calcPlayer.getScoring()));
-    	player.setSubskill4Pos(PlayerSkill.SCORING, getSubskillFromSkill(calcPlayer.getScoring()));
+    	player.setSubskill4PlayerSkill(PlayerSkill.SCORING, getSubskillFromSkill(calcPlayer.getScoring()));
     	player.setStandards ((int)Math.floor(calcPlayer.getSetPieces()));
-    	player.setSubskill4Pos(PlayerSkill.SET_PIECES, getSubskillFromSkill(calcPlayer.getSetPieces()));
+    	player.setSubskill4PlayerSkill(PlayerSkill.SET_PIECES, getSubskillFromSkill(calcPlayer.getSetPieces()));
     	player.setKondition((int) Math.floor(calcPlayer.getStamina()));
     	
     	return player;

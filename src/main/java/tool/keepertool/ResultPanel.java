@@ -118,7 +118,7 @@ class ResultPanel extends JPanel {
                         decimals = 0;
                     }
 
-                    sp.setSubskill4Pos(PlayerSkill.KEEPER, (float)decimals);
+                    sp.setSubskill4PlayerSkill(PlayerSkill.KEEPER, (float)decimals);
                     core.db.DBManager.instance().saveSpieler(core.model.HOVerwaltung.instance()
                                                                                                                           .getModel()
                                                                                                                           .getID(),

@@ -135,5 +135,51 @@ final class TrainingsTable extends AbstractTable {
 		return vTrainings;
 	}
 
-	
+
+	public List<TrainingPerWeek> getTrainingList(Instant fromDate, Instant toDate) {
+
+		final List<TrainingPerWeek> vTrainings = new ArrayList<>();
+
+		var statement = new StringBuilder ( "SELECT * FROM " )
+				.append( getTableName() )
+				.append(" WHERE TRAINING_DATE < '")
+				.append(""+toDate);
+
+				if (fromDate!=null) {
+					statement.append("' AND TRAINING_DATE >= '")
+							.append(""+fromDate);
+				}
+				statement.append("' ORDER BY TRAINING_DATE ASC");
+
+		try {
+			final ResultSet rs = adapter.executeQuery(statement.toString());
+			TrainingPerWeek tpw;
+			Instant trainingDate;
+			Integer training_type, training_intensity, staminaShare, trainingAssistantsLevel, coachLevel;
+			DBDataSource source;
+
+			if (rs != null) {
+				rs.beforeFirst();
+
+				while (rs.next()) {
+					trainingDate = rs.getTimestamp("TRAINING_DATE").toInstant();
+					training_type = rs.getInt("TRAINING_TYPE");
+					training_intensity = rs.getInt("TRAINING_INTENSITY");
+					staminaShare = rs.getInt("STAMINA_SHARE");
+					trainingAssistantsLevel = rs.getInt("TRAINING_ASSISTANTS_LEVEL");
+					coachLevel = rs.getInt("COACH_LEVEL");
+					source = DBDataSource.getCode(rs.getInt("SOURCE"));
+
+					tpw = new TrainingPerWeek(trainingDate, training_type, training_intensity, staminaShare, trainingAssistantsLevel,
+							coachLevel, false, false, source);
+
+					vTrainings.add(tpw);
+				}
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
+		}
+
+		return vTrainings;
+	}
 }
