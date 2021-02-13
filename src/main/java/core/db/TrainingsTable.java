@@ -2,6 +2,7 @@ package core.db;
 
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
+import core.util.DateTimeInfo;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
 import module.transfer.PlayerTransfer;
@@ -40,7 +41,7 @@ final class TrainingsTable extends AbstractTable {
 	}
 
 	/**
-	 * save provided training in database
+	 * save provided training in database (trainings still in the future will be skipped)
 	 * @param training training to be saved
 	 * @param force if true will replace the training if it exists, otherwise will do nothing
 	 */
@@ -48,7 +49,14 @@ final class TrainingsTable extends AbstractTable {
 
 		if (training != null) {
 
+			DateTimeInfo trainingDateAsDTI = new DateTimeInfo(training.getTrainingDate());
 			String trainingDate = DateTimeUtils.InstantToSQLtimeStamp(training.getTrainingDate());
+
+			if (trainingDateAsDTI.isInTheFuture()){
+				HOLogger.instance().debug(this.getClass(), trainingDate + " in the future   =>    SKIPPED");
+				return;
+			}
+
 
 			if(isTrainingDateInDB(trainingDate)){
 
@@ -83,6 +91,9 @@ final class TrainingsTable extends AbstractTable {
 	}
 
 
+	/**
+	 * apply the function saveTraining() to all elements of the provided vector
+	 */
 	void saveTrainings(List<TrainingPerWeek> trainings, boolean force) {
 		for (var training:trainings){
 			saveTraining(training, force);
