@@ -304,8 +304,8 @@ final class DBUpdater {
 				if (rs != null) {
 					rs.next();
 					var activationdate = rs.getTimestamp("ACTIVATIONDATE").toInstant();
-					// TODO all happens on construction. I would prefer a static method for such jobs
-					new TrainingWeekManager(activationdate, false, false);
+					TrainingWeekManager twm = new TrainingWeekManager(activationdate, false, false);
+					twm.push2TrainingsTable();
 				}
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
