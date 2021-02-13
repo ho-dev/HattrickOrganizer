@@ -43,7 +43,7 @@ public class PastTrainingsTableModel extends AbstractTrainingsTableModel {
 			train.setStaminaPart(staminaTrainingPart.intValue());
 		}
 
-		DBManager.instance().saveTraining((TrainingPerWeek) train);
+		DBManager.instance().saveTraining(train, true);
 		fireTableCellUpdated(row, col);
 	}
 
