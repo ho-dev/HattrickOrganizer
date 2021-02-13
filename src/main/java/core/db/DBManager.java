@@ -1550,14 +1550,14 @@ public class DBManager {
 	}
 
 
-	public void saveTraining(core.training.TrainingPerWeek training) {
+	public void saveTraining(TrainingPerWeek training, boolean force) {
 		((TrainingsTable) getTable(TrainingsTable.TABLENAME))
-				.saveTraining(training);
+				.saveTraining(training, force);
 	}
 
-	public void saveTrainings(List<TrainingPerWeek> trainings) {
+	public void saveTrainings(List<TrainingPerWeek> trainings, boolean force) {
 		((TrainingsTable) getTable(TrainingsTable.TABLENAME))
-				.saveTrainings(trainings);
+				.saveTrainings(trainings, force);
 	}
 
 	// ------------------------------- FutureTrainingTable

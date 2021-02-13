@@ -184,4 +184,13 @@ public class TrainingWeekManager {
     public List<TrainingPerWeek> getTrainingList() {
     	return m_Trainings;
     }
+
+	/**
+	 * The function push elements of m_Trainings into Training table but not replacing existing entries
+	 *
+	 */
+	public void push2TrainingsTable(){
+		DBManager.instance().saveTrainings(m_Trainings, false);
+	}
+
 }

@@ -43,7 +43,7 @@ public class TrainingManager {
         recentTrainings = new TrainingWeekManager(2, true, false);
 
 		// Save recent training history in 'trainings' table
-		DBManager.instance().saveTrainings(recentTrainings.getTrainingList());
+		DBManager.instance().saveTrainings(recentTrainings.getTrainingList(), false);
 
 		//TODO: add entries in trainings from recentTrainings
 

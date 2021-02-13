@@ -15,6 +15,7 @@ public class DateTimeInfo {
 
     private static ZoneId m_UserZoneID = ZoneId.systemDefault();  // TODO: allow to have this set from user preference (specified or system default)  #884
     private static ZoneId m_HTzoneID = ZoneId.of("Europe/Stockholm");
+    private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private Timestamp m_tsHattrick;  // for compatibility only
     private Timestamp m_tsUserLocalized;  // for compatibility only
     private Instant m_instantHattrick;
@@ -51,7 +52,7 @@ public class DateTimeInfo {
      **/
     public DateTimeInfo(String sDateTime) {
         m_sHattrick = cleanDateTimeString(sDateTime);
-        LocalDateTime _htDateTimeNonLocalized = LocalDateTime.parse(m_sHattrick, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime _htDateTimeNonLocalized = LocalDateTime.parse(m_sHattrick, dtf);
         m_zdtHattrick = ZonedDateTime.of(_htDateTimeNonLocalized, m_HTzoneID);
         m_zdtUserLocalized = m_zdtHattrick.withZoneSameInstant(m_UserZoneID);
         m_instantHattrick = m_zdtHattrick.toInstant();
@@ -60,10 +61,22 @@ public class DateTimeInfo {
         m_tsUserLocalized = Timestamp.from(m_instantUserLocalized);
     }
 
+    public boolean isInTheFuture(){
+        ZonedDateTime zdt = ZonedDateTime.now(m_HTzoneID);
+        return m_zdtHattrick.isAfter(zdt);
+    }
+
+    public boolean isPassed(){
+        return !isInTheFuture();
+    }
+
 
     public DateTimeInfo(Timestamp ts) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MM dd");
-        String sDateTime = formatter.format(ts.toInstant());
+        this(ts.toInstant());
+    }
+
+    public DateTimeInfo(Instant instant) {
+        String sDateTime = DateTimeUtils.InstantToSQLtimeStamp(instant);
         new DateTimeInfo(sDateTime);
     }
 

@@ -2,13 +2,17 @@ package core.db;
 
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
+import core.util.DateTimeInfo;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
+import module.transfer.PlayerTransfer;
+
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 
 /**
@@ -37,14 +41,34 @@ final class TrainingsTable extends AbstractTable {
 	}
 
 	/**
-	 * save provided training in database
+	 * save provided training in database (trainings still in the future will be skipped)
+	 * @param training training to be saved
+	 * @param force if true will replace the training if it exists, otherwise will do nothing
 	 */
-	void saveTraining(TrainingPerWeek training) {
+	void saveTraining(TrainingPerWeek training, boolean force) {
 
 		if (training != null) {
+
+			DateTimeInfo trainingDateAsDTI = new DateTimeInfo(training.getTrainingDate());
 			String trainingDate = DateTimeUtils.InstantToSQLtimeStamp(training.getTrainingDate());
 
-			delete(new String[]{"TRAINING_DATE"}, new String[]{trainingDate});
+			if (trainingDateAsDTI.isInTheFuture()){
+				HOLogger.instance().debug(this.getClass(), trainingDate + " in the future   =>    SKIPPED");
+				return;
+			}
+
+
+			if(isTrainingDateInDB(trainingDate)){
+
+				if (force){
+					delete(new String[]{"TRAINING_DATE"}, new String[]{trainingDate});
+					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    DELETED");
+				}
+				else{
+					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    SKIPPED");
+					return;
+				}
+			}
 
 			String statement = "INSERT INTO " + getTableName() + " (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL, SOURCE) VALUES (";
 			statement += trainingDate + ", ";
@@ -57,6 +81,7 @@ final class TrainingsTable extends AbstractTable {
 
 			try {
 				adapter.executeUpdate(statement);
+				HOLogger.instance().debug(this.getClass(), trainingDate + "  =>    INSERTED");
 			}
 
 			catch (Exception e) {
@@ -66,35 +91,24 @@ final class TrainingsTable extends AbstractTable {
 	}
 
 
-	void saveTrainings(List<TrainingPerWeek> trainings) {
+	/**
+	 * apply the function saveTraining() to all elements of the provided vector
+	 */
+	void saveTrainings(List<TrainingPerWeek> trainings, boolean force) {
 		for (var training:trainings){
-			saveTraining(training);
+			saveTraining(training, force);
 		}
 	}
 
-
-	// TODO create this function
-	/**
-	 * This function is used for migration HO 4.1 -> HO 5.0 (this function might be located in DBUpdater)
-	 * create TPW vector for all entries (TrainingWeekManager(01/01/1900, false, false)
-	 * extra recover existing information from TrainingTable (@wsbrenk)
-	 */
-	void recalculateEntries() {
-
-		//		Dummy code
-		//		new_entries = new List<TrainingPerWeek>
-		//		existing_entries = getTrainingList()
-		//		computedEntries = TrainingWeekManager(01/01/1900, false, false).getentries()
-		//		for (entry : computedEntries){
-		//			if entry.getDate() exist in existingentries.getEntry(entry.getDate()) {
-		//				new_entries.add(existingentries.get(entry.getDate())))
-		//           }
-		//			else {
-		//				newentries.add(entry)
-		//				}
-		//   clearTable()
-		//   saveTrainings(new_entries)
-
+	private boolean isTrainingDateInDB(String trainingDate){
+		String sql = String.format("SELECT 1 FROM XTRADATA WHERE TRAININGDATE = '%s' LIMIT 1", trainingDate);
+		ResultSet rs = adapter.executeQuery(sql);
+		if (rs == null) {
+			return false;
+		}
+		else{
+			return true;
+		}
 	}
 
 
@@ -134,6 +148,5 @@ final class TrainingsTable extends AbstractTable {
 
 		return vTrainings;
 	}
-
 	
 }
