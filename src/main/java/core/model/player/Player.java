@@ -1416,13 +1416,13 @@ public class Player {
     public float getSub4SkillAccurate(int skill) {
         double value = switch (skill) {
             case KEEPER -> m_dSubTorwart;
-            case PlayerSkill.PLAYMAKING -> m_dSubSpielaufbau;
-            case PlayerSkill.DEFENDING -> m_dSubVerteidigung;
-            case PlayerSkill.PASSING -> m_dSubPasspiel;
-            case PlayerSkill.WINGER -> m_dSubFluegelspiel;
-            case PlayerSkill.SCORING -> m_dSubTorschuss;
-            case PlayerSkill.SET_PIECES -> m_dSubStandards;
-            case PlayerSkill.EXPERIENCE -> subExperience;
+            case PLAYMAKING -> m_dSubSpielaufbau;
+            case DEFENDING -> m_dSubVerteidigung;
+            case PASSING -> m_dSubPasspiel;
+            case WINGER -> m_dSubFluegelspiel;
+            case SCORING -> m_dSubTorschuss;
+            case SET_PIECES -> m_dSubStandards;
+            case EXPERIENCE -> subExperience;
             default -> 0;
         };
 
@@ -1432,13 +1432,13 @@ public class Player {
     public void setSubskill4PlayerSkill(int skill, float value) {
         switch (skill) {
             case KEEPER -> m_dSubTorwart = value;
-            case PlayerSkill.PLAYMAKING -> m_dSubSpielaufbau = value;
-            case PlayerSkill.DEFENDING -> m_dSubVerteidigung = value;
-            case PlayerSkill.PASSING -> m_dSubPasspiel = value;
-            case PlayerSkill.WINGER -> m_dSubFluegelspiel = value;
-            case PlayerSkill.SCORING -> m_dSubTorschuss = value;
-            case PlayerSkill.SET_PIECES -> m_dSubStandards = value;
-            case PlayerSkill.EXPERIENCE -> subExperience = value;
+            case PLAYMAKING -> m_dSubSpielaufbau = value;
+            case DEFENDING -> m_dSubVerteidigung = value;
+            case PASSING -> m_dSubPasspiel = value;
+            case WINGER -> m_dSubFluegelspiel = value;
+            case SCORING -> m_dSubTorschuss = value;
+            case SET_PIECES -> m_dSubStandards = value;
+            case EXPERIENCE -> subExperience = value;
         }
     }
 
@@ -1750,17 +1750,17 @@ public class Player {
     public int getValue4Skill(int skill) {
         return switch (skill) {
             case KEEPER -> m_iTorwart;
-            case PlayerSkill.PLAYMAKING -> m_iSpielaufbau;
-            case PlayerSkill.DEFENDING -> m_iVerteidigung;
-            case PlayerSkill.PASSING -> m_iPasspiel;
-            case PlayerSkill.WINGER -> m_iFluegelspiel;
-            case PlayerSkill.SCORING -> m_iTorschuss;
-            case PlayerSkill.SET_PIECES -> m_iStandards;
-            case PlayerSkill.STAMINA -> m_iKondition;
-            case PlayerSkill.EXPERIENCE -> m_iErfahrung;
-            case PlayerSkill.FORM -> m_iForm;
-            case PlayerSkill.LEADERSHIP -> m_iFuehrung;
-            case PlayerSkill.LOYALTY -> m_iLoyalty;
+            case PLAYMAKING -> m_iSpielaufbau;
+            case DEFENDING -> m_iVerteidigung;
+            case PASSING -> m_iPasspiel;
+            case WINGER -> m_iFluegelspiel;
+            case SCORING -> m_iTorschuss;
+            case SET_PIECES -> m_iStandards;
+            case STAMINA -> m_iKondition;
+            case EXPERIENCE -> m_iErfahrung;
+            case FORM -> m_iForm;
+            case LEADERSHIP -> m_iFuehrung;
+            case LOYALTY -> m_iLoyalty;
             default -> 0;
         };
     }
@@ -1774,17 +1774,17 @@ public class Player {
     public void setValue4Skill(int skill, int value) {
         switch (skill) {
             case KEEPER -> setTorwart(value);
-            case PlayerSkill.PLAYMAKING -> setSpielaufbau(value);
-            case PlayerSkill.PASSING -> setPasspiel(value);
-            case PlayerSkill.WINGER -> setFluegelspiel(value);
-            case PlayerSkill.DEFENDING -> setVerteidigung(value);
-            case PlayerSkill.SCORING -> setTorschuss(value);
-            case PlayerSkill.SET_PIECES -> setStandards(value);
-            case PlayerSkill.STAMINA -> setKondition(value);
-            case PlayerSkill.EXPERIENCE -> setErfahrung(value);
-            case PlayerSkill.FORM -> setForm(value);
-            case PlayerSkill.LEADERSHIP -> setFuehrung(value);
-            case PlayerSkill.LOYALTY -> setLoyalty(value);
+            case PLAYMAKING -> setSpielaufbau(value);
+            case PASSING -> setPasspiel(value);
+            case WINGER -> setFluegelspiel(value);
+            case DEFENDING -> setVerteidigung(value);
+            case SCORING -> setTorschuss(value);
+            case SET_PIECES -> setStandards(value);
+            case STAMINA -> setKondition(value);
+            case EXPERIENCE -> setErfahrung(value);
+            case FORM -> setForm(value);
+            case LEADERSHIP -> setFuehrung(value);
+            case LOYALTY -> setLoyalty(value);
         }
     }
 
@@ -1986,9 +1986,9 @@ public class Player {
             return;
         }
 
-        for (int skillType = 0; skillType < PlayerSkill.EXPERIENCE; skillType++) {
+        for (int skillType = 0; skillType < EXPERIENCE; skillType++) {
 
-            if ((skillType == PlayerSkill.FORM) || (skillType == PlayerSkill.STAMINA)) {
+            if ((skillType == FORM) || (skillType == STAMINA)) {
                 continue;
             }
 
@@ -2045,12 +2045,12 @@ public class Player {
 
         String key = fo.getPosition() + ":"
                 + Helper.round(getGKskill() + getSub4Skill(KEEPER) + loy, 2) + "|"
-                + Helper.round(getPMskill() + getSub4Skill(PlayerSkill.PLAYMAKING) + loy, 2) + "|"
-                + Helper.round(getDEFskill() + getSub4Skill(PlayerSkill.DEFENDING) + loy, 2) + "|"
-                + Helper.round(getWIskill() + getSub4Skill(PlayerSkill.WINGER) + loy, 2) + "|"
-                + Helper.round(getPSskill() + getSub4Skill(PlayerSkill.PASSING) + loy, 2) + "|"
-                + Helper.round(getSPskill() + getSub4Skill(PlayerSkill.SET_PIECES) + loy, 2) + "|"
-                + Helper.round(getSCskill() + getSub4Skill(PlayerSkill.SCORING) + loy, 2) + "|"
+                + Helper.round(getPMskill() + getSub4Skill(PLAYMAKING) + loy, 2) + "|"
+                + Helper.round(getDEFskill() + getSub4Skill(DEFENDING) + loy, 2) + "|"
+                + Helper.round(getWIskill() + getSub4Skill(WINGER) + loy, 2) + "|"
+                + Helper.round(getPSskill() + getSub4Skill(PASSING) + loy, 2) + "|"
+                + Helper.round(getSPskill() + getSub4Skill(SET_PIECES) + loy, 2) + "|"
+                + Helper.round(getSCskill() + getSub4Skill(SCORING) + loy, 2) + "|"
                 + getForm() + "|"
                 + getKondition() + "|"
                 + getErfahrung() + "|"
@@ -2068,12 +2068,12 @@ public class Player {
 
         // Compute contribution
         float gkValue = fo.getGKfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, KEEPER, useForm, false, null, false);
-        float pmValue = fo.getPMfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.PLAYMAKING, useForm, false, null, false);
-        float deValue = fo.getDEfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.DEFENDING, useForm, false, null, false);
-        float wiValue = fo.getWIfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.WINGER, useForm, false, null, false);
-        float psValue = fo.getPSfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.PASSING, useForm, false, null, false);
-        float spValue = fo.getSPfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.SET_PIECES, useForm, false, null, false);
-        float scValue = fo.getSCfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.SCORING, useForm, false, null, false);
+        float pmValue = fo.getPMfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PLAYMAKING, useForm, false, null, false);
+        float deValue = fo.getDEfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, DEFENDING, useForm, false, null, false);
+        float wiValue = fo.getWIfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, WINGER, useForm, false, null, false);
+        float psValue = fo.getPSfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PASSING, useForm, false, null, false);
+        float spValue = fo.getSPfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, SET_PIECES, useForm, false, null, false);
+        float scValue = fo.getSCfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, SCORING, useForm, false, null, false);
         float val = gkValue + pmValue + deValue + wiValue + psValue + spValue + scValue;
 
         float absVal = val * 10; // multiplied by 10 for improved visibility
@@ -2134,9 +2134,9 @@ public class Player {
      * @param old
      */
     public void copySubSkills(Player old) {
-        for (int skillType = 0; skillType <= PlayerSkill.EXPERIENCE; skillType++) {
+        for (int skillType = 0; skillType <= EXPERIENCE; skillType++) {
 
-            if ((skillType == PlayerSkill.FORM) || (skillType == PlayerSkill.STAMINA)) {
+            if ((skillType == FORM) || (skillType == STAMINA)) {
                 continue;
             }
 
@@ -2156,7 +2156,7 @@ public class Player {
      */
     public void copySkills(Player old) {
 
-        for (int skillType = 0; skillType <= PlayerSkill.LOYALTY; skillType++) {
+        for (int skillType = 0; skillType <= LOYALTY; skillType++) {
             setValue4Skill(skillType, old.getValue4Skill(skillType));
         }
     }
@@ -2205,7 +2205,7 @@ public class Player {
      * Test for whether skilldown has occurred
      */
     public boolean check4SkillDown(int skill, Player oldPlayer) {
-        if (skill < PlayerSkill.EXPERIENCE)
+        if (skill < EXPERIENCE)
             if ((oldPlayer != null) && (oldPlayer.getPlayerID() > 0))
                 return oldPlayer.getValue4Skill(skill) > getValue4Skill(skill);
         return false;

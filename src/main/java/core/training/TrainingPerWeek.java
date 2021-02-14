@@ -65,6 +65,10 @@ public class TrainingPerWeek  {
         this(trainingDate,training_type,training_intensity,staminaShare,trainingAssistantsLevel,coachLevel,false,false,DBDataSource.GUESS);
     }
 
+    public TrainingPerWeek(Instant trainingDate, int training_type, int training_intensity, int staminaShare, int trainingAssistantsLevel, int coachLevel) {
+        this(trainingDate,training_type,training_intensity,staminaShare,trainingAssistantsLevel,coachLevel,false,false,DBDataSource.GUESS);
+    }
+
     /**
      * function that fetch info of NT match played related to the TrainingPerWeek instance
      * @return MatchKurzInfo[] related to this TrainingPerWeek instance
