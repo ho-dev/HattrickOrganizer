@@ -305,4 +305,27 @@ public final class HRFTable extends AbstractTable {
 
 		return null;
 	}
+
+	public String getHrfIdPerWeekList(int nWeeks) {
+		var sql = "select min(hrf_id) as id from " +
+				getTableName() +
+				" group by unix_timestamp(datum)/7/86400 order by id desc limit " +
+				nWeeks;
+
+		var ret = new StringBuilder();
+		var separator = "";
+
+		final ResultSet rs = adapter.executeQuery(sql);
+		try {
+			if (rs != null) {
+				while (rs.next()) {
+					ret.append(separator).append(rs.getInt(0));
+					separator=",";
+				}
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), "DatenbankZugriff.getAllHRFs: " + e);
+		}
+		return ret.toString();
+	}
 }

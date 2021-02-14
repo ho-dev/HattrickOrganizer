@@ -2703,4 +2703,8 @@ public class DBManager {
 	public HRF getPreviousHRF(int currentHRFId) {
 		return ((HRFTable)getTable(HRFTable.TABLENAME)).getPreviousHRF(currentHRFId);
 	}
+
+	public String getHrfIdPerWeekList(int nWeeks) {
+		return ((HRFTable)getTable(HRFTable.TABLENAME)).getHrfIdPerWeekList(nWeeks);
+	}
 }
