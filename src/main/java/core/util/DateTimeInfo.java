@@ -5,6 +5,7 @@ import core.model.HOVerwaltung;
 import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 
 /*
@@ -88,11 +89,11 @@ public class DateTimeInfo {
 
         ZonedDateTime origin_ht_date_localized = ORIGIN_HT_DATE.withZoneSameInstant(m_UserZoneID);
 
-        int nbDays = Period.between(origin_ht_date_localized.toLocalDate(), m_zdtUserLocalized.toLocalDate()).getDays();
-        int nbWeeks = Math.floorDiv(nbDays, 7);
+        long nbDays = ChronoUnit.DAYS.between(origin_ht_date_localized.toLocalDate(), m_zdtUserLocalized.toLocalDate());
+        long nbWeeks = nbDays / 7;
 
-        m_HTseasonLocalized = Math.floorDiv(nbWeeks, 16) + 1 + m_UserSeasonOffset;
-        m_HTweekLocalized = (nbWeeks % 16) + 1;
+        m_HTseasonLocalized = (int)Math.floorDiv(nbWeeks, 16) + 1 + m_UserSeasonOffset;
+        m_HTweekLocalized = (int)(nbWeeks % 16) + 1;
     }
 
 
