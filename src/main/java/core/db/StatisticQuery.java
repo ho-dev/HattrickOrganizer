@@ -561,9 +561,16 @@ public class StatisticQuery {
 	}
 
 
-	private static String getInClause(int anzahlHRF, List<TrainingPerWeek> trainings) {
+	/**
+	 * Get a list of HRF Ids of the last weeks
+	 * only one id per week is returned
+	 *
+	 * @param nWeeks number of weeks
+	 * @return comma separated list of hrf ids
+	 */
+	private static String getInClause(int nWeeks) {
 		StringBuffer inClause = new StringBuffer();
-		int start = trainings.size()-anzahlHRF;
+		int start = trainings.size()-nWeeks;
 		if (start<0) {
 			start=0;
 		}
