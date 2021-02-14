@@ -1,10 +1,9 @@
 package core.util;
 
+import core.model.HOVerwaltung;
+
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 
@@ -13,8 +12,13 @@ import java.time.format.DateTimeFormatter;
  */
 public class DateTimeInfo {
 
-    private static ZoneId m_UserZoneID = ZoneId.systemDefault();  // TODO: allow to have this set from user preference (specified or system default)  #884
+
+    private static ZoneId m_UserSystemZoneID = ZoneId.systemDefault();
+    private static ZoneId m_UserZoneID;
+    private static int m_UserSeasonOffsetDefault = HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
+    private static int m_UserSeasonOffset;
     private static ZoneId m_HTzoneID = ZoneId.of("Europe/Stockholm");
+    private static ZonedDateTime ORIGIN_HT_DATE = ZonedDateTime.of(1997, 9, 22, 0, 0, 0, 0, m_HTzoneID);
     private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private Timestamp m_tsHattrick;  // for compatibility only
     private Timestamp m_tsUserLocalized;  // for compatibility only
@@ -23,6 +27,9 @@ public class DateTimeInfo {
     private ZonedDateTime m_zdtHattrick;
     private ZonedDateTime m_zdtUserLocalized;
     private String m_sHattrick; // String as provided by Hattrick in xml files
+    private int m_HTweekLocalized;
+    private int m_HTseasonLocalized;
+
 
 
     @Deprecated
@@ -47,10 +54,29 @@ public class DateTimeInfo {
         return m_sHattrick;
     }
 
+    public int getHTSeasonLocalized() {
+        return m_HTseasonLocalized;
+    }
+
+    public int getHTWeekLocalized() {
+        return m_HTweekLocalized;
+    }
+
     /**
+     * By default resolves to System ZoneID
      * @param sDateTime as of "yyyy-MM-dd HH:mm:ss"
      **/
     public DateTimeInfo(String sDateTime) {
+        this(sDateTime, m_UserSystemZoneID, m_UserSeasonOffsetDefault);
+    }
+
+
+    /**
+     * @param sDateTime as of "yyyy-MM-dd HH:mm:ss"
+     **/
+    public DateTimeInfo(String sDateTime, ZoneId zoneID, Integer seasonOffset) {
+        m_UserZoneID = zoneID;
+        m_UserSeasonOffset = seasonOffset;
         m_sHattrick = cleanDateTimeString(sDateTime);
         LocalDateTime _htDateTimeNonLocalized = LocalDateTime.parse(m_sHattrick, dtf);
         m_zdtHattrick = ZonedDateTime.of(_htDateTimeNonLocalized, m_HTzoneID);
@@ -59,7 +85,16 @@ public class DateTimeInfo {
         m_instantUserLocalized = m_zdtUserLocalized.toInstant();
         m_tsHattrick = Timestamp.from(m_instantHattrick);
         m_tsUserLocalized = Timestamp.from(m_instantUserLocalized);
+
+        ZonedDateTime origin_ht_date_localized = ORIGIN_HT_DATE.withZoneSameInstant(m_UserZoneID);
+
+        int nbDays = Period.between(origin_ht_date_localized.toLocalDate(), m_zdtUserLocalized.toLocalDate()).getDays();
+        int nbWeeks = Math.floorDiv(nbDays, 7);
+
+        m_HTseasonLocalized = Math.floorDiv(nbWeeks, 16) + 1 + m_UserSeasonOffset;
+        m_HTweekLocalized = (nbWeeks % 16) + 1;
     }
+
 
     public boolean isInTheFuture(){
         ZonedDateTime zdt = ZonedDateTime.now(m_HTzoneID);
