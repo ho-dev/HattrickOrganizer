@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.constants.TrainingType;
-import core.model.StaffMember;
-import core.model.StaffType;
 import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -323,7 +321,7 @@ public abstract class WeeklyTrainingType {
 	static double[] coachKoeff = {0.734,0.834,0.92,1,1.04};
 	static double[] assistantKoeff ={1,1.035,1.07,1.105,1.14,1.175,1.21,1.245,1.28,1.315,1.35};
 
-	public double getTrainingAlternativeFormula(Player player, int trainerlevel, int value4Skill, TrainingPerPlayer trForPlayer, boolean isPrimarySkill) {
+	public double getTrainingAlternativeFormula(Player player, int value4Skill, TrainingPerPlayer trForPlayer, boolean isPrimarySkill) {
 		//return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), trainerlevel, intensity, stamina, value4Skill, staff);
 
 		/*
@@ -352,10 +350,11 @@ public abstract class WeeklyTrainingType {
 		4 0.734
 		*/
 
-		if (trainerlevel < 4 || trainerlevel > 8) {
-			return trainingCalcError("Trainerlevel out of range [4,8]: " + trainerlevel);    // dummy return
+		var skillvalue = trForPlayer.getTrainingWeek().getCoachLevel();
+		if (skillvalue < 4 || skillvalue > 8) {
+			return trainingCalcError("Trainerlevel out of range [4,8]: " + skillvalue);    // dummy return
 		}
-		var factorCoach = coachKoeff[trainerlevel - 4];
+		var factorCoach = coachKoeff[skillvalue - 4];
 
 		/*
 		K(assist)

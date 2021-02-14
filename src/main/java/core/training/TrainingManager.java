@@ -83,11 +83,9 @@ public class TrainingManager {
 
 
 	@Deprecated
-	public void calculateTraining(Timestamp nextTrainingDate,
-								  List<TrainingPerWeek> trainingList,
+	public void calculateTraining(List<TrainingPerWeek> trainingList,
 								  List<Player> currentPlayers,
-								  List<Player> previousPlayers,
-								  int trainerSkill) {
+								  List<Player> previousPlayers) {
 
 		// Generate a map of players from the previous hrf.
 		final Map<Integer, Player> playerOfPreviousDownload = new HashMap<>();

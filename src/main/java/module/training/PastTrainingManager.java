@@ -58,7 +58,7 @@ public class PastTrainingManager {
 							.getLastTrainingDate(
 									htDate,
 									HOVerwaltung.instance().getModel().getXtraDaten()
-											.getTrainingDate()).getTime();
+											.getNextTrainingDate()).getTime();
 
 					su = getSkillup(trainingDate);
 					su.setValue((Integer) element[2]);

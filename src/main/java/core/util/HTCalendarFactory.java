@@ -94,7 +94,7 @@ public final class HTCalendarFactory {
     	HOModel model = HOVerwaltung.instance().getModel();
         final Calendar calMark = Calendar.getInstance();
 
-        calMark.setTimeInMillis(model.getXtraDaten().getTrainingDate().getTime());
+        calMark.setTimeInMillis(model.getXtraDaten().getNextTrainingDate().getTime());
 
         final HTCalendar calendar = new HTCalendar();
         calendar.initialize(calMark);

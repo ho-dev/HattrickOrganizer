@@ -192,7 +192,7 @@ final class BasicsTable extends AbstractTable {
 		if (hrfID != -1) {
 			//todo sicherstellen das kein Trainingsdatum zwischen matchdate und hrfdate liegt
 
-			Timestamp training4Hrf = DBManager.instance().getXtraDaten(hrfID).getTrainingDate();
+			Timestamp training4Hrf = DBManager.instance().getXtraDaten(hrfID).getNextTrainingDate();
 
 			if ((training4Hrf.after(hrfDate)) && (training4Hrf.before(time))) //wenn hrfDate vor TrainingsDate und Matchdate nach Trainigsdate ->Abbruch!
 				{

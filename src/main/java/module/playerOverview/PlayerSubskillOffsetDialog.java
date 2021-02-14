@@ -17,9 +17,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.NumberFormat;
 import javax.swing.*;
-import javax.swing.text.NumberFormatter;
 
 
 final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener {
@@ -69,14 +67,14 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 	@Override
 	public final void actionPerformed(ActionEvent actionEvent) {
 		if (actionEvent.getSource().equals(okButton)) {
-			m_clPlayer.setSubskill4Pos(PlayerSkill.WINGER, wingerOffsetSlider.getValue() / 100);
-			m_clPlayer.setSubskill4Pos(PlayerSkill.PASSING, passingOffsetSlider.getValue() / 100);
-			m_clPlayer.setSubskill4Pos(PlayerSkill.PLAYMAKING, playmakingOffsetSlider.getValue() / 100);
-			m_clPlayer.setSubskill4Pos(PlayerSkill.SET_PIECES, setPiecesOffsetSlider.getValue() / 100);
-			m_clPlayer.setSubskill4Pos(PlayerSkill.SCORING, scoringOffsetSlider.getValue() / 100);
-			m_clPlayer.setSubskill4Pos(PlayerSkill.KEEPER, keeperOffsetSlider.getValue() / 100);
-			m_clPlayer.setSubskill4Pos(PlayerSkill.DEFENDING, defendingOffsetSlider.getValue() / 100);
-			m_clPlayer.setSubskill4Pos(PlayerSkill.EXPERIENCE, experienceOffsetSlider.getValue() / 100);
+			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.WINGER, wingerOffsetSlider.getValue() / 100);
+			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.PASSING, passingOffsetSlider.getValue() / 100);
+			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.PLAYMAKING, playmakingOffsetSlider.getValue() / 100);
+			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.SET_PIECES, setPiecesOffsetSlider.getValue() / 100);
+			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.SCORING, scoringOffsetSlider.getValue() / 100);
+			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.KEEPER, keeperOffsetSlider.getValue() / 100);
+			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.DEFENDING, defendingOffsetSlider.getValue() / 100);
+			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.EXPERIENCE, experienceOffsetSlider.getValue() / 100);
 
 			DBManager.instance().saveSpieler(
 				HOVerwaltung.instance().getModel().getID(),

@@ -6,6 +6,9 @@ import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public final class HRFTable extends AbstractTable {
@@ -87,7 +90,7 @@ public final class HRFTable extends AbstractTable {
 	 * Sucht das letzte HRF zwischen dem angegebenen Datum und 6 Tagen davor
 	 * Wird kein HRF gefunden wird -1 zurückgegeben
 	 */
-	int getPreviousHRF(int hrfId) {
+	int getPreviousHRFId(int hrfId) {
 		String sql;
 		int previousHrfId = -1;
 
@@ -263,5 +266,43 @@ public final class HRFTable extends AbstractTable {
 		// Convert to array
 		HRF[] allHrfs = liste.toArray(new HRF[0]);
 		return allHrfs;
+	}
+
+	public List<HRF> getHRFsSince(Instant from) {
+		var liste = new ArrayList<HRF>();
+		ResultSet rs;
+		String sql = "SELECT * FROM " + getTableName() + " WHERE Datum>=" + from + " ORDER BY Datum ASC";
+		rs = adapter.executeQuery(sql);
+
+		try {
+			if (rs != null) {
+				while (rs.next()) {
+					HRF curHrf = new HRF(rs);
+					liste.add(curHrf);
+				}
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), "DatenbankZugriff.getAllHRFs: " + e);
+		}
+		return liste;
+	}
+
+	public HRF getPreviousHRF(int hrfId) {
+		var sql = "select * from HRF where HRF_ID < " + hrfId
+				+ " order by HRF_ID desc LIMIT 1";
+
+		final ResultSet rs = adapter.executeQuery(sql);
+
+		try {
+			if (rs != null) {
+				if (rs.first()) {
+					return new HRF(rs);
+				}
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), "DBZugriff.getPreviousHRF: " + e.toString());
+		}
+
+		return null;
 	}
 }

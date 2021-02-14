@@ -42,6 +42,7 @@ import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -894,6 +895,10 @@ public class DBManager {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getMaxHrf().getHrfId();
 	}
 
+	public HRF getMaxHrf() {
+		return ((HRFTable) getTable(HRFTable.TABLENAME)).getMaxHrf();
+	}
+
 	/**
 	 * Update latest data.
 	 */
@@ -955,8 +960,8 @@ public class DBManager {
 	 * @param hrfId the hrf id
 	 * @return the previous hrf
 	 */
-	public int getPreviousHRF(int hrfId) {
-		return ((HRFTable) getTable(HRFTable.TABLENAME)).getPreviousHRF(hrfId);
+	public int getPreviousHRFId(int hrfId) {
+		return ((HRFTable) getTable(HRFTable.TABLENAME)).getPreviousHRFId(hrfId);
 	}
 
 	/**
@@ -1549,6 +1554,10 @@ public class DBManager {
 				.getTrainingList();
 	}
 
+	public List<TrainingPerWeek> getTrainingList(Instant fromDate, Instant toDate) {
+		return ((TrainingsTable) getTable(TrainingsTable.TABLENAME))
+				.getTrainingList(fromDate, toDate);
+	}
 
 	public void saveTraining(TrainingPerWeek training, boolean force) {
 		((TrainingsTable) getTable(TrainingsTable.TABLENAME))
@@ -1580,7 +1589,7 @@ public class DBManager {
 	 */
 	public void saveFutureTraining(TrainingPerWeek training) {
 		((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME))
-				.saveFutureTraining(training);
+				.storeFutureTraining(training);
 	}
 
 	// ------------------------------- VereinTable
@@ -1616,8 +1625,8 @@ public class DBManager {
 	 */
 // ------------------------------- FutureTraining
 	// -------------------------------------------------
-	public int getFuturTraining(int Saison, int Week) {
-		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).getFutureTrainings(Saison, Week);
+	public int getFuturTraining(Instant trainingDate) {
+		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).loadFutureTrainings(trainingDate);
 	}
 
 	// ------------------------------- XtraDataTable
@@ -2687,4 +2696,11 @@ public class DBManager {
 		((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).storeTeamLogoInfo(teamID, logoURL, lastAccess);
 	}
 
+	public List<HRF> getHRFsSince(Instant since) {
+		return ((HRFTable)getTable(HRFTable.TABLENAME)).getHRFsSince(since);
+	}
+
+	public HRF getPreviousHRF(int currentHRFId) {
+		return ((HRFTable)getTable(HRFTable.TABLENAME)).getPreviousHRF(currentHRFId);
+	}
 }

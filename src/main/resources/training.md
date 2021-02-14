@@ -1,3 +1,32 @@
+# Senior training skill calculation
+
+## Download updates TRAINING table
+Each download checks whether a new TRAINING table entry has to be created. Automatic updates shouldn't be necessary.
+They are only possible through interactive training editor.
+
+## After each Download HoModel.CalcSubskills is called  
+
+* determine the list of training weeks (training type, trainer skill, assistant level, stamina share) since previous download
+* determine list of match lineups and match details of each training week (happens implicitly by lazy loading in training week objects)
+* For each current player 
+  * determine status of previous download
+  * for all skills 
+    * init skill value to value of previous download
+    * For each training week
+      * call player.calcSubskillIncrement(previous player status, training, match infos)
+        * if skill is trained in training week  
+          * aggregate players training minutes per week (bonus, full, partly, osmosis)
+          * increment skill value training effect (training infos, training minutes)
+* store status of current players 
+
+## Interactiv Training editing, Recalc Subskills
+User can edit training week items. Starting RecalcSubskills will calculate all stored Download since oldest changed
+training item.
+* for each Download call HoModel.CalcSubskills
+
+Further options are available to recalculate 7 weeks or all downloads.
+
+
 # Youth training skill calculation
 
 Youthplayer's training development is realized as Hashmap in the class Youthplayer. It contains one

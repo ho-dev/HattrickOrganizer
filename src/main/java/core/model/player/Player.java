@@ -19,10 +19,12 @@ import core.training.*;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.HelperWrapper;
+import module.training.Skills;
 
 import java.sql.Timestamp;
 import java.util.*;
 
+import static core.constants.player.PlayerSkill.*;
 import static java.lang.Integer.min;
 
 public class Player {
@@ -1413,7 +1415,7 @@ public class Player {
      */
     public float getSub4SkillAccurate(int skill) {
         double value = switch (skill) {
-            case PlayerSkill.KEEPER -> m_dSubTorwart;
+            case KEEPER -> m_dSubTorwart;
             case PlayerSkill.PLAYMAKING -> m_dSubSpielaufbau;
             case PlayerSkill.DEFENDING -> m_dSubVerteidigung;
             case PlayerSkill.PASSING -> m_dSubPasspiel;
@@ -1427,9 +1429,9 @@ public class Player {
         return (float) Math.min(0.999, value);
     }
 
-    public void setSubskill4Pos(int skill, float value) {
+    public void setSubskill4PlayerSkill(int skill, float value) {
         switch (skill) {
-            case PlayerSkill.KEEPER -> m_dSubTorwart = value;
+            case KEEPER -> m_dSubTorwart = value;
             case PlayerSkill.PLAYMAKING -> m_dSubSpielaufbau = value;
             case PlayerSkill.DEFENDING -> m_dSubVerteidigung = value;
             case PlayerSkill.PASSING -> m_dSubPasspiel = value;
@@ -1747,7 +1749,7 @@ public class Player {
      */
     public int getValue4Skill(int skill) {
         return switch (skill) {
-            case PlayerSkill.KEEPER -> m_iTorwart;
+            case KEEPER -> m_iTorwart;
             case PlayerSkill.PLAYMAKING -> m_iSpielaufbau;
             case PlayerSkill.DEFENDING -> m_iVerteidigung;
             case PlayerSkill.PASSING -> m_iPasspiel;
@@ -1771,7 +1773,7 @@ public class Player {
      */
     public void setValue4Skill(int skill, int value) {
         switch (skill) {
-            case PlayerSkill.KEEPER -> setTorwart(value);
+            case KEEPER -> setTorwart(value);
             case PlayerSkill.PLAYMAKING -> setSpielaufbau(value);
             case PlayerSkill.PASSING -> setPasspiel(value);
             case PlayerSkill.WINGER -> setFluegelspiel(value);
@@ -1833,12 +1835,12 @@ public class Player {
     }
 
     private void incrementSubskills(Player originalPlayer, int trainerlevel, int skill, double points, WeeklyTrainingType wt, TrainingPerPlayer trForPlayer) {
-        if (skill < PlayerSkill.KEEPER || points <= 0)
+        if (skill < KEEPER || points <= 0)
             return;
 
         var trainingLength = wt.getTrainingLength(this, trainerlevel, trForPlayer.getTrainingWeek().getTrainingIntensity(), trForPlayer.getTrainingWeek().getStaminaPart(), trForPlayer.getTrainingWeek().getTrainingAssistantsLevel());
 
-        var trainingAlternativeFormula = wt.getTrainingAlternativeFormula(this, trainerlevel, originalPlayer.getValue4Skill(skill), trForPlayer, skill==wt.getPrimaryTrainingSkill());
+        var trainingAlternativeFormula = wt.getTrainingAlternativeFormula(this, trainerlevel, trForPlayer, skill==wt.getPrimaryTrainingSkill());
 
         HOLogger.instance().info(this.getClass(),
                 this.getLastName()+ "; " + PlayerSkill.toString(skill) +
@@ -1861,7 +1863,7 @@ public class Player {
             /* Carry subskill over skillup */
             gain = 0.0f;
         }
-        setSubskill4Pos(skill, Math.min(0.99f, getSub4SkillAccurate(skill) + gain));
+        setSubskill4PlayerSkill(skill, Math.min(0.99f, getSub4SkillAccurate(skill) + gain));
     }
 
     /**
@@ -1916,6 +1918,7 @@ public class Player {
     public TrainingPerPlayer calculateWeeklyTraining(TrainingPerWeek train) {
         final int playerID = this.getPlayerID();
         TrainingPerPlayer output = new TrainingPerPlayer(this);
+        output.setTrainingWeek(train);
         if (train == null || train.getTrainingType() < 0) {
             return output;
         }
@@ -1958,7 +1961,6 @@ public class Player {
                     }
                 }
                 output.setTrainingPair(trp);
-                output.setTrainingWeek(train);
             } catch (Exception e) {
                 HOLogger.instance().log(getClass(),e);
             }
@@ -1997,7 +1999,7 @@ public class Player {
                 //and check that the player has not popped
                 if ((drop > 0) && (originalPlayer.getSub4SkillAccurate(skillType) > 0)
                         && (getValue4Skill(skillType) == originalPlayer.getValue4Skill(skillType))) {
-                    setSubskill4Pos(skillType, Math.max(0, getSub4SkillAccurate(skillType) - drop / 100));
+                    setSubskill4PlayerSkill(skillType, Math.max(0, getSub4SkillAccurate(skillType) - drop / 100));
                 }
             }
         }
@@ -2042,7 +2044,7 @@ public class Player {
         float loy = RatingPredictionManager.getLoyaltyHomegrownBonus(this);
 
         String key = fo.getPosition() + ":"
-                + Helper.round(getGKskill() + getSub4Skill(PlayerSkill.KEEPER) + loy, 2) + "|"
+                + Helper.round(getGKskill() + getSub4Skill(KEEPER) + loy, 2) + "|"
                 + Helper.round(getPMskill() + getSub4Skill(PlayerSkill.PLAYMAKING) + loy, 2) + "|"
                 + Helper.round(getDEFskill() + getSub4Skill(PlayerSkill.DEFENDING) + loy, 2) + "|"
                 + Helper.round(getWIskill() + getSub4Skill(PlayerSkill.WINGER) + loy, 2) + "|"
@@ -2065,7 +2067,7 @@ public class Player {
         }
 
         // Compute contribution
-        float gkValue = fo.getGKfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.KEEPER, useForm, false, null, false);
+        float gkValue = fo.getGKfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, KEEPER, useForm, false, null, false);
         float pmValue = fo.getPMfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.PLAYMAKING, useForm, false, null, false);
         float deValue = fo.getDEfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.DEFENDING, useForm, false, null, false);
         float wiValue = fo.getWIfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PlayerSkill.WINGER, useForm, false, null, false);
@@ -2139,9 +2141,9 @@ public class Player {
             }
 
             if (!check4SkillUp(skillType, old)) {
-                setSubskill4Pos(skillType, old.getSub4SkillAccurate(skillType));
+                setSubskill4PlayerSkill(skillType, old.getSub4SkillAccurate(skillType));
             } else {
-                setSubskill4Pos(skillType, 0);
+                setSubskill4PlayerSkill(skillType, 0);
             }
         }
     }
@@ -2168,10 +2170,10 @@ public class Player {
     public void dropSubskills(int skillType) {
         if (getValue4Skill(skillType) > 0) {
             // non-existent has no subskill.
-            setSubskill4Pos(skillType, 0.999f);
+            setSubskill4PlayerSkill(skillType, 0.999f);
 
         } else {
-            setSubskill4Pos(skillType, 0);
+            setSubskill4PlayerSkill(skillType, 0);
         }
     }
 
@@ -2359,8 +2361,62 @@ public class Player {
 
     }
 
+    private static int[] trainingSkills= { KEEPER, SET_PIECES, DEFENDING, SCORING, WINGER,PASSING,PLAYMAKING };
 
-static class PositionContribute {
+    public void calcSubskills(int previousID, List<TrainingPerWeek> trainingWeeks) {
+        var before = DBManager.instance().getSpieler(previousID).stream()
+                .filter(i -> i.getPlayerID() == this.getPlayerID()).findFirst()
+                .orElse(this.CloneWithoutSubskills());
+        for (var skill : trainingSkills) {
+            var sub = before.getSub4Skill(skill);
+
+            if (trainingWeeks.size() > 0 &&                 // training happened
+                    !this.hasTrainingBlock()) {             // player training is not blocked (no longer possible)
+                var valueBeforeTraining = before.getValue4Skill(skill);
+                var valueAfterTraining = this.getValue4Skill(skill);
+                for (var training : trainingWeeks) {
+                    var trainingPerPlayer = calculateWeeklyTraining(training);
+                    if ( trainingPerPlayer != null) {
+                        sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + (int) sub);
+                        if (sub > 1) { // Skill up expected
+                            if (valueAfterTraining > valueBeforeTraining) { // OK
+                                valueBeforeTraining++;
+                                sub -= 1.;
+                            } else {                                        // No skill up
+                                sub = 0.99f;
+                            }
+                        }
+                    }
+                }
+                if (valueAfterTraining > valueBeforeTraining) { // Skill up (not yet expected)
+                    sub = 0;
+                }
+            }
+            this.setSubskill4PlayerSkill(skill, sub);
+        }
+    }
+
+
+
+    private int getValue4Skill(Skills.HTSkillID skill) {
+        return getValue4Skill(skill.convertToPlayerSkill());
+    }
+
+    private double getSub4Skill(Skills.HTSkillID skill) {
+        return getSub4Skill(skill.convertToPlayerSkill());
+    }
+
+    private Player CloneWithoutSubskills() {
+        var ret = new Player();
+        ret.copySkills(this);
+        ret.setSpielerID(getPlayerID());
+        ret.setAlter(getAlter());
+        ret.setLastName(getLastName());
+        return ret;
+    }
+
+
+    static class PositionContribute {
     private final float m_rating;
     private final byte clPositionID;
 

@@ -557,13 +557,13 @@ final class SpielerTable extends AbstractTable {
             }
 
             //Subskills
-            player.setSubskill4Pos(PlayerSkill.KEEPER,rs.getFloat("SubTorwart"));
-            player.setSubskill4Pos(PlayerSkill.DEFENDING,rs.getFloat("SubVerteidigung"));
-            player.setSubskill4Pos(PlayerSkill.PLAYMAKING,rs.getFloat("SubSpielaufbau"));
-            player.setSubskill4Pos(PlayerSkill.PASSING,rs.getFloat("SubPasspiel"));
-            player.setSubskill4Pos(PlayerSkill.WINGER,rs.getFloat("SubFluegel"));
-            player.setSubskill4Pos(PlayerSkill.SCORING,rs.getFloat("SubTorschuss"));
-			player.setSubskill4Pos(PlayerSkill.SET_PIECES,rs.getFloat("SubStandards"));
+            player.setSubskill4PlayerSkill(PlayerSkill.KEEPER,rs.getFloat("SubTorwart"));
+            player.setSubskill4PlayerSkill(PlayerSkill.DEFENDING,rs.getFloat("SubVerteidigung"));
+            player.setSubskill4PlayerSkill(PlayerSkill.PLAYMAKING,rs.getFloat("SubSpielaufbau"));
+            player.setSubskill4PlayerSkill(PlayerSkill.PASSING,rs.getFloat("SubPasspiel"));
+            player.setSubskill4PlayerSkill(PlayerSkill.WINGER,rs.getFloat("SubFluegel"));
+            player.setSubskill4PlayerSkill(PlayerSkill.SCORING,rs.getFloat("SubTorschuss"));
+			player.setSubskill4PlayerSkill(PlayerSkill.SET_PIECES,rs.getFloat("SubStandards"));
 
 			player.setSubExperience(rs.getFloat("SubExperience"));
 			player.setNationalTeamId(rs.getInt("NationalTeamID"));

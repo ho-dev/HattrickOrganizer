@@ -2,6 +2,7 @@ package core.model;
 
 import core.datatype.CBItem;
 import core.db.DBManager;
+import core.file.hrf.HRF;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.training.TrainingManager;
@@ -118,24 +119,27 @@ public class HOVerwaltung {
 		}
 
 		// Make sure the training week list is up to date.
-		TrainingManager.instance().refreshTrainingWeeks();
+		//TrainingManager.instance().refreshTrainingWeeks();
 
-		final Vector<CBItem> hrfListe = new Vector<>(DBManager.instance().getCBItemHRFListe(hrfDate));
-		Collections.reverse(hrfListe);
+		var hrfListe = DBManager.instance().getHRFsSince(hrfDate.toInstant());
+
+		int i=0;
 		long s1, s2, lSum = 0, mSum = 0;
 		HOLogger.instance().log(getClass(), "Subskill calculation prepared. " + new Date());
-		for (int i = 0; i < hrfListe.size(); i++) {
+		HRF previousHRF=null;
+		for (var hrf: hrfListe) {
 			try {
 				if (showWait ) {
-					HOMainFrame.instance().setWaitInformation((int) ((i * 100d) / hrfListe.size()));
+					HOMainFrame.instance().setWaitInformation((int) ((i++ * 100d) / hrfListe.size()));
 				}
 				s1 = System.currentTimeMillis();
 				//final HOModel model = this.loadModel((hrfListe.get(i)).getId());
 
-				HOModel model = new HOModel(hrfListe.get(i).getId());
+				HOModel model = new HOModel(hrf, previousHRF);
 				lSum += (System.currentTimeMillis() - s1);
 				s2 = System.currentTimeMillis();
 				model.calcSubskills();
+				previousHRF=hrf;
 				mSum += (System.currentTimeMillis() - s2);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(), "recalcSubskills : ");
@@ -164,23 +168,7 @@ public class HOVerwaltung {
 	 * (lineup ratings are only correct if id is the latest one)
 	 */
 	protected HOModel loadModel(int id) {
-		final HOModel model = new HOModel();
-		model.setCurrentPlayers(DBManager.instance().getSpieler(id));
-		model.setFormerPlayers(DBManager.instance().getAllSpieler());
-		model.setLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
-		model.setPreviousLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
-		model.setBasics(DBManager.instance().getBasics(id));
-		model.setEconomy(DBManager.instance().getEconomy(id));
-		model.setLeague(DBManager.instance().getLiga(id));
-		model.setStadium(DBManager.instance().getStadion(id));
-		model.setTeam(DBManager.instance().getTeam(id));
-		model.setClub(DBManager.instance().getVerein(id));
-		model.setID(id);
-		model.setFixtures(DBManager.instance().getSpielplan(-1, -1));
-		model.setXtraDaten(DBManager.instance().getXtraDaten(id));
-		model.setStaff(DBManager.instance().getStaffByHrfId(id));
-		
-		return model;
+		return new HOModel(id);
 	}
 
 
