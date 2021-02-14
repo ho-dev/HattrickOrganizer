@@ -260,7 +260,7 @@ final class DBUpdater {
 							dateString +
 							"' LIMIT 1";
 
-					rs = m_clJDBCAdapter.executeQuery(statement);
+					rs = m_clJDBCAdapter.executeQuery(sql);
 					if (rs != null) {
 						rs.next();
 						var trainingDate = rs.getTimestamp("TRAININGDATE");
