@@ -18,8 +18,6 @@ import java.util.*;
 public class StatisticQuery {
 
 	public static double[][] getSpielerDaten4Statistik(int spielerId, int anzahlHRF) {
-
-		List<TrainingPerWeek> trainings = TrainingManager.instance().getRecentTrainings();
 		final int anzahlSpalten = 16;
 		final float faktor = core.model.UserParameter.instance().faktorGeld;
 
@@ -27,7 +25,7 @@ public class StatisticQuery {
 		final Vector<double[]> vWerte = new Vector<double[]>();
 
 		ResultSet rs =
-			DBManager.instance().getAdapter().executeQuery("SELECT * FROM SPIELER WHERE SpielerID=" + spielerId + " AND HRF_ID IN (" + getInClause(anzahlHRF, trainings) + ") ORDER BY Datum DESC");
+			DBManager.instance().getAdapter().executeQuery("SELECT * FROM SPIELER WHERE SpielerID=" + spielerId + " AND HRF_ID IN (" + getHrfIdPerWeekList(anzahlHRF) + ") ORDER BY Datum DESC");
 
 		if (rs != null) {
 			try {
@@ -272,7 +270,6 @@ public class StatisticQuery {
 	}
 
 	public static double[][] getDataForTeamStatisticsPanel(int nbHRF, String group) {
-		List<TrainingPerWeek> trainings = TrainingManager.instance().getRecentTrainings();
 		final float factor = core.model.UserParameter.instance().faktorGeld;
 		double[][] returnValues = new double[0][0];
 		final Vector<double[]> values = new Vector<>();
@@ -289,7 +286,7 @@ public class StatisticQuery {
 		}
 
 
-		statement += (" Trainer=0 AND SPIELER.HRF_ID IN (" + getInClause(nbHRF, trainings) + ") ORDER BY Datum DESC");
+		statement += (" Trainer=0 AND SPIELER.HRF_ID IN (" + getHrfIdPerWeekList(nbHRF) + ") ORDER BY Datum DESC");
 
 		final ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery(statement);
 
@@ -395,13 +392,11 @@ public class StatisticQuery {
 		double[][] returnValues;
 		Vector<double[]> values = new Vector<>();
 
-		List<TrainingPerWeek> trainings = TrainingManager.instance().getRecentTrainings();
-
 		try {
 			//TODO: filter one 1 HRF per HTweek only and change filter iNumberHRF to HTSeason
 			ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery(
 					"SELECT * FROM VEREIN INNER JOIN HRF on VEREIN.HRF_ID = HRF.HRF_ID WHERE HRF.HRF_ID IN (" +
-							getInClause(iNumberHRF, trainings) +
+							getHrfIdPerWeekList(iNumberHRF) +
 							") ORDER BY HRF.DATUM ASC");
 
 			if (rs == null) return new double[0][0];
@@ -513,7 +508,6 @@ public class StatisticQuery {
 	}
 
 	public static double[][] getSpielerFinanzDaten4Statistik(int spielerId, int anzahlHRF) {
-		List<TrainingPerWeek> trainings = TrainingManager.instance().getRecentTrainings();
 		final int anzahlSpalten = 3;
 		final float faktor = core.model.UserParameter.instance().faktorGeld;
 
@@ -521,7 +515,7 @@ public class StatisticQuery {
 		final Vector<double[]> vWerte = new Vector<double[]>();
 
 		ResultSet rs =
-			DBManager.instance().getAdapter().executeQuery("SELECT * FROM SPIELER WHERE SpielerID=" + spielerId + " AND HRF_ID IN (" + getInClause(anzahlHRF, trainings) + ") ORDER BY Datum DESC");
+			DBManager.instance().getAdapter().executeQuery("SELECT * FROM SPIELER WHERE SpielerID=" + spielerId + " AND HRF_ID IN (" + getHrfIdPerWeekList(anzahlHRF) + ") ORDER BY Datum DESC");
 
 		if (rs != null) {
 			try {
@@ -568,19 +562,8 @@ public class StatisticQuery {
 	 * @param nWeeks number of weeks
 	 * @return comma separated list of hrf ids
 	 */
-	private static String getInClause(int nWeeks) {
-		StringBuffer inClause = new StringBuffer();
-		int start = trainings.size()-nWeeks;
-		if (start<0) {
-			start=0;
-		}
-		inClause.append(DBManager.instance().getLatestHrfId());
-		for (int index = start; index < trainings.size(); index++) {
-			TrainingPerWeek tpw = trainings.get(index);
-			inClause.append(" , ");
-			inClause.append("" + tpw.getPreviousHrfId());
-		}
-		return inClause.toString();
+	private static String getHrfIdPerWeekList(int nWeeks) {
+		return DBManager.instance().getHrfIdPerWeekList(nWeeks);
 	}
 
 }
