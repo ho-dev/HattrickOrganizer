@@ -1,8 +1,13 @@
 package module.training.ui.model;
 
+import core.datatype.CBItem;
+import core.db.DBManager;
 import core.training.TrainingPerWeek;
 import core.util.Helper;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -13,7 +18,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
 
-
+    protected final static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
 	protected List<TrainingPerWeek> o_TrainingsPerWeek;
     protected Object[][]o_Data;
     private String[] o_ColumnNames;
@@ -35,6 +40,33 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
 
     public void setTrainingsPerWeek(List<TrainingPerWeek> trainingsPerWeek) {
     	this.o_TrainingsPerWeek = trainingsPerWeek;
+    }
+
+    /**
+     * When a value is updated:
+     *      update the value in the DataModel
+     *      update the entry in Trainings table
+     *      refresh the table
+     */
+    public void setValueAt(Object value, int iRow, int iCol) {
+
+        o_Data[iRow][iCol] = value;
+
+        TrainingPerWeek tpw = o_TrainingsPerWeek.get(getRowCount() - iRow - 1);
+
+        if (iCol == 2) {
+            CBItem sel = (CBItem) value;
+            tpw.setTrainingType(sel.getId());
+        } else if (iCol == 3) {
+            Integer intense = (Integer) value;
+            tpw.setTrainingIntensity(intense.intValue());
+        } else if (iCol == 4) {
+            Integer staminaTrainingPart = (Integer) value;
+            tpw.setStaminaPart(staminaTrainingPart.intValue());
+        }
+
+        DBManager.instance().saveTraining(tpw, true);
+        fireTableCellUpdated(iRow, iCol);
     }
 
 

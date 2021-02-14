@@ -1,61 +1,25 @@
-// %638597353:hoplugins.trainingExperience.ui.model%
 package module.training.ui.model;
 
 import core.constants.TrainingType;
 import core.datatype.CBItem;
 import core.db.DBManager;
 import core.training.TrainingPerWeek;
-
 import java.util.List;
-import java.util.Vector;
+
 
 /**
  * Customized table model for future trainings
  */
 public class FutureTrainingsTableModel extends AbstractTrainingsTableModel {
 
-	private static final long serialVersionUID = 5448249533827333037L;	
 	private final TrainingModel trainingModel;
-	/**
-	 * Creates a new FutureTrainingsTableModel object.
-	 * 
-	 * @param miniModel
-	 */
+
 	public FutureTrainingsTableModel(TrainingModel trainingModel) {
 		super();
 		this.trainingModel = trainingModel;
 	}
 
-	/**
-	 * When a value is updated, update the value in the right TrainingWeek in
-	 * p_V_trainingsVector store the change in the DB and then update the player
-	 * prevision with the new training setting
-	 * 
-	 * @param value
-	 * @param row
-	 * @param col
-	 */
-	@Override
-	public void setValueAt(Object value, int row, int col) {
-		Object[] aobj = (Object[]) o_Data.get(row);
 
-		aobj[col] = value;
-
-		TrainingPerWeek train = this.o_TrainingsPerWeek.get(row);
-
-		if (col == 2) {
-			CBItem sel = (CBItem) value;
-			train.setTrainingType(sel.getId());
-		} else if (col == 3) {
-			Integer intense = (Integer) value;
-			train.setTrainingIntensity(intense.intValue());
-		} else if (col == 4) {
-			Integer staminaTrainingPart = (Integer) value;
-			train.setStaminaPart(staminaTrainingPart.intValue());
-		}
-		this.trainingModel.saveFutureTraining(train);
-		fireTableCellUpdated(row, col);
-	}
 
 	/**
 	 * Populate the table with the future training stored in the db, if not
@@ -64,20 +28,18 @@ public class FutureTrainingsTableModel extends AbstractTrainingsTableModel {
 	@Override
 	public void populate(List<TrainingPerWeek> trainings) {
 		setTrainingsPerWeek(trainings);
-		o_Data = new Vector<Object[]>();
-		List<TrainingPerWeek> futureTrainings = DBManager.instance().getFutureTrainingsVector();
+		o_Data = new Object[][]{};
 
-		for (TrainingPerWeek training : this.o_TrainingsPerWeek) {
-			Object[] aobj = (new Object[]{
-					training.getHattrickDate().getWeek() + "",
-					training.getHattrickDate().getSeason() + "",
-					new CBItem(TrainingType.toString(training.getTrainingType()),
-							training.getTrainingType()),
-							training.getTrainingIntensity(),
-							training.getStaminaShare()});
+		int iRow = 0;
 
-			// Add object to be visualized to the table model
-			o_Data.add(aobj);
+		for (TrainingPerWeek tpw : this.o_TrainingsPerWeek) {
+			o_Data[iRow][0] = cl_Formatter.format(tpw.getTrainingDate());
+			o_Data[iRow][1] = new CBItem(TrainingType.toString(tpw.getTrainingType()),	tpw.getTrainingType());
+			o_Data[iRow][2] = tpw.getTrainingIntensity();
+			o_Data[iRow][3] = tpw.getStaminaShare();
+			o_Data[iRow][4] = tpw.getCoachLevel();
+			o_Data[iRow][5] = tpw.getTrainingAssistantsLevel();
+			iRow ++;
 		}
 
 		fireTableDataChanged();
