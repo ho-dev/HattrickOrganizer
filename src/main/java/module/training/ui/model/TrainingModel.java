@@ -4,6 +4,7 @@ import core.constants.TrainingType;
 import core.db.DBManager;
 import core.model.StaffMember;
 import core.model.StaffType;
+import core.model.enums.DBDataSource;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.TrainingPerWeek;
@@ -101,12 +102,18 @@ public class TrainingModel {
 				if (training.getTrainingIntensity() == -1) {
 					if (oldTrain != null) {
 						training.setTrainingIntensity(oldTrain.getTrainingIntensity());
-						training.setStaminaPart(oldTrain.getStaminaPart());
+						training.setStaminaShare(oldTrain.getStaminaShare());
 						training.setTrainingType(oldTrain.getTrainingType());
+						training.setCoachLevel(oldTrain.getCoachLevel());
+						training.setTrainingAssistantLevel(oldTrain.getTrainingAssistantsLevel());
+						training.setSource(DBDataSource.GUESS);
 					} else {
 						training.setTrainingIntensity(100);
-						training.setStaminaPart(5);
+						training.setStaminaShare(10);
 						training.setTrainingType(TrainingType.SET_PIECES);
+						training.setCoachLevel(7);
+						training.setTrainingAssistantLevel(10);
+						training.setSource(DBDataSource.GUESS);
 					}
 					futureTrainingsToSave.add(training);
 				}

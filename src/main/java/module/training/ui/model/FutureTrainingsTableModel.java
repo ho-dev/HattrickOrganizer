@@ -74,7 +74,7 @@ public class FutureTrainingsTableModel extends AbstractTrainingsTableModel {
 					new CBItem(TrainingType.toString(training.getTrainingType()),
 							training.getTrainingType()),
 							training.getTrainingIntensity(),
-							training.getStaminaPart()});
+							training.getStaminaShare()});
 
 			// Add object to be visualized to the table model
 			o_Data.add(aobj);

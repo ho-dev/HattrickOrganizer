@@ -53,10 +53,6 @@ public class TrainingWeekManager {
 		m_Trainings = createTrainingListFromHRF();
 	}
 
-	public static List<TrainingPerWeek> getTrainingWeeks(Instant fromDate, Instant toDate) {
-
-	}
-
 	/**
 	 * Determine first training date from requested number of entries
 	 * @param minimumNbEntries requested size

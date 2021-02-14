@@ -120,7 +120,7 @@ public class TrainingPerWeek  {
         return o_TrainingDate;
     }
 
-    public final int getStaminaPart() {
+    public final int getStaminaShare() {
         return o_StaminaShare;
     }
 
@@ -170,4 +170,15 @@ public class TrainingPerWeek  {
     }
 
 
+    public void setStaminaShare(int staminaShare) {
+        this.o_StaminaShare=staminaShare;
+    }
+
+    public void setCoachLevel(int coachLevel) {
+        this.o_CoachLevel=coachLevel;
+    }
+
+    public void setTrainingAssistantLevel(int trainingAssistantsLevel) {
+        this.o_TrainingAssistantsLevel=trainingAssistantsLevel;
+    }
 }

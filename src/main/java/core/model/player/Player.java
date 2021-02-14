@@ -22,6 +22,7 @@ import core.util.HelperWrapper;
 import module.training.Skills;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 
 import static core.constants.player.PlayerSkill.*;
@@ -1838,7 +1839,7 @@ public class Player {
         if (skill < KEEPER || points <= 0)
             return;
 
-        var trainingLength = wt.getTrainingLength(this, trainerlevel, trForPlayer.getTrainingWeek().getTrainingIntensity(), trForPlayer.getTrainingWeek().getStaminaPart(), trForPlayer.getTrainingWeek().getTrainingAssistantsLevel());
+        var trainingLength = wt.getTrainingLength(this, trainerlevel, trForPlayer.getTrainingWeek().getTrainingIntensity(), trForPlayer.getTrainingWeek().getStaminaShare(), trForPlayer.getTrainingWeek().getTrainingAssistantsLevel());
 
         var trainingAlternativeFormula = wt.getTrainingAlternativeFormula(this, trainerlevel, trForPlayer, skill==wt.getPrimaryTrainingSkill());
 
@@ -2257,7 +2258,7 @@ public class Player {
                 var start = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
                 var remove = new ArrayList<FuturePlayerTraining>();
                 for (var t : futurePlayerTrainings) {
-                    if ( start.isAfter(t.getTo())){
+                    if ( start.isAfter(t.getTo().toInstant())){
                         remove.add(t);
                     }
                 }
@@ -2273,14 +2274,14 @@ public class Player {
      *
      * @param wt
      *  used to get priority depending from the player's best position.
-     * @param hattrickWeek
+     * @param trainingDate
      *  the training week
      * @return
      *  the training priority
      */
-    public FuturePlayerTraining.Priority getTrainingPriority(WeeklyTrainingType wt, HattrickDate hattrickWeek) {
+    public FuturePlayerTraining.Priority getTrainingPriority(WeeklyTrainingType wt, Instant trainingDate) {
         for ( var t : getFuturePlayerTrainings()) {
-            if (hattrickWeek.isBetween(t.getFrom(), t.getTo())) {
+            if (t.contains(trainingDate)) {
                 return t.getPriority();
             }
         }
@@ -2348,7 +2349,7 @@ public class Player {
     public String getTrainingPriorityInformation(HattrickDate nextWeek) {
         String ret=null;
         for ( var t : getFuturePlayerTrainings()) {
-            if (!nextWeek.isAfter(t.getTo())){
+            if (!nextWeek.isAfter(t.getTo().toInstant())){
                 if ( ret != null ){
                     ret = HOVerwaltung.instance().getLanguageString("trainpre.individual.prios");
                     break;

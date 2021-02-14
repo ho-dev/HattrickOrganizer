@@ -1,11 +1,22 @@
 package core.training;
 
+import core.util.DateTimeInfo;
+import module.transfer.test.HTWeek;
+
+import java.time.*;
+
 /**
  * Hattrick Date Object
  *
  * The accuracy is weekly
  */
 public class HattrickDate {
+
+    /**
+     * Date representing the hattrick week
+     */
+    private Instant date;
+
     /** season */
     private int _Season;
 
@@ -18,6 +29,7 @@ public class HattrickDate {
     public HattrickDate(int hattrickSeason, int hattrickWeek) {
         this._Season = hattrickSeason;
         this._Week = hattrickWeek;
+        this.date = toInstant();
     }
 
     public HattrickDate(String s) {
@@ -29,6 +41,7 @@ public class HattrickDate {
             this._Week = 0;
             this._Season = 0;
         }
+        this.date= toInstant();
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -40,6 +53,7 @@ public class HattrickDate {
      */
     public final void setSeason(int iSeason) {
         this._Season = iSeason;
+        this.date = toInstant();
     }
 
     /**
@@ -58,6 +72,7 @@ public class HattrickDate {
      */
     public final void setWeek(int iWeek) {
         this._Week = iWeek;
+        this.date = toInstant();
     }
 
     /**
@@ -102,8 +117,8 @@ public class HattrickDate {
      * @param date to compare with, if null an open end is assumed (=> return false)
      * @return true, if this date is after given date
      */
-    public boolean isAfter(HattrickDate date) {
-        return date != null && (this.getSeason() > date.getSeason() || this.getSeason()==date.getSeason() && this.getWeek() > date.getWeek());
+    public boolean isAfter(Instant date) {
+        return this.date.isAfter(date);
     }
 
     /**
@@ -120,6 +135,7 @@ public class HattrickDate {
             this._Season--;
             this._Week += 16;
         }
+        this.date = toInstant();
     }
 
 
@@ -145,4 +161,30 @@ public class HattrickDate {
         result = 31 * result + getSeason();
         return result;
     }
+
+
+    private static Instant getOrigin()
+    {
+        var orig = new DateTimeInfo("1997-08-22");
+        return orig.getHattrickTime().toInstant();
+    }
+
+    public Instant toInstant()
+    {
+        var val = getOrigin();
+        val.plus(Duration.ofDays((this._Season-1)*112 + (this._Week-1)*7));
+        return val;
+    }
+
+    public static HattrickDate getHattrickDateByDate(Instant date) {
+        var origin = getOrigin();
+        long msDiff = date.getEpochSecond() - origin.getEpochSecond();
+        long dayDiff = msDiff / 60 / 60 / 24;
+        int season = (int) Math.floor(dayDiff / (16 * 7)) + 1;
+        int week = (int) Math.floor((dayDiff % (16 * 7)) / 7) + 1;
+
+        return new HattrickDate(season, week);
+    }
+
+
 }
