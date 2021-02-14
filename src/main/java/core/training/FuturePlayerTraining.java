@@ -2,6 +2,7 @@ package core.training;
 
 import core.model.HOVerwaltung;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 
@@ -10,7 +11,12 @@ public class FuturePlayerTraining {
 
     public boolean contains(Instant trainingDate) {
         // from<=date & to>date
-        return !from.isAfter(trainingDate) && to.isAfter(trainingDate);
+        if ( !from.isAfter(trainingDate)  ) {
+            if  ( to == null ) return true;
+            var endOfToWeek = to.toInstant().plus(Duration.ofDays(7));
+            return endOfToWeek.isAfter(trainingDate);
+        }
+        return false;
     }
 
     public enum Priority {
