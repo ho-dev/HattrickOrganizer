@@ -14,7 +14,7 @@ import java.util.Locale;
 
 public class DateTimeUtils {
 
-	private static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
+	private static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss").withZone(ZoneId.from(ZoneOffset.UTC));
 
 	/**
 	 * Utility class - private constructor enforces noninstantiability.

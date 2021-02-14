@@ -1,12 +1,10 @@
-// %1126721451323:hoplugins.trainingExperience.ui.model%
 package module.training.ui.model;
 
-import core.model.HOVerwaltung;
 import core.training.TrainingPerWeek;
+import core.util.Helper;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-
 import javax.swing.table.AbstractTableModel;
 
 
@@ -15,40 +13,35 @@ import javax.swing.table.AbstractTableModel;
  */
 public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
 
-	private static final long serialVersionUID = 5399479264645517270L;
-	protected List<TrainingPerWeek> trainings;
-    /** Vector of ITrainingPerPlayer object */
-    protected Vector<Object[]> p_V_data;
-    private String[] columnNames;
+
+	protected List<TrainingPerWeek> o_TrainingsPerWeek;
+    protected Object[][]o_Data;
+    private String[] o_ColumnNames;
 
 
     /**
      * Creates a new AbstractTrainingsTableModel object.
-     *
-     * @param miniModel
      */
     public AbstractTrainingsTableModel() {
-        p_V_data = new Vector<Object[]>();
-        columnNames = new String[5];
-        HOVerwaltung hoV = HOVerwaltung.instance();
-        columnNames[0] = hoV.getLanguageString("Week");
-        columnNames[1] = hoV.getLanguageString("Season");
-        columnNames[2] = hoV.getLanguageString("ls.team.trainingtype");
-        columnNames[3] = hoV.getLanguageString("ls.team.trainingintensity");
-        columnNames[4] = hoV.getLanguageString("ls.team.staminatrainingshare");
+        o_Data = new Object[][]{};
+        o_ColumnNames = new String[6];
+        o_ColumnNames[0] = Helper.getTranslation("ls.youth.player.training.date");
+        o_ColumnNames[1] = Helper.getTranslation("ls.team.trainingtype");
+        o_ColumnNames[2] = Helper.getTranslation("ls.team.trainingintensity");
+        o_ColumnNames[3] = Helper.getTranslation("ls.team.staminatrainingshare");
+        o_ColumnNames[4] = Helper.getTranslation("ls.team.coachingskill");
+        o_ColumnNames[5] = Helper.getTranslation("ls.module.statistics.club.assistant_trainers_level");
     }
 
-    public void setTrainings(List<TrainingPerWeek> trainings) {
-    	this.trainings = trainings;
+    public void setTrainingsPerWeek(List<TrainingPerWeek> trainingsPerWeek) {
+    	this.o_TrainingsPerWeek = trainingsPerWeek;
     }
-    
+
+
+    //TODO: isCellEditable() make sure that cells older than 2 seasons are not editable
     /**
-     * Method that returns if a cell is editable or not
-     *
-     * @param row
-     * @param column
-     *
-     * @return
+     * Cells that are editable should be less than 2 seasons old (otherwise it could be misleading as they won't be considered in skill recalculation)
+     * also first column is not editable
      */
     @Override
 	public boolean isCellEditable(int row, int column) {
@@ -67,7 +60,7 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
      */
     @Override
 	public int getColumnCount() {
-        return columnNames.length;
+        return o_ColumnNames.length;
     }
 
     /**
@@ -79,7 +72,7 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
      */
     @Override
 	public String getColumnName(int column) {
-        return columnNames[column];
+        return o_ColumnNames[column];
     }
 
     /**
@@ -89,7 +82,7 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
      */
     @Override
 	public int getRowCount() {
-        return p_V_data.size();
+        return (o_Data != null) ? o_Data.length : 0;
     }
 
     /**
@@ -102,9 +95,10 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
      */
     @Override
 	public Object getValueAt(int row, int column) {
-        Object[] aobj = (Object[]) p_V_data.get(row);
-
-        return aobj[column];
+        if (o_Data != null) {
+            return o_Data[row][column];
+        }
+        return null;
     }
 
     /**

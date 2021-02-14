@@ -1,4 +1,3 @@
-// %1126721451963:hoplugins.trainingExperience.ui%
 package module.training.ui;
 
 import core.model.HOVerwaltung;
@@ -13,14 +12,12 @@ import module.training.ui.model.ModelChange;
 import module.training.ui.model.ModelChangeListener;
 import module.training.ui.model.PastTrainingsTableModel;
 import module.training.ui.model.TrainingModel;
-
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -41,14 +38,15 @@ import javax.swing.table.TableModel;
  */
 public class TrainingPanel extends JPanel {
 
-	private static final long serialVersionUID = 5456485854278251422L;
 	/** Future trainings table model */
 	private FutureTrainingsTableModel futureTrainingsTableModel;
 	/** Past trainings table model */
 	private PastTrainingsTableModel pastTrainingsTableModel;
+
 	private JTable futureTrainingsTable;
 	private JButton setAllButton;
 	private JSplitPane splitPane;
+
 	private final TrainingModel model;
 
 	/**
@@ -66,36 +64,29 @@ public class TrainingPanel extends JPanel {
 	 * Populate the table is called everytime a refresh command is issued
 	 */
 	public void reload() {
-		pastTrainingsTableModel.populate(TrainingManager.instance().getRecentTrainings());
+		pastTrainingsTableModel.populate(TrainingManager.instance().getAllTrainings());
 		futureTrainingsTableModel.populate(this.model.getFutureTrainings());
 	}
 
 	private void addListeners() {
-		this.setAllButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				TableCellEditor editor = futureTrainingsTable.getCellEditor();
+		this.setAllButton.addActionListener(arg0 -> {
+			TableCellEditor editor = futureTrainingsTable.getCellEditor();
 
-				if (editor != null) {
-					editor.stopCellEditing();
-				}
-
-				JOptionPane.showMessageDialog((JFrame) getTopLevelAncestor(),
-						new FutureSettingPanel(model, futureTrainingsTableModel), HOVerwaltung
-								.instance().getLanguageString("SetAll"), JOptionPane.PLAIN_MESSAGE);
+			if (editor != null) {
+				editor.stopCellEditing();
 			}
+
+			JOptionPane.showMessageDialog(getTopLevelAncestor(),
+					new FutureSettingPanel(model, futureTrainingsTableModel), HOVerwaltung
+							.instance().getLanguageString("SetAll"), JOptionPane.PLAIN_MESSAGE);
 		});
 
 		this.splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
 				new DividerListener(DividerListener.training_pastFutureTrainingsSplitPane));
 
-		this.model.addModelChangeListener(new ModelChangeListener() {
-
-			@Override
-			public void modelChanged(ModelChange change) {
-				if (change == ModelChange.FUTURE_TRAINING) {
-					reload();
-				}
+		this.model.addModelChangeListener(change -> {
+			if (change == ModelChange.FUTURE_TRAINING) {
+				reload();
 			}
 		});
 	}
