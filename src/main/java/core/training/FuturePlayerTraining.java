@@ -125,19 +125,19 @@ public class FuturePlayerTraining {
      * @return false if remaining training interval is not empty
      *          true if training is completely replaced by the new interval
      */
-    public boolean cut(HattrickDate from, HattrickDate to) {
-        if (from.isAfter(this.to.toInstant()) || this.from.isAfter(to.toInstant())) {
+    public boolean cut(Instant from, Instant to) {
+        if (from.isAfter(this.to.toInstant()) || this.from.isAfter(to)) {
             // this is outside the given interval
             return false;
         }
 
         if (from.isAfter(this.from.toInstant())) {
-            this.to = from;
+            this.to = HattrickDate.getHattrickDateByDate(from);
             this.to.addWeeks(-1);
             return false;
         }
-        if ( to != null && (this.to == null || this.to.isAfter(to.toInstant()))) {
-            this.from = to;
+        if ( to != null && (this.to == null || this.to.isAfter(to))) {
+            this.from = HattrickDate.getHattrickDateByDate(to);
             this.from.addWeeks(1);
             return false;
         }

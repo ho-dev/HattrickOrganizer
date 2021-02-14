@@ -2311,22 +2311,21 @@ public class Player {
     /**
      * Set training priority for a time interval.
      * Previously saved trainings of this interval are overwritten or deleted.
-     *
-     * @param prio new training priority for the given time interval
+     *  @param prio new training priority for the given time interval
      * @param fromWeek first week with new training priority
      * @param toWeek last week with new training priority
      */
-    public void setFutureTraining(FuturePlayerTraining.Priority prio, HattrickDate fromWeek, HattrickDate toWeek) {
+    public void setFutureTraining(FuturePlayerTraining.Priority prio, Instant fromWeek, Instant toWeek) {
         var removeIntervals = new ArrayList<FuturePlayerTraining>();
         for ( var t : getFuturePlayerTrainings() ){
             if ( t.cut(fromWeek, toWeek) ||
-                    t.cut(new HattrickDate(0,0), HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())){
+                    t.cut(new HattrickDate(0,0).toInstant(), HOVerwaltung.instance().getModel().getBasics().getHattrickWeek().toInstant())){
                 removeIntervals.add(t);
             }
         }
         futurePlayerTrainings.removeAll(removeIntervals);
         if ( prio != null){
-            futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerID(), prio, fromWeek, toWeek));
+            futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerID(), prio, HattrickDate.getHattrickDateByDate(fromWeek), HattrickDate.getHattrickDateByDate(toWeek)));
         }
         DBManager.instance().storeFuturePlayerTrainings(this.getPlayerID(), futurePlayerTrainings);
     }
