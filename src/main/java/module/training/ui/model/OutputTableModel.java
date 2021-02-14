@@ -5,6 +5,7 @@ import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
+import core.training.HattrickDate;
 import core.training.WeeklyTrainingType;
 import core.util.Helper;
 import module.training.Skills;
@@ -212,7 +213,7 @@ public class OutputTableModel extends AbstractTableModel {
     }
 
     private TrainingPriorityCell createBestPositionCell(Player player) {
-        return new TrainingPriorityCell(player, model.getFutureTrainings().get(0).getHattrickDate());
+        return new TrainingPriorityCell(player, HattrickDate.getHattrickDateByDate( model.getFutureTrainings().get(0).getTrainingDate()));
     }
 
 }
