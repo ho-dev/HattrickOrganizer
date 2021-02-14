@@ -55,10 +55,10 @@ public class TrainingPerWeek  {
 
         // Loading matches played the week preceding the training date --------------------------
         var _startDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
-        /*String _firstMatchDate = cl_Formatter.format(_startDate);
-        String _lastMatchDate = cl_Formatter.format(o_TrainingDate.plus(23, ChronoUnit.HOURS));
+        String _firstMatchDate = DateTimeUtils.InstantToSQLtimeStamp(_startDate);
+        String _lastMatchDate = DateTimeUtils.InstantToSQLtimeStamp(o_TrainingDate.plus(23, ChronoUnit.HOURS));
         o_Matches = fetchMatches(_firstMatchDate, _lastMatchDate);
-        o_NTmatches = fetchNTMatches(_firstMatchDate, _lastMatchDate);*/
+        o_NTmatches = fetchNTMatches(_firstMatchDate, _lastMatchDate);
     }
 
     public TrainingPerWeek(Instant trainingDate, int training_type, int training_intensity, int staminaShare, int trainingAssistantsLevel, int coachLevel) {
