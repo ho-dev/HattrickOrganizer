@@ -9,6 +9,7 @@ import module.training.ui.model.TrainingModel;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.Instant;
 
 public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListener {
 
@@ -49,17 +50,17 @@ public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListen
         var player = model.getActivePlayer();
         if (player == null) return;
 
-        HattrickDate from;
-        HattrickDate to=null;   // forever
+        Instant from;
+        Instant to=null;   // forever
         var futureTrainings = model.getFutureTrainings();
         if (cols == null ){
-            from = futureTrainings.get(0).getHattrickDate();
+            from = futureTrainings.get(0).getTrainingDate();
         }
         else {
-            from = futureTrainings.get(cols[0]).getHattrickDate();
+            from = futureTrainings.get(cols[0]).getTrainingDate();
             var toColNr = cols[cols.length - 1];
             if ( toColNr < futureTrainings.size()-1){
-                to = futureTrainings.get(toColNr).getHattrickDate();
+                to = futureTrainings.get(toColNr).getTrainingDate();
             }
         }
 

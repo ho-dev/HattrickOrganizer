@@ -66,7 +66,7 @@ public class PastTrainingsTableModel extends AbstractTrainingsTableModel {
 			o_Data[iRow][0] = cl_Formatter.format(tpw.getTrainingDate());
 			o_Data[iRow][1] = new CBItem(TrainingType.toString(tpw.getTrainingType()),	tpw.getTrainingType());
 			o_Data[iRow][2] = tpw.getTrainingIntensity();
-			o_Data[iRow][3] = tpw.getStaminaPart();
+			o_Data[iRow][3] = tpw.getStaminaShare();
 			o_Data[iRow][4] = tpw.getCoachLevel();
 			o_Data[iRow][5] = tpw.getTrainingAssistantsLevel();
 			iRow ++;

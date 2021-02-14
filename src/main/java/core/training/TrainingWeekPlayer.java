@@ -2,6 +2,8 @@ package core.training;
 
 import core.model.player.Player;
 
+import java.time.Instant;
+
 public class TrainingWeekPlayer {
 	private Player player;
 	private int fullTrainingMinutes = 0;
@@ -119,7 +121,7 @@ public class TrainingWeekPlayer {
 		return this.player.getFullName();
 	}
 
-	public FuturePlayerTraining.Priority getFutureTrainingPrio(WeeklyTrainingType wt, HattrickDate hattrickWeek) {
-		return player.getTrainingPriority(wt, hattrickWeek);
+	public FuturePlayerTraining.Priority getFutureTrainingPrio(WeeklyTrainingType wt, Instant trainingDate) {
+		return player.getTrainingPriority(wt, trainingDate);
 	}
 }

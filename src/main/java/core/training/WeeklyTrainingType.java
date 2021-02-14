@@ -392,7 +392,7 @@ public abstract class WeeklyTrainingType {
 		at 5 % of the stadium 1.0 - 5% = 0.95
 		at 15% of the stadium 1.0 - 15% = 0.85
 		*/
-		double factorStamina = 1. - (double) trForPlayer.getTrainingWeek().getStaminaPart() / 100.;
+		double factorStamina = 1. - (double) trForPlayer.getTrainingWeek().getStaminaShare() / 100.;
 
 		/*
 		K(age) = 0.9835^(Age-17)

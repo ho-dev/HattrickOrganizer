@@ -103,7 +103,7 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
             if (playerId > 0) {
             	if (!isSelected) {
             		// Check player's training priority
-					var prio = player.getTrainingPriority(wt, training.getHattrickDate());
+					var prio = player.getTrainingPriority(wt, training.getTrainingDate());
 					if (prio != null) {
 						switch (prio) {
 							case FULL_TRAINING:

@@ -111,7 +111,7 @@ public final class FutureTrainingTable extends AbstractTable {
 					"update " + getTableName() +
 							" set TRAINING_TYPE= " + training.getTrainingType() +
 							", TRAINING_INTENSITY=" + training.getTrainingIntensity() +
-							", STAMINA_SHARE=" + training.getStaminaPart() +
+							", STAMINA_SHARE=" + training.getStaminaShare() +
 							", COACH_LEVEL=" + training.getCoachLevel() +
 							", TRAINING_ASSISTANTS_LEVEL=" + training.getTrainingAssistantsLevel() +
 							" WHERE TRAINING_DATE='" + training.getTrainingDate() + "'";
@@ -123,7 +123,7 @@ public final class FutureTrainingTable extends AbstractTable {
 						training.getTrainingDate() + "'," +
 						training.getTrainingType() + "," +
 						training.getTrainingIntensity() + "," +
-						training.getStaminaPart() + "," +
+						training.getStaminaShare() + "," +
 						training.getCoachLevel() + "," +
 						training.getTrainingAssistantsLevel();
 				adapter.executeUpdate(statement);

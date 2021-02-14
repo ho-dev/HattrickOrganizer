@@ -2,12 +2,22 @@ package core.training;
 
 import core.model.HOVerwaltung;
 
-import javax.swing.*;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
-import java.util.Map;
 
 public class FuturePlayerTraining {
 
+
+    public boolean contains(Instant trainingDate) {
+        // from<=date & to>date
+        if ( !from.isAfter(trainingDate)  ) {
+            if  ( to == null ) return true;
+            var endOfToWeek = to.toInstant().plus(Duration.ofDays(7));
+            return endOfToWeek.isAfter(trainingDate);
+        }
+        return false;
+    }
 
     public enum Priority {
         NO_TRAINING(0),
@@ -121,19 +131,19 @@ public class FuturePlayerTraining {
      * @return false if remaining training interval is not empty
      *          true if training is completely replaced by the new interval
      */
-    public boolean cut(HattrickDate from, HattrickDate to) {
-        if (from.isAfter(this.to) || this.from.isAfter(to)) {
+    public boolean cut(Instant from, Instant to) {
+        if (from.isAfter(this.to.toInstant()) || this.from.isAfter(to)) {
             // this is outside the given interval
             return false;
         }
 
-        if (from.isAfter(this.from)) {
-            this.to = from;
+        if (from.isAfter(this.from.toInstant())) {
+            this.to = HattrickDate.getHattrickDateByDate(from);
             this.to.addWeeks(-1);
             return false;
         }
         if ( to != null && (this.to == null || this.to.isAfter(to))) {
-            this.from = to;
+            this.from = HattrickDate.getHattrickDateByDate(to);
             this.from.addWeeks(1);
             return false;
         }

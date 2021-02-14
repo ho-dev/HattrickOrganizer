@@ -2,6 +2,7 @@ package core.training;
 
 import core.model.player.ISkillChange;
 
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -11,7 +12,7 @@ public class PlayerSkillChange implements ISkillChange
 {
 
     /** Skillup Date */
-    private Date date;
+    private Instant date;
 
     /** Hattrick Season */
     private int htSeason;
@@ -32,7 +33,7 @@ public class PlayerSkillChange implements ISkillChange
 
     private String age;
 
-    public void setDate(Date date)
+    public void setDate(Instant date)
     {
         this.date = date;
     }

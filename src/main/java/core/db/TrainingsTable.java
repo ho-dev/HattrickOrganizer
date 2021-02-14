@@ -5,14 +5,12 @@ import core.training.TrainingPerWeek;
 import core.util.DateTimeInfo;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
-import module.transfer.PlayerTransfer;
 
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 
 /**
@@ -74,7 +72,7 @@ final class TrainingsTable extends AbstractTable {
 			statement += trainingDate + ", ";
 			statement += training.getTrainingType() + ", ";
 			statement += training.getTrainingIntensity() + ", ";
-			statement += training.getStaminaPart() + ", ";
+			statement += training.getStaminaShare() + ", ";
 			statement += training.getCoachLevel() + ", ";
 			statement += training.getTrainingAssistantsLevel() + ", ";
 			statement += training.getSource().getValue() + ")";

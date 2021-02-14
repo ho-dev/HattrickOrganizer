@@ -111,7 +111,8 @@ public class TrainingPreviewPlayers implements Refreshable {
             } else {
                 nextWeekWeek++;
             }
-            nextWeekTraining = DBManager.instance().getFuturTraining(nextWeekSaison, nextWeekWeek);
+            var hattrickDate = new HattrickDate(nextWeekSaison, nextWeekWeek);
+            nextWeekTraining = DBManager.instance().getFuturTraining(hattrickDate.toInstant());
         }
 
         return nextWeekTraining;
