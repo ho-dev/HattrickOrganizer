@@ -121,15 +121,28 @@ public class TrainingPerWeek  {
     }
 
     public final int getStaminaPart() {
-        return this.o_StaminaShare;
+        return o_StaminaShare;
     }
 
+    public final void setStaminaPart(int staminaPart) {
+        o_StaminaShare = staminaPart;
+    }
+
+
     public final int getTrainingIntensity() {
-        return this.o_TrainingIntensity;
+        return o_TrainingIntensity;
+    }
+
+    public final void setTrainingIntensity(int trainingIntensity) {
+        o_TrainingIntensity = trainingIntensity;
     }
 
     public final int getTrainingType() {
-        return this.o_TrainingType;
+        return o_TrainingType;
+    }
+
+    public final void setTrainingType(int trainingType) {
+        o_TrainingType = trainingType;
     }
 
 	public int getTrainingAssistantsLevel() {

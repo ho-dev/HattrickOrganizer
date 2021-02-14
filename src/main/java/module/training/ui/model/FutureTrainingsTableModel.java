@@ -37,11 +37,11 @@ public class FutureTrainingsTableModel extends AbstractTrainingsTableModel {
 	 */
 	@Override
 	public void setValueAt(Object value, int row, int col) {
-		Object[] aobj = (Object[]) p_V_data.get(row);
+		Object[] aobj = (Object[]) o_Data.get(row);
 
 		aobj[col] = value;
 
-		TrainingPerWeek train = this.trainings.get(row);
+		TrainingPerWeek train = this.o_TrainingsPerWeek.get(row);
 
 		if (col == 2) {
 			CBItem sel = (CBItem) value;
@@ -63,11 +63,11 @@ public class FutureTrainingsTableModel extends AbstractTrainingsTableModel {
 	 */
 	@Override
 	public void populate(List<TrainingPerWeek> trainings) {
-		setTrainings(trainings);
-		p_V_data = new Vector<Object[]>();
+		setTrainingsPerWeek(trainings);
+		o_Data = new Vector<Object[]>();
 		List<TrainingPerWeek> futureTrainings = DBManager.instance().getFutureTrainingsVector();
 
-		for (TrainingPerWeek training : this.trainings) {
+		for (TrainingPerWeek training : this.o_TrainingsPerWeek) {
 			Object[] aobj = (new Object[]{
 					training.getHattrickDate().getWeek() + "",
 					training.getHattrickDate().getSeason() + "",
@@ -77,7 +77,7 @@ public class FutureTrainingsTableModel extends AbstractTrainingsTableModel {
 							training.getStaminaPart()});
 
 			// Add object to be visualized to the table model
-			p_V_data.add(aobj);
+			o_Data.add(aobj);
 		}
 
 		fireTableDataChanged();

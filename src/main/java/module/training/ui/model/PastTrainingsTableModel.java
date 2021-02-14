@@ -1,76 +1,75 @@
-// %1126721451604:hoplugins.trainingExperience.ui.model%
 package module.training.ui.model;
 
 import core.constants.TrainingType;
 import core.datatype.CBItem;
 import core.db.DBManager;
 import core.training.TrainingPerWeek;
-
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Vector;
+
 
 /**
  * Customized table model for past trainings
  */
 public class PastTrainingsTableModel extends AbstractTrainingsTableModel {
 
-	private static final long serialVersionUID = -4741270987836161270L;
+
+	private static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
+
 
 	/**
-	 * When a value is updated, update the value in the right TrainingWeek in
-	 * p_V_trainingsVector store the change thru HO API. Refresh the main table,
-	 * and deselect any player
-	 * 
-	 * @param value
-	 * @param row
-	 * @param col
+	 * When a value is updated:
+	 *      update the value in the DataModel
+	 *      update the entry in Trainings table
+	 *      refresh the table
 	 */
 	@Override
-	public void setValueAt(Object value, int row, int col) {
-		Object[] aobj = (Object[]) p_V_data.get(row);
+	public void setValueAt(Object value, int iRow, int iCol) {
 
-		aobj[col] = value;
+		o_Data[iRow][iCol] = value;
 
-		TrainingPerWeek train = this.trainings.get(p_V_data.size() - row - 1);
-		if (col == 2) {
+		TrainingPerWeek tpw = o_TrainingsPerWeek.get(getRowCount() - iRow - 1);
+
+		if (iCol == 2) {
 			CBItem sel = (CBItem) value;
-			train.setTrainingType(sel.getId());
-		} else if (col == 3) {
+			tpw.setTrainingType(sel.getId());
+		} else if (iCol == 3) {
 			Integer intense = (Integer) value;
-			train.setTrainingIntensity(intense.intValue());
-		} else if (col == 4) {
+			tpw.setTrainingIntensity(intense.intValue());
+		} else if (iCol == 4) {
 			Integer staminaTrainingPart = (Integer) value;
-			train.setStaminaPart(staminaTrainingPart.intValue());
+			tpw.setStaminaPart(staminaTrainingPart.intValue());
 		}
 
-		DBManager.instance().saveTraining(train, true);
-		fireTableCellUpdated(row, col);
+		DBManager.instance().saveTraining(tpw, true);
+		fireTableCellUpdated(iRow, iCol);
 	}
 
 	/**
-	 * Populate the table with the old trainings week loaded from HO API
+	 * Populate the table with the content of TRAININGS table
 	 */
 	@Override
 	public void populate(List<TrainingPerWeek> trainings) {
-		setTrainings(trainings);
-		p_V_data = new Vector<Object[]>();
+		setTrainingsPerWeek(trainings);
+		o_Data = new Object[][]{};
 
-		if (this.trainings == null || this.trainings.isEmpty()) {
+		if (this.o_TrainingsPerWeek == null || this.o_TrainingsPerWeek.isEmpty()) {
 			return;
 		}
-		
-		// for each training week
-		for (TrainingPerWeek training : this.trainings) {
-			Object[] aobj = (new Object[] {
-					training.getHattrickDate().getWeek() + "",
-					training.getHattrickDate().getSeason() + "",
-					new CBItem(TrainingType.toString(training.getTrainingType()),
-							training.getTrainingType()),
-					new Integer(training.getTrainingIntensity()),
-					new Integer(training.getStaminaPart()) });
 
-			// add the data object into the table model
-			p_V_data.add(0, aobj);
+		int iRow = 0;
+
+		// iterate each TrainingPerWeek
+		for (TrainingPerWeek tpw : o_TrainingsPerWeek) {
+			o_Data[iRow][0] = cl_Formatter.format(tpw.getTrainingDate());
+			o_Data[iRow][1] = new CBItem(TrainingType.toString(tpw.getTrainingType()),	tpw.getTrainingType());
+			o_Data[iRow][2] = tpw.getTrainingIntensity();
+			o_Data[iRow][3] = tpw.getStaminaPart();
+			o_Data[iRow][4] = tpw.getCoachLevel();
+			o_Data[iRow][5] = tpw.getTrainingAssistantsLevel();
+			iRow ++;
 		}
 
 		fireTableDataChanged();
