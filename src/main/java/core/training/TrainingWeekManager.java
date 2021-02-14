@@ -20,7 +20,7 @@ import java.util.*;
  */
 public class TrainingWeekManager {
 
-	private static final Instant m_NextTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate().toInstant();
+	private static final Instant m_NextTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate().toInstant();
 
     private List<TrainingPerWeek> m_Trainings;
     private Instant m_StartDate;

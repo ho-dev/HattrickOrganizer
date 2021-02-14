@@ -5,7 +5,6 @@ import core.model.HOVerwaltung;
 import core.model.match.MatchType;
 import core.model.player.Player;
 import core.util.HOLogger;
-import core.util.Helper;
 import core.util.HelperWrapper;
 
 import java.sql.Timestamp;
@@ -159,7 +158,7 @@ public class TrainingPerPlayer  {
                 final Date tmpTime = new Date(((Timestamp) aobj[0]).getTime());
                 if ((tmpTime.before(trainTime)) && (tmpTime.after(skilluptime))) {
                     skilluptime = HelperWrapper.instance().getLastTrainingDate(tmpTime, 
-                    		HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate()).getTime();
+                    		HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate()).getTime();
                 }
             }
         }

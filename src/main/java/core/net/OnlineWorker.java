@@ -126,7 +126,7 @@ public class OnlineWorker {
 							hov.setModel(homodel);
 							// Recalculate Training
 							// Training->Subskill calculation
-							TrainingManager.instance().refreshTrainingWeeks();
+							//TrainingManager.instance().refreshTrainingWeeks();
 							//homodel.calcSubskills(); // moved behind the download of matches
 //							LineupsComparisonHistoryPanel.setHRFAufstellung(
 //									homodel.getLineup(), homodel.getPreviousLineup());

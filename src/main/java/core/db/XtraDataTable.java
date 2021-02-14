@@ -87,7 +87,7 @@ final class XtraDataTable extends AbstractTable {
 					+ "', '"
 					+ xtra.getSeriesMatchDate()
 					+ "', '"
-					+ xtra.getTrainingDate()
+					+ xtra.getNextTrainingDate()
 					+ "', '"
 					+ xtra.getEconomyDate()
 					+ "', "

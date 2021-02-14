@@ -2,37 +2,42 @@ package core.db;
 
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.training.HattrickDate;
 import core.training.TrainingPerWeek;
 import core.util.HOLogger;
+
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public final class FutureTrainingTable extends AbstractTable {
 
-	/** tablename **/
+	/**
+	 * tablename
+	 **/
 	public final static String TABLENAME = "FUTURETRAINING";
-	
-	protected FutureTrainingTable(JDBCAdapter  adapter){
-		super(TABLENAME,adapter);
+
+	protected FutureTrainingTable(JDBCAdapter adapter) {
+		super(TABLENAME, adapter);
 	}
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[5];
-		columns[0]= new ColumnDescriptor("TYPE",Types.INTEGER,false);
-		columns[1]= new ColumnDescriptor("INTENSITY",Types.INTEGER,false);
-		columns[2]= new ColumnDescriptor("WEEK",Types.INTEGER,false);
-		columns[3]= new ColumnDescriptor("SEASON",Types.INTEGER,false);
-		columns[4] = new ColumnDescriptor("STAMINATRAININGPART",Types.INTEGER,false);
+		columns = new ColumnDescriptor[]{
+				new ColumnDescriptor("TRAINING_DATE", Types.TIMESTAMP, false),
+				new ColumnDescriptor("TRAINING_TYPE", Types.INTEGER, false),
+				new ColumnDescriptor("TRAINING_INTENSITY", Types.INTEGER, false),
+				new ColumnDescriptor("STAMINA_SHARE", Types.INTEGER, false),
+				new ColumnDescriptor("COACH_LEVEL", Types.INTEGER, false),
+				new ColumnDescriptor("TRAINING_ASSISTANTS_LEVEL", Types.INTEGER, false)
+		};
 	}
-	
+
 	List<TrainingPerWeek> getFutureTrainingsVector() {
-		final Vector<TrainingPerWeek> vTrainings = new Vector<TrainingPerWeek>();
-		String query = "select * from "+getTableName();
+		var vTrainings = new ArrayList<TrainingPerWeek>();
+		String query = "select * from " + getTableName();
 		ResultSet rs = adapter.executeQuery(query);
 
 		try {
@@ -40,46 +45,31 @@ public final class FutureTrainingTable extends AbstractTable {
 				rs.beforeFirst();
 
 				while (rs.next()) {
-					TrainingPerWeek train = new TrainingPerWeek();			
-					train.setTrainingType(rs.getInt("TYPE")); 
-					train.setTrainingIntensity(rs.getInt("INTENSITY")); 
-					var week = rs.getInt("WEEK");
-					var season=rs.getInt("SEASON");
-					train.setHattrickDate(new HattrickDate(season, week));
-					train.setStaminaPart(rs.getInt("STAMINATRAININGPART"));
-					vTrainings.add(train);
+					var trainingDate = rs.getTimestamp("TRAINING_DATE").toInstant();
+					var training_type = rs.getInt("TRAINING_TYPE");
+					var training_intensity = rs.getInt("TRAINING_INTENSITY");
+					var staminaShare = rs.getInt("STAMINA_SHARE");
+					var trainingAssistantsLevel = rs.getInt("TRAINING_ASSISTANTS_LEVEL");
+					var coachLevel = rs.getInt("COACH_LEVEL");
+
+					var tpw = new TrainingPerWeek(trainingDate, training_type, training_intensity, staminaShare, trainingAssistantsLevel,
+							coachLevel);
+
+					vTrainings.add(tpw);
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
-		}
-		
-		List<TrainingPerWeek> futures = new ArrayList<TrainingPerWeek>();
-
-		int _actualSeason = HOVerwaltung.instance().getModel().getBasics().getSeason();
-		int _actualWeek = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
-
-		var actualDate = new HattrickDate(_actualSeason, _actualWeek);
-
-		// We are in the middle where season has not been updated!
-		try {
-			if (HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate().after(HOVerwaltung.instance().getModel()
-																				 .getXtraDaten()
-																				 .getSeriesMatchDate())) {
-				actualDate.addWeeks(1);
-			}
-		} catch (Exception e1) {
-			// Null when first time HO is launched		
+			HOLogger.instance().log(getClass(), "DatenbankZugriff.getTraining " + e);
 		}
 
+		var futures = new ArrayList<TrainingPerWeek>();
+		var actualDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate().toInstant();
 		for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
 			// load the training from DB
 			TrainingPerWeek train = null;
 
-			for ( var t : vTrainings){
-			//for (Iterator<TrainingPerWeek> iter = vTrainings.iterator(); iter.hasNext();) {
-			//	TrainingPerWeek tmp = (TrainingPerWeek) iter.next();
-				if (t.getHattrickDate().equals(actualDate)) {
+			for (var t : vTrainings) {
+				if (t.getTrainingDate().equals(actualDate)) {
 					train = t;
 					break;
 				}
@@ -87,22 +77,18 @@ public final class FutureTrainingTable extends AbstractTable {
 
 			// if not found create it and saves it
 			if (train == null) {
-				train = new TrainingPerWeek();
-				train.setHattrickDate(actualDate);
-				train.setTrainingIntensity(-1);
-				train.setStaminaPart(-1);
-				train.setTrainingType(-1);
-				saveFutureTraining(train);				
+				train = new TrainingPerWeek(actualDate, -1, -1, -1, -1, -1);
+				storeFutureTraining(train);
 			}
 			futures.add(train);
-			actualDate.addWeeks(1);
-		}		
+			actualDate.plus(Duration.ofDays(7));
+		}
 
 		return futures;
 	}
-	
-	int getFutureTrainings(int saison, int week) {
-		String query = "select TYPE from "+getTableName()+" where SEASON="+saison+" and WEEK="+week;
+
+	int loadFutureTrainings(Instant trainingDate) {
+		String query = "select TYPE from " + getTableName() + " where TRAINING_DATE='" + trainingDate + "'";
 		ResultSet rs = adapter.executeQuery(query);
 
 		try {
@@ -114,23 +100,34 @@ public final class FutureTrainingTable extends AbstractTable {
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
+			HOLogger.instance().log(getClass(), "DatenbankZugriff.getTraining " + e);
 		}
 		return -1;
 	}
 
-	void saveFutureTraining(TrainingPerWeek training) {
+	void storeFutureTraining(TrainingPerWeek training) {
 		if (training != null) {
 			String statement =
-				"update "+getTableName()+" set TYPE= " + training.getTrainingType() + ", INTENSITY=" + training.getTrainingIntensity() + ", STAMINATRAININGPART=" + training.getStaminaPart() + " WHERE WEEK=" + training.getHattrickDate().getWeek() + " AND SEASON=" + training.getHattrickDate().getSeason();
+					"update " + getTableName() +
+							" set TRAINING_TYPE= " + training.getTrainingType() +
+							", TRAINING_INTENSITY=" + training.getTrainingIntensity() +
+							", STAMINA_SHARE=" + training.getStaminaPart() +
+							", COACH_LEVEL=" + training.getCoachLevel() +
+							", TRAINING_ASSISTANTS_LEVEL=" + training.getTrainingAssistantsLevel() +
+							" WHERE TRAINING_DATE='" + training.getTrainingDate() + "'";
 			int count = adapter.executeUpdate(statement);
 
 			if (count == 0) {
-				adapter.executeUpdate("insert into "+getTableName()+" (TYPE, INTENSITY, WEEK, SEASON, STAMINATRAININGPART) values (" //$NON-NLS-1$
-				+training.getTrainingType() + ", " + training.getTrainingIntensity() + ", " + training.getHattrickDate().getWeek() + ", " + training.getHattrickDate().getSeason() + "," + training.getStaminaPart() + ")");
+				statement = "INSERT INTO " + getTableName() +
+						" (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL) VALUES ('" +
+						training.getTrainingDate() + "'," +
+						training.getTrainingType() + "," +
+						training.getTrainingIntensity() + "," +
+						training.getStaminaPart() + "," +
+						training.getCoachLevel() + "," +
+						training.getTrainingAssistantsLevel();
+				adapter.executeUpdate(statement);
 			}
-
 		}
 	}
-
 }

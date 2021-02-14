@@ -1589,7 +1589,7 @@ public class DBManager {
 	 */
 	public void saveFutureTraining(TrainingPerWeek training) {
 		((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME))
-				.saveFutureTraining(training);
+				.storeFutureTraining(training);
 	}
 
 	// ------------------------------- VereinTable
@@ -1625,8 +1625,8 @@ public class DBManager {
 	 */
 // ------------------------------- FutureTraining
 	// -------------------------------------------------
-	public int getFuturTraining(int Saison, int Week) {
-		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).getFutureTrainings(Saison, Week);
+	public int getFuturTraining(Instant trainingDate) {
+		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).loadFutureTrainings(trainingDate);
 	}
 
 	// ------------------------------- XtraDataTable

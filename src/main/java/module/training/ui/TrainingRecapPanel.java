@@ -99,7 +99,7 @@ public class TrainingRecapPanel extends LazyImagePanel  {
 
             // We are in the middle where season has not been updated!
             try {
-                if (HOVerwaltung.instance().getModel().getXtraDaten().getTrainingDate()
+                if (HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate()
                         .after(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
                     actualWeek.addWeeks(1);
                 }

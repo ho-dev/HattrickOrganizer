@@ -179,7 +179,7 @@ public class XtraData  {
      *
      * @return Value of property m_clTrainingDate.
      */
-    public final java.sql.Timestamp getTrainingDate() {
+    public final java.sql.Timestamp getNextTrainingDate() {
         return m_TrainingDate;
     }
 
