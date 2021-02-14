@@ -12,7 +12,7 @@ public class PlayerSkillChange implements ISkillChange
 {
 
     /** Skillup Date */
-    private Instant date;
+    private Date date;
 
     /** Hattrick Season */
     private int htSeason;
@@ -33,7 +33,7 @@ public class PlayerSkillChange implements ISkillChange
 
     private String age;
 
-    public void setDate(Instant date)
+    public void setDate(Date date)
     {
         this.date = date;
     }

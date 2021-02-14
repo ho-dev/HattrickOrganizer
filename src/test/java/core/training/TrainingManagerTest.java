@@ -14,9 +14,9 @@ public class TrainingManagerTest {
         Instant endDate = Instant.now();
         Instant startDate = endDate.minus(7, ChronoUnit.DAYS);
 
-        TrainingWeekManager trainingWeekManager = new TrainingWeekManager(startDate, endDate);
+       // TrainingWeekManager trainingWeekManager = new TrainingWeekManager(startDate, endDate);
 
-        System.out.print(trainingWeekManager.getTrainingList());
+        //System.out.print(trainingWeekManager.getTrainingList());
 
     }
 
