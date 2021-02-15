@@ -4,11 +4,13 @@ import core.db.DBManager;
 import core.db.JDBCAdapter;
 import core.model.HOVerwaltung;
 import core.model.enums.DBDataSource;
+import core.util.DateTimeInfo;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -20,7 +22,7 @@ import java.util.*;
  */
 public class TrainingWeekManager {
 
-	private static final Instant m_NextTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate().toInstant();
+	private static Instant cl_NextTrainingDate;
 
     private List<TrainingPerWeek> m_Trainings;
     private Instant m_StartDate;
@@ -34,6 +36,17 @@ public class TrainingWeekManager {
 	 * @param includeUpcomingMatches whether or not the TrainingPerWeek objects will contain upcoming match information
 	 */
 	public TrainingWeekManager(Instant startDate, boolean includeMatches, boolean includeUpcomingMatches) {
+		if(HOVerwaltung.instance().getModel() == null) {
+		HOLogger.instance().error(this.getClass(), "model not yet initialized");
+		//TODO: check what to do if this happen for new install
+		}
+		else{
+			if (cl_NextTrainingDate == null) {
+					cl_NextTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate().toInstant();
+
+				}
+			}
+
 		m_StartDate = startDate;
 		m_IncludeMatches = includeMatches;
 		m_IncludeUpcomingMatches = includeUpcomingMatches;
@@ -60,7 +73,7 @@ public class TrainingWeekManager {
 	 */
 	private Instant findStartDate(int minimumNbEntries){
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
-			String startDate = formatter.format(Instant.now().minus(1, ChronoUnit.YEARS));
+			String startDate = formatter.format(Instant.now().minus(365, ChronoUnit.DAYS));
 			String sql = String.format("""
 					SELECT TRAININGDATE	FROM XTRADATA WHERE XTRADATA.TRAININGDATE >= '%s' 
 					ORDER BY TRAININGDATE DESC LIMIT %s""",startDate, minimumNbEntries);
@@ -96,16 +109,21 @@ public class TrainingWeekManager {
 		HashMap<Instant, TrainingPerWeek>  trainingsInDB = createTPWfromDBentries();
 		int trainingsSize;
 
-		if (m_StartDate.isAfter(m_NextTrainingDate)){
+		if (m_StartDate.isAfter(cl_NextTrainingDate)){
 			HOLogger.instance().error(this.getClass(), "It was assumed that start date will always be before next training date in database");
 			return trainings;
 		}
 
-		long nbWeeks = ChronoUnit.DAYS.between(m_StartDate, m_NextTrainingDate) / 7;
+		long nbWeeks = ChronoUnit.DAYS.between(m_StartDate, cl_NextTrainingDate) / 7;
 
-		Instant currDate = m_NextTrainingDate.minus(nbWeeks * 7, ChronoUnit.DAYS);
 
-		while((currDate.isBefore(m_NextTrainingDate) || currDate.equals(m_NextTrainingDate))){
+		DateTimeInfo dtiTrainingDate = new DateTimeInfo(cl_NextTrainingDate);
+
+		ZonedDateTime zdtCurrDate =  dtiTrainingDate.getHattrickTime().minus(nbWeeks * 7, ChronoUnit.DAYS);
+
+		Instant currDate = zdtCurrDate.toInstant();
+
+		while((currDate.isBefore(cl_NextTrainingDate) || currDate.equals(cl_NextTrainingDate))){
 			if (trainingsInDB.containsKey(currDate)){
 				trainings.add(trainingsInDB.get(currDate));
 			}
@@ -114,8 +132,9 @@ public class TrainingWeekManager {
 				if(trainingsSize != 0)
 				{
 					var previousTraining = trainings.get(trainingsSize - 1);
-					previousTraining.setSource(DBDataSource.GUESS);
-					trainings.add(previousTraining);
+					var tpw = new TrainingPerWeek(currDate, previousTraining.getTrainingType(), previousTraining.getTrainingIntensity(), previousTraining.getStaminaShare(), previousTraining.getTrainingAssistantsLevel(), previousTraining.getCoachLevel(),
+							m_IncludeMatches, m_IncludeUpcomingMatches, DBDataSource.GUESS);
+					trainings.add(tpw);
 				}
 				else{
 					var tpw = new TrainingPerWeek(currDate, -1, 0, 0, 0, 0,
@@ -124,7 +143,8 @@ public class TrainingWeekManager {
 				}
 			}
 
-			currDate = currDate.plus(7, ChronoUnit.DAYS);
+			zdtCurrDate = zdtCurrDate.plus(7, ChronoUnit.DAYS);
+			currDate = zdtCurrDate.toInstant();
 		}
 
 		return trainings;

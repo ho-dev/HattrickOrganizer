@@ -99,7 +99,7 @@ final class TrainingsTable extends AbstractTable {
 	}
 
 	private boolean isTrainingDateInDB(String trainingDate){
-		String sql = String.format("SELECT 1 FROM XTRADATA WHERE TRAININGDATE = '%s' LIMIT 1", trainingDate);
+		String sql = String.format("SELECT 1 FROM " + getTableName() + " WHERE TRAININGDATE = '%s' LIMIT 1", trainingDate);
 		ResultSet rs = adapter.executeQuery(sql);
 		if (rs == null) {
 			return false;

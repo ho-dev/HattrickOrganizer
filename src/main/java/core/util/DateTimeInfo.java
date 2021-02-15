@@ -119,9 +119,11 @@ public class DateTimeInfo {
         this(ts.toInstant());
     }
 
+    /**
+       This constructor is supposed to be used for instant representing time in HT tZ
+     */
     public DateTimeInfo(Instant instant) {
-        String sDateTime = DateTimeUtils.InstantToSQLtimeStamp(instant);
-        new DateTimeInfo(sDateTime);
+        this(DateTimeUtils.InstantToSQLtimeStamp(instant));
     }
 
 
