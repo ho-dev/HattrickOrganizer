@@ -217,7 +217,7 @@ final class DBUpdater {
 		}
 
 		// Migrate TRAINING DATA
-		Instant recentTrainingDate;
+		Instant recentTrainingDate=null;
 		int recentCoachLevel=7;
 		int recentAssistantLevel=10;
 		var trainingTable = dbManager.getTable(TrainingsTable.TABLENAME);
@@ -334,53 +334,28 @@ final class DBUpdater {
 			// Load existing training entries
 
 			int startWeek=0;
-			final String statement = "SELECT min(season*16+week-1) FROM " + FutureTrainingTable.TABLENAME;
+			final String statement = "SELECT min(16*season+week-1) FROM " + FutureTrainingTable.TABLENAME;
 			ResultSet rs = m_clJDBCAdapter.executeQuery(statement);
 			try {
 				if (rs != null) {
 					startWeek = rs.getInt(0);
+
+					// update columns 								recentTrainingDate + "' + (7*(SEASON*16+WEEK-1)) DAY, " +
+					String update = "update " + FutureTrainingTable.TABLENAME +
+							" SET TRAINING_DATE=timestamp('" + recentTrainingDate + "') + (7*(16*SEASON+WEEK-" + startWeek + ")) DAY, " +
+							" TRAINING_ASSISTANTS_LEVEL=" + recentAssistantLevel +
+							", COACH_LEVEL=" + recentCoachLevel;
+					m_clJDBCAdapter.executeUpdate(update);
 				}
-
-				// update columns
-					String update = "update " + TrainingsTable.TABLENAME +
-								" SET" +
-								" TRAINING_DATE='" +
-								recentTrainingDate + "' + (7*(SEASON*16+WEEK-1)) DAY, " +
-								"',  TRAINING_ASSISTANTS_LEVEL=" +
-								coTrainer +
-								", COACH_LEVEL=" +
-								trainer +
-								" SOURCE=" +
-								DBDataSource.MANUAL.getValue() +
-								", WHERE YEAR=" +
-								training[1] +
-								" AND WEEK=" +
-								training[0];
-
-						m_clJDBCAdapter.executeUpdate(update);
-					}
-				}
-
 				// set not null, rename colums and delete
 				trainingTable.tryChangeColumn("COACH_LEVEL", "NOT NULL");
 				trainingTable.tryChangeColumn("TRAINING_ASSISTANTS_LEVEL", "NOT NULL");
 				trainingTable.tryChangeColumn("TRAINING_DATE", "NOT NULL");
-				trainingTable.tryChangeColumn("SOURCE", "NOT NULL");
 				trainingTable.tryRenameColumn("TYP", "TRAINING_TYPE");
 				trainingTable.tryRenameColumn("INTENSITY", "TRAINING_INTENSITY");
 				trainingTable.tryRenameColumn("STAMINATRAININGPART", "STAMINA_SHARE");
-				trainingTable.tryDeleteColumn("YEAR");
+				trainingTable.tryDeleteColumn("SEASON");
 				trainingTable.tryDeleteColumn("WEEK");
-
-				// Fill training table using information from VEREIN, PLAYER and XTRADATA (Step 2)
-				var sql = "select ACTIVATIONDATE FROM BASICS LIMIT 1";
-				rs = m_clJDBCAdapter.executeQuery(sql);
-				if (rs != null) {
-					rs.next();
-					var activationdate = rs.getTimestamp("ACTIVATIONDATE").toInstant();
-					TrainingWeekManager twm = new TrainingWeekManager(activationdate, false, false);
-					twm.push2TrainingsTable();
-				}
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(), "DatenbankZugriff.getTraining " + e);
 			}
