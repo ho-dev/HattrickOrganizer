@@ -120,6 +120,10 @@ public class TrainingPerWeek  {
         return o_TrainingDate;
     }
 
+    public void setTrainingDate(Instant trainingDate) {
+        o_TrainingDate = trainingDate;
+    }
+
     public final int getStaminaShare() {
         return o_StaminaShare;
     }

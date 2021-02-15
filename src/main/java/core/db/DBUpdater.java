@@ -1,7 +1,10 @@
 package core.db;
 
+import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.XtraData;
 import core.model.enums.DBDataSource;
+import core.model.misc.Basics;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
@@ -9,7 +12,6 @@ import core.training.HattrickDate;
 import core.training.TrainingWeekManager;
 import core.util.HOLogger;
 import module.playeranalysis.PlayerAnalysisModule;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -304,58 +306,35 @@ final class DBUpdater {
 				trainingTable.tryDeleteColumn("WEEK");
 
 				// Fill training table using information from VEREIN, PLAYER and XTRADATA (Step 2)
-				var sql = "select ACTIVATIONDATE FROM BASICS LIMIT 1";
+
+				HOModel model = new HOModel();
+				XtraData xtraData = new XtraData();
+				Basics basics = new Basics();
+
+				var sql = "SELECT TRAININGDATE FROM XTRADATA ORDER BY TRAININGDATE DESC LIMIT 1";
 				rs = m_clJDBCAdapter.executeQuery(sql);
-				if (rs != null) {
-					rs.next();
-					var activationdate = rs.getTimestamp("ACTIVATIONDATE").toInstant();
-					TrainingWeekManager twm = new TrainingWeekManager(activationdate, false, false);
-					twm.push2TrainingsTable();
+				rs.next();
+				xtraData.setTrainingDate(rs.getTimestamp("TRAININGDATE"));
 
-					var trainingsList = twm.getTrainingList();
-					if ( trainingsList.size()>0){
-						var recent = trainingsList.get(trainingsList.size()-1);
-						recentTrainingDate = recent.getTrainingDate();
-						recentAssistantLevel = recent.getTrainingAssistantsLevel();
-						recentCoachLevel = recent.getCoachLevel();
-					}
+				sql = "SELECT TRAININGDATE FROM XTRADATA ORDER BY TRAININGDATE ASC LIMIT 1";
+				rs = m_clJDBCAdapter.executeQuery(sql);
+				rs.next();
+				Instant	firstTrainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
 
-				}
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
-			}
-		}
+				sql = "SELECT TEAMID FROM BASICS LIMIT 1";
+				rs = m_clJDBCAdapter.executeQuery(sql);
+				rs.next();
+				basics.setTeamId(rs.getInt("TEAMID"));
 
-		var futureTrainingTable = dbManager.getTable(FutureTrainingTable.TABLENAME);
-		if ( futureTrainingTable.tryAddColumn("COACH_LEVEL","INTEGER")) {
-			futureTrainingTable.tryAddColumn("TRAINING_ASSISTANTS_LEVEL", "INTEGER");
-			futureTrainingTable.tryAddColumn("TRAINING_DATE", "TIMESTAMP");
+				model.setBasics(basics);
+				model.setXtraDaten(xtraData);
+				HOVerwaltung.instance().setModel(model);
 
-			// Load existing training entries
+				TrainingWeekManager twm = new TrainingWeekManager(firstTrainingDate, false, false);
+				twm.push2TrainingsTable();
+				HOLogger.instance().log(getClass(),"Database upgrade to version 5.0 complete !");
 
-			int startWeek=0;
-			final String statement = "SELECT min(16*season+week-1) FROM " + FutureTrainingTable.TABLENAME;
-			ResultSet rs = m_clJDBCAdapter.executeQuery(statement);
-			try {
-				if (rs != null) {
-					startWeek = rs.getInt(0);
 
-					// update columns 								recentTrainingDate + "' + (7*(SEASON*16+WEEK-1)) DAY, " +
-					String update = "update " + FutureTrainingTable.TABLENAME +
-							" SET TRAINING_DATE=timestamp('" + recentTrainingDate + "') + (7*(16*SEASON+WEEK-" + startWeek + ")) DAY, " +
-							" TRAINING_ASSISTANTS_LEVEL=" + recentAssistantLevel +
-							", COACH_LEVEL=" + recentCoachLevel;
-					m_clJDBCAdapter.executeUpdate(update);
-				}
-				// set not null, rename colums and delete
-				trainingTable.tryChangeColumn("COACH_LEVEL", "NOT NULL");
-				trainingTable.tryChangeColumn("TRAINING_ASSISTANTS_LEVEL", "NOT NULL");
-				trainingTable.tryChangeColumn("TRAINING_DATE", "NOT NULL");
-				trainingTable.tryRenameColumn("TYP", "TRAINING_TYPE");
-				trainingTable.tryRenameColumn("INTENSITY", "TRAINING_INTENSITY");
-				trainingTable.tryRenameColumn("STAMINATRAININGPART", "STAMINA_SHARE");
-				trainingTable.tryDeleteColumn("SEASON");
-				trainingTable.tryDeleteColumn("WEEK");
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(), "DatenbankZugriff.getTraining " + e);
 			}
@@ -620,17 +599,16 @@ final class DBUpdater {
 		if (version < DBVersion) {
 			if(!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update done, setting db version number from " + version + " to " + DBVersion);
-				dbManager.saveUserParameter("DBVersion", DBVersion);
+				dbManager.saveUserParameter("DBVersion", version);
 			}
 			else {
 				HOLogger.instance().info(DBUpdater.class, "Development update done but this is a development version so DBVersion will remain unchanged");
-				dbManager.saveUserParameter("DBVersion", DBVersion - 1);
 			}
 		}
 		else {
-			HOLogger.instance().info(DBUpdater.class,
-					"Update done, db version number will NOT be increased from " + version
-							+ " to " + DBVersion + " (isDevelopment=" + HO.isDevelopment() + ")");
+			HOLogger.instance().error(DBUpdater.class,
+					"Error trying to set DB version to unidentified value:  " + version
+							+ " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
 

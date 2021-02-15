@@ -157,7 +157,7 @@ public abstract class AbstractTable {
 
 	public boolean tryChangeColumn(String columnName, String type_not_null) throws SQLException {
 		if ( columnExistsInTable(columnName)) {
-			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + columnName + " " + type_not_null;
+			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + columnName + " SET " + type_not_null;
 			adapter.executeQuery(sql);
 			return true;
 		}

@@ -28,8 +28,7 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.8'
     implementation 'org.jetbrains:annotations:16.0.2'
     implementation 'org.knowm.xchart:xchart:3.6.5'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    compile 'org.junit.jupiter:junit-jupiter:5.6.2'
 }
 
 test {

@@ -61,7 +61,7 @@ final class XtraDataTable extends AbstractTable {
 	 * speichert das Team
 	 */
 	void saveXtraDaten(int hrfId, XtraData xtra) {
-		String statement = null;
+		String statement;
 
 		if (xtra != null) {
 			int hasProm = 0;

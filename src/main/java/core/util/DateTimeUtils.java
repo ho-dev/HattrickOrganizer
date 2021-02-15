@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,7 +15,7 @@ import java.util.Locale;
 
 public class DateTimeUtils {
 
-	private static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm:ss").withZone(ZoneId.from(ZoneOffset.UTC));
+	private static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("Europe/Stockholm"));
 
 	/**
 	 * Utility class - private constructor enforces noninstantiability.
@@ -42,7 +43,7 @@ public class DateTimeUtils {
 	}
 
 	/**
-	 converts an Instant into a SQL timestamp
+	 converts an Instant into a SQL timestamp with the instant suppose to represent time in HT timeZone
 	 */
 	public static String InstantToSQLtimeStamp(Instant instant) {
 		return cl_Formatter.format(instant);
