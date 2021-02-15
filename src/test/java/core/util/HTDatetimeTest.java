@@ -1,10 +1,8 @@
 package core.util;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.RepeatedTest;
+import core.HO;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import core.model.HOVerwaltung;
 import java.time.ZoneId;
@@ -12,45 +10,52 @@ import java.time.ZoneId;
 
 public class HTDatetimeTest {
 
+
+
+    
     @Test
     public void testWeeksAndSeasons() {
 
+        HO.setPortable_version(true);
         HOVerwaltung.instance().loadLatestHoModel();
         HOVerwaltung.instance().setResource("English");
 
-        DateTimeInfo dti = new DateTimeInfo("2021-02-14 23:11:00");
-        assertEquals(dti.getHTSeasonLocalized(), 77);
-        assertEquals(dti.getHTWeekLocalized(), 6);
 
+        DateTimeInfo dti = new DateTimeInfo("2021-02-14 23:11:00");
+        Assertions.assertEquals(dti.getHTSeasonLocalized(), 77);
+        Assertions.assertEquals(dti.getHTWeekLocalized(), 5);
+
+
+        dti = new DateTimeInfo("2020-06-27 00:00:00");
+        Assertions.assertEquals(dti.getHTSeasonLocalized(), 75);
+        Assertions.assertEquals(dti.getHTWeekLocalized(), 4);
+
+        dti = new DateTimeInfo("2018-05-10 00:00:00");
+        Assertions.assertEquals(dti.getHTSeasonLocalized(), 68);
+        Assertions.assertEquals(dti.getHTWeekLocalized(), 5);
+
+        dti = new DateTimeInfo("2009-05-28 00:00:00");
+        Assertions.assertEquals(dti.getHTSeasonLocalized(), 39);
+        Assertions.assertEquals(dti.getHTWeekLocalized(), 2);
 
         dti = new DateTimeInfo("2020-09-07 00:00:00");
-        assertEquals(dti.getHTSeasonLocalized(), 75);
-        assertEquals(dti.getHTWeekLocalized(), 10);
+        Assertions.assertEquals(dti.getHTSeasonLocalized(), 75);
+        Assertions.assertEquals(dti.getHTWeekLocalized(), 15);
 
-//
-//        dti = new DateTimeInfo("2023-02-23 17:00:00", ZoneId.of("America/Belize"), -74);
-//        assert dti.getHTSeasonLocalized() == 71;
-//        assert dti.getHTWeekLocalized() == 15;
-//
-//        dti = new DateTimeInfo("2020-09-21 01:30:00", ZoneId.of("America/Belize"), -74);
-//        assert dti.getHTSeasonLocalized() == 76;
-//        assert dti.getHTWeekLocalized() == 1;
-//
-//        dti = new DateTimeInfo("2020-09-21 01:30:00", ZoneId.of("America/Bahia"), -74);
-//        assert dti.getHTSeasonLocalized() == 75;
-//        assert dti.getHTWeekLocalized() == 16;
 
+        dti = new DateTimeInfo("2023-02-23 17:00:00", ZoneId.of("America/Belize"), -12);
+        Assertions.assertEquals(dti.getHTSeasonLocalized(), 71);
+        Assertions.assertEquals(dti.getHTWeekLocalized(), 15);
+
+        dti = new DateTimeInfo("2020-09-21 01:30:00");
+        Assertions.assertEquals(dti.getHTSeasonLocalized(), 76);
+        Assertions.assertEquals(dti.getHTWeekLocalized(), 1);
+
+        dti = new DateTimeInfo("2020-09-21 01:30:00", ZoneId.of("America/Bahia"), 0);
+        Assertions.assertEquals(dti.getHTSeasonLocalized(), 75);
+        Assertions.assertEquals(dti.getHTWeekLocalized(), 16);
 
     }
-
-//    public class TestRunner {
-//        public static void main(String[] args) {
-//            Result result = JUnitCore.runClasses(Junit4AssertionTest.class);
-//            for (Failure failure : result.getFailures()) {
-//                System.out.println(failure.toString());
-//            }
-//            System.out.println("Result=="+result.wasSuccessful());
-//        }
 
 
     }

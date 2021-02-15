@@ -19,7 +19,12 @@ public class DateTimeInfo {
     private static int m_UserSeasonOffsetDefault = HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
     private static int m_UserSeasonOffset;
     private static ZoneId m_HTzoneID = ZoneId.of("Europe/Stockholm");
-    private static ZonedDateTime ORIGIN_HT_DATE = ZonedDateTime.of(1997, 9, 22, 0, 0, 0, 0, m_HTzoneID);
+
+    // This is a bit unclear from HT side but latest discussion suggest that HTweeks are calculated as if ORIGIN_HT_DATE happened
+    // at different time accross the world, i.e. no timezone attached
+
+    //private static ZonedDateTime ORIGIN_HT_DATE = ZonedDateTime.of(1997, 9, 22, 0, 0, 0, 0, m_HTzoneID);
+    private static LocalDate ORIGIN_HT_DATE = LocalDate.of(1997, 9, 22);
     private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private Timestamp m_tsHattrick;  // for compatibility only
     private Timestamp m_tsUserLocalized;  // for compatibility only
@@ -87,7 +92,10 @@ public class DateTimeInfo {
         m_tsHattrick = Timestamp.from(m_instantHattrick);
         m_tsUserLocalized = Timestamp.from(m_instantUserLocalized);
 
-        ZonedDateTime origin_ht_date_localized = ORIGIN_HT_DATE.withZoneSameInstant(m_UserZoneID);
+        // This is a bit unclear from HT side but latest discussion suggest that HTweeks are calculated as if ORIGIN_HT_DATE happened
+        // at different time accross the world, i.e. no timezone attached
+//        ZonedDateTime origin_ht_date_localized = ORIGIN_HT_DATE.withZoneSameInstant(m_UserZoneID);
+        ZonedDateTime origin_ht_date_localized = ORIGIN_HT_DATE.atStartOfDay(m_UserZoneID);
 
         long nbDays = ChronoUnit.DAYS.between(origin_ht_date_localized.toLocalDate(), m_zdtUserLocalized.toLocalDate());
         long nbWeeks = nbDays / 7;

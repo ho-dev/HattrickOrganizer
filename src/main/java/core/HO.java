@@ -28,15 +28,11 @@ public class HO {
     private static String versionType;
 	private static OSUtils.OS platform;
 	private static boolean portable_version; // Used to determined the location of the DB
-
 	public static String getVersionType() {
 		return versionType;
 	}
 	public static int getRevisionNumber() {
 		return RevisionNumber;
-	}
-	public static boolean isPortableVersion() {
-		return portable_version;
 	}
 	public static OSUtils.OS getPlatform() {return platform; }
 	public static boolean isDevelopment() {
@@ -64,7 +60,14 @@ public class HO {
 		return txt;
 	}
 
-//	public static boolean isWindows(){ return platform == OSUtils.OS.WINDOWS;}
+	public static boolean isPortableVersion() {
+		return portable_version;
+	}
+
+	// Only used to run test
+	public static void setPortable_version(boolean portable_version) {
+		HO.portable_version = portable_version;
+	}
 
 	/**
 	 *  HO entry point
