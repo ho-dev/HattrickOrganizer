@@ -5,12 +5,14 @@ import core.model.enums.DBDataSource;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
+import core.training.HattrickDate;
 import core.training.TrainingWeekManager;
 import core.util.HOLogger;
 import module.playeranalysis.PlayerAnalysisModule;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -215,6 +217,9 @@ final class DBUpdater {
 		}
 
 		// Migrate TRAINING DATA
+		Instant recentTrainingDate;
+		int recentCoachLevel=7;
+		int recentAssistantLevel=10;
 		var trainingTable = dbManager.getTable(TrainingsTable.TABLENAME);
 		if ( trainingTable.tryAddColumn("COACH_LEVEL","INTEGER")){
 			trainingTable.tryAddColumn("TRAINING_ASSISTANTS_LEVEL", "INTEGER");
@@ -306,12 +311,80 @@ final class DBUpdater {
 					var activationdate = rs.getTimestamp("ACTIVATIONDATE").toInstant();
 					TrainingWeekManager twm = new TrainingWeekManager(activationdate, false, false);
 					twm.push2TrainingsTable();
+
+					var trainingsList = twm.getTrainingList();
+					if ( trainingsList.size()>0){
+						var recent = trainingsList.get(trainingsList.size()-1);
+						recentTrainingDate = recent.getTrainingDate();
+						recentAssistantLevel = recent.getTrainingAssistantsLevel();
+						recentCoachLevel = recent.getCoachLevel();
+					}
+
 				}
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
 			}
 		}
 
+		var futureTrainingTable = dbManager.getTable(FutureTrainingTable.TABLENAME);
+		if ( futureTrainingTable.tryAddColumn("COACH_LEVEL","INTEGER")) {
+			futureTrainingTable.tryAddColumn("TRAINING_ASSISTANTS_LEVEL", "INTEGER");
+			futureTrainingTable.tryAddColumn("TRAINING_DATE", "TIMESTAMP");
+
+			// Load existing training entries
+
+			int startWeek=0;
+			final String statement = "SELECT min(season*16+week-1) FROM " + FutureTrainingTable.TABLENAME;
+			ResultSet rs = m_clJDBCAdapter.executeQuery(statement);
+			try {
+				if (rs != null) {
+					startWeek = rs.getInt(0);
+				}
+
+				// update columns
+					String update = "update " + TrainingsTable.TABLENAME +
+								" SET" +
+								" TRAINING_DATE='" +
+								recentTrainingDate + "' + (7*(SEASON*16+WEEK-1)) DAY, " +
+								"',  TRAINING_ASSISTANTS_LEVEL=" +
+								coTrainer +
+								", COACH_LEVEL=" +
+								trainer +
+								" SOURCE=" +
+								DBDataSource.MANUAL.getValue() +
+								", WHERE YEAR=" +
+								training[1] +
+								" AND WEEK=" +
+								training[0];
+
+						m_clJDBCAdapter.executeUpdate(update);
+					}
+				}
+
+				// set not null, rename colums and delete
+				trainingTable.tryChangeColumn("COACH_LEVEL", "NOT NULL");
+				trainingTable.tryChangeColumn("TRAINING_ASSISTANTS_LEVEL", "NOT NULL");
+				trainingTable.tryChangeColumn("TRAINING_DATE", "NOT NULL");
+				trainingTable.tryChangeColumn("SOURCE", "NOT NULL");
+				trainingTable.tryRenameColumn("TYP", "TRAINING_TYPE");
+				trainingTable.tryRenameColumn("INTENSITY", "TRAINING_INTENSITY");
+				trainingTable.tryRenameColumn("STAMINATRAININGPART", "STAMINA_SHARE");
+				trainingTable.tryDeleteColumn("YEAR");
+				trainingTable.tryDeleteColumn("WEEK");
+
+				// Fill training table using information from VEREIN, PLAYER and XTRADATA (Step 2)
+				var sql = "select ACTIVATIONDATE FROM BASICS LIMIT 1";
+				rs = m_clJDBCAdapter.executeQuery(sql);
+				if (rs != null) {
+					rs.next();
+					var activationdate = rs.getTimestamp("ACTIVATIONDATE").toInstant();
+					TrainingWeekManager twm = new TrainingWeekManager(activationdate, false, false);
+					twm.push2TrainingsTable();
+				}
+			} catch (Exception e) {
+				HOLogger.instance().log(getClass(), "DatenbankZugriff.getTraining " + e);
+			}
+		}
 
 		updateDBVersion(dbVersion, version);
 	}
