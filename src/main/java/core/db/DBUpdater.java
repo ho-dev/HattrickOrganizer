@@ -8,6 +8,7 @@ import core.model.misc.Basics;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
+import core.training.HattrickDate;
 import core.training.TrainingWeekManager;
 import core.util.HTDatetime;
 import core.util.HOLogger;
