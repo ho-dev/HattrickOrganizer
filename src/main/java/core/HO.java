@@ -196,7 +196,7 @@ public class HO {
 
 		// Training estimation calculated on DB manual entries
 		// TODO exception on creation of TraininMAnager
-		// TrainingManager.instance();
+		TrainingManager.instance();
 
 		interuptionsWindow.setInfoText(8, "Prepare to show");
 		SwingUtilities.invokeLater(() -> {

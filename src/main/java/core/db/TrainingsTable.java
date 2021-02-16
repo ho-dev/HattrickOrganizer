@@ -7,6 +7,7 @@ import core.util.DateTimeUtils;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -100,13 +101,20 @@ final class TrainingsTable extends AbstractTable {
 
 	private boolean isTrainingDateInDB(String trainingDate){
 		String sql = String.format("SELECT 1 FROM " + getTableName() + " WHERE TRAINING_DATE = '%s' LIMIT 1", trainingDate);
-		ResultSet rs = adapter.executeQuery(sql);
-		if (rs == null) {
+
+		try {
+			ResultSet rs = adapter.executeQuery(sql);
+			if (rs != null) {
+				if (rs.next()) {
+					return true;
+				}
+			}
+		}
+		catch (SQLException throwables) {
+			HOLogger.instance().error(this.getClass(), "Error when controlling if following entry was in Training table: " + trainingDate);
 			return false;
 		}
-		else{
-			return true;
-		}
+		return false;
 	}
 
 

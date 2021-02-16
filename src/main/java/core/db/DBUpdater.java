@@ -377,9 +377,9 @@ final class DBUpdater {
 				futureTrainingTable.tryDeleteColumn("SEASON");
 				futureTrainingTable.tryDeleteColumn("WEEK");
 
-				HOLogger.instance().log(getClass(),"Database upgrade to version 5.0 complete !");
+				HOLogger.instance().info(getClass(),"Database upgrade to version 5.0 complete !");
 			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "DatenbankZugriff.getTraining " + e);
+				HOLogger.instance().error(getClass(), "DatenbankZugriff.getTraining " + e);
 			}
 
 		}
@@ -646,7 +646,7 @@ final class DBUpdater {
 				dbManager.saveUserParameter("DBVersion", version);
 			}
 			else {
-				HOLogger.instance().info(DBUpdater.class, "Development update done but this is a development version so DBVersion will remain unchanged");
+				HOLogger.instance().info(DBUpdater.class, "Development update to " + DBVersion + " done but this is a development version so DBVersion will remain unchanged");
 			}
 		}
 		else {
