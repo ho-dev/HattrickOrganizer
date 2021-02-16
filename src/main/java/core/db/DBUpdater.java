@@ -8,11 +8,14 @@ import core.model.misc.Basics;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
+import core.training.HattrickDate;
 import core.training.TrainingWeekManager;
+import core.util.DateTimeInfo;
 import core.util.HOLogger;
 import module.playeranalysis.PlayerAnalysisModule;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -218,6 +221,9 @@ final class DBUpdater {
 		}
 
 		// Migrate TRAINING DATA
+		Timestamp recentTrainingDate=null;
+		int recentCoachLevel=7;
+		int recentAssistantLevel=10;
 		var trainingTable = dbManager.getTable(TrainingsTable.TABLENAME);
 		if ( trainingTable.tryAddColumn("COACH_LEVEL","INTEGER")){
 			trainingTable.tryAddColumn("TRAINING_ASSISTANTS_LEVEL", "INTEGER");
@@ -279,9 +285,9 @@ final class DBUpdater {
 								coTrainer +
 								", COACH_LEVEL=" +
 								trainer +
-								" SOURCE=" +
+								", SOURCE=" +
 								DBDataSource.MANUAL.getValue() +
-								", WHERE YEAR=" +
+								" WHERE YEAR=" +
 								training[1] +
 								" AND WEEK=" +
 								training[0];
@@ -328,14 +334,55 @@ final class DBUpdater {
 
 				TrainingWeekManager twm = new TrainingWeekManager(firstTrainingDate, false, false);
 				twm.push2TrainingsTable();
+				var trainingList = twm.getTrainingList();
+				if ( trainingList.size()>0){
+					var latestTraining = trainingList.get(trainingList.size()-1);
+					recentTrainingDate = new DateTimeInfo(latestTraining.getTrainingDate()).getHattrickTimeAsTimestamp();
+					recentAssistantLevel = latestTraining.getTrainingAssistantsLevel();
+					recentCoachLevel = latestTraining.getCoachLevel();
+				}
+
+				// Future training table
+				var futureTrainingTable = dbManager.getTable(FutureTrainingTable.TABLENAME);
+				if ( futureTrainingTable.tryAddColumn("COACH_LEVEL","INTEGER")) {
+					futureTrainingTable.tryAddColumn("TRAINING_ASSISTANTS_LEVEL", "INTEGER");
+					futureTrainingTable.tryAddColumn("TRAINING_DATE", "TIMESTAMP");
+
+					// Update existing training entries
+					int startWeek = 0;
+					sql = "SELECT min(season*16+week-1) FROM " + FutureTrainingTable.TABLENAME;
+					rs = m_clJDBCAdapter.executeQuery(sql);
+					if (rs != null) {
+						rs.next();
+						startWeek = rs.getInt(1);
+					}
+
+					// update columns
+					String update = "update " + FutureTrainingTable.TABLENAME +
+							" SET" +
+							" TRAINING_DATE=timestamp('" +
+							recentTrainingDate + "') + (7*(SEASON*16+WEEK-" + startWeek + ")) DAY" +
+							",  TRAINING_ASSISTANTS_LEVEL=" + recentAssistantLevel +
+							", COACH_LEVEL=" + recentCoachLevel;
+					m_clJDBCAdapter.executeUpdate(update);
+				}
+
+				// set not null, rename colums and delete
+				futureTrainingTable.tryChangeColumn("COACH_LEVEL", "NOT NULL");
+				futureTrainingTable.tryChangeColumn("TRAINING_ASSISTANTS_LEVEL", "NOT NULL");
+				futureTrainingTable.tryChangeColumn("TRAINING_DATE", "NOT NULL");
+				futureTrainingTable.tryRenameColumn("TYPE", "TRAINING_TYPE");
+				futureTrainingTable.tryRenameColumn("INTENSITY", "TRAINING_INTENSITY");
+				futureTrainingTable.tryRenameColumn("STAMINATRAININGPART", "STAMINA_SHARE");
+				futureTrainingTable.tryDeleteColumn("SEASON");
+				futureTrainingTable.tryDeleteColumn("WEEK");
+
 				HOLogger.instance().log(getClass(),"Database upgrade to version 5.0 complete !");
-
-
 			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
+				HOLogger.instance().log(getClass(), "DatenbankZugriff.getTraining " + e);
 			}
-		}
 
+		}
 
 		updateDBVersion(dbVersion, version);
 	}

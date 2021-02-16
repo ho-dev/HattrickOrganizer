@@ -68,8 +68,8 @@ final class TrainingsTable extends AbstractTable {
 				}
 			}
 
-			String statement = "INSERT INTO " + getTableName() + " (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL, SOURCE) VALUES (";
-			statement += trainingDate + ", ";
+			String statement = "INSERT INTO " + getTableName() + " (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL, SOURCE) VALUES ('";
+			statement += trainingDate + "', ";
 			statement += training.getTrainingType() + ", ";
 			statement += training.getTrainingIntensity() + ", ";
 			statement += training.getStaminaShare() + ", ";
@@ -99,7 +99,7 @@ final class TrainingsTable extends AbstractTable {
 	}
 
 	private boolean isTrainingDateInDB(String trainingDate){
-		String sql = String.format("SELECT 1 FROM " + getTableName() + " WHERE TRAININGDATE = '%s' LIMIT 1", trainingDate);
+		String sql = String.format("SELECT 1 FROM " + getTableName() + " WHERE TRAINING_DATE = '%s' LIMIT 1", trainingDate);
 		ResultSet rs = adapter.executeQuery(sql);
 		if (rs == null) {
 			return false;
