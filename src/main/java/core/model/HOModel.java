@@ -76,13 +76,13 @@ public class HOModel {
 
         setCurrentPlayers(DBManager.instance().getSpieler(id));
         setFormerPlayers(DBManager.instance().getAllSpieler());
+        setTeam(DBManager.instance().getTeam(id));
         setLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
         setPreviousLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
         setBasics(DBManager.instance().getBasics(id));
         setEconomy(DBManager.instance().getEconomy(id));
         setLeague(DBManager.instance().getLiga(id));
         setStadium(DBManager.instance().getStadion(id));
-        setTeam(DBManager.instance().getTeam(id));
         setClub(DBManager.instance().getVerein(id));
         setFixtures(DBManager.instance().getSpielplan(-1, -1));
         setXtraDaten(DBManager.instance().getXtraDaten(id));

@@ -62,7 +62,7 @@ final class AufstellungTable extends AbstractTable {
 				lineup.setSubstitionList(new ArrayList<>(DBManager.instance()
 						.getMatchSubstitutionsByHrf(hrfID, name)));
 				lineup.setPenaltyTakers(DBManager.instance().getPenaltyTakers(name));
-				lineup.setRatings();
+				lineup.setRatings(hrfID);
 			}
 		}
 			catch (Exception e) {

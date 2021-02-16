@@ -31,8 +31,7 @@ public class RatingPredictionManager {
     private static final int LEFT = RatingPredictionParameter.LEFT;
     private static final int RIGHT = RatingPredictionParameter.RIGHT;
     public static final Date LAST_CHANGE = (new GregorianCalendar(2009, 4, 18)).getTime(); //18.05.2009
-    public static final Date LAST_CHANGE_FRIENDLY = (new GregorianCalendar(2009, 4, 18)).getTime(); //18.05.2009
-    private static final int SIDEDEFENSE = 0; 
+	private static final int SIDEDEFENSE = 0;
     private static final int CENTRALDEFENSE = 1; 
     private static final int MIDFIELD = 2; 
     private static final int SIDEATTACK = 3; 
@@ -92,11 +91,6 @@ public class RatingPredictionManager {
 	 */
 	private Hashtable<Double, Lineup> LineupEvolution = new Hashtable<>();
 
-//	public void flushStaminaEffect()
-//	{
-//		allStaminaEffect.clear();
-//	}
-
     public RatingPredictionManager () {
     	if (RatingPredictionManager.config == null)
     		RatingPredictionManager.config = RatingPredictionConfig.getInstance();
@@ -106,7 +100,7 @@ public class RatingPredictionManager {
     	RatingPredictionManager.config = config;
     }
     
-    public RatingPredictionManager(Lineup _startingLineup, Team iteam, short trainerType, int styleOfPlay, RatingPredictionConfig config)
+    public RatingPredictionManager(Lineup _startingLineup, Team iteam, int styleOfPlay, RatingPredictionConfig config)
     {
         this.startingLineup = _startingLineup;
         RatingPredictionManager.config = config;
@@ -1279,8 +1273,6 @@ public class RatingPredictionManager {
 			}
         }
 
-//      retVal *= params.getParam("longshots", "postMulti", 1.0);
-//		retVal = Math.pow(retVal, params.getParam("longshots", "postPower", 1));
 		retVal += params.getParam("longshots", "postDelta", 0);
     	retVal = applyCommonProps (retVal, params, "longshots");
     	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);

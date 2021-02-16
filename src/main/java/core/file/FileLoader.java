@@ -112,7 +112,7 @@ public class FileLoader {
 			if (is!=null) {
 				if (fileUnknown) {
 					fileStatusesCache.put(fileName, FileLoadingStatus.INSIDE_JAR);
-					HOLogger.instance().debug(getClass(), "File will be loaded from inside the JAR: " + fileName);
+//					HOLogger.instance().debug(getClass(), "File will be loaded from inside the JAR: " + fileName);
 				}
 				return is;
 			} else {

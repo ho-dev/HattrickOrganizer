@@ -6,6 +6,7 @@ import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.Ratings;
+import core.model.Team;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
 import core.model.match.Weather;
@@ -280,9 +281,7 @@ public class Lineup{
 	 */
 	public final float getTacticLevelAimAow() {
 		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel()
-				.getTeam(),
-				(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(),
-				settings.m_iStyleOfPlay, RatingPredictionConfig.getInstance()).getTacticLevelAowAim());
+				.getTeam(),	settings.m_iStyleOfPlay, RatingPredictionConfig.getInstance()).getTacticLevelAowAim());
 	}
 
 	/**
@@ -291,8 +290,7 @@ public class Lineup{
 	 * @return tactic level
 	 */
 	public final float getTacticLevelCounter() {
-		return (new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam(),
-				(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), settings.m_iStyleOfPlay,
+		return (new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam(), settings.m_iStyleOfPlay,
 				RatingPredictionConfig.getInstance())).getTacticLevelCounter();
 	}
 
@@ -303,8 +301,7 @@ public class Lineup{
 	 */
 	public final float getTacticLevelPressing() {
 		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel()
-				.getTeam(),
-				(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), settings.m_iStyleOfPlay,
+				.getTeam(),settings.m_iStyleOfPlay,
 				RatingPredictionConfig.getInstance()).getTacticLevelPressing());
 	}
 
@@ -315,8 +312,7 @@ public class Lineup{
 	 */
 	public final float getTacticLevelLongShots() {
 		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel()
-				.getTeam(),
-				(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), settings.m_iStyleOfPlay,
+				.getTeam(), settings.m_iStyleOfPlay,
 				RatingPredictionConfig.getInstance()).getTacticLevelLongShots());
 	}
 
@@ -498,16 +494,41 @@ public class Lineup{
 	}
 
 
-	 public void setRatings() {
+	public void setRatings(){
+		final RatingPredictionManager rpManager;
+		Ratings oRatings = new Ratings();
+		boolean bForm = true;
+
+		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
+			rpManager = new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam(), settings.m_iStyleOfPlay, RatingPredictionConfig.getInstance());
+			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings(bForm, true));
+			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings(bForm, true));
+			oRatings.setRightDefense(rpManager.getRightDefenseRatings(bForm, true));
+			oRatings.setMidfield(rpManager.getMFRatings(bForm, true));
+			oRatings.setLeftAttack(rpManager.getLeftAttackRatings(bForm, true));
+			oRatings.setCentralAttack(rpManager.getCentralAttackRatings(bForm, true));
+			oRatings.setRightAttack(rpManager.getRightAttackRatings(bForm, true));
+			oRatings.computeHatStats();
+			oRatings.computeLoddarStats();
+			this.oRatings = oRatings;
+		}
+		else {
+			this.oRatings = new Ratings(); }
+	}
+
+	/**
+	 * This version of the function is called during HOModel creation to avoid back looping
+	 *
+	 * @param hrfID
+	 */
+	 public void setRatings(int hrfID) {
 		 final RatingPredictionManager rpManager;
 		 Ratings oRatings = new Ratings();
 		 boolean bForm = true;
 
 		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
-			rpManager = new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam(),
-					(short) HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp(), settings.m_iStyleOfPlay, RatingPredictionConfig.getInstance());
-//			rpManager.flushStaminaEffect();
-//			this.printLineup();
+			Team _team = DBManager.instance().getTeam(hrfID);
+			rpManager = new RatingPredictionManager(this, _team, settings.m_iStyleOfPlay, RatingPredictionConfig.getInstance());
 			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings(bForm, true));
 			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings(bForm, true));
 			oRatings.setRightDefense(rpManager.getRightDefenseRatings(bForm, true));
@@ -533,13 +554,6 @@ public class Lineup{
 			return oRatings;
 		}
 
-	/**
-	 * Total strength.
-	 */
-	public final float getGesamtStaerke(List<Player> player, boolean useForm) {
-		return Helper.round(getTWTeamStk(player, useForm) + getAWTeamStk(player, useForm) //
-				+ getMFTeamStk(player, useForm) + getSTTeamStk(player, useForm), 1);
-	}
 
 
 	/**
@@ -1761,55 +1775,7 @@ public class Lineup{
 		return Helper.round(stk, 1);
 	}
 
-//	/**
-//	 * Debug log lineup.
-//	 */
-//	private void dumpValues() {
-//		if (m_vPositionen != null) {
-//			for (IMatchRoleID pos : m_vPositionen) {
-//				final Player temp = HOVerwaltung.instance().getModel()
-//						.getSpieler(((MatchRoleID) pos).getSpielerId());
-//				String name = "";
-//				float stk = 0.0f;
-//
-//				if (temp != null) {
-//					name = temp.getName();
-//					stk = temp.calcPosValue(((MatchRoleID) pos).getPosition(), true);
-//				}
-//
-//				HOLogger.instance().log(getClass(),
-//						"PosID: " + MatchRoleID.getNameForID(((MatchRoleID) pos).getId()) //
-//								+ ", Player :" + name + " , Stk : " + stk);
-//			}
-//		}
-//		if (m_iKapitaen > 0) {
-//			HOLogger.instance().log(
-//					getClass(),
-//					"Captain: "
-//							+ HOVerwaltung.instance().getModel().getSpieler(m_iKapitaen).getName());
-//		}
-//
-//		if (m_iKicker > 0) {
-//			HOLogger.instance().log(
-//					getClass(),
-//					"SetPieces: "
-//							+ HOVerwaltung.instance().getModel().getSpieler(m_iKicker).getName());
-//		}
-//
-//		if (m_sLocation > -1) {
-//			HOLogger.instance().log(getClass(), "Location: " + m_sLocation);
-//		}
-//
-//		HOLogger.instance().log(
-//				getClass(),
-//				"GK: " + getTWTeamStk(HOVerwaltung.instance().getModel().getAllSpieler(), true)
-//						+ " DF: "
-//						+ getAWTeamStk(HOVerwaltung.instance().getModel().getAllSpieler(), true)
-//						+ " MF : "
-//						+ getMFTeamStk(HOVerwaltung.instance().getModel().getAllSpieler(), true)
-//						+ " ST : "
-//						+ getSTTeamStk(HOVerwaltung.instance().getModel().getAllSpieler(), true));
-//	}
+
 
 	/**
 	 * Initializes the 553 lineup
