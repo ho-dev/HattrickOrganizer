@@ -31,18 +31,16 @@ public class TrainingPerWeek  {
     private int o_TrainingAssistantsLevel;
     private Instant o_TrainingDate;
     private Boolean o_IncludeMatches;
-    private Boolean o_IncludeUpcomingMatches;
     private MatchKurzInfo[] o_Matches;
     private MatchKurzInfo[] o_NTmatches;
     private DBDataSource o_Source;
-
 
 
     /**
      *
      * Constructor, matches are not passsed as parameters but are loaded at object creation
      */
-    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, boolean includeMatches, boolean includeUpcomingMatches, DBDataSource source) {
+    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, boolean includeMatches, DBDataSource source) {
         o_TrainingDate = trainingDate;
         o_TrainingType = trainingType;
         o_TrainingIntensity = trainingIntensity;
@@ -50,7 +48,6 @@ public class TrainingPerWeek  {
         o_CoachLevel = coachLevel;
         o_TrainingAssistantsLevel = trainingAssistantsLevel;
         o_IncludeMatches = includeMatches;
-        o_IncludeUpcomingMatches = includeUpcomingMatches;
         o_Source = source;
 
         // Loading matches played the week preceding the training date --------------------------
@@ -62,7 +59,7 @@ public class TrainingPerWeek  {
     }
 
     public TrainingPerWeek(Instant trainingDate, int training_type, int training_intensity, int staminaShare, int trainingAssistantsLevel, int coachLevel) {
-        this(trainingDate,training_type,training_intensity,staminaShare,trainingAssistantsLevel,coachLevel,false,false,DBDataSource.GUESS);
+        this(trainingDate,training_type,training_intensity,staminaShare,trainingAssistantsLevel,coachLevel,false, DBDataSource.GUESS);
     }
 
 
@@ -93,17 +90,9 @@ public class TrainingPerWeek  {
         var matchTypes= MatchType.getOfficialMatchType();
         String sOfficialMatchType = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
 
-        final String where;
-
-        if (!o_IncludeUpcomingMatches){
-            where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS=%s ORDER BY MatchDate DESC",
-                    myClubID, myClubID, firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED);
-        }
-
-        else{
-            where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS in (%s, %s) ORDER BY MatchDate DESC",
+        final String where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS in (%s, %s) ORDER BY MatchDate DESC",
                     myClubID, myClubID, firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED, MatchKurzInfo.UPCOMING);
-        }
+
 
         return DBManager.instance().getMatchesKurzInfo(where);
     }

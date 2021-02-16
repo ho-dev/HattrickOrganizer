@@ -8,9 +8,8 @@ import core.model.misc.Basics;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
-import core.training.HattrickDate;
 import core.training.TrainingWeekManager;
-import core.util.DateTimeInfo;
+import core.util.HTDatetime;
 import core.util.HOLogger;
 import module.playeranalysis.PlayerAnalysisModule;
 import java.sql.ResultSet;
@@ -307,37 +306,26 @@ final class DBUpdater {
 				trainingTable.tryDeleteColumn("YEAR");
 				trainingTable.tryDeleteColumn("WEEK");
 
-				// Fill training table using information from VEREIN, PLAYER and XTRADATA (Step 2)
-
+				// Set a minimal temporary model for class initilization relying on HOVerwaltung
+				int lastHRFid = DBManager.instance().getMaxHrf().getHrfId();
 				HOModel model = new HOModel();
-				XtraData xtraData = new XtraData();
-				Basics basics = new Basics();
-
-				var sql = "SELECT TRAININGDATE FROM XTRADATA ORDER BY TRAININGDATE DESC LIMIT 1";
-				rs = m_clJDBCAdapter.executeQuery(sql);
-				rs.next();
-				xtraData.setTrainingDate(rs.getTimestamp("TRAININGDATE"));
-
-				sql = "SELECT TRAININGDATE FROM XTRADATA ORDER BY TRAININGDATE ASC LIMIT 1";
-				rs = m_clJDBCAdapter.executeQuery(sql);
-				rs.next();
-				Instant	firstTrainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
-
-				sql = "SELECT TEAMID FROM BASICS LIMIT 1";
-				rs = m_clJDBCAdapter.executeQuery(sql);
-				rs.next();
-				basics.setTeamId(rs.getInt("TEAMID"));
-
+				Basics basics = DBManager.instance().getBasics(lastHRFid);
+				XtraData xtraData = DBManager.instance().getXtraDaten(lastHRFid);
 				model.setBasics(basics);
 				model.setXtraDaten(xtraData);
 				HOVerwaltung.instance().setModel(model);
+
+				String sql = "SELECT TRAININGDATE FROM XTRADATA ORDER BY TRAININGDATE ASC LIMIT 1";
+				rs = m_clJDBCAdapter.executeQuery(sql);
+				rs.next();
+				Instant	firstTrainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
 
 				TrainingWeekManager twm = new TrainingWeekManager(firstTrainingDate, false, false);
 				twm.push2TrainingsTable();
 				var trainingList = twm.getTrainingList();
 				if ( trainingList.size()>0){
 					var latestTraining = trainingList.get(trainingList.size()-1);
-					recentTrainingDate = new DateTimeInfo(latestTraining.getTrainingDate()).getHattrickTimeAsTimestamp();
+					recentTrainingDate = new HTDatetime(latestTraining.getTrainingDate()).getHattrickTimeAsTimestamp();
 					recentAssistantLevel = latestTraining.getTrainingAssistantsLevel();
 					recentCoachLevel = latestTraining.getCoachLevel();
 				}

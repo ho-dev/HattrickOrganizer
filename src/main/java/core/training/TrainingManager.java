@@ -3,13 +3,12 @@ package core.training;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
-import core.model.HOModel;
 import core.model.HOVerwaltung;
-import core.model.misc.TrainingEvent;
 import core.model.player.Player;
 import core.util.HOLogger;
-import core.util.HelperWrapper;
-import java.sql.Timestamp;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import javax.swing.JOptionPane;
 
@@ -22,9 +21,9 @@ public class TrainingManager {
 	// singleton class
 	private static TrainingManager m_clInstance;
 
-	private TrainingPerWeek nextWeekTraining;            // used to determine training bar, include upcoming game   => Created at initilization
-    private TrainingWeekManager recentTrainings;         // trainings information since last HRF used in regular subskill calculation  => Created at initilization
-	private List<TrainingPerWeek> trainings;             // used to populate training history, no match information => Created at initilization
+	private TrainingPerWeek nextWeekTraining;        // used to determine training bar, include upcoming game   => Created at initilization
+    private TrainingWeekManager recentTrainings;     // trainings that took place (if any null otherwise) since last entry in Training table  => Created at initilization
+	private List<TrainingPerWeek> trainings;         // used to populate training history, no match information => Created at initilization
 
 
 	public static final boolean TRAININGDEBUG = false;
@@ -36,18 +35,20 @@ public class TrainingManager {
      */
     private TrainingManager() {
 
-    	// Load data from 'trainings' table
+    	// Load historical trainings from 'trainings' table
 		trainings =  DBManager.instance().getTrainingList();
 
 		// Create recent training history from other tables in database
-        recentTrainings = new TrainingWeekManager(2, true, false);
 
-		// Save recent training history in 'trainings' table
-		DBManager.instance().saveTrainings(recentTrainings.getTrainingList(), false);
+		Instant previousTrainingDate = trainings.stream().map(t -> t.getTrainingDate()).max(Instant::compareTo).get();
+        recentTrainings = new TrainingWeekManager(previousTrainingDate.plus(1, ChronoUnit.DAYS), false, true);
+		//TODO: add entries in trainings from recentTrainings => should it be done from here ?
+		//TODO: the function DBManager.instance().saveTrainings() should refresh table in training tab
+        // DBManager.instance().saveTrainings(recentTrainings.getTrainingList(), false);
 
-		//TODO: add entries in trainings from recentTrainings
+		// Load next week training
+		nextWeekTraining = TrainingWeekManager.getNextWeekTraining(true);
 
-        nextWeekTraining = new TrainingWeekManager(1, true, true).getTrainingList().get(0);
 
 
     }

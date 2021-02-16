@@ -2,10 +2,10 @@ package core.db;
 
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
-import core.util.DateTimeInfo;
+import core.training.TrainingWeekManager;
+import core.util.HTDatetime;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -48,11 +48,11 @@ final class TrainingsTable extends AbstractTable {
 
 		if (training != null) {
 
-			DateTimeInfo trainingDateAsDTI = new DateTimeInfo(training.getTrainingDate());
+			HTDatetime trainingDateAsDTI = new HTDatetime(training.getTrainingDate());
 			String trainingDate = DateTimeUtils.InstantToSQLtimeStamp(training.getTrainingDate());
 
-			if (trainingDateAsDTI.isInTheFuture()){
-				HOLogger.instance().debug(this.getClass(), trainingDate + " in the future   =>    SKIPPED");
+			if (trainingDateAsDTI.isAfter(TrainingWeekManager.getLastUpdateDate())){
+//				HOLogger.instance().debug(this.getClass(), trainingDate + " in the future   =>    SKIPPED");
 				return;
 			}
 
@@ -61,10 +61,10 @@ final class TrainingsTable extends AbstractTable {
 
 				if (force){
 					delete(new String[]{"TRAINING_DATE"}, new String[]{trainingDate});
-					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    DELETED");
+//					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    DELETED");
 				}
 				else{
-					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    SKIPPED");
+//					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    SKIPPED");
 					return;
 				}
 			}
@@ -80,7 +80,7 @@ final class TrainingsTable extends AbstractTable {
 
 			try {
 				adapter.executeUpdate(statement);
-				HOLogger.instance().debug(this.getClass(), trainingDate + "  =>    INSERTED");
+//				HOLogger.instance().debug(this.getClass(), trainingDate + "  =>    INSERTED");
 			}
 
 			catch (Exception e) {
@@ -121,7 +121,7 @@ final class TrainingsTable extends AbstractTable {
 	List<TrainingPerWeek> getTrainingList() {
 		final List<TrainingPerWeek> vTrainings = new ArrayList<>();
 
-		final String statement = "SELECT * FROM " + getTableName() + " ORDER BY year, week ASC";
+		final String statement = "SELECT * FROM " + getTableName() + " ORDER BY TRAINING_DATE ASC";
 
 		try {
 			final ResultSet rs = adapter.executeQuery(statement);
@@ -143,7 +143,7 @@ final class TrainingsTable extends AbstractTable {
 					source = DBDataSource.getCode(rs.getInt("SOURCE"));
 
 					tpw = new TrainingPerWeek(trainingDate, training_type, training_intensity, staminaShare, trainingAssistantsLevel,
-							coachLevel, false, false, source);
+							coachLevel, false, source);
 
 					vTrainings.add(tpw);
 				}
@@ -191,7 +191,7 @@ final class TrainingsTable extends AbstractTable {
 					source = DBDataSource.getCode(rs.getInt("SOURCE"));
 
 					tpw = new TrainingPerWeek(trainingDate, training_type, training_intensity, staminaShare, trainingAssistantsLevel,
-							coachLevel, false, false, source);
+							coachLevel, false, source);
 
 					vTrainings.add(tpw);
 				}

@@ -1,7 +1,6 @@
 package core.training;
 
-import core.util.DateTimeInfo;
-import module.transfer.test.HTWeek;
+import core.util.HTDatetime;
 
 import java.time.*;
 
@@ -165,7 +164,7 @@ public class HattrickDate {
 
     private static Instant getOrigin()
     {
-        var orig = new DateTimeInfo("1997-08-22");
+        var orig = new HTDatetime("1997-08-22");
         return orig.getHattrickTime().toInstant();
     }
 

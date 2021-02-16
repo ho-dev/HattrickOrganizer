@@ -3,7 +3,7 @@ package core.model.match;
 import core.model.HOVerwaltung;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
-import core.util.DateTimeInfo;
+import core.util.HTDatetime;
 
 import java.time.ZonedDateTime;
 
@@ -20,7 +20,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	private String m_sHeimName = "";
 
 
-	private DateTimeInfo m_matchSchedule;
+	private HTDatetime m_matchSchedule;
 
 	/** orders given for this match? */
 	private boolean ordersGiven = true;
@@ -233,7 +233,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @param sMatchDate New value of property m_sMatchDate.
 	 */
 	public final void setMatchSchedule(String sMatchDate) {
-		m_matchSchedule = new DateTimeInfo(sMatchDate);
+		m_matchSchedule = new HTDatetime(sMatchDate);
 	}
 
 	/**

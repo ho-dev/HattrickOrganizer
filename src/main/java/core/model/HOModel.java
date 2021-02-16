@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -518,6 +519,7 @@ public class HOModel {
         var toDate = latestHRFs.length==2?latestHRFs[1].getDatum().toInstant():latestHRFs[0].getDatum().toInstant();
         return DBManager.instance().getTrainingList(fromDate, toDate);
     }
+
 
     /**
      * Remove a Player
