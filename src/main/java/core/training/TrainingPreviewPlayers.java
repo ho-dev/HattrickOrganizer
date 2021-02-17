@@ -12,6 +12,7 @@ import core.model.player.Player;
 import module.lineup.LineupPosition;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -112,7 +113,7 @@ public class TrainingPreviewPlayers implements Refreshable {
                 nextWeekWeek++;
             }
             var hattrickDate = new HattrickDate(nextWeekSaison, nextWeekWeek);
-            nextWeekTraining = DBManager.instance().getFuturTraining(hattrickDate.toInstant());
+            nextWeekTraining = DBManager.instance().getFuturTraining(Timestamp.from(hattrickDate.toInstant()));
         }
 
         return nextWeekTraining;

@@ -6,6 +6,7 @@ import core.training.TrainingPerWeek;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.Duration;
 import java.time.Instant;
@@ -87,8 +88,8 @@ public final class FutureTrainingTable extends AbstractTable {
 		return futures;
 	}
 
-	int loadFutureTrainings(Instant trainingDate) {
-		String query = "select TYPE from " + getTableName() + " where TRAINING_DATE='" + trainingDate + "'";
+	int loadFutureTrainings(Timestamp trainingDate) {
+		String query = "select TRAINING_TYPE from " + getTableName() + " where TRAINING_DATE='" + trainingDate + "'";
 		ResultSet rs = adapter.executeQuery(query);
 
 		try {

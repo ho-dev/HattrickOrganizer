@@ -1619,13 +1619,12 @@ public class DBManager {
 	/**
 	 * Gets futur training.
 	 *
-	 * @param Saison the saison
-	 * @param Week   the week
-	 * @return the futur training
+	 * @param trainingDate the saison
+	 * @return the futur training type
 	 */
 // ------------------------------- FutureTraining
 	// -------------------------------------------------
-	public int getFuturTraining(Instant trainingDate) {
+	public int getFuturTraining(Timestamp trainingDate) {
 		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).loadFutureTrainings(trainingDate);
 	}
 
