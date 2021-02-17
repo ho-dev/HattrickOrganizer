@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.ListIterator;
 
 
 /**
@@ -23,7 +24,7 @@ public class PastTrainingsTableModel extends AbstractTrainingsTableModel {
 	@Override
 	public void populate(List<TrainingPerWeek> trainings) {
 		setTrainingsPerWeek(trainings);
-		o_Data = new Object[][]{};
+		o_Data = new Object[getRowCount()][getColumnCount()];
 
 		if (this.o_TrainingsPerWeek == null || this.o_TrainingsPerWeek.isEmpty()) {
 			return;
@@ -31,8 +32,9 @@ public class PastTrainingsTableModel extends AbstractTrainingsTableModel {
 
 		int iRow = 0;
 
-		// iterate each TrainingPerWeek
-		for (TrainingPerWeek tpw : o_TrainingsPerWeek) {
+		// iterate backward through TrainingPerWeek to get more recent elements on top
+		for (int i = o_TrainingsPerWeek.size(); i-- > 0; ) {
+			var tpw = o_TrainingsPerWeek.get(i);
 			o_Data[iRow][0] = cl_Formatter.format(tpw.getTrainingDate());
 			o_Data[iRow][1] = new CBItem(TrainingType.toString(tpw.getTrainingType()),	tpw.getTrainingType());
 			o_Data[iRow][2] = tpw.getTrainingIntensity();

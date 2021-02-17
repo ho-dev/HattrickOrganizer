@@ -114,7 +114,7 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
      */
     @Override
 	public int getRowCount() {
-        return (o_Data != null) ? o_Data.length : 0;
+        return (o_TrainingsPerWeek != null) ? o_TrainingsPerWeek.size() : 0;
     }
 
     /**

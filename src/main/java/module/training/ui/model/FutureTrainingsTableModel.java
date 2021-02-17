@@ -28,7 +28,7 @@ public class FutureTrainingsTableModel extends AbstractTrainingsTableModel {
 	@Override
 	public void populate(List<TrainingPerWeek> trainings) {
 		setTrainingsPerWeek(trainings);
-		o_Data = new Object[][]{};
+		o_Data = new Object[getRowCount()][getColumnCount()];
 
 		int iRow = 0;
 
