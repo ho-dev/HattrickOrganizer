@@ -4,6 +4,8 @@ import core.constants.TrainingType;
 import core.datatype.CBItem;
 import core.db.DBManager;
 import core.training.TrainingPerWeek;
+import core.util.HTDatetime;
+
 import java.util.List;
 
 
@@ -33,7 +35,7 @@ public class FutureTrainingsTableModel extends AbstractTrainingsTableModel {
 		int iRow = 0;
 
 		for (TrainingPerWeek tpw : this.o_TrainingsPerWeek) {
-			o_Data[iRow][0] = cl_Formatter.format(tpw.getTrainingDate());
+			o_Data[iRow][0] = HTDatetime.getLocalizedDateString(tpw.getTrainingDate(), true);
 			o_Data[iRow][1] = new CBItem(TrainingType.toString(tpw.getTrainingType()),	tpw.getTrainingType());
 			o_Data[iRow][2] = tpw.getTrainingIntensity();
 			o_Data[iRow][3] = tpw.getStaminaShare();

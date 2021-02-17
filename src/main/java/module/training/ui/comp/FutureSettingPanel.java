@@ -74,9 +74,9 @@ public class FutureSettingPanel extends JPanel {
         training = new TrainingComboBox();
         final int ttyp = firstFutureTraining.getTrainingType();
         training.setSelectedItem(new CBItem(TrainingType.toString(ttyp), ttyp));
-        intensity = new IntensityComboBox(0);
+        intensity = new trainingParametersEditor(0);
         intensity.setSelectedIndex(firstFutureTraining.getTrainingIntensity());
-        staminaTrainingPart = new IntensityComboBox(10);
+        staminaTrainingPart = new trainingParametersEditor(10);
         int staminaPart = firstFutureTraining.getStaminaShare();
         if (staminaPart - 10 < 0){
             staminaPart = 10;

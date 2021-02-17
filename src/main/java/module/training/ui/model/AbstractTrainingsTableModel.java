@@ -18,7 +18,6 @@ import javax.swing.table.AbstractTableModel;
  */
 public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
 
-    protected final static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
 	protected List<TrainingPerWeek> o_TrainingsPerWeek;
     protected Object[][]o_Data;
     private String[] o_ColumnNames;
@@ -53,16 +52,23 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
         o_Data[iRow][iCol] = value;
 
         TrainingPerWeek tpw = o_TrainingsPerWeek.get(getRowCount() - iRow - 1);
+        Integer newVal;
 
-        if (iCol == 2) {
+        if (iCol == 1) {
             CBItem sel = (CBItem) value;
             tpw.setTrainingType(sel.getId());
+        } else if (iCol == 2) {
+            newVal = (Integer) value;
+            tpw.setTrainingIntensity((Integer) value);
         } else if (iCol == 3) {
-            Integer intense = (Integer) value;
-            tpw.setTrainingIntensity(intense.intValue());
+            newVal = (Integer) value;
+            tpw.setStaminaPart((Integer) value);
         } else if (iCol == 4) {
-            Integer staminaTrainingPart = (Integer) value;
-            tpw.setStaminaPart(staminaTrainingPart.intValue());
+            newVal = (Integer) value;
+            tpw.setCoachLevel((Integer) value);
+        } else if (iCol == 5) {
+            newVal= (Integer) value;
+            tpw.setTrainingAssistantLevel((Integer) value);
         }
 
         DBManager.instance().saveTraining(tpw, true);
@@ -77,7 +83,7 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
      */
     @Override
 	public boolean isCellEditable(int row, int column) {
-        return (column == 2 || column == 3 || column == 4);
+        return (column > 0);
     }
 
     @Override

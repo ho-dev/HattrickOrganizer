@@ -4,6 +4,8 @@ import core.constants.TrainingType;
 import core.datatype.CBItem;
 import core.db.DBManager;
 import core.training.TrainingPerWeek;
+import core.util.HTDatetime;
+
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -35,7 +37,7 @@ public class PastTrainingsTableModel extends AbstractTrainingsTableModel {
 		// iterate backward through TrainingPerWeek to get more recent elements on top
 		for (int i = o_TrainingsPerWeek.size(); i-- > 0; ) {
 			var tpw = o_TrainingsPerWeek.get(i);
-			o_Data[iRow][0] = cl_Formatter.format(tpw.getTrainingDate());
+			o_Data[iRow][0] = HTDatetime.getLocalizedDateString(tpw.getTrainingDate(), true);
 			o_Data[iRow][1] = new CBItem(TrainingType.toString(tpw.getTrainingType()),	tpw.getTrainingType());
 			o_Data[iRow][2] = tpw.getTrainingIntensity();
 			o_Data[iRow][3] = tpw.getStaminaShare();
