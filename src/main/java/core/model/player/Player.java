@@ -2258,7 +2258,7 @@ public class Player {
                 var start = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
                 var remove = new ArrayList<FuturePlayerTraining>();
                 for (var t : futurePlayerTrainings) {
-                    if ( start.isAfter(t.getTo().toInstant())){
+                    if (start.isAfter(t.getTo())){
                         remove.add(t);
                     }
                 }
@@ -2348,7 +2348,7 @@ public class Player {
     public String getTrainingPriorityInformation(HattrickDate nextWeek) {
         String ret=null;
         for ( var t : getFuturePlayerTrainings()) {
-            if (!nextWeek.isAfter(t.getTo().toInstant())){
+            if (!nextWeek.isAfter(t.getTo())){
                 if ( ret != null ){
                     ret = HOVerwaltung.instance().getLanguageString("trainpre.individual.prios");
                     break;

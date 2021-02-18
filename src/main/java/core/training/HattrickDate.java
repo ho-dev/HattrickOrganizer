@@ -116,8 +116,9 @@ public class HattrickDate {
      * @param date to compare with, if null an open end is assumed (=> return false)
      * @return true, if this date is after given date
      */
-    public boolean isAfter(Instant date) {
-        return this.date.isAfter(date);
+    public boolean isAfter(HattrickDate date) {
+        if ( date == null) return false;
+        return this.date.isAfter(date.toInstant());
     }
 
     /**
