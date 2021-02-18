@@ -82,13 +82,6 @@ public class HOVerwaltung {
 		return m_clInstance;
 	}
 
-	public static HOVerwaltung instanceStatic() {
-		if (m_clInstance == null) {
-			m_clInstance = new HOVerwaltung();
-		}
-		return m_clInstance;
-	}
-
 	public void setResource(String pfad) {
 		try {
                     languageBundle = ResourceBundle.getBundle("sprache." + pfad, new UTF8Control());

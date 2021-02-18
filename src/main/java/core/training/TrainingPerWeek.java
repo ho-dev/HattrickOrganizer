@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class TrainingPerWeek  {
 
     private final static int myClubID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-    private static DBManager cl_DBManager;
 
     private int o_TrainingIntensity;
     private int o_StaminaShare;
@@ -41,15 +40,7 @@ public class TrainingPerWeek  {
      *
      * Constructor, matches are not passsed as parameters but are loaded at object creation
      */
-    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, boolean includeMatches, DBDataSource source, DBManager _DBManager) {
-        if( cl_DBManager == null) {
-            if (_DBManager == null) {
-                cl_DBManager = DBManager.instance();
-            }
-            else {
-                cl_DBManager = _DBManager;
-            }
-        }
+    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, boolean includeMatches, DBDataSource source) {
         o_TrainingDate = trainingDate;
         o_TrainingType = trainingType;
         o_TrainingIntensity = trainingIntensity;
@@ -66,16 +57,6 @@ public class TrainingPerWeek  {
         o_Matches = fetchMatches(_firstMatchDate, _lastMatchDate);
         o_NTmatches = fetchNTMatches(_firstMatchDate, _lastMatchDate);
     }
-
-    /**
-     *
-     * Constructor, matches are not passsed as parameters but are loaded at object creation
-     */
-    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, boolean includeMatches, DBDataSource source) {
-        this(trainingDate, trainingType, trainingIntensity, staminaShare, trainingAssistantsLevel, coachLevel, includeMatches, source, null);
-    }
-
-
 
     public TrainingPerWeek(Instant trainingDate, int training_type, int training_intensity, int staminaShare, int trainingAssistantsLevel, int coachLevel) {
         this(trainingDate,training_type,training_intensity,staminaShare,trainingAssistantsLevel,coachLevel,false, DBDataSource.GUESS);
@@ -95,7 +76,7 @@ public class TrainingPerWeek  {
         final String where = String.format("WHERE MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS=%s ORDER BY MatchDate DESC",
                 firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED);
 
-        return cl_DBManager.getMatchesKurzInfo(where);
+        return DBManager.instance().getMatchesKurzInfo(where);
     }
 
 
@@ -113,7 +94,7 @@ public class TrainingPerWeek  {
                     myClubID, myClubID, firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED, MatchKurzInfo.UPCOMING);
 
 
-        return cl_DBManager.getMatchesKurzInfo(where);
+        return DBManager.instance().getMatchesKurzInfo(where);
     }
 
     public MatchKurzInfo[] getMatches() {

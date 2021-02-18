@@ -20,14 +20,12 @@ import java.util.*;
 public class TrainingWeekManager {
 
 	// cl_NextTrainingDate is seen not as of now but as of LastUpdateDate
-	private static DBManager cl_DBManager;
 	private static Instant cl_NextTrainingDate;
 	private static Instant cl_LastUpdateDate;
     private List<TrainingPerWeek> m_Trainings;
     private Instant m_StartDate;
 	private Boolean m_IncludeUpcomingTrainings;
 	private Boolean m_IncludeMatches;
-
 
 	/**
 	 * Construct a list of TrainingPerWeek since provided initial training Date
@@ -36,23 +34,30 @@ public class TrainingWeekManager {
 	 * @param includeMatches whether or not the TrainingPerWeek objects will contain match information
 	 */
 	public TrainingWeekManager(Instant startDate, boolean includeUpcomingTrainings, boolean includeMatches) {
-		this(startDate, includeUpcomingTrainings, includeMatches, DBManager.instance());
-	}
-
-
-	public TrainingWeekManager(Instant startDate, boolean includeUpcomingTrainings, boolean includeMatches, DBManager _DBManager) {
 		if(HOVerwaltung.instance().getModel() == null) {
-			HOLogger.instance().error(this.getClass(), "model not yet initialized");
+		HOLogger.instance().error(this.getClass(), "model not yet initialized");
 		}
 		else{
 			if (cl_NextTrainingDate == null) {
-				cl_NextTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate().toInstant();
-				cl_DBManager = _DBManager;
-				cl_LastUpdateDate = cl_DBManager.getMaxHrf().getDatum().toInstant();
+					cl_NextTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate().toInstant();
+				    cl_LastUpdateDate = DBManager.instance().getMaxHrf().getDatum().toInstant();
+				}
 			}
-		}
 
 		m_StartDate = startDate;
+		m_IncludeMatches = includeMatches;
+		m_IncludeUpcomingTrainings = includeUpcomingTrainings;
+		m_Trainings = createTrainingListFromHRF();
+	}
+
+	/**
+	 * Construct a list of TrainingPerWeek of requested size
+	 * @param minimumNbEntries requested minimum vector size
+	 * @param includeUpcomingTrainings whether or not the TrainingPerWeek objects will contain upcoming match information
+	 * @param includeMatches whether or not the TrainingPerWeek objects will contain match information
+	 */
+	public TrainingWeekManager(int minimumNbEntries, boolean includeUpcomingTrainings, boolean includeMatches) {
+		m_StartDate = findStartDate(minimumNbEntries);
 		m_IncludeMatches = includeMatches;
 		m_IncludeUpcomingTrainings = includeUpcomingTrainings;
 		m_Trainings = createTrainingListFromHRF();
@@ -74,7 +79,7 @@ public class TrainingWeekManager {
 
 			try {
 
-				final JDBCAdapter ijdbca = cl_DBManager.getAdapter();
+				final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
 				final ResultSet rs = ijdbca.executeQuery(sql);
 				rs.beforeFirst();
 
@@ -111,7 +116,7 @@ public class TrainingWeekManager {
 
 		try {
 
-			final JDBCAdapter ijdbca = cl_DBManager.getAdapter();
+			final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
 			final ResultSet rs = ijdbca.executeQuery(sql);
 			if(! rs.last()){
 				HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining()");
@@ -135,7 +140,7 @@ public class TrainingWeekManager {
 				coachLevel = rs.getInt("TRAINER");
 				trainingAssistantLevel = rs.getInt("COTRAINER");
 				return new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel,
-						coachLevel, includeMatches, DBDataSource.HRF, cl_DBManager);
+						coachLevel, includeMatches, DBDataSource.HRF);
 			}
 		}
 		catch (Exception e) {
@@ -230,7 +235,7 @@ public class TrainingWeekManager {
 
 		try {
 
-			final JDBCAdapter ijdbca = cl_DBManager.getAdapter();
+			final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
 			final ResultSet rs = ijdbca.executeQuery(sql);
 			rs.beforeFirst();
 
@@ -242,7 +247,7 @@ public class TrainingWeekManager {
 				coachLevel = rs.getInt("TRAINER");
 				trainingAssistantLevel = rs.getInt("COTRAINER");
 				TrainingPerWeek tpw = new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel,
-						coachLevel, m_IncludeMatches, DBDataSource.HRF, cl_DBManager);
+						coachLevel, m_IncludeMatches, DBDataSource.HRF);
 				output.put(trainingDate, tpw);
 			}
 		}
@@ -267,7 +272,7 @@ public class TrainingWeekManager {
 	 *
 	 */
 	public void push2TrainingsTable(){
-		cl_DBManager.saveTrainings(m_Trainings, false);
+		DBManager.instance().saveTrainings(m_Trainings, false);
 	}
 
 }
