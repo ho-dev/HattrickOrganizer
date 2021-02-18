@@ -60,7 +60,7 @@ public class TrainingPanel extends JPanel {
 	 * Populate the table is called everytime a refresh command is issued
 	 */
 	public void reload() {
-		pastTrainingsTableModel.populate(TrainingManager.instance().getAllTrainings());
+		pastTrainingsTableModel.populate(TrainingManager.instance().getHistoricalTrainings());
 		futureTrainingsTableModel.populate(this.model.getFutureTrainings());
 	}
 

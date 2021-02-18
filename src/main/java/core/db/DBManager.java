@@ -105,9 +105,8 @@ public class DBManager {
 	 *
 	 * @return the db manager
 	 */
-// //////////////////////////////////////////////////////////////////////////////
-	// INSTANCE
-	// //////////////////////////////////////////////////////////////////////////////
+
+	// INSTANCE ===============================================
 	public static synchronized DBManager instance() {
 		if (m_clInstance == null) {
 
@@ -213,16 +212,20 @@ public class DBManager {
 				dbUpdater.updateDB(DBVersion);
 			}
 
-			// Check if there are any config updates
-			// new since 1.401 - flattermann
-			dbUpdater.updateConfig();
-
 			// tempInstance.updateConfig();
 			m_clInstance = tempInstance;
 		}
 
 		return m_clInstance;
 	}
+
+	/**
+	 This method is called
+	 */
+	public void updateConfig(){
+		DBConfigUpdater.updateDBConfig(DBVersion);
+	}
+
 
 	/**
 	 * Null or value string.
@@ -2431,6 +2434,20 @@ public class DBManager {
 		return ((MatchOrderTable) getTable(MatchOrderTable.TABLENAME))
 				.getMatchOrder(matchId, matchTyp);
 	}
+
+	/**
+	 * Gets match order.
+	 *
+	 * @param matchId  the match id
+	 * @param matchTyp the match typ
+	 * @return the match order
+	 */
+	public LineupPosition getMatchOrder(int matchId,
+										MatchType matchTyp, boolean verifyInternetAccess) {
+		return ((MatchOrderTable) getTable(MatchOrderTable.TABLENAME))
+				.getMatchOrder(matchId, matchTyp, verifyInternetAccess);
+	}
+
 
 	/**
 	 * Update match order.

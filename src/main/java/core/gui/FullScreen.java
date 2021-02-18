@@ -71,7 +71,7 @@ class FullScreen
 		        for (int k = 0; k < confs.length; k++) {
 //					HOLogger.instance().debug(getClass(), "FullScreen: Conf found: "+k+"="+confs[k].toString());
 		        	if (frameConf == confs[k]) {
-						HOLogger.instance().debug(getClass(), "FullScreen: Matching conf found: ["+k+"]="+confs[k].toString()+" for dev["+i+"]="+devices[i].getIDstring());
+//						HOLogger.instance().debug(getClass(), "FullScreen: Matching conf found: ["+k+"]="+confs[k].toString()+" for dev["+i+"]="+devices[i].getIDstring());
 		        		device = devices[i];
 		        		bFound = true;
 		        		break;
@@ -79,7 +79,7 @@ class FullScreen
 		        }
 	        }
 	        if (!bFound) {
-				HOLogger.instance().debug(getClass(), "FullScreen: NO matching conf found");
+//				HOLogger.instance().debug(getClass(), "FullScreen: NO matching conf found");
 	        	device = devices[0]; // if nothing matches stay with the first one
 	        }
 	        try {
@@ -88,7 +88,7 @@ class FullScreen
 				// isFullScreenSupported on X11 > 1.3.0 requires fixed java 6 u10 or greater,
 				// see http://bugs.sun.com/view_bug.do?bug_id=6636469 for details
 				isFullScreenSupported = device.isFullScreenSupported();
-				HOLogger.instance().debug(getClass(), "FullScreen: dev "+device.getIDstring()+", isFullScreenSupported="+device.isFullScreenSupported());
+//				HOLogger.instance().debug(getClass(), "FullScreen: dev "+device.getIDstring()+", isFullScreenSupported="+device.isFullScreenSupported());
 			} catch (Exception e) {
 				HOLogger.instance().debug(getClass(), "Error checking FullScreen support: " + e);
 				isFullScreenSupported = false;
@@ -228,9 +228,9 @@ class FullScreen
 	                    o.wait();
 	                }
 	            } catch (InterruptedException ie) {
-					HOLogger.instance().debug(getClass(), "FullScreen: Blocking thread terminated (interrupted).");
+//					HOLogger.instance().debug(getClass(), "FullScreen: Blocking thread terminated (interrupted).");
 	            }
-				HOLogger.instance().debug(getClass(), "FullScreen: Blocking thread finished.");
+//				HOLogger.instance().debug(getClass(), "FullScreen: Blocking thread finished.");
 	        }
 	    };
 	    threadToAvoidJvmTermination = new Thread(r);
@@ -238,7 +238,7 @@ class FullScreen
 	    threadToAvoidJvmTermination.setName("Avoid JVM Termination");
 	    threadToAvoidJvmTermination.start();
 	    isThreadRunning = true;
-		HOLogger.instance().debug(getClass(), "FullScreen: Blocking thread started.");
+//		HOLogger.instance().debug(getClass(), "FullScreen: Blocking thread started.");
 	}
 	/**
 	 * stops the non daemon thread to avoid the unwanted JVM termination.

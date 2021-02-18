@@ -190,15 +190,19 @@ public class HO {
 		float fxRate = (float) HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate();
 		if (fxRate > -1) UserParameter.instance().faktorGeld = fxRate;
 
+		// Upgrade database configuration
+		interuptionsWindow.setInfoText(7, "Upgrade DB configuration");
+		DBManager.instance().updateConfig();
+
 
 		// Training
-		interuptionsWindow.setInfoText(7, "Initialize Training");
+		interuptionsWindow.setInfoText(8, "Initialize Training");
 
 		// Training estimation calculated on DB manual entries
 
 		TrainingManager.instance();
 
-		interuptionsWindow.setInfoText(8, "Prepare to show");
+		interuptionsWindow.setInfoText(9, "Prepare to show");
 		SwingUtilities.invokeLater(() -> {
 			HOMainFrame.instance().setVisible(true);
 

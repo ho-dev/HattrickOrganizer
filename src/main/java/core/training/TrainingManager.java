@@ -23,7 +23,7 @@ public class TrainingManager {
 
 	private TrainingPerWeek nextWeekTraining;        // used to determine training bar, include upcoming game   => Created at initilization
     private TrainingWeekManager recentTrainings;     // trainings that took place (if any null otherwise) since last entry in Training table  => Created at initilization
-	private List<TrainingPerWeek> trainings;         // used to populate training history, no match information => Created at initilization
+	private List<TrainingPerWeek> historicalTrainings;         // used to populate training history, no match information => Created at initilization
 
 
 	public static final boolean TRAININGDEBUG = false;
@@ -36,11 +36,11 @@ public class TrainingManager {
     private TrainingManager() {
 
     	// Load historical trainings from 'trainings' table
-		trainings =  DBManager.instance().getTrainingList();
+		historicalTrainings =  DBManager.instance().getTrainingList();
 
 		// Create recent training history from other tables in database
 
-		Instant previousTrainingDate = trainings.stream().map(t -> t.getTrainingDate()).max(Instant::compareTo).get();
+		Instant previousTrainingDate = historicalTrainings.stream().map(t -> t.getTrainingDate()).max(Instant::compareTo).get();
         recentTrainings = new TrainingWeekManager(previousTrainingDate.plus(1, ChronoUnit.DAYS), false, true);
 		//TODO: add entries in trainings from recentTrainings => should it be done from here ?
 		//TODO: the function DBManager.instance().saveTrainings() should refresh table in training tab
@@ -69,8 +69,8 @@ public class TrainingManager {
 		return nextWeekTraining;
 	}
 
-	public List<TrainingPerWeek> getAllTrainings() {
-		return trainings;
+	public List<TrainingPerWeek> getHistoricalTrainings() {
+		return historicalTrainings;
 	}
 
     @Deprecated

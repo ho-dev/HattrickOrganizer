@@ -212,7 +212,7 @@ public class TrainingPreviewPlayers implements Refreshable {
                             lMatchStats.add(new MatchStatistics(matchInfo, mlt));
                         }
                     } else if (matchInfo.getMatchStatus() == MatchKurzInfo.UPCOMING) {
-                        LineupPosition lineuppos = DBManager.instance().getMatchOrder(matchInfo.getMatchID(), matchInfo.getMatchType());
+                        LineupPosition lineuppos = DBManager.instance().getMatchOrder(matchInfo.getMatchID(), matchInfo.getMatchType(), true);
                         if (lineuppos != null)
                             lLinueupPos.add(lineuppos);
                     }

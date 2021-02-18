@@ -2,6 +2,7 @@ package core.db;
 
 import core.model.match.MatchType;
 import core.model.player.MatchRoleID;
+import core.net.MyConnector;
 import core.net.OnlineWorker;
 import core.util.HOLogger;
 import module.lineup.Lineup;
@@ -60,7 +61,7 @@ public class MatchOrderTable extends AbstractTable {
 		LineupPosition lineupPos = new LineupPosition();
 
 		try {
-			String sql = "SELECT * FROM "+getTableName()+" WHERE MatchID = " + matchId;
+			String sql = "SELECT * FROM " + getTableName() + " WHERE MatchID = " + matchId;
 			ResultSet rs = adapter.executeQuery(sql);
 
 			rs.beforeFirst();
@@ -78,6 +79,40 @@ public class MatchOrderTable extends AbstractTable {
 		}
 		return lineupPos;
 	}
+
+	/**
+	 * Get the lineup position of a futur match
+	 *
+	 * @param matchId:	match id
+	 * @param matchTyp:	match type
+	 * @return			lineup position of the match
+	 */
+	public LineupPosition getMatchOrder(int matchId, MatchType matchTyp, boolean verifyInternetAccess) {
+
+		LineupPosition lineupPos = new LineupPosition();
+
+		try {
+			String sql = "SELECT * FROM " + getTableName() + " WHERE MatchID = " + matchId;
+			ResultSet rs = adapter.executeQuery(sql);
+
+			rs.beforeFirst();
+			if (rs.next()) {
+				while (rs.next()) {
+					lineupPos.addPosition(rs.getInt("PositionCode"), rs.getInt("SpielerID"));
+				}
+			}
+			else {
+				if (! (verifyInternetAccess && (! MyConnector.hasInternetAccess()))){
+					lineupPos = addMatchOrder(matchId, matchTyp);
+				}
+			}
+
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),"DB.getMatchOrder Error" + e);
+		}
+		return lineupPos;
+	}
+
 
 	/**
 	 * Update match order

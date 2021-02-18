@@ -51,8 +51,6 @@ import javax.swing.JOptionPane;
  */
 public class OnlineWorker {
 
-	private final static SimpleDateFormat HT_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-	//private static LoginWaitDialog waitDialog;
 
 	/**
 	 * Utility class - private constructor enforces noninstantiability.
@@ -777,20 +775,6 @@ public class OnlineWorker {
 		return result;
 	}
 
-	private static String createPositionString(int roleId, Lineup lineup) {
-
-		int id = 0;
-		int behaviour = 0;
-
-		Player player = lineup.getPlayerByPositionID(roleId);
-		if (player != null) {
-			id = player.getPlayerID();
-			behaviour = lineup.getTactic4PositionID(roleId);
-		}
-
-		return "{\"id\":" + id + ",\"behaviour\":" + behaviour + "}";
-	}
-
 	private static Matchdetails downloadMatchDetails(int matchID, MatchType matchType, MatchLineup lineup) {
 		String matchDetails;
 		Matchdetails details;
@@ -844,8 +828,6 @@ public class OnlineWorker {
 		}
 		return lineUp;
 	}
-
-
 
 
 
@@ -910,34 +892,6 @@ public class OnlineWorker {
 			}
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Matchorder :";
-			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
-			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
-					JOptionPane.ERROR_MESSAGE);
-			HOLogger.instance().error(OnlineWorker.class, e.getMessage());
-		}
-
-		return null;
-	}
-
-	/**
-	 *
-	 * @param matchId
-	 *            The match ID for the match to download
-	 * @param matchType
-	 *            The matchTyp for the match to download
-	 * @return The Lineup object with the downloaded match data
-	 */
-	public static MatchRating getPredictionRatingbyMatchId(int matchId, MatchType matchType, int teamId) {
-
-		try {
-			String xml = MyConnector.instance().getRatingsPrediction(matchId, teamId, matchType);
-
-			if (!StringUtils.isEmpty(xml)) {
-				Map<String, String> map = XMLRatingParser.parsePredictionRatingFromString(xml);
-				return new MatchRating(map);
-			}
-		} catch (Exception e) {
-			String msg = getLangString("Downloadfehler") + " : Error fetching Prediction Rating :";
 			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);

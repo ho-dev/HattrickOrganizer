@@ -28,6 +28,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
@@ -96,6 +98,18 @@ public class MyConnector {
 			m_clInstance = new MyConnector();
 		}
 		return m_clInstance;
+	}
+
+	public static boolean hasInternetAccess(){
+		try {
+			URL url = new URL("http://www.hattrick.org");
+			URLConnection connection = url.openConnection();
+			connection.connect();
+			return true;
+		}
+		catch (IOException e) {
+			return false;
+		}
 	}
 
 	/**
@@ -245,7 +259,7 @@ public class MyConnector {
 	 * @throws IOException
 	 *             if an io-error occurred when fetching the matches.
 	 */
-	public String getMatchesArchive(int teamId, Date firstDate, Date lastDate) throws IOException {
+	public String getMatchesArchive(int teamId, Date firstDate, Date lastDate){
 		StringBuilder url = new StringBuilder();
 		url.append(htUrl).append("?file=matchesarchive&version=1.4");
 
@@ -595,17 +609,6 @@ public class MyConnector {
 		return getVersion("https://akasolace.github.io/HO/latestbeta.html");
 	}
 
-	public Extension getRatingsVersion() {
-		try {
-			String s = getWebPage(MyConnector.getResourceSite() + "/downloads/ratings.xml", false);
-			return XMLExtensionParser.parseExtension(s);
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),
-					"Unable to connect to the update server (Ratings): " + e);
-			return new Extension();
-		}
-	}
-
 
 	// ///////////////////////////////////////////////////////////////////////////////
 	// Proxy
@@ -638,17 +641,6 @@ public class MyConnector {
 		return "-1";
 	}
 
-	/**
-	 * Get the logo URI for a certain team.
-	 */
-	public String fetchLogoURI(int teamId) {
-		String xml = fetchTeamDetails(teamId);
-		if (xml.length()>0){
-			return XMLTeamDetailsParser.fetchLogoURI(xml);
-		}
-		return "-1";
-	}
-
 
 	public String fetchTeamDetails(int teamId)
 	{
@@ -661,7 +653,7 @@ public class MyConnector {
 		return "";
 	}
 
-	public InputStream getFileFromWeb(String url, boolean displaysettingsScreen) throws IOException {
+	public InputStream getFileFromWeb(String url, boolean displaysettingsScreen) {
 		if (displaysettingsScreen) {
 			// Show Screen
 			new ProxyDialog(HOMainFrame.instance());
