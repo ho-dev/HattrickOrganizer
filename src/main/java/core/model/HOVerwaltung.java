@@ -2,6 +2,7 @@ package core.model;
 
 import core.datatype.CBItem;
 import core.db.DBManager;
+import core.file.FileLoader;
 import core.file.hrf.HRF;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
@@ -10,6 +11,7 @@ import core.util.HOLogger;
 import core.util.UTF8Control;
 import module.lineup.Lineup;
 
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.Collections;
@@ -259,41 +261,26 @@ public class HOVerwaltung {
 	/**
 	 * Checked die Sprachdatei oder Fragt nach einer passenden
 	 */
-	public static void checkLanguageFile(String dateiname) {
+	public static void checkLanguageFile(String languageFilename) {
 		try {
-            final java.io.InputStream sprachdatei = HOVerwaltung.class.getClassLoader().getResourceAsStream("sprache/" + dateiname
-					+ ".properties");
+			final InputStream translationFile = FileLoader.instance().getFileInputStream("sprache/" + languageFilename + ".properties");
 
-			if (sprachdatei != null) {
-				double sprachfileversion = 0;
-				ResourceBundle temp = ResourceBundle.getBundle("sprache." + dateiname, new UTF8Control());
 
-				try {
-					sprachfileversion = Double.parseDouble(temp.getString("Version"));
-				} catch (Exception e) {
-					HOLogger.instance().log(HOMainFrame.class, "not use " + dateiname);
-				}
-
-//				if (sprachfileversion >= HO.SPRACHVERSION) {
-//					HOLogger.instance().log(HOMainFrame.class, "use " + dateiname);
-//
-//					// ok!!
-//					return;
-//				}
-
-				HOLogger.instance().log(HOMainFrame.class, "use " + dateiname);
-				// ok!!
+			if (translationFile != null) {
+				HOLogger.instance().info(HOVerwaltung.class, "language used for interface is: " + languageFilename);
 				return;
-
-				//HOLogger.instance().log(HOMainFrame.class, "not use " + dateiname);
-
 			}
-		} catch (Exception e) {
-			HOLogger.instance().log(HOMainFrame.class, "not use " + e);
+			else{
+				HOLogger.instance().error(HOVerwaltung.class, "language set for interface (" + languageFilename +") can't be loaded ... reverting to English !");
+				HOLogger.instance().log(HOVerwaltung.class, "language set for interface (" + languageFilename +") can't be loaded ... reverting to English !");
+			}
+		}
+		catch (Exception e) {
+			HOLogger.instance().error(HOVerwaltung.class, "language set for interface (" + languageFilename +") can't be loaded ... reverting to English !" + "   " + e);
+			HOLogger.instance().log(HOVerwaltung.class, "language set for interface (" + languageFilename +") can't be loaded ... reverting to English !" + "   " + e);
+			UserParameter.instance().sprachDatei = "English";
 		}
 
-		// Irgendein Fehler -> neue Datei aussuchen!
-		// new gui.menue.optionen.InitOptionsDialog();
-		UserParameter.instance().sprachDatei = "English";
+
 	}
 }

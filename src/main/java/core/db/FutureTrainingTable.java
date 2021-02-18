@@ -108,27 +108,28 @@ public final class FutureTrainingTable extends AbstractTable {
 
 	void storeFutureTraining(TrainingPerWeek training) {
 		if (training != null) {
-			String statement =
-					"update " + getTableName() +
-							" set TRAINING_TYPE= " + training.getTrainingType() +
-							", TRAINING_INTENSITY=" + training.getTrainingIntensity() +
-							", STAMINA_SHARE=" + training.getStaminaShare() +
-							", COACH_LEVEL=" + training.getCoachLevel() +
-							", TRAINING_ASSISTANTS_LEVEL=" + training.getTrainingAssistantsLevel() +
-							" WHERE TRAINING_DATE='" + training.getTrainingDate() + "'";
-			int count = adapter.executeUpdate(statement);
-
-			if (count == 0) {
-				statement = "INSERT INTO " + getTableName() +
-						" (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL) VALUES ('" +
-						training.getTrainingDate() + "'," +
-						training.getTrainingType() + "," +
-						training.getTrainingIntensity() + "," +
-						training.getStaminaShare() + "," +
-						training.getCoachLevel() + "," +
-						training.getTrainingAssistantsLevel();
-				adapter.executeUpdate(statement);
-			}
+			HOLogger.instance().error(getClass(), "storeFutureTraining() disabled as it crashed HO!");
+//			String statement =
+//					"update " + getTableName() +
+//							" set TRAINING_TYPE= " + training.getTrainingType() +
+//							", TRAINING_INTENSITY=" + training.getTrainingIntensity() +
+//							", STAMINA_SHARE=" + training.getStaminaShare() +
+//							", COACH_LEVEL=" + training.getCoachLevel() +
+//							", TRAINING_ASSISTANTS_LEVEL=" + training.getTrainingAssistantsLevel() +
+//							" WHERE TRAINING_DATE='" + training.getTrainingDate() + "'";
+//			int count = adapter.executeUpdate(statement);
+//
+//			if (count == 0) {
+//				statement = "INSERT INTO " + getTableName() +
+//						" (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL) VALUES ('" +
+//						training.getTrainingDate() + "'," +
+//						training.getTrainingType() + "," +
+//						training.getTrainingIntensity() + "," +
+//						training.getStaminaShare() + "," +
+//						training.getCoachLevel() + "," +
+//						training.getTrainingAssistantsLevel();
+//				adapter.executeUpdate(statement);
+//			}
 		}
 	}
 }

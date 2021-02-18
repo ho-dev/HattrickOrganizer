@@ -963,9 +963,9 @@ public class RatingPredictionManager {
 		boolean forceRefresh = false;
     	if (!playerStrengthCache.containsKey("lastRebuild") 
     			|| playerStrengthCache.get("lastRebuild") < config.getLastParse() || forceRefresh) {
-    		HOLogger.instance().debug(RatingPredictionManager.class, "RPM tainted, clearing cache!");
+    		HOLogger.instance().debug(RatingPredictionManager.class, "Rebuilding RPM cache!");
     		playerStrengthCache.clear();
-    		playerStrengthCache.put ("lastRebuild", new Double(new Date().getTime()));
+    		playerStrengthCache.put ("lastRebuild", (double) new Date().getTime());
     	}
     	String key = params.toString() + "|" + sectionName + "|" + stamina + "|" + xp + "|" + skill + "|" + form + "|" + useForm;
     	if (playerStrengthCache.containsKey(key)) {

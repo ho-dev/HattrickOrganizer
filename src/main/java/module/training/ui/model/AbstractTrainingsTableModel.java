@@ -2,6 +2,7 @@ package module.training.ui.model;
 
 import core.datatype.CBItem;
 import core.db.DBManager;
+import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.util.Helper;
 
@@ -52,25 +53,21 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
         o_Data[iRow][iCol] = value;
 
         TrainingPerWeek tpw = o_TrainingsPerWeek.get(getRowCount() - iRow - 1);
-        Integer newVal;
 
         if (iCol == 1) {
             CBItem sel = (CBItem) value;
             tpw.setTrainingType(sel.getId());
         } else if (iCol == 2) {
-            newVal = (Integer) value;
             tpw.setTrainingIntensity((Integer) value);
         } else if (iCol == 3) {
-            newVal = (Integer) value;
             tpw.setStaminaPart((Integer) value);
         } else if (iCol == 4) {
-            newVal = (Integer) value;
             tpw.setCoachLevel((Integer) value);
         } else if (iCol == 5) {
-            newVal= (Integer) value;
             tpw.setTrainingAssistantLevel((Integer) value);
         }
 
+        tpw.setSource(DBDataSource.MANUAL);
         DBManager.instance().saveTraining(tpw, true);
         fireTableCellUpdated(iRow, iCol);
     }

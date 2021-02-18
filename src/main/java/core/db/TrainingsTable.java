@@ -56,31 +56,35 @@ final class TrainingsTable extends AbstractTable {
 				return;
 			}
 
-
+			String sql;
 			if(isTrainingDateInDB(trainingDate)){
 
 				if (force){
-					delete(new String[]{"TRAINING_DATE"}, new String[]{trainingDate});
-//					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    DELETED");
+					sql = String.format("""
+     				UPDATE TRAINING  SET TRAINING_TYPE=%s, TRAINING_INTENSITY=%s, STAMINA_SHARE=%s, COACH_LEVEL=%s, 
+     				TRAINING_ASSISTANTS_LEVEL=%s, SOURCE=%s WHERE TRAINING_DATE = '%s'""", training.getTrainingType(), training.getTrainingIntensity(),
+							training.getStaminaShare(), training.getCoachLevel(), training.getTrainingAssistantsLevel(), training.getSource().getValue(), trainingDate);
+//					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    UPDATED");
 				}
 				else{
 //					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    SKIPPED");
 					return;
 				}
 			}
-
-			String statement = "INSERT INTO " + getTableName() + " (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL, SOURCE) VALUES ('";
-			statement += trainingDate + "', ";
-			statement += training.getTrainingType() + ", ";
-			statement += training.getTrainingIntensity() + ", ";
-			statement += training.getStaminaShare() + ", ";
-			statement += training.getCoachLevel() + ", ";
-			statement += training.getTrainingAssistantsLevel() + ", ";
-			statement += training.getSource().getValue() + ")";
+			else{
+				sql = "INSERT INTO " + getTableName() + " (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL, SOURCE) VALUES ('";
+				sql += trainingDate + "', ";
+				sql += training.getTrainingType() + ", ";
+				sql += training.getTrainingIntensity() + ", ";
+				sql += training.getStaminaShare() + ", ";
+				sql += training.getCoachLevel() + ", ";
+				sql += training.getTrainingAssistantsLevel() + ", ";
+				sql += training.getSource().getValue() + ")";
+				//HOLogger.instance().debug(this.getClass(), trainingDate + "  =>    INSERTED");
+			}
 
 			try {
-				adapter.executeUpdate(statement);
-//				HOLogger.instance().debug(this.getClass(), trainingDate + "  =>    INSERTED");
+				adapter.executeUpdate(sql);
 			}
 
 			catch (Exception e) {
@@ -202,4 +206,5 @@ final class TrainingsTable extends AbstractTable {
 
 		return vTrainings;
 	}
+
 }

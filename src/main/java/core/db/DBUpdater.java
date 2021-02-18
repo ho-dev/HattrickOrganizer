@@ -151,7 +151,7 @@ final class DBUpdater {
 
 		// Upgrade TRAINING table =================================================================================
 		if ( columnExistsInTable("COACH_LEVEL", TrainingsTable.TABLENAME)) {
-			HOLogger.instance().info(getClass(), "Upgrade of training table was already performed ... process skipped !");
+			HOLogger.instance().debug(getClass(), "Upgrade of training table was already performed ... process skipped !");
 		}
 		else {
 			// Step 1. Add new columns in TRAINING table ===========================
@@ -244,7 +244,7 @@ final class DBUpdater {
 
 		// Upgrade FutureTraining table ======================================================================================
 		if ( columnExistsInTable("COACH_LEVEL", FutureTrainingTable.TABLENAME)) {
-			HOLogger.instance().info(getClass(), "Upgrade of FutureTraining table was already performed ... process skipped !");
+			HOLogger.instance().debug(getClass(), "Upgrade of FutureTraining table was already performed ... process skipped !");
 		}
 		else{
 			// Step 1. Add new columns in FUTURETRAININGS table ===========================================================
@@ -520,7 +520,7 @@ final class DBUpdater {
 				dbManager.saveUserParameter("DBVersion", version);
 			}
 			else {
-				HOLogger.instance().info(DBUpdater.class, "Update to " + version + " done but this is a development version so DBVersion will remain unchanged");
+				HOLogger.instance().debug(DBUpdater.class, "Update to " + version + " done but this is a development version so DBVersion will remain unchanged");
 			}
 		}
 		else if (version == DBVersion){
@@ -529,7 +529,7 @@ final class DBUpdater {
 				dbManager.saveUserParameter("DBVersion", version);
 			}
 			else {
-				HOLogger.instance().info(DBUpdater.class, "Update to " + version + " complete but this is a development version so DBVersion will remain unchanged");
+				HOLogger.instance().debug(DBUpdater.class, "Update to " + version + " complete but this is a development version so DBVersion will remain unchanged");
 			}
 		}
 		else {

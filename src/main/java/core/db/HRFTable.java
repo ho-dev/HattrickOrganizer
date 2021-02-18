@@ -61,7 +61,7 @@ public final class HRFTable extends AbstractTable {
 
 		try {
 			if ((rs != null) && rs.first()) {
-				HOLogger.instance().log(getClass(), "Max( HRF_ID )" + rs.getInt(1));
+//				HOLogger.instance().log(getClass(), "Max( HRF_ID )" + rs.getInt(1));
 				return getHRF(rs.getInt(1));
 			}
 		} catch (Exception e) {

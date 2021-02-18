@@ -3,6 +3,8 @@ package module.training.ui;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.training.TrainingManager;
+import core.training.TrainingPerWeek;
+import core.util.Helper;
 import module.training.ui.comp.DividerListener;
 import module.training.ui.comp.FutureSettingPanel;
 import module.training.ui.comp.trainingParametersEditor;
@@ -11,10 +13,9 @@ import module.training.ui.model.FutureTrainingsTableModel;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.PastTrainingsTableModel;
 import module.training.ui.model.TrainingModel;
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+
+import java.awt.*;
+import java.awt.event.MouseEvent;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -26,6 +27,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
@@ -48,9 +50,9 @@ public class TrainingPanel extends JPanel {
 	/**
 	 * Creates a new TrainingPanel object.
 	 */
-	public TrainingPanel(TrainingModel model) {
+	public TrainingPanel(TrainingModel _model) {
 		super();
-		this.model = model;
+		model = _model;
 		initComponents();
 		addListeners();
 		reload();
@@ -91,7 +93,7 @@ public class TrainingPanel extends JPanel {
 	 * Initialize the object layout
 	 */
 	private void initComponents() {
-		JPanel pastTrainingsPanel = new JPanel(new GridBagLayout());
+		JPanel pastTrainingsPanel = new JPanel(new GridBagLayout()){};
 		GridBagConstraints uGbc = new GridBagConstraints();
 		uGbc.anchor = GridBagConstraints.WEST;
 		uGbc.insets = new Insets(3, 3, 3, 3);
@@ -103,7 +105,51 @@ public class TrainingPanel extends JPanel {
 		pastTrainingsPanel.add(pastTrainingsLabel, uGbc);
 
 		this.pastTrainingsTableModel = new PastTrainingsTableModel();
-		JTable pastTrainingsTable = new TrainingTable(this.pastTrainingsTableModel);
+		JTable pastTrainingsTable = new TrainingTable(this.pastTrainingsTableModel){
+
+			public Component prepareRenderer(
+					TableCellRenderer renderer, int row, int column) {
+				Component c = super.prepareRenderer(renderer, row, column);
+				int modelRow = convertRowIndexToModel(row);
+				var histoTraining = TrainingManager.instance().getHistoricalTrainings();
+				var nbRows = histoTraining.size();
+				TrainingPerWeek tpw = histoTraining.get(nbRows- modelRow- 1);
+				var source = tpw.getSource();
+				switch (source) {
+					case MANUAL -> c.setForeground(Color.BLUE);
+					case GUESS -> c.setForeground(Color.RED);
+					default -> c.setForeground(Color.BLACK);
+				}
+				return c;
+			}
+
+			public String getToolTipText(MouseEvent e) {
+				String tip = null;
+				java.awt.Point p = e.getPoint();
+				int rowIndex = rowAtPoint(p);
+
+				try {
+						int modelRow = convertRowIndexToModel(rowIndex);
+						var histoTraining = TrainingManager.instance().getHistoricalTrainings();
+						var nbRows = histoTraining.size();
+						TrainingPerWeek tpw = histoTraining.get(nbRows- modelRow- 1);
+						var source = tpw.getSource();
+						tip = switch (source) {
+							case MANUAL -> Helper.getTranslation("ls.module.training.manual_entry.tt");
+							case GUESS -> Helper.getTranslation("ls.module.training.guess_entry.tt");
+							default -> Helper.getTranslation("ls.module.training.hrf_entry.tt");
+						};
+
+				} catch (RuntimeException e1) {
+					//catch null pointer exception if mouse is over an empty line
+				}
+
+				return tip;
+			}
+
+		};
+
+
 		JScrollPane upperScrollPane = new JScrollPane(pastTrainingsTable);
 		upperScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		uGbc.gridy = 1;

@@ -17,17 +17,14 @@ import module.training.ui.TrainingPanel;
 import module.training.ui.TrainingRecapPanel;
 import module.training.ui.comp.DividerListener;
 import module.training.ui.model.TrainingModel;
-
 import java.awt.BorderLayout;
 import java.util.List;
-
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 public class TrainingModulePanel extends LazyPanel {
 
-	private static final long serialVersionUID = -1313192105835561643L;
 	private TrainingModel model;
 
 	@Override

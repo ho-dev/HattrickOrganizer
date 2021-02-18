@@ -6,6 +6,7 @@ import core.db.DBManager;
 import core.training.TrainingPerWeek;
 import core.util.HTDatetime;
 
+import java.awt.*;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -17,7 +18,6 @@ import java.util.ListIterator;
  * Customized table model for past trainings
  */
 public class PastTrainingsTableModel extends AbstractTrainingsTableModel {
-
 
 
 	/**
@@ -48,4 +48,5 @@ public class PastTrainingsTableModel extends AbstractTrainingsTableModel {
 
 		fireTableDataChanged();
 	}
+
 }

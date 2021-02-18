@@ -68,20 +68,20 @@ final class DBConfigUpdater {
 	private static void updateDBConfigVersion(double DBConfigVersion, double version) {
 		if (version < DBConfigVersion) {
 			if(!HO.isDevelopment()) {
-				HOLogger.instance().info(DBConfigUpdater.class, "Update to config " + version + " done. Updating DBConfigVersion");
+				HOLogger.instance().debug(DBConfigUpdater.class, "Update to config " + version + " done. Updating DBConfigVersion");
 				dbManager.saveUserParameter("LastConfUpdate", version);
 			}
 			else {
-				HOLogger.instance().info(DBConfigUpdater.class, "Update to config " + version + " done but this is a development version so DBConfigVersion will remain unchanged");
+				HOLogger.instance().debug(DBConfigUpdater.class, "Update to config " + version + " done but this is a development version so DBConfigVersion will remain unchanged");
 			}
 		}
 		else if (version == DBConfigVersion){
 			if(!HO.isDevelopment()) {
-				HOLogger.instance().info(DBConfigUpdater.class, "DB config update complete, setting DBConfigVersion to " + version);
+				HOLogger.instance().debug(DBConfigUpdater.class, "DB config update complete, setting DBConfigVersion to " + version);
 				dbManager.saveUserParameter("LastConfUpdate", version);
 			}
 			else {
-				HOLogger.instance().info(DBConfigUpdater.class, "Update to config " + version + " complete but this is a development version so DBConfigVersion will remain unchanged");
+				HOLogger.instance().debug(DBConfigUpdater.class, "Update to config " + version + " complete but this is a development version so DBConfigVersion will remain unchanged");
 			}
 		}
 		else {
