@@ -255,8 +255,9 @@ final class DBUpdater {
 
 
 			// Step 2: update columns with non-null values to ensure NOT NULL clauses can be called
+			// we store week and season information for future treatment
 			String sql = "UPDATE " + FutureTrainingTable.TABLENAME +
-					" SET TRAINING_DATE=timestamp('1900-01-01'),  TRAINING_ASSISTANTS_LEVEL=-1, COACH_LEVEL=-1 WHERE TRUE";
+					" SET TRAINING_DATE=timestamp('1900-01-01'),  TRAINING_ASSISTANTS_LEVEL=WEEK, COACH_LEVEL=SEASON WHERE TRUE";
 			m_clJDBCAdapter.executeUpdate(sql);
 
 			// Step 3. Finalize upgrade of FUTURETRAININGS table structure ===============================

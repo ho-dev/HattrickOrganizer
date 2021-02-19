@@ -1595,6 +1595,16 @@ public class DBManager {
 				.storeFutureTraining(training);
 	}
 
+	public void saveFutureTrainings(List<TrainingPerWeek> trainings) {
+		((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME))
+				.storeFutureTrainings(trainings);
+	}
+
+	public void clearFutureTrainingsTable(){
+		((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME))
+				.clearFutureTrainingsTable();
+	}
+
 	// ------------------------------- VereinTable
 	// -------------------------------------------------
 

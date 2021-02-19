@@ -122,6 +122,11 @@ public class HTDatetime {
         return res;
     }
 
+    public String getLocalizedDateString(boolean includeWeeksSeasons){
+        return getLocalizedDateString(m_iLocalized, includeWeeksSeasons);
+    }
+
+
     public static boolean isAfterLastUpdate(ZonedDateTime zdt){
         return zdt.toInstant().isAfter(cl_LastUpdate);
     }

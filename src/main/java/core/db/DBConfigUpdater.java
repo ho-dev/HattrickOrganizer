@@ -1,12 +1,20 @@
 package core.db;
 
 import core.HO;
+import core.training.TrainingPerWeek;
 import core.training.TrainingWeekManager;
 import core.util.HOLogger;
+import core.util.HTDatetime;
 
 import javax.swing.*;
 import java.sql.ResultSet;
 import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 
 final class DBConfigUpdater {
@@ -45,20 +53,72 @@ final class DBConfigUpdater {
 	private static void updateDBConfig5(double configVersion, boolean alreadyApplied){
 
 		if (!alreadyApplied) {
+
+			TrainingWeekManager twm=null;
+
 			// Creating entries into TRAININGS table ===========================================================
 			try {
 				String sql = "SELECT TRAININGDATE FROM XTRADATA ORDER BY TRAININGDATE ASC LIMIT 1";
 				ResultSet rs = m_clJDBCAdapter.executeQuery(sql);
 				rs.next();
 				Instant firstTrainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
-				TrainingWeekManager twm = new TrainingWeekManager(firstTrainingDate, false, false);
+				twm = new TrainingWeekManager(firstTrainingDate, false, false);
 				twm.push2TrainingsTable();
 			} catch (Exception e) {
 				HOLogger.instance().error(DBConfigUpdater.class, "Error when trying to create entries inside TRAINING table");
 			}
 
 			// Creating entries into FUTURETRAININGS table ===========================================================
-			HOLogger.instance().debug(DBConfigUpdater.class, "@wsbrenk code logic for migration of FuturesTraining table entries should be made here, I am not sure this is required");
+			try {
+				var trainingList = twm.getTrainingList();
+				Optional<TrainingPerWeek> optionallastTraining = trainingList.stream().max(Comparator.comparing(TrainingPerWeek::getTrainingDate));
+
+				if(optionallastTraining.isEmpty()){
+
+					throw new Exception("Can't determine last training");
+				}
+
+				// determine parameter of last training
+				TrainingPerWeek latestTraining = optionallastTraining.get();
+				int assistantLevel = latestTraining.getTrainingAssistantsLevel();
+				int coachLevel = latestTraining.getCoachLevel();
+				Instant lastTrainnig = latestTraining.getTrainingDate();
+
+				HTDatetime oTrainingDate = new HTDatetime(lastTrainnig);
+				ZonedDateTime zdtLastTraining =  oTrainingDate.getHattrickTime();
+				int latestTrainingWeek = oTrainingDate.getHTWeekLocalized();
+				int latestTrainingSeason = oTrainingDate.getHTSeasonLocalized();
+
+				// iterate through entries of Future Training table and migrate data
+				List<TrainingPerWeek> futureTrainings = new ArrayList<>();
+				List<TrainingPerWeek> futureTrainingsInDB = DBManager.instance().getFutureTrainingsVector();
+
+				ZonedDateTime zdtFutureTrainingDate;
+				int iWeekNumber, iSeasonNumber, nbDays;
+				TrainingPerWeek futureTraining;
+
+				for(TrainingPerWeek futureTrainingDB : futureTrainingsInDB){
+
+					iWeekNumber = futureTrainingDB.getTrainingAssistantsLevel();
+					iSeasonNumber = futureTrainingDB.getCoachLevel();
+					nbDays = ((iSeasonNumber - latestTrainingSeason) * 16 + (iWeekNumber - latestTrainingWeek)) * 7 ;
+					if(nbDays <= 0){
+						continue;
+					}
+
+					zdtFutureTrainingDate = zdtLastTraining.plus(nbDays, ChronoUnit.DAYS);
+					futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), futureTrainingDB.getTrainingType(), futureTrainingDB.getTrainingIntensity(),
+							futureTrainingDB.getStaminaShare(), assistantLevel, coachLevel);
+					futureTrainings.add(futureTraining);
+				}
+
+				// store futureTrainings in database
+				DBManager.instance().clearFutureTrainingsTable();
+				DBManager.instance().saveFutureTrainings(futureTrainings);
+
+			} catch (Exception e) {
+				HOLogger.instance().error(DBConfigUpdater.class, "Error when trying to create entries inside TRAINING table");
+			}
 
 			updateDBConfigVersion(configVersion, 5d);
 		}

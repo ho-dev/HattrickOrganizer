@@ -88,43 +88,8 @@ public class TrainingModel {
 	}
 
 	public List<TrainingPerWeek> getFutureTrainings() {
-		if (this.futureTrainings == null) {
-			this.futureTrainings = new ArrayList<>();
-			Object[] aobj;
-
-			TrainingPerWeek oldTrain = null;
-			List<TrainingPerWeek> futureTrainings = DBManager.instance().getFutureTrainingsVector();
-			List<TrainingPerWeek> futureTrainingsToSave = new ArrayList<>();
-
-			for (TrainingPerWeek training : futureTrainings) {
-
-				// if not found create it and saves it
-				if (training.getTrainingIntensity() == -1) {
-					if (oldTrain != null) {
-						training.setTrainingIntensity(oldTrain.getTrainingIntensity());
-						training.setStaminaShare(oldTrain.getStaminaShare());
-						training.setTrainingType(oldTrain.getTrainingType());
-						training.setCoachLevel(oldTrain.getCoachLevel());
-						training.setTrainingAssistantLevel(oldTrain.getTrainingAssistantsLevel());
-						training.setSource(DBDataSource.GUESS);
-					} else {
-						training.setTrainingIntensity(100);
-						training.setStaminaShare(10);
-						training.setTrainingType(TrainingType.SET_PIECES);
-						training.setCoachLevel(7);
-						training.setTrainingAssistantLevel(10);
-						training.setSource(DBDataSource.GUESS);
-					}
-					futureTrainingsToSave.add(training);
-				}
-
-				this.futureTrainings.add(training);
-				oldTrain = training;
-			}
-
-			if (!futureTrainingsToSave.isEmpty()) {
-				saveFutureTrainings(futureTrainingsToSave);
-			}
+		if (futureTrainings == null) {
+			futureTrainings = DBManager.instance().getFutureTrainingsVector();
 		}
 		return futureTrainings;
 	}
@@ -144,29 +109,17 @@ public class TrainingModel {
 		fireModelChanged(ModelChange.FUTURE_TRAINING);
 	}
 
-	public void saveFutureTraining(TrainingPerWeek training) {
-		DBManager.instance().saveFutureTraining(training);
-		if (!getFutureTrainings().contains(training)) {
-			this.futureTrainings = null;
-		}
-		fireModelChanged(ModelChange.FUTURE_TRAINING);
-	}
-
 	public void addModelChangeListener(ModelChangeListener listener) {
 		if (!this.listeners.contains(listener)) {
 			this.listeners.add(listener);
 		}
 	}
 
-	public void removeModelChangeListener(ModelChangeListener listener) {
-		this.listeners.remove(listener);
-	}
-
 	public FutureTrainingManager getFutureTrainingManager() {
 		
 		if (this.futureTrainingManager == null) {
 			
-			// gets the list of user defined future trainings
+			// gets the list of future trainings
 			List<TrainingPerWeek> trainings = getFutureTrainings();
 
 			// instantiate a future train manager to calculate the previsions */

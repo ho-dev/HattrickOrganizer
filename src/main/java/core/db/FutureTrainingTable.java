@@ -1,15 +1,11 @@
 package core.db;
 
-import core.model.HOVerwaltung;
-import core.model.UserParameter;
 import core.training.TrainingPerWeek;
+import core.util.DateTimeUtils;
 import core.util.HOLogger;
-
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,29 +59,8 @@ public final class FutureTrainingTable extends AbstractTable {
 			HOLogger.instance().log(getClass(), "DatenbankZugriff.getTraining " + e);
 		}
 
-		var futures = new ArrayList<TrainingPerWeek>();
-		var actualDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate().toInstant();
-		for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
-			// load the training from DB
-			TrainingPerWeek train = null;
 
-			for (var t : vTrainings) {
-				if (t.getTrainingDate().equals(actualDate)) {
-					train = t;
-					break;
-				}
-			}
-
-			// if not found create it and saves it
-			if (train == null) {
-				train = new TrainingPerWeek(actualDate, -1, -1, -1, -1, -1);
-				storeFutureTraining(train);
-			}
-			futures.add(train);
-			actualDate.plus(Duration.ofDays(7));
-		}
-
-		return futures;
+		return vTrainings;
 	}
 
 	int loadFutureTrainings(Timestamp trainingDate) {
@@ -108,28 +83,45 @@ public final class FutureTrainingTable extends AbstractTable {
 
 	void storeFutureTraining(TrainingPerWeek training) {
 		if (training != null) {
-			HOLogger.instance().error(getClass(), "storeFutureTraining() disabled as it crashed HO!");
-//			String statement =
-//					"update " + getTableName() +
-//							" set TRAINING_TYPE= " + training.getTrainingType() +
-//							", TRAINING_INTENSITY=" + training.getTrainingIntensity() +
-//							", STAMINA_SHARE=" + training.getStaminaShare() +
-//							", COACH_LEVEL=" + training.getCoachLevel() +
-//							", TRAINING_ASSISTANTS_LEVEL=" + training.getTrainingAssistantsLevel() +
-//							" WHERE TRAINING_DATE='" + training.getTrainingDate() + "'";
-//			int count = adapter.executeUpdate(statement);
-//
-//			if (count == 0) {
-//				statement = "INSERT INTO " + getTableName() +
-//						" (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL) VALUES ('" +
-//						training.getTrainingDate() + "'," +
-//						training.getTrainingType() + "," +
-//						training.getTrainingIntensity() + "," +
-//						training.getStaminaShare() + "," +
-//						training.getCoachLevel() + "," +
-//						training.getTrainingAssistantsLevel();
-//				adapter.executeUpdate(statement);
-//			}
+
+			String trainingDate = DateTimeUtils.InstantToSQLtimeStamp(training.getTrainingDate());
+
+			String statement =
+					"update " + getTableName() +
+							" set TRAINING_TYPE= " + training.getTrainingType() +
+							", TRAINING_INTENSITY=" + training.getTrainingIntensity() +
+							", STAMINA_SHARE=" + training.getStaminaShare() +
+							", COACH_LEVEL=" + training.getCoachLevel() +
+							", TRAINING_ASSISTANTS_LEVEL=" + training.getTrainingAssistantsLevel() +
+							" WHERE TRAINING_DATE='" + trainingDate+ "'";
+			int count = adapter.executeUpdate(statement);
+
+			if (count == 0) {
+				statement = "INSERT INTO " + getTableName() +
+						" (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL) VALUES ('" +
+						trainingDate + "'," +
+						training.getTrainingType() + "," +
+						training.getTrainingIntensity() + "," +
+						training.getStaminaShare() + "," +
+						training.getCoachLevel() + "," +
+						training.getTrainingAssistantsLevel() + ")";
+				adapter.executeUpdate(statement);
+			}
 		}
 	}
+
+	void storeFutureTrainings(List<TrainingPerWeek> trainings){
+		for (TrainingPerWeek futureTraining: trainings){
+			storeFutureTraining(futureTraining);
+		}
+	}
+
+
+	void clearFutureTrainingsTable(){
+		String sql = "DELETE FROM " + getTableName() + " WHERE TRUE";
+		adapter.executeUpdate(sql);
+		HOLogger.instance().debug(getClass(), "FutureTraining table has been cleared !");
+	}
+
+
 }

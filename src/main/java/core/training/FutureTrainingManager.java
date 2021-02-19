@@ -2,23 +2,23 @@ package core.training;
 
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
+import core.db.DBManager;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
+import core.util.HOLogger;
+import core.util.HTDatetime;
 import core.util.HelperWrapper;
 import module.training.Skills;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
-/**
- * Class that manages the prevision of training effect in the future
- *
- * @author Draghetto
- */
+
 public class FutureTrainingManager {
 	/** Actual Training sub */
 	public double[] actual = new double[8];
@@ -47,13 +47,17 @@ public class FutureTrainingManager {
 	* @param trainings The future training
 	*/
 	public FutureTrainingManager(Player p, List<TrainingPerWeek> trainings, int cotrainer,
-                                 int trainerLvl, List<StaffMember> staff) {
-		this.player = p;
-		this.futureSkillups = new ArrayList<>();
-		this.coTrainer = cotrainer;
-		this.trainer = trainerLvl;
-		this.futureTrainings = trainings;
-		this.staff = staff;
+                                 int trainerLvl, List<StaffMember> _staff) {
+		player = p;
+		futureSkillups = new ArrayList<>();
+		coTrainer = cotrainer;
+		trainer = trainerLvl;
+		futureTrainings = trainings;
+		adjustFutureTrainingsVector(UserParameter.instance().futureWeeks); // remove old entries and add new to make sure the vector size match user preference settings
+		staff = _staff;
+
+
+
 		previewPlayer(UserParameter.instance().futureWeeks);
 	}
 
@@ -388,6 +392,47 @@ public class FutureTrainingManager {
 			case PlayerSkill.STAMINA -> 7;
 			default -> 0;
 		};
+
+	}
+
+	private void adjustFutureTrainingsVector(int requiredNBentries){
+		Instant nextTrainingDate = TrainingManager.instance().getNextWeekTraining().getTrainingDate();
+		Optional<TrainingPerWeek> optionallastTraining = futureTrainings.stream().max(Comparator.comparing(TrainingPerWeek::getTrainingDate));
+		List<TrainingPerWeek> newfutureTrainings = new ArrayList<>();
+
+		if(optionallastTraining.isPresent()){
+			// removal of old entries
+			for(var entry: futureTrainings) {
+				if (!entry.getTrainingDate().isBefore(nextTrainingDate)) {
+					newfutureTrainings.add(entry);
+				}
+			}
+
+			TrainingPerWeek latestTraining = optionallastTraining.get();
+
+			// Adding new entries
+			int nbWeek = 1;
+			ZonedDateTime zdtFutureTrainingDate;
+
+			HTDatetime oTrainingDate = new HTDatetime(latestTraining.getTrainingDate());
+			ZonedDateTime zdtrefDate =  oTrainingDate.getHattrickTime();
+			TrainingPerWeek futureTraining;
+
+			while(newfutureTrainings.size() < requiredNBentries){
+				zdtFutureTrainingDate = zdtrefDate.plus(nbWeek*7, ChronoUnit.DAYS);
+				futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), latestTraining.getTrainingType(), latestTraining.getTrainingIntensity(),
+						latestTraining.getStaminaShare(), latestTraining.getTrainingAssistantsLevel(), latestTraining.getCoachLevel());
+				newfutureTrainings.add(futureTraining);
+				nbWeek++;
+			}
+
+			futureTrainings = newfutureTrainings;
+			DBManager.instance().clearFutureTrainingsTable();
+			DBManager.instance().saveFutureTrainings(futureTrainings);
+		}
+		else{
+			HOLogger.instance().error(getClass(), "Can't create new entries in FutureTrainings table");
+		}
 
 	}
 
