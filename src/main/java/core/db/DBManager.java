@@ -1581,8 +1581,7 @@ public class DBManager {
 	 * @return the future trainings vector
 	 */
 	public List<TrainingPerWeek> getFutureTrainingsVector() {
-		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME))
-				.getFutureTrainingsVector();
+		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).getFutureTrainingsVector();
 	}
 
 	/**

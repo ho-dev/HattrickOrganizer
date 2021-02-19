@@ -2,20 +2,13 @@ package core.training;
 
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.db.DBManager;
 import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
-import core.util.HOLogger;
-import core.util.HTDatetime;
 import core.util.HelperWrapper;
 import module.training.Skills;
-
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 
@@ -53,7 +46,6 @@ public class FutureTrainingManager {
 		coTrainer = cotrainer;
 		trainer = trainerLvl;
 		futureTrainings = trainings;
-		adjustFutureTrainingsVector(UserParameter.instance().futureWeeks); // remove old entries and add new to make sure the vector size match user preference settings
 		staff = _staff;
 
 
@@ -359,27 +351,6 @@ public class FutureTrainingManager {
 
 	}
 
-	/**
-	 * Gets the skill trained by a specific training type
-	 * (ITeam.TA_* -> ISpieler.SKILL_*)
-	 * 
-	 * @param trType	training type
-	 * @return			the trained skill
-	 */
-	private int getSkillForTraining (int trType) {
-		return switch (trType) {
-			case TrainingType.GOALKEEPING -> PlayerSkill.KEEPER;
-			case TrainingType.PLAYMAKING -> PlayerSkill.PLAYMAKING;
-			case TrainingType.SHORT_PASSES, TrainingType.THROUGH_PASSES -> PlayerSkill.PASSING;
-			case TrainingType.CROSSING_WINGER, TrainingType.WING_ATTACKS -> PlayerSkill.WINGER;
-			case TrainingType.DEFENDING, TrainingType.DEF_POSITIONS -> PlayerSkill.DEFENDING;
-			case TrainingType.SCORING, TrainingType.SHOOTING -> PlayerSkill.SCORING;
-			case TrainingType.SET_PIECES -> PlayerSkill.SET_PIECES;
-			default -> 0;
-		};
-
-	}
-
 	private int getSkillPosition(int skillIndex) {
 		return switch (skillIndex) {
 			case PlayerSkill.KEEPER -> 0;
@@ -395,45 +366,7 @@ public class FutureTrainingManager {
 
 	}
 
-	private void adjustFutureTrainingsVector(int requiredNBentries){
-		Instant nextTrainingDate = TrainingManager.instance().getNextWeekTraining().getTrainingDate();
-		Optional<TrainingPerWeek> optionallastTraining = futureTrainings.stream().max(Comparator.comparing(TrainingPerWeek::getTrainingDate));
-		List<TrainingPerWeek> newfutureTrainings = new ArrayList<>();
 
-		if(optionallastTraining.isPresent()){
-			// removal of old entries
-			for(var entry: futureTrainings) {
-				if (!entry.getTrainingDate().isBefore(nextTrainingDate)) {
-					newfutureTrainings.add(entry);
-				}
-			}
 
-			TrainingPerWeek latestTraining = optionallastTraining.get();
-
-			// Adding new entries
-			int nbWeek = 1;
-			ZonedDateTime zdtFutureTrainingDate;
-
-			HTDatetime oTrainingDate = new HTDatetime(latestTraining.getTrainingDate());
-			ZonedDateTime zdtrefDate =  oTrainingDate.getHattrickTime();
-			TrainingPerWeek futureTraining;
-
-			while(newfutureTrainings.size() < requiredNBentries){
-				zdtFutureTrainingDate = zdtrefDate.plus(nbWeek*7, ChronoUnit.DAYS);
-				futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), latestTraining.getTrainingType(), latestTraining.getTrainingIntensity(),
-						latestTraining.getStaminaShare(), latestTraining.getTrainingAssistantsLevel(), latestTraining.getCoachLevel());
-				newfutureTrainings.add(futureTraining);
-				nbWeek++;
-			}
-
-			futureTrainings = newfutureTrainings;
-			DBManager.instance().clearFutureTrainingsTable();
-			DBManager.instance().saveFutureTrainings(futureTrainings);
-		}
-		else{
-			HOLogger.instance().error(getClass(), "Can't create new entries in FutureTrainings table");
-		}
-
-	}
 
 }

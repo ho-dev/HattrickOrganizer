@@ -2,7 +2,6 @@ package module.training.ui.model;
 
 import core.constants.TrainingType;
 import core.datatype.CBItem;
-import core.db.DBManager;
 import core.training.TrainingPerWeek;
 import core.util.HTDatetime;
 
@@ -16,9 +15,9 @@ public class FutureTrainingsTableModel extends AbstractTrainingsTableModel {
 
 	private final TrainingModel trainingModel;
 
-	public FutureTrainingsTableModel(TrainingModel trainingModel) {
+	public FutureTrainingsTableModel(TrainingModel _trainingModel) {
 		super();
-		this.trainingModel = trainingModel;
+		trainingModel = _trainingModel;
 	}
 
 

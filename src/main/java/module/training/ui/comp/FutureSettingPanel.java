@@ -1,4 +1,3 @@
-// %1956788941:hoplugins.trainingExperience.ui.component%
 package module.training.ui.comp;
 
 import core.constants.TrainingType;
@@ -9,12 +8,10 @@ import core.model.HOVerwaltung;
 import core.training.TrainingPerWeek;
 import module.training.ui.model.FutureTrainingsTableModel;
 import module.training.ui.model.TrainingModel;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -27,7 +24,6 @@ import javax.swing.JPanel;
  */
 public class FutureSettingPanel extends JPanel {
 
-	private static final long serialVersionUID = 4872598003436712955L;
 	private FutureTrainingsTableModel futureModel;
     private JComboBox intensity;
     private JComboBox staminaTrainingPart;

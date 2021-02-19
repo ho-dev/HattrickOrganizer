@@ -1,5 +1,7 @@
 package module.training.ui;
 
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.training.TrainingManager;
@@ -13,7 +15,6 @@ import module.training.ui.model.FutureTrainingsTableModel;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.PastTrainingsTableModel;
 import module.training.ui.model.TrainingModel;
-
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import javax.swing.DefaultCellEditor;
@@ -63,7 +64,7 @@ public class TrainingPanel extends JPanel {
 	 */
 	public void reload() {
 		pastTrainingsTableModel.populate(TrainingManager.instance().getHistoricalTrainings());
-		futureTrainingsTableModel.populate(this.model.getFutureTrainings());
+		futureTrainingsTableModel.populate(model.getFutureTrainings());
 	}
 
 	private void addListeners() {
@@ -116,9 +117,9 @@ public class TrainingPanel extends JPanel {
 				TrainingPerWeek tpw = histoTraining.get(nbRows- modelRow- 1);
 				var source = tpw.getSource();
 				switch (source) {
-					case MANUAL -> c.setForeground(Color.BLUE);
-					case GUESS -> c.setForeground(Color.RED);
-					default -> c.setForeground(Color.BLACK);
+					case MANUAL -> c.setForeground(ThemeManager.getColor(HOColorName.BLUE));
+					case GUESS -> c.setForeground(ThemeManager.getColor(HOColorName.RED));
+					default -> c.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
 				}
 				return c;
 			}
@@ -175,7 +176,46 @@ public class TrainingPanel extends JPanel {
 		futureTrainingsPanel.add(this.setAllButton, lGbc);
 
 		this.futureTrainingsTableModel = new FutureTrainingsTableModel(this.model);
-		this.futureTrainingsTable = new TrainingTable(this.futureTrainingsTableModel);
+
+		futureTrainingsTable = new TrainingTable(futureTrainingsTableModel){
+
+			public Component prepareRenderer(
+					TableCellRenderer renderer, int row, int column) {
+				Component c = super.prepareRenderer(renderer, row, column);
+				int modelRow = convertRowIndexToModel(row);
+				TrainingPerWeek tpw = model.getFutureTrainings().get(UserParameter.instance().futureWeeks - modelRow- 1);
+				var source = tpw.getSource();
+				switch (source) {
+					case MANUAL -> c.setForeground(ThemeManager.getColor(HOColorName.BLUE));
+					case GUESS -> c.setForeground(ThemeManager.getColor(HOColorName.RED));
+					default -> c.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
+				}
+				return c;
+			}
+
+			public String getToolTipText(MouseEvent e) {
+				String tip = null;
+				java.awt.Point p = e.getPoint();
+				int rowIndex = rowAtPoint(p);
+
+				try {
+					int modelRow = convertRowIndexToModel(rowIndex);
+					TrainingPerWeek tpw = model.getFutureTrainings().get(UserParameter.instance().futureWeeks - modelRow- 1);
+					var source = tpw.getSource();
+					tip = switch (source) {
+						case MANUAL -> Helper.getTranslation("ls.module.training.manual_entry.tt");
+						case GUESS -> Helper.getTranslation("ls.module.training.guess_entry.tt");
+						default -> Helper.getTranslation("ls.module.training.hrf_entry.tt");
+					};
+
+				} catch (RuntimeException e1) {
+					//catch null pointer exception if mouse is over an empty line
+				}
+
+				return tip;
+			}
+
+		};
 		JScrollPane lowerScrollPane = new JScrollPane(this.futureTrainingsTable);
 		lowerScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		lGbc.gridx = 0;

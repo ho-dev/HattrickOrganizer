@@ -4,15 +4,24 @@ import core.constants.TrainingType;
 import core.db.DBManager;
 import core.model.StaffMember;
 import core.model.StaffType;
+import core.model.UserParameter;
 import core.model.enums.DBDataSource;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
+import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
 import core.training.WeeklyTrainingType;
+import core.util.HOLogger;
+import core.util.HTDatetime;
 import module.training.PastTrainingManager;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class TrainingModel {
 
@@ -89,7 +98,14 @@ public class TrainingModel {
 
 	public List<TrainingPerWeek> getFutureTrainings() {
 		if (futureTrainings == null) {
-			futureTrainings = DBManager.instance().getFutureTrainingsVector();
+			var _futureTrainings = DBManager.instance().getFutureTrainingsVector();
+
+			// remove old entries and add new to make sure the vector size match user preference settings
+			_futureTrainings = adjustFutureTrainingsVector(_futureTrainings, UserParameter.instance().futureWeeks);
+
+			DBManager.instance().clearFutureTrainingsTable();
+			DBManager.instance().saveFutureTrainings(_futureTrainings);
+			futureTrainings = _futureTrainings;
 		}
 		return futureTrainings;
 	}
@@ -186,5 +202,45 @@ public class TrainingModel {
 
 	private boolean isOsmosisTrainingAvailable(TrainingPerWeek t) {
 		return WeeklyTrainingType.instance(t.getTrainingType()).getTrainingSkillOsmosisTrainingPositions().length > 0;
+	}
+
+	private List<TrainingPerWeek> adjustFutureTrainingsVector(List<TrainingPerWeek> _futureTrainings,int requiredNBentries) {
+		Instant nextTrainingDate = TrainingManager.instance().getNextWeekTraining().getTrainingDate();
+		Optional<TrainingPerWeek> optionallastTraining = _futureTrainings.stream().max(Comparator.comparing(TrainingPerWeek::getTrainingDate));
+		List<TrainingPerWeek> newfutureTrainings = new ArrayList<>();
+
+		if (optionallastTraining.isPresent()) {
+			// removal of old entries
+			for (var entry : _futureTrainings) {
+				if (!entry.getTrainingDate().isBefore(nextTrainingDate)) {
+					newfutureTrainings.add(entry);
+				}
+			}
+
+			TrainingPerWeek latestTraining = optionallastTraining.get();
+
+			// Adding new entries
+			int nbWeek = 1;
+			ZonedDateTime zdtFutureTrainingDate;
+
+			HTDatetime oTrainingDate = new HTDatetime(latestTraining.getTrainingDate());
+			ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
+			TrainingPerWeek futureTraining;
+
+			while (newfutureTrainings.size() < requiredNBentries) {
+				zdtFutureTrainingDate = zdtrefDate.plus(nbWeek * 7, ChronoUnit.DAYS);
+				futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), latestTraining.getTrainingType(), latestTraining.getTrainingIntensity(),
+						latestTraining.getStaminaShare(), latestTraining.getTrainingAssistantsLevel(), latestTraining.getCoachLevel());
+				newfutureTrainings.add(futureTraining);
+				nbWeek++;
+			}
+
+		}
+		else {
+			HOLogger.instance().error(getClass(), "Can't create new entries in FutureTrainings table");
+		}
+
+		return newfutureTrainings;
+
 	}
 }
