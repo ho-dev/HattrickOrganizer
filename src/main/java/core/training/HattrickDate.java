@@ -176,7 +176,7 @@ public class HattrickDate {
         return val;
     }
 
-    public static HattrickDate getHattrickDateByDate(Instant date) {
+    public static HattrickDate fromInstant(Instant date) {
         var origin = getOrigin();
         long msDiff = date.getEpochSecond() - origin.getEpochSecond();
         long dayDiff = msDiff / 60 / 60 / 24;

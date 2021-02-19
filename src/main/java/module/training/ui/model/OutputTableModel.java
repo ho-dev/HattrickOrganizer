@@ -213,7 +213,7 @@ public class OutputTableModel extends AbstractTableModel {
     }
 
     private TrainingPriorityCell createBestPositionCell(Player player) {
-        return new TrainingPriorityCell(player, HattrickDate.getHattrickDateByDate( model.getFutureTrainings().get(0).getTrainingDate()));
+        return new TrainingPriorityCell(player, HattrickDate.fromInstant( model.getFutureTrainings().get(0).getTrainingDate()));
     }
 
 }

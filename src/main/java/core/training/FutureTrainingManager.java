@@ -135,7 +135,7 @@ public class FutureTrainingManager {
 						if (change != 0) {
 							if (!UserParameter.instance().TRAINING_SHOW_SKILLDROPS && change < 0) continue;
 							var trainingDate = tw.getTrainingDate();
-							var hattrickDate = HattrickDate.getHattrickDateByDate(trainingDate);
+							var hattrickDate = HattrickDate.fromInstant(trainingDate);
 							PlayerSkillChange su = new PlayerSkillChange();
 							su.setHtSeason(hattrickDate.getSeason());
 							su.setHtWeek(hattrickDate.getWeek());
