@@ -209,8 +209,7 @@ public class TrainingRecapPanel extends LazyImagePanel  {
 
         for (Player player : list) {
             FutureTrainingManager ftm = new FutureTrainingManager(player,
-                    this.model.getFutureTrainings(), 0,
-                    this.model.getTrainerLevel(), this.model.getAssistants());
+                    this.model.getFutureTrainings());
             List<ISkillChange> skillChanges = ftm.getFutureSkillups();
 
             HashMap<String, ISkillChange> maps = new HashMap<>();

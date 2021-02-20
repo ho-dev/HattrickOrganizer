@@ -34,7 +34,7 @@ public final class FutureTrainingTable extends AbstractTable {
 
 	List<TrainingPerWeek> getFutureTrainingsVector() {
 		var vTrainings = new ArrayList<TrainingPerWeek>();
-		String query = "select * from " + getTableName();
+		String query = "select * from " + getTableName() + " ORDER BY TRAINING_DATE";
 		ResultSet rs = adapter.executeQuery(query);
 
 		try {
@@ -58,8 +58,6 @@ public final class FutureTrainingTable extends AbstractTable {
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DatenbankZugriff.getTraining " + e);
 		}
-
-
 		return vTrainings;
 	}
 

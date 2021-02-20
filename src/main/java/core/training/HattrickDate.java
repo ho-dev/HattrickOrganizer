@@ -165,7 +165,8 @@ public class HattrickDate {
 
     private static Instant getOrigin()
     {
-        var orig = new HTDatetime("1997-08-22");
+        //var orig = new HTDatetime("1997-08-22");
+        var orig = new HTDatetime("1997-09-26");
         return orig.getHattrickTime().toInstant();
     }
 

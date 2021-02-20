@@ -29,27 +29,16 @@ public class FutureTrainingManager {
 	private int weeksPassed = 0;
 	private double trainingSpeed;
 
-	private int coTrainer;
-	private int trainer;
-	private List<StaffMember> staff;
-
 	/**
 	* Calculates the effects of the future training for the provided player
 	*
 	* @param p The active player
 	* @param trainings The future training
 	*/
-	public FutureTrainingManager(Player p, List<TrainingPerWeek> trainings, int cotrainer,
-                                 int trainerLvl, List<StaffMember> _staff) {
+	public FutureTrainingManager(Player p, List<TrainingPerWeek> trainings) {
 		player = p;
 		futureSkillups = new ArrayList<>();
-		coTrainer = cotrainer;
-		trainer = trainerLvl;
 		futureTrainings = trainings;
-		staff = _staff;
-
-
-
 		previewPlayer(UserParameter.instance().futureWeeks);
 	}
 
@@ -231,7 +220,7 @@ public class FutureTrainingManager {
 		// Set age and skill for simulation
 		player.setAlter (age + (int)Math.floor((ageDays + 7*weeksPassed)/112d));
 		player.setValue4Skill(wt.getPrimaryTrainingSkill(), (int)finalSkill[pos]);
-		double limit = wt.getTrainingLength(player, trainer, tw.getTrainingIntensity(), tw.getStaminaShare(), tw.getTrainingAssistantsLevel());
+		double limit = wt.getTrainingLength(player, tw.getCoachLevel(), tw.getTrainingIntensity(), tw.getStaminaShare(), tw.getTrainingAssistantsLevel());
 //		HOLogger.instance().debug(getClass(), "getTrLen for "+player.getName()+": weeksPassed="+weeksPassed+", age="+player.getAlter()+", skill="+getSkillValue(player, skillIndex)+", limit="+limit);
 		// Undo simulation changes on player
 		player.setAlter(age);
@@ -248,7 +237,7 @@ public class FutureTrainingManager {
 		// Set age and skill for simulation
 		player.setAlter (age + (int)Math.floor((ageDays + 7*weeksPassed)/112d));
 		player.setValue4Skill(wt.getSecondaryTrainingSkill(), (int)finalSkill[pos]);
-		double limit = wt.getSecondaryTrainingLength(player, trainer, tw.getTrainingIntensity(), tw.getStaminaShare(), tw.getTrainingAssistantsLevel());
+		double limit = wt.getSecondaryTrainingLength(player, tw.getCoachLevel(), tw.getTrainingIntensity(), tw.getStaminaShare(), tw.getTrainingAssistantsLevel());
 //		HOLogger.instance().debug(getClass(), "getTrLen for "+player.getName()+": weeksPassed="+weeksPassed+", age="+player.getAlter()+", skill="+getSkillValue(player, skillIndex)+", limit="+limit);
 		// Undo simulation changes on player
 		player.setAlter(age);
