@@ -9,6 +9,7 @@ import module.training.Skills;
 import module.training.Skills.ScoutCommentSkillTypeID;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static core.util.Helper.parseDate;
@@ -493,6 +494,12 @@ public class YouthPlayer {
         return this.getTrainingDevelopment().size();
     }
 
+    public String getYouthMatchDateAsString() {
+        if (this.youthMatchDate != null)
+            return new SimpleDateFormat("yyyy-MM-dd hh:mm").format(this.getYouthMatchDate());
+        return "";
+    }
+
     public static class ScoutComment {
         private int youthPlayerId;
         private int index;
@@ -761,7 +768,7 @@ public class YouthPlayer {
         }
         return htms17;
     }
-
+/*
     // now calculating the potential at 28yo
     private static int AGE_FACTOR = 28;
     private static int WEEKS_IN_SEASON = 16;
@@ -804,7 +811,7 @@ public class YouthPlayer {
         }
         return htms28;
     }
-
+*/
     private Integer averageSkillLevel = -1;
 
     public String getAverageSkillLevel() {
@@ -833,7 +840,7 @@ public class YouthPlayer {
             calcMaxSkills17();
             potential=0;
             for ( var skillId: skillIds){
-                potential += (int)(getSkillInfo(skillId).getPotential17Value() / YouthTraining.potentialNormingFactor.get(skillId).doubleValue());
+                potential += (int)(getSkillInfo(skillId).getPotential17Value() / YouthTraining.potentialNormingFactor.get(skillId));
             }
         }
         return potential;

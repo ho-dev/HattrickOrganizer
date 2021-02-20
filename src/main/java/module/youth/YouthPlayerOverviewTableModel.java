@@ -42,7 +42,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 }, new YouthPlayerColumn("ls.youth.player.lastmatchdate") {
             @Override
             public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                return new ColorLabelEntry(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(player.getYouthMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                return new ColorLabelEntry(player.getYouthMatchDateAsString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
         },
                 new YouthPlayerColumn("ls.youth.player.canBePromotedIn") {
