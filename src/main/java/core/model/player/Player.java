@@ -2258,7 +2258,7 @@ public class Player {
                 var start = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
                 var remove = new ArrayList<FuturePlayerTraining>();
                 for (var t : futurePlayerTrainings) {
-                    if ( start.isAfter(t.getTo().toInstant())){
+                    if (start.isAfter(t.getTo())){
                         remove.add(t);
                     }
                 }
@@ -2318,14 +2318,14 @@ public class Player {
     public void setFutureTraining(FuturePlayerTraining.Priority prio, Instant fromWeek, Instant toWeek) {
         var removeIntervals = new ArrayList<FuturePlayerTraining>();
         for ( var t : getFuturePlayerTrainings() ){
-            if ( t.cut(fromWeek, toWeek) ||
-                    t.cut(new HattrickDate(0,0).toInstant(), HOVerwaltung.instance().getModel().getBasics().getHattrickWeek().toInstant())){
+            if ( t.cut(HattrickDate.fromInstant(fromWeek), HattrickDate.fromInstant(toWeek)) ||
+                    t.cut(new HattrickDate(0,0), HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())){
                 removeIntervals.add(t);
             }
         }
         futurePlayerTrainings.removeAll(removeIntervals);
         if ( prio != null){
-            futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerID(), prio, HattrickDate.getHattrickDateByDate(fromWeek), HattrickDate.getHattrickDateByDate(toWeek)));
+            futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerID(), prio, HattrickDate.fromInstant(fromWeek), HattrickDate.fromInstant(toWeek)));
         }
         DBManager.instance().storeFuturePlayerTrainings(this.getPlayerID(), futurePlayerTrainings);
     }
@@ -2348,7 +2348,7 @@ public class Player {
     public String getTrainingPriorityInformation(HattrickDate nextWeek) {
         String ret=null;
         for ( var t : getFuturePlayerTrainings()) {
-            if (!nextWeek.isAfter(t.getTo().toInstant())){
+            if (!nextWeek.isAfter(t.getTo())){
                 if ( ret != null ){
                     ret = HOVerwaltung.instance().getLanguageString("trainpre.individual.prios");
                     break;

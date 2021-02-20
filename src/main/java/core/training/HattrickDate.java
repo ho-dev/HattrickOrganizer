@@ -116,8 +116,9 @@ public class HattrickDate {
      * @param date to compare with, if null an open end is assumed (=> return false)
      * @return true, if this date is after given date
      */
-    public boolean isAfter(Instant date) {
-        return this.date.isAfter(date);
+    public boolean isAfter(HattrickDate date) {
+        if ( date == null) return false;
+        return this.date.isAfter(date.toInstant());
     }
 
     /**
@@ -164,7 +165,8 @@ public class HattrickDate {
 
     private static Instant getOrigin()
     {
-        var orig = new HTDatetime("1997-08-22");
+        //var orig = new HTDatetime("1997-08-22");
+        var orig = new HTDatetime("1997-09-26");
         return orig.getHattrickTime().toInstant();
     }
 
@@ -175,7 +177,7 @@ public class HattrickDate {
         return val;
     }
 
-    public static HattrickDate getHattrickDateByDate(Instant date) {
+    public static HattrickDate fromInstant(Instant date) {
         var origin = getOrigin();
         long msDiff = date.getEpochSecond() - origin.getEpochSecond();
         long dayDiff = msDiff / 60 / 60 / 24;

@@ -139,8 +139,7 @@ public class TrainingModel {
 			List<TrainingPerWeek> trainings = getFutureTrainings();
 
 			// instantiate a future train manager to calculate the previsions */
-			this.futureTrainingManager = new FutureTrainingManager(this.activePlayer, trainings,
-					this.numberOfCoTrainers, this.trainerLevel, this.staff);
+			this.futureTrainingManager = new FutureTrainingManager(this.activePlayer, trainings);
 		}
 		return this.futureTrainingManager;
 	}

@@ -128,9 +128,7 @@ public class OutputTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         Player player = data.get(rowIndex);
 
-        FutureTrainingManager ftm = new FutureTrainingManager(player,
-                this.model.getFutureTrainings(), 0,
-                this.model.getTrainerLevel(), this.model.getAssistants());
+        FutureTrainingManager ftm = new FutureTrainingManager(player, this.model.getFutureTrainings());
 
         // Spielername
         // Spieleralter
@@ -213,7 +211,7 @@ public class OutputTableModel extends AbstractTableModel {
     }
 
     private TrainingPriorityCell createBestPositionCell(Player player) {
-        return new TrainingPriorityCell(player, HattrickDate.getHattrickDateByDate( model.getFutureTrainings().get(0).getTrainingDate()));
+        return new TrainingPriorityCell(player, HattrickDate.fromInstant( model.getFutureTrainings().get(0).getTrainingDate()));
     }
 
 }
