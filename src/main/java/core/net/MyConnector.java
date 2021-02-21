@@ -59,7 +59,7 @@ public class MyConnector {
 	private final static String VERSION_MATCHLINEUP = "2.0";
 	private final static String VERSION_MATCHDETAILS = "3.0";
 	private final static String VERSION_TEAM_DETAILS = "3.5";
-	private final static String VERSION_PLAYERS = "2.4";
+	private final static String VERSION_PLAYERS = "2.5";
 	private final static String VERSION_YOUTHPLAYERLIST = "1.1";
 	private final static String VERSION_WORLDDETAILS = "1.8";
 	private final static String VERSION_TOURNAMENTDETAILS = "1.0";

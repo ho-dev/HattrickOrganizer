@@ -438,12 +438,7 @@ public class Player {
             m_iTrikotnummer = Integer.parseInt(temp);
         }
 
-        // for national teams it's not a numeric
-        try {
-            m_iTransferlisted = Integer.parseInt(properties.getProperty("transferlisted", "0"));
-        } catch (NumberFormatException | NullPointerException nfe) {
-            m_iTransferlisted = 0;
-        }
+        m_iTransferlisted = Boolean.parseBoolean(properties.getProperty("transferlisted", "False"))?1:0;
         m_iLaenderspiele = Integer.parseInt(properties.getProperty("caps", "0"));
         m_iU20Laenderspiele = Integer.parseInt(properties.getProperty("capsU20", "0"));
         nationalTeamId = Integer.parseInt(properties.getProperty("nationalTeamID","0"));
