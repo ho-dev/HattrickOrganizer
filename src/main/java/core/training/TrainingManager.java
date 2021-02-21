@@ -39,18 +39,18 @@ public class TrainingManager {
 		historicalTrainings =  DBManager.instance().getTrainingList();
 
 		// Create recent training history from other tables in database
+		if (!historicalTrainings.isEmpty()) {
+			Instant previousTrainingDate = historicalTrainings.stream()
+					.map(TrainingPerWeek::getTrainingDate)
+					.max(Instant::compareTo).get();
+			recentTrainings = new TrainingWeekManager(previousTrainingDate.plus(1, ChronoUnit.DAYS), false, true);
+			//TODO: add entries in trainings from recentTrainings => should it be done from here ?
+			//TODO: the function DBManager.instance().saveTrainings() should refresh table in training tab
+			// DBManager.instance().saveTrainings(recentTrainings.getTrainingList(), false);
 
-		Instant previousTrainingDate = historicalTrainings.stream().map(t -> t.getTrainingDate()).max(Instant::compareTo).get();
-        recentTrainings = new TrainingWeekManager(previousTrainingDate.plus(1, ChronoUnit.DAYS), false, true);
-		//TODO: add entries in trainings from recentTrainings => should it be done from here ?
-		//TODO: the function DBManager.instance().saveTrainings() should refresh table in training tab
-        // DBManager.instance().saveTrainings(recentTrainings.getTrainingList(), false);
-
-		// Load next week training
-		nextWeekTraining = TrainingWeekManager.getNextWeekTraining(true);
-
-
-
+			// Load next week training
+			nextWeekTraining = TrainingWeekManager.getNextWeekTraining(true);
+		}
     }
 
 
@@ -94,9 +94,6 @@ public class TrainingManager {
 		String playerName = after.getFullName();
 
 		int age = after.getAlter();
-		int skill = -1;
-		int beforeSkill = 0;
-		int afterSkill = 0;
 
 		var changes= new StringBuilder();
 		for ( var s = PlayerSkill.KEEPER; s <= PlayerSkill.EXPERIENCE; s++){

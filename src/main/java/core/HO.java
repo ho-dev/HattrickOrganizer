@@ -191,8 +191,10 @@ public class HO {
 		if (fxRate > -1) UserParameter.instance().faktorGeld = fxRate;
 
 		// Upgrade database configuration
-		interuptionsWindow.setInfoText(7, "Upgrade DB configuration");
-		DBManager.instance().updateConfig();
+		if (!DBManager.instance().isFirstStart()) {
+			interuptionsWindow.setInfoText(7, "Upgrade DB configuration");
+			DBManager.instance().updateConfig();
+		}
 
 
 		// Training
