@@ -65,14 +65,20 @@ public class HOModel {
                 o_previousHRF = DBManager.instance().getMaxHrf();
                 o_hrf = new HRF(o_previousHRF.getHrfId() + 1);
             } catch (Exception e) {
-                HOLogger.instance().error(this.getClass(), "Error when trying to determine latest HRH_ID");
+                HOLogger.instance().error(this.getClass(), "Error when trying to determine latest HRF_ID");
             }
         }
     }
 
 	public HOModel(int id) {
-		o_hrf = DBManager.instance().getAllHRFs(id,id,false)[0];
-        o_previousHRF = DBManager.instance().getPreviousHRF(o_hrf.getHrfId());
+
+        if (DBManager.instance().isFirstStart()) {
+            o_hrf = new HRF(0);
+        } else {
+            final HRF[] hrfs = DBManager.instance().getAllHRFs(id, id, false);
+            o_hrf = hrfs[0];
+            o_previousHRF = DBManager.instance().getPreviousHRF(o_hrf.getHrfId());
+        }
 
         setCurrentPlayers(DBManager.instance().getSpieler(id));
         setFormerPlayers(DBManager.instance().getAllSpieler());
