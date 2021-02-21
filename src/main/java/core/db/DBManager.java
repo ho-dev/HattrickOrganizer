@@ -1557,7 +1557,7 @@ public class DBManager {
 				.getTrainingList();
 	}
 
-	public List<TrainingPerWeek> getTrainingList(Instant fromDate, Instant toDate) {
+	public List<TrainingPerWeek> getTrainingList(Timestamp fromDate, Timestamp toDate) {
 		return ((TrainingsTable) getTable(TrainingsTable.TABLENAME))
 				.getTrainingList(fromDate, toDate);
 	}
@@ -2721,7 +2721,7 @@ public class DBManager {
 		((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).storeTeamLogoInfo(teamID, logoURL, lastAccess);
 	}
 
-	public List<HRF> getHRFsSince(Instant since) {
+	public List<HRF> getHRFsSince(Timestamp since) {
 		return ((HRFTable)getTable(HRFTable.TABLENAME)).getHRFsSince(since);
 	}
 

@@ -123,7 +123,7 @@ public class HOVerwaltung {
 		// Make sure the training week list is up to date.
 		//TrainingManager.instance().refreshTrainingWeeks();
 
-		var hrfListe = DBManager.instance().getHRFsSince(hrfDate.toInstant());
+		var hrfListe = DBManager.instance().getHRFsSince(hrfDate);
 
 		int i=0;
 		long s1, s2, lSum = 0, mSum = 0;
