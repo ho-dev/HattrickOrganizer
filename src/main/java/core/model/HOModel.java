@@ -515,17 +515,13 @@ public class HOModel {
     }
 
     /**
-     * Determine the list of training weeks since previous Download id
+     * Determine the list of training weeks since previous Download
      *
      * @return list of training weeks between previous and current download (may be empty)
      */
     private List<TrainingPerWeek>  getTrainingWeeksSincePreviousDownload() {
-        var latestHRFs = DBManager.instance().getAllHRFs(getPreviousID(), getID(), true);
-        var fromDate = latestHRFs.length==2? latestHRFs[0].getDatum().toInstant():null;
-        var toDate = latestHRFs.length==2?latestHRFs[1].getDatum().toInstant():latestHRFs[0].getDatum().toInstant();
-        return DBManager.instance().getTrainingList(fromDate, toDate);
+        return DBManager.instance().getTrainingList(o_previousHRF.getDatum(), o_hrf.getDatum());
     }
-
 
     /**
      * Remove a Player

@@ -8,6 +8,7 @@ import core.util.DateTimeUtils;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -160,7 +161,7 @@ final class TrainingsTable extends AbstractTable {
 	}
 
 
-	public List<TrainingPerWeek> getTrainingList(Instant fromDate, Instant toDate) {
+	public List<TrainingPerWeek> getTrainingList(Timestamp fromDate, Timestamp toDate) {
 
 		final List<TrainingPerWeek> vTrainings = new ArrayList<>();
 
