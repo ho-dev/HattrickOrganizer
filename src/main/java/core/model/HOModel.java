@@ -628,16 +628,7 @@ public class HOModel {
     }
 
     public void storeTrainingsSinceLastDownload() {
-/*        var from = this.getBasics().getActivationDate();
-        if ( o_previousHRF != null){
-            from = o_previousHRF.getDatum();
-        }*/
         var recentTrainings = TrainingManager.instance().getRecentTrainings();
         DBManager.instance().saveTrainings(recentTrainings,false);
-
-        /*        if ( from.toInstant().plus(Duration.ofDays(7)).isBefore(this.getXtraDaten().getNextTrainingDate().toInstant()) ){
-            var twm = new TrainingWeekManager(firstTrainingDate, false, false);
-            twm.push2TrainingsTable();
-        }*/
     }
 }
