@@ -44,14 +44,20 @@ public class TrainingManager {
 					.map(TrainingPerWeek::getTrainingDate)
 					.max(Instant::compareTo).get();
 			recentTrainings = new TrainingWeekManager(previousTrainingDate.plus(1, ChronoUnit.DAYS), false, true);
-			//TODO: add entries in trainings from recentTrainings => should it be done from here ?
-			//TODO: the function DBManager.instance().saveTrainings() should refresh table in training tab
-			// DBManager.instance().saveTrainings(recentTrainings.getTrainingList(), false);
 
 			// Load next week training
 			nextWeekTraining = TrainingWeekManager.getNextWeekTraining(true);
 		}
     }
+
+
+    public void updateHistoricalTrainings(){
+    	// push trainings that took place since last update into Trainings table
+		recentTrainings.pushPastTrainings2TrainingsTable();
+		
+		// update historical trainings
+		historicalTrainings =  DBManager.instance().getTrainingList();
+	}
 
 
     public static TrainingManager instance() {
