@@ -8,6 +8,7 @@ import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
+import core.training.TrainingWeekManager;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.training.TrainingPerWeek;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -623,5 +625,19 @@ public class HOModel {
                 .filter(i->i.getMatchDate().after(date))
                 .sorted(Comparator.comparing(YouthTraining::getMatchDate))
                 .collect(Collectors.toList());
+    }
+
+    public void storeTrainingsSinceLastDownload() {
+/*        var from = this.getBasics().getActivationDate();
+        if ( o_previousHRF != null){
+            from = o_previousHRF.getDatum();
+        }*/
+        var recentTrainings = TrainingManager.instance().getRecentTrainings();
+        DBManager.instance().saveTrainings(recentTrainings,false);
+
+        /*        if ( from.toInstant().plus(Duration.ofDays(7)).isBefore(this.getXtraDaten().getNextTrainingDate().toInstant()) ){
+            var twm = new TrainingWeekManager(firstTrainingDate, false, false);
+            twm.push2TrainingsTable();
+        }*/
     }
 }
