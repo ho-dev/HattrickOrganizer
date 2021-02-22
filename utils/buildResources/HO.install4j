@@ -1130,6 +1130,22 @@ return true;</property>
       </excludedLaunchers>
       <jreBundle jreBundleSource="generated" />
     </unixInstaller>
+    <windows name="Windows (32bits)" id="1203" mediaFileName="HOSetup (32bits)-${compiler:HO_version}${compiler:versionType}" jreBitType="32">
+      <excludedLaunchers>
+        <launcher id="59" />
+        <launcher id="274" />
+        <launcher id="606" />
+      </excludedLaunchers>
+      <jreBundle usePack200="false" />
+    </windows>
+    <windows name="Windows (32bits) - JRE" id="1206" mediaFileName="HOSetup (32bits) -${compiler:HO_version}${compiler:versionType}-JRE">
+      <excludedLaunchers>
+        <launcher id="59" />
+        <launcher id="274" />
+        <launcher id="606" />
+      </excludedLaunchers>
+      <jreBundle usePack200="false" jreBundleSource="generated" />
+    </windows>
   </mediaSets>
   <buildIds buildAll="false">
     <mediaSet refId="64" />

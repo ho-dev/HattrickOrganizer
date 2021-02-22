@@ -148,7 +148,7 @@ final class TrainingsTable extends AbstractTable {
 					source = DBDataSource.getCode(rs.getInt("SOURCE"));
 
 					tpw = new TrainingPerWeek(trainingDate, training_type, training_intensity, staminaShare, trainingAssistantsLevel,
-							coachLevel, false, source);
+							coachLevel, source);
 
 					vTrainings.add(tpw);
 				}
@@ -196,7 +196,7 @@ final class TrainingsTable extends AbstractTable {
 					source = DBDataSource.getCode(rs.getInt("SOURCE"));
 
 					tpw = new TrainingPerWeek(trainingDate, training_type, training_intensity, staminaShare, trainingAssistantsLevel,
-							coachLevel, false, source);
+							coachLevel, source);
 
 					vTrainings.add(tpw);
 				}

@@ -140,7 +140,7 @@ public class TrainingWeekManager {
 				coachLevel = rs.getInt("TRAINER");
 				trainingAssistantLevel = rs.getInt("COTRAINER");
 				return new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel,
-						coachLevel, includeMatches, DBDataSource.HRF);
+						coachLevel, DBDataSource.HRF);
 			}
 		}
 		catch (Exception e) {
@@ -190,12 +190,12 @@ public class TrainingWeekManager {
 				{
 					var previousTraining = trainings.get(trainingsSize - 1);
 					var tpw = new TrainingPerWeek(currDate, previousTraining.getTrainingType(), previousTraining.getTrainingIntensity(), previousTraining.getStaminaShare(), previousTraining.getTrainingAssistantsLevel(), previousTraining.getCoachLevel(),
-							m_IncludeMatches, DBDataSource.GUESS);
+							DBDataSource.GUESS);
 					trainings.add(tpw);
 				}
 				else{
 					var tpw = new TrainingPerWeek(currDate, -1, 0, 0, 0, 0,
-							m_IncludeMatches, DBDataSource.GUESS);
+							DBDataSource.GUESS);
 					trainings.add(tpw);
 				}
 			}
@@ -247,7 +247,7 @@ public class TrainingWeekManager {
 				coachLevel = rs.getInt("TRAINER");
 				trainingAssistantLevel = rs.getInt("COTRAINER");
 				TrainingPerWeek tpw = new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel,
-						coachLevel, m_IncludeMatches, DBDataSource.HRF);
+						coachLevel, DBDataSource.HRF);
 				output.put(trainingDate, tpw);
 			}
 		}

@@ -7,12 +7,8 @@ import core.model.enums.DBDataSource;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
 import core.util.DateTimeUtils;
-import core.util.Helper;
 
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 
@@ -30,7 +26,6 @@ public class TrainingPerWeek  {
     private int o_CoachLevel;
     private int o_TrainingAssistantsLevel;
     private Instant o_TrainingDate;
-    private Boolean o_IncludeMatches;
     private MatchKurzInfo[] o_Matches;
     private MatchKurzInfo[] o_NTmatches;
     private DBDataSource o_Source;
@@ -40,14 +35,13 @@ public class TrainingPerWeek  {
      *
      * Constructor, matches are not passsed as parameters but are loaded at object creation
      */
-    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, boolean includeMatches, DBDataSource source) {
+    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, DBDataSource source) {
         o_TrainingDate = trainingDate;
         o_TrainingType = trainingType;
         o_TrainingIntensity = trainingIntensity;
         o_StaminaShare = staminaShare;
         o_CoachLevel = coachLevel;
         o_TrainingAssistantsLevel = trainingAssistantsLevel;
-        o_IncludeMatches = includeMatches;
         o_Source = source;
 
         // Loading matches played the week preceding the training date --------------------------
@@ -59,7 +53,7 @@ public class TrainingPerWeek  {
     }
 
     public TrainingPerWeek(Instant trainingDate, int training_type, int training_intensity, int staminaShare, int trainingAssistantsLevel, int coachLevel) {
-        this(trainingDate,training_type,training_intensity,staminaShare,trainingAssistantsLevel,coachLevel,false, DBDataSource.GUESS);
+        this(trainingDate,training_type,training_intensity,staminaShare,trainingAssistantsLevel,coachLevel, DBDataSource.GUESS);
     }
 
 

@@ -178,7 +178,9 @@ task media(type: com.install4j.gradle.Install4jTask) {
     projectFile = "${projectDir}/utils/buildResources/HO.install4j"
 
     // 60 -> Windows Setup
+    // 1203  -> Windows Setup (32 bits)
     // 485 -> Windows JRE
+    // 1206 -> Windows JRE (32 bits)
 
     // 64 -> Windows archive
     // 481 -> Windows archive JRE
@@ -197,7 +199,7 @@ task media(type: com.install4j.gradle.Install4jTask) {
     // 464  -> Linux rpm JRE
     // 471 -> Linux deb JRE
 
-    buildIds = [60, 485, 64, 481, 172, 473, 173, 477, 1062, 1064]
+    buildIds = [60, 485, 64, 481, 172, 473, 173, 477, 1062, 1064, 1203, 1206]
     String versionType
 
     switch(development_stage) {
