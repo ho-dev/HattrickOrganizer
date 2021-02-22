@@ -278,14 +278,7 @@ public class TrainingPanel extends JPanel {
 			TableColumn assitantsLevelColumn = getColumnModel().getColumn(5);
 			assitantsLevelColumn.setCellEditor(new DefaultCellEditor(jcbAssitantsTotalLevelEditor));
 			assitantsLevelColumn.setPreferredWidth(50);
-
-			// Disable column resize
-			getColumnModel().getColumn(0).setResizable(false);
-			getColumnModel().getColumn(1).setResizable(false);
-			getColumnModel().getColumn(2).setResizable(false);
-			getColumnModel().getColumn(3).setResizable(false);
-			getColumnModel().getColumn(4).setResizable(false);
-			getColumnModel().getColumn(5).setResizable(false);
+			
 		}
 	}
 }
