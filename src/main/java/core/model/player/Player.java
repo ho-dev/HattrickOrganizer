@@ -1761,6 +1761,10 @@ public class Player {
         };
     }
 
+    public float getSkillValue(int skill){
+        return getSub4Skill(skill) + getValue4Skill(skill);
+    }
+
     /**
      * set Skillvalue 4 skill
      *
@@ -1836,7 +1840,7 @@ public class Player {
 
         var trainingLength = wt.getTrainingLength(this, trainerlevel, trForPlayer.getTrainingWeek().getTrainingIntensity(), trForPlayer.getTrainingWeek().getStaminaShare(), trForPlayer.getTrainingWeek().getTrainingAssistantsLevel());
 
-        var trainingAlternativeFormula = wt.getTrainingAlternativeFormula(this, trainerlevel, trForPlayer, skill==wt.getPrimaryTrainingSkill());
+        var trainingAlternativeFormula = wt.getTrainingAlternativeFormula( getValue4Skill(skill), trForPlayer, skill==wt.getPrimaryTrainingSkill());
 
         HOLogger.instance().info(this.getClass(),
                 this.getLastName()+ "; " + PlayerSkill.toString(skill) +
@@ -2372,13 +2376,22 @@ public class Player {
                 for (var training : trainingWeeks) {
                     var trainingPerPlayer = calculateWeeklyTraining(training);
                     if ( trainingPerPlayer != null) {
-                        sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + (int) sub);
+                        sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + sub);
                         if (sub > 1) { // Skill up expected
                             if (valueAfterTraining > valueBeforeTraining) { // OK
                                 valueBeforeTraining++;
                                 sub -= 1.;
                             } else {                                        // No skill up
                                 sub = 0.99f;
+                            }
+                        }
+                        else if ( sub < 0 ){
+                            if ( valueAfterTraining < valueBeforeTraining){ // OK
+                                valueBeforeTraining--;
+                                sub += 1.;
+                            }
+                            else {                                          // No skill down
+                                sub = 0;
                             }
                         }
                     }
@@ -2390,8 +2403,6 @@ public class Player {
             this.setSubskill4PlayerSkill(skill, sub);
         }
     }
-
-
 
     private int getValue4Skill(Skills.HTSkillID skill) {
         return getValue4Skill(skill.convertToPlayerSkill());

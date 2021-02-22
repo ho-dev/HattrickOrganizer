@@ -321,7 +321,7 @@ public abstract class WeeklyTrainingType {
 	static double[] coachKoeff = {0.734,0.834,0.92,1,1.04};
 	static double[] assistantKoeff ={1,1.035,1.07,1.105,1.14,1.175,1.21,1.245,1.28,1.315,1.35};
 
-	public double getTrainingAlternativeFormula(Player player, int value4Skill, TrainingPerPlayer trForPlayer, boolean isPrimarySkill) {
+	public double getTrainingAlternativeFormula(int value4Skill, TrainingPerPlayer trForPlayer, boolean isPrimarySkill) {
 		//return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), trainerlevel, intensity, stamina, value4Skill, staff);
 
 		/*
@@ -419,7 +419,7 @@ public abstract class WeeklyTrainingType {
 		35 - 0.741
 		*/
 
-		var age = player.getAlter();
+		var age = trForPlayer.getPlayer().getAlter();
 		var factorAge = Math.pow(.9835, age-17);
 
 		/*

@@ -211,7 +211,9 @@ public class TrainingPerPlayer  {
 		return experienceSub;
 	}
 
-    public float calcSubskillIncrement(int skill, int skillValue) {
+    public float calcSubskillIncrement(int skill, float skillValueBeforeTraining) {
+
+		int skillValue = (int)skillValueBeforeTraining;
 		float ret = 0;
 
 		/* Time to perform skill drop */
@@ -219,34 +221,25 @@ public class TrainingPerPlayer  {
 			ret -= SkillDrops.instance().getSkillDrop(skillValue, this._Player.getAlter(), skill) / 100;
 		}
 
-		//var trainingLength = wt.getTrainingLength(this, trainerlevel, trForPlayer.getTrainingWeek().getTrainingIntensity(), trForPlayer.getTrainingWeek().getStaminaPart(), trForPlayer.getTrainingWeek().getTrainingAssistantsLevel());
-
-		var wt = WeeklyTrainingType.instance( this._TrainingWeek.getTrainingType());
-		if ( skill == wt.getPrimaryTrainingSkill()) {
-			ret += wt.getTrainingAlternativeFormula(_Player, skillValue, this, true);
-
-			HOLogger.instance().info(this.getClass(),
-					_Player.getLastName()+ "; " + PlayerSkill.toString(skill) +
-							"; Age=" + _Player.getAlter() +
-							"; Skill=" + skillValue +
-							"; Minutes=" + this.getTrainingPair().getTrainingDuration().getFullTrainingMinutes() +
-							";" + this.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes() +
-							";" + this.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes() +
-							"; training=" + ret);
-		}
-		else if ( skill == wt.getSecondaryTrainingSkill()){
-			ret += wt.getTrainingAlternativeFormula(_Player, skillValue, this, false);
-			HOLogger.instance().info(this.getClass(),
-					_Player.getLastName()+ "; " + PlayerSkill.toString(skill) +
-							"; Age=" + _Player.getAlter() +
-							"; Skill=" + skillValue +
-							"; Minutes=" + this.getTrainingPair().getTrainingDuration().getFullTrainingMinutes() +
-							";" + this.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes() +
-							";" + this.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes() +
-							"; training=" + ret);
+		var wt = WeeklyTrainingType.instance(this._TrainingWeek.getTrainingType());
+		if (skill == wt.getPrimaryTrainingSkill()) {
+			ret += wt.getTrainingAlternativeFormula(skillValue, this, true);
+		} else if (skill == wt.getSecondaryTrainingSkill()) {
+			ret += wt.getTrainingAlternativeFormula( skillValue, this, false);
 		}
 
 		if (ret > 1) ret = 1; // limit 1
+
+		HOLogger.instance().info(this.getClass(),
+				_Player.getLastName() +
+						"; Age=" + _Player.getAlter() +
+						"; " + PlayerSkill.toString(skill) +
+						"=" + skillValueBeforeTraining +
+						"; Minutes=" + this.getTrainingPair().getTrainingDuration().getFullTrainingMinutes() +
+						";" + this.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes() +
+						";" + this.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes() +
+						"; " + wt._Name + "training=" + ret
+		);
 
 		return ret;
 	}

@@ -298,4 +298,12 @@ public class MatchLineup {
             this.homeTeam.setMatchDetails(details);
         }
     }
+
+    public boolean isHomeTeamLoaded() {
+        return this.homeTeam != null;
+    }
+
+    public boolean isGuestTeamLoaded() {
+        return this.guestTeam != null;
+    }
 }

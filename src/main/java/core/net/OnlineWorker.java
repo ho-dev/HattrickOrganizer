@@ -648,7 +648,7 @@ public class OnlineWorker {
 	}
 
 	/**
-	 * Downlad match lineup
+	 * Download match lineup
 	 *
 	 * @param matchId
 	 * 			Match Id
@@ -679,13 +679,13 @@ public class OnlineWorker {
 
 			// Merge the two
 			if ((lineUp2 != null)) {
-				if (lineUp1.getHomeTeam() == null)
+				if (!lineUp1.isHomeTeamLoaded())
 					lineUp1.setHomeTeam(lineUp2.getHomeTeam());
-				else if (lineUp1.getGuestTeam() == null)
+				else if (!lineUp1.isGuestTeamLoaded())
 					lineUp1.setGuestTeam(lineUp2.getGuestTeam());
 			} else {
 				// Get the 2nd lineup
-				if (lineUp1.getHomeTeam() == null) {
+				if (!lineUp1.isHomeTeamLoaded()) {
 					lineUp2 = downloadMatchLineup(matchId, lineUp1.getHomeTeamId(), matchType);
 					if (lineUp2 != null)
 						lineUp1.setHomeTeam(lineUp2.getHomeTeam());

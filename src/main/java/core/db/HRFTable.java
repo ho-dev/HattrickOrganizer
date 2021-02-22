@@ -268,10 +268,10 @@ public final class HRFTable extends AbstractTable {
 		return allHrfs;
 	}
 
-	public List<HRF> getHRFsSince(Instant from) {
+	public List<HRF> getHRFsSince(Timestamp from) {
 		var liste = new ArrayList<HRF>();
 		ResultSet rs;
-		String sql = "SELECT * FROM " + getTableName() + " WHERE Datum>=" + from + " ORDER BY Datum ASC";
+		String sql = "SELECT * FROM " + getTableName() + " WHERE Datum>='" + from + "' ORDER BY Datum ASC";
 		rs = adapter.executeQuery(sql);
 
 		try {
