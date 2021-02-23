@@ -19,7 +19,6 @@ import javax.swing.ScrollPaneConstants;
 
 public class AutoFilterPanel extends JPanel implements ActionListener, KeyListener {
     //~ Instance fields ----------------------------------------------------------------------------
-	private static final long serialVersionUID = 980373632967180587L;
 	private JCheckBox awayGames = new JCheckBox();
     private JCheckBox cup = new JCheckBox();
     private JCheckBox defeat = new JCheckBox();

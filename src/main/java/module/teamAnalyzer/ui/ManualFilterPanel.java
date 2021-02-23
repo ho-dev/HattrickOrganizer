@@ -4,14 +4,13 @@ import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
 import core.model.match.MatchType;
 import core.net.OnlineWorker;
+import core.util.Helper;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.MatchManager;
 import module.teamAnalyzer.ui.model.UiFilterTableModel;
 import module.teamAnalyzer.vo.Match;
-
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -20,7 +19,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,20 +26,14 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
 
-/**
- *
- * @author Draghetto
- */
 public class ManualFilterPanel extends JPanel {
 
-	private static final long serialVersionUID = -9029680013941604647L;
-
 	private static final Vector<String> COLUMN_NAMES = new Vector<String>(Arrays.asList(new String[] { "",
-			HOVerwaltung.instance().getLanguageString("RecapPanel.Game"),
-			HOVerwaltung.instance().getLanguageString("Type"),
-			HOVerwaltung.instance().getLanguageString("ls.match.result"),
-			HOVerwaltung.instance().getLanguageString("Week"),
-			HOVerwaltung.instance().getLanguageString("Season"), "", "" }));
+			Helper.getTranslation("RecapPanel.Game"),
+			Helper.getTranslation("Type"),
+			Helper.getTranslation("ls.match.result"),
+			Helper.getTranslation("Week"),
+			Helper.getTranslation("Season"), "", "" }));
 
 	List<Match> availableMatches = new ArrayList<Match>();
 	private DefaultTableModel tableModel;
@@ -68,7 +60,7 @@ public class ManualFilterPanel extends JPanel {
 			List<Object> matchIds = new ArrayList<Object>();
 			Match element = iter.next();
 
-			rowData = new Vector<Object>();
+			rowData = new Vector<>();
 
 			boolean isAvailable = DBManager.instance().isMatchInDB(element.getMatchId());
 			boolean isSelected = TeamAnalyzerPanel.filter.getMatches().contains("" + element.getMatchId());
@@ -123,7 +115,7 @@ public class ManualFilterPanel extends JPanel {
 	 * Set a match filter.
 	 */
 	protected void setFilter() {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		int i = 0;
 
 		for (Iterator<Match> iter = availableMatches.iterator(); iter.hasNext();) {

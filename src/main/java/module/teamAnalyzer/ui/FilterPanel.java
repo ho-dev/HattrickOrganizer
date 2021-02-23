@@ -1,4 +1,3 @@
-// %3467106003:hoplugins.teamAnalyzer.ui%
 package module.teamAnalyzer.ui;
 
 import core.gui.comp.panel.ImagePanel;
@@ -8,13 +7,11 @@ import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.TeamManager;
 import module.teamAnalyzer.vo.Team;
-
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -26,7 +23,6 @@ import javax.swing.JRadioButton;
  */
 public class FilterPanel extends JPanel implements ActionListener {
 
-	private static final long serialVersionUID = -2795086705715618810L;
 	private static final String CARD_AUTOMATIC = "AUTOMATIC CARD";
 	private static final String CARD_MANUAL = "MANUAL CARD";
 	private static boolean teamComboUpdating = false;
