@@ -195,7 +195,6 @@ public class Helper {
     }
 
 
-
     /**
      * Überprüft den Inhalt eines Textfields, ob der Wert ein int ist, ansonsten setzt er den Wert
      * auf 0

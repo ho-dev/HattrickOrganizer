@@ -13,7 +13,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ## Highlights
   - complete makeover of the statistics module (#788)
   - improving consistency of dark themes
-- preview of new module Youth academy (#367) 
+  - preview of new module Youth academy (#367) 
       
 
 
@@ -33,31 +33,31 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 
 ### Team Analyser
-* tuning simulation (#865)
+  - tuning simulation (#865)
  
 
 ### Rating
-
+  - new default model
 
 
 ### Matches
 
 
 ### Lineup
-* Match orders remove substitution limit (#856)
+  - Match orders remove substitution limit (#856)
+  - complete revamp of lineup panel
 
 
 ### IFA
 
 
 ### Training
-
+  - many buf fixes
 
 
 ### Misc
-
-    - Fix issue with user preferences (incl. OAuth access token) not
-    being saved upon exiting HO. (#811)
+  - fix issue with user preferences (incl. OAuth access token) not being saved upon exiting HO. (#811)
+  - improved handling of timezone accross the app
 
 
 ### League
