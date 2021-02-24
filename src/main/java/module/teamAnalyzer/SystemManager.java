@@ -136,10 +136,8 @@ public class SystemManager {
 		updating = true;
 		List<MatchDetail> matchDetails = MatchManager.getMatchDetails();
 		if (MatchPopulator.getAnalyzedMatch().size() > 0) {
-			if (getActiveTeamId() != getReportedTeamId() || teamReport.isEmpty()) {
 				teamReport = new TeamReport(matchDetails);
 				setReportedTeamId(getActiveTeamId());
-			}
 		} else {
 			teamReport = null;
 		}
