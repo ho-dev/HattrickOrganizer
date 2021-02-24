@@ -14,6 +14,8 @@ import core.model.match.MatchKurzInfo;
 import core.model.match.SourceSystem;
 import core.model.player.Player;
 import core.net.login.ProxyDialog;
+import core.training.TrainingManager;
+import core.training.TrainingWeekManager;
 import core.util.HOLogger;
 
 import java.awt.BorderLayout;
@@ -332,6 +334,8 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		}
 
 		DBManager.instance().updateLatestData();
+		model.storeTrainingsSinceLastDownload();
 		model.calcSubskills();
+
 	}
 }
