@@ -21,7 +21,7 @@ public class HTDatetime {
     private static final DateTimeFormatter cl_DateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(cl_HTzoneID);
 
     private static ZoneId cl_UserSystemZoneID = ZoneId.systemDefault();
-    private static ZoneId cl_UserZoneID;
+    private static ZoneId cl_UserZoneID = DateTimeUtils.fromHash(core.model.UserParameter.instance().TimeZoneDifference);
     private static int cl_UserSeasonOffsetDefault = HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
     private static int cl_UserSeasonOffset;
     private final static Instant cl_LastUpdate = HOVerwaltung.instance().getModel().getBasics().getDatum().toInstant();
@@ -76,7 +76,7 @@ public class HTDatetime {
      * @param sDateTime as of "yyyy-MM-dd HH:mm:ss"
      **/
     public HTDatetime(String sDateTime) {
-        this(sDateTime, cl_UserSystemZoneID, cl_UserSeasonOffsetDefault);
+        this(sDateTime, cl_UserZoneID, cl_UserSeasonOffsetDefault);
     }
 
 
@@ -84,7 +84,13 @@ public class HTDatetime {
      * @param sDateTime as of "yyyy-MM-dd HH:mm:ss"
      **/
     public HTDatetime(String sDateTime, ZoneId zoneID, Integer seasonOffset) {
-        cl_UserZoneID = zoneID;
+        if (zoneID == null){
+            HOLogger.instance().error(getClass(), "ZoneID could not be identified, reverting to System defaults !");
+            cl_UserZoneID = cl_UserSystemZoneID;
+        }
+        else {
+            cl_UserZoneID = zoneID;
+        }
         cl_UserSeasonOffset = seasonOffset;
         m_sHT_CET = cleanDateTimeString(sDateTime);
         LocalDateTime _htDateTimeNonLocalized = LocalDateTime.parse(m_sHT_CET, cl_DatetimeFormatter);

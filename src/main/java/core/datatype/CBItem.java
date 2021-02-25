@@ -33,7 +33,6 @@ public class CBItem implements ComboItem {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
