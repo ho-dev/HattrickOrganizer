@@ -32,7 +32,7 @@ final class DBConfigUpdater {
 		 */
 
 		if (currentConfigVersion < 1.436) {
-			HOLogger.instance().log(DBConfigUpdater.class, "DB config version " + configVersion + " is too old");
+			HOLogger.instance().log(DBConfigUpdater.class, "DB config version " + currentConfigVersion + " is too old");
 			try {
 				JOptionPane.showMessageDialog(null,
 						"DB is too old.\nPlease update first to HO! 3.0", "Error",

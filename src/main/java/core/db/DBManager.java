@@ -50,8 +50,9 @@ import java.util.*;
  */
 public class DBManager {
 
-	/** database version */
+	/** database versions */
 	private static final int DBVersion = 500; // HO 5.0 version
+	private static final double DBConfigVersion = 5d; // HO 5.0 version
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
@@ -223,7 +224,7 @@ public class DBManager {
 	 This method is called
 	 */
 	public void updateConfig(){
-		DBConfigUpdater.updateDBConfig(DBVersion);
+		DBConfigUpdater.updateDBConfig(DBConfigVersion);
 	}
 
 
