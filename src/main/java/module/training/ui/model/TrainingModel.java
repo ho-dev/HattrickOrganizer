@@ -213,25 +213,29 @@ public class TrainingModel {
 			for (var entry : _futureTrainings) {
 				if (!entry.getTrainingDate().isBefore(nextTrainingDate)) {
 					newfutureTrainings.add(entry);
+					if(newfutureTrainings.size() == requiredNBentries){
+						break;
+					}
 				}
 			}
 
-			TrainingPerWeek latestTraining = optionallastTraining.get();
+			if(newfutureTrainings.size() < requiredNBentries) {
+				// Adding new entries
+				TrainingPerWeek latestTraining = optionallastTraining.get();
+				int nbWeek = 1;
+				ZonedDateTime zdtFutureTrainingDate;
 
-			// Adding new entries
-			int nbWeek = 1;
-			ZonedDateTime zdtFutureTrainingDate;
+				HTDatetime oTrainingDate = new HTDatetime(latestTraining.getTrainingDate());
+				ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
+				TrainingPerWeek futureTraining;
 
-			HTDatetime oTrainingDate = new HTDatetime(latestTraining.getTrainingDate());
-			ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
-			TrainingPerWeek futureTraining;
-
-			while (newfutureTrainings.size() < requiredNBentries) {
-				zdtFutureTrainingDate = zdtrefDate.plus(nbWeek * 7, ChronoUnit.DAYS);
-				futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), latestTraining.getTrainingType(), latestTraining.getTrainingIntensity(),
-						latestTraining.getStaminaShare(), latestTraining.getTrainingAssistantsLevel(), latestTraining.getCoachLevel());
-				newfutureTrainings.add(futureTraining);
-				nbWeek++;
+				while (newfutureTrainings.size() < requiredNBentries) {
+					zdtFutureTrainingDate = zdtrefDate.plus(nbWeek * 7, ChronoUnit.DAYS);
+					futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), latestTraining.getTrainingType(), latestTraining.getTrainingIntensity(),
+							latestTraining.getStaminaShare(), latestTraining.getTrainingAssistantsLevel(), latestTraining.getCoachLevel());
+					newfutureTrainings.add(futureTraining);
+					nbWeek++;
+				}
 			}
 
 		}
