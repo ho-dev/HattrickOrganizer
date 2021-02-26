@@ -5,6 +5,7 @@ import core.datatype.CBItem;
 import core.training.TrainingPerWeek;
 import core.util.HTDatetime;
 
+
 import java.util.List;
 
 
@@ -13,14 +14,17 @@ import java.util.List;
  */
 public class FutureTrainingsTableModel extends AbstractTrainingsTableModel {
 
+
 	private final TrainingModel trainingModel;
 
 	public FutureTrainingsTableModel(TrainingModel _trainingModel) {
-		super();
+		super(module.training.TrainingType.FUTURE_TRAINING);
 		trainingModel = _trainingModel;
 	}
 
-
+	public TrainingModel getTrainingModel() {
+		return trainingModel;
+	}
 
 	/**
 	 * Populate the table with the future training stored in the db, if not

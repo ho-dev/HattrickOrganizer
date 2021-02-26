@@ -183,7 +183,7 @@ public class TrainingPanel extends JPanel {
 					TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
 				int modelRow = convertRowIndexToModel(row);
-				TrainingPerWeek tpw = model.getFutureTrainings().get(UserParameter.instance().futureWeeks - modelRow- 1);
+				TrainingPerWeek tpw = model.getFutureTrainings().get(modelRow);
 				var source = tpw.getSource();
 				switch (source) {
 					case MANUAL -> c.setForeground(ThemeManager.getColor(HOColorName.BLUE));
@@ -200,7 +200,7 @@ public class TrainingPanel extends JPanel {
 
 				try {
 					int modelRow = convertRowIndexToModel(rowIndex);
-					TrainingPerWeek tpw = model.getFutureTrainings().get(UserParameter.instance().futureWeeks - modelRow- 1);
+					TrainingPerWeek tpw = model.getFutureTrainings().get(modelRow);
 					var source = tpw.getSource();
 					tip = switch (source) {
 						case MANUAL -> Helper.getTranslation("ls.module.training.manual_entry.tt");

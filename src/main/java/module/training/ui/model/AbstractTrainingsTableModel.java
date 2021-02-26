@@ -2,9 +2,11 @@ package module.training.ui.model;
 
 import core.datatype.CBItem;
 import core.db.DBManager;
+import core.gui.RefreshManager;
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.util.Helper;
+import module.training.TrainingType;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -17,12 +19,14 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
 	protected List<TrainingPerWeek> o_TrainingsPerWeek;
     protected Object[][]o_Data;
     private String[] o_ColumnNames;
+    private TrainingType o_trainingType;
 
 
     /**
      * Creates a new AbstractTrainingsTableModel object.
      */
-    public AbstractTrainingsTableModel() {
+    public AbstractTrainingsTableModel(TrainingType _trainingType) {
+        o_trainingType = _trainingType;
         o_Data = new Object[][]{};
         o_ColumnNames = new String[6];
         o_ColumnNames[0] = Helper.getTranslation("ls.youth.player.training.date");
@@ -47,7 +51,14 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
 
         o_Data[iRow][iCol] = value;
 
-        TrainingPerWeek tpw = o_TrainingsPerWeek.get(getRowCount() - iRow - 1);
+        TrainingPerWeek tpw;
+
+        if(o_trainingType == TrainingType.PAST_TRAINING) {
+            tpw = o_TrainingsPerWeek.get(getRowCount() - iRow - 1);
+        }
+        else{
+            tpw = o_TrainingsPerWeek.get(iRow);
+        }
 
         if (iCol == 1) {
             CBItem sel = (CBItem) value;
@@ -63,8 +74,15 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
         }
 
         tpw.setSource(DBDataSource.MANUAL);
-        DBManager.instance().saveTraining(tpw, true);
         fireTableCellUpdated(iRow, iCol);
+
+        if(o_trainingType == TrainingType.PAST_TRAINING) {
+            DBManager.instance().saveTraining(tpw, true);
+        }
+        else{
+            ((FutureTrainingsTableModel)this).getTrainingModel().saveFutureTraining(tpw);
+            RefreshManager.instance().doRefresh();
+        }
     }
 
 

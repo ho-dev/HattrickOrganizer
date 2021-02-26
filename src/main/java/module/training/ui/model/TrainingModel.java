@@ -111,13 +111,21 @@ public class TrainingModel {
 		boolean needsReload = false;
 		for (TrainingPerWeek training : trainings) {
 			DBManager.instance().saveFutureTraining(training);
-			if (!getFutureTrainings().contains(training)) {
+			if (!getFutureTrainings().contains(training)) {  //TODO: check if this check is really necessary
 				needsReload = true;
 			}
 		}
 
 		if (needsReload) {
-			this.futureTrainings = null;
+			futureTrainings = null;
+		}
+		fireModelChanged(ModelChange.FUTURE_TRAINING);
+	}
+
+	public void saveFutureTraining(TrainingPerWeek training) {
+		DBManager.instance().saveFutureTraining(training);
+		if (!getFutureTrainings().contains(training)) {  //TODO: check if this check is really necessary
+			futureTrainings = null;
 		}
 		fireModelChanged(ModelChange.FUTURE_TRAINING);
 	}
