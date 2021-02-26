@@ -1867,7 +1867,7 @@ public class Player {
         setSubskill4PlayerSkill(skill, Math.min(0.99f, getSub4SkillAccurate(skill) + gain));
     }
 
-    /**
+    /*
      * Calculates training benefit, and updates subskill for the player.
      * Used when there is only 1 week of training to be calculated.
      *
@@ -2129,7 +2129,7 @@ public class Player {
         return core.util.Helper.round(es, nb_decimals);
     }
 
-    /**
+    /*
      * Copy old player offset status.
      * Used by training, checks for skillup and resets subskill in that case
      *
@@ -2162,7 +2162,6 @@ public class Player {
             setValue4Skill(skillType, old.getValue4Skill(skillType));
         }
     }
-
 
     /**
      * Performs the subskill reset needed at skill drop.
@@ -2314,19 +2313,21 @@ public class Player {
      * Previously saved trainings of this interval are overwritten or deleted.
      *  @param prio new training priority for the given time interval
      * @param fromWeek first week with new training priority
-     * @param toWeek last week with new training priority
+     * @param toWeek last week with new training priority, null means open end
      */
     public void setFutureTraining(FuturePlayerTraining.Priority prio, Instant fromWeek, Instant toWeek) {
         var removeIntervals = new ArrayList<FuturePlayerTraining>();
-        for ( var t : getFuturePlayerTrainings() ){
-            if ( t.cut(HattrickDate.fromInstant(fromWeek), HattrickDate.fromInstant(toWeek)) ||
-                    t.cut(new HattrickDate(0,0), HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())){
+        var from = HattrickDate.fromInstant(fromWeek);
+        var to = toWeek != null ? HattrickDate.fromInstant(toWeek) : null;
+        for (var t : getFuturePlayerTrainings()) {
+            if (t.cut(from, to) ||
+                    t.cut(new HattrickDate(0, 0), HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())) {
                 removeIntervals.add(t);
             }
         }
         futurePlayerTrainings.removeAll(removeIntervals);
-        if ( prio != null){
-            futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerID(), prio, HattrickDate.fromInstant(fromWeek), HattrickDate.fromInstant(toWeek)));
+        if (prio != null) {
+            futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerID(), prio, from, to));
         }
         DBManager.instance().storeFuturePlayerTrainings(this.getPlayerID(), futurePlayerTrainings);
     }
