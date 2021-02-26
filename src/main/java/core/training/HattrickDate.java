@@ -48,7 +48,7 @@ public class HattrickDate {
     /**
      * Set Hattrick Season
      *
-     * @param iSeason
+     * @param iSeason hattrick season
      */
     public final void setSeason(int iSeason) {
         this._Season = iSeason;
@@ -67,7 +67,7 @@ public class HattrickDate {
     /**
      * Set Hattrick week
      *
-     * @param iWeek
+     * @param iWeek hattrick week [1..16]
      */
     public final void setWeek(int iWeek) {
         this._Week = iWeek;
@@ -90,12 +90,11 @@ public class HattrickDate {
      */
     @Override
 	public final String toString() {
-        final StringBuffer buffer = new StringBuffer();
-        buffer.append("Skillup[");
-        buffer.append("week = " + _Week);
-        buffer.append(", season = " + _Season);
-        buffer.append("]");
-        return buffer.toString();
+        String buffer = "Skillup[" +
+                "week = " + _Week +
+                ", season = " + _Season +
+                "]";
+        return buffer;
     }
 
     /**
@@ -173,8 +172,7 @@ public class HattrickDate {
     public Instant toInstant()
     {
         var val = getOrigin();
-        val.plus(Duration.ofDays((this._Season-1)*112 + (this._Week-1)*7));
-        return val;
+        return val.plus(Duration.ofDays((this._Season-1)* 112L + (this._Week-1)* 7L));
     }
 
     public static HattrickDate fromInstant(Instant date) {
