@@ -1,33 +1,26 @@
-// %1303949933:hoplugins.trainingExperience.ui%
 package module.training.ui;
 
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.model.HOVerwaltung;
 import core.model.player.ISkillChange;
-import module.training.ui.model.ModelChange;
-import module.training.ui.model.ModelChangeListener;
+import core.util.Helper;
 import module.training.ui.model.SkillupTableModel;
 import module.training.ui.model.TrainingModel;
 import module.training.ui.renderer.SkillupTableRenderer;
-
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
-/**
- * Panel of past skillups table ("Training History")
- */
-public class SkillupPanel extends LazyPanel {
 
-	private static final long serialVersionUID = 57377377617909870L;
+public class TrainingDevelopmentPanel extends LazyPanel {
+
 	private SkillupTable table;
 	private TrainingModel model;
 
@@ -36,7 +29,7 @@ public class SkillupPanel extends LazyPanel {
 	/**
 	 * Creates a new SkillupPanel object.
 	 */
-	public SkillupPanel(TrainingModel model) {
+	public TrainingDevelopmentPanel(TrainingModel model) {
 		this.model = model;
 	}
 
@@ -54,13 +47,7 @@ public class SkillupPanel extends LazyPanel {
 	}
 
 	private void addListeners() {
-		this.model.addModelChangeListener(new ModelChangeListener() {
-
-			@Override
-			public void modelChanged(ModelChange change) {
-				setNeedsRefresh(true);
-			}
-		});
+		this.model.addModelChangeListener(change -> setNeedsRefresh(true));
 	}
 
 	/**
@@ -69,7 +56,7 @@ public class SkillupPanel extends LazyPanel {
 	private void loadFromModel() {
 		List<ISkillChange> skillups = new ArrayList<ISkillChange>();
 		if (this.model.getActivePlayer() != null) {
-			this.title.setText(HOVerwaltung.instance().getLanguageString("TrainingHistory")+ " " + this.model.getActivePlayer().getFullName());
+			this.title.setText(Helper.getTranslation("ls.module.training.training_development")+ " " + this.model.getActivePlayer().getFullName());
 			skillups.addAll(this.model.getSkillupManager().getTrainedSkillups());
 			skillups.addAll(this.model.getFutureTrainingManager().getFutureSkillups());
 			Collections.reverse(skillups);
@@ -109,8 +96,7 @@ public class SkillupPanel extends LazyPanel {
 		JPanel headerPanel = new ImagePanel();
 		headerPanel.setOpaque(false);
 
-		title = new JLabel(HOVerwaltung.instance().getLanguageString("TrainingHistory"),
-				SwingConstants.CENTER);
+		title = new JLabel(" ", SwingConstants.CENTER);
 
 		title.setOpaque(false);
 		headerPanel.add(title, BorderLayout.CENTER);

@@ -1,4 +1,3 @@
-// %776182880:hoplugins.trainingExperience.ui%
 package module.training.ui;
 
 import core.gui.RefreshManager;
@@ -12,26 +11,18 @@ import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.TrainingModel;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
-
 import javax.swing.*;
 import javax.swing.table.*;
 
-/**
- * Recap Panel when future preview of skillups is shown ("Prediction" tab,
- * "Training Recap" table").
- *
- * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
- */
-public class TrainingRecapPanel extends LazyImagePanel  {
 
-    private static final long serialVersionUID = 7240288702397251461L;
+public class TrainingPredictionPanel extends LazyImagePanel  {
+
     private static final int fixedColumns = 5;
     private TrainingRecapTable recapTable;
     private final TrainingModel model;
@@ -42,7 +33,7 @@ public class TrainingRecapPanel extends LazyImagePanel  {
     /**
      * Creates a new TrainingRecapPanel object.
      */
-    public TrainingRecapPanel(TrainingModel model) {
+    public TrainingPredictionPanel(TrainingModel model) {
         this.model = model;
     }
 
@@ -131,7 +122,7 @@ public class TrainingRecapPanel extends LazyImagePanel  {
 
         setOpaque(false);
 
-        JLabel title = new JLabel(HOVerwaltung.instance().getLanguageString("Recap"),
+        JLabel title = new JLabel(HOVerwaltung.instance().getLanguageString("ls.module.training.training_prediction"),
                 SwingConstants.CENTER);
 
         title.setOpaque(false);

@@ -5,11 +5,6 @@ import core.db.DBManager;
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.util.Helper;
-
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 

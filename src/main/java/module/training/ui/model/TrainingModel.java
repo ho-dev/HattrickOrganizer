@@ -1,11 +1,9 @@
 package module.training.ui.model;
 
-import core.constants.TrainingType;
 import core.db.DBManager;
 import core.model.StaffMember;
 import core.model.StaffType;
 import core.model.UserParameter;
-import core.model.enums.DBDataSource;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.TrainingManager;
@@ -14,7 +12,6 @@ import core.training.WeeklyTrainingType;
 import core.util.HOLogger;
 import core.util.HTDatetime;
 import module.training.PastTrainingManager;
-
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -152,12 +149,11 @@ public class TrainingModel {
 	private void resetFutureTrainings_() {
 		this.futureTrainings = null;
 		this.futureTrainingManager = null;
-		//this.staff.clear();
 	}
 
 	private void fireModelChanged(ModelChange change) {
-		for (int i = this.listeners.size() - 1; i >= 0; i--) {
-			this.listeners.get(i).modelChanged(change);
+		for (int i = listeners.size() - 1; i >= 0; i--) {
+			listeners.get(i).modelChanged(change);
 		}
 	}
 
