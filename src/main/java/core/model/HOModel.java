@@ -423,24 +423,22 @@ public class HOModel {
     }
 
     /**
-     * Returns Trainer informatin
+     * Returns Trainer information
      */
     public final Player getTrainer() {
-		Player trainer = null;
-    	for ( Player p : getCurrentPlayers()){
-			if ( p.isTrainer()){
-				if (trainer == null || p.getTrainerSkill() > trainer.getTrainerSkill()){
-					trainer = p;
-				}
-			}
-		}
+        Player trainer = null;
+        for (Player p : getCurrentPlayers()) {
+            if (p.isTrainer()) {
+                trainer = p;
+                break;
+            }
+        }
 
         // Nt team protection, they may have no coach:
-        if (trainer == null)
-        {
-        	trainer = new Player();
-        	trainer.setTrainerSkill(7);
-        	trainer.setTrainerTyp(2); // neutral;
+        if (trainer == null) {
+            trainer = new Player();
+            trainer.setTrainerSkill(7);
+            trainer.setTrainerTyp(2); // neutral;
         }
 
         return trainer;
