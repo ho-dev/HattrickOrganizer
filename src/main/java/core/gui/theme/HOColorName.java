@@ -170,6 +170,8 @@ public interface HOColorName {
 	String TRAINING_FULL_BG = "training.full.bg";
 	String TRAINING_PARTIAL_BG = "training.partial.bg";
 	String TRAINING_OSMOSIS_BG = "training.osmosis.bg";
+	String TRAINING_ICON_COLOR_1 = "training_icon_color_1";
+	String TRAINING_ICON_COLOR_2  = "training_icon_color_2";
 
 	// TS Forecast
 	String TSFORECAST_ALT_COLOR = "tsforecast.alt.color";

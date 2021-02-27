@@ -91,6 +91,8 @@ public class SolarizedDarkTheme extends DarkTheme {
 
             //Training
             ThemeManager.instance().put(HOColorName.TRAINING_BIRTHDAY_BG, new Color(66, 66, 24));
+            ThemeManager.instance().put(HOColorName.TRAINING_ICON_COLOR_1, defaults.getColor("Label.foreground"));
+            ThemeManager.instance().put(HOColorName.TRAINING_ICON_COLOR_2, defaults.getColor("background").brighter());
 
             // Statistics
             ThemeManager.instance().put(HOColorName.STAT_PANEL_BG, defaults.getColor("background").brighter());
