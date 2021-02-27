@@ -163,7 +163,7 @@ public class YouthPlayer {
 
     public int getCanBePromotedInAtDate(long date) {
         long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-        long diff = (date - hrftime) / (1000 * 60 * 60 * 24);
+        long diff = (date - hrftime + 500*60*60*24) / (1000 * 60 * 60 * 24);
         return max(0, canBePromotedIn - (int) diff);
     }
 
@@ -857,7 +857,7 @@ public class YouthPlayer {
                     }
                 }
             }
-            else {
+            if (skill17 == null) {
                 skill17 = this.currentSkills;
             }
             for ( var skill: skill17.values()){

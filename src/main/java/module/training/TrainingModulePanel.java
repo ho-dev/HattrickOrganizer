@@ -13,7 +13,6 @@ import module.training.ui.EffectPanel;
 import module.training.ui.OutputPanel;
 import module.training.ui.PlayerDetailPanel;
 import module.training.ui.TrainingDevelopmentPanel;
-import module.training.ui.StaffPanel;
 import module.training.ui.TrainingPanel;
 import module.training.ui.TrainingPredictionPanel;
 import module.training.ui.comp.DividerListener;
@@ -31,7 +30,7 @@ public class TrainingModulePanel extends LazyPanel {
 	@Override
 	protected void initialize() {
 		this.model = new TrainingModel();
-		setStaffInTrainingModel(this.model);
+		//setStaffInTrainingModel(this.model);
 		initComponents();
 		registerRefreshable(true);
 	}
@@ -43,7 +42,7 @@ public class TrainingModulePanel extends LazyPanel {
 		this.model.setActivePlayer(null);
 		this.model.resetFutureTrainings();
 		// reload the staff, could have changed
-		setStaffInTrainingModel(this.model);
+		//setStaffInTrainingModel(this.model);
 
 		if (oldPlayer != null) {
 			Player player = HOVerwaltung.instance().getModel()
@@ -55,14 +54,9 @@ public class TrainingModulePanel extends LazyPanel {
 	private void initComponents() {
 		setLayout(new BorderLayout());
 
-		JSplitPane leftPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				new TrainingDevelopmentPanel(this.model), new StaffPanel(this.model));
-		leftPane.setResizeWeight(1);
-		leftPane.setDividerLocation(UserParameter.instance().training_lowerLeftSplitPane);
-		leftPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.training_lowerLeftSplitPane));
+		var trainingDevelopmentPanel = new TrainingDevelopmentPanel(this.model);
 
-		JSplitPane bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPane,
+		JSplitPane bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, trainingDevelopmentPanel,
 				new JScrollPane(new PlayerDetailPanel(this.model)));
 		bottomPanel.setDividerLocation(UserParameter.instance().training_bottomSplitPane);
 		bottomPanel.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
@@ -89,6 +83,7 @@ public class TrainingModulePanel extends LazyPanel {
 		add(mainPanel, BorderLayout.CENTER);
 	}
 
+	/*
 	private void setStaffInTrainingModel(TrainingModel trainingModel) {
 		HOModel hoModel = HOVerwaltung.instance().getModel();
 		// Assistant coaches
@@ -110,5 +105,5 @@ public class TrainingModulePanel extends LazyPanel {
 			trainingModel.setTrainerLevel(4);
 		}
 	}
-
+*/
 }

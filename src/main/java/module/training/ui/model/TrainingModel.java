@@ -24,11 +24,11 @@ public class TrainingModel {
 
 	/** The currently selected player */
 	private Player activePlayer;
-	private int numberOfCoTrainers;
+	//private int numberOfCoTrainers;
 	/** the current level of the coach */
-	private int trainerLevel;
-	private StaffMember staffMember = new StaffMember();
-	private  List<StaffMember> staff = new ArrayList<>();
+	//private int trainerLevel;
+	//private StaffMember staffMember = new StaffMember();
+	//private  List<StaffMember> staff = new ArrayList<>();
 	private List<TrainingPerWeek> futureTrainings;
 	private PastTrainingManager skillupManager;
 	private FutureTrainingManager futureTrainingManager;
@@ -50,6 +50,7 @@ public class TrainingModel {
 		}
 	}
 
+	/*
 	public int getNumberOfCoTrainers() {
 		return numberOfCoTrainers;
 	}
@@ -84,7 +85,7 @@ public class TrainingModel {
 			resetFutureTrainings_();
 			fireModelChanged(ModelChange.TRAINER_LEVEL);
 		}
-	}
+	}*/
 
 	public PastTrainingManager getSkillupManager() {
 		if (this.skillupManager == null) {

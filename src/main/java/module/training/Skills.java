@@ -217,7 +217,7 @@ public class Skills {
      * @param skillIndex skill to train
      * @return base training type for that skill
      */
-    public static int getTrainedSkillCode(int skillIndex) {
+    public static int getTrainingTypeForSkill(int skillIndex) {
         return switch (skillIndex) {
             case PlayerSkill.KEEPER -> TrainingType.GOALKEEPING;
             case PlayerSkill.PLAYMAKING -> TrainingType.PLAYMAKING;

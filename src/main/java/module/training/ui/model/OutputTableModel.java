@@ -28,7 +28,6 @@ import javax.swing.table.AbstractTableModel;
 public class OutputTableModel extends AbstractTableModel {
 
     public final static int COL_PLAYER_ID = 11;
-    private static final long serialVersionUID = -1695207352334612268L;
     private List<Player> data = new ArrayList<>();
     private final TrainingModel model;
 
@@ -168,13 +167,14 @@ public class OutputTableModel extends AbstractTableModel {
      */
     private double getTrainingLength(Player player, int skillIndex) {
         double dReturn = 0;
-        WeeklyTrainingType wt = WeeklyTrainingType.instance(Skills.getTrainedSkillCode(skillIndex));
+        WeeklyTrainingType wt = WeeklyTrainingType.instance(Skills.getTrainingTypeForSkill(skillIndex));
         if (wt != null) {
+            var model = HOVerwaltung.instance().getModel();
             dReturn = wt.getTrainingLength(player,
-                    this.model.getTrainerLevel(),
-                    HOVerwaltung.instance().getModel().getTeam().getTrainingslevel(),
-                    HOVerwaltung.instance().getModel().getTeam().getStaminaTrainingPart(),
-                    HOVerwaltung.instance().getModel().getClub().getCoTrainer());
+                    model.getTrainer().getTrainerSkill(),
+                    model.getTeam().getTrainingslevel(),
+                    model.getTeam().getStaminaTrainingPart(),
+                    model.getClub().getCoTrainer());
         }
         return dReturn;
     }
