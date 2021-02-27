@@ -24,10 +24,11 @@ import javax.swing.table.TableModel;
  * Decorator for the {@link TableModel} class that ensures that the table data is sorted.
  *
  * <p>The order of the sorted rows are maintained in the <code>indexes</code> instance variable,
- * which is then used to retrieved the <em>i</em>th row by using the mapping between the index
+ * which is then used to retrieve the <em>i</em>th row by using the mapping between the index
  * in <code>indexes</code> and the index of the row.  For example, if <code>indexes</code> is
  * <code>{ 4, 2, 0, 3, 1 }</code>, the first row is at index 4 in the model, the second is at
- * index 2, etc.</p>
+ * index 2, etc.  Sorting happens on the values returned by
+ * {@link HOTableModel#getValueAt(int, int)}.</p>
  *
  * <p>TableSorter supports a “three-way” sorting approach, based on the number of clicks.
  * If the <code>thirdColSort</code> is set (i.e. equal to or greater than 0), the behaviour is
@@ -108,8 +109,8 @@ public class TableSorter extends TableMap {
         return -1;
     }
 
-    public int getIndex(int row){
-        if ( row >= 0 && row < indexes.length){
+    public int getIndex(int row) {
+        if (row >= 0 && row < indexes.length) {
             return indexes[row];
         }
         return 0;
@@ -160,7 +161,7 @@ public class TableSorter extends TableMap {
             	final int id = Integer.parseInt(((ColorLabelEntry) getValueAt(row, idColumn)).getText());
 
                 if (getModel() instanceof PlayerOverviewModel) {
-                    return ((PlayerOverviewModel) getModel()).getSpieler(id);
+                    return ((PlayerOverviewModel) getModel()).getPlayer(id);
                 } else if (getModel() instanceof LineupTableModel) {
                     return ((LineupTableModel) getModel()).getPlayer(id);
                 } else {
@@ -189,11 +190,16 @@ public class TableSorter extends TableMap {
         return getModel().getValueAt(indexes[i], j);
     }
 
+    /**
+     * Registers mouse listener on <code>jtable</code> to handle sorting.
+     *
+     * @param jtable Table to add listener to.
+     */
     public final void addMouseListenerToHeaderInTable(JTable jtable) {
         final JTable tableView = jtable;
         final JTableHeader jtableheader = tableView.getTableHeader();
 
-        //Listener schon vorhanden
+        // Listener already present.
         if (jtableheader.getComponentListeners().length > 0) {
             return;
         }
@@ -239,8 +245,7 @@ public class TableSorter extends TableMap {
 
     public final int compare(int i, int j) {
 
-        for (int k = 0; k < sortingColumns.size(); k++) {
-            final Integer integer = sortingColumns.get(k);
+        for (final Integer integer : sortingColumns) {
             final int l = compareRowsByColumn(i, j, integer);
 
             if (l != 0) {
