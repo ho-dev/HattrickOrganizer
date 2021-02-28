@@ -12,6 +12,8 @@ import java.time.temporal.WeekFields;
 import java.util.*;
 import javax.swing.JOptionPane;
 import core.HO;
+import module.youth.YouthPlayer;
+import module.youth.YouthSkillInfo;
 
 final class DBUpdater {
 	JDBCAdapter m_clJDBCAdapter;
@@ -143,6 +145,11 @@ final class DBUpdater {
 			dbManager.getTable(YouthTrainingTable.TABLENAME).createTable();
 			dbManager.getTable(YouthPlayerTable.TABLENAME).createTable();
 			dbManager.getTable(YouthScoutCommentTable.TABLENAME).createTable();
+		}
+
+		AbstractTable youthplayerTable = dbManager.getTable(YouthPlayerTable.TABLENAME);
+		for ( var skill: YouthPlayer.skillIds) {
+			youthplayerTable.tryAddColumn(skill+"Top3", "BOOLEAN");
 		}
 
 		if (!tableExists(TeamsLogoTable.TABLENAME)) {

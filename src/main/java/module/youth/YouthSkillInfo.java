@@ -49,6 +49,16 @@ public class YouthSkillInfo {
      */
     private Double potential17Value;
 
+    /**
+     * Scout mentions up to 2 skill info. Both of them belong to the top 3 skills with highest maximum.
+     * Information is used to restrict other skill maxima.
+     *
+     * True if skill is one of the skills mentioned by the scout or found maximum is greater than one of the scout infos
+     * False if skill maximum is not one of the top 3 maximums
+     * null otherwise (not known)
+     */
+    private Boolean isTop3Skill;
+
     public YouthSkillInfo(Skills.HTSkillID id) {
         this.skillID = id;
     }
@@ -161,6 +171,20 @@ public class YouthSkillInfo {
 
     public Double getPotential17Value() {
         return potential17Value;
+    }
+
+    public void setIsTop3(Boolean b) {
+        this.isTop3Skill = b;
+    }
+
+    public Boolean isTop3() {
+        return this.isTop3Skill;
+    }
+
+    public int getMinimumPotential() {
+        if ( this.max != null) return this.max;
+        if ( this.currentLevel != null) return this.currentLevel;
+        return 0;
     }
 }
 
