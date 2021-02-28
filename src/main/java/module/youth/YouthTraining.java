@@ -139,6 +139,7 @@ public class YouthTraining {
 
         var ret = new YouthSkillInfo(value.getSkillID());
         ret.setMax(value.getMax());
+        ret.setIsTop3(value.isTop3());
         ret.setCurrentLevel(value.getCurrentLevel());
         ret.setMaxReached(value.isMaxReached());
         if (value.isMaxReached()) {

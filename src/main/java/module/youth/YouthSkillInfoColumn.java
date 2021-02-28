@@ -26,13 +26,16 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
 
     private String createToolTipText() {
         var hov = HOVerwaltung.instance();
-        return "<html>" + this.skillInfo.getSkillID().toString() + "<br>" +
-                String.format(hov.getLanguageString("ls.youth.skill.start") + ": %.2f<br>",this.skillInfo.getStartValue() ) +
-                String.format(hov.getLanguageString("ls.youth.skill.current") + ": %.2f<br>", this.skillInfo.getCurrentValue() ) +
-                hov.getLanguageString("ls.youth.skill.max") + ": " + this.skillInfo.getMax() + "<br>" +
-                hov.getLanguageString("ls.youth.skill.maxreached") + ": " + hov.getLanguageString("ls.youth." + this.skillInfo.isMaxReached()) + "<br>" +
-                hov.getLanguageString("ls.youth.skill.startlevel") + ": " + this.skillInfo.getStartLevel() + "<br>" +
-                hov.getLanguageString("ls.youth.skill.currentlevel") + ": " + this.skillInfo.getCurrentLevel() + "</html>";
+        return "<html>" +
+                    this.skillInfo.getSkillID().toString() + "<br>" +
+                    String.format(hov.getLanguageString("ls.youth.skill.start") + ": %.2f<br>",this.skillInfo.getStartValue() ) +
+                    String.format(hov.getLanguageString("ls.youth.skill.current") + ": %.2f<br>", this.skillInfo.getCurrentValue() ) +
+                    hov.getLanguageString("ls.youth.skill.max") + ": " + this.skillInfo.getMax() + "<br>" +
+                    hov.getLanguageString("ls.youth.skill.ismaxreached") + ": " + hov.getLanguageString("ls.youth." + this.skillInfo.isMaxReached()) + "<br>" +
+                    hov.getLanguageString("ls.youth.skill.startlevel") + ": " + this.skillInfo.getStartLevel() + "<br>" +
+                    hov.getLanguageString("ls.youth.skill.currentlevel") + ": " + this.skillInfo.getCurrentLevel() +
+                    (this.skillInfo.isTop3()!=null&&this.skillInfo.isTop3()?"<br>" + hov.getLanguageString("ls.youth.skill.istop3"): "") +
+                "</html>";
     }
 
     @Override
@@ -90,12 +93,17 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
         else xEnd = 83;
         g.fillRect(xStart, 0, xEnd-xStart, bar_thickness);
 
+        // Mark top3 skill
+        xStart = (int) (this.skillInfo.getStartValue() * 10);
+        if ( this.skillInfo.isTop3() != null && this.skillInfo.isTop3()){
+            g.setColor(Color.BLACK);
+            g.drawRect(xStart,0, xEnd-xStart, bar_thickness);
+        }
+
         // draw trained range
         g.setColor(this.skillInfo.isMaxReached() ? Color_MaxReached : Color_TrainedRange);
-        xStart = (int) (this.skillInfo.getStartValue() * 10);
         xEnd = (int) (this.skillInfo.getCurrentValue() * 10);
         g.fillRect(xStart, 0, xEnd-xStart+1, bar_thickness);
-
         super.paint(g);
     }
 }

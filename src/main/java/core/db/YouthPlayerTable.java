@@ -72,7 +72,8 @@ public class YouthPlayerTable  extends AbstractTable {
                 new ColumnDescriptor(prefix + "Start", Types.INTEGER, true),
                 new ColumnDescriptor(prefix + "IsMaxReached", Types.BOOLEAN, false),
                 new ColumnDescriptor(prefix + "Value", Types.DOUBLE, false),
-                new ColumnDescriptor(prefix + "StartValue", Types.DOUBLE, false)));
+                new ColumnDescriptor(prefix + "StartValue", Types.DOUBLE, false),
+                new ColumnDescriptor(prefix + "Top3", Types.BOOLEAN, true)));
     }
 
     /**
@@ -170,7 +171,8 @@ public class YouthPlayerTable  extends AbstractTable {
                 + prefix + "Start,"
                 + prefix + "IsMaxReached,"
                 + prefix + "Value,"
-                + prefix + "StartValue";
+                + prefix + "StartValue,"
+                + prefix + "Top3";
     }
 
     private void AppendSkillInfo(StringBuilder sql, YouthPlayer player, Skills.HTSkillID skillID) {
@@ -180,7 +182,8 @@ public class YouthPlayerTable  extends AbstractTable {
                 .append(",").append(skillInfo.getStartLevel())
                 .append(",").append(skillInfo.isMaxReached())
                 .append(",").append(skillInfo.getCurrentValue())
-                .append(",").append(skillInfo.getStartValue());
+                .append(",").append(skillInfo.getStartValue())
+                .append(",").append(skillInfo.isTop3());
     }
     /**
      * load youth player of HRF file id
@@ -257,7 +260,7 @@ public class YouthPlayerTable  extends AbstractTable {
             }
 
         } catch (Exception e) {
-            HOLogger.instance().log(getClass(),e);
+            HOLogger.instance().error(getClass(),e);
         }
         return ret;
     }
@@ -271,6 +274,7 @@ public class YouthPlayerTable  extends AbstractTable {
         skillinfo.setMaxReached(rs.getBoolean(columnPrefix + "IsMaxReached"));
         skillinfo.setCurrentValue(rs.getDouble(columnPrefix + "Value"));
         skillinfo.setStartValue(rs.getDouble(columnPrefix + "StartValue"));
+        skillinfo.setIsTop3(DBManager.getBoolean(rs, columnPrefix + "Top3"));
         youthPlayer.setSkillInfo(skillinfo);
     }
 
