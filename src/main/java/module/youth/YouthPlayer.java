@@ -91,14 +91,21 @@ public class YouthPlayer {
         if (scoutComments != null) {
             for (var c : scoutComments) {
                 if (c.type == CommentType.CURRENT_SKILL_LEVEL) {
-                    this.getSkillInfo(c.skillType.toHTSkillId()).setStartLevel(c.skillLevel);
+                    var startSkill = this.getSkillInfo(c.skillType.toHTSkillId());
+                    startSkill.setStartLevel(c.skillLevel);
+                    startSkill.setIsTop3(true);
                 } else if (c.type == CommentType.POTENTIAL_SKILL_LEVEL) {
-                    this.getSkillInfo(c.skillType.toHTSkillId()).setMax(c.skillLevel);
+                    var maxSkill = this.getSkillInfo(c.skillType.toHTSkillId());
+                    maxSkill.setMax(c.skillLevel);
+                    maxSkill.setIsTop3(true);
                 } else if (c.type == CommentType.PLAYER_HAS_SPECIALTY) {
                     this.specialty = Specialty.valueOf(c.skillType.getValue());
                 }
             }
         }
+
+        // Find Top3 skills
+        this.currentSkills.FindTop3Skills();
     }
 
     public int getId() {
@@ -418,6 +425,7 @@ public class YouthPlayer {
             startSkill.setStartValue(startValue + adjustment);
             skill.setStartValue(startSkill.getStartValue());
             startSkill.setMax(skill.getMax());
+            startSkill.setIsTop3(skill.isTop3());
             startSkills.put(startSkill.getSkillID(), startSkill);
         }
         return startSkills;
@@ -569,6 +577,11 @@ public class YouthPlayer {
         }
     }
 
+    /**
+     * Create a youthplayer from downloaded information.
+     *
+     * @param properties extracted from chpp-xml file
+     */
     public YouthPlayer(Properties properties) {
 
         id = getInt(properties, "id", 0);
