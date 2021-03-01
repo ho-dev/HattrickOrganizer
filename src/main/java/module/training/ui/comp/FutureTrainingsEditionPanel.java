@@ -87,7 +87,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
         jlTrainingIntensity.setToolTipText(Helper.getTranslation("ls.team.trainingintensity"));
         add(jlTrainingIntensity, gbc);
 
-        m_jcbIntensity = new trainingParametersEditor(TrainingConstants.MIN_TRAINING_INTENSITY);
+        m_jcbIntensity = new trainingParametersEditor(TrainingConstants.MIN_TRAINING_INTENSITY, true);
         m_jcbIntensity.setToolTipText(Helper.getTranslation("ls.team.trainingintensity"));
         gbc.gridy = 1;
         add(m_jcbIntensity, gbc);
@@ -99,7 +99,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
         jlStaminatrainingshare.setToolTipText(Helper.getTranslation("ls.team.staminatrainingshare"));
         add(jlStaminatrainingshare, gbc);
 
-        m_jcbStaminaTrainingPart = new trainingParametersEditor(TrainingConstants.MIN_STAMINA_SHARE);
+        m_jcbStaminaTrainingPart = new trainingParametersEditor(TrainingConstants.MIN_STAMINA_SHARE, true);
         m_jcbStaminaTrainingPart.setToolTipText(Helper.getTranslation("ls.team.staminatrainingshare"));
         gbc.gridy = 1;
         add(m_jcbStaminaTrainingPart, gbc);
@@ -111,7 +111,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
         jlCoachingSkill.setToolTipText(Helper.getTranslation("ls.team.coachingskill"));
         add(jlCoachingSkill, gbc);
 
-        m_jcbCoachSkillEditor  = new trainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL);
+        m_jcbCoachSkillEditor  = new trainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL, true);
         m_jcbCoachSkillEditor.setToolTipText(Helper.getTranslation("ls.team.coachingskill"));
         gbc.gridy = 1;
         add(m_jcbCoachSkillEditor, gbc);
@@ -123,7 +123,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
         jlAssistantsTrainerLevel.setToolTipText(Helper.getTranslation("ls.module.statistics.club.assistant_trainers_level"));
         add(jlAssistantsTrainerLevel, gbc);
 
-        m_jcbAssitantsTotalLevelEditor  = new trainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL);
+        m_jcbAssitantsTotalLevelEditor  = new trainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL, true);
         m_jcbAssitantsTotalLevelEditor.setToolTipText(Helper.getTranslation("ls.module.statistics.club.assistant_trainers_level"));
         gbc.gridy = 1;
         add(m_jcbAssitantsTotalLevelEditor, gbc);

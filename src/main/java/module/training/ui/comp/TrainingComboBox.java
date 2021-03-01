@@ -2,9 +2,7 @@ package module.training.ui.comp;
 
 import core.constants.TrainingType;
 import core.datatype.CBItem;
-
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.*;
 
 public class TrainingComboBox extends JComboBox {
@@ -36,7 +34,6 @@ public class TrainingComboBox extends JComboBox {
     public static class HighLightRowRenderer implements ListCellRenderer {
 
         private final ListCellRenderer delegate;
-        private int height = -1;
 
         public HighLightRowRenderer(ListCellRenderer delegate) {
             this.delegate = delegate;
@@ -47,8 +44,7 @@ public class TrainingComboBox extends JComboBox {
             Component component = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             Dimension size = component.getPreferredSize();
             if (value == null) {
-                size.height = 10;
-                component.setMinimumSize(size);
+                return new JLabel(" ");
             }
             return component;
         }
