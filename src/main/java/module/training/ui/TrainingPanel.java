@@ -27,6 +27,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import static core.gui.theme.HOIconName.TRAINING_ICON;
+import static module.lineup.LineupPanel.TITLE_FG;
 
 /**
  * Panel where past and future training are shown
@@ -39,7 +40,8 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 	private PastTrainingsTableModel pastTrainingsTableModel;
 
 	private JTable futureTrainingsTable;
-	private JButton m_jbEditFutureTrainings;
+	private JButton m_jbEditAllFutureTrainings;
+	private JButton m_jbEditSelectedFutureTrainings;
 	private JSplitPane splitPane;
 
 	private final TrainingModel model;
@@ -64,14 +66,14 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 	}
 
 	private void addListeners() {
-		this.m_jbEditFutureTrainings.addActionListener(arg0 -> {
+		this.m_jbEditAllFutureTrainings.addActionListener(arg0 -> {
 			TableCellEditor editor = futureTrainingsTable.getCellEditor();
 
 			if (editor != null) {
 				editor.stopCellEditing();
 			}
 
-			Object[] options = {"Cancel"};
+			Object[] options = {Helper.getTranslation("ls.button.close")};
 
 			Map<Object, Object> colorMap = Map.of("trainingColor1", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_1),
 					"trainingColor2", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_2));
@@ -82,8 +84,6 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 					JOptionPane.NO_OPTION,
 					JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25,25),
 					options, options[0]);
-
-
 		});
 
 		this.splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
@@ -107,6 +107,8 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 
 		JLabel pastTrainingsLabel = new JLabel();
 		pastTrainingsLabel.setText(HOVerwaltung.instance().getLanguageString("PastTrainings"));
+		pastTrainingsLabel.setForeground(TITLE_FG);
+		pastTrainingsLabel.setFont(getFont().deriveFont(Font.BOLD));
 		uGbc.gridx = 0;
 		uGbc.gridy = 0;
 		pastTrainingsPanel.add(pastTrainingsLabel, uGbc);
@@ -172,17 +174,28 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 
 		JLabel futureTrainingLabel = new JLabel();
 		futureTrainingLabel.setText(Helper.getTranslation("FutureTrainings"));
+		futureTrainingLabel.setForeground(TITLE_FG);
+		futureTrainingLabel.setFont(getFont().deriveFont(Font.BOLD));
 		lGbc.gridx = 0;
 		lGbc.gridy = 0;
 		futureTrainingsPanel.add(futureTrainingLabel, lGbc);
 
-		m_jbEditFutureTrainings = new JButton(Helper.getTranslation("ls.button.edit"));
-		m_jbEditFutureTrainings.setToolTipText(Helper.getTranslation("ls.module.training.edit_future_trainings.tt"));
+		m_jbEditSelectedFutureTrainings = new JButton(Helper.getTranslation("ls.button.edit_selected"));
+		m_jbEditSelectedFutureTrainings.setToolTipText(Helper.getTranslation("ls.module.training.edit_selected_future_trainings.tt"));
+		m_jbEditSelectedFutureTrainings.setEnabled(false);
 		lGbc.gridx = 1;
 		lGbc.anchor = GridBagConstraints.EAST;
-		futureTrainingsPanel.add(this.m_jbEditFutureTrainings, lGbc);
+		lGbc.weightx = 1;
+		futureTrainingsPanel.add(this.m_jbEditSelectedFutureTrainings, lGbc);
 
-		this.futureTrainingsTableModel = new FutureTrainingsTableModel(this.model);
+		m_jbEditAllFutureTrainings = new JButton(Helper.getTranslation("ls.button.edit_all"));
+		m_jbEditAllFutureTrainings.setToolTipText(Helper.getTranslation("ls.module.training.edit_all_future_trainings.tt"));
+		lGbc.gridx = 2;
+		lGbc.weightx = 0;
+		futureTrainingsPanel.add(this.m_jbEditAllFutureTrainings, lGbc);
+
+
+		futureTrainingsTableModel = new FutureTrainingsTableModel(this.model);
 
 		futureTrainingsTable = new TrainingTable(futureTrainingsTableModel){
 
@@ -227,16 +240,14 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		lowerScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		lGbc.gridx = 0;
 		lGbc.gridy = 1;
-		lGbc.gridwidth = 2;
-		lGbc.weightx = 1.0;
-		lGbc.weighty = 1.0;
+		lGbc.weighty = 1;
+		lGbc.gridwidth = 3;
 		lGbc.fill = GridBagConstraints.BOTH;
 		futureTrainingsPanel.add(lowerScrollPane, lGbc);
 
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pastTrainingsPanel,
 				futureTrainingsPanel);
-		splitPane
-				.setDividerLocation(UserParameter.instance().training_pastFutureTrainingsSplitPane);
+		splitPane.setDividerLocation(UserParameter.instance().training_pastFutureTrainingsSplitPane);
 		setLayout(new BorderLayout());
 		add(splitPane, BorderLayout.CENTER);
 	}
@@ -275,7 +286,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 			staminaColumn.setPreferredWidth(50);
 
 			// Sets the combo box for selecting the coach skill
-			JComboBox jcbCoachSkillEditor = new trainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL);
+			JComboBox jcbCoachSkillEditor = new trainingParametersEditor(TrainingConstants.MIN_COACH_SKILL, TrainingConstants.MAX_COACH_SKILL);
 			TableColumn coachSkillColumn = getColumnModel().getColumn(4);
 			coachSkillColumn.setCellEditor(new DefaultCellEditor(jcbCoachSkillEditor));
 			coachSkillColumn.setPreferredWidth(50);

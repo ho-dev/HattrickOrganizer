@@ -29,8 +29,7 @@ public class TrainingModulePanel extends LazyPanel {
 
 	@Override
 	protected void initialize() {
-		this.model = new TrainingModel();
-		//setStaffInTrainingModel(this.model);
+		this.model = new TrainingModel();;
 		initComponents();
 		registerRefreshable(true);
 	}

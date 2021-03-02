@@ -1,6 +1,7 @@
 package core.db;
 
 import core.HO;
+import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.training.TrainingWeekManager;
 import core.util.HOLogger;
@@ -108,7 +109,7 @@ final class DBConfigUpdater {
 
 					zdtFutureTrainingDate = zdtLastTraining.plus(nbDays, ChronoUnit.DAYS);
 					futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), futureTrainingDB.getTrainingType(), futureTrainingDB.getTrainingIntensity(),
-							futureTrainingDB.getStaminaShare(), assistantLevel, coachLevel);
+							futureTrainingDB.getStaminaShare(), assistantLevel, coachLevel, DBDataSource.MANUAL);
 					futureTrainings.add(futureTraining);
 				}
 

@@ -4,6 +4,7 @@ import core.datatype.CBItem;
 import core.gui.RefreshManager;
 import core.model.HOVerwaltung;
 import core.model.constants.TrainingConstants;
+import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.util.Helper;
 import module.training.ui.model.FutureTrainingsTableModel;
@@ -32,29 +33,49 @@ public class FutureTrainingsEditionPanel extends JPanel {
 
     public FutureTrainingsEditionPanel(TrainingModel _TrainingModel, FutureTrainingsTableModel fm) {
         setLayout(new BorderLayout());
-        this.m_TrainingModel = _TrainingModel;
+        m_TrainingModel = _TrainingModel;
         m_FutureTrainingsTableModel = fm;
         initComponents();
-
-
-
     }
 
-    /**
-     * Populate the Future training table with the future training
-     */
-    protected void resetFutureTrainings() {
+
+    protected void setFutureTrainings() {
+
+        if((m_jcbTrainingType.getSelectedItem() == null) && (m_jcbIntensity.getSelectedItem() == null) &&
+           (m_jcbStaminaTrainingPart.getSelectedItem() == null) && (m_jcbCoachSkillEditor.getSelectedItem() == null) &&
+           (m_jcbAssitantsTotalLevelEditor.getSelectedItem() == null)){
+            return;
+        }
+
         List<TrainingPerWeek> futureTrainingsToSave = new ArrayList<TrainingPerWeek>();
 
         for (TrainingPerWeek train: this.m_TrainingModel.getFutureTrainings()) {
-            train.setTrainingIntensity(m_jcbIntensity.getSelectedIndex());
-            train.setStaminaPart(m_jcbStaminaTrainingPart.getSelectedIndex() + 10);
-            train.setTrainingType(((CBItem) m_jcbTrainingType.getSelectedItem()).getId());
+            if(m_jcbTrainingType.getSelectedItem() != null){
+                train.setTrainingType(((CBItem) m_jcbTrainingType.getSelectedItem()).getId());
+            }
+
+            if(m_jcbIntensity.getSelectedItem() != null) {
+                train.setTrainingIntensity((Integer)m_jcbIntensity.getSelectedItem());
+            }
+
+            if(m_jcbStaminaTrainingPart.getSelectedItem() != null) {
+                train.setStaminaPart((Integer)m_jcbStaminaTrainingPart.getSelectedItem());
+            }
+
+            if(m_jcbCoachSkillEditor.getSelectedItem() != null) {
+                train.setCoachLevel((Integer)m_jcbCoachSkillEditor.getSelectedItem());
+            }
+
+            if(m_jcbAssitantsTotalLevelEditor.getSelectedItem() != null) {
+                train.setTrainingAssistantLevel((Integer)m_jcbAssitantsTotalLevelEditor.getSelectedItem());
+            }
+
+            train.setSource(DBDataSource.MANUAL);
             futureTrainingsToSave.add(train);
         }
 
-        this.m_TrainingModel.saveFutureTrainings(futureTrainingsToSave);
-        m_FutureTrainingsTableModel.populate(this.m_TrainingModel.getFutureTrainings());
+        m_TrainingModel.saveFutureTrainings(futureTrainingsToSave);
+        m_FutureTrainingsTableModel.populate(m_TrainingModel.getFutureTrainings());
         RefreshManager.instance().doRefresh();
     }
 
@@ -111,7 +132,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
         jlCoachingSkill.setToolTipText(Helper.getTranslation("ls.team.coachingskill"));
         add(jlCoachingSkill, gbc);
 
-        m_jcbCoachSkillEditor  = new trainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL, true);
+        m_jcbCoachSkillEditor  = new trainingParametersEditor(TrainingConstants.MIN_COACH_SKILL, TrainingConstants.MAX_COACH_SKILL, true);
         m_jcbCoachSkillEditor.setToolTipText(Helper.getTranslation("ls.team.coachingskill"));
         gbc.gridy = 1;
         add(m_jcbCoachSkillEditor, gbc);
@@ -130,7 +151,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
 
 
         JButton button = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply"));
-        button.addActionListener(arg0 -> resetFutureTrainings());
+        button.addActionListener(arg0 -> setFutureTrainings());
         gbc.gridx = 5;
         add(button, gbc);
 

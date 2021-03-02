@@ -142,6 +142,10 @@ public class TrainingPerWeek  {
         return o_Source;
     }
 
+    public Integer getSourceAsInt() {
+        return o_Source.getValue();
+    }
+
     public void setSource(DBDataSource source) {
         this.o_Source = source;
     }
