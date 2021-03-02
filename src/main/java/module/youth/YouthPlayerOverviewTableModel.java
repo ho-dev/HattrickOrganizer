@@ -39,12 +39,13 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
                         return new ColorLabelEntry(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(player.getArrivalDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
-                }, new YouthPlayerColumn("ls.youth.player.lastmatchdate") {
-            @Override
-            public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                return new ColorLabelEntry(player.getYouthMatchDateAsString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-            }
-        },
+                },
+                new YouthPlayerColumn("ls.youth.player.lastmatchdate") {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
+                        return new ColorLabelEntry(player.getYouthMatchDateAsString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
                 new YouthPlayerColumn("ls.youth.player.canBePromotedIn") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
@@ -151,5 +152,4 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
         }
         fireTableDataChanged();
     }
-
 }
