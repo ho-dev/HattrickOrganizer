@@ -1,14 +1,16 @@
 package module.training.ui;
 
 import core.gui.theme.HOColorName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.model.constants.TrainingConstants;
 import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
 import core.util.Helper;
 import module.training.ui.comp.DividerListener;
-import module.training.ui.comp.FutureSettingPanel;
+import module.training.ui.comp.FutureTrainingsEditionPanel;
 import module.training.ui.comp.trainingParametersEditor;
 import module.training.ui.comp.TrainingComboBox;
 import module.training.ui.model.FutureTrainingsTableModel;
@@ -17,25 +19,20 @@ import module.training.ui.model.PastTrainingsTableModel;
 import module.training.ui.model.TrainingModel;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
+import java.util.Map;
+import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import static core.gui.theme.HOIconName.TRAINING_ICON;
+import static module.lineup.LineupPanel.TITLE_FG;
+
 /**
  * Panel where past and future training are shown
  */
-public class TrainingPanel extends JPanel {
+public class TrainingPanel extends JPanel implements TrainingConstants {
 
 	/** Future trainings table model */
 	private FutureTrainingsTableModel futureTrainingsTableModel;
@@ -43,7 +40,8 @@ public class TrainingPanel extends JPanel {
 	private PastTrainingsTableModel pastTrainingsTableModel;
 
 	private JTable futureTrainingsTable;
-	private JButton setAllButton;
+	private JButton m_jbEditAllFutureTrainings;
+	private JButton m_jbEditSelectedFutureTrainings;
 	private JSplitPane splitPane;
 
 	private final TrainingModel model;
@@ -68,16 +66,24 @@ public class TrainingPanel extends JPanel {
 	}
 
 	private void addListeners() {
-		this.setAllButton.addActionListener(arg0 -> {
+		this.m_jbEditAllFutureTrainings.addActionListener(arg0 -> {
 			TableCellEditor editor = futureTrainingsTable.getCellEditor();
 
 			if (editor != null) {
 				editor.stopCellEditing();
 			}
 
-			JOptionPane.showMessageDialog(getTopLevelAncestor(),
-					new FutureSettingPanel(model, futureTrainingsTableModel), HOVerwaltung
-							.instance().getLanguageString("SetAll"), JOptionPane.PLAIN_MESSAGE);
+			Object[] options = {Helper.getTranslation("ls.button.close")};
+
+			Map<Object, Object> colorMap = Map.of("trainingColor1", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_1),
+					"trainingColor2", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_2));
+
+			JOptionPane.showOptionDialog(getTopLevelAncestor(),
+					new FutureTrainingsEditionPanel(model, futureTrainingsTableModel),
+					Helper.getTranslation("ls.module.training.edit_future_trainings.tt"),
+					JOptionPane.NO_OPTION,
+					JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25,25),
+					options, options[0]);
 		});
 
 		this.splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
@@ -101,6 +107,8 @@ public class TrainingPanel extends JPanel {
 
 		JLabel pastTrainingsLabel = new JLabel();
 		pastTrainingsLabel.setText(HOVerwaltung.instance().getLanguageString("PastTrainings"));
+		pastTrainingsLabel.setForeground(TITLE_FG);
+		pastTrainingsLabel.setFont(getFont().deriveFont(Font.BOLD));
 		uGbc.gridx = 0;
 		uGbc.gridy = 0;
 		pastTrainingsPanel.add(pastTrainingsLabel, uGbc);
@@ -165,17 +173,29 @@ public class TrainingPanel extends JPanel {
 		lGbc.insets = new Insets(3, 3, 3, 3);
 
 		JLabel futureTrainingLabel = new JLabel();
-		futureTrainingLabel.setText(HOVerwaltung.instance().getLanguageString("FutureTrainings"));
+		futureTrainingLabel.setText(Helper.getTranslation("FutureTrainings"));
+		futureTrainingLabel.setForeground(TITLE_FG);
+		futureTrainingLabel.setFont(getFont().deriveFont(Font.BOLD));
 		lGbc.gridx = 0;
 		lGbc.gridy = 0;
 		futureTrainingsPanel.add(futureTrainingLabel, lGbc);
 
-		this.setAllButton = new JButton(HOVerwaltung.instance().getLanguageString("SetAll"));
+		m_jbEditSelectedFutureTrainings = new JButton(Helper.getTranslation("ls.button.edit_selected"));
+		m_jbEditSelectedFutureTrainings.setToolTipText(Helper.getTranslation("ls.module.training.edit_selected_future_trainings.tt"));
+		m_jbEditSelectedFutureTrainings.setEnabled(false);
 		lGbc.gridx = 1;
 		lGbc.anchor = GridBagConstraints.EAST;
-		futureTrainingsPanel.add(this.setAllButton, lGbc);
+		lGbc.weightx = 1;
+		futureTrainingsPanel.add(this.m_jbEditSelectedFutureTrainings, lGbc);
 
-		this.futureTrainingsTableModel = new FutureTrainingsTableModel(this.model);
+		m_jbEditAllFutureTrainings = new JButton(Helper.getTranslation("ls.button.edit_all"));
+		m_jbEditAllFutureTrainings.setToolTipText(Helper.getTranslation("ls.module.training.edit_all_future_trainings.tt"));
+		lGbc.gridx = 2;
+		lGbc.weightx = 0;
+		futureTrainingsPanel.add(this.m_jbEditAllFutureTrainings, lGbc);
+
+
+		futureTrainingsTableModel = new FutureTrainingsTableModel(this.model);
 
 		futureTrainingsTable = new TrainingTable(futureTrainingsTableModel){
 
@@ -220,16 +240,14 @@ public class TrainingPanel extends JPanel {
 		lowerScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		lGbc.gridx = 0;
 		lGbc.gridy = 1;
-		lGbc.gridwidth = 2;
-		lGbc.weightx = 1.0;
-		lGbc.weighty = 1.0;
+		lGbc.weighty = 1;
+		lGbc.gridwidth = 3;
 		lGbc.fill = GridBagConstraints.BOTH;
 		futureTrainingsPanel.add(lowerScrollPane, lGbc);
 
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pastTrainingsPanel,
 				futureTrainingsPanel);
-		splitPane
-				.setDividerLocation(UserParameter.instance().training_pastFutureTrainingsSplitPane);
+		splitPane.setDividerLocation(UserParameter.instance().training_pastFutureTrainingsSplitPane);
 		setLayout(new BorderLayout());
 		add(splitPane, BorderLayout.CENTER);
 	}
@@ -256,25 +274,25 @@ public class TrainingPanel extends JPanel {
 			trainingColumn.setPreferredWidth(120);
 
 			// Sets the combo box for selecting the intensity
-			JComboBox jcbIntensityEditor = new trainingParametersEditor(1);
+			JComboBox jcbIntensityEditor = new trainingParametersEditor(TrainingConstants.MIN_TRAINING_INTENSITY);
 			TableColumn trainingIntensityColumn = getColumnModel().getColumn(2);
 			trainingIntensityColumn.setCellEditor(new DefaultCellEditor(jcbIntensityEditor));
 			trainingIntensityColumn.setPreferredWidth(50);
 
 			// Sets the combo box for selecting the staminaTrainingPart
-			JComboBox jcbStaminaEditor = new trainingParametersEditor(10);
+			JComboBox jcbStaminaEditor = new trainingParametersEditor(TrainingConstants.MIN_STAMINA_SHARE);
 			TableColumn staminaColumn = getColumnModel().getColumn(3);
 			staminaColumn.setCellEditor(new DefaultCellEditor(jcbStaminaEditor));
 			staminaColumn.setPreferredWidth(50);
 
 			// Sets the combo box for selecting the coach skill
-			JComboBox jcbCoachSkillEditor = new trainingParametersEditor(4, 8);
+			JComboBox jcbCoachSkillEditor = new trainingParametersEditor(TrainingConstants.MIN_COACH_SKILL, TrainingConstants.MAX_COACH_SKILL);
 			TableColumn coachSkillColumn = getColumnModel().getColumn(4);
 			coachSkillColumn.setCellEditor(new DefaultCellEditor(jcbCoachSkillEditor));
 			coachSkillColumn.setPreferredWidth(50);
 
 			// Sets the combo box for selecting the Assistant Coach Total Level
-			JComboBox jcbAssitantsTotalLevelEditor = new trainingParametersEditor(0, 10);
+			JComboBox jcbAssitantsTotalLevelEditor = new trainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL);
 			TableColumn assitantsLevelColumn = getColumnModel().getColumn(5);
 			assitantsLevelColumn.setCellEditor(new DefaultCellEditor(jcbAssitantsTotalLevelEditor));
 			assitantsLevelColumn.setPreferredWidth(50);

@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.model.StaffMember;
 import core.model.StaffType;
 import core.model.UserParameter;
+import core.model.enums.DBDataSource;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.TrainingManager;
@@ -22,13 +23,8 @@ import java.util.Optional;
 
 public class TrainingModel {
 
-	/** The currently selected player */
+
 	private Player activePlayer;
-	//private int numberOfCoTrainers;
-	/** the current level of the coach */
-	//private int trainerLevel;
-	//private StaffMember staffMember = new StaffMember();
-	//private  List<StaffMember> staff = new ArrayList<>();
 	private List<TrainingPerWeek> futureTrainings;
 	private PastTrainingManager skillupManager;
 	private FutureTrainingManager futureTrainingManager;
@@ -49,43 +45,6 @@ public class TrainingModel {
 			fireModelChanged(ModelChange.ACTIVE_PLAYER);
 		}
 	}
-
-	/*
-	public int getNumberOfCoTrainers() {
-		return numberOfCoTrainers;
-	}
-	
-	public List<StaffMember> getAssistants() {
-		return staff;
-	}
-
-	public void setNumberOfCoTrainers(int numberOfCoTrainers) {
-		if (this.numberOfCoTrainers != numberOfCoTrainers) {
-			this.numberOfCoTrainers = numberOfCoTrainers;
-			// create dummy staff for future training calculations
-			if(staff.isEmpty()) {
-				staffMember.setStaffType(StaffType.ASSISTANTTRAINER);
-				staffMember.setLevel(this.numberOfCoTrainers);
-				staff.add(staffMember);
-				} else {
-			staff.get(0).setLevel(numberOfCoTrainers);
-				}
-			resetFutureTrainings_();
-			fireModelChanged(ModelChange.NUMBER_OF_CO_TRAINERS);
-		}
-	}
-
-	public int getTrainerLevel() {
-		return trainerLevel;
-	}
-
-	public void setTrainerLevel(int trainerLevel) {
-		if (this.trainerLevel != trainerLevel) {
-			this.trainerLevel = trainerLevel;
-			resetFutureTrainings_();
-			fireModelChanged(ModelChange.TRAINER_LEVEL);
-		}
-	}*/
 
 	public PastTrainingManager getSkillupManager() {
 		if (this.skillupManager == null) {
@@ -109,25 +68,16 @@ public class TrainingModel {
 	}
 
 	public void saveFutureTrainings(List<TrainingPerWeek> trainings) {
-		boolean needsReload = false;
 		for (TrainingPerWeek training : trainings) {
 			DBManager.instance().saveFutureTraining(training);
-			if (!getFutureTrainings().contains(training)) {  //TODO: check if this check is really necessary
-				needsReload = true;
-			}
 		}
-
-		if (needsReload) {
-			futureTrainings = null;
-		}
+		futureTrainings = null; //force reload
 		fireModelChanged(ModelChange.FUTURE_TRAINING);
 	}
 
 	public void saveFutureTraining(TrainingPerWeek training) {
 		DBManager.instance().saveFutureTraining(training);
-		if (!getFutureTrainings().contains(training)) {  //TODO: check if this check is really necessary
-			futureTrainings = null;
-		}
+		futureTrainings = null; //force reload
 		fireModelChanged(ModelChange.FUTURE_TRAINING);
 	}
 
@@ -237,7 +187,7 @@ public class TrainingModel {
 				while (newfutureTrainings.size() < requiredNBentries) {
 					zdtFutureTrainingDate = zdtrefDate.plus(nbWeek * 7, ChronoUnit.DAYS);
 					futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), latestTraining.getTrainingType(), latestTraining.getTrainingIntensity(),
-							latestTraining.getStaminaShare(), latestTraining.getTrainingAssistantsLevel(), latestTraining.getCoachLevel());
+							latestTraining.getStaminaShare(), latestTraining.getTrainingAssistantsLevel(), latestTraining.getCoachLevel(), DBDataSource.GUESS);
 					newfutureTrainings.add(futureTraining);
 					nbWeek++;
 				}

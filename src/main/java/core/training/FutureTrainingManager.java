@@ -2,7 +2,6 @@ package core.training;
 
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
 import core.model.player.ISkillChange;

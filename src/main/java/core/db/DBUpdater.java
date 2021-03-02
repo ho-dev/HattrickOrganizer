@@ -259,18 +259,21 @@ final class DBUpdater {
 			futureTrainingTable.tryAddColumn("COACH_LEVEL","INTEGER");
 			futureTrainingTable.tryAddColumn("TRAINING_ASSISTANTS_LEVEL", "INTEGER");
 			futureTrainingTable.tryAddColumn("TRAINING_DATE", "TIMESTAMP");
+			futureTrainingTable.tryAddColumn("SOURCE", "INTEGER");
 
 
 			// Step 2: update columns with non-null values to ensure NOT NULL clauses can be called
 			// we store week and season information for future treatment
 			String sql = "UPDATE " + FutureTrainingTable.TABLENAME +
-					" SET TRAINING_DATE=timestamp('1900-01-01'),  TRAINING_ASSISTANTS_LEVEL=WEEK, COACH_LEVEL=SEASON WHERE TRUE";
+					" SET TRAINING_DATE=timestamp('1900-01-01'), TRAINING_ASSISTANTS_LEVEL=WEEK, COACH_LEVEL=SEASON, SOURCE=" +
+					DBDataSource.MANUAL.getValue() + " WHERE TRUE";
 			m_clJDBCAdapter.executeUpdate(sql);
 
 			// Step 3. Finalize upgrade of FUTURETRAININGS table structure ===============================
 			futureTrainingTable.tryChangeColumn("COACH_LEVEL", "NOT NULL");
 			futureTrainingTable.tryChangeColumn("TRAINING_ASSISTANTS_LEVEL", "NOT NULL");
 			futureTrainingTable.tryChangeColumn("TRAINING_DATE", "NOT NULL");
+			futureTrainingTable.tryChangeColumn("SOURCE", "NOT NULL");
 			futureTrainingTable.tryRenameColumn("TYPE", "TRAINING_TYPE");
 			futureTrainingTable.tryRenameColumn("INTENSITY", "TRAINING_INTENSITY");
 			futureTrainingTable.tryRenameColumn("STAMINATRAININGPART", "STAMINA_SHARE");
