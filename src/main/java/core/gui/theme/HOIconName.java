@@ -175,6 +175,7 @@ public interface HOIconName {
 	String WARNING_ICON = "warning.icon";
 
 	String TRAINING_BAR = "training_bar";
+	String TRAINING_ICON = "training_icon";
 
 	String GREEN_WHITE_CLOCK = "green-white-clock";
 	String WHITE_GREEN_CLOCK = "white-green-clock";

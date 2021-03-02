@@ -1,4 +1,3 @@
-// %1126721452104:hoplugins.trainingExperience.ui%
 package module.training.ui;
 
 import core.gui.theme.HOColorName;
@@ -8,27 +7,16 @@ import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
 import module.training.ui.model.TrainingModel;
 import module.training.ui.renderer.TrainingRecapRenderer;
-
 import java.awt.Color;
 import java.awt.Component;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 
-/**
- * A Table with frozen columns
- *
- * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
- */
-public class TrainingRecapTable extends JScrollPane {
-    //~ Instance fields ----------------------------------------------------------------------------
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 7666144967819145973L;
+public class TrainingRecapTable extends JScrollPane {
+
     private JTable fixed;
     private JTable scroll;
 
@@ -38,7 +26,6 @@ public class TrainingRecapTable extends JScrollPane {
      * Fixed table renderer to add special background colors depending on training speed
      */
     private class FixedTrainingRecapRenderer extends DefaultTableCellRenderer {
-        private static final long serialVersionUID = 7666144967819145974L;
 
         /* (non-Javadoc)
          * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)

@@ -1,5 +1,6 @@
 package core.db;
 
+import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
@@ -28,7 +29,8 @@ public final class FutureTrainingTable extends AbstractTable {
 				new ColumnDescriptor("TRAINING_INTENSITY", Types.INTEGER, false),
 				new ColumnDescriptor("STAMINA_SHARE", Types.INTEGER, false),
 				new ColumnDescriptor("COACH_LEVEL", Types.INTEGER, false),
-				new ColumnDescriptor("TRAINING_ASSISTANTS_LEVEL", Types.INTEGER, false)
+				new ColumnDescriptor("TRAINING_ASSISTANTS_LEVEL", Types.INTEGER, false),
+				new ColumnDescriptor("SOURCE", Types.INTEGER, false)
 		};
 	}
 
@@ -48,15 +50,16 @@ public final class FutureTrainingTable extends AbstractTable {
 					var staminaShare = rs.getInt("STAMINA_SHARE");
 					var trainingAssistantsLevel = rs.getInt("TRAINING_ASSISTANTS_LEVEL");
 					var coachLevel = rs.getInt("COACH_LEVEL");
+					var source = DBDataSource.getCode(rs.getInt("SOURCE"));
 
 					var tpw = new TrainingPerWeek(trainingDate, training_type, training_intensity, staminaShare, trainingAssistantsLevel,
-							coachLevel);
+							coachLevel, source);
 
 					vTrainings.add(tpw);
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DatenbankZugriff.getTraining " + e);
+			HOLogger.instance().log(getClass(), "Error when calling getFutureTrainingsVector():  " + e);
 		}
 		return vTrainings;
 	}
@@ -91,18 +94,20 @@ public final class FutureTrainingTable extends AbstractTable {
 							", STAMINA_SHARE=" + training.getStaminaShare() +
 							", COACH_LEVEL=" + training.getCoachLevel() +
 							", TRAINING_ASSISTANTS_LEVEL=" + training.getTrainingAssistantsLevel() +
+							", SOURCE=" + training.getSourceAsInt() +
 							" WHERE TRAINING_DATE='" + trainingDate+ "'";
 			int count = adapter.executeUpdate(statement);
 
 			if (count == 0) {
 				statement = "INSERT INTO " + getTableName() +
-						" (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL) VALUES ('" +
+						" (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL, SOURCE) VALUES ('" +
 						trainingDate + "'," +
 						training.getTrainingType() + "," +
 						training.getTrainingIntensity() + "," +
 						training.getStaminaShare() + "," +
 						training.getCoachLevel() + "," +
-						training.getTrainingAssistantsLevel() + ")";
+						training.getTrainingAssistantsLevel() + "," +
+						training.getSourceAsInt() + ")";
 				adapter.executeUpdate(statement);
 			}
 		}

@@ -103,11 +103,14 @@ public class CheckBoxTree extends JTree {
         JCheckBox checkBox;
 
         public CheckBoxCellRenderer() {
-            super();
             this.setLayout(new BorderLayout());
             checkBox = new JCheckBox();
             add(checkBox, BorderLayout.CENTER);
             setOpaque(false);
+        }
+
+        public Container getParent() {
+            return CheckBoxTree.this.getParent();
         }
 
         @Override

@@ -231,6 +231,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		// Train bar
 		put(TRAINING_BAR, "gui/bilder/trainpreview/training_bar.svg");
+		put(TRAINING_ICON, "gui/bilder/training.svg");
 
 
 		put(GREEN_WHITE_CLOCK, "gui/bilder/green-white-clock.png");
@@ -454,6 +455,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TRAINING_FULL_BG,"lightGreen");
 		put(TRAINING_PARTIAL_BG,"lightYellow");
 		put(TRAINING_OSMOSIS_BG, Color.LIGHT_GRAY);
+		put(HOColorName.TRAINING_ICON_COLOR_1, new Color(0, 0, 0));
+		put(HOColorName.TRAINING_ICON_COLOR_2, new Color(255, 255, 255));
 
 		// Training bars
 		put(FULL_TRAINING_DONE, new Color(37, 110, 9));

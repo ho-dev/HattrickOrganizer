@@ -4,23 +4,44 @@ import core.model.UserParameter;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class DateTimeUtils {
 
 	private static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("Europe/Stockholm"));
+	private static Map<String, String> cl_availableZoneIds ;
 
 	/**
 	 * Utility class - private constructor enforces noninstantiability.
 	 */
 	private DateTimeUtils() {
+	}
+
+
+	public static Map<String, String>  getAvailableZoneIds(){
+
+		LocalDateTime localDateTime = LocalDateTime.now();
+
+		if(cl_availableZoneIds == null) {
+			cl_availableZoneIds = ZoneId.getAvailableZoneIds()
+					.stream()
+					.map(ZoneId::of)
+					.map(zoneId -> new AbstractMap.SimpleEntry<>(zoneId.toString(), localDateTime.atZone(zoneId)
+							.getOffset()
+							.getId()
+							.replaceAll("Z", "+00:00")))
+					.sorted(Map.Entry.<String, String>comparingByValue().reversed())
+					.collect(Collectors.toMap(
+							AbstractMap.SimpleEntry::getKey,
+							AbstractMap.SimpleEntry::getValue,
+							(oldValue, newValue) -> oldValue,
+							LinkedHashMap::new));
+		}
+		return cl_availableZoneIds;
 	}
 
 	/**
@@ -49,6 +70,20 @@ public class DateTimeUtils {
 		return cl_Formatter.format(instant);
 	}
 
+
+	/**
+	 * return the zoneID from the hashCode
+	 */
+	public static ZoneId fromHash(int _hashCode){
+		getAvailableZoneIds();
+		for (var toto:cl_availableZoneIds.keySet()){
+			if(toto.hashCode() == _hashCode){
+				return ZoneId.of(toto);
+			}
+		}
+		HOLogger.instance().error(DateTimeUtils.class, "ZoneID could not be identified from hashValue");
+		return null;
+	}
 
 	/**
 	 * Creates a new <code>Date</code> based on the given date with the time set

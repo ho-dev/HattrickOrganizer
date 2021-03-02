@@ -126,7 +126,7 @@ public class FuturePlayerTraining {
      * Cut the given time interval from the current training interval
      *
      * @param from HattrickDate
-     * @param to   HattrickDate
+     * @param to   HattrickDate, null means open end
      *
      * @return false if remaining training interval is not empty
      *          true if training is completely replaced by the new interval

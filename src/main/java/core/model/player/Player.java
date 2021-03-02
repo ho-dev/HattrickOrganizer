@@ -1834,6 +1834,7 @@ public class Player {
         return PlayerSpeciality.getImpactWeatherEffect(weather, iPlayerSpecialty);
     }
 
+    @Deprecated
     private void incrementSubskills(Player originalPlayer, int trainerlevel, int skill, double points, WeeklyTrainingType wt, TrainingPerPlayer trForPlayer) {
         if (skill < KEEPER || points <= 0)
             return;
@@ -1866,14 +1867,15 @@ public class Player {
         setSubskill4PlayerSkill(skill, Math.min(0.99f, getSub4SkillAccurate(skill) + gain));
     }
 
-    /**
+    /*
      * Calculates training benefit, and updates subskill for the player.
      * Used when there is only 1 week of training to be calculated.
      *
      * @param originalPlayer - The player to calculate subskills on
      * @param trainerlevel   - The trainer level
      * @param trainingWeek
-     */
+
+    @Deprecated
     public void calcIncrementalSubskills(Player originalPlayer, int trainerlevel, TrainingPerWeek trainingWeek) {
 
         if (this.hasTrainingBlock()) {
@@ -1893,7 +1895,7 @@ public class Player {
         if (tp == null)
             return;
 
-        /* Time to perform skill drop */
+        // Time to perform skill drop
         if (SkillDrops.instance().isActive()) {
             performSkilldrop(originalPlayer, 1);
         }
@@ -1907,7 +1909,7 @@ public class Player {
         addExperienceSub(trainingForPlayer.getExperienceSub());
 
     }
-
+ */
     /**
      * Training for given player for each skill
      *
@@ -2127,12 +2129,12 @@ public class Player {
         return core.util.Helper.round(es, nb_decimals);
     }
 
-    /**
+    /*
      * Copy old player offset status.
      * Used by training, checks for skillup and resets subskill in that case
      *
      * @param old
-     */
+
     public void copySubSkills(Player old) {
         for (int skillType = 0; skillType <= EXPERIENCE; skillType++) {
 
@@ -2147,12 +2149,12 @@ public class Player {
             }
         }
     }
-
+   */
     /**
      * Copy the skills of old player.
      * Used by training
      *
-     * @param old
+     * @param old player to copy from
      */
     public void copySkills(Player old) {
 
@@ -2160,7 +2162,6 @@ public class Player {
             setValue4Skill(skillType, old.getValue4Skill(skillType));
         }
     }
-
 
     /**
      * Performs the subskill reset needed at skill drop.
@@ -2312,19 +2313,21 @@ public class Player {
      * Previously saved trainings of this interval are overwritten or deleted.
      *  @param prio new training priority for the given time interval
      * @param fromWeek first week with new training priority
-     * @param toWeek last week with new training priority
+     * @param toWeek last week with new training priority, null means open end
      */
     public void setFutureTraining(FuturePlayerTraining.Priority prio, Instant fromWeek, Instant toWeek) {
         var removeIntervals = new ArrayList<FuturePlayerTraining>();
-        for ( var t : getFuturePlayerTrainings() ){
-            if ( t.cut(HattrickDate.fromInstant(fromWeek), HattrickDate.fromInstant(toWeek)) ||
-                    t.cut(new HattrickDate(0,0), HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())){
+        var from = HattrickDate.fromInstant(fromWeek);
+        var to = toWeek != null ? HattrickDate.fromInstant(toWeek) : null;
+        for (var t : getFuturePlayerTrainings()) {
+            if (t.cut(from, to) ||
+                    t.cut(new HattrickDate(0, 0), HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())) {
                 removeIntervals.add(t);
             }
         }
         futurePlayerTrainings.removeAll(removeIntervals);
-        if ( prio != null){
-            futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerID(), prio, HattrickDate.fromInstant(fromWeek), HattrickDate.fromInstant(toWeek)));
+        if (prio != null) {
+            futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerID(), prio, from, to));
         }
         DBManager.instance().storeFuturePlayerTrainings(this.getPlayerID(), futurePlayerTrainings);
     }
@@ -2360,12 +2363,23 @@ public class Player {
 
     }
 
-    private static int[] trainingSkills= { KEEPER, SET_PIECES, DEFENDING, SCORING, WINGER,PASSING,PLAYMAKING };
+    private static int[] trainingSkills= { KEEPER, SET_PIECES, DEFENDING, SCORING, WINGER, PASSING, PLAYMAKING };
 
+    /**
+     * Calculates skill status of the player
+     *
+     * @param previousID Id of the previous download. Previous player status is loaded by this id.
+     * @param trainingWeeks List of training week information
+     */
     public void calcSubskills(int previousID, List<TrainingPerWeek> trainingWeeks) {
         var before = DBManager.instance().getSpieler(previousID).stream()
                 .filter(i -> i.getPlayerID() == this.getPlayerID()).findFirst()
                 .orElse(this.CloneWithoutSubskills());
+
+        // since we don't want to work with temp player objects we calculate skill by skill
+        // whereas experience is calculated within the first skill
+        boolean experienceSubDone = this.getErfahrung() > before.getErfahrung(); // Do not calculate sub on experience skill up
+        var experienceSub = experienceSubDone?0:before.getSubExperience(); // set sub to 0 on skill up
         for (var skill : trainingSkills) {
             var sub = before.getSub4Skill(skill);
 
@@ -2394,13 +2408,20 @@ public class Player {
                                 sub = 0;
                             }
                         }
+
+                        if ( !experienceSubDone){
+                            experienceSub+=trainingPerPlayer.getExperienceSub();
+                            if ( experienceSub > 0.99) experienceSub = 0.99;
+                        }
                     }
                 }
+                experienceSubDone=true;
                 if (valueAfterTraining > valueBeforeTraining) { // Skill up (not yet expected)
                     sub = 0;
                 }
             }
             this.setSubskill4PlayerSkill(skill, sub);
+            this.setSubExperience(experienceSub);
         }
     }
 

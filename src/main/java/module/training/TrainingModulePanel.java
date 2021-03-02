@@ -7,14 +7,14 @@ import core.model.StaffMember;
 import core.model.StaffType;
 import core.model.UserParameter;
 import core.model.player.Player;
+import core.util.Helper;
 import module.training.ui.AnalyzerPanel;
 import module.training.ui.EffectPanel;
 import module.training.ui.OutputPanel;
 import module.training.ui.PlayerDetailPanel;
-import module.training.ui.SkillupPanel;
-import module.training.ui.StaffPanel;
+import module.training.ui.TrainingDevelopmentPanel;
 import module.training.ui.TrainingPanel;
-import module.training.ui.TrainingRecapPanel;
+import module.training.ui.TrainingPredictionPanel;
 import module.training.ui.comp.DividerListener;
 import module.training.ui.model.TrainingModel;
 import java.awt.BorderLayout;
@@ -29,8 +29,7 @@ public class TrainingModulePanel extends LazyPanel {
 
 	@Override
 	protected void initialize() {
-		this.model = new TrainingModel();
-		setStaffInTrainingModel(this.model);
+		this.model = new TrainingModel();;
 		initComponents();
 		registerRefreshable(true);
 	}
@@ -42,7 +41,7 @@ public class TrainingModulePanel extends LazyPanel {
 		this.model.setActivePlayer(null);
 		this.model.resetFutureTrainings();
 		// reload the staff, could have changed
-		setStaffInTrainingModel(this.model);
+		//setStaffInTrainingModel(this.model);
 
 		if (oldPlayer != null) {
 			Player player = HOVerwaltung.instance().getModel()
@@ -54,24 +53,19 @@ public class TrainingModulePanel extends LazyPanel {
 	private void initComponents() {
 		setLayout(new BorderLayout());
 
-		JSplitPane leftPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				new SkillupPanel(this.model), new StaffPanel(this.model));
-		leftPane.setResizeWeight(1);
-		leftPane.setDividerLocation(UserParameter.instance().training_lowerLeftSplitPane);
-		leftPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.training_lowerLeftSplitPane));
+		var trainingDevelopmentPanel = new TrainingDevelopmentPanel(this.model);
 
-		JSplitPane bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPane,
+		JSplitPane bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, trainingDevelopmentPanel,
 				new JScrollPane(new PlayerDetailPanel(this.model)));
 		bottomPanel.setDividerLocation(UserParameter.instance().training_bottomSplitPane);
 		bottomPanel.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
 				new DividerListener(DividerListener.training_bottomSplitPane));
 
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab(getLangStr("Training"), new OutputPanel(this.model));
-		tabbedPane.addTab(getLangStr("MainPanel.Prediction"), new TrainingRecapPanel(this.model));
-		tabbedPane.addTab(getLangStr("MainPanel.Analyzer"), new AnalyzerPanel(this.model));
-		tabbedPane.addTab(getLangStr("MainPanel.Effect"), new EffectPanel());
+		tabbedPane.addTab(Helper.getTranslation("Training"), new OutputPanel(this.model));
+		tabbedPane.addTab(Helper.getTranslation("MainPanel.Prediction"), new TrainingPredictionPanel(this.model));
+		tabbedPane.addTab(Helper.getTranslation("MainPanel.Analyzer"), new AnalyzerPanel(this.model));
+		tabbedPane.addTab(Helper.getTranslation("MainPanel.Effect"), new EffectPanel());
 
 		JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, bottomPanel);
 		splitPanel.setDividerLocation(UserParameter.instance().training_mainSplitPane);
@@ -88,6 +82,7 @@ public class TrainingModulePanel extends LazyPanel {
 		add(mainPanel, BorderLayout.CENTER);
 	}
 
+	/*
 	private void setStaffInTrainingModel(TrainingModel trainingModel) {
 		HOModel hoModel = HOVerwaltung.instance().getModel();
 		// Assistant coaches
@@ -109,8 +104,5 @@ public class TrainingModulePanel extends LazyPanel {
 			trainingModel.setTrainerLevel(4);
 		}
 	}
-
-	private String getLangStr(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
-	}
+*/
 }

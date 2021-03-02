@@ -8,6 +8,7 @@ import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
+import core.training.TrainingWeekManager;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.training.TrainingPerWeek;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -421,24 +423,22 @@ public class HOModel {
     }
 
     /**
-     * Returns Trainer informatin
+     * Returns Trainer information
      */
     public final Player getTrainer() {
-		Player trainer = null;
-    	for ( Player p : getCurrentPlayers()){
-			if ( p.isTrainer()){
-				if (trainer == null || p.getTrainerSkill() > trainer.getTrainerSkill()){
-					trainer = p;
-				}
-			}
-		}
+        Player trainer = null;
+        for (Player p : getCurrentPlayers()) {
+            if (p.isTrainer()) {
+                trainer = p;
+                break;
+            }
+        }
 
         // Nt team protection, they may have no coach:
-        if (trainer == null)
-        {
-        	trainer = new Player();
-        	trainer.setTrainerSkill(7);
-        	trainer.setTrainerTyp(2); // neutral;
+        if (trainer == null) {
+            trainer = new Player();
+            trainer.setTrainerSkill(7);
+            trainer.setTrainerTyp(2); // neutral;
         }
 
         return trainer;
@@ -623,5 +623,10 @@ public class HOModel {
                 .filter(i->i.getMatchDate().after(date))
                 .sorted(Comparator.comparing(YouthTraining::getMatchDate))
                 .collect(Collectors.toList());
+    }
+
+    public void storeTrainingsSinceLastDownload() {
+        var recentTrainings = TrainingManager.instance().getRecentTrainings();
+        DBManager.instance().saveTrainings(recentTrainings,false);
     }
 }

@@ -31,7 +31,7 @@ public class OptionenDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private FormelPanel m_jpFormeln;
-	private SonstigeOptionenPanel m_jpSonstigeOptionen;
+	private GeneralSettingsPanel m_jpSonstigeOptionen;
 	private TrainingsOptionenPanel m_jpTrainingsOptionen;
 	private UserColumnsPanel m_jpUserColumns;
 	private ReleaseChannelPanel m_jpReleaseChannelsPanel;
@@ -84,7 +84,7 @@ public class OptionenDialog extends JDialog {
 		JTabbedPane tabbedPane = new JTabbedPane();
 
 		// Misc
-		m_jpSonstigeOptionen = new SonstigeOptionenPanel();
+		m_jpSonstigeOptionen = new GeneralSettingsPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verschiedenes"),
 				new JScrollPane(m_jpSonstigeOptionen));
 

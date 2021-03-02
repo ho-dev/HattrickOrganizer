@@ -186,6 +186,8 @@ task media(type: com.install4j.gradle.Install4jTask) {
 
     // 64 -> Windows archive
     // 481 -> Windows archive JRE
+    // 1208 -> Windows archive (32bits)
+    // 1211 -> Windows archive JRE (32bits)
 
     // 172 -> macOS Single Bundle
     // 473 -> macOS Single Bundle JRE
@@ -201,7 +203,7 @@ task media(type: com.install4j.gradle.Install4jTask) {
     // 464  -> Linux rpm JRE
     // 471 -> Linux deb JRE
 
-    buildIds = [60, 485, 64, 481, 172, 473, 173, 477, 1062, 1064, 1203, 1206]
+    buildIds = [60, 485, 64, 481, 172, 473, 173, 477, 1062, 1064, 1203, 1206, 1208, 1211]
     String versionType
 
     switch(development_stage) {

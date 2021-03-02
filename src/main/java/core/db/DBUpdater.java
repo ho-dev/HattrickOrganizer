@@ -12,6 +12,8 @@ import java.time.temporal.WeekFields;
 import java.util.*;
 import javax.swing.JOptionPane;
 import core.HO;
+import module.youth.YouthPlayer;
+import module.youth.YouthSkillInfo;
 
 final class DBUpdater {
 	JDBCAdapter m_clJDBCAdapter;
@@ -145,6 +147,11 @@ final class DBUpdater {
 			dbManager.getTable(YouthScoutCommentTable.TABLENAME).createTable();
 		}
 
+		AbstractTable youthplayerTable = dbManager.getTable(YouthPlayerTable.TABLENAME);
+		for ( var skill: YouthPlayer.skillIds) {
+			youthplayerTable.tryAddColumn(skill+"Top3", "BOOLEAN");
+		}
+
 		if (!tableExists(TeamsLogoTable.TABLENAME)) {
 			dbManager.getTable(TeamsLogoTable.TABLENAME).createTable();
 		}
@@ -252,18 +259,21 @@ final class DBUpdater {
 			futureTrainingTable.tryAddColumn("COACH_LEVEL","INTEGER");
 			futureTrainingTable.tryAddColumn("TRAINING_ASSISTANTS_LEVEL", "INTEGER");
 			futureTrainingTable.tryAddColumn("TRAINING_DATE", "TIMESTAMP");
+			futureTrainingTable.tryAddColumn("SOURCE", "INTEGER");
 
 
 			// Step 2: update columns with non-null values to ensure NOT NULL clauses can be called
 			// we store week and season information for future treatment
 			String sql = "UPDATE " + FutureTrainingTable.TABLENAME +
-					" SET TRAINING_DATE=timestamp('1900-01-01'),  TRAINING_ASSISTANTS_LEVEL=WEEK, COACH_LEVEL=SEASON WHERE TRUE";
+					" SET TRAINING_DATE=timestamp('1900-01-01'), TRAINING_ASSISTANTS_LEVEL=WEEK, COACH_LEVEL=SEASON, SOURCE=" +
+					DBDataSource.MANUAL.getValue() + " WHERE TRUE";
 			m_clJDBCAdapter.executeUpdate(sql);
 
 			// Step 3. Finalize upgrade of FUTURETRAININGS table structure ===============================
 			futureTrainingTable.tryChangeColumn("COACH_LEVEL", "NOT NULL");
 			futureTrainingTable.tryChangeColumn("TRAINING_ASSISTANTS_LEVEL", "NOT NULL");
 			futureTrainingTable.tryChangeColumn("TRAINING_DATE", "NOT NULL");
+			futureTrainingTable.tryChangeColumn("SOURCE", "NOT NULL");
 			futureTrainingTable.tryRenameColumn("TYPE", "TRAINING_TYPE");
 			futureTrainingTable.tryRenameColumn("INTENSITY", "TRAINING_INTENSITY");
 			futureTrainingTable.tryRenameColumn("STAMINATRAININGPART", "STAMINA_SHARE");

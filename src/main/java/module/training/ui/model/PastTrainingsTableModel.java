@@ -20,6 +20,10 @@ import java.util.ListIterator;
 public class PastTrainingsTableModel extends AbstractTrainingsTableModel {
 
 
+	public PastTrainingsTableModel() {
+		super(module.training.TrainingType.PAST_TRAINING);
+	}
+
 	/**
 	 * Populate the table with the content of TRAININGS table
 	 */

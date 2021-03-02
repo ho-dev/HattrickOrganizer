@@ -20,10 +20,9 @@ import javax.swing.SwingConstants;
 class ComboBoxPanel extends ImagePanel {
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private static final long serialVersionUID = 1L;
 	private JComboBox m_jcbComboBox;
     private JLabel m_jlLabel;
-    private int m_iTextbreite = 80;
+    private final int m_iTextbreite;
 
     //~ Constructors -------------------------------------------------------------------------------
 

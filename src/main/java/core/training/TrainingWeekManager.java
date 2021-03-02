@@ -275,4 +275,19 @@ public class TrainingWeekManager {
 		DBManager.instance().saveTrainings(m_Trainings, false);
 	}
 
+	/**
+	 * The function push elements of m_Trainings into Training table but not replacing existing entries
+	 *
+	 */
+	public void pushPastTrainings2TrainingsTable(){
+		List<TrainingPerWeek> pastTrainingsSinceLastUpdate = new ArrayList<>();
+		for (var training: m_Trainings){
+			if (training.getTrainingDate().isBefore(cl_NextTrainingDate))
+			{
+				pastTrainingsSinceLastUpdate.add(training);
+			}
+		}
+		DBManager.instance().saveTrainings(pastTrainingsSinceLastUpdate, false);
+	}
+
 }
