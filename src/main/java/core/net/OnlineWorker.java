@@ -13,14 +13,10 @@ import core.model.UserParameter;
 import core.model.match.*;
 import core.model.misc.Regiondetails;
 import core.model.misc.TrainingEvent;
-import core.model.player.Player;
-import core.training.TrainingManager;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
 import module.lineup.Lineup;
-import module.lineup.LineupSettingsPanel;
-import module.teamAnalyzer.vo.MatchRating;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.Color;
@@ -134,7 +130,7 @@ public class OnlineWorker {
 //													.getLineup()));
 
 							// reset value of TS, confidence in Lineup Settings Panel after data download
-							HOMainFrame.instance().getLineupPanel().getLineupSettingsPanel().setRealValues();
+							HOMainFrame.instance().getLineupPanel().getLineupSettingsPanel().backupRealGameSettings();
 
 						}
 						// Info
