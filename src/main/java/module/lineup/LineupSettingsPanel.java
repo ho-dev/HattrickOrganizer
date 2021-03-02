@@ -97,10 +97,13 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	private int m_iRealTrainerType;
 	private int m_iRealTacticalAssistantsLevel;
 
-	final HOModel homodel = HOVerwaltung.instance().getModel();
+	private HOModel homodel;
 
 
-	public void setRealValues(){
+	public void backupRealGameSettings(){
+
+		homodel = HOVerwaltung.instance().getModel();
+
 		//the following values are stored to allow reverting to real value after playing with the various lineup settings
 		if ((homodel.getTeam() != null) && (homodel.getClub() != null) && (homodel.getTrainer() != null)) {
 			m_iRealTeamSpirit = homodel.getTeam().getTeamSpirit();
@@ -120,7 +123,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 
 	public LineupSettingsPanel(LineupPanel parent) {
 		lineupPanel = parent;
-		setRealValues();
+		backupRealGameSettings();
 		initComponents();
 		core.gui.RefreshManager.instance().registerRefreshable(this);
 	}
