@@ -20,7 +20,9 @@ dependencies {
     implementation 'com.github.scribejava:scribejava-core:8.1.0'
     implementation 'org.hsqldb:hsqldb:2.4.1'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.squareup.okhttp3:okhttp:4.3.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okhttp3:okhttp-tls:4.9.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
     implementation 'com.github.weisj:darklaf-core:2.5.5'               //'darklaf-core:latest.integration'
     implementation 'com.github.weisj:darklaf-theme:2.5.5'              //'darklaf-theme:latest.integration'
     implementation 'com.github.weisj:darklaf-property-loader:2.5.5'    //darklaf-property-loader:latest.integration'
