@@ -44,6 +44,8 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 	private JButton m_jbEditSelectedFutureTrainings;
 	private JSplitPane splitPane;
 
+	private ListSelectionModel m_lsm;
+
 	private final TrainingModel model;
 
 	/**
@@ -66,21 +68,39 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 	}
 
 	private void addListeners() {
-		this.m_jbEditAllFutureTrainings.addActionListener(arg0 -> {
+
+		Map<Object, Object> colorMap = Map.of("trainingColor1", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_1),
+				"trainingColor2", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_2));
+
+		Object[] options = {Helper.getTranslation("ls.button.close")};
+
+		m_jbEditSelectedFutureTrainings.addActionListener(arg0 -> {
+
+			TableCellEditor editor = futureTrainingsTable.getCellEditor();
+			if (editor != null) {
+				editor.stopCellEditing();
+			}
+
+
+			JOptionPane.showOptionDialog(getTopLevelAncestor(),
+					new FutureTrainingsEditionPanel(model, futureTrainingsTableModel, m_lsm),
+					Helper.getTranslation("ls.module.training.edit_selected_future_trainings.tt"),
+					JOptionPane.NO_OPTION,
+					JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25,25),
+					options, options[0]);
+		});
+
+
+		m_jbEditAllFutureTrainings.addActionListener(arg0 -> {
 			TableCellEditor editor = futureTrainingsTable.getCellEditor();
 
 			if (editor != null) {
 				editor.stopCellEditing();
 			}
 
-			Object[] options = {Helper.getTranslation("ls.button.close")};
-
-			Map<Object, Object> colorMap = Map.of("trainingColor1", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_1),
-					"trainingColor2", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_2));
-
 			JOptionPane.showOptionDialog(getTopLevelAncestor(),
 					new FutureTrainingsEditionPanel(model, futureTrainingsTableModel),
-					Helper.getTranslation("ls.module.training.edit_future_trainings.tt"),
+					Helper.getTranslation("ls.module.training.edit_all_future_trainings.tt"),
 					JOptionPane.NO_OPTION,
 					JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25,25),
 					options, options[0]);
@@ -236,6 +256,14 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 			}
 
 		};
+
+		ListSelectionModel listSelectionModel = futureTrainingsTable.getSelectionModel();
+		listSelectionModel.addListSelectionListener(e -> {
+			m_lsm= (ListSelectionModel)e.getSource();
+			m_jbEditSelectedFutureTrainings.setEnabled(!m_lsm.isSelectionEmpty());
+		});
+
+
 		JScrollPane lowerScrollPane = new JScrollPane(this.futureTrainingsTable);
 		lowerScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		lGbc.gridx = 0;

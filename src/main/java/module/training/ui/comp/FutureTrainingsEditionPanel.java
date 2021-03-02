@@ -12,7 +12,9 @@ import module.training.ui.model.TrainingModel;
 import java.awt.*;
 import static module.lineup.LineupPanel.TITLE_FG;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.swing.*;
 
 
@@ -27,12 +29,26 @@ public class FutureTrainingsEditionPanel extends JPanel {
     private JComboBox m_jcbTrainingType;
     private JComboBox m_jcbCoachSkillEditor;
     private JComboBox m_jcbAssitantsTotalLevelEditor;
-
+    private Set m_selectedTrainingDates;
     private final TrainingModel m_TrainingModel;
+
+
+    public FutureTrainingsEditionPanel(TrainingModel _TrainingModel, FutureTrainingsTableModel fm, ListSelectionModel lsm) {
+        setLayout(new BorderLayout());
+        m_TrainingModel = _TrainingModel;
+        m_FutureTrainingsTableModel = fm;
+        m_selectedTrainingDates = new HashSet();
+        for (var i : lsm.getSelectedIndices()){
+            TrainingPerWeek tpw = _TrainingModel.getFutureTrainings().get(i);
+            m_selectedTrainingDates.add(tpw.getTrainingDate());
+        }
+        initComponents();
+    }
 
 
     public FutureTrainingsEditionPanel(TrainingModel _TrainingModel, FutureTrainingsTableModel fm) {
         setLayout(new BorderLayout());
+        m_selectedTrainingDates = null;
         m_TrainingModel = _TrainingModel;
         m_FutureTrainingsTableModel = fm;
         initComponents();
@@ -50,6 +66,13 @@ public class FutureTrainingsEditionPanel extends JPanel {
         List<TrainingPerWeek> futureTrainingsToSave = new ArrayList<TrainingPerWeek>();
 
         for (TrainingPerWeek train: this.m_TrainingModel.getFutureTrainings()) {
+
+            if(m_selectedTrainingDates != null){
+                if ( ! m_selectedTrainingDates.contains(train.getTrainingDate())){
+                    continue;
+                }
+            }
+
             if(m_jcbTrainingType.getSelectedItem() != null){
                 train.setTrainingType(((CBItem) m_jcbTrainingType.getSelectedItem()).getId());
             }
