@@ -1138,7 +1138,7 @@ return true;</property>
       </excludedLaunchers>
       <jreBundle usePack200="false" />
     </windows>
-    <windows name="Windows (32bits) - JRE" id="1206" mediaFileName="HOSetup-32bits-${compiler:HO_version}${compiler:versionType}-JRE">
+    <windows name="Windows (32bits) - JRE" id="1206" mediaFileName="HOSetup-32bits-${compiler:HO_version}${compiler:versionType}-JRE" jreBitType="32">
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="274" />
