@@ -296,6 +296,11 @@ task CreateDistribution (dependsOn: installDist) {
             into "${distribDir}"
         }
 
+        copy {
+            from "${projectDir}\\src\\main\\resources\\truststore.jks"
+            into "${distribDir}"
+        }
+
         delete "${distribDir}\\bin"
         delete "${distribDir}\\lib"
 
