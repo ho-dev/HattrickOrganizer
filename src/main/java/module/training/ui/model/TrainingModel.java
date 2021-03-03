@@ -158,12 +158,12 @@ public class TrainingModel {
 		return WeeklyTrainingType.instance(t.getTrainingType()).getTrainingSkillOsmosisTrainingPositions().length > 0;
 	}
 
-	private List<TrainingPerWeek> adjustFutureTrainingsVector(List<TrainingPerWeek> _futureTrainings,int requiredNBentries) {
+	private List<TrainingPerWeek> adjustFutureTrainingsVector(List<TrainingPerWeek> _futureTrainings, int requiredNBentries) {
 		Instant nextTrainingDate = TrainingManager.instance().getNextWeekTraining().getTrainingDate();
 		Optional<TrainingPerWeek> optionallastTraining = _futureTrainings.stream().max(Comparator.comparing(TrainingPerWeek::getTrainingDate));
 		List<TrainingPerWeek> newfutureTrainings = new ArrayList<>();
 
-		if (optionallastTraining.isPresent()) {
+		if (_futureTrainings.size() != 0){
 			// removal of old entries
 			for (var entry : _futureTrainings) {
 				if (!entry.getTrainingDate().isBefore(nextTrainingDate)) {
@@ -173,29 +173,35 @@ public class TrainingModel {
 					}
 				}
 			}
+		}
 
-			if(newfutureTrainings.size() < requiredNBentries) {
-				// Adding new entries
-				TrainingPerWeek latestTraining = optionallastTraining.get();
-				int nbWeek = 1;
-				ZonedDateTime zdtFutureTrainingDate;
+		TrainingPerWeek latestTraining;
 
-				HTDatetime oTrainingDate = new HTDatetime(latestTraining.getTrainingDate());
-				ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
-				TrainingPerWeek futureTraining;
-
-				while (newfutureTrainings.size() < requiredNBentries) {
-					zdtFutureTrainingDate = zdtrefDate.plus(nbWeek * 7, ChronoUnit.DAYS);
-					futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), latestTraining.getTrainingType(), latestTraining.getTrainingIntensity(),
-							latestTraining.getStaminaShare(), latestTraining.getTrainingAssistantsLevel(), latestTraining.getCoachLevel(), DBDataSource.GUESS);
-					newfutureTrainings.add(futureTraining);
-					nbWeek++;
-				}
-			}
-
+		if (optionallastTraining.isPresent()) {
+			latestTraining = optionallastTraining.get();
 		}
 		else {
-			HOLogger.instance().error(getClass(), "Can't create new entries in FutureTrainings table");
+			latestTraining = TrainingManager.instance().getNextWeekTraining();
+		}
+
+
+		if(newfutureTrainings.size() < requiredNBentries) {
+			// Adding new entries
+
+			int nbWeek = 1;
+			ZonedDateTime zdtFutureTrainingDate;
+
+			HTDatetime oTrainingDate = new HTDatetime(latestTraining.getTrainingDate());
+			ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
+			TrainingPerWeek futureTraining;
+
+			while (newfutureTrainings.size() < requiredNBentries) {
+				zdtFutureTrainingDate = zdtrefDate.plus(nbWeek * 7, ChronoUnit.DAYS);
+				futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), latestTraining.getTrainingType(), latestTraining.getTrainingIntensity(),
+						latestTraining.getStaminaShare(), latestTraining.getTrainingAssistantsLevel(), latestTraining.getCoachLevel(), DBDataSource.GUESS);
+				newfutureTrainings.add(futureTraining);
+				nbWeek++;
+			}
 		}
 
 		return newfutureTrainings;
