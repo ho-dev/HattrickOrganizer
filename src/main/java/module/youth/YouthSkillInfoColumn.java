@@ -97,7 +97,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
         xStart = (int) (this.skillInfo.getStartValue() * 10);
         if ( this.skillInfo.isTop3() != null && this.skillInfo.isTop3()){
             g.setColor(Color.BLACK);
-            g.drawRect(xStart,0, xEnd-xStart, bar_thickness);
+            g.drawLine(0,bar_thickness, bar_width, bar_thickness );
         }
 
         // draw trained range
