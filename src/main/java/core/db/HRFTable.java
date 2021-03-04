@@ -319,7 +319,7 @@ public final class HRFTable extends AbstractTable {
 		try {
 			if (rs != null) {
 				while (rs.next()) {
-					ret.append(separator).append(rs.getInt(0));
+					ret.append(separator).append(rs.getInt("ID"));
 					separator=",";
 				}
 			}
