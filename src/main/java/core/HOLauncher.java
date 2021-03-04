@@ -108,7 +108,7 @@ public class HOLauncher {
 	}
 
 	private static boolean isValidDestPath(String fileName) {
-		final List<String> updateFolders = List.of("\\.\\/prediction/.*", "\\.\\/[^\\/]*\\.jar", "\\.\\/changelog\\.html");
+		final List<String> updateFolders = List.of("\\.\\/prediction/.*", "\\.\\/[^\\/]*\\.jar", "\\.\\/changelog\\.html", "\\.\\/truststore\\.jks");
 		Pattern pattern;
 
 		for (String regex : updateFolders) {
