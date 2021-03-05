@@ -9,11 +9,12 @@ import java.util.List;
 
 
 /**
- * 
+ * Model used to display players in the Squad table.
+ *
  * @author Thorsten Dietz
  * @since 1.36
  */
-public final  class PlayerOverviewModel extends HOTableModel {
+public final class PlayerOverviewModel extends HOTableModel {
 	
 	private static final long serialVersionUID = 5149408240369536138L;
 	
@@ -30,12 +31,11 @@ public final  class PlayerOverviewModel extends HOTableModel {
 	}
 	
 	/**
-	 * initialize all columns
-	 *
+	 * initialize all columns.
 	 */
 	private void initialize() {
-		UserColumn[] basic =  UserColumnFactory.createPlayerBasicArray();
-		columns = new UserColumn[49];
+		UserColumn[] basic = UserColumnFactory.createPlayerBasicArray();
+		columns = new UserColumn[50];
 		columns[0] = basic[0];
 		columns[48] = basic[1];
 		
@@ -56,7 +56,7 @@ public final  class PlayerOverviewModel extends HOTableModel {
 		for (int i = 0; i < goals.length; i++) {
 			columns[goalsIndex+i] = goals[i];
 		}
-		UserColumn[] add =  UserColumnFactory.createPlayerAdditionalArray();
+		UserColumn[] add = UserColumnFactory.createPlayerAdditionalArray();
 		columns[1] = add[0];
 		columns[2] = add[1];
 		columns[4] = add[2];
@@ -67,16 +67,17 @@ public final  class PlayerOverviewModel extends HOTableModel {
 		columns[46] = add[7];
 		columns[8] = add[8];// tsi
 		columns[22] = add[9]; // lastmatch
-		columns[47] = add[10];
-		columns[3] = add[11];// Motherclub
+		columns[47] = add[11];
+		columns[3] = add[12];// Motherclub
+		columns[49] = add[10];
 	}
 	
-    public final Player getSpieler(int id) {
-        //Kann < 0 sein für TempSpieler if ( id > 0 )
+    public final Player getPlayer(int id) {
+        // Can be negative for temp player
         if (id != 0) {
             for (int i = 0; i < m_vPlayers.size(); i++) {
-                if (((Player) m_vPlayers.get(i)).getPlayerID() == id) {
-                    return (Player) m_vPlayers.get(i);
+                if (m_vPlayers.get(i).getPlayerID() == id) {
+                    return m_vPlayers.get(i);
                 }
             }
         }
@@ -85,7 +86,7 @@ public final  class PlayerOverviewModel extends HOTableModel {
     }
     
     /**
-     * Player neu setzen
+     * Sets the new list of players.
      */
     public final void setValues(List<Player> player) {
     	m_vPlayers = player;
@@ -93,30 +94,15 @@ public final  class PlayerOverviewModel extends HOTableModel {
     }
     
     /**
-     * Fügt der Tabelle einen Player hinzu
-     */
-    public final void addSpieler(Player player, int index) {
-    	m_vPlayers.add(index, player);
-        initData();
-    }
-    
-    /**
-     * Passt alle Spalten an, die Verändungen bei einem HRF-Vergleich anzeigen
+     * Resets the data for an HRF comparison.
      */
     public final void reInitDataHRFVergleich() {
         initData();
     }
+
     
     /**
-     * Entfernt den Player aus der Tabelle
-     */
-    public final void removeSpieler(Player player) {
-    	m_vPlayers.remove(player);
-        initData();
-    }
-    
-    /**
-     * Gibt den Player mit der gleichen ID, wie die übergebene, zurück, oder null
+     * Returns the {@link Player} with the same ID as the instance passed, or <code>null</code>.
      */
     private Player getVergleichsSpieler(Player vorlage) {
         final int id = vorlage.getPlayerID();
@@ -127,7 +113,6 @@ public final  class PlayerOverviewModel extends HOTableModel {
             final Player vergleichsPlayer = SpielerTrainingsVergleichsPanel.getVergleichsPlayer().get(i);
 
             if (vergleichsPlayer.getPlayerID() == id) {
-                //Treffer
                 return vergleichsPlayer;
             }
         }
@@ -140,7 +125,7 @@ public final  class PlayerOverviewModel extends HOTableModel {
     }
     
     /**
-     * Gibt den Player aus dem ersten HRF, wo der Player aufgetauch ist, zurück
+     * Returns the {@link Player} from the first HRF in which he appears.
      */
     private Player getVergleichsSpielerFirstHRF(Player vorlage) {
         return core.db.DBManager.instance().getSpielerFirstHRF(vorlage.getPlayerID());

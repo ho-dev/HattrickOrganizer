@@ -13,8 +13,8 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ## Highlights
   - complete makeover of the statistics module (#788)
   - improving consistency of dark themes
-  - preview of new module Youth academy (#367) 
-      
+  - preview of new module Youth academy (#367)
+
 
 
 ## Detailed Changelog
@@ -31,10 +31,12 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ### Squad
 
+  - Separate rating and match date columns for easier sorting. (#895)
+
 
 ### Team Analyser
   - tuning simulation (#865)
- 
+
 
 ### Rating
   - new default model
@@ -46,6 +48,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ### Lineup
   - Match orders remove substitution limit (#856)
   - complete revamp of lineup panel
+  - Separate rating and match date columns for easier sorting. (#895)
 
 
 ### IFA
@@ -74,8 +77,8 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 # Changelist HO! 4.1
 
   - fixes NPE events in module Player Analysis and SpecialEvents (#797)
-  
-  
+
+
 
 # Changelist HO! 4.0
 
@@ -127,8 +130,8 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ### IFA
 
   - [FIX] add supports for 9 new leagues: Belize, Madagascar, Botswana, Saint Vincent and the Grenadines, Myanmar, Zambia, San Marino, Puerto Rico and Haiti [#539]
-  
-  
+
+
 ### Training
 
   - [FIX] Fix bug of season correction calculation. Training effect table shows wrong seasons in week 16 [#539]

@@ -13,6 +13,7 @@ import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
+import core.gui.comp.entry.MatchDateTableEntry;
 import core.gui.comp.entry.RatingTableEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.renderer.SmilieListCellRenderer;
@@ -21,6 +22,7 @@ import core.model.FactorObject;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
+import core.model.match.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -72,7 +74,10 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     private RatingTableEntry m_jpRating = new RatingTableEntry();
     private final ColorLabelEntry m_jpBestPosition = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-    private RatingTableEntry m_jpLastMatchRating = new RatingTableEntry();
+    private DoubleLabelEntries m_jpLastMatchRating = new DoubleLabelEntries(
+            new RatingTableEntry(),
+            new MatchDateTableEntry(null, MatchType.NONE),
+            new GridBagLayout());
     private JLabel m_lastMatchLink = null;
 
     // Top Row, column 2
@@ -353,8 +358,8 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         if (m_clPlayer.getLastMatchRating() > 0) {
             MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(m_clPlayer.getLastMatchId());
             if (info != null) {
-                m_jpLastMatchRating.setRating((float)m_clPlayer.getLastMatchRating());
-                m_jpLastMatchRating.setMatchInfo(m_clPlayer.getLastMatchDate(), info.getMatchType());
+                ((RatingTableEntry) m_jpLastMatchRating.getTableEntryLeft()).setRating((float)m_clPlayer.getLastMatchRating());
+                ((MatchDateTableEntry) m_jpLastMatchRating.getTableEntryRight()).setMatchInfo(m_clPlayer.getLastMatchDate(), info.getMatchType());
             }
         }
         m_jpNationality.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalitaet()));
@@ -673,17 +678,18 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         label = new JLabel(HOVerwaltung.instance().getLanguageString("LastMatchRating"));
         initNormalLabel(0, 4, constraints, layout, panel, label);
         initNormalField(1, 4, constraints, layout, panel, m_jpLastMatchRating.getComponent(false));
-        m_lastMatchLink = m_jpLastMatchRating.getLabelMatch();
+        m_lastMatchLink = ((MatchDateTableEntry)m_jpLastMatchRating.getTableEntryRight()).getMatchLink();
         m_lastMatchLink.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(m_clPlayer!=null){
-                    if(e.isShiftDown()){
+                if (m_clPlayer != null) {
+                    if (e.isShiftDown()) {
                         int matchId = m_clPlayer.getLastMatchId();
                         MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
-                        HattrickLink.showMatch(matchId+"",info.getMatchType().isOfficial());
-                    }else
-                    HOMainFrame.instance().showMatch(m_clPlayer.getLastMatchId());
+                        HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
+                    } else {
+                        HOMainFrame.instance().showMatch(m_clPlayer.getLastMatchId());
+                    }
                 }
             }
         });
