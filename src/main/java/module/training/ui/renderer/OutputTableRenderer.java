@@ -4,20 +4,16 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import module.training.ui.comp.PlayerNameCell;
 import module.training.ui.comp.VerticalIndicator;
-
 import java.awt.*;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * {@link javax.swing.table.TableCellRenderer} for the training results table
- * in the Training tab.
+ * TableCellRenderer for the training results table in the Training tab.
  */
 public class OutputTableRenderer extends DefaultTableCellRenderer {
     //~ Methods ------------------------------------------------------------------------------------
 
-    private static final long serialVersionUID = 7179773036740605371L;
 
     private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
     private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);

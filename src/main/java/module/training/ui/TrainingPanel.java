@@ -48,6 +48,10 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 
 	private final TrainingModel model;
 
+	private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
+	private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
+	private static final Color TABLE_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
+
 	/**
 	 * Creates a new TrainingPanel object.
 	 */
@@ -140,6 +144,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 					TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
 				int modelRow = convertRowIndexToModel(row);
+				int selectedRow = convertRowIndexToModel(super.getSelectedRow());
 				var histoTraining = TrainingManager.instance().getHistoricalTrainings();
 				var nbRows = histoTraining.size();
 				TrainingPerWeek tpw = histoTraining.get(nbRows- modelRow- 1);
@@ -148,6 +153,12 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 					case MANUAL -> c.setForeground(ThemeManager.getColor(HOColorName.BLUE));
 					case GUESS -> c.setForeground(ThemeManager.getColor(HOColorName.RED));
 					default -> c.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
+				}
+				if (modelRow == selectedRow) {
+					c.setBackground(SELECTION_BG);
+				}
+				else {
+					c.setBackground(TABLE_BG);
 				}
 				return c;
 			}
@@ -222,6 +233,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 			public Component prepareRenderer(
 					TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
+				int selectedRow = convertRowIndexToModel(super.getSelectedRow());
 				int modelRow = convertRowIndexToModel(row);
 				TrainingPerWeek tpw = model.getFutureTrainings().get(modelRow);
 				var source = tpw.getSource();
@@ -229,6 +241,12 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 					case MANUAL -> c.setForeground(ThemeManager.getColor(HOColorName.BLUE));
 					case GUESS -> c.setForeground(ThemeManager.getColor(HOColorName.RED));
 					default -> c.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
+				}
+				if (modelRow == selectedRow) {
+					c.setBackground(SELECTION_BG);
+				}
+				else {
+					c.setBackground(TABLE_BG);
 				}
 				return c;
 			}
@@ -287,8 +305,14 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 
 
 		public TrainingTable(TableModel arg0) {
+			this(arg0, false);
+		}
+
+		public TrainingTable(TableModel arg0, boolean hasEditor) {
 			super(arg0);
-			setComboBoxEditor();
+			if (hasEditor) {
+				setComboBoxEditor();
+			}
 		}
 
 		/**

@@ -103,6 +103,52 @@ public class FutureTrainingsEditionPanel extends JPanel {
     }
 
     /**
+     * if a single value accross edited future training then default the CB to that value
+     */
+    private void setCBvalues() {
+
+        Set setTrainingType = new HashSet();
+        Set setIntensity = new HashSet();
+        Set setStaminaShare = new HashSet();
+        Set setCoachSkill = new HashSet();
+        Set setTrainingAssistantsLevel = new HashSet();
+
+        for (TrainingPerWeek train: m_TrainingModel.getFutureTrainings()) {
+
+            if(m_selectedTrainingDates != null){
+                if ( ! m_selectedTrainingDates.contains(train.getTrainingDate())){
+                    continue;
+                }
+            }
+
+            setTrainingType.add(train.getTrainingType());
+            setIntensity.add(train.getTrainingIntensity());
+            setStaminaShare.add(train.getStaminaShare());
+            setCoachSkill.add(train.getCoachLevel());
+            setTrainingAssistantsLevel.add(train.getTrainingAssistantsLevel());
+
+        }
+
+        if(setTrainingType.size() == 1){
+            m_jcbTrainingType.setSelectedItem(setTrainingType.iterator().next());
+        }
+        if(setIntensity.size() == 1){
+            m_jcbIntensity.setSelectedItem(setIntensity.iterator().next());
+        }
+        if(setStaminaShare.size() == 1){
+            m_jcbStaminaTrainingPart.setSelectedItem(setStaminaShare.iterator().next());
+        }
+        if(setCoachSkill.size() == 1){
+            m_jcbCoachSkillEditor.setSelectedItem(setCoachSkill.iterator().next());
+        }
+        if(setTrainingAssistantsLevel.size() == 1){
+            m_jcbAssitantsTotalLevelEditor.setSelectedItem(setTrainingAssistantsLevel.iterator().next());
+        }
+
+    }
+
+
+    /**
      * Initializes the state of this instance.
      */
     private void initComponents() {
@@ -177,6 +223,8 @@ public class FutureTrainingsEditionPanel extends JPanel {
         button.addActionListener(arg0 -> setFutureTrainings());
         gbc.gridx = 5;
         add(button, gbc);
+
+        setCBvalues();
 
     }
 
