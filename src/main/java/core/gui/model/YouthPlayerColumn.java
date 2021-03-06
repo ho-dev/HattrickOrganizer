@@ -9,21 +9,20 @@ import javax.swing.table.TableColumn;
 
 public class YouthPlayerColumn extends UserColumn {
 
-    static int nextId=0;
-    protected YouthPlayerColumn( String name) {
-        super(nextId++, name);
-        this.setDisplay(true);
-    }
-    public YouthPlayerColumn(String name,int minWidth){
-        this(name,name,minWidth);
-    }
-    public YouthPlayerColumn(String name, String tooltip, int minWidth){
-        super(nextId++,name,tooltip);
+    static int nextId = 0;
 
-        // TODO setting column width does not work
-        this.minWidth = minWidth;
-        preferredWidth = minWidth;
+    protected YouthPlayerColumn(String name) {
+        this(name, name, 50);
+    }
 
+    public YouthPlayerColumn(String name, int minWidth) {
+        this(name, name, minWidth);
+    }
+
+    public YouthPlayerColumn(String name, String tooltip, int minWidth) {
+        super(nextId++, name, tooltip);
+        this.minWidth=minWidth;
+        this.setPreferredWidth(minWidth);
         this.setDisplay(true);
     }
 
@@ -31,7 +30,7 @@ public class YouthPlayerColumn extends UserColumn {
         return new ColorLabelEntry(getValue(player), ColorLabelEntry.BG_STANDARD, false, 0);
     }
 
-    public int getValue(YouthPlayer player){
+    public int getValue(YouthPlayer player) {
         return player.getId();
     }
 
@@ -42,8 +41,7 @@ public class YouthPlayerColumn extends UserColumn {
 
     @Override
     public void setSize(TableColumn column) {
-        // TODO does not work
-        column.setMinWidth(200);
-        column.setPreferredWidth(200);
+        column.setMinWidth(50);
+        column.setPreferredWidth(100);
     }
 }
