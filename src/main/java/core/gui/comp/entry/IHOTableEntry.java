@@ -2,7 +2,13 @@ package core.gui.comp.entry;
 
 import org.jetbrains.annotations.NotNull;
 
-
+/**
+ * Classes implementing this interface create a {@link javax.swing.JComponent} that will
+ * be displayed as a cell in a {@link javax.swing.JTable}: they act as factories to
+ * create and initialise the UI component.
+ *
+ * <p>To display the component, call {@link #getComponent(boolean)}</p>.
+ */
 public interface IHOTableEntry extends Comparable<IHOTableEntry> {
 
 

@@ -5,34 +5,38 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.Color;
+import java.awt.*;
 
-import javax.swing.JComponent;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 
 /**
  * A panel with two labels to display two values in the same column, e.g. (value, diff).
+ *
+ * <p>The two labels within the resulting components will have equal width, unless the layout
+ * manager has been set.
  */
 public class DoubleLabelEntries extends AbstractHOTableEntry {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private DoppelLabel m_clComponent = new DoppelLabel();
+    private DoubleLabel m_clComponent = new DoubleLabel();
     private IHOTableEntry m_clLinks;
     private IHOTableEntry m_clRechts;
+
+    private LayoutManager layout;
 
     private final static Color DIFF_COLOR = ThemeManager.getColor(HOColorName.FG_INJURED);
 
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
-     * Creates a new DoppelLabelEntry object.
+     * Creates a new DoubleLabelEntries object.
      */
     public DoubleLabelEntries() {
     }
 
     /**
-     * Creates a new DoppelLabelEntry object.
+     * Creates a new DoubleLabelEntries object.
      *
      */
     public DoubleLabelEntries(Color color) {
@@ -41,16 +45,22 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
                                         SwingConstants.RIGHT);
         m_clRechts = new ColorLabelEntry("", DIFF_COLOR, color,
                                          SwingConstants.CENTER);
+
         createComponent();
     }
 
     /**
-     * Creates a new DoppelLabelEntry object.
+     * Creates a new DoubleLabelEntries object.
      *
      */
     public DoubleLabelEntries(IHOTableEntry links, IHOTableEntry rechts) {
+        this(links, rechts, null);
+    }
+
+    public DoubleLabelEntries(IHOTableEntry links, IHOTableEntry rechts, LayoutManager layout) {
         m_clLinks = links;
         m_clRechts = rechts;
+        setLayoutManager(layout);
         createComponent();
     }
 
@@ -61,8 +71,24 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
         final JComponent links = m_clLinks.getComponent(isSelected);
         final JComponent rechts = m_clRechts.getComponent(isSelected);
 
-        m_clComponent.add(links);
-        m_clComponent.add(rechts);
+        if (layout != null) {
+            m_clComponent.setLayoutManager(layout);
+        }
+
+        // If the layout is a GridBagLayout, force the components to take
+        // the full space of their respective cell.
+        if (layout instanceof GridBagLayout) {
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.fill = GridBagConstraints.BOTH;
+            gbc.weightx = 1.0;
+            gbc.weighty = 1.0;
+
+            m_clComponent.add(links, gbc);
+            m_clComponent.add(rechts, gbc);
+        } else {
+            m_clComponent.add(links);
+            m_clComponent.add(rechts);
+        }
 
         return m_clComponent;
     }
@@ -74,23 +100,25 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
     }
 
     /**
-     * Nur benutzen, wenn es auch ein ColorLabelEntry ist!
-     *
+     * Only use if left is a {@link ColorLabelEntry}.
      */
     public final ColorLabelEntry getLeft() {
         return (ColorLabelEntry) m_clLinks;
     }
 
     /**
-     * Nur benutzen, wenn es auch ein ColorLabelEntry ist!
-     *
+     * Only use if right is a {@link ColorLabelEntry}.
      */
     public final ColorLabelEntry getRight() {
         return (ColorLabelEntry) m_clRechts;
     }
 
-    public final IHOTableEntry getTableEntryLinks() {
+    public final IHOTableEntry getTableEntryLeft() {
         return m_clLinks;
+    }
+
+    public final IHOTableEntry getTableEntryRight() {
+        return m_clRechts;
     }
 
 	public final void clear() {
@@ -101,20 +129,22 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
 	public int compareTo(@NotNull IHOTableEntry obj) {
         if (obj instanceof DoubleLabelEntries) {
             final DoubleLabelEntries entry = (DoubleLabelEntries) obj;
-            return getTableEntryLinks().compareTo(entry.getTableEntryLinks());
+            return getTableEntryLeft().compareTo(entry.getTableEntryLeft());
         }
 
         return 0;
     }
 
-
 	public final void createComponent() {
-        m_clComponent = new DoppelLabel();
+        m_clComponent = new DoubleLabel();
     }
-
 
 	public void updateComponent() {
         m_clLinks.updateComponent();
         m_clRechts.updateComponent();
+    }
+
+    public void setLayoutManager(LayoutManager layout) {
+        this.layout = layout;
     }
 }

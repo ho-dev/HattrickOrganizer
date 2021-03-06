@@ -1,4 +1,3 @@
-// %3839090226:hoplugins.trainingExperience.ui%
 package module.training.ui;
 
 import core.gui.HOMainFrame;
@@ -17,7 +16,6 @@ import module.training.ui.model.ModelChange;
 import module.training.ui.model.OutputTableModel;
 import module.training.ui.model.TrainingModel;
 import module.training.ui.renderer.OutputTableRenderer;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -50,7 +48,6 @@ import javax.swing.table.TableRowSorter;
  */
 public class OutputPanel extends LazyImagePanel {
 
-    private static final long serialVersionUID = 7955126207696897546L;
     private JTable outputTable;
     private JButton importButton;
     private JButton calculateButton;
@@ -229,7 +226,6 @@ public class OutputPanel extends LazyImagePanel {
     }
 
     private class OutputTable extends JTable {
-        private static final long serialVersionUID = 1089805262735794338L;
 
         public OutputTable(TableModel dm) {
             super(dm);

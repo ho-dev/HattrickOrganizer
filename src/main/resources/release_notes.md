@@ -34,6 +34,8 @@ layout: page
 
 ### Squad
 
+  - Separate rating and match date columns for easier sorting. (#895)
+
 
 ### Team Analyser
 - tuning simulation (#865)
@@ -49,6 +51,7 @@ layout: page
 ### Lineup
 - Match orders remove substitution limit (#856)
 - complete revamp of lineup panel
+- Separate rating and match date columns for easier sorting. (#895)
 
 
 ### IFA
@@ -70,4 +73,3 @@ layout: page
 ## Translations
 - HO! is currently available in xxx languages thanks to the work of xxx translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
 - Translators contribution since the previous release (number of translated terms)
-

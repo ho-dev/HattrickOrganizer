@@ -11,18 +11,24 @@ import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
+import core.model.match.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.Helper;
 import module.playerOverview.SpielerStatusLabelEntry;
+
 import java.awt.Color;
 import java.sql.Timestamp;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableColumn;
 
-
+/**
+ * User column factory creates {@link core.gui.comp.table.UserColumn} instances used in the
+ * different {@link core.gui.comp.table.HOTableModel} table models.  Each column has a name,
+ * an ID, and may have a preferred width.
+ */
 final public class UserColumnFactory {
 
     public static final int NAME = 1;
@@ -32,6 +38,7 @@ final public class UserColumnFactory {
     public static final int ID = 440;
     public static final int DATUM = 450;
     public static final int RATING = 435;
+
     public static final int AUTO_LINEUP = 510;
     public static final int LAST_MATCH = 461;
 
@@ -80,7 +87,7 @@ final public class UserColumnFactory {
         playerColumn2Array[3] = new PlayerColumn2(RATING, "Rating") {
             @Override
             public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem) {
-                return new RatingTableEntry(spielerCBItem.getRating());
+                return new RatingTableEntry(spielerCBItem.getRating(), false);
             }
         };
 
@@ -495,7 +502,7 @@ final public class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createPlayerAdditionalArray() {
-        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[12];
+        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[13];
 
         playerAdditionalArray[0] = new PlayerColumn(10, " ", " ", 0) {
             @Override
@@ -712,7 +719,8 @@ final public class UserColumnFactory {
             }
         };
 
-        playerAdditionalArray[9] = new PlayerColumn(LAST_MATCH, "LastMatchRating", 150) {
+        // Last match rating column.
+        playerAdditionalArray[9] = new PlayerColumn(RATING, "Rating", 40) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 if (player.getLastMatchRating() > 0) {
@@ -720,14 +728,28 @@ final public class UserColumnFactory {
                     if (info == null) {
                         return new RatingTableEntry((float) player.getLastMatchRating(), true);
                     } else {
-                        return new RatingTableEntry((float) player.getLastMatchRating(), player.getLastMatchDate(), info.getMatchType(), true);
+                        return new RatingTableEntry((float) player.getLastMatchRating(), true);
                     }
                 }
                 return new RatingTableEntry();
             }
         };
 
-        playerAdditionalArray[10] = new PlayerColumn(436, "Marktwert", 140) {
+        // Last Match date column.
+        playerAdditionalArray[10] = new PlayerColumn(LAST_MATCH, "LastMatchRating", 80) {
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                if (player.getLastMatchRating() > 0) {
+                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId());
+                    if (info != null) {
+                        return new MatchDateTableEntry(info.getMatchDateAsTimestamp().toString(), info.getMatchType());
+                    }
+                }
+                return new MatchDateTableEntry(null, MatchType.NONE);
+            }
+        };
+
+        playerAdditionalArray[11] = new PlayerColumn(436, "Marktwert", 140) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 if (playerCompare == null) {
@@ -756,7 +778,7 @@ final public class UserColumnFactory {
             }
         };
 
-        playerAdditionalArray[11] = new PlayerColumn(437, "ls.player.short_motherclub", "ls.player.motherclub", 25) {
+        playerAdditionalArray[12] = new PlayerColumn(437, "ls.player.short_motherclub", "ls.player.motherclub", 25) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 HomegrownEntry home = new HomegrownEntry();

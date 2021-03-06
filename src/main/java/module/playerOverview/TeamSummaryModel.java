@@ -4,7 +4,6 @@ import core.model.UserParameter;
 import core.model.player.Player;
 
 import java.util.List;
-import java.util.Vector;
 
 public class TeamSummaryModel {
 

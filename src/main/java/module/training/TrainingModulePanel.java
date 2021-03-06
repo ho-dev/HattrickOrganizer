@@ -82,27 +82,4 @@ public class TrainingModulePanel extends LazyPanel {
 		add(mainPanel, BorderLayout.CENTER);
 	}
 
-	/*
-	private void setStaffInTrainingModel(TrainingModel trainingModel) {
-		HOModel hoModel = HOVerwaltung.instance().getModel();
-		// Assistant coaches
-		if (hoModel.getStaff() != null) {
-			// Loop over the staff members and add up the assistant coach levels
-			int level = 0;
-			List<StaffMember> staff = hoModel.getStaff();
-			for (StaffMember staffMember : staff) {
-				if (staffMember.getStaffType() == StaffType.ASSISTANTTRAINER) {
-					level += staffMember.getLevel();
-				}
-			}
-			trainingModel.setNumberOfCoTrainers(level);
-		}
-		// Main coach
-		if (hoModel.getTrainer() != null) {
-			trainingModel.setTrainerLevel(hoModel.getTrainer().getTrainerSkill());
-		} else {
-			trainingModel.setTrainerLevel(4);
-		}
-	}
-*/
 }

@@ -527,7 +527,7 @@ public class HOModel {
      * Remove a Player
      */
     public final void removePlayer(Player player) {
-    	if ( m_vPlayer != null) {
+    	if (m_vPlayer != null) {
 			m_vPlayer.remove(player);
 		}
     }
