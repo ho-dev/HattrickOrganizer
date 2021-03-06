@@ -7,6 +7,8 @@ import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.HOLogger;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -16,7 +18,7 @@ import javax.swing.JOptionPane;
  * Singleton class that holds training information.
  * The class is initilized during startup procedure
  */
-public class TrainingManager {
+public class TrainingManager implements PropertyChangeListener {
 
 	// singleton class
 	private static TrainingManager m_clInstance;
@@ -29,6 +31,10 @@ public class TrainingManager {
 	public static final boolean TRAININGDEBUG = false;
 
 
+	public void propertyChange(PropertyChangeEvent evt) {
+		m_clInstance = null;
+		TrainingWeekManager.reset();
+	}
 
     /**
      * Creates a new instance of TrainingsManager
@@ -48,6 +54,8 @@ public class TrainingManager {
 			// Load next week training
 			nextWeekTraining = TrainingWeekManager.getNextWeekTraining();
 		}
+
+		HOVerwaltung.instance().addPropertyChangeListener(this);
     }
 
 
@@ -56,7 +64,7 @@ public class TrainingManager {
 		recentTrainings.pushPastTrainings2TrainingsTable();
 		
 		// update historical trainings
-		historicalTrainings =  DBManager.instance().getTrainingList();
+		historicalTrainings = DBManager.instance().getTrainingList();
 	}
 
 
@@ -67,10 +75,6 @@ public class TrainingManager {
         return m_clInstance;
     }
 
-	public static void reset() {
-		m_clInstance = null;
-		TrainingWeekManager.reset();
-	}
 
     public List<TrainingPerWeek> getRecentTrainings() {
         return recentTrainings.getTrainingList();

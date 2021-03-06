@@ -1,36 +1,30 @@
 package core.model;
 
-import core.datatype.CBItem;
+
 import core.db.DBManager;
 import core.file.FileLoader;
 import core.file.hrf.HRF;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
-import core.training.TrainingManager;
 import core.util.HOLogger;
+import core.util.HTDatetime;
 import core.util.UTF8Control;
-import module.lineup.Lineup;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-/**
- * @author tom
- */
+
 public class HOVerwaltung {
-	// ~ Static fields/initializers
-	// -----------------------------------------------------------------
+
 
 	/** singelton */
 	protected static HOVerwaltung m_clInstance;
-
-	// ~ Instance fields
-	// ----------------------------------------------------------------------------
 
 	/** das Model */
 	protected HOModel m_clHoModel;
@@ -48,22 +42,29 @@ public class HOVerwaltung {
 
 	private int id;
 
-	// ~ Constructors
-	// -------------------------------------------------------------------------------
+	private PropertyChangeSupport support;
 
 	/**
 	 * Creates a new HOVerwaltung object.
 	 */
 	private HOVerwaltung() {
+		support = new PropertyChangeSupport(this);
 	}
 
 	// -----------------Hilfsmethoden---------------------------------------------
+
+	public void addPropertyChangeListener(PropertyChangeListener pcl) {
+		support.addPropertyChangeListener(pcl);
+	}
+
 
 	/**
 	 * Set the HOModel.
 	 */
 	public void setModel(HOModel model) {
+		support.firePropertyChange("m_clHoModel", m_clHoModel, model);
 		m_clHoModel = model;
+		HTDatetime.reset();
 	}
 
 	public HOModel getModel() {
@@ -106,7 +107,7 @@ public class HOVerwaltung {
 	public void loadLatestHoModel() {
 		int id = DBManager.instance().getLatestHrfId();
 		this.id = id;
-		m_clHoModel = loadModel(id);
+		setModel(loadModel(id));
 	}
 
 	/**
@@ -135,7 +136,6 @@ public class HOVerwaltung {
 					HOMainFrame.instance().setWaitInformation((int) ((i++ * 100d) / hrfListe.size()));
 				}
 				s1 = System.currentTimeMillis();
-				//final HOModel model = this.loadModel((hrfListe.get(i)).getId());
 
 				HOModel model = new HOModel(hrf, previousHRF);
 				lSum += (System.currentTimeMillis() - s1);

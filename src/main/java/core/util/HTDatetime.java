@@ -1,6 +1,9 @@
 package core.util;
 
 import core.model.HOVerwaltung;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -13,7 +16,7 @@ import java.time.temporal.ChronoUnit;
    Timestamps and Instants within the are all localized in CET (UTC would have be a better choice but we have to deal with HO history and with the fact that CHPP datetime refers to CET)
    ZonedDateTime should only be used for GUI display and not in code logic
  */
-public class HTDatetime {
+public class HTDatetime{
 
     private static final LocalDate cl_HT_Birthdate = LocalDate.of(1997, 9, 22);
     private static final ZoneId cl_HTzoneID = ZoneId.of("Europe/Stockholm");
@@ -41,13 +44,12 @@ public class HTDatetime {
     private int m_HTseasonLocalized;
 
 
-    /**
-     * function to be called after data download
-     */
+
     public static void reset(){
         cl_LastUpdate = HOVerwaltung.instance().getModel().getBasics().getDatum().toInstant();
         cl_UserSeasonOffsetDefault = HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
     }
+
 
 
     @Deprecated
@@ -93,6 +95,7 @@ public class HTDatetime {
      * @param sDateTime as of "yyyy-MM-dd HH:mm:ss"
      **/
     public HTDatetime(String sDateTime, ZoneId zoneID, Integer seasonOffset) {
+
         if (zoneID == null){
             HOLogger.instance().error(getClass(), "ZoneID could not be identified, reverting to System defaults !");
             cl_UserZoneID = cl_UserSystemZoneID;
@@ -123,10 +126,6 @@ public class HTDatetime {
     }
 
 
-    public static boolean isInTheFuture(ZonedDateTime zdt){
-        ZonedDateTime now = ZonedDateTime.now(cl_HTzoneID);
-        return zdt.isAfter(now);
-    }
 
     public static String getLocalizedDateString(Instant instant, boolean includeWeeksSeasons){
         HTDatetime o_temp = new HTDatetime(instant);

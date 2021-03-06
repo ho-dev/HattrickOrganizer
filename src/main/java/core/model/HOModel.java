@@ -35,8 +35,6 @@ import java.util.stream.Collectors;
 public class HOModel {
     private HRF o_previousHRF;
     private HRF o_hrf;
-    //~ Instance fields ----------------------------------------------------------------------------
-
     private Lineup m_clAufstellung;
     private Lineup m_clLastAufstellung;
     private Basics m_clBasics;
@@ -49,8 +47,6 @@ public class HOModel {
     private List<Player> m_vPlayer;
     private Verein m_clVerein;
     private XtraData m_clXtraDaten;
-    //private int m_iID = -1;
-    //private int o_previousID;
     private List<StaffMember> m_clStaff;
     private List<YouthPlayer> youthPlayers;
     private List<MatchLineup> youthMatchLineups;
@@ -517,14 +513,6 @@ public class HOModel {
         TrainingManager.instance().updateHistoricalTrainings();
     }
 
-    /**
-     * Determine the list of training weeks since previous Download
-     *
-     * @return list of training weeks between previous and current download (may be empty)
-     */
-    private List<TrainingPerWeek>  getTrainingWeeksSincePreviousDownload() {
-        return DBManager.instance().getTrainingList(o_previousHRF.getDatum(), o_hrf.getDatum());
-    }
 
     /**
      * Remove a Player
@@ -617,9 +605,6 @@ public class HOModel {
         }
     }
 
-    public void setYouthTrainings(List<YouthTraining> youthTrainings) {
-        this.youthTrainings = youthTrainings;
-    }
 
     public List<YouthTraining> getYouthTrainingsAfter(Timestamp date) {
         return getYouthTrainings().stream()
@@ -628,8 +613,4 @@ public class HOModel {
                 .collect(Collectors.toList());
     }
 
-    public void storeTrainingsSinceLastDownload() {
-        var recentTrainings = TrainingManager.instance().getRecentTrainings();
-        DBManager.instance().saveTrainings(recentTrainings,false);
-    }
 }

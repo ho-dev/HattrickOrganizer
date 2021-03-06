@@ -1,8 +1,7 @@
 package module.training.ui.model;
 
 import core.db.DBManager;
-import core.model.StaffMember;
-import core.model.StaffType;
+import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.enums.DBDataSource;
 import core.model.player.Player;
@@ -10,9 +9,11 @@ import core.training.FutureTrainingManager;
 import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
 import core.training.WeeklyTrainingType;
-import core.util.HOLogger;
 import core.util.HTDatetime;
 import module.training.PastTrainingManager;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -21,7 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class TrainingModel {
+public class TrainingModel implements PropertyChangeListener {
 
 
 	private Player activePlayer;
@@ -29,6 +30,14 @@ public class TrainingModel {
 	private PastTrainingManager skillupManager;
 	private FutureTrainingManager futureTrainingManager;
 	private final List<ModelChangeListener> listeners = new ArrayList<>();
+
+	public TrainingModel(){
+		HOVerwaltung.instance().addPropertyChangeListener(this);
+	}
+
+	public void propertyChange(PropertyChangeEvent evt) {
+		futureTrainings = null;
+	}
 
 	public Player getActivePlayer() {
 		return activePlayer;
@@ -159,49 +168,37 @@ public class TrainingModel {
 	}
 
 	private List<TrainingPerWeek> adjustFutureTrainingsVector(List<TrainingPerWeek> _futureTrainings, int requiredNBentries) {
-		Instant nextTrainingDate = TrainingManager.instance().getNextWeekTraining().getTrainingDate();
-		Optional<TrainingPerWeek> optionallastTraining = _futureTrainings.stream().max(Comparator.comparing(TrainingPerWeek::getTrainingDate));
+		Optional<TrainingPerWeek> oFutureTraining;
+		TrainingPerWeek previousTraining = TrainingManager.instance().getNextWeekTraining();
+		HTDatetime oTrainingDate = new HTDatetime(previousTraining.getTrainingDate());
+		ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
 		List<TrainingPerWeek> newfutureTrainings = new ArrayList<>();
 
-		if (_futureTrainings.size() != 0){
-			// removal of old entries
-			for (var entry : _futureTrainings) {
-				if (!entry.getTrainingDate().isBefore(nextTrainingDate)) {
-					newfutureTrainings.add(entry);
-					if(newfutureTrainings.size() == requiredNBentries){
-						break;
-					}
-				}
+		int nbWeek = 0;
+		ZonedDateTime zdtFutureTrainingDate;
+		TrainingPerWeek futureTraining;
+
+		while (newfutureTrainings.size() < requiredNBentries) {
+
+			//first iteration equals to nextWeek training then increase per one week per iteration
+			zdtFutureTrainingDate = zdtrefDate.plus(nbWeek * 7, ChronoUnit.DAYS);
+
+			ZonedDateTime finalZdtFutureTrainingDate = zdtFutureTrainingDate;
+			oFutureTraining = _futureTrainings.stream().filter(t -> finalZdtFutureTrainingDate.toInstant().equals(t.getTrainingDate())).findFirst();
+
+			if (oFutureTraining.isPresent()) {
+				// training present in Future Training table => we keep it
+				futureTraining = oFutureTraining.get();
+			} else {
+				// training not present in Future Training table => we create a new one from previous training
+				futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), previousTraining.getTrainingType(), previousTraining.getTrainingIntensity(),
+						previousTraining.getStaminaShare(), previousTraining.getTrainingAssistantsLevel(), previousTraining.getCoachLevel(), DBDataSource.GUESS);
 			}
-		}
 
-		TrainingPerWeek latestTraining;
+			newfutureTrainings.add(futureTraining);
+			previousTraining = futureTraining;
 
-		if (optionallastTraining.isPresent()) {
-			latestTraining = optionallastTraining.get();
-		}
-		else {
-			latestTraining = TrainingManager.instance().getNextWeekTraining();
-		}
-
-
-		if(newfutureTrainings.size() < requiredNBentries) {
-			// Adding new entries
-
-			int nbWeek = 1;
-			ZonedDateTime zdtFutureTrainingDate;
-
-			HTDatetime oTrainingDate = new HTDatetime(latestTraining.getTrainingDate());
-			ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
-			TrainingPerWeek futureTraining;
-
-			while (newfutureTrainings.size() < requiredNBentries) {
-				zdtFutureTrainingDate = zdtrefDate.plus(nbWeek * 7, ChronoUnit.DAYS);
-				futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), latestTraining.getTrainingType(), latestTraining.getTrainingIntensity(),
-						latestTraining.getStaminaShare(), latestTraining.getTrainingAssistantsLevel(), latestTraining.getCoachLevel(), DBDataSource.GUESS);
-				newfutureTrainings.add(futureTraining);
-				nbWeek++;
-			}
+			nbWeek++;
 		}
 
 		return newfutureTrainings;
