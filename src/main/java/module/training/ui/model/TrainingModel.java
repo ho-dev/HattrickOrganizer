@@ -1,6 +1,7 @@
 package module.training.ui.model;
 
 import core.db.DBManager;
+import core.model.HOVerwaltung;
 import core.model.StaffMember;
 import core.model.StaffType;
 import core.model.UserParameter;
@@ -29,6 +30,7 @@ public class TrainingModel {
 	private PastTrainingManager skillupManager;
 	private FutureTrainingManager futureTrainingManager;
 	private final List<ModelChangeListener> listeners = new ArrayList<>();
+	private Instant nextTrainingDate;
 
 	public Player getActivePlayer() {
 		return activePlayer;
@@ -54,7 +56,10 @@ public class TrainingModel {
 	}
 
 	public List<TrainingPerWeek> getFutureTrainings() {
-		if (futureTrainings == null) {
+		var homodel = HOVerwaltung.instance().getModel();
+		if (futureTrainings == null ||
+				homodel.getBasics().getDatum().toInstant().isAfter(this.nextTrainingDate)) { // download happened
+			this.nextTrainingDate = homodel.getXtraDaten().getNextTrainingDate().toInstant();
 			var _futureTrainings = DBManager.instance().getFutureTrainingsVector();
 
 			// remove old entries and add new to make sure the vector size match user preference settings
@@ -159,14 +164,14 @@ public class TrainingModel {
 	}
 
 	private List<TrainingPerWeek> adjustFutureTrainingsVector(List<TrainingPerWeek> _futureTrainings, int requiredNBentries) {
-		Instant nextTrainingDate = TrainingManager.instance().getNextWeekTraining().getTrainingDate();
+		//Instant nextTrainingDate = TrainingManager.instance().getNextWeekTraining().getTrainingDate();
 		Optional<TrainingPerWeek> optionallastTraining = _futureTrainings.stream().max(Comparator.comparing(TrainingPerWeek::getTrainingDate));
 		List<TrainingPerWeek> newfutureTrainings = new ArrayList<>();
 
 		if (_futureTrainings.size() != 0){
 			// removal of old entries
 			for (var entry : _futureTrainings) {
-				if (!entry.getTrainingDate().isBefore(nextTrainingDate)) {
+				if (!entry.getTrainingDate().isBefore(this.nextTrainingDate)) {
 					newfutureTrainings.add(entry);
 					if(newfutureTrainings.size() == requiredNBentries){
 						break;

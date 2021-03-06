@@ -1,5 +1,6 @@
 package core.training;
 
+import com.install4j.api.beaninfo.Install4JBeanInfo;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
@@ -25,10 +26,7 @@ public class TrainingManager {
     private TrainingWeekManager recentTrainings;     // trainings that took place (if any null otherwise) since last entry in Training table  => Created at initilization
 	private List<TrainingPerWeek> historicalTrainings;         // used to populate training history, no match information => Created at initilization
 
-
 	public static final boolean TRAININGDEBUG = false;
-
-
 
     /**
      * Creates a new instance of TrainingsManager
@@ -50,24 +48,30 @@ public class TrainingManager {
 		}
     }
 
-
-    public void updateHistoricalTrainings(){
+	/**
+	 * Update training lists
+	 * Method is called during Download, when new HOModel is created.
+	 * TrainingWeekManagers info about training date and download date are updated
+	 *
+	 * @param newNextTrainingDate new value of next training date
+	 * @param newLastDownloadDate new value of last download date (now)
+	 */
+	public void updateHistoricalTrainings(Instant newNextTrainingDate, Instant newLastDownloadDate){
     	// push trainings that took place since last update into Trainings table
-		recentTrainings.pushPastTrainings2TrainingsTable();
+		recentTrainings.pushPastTrainings2TrainingsTable(newNextTrainingDate, newLastDownloadDate);
 		
 		// update historical trainings
 		historicalTrainings =  DBManager.instance().getTrainingList();
 	}
 
+	public static TrainingManager instance() {
+		if (m_clInstance == null) {
+			m_clInstance = new TrainingManager();
+		}
+		return m_clInstance;
+	}
 
-    public static TrainingManager instance() {
-        if (m_clInstance == null) {
-            m_clInstance = new TrainingManager();
-        }
-        return m_clInstance;
-    }
-
-    public List<TrainingPerWeek> getRecentTrainings() {
+	public List<TrainingPerWeek> getRecentTrainings() {
         return recentTrainings.getTrainingList();
     }
 
@@ -117,6 +121,4 @@ public class TrainingManager {
 			HOLogger.instance().debug(getClass(), playerID + "|" + playerName + "|" + age + "|" + changes.toString());
 		}
 	}
-
-
 }

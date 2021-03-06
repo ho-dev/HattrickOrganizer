@@ -11,6 +11,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -175,11 +176,13 @@ public class TrainingWeekManager {
 
 		Instant currDate = zdtCurrDate.toInstant();
 
-		while((currDate.isBefore(cl_NextTrainingDate) || currDate.equals(cl_NextTrainingDate))){
+		while(currDate.isBefore(cl_NextTrainingDate) ||
+				currDate.equals(cl_NextTrainingDate)  && m_IncludeUpcomingTrainings){
 
-			if ((! m_IncludeUpcomingTrainings) && (HTDatetime.isAfterLastUpdate(zdtCurrDate))){
+/*			if ((! m_IncludeUpcomingTrainings) && (HTDatetime.isAfterLastUpdate(zdtCurrDate))){
 				break;
 			}
+*/
 
 			if (trainingsInDB.containsKey(currDate)){
 				trainings.add(trainingsInDB.get(currDate));
@@ -278,16 +281,17 @@ public class TrainingWeekManager {
 	/**
 	 * The function push elements of m_Trainings into Training table but not replacing existing entries
 	 *
+	 * @param nextTrainingDate
 	 */
-	public void pushPastTrainings2TrainingsTable(){
-		List<TrainingPerWeek> pastTrainingsSinceLastUpdate = new ArrayList<>();
-		for (var training: m_Trainings){
-			if (training.getTrainingDate().isBefore(cl_NextTrainingDate))
-			{
-				pastTrainingsSinceLastUpdate.add(training);
-			}
-		}
-		DBManager.instance().saveTrainings(pastTrainingsSinceLastUpdate, false);
+	public void pushPastTrainings2TrainingsTable(Instant nextTrainingDate, Instant lastDownloadDate){
+		cl_NextTrainingDate = nextTrainingDate;
+		cl_LastUpdateDate = lastDownloadDate;
+		m_Trainings = createTrainingListFromHRF();
+		// TODO check if additional filtering is necessary (createTrainingListFromHRF returns filtered list)
+		/*var pastTrainingsSinceLastUpdate =  m_Trainings.stream()
+				.filter(t->t.getTrainingDate().isBefore(nextTrainingDate))
+				.collect(Collectors.toList());*/
+		DBManager.instance().saveTrainings(m_Trainings, false);
 	}
 
 }

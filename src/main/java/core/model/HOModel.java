@@ -626,7 +626,6 @@ public class HOModel {
     }
 
     public void storeTrainingsSinceLastDownload() {
-        var recentTrainings = TrainingManager.instance().getRecentTrainings();
-        DBManager.instance().saveTrainings(recentTrainings,false);
+        TrainingManager.instance().updateHistoricalTrainings(this.getXtraDaten().getNextTrainingDate().toInstant(), this.getBasics().getDatum().toInstant());
     }
 }
