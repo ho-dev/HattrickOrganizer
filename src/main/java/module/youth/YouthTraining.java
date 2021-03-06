@@ -111,7 +111,7 @@ public class YouthTraining {
         return this.matchLineup;
     }
 
-    private Matchdetails getMatchDetails() {
+    public Matchdetails getMatchDetails() {
         if (this.matchdetails == null) {
             this.matchdetails = DBManager.instance().loadMatchDetails(SourceSystem.YOUTH.getValue(), this.youthMatchId);
             this.matchdetails.setMatchType(this.getMatchLineup().getMatchTyp());
