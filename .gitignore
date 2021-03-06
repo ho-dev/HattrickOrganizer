@@ -148,3 +148,4 @@ local.properties
 /database.data
 /database.properties
 /database.script
+truststore.jks
