@@ -17,6 +17,7 @@ import core.net.login.ProxyDialog;
 import core.training.TrainingManager;
 import core.training.TrainingWeekManager;
 import core.util.HOLogger;
+import core.util.HTDatetime;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -334,7 +335,9 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		}
 
 		DBManager.instance().updateLatestData();
-		model.storeTrainingsSinceLastDownload();
+		HTDatetime.reset();
+		TrainingManager.reset();
+//		model.storeTrainingsSinceLastDownload();
 		model.calcSubskills();
 
 	}

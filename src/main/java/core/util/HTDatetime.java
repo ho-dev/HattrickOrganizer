@@ -24,7 +24,7 @@ public class HTDatetime {
     private static ZoneId cl_UserZoneID = DateTimeUtils.fromHash(core.model.UserParameter.instance().TimeZoneDifference);
     private static int cl_UserSeasonOffsetDefault = HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
     private static int cl_UserSeasonOffset;
-    private final static Instant cl_LastUpdate = HOVerwaltung.instance().getModel().getBasics().getDatum().toInstant();
+    private static Instant cl_LastUpdate = HOVerwaltung.instance().getModel().getBasics().getDatum().toInstant();
 
     // This is a bit unclear from HT side but latest discussion suggest that HTweeks are calculated as if ORIGIN_HT_DATE happened
     // at different time accross the world, i.e. no timezone attached
@@ -39,6 +39,15 @@ public class HTDatetime {
     private String m_sHT_CET; // String as provided by Hattrick in xml files
     private int m_HTweekLocalized;
     private int m_HTseasonLocalized;
+
+
+    /**
+     * function to be called after data download
+     */
+    public static void reset(){
+        cl_LastUpdate = HOVerwaltung.instance().getModel().getBasics().getDatum().toInstant();
+        cl_UserSeasonOffsetDefault = HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
+    }
 
 
     @Deprecated

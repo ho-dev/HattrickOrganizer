@@ -506,12 +506,15 @@ public class HOModel {
      */
     public final void calcSubskills() {
 
-        var trainingWeeks = getTrainingWeeksSincePreviousDownload();
+        var trainingWeeks = TrainingManager.instance().getRecentTrainings();
         for (var player : this.getCurrentPlayers()) {
             player.calcSubskills(this.getPreviousID(), trainingWeeks);
         }
         // store new values of current players
         DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum());
+
+        // push recent training to historical training table
+        TrainingManager.instance().updateHistoricalTrainings();
     }
 
     /**

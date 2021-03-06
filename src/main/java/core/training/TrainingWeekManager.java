@@ -50,52 +50,12 @@ public class TrainingWeekManager {
 		m_Trainings = createTrainingListFromHRF();
 	}
 
-	/**
-	 * Construct a list of TrainingPerWeek of requested size
-	 * @param minimumNbEntries requested minimum vector size
-	 * @param includeUpcomingTrainings whether or not the TrainingPerWeek objects will contain upcoming match information
-	 * @param includeMatches whether or not the TrainingPerWeek objects will contain match information
-	 */
-	public TrainingWeekManager(int minimumNbEntries, boolean includeUpcomingTrainings, boolean includeMatches) {
-		m_StartDate = findStartDate(minimumNbEntries);
-		m_IncludeMatches = includeMatches;
-		m_IncludeUpcomingTrainings = includeUpcomingTrainings;
-		m_Trainings = createTrainingListFromHRF();
-	}
-
-	/**
-	 * Determine first training date from requested number of entries
-	 * @param minimumNbEntries requested size
-	 * @return
-	 */
-	private Instant findStartDate(int minimumNbEntries){
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
-			String startDate = formatter.format(Instant.now().minus(365, ChronoUnit.DAYS));
-			String sql = String.format("""
-					SELECT TRAININGDATE	FROM XTRADATA WHERE XTRADATA.TRAININGDATE >= '%s' 
-					ORDER BY TRAININGDATE DESC LIMIT %s""",startDate, minimumNbEntries);
-
-			Instant trainingDate = null;
-
-			try {
-
-				final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
-				final ResultSet rs = ijdbca.executeQuery(sql);
-				rs.beforeFirst();
-
-				while (rs.next()) {
-					trainingDate = rs.getTimestamp("TRAINING_DATE").toInstant();
-				}
-			}
-			catch (Exception e) {
-				HOLogger.instance().error(this.getClass(), "Error while performing findDefaultStartDate():  " + e);
-			}
-
-			return trainingDate;
+	public static void reset(){
+		cl_NextTrainingDate = null;
 	}
 
 
-	public static TrainingPerWeek getNextWeekTraining(Boolean includeMatches){
+	public static TrainingPerWeek getNextWeekTraining(){
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
 		String refDate = formatter.format(cl_NextTrainingDate);

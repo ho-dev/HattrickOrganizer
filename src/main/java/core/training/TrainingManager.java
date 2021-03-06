@@ -46,7 +46,7 @@ public class TrainingManager {
 			recentTrainings = new TrainingWeekManager(previousTrainingDate.plus(1, ChronoUnit.DAYS), false, true);
 
 			// Load next week training
-			nextWeekTraining = TrainingWeekManager.getNextWeekTraining(true);
+			nextWeekTraining = TrainingWeekManager.getNextWeekTraining();
 		}
     }
 
@@ -66,6 +66,11 @@ public class TrainingManager {
         }
         return m_clInstance;
     }
+
+	public static void reset() {
+		m_clInstance = null;
+		TrainingWeekManager.reset();
+	}
 
     public List<TrainingPerWeek> getRecentTrainings() {
         return recentTrainings.getTrainingList();
