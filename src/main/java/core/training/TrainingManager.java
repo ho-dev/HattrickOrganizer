@@ -32,6 +32,7 @@ public class TrainingManager implements PropertyChangeListener {
 
 
 	public void propertyChange(PropertyChangeEvent evt) {
+		HOLogger.instance().debug(this.getClass(), "HOVerwaltung model changed => TrainingManager and TrainingWeekManager are reinitialized");
 		m_clInstance = null;
 		TrainingWeekManager.reset();
 	}

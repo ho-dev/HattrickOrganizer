@@ -7,9 +7,7 @@ import core.file.hrf.HRF;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.util.HOLogger;
-import core.util.HTDatetime;
 import core.util.UTF8Control;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.InputStream;
@@ -62,9 +60,9 @@ public class HOVerwaltung {
 	 * Set the HOModel.
 	 */
 	public void setModel(HOModel model) {
-		support.firePropertyChange("m_clHoModel", m_clHoModel, model);
+		HOModel oldModel = m_clHoModel;
 		m_clHoModel = model;
-		HTDatetime.reset();
+		support.firePropertyChange("m_clHoModel", oldModel, m_clHoModel);
 	}
 
 	public HOModel getModel() {
