@@ -49,7 +49,6 @@ public class YouthPlayer {
 
     /**
      * current skills of the player
-     * <p>
      * mapping skill id to skill info
      */
     private YouthSkillsInfo currentSkills = new YouthSkillsInfo();
@@ -623,10 +622,11 @@ public class YouthPlayer {
             }
         }
 
-        this.scoutComments = new ArrayList<>();
+/*        this.scoutComments = new ArrayList<>();
         for (int i = 0; true; i++) {
             if (!parseScoutComment(properties, i)) break;
-        }
+        }*/
+        parseScoutComments(properties);
         evaluateScoutComments();
     }
 
@@ -636,26 +636,31 @@ public class YouthPlayer {
         return null;
     }
 
-    private boolean parseScoutComment(Properties properties, int i) {
-        var prefix = "scoutcomment" + i;
-        var text = properties.getProperty(prefix + "text");
-        if (text != null) {
-            var scoutComment = new ScoutComment();
-            scoutComment.text = properties.getProperty(prefix + "text", "");
-            scoutComment.type = CommentType.valueOf(getInteger(properties, prefix + "type"));
-            scoutComment.variation = getInteger(properties, prefix + "variation");
-            if (scoutComment.type == CommentType.AVERAGE_SKILL_LEVEL) {
-                // Average comment stores skill level in skillType
-                scoutComment.skillType = ScoutCommentSkillTypeID.AVERAGE;
-                scoutComment.skillLevel = getInteger(properties, prefix + "skilltype");
-            } else {
-                scoutComment.skillType = ScoutCommentSkillTypeID.valueOf(getInteger(properties, prefix + "skilltype"));
-                scoutComment.skillLevel = getInteger(properties, prefix + "skilllevel");
+    private void parseScoutComments(Properties properties) {
+        this.scoutComments = new ArrayList<>();
+        for (int i=0; true; i++ ) {
+            var prefix = "scoutcomment" + i;
+            var text = properties.getProperty(prefix + "text");
+            if (text != null) {
+                var scoutComment = new ScoutComment();
+                scoutComment.text = properties.getProperty(prefix + "text", "");
+                scoutComment.type = CommentType.valueOf(getInteger(properties, prefix + "type"));
+                scoutComment.variation = getInteger(properties, prefix + "variation");
+                if (scoutComment.type == CommentType.AVERAGE_SKILL_LEVEL) {
+                    // Average comment stores skill level in skillType
+                    scoutComment.skillType = ScoutCommentSkillTypeID.AVERAGE;
+                    scoutComment.skillLevel = getInteger(properties, prefix + "skilltype");
+                } else {
+                    scoutComment.skillType = ScoutCommentSkillTypeID.valueOf(getInteger(properties, prefix + "skilltype"));
+                    scoutComment.skillLevel = getInteger(properties, prefix + "skilllevel");
+                }
+                this.scoutComments.add(scoutComment);
             }
-            this.scoutComments.add(scoutComment);
-            return true;
+            else {
+                // No more scout comment found
+                return;
+            }
         }
-        return false;
     }
 
     private YouthSkillInfo parseSkillInfo(Properties properties, Skills.HTSkillID skillID) {
