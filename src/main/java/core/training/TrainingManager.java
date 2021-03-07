@@ -9,9 +9,11 @@ import core.util.HOLogger;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 
 /**
@@ -76,9 +78,11 @@ public class TrainingManager implements PropertyChangeListener {
         return m_clInstance;
     }
 
-
-    public List<TrainingPerWeek> getRecentTrainings() {
-        return recentTrainings.getTrainingList();
+    public List<TrainingPerWeek> getRecentTrainings(Timestamp since, Timestamp before) {
+        //return recentTrainings.getTrainingList();
+		return historicalTrainings.stream()
+				.filter(t->t.getTrainingDate().isBefore(before.toInstant()) && !since.toInstant().isAfter(t.getTrainingDate()))
+				.collect(Collectors.toList());
     }
 
 	public TrainingPerWeek getNextWeekTraining() {

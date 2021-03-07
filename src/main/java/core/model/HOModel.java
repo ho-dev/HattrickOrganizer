@@ -502,7 +502,7 @@ public class HOModel {
      */
     public final void calcSubskills() {
 
-        var trainingWeeks = TrainingManager.instance().getRecentTrainings();
+        var trainingWeeks = TrainingManager.instance().getRecentTrainings(this.o_previousHRF.getDatum(), this.getXtraDaten().getNextTrainingDate());
         for (var player : this.getCurrentPlayers()) {
             player.calcSubskills(this.getPreviousID(), trainingWeeks);
         }
