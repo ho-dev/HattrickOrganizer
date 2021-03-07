@@ -141,6 +141,8 @@ public class YouthTraining {
         ret.setMax(value.getMax());
         ret.setIsTop3(value.isTop3());
         ret.setCurrentLevel(value.getCurrentLevel());
+        ret.setStartLevel(value.getStartLevel());
+        ret.setIsTop3(value.isTop3());
         ret.setMaxReached(value.isMaxReached());
         if (value.isMaxReached()) {
             ret.setCurrentValue(value.getCurrentValue());
@@ -242,21 +244,20 @@ public class YouthTraining {
         return ret.toString();
     }
 
-    /**
-     * Calc most effective training for given skill id
-     * <p>
-     * training rate is 6 league matches/training in 44 days
-     * plus             1 friendly match in 21 days
-     *
-     * @param skillId
-     * @param skillVal
-     * @param age
-     * @return
-     */
 
     static final double fullTrainingsPerWeek = (6 * 21 + 44 * TRAINING_FRIENDLYFACTOR) / (21 * 44) * 7;
     static final double equalTrainings = 1.33;
 
+    /**
+     * Calc most effective training for given skill id
+     * training rate is 6 league matches/training in 44 days
+     * plus             1 friendly match in 21 days
+     *
+     * @param skillId skill id
+     * @param skillVal skill level value
+     * @param age player age in years
+     * @return maximum skill increment with optimal training
+     */
     public static double getMaxTrainingPerWeek(Skills.HTSkillID skillId, int skillVal, int age) {
 
         // TODO check if shooting as secondary training is more effective
@@ -287,7 +288,9 @@ public class YouthTraining {
     );
 
     public double getRating(int playerId) {
-        return this.getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId()).getPlayerByID(playerId).getRating();
+        var player = this.getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId()).getPlayerByID(playerId);
+        if ( player != null ) return player.getRating();
+        return 0;
     }
 
 }
