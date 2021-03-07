@@ -63,7 +63,7 @@ final class DBConfigUpdater {
 				ResultSet rs = m_clJDBCAdapter.executeQuery(sql);
 				rs.next();
 				Instant firstTrainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
-				twm = new TrainingWeekManager(firstTrainingDate, false, false);
+				twm = new TrainingWeekManager(firstTrainingDate, false);
 				twm.push2TrainingsTable();
 			} catch (Exception e) {
 				HOLogger.instance().error(DBConfigUpdater.class, "Error when trying to create entries inside TRAINING table");

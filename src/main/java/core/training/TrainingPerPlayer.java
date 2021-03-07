@@ -114,7 +114,7 @@ public class TrainingPerPlayer  {
 	 */
 	private boolean isAfterSkillup (Calendar trainingDate, int skillType) {
 		if (getTimestamp() == null) {
-			if (TrainingManager.TRAININGDEBUG) {
+			if (TrainingManager.TRAINING_DEBUG) {
 				HOLogger.instance().debug(getClass(), 
 						"isAfterSkillup: traindate NULL (" + skillType + ") is always after skillup");
 			}
@@ -122,14 +122,14 @@ public class TrainingPerPlayer  {
 		}
 		Date skillupTime = getLastSkillupDate(skillType, getTimestamp());
 		if (trainingDate.getTimeInMillis() > skillupTime.getTime()) {
-			if (TrainingManager.TRAININGDEBUG) {
+			if (TrainingManager.TRAINING_DEBUG) {
 				HOLogger.instance().debug(getClass(), 
 						"isAfterSkillup: traindate "+trainingDate.getTime().toString() 
 						+ " (" + skillType + ") is after skillup");
 			}
 			return true;	
 		} else {
-			if (TrainingManager.TRAININGDEBUG) {
+			if (TrainingManager.TRAINING_DEBUG) {
 				HOLogger.instance().debug(getClass(), 
 						"isAfterSkillup: traindate "+trainingDate.getTime().toString() 
 						+ " (" + skillType + ") is NOT after skillup");

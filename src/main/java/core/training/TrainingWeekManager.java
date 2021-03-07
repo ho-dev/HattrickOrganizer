@@ -25,7 +25,6 @@ public class TrainingWeekManager {
     private List<TrainingPerWeek> m_Trainings;
     private Instant m_StartDate;
 	private Boolean m_IncludeUpcomingTrainings;
-	private Boolean m_IncludeMatches;
 
 	/**
 	 * Construct a list of TrainingPerWeek since provided initial training Date
@@ -33,7 +32,7 @@ public class TrainingWeekManager {
 	 * @param includeUpcomingTrainings whether or not the TrainingPerWeek objects will contain upcoming match information
 	 * @param includeMatches whether or not the TrainingPerWeek objects will contain match information
 	 */
-	public TrainingWeekManager(Instant startDate, boolean includeUpcomingTrainings, boolean includeMatches) {
+	public TrainingWeekManager(Instant startDate, boolean includeUpcomingTrainings) {
 		if(HOVerwaltung.instance().getModel() == null) {
 		HOLogger.instance().error(this.getClass(), "model not yet initialized");
 		}
@@ -45,7 +44,6 @@ public class TrainingWeekManager {
 			}
 
 		m_StartDate = startDate;
-		m_IncludeMatches = includeMatches;
 		m_IncludeUpcomingTrainings = includeUpcomingTrainings;
 		m_Trainings = createTrainingListFromHRF();
 	}
