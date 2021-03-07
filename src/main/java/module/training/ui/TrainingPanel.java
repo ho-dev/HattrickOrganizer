@@ -138,7 +138,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		pastTrainingsPanel.add(pastTrainingsLabel, uGbc);
 
 		this.pastTrainingsTableModel = new PastTrainingsTableModel();
-		JTable pastTrainingsTable = new TrainingTable(this.pastTrainingsTableModel){
+		JTable pastTrainingsTable = new TrainingTable(this.pastTrainingsTableModel, true){
 
 			public Component prepareRenderer(
 					TableCellRenderer renderer, int row, int column) {
